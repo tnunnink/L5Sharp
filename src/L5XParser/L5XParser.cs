@@ -4,11 +4,11 @@ using L5XParser.Model;
 
 namespace L5XParser
 {
-    public class L5XFile
+    public class L5XParser
     {
         private readonly XDocument _document;
 
-        public L5XFile(string fileName)
+        public L5XParser(string fileName)
         {
             _document = XDocument.Load(fileName);
         }

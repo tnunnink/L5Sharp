@@ -7,13 +7,13 @@ using NUnit.Framework;
 namespace L5XParser.Tests
 {
     [TestFixture]
-    public class L5XFileTests
+    public class L5XParserTests
     {
 
         [Test]
         public void TestFileExists()
         {
-            var fileName = Path.Combine(Environment.CurrentDirectory, @"TestFiles\ETBB Master Template Gen5.xml");
+            var fileName = Path.Combine(Environment.CurrentDirectory, @"TestFiles\Input.L5X");
 
             File.Exists(fileName).Should().BeTrue();
         }
@@ -23,7 +23,7 @@ namespace L5XParser.Tests
         {
             var fileName = Path.Combine(Environment.CurrentDirectory, @"TestFiles\ETBB Master Template Gen5.xml");
 
-            var sut = new L5XFile(fileName);
+            var sut = new L5XParser(fileName);
 
             sut.Should().NotBeNull();
         }
@@ -32,7 +32,7 @@ namespace L5XParser.Tests
         public void GetModules_WhenCalled_ShouldNotBeNullOrEmpty()
         {
             var fileName = Path.Combine(Environment.CurrentDirectory, @"TestFiles\ETBB Master Template Gen5.xml");
-            var sut = new L5XFile(fileName);
+            var sut = new L5XParser(fileName);
 
             var modules = sut.GetModules().ToList();
 
@@ -44,7 +44,7 @@ namespace L5XParser.Tests
         public void GetRungs_WhenCalled_ShouldNotBeNull()
         {
             var fileName = Path.Combine(Environment.CurrentDirectory, @"TestFiles\ETBB Master Template Gen5.xml");
-            var sut = new L5XFile(fileName);
+            var sut = new L5XParser(fileName);
 
             var rungs = sut.GetRungs().ToList();
 
@@ -56,7 +56,7 @@ namespace L5XParser.Tests
         public void GetRungsWithTag_KnownValidTag_ShouldNotBeNullOrEmpty()
         {
             var fileName = Path.Combine(Environment.CurrentDirectory, @"TestFiles\ETBB Master Template Gen5.xml");
-            var sut = new L5XFile(fileName);
+            var sut = new L5XParser(fileName);
 
             var rungs = sut.GetRungsWithTag("FIO_INJ:1:I").ToList();
 
