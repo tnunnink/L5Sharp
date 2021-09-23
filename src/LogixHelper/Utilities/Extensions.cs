@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace L5XParser
+namespace LogixHelper.Utilities
 {
     public static class Extensions
     {

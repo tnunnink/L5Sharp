@@ -1,10 +1,11 @@
-﻿namespace L5XParser.Model
+﻿namespace LogixHelper
 {
-    public class DataValueMember
+    public class DataValue
     {
         public string Name { get; set; }
         public string DataType { get; set; }
+        public Radix Radix { get; set; }
         public object Value { get; set; }
-        public string Radix { get; set; }
+        public object ForceValue { get; set; }
     }
 }

@@ -7,6 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="ApprovalTests" Version="5.7.0" />
         <PackageReference Include="FluentAssertions" Version="6.1.0" />
         <PackageReference Include="NUnit" Version="3.12.0" />
         <PackageReference Include="NUnit3TestAdapter" Version="3.16.1" />
@@ -14,11 +15,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\src\L5XParser\L5XParser.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="TestFiles" />
+      <ProjectReference Include="..\..\src\LogixHelper\LogixHelper.csproj" />
     </ItemGroup>
 
 </Project>
