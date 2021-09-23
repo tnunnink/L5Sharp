@@ -1,6 +1,6 @@
 ﻿using Ardalis.SmartEnum;
 
-namespace LogixHelper
+namespace LogixHelper.Enumerations
 {
     public class TagType : SmartEnum<TagType>
     {

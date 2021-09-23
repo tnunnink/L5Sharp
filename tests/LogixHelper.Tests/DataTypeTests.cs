@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using LogixHelper.Primitives;
 using NUnit.Framework;
 
 namespace LogixHelper.Tests
@@ -9,15 +10,9 @@ namespace LogixHelper.Tests
         [Test]
         public void New_ValidArguments_ShouldNotBeNull()
         {
-            var type = new DataType(string.Empty);
+            var type = new DataType(string.Empty, string.Empty);
 
             type.Should().NotBeNull();
-        }
-
-        [Test]
-        public void METHOD()
-        {
-            var controller = new Controller();
         }
     }
 }

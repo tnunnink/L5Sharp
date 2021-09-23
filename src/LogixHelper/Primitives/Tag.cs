@@ -1,4 +1,6 @@
-﻿namespace LogixHelper
+﻿using LogixHelper.Enumerations;
+
+namespace LogixHelper.Primitives
 {
     public class Tag
     {
