@@ -9,6 +9,6 @@ namespace LogixHelper.Enumerations
         }
 
         public static readonly DataTypeFamily None = new DataTypeFamily("NoFamily", 0);
-        public static readonly DataTypeFamily String = new DataTypeFamily("StringFamily", 0);
+        public static readonly DataTypeFamily String = new DataTypeFamily("StringFamily", 1);
     }
 }

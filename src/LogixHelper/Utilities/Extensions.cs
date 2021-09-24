@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Xml.Linq;
 
 namespace LogixHelper.Utilities
 {
@@ -8,5 +9,10 @@ namespace LogixHelper.Utilities
         {
             return source?.IndexOf(value, comparison) >= 0;
         }
+        
+        /*public static T Materialize<T>(this T obj, XElement element) where T : new()
+        {
+            return new T(element);
+        }*/
     }
 }

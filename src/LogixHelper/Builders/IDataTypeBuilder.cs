@@ -1,6 +1,6 @@
 ﻿using LogixHelper.Primitives;
 
-namespace LogixHelper.Abstractions
+namespace LogixHelper.Builders
 {
     public interface IDataTypeBuilder
     {

@@ -14,6 +14,6 @@ namespace LogixHelper.Enumerations
         public static readonly TagUsage Output = new TagUsage("Output", 3);
         public static readonly TagUsage InOut = new TagUsage("InOut", 4);
         public static readonly TagUsage Static = new TagUsage("Static", 5);
-        public static readonly TagUsage Null = new TagUsage("NULL", 6); //todo really?
+        public static readonly TagUsage Null = new TagUsage("NULL", 6);
     }
 }

@@ -4,34 +4,28 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2fdc9230-37b0-426b-adb5-47b53e197079" name="Changes" comment="not sure">
-      <change afterPath="$PROJECT_DIR$/Abstractions/IController.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Abstractions/IControllerBuilder.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Abstractions/IDataTypeBuilder.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Abstractions/IXSerializable.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Builders/ControllerBuilder.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Builders/DataTypeBuilder.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Enumerations/DataTypeClass.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Enumerations/DataTypeFamily.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Utilities/Validate.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../tests/LogixHelper.Tests/BuilderApiTests.cs" afterDir="false" />
+    <list default="true" id="2fdc9230-37b0-426b-adb5-47b53e197079" name="Changes" comment="adding more primitives. Updating logic. adding builders. reorg">
+      <change afterPath="$PROJECT_DIR$/Exceptions/InvalidNameException.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Primitives/PredefinedMember.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Primitives/PredefinedType.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Primitives/Program.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Primitives/Routine.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Primitives/Rung.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Primitives/Task.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Utilities/Throw.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.LogixHelper/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.LogixHelper/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Controller.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Primitives/Controller.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Data.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Data.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataArray.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DataArray.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataStructure.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DataStructure.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Primitives/DataType.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataTypeClass.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataTypeMember.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Primitives/DataTypeMember.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataValue.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Primitives/DataValue.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ExternalAccess.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Enumerations/ExternalAccess.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Radix.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Enumerations/Radix.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Scope.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Enumerations/Scope.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tag.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Primitives/Tag.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TagType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Enumerations/TagType.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TagUsage.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Enumerations/TagUsage.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Data.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DataArray.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DataArrayElement.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DataStructure.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Enumerations/DataTypeFamily.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Enumerations/DataTypeFamily.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Enumerations/TagUsage.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Enumerations/TagUsage.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Primitives/DataType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Primitives/DataType.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Primitives/DataTypeMember.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Primitives/DataTypeMember.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Primitives/Tag.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Primitives/Tag.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Utilities/Extensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Utilities/Extensions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Utilities/Validate.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Utilities/Validate.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../tests/LogixHelper.Tests/DataTypeTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/LogixHelper.Tests/DataTypeTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../tests/LogixHelper.Tests/LogixHelper.Tests.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/LogixHelper.Tests/LogixHelper.Tests.csproj" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -41,6 +35,18 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
   </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/777281e5529b43ccbfcc25e4a52829673600/54/4e2df418/SmartEnum`1.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/777281e5529b43ccbfcc25e4a52829673600/73/c63a15a3/SmartEnum`2.cs" root0="SKIP_HIGHLIGHTING" />
+  </component>
   <component name="ProjectId" id="1yW9sndWVwS6eEJhtINyD4acYLp" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
@@ -48,6 +54,8 @@
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="DebuggerViewTab_PTCS_FirstProportionKey" value="0.34994584" />
+    <property name="DebuggerViewTab_PTCS_LastProportionKey" value="0.0" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
@@ -66,7 +74,8 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1632356690149</updated>
-      <workItem from="1632356694207" duration="5969000" />
+      <workItem from="1632356694207" duration="29433000" />
+      <workItem from="1632450450969" duration="13421000" />
     </task>
     <task id="LOCAL-00001" summary="naming changes and initial model development">
       <created>1632356746758</created>
@@ -82,14 +91,21 @@
       <option name="project" value="LOCAL" />
       <updated>1632356765483</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="adding more primitives. Updating logic. adding builders. reorg">
+      <created>1632362697503</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1632362697503</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="UnityCheckinConfiguration" checkUnsavedScenes="true" />
-  <component name="UnityProjectConfiguration" hasMinimizedUI="null" />
+  <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
   <component name="UnityUnitTestConfiguration" currentTestLauncher="NUnit" />
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
@@ -101,11 +117,13 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
     <MESSAGE value="naming changes and initial model development" />
     <MESSAGE value="not sure" />
-    <option name="LAST_COMMIT_MESSAGE" value="not sure" />
+    <MESSAGE value="adding more primitives. Updating logic. adding builders. reorg" />
+    <option name="LAST_COMMIT_MESSAGE" value="adding more primitives. Updating logic. adding builders. reorg" />
   </component>
 </project>

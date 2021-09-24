@@ -1,4 +1,4 @@
-﻿namespace LogixHelper.Abstractions
+﻿namespace LogixHelper.Builders
 {
     public interface IControllerBuilder
     {
