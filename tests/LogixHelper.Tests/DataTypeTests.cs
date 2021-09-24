@@ -2,6 +2,7 @@
 using AutoFixture;
 using FluentAssertions;
 using LogixHelper.Enumerations;
+using LogixHelper.Exceptions;
 using LogixHelper.Primitives;
 using NUnit.Framework;
 
@@ -21,7 +22,7 @@ namespace LogixHelper.Tests
         {
             var fixture = new Fixture();
             FluentActions.Invoking(() => new DataType(fixture.Create<string>())).Should()
-                .Throw<InvalidOperationException>();
+                .Throw<InvalidNameException>();
         }
 
         [Test]
@@ -33,7 +34,6 @@ namespace LogixHelper.Tests
             type.Name.Should().Be("BOOL");
             type.Class.Should().Be(DataTypeClass.ProductDefined);
             type.Family.Should().Be(DataTypeFamily.None);
-            type.Members.Should().BeEmpty();
         }
         
         [Test]
@@ -45,8 +45,6 @@ namespace LogixHelper.Tests
             type.Name.Should().Be("SINT");
             type.Class.Should().Be(DataTypeClass.ProductDefined);
             type.Family.Should().Be(DataTypeFamily.None);
-            type.Description.Should().BeEmpty();
-            type.Members.Should().BeEmpty();
         }
         
         [Test]
@@ -58,8 +56,6 @@ namespace LogixHelper.Tests
             type.Name.Should().Be("INT");
             type.Class.Should().Be(DataTypeClass.ProductDefined);
             type.Family.Should().Be(DataTypeFamily.None);
-            type.Description.Should().BeEmpty();
-            type.Members.Should().BeEmpty();
         }
         
         [Test]
@@ -71,8 +67,6 @@ namespace LogixHelper.Tests
             type.Name.Should().Be("DINT");
             type.Class.Should().Be(DataTypeClass.ProductDefined);
             type.Family.Should().Be(DataTypeFamily.None);
-            type.Description.Should().BeEmpty();
-            type.Members.Should().BeEmpty();
         }
         
         [Test]
@@ -84,8 +78,6 @@ namespace LogixHelper.Tests
             type.Name.Should().Be("REAL");
             type.Class.Should().Be(DataTypeClass.ProductDefined);
             type.Family.Should().Be(DataTypeFamily.None);
-            type.Description.Should().BeEmpty();
-            type.Members.Should().BeEmpty();
         }
         
         [Test]
@@ -126,7 +118,7 @@ namespace LogixHelper.Tests
             var fixture = new Fixture();
             var desc = fixture.Create<string>();
 
-            FluentActions.Invoking(() => DataType.StringType("Test_String_001", 0, desc)).Should().Throw<Exception>();
+            FluentActions.Invoking(() => DataType.StringType("Test_String_001", 0, desc)).Should().Throw<ArgumentException>();
         }
         
         [Test]
@@ -137,7 +129,7 @@ namespace LogixHelper.Tests
             
             var type = DataType.StringType("Test_String_001", 100, desc);
 
-            FluentActions.Invoking(() => type.AddMember("Test", DataType.Dint, "Test")).Should().Throw<Exception>();
+            FluentActions.Invoking(() => type.AddMember("Test", DataType.Dint, "Test")).Should().Throw<NotConfigurableException>();
         }
         
         [Test]
@@ -148,7 +140,7 @@ namespace LogixHelper.Tests
             
             var type = DataType.StringType("Test_String_001", 100, desc);
 
-            FluentActions.Invoking(() => type.RemoveMember("LEN")).Should().Throw<Exception>();
+            FluentActions.Invoking(() => type.RemoveMember("LEN")).Should().Throw<NotConfigurableException>();
         }
     }
 }

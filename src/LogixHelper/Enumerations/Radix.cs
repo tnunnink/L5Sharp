@@ -1,4 +1,6 @@
 ﻿using Ardalis.SmartEnum;
+using LogixHelper.Abstractions;
+using LogixHelper.Primitives;
 
 namespace LogixHelper.Enumerations
 {
@@ -6,6 +8,15 @@ namespace LogixHelper.Enumerations
     {
         private Radix(string name, int value) : base(name, value)
         {
+        }
+
+        public static Radix Default(IDataType dataType)
+        {
+            var type = (DataType)dataType;
+            return !type.IsAtomic 
+                ? NullType 
+                : type == DataType.Real ? Float
+                    : Decimal;
         }
         
         public static readonly Radix NullType = new Radix("NullType", 0);

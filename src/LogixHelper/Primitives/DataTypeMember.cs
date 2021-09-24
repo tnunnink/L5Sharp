@@ -10,13 +10,13 @@ namespace LogixHelper.Primitives
     {
         private string _name;
 
-        internal DataTypeMember(string name, DataType dataType, Radix radix, ExternalAccess access,
+        private DataTypeMember(string name, IDataType dataType, Radix radix, ExternalAccess access,
             short dimension = 0, bool hidden = false, string target = null, short bitNumber = 0,
             string description = null)
         {
             Name = name;
             DataType = dataType;
-            Radix = radix ?? dataType.DefaultRadix;
+            Radix = radix ?? Radix.Default(dataType);
             ExternalAccess = access ?? ExternalAccess.ReadWrite;
             Dimension = dimension;
             Hidden = hidden;
@@ -24,7 +24,7 @@ namespace LogixHelper.Primitives
             BitNumber = bitNumber;
             Description = description ?? string.Empty;
         }
-        
+
         private DataTypeMember(XElement element)
         {
             Name = element.Attribute(nameof(Name))?.Value;
@@ -37,9 +37,9 @@ namespace LogixHelper.Primitives
             Target = element.Attribute(nameof(Target))?.Value;
             BitNumber = Convert.ToInt16(element.Attribute(nameof(BitNumber))?.Value);
         }
-        
-        public DataTypeMember(string name, DataType dataType, short dimension = 0, string description = null, 
-            Radix radix = null, ExternalAccess access = null) 
+
+        public DataTypeMember(string name, IDataType dataType, short dimension = 0, string description = null,
+            Radix radix = null, ExternalAccess access = null)
             : this(name, dataType, radix, access, dimension, description: description)
         {
         }
@@ -53,7 +53,7 @@ namespace LogixHelper.Primitives
                 _name = value;
             }
         }
-        public DataType DataType { get; set; }
+        public IDataType DataType { get; set; }
         public string Description { get; set; }
         public short Dimension { get; set; }
         public Radix Radix { get; set; }
