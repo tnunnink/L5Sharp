@@ -33,7 +33,6 @@ namespace LogixHelper.Tests
             type.Name.Should().Be("BOOL");
             type.Class.Should().Be(DataTypeClass.ProductDefined);
             type.Family.Should().Be(DataTypeFamily.None);
-            type.Description.Should().BeEmpty();
             type.Members.Should().BeEmpty();
         }
         

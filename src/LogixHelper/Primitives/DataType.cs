@@ -14,12 +14,13 @@ namespace LogixHelper.Primitives
 {
     public class DataType : IXSerializable
     {
+        private static readonly string[] AtomicNames = { "BOOL", "SINT", "INT", "DINT", "LINT", "REAL" };
         private static readonly string[] StringMemberNames = { "LEN", "DATA" };
         private string _name;
         private string _description;
         private readonly Dictionary<string, DataTypeMember> _members = new Dictionary<string, DataTypeMember>();
 
-        private DataType(string name, DataTypeFamily family, DataTypeClass typeClass,
+        internal DataType(string name, DataTypeFamily family, DataTypeClass typeClass,
             string description = null, short length = 1)
         {
             if (typeClass == null)
@@ -82,8 +83,7 @@ namespace LogixHelper.Primitives
             }
         }
         public bool IsUserDefined => Class.Equals(DataTypeClass.User);
-
-        public IEnumerable<DataTypeMember> Members => _members.Values;
+        public IReadOnlyCollection<DataTypeMember> Members => _members.Values;
         public static IReadOnlyCollection<DataType> Predefined => GetPredefined();
         public Radix DefaultRadix => Equals(Real) ? Radix.Float : Radix.Decimal;
 
@@ -94,7 +94,7 @@ namespace LogixHelper.Primitives
 
             if (_members.ContainsKey(name)) return;
             
-            _members.Add(name, new DataTypeMember(name, dataType, description));
+            _members.Add(name, new DataTypeMember(name, dataType, description: description));
         }
 
         public void RemoveMember(string name)
@@ -107,8 +107,7 @@ namespace LogixHelper.Primitives
             _members.Remove(name);
         }
 
-        public void UpdateMember(string name, DataType dataType, short dimension, ExternalAccess access, Radix radix,
-            string description)
+        public void UpdateMember(string name, DataTypeMember member)
         {
             
         }
@@ -137,7 +136,8 @@ namespace LogixHelper.Primitives
             return new DataType(name, DataTypeFamily.String, DataTypeClass.User, description, length);
         }
 
-        public static readonly DataType Bool = new DataType("BOOL", DataTypeFamily.None, DataTypeClass.ProductDefined);
+        public static readonly PredefinedType Bool =
+            new PredefinedType(new DataType("BOOL", DataTypeFamily.None, DataTypeClass.ProductDefined));
         public static readonly DataType Sint = new DataType("SINT", DataTypeFamily.None, DataTypeClass.ProductDefined);
         public static readonly DataType Int = new DataType("INT", DataTypeFamily.None, DataTypeClass.ProductDefined);
         public static readonly DataType Dint = new DataType("DINT", DataTypeFamily.None, DataTypeClass.ProductDefined);

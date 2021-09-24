@@ -4,27 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2fdc9230-37b0-426b-adb5-47b53e197079" name="Changes" comment="adding more primitives. Updating logic. adding builders. reorg">
-      <change afterPath="$PROJECT_DIR$/Exceptions/InvalidNameException.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Primitives/PredefinedMember.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Primitives/PredefinedType.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Primitives/Program.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Primitives/Routine.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Primitives/Rung.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Primitives/Task.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Utilities/Throw.cs" afterDir="false" />
+    <list default="true" id="2fdc9230-37b0-426b-adb5-47b53e197079" name="Changes" comment="development...">
+      <change afterPath="$PROJECT_DIR$/../../tests/LogixHelper.Tests/DataTypeMemberTests.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.LogixHelper/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.LogixHelper/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Data.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataArray.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataArrayElement.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataStructure.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Enumerations/DataTypeFamily.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Enumerations/DataTypeFamily.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Enumerations/TagUsage.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Enumerations/TagUsage.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Primitives/DataType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Primitives/DataType.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Primitives/DataTypeMember.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Primitives/DataTypeMember.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Primitives/Tag.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Primitives/Tag.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Utilities/Extensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Utilities/Extensions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Utilities/Validate.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Utilities/Validate.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Primitives/PredefinedMember.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Primitives/PredefinedTypeMember.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Primitives/PredefinedType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Primitives/PredefinedType.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../tests/LogixHelper.Tests/DataTypeTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/LogixHelper.Tests/DataTypeTests.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -75,7 +61,7 @@
       <option name="presentableId" value="Default" />
       <updated>1632356690149</updated>
       <workItem from="1632356694207" duration="29433000" />
-      <workItem from="1632450450969" duration="13421000" />
+      <workItem from="1632450450969" duration="18154000" />
     </task>
     <task id="LOCAL-00001" summary="naming changes and initial model development">
       <created>1632356746758</created>
@@ -98,7 +84,14 @@
       <option name="project" value="LOCAL" />
       <updated>1632362697503</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="development...">
+      <created>1632505721608</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1632505721609</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -124,6 +117,7 @@
     <MESSAGE value="naming changes and initial model development" />
     <MESSAGE value="not sure" />
     <MESSAGE value="adding more primitives. Updating logic. adding builders. reorg" />
-    <option name="LAST_COMMIT_MESSAGE" value="adding more primitives. Updating logic. adding builders. reorg" />
+    <MESSAGE value="development..." />
+    <option name="LAST_COMMIT_MESSAGE" value="development..." />
   </component>
 </project>
