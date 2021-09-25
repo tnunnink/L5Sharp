@@ -1,10 +1,10 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LogixHelper", "LogixHelper.csproj", "{1C401968-C9AA-41AF-8D18-93605D123AFF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "L5Sharp", "L5Sharp.csproj", "{1C401968-C9AA-41AF-8D18-93605D123AFF}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{337B58B2-5647-4088-8CB3-50B3752B04D8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LogixHelper.Tests", "..\..\tests\LogixHelper.Tests\LogixHelper.Tests.csproj", "{49824AD6-5AE2-434F-AE18-A3B9011BA06C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "L5Sharp.Tests", "..\..\tests\L5Sharp.Tests\L5Sharp.Tests.csproj", "{49824AD6-5AE2-434F-AE18-A3B9011BA06C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestConsole", "..\..\tests\TestConsole\TestConsole.csproj", "{54605150-B0AA-4903-B7C4-E1FB95621CC5}"
 EndProject
