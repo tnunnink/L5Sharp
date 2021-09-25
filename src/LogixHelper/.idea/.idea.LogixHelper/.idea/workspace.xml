@@ -8,24 +8,23 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2fdc9230-37b0-426b-adb5-47b53e197079" name="Changes" comment="development...">
-      <change afterPath="$PROJECT_DIR$/Builders/IMemberBuilder.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Builders/MemberBuilder.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Helpers/PredefinedGenerator.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../tests/LogixHelper.Tests/RadixTests.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Builders/BaseBuilder.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Builders/IBuilder.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Exceptions/MemberNameCollisionException.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Exceptions/MemberNotFoundException.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Exceptions/RadixNotSupportedException.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Primitives/Module.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../tests/LogixHelper.Tests/DataTypePredefinedTests.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../tests/LogixHelper.Tests/DataTypeSerializationTests.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.LogixHelper/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.LogixHelper/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Abstractions/IDataType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Abstractions/IDataType.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Builders/DataTypeBuilder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Builders/DataTypeBuilder.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Enumerations/DataTypeClass.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Enumerations/DataTypeClass.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Builders/IMemberBuilder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Builders/IMemberBuilder.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Builders/MemberBuilder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Builders/MemberBuilder.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Enumerations/Radix.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Enumerations/Radix.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Exceptions/InvalidNameException.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Exceptions/InvalidTagNameException.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LogixHelper.sln" beforeDir="false" afterPath="$PROJECT_DIR$/LogixHelper.sln" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Primitives/DataType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Primitives/DataType.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Primitives/DataTypeMember.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Primitives/DataTypeMember.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Primitives/DataValue.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Utilities/Extensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Utilities/Extensions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Utilities/Validate.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Utilities/Validate.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../tests/LogixHelper.Tests/DataTypeMemberTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/LogixHelper.Tests/DataTypeMemberTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Utilities/Throw.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Utilities/Throw.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../tests/LogixHelper.Tests/DataTypeTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/LogixHelper.Tests/DataTypeTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tests/LogixHelper.Tests/RadixTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/LogixHelper.Tests/RadixTests.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -99,7 +98,7 @@
       <workItem from="1632356694207" duration="29433000" />
       <workItem from="1632450450969" duration="18177000" />
       <workItem from="1632512266935" duration="2514000" />
-      <workItem from="1632525566700" duration="10209000" />
+      <workItem from="1632525566700" duration="17610000" />
     </task>
     <task id="LOCAL-00001" summary="naming changes and initial model development">
       <created>1632356746758</created>
@@ -143,7 +142,14 @@
       <option name="project" value="LOCAL" />
       <updated>1632525578532</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="development...">
+      <created>1632544212849</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1632544212849</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -187,19 +193,6 @@
             </endOffsets>
           </properties>
           <option name="timeStamp" value="2" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/../../tests/LogixHelper.Tests/DataTypeTests.cs</url>
-          <line>103</line>
-          <properties documentPath="C:\Users\tnunnink\dev\projects\LogixHelper\tests\LogixHelper.Tests\DataTypeTests.cs" initialLine="103" containingFunctionPresentation="method 'Predefined_WhenCalled_ShouldNotBeEmpty'">
-            <startOffsets>
-              <option value="3107" />
-            </startOffsets>
-            <endOffsets>
-              <option value="3140" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="7" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

@@ -61,17 +61,19 @@ namespace LogixHelper.Primitives
 
         public XElement Serialize()
         {
-            var element = new XElement(nameof(DataTypeMember));
+            var element = new XElement("Member");
             element.Add(new XAttribute(nameof(Name), Name));
-            element.Add(new XAttribute(nameof(DataType), DataType));
+            element.Add(new XAttribute(nameof(DataType), DataType.Name));
             element.Add(new XAttribute(nameof(Dimension), Dimension));
             element.Add(new XAttribute(nameof(Radix), Radix));
-            element.Add(new XAttribute(nameof(ExternalAccess), ExternalAccess));
             element.Add(new XAttribute(nameof(Hidden), Hidden));
-            element.Add(new XAttribute(nameof(Target), Target));
-            element.Add(new XAttribute(nameof(BitNumber), BitNumber));
-            element.Add(new XElement(nameof(Description), new XCData(Description)));
+            if (Hidden) element.Add(new XAttribute(nameof(Target), Target));
+            if (Hidden) element.Add(new XAttribute(nameof(BitNumber), BitNumber));
+            element.Add(new XAttribute(nameof(ExternalAccess), ExternalAccess));
 
+            if (!string.IsNullOrEmpty(Description))
+                element.Add(new XElement(nameof(Description), new XCData(Description)));    
+            
             return element;
         }
 

@@ -84,13 +84,18 @@ namespace LogixHelper.Primitives
         public IEnumerable<DataTypeMember> Members => _members.Values.AsEnumerable();
         private bool HasConfigurableMembers => Class.Equals(DataTypeClass.User) && Family.Equals(DataTypeFamily.None);
 
+        public DataTypeMember GetMember(string name)
+        {
+            return _members.ContainsKey(name) ? _members[name] : null;
+        }
+
         public IMemberBuilder AddMember(string name, IDataType dataType)
         {
             if (!HasConfigurableMembers)
-                throw new NotConfigurableException();
+                throw new NotConfigurableException(); //todo throw helper
 
             if (_members.ContainsKey(name))
-                throw new InvalidOperationException();
+                throw new MemberNameCollisionException(); //todo throw helper
 
             var member = new DataTypeMember(name, dataType);
             _members.Add(member.Name, member);
@@ -113,7 +118,7 @@ namespace LogixHelper.Primitives
                 throw new NotConfigurableException();
 
             if (!_members.ContainsKey(name))
-                throw new InvalidOperationException();
+                throw new MemberNotFoundException();
             
             return new MemberBuilder(_members[name]);
         }
@@ -124,7 +129,7 @@ namespace LogixHelper.Primitives
                 throw new NotConfigurableException();
 
             if (!_members.ContainsKey(oldName))
-                throw new InvalidOperationException();
+                throw new MemberNotFoundException();
 
             var member = _members[oldName];
             _members.Remove(oldName);

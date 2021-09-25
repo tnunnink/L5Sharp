@@ -1,9 +1,10 @@
 ﻿using LogixHelper.Abstractions;
 using LogixHelper.Enumerations;
+using LogixHelper.Primitives;
 
 namespace LogixHelper.Builders
 {
-    public interface IMemberBuilder
+    public interface IMemberBuilder : IBuilder<DataTypeMember>
     {
         IMemberBuilder WithDataType(IDataType dataType);
         IMemberBuilder WithDescription(string description);
