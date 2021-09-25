@@ -8,19 +8,24 @@ namespace LogixHelper.Primitives
 {
     public class DataTypeMember : IXSerializable
     {
-        private string _name;
-
         private DataTypeMember(string name, IDataType dataType, Radix radix, ExternalAccess access,
             short dimension = 0, bool hidden = false, string target = null, short bitNumber = 0,
             string description = null)
         {
+            if (name == null)
+                throw new ArgumentNullException();
+            if (dataType == null)
+                throw new ArgumentNullException();
+            
+            Validate.TagName(name);
+            
             Name = name;
             DataType = dataType;
             Radix = radix ?? Radix.Default(dataType);
             ExternalAccess = access ?? ExternalAccess.ReadWrite;
             Dimension = dimension;
             Hidden = hidden;
-            Target = target;
+            Target = target ?? string.Empty;
             BitNumber = bitNumber;
             Description = description ?? string.Empty;
         }
@@ -38,26 +43,18 @@ namespace LogixHelper.Primitives
             BitNumber = Convert.ToInt16(element.Attribute(nameof(BitNumber))?.Value);
         }
 
-        public DataTypeMember(string name, IDataType dataType, short dimension = 0, string description = null,
+        internal DataTypeMember(string name, IDataType dataType, string description = null, short dimension = 0,
             Radix radix = null, ExternalAccess access = null)
             : this(name, dataType, radix, access, dimension, description: description)
         {
         }
 
-        public string Name
-        {
-            get => _name;
-            set
-            {
-                Validate.TagName(value);
-                _name = value;
-            }
-        }
-        public IDataType DataType { get; set; }
-        public string Description { get; set; }
-        public short Dimension { get; set; }
-        public Radix Radix { get; set; }
-        public ExternalAccess ExternalAccess { get; set; }
+        public string Name { get; internal set; }
+        public IDataType DataType { get; internal set; }
+        public string Description { get; internal set; }
+        public short Dimension { get; internal set; }
+        public Radix Radix { get; internal set; }
+        public ExternalAccess ExternalAccess { get; internal set; }
         private bool Hidden { get; }
         private string Target { get; }
         private short BitNumber { get; }

@@ -9,7 +9,7 @@ namespace LogixHelper.Enumerations
         }
 
         public static readonly DataTypeClass User = new DataTypeClass("User", 0);
-        public static readonly DataTypeClass ProductDefined = new DataTypeClass("ProductDefined", 1);
+        public static readonly DataTypeClass Predefined = new DataTypeClass("ProductDefined", 1); //I think this mean predefined 
         public static readonly DataTypeClass Io = new DataTypeClass("IO", 2);
     }
 }

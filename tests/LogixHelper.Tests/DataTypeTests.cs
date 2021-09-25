@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using AutoFixture;
 using FluentAssertions;
 using LogixHelper.Enumerations;
@@ -22,7 +23,7 @@ namespace LogixHelper.Tests
         {
             var fixture = new Fixture();
             FluentActions.Invoking(() => new DataType(fixture.Create<string>())).Should()
-                .Throw<InvalidNameException>();
+                .Throw<InvalidTagNameException>();
         }
 
         [Test]
@@ -32,7 +33,7 @@ namespace LogixHelper.Tests
 
             type.Should().NotBeNull();
             type.Name.Should().Be("BOOL");
-            type.Class.Should().Be(DataTypeClass.ProductDefined);
+            type.Class.Should().Be(DataTypeClass.Predefined);
             type.Family.Should().Be(DataTypeFamily.None);
         }
         
@@ -43,7 +44,7 @@ namespace LogixHelper.Tests
 
             type.Should().NotBeNull();
             type.Name.Should().Be("SINT");
-            type.Class.Should().Be(DataTypeClass.ProductDefined);
+            type.Class.Should().Be(DataTypeClass.Predefined);
             type.Family.Should().Be(DataTypeFamily.None);
         }
         
@@ -54,7 +55,7 @@ namespace LogixHelper.Tests
 
             type.Should().NotBeNull();
             type.Name.Should().Be("INT");
-            type.Class.Should().Be(DataTypeClass.ProductDefined);
+            type.Class.Should().Be(DataTypeClass.Predefined);
             type.Family.Should().Be(DataTypeFamily.None);
         }
         
@@ -65,7 +66,7 @@ namespace LogixHelper.Tests
 
             type.Should().NotBeNull();
             type.Name.Should().Be("DINT");
-            type.Class.Should().Be(DataTypeClass.ProductDefined);
+            type.Class.Should().Be(DataTypeClass.Predefined);
             type.Family.Should().Be(DataTypeFamily.None);
         }
         
@@ -76,7 +77,7 @@ namespace LogixHelper.Tests
 
             type.Should().NotBeNull();
             type.Name.Should().Be("REAL");
-            type.Class.Should().Be(DataTypeClass.ProductDefined);
+            type.Class.Should().Be(DataTypeClass.Predefined);
             type.Family.Should().Be(DataTypeFamily.None);
         }
         
@@ -93,6 +94,14 @@ namespace LogixHelper.Tests
             type.Class.Should().Be(DataTypeClass.User);
             type.Family.Should().Be(DataTypeFamily.None);
             type.Description.Should().Be(description);
+        }
+
+        [Test]
+        public void Predefined_WhenCalled_ShouldNotBeEmpty()
+        {
+            var predefined = DataType.Predefined;
+
+            predefined.Should().NotBeEmpty();
         }
 
         [Test]
@@ -121,7 +130,7 @@ namespace LogixHelper.Tests
             FluentActions.Invoking(() => DataType.StringType("Test_String_001", 0, desc)).Should().Throw<ArgumentException>();
         }
         
-        [Test]
+        /*[Test]
         public void StringType_AddMember_ShouldThrowException()
         {
             var fixture = new Fixture();
@@ -130,7 +139,7 @@ namespace LogixHelper.Tests
             var type = DataType.StringType("Test_String_001", 100, desc);
 
             FluentActions.Invoking(() => type.AddMember("Test", DataType.Dint, "Test")).Should().Throw<NotConfigurableException>();
-        }
+        }*/
         
         [Test]
         public void StringType_RemoveMember_ShouldThrowException()
@@ -141,6 +150,55 @@ namespace LogixHelper.Tests
             var type = DataType.StringType("Test_String_001", 100, desc);
 
             FluentActions.Invoking(() => type.RemoveMember("LEN")).Should().Throw<NotConfigurableException>();
+        }
+
+        [Test]
+        public void AddMember_ValidArguments_ShouldHaveExpectedMember()
+        {
+            var type = new DataType("Test_Type_001");
+            
+            type.AddMember("Member", DataType.Dint);
+            
+            type.Members.Should().HaveCount(1);
+            var result = type.Members.SingleOrDefault(m => m.Name == "Member");
+            result.Should().NotBeNull();
+            result?.Name.Should().Be("Member");
+            result?.DataType.Should().Be(DataType.Dint);
+            result?.Dimension.Should().Be(0);
+            result?.Description.Should().Be(string.Empty);
+            result?.Radix.Should().Be(Radix.Decimal);
+            result?.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);
+        }
+        
+        [Test]
+        public void AddMember_InvalidTagName_ShouldThrowInvalidTagNameException()
+        {
+            var type = new DataType("Test_Type_001");
+
+            FluentActions.Invoking(() => type.AddMember("This_is Not_It", DataType.Dint)).Should()
+                .Throw<InvalidTagNameException>();
+        }
+
+        [Test]
+        public void AddMember_WithProperties_ShouldHaveExpectedProperties()
+        {
+            var type = new DataType("Test_Type_001");
+
+            type.AddMember("Member", DataType.Dint)
+                .WithDataType(DataType.Int)
+                .WithDimension(4)
+                .WithDescription("This is a test description")
+                .WithRadix(Radix.Hex)
+                .WithAccess(ExternalAccess.None);
+
+            var result = type.Members.SingleOrDefault(m => m.Name == "Member");
+            result.Should().NotBeNull();
+            result?.Name.Should().Be("Member");
+            result?.DataType.Should().Be(DataType.Int);
+            result?.Dimension.Should().Be(4);
+            result?.Description.Should().Be("This is a test description");
+            result?.Radix.Should().Be(Radix.Hex);
+            result?.ExternalAccess.Should().Be(ExternalAccess.None);
         }
     }
 }

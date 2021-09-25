@@ -1,4 +1,6 @@
-﻿using LogixHelper.Enumerations;
+﻿using System.Collections.Generic;
+using LogixHelper.Enumerations;
+using LogixHelper.Primitives;
 
 namespace LogixHelper.Abstractions
 {
@@ -8,5 +10,6 @@ namespace LogixHelper.Abstractions
         public DataTypeFamily Family { get; }
         public DataTypeClass Class { get; }
         public bool IsAtomic { get; }
+        public IEnumerable<DataTypeMember> Members { get; }
     }
 }

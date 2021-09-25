@@ -2,14 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Xml.Linq;
 using LogixHelper.Abstractions;
+using LogixHelper.Builders;
 using LogixHelper.Enumerations;
 using LogixHelper.Exceptions;
+using LogixHelper.Helpers;
 using LogixHelper.Utilities;
-
-[assembly: InternalsVisibleTo("LogixHelper.Tests")]
 
 namespace LogixHelper.Primitives
 {
@@ -22,29 +21,27 @@ namespace LogixHelper.Primitives
         private readonly Dictionary<string, DataTypeMember> _members = new Dictionary<string, DataTypeMember>();
 
         private DataType(string name, DataTypeFamily family, DataTypeClass typeClass,
-            string description = null, short length = 1)
+            string description = null, short length = 1, List<DataTypeMember> members = null)
         {
-            if (typeClass == null)
-                throw new ArgumentNullException();
-            if (family == null)
-                throw new ArgumentNullException();
-            if (string.IsNullOrEmpty(name))
-                throw new ArgumentNullException();
+            if (string.IsNullOrEmpty(name)) throw new ArgumentNullException(nameof(name));
+            if (family == null) throw new ArgumentNullException(nameof(family));
+            if (typeClass == null) throw new ArgumentNullException(nameof(typeClass));
 
-            //Class needs to be initialized first since the setting of other properties will depend on its value
+            if (typeClass == DataTypeClass.User) Validate.TagName(name);
+
+            _name = name;
             Class = typeClass;
-
             Family = family;
-            if (family.Equals(DataTypeFamily.String))
-                InitializeStringMembers(length);
+            _description = description ?? string.Empty;
 
-            Name = name;
-            Description = description ?? string.Empty;
+            if (members == null) return;
+            foreach (var member in members)
+                _members.Add(member.Name, member);
         }
 
         private DataType(XElement element)
         {
-            //Class needs to be initialized first since the setting of other properties will depend on its value
+            
             Class = DataTypeClass.FromName(element.Attribute(nameof(Class))?.Value);
             Family = DataTypeFamily.FromName(element.Attribute(nameof(Family))?.Value);
             Name = element.Attribute(nameof(Name))?.Value;
@@ -58,18 +55,17 @@ namespace LogixHelper.Primitives
         {
         }
 
-
+        
         public string Name
         {
             get => _name;
             set
             {
-                if (IsUserDefined)
-                {
-                    Validate.TagName(value);
-                    Validate.DataTypeName(value);
-                }
+                if (!Class.Equals(DataTypeClass.User))
+                    throw new NotConfigurableException();
 
+                Validate.TagName(value);
+                Validate.DataTypeName(value);
                 _name = value;
             }
         }
@@ -81,28 +77,29 @@ namespace LogixHelper.Primitives
             get => _description;
             set
             {
-                if (!IsUserDefined) return;
+                if (!Class.Equals(DataTypeClass.User)) return;
                 _description = value;
             }
         }
-        public bool IsUserDefined => Class.Equals(DataTypeClass.User);
-        public IEnumerable<DataTypeMember> Members => _members.Values;
-        public static IEnumerable<IDataType> Predefined => GetPredefined();
-        private bool IsConfigurable => Class.Equals(DataTypeClass.User) && Family.Equals(DataTypeFamily.None);
+        public IEnumerable<DataTypeMember> Members => _members.Values.AsEnumerable();
+        private bool HasConfigurableMembers => Class.Equals(DataTypeClass.User) && Family.Equals(DataTypeFamily.None);
 
-        public void AddMember(string name, IDataType dataType, string description)
+        public IMemberBuilder AddMember(string name, IDataType dataType)
         {
-            if (!IsConfigurable)
+            if (!HasConfigurableMembers)
                 throw new NotConfigurableException();
 
-            if (_members.ContainsKey(name)) return;
+            if (_members.ContainsKey(name))
+                throw new InvalidOperationException();
 
-            _members.Add(name, new DataTypeMember(name, dataType, description: description));
+            var member = new DataTypeMember(name, dataType);
+            _members.Add(member.Name, member);
+            return new MemberBuilder(member);
         }
 
         public void RemoveMember(string name)
         {
-            if (!IsConfigurable)
+            if (!HasConfigurableMembers)
                 throw new NotConfigurableException();
 
             if (!_members.ContainsKey(name)) return;
@@ -110,21 +107,32 @@ namespace LogixHelper.Primitives
             _members.Remove(name);
         }
 
-        public void UpdateMember(string name, DataTypeMember member)
+        public IMemberBuilder UpdateMember(string name)
         {
-            if (!IsConfigurable)
+            if (!HasConfigurableMembers)
                 throw new NotConfigurableException();
+
+            if (!_members.ContainsKey(name))
+                throw new InvalidOperationException();
             
-            if (!_members.ContainsKey(name)) return;
+            return new MemberBuilder(_members[name]);
+        }
 
-            if (member.Name == name)
-            {
-                _members[name] = member;
-                return;
-            }
+        public IMemberBuilder RenameMember(string oldName, string newName)
+        {
+            if (!HasConfigurableMembers)
+                throw new NotConfigurableException();
 
-            _members.Remove(name);
+            if (!_members.ContainsKey(oldName))
+                throw new InvalidOperationException();
+
+            var member = _members[oldName];
+            _members.Remove(oldName);
+            
+            member.Name = newName;
             _members.Add(member.Name, member);
+
+            return new MemberBuilder(member);
         }
 
         public XElement Serialize()
@@ -134,7 +142,7 @@ namespace LogixHelper.Primitives
             element.Add(new XAttribute(nameof(Family), Family));
             element.Add(new XAttribute(nameof(Class), Class));
             element.Add(new XElement(nameof(Description), new XCData(Description)));
-            element.Add(new XElement(nameof(Members), Members.Select(m => m.Serialize())));
+            element.Add(new XElement(nameof(Members), _members.Values.Select(m => m.Serialize())));
             return element;
         }
 
@@ -148,26 +156,48 @@ namespace LogixHelper.Primitives
             if (length <= 0)
                 throw new ArgumentException("Length must be greater 0");
 
-            return new DataType(name, DataTypeFamily.String, DataTypeClass.User, description, length);
+            return new DataType(name, DataTypeFamily.String, DataTypeClass.User, description, length,
+                GenerateStringMembers(length));
         }
 
+        public static IEnumerable<IDataType> Atomic => GetPredefined().Where(x => x.IsAtomic);
+        public static IEnumerable<IDataType> Predefined => GetPredefined();
+
         public static readonly IDataType Bool = new DataType(nameof(Bool).ToUpper(), DataTypeFamily.None,
-            DataTypeClass.ProductDefined);
+            DataTypeClass.Predefined);
 
         public static readonly IDataType Sint = new DataType(nameof(Sint).ToUpper(), DataTypeFamily.None,
-            DataTypeClass.ProductDefined);
+            DataTypeClass.Predefined);
 
         public static readonly IDataType Int = new DataType(nameof(Int).ToUpper(), DataTypeFamily.None,
-            DataTypeClass.ProductDefined);
+            DataTypeClass.Predefined);
 
         public static readonly IDataType Dint = new DataType(nameof(Dint).ToUpper(), DataTypeFamily.None,
-            DataTypeClass.ProductDefined);
+            DataTypeClass.Predefined);
 
         public static readonly IDataType Lint = new DataType(nameof(Lint).ToUpper(), DataTypeFamily.None,
-            DataTypeClass.ProductDefined);
+            DataTypeClass.Predefined);
 
         public static readonly IDataType Real = new DataType(nameof(Real).ToUpper(), DataTypeFamily.None,
-            DataTypeClass.ProductDefined);
+            DataTypeClass.Predefined);
+
+        public static readonly IDataType String = new DataType(nameof(String).ToUpper(), DataTypeFamily.String,
+            DataTypeClass.Predefined, members: GenerateStringMembers());
+        
+        public static readonly IDataType Timer = new DataType(nameof(Timer).ToUpper(), DataTypeFamily.None,
+            DataTypeClass.Predefined, members: PredefinedGenerator.TimerMembers());
+
+        public static readonly IDataType Counter = new DataType(nameof(Counter).ToUpper(), DataTypeFamily.None,
+            DataTypeClass.Predefined, members: PredefinedGenerator.CounterMembers());
+
+        private static List<DataTypeMember> GenerateStringMembers(short length = 82)
+        {
+            return new List<DataTypeMember>
+            {
+                new DataTypeMember(StringMemberNames[0], Dint),
+                new DataTypeMember(StringMemberNames[1], Sint, dimension: length, radix: Radix.Ascii)
+            };
+        }
 
         private static IEnumerable<IDataType> GetPredefined()
         {
@@ -175,12 +205,6 @@ namespace LogixHelper.Primitives
                 .Where(p => typeof(IDataType).IsAssignableFrom(p.FieldType))
                 .Select(pi => (IDataType)pi.GetValue(null))
                 .ToList();
-        }
-
-        private void InitializeStringMembers(short length)
-        {
-            _members.Add(StringMemberNames[0], new DataTypeMember(StringMemberNames[0], Dint));
-            _members.Add(StringMemberNames[1], new DataTypeMember(StringMemberNames[1], Sint, length));
         }
     }
 }

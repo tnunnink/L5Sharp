@@ -27,7 +27,6 @@ namespace LogixHelper.Builders
             if (type == null)
                 throw new InvalidOperationException($"Can not find data type {dataType}");
             
-            _dataType.AddMember(name, type, description);
             
             return this;
         }

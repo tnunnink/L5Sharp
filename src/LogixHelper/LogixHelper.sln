@@ -6,6 +6,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{337B58B2
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LogixHelper.Tests", "..\..\tests\LogixHelper.Tests\LogixHelper.Tests.csproj", "{49824AD6-5AE2-434F-AE18-A3B9011BA06C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestConsole", "..\..\tests\TestConsole\TestConsole.csproj", "{54605150-B0AA-4903-B7C4-E1FB95621CC5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -20,8 +22,13 @@ Global
 		{49824AD6-5AE2-434F-AE18-A3B9011BA06C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{49824AD6-5AE2-434F-AE18-A3B9011BA06C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{49824AD6-5AE2-434F-AE18-A3B9011BA06C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{54605150-B0AA-4903-B7C4-E1FB95621CC5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{54605150-B0AA-4903-B7C4-E1FB95621CC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{54605150-B0AA-4903-B7C4-E1FB95621CC5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{54605150-B0AA-4903-B7C4-E1FB95621CC5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{49824AD6-5AE2-434F-AE18-A3B9011BA06C} = {337B58B2-5647-4088-8CB3-50B3752B04D8}
+		{54605150-B0AA-4903-B7C4-E1FB95621CC5} = {337B58B2-5647-4088-8CB3-50B3752B04D8}
 	EndGlobalSection
 EndGlobal

@@ -12,14 +12,12 @@ namespace LogixHelper.Enumerations
 
         public static Radix Default(IDataType dataType)
         {
-            var type = (DataType)dataType;
-            return !type.IsAtomic 
-                ? NullType 
-                : type == DataType.Real ? Float
-                    : Decimal;
+            return !dataType.IsAtomic ? Null : dataType == DataType.Real ? Float : Decimal;
         }
+
         
-        public static readonly Radix NullType = new Radix("NullType", 0);
+        
+        public static readonly Radix Null = new Radix("NullType", 0);
         public static readonly Radix General = new Radix("General", 1);
         public static readonly Radix Binary = new Radix("Binary", 2);
         public static readonly Radix Octal = new Radix("Octal", 3);

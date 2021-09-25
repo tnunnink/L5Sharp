@@ -11,7 +11,7 @@ namespace LogixHelper.Utilities
         public static void TagName(string name)
         {
             if (!Regex.IsMatch(name, @"^[a-zA-Z_][a-zA-Z0-9_]{0,39}$"))
-                throw new InvalidNameException();
+                throw new InvalidTagNameException();
         }
         
         public static void DataTypeName(string name)
