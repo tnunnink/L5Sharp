@@ -18,10 +18,15 @@ namespace L5Sharp.Primitives
         private readonly Dictionary<string, Program> _programs = new Dictionary<string, Program>();
         private readonly Dictionary<string, Task> _tasks = new Dictionary<string, Task>();
 
-        public Controller(string name, string description = null)
+        public Controller(string name, string description = null, string processorType = null,
+            ulong majorRev = 0, ushort minorRev = 0)
         {
             Name = name;
-            Description = description;
+            Use = Use.Target;
+            Description = description ?? string.Empty;
+            ProcessorType = processorType ?? string.Empty;
+            MajorRev = majorRev;
+            MinorRev = minorRev;
             ProjectCreationDate = DateTime.Now;
             LastModifiedDate = DateTime.Now;
         }
@@ -31,8 +36,8 @@ namespace L5Sharp.Primitives
             Name = element.Attribute(nameof(Name))?.Value;
             Description = element.Attribute(nameof(Description))?.Value;
             ProcessorType = element.Attribute(nameof(ProcessorType))?.Value;
-            Major = Convert.ToUInt64(element.Attribute(nameof(Major))?.Value);
-            Minor = Convert.ToUInt16(element.Attribute(nameof(Minor))?.Value);
+            MajorRev = Convert.ToUInt64(element.Attribute(nameof(MajorRev))?.Value);
+            MinorRev = Convert.ToUInt16(element.Attribute(nameof(MinorRev))?.Value);
             ProjectCreationDate = Convert.ToDateTime(element.Attribute(nameof(ProjectCreationDate))?.Value);
             LastModifiedDate = Convert.ToDateTime(element.Attribute(nameof(LastModifiedDate))?.Value);
 
@@ -43,18 +48,13 @@ namespace L5Sharp.Primitives
 
         public string Name { get; }
 
+        public Use Use { get; set; }
         public string Description { get; }
-
         public string ProcessorType { get; }
-
-        public ulong Major { get; }
-
-        public ushort Minor { get; }
-
+        public ulong MajorRev { get; }
+        public ushort MinorRev { get; }
         public DateTime ProjectCreationDate { get; }
-
         public DateTime LastModifiedDate { get; }
-
         public IEnumerable<IDataType> DataTypes => _dataTypes.Values.AsEnumerable();
 
         public IEnumerable<Module> Modules { get; }
@@ -69,7 +69,7 @@ namespace L5Sharp.Primitives
 
         public bool HasContinuousTask => _tasks.Any(t => t.Value.Type == TaskType.Continuous);
 
-        public ControllerCreator Create()
+        public IControllerCreator Create()
         {
             return new ControllerCreator(this);
         }
@@ -85,6 +85,17 @@ namespace L5Sharp.Primitives
             _dataTypes.Add(dataType.Name, dataType);
         }
 
+        public void RemoveDataType(string name)
+        {
+            if (name == null)
+                throw new ArgumentNullException(nameof(name));
+
+            if (!_dataTypes.ContainsKey(name))
+                Throw.ItemNotFoundException(name);
+
+            _dataTypes.Remove(name);
+        }
+
         public void AddTask(Task task)
         {
             if (task == null)
@@ -98,19 +109,6 @@ namespace L5Sharp.Primitives
 
             _tasks.Add(task.Name, task);
         }
-        
-       
-
-        public void DeleteDataType(string name)
-        {
-            if (name == null)
-                throw new ArgumentNullException(nameof(name));
-
-            if (!_dataTypes.ContainsKey(name))
-                Throw.ItemNotFoundException(name);
-
-            _dataTypes.Remove(name);
-        }
 
         public void DeleteTask(string name)
         {
@@ -122,21 +120,22 @@ namespace L5Sharp.Primitives
 
             _tasks.Remove(name);
         }
-        
-        public void DeleteProgram(string name)
-        {
-            if (name == null)
-                throw new ArgumentNullException(nameof(name));
 
-            if (!_programs.ContainsKey(name))
-                Throw.ItemNotFoundException(name);
-
-            _programs.Remove(name);
-        }
 
         public XElement Serialize()
         {
-            throw new NotImplementedException();
+            var element = new XElement(nameof(Controller));
+            element.Add(new XAttribute(nameof(Name), Name));
+            element.Add(new XAttribute(nameof(ProcessorType), ProcessorType));
+            element.Add(new XAttribute(nameof(MajorRev), MajorRev));
+            element.Add(new XAttribute(nameof(MinorRev), MinorRev));
+            //todo update approval tests to scrub text or have datetime generator that we can mock...
+            //element.Add(new XAttribute(nameof(ProjectCreationDate), ProjectCreationDate));
+            //element.Add(new XAttribute(nameof(LastModifiedDate), LastModifiedDate));
+
+            element.Add(new XElement(nameof(DataTypes)), DataTypes.Select(d => d.Serialize()));
+
+            return element;
         }
 
         private void ParseDataTypes(XContainer element)

@@ -9,8 +9,8 @@ namespace L5Sharp.Abstractions
         public string Name { get; }
         public string Description { get; }
         public string ProcessorType { get; }
-        public ulong Major { get; }
-        public ushort Minor { get; }
+        public ulong MajorRev { get; }
+        public ushort MinorRev { get; }
         public DateTime ProjectCreationDate { get; }
         public DateTime LastModifiedDate { get; }
         public IEnumerable<IDataType> DataTypes { get; }

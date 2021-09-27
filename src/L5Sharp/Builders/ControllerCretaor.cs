@@ -3,7 +3,7 @@ using L5Sharp.Primitives;
 
 namespace L5Sharp.Builders
 {
-    public class ControllerCreator : IControllerCreator
+    internal class ControllerCreator : IControllerCreator
     {
         private readonly Controller _controller;
 
@@ -16,7 +16,9 @@ namespace L5Sharp.Builders
         {
             var typeBuilder = new DataTypeBuilder(name);
             builder.Invoke(typeBuilder);
+            
             var type = typeBuilder.Build();
+            
            _controller.AddDataType(type);
         }
 

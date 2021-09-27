@@ -24,7 +24,20 @@ namespace L5Sharp.Builders
 
         public IDataTypeBuilder WithMember(string name, IDataType dataType, Action<IMemberBuilder> memberBuilder)
         {
-            _dataType.AddMember(name, dataType, memberBuilder);
+            if (memberBuilder == null)
+            {
+                _dataType.AddMember(name, dataType);
+                return this;
+            }
+            
+            var builder = new MemberBuilder(name, dataType);
+            memberBuilder.Invoke(builder);
+                
+            var member = builder.Build();
+                
+            _dataType.AddMember(member.Name, member.DataType, member.Description, member.Dimension, member.Radix,
+                member.ExternalAccess);
+            
             return this;
         }
 
