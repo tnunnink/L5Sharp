@@ -1,6 +1,11 @@
 ﻿namespace L5Sharp.Builders
 {
-    public interface IBuilder<out T>
+    public interface IBuilder
+    {
+        
+    }
+    
+    public interface IBuilder<out T> : IBuilder
     {
         T Build();
     }

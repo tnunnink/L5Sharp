@@ -86,7 +86,7 @@ namespace L5Sharp.Tests
             FluentActions.Invoking(() => type.AddMember("Test", DataType.Dint)).Should()
                 .Throw<NotConfigurableException>();
         }
-        
+
         [Test]
         public void StringType_RemoveMember_ShouldThrowNotConfigurableException()
         {
@@ -98,7 +98,7 @@ namespace L5Sharp.Tests
             FluentActions.Invoking(() => type.RemoveMember("LEN")).Should()
                 .Throw<NotConfigurableException>();
         }
-        
+
         [Test]
         public void StringType_UpdateMember_ShouldThrowNotConfigurableException()
         {
@@ -107,10 +107,10 @@ namespace L5Sharp.Tests
 
             var type = DataType.StringType("Test_String_001", 100, desc);
 
-            FluentActions.Invoking(() => type.UpdateMember("LEN").WithDataType(DataType.Bool)).Should()
+            FluentActions.Invoking(() => type.UpdateMember("LEN", b => b.HasDescription("Test"))).Should()
                 .Throw<NotConfigurableException>();
         }
-        
+
         [Test]
         public void StringType_RenameMember_ShouldThrowNotConfigurableException()
         {
@@ -134,7 +134,7 @@ namespace L5Sharp.Tests
 
             type.Name.Should().Be("NewName");
         }
-        
+
         [Test]
         public void SetName_InvalidName_ShouldThrowInvalidTagNameException()
         {
@@ -144,7 +144,7 @@ namespace L5Sharp.Tests
 
             FluentActions.Invoking(() => type.Name = "Not.Valid%01").Should().Throw<InvalidTagNameException>();
         }
-        
+
         [Test]
         public void SetDescription_WhenCalled_ShouldBeExpectedValue()
         {
@@ -157,7 +157,7 @@ namespace L5Sharp.Tests
 
             type.Description.Should().Be(newDescription);
         }
-        
+
         [Test]
         public void AddMember_ExistingMember_ShouldThrowMemberNameCollisionException()
         {
@@ -165,7 +165,7 @@ namespace L5Sharp.Tests
             type.AddMember("Member", DataType.Dint);
 
             FluentActions.Invoking(() => type.AddMember("Member", DataType.Int)).Should()
-                .Throw<MemberNameCollisionException>();
+                .Throw<NameCollisionException>();
         }
 
         [Test]
@@ -176,7 +176,7 @@ namespace L5Sharp.Tests
             FluentActions.Invoking(() => type.AddMember("This_is Not_It", DataType.Dint)).Should()
                 .Throw<InvalidTagNameException>();
         }
-        
+
         [Test]
         public void AddMember_NullDataType_ShouldThrowArgumentNullException()
         {
@@ -185,34 +185,35 @@ namespace L5Sharp.Tests
             FluentActions.Invoking(() => type.AddMember("Member", null)).Should()
                 .Throw<ArgumentNullException>();
         }
-        
+
         [Test]
         public void AddMember_NullRadix_ShouldThrowArgumentNullException()
         {
             var type = new DataType("Test_Type_001");
 
-            FluentActions.Invoking(() => type.AddMember("Member", DataType.Int).WithRadix(null)).Should()
+            FluentActions.Invoking(() => type.AddMember("Member", DataType.Int, builder => builder.HasRadix(null)))
+                .Should()
                 .Throw<ArgumentNullException>();
         }
-        
+
         [Test]
         public void AddMember_InvalidRadixForType_ShouldThrowRadixNotSupportedException()
         {
             var type = new DataType("Test_Type_001");
 
-            FluentActions.Invoking(() => type.AddMember("Member", DataType.Int).WithRadix(Radix.Float)).Should()
+            FluentActions.Invoking(() => type.AddMember("Member", DataType.Int, radix: Radix.Float)).Should()
                 .Throw<RadixNotSupportedException>();
         }
-        
+
         [Test]
         public void AddMember_NullExternalAccess_ShouldThrowArgumentNullException()
         {
             var type = new DataType("Test_Type_001");
 
-            FluentActions.Invoking(() => type.AddMember("Member", DataType.Int).WithAccess(null)).Should()
+            FluentActions.Invoking(() => type.AddMember("Member", DataType.Int, b => b.HasAccess(null))).Should()
                 .Throw<ArgumentNullException>();
         }
-        
+
         [Test]
         public void AddMember_ValidArguments_ShouldHaveExpectedMember()
         {
@@ -232,25 +233,34 @@ namespace L5Sharp.Tests
         }
 
         [Test]
-        public void AddMember_WithProperties_ShouldHaveExpectedProperties()
+        public void AddMember_FluentBuilder_ShouldHaveExpectedProperties()
         {
             var type = new DataType("Test_Type_001");
 
-            type.AddMember("Member", DataType.Dint)
-                .WithDataType(DataType.Int)
-                .WithDimension(4)
-                .WithDescription("This is a test description")
-                .WithRadix(Radix.Hex)
-                .WithAccess(ExternalAccess.None);
+            type.AddMember("Member", DataType.Dint,
+                b => b.HasDimension(4)
+                    .HasDescription("This is a test description")
+                    .HasRadix(Radix.Hex)
+                    .HasAccess(ExternalAccess.None));
 
             var result = type.Members.SingleOrDefault(m => m.Name == "Member");
             result.Should().NotBeNull();
             result?.Name.Should().Be("Member");
-            result?.DataType.Should().Be(DataType.Int);
+            result?.DataType.Should().Be(DataType.Dint);
             result?.Dimension.Should().Be(4);
             result?.Description.Should().Be("This is a test description");
             result?.Radix.Should().Be(Radix.Hex);
             result?.ExternalAccess.Should().Be(ExternalAccess.None);
+        }
+
+        [Test]
+        public void AddMember_BooleanMember_ShouldHaveBackingMember()
+        {
+            var type = new DataType("Test");
+            
+            type.AddMember("Member", DataType.Bool);
+
+            type.Members.Should().HaveCount(1);
         }
 
         [Test]
@@ -259,12 +269,12 @@ namespace L5Sharp.Tests
             var type = new DataType("Test_Type_001");
             type.AddMember("Member", DataType.Dint);
 
-            type.UpdateMember("Member")
-                .WithDataType(DataType.Int)
-                .WithDimension(4)
-                .WithDescription("This is a test description")
-                .WithRadix(Radix.Hex)
-                .WithAccess(ExternalAccess.None);
+            type.UpdateMember("Member",
+                b => b.HasType(DataType.Int)
+                    .HasDimension(4)
+                    .HasDescription("This is a test description")
+                    .HasRadix(Radix.Hex)
+                    .HasAccess(ExternalAccess.None));
 
             var result = type.Members.SingleOrDefault(m => m.Name == "Member");
             result.Should().NotBeNull();
@@ -275,16 +285,17 @@ namespace L5Sharp.Tests
             result?.Radix.Should().Be(Radix.Hex);
             result?.ExternalAccess.Should().Be(ExternalAccess.None);
         }
-        
+
         [Test]
         public void UpdateMember_NonExistingMember_ShouldThrowMemberNotFoundException()
         {
             var type = new DataType("Test_Type_001");
             type.AddMember("Member", DataType.Dint);
 
-            FluentActions.Invoking(() => type.UpdateMember("Test")).Should().Throw<MemberNotFoundException>();
+            FluentActions.Invoking(() => type.UpdateMember("Test", b => b.HasType(DataType.Bool))).Should()
+                .Throw<ItemNotFoundException>();
         }
-        
+
         [Test]
         public void RemoveMember_ExistingMember_MembersShouldEmpty()
         {
@@ -295,7 +306,7 @@ namespace L5Sharp.Tests
 
             type.Members.Should().BeEmpty();
         }
-        
+
         [Test]
         public void RemoveMember_NonExistingMember_MembersShouldSame()
         {
@@ -306,7 +317,7 @@ namespace L5Sharp.Tests
 
             type.Members.Should().HaveCount(1);
         }
-        
+
         [Test]
         public void GetMember_ExistingName_ShouldNotBeNullAndExpected()
         {

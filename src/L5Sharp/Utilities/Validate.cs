@@ -11,14 +11,14 @@ namespace L5Sharp.Utilities
         public static void TagName(string name)
         {
             if (!Regex.IsMatch(name, @"^[a-zA-Z_][a-zA-Z0-9_]{0,39}$"))
-                throw new InvalidTagNameException();
+                Throw.InvalidTagNameException(name);
         }
         
         public static void DataTypeName(string name)
         {
-            var predefined = DataType.Predefined;
+            var predefined = DataType.GetPredefined();
             if (predefined.Any(x => x.Name == name))
-                throw new InvalidOperationException();
+                Throw.DataTypeAlreadyExistsException(name);
         }
     }
 }

@@ -6,50 +6,57 @@ using L5Sharp.Utilities;
 
 namespace L5Sharp.Builders
 {
-    public class MemberBuilder : BaseBuilder<DataTypeMember>, IMemberBuilder
+    internal class MemberBuilder : IMemberBuilder
     {
-        public MemberBuilder(DataTypeMember model) : base(model)
+        private readonly Member _member;
+
+        public MemberBuilder(string name, IDataType dataType)
         {
+            _member = new Member(name, dataType);
         }
 
-        public IMemberBuilder WithDataType(IDataType dataType)
+        public Member Build()
+        {
+            return _member;
+        }
+
+        public IMemberBuilder HasType(IDataType dataType)
         {
             if (dataType == null) throw new ArgumentNullException(nameof(dataType));
 
-            Model.DataType = dataType;
+            _member.DataType = dataType;
             return this;
         }
 
-        public IMemberBuilder WithDescription(string description)
+        public IMemberBuilder HasDescription(string description)
         {
-            Model.Description = description ?? string.Empty;
+            _member.Description = description ?? string.Empty;
             return this;
         }
 
-        public IMemberBuilder WithDimension(ushort dimension)
+        public IMemberBuilder HasDimension(ushort dimension)
         {
-            Model.Dimension = dimension;
+            _member.Dimension = dimension;
             return this;
         }
 
-        public IMemberBuilder WithRadix(Radix radix)
+        public IMemberBuilder HasRadix(Radix radix)
         {
             if (radix == null) throw new ArgumentNullException(nameof(radix));
             
-            if (!radix.SupportsType(Model.DataType))
-                Throw.RadixNotSupportedException(radix, Model.DataType);
+            if (!_member.DataType.SupportsRadix(radix))
+                Throw.RadixNotSupportedException(radix, _member.DataType);
             
-            Model.Radix = radix;
+            _member.Radix = radix;
             return this;
         }
 
-        public IMemberBuilder WithAccess(ExternalAccess access)
+        public IMemberBuilder HasAccess(ExternalAccess access)
         {
             if (access == null) throw new ArgumentNullException(nameof(access));
             
-            Model.ExternalAccess = access;
+            _member.ExternalAccess = access;
             return this;
         }
-
     }
 }

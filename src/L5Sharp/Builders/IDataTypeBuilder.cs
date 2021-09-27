@@ -1,10 +1,12 @@
-﻿using L5Sharp.Primitives;
+﻿using System;
+using L5Sharp.Abstractions;
+using L5Sharp.Primitives;
 
 namespace L5Sharp.Builders
 {
-    public interface IDataTypeBuilder
+    public interface IDataTypeBuilder : IBuilder<DataType>
     {
-        public DataType Build();
-        IDataTypeBuilder WithMember(string name, string dataType, string description = null);
+        IDataTypeBuilder HasDescription(string description);
+        IDataTypeBuilder WithMember(string name, IDataType dataType, Action<IMemberBuilder> memberBuilder = null);
     }
 }

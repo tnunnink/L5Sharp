@@ -1,34 +1,36 @@
 ﻿using System;
-using System.Linq;
+using System.Runtime.CompilerServices;
 using L5Sharp.Primitives;
 using L5Sharp.Abstractions;
+
+[assembly: InternalsVisibleTo("L5Sharp.Tests.Internal")]
 
 namespace L5Sharp.Builders
 {
     internal class DataTypeBuilder : IDataTypeBuilder
     {
-        private readonly Controller _controller;
         private readonly DataType _dataType;
 
-        internal DataTypeBuilder(Controller controller, string name, string description)
+        public DataTypeBuilder(string name)
         {
-            _controller = controller;
-            _dataType = new DataType(name, description);
+            _dataType = new DataType(name);
+        }
+
+        public IDataTypeBuilder HasDescription(string description)
+        {
+            _dataType.Description = description;
+            return this;
+        }
+
+        public IDataTypeBuilder WithMember(string name, IDataType dataType, Action<IMemberBuilder> memberBuilder)
+        {
+            _dataType.AddMember(name, dataType, memberBuilder);
+            return this;
         }
 
         public DataType Build()
         {
             return _dataType;
-        }
-
-        public IDataTypeBuilder WithMember(string name, string dataType, string description = null)
-        {
-            var type = _controller.DataTypes.SingleOrDefault(d => d.Name == dataType);
-            if (type == null)
-                throw new InvalidOperationException($"Can not find data type {dataType}");
-            
-            
-            return this;
         }
     }
 }

@@ -4,12 +4,12 @@ using L5Sharp.Primitives;
 
 namespace L5Sharp.Builders
 {
-    public interface IMemberBuilder : IBuilder<DataTypeMember>
+    public interface IMemberBuilder : IBuilder<Member>
     {
-        IMemberBuilder WithDataType(IDataType dataType);
-        IMemberBuilder WithDescription(string description);
-        IMemberBuilder WithDimension(ushort dimension);
-        IMemberBuilder WithRadix(Radix radix);
-        IMemberBuilder WithAccess(ExternalAccess access);
+        IMemberBuilder HasType(IDataType dataType);
+        IMemberBuilder HasDescription(string description);
+        IMemberBuilder HasDimension(ushort dimension);
+        IMemberBuilder HasRadix(Radix radix);
+        IMemberBuilder HasAccess(ExternalAccess access);
     }
 }

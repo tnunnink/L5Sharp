@@ -6,10 +6,10 @@ using L5Sharp.Utilities;
 
 namespace L5Sharp.Primitives
 {
-    public class DataTypeMember : IXSerializable
+    public class Member : IXSerializable
     {
-        private DataTypeMember(string name, IDataType dataType, Radix radix, ExternalAccess access,
-            ushort dimension = 0, bool hidden = false, string target = null, ushort bitNumber = 0,
+        internal Member(string name, IDataType dataType, ushort dimension = 0, Radix radix = null,
+            ExternalAccess access = null, bool hidden = false, string target = null, ushort bitNumber = 0,
             string description = null)
         {
             if (name == null) throw new ArgumentNullException(nameof(name));
@@ -19,7 +19,11 @@ namespace L5Sharp.Primitives
             
             Name = name;
             DataType = dataType;
+            
+            if (radix != null && !dataType.SupportsRadix(radix))
+                Throw.RadixNotSupportedException(radix, dataType);
             Radix = radix ?? Radix.Default(dataType);
+            
             ExternalAccess = access ?? ExternalAccess.ReadWrite;
             Dimension = dimension;
             Hidden = hidden;
@@ -28,10 +32,10 @@ namespace L5Sharp.Primitives
             Description = description ?? string.Empty;
         }
 
-        private DataTypeMember(XElement element)
+        private Member(XElement element)
         {
             Name = element.Attribute(nameof(Name))?.Value;
-            DataType = new DataType(element.Attribute(nameof(DataType))?.Value);
+            DataType = Primitives.DataType.FromName(element.Attribute(nameof(DataType))?.Value);
             Dimension = Convert.ToUInt16(element.Attribute(nameof(Dimension))?.Value);
             Radix = Radix.FromName(element.Attribute(nameof(Radix))?.Value);
             ExternalAccess = ExternalAccess.FromName(element.Attribute(nameof(ExternalAccess))?.Value);
@@ -41,21 +45,15 @@ namespace L5Sharp.Primitives
             BitNumber = Convert.ToUInt16(element.Attribute(nameof(BitNumber))?.Value);
         }
 
-        internal DataTypeMember(string name, IDataType dataType, string description = null, ushort dimension = 0,
-            Radix radix = null, ExternalAccess access = null)
-            : this(name, dataType, radix, access, dimension, description: description)
-        {
-        }
-
         public string Name { get; internal set; }
         public IDataType DataType { get; internal set; }
         public string Description { get; internal set; }
         public ushort Dimension { get; internal set; }
         public Radix Radix { get; internal set; }
         public ExternalAccess ExternalAccess { get; internal set; }
-        private bool Hidden { get; }
-        private string Target { get; }
-        private ushort BitNumber { get; }
+        internal bool Hidden { get; set; }
+        internal string Target { get; set; }
+        internal ushort BitNumber { get; set; }
 
         public XElement Serialize()
         {
@@ -65,8 +63,10 @@ namespace L5Sharp.Primitives
             element.Add(new XAttribute(nameof(Dimension), Dimension));
             element.Add(new XAttribute(nameof(Radix), Radix));
             element.Add(new XAttribute(nameof(Hidden), Hidden));
-            if (Hidden) element.Add(new XAttribute(nameof(Target), Target));
-            if (Hidden) element.Add(new XAttribute(nameof(BitNumber), BitNumber));
+            if (!string.IsNullOrEmpty(Target))
+                element.Add(new XAttribute(nameof(Target), Target));
+            if (!string.IsNullOrEmpty(Target))
+                element.Add(new XAttribute(nameof(BitNumber), BitNumber));
             element.Add(new XAttribute(nameof(ExternalAccess), ExternalAccess));
 
             if (!string.IsNullOrEmpty(Description))
@@ -75,9 +75,9 @@ namespace L5Sharp.Primitives
             return element;
         }
 
-        public static DataTypeMember Materialize(XElement element)
+        public static Member Materialize(XElement element)
         {
-            return new DataTypeMember(element);
+            return new Member(element);
         }
     }
 }

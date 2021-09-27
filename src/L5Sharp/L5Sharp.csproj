@@ -8,4 +8,13 @@
       <PackageReference Include="Ardalis.SmartEnum" Version="2.0.1" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Remove="Resources\Predefined.db" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Resources\Predefined.xml" />
+      <EmbeddedResource Include="Resources\Predefined.xml" />
+    </ItemGroup>
+
 </Project>
