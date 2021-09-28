@@ -2,11 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Xml.Linq;
 using Ardalis.SmartEnum;
 using L5Sharp.Abstractions;
-using L5Sharp.Base;
 using L5Sharp.Primitives;
 using L5Sharp.Utilities;
 
@@ -34,7 +32,7 @@ namespace L5Sharp.Enumerations
 
         public static readonly Predefined Bool = Load(nameof(Bool).ToUpper());
 
-        public static readonly Predefined Sint = Load(nameof(Sint).ToUpper());
+        public static readonly Predefined Sint = new SintType(LoadElement(nameof(Sint).ToUpper()));
 
         public static readonly Predefined Int = Load(nameof(Int).ToUpper());
 
@@ -95,7 +93,7 @@ namespace L5Sharp.Enumerations
             return predefined;
         }
 
-        public object ParseValue(string value)
+        public virtual object ParseValue(string value)
         {
             if (!IsAtomic)
                 throw new InvalidOperationException($"Type {Name} is not atomic and does not represent an value type");
@@ -123,6 +121,14 @@ namespace L5Sharp.Enumerations
 
             return new Predefined(element);
         }
+        
+        private static XElement LoadElement(string name)
+        {
+            var element = PredefinedData.Descendants(nameof(DataType))
+                .SingleOrDefault(x => x.Attribute(nameof(Name))?.Value == name);
+
+            return element;
+        }
 
         private static XDocument LoadPredefined()
         {
@@ -132,6 +138,25 @@ namespace L5Sharp.Enumerations
                     $"Could not load template resource file {PredefinedFileName} from {ResourceNamespace}");
 
             return XDocument.Load(stream);
+        }
+        
+        private class BoolType : Predefined
+        {
+            public BoolType(XElement element) : base(element)
+            {
+            }
+
+            public override object ParseValue(string value)
+            {
+                return value == "1" || value == "Yes" || value == "true";
+            }
+        }
+        
+        private class SintType : Predefined
+        {
+            public SintType(XElement element) : base(element)
+            {
+            }
         }
     }
 }

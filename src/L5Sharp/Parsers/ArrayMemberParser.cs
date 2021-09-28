@@ -21,8 +21,9 @@ namespace L5Sharp.Parsers
             var radix = Radix.FromName(element.Attribute(nameof(Radix))?.Value);
 
             var tag = new Tag(_parent, name, dataType, dimensions, radix);
+            _parent.AddTag(tag);
 
-            var parser = new ArrayElementParser(tag);
+            var parser = new ArrayParser(tag);
             parser.Parse(element);
         }
     }

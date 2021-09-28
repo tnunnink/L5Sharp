@@ -7,80 +7,21 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Abstractions/IInstruction.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Abstractions/UserDefinedType.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Base/IEntity.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Base/INamedComponent.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Builders/Abstractions/ITaskBuilder.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Enumerations/Predefined.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Logix.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Parsers/ArrayElementParser.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Parsers/ArrayMemberParser.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Parsers/DataValueMemberParser.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Parsers/DataValueParser.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Parsers/DecoratedDataParser.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Parsers/IElementParser.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Parsers/StructureMemberParser.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Parsers/StructureParser.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../tests/L5Sharp.Builder.Tests/ControllerBuilder.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../tests/L5Sharp.Parsers.Tests/DataValueParserTests.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../tests/L5Sharp.Parsers.Tests/L5Sharp.Parsers.Tests.csproj" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../tests/L5Sharp.Primitives.Tests/TaskTests.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../tests/L5Sharp.Primitives.Tests/UserDefinedImplementationTest.ShouldHaveApprovedOutput.approved.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../tests/L5Sharp.Primitives.Tests/UserDefinedImplementationTest.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../tests/L5Sharp.Serialization.Tests/DataTypeSerializationTests.Serialise_WhenCalled_ShouldHaveApprovedOutput.approved.xml.bak" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../tests/L5Sharp.Serialization.Tests/L5Sharp.Serialization.Tests.csproj" afterDir="false" />
+    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="development">
+      <change afterPath="$PROJECT_DIR$/Abstractions/AddOnInstruction.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Primitives/GenericTag.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../tests/L5Sharp.Parsers.Tests/ArrayElementParserTests.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../tests/L5Sharp.Parsers.Tests/ArrayMemberParserTests.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../tests/L5Sharp.Parsers.Tests/DataValueMemberParserTests.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../tests/L5Sharp.Parsers.Tests/StructureParserTests.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Abstractions/IController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Abstractions/IController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Abstractions/IDataType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Abstractions/IDataType.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Abstractions/IProgram.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Abstractions/ITag.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Abstractions/IXSerializable.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Base/IXSerializable.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Builders/ControllerCretaor.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Builders/ControllerCretaor.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Builders/DataTypeBuilder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Builders/DataTypeBuilder.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Builders/IBuilder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Builders/Abstractions/IBuilder.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Builders/IControllerCreator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Builders/Abstractions/IControllerCreator.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Builders/IDataTypeBuilder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Builders/Abstractions/IDataTypeBuilder.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Builders/IInstructionBuilder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Builders/Abstractions/IInstructionBuilder.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Builders/IMemberBuilder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Builders/Abstractions/IMemberBuilder.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Builders/IProgramBuilder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Builders/Abstractions/IProgramBuilder.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Builders/IRoutineBuilder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Builders/Abstractions/IRoutineBuilder.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Builders/ITagBuilder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Builders/Abstractions/ITagBuilder.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Builders/ITaskBuilder.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Builders/MemberBuilder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Builders/MemberBuilder.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Builders/ProgramBuilder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Builders/ProgramBuilder.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Builders/TaskBuilder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Builders/TaskBuilder.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Exceptions/InvalidTagNameException.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Exceptions/InvalidNameException.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Helpers/TagDataParser.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.sln" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.sln" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Primitives/Controller.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Primitives/Controller.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Primitives/DataType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Primitives/DataType.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Primitives/Member.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Primitives/Member.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Primitives/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Primitives/Program.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Enumerations/Predefined.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Enumerations/Predefined.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Logix.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Parsers/ArrayElementParser.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Parsers/ArrayParser.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Parsers/ArrayMemberParser.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Parsers/ArrayMemberParser.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Parsers/DataValueMemberParser.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Parsers/DataValueMemberParser.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Primitives/Tag.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Primitives/Tag.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Primitives/Task.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Primitives/Task.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Utilities/Throw.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Utilities/Throw.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Utilities/Validate.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Utilities/Validate.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../tests/L5Sharp.Tests.Internal/DataTypeBuilderTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/L5Sharp.Builder.Tests/DataTypeBuilderTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../tests/L5Sharp.Tests.Internal/L5Sharp.Tests.Internal.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/L5Sharp.Builder.Tests/L5Sharp.Builder.Tests.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../tests/L5Sharp.Tests/ControllerSerializationTests.Serialize_WhenCalled_ShouldHaveApprovedOutput.approved.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/L5Sharp.Serialization.Tests/ControllerSerializationTests.Serialize_WhenCalled_ShouldHaveApprovedOutput.approved.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../tests/L5Sharp.Tests/ControllerSerializationTests.Serialize_WhenCalled_ShouldHaveApprovedOutput.approved.xml.bak" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/L5Sharp.Serialization.Tests/ControllerSerializationTests.Serialize_WhenCalled_ShouldHaveApprovedOutput.approved.xml.bak" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../tests/L5Sharp.Tests/ControllerSerializationTests.Serialize_WithDataTypes_ShouldHaveApprovedOutput.approved.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/L5Sharp.Serialization.Tests/ControllerSerializationTests.Serialize_WithDataTypes_ShouldHaveApprovedOutput.approved.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../tests/L5Sharp.Tests/ControllerSerializationTests.Serialize_WithDataTypes_ShouldHaveApprovedOutput.approved.xml.bak" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/L5Sharp.Serialization.Tests/ControllerSerializationTests.Serialize_WithDataTypes_ShouldHaveApprovedOutput.approved.xml.bak" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../tests/L5Sharp.Tests/ControllerSerializationTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/L5Sharp.Serialization.Tests/ControllerSerializationTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../tests/L5Sharp.Tests/ControllerTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/L5Sharp.Primitives.Tests/ControllerTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../tests/L5Sharp.Tests/DataTypePredefinedTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/L5Sharp.Primitives.Tests/PredefinedTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../tests/L5Sharp.Tests/DataTypeSerializationTests.Serialise_WhenCalled_ShouldHaveApprovedOutput.approved.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/L5Sharp.Serialization.Tests/DataTypeSerializationTests.Serialise_WhenCalled_ShouldHaveApprovedOutput.approved.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../tests/L5Sharp.Tests/DataTypeSerializationTests.Serialise_WhenCalled_ShouldHaveApprovedOutput.approved.xml.bak" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/L5Sharp.Primitives.Tests/UserDefinedImplementationTest.ShouldHaveApprovedOutput.approved.xml.bak" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../tests/L5Sharp.Tests/DataTypeSerializationTests.Serialise_WithMembers_ShouldHaveApprovedOutput.approved.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/L5Sharp.Serialization.Tests/DataTypeSerializationTests.Serialise_WithMembers_ShouldHaveApprovedOutput.approved.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../tests/L5Sharp.Tests/DataTypeSerializationTests.Serialise_WithMembers_ShouldHaveApprovedOutput.approved.xml.bak" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/L5Sharp.Serialization.Tests/DataTypeSerializationTests.Serialise_WithMembers_ShouldHaveApprovedOutput.approved.xml.bak" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../tests/L5Sharp.Tests/DataTypeSerializationTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/L5Sharp.Serialization.Tests/DataTypeSerializationTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../tests/L5Sharp.Tests/DataTypeTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/L5Sharp.Primitives.Tests/DataTypeTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../tests/L5Sharp.Tests/DimensionsTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/L5Sharp.Primitives.Tests/DimensionsTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../tests/L5Sharp.Tests/L5Sharp.Tests.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/L5Sharp.Primitives.Tests/L5Sharp.Primitives.Tests.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../tests/L5Sharp.Tests/RadixTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/L5Sharp.Primitives.Tests/RadixTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../tests/L5Sharp.Tests/TagTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/L5Sharp.Primitives.Tests/TagTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tests/L5Sharp.Parsers.Tests/L5Sharp.Parsers.Tests.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/L5Sharp.Parsers.Tests/L5Sharp.Parsers.Tests.csproj" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -106,13 +47,16 @@
     </file-type-list>
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/Parsers/ArrayElementParser.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Parsers/ArrayParser.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/obj/Debug/netstandard2.1/.NETStandard,Version=v2.1.AssemblyAttributes.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$USER_HOME$/AppData/Local/Symbols/src/nunit/nunit/c933a883ea25263ec575a654dae69fa38000edd9/src/NUnitFramework/framework/Internal/Execution/SimpleWorkItemDispatcher.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/777281e5529b43ccbfcc25e4a52829673600/54/4e2df418/SmartEnum`1.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Parsers/StructureParser.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/f3dd31a3d4374d7d9525d887480dae958f4788/316/RtFieldInfo.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/777281e5529b43ccbfcc25e4a52829673600/73/c63a15a3/SmartEnum`2.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/777281e5529b43ccbfcc25e4a52829673600/bf/5929012a/ThrowHelper.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/e076aa0ddc1143c4ae72963282119f709cc00/C0/LateBoundTestFramework.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/f3dd31a3d4374d7d9525d887480dae958f4788/6C/Boolean.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/f3dd31a3d4374d7d9525d887480dae958f4788/9B/Lazy.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="ProjectId" id="1ydTPTzKqKCbPz8lpCqgOe9jraF" />
@@ -144,7 +88,7 @@
       <option name="presentableId" value="Default" />
       <updated>1632580444699</updated>
       <workItem from="1632580448052" duration="78861000" />
-      <workItem from="1632779982254" duration="45390000" />
+      <workItem from="1632779982254" duration="52169000" />
     </task>
     <task id="LOCAL-00001" summary="renaming">
       <created>1632580540996</created>
@@ -167,7 +111,14 @@
       <option name="project" value="LOCAL" />
       <updated>1632779470511</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="development">
+      <created>1632857668993</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1632857668993</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -191,8 +142,27 @@
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
     <MESSAGE value="renaming" />
-    <MESSAGE value="development" />
     <MESSAGE value="testing" />
-    <option name="LAST_COMMIT_MESSAGE" value="testing" />
+    <MESSAGE value="development" />
+    <option name="LAST_COMMIT_MESSAGE" value="development" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Parsers/StructureParser.cs</url>
+          <line>37</line>
+          <properties documentPath="C:\Users\tnunnink\dev\projects\L5Sharp\src\L5Sharp\Parsers\StructureParser.cs" initialLine="37" containingFunctionPresentation="method 'Parse'">
+            <startOffsets>
+              <option value="1257" />
+            </startOffsets>
+            <endOffsets>
+              <option value="1277" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="29" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

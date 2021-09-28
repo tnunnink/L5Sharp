@@ -1,22 +1,23 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Xml.Linq;
 using L5Sharp.Enumerations;
 using L5Sharp.Primitives;
 
 namespace L5Sharp.Parsers
 {
-    public class ArrayElementParser : IElementParser
+    public class ArrayParser : IElementParser
     {
         private readonly Tag _parent;
 
-        public ArrayElementParser(Tag parent)
+        public ArrayParser(Tag parent)
         {
             _parent = parent;
         }
         
         public void Parse(XElement element)
         {
-            var dataType = Predefined.TypeParseType(element.Attribute(nameof(DataType))?.Value); //todo validate
+            var dataType = Predefined.TypeParseType(element.Attribute(nameof(DataType))?.Value); //todo validate - should match parent
             var dimension = Dimensions.Parse(element.Attribute(nameof(Dimensions))?.Value); //todo validate
             var radix = Radix.FromName(element.Attribute(nameof(Radix))?.Value); //todo validate
 
@@ -24,9 +25,12 @@ namespace L5Sharp.Parsers
             
             foreach (var index in indices)
             {
-                var name = $"{_parent.Name}{index.Attribute("Index")?.Value}";
-                var value = index.Attribute("Value")?.Value;
+                var name = index.Attribute("Index")?.Value;
                 
+                var value = dataType is Predefined predefined && index.Attribute(nameof(_parent.Value)) != null
+                    ? predefined.ParseValue(index.Attribute(nameof(_parent.Value))?.Value)
+                    : null;
+
                 var tag = new Tag(_parent, name, dataType, value: value);
                 _parent.AddTag(tag);
 

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Xml;
 using System.Xml.Linq;
 using L5Sharp.Abstractions;
 using L5Sharp.Base;
@@ -26,7 +25,8 @@ namespace L5Sharp.Primitives
         private bool _constant;
         private object _value;
         private readonly List<Tag> _tags = new List<Tag>();
-        private readonly Dictionary<string, Func<Tag, IElementParser>> _parsers = 
+
+        private readonly Dictionary<string, Func<Tag, IElementParser>> _parsers =
             new Dictionary<string, Func<Tag, IElementParser>>
             {
                 { "Decorated", t => new DataValueParser(t) },
@@ -112,8 +112,8 @@ namespace L5Sharp.Primitives
 
             var formatted = element.Descendants("Data")
                 .SingleOrDefault(x => x.HasAttributes && x.FirstAttribute.Name == "Format");
-            if (formatted == null ) return;
-            
+            if (formatted == null) return;
+
             var format = formatted.Attribute("Format")?.Value;
             if (string.IsNullOrEmpty(format)) return;
 
@@ -127,7 +127,7 @@ namespace L5Sharp.Primitives
             Radix radix = null, ExternalAccess access = null, string description = null, object value = null)
         {
             Parent = parent ?? throw new ArgumentNullException(nameof(parent));
-            
+
             if (string.IsNullOrEmpty(name)) Throw.ArgumentNullOrEmptyException(nameof(name));
             _name = name;
 
@@ -182,7 +182,7 @@ namespace L5Sharp.Primitives
         }
 
         public string FullName => Parent == null ? Name
-            : IsArrayMember ? $"{GetName(Parent)}{Name}"
+            : IsArrayElement ? $"{GetName(Parent)}{Name}"
             : $"{GetName(Parent)}.{Name}";
 
         public string Name
@@ -293,7 +293,15 @@ namespace L5Sharp.Primitives
             }
         }
 
-        public object Value { get; set; }
+        public object Value
+        {
+            get => _value;
+            set
+            {
+                //todo validate value for type
+                _value = value;
+            }
+        }
 
         public object ForceValue { get; set; }
 
@@ -302,14 +310,10 @@ namespace L5Sharp.Primitives
         public IEnumerable<Tag> Tags => _tags.AsEnumerable();
 
         private Tag Parent { get; }
-
         private bool IsBaseTag => Parent == null;
-
+        private bool IsArrayElement => !IsBaseTag && Parent.Dimensions.Length > 0;
         private bool IsValueMember => Value != null && DataType.IsAtomic;
 
-        private bool IsArrayMember => _dimensions.Length > 0;
-
-        private bool IsStructureMember => !IsArrayMember && !IsValueMember;
 
         internal void AddTag(Tag tag)
         {
@@ -333,7 +337,7 @@ namespace L5Sharp.Primitives
         private static string GetName(Tag tag)
         {
             return tag.Parent != null
-                ? tag.Parent.IsArrayMember
+                ? tag.Parent.IsArrayElement
                     ? $"{GetName(tag.Parent)}{tag.Name}"
                     : $"{GetName(tag.Parent)}.{tag.Name}"
                 : tag.Name;
@@ -343,7 +347,7 @@ namespace L5Sharp.Primitives
         {
             _tags.Clear();
 
-            var tags = IsArrayMember ? GenerateMembers(_dimensions) : GenerateMembers(_dataType);
+            var tags = IsArrayElement ? GenerateMembers(_dimensions) : GenerateMembers(_dataType);
 
             _tags.AddRange(tags);
         }
