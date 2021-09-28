@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using L5Sharp.Abstractions;
-using L5Sharp.Builders;
+using L5Sharp.Base;
 using L5Sharp.Enumerations;
 using L5Sharp.Utilities;
 
 namespace L5Sharp.Primitives
 {
-    public class Program : IProgram, IXSerializable
+    public class Program : INamedComponent, IXSerializable
     {
         private readonly Dictionary<string, Tag> _tags = new Dictionary<string, Tag>();
         private readonly Dictionary<string, Routine> _routines = new Dictionary<string, Routine>();
@@ -49,17 +49,24 @@ namespace L5Sharp.Primitives
         public bool UseAsFolder { get; set; }
         public IEnumerable<Tag> Tags => _tags.Values.AsEnumerable();
         public IEnumerable<Routine> Routines => _routines.Values.AsEnumerable();
-        public Task Task { get; internal set; }
 
+        public void AddRoutine(Routine routine)
+        {
+            if (routine == null) throw new ArgumentNullException(nameof(routine));
+            
+            if (_routines.ContainsKey(routine.Name))
+                Throw.NameCollisionException(routine.Name, typeof(Routine));
+            
+            _routines.Add(routine.Name, routine);
+        }
+        
         public void AddRoutine(string name, RoutineType type)
         {
             if (string.IsNullOrEmpty(name))
                 Throw.ArgumentNullOrEmptyException(nameof(name));
-            
-            if (_routines.ContainsKey(name!))
-                Throw.NameCollisionException(name);
-            
-            _routines.Add(name, new Routine(name, type));
+
+            var routine = new Routine(name, type);
+            AddRoutine(routine);
         }
         
         public void RemoveRoutine(string name)
@@ -88,13 +95,12 @@ namespace L5Sharp.Primitives
             _routines.Add(routine.Name, routine);
         }
 
-        public void AddTag(string name, IDataType dataType, Dimensions dimensions = null, Radix radix = null,
-            ExternalAccess access = null, string description = null)
+        public void AddTag(Tag tag)
         {
             
         }
         
-        public void AddTag(string name, IDataType dataType, Action<ITagBuilder> builder)
+        public void AddTag(string name, IDataType dataType)
         {
             
         }

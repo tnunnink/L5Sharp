@@ -1,46 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Xml.Linq;
 using L5Sharp.Abstractions;
+using L5Sharp.Base;
 using L5Sharp.Builders;
+using L5Sharp.Builders.Abstractions;
 using L5Sharp.Enumerations;
-using L5Sharp.Exceptions;
 using L5Sharp.Utilities;
 
 namespace L5Sharp.Primitives
 {
-    public class DataType : IDataType
+    public class DataType : IDataType, IEquatable<DataType>, IXSerializable
     {
-        private const string ResourceNamespace = "Resources";
-        private const string PredefinedFileName = "Predefined.xml";
-        private static readonly ResourceReader Resources = new ResourceReader(typeof(DataType));
-        private static readonly XDocument PredefinedData = LoadPredefined();
-        private static readonly string[] AtomicNames = { "BOOL", "SINT", "INT", "DINT", "LINT", "REAL" };
         private static readonly string[] StringMemberNames = { "LEN", "DATA" };
         private string _name;
-        private string _description;
         private readonly Dictionary<string, Member> _members = new Dictionary<string, Member>();
 
-
-        private DataType(string name, DataTypeFamily family, DataTypeClass typeClass,
-            string description = null, List<Member> members = null)
+        private DataType(string name, DataTypeFamily family, string description = null, List<Member> members = null)
         {
             if (string.IsNullOrEmpty(name)) throw new ArgumentNullException(nameof(name));
             if (family == null) throw new ArgumentNullException(nameof(family));
-            if (typeClass == null) throw new ArgumentNullException(nameof(typeClass));
 
-            if (typeClass == DataTypeClass.User)
-            {
-                Validate.TagName(name);
-                Validate.DataTypeName(name);
-            }
-
-            _name = name;
-            Class = typeClass;
+            Name = name;
             Family = family;
-            _description = description ?? string.Empty;
+            Description = description ?? string.Empty;
 
             if (members == null) return;
             foreach (var member in members)
@@ -49,11 +33,9 @@ namespace L5Sharp.Primitives
 
         private DataType(XElement element)
         {
-            Class = DataTypeClass.FromName(element.Attribute(nameof(Class))?.Value);
+            Name = element.Attribute(nameof(Name))?.Value;
             Family = DataTypeFamily.FromName(element.Attribute(nameof(Family))?.Value);
-            _name = element.Attribute(nameof(Name))?.Value;
             Description = element.Element(nameof(Description))?.Value;
-
             var members = element.Element(nameof(Members))?.Descendants().Select(Member.Materialize);
             if (members == null) return;
             foreach (var member in members)
@@ -61,42 +43,58 @@ namespace L5Sharp.Primitives
         }
 
         public DataType(string name, string description = null)
-            : this(name, DataTypeFamily.None, DataTypeClass.User, description)
+            : this(name, DataTypeFamily.None, description)
         {
         }
-
 
         public string Name
         {
             get => _name;
             set
             {
-                if (!Class.Equals(DataTypeClass.User))
-                    throw new NotConfigurableException();
-
-                Validate.TagName(value);
+                Validate.Name(value);
                 Validate.DataTypeName(value);
                 _name = value;
             }
         }
-
         public DataTypeFamily Family { get; }
-        public DataTypeClass Class { get; }
-        public bool IsAtomic => AtomicNames.Contains(Name);
-
-        public string Description
-        {
-            get => _description;
-            set
-            {
-                if (!Class.Equals(DataTypeClass.User)) return;
-                _description = value;
-            }
-        }
+        public DataTypeClass Class => DataTypeClass.User;
+        public bool IsAtomic => false;
+        public string Description { get; set; }
 
         public IEnumerable<Member> Members => _members.Values.Where(m => !m.Hidden).AsEnumerable();
-        private bool HasConfigurableMembers => Class.Equals(DataTypeClass.User) && Family.Equals(DataTypeFamily.None);
 
+        public bool SupportsRadix(Radix radix)
+        {
+            return radix == Radix.Null;
+        }
+
+        public XElement Serialize()
+        {
+            var element = new XElement(nameof(DataType));
+            element.Add(new XAttribute(nameof(Name), Name));
+            element.Add(new XAttribute(nameof(Family), Family));
+            element.Add(new XAttribute(nameof(Class), Class));
+
+            if (!string.IsNullOrEmpty(Description))
+                element.Add(new XElement(nameof(Description), new XCData(Description)));
+
+            element.Add(new XElement(nameof(Members), _members.Values.Select(m => m.Serialize())));
+            return element;
+        }
+
+        public static DataType Materialize(XElement element)
+        {
+            return new DataType(element);
+        }
+
+        public static DataType StringType(string name, ushort length, string description = null)
+        {
+            if (length <= 0)
+                throw new ArgumentException("Length must be greater 0");
+
+            return new DataType(name, DataTypeFamily.String, description, GenerateStringMembers(length));
+        }
 
         public Member GetMember(string name)
         {
@@ -106,12 +104,12 @@ namespace L5Sharp.Primitives
         public void AddMember(string name, IDataType dataType, string description = null,
             ushort dimension = 0, Radix radix = null, ExternalAccess access = null)
         {
-            if (!HasConfigurableMembers)
-                Throw.NotConfigurableException(nameof(Members), nameof(DataType),
-                    "Members have a predefined structure that are not configurable");
-
+            if (Family == DataTypeFamily.String)
+                Throw.NotConfigurableException(nameof(Members), nameof(Member),
+                    "Can not configure members of string family");
+            
             if (_members.ContainsKey(name))
-                Throw.NameCollisionException(name);
+                Throw.NameCollisionException(name, typeof(Member));
 
             var member = new Member(name, dataType, dimension, radix, access, description: description);
 
@@ -123,12 +121,12 @@ namespace L5Sharp.Primitives
 
         public void AddMember(string name, IDataType dataType, Action<IMemberBuilder> builder)
         {
-            if (!HasConfigurableMembers)
-                Throw.NotConfigurableException(nameof(Members), nameof(DataType),
-                    "Members have a predefined structure that are not configurable");
-
+            if (Family == DataTypeFamily.String)
+                Throw.NotConfigurableException(nameof(Members), nameof(Member),
+                    "Can not configure members of string family");
+            
             if (_members.ContainsKey(name))
-                Throw.NameCollisionException(name);
+                Throw.NameCollisionException(name, typeof(Member));
 
             var memberBuilder = new MemberBuilder(name, dataType);
             builder(memberBuilder);
@@ -143,10 +141,10 @@ namespace L5Sharp.Primitives
 
         public void UpdateMember(string name, Action<IMemberBuilder> builder)
         {
-            if (!HasConfigurableMembers)
-                Throw.NotConfigurableException(nameof(Members), nameof(DataType),
-                    "Members have a predefined structure that are not configurable");
-
+            if (Family == DataTypeFamily.String)
+                Throw.NotConfigurableException(nameof(Members), nameof(Member),
+                    "Can not configure members of string family");
+            
             if (!_members.ContainsKey(name))
                 Throw.ItemNotFoundException(name);
 
@@ -164,9 +162,10 @@ namespace L5Sharp.Primitives
 
         public void RemoveMember(string name)
         {
-            if (!HasConfigurableMembers)
-                throw new NotConfigurableException();
-
+            if (Family == DataTypeFamily.String)
+                Throw.NotConfigurableException(nameof(Members), nameof(Member),
+                    "Can not configure members of string family");
+            
             if (!_members.ContainsKey(name)) return;
 
             var member = _members[name];
@@ -183,10 +182,10 @@ namespace L5Sharp.Primitives
 
         public void RenameMember(string oldName, string newName)
         {
-            if (!HasConfigurableMembers)
-                Throw.NotConfigurableException(nameof(Members), nameof(DataType),
-                    "Members have a predefined structure that are not configurable");
-
+            if (Family == DataTypeFamily.String)
+                Throw.NotConfigurableException(nameof(Members), nameof(Member),
+                    "Can not configure members of string family");
+            
             if (!_members.ContainsKey(oldName))
                 Throw.ItemNotFoundException(oldName);
 
@@ -197,67 +196,7 @@ namespace L5Sharp.Primitives
             _members.Add(member.Name, member);
         }
 
-        public XElement Serialize()
-        {
-            var element = new XElement(nameof(DataType));
-            element.Add(new XAttribute(nameof(Name), Name));
-            element.Add(new XAttribute(nameof(Family), Family));
-            element.Add(new XAttribute(nameof(Class), Class));
-            element.Add(new XElement(nameof(Description), new XCData(Description)));
-            element.Add(new XElement(nameof(Members), _members.Values.Select(m => m.Serialize())));
-            return element;
-        }
-
-        public static DataType Materialize(XElement element)
-        {
-            return new DataType(element);
-        }
-
-        public static DataType StringType(string name, ushort length, string description = null)
-        {
-            if (length <= 0)
-                throw new ArgumentException("Length must be greater 0");
-
-            return new DataType(name, DataTypeFamily.String, DataTypeClass.User, description,
-                GenerateStringMembers(length));
-        }
-
-        public static IDataType FromName(string name)
-        {
-            var predefined = GetPredefined();
-
-            foreach (var dataType in predefined)
-                if (dataType.Name == name)
-                    return dataType;
-
-            return new DataType(name);
-        }
-
-        public bool SupportsRadix(Radix radix)
-        {
-            if (!IsAtomic) return radix == Radix.Null;
-
-            if (this == (DataType)Real)
-            {
-                return radix == Radix.Float || radix == Radix.Exponential;
-            }
-
-            if (this == (DataType)Bool)
-            {
-                return radix == Radix.Binary || radix == Radix.Octal || radix == Radix.Decimal || radix == Radix.Hex;
-            }
-
-            if (this == (DataType)Lint)
-            {
-                return radix == Radix.Binary || radix == Radix.Octal || radix == Radix.Decimal || radix == Radix.Hex
-                       || radix == Radix.Ascii || radix == Radix.DateTime || radix == Radix.DateTimeNs;
-            }
-
-            return radix == Radix.Binary || radix == Radix.Octal || radix == Radix.Decimal || radix == Radix.Hex ||
-                   radix == Radix.Ascii;
-        }
-
-        public bool Equals(IDataType other)
+        public bool Equals(DataType other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
@@ -268,7 +207,7 @@ namespace L5Sharp.Primitives
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((IDataType)obj);
+            return obj.GetType() == GetType() && Equals((DataType)obj);
         }
 
         public override int GetHashCode()
@@ -286,27 +225,15 @@ namespace L5Sharp.Primitives
             return !Equals(left, right);
         }
 
-        public static IEnumerable<IDataType> GetAtomic() => GetStaticMembers().Where(x => x.IsAtomic);
-        public static IEnumerable<IDataType> GetPredefined() => GetStaticMembers();
-
-
-        public static readonly IDataType Bool = Load(nameof(Bool).ToUpper());
-
-        public static readonly IDataType Sint = Load(nameof(Sint).ToUpper());
-
-        public static readonly IDataType Int = Load(nameof(Int).ToUpper());
-
-        public static readonly IDataType Dint = Load(nameof(Dint).ToUpper());
-
-        public static readonly IDataType Lint = Load(nameof(Lint).ToUpper());
-
-        public static readonly IDataType Real = Load(nameof(Real).ToUpper());
-
-        public static readonly IDataType String = Load(nameof(String).ToUpper());
-
-        public static readonly IDataType Timer = Load(nameof(Timer).ToUpper());
-
-        public static readonly IDataType Counter = Load(nameof(Counter).ToUpper());
+        public static Predefined Bool => Predefined.Bool;
+        public static Predefined Sint => Predefined.Sint;
+        public static Predefined Int => Predefined.Int;
+        public static Predefined Dint => Predefined.Dint;
+        public static Predefined Lint => Predefined.Lint;
+        public static Predefined Real => Predefined.Real;
+        public static Predefined String => Predefined.String;
+        public static Predefined Timer => Predefined.Timer;
+        public static Predefined Counter => Predefined.Counter;
 
         private static List<Member> GenerateStringMembers(ushort length = 82)
         {
@@ -334,32 +261,6 @@ namespace L5Sharp.Primitives
             _members.Add(backingMember.Name, backingMember);
 
             member.Target = backingMember.Name;
-        }
-
-        private static IEnumerable<IDataType> GetStaticMembers()
-        {
-            return typeof(DataType).GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)
-                .Where(p => typeof(IDataType).IsAssignableFrom(p.FieldType))
-                .Select(pi => (IDataType)pi.GetValue(null))
-                .ToList();
-        }
-
-        private static IDataType Load(string name)
-        {
-            var element = PredefinedData.Descendants(nameof(DataType))
-                .SingleOrDefault(x => x.Attribute(nameof(Name))?.Value == name);
-
-            return Materialize(element);
-        }
-
-        private static XDocument LoadPredefined()
-        {
-            using var stream = Resources.GetStream(PredefinedFileName, ResourceNamespace);
-            if (stream == null)
-                throw new InvalidOperationException(
-                    $"Could not load template resource file {PredefinedFileName} from {ResourceNamespace}");
-
-            return XDocument.Load(stream);
         }
     }
 }

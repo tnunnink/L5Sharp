@@ -1,0 +1,12 @@
+﻿<DataType Name="UserDefinedImplementationTest" Family="NoFamily" Class="User">
+  <Description><![CDATA[My Type description]]></Description>
+  <Members>
+    <Member Name="ZZZZZZZZZZUserDefinedImplementationTest0" DataType="SINT" Dimension="0" Radix="Decimal" Hidden="true" ExternalAccess="Read/Write" />
+    <Member Name="MyMember01" DataType="BOOL" Dimension="0" Radix="Decimal" Hidden="false" Target="ZZZZZZZZZZUserDefinedImplementationTest0" BitNumber="0" ExternalAccess="Read/Write">
+      <Description><![CDATA[This is a test member]]></Description>
+    </Member>
+    <Member Name="MyMember02" DataType="DINT" Dimension="5" Radix="ASCII" Hidden="false" ExternalAccess="Read/Write">
+      <Description><![CDATA[This is a test member array]]></Description>
+    </Member>
+  </Members>
+</DataType>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Xml.Linq;
 using L5Sharp.Abstractions;
+using L5Sharp.Base;
 using L5Sharp.Enumerations;
 using L5Sharp.Utilities;
 
@@ -15,7 +16,7 @@ namespace L5Sharp.Primitives
             if (name == null) throw new ArgumentNullException(nameof(name));
             if (dataType == null) throw new ArgumentNullException(nameof(dataType));
             
-            Validate.TagName(name);
+            Validate.Name(name);
             
             Name = name;
             DataType = dataType;
@@ -35,7 +36,7 @@ namespace L5Sharp.Primitives
         private Member(XElement element)
         {
             Name = element.Attribute(nameof(Name))?.Value;
-            DataType = Primitives.DataType.FromName(element.Attribute(nameof(DataType))?.Value);
+            DataType = Predefined.TypeParseType(element.Attribute(nameof(DataType))?.Value);
             Dimension = Convert.ToUInt16(element.Attribute(nameof(Dimension))?.Value);
             Radix = Radix.FromName(element.Attribute(nameof(Radix))?.Value);
             ExternalAccess = ExternalAccess.FromName(element.Attribute(nameof(ExternalAccess))?.Value);

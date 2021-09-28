@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
-using L5Sharp.Primitives;
 using L5Sharp.Abstractions;
+using L5Sharp.Builders.Abstractions;
+using L5Sharp.Primitives;
 
-[assembly: InternalsVisibleTo("L5Sharp.Tests.Internal")]
+[assembly: InternalsVisibleTo("L5Sharp.Builder.Tests")]
 
 namespace L5Sharp.Builders
 {
@@ -29,15 +30,15 @@ namespace L5Sharp.Builders
                 _dataType.AddMember(name, dataType);
                 return this;
             }
-            
+
             var builder = new MemberBuilder(name, dataType);
             memberBuilder.Invoke(builder);
-                
+
             var member = builder.Build();
-                
+
             _dataType.AddMember(member.Name, member.DataType, member.Description, member.Dimension, member.Radix,
                 member.ExternalAccess);
-            
+
             return this;
         }
 

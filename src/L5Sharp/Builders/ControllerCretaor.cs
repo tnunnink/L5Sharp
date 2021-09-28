@@ -1,4 +1,5 @@
 ﻿using System;
+using L5Sharp.Builders.Abstractions;
 using L5Sharp.Primitives;
 
 namespace L5Sharp.Builders
@@ -28,6 +29,11 @@ namespace L5Sharp.Builders
             builder.Invoke(typeBuilder);
             var type = typeBuilder.Build();
             _controller.CreateDataType(type);*/
+        }
+
+        public void Task(string name, Action<ITaskBuilder> builder)
+        {
+            throw new NotImplementedException();
         }
     }
 }

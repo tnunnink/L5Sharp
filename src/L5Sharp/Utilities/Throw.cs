@@ -10,8 +10,8 @@ namespace L5Sharp.Utilities
         public static void ArgumentNullOrEmptyException(string paramName)
             => throw new ArgumentException("Argument cannot be null or empty.", paramName);
 
-        public static void InvalidTagNameException(string tagName) =>
-            throw new InvalidTagNameException(
+        public static void InvalidNameException(string tagName) =>
+            throw new InvalidNameException(
                 $"Name {tagName} is not valid. " +
                 $"Must contain alphanumeric, start with letter, and contains only '_' special characters");
         
@@ -19,9 +19,9 @@ namespace L5Sharp.Utilities
             throw new DataTypeAlreadyExistsException(
                 $"Data type {dataType} already exists either as a predefined type on in the current controller context");
 
-        public static void NameCollisionException(string name) =>
+        public static void NameCollisionException(string name, Type type) =>
             throw new NameCollisionException(
-                $"Name {name} already exists for this type. Name must be unique");
+                $"Name {name} already exists for {type}. Name must be unique.");
         
         public static void ItemNotFoundException(string name) =>
             throw new ItemNotFoundException(

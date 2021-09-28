@@ -1,14 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml;
 using System.Xml.Linq;
 using L5Sharp.Abstractions;
+using L5Sharp.Base;
 using L5Sharp.Enumerations;
+using L5Sharp.Parsers;
 using L5Sharp.Utilities;
 
 namespace L5Sharp.Primitives
 {
-    public class Tag : ITag, IXSerializable
+    public class Tag : INamedComponent, IXSerializable
     {
         private string _name;
         private IDataType _dataType;
@@ -19,45 +22,17 @@ namespace L5Sharp.Primitives
         private TagType _tagType;
         private TagUsage _usage;
         private Scope _scope;
-        private Program _program;
         private string _aliasFor;
         private bool _constant;
         private object _value;
-        private readonly List<ITag> _tags = new List<ITag>();
-
-        private Tag(string name, IDataType dataType, Dimensions dimensions = null, Radix radix = null,
-            ExternalAccess externalAccess = null, TagType tagType = null, TagUsage usage = null,
-            string description = null,
-            Scope scope = null, Program program = null, string aliasFor = null, bool constant = false,
-            object value = null, Tag parent = null)
-        {
-            if (string.IsNullOrEmpty(name)) Throw.ArgumentNullOrEmptyException(nameof(name));
-
-            Validate.TagName(name);
-            _name = name;
-
-            _dataType = dataType ?? throw new ArgumentNullException(nameof(dataType));
-            _dimensions = dimensions ?? Dimensions.Empty;
-
-            if (radix != null && !_dataType.SupportsRadix(radix))
-                Throw.RadixNotSupportedException(radix, _dataType);
-            _radix = radix ?? Radix.Default(dataType);
-
-            _externalAccess = externalAccess ?? ExternalAccess.None;
-            _tagType = tagType ?? TagType.Base;
-            _aliasFor = aliasFor ?? string.Empty;
-            _description = description ?? string.Empty;
-            _constant = constant;
-
-            Usage = usage ?? TagUsage.Null;
-            Program = program;
-            Scope = scope ?? Scope.Null;
-
-            Value = value;
-            Parent = parent;
-
-            InstantiateMembers();
-        }
+        private readonly List<Tag> _tags = new List<Tag>();
+        private readonly Dictionary<string, Func<Tag, IElementParser>> _parsers = 
+            new Dictionary<string, Func<Tag, IElementParser>>
+            {
+                { "Decorated", t => new DataValueParser(t) },
+                { "String", t => new DataValueParser(t) },
+                { "Alarm", t => new DataValueParser(t) }
+            };
 
         /// <summary>
         /// This constrictor is meant specifically for initializing data type member tags of a given base tag.
@@ -68,7 +43,7 @@ namespace L5Sharp.Primitives
         /// <remarks>
         /// Based on testing, the following rules appear to be true:
         /// 1. The member's Data Type gets set by the data type member.
-        /// 2. The member's Radix (Style) gets set by the data type member.
+        /// 2. The member's Radix (Style) gets set by the data type member (but can be overridden).
         /// 3. The member's External Access is inherited from the parent/base tag
         /// 4. The member's Description (by default) is a concatenation of the parent and member description
         /// </remarks>
@@ -85,7 +60,6 @@ namespace L5Sharp.Primitives
             _description = $"{parent.Description} {member.Description}";
             _tagType = parent.TagType;
             _usage = parent.Usage;
-            _program = parent.Program;
             _scope = parent.Scope;
             _aliasFor = null;
             _constant = false;
@@ -93,24 +67,6 @@ namespace L5Sharp.Primitives
             Parent = parent;
 
             InstantiateMembers();
-        }
-
-        private Tag(string name, IDataType dataType, Radix radix, object value, Tag parent)
-        {
-            _name = name ?? throw new ArgumentNullException(nameof(name));
-            _dataType = dataType ?? throw new ArgumentNullException(nameof(dataType));
-            _dimensions = Dimensions.Empty;
-            _radix = radix ?? parent.Radix;
-            _externalAccess = parent.ExternalAccess;
-            _description = $"{parent.Description}";
-            _tagType = parent.TagType;
-            _usage = parent.Usage;
-            _program = parent.Program;
-            _scope = parent.Scope;
-            _aliasFor = null;
-            _constant = false;
-            _value = value;
-            Parent = parent;
         }
 
         /// <summary>
@@ -132,7 +88,6 @@ namespace L5Sharp.Primitives
             _description = parent.Description;
             _tagType = parent.TagType;
             _usage = parent.Usage;
-            _program = parent.Program;
             _scope = parent.Scope;
             _aliasFor = parent.AliasFor;
             _constant = parent.Constant;
@@ -145,7 +100,7 @@ namespace L5Sharp.Primitives
         private Tag(XElement element)
         {
             _name = element.Attribute(nameof(Name))?.Value;
-            _dataType = Primitives.DataType.FromName(element.Attribute(nameof(DataType))?.Value);
+            _dataType = Predefined.TypeParseType(element.Attribute(nameof(DataType))?.Value);
             _dimensions = Dimensions.Parse(element.Attribute(nameof(Dimensions))?.Value);
             _radix = Radix.FromName(element.Attribute(nameof(Radix))?.Value) ?? Radix.Null;
             _externalAccess = ExternalAccess.FromName(element.Attribute(nameof(ExternalAccess))?.Value);
@@ -155,51 +110,75 @@ namespace L5Sharp.Primitives
             _usage = TagUsage.FromName(element.Attribute(nameof(Usage))?.Value);
             _constant = Convert.ToBoolean(element.Attribute(nameof(Constant))?.Value);
 
-            var decorated = element.Descendants("Data")
-                .SingleOrDefault(x => x.HasAttributes && x.FirstAttribute.Value == "Decorated");
-
-            if (decorated == null)
-                return;
-
-            var first = decorated.Descendants().First();
-
-            if (first.Name == "DataValue")
-            {
-                //todo possibly check data type and radix?
-                _value = first.Attribute(nameof(Value))?.Value;
-            }
+            var formatted = element.Descendants("Data")
+                .SingleOrDefault(x => x.HasAttributes && x.FirstAttribute.Name == "Format");
+            if (formatted == null ) return;
             
-            if (first.Name == "Array")
-            {
-                //todo possibly check data type and radix and dimensions?
-                var indices = first.Descendants("Element");
-                foreach (var index in indices)
-                {
-                    var tag = new Tag(index.Attribute("Index")?.Value, this);
-                    _tags.Add(tag);
-                }
-            }
-            
-            if (first.Name == "Structure")
-            {
-                //parse data value tag
-            }
-        }
-        
-        private Tag ParseDataValueMember(XElement element)
-        {
-            var name = element.Attribute(nameof(Name))?.Value;
-            var dataType = Primitives.DataType.FromName(element.Attribute(nameof(DataType))?.Value);
-            var radix = Radix.FromName(element.Attribute(nameof(Radix))?.Value);
-            var value = element.Attribute(nameof(Value))?.Value;
+            var format = formatted.Attribute("Format")?.Value;
+            if (string.IsNullOrEmpty(format)) return;
 
-            return new Tag(name, dataType, radix, value, this);
+            if (!_parsers.ContainsKey(format)) return;
+
+            var parser = _parsers[format].Invoke(this);
+            parser.Parse(formatted);
         }
 
-        public Tag(string name, IDataType dataType, Dimensions dimensions = null, Program program = null,
-            string description = null, Radix radix = null, ExternalAccess access = null)
-            : this(name, dataType, dimensions, radix, access, program: program, description: description)
+        internal Tag(Tag parent, string name, IDataType dataType, Dimensions dimensions = null,
+            Radix radix = null, ExternalAccess access = null, string description = null, object value = null)
         {
+            Parent = parent ?? throw new ArgumentNullException(nameof(parent));
+            
+            if (string.IsNullOrEmpty(name)) Throw.ArgumentNullOrEmptyException(nameof(name));
+            _name = name;
+
+            _dataType = dataType ?? throw new ArgumentNullException(nameof(dataType));
+            _dimensions = dimensions ?? Dimensions.Empty;
+
+            if (radix != null && !_dataType.SupportsRadix(radix))
+                Throw.RadixNotSupportedException(radix, _dataType);
+            _radix = radix ?? Radix.Default(dataType);
+
+            _externalAccess = access ?? parent.ExternalAccess;
+            _description = description ?? string.Empty;
+            _value = value; //todo should assign default value based on type
+
+            _tagType = parent.TagType;
+            _aliasFor = parent.AliasFor;
+            _constant = parent.Constant;
+
+            Usage = parent.Usage;
+            Scope = parent.Scope;
+        }
+
+        public Tag(string name, IDataType dataType, Dimensions dimensions = null, Radix radix = null,
+            ExternalAccess externalAccess = null, TagType tagType = null, TagUsage usage = null,
+            string description = null, Scope scope = null, string aliasFor = null, bool constant = false,
+            object value = null)
+        {
+            if (string.IsNullOrEmpty(name)) Throw.ArgumentNullOrEmptyException(nameof(name));
+            Validate.Name(name);
+            _name = name;
+
+            _dataType = dataType ?? throw new ArgumentNullException(nameof(dataType));
+            _dimensions = dimensions ?? Dimensions.Empty;
+
+            if (radix != null && !_dataType.SupportsRadix(radix))
+                Throw.RadixNotSupportedException(radix, _dataType);
+            _radix = radix ?? Radix.Default(dataType);
+
+            _externalAccess = externalAccess ?? ExternalAccess.None;
+            _tagType = tagType ?? TagType.Base;
+            _aliasFor = aliasFor;
+            _description = description ?? string.Empty;
+            _constant = constant;
+
+            Usage = usage ?? TagUsage.Null;
+            Scope = scope ?? Scope.Null;
+
+            Value = value; //todo should assign default value based on type
+            Parent = null;
+
+            InstantiateMembers();
         }
 
         public string FullName => Parent == null ? Name
@@ -215,7 +194,7 @@ namespace L5Sharp.Primitives
                     Throw.NotConfigurableException(nameof(Name), GetType().Name,
                         "This instance's Name property is determined by it's base tag");
 
-                Validate.TagName(value);
+                Validate.Name(value);
 
                 _name = value;
             }
@@ -227,8 +206,8 @@ namespace L5Sharp.Primitives
             set
             {
                 if (!IsBaseTag)
-                    Throw.NotConfigurableException(nameof(DataType), GetType().Name,
-                        "This instance's DataType property is determined by the base tag");
+                    Throw.NotConfigurableException(nameof(DataType), nameof(Tag),
+                        "This property is determined by the base tag");
 
                 _dataType = value;
 
@@ -242,8 +221,8 @@ namespace L5Sharp.Primitives
             set
             {
                 if (!IsBaseTag)
-                    Throw.NotConfigurableException(nameof(Dimensions), GetType().Name,
-                        "This instance's Dimensions property is determined by the base tag");
+                    Throw.NotConfigurableException(nameof(Dimensions), nameof(Tag),
+                        "This property is determined by the base tag");
 
                 _dimensions = value;
 
@@ -261,7 +240,7 @@ namespace L5Sharp.Primitives
 
                 _radix = value;
 
-                PropagateValue((t, v) => t._radix = v, _radix);
+                PropagatePropertyValue((t, v) => t._radix = v, _radix);
             }
         }
 
@@ -271,12 +250,12 @@ namespace L5Sharp.Primitives
             set
             {
                 if (!IsBaseTag)
-                    Throw.NotConfigurableException(nameof(ExternalAccess), GetType().Name,
+                    Throw.NotConfigurableException(nameof(ExternalAccess), nameof(Tag),
                         "This instance's ExternalAccess property is determined by the base tag");
 
                 _externalAccess = value;
-                
-                PropagateValue((t, v) => t._externalAccess = v, _externalAccess);
+
+                PropagatePropertyValue((t, v) => t._externalAccess = v, _externalAccess);
             }
         }
 
@@ -288,24 +267,18 @@ namespace L5Sharp.Primitives
             set
             {
                 if (!IsBaseTag)
-                    Throw.NotConfigurableException(nameof(TagType), GetType().Name,
+                    Throw.NotConfigurableException(nameof(TagType), nameof(Tag),
                         "This instance's TagType property is determined by the base tag");
 
                 _tagType = value;
-                
-                PropagateValue((t, v) => t._tagType = v, _tagType);
+
+                PropagatePropertyValue((t, v) => t._tagType = v, _tagType);
             }
         }
 
         public TagUsage Usage { get; set; }
-
         public Scope Scope { get; }
-
-        public Program Program { get; }
-
         public string AliasFor { get; set; }
-
-        public string AliasBase { get; set; }
 
         public bool Constant
         {
@@ -313,8 +286,8 @@ namespace L5Sharp.Primitives
             set
             {
                 if (!IsBaseTag)
-                    Throw.NotConfigurableException(nameof(TagType), GetType().Name,
-                        "This instance's TagType property is determined by the base tag");
+                    Throw.NotConfigurableException(nameof(Constant), nameof(Tag),
+                        "This instance's Constant property is determined by the base tag");
 
                 _constant = value;
             }
@@ -326,7 +299,7 @@ namespace L5Sharp.Primitives
 
         public bool CanForce { get; set; }
 
-        public IEnumerable<ITag> Tags => _tags.AsEnumerable();
+        public IEnumerable<Tag> Tags => _tags.AsEnumerable();
 
         private Tag Parent { get; }
 
@@ -337,6 +310,20 @@ namespace L5Sharp.Primitives
         private bool IsArrayMember => _dimensions.Length > 0;
 
         private bool IsStructureMember => !IsArrayMember && !IsValueMember;
+
+        internal void AddTag(Tag tag)
+        {
+            _tags.Add(tag);
+        }
+
+        internal void AddTag(string name, IDataType dataType = null,
+            Dimensions dimensions = null, Radix radix = null, object value = null, string description = null)
+        {
+            var tag = new Tag(name, dataType, dimensions, radix, _externalAccess, _tagType, _usage, description,
+                _scope, _aliasFor, _constant, value);
+            _tags.Add(tag);
+        }
+
 
         public XElement Serialize()
         {
@@ -381,7 +368,7 @@ namespace L5Sharp.Primitives
             return indices.Select(index => new Tag(index, this)).ToList();
         }
 
-        private void PropagateValue<TProperty>(Action<Tag, TProperty> setter, TProperty value)
+        private void PropagatePropertyValue<TProperty>(Action<Tag, TProperty> setter, TProperty value)
         {
             foreach (var child in _tags.Cast<Tag>())
                 setter.Invoke(child, value);
