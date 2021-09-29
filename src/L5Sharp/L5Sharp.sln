@@ -10,7 +10,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "L5Sharp.Builder.Tests", "..
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "L5Sharp.Serialization.Tests", "..\..\tests\L5Sharp.Serialization.Tests\L5Sharp.Serialization.Tests.csproj", "{AFE7CA3D-C023-44D8-A7B2-0227986A1EFC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "L5Sharp.Parsers.Tests", "..\..\tests\L5Sharp.Parsers.Tests\L5Sharp.Parsers.Tests.csproj", "{57345639-312F-4C9E-984C-C71B75F3BA4E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "L5Sharp.Transforms.Tests", "..\..\tests\L5Sharp.Transforms.Tests\L5Sharp.Transforms.Tests.csproj", "{57345639-312F-4C9E-984C-C71B75F3BA4E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

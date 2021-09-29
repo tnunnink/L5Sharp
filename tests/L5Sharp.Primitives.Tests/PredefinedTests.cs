@@ -157,7 +157,7 @@ namespace L5Sharp.Primitives.Tests
         [Test]
         public void New_Bool_ShouldThrowDataTypeAlreadyExistsException()
         {
-            FluentActions.Invoking(() => new DataType("BOOL")).Should().Throw<DataTypeAlreadyExistsException>();
+            FluentActions.Invoking(() => new DataType("BOOL")).Should().Throw<PredefinedCollisionException>();
         }
         
         [Test]
@@ -185,7 +185,7 @@ namespace L5Sharp.Primitives.Tests
         [Test]
         public void New_Sint_ShouldThrowDataTypeAlreadyExistsException()
         {
-            FluentActions.Invoking(() => new DataType("SINT")).Should().Throw<DataTypeAlreadyExistsException>();
+            FluentActions.Invoking(() => new DataType("SINT")).Should().Throw<PredefinedCollisionException>();
         }
         
         [Test]

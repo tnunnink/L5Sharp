@@ -17,7 +17,7 @@ namespace L5Sharp.Builder.Tests
                 .WithMember("TestMember", DataType.Dint, b => b
                     .HasDescription("This is a member test")
                     .HasRadix(Radix.Ascii))
-                .WithMember("AnotherMember", DataType.Timer, b => b.HasDimension(4))
+                .WithMember("AnotherMember", DataType.Timer, b => b.HasDimension(new Dimensions(4)))
                 .Build();
 
             dataType.Should().NotBeNull();

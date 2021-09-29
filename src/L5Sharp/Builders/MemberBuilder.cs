@@ -35,7 +35,7 @@ namespace L5Sharp.Builders
             return this;
         }
 
-        public IMemberBuilder HasDimension(ushort dimension)
+        public IMemberBuilder HasDimension(Dimensions dimension)
         {
             _member.Dimension = dimension;
             return this;

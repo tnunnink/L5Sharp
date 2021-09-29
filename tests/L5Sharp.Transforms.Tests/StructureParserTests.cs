@@ -1,16 +1,11 @@
-﻿using System.Linq;
-using System.Xml.Linq;
-using FluentAssertions;
-using L5Sharp.Enumerations;
-using L5Sharp.Primitives;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 
-namespace L5Sharp.Parsers.Tests
+namespace L5Sharp.Transforms.Tests
 {
     [TestFixture]
     public class StructureParserTests
     {
-        private XElement _element;
+        /*private XElement _element;
 
         [SetUp]
         public void Setup()
@@ -54,6 +49,6 @@ namespace L5Sharp.Parsers.Tests
             second.Dimensions.Length.Should().Be(1);
             second.Value.Should().Be(null);
             second.Tags.Should().HaveCount(1);
-        }
+        }*/
     }
 }

@@ -51,7 +51,7 @@ namespace L5Sharp.Enumerations
         public DataTypeFamily Family { get; }
         public DataTypeClass Class => DataTypeClass.Predefined;
         public bool IsAtomic => AtomicNames.Contains(Name);
-        public IEnumerable<Member> Members => _members.Values.AsEnumerable();
+        public IEnumerable<IMember> Members => _members.Values.AsEnumerable();
 
         public bool SupportsRadix(Radix radix)
         {
@@ -80,17 +80,12 @@ namespace L5Sharp.Enumerations
             return List.Any(type => type.Name == name);
         }
 
-        public static IDataType TypeParseType(string name)
+        public static IDataType ParseType(string name)
         {
             var field = typeof(Predefined)
                 .GetField(name, BindingFlags.Public | BindingFlags.Static | BindingFlags.IgnoreCase);
             
-            var predefined = (Predefined) field?.GetValue(null);
-
-            if (predefined == null)
-                return new DataType(name);
-
-            return predefined;
+            return (Predefined) field?.GetValue(null);
         }
 
         public virtual object ParseValue(string value)

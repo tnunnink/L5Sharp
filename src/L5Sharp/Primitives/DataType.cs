@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using L5Sharp.Abstractions;
-using L5Sharp.Base;
 using L5Sharp.Builders;
 using L5Sharp.Builders.Abstractions;
 using L5Sharp.Enumerations;
@@ -62,7 +61,7 @@ namespace L5Sharp.Primitives
         public bool IsAtomic => false;
         public string Description { get; set; }
 
-        public IEnumerable<Member> Members => _members.Values.Where(m => !m.Hidden).AsEnumerable();
+        public IEnumerable<IMember> Members => _members.Values.Where(m => !m.Hidden).AsEnumerable();
 
         public bool SupportsRadix(Radix radix)
         {
@@ -102,7 +101,7 @@ namespace L5Sharp.Primitives
         }
 
         public void AddMember(string name, IDataType dataType, string description = null,
-            ushort dimension = 0, Radix radix = null, ExternalAccess access = null)
+            Dimensions dimension = null, Radix radix = null, ExternalAccess access = null)
         {
             if (Family == DataTypeFamily.String)
                 Throw.NotConfigurableException(nameof(Members), nameof(Member),
@@ -243,7 +242,7 @@ namespace L5Sharp.Primitives
             return new List<Member>
             {
                 new Member(StringMemberNames[0], Dint),
-                new Member(StringMemberNames[1], Sint, dimension: length, radix: Radix.Ascii)
+                new Member(StringMemberNames[1], Sint, new Dimensions(82), Radix.Ascii)
             };
         }
 

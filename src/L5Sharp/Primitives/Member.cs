@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Xml.Linq;
 using L5Sharp.Abstractions;
-using L5Sharp.Base;
 using L5Sharp.Enumerations;
 using L5Sharp.Utilities;
 
 namespace L5Sharp.Primitives
 {
-    public class Member : IXSerializable
+    public class Member : IMember, IXSerializable
     {
-        internal Member(string name, IDataType dataType, ushort dimension = 0, Radix radix = null,
+        internal Member(string name, IDataType dataType, Dimensions dimension = null, Radix radix = null,
             ExternalAccess access = null, bool hidden = false, string target = null, ushort bitNumber = 0,
             string description = null)
         {
@@ -26,7 +25,7 @@ namespace L5Sharp.Primitives
             Radix = radix ?? Radix.Default(dataType);
             
             ExternalAccess = access ?? ExternalAccess.ReadWrite;
-            Dimension = dimension;
+            Dimension = dimension ?? Dimensions.Empty;
             Hidden = hidden;
             Target = target ?? string.Empty;
             BitNumber = bitNumber;
@@ -36,8 +35,8 @@ namespace L5Sharp.Primitives
         private Member(XElement element)
         {
             Name = element.Attribute(nameof(Name))?.Value;
-            DataType = Predefined.TypeParseType(element.Attribute(nameof(DataType))?.Value);
-            Dimension = Convert.ToUInt16(element.Attribute(nameof(Dimension))?.Value);
+            DataType = Predefined.ParseType(element.Attribute(nameof(DataType))?.Value);
+            Dimension = Dimensions.Parse(element.Attribute(nameof(Dimension))?.Value);
             Radix = Radix.FromName(element.Attribute(nameof(Radix))?.Value);
             ExternalAccess = ExternalAccess.FromName(element.Attribute(nameof(ExternalAccess))?.Value);
             Description = element.Element(nameof(Description))?.Value;
@@ -48,10 +47,10 @@ namespace L5Sharp.Primitives
 
         public string Name { get; internal set; }
         public IDataType DataType { get; internal set; }
-        public string Description { get; internal set; }
-        public ushort Dimension { get; internal set; }
+        public Dimensions Dimension { get; internal set; }
         public Radix Radix { get; internal set; }
         public ExternalAccess ExternalAccess { get; internal set; }
+        public string Description { get; internal set; }
         internal bool Hidden { get; set; }
         internal string Target { get; set; }
         internal ushort BitNumber { get; set; }
@@ -61,7 +60,7 @@ namespace L5Sharp.Primitives
             var element = new XElement("Member");
             element.Add(new XAttribute(nameof(Name), Name));
             element.Add(new XAttribute(nameof(DataType), DataType.Name));
-            element.Add(new XAttribute(nameof(Dimension), Dimension));
+            element.Add(new XAttribute(nameof(Dimension), Dimension.ToString()));
             element.Add(new XAttribute(nameof(Radix), Radix));
             element.Add(new XAttribute(nameof(Hidden), Hidden));
             if (!string.IsNullOrEmpty(Target))

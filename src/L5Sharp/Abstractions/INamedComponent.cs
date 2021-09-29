@@ -1,4 +1,4 @@
-﻿namespace L5Sharp.Base
+﻿namespace L5Sharp.Abstractions
 {
     public interface INamedComponent
     {

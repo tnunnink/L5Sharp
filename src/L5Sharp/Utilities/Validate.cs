@@ -19,7 +19,7 @@ namespace L5Sharp.Utilities
         {
             var predefined = Predefined.List;
             if (predefined.Any(t => t.Name == name))
-                Throw.DataTypeAlreadyExistsException(name);
+                Throw.PredefinedCollisionException(name);
         }
     }
 }

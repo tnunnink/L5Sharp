@@ -40,7 +40,7 @@ namespace L5Sharp.Primitives.Tests
             
             tag.Radix = Radix.Ascii;
 
-            tag.Tags.All(t => t.Radix == Radix.Ascii).Should().BeTrue();
+            tag.Members.All(t => t.Radix == Radix.Ascii).Should().BeTrue();
         }
     }
 }

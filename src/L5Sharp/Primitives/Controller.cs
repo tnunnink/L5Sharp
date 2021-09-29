@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using L5Sharp.Abstractions;
-using L5Sharp.Base;
 using L5Sharp.Builders;
 using L5Sharp.Builders.Abstractions;
 using L5Sharp.Enumerations;
@@ -16,7 +15,7 @@ namespace L5Sharp.Primitives
     {
         private string _name;
         private readonly Dictionary<Type, dynamic> _components = new Dictionary<Type, dynamic>();
-        private readonly Dictionary<string, DataType> _dataTypes = new Dictionary<string, DataType>();
+        private readonly Dictionary<string, IDataType> _dataTypes = new Dictionary<string, IDataType>();
         private readonly Dictionary<string, Module> _modules = new Dictionary<string, Module>();
         private readonly Dictionary<string, Instruction> _instructions = new Dictionary<string, Instruction>();
         private readonly Dictionary<string, Tag> _tags = new Dictionary<string, Tag>();
@@ -82,7 +81,7 @@ namespace L5Sharp.Primitives
 
         public DateTime LastModifiedDate { get; }
 
-        public IEnumerable<DataType> DataTypes => _dataTypes.Values.AsEnumerable();
+        public IEnumerable<IDataType> DataTypes => _dataTypes.Values.AsEnumerable();
 
         public IEnumerable<Module> Modules { get; }
 
@@ -121,7 +120,13 @@ namespace L5Sharp.Primitives
             component.Add(item.Name, item);
         }
 
-        public void AddDataType(DataType dataType)
+        public IDataType GetDataType(string name)
+        {
+            var predefined = Predefined.ParseType(name);
+            return predefined ?? DataTypes.SingleOrDefault(t => t.Name == name);
+        }
+
+        public void AddDataType(IDataType dataType)
         {
             if (dataType == null)
                 throw new ArgumentNullException(nameof(dataType));
@@ -202,7 +207,7 @@ namespace L5Sharp.Primitives
             //element.Add(new XAttribute(nameof(ProjectCreationDate), ProjectCreationDate));
             //element.Add(new XAttribute(nameof(LastModifiedDate), LastModifiedDate));
 
-            element.Add(new XElement(nameof(DataTypes)), _dataTypes.Values.Select(d => d.Serialize()));
+            element.Add(new XElement(nameof(DataTypes)), _dataTypes.Values.Select(d => ((DataType)d).Serialize()));
             //module
             //instructions
             //tags

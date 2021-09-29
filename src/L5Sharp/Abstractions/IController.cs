@@ -13,11 +13,13 @@ namespace L5Sharp.Abstractions
         public ushort MinorRev { get; }
         public DateTime ProjectCreationDate { get; }
         public DateTime LastModifiedDate { get; }
-        public IEnumerable<DataType> DataTypes { get; }
+        public IEnumerable<IDataType> DataTypes { get; }
         public IEnumerable<Module> Modules { get; }
         public IEnumerable<Instruction> Instructions { get; }
         public IEnumerable<Tag> Tags { get; }
         public IEnumerable<Program> Programs { get; }
         public IEnumerable<Task> Tasks { get; }
+        IDataType GetDataType(string name);
+        void AddDataType(IDataType dataType);
     }
 }

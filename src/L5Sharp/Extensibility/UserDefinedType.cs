@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
-using L5Sharp.Base;
+using L5Sharp.Abstractions;
 using L5Sharp.Enumerations;
 using L5Sharp.Primitives;
 using L5Sharp.Utilities;
 
-namespace L5Sharp.Abstractions
+namespace L5Sharp.Extensibility
 {
     public abstract class UserDefinedType : IDataType, IXSerializable
     {
@@ -44,13 +44,13 @@ namespace L5Sharp.Abstractions
         public DataTypeClass Class { get; }
         public bool IsAtomic => false;
         public string Description { get; }
-        public IEnumerable<Member> Members => _members.Values.Where(m => !m.Hidden).AsEnumerable();
+        public IEnumerable<IMember> Members => _members.Values.Where(m => !m.Hidden).AsEnumerable();
         public bool SupportsRadix(Radix radix)
         {
             return false;
         }
 
-        protected void RegisterMember(string name, IDataType dataType, string description = null, ushort dimension = 0, 
+        protected void RegisterMember(string name, IDataType dataType, string description = null, Dimensions dimension = null, 
             Radix radix = null, ExternalAccess access = null)
         {
             if (_members.ContainsKey(name))
