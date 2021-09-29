@@ -65,7 +65,7 @@ namespace L5Sharp.Primitives
         {
             return Z > 0 ? $"{X} {Y} {Z}"
                 : Y > 0 ? $"{X} {Y}"
-                : X > 0 ? $"{X}" : string.Empty;
+                : $"{X}";
         }
 
         public IEnumerable<string> GenerateIndices()

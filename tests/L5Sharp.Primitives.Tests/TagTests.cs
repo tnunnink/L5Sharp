@@ -20,9 +20,9 @@ namespace L5Sharp.Primitives.Tests
         [Test]
         public void New_Counter_ShouldNotBeNull()
         {
-            /*var tag = new Tag("Test", DataType.Counter);
+            var tag = new Tag("Test", DataType.Counter);
 
-            tag.Should().NotBeNull();*/
+            tag.Should().NotBeNull();
         }
         
         [Test]

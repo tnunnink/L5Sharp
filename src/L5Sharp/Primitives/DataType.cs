@@ -242,7 +242,7 @@ namespace L5Sharp.Primitives
             return new List<Member>
             {
                 new Member(StringMemberNames[0], Dint),
-                new Member(StringMemberNames[1], Sint, new Dimensions(82), Radix.Ascii)
+                new Member(StringMemberNames[1], Sint, new Dimensions(length), Radix.Ascii)
             };
         }
 

@@ -47,11 +47,11 @@ namespace L5Sharp.Primitives
             {
                 if (!(_dataType is Predefined predefined))
                     throw new InvalidOperationException();
-                
+
                 _value = predefined.ParseValue(dataValue.Attribute(ElementNames.Value)?.Value);
                 return;
             }
-            
+
             //otherwise use transforms to construct members
             var formatted = element.Descendants(ElementNames.Data)
                 .SingleOrDefault(x => x.HasAttributes && x.Attribute("Format") != null);
@@ -164,16 +164,6 @@ namespace L5Sharp.Primitives
             }
         }
 
-        public TagType TagType
-        {
-            get => _tagType;
-            set { _tagType = value; }
-        }
-
-        public string AliasFor { get; set; }
-
-        public bool Constant { get; set; }
-
         public object Value
         {
             get => _value;
@@ -186,7 +176,17 @@ namespace L5Sharp.Primitives
             }
         }
 
-        public object ForceValue { get; set; }
+        public ITagMember Parent => null;
+
+        public TagType TagType
+        {
+            get => _tagType;
+            set { _tagType = value; }
+        }
+
+        public string AliasFor { get; set; }
+
+        public bool Constant { get; set; }
 
         public TagUsage Usage
         {
@@ -199,7 +199,7 @@ namespace L5Sharp.Primitives
         }
 
         public Scope Scope { get; }
-
+        public object ForceValue { get; set; }
         public bool CanForce { get; set; }
         public IEnumerable<ITagMember> Members => _members.AsEnumerable();
 

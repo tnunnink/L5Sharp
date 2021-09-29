@@ -4,7 +4,7 @@ using FluentAssertions;
 using L5Sharp.Primitives;
 using NUnit.Framework;
 
-namespace L5Sharp.Primitives.Tests
+namespace L5Sharp.Serialization.Tests
 {
     [TestFixture]
     public class ControllerSerializationTests

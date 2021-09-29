@@ -22,7 +22,7 @@ namespace L5Sharp.Primitives.Tests
         {
             var dimensions = Dimensions.Empty;
 
-            dimensions.ToString().Should().BeEmpty();
+            dimensions.ToString().Should().Be("0");
             dimensions.X.Should().Be(0);
             dimensions.Y.Should().Be(0);
             dimensions.Z.Should().Be(0);

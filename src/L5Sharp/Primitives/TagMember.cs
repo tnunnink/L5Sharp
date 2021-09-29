@@ -33,7 +33,7 @@ namespace L5Sharp.Primitives
         private TagMember(ITagMember parent, string name, IDataType dataType = null, Dimensions dimensions = null,
             Radix radix = null, string description = null, object value = null)
         {
-            Parent = (TagMember)parent ?? throw new ArgumentNullException(nameof(parent));
+            Parent = parent ?? throw new ArgumentNullException(nameof(parent));
             if (string.IsNullOrEmpty(name)) Throw.ArgumentNullOrEmptyException(nameof(name));
 
             Name = name;
@@ -98,7 +98,7 @@ namespace L5Sharp.Primitives
         public bool IsArrayElement => Parent is { IsArrayMember: true };
         public bool IsStructureMember => !IsValueMember && !IsArrayMember && _members.Count > 0;
 
-        private TagMember Parent { get; }
+        public ITagMember Parent { get; }
 
         public XElement Serialize()
         {
@@ -128,7 +128,7 @@ namespace L5Sharp.Primitives
             return members;
         }
 
-        private static string GetName(TagMember member)
+        private static string GetName(ITagMember member)
         {
             return member.Parent != null
                 ? member.Parent.IsArrayElement
