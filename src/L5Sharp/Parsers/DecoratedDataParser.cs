@@ -12,8 +12,8 @@ namespace L5Sharp.Parsers
             new Dictionary<string, Func<Tag, IElementParser>>
         {
             { "DataValue", t => new DataValueParser(t) },
-            { "Array", t => new DataValueParser(t) },
-            { "Structure", t => new DataValueParser(t) }
+            { "Array", t => new ArrayParser(t) },
+            { "Structure", t => new StructureParser(t) }
         };
 
         private readonly Tag _parent;

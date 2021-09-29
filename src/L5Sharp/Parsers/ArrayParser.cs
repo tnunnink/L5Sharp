@@ -8,6 +8,10 @@ namespace L5Sharp.Parsers
 {
     public class ArrayParser : IElementParser
     {
+        private const string BaseElementName = "Array";
+        private const string ArrayElementName = "Element";
+        private const string ArrayIndexName = "Element";
+        private const string StructureName = "Structure";
         private readonly Tag _parent;
 
         public ArrayParser(Tag parent)
@@ -17,15 +21,26 @@ namespace L5Sharp.Parsers
         
         public void Parse(XElement element)
         {
-            var dataType = Predefined.TypeParseType(element.Attribute(nameof(DataType))?.Value); //todo validate - should match parent
-            var dimension = Dimensions.Parse(element.Attribute(nameof(Dimensions))?.Value); //todo validate
-            var radix = Radix.FromName(element.Attribute(nameof(Radix))?.Value); //todo validate
-
-            var indices = element.Descendants("Element");
+            if (!element.Name.ToString().Contains(BaseElementName))
+                throw new InvalidOperationException("Element name does not contain expected value Array ");
+            
+            var dataType = Predefined.TypeParseType(element.Attribute(nameof(DataType))?.Value);
+            if (!Equals(dataType, _parent.DataType))
+                throw new InvalidOperationException("Array type does not match parent type");
+            
+            var dimension = Dimensions.Parse(element.Attribute(nameof(Dimensions))?.Value);
+            if (!Equals(dimension, _parent.Dimensions))
+                throw new InvalidOperationException("Array dimensions does not match parent dimensions");
+            
+            var radix = Radix.FromName(element.Attribute(nameof(Radix))?.Value);
+            if (!Equals(radix, _parent.Radix))
+                throw new InvalidOperationException("Array radix does not match parent radix");
+            
+            var indices = element.Descendants(ArrayElementName);
             
             foreach (var index in indices)
             {
-                var name = index.Attribute("Index")?.Value;
+                var name = index.Attribute(ArrayIndexName)?.Value;
                 
                 var value = dataType is Predefined predefined && index.Attribute(nameof(_parent.Value)) != null
                     ? predefined.ParseValue(index.Attribute(nameof(_parent.Value))?.Value)
@@ -34,7 +49,7 @@ namespace L5Sharp.Parsers
                 var tag = new Tag(_parent, name, dataType, value: value);
                 _parent.AddTag(tag);
 
-                if (!index.HasElements || index.Elements().First().Name != "Structure") continue;
+                if (!index.HasElements || index.Elements().First().Name != StructureName) continue;
                 var parser = new StructureParser(tag);
                 parser.Parse(index.Elements().First());
             }

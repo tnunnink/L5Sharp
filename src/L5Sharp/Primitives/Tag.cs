@@ -20,7 +20,6 @@ namespace L5Sharp.Primitives
         private string _description;
         private TagType _tagType;
         private TagUsage _usage;
-        private Scope _scope;
         private string _aliasFor;
         private bool _constant;
         private object _value;
@@ -60,7 +59,7 @@ namespace L5Sharp.Primitives
             _description = $"{parent.Description} {member.Description}";
             _tagType = parent.TagType;
             _usage = parent.Usage;
-            _scope = parent.Scope;
+            Scope = parent.Scope;
             _aliasFor = null;
             _constant = false;
             _value = _dataType.IsAtomic ? (object)0 : null; //todo I guess value will depend more on radix than datatype
@@ -88,7 +87,7 @@ namespace L5Sharp.Primitives
             _description = parent.Description;
             _tagType = parent.TagType;
             _usage = parent.Usage;
-            _scope = parent.Scope;
+            Scope = parent.Scope;
             _aliasFor = parent.AliasFor;
             _constant = parent.Constant;
             Value = parent.Value;
@@ -276,8 +275,6 @@ namespace L5Sharp.Primitives
             }
         }
 
-        public TagUsage Usage { get; set; }
-        public Scope Scope { get; }
         public string AliasFor { get; set; }
 
         public bool Constant
@@ -298,12 +295,27 @@ namespace L5Sharp.Primitives
             get => _value;
             set
             {
-                //todo validate value for type
+                if (!IsValueMember) return;
+
+
                 _value = value;
             }
         }
 
         public object ForceValue { get; set; }
+
+        public TagUsage Usage
+        {
+            get => _usage;
+            set
+            {
+                if (Scope == Scope.Controller) return;
+                _usage = value;
+            }
+        }
+
+        public Scope Scope { get; }
+
 
         public bool CanForce { get; set; }
 
@@ -311,9 +323,9 @@ namespace L5Sharp.Primitives
 
         private Tag Parent { get; }
         private bool IsBaseTag => Parent == null;
+        private bool IsArrayMember => Dimensions.Length > 0;
         private bool IsArrayElement => !IsBaseTag && Parent.Dimensions.Length > 0;
         private bool IsValueMember => Value != null && DataType.IsAtomic;
-
 
         internal void AddTag(Tag tag)
         {
@@ -324,14 +336,34 @@ namespace L5Sharp.Primitives
             Dimensions dimensions = null, Radix radix = null, object value = null, string description = null)
         {
             var tag = new Tag(name, dataType, dimensions, radix, _externalAccess, _tagType, _usage, description,
-                _scope, _aliasFor, _constant, value);
+                Scope, _aliasFor, _constant, value);
             _tags.Add(tag);
         }
 
-
         public XElement Serialize()
         {
-            throw new NotImplementedException();
+            var element = new XElement(nameof(Tag));
+            element.Add(new XAttribute(nameof(Name), Name));
+            element.Add(new XAttribute(nameof(TagType), TagType.Name));
+            element.Add(new XAttribute(nameof(DataType), DataType.Name));
+            element.Add(new XAttribute(nameof(Dimensions), Dimensions.ToString()));
+            element.Add(new XAttribute(nameof(Radix), Radix.Name));
+            element.Add(new XAttribute(nameof(Constant), Constant));
+            element.Add(new XAttribute(nameof(ExternalAccess), ExternalAccess.Name));
+
+            if (!string.IsNullOrEmpty(Description))
+                element.Add(new XElement(nameof(Description), Description));
+
+            element.Add(new XAttribute(nameof(AliasFor), AliasFor));
+            element.Add(new XAttribute(nameof(Usage), Usage.Name));
+
+
+            return element;
+        }
+
+        public static Tag Materialize(XElement element)
+        {
+            return new Tag(element);
         }
 
         private static string GetName(Tag tag)
@@ -347,7 +379,7 @@ namespace L5Sharp.Primitives
         {
             _tags.Clear();
 
-            var tags = IsArrayElement ? GenerateMembers(_dimensions) : GenerateMembers(_dataType);
+            var tags = IsArrayMember ? GenerateMembers(_dimensions) : GenerateMembers(_dataType);
 
             _tags.AddRange(tags);
         }

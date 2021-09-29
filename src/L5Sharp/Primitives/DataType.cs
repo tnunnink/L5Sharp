@@ -200,7 +200,10 @@ namespace L5Sharp.Primitives
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return Name == other.Name;
+            return _name == other._name 
+                   && Equals(_members, other._members) 
+                   && Equals(Family, other.Family) 
+                   && Description == other.Description;
         }
 
         public override bool Equals(object obj)
