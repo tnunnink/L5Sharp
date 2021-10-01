@@ -5,6 +5,7 @@ using System.Xml.Linq;
 using ApprovalTests;
 using ApprovalTests.Reporters;
 using FluentAssertions;
+using L5Sharp.Loaders;
 using NUnit.Framework;
 
 namespace L5Sharp.Transforms.Tests
@@ -37,7 +38,7 @@ namespace L5Sharp.Transforms.Tests
         {
             var transform = new DataValueMemberTransform();
 
-            var result = transform.Perform(_element);
+            var result = transform.Normalize(_element);
 
             result.Name.ToString().Should().Be("TagMember");
             result.Should().HaveAttribute("Name", "MemberName");
@@ -55,7 +56,7 @@ namespace L5Sharp.Transforms.Tests
                 .Descendants("DataValueMember").FirstOrDefault();
             var transform = new DataValueMemberTransform();
 
-            var result = transform.Perform(element);
+            var result = transform.Normalize(element);
             
             Approvals.VerifyXml(result.ToString());
         }

@@ -8,7 +8,8 @@ namespace L5Sharp.Abstractions
         public DataTypeFamily Family { get; }
         public DataTypeClass Class { get; }
         public bool IsAtomic { get; }
+        public object Default { get; }
         public IEnumerable<IMember> Members { get; }
-        public bool SupportsRadix(Radix radix); //todo still not sure about this
+        public bool SupportsRadix(Radix radix);
     }
 }

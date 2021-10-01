@@ -137,6 +137,11 @@ namespace L5Sharp.Primitives
             _dataTypes.Add(dataType.Name, dataType);
         }
 
+        public void AddTag(Tag tag)
+        {
+            throw new NotImplementedException();
+        }
+
         public void RemoveDataType(string name)
         {
             if (name == null)
@@ -225,10 +230,10 @@ namespace L5Sharp.Primitives
 
         private void ParseDataTypes(XContainer element)
         {
-            var dataTypes = element.Element(nameof(DataTypes))?.Descendants().Select(DataType.Materialize);
+            /*var dataTypes = element.Element(nameof(DataTypes))?.Descendants().Select(DataType.Materialize);
             if (dataTypes == null) return;
             foreach (var dataType in dataTypes)
-                _dataTypes.Add(dataType.Name, dataType);
+                _dataTypes.Add(dataType.Name, dataType);*/
         }
 
         private void ParseTasks(XContainer element)

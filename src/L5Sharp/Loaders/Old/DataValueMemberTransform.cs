@@ -2,30 +2,31 @@
 using System.Linq;
 using System.Xml.Linq;
 using L5Sharp.Primitives;
+using L5Sharp.Utilities;
 
-namespace L5Sharp.Transforms
+namespace L5Sharp.Loaders
 {
-    public class DataValueMemberTransform : BaseTransform
+    public class DataValueMemberTransform : TagMemberTransform
     {
-        public override XElement Perform(XElement element)
+        public override XElement Normalize(XElement element)
         {
-            if (!element.Name.ToString().Equals(ElementNames.DataValueMember))
+            if (!element.Name.ToString().Equals(L5XNames.DataValueMember))
                 throw new InvalidOperationException(
-                    $"XElement name is not expected value {ElementNames.DataValueMember}");
+                    $"XElement name is not expected value {L5XNames.DataValueMember}");
 
-            var name = element.Attribute(ElementNames.Name)?.Value ?? throw new ArgumentNullException();
-            var dataType = element.Attribute(nameof(ElementNames.DataType))?.Value;
-            var radix = element.Attribute(nameof(ElementNames.Radix))?.Value;
+            var name = element.GetName() ?? throw new ArgumentNullException();
+            var dataType = element.GetDataTypeName();
+            var radix = element.GetRadix();
             var externalAccess = element.Ancestors(nameof(Tag))
-                .FirstOrDefault()?.Attribute(nameof(ElementNames.ExternalAccess))?.Value;
+                .FirstOrDefault()?.Attribute(nameof(L5XNames.ExternalAccess))?.Value;
             
             var operand = GetOperand(element);
             var description = element.Ancestors(nameof(Tag)).FirstOrDefault()?.Descendants("Comment")
                     .SingleOrDefault(c => c.Attribute("Operand")?.Value == operand)?.Value.ToString();
             
-            var value = element.Attribute(ElementNames.Value)?.Value;
+            var value = element.Attribute(L5XNames.Value)?.Value;
 
-            var transformed = Generate(name, dataType, radix: radix, access: externalAccess, description: description,
+            var transformed = GenerateMember(name, dataType, radix: radix.Name, access: externalAccess, description: description,
                 value: value);
             
             return transformed;
@@ -33,7 +34,7 @@ namespace L5Sharp.Transforms
 
         private static string GetOperand(XElement element)
         {
-            var operandName = element.Attribute(ElementNames.Name)?.Value ?? string.Empty;
+            var operandName = element.Attribute(L5XNames.Name)?.Value ?? string.Empty;
 
             var parent = element.Parent;
 
@@ -41,8 +42,8 @@ namespace L5Sharp.Transforms
             
             while (parent.Name != nameof(Tag))
             {
-                var name = parent.Attribute(ElementNames.Name)?.Value;
-                var index = parent.Attribute(ElementNames.Index)?.Value;
+                var name = parent.Attribute(L5XNames.Name)?.Value;
+                var index = parent.Attribute(L5XNames.Index)?.Value;
 
                 if (name != null)
                     operandName = operandName.StartsWith('[') ? $"{name}{operandName}" : $"{name}.{operandName}";

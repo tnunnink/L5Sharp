@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
+using L5Sharp.Utilities;
 
-namespace L5Sharp.Transforms
+namespace L5Sharp.Loaders
 {
     public class DecoratedDataTransform : IMultiElementTransform
     {
@@ -24,18 +25,18 @@ namespace L5Sharp.Transforms
             
             var members = new List<XElement>();
             
-            if (!element.Name.ToString().Contains(ElementNames.Data))
-                throw new InvalidOperationException($"XElement name is not expected value {ElementNames.Data}");
+            if (!element.Name.ToString().Contains(L5XNames.Data))
+                throw new InvalidOperationException($"XElement name is not expected value {L5XNames.Data}");
 
-            var first = element.Elements().FirstOrDefault();
-            if (first == null) return members;
+            var root = element.Elements().FirstOrDefault();
+            if (root == null) return members;
 
-            if (!_transforms.ContainsKey(first.Name.ToString()))
+            if (!_transforms.ContainsKey(root.Name.ToString()))
                 throw new InvalidOperationException();
 
-            var transform = _transforms[first.Name.ToString()];
+            var transform = _transforms[root.Name.ToString()];
 
-            members.AddRange(element.Elements().Select(child => transform.Perform(child)));
+            members.AddRange(root.Elements().Select(child => transform.Normalize(child)));
             return members;
         }
     }

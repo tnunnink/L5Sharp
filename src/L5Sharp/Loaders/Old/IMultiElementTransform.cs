@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Xml.Linq;
 
-namespace L5Sharp.Transforms
+namespace L5Sharp.Loaders
 {
     public interface IMultiElementTransform
     {

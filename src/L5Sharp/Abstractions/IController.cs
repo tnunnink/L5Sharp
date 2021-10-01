@@ -21,5 +21,7 @@ namespace L5Sharp.Abstractions
         public IEnumerable<Task> Tasks { get; }
         IDataType GetDataType(string name);
         void AddDataType(IDataType dataType);
+        void AddTag(Tag tag);
+        void AddTask(Task task);
     }
 }

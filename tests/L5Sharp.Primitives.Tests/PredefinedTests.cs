@@ -127,7 +127,7 @@ namespace L5Sharp.Primitives.Tests
         [Test]
         public void BoolAtomicShouldNotBeCastToDataType()
         {
-            var atomic = (IDataType) Predefined.Bool;
+            var atomic = (IDataType) Predefined.Sint;
 
             FluentActions.Invoking(() => (DataType)atomic).Should().Throw<InvalidCastException>();
         }
@@ -219,6 +219,18 @@ namespace L5Sharp.Primitives.Tests
             type.Name.Should().Be("REAL");
             type.Class.Should().Be(DataTypeClass.Predefined);
             type.Family.Should().Be(DataTypeFamily.None);
+        }
+
+        [Test]
+        public void New_String_ShouldNotBeNull()
+        {
+            var type = DataType.String;
+
+            type.Should().NotBeNull();
+            type.Name.Should().Be("STRING");
+            type.Class.Should().Be(DataTypeClass.Predefined);
+            type.Family.Should().Be(DataTypeFamily.None);
+            type.Members.Should().HaveCount(2);
         }
         
         [Test]

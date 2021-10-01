@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Xml.Linq;
 
-namespace L5Sharp.Transforms
+namespace L5Sharp.Loaders
 {
-    public class StructureElementTransform : BaseTransform
+    public class StructureElementTransform : TagMemberTransform
     {
         private readonly Dictionary<string, IElementTransform> _transforms = new Dictionary<string, IElementTransform>
         {
@@ -13,7 +13,7 @@ namespace L5Sharp.Transforms
             { "StructureMember", new StructureMemberTransform() }
         };
 
-        public override XElement Perform(XElement element)
+        public override XElement Normalize(XElement element)
         {
             if (element == null) throw new ArgumentNullException(nameof(element));
             
@@ -23,7 +23,7 @@ namespace L5Sharp.Transforms
 
             var transform = _transforms[element.Name.ToString()];
 
-            return transform.Perform(element);
+            return transform.Normalize(element);
         }
     }
 }

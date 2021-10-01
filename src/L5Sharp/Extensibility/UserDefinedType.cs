@@ -20,10 +20,10 @@ namespace L5Sharp.Extensibility
             Class = DataTypeClass.FromName(element.Attribute(nameof(Class))?.Value);
             Description = element.Element(nameof(Description))?.Value;
 
-            var members = element.Element(nameof(Members))?.Descendants().Select(Member.Materialize);
+            /*var members = element.Element(nameof(Members))?.Descendants().Select(Member.Materialize);
             if (members == null) return;
             foreach (var member in members)
-                _members.Add(member.Name, member);
+                _members.Add(member.Name, member);*/
         }
 
         protected UserDefinedType(string name, string description = null)
@@ -43,6 +43,7 @@ namespace L5Sharp.Extensibility
         public DataTypeFamily Family { get; }
         public DataTypeClass Class { get; }
         public bool IsAtomic => false;
+        public object Default => null;
         public string Description { get; }
         public IEnumerable<IMember> Members => _members.Values.Where(m => !m.Hidden).AsEnumerable();
         public bool SupportsRadix(Radix radix)

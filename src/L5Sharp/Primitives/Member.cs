@@ -8,59 +8,73 @@ namespace L5Sharp.Primitives
 {
     public class Member : IMember, IXSerializable
     {
-        internal Member(string name, IDataType dataType, Dimensions dimension = null, Radix radix = null,
-            ExternalAccess access = null, bool hidden = false, string target = null, ushort bitNumber = 0,
-            string description = null)
+        private string _name;
+        private Dimensions _dimension;
+        private Radix _radix;
+
+        public Member(string name, IDataType dataType, Dimensions dimension = null, Radix radix = null,
+            ExternalAccess access = null, string description = null, bool hidden = false, string target = null,
+            ushort bitNumber = 0)
         {
-            if (name == null) throw new ArgumentNullException(nameof(name));
-            if (dataType == null) throw new ArgumentNullException(nameof(dataType));
-            
-            Validate.Name(name);
-            
-            Name = name;
-            DataType = dataType;
-            
-            if (radix != null && !dataType.SupportsRadix(radix))
-                Throw.RadixNotSupportedException(radix, dataType);
-            Radix = radix ?? Radix.Default(dataType);
-            
-            ExternalAccess = access ?? ExternalAccess.ReadWrite;
+            Name = name ?? throw new ArgumentNullException(nameof(name));
+            DataType = dataType ?? throw new ArgumentNullException(nameof(dataType));
             Dimension = dimension ?? Dimensions.Empty;
+            Radix = radix ?? Radix.Default(dataType);
+            ExternalAccess = access ?? ExternalAccess.ReadWrite;
+            Description = description ?? string.Empty;
             Hidden = hidden;
             Target = target ?? string.Empty;
             BitNumber = bitNumber;
-            Description = description ?? string.Empty;
         }
 
-        private Member(XElement element)
+        public string Name
         {
-            Name = element.Attribute(nameof(Name))?.Value;
-            DataType = Predefined.ParseType(element.Attribute(nameof(DataType))?.Value);
-            Dimension = Dimensions.Parse(element.Attribute(nameof(Dimension))?.Value);
-            Radix = Radix.FromName(element.Attribute(nameof(Radix))?.Value);
-            ExternalAccess = ExternalAccess.FromName(element.Attribute(nameof(ExternalAccess))?.Value);
-            Description = element.Element(nameof(Description))?.Value;
-            Hidden = Convert.ToBoolean(element.Attribute(nameof(Hidden))?.Value);
-            Target = element.Attribute(nameof(Target))?.Value;
-            BitNumber = Convert.ToUInt16(element.Attribute(nameof(BitNumber))?.Value);
+            get => _name;
+            set
+            {
+                Validate.Name(value);
+                _name = value;
+            }
+        }
+        public IDataType DataType { get; set; }
+
+        public Dimensions Dimension
+        {
+            get => _dimension;
+            set
+            {
+                if (value.Y > 0)
+                    throw new InvalidOperationException(); //todo throw custom
+                _dimension = value;
+            }
         }
 
-        public string Name { get; internal set; }
-        public IDataType DataType { get; internal set; }
-        public Dimensions Dimension { get; internal set; }
-        public Radix Radix { get; internal set; }
-        public ExternalAccess ExternalAccess { get; internal set; }
-        public string Description { get; internal set; }
+        public Radix Radix
+        {
+            get => _radix;
+            set
+            {
+                if (!DataType.IsAtomic) return;
+                
+                if (!DataType.SupportsRadix(value))
+                    Throw.RadixNotSupportedException(value, DataType);
+                
+                _radix = value;
+            }
+        }
+
+        public ExternalAccess ExternalAccess { get; set; }
+        public string Description { get; set; }
         internal bool Hidden { get; set; }
         internal string Target { get; set; }
         internal ushort BitNumber { get; set; }
 
         public XElement Serialize()
         {
-            var element = new XElement("Member");
+            var element = new XElement(nameof(Member));
             element.Add(new XAttribute(nameof(Name), Name));
             element.Add(new XAttribute(nameof(DataType), DataType.Name));
-            element.Add(new XAttribute(nameof(Dimension), Dimension.ToString()));
+            element.Add(new XAttribute(nameof(Dimension), Dimension.X.ToString()));
             element.Add(new XAttribute(nameof(Radix), Radix));
             element.Add(new XAttribute(nameof(Hidden), Hidden));
             if (!string.IsNullOrEmpty(Target))
@@ -73,11 +87,6 @@ namespace L5Sharp.Primitives
                 element.Add(new XElement(nameof(Description), new XCData(Description)));    
             
             return element;
-        }
-
-        public static Member Materialize(XElement element)
-        {
-            return new Member(element);
         }
     }
 }

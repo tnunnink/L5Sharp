@@ -8,7 +8,7 @@ namespace L5Sharp.Builder.Tests
 {
     [TestFixture]
     public class DataTypeBuilderTests
-    {
+    {/*
         [Test]
         public void FluentInterface_BuildsCorrectly()
         {
@@ -21,6 +21,6 @@ namespace L5Sharp.Builder.Tests
                 .Build();
 
             dataType.Should().NotBeNull();
-        }
+        }*/
     }
 }

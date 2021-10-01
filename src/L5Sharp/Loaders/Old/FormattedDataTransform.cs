@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 
-namespace L5Sharp.Transforms
+namespace L5Sharp.Loaders
 {
     public class FormattedDataTransform : IMultiElementTransform
     {
@@ -30,7 +30,7 @@ namespace L5Sharp.Transforms
                     $"The element {element.Name} does not have a specified transform instance");
 
             var transform = _transforms[format];
-            return transform.TransformMany(element.Elements().FirstOrDefault());
+            return transform.TransformMany(element);
         }
     }
 }

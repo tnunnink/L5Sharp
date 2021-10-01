@@ -30,17 +30,6 @@ namespace L5Sharp.Primitives
                 _members.Add(member.Name, member);
         }
 
-        private DataType(XElement element)
-        {
-            Name = element.Attribute(nameof(Name))?.Value;
-            Family = DataTypeFamily.FromName(element.Attribute(nameof(Family))?.Value);
-            Description = element.Element(nameof(Description))?.Value;
-            var members = element.Element(nameof(Members))?.Descendants().Select(Member.Materialize);
-            if (members == null) return;
-            foreach (var member in members)
-                _members.Add(member.Name, member);
-        }
-
         public DataType(string name, string description = null)
             : this(name, DataTypeFamily.None, description)
         {
@@ -56,9 +45,11 @@ namespace L5Sharp.Primitives
                 _name = value;
             }
         }
+        
         public DataTypeFamily Family { get; }
         public DataTypeClass Class => DataTypeClass.User;
         public bool IsAtomic => false;
+        public object Default => null;
         public string Description { get; set; }
 
         public IEnumerable<IMember> Members => _members.Values.Where(m => !m.Hidden).AsEnumerable();
@@ -82,11 +73,6 @@ namespace L5Sharp.Primitives
             return element;
         }
 
-        public static DataType Materialize(XElement element)
-        {
-            return new DataType(element);
-        }
-
         public static DataType StringType(string name, ushort length, string description = null)
         {
             if (length <= 0)
@@ -100,22 +86,32 @@ namespace L5Sharp.Primitives
             return _members.ContainsKey(name) ? _members[name] : null;
         }
 
-        public void AddMember(string name, IDataType dataType, string description = null,
-            Dimensions dimension = null, Radix radix = null, ExternalAccess access = null)
+        public void AddMember(Member member)
         {
             if (Family == DataTypeFamily.String)
                 Throw.NotConfigurableException(nameof(Members), nameof(Member),
                     "Can not configure members of string family");
             
-            if (_members.ContainsKey(name))
-                Throw.NameCollisionException(name, typeof(Member));
+            if (_members.ContainsKey(member.Name))
+                Throw.NameCollisionException(member.Name, typeof(Member));
 
-            var member = new Member(name, dataType, dimension, radix, access, description: description);
-
-            if (dataType.Equals(Bool))
+            if (member.DataType.Equals(Bool))
                 GenerateBitBackingMember(member);
 
             _members.Add(member.Name, member);
+        }
+
+        public void AddMember(string name, IDataType dataType, string description = null,
+            Dimensions dimension = null, Radix radix = null, ExternalAccess access = null)
+        {
+            var member = new Member(name, dataType, dimension, radix, access, description);
+            AddMember(member);
+        }
+
+        public void AddMembers(IEnumerable<Member> members)
+        {
+            foreach (var member in members)
+                AddMember(member);
         }
 
         public void AddMember(string name, IDataType dataType, Action<IMemberBuilder> builder)
@@ -227,13 +223,13 @@ namespace L5Sharp.Primitives
             return !Equals(left, right);
         }
 
-        public static Predefined Bool => Predefined.Bool;
-        public static Predefined Sint => Predefined.Sint;
-        public static Predefined Int => Predefined.Int;
-        public static Predefined Dint => Predefined.Dint;
-        public static Predefined Lint => Predefined.Lint;
-        public static Predefined Real => Predefined.Real;
-        public static Predefined String => Predefined.String;
+        public static IDataType Bool => Predefined.Bool;
+        public static IDataType Sint => Predefined.Sint;
+        public static IDataType Int => Predefined.Int;
+        public static IDataType Dint => Predefined.Dint;
+        public static IDataType Lint => Predefined.Lint;
+        public static IDataType Real => Predefined.Real;
+        public static IDataType String => Predefined.String;
         public static Predefined Timer => Predefined.Timer;
         public static Predefined Counter => Predefined.Counter;
 

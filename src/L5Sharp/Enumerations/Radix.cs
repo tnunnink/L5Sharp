@@ -1,4 +1,5 @@
-﻿using Ardalis.SmartEnum;
+﻿using System.Collections.Generic;
+using Ardalis.SmartEnum;
 using L5Sharp.Abstractions;
 using L5Sharp.Primitives;
 

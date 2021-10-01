@@ -60,6 +60,20 @@
         <ParentFile>DataTypeSerializationTests</ParentFile>
         <DependentUpon>DataTypeSerializationTests.cs</DependentUpon>
       </None>
+      <None Update="TagSerializationTests.Serialize_Tag_ShouldHaveApprovedOutput.approved.xml">
+        <DependentUpon>TagSerializationTests.cs</DependentUpon>
+      </None>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="TestFiles" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="TestFiles\Test.xml" />
+      <Content Include="TestFiles\Test.xml">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
     </ItemGroup>
 
 </Project>

@@ -17,60 +17,43 @@ namespace L5Sharp.Enumerations
         private static readonly ResourceReader Resources = new ResourceReader(typeof(Predefined));
         private static readonly XDocument PredefinedData = LoadPredefined();
         private static readonly string[] AtomicNames = { "BOOL", "SINT", "INT", "DINT", "LINT", "REAL" };
-        private readonly Dictionary<string, Member> _members = new Dictionary<string, Member>();
+        private readonly Dictionary<string, ReadOnlyMember> _members = new Dictionary<string, ReadOnlyMember>();
 
-        private Predefined(XElement element) :
-            base(element.Attribute(nameof(Name))?.Value, element.Attribute(nameof(Name))?.Value)
+        private Predefined(string name, string value) : base(name, value)
+        {
+        }
+
+        private Predefined(XElement element) : base(element.GetName(), element.GetName())
         {
             Family = DataTypeFamily.FromName(element.Attribute(nameof(Family))?.Value);
 
-            var members = element.Element(nameof(Members))?.Descendants().Select(Member.Materialize);
+            var members = element.Element(nameof(Members))?.Descendants().Select(ReadOnlyMember.Materialize);
             if (members == null) return;
             foreach (var member in members)
                 _members.Add(member.Name, member);
         }
 
-        public static readonly Predefined Bool = Load(nameof(Bool).ToUpper());
-
-        public static readonly Predefined Sint = new SintType(LoadElement(nameof(Sint).ToUpper()));
-
-        public static readonly Predefined Int = Load(nameof(Int).ToUpper());
-
-        public static readonly Predefined Dint = Load(nameof(Dint).ToUpper());
-
-        public static readonly Predefined Lint = Load(nameof(Lint).ToUpper());
-
-        public static readonly Predefined Real = Load(nameof(Real).ToUpper());
-
-        public static readonly Predefined String = Load(nameof(String).ToUpper());
-
+        public static readonly Predefined Bit = new BoolType(nameof(Bit).ToUpper());
+        public static readonly Predefined Bool = new BoolType();
+        public static readonly Predefined Sint = new SintType();
+        public static readonly Predefined Int = new IntType();
+        public static readonly Predefined Dint = new DintType();
+        public static readonly Predefined Lint = new LintType();
+        public static readonly Predefined Real = new RealType();
+        public static readonly Predefined String = new StringType();
         public static readonly Predefined Timer = Load(nameof(Timer).ToUpper());
-
         public static readonly Predefined Counter = Load(nameof(Counter).ToUpper());
 
         public DataTypeFamily Family { get; }
         public DataTypeClass Class => DataTypeClass.Predefined;
         public bool IsAtomic => AtomicNames.Contains(Name);
+        public virtual object Default => null;
         public IEnumerable<IMember> Members => _members.Values.AsEnumerable();
 
-        public bool SupportsRadix(Radix radix)
+        public virtual bool SupportsRadix(Radix radix)
         {
-            if (this == Real)
-            {
-                return radix == Radix.Float || radix == Radix.Exponential;
-            }
-
-            if (this == Bool)
-            {
-                return radix == Radix.Binary || radix == Radix.Octal || radix == Radix.Decimal || radix == Radix.Hex;
-            }
-
-            if (this == Lint)
-            {
-                return radix == Radix.Binary || radix == Radix.Octal || radix == Radix.Decimal || radix == Radix.Hex
-                       || radix == Radix.Ascii || radix == Radix.DateTime || radix == Radix.DateTimeNs;
-            }
-
+            if (!IsAtomic) return radix.Equals(Radix.Null);
+            
             return radix == Radix.Binary || radix == Radix.Octal || radix == Radix.Decimal || radix == Radix.Hex ||
                    radix == Radix.Ascii;
         }
@@ -84,29 +67,22 @@ namespace L5Sharp.Enumerations
         {
             var field = typeof(Predefined)
                 .GetField(name, BindingFlags.Public | BindingFlags.Static | BindingFlags.IgnoreCase);
-            
-            return (Predefined) field?.GetValue(null);
+
+            return (Predefined)field?.GetValue(null);
         }
 
         public virtual object ParseValue(string value)
         {
-            if (!IsAtomic)
-                throw new InvalidOperationException($"Type {Name} is not atomic and does not represent an value type");
-
-            if (Equals(Bool))
-                return bool.Parse(value);
-            if (Equals(Sint))
-                return byte.Parse(value);
-            if (Equals(Int))
-                return short.Parse(value);
-            if (Equals(Dint))
-                return int.Parse(value);
-            if (Equals(Lint))
-                return long.Parse(value);
-            if (Equals(Real))
-                return float.Parse(value);
-
             return null;
+        }
+
+        public virtual bool IsValidValue(object value)
+        {
+            return !IsAtomic && value == null;
+        }
+
+        internal virtual void UpdateMembers(ITagMember member)
+        {
         }
 
         private static Predefined Load(string name)
@@ -116,7 +92,7 @@ namespace L5Sharp.Enumerations
 
             return new Predefined(element);
         }
-        
+
         private static XElement LoadElement(string name)
         {
             var element = PredefinedData.Descendants(nameof(DataType))
@@ -134,24 +110,187 @@ namespace L5Sharp.Enumerations
 
             return XDocument.Load(stream);
         }
-        
+
+
+        #region Classes
+
         private class BoolType : Predefined
         {
-            public BoolType(XElement element) : base(element)
+            internal BoolType() : base(LoadElement(nameof(Bool).ToUpper()))
             {
+            }
+            
+            internal BoolType(string name) : base(name, LoadElement(nameof(Bool).ToUpper()).GetName())
+            {
+            }
+
+            public override object Default => default(bool);
+
+            public override bool SupportsRadix(Radix radix)
+            {
+                return radix == Radix.Binary || radix == Radix.Octal || radix == Radix.Decimal || radix == Radix.Hex;
             }
 
             public override object ParseValue(string value)
             {
-                return value == "1" || value == "Yes" || value == "true";
+                if (bool.TryParse(value, out var result))
+                    return result;
+
+                if (string.Equals(value, "1", StringComparison.OrdinalIgnoreCase)
+                    || string.Equals(value, "True", StringComparison.OrdinalIgnoreCase)
+                    || string.Equals(value, "Yes", StringComparison.OrdinalIgnoreCase))
+                    return true;
+
+                if (string.Equals(value, "0", StringComparison.OrdinalIgnoreCase)
+                    || string.Equals(value, "False", StringComparison.OrdinalIgnoreCase)
+                    || string.Equals(value, "No", StringComparison.OrdinalIgnoreCase))
+                    return false;
+
+                return null;
+            }
+
+            public override bool IsValidValue(object value)
+            {
+                return value is bool;
+            }
+        }
+
+        private class SintType : Predefined
+        {
+            internal SintType() : base(LoadElement(nameof(Sint).ToUpper()))
+            {
+            }
+
+            public override object Default => default(byte);
+
+            public override object ParseValue(string value)
+            {
+                if (byte.TryParse(value, out var result))
+                    return result;
+                return null;
+            }
+            
+            public override bool IsValidValue(object value)
+            {
+                return value is byte;
+            }
+        }
+
+        private class IntType : Predefined
+        {
+            internal IntType() : base(LoadElement(nameof(Int).ToUpper()))
+            {
+            }
+
+            public override object Default => default(short);
+
+            public override object ParseValue(string value)
+            {
+                if (short.TryParse(value, out var result))
+                    return result;
+                return null;
+            }
+            
+            public override bool IsValidValue(object value)
+            {
+                return value is short;
+            }
+        }
+
+        private class DintType : Predefined
+        {
+            internal DintType() : base(LoadElement(nameof(Dint).ToUpper()))
+            {
+            }
+
+            public override object Default => default(int);
+
+            public override object ParseValue(string value)
+            {
+                if (int.TryParse(value, out var result))
+                    return result;
+                return null;
+            }
+            
+            public override bool IsValidValue(object value)
+            {
+                return value is int;
+            }
+        }
+
+        private class LintType : Predefined
+        {
+            internal LintType() : base(LoadElement(nameof(Lint).ToUpper()))
+            {
+            }
+
+            public override object Default => default(long);
+
+            public override bool SupportsRadix(Radix radix)
+            {
+                return radix == Radix.Binary || radix == Radix.Octal || radix == Radix.Decimal || radix == Radix.Hex
+                       || radix == Radix.Ascii || radix == Radix.DateTime || radix == Radix.DateTimeNs;
+            }
+
+            public override object ParseValue(string value)
+            {
+                if (long.TryParse(value, out var result))
+                    return result;
+                return null;
+            }
+            
+            public override bool IsValidValue(object value)
+            {
+                return value is long;
+            }
+        }
+
+        private class RealType : Predefined
+        {
+            internal RealType() : base(LoadElement(nameof(Real).ToUpper()))
+            {
+            }
+
+            public override object Default => default(float);
+
+            public override bool SupportsRadix(Radix radix)
+            {
+                return radix == Radix.Float || radix == Radix.Exponential;
+            }
+
+            public override object ParseValue(string value)
+            {
+                if (float.TryParse(value, out var result))
+                    return result;
+                return null;
+            }
+            
+            public override bool IsValidValue(object value)
+            {
+                return value is float;
+            }
+        }
+
+        private class StringType : Predefined
+        {
+            internal StringType() : base(LoadElement(nameof(String).ToUpper()))
+            {
+                
+            }
+
+            public override object Default => string.Empty;
+
+            public override object ParseValue(string value)
+            {
+                return value;
+            }
+
+            public override bool IsValidValue(object value)
+            {
+                return value is string;
             }
         }
         
-        private class SintType : Predefined
-        {
-            public SintType(XElement element) : base(element)
-            {
-            }
-        }
+        #endregion
     }
 }
