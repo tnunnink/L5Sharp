@@ -4,73 +4,52 @@ using System.Linq;
 using System.Xml.Linq;
 using L5Sharp.Abstractions;
 using L5Sharp.Primitives;
-using L5Sharp.Serialization;
 using L5Sharp.Utilities;
 
 namespace L5Sharp
 {
     public class L5X
     {
-        private readonly XDocument _doc;
-
-        private readonly Dictionary<Type, IL5XSerializer> _serializers =
-            new Dictionary<Type, IL5XSerializer>
-            {
-                { typeof(DataType), new DataTypeSerializer() }
-            };
-
-        private readonly Dictionary<Type, string> _containerName = new Dictionary<Type, string>
+        private readonly XDocument _document;
+        private readonly Dictionary<Type, string> _containerNames = new Dictionary<Type, string>
         {
             { typeof(DataType), L5XNames.Containers.DataTypes },
         };
 
         public L5X(string fileName)
         {
-            _doc = XDocument.Load(fileName);
+            _document = XDocument.Load(fileName);
         }
 
-        public L5X(IController controller)
+        public bool Contains<T>(string name) where T : INamedComponent
         {
+            var component = typeof(T).Name;
+            return _document.Descendants(component).FirstOrDefault(x => x.GetName() == name) != null;
         }
-
+        
         public T Get<T>(string name) where T : INamedComponent
         {
-            var type = typeof(T);
-            var elementName = type.Name;
-
-            if (!_serializers.ContainsKey(type)) return default;
-
-            var serializer = (IL5XSerializer<T>)_serializers[type];
-
-            var element = _doc.Descendants(elementName)
-                .SingleOrDefault(x => x.Attribute(L5XNames.Name)?.Value == name);
-
-            return serializer.Deserialize(element);
+            var component = typeof(T).Name;
+            return _document.Descendants(component).FirstOrDefault(x => x.GetName() == name).Deserialize<T>();
+        }
+        
+        public XElement GetContainer<T>() where T : INamedComponent
+        {
+            var containerName = _containerNames[typeof(T)];
+            return _document.Descendants(containerName).FirstOrDefault();
         }
 
-        public void Add<T>(T item) where T : INamedComponent
+        private static XDocument GenerateRoot()
         {
-            var type = typeof(T);
-            var elementName = type.Name;
-
-            if (_serializers.ContainsKey(type))
-                throw new InvalidOperationException();
-
-            var serializer = (IL5XSerializer<T>)_serializers[type];
-
-            var element = serializer.Serialize(item);
-
-            var container = GetComponent(elementName);
-
-            container.Add(element);
-
-            /*var element = _doc.Descendants(elementName)
-                .SingleOrDefault(x => x.Attribute(L5XNames.Name)?.Value == name);*/
-        }
-
-        private XElement GetComponent(string name)
-        {
-            return _doc.Descendants(name).FirstOrDefault()?.Parent;
+            var declaration = new XDeclaration("1.0", "UTF-8", "yes");
+            var root = new XElement(L5XNames.Containers.RSLogix5000Content);
+            root.Add(new XAttribute("SchemaRevision", "1.0"));
+            root.Add(new XAttribute("SoftwareRevision", "1.0"));
+            root.Add(new XAttribute("TargetName", "1.0"));
+            root.Add(new XAttribute("TargetType", "1.0"));
+            root.Add(new XAttribute("SchemaRevision", "1.0"));
+            
+            return new XDocument(declaration);
         }
     }
 }

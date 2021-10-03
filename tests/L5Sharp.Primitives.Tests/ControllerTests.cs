@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using FluentAssertions;
-using L5Sharp.Primitives;
+﻿using FluentAssertions;
 using NUnit.Framework;
 
 namespace L5Sharp.Primitives.Tests

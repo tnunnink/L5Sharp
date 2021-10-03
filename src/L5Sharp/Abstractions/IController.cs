@@ -13,5 +13,6 @@ namespace L5Sharp.Abstractions
         T Get<T>(string name) where T : INamedComponent;
         void Add<T>(T item) where T : INamedComponent;
         void Remove<T>(T item) where T : INamedComponent;
+        void Update<T>(T item) where T : INamedComponent;
     }
 }

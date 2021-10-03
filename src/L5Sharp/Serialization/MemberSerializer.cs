@@ -11,8 +11,6 @@ namespace L5Sharp.Serialization
 {
     internal class MemberSerializer : IL5XSerializer<Member>
     {
-        private readonly DataTypeSerializer _typeSerializer = new DataTypeSerializer();
-        
         public XElement Serialize(Member component)
         {
             var element = new XElement(nameof(Member));
@@ -35,15 +33,22 @@ namespace L5Sharp.Serialization
 
         public Member Deserialize(XElement element)
         {
-            var typeName = element.GetDataTypeName();
-            
-            var dataType = Predefined.ContainsType(typeName)
-                ? (IDataType) Predefined.FromName(typeName)
-                : _typeSerializer.Deserialize(element.FindDataType(typeName));
+            var dataType = GetDataType(element);
             
             return new Member(element.GetName(), dataType, element.GetDimension(), element.GetRadix(),
                 element.GetExternalAccess(), element.GetDescription(), element.GetHidden(), element.GetTarget(),
                 element.GetBitNumber());
+        }
+
+        private static IDataType GetDataType(XElement element)
+        {
+            var typeName = element.GetDataTypeName();
+
+            if (Predefined.ContainsType(typeName))
+                return Predefined.FromName(typeName);
+
+            var serializer = new DataTypeSerializer();
+            return serializer.Deserialize(element.FindDataType(typeName));
         }
     }
 }

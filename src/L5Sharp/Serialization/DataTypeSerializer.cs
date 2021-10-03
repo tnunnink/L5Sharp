@@ -31,7 +31,7 @@ namespace L5Sharp.Serialization
         {
             var serializer = new MemberSerializer();
             
-            var members = element.Descendants(L5XNames.Member)
+            var members = element.Descendants(L5XNames.Components.Member)
                 .Select(e => serializer.Deserialize(e));
 
             var dataType = new DataType(element.GetName(), element.GetFamily(), element.GetDescription(), members);

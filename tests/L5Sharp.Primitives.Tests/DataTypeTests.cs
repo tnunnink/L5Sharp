@@ -177,12 +177,14 @@ namespace L5Sharp.Primitives.Tests
         }
 
         [Test]
-        public void AddMember_NullDataType_ShouldThrowArgumentNullException()
+        public void AddMember_NullDataType_ShouldHaveMemberWithNullType()
         {
             var type = new DataType("Test_Type_001");
 
-            FluentActions.Invoking(() => type.AddMember("Member", null)).Should()
-                .Throw<ArgumentNullException>();
+            type.AddMember("Member", null);
+
+            var member = type.Members.Single(m => m.Name == "Member");
+            member.DataType.Should().Be(DataType.Null);
         }
 
         [Test]

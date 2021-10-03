@@ -1,8 +1,10 @@
 ﻿using System.Linq;
 using AutoFixture;
 using FluentAssertions;
+using L5Sharp.Abstractions;
 using L5Sharp.Enumerations;
 using L5Sharp.Exceptions;
+using L5Sharp.Types;
 using NUnit.Framework;
 
 namespace L5Sharp.Primitives.Tests
@@ -30,15 +32,15 @@ namespace L5Sharp.Primitives.Tests
         [Test]
         public void New_NoDataType_ShouldHaveExpectedDefaults()
         {
-            var tag = new Tag("Test");
+            var tag = new Tag("Test", DataType.Bool);
 
             tag.Should().NotBeNull();
             tag.Name.Should().Be("Test");
-            tag.DataType.Should().BeNull();
+            tag.DataType.Should().Be(DataType.Bool.Name);
             tag.Dimension.Should().Be(Dimensions.Empty);
-            tag.Radix.Should().Be(Radix.Null);
+            tag.Radix.Should().Be(Radix.Decimal);
             tag.ExternalAccess.Should().Be(ExternalAccess.None);
-            tag.Value.Should().BeNull();
+            tag.Value.Should().Be(false);
             tag.Description.Should().BeEmpty();
             tag.TagType.Should().Be(TagType.Base);
             tag.Usage.Should().Be(TagUsage.Null);
@@ -89,7 +91,7 @@ namespace L5Sharp.Primitives.Tests
         [Test]
         public void New_GenericTag_ShouldNotBeNull()
         {
-
+            var tag = new Tag<Bool>("Test");
         }
     }
 }

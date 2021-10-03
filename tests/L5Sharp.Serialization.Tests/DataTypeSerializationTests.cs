@@ -34,7 +34,7 @@ namespace L5Sharp.Serialization.Tests
         [Test]
         public void Deserialize_WhenCalled_ResultsShouldNotBeNull()
         {
-            var element = _document.Descendants(L5XNames.DataType).FirstOrDefault();
+            var element = _document.Descendants(L5XNames.Components.DataType).FirstOrDefault();
             
             var result = _serializer.Deserialize(element);
 

@@ -13,6 +13,7 @@ namespace L5Sharp.Primitives
     {
         private static readonly string[] StringMemberNames = { "LEN", "DATA" };
         private string _name;
+        private string _description;
         private readonly Dictionary<string, Member> _members = new Dictionary<string, Member>();
 
         internal DataType(string name, DataTypeFamily family, string description = null,
@@ -50,7 +51,12 @@ namespace L5Sharp.Primitives
         public DataTypeClass Class => DataTypeClass.User;
         public bool IsAtomic => false;
         public object Default => null;
-        public string Description { get; set; }
+
+        public string Description
+        {
+            get => _description;
+            set => _description = value ?? string.Empty;
+        }
 
         public IEnumerable<IMember> Members => _members.Values.Where(m => !m.Hidden).AsEnumerable();
 

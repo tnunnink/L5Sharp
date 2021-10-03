@@ -1,18 +1,21 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Xml.Linq;
 using L5Sharp.Abstractions;
 using L5Sharp.Builders;
 using L5Sharp.Builders.Abstractions;
 using L5Sharp.Enumerations;
+using L5Sharp.Repositories;
+using L5Sharp.Repositories.Abstractions;
 using L5Sharp.Utilities;
 
 namespace L5Sharp.Primitives
 {
     public class Controller : IController
     {
-        private string _name;
-
         private readonly L5X _l5X;
+        private string _name;
+        private static Dictionary<Type, IRepository> Repositories => new Dictionary<Type, IRepository>();
 
         public Controller(string name, string description = null, string processorType = null,
             ulong majorRev = 0, ushort minorRev = 0)
@@ -26,7 +29,9 @@ namespace L5Sharp.Primitives
             ProjectCreationDate = DateTime.Now;
             LastModifiedDate = DateTime.Now;
 
-            _l5X = new L5X(this);
+            _l5X = new L5X(string.Empty); //todo actually load or create here
+            
+            Repositories.Add(typeof(DataType), new DataTypeRepository(_l5X));
         }
 
         public string Name
@@ -52,12 +57,36 @@ namespace L5Sharp.Primitives
         public DateTime ProjectCreationDate { get; }
 
         public DateTime LastModifiedDate { get; }
+        
+        public T Get<T>(string name) where T : INamedComponent
+        {
+            var repository = GetRepository<T>();
+            return repository.Get(name);
+        }
+
+        public void Add<T>(T item) where T : INamedComponent
+        {
+            var repository = GetRepository<T>();
+            repository.Add(item);
+        }
+
+        public void Remove<T>(T item) where T : INamedComponent
+        {
+            var repository = GetRepository<T>();
+            repository.Remove(item);
+        }
+
+        public void Update<T>(T item) where T : INamedComponent
+        {
+            var repository = GetRepository<T>();
+            repository.Update(item);
+        }
 
         public IControllerCreator Create()
         {
             return new ControllerCreator(this);
         }
-        
+
         public void Build<TModel, TBuilder>(Func<TBuilder> builderFactory, Action<TBuilder> builderConfig)
             where TModel : INamedComponent
             where TBuilder : IBuilder<TModel>
@@ -78,29 +107,14 @@ namespace L5Sharp.Primitives
             collection.Add(item.Name, item);*/
         }
 
-        public T Get<T>(string name) where T : INamedComponent
+        private IRepository<T> GetRepository<T>() where T : INamedComponent
         {
-            if (string.IsNullOrEmpty(name))
-                throw new ArgumentNullException(nameof(name));
-
-            return _l5X.Get<T>(name);
-        }
-
-        public void Add<T>(T item) where T : INamedComponent
-        {
-            if (item == null)
-                throw new ArgumentNullException(nameof(item));
-            
             var type = typeof(T);
-        }
 
-        public void Remove<T>(T item) where T : INamedComponent
-        {
-            if (item == null)
-                throw new ArgumentNullException(nameof(item));
-            
-            var type = typeof(T);
-            
+            if (!Repositories.ContainsKey(type))
+                throw new InvalidOperationException();
+
+            return (IRepository<T>) Repositories[type];
         }
 
         public XElement Serialize()

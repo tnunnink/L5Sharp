@@ -125,7 +125,7 @@ namespace L5Sharp.Primitives.Tests
             type.Family.Should().Be(DataTypeFamily.None);
         }
         
-        [Test]
+        /*[Test]
         public void New_Bool_ShouldNotBeNull()
         {
             var type = new Bool();
@@ -134,7 +134,7 @@ namespace L5Sharp.Primitives.Tests
             type.Name.Should().Be("BOOL");
             type.Class.Should().Be(DataTypeClass.Predefined);
             type.Family.Should().Be(DataTypeFamily.None);
-        }
+        }*/
 
         [Test]
         public void BoolAtomicShouldNotBeCastToDataType()

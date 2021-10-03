@@ -10,16 +10,18 @@ namespace L5Sharp.Primitives
         private string _name;
         private IDataType _dataType;
         private Radix _radix;
+        private ExternalAccess _externalAccess;
+        private string _description;
 
         internal Member(string name, IDataType dataType, ushort dimension, Radix radix,
             ExternalAccess access, string description, bool hidden, string target, ushort bitNumber)
         {
-            Name = name ?? throw new ArgumentNullException(nameof(name));
-            DataType = dataType ?? Predefined.Null;
+            Name = name;
+            DataType = dataType;
             Dimension = dimension;
             Radix = radix ?? Radix.Default(dataType);
             ExternalAccess = access ?? ExternalAccess.ReadWrite;
-            Description = description ?? string.Empty;
+            Description = description;
             Hidden = hidden;
             Target = target ?? string.Empty;
             BitNumber = bitNumber;
@@ -54,17 +56,29 @@ namespace L5Sharp.Primitives
             get => _radix;
             set
             {
-                if (!DataType.IsAtomic) return;
-
-                if (!DataType.SupportsRadix(value))
-                    Throw.RadixNotSupportedException(value, DataType);
-
+                Validate.Radix(value, _dataType);
                 _radix = value;
             }
         }
 
-        public ExternalAccess ExternalAccess { get; set; }
-        public string Description { get; set; }
+        public ExternalAccess ExternalAccess
+        {
+            get => _externalAccess;
+            set
+            {
+                Validate.ExternalAccess(value);
+                _externalAccess = value;
+            }
+        }
+
+        public string Description
+        {
+            get => _description;
+            set
+            {
+                _description = value ?? string.Empty;
+            }
+        }
         internal bool Hidden { get; set; }
         internal string Target { get; set; }
         internal ushort BitNumber { get; set; }

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Xml.Linq;
 using L5Sharp.Abstractions;
 using L5Sharp.Enumerations;
 using L5Sharp.Utilities;
@@ -120,15 +119,6 @@ namespace L5Sharp.Primitives
 
         private ITagMember Parent { get; }
 
-        public XElement Serialize()
-        {
-            return IsValueMember ? SerializeValueMember()
-                : IsArrayMember ? SerializeArrayMember()
-                : IsArrayElement ? SerializeArrayElement()
-                : IsStructureMember ? SerializeStructureMember()
-                : throw new InvalidOperationException();
-        }
-
         private void Instantiate()
         {
             if (IsValueMember) return; //todo unless we decide that value members have members?
@@ -154,49 +144,7 @@ namespace L5Sharp.Primitives
             foreach (var tagMember in _members.Values)
                 setter.Invoke(tagMember, value);
         }
-
-        private XElement SerializeValueMember()
-        {
-            var element = new XElement(L5XNames.DataValueMember);
-            element.Add(new XAttribute(L5XNames.Name, Name));
-            element.Add(new XAttribute(L5XNames.DataType, DataType));
-            if (Radix != null) element.Add(new XAttribute(nameof(Radix), Radix.Name));
-            element.Add(new XAttribute(L5XNames.Value, Value.ToString()));
-            return element;
-        }
-
-        private XElement SerializeArrayMember()
-        {
-            var element = new XElement(L5XNames.ArrayMember);
-            element.Add(new XAttribute(L5XNames.Name, Name));
-            element.Add(new XAttribute(L5XNames.DataType, DataType));
-            element.Add(new XAttribute(L5XNames.Dimensions, Dimension.Length));
-            element.Add(new XAttribute(L5XNames.Radix, Radix.Name));
-            return element;
-        }
-
-        private XElement SerializeArrayElement()
-        {
-            var element = new XElement(L5XNames.Element);
-            element.Add(new XAttribute(L5XNames.Index, Name));
-
-            if (Value != null)
-                element.Add(new XAttribute(L5XNames.Value, Value));
-
-            if (IsStructureMember)
-                element.Add(new XElement(L5XNames.Structure, new XAttribute(L5XNames.DataType, DataType)));
-
-            return element;
-        }
-
-        private XElement SerializeStructureMember()
-        {
-            var element = new XElement(L5XNames.StructureMember);
-            element.Add(new XAttribute(L5XNames.Name, Name));
-            element.Add(new XAttribute(L5XNames.DataType, DataType));
-            return element;
-        }
-
+        
         private static string GetName(INamedComponent member)
         {
             if (member is TagMember tagMember)

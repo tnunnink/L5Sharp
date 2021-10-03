@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Xml.Linq;
 using L5Sharp.Abstractions;
 using L5Sharp.Enumerations;
 using L5Sharp.Utilities;
@@ -21,46 +20,7 @@ namespace L5Sharp.Primitives
         private object _value;
         private readonly Dictionary<string, TagMember> _members = new Dictionary<string, TagMember>();
 
-        /*private Tag(XElement element, IController controller)
-        {
-            _name = element.Attribute(nameof(Name))?.Value;
-
-            //we have to get reference to existing data type
-            var typeName = element.Attribute(nameof(DataType))?.Value;
-            _dataType = controller.GetDataType(typeName);
-            if (_dataType == null) Throw.DataTypeNotFoundException(typeName, _name);
-            
-            _tagType = element.GetTagType() ?? TagType.Base;
-            _dimensions = element.GetDimensions() ?? Dimensions.Empty;
-            _radix = element.GetRadix() ?? Radix.Default(_dataType);
-            _externalAccess = element.GetExternalAccess() ?? ExternalAccess.None;
-            _aliasFor = element.GetAliasFor() ?? string.Empty;
-            _usage = element.GetUsage() ?? TagUsage.Null;
-            _description = element.GetDescription() ?? string.Empty;
-            Constant = element.GetConstant();
-
-            //if data has data value element then it is atomic and we just set the value
-            var dataValue = element.Descendants(L5XNames.DataValue).SingleOrDefault();
-            if (dataValue != null)
-            {
-                if (!(_dataType is Predefined predefined))
-                    throw new InvalidOperationException();
-
-                _value = predefined.ParseValue(dataValue.Attribute(L5XNames.Value)?.Value);
-                return;
-            }
-
-            //otherwise use transforms to construct members
-            var formatted = element
-                .Descendants(L5XNames.Data).FirstOrDefault(x =>
-                    x.HasAttributes && x.Attribute("Format") != null && x.Attribute("Format")?.Value != "L5K");
-
-            var transform = new FormattedDataTransform();
-            var members = transform.TransformMany(formatted);
-            _members.AddRange(members.Select(m => TagMember.Materialize(m, controller)));
-        }*/
-
-        public Tag(string name, IDataType dataType = null, Dimensions dimensions = null, Radix radix = null,
+        public Tag(string name, IDataType dataType, Dimensions dimensions = null, Radix radix = null,
             ExternalAccess externalAccess = null, TagType tagType = null, TagUsage usage = null,
             string description = null, Scope scope = null, string aliasFor = null, bool constant = false)
         {
@@ -204,69 +164,6 @@ namespace L5Sharp.Primitives
             _value = dataType.Default;
             Radix = Radix.Default(dataType);
             Instantiate();
-        }
-        
-        public XElement Serialize()
-        {
-            var element = new XElement(nameof(Tag));
-            element.Add(new XAttribute(L5XNames.Name, Name));
-            element.Add(new XAttribute(L5XNames.TagType, TagType.Name));
-            element.Add(new XAttribute(L5XNames.DataType, DataType));
-            if (Dimension.Length > 0)
-                element.Add(new XAttribute(L5XNames.Dimensions, Dimension.ToString()));
-            if (Radix != Radix.Null)
-                element.Add(new XAttribute(L5XNames.Radix, Radix.Name));
-            element.Add(new XAttribute(L5XNames.Constant, Constant));
-            element.Add(new XAttribute(L5XNames.ExternalAccess, ExternalAccess.Name));
-
-            if (!string.IsNullOrEmpty(AliasFor))
-                element.Add(new XAttribute(nameof(AliasFor), AliasFor));
-
-            if (Usage != TagUsage.Null)
-                element.Add(new XAttribute(nameof(Usage), Usage.Name));
-
-            if (!string.IsNullOrEmpty(Description))
-                element.Add(new XElement(nameof(Description), Description));
-
-            var data = GenerateDataElement();
-            element.Add(data);
-
-            return element;
-        }
-
-        private XElement GenerateDataElement()
-        {
-            var data = new XElement(L5XNames.Data);
-            data.Add(new XAttribute("Format", "Decorated"));
-
-            if (IsValueMember)
-            {
-                var dataValue = new XElement(L5XNames.DataValue);
-                dataValue.Add(new XAttribute(L5XNames.DataType, DataType));
-                dataValue.Add(new XAttribute(L5XNames.Radix, Radix.Name));
-                dataValue.Add(new XAttribute(L5XNames.Value, Value));
-                data.Add(dataValue);
-                return data;
-            }
-
-            if (IsArrayMember)
-            {
-                var array = new XElement(L5XNames.Array);
-                array.Add(new XAttribute(L5XNames.DataType, DataType));
-                array.Add(new XAttribute(L5XNames.Dimensions, Dimension.ToString()));
-                array.Add(new XAttribute(L5XNames.Radix, Radix.Name));
-                array.Add(_members.Values.Select(m => m.Serialize()));
-                data.Add(array);
-                return data;
-            }
-
-            if (!IsStructureMember) return null;
-
-            var structure = new XElement(L5XNames.Structure);
-            structure.Add(new XAttribute(L5XNames.DataType, DataType));
-            structure.Add(_members.Values.Select(m => m.Serialize()));
-            data.Add(structure);
-            return data;
         }
 
         private void Instantiate()

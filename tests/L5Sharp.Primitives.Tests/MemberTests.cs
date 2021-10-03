@@ -41,7 +41,7 @@ namespace L5Sharp.Primitives.Tests
         [Test]
         public void New_NullDataType_ShouldHaveNullTypeDataType()
         {
-            var member = new Member("1!@#$%#$!", DataType.Int);
+            var member = new Member("Test", null);
 
             member.DataType.Should().Be(DataType.Null);
         }
@@ -93,13 +93,89 @@ namespace L5Sharp.Primitives.Tests
         }
         
         [Test]
-        public void SetDimension_ValidSingleDimension_ShouldHaveExpectedDimensions()
+        public void SetDimension_ValidNumber_ShouldHaveExpectedDimensions()
         {
             var member = new Member("MemberName", DataType.Int);
 
             member.Dimension = 10;
 
             member.Dimension.Should().Be(10);
+        }
+
+        [Test]
+        public void SetRadix_ValidRadix_ShouldUpdateRadix()
+        {
+            var member = new Member("MemberName", DataType.Int);
+
+            member.Radix = Radix.Ascii;
+
+            member.Radix.Should().Be(Radix.Ascii);
+        }
+        
+        
+        [Test]
+        public void SetRadix_InvalidRadix_ShouldThrowRadixNotSupportedException()
+        {
+            var member = new Member("MemberName", DataType.Int);
+
+            FluentActions.Invoking(() => member.Radix = Radix.Float).Should().Throw<RadixNotSupportedException>();
+        }
+        
+                
+        [Test]
+        public void SetRadix_Null_ShouldThrowArgumentNullException()
+        {
+            var member = new Member("MemberName", DataType.Int);
+
+            FluentActions.Invoking(() => member.Radix = null).Should().Throw<ArgumentNullException>();
+        }
+        
+        [Test]
+        public void SetExternalAccess_None_ShouldUpdateExternalAccess()
+        {
+            var member = new Member("MemberName", DataType.Int);
+
+            member.ExternalAccess = ExternalAccess.None;
+
+            member.ExternalAccess.Should().Be(ExternalAccess.None);
+        }
+        
+        [Test]
+        public void SetExternalAccess_ReadOnly_ShouldUpdateExternalAccess()
+        {
+            var member = new Member("MemberName", DataType.Int);
+
+            member.ExternalAccess = ExternalAccess.ReadOnly;
+
+            member.ExternalAccess.Should().Be(ExternalAccess.ReadOnly);
+        }
+        
+        [Test]
+        public void SetExternalAccess_Null_ShouldThrowArgumentNullException()
+        {
+            var member = new Member("MemberName", DataType.Int);
+
+            FluentActions.Invoking(() => member.ExternalAccess = null).Should().Throw<ArgumentNullException>();
+        }
+        
+        [Test]
+        public void SetDescription_ValidString_ShouldUpdateString()
+        {
+            var member = new Member("MemberName", DataType.Int);
+
+            member.Description = "This is a test description";
+
+            member.Description.Should().Be("This is a test description");
+        }
+        
+        [Test]
+        public void SetDescription_Null_ShouldBeEmpty()
+        {
+            var member = new Member("MemberName", DataType.Int);
+
+            member.Description = null;
+
+            member.Description.Should().BeEmpty();
         }
     }
 }

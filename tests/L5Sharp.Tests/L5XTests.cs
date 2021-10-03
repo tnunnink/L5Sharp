@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using FluentAssertions;
-using L5Sharp.Primitives;
 using NUnit.Framework;
 
 namespace L5Sharp.Tests
@@ -23,16 +22,6 @@ namespace L5Sharp.Tests
             var sut = new L5X(_fileName);
 
             sut.Should().NotBeNull();
-        }
-        
-        [Test]
-        public void Get_DataType_ShouldNotBeNull()
-        {
-            var sut = new L5X(_fileName);
-
-            var result = sut.Get<DataType>("Atomics");
-
-            result.Should().NotBeNull();
         }
     }
 }
