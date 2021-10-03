@@ -8,7 +8,7 @@ using L5Sharp.Utilities;
 
 namespace L5Sharp.Primitives
 {
-    public class Program : INamedComponent, IXSerializable
+    public class Program : INamedComponent
     {
         private readonly Dictionary<string, Tag> _tags = new Dictionary<string, Tag>();
         private readonly Dictionary<string, Routine> _routines = new Dictionary<string, Routine>();

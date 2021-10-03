@@ -20,7 +20,7 @@ namespace L5Sharp.Builders
             
             var type = typeBuilder.Build();
             
-           _controller.AddDataType(type);
+           _controller.Add(type);
         }
 
         public void Tag(string name, Action<ITagBuilder> builder)

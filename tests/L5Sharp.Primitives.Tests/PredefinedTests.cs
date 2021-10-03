@@ -6,6 +6,7 @@ using FluentAssertions;
 using L5Sharp.Abstractions;
 using L5Sharp.Enumerations;
 using L5Sharp.Exceptions;
+using L5Sharp.Types;
 using NUnit.Framework;
 
 namespace L5Sharp.Primitives.Tests
@@ -117,6 +118,17 @@ namespace L5Sharp.Primitives.Tests
         public void Bool_ShouldNotBeNull()
         {
             var type = DataType.Bool;
+
+            type.Should().NotBeNull();
+            type.Name.Should().Be("BOOL");
+            type.Class.Should().Be(DataTypeClass.Predefined);
+            type.Family.Should().Be(DataTypeFamily.None);
+        }
+        
+        [Test]
+        public void New_Bool_ShouldNotBeNull()
+        {
+            var type = new Bool();
 
             type.Should().NotBeNull();
             type.Name.Should().Be("BOOL");

@@ -6,7 +6,7 @@ namespace L5Sharp.Abstractions
     public interface IMember : INamedComponent
     {
         IDataType DataType { get; }
-        Dimensions Dimension { get; }
+        ushort Dimension { get; }
         Radix Radix { get; }
         ExternalAccess ExternalAccess { get; }
         string Description { get; }

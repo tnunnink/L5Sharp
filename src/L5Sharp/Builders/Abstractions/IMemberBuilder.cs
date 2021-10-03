@@ -8,7 +8,7 @@ namespace L5Sharp.Builders.Abstractions
     {
         IMemberBuilder HasType(IDataType dataType);
         IMemberBuilder HasDescription(string description);
-        IMemberBuilder HasDimension(Dimensions dimension);
+        IMemberBuilder HasDimension(ushort dimension);
         IMemberBuilder HasRadix(Radix radix);
         IMemberBuilder HasAccess(ExternalAccess access);
     }

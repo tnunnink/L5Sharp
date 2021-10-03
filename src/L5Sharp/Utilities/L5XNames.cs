@@ -2,6 +2,24 @@
 {
     public static class L5XNames
     {
+        public static class Containers
+        {
+            // ReSharper disable once InconsistentNaming
+            public const string RSLogix5000Content = nameof(RSLogix5000Content);
+            public const string Controller = nameof(Controller);
+            public const string DataTypes = nameof(DataTypes);
+            public const string Modules = nameof(Modules);
+            public const string AddOnInstructions = nameof(AddOnInstructions);
+            public const string Tags = nameof(Tags);
+            public const string Programs = nameof(Programs);
+            public const string Tasks = nameof(Tasks);    
+        }
+        
+
+
+        public const string Program = nameof(Program);
+        public const string Tag = nameof(Tag);
+        public const string Task = nameof(Task);
         public const string Data = nameof(Data);
         public const string DataValue = nameof(DataValue);
         public const string Array = nameof(Array);
@@ -27,5 +45,7 @@
         public const string Constant = nameof(Constant);
         public const string AliasFor = nameof(AliasFor);
         public const string Member = nameof(Member);
+        public const string Family = nameof(Family);
+        public const string Class = nameof(Class);
     }
 }

@@ -25,23 +25,44 @@ namespace L5Sharp.Primitives.Tests
         }
         
         [Test]
-        public void AddDataType_ValidType_ShouldHaveExpectedCount()
+        public void Get_DataTypeExistingType_ShouldNotBeNull()
+        {
+            var controller = new Controller("Test_Controller");
+
+            var type = controller.Get<DataType>("Injector");
+
+            type.Should().NotBeNull();
+        }
+
+        /*[Test]
+        public void Add_DataType_DataTypesShouldContainExpectedDataType()
+        {
+            var dataType = new DataType("TestType");
+            var controller = new Controller("Test");
+
+            controller.Add(dataType);
+
+            controller.DataTypes.Should().Contain(dataType);
+        }
+        
+        [Test]
+        public void Add_DataTypeValidType_ShouldHaveExpectedCount()
         {
             var controller = new Controller("Name");
             
-            controller.AddDataType(new DataType("TypeName", "This is a test"));
+            controller.Add(new DataType("TypeName", "This is a test"));
 
             controller.DataTypes.Where(x => x.Name == "TypeName").Should().HaveCount(1);
         }
 
         [Test]
-        public void AddDataType_ValidDataType_ShouldUpdateCollection()
+        public void Add_DataTypeValidDataType_ShouldUpdateCollection()
         {
             var controller = new Controller("Name");
             var type = new DataType("TestType");
             type.AddMember("Member01", DataType.Dint);
             
-            controller.AddDataType(type);
+            controller.Add(type);
 
             controller.DataTypes.Where(x => x.Name == "TestType").Should().HaveCount(1);
         }
@@ -61,6 +82,6 @@ namespace L5Sharp.Primitives.Tests
 
             controller.DataTypes.Should().Contain(d => d.Name == "DT1");
             controller.DataTypes.Should().Contain(d => d.Name == "DT2");
-        }
+        }*/
     }
 }

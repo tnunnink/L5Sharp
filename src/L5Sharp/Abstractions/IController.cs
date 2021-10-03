@@ -1,27 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using L5Sharp.Primitives;
 
 namespace L5Sharp.Abstractions
 {
-    public interface IController
+    public interface IController : INamedComponent
     {
-        public string Name { get; }
         public string Description { get; }
         public string ProcessorType { get; }
         public ulong MajorRev { get; }
         public ushort MinorRev { get; }
         public DateTime ProjectCreationDate { get; }
         public DateTime LastModifiedDate { get; }
-        public IEnumerable<IDataType> DataTypes { get; }
-        public IEnumerable<Module> Modules { get; }
-        public IEnumerable<Instruction> Instructions { get; }
-        public IEnumerable<Tag> Tags { get; }
-        public IEnumerable<Program> Programs { get; }
-        public IEnumerable<Task> Tasks { get; }
-        IDataType GetDataType(string name);
-        void AddDataType(IDataType dataType);
-        void AddTag(Tag tag);
-        void AddTask(Task task);
+        T Get<T>(string name) where T : INamedComponent;
+        void Add<T>(T item) where T : INamedComponent;
+        void Remove<T>(T item) where T : INamedComponent;
     }
 }

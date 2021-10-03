@@ -8,7 +8,7 @@ using L5Sharp.Utilities;
 
 namespace L5Sharp.Primitives
 {
-    public class Task : IXSerializable, INamedComponent
+    public class Task : INamedComponent
     {
         private string _name;
         private TaskType _type;
@@ -33,21 +33,6 @@ namespace L5Sharp.Primitives
             Watchdog = watchdog;
             InhibitTask = inhibitTask;
             DisableUpdateOutputs = disableUpdateOutputs;
-        }
-
-        private Task(XElement element)
-        {
-            Name = element.Attribute(nameof(Name))?.Value;
-            Description = element.Element(nameof(Description))?.Value ?? string.Empty;
-            Type = TaskType.FromName(element.Attribute(nameof(Type))?.Value) 
-                   ?? throw new ArgumentNullException(nameof(Type));
-            Rate = Convert.ToSingle(element.Attribute(nameof(Rate))?.Value);
-            Priority = Convert.ToInt16(element.Attribute(nameof(Priority))?.Value);
-            Watchdog = Convert.ToSingle(element.Attribute(nameof(Watchdog))?.Value);
-            InhibitTask = Convert.ToBoolean(element.Attribute(nameof(InhibitTask))?.Value);
-            DisableUpdateOutputs = Convert.ToBoolean(element.Attribute(nameof(DisableUpdateOutputs))?.Value);
-            //We are not going to initialize programs here since we will do in in the controller and add them manually.
-            //Program elements are not children of tasks in the L5X schema
         }
 
         public string Name
@@ -166,11 +151,6 @@ namespace L5Sharp.Primitives
             element.Add(scheduled);
 
             return element;
-        }
-
-        public static Task Materialize(XElement element)
-        {
-            return new Task(element);
         }
     }
 }

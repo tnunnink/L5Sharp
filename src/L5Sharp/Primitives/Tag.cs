@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Xml.Linq;
 using L5Sharp.Abstractions;
 using L5Sharp.Enumerations;
-using L5Sharp.Loaders;
 using L5Sharp.Utilities;
 
 namespace L5Sharp.Primitives
 {
-    public class Tag : ITagMember, IXSerializable
+    public class Tag : ITagMember
     {
         private string _name;
         private IDataType _dataType;
@@ -17,13 +17,11 @@ namespace L5Sharp.Primitives
         private Radix _radix;
         private ExternalAccess _externalAccess;
         private string _description;
-        private TagType _tagType;
         private TagUsage _usage;
-        private string _aliasFor;
         private object _value;
-        private readonly List<ITagMember> _members = new List<ITagMember>();
+        private readonly Dictionary<string, TagMember> _members = new Dictionary<string, TagMember>();
 
-        private Tag(XElement element, IController controller)
+        /*private Tag(XElement element, IController controller)
         {
             _name = element.Attribute(nameof(Name))?.Value;
 
@@ -60,36 +58,28 @@ namespace L5Sharp.Primitives
             var transform = new FormattedDataTransform();
             var members = transform.TransformMany(formatted);
             _members.AddRange(members.Select(m => TagMember.Materialize(m, controller)));
-        }
+        }*/
 
-        public Tag(string name, IDataType dataType, Dimensions dimensions = null, Radix radix = null,
+        public Tag(string name, IDataType dataType = null, Dimensions dimensions = null, Radix radix = null,
             ExternalAccess externalAccess = null, TagType tagType = null, TagUsage usage = null,
-            string description = null, Scope scope = null, string aliasFor = null, bool constant = false,
-            object value = null)
+            string description = null, Scope scope = null, string aliasFor = null, bool constant = false)
         {
-            if (string.IsNullOrEmpty(name)) Throw.ArgumentNullOrEmptyException(nameof(name));
-            Validate.Name(name);
-            _name = name;
-
+            Name = name;
             _dataType = dataType ?? throw new ArgumentNullException(nameof(dataType));
             _dimensions = dimensions ?? Dimensions.Empty;
 
-            if (radix != null && !_dataType.SupportsRadix(radix))
-                Throw.RadixNotSupportedException(radix, _dataType);
-            _radix = radix ?? Radix.Default(dataType);
-
-            _externalAccess = externalAccess ?? ExternalAccess.None;
-            _tagType = tagType ?? TagType.Base;
-            _aliasFor = aliasFor;
-            _description = description ?? string.Empty;
+            Radix = radix ?? Radix.Default(dataType);
+            ExternalAccess = externalAccess ?? ExternalAccess.None;
+            TagType = tagType ?? TagType.Base;
+            AliasFor = aliasFor ?? string.Empty;
+            Description = description ?? string.Empty;
             Constant = constant;
-
-            Usage = usage ?? TagUsage.Null;
             Scope = scope ?? Scope.Null;
+            Usage = usage != null ? usage : scope == Scope.Program ? TagUsage.Local : TagUsage.Null;
 
-            _value = value ?? _dataType.Default;
+            _value = _dataType.Default;
 
-            _members.AddRange(TagMember.Instantiate(this));
+            Instantiate();
         }
 
         public string Name
@@ -97,22 +87,13 @@ namespace L5Sharp.Primitives
             get => _name;
             set
             {
+                if (value == null) throw new ArgumentNullException(nameof(value));
                 Validate.Name(value);
                 _name = value;
             }
         }
 
-        public IDataType DataType
-        {
-            get => _dataType;
-            set
-            {
-                _dataType = value;
-
-                _members.Clear();
-                _members.AddRange(TagMember.Instantiate(this));
-            }
-        }
+        public string DataType => _dataType?.Name;
 
         public Dimensions Dimension
         {
@@ -122,7 +103,7 @@ namespace L5Sharp.Primitives
                 _dimensions = value;
 
                 _members.Clear();
-                _members.AddRange(TagMember.Instantiate(this));
+                Instantiate();
             }
         }
 
@@ -182,11 +163,7 @@ namespace L5Sharp.Primitives
             }
         }
 
-        public TagType TagType
-        {
-            get => _tagType;
-            set { _tagType = value; }
-        }
+        public TagType TagType { get; set; }
 
         public string AliasFor { get; set; }
 
@@ -201,22 +178,40 @@ namespace L5Sharp.Primitives
                 _usage = value;
             }
         }
-        public Scope Scope { get; }
+
+        public Scope Scope { get; internal set; }
         public object ForceValue { get; set; }
         public bool CanForce { get; set; }
-        public IEnumerable<ITagMember> Members => _members.AsEnumerable();
+        public IEnumerable<ITagMember> Members => _members.Values.AsEnumerable();
 
-        public bool IsValueMember => Value != null && DataType.IsAtomic;
+        public bool IsValueMember => Value != null && _dataType is { IsAtomic: true };
         public bool IsArrayMember => Dimension.Length > 0;
         public bool IsArrayElement => false;
         public bool IsStructureMember => !IsValueMember && !IsArrayMember && _members.Count > 0;
+        public ITagMember GetMember(string name)
+        {
+            return Members.SingleOrDefault(m => m.Name == name);
+        }
 
+        public IEnumerable<string> ListMembers()
+        {
+            return GetMemberNames(this);
+        }
+
+        public void ChangeType(IDataType dataType)
+        {
+            _dataType = dataType;
+            _value = dataType.Default;
+            Radix = Radix.Default(dataType);
+            Instantiate();
+        }
+        
         public XElement Serialize()
         {
             var element = new XElement(nameof(Tag));
             element.Add(new XAttribute(L5XNames.Name, Name));
             element.Add(new XAttribute(L5XNames.TagType, TagType.Name));
-            element.Add(new XAttribute(L5XNames.DataType, DataType.Name));
+            element.Add(new XAttribute(L5XNames.DataType, DataType));
             if (Dimension.Length > 0)
                 element.Add(new XAttribute(L5XNames.Dimensions, Dimension.ToString()));
             if (Radix != Radix.Null)
@@ -226,7 +221,7 @@ namespace L5Sharp.Primitives
 
             if (!string.IsNullOrEmpty(AliasFor))
                 element.Add(new XAttribute(nameof(AliasFor), AliasFor));
-            
+
             if (Usage != TagUsage.Null)
                 element.Add(new XAttribute(nameof(Usage), Usage.Name));
 
@@ -247,7 +242,7 @@ namespace L5Sharp.Primitives
             if (IsValueMember)
             {
                 var dataValue = new XElement(L5XNames.DataValue);
-                dataValue.Add(new XAttribute(L5XNames.DataType, DataType.Name));
+                dataValue.Add(new XAttribute(L5XNames.DataType, DataType));
                 dataValue.Add(new XAttribute(L5XNames.Radix, Radix.Name));
                 dataValue.Add(new XAttribute(L5XNames.Value, Value));
                 data.Add(dataValue);
@@ -257,10 +252,10 @@ namespace L5Sharp.Primitives
             if (IsArrayMember)
             {
                 var array = new XElement(L5XNames.Array);
-                array.Add(new XAttribute(L5XNames.DataType, DataType.Name));
+                array.Add(new XAttribute(L5XNames.DataType, DataType));
                 array.Add(new XAttribute(L5XNames.Dimensions, Dimension.ToString()));
                 array.Add(new XAttribute(L5XNames.Radix, Radix.Name));
-                array.Add(_members.Select(m => ((TagMember)m).Serialize()));
+                array.Add(_members.Values.Select(m => m.Serialize()));
                 data.Add(array);
                 return data;
             }
@@ -268,21 +263,77 @@ namespace L5Sharp.Primitives
             if (!IsStructureMember) return null;
 
             var structure = new XElement(L5XNames.Structure);
-            structure.Add(new XAttribute(L5XNames.DataType, DataType.Name));
-            structure.Add(_members.Select(m => ((TagMember)m).Serialize()));
+            structure.Add(new XAttribute(L5XNames.DataType, DataType));
+            structure.Add(_members.Values.Select(m => m.Serialize()));
             data.Add(structure);
             return data;
         }
 
-        public static Tag Materialize(XElement element, IController controller)
+        private void Instantiate()
         {
-            return new Tag(element, controller);
+            if (IsValueMember) return; //todo unless we decide that value members have members?
+
+            _members.Clear();
+
+            if (IsArrayMember)
+            {
+                var indices = Dimension.GenerateIndices();
+                var arrayMembers = indices.Select(i => new TagMember(this, i, _dataType)).ToList();
+                foreach (var member in arrayMembers)
+                    _members.Add(member.Name, member);
+                return;
+            }
+
+            var members = _dataType.Members.Select(m => new TagMember(this, m));
+            foreach (var member in members)
+                _members.Add(member.Name, member);
+        }
+
+        private static IEnumerable<string> GetMemberNames(ITagMember member)
+        {
+            var names = new List<string>();
+
+            foreach (var m in member.Members)
+            {
+                var name = m.IsArrayElement ? $"{member.Name}{m.Name}" : $"{member.Name}.{m.Name}";
+                names.Add(name);    
+                names.AddRange(GetMemberNames(m));
+            }
+
+            return names;
         }
 
         private void PropagatePropertyValue<TProperty>(Action<TagMember, TProperty> setter, TProperty value)
         {
-            foreach (var tagMember in _members.Cast<TagMember>())
+            foreach (var tagMember in _members.Values.Cast<TagMember>())
                 setter.Invoke(tagMember, value);
+        }
+    }
+
+    public class Tag<T> : Tag where T : IDataType, new()
+    {
+        private Tag(string name, IDataType dataType, Dimensions dimensions = null, Radix radix = null,
+            ExternalAccess externalAccess = null, TagType tagType = null, TagUsage usage = null,
+            string description = null, Scope scope = null, string aliasFor = null, bool constant = false) : base(name,
+            dataType, dimensions, radix, externalAccess, tagType, usage, description, scope, aliasFor, constant)
+        {
+        }
+
+        public Tag(string name, Dimensions dimensions = null, Radix radix = null,
+            ExternalAccess externalAccess = null, TagType tagType = null, TagUsage usage = null,
+            string description = null, Scope scope = null, string aliasFor = null, bool constant = false) : this(name,
+            new T(), dimensions, radix, externalAccess, tagType, usage, description, scope, aliasFor, constant)
+        {
+        }
+
+        public ITagMember GetMember<TProperty>(Expression<Func<T, TProperty>> propertyExpression)
+        {
+            if (!(propertyExpression.Body is MemberExpression memberExpression))
+                throw new InvalidOperationException("");
+
+            var propertyName = memberExpression.Member.Name;
+
+            return Members.SingleOrDefault(m => m.Name == propertyName);
         }
     }
 }

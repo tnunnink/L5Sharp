@@ -19,9 +19,9 @@ namespace L5Sharp.Utilities
             throw new PredefinedCollisionException(
                 $"Data type {dataType} already exists either as a predefined type on in the current controller context");
         
-        public static void DataTypeNotFoundException(string dataType, string tagName) =>
+        public static void DataTypeNotFoundException(string dataType) =>
             throw new DataTypeNotFoundException(
-                $"Data type {dataType} does not exist in the current controller. {tagName} can not be instantiated");
+                $"Data type '{dataType}' does not exist in the current controller context");
 
         public static void NameCollisionException(string name, Type type) =>
             throw new NameCollisionException(

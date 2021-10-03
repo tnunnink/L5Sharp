@@ -26,6 +26,26 @@ namespace L5Sharp.Primitives.Tests
             FluentActions.Invoking(() => new Tag(fixture.Create<string>(), DataType.Bool)).Should()
                 .Throw<InvalidNameException>();
         }
+        
+        [Test]
+        public void New_NoDataType_ShouldHaveExpectedDefaults()
+        {
+            var tag = new Tag("Test");
+
+            tag.Should().NotBeNull();
+            tag.Name.Should().Be("Test");
+            tag.DataType.Should().BeNull();
+            tag.Dimension.Should().Be(Dimensions.Empty);
+            tag.Radix.Should().Be(Radix.Null);
+            tag.ExternalAccess.Should().Be(ExternalAccess.None);
+            tag.Value.Should().BeNull();
+            tag.Description.Should().BeEmpty();
+            tag.TagType.Should().Be(TagType.Base);
+            tag.Usage.Should().Be(TagUsage.Null);
+            tag.Scope.Should().Be(Scope.Null);
+            tag.AliasFor.Should().BeEmpty();
+            tag.Constant.Should().BeFalse();
+        }
 
         [Test]
         public void New_Counter_ShouldHaveValidMembers()
@@ -64,14 +84,6 @@ namespace L5Sharp.Primitives.Tests
             tag.Radix = Radix.Ascii;
 
             tag.Members.All(t => t.Radix == Radix.Ascii).Should().BeTrue();
-        }
-        
-        [Test]
-        public void SetDataType_ValidType_ShouldRedefineMembers()
-        {
-            var tag = new Tag("Test", DataType.Int);
-
-            tag.DataType = DataType.Timer;
         }
 
         [Test]

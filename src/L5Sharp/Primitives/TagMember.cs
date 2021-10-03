@@ -8,11 +8,12 @@ using L5Sharp.Utilities;
 
 namespace L5Sharp.Primitives
 {
-    public class TagMember : ITagMember, IXSerializable
+    public class TagMember : ITagMember
     {
+        private readonly IDataType _dataType;
         private Radix _radix;
         private object _value;
-        private readonly Dictionary<string, ITagMember> _members = new Dictionary<string, ITagMember>();
+        private readonly Dictionary<string, TagMember> _members = new Dictionary<string, TagMember>();
 
         /// <summary>
         /// Base constructor. Initialized fields if provided otherwise will opt to parent or default parameters. 
@@ -32,26 +33,23 @@ namespace L5Sharp.Primitives
         /// 3. The member's External Access is inherited from the parent/base tag
         /// 4. The member's Description (by default) is a concatenation of the parent and member description
         /// </remarks>
-        private TagMember(IMember parent, string name, IDataType dataType = null, Dimensions dimensions = null,
+        internal TagMember(ITagMember parent, string name, IDataType dataType, Dimensions dimensions = null,
             Radix radix = null, string description = null, object value = null)
         {
-           // Parent = parent ?? throw new ArgumentNullException(nameof(parent));
+            Parent = parent ?? throw new ArgumentNullException(nameof(parent));
             if (string.IsNullOrEmpty(name)) Throw.ArgumentNullOrEmptyException(nameof(name));
 
             Name = name;
-            DataType = dataType ?? parent.DataType;
+            _dataType = dataType;
             Dimension = dimensions ?? Dimensions.Empty;
             _radix = radix ?? parent.Radix;
             ExternalAccess = parent.ExternalAccess;
             Description = string.IsNullOrEmpty(description)
                 ? parent.Description
                 : $"{parent.Description} {description}";
-            _value = value ?? DataType.Default;
+            _value = value ?? _dataType.Default;
 
-            var members = Instantiate(this);
-            
-            foreach (var member in members)
-                _members.Add(member.Name, member);
+            Instantiate();
         }
 
         /// <summary>
@@ -59,37 +57,18 @@ namespace L5Sharp.Primitives
         /// </summary>
         /// <param name="parent">The parent tag member instance</param>
         /// <param name="member">The data type member that defines the properties for this member</param>
-        private TagMember(IMember parent, IMember member) :
-            this(parent, member.Name, member.DataType, member.Dimension, member.Radix, member.Description)
+        internal TagMember(ITagMember parent, IMember member) :
+            this(parent, member.Name, member.DataType, new Dimensions(member.Dimension), member.Radix,
+                member.Description)
         {
         }
 
-        private TagMember(XElement element, IController controller)
-        {
-            Name = element.GetName() ?? throw new ArgumentNullException(nameof(Name));
-
-            var typeName = element.GetDataTypeName();
-            DataType = controller.GetDataType(typeName);
-            if (DataType == null) Throw.DataTypeNotFoundException(typeName, Name);
-            
-            Dimension = element.GetDimensions() ?? Dimensions.Empty;
-            Radix = element.GetRadix() ?? Radix.Default(DataType);
-            ExternalAccess = element.GetExternalAccess() ?? ExternalAccess.None;
-            Description = element.GetDescription() ?? string.Empty;
-            
-            _value = element.GetValue();
-
-            var members = element.Elements().Select(e => Materialize(e, controller));
-            foreach (var member in members)
-                _members.Add(member.Name, member);
-        }
-
-        /*public string FullName => Parent == null ? Name
+        public string FullName => Parent == null ? Name
             : IsArrayElement ? $"{GetName(Parent)}{Name}"
-            : $"{GetName(Parent)}.{Name}";*/
+            : $"{GetName(Parent)}.{Name}";
 
         public string Name { get; }
-        public IDataType DataType { get; }
+        public string DataType => _dataType.Name;
         public Dimensions Dimension { get; }
 
         public Radix Radix
@@ -97,17 +76,17 @@ namespace L5Sharp.Primitives
             get => _radix;
             set
             {
-                if (!DataType.IsAtomic) return;
+                if (!_dataType.IsAtomic) return;
 
-                if (!DataType.SupportsRadix(value))
-                    Throw.RadixNotSupportedException(value, DataType);
+                if (!_dataType.SupportsRadix(value))
+                    Throw.RadixNotSupportedException(value, _dataType);
 
                 _radix = value;
-                
+
                 PropagatePropertyValue((t, v) => t.Radix = v, _radix);
             }
         }
-        
+
         public ExternalAccess ExternalAccess { get; internal set; }
         public string Description { get; set; }
 
@@ -119,21 +98,27 @@ namespace L5Sharp.Primitives
                 if (!IsValueMember)
                     throw new InvalidOperationException();
 
-                if (!(DataType is Predefined predefined))
+                if (!(_dataType is Predefined predefined))
                     throw new InvalidOperationException();
 
                 if (!predefined.IsValidValue(value))
                     throw new InvalidOperationException();
-                
+
                 _value = value;
             }
         }
 
         public IEnumerable<ITagMember> Members => _members.Values.AsEnumerable();
-        public bool IsValueMember => Value != null && DataType.IsAtomic;
+        public bool IsValueMember => Value != null && _dataType.IsAtomic;
         public bool IsArrayMember => Dimension.Length > 0;
-        public bool IsArrayElement => Name.StartsWith('[') && Name.EndsWith(']');
+        public bool IsArrayElement => Parent.IsArrayMember;
         public bool IsStructureMember => !IsValueMember && !IsArrayMember && _members.Count > 0;
+        public ITagMember GetMember(string name)
+        {
+            return Members.SingleOrDefault(m => m.Name == name);
+        }
+
+        private ITagMember Parent { get; }
 
         public XElement Serialize()
         {
@@ -144,49 +129,52 @@ namespace L5Sharp.Primitives
                 : throw new InvalidOperationException();
         }
 
-        public static TagMember Materialize(XElement element, IController controller)
+        private void Instantiate()
         {
-            return new TagMember(element, controller);
-        }
+            if (IsValueMember) return; //todo unless we decide that value members have members?
 
-        internal static IEnumerable<ITagMember> Instantiate(ITagMember tag)
-        {
-            var members = new List<ITagMember>();
+            _members.Clear();
 
-            if (tag.IsValueMember) return members;
-
-            if (tag.IsArrayMember)
+            if (IsArrayMember)
             {
-                var indices = tag.Dimension.GenerateIndices();
-                var memberIndices = indices.Select(index => new TagMember(tag, index)).ToList();
-                members.AddRange(memberIndices);
-                return members;
+                var indices = Dimension.GenerateIndices();
+                var arrayMembers = indices.Select(i => new TagMember(this, i, _dataType)).ToList();
+                foreach (var member in arrayMembers)
+                    _members.Add(member.Name, member);
+                return;
             }
 
-            members.AddRange(tag.DataType.Members.Select(m => new TagMember(tag, m)));
-            return members;
+            var members = _dataType.Members.Select(m => new TagMember(this, m));
+            foreach (var member in members)
+                _members.Add(member.Name, member);
+        }
+
+        private void PropagatePropertyValue<TProperty>(Action<TagMember, TProperty> setter, TProperty value)
+        {
+            foreach (var tagMember in _members.Values)
+                setter.Invoke(tagMember, value);
         }
 
         private XElement SerializeValueMember()
         {
             var element = new XElement(L5XNames.DataValueMember);
             element.Add(new XAttribute(L5XNames.Name, Name));
-            element.Add(new XAttribute(L5XNames.DataType, DataType.Name));
+            element.Add(new XAttribute(L5XNames.DataType, DataType));
             if (Radix != null) element.Add(new XAttribute(nameof(Radix), Radix.Name));
             element.Add(new XAttribute(L5XNames.Value, Value.ToString()));
             return element;
         }
-        
+
         private XElement SerializeArrayMember()
         {
             var element = new XElement(L5XNames.ArrayMember);
             element.Add(new XAttribute(L5XNames.Name, Name));
-            element.Add(new XAttribute(L5XNames.DataType, DataType.Name));
+            element.Add(new XAttribute(L5XNames.DataType, DataType));
             element.Add(new XAttribute(L5XNames.Dimensions, Dimension.Length));
             element.Add(new XAttribute(L5XNames.Radix, Radix.Name));
             return element;
         }
-        
+
         private XElement SerializeArrayElement()
         {
             var element = new XElement(L5XNames.Element);
@@ -197,10 +185,10 @@ namespace L5Sharp.Primitives
 
             if (IsStructureMember)
                 element.Add(new XElement(L5XNames.Structure, new XAttribute(L5XNames.DataType, DataType)));
-            
+
             return element;
         }
-        
+
         private XElement SerializeStructureMember()
         {
             var element = new XElement(L5XNames.StructureMember);
@@ -209,19 +197,18 @@ namespace L5Sharp.Primitives
             return element;
         }
 
-        /*private static string GetName(ITagMember member)
+        private static string GetName(INamedComponent member)
         {
-            return member.Parent != null
-                ? member.Parent.IsArrayElement
-                    ? $"{GetName(member.Parent)}{member.Name}"
-                    : $"{GetName(member.Parent)}.{member.Name}"
-                : member.Name;
-        }*/
-        
-        private void PropagatePropertyValue<TProperty>(Action<TagMember, TProperty> setter, TProperty value)
-        {
-            foreach (var tagMember in _members.Cast<TagMember>())
-                setter.Invoke(tagMember, value);
+            if (member is TagMember tagMember)
+            {
+                return tagMember.Parent != null
+                    ? tagMember.Parent.IsArrayElement
+                        ? $"{GetName(tagMember.Parent)}{member.Name}"
+                        : $"{GetName(tagMember.Parent)}.{member.Name}"
+                    : member.Name;
+            }
+
+            return member.Name;
         }
     }
 }

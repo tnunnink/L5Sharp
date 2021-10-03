@@ -66,11 +66,10 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="TestFiles" />
-    </ItemGroup>
-
-    <ItemGroup>
       <None Remove="TestFiles\Test.xml" />
+      <Content Include="TestFiles\DataTypes.xml">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
       <Content Include="TestFiles\Test.xml">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>

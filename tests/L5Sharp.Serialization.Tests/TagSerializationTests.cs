@@ -43,7 +43,7 @@ namespace L5Sharp.Serialization.Tests
             Approvals.VerifyXml(element.ToString());
         }*/
         
-        [Test]
+        /*[Test]
         [UseReporter(typeof(DiffReporter))]
         public void Materialize_Tag_ShouldHaveApprovedOutput()
         {
@@ -57,6 +57,6 @@ namespace L5Sharp.Serialization.Tests
 
             var result = tag.Serialize();
             Approvals.VerifyXml(result.ToString());
-        }
+        }*/
     }
 }

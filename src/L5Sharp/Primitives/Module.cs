@@ -1,7 +1,9 @@
-﻿namespace L5Sharp.Primitives
+﻿using L5Sharp.Abstractions;
+
+namespace L5Sharp.Primitives
 {
-    public class Module
+    public class Module : INamedComponent
     {
-        
+        public string Name { get; }
     }
 }

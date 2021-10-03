@@ -13,6 +13,7 @@ namespace L5Sharp.Enumerations
 
         public static Radix Default(IDataType dataType)
         {
+            if (dataType == null) return Radix.Null;
             return dataType.IsAtomic ? dataType.Equals(DataType.Real) ? Float : Decimal : Null;
         }
 

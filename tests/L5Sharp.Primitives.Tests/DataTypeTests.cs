@@ -59,7 +59,7 @@ namespace L5Sharp.Primitives.Tests
             type.Members.Should().Contain(m => m.Name == "LEN");
             type.Members.Should().Contain(m => m.Name == "DATA");
             var data = type.Members.Single(m => m.Name == "DATA");
-            data.Dimension.Length.Should().Be(100);
+            data.Dimension.Should().Be(100);
             data.Radix.Should().Be(Radix.Ascii);
             data.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);
         }
@@ -225,7 +225,7 @@ namespace L5Sharp.Primitives.Tests
             result.Should().NotBeNull();
             result.Name.Should().Be("Member");
             result.DataType.Should().Be(DataType.Dint);
-            result.Dimension.Length.Should().Be(0);
+            result.Dimension.Should().Be(0);
             result.Description.Should().Be(string.Empty);
             result.Radix.Should().Be(Radix.Decimal);
             result.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);
@@ -237,7 +237,7 @@ namespace L5Sharp.Primitives.Tests
             var type = new DataType("Test_Type_001");
 
             type.AddMember("Member", DataType.Dint,
-                b => b.HasDimension(new Dimensions(4))
+                b => b.HasDimension(4)
                     .HasDescription("This is a test description")
                     .HasRadix(Radix.Hex)
                     .HasAccess(ExternalAccess.None));
@@ -246,7 +246,7 @@ namespace L5Sharp.Primitives.Tests
             result.Should().NotBeNull();
             result?.Name.Should().Be("Member");
             result?.DataType.Should().Be(DataType.Dint);
-            result?.Dimension.Length.Should().Be(4);
+            result?.Dimension.Should().Be(4);
             result?.Description.Should().Be("This is a test description");
             result?.Radix.Should().Be(Radix.Hex);
             result?.ExternalAccess.Should().Be(ExternalAccess.None);
@@ -270,7 +270,7 @@ namespace L5Sharp.Primitives.Tests
 
             type.UpdateMember("Member",
                 b => b.HasType(DataType.Int)
-                    .HasDimension(new Dimensions(4))
+                    .HasDimension(4)
                     .HasDescription("This is a test description")
                     .HasRadix(Radix.Hex)
                     .HasAccess(ExternalAccess.None));
@@ -279,7 +279,7 @@ namespace L5Sharp.Primitives.Tests
             result.Should().NotBeNull();
             result?.Name.Should().Be("Member");
             result?.DataType.Should().Be(DataType.Int);
-            result?.Dimension.Length.Should().Be(4);
+            result?.Dimension.Should().Be(4);
             result?.Description.Should().Be("This is a test description");
             result?.Radix.Should().Be(Radix.Hex);
             result?.ExternalAccess.Should().Be(ExternalAccess.None);

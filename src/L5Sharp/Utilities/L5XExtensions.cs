@@ -45,10 +45,10 @@ namespace L5Sharp.Utilities
         /// </summary>
         /// <param name="element">The current element instance</param>
         /// <returns>The string value of the Dimension attribute if it exists. Null if it is not found</returns>
-        public static Dimensions GetDimension(this XElement element)
+        public static ushort GetDimension(this XElement element)
         {
             var dimension = element.Attribute(L5XNames.Dimension)?.Value;
-            return dimension != null ? Dimensions.Parse(dimension) : null;
+            return dimension != null ? Convert.ToUInt16(dimension) : (ushort) 0;
         }
 
         /// <summary>
@@ -91,6 +91,17 @@ namespace L5Sharp.Utilities
         public static string GetDescription(this XElement element)
         {
             return element.Element(L5XNames.Description)?.Value;
+        }
+        
+        /// <summary>
+        /// Simple helper extension that gets the attribute "Family" from the current element
+        /// </summary>
+        /// <param name="element">The current element instance</param>
+        /// <returns>The string value of the Family attribute if it exists. Null if it is not found</returns>
+        public static DataTypeFamily GetFamily(this XElement element)
+        {
+            var family = element.Attribute(L5XNames.Family)?.Value;
+            return family != null ? DataTypeFamily.FromName(family) : null;
         }
 
         /// <summary>
@@ -168,10 +179,30 @@ namespace L5Sharp.Utilities
             return element.Attribute(L5XNames.AliasFor)?.Value;
         }
         
+        /// <summary>
+        /// Simple helper extension that gets the attribute "Scope" from the current element
+        /// </summary>
+        /// <param name="element">The current element instance</param>
+        /// <returns>The string value of the Scope attribute if it exists. Null if it is not found</returns>
+        public static Scope GetScope(this XElement element)
+        {
+            var program = element.Ancestors(L5XNames.Program).FirstOrDefault();
+            return program == null ? Scope.Controller : Scope.Program;
+        }
+        
         public static XElement FindDataType(this XDocument document, string name)
         {
             return document.Descendants(L5XNames.DataType).SingleOrDefault(x => x.GetName() == name);
         }
+        
+        public static XElement FindDataType(this XElement element, string name)
+        {
+            return element.Document?.Root?
+                .Descendants(L5XNames.DataType)
+                .SingleOrDefault(x => x.Attribute(L5XNames.Name)?.Value == name);
+        }
+        
+        
         
 
         public static IEnumerable<XElement> GetDataTypes(this XDocument document)

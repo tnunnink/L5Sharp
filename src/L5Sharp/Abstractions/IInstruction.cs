@@ -1,6 +1,6 @@
 ﻿namespace L5Sharp.Abstractions
 {
-    public interface IInstruction
+    public interface IInstruction : INamedComponent
     {
         
     }
