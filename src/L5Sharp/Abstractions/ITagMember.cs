@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
+using L5Sharp.Core;
 using L5Sharp.Enumerations;
-using L5Sharp.Primitives;
 
 namespace L5Sharp.Abstractions
 {
-    public interface ITagMember : INamedComponent
+    public interface ITagMember : IComponent
     {
         public string DataType { get; }
         public Dimensions Dimension { get; }

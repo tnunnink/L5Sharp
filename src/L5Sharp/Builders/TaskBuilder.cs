@@ -1,7 +1,7 @@
 ﻿using System;
 using L5Sharp.Builders.Abstractions;
+using L5Sharp.Core;
 using L5Sharp.Enumerations;
-using L5Sharp.Primitives;
 
 namespace L5Sharp.Builders
 {

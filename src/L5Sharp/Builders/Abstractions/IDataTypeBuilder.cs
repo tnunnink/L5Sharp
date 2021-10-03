@@ -1,6 +1,6 @@
 ﻿using System;
 using L5Sharp.Abstractions;
-using L5Sharp.Primitives;
+using L5Sharp.Core;
 
 namespace L5Sharp.Builders.Abstractions
 {

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Ardalis.SmartEnum;
 using L5Sharp.Abstractions;
-using L5Sharp.Primitives;
+using L5Sharp.Core;
 
 namespace L5Sharp.Enumerations
 {

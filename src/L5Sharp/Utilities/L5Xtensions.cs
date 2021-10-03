@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using L5Sharp.Abstractions;
+using L5Sharp.Core;
 using L5Sharp.Enumerations;
-using L5Sharp.Primitives;
 using L5Sharp.Serialization;
 
 namespace L5Sharp.Utilities
@@ -16,8 +16,20 @@ namespace L5Sharp.Utilities
             { typeof(DataType), new DataTypeSerializer() },
             { typeof(Member), new MemberSerializer() }
         };
+        
+        private static readonly Dictionary<Type, string> ContainerNames = new Dictionary<Type, string>
+        {
+            { typeof(DataType), L5XNames.Containers.DataTypes },
+            { typeof(Module), L5XNames.Containers.Modules },
+            { typeof(Instruction), L5XNames.Containers.AddOnInstructions },
+            { typeof(Tag), L5XNames.Containers.Tags },
+            { typeof(Program), L5XNames.Containers.Programs },
+            { typeof(Task), L5XNames.Containers.Tasks },
+        };
+        
+        #region GenericHelpers
 
-        public static XElement Serialize<T>(this T component) where T : INamedComponent
+        public static XElement Serialize<T>(this T component) where T : IComponent
         {
             var type = typeof(T);
 
@@ -29,7 +41,7 @@ namespace L5Sharp.Utilities
             return serializer.Serialize(component);
         }
 
-        public static T Deserialize<T>(this XElement element) where T : INamedComponent
+        public static T Deserialize<T>(this XElement element) where T : IComponent
         {
             var type = typeof(T);
 
@@ -41,7 +53,72 @@ namespace L5Sharp.Utilities
             return serializer.Deserialize(element);
         }
         
-        /// <summary>
+        public static bool Contains<T>(this XElement element, string name) where T : IComponent
+        {
+            var component = typeof(T).Name;
+            return element.Descendants(component).FirstOrDefault(x => x.GetName() == name) != null;
+        }
+        
+        public static IEnumerable<T> All<T>(this XElement element) where T : IComponent
+        {
+            var component = typeof(T).Name;
+            return element.Descendants(component).Select(x => x.Deserialize<T>());
+        }
+
+        public static T Get<T>(this XElement element, string name) where T : IComponent
+        {
+            var component = typeof(T).Name;
+            return element.Descendants(component).FirstOrDefault(x => x.GetName() == name).Deserialize<T>();
+        }
+        
+        public static XElement Container<T>(this XElement element) where T : IComponent
+        {
+            var containerName = ContainerNames[typeof(T)];
+            return element.Descendants(containerName).FirstOrDefault();
+        }
+
+        #endregion
+        
+        
+        #region ComponentHelpers
+
+        public static XElement FindDataType(this XElement element, string name)
+        {
+            return element.Document?.Root?
+                .Descendants(L5XNames.Components.DataType)
+                .SingleOrDefault(x => x.Attribute(L5XNames.Attributes.Name)?.Value == name);
+        }
+        
+        public static string GetOperandOfTag(this XElement element)
+        {
+            var operandName = element.Attribute("Name")?.Value ?? string.Empty;
+
+            var parent = element.Parent;
+
+            if (parent == null) return operandName;
+            
+            while (parent.Name != "Tag")
+            {
+                var name = parent.Attribute("Name")?.Value;
+                var index = parent.Attribute("Name")?.Value;
+
+                if (name != null)
+                    operandName = operandName.StartsWith('[') ? $"{name}{operandName}" : $"{name}.{operandName}";
+                if (index != null)
+                    operandName = $"{index}.{operandName}";
+
+                if (parent.Parent == null) break;
+                parent = parent.Parent;
+            }
+
+            return $".{operandName}";
+        }
+
+        #endregion
+
+        #region AttributeHelpers
+
+         /// <summary>
         /// Gets the attribute "Name" from the current element
         /// </summary>
         /// <param name="element">The current element instance</param>
@@ -222,37 +299,6 @@ namespace L5Sharp.Utilities
             return program == null ? Scope.Controller : Scope.Program;
         }
 
-        public static XElement FindDataType(this XElement element, string name)
-        {
-            return element.Document?.Root?
-                .Descendants(L5XNames.Components.DataType)
-                .SingleOrDefault(x => x.Attribute(L5XNames.Attributes.Name)?.Value == name);
-        }
-
-
-        public static string GetOperandOfTag(this XElement element)
-        {
-            var operandName = element.Attribute("Name")?.Value ?? string.Empty;
-
-            var parent = element.Parent;
-
-            if (parent == null) return operandName;
-            
-            while (parent.Name != "Tag")
-            {
-                var name = parent.Attribute("Name")?.Value;
-                var index = parent.Attribute("Name")?.Value;
-
-                if (name != null)
-                    operandName = operandName.StartsWith('[') ? $"{name}{operandName}" : $"{name}.{operandName}";
-                if (index != null)
-                    operandName = $"{index}.{operandName}";
-
-                if (parent.Parent == null) break;
-                parent = parent.Parent;
-            }
-
-            return $".{operandName}";
-        }
+        #endregion
     }
 }

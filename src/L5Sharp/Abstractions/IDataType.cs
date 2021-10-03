@@ -3,7 +3,7 @@ using L5Sharp.Enumerations;
 
 namespace L5Sharp.Abstractions
 {
-    public interface IDataType : INamedComponent
+    public interface IDataType : IComponent
     {
         public DataTypeFamily Family { get; }
         public DataTypeClass Class { get; }

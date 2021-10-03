@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Xml.Linq;
 using Ardalis.SmartEnum;
 using L5Sharp.Abstractions;
-using L5Sharp.Primitives;
+using L5Sharp.Core;
 using L5Sharp.Types;
 using L5Sharp.Utilities;
 using String = L5Sharp.Types.String;

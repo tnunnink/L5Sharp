@@ -1,6 +1,6 @@
 ﻿using System;
 using L5Sharp.Builders.Abstractions;
-using L5Sharp.Primitives;
+using L5Sharp.Core;
 
 namespace L5Sharp.Builders
 {
@@ -15,12 +15,12 @@ namespace L5Sharp.Builders
 
         public void DataType(string name, Action<IDataTypeBuilder> builder)
         {
-            var typeBuilder = new DataTypeBuilder(name);
+            /*var typeBuilder = new DataTypeBuilder(name);
             builder.Invoke(typeBuilder);
             
             var type = typeBuilder.Build();
             
-           _controller.Add(type);
+           _controller.Add(type);*/
         }
 
         public void Tag(string name, Action<ITagBuilder> builder)

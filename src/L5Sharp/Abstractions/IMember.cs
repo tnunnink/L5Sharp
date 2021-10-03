@@ -1,9 +1,8 @@
 ﻿using L5Sharp.Enumerations;
-using L5Sharp.Primitives;
 
 namespace L5Sharp.Abstractions
 {
-    public interface IMember : INamedComponent
+    public interface IMember : IComponent
     {
         IDataType DataType { get; }
         ushort Dimension { get; }

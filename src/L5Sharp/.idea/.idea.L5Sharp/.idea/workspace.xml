@@ -8,32 +8,74 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="development">
-      <change afterPath="$PROJECT_DIR$/Enumerations/Revision.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Repositories/Abstractions/IDataTypeRepository.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Repositories/Abstractions/IRepository.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Repositories/DataTypeRepository.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Logix.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Repositories/IDataTypeRepository.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Repositories/IProgramRepository.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Serialization/ProgramSerializer.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Serialization/TagMemberSerializer.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../tests/L5Sharp.Enumerations.Tests/L5Sharp.Enumerations.Tests.csproj" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../tests/L5Sharp.Repositories.Tests/L5Sharp.Repositories.Tests.csproj" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Abstractions/IController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Abstractions/IController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Abstractions/INamedEntity.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Abstractions/INamedComponent.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Enumerations/DataTypeClass.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Enumerations/DataTypeClass.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5X.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5X.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Primitives/Controller.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Primitives/Controller.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Primitives/DataType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Primitives/DataType.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Primitives/Member.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Primitives/Member.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Primitives/Tag.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Primitives/Tag.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Primitives/TagMember.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Primitives/TagMember.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Abstractions/IDataType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Abstractions/IDataType.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Abstractions/IInstruction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Abstractions/IInstruction.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Abstractions/IMember.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Abstractions/IMember.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Abstractions/INamedComponent.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Abstractions/IComponent.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Abstractions/ITagMember.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Abstractions/ITagMember.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Builders/Abstractions/IDataTypeBuilder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Builders/Abstractions/IDataTypeBuilder.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Builders/Abstractions/IMemberBuilder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Builders/Abstractions/IMemberBuilder.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Builders/Abstractions/IProgramBuilder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Builders/Abstractions/IProgramBuilder.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Builders/Abstractions/ITaskBuilder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Builders/Abstractions/ITaskBuilder.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Builders/ControllerCretaor.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Builders/ControllerCretaor.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Builders/DataTypeBuilder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Builders/DataTypeBuilder.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Builders/MemberBuilder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Builders/MemberBuilder.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Builders/ProgramBuilder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Builders/ProgramBuilder.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Builders/TaskBuilder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Builders/TaskBuilder.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Enumerations/Predefined.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Enumerations/Predefined.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Enumerations/Radix.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Enumerations/Radix.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Enumerations/RungType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Enumerations/RungType.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Extensibility/UserDefinedType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Extensibility/UserDefinedType.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.sln" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.sln" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5X.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Primitives/Controller.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/Controller.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Primitives/DataType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/DataType.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Primitives/Dimensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/Dimensions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Primitives/Instruction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/Instruction.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Primitives/Member.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/Member.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Primitives/Module.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/Module.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Primitives/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/Program.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Primitives/ReadOnlyMember.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/ReadOnlyMember.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Primitives/Routine.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/Routine.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Primitives/Rung.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/Rung.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Primitives/Tag.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/Tag.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Primitives/TagMember.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/TagMember.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Primitives/Task.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/Task.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Repositories/Abstractions/IDataTypeRepository.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Repositories/Abstractions/IRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Repositories/IRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Repositories/DataTypeRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Repositories/DataTypeRepository.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Serialization/DataTypeSerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Serialization/DataTypeSerializer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Serialization/IL5XSerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Serialization/IL5XSerializer.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Serialization/MemberSerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Serialization/MemberSerializer.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Serialization/TagSerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Serialization/TagSerializer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Utilities/L5XExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Utilities/L5Xtensions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Utilities/L5XNames.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Utilities/L5XNames.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Utilities/L5Xtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Utilities/L5Xtensions.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Utilities/Validate.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Utilities/Validate.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../tests/L5Sharp.Primitives.Tests/ControllerTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/L5Sharp.Primitives.Tests/ControllerTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../tests/L5Sharp.Primitives.Tests/DataTypeTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/L5Sharp.Primitives.Tests/DataTypeTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../tests/L5Sharp.Primitives.Tests/MemberTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/L5Sharp.Primitives.Tests/MemberTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../tests/L5Sharp.Primitives.Tests/PredefinedTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/L5Sharp.Primitives.Tests/PredefinedTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../tests/L5Sharp.Primitives.Tests/TagTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/L5Sharp.Primitives.Tests/TagTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tests/L5Sharp.Builder.Tests/ControllerBuilder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/L5Sharp.Builder.Tests/ControllerBuilder.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tests/L5Sharp.Builder.Tests/DataTypeBuilderTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/L5Sharp.Builder.Tests/DataTypeBuilderTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tests/L5Sharp.Primitives.Tests/ControllerTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/L5Sharp.Core.Tests/ControllerTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tests/L5Sharp.Primitives.Tests/DataTypeTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/L5Sharp.Core.Tests/DataTypeTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tests/L5Sharp.Primitives.Tests/DimensionsTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/L5Sharp.Core.Tests/DimensionsTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tests/L5Sharp.Primitives.Tests/L5Sharp.Primitives.Tests.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/L5Sharp.Core.Tests/L5Sharp.Core.Tests.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tests/L5Sharp.Primitives.Tests/MemberTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/L5Sharp.Core.Tests/MemberTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tests/L5Sharp.Primitives.Tests/PredefinedTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/L5Sharp.Enumerations.Tests/PredefinedTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tests/L5Sharp.Primitives.Tests/RadixTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/L5Sharp.Enumerations.Tests/RadixTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tests/L5Sharp.Primitives.Tests/TagTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/L5Sharp.Core.Tests/TagTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tests/L5Sharp.Primitives.Tests/TaskTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/L5Sharp.Core.Tests/TaskTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tests/L5Sharp.Primitives.Tests/UserDefinedImplementationTest.ShouldHaveApprovedOutput.approved.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/L5Sharp.Core.Tests/UserDefinedImplementationTest.ShouldHaveApprovedOutput.approved.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tests/L5Sharp.Primitives.Tests/UserDefinedImplementationTest.ShouldHaveApprovedOutput.approved.xml.bak" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/L5Sharp.Core.Tests/UserDefinedImplementationTest.ShouldHaveApprovedOutput.approved.xml.bak" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tests/L5Sharp.Primitives.Tests/UserDefinedImplementationTest.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/L5Sharp.Core.Tests/UserDefinedImplementationTest.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tests/L5Sharp.Serialization.Tests/ControllerSerializationTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/L5Sharp.Serialization.Tests/ControllerSerializationTests.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../tests/L5Sharp.Serialization.Tests/DataTypeSerializationTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/L5Sharp.Serialization.Tests/DataTypeSerializationTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tests/L5Sharp.Serialization.Tests/TagSerializationTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/L5Sharp.Serialization.Tests/TagSerializationTests.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../tests/L5Sharp.Tests/L5XTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/L5Sharp.Tests/L5XTests.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -115,7 +157,7 @@
       <workItem from="1632779982254" duration="52601000" />
       <workItem from="1632867038177" duration="1006000" />
       <workItem from="1632881281881" duration="78963000" />
-      <workItem from="1633049237256" duration="71363000" />
+      <workItem from="1633049237256" duration="87323000" />
     </task>
     <task id="LOCAL-00001" summary="renaming">
       <created>1632580540996</created>
@@ -187,7 +229,14 @@
       <option name="project" value="LOCAL" />
       <updated>1633219249212</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="development">
+      <created>1633233238826</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1633233238826</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -202,7 +251,7 @@
       <expand>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 0% 2593/2593" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 0% 2649/2649" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
       </expand>
       <select />

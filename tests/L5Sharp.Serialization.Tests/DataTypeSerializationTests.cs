@@ -5,7 +5,7 @@ using System.Xml.Linq;
 using ApprovalTests;
 using ApprovalTests.Reporters;
 using FluentAssertions;
-using L5Sharp.Primitives;
+using L5Sharp.Core;
 using L5Sharp.Utilities;
 using NUnit.Framework;
 

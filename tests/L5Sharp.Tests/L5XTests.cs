@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using FluentAssertions;
+using L5Sharp.Utilities;
 using NUnit.Framework;
 
 namespace L5Sharp.Tests
@@ -19,7 +20,7 @@ namespace L5Sharp.Tests
         [Test]
         public void New_ValidFile_ShouldNotBeNull()
         {
-            var sut = new L5X(_fileName);
+            var sut = new Logix(_fileName);
 
             sut.Should().NotBeNull();
         }

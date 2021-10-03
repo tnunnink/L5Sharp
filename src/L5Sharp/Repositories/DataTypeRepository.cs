@@ -1,33 +1,44 @@
-﻿using L5Sharp.Primitives;
-using L5Sharp.Repositories.Abstractions;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Xml.Linq;
+using L5Sharp.Abstractions;
+using L5Sharp.Core;
 using L5Sharp.Utilities;
+
+[assembly: InternalsVisibleTo("L5Sharp.Repositories.Tests")]
 
 namespace L5Sharp.Repositories
 {
-    public class DataTypeRepository : IDataTypeRepository
+    internal class DataTypeRepository : IDataTypeRepository
     {
-        private readonly L5X _l5X;
+        private readonly XElement _container;
 
-        public DataTypeRepository(L5X l5X)
+        public DataTypeRepository(Logix logix)
         {
-            _l5X = l5X;
+            _container = logix.Content.Container<DataType>();
         }
-        
+
+        public IEnumerable<DataType> All()
+        {
+            return _container.All<DataType>();
+        }
+
         public DataType Get(string name)
         {
-            return _l5X.Get<DataType>(name);
+            return _container.Get<DataType>(name);
         }
 
         public void Add(DataType component)
         {
-            if (_l5X.Contains<DataType>(component.Name))
+            if (_container.Contains<DataType>(component.Name))
                 Throw.NameCollisionException(component.Name, typeof(DataType));
-            
+
             var element = component.Serialize();
+            var dependents = component.GetDependentUserTypes().Select(t => t.Serialize());
 
-            var container = _l5X.GetContainer<DataType>();
-
-            container.Add(element);
+            _container.Add(element);
+            _container.Add(dependents);
         }
 
         public void Remove(DataType component)
@@ -38,6 +49,13 @@ namespace L5Sharp.Repositories
         public void Update(DataType component)
         {
             throw new System.NotImplementedException();
+        }
+
+        public IEnumerable<DataType> WithMemberType(IDataType dataType)
+        {
+            return _container.Descendants(L5XNames.Components.Member)
+                .Where(x => x.GetDataTypeName() == dataType.Name)
+                .Select(x => x.Parent.Deserialize<DataType>());
         }
     }
 }

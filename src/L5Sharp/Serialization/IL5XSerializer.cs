@@ -10,7 +10,7 @@ namespace L5Sharp.Serialization
     {
     }
     
-    internal interface IL5XSerializer<T> : IL5XSerializer where T : INamedComponent
+    internal interface IL5XSerializer<T> : IL5XSerializer where T : IComponent
     {
         XElement Serialize(T component);
         

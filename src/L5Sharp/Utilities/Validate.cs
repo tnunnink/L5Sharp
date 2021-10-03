@@ -4,7 +4,6 @@ using System.Text.RegularExpressions;
 using L5Sharp.Abstractions;
 using L5Sharp.Enumerations;
 using L5Sharp.Exceptions;
-using L5Sharp.Primitives;
 
 namespace L5Sharp.Utilities
 {
