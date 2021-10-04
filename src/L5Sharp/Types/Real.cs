@@ -8,7 +8,7 @@ namespace L5Sharp.Types
         {
         }
 
-        public override object Default => default(float);
+        public override object DefaultValue => default(float);
 
         public override bool SupportsRadix(Radix radix)
         {
@@ -24,6 +24,9 @@ namespace L5Sharp.Types
             
         public override bool IsValidValue(object value)
         {
+            if (value is string)
+                value = ParseValue(value.ToString());
+            
             return value is float;
         }
     }

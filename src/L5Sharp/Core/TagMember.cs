@@ -46,7 +46,7 @@ namespace L5Sharp.Core
             Description = string.IsNullOrEmpty(description)
                 ? parent.Description
                 : $"{parent.Description} {description}";
-            _value = value ?? _dataType.Default;
+            _value = value ?? _dataType.DefaultValue;
 
             Instantiate();
         }

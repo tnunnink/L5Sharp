@@ -6,6 +6,7 @@ using FluentAssertions;
 using L5Sharp.Abstractions;
 using L5Sharp.Core;
 using L5Sharp.Exceptions;
+using L5Sharp.Types;
 using NUnit.Framework;
 
 namespace L5Sharp.Enumerations.Tests
@@ -124,7 +125,7 @@ namespace L5Sharp.Enumerations.Tests
             type.Family.Should().Be(DataTypeFamily.None);
         }
         
-        /*[Test]
+        [Test]
         public void New_Bool_ShouldNotBeNull()
         {
             var type = new Bool();
@@ -133,7 +134,7 @@ namespace L5Sharp.Enumerations.Tests
             type.Name.Should().Be("BOOL");
             type.Class.Should().Be(DataTypeClass.Predefined);
             type.Family.Should().Be(DataTypeFamily.None);
-        }*/
+        }
 
         [Test]
         public void BoolAtomicShouldNotBeCastToDataType()
@@ -247,12 +248,24 @@ namespace L5Sharp.Enumerations.Tests
         [Test]
         public void New_Timer_ShouldNotBeNull()
         {
-            var type = DataType.Timer;
+            var type = Predefined.Timer;
 
             type.Should().NotBeNull();
             type.Name.Should().Be("TIMER");
             type.Class.Should().Be(DataTypeClass.Predefined);
             type.Family.Should().Be(DataTypeFamily.None);
+            type.Members.Should().NotBeEmpty();
+        }
+
+        [Test]
+        public void New_Alarm_ShouldHaveExpectedProperties()
+        {
+            var type = Predefined.Alarm;
+            
+            type.Should().NotBeNull();
+
+            type.Name.Should().Be("ALARM");
+            type.Members.Should().HaveCount(24);
         }
     }
 }

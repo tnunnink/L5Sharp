@@ -45,11 +45,7 @@ namespace L5Sharp.Serialization
 
         public Tag Deserialize(XElement element)
         {
-            var typeElement = element.FindDataType(element.GetDataTypeName());
-            var serializer = new DataTypeSerializer();
-            var dataType = Predefined.ContainsType(typeElement.GetName())
-                ? (IDataType)Predefined.FromName(typeElement.GetName())
-                : serializer.Deserialize(typeElement);
+            var dataType = element.GetDataType();
 
             var tag = new Tag(element.GetName(), dataType, element.GetDimensions(), element.GetRadix(),
                 element.GetExternalAccess(), element.GetTagType(), element.GetUsage(), element.GetDescription(),
@@ -99,8 +95,11 @@ namespace L5Sharp.Serialization
             var member = tag.GetMember(name);
             if (!(member is TagMember tagMember)) return;
 
-            tagMember.Radix = element.GetRadix();
-            tagMember.Value = element.GetValue();
+            if (element.GetRadix() != null)
+                tagMember.Radix = element.GetRadix();
+            
+            if (element.GetValue() != null)
+                tagMember.Value = element.GetValue();
 
             if (element.Name.ToString() != L5XNames.Elements.StructureMember &&
                 element.Name.ToString() != L5XNames.Elements.ArrayMember) return;

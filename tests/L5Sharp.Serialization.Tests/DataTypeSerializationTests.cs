@@ -6,6 +6,7 @@ using ApprovalTests;
 using ApprovalTests.Reporters;
 using FluentAssertions;
 using L5Sharp.Core;
+using L5Sharp.Enumerations;
 using L5Sharp.Utilities;
 using NUnit.Framework;
 
@@ -14,7 +15,7 @@ namespace L5Sharp.Serialization.Tests
     [TestFixture]
     public class DataTypeSerializationTests
     {
-        private readonly string _fileName = Path.Combine(Environment.CurrentDirectory, @"TestFiles\DataTypes.xml");
+        private readonly string _fileName = Path.Combine(Environment.CurrentDirectory, @"TestFiles\Test.xml");
         private DataTypeSerializer _serializer;
         private XDocument _document;
 
@@ -39,6 +40,26 @@ namespace L5Sharp.Serialization.Tests
             var result = _serializer.Deserialize(element);
 
             result.Should().NotBeNull();
+        }
+        
+        [Test]
+        public void Deserialize_ArrayType_ResultShouldExpectedProperties()
+        {
+            var element = _document.Descendants(L5XNames.Components.DataType)
+                .FirstOrDefault(x => x.Attribute("Name")?.Value == "ArrayType");
+            
+            var result = _serializer.Deserialize(element);
+
+            result.Should().NotBeNull();
+            result.Name.Should().Be("ArrayType");
+            result.Class.Should().Be(DataTypeClass.User);
+            result.Family.Should().Be(DataTypeFamily.None);
+            result.Members.Should().NotBeEmpty();
+            result.Members.Should().Contain(m => m.Name == "BoolArray");
+            result.Members.Should().Contain(m => m.Name == "SintArray");
+            result.Members.Should().Contain(m => m.Name == "IntArray");
+            result.Members.Should().Contain(m => m.Name == "DintArray");
+            result.Members.Should().Contain(m => m.Name == "LintArray");
         }
         
         [Test]

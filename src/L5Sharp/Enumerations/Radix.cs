@@ -11,12 +11,6 @@ namespace L5Sharp.Enumerations
         {
         }
 
-        public static Radix Default(IDataType dataType)
-        {
-            if (dataType == null) return Radix.Null;
-            return dataType.IsAtomic ? dataType.Equals(DataType.Real) ? Float : Decimal : Null;
-        }
-
         public static readonly Radix Null = new Radix("NullType", 0);
         public static readonly Radix General = new Radix("General", 1); //todo what type does this go with
         public static readonly Radix Binary = new Radix("Binary", 2);

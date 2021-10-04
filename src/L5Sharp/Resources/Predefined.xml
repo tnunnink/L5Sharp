@@ -34,6 +34,34 @@
             <Member Name="DN" DataType="BOOL" Dimension="0" Radix="Decimal" ExternalAccess="Read/Write"/>
         </Members>
     </DataType>
+    <DataType Name="ALARM" Family="NoFamily" Class="ProductDefined">
+        <Members>
+            <Member Name="EnableIn" DataType="BOOL" Dimension="0" Radix="Decimal" ExternalAccess="Read/Write"/>
+            <Member Name="In" DataType="REAL" Dimension="0" Radix="Float" ExternalAccess="Read/Write"/>
+            <Member Name="HHLimit" DataType="REAL" Dimension="0" Radix="Float" ExternalAccess="Read/Write"/>
+            <Member Name="HLimit" DataType="REAL" Dimension="0" Radix="Float" ExternalAccess="Read/Write"/>
+            <Member Name="LLimit" DataType="REAL" Dimension="0" Radix="Float" ExternalAccess="Read/Write"/>
+            <Member Name="LLLimit" DataType="REAL" Dimension="0" Radix="Float" ExternalAccess="Read/Write"/>
+            <Member Name="Deadband" DataType="REAL" Dimension="0" Radix="Float" ExternalAccess="Read/Write"/>
+            <Member Name="ROCPosLimit" DataType="REAL" Dimension="0" Radix="Float" ExternalAccess="Read/Write"/>
+            <Member Name="ROCNegLimit" DataType="REAL" Dimension="0" Radix="Float" ExternalAccess="Read/Write"/>
+            <Member Name="ROCPeriod" DataType="REAL" Dimension="0" Radix="Float" ExternalAccess="Read/Write"/>
+            <Member Name="EnableOut" DataType="BOOL" Dimension="0" Radix="Decimal" ExternalAccess="Read/Write"/>
+            <Member Name="HHAlarm" DataType="BOOL" Dimension="0" Radix="Decimal" ExternalAccess="Read/Write"/>
+            <Member Name="HAlarm" DataType="BOOL" Dimension="0" Radix="Decimal" ExternalAccess="Read/Write"/>
+            <Member Name="LAlarm" DataType="BOOL" Dimension="0" Radix="Decimal" ExternalAccess="Read/Write"/>
+            <Member Name="LLAlarm" DataType="BOOL" Dimension="0" Radix="Decimal" ExternalAccess="Read/Write"/>
+            <Member Name="ROCPosAlarm" DataType="BOOL" Dimension="0" Radix="Decimal" ExternalAccess="Read/Write"/>
+            <Member Name="ROCNegAlarm" DataType="BOOL" Dimension="0" Radix="Decimal" ExternalAccess="Read/Write"/>
+            <Member Name="ROC" DataType="REAL" Dimension="0" Radix="Float" ExternalAccess="Read/Write"/>
+            <Member Name="Status" DataType="DINT" Dimension="0" Radix="Hex" ExternalAccess="Read/Write"/>
+            <Member Name="InstructFault" DataType="BOOL" Dimension="0" Radix="Decimal" ExternalAccess="Read/Write"/>
+            <Member Name="DeadbandInv" DataType="BOOL" Dimension="0" Radix="Decimal" ExternalAccess="Read/Write"/>
+            <Member Name="ROCPosLimitInv" DataType="BOOL" Dimension="0" Radix="Decimal" ExternalAccess="Read/Write"/>
+            <Member Name="ROCNegLimitInv" DataType="BOOL" Dimension="0" Radix="Decimal" ExternalAccess="Read/Write"/>
+            <Member Name="ROCPeriodInv" DataType="BOOL" Dimension="0" Radix="Decimal" ExternalAccess="Read/Write"/>    
+        </Members>
+    </DataType>
     <DataType Name="ALARM_ANALOG" Family="NoFamily" Class="ProductDefined">
         <Members>
             <Member Name="EnableIn" DataType="BOOL" Dimension="0" Radix="Decimal" ExternalAccess="Read/Write"/>

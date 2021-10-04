@@ -82,10 +82,27 @@ namespace L5Sharp.Utilities
         
         #region ComponentHelpers
 
-        public static XElement FindDataType(this XElement element, string name)
+        public static IDataType GetDataType(this XElement element)
         {
-            return element.Document?.Root?
-                .Descendants(L5XNames.Components.DataType)
+            if (element == null) throw new ArgumentNullException(nameof(element));
+            
+            var typeName = element.GetDataTypeName();
+            if (typeName == null)
+                throw new InvalidOperationException($"Element '{element.Name}' does not have data type name");
+                
+            if (Predefined.ContainsType(typeName))
+                return Predefined.FromName(typeName);
+            
+            var typeElement = element.FindDataTypeElement(typeName);
+            if (typeElement == null) return null;
+
+                var serializer = new DataTypeSerializer();
+            return serializer.Deserialize(typeElement);
+        }
+
+        public static XElement FindDataTypeElement(this XElement element, string name)
+        {
+            return element.Document?.Descendants(L5XNames.Components.DataType)
                 .SingleOrDefault(x => x.Attribute(L5XNames.Attributes.Name)?.Value == name);
         }
         

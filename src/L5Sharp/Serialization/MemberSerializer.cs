@@ -48,7 +48,7 @@ namespace L5Sharp.Serialization
                 return Predefined.FromName(typeName);
 
             var serializer = new DataTypeSerializer();
-            return serializer.Deserialize(element.FindDataType(typeName));
+            return serializer.Deserialize(element.FindDataTypeElement(typeName));
         }
     }
 }

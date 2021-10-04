@@ -4,7 +4,7 @@ namespace L5Sharp.Enumerations
 {
     public class ProgramType : SmartEnum<ProgramType>
     {
-        public ProgramType(string name, int value) : base(name, value)
+        private ProgramType(string name, int value) : base(name, value)
         {
         }
 

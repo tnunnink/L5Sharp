@@ -5,6 +5,7 @@ using System.Xml.Linq;
 using ApprovalTests;
 using ApprovalTests.Reporters;
 using FluentAssertions;
+using L5Sharp.Core;
 using L5Sharp.Utilities;
 using NUnit.Framework;
 
@@ -14,6 +15,15 @@ namespace L5Sharp.Serialization.Tests
     public class TagSerializationTests
     {
         private readonly string _fileName = Path.Combine(Environment.CurrentDirectory, @"TestFiles\Test.xml");
+        private TagSerializer _serializer;
+        private XDocument _document;
+
+        [SetUp]
+        public void Setup()
+        {
+            _document = XDocument.Load(_fileName);
+            _serializer = new TagSerializer();
+        }
 
         [Test]
         public void TestFileExists()
@@ -21,7 +31,29 @@ namespace L5Sharp.Serialization.Tests
             FileAssert.Exists(_fileName);
         }
         
-        /*[Test]
+        [Test]
+        public void Deserialize_SimpleBool_ResultsShouldNotBeNull()
+        {
+            var element = _document.Descendants(L5XNames.Components.Tag)
+                .FirstOrDefault(x => x.Attribute("Name")?.Value == "SimpleBool");
+            
+            var result = _serializer.Deserialize(element);
+
+            result.Should().NotBeNull();
+        }
+        
+        [Test]
+        public void Deserialize_TestAlarmTag_ResultsShouldNotBeNull()
+        {
+            var element = _document.Descendants(L5XNames.Components.Tag)
+                .FirstOrDefault(x => x.Attribute("Name")?.Value == "TestAlarmTag");
+            
+            var result = _serializer.Deserialize(element);
+
+            result.Should().NotBeNull();
+        }
+        
+        [Test]
         public void Serialize_Tag_ShouldNotBeNull()
         {
             var tag = new Tag("TestTag", DataType.Counter);
@@ -40,7 +72,7 @@ namespace L5Sharp.Serialization.Tests
             var element = tag.Serialize();
 
             Approvals.VerifyXml(element.ToString());
-        }*/
+        }
         
         /*[Test]
         [UseReporter(typeof(DiffReporter))]

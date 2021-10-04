@@ -8,7 +8,7 @@ namespace L5Sharp.Types
         {
         }
 
-        public override object Default => default(byte);
+        public override object DefaultValue => default(byte);
 
         public override object ParseValue(string value)
         {
@@ -19,6 +19,9 @@ namespace L5Sharp.Types
             
         public override bool IsValidValue(object value)
         {
+            if (value is string)
+                value = ParseValue(value.ToString());
+            
             return value is byte;
         }
     }

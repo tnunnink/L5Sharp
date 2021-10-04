@@ -8,7 +8,7 @@ namespace L5Sharp.Types
         {
         }
 
-        public override object Default => default(long);
+        public override object DefaultValue => default(long);
 
         public override bool SupportsRadix(Radix radix)
         {
@@ -25,6 +25,9 @@ namespace L5Sharp.Types
             
         public override bool IsValidValue(object value)
         {
+            if (value is string)
+                value = ParseValue(value.ToString());
+            
             return value is long;
         }
     }

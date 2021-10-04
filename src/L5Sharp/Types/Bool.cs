@@ -16,7 +16,7 @@ namespace L5Sharp.Types
 
         public bool MemberName { get; set; }
 
-        public override object Default => default(bool);
+        public override object DefaultValue => default(bool);
 
         public override bool SupportsRadix(Radix radix)
         {
@@ -43,6 +43,9 @@ namespace L5Sharp.Types
 
         public override bool IsValidValue(object value)
         {
+            if (value is string)
+                return ParseValue(value.ToString()) is bool;
+            
             return value is bool;
         }
     }

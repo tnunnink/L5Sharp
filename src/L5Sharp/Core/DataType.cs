@@ -50,7 +50,9 @@ namespace L5Sharp.Core
         public DataTypeFamily Family { get; }
         public DataTypeClass Class => DataTypeClass.User;
         public bool IsAtomic => false;
-        public object Default => null;
+        public object DefaultValue => null;
+        public Radix DefaultRadix => Radix.Null;
+        public TagDataFormat DataFormat => TagDataFormat.Decorated;
 
         public string Description
         {

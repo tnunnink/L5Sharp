@@ -28,7 +28,7 @@ namespace L5Sharp.Core
             _dataType = dataType ?? throw new ArgumentNullException(nameof(dataType));
             _dimensions = dimensions ?? Dimensions.Empty;
 
-            Radix = radix ?? Radix.Default(dataType);
+            Radix = radix ?? dataType.DefaultRadix;
             ExternalAccess = externalAccess ?? ExternalAccess.None;
             TagType = tagType ?? TagType.Base;
             AliasFor = aliasFor ?? string.Empty;
@@ -37,7 +37,7 @@ namespace L5Sharp.Core
             Scope = scope ?? Scope.Null;
             Usage = usage != null ? usage : scope == Scope.Program ? TagUsage.Local : TagUsage.Null;
 
-            _value = _dataType.Default;
+            _value = _dataType.DefaultValue;
 
             Instantiate();
         }
@@ -161,8 +161,8 @@ namespace L5Sharp.Core
         public void ChangeType(IDataType dataType)
         {
             _dataType = dataType;
-            _value = dataType.Default;
-            Radix = Radix.Default(dataType);
+            _value = dataType.DefaultValue;
+            Radix = dataType.DefaultRadix;
             Instantiate();
         }
 

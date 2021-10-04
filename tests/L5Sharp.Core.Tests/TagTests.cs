@@ -64,6 +64,38 @@ namespace L5Sharp.Core.Tests
             tag.Members.Any(t => t.Name == "OV").Should().BeTrue();
             tag.Members.Any(t => t.Name == "UN").Should().BeTrue();
         }
+        
+        [Test]
+        public void New_Alarm_ShouldHaveValidMembers()
+        {
+            var tag = new Tag("Test", Predefined.Alarm);
+
+            tag.Should().NotBeNull();
+            tag.Members.Should().HaveCount(24);
+            tag.Members.Any(t => t.Name == "EnableIn").Should().BeTrue();
+            tag.Members.Any(t => t.Name == "In").Should().BeTrue();
+            tag.Members.Any(t => t.Name == "HHLimit").Should().BeTrue();
+            tag.Members.Any(t => t.Name == "HLimit").Should().BeTrue();
+            tag.Members.Any(t => t.Name == "LLimit").Should().BeTrue();
+            tag.Members.Any(t => t.Name == "LLLimit").Should().BeTrue();
+            tag.Members.Any(t => t.Name == "Deadband").Should().BeTrue();
+            tag.Members.Any(t => t.Name == "ROCPosLimit").Should().BeTrue();
+            tag.Members.Any(t => t.Name == "ROCNegLimit").Should().BeTrue();
+            tag.Members.Any(t => t.Name == "ROCPeriod").Should().BeTrue();
+            tag.Members.Any(t => t.Name == "EnableOut").Should().BeTrue();
+            tag.Members.Any(t => t.Name == "HHAlarm").Should().BeTrue();
+            tag.Members.Any(t => t.Name == "HAlarm").Should().BeTrue();
+            tag.Members.Any(t => t.Name == "LAlarm").Should().BeTrue();
+            tag.Members.Any(t => t.Name == "LLAlarm").Should().BeTrue();
+            tag.Members.Any(t => t.Name == "ROCPosAlarm").Should().BeTrue();
+            tag.Members.Any(t => t.Name == "ROCNegAlarm").Should().BeTrue();
+            tag.Members.Any(t => t.Name == "ROC").Should().BeTrue();
+            tag.Members.Any(t => t.Name == "Status").Should().BeTrue();
+            tag.Members.Any(t => t.Name == "InstructFault").Should().BeTrue();
+            tag.Members.Any(t => t.Name == "DeadbandInv").Should().BeTrue();
+            tag.Members.Any(t => t.Name == "ROCPosLimitInv").Should().BeTrue();
+            tag.Members.Any(t => t.Name == "ROCNegLimitInv").Should().BeTrue();
+        }
 
         [Test]
         public void New_TwoDimensionalArray_ShouldHaveExpectedLength()

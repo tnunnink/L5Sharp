@@ -17,7 +17,7 @@ namespace L5Sharp.Core
                 : throw new DataTypeNotFoundException();
 
             Dimension = element.GetDimension();
-            Radix = element.GetRadix() ?? Radix.Default(DataType);
+            Radix = element.GetRadix() ?? DataType.DefaultRadix;
             ExternalAccess = element.GetExternalAccess() ?? ExternalAccess.ReadWrite;
             Description = element.GetDescription() ?? string.Empty;
         }

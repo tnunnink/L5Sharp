@@ -30,7 +30,9 @@ namespace L5Sharp.Extensibility
         public DataTypeFamily Family { get; }
         public DataTypeClass Class { get; }
         public bool IsAtomic => false;
-        public object Default => null;
+        public object DefaultValue => null;
+        public Radix DefaultRadix => Radix.Null;
+        public TagDataFormat DataFormat => TagDataFormat.Decorated;
         public string Description { get; }
         public IEnumerable<IMember> Members => _members.Values.Where(m => !m.Hidden).AsEnumerable();
 

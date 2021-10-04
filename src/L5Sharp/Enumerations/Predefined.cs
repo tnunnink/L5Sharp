@@ -46,11 +46,14 @@ namespace L5Sharp.Enumerations
         public static readonly Predefined String = new String();
         public static readonly Predefined Timer = new Timer();
         public static readonly Predefined Counter = new Counter();
+        public static readonly Predefined Alarm = new Alarm();
 
         public DataTypeFamily Family { get; }
         public DataTypeClass Class => DataTypeClass.Predefined;
         public bool IsAtomic => AtomicNames.Contains(Name);
-        public virtual object Default => null;
+        public virtual object DefaultValue => null;
+        public virtual Radix DefaultRadix => Radix.Null;
+        public virtual TagDataFormat DataFormat => TagDataFormat.Decorated;
         public IEnumerable<IMember> Members => _members.Values.AsEnumerable();
 
         public virtual bool SupportsRadix(Radix radix)
@@ -95,6 +98,7 @@ namespace L5Sharp.Enumerations
         private static XDocument LoadPredefined()
         {
             using var stream = Resources.GetStream(PredefinedFileName, ResourceNamespace);
+            
             if (stream == null)
                 throw new InvalidOperationException(
                     $"Could not load template resource file {PredefinedFileName} from {ResourceNamespace}");
