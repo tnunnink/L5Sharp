@@ -47,7 +47,7 @@ namespace L5Sharp.Builders
         {
             if (builder == null)
             {
-                _task.AddProgram(name);
+                _task.NewProgram(name);
                 return this;
             }
             

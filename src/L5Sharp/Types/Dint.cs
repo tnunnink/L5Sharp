@@ -9,6 +9,8 @@ namespace L5Sharp.Types
         }
 
         public override object DefaultValue => default(int);
+        
+        public override Radix DefaultRadix => Radix.Decimal;
 
         public override object ParseValue(string value)
         {

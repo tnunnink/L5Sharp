@@ -150,7 +150,7 @@ namespace L5Sharp.Core.Tests
         {
             var task = new Task("TestTask");
             
-            task.AddProgram("Program");
+            task.NewProgram("Program");
 
             task.ScheduledPrograms.Should().Contain("Program");
             task.Programs.Should().Contain(p => p.Name == "Program");
@@ -172,16 +172,16 @@ namespace L5Sharp.Core.Tests
         {
             var task = new Task("TestTask");
             
-            task.AddProgram("Program");
+            task.NewProgram("Program");
 
-            FluentActions.Invoking(() => task.AddProgram("Program")).Should().Throw<NameCollisionException>();
+            FluentActions.Invoking(() => task.NewProgram("Program")).Should().Throw<ComponentNameCollisionException>();
         }
         
         [Test]
         public void RemoveProgram_ExistingProgram_ProgramsShouldBeEmpty()
         {
             var task = new Task("TestTask");
-            task.AddProgram("Program");
+            task.NewProgram("Program");
             
             task.RemoveProgram("Program");
             
@@ -193,7 +193,7 @@ namespace L5Sharp.Core.Tests
         public void RemoveProgram_NonExistingProgram_ProgramsShouldBeEmpty()
         {
             var task = new Task("TestTask");
-            task.AddProgram("Program");
+            task.NewProgram("Program");
             
             task.RemoveProgram("Program");
 

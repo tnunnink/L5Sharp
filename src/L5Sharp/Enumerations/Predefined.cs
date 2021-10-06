@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Xml.Linq;
 using Ardalis.SmartEnum;
 using L5Sharp.Abstractions;
 using L5Sharp.Core;
+using L5Sharp.Extensions;
 using L5Sharp.Types;
 using L5Sharp.Utilities;
 using String = L5Sharp.Types.String;
@@ -60,8 +60,11 @@ namespace L5Sharp.Enumerations
         {
             if (!IsAtomic) return radix.Equals(Radix.Null);
             
-            return radix == Radix.Binary || radix == Radix.Octal || radix == Radix.Decimal || radix == Radix.Hex ||
-                   radix == Radix.Ascii;
+            return radix == Radix.Binary 
+                   || radix == Radix.Octal 
+                   || radix == Radix.Decimal 
+                   || radix == Radix.Hex
+                   || radix == Radix.Ascii;
         }
 
         public static bool ContainsType(string name)
@@ -98,11 +101,6 @@ namespace L5Sharp.Enumerations
         private static XDocument LoadPredefined()
         {
             using var stream = Resources.GetStream(PredefinedFileName, ResourceNamespace);
-            
-            if (stream == null)
-                throw new InvalidOperationException(
-                    $"Could not load template resource file {PredefinedFileName} from {ResourceNamespace}");
-
             return XDocument.Load(stream);
         }
     }

@@ -20,7 +20,7 @@ namespace L5Sharp.Tests
         [Test]
         public void New_ValidFile_ShouldNotBeNull()
         {
-            var sut = new Logix(_fileName);
+            var sut = new LogixContext(_fileName);
 
             sut.Should().NotBeNull();
         }

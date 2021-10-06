@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Xml.Linq;
 using L5Sharp.Abstractions;
 using L5Sharp.Enumerations;
 using L5Sharp.Utilities;
@@ -108,12 +107,12 @@ namespace L5Sharp.Core
             if (program == null) throw new ArgumentNullException(nameof(program));
 
             if (_programs.ContainsKey(program.Name))
-                Throw.NameCollisionException(program.Name, typeof(Program));
+                Throw.ComponentNameCollisionException(program.Name, typeof(Program));
 
             _programs.Add(program.Name, program);
         }
 
-        public void AddProgram(string name)
+        public void NewProgram(string name)
         {
             var program = new Program(name);
             AddProgram(program);
@@ -126,31 +125,6 @@ namespace L5Sharp.Core
             if (!_programs.ContainsKey(name)) return;
 
             _programs.Remove(name);
-        }
-
-        public XElement Serialize()
-        {
-            var element = new XElement(nameof(Task));
-            element.Add(new XAttribute(nameof(Name), Name));
-            element.Add(new XAttribute(nameof(Type), Type));
-            element.Add(new XAttribute(nameof(Rate), Rate));
-            element.Add(new XAttribute(nameof(Priority), Priority));
-            element.Add(new XAttribute(nameof(Watchdog), Watchdog));
-            element.Add(new XAttribute(nameof(InhibitTask), InhibitTask));
-            element.Add(new XAttribute(nameof(DisableUpdateOutputs), DisableUpdateOutputs));
-
-            if (!string.IsNullOrEmpty(Description))
-                element.Add(new XElement(nameof(Description)), Description);
-
-            if (_programs.Count <= 0) return element;
-
-            var scheduled = new XElement(nameof(ScheduledPrograms));
-            foreach (var name in _programs.Keys)
-                scheduled.Add(new XElement("ScheduledProgram", new XAttribute("Name", name)));
-
-            element.Add(scheduled);
-
-            return element;
         }
     }
 }

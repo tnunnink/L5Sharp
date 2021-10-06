@@ -9,6 +9,8 @@ namespace L5Sharp.Types
         }
 
         public override object DefaultValue => default(long);
+        
+        public override Radix DefaultRadix => Radix.Decimal;
 
         public override bool SupportsRadix(Radix radix)
         {

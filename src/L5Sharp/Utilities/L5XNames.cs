@@ -46,6 +46,7 @@
             public const string Member = nameof(Member);
             public const string Family = nameof(Family);
             public const string Class = nameof(Class);    
+            public const string Type = nameof(Type);    
         }
 
         public static class Elements

@@ -142,12 +142,14 @@ namespace L5Sharp.Core
         public Scope Scope { get; internal set; }
         public object ForceValue { get; set; }
         public bool CanForce { get; set; }
+        
         public IEnumerable<ITagMember> Members => _members.Values.AsEnumerable();
 
         public bool IsValueMember => Value != null && _dataType is { IsAtomic: true };
         public bool IsArrayMember => Dimension.Length > 0;
         public bool IsArrayElement => false;
         public bool IsStructureMember => !IsValueMember && !IsArrayMember && _members.Count > 0;
+        
         public ITagMember GetMember(string name)
         {
             return Members.SingleOrDefault(m => m.Name == name);

@@ -6,6 +6,7 @@ using ApprovalTests;
 using ApprovalTests.Reporters;
 using FluentAssertions;
 using L5Sharp.Core;
+using L5Sharp.Extensions;
 using L5Sharp.Utilities;
 using NUnit.Framework;
 

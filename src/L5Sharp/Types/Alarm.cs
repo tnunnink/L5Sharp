@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using L5Sharp.Abstractions;
 using L5Sharp.Enumerations;
+// ReSharper disable InconsistentNaming I want to keep the naming consistent with Logix (for now).
 
 namespace L5Sharp.Types
 {
@@ -9,6 +10,8 @@ namespace L5Sharp.Types
         public Alarm() : base(LoadElement(nameof(Alarm).ToUpper()))
         {
         }
+        
+        public override TagDataFormat DataFormat => TagDataFormat.Alarm;
 
         public IMember EnableIn => Members.SingleOrDefault(m => m.Name == nameof(EnableIn));
         public IMember In => Members.SingleOrDefault(m => m.Name == nameof(In));

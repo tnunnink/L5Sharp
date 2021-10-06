@@ -2,6 +2,7 @@
 using ApprovalTests.Reporters;
 using FluentAssertions;
 using L5Sharp.Core;
+using L5Sharp.Extensions;
 using NUnit.Framework;
 
 namespace L5Sharp.Serialization.Tests
@@ -31,7 +32,7 @@ namespace L5Sharp.Serialization.Tests
             Approvals.VerifyXml(element.ToString());
         }
         
-        [Test]
+        /*[Test]
         [UseReporter(typeof(DiffReporter))]
         public void Serialize_WithDataTypes_ShouldHaveApprovedOutput()
         {
@@ -48,6 +49,6 @@ namespace L5Sharp.Serialization.Tests
             var element = controller.Serialize();
 
             Approvals.VerifyXml(element.ToString());
-        }
+        }*/
     }
 }

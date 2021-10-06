@@ -1,6 +1,6 @@
 ﻿using System;
 using L5Sharp.Enumerations;
-using L5Sharp.Utilities;
+using L5Sharp.Extensions;
 
 namespace L5Sharp.Types
 {
@@ -14,9 +14,9 @@ namespace L5Sharp.Types
         {
         }
 
-        public bool MemberName { get; set; }
-
         public override object DefaultValue => default(bool);
+
+        public override Radix DefaultRadix => Radix.Decimal;
 
         public override bool SupportsRadix(Radix radix)
         {

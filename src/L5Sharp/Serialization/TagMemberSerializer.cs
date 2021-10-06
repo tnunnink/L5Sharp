@@ -11,8 +11,15 @@ using L5Sharp.Utilities;
 
 namespace L5Sharp.Serialization
 {
-    internal class TagMemberSerializer : IL5XSerializer<TagMember>
+    internal class TagMemberSerializer : IComponentSerializer<TagMember>
     {
+        private readonly ITagMember _parent;
+
+        public TagMemberSerializer(ITagMember parent)
+        {
+            _parent = parent;
+        }
+        
         public XElement Serialize(TagMember component)
         {
             if (component.IsValueMember)

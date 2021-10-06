@@ -6,7 +6,7 @@ using L5Sharp.Core;
 
 namespace L5Sharp.Serialization
 {
-    internal class ProgramSerializer : IL5XSerializer<Program>
+    internal class ProgramSerializer : IComponentSerializer<Program>
     {
         public XElement Serialize(Program component)
         {

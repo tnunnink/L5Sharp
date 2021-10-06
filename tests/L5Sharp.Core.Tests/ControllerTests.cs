@@ -1,4 +1,6 @@
-﻿using FluentAssertions;
+﻿using System;
+using FluentAssertions;
+using L5Sharp.Exceptions;
 using NUnit.Framework;
 
 namespace L5Sharp.Core.Tests
@@ -15,71 +17,53 @@ namespace L5Sharp.Core.Tests
         }
         
         [Test]
-        public void New_InvalidName_ShouldNotBeNull()
+        public void New_InvalidName_ShouldThrowInvalidNameException()
+        {
+            FluentActions.Invoking(() => new Controller("This is Invalid !@#$")).Should().Throw<InvalidNameException>();
+        }
+        
+        //todo add property tests
+        
+        [Test]
+        public void AddDataType_ValidDataType_DataTypesShouldHaveComponent()
         {
             var controller = new Controller("Test_Controller");
+            var datatype = new DataType("TestType");
 
-            controller.Should().NotBeNull();
+            controller.AddDataType(datatype);
+
+            controller.DataTypes.Should().Contain(datatype);
         }
         
         [Test]
-        public void Get_DataTypeExistingType_ShouldNotBeNull()
+        public void AddDataType_Null_ShouldThrowArgumentNullException()
         {
             var controller = new Controller("Test_Controller");
 
-            var type = controller.DataTypes.Get("");
-
-            type.Should().NotBeNull();
-        }
-
-        /*[Test]
-        public void Add_DataType_DataTypesShouldContainExpectedDataType()
-        {
-            var dataType = new DataType("TestType");
-            var controller = new Controller("Test");
-
-            controller.Add(dataType);
-
-            controller.DataTypes.Should().Contain(dataType);
+            FluentActions.Invoking(() => controller.AddDataType(null)).Should().Throw<ArgumentNullException>();
         }
         
         [Test]
-        public void Add_DataTypeValidType_ShouldHaveExpectedCount()
+        public void AddDataType_AlreadyExists_ShouldThrowComponentNameCollisionException()
         {
-            var controller = new Controller("Name");
-            
-            controller.Add(new DataType("TypeName", "This is a test"));
+            var controller = new Controller("Test_Controller");
+            var datatype = new DataType("TestType");
+            controller.AddDataType(datatype);
 
-            controller.DataTypes.Where(x => x.Name == "TypeName").Should().HaveCount(1);
+            FluentActions.Invoking(() => controller.AddDataType(datatype)).Should()
+                .Throw<ComponentNameCollisionException>();
         }
 
         [Test]
-        public void Add_DataTypeValidDataType_ShouldUpdateCollection()
+        public void RemoveDataType_ValidDataType_DataTypesShouldHaveComponent()
         {
-            var controller = new Controller("Name");
-            var type = new DataType("TestType");
-            type.AddMember("Member01", DataType.Dint);
+            var controller = new Controller("Test_Controller");
+            var datatype = new DataType("TestType");
+            controller.AddDataType(datatype);
             
-            controller.Add(type);
-
-            controller.DataTypes.Where(x => x.Name == "TestType").Should().HaveCount(1);
+            controller.RemoveDataType(datatype);
+            
+            controller.DataTypes.Should().NotContain(datatype);
         }
-
-        [Test]
-        public void Create_DatatypeWithMembers_ShouldHaveExpectedDataTypes()
-        {
-            var controller = new Controller("ControllerName");
-            
-            controller.Create().DataType("DT1", b =>
-                b.HasDescription("Test Type 1")
-                    .WithMember("TestMember", DataType.Bool));
-            
-            controller.Create().DataType("DT2", b =>
-                b.HasDescription("Test Type 2")
-                    .WithMember("TestMember", DataType.Dint));
-
-            controller.DataTypes.Should().Contain(d => d.Name == "DT1");
-            controller.DataTypes.Should().Contain(d => d.Name == "DT2");
-        }*/
     }
 }

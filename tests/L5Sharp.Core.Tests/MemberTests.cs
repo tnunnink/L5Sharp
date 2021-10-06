@@ -73,6 +73,14 @@ namespace L5Sharp.Core.Tests
         }
 
         [Test]
+        public void SetName_Null_ShouldThrowInvalidNameException()
+        {
+            var member = new Member("MemberName", DataType.Bool);
+
+            FluentActions.Invoking(() => member.Name = null).Should().Throw<ArgumentNullException>();
+        }
+
+        [Test]
         public void SetDataType_ValidDataType_ShouldUpdateDataType()
         {
             var member = new Member("MemberName", DataType.Bool);
@@ -91,7 +99,7 @@ namespace L5Sharp.Core.Tests
 
             member.DataType.Should().Be(DataType.Null);
         }
-        
+
         [Test]
         public void SetDimension_ValidNumber_ShouldHaveExpectedDimensions()
         {
@@ -111,8 +119,8 @@ namespace L5Sharp.Core.Tests
 
             member.Radix.Should().Be(Radix.Ascii);
         }
-        
-        
+
+
         [Test]
         public void SetRadix_InvalidRadix_ShouldThrowRadixNotSupportedException()
         {
@@ -120,8 +128,8 @@ namespace L5Sharp.Core.Tests
 
             FluentActions.Invoking(() => member.Radix = Radix.Float).Should().Throw<RadixNotSupportedException>();
         }
-        
-                
+
+
         [Test]
         public void SetRadix_Null_ShouldThrowArgumentNullException()
         {
@@ -129,7 +137,7 @@ namespace L5Sharp.Core.Tests
 
             FluentActions.Invoking(() => member.Radix = null).Should().Throw<ArgumentNullException>();
         }
-        
+
         [Test]
         public void SetExternalAccess_None_ShouldUpdateExternalAccess()
         {
@@ -139,7 +147,7 @@ namespace L5Sharp.Core.Tests
 
             member.ExternalAccess.Should().Be(ExternalAccess.None);
         }
-        
+
         [Test]
         public void SetExternalAccess_ReadOnly_ShouldUpdateExternalAccess()
         {
@@ -149,7 +157,7 @@ namespace L5Sharp.Core.Tests
 
             member.ExternalAccess.Should().Be(ExternalAccess.ReadOnly);
         }
-        
+
         [Test]
         public void SetExternalAccess_Null_ShouldThrowArgumentNullException()
         {
@@ -157,7 +165,7 @@ namespace L5Sharp.Core.Tests
 
             FluentActions.Invoking(() => member.ExternalAccess = null).Should().Throw<ArgumentNullException>();
         }
-        
+
         [Test]
         public void SetDescription_ValidString_ShouldUpdateString()
         {
@@ -167,15 +175,129 @@ namespace L5Sharp.Core.Tests
 
             member.Description.Should().Be("This is a test description");
         }
-        
+
         [Test]
         public void SetDescription_Null_ShouldBeEmpty()
         {
             var member = new Member("MemberName", DataType.Int);
 
-            member.Description = null;
+            FluentActions.Invoking(() => member.Description = null).Should().Throw<ArgumentNullException>();
+        }
 
-            member.Description.Should().BeEmpty();
+        [Test]
+        public void Equals_TypeOverloadAreEqual_ShouldBeTrue()
+        {
+            var member1 = new Member("Member", DataType.Bool);
+            var member2 = new Member("Member", DataType.Bool);
+
+            var result = member1.Equals(member2);
+
+            result.Should().BeTrue();
+        }
+
+        [Test]
+        public void Equals_TypeOverloadAreNotEqual_ShouldBeFalse()
+        {
+            var member1 = new Member("Member", DataType.Bool);
+            var member2 = new Member("Member", DataType.Int);
+
+            var result = member1.Equals(member2);
+
+            result.Should().BeFalse();
+        }
+
+        [Test]
+        public void Equals_TypeOverloadSameReference_ShouldBeTrue()
+        {
+            var member = new Member("Member", DataType.Bool);
+
+            var result = member.Equals(member);
+
+            result.Should().BeTrue();
+        }
+
+        [Test]
+        public void Equals_TypeOverloadNull_ShouldBeFalse()
+        {
+            var member = new Member("Member", DataType.Bool);
+
+            var result = member.Equals(null);
+
+            result.Should().BeFalse();
+        }
+
+        [Test]
+        public void Equals_ObjectOverloadAreEqual_ShouldBeTrue()
+        {
+            var member1 = new Member("Member", DataType.Bool);
+            var member2 = new Member("Member", DataType.Bool);
+
+            var result = member1.Equals((object)member2);
+
+            result.Should().BeTrue();
+        }
+
+        [Test]
+        public void Equals_ObjectOverloadAreNotEqual_ShouldBeFalse()
+        {
+            var member1 = new Member("Member", DataType.Bool);
+            var member2 = new Member("Member", DataType.Int);
+
+            var result = member1.Equals((object)member2);
+
+            result.Should().BeFalse();
+        }
+
+        [Test]
+        public void Equals_ObjectOverloadSameReference_ShouldBeTrue()
+        {
+            var member = new Member("Member", DataType.Bool);
+
+            var result = member.Equals((object)member);
+
+            result.Should().BeTrue();
+        }
+
+        [Test]
+        public void Equals_ObjectOverloadNull_ShouldBeFalse()
+        {
+            var member = new Member("Member", DataType.Bool);
+
+            var result = member.Equals((object)null);
+
+            result.Should().BeFalse();
+        }
+
+        [Test]
+        public void GetHashCode_WhenCalled_ShouldNotBeNull()
+        {
+            var member = new Member("Member", DataType.Bool);
+
+            var hash = member.GetHashCode();
+
+            hash.Should().NotBe(0);
+        }
+
+        [Test]
+        public void Equals_OperatorAreEqual_ShouldBeTrue()
+        {
+            var member1 = new Member("Member", DataType.Bool);
+            var member2 = new Member("Member", DataType.Bool);
+
+            var result = member1 == member2;
+
+            result.Should().BeTrue();
+        }
+
+        [Test]
+        public void NotEquals_OperatorAreEqual_ShouldBeFalse()
+        {
+            var member1 = new Member("Member", DataType.Bool);
+            var member2 = new Member("Member", DataType.Bool);
+
+            var result = member1 != member2;
+
+            result.Should().BeFalse();
         }
     }
 }

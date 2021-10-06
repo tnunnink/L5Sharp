@@ -1,141 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
-using L5Sharp.Abstractions;
 using L5Sharp.Core;
 using L5Sharp.Enumerations;
-using L5Sharp.Serialization;
+using L5Sharp.Utilities;
 
-namespace L5Sharp.Utilities
+namespace L5Sharp.Extensions
 {
-    internal static class L5Xtensions
+    public static class L5XAttributeExtensions
     {
-        private static readonly Dictionary<Type, IL5XSerializer> Serializers = new Dictionary<Type, IL5XSerializer>
-        {
-            { typeof(DataType), new DataTypeSerializer() },
-            { typeof(Member), new MemberSerializer() }
-        };
-        
-        private static readonly Dictionary<Type, string> ContainerNames = new Dictionary<Type, string>
-        {
-            { typeof(DataType), L5XNames.Containers.DataTypes },
-            { typeof(Module), L5XNames.Containers.Modules },
-            { typeof(Instruction), L5XNames.Containers.AddOnInstructions },
-            { typeof(Tag), L5XNames.Containers.Tags },
-            { typeof(Program), L5XNames.Containers.Programs },
-            { typeof(Task), L5XNames.Containers.Tasks },
-        };
-        
-        #region GenericHelpers
-
-        public static XElement Serialize<T>(this T component) where T : IComponent
-        {
-            var type = typeof(T);
-
-            if (!Serializers.ContainsKey(type))
-                throw new InvalidOperationException($"Not serializer defined for type '{type}'");
-
-            var serializer = (IL5XSerializer<T>)Serializers[type];
-
-            return serializer.Serialize(component);
-        }
-
-        public static T Deserialize<T>(this XElement element) where T : IComponent
-        {
-            var type = typeof(T);
-
-            if (!Serializers.ContainsKey(type))
-                throw new InvalidOperationException($"Not serializer defined for type '{type}'");
-
-            var serializer = (IL5XSerializer<T>)Serializers[type];
-
-            return serializer.Deserialize(element);
-        }
-        
-        public static bool Contains<T>(this XElement element, string name) where T : IComponent
-        {
-            var component = typeof(T).Name;
-            return element.Descendants(component).FirstOrDefault(x => x.GetName() == name) != null;
-        }
-        
-        public static IEnumerable<T> All<T>(this XElement element) where T : IComponent
-        {
-            var component = typeof(T).Name;
-            return element.Descendants(component).Select(x => x.Deserialize<T>());
-        }
-
-        public static T Get<T>(this XElement element, string name) where T : IComponent
-        {
-            var component = typeof(T).Name;
-            return element.Descendants(component).FirstOrDefault(x => x.GetName() == name).Deserialize<T>();
-        }
-        
-        public static XElement Container<T>(this XElement element) where T : IComponent
-        {
-            var containerName = ContainerNames[typeof(T)];
-            return element.Descendants(containerName).FirstOrDefault();
-        }
-
-        #endregion
-        
-        
-        #region ComponentHelpers
-
-        public static IDataType GetDataType(this XElement element)
-        {
-            if (element == null) throw new ArgumentNullException(nameof(element));
-            
-            var typeName = element.GetDataTypeName();
-            if (typeName == null)
-                throw new InvalidOperationException($"Element '{element.Name}' does not have data type name");
-                
-            if (Predefined.ContainsType(typeName))
-                return Predefined.FromName(typeName);
-            
-            var typeElement = element.FindDataTypeElement(typeName);
-            if (typeElement == null) return null;
-
-                var serializer = new DataTypeSerializer();
-            return serializer.Deserialize(typeElement);
-        }
-
-        public static XElement FindDataTypeElement(this XElement element, string name)
-        {
-            return element.Document?.Descendants(L5XNames.Components.DataType)
-                .SingleOrDefault(x => x.Attribute(L5XNames.Attributes.Name)?.Value == name);
-        }
-        
-        public static string GetOperandOfTag(this XElement element)
-        {
-            var operandName = element.Attribute("Name")?.Value ?? string.Empty;
-
-            var parent = element.Parent;
-
-            if (parent == null) return operandName;
-            
-            while (parent.Name != "Tag")
-            {
-                var name = parent.Attribute("Name")?.Value;
-                var index = parent.Attribute("Name")?.Value;
-
-                if (name != null)
-                    operandName = operandName.StartsWith('[') ? $"{name}{operandName}" : $"{name}.{operandName}";
-                if (index != null)
-                    operandName = $"{index}.{operandName}";
-
-                if (parent.Parent == null) break;
-                parent = parent.Parent;
-            }
-
-            return $".{operandName}";
-        }
-
-        #endregion
-
-        #region AttributeHelpers
-
-         /// <summary>
+        /// <summary>
         /// Gets the attribute "Name" from the current element
         /// </summary>
         /// <param name="element">The current element instance</param>
@@ -174,7 +48,7 @@ namespace L5Sharp.Utilities
         public static ushort GetDimension(this XElement element)
         {
             var dimension = element.Attribute(L5XNames.Attributes.Dimension)?.Value;
-            return dimension != null ? Convert.ToUInt16(dimension) : (ushort) 0;
+            return dimension != null ? Convert.ToUInt16(dimension) : (ushort)0;
         }
 
         /// <summary>
@@ -218,7 +92,7 @@ namespace L5Sharp.Utilities
         {
             return element.Element(L5XNames.Attributes.Description)?.Value;
         }
-        
+
         /// <summary>
         /// Simple helper extension that gets the attribute "Family" from the current element
         /// </summary>
@@ -240,7 +114,7 @@ namespace L5Sharp.Utilities
             var hidden = element.Attribute(L5XNames.Attributes.Hidden)?.Value;
             return hidden != null && Convert.ToBoolean(hidden);
         }
-        
+
         /// <summary>
         /// Simple helper extension that gets the element "Target" from the current element.
         /// </summary>
@@ -250,7 +124,7 @@ namespace L5Sharp.Utilities
         {
             return element.Attribute(L5XNames.Attributes.Target)?.Value;
         }
-        
+
         /// <summary>
         /// Simple helper extension that gets the element "BitNumber" from the current element.
         /// </summary>
@@ -304,7 +178,7 @@ namespace L5Sharp.Utilities
         {
             return element.Attribute(L5XNames.Attributes.AliasFor)?.Value;
         }
-        
+
         /// <summary>
         /// Simple helper extension that gets the attribute "Scope" from the current element
         /// </summary>
@@ -316,6 +190,15 @@ namespace L5Sharp.Utilities
             return program == null ? Scope.Controller : Scope.Program;
         }
 
-        #endregion
+        /// <summary>
+        /// Simple helper extension that gets the attribute "Scope" from the current element
+        /// </summary>
+        /// <param name="element">The current element instance</param>
+        /// <returns>The string value of the Scope attribute if it exists. Null if it is not found</returns>
+        public static TaskType GetTaskType(this XElement element)
+        {
+            var type = element.Attribute(L5XNames.Attributes.Type)?.Value;
+            return type != null ? TaskType.FromName(type) : null;
+        }
     }
 }

@@ -9,11 +9,13 @@ namespace L5Sharp.Types
         }
 
         public override object DefaultValue => default(byte);
+        public override Radix DefaultRadix => Radix.Decimal;
 
         public override object ParseValue(string value)
         {
             if (byte.TryParse(value, out var result))
                 return result;
+            
             return null;
         }
             

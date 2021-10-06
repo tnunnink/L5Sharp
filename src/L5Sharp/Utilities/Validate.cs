@@ -35,10 +35,5 @@ namespace L5Sharp.Utilities
 
             if (!type.SupportsRadix(radix)) Throw.RadixNotSupportedException(radix, type);
         }
-        
-        public static void ExternalAccess(ExternalAccess externalAccess)
-        {
-            if (externalAccess == null) throw new ArgumentNullException(nameof(externalAccess));
-        }
     }
 }

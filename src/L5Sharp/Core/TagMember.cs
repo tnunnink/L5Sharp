@@ -36,10 +36,8 @@ namespace L5Sharp.Core
             Radix radix = null, string description = null, object value = null)
         {
             Parent = parent ?? throw new ArgumentNullException(nameof(parent));
-            if (string.IsNullOrEmpty(name)) Throw.ArgumentNullOrEmptyException(nameof(name));
-
-            Name = name;
-            _dataType = dataType;
+            Name = name ?? throw new ArgumentNullException(nameof(name)) ;
+            _dataType = dataType ?? throw new ArgumentNullException(nameof(dataType));
             Dimension = dimensions ?? Dimensions.Empty;
             _radix = radix ?? parent.Radix;
             ExternalAccess = parent.ExternalAccess;

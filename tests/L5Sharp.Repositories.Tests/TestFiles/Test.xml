@@ -1,0 +1,395 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<RSLogix5000Content SchemaRevision="1.0" SoftwareRevision="32.02" TargetName="TestController" TargetType="Controller"
+                    ContainsContext="false" Owner="tnunnink, EN Engineering" ExportDate="Sun Oct 03 19:09:11 2021"
+                    ExportOptions="NoRawData L5KData DecoratedData ForceProtectedEncoding AllProjDocTrans">
+    <Controller Use="Target" Name="TestController" ProcessorType="1756-L83E" MajorRev="32" MinorRev="11"
+                ProjectCreationDate="Mon Sep 27 16:23:27 2021" LastModifiedDate="Sun Oct 03 19:08:30 2021"
+                SFCExecutionControl="CurrentActive" SFCRestartPosition="MostRecent" SFCLastScan="DontScan"
+                ProjectSN="16#0000_0000"
+                MatchProjectToController="false" CanUseRPIFromProducer="false" InhibitAutomaticFirmwareUpdate="0"
+                PassThroughConfiguration="EnabledWithAppend" DownloadProjectDocumentationAndExtendedProperties="true"
+                DownloadProjectCustomProperties="true" ReportMinorOverflow="false">
+        <Description>
+            <![CDATA[This is a test project]]>
+        </Description>
+        <RedundancyInfo Enabled="false" KeepTestEditsOnSwitchOver="false"/>
+        <Security Code="0" ChangesToDetect="16#ffff_ffff_ffff_ffff"/>
+        <SafetyInfo/>
+        <DataTypes>
+            <DataType Name="ArrayType" Family="NoFamily" Class="User">
+                <Description>
+                    <![CDATA[This is a test type]]>
+                </Description>
+                <Members>
+                    <Member Name="BoolArray" DataType="BOOL" Dimension="32" Radix="Decimal" Hidden="false"
+                            ExternalAccess="Read/Write">
+                        <Description>
+                            <![CDATA[Test boolean array]]>
+                        </Description>
+                    </Member>
+                    <Member Name="SintArray" DataType="SINT" Dimension="6" Radix="Decimal" Hidden="false"
+                            ExternalAccess="Read/Write">
+                        <Description>
+                            <![CDATA[Test Sint Array]]>
+                        </Description>
+                    </Member>
+                    <Member Name="IntArray" DataType="INT" Dimension="8" Radix="Decimal" Hidden="false"
+                            ExternalAccess="Read/Write">
+                        <Description>
+                            <![CDATA[Test Int Array]]>
+                        </Description>
+                    </Member>
+                    <Member Name="DintArray" DataType="DINT" Dimension="3" Radix="Decimal" Hidden="false"
+                            ExternalAccess="Read/Write">
+                        <Description>
+                            <![CDATA[Test 
+Dint Array]]>
+                        </Description>
+                    </Member>
+                    <Member Name="LintArray" DataType="LINT" Dimension="2" Radix="ASCII" Hidden="false"
+                            ExternalAccess="Read/Write">
+                        <Description>
+                            <![CDATA[Test Lint Array]]>
+                        </Description>
+                    </Member>
+                </Members>
+            </DataType>
+            <DataType Name="ComplexType" Family="NoFamily" Class="User">
+                <Description>
+                    <![CDATA[Test data type with more complex members]]>
+                </Description>
+                <Members>
+                    <Member Name="SimpleMember" DataType="SimpleTypes" Dimension="0" Radix="NullType" Hidden="false"
+                            ExternalAccess="Read/Write">
+                        <Description>
+                            <![CDATA[User defined complex type]]>
+                        </Description>
+                    </Member>
+                    <Member Name="CounterMember" DataType="COUNTER" Dimension="0" Radix="NullType" Hidden="false"
+                            ExternalAccess="Read/Write">
+                        <Description>
+                            <![CDATA[Test counter member]]>
+                        </Description>
+                    </Member>
+                    <Member Name="TimeMember" DataType="TIMER" Dimension="0" Radix="NullType" Hidden="false"
+                            ExternalAccess="Read/Write">
+                        <Description>
+                            <![CDATA[Test Timer member]]>
+                        </Description>
+                    </Member>
+                    <Member Name="AlarmMember" DataType="ALARM" Dimension="0" Radix="NullType" Hidden="false"
+                            ExternalAccess="Read/Write">
+                        <Description>
+                            <![CDATA[Test Analog Alarm]]>
+                        </Description>
+                    </Member>
+                </Members>
+            </DataType>
+            <DataType Name="MyStringType" Family="StringFamily" Class="User">
+                <Description>
+                    <![CDATA[This is a test string type]]>
+                </Description>
+                <Members>
+                    <Member Name="LEN" DataType="DINT" Dimension="0" Radix="Decimal" Hidden="false"
+                            ExternalAccess="Read/Write"/>
+                    <Member Name="DATA" DataType="SINT" Dimension="100" Radix="ASCII" Hidden="false"
+                            ExternalAccess="Read/Write"/>
+                </Members>
+            </DataType>
+            <DataType Name="SimpleTypes" Family="NoFamily" Class="User">
+                <Description>
+                    <![CDATA[This is a test data type that contains simple atomic types]]>
+                </Description>
+                <Members>
+                    <Member Name="ZZZZZZZZZZSimpleType0" DataType="SINT" Dimension="0" Radix="Decimal" Hidden="true"
+                            ExternalAccess="Read/Write"/>
+                    <Member Name="BoolMember" DataType="BIT" Dimension="0" Radix="Decimal" Hidden="false"
+                            Target="ZZZZZZZZZZSimpleType0" BitNumber="0" ExternalAccess="Read/Write">
+                        <Description>
+                            <![CDATA[Test Boolean]]>
+                        </Description>
+                    </Member>
+                    <Member Name="SintMember" DataType="SINT" Dimension="0" Radix="Decimal" Hidden="false"
+                            ExternalAccess="Read/Write">
+                        <Description>
+                            <![CDATA[Test Sint]]>
+                        </Description>
+                    </Member>
+                    <Member Name="IntMember" DataType="INT" Dimension="0" Radix="Decimal" Hidden="false"
+                            ExternalAccess="Read/Write">
+                        <Description>
+                            <![CDATA[Test Int]]>
+                        </Description>
+                    </Member>
+                    <Member Name="DintMember" DataType="DINT" Dimension="0" Radix="Decimal" Hidden="false"
+                            ExternalAccess="Read/Write">
+                        <Description>
+                            <![CDATA[Test Dint]]>
+                        </Description>
+                    </Member>
+                    <Member Name="LintMember" DataType="LINT" Dimension="0" Radix="Decimal" Hidden="false"
+                            ExternalAccess="Read/Write">
+                        <Description>
+                            <![CDATA[Test Lint]]>
+                        </Description>
+                    </Member>
+                </Members>
+            </DataType>
+        </DataTypes>
+        <Modules>
+            <Module Name="Local" CatalogNumber="1756-L83E" Vendor="1" ProductType="14" ProductCode="166" Major="32"
+                    Minor="11" ParentModule="Local" ParentModPortId="1" Inhibited="false" MajorFault="true"
+            >
+                <EKey State="Disabled"/>
+                <Ports>
+                    <Port Id="1" Address="0" Type="ICP" Upstream="false">
+                        <Bus Size="10"/>
+                    </Port>
+                    <Port Id="2" Type="Ethernet" Upstream="false">
+                        <Bus/>
+                    </Port>
+                </Ports>
+            </Module>
+        </Modules>
+        <AddOnInstructionDefinitions/>
+        <Tags>
+            <Tag Name="SimpleBool" TagType="Base" DataType="BOOL" Radix="Decimal" Constant="false"
+                 ExternalAccess="None">
+                <Data Format="L5K">
+                    <![CDATA[0]]>
+                </Data>
+                <Data Format="Decorated">
+                    <DataValue DataType="BOOL" Radix="Decimal" Value="0"/>
+                </Data>
+            </Tag>
+            <Tag Name="SimpleDint" TagType="Base" DataType="DINT" Radix="Decimal" Constant="false"
+                 ExternalAccess="None">
+                <Data Format="L5K">
+                    <![CDATA[0]]>
+                </Data>
+                <Data Format="Decorated">
+                    <DataValue DataType="DINT" Radix="Decimal" Value="0"/>
+                </Data>
+            </Tag>
+            <Tag Name="SimpleLint" TagType="Base" DataType="LINT" Radix="Decimal" Constant="false"
+                 ExternalAccess="None">
+                <Data Format="L5K">
+                    <![CDATA[0]]>
+                </Data>
+                <Data Format="Decorated">
+                    <DataValue DataType="LINT" Radix="Decimal" Value="0"/>
+                </Data>
+            </Tag>
+            <Tag Name="SimpleSint" TagType="Base" DataType="SINT" Radix="Decimal" Constant="false"
+                 ExternalAccess="None">
+                <Data Format="L5K">
+                    <![CDATA[0]]>
+                </Data>
+                <Data Format="Decorated">
+                    <DataValue DataType="SINT" Radix="Decimal" Value="0"/>
+                </Data>
+            </Tag>
+            <Tag Name="TestAlarmTag" TagType="Base" DataType="ALARM" Constant="false" ExternalAccess="None">
+                <Data Format="L5K">
+                    <![CDATA[[1,0.00000000e+000,3.40282347e+038,3.40282347e+038,-3.40282347e+038,-3.40282347e+038,0.00000000e+000
+		,0.00000000e+000,0.00000000e+000,0.00000000e+000,0,0.00000000e+000,0,5.60519386e-045,0.00000000e+000
+		,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000
+		,0.00000000e+000,0.00000000e+000,0.00000000e+000]]]>
+                </Data>
+                <Data Format="Decorated">
+                    <Structure DataType="ALARM">
+                        <DataValueMember Name="EnableIn" DataType="BOOL" Value="1"/>
+                        <DataValueMember Name="In" DataType="REAL" Radix="Float" Value="0.0"/>
+                        <DataValueMember Name="HHLimit" DataType="REAL" Radix="Float" Value="3.40282347e+038"/>
+                        <DataValueMember Name="HLimit" DataType="REAL" Radix="Float" Value="3.40282347e+038"/>
+                        <DataValueMember Name="LLimit" DataType="REAL" Radix="Float" Value="-3.40282347e+038"/>
+                        <DataValueMember Name="LLLimit" DataType="REAL" Radix="Float" Value="-3.40282347e+038"/>
+                        <DataValueMember Name="Deadband" DataType="REAL" Radix="Float" Value="0.0"/>
+                        <DataValueMember Name="ROCPosLimit" DataType="REAL" Radix="Float" Value="0.0"/>
+                        <DataValueMember Name="ROCNegLimit" DataType="REAL" Radix="Float" Value="0.0"/>
+                        <DataValueMember Name="ROCPeriod" DataType="REAL" Radix="Float" Value="0.0"/>
+                        <DataValueMember Name="EnableOut" DataType="BOOL" Value="0"/>
+                        <DataValueMember Name="HHAlarm" DataType="BOOL" Value="0"/>
+                        <DataValueMember Name="HAlarm" DataType="BOOL" Value="0"/>
+                        <DataValueMember Name="LAlarm" DataType="BOOL" Value="0"/>
+                        <DataValueMember Name="LLAlarm" DataType="BOOL" Value="0"/>
+                        <DataValueMember Name="ROCPosAlarm" DataType="BOOL" Value="0"/>
+                        <DataValueMember Name="ROCNegAlarm" DataType="BOOL" Value="0"/>
+                        <DataValueMember Name="ROC" DataType="REAL" Radix="Float" Value="0.0"/>
+                        <DataValueMember Name="Status" DataType="DINT" Radix="Hex" Value="16#0000_0000"/>
+                        <DataValueMember Name="InstructFault" DataType="BOOL" Value="0"/>
+                        <DataValueMember Name="DeadbandInv" DataType="BOOL" Value="0"/>
+                        <DataValueMember Name="ROCPosLimitInv" DataType="BOOL" Value="0"/>
+                        <DataValueMember Name="ROCNegLimitInv" DataType="BOOL" Value="0"/>
+                        <DataValueMember Name="ROCPeriodInv" DataType="BOOL" Value="0"/>
+                    </Structure>
+                </Data>
+            </Tag>
+            <Tag Name="TestArrayTypeTag" TagType="Base" DataType="ArrayType" Constant="false" ExternalAccess="None">
+                <Data Format="L5K">
+                    <![CDATA[[[2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0
+		,2#0,2#0,2#0,2#0,2#0],[0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0],[0,0]]]]>
+                </Data>
+                <Data Format="Decorated">
+                    <Structure DataType="ArrayType">
+                        <ArrayMember Name="BoolArray" DataType="BOOL" Dimensions="32" Radix="Decimal">
+                            <Element Index="[0]" Value="0"/>
+                            <Element Index="[1]" Value="0"/>
+                            <Element Index="[2]" Value="0"/>
+                            <Element Index="[3]" Value="0"/>
+                            <Element Index="[4]" Value="0"/>
+                            <Element Index="[5]" Value="0"/>
+                            <Element Index="[6]" Value="0"/>
+                            <Element Index="[7]" Value="0"/>
+                            <Element Index="[8]" Value="0"/>
+                            <Element Index="[9]" Value="0"/>
+                            <Element Index="[10]" Value="0"/>
+                            <Element Index="[11]" Value="0"/>
+                            <Element Index="[12]" Value="0"/>
+                            <Element Index="[13]" Value="0"/>
+                            <Element Index="[14]" Value="0"/>
+                            <Element Index="[15]" Value="0"/>
+                            <Element Index="[16]" Value="0"/>
+                            <Element Index="[17]" Value="0"/>
+                            <Element Index="[18]" Value="0"/>
+                            <Element Index="[19]" Value="0"/>
+                            <Element Index="[20]" Value="0"/>
+                            <Element Index="[21]" Value="0"/>
+                            <Element Index="[22]" Value="0"/>
+                            <Element Index="[23]" Value="0"/>
+                            <Element Index="[24]" Value="0"/>
+                            <Element Index="[25]" Value="0"/>
+                            <Element Index="[26]" Value="0"/>
+                            <Element Index="[27]" Value="0"/>
+                            <Element Index="[28]" Value="0"/>
+                            <Element Index="[29]" Value="0"/>
+                            <Element Index="[30]" Value="0"/>
+                            <Element Index="[31]" Value="0"/>
+                        </ArrayMember>
+                        <ArrayMember Name="SintArray" DataType="SINT" Dimensions="6" Radix="Decimal">
+                            <Element Index="[0]" Value="0"/>
+                            <Element Index="[1]" Value="0"/>
+                            <Element Index="[2]" Value="0"/>
+                            <Element Index="[3]" Value="0"/>
+                            <Element Index="[4]" Value="0"/>
+                            <Element Index="[5]" Value="0"/>
+                        </ArrayMember>
+                        <ArrayMember Name="IntArray" DataType="INT" Dimensions="8" Radix="Decimal">
+                            <Element Index="[0]" Value="0"/>
+                            <Element Index="[1]" Value="0"/>
+                            <Element Index="[2]" Value="0"/>
+                            <Element Index="[3]" Value="0"/>
+                            <Element Index="[4]" Value="0"/>
+                            <Element Index="[5]" Value="0"/>
+                            <Element Index="[6]" Value="0"/>
+                            <Element Index="[7]" Value="0"/>
+                        </ArrayMember>
+                        <ArrayMember Name="DintArray" DataType="DINT" Dimensions="3" Radix="Decimal">
+                            <Element Index="[0]" Value="0"/>
+                            <Element Index="[1]" Value="0"/>
+                            <Element Index="[2]" Value="0"/>
+                        </ArrayMember>
+                        <ArrayMember Name="LintArray" DataType="LINT" Dimensions="2" Radix="ASCII">
+                            <Element Index="[0]" Value="'$00$00$00$00$00$00$00$00'"/>
+                            <Element Index="[1]" Value="'$00$00$00$00$00$00$00$00'"/>
+                        </ArrayMember>
+                    </Structure>
+                </Data>
+            </Tag>
+            <Tag Name="TestComplexTag" TagType="Base" DataType="ComplexType" Constant="false" ExternalAccess="None">
+                <Data Format="L5K">
+                    <![CDATA[[[0,0,0,0,0],[0,0,0],[0,0,0],[1,0.00000000e+000,3.40282347e+038,3.40282347e+038,-3.40282347e+038,-3.40282347e+038
+		,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000,0,0.00000000e+000,0,5.60519386e-045
+		,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000
+		,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000]]]]>
+                </Data>
+                <Data Format="Decorated">
+                    <Structure DataType="ComplexType">
+                        <StructureMember Name="SimpleMember" DataType="SimpleTypes">
+                            <DataValueMember Name="BoolMember" DataType="BOOL" Value="0"/>
+                            <DataValueMember Name="SintMember" DataType="SINT" Radix="Decimal" Value="0"/>
+                            <DataValueMember Name="IntMember" DataType="INT" Radix="Decimal" Value="0"/>
+                            <DataValueMember Name="DintMember" DataType="DINT" Radix="Decimal" Value="0"/>
+                            <DataValueMember Name="LintMember" DataType="LINT" Radix="Decimal" Value="0"/>
+                        </StructureMember>
+                        <StructureMember Name="CounterMember" DataType="COUNTER">
+                            <DataValueMember Name="PRE" DataType="DINT" Radix="Decimal" Value="0"/>
+                            <DataValueMember Name="ACC" DataType="DINT" Radix="Decimal" Value="0"/>
+                            <DataValueMember Name="CU" DataType="BOOL" Value="0"/>
+                            <DataValueMember Name="CD" DataType="BOOL" Value="0"/>
+                            <DataValueMember Name="DN" DataType="BOOL" Value="0"/>
+                            <DataValueMember Name="OV" DataType="BOOL" Value="0"/>
+                            <DataValueMember Name="UN" DataType="BOOL" Value="0"/>
+                        </StructureMember>
+                        <StructureMember Name="TimeMember" DataType="TIMER">
+                            <DataValueMember Name="PRE" DataType="DINT" Radix="Decimal" Value="0"/>
+                            <DataValueMember Name="ACC" DataType="DINT" Radix="Decimal" Value="0"/>
+                            <DataValueMember Name="EN" DataType="BOOL" Value="0"/>
+                            <DataValueMember Name="TT" DataType="BOOL" Value="0"/>
+                            <DataValueMember Name="DN" DataType="BOOL" Value="0"/>
+                        </StructureMember>
+                        <StructureMember Name="AlarmMember" DataType="ALARM">
+                            <DataValueMember Name="EnableIn" DataType="BOOL" Value="1"/>
+                            <DataValueMember Name="In" DataType="REAL" Radix="Float" Value="0.0"/>
+                            <DataValueMember Name="HHLimit" DataType="REAL" Radix="Float" Value="3.40282347e+038"/>
+                            <DataValueMember Name="HLimit" DataType="REAL" Radix="Float" Value="3.40282347e+038"/>
+                            <DataValueMember Name="LLimit" DataType="REAL" Radix="Float" Value="-3.40282347e+038"/>
+                            <DataValueMember Name="LLLimit" DataType="REAL" Radix="Float" Value="-3.40282347e+038"/>
+                            <DataValueMember Name="Deadband" DataType="REAL" Radix="Float" Value="0.0"/>
+                            <DataValueMember Name="ROCPosLimit" DataType="REAL" Radix="Float" Value="0.0"/>
+                            <DataValueMember Name="ROCNegLimit" DataType="REAL" Radix="Float" Value="0.0"/>
+                            <DataValueMember Name="ROCPeriod" DataType="REAL" Radix="Float" Value="0.0"/>
+                            <DataValueMember Name="EnableOut" DataType="BOOL" Value="0"/>
+                            <DataValueMember Name="HHAlarm" DataType="BOOL" Value="0"/>
+                            <DataValueMember Name="HAlarm" DataType="BOOL" Value="0"/>
+                            <DataValueMember Name="LAlarm" DataType="BOOL" Value="0"/>
+                            <DataValueMember Name="LLAlarm" DataType="BOOL" Value="0"/>
+                            <DataValueMember Name="ROCPosAlarm" DataType="BOOL" Value="0"/>
+                            <DataValueMember Name="ROCNegAlarm" DataType="BOOL" Value="0"/>
+                            <DataValueMember Name="ROC" DataType="REAL" Radix="Float" Value="0.0"/>
+                            <DataValueMember Name="Status" DataType="DINT" Radix="Hex" Value="16#0000_0000"/>
+                            <DataValueMember Name="InstructFault" DataType="BOOL" Value="0"/>
+                            <DataValueMember Name="DeadbandInv" DataType="BOOL" Value="0"/>
+                            <DataValueMember Name="ROCPosLimitInv" DataType="BOOL" Value="0"/>
+                            <DataValueMember Name="ROCNegLimitInv" DataType="BOOL" Value="0"/>
+                            <DataValueMember Name="ROCPeriodInv" DataType="BOOL" Value="0"/>
+                        </StructureMember>
+                    </Structure>
+                </Data>
+            </Tag>
+            <Tag Name="TestStringTag" TagType="Base" DataType="MyStringType" Constant="false" ExternalAccess="None">
+                <Data Format="L5K">
+                    <![CDATA[[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
+		]]]>
+                </Data>
+                <Data Format="String" Length="0">
+                    <![CDATA['']]>
+                </Data>
+            </Tag>
+            <Tag Name="TestTag01" TagType="Base" DataType="SimpleTypes" Constant="false" ExternalAccess="None">
+                <Data Format="L5K">
+                    <![CDATA[[0,0,0,0,0]]]>
+                </Data>
+                <Data Format="Decorated">
+                    <Structure DataType="SimpleTypes">
+                        <DataValueMember Name="BoolMember" DataType="BOOL" Value="0"/>
+                        <DataValueMember Name="SintMember" DataType="SINT" Radix="Decimal" Value="0"/>
+                        <DataValueMember Name="IntMember" DataType="INT" Radix="Decimal" Value="0"/>
+                        <DataValueMember Name="DintMember" DataType="DINT" Radix="Decimal" Value="0"/>
+                        <DataValueMember Name="LintMember" DataType="LINT" Radix="Decimal" Value="0"/>
+                    </Structure>
+                </Data>
+            </Tag>
+        </Tags>
+        <Programs/>
+        <Tasks/>
+        <CST MasterID="0"/>
+        <WallClockTime LocalTimeAdjustment="0" TimeZone="0"/>
+        <Trends/>
+        <DataLogs/>
+        <TimeSynchronize Priority1="128" Priority2="128" PTPEnable="false"/>
+        <EthernetPorts>
+            <EthernetPort Port="1" Label="1" PortEnabled="true"/>
+        </EthernetPorts>
+    </Controller>
+</RSLogix5000Content>

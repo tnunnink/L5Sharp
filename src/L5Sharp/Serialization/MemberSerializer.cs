@@ -3,13 +3,14 @@ using System.Xml.Linq;
 using L5Sharp.Abstractions;
 using L5Sharp.Core;
 using L5Sharp.Enumerations;
+using L5Sharp.Extensions;
 using L5Sharp.Utilities;
 
 [assembly: InternalsVisibleTo("L5Sharp.Serialization.Tests")]
 
 namespace L5Sharp.Serialization
 {
-    internal class MemberSerializer : IL5XSerializer<Member>
+    internal class MemberSerializer : IComponentSerializer<Member>
     {
         public XElement Serialize(Member component)
         {
@@ -33,22 +34,11 @@ namespace L5Sharp.Serialization
 
         public Member Deserialize(XElement element)
         {
-            var dataType = GetDataType(element);
+            var dataType = element.GetDataType();
             
             return new Member(element.GetName(), dataType, element.GetDimension(), element.GetRadix(),
                 element.GetExternalAccess(), element.GetDescription(), element.GetHidden(), element.GetTarget(),
                 element.GetBitNumber());
-        }
-
-        private static IDataType GetDataType(XElement element)
-        {
-            var typeName = element.GetDataTypeName();
-
-            if (Predefined.ContainsType(typeName))
-                return Predefined.FromName(typeName);
-
-            var serializer = new DataTypeSerializer();
-            return serializer.Deserialize(element.FindDataTypeElement(typeName));
         }
     }
 }

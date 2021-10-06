@@ -1,24 +1,31 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Xml.Linq;
+using L5Sharp.Abstractions;
 using L5Sharp.Core;
-using L5Sharp.Utilities;
+using L5Sharp.Extensions;
 
 [assembly: InternalsVisibleTo("L5Sharp.Serialization.Tests")]
 
 namespace L5Sharp.Serialization
 {
-    internal class DataTypeSerializer : IL5XSerializer<DataType>
+    internal class DataTypeSerializer : IComponentSerializer<IDataType>
     {
-        public XElement Serialize(DataType component)
+        public XElement Serialize(IDataType component)
         {
+            if (component == null) throw new ArgumentNullException(nameof(component));
+
             var element = new XElement(nameof(DataType));
             element.Add(new XAttribute(nameof(component.Name), component.Name));
             element.Add(new XAttribute(nameof(component.Family), component.Family));
             element.Add(new XAttribute(nameof(component.Class), component.Class));
 
-            if (!string.IsNullOrEmpty(component.Description))
-                element.Add(new XElement(nameof(component.Description), new XCData(component.Description)));
+            if (component is DataType type)
+            {
+                if (!string.IsNullOrEmpty(type.Description))
+                    element.Add(new XElement(nameof(type.Description), new XCData(type.Description)));
+            }
 
             var serializer = new MemberSerializer();
             element.Add(new XElement(nameof(component.Members),
@@ -27,18 +34,13 @@ namespace L5Sharp.Serialization
             return element;
         }
 
-        public DataType Deserialize(XElement element)
+        public IDataType Deserialize(XElement element)
         {
-            if (element == null) return null;
+            if (element == null) throw new ArgumentNullException(nameof(element));
 
-            var serializer = new MemberSerializer();
+            var members = element.GetAll<Member>().Select(x => x.Deserialize<Member>());
 
-            var members = element.Descendants(L5XNames.Components.Member)
-                .Select(e => serializer.Deserialize(e));
-
-            var dataType = new DataType(element.GetName(), element.GetFamily(), element.GetDescription(), members);
-
-            return dataType;
+            return new DataType(element.GetName(), element.GetDescription(), members);
         }
     }
 }

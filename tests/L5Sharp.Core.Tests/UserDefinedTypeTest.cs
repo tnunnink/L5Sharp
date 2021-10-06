@@ -2,18 +2,17 @@
 using FluentAssertions;
 using L5Sharp.Abstractions;
 using L5Sharp.Enumerations;
-using L5Sharp.Extensibility;
 using NUnit.Framework;
 
 namespace L5Sharp.Core.Tests
 {
     [TestFixture]
-    public class UserDefinedImplementationTest : UserDefinedType
+    public class UserDefinedTypeTest : DataType
     {
-        public UserDefinedImplementationTest() : base(nameof(UserDefinedImplementationTest), "My Type description")
+        public UserDefinedTypeTest() : base(nameof(UserDefinedTypeTest), "My Type description")
         {
-            RegisterMember(nameof(MyMember01), DataType.Bool, "This is a test member");
-            RegisterMember(nameof(MyMember02), DataType.Dint, "This is a test member array", 5, Radix.Ascii);
+            AddMember(nameof(MyMember01), Bool, "This is a test member");
+            AddMember(nameof(MyMember02), Dint, "This is a test member array", 5, Radix.Ascii);
         }
 
         public IMember MyMember01 => Members.SingleOrDefault(m => m.Name == nameof(MyMember01));

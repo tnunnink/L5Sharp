@@ -44,85 +44,6 @@ namespace L5Sharp.Core.Tests
         }
 
         [Test]
-        public void StringType_ValidNameAndLength_ShouldHaveExpectedProperties()
-        {
-            var fixture = new Fixture();
-            var desc = fixture.Create<string>();
-
-            var type = DataType.StringType("Test_String_001", 100, desc);
-
-            type.Should().NotBeNull();
-            type.Name.Should().Be("Test_String_001");
-            type.Class.Should().Be(DataTypeClass.User);
-            type.Family.Should().Be(DataTypeFamily.String);
-            type.Description.Should().Be(desc);
-            type.Members.Should().Contain(m => m.Name == "LEN");
-            type.Members.Should().Contain(m => m.Name == "DATA");
-            var data = type.Members.Single(m => m.Name == "DATA");
-            data.Dimension.Should().Be(100);
-            data.Radix.Should().Be(Radix.Ascii);
-            data.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);
-        }
-
-        [Test]
-        public void StringType_InvalidLength_ShouldThrowException()
-        {
-            var fixture = new Fixture();
-            var desc = fixture.Create<string>();
-
-            FluentActions.Invoking(() => DataType.StringType("Test_String_001", 0, desc)).Should()
-                .Throw<ArgumentException>();
-        }
-
-        [Test]
-        public void StringType_AddMember_ShouldThrowNotConfigurableException()
-        {
-            var fixture = new Fixture();
-            var desc = fixture.Create<string>();
-
-            var type = DataType.StringType("Test_String_001", 100, desc);
-
-            FluentActions.Invoking(() => type.AddMember("Test", DataType.Dint)).Should()
-                .Throw<NotConfigurableException>();
-        }
-
-        [Test]
-        public void StringType_RemoveMember_ShouldThrowNotConfigurableException()
-        {
-            var fixture = new Fixture();
-            var desc = fixture.Create<string>();
-
-            var type = DataType.StringType("Test_String_001", 100, desc);
-
-            FluentActions.Invoking(() => type.RemoveMember("LEN")).Should()
-                .Throw<NotConfigurableException>();
-        }
-
-        [Test]
-        public void StringType_UpdateMember_ShouldThrowNotConfigurableException()
-        {
-            var fixture = new Fixture();
-            var desc = fixture.Create<string>();
-
-            var type = DataType.StringType("Test_String_001", 100, desc);
-
-            FluentActions.Invoking(() => type.UpdateMember("LEN", b => b.HasDescription("Test"))).Should()
-                .Throw<NotConfigurableException>();
-        }
-
-        [Test]
-        public void StringType_RenameMember_ShouldThrowNotConfigurableException()
-        {
-            var fixture = new Fixture();
-            var desc = fixture.Create<string>();
-
-            var type = DataType.StringType("Test_String_001", 100, desc);
-
-            FluentActions.Invoking(() => type.RenameMember("Data", "Test")).Should()
-                .Throw<NotConfigurableException>();
-        }
-
-        [Test]
         public void SetName_ValidName_ShouldBeExpectedValue()
         {
             var fixture = new Fixture();
@@ -164,7 +85,7 @@ namespace L5Sharp.Core.Tests
             type.AddMember("Member", DataType.Dint);
 
             FluentActions.Invoking(() => type.AddMember("Member", DataType.Int)).Should()
-                .Throw<NameCollisionException>();
+                .Throw<ComponentNameCollisionException>();
         }
 
         [Test]
@@ -294,7 +215,7 @@ namespace L5Sharp.Core.Tests
             type.AddMember("Member", DataType.Dint);
 
             FluentActions.Invoking(() => type.UpdateMember("Test", b => b.HasType(DataType.Bool))).Should()
-                .Throw<ItemNotFoundException>();
+                .Throw<ComponentNotFoundException>();
         }
 
         [Test]

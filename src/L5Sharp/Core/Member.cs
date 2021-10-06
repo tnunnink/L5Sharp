@@ -17,11 +17,11 @@ namespace L5Sharp.Core
             ExternalAccess access, string description, bool hidden, string target, ushort bitNumber)
         {
             Name = name;
-            DataType = dataType;
+            _dataType = dataType ?? Predefined.Null;
             Dimension = dimension;
-            Radix = radix ?? dataType.DefaultRadix;
-            ExternalAccess = access ?? ExternalAccess.ReadWrite;
-            Description = description;
+            _radix = radix ?? _dataType.DefaultRadix;
+            _externalAccess = access ?? ExternalAccess.ReadWrite;
+            _description = description ?? string.Empty;
             Hidden = hidden;
             Target = target ?? string.Empty;
             BitNumber = bitNumber;
@@ -38,8 +38,14 @@ namespace L5Sharp.Core
             get => _name;
             set
             {
+                if (value == null)
+                    throw new ArgumentNullException(nameof(value), "Cannot set member name property to null");
+
                 Validate.Name(value);
+
+                var old = _name;
                 _name = value;
+                RaiseNameChanged(old, _name);
             }
         }
 
@@ -64,22 +70,22 @@ namespace L5Sharp.Core
         public ExternalAccess ExternalAccess
         {
             get => _externalAccess;
-            set
-            {
-                Validate.ExternalAccess(value);
-                _externalAccess = value;
-            }
+            set => _externalAccess = value ?? throw new ArgumentNullException(nameof(value),
+                "Cannot set member ExternalAccess property to null");
         }
 
         public string Description
         {
             get => _description;
-            set { _description = value ?? string.Empty; }
+            set => _description = value ?? throw new ArgumentNullException(nameof(value),
+                "Cannot set member Description property to null");
         }
 
+        internal event EventHandler<NameChangedEventArgs> NameChanged;
         internal bool Hidden { get; set; }
         internal string Target { get; set; }
         internal ushort BitNumber { get; set; }
+
 
         public bool Equals(Member other)
         {
@@ -95,8 +101,7 @@ namespace L5Sharp.Core
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
-            return Equals((Member)obj);
+            return obj.GetType() == GetType() && Equals((Member)obj);
         }
 
         public override int GetHashCode()
@@ -122,6 +127,11 @@ namespace L5Sharp.Core
         public static bool operator !=(Member left, Member right)
         {
             return !Equals(left, right);
+        }
+
+        public void RaiseNameChanged(string oldName, string newName)
+        {
+            NameChanged?.Invoke(this, new NameChangedEventArgs(oldName, newName));
         }
     }
 }

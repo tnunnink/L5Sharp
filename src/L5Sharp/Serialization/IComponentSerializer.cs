@@ -6,11 +6,11 @@ using L5Sharp.Abstractions;
 
 namespace L5Sharp.Serialization
 {
-    internal interface IL5XSerializer
+    internal interface IComponentSerializer
     {
     }
     
-    internal interface IL5XSerializer<T> : IL5XSerializer where T : IComponent
+    internal interface IComponentSerializer<T> : IComponentSerializer where T : IComponent
     {
         XElement Serialize(T component);
         

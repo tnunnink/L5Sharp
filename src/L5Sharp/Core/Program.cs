@@ -54,7 +54,7 @@ namespace L5Sharp.Core
             if (routine == null) throw new ArgumentNullException(nameof(routine));
             
             if (_routines.ContainsKey(routine.Name))
-                Throw.NameCollisionException(routine.Name, typeof(Routine));
+                Throw.ComponentNameCollisionException(routine.Name, typeof(Routine));
             
             _routines.Add(routine.Name, routine);
         }
@@ -74,7 +74,7 @@ namespace L5Sharp.Core
                 Throw.ArgumentNullOrEmptyException(nameof(name));
             
             if (!_routines.ContainsKey(name!))
-                Throw.ItemNotFoundException(name);
+                Throw.ComponentNotFoundException(name, typeof(Routine));
             
             _routines.Remove(name);
         }
@@ -85,7 +85,7 @@ namespace L5Sharp.Core
                 Throw.ArgumentNullOrEmptyException(nameof(oldName));
             
             if (!_routines.ContainsKey(oldName!))
-                Throw.ItemNotFoundException(oldName);
+                Throw.ComponentNotFoundException(oldName, typeof(Routine));
 
             var routine = _routines[oldName];
             _routines.Remove(oldName);

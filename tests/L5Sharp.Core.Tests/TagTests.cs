@@ -30,7 +30,7 @@ namespace L5Sharp.Core.Tests
         }
         
         [Test]
-        public void New_NoDataType_ShouldHaveExpectedDefaults()
+        public void New_NoOverloads_ShouldHaveExpectedDefaults()
         {
             var tag = new Tag("Test", DataType.Bool);
 
@@ -47,6 +47,27 @@ namespace L5Sharp.Core.Tests
             tag.Scope.Should().Be(Scope.Null);
             tag.AliasFor.Should().BeEmpty();
             tag.Constant.Should().BeFalse();
+        }
+        
+        [Test]
+        public void New_AllDataType_ShouldHaveExpectedDefaults()
+        {
+            var tag = new Tag("Test", DataType.Dint, new Dimensions(5), Radix.Ascii, ExternalAccess.ReadOnly, 
+                TagType.Alias, TagUsage.Local, "This is a test tag", Scope.Program, "Alias.Name", true);
+
+            tag.Should().NotBeNull();
+            tag.Name.Should().Be("Test");
+            tag.DataType.Should().Be(DataType.Dint.Name);
+            tag.Dimension.Should().Be(new Dimensions(5));
+            tag.Radix.Should().Be(Radix.Ascii);
+            tag.ExternalAccess.Should().Be(ExternalAccess.ReadOnly);
+            tag.Value.Should().Be(0);
+            tag.Description.Should().Be("This is a test tag");
+            tag.TagType.Should().Be(TagType.Alias);
+            tag.Usage.Should().Be(TagUsage.Local);
+            tag.Scope.Should().Be(Scope.Program);
+            tag.AliasFor.Should().Be("Alias.Name");
+            tag.Constant.Should().BeTrue();
         }
 
         [Test]
@@ -111,12 +132,13 @@ namespace L5Sharp.Core.Tests
         }
 
         [Test]
-        public void SetRadix_ValidRadix_ShouldSetMembersRadix()
+        public void SetRadix_AtomicValidRadix_ShouldSetMembersRadix()
         {
             var tag = new Tag("Test", DataType.Dint, new Dimensions(3, 4));
 
             tag.Radix = Radix.Ascii;
 
+            tag.Radix.Should().Be(Radix.Ascii);
             tag.Members.All(t => t.Radix == Radix.Ascii).Should().BeTrue();
         }
 

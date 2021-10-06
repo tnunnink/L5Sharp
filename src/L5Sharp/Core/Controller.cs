@@ -1,34 +1,28 @@
 ﻿using System;
-using System.Xml.Linq;
+using System.Collections.Generic;
+using System.Linq;
 using L5Sharp.Abstractions;
-using L5Sharp.Builders;
 using L5Sharp.Builders.Abstractions;
 using L5Sharp.Enumerations;
-using L5Sharp.Repositories;
 using L5Sharp.Utilities;
 
 namespace L5Sharp.Core
 {
-    public class Controller : IController
+    public class Controller : IComponent
     {
-        private readonly Logix _logix;
         private string _name;
+        private readonly Dictionary<string, DataType> _dataTypes = new Dictionary<string, DataType>();
+        private readonly Dictionary<string, Tag> _tags = new Dictionary<string, Tag>();
 
-        public Controller(string name, string description = null, string processorType = null,
-            ulong majorRev = 0, ushort minorRev = 0)
+        public Controller(string name, string description = null, string processorType = null, Revision revision = null)
         {
             Name = name;
             Use = Use.Target;
             Description = description ?? string.Empty;
             ProcessorType = processorType ?? string.Empty;
-            MajorRev = majorRev;
-            MinorRev = minorRev;
+            Revision = revision ?? Revision.v32;
             ProjectCreationDate = DateTime.Now;
             LastModifiedDate = DateTime.Now;
-
-            _logix = new Logix(string.Empty); //todo actually load or create here
-
-            DataTypes = new DataTypeRepository(_logix);
         }
 
         public string Name
@@ -47,19 +41,64 @@ namespace L5Sharp.Core
 
         public string ProcessorType { get; }
 
-        public ulong MajorRev { get; }
+        public Revision Revision { get; set; }
 
-        public ushort MinorRev { get; }
+        public int MajorRev => Revision.Major;
+
+        public int MinorRev => Revision.Minor;
 
         public DateTime ProjectCreationDate { get; }
 
         public DateTime LastModifiedDate { get; }
-        
-        public IDataTypeRepository DataTypes { get; }
 
-        public IControllerCreator Create()
+        public IEnumerable<DataType> DataTypes => _dataTypes.Values.AsEnumerable();
+        public IEnumerable<Tag> Tags => _tags.Values.AsEnumerable();
+
+        public void AddDataType(DataType dataType)
         {
-            return new ControllerCreator(this);
+            if (dataType == null) throw new ArgumentNullException(nameof(dataType));
+
+            if (_dataTypes.ContainsKey(dataType.Name))
+                Throw.ComponentNameCollisionException(dataType.Name, typeof(DataType));
+
+            _dataTypes.Add(dataType.Name, dataType);
+        }
+        
+        public void RemoveDataType(DataType dataType)
+        {
+            if (dataType == null) throw new ArgumentNullException(nameof(dataType));
+            
+            if (_tags.Values.Any(x => x.DataType == dataType.Name))
+                Throw.ComponentReferencedException(dataType.Name, typeof(DataType));
+
+            if (!_dataTypes.ContainsKey(dataType.Name))
+                Throw.ComponentNotFoundException(dataType.Name, typeof(DataType));
+
+            _dataTypes.Remove(dataType.Name);
+        }
+        
+        public void AddTag(Tag tag)
+        {
+            if (tag == null) throw new ArgumentNullException(nameof(tag));
+
+            if (_tags.ContainsKey(tag.Name))
+                Throw.ComponentNameCollisionException(tag.Name, typeof(Tag));
+
+            _tags.Add(tag.Name, tag);
+        }
+        
+        public void RemoveTag(Tag tag)
+        {
+            if (tag == null) throw new ArgumentNullException(nameof(tag));
+            
+            //todo I guess tags that are referenced in rung cant be deleted. Should we enforce that?
+            /*if (_tags.Values.Any(x => x.DataType == dataType.Name))
+                Throw.ComponentReferencedException(dataType.Name, typeof(DataType));*/
+            
+            if (!_tags.ContainsKey(tag.Name))
+                Throw.ComponentNotFoundException(tag.Name, typeof(Tag)); 
+
+            _tags.Remove(tag.Name);
         }
 
         public void Build<TModel, TBuilder>(Func<TBuilder> builderFactory, Action<TBuilder> builderConfig)
@@ -81,60 +120,6 @@ namespace L5Sharp.Core
 
             collection.Add(item.Name, item);*/
         }
-
-        public XElement Serialize()
-        {
-            var element = new XElement(nameof(Controller));
-            element.Add(new XAttribute(nameof(Name), Name));
-            element.Add(new XAttribute(nameof(ProcessorType), ProcessorType));
-            element.Add(new XAttribute(nameof(MajorRev), MajorRev));
-            element.Add(new XAttribute(nameof(MinorRev), MinorRev));
-
-            //todo update approval tests to scrub text or have datetime generator that we can mock...
-            //element.Add(new XAttribute(nameof(ProjectCreationDate), ProjectCreationDate));
-            //element.Add(new XAttribute(nameof(LastModifiedDate), LastModifiedDate));
-
-            /*element.Add(new XElement(nameof(DataTypes)), _dataTypes.Values.Select(d => ((DataType)d).Serialize()));
-            //module
-            //instructions
-            //tags
-            element.Add(new XElement(nameof(Programs)),
-                _tasks.Values.SelectMany(t => t.Programs.Select(p => p.Serialize())));
-            element.Add(new XElement(nameof(Tasks)), _tasks.Values.Select(t => t.Serialize()));*/
-
-            return element;
-        }
-
-        /*private Dictionary<string, T> GetCollection<T>(Type type) where T : INamedComponent
-        {
-            if (!_collections.ContainsKey(type))
-                throw new InvalidOperationException($"There is not collection for the specified type '{type}'");
-
-            if (!(_collections[type] is Dictionary<string, T> collection))
-                throw new InvalidOperationException(
-                    $"The collection found for type '{type}' is not able to be casted to the generic dictionary");
-
-            return collection;
-        }*/
-
-        /*private void ParsePrograms(XContainer element)
-        {
-            var programs = element.Element(nameof(Programs))?.Descendants().Select(Program.Materialize);
-            if (programs == null) return;
-            foreach (var program in programs)
-            {
-                var taskName = element.Descendants("Task")
-                    .SingleOrDefault(t => t.Descendants("ScheduledProgram")
-                        .SingleOrDefault(p => p.Attribute("Name")?.Value == program.Name) != null)
-                    ?.Attribute("Name")?.Value;
-
-                if (taskName == null)
-                    throw new InvalidOperationException();
-
-                var task = _tasks[taskName];
-
-                task.AddProgram(program);
-            }
-        }*/
+        
     }
 }

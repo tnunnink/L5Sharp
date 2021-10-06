@@ -6,7 +6,6 @@ using FluentAssertions;
 using L5Sharp.Abstractions;
 using L5Sharp.Core;
 using L5Sharp.Exceptions;
-using L5Sharp.Types;
 using NUnit.Framework;
 
 namespace L5Sharp.Enumerations.Tests
@@ -21,13 +20,60 @@ namespace L5Sharp.Enumerations.Tests
 
             predefined.Should().NotBeEmpty();
         }
-        
+
         [Test]
         public void GetAtomic_WhenCalled_ShouldNotBeEmpty()
         {
-            var atomic = Predefined.List.Where(t => t.IsAtomic);
+            var atomic = Predefined.List.Where(t => t.IsAtomic).ToList();
 
             atomic.Should().NotBeEmpty();
+            atomic.Should().Contain(x => x.Name == "BIT");
+            atomic.Should().Contain(x => x.Name == "BOOL");
+            atomic.Should().Contain(x => x.Name == "SINT");
+            atomic.Should().Contain(x => x.Name == "INT");
+            atomic.Should().Contain(x => x.Name == "DINT");
+            atomic.Should().Contain(x => x.Name == "LINT");
+            atomic.Should().Contain(x => x.Name == "REAL");
+        }
+        
+        [Test]
+        public void Family_ValidType_ShouldReturnExpected()
+        {
+            var type = Predefined.Null;
+
+            type.Family.Should().Be(DataTypeFamily.None);
+        }
+        
+        [Test]
+        public void Class_ValidType_ShouldReturnExpected()
+        {
+            var type = Predefined.Null;
+
+            type.Class.Should().Be(DataTypeClass.Predefined);
+        }
+        
+        [Test]
+        public void DefaultValue_ValidType_ShouldReturnExpected()
+        {
+            var type = Predefined.Null;
+
+            type.DefaultValue.Should().Be(null);
+        }
+        
+        [Test]
+        public void DefaultRadix_ValidType_ShouldReturnExpected()
+        {
+            var type = Predefined.Null;
+
+            type.DefaultRadix.Should().Be(Radix.Null);
+        }
+        
+        [Test]
+        public void DataFormat_ValidType_ShouldReturnExpected()
+        {
+            var type = Predefined.Null;
+
+            type.DataFormat.Should().Be(TagDataFormat.Decorated);
         }
 
         [Test]
@@ -35,7 +81,7 @@ namespace L5Sharp.Enumerations.Tests
         {
             Predefined.ContainsType("BOOL").Should().BeTrue();
         }
-        
+
         [Test]
         public void ContainsType_TypeThatDoesNotExistAsPredefined_ShouldBeFalse()
         {
@@ -43,17 +89,83 @@ namespace L5Sharp.Enumerations.Tests
         }
 
         [Test]
-        public void Parse_ValidValueBool_ShouldReturnExpected()
+        public void SupportsRadix_NonAtomicValidRadixForType_ShouldBeTrue()
         {
-            var fixture = new Fixture();
-            var value = fixture.Create<bool>();
-            var type = Predefined.Bool;
+            var type = Predefined.Null;
 
-            var result = type.ParseValue(value.ToString());
+            var result = type.SupportsRadix(Radix.Null);
 
-            result.Should().Be(value);
+            result.Should().BeTrue();
         }
         
+        [Test]
+        public void SupportsRadix_NonAtomicInvalidRadixForType_ShouldBeFalse()
+        {
+            var type = Predefined.Null;
+
+            var result = type.SupportsRadix(Radix.Decimal);
+
+            result.Should().BeFalse();
+        }
+
+        [Test]
+        public void SupportsRadix_AtomicValidRadixForType_ShouldBeTrue()
+        {
+            var type = Predefined.Dint;
+
+            var result = type.SupportsRadix(Radix.Decimal);
+
+            result.Should().BeTrue();
+        }
+        
+        [Test]
+        public void SupportsRadix_AtomicInvalidRadixForType_ShouldBeFalse()
+        {
+            var type = Predefined.Dint;
+
+            var result = type.SupportsRadix(Radix.Float);
+
+            result.Should().BeFalse();
+        }
+        
+        [Test]
+        public void IsValidValue_ValidType_ShouldBeExpected()
+        {
+            var type = Predefined.Null;
+
+            var result = type.IsValidValue(null);
+
+            result.Should().BeTrue();
+        }
+        
+        [Test]
+        public void ParseValue_NullType_ShouldBeNull()
+        {
+            var type = Predefined.Null;
+
+            var result = type.ParseValue("true");
+
+            result.Should().Be(null);
+        }
+        
+        [Test]
+        public void IsValidValue_Null_ShouldBeNull()
+        {
+            var type = Predefined.Null;
+
+            var result = type.ParseValue("true");
+
+            result.Should().Be(null);
+        }
+        
+        [Test]
+        public void Predefined_WhenCastedToDataType_ShouldThrowInvalidCastException()
+        {
+            var atomic = (IDataType) Predefined.Bool;
+
+            FluentActions.Invoking(() => (DataType)atomic).Should().Throw<InvalidCastException>();
+        }
+
         [Test]
         public void Parse_ValidValueSint_ShouldReturnExpected()
         {
@@ -65,7 +177,7 @@ namespace L5Sharp.Enumerations.Tests
 
             result.Should().Be(value);
         }
-        
+
         [Test]
         public void Parse_ValidValueInt_ShouldReturnExpected()
         {
@@ -77,7 +189,7 @@ namespace L5Sharp.Enumerations.Tests
 
             result.Should().Be(value);
         }
-        
+
         [Test]
         public void Parse_ValidValueDint_ShouldReturnExpected()
         {
@@ -89,7 +201,7 @@ namespace L5Sharp.Enumerations.Tests
 
             result.Should().Be(value);
         }
-        
+
         [Test]
         public void Parse_ValidValueLint_ShouldReturnExpected()
         {
@@ -101,7 +213,7 @@ namespace L5Sharp.Enumerations.Tests
 
             result.Should().Be(value);
         }
-        
+
         [Test]
         public void Parse_ValidValueReal_ShouldReturnExpected()
         {
@@ -114,64 +226,13 @@ namespace L5Sharp.Enumerations.Tests
             result.Should().Be(value);
         }
 
-        [Test]
-        public void Bool_ShouldNotBeNull()
-        {
-            var type = DataType.Bool;
-
-            type.Should().NotBeNull();
-            type.Name.Should().Be("BOOL");
-            type.Class.Should().Be(DataTypeClass.Predefined);
-            type.Family.Should().Be(DataTypeFamily.None);
-        }
-        
-        [Test]
-        public void New_Bool_ShouldNotBeNull()
-        {
-            var type = new Bool();
-
-            type.Should().NotBeNull();
-            type.Name.Should().Be("BOOL");
-            type.Class.Should().Be(DataTypeClass.Predefined);
-            type.Family.Should().Be(DataTypeFamily.None);
-        }
 
         [Test]
-        public void BoolAtomicShouldNotBeCastToDataType()
-        {
-            var atomic = (IDataType) Predefined.Sint;
-
-            FluentActions.Invoking(() => (DataType)atomic).Should().Throw<InvalidCastException>();
-        }
-
-        [Test]
-        public void FromName_Bool_ShouldReturnExpectedType()
-        {
-            var type = Predefined.FromName("BOOL");
-
-            type.Should().NotBeNull();
-            type.Name.Should().Be("BOOL");
-            type.Class.Should().Be(DataTypeClass.Predefined);
-            type.Family.Should().Be(DataTypeFamily.None);
-        }
-        
-        [Test]
-        public void FromName_BoolLower_ShouldReturnExpectedType()
-        {
-            var type = Predefined.FromName("bool", true);
-
-            type.Should().NotBeNull();
-            type.Name.Should().Be("BOOL");
-            type.Class.Should().Be(DataTypeClass.Predefined);
-            type.Family.Should().Be(DataTypeFamily.None);
-        }
-
-        [Test]
-        public void New_Bool_ShouldThrowDataTypeAlreadyExistsException()
+        public void New_Bool_ShouldThrowPredefinedCollisionException()
         {
             FluentActions.Invoking(() => new DataType("BOOL")).Should().Throw<PredefinedCollisionException>();
         }
-        
+
         [Test]
         public void New_Sint_ShouldNotBeNull()
         {
@@ -182,7 +243,7 @@ namespace L5Sharp.Enumerations.Tests
             type.Class.Should().Be(DataTypeClass.Predefined);
             type.Family.Should().Be(DataTypeFamily.None);
         }
-        
+
         [Test]
         public void FromName_Sint_ShouldReturnExpectedType()
         {
@@ -199,7 +260,7 @@ namespace L5Sharp.Enumerations.Tests
         {
             FluentActions.Invoking(() => new DataType("SINT")).Should().Throw<PredefinedCollisionException>();
         }
-        
+
         [Test]
         public void New_Int_ShouldNotBeNull()
         {
@@ -210,7 +271,7 @@ namespace L5Sharp.Enumerations.Tests
             type.Class.Should().Be(DataTypeClass.Predefined);
             type.Family.Should().Be(DataTypeFamily.None);
         }
-        
+
         [Test]
         public void New_Dint_ShouldNotBeNull()
         {
@@ -221,7 +282,7 @@ namespace L5Sharp.Enumerations.Tests
             type.Class.Should().Be(DataTypeClass.Predefined);
             type.Family.Should().Be(DataTypeFamily.None);
         }
-        
+
         [Test]
         public void New_Real_ShouldNotBeNull()
         {
@@ -244,7 +305,7 @@ namespace L5Sharp.Enumerations.Tests
             type.Family.Should().Be(DataTypeFamily.None);
             type.Members.Should().HaveCount(2);
         }
-        
+
         [Test]
         public void New_Timer_ShouldNotBeNull()
         {
@@ -261,11 +322,103 @@ namespace L5Sharp.Enumerations.Tests
         public void New_Alarm_ShouldHaveExpectedProperties()
         {
             var type = Predefined.Alarm;
-            
+
             type.Should().NotBeNull();
 
             type.Name.Should().Be("ALARM");
             type.Members.Should().HaveCount(24);
+        }
+
+        
+
+        [Test]
+        public void DefaultValue_Sint_ShouldBeZero()
+        {
+            var type = Predefined.Sint;
+
+            var value = type.DefaultValue;
+
+            value.Should().Be(0);
+        }
+
+        [Test]
+        public void DefaultValue_Int_ShouldBeZero()
+        {
+            var type = Predefined.Int;
+
+            var value = type.DefaultValue;
+
+            value.Should().Be(0);
+        }
+
+        [Test]
+        public void DefaultValue_Dint_ShouldBeZero()
+        {
+            var type = Predefined.Dint;
+
+            var value = type.DefaultValue;
+
+            value.Should().Be(0);
+        }
+
+        [Test]
+        public void DefaultValue_Lint_ShouldBeZero()
+        {
+            var type = Predefined.Lint;
+
+            var value = type.DefaultValue;
+
+            value.Should().Be(0);
+        }
+
+        [Test]
+        public void DefaultValue_Real_ShouldBeZeroFloat()
+        {
+            var type = Predefined.Real;
+
+            var value = type.DefaultValue;
+
+            value.Should().Be(0f);
+        }
+
+        [Test]
+        public void DefaultRadix_Real_ShouldBeDecimal()
+        {
+            var type = Predefined.Real;
+
+            var value = type.DefaultRadix;
+
+            value.Should().Be(Radix.Float);
+        }
+
+        [Test]
+        public void SupportsRadix_BoolInvalidRadix_ShouldBeFalse()
+        {
+            var type = Predefined.Bool;
+
+            var result = type.SupportsRadix(Radix.Exponential);
+
+            result.Should().BeFalse();
+        }
+
+        [Test]
+        public void SupportsRadix_BoolValidRadix_ShouldBeTrue()
+        {
+            var type = Predefined.Bool;
+
+            var result = type.SupportsRadix(Radix.Binary);
+
+            result.Should().BeTrue();
+        }
+
+        [Test]
+        public void SupportsRadix_CounterValidRadix_ShouldBeTrue()
+        {
+            var type = Predefined.Counter;
+
+            var result = type.SupportsRadix(Radix.Null);
+
+            result.Should().BeTrue();
         }
     }
 }

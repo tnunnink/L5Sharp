@@ -9,31 +9,27 @@ using L5Sharp.Utilities;
 
 namespace L5Sharp.Core
 {
-    public sealed class DataType : IDataType, IEquatable<DataType>
+    public class DataType : IDataType, IEquatable<DataType>
     {
-        private static readonly string[] StringMemberNames = { "LEN", "DATA" };
         private string _name;
         private string _description;
+        private readonly Dictionary<Member, List<Member>> _backingMembers = new Dictionary<Member, List<Member>>();
         private readonly Dictionary<string, Member> _members = new Dictionary<string, Member>();
 
-        internal DataType(string name, DataTypeFamily family, string description = null,
-            IEnumerable<Member> members = null)
+        public DataType(string name, string description = null, IEnumerable<Member> members = null)
         {
             if (string.IsNullOrEmpty(name)) throw new ArgumentNullException(nameof(name));
-            if (family == null) throw new ArgumentNullException(nameof(family));
 
             Name = name;
-            Family = family;
             Description = description ?? string.Empty;
 
             if (members == null) return;
             foreach (var member in members)
+            {
+                member.NameChanged += MemberOnNameChanged;
                 _members.Add(member.Name, member);
-        }
-
-        public DataType(string name, string description = null)
-            : this(name, DataTypeFamily.None, description)
-        {
+            }
+                
         }
 
         public string Name
@@ -47,11 +43,16 @@ namespace L5Sharp.Core
             }
         }
 
-        public DataTypeFamily Family { get; }
+        public DataTypeFamily Family => DataTypeFamily.None;
+
         public DataTypeClass Class => DataTypeClass.User;
+
         public bool IsAtomic => false;
+
         public object DefaultValue => null;
+
         public Radix DefaultRadix => Radix.Null;
+
         public TagDataFormat DataFormat => TagDataFormat.Decorated;
 
         public string Description
@@ -65,14 +66,6 @@ namespace L5Sharp.Core
         public bool SupportsRadix(Radix radix)
         {
             return radix == Radix.Null;
-        }
-
-        public static DataType StringType(string name, ushort length, string description = null)
-        {
-            if (length <= 0)
-                throw new ArgumentException("Length must be greater 0");
-
-            return new DataType(name, DataTypeFamily.String, description, GenerateStringMembers(length));
         }
 
         public Member GetMember(string name)
@@ -119,12 +112,8 @@ namespace L5Sharp.Core
 
         public void UpdateMember(string name, Action<IMemberBuilder> builder)
         {
-            if (Family == DataTypeFamily.String)
-                Throw.NotConfigurableException(nameof(Members), nameof(Member),
-                    "Can not configure members of string family");
-
             if (!_members.ContainsKey(name))
-                Throw.ItemNotFoundException(name);
+                Throw.ComponentNotFoundException(name, typeof(Member));
 
             var current = _members[name];
             var memberBuilder = new MemberBuilder(current.Name, current.DataType);
@@ -140,10 +129,6 @@ namespace L5Sharp.Core
 
         public void RemoveMember(string name)
         {
-            if (Family == DataTypeFamily.String)
-                Throw.NotConfigurableException(nameof(Members), nameof(Member),
-                    "Can not configure members of string family");
-
             if (!_members.ContainsKey(name)) return;
 
             var member = _members[name];
@@ -156,22 +141,6 @@ namespace L5Sharp.Core
             }
 
             _members.Remove(name);
-        }
-
-        public void RenameMember(string oldName, string newName)
-        {
-            if (Family == DataTypeFamily.String)
-                Throw.NotConfigurableException(nameof(Members), nameof(Member),
-                    "Can not configure members of string family");
-
-            if (!_members.ContainsKey(oldName))
-                Throw.ItemNotFoundException(oldName);
-
-            var member = _members[oldName];
-            _members.Remove(oldName);
-
-            member.Name = newName;
-            _members.Add(member.Name, member);
         }
 
         public bool Equals(DataType other)
@@ -207,14 +176,23 @@ namespace L5Sharp.Core
         }
 
         public static IDataType Null => Predefined.Null;
+
         public static IDataType Bool => Predefined.Bool;
+
         public static IDataType Sint => Predefined.Sint;
+
         public static IDataType Int => Predefined.Int;
+
         public static IDataType Dint => Predefined.Dint;
+
         public static IDataType Lint => Predefined.Lint;
+
         public static IDataType Real => Predefined.Real;
+
         public static IDataType String => Predefined.String;
+
         public static IDataType Timer => Predefined.Timer;
+
         public static IDataType Counter => Predefined.Counter;
 
         private void AddMemberInternal(Member member)
@@ -224,21 +202,12 @@ namespace L5Sharp.Core
                     "Can not configure members of string family");
 
             if (_members.ContainsKey(member.Name))
-                Throw.NameCollisionException(member.Name, typeof(Member));
+                Throw.ComponentNameCollisionException(member.Name, typeof(Member));
 
             if (member.DataType.Equals(Bool))
                 GenerateBitBackingMember(member);
 
             _members.Add(member.Name, member);
-        }
-
-        private static IEnumerable<Member> GenerateStringMembers(ushort length = 82)
-        {
-            return new List<Member>
-            {
-                new Member(StringMemberNames[0], Dint),
-                new Member(StringMemberNames[1], Sint, length, Radix.Ascii)
-            };
         }
 
         private void GenerateBitBackingMember(Member member)
@@ -260,11 +229,11 @@ namespace L5Sharp.Core
 
             member.Target = backingMember.Name;
         }
-        
+
         private static IEnumerable<IDataType> GetUniqueMemberTypes(IDataType dataType)
         {
             var types = new List<IDataType>();
-            
+
             foreach (var member in dataType.Members)
             {
                 types.Add(member.DataType);
@@ -272,6 +241,16 @@ namespace L5Sharp.Core
             }
 
             return types.Distinct();
+        }
+
+        private void MemberOnNameChanged(object sender, NameChangedEventArgs e)
+        {
+            if (_members.ContainsKey(e.OldName)) return;
+
+            var member = _members[e.OldName];
+
+            _members.Remove(e.OldName);
+            _members.Add(member.Name, member);
         }
     }
 }

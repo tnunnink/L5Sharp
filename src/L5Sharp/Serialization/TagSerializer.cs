@@ -5,16 +5,15 @@ using System.Xml.Linq;
 using L5Sharp.Abstractions;
 using L5Sharp.Core;
 using L5Sharp.Enumerations;
+using L5Sharp.Extensions;
 using L5Sharp.Utilities;
 
 [assembly: InternalsVisibleTo("L5Sharp.Serialization.Tests")]
 
 namespace L5Sharp.Serialization
 {
-    internal class TagSerializer : IL5XSerializer<Tag>
+    internal class TagSerializer : IComponentSerializer<Tag>
     {
-        private readonly DataTypeSerializer _typeSerializer = new DataTypeSerializer();
-
         public XElement Serialize(Tag component)
         {
             var element = new XElement(nameof(Tag));
@@ -123,15 +122,13 @@ namespace L5Sharp.Serialization
                 return data;
             }
 
-            var serializer = new TagMemberSerializer();
-
             if (tag.IsArrayMember)
             {
                 var array = new XElement(L5XNames.Elements.Array);
                 array.Add(new XAttribute(L5XNames.Attributes.DataType, tag.DataType));
                 array.Add(new XAttribute(L5XNames.Attributes.Dimensions, tag.Dimension.ToString()));
                 array.Add(new XAttribute(L5XNames.Attributes.Radix, tag.Radix.Name));
-                array.Add(tag.Members.Select(m => serializer.Serialize((TagMember)m)));
+                array.Add(tag.Members.Select(m => m.Serialize()));
                 data.Add(array);
                 return data;
             }
@@ -141,7 +138,7 @@ namespace L5Sharp.Serialization
 
             var structure = new XElement(L5XNames.Elements.Structure);
             structure.Add(new XAttribute(L5XNames.Attributes.DataType, tag.DataType));
-            structure.Add(tag.Members.Select(m => serializer.Serialize((TagMember)m)));
+            structure.Add(tag.Members.Select(m => m.Serialize()));
             data.Add(structure);
             return data;
         }

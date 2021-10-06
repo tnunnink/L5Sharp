@@ -18,18 +18,18 @@ namespace L5Sharp.Utilities
         public static void PredefinedCollisionException(string dataType) =>
             throw new PredefinedCollisionException(
                 $"Data type {dataType} already exists either as a predefined type on in the current controller context");
-        
-        public static void DataTypeNotFoundException(string dataType) =>
-            throw new DataTypeNotFoundException(
-                $"Data type '{dataType}' does not exist in the current controller context");
 
-        public static void NameCollisionException(string name, Type type) =>
-            throw new NameCollisionException(
-                $"Name {name} already exists for {type}. Name must be unique.");
+        public static void ComponentNameCollisionException(string name, Type type) =>
+            throw new ComponentNameCollisionException(
+                $"Name {name} already exists for {type}");
         
-        public static void ItemNotFoundException(string name) =>
-            throw new ItemNotFoundException(
-                $"Item {name} does not exists on this type");
+        public static void ComponentNotFoundException(string name, Type type) =>
+            throw new ComponentNotFoundException(
+                $"Component {name} does not exists for {type}");
+        
+        public static void ComponentReferencedException(string name, Type type) =>
+            throw new ComponentReferencedException(
+                $"Component {name} is of type {type} is currently referenced");
 
         public static void NotConfigurableException(string propertyName, string baseType, string reason) =>
             throw new NotConfigurableException(
