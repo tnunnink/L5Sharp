@@ -3,7 +3,6 @@ using System.Linq;
 using System.Xml.Linq;
 using L5Sharp.Abstractions;
 using L5Sharp.Core;
-using L5Sharp.Enumerations;
 using L5Sharp.Utilities;
 
 namespace L5Sharp.Extensions
@@ -19,7 +18,7 @@ namespace L5Sharp.Extensions
                 throw new InvalidOperationException($"Element '{element.Name}' does not have data type name");
                 
             if (Predefined.ContainsType(typeName))
-                return Predefined.FromName(typeName);
+                return Predefined.ParseType(typeName);
             
             var typeElement = element.FindDataTypeElement(typeName);
             return typeElement?.Deserialize<DataType>();

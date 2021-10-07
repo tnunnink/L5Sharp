@@ -2,7 +2,7 @@
 using L5Sharp.Core;
 using L5Sharp.Enumerations;
 
-namespace L5Sharp.Repositories
+namespace L5Sharp.Abstractions
 {
     public interface IProgramRepository : IRepository<Program>
     {

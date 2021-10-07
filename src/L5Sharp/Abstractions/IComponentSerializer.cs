@@ -1,10 +1,9 @@
 ﻿using System.Runtime.CompilerServices;
 using System.Xml.Linq;
-using L5Sharp.Abstractions;
 
 [assembly: InternalsVisibleTo("L5Sharp.Loaders.Tests")]
 
-namespace L5Sharp.Serialization
+namespace L5Sharp.Abstractions
 {
     internal interface IComponentSerializer
     {

@@ -59,15 +59,6 @@ namespace L5Sharp.Types.Tests
         }
 
         [Test]
-        public void FromName_ValidName_ShouldNotBeNull()
-        {
-            var type = Predefined.FromName("INT");
-
-            type.Should().NotBeNull();
-            type.Name.Should().Be("INT");
-        }
-
-        [Test]
         public void ParseType_ValidName_ShouldNotBeNull()
         {
             var type = Predefined.ParseType("INT");

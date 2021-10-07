@@ -1,16 +1,12 @@
 ﻿using System;
+using L5Sharp.Core;
 using L5Sharp.Enumerations;
-using L5Sharp.Extensions;
 
 namespace L5Sharp.Types
 {
     public sealed class Bool : Predefined
     {
         public Bool() : base(LoadElement(nameof(Bool).ToUpper()))
-        {
-        }
-            
-        internal Bool(string name) : base(name, LoadElement(nameof(Bool).ToUpper()).GetName())
         {
         }
 

@@ -1,11 +1,13 @@
 ﻿using System;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using L5Sharp.Abstractions;
 using L5Sharp.Enumerations;
 using L5Sharp.Utilities;
 
 namespace L5Sharp.Core
 {
-    public class Member : IMember, IEquatable<Member>
+    public class Member : IMember, IEquatable<Member>, INotifyPropertyChanged
     {
         private string _name;
         private IDataType _dataType;
@@ -17,11 +19,11 @@ namespace L5Sharp.Core
             ExternalAccess access, string description, bool hidden, string target, ushort bitNumber)
         {
             Name = name;
-            _dataType = dataType ?? Predefined.Null;
+            DataType = dataType ?? Predefined.Null;
             Dimension = dimension;
-            _radix = radix ?? _dataType.DefaultRadix;
-            _externalAccess = access ?? ExternalAccess.ReadWrite;
-            _description = description ?? string.Empty;
+            Radix = radix == null ? DataType.DefaultRadix : radix;
+            ExternalAccess = access == null ? ExternalAccess.ReadWrite : access;
+            Description = description ?? string.Empty;
             Hidden = hidden;
             Target = target ?? string.Empty;
             BitNumber = bitNumber;
@@ -38,21 +40,19 @@ namespace L5Sharp.Core
             get => _name;
             set
             {
-                if (value == null)
-                    throw new ArgumentNullException(nameof(value), "Cannot set member name property to null");
-
                 Validate.Name(value);
-
-                var old = _name;
                 _name = value;
-                RaiseNameChanged(old, _name);
             }
         }
 
         public IDataType DataType
         {
             get => _dataType;
-            set => _dataType = value ?? Predefined.Null;
+            set
+            {
+                _dataType = value ?? Predefined.Null;
+                OnPropertyChanged();
+            }
         }
 
         public ushort Dimension { get; set; }
@@ -71,17 +71,16 @@ namespace L5Sharp.Core
         {
             get => _externalAccess;
             set => _externalAccess = value ?? throw new ArgumentNullException(nameof(value),
-                "Cannot set member ExternalAccess property to null");
+                "ExternalAccess property can not be null");
         }
 
         public string Description
         {
             get => _description;
             set => _description = value ?? throw new ArgumentNullException(nameof(value),
-                "Cannot set member Description property to null");
+                "Description property can not be null");
         }
 
-        internal event EventHandler<NameChangedEventArgs> NameChanged;
         internal bool Hidden { get; set; }
         internal string Target { get; set; }
         internal ushort BitNumber { get; set; }
@@ -129,9 +128,12 @@ namespace L5Sharp.Core
             return !Equals(left, right);
         }
 
-        public void RaiseNameChanged(string oldName, string newName)
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        [NotifyPropertyChangedInvocator]
+        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            NameChanged?.Invoke(this, new NameChangedEventArgs(oldName, newName));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

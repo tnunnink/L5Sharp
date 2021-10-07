@@ -1,14 +1,11 @@
-﻿using System.Xml.Linq;
-using L5Sharp.Enumerations;
+﻿using L5Sharp.Core;
 
 namespace L5Sharp.Types
 {
-    public class Null : Predefined
+    public sealed class Null : Predefined
     {
         public Null() : base(LoadElement(nameof(Null).ToUpper()))
         {
         }
-        
-        
     }
 }

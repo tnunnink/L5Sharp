@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
-using L5Sharp.Abstractions;
 using L5Sharp.Core;
 
-namespace L5Sharp.Repositories
+namespace L5Sharp.Abstractions
 {
     public interface IDataTypeRepository : IRepository<DataType>
     {

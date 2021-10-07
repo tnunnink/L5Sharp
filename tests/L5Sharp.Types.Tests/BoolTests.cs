@@ -59,20 +59,9 @@ namespace L5Sharp.Types.Tests
         }
 
         [Test]
-        public void FromName_Bool_ShouldReturnExpectedType()
+        public void ParseType_BoolLower_ShouldReturnExpectedType()
         {
-            var type = Predefined.FromName("BOOL");
-
-            type.Should().NotBeNull();
-            type.Name.Should().Be("BOOL");
-            type.Class.Should().Be(DataTypeClass.Predefined);
-            type.Family.Should().Be(DataTypeFamily.None);
-        }
-        
-        [Test]
-        public void FromName_BoolLowerIgnoreCase_ShouldReturnExpectedType()
-        {
-            var type = Predefined.FromName("bool", true);
+            var type = Predefined.ParseType("bool");
 
             type.Should().NotBeNull();
             type.Name.Should().Be("BOOL");

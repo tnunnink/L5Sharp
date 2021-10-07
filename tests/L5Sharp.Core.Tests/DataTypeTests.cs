@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using AutoFixture;
 using FluentAssertions;
@@ -12,14 +13,21 @@ namespace L5Sharp.Core.Tests
     public class DataTypeTests
     {
         [Test]
-        public void New_EmptyTagName_ShouldThrowArgumentNullException()
+        public void New_NullName_ShouldThrowArgumentNullException()
+        {
+            FluentActions.Invoking(() => new DataType(string.Empty)).Should()
+                .Throw<ArgumentException>();
+        }
+        
+        [Test]
+        public void New_EmptyName_ShouldThrowArgumentNullException()
         {
             FluentActions.Invoking(() => new DataType(string.Empty)).Should()
                 .Throw<ArgumentException>();
         }
 
         [Test]
-        public void New_InvalidTagName_ShouldThrowInvalidTagNameException()
+        public void New_InvalidName_ShouldThrowInvalidTagNameException()
         {
             var fixture = new Fixture();
             FluentActions.Invoking(() => new DataType(fixture.Create<string>())).Should()
@@ -32,19 +40,87 @@ namespace L5Sharp.Core.Tests
             var fixture = new Fixture();
             var description = fixture.Create<string>();
 
-            var type = new DataType("Test_Type_001", description);
+            var type = new DataType("Test", description);
 
             type.Should().NotBeNull();
-            type.Name.Should().Be("Test_Type_001");
+            type.Name.Should().Be("Test");
             type.Class.Should().Be(DataTypeClass.User);
             type.Family.Should().Be(DataTypeFamily.None);
             type.Description.Should().Be(description);
             type.IsAtomic.Should().BeFalse();
             type.Members.Should().BeEmpty();
         }
+        
+        [Test]
+        public void New_MemberOverload_ShouldBeExpected()
+        {
+            var fixture = new Fixture();
+            var description = fixture.Create<string>();
+            var member = new Member("Member", Predefined.Bool);
+
+            var type = new DataType("Test", member, description);
+
+            type.Should().NotBeNull();
+            type.Name.Should().Be("Test");
+            type.Class.Should().Be(DataTypeClass.User);
+            type.Family.Should().Be(DataTypeFamily.None);
+            type.Description.Should().Be(description);
+            type.IsAtomic.Should().BeFalse();
+            type.Members.Should().HaveCount(1);
+            type.Members.Should().Contain(member);
+        }
+        
+        [Test]
+        public void New_MembersOverload_ShouldBeExpected()
+        {
+            var fixture = new Fixture();
+            var description = fixture.Create<string>();
+            var members = new List<Member>
+            {
+                new("Member01", Predefined.Bool),
+                new("Member02", Predefined.Bool)
+            };
+
+            var type = new DataType("Test", members, description);
+
+            type.Should().NotBeNull();
+            type.Name.Should().Be("Test");
+            type.Class.Should().Be(DataTypeClass.User);
+            type.Family.Should().Be(DataTypeFamily.None);
+            type.Description.Should().Be(description);
+            type.IsAtomic.Should().BeFalse();
+            type.Members.Should().HaveCount(2);
+            type.Members.Should().BeEquivalentTo(members);
+        }
+        
+        [Test]
+        public void New_MembersOverloadBools_ShouldBeExpected()
+        {
+            var fixture = new Fixture();
+            var description = fixture.Create<string>();
+            var members = new List<Member>
+            {
+                new("Member01", Predefined.Bool),
+                new("Member02", Predefined.Bool),
+                new("Member03", Predefined.Bool),
+                new("Member04", Predefined.Bool),
+                new("Member05", Predefined.Int),
+                new("Member06", Predefined.Bool),
+                new("Member07", Predefined.Bool),
+                new("Member08", Predefined.Real),
+                new("Member09", Predefined.Bool),
+                new("Member10", Predefined.Bool)
+            };
+
+            var type = new DataType("Test", members, description);
+
+            type.Should().NotBeNull();
+            type.Members.Should().HaveCount(10);
+            type.Members.Should().BeEquivalentTo(members);
+        }
 
         [Test]
-        public void SetName_ValidName_ShouldBeExpectedValue()
+        public void Name_SetValueValidName_ShouldBeExpectedValue()
         {
             var fixture = new Fixture();
             var description = fixture.Create<string>();
@@ -56,7 +132,7 @@ namespace L5Sharp.Core.Tests
         }
 
         [Test]
-        public void SetName_InvalidName_ShouldThrowInvalidTagNameException()
+        public void Name_SetValueInvalidName_ShouldThrowInvalidTagNameException()
         {
             var fixture = new Fixture();
             var description = fixture.Create<string>();
@@ -66,7 +142,7 @@ namespace L5Sharp.Core.Tests
         }
 
         [Test]
-        public void SetDescription_WhenCalled_ShouldBeExpectedValue()
+        public void Description_SetValueValidValue_ShouldBeExpectedValue()
         {
             var fixture = new Fixture();
             var description = fixture.Create<string>();
@@ -79,100 +155,88 @@ namespace L5Sharp.Core.Tests
         }
 
         [Test]
+        public void GetMember_ValidName_ShouldNotBeNull()
+        {
+            var type = new DataType("Test");
+            
+            
+        }
+        
+        [Test]
+        public void Description_SetValueNull_ShouldThrowArgumentNullException()
+        {
+            var type = new DataType("Test");
+
+            FluentActions.Invoking(() => type.Description = null).Should().Throw<ArgumentNullException>();
+        }
+        
+        
+
+        [Test]
         public void AddMember_ExistingMember_ShouldThrowMemberNameCollisionException()
         {
-            var type = new DataType("Test_Type_001");
-            type.AddMember("Member", DataType.Dint);
+            var member = new Member("Test", Predefined.Dint);
+            var type = new DataType("Test");
 
             FluentActions.Invoking(() => type.AddMember("Member", DataType.Int)).Should()
                 .Throw<ComponentNameCollisionException>();
         }
 
         [Test]
-        public void AddMember_InvalidTagName_ShouldThrowInvalidTagNameException()
+        public void AddMember_InvalidName_ShouldThrowInvalidNameException()
         {
-            var type = new DataType("Test_Type_001");
+            var fixture = new Fixture();
+            var type = new DataType("Test");
 
-            FluentActions.Invoking(() => type.AddMember("This_is Not_It", DataType.Dint)).Should()
+            FluentActions.Invoking(() => type.AddMember(fixture.Create<string>(), DataType.Dint)).Should()
                 .Throw<InvalidNameException>();
+        }
+        
+        [Test]
+        public void AddMember_NullName_ShouldThrowArgumentNullException()
+        {
+            var type = new DataType("Test");
+
+            FluentActions.Invoking(() => type.AddMember(null, DataType.Dint)).Should()
+                .Throw<ArgumentNullException>();
         }
 
         [Test]
         public void AddMember_NullDataType_ShouldHaveMemberWithNullType()
         {
-            var type = new DataType("Test_Type_001");
+            var type = new DataType("Test");
 
             type.AddMember("Member", null);
 
-            var member = type.Members.Single(m => m.Name == "Member");
+            var member = type.GetMember("Member");
             member.DataType.Should().Be(DataType.Null);
-        }
-
-        [Test]
-        public void AddMember_NullRadix_ShouldThrowArgumentNullException()
-        {
-            var type = new DataType("Test_Type_001");
-
-            FluentActions.Invoking(() => type.AddMember("Member", DataType.Int, builder => builder.HasRadix(null)))
-                .Should()
-                .Throw<ArgumentNullException>();
         }
 
         [Test]
         public void AddMember_InvalidRadixForType_ShouldThrowRadixNotSupportedException()
         {
-            var type = new DataType("Test_Type_001");
+            var type = new DataType("Test");
 
             FluentActions.Invoking(() => type.AddMember("Member", DataType.Int, radix: Radix.Float)).Should()
                 .Throw<RadixNotSupportedException>();
         }
 
         [Test]
-        public void AddMember_NullExternalAccess_ShouldThrowArgumentNullException()
-        {
-            var type = new DataType("Test_Type_001");
-
-            FluentActions.Invoking(() => type.AddMember("Member", DataType.Int, b => b.HasAccess(null))).Should()
-                .Throw<ArgumentNullException>();
-        }
-
-        [Test]
         public void AddMember_ValidArguments_ShouldHaveExpectedMember()
         {
-            var type = new DataType("Test_Type_001");
+            var type = new DataType("Test");
 
             type.AddMember("Member", DataType.Dint);
 
             type.Members.Should().HaveCount(1);
-            var result = type.Members.Single(m => m.Name == "Member");
-            result.Should().NotBeNull();
-            result.Name.Should().Be("Member");
-            result.DataType.Should().Be(DataType.Dint);
-            result.Dimension.Should().Be(0);
-            result.Description.Should().Be(string.Empty);
-            result.Radix.Should().Be(Radix.Decimal);
-            result.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);
-        }
-
-        [Test]
-        public void AddMember_FluentBuilder_ShouldHaveExpectedProperties()
-        {
-            var type = new DataType("Test_Type_001");
-
-            type.AddMember("Member", DataType.Dint,
-                b => b.HasDimension(4)
-                    .HasDescription("This is a test description")
-                    .HasRadix(Radix.Hex)
-                    .HasAccess(ExternalAccess.None));
-
-            var result = type.Members.SingleOrDefault(m => m.Name == "Member");
-            result.Should().NotBeNull();
-            result?.Name.Should().Be("Member");
-            result?.DataType.Should().Be(DataType.Dint);
-            result?.Dimension.Should().Be(4);
-            result?.Description.Should().Be("This is a test description");
-            result?.Radix.Should().Be(Radix.Hex);
-            result?.ExternalAccess.Should().Be(ExternalAccess.None);
+            var member = type.GetMember("Member");
+            member.Should().NotBeNull();
+            member.Name.Should().Be("Member");
+            member.DataType.Should().Be(DataType.Dint);
+            member.Dimension.Should().Be(0);
+            member.Description.Should().Be(string.Empty);
+            member.Radix.Should().Be(Radix.Decimal);
+            member.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);
         }
 
         [Test]
@@ -183,39 +247,6 @@ namespace L5Sharp.Core.Tests
             type.AddMember("Member", DataType.Bool);
 
             type.Members.Should().HaveCount(1);
-        }
-
-        [Test]
-        public void UpdateMember_ExistingMemberWithProperties_ShouldHaveExpectedProperties()
-        {
-            var type = new DataType("Test_Type_001");
-            type.AddMember("Member", DataType.Dint);
-
-            type.UpdateMember("Member",
-                b => b.HasType(DataType.Int)
-                    .HasDimension(4)
-                    .HasDescription("This is a test description")
-                    .HasRadix(Radix.Hex)
-                    .HasAccess(ExternalAccess.None));
-
-            var result = type.Members.SingleOrDefault(m => m.Name == "Member");
-            result.Should().NotBeNull();
-            result?.Name.Should().Be("Member");
-            result?.DataType.Should().Be(DataType.Int);
-            result?.Dimension.Should().Be(4);
-            result?.Description.Should().Be("This is a test description");
-            result?.Radix.Should().Be(Radix.Hex);
-            result?.ExternalAccess.Should().Be(ExternalAccess.None);
-        }
-
-        [Test]
-        public void UpdateMember_NonExistingMember_ShouldThrowMemberNotFoundException()
-        {
-            var type = new DataType("Test_Type_001");
-            type.AddMember("Member", DataType.Dint);
-
-            FluentActions.Invoking(() => type.UpdateMember("Test", b => b.HasType(DataType.Bool))).Should()
-                .Throw<ComponentNotFoundException>();
         }
 
         [Test]

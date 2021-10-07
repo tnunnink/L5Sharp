@@ -1,5 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 using System.Xml.Linq;
+using L5Sharp.Abstractions;
 using L5Sharp.Core;
 
 [assembly: InternalsVisibleTo("L5Sharp.Serialization.Tests")]

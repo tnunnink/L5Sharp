@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
-using L5Sharp.Abstractions;
 using L5Sharp.Extensions;
 using L5Sharp.Utilities;
 
-namespace L5Sharp.Repositories
+namespace L5Sharp.Abstractions
 {
     public class Repository<T> : IRepository<T> where T : IComponent
     {

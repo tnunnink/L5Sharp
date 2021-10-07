@@ -77,7 +77,7 @@ namespace L5Sharp.Core.Tests
         {
             var member = new Member("MemberName", DataType.Bool);
 
-            FluentActions.Invoking(() => member.Name = null).Should().Throw<ArgumentNullException>();
+            FluentActions.Invoking(() => member.Name = null).Should().Throw<ArgumentException>();
         }
 
         [Test]

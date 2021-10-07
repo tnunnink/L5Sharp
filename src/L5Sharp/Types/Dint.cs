@@ -1,8 +1,9 @@
-﻿using L5Sharp.Enumerations;
+﻿using L5Sharp.Core;
+using L5Sharp.Enumerations;
 
 namespace L5Sharp.Types
 {
-    public class Dint : Predefined
+    public sealed class Dint : Predefined
     {
         public Dint() : base(LoadElement(nameof(Dint).ToUpper()))
         {

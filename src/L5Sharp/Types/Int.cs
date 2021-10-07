@@ -1,8 +1,9 @@
-﻿using L5Sharp.Enumerations;
+﻿using L5Sharp.Core;
+using L5Sharp.Enumerations;
 
 namespace L5Sharp.Types
 {
-    public class Int : Predefined
+    public sealed class Int : Predefined
     {
         public Int() : base(LoadElement(nameof(Int).ToUpper()))
         {

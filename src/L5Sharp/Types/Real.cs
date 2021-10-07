@@ -1,8 +1,9 @@
-﻿using L5Sharp.Enumerations;
+﻿using L5Sharp.Core;
+using L5Sharp.Enumerations;
 
 namespace L5Sharp.Types
 {
-    public class Real : Predefined
+    public sealed class Real : Predefined
     {
         public Real() : base(LoadElement(nameof(Real).ToUpper()))
         {

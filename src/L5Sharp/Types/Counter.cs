@@ -1,10 +1,11 @@
 ﻿using System.Linq;
 using L5Sharp.Abstractions;
+using L5Sharp.Core;
 using L5Sharp.Enumerations;
 
 namespace L5Sharp.Types
 {
-    public class Counter : Predefined
+    public sealed class Counter : Predefined
     {
         public Counter() : base(LoadElement(nameof(Counter).ToUpper()))
         {

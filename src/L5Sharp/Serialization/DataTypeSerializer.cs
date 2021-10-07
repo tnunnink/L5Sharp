@@ -10,9 +10,9 @@ using L5Sharp.Extensions;
 
 namespace L5Sharp.Serialization
 {
-    internal class DataTypeSerializer : IComponentSerializer<IDataType>
+    internal class DataTypeSerializer : IComponentSerializer<DataType>
     {
-        public XElement Serialize(IDataType component)
+        public XElement Serialize(DataType component)
         {
             if (component == null) throw new ArgumentNullException(nameof(component));
 
@@ -21,11 +21,8 @@ namespace L5Sharp.Serialization
             element.Add(new XAttribute(nameof(component.Family), component.Family));
             element.Add(new XAttribute(nameof(component.Class), component.Class));
 
-            if (component is DataType type)
-            {
-                if (!string.IsNullOrEmpty(type.Description))
-                    element.Add(new XElement(nameof(type.Description), new XCData(type.Description)));
-            }
+            if (!string.IsNullOrEmpty(component.Description))
+                element.Add(new XElement(nameof(component.Description), new XCData(component.Description)));
 
             var serializer = new MemberSerializer();
             element.Add(new XElement(nameof(component.Members),
@@ -34,13 +31,13 @@ namespace L5Sharp.Serialization
             return element;
         }
 
-        public IDataType Deserialize(XElement element)
+        public DataType Deserialize(XElement element)
         {
             if (element == null) throw new ArgumentNullException(nameof(element));
 
-            var members = element.GetAll<Member>().Select(x => x.Deserialize<Member>());
+            var members = element.GetAll<Member>().Where(e => !e.GetHidden()).Select(x => x.Deserialize<Member>());
 
-            return new DataType(element.GetName(), element.GetDescription(), members);
+            return new DataType(element.GetName(), members, element.GetDescription());
         }
     }
 }

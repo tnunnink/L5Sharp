@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
-using L5Sharp.Abstractions;
+﻿using System.Collections.Generic;
 
-namespace L5Sharp.Repositories
+namespace L5Sharp.Abstractions
 {
     public interface IRepository
     {

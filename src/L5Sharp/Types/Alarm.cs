@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using L5Sharp.Abstractions;
+using L5Sharp.Core;
 using L5Sharp.Enumerations;
 // ReSharper disable InconsistentNaming I want to keep the naming consistent with Logix (for now).
 

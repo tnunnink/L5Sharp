@@ -4,19 +4,19 @@ using System.Linq;
 using AutoFixture;
 using FluentAssertions;
 using L5Sharp.Abstractions;
-using L5Sharp.Core;
+using L5Sharp.Enumerations;
 using L5Sharp.Exceptions;
 using NUnit.Framework;
 
-namespace L5Sharp.Enumerations.Tests
+namespace L5Sharp.Core.Tests
 {
     [TestFixture]
     public class PredefinedTests
     {
         [Test]
-        public void List_WhenCalled_ShouldNotBeEmpty()
+        public void Types_WhenCalled_ShouldNotBeEmpty()
         {
-            var predefined = Predefined.List;
+            var predefined = Predefined.Types();
 
             predefined.Should().NotBeEmpty();
         }
@@ -24,10 +24,9 @@ namespace L5Sharp.Enumerations.Tests
         [Test]
         public void GetAtomic_WhenCalled_ShouldNotBeEmpty()
         {
-            var atomic = Predefined.List.Where(t => t.IsAtomic).ToList();
+            var atomic = Predefined.Types().Where(t => t.IsAtomic).ToList();
 
             atomic.Should().NotBeEmpty();
-            atomic.Should().Contain(x => x.Name == "BIT");
             atomic.Should().Contain(x => x.Name == "BOOL");
             atomic.Should().Contain(x => x.Name == "SINT");
             atomic.Should().Contain(x => x.Name == "INT");
@@ -245,9 +244,9 @@ namespace L5Sharp.Enumerations.Tests
         }
 
         [Test]
-        public void FromName_Sint_ShouldReturnExpectedType()
+        public void ParseType_Sint_ShouldReturnExpectedType()
         {
-            var type = Predefined.FromName("SINT");
+            var type = Predefined.ParseType("SINT");
 
             type.Should().NotBeNull();
             type.Name.Should().Be("SINT");

@@ -1,7 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <DataTypes>
     <DataType Name="NULL" Family="NoFamily" Class="ProductDefined"/>
-    <DataType Name="BIT" Family="NoFamily" Class="ProductDefined"/>
     <DataType Name="BOOL" Family="NoFamily" Class="ProductDefined"/>
     <DataType Name="SINT" Family="NoFamily" Class="ProductDefined"/>
     <DataType Name="INT" Family="NoFamily" Class="ProductDefined"/>
