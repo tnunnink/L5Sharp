@@ -1,21 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using L5Sharp.Abstractions;
 using L5Sharp.Enumerations;
+using L5Sharp.Exceptions;
 using L5Sharp.Utilities;
 
 namespace L5Sharp.Core
 {
     public class DataType : IDataType, IEquatable<DataType>
     {
-        // ReSharper disable once StringLiteralTypo This is the prefix for boolean backing members
-        private const string BackingMemberPrefix = "ZZZZZZZZZZ";
         private string _name;
         private string _description;
-        private readonly List<Member> _backing = new List<Member>();
-        private readonly List<Member> _members = new List<Member>();
+        private readonly Dictionary<string, Member> _members = new Dictionary<string, Member>();
         
         public DataType(string name, string description = null)
         {
@@ -64,29 +61,19 @@ namespace L5Sharp.Core
                 value ?? throw new ArgumentNullException(nameof(value), "Description can not be null");
         }
 
-        public IEnumerable<IMember> Members => _members.Where(m => !m.Hidden).AsEnumerable();
+        public IEnumerable<IMember> Members => _members.Values.AsEnumerable();
 
         public bool SupportsRadix(Radix radix)
         {
             return radix == Radix.Null;
         }
 
-        public bool ContainsMember(string name) => HasMemberName(name);
+        public Member GetMember(string name) => GetMemberByName(name);
 
-        public Member GetMember(string name)
-        {
-            return _members.SingleOrDefault(m => m.Name == name);
-        }
+        public IEnumerable<IDataType> GetDependentTypes() => GetUniqueMemberTypes(this);
 
-        public IEnumerable<IDataType> GetDependentTypes()
-        {
-            return GetUniqueMemberTypes(this);
-        }
-
-        public IEnumerable<IDataType> GetDependentUserTypes()
-        {
-            return GetUniqueMemberTypes(this).Where(t => t.Class == DataTypeClass.User);
-        }
+        public IEnumerable<IDataType> GetDependentUserTypes() =>
+            GetUniqueMemberTypes(this).Where(t => t.Class == DataTypeClass.User);
 
         public void AddMember(Member member) => AddMemberComponent(member);
         
@@ -153,28 +140,7 @@ namespace L5Sharp.Core
         public static IDataType Counter => Predefined.Counter;
 
         /// <summary>
-        /// Gets a enumeration of all members both public and backing for use in serialization
-        /// </summary>
-        /// <returns>Enumeration of all data type members</returns>
-        /// <remarks>
-        /// Serializer needs access to backing members so that if can correctly compose the L5X structure
-        /// </remarks>
-        internal IEnumerable<Member> GetAllMembers()
-        {
-            var members = new List<Member>();
-            
-            for (var i = 0; i < _members.Count + _backing.Count; i++)
-            {
-                members.Add(_backing.SingleOrDefault(b => b.Name.EndsWith(i.ToString())) != null
-                    ? _backing[i]
-                    : _members[i]);
-            }
-
-            return members;
-        }
-
-        /// <summary>
-        /// Adds the member to the data type's member collection. Will also call registration of backing members.
+        /// Adds a member to the data type member collection
         /// </summary>
         /// <param name="member">The member to add</param>
         /// <exception cref="ArgumentNullException">Thrown when member is null</exception>
@@ -186,11 +152,11 @@ namespace L5Sharp.Core
             if (HasMemberName(member.Name))
                 Throw.ComponentNameCollisionException(member.Name, typeof(Member));
 
-            member.PropertyChanged += OnMemberPropertyChanged;
-            
-            _members.Add(member);
-            
-            RegisterBackingMembers();
+            if (member.DataType.Equals(this))
+                throw new CircularReferenceException(
+                    $"Member can not have same type as parent type '{member.DataType.Name}'");
+
+            _members.Add(member.Name, member);
         }
 
         /// <summary>
@@ -205,71 +171,7 @@ namespace L5Sharp.Core
             
             if (!HasMemberName(member.Name)) return;
 
-            member.PropertyChanged -= OnMemberPropertyChanged;
-            
-            _members.Remove(member);
-            
-            RegisterBackingMembers();
-        }
-
-        /// <summary>
-        /// Re-registers the backing members of the type. Called When member property changed event fires
-        /// </summary>
-        /// <param name="sender">The member object tat fired the event</param>
-        /// <param name="e">The property changed event arguments</param>
-        private void OnMemberPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            RegisterBackingMembers();
-        }
-
-        /// <summary>
-        /// Iterates the member collection and creates and "backing" members that are need by boolean types.
-        /// </summary>
-        private void RegisterBackingMembers()
-        {
-            _backing.Clear();
-            
-            foreach (var member in _members)
-                RegisterBackingMember(member);
-        }
-
-        /// <summary>
-        /// Assigns the backing member to the target of a boolean member.
-        /// Will create the backing member if it does not exists. Otherwise will retrieve and set target and bit number
-        /// This functionality is based on how Logix allocates bool members to conserve memory. When we serialize or
-        /// deserialize we need to account for these members. 
-        /// </summary>
-        /// <param name="member"></param>
-        /// <remarks>
-        /// Backing members appear to be named using the following convention:
-        /// {MemberPrefix}{DataTypeName}{IndexOfMember}
-        /// </remarks>
-        private void RegisterBackingMember(Member member)
-        {
-            if (!member.DataType.Equals(Predefined.Bool)) return;
-
-            var index = _members.IndexOf(member);
-            var previous = index - 1 >= 0 ? _members[index - 1] : null;
-            
-            if (!string.IsNullOrEmpty(previous?.Target) && previous.BitNumber < 7)
-            {
-                var target = _backing.SingleOrDefault(x => x.Name == previous.Target);
-                member.Target = target?.Name;
-                member.BitNumber = (ushort)(previous.BitNumber + 1);
-                return;
-            }
-            
-            //The backing member name only uses the first 10 characters of the data type name
-            var memberIndex = index + _backing.Count;
-            var backingName = Name.Length > 10 ? Name[..10] : Name;
-            
-            var backing = new Member($"{BackingMemberPrefix}{backingName}{memberIndex}", Sint, 0,
-                Radix.Decimal, ExternalAccess.ReadWrite, string.Empty, true, string.Empty, 0);
-            
-            _backing.Add(backing);
-
-            member.Target = backing.Name;
-            member.BitNumber = 0;
+            _members.Remove(member.Name);
         }
 
         /// <summary>
@@ -279,7 +181,8 @@ namespace L5Sharp.Core
         /// <returns></returns>
         private Member GetMemberByName(string name)
         {
-            return _members.SingleOrDefault(m => m.Name == name);
+            _members.TryGetValue(name, out var member);
+            return member;
         }
 
         /// <summary>
@@ -289,7 +192,7 @@ namespace L5Sharp.Core
         /// <returns>True when a member with the provided name exists</returns>
         private bool HasMemberName(string name)
         {
-            return _members.Any(m => m.Name == name);
+            return _members.ContainsKey(name);
         }
 
         /// <summary>

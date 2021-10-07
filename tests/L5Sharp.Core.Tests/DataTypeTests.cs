@@ -94,7 +94,7 @@ namespace L5Sharp.Core.Tests
         }
         
         [Test]
-        public void New_MembersOverloadBools_ShouldBeExpected()
+        public void New_MembersOverloadTen_ShouldBeExpected()
         {
             var fixture = new Fixture();
             var description = fixture.Create<string>();
@@ -140,6 +140,14 @@ namespace L5Sharp.Core.Tests
 
             FluentActions.Invoking(() => type.Name = "Not.Valid%01").Should().Throw<InvalidNameException>();
         }
+        
+        [Test]
+        public void Name_SetValueNull_ShouldThrowInvalidTagNameException()
+        {
+            var type = new DataType("Test");
+
+            FluentActions.Invoking(() => type.Name = null).Should().Throw<ArgumentException>();
+        }
 
         [Test]
         public void Description_SetValueValidValue_ShouldBeExpectedValue()
@@ -155,28 +163,51 @@ namespace L5Sharp.Core.Tests
         }
 
         [Test]
-        public void GetMember_ValidName_ShouldNotBeNull()
-        {
-            var type = new DataType("Test");
-            
-            
-        }
-        
-        [Test]
         public void Description_SetValueNull_ShouldThrowArgumentNullException()
         {
             var type = new DataType("Test");
 
             FluentActions.Invoking(() => type.Description = null).Should().Throw<ArgumentNullException>();
         }
-        
-        
+
+        [Test]
+        public void GetMember_ValidName_ShouldNotBeNull()
+        {
+            var member = new Member("Member", Predefined.Bool);
+            var type = new DataType("Test", member);
+
+            var result = type.GetMember("Member");
+
+            result.Should().NotBeNull();
+            result.Name.Should().Be("Member");
+        }
+
+        [Test]
+        public void GetMember_Null_ShouldThrowArgumentNullException()
+        {
+            var member = new Member("Member", Predefined.Bool);
+            var type = new DataType("Test", member);
+
+            FluentActions.Invoking(() => type.GetMember(null)).Should().Throw<ArgumentNullException>();
+        }
+
+
+        [Test]
+        public void GetMember_MemberThatDoesNotExist_ShouldBeNull()
+        {
+            var member = new Member("Member", Predefined.Bool);
+            var type = new DataType("Test", member);
+
+            var result = type.GetMember("MemberName");
+
+            result.Should().BeNull();
+        }
 
         [Test]
         public void AddMember_ExistingMember_ShouldThrowMemberNameCollisionException()
         {
-            var member = new Member("Test", Predefined.Dint);
-            var type = new DataType("Test");
+            var member = new Member("Member", Predefined.Dint);
+            var type = new DataType("Test", member);
 
             FluentActions.Invoking(() => type.AddMember("Member", DataType.Int)).Should()
                 .Throw<ComponentNameCollisionException>();
@@ -191,7 +222,7 @@ namespace L5Sharp.Core.Tests
             FluentActions.Invoking(() => type.AddMember(fixture.Create<string>(), DataType.Dint)).Should()
                 .Throw<InvalidNameException>();
         }
-        
+
         [Test]
         public void AddMember_NullName_ShouldThrowArgumentNullException()
         {
@@ -252,8 +283,8 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void RemoveMember_ExistingMember_MembersShouldEmpty()
         {
-            var type = new DataType("Test_Type_001");
-            type.AddMember("Member", DataType.Dint);
+            var member = new Member("Member", DataType.Dint);
+            var type = new DataType("Test", member);
 
             type.RemoveMember("Member");
 
@@ -261,29 +292,14 @@ namespace L5Sharp.Core.Tests
         }
 
         [Test]
-        public void RemoveMember_NonExistingMember_MembersShouldSame()
+        public void RemoveMember_NonExistingMember_MembersShouldSingle()
         {
-            var type = new DataType("Test_Type_001");
-            type.AddMember("Member", DataType.Dint);
+            var member = new Member("Member", DataType.Dint);
+            var type = new DataType("Test", member);
 
             type.RemoveMember("Test");
 
             type.Members.Should().HaveCount(1);
-        }
-
-        [Test]
-        public void GetMember_ExistingName_ShouldNotBeNullAndExpected()
-        {
-            var fixture = new Fixture();
-            var description = fixture.Create<string>();
-            var type = new DataType("Test", description);
-            type.AddMember("Member", DataType.Dint);
-
-            var member = type.GetMember("Member");
-
-            member.Should().NotBeNull();
-            member.Name.Should().Be("Member");
-            member.DataType.Should().Be(DataType.Dint);
         }
 
         [Test]

@@ -1,13 +1,11 @@
 ﻿using System;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using L5Sharp.Abstractions;
 using L5Sharp.Enumerations;
 using L5Sharp.Utilities;
 
 namespace L5Sharp.Core
 {
-    public class Member : IMember, IEquatable<Member>, INotifyPropertyChanged
+    public class Member : IMember, IEquatable<Member>
     {
         private string _name;
         private IDataType _dataType;
@@ -15,8 +13,8 @@ namespace L5Sharp.Core
         private ExternalAccess _externalAccess;
         private string _description;
 
-        internal Member(string name, IDataType dataType, ushort dimension, Radix radix,
-            ExternalAccess access, string description, bool hidden, string target, ushort bitNumber)
+        public Member(string name, IDataType dataType, ushort dimension = 0, Radix radix = null,
+            ExternalAccess access = null, string description = null)
         {
             Name = name;
             DataType = dataType ?? Predefined.Null;
@@ -24,15 +22,6 @@ namespace L5Sharp.Core
             Radix = radix == null ? DataType.DefaultRadix : radix;
             ExternalAccess = access == null ? ExternalAccess.ReadWrite : access;
             Description = description ?? string.Empty;
-            Hidden = hidden;
-            Target = target ?? string.Empty;
-            BitNumber = bitNumber;
-        }
-
-        public Member(string name, IDataType dataType, ushort dimension = 0, Radix radix = null,
-            ExternalAccess access = null, string description = null)
-            : this(name, dataType, dimension, radix, access, description, false, string.Empty, 0)
-        {
         }
 
         public string Name
@@ -48,11 +37,7 @@ namespace L5Sharp.Core
         public IDataType DataType
         {
             get => _dataType;
-            set
-            {
-                _dataType = value ?? Predefined.Null;
-                OnPropertyChanged();
-            }
+            set => _dataType = value ?? Predefined.Null;
         }
 
         public ushort Dimension { get; set; }
@@ -81,19 +66,13 @@ namespace L5Sharp.Core
                 "Description property can not be null");
         }
 
-        internal bool Hidden { get; set; }
-        internal string Target { get; set; }
-        internal ushort BitNumber { get; set; }
-
-
         public bool Equals(Member other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
             return _name == other._name && Equals(_dataType, other._dataType) && Equals(_radix, other._radix) &&
                    Equals(_externalAccess, other._externalAccess) && _description == other._description &&
-                   Dimension == other.Dimension && Hidden == other.Hidden && Target == other.Target &&
-                   BitNumber == other.BitNumber;
+                   Dimension == other.Dimension;
         }
 
         public override bool Equals(object obj)
@@ -112,9 +91,6 @@ namespace L5Sharp.Core
             hashCode.Add(ExternalAccess);
             hashCode.Add(Description);
             hashCode.Add(Dimension);
-            hashCode.Add(Hidden);
-            hashCode.Add(Target);
-            hashCode.Add(BitNumber);
             return hashCode.ToHashCode();
         }
 
@@ -126,14 +102,6 @@ namespace L5Sharp.Core
         public static bool operator !=(Member left, Member right)
         {
             return !Equals(left, right);
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        [NotifyPropertyChangedInvocator]
-        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

@@ -19,11 +19,6 @@ namespace L5Sharp.Serialization
             element.Add(new XAttribute(nameof(component.DataType), component.DataType.Name));
             element.Add(new XAttribute(nameof(component.Dimension), component.Dimension));
             element.Add(new XAttribute(nameof(component.Radix), component.Radix));
-            element.Add(new XAttribute(nameof(component.Hidden), component.Hidden));
-            if (!string.IsNullOrEmpty(component.Target))
-                element.Add(new XAttribute(nameof(component.Target), component.Target));
-            if (!string.IsNullOrEmpty(component.Target))
-                element.Add(new XAttribute(nameof(component.BitNumber), component.BitNumber));
             element.Add(new XAttribute(nameof(component.ExternalAccess), component.ExternalAccess));
 
             if (!string.IsNullOrEmpty(component.Description))
@@ -37,8 +32,7 @@ namespace L5Sharp.Serialization
             var dataType = element.GetDataType();
             
             return new Member(element.GetName(), dataType, element.GetDimension(), element.GetRadix(),
-                element.GetExternalAccess(), element.GetDescription(), element.GetHidden(), element.GetTarget(),
-                element.GetBitNumber());
+                element.GetExternalAccess(), element.GetDescription());
         }
     }
 }
