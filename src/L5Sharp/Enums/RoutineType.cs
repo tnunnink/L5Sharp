@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using Ardalis.SmartEnum;
 using L5Sharp.Abstractions;
 using L5Sharp.Core;
 
-namespace L5Sharp.Enumerations
+namespace L5Sharp.Enums
 {
     public abstract class RoutineType : SmartEnum<RoutineType, string>
     {

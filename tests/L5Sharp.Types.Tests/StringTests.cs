@@ -1,7 +1,7 @@
 ﻿using AutoFixture;
 using FluentAssertions;
 using L5Sharp.Core;
-using L5Sharp.Enumerations;
+using L5Sharp.Enums;
 using NUnit.Framework;
 
 namespace L5Sharp.Types.Tests

@@ -1,6 +1,6 @@
 ﻿using Ardalis.SmartEnum;
 
-namespace L5Sharp.Enumerations
+namespace L5Sharp.Enums
 {
     public class Scope : SmartEnum<Scope>
     {

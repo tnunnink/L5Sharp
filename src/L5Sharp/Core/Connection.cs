@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using L5Sharp.Abstractions;
-using L5Sharp.Enumerations;
+using L5Sharp.Enums;
 
 namespace L5Sharp.Core
 {

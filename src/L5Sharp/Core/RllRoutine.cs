@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using L5Sharp.Abstractions;
 using L5Sharp.Base;
-using L5Sharp.Enumerations;
+using L5Sharp.Enums;
 
 namespace L5Sharp.Core
 {

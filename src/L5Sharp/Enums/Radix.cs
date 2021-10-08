@@ -1,9 +1,6 @@
-﻿using System.Collections.Generic;
-using Ardalis.SmartEnum;
-using L5Sharp.Abstractions;
-using L5Sharp.Core;
+﻿using Ardalis.SmartEnum;
 
-namespace L5Sharp.Enumerations
+namespace L5Sharp.Enums
 {
     public class Radix : SmartEnum<Radix>
     {

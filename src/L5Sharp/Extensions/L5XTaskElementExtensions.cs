@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Xml.Linq;
-using L5Sharp.Enumerations;
+using L5Sharp.Enums;
 using L5Sharp.Utilities;
 
 namespace L5Sharp.Extensions

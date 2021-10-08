@@ -3,7 +3,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using L5Sharp.Abstractions;
 using L5Sharp.Core;
-using L5Sharp.Enumerations;
+using L5Sharp.Enums;
 
 namespace L5Sharp.Utilities
 {

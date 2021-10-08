@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using L5Sharp.Enums;
 using NUnit.Framework;
 
 namespace L5Sharp.Enumerations.Tests

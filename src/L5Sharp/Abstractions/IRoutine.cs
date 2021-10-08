@@ -1,4 +1,4 @@
-﻿using L5Sharp.Enumerations;
+﻿using L5Sharp.Enums;
 
 namespace L5Sharp.Abstractions
 {

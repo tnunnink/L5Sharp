@@ -2,7 +2,7 @@
 using AutoFixture;
 using FluentAssertions;
 using L5Sharp.Abstractions;
-using L5Sharp.Enumerations;
+using L5Sharp.Enums;
 using L5Sharp.Exceptions;
 using L5Sharp.Types;
 using NUnit.Framework;

@@ -4,7 +4,7 @@ using L5Sharp.Abstractions;
 using L5Sharp.Core;
 using L5Sharp.Extensions;
 
-namespace L5Sharp.Enumerations
+namespace L5Sharp.Enums
 {
     public abstract class TaskType : SmartEnum<TaskType, string>
     {

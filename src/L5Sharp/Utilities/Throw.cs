@@ -1,6 +1,6 @@
 ﻿using System;
 using L5Sharp.Abstractions;
-using L5Sharp.Enumerations;
+using L5Sharp.Enums;
 using L5Sharp.Exceptions;
 
 namespace L5Sharp.Utilities

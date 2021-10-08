@@ -1,7 +1,8 @@
-﻿using Ardalis.SmartEnum;
+﻿
+
 // ReSharper disable InconsistentNaming
 
-namespace L5Sharp.Enumerations
+namespace L5Sharp.Enums
 {
     public class Revision
     {

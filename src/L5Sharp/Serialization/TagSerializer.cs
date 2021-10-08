@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 using System.Xml.Linq;
 using L5Sharp.Abstractions;
 using L5Sharp.Core;
-using L5Sharp.Enumerations;
+using L5Sharp.Enums;
 using L5Sharp.Extensions;
 using L5Sharp.Utilities;
 
