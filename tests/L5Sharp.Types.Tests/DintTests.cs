@@ -21,17 +21,6 @@ namespace L5Sharp.Types.Tests
         }
 
         [Test]
-        public void DataType_Dint_ShouldNotBeNull()
-        {
-            var type = DataType.Dint;
-
-            type.Should().NotBeNull();
-            type.Name.Should().Be("DINT");
-            type.Class.Should().Be(DataTypeClass.Predefined);
-            type.Family.Should().Be(DataTypeFamily.None);
-        }
-        
-        [Test]
         public void Predefined_Dint_ShouldNotBeNull()
         {
             var type = Predefined.Dint;

@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Xml.Linq;
 using L5Sharp.Core;
 using L5Sharp.Enumerations;
 using L5Sharp.Utilities;
 
+[assembly: InternalsVisibleTo("L5Sharp.Tests")]
+
 namespace L5Sharp.Extensions
 {
-    public static class L5XAttributeExtensions
+    public static class CommonAttributeExtensions
     {
         /// <summary>
         /// Gets the attribute "Name" from the current element
@@ -199,6 +202,17 @@ namespace L5Sharp.Extensions
         {
             var type = element.Attribute(L5XNames.Attributes.Type)?.Value;
             return type != null ? TaskType.FromName(type) : null;
+        }
+        
+        /// <summary>
+        /// Simple helper extension that gets the attribute "Scope" from the current element
+        /// </summary>
+        /// <param name="element">The current element instance</param>
+        /// <returns>The string value of the Scope attribute if it exists. Null if it is not found</returns>
+        public static RoutineType GetRoutineType(this XElement element)
+        {
+            var type = element.Attribute(L5XNames.Attributes.Type)?.Value;
+            return type != null ? RoutineType.FromName(type) : null;
         }
     }
 }

@@ -25,10 +25,12 @@ namespace L5Sharp.Core
             string description = null, Scope scope = null, string aliasFor = null, bool constant = false)
         {
             Name = name;
-            _dataType = dataType ?? throw new ArgumentNullException(nameof(dataType));
-            _dimensions = dimensions ?? Dimensions.Empty;
-
-            Radix = radix ?? dataType.DefaultRadix;
+            
+            Validate.DataType(dataType);
+            _dataType = dataType;
+            _dimensions = dimensions == null ? Dimensions.Empty : dimensions;
+            
+            Radix = radix == null ? dataType.DefaultRadix : radix;
             ExternalAccess = externalAccess ?? ExternalAccess.None;
             TagType = tagType ?? TagType.Base;
             AliasFor = aliasFor ?? string.Empty;
@@ -47,7 +49,6 @@ namespace L5Sharp.Core
             get => _name;
             set
             {
-                if (value == null) throw new ArgumentNullException(nameof(value));
                 Validate.Name(value);
                 _name = value;
             }
@@ -61,7 +62,6 @@ namespace L5Sharp.Core
             set
             {
                 _dimensions = value;
-
                 _members.Clear();
                 Instantiate();
             }
@@ -72,14 +72,12 @@ namespace L5Sharp.Core
             get => _radix;
             set
             {
-                if (!_dataType.IsAtomic) return;
-
-                if (!_dataType.SupportsRadix(value))
-                    Throw.RadixNotSupportedException(value, _dataType);
+                Validate.Radix(value, _dataType);
 
                 _radix = value;
 
-                PropagatePropertyValue((t, v) => t.Radix = v, _radix);
+                if (_dataType.IsAtomic)
+                    PropagatePropertyValue((t, v) => t.Radix = v, _radix);
             }
         }
 

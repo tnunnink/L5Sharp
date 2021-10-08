@@ -57,7 +57,7 @@ namespace L5Sharp.Serialization.Tests
         [Test]
         public void Serialize_Tag_ShouldNotBeNull()
         {
-            var tag = new Tag("TestTag", DataType.Counter);
+            var tag = new Tag("TestTag", Predefined.Counter);
 
             var element = tag.Serialize();
 
@@ -68,7 +68,7 @@ namespace L5Sharp.Serialization.Tests
         [UseReporter(typeof(DiffReporter))]
         public void Serialize_Tag_ShouldHaveApprovedOutput()
         {
-            var tag = new Tag("TestTag", DataType.Counter);
+            var tag = new Tag("TestTag", Predefined.Counter);
 
             var element = tag.Serialize();
 
@@ -85,7 +85,7 @@ namespace L5Sharp.Serialization.Tests
             var tag = Tag.Materialize(element, new Controller("Test"));
             tag.Should().NotBeNull();
             tag.Name.Should().Be("array");
-            tag.DataType.Should().Be(DataType.Dint);
+            tag.Predefined.Should().Be(Predefined.Dint);
 
             var result = tag.Serialize();
             Approvals.VerifyXml(result.ToString());

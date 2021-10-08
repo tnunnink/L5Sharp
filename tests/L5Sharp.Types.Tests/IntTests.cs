@@ -21,17 +21,6 @@ namespace L5Sharp.Types.Tests
         }
 
         [Test]
-        public void DataType_Int_ShouldNotBeNull()
-        {
-            var type = DataType.Int;
-
-            type.Should().NotBeNull();
-            type.Name.Should().Be("INT");
-            type.Class.Should().Be(DataTypeClass.Predefined);
-            type.Family.Should().Be(DataTypeFamily.None);
-        }
-        
-        [Test]
         public void Predefined_Int_ShouldNotBeNull()
         {
             var type = Predefined.Int;

@@ -3,15 +3,15 @@
 
 namespace L5Sharp.Enumerations
 {
-    public class Revision : SmartEnum<Revision>
+    public class Revision
     {
-        private Revision(string name, int value) : base(name, value)
+        private Revision(int major, int minor)
         {
+            Major = major;
+            Minor = minor;
         }
         
         public int Major { get; }
         public int Minor { get; }
-
-        public static readonly Revision v32 = new Revision(nameof(v32), 32);
     }
 }

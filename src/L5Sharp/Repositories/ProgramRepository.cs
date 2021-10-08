@@ -32,7 +32,7 @@ namespace L5Sharp.Repositories
             throw new System.NotImplementedException();
         }
 
-        public IEnumerable<Program> GetByTask(Task task)
+        public IEnumerable<Program> GetByTask(PeriodicTask task)
         {
             throw new System.NotImplementedException();
         }

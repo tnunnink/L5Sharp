@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Xml.Linq;
 using L5Sharp.Abstractions;
 using L5Sharp.Core;
@@ -7,21 +8,24 @@ using L5Sharp.Utilities;
 
 namespace L5Sharp.Serialization
 {
-    public class TaskSerializer : IComponentSerializer<Task>
+    public class TaskSerializer : IComponentSerializer<ITask>
     {
-        public XElement Serialize(Task component)
+        public XElement Serialize(ITask component)
         {
-            var element = new XElement(nameof(Task));
-            element.Add(new XAttribute(nameof(component.Name), component.Name));
-            element.Add(new XAttribute(nameof(component.Type), component.Type));
-            element.Add(new XAttribute(nameof(component.Rate), component.Rate));
-            element.Add(new XAttribute(nameof(component.Priority), component.Priority));
-            element.Add(new XAttribute(nameof(component.Watchdog), component.Watchdog));
-            element.Add(new XAttribute(nameof(component.InhibitTask), component.InhibitTask));
-            element.Add(new XAttribute(nameof(component.DisableUpdateOutputs), component.DisableUpdateOutputs));
+            var element = new XElement(L5XNames.Components.Task);
+            element.Add(component.ToXAttribute(c => c.Name));
+            element.Add(component.ToXAttribute(c => c.Type));
+            element.Add(component.ToXAttribute(c => c.Priority));
+
+            if (component is PeriodicTask periodicTask)
+                element.Add(periodicTask.ToXAttribute(c => c.Rate));
+
+            element.Add(component.ToXAttribute(c => c.Watchdog));
+            element.Add(component.ToXAttribute(c => c.InhibitTask));
+            element.Add(component.ToXAttribute(c => c.DisableUpdateOutputs));
 
             if (!string.IsNullOrEmpty(component.Description))
-                element.Add(new XElement(nameof(component.Description)), component.Description);
+                element.Add(component.ToXElement(c => c.Description));
 
             var programs = component.ScheduledPrograms.ToList();
             if (programs.Count <= 0) return element;
@@ -36,17 +40,17 @@ namespace L5Sharp.Serialization
             return element;
         }
 
-        public Task Deserialize(XElement element)
+        public ITask Deserialize(XElement element)
         {
-            //todo add helpers for the rest of the methods
-            var task = new Task(element.GetName(), element.GetTaskType(), element.GetDescription());
+            var type = element.GetTaskType();
+            if (type == null)
+                throw new InvalidOperationException();
 
-            var programs = element.Descendants("ScheduledProgram").ToList();
-            if (programs.Count <= 0) return task;
+            var task = type.Create(element);
 
-            var serializer = new ProgramSerializer();
+            var programs = element.Descendants("ScheduledProgram").Select(e => e.GetName());
             foreach (var program in programs)
-                task.AddProgram(serializer.Deserialize(program));
+                task.AddProgram(program);
 
             return task;
         }

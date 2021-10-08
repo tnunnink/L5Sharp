@@ -235,7 +235,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void New_Sint_ShouldNotBeNull()
         {
-            var type = DataType.Sint;
+            var type = Predefined.Sint;
 
             type.Should().NotBeNull();
             type.Name.Should().Be("SINT");
@@ -263,7 +263,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void New_Int_ShouldNotBeNull()
         {
-            var type = DataType.Int;
+            var type = Predefined.Int;
 
             type.Should().NotBeNull();
             type.Name.Should().Be("INT");
@@ -274,7 +274,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void New_Dint_ShouldNotBeNull()
         {
-            var type = DataType.Dint;
+            var type = Predefined.Dint;
 
             type.Should().NotBeNull();
             type.Name.Should().Be("DINT");
@@ -285,7 +285,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void New_Real_ShouldNotBeNull()
         {
-            var type = DataType.Real;
+            var type = Predefined.Real;
 
             type.Should().NotBeNull();
             type.Name.Should().Be("REAL");
@@ -296,7 +296,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void New_String_ShouldNotBeNull()
         {
-            var type = DataType.String;
+            var type = Predefined.String;
 
             type.Should().NotBeNull();
             type.Name.Should().Be("STRING");

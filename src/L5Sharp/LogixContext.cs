@@ -2,7 +2,6 @@
 using System.Xml.Linq;
 using L5Sharp.Abstractions;
 using L5Sharp.Core;
-using L5Sharp.Enumerations;
 using L5Sharp.Extensions;
 using L5Sharp.Repositories;
 using L5Sharp.Utilities;
@@ -12,25 +11,29 @@ namespace L5Sharp
     public class LogixContext
     {
         private readonly XDocument _document;
+        private XElement Content => _document.Root;
 
         private LogixContext(XDocument document)
         {
-            DataTypes = new DataTypeRepository(this);
+            if (document == null) throw new ArgumentNullException(nameof(document));
+            
+            //todo validate document?
+            
+            _document = document;
         }
-        
-        public LogixContext(IComponent component, Revision revision)
-        {
-            _document = GenerateRoot();
-        }
-        
-        public LogixContext(string fileName)
-        {
-            _document = XDocument.Load(fileName);
-        }
-        
-        public IDataTypeRepository DataTypes { get; }
 
-        internal XElement Content => _document.Root;
+        public LogixContext(string fileName) : this(XDocument.Load(fileName))
+        {
+        }
+
+        public string SchemaRevision => Content.Attribute(nameof(SchemaRevision))?.Value;
+        public string SoftwareRevision => Content.Attribute(nameof(SoftwareRevision))?.Value;
+        public string TargetName => Content.Attribute(nameof(TargetName))?.Value;
+        public string TargetType => Content.Attribute(nameof(TargetType))?.Value;
+        public string ContainsContext => Content.Attribute(nameof(ContainsContext))?.Value;
+        public string Owner => Content.Attribute(nameof(Owner))?.Value;
+
+        public IDataTypeRepository DataTypes => new DataTypeRepository(Content.Container<IDataType>());
 
         public void RegisterDataType(IDataType dataType)
         {

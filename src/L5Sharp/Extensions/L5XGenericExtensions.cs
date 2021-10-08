@@ -1,15 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Xml.Linq;
 using L5Sharp.Abstractions;
 using L5Sharp.Core;
 using L5Sharp.Serialization;
 using L5Sharp.Utilities;
+using Module = L5Sharp.Core.Module;
+
+[assembly: InternalsVisibleTo("L5Sharp.Tests")]
 
 namespace L5Sharp.Extensions
 {
-    public static class GenericL5XExtensions
+    internal static class L5XGenericExtensions
     {
         private static readonly Dictionary<Type, IComponentSerializer> Serializers = new Dictionary<Type, IComponentSerializer>
         {
@@ -17,29 +23,30 @@ namespace L5Sharp.Extensions
             { typeof(Member), new MemberSerializer() },
             { typeof(Tag), new TagSerializer() },
             { typeof(Program), new ProgramSerializer() },
-            { typeof(Task), new TaskSerializer() }
+            { typeof(ITask), new TaskSerializer() }
         };
-        
+
         private static readonly Dictionary<Type, string> Components = new Dictionary<Type, string>
         {
             { typeof(DataType), L5XNames.Components.DataType },
             { typeof(Module), L5XNames.Components.Module },
-            { typeof(Instruction), L5XNames.Components.AddOnInstructionDefinition },
+            //{ typeof(Instruction), L5XNames.Components.AddOnInstructionDefinition },
             { typeof(Tag), L5XNames.Components.Tag },
             { typeof(Program), L5XNames.Components.Program },
-            { typeof(Task), L5XNames.Components.Task }
+            { typeof(PeriodicTask), L5XNames.Components.Task }
         };
-        
+
         private static readonly Dictionary<Type, string> Containers = new Dictionary<Type, string>
         {
             { typeof(DataType), L5XNames.Containers.DataTypes },
             { typeof(Module), L5XNames.Containers.Modules },
-            { typeof(Instruction), L5XNames.Containers.AddOnInstructions },
+            //{ typeof(Instruction), L5XNames.Containers.AddOnInstructions },
             { typeof(Tag), L5XNames.Containers.Tags },
             { typeof(Program), L5XNames.Containers.Programs },
-            { typeof(Task), L5XNames.Containers.Tasks },
+            { typeof(IRoutine), L5XNames.Containers.Routines },
+            { typeof(ITask), L5XNames.Containers.Tasks },
         };
-        
+
 
         public static XElement Serialize<T>(this T component) where T : IComponent
         {
@@ -93,6 +100,32 @@ namespace L5Sharp.Extensions
         {
             var container = GetContainerName<T>();
             return element.Descendants(container).FirstOrDefault();
+        }
+
+        public static XAttribute ToXAttribute<TComponent, TProperty>(this TComponent component, 
+            Expression<Func<TComponent, TProperty>> propertyExpression)
+            where TComponent : IComponent
+        {
+            if (!(propertyExpression.Body is MemberExpression memberExpression))
+                throw new InvalidOperationException();
+
+            var func = propertyExpression.Compile();
+            var value = func(component);
+
+            return new XAttribute(memberExpression.Member.Name, value);
+        }
+        
+        public static XElement ToXElement<TComponent, TProperty>(this TComponent component, 
+            Expression<Func<TComponent, TProperty>> propertyExpression)
+            where TComponent : IComponent
+        {
+            if (!(propertyExpression.Body is MemberExpression memberExpression))
+                throw new InvalidOperationException();
+
+            var func = propertyExpression.Compile();
+            var value = func(component);
+
+            return new XElement(memberExpression.Member.Name, value);
         }
         
         private static string GetComponentName<T>() where T : IComponent

@@ -26,9 +26,9 @@ namespace L5Sharp.Core
             Description = description ?? string.Empty;
             
             _members.Add(MemberNames[0],
-                new ReadOnlyMember(MemberNames[0], DataType.Dint));
+                new ReadOnlyMember(MemberNames[0], Predefined.Dint));
             _members.Add(MemberNames[1],
-                new ReadOnlyMember(MemberNames[1], DataType.Sint, length, Radix.Ascii));
+                new ReadOnlyMember(MemberNames[1], Predefined.Sint, length, Radix.Ascii));
         }
 
         public string Name

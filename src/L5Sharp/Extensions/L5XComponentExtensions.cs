@@ -15,7 +15,7 @@ namespace L5Sharp.Extensions
             
             var typeName = element.GetDataTypeName();
             if (typeName == null)
-                throw new InvalidOperationException($"Element '{element.Name}' does not have data type name");
+                throw new InvalidOperationException($"Element '{element.Name}' does not have data type attribute");
                 
             if (Predefined.ContainsType(typeName))
                 return Predefined.ParseType(typeName);
@@ -23,7 +23,7 @@ namespace L5Sharp.Extensions
             var typeElement = element.FindDataTypeElement(typeName);
             return typeElement?.Deserialize<DataType>();
         }
-        public static XElement FindDataTypeElement(this XElement element, string name)
+        private static XElement FindDataTypeElement(this XObject element, string name)
         {
             return element.Document?.Descendants(L5XNames.Components.DataType)
                 .SingleOrDefault(x => x.Attribute(L5XNames.Attributes.Name)?.Value == name);

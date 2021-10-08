@@ -6,7 +6,7 @@ namespace L5Sharp.Abstractions
 {
     public interface IProgramRepository : IRepository<Program>
     {
-        IEnumerable<Program> GetByTask(Task task);
+        IEnumerable<Program> GetByTask(PeriodicTask task);
         IEnumerable<Program> GetByType(ProgramType type);
     }
 }

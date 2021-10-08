@@ -73,11 +73,8 @@ namespace L5Sharp.Core
             get => _radix;
             set
             {
-                if (!_dataType.IsAtomic) return;
-
-                if (!_dataType.SupportsRadix(value))
-                    Throw.RadixNotSupportedException(value, _dataType);
-
+                Validate.Radix(value, _dataType);
+                
                 _radix = value;
 
                 PropagatePropertyValue((t, v) => t.Radix = v, _radix);
@@ -110,16 +107,17 @@ namespace L5Sharp.Core
         public bool IsArrayMember => Dimension.Length > 0;
         public bool IsArrayElement => Parent.IsArrayMember;
         public bool IsStructureMember => !IsValueMember && !IsArrayMember && _members.Count > 0;
+        private ITagMember Parent { get; }
+
         public ITagMember GetMember(string name)
         {
-            return Members.SingleOrDefault(m => m.Name == name);
+            _members.TryGetValue(name, out var member);
+            return member;
         }
-
-        private ITagMember Parent { get; }
 
         private void Instantiate()
         {
-            if (IsValueMember) return; //todo unless we decide that value members have members?
+            if (IsValueMember) return;
 
             _members.Clear();
 

@@ -21,17 +21,6 @@ namespace L5Sharp.Types.Tests
         }
 
         [Test]
-        public void DataType_Sint_ShouldNotBeNull()
-        {
-            var type = DataType.Sint;
-
-            type.Should().NotBeNull();
-            type.Name.Should().Be("SINT");
-            type.Class.Should().Be(DataTypeClass.Predefined);
-            type.Family.Should().Be(DataTypeFamily.None);
-        }
-        
-        [Test]
         public void Predefined_Sint_ShouldNotBeNull()
         {
             var type = Predefined.Sint;

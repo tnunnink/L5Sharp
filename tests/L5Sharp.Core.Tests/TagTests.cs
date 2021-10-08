@@ -15,7 +15,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void New_ValidTagName_ShouldNotBeNull()
         {
-            var tag = new Tag("Test", DataType.Bool);
+            var tag = new Tag("Test", Predefined.Bool);
 
             tag.Should().NotBeNull();
         }
@@ -25,18 +25,18 @@ namespace L5Sharp.Core.Tests
         {
             var fixture = new Fixture();
 
-            FluentActions.Invoking(() => new Tag(fixture.Create<string>(), DataType.Bool)).Should()
+            FluentActions.Invoking(() => new Tag(fixture.Create<string>(), Predefined.Bool)).Should()
                 .Throw<InvalidNameException>();
         }
         
         [Test]
         public void New_NoOverloads_ShouldHaveExpectedDefaults()
         {
-            var tag = new Tag("Test", DataType.Bool);
+            var tag = new Tag("Test", Predefined.Bool);
 
             tag.Should().NotBeNull();
             tag.Name.Should().Be("Test");
-            tag.DataType.Should().Be(DataType.Bool.Name);
+            tag.DataType.Should().Be(Predefined.Bool.Name);
             tag.Dimension.Should().Be(Dimensions.Empty);
             tag.Radix.Should().Be(Radix.Decimal);
             tag.ExternalAccess.Should().Be(ExternalAccess.None);
@@ -52,12 +52,12 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void New_AllDataType_ShouldHaveExpectedDefaults()
         {
-            var tag = new Tag("Test", DataType.Dint, new Dimensions(5), Radix.Ascii, ExternalAccess.ReadOnly, 
+            var tag = new Tag("Test", Predefined.Dint, new Dimensions(5), Radix.Ascii, ExternalAccess.ReadOnly, 
                 TagType.Alias, TagUsage.Local, "This is a test tag", Scope.Program, "Alias.Name", true);
 
             tag.Should().NotBeNull();
             tag.Name.Should().Be("Test");
-            tag.DataType.Should().Be(DataType.Dint.Name);
+            tag.DataType.Should().Be(Predefined.Dint.Name);
             tag.Dimension.Should().Be(new Dimensions(5));
             tag.Radix.Should().Be(Radix.Ascii);
             tag.ExternalAccess.Should().Be(ExternalAccess.ReadOnly);
@@ -73,7 +73,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void New_Counter_ShouldHaveValidMembers()
         {
-            var tag = new Tag("Test", DataType.Counter);
+            var tag = new Tag("Test", Predefined.Counter);
 
             tag.Should().NotBeNull();
             tag.Members.Should().HaveCount(7);
@@ -126,7 +126,7 @@ namespace L5Sharp.Core.Tests
             var second = fixture.Create<ushort>();
             var length = first * second;
             
-            var tag = new Tag("Test", DataType.Dint, new Dimensions(first, second));
+            var tag = new Tag("Test", Predefined.Dint, new Dimensions(first, second));
 
             tag.Dimension.Length.Should().Be(length);
         }
@@ -134,7 +134,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void SetRadix_AtomicValidRadix_ShouldSetMembersRadix()
         {
-            var tag = new Tag("Test", DataType.Dint, new Dimensions(3, 4));
+            var tag = new Tag("Test", Predefined.Dint, new Dimensions(3, 4));
 
             tag.Radix = Radix.Ascii;
 

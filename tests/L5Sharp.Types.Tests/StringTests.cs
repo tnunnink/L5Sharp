@@ -21,17 +21,6 @@ namespace L5Sharp.Types.Tests
         }
 
         [Test]
-        public void DataType_String_ShouldNotBeNull()
-        {
-            var type = DataType.String;
-
-            type.Should().NotBeNull();
-            type.Name.Should().Be("STRING");
-            type.Class.Should().Be(DataTypeClass.Predefined);
-            type.Family.Should().Be(DataTypeFamily.None);
-        }
-        
-        [Test]
         public void Predefined_String_ShouldNotBeNull()
         {
             var type = Predefined.String;

@@ -21,6 +21,22 @@ namespace L5Sharp.Core
         private static readonly string[] AtomicNames = { "BOOL", "SINT", "INT", "DINT", "LINT", "REAL" };
         private readonly Dictionary<string, ReadOnlyMember> _members = new Dictionary<string, ReadOnlyMember>();
 
+        protected Predefined(string name, DataTypeFamily family, IEnumerable<ReadOnlyMember> members)
+        {
+            Name = name ?? throw new ArgumentNullException(nameof(name), "Name can not be null");
+            Family = family ?? throw new ArgumentNullException(nameof(family), "Family can not be null");
+
+            if (members == null) return;
+
+            foreach (var member in members)
+            {
+                if (_members.ContainsKey(member.Name))
+                    Throw.ComponentNameCollisionException(member.Name, typeof(ReadOnlyMember));
+                
+                _members.Add(member.Name, member);
+            }
+        }
+
         internal Predefined(XElement element)
         {
             Name = element.GetName() ?? throw new ArgumentNullException(nameof(element), "Name can not be null");
@@ -57,6 +73,7 @@ namespace L5Sharp.Core
         public static readonly Alarm Alarm = new Alarm();
 
         public string Name { get; }
+        public string Description { get; }
         public DataTypeFamily Family { get; }
         public DataTypeClass Class => DataTypeClass.Predefined;
         public bool IsAtomic => AtomicNames.Contains(Name);
@@ -101,7 +118,7 @@ namespace L5Sharp.Core
             return !IsAtomic && value == null;
         }
 
-        protected static XElement LoadElement(string name)
+        internal static XElement LoadElement(string name)
         {
             var element = PredefinedData.Descendants(nameof(DataType))
                 .SingleOrDefault(x => x.Attribute(nameof(Name))?.Value == name);

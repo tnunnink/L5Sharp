@@ -75,16 +75,12 @@ namespace L5Sharp.Core
         public IEnumerable<IDataType> GetDependentUserTypes() =>
             GetUniqueMemberTypes(this).Where(t => t.Class == DataTypeClass.User);
 
-        public void AddMember(Member member) => AddMemberComponent(member);
-        
+        public bool ContainsNullType() => GetUniqueMemberTypes(this).Any(t => t.Equals(Predefined.Null));
+
         public void AddMember(string name, IDataType dataType, string description = null,
             ushort dimension = 0, Radix radix = null, ExternalAccess access = null) =>
             AddMemberComponent(new Member(name, dataType, dimension, radix, access, description));
-        
-        public void AddMembers(IEnumerable<Member> members) => members.ToList().ForEach(AddMemberComponent);
-        
-        public void RemoveMember(Member member) => RemoveMemberComponent(member);
-        
+
         public void RemoveMember(string name) => RemoveMemberComponent(GetMemberByName(name));
 
         public bool Equals(DataType other)
@@ -118,27 +114,7 @@ namespace L5Sharp.Core
         {
             return !Equals(left, right);
         }
-
-        public static IDataType Null => Predefined.Null;
-
-        public static IDataType Bool => Predefined.Bool;
-
-        public static IDataType Sint => Predefined.Sint;
-
-        public static IDataType Int => Predefined.Int;
-
-        public static IDataType Dint => Predefined.Dint;
-
-        public static IDataType Lint => Predefined.Lint;
-
-        public static IDataType Real => Predefined.Real;
-
-        public static IDataType String => Predefined.String;
-
-        public static IDataType Timer => Predefined.Timer;
-
-        public static IDataType Counter => Predefined.Counter;
-
+        
         /// <summary>
         /// Adds a member to the data type member collection
         /// </summary>

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using L5Sharp.Abstractions;
-using L5Sharp.Builders.Abstractions;
 using L5Sharp.Enumerations;
 using L5Sharp.Utilities;
 
@@ -14,13 +13,13 @@ namespace L5Sharp.Core
         private readonly Dictionary<string, DataType> _dataTypes = new Dictionary<string, DataType>();
         private readonly Dictionary<string, Tag> _tags = new Dictionary<string, Tag>();
 
-        public Controller(string name, string description = null, string processorType = null, Revision revision = null)
+        public Controller(string name, Revision revision = null, ProcessorType processorType = null, string description = null)
         {
             Name = name;
             Use = Use.Target;
             Description = description ?? string.Empty;
-            ProcessorType = processorType ?? string.Empty;
-            Revision = revision ?? Revision.v32;
+            ProcessorType = processorType;
+            Revision = revision;
             ProjectCreationDate = DateTime.Now;
             LastModifiedDate = DateTime.Now;
         }
@@ -39,7 +38,7 @@ namespace L5Sharp.Core
 
         public string Description { get; set; }
 
-        public string ProcessorType { get; }
+        public ProcessorType ProcessorType { get; }
 
         public Revision Revision { get; set; }
 
@@ -101,25 +100,5 @@ namespace L5Sharp.Core
             _tags.Remove(tag.Name);
         }
 
-        public void Build<TModel, TBuilder>(Func<TBuilder> builderFactory, Action<TBuilder> builderConfig)
-            where TModel : IComponent
-            where TBuilder : IBuilder<TModel>
-        {
-            var type = typeof(TModel);
-
-            var typedBuilder = builderFactory.Invoke();
-            builderConfig.Invoke(typedBuilder);
-
-            var item = typedBuilder.Build();
-
-            /*if (!(_collections[type] is Dictionary<string, TModel> collection))
-                throw new InvalidOperationException();
-            
-            if (collection.ContainsKey(item.Name))
-                throw new NameCollisionException();
-
-            collection.Add(item.Name, item);*/
-        }
-        
     }
 }

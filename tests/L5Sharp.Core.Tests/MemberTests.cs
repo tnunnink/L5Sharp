@@ -12,7 +12,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void New_ValidNameWithDataType_ShouldNotBeNull()
         {
-            var member = new Member("MemberName", DataType.Bool);
+            var member = new Member("MemberName", Predefined.Bool);
 
             member.Should().NotBeNull();
         }
@@ -20,10 +20,10 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void New_ValidNameWithDataType_ShouldHaveExpectedDefaults()
         {
-            var member = new Member("Test", DataType.Dint);
+            var member = new Member("Test", Predefined.Dint);
 
             member.Name.Should().Be("Test");
-            member.DataType.Should().Be(DataType.Dint);
+            member.DataType.Should().Be(Predefined.Dint);
             member.Dimension.Should().Be(0);
             member.Radix.Should().Be(Radix.Decimal);
             member.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);
@@ -33,7 +33,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void New_InvalidName_ShouldThrowInvalidNameException()
         {
-            FluentActions.Invoking(() => new Member("1!@#$%#$!", DataType.Int))
+            FluentActions.Invoking(() => new Member("1!@#$%#$!", Predefined.Int))
                 .Should().Throw<InvalidNameException>();
         }
 
@@ -43,7 +43,7 @@ namespace L5Sharp.Core.Tests
         {
             var member = new Member("Test", null);
 
-            member.DataType.Should().Be(DataType.Null);
+            member.DataType.Should().Be(Predefined.Null);
         }
 
         [Test]
@@ -51,13 +51,13 @@ namespace L5Sharp.Core.Tests
         {
             var type = new Member("Test", null);
 
-            type.DataType.Should().Be(DataType.Null);
+            type.DataType.Should().Be(Predefined.Null);
         }
 
         [Test]
         public void SetName_ValidName_ShouldUpdateName()
         {
-            var member = new Member("MemberName", DataType.Bool);
+            var member = new Member("MemberName", Predefined.Bool);
 
             member.Name = "Test";
 
@@ -67,7 +67,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void SetName_InvalidName_ShouldThrowInvalidNameException()
         {
-            var member = new Member("MemberName", DataType.Bool);
+            var member = new Member("MemberName", Predefined.Bool);
 
             FluentActions.Invoking(() => member.Name = "09_#$Test").Should().Throw<InvalidNameException>();
         }
@@ -75,7 +75,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void SetName_Null_ShouldThrowInvalidNameException()
         {
-            var member = new Member("MemberName", DataType.Bool);
+            var member = new Member("MemberName", Predefined.Bool);
 
             FluentActions.Invoking(() => member.Name = null).Should().Throw<ArgumentException>();
         }
@@ -83,27 +83,27 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void SetDataType_ValidDataType_ShouldUpdateDataType()
         {
-            var member = new Member("MemberName", DataType.Bool);
+            var member = new Member("MemberName", Predefined.Bool);
 
-            member.DataType = DataType.Lint;
+            member.DataType = Predefined.Lint;
 
-            member.DataType.Should().Be(DataType.Lint);
+            member.DataType.Should().Be(Predefined.Lint);
         }
 
         [Test]
         public void SetDataType_Null_ShouldUpdateDataTypeToNullType()
         {
-            var member = new Member("MemberName", DataType.Bool);
+            var member = new Member("MemberName", Predefined.Bool);
 
             member.DataType = null;
 
-            member.DataType.Should().Be(DataType.Null);
+            member.DataType.Should().Be(Predefined.Null);
         }
 
         [Test]
         public void SetDimension_ValidNumber_ShouldHaveExpectedDimensions()
         {
-            var member = new Member("MemberName", DataType.Int);
+            var member = new Member("MemberName", Predefined.Int);
 
             member.Dimension = 10;
 
@@ -113,7 +113,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void SetRadix_ValidRadix_ShouldUpdateRadix()
         {
-            var member = new Member("MemberName", DataType.Int);
+            var member = new Member("MemberName", Predefined.Int);
 
             member.Radix = Radix.Ascii;
 
@@ -124,7 +124,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void SetRadix_InvalidRadix_ShouldThrowRadixNotSupportedException()
         {
-            var member = new Member("MemberName", DataType.Int);
+            var member = new Member("MemberName", Predefined.Int);
 
             FluentActions.Invoking(() => member.Radix = Radix.Float).Should().Throw<RadixNotSupportedException>();
         }
@@ -133,7 +133,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void SetRadix_Null_ShouldThrowArgumentNullException()
         {
-            var member = new Member("MemberName", DataType.Int);
+            var member = new Member("MemberName", Predefined.Int);
 
             FluentActions.Invoking(() => member.Radix = null).Should().Throw<ArgumentNullException>();
         }
@@ -141,7 +141,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void SetExternalAccess_None_ShouldUpdateExternalAccess()
         {
-            var member = new Member("MemberName", DataType.Int);
+            var member = new Member("MemberName", Predefined.Int);
 
             member.ExternalAccess = ExternalAccess.None;
 
@@ -151,7 +151,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void SetExternalAccess_ReadOnly_ShouldUpdateExternalAccess()
         {
-            var member = new Member("MemberName", DataType.Int);
+            var member = new Member("MemberName", Predefined.Int);
 
             member.ExternalAccess = ExternalAccess.ReadOnly;
 
@@ -161,7 +161,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void SetExternalAccess_Null_ShouldThrowArgumentNullException()
         {
-            var member = new Member("MemberName", DataType.Int);
+            var member = new Member("MemberName", Predefined.Int);
 
             FluentActions.Invoking(() => member.ExternalAccess = null).Should().Throw<ArgumentNullException>();
         }
@@ -169,7 +169,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void SetDescription_ValidString_ShouldUpdateString()
         {
-            var member = new Member("MemberName", DataType.Int);
+            var member = new Member("MemberName", Predefined.Int);
 
             member.Description = "This is a test description";
 
@@ -179,7 +179,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void SetDescription_Null_ShouldBeEmpty()
         {
-            var member = new Member("MemberName", DataType.Int);
+            var member = new Member("MemberName", Predefined.Int);
 
             FluentActions.Invoking(() => member.Description = null).Should().Throw<ArgumentNullException>();
         }
@@ -187,8 +187,8 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Equals_TypeOverloadAreEqual_ShouldBeTrue()
         {
-            var member1 = new Member("Member", DataType.Bool);
-            var member2 = new Member("Member", DataType.Bool);
+            var member1 = new Member("Member", Predefined.Bool);
+            var member2 = new Member("Member", Predefined.Bool);
 
             var result = member1.Equals(member2);
 
@@ -198,8 +198,8 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Equals_TypeOverloadAreNotEqual_ShouldBeFalse()
         {
-            var member1 = new Member("Member", DataType.Bool);
-            var member2 = new Member("Member", DataType.Int);
+            var member1 = new Member("Member", Predefined.Bool);
+            var member2 = new Member("Member", Predefined.Int);
 
             var result = member1.Equals(member2);
 
@@ -209,7 +209,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Equals_TypeOverloadSameReference_ShouldBeTrue()
         {
-            var member = new Member("Member", DataType.Bool);
+            var member = new Member("Member", Predefined.Bool);
 
             var result = member.Equals(member);
 
@@ -219,7 +219,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Equals_TypeOverloadNull_ShouldBeFalse()
         {
-            var member = new Member("Member", DataType.Bool);
+            var member = new Member("Member", Predefined.Bool);
 
             var result = member.Equals(null);
 
@@ -229,8 +229,8 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Equals_ObjectOverloadAreEqual_ShouldBeTrue()
         {
-            var member1 = new Member("Member", DataType.Bool);
-            var member2 = new Member("Member", DataType.Bool);
+            var member1 = new Member("Member", Predefined.Bool);
+            var member2 = new Member("Member", Predefined.Bool);
 
             var result = member1.Equals((object)member2);
 
@@ -240,8 +240,8 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Equals_ObjectOverloadAreNotEqual_ShouldBeFalse()
         {
-            var member1 = new Member("Member", DataType.Bool);
-            var member2 = new Member("Member", DataType.Int);
+            var member1 = new Member("Member", Predefined.Bool);
+            var member2 = new Member("Member", Predefined.Int);
 
             var result = member1.Equals((object)member2);
 
@@ -251,7 +251,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Equals_ObjectOverloadSameReference_ShouldBeTrue()
         {
-            var member = new Member("Member", DataType.Bool);
+            var member = new Member("Member", Predefined.Bool);
 
             var result = member.Equals((object)member);
 
@@ -261,7 +261,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Equals_ObjectOverloadNull_ShouldBeFalse()
         {
-            var member = new Member("Member", DataType.Bool);
+            var member = new Member("Member", Predefined.Bool);
 
             var result = member.Equals((object)null);
 
@@ -271,7 +271,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void GetHashCode_WhenCalled_ShouldNotBeNull()
         {
-            var member = new Member("Member", DataType.Bool);
+            var member = new Member("Member", Predefined.Bool);
 
             var hash = member.GetHashCode();
 
@@ -281,8 +281,8 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Equals_OperatorAreEqual_ShouldBeTrue()
         {
-            var member1 = new Member("Member", DataType.Bool);
-            var member2 = new Member("Member", DataType.Bool);
+            var member1 = new Member("Member", Predefined.Bool);
+            var member2 = new Member("Member", Predefined.Bool);
 
             var result = member1 == member2;
 
@@ -292,8 +292,8 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void NotEquals_OperatorAreEqual_ShouldBeFalse()
         {
-            var member1 = new Member("Member", DataType.Bool);
-            var member2 = new Member("Member", DataType.Bool);
+            var member1 = new Member("Member", Predefined.Bool);
+            var member2 = new Member("Member", Predefined.Bool);
 
             var result = member1 != member2;
 

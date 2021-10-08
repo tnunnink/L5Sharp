@@ -51,7 +51,7 @@ namespace L5Sharp.Enumerations.Tests
             sut.Name.Should().Be("ST");
         }
         
-        [Test]
+        /*[Test]
         public void New_External_ShouldNotBeNull()
         {
             var sut = RoutineType.External;
@@ -67,6 +67,6 @@ namespace L5Sharp.Enumerations.Tests
 
             sut.Should().NotBeNull();
             sut.Name.Should().Be("Encrypted");
-        }
+        }*/
     }
 }

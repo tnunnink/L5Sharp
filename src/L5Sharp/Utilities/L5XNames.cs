@@ -12,6 +12,7 @@
             public const string AddOnInstructions = nameof(AddOnInstructions);
             public const string Tags = nameof(Tags);
             public const string Programs = nameof(Programs);
+            public const string Routines = nameof(Routines);
             public const string Tasks = nameof(Tasks);    
         }
         

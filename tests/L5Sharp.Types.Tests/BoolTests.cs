@@ -21,17 +21,6 @@ namespace L5Sharp.Types.Tests
         }
 
         [Test]
-        public void DataType_Bool_ShouldNotBeNull()
-        {
-            var type = DataType.Bool;
-
-            type.Should().NotBeNull();
-            type.Name.Should().Be("BOOL");
-            type.Class.Should().Be(DataTypeClass.Predefined);
-            type.Family.Should().Be(DataTypeFamily.None);
-        }
-        
-        [Test]
         public void Predefined_Bool_ShouldNotBeNull()
         {
             var type = Predefined.Bool;

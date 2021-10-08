@@ -4,7 +4,6 @@ using System.Text.RegularExpressions;
 using L5Sharp.Abstractions;
 using L5Sharp.Core;
 using L5Sharp.Enumerations;
-using L5Sharp.Exceptions;
 
 namespace L5Sharp.Utilities
 {
@@ -22,6 +21,18 @@ namespace L5Sharp.Utilities
         {
             if (Predefined.Types().Any(t => t.Name == name))
                 Throw.PredefinedCollisionException(name);
+        }
+        
+        public static void DataType(IDataType type)
+        {
+            if (type == null) 
+                throw new ArgumentNullException(nameof(type), "DataType can not be null");
+
+            if (type.Equals(Predefined.Null))
+                throw new InvalidOperationException("");
+
+            if (type is DataType dataType && dataType.ContainsNullType())
+                throw new InvalidOperationException();
         }
         
         public static void Radix(Radix radix, IDataType type)
