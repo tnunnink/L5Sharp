@@ -16,10 +16,6 @@ namespace L5Sharp.Core
         }
 
         public override TagType TagType => TagType.Base;
-
-        public object ForceValue { get; set; }
-
-        public bool CanForce { get; set; }
     }
 
     public class Tag<T> : Tag where T : IDataType, new()

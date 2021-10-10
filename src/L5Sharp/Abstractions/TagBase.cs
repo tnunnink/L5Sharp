@@ -23,7 +23,7 @@ namespace L5Sharp.Abstractions
             _dataType = dataType ?? throw new ArgumentNullException(nameof(dataType), "DataType can not be null");
 
             Container = container;
-            Usage = usage;
+            Usage = usage != null ? usage : TagUsage.Null;
             Dimensions = dimensions == null ? Dimensions.Empty : dimensions;
             Radix = radix == null ? dataType.DefaultRadix : radix;
             ExternalAccess = externalAccess ?? ExternalAccess.None;
@@ -84,7 +84,7 @@ namespace L5Sharp.Abstractions
             {
                 if (!_dataType.IsValidValue(value))
                     Throw.InvalidTagValueException(value, _dataType.Name);
-                    
+
                 _value = value;
             }
         }
@@ -97,15 +97,18 @@ namespace L5Sharp.Abstractions
 
         public ITag ChangeTagType(TagType type)
         {
-            throw new System.NotImplementedException();
+            return type.Create(Name, _dataType);
         }
 
         public ITagMember GetMember(string name)
         {
+            if (string.IsNullOrEmpty(name))
+                throw new ArgumentException("Member name can not be null or empty");
+
             _members.TryGetValue(name, out var member);
             return member;
         }
-        
+
         public IEnumerable<string> ListMembers()
         {
             return GetMemberNames(this);

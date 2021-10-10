@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Xml.Linq;
 using Ardalis.SmartEnum;
 using L5Sharp.Abstractions;
+using L5Sharp.Core;
 
 namespace L5Sharp.Enums
 {
@@ -40,7 +41,7 @@ namespace L5Sharp.Enums
 
             public override ITag Create(string name, IDataType dataType)
             {
-                throw new NotImplementedException();
+                return new Tag(name, dataType);
             }
 
             internal override ITag Create(XElement element)

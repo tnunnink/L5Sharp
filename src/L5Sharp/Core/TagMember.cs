@@ -38,7 +38,7 @@ namespace L5Sharp.Core
         /// </remarks>
         private TagMember(ITagMember parent, string name, IDataType dataType,
             Dimensions dimensions = null, Radix radix = null, string description = null,
-            object value = null) : base(name, description)
+            object value = null) : base(name, description, false)
         {
             _parent = parent ?? throw new ArgumentNullException(nameof(parent));
             _dataType = dataType ?? throw new ArgumentNullException(nameof(dataType));
