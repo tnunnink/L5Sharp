@@ -4,7 +4,7 @@ namespace L5Sharp.Enums
 {
     public class RungType : SmartEnum<RungType, string>
     {
-        public RungType(string name, string value) : base(name, value)
+        private RungType(string name, string value) : base(name, value)
         {
         }
 

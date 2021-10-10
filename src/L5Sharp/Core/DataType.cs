@@ -68,6 +68,11 @@ namespace L5Sharp.Core
             return radix == Radix.Null;
         }
 
+        public bool IsValidValue(object value)
+        {
+            return value == null;
+        }
+
         public Member GetMember(string name) => GetMemberByName(name);
 
         public IEnumerable<IDataType> GetDependentTypes() => GetUniqueMemberTypes(this);
@@ -75,7 +80,7 @@ namespace L5Sharp.Core
         public IEnumerable<IDataType> GetDependentUserTypes() =>
             GetUniqueMemberTypes(this).Where(t => t.Class == DataTypeClass.User);
 
-        public bool ContainsNullType() => GetUniqueMemberTypes(this).Any(t => t.Equals(Predefined.Null));
+        public bool ContainsNullType() => GetUniqueMemberTypes(this).Any(t => t.Equals(Predefined.Undefined));
 
         public void AddMember(string name, IDataType dataType, string description = null,
             ushort dimension = 0, Radix radix = null, ExternalAccess access = null) =>

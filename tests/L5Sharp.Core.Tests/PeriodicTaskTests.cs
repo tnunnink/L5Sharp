@@ -38,6 +38,14 @@ namespace L5Sharp.Core.Tests
             task.InhibitTask.Should().Be(false);
             task.DisableUpdateOutputs.Should().Be(false);
         }
+
+        [Test]
+        public void Type_GetValue_ShouldBePeriodic()
+        {
+            var task = new PeriodicTask("Test");
+
+            task.Type.Should().Be(TaskType.Periodic);
+        }
         
         [Test]
         public void SetName_ValidType_ShouldBeExpectedValue()
@@ -115,13 +123,14 @@ namespace L5Sharp.Core.Tests
             
             FluentActions.Invoking(() => task.Watchdog = 5000000).Should().Throw<ArgumentOutOfRangeException>();
         }
-
+        
+        
         [Test]
         public void AddProgram_NonExistingProgram_ShouldAddProgram()
         {
             var task = new PeriodicTask("TestTask");
             
-            task.NewProgram("Program");
+            task.AddProgram("Program");
 
             task.ScheduledPrograms.Should().Contain("Program");
         }
@@ -131,16 +140,53 @@ namespace L5Sharp.Core.Tests
         {
             var task = new PeriodicTask("TestTask");
             
-            task.NewProgram("Program");
+            task.AddProgram("Program");
+
+            FluentActions.Invoking(() => task.AddProgram("Program")).Should().Throw<ComponentNameCollisionException>();
+        }
+        
+        [Test]
+        public void AddProgram_Null_ShouldThrowArgumentNullException()
+        {
+            var task = new PeriodicTask("TestTask");
+            
+            FluentActions.Invoking(() => task.AddProgram(null)).Should().Throw<ArgumentNullException>();
+        }
+
+        [Test]
+        public void NewProgram_NonExistingProgram_ShouldAddProgram()
+        {
+            var task = new PeriodicTask("TestTask");
+            
+            var program = task.NewProgram("Program");
+
+            task.ScheduledPrograms.Should().Contain("Program");
+            program.Should().NotBeNull();
+        }
+
+        [Test]
+        public void NewProgram_ExistingProgram_ShouldThrowNameCollisionException()
+        {
+            var task = new PeriodicTask("TestTask");
+            
+            task.AddProgram("Program");
 
             FluentActions.Invoking(() => task.NewProgram("Program")).Should().Throw<ComponentNameCollisionException>();
+        }
+        
+        [Test]
+        public void NewProgram_Null_ShouldThrowArgumentNullException()
+        {
+            var task = new PeriodicTask("TestTask");
+            
+            FluentActions.Invoking(() => task.NewProgram(null)).Should().Throw<ArgumentException>();
         }
         
         [Test]
         public void RemoveProgram_ExistingProgram_ProgramsShouldBeEmpty()
         {
             var task = new PeriodicTask("TestTask");
-            task.NewProgram("Program");
+            task.AddProgram("Program");
             
             task.RemoveProgram("Program");
             
@@ -151,11 +197,20 @@ namespace L5Sharp.Core.Tests
         public void RemoveProgram_NonExistingProgram_ProgramsShouldBeEmpty()
         {
             var task = new PeriodicTask("TestTask");
-            task.NewProgram("Program");
+            task.AddProgram("Program");
             
-            task.RemoveProgram("Program");
+            task.RemoveProgram("Test");
 
             task.ScheduledPrograms.Should().BeEmpty();
+        }
+        
+        
+        [Test]
+        public void RemoveProgram_Null_ShouldThrowArgumentNullException()
+        {
+            var task = new PeriodicTask("TestTask");
+            
+            FluentActions.Invoking(() => task.RemoveProgram(null)).Should().Throw<ArgumentNullException>();
         }
     }
 }

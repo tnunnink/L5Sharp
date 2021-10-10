@@ -12,23 +12,23 @@ using L5Sharp.Utilities;
 
 namespace L5Sharp.Serialization
 {
-    internal class TagSerializer : IComponentSerializer<Tag>
+    internal class TagSerializer : IComponentSerializer<ITag>
     {
-        public XElement Serialize(Tag component)
+        public XElement Serialize(ITag component)
         {
             var element = new XElement(nameof(Tag));
             element.Add(new XAttribute(nameof(component.Name), component.Name));
             element.Add(new XAttribute(nameof(component.TagType), component.TagType));
             element.Add(new XAttribute(nameof(component.DataType), component.DataType));
-            if (component.Dimension.Length > 0)
-                element.Add(new XAttribute(L5XNames.Attributes.Dimensions, component.Dimension.ToString()));
+            if (component.Dimensions.Length > 0)
+                element.Add(new XAttribute(L5XNames.Attributes.Dimensions, component.Dimensions.ToString()));
             if (component.Radix != Radix.Null)
                 element.Add(new XAttribute(nameof(component.Radix), component.Radix));
             element.Add(new XAttribute(nameof(component.Constant), component.Constant));
             element.Add(new XAttribute(nameof(component.ExternalAccess), component.ExternalAccess));
 
-            if (!string.IsNullOrEmpty(component.AliasFor))
-                element.Add(new XAttribute(nameof(component.AliasFor), component.AliasFor));
+            /*if (!string.IsNullOrEmpty(component.AliasFor))
+                element.Add(new XAttribute(nameof(component.AliasFor), component.AliasFor));*/
 
             if (component.Usage != TagUsage.Null)
                 element.Add(new XAttribute(nameof(component.Usage), component.Usage));
@@ -42,13 +42,12 @@ namespace L5Sharp.Serialization
             return element;
         }
 
-        public Tag Deserialize(XElement element)
+        public ITag Deserialize(XElement element)
         {
             var dataType = element.GetDataType();
+            var tagType = element.GetTagType();
 
-            var tag = new Tag(element.GetName(), dataType, element.GetDimensions(), element.GetRadix(),
-                element.GetExternalAccess(), element.GetTagType(), element.GetUsage(), element.GetDescription(),
-                element.GetScope(), element.GetAliasFor(), element.GetConstant());
+            var tag = tagType.Create(element);
 
             var formatted = element
                 .Descendants(L5XNames.Elements.Data).FirstOrDefault(x =>
@@ -67,7 +66,7 @@ namespace L5Sharp.Serialization
             return tag;
         }
 
-        private static void UpdateTagValue(XElement element, Tag tag, Predefined type)
+        private static void UpdateTagValue(XElement element, ITagMember tag, Predefined type)
         {
             if (element == null) throw new ArgumentNullException(nameof(element));
 
@@ -126,7 +125,7 @@ namespace L5Sharp.Serialization
             {
                 var array = new XElement(L5XNames.Elements.Array);
                 array.Add(new XAttribute(L5XNames.Attributes.DataType, tag.DataType));
-                array.Add(new XAttribute(L5XNames.Attributes.Dimensions, tag.Dimension.ToString()));
+                array.Add(new XAttribute(L5XNames.Attributes.Dimensions, tag.Dimensions.ToString()));
                 array.Add(new XAttribute(L5XNames.Attributes.Radix, tag.Radix.Name));
                 array.Add(tag.Members.Select(m => m.Serialize()));
                 data.Add(array);

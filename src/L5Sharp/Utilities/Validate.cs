@@ -28,7 +28,7 @@ namespace L5Sharp.Utilities
             if (type == null) 
                 throw new ArgumentNullException(nameof(type), "DataType can not be null");
 
-            if (type.Equals(Predefined.Null))
+            if (type.Equals(Predefined.Undefined))
                 throw new InvalidOperationException("");
 
             if (type is DataType dataType && dataType.ContainsNullType())

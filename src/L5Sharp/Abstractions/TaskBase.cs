@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using L5Sharp.Abstractions;
 using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Utilities;
 
-namespace L5Sharp.Base
+namespace L5Sharp.Abstractions
 {
     public abstract class TaskBase : ITask
     {
@@ -26,7 +25,7 @@ namespace L5Sharp.Base
             DisableUpdateOutputs = disableUpdateOutputs;
         }
 
-        
+
         public string Name
         {
             get => _name;
@@ -38,7 +37,7 @@ namespace L5Sharp.Base
         }
 
         public string Description { get; set; }
-        public virtual TaskType Type { get; }
+        public abstract TaskType Type { get; }
 
         public byte Priority
         {
@@ -73,11 +72,16 @@ namespace L5Sharp.Base
 
         public virtual void RemoveProgram(string name) => RemoveProgramComponent(name);
 
-        public virtual Program NewProgram(string name)
+        public virtual IProgram NewProgram(string name)
         {
             var program = new Program(name);
             AddProgramComponent(program.Name);
             return program;
+        }
+
+        public virtual ITask ChangeType(TaskType type)
+        {
+            return type.Create(Name);
         }
 
         private void AddProgramComponent(string name)

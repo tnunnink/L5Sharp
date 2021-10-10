@@ -15,6 +15,9 @@ namespace L5Sharp.Utilities
                 $"Name {tagName} is not valid. " +
                 $"Must contain alphanumeric, start with letter, and contains only '_' special characters");
         
+        public static void InvalidTagValueException(object value, string dataType) =>
+            throw new InvalidTagValueException($"Value '{value}' is not valid for type '{dataType}'");
+        
         public static void PredefinedCollisionException(string dataType) =>
             throw new PredefinedCollisionException(
                 $"Data type {dataType} already exists either as a predefined type on in the current controller context");

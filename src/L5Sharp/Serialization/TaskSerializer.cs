@@ -31,6 +31,7 @@ namespace L5Sharp.Serialization
             if (programs.Count <= 0) return element;
 
             var scheduled = new XElement(nameof(component.ScheduledPrograms));
+            
             foreach (var program in programs)
                 scheduled.Add(new XElement("ScheduledProgram",
                     new XAttribute(L5XNames.Attributes.Name, program)));

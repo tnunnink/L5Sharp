@@ -38,7 +38,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Family_ValidType_ShouldReturnExpected()
         {
-            var type = Predefined.Null;
+            var type = Predefined.Undefined;
 
             type.Family.Should().Be(DataTypeFamily.None);
         }
@@ -46,7 +46,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Class_ValidType_ShouldReturnExpected()
         {
-            var type = Predefined.Null;
+            var type = Predefined.Undefined;
 
             type.Class.Should().Be(DataTypeClass.Predefined);
         }
@@ -54,7 +54,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void DefaultValue_ValidType_ShouldReturnExpected()
         {
-            var type = Predefined.Null;
+            var type = Predefined.Undefined;
 
             type.DefaultValue.Should().Be(null);
         }
@@ -62,7 +62,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void DefaultRadix_ValidType_ShouldReturnExpected()
         {
-            var type = Predefined.Null;
+            var type = Predefined.Undefined;
 
             type.DefaultRadix.Should().Be(Radix.Null);
         }
@@ -70,7 +70,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void DataFormat_ValidType_ShouldReturnExpected()
         {
-            var type = Predefined.Null;
+            var type = Predefined.Undefined;
 
             type.DataFormat.Should().Be(TagDataFormat.Decorated);
         }
@@ -90,7 +90,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void SupportsRadix_NonAtomicValidRadixForType_ShouldBeTrue()
         {
-            var type = Predefined.Null;
+            var type = Predefined.Undefined;
 
             var result = type.SupportsRadix(Radix.Null);
 
@@ -100,7 +100,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void SupportsRadix_NonAtomicInvalidRadixForType_ShouldBeFalse()
         {
-            var type = Predefined.Null;
+            var type = Predefined.Undefined;
 
             var result = type.SupportsRadix(Radix.Decimal);
 
@@ -130,7 +130,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void IsValidValue_ValidType_ShouldBeExpected()
         {
-            var type = Predefined.Null;
+            var type = Predefined.Undefined;
 
             var result = type.IsValidValue(null);
 
@@ -140,7 +140,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void ParseValue_NullType_ShouldBeNull()
         {
-            var type = Predefined.Null;
+            var type = Predefined.Undefined;
 
             var result = type.ParseValue("true");
 
@@ -150,7 +150,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void IsValidValue_Null_ShouldBeNull()
         {
-            var type = Predefined.Null;
+            var type = Predefined.Undefined;
 
             var result = type.ParseValue("true");
 

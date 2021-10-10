@@ -4,7 +4,7 @@ namespace L5Sharp.Enums
 {
     public class ProcessorType : SmartEnum<ProcessorType, string>
     {
-        public ProcessorType(string name, string value) : base(name, value)
+        private ProcessorType(string name, string value) : base(name, value)
         {
         }
 

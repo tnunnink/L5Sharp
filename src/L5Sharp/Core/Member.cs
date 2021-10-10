@@ -17,7 +17,7 @@ namespace L5Sharp.Core
             ExternalAccess access = null, string description = null)
         {
             Name = name;
-            DataType = dataType ?? Predefined.Null;
+            DataType = dataType ?? Predefined.Undefined;
             Dimension = dimension;
             Radix = radix == null ? DataType.DefaultRadix : radix;
             ExternalAccess = access == null ? ExternalAccess.ReadWrite : access;
@@ -37,7 +37,7 @@ namespace L5Sharp.Core
         public IDataType DataType
         {
             get => _dataType;
-            set => _dataType = value ?? Predefined.Null;
+            set => _dataType = value ?? Predefined.Undefined;
         }
 
         public ushort Dimension { get; set; }

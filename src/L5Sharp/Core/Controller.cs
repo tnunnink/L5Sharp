@@ -7,16 +7,15 @@ using L5Sharp.Utilities;
 
 namespace L5Sharp.Core
 {
-    public class Controller : IComponent
+    public class Controller : IController
     {
         private string _name;
-        private readonly Dictionary<string, DataType> _dataTypes = new Dictionary<string, DataType>();
-        private readonly Dictionary<string, Tag> _tags = new Dictionary<string, Tag>();
+        private readonly Dictionary<string, IDataType> _dataTypes = new Dictionary<string, IDataType>();
+        private readonly Dictionary<string, ITag> _tags = new Dictionary<string, ITag>();
 
         public Controller(string name, Revision revision = null, ProcessorType processorType = null, string description = null)
         {
             Name = name;
-            Use = Use.Target;
             Description = description ?? string.Empty;
             ProcessorType = processorType;
             Revision = revision;
@@ -34,8 +33,6 @@ namespace L5Sharp.Core
             }
         }
 
-        public Use Use { get; set; }
-
         public string Description { get; set; }
 
         public ProcessorType ProcessorType { get; }
@@ -50,10 +47,10 @@ namespace L5Sharp.Core
 
         public DateTime LastModifiedDate { get; }
 
-        public IEnumerable<DataType> DataTypes => _dataTypes.Values.AsEnumerable();
-        public IEnumerable<Tag> Tags => _tags.Values.AsEnumerable();
+        public IEnumerable<IDataType> DataTypes => _dataTypes.Values.AsEnumerable();
+        public IEnumerable<ITag> Tags => _tags.Values.AsEnumerable();
 
-        public void AddDataType(DataType dataType)
+        public void AddDataType(IDataType dataType)
         {
             if (dataType == null) throw new ArgumentNullException(nameof(dataType));
 
@@ -63,11 +60,11 @@ namespace L5Sharp.Core
             _dataTypes.Add(dataType.Name, dataType);
         }
         
-        public void RemoveDataType(DataType dataType)
+        public void RemoveDataType(IDataType dataType)
         {
             if (dataType == null) throw new ArgumentNullException(nameof(dataType));
             
-            if (_tags.Values.Any(x => x.DataType == dataType.Name))
+            if (_tags.Values.Any(t => t.DataType == dataType.Name))
                 Throw.ComponentReferencedException(dataType.Name, typeof(DataType));
 
             if (!_dataTypes.ContainsKey(dataType.Name))
@@ -76,7 +73,7 @@ namespace L5Sharp.Core
             _dataTypes.Remove(dataType.Name);
         }
         
-        public void AddTag(Tag tag)
+        public void AddTag(ITag tag)
         {
             if (tag == null) throw new ArgumentNullException(nameof(tag));
 
@@ -86,7 +83,7 @@ namespace L5Sharp.Core
             _tags.Add(tag.Name, tag);
         }
         
-        public void RemoveTag(Tag tag)
+        public void RemoveTag(ITag tag)
         {
             if (tag == null) throw new ArgumentNullException(nameof(tag));
             

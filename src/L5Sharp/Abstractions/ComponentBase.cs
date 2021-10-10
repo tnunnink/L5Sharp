@@ -1,7 +1,6 @@
-﻿using L5Sharp.Abstractions;
-using L5Sharp.Utilities;
+﻿using L5Sharp.Utilities;
 
-namespace L5Sharp.Base
+namespace L5Sharp.Abstractions
 {
     public abstract class ComponentBase : IComponent
     {
@@ -23,6 +22,6 @@ namespace L5Sharp.Base
             }
         }
 
-        public string Description { get; }
+        public virtual string Description { get; set; }
     }
 }

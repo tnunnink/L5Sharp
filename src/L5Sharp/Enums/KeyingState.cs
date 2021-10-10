@@ -4,7 +4,7 @@ namespace L5Sharp.Enums
 {
     public class KeyingState : SmartEnum<KeyingState>
     {
-        public KeyingState(string name, int value) : base(name, value)
+        private KeyingState(string name, int value) : base(name, value)
         {
         }
 

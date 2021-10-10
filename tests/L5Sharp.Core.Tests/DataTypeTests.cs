@@ -240,7 +240,7 @@ namespace L5Sharp.Core.Tests
             type.AddMember("Member", null);
 
             var member = type.GetMember("Member");
-            member.DataType.Should().Be(Predefined.Null);
+            member.DataType.Should().Be(Predefined.Undefined);
         }
 
         [Test]

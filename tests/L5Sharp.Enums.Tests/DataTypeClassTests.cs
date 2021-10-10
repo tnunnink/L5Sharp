@@ -2,7 +2,7 @@
 using L5Sharp.Enums;
 using NUnit.Framework;
 
-namespace L5Sharp.Enumerations.Tests
+namespace L5Sharp.Enums.Tests
 {
     [TestFixture]
     public class DataTypeClassTests

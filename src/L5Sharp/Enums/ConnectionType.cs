@@ -4,7 +4,7 @@ namespace L5Sharp.Enums
 {
     public class ConnectionType : SmartEnum<ConnectionType>
     {
-        public ConnectionType(string name, int value) : base(name, value)
+        private ConnectionType(string name, int value) : base(name, value)
         {
         }
 

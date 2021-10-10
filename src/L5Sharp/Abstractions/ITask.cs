@@ -1,12 +1,10 @@
 ﻿using System.Collections.Generic;
-using L5Sharp.Core;
 using L5Sharp.Enums;
 
 namespace L5Sharp.Abstractions
 {
     public interface ITask : IComponent
     {
-        string Description { get; }
         TaskType Type { get; }
         public byte Priority { get; }
         float Watchdog { get; }
@@ -15,6 +13,7 @@ namespace L5Sharp.Abstractions
         IEnumerable<string> ScheduledPrograms { get; }
         void AddProgram(string name);
         void RemoveProgram(string name);
-        Program NewProgram(string name);
+        IProgram NewProgram(string name);
+        ITask ChangeType(TaskType type);
     }
 }

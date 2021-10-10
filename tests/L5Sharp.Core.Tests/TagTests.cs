@@ -37,7 +37,7 @@ namespace L5Sharp.Core.Tests
             tag.Should().NotBeNull();
             tag.Name.Should().Be("Test");
             tag.DataType.Should().Be(Predefined.Bool.Name);
-            tag.Dimension.Should().Be(Dimensions.Empty);
+            tag.Dimensions.Should().Be(Dimensions.Empty);
             tag.Radix.Should().Be(Radix.Decimal);
             tag.ExternalAccess.Should().Be(ExternalAccess.None);
             tag.Value.Should().Be(false);
@@ -45,7 +45,6 @@ namespace L5Sharp.Core.Tests
             tag.TagType.Should().Be(TagType.Base);
             tag.Usage.Should().Be(TagUsage.Null);
             tag.Scope.Should().Be(Scope.Null);
-            tag.AliasFor.Should().BeEmpty();
             tag.Constant.Should().BeFalse();
         }
         
@@ -53,20 +52,17 @@ namespace L5Sharp.Core.Tests
         public void New_AllDataType_ShouldHaveExpectedDefaults()
         {
             var tag = new Tag("Test", Predefined.Dint, new Dimensions(5), Radix.Ascii, ExternalAccess.ReadOnly, 
-                TagType.Alias, TagUsage.Local, "This is a test tag", Scope.Program, "Alias.Name", true);
+                 "This is a test tag", TagUsage.Input, true);
 
             tag.Should().NotBeNull();
             tag.Name.Should().Be("Test");
             tag.DataType.Should().Be(Predefined.Dint.Name);
-            tag.Dimension.Should().Be(new Dimensions(5));
+            tag.Dimensions.Should().Be(new Dimensions(5));
             tag.Radix.Should().Be(Radix.Ascii);
             tag.ExternalAccess.Should().Be(ExternalAccess.ReadOnly);
             tag.Value.Should().Be(0);
             tag.Description.Should().Be("This is a test tag");
-            tag.TagType.Should().Be(TagType.Alias);
-            tag.Usage.Should().Be(TagUsage.Local);
-            tag.Scope.Should().Be(Scope.Program);
-            tag.AliasFor.Should().Be("Alias.Name");
+            tag.Usage.Should().Be(TagUsage.Input);
             tag.Constant.Should().BeTrue();
         }
 
@@ -128,7 +124,7 @@ namespace L5Sharp.Core.Tests
             
             var tag = new Tag("Test", Predefined.Dint, new Dimensions(first, second));
 
-            tag.Dimension.Length.Should().Be(length);
+            tag.Dimensions.Length.Should().Be(length);
         }
 
         [Test]

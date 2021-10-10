@@ -43,7 +43,7 @@ namespace L5Sharp.Core.Tests
         {
             var member = new Member("Test", null);
 
-            member.DataType.Should().Be(Predefined.Null);
+            member.DataType.Should().Be(Predefined.Undefined);
         }
 
         [Test]
@@ -51,7 +51,7 @@ namespace L5Sharp.Core.Tests
         {
             var type = new Member("Test", null);
 
-            type.DataType.Should().Be(Predefined.Null);
+            type.DataType.Should().Be(Predefined.Undefined);
         }
 
         [Test]
@@ -97,7 +97,7 @@ namespace L5Sharp.Core.Tests
 
             member.DataType = null;
 
-            member.DataType.Should().Be(Predefined.Null);
+            member.DataType.Should().Be(Predefined.Undefined);
         }
 
         [Test]

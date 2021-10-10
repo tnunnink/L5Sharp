@@ -21,7 +21,7 @@ namespace L5Sharp.Core
         private static readonly string[] AtomicNames = { "BOOL", "SINT", "INT", "DINT", "LINT", "REAL" };
         private readonly Dictionary<string, ReadOnlyMember> _members = new Dictionary<string, ReadOnlyMember>();
 
-        protected Predefined(string name, DataTypeFamily family, IEnumerable<ReadOnlyMember> members)
+        protected Predefined(string name, DataTypeFamily family, IEnumerable<ReadOnlyMember> members = null)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name), "Name can not be null");
             Family = family ?? throw new ArgumentNullException(nameof(family), "Family can not be null");
@@ -59,7 +59,7 @@ namespace L5Sharp.Core
             }
         }
 
-        public static readonly Null Null = new Null();
+        public static readonly Undefined Undefined = new Undefined();
         public static readonly Bool Bit = new Bool();
         public static readonly Bool Bool = new Bool();
         public static readonly Sint Sint = new Sint();
@@ -73,7 +73,7 @@ namespace L5Sharp.Core
         public static readonly Alarm Alarm = new Alarm();
 
         public string Name { get; }
-        public string Description { get; }
+        public virtual string Description => string.Empty;
         public DataTypeFamily Family { get; }
         public DataTypeClass Class => DataTypeClass.Predefined;
         public bool IsAtomic => AtomicNames.Contains(Name);
@@ -91,6 +91,11 @@ namespace L5Sharp.Core
                    || radix == Radix.Decimal
                    || radix == Radix.Hex
                    || radix == Radix.Ascii;
+        }
+
+        public virtual bool IsValidValue(object value)
+        {
+            return value == null;
         }
 
         public static bool ContainsType(string name)
@@ -111,11 +116,6 @@ namespace L5Sharp.Core
         public virtual object ParseValue(string value)
         {
             return null;
-        }
-
-        public virtual bool IsValidValue(object value)
-        {
-            return !IsAtomic && value == null;
         }
 
         internal static XElement LoadElement(string name)

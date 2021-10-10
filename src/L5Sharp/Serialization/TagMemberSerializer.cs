@@ -62,7 +62,7 @@ namespace L5Sharp.Serialization
             var element = new XElement(L5XNames.Elements.ArrayMember);
             element.Add(new XAttribute(L5XNames.Attributes.Name, member.Name));
             element.Add(new XAttribute(L5XNames.Attributes.DataType, member.DataType));
-            element.Add(new XAttribute(L5XNames.Attributes.Dimensions, member.Dimension.ToString()));
+            element.Add(new XAttribute(L5XNames.Attributes.Dimensions, member.Dimensions.ToString()));
             element.Add(new XAttribute(L5XNames.Attributes.Radix, member.Radix));
             return element;
         }

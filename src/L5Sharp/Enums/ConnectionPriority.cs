@@ -4,7 +4,7 @@ namespace L5Sharp.Enums
 {
     public class ConnectionPriority : SmartEnum<ConnectionPriority>
     {
-        public ConnectionPriority(string name, int value) : base(name, value)
+        private ConnectionPriority(string name, int value) : base(name, value)
         {
         }
 

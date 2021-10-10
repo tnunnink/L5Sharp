@@ -70,6 +70,11 @@ namespace L5Sharp.Core
             return radix == Radix.Null;
         }
 
+        public bool IsValidValue(object value)
+        {
+            return value is string;
+        }
+
         public void UpdateLength(ushort length)
         {
             if (length <= 0)
