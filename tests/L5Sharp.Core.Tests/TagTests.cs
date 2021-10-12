@@ -7,6 +7,7 @@ using L5Sharp.Enums;
 using L5Sharp.Exceptions;
 using L5Sharp.Types;
 using NUnit.Framework;
+using String = System.String;
 
 namespace L5Sharp.Core.Tests
 {

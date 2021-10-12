@@ -5,33 +5,19 @@ using L5Sharp.Utilities;
 
 namespace L5Sharp.Core
 {
-    public class Member : IMember, IEquatable<Member>
+    public class Member : ComponentBase, IMember, IEquatable<Member>
     {
-        private string _name;
         private IDataType _dataType;
         private Radix _radix;
         private ExternalAccess _externalAccess;
-        private string _description;
 
         public Member(string name, IDataType dataType, ushort dimension = 0, Radix radix = null,
-            ExternalAccess access = null, string description = null)
+            ExternalAccess access = null, string description = null) : base(name, description)
         {
-            Name = name;
             DataType = dataType ?? Predefined.Undefined;
             Dimension = dimension;
-            Radix = radix == null ? DataType.DefaultRadix : radix;
+            Radix = DataType.Equals(Predefined.Undefined) ? Radix.Null : radix == null ? DataType.DefaultRadix : radix;
             ExternalAccess = access == null ? ExternalAccess.ReadWrite : access;
-            Description = description ?? string.Empty;
-        }
-
-        public string Name
-        {
-            get => _name;
-            set
-            {
-                Validate.Name(value);
-                _name = value;
-            }
         }
 
         public IDataType DataType
@@ -59,19 +45,12 @@ namespace L5Sharp.Core
                 "ExternalAccess property can not be null");
         }
 
-        public string Description
-        {
-            get => _description;
-            set => _description = value ?? throw new ArgumentNullException(nameof(value),
-                "Description property can not be null");
-        }
-
         public bool Equals(Member other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return _name == other._name && Equals(_dataType, other._dataType) && Equals(_radix, other._radix) &&
-                   Equals(_externalAccess, other._externalAccess) && _description == other._description &&
+            return Name == other.Name && Equals(_dataType, other._dataType) && Equals(_radix, other._radix) &&
+                   Equals(_externalAccess, other._externalAccess) && Description == other.Description &&
                    Dimension == other.Dimension;
         }
 

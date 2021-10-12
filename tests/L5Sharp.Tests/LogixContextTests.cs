@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using FluentAssertions;
 using L5Sharp.Utilities;
 using NUnit.Framework;
@@ -7,7 +8,7 @@ using NUnit.Framework;
 namespace L5Sharp.Tests
 {
     [TestFixture]
-    public class L5XTests
+    public class LogixContextTests
     {
         private readonly string _fileName = Path.Combine(Environment.CurrentDirectory, @"TestFiles\Test.xml");
 
@@ -23,6 +24,19 @@ namespace L5Sharp.Tests
             var sut = new LogixContext(_fileName);
 
             sut.Should().NotBeNull();
+        }
+
+        [Test]
+        public void DataTypes_GetAll_ShouldNotBeEmpty()
+        {
+            var context = new LogixContext(_fileName);
+
+            var types = context.DataTypes.GetAll();
+
+            foreach (var type in types)
+            {
+                type.Should().NotBeNull();
+            }
         }
     }
 }

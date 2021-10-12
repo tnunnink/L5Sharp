@@ -12,20 +12,22 @@ namespace L5Sharp.Core
     {
         private string _name;
         private string _description;
-        private readonly Dictionary<string, Member> _members = new Dictionary<string, Member>();
-        
+
+        private readonly Dictionary<string, IMember> _members =
+            new Dictionary<string, IMember>(StringComparer.OrdinalIgnoreCase);
+
         public DataType(string name, string description = null)
         {
             Name = name;
             Description = description ?? string.Empty;
         }
 
-        public DataType(string name, Member member, string description = null) : this(name, description)
+        public DataType(string name, IMember member, string description = null) : this(name, description)
         {
             AddMemberComponent(member);
         }
-        
-        public DataType(string name, IEnumerable<Member> members, string description = null) : this(name, description)
+
+        public DataType(string name, IEnumerable<IMember> members, string description = null) : this(name, description)
         {
             foreach (var member in members)
                 AddMemberComponent(member);
@@ -73,7 +75,7 @@ namespace L5Sharp.Core
             return value == null;
         }
 
-        public Member GetMember(string name) => GetMemberByName(name);
+        public IMember GetMember(string name) => GetMemberByName(name);
 
         public IEnumerable<IDataType> GetDependentTypes() => GetUniqueMemberTypes(this);
 
@@ -110,6 +112,11 @@ namespace L5Sharp.Core
             return HashCode.Combine(Name);
         }
 
+        public override string ToString()
+        {
+            return Name;
+        }
+
         public static bool operator ==(DataType left, DataType right)
         {
             return Equals(left, right);
@@ -119,17 +126,17 @@ namespace L5Sharp.Core
         {
             return !Equals(left, right);
         }
-        
+
         /// <summary>
         /// Adds a member to the data type member collection
         /// </summary>
         /// <param name="member">The member to add</param>
         /// <exception cref="ArgumentNullException">Thrown when member is null</exception>
-        private void AddMemberComponent(Member member)
+        private void AddMemberComponent(IMember member)
         {
             if (member == null)
                 throw new ArgumentNullException(nameof(member), "Member can nt be null");
-            
+
             if (HasMemberName(member.Name))
                 Throw.ComponentNameCollisionException(member.Name, typeof(Member));
 
@@ -143,16 +150,15 @@ namespace L5Sharp.Core
         /// <summary>
         /// Removes the member from the data type's member collection.
         /// </summary>
-        /// <param name="member"></param>
+        /// <param name="component"></param>
         /// <exception cref="ArgumentNullException"></exception>
-        private void RemoveMemberComponent(Member member)
+        private void RemoveMemberComponent(IComponent component)
         {
-            if (member == null)
-                throw new ArgumentNullException(nameof(member), "Member can nt be null");
-            
-            if (!HasMemberName(member.Name)) return;
+            if (component == null) return;
 
-            _members.Remove(member.Name);
+            if (!HasMemberName(component.Name)) return;
+
+            _members.Remove(component.Name);
         }
 
         /// <summary>
@@ -160,7 +166,7 @@ namespace L5Sharp.Core
         /// </summary>
         /// <param name="name">The name of the member to get</param>
         /// <returns></returns>
-        private Member GetMemberByName(string name)
+        private IMember GetMemberByName(string name)
         {
             _members.TryGetValue(name, out var member);
             return member;

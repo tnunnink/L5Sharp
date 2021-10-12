@@ -21,7 +21,7 @@ namespace L5Sharp.Extensions
                 return Predefined.ParseType(typeName);
             
             var typeElement = element.FindDataTypeElement(typeName);
-            return typeElement?.Deserialize<DataType>();
+            return typeElement?.Deserialize<IDataType>();
         }
         private static XElement FindDataTypeElement(this XObject element, string name)
         {

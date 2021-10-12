@@ -7,13 +7,35 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="development">
+    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/../../tests/L5Sharp.Types.Tests/BitTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Abstractions/ComponentBase.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Abstractions/ComponentBase.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Abstractions/TagBase.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Abstractions/TagBase.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/Tag.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/Tag.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Abstractions/IDataType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Abstractions/IDataType.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Abstractions/IDataTypeRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Abstractions/IDataTypeRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Abstractions/IMember.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Abstractions/IMember.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/DataType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/DataType.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/Member.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/Member.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/Predefined.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/Predefined.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/StringType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/StringType.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Core/TagMember.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/TagMember.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Enums/TagType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Enums/TagType.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Extensions/L5XComponentExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Extensions/L5XComponentExtensions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Extensions/L5XGenericExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Extensions/L5XGenericExtensions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LogixContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LogixContext.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Repositories/DataTypeRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Repositories/DataTypeRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Serialization/DataTypeSerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Serialization/DataTypeSerializer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Serialization/MemberSerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Serialization/MemberSerializer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Utilities/L5XNames.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Utilities/LogixNames.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Utilities/Validate.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Utilities/Validate.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tests/L5Sharp.Core.Tests/DataTypeTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/L5Sharp.Core.Tests/DataTypeTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tests/L5Sharp.Core.Tests/MemberTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/L5Sharp.Core.Tests/MemberTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tests/L5Sharp.Core.Tests/PredefinedTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/L5Sharp.Core.Tests/PredefinedTests.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../tests/L5Sharp.Core.Tests/TagTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/L5Sharp.Core.Tests/TagTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tests/L5Sharp.Serialization.Tests/DataTypeSerializationTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/L5Sharp.Serialization.Tests/DataTypeSerializationTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tests/L5Sharp.Tests/L5Sharp.Tests.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/L5Sharp.Tests/L5Sharp.Tests.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tests/L5Sharp.Tests/L5XTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/L5Sharp.Tests/LogixContextTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tests/L5Sharp.Tests/TestFiles/Test.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/L5Sharp.Tests/TestFiles/Test.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tests/L5Sharp.Types.Tests/StringTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/L5Sharp.Types.Tests/StringTests.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -39,29 +61,32 @@
     </file-type-list>
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/f3dd31a3d4374d7d9525d887480dae958f4788/412/Dictionary.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/f3dd31a3d4374d7d9525d887480dae958f4788/37/Object.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/obj/Debug/netstandard2.1/.NETStandard,Version=v2.1.AssemblyAttributes.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/39b5216120a2470e9278aef9ec0d271d61188/11/XElement.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/f3dd31a3d4374d7d9525d887480dae958f4788/40/String.Manipulation.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/d3bfdb86da53416a9a76296e6325a7b366588/46/ThrowHelper.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/042bba9eb7364f69a2ff02397255a74b17000/b8/8e0cc25b/DataTypeLoader.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/f3dd31a3d4374d7d9525d887480dae958f4788/2B3/CastHelpers.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/f3dd31a3d4374d7d9525d887480dae958f4788/9B/Lazy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Utilities/LogixNames.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/6d2600898291416eacbad905b4d24c316778/92/a792639a/Enumerable.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/f3dd31a3d4374d7d9525d887480dae958f4788/394/FileStream.Windows.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/d3bfdb86da53416a9a76296e6325a7b366588/26/Select.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/777281e5529b43ccbfcc25e4a52829673600/54/4e2df418/SmartEnum`1.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$USER_HOME$/AppData/Local/Symbols/src/nunit/nunit/c933a883ea25263ec575a654dae69fa38000edd9/src/NUnitFramework/framework/Internal/Execution/SimpleWorkItemDispatcher.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/39396bebbbf140248213397d1b31faed26200/24/IntroductionReporter.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/777281e5529b43ccbfcc25e4a52829673600/73/c63a15a3/SmartEnum`2.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/777281e5529b43ccbfcc25e4a52829673600/bf/5929012a/ThrowHelper.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/f3dd31a3d4374d7d9525d887480dae958f4788/316/RtFieldInfo.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/f3dd31a3d4374d7d9525d887480dae958f4788/E2/ThrowHelper.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/e076aa0ddc1143c4ae72963282119f709cc00/C0/LateBoundTestFramework.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/f3dd31a3d4374d7d9525d887480dae958f4788/6C/Boolean.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/f3dd31a3d4374d7d9525d887480dae958f4788/2A/Environment.CoreCLR.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$USER_HOME$/AppData/Local/Symbols/src/nunit/nunit/c933a883ea25263ec575a654dae69fa38000edd9/src/NUnitFramework/framework/Internal/Reflect.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/d3bfdb86da53416a9a76296e6325a7b366588/47/Utilities.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/f3dd31a3d4374d7d9525d887480dae958f4788/412/Dictionary.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/f3dd31a3d4374d7d9525d887480dae958f4788/37/Object.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/f3dd31a3d4374d7d9525d887480dae958f4788/40/String.Manipulation.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/d3bfdb86da53416a9a76296e6325a7b366588/46/ThrowHelper.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/042bba9eb7364f69a2ff02397255a74b17000/b8/8e0cc25b/DataTypeLoader.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/f3dd31a3d4374d7d9525d887480dae958f4788/394/FileStream.Windows.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$USER_HOME$/AppData/Local/Symbols/src/nunit/nunit/c933a883ea25263ec575a654dae69fa38000edd9/src/NUnitFramework/framework/Internal/Execution/SimpleWorkItemDispatcher.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/f3dd31a3d4374d7d9525d887480dae958f4788/316/RtFieldInfo.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="ProjectId" id="1ydTPTzKqKCbPz8lpCqgOe9jraF" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -99,7 +124,8 @@
       <workItem from="1633348277849" duration="5340000" />
       <workItem from="1633376242638" duration="49930000" />
       <workItem from="1633521737868" duration="34486000" />
-      <workItem from="1633609582256" duration="79854000" />
+      <workItem from="1633609582256" duration="80103000" />
+      <workItem from="1633963607524" duration="37173000" />
     </task>
     <task id="LOCAL-00001" summary="renaming">
       <created>1632580540996</created>
@@ -234,7 +260,14 @@
       <option name="project" value="LOCAL" />
       <updated>1633899784695</updated>
     </task>
-    <option name="localTasksCounter" value="20" />
+    <task id="LOCAL-00020" summary="development">
+      <created>1633902130813</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1633902130813</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -244,30 +277,38 @@
     <option name="coveragePercentColumnWidth" value="88" />
     <option name="sortOrder" value="DESCENDING" />
     <option name="sortedColumn" value="1" />
-    <option name="symbolColumnWidth" value="288" />
+    <option name="symbolColumnWidth" value="300" />
     <coverage-tree-state>
       <expand>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 20% 3274/4114" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 43% 2486/4347" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 20% 3274/4114" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 30% 1536/2199" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 43% 2486/4347" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 43% 1320/2297" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 20% 3274/4114" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 30% 1536/2199" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="(1.0.0.0, .NETStandard,Version=v2.1) 30% 1536/2199" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 43% 2486/4347" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 43% 1320/2297" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="(1.0.0.0, .NETStandard,Version=v2.1) 43% 1320/2297" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 20% 3274/4114" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 30% 1536/2199" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="(1.0.0.0, .NETStandard,Version=v2.1) 30% 1536/2199" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 30% 1536/2199" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 43% 2486/4347" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 43% 1320/2297" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="(1.0.0.0, .NETStandard,Version=v2.1) 43% 1320/2297" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 43% 1320/2297" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+        </path>
+        <path>
+          <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
+          <item name="Total 43% 2486/4347" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 43% 1320/2297" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="(1.0.0.0, .NETStandard,Version=v2.1) 43% 1320/2297" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 43% 1320/2297" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Core 58% 345/828" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
       </expand>
       <select />
@@ -312,6 +353,32 @@
             </endOffsets>
           </properties>
           <option name="timeStamp" value="86" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/../../tests/L5Sharp.Tests/LogixContextTests.cs</url>
+          <line>37</line>
+          <properties documentPath="C:\Users\tnunnink\dev\projects\L5Sharp\tests\L5Sharp.Tests\LogixContextTests.cs" initialLine="37" containingFunctionPresentation="method 'DataTypes_GetAll_ShouldNotBeEmpty'">
+            <startOffsets>
+              <option value="881" />
+            </startOffsets>
+            <endOffsets>
+              <option value="907" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="89" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/../../tests/L5Sharp.Core.Tests/DimensionsTests.cs</url>
+          <line>108</line>
+          <properties documentPath="C:\Users\tnunnink\dev\projects\L5Sharp\tests\L5Sharp.Core.Tests\DimensionsTests.cs" initialLine="108" containingFunctionPresentation="method 'GenerateIndices_ThreeDimension_ShouldNotBeNullAndHaveExpectedLength'">
+            <startOffsets>
+              <option value="3356" />
+            </startOffsets>
+            <endOffsets>
+              <option value="3397" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="115" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

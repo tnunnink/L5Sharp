@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Xml.Linq;
 using L5Sharp.Abstractions;
@@ -20,7 +19,7 @@ namespace L5Sharp.Extensions
         private static readonly Dictionary<Type, IComponentSerializer> Serializers = new Dictionary<Type, IComponentSerializer>
         {
             { typeof(IDataType), new DataTypeSerializer() },
-            { typeof(Member), new MemberSerializer() },
+            { typeof(IMember), new MemberSerializer() },
             { typeof(Tag), new TagSerializer() },
             { typeof(Program), new ProgramSerializer() },
             { typeof(ITask), new TaskSerializer() }
@@ -28,7 +27,8 @@ namespace L5Sharp.Extensions
 
         private static readonly Dictionary<Type, string> Components = new Dictionary<Type, string>
         {
-            { typeof(DataType), L5XNames.Components.DataType },
+            { typeof(IDataType), L5XNames.Components.DataType },
+            { typeof(IMember), L5XNames.Components.Member },
             { typeof(Module), L5XNames.Components.Module },
             //{ typeof(Instruction), L5XNames.Components.AddOnInstructionDefinition },
             { typeof(Tag), L5XNames.Components.Tag },
@@ -38,13 +38,13 @@ namespace L5Sharp.Extensions
 
         private static readonly Dictionary<Type, string> Containers = new Dictionary<Type, string>
         {
-            { typeof(DataType), L5XNames.Containers.DataTypes },
-            { typeof(Module), L5XNames.Containers.Modules },
+            { typeof(IDataType), L5XNames.Containers.DataTypes },
+            { typeof(IMember), L5XNames.Containers.Modules },
             //{ typeof(Instruction), L5XNames.Containers.AddOnInstructions },
             { typeof(Tag), L5XNames.Containers.Tags },
             { typeof(Program), L5XNames.Containers.Programs },
             { typeof(IRoutine), L5XNames.Containers.Routines },
-            { typeof(ITask), L5XNames.Containers.Tasks },
+            { typeof(ITask), L5XNames.Containers.Tasks }
         };
 
 
@@ -65,7 +65,7 @@ namespace L5Sharp.Extensions
             var type = typeof(T);
 
             if (!Serializers.ContainsKey(type))
-                throw new InvalidOperationException($"Not serializer defined for type '{type}'");
+                throw new InvalidOperationException($"No serializer defined for type '{type}'");
 
             var serializer = (IComponentSerializer<T>)Serializers[type];
 
@@ -126,6 +126,20 @@ namespace L5Sharp.Extensions
             var value = func(component);
 
             return new XElement(memberExpression.Member.Name, value);
+        }
+        
+        // ReSharper disable once InconsistentNaming
+        public static XElement ToXCDataElement<TComponent, TProperty>(this TComponent component, 
+            Expression<Func<TComponent, TProperty>> propertyExpression)
+            where TComponent : IComponent
+        {
+            if (!(propertyExpression.Body is MemberExpression memberExpression))
+                throw new InvalidOperationException();
+
+            var func = propertyExpression.Compile();
+            var value = func(component);
+
+            return new XElement(memberExpression.Member.Name, new XCData(value.ToString()));
         }
         
         private static string GetComponentName<T>() where T : IComponent

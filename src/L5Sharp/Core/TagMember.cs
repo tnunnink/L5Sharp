@@ -7,7 +7,7 @@ using L5Sharp.Utilities;
 
 namespace L5Sharp.Core
 {
-    internal class TagMember : ComponentBase, ITagMember
+    internal class TagMember : ITagMember
     {
         private readonly ITagMember _parent;
         private readonly IDataType _dataType;
@@ -38,11 +38,12 @@ namespace L5Sharp.Core
         /// </remarks>
         private TagMember(ITagMember parent, string name, IDataType dataType,
             Dimensions dimensions = null, Radix radix = null, string description = null,
-            object value = null) : base(name, description, false)
+            object value = null)
         {
             _parent = parent ?? throw new ArgumentNullException(nameof(parent));
             _dataType = dataType ?? throw new ArgumentNullException(nameof(dataType));
 
+            Name = name;
             Dimensions = dimensions != null ? dimensions : Dimensions.Empty;
             Radix = radix != null ? radix : dataType.DefaultRadix;
             _description = string.IsNullOrEmpty(description)
@@ -69,6 +70,8 @@ namespace L5Sharp.Core
         public string FullName => _parent == null ? Name
             : IsArrayElement ? $"{GetName(_parent)}{Name}"
             : $"{GetName(_parent)}.{Name}";
+        
+        public string Name { get; }
 
         public string DataType => _dataType.Name;
         public Dimensions Dimensions { get; }
@@ -89,7 +92,7 @@ namespace L5Sharp.Core
 
         public ExternalAccess ExternalAccess => _parent.ExternalAccess;
 
-        public override string Description
+        public string Description
         {
             get => _description;
             set => _description = _descriptionOverriden ? value : $"{_parent.Description} {value}";

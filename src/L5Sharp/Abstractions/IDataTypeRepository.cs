@@ -3,8 +3,8 @@ using L5Sharp.Core;
 
 namespace L5Sharp.Abstractions
 {
-    public interface IDataTypeRepository : IRepository<DataType>
+    public interface IDataTypeRepository : IRepository<IDataType>
     {
-        IEnumerable<DataType> WithMemberType(IDataType dataType);
+        IEnumerable<IDataType> WithMemberType(IDataType dataType);
     }
 }

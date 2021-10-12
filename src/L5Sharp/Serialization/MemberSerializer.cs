@@ -9,24 +9,24 @@ using L5Sharp.Utilities;
 
 namespace L5Sharp.Serialization
 {
-    internal class MemberSerializer : IComponentSerializer<Member>
+    internal class MemberSerializer : IComponentSerializer<IMember>
     {
-        public XElement Serialize(Member component)
+        public XElement Serialize(IMember component)
         {
-            var element = new XElement(nameof(Member));
-            element.Add(new XAttribute(nameof(component.Name), component.Name));
-            element.Add(new XAttribute(nameof(component.DataType), component.DataType.Name));
-            element.Add(new XAttribute(nameof(component.Dimension), component.Dimension));
-            element.Add(new XAttribute(nameof(component.Radix), component.Radix));
-            element.Add(new XAttribute(nameof(component.ExternalAccess), component.ExternalAccess));
-
+            var element = new XElement(L5XNames.Components.Member);
+            element.Add(component.ToXAttribute(c => c.Name));
+            element.Add(component.ToXAttribute(c => c.DataType));
+            element.Add(component.ToXAttribute(c => c.Dimension));
+            element.Add(component.ToXAttribute(c => c.Radix));
+            element.Add(component.ToXAttribute(c => c.ExternalAccess));
+            
             if (!string.IsNullOrEmpty(component.Description))
-                element.Add(new XElement(nameof(component.Description), new XCData(component.Description)));
+                element.Add(component.ToXCDataElement(x => x.Description));
 
             return element;
         }
 
-        public Member Deserialize(XElement element)
+        public IMember Deserialize(XElement element)
         {
             var dataType = element.GetDataType();
             

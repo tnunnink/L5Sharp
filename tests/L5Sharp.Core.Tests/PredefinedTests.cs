@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Globalization;
 using System.Linq;
-using AutoFixture;
 using FluentAssertions;
 using L5Sharp.Abstractions;
 using L5Sharp.Enums;
@@ -16,15 +14,15 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Types_WhenCalled_ShouldNotBeEmpty()
         {
-            var predefined = Predefined.Types();
+            var predefined = Predefined.Types;
 
             predefined.Should().NotBeEmpty();
         }
 
         [Test]
-        public void GetAtomic_WhenCalled_ShouldNotBeEmpty()
+        public void Atomics_WhenCalled_ShouldNotBeEmpty()
         {
-            var atomic = Predefined.Types().Where(t => t.IsAtomic).ToList();
+            var atomic = Predefined.Atomics.ToList();
 
             atomic.Should().NotBeEmpty();
             atomic.Should().Contain(x => x.Name == "BOOL");
@@ -34,15 +32,15 @@ namespace L5Sharp.Core.Tests
             atomic.Should().Contain(x => x.Name == "LINT");
             atomic.Should().Contain(x => x.Name == "REAL");
         }
-        
+
         [Test]
-        public void Family_ValidType_ShouldReturnExpected()
+        public void Description_GetValue_ShouldBeEmpty()
         {
             var type = Predefined.Undefined;
 
-            type.Family.Should().Be(DataTypeFamily.None);
+            type.Description.Should().BeEmpty();
         }
-        
+
         [Test]
         public void Class_ValidType_ShouldReturnExpected()
         {
@@ -50,7 +48,7 @@ namespace L5Sharp.Core.Tests
 
             type.Class.Should().Be(DataTypeClass.Predefined);
         }
-        
+
         [Test]
         public void DefaultValue_ValidType_ShouldReturnExpected()
         {
@@ -58,7 +56,7 @@ namespace L5Sharp.Core.Tests
 
             type.DefaultValue.Should().Be(null);
         }
-        
+
         [Test]
         public void DefaultRadix_ValidType_ShouldReturnExpected()
         {
@@ -66,13 +64,45 @@ namespace L5Sharp.Core.Tests
 
             type.DefaultRadix.Should().Be(Radix.Null);
         }
-        
+
         [Test]
         public void DataFormat_ValidType_ShouldReturnExpected()
         {
             var type = Predefined.Undefined;
 
             type.DataFormat.Should().Be(TagDataFormat.Decorated);
+        }
+
+        [Test]
+        public void GetMember_TypeWithMember_ShouldNotBeNull()
+        {
+            var type = Predefined.String;
+            var member = type.GetMember("Data");
+            member.Should().NotBeNull();
+        }
+
+        [Test]
+        public void GetMember_TypeWithoutMember_ShouldBeNull()
+        {
+            var type = Predefined.Bool;
+            var member = type.GetMember("Member");
+            member.Should().BeNull();
+        }
+
+        [Test]
+        public void GetDependentTypes_TypeWithMembers_ShouldNotBeEmpty()
+        {
+            var type = Predefined.String;
+
+            type.GetDependentTypes().Should().NotBeEmpty();
+        }
+
+        [Test]
+        public void GetDependentTypes_TypeWithNoMembers_ShouldBeEmpty()
+        {
+            var type = Predefined.Undefined;
+
+            type.GetDependentTypes().Should().BeEmpty();
         }
 
         [Test]
@@ -96,7 +126,7 @@ namespace L5Sharp.Core.Tests
 
             result.Should().BeTrue();
         }
-        
+
         [Test]
         public void SupportsRadix_NonAtomicInvalidRadixForType_ShouldBeFalse()
         {
@@ -116,7 +146,7 @@ namespace L5Sharp.Core.Tests
 
             result.Should().BeTrue();
         }
-        
+
         [Test]
         public void SupportsRadix_AtomicInvalidRadixForType_ShouldBeFalse()
         {
@@ -126,9 +156,9 @@ namespace L5Sharp.Core.Tests
 
             result.Should().BeFalse();
         }
-        
+
         [Test]
-        public void IsValidValue_ValidType_ShouldBeExpected()
+        public void IsValidValue_ValidValueForType_ShouldBeTrue()
         {
             var type = Predefined.Undefined;
 
@@ -136,288 +166,236 @@ namespace L5Sharp.Core.Tests
 
             result.Should().BeTrue();
         }
-        
+
         [Test]
-        public void ParseValue_NullType_ShouldBeNull()
+        public void IsValidValue_InvalidValueForType_ShouldBeFalse()
         {
             var type = Predefined.Undefined;
 
-            var result = type.ParseValue("true");
-
-            result.Should().Be(null);
-        }
-        
-        [Test]
-        public void IsValidValue_Null_ShouldBeNull()
-        {
-            var type = Predefined.Undefined;
-
-            var result = type.ParseValue("true");
-
-            result.Should().Be(null);
-        }
-        
-        [Test]
-        public void Predefined_WhenCastedToDataType_ShouldThrowInvalidCastException()
-        {
-            var atomic = (IDataType) Predefined.Bool;
-
-            FluentActions.Invoking(() => (DataType)atomic).Should().Throw<InvalidCastException>();
-        }
-
-        [Test]
-        public void Parse_ValidValueSint_ShouldReturnExpected()
-        {
-            var fixture = new Fixture();
-            var value = fixture.Create<byte>();
-            var type = Predefined.Sint;
-
-            var result = type.ParseValue(value.ToString());
-
-            result.Should().Be(value);
-        }
-
-        [Test]
-        public void Parse_ValidValueInt_ShouldReturnExpected()
-        {
-            var fixture = new Fixture();
-            var value = fixture.Create<short>();
-            var type = Predefined.Sint;
-
-            var result = type.ParseValue(value.ToString());
-
-            result.Should().Be(value);
-        }
-
-        [Test]
-        public void Parse_ValidValueDint_ShouldReturnExpected()
-        {
-            var fixture = new Fixture();
-            var value = fixture.Create<int>();
-            var type = Predefined.Sint;
-
-            var result = type.ParseValue(value.ToString());
-
-            result.Should().Be(value);
-        }
-
-        [Test]
-        public void Parse_ValidValueLint_ShouldReturnExpected()
-        {
-            var fixture = new Fixture();
-            var value = fixture.Create<long>();
-            var type = Predefined.Lint;
-
-            var result = type.ParseValue(value.ToString());
-
-            result.Should().Be(value);
-        }
-
-        [Test]
-        public void Parse_ValidValueReal_ShouldReturnExpected()
-        {
-            var fixture = new Fixture();
-            var value = fixture.Create<float>();
-            var type = Predefined.Real;
-
-            var result = type.ParseValue(value.ToString(CultureInfo.InvariantCulture));
-
-            result.Should().Be(value);
-        }
-
-
-        [Test]
-        public void New_Bool_ShouldThrowPredefinedCollisionException()
-        {
-            FluentActions.Invoking(() => new DataType("BOOL")).Should().Throw<PredefinedCollisionException>();
-        }
-
-        [Test]
-        public void New_Sint_ShouldNotBeNull()
-        {
-            var type = Predefined.Sint;
-
-            type.Should().NotBeNull();
-            type.Name.Should().Be("SINT");
-            type.Class.Should().Be(DataTypeClass.Predefined);
-            type.Family.Should().Be(DataTypeFamily.None);
-        }
-
-        [Test]
-        public void ParseType_Sint_ShouldReturnExpectedType()
-        {
-            var type = Predefined.ParseType("SINT");
-
-            type.Should().NotBeNull();
-            type.Name.Should().Be("SINT");
-            type.Class.Should().Be(DataTypeClass.Predefined);
-            type.Family.Should().Be(DataTypeFamily.None);
-        }
-
-        [Test]
-        public void New_Sint_ShouldThrowDataTypeAlreadyExistsException()
-        {
-            FluentActions.Invoking(() => new DataType("SINT")).Should().Throw<PredefinedCollisionException>();
-        }
-
-        [Test]
-        public void New_Int_ShouldNotBeNull()
-        {
-            var type = Predefined.Int;
-
-            type.Should().NotBeNull();
-            type.Name.Should().Be("INT");
-            type.Class.Should().Be(DataTypeClass.Predefined);
-            type.Family.Should().Be(DataTypeFamily.None);
-        }
-
-        [Test]
-        public void New_Dint_ShouldNotBeNull()
-        {
-            var type = Predefined.Dint;
-
-            type.Should().NotBeNull();
-            type.Name.Should().Be("DINT");
-            type.Class.Should().Be(DataTypeClass.Predefined);
-            type.Family.Should().Be(DataTypeFamily.None);
-        }
-
-        [Test]
-        public void New_Real_ShouldNotBeNull()
-        {
-            var type = Predefined.Real;
-
-            type.Should().NotBeNull();
-            type.Name.Should().Be("REAL");
-            type.Class.Should().Be(DataTypeClass.Predefined);
-            type.Family.Should().Be(DataTypeFamily.None);
-        }
-
-        [Test]
-        public void New_String_ShouldNotBeNull()
-        {
-            var type = Predefined.String;
-
-            type.Should().NotBeNull();
-            type.Name.Should().Be("STRING");
-            type.Class.Should().Be(DataTypeClass.Predefined);
-            type.Family.Should().Be(DataTypeFamily.None);
-            type.Members.Should().HaveCount(2);
-        }
-
-        [Test]
-        public void New_Timer_ShouldNotBeNull()
-        {
-            var type = Predefined.Timer;
-
-            type.Should().NotBeNull();
-            type.Name.Should().Be("TIMER");
-            type.Class.Should().Be(DataTypeClass.Predefined);
-            type.Family.Should().Be(DataTypeFamily.None);
-            type.Members.Should().NotBeEmpty();
-        }
-
-        [Test]
-        public void New_Alarm_ShouldHaveExpectedProperties()
-        {
-            var type = Predefined.Alarm;
-
-            type.Should().NotBeNull();
-
-            type.Name.Should().Be("ALARM");
-            type.Members.Should().HaveCount(24);
-        }
-
-        
-
-        [Test]
-        public void DefaultValue_Sint_ShouldBeZero()
-        {
-            var type = Predefined.Sint;
-
-            var value = type.DefaultValue;
-
-            value.Should().Be(0);
-        }
-
-        [Test]
-        public void DefaultValue_Int_ShouldBeZero()
-        {
-            var type = Predefined.Int;
-
-            var value = type.DefaultValue;
-
-            value.Should().Be(0);
-        }
-
-        [Test]
-        public void DefaultValue_Dint_ShouldBeZero()
-        {
-            var type = Predefined.Dint;
-
-            var value = type.DefaultValue;
-
-            value.Should().Be(0);
-        }
-
-        [Test]
-        public void DefaultValue_Lint_ShouldBeZero()
-        {
-            var type = Predefined.Lint;
-
-            var value = type.DefaultValue;
-
-            value.Should().Be(0);
-        }
-
-        [Test]
-        public void DefaultValue_Real_ShouldBeZeroFloat()
-        {
-            var type = Predefined.Real;
-
-            var value = type.DefaultValue;
-
-            value.Should().Be(0f);
-        }
-
-        [Test]
-        public void DefaultRadix_Real_ShouldBeDecimal()
-        {
-            var type = Predefined.Real;
-
-            var value = type.DefaultRadix;
-
-            value.Should().Be(Radix.Float);
-        }
-
-        [Test]
-        public void SupportsRadix_BoolInvalidRadix_ShouldBeFalse()
-        {
-            var type = Predefined.Bool;
-
-            var result = type.SupportsRadix(Radix.Exponential);
+            var result = type.IsValidValue(true);
 
             result.Should().BeFalse();
         }
 
         [Test]
-        public void SupportsRadix_BoolValidRadix_ShouldBeTrue()
+        public void ParseValue_UndefinedTypeTrueString_ShouldBeNull()
         {
-            var type = Predefined.Bool;
+            var type = Predefined.Undefined;
 
-            var result = type.SupportsRadix(Radix.Binary);
+            var result = type.ParseValue("true");
+
+            result.Should().Be(null);
+        }
+
+        [Test]
+        public void ParseValue_UndefinedTypeNullString_ShouldBeNull()
+        {
+            var type = Predefined.Undefined;
+
+            var result = type.ParseValue("null");
+
+            result.Should().Be(null);
+        }
+
+        [Test]
+        public void ParseValue_UndefinedTypeNullValue_ShouldBeNull()
+        {
+            var type = Predefined.Undefined;
+
+            var result = type.ParseValue(null);
+
+            result.Should().Be(null);
+        }
+
+        [Test]
+        public void Predefined_WhenCastedToDataType_ShouldThrowInvalidCastException()
+        {
+            var atomic = (IDataType)Predefined.Bool;
+
+            FluentActions.Invoking(() => (DataType)atomic).Should().Throw<InvalidCastException>();
+        }
+
+        [Test]
+        public void New_PredefinedTypeName_ShouldThrowPredefinedCollisionException()
+        {
+            FluentActions.Invoking(() => new DataType("Undefined")).Should().Throw<PredefinedCollisionException>();
+        }
+
+        [Test]
+        public void RegisterType_ValidType_TypesShouldContainPredefined()
+        {
+            var type = new MyPredefined();
+            
+            Predefined.RegisterType(type);
+
+            Predefined.Types.Should().Contain(type);
+        }
+        
+        /*[Test]
+        public void RegisterType_Null_ShouldThrowArgumentNullException()
+        {
+            FluentActions.Invoking(() => Predefined.RegisterType(null)).Should().Throw<ArgumentNullException>;
+        }*/
+
+        [Test]
+        public void ParseType_RegisteredType_ShouldNotBeNull()
+        {
+            var type = Predefined.ParseType("Bool");
+            type.Should().NotBeNull();
+            type.Should().Be(Predefined.Bool);
+        }
+
+        [Test]
+        public void ParseType_StaticField_ShouldNotBeNull()
+        {
+            var type = Predefined.ParseType("bit");
+            type.Should().NotBeNull();
+            type.Should().Be(Predefined.Bit);
+            type.Name.Should().Be("BOOL");
+        }
+
+        [Test]
+        public void ParseType_AssemblyType_ShouldNotBeNull()
+        {
+            var type = Predefined.ParseType("MyPredefined");
+            type.Should().NotBeNull();
+            type.Name.Should().Be("MyPredefined");
+            type.Family.Should().Be(DataTypeFamily.None);
+        }
+
+        [Test]
+        public void New_MyPredefined_ShouldNotBeNull()
+        {
+            var type = new MyPredefined();
+            type.Should().NotBeNull();
+        }
+
+        private class MyPredefined : Predefined
+        {
+            public MyPredefined() :
+                base(nameof(MyPredefined), DataTypeFamily.None)
+            {
+            }
+        }
+        
+        [Test]
+        public void New_MyNullNamePredefined_ShouldThrowArgumentException()
+        {
+            FluentActions.Invoking(() => new MyNullNamePredefined()).Should().Throw<ArgumentException>();
+        }
+        
+        private class MyNullNamePredefined : Predefined
+        {
+            public MyNullNamePredefined() :
+                base(null, DataTypeFamily.None)
+            {
+            }
+        }
+
+        [Test]
+        public void Equals_TypeOverloadEquals_ShouldBeTrue()
+        {
+            var type1 = Predefined.Bool;
+            var type2 = Predefined.Bool;
+
+            var result = type1.Equals(type2);
 
             result.Should().BeTrue();
         }
 
         [Test]
-        public void SupportsRadix_CounterValidRadix_ShouldBeTrue()
+        public void Equals_TypeOverloadNotEquals_ShouldBeFalse()
         {
-            var type = Predefined.Counter;
+            var type1 = Predefined.Bool;
+            var type2 = Predefined.Int;
 
-            var result = type.SupportsRadix(Radix.Null);
+            var result = type1.Equals(type2);
+
+            result.Should().BeFalse();
+        }
+        
+        [Test]
+        public void Equals_TypeOverloadNull_ShouldBeFalse()
+        {
+            var type = Predefined.Bool;
+
+            var result = type.Equals(null);
+
+            result.Should().BeFalse();
+        }
+        
+        [Test]
+        public void Equals_ObjectOverloadEquals_ShouldBeTrue()
+        {
+            var type1 = Predefined.Bool;
+            var type2 = (object) Predefined.Bool;
+
+            var result = type1.Equals(type2);
 
             result.Should().BeTrue();
+        }
+        
+        [Test]
+        public void Equals_ObjectOverloadSameReference_ShouldBeTrue()
+        {
+            var type1 = Predefined.Bool;
+            var type2 = (object) type1;
+
+            var result = type1.Equals(type2);
+
+            result.Should().BeTrue();
+        }
+        
+        [Test]
+        public void Equals_ObjectOverloadNull_ShouldBeFalse()
+        {
+            var type = Predefined.Bool;
+
+            var result = type.Equals((object) null);
+
+            result.Should().BeFalse();
+        }
+
+        [Test]
+        public void Equals_TypeOverloadSameReference_ShouldBeTrue()
+        {
+            var type1 = Predefined.Bool;
+
+            var result = type1.Equals(type1);
+
+            result.Should().BeTrue();
+        }
+
+        [Test]
+        public void GetHashCode_WhenCalled_ShouldNotBeZero()
+        {
+            var type = Predefined.Undefined;
+
+            var hash = type.GetHashCode();
+
+            hash.Should().NotBe(0);
+        }
+
+        [Test]
+        public void Equals_OperatorAreEqual_ShouldBeTrue()
+        {
+            var type1 = Predefined.Undefined;
+            var type2 = Predefined.Undefined;
+
+            var result = type1 == type2;
+
+            result.Should().BeTrue();
+        }
+
+        [Test]
+        public void NotEquals_OperatorAreEqual_ShouldBeFalse()
+        {
+            var type1 = Predefined.Undefined;
+            var type2 = Predefined.Undefined;
+
+            var result = type1 != type2;
+
+            result.Should().BeFalse();
         }
     }
 }

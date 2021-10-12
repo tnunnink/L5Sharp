@@ -4,6 +4,7 @@ using System.Runtime.CompilerServices;
 using System.Xml.Linq;
 using L5Sharp.Abstractions;
 using L5Sharp.Core;
+using L5Sharp.Enums;
 using L5Sharp.Extensions;
 using L5Sharp.Utilities;
 
@@ -11,35 +12,38 @@ using L5Sharp.Utilities;
 
 namespace L5Sharp.Repositories
 {
-    internal class DataTypeRepository : Repository<DataType>, IDataTypeRepository
+    internal class DataTypeRepository : Repository<IDataType>, IDataTypeRepository
     {
         public DataTypeRepository(XElement context) : base(context)
         {
         }
 
-        public override void Add(DataType component)
+        public override void Add(IDataType component)
         {
-            if (Context.Contains<DataType>(component.Name))
-                Throw.ComponentNameCollisionException(component.Name, typeof(DataType));
+            if (Context.Contains<IDataType>(component.Name))
+                Throw.ComponentNameCollisionException(component.Name, typeof(IDataType));
 
             var element = component.Serialize();
-            var dependents = component.GetDependentUserTypes().Select(t => t.Serialize());
+            
+            var dependents = component.GetDependentTypes()
+                .Where(t => t.Class == DataTypeClass.User)
+                .Select(t => t.Serialize());
 
             Context.Add(element);
             Context.Add(dependents);
         }
 
-        public override void Remove(DataType component)
+        public override void Remove(IDataType component)
         {
             throw new System.NotImplementedException();
         }
 
-        public override void Update(DataType component)
+        public override void Update(IDataType component)
         {
             throw new System.NotImplementedException();
         }
 
-        public IEnumerable<DataType> WithMemberType(IDataType dataType)
+        public IEnumerable<IDataType> WithMemberType(IDataType dataType)
         {
             return Context.Descendants(L5XNames.Components.Member)
                 .Where(x => x.GetDataTypeName() == dataType.Name)

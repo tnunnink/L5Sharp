@@ -49,6 +49,8 @@ namespace L5Sharp.Core.Tests
             type.Description.Should().Be(description);
             type.IsAtomic.Should().BeFalse();
             type.Members.Should().BeEmpty();
+            type.DefaultValue.Should().BeNull();
+            type.DataFormat.Should().Be(TagDataFormat.Decorated);
         }
         
         [Test]
@@ -229,7 +231,7 @@ namespace L5Sharp.Core.Tests
             var type = new DataType("Test");
 
             FluentActions.Invoking(() => type.AddMember(null, Predefined.Dint)).Should()
-                .Throw<ArgumentNullException>();
+                .Throw<ArgumentException>();
         }
 
         [Test]
@@ -265,7 +267,7 @@ namespace L5Sharp.Core.Tests
             member.Name.Should().Be("Member");
             member.DataType.Should().Be(Predefined.Dint);
             member.Dimension.Should().Be(0);
-            member.Description.Should().Be(string.Empty);
+            member.Description.Should().BeNull();
             member.Radix.Should().Be(Radix.Decimal);
             member.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);
         }

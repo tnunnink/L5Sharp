@@ -74,7 +74,7 @@ namespace L5Sharp.Serialization.Tests
 
         [Test]
         [UseReporter(typeof(DiffReporter))]
-        public void Serialise_WhenCalled_ShouldHaveApprovedOutput()
+        public void Serialize_WhenCalled_ShouldHaveApprovedOutput()
         {
             var type = new DataType("TypeName", "Description of the type");
             
@@ -85,7 +85,7 @@ namespace L5Sharp.Serialization.Tests
         
         [Test]
         [UseReporter(typeof(DiffReporter))]
-        public void Serialise_WithMembers_ShouldHaveApprovedOutput()
+        public void Serialize_WithMembers_ShouldHaveApprovedOutput()
         {
             var type = new DataType("TypeName", "Description of the type");
             type.AddMember("Member_Bool", Predefined.Bool);

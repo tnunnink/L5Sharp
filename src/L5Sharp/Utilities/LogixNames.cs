@@ -18,6 +18,7 @@
         
         public static class Components
         {
+            public const string Controller = nameof(Controller);
             public const string DataType = nameof(DataType);
             public const string Member = nameof(Member);
             public const string Module = nameof(Module);

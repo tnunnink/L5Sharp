@@ -75,6 +75,16 @@ namespace L5Sharp.Core
             return value is string;
         }
 
+        public IMember GetMember(string name)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<IDataType> GetDependentTypes()
+        {
+            throw new NotImplementedException();
+        }
+
         public void UpdateLength(ushort length)
         {
             if (length <= 0)
@@ -84,6 +94,11 @@ namespace L5Sharp.Core
             
             _members.Remove(MemberNames[1]);
             _members.Add(data.Name, data);
+        }
+
+        public override string ToString()
+        {
+            return Name;
         }
     }
 }

@@ -8,6 +8,5 @@ namespace L5Sharp.Abstractions
         ushort Dimension { get; }
         Radix Radix { get; }
         ExternalAccess ExternalAccess { get; }
-        string Description { get; }
     }
 }

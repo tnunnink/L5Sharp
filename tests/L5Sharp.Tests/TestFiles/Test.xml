@@ -1,97 +1,179 @@
 ﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<RSLogix5000Content SchemaRevision="1.0" SoftwareRevision="32.01" TargetName="IOGeneratorTest" TargetType="Controller"
-                    ContainsContext="false" Owner="Administrator, EN Engineering" ExportDate="Thu Sep 30 11:47:11 2021"
+<RSLogix5000Content SchemaRevision="1.0" SoftwareRevision="32.02" TargetName="TestController" TargetType="Controller"
+                    ContainsContext="false" Owner="tnunnink, EN Engineering" ExportDate="Fri Oct 08 13:18:24 2021"
                     ExportOptions="NoRawData L5KData DecoratedData ForceProtectedEncoding AllProjDocTrans">
-    <Controller Use="Target" Name="IOGeneratorTest" ProcessorType="1756-L83E" MajorRev="32" MinorRev="11"
-                ProjectCreationDate="Mon Sep 20 16:43:32 2021" LastModifiedDate="Thu Sep 30 11:47:00 2021"
+    <Controller Use="Target" Name="TestController" ProcessorType="1756-L83E" MajorRev="32" MinorRev="11"
+                ProjectCreationDate="Mon Sep 27 16:23:27 2021" LastModifiedDate="Fri Oct 08 13:18:15 2021"
                 SFCExecutionControl="CurrentActive" SFCRestartPosition="MostRecent" SFCLastScan="DontScan"
                 ProjectSN="16#0000_0000"
                 MatchProjectToController="false" CanUseRPIFromProducer="false" InhibitAutomaticFirmwareUpdate="0"
                 PassThroughConfiguration="EnabledWithAppend" DownloadProjectDocumentationAndExtendedProperties="true"
                 DownloadProjectCustomProperties="true" ReportMinorOverflow="false">
         <Description>
-            <![CDATA[Test controller for adding IO and running io list generator application]]>
+            <![CDATA[This is a test project]]>
         </Description>
         <RedundancyInfo Enabled="false" KeepTestEditsOnSwitchOver="false"/>
         <Security Code="0" ChangesToDetect="16#ffff_ffff_ffff_ffff"/>
         <SafetyInfo/>
         <DataTypes>
-            <DataType Name="Atomics" Family="NoFamily" Class="User">
+            <DataType Name="AlarmType" Family="NoFamily" Class="User">
                 <Description>
-                    <![CDATA[test]]>
+                    <![CDATA[This is a test alarm type]]>
                 </Description>
                 <Members>
-                    <Member Name="ZZZZZZZZZZAtomics0" DataType="SINT" Dimension="0" Radix="Decimal" Hidden="true"
-                            ExternalAccess="Read/Write"/>
-                    <Member Name="BOOL" DataType="BIT" Dimension="0" Radix="Decimal" Hidden="false"
-                            Target="ZZZZZZZZZZAtomics0" BitNumber="0" ExternalAccess="Read/Write">
-                        <Description>
-                            <![CDATA[test bool]]>
-                        </Description>
-                    </Member>
-                    <Member Name="INT" DataType="INT" Dimension="0" Radix="Decimal" Hidden="false"
-                            ExternalAccess="Read/Write"/>
-                    <Member Name="SINT" DataType="SINT" Dimension="0" Radix="Decimal" Hidden="false"
-                            ExternalAccess="Read/Write"/>
-                    <Member Name="DINT" DataType="DINT" Dimension="0" Radix="ASCII" Hidden="false"
-                            ExternalAccess="Read/Write"/>
-                    <Member Name="LINT" DataType="LINT" Dimension="0" Radix="Decimal" Hidden="false"
-                            ExternalAccess="Read/Write"/>
-                    <Member Name="REAL" DataType="REAL" Dimension="0" Radix="Float" Hidden="false"
-                            ExternalAccess="Read/Write"/>
-                    <Member Name="INTArray" DataType="INT" Dimension="4" Radix="Decimal" Hidden="false"
+                    <Member Name="DigitalMember" DataType="CAM" Dimension="0" Radix="NullType" Hidden="false"
                             ExternalAccess="Read/Write">
                         <Description>
-                            <![CDATA[test array]]>
+                            <![CDATA[Test digital member]]>
                         </Description>
                     </Member>
-                    <Member Name="Test" DataType="TestStringType" Dimension="0" Radix="NullType" Hidden="false"
+                </Members>
+            </DataType>
+            <DataType Name="ArrayType" Family="NoFamily" Class="User">
+                <Description>
+                    <![CDATA[This is a test type]]>
+                </Description>
+                <Members>
+                    <Member Name="BoolArray" DataType="BOOL" Dimension="32" Radix="Decimal" Hidden="false"
+                            ExternalAccess="Read/Write">
+                        <Description>
+                            <![CDATA[Test boolean array]]>
+                        </Description>
+                    </Member>
+                    <Member Name="SintArray" DataType="SINT" Dimension="6" Radix="Decimal" Hidden="false"
+                            ExternalAccess="Read/Write">
+                        <Description>
+                            <![CDATA[Test Sint Array]]>
+                        </Description>
+                    </Member>
+                    <Member Name="IntArray" DataType="INT" Dimension="8" Radix="Decimal" Hidden="false"
+                            ExternalAccess="Read/Write">
+                        <Description>
+                            <![CDATA[Test Int Array]]>
+                        </Description>
+                    </Member>
+                    <Member Name="DintArray" DataType="DINT" Dimension="3" Radix="Decimal" Hidden="false"
+                            ExternalAccess="Read/Write">
+                        <Description>
+                            <![CDATA[Test 
+Dint Array]]>
+                        </Description>
+                    </Member>
+                    <Member Name="LintArray" DataType="LINT" Dimension="2" Radix="ASCII" Hidden="false"
+                            ExternalAccess="Read/Write">
+                        <Description>
+                            <![CDATA[Test Lint Array]]>
+                        </Description>
+                    </Member>
+                </Members>
+            </DataType>
+            <DataType Name="BoolTest" Family="NoFamily" Class="User">
+                <Description>
+                    <![CDATA[This is a test]]>
+                </Description>
+                <Members>
+                    <Member Name="Member01" DataType="BOOL" Dimension="0" Radix="Decimal" Hidden="false"
                             ExternalAccess="Read/Write"/>
-                    <Member Name="ZZZZZZZZZZAtomics9" DataType="SINT" Dimension="0" Radix="Decimal" Hidden="true"
+                    <Member Name="Member02" DataType="BOOL" Dimension="0" Radix="Decimal" Hidden="false"
                             ExternalAccess="Read/Write"/>
-                    <Member Name="BOOL2" DataType="BIT" Dimension="0" Radix="Decimal" Hidden="false"
-                            Target="ZZZZZZZZZZAtomics9" BitNumber="0" ExternalAccess="Read/Write"/>
-                    <Member Name="String" DataType="STRING" Dimension="0" Radix="NullType" Hidden="false"
+                    <Member Name="Member04" DataType="BOOL" Dimension="0" Radix="Decimal" Hidden="false"
+                            ExternalAccess="Read/Write"/>
+                    <Member Name="Member05" DataType="BOOL" Dimension="0" Radix="Decimal" Hidden="false"
                             ExternalAccess="Read/Write"/>
                 </Members>
             </DataType>
-            <DataType Name="teata" Family="StringFamily" Class="User">
+            <DataType Name="ComplexType" Family="NoFamily" Class="User">
+                <Description>
+                    <![CDATA[Test data type with more complex members]]>
+                </Description>
+                <Members>
+                    <Member Name="SimpleMember" DataType="SimpleTypes" Dimension="0" Radix="NullType" Hidden="false"
+                            ExternalAccess="Read/Write">
+                        <Description>
+                            <![CDATA[User defined complex type]]>
+                        </Description>
+                    </Member>
+                    <Member Name="CounterMember" DataType="COUNTER" Dimension="0" Radix="NullType" Hidden="false"
+                            ExternalAccess="Read/Write">
+                        <Description>
+                            <![CDATA[Test counter member]]>
+                        </Description>
+                    </Member>
+                    <Member Name="TimeMember" DataType="TIMER" Dimension="0" Radix="NullType" Hidden="false"
+                            ExternalAccess="Read/Write">
+                        <Description>
+                            <![CDATA[Test Timer member]]>
+                        </Description>
+                    </Member>
+                    <Member Name="AlarmMember" DataType="ALARM" Dimension="0" Radix="NullType" Hidden="false"
+                            ExternalAccess="Read/Write">
+                        <Description>
+                            <![CDATA[Test Analog Alarm]]>
+                        </Description>
+                    </Member>
+                </Members>
+            </DataType>
+            <DataType Name="InvalidType" Family="NoFamily" Class="User">
+                <Description>
+                    <![CDATA[Testing type with invalid members]]>
+                </Description>
+                <Members>
+                    <Member Name="Invalid01" DataType="NULL" Dimension="0" Radix="NullType" Hidden="false"
+                            ExternalAccess="Read/Write">
+                        <Description>
+                            <![CDATA[Test]]>
+                        </Description>
+                    </Member>
+                </Members>
+            </DataType>
+            <DataType Name="MyStringType" Family="StringFamily" Class="User">
+                <Description>
+                    <![CDATA[This is a test string type]]>
+                </Description>
                 <Members>
                     <Member Name="LEN" DataType="DINT" Dimension="0" Radix="Decimal" Hidden="false"
                             ExternalAccess="Read/Write"/>
-                    <Member Name="DATA" DataType="SINT" Dimension="22" Radix="ASCII" Hidden="false"
+                    <Member Name="DATA" DataType="SINT" Dimension="100" Radix="ASCII" Hidden="false"
                             ExternalAccess="Read/Write"/>
                 </Members>
             </DataType>
-            <DataType Name="TestStringType" Family="StringFamily" Class="User">
-                <Members>
-                    <Member Name="LEN" DataType="DINT" Dimension="0" Radix="Decimal" Hidden="false"
-                            ExternalAccess="Read/Write"/>
-                    <Member Name="DATA" DataType="SINT" Dimension="45" Radix="ASCII" Hidden="false"
-                            ExternalAccess="Read/Write"/>
-                </Members>
-            </DataType>
-            <DataType Name="TestType" Family="NoFamily" Class="User">
+            <DataType Name="SimpleTypes" Family="NoFamily" Class="User">
                 <Description>
-                    <![CDATA[sdfj;aljq3p0!@#$%!23458-11-9085-109;laskjdfg;a///\][\[\a]]>
+                    <![CDATA[This is a test data type that contains simple atomic types]]>
                 </Description>
                 <Members>
-                    <Member Name="asd1231" DataType="DINT" Dimension="0" Radix="Decimal" Hidden="false"
-                            ExternalAccess="Read/Write">
+                    <Member Name="ZZZZZZZZZZSimpleType0" DataType="SINT" Dimension="0" Radix="Decimal" Hidden="true"
+                            ExternalAccess="Read/Write"/>
+                    <Member Name="BoolMember" DataType="BIT" Dimension="0" Radix="Decimal" Hidden="false"
+                            Target="ZZZZZZZZZZSimpleType0" BitNumber="0" ExternalAccess="Read/Write">
                         <Description>
-                            <![CDATA[asdfasdf]]>
+                            <![CDATA[Test Boolean]]>
                         </Description>
                     </Member>
-                    <Member Name="ZZZZZZZZZZTestType1" DataType="SINT" Dimension="0" Radix="Decimal" Hidden="true"
-                            ExternalAccess="Read/Write"/>
-                    <Member Name="test" DataType="BIT" Dimension="0" Radix="Decimal" Hidden="false"
-                            Target="ZZZZZZZZZZTestType1" BitNumber="0" ExternalAccess="Read/Write"/>
-                    <Member Name="test1" DataType="DINT" Dimension="0" Radix="Decimal" Hidden="false"
-                            ExternalAccess="Read/Write"/>
-                    <Member Name="w0_98" DataType="REAL" Dimension="0" Radix="Float" Hidden="false"
-                            ExternalAccess="Read/Write"/>
-                    <Member Name="AtomicsArray" DataType="Atomics" Dimension="3" Radix="NullType" Hidden="false"
-                            ExternalAccess="Read/Write"/>
+                    <Member Name="SintMember" DataType="SINT" Dimension="0" Radix="Decimal" Hidden="false"
+                            ExternalAccess="Read/Write">
+                        <Description>
+                            <![CDATA[Test Sint]]>
+                        </Description>
+                    </Member>
+                    <Member Name="IntMember" DataType="INT" Dimension="0" Radix="Decimal" Hidden="false"
+                            ExternalAccess="Read/Write">
+                        <Description>
+                            <![CDATA[Test Int]]>
+                        </Description>
+                    </Member>
+                    <Member Name="DintMember" DataType="DINT" Dimension="0" Radix="Decimal" Hidden="false"
+                            ExternalAccess="Read/Write">
+                        <Description>
+                            <![CDATA[Test Dint]]>
+                        </Description>
+                    </Member>
+                    <Member Name="LintMember" DataType="LINT" Dimension="0" Radix="Decimal" Hidden="false"
+                            ExternalAccess="Read/Write">
+                        <Description>
+                            <![CDATA[Test Lint]]>
+                        </Description>
+                    </Member>
                 </Members>
             </DataType>
         </DataTypes>
@@ -112,476 +194,7 @@
         </Modules>
         <AddOnInstructionDefinitions/>
         <Tags>
-            <Tag Name="array" TagType="Base" DataType="DINT" Dimensions="1 1" Radix="Decimal" Constant="false"
-                 ExternalAccess="None">
-                <Data Format="L5K">
-                    <![CDATA[[0]]]>
-                </Data>
-                <Data Format="Decorated">
-                    <Array DataType="DINT" Dimensions="1,1" Radix="Decimal">
-                        <Element Index="[0,0]" Value="0"/>
-                    </Array>
-                </Data>
-            </Tag>
-            <Tag Name="DINT" TagType="Base" DataType="Atomics" Constant="false" ExternalAccess="None">
-                <Comments>
-                    <Comment Operand=".BOOL">
-                        <![CDATA[This is a test comment]]>
-                    </Comment>
-                    <Comment Operand=".INTARRAY">
-                        <![CDATA[test test array with a new comment]]>
-                    </Comment>
-                </Comments>
-                <Data Format="L5K">
-                    <![CDATA[[0,1104,20,532480,0,2.00000000e+007,[4,0,0,0],[14,'This is a test$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
-		],0,[20,'This is another test$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
-		]]]]>
-                </Data>
-                <Data Format="Decorated">
-                    <Structure DataType="Atomics">
-                        <DataValueMember Name="BOOL" DataType="BOOL" Value="0"/>
-                        <DataValueMember Name="INT" DataType="INT" Radix="Decimal" Value="1104"/>
-                        <DataValueMember Name="SINT" DataType="SINT" Radix="Decimal" Value="20"/>
-                        <DataValueMember Name="DINT" DataType="DINT" Radix="ASCII" Value="'$00$08 $00'"/>
-                        <DataValueMember Name="LINT" DataType="LINT" Radix="Decimal" Value="0"/>
-                        <DataValueMember Name="REAL" DataType="REAL" Radix="Float" Value="20000000.0"/>
-                        <ArrayMember Name="INTArray" DataType="INT" Dimensions="4" Radix="Decimal">
-                            <Element Index="[0]" Value="4"/>
-                            <Element Index="[1]" Value="0"/>
-                            <Element Index="[2]" Value="0"/>
-                            <Element Index="[3]" Value="0"/>
-                        </ArrayMember>
-                        <StructureMember Name="Test" DataType="TestStringType">
-                            <DataValueMember Name="LEN" DataType="DINT" Radix="Decimal" Value="14"/>
-                            <DataValueMember Name="DATA" DataType="TestStringType" Radix="ASCII">
-                                <![CDATA['This is a test']]>
-                            </DataValueMember>
-                        </StructureMember>
-                        <DataValueMember Name="BOOL2" DataType="BOOL" Value="0"/>
-                        <StructureMember Name="String" DataType="STRING">
-                            <DataValueMember Name="LEN" DataType="DINT" Radix="Decimal" Value="20"/>
-                            <DataValueMember Name="DATA" DataType="STRING" Radix="ASCII">
-                                <![CDATA['This is another test']]>
-                            </DataValueMember>
-                        </StructureMember>
-                    </Structure>
-                </Data>
-            </Tag>
-            <Tag Name="Fake" TagType="Base" DataType="TestType" Dimensions="2" Constant="false" ExternalAccess="None">
-                <Description>
-                    <![CDATA[I need to update this]]>
-                </Description>
-                <Comments>
-                    <Comment Operand="[0]">
-                        <![CDATA[This is the structure member]]>
-                    </Comment>
-                    <Comment Operand="[0].ASD1231">
-                        <![CDATA[This is a data value member]]>
-                    </Comment>
-                </Comments>
-                <Data Format="L5K">
-                    <![CDATA[[[0,0,0,0.00000000e+000,[[0,0,0,0,0,0.00000000e+000,[0,0,0,0],[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
-		],0,[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
-		]],[0,0,0,0,0,0.00000000e+000,[0,0,0,0],[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
-		],0,[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
-		]],[0,0,0,0,0,0.00000000e+000,[0,0,0,0],[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
-		],0,[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
-		]]]],[0,0,0,0.00000000e+000,[[0,0,0,0,0,0.00000000e+000,[0,0,0,0],[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
-		],0,[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
-		]],[0,0,0,0,0,0.00000000e+000,[0,0,0,0],[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
-		],0,[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
-		]],[0,0,0,0,0,0.00000000e+000,[0,0,0,0],[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
-		],0,[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
-		]]]]]]]>
-                </Data>
-                <Data Format="Decorated">
-                    <Array DataType="TestType" Dimensions="2">
-                        <Element Index="[0]">
-                            <Structure DataType="TestType">
-                                <DataValueMember Name="asd1231" DataType="DINT" Radix="Decimal" Value="0"/>
-                                <DataValueMember Name="test" DataType="BOOL" Value="0"/>
-                                <DataValueMember Name="test1" DataType="DINT" Radix="Decimal" Value="0"/>
-                                <DataValueMember Name="w0_98" DataType="REAL" Radix="Float" Value="0.0"/>
-                                <ArrayMember Name="AtomicsArray" DataType="Atomics" Dimensions="3">
-                                    <Element Index="[0]">
-                                        <Structure DataType="Atomics">
-                                            <DataValueMember Name="BOOL" DataType="BOOL" Value="0"/>
-                                            <DataValueMember Name="INT" DataType="INT" Radix="Decimal" Value="0"/>
-                                            <DataValueMember Name="SINT" DataType="SINT" Radix="Decimal" Value="0"/>
-                                            <DataValueMember Name="DINT" DataType="DINT" Radix="ASCII"
-                                                             Value="'$00$00$00$00'"/>
-                                            <DataValueMember Name="LINT" DataType="LINT" Radix="Decimal" Value="0"/>
-                                            <DataValueMember Name="REAL" DataType="REAL" Radix="Float" Value="0.0"/>
-                                            <ArrayMember Name="INTArray" DataType="INT" Dimensions="4" Radix="Decimal">
-                                                <Element Index="[0]" Value="0"/>
-                                                <Element Index="[1]" Value="0"/>
-                                                <Element Index="[2]" Value="0"/>
-                                                <Element Index="[3]" Value="0"/>
-                                            </ArrayMember>
-                                            <StructureMember Name="Test" DataType="TestStringType">
-                                                <DataValueMember Name="LEN" DataType="DINT" Radix="Decimal" Value="0"/>
-                                                <DataValueMember Name="DATA" DataType="TestStringType" Radix="ASCII">
-                                                    <![CDATA[]]>
-                                                </DataValueMember>
-                                            </StructureMember>
-                                            <DataValueMember Name="BOOL2" DataType="BOOL" Value="0"/>
-                                            <StructureMember Name="String" DataType="STRING">
-                                                <DataValueMember Name="LEN" DataType="DINT" Radix="Decimal" Value="0"/>
-                                                <DataValueMember Name="DATA" DataType="STRING" Radix="ASCII">
-                                                    <![CDATA[]]>
-                                                </DataValueMember>
-                                            </StructureMember>
-                                        </Structure>
-                                    </Element>
-                                    <Element Index="[1]">
-                                        <Structure DataType="Atomics">
-                                            <DataValueMember Name="BOOL" DataType="BOOL" Value="0"/>
-                                            <DataValueMember Name="INT" DataType="INT" Radix="Decimal" Value="0"/>
-                                            <DataValueMember Name="SINT" DataType="SINT" Radix="Decimal" Value="0"/>
-                                            <DataValueMember Name="DINT" DataType="DINT" Radix="ASCII"
-                                                             Value="'$00$00$00$00'"/>
-                                            <DataValueMember Name="LINT" DataType="LINT" Radix="Decimal" Value="0"/>
-                                            <DataValueMember Name="REAL" DataType="REAL" Radix="Float" Value="0.0"/>
-                                            <ArrayMember Name="INTArray" DataType="INT" Dimensions="4" Radix="Decimal">
-                                                <Element Index="[0]" Value="0"/>
-                                                <Element Index="[1]" Value="0"/>
-                                                <Element Index="[2]" Value="0"/>
-                                                <Element Index="[3]" Value="0"/>
-                                            </ArrayMember>
-                                            <StructureMember Name="Test" DataType="TestStringType">
-                                                <DataValueMember Name="LEN" DataType="DINT" Radix="Decimal" Value="0"/>
-                                                <DataValueMember Name="DATA" DataType="TestStringType" Radix="ASCII">
-                                                    <![CDATA[]]>
-                                                </DataValueMember>
-                                            </StructureMember>
-                                            <DataValueMember Name="BOOL2" DataType="BOOL" Value="0"/>
-                                            <StructureMember Name="String" DataType="STRING">
-                                                <DataValueMember Name="LEN" DataType="DINT" Radix="Decimal" Value="0"/>
-                                                <DataValueMember Name="DATA" DataType="STRING" Radix="ASCII">
-                                                    <![CDATA[]]>
-                                                </DataValueMember>
-                                            </StructureMember>
-                                        </Structure>
-                                    </Element>
-                                    <Element Index="[2]">
-                                        <Structure DataType="Atomics">
-                                            <DataValueMember Name="BOOL" DataType="BOOL" Value="0"/>
-                                            <DataValueMember Name="INT" DataType="INT" Radix="Decimal" Value="0"/>
-                                            <DataValueMember Name="SINT" DataType="SINT" Radix="Decimal" Value="0"/>
-                                            <DataValueMember Name="DINT" DataType="DINT" Radix="ASCII"
-                                                             Value="'$00$00$00$00'"/>
-                                            <DataValueMember Name="LINT" DataType="LINT" Radix="Decimal" Value="0"/>
-                                            <DataValueMember Name="REAL" DataType="REAL" Radix="Float" Value="0.0"/>
-                                            <ArrayMember Name="INTArray" DataType="INT" Dimensions="4" Radix="Decimal">
-                                                <Element Index="[0]" Value="0"/>
-                                                <Element Index="[1]" Value="0"/>
-                                                <Element Index="[2]" Value="0"/>
-                                                <Element Index="[3]" Value="0"/>
-                                            </ArrayMember>
-                                            <StructureMember Name="Test" DataType="TestStringType">
-                                                <DataValueMember Name="LEN" DataType="DINT" Radix="Decimal" Value="0"/>
-                                                <DataValueMember Name="DATA" DataType="TestStringType" Radix="ASCII">
-                                                    <![CDATA[]]>
-                                                </DataValueMember>
-                                            </StructureMember>
-                                            <DataValueMember Name="BOOL2" DataType="BOOL" Value="0"/>
-                                            <StructureMember Name="String" DataType="STRING">
-                                                <DataValueMember Name="LEN" DataType="DINT" Radix="Decimal" Value="0"/>
-                                                <DataValueMember Name="DATA" DataType="STRING" Radix="ASCII">
-                                                    <![CDATA[]]>
-                                                </DataValueMember>
-                                            </StructureMember>
-                                        </Structure>
-                                    </Element>
-                                </ArrayMember>
-                            </Structure>
-                        </Element>
-                        <Element Index="[1]">
-                            <Structure DataType="TestType">
-                                <DataValueMember Name="asd1231" DataType="DINT" Radix="Decimal" Value="0"/>
-                                <DataValueMember Name="test" DataType="BOOL" Value="0"/>
-                                <DataValueMember Name="test1" DataType="DINT" Radix="Decimal" Value="0"/>
-                                <DataValueMember Name="w0_98" DataType="REAL" Radix="Float" Value="0.0"/>
-                                <ArrayMember Name="AtomicsArray" DataType="Atomics" Dimensions="3">
-                                    <Element Index="[0]">
-                                        <Structure DataType="Atomics">
-                                            <DataValueMember Name="BOOL" DataType="BOOL" Value="0"/>
-                                            <DataValueMember Name="INT" DataType="INT" Radix="Decimal" Value="0"/>
-                                            <DataValueMember Name="SINT" DataType="SINT" Radix="Decimal" Value="0"/>
-                                            <DataValueMember Name="DINT" DataType="DINT" Radix="ASCII"
-                                                             Value="'$00$00$00$00'"/>
-                                            <DataValueMember Name="LINT" DataType="LINT" Radix="Decimal" Value="0"/>
-                                            <DataValueMember Name="REAL" DataType="REAL" Radix="Float" Value="0.0"/>
-                                            <ArrayMember Name="INTArray" DataType="INT" Dimensions="4" Radix="Decimal">
-                                                <Element Index="[0]" Value="0"/>
-                                                <Element Index="[1]" Value="0"/>
-                                                <Element Index="[2]" Value="0"/>
-                                                <Element Index="[3]" Value="0"/>
-                                            </ArrayMember>
-                                            <StructureMember Name="Test" DataType="TestStringType">
-                                                <DataValueMember Name="LEN" DataType="DINT" Radix="Decimal" Value="0"/>
-                                                <DataValueMember Name="DATA" DataType="TestStringType" Radix="ASCII">
-                                                    <![CDATA[]]>
-                                                </DataValueMember>
-                                            </StructureMember>
-                                            <DataValueMember Name="BOOL2" DataType="BOOL" Value="0"/>
-                                            <StructureMember Name="String" DataType="STRING">
-                                                <DataValueMember Name="LEN" DataType="DINT" Radix="Decimal" Value="0"/>
-                                                <DataValueMember Name="DATA" DataType="STRING" Radix="ASCII">
-                                                    <![CDATA[]]>
-                                                </DataValueMember>
-                                            </StructureMember>
-                                        </Structure>
-                                    </Element>
-                                    <Element Index="[1]">
-                                        <Structure DataType="Atomics">
-                                            <DataValueMember Name="BOOL" DataType="BOOL" Value="0"/>
-                                            <DataValueMember Name="INT" DataType="INT" Radix="Decimal" Value="0"/>
-                                            <DataValueMember Name="SINT" DataType="SINT" Radix="Decimal" Value="0"/>
-                                            <DataValueMember Name="DINT" DataType="DINT" Radix="ASCII"
-                                                             Value="'$00$00$00$00'"/>
-                                            <DataValueMember Name="LINT" DataType="LINT" Radix="Decimal" Value="0"/>
-                                            <DataValueMember Name="REAL" DataType="REAL" Radix="Float" Value="0.0"/>
-                                            <ArrayMember Name="INTArray" DataType="INT" Dimensions="4" Radix="Decimal">
-                                                <Element Index="[0]" Value="0"/>
-                                                <Element Index="[1]" Value="0"/>
-                                                <Element Index="[2]" Value="0"/>
-                                                <Element Index="[3]" Value="0"/>
-                                            </ArrayMember>
-                                            <StructureMember Name="Test" DataType="TestStringType">
-                                                <DataValueMember Name="LEN" DataType="DINT" Radix="Decimal" Value="0"/>
-                                                <DataValueMember Name="DATA" DataType="TestStringType" Radix="ASCII">
-                                                    <![CDATA[]]>
-                                                </DataValueMember>
-                                            </StructureMember>
-                                            <DataValueMember Name="BOOL2" DataType="BOOL" Value="0"/>
-                                            <StructureMember Name="String" DataType="STRING">
-                                                <DataValueMember Name="LEN" DataType="DINT" Radix="Decimal" Value="0"/>
-                                                <DataValueMember Name="DATA" DataType="STRING" Radix="ASCII">
-                                                    <![CDATA[]]>
-                                                </DataValueMember>
-                                            </StructureMember>
-                                        </Structure>
-                                    </Element>
-                                    <Element Index="[2]">
-                                        <Structure DataType="Atomics">
-                                            <DataValueMember Name="BOOL" DataType="BOOL" Value="0"/>
-                                            <DataValueMember Name="INT" DataType="INT" Radix="Decimal" Value="0"/>
-                                            <DataValueMember Name="SINT" DataType="SINT" Radix="Decimal" Value="0"/>
-                                            <DataValueMember Name="DINT" DataType="DINT" Radix="ASCII"
-                                                             Value="'$00$00$00$00'"/>
-                                            <DataValueMember Name="LINT" DataType="LINT" Radix="Decimal" Value="0"/>
-                                            <DataValueMember Name="REAL" DataType="REAL" Radix="Float" Value="0.0"/>
-                                            <ArrayMember Name="INTArray" DataType="INT" Dimensions="4" Radix="Decimal">
-                                                <Element Index="[0]" Value="0"/>
-                                                <Element Index="[1]" Value="0"/>
-                                                <Element Index="[2]" Value="0"/>
-                                                <Element Index="[3]" Value="0"/>
-                                            </ArrayMember>
-                                            <StructureMember Name="Test" DataType="TestStringType">
-                                                <DataValueMember Name="LEN" DataType="DINT" Radix="Decimal" Value="0"/>
-                                                <DataValueMember Name="DATA" DataType="TestStringType" Radix="ASCII">
-                                                    <![CDATA[]]>
-                                                </DataValueMember>
-                                            </StructureMember>
-                                            <DataValueMember Name="BOOL2" DataType="BOOL" Value="0"/>
-                                            <StructureMember Name="String" DataType="STRING">
-                                                <DataValueMember Name="LEN" DataType="DINT" Radix="Decimal" Value="0"/>
-                                                <DataValueMember Name="DATA" DataType="STRING" Radix="ASCII">
-                                                    <![CDATA[]]>
-                                                </DataValueMember>
-                                            </StructureMember>
-                                        </Structure>
-                                    </Element>
-                                </ArrayMember>
-                            </Structure>
-                        </Element>
-                    </Array>
-                </Data>
-            </Tag>
-            <Tag Name="INT" TagType="Base" DataType="INT" Radix="Decimal" Constant="false" ExternalAccess="None">
-                <Data Format="L5K">
-                    <![CDATA[0]]>
-                </Data>
-                <Data Format="Decorated">
-                    <DataValue DataType="INT" Radix="Decimal" Value="0"/>
-                </Data>
-            </Tag>
-            <Tag Name="LINT" TagType="Base" DataType="LINT" Radix="Decimal" Constant="false" ExternalAccess="None">
-                <Data Format="L5K">
-                    <![CDATA[0]]>
-                </Data>
-                <Data Format="Decorated">
-                    <DataValue DataType="LINT" Radix="Decimal" Value="0"/>
-                </Data>
-            </Tag>
-            <Tag Name="MultiArray" TagType="Base" DataType="DINT" Dimensions="4 4 2" Radix="Decimal" Constant="false"
-                 ExternalAccess="Read Only">
-                <Description>
-                    <![CDATA[new desc]]>
-                </Description>
-                <Comments>
-                    <Comment Operand="[0,0,0]">
-                        <![CDATA[override]]>
-                    </Comment>
-                </Comments>
-                <Data Format="L5K">
-                    <![CDATA[[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]]]>
-                </Data>
-                <Data Format="Decorated">
-                    <Array DataType="DINT" Dimensions="4,4,2" Radix="Decimal">
-                        <Element Index="[0,0,0]" Value="0"/>
-                        <Element Index="[0,0,1]" Value="0"/>
-                        <Element Index="[0,1,0]" Value="0"/>
-                        <Element Index="[0,1,1]" Value="0"/>
-                        <Element Index="[0,2,0]" Value="0"/>
-                        <Element Index="[0,2,1]" Value="0"/>
-                        <Element Index="[0,3,0]" Value="0"/>
-                        <Element Index="[0,3,1]" Value="0"/>
-                        <Element Index="[1,0,0]" Value="0"/>
-                        <Element Index="[1,0,1]" Value="0"/>
-                        <Element Index="[1,1,0]" Value="0"/>
-                        <Element Index="[1,1,1]" Value="0"/>
-                        <Element Index="[1,2,0]" Value="0"/>
-                        <Element Index="[1,2,1]" Value="0"/>
-                        <Element Index="[1,3,0]" Value="0"/>
-                        <Element Index="[1,3,1]" Value="0"/>
-                        <Element Index="[2,0,0]" Value="0"/>
-                        <Element Index="[2,0,1]" Value="0"/>
-                        <Element Index="[2,1,0]" Value="0"/>
-                        <Element Index="[2,1,1]" Value="0"/>
-                        <Element Index="[2,2,0]" Value="0"/>
-                        <Element Index="[2,2,1]" Value="0"/>
-                        <Element Index="[2,3,0]" Value="0"/>
-                        <Element Index="[2,3,1]" Value="0"/>
-                        <Element Index="[3,0,0]" Value="0"/>
-                        <Element Index="[3,0,1]" Value="0"/>
-                        <Element Index="[3,1,0]" Value="0"/>
-                        <Element Index="[3,1,1]" Value="0"/>
-                        <Element Index="[3,2,0]" Value="0"/>
-                        <Element Index="[3,2,1]" Value="0"/>
-                        <Element Index="[3,3,0]" Value="0"/>
-                        <Element Index="[3,3,1]" Value="0"/>
-                    </Array>
-                </Data>
-            </Tag>
-            <Tag Name="newAromtic" TagType="Base" DataType="Atomics" Constant="false" ExternalAccess="None">
-                <Data Format="L5K">
-                    <![CDATA[[0,0,0,0,0,0.00000000e+000,[0,0,0,0],[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
-		],0,[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
-		]]]]>
-                </Data>
-                <Data Format="Decorated">
-                    <Structure DataType="Atomics">
-                        <DataValueMember Name="BOOL" DataType="BOOL" Value="0"/>
-                        <DataValueMember Name="INT" DataType="INT" Radix="Decimal" Value="0"/>
-                        <DataValueMember Name="SINT" DataType="SINT" Radix="Decimal" Value="0"/>
-                        <DataValueMember Name="DINT" DataType="DINT" Radix="ASCII" Value="'$00$00$00$00'"/>
-                        <DataValueMember Name="LINT" DataType="LINT" Radix="Decimal" Value="0"/>
-                        <DataValueMember Name="REAL" DataType="REAL" Radix="Float" Value="0.0"/>
-                        <ArrayMember Name="INTArray" DataType="INT" Dimensions="4" Radix="Decimal">
-                            <Element Index="[0]" Value="0"/>
-                            <Element Index="[1]" Value="0"/>
-                            <Element Index="[2]" Value="0"/>
-                            <Element Index="[3]" Value="0"/>
-                        </ArrayMember>
-                        <StructureMember Name="Test" DataType="TestStringType">
-                            <DataValueMember Name="LEN" DataType="DINT" Radix="Decimal" Value="0"/>
-                            <DataValueMember Name="DATA" DataType="TestStringType" Radix="ASCII">
-                                <![CDATA[]]>
-                            </DataValueMember>
-                        </StructureMember>
-                        <DataValueMember Name="BOOL2" DataType="BOOL" Value="0"/>
-                        <StructureMember Name="String" DataType="STRING">
-                            <DataValueMember Name="LEN" DataType="DINT" Radix="Decimal" Value="0"/>
-                            <DataValueMember Name="DATA" DataType="STRING" Radix="ASCII">
-                                <![CDATA[]]>
-                            </DataValueMember>
-                        </StructureMember>
-                    </Structure>
-                </Data>
-            </Tag>
-            <Tag Name="Produced" TagType="Produced" DataType="DINT" Radix="Decimal" Constant="false"
-                 ExternalAccess="None">
-                <ProduceInfo ProduceCount="1" ProgrammaticallySendEventTrigger="false" UnicastPermitted="true"
-                             MinimumRPI="0.200" MaximumRPI="536870.900" DefaultRPI="0"/>
-                <Data Format="L5K">
-                    <![CDATA[0]]>
-                </Data>
-                <Data Format="Decorated">
-                    <DataValue DataType="DINT" Radix="Decimal" Value="0"/>
-                </Data>
-            </Tag>
-            <Tag Name="REAL" TagType="Base" DataType="REAL" Radix="Float" Constant="false" ExternalAccess="None">
-                <Data Format="L5K">
-                    <![CDATA[0.00000000e+000]]>
-                </Data>
-                <Data Format="Decorated">
-                    <DataValue DataType="REAL" Radix="Float" Value="0.0"/>
-                </Data>
-            </Tag>
-            <Tag Name="Test" TagType="Base" DataType="DINT" Radix="Decimal" Constant="false" ExternalAccess="None">
-                <Data Format="L5K">
-                    <![CDATA[0]]>
-                </Data>
-                <Data Format="Decorated">
-                    <DataValue DataType="DINT" Radix="Decimal" Value="0"/>
-                </Data>
-            </Tag>
-            <Tag Name="TestString" TagType="Base" DataType="STRING" Constant="false" ExternalAccess="None">
-                <Description>
-                    <![CDATA[Test String]]>
-                </Description>
-                <Data Format="L5K">
-                    <![CDATA[[4,'Test$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
-		]]]>
-                </Data>
-                <Data Format="String" Length="4">
-                    <![CDATA['Test']]>
-                </Data>
-            </Tag>
-            <Tag Name="TestTag" TagType="Base" DataType="Atomics" Constant="false" ExternalAccess="None">
-                <Comments>
-                    <Comment Operand=".INT">
-                        <![CDATA[test 1]]>
-                    </Comment>
-                </Comments>
-                <Data Format="L5K">
-                    <![CDATA[[0,1,0,0,0,0.00000000e+000,[0,0,0,0],[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
-		],0,[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
-		]]]]>
-                </Data>
-                <Data Format="Decorated">
-                    <Structure DataType="Atomics">
-                        <DataValueMember Name="BOOL" DataType="BOOL" Value="0"/>
-                        <DataValueMember Name="INT" DataType="INT" Radix="Decimal" Value="1"/>
-                        <DataValueMember Name="SINT" DataType="SINT" Radix="Decimal" Value="0"/>
-                        <DataValueMember Name="DINT" DataType="DINT" Radix="ASCII" Value="'$00$00$00$00'"/>
-                        <DataValueMember Name="LINT" DataType="LINT" Radix="Decimal" Value="0"/>
-                        <DataValueMember Name="REAL" DataType="REAL" Radix="Float" Value="0.0"/>
-                        <ArrayMember Name="INTArray" DataType="INT" Dimensions="4" Radix="Decimal">
-                            <Element Index="[0]" Value="0"/>
-                            <Element Index="[1]" Value="0"/>
-                            <Element Index="[2]" Value="0"/>
-                            <Element Index="[3]" Value="0"/>
-                        </ArrayMember>
-                        <StructureMember Name="Test" DataType="TestStringType">
-                            <DataValueMember Name="LEN" DataType="DINT" Radix="Decimal" Value="0"/>
-                            <DataValueMember Name="DATA" DataType="TestStringType" Radix="ASCII">
-                                <![CDATA[]]>
-                            </DataValueMember>
-                        </StructureMember>
-                        <DataValueMember Name="BOOL2" DataType="BOOL" Value="0"/>
-                        <StructureMember Name="String" DataType="STRING">
-                            <DataValueMember Name="LEN" DataType="DINT" Radix="Decimal" Value="0"/>
-                            <DataValueMember Name="DATA" DataType="STRING" Radix="ASCII">
-                                <![CDATA[]]>
-                            </DataValueMember>
-                        </StructureMember>
-                    </Structure>
-                </Data>
-            </Tag>
-            <Tag Name="tes_phase" TagType="Base" DataType="PHASE" ExternalAccess="Read/Write">
+            <Tag Name="EquipmentPhase" TagType="Base" DataType="PHASE" ExternalAccess="Read/Write">
                 <Data Format="L5K">
                     <![CDATA[[0,0,0,0,0,0,0,0]]]>
                 </Data>
@@ -637,65 +250,340 @@
                     </Structure>
                 </Data>
             </Tag>
-            <Tag Name="UINT" TagType="Base" DataType="UINT" Radix="Decimal" Constant="false" ExternalAccess="None">
+            <Tag Name="SimpleBool" TagType="Base" DataType="BOOL" Radix="Decimal" Constant="false"
+                 ExternalAccess="None">
                 <Data Format="L5K">
                     <![CDATA[0]]>
                 </Data>
                 <Data Format="Decorated">
-                    <DataValue DataType="UINT" Radix="Decimal" Value="0"/>
+                    <DataValue DataType="BOOL" Radix="Decimal" Value="0"/>
+                </Data>
+            </Tag>
+            <Tag Name="SimpleDint" TagType="Base" DataType="DINT" Radix="Decimal" Constant="false"
+                 ExternalAccess="None">
+                <Data Format="L5K">
+                    <![CDATA[0]]>
+                </Data>
+                <Data Format="Decorated">
+                    <DataValue DataType="DINT" Radix="Decimal" Value="0"/>
+                </Data>
+            </Tag>
+            <Tag Name="SimpleLint" TagType="Base" DataType="LINT" Radix="Decimal" Constant="false"
+                 ExternalAccess="None">
+                <Data Format="L5K">
+                    <![CDATA[0]]>
+                </Data>
+                <Data Format="Decorated">
+                    <DataValue DataType="LINT" Radix="Decimal" Value="0"/>
+                </Data>
+            </Tag>
+            <Tag Name="SimpleSint" TagType="Base" DataType="SINT" Radix="Decimal" Constant="false"
+                 ExternalAccess="None">
+                <Comments>
+                    <Comment Operand=".0">
+                        <![CDATA[This is a test]]>
+                    </Comment>
+                </Comments>
+                <Data Format="L5K">
+                    <![CDATA[0]]>
+                </Data>
+                <Data Format="Decorated">
+                    <DataValue DataType="SINT" Radix="Decimal" Value="0"/>
+                </Data>
+            </Tag>
+            <Tag Name="TestAlarmTag" TagType="Base" DataType="ALARM" Constant="false" ExternalAccess="None">
+                <Data Format="L5K">
+                    <![CDATA[[1,0.00000000e+000,3.40282347e+038,3.40282347e+038,-3.40282347e+038,-3.40282347e+038,0.00000000e+000
+		,0.00000000e+000,0.00000000e+000,0.00000000e+000,0,0.00000000e+000,0,5.60519386e-045,0.00000000e+000
+		,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000
+		,0.00000000e+000,0.00000000e+000,0.00000000e+000]]]>
+                </Data>
+                <Data Format="Decorated">
+                    <Structure DataType="ALARM">
+                        <DataValueMember Name="EnableIn" DataType="BOOL" Value="1"/>
+                        <DataValueMember Name="In" DataType="REAL" Radix="Float" Value="0.0"/>
+                        <DataValueMember Name="HHLimit" DataType="REAL" Radix="Float" Value="3.40282347e+038"/>
+                        <DataValueMember Name="HLimit" DataType="REAL" Radix="Float" Value="3.40282347e+038"/>
+                        <DataValueMember Name="LLimit" DataType="REAL" Radix="Float" Value="-3.40282347e+038"/>
+                        <DataValueMember Name="LLLimit" DataType="REAL" Radix="Float" Value="-3.40282347e+038"/>
+                        <DataValueMember Name="Deadband" DataType="REAL" Radix="Float" Value="0.0"/>
+                        <DataValueMember Name="ROCPosLimit" DataType="REAL" Radix="Float" Value="0.0"/>
+                        <DataValueMember Name="ROCNegLimit" DataType="REAL" Radix="Float" Value="0.0"/>
+                        <DataValueMember Name="ROCPeriod" DataType="REAL" Radix="Float" Value="0.0"/>
+                        <DataValueMember Name="EnableOut" DataType="BOOL" Value="0"/>
+                        <DataValueMember Name="HHAlarm" DataType="BOOL" Value="0"/>
+                        <DataValueMember Name="HAlarm" DataType="BOOL" Value="0"/>
+                        <DataValueMember Name="LAlarm" DataType="BOOL" Value="0"/>
+                        <DataValueMember Name="LLAlarm" DataType="BOOL" Value="0"/>
+                        <DataValueMember Name="ROCPosAlarm" DataType="BOOL" Value="0"/>
+                        <DataValueMember Name="ROCNegAlarm" DataType="BOOL" Value="0"/>
+                        <DataValueMember Name="ROC" DataType="REAL" Radix="Float" Value="0.0"/>
+                        <DataValueMember Name="Status" DataType="DINT" Radix="Hex" Value="16#0000_0000"/>
+                        <DataValueMember Name="InstructFault" DataType="BOOL" Value="0"/>
+                        <DataValueMember Name="DeadbandInv" DataType="BOOL" Value="0"/>
+                        <DataValueMember Name="ROCPosLimitInv" DataType="BOOL" Value="0"/>
+                        <DataValueMember Name="ROCNegLimitInv" DataType="BOOL" Value="0"/>
+                        <DataValueMember Name="ROCPeriodInv" DataType="BOOL" Value="0"/>
+                    </Structure>
+                </Data>
+            </Tag>
+            <Tag Name="TestAnalogAlarm" TagType="Base" DataType="ALARM_ANALOG" ExternalAccess="Read/Write">
+                <Data Format="Alarm">
+                    <AlarmAnalogParameters EnableIn="false" InFault="false" HHEnabled="false" HEnabled="false"
+                                           LEnabled="false" LLEnabled="false" AckRequired="true" ProgAckAll="false"
+                                           OperAckAll="false" HHProgAck="false" HHOperAck="false"
+                                           HProgAck="false" HOperAck="false" LProgAck="false" LOperAck="false"
+                                           LLProgAck="false" LLOperAck="false" ROCPosProgAck="false"
+                                           ROCPosOperAck="false" ROCNegProgAck="false" ROCNegOperAck="false"
+                                           ProgSuppress="false"
+                                           OperSuppress="false" ProgUnsuppress="false" OperUnsuppress="false"
+                                           HHOperShelve="false" HOperShelve="false" LOperShelve="false"
+                                           LLOperShelve="false" ROCPosOperShelve="false" ROCNegOperShelve="false"
+                                           ProgUnshelveAll="false" HHOperUnshelve="false"
+                                           HOperUnshelve="false" LOperUnshelve="false" LLOperUnshelve="false"
+                                           ROCPosOperUnshelve="false" ROCNegOperUnshelve="false" ProgDisable="false"
+                                           OperDisable="false" ProgEnable="false" OperEnable="false"
+                                           AlarmCountReset="false" HHMinDurationEnable="true"
+                                           HMinDurationEnable="true" LMinDurationEnable="true"
+                                           LLMinDurationEnable="true" In="0.0" HHLimit="0.0" HHSeverity="500"
+                                           HLimit="0.0" HSeverity="500" LLimit="0.0" LSeverity="500" LLLimit="0.0"
+                                           LLSeverity="500" MinDurationPRE="0" ShelveDuration="0" MaxShelveDuration="0"
+                                           Deadband="0.0" ROCPosLimit="0.0" ROCPosSeverity="500" ROCNegLimit="0.0"
+                                           ROCNegSeverity="500" ROCPeriod="0.0"/>
+                    <AlarmConfig/>
+                </Data>
+            </Tag>
+            <Tag Name="TestArrayTypeTag" TagType="Base" DataType="ArrayType" Constant="false" ExternalAccess="None">
+                <Data Format="L5K">
+                    <![CDATA[[[2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0
+		,2#0,2#0,2#0,2#0,2#0],[0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0],[0,0]]]]>
+                </Data>
+                <Data Format="Decorated">
+                    <Structure DataType="ArrayType">
+                        <ArrayMember Name="BoolArray" DataType="BOOL" Dimensions="32" Radix="Decimal">
+                            <Element Index="[0]" Value="0"/>
+                            <Element Index="[1]" Value="0"/>
+                            <Element Index="[2]" Value="0"/>
+                            <Element Index="[3]" Value="0"/>
+                            <Element Index="[4]" Value="0"/>
+                            <Element Index="[5]" Value="0"/>
+                            <Element Index="[6]" Value="0"/>
+                            <Element Index="[7]" Value="0"/>
+                            <Element Index="[8]" Value="0"/>
+                            <Element Index="[9]" Value="0"/>
+                            <Element Index="[10]" Value="0"/>
+                            <Element Index="[11]" Value="0"/>
+                            <Element Index="[12]" Value="0"/>
+                            <Element Index="[13]" Value="0"/>
+                            <Element Index="[14]" Value="0"/>
+                            <Element Index="[15]" Value="0"/>
+                            <Element Index="[16]" Value="0"/>
+                            <Element Index="[17]" Value="0"/>
+                            <Element Index="[18]" Value="0"/>
+                            <Element Index="[19]" Value="0"/>
+                            <Element Index="[20]" Value="0"/>
+                            <Element Index="[21]" Value="0"/>
+                            <Element Index="[22]" Value="0"/>
+                            <Element Index="[23]" Value="0"/>
+                            <Element Index="[24]" Value="0"/>
+                            <Element Index="[25]" Value="0"/>
+                            <Element Index="[26]" Value="0"/>
+                            <Element Index="[27]" Value="0"/>
+                            <Element Index="[28]" Value="0"/>
+                            <Element Index="[29]" Value="0"/>
+                            <Element Index="[30]" Value="0"/>
+                            <Element Index="[31]" Value="0"/>
+                        </ArrayMember>
+                        <ArrayMember Name="SintArray" DataType="SINT" Dimensions="6" Radix="Decimal">
+                            <Element Index="[0]" Value="0"/>
+                            <Element Index="[1]" Value="0"/>
+                            <Element Index="[2]" Value="0"/>
+                            <Element Index="[3]" Value="0"/>
+                            <Element Index="[4]" Value="0"/>
+                            <Element Index="[5]" Value="0"/>
+                        </ArrayMember>
+                        <ArrayMember Name="IntArray" DataType="INT" Dimensions="8" Radix="Decimal">
+                            <Element Index="[0]" Value="0"/>
+                            <Element Index="[1]" Value="0"/>
+                            <Element Index="[2]" Value="0"/>
+                            <Element Index="[3]" Value="0"/>
+                            <Element Index="[4]" Value="0"/>
+                            <Element Index="[5]" Value="0"/>
+                            <Element Index="[6]" Value="0"/>
+                            <Element Index="[7]" Value="0"/>
+                        </ArrayMember>
+                        <ArrayMember Name="DintArray" DataType="DINT" Dimensions="3" Radix="Decimal">
+                            <Element Index="[0]" Value="0"/>
+                            <Element Index="[1]" Value="0"/>
+                            <Element Index="[2]" Value="0"/>
+                        </ArrayMember>
+                        <ArrayMember Name="LintArray" DataType="LINT" Dimensions="2" Radix="ASCII">
+                            <Element Index="[0]" Value="'$00$00$00$00$00$00$00$00'"/>
+                            <Element Index="[1]" Value="'$00$00$00$00$00$00$00$00'"/>
+                        </ArrayMember>
+                    </Structure>
+                </Data>
+            </Tag>
+            <Tag Name="TestComplexTag" TagType="Base" DataType="ComplexType" Constant="false" ExternalAccess="None">
+                <Data Format="L5K">
+                    <![CDATA[[[0,0,0,0,0],[0,0,0],[0,0,0],[1,0.00000000e+000,3.40282347e+038,3.40282347e+038,-3.40282347e+038,-3.40282347e+038
+		,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000,0,0.00000000e+000,0,5.60519386e-045
+		,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000
+		,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000]]]]>
+                </Data>
+                <Data Format="Decorated">
+                    <Structure DataType="ComplexType">
+                        <StructureMember Name="SimpleMember" DataType="SimpleTypes">
+                            <DataValueMember Name="BoolMember" DataType="BOOL" Value="0"/>
+                            <DataValueMember Name="SintMember" DataType="SINT" Radix="Decimal" Value="0"/>
+                            <DataValueMember Name="IntMember" DataType="INT" Radix="Decimal" Value="0"/>
+                            <DataValueMember Name="DintMember" DataType="DINT" Radix="Decimal" Value="0"/>
+                            <DataValueMember Name="LintMember" DataType="LINT" Radix="Decimal" Value="0"/>
+                        </StructureMember>
+                        <StructureMember Name="CounterMember" DataType="COUNTER">
+                            <DataValueMember Name="PRE" DataType="DINT" Radix="Decimal" Value="0"/>
+                            <DataValueMember Name="ACC" DataType="DINT" Radix="Decimal" Value="0"/>
+                            <DataValueMember Name="CU" DataType="BOOL" Value="0"/>
+                            <DataValueMember Name="CD" DataType="BOOL" Value="0"/>
+                            <DataValueMember Name="DN" DataType="BOOL" Value="0"/>
+                            <DataValueMember Name="OV" DataType="BOOL" Value="0"/>
+                            <DataValueMember Name="UN" DataType="BOOL" Value="0"/>
+                        </StructureMember>
+                        <StructureMember Name="TimeMember" DataType="TIMER">
+                            <DataValueMember Name="PRE" DataType="DINT" Radix="Decimal" Value="0"/>
+                            <DataValueMember Name="ACC" DataType="DINT" Radix="Decimal" Value="0"/>
+                            <DataValueMember Name="EN" DataType="BOOL" Value="0"/>
+                            <DataValueMember Name="TT" DataType="BOOL" Value="0"/>
+                            <DataValueMember Name="DN" DataType="BOOL" Value="0"/>
+                        </StructureMember>
+                        <StructureMember Name="AlarmMember" DataType="ALARM">
+                            <DataValueMember Name="EnableIn" DataType="BOOL" Value="1"/>
+                            <DataValueMember Name="In" DataType="REAL" Radix="Float" Value="0.0"/>
+                            <DataValueMember Name="HHLimit" DataType="REAL" Radix="Float" Value="3.40282347e+038"/>
+                            <DataValueMember Name="HLimit" DataType="REAL" Radix="Float" Value="3.40282347e+038"/>
+                            <DataValueMember Name="LLimit" DataType="REAL" Radix="Float" Value="-3.40282347e+038"/>
+                            <DataValueMember Name="LLLimit" DataType="REAL" Radix="Float" Value="-3.40282347e+038"/>
+                            <DataValueMember Name="Deadband" DataType="REAL" Radix="Float" Value="0.0"/>
+                            <DataValueMember Name="ROCPosLimit" DataType="REAL" Radix="Float" Value="0.0"/>
+                            <DataValueMember Name="ROCNegLimit" DataType="REAL" Radix="Float" Value="0.0"/>
+                            <DataValueMember Name="ROCPeriod" DataType="REAL" Radix="Float" Value="0.0"/>
+                            <DataValueMember Name="EnableOut" DataType="BOOL" Value="0"/>
+                            <DataValueMember Name="HHAlarm" DataType="BOOL" Value="0"/>
+                            <DataValueMember Name="HAlarm" DataType="BOOL" Value="0"/>
+                            <DataValueMember Name="LAlarm" DataType="BOOL" Value="0"/>
+                            <DataValueMember Name="LLAlarm" DataType="BOOL" Value="0"/>
+                            <DataValueMember Name="ROCPosAlarm" DataType="BOOL" Value="0"/>
+                            <DataValueMember Name="ROCNegAlarm" DataType="BOOL" Value="0"/>
+                            <DataValueMember Name="ROC" DataType="REAL" Radix="Float" Value="0.0"/>
+                            <DataValueMember Name="Status" DataType="DINT" Radix="Hex" Value="16#0000_0000"/>
+                            <DataValueMember Name="InstructFault" DataType="BOOL" Value="0"/>
+                            <DataValueMember Name="DeadbandInv" DataType="BOOL" Value="0"/>
+                            <DataValueMember Name="ROCPosLimitInv" DataType="BOOL" Value="0"/>
+                            <DataValueMember Name="ROCNegLimitInv" DataType="BOOL" Value="0"/>
+                            <DataValueMember Name="ROCPeriodInv" DataType="BOOL" Value="0"/>
+                        </StructureMember>
+                    </Structure>
+                </Data>
+            </Tag>
+            <Tag Name="TestDigitalAlarm" TagType="Base" DataType="ALARM_DIGITAL" ExternalAccess="Read/Write">
+                <Data Format="Alarm">
+                    <AlarmDigitalParameters Severity="500" MinDurationPRE="0" ShelveDuration="0" MaxShelveDuration="0"
+                                            ProgTime="DT#1970-01-01-00:00:00.000_000Z" EnableIn="false" In="false"
+                                            InFault="false" Condition="true" AckRequired="true" Latched="false"
+                                            ProgAck="false" OperAck="false" ProgReset="false" OperReset="false"
+                                            ProgSuppress="false" OperSuppress="false" ProgUnsuppress="false"
+                                            OperUnsuppress="false" OperShelve="false" ProgUnshelve="false"
+                                            OperUnshelve="false"
+                                            ProgDisable="false" OperDisable="false" ProgEnable="false"
+                                            OperEnable="false" AlarmCountReset="false" UseProgTime="false"/>
+                    <AlarmConfig/>
+                </Data>
+            </Tag>
+            <Tag Name="TestStringTag" TagType="Base" DataType="MyStringType" Constant="false" ExternalAccess="None">
+                <Data Format="L5K">
+                    <![CDATA[[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
+		]]]>
+                </Data>
+                <Data Format="String" Length="0">
+                    <![CDATA['']]>
+                </Data>
+            </Tag>
+            <Tag Name="TestTag01" TagType="Base" DataType="SimpleTypes" Constant="false" ExternalAccess="None">
+                <Data Format="L5K">
+                    <![CDATA[[0,0,0,0,0]]]>
+                </Data>
+                <Data Format="Decorated">
+                    <Structure DataType="SimpleTypes">
+                        <DataValueMember Name="BoolMember" DataType="BOOL" Value="0"/>
+                        <DataValueMember Name="SintMember" DataType="SINT" Radix="Decimal" Value="0"/>
+                        <DataValueMember Name="IntMember" DataType="INT" Radix="Decimal" Value="0"/>
+                        <DataValueMember Name="DintMember" DataType="DINT" Radix="Decimal" Value="0"/>
+                        <DataValueMember Name="LintMember" DataType="LINT" Radix="Decimal" Value="0"/>
+                    </Structure>
                 </Data>
             </Tag>
         </Tags>
         <Programs>
-            <Program Name="MainProgram" TestEdits="false" MainRoutineName="MainRoutine" Disabled="false"
+            <Program Name="EquipmentPhase" Type="EquipmentPhase" TestEdits="false" Disabled="false" InitialStepIndex="0"
+                     InitialState="Idle" CompleteStateIfNotImpl="StateComplete" LossOfCommCmd="None"
+                     ExternalRequestAction="None" UseAsFolder="false" AutoValueAssignStepToPhase="true"
+                     AutoValueAssignPhaseToStepOnComplete="true" AutoValueAssignPhaseToStepOnStopped="true"
+                     AutoValueAssignPhaseToStepOnAborted="true">
+                <Description>
+                    <![CDATA[Test]]>
+                </Description>
+                <Tags/>
+                <Routines/>
+            </Program>
+            <Program Name="EventProgram01" TestEdits="false" Disabled="false" UseAsFolder="false">
+                <Tags/>
+                <Routines/>
+            </Program>
+            <Program Name="MainProgram" TestEdits="false" Disabled="false" UseAsFolder="false">
+                <Tags/>
+                <Routines/>
+            </Program>
+            <Program Name="TestProgram" TestEdits="false" MainRoutineName="TestRoutine" Disabled="false"
                      UseAsFolder="false">
-                <Tags>
-                    <Tag Name="Atomic" TagType="Base" DataType="DINT" Radix="Decimal" Usage="Input" Constant="false"
-                         ExternalAccess="None">
-                        <Data Format="L5K">
-                            <![CDATA[0]]>
-                        </Data>
-                        <Data Format="Decorated">
-                            <DataValue DataType="DINT" Radix="Decimal" Value="0"/>
-                        </Data>
-                    </Tag>
-                    <Tag Name="ProgramTag" TagType="Base" DataType="DINT" Radix="Decimal" Constant="false"
-                         ExternalAccess="None">
-                        <Data Format="L5K">
-                            <![CDATA[0]]>
-                        </Data>
-                        <Data Format="Decorated">
-                            <DataValue DataType="DINT" Radix="Decimal" Value="0"/>
-                        </Data>
-                    </Tag>
-                </Tags>
+                <Tags/>
                 <Routines>
-                    <Routine Name="MainRoutine" Type="RLL">
+                    <Routine Name="TestRoutine" Type="RLL">
                         <RLLContent>
                             <Rung Number="0" Type="N">
                                 <Text>
-                                    <![CDATA[OTE(Test);]]>
+                                    <![CDATA[XIC(?)OTE(SimpleSint.0);]]>
                                 </Text>
                             </Rung>
                         </RLLContent>
                     </Routine>
                 </Routines>
             </Program>
-            <Program Name="tes_phase" Type="EquipmentPhase" TestEdits="false" Disabled="false" InitialStepIndex="0"
-                     InitialState="Idle" CompleteStateIfNotImpl="StateComplete" LossOfCommCmd="None"
-                     ExternalRequestAction="None" UseAsFolder="false" AutoValueAssignStepToPhase="true"
-                     AutoValueAssignPhaseToStepOnComplete="true" AutoValueAssignPhaseToStepOnStopped="true"
-                     AutoValueAssignPhaseToStepOnAborted="true">
-                <Tags/>
-                <Routines/>
-            </Program>
         </Programs>
         <Tasks>
-            <Task Name="MainTask" Type="PERIODIC" Rate="100" Priority="10" Watchdog="500" DisableUpdateOutputs="false"
+            <Task Name="Continuous" Type="CONTINUOUS" Priority="10" Watchdog="500" DisableUpdateOutputs="false"
                   InhibitTask="false">
+                <Description>
+                    <![CDATA[Test continuous task]]>
+                </Description>
                 <ScheduledPrograms>
                     <ScheduledProgram Name="MainProgram"/>
-                    <ScheduledProgram Name="tes_phase"/>
+                </ScheduledPrograms>
+            </Task>
+            <Task Name="EventTask" Type="EVENT" Rate="10" Priority="10" Watchdog="500" DisableUpdateOutputs="true"
+                  InhibitTask="false">
+                <Description>
+                    <![CDATA[TestEvent Task]]>
+                </Description>
+                <EventInfo EventTrigger="EVENT Instruction Only" EnableTimeout="true"/>
+                <ScheduledPrograms>
+                    <ScheduledProgram Name="EventProgram01"/>
+                </ScheduledPrograms>
+            </Task>
+            <Task Name="TestTask" Type="PERIODIC" Rate="10" Priority="10" Watchdog="500" DisableUpdateOutputs="false"
+                  InhibitTask="false">
+                <ScheduledPrograms>
+                    <ScheduledProgram Name="TestProgram"/>
+                    <ScheduledProgram Name="EquipmentPhase"/>
                 </ScheduledPrograms>
             </Task>
         </Tasks>

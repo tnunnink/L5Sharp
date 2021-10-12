@@ -19,7 +19,7 @@ namespace L5Sharp.Utilities
         
         public static void DataTypeName(string name)
         {
-            if (Predefined.Types().Any(t => t.Name == name))
+            if (Predefined.Types.Any(t => t.Name == name))
                 Throw.PredefinedCollisionException(name);
         }
         

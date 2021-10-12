@@ -1,4 +1,5 @@
-﻿using AutoFixture;
+﻿using System;
+using AutoFixture;
 using FluentAssertions;
 using L5Sharp.Core;
 using L5Sharp.Enums;
@@ -18,6 +19,14 @@ namespace L5Sharp.Types.Tests
             type.Name.Should().Be("STRING");
             type.Class.Should().Be(DataTypeClass.Predefined);
             type.Family.Should().Be(DataTypeFamily.None);
+        }
+        
+        [Test]
+        public void SetMemberName_ShouldNotBeNull()
+        {
+            var type = new String();
+
+            FluentActions.Invoking(() => (Member) type.Data).Should().Throw<InvalidCastException>();
         }
 
         [Test]

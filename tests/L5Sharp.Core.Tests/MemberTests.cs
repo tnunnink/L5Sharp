@@ -27,7 +27,7 @@ namespace L5Sharp.Core.Tests
             member.Dimension.Should().Be(0);
             member.Radix.Should().Be(Radix.Decimal);
             member.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);
-            member.Description.Should().BeEmpty();
+            member.Description.Should().BeNull();
         }
 
         [Test]
@@ -174,14 +174,6 @@ namespace L5Sharp.Core.Tests
             member.Description = "This is a test description";
 
             member.Description.Should().Be("This is a test description");
-        }
-
-        [Test]
-        public void SetDescription_Null_ShouldBeEmpty()
-        {
-            var member = new Member("MemberName", Predefined.Int);
-
-            FluentActions.Invoking(() => member.Description = null).Should().Throw<ArgumentNullException>();
         }
 
         [Test]
