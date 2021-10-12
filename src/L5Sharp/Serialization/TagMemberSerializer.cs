@@ -49,38 +49,38 @@ namespace L5Sharp.Serialization
 
         private static XElement GenerateDataValueMember(ITagMember member)
         {
-            var element = new XElement(L5XNames.Elements.DataValueMember);
-            element.Add(new XAttribute(L5XNames.Attributes.Name, member.DataType));
-            element.Add(new XAttribute(L5XNames.Attributes.DataType, member.DataType));
-            if (member.Radix != Radix.Null) element.Add(new XAttribute(L5XNames.Attributes.Radix, member.Radix.Name));
-            element.Add(new XAttribute(L5XNames.Attributes.Value, member.Value));
+            var element = new XElement(LogixNames.Elements.DataValueMember);
+            element.Add(new XAttribute(LogixNames.Attributes.Name, member.DataType));
+            element.Add(new XAttribute(LogixNames.Attributes.DataType, member.DataType));
+            if (member.Radix != Radix.Null) element.Add(new XAttribute(LogixNames.Attributes.Radix, member.Radix.Name));
+            element.Add(new XAttribute(LogixNames.Attributes.Value, member.Value));
             return element;
         }
 
         private static XElement GenerateArrayMember(ITagMember member)
         {
-            var element = new XElement(L5XNames.Elements.ArrayMember);
-            element.Add(new XAttribute(L5XNames.Attributes.Name, member.Name));
-            element.Add(new XAttribute(L5XNames.Attributes.DataType, member.DataType));
-            element.Add(new XAttribute(L5XNames.Attributes.Dimensions, member.Dimensions.ToString()));
-            element.Add(new XAttribute(L5XNames.Attributes.Radix, member.Radix));
+            var element = new XElement(LogixNames.Elements.ArrayMember);
+            element.Add(new XAttribute(LogixNames.Attributes.Name, member.Name));
+            element.Add(new XAttribute(LogixNames.Attributes.DataType, member.DataType));
+            element.Add(new XAttribute(LogixNames.Attributes.Dimensions, member.Dimensions.ToString()));
+            element.Add(new XAttribute(LogixNames.Attributes.Radix, member.Radix));
             return element;
         }
 
         private static XElement GenerateArrayElement(ITagMember member)
         {
-            var element = new XElement(L5XNames.Elements.Element);
-            element.Add(new XAttribute(L5XNames.Elements.Index, member.Name));
+            var element = new XElement(LogixNames.Elements.Element);
+            element.Add(new XAttribute(LogixNames.Elements.Index, member.Name));
             if (!member.IsStructureMember)
-                element.Add(new XAttribute(L5XNames.Attributes.Value, member.Value));
+                element.Add(new XAttribute(LogixNames.Attributes.Value, member.Value));
             return element;
         }
 
         private static XElement GenerateStructureMember(ITagMember member)
         {
-            var element = new XElement(L5XNames.Elements.Structure);
-            element.Add(new XAttribute(L5XNames.Attributes.Name, member.Name));
-            element.Add(new XAttribute(L5XNames.Attributes.DataType, member.DataType));
+            var element = new XElement(LogixNames.Elements.Structure);
+            element.Add(new XAttribute(LogixNames.Attributes.Name, member.Name));
+            element.Add(new XAttribute(LogixNames.Attributes.DataType, member.DataType));
             return element;
         }
     }

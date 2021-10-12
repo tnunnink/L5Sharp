@@ -27,24 +27,24 @@ namespace L5Sharp.Extensions
 
         private static readonly Dictionary<Type, string> Components = new Dictionary<Type, string>
         {
-            { typeof(IDataType), L5XNames.Components.DataType },
-            { typeof(IMember), L5XNames.Components.Member },
-            { typeof(Module), L5XNames.Components.Module },
+            { typeof(IDataType), LogixNames.Components.DataType },
+            { typeof(IMember), LogixNames.Components.Member },
+            { typeof(Module), LogixNames.Components.Module },
             //{ typeof(Instruction), L5XNames.Components.AddOnInstructionDefinition },
-            { typeof(Tag), L5XNames.Components.Tag },
-            { typeof(Program), L5XNames.Components.Program },
-            { typeof(PeriodicTask), L5XNames.Components.Task }
+            { typeof(Tag), LogixNames.Components.Tag },
+            { typeof(Program), LogixNames.Components.Program },
+            { typeof(PeriodicTask), LogixNames.Components.Task }
         };
 
         private static readonly Dictionary<Type, string> Containers = new Dictionary<Type, string>
         {
-            { typeof(IDataType), L5XNames.Containers.DataTypes },
-            { typeof(IMember), L5XNames.Containers.Modules },
+            { typeof(IDataType), LogixNames.Containers.DataTypes },
+            { typeof(IMember), LogixNames.Containers.Modules },
             //{ typeof(Instruction), L5XNames.Containers.AddOnInstructions },
-            { typeof(Tag), L5XNames.Containers.Tags },
-            { typeof(Program), L5XNames.Containers.Programs },
-            { typeof(IRoutine), L5XNames.Containers.Routines },
-            { typeof(ITask), L5XNames.Containers.Tasks }
+            { typeof(Tag), LogixNames.Containers.Tags },
+            { typeof(Program), LogixNames.Containers.Programs },
+            { typeof(IRoutine), LogixNames.Containers.Routines },
+            { typeof(ITask), LogixNames.Containers.Tasks }
         };
 
 

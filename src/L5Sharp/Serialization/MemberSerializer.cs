@@ -13,7 +13,7 @@ namespace L5Sharp.Serialization
     {
         public XElement Serialize(IMember component)
         {
-            var element = new XElement(L5XNames.Components.Member);
+            var element = new XElement(LogixNames.Components.Member);
             element.Add(component.ToXAttribute(c => c.Name));
             element.Add(component.ToXAttribute(c => c.DataType));
             element.Add(component.ToXAttribute(c => c.Dimension));

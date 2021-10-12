@@ -45,7 +45,7 @@ namespace L5Sharp.Repositories
 
         public IEnumerable<IDataType> WithMemberType(IDataType dataType)
         {
-            return Context.Descendants(L5XNames.Components.Member)
+            return Context.Descendants(LogixNames.Components.Member)
                 .Where(x => x.GetDataTypeName() == dataType.Name)
                 .Select(x => x.Parent.Deserialize<DataType>());
         }

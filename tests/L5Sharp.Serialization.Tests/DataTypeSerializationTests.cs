@@ -35,7 +35,7 @@ namespace L5Sharp.Serialization.Tests
         [Test]
         public void Deserialize_WhenCalled_ResultsShouldNotBeNull()
         {
-            var element = _document.Descendants(L5XNames.Components.DataType).FirstOrDefault();
+            var element = _document.Descendants(LogixNames.Components.DataType).FirstOrDefault();
             
             var result = _serializer.Deserialize(element);
 
@@ -45,7 +45,7 @@ namespace L5Sharp.Serialization.Tests
         [Test]
         public void Deserialize_ArrayType_ResultShouldExpectedProperties()
         {
-            var element = _document.Descendants(L5XNames.Components.DataType)
+            var element = _document.Descendants(LogixNames.Components.DataType)
                 .FirstOrDefault(x => x.Attribute("Name")?.Value == "ArrayType");
             
             var result = _serializer.Deserialize(element);

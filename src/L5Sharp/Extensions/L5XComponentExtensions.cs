@@ -25,8 +25,8 @@ namespace L5Sharp.Extensions
         }
         private static XElement FindDataTypeElement(this XObject element, string name)
         {
-            return element.Document?.Descendants(L5XNames.Components.DataType)
-                .SingleOrDefault(x => x.Attribute(L5XNames.Attributes.Name)?.Value == name);
+            return element.Document?.Descendants(LogixNames.Components.DataType)
+                .SingleOrDefault(x => x.Attribute(LogixNames.Attributes.Name)?.Value == name);
         }
         
         public static string GetOperandOfTag(this XElement element)

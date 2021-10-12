@@ -35,7 +35,7 @@ namespace L5Sharp.Serialization.Tests
         [Test]
         public void Deserialize_SimpleBool_ResultsShouldNotBeNull()
         {
-            var element = _document.Descendants(L5XNames.Components.Tag)
+            var element = _document.Descendants(LogixNames.Components.Tag)
                 .FirstOrDefault(x => x.Attribute("Name")?.Value == "SimpleBool");
             
             var result = _serializer.Deserialize(element);
@@ -46,7 +46,7 @@ namespace L5Sharp.Serialization.Tests
         [Test]
         public void Deserialize_TestAlarmTag_ResultsShouldNotBeNull()
         {
-            var element = _document.Descendants(L5XNames.Components.Tag)
+            var element = _document.Descendants(LogixNames.Components.Tag)
                 .FirstOrDefault(x => x.Attribute("Name")?.Value == "TestAlarmTag");
             
             var result = _serializer.Deserialize(element);

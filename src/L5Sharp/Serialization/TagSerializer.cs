@@ -21,7 +21,7 @@ namespace L5Sharp.Serialization
             element.Add(new XAttribute(nameof(component.TagType), component.TagType));
             element.Add(new XAttribute(nameof(component.DataType), component.DataType));
             if (component.Dimensions.Length > 0)
-                element.Add(new XAttribute(L5XNames.Attributes.Dimensions, component.Dimensions.ToString()));
+                element.Add(new XAttribute(LogixNames.Attributes.Dimensions, component.Dimensions.ToString()));
             if (component.Radix != Radix.Null)
                 element.Add(new XAttribute(nameof(component.Radix), component.Radix));
             element.Add(new XAttribute(nameof(component.Constant), component.Constant));
@@ -50,7 +50,7 @@ namespace L5Sharp.Serialization
             var tag = tagType.Create(element);
 
             var formatted = element
-                .Descendants(L5XNames.Elements.Data).FirstOrDefault(x =>
+                .Descendants(LogixNames.Elements.Data).FirstOrDefault(x =>
                     x.HasAttributes && x.Attribute("Format") != null && x.Attribute("Format")?.Value != "L5K");
 
             //todo what about other formats?
@@ -70,24 +70,24 @@ namespace L5Sharp.Serialization
         {
             if (element == null) throw new ArgumentNullException(nameof(element));
 
-            if (element.Name != L5XNames.Elements.DataValue)
+            if (element.Name != LogixNames.Elements.DataValue)
                 throw new InvalidOperationException(
-                    $"Current element is not the expected name '{L5XNames.Elements.DataValue}");
+                    $"Current element is not the expected name '{LogixNames.Elements.DataValue}");
 
-            tag.Value = type.ParseValue(element.Attribute(L5XNames.Attributes.Value)?.Value);
+            tag.Value = type.ParseValue(element.Attribute(LogixNames.Attributes.Value)?.Value);
         }
 
         private static void UpdateTagMember(XElement element, ITagMember tag)
         {
-            if (element.Name == L5XNames.Elements.Array || element.Name == L5XNames.Elements.Structure)
+            if (element.Name == LogixNames.Elements.Array || element.Name == LogixNames.Elements.Structure)
             {
                 var children = element.Elements();
                 foreach (var child in children)
                     UpdateTagMember(child, tag);
             }
 
-            if (!element.Name.ToString().Contains(L5XNames.Components.Member) &&
-                !element.Name.ToString().Contains(L5XNames.Elements.Element)) return;
+            if (!element.Name.ToString().Contains(LogixNames.Components.Member) &&
+                !element.Name.ToString().Contains(LogixNames.Elements.Element)) return;
 
             var name = element.FirstAttribute.Value;
             var member = tag.GetMember(name);
@@ -99,8 +99,8 @@ namespace L5Sharp.Serialization
             if (element.GetValue() != null)
                 tagMember.Value = element.GetValue();
 
-            if (element.Name.ToString() != L5XNames.Elements.StructureMember &&
-                element.Name.ToString() != L5XNames.Elements.ArrayMember) return;
+            if (element.Name.ToString() != LogixNames.Elements.StructureMember &&
+                element.Name.ToString() != LogixNames.Elements.ArrayMember) return;
 
             foreach (var child in element.Elements())
                 UpdateTagMember(child, tagMember);
@@ -108,25 +108,25 @@ namespace L5Sharp.Serialization
 
         private static XElement GenerateDataElement(ITagMember tag)
         {
-            var data = new XElement(L5XNames.Elements.Data);
+            var data = new XElement(LogixNames.Elements.Data);
             data.Add(new XAttribute("Format", "Decorated"));
 
             if (tag.IsValueMember)
             {
-                var dataValue = new XElement(L5XNames.Elements.DataValue);
-                dataValue.Add(new XAttribute(L5XNames.Attributes.DataType, tag.DataType));
-                dataValue.Add(new XAttribute(L5XNames.Attributes.Radix, tag.Radix.Name));
-                dataValue.Add(new XAttribute(L5XNames.Attributes.Value, tag.Value));
+                var dataValue = new XElement(LogixNames.Elements.DataValue);
+                dataValue.Add(new XAttribute(LogixNames.Attributes.DataType, tag.DataType));
+                dataValue.Add(new XAttribute(LogixNames.Attributes.Radix, tag.Radix.Name));
+                dataValue.Add(new XAttribute(LogixNames.Attributes.Value, tag.Value));
                 data.Add(dataValue);
                 return data;
             }
 
             if (tag.IsArrayMember)
             {
-                var array = new XElement(L5XNames.Elements.Array);
-                array.Add(new XAttribute(L5XNames.Attributes.DataType, tag.DataType));
-                array.Add(new XAttribute(L5XNames.Attributes.Dimensions, tag.Dimensions.ToString()));
-                array.Add(new XAttribute(L5XNames.Attributes.Radix, tag.Radix.Name));
+                var array = new XElement(LogixNames.Elements.Array);
+                array.Add(new XAttribute(LogixNames.Attributes.DataType, tag.DataType));
+                array.Add(new XAttribute(LogixNames.Attributes.Dimensions, tag.Dimensions.ToString()));
+                array.Add(new XAttribute(LogixNames.Attributes.Radix, tag.Radix.Name));
                 array.Add(tag.Members.Select(m => m.Serialize()));
                 data.Add(array);
                 return data;
@@ -135,8 +135,8 @@ namespace L5Sharp.Serialization
             if (!tag.IsStructureMember)
                 throw new InvalidOperationException();
 
-            var structure = new XElement(L5XNames.Elements.Structure);
-            structure.Add(new XAttribute(L5XNames.Attributes.DataType, tag.DataType));
+            var structure = new XElement(LogixNames.Elements.Structure);
+            structure.Add(new XAttribute(LogixNames.Attributes.DataType, tag.DataType));
             structure.Add(tag.Members.Select(m => m.Serialize()));
             data.Add(structure);
             return data;

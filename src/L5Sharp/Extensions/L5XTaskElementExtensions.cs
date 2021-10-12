@@ -7,7 +7,7 @@ namespace L5Sharp.Extensions
 {
     public static class L5XTaskElementExtensions
     {
-        private const string ExpectedElementName = L5XNames.Components.Task;
+        private const string ExpectedElementName = LogixNames.Components.Task;
 
         /// <summary>
         /// Helper extension that gets the "Priority" attribute from the current element

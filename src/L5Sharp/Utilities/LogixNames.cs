@@ -1,6 +1,6 @@
 ﻿namespace L5Sharp.Utilities
 {
-    public static class L5XNames
+    public static class LogixNames
     {
         public static class Containers
         {

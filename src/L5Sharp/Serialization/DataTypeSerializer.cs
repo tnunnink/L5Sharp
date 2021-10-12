@@ -17,7 +17,7 @@ namespace L5Sharp.Serialization
         {
             if (component == null) throw new ArgumentNullException(nameof(component));
 
-            var element = new XElement(L5XNames.Components.DataType);
+            var element = new XElement(LogixNames.Components.DataType);
             element.Add(component.ToXAttribute(c => c.Name));
             element.Add(component.ToXAttribute(c => c.Family));
             element.Add(component.ToXAttribute(c => c.Class));

@@ -53,7 +53,7 @@ namespace L5Sharp.Core
             Name = element.GetName();
             Family = element.GetFamily() ?? throw new ArgumentNullException(nameof(element), "Family can not be null");
 
-            var members = element.Descendants(L5XNames.Components.Member);
+            var members = element.Descendants(LogixNames.Components.Member);
 
             foreach (var me in members)
             {

@@ -6,7 +6,7 @@ namespace L5Sharp.Extensions
 {
     public static class L5XProgramElementExtensions
     {
-        private const string ExpectedElementName = L5XNames.Components.Program;
+        private const string ExpectedElementName = LogixNames.Components.Program;
         private static readonly string TestEdits = nameof(TestEdits);
         private static readonly string Disabled = nameof(Disabled);
         private static readonly string UseAsFolder = nameof(UseAsFolder);

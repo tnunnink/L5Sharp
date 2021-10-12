@@ -12,7 +12,7 @@ namespace L5Sharp.Serialization
     {
         public XElement Serialize(ITask component)
         {
-            var element = new XElement(L5XNames.Components.Task);
+            var element = new XElement(LogixNames.Components.Task);
             element.Add(component.ToXAttribute(c => c.Name));
             element.Add(component.ToXAttribute(c => c.Type));
             element.Add(component.ToXAttribute(c => c.Priority));
@@ -34,7 +34,7 @@ namespace L5Sharp.Serialization
             
             foreach (var program in programs)
                 scheduled.Add(new XElement("ScheduledProgram",
-                    new XAttribute(L5XNames.Attributes.Name, program)));
+                    new XAttribute(LogixNames.Attributes.Name, program)));
 
             element.Add(scheduled);
 

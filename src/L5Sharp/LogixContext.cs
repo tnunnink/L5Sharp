@@ -58,7 +58,7 @@ namespace L5Sharp
         private static XDocument GenerateContent(IComponent component, Revision revision)
         {
             var declaration = new XDeclaration("1.0", "UTF-8", "yes");
-            var root = new XElement(L5XNames.Containers.RSLogix5000Content);
+            var root = new XElement(LogixNames.Containers.RSLogix5000Content);
             root.Add(new XAttribute("SchemaRevision", "1.0"));
             root.Add(new XAttribute("SoftwareRevision", revision.ToString()));
             root.Add(new XAttribute("TargetName", component.Name));
@@ -70,7 +70,7 @@ namespace L5Sharp
 
             if (component is IController) return new XDocument(declaration, root);
             
-            var controllerElement = new XElement(L5XNames.Components.Controller);
+            var controllerElement = new XElement(LogixNames.Components.Controller);
             //todo add other properties needed
             root.Add(controllerElement);
 
