@@ -193,7 +193,6 @@ namespace L5Sharp.Core.Tests
             FluentActions.Invoking(() => type.GetMember(null)).Should().Throw<ArgumentNullException>();
         }
 
-
         [Test]
         public void GetMember_MemberThatDoesNotExist_ShouldBeNull()
         {

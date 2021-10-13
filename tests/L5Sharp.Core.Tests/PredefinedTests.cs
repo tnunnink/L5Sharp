@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
 using L5Sharp.Abstractions;
@@ -222,22 +223,6 @@ namespace L5Sharp.Core.Tests
         }
 
         [Test]
-        public void RegisterType_ValidType_TypesShouldContainPredefined()
-        {
-            var type = new MyPredefined();
-            
-            Predefined.RegisterType(type);
-
-            Predefined.Types.Should().Contain(type);
-        }
-        
-        /*[Test]
-        public void RegisterType_Null_ShouldThrowArgumentNullException()
-        {
-            FluentActions.Invoking(() => Predefined.RegisterType(null)).Should().Throw<ArgumentNullException>;
-        }*/
-
-        [Test]
         public void ParseType_RegisteredType_ShouldNotBeNull()
         {
             var type = Predefined.ParseType("Bool");
@@ -255,12 +240,28 @@ namespace L5Sharp.Core.Tests
         }
 
         [Test]
-        public void ParseType_AssemblyType_ShouldNotBeNull()
+        public void ParseType_AssemblyValidType_ShouldNotBeExpected()
         {
             var type = Predefined.ParseType("MyPredefined");
             type.Should().NotBeNull();
             type.Name.Should().Be("MyPredefined");
             type.Family.Should().Be(DataTypeFamily.None);
+        }
+        
+        [Test]
+        public void ParseType_AssemblyInvalidType_ShouldNotBeUndefined()
+        {
+            var type = Predefined.ParseType("MyNullNamePredefined");
+            type.Should().NotBeNull();
+            type.Should().Be(Predefined.Undefined);
+        }
+        
+        [Test]
+        public void ParseType_NonExistingType_ShouldNotBeUndefined()
+        {
+            var type = Predefined.ParseType("Invalid");
+            type.Should().NotBeNull();
+            type.Should().Be(Predefined.Undefined);
         }
 
         [Test]
@@ -289,6 +290,31 @@ namespace L5Sharp.Core.Tests
             public MyNullNamePredefined() :
                 base(null, DataTypeFamily.None)
             {
+            }
+        }
+
+        [Test]
+        public void New_InvalidMemberType_ShouldThrowComponentNameCollisionException()
+        {
+            FluentActions.Invoking(() => new MyInvalidMemberPredefined()).Should()
+                .Throw<ComponentNameCollisionException>();
+        }
+        
+        private class MyInvalidMemberPredefined : Predefined
+        {
+            public MyInvalidMemberPredefined() :
+                base(nameof(MyInvalidMemberPredefined), DataTypeFamily.None, GetMembers())
+            {
+            }
+
+            private static IEnumerable<ReadOnlyMember> GetMembers()
+            {
+                return new List<ReadOnlyMember>
+                {
+                    new("Member01", Bool),
+                    new("Member01", Bool),
+                    new("Member03", Int)
+                };
             }
         }
 

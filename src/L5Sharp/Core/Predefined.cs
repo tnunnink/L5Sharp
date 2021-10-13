@@ -154,14 +154,6 @@ namespace L5Sharp.Core
             }
         }
 
-        public static void RegisterType(Predefined predefined)
-        {
-            if (predefined == null) throw new ArgumentNullException(nameof(predefined), "Predefined can not be null");
-
-            if (!RegisteredTypes.ContainsKey(predefined.Name))
-                RegisteredTypes.Add(predefined.Name, predefined);
-        }
-
         public virtual object ParseValue(string value)
         {
             return null;

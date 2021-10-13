@@ -7,35 +7,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/../../tests/L5Sharp.Types.Tests/BitTests.cs" afterDir="false" />
+    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="development">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Abstractions/ComponentBase.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Abstractions/ComponentBase.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Abstractions/IDataType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Abstractions/IDataType.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Abstractions/IDataTypeRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Abstractions/IDataTypeRepository.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Abstractions/IMember.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Abstractions/IMember.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/DataType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/DataType.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/Member.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/Member.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/Dimensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/Dimensions.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Core/Predefined.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/Predefined.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/StringType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/StringType.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/TagMember.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/TagMember.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Extensions/L5XComponentExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Extensions/L5XComponentExtensions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Extensions/L5XGenericExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Extensions/L5XGenericExtensions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LogixContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LogixContext.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Repositories/DataTypeRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Repositories/DataTypeRepository.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Serialization/DataTypeSerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Serialization/DataTypeSerializer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Serialization/MemberSerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Serialization/MemberSerializer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Utilities/L5XNames.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Utilities/LogixNames.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Utilities/Validate.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Utilities/Validate.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../tests/L5Sharp.Core.Tests/DataTypeTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/L5Sharp.Core.Tests/DataTypeTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../tests/L5Sharp.Core.Tests/MemberTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/L5Sharp.Core.Tests/MemberTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tests/L5Sharp.Core.Tests/DimensionsTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/L5Sharp.Core.Tests/DimensionsTests.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../tests/L5Sharp.Core.Tests/PredefinedTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/L5Sharp.Core.Tests/PredefinedTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../tests/L5Sharp.Core.Tests/TagTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/L5Sharp.Core.Tests/TagTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../tests/L5Sharp.Serialization.Tests/DataTypeSerializationTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/L5Sharp.Serialization.Tests/DataTypeSerializationTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../tests/L5Sharp.Tests/L5Sharp.Tests.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/L5Sharp.Tests/L5Sharp.Tests.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../tests/L5Sharp.Tests/L5XTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/L5Sharp.Tests/LogixContextTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../tests/L5Sharp.Tests/TestFiles/Test.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/L5Sharp.Tests/TestFiles/Test.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../tests/L5Sharp.Types.Tests/StringTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/L5Sharp.Types.Tests/StringTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tests/L5Sharp.Tests/LogixContextTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/L5Sharp.Tests/LogixContextTests.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -125,7 +104,7 @@
       <workItem from="1633376242638" duration="49930000" />
       <workItem from="1633521737868" duration="34486000" />
       <workItem from="1633609582256" duration="80103000" />
-      <workItem from="1633963607524" duration="37173000" />
+      <workItem from="1633963607524" duration="50501000" />
     </task>
     <task id="LOCAL-00001" summary="renaming">
       <created>1632580540996</created>
@@ -267,7 +246,21 @@
       <option name="project" value="LOCAL" />
       <updated>1633902130813</updated>
     </task>
-    <option name="localTasksCounter" value="21" />
+    <task id="LOCAL-00021" summary="development">
+      <created>1634059847882</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1634059847883</updated>
+    </task>
+    <task id="LOCAL-00022" summary="development">
+      <created>1634059871394</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1634059871394</updated>
+    </task>
+    <option name="localTasksCounter" value="23" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -277,38 +270,38 @@
     <option name="coveragePercentColumnWidth" value="88" />
     <option name="sortOrder" value="DESCENDING" />
     <option name="sortedColumn" value="1" />
-    <option name="symbolColumnWidth" value="300" />
+    <option name="symbolColumnWidth" value="301" />
     <coverage-tree-state>
       <expand>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 43% 2486/4347" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 44% 2475/4457" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 43% 2486/4347" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 43% 1320/2297" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 44% 2475/4457" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 43% 1300/2294" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 43% 2486/4347" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 43% 1320/2297" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="(1.0.0.0, .NETStandard,Version=v2.1) 43% 1320/2297" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 44% 2475/4457" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 43% 1300/2294" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="(1.0.0.0, .NETStandard,Version=v2.1) 43% 1300/2294" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 43% 2486/4347" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 43% 1320/2297" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="(1.0.0.0, .NETStandard,Version=v2.1) 43% 1320/2297" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 43% 1320/2297" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 44% 2475/4457" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 43% 1300/2294" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="(1.0.0.0, .NETStandard,Version=v2.1) 43% 1300/2294" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 43% 1300/2294" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 43% 2486/4347" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 43% 1320/2297" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="(1.0.0.0, .NETStandard,Version=v2.1) 43% 1320/2297" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 43% 1320/2297" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="Core 58% 345/828" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 44% 2475/4457" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 43% 1300/2294" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="(1.0.0.0, .NETStandard,Version=v2.1) 43% 1300/2294" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 43% 1300/2294" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Core 61% 325/825" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
       </expand>
       <select />
@@ -353,32 +346,6 @@
             </endOffsets>
           </properties>
           <option name="timeStamp" value="86" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/../../tests/L5Sharp.Tests/LogixContextTests.cs</url>
-          <line>37</line>
-          <properties documentPath="C:\Users\tnunnink\dev\projects\L5Sharp\tests\L5Sharp.Tests\LogixContextTests.cs" initialLine="37" containingFunctionPresentation="method 'DataTypes_GetAll_ShouldNotBeEmpty'">
-            <startOffsets>
-              <option value="881" />
-            </startOffsets>
-            <endOffsets>
-              <option value="907" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="89" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/../../tests/L5Sharp.Core.Tests/DimensionsTests.cs</url>
-          <line>108</line>
-          <properties documentPath="C:\Users\tnunnink\dev\projects\L5Sharp\tests\L5Sharp.Core.Tests\DimensionsTests.cs" initialLine="108" containingFunctionPresentation="method 'GenerateIndices_ThreeDimension_ShouldNotBeNullAndHaveExpectedLength'">
-            <startOffsets>
-              <option value="3356" />
-            </startOffsets>
-            <endOffsets>
-              <option value="3397" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="115" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

@@ -2,7 +2,6 @@
 using System.IO;
 using System.Linq;
 using FluentAssertions;
-using L5Sharp.Utilities;
 using NUnit.Framework;
 
 namespace L5Sharp.Tests
@@ -31,12 +30,25 @@ namespace L5Sharp.Tests
         {
             var context = new LogixContext(_fileName);
 
-            var types = context.DataTypes.GetAll();
+            var types = context.DataTypes.GetAll().ToList();
 
-            foreach (var type in types)
-            {
-                type.Should().NotBeNull();
-            }
+            types.Should().NotBeEmpty();
+        }
+
+        [Test]
+        public void DataTypes_GetAll_SimpleTypesReferenceSame()
+        {
+            var context = new LogixContext(_fileName);
+
+            var types = context.DataTypes.GetAll().ToList();
+
+            var complex = types.SingleOrDefault(t => t.Name == "ComplexType");
+            var simple = types.SingleOrDefault(t => t.Name == "SimpleTypes");
+
+            var simpleMember = complex?.GetMember("SimpleMember").DataType;
+
+            simple.Should().BeEquivalentTo(simpleMember);
+            //simple.Should().BeSameAs(simpleMember);
         }
     }
 }

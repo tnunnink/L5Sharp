@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace L5Sharp.Core
 {
@@ -17,8 +18,11 @@ namespace L5Sharp.Core
 
         public Dimensions(ushort x, ushort y) : this(x)
         {
+            if (x == 0)
+                throw new ArgumentException("X must be non zero");
+            
             if (y == 0)
-                throw new ArgumentException("Value must be non zero");
+                throw new ArgumentException("Y must be non zero");
 
             Y = y;
         }
@@ -26,7 +30,7 @@ namespace L5Sharp.Core
         public Dimensions(ushort x, ushort y, ushort z) : this(x, y)
         {
             if (z == 0)
-                throw new ArgumentException("Value must be non zero");
+                throw new ArgumentException("Z must be non zero");
 
             Z = z;
         }
@@ -40,24 +44,28 @@ namespace L5Sharp.Core
 
         public static Dimensions Parse(string value)
         {
-            if (value == null) throw new ArgumentNullException(nameof(value));
-            
-            //todo regex validate string input
+            switch (value)
+            {
+                case null:
+                    throw new ArgumentNullException(nameof(value));
+                case "":
+                    return Empty;
+            }
 
-            if (value == string.Empty)
-                return Empty;
+            if (!Regex.IsMatch(value, @"[0-9\s]+"))
+                throw new ArgumentException($"Value '{value}' does not match expected pattern");
 
             var numbers = value.Split(' ').Select(v => Convert.ToUInt16(v)).ToList();
 
             if (numbers.Count > 3)
-                throw new InvalidOperationException();
+                throw new ArgumentException($"Value '{value}' has more than three dimensions. Must have three or less");
 
             return numbers.Count switch
             {
                 3 => new Dimensions(numbers[0], numbers[1], numbers[2]),
                 2 => new Dimensions(numbers[0], numbers[1]),
                 1 => new Dimensions(numbers[0]),
-                _ => Empty
+                _ => throw new ArgumentOutOfRangeException()
             };
         }
         
