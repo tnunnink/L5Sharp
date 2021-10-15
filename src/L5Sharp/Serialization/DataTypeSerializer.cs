@@ -25,21 +25,10 @@ namespace L5Sharp.Serialization
             if (!string.IsNullOrEmpty(component.Description))
                 element.Add(component.ToXCDataElement(c => c.Description));
 
-            var serializer = new MemberSerializer();
-            
             element.Add(new XElement(nameof(component.Members),
-                component.Members.Select(m => serializer.Serialize(m))));
+                component.Members.Select(m => m.Serialize())));
 
             return element;
-        }
-
-        public IDataType Deserialize(XElement element)
-        {
-            if (element == null) throw new ArgumentNullException(nameof(element));
-
-            var members = element.GetAll<IMember>().Select(x => x.Deserialize<IMember>());
-
-            return new DataType(element.GetName(), members, element.GetDescription());
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Xml.Linq;
 using L5Sharp.Abstractions;
 using L5Sharp.Core;
@@ -39,21 +38,6 @@ namespace L5Sharp.Serialization
             element.Add(scheduled);
 
             return element;
-        }
-
-        public ITask Deserialize(XElement element)
-        {
-            var type = element.GetTaskType();
-            if (type == null)
-                throw new InvalidOperationException();
-
-            var task = type.Create(element);
-
-            var programs = element.Descendants("ScheduledProgram").Select(e => e.GetName());
-            foreach (var program in programs)
-                task.AddProgram(program);
-
-            return task;
         }
     }
 }

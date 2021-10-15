@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Xml.Linq;
 using L5Sharp.Abstractions;
 using L5Sharp.Core;
 using L5Sharp.Enums;
@@ -14,13 +13,13 @@ namespace L5Sharp.Repositories
 {
     internal class DataTypeRepository : Repository<IDataType>, IDataTypeRepository
     {
-        public DataTypeRepository(XElement context) : base(context)
+        public DataTypeRepository(LogixContext context) : base(context)
         {
         }
 
         public override void Add(IDataType component)
         {
-            if (Context.Contains<IDataType>(component.Name))
+            if (Container.Contains<IDataType>(component.Name))
                 Throw.ComponentNameCollisionException(component.Name, typeof(IDataType));
 
             var element = component.Serialize();
@@ -29,8 +28,8 @@ namespace L5Sharp.Repositories
                 .Where(t => t.Class == DataTypeClass.User)
                 .Select(t => t.Serialize());
 
-            Context.Add(element);
-            Context.Add(dependents);
+            Container.Add(element);
+            Container.Add(dependents);
         }
 
         public override void Remove(IDataType component)
@@ -45,9 +44,9 @@ namespace L5Sharp.Repositories
 
         public IEnumerable<IDataType> WithMemberType(IDataType dataType)
         {
-            return Context.Descendants(LogixNames.Components.Member)
-                .Where(x => x.GetDataTypeName() == dataType.Name)
-                .Select(x => x.Parent.Deserialize<DataType>());
+            return Container.Descendants(LogixNames.Components.Member)
+                .Where(x => x.GetValue<IMember, IDataType, string>(m => m.DataType, s => s) == dataType.Name)
+                .Select(x => x.Parent.Deserialize<DataType>(Context));
         }
     }
 }

@@ -1,7 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 using System.Xml.Linq;
 using L5Sharp.Abstractions;
-using L5Sharp.Core;
 using L5Sharp.Extensions;
 using L5Sharp.Utilities;
 
@@ -24,14 +23,6 @@ namespace L5Sharp.Serialization
                 element.Add(component.ToXCDataElement(x => x.Description));
 
             return element;
-        }
-
-        public IMember Deserialize(XElement element)
-        {
-            var dataType = element.GetDataType();
-            
-            return new Member(element.GetName(), dataType, element.GetDimension(), element.GetRadix(),
-                element.GetExternalAccess(), element.GetDescription());
         }
     }
 }

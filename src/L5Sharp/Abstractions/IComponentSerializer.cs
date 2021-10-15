@@ -9,10 +9,8 @@ namespace L5Sharp.Abstractions
     {
     }
     
-    internal interface IComponentSerializer<T> : IComponentSerializer where T : IComponent
+    internal interface IComponentSerializer<in T> : IComponentSerializer where T : IComponent
     {
         XElement Serialize(T component);
-        
-        T Deserialize(XElement element);
     }
 }

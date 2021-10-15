@@ -5,7 +5,6 @@ using System.Xml.Linq;
 using Ardalis.SmartEnum;
 using L5Sharp.Abstractions;
 using L5Sharp.Core;
-using L5Sharp.Extensions;
 
 namespace L5Sharp.Enums
 {
@@ -46,8 +45,7 @@ namespace L5Sharp.Enums
 
             internal override ITask Create(XElement element)
             {
-                return new ContinuousTask(element.GetName(), element.GetDescription(), element.GetPriority(),
-                    element.GetWatchdog(), element.GetInhibitTask(), element.GetDisableUpdateOutputs());
+                throw new NotImplementedException();
             }
         }
 
@@ -64,9 +62,7 @@ namespace L5Sharp.Enums
 
             internal override ITask Create(XElement element)
             {
-                return new PeriodicTask(element.GetName(), element.GetDescription(), element.GetRate(),
-                    element.GetPriority(), element.GetWatchdog(), element.GetInhibitTask(),
-                    element.GetDisableUpdateOutputs());
+                throw new NotImplementedException();
             }
         }
 
@@ -83,10 +79,7 @@ namespace L5Sharp.Enums
 
             internal override ITask Create(XElement element)
             {
-                return new EventTask(element.GetName(), element.GetDescription(), element.GetEventTrigger(),
-                    element.GetEventTag(), element.GetEnableTimeout(), element.GetRate(),
-                    element.GetPriority(), element.GetWatchdog(), element.GetInhibitTask(),
-                    element.GetDisableUpdateOutputs());
+                throw new NotImplementedException();
             }
         }
     }

@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Xml.Linq;
 using L5Sharp.Abstractions;
 using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Extensions;
 using L5Sharp.Repositories;
+using L5Sharp.Serialization;
 using L5Sharp.Utilities;
 
 namespace L5Sharp
@@ -12,7 +14,15 @@ namespace L5Sharp
     public class LogixContext
     {
         private readonly XDocument _document;
-        private XElement Content => _document.Root;
+
+        private readonly Dictionary<Type, IComponentSerializer> _serializers = new Dictionary<Type, IComponentSerializer>
+        {
+        };
+
+        private readonly Dictionary<Type, IComponentCache> _cache = new Dictionary<Type, IComponentCache>
+        {
+            {typeof(IDataType), new ComponentCache<DataType>()}
+        };
 
         private LogixContext(XDocument document)
         {
@@ -26,7 +36,7 @@ namespace L5Sharp
         public LogixContext(string fileName) : this(XDocument.Load(fileName))
         {
         }
-        
+
         public LogixContext(IComponent component, Revision revision) : this(GenerateContent(component, revision))
         {
         }
@@ -36,25 +46,54 @@ namespace L5Sharp
             _document.Save(fileName);
         }
 
+
         public string SchemaRevision => Content.Attribute(nameof(SchemaRevision))?.Value;
+
         public string SoftwareRevision => Content.Attribute(nameof(SoftwareRevision))?.Value;
+
         public string TargetName => Content.Attribute(nameof(TargetName))?.Value;
+
         public string TargetType => Content.Attribute(nameof(TargetType))?.Value;
+
         public string ContainsContext => Content.Attribute(nameof(ContainsContext))?.Value;
+
         public string Owner => Content.Attribute(nameof(Owner))?.Value;
 
-        public IDataTypeRepository DataTypes => new DataTypeRepository(Content.Container<IDataType>());
+        public IDataTypeRepository DataTypes => new DataTypeRepository(this);
+        
+        internal XElement Content => _document.Root;
 
-        public void RegisterDataType(IDataType dataType)
+        internal IComponentCache<T> GetCache<T>()  where T : IComponent 
         {
-            if (dataType == null) throw new ArgumentNullException(nameof(dataType));
+            var type = typeof(T);
 
-            if (Content.Contains<DataType>(dataType.Name))
-                Throw.ComponentNameCollisionException(dataType.Name, typeof(IDataType));
-            
-            Content.Container<DataType>().Add(dataType.Serialize());
+            if (!_cache.ContainsKey(type))
+                throw new InvalidOperationException($"Cache not defined for component of type '{type}'");
+
+            return (IComponentCache<T>) _cache[type];
         }
         
+        internal IComponentSerializer<T> GetSerializer<T>()  where T : IComponent 
+        {
+            var type = typeof(T);
+
+            if (!_serializers.ContainsKey(type))
+                throw new InvalidOperationException($"Serializer not defined for component of type '{type}'");
+
+            return (IComponentSerializer<T>) _serializers[type];
+        }
+        
+        internal IDataType FindDataType(string name)
+        {
+            if (name == null) throw new ArgumentNullException(nameof(name));
+
+            if (Predefined.ContainsType(name))
+                return Predefined.ParseType(name);
+
+            var element = Content.GetFirst<DataType>(name);
+            return element?.Deserialize<IDataType>(this);
+        }
+
         private static XDocument GenerateContent(IComponent component, Revision revision)
         {
             var declaration = new XDeclaration("1.0", "UTF-8", "yes");

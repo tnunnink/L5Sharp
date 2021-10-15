@@ -44,10 +44,15 @@ namespace L5Sharp.Enums
 
             internal override IProgram Create(XElement element)
             {
+                throw new NotImplementedException();
+            }
+
+            /*internal override IProgram Create(XElement element)
+            {
                 return new Program(element.GetName(), element.GetDescription(), element.GetMainRoutineName(),
                     element.GetFaultRoutineName(), element.GetUseAsFolder(), element.GetTestEdits(),
                     element.GetDisabled());
-            }
+            }*/
         }
 
         private class EquipmentPhaseType : ProgramType

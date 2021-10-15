@@ -10,16 +10,5 @@ namespace L5Sharp.Serialization
         {
             throw new System.NotImplementedException();
         }
-
-        public IRoutine Deserialize(XElement element)
-        {
-            var type = element.GetRoutineType();
-            
-            var routine = type.Create(element.GetName());
-
-            
-            
-            return routine;
-        }
     }
 }

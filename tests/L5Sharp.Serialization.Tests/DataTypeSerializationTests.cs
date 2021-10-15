@@ -32,7 +32,7 @@ namespace L5Sharp.Serialization.Tests
             FileAssert.Exists(_fileName);
         }
 
-        [Test]
+        /*[Test]
         public void Deserialize_WhenCalled_ResultsShouldNotBeNull()
         {
             var element = _document.Descendants(LogixNames.Components.DataType).FirstOrDefault();
@@ -60,7 +60,7 @@ namespace L5Sharp.Serialization.Tests
             result.Members.Should().Contain(m => m.Name == "IntArray");
             result.Members.Should().Contain(m => m.Name == "DintArray");
             result.Members.Should().Contain(m => m.Name == "LintArray");
-        }
+        }*/
         
         [Test]
         public void Serialize_WhenCalled_ShouldNotBeNull()

@@ -36,7 +36,6 @@
             public const string Dimensions = nameof(Dimensions);
             public const string Radix = nameof(Radix);
             public const string ExternalAccess = nameof(ExternalAccess);
-            public const string Description = nameof(Description);
             public const string Value = nameof(Value);
             public const string Hidden = nameof(Hidden);
             public const string Target = nameof(Target);
@@ -48,11 +47,12 @@
             public const string Member = nameof(Member);
             public const string Family = nameof(Family);
             public const string Class = nameof(Class);    
-            public const string Type = nameof(Type);    
+            public const string Type = nameof(Type);
         }
 
         public static class Elements
         {
+            public const string Description = nameof(Description);
             public const string Data = nameof(Data);
             public const string DataValue = nameof(DataValue);
             public const string Array = nameof(Array);

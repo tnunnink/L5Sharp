@@ -34,6 +34,7 @@ namespace L5Sharp.Core
             Family = family ?? throw new ArgumentNullException(nameof(family), "Family can not be null");
             
             members ??= Array.Empty<ReadOnlyMember>();
+            
             foreach (var member in members)
             {
                 if (_members.ContainsKey(member.Name))
@@ -51,14 +52,14 @@ namespace L5Sharp.Core
             Validate.Name(element.GetName());
 
             Name = element.GetName();
-            Family = element.GetFamily() ?? throw new ArgumentNullException(nameof(element), "Family can not be null");
+            Family = element.GetValue<IDataType>(d => d.Family) 
+                     ?? throw new ArgumentNullException(nameof(element), "Family can not be null");
 
             var members = element.Descendants(LogixNames.Components.Member);
 
-            foreach (var me in members)
+            foreach (var e in members)
             {
-                var typeName = me.GetDataTypeName();
-
+                var typeName = e.GetValue<IMember, IDataType, string>(m => m.DataType, s => s);
                 if (typeName == null)
                     throw new ArgumentNullException(nameof(typeName), "DataType can not be null");
 
@@ -67,8 +68,13 @@ namespace L5Sharp.Core
 
                 var type = RegisteredTypes[typeName];
 
-                var member = new ReadOnlyMember(me.GetName(), type, me.GetDimension(), me.GetRadix(),
-                    me.GetExternalAccess(), me.GetDescription());
+                var name = e.GetName();
+                var description = e.GetDescription();
+                var dimension = e.GetValue<IMember>(m => m.Dimension);
+                var radix = e.GetValue<IMember>(m => m.Radix);
+                var access = e.GetValue<IMember>(m => m.ExternalAccess);
+                
+                var member = new ReadOnlyMember(name, type, dimension, radix, access, description);
 
                 _members.Add(member.Name, member);
             }

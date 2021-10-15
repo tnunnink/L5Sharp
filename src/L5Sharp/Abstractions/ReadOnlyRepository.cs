@@ -7,21 +7,26 @@ namespace L5Sharp.Abstractions
 {
     public class ReadOnlyRepository<T> : IReadOnlyRepository<T> where T : IComponent
     {
-        protected readonly XElement Context;
+        protected readonly LogixContext Context;
+        protected readonly XElement Container;
 
-        protected ReadOnlyRepository(XElement context)
+        protected ReadOnlyRepository(LogixContext context)
         {
             Context = context;
+            Container = context.Content.Container<T>();
         }
 
         public virtual IEnumerable<T> GetAll()
         {
-            return Context.GetAll<T>().Select(x => x.Deserialize<T>());
+            var cache = Context.GetCache<T>();
+            return Container.GetAll<T>()
+                .Select(e => cache.GetOrCreate(e.GetName(), () => e.Deserialize<T>(Context)));
         }
 
         public virtual T Get(string name)
         {
-            return Context.GetFirst<T>(name).Deserialize<T>();
+            var cache = Context.GetCache<T>();
+            return cache.GetOrCreate(name, () => Container.GetFirst<T>(name).Deserialize<T>(Context));
         }
     }
 }

@@ -32,7 +32,7 @@ namespace L5Sharp.Serialization.Tests
             FileAssert.Exists(_fileName);
         }
         
-        [Test]
+        /*[Test]
         public void Deserialize_SimpleBool_ResultsShouldNotBeNull()
         {
             var element = _document.Descendants(LogixNames.Components.Tag)
@@ -52,7 +52,7 @@ namespace L5Sharp.Serialization.Tests
             var result = _serializer.Deserialize(element);
 
             result.Should().NotBeNull();
-        }
+        }*/
         
         [Test]
         public void Serialize_Tag_ShouldNotBeNull()
