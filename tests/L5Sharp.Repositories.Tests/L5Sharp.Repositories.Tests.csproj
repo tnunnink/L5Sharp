@@ -14,13 +14,13 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\src\L5Sharp\L5Sharp.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
       <Content Include="TestFiles\Test.xml">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\src\L5Sharp.csproj" />
     </ItemGroup>
 
 </Project>

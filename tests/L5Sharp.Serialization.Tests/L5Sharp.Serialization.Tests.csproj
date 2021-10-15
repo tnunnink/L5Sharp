@@ -16,10 +16,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\src\L5Sharp\L5Sharp.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
       <None Update="ControllerSerializationTests.Serialize_WhenCalled_ShouldHaveApprovedOutput.approved.xml">
         <ParentExtension>.cs</ParentExtension>
         <ParentFile>ControllerSerializationTests</ParentFile>
@@ -67,6 +63,10 @@
 
     <ItemGroup>
       <None Remove="TestFiles\Test.xml" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\src\L5Sharp.csproj" />
     </ItemGroup>
 
 </Project>
