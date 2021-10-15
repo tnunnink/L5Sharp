@@ -38,20 +38,6 @@ namespace L5Sharp.Extensions
             { typeof(ITask), LogixNames.Containers.Tasks }
         };
 
-        public static T Deserialize<T>(this XElement element, LogixContext context) where T : IComponent
-        {
-            /*var type = typeof(T);
-
-            if (!Serializers.ContainsKey(type))
-                throw new InvalidOperationException($"No serializer defined for type '{type}'");
-
-            var serializer = (IComponentSerializer<T>)Serializers[type];*/
-            
-            var serializer = context.GetSerializer<T>();
-
-            return default;
-        }
-        
         public static bool Contains<T>(this XElement element, string name) where T : IComponent
         {
             var component = GetComponentName<T>();
@@ -82,7 +68,7 @@ namespace L5Sharp.Extensions
             return element.Descendants(container).FirstOrDefault();
         }
 
-        public static XAttribute ToXAttribute<TComponent, TProperty>(this TComponent component, 
+        public static XAttribute ToAttribute<TComponent, TProperty>(this TComponent component, 
             Expression<Func<TComponent, TProperty>> propertyExpression)
             where TComponent : IComponent
         {
@@ -95,7 +81,7 @@ namespace L5Sharp.Extensions
             return new XAttribute(memberExpression.Member.Name, value);
         }
         
-        public static XElement ToXElement<TComponent, TProperty>(this TComponent component, 
+        public static XElement ToElement<TComponent, TProperty>(this TComponent component, 
             Expression<Func<TComponent, TProperty>> propertyExpression)
             where TComponent : IComponent
         {
@@ -108,8 +94,7 @@ namespace L5Sharp.Extensions
             return new XElement(memberExpression.Member.Name, value);
         }
         
-        // ReSharper disable once InconsistentNaming
-        public static XElement ToXCDataElement<TComponent, TProperty>(this TComponent component, 
+        public static XElement ToCDataElement<TComponent, TProperty>(this TComponent component, 
             Expression<Func<TComponent, TProperty>> propertyExpression)
             where TComponent : IComponent
         {
@@ -182,8 +167,17 @@ namespace L5Sharp.Extensions
         public static ExternalAccess GetValue<TComponent>(this XElement element,
             Expression<Func<TComponent, ExternalAccess>> propertyExpression)
             where TComponent : IComponent
-            => element.GetAttributeValueInternal(propertyExpression,
-                v => v != null ? ExternalAccess.FromName(v) : null);
+            => element.GetAttributeValueInternal(propertyExpression, v => v != null ? ExternalAccess.FromName(v) : null);
+        
+        public static TaskType GetValue<TComponent>(this XElement element,
+            Expression<Func<TComponent, TaskType>> propertyExpression)
+            where TComponent : IComponent
+            => element.GetAttributeValueInternal(propertyExpression, v => v != null ? TaskType.FromName(v) : null);
+
+        public static TaskTrigger GetValue<TComponent>(this XElement element,
+            Expression<Func<TComponent, TaskTrigger>> propertyExpression)
+            where TComponent : IComponent
+            => element.GetAttributeValueInternal(propertyExpression, v => v != null ? TaskTrigger.FromName(v) : null);
 
         public static string GetElementValue<TComponent, TProperty>(this XElement element,
             Expression<Func<TComponent, TProperty>> propertyExpression)

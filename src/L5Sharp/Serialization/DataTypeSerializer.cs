@@ -18,12 +18,12 @@ namespace L5Sharp.Serialization
             if (component == null) throw new ArgumentNullException(nameof(component));
 
             var element = new XElement(LogixNames.Components.DataType);
-            element.Add(component.ToXAttribute(c => c.Name));
-            element.Add(component.ToXAttribute(c => c.Family));
-            element.Add(component.ToXAttribute(c => c.Class));
+            element.Add(component.ToAttribute(c => c.Name));
+            element.Add(component.ToAttribute(c => c.Family));
+            element.Add(component.ToAttribute(c => c.Class));
 
             if (!string.IsNullOrEmpty(component.Description))
-                element.Add(component.ToXCDataElement(c => c.Description));
+                element.Add(component.ToCDataElement(c => c.Description));
 
             element.Add(new XElement(nameof(component.Members),
                 component.Members.Select(m => m.Serialize())));

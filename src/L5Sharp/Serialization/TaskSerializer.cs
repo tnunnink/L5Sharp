@@ -12,19 +12,19 @@ namespace L5Sharp.Serialization
         public XElement Serialize(ITask component)
         {
             var element = new XElement(LogixNames.Components.Task);
-            element.Add(component.ToXAttribute(c => c.Name));
-            element.Add(component.ToXAttribute(c => c.Type));
-            element.Add(component.ToXAttribute(c => c.Priority));
+            element.Add(component.ToAttribute(c => c.Name));
+            element.Add(component.ToAttribute(c => c.Type));
+            element.Add(component.ToAttribute(c => c.Priority));
 
             if (component is PeriodicTask periodicTask)
-                element.Add(periodicTask.ToXAttribute(c => c.Rate));
+                element.Add(periodicTask.ToAttribute(c => c.Rate));
 
-            element.Add(component.ToXAttribute(c => c.Watchdog));
-            element.Add(component.ToXAttribute(c => c.InhibitTask));
-            element.Add(component.ToXAttribute(c => c.DisableUpdateOutputs));
+            element.Add(component.ToAttribute(c => c.Watchdog));
+            element.Add(component.ToAttribute(c => c.InhibitTask));
+            element.Add(component.ToAttribute(c => c.DisableUpdateOutputs));
 
             if (!string.IsNullOrEmpty(component.Description))
-                element.Add(component.ToXElement(c => c.Description));
+                element.Add(component.ToElement(c => c.Description));
 
             var programs = component.ScheduledPrograms.ToList();
             if (programs.Count <= 0) return element;

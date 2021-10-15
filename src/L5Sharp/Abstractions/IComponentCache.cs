@@ -9,6 +9,8 @@ namespace L5Sharp.Abstractions
     
     public interface IComponentCache<T> : IComponentCache where T : IComponent
     {
-        T GetOrCreate(string name, Func<T> create);
+        bool HasComponent(string name);
+        void Cache(T component);
+        T Get(string name);
     }
 }

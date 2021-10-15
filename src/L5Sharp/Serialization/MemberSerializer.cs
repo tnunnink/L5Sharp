@@ -13,14 +13,14 @@ namespace L5Sharp.Serialization
         public XElement Serialize(IMember component)
         {
             var element = new XElement(LogixNames.Components.Member);
-            element.Add(component.ToXAttribute(c => c.Name));
-            element.Add(component.ToXAttribute(c => c.DataType));
-            element.Add(component.ToXAttribute(c => c.Dimension));
-            element.Add(component.ToXAttribute(c => c.Radix));
-            element.Add(component.ToXAttribute(c => c.ExternalAccess));
+            element.Add(component.ToAttribute(c => c.Name));
+            element.Add(component.ToAttribute(c => c.DataType));
+            element.Add(component.ToAttribute(c => c.Dimension));
+            element.Add(component.ToAttribute(c => c.Radix));
+            element.Add(component.ToAttribute(c => c.ExternalAccess));
             
             if (!string.IsNullOrEmpty(component.Description))
-                element.Add(component.ToXCDataElement(x => x.Description));
+                element.Add(component.ToCDataElement(x => x.Description));
 
             return element;
         }

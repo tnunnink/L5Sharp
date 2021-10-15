@@ -7,12 +7,20 @@ namespace L5Sharp.Abstractions
     {
         private readonly Dictionary<string, T> _cache = new Dictionary<string, T>(StringComparer.OrdinalIgnoreCase);
 
-        public T GetOrCreate(string name, Func<T> create)
+        public bool HasComponent(string name)
         {
-            if (_cache.ContainsKey(name)) return _cache[name];
-            
-            var component = create();
+            return _cache.ContainsKey(name);
+        }
+
+        public void Cache(T component)
+        {
+            if (_cache.ContainsKey(component.Name)) return;
             _cache.Add(component.Name, component);
+        }
+
+        public T Get(string name)
+        {
+            _cache.TryGetValue(name, out var component);
             return component;
         }
     }

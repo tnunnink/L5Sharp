@@ -6,21 +6,21 @@ using L5Sharp.Extensions;
 
 [assembly: InternalsVisibleTo("L5Sharp.Serialization.Tests")]
 
-namespace L5Sharp.Serialization
+namespace L5Sharp.Factories
 {
-    internal class MemberMaterializer : IComponentMaterializer<IMember>
+    internal class MemberFactory : IComponentFactory<IMember>
     {
         private readonly LogixContext _context;
 
-        public MemberMaterializer(LogixContext context)
+        public MemberFactory(LogixContext context)
         {
             _context = context;
         }
 
-        public IMember Materialize(XElement element)
+        public IMember Create(XElement element)
         {
             var typeName = element.GetValue<IMember, IDataType, string>(m => m.DataType, s => s);
-            var dataType = _context.FindDataType(typeName);
+            var dataType = _context.DataTypes.Get(typeName);
 
             var name = element.GetName();
             var description = element.GetDescription();

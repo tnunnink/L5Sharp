@@ -48,7 +48,7 @@ namespace L5Sharp.Tests.ExtensionTests
         {
             var component = new DataType("Test");
 
-            var attribute = component.ToXAttribute(c => c.Name);
+            var attribute = component.ToAttribute(c => c.Name);
 
             attribute.Should().NotBeNull();
             attribute.Name.ToString().Should().Be("Name");

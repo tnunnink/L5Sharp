@@ -5,8 +5,8 @@ using L5Sharp.Abstractions;
 using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Extensions;
+using L5Sharp.Factories;
 using L5Sharp.Repositories;
-using L5Sharp.Serialization;
 using L5Sharp.Utilities;
 
 namespace L5Sharp
@@ -14,23 +14,23 @@ namespace L5Sharp
     public class LogixContext
     {
         private readonly XDocument _document;
-
-        private readonly Dictionary<Type, IComponentSerializer> _serializers = new Dictionary<Type, IComponentSerializer>
-        {
-        };
+        private readonly Dictionary<Type, IComponentFactory> _factories = new Dictionary<Type, IComponentFactory>();
 
         private readonly Dictionary<Type, IComponentCache> _cache = new Dictionary<Type, IComponentCache>
         {
-            {typeof(IDataType), new ComponentCache<DataType>()}
+            { typeof(IDataType), new ComponentCache<IDataType>() },
+            { typeof(ITag), new ComponentCache<ITag>() }
         };
 
         private LogixContext(XDocument document)
         {
             if (document == null) throw new ArgumentNullException(nameof(document));
-            
+
             //todo validate document?
-            
+
             _document = document;
+            
+            _factories.Add(typeof(IDataType), new DataTypeFactory(this));
         }
 
         public LogixContext(string fileName) : this(XDocument.Load(fileName))
@@ -60,38 +60,27 @@ namespace L5Sharp
         public string Owner => Content.Attribute(nameof(Owner))?.Value;
 
         public IDataTypeRepository DataTypes => new DataTypeRepository(this);
-        
+
         internal XElement Content => _document.Root;
 
-        internal IComponentCache<T> GetCache<T>()  where T : IComponent 
+        internal IComponentCache<T> GetCache<T>() where T : IComponent
         {
             var type = typeof(T);
 
             if (!_cache.ContainsKey(type))
                 throw new InvalidOperationException($"Cache not defined for component of type '{type}'");
 
-            return (IComponentCache<T>) _cache[type];
+            return (IComponentCache<T>)_cache[type];
         }
-        
-        internal IComponentSerializer<T> GetSerializer<T>()  where T : IComponent 
+
+        internal IComponentFactory<T> GetFactory<T>() where T : IComponent
         {
             var type = typeof(T);
 
-            if (!_serializers.ContainsKey(type))
+            if (!_factories.ContainsKey(type))
                 throw new InvalidOperationException($"Serializer not defined for component of type '{type}'");
 
-            return (IComponentSerializer<T>) _serializers[type];
-        }
-        
-        internal IDataType FindDataType(string name)
-        {
-            if (name == null) throw new ArgumentNullException(nameof(name));
-
-            if (Predefined.ContainsType(name))
-                return Predefined.ParseType(name);
-
-            var element = Content.GetFirst<DataType>(name);
-            return element?.Deserialize<IDataType>(this);
+            return (IComponentFactory<T>)_factories[type];
         }
 
         private static XDocument GenerateContent(IComponent component, Revision revision)
@@ -108,7 +97,7 @@ namespace L5Sharp
             root.Add(new XAttribute("ExportOptions", ""));
 
             if (component is IController) return new XDocument(declaration, root);
-            
+
             var controllerElement = new XElement(LogixNames.Components.Controller);
             //todo add other properties needed
             root.Add(controllerElement);

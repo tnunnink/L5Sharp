@@ -5,13 +5,13 @@ using L5Sharp.Abstractions;
 using L5Sharp.Enums;
 using L5Sharp.Extensions;
 
-namespace L5Sharp.Serialization
+namespace L5Sharp.Factories
 {
-    public class TaskMaterializer : IComponentMaterializer<ITask>
+    public class TaskFactory : IComponentMaterializer<ITask>
     {
         public ITask Materialize(XElement element)
         {
-            var type = element.GetValue<ITask, TaskType>(t => t.Type, s => TaskType.FromName(s));
+            var type = element.GetValue<ITask>(t => t.Type);
             if (type == null) throw new InvalidOperationException();
             
             var name = element.GetName();

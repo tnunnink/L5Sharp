@@ -1,10 +1,24 @@
 ﻿using System.Xml.Linq;
 using L5Sharp.Abstractions;
 
-namespace L5Sharp.Serialization
+namespace L5Sharp.Factories
 {
-    public class TagMaterializer : IComponentMaterializer<ITag>
+    public class TagFactory : IComponentFactory<ITag>
     {
+        private readonly LogixContext _context;
+        private readonly IComponentCache<IDataType> _cache;
+
+        public TagFactory(LogixContext context)
+        {
+            _context = context;
+            _cache = _context.GetCache<IDataType>();
+        }
+        
+        public ITag Create(XElement element)
+        {
+            throw new System.NotImplementedException();
+        }
+
         public ITag Materialize(XElement element)
         {
             /*var dataType = element.GetDataType();
@@ -29,7 +43,7 @@ namespace L5Sharp.Serialization
             return tag;*/
             return null;
         }
-        
+
         /*
         private static void UpdateTagValue(XElement element, ITagMember tag, Predefined type)
         {

@@ -17,6 +17,11 @@ namespace L5Sharp.Repositories
         {
         }
 
+        public override IDataType Get(string name)
+        {
+            return Predefined.ContainsType(name) ? Predefined.ParseType(name) : base.Get(name);
+        }
+
         public override void Add(IDataType component)
         {
             if (Container.Contains<IDataType>(component.Name))
@@ -46,7 +51,7 @@ namespace L5Sharp.Repositories
         {
             return Container.Descendants(LogixNames.Components.Member)
                 .Where(x => x.GetValue<IMember, IDataType, string>(m => m.DataType, s => s) == dataType.Name)
-                .Select(x => x.Parent.Deserialize<DataType>(Context));
+                .Select(x => Factory.Create(x.Parent));
         }
     }
 }

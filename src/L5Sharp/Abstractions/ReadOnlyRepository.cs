@@ -9,24 +9,23 @@ namespace L5Sharp.Abstractions
     {
         protected readonly LogixContext Context;
         protected readonly XElement Container;
+        internal readonly IComponentFactory<T> Factory;
 
         protected ReadOnlyRepository(LogixContext context)
         {
             Context = context;
             Container = context.Content.Container<T>();
+            Factory = context.GetFactory<T>();
         }
 
         public virtual IEnumerable<T> GetAll()
         {
-            var cache = Context.GetCache<T>();
-            return Container.GetAll<T>()
-                .Select(e => cache.GetOrCreate(e.GetName(), () => e.Deserialize<T>(Context)));
+            return Container.GetAll<T>().Select(e => Factory.Create(e));
         }
 
         public virtual T Get(string name)
         {
-            var cache = Context.GetCache<T>();
-            return cache.GetOrCreate(name, () => Container.GetFirst<T>(name).Deserialize<T>(Context));
+            return Factory.Create(Container.GetFirst<T>(name));
         }
     }
 }
