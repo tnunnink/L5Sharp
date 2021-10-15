@@ -11,7 +11,7 @@ using L5Sharp.Utilities;
 
 namespace L5Sharp.Serialization
 {
-    internal class TagMemberSerializer : IComponentSerializer<TagMember>
+    /*internal class TagMemberSerializer : IComponentSerializer<TagMember>
     {
         private readonly ITagMember _parent;
 
@@ -40,11 +40,6 @@ namespace L5Sharp.Serialization
             member.Add(component.Members.Select(m => Serialize((TagMember)m)));
 
             return member;
-        }
-
-        public TagMember Deserialize(XElement element)
-        {
-            throw new NotImplementedException();
         }
 
         private static XElement GenerateDataValueMember(ITagMember member)
@@ -83,5 +78,5 @@ namespace L5Sharp.Serialization
             element.Add(new XAttribute(LogixNames.Attributes.DataType, member.DataType));
             return element;
         }
-    }
+    }*/
 }

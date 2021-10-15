@@ -9,9 +9,12 @@ namespace L5Sharp.Serialization
 {
     public class TaskSerializer : IComponentSerializer<ITask>
     {
+        private static readonly string ScheduledProgram = nameof(ScheduledProgram);
+        private static readonly string Name = nameof(Name);
+        
         public XElement Serialize(ITask component)
         {
-            var element = new XElement(LogixNames.Components.Task);
+            var element = new XElement(LogixNames.GetComponentName<ITask>());
             element.Add(component.ToAttribute(c => c.Name));
             element.Add(component.ToAttribute(c => c.Type));
             element.Add(component.ToAttribute(c => c.Priority));
@@ -32,8 +35,7 @@ namespace L5Sharp.Serialization
             var scheduled = new XElement(nameof(component.ScheduledPrograms));
             
             foreach (var program in programs)
-                scheduled.Add(new XElement("ScheduledProgram",
-                    new XAttribute(LogixNames.Attributes.Name, program)));
+                scheduled.Add(new XElement(ScheduledProgram, new XAttribute(Name, program)));
 
             element.Add(scheduled);
 

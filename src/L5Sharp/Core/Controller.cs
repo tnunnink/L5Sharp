@@ -7,13 +7,15 @@ using L5Sharp.Utilities;
 
 namespace L5Sharp.Core
 {
-    public class Controller : IController
+    public class Controller : ComponentBase, IController
     {
-        private string _name;
         private readonly Dictionary<string, IDataType> _dataTypes = new Dictionary<string, IDataType>();
         private readonly Dictionary<string, ITag> _tags = new Dictionary<string, ITag>();
+        private readonly Dictionary<string, IProgram> _programs = new Dictionary<string, IProgram>();
+        private readonly Dictionary<string, ITask> _tasks = new Dictionary<string, ITask>();
 
-        public Controller(string name, Revision revision = null, ProcessorType processorType = null, string description = null)
+        public Controller(string name, Revision revision = null, ProcessorType processorType = null,
+            string description = null) : base(name, description)
         {
             Name = name;
             Description = description ?? string.Empty;
@@ -22,18 +24,6 @@ namespace L5Sharp.Core
             ProjectCreationDate = DateTime.Now;
             LastModifiedDate = DateTime.Now;
         }
-
-        public string Name
-        {
-            get => _name;
-            set
-            {
-                Validate.Name(value);
-                _name = value;
-            }
-        }
-
-        public string Description { get; set; }
 
         public ProcessorType ProcessorType { get; }
 
@@ -49,6 +39,8 @@ namespace L5Sharp.Core
 
         public IEnumerable<IDataType> DataTypes => _dataTypes.Values.AsEnumerable();
         public IEnumerable<ITag> Tags => _tags.Values.AsEnumerable();
+        public IEnumerable<IProgram> Programs => _programs.Values.AsEnumerable();
+        public IEnumerable<ITask> Tasks => _tasks.Values.AsEnumerable();
 
         public void AddDataType(IDataType dataType)
         {
@@ -59,20 +51,19 @@ namespace L5Sharp.Core
 
             _dataTypes.Add(dataType.Name, dataType);
         }
-        
+
         public void RemoveDataType(IDataType dataType)
         {
             if (dataType == null) throw new ArgumentNullException(nameof(dataType));
-            
+
             if (_tags.Values.Any(t => t.DataType == dataType.Name))
                 Throw.ComponentReferencedException(dataType.Name, typeof(DataType));
 
-            if (!_dataTypes.ContainsKey(dataType.Name))
-                Throw.ComponentNotFoundException(dataType.Name, typeof(DataType));
+            if (!_dataTypes.ContainsKey(dataType.Name)) return;
 
             _dataTypes.Remove(dataType.Name);
         }
-        
+
         public void AddTag(ITag tag)
         {
             if (tag == null) throw new ArgumentNullException(nameof(tag));
@@ -82,20 +73,39 @@ namespace L5Sharp.Core
 
             _tags.Add(tag.Name, tag);
         }
-        
+
         public void RemoveTag(ITag tag)
         {
             if (tag == null) throw new ArgumentNullException(nameof(tag));
-            
-            //todo I guess tags that are referenced in rung cant be deleted. Should we enforce that?
+
+            //todo I guess tags that are referenced in rungs cant be deleted. Should we enforce that?
             /*if (_tags.Values.Any(x => x.DataType == dataType.Name))
                 Throw.ComponentReferencedException(dataType.Name, typeof(DataType));*/
-            
+
             if (!_tags.ContainsKey(tag.Name))
-                Throw.ComponentNotFoundException(tag.Name, typeof(Tag)); 
+                Throw.ComponentNotFoundException(tag.Name, typeof(Tag));
 
             _tags.Remove(tag.Name);
         }
 
+        public void AddProgram(IProgram program)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void RemoveProgram(IProgram program)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void AddTask(ITask task)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void RemoveTask(ITask task)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -6,7 +6,7 @@ using L5Sharp.Abstractions;
 using L5Sharp.Core;
 using L5Sharp.Extensions;
 
-[assembly: InternalsVisibleTo("L5Sharp.Serialization.Tests")]
+[assembly: InternalsVisibleTo("L5Sharp.Factories.Tests")]
 
 namespace L5Sharp.Factories
 {
@@ -31,12 +31,14 @@ namespace L5Sharp.Factories
             if (_cache.HasComponent(name))
                 return _cache.Get(name);
 
-            var factory = new MemberFactory(_context);
+            var factory = _context.GetFactory<Member>();
 
-            var members = element.GetAll<IMember>().Select(x => factory.Create(x));
+            var members = element.GetAll<Member>().Select(x => factory.Create(x));
             var description = element.GetDescription();
 
-            return new DataType(name, members, description);
+            var type = new DataType(name, members, description);
+            _cache.Add(type);
+            return type;
         }
     }
 }

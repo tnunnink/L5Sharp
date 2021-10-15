@@ -6,7 +6,6 @@ using L5Sharp.Abstractions;
 using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Extensions;
-using L5Sharp.Utilities;
 
 [assembly: InternalsVisibleTo("L5Sharp.Serialization.Tests")]
 
@@ -14,18 +13,31 @@ namespace L5Sharp.Serialization
 {
     internal class TagSerializer : IComponentSerializer<ITag>
     {
+        public const string Data = nameof(Data);
+        public const string DataValue = nameof(DataValue);
+        public const string Array = nameof(Array);
+        public const string Index = nameof(Index);
+        public const string Element = nameof(Element);
+        public const string Structure = nameof(Structure);
+        public const string ArrayMember = nameof(ArrayMember);
+        public const string DataValueMember = nameof(DataValueMember);
+        public const string StructureMember = nameof(StructureMember);
+        
         public XElement Serialize(ITag component)
         {
             var element = new XElement(nameof(Tag));
-            element.Add(new XAttribute(nameof(component.Name), component.Name));
-            element.Add(new XAttribute(nameof(component.TagType), component.TagType));
-            element.Add(new XAttribute(nameof(component.DataType), component.DataType));
+            element.Add(component.ToAttribute(t => t.Name));
+            element.Add(component.ToAttribute(t => t.TagType));
+            element.Add(component.ToAttribute(t => t.DataType));
+            
             if (component.Dimensions.Length > 0)
-                element.Add(new XAttribute(LogixNames.Attributes.Dimensions, component.Dimensions.ToString()));
+                element.Add(component.ToAttribute(t => t.Dimensions));
+            
             if (component.Radix != Radix.Null)
-                element.Add(new XAttribute(nameof(component.Radix), component.Radix));
-            element.Add(new XAttribute(nameof(component.Constant), component.Constant));
-            element.Add(new XAttribute(nameof(component.ExternalAccess), component.ExternalAccess));
+                element.Add(component.ToAttribute(t => t.Radix));
+            
+            element.Add(component.ToAttribute(t => t.Constant));
+            element.Add(component.ToAttribute(t => t.ExternalAccess));
 
             /*if (!string.IsNullOrEmpty(component.AliasFor))
                 element.Add(new XAttribute(nameof(component.AliasFor), component.AliasFor));*/
@@ -44,25 +56,25 @@ namespace L5Sharp.Serialization
 
         private static XElement GenerateDataElement(ITagMember tag)
         {
-            var data = new XElement(LogixNames.Elements.Data);
+            var data = new XElement(Data);
             data.Add(new XAttribute("Format", "Decorated"));
 
             if (tag.IsValueMember)
             {
-                var dataValue = new XElement(LogixNames.Elements.DataValue);
-                dataValue.Add(new XAttribute(LogixNames.Attributes.DataType, tag.DataType));
-                dataValue.Add(new XAttribute(LogixNames.Attributes.Radix, tag.Radix.Name));
-                dataValue.Add(new XAttribute(LogixNames.Attributes.Value, tag.Value));
+                var dataValue = new XElement(DataValue);
+                dataValue.Add(tag.ToAttribute(t => t.DataType));
+                dataValue.Add(tag.ToAttribute(t => t.Radix));
+                dataValue.Add(tag.ToAttribute(t => t.Value));
                 data.Add(dataValue);
                 return data;
             }
 
             if (tag.IsArrayMember)
             {
-                var array = new XElement(LogixNames.Elements.Array);
-                array.Add(new XAttribute(LogixNames.Attributes.DataType, tag.DataType));
-                array.Add(new XAttribute(LogixNames.Attributes.Dimensions, tag.Dimensions.ToString()));
-                array.Add(new XAttribute(LogixNames.Attributes.Radix, tag.Radix.Name));
+                var array = new XElement(Array);
+                array.Add(tag.ToAttribute(t => t.DataType));
+                array.Add(tag.ToAttribute(t => t.Dimensions));
+                array.Add(tag.ToAttribute(t => t.Radix));
                 array.Add(tag.Members.Select(m => m.Serialize()));
                 data.Add(array);
                 return data;
@@ -71,8 +83,8 @@ namespace L5Sharp.Serialization
             if (!tag.IsStructureMember)
                 throw new InvalidOperationException();
 
-            var structure = new XElement(LogixNames.Elements.Structure);
-            structure.Add(new XAttribute(LogixNames.Attributes.DataType, tag.DataType));
+            var structure = new XElement(Structure);
+            structure.Add(tag.ToAttribute(t => t.DataType));
             structure.Add(tag.Members.Select(m => m.Serialize()));
             data.Add(structure);
             return data;

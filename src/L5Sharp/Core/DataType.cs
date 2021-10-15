@@ -22,12 +22,12 @@ namespace L5Sharp.Core
             Description = description ?? string.Empty;
         }
 
-        public DataType(string name, IMember member, string description = null) : this(name, description)
+        public DataType(string name, Member member, string description = null) : this(name, description)
         {
             AddMemberComponent(member);
         }
 
-        public DataType(string name, IEnumerable<IMember> members, string description = null) : this(name, description)
+        public DataType(string name, IEnumerable<Member> members, string description = null) : this(name, description)
         {
             foreach (var member in members)
                 AddMemberComponent(member);
@@ -65,16 +65,6 @@ namespace L5Sharp.Core
 
         public IEnumerable<IMember> Members => _members.Values.AsEnumerable();
 
-        public bool SupportsRadix(Radix radix)
-        {
-            return radix == Radix.Null;
-        }
-
-        public bool IsValidValue(object value)
-        {
-            return value == null;
-        }
-
         public IMember GetMember(string name) => GetMemberByName(name);
 
         public IEnumerable<IDataType> GetDependentTypes() => GetUniqueMemberTypes(this);
@@ -82,13 +72,11 @@ namespace L5Sharp.Core
         public IEnumerable<IDataType> GetDependentUserTypes() =>
             GetUniqueMemberTypes(this).Where(t => t.Class == DataTypeClass.User);
 
-        public bool ContainsNullType() => GetUniqueMemberTypes(this).Any(t => t.Equals(Predefined.Undefined));
-
         public void AddMember(string name, IDataType dataType, string description = null,
             ushort dimension = 0, Radix radix = null, ExternalAccess access = null) =>
             AddMemberComponent(new Member(name, dataType, dimension, radix, access, description));
 
-        public void RemoveMember(string name) => RemoveMemberComponent(GetMemberByName(name));
+        public void RemoveMember(string name) => RemoveMemberComponent((Member)GetMemberByName(name));
 
         public bool Equals(DataType other)
         {
@@ -126,39 +114,17 @@ namespace L5Sharp.Core
         {
             return !Equals(left, right);
         }
+        
+        internal event EventHandler MemberUpdated;
 
         /// <summary>
-        /// Adds a member to the data type member collection
+        /// Determines if the members collection contains a member with the provided name
         /// </summary>
-        /// <param name="member">The member to add</param>
-        /// <exception cref="ArgumentNullException">Thrown when member is null</exception>
-        private void AddMemberComponent(IMember member)
+        /// <param name="name">The name of the member to find</param>
+        /// <returns>True when a member with the provided name exists</returns>
+        private bool HasMemberName(string name)
         {
-            if (member == null)
-                throw new ArgumentNullException(nameof(member), "Member can nt be null");
-
-            if (HasMemberName(member.Name))
-                Throw.ComponentNameCollisionException(member.Name, typeof(Member));
-
-            if (member.DataType.Equals(this))
-                throw new CircularReferenceException(
-                    $"Member can not have same type as parent type '{member.DataType.Name}'");
-
-            _members.Add(member.Name, member);
-        }
-
-        /// <summary>
-        /// Removes the member from the data type's member collection.
-        /// </summary>
-        /// <param name="component"></param>
-        /// <exception cref="ArgumentNullException"></exception>
-        private void RemoveMemberComponent(IComponent component)
-        {
-            if (component == null) return;
-
-            if (!HasMemberName(component.Name)) return;
-
-            _members.Remove(component.Name);
+            return _members.ContainsKey(name);
         }
 
         /// <summary>
@@ -170,16 +136,6 @@ namespace L5Sharp.Core
         {
             _members.TryGetValue(name, out var member);
             return member;
-        }
-
-        /// <summary>
-        /// Determines if the members collection contains a member with the provided name
-        /// </summary>
-        /// <param name="name">The name of the member to find</param>
-        /// <returns>True when a member with the provided name exists</returns>
-        private bool HasMemberName(string name)
-        {
-            return _members.ContainsKey(name);
         }
 
         /// <summary>
@@ -198,6 +154,58 @@ namespace L5Sharp.Core
             }
 
             return types.Distinct();
+        }
+
+        /// <summary>
+        /// Adds a member to the data type member collection
+        /// </summary>
+        /// <param name="member">The member to add</param>
+        /// <exception cref="ArgumentNullException">Thrown when member is null</exception>
+        private void AddMemberComponent(Member member)
+        {
+            if (member == null)
+                throw new ArgumentNullException(nameof(member), "Member can nt be null");
+
+            if (HasMemberName(member.Name))
+                Throw.ComponentNameCollisionException(member.Name, typeof(Member));
+
+            if (member.DataType.Equals(this))
+                throw new CircularReferenceException(
+                    $"Member can not have same type as parent type '{member.DataType.Name}'");
+            
+            member.Updated += OnMemberUpdated;
+
+            _members.Add(member.Name, member);
+            
+            RaiseMemberUpdated();
+        }
+
+        /// <summary>
+        /// Removes the member from the data type's member collection.
+        /// </summary>
+        /// <param name="member"></param>
+        /// <exception cref="ArgumentNullException"></exception>
+        private void RemoveMemberComponent(Member member)
+        {
+            if (member == null) return;
+
+            if (!HasMemberName(member.Name)) return;
+
+            member.Updated -= OnMemberUpdated;
+
+            _members.Remove(member.Name);
+            
+            RaiseMemberUpdated();
+        }
+
+        private void RaiseMemberUpdated()
+        {
+            MemberUpdated?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void OnMemberUpdated(object sender, EventArgs e)
+        {
+            RaiseMemberUpdated();
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System;
+using System.Runtime.CompilerServices;
 using System.Xml.Linq;
 using L5Sharp.Abstractions;
 using L5Sharp.Extensions;
@@ -12,7 +13,9 @@ namespace L5Sharp.Serialization
     {
         public XElement Serialize(IMember component)
         {
-            var element = new XElement(LogixNames.Components.Member);
+            if (component == null) throw new ArgumentNullException(nameof(component));
+            
+            var element = new XElement(LogixNames.GetComponentName<IMember>());
             element.Add(component.ToAttribute(c => c.Name));
             element.Add(component.ToAttribute(c => c.DataType));
             element.Add(component.ToAttribute(c => c.Dimension));
@@ -20,7 +23,7 @@ namespace L5Sharp.Serialization
             element.Add(component.ToAttribute(c => c.ExternalAccess));
             
             if (!string.IsNullOrEmpty(component.Description))
-                element.Add(component.ToCDataElement(x => x.Description));
+                element.Add(component.ToElement(x => x.Description));
 
             return element;
         }

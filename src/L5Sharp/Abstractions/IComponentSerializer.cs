@@ -1,7 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-using System.Xml.Linq;
-
-[assembly: InternalsVisibleTo("L5Sharp.Loaders.Tests")]
+﻿using System.Xml.Linq;
 
 namespace L5Sharp.Abstractions
 {

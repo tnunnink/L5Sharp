@@ -12,8 +12,6 @@ namespace L5Sharp.Abstractions
         public Radix DefaultRadix { get; }
         public TagDataFormat DataFormat { get; }
         public IEnumerable<IMember> Members { get; }
-        public bool SupportsRadix(Radix radix);
-        public bool IsValidValue(object value);
         public IMember GetMember(string name);
         public IEnumerable<IDataType> GetDependentTypes();
     }

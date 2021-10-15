@@ -4,9 +4,9 @@ using L5Sharp.Enums;
 
 namespace L5Sharp.Abstractions
 {
-    public interface IProgramRepository : IRepository<Program>
+    public interface IProgramRepository : IRepository<IProgram>
     {
-        IEnumerable<Program> GetByTask(PeriodicTask task);
+        IEnumerable<Program> GetByTask(ITask task);
         IEnumerable<Program> GetByType(ProgramType type);
     }
 }

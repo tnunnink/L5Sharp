@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using L5Sharp.Abstractions;
 
-namespace L5Sharp.Abstractions
+namespace L5Sharp.Utilities
 {
-    public class ComponentCache<T> : IComponentCache<T> where T : IComponent
+    internal class ComponentCache<T> : IComponentCache<T> where T : IComponent
     {
         private readonly Dictionary<string, T> _cache = new Dictionary<string, T>(StringComparer.OrdinalIgnoreCase);
 
@@ -12,7 +13,7 @@ namespace L5Sharp.Abstractions
             return _cache.ContainsKey(name);
         }
 
-        public void Cache(T component)
+        public void Add(T component)
         {
             if (_cache.ContainsKey(component.Name)) return;
             _cache.Add(component.Name, component);
@@ -22,6 +23,11 @@ namespace L5Sharp.Abstractions
         {
             _cache.TryGetValue(name, out var component);
             return component;
+        }
+
+        public void Clear()
+        {
+            _cache.Clear();
         }
     }
 }

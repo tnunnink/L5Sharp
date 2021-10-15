@@ -55,11 +55,11 @@ namespace L5Sharp.Core
             Family = element.GetValue<IDataType>(d => d.Family) 
                      ?? throw new ArgumentNullException(nameof(element), "Family can not be null");
 
-            var members = element.Descendants(LogixNames.Components.Member);
+            var members = element.Descendants(LogixNames.GetComponentName<IMember>());
 
             foreach (var e in members)
             {
-                var typeName = e.GetValue<IMember, IDataType, string>(m => m.DataType, s => s);
+                var typeName = e.GetDataTypeName();
                 if (typeName == null)
                     throw new ArgumentNullException(nameof(typeName), "DataType can not be null");
 

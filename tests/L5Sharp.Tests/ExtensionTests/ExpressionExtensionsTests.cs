@@ -2,10 +2,9 @@
 using System.Linq.Expressions;
 using L5Sharp.Abstractions;
 using L5Sharp.Extensions;
-using L5Sharp.Utilities;
 using NUnit.Framework;
 
-namespace L5Sharp.Tests
+namespace L5Sharp.Tests.ExtensionTests
 {
     [TestFixture]
     public class ExpressionExtensionsTests

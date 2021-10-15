@@ -67,9 +67,6 @@
 
     <ItemGroup>
       <None Remove="TestFiles\Test.xml" />
-      <Content Include="TestFiles\Test.xml">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </Content>
     </ItemGroup>
 
 </Project>

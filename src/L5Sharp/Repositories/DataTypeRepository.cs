@@ -19,7 +19,11 @@ namespace L5Sharp.Repositories
 
         public override IDataType Get(string name)
         {
-            return Predefined.ContainsType(name) ? Predefined.ParseType(name) : base.Get(name);
+            return Predefined.ContainsType(name) 
+                ? Predefined.ParseType(name) 
+                : Container.Contains<IDataType>(name) 
+                    ? base.Get(name) 
+                    : Predefined.Undefined;
         }
 
         public override void Add(IDataType component)
@@ -37,11 +41,6 @@ namespace L5Sharp.Repositories
             Container.Add(dependents);
         }
 
-        public override void Remove(IDataType component)
-        {
-            throw new System.NotImplementedException();
-        }
-
         public override void Update(IDataType component)
         {
             throw new System.NotImplementedException();
@@ -49,7 +48,7 @@ namespace L5Sharp.Repositories
 
         public IEnumerable<IDataType> WithMemberType(IDataType dataType)
         {
-            return Container.Descendants(LogixNames.Components.Member)
+            return Container.Descendants(LogixNames.GetComponentName<IMember>())
                 .Where(x => x.GetValue<IMember, IDataType, string>(m => m.DataType, s => s) == dataType.Name)
                 .Select(x => Factory.Create(x.Parent));
         }

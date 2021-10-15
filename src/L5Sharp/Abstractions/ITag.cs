@@ -9,7 +9,8 @@ namespace L5Sharp.Abstractions
         Scope Scope { get; }
         TagUsage Usage { get; }
         bool Constant { get; }
-        IComponent Container { get; }
+        IComponent Parent { get; }
+        void UpdateDataType(IDataType dataType);
         ITag ChangeTagType(TagType type);
         IEnumerable<string> ListMembers();
     }

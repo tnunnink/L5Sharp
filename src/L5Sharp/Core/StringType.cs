@@ -65,24 +65,15 @@ namespace L5Sharp.Core
 
         public IEnumerable<IMember> Members => _members.Values.AsEnumerable();
 
-        public bool SupportsRadix(Radix radix)
-        {
-            return radix == Radix.Null;
-        }
-
-        public bool IsValidValue(object value)
-        {
-            return value is string;
-        }
-
         public IMember GetMember(string name)
         {
-            throw new NotImplementedException();
+            _members.TryGetValue(name, out var member);
+            return member;
         }
 
         public IEnumerable<IDataType> GetDependentTypes()
         {
-            throw new NotImplementedException();
+            return _members.Select(member => member.Value.DataType);
         }
 
         public void UpdateLength(ushort length)

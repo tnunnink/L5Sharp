@@ -12,7 +12,7 @@ using NUnit.Framework;
 namespace L5Sharp.Tests.ExtensionTests
 {
     [TestFixture]
-    public class L5XGenericExtensionsTests
+    public class ElementExtensionsTests
     {
         private readonly string _fileName = Path.Combine(Environment.CurrentDirectory, @"TestFiles\Test.xml");
 
@@ -23,28 +23,34 @@ namespace L5Sharp.Tests.ExtensionTests
         }
 
         [Test]
-        public void GetValue_WhenCalled_ShouldReturnExpectedValue()
+        public void Contains_DataTypeKnownType_ShouldNotBeNull()
         {
-            var element = XElement.Load(_fileName);
-            var target = element.Descendants("DataType").FirstOrDefault();
-
-            var value = target.GetValue<IDataType, DataTypeClass>(t => t.Class, v => DataTypeClass.FromName(v));
-
-            value.Should().NotBeNull();
+            
         }
-        
+
         [Test]
         public void GetFirst_WhenCalled_ShouldBeExpected()
         {
             var element = XElement.Load(_fileName);
 
-            var type = element.Descendants("DataTypes").Single().Nodes().FirstOrDefault();
+            var type = element.GetFirst<DataType>("ArrayType");
 
             type.Should().NotBeNull();
         }
-        
+
         [Test]
-        public void ToXAttribute_ValidComponent_ShouldHaveExpectedNameAndValue()
+        public void GetValue_WhenCalled_ShouldReturnExpectedValue()
+        {
+            var element = XElement.Load(_fileName);
+            var target = element.Descendants("DataType").FirstOrDefault();
+
+            var value = target.GetValue<IDataType>(t => t.Class);
+
+            value.Should().NotBeNull();
+        }
+
+        [Test]
+        public void ToAttribute_ValidComponent_ShouldHaveExpectedNameAndValue()
         {
             var component = new DataType("Test");
 

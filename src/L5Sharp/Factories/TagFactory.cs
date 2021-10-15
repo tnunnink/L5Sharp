@@ -1,9 +1,12 @@
-﻿using System.Xml.Linq;
+﻿using System.Runtime.CompilerServices;
+using System.Xml.Linq;
 using L5Sharp.Abstractions;
+
+[assembly: InternalsVisibleTo("L5Sharp.Factories.Tests")]
 
 namespace L5Sharp.Factories
 {
-    public class TagFactory : IComponentFactory<ITag>
+    internal class TagFactory : IComponentFactory<ITag>
     {
         private readonly LogixContext _context;
         private readonly IComponentCache<IDataType> _cache;

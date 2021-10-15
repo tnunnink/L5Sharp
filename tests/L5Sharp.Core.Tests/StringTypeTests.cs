@@ -120,26 +120,6 @@ namespace L5Sharp.Core.Tests
         }
 
         [Test]
-        public void SupportsRadix_ValidRadix_ShouldBeTrue()
-        {
-            var type = new StringType("Test", 100);
-
-            var result = type.SupportsRadix(Radix.Null);
-
-            result.Should().BeTrue();
-        }
-        
-        [Test]
-        public void SupportsRadix_ValidRadix_ShouldBeFalse()
-        {
-            var type = new StringType("Test", 100);
-
-            var result = type.SupportsRadix(Radix.Exponential);
-
-            result.Should().BeFalse();
-        }
-
-        [Test]
         public void UpdateLength_ValidLength_ShouldUpdateDataMember()
         {
             var type = new StringType("Test", 100);

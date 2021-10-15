@@ -4,7 +4,7 @@ using L5Sharp.Abstractions;
 using L5Sharp.Core;
 using L5Sharp.Extensions;
 
-[assembly: InternalsVisibleTo("L5Sharp.Serialization.Tests")]
+[assembly: InternalsVisibleTo("L5Sharp.Factories.Tests")]
 
 namespace L5Sharp.Factories
 {
@@ -19,7 +19,7 @@ namespace L5Sharp.Factories
 
         public IMember Create(XElement element)
         {
-            var typeName = element.GetValue<IMember, IDataType, string>(m => m.DataType, s => s);
+            var typeName = element.GetDataTypeName();
             var dataType = _context.DataTypes.Get(typeName);
 
             var name = element.GetName();

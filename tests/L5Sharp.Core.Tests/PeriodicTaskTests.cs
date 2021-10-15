@@ -197,8 +197,7 @@ namespace L5Sharp.Core.Tests
         public void RemoveProgram_NonExistingProgram_ProgramsShouldBeEmpty()
         {
             var task = new PeriodicTask("TestTask");
-            task.AddProgram("Program");
-            
+
             task.RemoveProgram("Test");
 
             task.ScheduledPrograms.Should().BeEmpty();

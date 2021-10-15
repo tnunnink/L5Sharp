@@ -55,7 +55,7 @@ namespace L5Sharp.Core.Tests
         }
 
         [Test]
-        public void SetName_ValidName_ShouldUpdateName()
+        public void Name_ValidName_ShouldUpdateName()
         {
             var member = new Member("MemberName", Predefined.Bool);
 
@@ -63,9 +63,20 @@ namespace L5Sharp.Core.Tests
 
             member.Name.Should().Be("Test");
         }
+        
+        [Test]
+        public void Name_ValidName_ShouldRaiseUpdatedEvent()
+        {
+            var member = new Member("MemberName", Predefined.Bool);
+            var monitor = member.Monitor();
+
+            member.Name = "Test";
+
+            monitor.Should().Raise("Updated");
+        }
 
         [Test]
-        public void SetName_InvalidName_ShouldThrowInvalidNameException()
+        public void Name_InvalidName_ShouldThrowInvalidNameException()
         {
             var member = new Member("MemberName", Predefined.Bool);
 
@@ -73,7 +84,7 @@ namespace L5Sharp.Core.Tests
         }
 
         [Test]
-        public void SetName_Null_ShouldThrowInvalidNameException()
+        public void Name_Null_ShouldThrowInvalidNameException()
         {
             var member = new Member("MemberName", Predefined.Bool);
 
@@ -81,7 +92,7 @@ namespace L5Sharp.Core.Tests
         }
 
         [Test]
-        public void SetDataType_ValidDataType_ShouldUpdateDataType()
+        public void DataType_ValidDataType_ShouldUpdateDataType()
         {
             var member = new Member("MemberName", Predefined.Bool);
 
@@ -89,9 +100,20 @@ namespace L5Sharp.Core.Tests
 
             member.DataType.Should().Be(Predefined.Lint);
         }
+        
+        [Test]
+        public void DataType_ValidName_ShouldRaiseUpdatedEvent()
+        {
+            var member = new Member("MemberName", Predefined.Bool);
+            var monitor = member.Monitor();
+
+            member.DataType = Predefined.Lint;
+
+            monitor.Should().Raise("Updated");
+        }
 
         [Test]
-        public void SetDataType_Null_ShouldUpdateDataTypeToNullType()
+        public void DataType_Null_ShouldUpdateDataTypeToNullType()
         {
             var member = new Member("MemberName", Predefined.Bool);
 
@@ -101,7 +123,7 @@ namespace L5Sharp.Core.Tests
         }
 
         [Test]
-        public void SetDimension_ValidNumber_ShouldHaveExpectedDimensions()
+        public void Dimension_ValidNumber_ShouldHaveExpectedDimensions()
         {
             var member = new Member("MemberName", Predefined.Int);
 
@@ -109,9 +131,20 @@ namespace L5Sharp.Core.Tests
 
             member.Dimension.Should().Be(10);
         }
+        
+        [Test]
+        public void Dimension_ValidNumber_ShouldRaiseUpdatedEvent()
+        {
+            var member = new Member("MemberName", Predefined.Bool);
+            var monitor = member.Monitor();
+
+            member.Dimension = 10;
+
+            monitor.Should().Raise("Updated");
+        }
 
         [Test]
-        public void SetRadix_ValidRadix_ShouldUpdateRadix()
+        public void Radix_ValidRadix_ShouldUpdateRadix()
         {
             var member = new Member("MemberName", Predefined.Int);
 
@@ -119,10 +152,21 @@ namespace L5Sharp.Core.Tests
 
             member.Radix.Should().Be(Radix.Ascii);
         }
+        
+        [Test]
+        public void Radix_ValidRadix_ShouldRaiseUpdatedEvent()
+        {
+            var member = new Member("MemberName", Predefined.Int);
+            var monitor = member.Monitor();
+
+            member.Radix = Radix.Ascii;
+
+            monitor.Should().Raise("Updated");
+        }
 
 
         [Test]
-        public void SetRadix_InvalidRadix_ShouldThrowRadixNotSupportedException()
+        public void Radix_InvalidRadix_ShouldThrowRadixNotSupportedException()
         {
             var member = new Member("MemberName", Predefined.Int);
 
@@ -131,15 +175,36 @@ namespace L5Sharp.Core.Tests
 
 
         [Test]
-        public void SetRadix_Null_ShouldThrowArgumentNullException()
+        public void Radix_Null_ShouldThrowArgumentNullException()
         {
             var member = new Member("MemberName", Predefined.Int);
 
             FluentActions.Invoking(() => member.Radix = null).Should().Throw<ArgumentNullException>();
         }
+        
+        [Test]
+        public void ExternalAccess_ReadWrite_ShouldUpdateExternalAccess()
+        {
+            var member = new Member("MemberName", Predefined.Int);
+
+            member.ExternalAccess = ExternalAccess.ReadWrite;
+
+            member.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);
+        }
+        
+        [Test]
+        public void ExternalAccess_ReadWrite_ShouldRaiseUpdatedEvent()
+        {
+            var member = new Member("MemberName", Predefined.Bool);
+            var monitor = member.Monitor();
+
+            member.ExternalAccess = ExternalAccess.ReadWrite;
+
+            monitor.Should().NotRaise("Updated");
+        }
 
         [Test]
-        public void SetExternalAccess_None_ShouldUpdateExternalAccess()
+        public void ExternalAccess_None_ShouldUpdateExternalAccess()
         {
             var member = new Member("MemberName", Predefined.Int);
 
@@ -147,9 +212,20 @@ namespace L5Sharp.Core.Tests
 
             member.ExternalAccess.Should().Be(ExternalAccess.None);
         }
+        
+        [Test]
+        public void ExternalAccess_None_ShouldRaiseUpdatedEvent()
+        {
+            var member = new Member("MemberName", Predefined.Bool);
+            var monitor = member.Monitor();
+
+            member.ExternalAccess = ExternalAccess.None;
+
+            monitor.Should().Raise("Updated");
+        }
 
         [Test]
-        public void SetExternalAccess_ReadOnly_ShouldUpdateExternalAccess()
+        public void ExternalAccess_ReadOnly_ShouldUpdateExternalAccess()
         {
             var member = new Member("MemberName", Predefined.Int);
 
@@ -157,9 +233,20 @@ namespace L5Sharp.Core.Tests
 
             member.ExternalAccess.Should().Be(ExternalAccess.ReadOnly);
         }
+        
+        [Test]
+        public void ExternalAccess_ReadOnly_ShouldRaiseUpdatedEvent()
+        {
+            var member = new Member("MemberName", Predefined.Bool);
+            var monitor = member.Monitor();
+
+            member.ExternalAccess = ExternalAccess.ReadOnly;
+
+            monitor.Should().Raise("Updated");
+        }
 
         [Test]
-        public void SetExternalAccess_Null_ShouldThrowArgumentNullException()
+        public void ExternalAccess_Null_ShouldThrowArgumentNullException()
         {
             var member = new Member("MemberName", Predefined.Int);
 
@@ -167,13 +254,24 @@ namespace L5Sharp.Core.Tests
         }
 
         [Test]
-        public void SetDescription_ValidString_ShouldUpdateString()
+        public void Description_ValidString_ShouldUpdateString()
         {
             var member = new Member("MemberName", Predefined.Int);
 
             member.Description = "This is a test description";
 
             member.Description.Should().Be("This is a test description");
+        }
+        
+        [Test]
+        public void Description_ValidString_ShouldRaiseUpdatedEvent()
+        {
+            var member = new Member("MemberName", Predefined.Bool);
+            var monitor = member.Monitor();
+
+            member.Description = "This is a test description";
+
+            monitor.Should().Raise("Updated");
         }
 
         [Test]

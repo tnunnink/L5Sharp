@@ -1,15 +1,18 @@
 ﻿using System;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Xml.Linq;
 using L5Sharp.Abstractions;
 using L5Sharp.Enums;
 using L5Sharp.Extensions;
 
+[assembly: InternalsVisibleTo("L5Sharp.Factories.Tests")]
+
 namespace L5Sharp.Factories
 {
-    public class TaskFactory : IComponentMaterializer<ITask>
+    internal class TaskFactory : IComponentFactory<ITask>
     {
-        public ITask Materialize(XElement element)
+        public ITask Create(XElement element)
         {
             var type = element.GetValue<ITask>(t => t.Type);
             if (type == null) throw new InvalidOperationException();

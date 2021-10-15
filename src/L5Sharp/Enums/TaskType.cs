@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Globalization;
 using System.Reflection;
-using System.Xml.Linq;
 using Ardalis.SmartEnum;
 using L5Sharp.Abstractions;
 using L5Sharp.Core;
@@ -25,8 +24,6 @@ namespace L5Sharp.Enums
                 BindingFlags.OptionalParamBinding, null, new[] {name, Type.Missing}, CultureInfo.CurrentCulture);
         }
 
-        internal abstract ITask Create(XElement element);
-
         public static readonly TaskType Continuous = new ContinuousType();
         public static readonly TaskType Periodic = new PeriodicType();
         public static readonly TaskType Event = new EventType();
@@ -42,11 +39,6 @@ namespace L5Sharp.Enums
             {
                 return new ContinuousTask(name);
             }
-
-            internal override ITask Create(XElement element)
-            {
-                throw new NotImplementedException();
-            }
         }
 
         private class PeriodicType : TaskType
@@ -59,11 +51,6 @@ namespace L5Sharp.Enums
             {
                 return new PeriodicTask(name);
             }
-
-            internal override ITask Create(XElement element)
-            {
-                throw new NotImplementedException();
-            }
         }
 
         private class EventType : TaskType
@@ -75,11 +62,6 @@ namespace L5Sharp.Enums
             public override ITask Create(string name)
             {
                 return new EventTask(name);
-            }
-
-            internal override ITask Create(XElement element)
-            {
-                throw new NotImplementedException();
             }
         }
     }

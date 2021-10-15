@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using FluentAssertions;
 using L5Sharp.Exceptions;
 using NUnit.Framework;
@@ -64,6 +65,23 @@ namespace L5Sharp.Core.Tests
             controller.RemoveDataType(datatype);
             
             controller.DataTypes.Should().NotContain(datatype);
+        }
+
+        [Test]
+        public void UpdateDataTypeAndSeeHowThatWorks()
+        {
+            var controller = new Controller("Test");
+            var datatype = new DataType("TestType");
+            datatype.AddMember("Test", Predefined.Bool);
+            controller.AddDataType(datatype);
+
+            var type = controller.DataTypes.First();
+            
+            var member = (Member) type.GetMember("Test");
+            member.DataType = Predefined.Dint;
+
+            member.DataType.Should().Be(Predefined.Dint);
+            controller.DataTypes.First().Members.First().DataType.Should().Be(Predefined.Dint);
         }
     }
 }

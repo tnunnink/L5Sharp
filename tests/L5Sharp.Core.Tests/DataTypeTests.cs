@@ -52,7 +52,7 @@ namespace L5Sharp.Core.Tests
             type.DefaultValue.Should().BeNull();
             type.DataFormat.Should().Be(TagDataFormat.Decorated);
         }
-        
+
         [Test]
         public void New_MemberOverload_ShouldBeExpected()
         {
@@ -171,7 +171,7 @@ namespace L5Sharp.Core.Tests
 
             FluentActions.Invoking(() => type.Description = null).Should().Throw<ArgumentNullException>();
         }
-
+        
         [Test]
         public void GetMember_ValidName_ShouldNotBeNull()
         {

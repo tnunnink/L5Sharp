@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using L5Sharp.Abstractions;
 using L5Sharp.Enums;
+using L5Sharp.Exceptions;
 using L5Sharp.Utilities;
 
 namespace L5Sharp.Core
@@ -103,7 +104,11 @@ namespace L5Sharp.Core
             get => _value;
             set
             {
-                if (!_dataType.IsValidValue(value))
+                if (!(_dataType is Predefined { IsAtomic: true } predefined))
+                    throw new NotConfigurableException(
+                        $"Radix property is not not configurable for type {_dataType}. Radix is only configurable for atomic types");
+                
+                if (!predefined.IsValidValue(value))
                     Throw.InvalidTagValueException(value, _dataType.Name);
 
                 _value = value;

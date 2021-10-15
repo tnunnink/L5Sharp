@@ -50,11 +50,11 @@ namespace L5Sharp.Types.Tests
         }
 
         [Test]
-        public void DefaultValue_WhenCalled_ShouldBeZero()
+        public void DefaultValue_WhenCalled_ShouldBeEmpty()
         {
             var type = new String();
 
-            type.DefaultValue.Should().Be(0);
+            type.DefaultValue.Should().Be(string.Empty);
         }
         
         [Test]
@@ -62,7 +62,7 @@ namespace L5Sharp.Types.Tests
         {
             var type = new String();
 
-            type.DefaultRadix.Should().Be(Radix.Decimal);
+            type.DefaultRadix.Should().Be(Radix.Null);
         }
 
         [Test]
@@ -77,10 +77,10 @@ namespace L5Sharp.Types.Tests
         public void ParseValue_ValidValue_ShouldReturnExpected()
         {
             var fixture = new Fixture();
-            var value = fixture.Create<int>();
+            var value = fixture.Create<string>();
             var type = Predefined.String;
 
-            var result = type.ParseValue(value.ToString());
+            var result = type.ParseValue(value);
 
             result.Should().Be(value);
         }
@@ -90,7 +90,7 @@ namespace L5Sharp.Types.Tests
         {
             var type = Predefined.String;
 
-            var result = type.ParseValue("Invalid");
+            var result = type.ParseValue(null);
 
             result.Should().Be(null);
         }
@@ -100,7 +100,7 @@ namespace L5Sharp.Types.Tests
         {
             var type = Predefined.String;
 
-            var value = type.SupportsRadix(Radix.Decimal);
+            var value = type.SupportsRadix(Radix.Null);
 
             value.Should().BeTrue();
         }
@@ -110,7 +110,7 @@ namespace L5Sharp.Types.Tests
         {
             var type = Predefined.String;
 
-            var value = type.SupportsRadix(Radix.Null);
+            var value = type.SupportsRadix(Radix.Decimal);
 
             value.Should().BeFalse();
         }
@@ -119,26 +119,14 @@ namespace L5Sharp.Types.Tests
         public void IsValidValue_ValidValue_ShouldBeTrue()
         {
             var fixture = new Fixture();
-            var value = fixture.Create<int>();
+            var value = fixture.Create<string>();
             var type = Predefined.String;
 
             var result = type.IsValidValue(value);
 
             result.Should().BeTrue();
         }
-        
-        [Test]
-        public void IsValidValue_String_Should()
-        {
-            var fixture = new Fixture();
-            var value = fixture.Create<int>();
-            var type = Predefined.String;
 
-            var result = type.IsValidValue(value.ToString());
-
-            result.Should().BeTrue();
-        }
-        
         [Test]
         public void IsValidValue_Null_Should()
         {

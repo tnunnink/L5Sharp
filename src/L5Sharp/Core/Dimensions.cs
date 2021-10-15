@@ -52,7 +52,7 @@ namespace L5Sharp.Core
                     return Empty;
             }
 
-            if (!Regex.IsMatch(value, @"[0-9\s]+"))
+            if (!Regex.IsMatch(value, @"(?=\d+)^[\d\s]+$"))
                 throw new ArgumentException($"Value '{value}' does not match expected pattern");
 
             var numbers = value.Split(' ').Select(v => Convert.ToUInt16(v)).ToList();

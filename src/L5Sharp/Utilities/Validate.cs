@@ -4,6 +4,7 @@ using System.Text.RegularExpressions;
 using L5Sharp.Abstractions;
 using L5Sharp.Core;
 using L5Sharp.Enums;
+using L5Sharp.Exceptions;
 
 namespace L5Sharp.Utilities
 {
@@ -31,16 +32,29 @@ namespace L5Sharp.Utilities
             if (type.Equals(Predefined.Undefined))
                 throw new InvalidOperationException("");
 
-            if (type is DataType dataType && dataType.ContainsNullType())
+            if (type is DataType dataType && dataType.GetDependentTypes().Any(t => t.Equals(Predefined.Undefined)))
                 throw new InvalidOperationException();
         }
         
         public static void Radix(Radix radix, IDataType type)
         {
             if (radix == null) throw new ArgumentNullException(nameof(radix), "Radix property can not be null");
-            if (type == null) throw new ArgumentNullException(nameof(type), "DataType property can not be null");
-            if (!type.SupportsRadix(radix)) 
-                Throw.RadixNotSupportedException(radix, type);
+            
+            switch (type)
+            {
+                case null:
+                    throw new ArgumentNullException(nameof(type), "DataType property can not be null");
+                case Predefined predefined:
+                {
+                    if (!predefined.SupportsRadix(radix)) 
+                        Throw.RadixNotSupportedException(radix, type);
+                    break;
+                }
+                case DataType _:
+                    if (!radix.Equals(Enums.Radix.Null))
+                        Throw.RadixNotSupportedException(radix, type);   
+                    break;
+            }
         }
     }
 }

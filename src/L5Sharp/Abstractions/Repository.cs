@@ -10,7 +10,6 @@ namespace L5Sharp.Abstractions
         {
         }
         
-
         public virtual void Add(T component)
         {
             if (Container.Contains<T>(component.Name))
@@ -21,9 +20,7 @@ namespace L5Sharp.Abstractions
 
         public virtual void Remove(T component)
         {
-            if (!Container.Contains<T>(component.Name))
-                Throw.ComponentNotFoundException(component.Name, typeof(T));
-            
+            if (!Container.Contains<T>(component.Name)) return;
             var element = Container.GetSingle<T>(component.Name);
             element.Remove();
         }
@@ -31,7 +28,7 @@ namespace L5Sharp.Abstractions
         public virtual void Update(T component)
         {
             if (!Container.Contains<T>(component.Name))
-                Throw.ComponentNotFoundException(component.Name, typeof(T));
+                Container.Add(component.Serialize());
             
             var element = Container.GetSingle<T>(component.Name);
         }

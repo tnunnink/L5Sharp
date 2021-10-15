@@ -5,34 +5,13 @@ using L5Sharp.Enums;
 
 namespace L5Sharp.Repositories
 {
-    public class ProgramRepository : IProgramRepository
+    internal class ProgramRepository : Repository<IProgram>, IProgramRepository
     {
-        public IEnumerable<Program> GetAll()
+        public ProgramRepository(LogixContext context) : base(context)
         {
-            throw new System.NotImplementedException();
         }
 
-        public Program Get(string name)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public void Add(Program component)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public void Remove(Program component)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public void Update(Program component)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public IEnumerable<Program> GetByTask(PeriodicTask task)
+        public IEnumerable<Program> GetByTask(ITask task)
         {
             throw new System.NotImplementedException();
         }

@@ -2,7 +2,7 @@
 
 namespace L5Sharp.Abstractions
 {
-    public interface IComponentFactory
+    internal interface IComponentFactory
     {
         
     }

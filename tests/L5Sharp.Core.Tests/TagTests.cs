@@ -48,7 +48,7 @@ namespace L5Sharp.Core.Tests
             tag.TagType.Should().Be(TagType.Base);
             tag.Usage.Should().Be(TagUsage.Null);
             tag.Scope.Should().Be(Scope.Null);
-            tag.Container.Should().Be(null);
+            tag.Parent.Should().Be(null);
             tag.Constant.Should().BeFalse();
             tag.IsValueMember.Should().BeTrue();
             tag.IsArrayMember.Should().BeFalse();
@@ -142,6 +142,12 @@ namespace L5Sharp.Core.Tests
             tag.Should().NotBeNull();
             tag.DataType.Should().Be("BOOL");
         }
+
+        [Test]
+        public void New_UserDefinedTypeUpdateMember_ShouldFireUpdatedEvent()
+        {
+            
+        }
         
         [Test]
         public void ListMembers_WhenCalledHasNoMembers_ShouldBeEmpty()
@@ -151,7 +157,7 @@ namespace L5Sharp.Core.Tests
             var members = tag.ListMembers();
 
             members.Should().BeEmpty();
-        }
+        } 
 
         [Test]
         public void ListMembers_WhenCalledHasMembers_ShouldNotBeEmpty()

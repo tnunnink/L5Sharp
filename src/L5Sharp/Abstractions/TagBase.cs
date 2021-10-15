@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using L5Sharp.Core;
 using L5Sharp.Enums;
+using L5Sharp.Exceptions;
 using L5Sharp.Utilities;
 
 namespace L5Sharp.Abstractions
 {
     public abstract class TagBase : ComponentBase, ITag
     {
-        private readonly IDataType _dataType;
+        private IDataType _dataType;
         private Dimensions _dimensions;
         private Radix _radix;
         private TagUsage _usage;
@@ -17,12 +18,15 @@ namespace L5Sharp.Abstractions
         private readonly Dictionary<string, TagMember> _members = new Dictionary<string, TagMember>();
 
         protected TagBase(string name, IDataType dataType, Dimensions dimensions, Radix radix,
-            ExternalAccess externalAccess, string description, IComponent container, TagUsage usage, bool constant)
+            ExternalAccess externalAccess, string description, IComponent parent, TagUsage usage, bool constant)
             : base(name, description)
         {
             _dataType = dataType ?? throw new ArgumentNullException(nameof(dataType), "DataType can not be null");
 
-            Container = container;
+            if (_dataType is DataType userDefined)
+                userDefined.MemberUpdated += OnDataTypeMemberUpdated;
+
+            Parent = parent;
             Usage = usage != null ? usage : TagUsage.Null;
             Dimensions = dimensions == null ? Dimensions.Empty : dimensions;
             Radix = radix == null ? dataType.DefaultRadix : radix;
@@ -34,11 +38,11 @@ namespace L5Sharp.Abstractions
 
         public abstract TagType TagType { get; }
 
-        public Scope Scope => Container == null ? Scope.Null
-            : Container is Controller ? Scope.Controller
-            : Container is IProgram ? Scope.Program
+        public Scope Scope => Parent == null ? Scope.Null
+            : Parent is IController ? Scope.Controller
+            : Parent is IProgram ? Scope.Program
             : throw new InvalidOperationException(
-                $"Scope can not be determined by container type '{Container.GetType()}'");
+                $"Scope can not be determined by container type '{Parent.GetType()}'");
 
         public TagUsage Usage
         {
@@ -47,7 +51,7 @@ namespace L5Sharp.Abstractions
         }
 
         public bool Constant { get; set; }
-        public IComponent Container { get; }
+        public IComponent Parent { get; }
         public string FullName => Name;
         public string DataType => _dataType?.Name;
 
@@ -57,7 +61,7 @@ namespace L5Sharp.Abstractions
             set
             {
                 _dimensions = value;
-                Instantiate();
+                InstantiateMembers(_dataType);
             }
         }
 
@@ -82,7 +86,12 @@ namespace L5Sharp.Abstractions
             get => _value;
             set
             {
-                if (!_dataType.IsValidValue(value))
+                if (!(_dataType is Predefined { IsAtomic: true } predefined))
+                    throw new NotConfigurableException(
+                        $"Radix property is not not configurable for type {_dataType}. Radix is only configurable for atomic types");
+
+                
+                if (!predefined.IsValidValue(value))
                     Throw.InvalidTagValueException(value, _dataType.Name);
 
                 _value = value;
@@ -94,6 +103,19 @@ namespace L5Sharp.Abstractions
         public bool IsArrayMember => Dimensions.Length > 0;
         public bool IsArrayElement => false;
         public bool IsStructureMember => !IsValueMember && !IsArrayMember && _members.Count > 0;
+        
+        public void UpdateDataType(IDataType dataType)
+        {
+            if (_dataType is DataType type)
+                type.MemberUpdated -= OnDataTypeMemberUpdated;
+
+            if (dataType is DataType userDefined)
+                userDefined.MemberUpdated += OnDataTypeMemberUpdated;
+            
+            _dataType = dataType;
+            
+            InstantiateMembers(_dataType);
+        } 
 
         public ITag ChangeTagType(TagType type)
         {
@@ -128,18 +150,23 @@ namespace L5Sharp.Abstractions
             return names;
         }
 
-        private void Instantiate()
+        private void InstantiateMembers(IDataType dataType)
         {
             _members.Clear();
-            var members = TagMember.GenerateMembers(this, _dataType);
+            var members = TagMember.GenerateMembers(this, dataType);
             foreach (var member in members)
-                _members.Add(member.Name, member);
+                _members.Add(member.Name, member); 
         }
 
         private void PropagatePropertyValue<TProperty>(Action<TagMember, TProperty> setter, TProperty value)
         {
             foreach (var tagMember in _members.Values.Cast<TagMember>())
                 setter.Invoke(tagMember, value);
+        }
+        
+        private void OnDataTypeMemberUpdated(object sender, EventArgs e)
+        {
+            InstantiateMembers(_dataType);
         }
     }
 }

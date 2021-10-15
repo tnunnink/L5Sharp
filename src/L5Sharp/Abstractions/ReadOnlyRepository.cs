@@ -14,18 +14,23 @@ namespace L5Sharp.Abstractions
         protected ReadOnlyRepository(LogixContext context)
         {
             Context = context;
-            Container = context.Content.Container<T>();
+            Container = context.GetContainer<T>();
             Factory = context.GetFactory<T>();
         }
 
-        public virtual IEnumerable<T> GetAll()
+        public virtual bool Exists(string name)
         {
-            return Container.GetAll<T>().Select(e => Factory.Create(e));
+            return Container.Contains<T>(name);
         }
 
         public virtual T Get(string name)
         {
             return Factory.Create(Container.GetFirst<T>(name));
+        }
+
+        public virtual IEnumerable<T> GetAll()
+        {
+            return Container.GetAll<T>().Select(e => Factory.Create(e));
         }
     }
 }

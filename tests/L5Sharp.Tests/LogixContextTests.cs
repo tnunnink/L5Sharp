@@ -48,7 +48,7 @@ namespace L5Sharp.Tests
             var simpleMember = complex?.GetMember("SimpleMember").DataType;
 
             simple.Should().BeEquivalentTo(simpleMember);
-            //simple.Should().BeSameAs(simpleMember);
+            simple.Should().BeSameAs(simpleMember);
         }
     }
 }
