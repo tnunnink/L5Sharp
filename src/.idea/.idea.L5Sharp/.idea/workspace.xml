@@ -7,119 +7,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/L5Sharp/.idea/.idea.L5Sharp/.idea/encodings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/.idea/.idea.L5Sharp/.idea/workspace.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Abstractions/ComponentBase.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Abstractions/IComponent.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Abstractions/IComponentCache.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Abstractions/IComponentFactory.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Abstractions/IComponentSerializer.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Abstractions/IController.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Abstractions/IDataType.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Abstractions/IDataTypeRepository.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Abstractions/IInstruction.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Abstractions/IMember.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Abstractions/IProgram.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Abstractions/IProgramRepository.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Abstractions/IReadOnlyRepository.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Abstractions/IRepository.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Abstractions/IRoutine.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Abstractions/ITag.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Abstractions/ITagMember.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Abstractions/ITask.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Abstractions/ProgramBase.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Abstractions/ReadOnlyRepository.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Abstractions/Repository.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Abstractions/TagBase.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Abstractions/TaskBase.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Core/Connection.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Core/ContinuousTask.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Core/Controller.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Core/DataType.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Core/Dimensions.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Core/EventTask.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Core/Member.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Core/Module.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Core/PeriodicTask.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Core/Port.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Core/Predefined.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Core/Program.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Core/ReadOnlyMember.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Core/RllRoutine.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Core/Rung.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Core/StringType.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Core/Tag.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Core/TagMember.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Enums/ConnectionPriority.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Enums/ConnectionType.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Enums/DataTypeClass.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Enums/DataTypeFamily.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Enums/ExternalAccess.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Enums/KeyingState.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Enums/ProcessorType.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Enums/ProductionTrigger.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Enums/ProgramType.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Enums/Radix.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Enums/Revision.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Enums/RoutineType.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Enums/RungType.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Enums/Scope.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Enums/TagDataFormat.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Enums/TagType.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Enums/TagUsage.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Enums/TaskTrigger.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Enums/TaskType.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Enums/TransmissionType.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Enums/Use.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Exceptions/CircularReferenceException.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Exceptions/ComponentNameCollisionException.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Exceptions/ComponentNotFoundException.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Exceptions/ComponentReferencedException.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Exceptions/DataTypeNotFoundException.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Exceptions/InvalidNameException.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Exceptions/InvalidTagValueException.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Exceptions/NotConfigurableException.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Exceptions/PredefinedCollisionException.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Exceptions/RadixNotSupportedException.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Extensions/ElementExtensions.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Extensions/ExpressionExtensions.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Extensions/GenericExtensions.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Factories/DataTypeFactory.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Factories/MemberFactory.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Factories/TagFactory.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Factories/TaskFactory.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/L5Sharp.csproj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/L5Sharp.sln" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/LogixContext.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Repositories/DataTypeRepository.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Repositories/ProgramRepository.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Resources/L5X.xsd" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Resources/Predefined.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Serialization/DataTypeSerializer.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Serialization/MemberSerializer.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Serialization/ProgramSerializer.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Serialization/RoutineSerializer.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Serialization/TagMemberSerializer.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Serialization/TagSerializer.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Serialization/TaskSerializer.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Types/Alarm.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Types/Bool.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Types/Counter.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Types/Dint.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Types/Int.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Types/Lint.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Types/Real.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Types/Sint.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Types/String.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Types/Timer.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Types/Undefined.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Utilities/ComponentCache.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Utilities/LogixNames.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Utilities/ResourceReader.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Utilities/Throw.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Utilities/Validate.cs" beforeDir="false" />
-    </list>
+    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="development" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -144,11 +32,10 @@
     </file-type-list>
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/obj/Debug/netstandard2.1/.NETStandard,Version=v2.1.AssemblyAttributes.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Utilities/LogixNames.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/39b5216120a2470e9278aef9ec0d271d61188/11/XElement.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/f3dd31a3d4374d7d9525d887480dae958f4788/2B3/CastHelpers.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/f3dd31a3d4374d7d9525d887480dae958f4788/9B/Lazy.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Utilities/LogixNames.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/6d2600898291416eacbad905b4d24c316778/92/a792639a/Enumerable.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/d3bfdb86da53416a9a76296e6325a7b366588/26/Select.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/777281e5529b43ccbfcc25e4a52829673600/54/4e2df418/SmartEnum`1.cs" root0="SKIP_HIGHLIGHTING" />
@@ -170,6 +57,7 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/7dbc091ee5334193a01f8b90b85bc4db808588/70/XmlConvert.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$USER_HOME$/AppData/Local/Symbols/src/nunit/nunit/c933a883ea25263ec575a654dae69fa38000edd9/src/NUnitFramework/framework/Internal/Execution/SimpleWorkItemDispatcher.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/f3dd31a3d4374d7d9525d887480dae958f4788/316/RtFieldInfo.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/obj/Debug/netstandard2.1/.NETStandard,Version=v2.1.AssemblyAttributes.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="ProjectId" id="1ydTPTzKqKCbPz8lpCqgOe9jraF" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -211,6 +99,7 @@
       <workItem from="1633963607524" duration="51324000" />
       <workItem from="1634125922438" duration="81940000" />
       <workItem from="1634336182794" duration="33000" />
+      <workItem from="1634336306685" duration="850000" />
     </task>
     <task id="LOCAL-00001" summary="renaming">
       <created>1632580540996</created>
@@ -394,7 +283,21 @@
       <option name="project" value="LOCAL" />
       <updated>1634335755394</updated>
     </task>
-    <option name="localTasksCounter" value="27" />
+    <task id="LOCAL-00027" summary="development">
+      <created>1634336515531</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1634336515531</updated>
+    </task>
+    <task id="LOCAL-00028" summary="development">
+      <created>1634336538285</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1634336538285</updated>
+    </task>
+    <option name="localTasksCounter" value="29" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
