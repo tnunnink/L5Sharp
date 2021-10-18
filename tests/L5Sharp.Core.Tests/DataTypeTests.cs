@@ -165,11 +165,13 @@ namespace L5Sharp.Core.Tests
         }
 
         [Test]
-        public void Description_SetValueNull_ShouldThrowArgumentNullException()
+        public void Description_SetValueNull_ShouldBeNull()
         {
             var type = new DataType("Test");
 
-            FluentActions.Invoking(() => type.Description = null).Should().Throw<ArgumentNullException>();
+            type.Description = null;
+
+            type.Description.Should().BeNull();
         }
         
         [Test]
@@ -272,6 +274,17 @@ namespace L5Sharp.Core.Tests
         }
 
         [Test]
+        public void AddMember_BooleanMember_ShouldRaiseMembersChanged()
+        {
+            var type = new DataType("Test");
+            var monitor = type.Monitor(); 
+            
+            type.AddMember("Member", Predefined.Bool);
+
+            monitor.Should().Raise("MemberChanged");
+        }
+        
+        [Test]
         public void AddMember_BooleanMember_ShouldHaveBackingMember()
         {
             var type = new DataType("Test");
@@ -290,6 +303,18 @@ namespace L5Sharp.Core.Tests
             type.RemoveMember("Member");
 
             type.Members.Should().BeEmpty();
+        }
+        
+        [Test]
+        public void RemoveMember_ExistingMember_ShouldRaiseMembersChanged()
+        {
+            var member = new Member("Member", Predefined.Dint);
+            var type = new DataType("Test", member);
+            var monitor = type.Monitor(); 
+            
+            type.RemoveMember("Member");
+
+            monitor.Should().Raise("MemberChanged");
         }
 
         [Test]
@@ -349,6 +374,42 @@ namespace L5Sharp.Core.Tests
             dependents.Should().NotBeEmpty();
             dependents.Should().HaveCount(1);
             dependents.Should().Contain(dependentUserType);
+        }
+        
+        [Test]
+        public void UpdatingMember_Name_ShouldGetMemberByNewName()
+        {
+            var type = new DataType("Test", new Member("Member", Predefined.Dint));
+            
+            var sut = (Member) type.GetMember("Member");
+            sut.Name = "NewName";
+
+            var result = type.GetMember("NewName");
+            result.Should().NotBeNull();
+        }
+
+        [Test]
+        public void UpdatingMember_Name_ShouldRaiseMembersChanged()
+        {
+            var type = new DataType("Test", new Member("Member", Predefined.Dint));
+            var monitor = type.Monitor(); 
+            
+            var member = (Member) type.GetMember("Member");
+            member.Name = "NewName";
+
+            monitor.Should().Raise("MemberChanged");
+        }
+
+        [Test]
+        public void UpdatingMember_DataType_ShouldRaiseMembersChanged()
+        {
+            var type = new DataType("Test", new Member("Member", Predefined.Dint));
+            var monitor = type.Monitor(); 
+            
+            var member = (Member) type.GetMember("Member");
+            member.DataType = Predefined.Alarm;
+
+            monitor.Should().Raise("MemberChanged");
         }
     }
 }

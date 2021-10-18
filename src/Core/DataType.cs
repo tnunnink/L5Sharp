@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using L5Sharp.Abstractions;
 using L5Sharp.Enums;
@@ -8,18 +9,13 @@ using L5Sharp.Utilities;
 
 namespace L5Sharp.Core
 {
-    public class DataType : IDataType, IEquatable<DataType>
+    public class DataType : ComponentBase, IDataType, IEquatable<DataType>
     {
-        private string _name;
-        private string _description;
+        private readonly List<IMember> _members = new List<IMember>();
 
-        private readonly Dictionary<string, IMember> _members =
-            new Dictionary<string, IMember>(StringComparer.OrdinalIgnoreCase);
-
-        public DataType(string name, string description = null)
+        public DataType(string name, string description = null) : base(name, description)
         {
-            Name = name;
-            Description = description ?? string.Empty;
+            Validate.DataTypeName(name);
         }
 
         public DataType(string name, Member member, string description = null) : this(name, description)
@@ -33,14 +29,13 @@ namespace L5Sharp.Core
                 AddMemberComponent(member);
         }
 
-        public string Name
+        public override string Name
         {
-            get => _name;
+            get => base.Name;
             set
             {
-                Validate.Name(value);
                 Validate.DataTypeName(value);
-                _name = value;
+                base.Name = value;
             }
         }
 
@@ -56,18 +51,12 @@ namespace L5Sharp.Core
 
         public TagDataFormat DataFormat => TagDataFormat.Decorated;
 
-        public string Description
-        {
-            get => _description;
-            set => _description =
-                value ?? throw new ArgumentNullException(nameof(value), "Description can not be null");
-        }
-
-        public IEnumerable<IMember> Members => _members.Values.AsEnumerable();
+        public IEnumerable<IMember> Members => _members.AsEnumerable();
 
         public IMember GetMember(string name) => GetMemberByName(name);
 
         public IEnumerable<IDataType> GetDependentTypes() => GetUniqueMemberTypes(this);
+
 
         public IEnumerable<IDataType> GetDependentUserTypes() =>
             GetUniqueMemberTypes(this).Where(t => t.Class == DataTypeClass.User);
@@ -78,12 +67,13 @@ namespace L5Sharp.Core
 
         public void RemoveMember(string name) => RemoveMemberComponent((Member)GetMemberByName(name));
 
+
         public bool Equals(DataType other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return _name == other._name
-                   && Equals(_members, other._members)
+            return Name == other.Name
+                   && Equals(Members, other.Members)
                    && Equals(Family, other.Family)
                    && Description == other.Description;
         }
@@ -114,8 +104,6 @@ namespace L5Sharp.Core
         {
             return !Equals(left, right);
         }
-        
-        internal event EventHandler MemberUpdated;
 
         /// <summary>
         /// Determines if the members collection contains a member with the provided name
@@ -124,7 +112,10 @@ namespace L5Sharp.Core
         /// <returns>True when a member with the provided name exists</returns>
         private bool HasMemberName(string name)
         {
-            return _members.ContainsKey(name);
+            if (name == null)
+                throw new ArgumentNullException(nameof(name), "Name can not be null");
+            
+            return _members.Any(m => m.Name == name);
         }
 
         /// <summary>
@@ -134,12 +125,14 @@ namespace L5Sharp.Core
         /// <returns></returns>
         private IMember GetMemberByName(string name)
         {
-            _members.TryGetValue(name, out var member);
-            return member;
+            if (name == null)
+                throw new ArgumentNullException(nameof(name), "Name can not be null");
+            
+            return _members.SingleOrDefault(m => m.Name == name);
         }
 
         /// <summary>
-        /// Recursively walks the member collections and find all unique data types of the structure
+        /// Recursively walks the member collections and finds all unique data types of the structure
         /// </summary>
         /// <param name="dataType">The datatype to walk</param>
         /// <returns>An enumeration of all unique data types</returns>
@@ -164,20 +157,45 @@ namespace L5Sharp.Core
         private void AddMemberComponent(Member member)
         {
             if (member == null)
-                throw new ArgumentNullException(nameof(member), "Member can nt be null");
+                throw new ArgumentNullException(nameof(member), "Member can not be null");
 
             if (HasMemberName(member.Name))
                 Throw.ComponentNameCollisionException(member.Name, typeof(Member));
 
             if (member.DataType.Equals(this))
                 throw new CircularReferenceException(
-                    $"Member can not have same type as parent type '{member.DataType.Name}'");
+                    $"Member can not be same type as parent type '{member.DataType.Name}'");
             
-            member.Updated += OnMemberUpdated;
+            member.PropertyChanged += OnMemberPropertyChanged;
+            
+            _members.Add(member);
+            
+            RaisePropertyChanged(nameof(Members));
+        }
 
-            _members.Add(member.Name, member);
+        /// <summary>
+        /// Adds a member to the data type member collection
+        /// </summary>
+        /// <param name="index"></param>
+        /// <param name="member">The member to add</param>
+        /// <exception cref="ArgumentNullException">Thrown when member is null</exception>
+        private void InsertMemberComponent(int index, Member member)
+        {
+            if (member == null)
+                throw new ArgumentNullException(nameof(member), "Member can not be null");
+
+            if (HasMemberName(member.Name))
+                Throw.ComponentNameCollisionException(member.Name, typeof(Member));
+
+            if (member.DataType.Equals(this))
+                throw new CircularReferenceException(
+                    $"Member can not be same type as parent type '{member.DataType.Name}'");
             
-            RaiseMemberUpdated();
+            member.PropertyChanged += OnMemberPropertyChanged;
+            
+            _members.Insert(index, member);
+            
+            RaisePropertyChanged(nameof(Members));
         }
 
         /// <summary>
@@ -191,21 +209,21 @@ namespace L5Sharp.Core
 
             if (!HasMemberName(member.Name)) return;
 
-            member.Updated -= OnMemberUpdated;
-
-            _members.Remove(member.Name);
+            member.PropertyChanged -= OnMemberPropertyChanged;
             
-            RaiseMemberUpdated();
+            _members.Remove(member);
+            
+            RaisePropertyChanged(nameof(Members));
         }
 
-        private void RaiseMemberUpdated()
+        /// <summary>
+        /// Handles Member property changed event by raising 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnMemberPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            MemberUpdated?.Invoke(this, EventArgs.Empty);
-        }
-
-        private void OnMemberUpdated(object sender, EventArgs e)
-        {
-            RaiseMemberUpdated();
+            RaisePropertyChanged(nameof(Members));
         }
     }
 }

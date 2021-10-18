@@ -38,7 +38,7 @@ namespace L5Sharp.Abstractions
         public bool HasRoutine(string name)
         {
             if (string.IsNullOrEmpty(name)) throw new ArgumentNullException(nameof(name));
-            return _routines.Keys.Any(r => r == name);
+            return _routines.ContainsKey(name);
         }
 
         public bool HasRoutine(RoutineType type)
@@ -87,7 +87,7 @@ namespace L5Sharp.Abstractions
             _routines.Remove(name);
         }
 
-        public void AddTag(Tag tag)
+        public void AddTag(ITag tag)
         {
         }
 

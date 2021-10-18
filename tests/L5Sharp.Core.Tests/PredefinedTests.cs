@@ -311,9 +311,9 @@ namespace L5Sharp.Core.Tests
             {
                 return new List<ReadOnlyMember>
                 {
-                    new("Member01", Bool),
-                    new("Member01", Bool),
-                    new("Member03", Int)
+                    ReadOnlyMember.New("Member01", Bool),
+                    ReadOnlyMember.New("Member01", Bool),
+                    ReadOnlyMember.New("Member03", Int)
                 };
             }
         }

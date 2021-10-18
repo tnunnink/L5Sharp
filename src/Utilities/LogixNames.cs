@@ -18,7 +18,7 @@ namespace L5Sharp.Utilities
             return Components[key];
         }
 
-        public static string GetContainerName<T>()
+        public static string GetContainerName<T>() where T : IComponent
         {
             var key = FindKey<T>();
             
@@ -45,7 +45,6 @@ namespace L5Sharp.Utilities
 
         private static readonly Dictionary<Type, string> Containers = new Dictionary<Type, string>
         {
-            { typeof(LogixContext), ContainerNames.RSLogix5000Content },
             { typeof(IDataType), ContainerNames.DataTypes },
             { typeof(IMember), ContainerNames.Members },
             { typeof(ITag), ContainerNames.Tags },
@@ -57,8 +56,6 @@ namespace L5Sharp.Utilities
 
         private static class ContainerNames
         {
-            // ReSharper disable once InconsistentNaming
-            public const string RSLogix5000Content = nameof(RSLogix5000Content);
             public const string Controller = nameof(Controller);
             public const string DataTypes = nameof(DataTypes);
             public const string Members = nameof(Members);

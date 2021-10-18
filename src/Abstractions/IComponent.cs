@@ -1,4 +1,6 @@
-﻿namespace L5Sharp.Abstractions
+﻿using System;
+
+namespace L5Sharp.Abstractions
 {
     public interface IComponent
     {

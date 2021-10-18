@@ -12,6 +12,7 @@ namespace L5Sharp
 {
     public class LogixContext
     {
+        private const string RsLogix5000Content = "RSLogix5000Content";
         private readonly XDocument _document;
         private readonly XElement _content;
         private readonly Dictionary<Type, IComponentFactory> _factories = new Dictionary<Type, IComponentFactory>();
@@ -104,7 +105,7 @@ namespace L5Sharp
         private static XDocument GenerateContent(IComponent component, Revision revision)
         {
             var declaration = new XDeclaration("1.0", "UTF-8", "yes");
-            var root = new XElement(LogixNames.GetContainerName<LogixContext>());
+            var root = new XElement(RsLogix5000Content);
             root.Add(new XAttribute("SchemaRevision", "1.0"));
             root.Add(new XAttribute("SoftwareRevision", revision.ToString()));
             root.Add(new XAttribute("TargetName", component.Name));

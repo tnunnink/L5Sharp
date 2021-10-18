@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using L5Sharp.Abstractions;
+using L5Sharp.Enums;
 
 namespace L5Sharp.Core
 {
@@ -97,7 +99,7 @@ namespace L5Sharp.Core
 
             return indices;
         }
-        
+
         public bool Equals(Dimensions other)
         {
             if (ReferenceEquals(null, other)) return false;
@@ -131,7 +133,7 @@ namespace L5Sharp.Core
         {
             return $"[{x}]";
         }
-
+        
         private static string GenerateIndex(ushort x, ushort y)
         {
             return $"[{x},{y}]";

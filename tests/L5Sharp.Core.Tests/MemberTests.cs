@@ -65,14 +65,14 @@ namespace L5Sharp.Core.Tests
         }
         
         [Test]
-        public void Name_ValidName_ShouldRaiseUpdatedEvent()
+        public void Name_ValidName_ShouldRaisePropertyChangedEvent()
         {
             var member = new Member("MemberName", Predefined.Bool);
             var monitor = member.Monitor();
 
             member.Name = "Test";
 
-            monitor.Should().Raise("Updated");
+            monitor.Should().RaisePropertyChangeFor(m => m.Name);
         }
 
         [Test]
@@ -102,14 +102,14 @@ namespace L5Sharp.Core.Tests
         }
         
         [Test]
-        public void DataType_ValidName_ShouldRaiseUpdatedEvent()
+        public void DataType_ValidName_ShouldRaisePropertyChangeEvent()
         {
             var member = new Member("MemberName", Predefined.Bool);
             var monitor = member.Monitor();
 
             member.DataType = Predefined.Lint;
 
-            monitor.Should().Raise("Updated");
+            monitor.Should().RaisePropertyChangeFor(m => m.DataType);
         }
 
         [Test]
@@ -133,14 +133,14 @@ namespace L5Sharp.Core.Tests
         }
         
         [Test]
-        public void Dimension_ValidNumber_ShouldRaiseUpdatedEvent()
+        public void Dimension_ValidNumber_ShouldRaisePropertyChangeEvent()
         {
             var member = new Member("MemberName", Predefined.Bool);
             var monitor = member.Monitor();
 
             member.Dimension = 10;
 
-            monitor.Should().Raise("Updated");
+            monitor.Should().RaisePropertyChangeFor(m => m.Dimension);
         }
 
         [Test]
@@ -154,14 +154,14 @@ namespace L5Sharp.Core.Tests
         }
         
         [Test]
-        public void Radix_ValidRadix_ShouldRaiseUpdatedEvent()
+        public void Radix_ValidRadix_ShouldRaisePropertyChangeEvent()
         {
             var member = new Member("MemberName", Predefined.Int);
             var monitor = member.Monitor();
 
             member.Radix = Radix.Ascii;
 
-            monitor.Should().Raise("Updated");
+            monitor.Should().RaisePropertyChangeFor(m => m.Radix);
         }
 
 
@@ -193,14 +193,14 @@ namespace L5Sharp.Core.Tests
         }
         
         [Test]
-        public void ExternalAccess_ReadWrite_ShouldRaiseUpdatedEvent()
+        public void ExternalAccess_ReadWrite_ShouldRaisePropertyChangeEvent()
         {
             var member = new Member("MemberName", Predefined.Bool);
             var monitor = member.Monitor();
 
             member.ExternalAccess = ExternalAccess.ReadWrite;
 
-            monitor.Should().NotRaise("Updated");
+            monitor.Should().NotRaisePropertyChangeFor(m => m.ExternalAccess);
         }
 
         [Test]
@@ -214,14 +214,14 @@ namespace L5Sharp.Core.Tests
         }
         
         [Test]
-        public void ExternalAccess_None_ShouldRaiseUpdatedEvent()
+        public void ExternalAccess_None_ShouldRaisePropertyChangeEvent()
         {
             var member = new Member("MemberName", Predefined.Bool);
             var monitor = member.Monitor();
 
             member.ExternalAccess = ExternalAccess.None;
 
-            monitor.Should().Raise("Updated");
+            monitor.Should().RaisePropertyChangeFor(m => m.ExternalAccess);
         }
 
         [Test]
@@ -235,14 +235,14 @@ namespace L5Sharp.Core.Tests
         }
         
         [Test]
-        public void ExternalAccess_ReadOnly_ShouldRaiseUpdatedEvent()
+        public void ExternalAccess_ReadOnly_ShouldRaisePropertyChangeEvent()
         {
             var member = new Member("MemberName", Predefined.Bool);
             var monitor = member.Monitor();
 
             member.ExternalAccess = ExternalAccess.ReadOnly;
 
-            monitor.Should().Raise("Updated");
+            monitor.Should().RaisePropertyChangeFor(m => m.ExternalAccess);
         }
 
         [Test]
@@ -264,14 +264,14 @@ namespace L5Sharp.Core.Tests
         }
         
         [Test]
-        public void Description_ValidString_ShouldRaiseUpdatedEvent()
+        public void Description_ValidString_ShouldRaisePropertyChangeEvent()
         {
             var member = new Member("MemberName", Predefined.Bool);
             var monitor = member.Monitor();
 
             member.Description = "This is a test description";
 
-            monitor.Should().Raise("Updated");
+            monitor.Should().RaisePropertyChangeFor(m => m.Description);
         }
 
         [Test]

@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Globalization;
 using System.Reflection;
-using System.Xml.Linq;
 using Ardalis.SmartEnum;
 using L5Sharp.Abstractions;
 using L5Sharp.Core;
-using L5Sharp.Extensions;
 
 namespace L5Sharp.Enums
 {
@@ -26,8 +24,6 @@ namespace L5Sharp.Enums
                 BindingFlags.OptionalParamBinding, null, new[] {name, Type.Missing}, CultureInfo.CurrentCulture);
         }
 
-        internal abstract IProgram Create(XElement element);
-
         public static readonly ProgramType Normal = new NormalType();
         public static readonly ProgramType EquipmentPhase = new EquipmentPhaseType();
 
@@ -41,18 +37,6 @@ namespace L5Sharp.Enums
             {
                 return new Program(name);
             }
-
-            internal override IProgram Create(XElement element)
-            {
-                throw new NotImplementedException();
-            }
-
-            /*internal override IProgram Create(XElement element)
-            {
-                return new Program(element.GetName(), element.GetDescription(), element.GetMainRoutineName(),
-                    element.GetFaultRoutineName(), element.GetUseAsFolder(), element.GetTestEdits(),
-                    element.GetDisabled());
-            }*/
         }
 
         private class EquipmentPhaseType : ProgramType
@@ -62,11 +46,6 @@ namespace L5Sharp.Enums
             }
 
             public override IProgram Create(string name)
-            {
-                throw new NotImplementedException();
-            }
-
-            internal override IProgram Create(XElement element)
             {
                 throw new NotImplementedException();
             }

@@ -53,7 +53,9 @@ namespace L5Sharp.Extensions
             Expression<Func<TComponent, TProperty>> propertyExpression, Func<string, TProperty> parse)
             where TComponent : IComponent => element.GetAttributeValueInternal(propertyExpression, parse);
 
-        public static string GetValue<TComponent>(this XElement element,
+        #region Typed GetValue Extensiosn
+
+         public static string GetValue<TComponent>(this XElement element,
             Expression<Func<TComponent, string>> propertyExpression)
             where TComponent : IComponent => element.GetAttributeValueInternal(propertyExpression, s => s);
 
@@ -112,28 +114,7 @@ namespace L5Sharp.Extensions
             where TComponent : IComponent
             => element.GetAttributeValueInternal(propertyExpression, v => v != null ? TaskTrigger.FromName(v) : null);
 
-        public static string GetElementValue<TComponent, TProperty>(this XElement element,
-            Expression<Func<TComponent, TProperty>> propertyExpression)
-            where TComponent : IComponent => element.GetElementValueInternal(propertyExpression, s => s);
-
-        public static TProperty GetElementValue<TComponent, TProperty>(this XElement element,
-            Expression<Func<TComponent, TProperty>> propertyExpression, Func<string, TProperty> parse)
-            where TComponent : IComponent
-        {
-            var componentName = LogixNames.GetComponentName<TComponent>();
-
-            if (element.Name != componentName)
-                throw new InvalidOperationException(
-                    $"Element name '{element.Name}' is not expected value '{componentName}'");
-
-            if (!(propertyExpression.Body is MemberExpression memberExpression))
-                throw new ArgumentException($"Expression must of type {typeof(MemberExpression)}");
-
-            var memberName = memberExpression.Member.Name;
-            var value = element.Element(memberName)?.Value;
-
-            return parse(value);
-        }
+        #endregion
 
         private static TReturn GetAttributeValueInternal<TComponent, TProperty, TReturn>(this XElement element,
             Expression<Func<TComponent, TProperty>> propertyExpression, Func<string, TReturn> parse)

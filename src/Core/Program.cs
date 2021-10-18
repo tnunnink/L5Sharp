@@ -19,8 +19,6 @@ namespace L5Sharp.Core
         public override ProgramType Type => ProgramType.Normal;
         public bool UseAsFolder { get; }
         public string MainRoutineName { get; set; }
-        public IRoutine MainRoutine => GetRoutine(MainRoutineName);
         public string FaultRoutineName { get; set; }
-        public IRoutine FaultRoutine => GetRoutine(FaultRoutineName);
     }
 }

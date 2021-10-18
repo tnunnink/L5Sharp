@@ -12,7 +12,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void New_ValidNameAndType_ShouldNotBeNull()
         {
-            var member = new ReadOnlyMember("Member", Predefined.Real);
+            var member = ReadOnlyMember.New("Member", Predefined.Real);
 
             member.Should().NotBeNull();
         }
@@ -20,28 +20,28 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void New_InvalidName_ShouldThrowInvalidNameException()
         {
-            FluentActions.Invoking(() => new ReadOnlyMember("$Invalid", Predefined.Dint)).Should()
+            FluentActions.Invoking(() => ReadOnlyMember.New("$Invalid", Predefined.Dint)).Should()
                 .Throw<InvalidNameException>();
         }
         
         [Test]
         public void New_NullName_ShouldThrowArgumentNullException()
         {
-            FluentActions.Invoking(() => new ReadOnlyMember(null, Predefined.Dint)).Should()
+            FluentActions.Invoking(() => ReadOnlyMember.New(null, Predefined.Dint)).Should()
                 .Throw<ArgumentNullException>();
         }
         
         [Test]
         public void New_NullType_ShouldThrowArgumentNullException()
         {
-            FluentActions.Invoking(() => new ReadOnlyMember("Name", null)).Should()
+            FluentActions.Invoking(() => ReadOnlyMember.New("Name", null)).Should()
                 .Throw<ArgumentNullException>();
         }
         
         [Test]
         public void New_OverrideProperties_ShouldNotBeNull()
         {
-            var member = new ReadOnlyMember("Member", Predefined.Real, 35, Radix.General, ExternalAccess.ReadOnly,
+            var member = ReadOnlyMember.New("Member", Predefined.Real, 35, Radix.General, ExternalAccess.ReadOnly,
                 "Test");
 
             member.Should().NotBeNull();
@@ -56,7 +56,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Name_GetValue_ShouldBeExpected()
         {
-            var member = new ReadOnlyMember("Member", Predefined.Real);
+            var member = ReadOnlyMember.New("Member", Predefined.Real);
 
             var name = member.Name;
             
@@ -66,7 +66,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void DataType_GetValue_ShouldBeExpected()
         {
-            var member = new ReadOnlyMember("Member", Predefined.Real);
+            var member = ReadOnlyMember.New("Member", Predefined.Real);
 
             var dataType = member.DataType;
             
@@ -76,7 +76,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Dimension_GetValue_ShouldBeExpected()
         {
-            var member = new ReadOnlyMember("Member", Predefined.Real);
+            var member = ReadOnlyMember.New("Member", Predefined.Real);
 
             var dimension = member.Dimension;
             
@@ -86,7 +86,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Radix_GetValue_ShouldBeExpected()
         {
-            var member = new ReadOnlyMember("Member", Predefined.Real);
+            var member = ReadOnlyMember.New("Member", Predefined.Real);
 
             var radix = member.Radix;
             
@@ -96,7 +96,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void ExternalAccess_GetValue_ShouldBeExpected()
         {
-            var member = new ReadOnlyMember("Member", Predefined.Real);
+            var member = ReadOnlyMember.New("Member", Predefined.Real);
 
             var access = member.ExternalAccess;
             
@@ -106,7 +106,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Description_GetValue_ShouldBeExpected()
         {
-            var member = new ReadOnlyMember("Member", Predefined.Real);
+            var member = ReadOnlyMember.New("Member", Predefined.Real);
 
             var description = member.Description;
             

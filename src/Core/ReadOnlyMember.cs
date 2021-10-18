@@ -7,19 +7,19 @@ namespace L5Sharp.Core
 {
     public class ReadOnlyMember : IMember, IEquatable<ReadOnlyMember>
     {
-        public ReadOnlyMember(string name, IDataType dataType, ushort dimension = 0, Radix radix = null,
+        internal ReadOnlyMember(string name, IDataType dataType, ushort dimension = 0, Radix radix = null,
             ExternalAccess externalAccess = null, string description = null)
         {
-            if (name == null) throw new ArgumentNullException(nameof(name), "Name can not be null");
-            Validate.Name(name);
-
             Name = name;
-            DataType = dataType ?? throw new ArgumentNullException(nameof(dataType), "DataType can not be null");
+            DataType = dataType ?? Predefined.Undefined;
             Dimension = dimension;
-            Radix = radix ?? dataType.DefaultRadix;
-            ExternalAccess = externalAccess ?? ExternalAccess.ReadWrite;
-            Description = description ?? string.Empty;
+            Radix = DataType.Equals(Predefined.Undefined) ? Radix.Null : radix == null ? DataType.DefaultRadix : radix;
+            ExternalAccess = externalAccess == null ? ExternalAccess.ReadWrite : externalAccess;
+            Description = description;
         }
+
+        internal ReadOnlyMember(IMember member) : this(member.Name, member.DataType, member.Dimension, member.Radix,
+            member.ExternalAccess, member.Description){}
 
         public string Name { get; }
         public IDataType DataType { get; }
@@ -28,6 +28,15 @@ namespace L5Sharp.Core
         public ExternalAccess ExternalAccess { get; }
         public string Description { get; }
 
+        public static ReadOnlyMember New(string name, IDataType dataType, ushort dimension = 0, Radix radix = null,
+            ExternalAccess externalAccess = null, string description = null)
+        {
+            if (name == null) throw new ArgumentNullException(nameof(name), "Name can not be null");
+            Validate.Name(name);
+
+            return new ReadOnlyMember(name, dataType, dimension, radix, externalAccess, description);
+        }
+        
         public bool Equals(ReadOnlyMember other)
         {
             if (ReferenceEquals(null, other)) return false;

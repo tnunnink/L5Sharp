@@ -17,7 +17,7 @@ namespace L5Sharp.Abstractions
         IEnumerable<T> GetRoutines<T>() where T : IRoutine;
         void AddRoutine(string name, RoutineType type);
         void RemoveRoutine(string name);
-        void AddTag(Tag tag);
+        void AddTag(ITag tag);
         void RemoveTag(string name);
     }
 }
