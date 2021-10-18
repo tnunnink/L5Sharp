@@ -154,7 +154,7 @@ namespace L5Sharp.Core.Tests
         {
             var tag = new Tag<Bool>("Test");
 
-            var members = tag.ListMembers();
+            var members = tag.ListMembersNames();
 
             members.Should().BeEmpty();
         } 
@@ -164,7 +164,7 @@ namespace L5Sharp.Core.Tests
         {
             var tag = new Tag<Counter>("Test");
 
-            var members = tag.ListMembers();
+            var members = tag.ListMembersNames();
 
             members.Should().NotBeEmpty();
         }

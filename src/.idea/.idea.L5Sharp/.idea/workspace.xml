@@ -7,32 +7,21 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="development">
-      <change afterPath="$PROJECT_DIR$/Abstractions/NotificationBase.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Annotations.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Events/PropertyChangedValueEventArgs.cs" afterDir="false" />
+    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/TagUserDefinedTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Abstractions/ComponentBase.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Abstractions/ComponentBase.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Abstractions/IComponent.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Abstractions/IComponent.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Abstractions/IProgram.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Abstractions/IProgram.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Abstractions/ProgramBase.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Abstractions/ProgramBase.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Abstractions/IMember.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Abstractions/IMember.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Abstractions/ITag.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Abstractions/ITag.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Abstractions/NotificationBase.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Abstractions/NotificationBase.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Abstractions/TagBase.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Abstractions/TagBase.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/DataType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/DataType.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/Dimensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/Dimensions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/Member.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/Member.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/Program.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/ReadOnlyMember.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/ReadOnlyMember.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Core/TagMember.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/TagMember.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Enums/ExternalAccess.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Enums/ExternalAccess.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Enums/ProgramType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Enums/ProgramType.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Extensions/ElementExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Extensions/ElementExtensions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LogixContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LogixContext.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Utilities/LogixNames.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Utilities/LogixNames.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Resources/Predefined.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Resources/Predefined.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/DataTypeTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/DataTypeTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/MemberTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/MemberTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/PredefinedImplementationTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/PredefinedImplementationTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/PredefinedTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/PredefinedTests.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/ReadOnlyMemberTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/ReadOnlyMemberTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/StringTypeTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/StringTypeTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/TagTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/TagTests.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -102,7 +91,7 @@
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
-    <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
+    <property name="settings.editor.selected.configurable" value="project.propVCSSupport.Mappings" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
@@ -125,7 +114,8 @@
       <workItem from="1633963607524" duration="51324000" />
       <workItem from="1634125922438" duration="81940000" />
       <workItem from="1634336182794" duration="33000" />
-      <workItem from="1634336306685" duration="23901000" />
+      <workItem from="1634336306685" duration="23938000" />
+      <workItem from="1634566436202" duration="4619000" />
     </task>
     <task id="LOCAL-00001" summary="renaming">
       <created>1632580540996</created>
@@ -330,7 +320,14 @@
       <option name="project" value="LOCAL" />
       <updated>1634396393207</updated>
     </task>
-    <option name="localTasksCounter" value="30" />
+    <task id="LOCAL-00030" summary="development">
+      <created>1634563839760</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1634563839760</updated>
+    </task>
+    <option name="localTasksCounter" value="31" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -402,6 +399,9 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
+    <ignored-roots>
+      <path value="$PROJECT_DIR$/../.." />
+    </ignored-roots>
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
     <MESSAGE value="renaming" />
     <MESSAGE value="testing" />
@@ -413,19 +413,6 @@
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/DataTypeTests.cs</url>
-          <line>386</line>
-          <properties documentPath="C:\Users\tnunnink\dev\projects\L5Sharp\tests\L5Sharp.Core.Tests\DataTypeTests.cs" initialLine="384" containingFunctionPresentation="method 'UpdatingMember_Name_ShouldGetMemberByNewName'">
-            <startOffsets>
-              <option value="13507" />
-            </startOffsets>
-            <endOffsets>
-              <option value="13546" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="3" />
-        </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/DataTypeTests.cs</url>
           <line>42</line>

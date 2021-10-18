@@ -39,9 +39,7 @@ namespace L5Sharp.Core
                 userDefined.PropertyChanged += OnDataTypePropertyChanged;
 
             _radix = member.Radix;
-            _description = member.Description;
-            
-            Value = member.DataType.DefaultValue;
+            _value = member.DataType.DefaultValue;
             
             var children = GenerateMembers(this, member.DataType);
             foreach (var child in children)
@@ -89,7 +87,7 @@ namespace L5Sharp.Core
             {
                 if (!(_member.DataType is Predefined { IsAtomic: true } predefined))
                     throw new NotConfigurableException(
-                        $"Radix property is not not configurable for type {_member.DataType}. Radix is only configurable for atomic types");
+                        $"Value is not not configurable for type {_member.DataType}. Value is only configurable for atomic types");
 
                 if (!predefined.IsValidValue(value))
                     Throw.InvalidTagValueException(value, _member.DataType.Name);
@@ -150,13 +148,9 @@ namespace L5Sharp.Core
         private void OnDataTypePropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             if (!(sender is DataType userDefined)) return;
-
-            Description = userDefined.Description; //todo although this need to be handled by overridden description
-
+            
             var members = GenerateMembers(this, userDefined);
-
             _members.Clear();
-
             foreach (var member in members)
                 _members.Add(member.Name, member);
         }

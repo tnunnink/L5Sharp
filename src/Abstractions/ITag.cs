@@ -12,6 +12,6 @@ namespace L5Sharp.Abstractions
         IComponent Parent { get; }
         void UpdateDataType(IDataType dataType);
         ITag ChangeTagType(TagType type);
-        IEnumerable<string> ListMembers();
+        IEnumerable<string> ListMembersNames();
     }
 }

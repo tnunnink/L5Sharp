@@ -102,7 +102,7 @@ namespace L5Sharp.Core.Tests
             type.Len.Dimension.Should().Be(0);
             type.Len.Radix.Should().Be(Radix.Decimal);
             type.Len.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);
-            type.Len.Description.Should().BeEmpty();
+            type.Len.Description.Should().BeNull();
         }
         
         [Test]
@@ -116,7 +116,7 @@ namespace L5Sharp.Core.Tests
             type.Data.Dimension.Should().Be(100);
             type.Data.Radix.Should().Be(Radix.Ascii);
             type.Data.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);
-            type.Data.Description.Should().BeEmpty();
+            type.Data.Description.Should().BeNull();
         }
 
         [Test]

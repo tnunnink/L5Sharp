@@ -198,4 +198,104 @@
             <Member Name="ROCPeriodInv" DataType="BOOL" Dimension="0" Radix="Decimal" ExternalAccess="Read/Write"/>
         </Members>
     </DataType>
+    <DataType Name="ALARM_DIGITAL" Family="NoFamily" Class="ProductDefined">
+        <Members>
+            <Member Name="EnableIn" DataType="BOOL" Dimension="0" Radix="Decimal" ExternalAccess="Read/Write"/>
+            <Member Name="In" DataType="BOOL" Dimension="0" Radix="Decimal" ExternalAccess="Read/Write"/>
+            <Member Name="InFault" DataType="BOOL" Dimension="0" Radix="Decimal" ExternalAccess="Read/Write"/>
+            <Member Name="Condition" DataType="BOOL" Dimension="0" Radix="Decimal" ExternalAccess="Read/Write"/>
+            <Member Name="AckRequired" DataType="BOOL" Dimension="0" Radix="Decimal" ExternalAccess="Read/Write"/>
+            <Member Name="Latched" DataType="BOOL" Dimension="0" Radix="Decimal" ExternalAccess="Read/Write"/>
+            <Member Name="ProgAck" DataType="BOOL" Dimension="0" Radix="Decimal" ExternalAccess="Read/Write"/>
+            <Member Name="OperAck" DataType="BOOL" Dimension="0" Radix="Decimal" ExternalAccess="Read/Write"/>
+            <Member Name="ProgReset" DataType="BOOL" Dimension="0" Radix="Decimal" ExternalAccess="Read/Write"/>
+            <Member Name="OperReset" DataType="BOOL" Dimension="0" Radix="Decimal" ExternalAccess="Read/Write"/>
+            <Member Name="ProgSuppress" DataType="BOOL" Dimension="0" Radix="Decimal" ExternalAccess="Read/Write"/>
+            <Member Name="OperSuppress" DataType="BOOL" Dimension="0" Radix="Decimal" ExternalAccess="Read/Write"/>
+            <Member Name="ProgUnsuppress" DataType="BOOL" Dimension="0" Radix="Decimal" ExternalAccess="Read/Write"/>
+            <Member Name="OperUnsuppress" DataType="BOOL" Dimension="0" Radix="Decimal" ExternalAccess="Read/Write"/>
+            <Member Name="OperShelve" DataType="BOOL" Dimension="0" Radix="Decimal" ExternalAccess="Read/Write"/>
+            <Member Name="ProgUnshelve" DataType="BOOL" Dimension="0" Radix="Decimal" ExternalAccess="Read/Write"/>
+            <Member Name="OperUnshelve" DataType="BOOL" Dimension="0" Radix="Decimal" ExternalAccess="Read/Write"/>
+            <Member Name="ProgDisable" DataType="BOOL" Dimension="0" Radix="Decimal" ExternalAccess="Read/Write"/>
+            <Member Name="OperDisable" DataType="BOOL" Dimension="0" Radix="Decimal" ExternalAccess="Read/Write"/>
+            <Member Name="ProgEnable" DataType="BOOL" Dimension="0" Radix="Decimal" ExternalAccess="Read/Write"/>
+            <Member Name="OperEnable" DataType="BOOL" Dimension="0" Radix="Decimal" ExternalAccess="Read/Write"/>
+            <Member Name="AlarmCountReset" DataType="BOOL" Dimension="0" Radix="Decimal" ExternalAccess="Read/Write"/>
+            <Member Name="UseProgTime" DataType="BOOL" Dimension="0" Radix="Decimal" ExternalAccess="Read/Write"/>
+            <Member Name="ProgTime" DataType="LINT" Dimension="0" Radix="Date" ExternalAccess="Read/Write"/>
+            <Member Name="Severity" DataType="DINT" Dimension="0" Radix="Decimal" ExternalAccess="Read/Write"/>
+            <Member Name="MinDurationPRE" DataType="DINT" Dimension="0" Radix="Decimal" ExternalAccess="Read/Write"/>
+            <Member Name="ShelveDuration" DataType="DINT" Dimension="0" Radix="Decimal" ExternalAccess="Read/Write"/>
+            <Member Name="MaxShelveDuration" DataType="DINT" Dimension="0" Radix="Decimal" ExternalAccess="Read/Write"/>
+            <Member Name="EnableOut" DataType="BOOL" Dimension="0" Radix="Decimal" ExternalAccess="Read/Write"/>
+            <Member Name="InAlarm" DataType="BOOL" Dimension="0" Radix="Decimal" ExternalAccess="Read/Write"/>
+            <Member Name="Acked" DataType="BOOL" Dimension="0" Radix="Decimal" ExternalAccess="Read/Write"/>
+            <Member Name="InAlarmUnack" DataType="BOOL" Dimension="0" Radix="Decimal" ExternalAccess="Read/Write"/>
+            <Member Name="Suppressed" DataType="BOOL" Dimension="0" Radix="Decimal" ExternalAccess="Read/Write"/>
+            <Member Name="Shelved" DataType="BOOL" Dimension="0" Radix="Decimal" ExternalAccess="Read/Write"/>
+            <Member Name="Disabled" DataType="BOOL" Dimension="0" Radix="Decimal" ExternalAccess="Read/Write"/>
+            <Member Name="Commissioned" DataType="BOOL" Dimension="0" Radix="Decimal" ExternalAccess="Read/Write"/>
+            <Member Name="MinDurationACC" DataType="DINT" Dimension="0" Radix="Decimal" ExternalAccess="Read/Write"/>
+            <Member Name="AlarmCount" DataType="DINT" Dimension="0" Radix="Decimal" ExternalAccess="Read/Write"/>
+            <Member Name="InAlarmTime" DataType="LINT" Dimension="0" Radix="Date" ExternalAccess="Read/Write"/>
+            <Member Name="AckTime" DataType="LINT" Dimension="0" Radix="Date" ExternalAccess="Read/Write"/>
+            <Member Name="RetToNormalTime" DataType="LINT" Dimension="0" Radix="Date" ExternalAccess="Read/Write"/>
+            <Member Name="AlarmCountResetTime" DataType="LINT" Dimension="0" Radix="Date" ExternalAccess="Read/Write"/>
+            <Member Name="ShelveTime" DataType="LINT" Dimension="0" Radix="Date" ExternalAccess="Read/Write"/>
+            <Member Name="UnshelveTime" DataType="LINT" Dimension="0" Radix="Date" ExternalAccess="Read/Write"/>
+            <Member Name="Status" DataType="DINT" Dimension="0" Radix="Decimal" ExternalAccess="Read/Write"/>
+            <Member Name="InstructFault" DataType="BOOL" Dimension="0" Radix="Decimal" ExternalAccess="Read/Write"/>
+            <Member Name="InFaulted" DataType="BOOL" Dimension="0" Radix="Decimal" ExternalAccess="Read/Write"/>
+            <Member Name="SeverityInv" DataType="BOOL" Dimension="0" Radix="Decimal" ExternalAccess="Read/Write"/>
+        </Members>
+    </DataType>
+    <DataType Name="CONTROL" Family="NoFamily" Class="ProductDefined">
+        <Members>
+            <Member Name="LEN" DataType="DINT" Dimension="0" Radix="Decimal" ExternalAccess="Read/Write"/>
+            <Member Name="POS" DataType="DINT" Dimension="0" Radix="Decimal" ExternalAccess="Read/Write"/>
+            <Member Name="EN" DataType="BOOL" Dimension="0" Radix="Decimal" ExternalAccess="Read/Write"/>
+            <Member Name="EU" DataType="BOOL" Dimension="0" Radix="Decimal" ExternalAccess="Read/Write"/>
+            <Member Name="DN" DataType="BOOL" Dimension="0" Radix="Decimal" ExternalAccess="Read/Write"/>
+            <Member Name="EM" DataType="BOOL" Dimension="0" Radix="Decimal" ExternalAccess="Read/Write"/>
+            <Member Name="ER" DataType="BOOL" Dimension="0" Radix="Decimal" ExternalAccess="Read/Write"/>
+            <Member Name="UL" DataType="BOOL" Dimension="0" Radix="Decimal" ExternalAccess="Read/Write"/>
+            <Member Name="IN" DataType="BOOL" Dimension="0" Radix="Decimal" ExternalAccess="Read/Write"/>
+            <Member Name="FD" DataType="BOOL" Dimension="0" Radix="Decimal" ExternalAccess="Read/Write"/>
+        </Members>
+    </DataType>
+    <DataType Name="MESSAGE" Family="NoFamily" Class="ProductDefined">
+        <Members>
+            <Member Name="Flags" DataType="INT" Dimension="0" Radix="Hex" ExternalAccess="Read/Write"/>
+            <Member Name="EW" DataType="BOOL" Dimension="0" Radix="Decimal" ExternalAccess="Read/Write"/>
+            <Member Name="ER" DataType="BOOL" Dimension="0" Radix="Decimal" ExternalAccess="Read/Write"/>
+            <Member Name="DN" DataType="BOOL" Dimension="0" Radix="Decimal" ExternalAccess="Read/Write"/>
+            <Member Name="ST" DataType="BOOL" Dimension="0" Radix="Decimal" ExternalAccess="Read/Write"/>
+            <Member Name="EN" DataType="BOOL" Dimension="0" Radix="Decimal" ExternalAccess="Read/Write"/>
+            <Member Name="TO" DataType="BOOL" Dimension="0" Radix="Decimal" ExternalAccess="Read/Write"/>
+            <Member Name="EN_CC" DataType="BOOL" Dimension="0" Radix="Decimal" ExternalAccess="Read/Write"/>
+            <Member Name="ERR" DataType="INT" Dimension="0" Radix="Hex" ExternalAccess="Read/Write"/>
+            <Member Name="EXERR" DataType="DINT" Dimension="0" Radix="Hex" ExternalAccess="Read/Write"/>
+            <Member Name="ERR_SRC" DataType="SINT" Dimension="0" Radix="Decimal" ExternalAccess="Read/Write"/>
+            <Member Name="DN_LEN" DataType="INT" Dimension="0" Radix="Decimal" ExternalAccess="Read/Write"/>
+            <Member Name="REQ_LEN" DataType="INT" Dimension="0" Radix="Decimal" ExternalAccess="Read/Write"/>
+            <Member Name="DestinationLink" DataType="INT" Dimension="0" Radix="Decimal" ExternalAccess="Read/Write"/>
+            <Member Name="DestinationNode" DataType="INT" Dimension="0" Radix="Octal" ExternalAccess="Read/Write"/>
+            <Member Name="SourceLink" DataType="INT" Dimension="0" Radix="Decimal" ExternalAccess="Read/Write"/>
+            <Member Name="Class" DataType="INT" Dimension="0" Radix="Hex" ExternalAccess="Read/Write"/>
+            <Member Name="Attribute" DataType="INT" Dimension="0" Radix="Hex" ExternalAccess="Read/Write"/>
+            <Member Name="Instance" DataType="DINT" Dimension="0" Radix="Decimal" ExternalAccess="Read/Write"/>
+            <Member Name="LocalIndex" DataType="DINT" Dimension="0" Radix="Decimal" ExternalAccess="Read/Write"/>
+            <Member Name="Channel" DataType="SINT" Dimension="0" Radix="ASCII" ExternalAccess="Read/Write"/>
+            <Member Name="Rack" DataType="SINT" Dimension="0" Radix="Octal" ExternalAccess="Read/Write"/>
+            <Member Name="Group" DataType="SINT" Dimension="0" Radix="Decimal" ExternalAccess="Read/Write"/>
+            <Member Name="Slot" DataType="SINT" Dimension="0" Radix="Decimal" ExternalAccess="Read/Write"/>
+            <Member Name="Path" DataType="STRING" Dimension="0" Radix="NullType" ExternalAccess="Read/Write"/>
+            <Member Name="RemoteIndex" DataType="DINT" Dimension="0" Radix="Decimal" ExternalAccess="Read/Write"/>
+            <Member Name="RemoteElement" DataType="STRING" Dimension="0" Radix="NullType" ExternalAccess="Read/Write"/>
+            <Member Name="UnconnectedTimeout" DataType="DINT" Dimension="0" Radix="Decimal" ExternalAccess="Read/Write"/>
+            <Member Name="ConnectionRate" DataType="DINT" Dimension="0" Radix="Decimal" ExternalAccess="Read/Write"/>
+            <Member Name="TimeoutMultiplier" DataType="SINT" Dimension="0" Radix="Decimal" ExternalAccess="Read/Write"/>
+        </Members>
+    </DataType>
 </DataTypes>

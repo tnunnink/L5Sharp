@@ -274,14 +274,14 @@ namespace L5Sharp.Core.Tests
         }
 
         [Test]
-        public void AddMember_BooleanMember_ShouldRaiseMembersChanged()
+        public void AddMember_BooleanMember_ShouldRaisePropertyChanged()
         {
             var type = new DataType("Test");
             var monitor = type.Monitor(); 
             
             type.AddMember("Member", Predefined.Bool);
 
-            monitor.Should().Raise("MemberChanged");
+            monitor.Should().RaisePropertyChangeFor(m => m.Members);
         }
         
         [Test]
@@ -306,7 +306,7 @@ namespace L5Sharp.Core.Tests
         }
         
         [Test]
-        public void RemoveMember_ExistingMember_ShouldRaiseMembersChanged()
+        public void RemoveMember_ExistingMember_ShouldRaisePropertyChanged()
         {
             var member = new Member("Member", Predefined.Dint);
             var type = new DataType("Test", member);
@@ -314,7 +314,7 @@ namespace L5Sharp.Core.Tests
             
             type.RemoveMember("Member");
 
-            monitor.Should().Raise("MemberChanged");
+            monitor.Should().RaisePropertyChangeFor(m => m.Members);
         }
 
         [Test]
@@ -389,7 +389,7 @@ namespace L5Sharp.Core.Tests
         }
 
         [Test]
-        public void UpdatingMember_Name_ShouldRaiseMembersChanged()
+        public void UpdatingMember_Name_ShouldRaisePropertyChanged()
         {
             var type = new DataType("Test", new Member("Member", Predefined.Dint));
             var monitor = type.Monitor(); 
@@ -397,11 +397,11 @@ namespace L5Sharp.Core.Tests
             var member = (Member) type.GetMember("Member");
             member.Name = "NewName";
 
-            monitor.Should().Raise("MemberChanged");
+            monitor.Should().RaisePropertyChangeFor(m => m.Members);
         }
 
         [Test]
-        public void UpdatingMember_DataType_ShouldRaiseMembersChanged()
+        public void UpdatingMember_DataType_ShouldRaisePropertyChanged()
         {
             var type = new DataType("Test", new Member("Member", Predefined.Dint));
             var monitor = type.Monitor(); 
@@ -409,7 +409,7 @@ namespace L5Sharp.Core.Tests
             var member = (Member) type.GetMember("Member");
             member.DataType = Predefined.Alarm;
 
-            monitor.Should().Raise("MemberChanged");
+            monitor.Should().RaisePropertyChangeFor(m => m.Members);
         }
     }
 }

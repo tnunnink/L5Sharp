@@ -32,10 +32,10 @@ namespace L5Sharp.Core.Tests
         }
         
         [Test]
-        public void New_NullType_ShouldThrowArgumentNullException()
+        public void New_NullType_ShouldHaveUndefinedDataType()
         {
-            FluentActions.Invoking(() => ReadOnlyMember.New("Name", null)).Should()
-                .Throw<ArgumentNullException>();
+            var member = ReadOnlyMember.New("Name", null);
+            member.DataType.Should().Be(Predefined.Undefined);
         }
         
         [Test]
@@ -110,7 +110,7 @@ namespace L5Sharp.Core.Tests
 
             var description = member.Description;
             
-            description.Should().BeEmpty();
+            description.Should().BeNull();
         }
     }
 }

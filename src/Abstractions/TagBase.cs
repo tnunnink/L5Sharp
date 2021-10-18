@@ -61,11 +61,7 @@ namespace L5Sharp.Abstractions
         public Dimensions Dimensions
         {
             get => _dimensions;
-            set
-            {
-                SetProperty(ref _dimensions, value);
-                InstantiateMembers(_dataType);
-            }
+            set => SetProperty(ref _dimensions, value, InstantiateMembers);
         }
 
         public Radix Radix
@@ -126,7 +122,7 @@ namespace L5Sharp.Abstractions
             
             _dataType = dataType;
             
-            InstantiateMembers(_dataType);
+            InstantiateMembers();
         } 
 
         public ITag ChangeTagType(TagType type)
@@ -143,30 +139,29 @@ namespace L5Sharp.Abstractions
             return member;
         }
 
-        public IEnumerable<string> ListMembers()
+        public IEnumerable<string> ListMembersNames()
         {
             return GetMemberNames(this);
         }
 
-        private static IEnumerable<string> GetMemberNames(ITagMember member)
+        private static IEnumerable<string> GetMemberNames(ITagMember tagMember)
         {
             var names = new List<string>();
 
-            foreach (var m in member.Members)
+            foreach (var member in tagMember.Members)
             {
-                var name = m.IsArrayElement ? $"{member.Name}{m.Name}" : $"{member.Name}.{m.Name}";
-                names.Add(name);
-                names.AddRange(GetMemberNames(m));
+                names.Add(member.FullName);
+                names.AddRange(GetMemberNames(member));
             }
 
             return names;
         }
 
-        private void InstantiateMembers(IDataType dataType)
+        private void InstantiateMembers()
         {
             _members.Clear();
             
-            var members = TagMember.GenerateMembers(this, dataType);
+            var members = TagMember.GenerateMembers(this, _dataType);
             
             foreach (var member in members)
                 _members.Add(member.Name, member); 
@@ -178,9 +173,6 @@ namespace L5Sharp.Abstractions
                 setter.Invoke(tagMember, value);
         }
         
-        private void OnDataTypePropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            InstantiateMembers(_dataType);
-        }
+        private void OnDataTypePropertyChanged(object sender, PropertyChangedEventArgs e) => InstantiateMembers();
     }
 }

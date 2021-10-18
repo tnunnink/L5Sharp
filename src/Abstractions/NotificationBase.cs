@@ -10,7 +10,16 @@ namespace L5Sharp.Abstractions
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected void SetProperty<T>(ref T storage, T value, Action<T> validate = null,
+        protected void SetProperty<T>(ref T storage, T value, [CallerMemberName] string propertyName = null)
+        {
+            if (EqualityComparer<T>.Default.Equals(storage, value)) return;
+
+            storage = value;
+
+            RaisePropertyChanged(propertyName);
+        }
+        
+        protected void SetProperty<T>(ref T storage, T value, Action<T> validate,
             [CallerMemberName] string propertyName = null)
         {
             if (EqualityComparer<T>.Default.Equals(storage, value)) return;
@@ -18,6 +27,19 @@ namespace L5Sharp.Abstractions
             validate?.Invoke(value);
             
             storage = value;
+
+            RaisePropertyChanged(propertyName);
+        }
+        
+        protected void SetProperty<T>(ref T storage, T value, Action onChanged,
+            [CallerMemberName] string propertyName = null)
+        {
+            if (EqualityComparer<T>.Default.Equals(storage, value)) return;
+
+            storage = value;
+            
+            onChanged?.Invoke();
+            
             RaisePropertyChanged(propertyName);
         }
 
