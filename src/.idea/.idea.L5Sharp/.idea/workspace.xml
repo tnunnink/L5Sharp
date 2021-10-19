@@ -8,19 +8,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/TagUserDefinedTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Abstractions/IComponent.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Abstractions/IComponent.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Abstractions/IMember.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Abstractions/IMember.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Abstractions/IProgram.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Abstractions/IProgram.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Abstractions/ITag.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Abstractions/ITag.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Abstractions/NotificationBase.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Abstractions/NotificationBase.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Abstractions/ProgramBase.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Abstractions/ProgramBase.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Abstractions/TagBase.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Abstractions/TagBase.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/TagMember.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/TagMember.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Resources/Predefined.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Resources/Predefined.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/DataTypeTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/DataTypeTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/ReadOnlyMemberTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/ReadOnlyMemberTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/StringTypeTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/StringTypeTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Abstractions/TaskBase.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Abstractions/TaskBase.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/Tag.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/Tag.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Enums/TaskType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Enums/TaskType.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Extensions/ElementExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Extensions/ElementExtensions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Factories/DataTypeFactory.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Factories/DataTypeFactory.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Factories/TaskFactory.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Factories/TaskFactory.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/TagTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/TagTests.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -91,7 +89,7 @@
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
-    <property name="settings.editor.selected.configurable" value="project.propVCSSupport.Mappings" />
+    <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
@@ -115,7 +113,8 @@
       <workItem from="1634125922438" duration="81940000" />
       <workItem from="1634336182794" duration="33000" />
       <workItem from="1634336306685" duration="23938000" />
-      <workItem from="1634566436202" duration="4619000" />
+      <workItem from="1634566436202" duration="14916000" />
+      <workItem from="1634677864474" duration="1753000" />
     </task>
     <task id="LOCAL-00001" summary="renaming">
       <created>1632580540996</created>
@@ -327,7 +326,14 @@
       <option name="project" value="LOCAL" />
       <updated>1634563839760</updated>
     </task>
-    <option name="localTasksCounter" value="31" />
+    <task id="LOCAL-00031" summary="development">
+      <created>1634571094396</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1634571094396</updated>
+    </task>
+    <option name="localTasksCounter" value="32" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

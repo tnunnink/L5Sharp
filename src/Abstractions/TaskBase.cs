@@ -81,7 +81,7 @@ namespace L5Sharp.Abstractions
 
         public virtual ITask ChangeType(TaskType type)
         {
-            return type.Create(Name);
+            return type.Create(Name, Description, Priority, Watchdog, InhibitTask, DisableUpdateOutputs);
         }
 
         private void AddProgramComponent(string name)

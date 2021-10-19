@@ -5,7 +5,6 @@ using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 using System.Xml.Linq;
 using L5Sharp.Abstractions;
-using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Utilities;
 
@@ -53,7 +52,7 @@ namespace L5Sharp.Extensions
             Expression<Func<TComponent, TProperty>> propertyExpression, Func<string, TProperty> parse)
             where TComponent : IComponent => element.GetAttributeValueInternal(propertyExpression, parse);
 
-        #region Typed GetValue Extensiosn
+        #region TypedValueExtensions
 
          public static string GetValue<TComponent>(this XElement element,
             Expression<Func<TComponent, string>> propertyExpression)
@@ -62,6 +61,9 @@ namespace L5Sharp.Extensions
         public static bool GetValue<TComponent>(this XElement element,
             Expression<Func<TComponent, bool>> propertyExpression)
             where TComponent : IComponent => element.GetAttributeValueInternal(propertyExpression, Convert.ToBoolean);
+        public static byte GetValue<TComponent>(this XElement element,
+            Expression<Func<TComponent, byte>> propertyExpression)
+            where TComponent : IComponent => element.GetAttributeValueInternal(propertyExpression, Convert.ToByte);
 
         public static ushort GetValue<TComponent>(this XElement element,
             Expression<Func<TComponent, ushort>> propertyExpression)
@@ -131,25 +133,6 @@ namespace L5Sharp.Extensions
 
             var attributeName = memberExpression.Member.Name;
             var value = element.Attribute(attributeName)?.Value;
-
-            return parse(value);
-        }
-
-        private static TReturn GetElementValueInternal<TComponent, TProperty, TReturn>(this XElement element,
-            Expression<Func<TComponent, TProperty>> propertyExpression, Func<string, TReturn> parse)
-            where TComponent : IComponent
-        {
-            var componentName = LogixNames.GetComponentName<TComponent>();
-
-            if (element.Name != componentName)
-                throw new InvalidOperationException(
-                    $"Element name '{element.Name}' is not expected value '{componentName}'");
-
-            if (!(propertyExpression.Body is MemberExpression memberExpression))
-                throw new ArgumentException($"Expression must of type {typeof(MemberExpression)}");
-
-            var memberName = memberExpression.Member.Name;
-            var value = element.Element(memberName)?.Value;
 
             return parse(value);
         }

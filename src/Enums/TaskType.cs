@@ -13,7 +13,8 @@ namespace L5Sharp.Enums
         {
         }
 
-        public abstract ITask Create(string name);
+        public abstract ITask Create(string name, string description = null,
+            byte priority = 10, float watchdog = 500, bool inhibit = false, bool disableUpdateOutputs = false);
 
         public static T Create<T>(string name) where T : ITask
         {
@@ -21,7 +22,7 @@ namespace L5Sharp.Enums
                 BindingFlags.CreateInstance |
                 BindingFlags.Public |
                 BindingFlags.Instance |
-                BindingFlags.OptionalParamBinding, null, new[] {name, Type.Missing}, CultureInfo.CurrentCulture);
+                BindingFlags.OptionalParamBinding, null, new[] { name, Type.Missing }, CultureInfo.CurrentCulture);
         }
 
         public static readonly TaskType Continuous = new ContinuousType();
@@ -35,9 +36,10 @@ namespace L5Sharp.Enums
             {
             }
 
-            public override ITask Create(string name)
+            public override ITask Create(string name, string description, byte priority, float watchdog, bool inhibit,
+                bool disableUpdateOutputs)
             {
-                return new ContinuousTask(name);
+                return new ContinuousTask(name, description, priority, watchdog, inhibit, disableUpdateOutputs);
             }
         }
 
@@ -47,9 +49,14 @@ namespace L5Sharp.Enums
             {
             }
 
-            public override ITask Create(string name)
+            public override ITask Create(string name, string description, byte priority, float watchdog, bool inhibit,
+                bool disableUpdateOutputs)
             {
-                return new PeriodicTask(name);
+                return new PeriodicTask(name, description,
+                    priority: priority,
+                    watchdog: watchdog,
+                    inhibitTask: inhibit,
+                    disableUpdateOutputs: disableUpdateOutputs);
             }
         }
 
@@ -59,9 +66,14 @@ namespace L5Sharp.Enums
             {
             }
 
-            public override ITask Create(string name)
+            public override ITask Create(string name, string description, byte priority, float watchdog, bool inhibit,
+                bool disableUpdateOutputs)
             {
-                return new EventTask(name);
+                return new EventTask(name, description,
+                    priority: priority,
+                    watchdog: watchdog,
+                    inhibitTask: inhibit,
+                    disableUpdateOutputs: disableUpdateOutputs);
             }
         }
     }

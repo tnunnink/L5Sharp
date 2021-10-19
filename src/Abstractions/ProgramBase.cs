@@ -9,7 +9,7 @@ namespace L5Sharp.Abstractions
 {
     public abstract class ProgramBase : ComponentBase, IProgram
     {
-        private readonly Dictionary<string, Tag> _tags = new Dictionary<string, Tag>();
+        private readonly Dictionary<string, ITag> _tags = new Dictionary<string, ITag>();
         private readonly Dictionary<string, IRoutine> _routines = new Dictionary<string, IRoutine>();
 
         private readonly Dictionary<Type, RoutineType> _routineTypes = new Dictionary<Type, RoutineType>
@@ -17,7 +17,7 @@ namespace L5Sharp.Abstractions
             { typeof(RllRoutine), RoutineType.Ladder }
         };
 
-        protected ProgramBase(string name, string description = null, bool testEdits = false, bool disabled = false) 
+        protected ProgramBase(string name, string description = null, bool testEdits = false, bool disabled = false)
             : base(name, description)
         {
             TestEdits = testEdits;
@@ -25,12 +25,12 @@ namespace L5Sharp.Abstractions
         }
 
         public abstract ProgramType Type { get; }
-        
+
         public bool TestEdits { get; set; }
 
         public bool Disabled { get; set; }
 
-        public IEnumerable<Tag> Tags => _tags.Values.AsEnumerable();
+        public IEnumerable<ITag> Tags => _tags.Values.AsEnumerable();
 
         public IEnumerable<IRoutine> Routines => _routines.Values.AsEnumerable();
 
@@ -53,6 +53,11 @@ namespace L5Sharp.Abstractions
 
             _routines.TryGetValue(name, out var routine);
             return routine;
+        }
+
+        public T GetRoutine<T>(string name) where T : IRoutine
+        {
+            throw new NotImplementedException();
         }
 
         public IEnumerable<T> GetRoutines<T>() where T : IRoutine
@@ -87,12 +92,72 @@ namespace L5Sharp.Abstractions
             _routines.Remove(name);
         }
 
-        public void AddTag(ITag tag)
+        public ITag GetTag(string name)
         {
+            return GetTagComponent(name);
+        }
+
+        public ITag<T> GetTag<T>(string name) where T : IDataType, new()
+        {
+            var tag = GetTagComponent(name);
+
+            if (tag.DataType.GetType() != typeof(T))
+                throw new InvalidOperationException();
+
+            return tag as ITag<T>;
+        }
+
+        public IEnumerable<T> GetTags<T>() where T : ITag
+        {
+            throw new NotImplementedException();
+        }
+        
+        public void AddTag(string name, IDataType dataType)
+        {
+            var tag = new Tag(name, dataType, this);
+            AddTagComponent(tag);
+        }
+
+        public void AddTag<T>(string name) where T : IDataType, new()
+        {
+            var tag = new Tag<T>(name, this);
+            AddTagComponent(tag);
         }
 
         public void RemoveTag(string name)
         {
+            if (string.IsNullOrEmpty(name)) throw new ArgumentException("Name can not be null");
+
+            if (!_tags.ContainsKey(name)) return;
+
+            _tags.Remove(name);
+        }
+
+        private ITag GetTagComponent(string name)
+        {
+            if (name == null) throw new ArgumentNullException(nameof(name), "Name can not be null");
+
+            _tags.TryGetValue(name, out var tag);
+            return tag;
+        }
+
+        private void AddTagComponent(ITag tag)
+        {
+            if (tag == null) throw new ArgumentNullException(nameof(tag), "Tag can not be null");
+
+            if (_tags.ContainsKey(tag.Name))
+                Throw.ComponentNameCollisionException(tag.Name, typeof(ITag));
+
+            _tags.Add(tag.Name, tag);
+        }
+
+        private void RemoveTagComponent(ITag tag)
+        {
+            if (tag == null) throw new ArgumentNullException(nameof(tag), "Tag can not be null");
+
+            if (!_tags.ContainsKey(tag.Name)) return;
+
+            _tags.Remove(tag.Name);
         }
     }
 }

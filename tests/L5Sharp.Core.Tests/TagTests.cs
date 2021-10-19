@@ -59,7 +59,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void New_AllOverloads_ShouldHaveExpectedProperties()
         {
-            var tag = new Tag("Test", Predefined.Dint, new Dimensions(5), Radix.Ascii, ExternalAccess.ReadOnly, 
+            var tag = new Tag("Test", Predefined.Dint, null, new Dimensions(5), Radix.Ascii, ExternalAccess.ReadOnly, 
                  "This is a test tag", TagUsage.Input, true);
 
             tag.Should().NotBeNull();
@@ -130,7 +130,7 @@ namespace L5Sharp.Core.Tests
             var second = fixture.Create<ushort>();
             var length = first * second;
             
-            var tag = new Tag("Test", Predefined.Dint, new Dimensions(first, second));
+            var tag = new Tag("Test", Predefined.Dint, null, new Dimensions(first, second));
 
             tag.Dimensions.Length.Should().Be(length);
         }
@@ -172,7 +172,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Radix_SetValueAtomicValidRadix_ShouldSetMembersRadix()
         {
-            var tag = new Tag<Dint>("Test", new Dimensions(3, 4));
+            var tag = new Tag<Dint>("Test", dimensions: new Dimensions(3, 4));
 
             tag.Radix = Radix.Ascii;
 

@@ -14,4 +14,9 @@ namespace L5Sharp.Abstractions
         ITag ChangeTagType(TagType type);
         IEnumerable<string> ListMembersNames();
     }
+
+    public interface ITag<T> : ITag where T : IDataType, new()
+    {
+        ITag<T> As();
+    }
 }

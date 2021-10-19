@@ -54,8 +54,11 @@ namespace L5Sharp.Abstractions
         }
 
         public bool Constant { get; set; }
+        
         public IComponent Parent { get; }
+        
         public string FullName => Name;
+        
         public string DataType => _dataType?.Name;
 
         public Dimensions Dimensions
@@ -107,6 +110,7 @@ namespace L5Sharp.Abstractions
         }
 
         public IEnumerable<ITagMember> Members => _members.Values.AsEnumerable();
+        
         public bool IsValueMember => Value != null && _dataType is { IsAtomic: true };
         public bool IsArrayMember => Dimensions.Length > 0;
         public bool IsArrayElement => false;
