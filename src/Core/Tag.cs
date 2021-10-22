@@ -9,7 +9,7 @@ using L5Sharp.Enums;
 
 namespace L5Sharp.Core
 {
-    public class Tag : TagBase
+    public class Tag : TagBase<IDataType>
     {
         internal Tag(string name, IDataType dataType, IComponent parent = null, Dimensions dimensions = null,
             Radix radix = null, ExternalAccess externalAccess = null, string description = null,
@@ -21,28 +21,14 @@ namespace L5Sharp.Core
         public override TagType TagType => TagType.Base;
     }
 
-    public class Tag<T> : Tag, ITag<T> where T : IDataType, new()
+    public class Tag<T> : TagBase<T> where T : IDataType, new()
     {
         internal Tag(string name, IComponent parent = null, Dimensions dimensions = null, Radix radix = null,
-            ExternalAccess externalAccess = null, string description = null, TagUsage usage = null,
-            bool constant = false)
-            : base(name, new T(), parent, dimensions, radix, externalAccess, description, usage, constant)
+            ExternalAccess externalAccess = null, string description = null, TagUsage usage = null, bool constant = false)
+            : base(name, new T(), dimensions, radix, externalAccess, description, parent, usage, constant)
         {
         }
 
-        public ITagMember GetMember<TProperty>(Expression<Func<T, TProperty>> propertyExpression)
-        {
-            if (!(propertyExpression.Body is MemberExpression memberExpression))
-                throw new InvalidOperationException("");
-
-            var propertyName = memberExpression.Member.Name;
-
-            return Members.SingleOrDefault(m => m.Name == propertyName);
-        }
-
-        public ITag<T> As()
-        {
-            throw new NotImplementedException();
-        }
+        public override TagType TagType => TagType.Base;
     }
 }

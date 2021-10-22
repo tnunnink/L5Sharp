@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Linq.Expressions;
 using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Exceptions;
@@ -9,7 +10,7 @@ using L5Sharp.Utilities;
 
 namespace L5Sharp.Abstractions
 {
-    public abstract class TagBase : ComponentBase, ITag
+    public abstract class TagBase<TDataType> : ComponentBase, ITag<TDataType> where TDataType : IDataType
     {
         private IDataType _dataType;
         private Dimensions _dimensions;
@@ -34,7 +35,7 @@ namespace L5Sharp.Abstractions
             Radix = radix == null ? dataType.DefaultRadix : radix;
             ExternalAccess = externalAccess ?? ExternalAccess.None;
             Constant = constant;
-            
+
             if (_dataType.IsAtomic)
                 _value = _dataType.DefaultValue;
         }
@@ -54,11 +55,16 @@ namespace L5Sharp.Abstractions
         }
 
         public bool Constant { get; set; }
-        
+
         public IComponent Parent { get; }
-        
+
+        public TDataType GetDataType()
+        {
+            return (TDataType) _dataType;
+        }
+
         public string FullName => Name;
-        
+
         public string DataType => _dataType?.Name;
 
         public Dimensions Dimensions
@@ -88,7 +94,7 @@ namespace L5Sharp.Abstractions
             {
                 if (value == null)
                     throw new ArgumentNullException(nameof(value), "External Access property can not be null");
-                
+
                 SetProperty(ref _externalAccess, value);
             }
         }
@@ -110,12 +116,15 @@ namespace L5Sharp.Abstractions
         }
 
         public IEnumerable<ITagMember> Members => _members.Values.AsEnumerable();
-        
+
         public bool IsValueMember => Value != null && _dataType is { IsAtomic: true };
+
         public bool IsArrayMember => Dimensions.Length > 0;
+
         public bool IsArrayElement => false;
+
         public bool IsStructureMember => !IsValueMember && !IsArrayMember && _members.Count > 0;
-        
+
         public void UpdateDataType(IDataType dataType)
         {
             if (_dataType is DataType type)
@@ -123,11 +132,11 @@ namespace L5Sharp.Abstractions
 
             if (dataType is DataType userDefined)
                 userDefined.PropertyChanged += OnDataTypePropertyChanged;
-            
+
             _dataType = dataType;
-            
+
             InstantiateMembers();
-        } 
+        }
 
         public ITag ChangeTagType(TagType type)
         {
@@ -141,6 +150,43 @@ namespace L5Sharp.Abstractions
 
             _members.TryGetValue(name, out var member);
             return member;
+        }
+
+        public ITagMember GetMember<TProperty>(Expression<Func<TDataType, TProperty>> propertyExpression)
+            where TProperty : IMember
+        {
+            if (!(propertyExpression.Body is MemberExpression memberExpression))
+                throw new InvalidOperationException("");
+
+            var propertyName = memberExpression.Member.Name;
+
+            return Members.SingleOrDefault(m => m.Name == propertyName);
+        }
+        
+        public void SetMemberValue<TProperty>(Expression<Func<TDataType, TProperty>> propertyExpression, object value)
+            where TProperty : IMember
+        {
+            if (!(propertyExpression.Body is MemberExpression memberExpression))
+                throw new InvalidOperationException("");
+
+            var propertyName = memberExpression.Member.Name;
+
+            var member =  Members.SingleOrDefault(m => m.Name == propertyName);
+
+            if (member == null)
+                throw new InvalidOperationException();
+            
+            member.Value = value;
+        }
+
+        public ITag<TType> AsType<TType>() where TType : IDataType
+        {
+            if (_dataType is TType && this is ITag<TType>)
+            {
+                return this as ITag<TType>;
+            }
+
+            return null;
         }
 
         public IEnumerable<string> ListMembersNames()
@@ -164,11 +210,11 @@ namespace L5Sharp.Abstractions
         private void InstantiateMembers()
         {
             _members.Clear();
-            
+
             var members = TagMember.GenerateMembers(this, _dataType);
-            
+
             foreach (var member in members)
-                _members.Add(member.Name, member); 
+                _members.Add(member.Name, member);
         }
 
         private void PropagatePropertyValue<TProperty>(Action<TagMember, TProperty> setter, TProperty value)
@@ -176,7 +222,7 @@ namespace L5Sharp.Abstractions
             foreach (var tagMember in _members.Values.Cast<TagMember>())
                 setter.Invoke(tagMember, value);
         }
-        
+
         private void OnDataTypePropertyChanged(object sender, PropertyChangedEventArgs e) => InstantiateMembers();
     }
 }

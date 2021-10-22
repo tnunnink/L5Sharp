@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq.Expressions;
 using L5Sharp.Enums;
 
 namespace L5Sharp.Abstractions
@@ -15,8 +17,10 @@ namespace L5Sharp.Abstractions
         IEnumerable<string> ListMembersNames();
     }
 
-    public interface ITag<T> : ITag where T : IDataType, new()
+    public interface ITag<out TDataType> : ITag where TDataType : IDataType
     {
-        ITag<T> As();
+        TDataType GetDataType();
+        /*ITagMember GetMember<TProperty>(Expression<Func<TDataType, TProperty>> propertyExpression) where TProperty : IMember;*/
+        ITag<TType> AsType<TType>() where TType : IDataType;
     }
 }

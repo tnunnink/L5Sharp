@@ -5,9 +5,9 @@ using FluentAssertions;
 using L5Sharp.Abstractions;
 using L5Sharp.Enums;
 using L5Sharp.Exceptions;
+using L5Sharp.Extensions;
 using L5Sharp.Types;
 using NUnit.Framework;
-using String = System.String;
 
 namespace L5Sharp.Core.Tests
 {
@@ -141,6 +141,16 @@ namespace L5Sharp.Core.Tests
             var tag = new Tag<Bool>("Test");
             tag.Should().NotBeNull();
             tag.DataType.Should().Be("BOOL");
+        }
+
+        [Test]
+        public void AsType_ValidType_ShouldNotBeNull()
+        {
+            var tag = new Tag("Test", Predefined.Counter);
+
+            var typed = tag.AsType<IDataType>();
+            
+            typed.Should().NotBeNull();
         }
 
         [Test]

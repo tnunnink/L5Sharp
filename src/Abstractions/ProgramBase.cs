@@ -101,8 +101,8 @@ namespace L5Sharp.Abstractions
         {
             var tag = GetTagComponent(name);
 
-            if (tag.DataType.GetType() != typeof(T))
-                throw new InvalidOperationException();
+            /*if (tag.DataType != typeof(T).Name)
+                throw new InvalidOperationException($"Tag type '{tag.DataType}' is not valid for type '{}'");*/
 
             return tag as ITag<T>;
         }
