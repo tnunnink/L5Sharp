@@ -37,7 +37,7 @@ namespace L5Sharp.Core.Tests
             type2.AddMember("NewMember", Predefined.Int);
 
             tag.Members.Should().HaveCount(2);
-            var names = tag.ListMembersNames();
+            var names = tag.GetMembersNames();
             names.Should().HaveCount(4);
         }
     }

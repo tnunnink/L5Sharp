@@ -6,7 +6,7 @@ using L5Sharp.Utilities;
 
 namespace L5Sharp.Core
 {
-    public class Module : ComponentBase
+    public class Module : Component
     {
         private readonly Dictionary<int, Port> _ports = new Dictionary<int, Port>();
         private readonly Dictionary<string, Connection> _connections = new Dictionary<string, Connection>();
@@ -46,7 +46,5 @@ namespace L5Sharp.Core
         public KeyingState State { get; set; }
         public IEnumerable<Port> Ports => _ports.Values.AsEnumerable();
         public IEnumerable<Connection> Connections => _connections.Values.AsEnumerable();
-        
-        public IEnumerable<ITag> Tags { get; }
     }
 }

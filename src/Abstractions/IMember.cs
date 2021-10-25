@@ -1,4 +1,5 @@
-﻿using L5Sharp.Enums;
+﻿using L5Sharp.Core;
+using L5Sharp.Enums;
 
 namespace L5Sharp.Abstractions
 {
@@ -23,5 +24,13 @@ namespace L5Sharp.Abstractions
         /// This External Access of the member component.
         /// </summary>
         ExternalAccess ExternalAccess { get; }
+    }
+
+    public interface IMem<out TDataType> : IComponent where TDataType : IDataType
+    {
+        public TDataType DataType { get; }
+        public Dimensions Dimensions { get; }
+        public Radix Radix { get; }
+        public ExternalAccess ExternalAccess { get; }
     }
 }

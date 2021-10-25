@@ -22,6 +22,5 @@ namespace L5Sharp.Core
         public byte OutputSize { get; set; }
         public bool Unicast { get; set; }
         public int EventId { get; set; }
-        private IEnumerable<ITagMember> Members { get; }
     }
 }

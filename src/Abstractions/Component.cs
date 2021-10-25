@@ -3,12 +3,12 @@ using L5Sharp.Utilities;
 
 namespace L5Sharp.Abstractions
 {
-    public abstract class ComponentBase : NotificationBase, IComponent, IEquatable<ComponentBase>
+    public abstract class Component : NotificationBase, IComponent, IEquatable<Component>
     {
         private string _name;
         private string _description;
 
-        protected ComponentBase(string name, string description)
+        protected Component(string name, string description)
         {
             Validate.Name(name);
             
@@ -28,7 +28,7 @@ namespace L5Sharp.Abstractions
             set => SetProperty(ref _description, value);
         }
 
-        public bool Equals(ComponentBase other)
+        public bool Equals(Component other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
@@ -39,7 +39,7 @@ namespace L5Sharp.Abstractions
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((ComponentBase)obj);
+            return obj.GetType() == GetType() && Equals((Component)obj);
         }
 
         public override int GetHashCode()
@@ -47,12 +47,12 @@ namespace L5Sharp.Abstractions
             return HashCode.Combine(_name, _description);
         }
 
-        public static bool operator ==(ComponentBase left, ComponentBase right)
+        public static bool operator ==(Component left, Component right)
         {
             return Equals(left, right);
         }
 
-        public static bool operator !=(ComponentBase left, ComponentBase right)
+        public static bool operator !=(Component left, Component right)
         {
             return !Equals(left, right);
         }

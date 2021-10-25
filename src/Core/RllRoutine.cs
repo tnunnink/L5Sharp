@@ -6,7 +6,7 @@ using L5Sharp.Enums;
 
 namespace L5Sharp.Core
 {
-    public class RllRoutine : ComponentBase, IRoutine
+    public class RllRoutine : Component, IRoutine
     {
         private readonly List<Rung> _rungs = new List<Rung>();
 

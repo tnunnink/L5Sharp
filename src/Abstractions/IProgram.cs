@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using L5Sharp.Core;
 using L5Sharp.Enums;
 
 namespace L5Sharp.Abstractions
@@ -9,7 +8,7 @@ namespace L5Sharp.Abstractions
         ProgramType Type { get; }
         bool TestEdits { get; }
         bool Disabled { get; set; }
-        IEnumerable<ITag> Tags { get; }
+        IEnumerable<ITag<IDataType>> Tags { get; }
         IEnumerable<IRoutine> Routines { get; }
         bool HasRoutine(string name);
         bool HasRoutine(RoutineType type);
@@ -18,9 +17,9 @@ namespace L5Sharp.Abstractions
         IEnumerable<T> GetRoutines<T>() where T : IRoutine;
         void AddRoutine(string name, RoutineType type);
         void RemoveRoutine(string name);
-        ITag GetTag(string name);
-        ITag<T> GetTag<T>(string name) where T : IDataType, new();
-        IEnumerable<T> GetTags<T>() where T : ITag;
+        ITag<IDataType> GetTag(string name);
+        ITag<TDataType> GetTag<TDataType>(string name) where TDataType : IDataType;
+        IEnumerable<TDataType> GetTags<TDataType>() where TDataType : IDataType;
         void AddTag(string name, IDataType dataType);
         void AddTag<T>(string name) where T : IDataType, new();
         void RemoveTag(string name);

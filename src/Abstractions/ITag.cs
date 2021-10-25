@@ -1,26 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
+﻿using L5Sharp.Core;
 using L5Sharp.Enums;
 
 namespace L5Sharp.Abstractions
 {
-    public interface ITag : ITagMember
+    public interface ITag : IComponent, ISetComponentName, ISetComponentDescription
     {
         TagType TagType { get; }
         Scope Scope { get; }
         TagUsage Usage { get; }
         bool Constant { get; }
-        IComponent Parent { get; }
-        void UpdateDataType(IDataType dataType);
-        ITag ChangeTagType(TagType type);
-        IEnumerable<string> ListMembersNames();
+        void SetUsage(TagUsage usage);
     }
-
-    public interface ITag<out TDataType> : ITag where TDataType : IDataType
+    
+    public interface ITag<out TDataType> : ITag, ITagMember<TDataType> where TDataType : IDataType
     {
-        TDataType GetDataType();
-        /*ITagMember GetMember<TProperty>(Expression<Func<TDataType, TProperty>> propertyExpression) where TProperty : IMember;*/
-        ITag<TType> AsType<TType>() where TType : IDataType;
+        ITag<TDataType> SetDimensions(Dimensions dimensions);
+        void SetExternalAccess(ExternalAccess externalAccess);
+        ITag<IDataType> ChangeTagType(TagType type);
     }
 }

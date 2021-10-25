@@ -8,13 +8,13 @@ namespace L5Sharp.Abstractions
         ProcessorType ProcessorType { get; }
         Revision Revision { get; }
         IEnumerable<IDataType> DataTypes { get; }
-        IEnumerable<ITag> Tags { get; }
+        IEnumerable<ITag<IDataType>> Tags { get; }
         IEnumerable<IProgram> Programs { get; }
         IEnumerable<ITask> Tasks { get; }
         void AddDataType(IDataType dataType);
         void RemoveDataType(IDataType dataType);
-        void AddTag(ITag tag);
-        void RemoveTag(ITag tag);
+        void AddTag(ITag<IDataType> tag);
+        void RemoveTag(ITag<IDataType> tag);
         void AddProgram(IProgram program);
         void RemoveProgram(IProgram program);
         void AddTask(ITask task);

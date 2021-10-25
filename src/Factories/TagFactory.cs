@@ -6,7 +6,7 @@ using L5Sharp.Abstractions;
 
 namespace L5Sharp.Factories
 {
-    internal class TagFactory : IComponentFactory<ITag>
+    internal class TagFactory : IComponentFactory<ITag<IDataType>>
     {
         private readonly LogixContext _context;
         private readonly IComponentCache<IDataType> _cache;
@@ -17,12 +17,12 @@ namespace L5Sharp.Factories
             _cache = _context.GetCache<IDataType>();
         }
         
-        public ITag Create(XElement element)
+        public ITag<IDataType> Create(XElement element)
         {
             throw new System.NotImplementedException();
         }
 
-        public ITag Materialize(XElement element)
+        public ITag<IDataType> Materialize(XElement element)
         {
             /*var dataType = element.GetDataType();
             var tagType = element.GetTagType();

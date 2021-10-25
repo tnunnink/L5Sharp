@@ -6,10 +6,11 @@ using L5Sharp.Abstractions;
 using L5Sharp.Enums;
 using L5Sharp.Exceptions;
 using L5Sharp.Utilities;
+using Component = L5Sharp.Abstractions.Component;
 
 namespace L5Sharp.Core
 {
-    public class DataType : ComponentBase, IDataType, IEquatable<DataType>
+    public class DataType : Component, IDataType, IEquatable<DataType>
     {
         private readonly List<IMember> _members = new List<IMember>();
 

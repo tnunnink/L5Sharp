@@ -7,9 +7,9 @@ using L5Sharp.Utilities;
 
 namespace L5Sharp.Abstractions
 {
-    public abstract class ProgramBase : ComponentBase, IProgram
+    public abstract class ProgramBase : Component, IProgram
     {
-        private readonly Dictionary<string, ITag> _tags = new Dictionary<string, ITag>();
+        private readonly Dictionary<string, ITag<IDataType>> _tags = new Dictionary<string, ITag<IDataType>>();
         private readonly Dictionary<string, IRoutine> _routines = new Dictionary<string, IRoutine>();
 
         private readonly Dictionary<Type, RoutineType> _routineTypes = new Dictionary<Type, RoutineType>
@@ -30,7 +30,7 @@ namespace L5Sharp.Abstractions
 
         public bool Disabled { get; set; }
 
-        public IEnumerable<ITag> Tags => _tags.Values.AsEnumerable();
+        public IEnumerable<ITag<IDataType>> Tags => _tags.Values.AsEnumerable();
 
         public IEnumerable<IRoutine> Routines => _routines.Values.AsEnumerable();
 
@@ -55,7 +55,7 @@ namespace L5Sharp.Abstractions
             return routine;
         }
 
-        public T GetRoutine<T>(string name) where T : IRoutine
+        public TRoutine GetRoutine<TRoutine>(string name) where TRoutine : IRoutine
         {
             throw new NotImplementedException();
         }
@@ -92,36 +92,31 @@ namespace L5Sharp.Abstractions
             _routines.Remove(name);
         }
 
-        public ITag GetTag(string name)
+        public ITag<IDataType> GetTag(string name)
         {
             return GetTagComponent(name);
         }
 
-        public ITag<T> GetTag<T>(string name) where T : IDataType, new()
+        public ITag<TDataType> GetTag<TDataType>(string name) where TDataType : IDataType
         {
-            var tag = GetTagComponent(name);
-
-            /*if (tag.DataType != typeof(T).Name)
-                throw new InvalidOperationException($"Tag type '{tag.DataType}' is not valid for type '{}'");*/
-
-            return tag as ITag<T>;
+            return (ITag<TDataType>) GetTagComponent(name);
         }
 
-        public IEnumerable<T> GetTags<T>() where T : ITag
+        public IEnumerable<TDataType> GetTags<TDataType>() where TDataType : IDataType
         {
             throw new NotImplementedException();
         }
-        
+
         public void AddTag(string name, IDataType dataType)
         {
             var tag = new Tag(name, dataType, this);
             AddTagComponent(tag);
         }
 
-        public void AddTag<T>(string name) where T : IDataType, new()
+        public void AddTag<TDataType>(string name) where TDataType : IDataType, new()
         {
-            var tag = new Tag<T>(name, this);
-            AddTagComponent(tag);
+            var tag = new Tag<TDataType>(name, this);
+            AddTagComponent((ITag<IDataType>)tag);
         }
 
         public void RemoveTag(string name)
@@ -133,7 +128,7 @@ namespace L5Sharp.Abstractions
             _tags.Remove(name);
         }
 
-        private ITag GetTagComponent(string name)
+        private ITag<IDataType> GetTagComponent(string name)
         {
             if (name == null) throw new ArgumentNullException(nameof(name), "Name can not be null");
 
@@ -141,17 +136,17 @@ namespace L5Sharp.Abstractions
             return tag;
         }
 
-        private void AddTagComponent(ITag tag)
+        private void AddTagComponent(ITag<IDataType> tag)
         {
             if (tag == null) throw new ArgumentNullException(nameof(tag), "Tag can not be null");
 
             if (_tags.ContainsKey(tag.Name))
-                Throw.ComponentNameCollisionException(tag.Name, typeof(ITag));
+                Throw.ComponentNameCollisionException(tag.Name, typeof(ITag<IDataType>));
 
             _tags.Add(tag.Name, tag);
         }
 
-        private void RemoveTagComponent(ITag tag)
+        private void RemoveTagComponent(ITag<IDataType> tag)
         {
             if (tag == null) throw new ArgumentNullException(nameof(tag), "Tag can not be null");
 

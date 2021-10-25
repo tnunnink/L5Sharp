@@ -5,7 +5,7 @@ using L5Sharp.Utilities;
 
 namespace L5Sharp.Core
 {
-    public class Member : ComponentBase, IMember, IEquatable<Member>
+    public class Member : Component, IMember, IEquatable<Member>
     {
         private IDataType _dataType;
         private Radix _radix;

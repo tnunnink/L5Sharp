@@ -13,7 +13,7 @@ namespace L5Sharp.Enums
         public static readonly ExternalAccess None = new NoneType();
         public static readonly ExternalAccess ReadOnly = new ReadOnlyType();
         public static readonly ExternalAccess ReadWrite = new ReadWriteType();
-        
+
         private class NoneType : ExternalAccess
         {
             public NoneType() : base("None", 0)
@@ -25,7 +25,7 @@ namespace L5Sharp.Enums
                 return true;
             }
         }
-        
+
         private class ReadOnlyType : ExternalAccess
         {
             public ReadOnlyType() : base("Read Only", 1)
@@ -34,10 +34,10 @@ namespace L5Sharp.Enums
 
             public override bool IsMoreRestrictive(ExternalAccess access)
             {
-                return access.Equals(ReadWrite);
+                return access != null && access.Equals(ReadWrite);
             }
         }
-        
+
         private class ReadWriteType : ExternalAccess
         {
             public ReadWriteType() : base("Read/Write", 2)

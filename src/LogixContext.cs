@@ -93,7 +93,7 @@ namespace L5Sharp
         private void InitializeCache()
         {
             _cache.Add(typeof(IDataType), new ComponentCache<IDataType>());
-            _cache.Add(typeof(ITag), new ComponentCache<ITag>());
+            _cache.Add(typeof(ITag<IDataType>), new ComponentCache<ITag<IDataType>>());
         }
         
         private void InitializeFactories()

@@ -2,12 +2,12 @@
 using System.Linq;
 using AutoFixture;
 using FluentAssertions;
-using L5Sharp.Abstractions;
 using L5Sharp.Enums;
 using L5Sharp.Exceptions;
 using L5Sharp.Extensions;
 using L5Sharp.Types;
 using NUnit.Framework;
+using String = L5Sharp.Types.String;
 
 namespace L5Sharp.Core.Tests
 {
@@ -39,7 +39,7 @@ namespace L5Sharp.Core.Tests
             tag.Should().NotBeNull();
             tag.Name.Should().Be("Test");
             tag.FullName.Should().Be("Test");
-            tag.DataType.Should().Be(Predefined.Bool.Name);
+            tag.DataType.Should().Be(Predefined.Bool);
             tag.Dimensions.Should().Be(Dimensions.Empty);
             tag.Radix.Should().Be(Radix.Decimal);
             tag.ExternalAccess.Should().Be(ExternalAccess.None);
@@ -64,7 +64,7 @@ namespace L5Sharp.Core.Tests
 
             tag.Should().NotBeNull();
             tag.Name.Should().Be("Test");
-            tag.DataType.Should().Be(Predefined.Dint.Name);
+            tag.DataType.Should().Be(Predefined.Dint);
             tag.Dimensions.Should().Be(new Dimensions(5));
             tag.Radix.Should().Be(Radix.Ascii);
             tag.ExternalAccess.Should().Be(ExternalAccess.ReadOnly);
@@ -88,6 +88,17 @@ namespace L5Sharp.Core.Tests
             tag.Members.Any(t => t.Name == "DN").Should().BeTrue();
             tag.Members.Any(t => t.Name == "OV").Should().BeTrue();
             tag.Members.Any(t => t.Name == "UN").Should().BeTrue();
+        }
+
+        [Test]
+        public void New_String_ShouldHaveValidMembers()
+        {
+            var tag = new Tag("Test", Predefined.String);
+
+            tag.Should().NotBeNull();
+            tag.Members.Should().HaveCount(2);
+            tag.Members.Any(t => t.Name == "LEN").Should().BeTrue();
+            tag.Members.Any(t => t.Name == "DATA").Should().BeTrue();
         }
         
         [Test]
@@ -140,31 +151,53 @@ namespace L5Sharp.Core.Tests
         {
             var tag = new Tag<Bool>("Test");
             tag.Should().NotBeNull();
-            tag.DataType.Should().Be("BOOL");
+            tag.DataType.Should().Be(Predefined.Bool);
         }
 
         [Test]
-        public void AsType_ValidType_ShouldNotBeNull()
+        public void SetName_Null_ShouldThrowArgumentException()
         {
-            var tag = new Tag("Test", Predefined.Counter);
+            var tag = new Tag("Test", Predefined.Dint);
 
-            var typed = tag.AsType<IDataType>();
-            
-            typed.Should().NotBeNull();
-        }
-
-        [Test]
-        public void New_UserDefinedTypeUpdateMember_ShouldFireUpdatedEvent()
-        {
-            
+            FluentActions.Invoking(() => tag.SetName(null)).Should().Throw<ArgumentException>();
         }
         
+        [Test]
+        public void SetName_InvalidName_ShouldThrowInvalidNameException()
+        {
+            var tag = new Tag("Test", Predefined.Dint);
+            var fixture = new Fixture();
+
+            FluentActions.Invoking(() => tag.SetName(fixture.Create<string>())).Should().Throw<InvalidNameException>();
+        }
+
+        [Test]
+        public void SetName_ValidName_ShouldUpdateName()
+        {
+            var tag = new Tag("Test", Predefined.Dint);
+
+            tag.SetName("NewName");
+
+            tag.Name.Should().Be("NewName");
+        }
+
+        [Test]
+        public void SetName_ValidName_ShouldRaisePropertyChangedEvent()
+        {
+            var tag = new Tag("Test", Predefined.Dint);
+            var monitor = tag.Monitor();
+            
+            tag.SetName("NewName");
+
+            monitor.Should().RaisePropertyChangeFor(t => t.Name);
+        }
+
         [Test]
         public void ListMembers_WhenCalledHasNoMembers_ShouldBeEmpty()
         {
             var tag = new Tag<Bool>("Test");
 
-            var members = tag.ListMembersNames();
+            var members = tag.GetMembersNames();
 
             members.Should().BeEmpty();
         } 
@@ -174,7 +207,7 @@ namespace L5Sharp.Core.Tests
         {
             var tag = new Tag<Counter>("Test");
 
-            var members = tag.ListMembersNames();
+            var members = tag.GetMembersNames();
 
             members.Should().NotBeEmpty();
         }
@@ -184,7 +217,7 @@ namespace L5Sharp.Core.Tests
         {
             var tag = new Tag<Dint>("Test", dimensions: new Dimensions(3, 4));
 
-            tag.Radix = Radix.Ascii;
+            tag.SetRadix(Radix.Ascii);
 
             tag.Radix.Should().Be(Radix.Ascii);
             tag.Members.All(t => t.Radix == Radix.Ascii).Should().BeTrue();
@@ -197,7 +230,7 @@ namespace L5Sharp.Core.Tests
             var expected = fixture.Create<short>();
             var tag = new Tag<Int>("Test");
 
-            tag.Value = expected;
+            tag.SetValue(expected);
 
             tag.Value.Should().Be(expected);
         }
@@ -209,7 +242,7 @@ namespace L5Sharp.Core.Tests
             var expected = fixture.Create<long>();
             var tag = new Tag<Int>("Test");
 
-            FluentActions.Invoking(() => tag.Value = expected).Should().Throw<InvalidTagValueException>();
+            FluentActions.Invoking(() => tag.SetValue(expected)).Should().Throw<InvalidTagValueException>();
         }
 
         [Test]
@@ -249,5 +282,16 @@ namespace L5Sharp.Core.Tests
 
             result.Should().NotBeNull();
         }
+
+        [Test]
+        public void ToType_WhenCalled_ShouldNotBeNull()
+        {
+            var tag = new Tag("Test", Predefined.String);
+
+            var result = tag.ToType<String>();
+
+            result.Should().NotBeNull();
+        }
+
     }
 }

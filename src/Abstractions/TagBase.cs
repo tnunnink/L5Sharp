@@ -1,45 +1,36 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Linq.Expressions;
 using L5Sharp.Core;
 using L5Sharp.Enums;
-using L5Sharp.Exceptions;
 using L5Sharp.Utilities;
 
 namespace L5Sharp.Abstractions
 {
-    public abstract class TagBase<TDataType> : ComponentBase, ITag<TDataType> where TDataType : IDataType
+    public abstract class TagBase<TDataType> : TagMemberBase<TDataType>, ITag<TDataType> where TDataType : IDataType
     {
-        private IDataType _dataType;
-        private Dimensions _dimensions;
-        private Radix _radix;
+        private string _name;
         private ExternalAccess _externalAccess;
         private TagUsage _usage;
-        private object _value;
-        private readonly Dictionary<string, TagMember> _members = new Dictionary<string, TagMember>();
 
-        protected TagBase(string name, IDataType dataType, Dimensions dimensions, Radix radix,
+        protected TagBase(string name, TDataType dataType, Dimensions dimensions, Radix radix,
             ExternalAccess externalAccess, string description, IComponent parent, TagUsage usage, bool constant)
-            : base(name, description)
+            : base(name, dataType, dimensions, radix, externalAccess, description, parent)
         {
-            _dataType = dataType ?? throw new ArgumentNullException(nameof(dataType), "DataType can not be null");
-
-            if (_dataType is DataType userDefined)
-                userDefined.PropertyChanged += OnDataTypePropertyChanged;
-
-            Parent = parent;
-            Usage = usage != null ? usage : TagUsage.Null;
-            Dimensions = dimensions == null ? Dimensions.Empty : dimensions;
-            Radix = radix == null ? dataType.DefaultRadix : radix;
-            ExternalAccess = externalAccess ?? ExternalAccess.None;
+            Validate.Name(name);
+            
+            _name = name;
+            _externalAccess = externalAccess ?? ExternalAccess.None;
+            _usage = usage != null ? usage : TagUsage.Null;
             Constant = constant;
-
-            if (_dataType.IsAtomic)
-                _value = _dataType.DefaultValue;
+            
+            InstantiateMembers();
         }
 
+        public override string FullName => Name;
+
+        public override string Name => _name;
+
+        public override ExternalAccess ExternalAccess => _externalAccess;
+        
         public abstract TagType TagType { get; }
 
         public Scope Scope => Parent == null ? Scope.Null
@@ -47,182 +38,46 @@ namespace L5Sharp.Abstractions
             : Parent is IProgram ? Scope.Program
             : throw new InvalidOperationException(
                 $"Scope can not be determined by container type '{Parent.GetType()}'");
-
-        public TagUsage Usage
-        {
-            get => _usage;
-            set => _usage = value;
-        }
-
+        
+        public TagUsage Usage => _usage;
+        
         public bool Constant { get; set; }
 
-        public IComponent Parent { get; }
-
-        public TDataType GetDataType()
+        public void SetName(string name)
         {
-            return (TDataType) _dataType;
+            SetProperty(ref _name, name, Validate.Name, nameof(Name));
         }
 
-        public string FullName => Name;
-
-        public string DataType => _dataType?.Name;
-
-        public Dimensions Dimensions
+        public ITag<TDataType> SetDimensions(Dimensions dimensions)
         {
-            get => _dimensions;
-            set => SetProperty(ref _dimensions, value, InstantiateMembers);
+            if (dimensions == null)
+                throw new ArgumentNullException(nameof(dimensions), "Dimensions can not be null");
+
+            throw new NotImplementedException();
         }
 
-        public Radix Radix
+        public void SetExternalAccess(ExternalAccess externalAccess)
         {
-            get => _radix;
-            set
-            {
-                Validate.Radix(value, _dataType);
+            if (externalAccess == null)
+                throw new ArgumentNullException(nameof(externalAccess), "External Access can not be null");
 
-                SetProperty(ref _radix, value);
-
-                if (_dataType.IsAtomic)
-                    PropagatePropertyValue((t, v) => t.Radix = v, _radix);
-            }
+            SetProperty(ref _externalAccess, externalAccess, nameof(ExternalAccess));
         }
 
-        public ExternalAccess ExternalAccess
+        public void SetUsage(TagUsage usage)
         {
-            get => _externalAccess;
-            set
-            {
-                if (value == null)
-                    throw new ArgumentNullException(nameof(value), "External Access property can not be null");
-
-                SetProperty(ref _externalAccess, value);
-            }
-        }
-
-        public object Value
-        {
-            get => _value;
-            set
-            {
-                if (!(_dataType is Predefined { IsAtomic: true } predefined))
-                    throw new NotConfigurableException(
-                        $"Radix property is not not configurable for type {_dataType}. Radix is only configurable for atomic types");
-
-                if (!predefined.IsValidValue(value))
-                    Throw.InvalidTagValueException(value, _dataType.Name);
-
-                _value = value;
-            }
-        }
-
-        public IEnumerable<ITagMember> Members => _members.Values.AsEnumerable();
-
-        public bool IsValueMember => Value != null && _dataType is { IsAtomic: true };
-
-        public bool IsArrayMember => Dimensions.Length > 0;
-
-        public bool IsArrayElement => false;
-
-        public bool IsStructureMember => !IsValueMember && !IsArrayMember && _members.Count > 0;
-
-        public void UpdateDataType(IDataType dataType)
-        {
-            if (_dataType is DataType type)
-                type.PropertyChanged -= OnDataTypePropertyChanged;
-
-            if (dataType is DataType userDefined)
-                userDefined.PropertyChanged += OnDataTypePropertyChanged;
-
-            _dataType = dataType;
-
-            InstantiateMembers();
-        }
-
-        public ITag ChangeTagType(TagType type)
-        {
-            return type.Create(Name, _dataType);
-        }
-
-        public ITagMember GetMember(string name)
-        {
-            if (string.IsNullOrEmpty(name))
-                throw new ArgumentException("Member name can not be null or empty");
-
-            _members.TryGetValue(name, out var member);
-            return member;
-        }
-
-        public ITagMember GetMember<TProperty>(Expression<Func<TDataType, TProperty>> propertyExpression)
-            where TProperty : IMember
-        {
-            if (!(propertyExpression.Body is MemberExpression memberExpression))
-                throw new InvalidOperationException("");
-
-            var propertyName = memberExpression.Member.Name;
-
-            return Members.SingleOrDefault(m => m.Name == propertyName);
-        }
-        
-        public void SetMemberValue<TProperty>(Expression<Func<TDataType, TProperty>> propertyExpression, object value)
-            where TProperty : IMember
-        {
-            if (!(propertyExpression.Body is MemberExpression memberExpression))
-                throw new InvalidOperationException("");
-
-            var propertyName = memberExpression.Member.Name;
-
-            var member =  Members.SingleOrDefault(m => m.Name == propertyName);
-
-            if (member == null)
+            if (usage == null)
+                throw new ArgumentNullException(nameof(usage), "Usage can not be null");
+            
+            if (Scope != Scope.Program)
                 throw new InvalidOperationException();
             
-            member.Value = value;
+            SetProperty(ref _usage, usage, nameof(Usage));
         }
 
-        public ITag<TType> AsType<TType>() where TType : IDataType
+        public ITag<IDataType> ChangeTagType(TagType type)
         {
-            if (_dataType is TType && this is ITag<TType>)
-            {
-                return this as ITag<TType>;
-            }
-
-            return null;
+            return type.Create(Name, DataType);
         }
-
-        public IEnumerable<string> ListMembersNames()
-        {
-            return GetMemberNames(this);
-        }
-
-        private static IEnumerable<string> GetMemberNames(ITagMember tagMember)
-        {
-            var names = new List<string>();
-
-            foreach (var member in tagMember.Members)
-            {
-                names.Add(member.FullName);
-                names.AddRange(GetMemberNames(member));
-            }
-
-            return names;
-        }
-
-        private void InstantiateMembers()
-        {
-            _members.Clear();
-
-            var members = TagMember.GenerateMembers(this, _dataType);
-
-            foreach (var member in members)
-                _members.Add(member.Name, member);
-        }
-
-        private void PropagatePropertyValue<TProperty>(Action<TagMember, TProperty> setter, TProperty value)
-        {
-            foreach (var tagMember in _members.Values.Cast<TagMember>())
-                setter.Invoke(tagMember, value);
-        }
-
-        private void OnDataTypePropertyChanged(object sender, PropertyChangedEventArgs e) => InstantiateMembers();
     }
 }

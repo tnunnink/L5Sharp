@@ -36,18 +36,7 @@ namespace L5Sharp.Core.Tests
             tag.Should().NotBeNull();
             tag.Name.Should().Be("Test");
         }
-        
-        [Test]
-        public void GetTagTyped_AsDifferentType_ShouldBeNull()
-        {
-            var program = new Program("Test");
-            program.AddTag<Bool>("Test");
 
-            var tag = program.GetTag<Int>("Test");
-
-            tag.Should().BeNull();
-        }
-        
         [Test]
         public void GetTagTyped_FromNonGenericTag_ShouldNotBeNull()
         {

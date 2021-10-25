@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Globalization;
 using System.Reflection;
-using System.Xml.Linq;
 using Ardalis.SmartEnum;
 using L5Sharp.Abstractions;
 using L5Sharp.Core;
@@ -14,9 +13,11 @@ namespace L5Sharp.Enums
         {
         }
 
-        public abstract ITag Create(string name, IDataType dataType);
+        public abstract ITag<IDataType> Create(string name, IDataType dataType);
+        
+        public abstract ITag<TDataType> Create<TDataType>(string name) where TDataType : IDataType, new();
 
-        public static T Create<T>(string name, IDataType dataType) where T : ITag
+        public static T Create<T>(string name, IDataType dataType) where T : ITag<IDataType>
         {
             return (T)Activator.CreateInstance(typeof(T),
                 BindingFlags.CreateInstance |
@@ -25,8 +26,6 @@ namespace L5Sharp.Enums
                 BindingFlags.OptionalParamBinding, null, new[] { name, dataType, Type.Missing },
                 CultureInfo.CurrentCulture);
         }
-
-        internal abstract ITag Create(XElement element);
 
         public static readonly TagType Base = new BaseType();
         public static readonly TagType Alias = new AliasType();
@@ -39,14 +38,14 @@ namespace L5Sharp.Enums
             {
             }
 
-            public override ITag Create(string name, IDataType dataType)
+            public override ITag<IDataType> Create(string name, IDataType dataType)
             {
                 return new Tag(name, dataType);
             }
 
-            internal override ITag Create(XElement element)
+            public override ITag<TDataType> Create<TDataType>(string name)
             {
-                throw new NotImplementedException();
+                return new Tag<TDataType>(name);
             }
         }
 
@@ -56,14 +55,15 @@ namespace L5Sharp.Enums
             {
             }
 
-            public override ITag Create(string name, IDataType dataType)
+            public override ITag<IDataType> Create(string name, IDataType dataType)
             {
                 throw new NotImplementedException();
             }
-
-            internal override ITag Create(XElement element)
+            
+            
+            public override ITag<TDataType> Create<TDataType>(string name)
             {
-                throw new NotImplementedException();
+                return new Tag<TDataType>(name);
             }
         }
 
@@ -73,14 +73,14 @@ namespace L5Sharp.Enums
             {
             }
 
-            public override ITag Create(string name, IDataType dataType)
+            public override ITag<IDataType> Create(string name, IDataType dataType)
             {
                 throw new NotImplementedException();
             }
-
-            internal override ITag Create(XElement element)
+            
+            public override ITag<TDataType> Create<TDataType>(string name)
             {
-                throw new NotImplementedException();
+                return new Tag<TDataType>(name);
             }
         }
 
@@ -90,14 +90,14 @@ namespace L5Sharp.Enums
             {
             }
 
-            public override ITag Create(string name, IDataType dataType)
+            public override ITag<IDataType> Create(string name, IDataType dataType)
             {
                 throw new NotImplementedException();
             }
 
-            internal override ITag Create(XElement element)
+            public override ITag<TDataType> Create<TDataType>(string name)
             {
-                throw new NotImplementedException();
+                return new Tag<TDataType>(name);
             }
         }
     }

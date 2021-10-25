@@ -8,17 +8,37 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Extensions/TagExtensions.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Abstractions/ISetComponentDescription.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Abstractions/ISetComponentName.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Abstractions/TagMemberBase.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Abstractions/ComponentBase.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Abstractions/Component.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Abstractions/IController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Abstractions/IController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Abstractions/IMember.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Abstractions/IMember.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Abstractions/IProgram.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Abstractions/IProgram.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Abstractions/ITag.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Abstractions/ITag.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Abstractions/ITagMember.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Abstractions/ITagMember.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Abstractions/ProgramBase.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Abstractions/ProgramBase.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Abstractions/TagBase.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Abstractions/TagBase.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/Connection.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/Connection.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/Controller.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/Controller.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/DataType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/DataType.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/Member.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/Member.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Core/Module.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/Module.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/RllRoutine.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/RllRoutine.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Core/Tag.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/Tag.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Events/PropertyChangedValueEventArgs.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/TagMember.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/TagMember.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Enums/ExternalAccess.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Enums/ExternalAccess.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Enums/TagType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Enums/TagType.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Extensions/GenericExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Extensions/GenericExtensions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Extensions/TagExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Extensions/TagExtensions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Factories/TagFactory.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Factories/TagFactory.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LogixContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LogixContext.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Serialization/TagSerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Serialization/TagSerializer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Utilities/LogixNames.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Utilities/LogixNames.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/ProgramTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/ProgramTests.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/TagTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/TagTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/TagUserDefinedTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/TagUserDefinedTests.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -49,6 +69,7 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/f3dd31a3d4374d7d9525d887480dae958f4788/2B3/CastHelpers.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/f3dd31a3d4374d7d9525d887480dae958f4788/9B/Lazy.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/6d2600898291416eacbad905b4d24c316778/92/a792639a/Enumerable.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/f3dd31a3d4374d7d9525d887480dae958f4788/2B7/RuntimeHelpers.CoreCLR.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/d3bfdb86da53416a9a76296e6325a7b366588/26/Select.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/777281e5529b43ccbfcc25e4a52829673600/54/4e2df418/SmartEnum`1.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/39396bebbbf140248213397d1b31faed26200/24/IntroductionReporter.cs" root0="SKIP_HIGHLIGHTING" />
@@ -119,6 +140,7 @@
       <workItem from="1634732521597" duration="4461000" />
       <workItem from="1634780174917" duration="605000" />
       <workItem from="1634913382659" duration="4769000" />
+      <workItem from="1634948427192" duration="32327000" />
     </task>
     <task id="LOCAL-00001" summary="renaming">
       <created>1632580540996</created>
@@ -445,29 +467,55 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/TagTests.cs</url>
-          <line>150</line>
-          <properties documentPath="C:\Users\tnunnink\dev\projects\L5Sharp\tests\L5Sharp.Core.Tests\TagTests.cs" initialLine="149" containingFunctionPresentation="method 'AsType_ValidType_ShouldNotBeNull'">
+          <line>19</line>
+          <properties documentPath="C:\Users\tnunnink\dev\projects\L5Sharp\tests\L5Sharp.Core.Tests\TagTests.cs" initialLine="19" containingFunctionPresentation="method 'New_ValidTagName_ShouldNotBeNull'">
             <startOffsets>
-              <option value="6149" />
+              <option value="404" />
             </startOffsets>
             <endOffsets>
-              <option value="6185" />
+              <option value="447" />
             </endOffsets>
           </properties>
-          <option name="timeStamp" value="13" />
+          <option name="timeStamp" value="10" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/Abstractions/TagBase.cs</url>
-          <line>185</line>
-          <properties documentPath="C:\Users\tnunnink\dev\projects\L5Sharp\src\Abstractions\TagBase.cs" initialLine="185" containingFunctionPresentation="method 'AsType'">
+          <url>file://$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/TagTests.cs</url>
+          <line>44</line>
+          <properties documentPath="C:\Users\tnunnink\dev\projects\L5Sharp\tests\L5Sharp.Core.Tests\TagTests.cs" initialLine="44" containingFunctionPresentation="method 'New_NoOverloads_ShouldHaveExpectedDefaults'">
             <startOffsets>
-              <option value="6130" />
+              <option value="1255" />
             </startOffsets>
             <endOffsets>
-              <option value="6157" />
+              <option value="1307" />
             </endOffsets>
           </properties>
-          <option name="timeStamp" value="14" />
+          <option name="timeStamp" value="15" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/TagTests.cs</url>
+          <line>290</line>
+          <properties documentPath="C:\Users\tnunnink\dev\projects\L5Sharp\tests\L5Sharp.Core.Tests\TagTests.cs" initialLine="279" containingFunctionPresentation="method 'ToType_WhenCalled_ShouldNotBeNull'">
+            <startOffsets>
+              <option value="10247" />
+            </startOffsets>
+            <endOffsets>
+              <option value="10281" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="16" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/TagTests.cs</url>
+          <line>288</line>
+          <properties documentPath="C:\Users\tnunnink\dev\projects\L5Sharp\tests\L5Sharp.Core.Tests\TagTests.cs" initialLine="277" containingFunctionPresentation="method 'ToType_WhenCalled_ShouldNotBeNull'">
+            <startOffsets>
+              <option value="10188" />
+            </startOffsets>
+            <endOffsets>
+              <option value="10233" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="17" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
