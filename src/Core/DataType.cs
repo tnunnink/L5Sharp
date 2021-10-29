@@ -6,68 +6,74 @@ using L5Sharp.Abstractions;
 using L5Sharp.Enums;
 using L5Sharp.Exceptions;
 using L5Sharp.Utilities;
-using Component = L5Sharp.Abstractions.Component;
 
 namespace L5Sharp.Core
 {
-    public class DataType : Component, IDataType, IEquatable<DataType>
+    public class DataType : NotificationBase, IUserDefined, IEquatable<DataType>
     {
-        private readonly List<IMember> _members = new List<IMember>();
+        private string _name;
+        private string _description;
+        private readonly List<IDataTypeMember> _members = new List<IDataTypeMember>();
 
-        public DataType(string name, string description = null) : base(name, description)
+        public DataType(string name, string description = null)
         {
+            Validate.Name(name);
             Validate.DataTypeName(name);
+            
+            _name = name;
+            _description = description;
         }
 
-        public DataType(string name, Member member, string description = null) : this(name, description)
+        public DataType(string name, DataTypeMember dataTypeMember, string description = null) 
+            : this(name, description)
         {
-            AddMemberComponent(member);
+            AddMemberComponent(dataTypeMember);
         }
 
-        public DataType(string name, IEnumerable<Member> members, string description = null) : this(name, description)
+        public DataType(string name, IEnumerable<DataTypeMember> members, string description = null) 
+            : this(name, description)
         {
             foreach (var member in members)
                 AddMemberComponent(member);
         }
 
-        public override string Name
-        {
-            get => base.Name;
-            set
-            {
-                Validate.DataTypeName(value);
-                base.Name = value;
-            }
-        }
+        public string Name => _name;
+
+        public string Description => _description;
 
         public DataTypeFamily Family => DataTypeFamily.None;
 
         public DataTypeClass Class => DataTypeClass.User;
-
+        
         public bool IsAtomic => false;
-
-        public object DefaultValue => null;
-
-        public Radix DefaultRadix => Radix.Null;
 
         public TagDataFormat DataFormat => TagDataFormat.Decorated;
 
         public IEnumerable<IMember> Members => _members.AsEnumerable();
 
-        public IMember GetMember(string name) => GetMemberByName(name);
+        public void SetName(string name)
+        {
+            Validate.DataTypeName(name);
+            SetProperty(ref _name, name, nameof(Name));
+        }
+
+        public void SetDescription(string description)
+        {
+            SetProperty(ref _description, description, nameof(Description));
+        }
+
+        public IDataTypeMember GetMember(string name) => GetMemberByName(name);
 
         public IEnumerable<IDataType> GetDependentTypes() => GetUniqueMemberTypes(this);
-
-
+        
         public IEnumerable<IDataType> GetDependentUserTypes() =>
             GetUniqueMemberTypes(this).Where(t => t.Class == DataTypeClass.User);
 
         public void AddMember(string name, IDataType dataType, string description = null,
-            ushort dimension = 0, Radix radix = null, ExternalAccess access = null) =>
-            AddMemberComponent(new Member(name, dataType, dimension, radix, access, description));
+            Dimensions dimension = null, Radix radix = null, ExternalAccess access = null) =>
+            AddMemberComponent(new DataTypeMember(name, dataType, dimension, radix, access, description));
 
-        public void RemoveMember(string name) => RemoveMemberComponent((Member)GetMemberByName(name));
-
+        public void RemoveMember(string name) => RemoveMemberComponent((DataTypeMember)GetMemberByName(name));
 
         public bool Equals(DataType other)
         {
@@ -124,7 +130,7 @@ namespace L5Sharp.Core
         /// </summary>
         /// <param name="name">The name of the member to get</param>
         /// <returns></returns>
-        private IMember GetMemberByName(string name)
+        private IDataTypeMember GetMemberByName(string name)
         {
             if (name == null)
                 throw new ArgumentNullException(nameof(name), "Name can not be null");
@@ -153,23 +159,23 @@ namespace L5Sharp.Core
         /// <summary>
         /// Adds a member to the data type member collection
         /// </summary>
-        /// <param name="member">The member to add</param>
+        /// <param name="dataTypeMember">The member to add</param>
         /// <exception cref="ArgumentNullException">Thrown when member is null</exception>
-        private void AddMemberComponent(Member member)
+        private void AddMemberComponent(DataTypeMember dataTypeMember)
         {
-            if (member == null)
-                throw new ArgumentNullException(nameof(member), "Member can not be null");
+            if (dataTypeMember == null)
+                throw new ArgumentNullException(nameof(dataTypeMember), "Member can not be null");
 
-            if (HasMemberName(member.Name))
-                Throw.ComponentNameCollisionException(member.Name, typeof(Member));
+            if (HasMemberName(dataTypeMember.Name))
+                Throw.ComponentNameCollisionException(dataTypeMember.Name, typeof(DataTypeMember));
 
-            if (member.DataType.Equals(this))
+            if (dataTypeMember.DataType.Equals(this))
                 throw new CircularReferenceException(
-                    $"Member can not be same type as parent type '{member.DataType.Name}'");
+                    $"Member can not be same type as parent type '{dataTypeMember.DataType.Name}'");
             
-            member.PropertyChanged += OnMemberPropertyChanged;
+            dataTypeMember.PropertyChanged += OnMemberPropertyChanged;
             
-            _members.Add(member);
+            _members.Add(dataTypeMember);
             
             RaisePropertyChanged(nameof(Members));
         }
@@ -178,23 +184,23 @@ namespace L5Sharp.Core
         /// Adds a member to the data type member collection
         /// </summary>
         /// <param name="index"></param>
-        /// <param name="member">The member to add</param>
+        /// <param name="dataTypeMember">The member to add</param>
         /// <exception cref="ArgumentNullException">Thrown when member is null</exception>
-        private void InsertMemberComponent(int index, Member member)
+        private void InsertMemberComponent(int index, DataTypeMember dataTypeMember)
         {
-            if (member == null)
-                throw new ArgumentNullException(nameof(member), "Member can not be null");
+            if (dataTypeMember == null)
+                throw new ArgumentNullException(nameof(dataTypeMember), "Member can not be null");
 
-            if (HasMemberName(member.Name))
-                Throw.ComponentNameCollisionException(member.Name, typeof(Member));
+            if (HasMemberName(dataTypeMember.Name))
+                Throw.ComponentNameCollisionException(dataTypeMember.Name, typeof(DataTypeMember));
 
-            if (member.DataType.Equals(this))
+            if (dataTypeMember.DataType.Equals(this))
                 throw new CircularReferenceException(
-                    $"Member can not be same type as parent type '{member.DataType.Name}'");
+                    $"Member can not be same type as parent type '{dataTypeMember.DataType.Name}'");
             
-            member.PropertyChanged += OnMemberPropertyChanged;
+            dataTypeMember.PropertyChanged += OnMemberPropertyChanged;
             
-            _members.Insert(index, member);
+            _members.Insert(index, dataTypeMember);
             
             RaisePropertyChanged(nameof(Members));
         }
@@ -202,17 +208,17 @@ namespace L5Sharp.Core
         /// <summary>
         /// Removes the member from the data type's member collection.
         /// </summary>
-        /// <param name="member"></param>
+        /// <param name="dataTypeMember"></param>
         /// <exception cref="ArgumentNullException"></exception>
-        private void RemoveMemberComponent(Member member)
+        private void RemoveMemberComponent(DataTypeMember dataTypeMember)
         {
-            if (member == null) return;
+            if (dataTypeMember == null) return;
 
-            if (!HasMemberName(member.Name)) return;
+            if (!HasMemberName(dataTypeMember.Name)) return;
 
-            member.PropertyChanged -= OnMemberPropertyChanged;
+            dataTypeMember.PropertyChanged -= OnMemberPropertyChanged;
             
-            _members.Remove(member);
+            _members.Remove(dataTypeMember);
             
             RaisePropertyChanged(nameof(Members));
         }

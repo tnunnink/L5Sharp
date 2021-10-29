@@ -17,8 +17,6 @@ namespace L5Sharp.Core
         public Controller(string name, Revision revision = null, ProcessorType processorType = null,
             string description = null) : base(name, description)
         {
-            Name = name;
-            Description = description ?? string.Empty;
             ProcessorType = processorType;
             Revision = revision;
             ProjectCreationDate = DateTime.Now;

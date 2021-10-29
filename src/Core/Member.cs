@@ -1,70 +1,36 @@
 ﻿using System;
-using L5Sharp.Abstractions;
 using L5Sharp.Enums;
-using L5Sharp.Utilities;
 
 namespace L5Sharp.Core
 {
-    public class Member : Component, IMember, IEquatable<Member>
+    public class Member : IMember, IEquatable<Member>
     {
-        private IDataType _dataType;
-        private Radix _radix;
-        private ushort _dimension;
-        private ExternalAccess _externalAccess;
-
-        public Member(string name, IDataType dataType, ushort dimension = 0, Radix radix = null,
-            ExternalAccess externalAccess = null, string description = null) : base(name, description)
+        internal Member(string name, IDataType dataType, Dimensions dimension = null, Radix radix = null,
+            ExternalAccess externalAccess = null, string description = null)
         {
+            Name = name ?? throw new ArgumentNullException(nameof(name), "Name can not be null");
             DataType = dataType ?? Predefined.Undefined;
-            Dimension = dimension;
-            Radix = DataType.Equals(Predefined.Undefined) ? Radix.Null : radix == null ? DataType.DefaultRadix : radix;
+            Dimension = dimension ?? Dimensions.Empty;
+            Radix = !(DataType is IPredefined predefined) ? Radix.Null 
+                : radix == null ? predefined.DefaultRadix : radix;
             ExternalAccess = externalAccess == null ? ExternalAccess.ReadWrite : externalAccess;
+            Description = description;
         }
 
-        public IDataType DataType
-        {
-            get => _dataType;
-            set
-            {
-                value ??= Predefined.Undefined;
-                SetProperty(ref _dataType, value);
-            }
-        }
-
-        public ushort Dimension
-        {
-            get => _dimension;
-            set => SetProperty(ref _dimension, value);
-        }
-
-        public Radix Radix
-        {
-            get => _radix;
-            set
-            {
-                Validate.Radix(value, _dataType);
-                SetProperty(ref _radix, value);
-            }
-        }
-
-        public ExternalAccess ExternalAccess
-        {
-            get => _externalAccess;
-            set
-            {
-                if (value == null)
-                    throw new ArgumentNullException(nameof(value), "ExternalAccess property can not be null");
-                SetProperty(ref _externalAccess, value);
-            }
-        }
+        public string Name { get; }
+        public IDataType DataType { get; }
+        public Dimensions Dimension { get; }
+        public Radix Radix { get; }
+        public ExternalAccess ExternalAccess { get; }
+        public string Description { get; }
 
         public bool Equals(Member other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return Name == other.Name && Equals(_dataType, other._dataType) && Equals(_radix, other._radix) &&
-                   Equals(_externalAccess, other._externalAccess) && Description == other.Description &&
-                   Dimension == other.Dimension;
+            return Name == other.Name && Equals(DataType, other.DataType) && Dimension == other.Dimension &&
+                   Equals(Radix, other.Radix) && Equals(ExternalAccess, other.ExternalAccess) &&
+                   Description == other.Description;
         }
 
         public override bool Equals(object obj)
@@ -76,13 +42,7 @@ namespace L5Sharp.Core
 
         public override int GetHashCode()
         {
-            var hashCode = new HashCode();
-            hashCode.Add(Name);
-            hashCode.Add(DataType);
-            hashCode.Add(Radix);
-            hashCode.Add(ExternalAccess);
-            hashCode.Add(Dimension);
-            return hashCode.ToHashCode();
+            return HashCode.Combine(Name, DataType, Dimension, Radix, ExternalAccess, Description);
         }
 
         public static bool operator ==(Member left, Member right)

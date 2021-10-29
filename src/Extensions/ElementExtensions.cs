@@ -5,6 +5,7 @@ using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 using System.Xml.Linq;
 using L5Sharp.Abstractions;
+using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Utilities;
 
@@ -94,6 +95,11 @@ namespace L5Sharp.Extensions
             Expression<Func<TComponent, DataTypeClass>> propertyExpression)
             where TComponent : IComponent =>
             element.GetAttributeValueInternal(propertyExpression, v => v != null ? DataTypeClass.FromName(v) : null);
+        
+        public static Dimensions GetValue<TComponent>(this XElement element,
+            Expression<Func<TComponent, Dimensions>> propertyExpression)
+            where TComponent : IComponent
+            => element.GetAttributeValueInternal(propertyExpression, v => v != null ? Dimensions.Parse(v) : null);
 
         public static Radix GetValue<TComponent>(this XElement element,
             Expression<Func<TComponent, Radix>> propertyExpression)

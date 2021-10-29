@@ -2,9 +2,9 @@
 using L5Sharp.Core;
 using L5Sharp.Enums;
 
-namespace L5Sharp.Abstractions
+namespace L5Sharp
 {
-    public interface ITagMember<out TDataType> : IComponent, ISetComponentDescription where TDataType : IDataType
+    public interface ITagMember<out TDataType> : IComponent where TDataType : IDataType
     {
         string FullName { get; }
         public TDataType DataType { get; }
@@ -18,6 +18,7 @@ namespace L5Sharp.Abstractions
         bool IsArrayMember { get; }
         bool IsArrayElement { get; }
         bool IsStructureMember { get; }
+        void SetDescription(string description);
         void SetRadix(Radix radix);
         void SetValue(object value);
         ITagMember<IDataType> GetMember(string name);

@@ -45,7 +45,7 @@ namespace L5Sharp.Enums
 
             public override IRoutine Create(string name)
             {
-                return new RllRoutine(name);
+                return new LadderRoutine(name);
             }
         }
         

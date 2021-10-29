@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using L5Sharp.Annotations;
 
 namespace L5Sharp.Abstractions
 {
@@ -28,18 +27,6 @@ namespace L5Sharp.Abstractions
             
             storage = value;
 
-            RaisePropertyChanged(propertyName);
-        }
-        
-        protected void SetProperty<T>(ref T storage, T value, Action onChanged,
-            [CallerMemberName] string propertyName = null)
-        {
-            if (EqualityComparer<T>.Default.Equals(storage, value)) return;
-
-            storage = value;
-            
-            onChanged?.Invoke();
-            
             RaisePropertyChanged(propertyName);
         }
 

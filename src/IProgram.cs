@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using L5Sharp.Enums;
 
-namespace L5Sharp.Abstractions
+namespace L5Sharp
 {
     public interface IProgram : IComponent
     {

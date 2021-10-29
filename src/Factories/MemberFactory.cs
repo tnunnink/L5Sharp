@@ -1,4 +1,5 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System;
+using System.Runtime.CompilerServices;
 using System.Xml.Linq;
 using L5Sharp.Abstractions;
 using L5Sharp.Core;
@@ -19,6 +20,9 @@ namespace L5Sharp.Factories
 
         public IMember Create(XElement element)
         {
+            if (element == null)
+                throw new ArgumentNullException(nameof(element));
+            
             var typeName = element.GetDataTypeName();
             var dataType = _context.DataTypes.Get(typeName);
 
@@ -28,7 +32,7 @@ namespace L5Sharp.Factories
             var radix = element.GetValue<IMember>(m => m.Radix);
             var access = element.GetValue<IMember>(m => m.ExternalAccess);
 
-            return new Member(name, dataType, dimensions, radix, access, description);
+            return new DataTypeMember(name, dataType, dimensions, radix, access, description);
         }
     }
 }

@@ -13,7 +13,7 @@ using String = L5Sharp.Types.String;
 
 namespace L5Sharp.Core
 {
-    public class Predefined : IDataType, IEquatable<Predefined>
+    public class Predefined : IPredefined, IEquatable<Predefined>
     {
         private const string ResourceNamespace = "Resources";
         private const string PredefinedFileName = "Predefined.xml";
@@ -21,27 +21,27 @@ namespace L5Sharp.Core
         private static readonly XDocument PredefinedData = LoadPredefined();
         private static readonly string[] AtomicNames = { "BOOL", "SINT", "INT", "DINT", "LINT", "REAL" };
 
-        private static readonly Dictionary<string, IDataType> RegisteredTypes =
-            new Dictionary<string, IDataType>(StringComparer.OrdinalIgnoreCase);
+        private static readonly Dictionary<string, IPredefined> RegisteredTypes =
+            new Dictionary<string, IPredefined>(StringComparer.OrdinalIgnoreCase);
 
-        private readonly Dictionary<string, ReadOnlyMember> _members =
-            new Dictionary<string, ReadOnlyMember>(StringComparer.OrdinalIgnoreCase);
+        private readonly Dictionary<string, Member> _members =
+            new Dictionary<string, Member>(StringComparer.OrdinalIgnoreCase);
 
-        protected Predefined(string name, DataTypeFamily family, IEnumerable<ReadOnlyMember> members = null)
+        protected Predefined(string name, DataTypeFamily family, IEnumerable<Member> members = null)
         {
             Validate.Name(name);
             Name = name;
             Family = family ?? throw new ArgumentNullException(nameof(family), "Family can not be null");
-            
-            members ??= Array.Empty<ReadOnlyMember>();
-            
+
+            members ??= Array.Empty<Member>();
+
             foreach (var member in members)
             {
                 if (_members.ContainsKey(member.Name))
-                    Throw.ComponentNameCollisionException(member.Name, typeof(ReadOnlyMember));
+                    Throw.ComponentNameCollisionException(member.Name, typeof(Member));
 
                 _members.Add(member.Name, member);
-            }  
+            }
 
             if (!RegisteredTypes.ContainsKey(name))
                 RegisteredTypes.Add(name, this);
@@ -52,7 +52,7 @@ namespace L5Sharp.Core
             Validate.Name(element.GetName());
 
             Name = element.GetName();
-            Family = element.GetValue<IDataType>(d => d.Family) 
+            Family = element.GetValue<IDataType>(d => d.Family)
                      ?? throw new ArgumentNullException(nameof(element), "Family can not be null");
 
             var members = element.Descendants(LogixNames.GetComponentName<IMember>());
@@ -73,8 +73,8 @@ namespace L5Sharp.Core
                 var dimension = e.GetValue<IMember>(m => m.Dimension);
                 var radix = e.GetValue<IMember>(m => m.Radix);
                 var access = e.GetValue<IMember>(m => m.ExternalAccess);
-                
-                var member = new ReadOnlyMember(name, type, dimension, radix, access, description);
+
+                var member = new Member(name, type, dimension, radix, access, description);
 
                 _members.Add(member.Name, member);
             }
@@ -198,7 +198,7 @@ namespace L5Sharp.Core
         {
             return !Equals(left, right);
         }
-        
+
         private static IDataType FindFieldType(string name)
         {
             var field = typeof(Predefined).GetField(name, BindingFlags.Public

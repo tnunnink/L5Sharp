@@ -26,7 +26,7 @@ namespace L5Sharp.Types.Tests
         {
             var type = new String();
 
-            FluentActions.Invoking(() => (Member) type.Data).Should().Throw<InvalidCastException>();
+            FluentActions.Invoking(() => (DataTypeMember) type.Data).Should().Throw<InvalidCastException>();
         }
 
         [Test]

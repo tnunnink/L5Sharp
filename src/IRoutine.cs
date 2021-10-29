@@ -1,9 +1,9 @@
 ﻿using L5Sharp.Enums;
 
-namespace L5Sharp.Abstractions
+namespace L5Sharp
 {
     public interface IRoutine : IComponent
     {
-        public RoutineType Type { get; }
+        RoutineType Type { get; }
     }
 }

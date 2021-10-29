@@ -307,13 +307,13 @@ namespace L5Sharp.Core.Tests
             {
             }
 
-            private static IEnumerable<ReadOnlyMember> GetMembers()
+            private static IEnumerable<Member> GetMembers()
             {
-                return new List<ReadOnlyMember>
+                return new List<Member>
                 {
-                    ReadOnlyMember.New("Member01", Bool),
-                    ReadOnlyMember.New("Member01", Bool),
-                    ReadOnlyMember.New("Member03", Int)
+                    new("Member01", Bool),
+                    new("Member02", Bool),
+                    new("Member03", Int)
                 };
             }
         }

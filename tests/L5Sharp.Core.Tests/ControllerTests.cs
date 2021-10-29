@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using FluentAssertions;
+using L5Sharp.Abstractions;
 using L5Sharp.Exceptions;
 using NUnit.Framework;
 
@@ -75,10 +76,10 @@ namespace L5Sharp.Core.Tests
             datatype.AddMember("Test", Predefined.Bool);
             controller.AddDataType(datatype);
 
-            var type = controller.DataTypes.First();
+            var type = (IUserDefined) controller.DataTypes.First();
             
-            var member = (Member) type.GetMember("Test");
-            member.DataType = Predefined.Dint;
+            var member = type.GetMember("Test");
+            member.SetDataType(Predefined.Dint);
 
             member.DataType.Should().Be(Predefined.Dint);
             controller.DataTypes.First().Members.First().DataType.Should().Be(Predefined.Dint);

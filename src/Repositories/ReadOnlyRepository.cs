@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
+using L5Sharp.Abstractions;
 using L5Sharp.Extensions;
+using L5Sharp.Factories;
 
-namespace L5Sharp.Abstractions
+namespace L5Sharp.Repositories
 {
     public class ReadOnlyRepository<T> : IReadOnlyRepository<T> where T : IComponent
     {

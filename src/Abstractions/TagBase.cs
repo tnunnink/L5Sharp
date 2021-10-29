@@ -25,7 +25,7 @@ namespace L5Sharp.Abstractions
             InstantiateMembers();
         }
 
-        public override string FullName => Name;
+        public override string FullName => _name;
 
         public override string Name => _name;
 
@@ -45,15 +45,8 @@ namespace L5Sharp.Abstractions
 
         public void SetName(string name)
         {
-            SetProperty(ref _name, name, Validate.Name, nameof(Name));
-        }
-
-        public ITag<TDataType> SetDimensions(Dimensions dimensions)
-        {
-            if (dimensions == null)
-                throw new ArgumentNullException(nameof(dimensions), "Dimensions can not be null");
-
-            throw new NotImplementedException();
+            Validate.Name(name);
+            SetProperty(ref _name, name, nameof(Name));
         }
 
         public void SetExternalAccess(ExternalAccess externalAccess)
@@ -68,11 +61,28 @@ namespace L5Sharp.Abstractions
         {
             if (usage == null)
                 throw new ArgumentNullException(nameof(usage), "Usage can not be null");
-            
+
             if (Scope != Scope.Program)
-                throw new InvalidOperationException();
+                Throw.NotConfigurableException(nameof(Usage), nameof(Tag),
+                    "The tag must be a program tag to set usage");
             
             SetProperty(ref _usage, usage, nameof(Usage));
+        }
+
+        public ITag<IDataType> ChangeDataType(IDataType dataType)
+        {
+            if (dataType == null)
+                throw new ArgumentNullException(nameof(dataType), "Dimensions can not be null");
+
+            return new Tag(Name, dataType, Parent, Dimensions, Radix, ExternalAccess, Description, Usage, Constant);
+        }
+
+        public ITag<IDataType> ChangeDimensions(Dimensions dimensions)
+        {
+            if (dimensions == null)
+                throw new ArgumentNullException(nameof(dimensions), "Dimensions can not be null");
+
+            return new Tag(Name, DataType, Parent, dimensions, Radix, ExternalAccess, Description, Usage, Constant);
         }
 
         public ITag<IDataType> ChangeTagType(TagType type)

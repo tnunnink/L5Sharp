@@ -35,7 +35,7 @@ namespace L5Sharp
         {
         }
 
-        public LogixContext(IComponent component, Revision revision) : this(GenerateContent(component, revision))
+        public LogixContext(IController controller, Revision revision) : this(GenerateContent(controller, revision))
         {
         }
 

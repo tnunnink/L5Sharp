@@ -6,18 +6,29 @@ using L5Sharp.Enums;
 
 namespace L5Sharp.Core
 {
-    public class RllRoutine : Component, IRoutine
+    public class LadderRoutine : Component, ILadderRoutine
     {
-        private readonly List<Rung> _rungs = new List<Rung>();
+        private readonly List<IRung> _rungs = new List<IRung>();
 
-        public RllRoutine(string name, string description = null) : base(name, description)
+        public LadderRoutine(string name, string description = null) : base(name, description)
         {
         }
         
         public RoutineType Type => RoutineType.Ladder;
-        public IEnumerable<Rung> Rungs => _rungs.AsEnumerable();
+        public IEnumerable<IRung> Rungs => _rungs.AsEnumerable();
+        
+        public void AddRung(int number, string description, string text)
+        {
+            var rung = new Rung(number, description, text);
+            AddRungComponent(rung);
+        }
 
-        public void AddRung(Rung rung)
+        public void RemoveRung(int number)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void AddRungComponent(IRung rung)
         {
             if (rung == null) throw new ArgumentNullException(nameof(rung), "Rung can not be null");
 
@@ -27,7 +38,7 @@ namespace L5Sharp.Core
             _rungs.Insert(rung.Number, rung);
         }
         
-        public void RemoveRung(Rung rung)
+        public void RemoveRungComponent(IRung rung)
         {
             if (rung == null) throw new ArgumentNullException(nameof(rung), "Rung can not be null");
 

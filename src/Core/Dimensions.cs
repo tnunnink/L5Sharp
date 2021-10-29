@@ -41,6 +41,7 @@ namespace L5Sharp.Core
         public ushort Y { get; }
         public ushort Z { get; }
         public int Length => Z > 0 ? X * Y * Z : Y > 0 ? X * Y : X;
+        public bool IsMultiDimensional => Y > 0;
 
         public static Dimensions Empty => new Dimensions();
 
@@ -70,7 +71,7 @@ namespace L5Sharp.Core
                 _ => throw new ArgumentOutOfRangeException()
             };
         }
-        
+
         public override string ToString()
         {
             return Z > 0 ? $"{X} {Y} {Z}"

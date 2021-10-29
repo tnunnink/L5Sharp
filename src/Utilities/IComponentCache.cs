@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace L5Sharp.Abstractions
+﻿namespace L5Sharp.Abstractions
 {
     internal interface IComponentCache
     {

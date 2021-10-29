@@ -1,4 +1,4 @@
-﻿namespace L5Sharp.Abstractions
+﻿namespace L5Sharp.Repositories
 {
     public interface IRepository<T> : IReadOnlyRepository<T> where T : IComponent
     {

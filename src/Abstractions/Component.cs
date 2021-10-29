@@ -5,34 +5,23 @@ namespace L5Sharp.Abstractions
 {
     public abstract class Component : NotificationBase, IComponent, IEquatable<Component>
     {
-        private string _name;
-        private string _description;
-
         protected Component(string name, string description)
         {
             Validate.Name(name);
             
-            _name = name;
-            _description = description;
+            Name = name;
+            Description = description;
         }
         
-        public virtual string Name
-        {
-            get => _name;
-            set => SetProperty(ref _name, value, Validate.Name);
-        }
+        public virtual string Name { get; }
 
-        public virtual string Description   
-        {
-            get => _description;
-            set => SetProperty(ref _description, value);
-        }
+        public virtual string Description { get; }
 
         public bool Equals(Component other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return _name == other._name && _description == other._description;
+            return Name == other.Name && Description == other.Description;
         }
 
         public override bool Equals(object obj)
@@ -44,7 +33,7 @@ namespace L5Sharp.Abstractions
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(_name, _description);
+            return HashCode.Combine(Name, Description);
         }
 
         public static bool operator ==(Component left, Component right)

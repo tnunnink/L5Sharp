@@ -44,7 +44,7 @@ namespace L5Sharp.Tests
         [Test]
         public void GetContainerName_Member_ShouldBeDataTypes()
         {
-            var name = LogixNames.GetContainerName<Member>();
+            var name = LogixNames.GetContainerName<DataTypeMember>();
 
             name.Should().Be("Members");
         }

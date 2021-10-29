@@ -24,7 +24,7 @@ namespace L5Sharp.Core
         /// 4. The member's Description (by default) is a concatenation of the parent and member description
         /// </remarks>
         internal TagMember(ITagMember<IDataType> parent, IMember member) : base(member.Name, (TDataType)member.DataType,
-            new Dimensions(member.Dimension), member.Radix, member.ExternalAccess, member.Description, parent)
+            member.Dimension, member.Radix, member.ExternalAccess, member.Description, parent)
         {
             _parent = parent ?? throw new ArgumentNullException(nameof(parent), "Parent can not be null");
             _member = member;

@@ -15,14 +15,14 @@ namespace L5Sharp.Core.Tests
         {
         }
 
-        private static IEnumerable<ReadOnlyMember> GenerateMembers()
+        private static IEnumerable<Member> GenerateMembers()
         {
-            return new List<ReadOnlyMember>
+            return new List<Member>
             {
-                ReadOnlyMember.New("Member01", Bool),
-                ReadOnlyMember.New("Member02", Bool),
-                ReadOnlyMember.New("Member03", Bool),
-                ReadOnlyMember.New("Member04", Bool)
+                new("Member01", Bool),
+                new("Member02", Bool),
+                new("Member03", Bool),
+                new("Member04", Bool),
             };
         }
 

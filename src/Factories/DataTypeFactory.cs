@@ -31,13 +31,14 @@ namespace L5Sharp.Factories
             if (_cache.HasComponent(name))
                 return _cache.Get(name);
 
-            var factory = _context.GetFactory<Member>();
-            var members = element.GetAll<Member>().Select(x => factory.Create(x));
+            var factory = _context.GetFactory<DataTypeMember>();
+            var members = element.GetAll<DataTypeMember>().Select(x => factory.Create(x));
             var description = element.GetDescription();
 
             var type = new DataType(name, members, description);
             
             _cache.Add(type);
+            
             return type;
         }
     }

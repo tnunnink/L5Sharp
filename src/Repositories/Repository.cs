@@ -1,8 +1,8 @@
-﻿using System.Xml.Linq;
+﻿using L5Sharp.Abstractions;
 using L5Sharp.Extensions;
 using L5Sharp.Utilities;
 
-namespace L5Sharp.Abstractions
+namespace L5Sharp.Repositories
 {
     public class Repository<T> : ReadOnlyRepository<T>, IRepository<T> where T : IComponent
     {

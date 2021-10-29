@@ -2,11 +2,18 @@
 
 namespace L5Sharp.Core
 {
-    public class Rung
+    public class Rung : IRung
     {
-        public int Number { get; set; }
-        public RungType Type { get; set; }
-        public string Comment { get; set; }
-        public string Text { get; set; }
+        public Rung(int number, string comment = null, string text = null, RungType type = null)
+        {
+            Number = number;
+            Type = type;
+            Comment = comment;
+            Text = text;
+        }
+        public int Number { get; }
+        public RungType Type { get; }
+        public string Comment { get; }
+        public string Text { get; }
     }
 }

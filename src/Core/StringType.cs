@@ -13,7 +13,7 @@ namespace L5Sharp.Core
         private string _name;
         private string _description;
 
-        private readonly Dictionary<string, ReadOnlyMember> _members = new Dictionary<string, ReadOnlyMember>();
+        private readonly Dictionary<string, Member> _members = new Dictionary<string, Member>();
 
         public StringType(string name, ushort length, string description = null)
         {
@@ -26,9 +26,9 @@ namespace L5Sharp.Core
             Description = description ?? string.Empty;
             
             _members.Add(MemberNames[0],
-                new ReadOnlyMember(MemberNames[0], Predefined.Dint));
+                new Member(MemberNames[0], Predefined.Dint));
             _members.Add(MemberNames[1],
-                new ReadOnlyMember(MemberNames[1], Predefined.Sint, length, Radix.Ascii));
+                new Member(MemberNames[1], Predefined.Sint, new Dimensions(length), Radix.Ascii));
         }
 
         public string Name
@@ -81,7 +81,7 @@ namespace L5Sharp.Core
             if (length <= 0)
                 throw new ArgumentException("Length must be greater than 0");
 
-            var data = new ReadOnlyMember(MemberNames[1], Predefined.Sint, length, Radix.Ascii);
+            var data = new Member(MemberNames[1], Predefined.Sint, new Dimensions(length), Radix.Ascii);
             
             _members.Remove(MemberNames[1]);
             _members.Add(data.Name, data);

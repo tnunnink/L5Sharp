@@ -1,6 +1,6 @@
 ﻿using System.Xml.Linq;
 
-namespace L5Sharp.Abstractions
+namespace L5Sharp.Serialization
 {
     internal interface IComponentSerializer
     {

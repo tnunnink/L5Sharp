@@ -14,7 +14,7 @@ namespace L5Sharp.Abstractions
 
         private readonly Dictionary<Type, RoutineType> _routineTypes = new Dictionary<Type, RoutineType>
         {
-            { typeof(RllRoutine), RoutineType.Ladder }
+            { typeof(LadderRoutine), RoutineType.Ladder }
         };
 
         protected ProgramBase(string name, string description = null, bool testEdits = false, bool disabled = false)
@@ -33,8 +33,7 @@ namespace L5Sharp.Abstractions
         public IEnumerable<ITag<IDataType>> Tags => _tags.Values.AsEnumerable();
 
         public IEnumerable<IRoutine> Routines => _routines.Values.AsEnumerable();
-
-
+        
         public bool HasRoutine(string name)
         {
             if (string.IsNullOrEmpty(name)) throw new ArgumentNullException(nameof(name));
@@ -119,14 +118,7 @@ namespace L5Sharp.Abstractions
             AddTagComponent((ITag<IDataType>)tag);
         }
 
-        public void RemoveTag(string name)
-        {
-            if (string.IsNullOrEmpty(name)) throw new ArgumentException("Name can not be null");
-
-            if (!_tags.ContainsKey(name)) return;
-
-            _tags.Remove(name);
-        }
+        public void RemoveTag(string name) => RemoveTagComponent(GetTagComponent(name));
 
         private ITag<IDataType> GetTagComponent(string name)
         {

@@ -22,13 +22,16 @@ namespace L5Sharp.Abstractions
             Name = name ?? throw new ArgumentNullException(nameof(name), "Name can not be null");
             DataType = dataType ?? throw new ArgumentNullException(nameof(dataType), "DataType can not be null");
             Dimensions = dimensions == null ? Dimensions.Empty : dimensions;
-            _radix = radix == null ? dataType.DefaultRadix : radix;
+            
+            _radix = !(dataType is IPredefined predefined) ? Radix.Null :
+                radix == null ? predefined.DefaultRadix : radix;
+            
             ExternalAccess = externalAccess ?? ExternalAccess.None;
             _description = description;
             Parent = parent;
 
-            if (dataType.IsAtomic)
-                _value = dataType.DefaultValue;
+            if (dataType is IPredefined p)
+                _value = p.DefaultValue;
             
             RegisterType();
         }
@@ -55,14 +58,14 @@ namespace L5Sharp.Abstractions
 
         public IComponent Parent { get; }
 
-        public bool IsValueMember => DataType.IsAtomic && Dimensions.Length == 0;
+        public bool IsValueMember => DataType is IPredefined {IsAtomic: true} && Dimensions.Length == 0;
 
         public bool IsArrayMember => Dimensions.Length > 0;
 
         public bool IsArrayElement => Parent is ITagMember<IDataType> { IsArrayMember: true };
 
-        public bool IsStructureMember => !DataType.IsAtomic && !IsArrayMember && _members.Count > 0;
-
+        public bool IsStructureMember =>
+            !(DataType is IPredefined { IsAtomic: true }) && !IsArrayMember && _members.Count > 0;
 
         public virtual void SetDescription(string description)
         {
@@ -81,11 +84,11 @@ namespace L5Sharp.Abstractions
 
         public virtual void SetValue(object value)
         {
-            if (!(DataType is Predefined { IsAtomic: true } predefined))
+            if (!(DataType is Predefined { IsAtomic: true } atomic))
                 throw new NotConfigurableException(
                     $"Value is not not configurable for type {DataType}. Value is only configurable for atomic types");
 
-            if (!predefined.IsValidValue(value))
+            if (!atomic.IsValidValue(value))
                 Throw.InvalidTagValueException(value, DataType.Name);
 
             SetProperty(ref _value, value, nameof(Value));
@@ -133,26 +136,6 @@ namespace L5Sharp.Abstractions
                 _members.Add(member.Name, member);
         }
 
-        protected void AddMember(TagMember<IDataType> tagMember)
-        {
-            if (tagMember == null)
-                throw new ArgumentNullException();
-            
-            if (_members.ContainsKey(tagMember.Name))
-                Throw.ComponentNameCollisionException(tagMember.Name, typeof(TagMember<IDataType>));
-            
-            _members.Add(tagMember.Name, tagMember);
-        }
-
-        protected void UpdateMember(TagMember<IDataType> tagMember)
-        {
-            if (tagMember == null)
-                throw new ArgumentNullException();
-            
-            if (_members.ContainsKey(tagMember.Name))
-                Throw.ComponentNameCollisionException(tagMember.Name, typeof(TagMember<IDataType>));
-        }
-
         private static IEnumerable<ITagMember<IDataType>> GenerateMembers(ITagMember<IDataType> tagMember,
             IDataType dataType)
         {
@@ -161,10 +144,10 @@ namespace L5Sharp.Abstractions
             if (tagMember.IsArrayMember)
                 return tagMember.Dimensions.GenerateIndices()
                     .Select(i => new TagMember<IDataType>(tagMember,
-                        new ReadOnlyMember(i, dataType, 0, tagMember.Radix, tagMember.ExternalAccess,
+                        new Member(i, dataType, Dimensions.Empty, tagMember.Radix, tagMember.ExternalAccess,
                             tagMember.Description)));
 
-            return dataType.Members.Select(m => new TagMember<IDataType>(tagMember, new ReadOnlyMember(m)));
+            return dataType.Members.Select(m => new TagMember<IDataType>(tagMember, m));
         }
 
         private void PropagateValue<TProperty>(Action<ITagMember<IDataType>, TProperty> setter, TProperty value)
@@ -209,7 +192,6 @@ namespace L5Sharp.Abstractions
 
         private void OnDataTypePropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if (!(sender is DataType)) return;
             InstantiateMembers();
         }
     }

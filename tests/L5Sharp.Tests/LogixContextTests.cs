@@ -45,7 +45,7 @@ namespace L5Sharp.Tests
             var complex = types.SingleOrDefault(t => t.Name == "ComplexType");
             var simple = types.SingleOrDefault(t => t.Name == "SimpleTypes");
 
-            var simpleMember = complex?.GetMember("SimpleMember").DataType;
+            var simpleMember = complex?.Members.Single(m => m.Name == "SimpleMember").DataType;
 
             simple.Should().BeEquivalentTo(simpleMember);
             simple.Should().BeSameAs(simpleMember);
