@@ -1,6 +1,7 @@
 ﻿using System;
 using L5Sharp.Abstractions;
 using L5Sharp.Enums;
+using L5Sharp.Exceptions;
 using L5Sharp.Utilities;
 
 namespace L5Sharp.Core
@@ -17,8 +18,9 @@ namespace L5Sharp.Core
         {
             _dataType = dataType ?? Predefined.Undefined;
             _dimensions = dimension ?? Dimensions.Empty;
-            _radix = !(_dataType is IPredefined predefined) ? Radix.Null :
-                radix == null ? predefined.DefaultRadix : radix;
+            _radix = radix != null ? radix.IsValidForType(_dataType) ? 
+                    radix : throw new RadixNotSupportedException(radix, _dataType)
+                : _dataType is IPredefined predefined ? predefined.DefaultRadix : Radix.Null;
             _externalAccess = externalAccess == null ? ExternalAccess.ReadWrite : externalAccess;
         }
 

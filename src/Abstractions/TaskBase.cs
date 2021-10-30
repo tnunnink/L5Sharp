@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using L5Sharp.Core;
 using L5Sharp.Enums;
+using L5Sharp.Exceptions;
 using L5Sharp.Utilities;
 
 namespace L5Sharp.Abstractions
@@ -89,7 +90,7 @@ namespace L5Sharp.Abstractions
             if (name == null) throw new ArgumentNullException(nameof(name));
 
             if (_programs.Contains(name))
-                Throw.ComponentNameCollisionException(name, typeof(Program));
+                throw new ComponentNameCollisionException(name, typeof(Program));
 
             _programs.Add(name);
         }

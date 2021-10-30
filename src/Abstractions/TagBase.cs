@@ -1,6 +1,7 @@
 ﻿using System;
 using L5Sharp.Core;
 using L5Sharp.Enums;
+using L5Sharp.Exceptions;
 using L5Sharp.Utilities;
 
 namespace L5Sharp.Abstractions
@@ -36,8 +37,7 @@ namespace L5Sharp.Abstractions
         public Scope Scope => Parent == null ? Scope.Null
             : Parent is IController ? Scope.Controller
             : Parent is IProgram ? Scope.Program
-            : throw new InvalidOperationException(
-                $"Scope can not be determined by container type '{Parent.GetType()}'");
+            : Scope.Null;
         
         public TagUsage Usage => _usage;
         
@@ -63,8 +63,8 @@ namespace L5Sharp.Abstractions
                 throw new ArgumentNullException(nameof(usage), "Usage can not be null");
 
             if (Scope != Scope.Program)
-                Throw.NotConfigurableException(nameof(Usage), nameof(Tag),
-                    "The tag must be a program tag to set usage");
+                throw new ComponentNotConfigurableException(nameof(Usage), typeof(Tag),
+                    "Tag is not a program scoped tag");
             
             SetProperty(ref _usage, usage, nameof(Usage));
         }

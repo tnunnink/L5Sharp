@@ -4,8 +4,8 @@ namespace L5Sharp.Exceptions
 {
     public class InvalidTagValueException : Exception
     {
-        public InvalidTagValueException(string message)
-            : base(message)
+        public InvalidTagValueException(object value, Type dataType)
+            : base($"Value '{value}' is not valid for type '{dataType}'")
         {
         }
     }

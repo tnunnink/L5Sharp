@@ -4,17 +4,8 @@ namespace L5Sharp.Exceptions
 {
     public class ComponentReferencedException : Exception
     {
-        public ComponentReferencedException()
-        {
-        }
-        
-        public ComponentReferencedException(string message)
-            : base(message)
-        {
-        }
-        
-        public ComponentReferencedException(string message, Exception innerException)
-            : base(message, innerException)
+        public ComponentReferencedException(string name, Type type)
+            : base($"Component {name} is of type {type} is currently referenced")
         {
         }
     }

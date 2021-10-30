@@ -1,4 +1,5 @@
 ﻿using L5Sharp.Abstractions;
+using L5Sharp.Exceptions;
 using L5Sharp.Extensions;
 using L5Sharp.Utilities;
 
@@ -13,7 +14,7 @@ namespace L5Sharp.Repositories
         public virtual void Add(T component)
         {
             if (Container.Contains<T>(component.Name))
-                Throw.ComponentNameCollisionException(component.Name, typeof(T));
+                throw new ComponentNameCollisionException(component.Name, typeof(T));
             
             Container.Add(component.Serialize());
         }

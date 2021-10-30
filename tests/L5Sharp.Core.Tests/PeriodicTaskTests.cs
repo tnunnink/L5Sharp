@@ -21,7 +21,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void New_InvalidName_ShouldThrowInvalidNameException()
         {
-            FluentActions.Invoking(() => new PeriodicTask("Test_Task_#!_001")).Should().Throw<InvalidNameException>();
+            FluentActions.Invoking(() => new PeriodicTask("Test_Task_#!_001")).Should().Throw<ComponentNameInvalidException>();
         }
         
         [Test]
@@ -63,7 +63,7 @@ namespace L5Sharp.Core.Tests
         {
             var task = new PeriodicTask("TestTask");
             
-            FluentActions.Invoking(() => task.Name = "Invalid Name 01").Should().Throw<InvalidNameException>();
+            FluentActions.Invoking(() => task.Name = "Invalid Name 01").Should().Throw<ComponentNameInvalidException>();
         }
 
         [Test]

@@ -21,7 +21,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void New_InvalidName_ShouldThrowInvalidNameException()
         {
-            FluentActions.Invoking(() => new Controller("This is Invalid !@#$")).Should().Throw<InvalidNameException>();
+            FluentActions.Invoking(() => new Controller("This is Invalid !@#$")).Should().Throw<ComponentNameInvalidException>();
         }
         
         //todo add property tests

@@ -34,7 +34,7 @@ namespace L5Sharp.Core.Tests
         public void New_InvalidName_ShouldThrowInvalidNameException()
         {
             FluentActions.Invoking(() => new DataTypeMember("1!@#$%#$!", Predefined.Int))
-                .Should().Throw<InvalidNameException>();
+                .Should().Throw<ComponentNameInvalidException>();
         }
 
 
@@ -80,7 +80,7 @@ namespace L5Sharp.Core.Tests
         {
             var member = new DataTypeMember("MemberName", Predefined.Bool);
 
-            FluentActions.Invoking(() => member.SetName("09_#$Test")).Should().Throw<InvalidNameException>();
+            FluentActions.Invoking(() => member.SetName("09_#$Test")).Should().Throw<ComponentNameInvalidException>();
         }
 
         [Test]
@@ -174,11 +174,11 @@ namespace L5Sharp.Core.Tests
         }
 
         [Test]
-        public void SetRadix_Null_ShouldThrowArgumentNullException()
+        public void SetRadix_Null_ShouldThrowRadixNotSupportedException()
         {
             var member = new DataTypeMember("MemberName", Predefined.Int);
 
-            FluentActions.Invoking(() => member.SetRadix(null)).Should().Throw<ArgumentNullException>();
+            FluentActions.Invoking(() => member.SetRadix(null)).Should().Throw<RadixNotSupportedException>();
         }
         
         [Test]

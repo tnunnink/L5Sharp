@@ -63,7 +63,7 @@ namespace L5Sharp.Core.Tests
             var fixture = new Fixture();
             var sut = new TestLogixComponent("Test", "This is a test");
             
-            FluentActions.Invoking(() => sut.SetName(fixture.Create<string>())).Should().Throw<InvalidNameException>();
+            FluentActions.Invoking(() => sut.SetName(fixture.Create<string>())).Should().Throw<ComponentNameInvalidException>();
         }
 
         [Test]

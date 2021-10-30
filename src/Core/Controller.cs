@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using L5Sharp.Abstractions;
 using L5Sharp.Enums;
+using L5Sharp.Exceptions;
 using L5Sharp.Utilities;
 
 namespace L5Sharp.Core
@@ -45,7 +46,7 @@ namespace L5Sharp.Core
             if (dataType == null) throw new ArgumentNullException(nameof(dataType));
 
             if (_dataTypes.ContainsKey(dataType.Name))
-                Throw.ComponentNameCollisionException(dataType.Name, typeof(DataType));
+                throw new ComponentNameCollisionException(dataType.Name, typeof(DataType));
 
             _dataTypes.Add(dataType.Name, dataType);
         }
@@ -55,7 +56,7 @@ namespace L5Sharp.Core
             if (dataType == null) throw new ArgumentNullException(nameof(dataType));
 
             if (_tags.Values.Any(t => t.DataType.Equals(dataType)))
-                Throw.ComponentReferencedException(dataType.Name, typeof(DataType));
+                throw new ComponentReferencedException(dataType.Name, typeof(DataType));
 
             if (!_dataTypes.ContainsKey(dataType.Name)) return;
 
@@ -67,7 +68,7 @@ namespace L5Sharp.Core
             if (tag == null) throw new ArgumentNullException(nameof(tag));
 
             if (_tags.ContainsKey(tag.Name))
-                Throw.ComponentNameCollisionException(tag.Name, typeof(Tag));
+                throw new ComponentNameCollisionException(tag.Name, typeof(Tag));
 
             _tags.Add(tag.Name, tag);
         }
@@ -80,8 +81,7 @@ namespace L5Sharp.Core
             /*if (_tags.Values.Any(x => x.DataType == dataType.Name))
                 Throw.ComponentReferencedException(dataType.Name, typeof(DataType));*/
 
-            if (!_tags.ContainsKey(tag.Name))
-                Throw.ComponentNotFoundException(tag.Name, typeof(Tag));
+            if (!_tags.ContainsKey(tag.Name)) return;
 
             _tags.Remove(tag.Name);
         }

@@ -1,4 +1,5 @@
-﻿using Ardalis.SmartEnum;
+﻿using System;
+using Ardalis.SmartEnum;
 
 namespace L5Sharp.Enums
 {
@@ -6,6 +7,18 @@ namespace L5Sharp.Enums
     {
         private Radix(string name, int value) : base(name, value)
         {
+        }
+
+        public bool IsValidForType(IDataType dataType)
+        {
+            return dataType switch
+            {
+                null => throw new ArgumentNullException(nameof(dataType), "Data type can not be null"),
+                IPredefined predefined => predefined.SupportsRadix(this),
+                IUserDefined _ => Equals(Null),
+                _ => throw new ArgumentOutOfRangeException(nameof(dataType),
+                    "Data type provided is not predefined or user defined")
+            };
         }
 
         public static readonly Radix Null = new Radix("NullType", 0);

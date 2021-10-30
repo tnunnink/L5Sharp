@@ -1,20 +1,12 @@
 ﻿using System;
+using L5Sharp.Enums;
 
 namespace L5Sharp.Exceptions
 {
     public class RadixNotSupportedException : Exception
     {
-        public RadixNotSupportedException()
-        {
-        }
-        
-        public RadixNotSupportedException(string message)
-            : base(message)
-        {
-        }
-        
-        public RadixNotSupportedException(string message, Exception innerException)
-            : base(message, innerException)
+        public RadixNotSupportedException(Radix radix, ILogixComponent dataType) 
+            : base($"Radix {radix.Name} not supported by type {dataType.Name}")
         {
         }
     }

@@ -157,7 +157,7 @@ namespace L5Sharp.Core
                 throw new ArgumentNullException(nameof(dataTypeMember), "Member can not be null");
 
             if (HasMemberName(dataTypeMember.Name))
-                Throw.ComponentNameCollisionException(dataTypeMember.Name, typeof(DataTypeMember));
+                throw new ComponentNameCollisionException(dataTypeMember.Name, typeof(DataTypeMember));
 
             if (dataTypeMember.DataType.Equals(this))
                 throw new CircularReferenceException(
@@ -182,7 +182,7 @@ namespace L5Sharp.Core
                 throw new ArgumentNullException(nameof(dataTypeMember), "Member can not be null");
 
             if (HasMemberName(dataTypeMember.Name))
-                Throw.ComponentNameCollisionException(dataTypeMember.Name, typeof(DataTypeMember));
+                throw new ComponentNameCollisionException(dataTypeMember.Name, typeof(DataTypeMember));
 
             if (dataTypeMember.DataType.Equals(this))
                 throw new CircularReferenceException(

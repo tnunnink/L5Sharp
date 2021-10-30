@@ -23,8 +23,9 @@ namespace L5Sharp.Abstractions
             DataType = dataType ?? throw new ArgumentNullException(nameof(dataType), "DataType can not be null");
             Dimensions = dimensions == null ? Dimensions.Empty : dimensions;
             
-            _radix = !(dataType is IPredefined predefined) ? Radix.Null :
-                radix == null ? predefined.DefaultRadix : radix;
+            _radix = radix != null ? radix.IsValidForType(DataType) ? 
+                    radix : throw new RadixNotSupportedException(radix, DataType)
+                : DataType is IPredefined predefined ? predefined.DefaultRadix : Radix.Null;
             
             ExternalAccess = externalAccess ?? ExternalAccess.None;
             _description = description;
@@ -85,11 +86,11 @@ namespace L5Sharp.Abstractions
         public virtual void SetValue(object value)
         {
             if (!(DataType is Predefined { IsAtomic: true } atomic))
-                throw new NotConfigurableException(
-                    $"Value is not not configurable for type {DataType}. Value is only configurable for atomic types");
+                throw new ComponentNotConfigurableException(nameof(Value), typeof(TagMember),
+                    $"'{Name}' is not an atomic type. Value is only configurable for atomics");
 
             if (!atomic.IsValidValue(value))
-                Throw.InvalidTagValueException(value, DataType.Name);
+                throw new InvalidTagValueException(value, DataType.GetType());
 
             SetProperty(ref _value, value, nameof(Value));
         }

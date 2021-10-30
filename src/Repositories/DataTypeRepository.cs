@@ -4,6 +4,7 @@ using System.Runtime.CompilerServices;
 using L5Sharp.Abstractions;
 using L5Sharp.Core;
 using L5Sharp.Enums;
+using L5Sharp.Exceptions;
 using L5Sharp.Extensions;
 using L5Sharp.Utilities;
 
@@ -29,7 +30,7 @@ namespace L5Sharp.Repositories
         public override void Add(IDataType component)
         {
             if (Container.Contains<IDataType>(component.Name))
-                Throw.ComponentNameCollisionException(component.Name, typeof(IDataType));
+                throw new ComponentNameCollisionException(component.Name, typeof(IDataType));
 
             var element = component.Serialize();
             

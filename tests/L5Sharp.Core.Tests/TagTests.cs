@@ -25,7 +25,7 @@ namespace L5Sharp.Core.Tests
             var fixture = new Fixture();
 
             FluentActions.Invoking(() => new Tag(fixture.Create<string>(), Predefined.Bool)).Should()
-                .Throw<InvalidNameException>();
+                .Throw<ComponentNameInvalidException>();
         }
 
         [Test]
@@ -138,7 +138,7 @@ namespace L5Sharp.Core.Tests
             var tag = new Tag("Test", Predefined.Dint);
             var fixture = new Fixture();
 
-            FluentActions.Invoking(() => tag.SetName(fixture.Create<string>())).Should().Throw<InvalidNameException>();
+            FluentActions.Invoking(() => tag.SetName(fixture.Create<string>())).Should().Throw<ComponentNameInvalidException>();
         }
 
         [Test]
@@ -272,7 +272,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void SetRadix_ValidRadixOnAtomic_ShouldSetMembersRadix()
         {
-            var tag = new Tag("Test", Predefined.Bool, new Dimensions(3, 4));
+            var tag = new Tag("Test", Predefined.Int, new Dimensions(3, 4));
 
             tag.SetRadix(Radix.Ascii);
 
@@ -287,7 +287,7 @@ namespace L5Sharp.Core.Tests
             var value = fixture.Create<int>();
             var tag = new Tag("Test", Predefined.Timer);
 
-            FluentActions.Invoking(() => tag.SetValue(value)).Should().Throw<NotConfigurableException>();
+            FluentActions.Invoking(() => tag.SetValue(value)).Should().Throw<ComponentNotConfigurableException>();
         }
 
         [Test]
@@ -411,7 +411,7 @@ namespace L5Sharp.Core.Tests
         {
             var tag = new Tag("Test", Predefined.Int);
 
-            FluentActions.Invoking(() => tag.SetUsage(TagUsage.Output)).Should().Throw<NotConfigurableException>();
+            FluentActions.Invoking(() => tag.SetUsage(TagUsage.Output)).Should().Throw<ComponentNotConfigurableException>();
         }
 
         [Test]

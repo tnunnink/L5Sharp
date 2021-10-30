@@ -38,7 +38,7 @@ namespace L5Sharp.Core
             foreach (var member in members)
             {
                 if (_members.ContainsKey(member.Name))
-                    Throw.ComponentNameCollisionException(member.Name, typeof(Member));
+                    throw new ComponentNameCollisionException(member.Name, typeof(Member));
 
                 _members.Add(member.Name, member);
             }
@@ -64,7 +64,8 @@ namespace L5Sharp.Core
                     throw new ArgumentNullException(nameof(typeName), "DataType can not be null");
 
                 if (!RegisteredTypes.ContainsKey(typeName))
-                    throw new DataTypeNotFoundException($"Type '{typeName}' has not been defined");
+                    throw new InvalidOperationException(
+                        $"Type '{typeName}' has not been defined. Register dependent types before parent type");
 
                 var type = RegisteredTypes[typeName];
 

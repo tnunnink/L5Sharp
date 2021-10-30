@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using L5Sharp.Core;
 using L5Sharp.Enums;
+using L5Sharp.Exceptions;
 using L5Sharp.Utilities;
 
 namespace L5Sharp.Abstractions
@@ -77,7 +78,7 @@ namespace L5Sharp.Abstractions
             if (routine == null) return;
 
             if (_routines.ContainsKey(routine.Name))
-                Throw.ComponentNameCollisionException(routine.Name, typeof(IRoutine));
+                throw new ComponentNameCollisionException(routine.Name, typeof(IRoutine));
 
             _routines.Add(routine.Name, routine);
         }
@@ -117,7 +118,7 @@ namespace L5Sharp.Abstractions
             if (tag == null) throw new ArgumentNullException(nameof(tag), "Tag can not be null");
 
             if (_tags.ContainsKey(tag.Name))
-                Throw.ComponentNameCollisionException(tag.Name, typeof(ITag));
+                throw new ComponentNameCollisionException(tag.Name, typeof(ITag));
 
             _tags.Add(tag.Name, tag);
         }

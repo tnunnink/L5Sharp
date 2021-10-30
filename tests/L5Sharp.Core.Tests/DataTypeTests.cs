@@ -31,7 +31,7 @@ namespace L5Sharp.Core.Tests
         {
             var fixture = new Fixture();
             FluentActions.Invoking(() => new DataType(fixture.Create<string>())).Should()
-                .Throw<InvalidNameException>();
+                .Throw<ComponentNameInvalidException>();
         }
 
         [Test]
@@ -139,7 +139,7 @@ namespace L5Sharp.Core.Tests
             var description = fixture.Create<string>();
             var type = new DataType("Test", description);
 
-            FluentActions.Invoking(() => type.SetName("Not.Valid%01")).Should().Throw<InvalidNameException>();
+            FluentActions.Invoking(() => type.SetName("Not.Valid%01")).Should().Throw<ComponentNameInvalidException>();
         }
         
         [Test]
@@ -222,7 +222,7 @@ namespace L5Sharp.Core.Tests
             var type = new DataType("Test");
 
             FluentActions.Invoking(() => type.AddMember(fixture.Create<string>(), Predefined.Dint)).Should()
-                .Throw<InvalidNameException>();
+                .Throw<ComponentNameInvalidException>();
         }
 
         [Test]
