@@ -21,7 +21,7 @@ namespace L5Sharp.Utilities
         public static void DataTypeName(string name)
         {
             if (Predefined.Types.Any(t => t.Name == name))
-                Throw.PredefinedCollisionException(name);
+                throw new ComponentNameCollisionException(name, typeof(Predefined));
         }
 
         public static void Radix(Radix radix, IDataType type)

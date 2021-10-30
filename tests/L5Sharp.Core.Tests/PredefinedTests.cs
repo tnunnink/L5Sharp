@@ -217,9 +217,9 @@ namespace L5Sharp.Core.Tests
         }
 
         [Test]
-        public void New_PredefinedTypeName_ShouldThrowPredefinedCollisionException()
+        public void New_PredefinedTypeName_ShouldThrowComponentNameCollisionException()
         {
-            FluentActions.Invoking(() => new DataType("Undefined")).Should().Throw<PredefinedCollisionException>();
+            FluentActions.Invoking(() => new DataType("Undefined")).Should().Throw<ComponentNameCollisionException>();
         }
 
         [Test]
