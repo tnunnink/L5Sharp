@@ -5,14 +5,14 @@ using L5Sharp.Utilities;
 
 namespace L5Sharp.Abstractions
 {
-    public abstract class TagBase<TDataType> : TagMemberBase<TDataType>, ITag<TDataType> where TDataType : IDataType
+    public abstract class TagBase : TagMemberBase, ITag
     {
         private string _name;
         private ExternalAccess _externalAccess;
         private TagUsage _usage;
 
-        protected TagBase(string name, TDataType dataType, Dimensions dimensions, Radix radix,
-            ExternalAccess externalAccess, string description, IComponent parent, TagUsage usage, bool constant)
+        protected TagBase(string name, IDataType dataType, Dimensions dimensions, Radix radix,
+            ExternalAccess externalAccess, string description, TagUsage usage, bool constant, ILogixComponent parent)
             : base(name, dataType, dimensions, radix, externalAccess, description, parent)
         {
             Validate.Name(name);
@@ -69,23 +69,23 @@ namespace L5Sharp.Abstractions
             SetProperty(ref _usage, usage, nameof(Usage));
         }
 
-        public ITag<IDataType> ChangeDataType(IDataType dataType)
+        public ITag ChangeDataType(IDataType dataType)
         {
             if (dataType == null)
                 throw new ArgumentNullException(nameof(dataType), "Dimensions can not be null");
 
-            return new Tag(Name, dataType, Parent, Dimensions, Radix, ExternalAccess, Description, Usage, Constant);
+            return new Tag(Name, dataType, Dimensions, Radix, ExternalAccess, Description, Usage, Constant, Parent);
         }
 
-        public ITag<IDataType> ChangeDimensions(Dimensions dimensions)
+        public ITag ChangeDimensions(Dimensions dimensions)
         {
             if (dimensions == null)
                 throw new ArgumentNullException(nameof(dimensions), "Dimensions can not be null");
 
-            return new Tag(Name, DataType, Parent, dimensions, Radix, ExternalAccess, Description, Usage, Constant);
+            return new Tag(Name, DataType, dimensions, Radix, ExternalAccess, Description, Usage, Constant, Parent);
         }
 
-        public ITag<IDataType> ChangeTagType(TagType type)
+        public ITag ChangeTagType(TagType type)
         {
             return type.Create(Name, DataType);
         }

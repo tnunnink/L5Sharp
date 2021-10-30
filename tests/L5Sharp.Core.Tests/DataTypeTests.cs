@@ -266,7 +266,7 @@ namespace L5Sharp.Core.Tests
             member.Should().NotBeNull();
             member.Name.Should().Be("Member");
             member.DataType.Should().Be(Predefined.Dint);
-            member.Dimension.Should().Be(0);
+            member.Dimensions.Length.Should().Be(0);
             member.Description.Should().BeNull();
             member.Radix.Should().Be(Radix.Decimal);
             member.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);

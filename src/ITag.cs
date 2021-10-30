@@ -3,7 +3,7 @@ using L5Sharp.Enums;
 
 namespace L5Sharp
 {
-    public interface ITag : IComponent
+    public interface ITag : ITagMember
     {
         TagType TagType { get; }
         Scope Scope { get; }
@@ -11,13 +11,9 @@ namespace L5Sharp
         bool Constant { get; }
         void SetName(string name);
         void SetUsage(TagUsage usage);
-    }
-    
-    public interface ITag<out TDataType> : ITag, ITagMember<TDataType> where TDataType : IDataType
-    {
         void SetExternalAccess(ExternalAccess externalAccess);
-        ITag<IDataType> ChangeDataType(IDataType dataType);
-        ITag<IDataType> ChangeDimensions(Dimensions dimensions);
-        ITag<IDataType> ChangeTagType(TagType type);
+        ITag ChangeDataType(IDataType dataType);
+        ITag ChangeDimensions(Dimensions dimensions);
+        ITag ChangeTagType(TagType type);
     }
 }

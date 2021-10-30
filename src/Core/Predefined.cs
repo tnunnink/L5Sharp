@@ -70,7 +70,7 @@ namespace L5Sharp.Core
 
                 var name = e.GetName();
                 var description = e.GetDescription();
-                var dimension = e.GetValue<IMember>(m => m.Dimension);
+                var dimension = e.GetValue<IMember>(m => m.Dimensions);
                 var radix = e.GetValue<IMember>(m => m.Radix);
                 var access = e.GetValue<IMember>(m => m.ExternalAccess);
 
@@ -79,8 +79,8 @@ namespace L5Sharp.Core
                 _members.Add(member.Name, member);
             }
 
-            if (!RegisteredTypes.ContainsKey(element.GetName()))
-                RegisteredTypes.Add(element.GetName(), this);
+            if (!RegisteredTypes.ContainsKey(Name))
+                RegisteredTypes.Add(Name, this);
         }
 
         public static readonly Undefined Undefined = new Undefined();

@@ -3,7 +3,7 @@ using L5Sharp.Abstractions;
 
 namespace L5Sharp.Repositories
 {
-    public interface IReadOnlyRepository<out T> where T : IComponent
+    public interface IReadOnlyRepository<out T> where T : ILogixComponent
     {
         bool Exists(string name);
         T Get(string name);

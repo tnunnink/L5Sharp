@@ -6,21 +6,21 @@ using L5Sharp.Enums;
 
 namespace L5Sharp.Core
 {
-    public class Tag : TagBase<IDataType>
+    public class Tag : TagBase
     {
-        internal Tag(string name, IDataType dataType, IComponent parent = null, Dimensions dimensions = null,
-            Radix radix = null, ExternalAccess externalAccess = null, string description = null,
-            TagUsage usage = null, bool constant = false) : base(name, dataType, dimensions, radix, externalAccess,
-            description, parent, usage, constant)
+        internal Tag(string name, IDataType dataType, Dimensions dimensions = null, Radix radix = null,
+            ExternalAccess externalAccess = null, string description = null, TagUsage usage = null,
+            bool constant = false, ILogixComponent parent = null) : base(name, dataType, dimensions, radix, externalAccess,
+            description, usage, constant, parent)
         {
         }
 
         public override TagType TagType => TagType.Base;
     }
 
-    public class Tag<TDataType> : TagBase<TDataType> where TDataType : IDataType, new()
+    /*public class Tag<TDataType> : TagBase<TDataType> where TDataType : IDataType, new()
     {
-        internal Tag(string name, IComponent parent = null, Dimensions dimensions = null, Radix radix = null,
+        internal Tag(string name, ILogixComponent parent = null, Dimensions dimensions = null, Radix radix = null,
             ExternalAccess externalAccess = null, string description = null, TagUsage usage = null,
             bool constant = false)
             : base(name, new TDataType(), dimensions, radix, externalAccess, description, parent, usage, constant)
@@ -39,5 +39,5 @@ namespace L5Sharp.Core
         }
 
         public override TagType TagType => TagType.Base;
-    }
+    }*/
 }

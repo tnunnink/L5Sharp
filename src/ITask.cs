@@ -3,7 +3,7 @@ using L5Sharp.Enums;
 
 namespace L5Sharp
 {
-    public interface ITask : IComponent
+    public interface ITask : ILogixComponent
     {
         TaskType Type { get; }
         public byte Priority { get; }

@@ -6,7 +6,7 @@
         void Clear();
     }
     
-    internal interface IComponentCache<T> : IComponentCache where T : IComponent
+    internal interface IComponentCache<T> : IComponentCache where T : ILogixComponent
     {
         void Add(T component);
         T Get(string name);

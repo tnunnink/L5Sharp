@@ -312,7 +312,7 @@ namespace L5Sharp.Core.Tests
                 return new List<Member>
                 {
                     new("Member01", Bool),
-                    new("Member02", Bool),
+                    new("Member01", Bool),
                     new("Member03", Int)
                 };
             }

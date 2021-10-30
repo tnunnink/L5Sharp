@@ -1,6 +1,6 @@
 ﻿namespace L5Sharp
 {
-    public interface IMutableComponent
+    public interface IMutableLogixComponent
     {
         void SetName(string name);
         void SetDescription(string description);

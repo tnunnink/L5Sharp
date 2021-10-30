@@ -6,7 +6,7 @@ using L5Sharp.Utilities;
 
 namespace L5Sharp.Core
 {
-    public class Module : Component
+    public class Module : LogixComponent
     {
         private readonly Dictionary<int, Port> _ports = new Dictionary<int, Port>();
         private readonly Dictionary<string, Connection> _connections = new Dictionary<string, Connection>();

@@ -18,13 +18,6 @@ namespace L5Sharp.Core.Tests
         }
 
         [Test]
-        public void New_InvalidName_ShouldThrowInvalidNameException()
-        {
-            FluentActions.Invoking(() => new Member("$Invalid", Predefined.Dint)).Should()
-                .Throw<InvalidNameException>();
-        }
-
-        [Test]
         public void New_NullName_ShouldThrowArgumentNullException()
         {
             FluentActions.Invoking(() => new Member(null, Predefined.Dint)).Should()
@@ -47,7 +40,7 @@ namespace L5Sharp.Core.Tests
             member.Should().NotBeNull();
             member.Name.Should().Be("Member");
             member.DataType.Should().Be(Predefined.Real);
-            member.Dimension.Should().Be(35);
+            member.Dimensions.Length.Should().Be(35);
             member.Radix.Should().Be(Radix.General);
             member.ExternalAccess.Should().Be(ExternalAccess.ReadOnly);
             member.Description.Should().Be("Test");
@@ -78,9 +71,9 @@ namespace L5Sharp.Core.Tests
         {
             var member = new Member("Member", Predefined.Real);
 
-            var dimension = member.Dimension;
+            var dimension = member.Dimensions;
 
-            dimension.Should().Be(0);
+            dimension.Length.Should().Be(0);
         }
 
         [Test]

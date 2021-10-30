@@ -4,9 +4,9 @@ using L5Sharp.Enums;
 
 namespace L5Sharp.Core
 {
-    public sealed class TagMember<TDataType> : TagMemberBase<TDataType> where TDataType : IDataType
+    public sealed class TagMember : TagMemberBase
     {
-        private readonly ITagMember<IDataType> _parent;
+        private readonly ITagMember _parent;
         private readonly IMember _member;
         private string _description;
 
@@ -23,8 +23,8 @@ namespace L5Sharp.Core
         /// 3. The member's External Access is inherited from the parent/base tag
         /// 4. The member's Description (by default) is a concatenation of the parent and member description
         /// </remarks>
-        internal TagMember(ITagMember<IDataType> parent, IMember member) : base(member.Name, (TDataType)member.DataType,
-            member.Dimension, member.Radix, member.ExternalAccess, member.Description, parent)
+        internal TagMember(ITagMember parent, IMember member) : base(member.Name, member.DataType,
+            member.Dimensions, member.Radix, member.ExternalAccess, member.Description, parent)
         {
             _parent = parent ?? throw new ArgumentNullException(nameof(parent), "Parent can not be null");
             _member = member;

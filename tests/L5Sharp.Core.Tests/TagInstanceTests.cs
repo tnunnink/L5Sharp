@@ -24,7 +24,7 @@ namespace L5Sharp.Core.Tests
             var tag = new Tag("Test", Predefined.Timer);
 
             tag.Should().NotBeNull();
-            tag.Members.Should().HaveCount(2);
+            tag.Members.Should().HaveCount(5);
             tag.Members.Any(t => t.Name == "PRE").Should().BeTrue();
             tag.Members.Any(t => t.Name == "ACC").Should().BeTrue();
             tag.Members.Any(t => t.Name == "EN").Should().BeTrue();

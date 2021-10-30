@@ -4,7 +4,7 @@ using L5Sharp.Abstractions;
 
 namespace L5Sharp.Utilities
 {
-    internal class ComponentCache<T> : IComponentCache<T> where T : IComponent
+    internal class ComponentCache<T> : IComponentCache<T> where T : ILogixComponent
     {
         private readonly Dictionary<string, T> _cache = new Dictionary<string, T>(StringComparer.OrdinalIgnoreCase);
 

@@ -10,7 +10,7 @@ namespace L5Sharp.Core
         {
             Name = name ?? throw new ArgumentNullException(nameof(name), "Name can not be null");
             DataType = dataType ?? Predefined.Undefined;
-            Dimension = dimension ?? Dimensions.Empty;
+            Dimensions = dimension ?? Dimensions.Empty;
             Radix = !(DataType is IPredefined predefined) ? Radix.Null 
                 : radix == null ? predefined.DefaultRadix : radix;
             ExternalAccess = externalAccess == null ? ExternalAccess.ReadWrite : externalAccess;
@@ -19,7 +19,7 @@ namespace L5Sharp.Core
 
         public string Name { get; }
         public IDataType DataType { get; }
-        public Dimensions Dimension { get; }
+        public Dimensions Dimensions { get; }
         public Radix Radix { get; }
         public ExternalAccess ExternalAccess { get; }
         public string Description { get; }
@@ -28,7 +28,7 @@ namespace L5Sharp.Core
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return Name == other.Name && Equals(DataType, other.DataType) && Dimension == other.Dimension &&
+            return Name == other.Name && Equals(DataType, other.DataType) && Dimensions == other.Dimensions &&
                    Equals(Radix, other.Radix) && Equals(ExternalAccess, other.ExternalAccess) &&
                    Description == other.Description;
         }
@@ -42,7 +42,7 @@ namespace L5Sharp.Core
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(Name, DataType, Dimension, Radix, ExternalAccess, Description);
+            return HashCode.Combine(Name, DataType, Dimensions, Radix, ExternalAccess, Description);
         }
 
         public static bool operator ==(Member left, Member right)

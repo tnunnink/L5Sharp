@@ -4,7 +4,7 @@ using L5Sharp.Utilities;
 
 namespace L5Sharp.Repositories
 {
-    public class Repository<T> : ReadOnlyRepository<T>, IRepository<T> where T : IComponent
+    public class Repository<T> : ReadOnlyRepository<T>, IRepository<T> where T : ILogixComponent
     {
         protected Repository(LogixContext context) : base(context)
         {

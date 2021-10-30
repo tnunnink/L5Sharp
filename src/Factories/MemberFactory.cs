@@ -28,7 +28,7 @@ namespace L5Sharp.Factories
 
             var name = element.GetName();
             var description = element.GetDescription();
-            var dimensions = element.GetValue<IMember>(m => m.Dimension);
+            var dimensions = element.GetValue<IMember>(m => m.Dimensions);
             var radix = element.GetValue<IMember>(m => m.Radix);
             var access = element.GetValue<IMember>(m => m.ExternalAccess);
 

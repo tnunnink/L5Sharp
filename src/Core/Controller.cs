@@ -7,10 +7,10 @@ using L5Sharp.Utilities;
 
 namespace L5Sharp.Core
 {
-    public class Controller : Component, IController
+    public class Controller : LogixComponent, IController
     {
         private readonly Dictionary<string, IDataType> _dataTypes = new Dictionary<string, IDataType>();
-        private readonly Dictionary<string, ITag<IDataType>> _tags = new Dictionary<string, ITag<IDataType>>();
+        private readonly Dictionary<string, ITag> _tags = new Dictionary<string, ITag>();
         private readonly Dictionary<string, IProgram> _programs = new Dictionary<string, IProgram>();
         private readonly Dictionary<string, ITask> _tasks = new Dictionary<string, ITask>();
 
@@ -36,7 +36,7 @@ namespace L5Sharp.Core
         public DateTime LastModifiedDate { get; }
 
         public IEnumerable<IDataType> DataTypes => _dataTypes.Values.AsEnumerable();
-        public IEnumerable<ITag<IDataType>> Tags => _tags.Values.AsEnumerable();
+        public IEnumerable<ITag> Tags => _tags.Values.AsEnumerable();
         public IEnumerable<IProgram> Programs => _programs.Values.AsEnumerable();
         public IEnumerable<ITask> Tasks => _tasks.Values.AsEnumerable();
 
@@ -62,7 +62,7 @@ namespace L5Sharp.Core
             _dataTypes.Remove(dataType.Name);
         }
 
-        public void AddTag(ITag<IDataType> tag)
+        public void AddTag(ITag tag)
         {
             if (tag == null) throw new ArgumentNullException(nameof(tag));
 
@@ -72,7 +72,7 @@ namespace L5Sharp.Core
             _tags.Add(tag.Name, tag);
         }
 
-        public void RemoveTag(ITag<IDataType> tag)
+        public void RemoveTag(ITag tag)
         {
             if (tag == null) throw new ArgumentNullException(nameof(tag));
 

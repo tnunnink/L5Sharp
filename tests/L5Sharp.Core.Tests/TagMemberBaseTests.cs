@@ -4,10 +4,10 @@ using NUnit.Framework;
 
 namespace L5Sharp.Core.Tests
 {
-    public class TestTagMemberBase<TDataType> : TagMemberBase<TDataType> where TDataType : IDataType
+    public class TestTagMemberBase<TDataType> : TagMemberBase where TDataType : IDataType
     {
         public TestTagMemberBase(string name, TDataType dataType, Dimensions dimensions, Radix radix,
-            ExternalAccess externalAccess, string description, IComponent parent) : base(name, dataType, dimensions,
+            ExternalAccess externalAccess, string description, ILogixComponent parent) : base(name, dataType, dimensions,
             radix, externalAccess, description, parent)
         {
         }

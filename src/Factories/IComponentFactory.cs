@@ -7,7 +7,7 @@ namespace L5Sharp.Factories
         
     }
     
-    internal interface IComponentFactory<out T> : IComponentFactory where T : IComponent
+    internal interface IComponentFactory<out T> : IComponentFactory where T : ILogixComponent
     {
         T Create(XElement element);
     }

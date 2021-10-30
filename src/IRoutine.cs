@@ -2,7 +2,7 @@
 
 namespace L5Sharp
 {
-    public interface IRoutine : IComponent
+    public interface IRoutine : ILogixComponent
     {
         RoutineType Type { get; }
     }

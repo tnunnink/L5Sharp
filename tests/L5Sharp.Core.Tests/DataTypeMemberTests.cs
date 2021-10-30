@@ -7,7 +7,7 @@ using NUnit.Framework;
 namespace L5Sharp.Core.Tests
 {
     [TestFixture]
-    public class UserDefinedMemberTests
+    public class DataTypeMemberTests
     {
         [Test]
         public void New_ValidNameWithDataType_ShouldNotBeNull()
@@ -24,7 +24,7 @@ namespace L5Sharp.Core.Tests
 
             member.Name.Should().Be("Test");
             member.DataType.Should().Be(Predefined.Dint);
-            member.Dimension.Should().Be(0);
+            member.Dimensions.Length.Should().Be(0);
             member.Radix.Should().Be(Radix.Decimal);
             member.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);
             member.Description.Should().BeNull();
@@ -129,7 +129,7 @@ namespace L5Sharp.Core.Tests
 
             member.SetDimensions(new Dimensions(10));
 
-            member.Dimension.Should().Be(10);
+            member.Dimensions.Length.Should().Be(10);
         }
         
         [Test]
@@ -140,7 +140,7 @@ namespace L5Sharp.Core.Tests
 
             member.SetDimensions(new Dimensions(10));
 
-            monitor.Should().RaisePropertyChangeFor(m => m.Dimension);
+            monitor.Should().RaisePropertyChangeFor(m => m.Dimensions);
         }
 
         [Test]
@@ -172,7 +172,6 @@ namespace L5Sharp.Core.Tests
 
             FluentActions.Invoking(() => member.SetRadix(Radix.Float)).Should().Throw<RadixNotSupportedException>();
         }
-
 
         [Test]
         public void SetRadix_Null_ShouldThrowArgumentNullException()

@@ -8,7 +8,7 @@ namespace L5Sharp.Utilities
 {
     public static class LogixNames
     {
-        public static string GetComponentName<T>() where T : IComponent
+        public static string GetComponentName<T>() where T : ILogixComponent
         {
             var key = FindKey<T>();
             
@@ -18,7 +18,7 @@ namespace L5Sharp.Utilities
             return Components[key];
         }
 
-        public static string GetContainerName<T>() where T : IComponent
+        public static string GetContainerName<T>() where T : ILogixComponent
         {
             var key = FindKey<T>();
             
@@ -38,7 +38,7 @@ namespace L5Sharp.Utilities
             { typeof(IDataType), ComponentNames.DataType },
             { typeof(IMember), ComponentNames.Member },
             { typeof(Module), ComponentNames.Module },
-            { typeof(ITag<IDataType>), ComponentNames.Tag },
+            { typeof(ITag), ComponentNames.Tag },
             { typeof(IProgram), ComponentNames.Program },
             { typeof(ITask), ComponentNames.Task }
         };
@@ -47,7 +47,7 @@ namespace L5Sharp.Utilities
         {
             { typeof(IDataType), ContainerNames.DataTypes },
             { typeof(IMember), ContainerNames.Members },
-            { typeof(ITag<IDataType>), ContainerNames.Tags },
+            { typeof(ITag), ContainerNames.Tags },
             { typeof(IProgram), ContainerNames.Programs },
             { typeof(IRoutine), ContainerNames.Routines },
             { typeof(Rung), ContainerNames.Rungs },

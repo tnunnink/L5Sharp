@@ -1,6 +1,6 @@
 ﻿namespace L5Sharp
 {
-    public interface IComponent
+    public interface ILogixComponent
     {
         /// <summary>
         /// The name property of the Logix component

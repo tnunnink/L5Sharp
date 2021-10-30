@@ -4,10 +4,7 @@ using AutoFixture;
 using FluentAssertions;
 using L5Sharp.Enums;
 using L5Sharp.Exceptions;
-using L5Sharp.Extensions;
-using L5Sharp.Types;
 using NUnit.Framework;
-using String = L5Sharp.Types.String;
 
 namespace L5Sharp.Core.Tests
 {
@@ -59,7 +56,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void New_AllOverloads_ShouldHaveExpectedProperties()
         {
-            var tag = new Tag("Test", Predefined.Dint, null, new Dimensions(5), Radix.Ascii, ExternalAccess.ReadOnly,
+            var tag = new Tag("Test", Predefined.Dint, new Dimensions(5), Radix.Ascii, ExternalAccess.ReadOnly,
                 "This is a test tag", TagUsage.Input, true);
 
             tag.Should().NotBeNull();
@@ -114,7 +111,7 @@ namespace L5Sharp.Core.Tests
             var second = fixture.Create<ushort>();
             var length = first * second;
 
-            var tag = new Tag("Test", Predefined.Dint, null, new Dimensions(first, second));
+            var tag = new Tag("Test", Predefined.Dint, new Dimensions(first, second));
 
             tag.Dimensions.Length.Should().Be(length);
         }
@@ -122,7 +119,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void New_GenericTag_ShouldNotBeNull()
         {
-            var tag = new Tag<Bool>("Test");
+            var tag = new Tag("Test", Predefined.Bool);
             tag.Should().NotBeNull();
             tag.DataType.Should().Be(Predefined.Bool);
         }
@@ -195,7 +192,7 @@ namespace L5Sharp.Core.Tests
 
             tag.Description.Should().Be("This is a test description");
         }
-        
+
         [Test]
         public void ChangeDataType_Null_ShouldThrowArgumentNullException()
         {
@@ -229,7 +226,7 @@ namespace L5Sharp.Core.Tests
             result.ExternalAccess.Should().Be(ExternalAccess.ReadOnly);
             result.Description.Should().Be("This is a test");
         }
-        
+
         [Test]
         public void ChangeDimensions_Null_ShouldThrowArgumentNullException()
         {
@@ -251,8 +248,8 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void ChangeDimensions_ValidType_ShouldHaveExpectedProperties()
         {
-            var tag = new Tag("Test", Predefined.Bool, dimensions: new Dimensions(10), radix: Radix.Hex,
-                externalAccess: ExternalAccess.ReadOnly, description: "This is a test");
+            var tag = new Tag("Test", Predefined.Bool, new Dimensions(10), Radix.Hex, ExternalAccess.ReadOnly,
+                "This is a test");
 
             var result = tag.ChangeDimensions(new Dimensions(25));
 
@@ -267,7 +264,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void SetRadix_NullOnAtomic_ShouldThrowArgumentNullException()
         {
-            var tag = new Tag<Dint>("Test", dimensions: new Dimensions(3, 4));
+            var tag = new Tag("Test", Predefined.Dint, new Dimensions(3, 4));
 
             FluentActions.Invoking(() => tag.SetRadix(null)).Should().Throw<ArgumentNullException>();
         }
@@ -275,7 +272,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void SetRadix_ValidRadixOnAtomic_ShouldSetMembersRadix()
         {
-            var tag = new Tag<Dint>("Test", dimensions: new Dimensions(3, 4));
+            var tag = new Tag("Test", Predefined.Bool, new Dimensions(3, 4));
 
             tag.SetRadix(Radix.Ascii);
 
@@ -288,15 +285,15 @@ namespace L5Sharp.Core.Tests
         {
             var fixture = new Fixture();
             var value = fixture.Create<int>();
-            var tag = new Tag<Timer>("Test");
+            var tag = new Tag("Test", Predefined.Timer);
 
             FluentActions.Invoking(() => tag.SetValue(value)).Should().Throw<NotConfigurableException>();
         }
-        
+
         [Test]
         public void SetValue_Null_ShouldThrowInvalidTagValueException()
         {
-            var tag = new Tag<Int>("Test");
+            var tag = new Tag("Test", Predefined.Int);
 
             FluentActions.Invoking(() => tag.SetValue(null)).Should().Throw<InvalidTagValueException>();
         }
@@ -306,7 +303,7 @@ namespace L5Sharp.Core.Tests
         {
             var fixture = new Fixture();
             var expected = fixture.Create<long>();
-            var tag = new Tag<Int>("Test");
+            var tag = new Tag("Test", Predefined.Int);
 
             FluentActions.Invoking(() => tag.SetValue(expected)).Should().Throw<InvalidTagValueException>();
         }
@@ -316,19 +313,19 @@ namespace L5Sharp.Core.Tests
         {
             var fixture = new Fixture();
             var expected = fixture.Create<bool>();
-            var tag = new Tag<Bool>("Test");
+            var tag = new Tag("Test", Predefined.Bool);
 
             tag.SetValue(expected);
 
             tag.Value.Should().Be(expected);
         }
-        
+
         [Test]
         public void SetValue_IsValidSint_ShouldBeExpectedValue()
         {
             var fixture = new Fixture();
             var expected = fixture.Create<byte>();
-            var tag = new Tag<Sint>("Test");
+            var tag = new Tag("Test", Predefined.Sint);
 
             tag.SetValue(expected);
 
@@ -340,43 +337,43 @@ namespace L5Sharp.Core.Tests
         {
             var fixture = new Fixture();
             var expected = fixture.Create<short>();
-            var tag = new Tag<Int>("Test");
+            var tag = new Tag("Test", Predefined.Int);
 
             tag.SetValue(expected);
 
             tag.Value.Should().Be(expected);
         }
-        
+
         [Test]
         public void SetValue_IsValidDint_ShouldBeExpectedValue()
         {
             var fixture = new Fixture();
             var expected = fixture.Create<int>();
-            var tag = new Tag<Dint>("Test");
+            var tag = new Tag("Test", Predefined.Dint);
 
             tag.SetValue(expected);
 
             tag.Value.Should().Be(expected);
         }
-        
+
         [Test]
         public void SetValue_IsValidLint_ShouldBeExpectedValue()
         {
             var fixture = new Fixture();
             var expected = fixture.Create<long>();
-            var tag = new Tag<Lint>("Test");
+            var tag = new Tag("Test", Predefined.Lint);
 
             tag.SetValue(expected);
 
             tag.Value.Should().Be(expected);
         }
-        
+
         [Test]
         public void SetValue_IsValidReal_ShouldBeExpectedValue()
         {
             var fixture = new Fixture();
             var expected = fixture.Create<float>();
-            var tag = new Tag<Real>("Test");
+            var tag = new Tag("Test", Predefined.Real);
 
             tag.SetValue(expected);
 
@@ -387,40 +384,40 @@ namespace L5Sharp.Core.Tests
         public void SetExternalAccess_Null_ShouldThrowArgumentNullException()
         {
             var tag = new Tag("Test", Predefined.Int);
-            
+
             FluentActions.Invoking(() => tag.SetExternalAccess(null)).Should().Throw<ArgumentNullException>();
         }
-        
+
         [Test]
         public void SetExternalAccess_ValidType_ShouldBeExpectedType()
         {
             var tag = new Tag("Test", Predefined.Int);
-            
+
             tag.SetExternalAccess(ExternalAccess.ReadOnly);
 
             tag.ExternalAccess.Should().Be(ExternalAccess.ReadOnly);
         }
-        
+
         [Test]
         public void SetUsage_Null_ShouldThrowArgumentNullException()
         {
             var tag = new Tag("Test", Predefined.Int);
-            
+
             FluentActions.Invoking(() => tag.SetUsage(null)).Should().Throw<ArgumentNullException>();
         }
-        
+
         [Test]
         public void SetUsage_ValidTypeNonProgramTag_ShouldThrowNotConfigurableException()
         {
             var tag = new Tag("Test", Predefined.Int);
-            
+
             FluentActions.Invoking(() => tag.SetUsage(TagUsage.Output)).Should().Throw<NotConfigurableException>();
         }
-        
+
         [Test]
         public void SetUsage_ValidTypeProgramTag_ShouldThrowNotConfigurableException()
         {
-            var tag = new Tag("Test", Predefined.Int, new Program("Program"));
+            var tag = new Tag("Test", Predefined.Int, parent: new Program("Program"));
 
             tag.SetUsage(TagUsage.Output);
 
@@ -430,7 +427,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void ListMembers_WhenCalledHasNoMembers_ShouldBeEmpty()
         {
-            var tag = new Tag<Bool>("Test");
+            var tag = new Tag("Test", Predefined.Bool);
 
             var members = tag.GetMembersNames();
 
@@ -440,7 +437,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void ListMembers_WhenCalledHasMembers_ShouldNotBeEmpty()
         {
-            var tag = new Tag<Counter>("Test");
+            var tag = new Tag("Test", Predefined.Counter);
 
             var members = tag.GetMembersNames();
 
@@ -450,7 +447,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void GetMember_ValidNameHasMember_ShouldNotBeNull()
         {
-            var tag = new Tag<Timer>("Test");
+            var tag = new Tag("Test", Predefined.Timer);
 
             var member = tag.GetMember("PRE");
 
@@ -460,7 +457,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void GetMember_NullMemberHasMember_ShouldThrowArgumentNullException()
         {
-            var tag = new Tag<Timer>("Test");
+            var tag = new Tag("Test", Predefined.Timer);
 
             FluentActions.Invoking(() => tag.GetMember(null)).Should().Throw<ArgumentException>();
         }
@@ -468,7 +465,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void GetMember_InvalidMemberHasMember_MemberShouldBeNull()
         {
-            var tag = new Tag<Timer>("Test");
+            var tag = new Tag("Test", Predefined.Timer);
 
             var member = tag.GetMember("Invalid");
 
@@ -478,19 +475,9 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void ChangeTagType_ValidTypeBase_TagShouldNotBeNull()
         {
-            var tag = new Tag<Timer>("Test");
+            var tag = new Tag("Test", Predefined.Timer);
 
             var result = tag.ChangeTagType(TagType.Base);
-
-            result.Should().NotBeNull();
-        }
-
-        [Test]
-        public void ToType_WhenCalled_ShouldNotBeNull()
-        {
-            var tag = new Tag("Test", Predefined.String);
-
-            var result = tag.ToType<String>();
 
             result.Should().NotBeNull();
         }

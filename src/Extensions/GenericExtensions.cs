@@ -16,12 +16,12 @@ namespace L5Sharp.Extensions
             { typeof(DataType), new DataTypeSerializer() },
             { typeof(IMember), new MemberSerializer() },
             { typeof(DataTypeMember), new MemberSerializer() },
-            { typeof(ITag<IDataType>), new TagSerializer() },
+            { typeof(ITag), new TagSerializer() },
             { typeof(IProgram), new ProgramSerializer() },
             { typeof(ITask), new TaskSerializer() }
         };
         
-        public static XElement Serialize<T>(this T component) where T : IComponent
+        public static XElement Serialize<T>(this T component) where T : ILogixComponent
         {
             var type = typeof(T);
 
@@ -35,7 +35,7 @@ namespace L5Sharp.Extensions
         
         public static XAttribute ToAttribute<TComponent, TProperty>(this TComponent component,
             Expression<Func<TComponent, TProperty>> propertyExpression)
-            where TComponent : IComponent
+            where TComponent : ILogixComponent
         {
             if (!(propertyExpression.Body is MemberExpression memberExpression))
                 throw new InvalidOperationException();
@@ -48,7 +48,7 @@ namespace L5Sharp.Extensions
 
         public static XElement ToElement<TComponent, TProperty>(this TComponent component,
             Expression<Func<TComponent, TProperty>> propertyExpression, bool useCDataElement = true)
-            where TComponent : IComponent
+            where TComponent : ILogixComponent
         {
             if (!(propertyExpression.Body is MemberExpression memberExpression))
                 throw new InvalidOperationException();

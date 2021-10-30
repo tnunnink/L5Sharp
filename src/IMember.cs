@@ -3,7 +3,7 @@ using L5Sharp.Enums;
 
 namespace L5Sharp
 {
-    public interface IMember : IComponent
+    public interface IMember : ILogixComponent
     {
         /// <summary>
         /// The DataType of the member component.
@@ -13,7 +13,7 @@ namespace L5Sharp
         /// <summary>
         /// The Dimensions of the member component
         /// </summary>
-        Dimensions Dimension { get; }
+        Dimensions Dimensions { get; }
         
         /// <summary>
         /// This Radix(Style) of the member component.

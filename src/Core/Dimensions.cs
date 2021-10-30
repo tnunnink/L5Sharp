@@ -129,6 +129,16 @@ namespace L5Sharp.Core
         {
             return !Equals(left, right);
         }
+        
+        public static implicit operator Dimensions(ushort length)
+        {
+            return new Dimensions(length);
+        }
+        
+        public static implicit operator int(Dimensions dimensions)
+        {
+            return dimensions.Length;
+        }
 
         private static string GenerateIndex(ushort x)
         {

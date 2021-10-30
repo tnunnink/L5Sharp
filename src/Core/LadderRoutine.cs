@@ -6,7 +6,7 @@ using L5Sharp.Enums;
 
 namespace L5Sharp.Core
 {
-    public class LadderRoutine : Component, ILadderRoutine
+    public class LadderRoutine : LogixComponent, ILadderRoutine
     {
         private readonly List<IRung> _rungs = new List<IRung>();
 

@@ -3,12 +3,12 @@ using L5Sharp.Enums;
 
 namespace L5Sharp
 {
-    public interface IProgram : IComponent
+    public interface IProgram : ILogixComponent
     {
         ProgramType Type { get; }
         bool TestEdits { get; }
         bool Disabled { get; set; }
-        IEnumerable<ITag<IDataType>> Tags { get; }
+        IEnumerable<ITag> Tags { get; }
         IEnumerable<IRoutine> Routines { get; }
         bool HasRoutine(string name);
         bool HasRoutine(RoutineType type);
@@ -17,11 +17,8 @@ namespace L5Sharp
         IEnumerable<T> GetRoutines<T>() where T : IRoutine;
         void AddRoutine(string name, RoutineType type);
         void RemoveRoutine(string name);
-        ITag<IDataType> GetTag(string name);
-        ITag<TDataType> GetTag<TDataType>(string name) where TDataType : IDataType;
-        IEnumerable<TDataType> GetTags<TDataType>() where TDataType : IDataType;
+        ITag GetTag(string name);
         void AddTag(string name, IDataType dataType);
-        void AddTag<T>(string name) where T : IDataType, new();
         void RemoveTag(string name);
     }
 }

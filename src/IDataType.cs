@@ -3,7 +3,7 @@ using L5Sharp.Enums;
 
 namespace L5Sharp
 {
-    public interface IDataType : IComponent
+    public interface IDataType : ILogixComponent
     {
         public DataTypeFamily Family { get; }
         public DataTypeClass Class { get; }

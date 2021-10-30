@@ -64,7 +64,7 @@ namespace L5Sharp
                 cache.Value.Clear();
         }
 
-        internal IComponentCache<T> GetCache<T>() where T : IComponent
+        internal IComponentCache<T> GetCache<T>() where T : ILogixComponent
         {
             var type = _cache.Keys.FirstOrDefault(t => t.IsAssignableFrom(typeof(T)));
             
@@ -74,7 +74,7 @@ namespace L5Sharp
             return (IComponentCache<T>)_cache[type];
         }
 
-        internal IComponentFactory<T> GetFactory<T>() where T : IComponent
+        internal IComponentFactory<T> GetFactory<T>() where T : ILogixComponent
         {
             var type = _factories.Keys.FirstOrDefault(t => t.IsAssignableFrom(typeof(T)));
             
@@ -84,7 +84,7 @@ namespace L5Sharp
             return (IComponentFactory<T>)_factories[type];
         }
 
-        internal XElement GetContainer<T>() where T : IComponent
+        internal XElement GetContainer<T>() where T : ILogixComponent
         {
             var container = LogixNames.GetContainerName<T>();
             return _content.Descendants(container).FirstOrDefault();
@@ -93,7 +93,7 @@ namespace L5Sharp
         private void InitializeCache()
         {
             _cache.Add(typeof(IDataType), new ComponentCache<IDataType>());
-            _cache.Add(typeof(ITag<IDataType>), new ComponentCache<ITag<IDataType>>());
+            _cache.Add(typeof(ITag), new ComponentCache<ITag>());
         }
         
         private void InitializeFactories()
@@ -102,20 +102,20 @@ namespace L5Sharp
             _factories.Add(typeof(IMember), new MemberFactory(this));
         }
 
-        private static XDocument GenerateContent(IComponent component, Revision revision)
+        private static XDocument GenerateContent(ILogixComponent logixComponent, Revision revision)
         {
             var declaration = new XDeclaration("1.0", "UTF-8", "yes");
             var root = new XElement(RsLogix5000Content);
             root.Add(new XAttribute("SchemaRevision", "1.0"));
             root.Add(new XAttribute("SoftwareRevision", revision.ToString()));
-            root.Add(new XAttribute("TargetName", component.Name));
-            root.Add(new XAttribute("TargetType", component.GetType().Name));
-            root.Add(new XAttribute("ContainsContext", component.GetType() != typeof(IController)));
+            root.Add(new XAttribute("TargetName", logixComponent.Name));
+            root.Add(new XAttribute("TargetType", logixComponent.GetType().Name));
+            root.Add(new XAttribute("ContainsContext", logixComponent.GetType() != typeof(IController)));
             root.Add(new XAttribute("Owner", $"{Environment.UserName}, {Environment.UserDomainName}"));
             root.Add(new XAttribute("ExportDate", DateTime.Now));
             root.Add(new XAttribute("ExportOptions", ""));
 
-            if (component is IController) return new XDocument(declaration, root);
+            if (logixComponent is IController) return new XDocument(declaration, root);
 
             var controllerElement = new XElement(LogixNames.GetComponentName<IController>());
             //todo add other properties needed

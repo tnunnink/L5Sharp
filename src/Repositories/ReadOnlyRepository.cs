@@ -7,7 +7,7 @@ using L5Sharp.Factories;
 
 namespace L5Sharp.Repositories
 {
-    public class ReadOnlyRepository<T> : IReadOnlyRepository<T> where T : IComponent
+    public class ReadOnlyRepository<T> : IReadOnlyRepository<T> where T : ILogixComponent
     {
         protected readonly LogixContext Context;
         protected readonly XElement Container;

@@ -9,19 +9,15 @@ using L5Sharp.Utilities;
 
 namespace L5Sharp.Core
 {
-    public class DataType : NotificationBase, IUserDefined, IEquatable<DataType>
+    public class DataType : LogixComponent, IUserDefined, IEquatable<DataType>
     {
         private string _name;
-        private string _description;
         private readonly List<IDataTypeMember> _members = new List<IDataTypeMember>();
 
-        public DataType(string name, string description = null)
+        public DataType(string name, string description = null) : base (name, description)
         {
-            Validate.Name(name);
             Validate.DataTypeName(name);
-            
             _name = name;
-            _description = description;
         }
 
         public DataType(string name, DataTypeMember dataTypeMember, string description = null) 
@@ -37,9 +33,7 @@ namespace L5Sharp.Core
                 AddMemberComponent(member);
         }
 
-        public string Name => _name;
-
-        public string Description => _description;
+        public override string Name => _name;
 
         public DataTypeFamily Family => DataTypeFamily.None;
 
@@ -51,15 +45,11 @@ namespace L5Sharp.Core
 
         public IEnumerable<IMember> Members => _members.AsEnumerable();
 
-        public void SetName(string name)
+        public override void SetName(string name)
         {
+            Validate.Name(name);
             Validate.DataTypeName(name);
             SetProperty(ref _name, name, nameof(Name));
-        }
-
-        public void SetDescription(string description)
-        {
-            SetProperty(ref _description, description, nameof(Description));
         }
 
         public IDataTypeMember GetMember(string name) => GetMemberByName(name);

@@ -20,7 +20,7 @@ namespace L5Sharp.Core.Tests
         {
             var program = new Program("Test");
 
-            program.AddTag<Bool>("Test_Bool");
+            program.AddTag("Test_Bool", Predefined.Bool);
 
             program.Tags.Should().Contain(t => t.Name == "Test_Bool");
         }
@@ -29,9 +29,9 @@ namespace L5Sharp.Core.Tests
         public void GetTagTyped_AsCorrectType_ShouldNotBeNull()
         {
             var program = new Program("Test");
-            program.AddTag<Bool>("Test");
+            program.AddTag("Test", Predefined.Bool);
 
-            var tag = program.GetTag<Bool>("Test");
+            var tag = program.GetTag("Test");
 
             tag.Should().NotBeNull();
             tag.Name.Should().Be("Test");
@@ -43,7 +43,7 @@ namespace L5Sharp.Core.Tests
             var program = new Program("Test");
             program.AddTag("Test", Predefined.Dint);
 
-            var tag = program.GetTag<Dint>("Test");
+            var tag = program.GetTag("Test");
 
             tag.Should().NotBeNull();
             tag.Name.Should().Be("Test");

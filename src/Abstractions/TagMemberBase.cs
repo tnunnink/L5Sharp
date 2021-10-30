@@ -8,16 +8,16 @@ using L5Sharp.Utilities;
 
 namespace L5Sharp.Abstractions
 {
-    public abstract class TagMemberBase<TDataType> : NotificationBase, ITagMember<TDataType> where TDataType : IDataType
+    public abstract class TagMemberBase : NotificationBase, ITagMember
     {
         private string _description;
         private Radix _radix;
         private object _value;
-        private readonly Dictionary<string, ITagMember<IDataType>> _members =
-            new Dictionary<string, ITagMember<IDataType>>();
+        private readonly Dictionary<string, ITagMember> _members =
+            new Dictionary<string, ITagMember>();
 
-        protected TagMemberBase(string name, TDataType dataType, Dimensions dimensions, Radix radix,
-            ExternalAccess externalAccess, string description, IComponent parent)
+        protected TagMemberBase(string name, IDataType dataType, Dimensions dimensions, Radix radix,
+            ExternalAccess externalAccess, string description, ILogixComponent parent)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name), "Name can not be null");
             DataType = dataType ?? throw new ArgumentNullException(nameof(dataType), "DataType can not be null");
@@ -42,7 +42,7 @@ namespace L5Sharp.Abstractions
 
         public virtual string Name { get; }
 
-        public TDataType DataType { get; }
+        public IDataType DataType { get; }
 
         public Dimensions Dimensions { get; }
 
@@ -54,15 +54,15 @@ namespace L5Sharp.Abstractions
 
         public virtual object Value => _value;
 
-        public IEnumerable<ITagMember<IDataType>> Members => _members.Values.AsEnumerable();
+        public IEnumerable<ITagMember> Members => _members.Values.AsEnumerable();
 
-        public IComponent Parent { get; }
+        public ILogixComponent Parent { get; }
 
         public bool IsValueMember => DataType is IPredefined {IsAtomic: true} && Dimensions.Length == 0;
 
         public bool IsArrayMember => Dimensions.Length > 0;
 
-        public bool IsArrayElement => Parent is ITagMember<IDataType> { IsArrayMember: true };
+        public bool IsArrayElement => Parent is ITagMember { IsArrayMember: true };
 
         public bool IsStructureMember =>
             !(DataType is IPredefined { IsAtomic: true }) && !IsArrayMember && _members.Count > 0;
@@ -76,9 +76,9 @@ namespace L5Sharp.Abstractions
         {
             Validate.Radix(radix, DataType);
 
-            SetProperty(ref _radix, radix, nameof(Radix));
-
-            if (DataType.IsAtomic && _members.Count > 0)
+            var changed = SetProperty(ref _radix, radix, nameof(Radix));
+            
+            if (changed && DataType.IsAtomic && _members.Count > 0)
                 PropagateValue((m, r) => m.SetRadix(r), _radix);
         }
 
@@ -94,7 +94,7 @@ namespace L5Sharp.Abstractions
             SetProperty(ref _value, value, nameof(Value));
         }
 
-        public ITagMember<IDataType> GetMember(string name)
+        public ITagMember GetMember(string name)
         {
             _members.TryGetValue(name, out var member);
             return member;
@@ -102,10 +102,10 @@ namespace L5Sharp.Abstractions
 
         public IEnumerable<string> GetMembersNames()
         {
-            return GetMemberNames((ITagMember<IDataType>)this);
+            return GetMemberNames(this);
         }
 
-        internal void UpdateMembers(IEnumerable<ITagMember<IDataType>> tagMembers)
+        internal void UpdateMembers(IEnumerable<ITagMember> tagMembers)
         {
             foreach (var tagMember in tagMembers)
             {
@@ -128,7 +128,7 @@ namespace L5Sharp.Abstractions
 
         protected void InstantiateMembers()
         {
-            var members = GenerateMembers((ITagMember<IDataType>)this, DataType);
+            var members = GenerateMembers(this, DataType);
 
             _members.Clear();
 
@@ -136,27 +136,26 @@ namespace L5Sharp.Abstractions
                 _members.Add(member.Name, member);
         }
 
-        private static IEnumerable<ITagMember<IDataType>> GenerateMembers(ITagMember<IDataType> tagMember,
-            IDataType dataType)
+        private static IEnumerable<ITagMember> GenerateMembers(ITagMember tagMember, IDataType dataType)
         {
-            if (tagMember.IsValueMember) return Array.Empty<ITagMember<IDataType>>();
+            if (tagMember.IsValueMember) return Array.Empty<ITagMember>();
 
             if (tagMember.IsArrayMember)
                 return tagMember.Dimensions.GenerateIndices()
-                    .Select(i => new TagMember<IDataType>(tagMember,
+                    .Select(i => new TagMember(tagMember,
                         new Member(i, dataType, Dimensions.Empty, tagMember.Radix, tagMember.ExternalAccess,
                             tagMember.Description)));
 
-            return dataType.Members.Select(m => new TagMember<IDataType>(tagMember, m));
+            return dataType.Members.Select(m => new TagMember(tagMember, m));
         }
 
-        private void PropagateValue<TProperty>(Action<ITagMember<IDataType>, TProperty> setter, TProperty value)
+        private void PropagateValue<TProperty>(Action<ITagMember, TProperty> setter, TProperty value)
         {
             foreach (var tagMember in _members.Values)
                 setter.Invoke(tagMember, value);
         }
 
-        private static IEnumerable<string> GetMemberNames(ITagMember<IDataType> tagMember)
+        private static IEnumerable<string> GetMemberNames(ITagMember tagMember)
         {
             var names = new List<string>();
 
@@ -169,11 +168,11 @@ namespace L5Sharp.Abstractions
             return names;
         }
 
-        private static string GetName(IComponent member)
+        private static string GetName(ILogixComponent member)
         {
-            if (member is ITagMember<IDataType> tagMember)
+            if (member is ITagMember tagMember)
             {
-                return tagMember.Parent is ITagMember<IDataType> parentMember
+                return tagMember.Parent is ITagMember parentMember
                     ? parentMember.IsArrayElement
                         ? $"{GetName(tagMember.Parent)}{member.Name}"
                         : $"{GetName(tagMember.Parent)}.{member.Name}"
