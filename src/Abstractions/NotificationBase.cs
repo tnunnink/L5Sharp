@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
@@ -18,18 +17,6 @@ namespace L5Sharp.Abstractions
             RaisePropertyChanged(propertyName);
 
             return true;
-        }
-        
-        protected void SetProperty<T>(ref T storage, T value, Action<T> validate,
-            [CallerMemberName] string propertyName = null)
-        {
-            if (EqualityComparer<T>.Default.Equals(storage, value)) return;
-
-            validate?.Invoke(value);
-            
-            storage = value;
-
-            RaisePropertyChanged(propertyName);
         }
 
         protected void RaisePropertyChanged([CallerMemberName] string propertyName = null)

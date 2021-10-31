@@ -6,6 +6,7 @@ namespace L5Sharp
     {
         IEnumerable<IRung> Rungs { get; }
         void AddRung(int number, string description, string text);
+        void InsertRung(int number, string description, string text);
         void RemoveRung(int number);
     }
 }

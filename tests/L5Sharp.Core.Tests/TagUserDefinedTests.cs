@@ -21,7 +21,7 @@ namespace L5Sharp.Core.Tests
             var type = new DataType("Test", new DataTypeMember("Member01", Predefined.Dint));
             var tag = new Tag("TestTag", type);
 
-            type.AddMember("NewMember", Predefined.Bool);
+            type.Members.Add(new DataTypeMember("NewMember", Predefined.Bool));
 
             tag.Members.Should().HaveCount(2);
         }
@@ -31,10 +31,10 @@ namespace L5Sharp.Core.Tests
         {
             var type1 = new DataType("BaseType", new DataTypeMember("BaseMember", Predefined.Dint));
             var type2 = new DataType("SubType", new DataTypeMember("Member01", Predefined.Bool));
-            type1.AddMember("SubMember", type2);
+            type1.Members.Add(new DataTypeMember("SubMember", type2));
             var tag = new Tag("TestTag", type1);
 
-            type2.AddMember("NewMember", Predefined.Int);
+            type2.Members.Add(new DataTypeMember("NewMember", Predefined.Int));
 
             tag.Members.Should().HaveCount(2);
             var names = tag.GetMembersNames();

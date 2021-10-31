@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using AutoFixture;
 using FluentAssertions;
+using L5Sharp.Configurations;
 using L5Sharp.Enums;
 using L5Sharp.Exceptions;
 using NUnit.Framework;
@@ -18,7 +19,7 @@ namespace L5Sharp.Core.Tests
             FluentActions.Invoking(() => new DataType(string.Empty)).Should()
                 .Throw<ArgumentException>();
         }
-        
+
         [Test]
         public void New_EmptyName_ShouldThrowArgumentNullException()
         {
@@ -70,7 +71,7 @@ namespace L5Sharp.Core.Tests
             type.Members.Should().HaveCount(1);
             type.Members.Should().Contain(member);
         }
-        
+
         [Test]
         public void New_MembersOverload_ShouldBeExpected()
         {
@@ -93,7 +94,7 @@ namespace L5Sharp.Core.Tests
             type.Members.Should().HaveCount(2);
             type.Members.Should().BeEquivalentTo(members);
         }
-        
+
         [Test]
         public void New_MembersOverloadTen_ShouldBeExpected()
         {
@@ -141,7 +142,7 @@ namespace L5Sharp.Core.Tests
 
             FluentActions.Invoking(() => type.SetName("Not.Valid%01")).Should().Throw<ComponentNameInvalidException>();
         }
-        
+
         [Test]
         public void Name_SetValueNull_ShouldThrowInvalidTagNameException()
         {
@@ -172,17 +173,16 @@ namespace L5Sharp.Core.Tests
 
             type.Description.Should().BeNull();
         }
-        
+
         [Test]
-        public void GetMember_ValidName_ShouldNotBeNull()
+        public void GetMember_ValidName_ShouldBeExpectedMember()
         {
             var member = new DataTypeMember("Member", Predefined.Bool);
             var type = new DataType("Test", member);
 
-            var result = type.GetMember("Member");
+            var result = type.Members.Get("Member");
 
-            result.Should().NotBeNull();
-            result.Name.Should().Be("Member");
+            result.Should().Be(member);
         }
 
         [Test]
@@ -191,7 +191,9 @@ namespace L5Sharp.Core.Tests
             var member = new DataTypeMember("Member", Predefined.Bool);
             var type = new DataType("Test", member);
 
-            FluentActions.Invoking(() => type.GetMember(null)).Should().Throw<ArgumentNullException>();
+            var result = type.Members.Get((string)null);
+
+            result.Should().BeNull();
         }
 
         [Test]
@@ -200,7 +202,7 @@ namespace L5Sharp.Core.Tests
             var member = new DataTypeMember("Member", Predefined.Bool);
             var type = new DataType("Test", member);
 
-            var result = type.GetMember("MemberName");
+            var result = type.Members.Get("MemberName");
 
             result.Should().BeNull();
         }
@@ -211,7 +213,7 @@ namespace L5Sharp.Core.Tests
             var member = new DataTypeMember("Member", Predefined.Dint);
             var type = new DataType("Test", member);
 
-            FluentActions.Invoking(() => type.AddMember("Member", Predefined.Int)).Should()
+            FluentActions.Invoking(() => type.Members.Add(new DataTypeMember("Member", Predefined.Int))).Should()
                 .Throw<ComponentNameCollisionException>();
         }
 
@@ -221,8 +223,9 @@ namespace L5Sharp.Core.Tests
             var fixture = new Fixture();
             var type = new DataType("Test");
 
-            FluentActions.Invoking(() => type.AddMember(fixture.Create<string>(), Predefined.Dint)).Should()
-                .Throw<ComponentNameInvalidException>();
+            FluentActions
+                .Invoking(() => type.Members.Add(new DataTypeMember(fixture.Create<string>(), Predefined.Dint)))
+                .Should().Throw<ComponentNameInvalidException>();
         }
 
         [Test]
@@ -230,8 +233,8 @@ namespace L5Sharp.Core.Tests
         {
             var type = new DataType("Test");
 
-            FluentActions.Invoking(() => type.AddMember(null, Predefined.Dint)).Should()
-                .Throw<ArgumentException>();
+            FluentActions.Invoking(() => type.Members.Add(new DataTypeMember(null, Predefined.Dint)))
+                .Should().Throw<ArgumentException>();
         }
 
         [Test]
@@ -239,9 +242,9 @@ namespace L5Sharp.Core.Tests
         {
             var type = new DataType("Test");
 
-            type.AddMember("Member", null);
+            type.Members.Add(new DataTypeMember("Member", null));
 
-            var member = type.GetMember("Member");
+            var member = type.Members.Get("Member");
             member.DataType.Should().Be(Predefined.Undefined);
         }
 
@@ -250,8 +253,9 @@ namespace L5Sharp.Core.Tests
         {
             var type = new DataType("Test");
 
-            FluentActions.Invoking(() => type.AddMember("Member", Predefined.Int, radix: Radix.Float)).Should()
-                .Throw<RadixNotSupportedException>();
+            FluentActions
+                .Invoking(() => type.Members.Add(new DataTypeMember("Member", Predefined.Int, radix: Radix.Float)))
+                .Should().Throw<RadixNotSupportedException>();
         }
 
         [Test]
@@ -259,10 +263,10 @@ namespace L5Sharp.Core.Tests
         {
             var type = new DataType("Test");
 
-            type.AddMember("Member", Predefined.Dint);
+            type.Members.Add(new DataTypeMember("Member", Predefined.Dint));
 
             type.Members.Should().HaveCount(1);
-            var member = type.GetMember("Member");
+            var member = type.Members.Get("Member");
             member.Should().NotBeNull();
             member.Name.Should().Be("Member");
             member.DataType.Should().Be(Predefined.Dint);
@@ -273,22 +277,11 @@ namespace L5Sharp.Core.Tests
         }
 
         [Test]
-        public void AddMember_BooleanMember_ShouldRaisePropertyChanged()
-        {
-            var type = new DataType("Test");
-            var monitor = type.Monitor(); 
-            
-            type.AddMember("Member", Predefined.Bool);
-
-            monitor.Should().RaisePropertyChangeFor(m => m.Members);
-        }
-        
-        [Test]
         public void AddMember_BooleanMember_ShouldHaveBackingMember()
         {
             var type = new DataType("Test");
-            
-            type.AddMember("Member", Predefined.Bool);
+
+            type.Members.Add(new DataTypeMember("Member", Predefined.Bool));
 
             type.Members.Should().HaveCount(1);
         }
@@ -299,21 +292,9 @@ namespace L5Sharp.Core.Tests
             var member = new DataTypeMember("Member", Predefined.Dint);
             var type = new DataType("Test", member);
 
-            type.RemoveMember("Member");
+            type.Members.Remove("Member");
 
             type.Members.Should().BeEmpty();
-        }
-        
-        [Test]
-        public void RemoveMember_ExistingMember_ShouldRaisePropertyChanged()
-        {
-            var member = new DataTypeMember("Member", Predefined.Dint);
-            var type = new DataType("Test", member);
-            var monitor = type.Monitor(); 
-            
-            type.RemoveMember("Member");
-
-            monitor.Should().RaisePropertyChangeFor(m => m.Members);
         }
 
         [Test]
@@ -322,7 +303,7 @@ namespace L5Sharp.Core.Tests
             var member = new DataTypeMember("Member", Predefined.Dint);
             var type = new DataType("Test", member);
 
-            type.RemoveMember("Test");
+            type.Members.Remove("Test");
 
             type.Members.Should().HaveCount(1);
         }
@@ -331,16 +312,16 @@ namespace L5Sharp.Core.Tests
         public void GetDependentTypes_ComplexType_ShouldContainExpectedTypes()
         {
             var type = new DataType("Type01");
-            type.AddMember("Member01", Predefined.Bool);
-            type.AddMember("Member02", Predefined.Counter);
-            type.AddMember("Member03", Predefined.Dint);
-            type.AddMember("Member04", Predefined.String);
+            type.Members.Add(new DataTypeMember("Member01", Predefined.Bool));
+            type.Members.Add(new DataTypeMember("Member02", Predefined.Counter));
+            type.Members.Add(new DataTypeMember("Member03", Predefined.Dint));
+            type.Members.Add(new DataTypeMember("Member04", Predefined.String));
             var dependentUserType = new DataType("Type02");
-            dependentUserType.AddMember("Member01", Predefined.Bool);
-            dependentUserType.AddMember("Member02", Predefined.Dint);
-            dependentUserType.AddMember("Member03", Predefined.String);
-            dependentUserType.AddMember("Member04", Predefined.Timer);
-            type.AddMember("Member05", dependentUserType);
+            dependentUserType.Members.Add(new DataTypeMember("Member01", Predefined.Bool));
+            dependentUserType.Members.Add(new DataTypeMember("Member02", Predefined.Dint));
+            dependentUserType.Members.Add(new DataTypeMember("Member03", Predefined.String));
+            dependentUserType.Members.Add(new DataTypeMember("Member04", Predefined.Timer));
+            type.Members.Add(new DataTypeMember("Member05", dependentUserType));
 
             var dependents = type.GetDependentTypes().ToList();
 
@@ -352,21 +333,21 @@ namespace L5Sharp.Core.Tests
             dependents.Should().Contain(Predefined.Timer);
             dependents.Should().Contain(dependentUserType);
         }
-        
+
         [Test]
         public void GetDependentUserTypes_ComplexType_ShouldContainExpectedTypes()
         {
             var type = new DataType("Type01");
-            type.AddMember("Member01", Predefined.Bool);
-            type.AddMember("Member02", Predefined.Counter);
-            type.AddMember("Member03", Predefined.Dint);
-            type.AddMember("Member04", Predefined.String);
+            type.Members.Add(new DataTypeMember("Member01", Predefined.Bool));
+            type.Members.Add(new DataTypeMember("Member02", Predefined.Counter));
+            type.Members.Add(new DataTypeMember("Member03", Predefined.Dint));
+            type.Members.Add(new DataTypeMember("Member04", Predefined.String));
             var dependentUserType = new DataType("Type02");
-            dependentUserType.AddMember("Member01", Predefined.Bool);
-            dependentUserType.AddMember("Member02", Predefined.Dint);
-            dependentUserType.AddMember("Member03", Predefined.String);
-            dependentUserType.AddMember("Member04", Predefined.Timer);
-            type.AddMember("Member05", dependentUserType);
+            dependentUserType.Members.Add(new DataTypeMember("Member01", Predefined.Bool));
+            dependentUserType.Members.Add(new DataTypeMember("Member02", Predefined.Dint));
+            dependentUserType.Members.Add(new DataTypeMember("Member03", Predefined.String));
+            dependentUserType.Members.Add(new DataTypeMember("Member04", Predefined.Timer));
+            type.Members.Add(new DataTypeMember("Member05", dependentUserType));
 
             var dependents = type.GetDependentUserTypes().ToList();
 
@@ -374,41 +355,26 @@ namespace L5Sharp.Core.Tests
             dependents.Should().HaveCount(1);
             dependents.Should().Contain(dependentUserType);
         }
-        
-        [Test]
-        public void UpdatingMember_Name_ShouldGetMemberByNewName()
-        {
-            var type = new DataType("Test", new DataTypeMember("Member", Predefined.Dint));
-            
-            var sut = type.GetMember("Member");
-            sut.SetName("NewName");
 
-            var result = type.GetMember("NewName");
+        [Test]
+        public void TypeEquals_Equal_ShouldBeTrue()
+        {
+        }
+
+        [Test]
+        public void AddMember_Configuration_ShouldHaveExpectedMember()
+        {
+            var type = new DataType("Test");
+
+            type.Members.Add("Test",
+                c => c.HasDataType(Predefined.Alarm)
+                    .HasAccess(ExternalAccess.ReadOnly));
+
+            var result = type.Members.Get("Test");
+
             result.Should().NotBeNull();
-        }
-
-        [Test]
-        public void UpdatingMember_Name_ShouldRaisePropertyChanged()
-        {
-            var type = new DataType("Test", new DataTypeMember("Member", Predefined.Dint));
-            var monitor = type.Monitor(); 
-            
-            var member = (DataTypeMember) type.GetMember("Member");
-            member.SetName("NewName");
-
-            monitor.Should().RaisePropertyChangeFor(m => m.Members);
-        }
-
-        [Test]
-        public void UpdatingMember_DataType_ShouldRaisePropertyChanged()
-        {
-            var type = new DataType("Test", new DataTypeMember("Member", Predefined.Dint));
-            var monitor = type.Monitor(); 
-            
-            var member = (IDataTypeMember) type.GetMember("Member");
-            member.SetDataType(Predefined.Alarm);
-
-            monitor.Should().RaisePropertyChangeFor(m => m.Members);
+            result.DataType.Should().Be(Predefined.Alarm);
+            result.ExternalAccess.Should().Be(ExternalAccess.ReadOnly);
         }
     }
 }

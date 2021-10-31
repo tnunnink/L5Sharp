@@ -1,19 +1,11 @@
 ﻿using System;
 using AutoFixture;
 using FluentAssertions;
-using L5Sharp.Abstractions;
 using L5Sharp.Exceptions;
 using NUnit.Framework;
 
-namespace L5Sharp.Core.Tests
+namespace L5Sharp.Abstractions.Tests
 {
-    internal class TestLogixComponent : LogixComponent
-    {
-        public TestLogixComponent(string name, string description) : base(name, description)
-        {
-        }
-    }
-
     [TestFixture]
     public class LogixComponentTests
     {

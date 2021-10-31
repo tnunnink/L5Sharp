@@ -73,12 +73,12 @@ namespace L5Sharp.Core.Tests
         {
             var controller = new Controller("Test");
             var datatype = new DataType("TestType");
-            datatype.AddMember("Test", Predefined.Bool);
+            datatype.Members.Add(new DataTypeMember("Test", Predefined.Bool));
             controller.AddDataType(datatype);
 
             var type = (IUserDefined) controller.DataTypes.First();
             
-            var member = type.GetMember("Test");
+            var member = type.Members.Get("Test");
             member.SetDataType(Predefined.Dint);
 
             member.DataType.Should().Be(Predefined.Dint);

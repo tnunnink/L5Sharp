@@ -23,6 +23,13 @@ namespace L5Sharp.Utilities
             if (Predefined.Types.Any(t => t.Name == name))
                 throw new ComponentNameCollisionException(name, typeof(Predefined));
         }
+        
+        public static void MemberDataType(IMember member, IDataType dataType)
+        {
+            if (member.DataType.Equals(dataType))
+                throw new CircularReferenceException(
+                    $"Member can not be same type as parent type '{member.DataType.Name}'");
+        }
 
         public static void Radix(Radix radix, IDataType type)
         {

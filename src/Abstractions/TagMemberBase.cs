@@ -33,8 +33,6 @@ namespace L5Sharp.Abstractions
 
             if (dataType is IPredefined p)
                 _value = p.DefaultValue;
-            
-            RegisterType();
         }
 
         public virtual string FullName => Parent == null ? Name
@@ -181,18 +179,6 @@ namespace L5Sharp.Abstractions
             }
 
             return member.Name;
-        }
-
-        private void RegisterType()
-        {
-            if (!(DataType is DataType userDefined)) return;
-            userDefined.PropertyChanged -= OnDataTypePropertyChanged;
-            userDefined.PropertyChanged += OnDataTypePropertyChanged;
-        }
-
-        private void OnDataTypePropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
-        {
-            InstantiateMembers();
         }
     }
 }

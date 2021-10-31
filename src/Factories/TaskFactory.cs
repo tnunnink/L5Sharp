@@ -4,6 +4,7 @@ using System.Runtime.CompilerServices;
 using System.Xml.Linq;
 using L5Sharp.Abstractions;
 using L5Sharp.Core;
+using L5Sharp.Enums;
 using L5Sharp.Extensions;
 
 [assembly: InternalsVisibleTo("L5Sharp.Factories.Tests")]
@@ -30,22 +31,18 @@ namespace L5Sharp.Factories
                 return _cache.Get(name);
             
             var type = element.GetValue<ITask>(t => t.Type);
-            var description = element.GetDescription();
             var priority = element.GetValue<ITask>(t => t.Priority);
+            var rate = element.GetValue<ITask>(t => t.Rate);
             var watchdog = element.GetValue<ITask>(t => t.Watchdog);
             var inhibitTask = element.GetValue<ITask>(t => t.InhibitTask);
             var disableUpdateOutputs = element.GetValue<ITask>(t => t.DisableUpdateOutputs);
-            
-            var task = type.Create(name, description, priority, watchdog, inhibitTask, disableUpdateOutputs);
+            var description = element.GetDescription();
 
-            if (task is PeriodicTask periodicTask)
+            var task = new Task(name, type, priority, rate, watchdog, inhibitTask, disableUpdateOutputs, description);
+
+            if (type.Equals(TaskType.Event))
             {
-                periodicTask.Rate = element.GetValue<PeriodicTask>(t => t.Rate);
-            }
-            
-            if (task is EventTask eventTask)
-            {
-                eventTask.Rate = element.GetValue<PeriodicTask>(t => t.Rate);
+                //task.EventTrigger = element.GetValue<ITask>(t => t.EventTrigger);
             }
 
             var programs = element.Descendants("ScheduledProgram").Select(e => e.GetName());

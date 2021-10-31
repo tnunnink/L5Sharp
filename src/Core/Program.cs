@@ -9,16 +9,14 @@ namespace L5Sharp.Core
             string faultRoutineName = null, bool useAsFolder = false, bool testEdits = false, bool disabled = false)
             : base(name, description, testEdits, disabled)
         {
-            Disabled = disabled;
             MainRoutineName = mainRoutineName;
             FaultRoutineName = faultRoutineName;
             UseAsFolder = useAsFolder;
-            TestEdits = testEdits;
         }
 
         public override ProgramType Type => ProgramType.Normal;
         public bool UseAsFolder { get; }
-        public string MainRoutineName { get; set; }
-        public string FaultRoutineName { get; set; }
+        public string MainRoutineName { get; }
+        public string FaultRoutineName { get; }
     }
 }

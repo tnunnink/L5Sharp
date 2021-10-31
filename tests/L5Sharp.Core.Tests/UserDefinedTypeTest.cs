@@ -11,8 +11,9 @@ namespace L5Sharp.Core.Tests
     {
         public UserDefinedTypeTest() : base(nameof(UserDefinedTypeTest), "My Type description")
         {
-            AddMember(nameof(MyMember01), Predefined.Bool, "This is a test member");
-            AddMember(nameof(MyMember02), Predefined.Dint, "This is a test member array", new Dimensions(5), Radix.Ascii);
+            Members.Add(new DataTypeMember(nameof(MyMember01), Predefined.Bool, description: "This is a test member"));
+            Members.Add(new DataTypeMember(nameof(MyMember02), Predefined.Dint, new Dimensions(5), Radix.Ascii,
+                description: "This is a test member array"));
         }
 
         public IMember MyMember01 => Members.SingleOrDefault(m => m.Name == nameof(MyMember01));

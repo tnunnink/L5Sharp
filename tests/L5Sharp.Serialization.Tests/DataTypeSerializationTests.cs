@@ -36,12 +36,12 @@ namespace L5Sharp.Serialization.Tests
         public void Serialize_WithMembers_ShouldHaveApprovedOutput()
         {
             var type = new DataType("TypeName", "Description of the type");
-            type.AddMember("Member_Bool", Predefined.Bool);
-            type.AddMember("Member_Sint", Predefined.Sint);
-            type.AddMember("Member_Int", Predefined.Int);
-            type.AddMember("Member_Dint", Predefined.Dint);
-            type.AddMember("Member_Lint", Predefined.Lint);
-            type.AddMember("Member_Real", Predefined.Real);
+            type.Members.Add(new DataTypeMember("Member_Bool", Predefined.Bool));
+            type.Members.Add(new DataTypeMember("Member_Sint", Predefined.Sint));
+            type.Members.Add(new DataTypeMember("Member_Int", Predefined.Int));
+            type.Members.Add(new DataTypeMember("Member_Dint", Predefined.Dint));
+            type.Members.Add(new DataTypeMember("Member_Lint", Predefined.Lint));
+            type.Members.Add(new DataTypeMember("Member_Real", Predefined.Real));
             
             var element = type.Serialize();
 

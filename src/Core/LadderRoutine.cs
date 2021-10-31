@@ -23,6 +23,11 @@ namespace L5Sharp.Core
             AddRungComponent(rung);
         }
 
+        public void InsertRung(int number, string description, string text)
+        {
+            throw new NotImplementedException();
+        }
+
         public void RemoveRung(int number)
         {
             throw new NotImplementedException();

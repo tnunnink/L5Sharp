@@ -8,7 +8,7 @@ namespace L5Sharp.Core
 {
     public class Tag : TagBase
     {
-        internal Tag(string name, IDataType dataType, Dimensions dimensions = null, Radix radix = null,
+        public Tag(string name, IDataType dataType, Dimensions dimensions = null, Radix radix = null,
             ExternalAccess externalAccess = null, string description = null, TagUsage usage = null,
             bool constant = false, ILogixComponent parent = null) : base(name, dataType, dimensions, radix, externalAccess,
             description, usage, constant, parent)

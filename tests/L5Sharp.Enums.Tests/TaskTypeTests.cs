@@ -31,7 +31,7 @@ namespace L5Sharp.Enums.Tests
             type.Should().NotBeNull();
         }
         
-        [Test]
+        /*[Test]
         public void Create_ValidNameContinuous_ShouldNotBeNull()
         {
             var type = TaskType.Continuous;
@@ -59,30 +59,6 @@ namespace L5Sharp.Enums.Tests
             var task = type.Create("Test"); 
 
             task.Should().NotBeNull();
-        }
-
-        [Test]
-        public void CreateGeneric_ValidNameContinuous_ShouldNotBeNull()
-        {
-            var type = TaskType.Create<ContinuousTask>("Test");
-
-            type.Should().NotBeNull();
-        }
-        
-        [Test]
-        public void CreateGeneric_ValidNamePeriodic_ShouldNotBeNull()
-        {
-            var type = TaskType.Create<PeriodicTask>("Test");
-
-            type.Should().NotBeNull();
-        }
-        
-        [Test]
-        public void CreateGeneric_ValidNameEvent_ShouldNotBeNull()
-        {
-            var type = TaskType.Create<EventTask>("Test");
-            
-            type.Should().NotBeNull();
-        }
+        }*/
     }
 }

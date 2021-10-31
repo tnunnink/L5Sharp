@@ -18,10 +18,7 @@ namespace L5Sharp.Serialization
             element.Add(component.ToAttribute(c => c.Name));
             element.Add(component.ToAttribute(c => c.Type));
             element.Add(component.ToAttribute(c => c.Priority));
-
-            if (component is PeriodicTask periodicTask)
-                element.Add(periodicTask.ToAttribute(c => c.Rate));
-
+            element.Add(component.ToAttribute(c => c.Rate));
             element.Add(component.ToAttribute(c => c.Watchdog));
             element.Add(component.ToAttribute(c => c.InhibitTask));
             element.Add(component.ToAttribute(c => c.DisableUpdateOutputs));

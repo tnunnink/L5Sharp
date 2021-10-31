@@ -4,7 +4,7 @@ namespace L5Sharp.Enums
 {
     public class TaskTrigger : SmartEnum<TaskTrigger>
     {
-        public TaskTrigger(string name, int value) : base(name, value)
+        private TaskTrigger(string name, int value) : base(name, value)
         {
         }
 
