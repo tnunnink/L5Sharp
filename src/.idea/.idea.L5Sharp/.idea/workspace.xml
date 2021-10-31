@@ -8,40 +8,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="development">
-      <change afterPath="$PROJECT_DIR$/Configurations/DataTypeConfiguration.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Configurations/IDataTypeConfiguration.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Configurations/ITaskConfiguration.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Configurations/TaskConfiguration.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/DataTypes.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/Tasks.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/IDataTypes.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ITasks.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Configurations.Tests/DataTypeMemberConfigurationTests.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Configurations.Tests/L5Sharp.Configurations.Tests.csproj" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/BasicComponentTests.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Configurations/IProgramConfiguration.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Configurations/IRoutineConfiguration.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Configurations/ITagConfiguration.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Configurations/TagConfiguration.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/Tags.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/IPrograms.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ITags.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Abstractions/ComponentCollection.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Abstractions/ComponentCollection.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Abstractions/LogixComponent.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Abstractions/LogixComponent.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Abstractions/NotificationBase.cs" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Abstractions/ProgramBase.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Abstractions/ProgramBase.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Abstractions/TagBase.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Abstractions/TagBase.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Abstractions/TagMemberBase.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Abstractions/TagMemberBase.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Annotations.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Configurations/DataTypeMemberConfiguration.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Configurations/DataTypeMemberConfiguration.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Configurations/IComponentConfiguration.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Configurations/IComponentConfiguration.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Configurations/IDataTypeMemberConfiguration.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Configurations/IDataTypeMemberConfiguration.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/Controller.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/Controller.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/DataType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/DataType.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/DataTypeMember.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/DataTypeMember.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/DataTypeMembers.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/DataTypeMembers.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/TagMember.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/TagMember.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/IComponentCollection.cs" beforeDir="false" afterPath="$PROJECT_DIR$/IComponentCollection.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/IController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/IController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.sln" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.sln" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Abstractions.Tests/NotificationBaseTests.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/ControllerTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/ControllerTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/DataTypeTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/DataTypeTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/TagUserDefinedTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/TagUserDefinedTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/IProgram.cs" beforeDir="false" afterPath="$PROJECT_DIR$/IProgram.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/IRung.cs" beforeDir="false" afterPath="$PROJECT_DIR$/IRung.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -147,7 +125,7 @@
       <workItem from="1634948427192" duration="33209000" />
       <workItem from="1635211056150" duration="5634000" />
       <workItem from="1635371728413" duration="1649000" />
-      <workItem from="1635464435952" duration="78796000" />
+      <workItem from="1635464435952" duration="82591000" />
     </task>
     <task id="LOCAL-00001" summary="renaming">
       <created>1632580540996</created>
@@ -415,55 +393,62 @@
       <option name="project" value="LOCAL" />
       <updated>1635694902797</updated>
     </task>
-    <option name="localTasksCounter" value="39" />
+    <task id="LOCAL-00039" summary="development">
+      <created>1635699998500</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1635699998500</updated>
+    </task>
+    <option name="localTasksCounter" value="40" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="UnitTestsCoverage.Settings">
-    <option name="coveragePercentColumnWidth" value="76" />
+    <option name="coveragePercentColumnWidth" value="78" />
     <option name="sortOrder" value="DESCENDING" />
     <option name="sortedColumn" value="1" />
-    <option name="symbolColumnWidth" value="257" />
+    <option name="symbolColumnWidth" value="264" />
     <coverage-tree-state>
       <expand>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 57% 2249/5229" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 60% 1926/4831" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 57% 2249/5229" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 47% 1291/2431" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 60% 1926/4831" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 52% 1030/2160" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 57% 2249/5229" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 47% 1291/2431" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="(1.0.0.0, .NETStandard,Version=v2.1) 47% 1291/2431" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 60% 1926/4831" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 52% 1030/2160" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="(1.0.0.0, .NETStandard,Version=v2.1) 52% 1030/2160" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 57% 2249/5229" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 47% 1291/2431" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="(1.0.0.0, .NETStandard,Version=v2.1) 47% 1291/2431" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 47% 1291/2431" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 60% 1926/4831" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 52% 1030/2160" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="(1.0.0.0, .NETStandard,Version=v2.1) 52% 1030/2160" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 52% 1030/2160" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 57% 2249/5229" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 47% 1291/2431" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="(1.0.0.0, .NETStandard,Version=v2.1) 47% 1291/2431" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 47% 1291/2431" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="Abstractions 92% 23/300" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 60% 1926/4831" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 52% 1030/2160" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="(1.0.0.0, .NETStandard,Version=v2.1) 52% 1030/2160" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 52% 1030/2160" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Abstractions 92% 24/291" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 57% 2249/5229" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 47% 1291/2431" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="(1.0.0.0, .NETStandard,Version=v2.1) 47% 1291/2431" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 47% 1291/2431" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 60% 1926/4831" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 52% 1030/2160" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="(1.0.0.0, .NETStandard,Version=v2.1) 52% 1030/2160" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 52% 1030/2160" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
           <item name="Core 70% 228/770" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
       </expand>

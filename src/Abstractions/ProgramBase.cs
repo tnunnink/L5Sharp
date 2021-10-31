@@ -1,4 +1,5 @@
-﻿using L5Sharp.Enums;
+﻿using L5Sharp.Core;
+using L5Sharp.Enums;
 
 namespace L5Sharp.Abstractions
 {
@@ -10,7 +11,7 @@ namespace L5Sharp.Abstractions
             TestEdits = testEdits;
             Disabled = disabled;
 
-            Tags = new ComponentCollection<ITag>();
+            Tags = new Tags();
             Routines = new ComponentCollection<IRoutine>();
         }
 
@@ -20,7 +21,7 @@ namespace L5Sharp.Abstractions
 
         public bool Disabled { get; private set; }
 
-        public IComponentCollection<ITag> Tags { get; }
+        public ITags Tags { get; }
 
         public IComponentCollection<IRoutine> Routines { get; }
 
