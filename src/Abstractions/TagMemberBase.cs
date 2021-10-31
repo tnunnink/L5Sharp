@@ -8,7 +8,7 @@ using L5Sharp.Utilities;
 
 namespace L5Sharp.Abstractions
 {
-    public abstract class TagMemberBase : NotificationBase, ITagMember
+    public abstract class TagMemberBase : ITagMember
     {
         private string _description;
         private Radix _radix;
@@ -68,16 +68,17 @@ namespace L5Sharp.Abstractions
 
         public virtual void SetDescription(string description)
         {
-            SetProperty(ref _description, description, nameof(Description));
+            _description = description;
         }
 
         public virtual void SetRadix(Radix radix)
         {
-            Validate.Radix(radix, DataType);
-
-            var changed = SetProperty(ref _radix, radix, nameof(Radix));
+            if (_radix == radix) return;
             
-            if (changed && DataType.IsAtomic && _members.Count > 0)
+            Validate.Radix(radix, DataType);
+            _radix = radix;
+            
+            if (DataType.IsAtomic && _members.Count > 0)
                 PropagateValue((m, r) => m.SetRadix(r), _radix);
         }
 
@@ -90,7 +91,7 @@ namespace L5Sharp.Abstractions
             if (!atomic.IsValidValue(value))
                 throw new InvalidTagValueException(value, DataType.GetType());
 
-            SetProperty(ref _value, value, nameof(Value));
+            _value = value;
         }
 
         public ITagMember GetMember(string name)

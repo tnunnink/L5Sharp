@@ -367,8 +367,8 @@ namespace L5Sharp.Core.Tests
             var type = new DataType("Test");
 
             type.Members.Add("Test",
-                c => c.HasDataType(Predefined.Alarm)
-                    .HasAccess(ExternalAccess.ReadOnly));
+                c => c.OfType(Predefined.Alarm)
+                    .WithAccess(ExternalAccess.ReadOnly));
 
             var result = type.Members.Get("Test");
 

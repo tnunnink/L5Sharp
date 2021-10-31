@@ -10,7 +10,6 @@ namespace L5Sharp.Abstractions
     {
         private string _name;
         private ExternalAccess _externalAccess;
-        private TagUsage _usage;
 
         protected TagBase(string name, IDataType dataType, Dimensions dimensions, Radix radix,
             ExternalAccess externalAccess, string description, TagUsage usage, bool constant, ILogixComponent parent)
@@ -20,7 +19,7 @@ namespace L5Sharp.Abstractions
             
             _name = name;
             _externalAccess = externalAccess ?? ExternalAccess.None;
-            _usage = usage != null ? usage : TagUsage.Null;
+            Usage = usage != null ? usage : TagUsage.Null;
             Constant = constant;
             
             InstantiateMembers();
@@ -39,14 +38,14 @@ namespace L5Sharp.Abstractions
             : Parent is IProgram ? Scope.Program
             : Scope.Null;
         
-        public TagUsage Usage => _usage;
-        
+        public TagUsage Usage { get; private set; }
+
         public bool Constant { get; set; }
 
         public void SetName(string name)
         {
             Validate.Name(name);
-            SetProperty(ref _name, name, nameof(Name));
+            _name = name;
         }
 
         public void SetExternalAccess(ExternalAccess externalAccess)
@@ -54,7 +53,7 @@ namespace L5Sharp.Abstractions
             if (externalAccess == null)
                 throw new ArgumentNullException(nameof(externalAccess), "External Access can not be null");
 
-            SetProperty(ref _externalAccess, externalAccess, nameof(ExternalAccess));
+            _externalAccess = externalAccess;
         }
 
         public void SetUsage(TagUsage usage)
@@ -65,8 +64,8 @@ namespace L5Sharp.Abstractions
             if (Scope != Scope.Program)
                 throw new ComponentNotConfigurableException(nameof(Usage), typeof(Tag),
                     "Tag is not a program scoped tag");
-            
-            SetProperty(ref _usage, usage, nameof(Usage));
+
+            Usage = usage;
         }
 
         public ITag ChangeDataType(IDataType dataType)

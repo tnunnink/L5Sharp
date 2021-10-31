@@ -28,11 +28,9 @@ namespace L5Sharp.Core
 
         public void Add(string name, Action<IDataTypeMemberConfiguration> config = null)
         {
-            var configuration = new DataTypeMemberConfiguration();
-            
+            var configuration = new DataTypeMemberConfiguration(name);
             config?.Invoke(configuration);
-            
-            Add(name, configuration);
+            Add(configuration);
         }
     }
 }

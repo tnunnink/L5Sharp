@@ -152,17 +152,6 @@ namespace L5Sharp.Core.Tests
         }
 
         [Test]
-        public void SetName_ValidName_ShouldRaisePropertyChangedEvent()
-        {
-            var tag = new Tag("Test", Predefined.Dint);
-            var monitor = tag.Monitor();
-
-            tag.SetName("NewName");
-
-            monitor.Should().RaisePropertyChangeFor(t => t.Name);
-        }
-
-        [Test]
         public void SetDescription_Null_ShouldBeExpected()
         {
             var tag = new Tag("Test", Predefined.Dint);
@@ -170,17 +159,6 @@ namespace L5Sharp.Core.Tests
             tag.SetDescription(null);
 
             tag.Description.Should().Be(null);
-        }
-
-        [Test]
-        public void SetDescription_StringValue_ShouldRaisePropertyChanged()
-        {
-            var tag = new Tag("Test", Predefined.Dint);
-            var monitor = tag.Monitor();
-
-            tag.SetDescription("Test Description");
-
-            monitor.Should().RaisePropertyChangeFor(m => m.Description);
         }
 
         [Test]

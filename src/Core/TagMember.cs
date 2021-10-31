@@ -43,7 +43,7 @@ namespace L5Sharp.Core
 
         public override void SetDescription(string description)
         {
-            SetProperty(ref _description, description);
+            _description = description;
         }
     }
 }

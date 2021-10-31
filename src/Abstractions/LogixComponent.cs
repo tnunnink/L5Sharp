@@ -3,7 +3,7 @@ using L5Sharp.Utilities;
 
 namespace L5Sharp.Abstractions
 {
-    public abstract class LogixComponent : NotificationBase, IMutableLogixComponent, IEquatable<LogixComponent>
+    public abstract class LogixComponent : IMutableLogixComponent, IEquatable<LogixComponent>
     {
         private string _name;
         private string _description;
@@ -23,12 +23,12 @@ namespace L5Sharp.Abstractions
         public virtual void SetName(string name)
         {
             Validate.Name(name);
-            SetProperty(ref _name, name, nameof(Name));
+            _name = name;
         }
 
         public virtual void SetDescription(string description)
         {
-            SetProperty(ref _description, description, nameof(Description));
+            _description = description;
         }
 
         public bool Equals(LogixComponent other)

@@ -36,7 +36,7 @@ namespace L5Sharp.Core
         {
             dataType ??= Predefined.Undefined;
 
-            SetProperty(ref _dataType, dataType, nameof(DataType));
+            _dataType = dataType;
         }
 
         public void SetDimensions(Dimensions dimensions)
@@ -46,7 +46,7 @@ namespace L5Sharp.Core
             if (dimensions.IsMultiDimensional)
                 throw new InvalidOperationException("Can not set data type member to a multidimensional array");
 
-            SetProperty(ref _dimensions, dimensions, nameof(Dimensions));
+            _dimensions = dimensions;
         }
 
         public void SetRadix(Radix radix)
@@ -55,7 +55,7 @@ namespace L5Sharp.Core
 
             Validate.Radix(radix, _dataType);
 
-            SetProperty(ref _radix, radix, nameof(Radix));
+            _radix = radix;
         }
 
         public void SetExternalAccess(ExternalAccess externalAccess)
@@ -63,7 +63,7 @@ namespace L5Sharp.Core
             if (externalAccess == null)
                 throw new ArgumentNullException(nameof(externalAccess), "External Access property can not be null");
 
-            SetProperty(ref _externalAccess, externalAccess, nameof(ExternalAccess));
+            _externalAccess = externalAccess;
         }
 
         public bool Equals(DataTypeMember other)

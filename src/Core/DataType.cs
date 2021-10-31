@@ -49,7 +49,7 @@ namespace L5Sharp.Core
         {
             Validate.Name(name);
             Validate.DataTypeName(name);
-            SetProperty(ref _name, name, nameof(Name));
+            _name = name;
         }
 
         public IEnumerable<IDataType> GetDependentTypes() => GetUniqueMemberTypes(this);

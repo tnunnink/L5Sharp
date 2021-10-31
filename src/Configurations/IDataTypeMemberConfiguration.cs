@@ -5,10 +5,10 @@ namespace L5Sharp.Configurations
 {
     public interface IDataTypeMemberConfiguration : IComponentConfiguration<IDataTypeMember>
     {
-        IDataTypeMemberConfiguration HasDataType(IDataType dataType);
         IDataTypeMemberConfiguration HasDescription(string description);
-        IDataTypeMemberConfiguration HasDimension(Dimensions dimensions);
-        IDataTypeMemberConfiguration HasRadix(Radix radix);
-        IDataTypeMemberConfiguration HasAccess(ExternalAccess externalAccess);
+        IDataTypeMemberConfiguration OfType(IDataType dataType);
+        IDataTypeMemberConfiguration WithDimension(Dimensions dimensions);
+        IDataTypeMemberConfiguration WithRadix(Radix radix);
+        IDataTypeMemberConfiguration WithAccess(ExternalAccess externalAccess);
     }
 }

@@ -65,17 +65,6 @@ namespace L5Sharp.Core.Tests
         }
         
         [Test]
-        public void Name_ValidName_ShouldRaisePropertyChangedEvent()
-        {
-            var member = new DataTypeMember("MemberName", Predefined.Bool);
-            var monitor = member.Monitor();
-
-            member.SetName("Test");
-
-            monitor.Should().RaisePropertyChangeFor(m => m.Name);
-        }
-
-        [Test]
         public void Name_InvalidName_ShouldThrowInvalidNameException()
         {
             var member = new DataTypeMember("MemberName", Predefined.Bool);
@@ -102,27 +91,6 @@ namespace L5Sharp.Core.Tests
         }
         
         [Test]
-        public void SetDataType_ValidName_ShouldRaisePropertyChangeEvent()
-        {
-            var member = new DataTypeMember("MemberName", Predefined.Bool);
-            var monitor = member.Monitor();
-
-            member.SetDataType(Predefined.Lint);
-
-            monitor.Should().RaisePropertyChangeFor(m => m.DataType);
-        }
-
-        [Test]
-        public void SetDataType_Null_ShouldUpdateDataTypeToNullType()
-        {
-            var member = new DataTypeMember("MemberName", Predefined.Bool);
-
-            member.SetDataType(null);
-
-            member.DataType.Should().Be(Predefined.Undefined);
-        }
-
-        [Test]
         public void SetDimension_ValidNumber_ShouldHaveExpectedDimensions()
         {
             var member = new DataTypeMember("MemberName", Predefined.Int);
@@ -133,17 +101,6 @@ namespace L5Sharp.Core.Tests
         }
         
         [Test]
-        public void SetDimension_ValidNumber_ShouldRaisePropertyChangeEvent()
-        {
-            var member = new DataTypeMember("MemberName", Predefined.Bool);
-            var monitor = member.Monitor();
-
-            member.SetDimensions(new Dimensions(10));
-
-            monitor.Should().RaisePropertyChangeFor(m => m.Dimensions);
-        }
-
-        [Test]
         public void SetRadix_ValidRadix_ShouldUpdateRadix()
         {
             var member = new DataTypeMember("MemberName", Predefined.Int);
@@ -152,18 +109,6 @@ namespace L5Sharp.Core.Tests
 
             member.Radix.Should().Be(Radix.Ascii);
         }
-        
-        [Test]
-        public void SetRadix_ValidRadix_ShouldRaisePropertyChangeEvent()
-        {
-            var member = new DataTypeMember("MemberName", Predefined.Int);
-            var monitor = member.Monitor();
-
-            member.SetRadix(Radix.Ascii);
-
-            monitor.Should().RaisePropertyChangeFor(m => m.Radix);
-        }
-
 
         [Test]
         public void SetRadix_InvalidRadix_ShouldThrowRadixNotSupportedException()
@@ -190,17 +135,6 @@ namespace L5Sharp.Core.Tests
 
             member.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);
         }
-        
-        [Test]
-        public void SetExternalAccess_ReadWrite_ShouldRaisePropertyChangeEvent()
-        {
-            var member = new DataTypeMember("MemberName", Predefined.Bool);
-            var monitor = member.Monitor();
-
-            member.SetExternalAccess(ExternalAccess.ReadWrite);
-
-            monitor.Should().NotRaisePropertyChangeFor(m => m.ExternalAccess);
-        }
 
         [Test]
         public void SetExternalAccess_None_ShouldUpdateExternalAccess()
@@ -213,17 +147,6 @@ namespace L5Sharp.Core.Tests
         }
         
         [Test]
-        public void SetExternalAccess_None_ShouldRaisePropertyChangeEvent()
-        {
-            var member = new DataTypeMember("MemberName", Predefined.Bool);
-            var monitor = member.Monitor();
-
-            member.SetExternalAccess(ExternalAccess.None);
-
-            monitor.Should().RaisePropertyChangeFor(m => m.ExternalAccess);
-        }
-
-        [Test]
         public void SetExternalAccess_ReadOnly_ShouldUpdateExternalAccess()
         {
             var member = new DataTypeMember("MemberName", Predefined.Int);
@@ -233,17 +156,6 @@ namespace L5Sharp.Core.Tests
             member.ExternalAccess.Should().Be(ExternalAccess.ReadOnly);
         }
         
-        [Test]
-        public void SetExternalAccess_ReadOnly_ShouldRaisePropertyChangeEvent()
-        {
-            var member = new DataTypeMember("MemberName", Predefined.Bool);
-            var monitor = member.Monitor();
-
-            member.SetExternalAccess(ExternalAccess.ReadOnly);
-
-            monitor.Should().RaisePropertyChangeFor(m => m.ExternalAccess);
-        }
-
         [Test]
         public void SetExternalAccess_Null_ShouldThrowArgumentNullException()
         {
@@ -260,17 +172,6 @@ namespace L5Sharp.Core.Tests
             member.SetDescription("This is a test description");
 
             member.Description.Should().Be("This is a test description");
-        }
-        
-        [Test]
-        public void Description_ValidString_ShouldRaisePropertyChangeEvent()
-        {
-            var member = new DataTypeMember("MemberName", Predefined.Bool);
-            var monitor = member.Monitor();
-
-            member.SetDescription("This is a test description");
-
-            monitor.Should().RaisePropertyChangeFor(m => m.Description);
         }
 
         [Test]

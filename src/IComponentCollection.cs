@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using L5Sharp.Configurations;
 
 namespace L5Sharp
 {
@@ -11,6 +12,10 @@ namespace L5Sharp
         IEnumerable<TComponent> Find(Func<TComponent, bool> predicate);
         IEnumerable<TComponent> Ordered();
         void Add(TComponent component);
+
+        void Add<TConfiguration>(TConfiguration configuration)
+            where TConfiguration : IComponentConfiguration<TComponent>;
+
         void Insert(int index, TComponent component);
         void Remove(string name);
     }

@@ -5,50 +5,45 @@ namespace L5Sharp.Configurations
 {
     public class DataTypeMemberConfiguration : IDataTypeMemberConfiguration
     {
-        private string _name;
-        private IDataType _dataType;
-        private string _description;
-        private Dimensions _dimensions;
-        private Radix _radix;
-        private ExternalAccess _externalAccess;
+        private readonly DataTypeMember _member;
+
+        public DataTypeMemberConfiguration(string name)
+        {
+            _member = new DataTypeMember(name, Predefined.Undefined);
+        }
 
         public IDataTypeMember Compile()
         {
-            return new DataTypeMember(_name, _dataType, _dimensions, _radix, _externalAccess, _description);
+            return _member;
         }
 
-        void IComponentConfiguration<IDataTypeMember>.HasName(string name)
+        public IDataTypeMemberConfiguration OfType(IDataType dataType)
         {
-            _name = name;
-        }
-
-        public IDataTypeMemberConfiguration HasDataType(IDataType dataType)
-        {
-            _dataType = dataType;
+            _member.SetDataType(dataType);
             return this;
         }
 
         public IDataTypeMemberConfiguration HasDescription(string description)
         {
-            _description = description;
+            _member.SetDescription(description);
             return this;
         }
 
-        public IDataTypeMemberConfiguration HasDimension(Dimensions dimensions)
+        public IDataTypeMemberConfiguration WithDimension(Dimensions dimensions)
         {
-            _dimensions = dimensions;
+            _member.SetDimensions(dimensions);
             return this;
         }
 
-        public IDataTypeMemberConfiguration HasRadix(Radix radix)
+        public IDataTypeMemberConfiguration WithRadix(Radix radix)
         {
-            _radix = radix;
+            _member.SetRadix(radix);
             return this;
         }
 
-        public IDataTypeMemberConfiguration HasAccess(ExternalAccess externalAccess)
+        public IDataTypeMemberConfiguration WithAccess(ExternalAccess externalAccess)
         {
-            _externalAccess = externalAccess;
+            _member.SetExternalAccess(externalAccess);
             return this;
         }
     }

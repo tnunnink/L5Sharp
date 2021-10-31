@@ -63,6 +63,21 @@ namespace L5Sharp.Abstractions
             _items.Add(component.Name);
         }
 
+        public void Add<TConfiguration>(TConfiguration configuration)
+            where TConfiguration : IComponentConfiguration<TComponent>
+        {
+            var component = configuration.Compile();
+
+            if (component == null)
+                throw new ArgumentNullException(nameof(component), $"{typeof(TComponent).Name} can not be null");
+
+            if (_components.ContainsKey(component.Name))
+                throw new ComponentNameCollisionException(component.Name, typeof(TComponent));
+
+            _components.Add(component.Name, component);
+            _items.Add(component.Name);
+        }
+
         public void Insert(int index, TComponent component)
         {
             if (component == null)
@@ -92,23 +107,6 @@ namespace L5Sharp.Abstractions
         IEnumerator<TComponent> IEnumerable<TComponent>.GetEnumerator()
         {
             return _components.Values.GetEnumerator();
-        }
-
-        protected void Add<TConfiguration>(string name, TConfiguration configuration)
-            where TConfiguration : IComponentConfiguration<TComponent>
-        {
-            configuration.HasName(name);
-
-            var component = configuration.Compile();
-
-            if (component == null)
-                throw new ArgumentNullException(nameof(component), $"{typeof(TComponent).Name} can not be null");
-
-            if (_components.ContainsKey(component.Name))
-                throw new ComponentNameCollisionException(component.Name, typeof(TComponent));
-
-            _components.Add(component.Name, component);
-            _items.Add(component.Name);
         }
     }
 }
