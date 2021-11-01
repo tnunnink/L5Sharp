@@ -4,7 +4,24 @@ using L5Sharp.Enums;
 
 namespace L5Sharp.Core
 {
-    public class Connection
+    public interface IConnection
+    {
+        string Name { get; }
+        int Rpi { get; set; }
+        ConnectionType Type { get; set; }
+        ConnectionPriority Priority { get; set; }
+        TransmissionType InputConnectionType { get; set; }
+        ProductionTrigger InputProductionTrigger { get; set; }
+        bool OutputRedundantOwner { get; set; }
+        byte InputSize { get; set; }
+        byte OutputSize { get; set; }
+        string InputSuffix { get; set; }
+        string OutputSuffix { get; set; }
+        bool Unicast { get; set; }
+        int EventId { get; set; }
+    }
+
+    public class Connection : IConnection
     {
         public string Name { get; }
         public int Rpi { get; set; }

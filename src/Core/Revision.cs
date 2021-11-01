@@ -2,7 +2,7 @@
 
 // ReSharper disable InconsistentNaming
 
-namespace L5Sharp.Enums
+namespace L5Sharp.Core
 {
     public class Revision
     {
