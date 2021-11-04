@@ -19,4 +19,9 @@ namespace L5Sharp
         ITagMember GetMember(string name);
         IEnumerable<string> GetMembersNames();
     }
+    
+    public interface ITagMember<out TDataType> : ITagMember where TDataType : IDataType
+    {
+        
+    }
 }

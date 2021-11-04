@@ -14,7 +14,7 @@ namespace L5Sharp.Enums
             return dataType switch
             {
                 null => throw new ArgumentNullException(nameof(dataType), "Data type can not be null"),
-                IPredefined predefined => predefined.SupportsRadix(this),
+                IAtomic atomic => atomic.SupportsRadix(this),
                 IUserDefined _ => Equals(Null),
                 _ => throw new ArgumentOutOfRangeException(nameof(dataType),
                     "Data type provided is not predefined or user defined")

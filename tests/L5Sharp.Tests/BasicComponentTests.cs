@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using System;
+using FluentAssertions;
 using L5Sharp.Core;
 using NUnit.Framework;
 

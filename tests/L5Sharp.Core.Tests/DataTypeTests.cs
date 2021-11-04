@@ -58,7 +58,7 @@ namespace L5Sharp.Core.Tests
         {
             var fixture = new Fixture();
             var description = fixture.Create<string>();
-            var member = new DataTypeMember("Member", Predefined.Bool);
+            var member = new DataTypeMember("Member", Logix.DataType.Bool);
 
             var type = new DataType("Test", member, description);
 

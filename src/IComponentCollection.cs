@@ -12,6 +12,7 @@ namespace L5Sharp
         IEnumerable<TComponent> Find(Func<TComponent, bool> predicate);
         IEnumerable<TComponent> Ordered();
         void Add(TComponent component);
+        void AddRange(IEnumerable<TComponent> components);
 
         void Add<TConfiguration>(TConfiguration configuration)
             where TConfiguration : IComponentConfiguration<TComponent>;

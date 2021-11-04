@@ -22,6 +22,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "L5Sharp.Abstractions.Tests"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "L5Sharp.Configurations.Tests", "..\tests\L5Sharp.Configurations.Tests\L5Sharp.Configurations.Tests.csproj", "{672BA97C-9952-4840-B730-7055B59883BD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "L5Sharp.Instructions.Tests", "..\tests\L5Sharp.Instructions.Tests\L5Sharp.Instructions.Tests.csproj", "{43AD8474-5835-49E5-9A44-59E39791752D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -68,6 +70,10 @@ Global
 		{672BA97C-9952-4840-B730-7055B59883BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{672BA97C-9952-4840-B730-7055B59883BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{672BA97C-9952-4840-B730-7055B59883BD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{43AD8474-5835-49E5-9A44-59E39791752D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{43AD8474-5835-49E5-9A44-59E39791752D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{43AD8474-5835-49E5-9A44-59E39791752D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{43AD8474-5835-49E5-9A44-59E39791752D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{49824AD6-5AE2-434F-AE18-A3B9011BA06C} = {337B58B2-5647-4088-8CB3-50B3752B04D8}
@@ -79,5 +85,6 @@ Global
 		{ECAE5C07-6CB4-45AA-9A97-69C0C0162D66} = {337B58B2-5647-4088-8CB3-50B3752B04D8}
 		{4778CD2F-A572-4999-AC41-065AD05F0B35} = {337B58B2-5647-4088-8CB3-50B3752B04D8}
 		{672BA97C-9952-4840-B730-7055B59883BD} = {337B58B2-5647-4088-8CB3-50B3752B04D8}
+		{43AD8474-5835-49E5-9A44-59E39791752D} = {337B58B2-5647-4088-8CB3-50B3752B04D8}
 	EndGlobalSection
 EndGlobal

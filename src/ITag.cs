@@ -16,4 +16,9 @@ namespace L5Sharp
         ITag ChangeDimensions(Dimensions dimensions);
         ITag ChangeTagType(TagType type);
     }
+
+    public interface ITag<out TDataType> : ITag, ITagMember<TDataType> where TDataType : IDataType
+    {
+        
+    }
 }

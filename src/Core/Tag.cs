@@ -18,26 +18,26 @@ namespace L5Sharp.Core
         public override TagType TagType => TagType.Base;
     }
 
-    /*public class Tag<TDataType> : TagBase<TDataType> where TDataType : IDataType, new()
+    public class Tag<TDataType> : TagBase, ITag<TDataType> where TDataType : IDataType, new()
     {
-        internal Tag(string name, ILogixComponent parent = null, Dimensions dimensions = null, Radix radix = null,
+        public Tag(string name, ILogixComponent parent = null, Dimensions dimensions = null, Radix radix = null,
             ExternalAccess externalAccess = null, string description = null, TagUsage usage = null,
             bool constant = false)
-            : base(name, new TDataType(), dimensions, radix, externalAccess, description, parent, usage, constant)
+            : base(name, new TDataType(), dimensions, radix, externalAccess, description, usage, constant, parent)
         {
         }
 
-        internal Tag(Tag tag)
+        public Tag(Tag tag)
             : base(tag.Name, (TDataType)tag.DataType, tag.Dimensions, tag.Radix, tag.ExternalAccess, tag.Description,
-                tag.Parent, tag.Usage, tag.Constant)
+                tag.Usage, tag.Constant, tag.Parent)
         {
         }
 
-        internal Tag(ITag<IDataType> tag) : base(tag.Name, (TDataType)tag.DataType, tag.Dimensions, tag.Radix,
-            tag.ExternalAccess, tag.Description, tag.Parent, tag.Usage, tag.Constant)
+        public Tag(ITag<IDataType> tag) : base(tag.Name, (TDataType)tag.DataType, tag.Dimensions, tag.Radix,
+            tag.ExternalAccess, tag.Description, tag.Usage, tag.Constant, tag.Parent)
         {
         }
 
         public override TagType TagType => TagType.Base;
-    }*/
+    }
 }

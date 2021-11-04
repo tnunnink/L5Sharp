@@ -63,6 +63,14 @@ namespace L5Sharp.Abstractions
             _items.Add(component.Name);
         }
 
+        public virtual void AddRange(IEnumerable<TComponent> components)
+        {
+            if (components == null) return;
+
+            foreach (var component in components)
+                Add(component);
+        }
+
         public void Add<TConfiguration>(TConfiguration configuration)
             where TConfiguration : IComponentConfiguration<TComponent>
         {
@@ -78,7 +86,7 @@ namespace L5Sharp.Abstractions
             _items.Add(component.Name);
         }
 
-        public void Insert(int index, TComponent component)
+        public virtual void Insert(int index, TComponent component)
         {
             if (component == null)
                 throw new ArgumentNullException(nameof(component), $"{typeof(TComponent).Name} can not be null");

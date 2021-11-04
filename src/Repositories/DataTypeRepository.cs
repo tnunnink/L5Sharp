@@ -20,11 +20,11 @@ namespace L5Sharp.Repositories
 
         public override IDataType Get(string name)
         {
-            return Predefined.ContainsType(name) 
-                ? Predefined.ParseType(name) 
+            return Logix.DataType.Contains(name) 
+                ? Logix.DataType.Parse(name) 
                 : Container.Contains<IDataType>(name) 
                     ? base.Get(name) 
-                    : Predefined.Undefined;
+                    : Logix.DataType.Undefined;
         }
 
         public override void Add(IDataType component)

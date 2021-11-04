@@ -50,7 +50,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void ParseType_ValidName_ShouldNotBeNull()
         {
-            var type = Predefined.ParseType("SINT");
+            var type = Logix.DataType.Parse("SINT");
 
             type.Should().NotBeNull();
         }

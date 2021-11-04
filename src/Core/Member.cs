@@ -11,8 +11,8 @@ namespace L5Sharp.Core
             Name = name ?? throw new ArgumentNullException(nameof(name), "Name can not be null");
             DataType = dataType ?? Predefined.Undefined;
             Dimensions = dimension ?? Dimensions.Empty;
-            Radix = !(DataType is IPredefined predefined) ? Radix.Null 
-                : radix == null ? predefined.DefaultRadix : radix;
+            Radix = !(DataType is IAtomic atomic) ? Radix.Null 
+                : radix == null ? atomic.DefaultRadix : radix;
             ExternalAccess = externalAccess == null ? ExternalAccess.ReadWrite : externalAccess;
             Description = description;
         }

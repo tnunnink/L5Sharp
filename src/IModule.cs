@@ -13,20 +13,19 @@ namespace L5Sharp
         ushort ProductCode { get; }
         Revision Revision { get; }
         Module Parent { get; }
+        int ParentModPortId { get; }
         string ParentModule { get; }
-        int ParentPortId { get; }
         bool Inhibited { get; }
         bool MajorFault { get; }
         bool SafetyEnabled { get; }
         KeyingState State { get; }
-        byte CassisSize { get; }
-        IPAddress Address { get; }
-        byte Slot { get; }
-        
+
+        IEnumerable<Port> Ports { get; }
         IEnumerable<IModule> Modules { get; }
         IEnumerable<Connection> Connections { get; }
 
         void SetCatalogNumber(string catalogNumber);
         void SetVendor(string vendor);
+        void SetRevision(Revision revision);
     }
 }

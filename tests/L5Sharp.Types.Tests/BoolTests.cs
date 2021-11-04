@@ -50,7 +50,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void ParseType_BoolLower_ShouldReturnExpectedType()
         {
-            var type = Predefined.ParseType("bool");
+            var type = Logix.DataType.Parse("bool");
 
             type.Should().NotBeNull();
             type.Name.Should().Be("BOOL");
@@ -61,7 +61,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void ParseType_ValidName_ShouldNotBeNull()
         {
-            var type = Predefined.ParseType("BOOL");
+            var type = Logix.DataType.Parse("BOOL");
 
             type.Should().NotBeNull();
         }

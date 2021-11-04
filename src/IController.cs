@@ -9,8 +9,8 @@ namespace L5Sharp
         ProcessorType ProcessorType { get; }
         Revision Revision { get; }
         IDataTypes DataTypes { get; }
-        IEnumerable<ITag> Tags { get; }
-        IEnumerable<IProgram> Programs { get; }
+        ITags Tags { get; }
+        IPrograms Programs { get; }
         ITasks Tasks { get; }
     }
 }

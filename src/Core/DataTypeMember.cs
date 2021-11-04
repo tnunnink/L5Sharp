@@ -8,35 +8,34 @@ namespace L5Sharp.Core
 {
     public class DataTypeMember : LogixComponent, IDataTypeMember, IEquatable<DataTypeMember>
     {
-        private IDataType _dataType;
-        private Dimensions _dimensions;
-        private Radix _radix;
-        private ExternalAccess _externalAccess;
-
         public DataTypeMember(string name, IDataType dataType, Dimensions dimension = null, Radix radix = null,
             ExternalAccess externalAccess = null, string description = null) : base(name, description)
         {
-            _dataType = dataType ?? Predefined.Undefined;
-            _dimensions = dimension ?? Dimensions.Empty;
-            _radix = radix != null ? radix.IsValidForType(_dataType) ? 
-                    radix : throw new RadixNotSupportedException(radix, _dataType)
-                : _dataType is IPredefined predefined ? predefined.DefaultRadix : Radix.Null;
-            _externalAccess = externalAccess == null ? ExternalAccess.ReadWrite : externalAccess;
+            DataType = dataType ?? Logix.DataType.Undefined;
+            Dimensions = dimension ?? Dimensions.Empty;
+            
+            Radix = radix != null 
+                ? radix.IsValidForType(DataType) 
+                    ? radix : throw new RadixNotSupportedException(radix, DataType)
+                : DataType is IAtomic atomic 
+                    ? atomic.DefaultRadix : Radix.Null;
+            
+            ExternalAccess = externalAccess == null ? ExternalAccess.ReadWrite : externalAccess;
         }
 
-        public IDataType DataType => _dataType;
+        public IDataType DataType { get; private set; }
 
-        public Dimensions Dimensions => _dimensions;
+        public Dimensions Dimensions { get; private set; }
 
-        public Radix Radix => _radix;
+        public Radix Radix { get; private set; }
 
-        public ExternalAccess ExternalAccess => _externalAccess;
+        public ExternalAccess ExternalAccess { get; private set; }
 
         public void SetDataType(IDataType dataType)
         {
-            dataType ??= Predefined.Undefined;
+            dataType ??= Logix.DataType.Undefined;
 
-            _dataType = dataType;
+            DataType = dataType;
         }
 
         public void SetDimensions(Dimensions dimensions)
@@ -46,16 +45,16 @@ namespace L5Sharp.Core
             if (dimensions.IsMultiDimensional)
                 throw new InvalidOperationException("Can not set data type member to a multidimensional array");
 
-            _dimensions = dimensions;
+            Dimensions = dimensions;
         }
 
         public void SetRadix(Radix radix)
         {
             radix ??= Radix.Null;
 
-            Validate.Radix(radix, _dataType);
+            Validate.Radix(radix, DataType);
 
-            _radix = radix;
+            Radix = radix;
         }
 
         public void SetExternalAccess(ExternalAccess externalAccess)
@@ -63,15 +62,15 @@ namespace L5Sharp.Core
             if (externalAccess == null)
                 throw new ArgumentNullException(nameof(externalAccess), "External Access property can not be null");
 
-            _externalAccess = externalAccess;
+            ExternalAccess = externalAccess;
         }
 
         public bool Equals(DataTypeMember other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return Name == other.Name && Equals(_dataType, other._dataType) && Equals(_radix, other._radix) &&
-                   Equals(_externalAccess, other._externalAccess) && Description == other.Description &&
+            return Name == other.Name && Equals(DataType, other.DataType) && Equals(Radix, other.Radix) &&
+                   Equals(ExternalAccess, other.ExternalAccess) && Description == other.Description &&
                    Dimensions == other.Dimensions;
         }
 

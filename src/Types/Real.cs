@@ -3,9 +3,9 @@ using L5Sharp.Enums;
 
 namespace L5Sharp.Types
 {
-    public sealed class Real : Predefined
+    public sealed class Real : Atomic
     {
-        public Real() : base(LoadElement(nameof(Real).ToUpper()))
+        public Real() : base(nameof(Real).ToUpper())
         {
         }
 

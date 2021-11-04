@@ -3,15 +3,14 @@ using L5Sharp.Enums;
 
 namespace L5Sharp.Types
 {
-    public class Sint : Predefined
+    public class Sint : Atomic
     {
-        public Sint() : base(LoadElement(nameof(Sint).ToUpper()))
+        public Sint() : base(nameof(Sint).ToUpper())
         {
         }
 
         public override object DefaultValue => default(byte);
-        public override Radix DefaultRadix => Radix.Decimal;
-        
+
         public override object ParseValue(string value)
         {
             if (byte.TryParse(value, out var result))

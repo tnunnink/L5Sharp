@@ -37,15 +37,14 @@ namespace L5Sharp.Core
         public ushort ProductCode { get; }
         public Revision Revision { get; }
         public Module Parent { get; }
+        public int ParentModPortId { get; }
         public string ParentModule { get; }
-        public int ParentPortId { get; }
         public bool Inhibited { get; }
         public bool MajorFault { get; }
         public bool SafetyEnabled { get; }
         public KeyingState State { get; }
-        public byte CassisSize { get; }
-        public IPAddress Address { get; }
-        public byte Slot { get; }
+        
+        public IEnumerable<Port> Ports { get; }
         public IEnumerable<IModule> Modules { get; }
         public IEnumerable<Connection> Connections { get; }
         public void SetCatalogNumber(string catalogNumber)
@@ -54,6 +53,11 @@ namespace L5Sharp.Core
         }
 
         public void SetVendor(string vendor)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void SetRevision(Revision revision)
         {
             throw new System.NotImplementedException();
         }

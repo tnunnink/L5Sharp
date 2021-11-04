@@ -8,17 +8,16 @@ namespace L5Sharp.Core
     {
         string Name { get; }
         int Rpi { get; set; }
-        ConnectionType Type { get; set; }
-        ConnectionPriority Priority { get; set; }
-        TransmissionType InputConnectionType { get; set; }
-        ProductionTrigger InputProductionTrigger { get; set; }
-        bool OutputRedundantOwner { get; set; }
-        byte InputSize { get; set; }
-        byte OutputSize { get; set; }
-        string InputSuffix { get; set; }
-        string OutputSuffix { get; set; }
-        bool Unicast { get; set; }
-        int EventId { get; set; }
+        bool Unicast { get; }
+        ConnectionType Type { get; }
+        ConnectionPriority Priority { get; }
+        TransmissionType InputConnectionType { get; }
+        ProductionTrigger InputProductionTrigger { get; }
+        bool OutputRedundantOwner { get; }
+        byte InputSize { get; }
+        byte OutputSize { get; }
+        string InputSuffix { get; }
+        string OutputSuffix { get; }
     }
 
     public class Connection : IConnection

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Xml.Linq;
-using L5Sharp.Abstractions;
 using L5Sharp.Enums;
 using L5Sharp.Exceptions;
 using L5Sharp.Extensions;
@@ -16,10 +15,9 @@ namespace L5Sharp.Core
     public class Predefined : IPredefined, IEquatable<Predefined>
     {
         private const string ResourceNamespace = "Resources";
-        private const string PredefinedFileName = "Predefined.xml";
+        private const string ResourceFileName = "Predefined.xml";
         private static readonly ResourceReader Resources = new ResourceReader(typeof(Predefined));
         private static readonly XDocument PredefinedData = LoadPredefined();
-        private static readonly string[] AtomicNames = { "BOOL", "SINT", "INT", "DINT", "LINT", "REAL" };
 
         private static readonly Dictionary<string, IPredefined> RegisteredTypes =
             new Dictionary<string, IPredefined>(StringComparer.OrdinalIgnoreCase);
@@ -101,71 +99,15 @@ namespace L5Sharp.Core
         public string Description => string.Empty;
         public DataTypeFamily Family { get; }
         public DataTypeClass Class => DataTypeClass.Predefined;
-        public bool IsAtomic => AtomicNames.Contains(Name);
-        public virtual object DefaultValue => null;
-        public virtual Radix DefaultRadix => Radix.Null;
         public virtual TagDataFormat DataFormat => TagDataFormat.Decorated;
         public IEnumerable<IMember> Members => _members.Values.AsEnumerable();
-        public static IEnumerable<IDataType> Types => RegisteredTypes.Values.ToList();
-        public static IEnumerable<IDataType> Atomics => RegisteredTypes.Values.Where(t => t.IsAtomic).ToList();
-
-        public virtual bool SupportsRadix(Radix radix)
-        {
-            if (!IsAtomic) return radix.Equals(Radix.Null);
-
-            return radix == Radix.Binary
-                   || radix == Radix.Octal
-                   || radix == Radix.Decimal
-                   || radix == Radix.Hex
-                   || radix == Radix.Ascii;
-        }
-
-        public virtual bool IsValidValue(object value)
-        {
-            return value == null;
-        }
-
+        
         public IMember GetMember(string name)
         {
             _members.TryGetValue(name, out var member);
             return member;
         }
-
-        public IEnumerable<IDataType> GetDependentTypes() => GetUniqueMemberTypes(this);
-
-        public static bool ContainsType(string name)
-        {
-            return RegisteredTypes.ContainsKey(name)
-                   || FindFieldType(name) != null
-                   || FindAssemblyType(name) != null;
-        }
-
-        public static IDataType ParseType(string name)
-        {
-            if (RegisteredTypes.ContainsKey(name))
-                return RegisteredTypes[name];
-
-            var fieldType = FindFieldType(name);
-            if (fieldType != null)
-                return fieldType;
-
-            var assemblyType = FindAssemblyType(name);
-
-            try
-            {
-                return (IDataType)Activator.CreateInstance(assemblyType);
-            }
-            catch (Exception)
-            {
-                return Undefined;
-            }
-        }
-
-        public virtual object ParseValue(string value)
-        {
-            return null;
-        }
-
+        
         public override string ToString()
         {
             return Name;
@@ -200,30 +142,6 @@ namespace L5Sharp.Core
             return !Equals(left, right);
         }
 
-        private static IDataType FindFieldType(string name)
-        {
-            var field = typeof(Predefined).GetField(name, BindingFlags.Public
-                                                          | BindingFlags.Static
-                                                          | BindingFlags.IgnoreCase);
-
-            return (Predefined)field?.GetValue(null);
-        }
-
-        private static Type FindAssemblyType(string name)
-        {
-            return GetAssemblyTypes().SingleOrDefault(t => t.Name == name);
-        }
-
-        private static IEnumerable<Type> GetAssemblyTypes()
-        {
-            return from assembly in AppDomain.CurrentDomain.GetAssemblies()
-                from type in assembly.GetTypes()
-                where type.IsSubclassOf(typeof(Predefined))
-                      && !type.IsAbstract
-                      && type.GetConstructor(Type.EmptyTypes) != null
-                select type;
-        }
-
         internal static XElement LoadElement(string name)
         {
             var element = PredefinedData.Descendants(nameof(DataType))
@@ -234,21 +152,8 @@ namespace L5Sharp.Core
 
         private static XDocument LoadPredefined()
         {
-            using var stream = Resources.GetStream(PredefinedFileName, ResourceNamespace);
+            using var stream = Resources.GetStream(ResourceFileName, ResourceNamespace);
             return XDocument.Load(stream);
-        }
-
-        private static IEnumerable<IDataType> GetUniqueMemberTypes(IDataType dataType)
-        {
-            var types = new List<IDataType>();
-
-            foreach (var member in dataType.Members)
-            {
-                types.Add(member.DataType);
-                types.AddRange(GetUniqueMemberTypes(member.DataType));
-            }
-
-            return types.Distinct();
         }
     }
 }

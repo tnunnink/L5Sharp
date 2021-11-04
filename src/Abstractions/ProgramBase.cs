@@ -11,7 +11,7 @@ namespace L5Sharp.Abstractions
             TestEdits = testEdits;
             Disabled = disabled;
 
-            Tags = new Tags();
+            Tags = new Tags(this);
             Routines = new ComponentCollection<IRoutine>();
         }
 

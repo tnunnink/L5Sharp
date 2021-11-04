@@ -23,16 +23,18 @@ namespace L5Sharp.Abstractions
             DataType = dataType ?? throw new ArgumentNullException(nameof(dataType), "DataType can not be null");
             Dimensions = dimensions == null ? Dimensions.Empty : dimensions;
             
-            _radix = radix != null ? radix.IsValidForType(DataType) ? 
-                    radix : throw new RadixNotSupportedException(radix, DataType)
-                : DataType is IPredefined predefined ? predefined.DefaultRadix : Radix.Null;
+            _radix = radix != null 
+                ? radix.IsValidForType(DataType) 
+                    ? radix : throw new RadixNotSupportedException(radix, DataType)
+                : DataType is IAtomic atomic 
+                    ? atomic.DefaultRadix : Radix.Null;
             
             ExternalAccess = externalAccess ?? ExternalAccess.None;
             _description = description;
             Parent = parent;
 
-            if (dataType is IPredefined p)
-                _value = p.DefaultValue;
+            if (dataType is IAtomic a)
+                _value = a.DefaultValue;
         }
 
         public virtual string FullName => Parent == null ? Name
@@ -57,14 +59,13 @@ namespace L5Sharp.Abstractions
 
         public ILogixComponent Parent { get; }
 
-        public bool IsValueMember => DataType is IPredefined {IsAtomic: true} && Dimensions.Length == 0;
+        public bool IsValueMember => DataType is IAtomic && Dimensions.Length == 0;
 
         public bool IsArrayMember => Dimensions.Length > 0;
 
         public bool IsArrayElement => Parent is ITagMember { IsArrayMember: true };
 
-        public bool IsStructureMember =>
-            !(DataType is IPredefined { IsAtomic: true }) && !IsArrayMember && _members.Count > 0;
+        public bool IsStructureMember => !(DataType is IAtomic) && !IsArrayMember && _members.Count > 0;
 
         public virtual void SetDescription(string description)
         {
@@ -78,13 +79,13 @@ namespace L5Sharp.Abstractions
             Validate.Radix(radix, DataType);
             _radix = radix;
             
-            if (DataType.IsAtomic && _members.Count > 0)
+            if (DataType is IAtomic && _members.Count > 0)
                 PropagateValue((m, r) => m.SetRadix(r), _radix);
         }
 
         public virtual void SetValue(object value)
         {
-            if (!(DataType is Predefined { IsAtomic: true } atomic))
+            if (!(DataType is IAtomic atomic))
                 throw new ComponentNotConfigurableException(nameof(Value), typeof(TagMember),
                     $"'{Name}' is not an atomic type. Value is only configurable for atomics");
 

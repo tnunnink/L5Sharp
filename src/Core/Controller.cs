@@ -19,6 +19,8 @@ namespace L5Sharp.Core
             LastModifiedDate = DateTime.Now;
 
             DataTypes = new DataTypes();
+            Tags = new Tags(this);
+            Programs = new Programs();
             Tasks = new Tasks();
         }
 
@@ -35,9 +37,8 @@ namespace L5Sharp.Core
         public DateTime LastModifiedDate { get; }
 
         public IDataTypes DataTypes { get; }
-        public IEnumerable<ITag> Tags { get; }
-        public IEnumerable<IProgram> Programs { get; }
-
+        public ITags Tags { get; }
+        public IPrograms Programs { get; }
         public ITasks Tasks { get; }
     }
 }

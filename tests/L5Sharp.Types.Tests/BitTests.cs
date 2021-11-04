@@ -10,27 +10,20 @@ namespace L5Sharp.Types.Tests
     {
 
         [Test]
-        public void Test()
-        {
-            var types = Predefined.Bit;
-            types.Should().NotBeNull();
-        }
-        
-        [Test]
         public void Predefined_Bool_ShouldNotBeNull()
         {
-            var type = Predefined.Bit;
+            var type = Logix.DataType.Bit;
 
             type.Should().NotBeNull();
             type.Name.Should().Be("BOOL");
-            type.Class.Should().Be(DataTypeClass.Predefined);
+            type.Class.Should().Be(DataTypeClass.Atomic);
             type.Family.Should().Be(DataTypeFamily.None);
         } 
         
         [Test]
         public void ParseType_Bit_ShouldNotBeNull()
         {
-            var type = Predefined.ParseType("BIT");
+            var type = Logix.DataType.Parse("BIT");
 
             type.Should().NotBeNull();
             type.Name.Should().Be("BOOL");
@@ -41,7 +34,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void ContainsType_Bit_ShouldBeTrue()
         {
-            var result = Predefined.ContainsType("BIT");
+            var result = Logix.DataType.Contains("BIT");
 
             result.Should().BeTrue();
         } 

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using FluentAssertions;
-using L5Sharp.Abstractions;
 using L5Sharp.Enums;
 using L5Sharp.Exceptions;
 using NUnit.Framework;
@@ -13,31 +11,17 @@ namespace L5Sharp.Core.Tests
     public class PredefinedTests
     {
         [Test]
-        public void Types_WhenCalled_ShouldNotBeEmpty()
+        public void Name_GetValue_ShouldBeEmpty()
         {
-            var predefined = Predefined.Types;
+            var type = Logix.DataType.Undefined;
 
-            predefined.Should().NotBeEmpty();
+            type.Name.Should().Be("Undefined");
         }
-
-        [Test]
-        public void Atomics_WhenCalled_ShouldNotBeEmpty()
-        {
-            var atomic = Predefined.Atomics.ToList();
-
-            atomic.Should().NotBeEmpty();
-            atomic.Should().Contain(x => x.Name == "BOOL");
-            atomic.Should().Contain(x => x.Name == "SINT");
-            atomic.Should().Contain(x => x.Name == "INT");
-            atomic.Should().Contain(x => x.Name == "DINT");
-            atomic.Should().Contain(x => x.Name == "LINT");
-            atomic.Should().Contain(x => x.Name == "REAL");
-        }
-
+        
         [Test]
         public void Description_GetValue_ShouldBeEmpty()
         {
-            var type = Predefined.Undefined;
+            var type = Logix.DataType.Undefined;
 
             type.Description.Should().BeEmpty();
         }
@@ -45,31 +29,15 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Class_ValidType_ShouldReturnExpected()
         {
-            var type = Predefined.Undefined;
+            var type = Logix.DataType.Undefined;
 
             type.Class.Should().Be(DataTypeClass.Predefined);
         }
 
         [Test]
-        public void DefaultValue_ValidType_ShouldReturnExpected()
-        {
-            var type = Predefined.Undefined;
-
-            type.DefaultValue.Should().Be(null);
-        }
-
-        [Test]
-        public void DefaultRadix_ValidType_ShouldReturnExpected()
-        {
-            var type = Predefined.Undefined;
-
-            type.DefaultRadix.Should().Be(Radix.Null);
-        }
-
-        [Test]
         public void DataFormat_ValidType_ShouldReturnExpected()
         {
-            var type = Predefined.Undefined;
+            var type = Logix.DataType.Undefined;
 
             type.DataFormat.Should().Be(TagDataFormat.Decorated);
         }
@@ -77,7 +45,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void GetMember_TypeWithMember_ShouldNotBeNull()
         {
-            var type = Predefined.String;
+            var type = Logix.DataType.String;
             var member = type.GetMember("Data");
             member.Should().NotBeNull();
         }
@@ -85,133 +53,15 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void GetMember_TypeWithoutMember_ShouldBeNull()
         {
-            var type = Predefined.Bool;
+            var type = Logix.DataType.Undefined;
             var member = type.GetMember("Member");
             member.Should().BeNull();
         }
 
         [Test]
-        public void GetDependentTypes_TypeWithMembers_ShouldNotBeEmpty()
-        {
-            var type = Predefined.String;
-
-            type.GetDependentTypes().Should().NotBeEmpty();
-        }
-
-        [Test]
-        public void GetDependentTypes_TypeWithNoMembers_ShouldBeEmpty()
-        {
-            var type = Predefined.Undefined;
-
-            type.GetDependentTypes().Should().BeEmpty();
-        }
-
-        [Test]
-        public void ContainsType_TypeThatExistsAsPredefined_ShouldBeTrue()
-        {
-            Predefined.ContainsType("BOOL").Should().BeTrue();
-        }
-
-        [Test]
-        public void ContainsType_TypeThatDoesNotExistAsPredefined_ShouldBeFalse()
-        {
-            Predefined.ContainsType("TEMP").Should().BeFalse();
-        }
-
-        [Test]
-        public void SupportsRadix_NonAtomicValidRadixForType_ShouldBeTrue()
-        {
-            var type = Predefined.Undefined;
-
-            var result = type.SupportsRadix(Radix.Null);
-
-            result.Should().BeTrue();
-        }
-
-        [Test]
-        public void SupportsRadix_NonAtomicInvalidRadixForType_ShouldBeFalse()
-        {
-            var type = Predefined.Undefined;
-
-            var result = type.SupportsRadix(Radix.Decimal);
-
-            result.Should().BeFalse();
-        }
-
-        [Test]
-        public void SupportsRadix_AtomicValidRadixForType_ShouldBeTrue()
-        {
-            var type = Predefined.Dint;
-
-            var result = type.SupportsRadix(Radix.Decimal);
-
-            result.Should().BeTrue();
-        }
-
-        [Test]
-        public void SupportsRadix_AtomicInvalidRadixForType_ShouldBeFalse()
-        {
-            var type = Predefined.Dint;
-
-            var result = type.SupportsRadix(Radix.Float);
-
-            result.Should().BeFalse();
-        }
-
-        [Test]
-        public void IsValidValue_ValidValueForType_ShouldBeTrue()
-        {
-            var type = Predefined.Undefined;
-
-            var result = type.IsValidValue(null);
-
-            result.Should().BeTrue();
-        }
-
-        [Test]
-        public void IsValidValue_InvalidValueForType_ShouldBeFalse()
-        {
-            var type = Predefined.Undefined;
-
-            var result = type.IsValidValue(true);
-
-            result.Should().BeFalse();
-        }
-
-        [Test]
-        public void ParseValue_UndefinedTypeTrueString_ShouldBeNull()
-        {
-            var type = Predefined.Undefined;
-
-            var result = type.ParseValue("true");
-
-            result.Should().Be(null);
-        }
-
-        [Test]
-        public void ParseValue_UndefinedTypeNullString_ShouldBeNull()
-        {
-            var type = Predefined.Undefined;
-
-            var result = type.ParseValue("null");
-
-            result.Should().Be(null);
-        }
-
-        [Test]
-        public void ParseValue_UndefinedTypeNullValue_ShouldBeNull()
-        {
-            var type = Predefined.Undefined;
-
-            var result = type.ParseValue(null);
-
-            result.Should().Be(null);
-        }
-
-        [Test]
         public void Predefined_WhenCastedToDataType_ShouldThrowInvalidCastException()
         {
-            var atomic = (IDataType)Predefined.Bool;
+            var atomic = (IDataType)Logix.DataType.Bool;
 
             FluentActions.Invoking(() => (DataType)atomic).Should().Throw<InvalidCastException>();
         }
@@ -220,48 +70,6 @@ namespace L5Sharp.Core.Tests
         public void New_PredefinedTypeName_ShouldThrowComponentNameCollisionException()
         {
             FluentActions.Invoking(() => new DataType("Undefined")).Should().Throw<ComponentNameCollisionException>();
-        }
-
-        [Test]
-        public void ParseType_RegisteredType_ShouldNotBeNull()
-        {
-            var type = Predefined.ParseType("Bool");
-            type.Should().NotBeNull();
-            type.Should().Be(Predefined.Bool);
-        }
-
-        [Test]
-        public void ParseType_StaticField_ShouldNotBeNull()
-        {
-            var type = Predefined.ParseType("bit");
-            type.Should().NotBeNull();
-            type.Should().Be(Predefined.Bit);
-            type.Name.Should().Be("BOOL");
-        }
-
-        [Test]
-        public void ParseType_AssemblyValidType_ShouldNotBeExpected()
-        {
-            var type = Predefined.ParseType("MyPredefined");
-            type.Should().NotBeNull();
-            type.Name.Should().Be("MyPredefined");
-            type.Family.Should().Be(DataTypeFamily.None);
-        }
-        
-        [Test]
-        public void ParseType_AssemblyInvalidType_ShouldNotBeUndefined()
-        {
-            var type = Predefined.ParseType("MyNullNamePredefined");
-            type.Should().NotBeNull();
-            type.Should().Be(Predefined.Undefined);
-        }
-        
-        [Test]
-        public void ParseType_NonExistingType_ShouldNotBeUndefined()
-        {
-            var type = Predefined.ParseType("Invalid");
-            type.Should().NotBeNull();
-            type.Should().Be(Predefined.Undefined);
         }
 
         [Test]
@@ -321,8 +129,8 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Equals_TypeOverloadEquals_ShouldBeTrue()
         {
-            var type1 = Predefined.Bool;
-            var type2 = Predefined.Bool;
+            var type1 = Logix.DataType.Bool;
+            var type2 = Logix.DataType.Bool;
 
             var result = type1.Equals(type2);
 
@@ -332,8 +140,8 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Equals_TypeOverloadNotEquals_ShouldBeFalse()
         {
-            var type1 = Predefined.Bool;
-            var type2 = Predefined.Int;
+            var type1 = Logix.DataType.Bool;
+            var type2 = Logix.DataType.Int;
 
             var result = type1.Equals(type2);
 
@@ -343,7 +151,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Equals_TypeOverloadNull_ShouldBeFalse()
         {
-            var type = Predefined.Bool;
+            var type = Logix.DataType.Bool;
 
             var result = type.Equals(null);
 
@@ -353,8 +161,8 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Equals_ObjectOverloadEquals_ShouldBeTrue()
         {
-            var type1 = Predefined.Bool;
-            var type2 = (object) Predefined.Bool;
+            var type1 = Logix.DataType.Bool;
+            var type2 = (object) Logix.DataType.Bool;
 
             var result = type1.Equals(type2);
 
@@ -364,7 +172,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Equals_ObjectOverloadSameReference_ShouldBeTrue()
         {
-            var type1 = Predefined.Bool;
+            var type1 = Logix.DataType.Bool;
             var type2 = (object) type1;
 
             var result = type1.Equals(type2);
@@ -375,7 +183,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Equals_ObjectOverloadNull_ShouldBeFalse()
         {
-            var type = Predefined.Bool;
+            var type = Logix.DataType.Bool;
 
             var result = type.Equals((object) null);
 
@@ -385,7 +193,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Equals_TypeOverloadSameReference_ShouldBeTrue()
         {
-            var type1 = Predefined.Bool;
+            var type1 = Logix.DataType.Bool;
 
             var result = type1.Equals(type1);
 
@@ -395,7 +203,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void GetHashCode_WhenCalled_ShouldNotBeZero()
         {
-            var type = Predefined.Undefined;
+            var type = Logix.DataType.Undefined;
 
             var hash = type.GetHashCode();
 
@@ -405,8 +213,8 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Equals_OperatorAreEqual_ShouldBeTrue()
         {
-            var type1 = Predefined.Undefined;
-            var type2 = Predefined.Undefined;
+            var type1 = Logix.DataType.Undefined;
+            var type2 = Logix.DataType.Undefined;
 
             var result = type1 == type2;
 
@@ -416,8 +224,8 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void NotEquals_OperatorAreEqual_ShouldBeFalse()
         {
-            var type1 = Predefined.Undefined;
-            var type2 = Predefined.Undefined;
+            var type1 = Logix.DataType.Undefined;
+            var type2 = Logix.DataType.Undefined;
 
             var result = type1 != type2;
 

@@ -6,6 +6,18 @@ namespace L5Sharp.Core
 {
     public class Tags : ComponentCollection<ITag>, ITags
     {
+        public Tags(IController controller)
+        {
+        }
+        
+        public Tags(IProgram program)
+        {
+        }
+        
+        public Tags(IAddOnInstruction instruction)
+        {
+        }
+        
         public void Add(string name, IDataType dataType, Action<ITagConfiguration> config = null)
         {
             var configuration = new TagConfiguration(name, dataType);

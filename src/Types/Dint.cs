@@ -3,15 +3,13 @@ using L5Sharp.Enums;
 
 namespace L5Sharp.Types
 {
-    public sealed class Dint : Predefined
+    public sealed class Dint : Atomic
     {
-        public Dint() : base(LoadElement(nameof(Dint).ToUpper()))
+        public Dint() : base(nameof(Dint).ToUpper())
         {
         }
 
         public override object DefaultValue => default(int);
-        
-        public override Radix DefaultRadix => Radix.Decimal;
 
         public override bool IsValidValue(object value)
         {

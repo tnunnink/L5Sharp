@@ -7,9 +7,7 @@ namespace L5Sharp
     {
         public DataTypeFamily Family { get; }
         public DataTypeClass Class { get; }
-        public bool IsAtomic { get; }
         public TagDataFormat DataFormat { get; }
         public IEnumerable<IMember> Members { get; }
-        public IEnumerable<IDataType> GetDependentTypes();
     }
 }
