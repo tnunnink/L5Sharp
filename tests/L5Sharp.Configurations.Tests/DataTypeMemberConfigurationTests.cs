@@ -23,10 +23,10 @@ namespace L5Sharp.Configurations.Tests
         {
             var config = new DataTypeMemberConfiguration("Test");
 
-            config.OfType(Predefined.Dint);
+            config.OfType(Logix.DataType.Dint);
 
             var result = config.Compile();
-            result.DataType.Should().Be(Predefined.Dint);
+            result.DataType.Should().Be(Logix.DataType.Dint);
         }
         
         [Test]

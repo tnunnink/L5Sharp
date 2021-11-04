@@ -84,7 +84,7 @@ namespace L5Sharp.Core.Tests
         public void GetTag_TagExists_ShouldNotBeNull()
         {
             var program = new Program("Test");
-            var tag = new Tag("Test", Predefined.Bool);
+            var tag = new Tag("Test", Logix.DataType.Bool);
             program.Tags.Add(tag);
 
             var result = program.Tags.Get("Test");
@@ -107,7 +107,7 @@ namespace L5Sharp.Core.Tests
         public void AddTag_ValidName_ShouldNotBeNull()
         {
             var program = new Program("Test");
-            var tag = new Tag("Test", Predefined.Bool);
+            var tag = new Tag("Test", Logix.DataType.Bool);
 
             program.Tags.Add(tag);
 
@@ -118,7 +118,7 @@ namespace L5Sharp.Core.Tests
         public void RemoveTag_Exists_ShouldRemoveFromCollection()
         {
             var program = new Program("Test");
-            var tag = new Tag("Test", Predefined.Bool);
+            var tag = new Tag("Test", Logix.DataType.Bool);
             program.Tags.Add(tag);
 
             program.Tags.Remove(tag.Name);

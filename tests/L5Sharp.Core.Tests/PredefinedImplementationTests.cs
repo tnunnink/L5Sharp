@@ -19,10 +19,10 @@ namespace L5Sharp.Core.Tests
         {
             return new List<Member>
             {
-                new("Member01", Bool),
-                new("Member02", Bool),
-                new("Member03", Bool),
-                new("Member04", Bool),
+                new("Member01", Logix.DataType.Bool),
+                new("Member02", Logix.DataType.Bool),
+                new("Member03", Logix.DataType.Bool),
+                new("Member04", Logix.DataType.Bool),
             };
         }
 

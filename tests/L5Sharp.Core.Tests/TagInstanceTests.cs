@@ -10,7 +10,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void String_ValidParameters_ShouldHaveValidMembers()
         {
-            var tag = new Tag("Test", Predefined.String);
+            var tag = new Tag("Test", Logix.DataType.String);
 
             tag.Should().NotBeNull();
             tag.Members.Should().HaveCount(2);
@@ -21,7 +21,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Timer_ValidParameters_ShouldHaveValidMembers()
         {
-            var tag = new Tag("Test", Predefined.Timer);
+            var tag = new Tag("Test", Logix.DataType.Timer);
 
             tag.Should().NotBeNull();
             tag.Members.Should().HaveCount(5);
@@ -36,7 +36,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Counter_ValidParameters_ShouldHaveValidMembers()
         {
-            var tag = new Tag("Test", Predefined.Counter);
+            var tag = new Tag("Test", Logix.DataType.Counter);
 
             tag.Should().NotBeNull();
             tag.Members.Should().HaveCount(7);

@@ -11,7 +11,7 @@ namespace L5Sharp.Tests
         [Test]
         public void Create_DataTypeMember_ShouldNotBeNull()
         {
-            var member = new DataTypeMember("Test", Predefined.Dint);
+            var member = new DataTypeMember("Test", Logix.DataType.Dint);
 
             member.Should().NotBeNull();
         }

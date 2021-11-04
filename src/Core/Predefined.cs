@@ -41,8 +41,8 @@ namespace L5Sharp.Core
                 _members.Add(member.Name, member);
             }
 
-            if (!RegisteredTypes.ContainsKey(name))
-                RegisteredTypes.Add(name, this);
+            if (!Logix.DataType.Contains(Name))
+                Logix.DataType.Register(this);
         }
 
         internal Predefined(XElement element)
@@ -61,11 +61,11 @@ namespace L5Sharp.Core
                 if (typeName == null)
                     throw new ArgumentNullException(nameof(typeName), "DataType can not be null");
 
-                if (!RegisteredTypes.ContainsKey(typeName))
+                if (!Logix.DataType.Contains(typeName))
                     throw new InvalidOperationException(
                         $"Type '{typeName}' has not been defined. Register dependent types before parent type");
 
-                var type = RegisteredTypes[typeName];
+                var type = Logix.DataType.Parse(typeName);
 
                 var name = e.GetName();
                 var description = e.GetDescription();
@@ -78,11 +78,11 @@ namespace L5Sharp.Core
                 _members.Add(member.Name, member);
             }
 
-            if (!RegisteredTypes.ContainsKey(Name))
-                RegisteredTypes.Add(Name, this);
+            if (!Logix.DataType.Contains(Name))
+                Logix.DataType.Register(this);
         }
 
-        public static readonly Undefined Undefined = new Undefined();
+        /*public static readonly Undefined Undefined = new Undefined();
         public static readonly Bool Bit = new Bool();
         public static readonly Bool Bool = new Bool();
         public static readonly Sint Sint = new Sint();
@@ -93,7 +93,7 @@ namespace L5Sharp.Core
         public static readonly String String = new String();
         public static readonly Timer Timer = new Timer();
         public static readonly Counter Counter = new Counter();
-        public static readonly Alarm Alarm = new Alarm();
+        public static readonly Alarm Alarm = new Alarm();*/
 
         public string Name { get; }
         public string Description => string.Empty;

@@ -23,7 +23,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void Predefined_Dint_ShouldNotBeNull()
         {
-            var type = Predefined.Dint;
+            var type = Logix.DataType.Dint;
 
             type.Should().NotBeNull();
             type.Name.Should().Be("DINT");
@@ -60,7 +60,7 @@ namespace L5Sharp.Types.Tests
         {
             var fixture = new Fixture();
             var value = fixture.Create<int>();
-            var type = Predefined.Dint;
+            var type = Logix.DataType.Dint;
 
             var result = type.ParseValue(value.ToString());
 
@@ -70,7 +70,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void ParseValue_InvalidValue_ShouldBeNull()
         {
-            var type = Predefined.Dint;
+            var type = Logix.DataType.Dint;
 
             var result = type.ParseValue("Invalid");
 
@@ -80,7 +80,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void SupportsRadix_Decimal_ShouldBeTrue()
         {
-            var type = Predefined.Dint;
+            var type = Logix.DataType.Dint;
 
             var value = type.SupportsRadix(Radix.Decimal);
 
@@ -90,7 +90,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void SupportsRadix_Null_ShouldBeFalse()
         {
-            var type = Predefined.Dint;
+            var type = Logix.DataType.Dint;
 
             var value = type.SupportsRadix(Radix.Null);
 
@@ -102,7 +102,7 @@ namespace L5Sharp.Types.Tests
         {
             var fixture = new Fixture();
             var value = fixture.Create<int>();
-            var type = Predefined.Dint;
+            var type = Logix.DataType.Dint;
 
             var result = type.IsValidValue(value);
 
@@ -114,7 +114,7 @@ namespace L5Sharp.Types.Tests
         {
             var fixture = new Fixture();
             var value = fixture.Create<int>();
-            var type = Predefined.Dint;
+            var type = Logix.DataType.Dint;
 
             var result = type.IsValidValue(value.ToString());
 
@@ -124,7 +124,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void IsValidValue_Null_Should()
         {
-            var type = Predefined.Dint;
+            var type = Logix.DataType.Dint;
 
             var value = type.IsValidValue(null);
 

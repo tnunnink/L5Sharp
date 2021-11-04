@@ -23,7 +23,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void Predefined_Bool_ShouldNotBeNull()
         {
-            var type = Predefined.Bool;
+            var type = Logix.DataType.Bool;
 
             type.Should().NotBeNull();
             type.Name.Should().Be("BOOL");
@@ -71,7 +71,7 @@ namespace L5Sharp.Types.Tests
         {
             var fixture = new Fixture();
             var value = fixture.Create<bool>();
-            var type = Predefined.Bool;
+            var type = Logix.DataType.Bool;
 
             var result = type.ParseValue(value.ToString());
 
@@ -81,7 +81,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void ParseValue_ValidValueBoolOne_ShouldBeTrue()
         {
-            var type = Predefined.Bool;
+            var type = Logix.DataType.Bool;
 
             var result = type.ParseValue("1");
 
@@ -91,7 +91,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void ParseValue_ValidValueBoolYes_ShouldBeTrue()
         {
-            var type = Predefined.Bool;
+            var type = Logix.DataType.Bool;
 
             var result = type.ParseValue("Yes");
 
@@ -101,7 +101,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void ParseValue_ValidValueBoolZero_ShouldBeFalse()
         {
-            var type = Predefined.Bool;
+            var type = Logix.DataType.Bool;
 
             var result = type.ParseValue("0");
 
@@ -111,7 +111,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void ParseValue_ValidValueBoolNo_ShouldBeFalse()
         {
-            var type = Predefined.Bool;
+            var type = Logix.DataType.Bool;
 
             var result = type.ParseValue("No");
 
@@ -121,7 +121,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void ParseValue_ValidValueBoolNull_ShouldBeFalse()
         {
-            var type = Predefined.Bool;
+            var type = Logix.DataType.Bool;
 
             var result = type.ParseValue("Invalid");
 
@@ -131,7 +131,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void SupportsRadix_Decimal_ShouldBeTrue()
         {
-            var type = Predefined.Bool;
+            var type = Logix.DataType.Bool;
 
             var value = type.SupportsRadix(Radix.Decimal);
 
@@ -141,7 +141,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void SupportsRadix_Float_ShouldBeFalse()
         {
-            var type = Predefined.Bool;
+            var type = Logix.DataType.Bool;
 
             var value = type.SupportsRadix(Radix.Float);
 
@@ -151,7 +151,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void IsValidValue_BoolFalse_ShouldBeTrue()
         {
-            var type = Predefined.Bool;
+            var type = Logix.DataType.Bool;
 
             var value = type.IsValidValue(false);
 
@@ -161,7 +161,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void IsValidValue_BoolFalseString_Should()
         {
-            var type = Predefined.Bool;
+            var type = Logix.DataType.Bool;
 
             var value = type.IsValidValue("True");
 
@@ -171,7 +171,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void IsValidValue_Bool_Should()
         {
-            var type = Predefined.Bool;
+            var type = Logix.DataType.Bool;
 
             var value = type.IsValidValue(null);
 

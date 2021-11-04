@@ -26,9 +26,9 @@ namespace L5Sharp.Core
             Description = description ?? string.Empty;
             
             _members.Add(MemberNames[0],
-                new Member(MemberNames[0], Predefined.Dint));
+                new Member(MemberNames[0], Logix.DataType.Dint));
             _members.Add(MemberNames[1],
-                new Member(MemberNames[1], Predefined.Sint, new Dimensions(length), Radix.Ascii));
+                new Member(MemberNames[1], Logix.DataType.Sint, new Dimensions(length), Radix.Ascii));
         }
 
         public string Name
@@ -81,7 +81,7 @@ namespace L5Sharp.Core
             if (length <= 0)
                 throw new ArgumentException("Length must be greater than 0");
 
-            var data = new Member(MemberNames[1], Predefined.Sint, new Dimensions(length), Radix.Ascii);
+            var data = new Member(MemberNames[1], Logix.DataType.Sint, new Dimensions(length), Radix.Ascii);
             
             _members.Remove(MemberNames[1]);
             _members.Add(data.Name, data);

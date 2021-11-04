@@ -2,7 +2,7 @@
 
 namespace L5Sharp
 {
-    public interface IRung : IRoutineComponent
+    public interface IRung
     {
         int Number { get; }
         RungType Type { get; }

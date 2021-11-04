@@ -25,7 +25,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void Predefined_String_ShouldHaveMembers()
         {
-            var type = Predefined.String;
+            var type = Logix.DataType.String;
 
             type.Len.Should().NotBeNull();
             type.Data.Should().NotBeNull();

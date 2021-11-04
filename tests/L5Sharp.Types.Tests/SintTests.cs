@@ -23,7 +23,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void Predefined_Sint_ShouldNotBeNull()
         {
-            var type = Predefined.Sint;
+            var type = Logix.DataType.Sint;
 
             type.Should().NotBeNull();
             type.Name.Should().Be("SINT");
@@ -60,7 +60,7 @@ namespace L5Sharp.Types.Tests
         {
             var fixture = new Fixture();
             var value = fixture.Create<byte>();
-            var type = Predefined.Sint;
+            var type = Logix.DataType.Sint;
 
             var result = type.ParseValue(value.ToString());
 
@@ -71,7 +71,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void ParseValue_InvalidValue_ShouldBeNull()
         {
-            var type = Predefined.Sint;
+            var type = Logix.DataType.Sint;
 
             var result = type.ParseValue("Invalid");
 
@@ -81,7 +81,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void SupportsRadix_Decimal_ShouldBeTrue()
         {
-            var type = Predefined.Sint;
+            var type = Logix.DataType.Sint;
 
             var value = type.SupportsRadix(Radix.Decimal);
 
@@ -91,7 +91,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void SupportsRadix_Null_ShouldBeFalse()
         {
-            var type = Predefined.Sint;
+            var type = Logix.DataType.Sint;
 
             var value = type.SupportsRadix(Radix.Null);
 
@@ -103,7 +103,7 @@ namespace L5Sharp.Types.Tests
         {
             var fixture = new Fixture();
             var value = fixture.Create<byte>();
-            var type = Predefined.Sint;
+            var type = Logix.DataType.Sint;
 
             var result = type.IsValidValue(value);
 
@@ -115,7 +115,7 @@ namespace L5Sharp.Types.Tests
         {
             var fixture = new Fixture();
             var value = fixture.Create<byte>();
-            var type = Predefined.Sint;
+            var type = Logix.DataType.Sint;
 
             var result = type.IsValidValue(value.ToString());
 
@@ -125,7 +125,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void IsValidValue_Null_Should()
         {
-            var type = Predefined.Sint;
+            var type = Logix.DataType.Sint;
 
             var value = type.IsValidValue(null);
 

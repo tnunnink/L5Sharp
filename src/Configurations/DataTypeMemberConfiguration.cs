@@ -9,7 +9,7 @@ namespace L5Sharp.Configurations
 
         public DataTypeMemberConfiguration(string name)
         {
-            _member = new DataTypeMember(name, Predefined.Undefined);
+            _member = new DataTypeMember(name, Logix.DataType.Undefined);
         }
 
         public IDataTypeMember Compile()

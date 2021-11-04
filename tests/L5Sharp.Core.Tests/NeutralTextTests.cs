@@ -21,7 +21,7 @@ namespace L5Sharp.Core.Tests
         {
             var text = NeutralText.Create<MOV>();
             
-            text.Assign(m => m.Source, new Tag("Test", Predefined.Dint));
+            text.Assign(m => m.Source, new Tag("Test", Logix.DataType.Dint));
         }
     }
 }

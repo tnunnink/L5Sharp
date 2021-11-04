@@ -9,7 +9,7 @@ namespace L5Sharp.Core
             ExternalAccess externalAccess = null, string description = null)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name), "Name can not be null");
-            DataType = dataType ?? Predefined.Undefined;
+            DataType = dataType ?? Logix.DataType.Undefined;
             Dimensions = dimension ?? Dimensions.Empty;
             Radix = !(DataType is IAtomic atomic) ? Radix.Null 
                 : radix == null ? atomic.DefaultRadix : radix;
