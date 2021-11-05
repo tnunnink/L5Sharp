@@ -1,26 +1,23 @@
-﻿using System;
-
-namespace L5Sharp.Builders
+﻿namespace L5Sharp.Builders
 {
     internal class RungBuilderOutput : IRungBuilderOutput
     {
-        public RungBuilderOutput()
+        private readonly RungBuilderContext _context;
+
+        public RungBuilderOutput(RungBuilderContext context)
         {
+            _context = context;
         }
 
-        public IRungBuilderOutput And(INeutralText text)
+        public IRungBuilderOutput And(string text)
         {
-            throw new NotImplementedException();
+            _context.BranchOutput(text);
+            return this;
         }
 
-        public IRungBuilderOutput Branch(INeutralText text, Action<IRungBuilderOutput> branch)
+        public IRungBuilder Compile()
         {
-            throw new NotImplementedException();
-        }
-
-        public IRungBuilder Return()
-        {
-            throw new NotImplementedException();
+            return _context.Builder;
         }
     }
 }

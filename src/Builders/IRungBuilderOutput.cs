@@ -1,11 +1,7 @@
-﻿using System;
-
-namespace L5Sharp.Builders
+﻿namespace L5Sharp.Builders
 {
-    public interface IRungBuilderOutput
+    public interface IRungBuilderOutput : IRungBuilderSegment
     {
-        IRungBuilderOutput And(INeutralText text);
-        IRungBuilderOutput Branch(INeutralText text, Action<IRungBuilderOutput> branch);
-        IRungBuilder Return();
+        IRungBuilderOutput And(string text);
     }
 }

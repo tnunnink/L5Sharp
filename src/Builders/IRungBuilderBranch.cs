@@ -2,10 +2,10 @@
 
 namespace L5Sharp.Builders
 {
-    public interface IRungBuilderInput : IRungBuilderSegment
+    public interface IRungBuilderBranch
     {
-        IRungBuilderInput And(string text);
         IRungBuilderBranch Or(Action<IRungBuilderStart> branch);
+        IRungBuilderInput And(string text);
         IRungBuilderOutput Then(string text);
     }
 }

@@ -2,38 +2,34 @@
 
 namespace L5Sharp.Builders
 {
-    internal class RungBuilderInput : IRungBuilderInput
+    internal class RungBuilderBranch : IRungBuilderBranch
     {
         private readonly RungBuilderContext _context;
 
-        public RungBuilderInput(RungBuilderContext context)
+        public RungBuilderBranch(RungBuilderContext context)
         {
             _context = context;
         }
 
-        public IRungBuilderInput And(string text)
-        {
-            _context.Append(text);
-            return this;
-        }
-
         public IRungBuilderBranch Or(Action<IRungBuilderStart> branch)
         {
-            _context.BranchStart();
             _context.BranchAppend();
             branch.Invoke(_context.Start);
             return _context.Branch;
         }
 
-        public IRungBuilderOutput Then(string text)
+        public IRungBuilderInput And(string text)
         {
+            _context.BranchEnd();
             _context.Append(text);
-            return _context.Output;
+            return _context.Input;
         }
 
-        public IRungBuilder Compile()
+        public IRungBuilderOutput Then(string text)
         {
-            return _context.Builder;
+            _context.BranchEnd();
+            _context.Append(text);
+            return _context.Output;
         }
     }
 }
