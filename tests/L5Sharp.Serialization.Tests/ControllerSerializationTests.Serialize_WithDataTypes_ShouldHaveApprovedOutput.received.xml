@@ -1,0 +1,18 @@
+﻿<Controller Name="ControllerName" ProcessorType="" MajorRev="0" MinorRev="0">
+  <DataTypes />
+  <DataType Name="DT1" Family="NoFamily" Class="User">
+    <Description><![CDATA[Test Type 1]]></Description>
+    <Members>
+      <Member Name="ZZZZZZZZZZDT10" DataType="SINT" Dimension="0" Radix="Decimal" Hidden="true" ExternalAccess="Read/Write" />
+      <Member Name="TestMember" DataType="BOOL" Dimension="0" Radix="Decimal" Hidden="false" Target="ZZZZZZZZZZDT10" BitNumber="0" ExternalAccess="Read/Write" />
+    </Members>
+  </DataType>
+  <DataType Name="DT2" Family="NoFamily" Class="User">
+    <Description><![CDATA[Test Type 2]]></Description>
+    <Members>
+      <Member Name="TestMember" DataType="DINT" Dimension="0" Radix="Decimal" Hidden="false" ExternalAccess="Read/Write" />
+    </Members>
+  </DataType>
+  <Programs />
+  <Tasks />
+</Controller>
