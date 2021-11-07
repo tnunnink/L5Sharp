@@ -1,46 +1,77 @@
 ﻿using System;
-using L5Sharp.Core;
+using System.Collections.Generic;
+using System.Linq;
 using L5Sharp.Enums;
 
 namespace L5Sharp.Types
 {
-    public sealed class Bool : Atomic
+    public struct Bool : IAtomic<bool>
     {
-        public Bool() : base(nameof(Bool).ToUpper())
+        private bool _value;
+        
+        public Bool(bool value = default)
         {
+            _value = value;
         }
 
-        public override object DefaultValue => default(bool);
+        public string Name => nameof(Bool).ToUpper();
+        public string Description => string.Empty;
+        public DataTypeFamily Family => DataTypeFamily.None;
+        public DataTypeClass Class => DataTypeClass.Atomic;
+        public TagDataFormat DataFormat => TagDataFormat.Decorated;
+        public IEnumerable<IMember<IDataType>> Members => Enumerable.Empty<IMember<IDataType>>();
 
-        public override bool SupportsRadix(Radix radix)
+        public object Default => default(bool);
+
+        public bool GetValue()
+        {
+            return _value;
+        }
+
+        object IAtomic.GetValue()
+        {
+            return GetValue();
+        }
+
+        public void SetValue(bool value)
+        {
+            _value = value;
+        }
+
+        public void SetValue(object value)
+        {
+            _value = value switch
+            {
+                null => throw new ArgumentNullException(nameof(value), "Value can not be null"),
+                bool b => b,
+                string str => ParseValue(str),
+                _ => throw new ArgumentException($"Value not valid type for {Name}")
+            };
+        }
+
+        public static implicit operator Bool(bool value)
+        {
+            return new Bool(value);
+        }
+
+        public static implicit operator bool(Bool atomic)
+        {
+            return atomic.GetValue();
+        }
+
+        public bool SupportsRadix(Radix radix)
         {
             return radix == Radix.Binary || radix == Radix.Octal || radix == Radix.Decimal || radix == Radix.Hex;
         }
 
-        public override bool IsValidValue(object value)
-        {
-            if (value is string)
-                return ParseValue(value.ToString()) is bool;
-            
-            return value is bool;
-        }
-
-        public override object ParseValue(string value)
+        private static bool ParseValue(string value)
         {
             if (bool.TryParse(value, out var result))
                 return result;
 
-            if (string.Equals(value, "1", StringComparison.OrdinalIgnoreCase)
-                || string.Equals(value, "True", StringComparison.OrdinalIgnoreCase)
-                || string.Equals(value, "Yes", StringComparison.OrdinalIgnoreCase))
-                return true;
-
-            if (string.Equals(value, "0", StringComparison.OrdinalIgnoreCase)
-                || string.Equals(value, "False", StringComparison.OrdinalIgnoreCase)
-                || string.Equals(value, "No", StringComparison.OrdinalIgnoreCase))
-                return false;
-
-            return null;
+            return string.Equals(value, "1", StringComparison.OrdinalIgnoreCase)
+                   || string.Equals(value, "True", StringComparison.OrdinalIgnoreCase)
+                   || string.Equals(value, "Yes", StringComparison.OrdinalIgnoreCase);
         }
     }
 }

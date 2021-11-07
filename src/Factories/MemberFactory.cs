@@ -9,7 +9,7 @@ using L5Sharp.Extensions;
 
 namespace L5Sharp.Factories
 {
-    internal class MemberFactory : IComponentFactory<IMember>
+    internal class MemberFactory : IComponentFactory<IMember<IDataType>>
     {
         private readonly LogixContext _context;
 
@@ -18,7 +18,7 @@ namespace L5Sharp.Factories
             _context = context;
         }
 
-        public IMember Create(XElement element)
+        public IMember<IDataType> Create(XElement element)
         {
             if (element == null)
                 throw new ArgumentNullException(nameof(element));
@@ -28,11 +28,11 @@ namespace L5Sharp.Factories
 
             var name = element.GetName();
             var description = element.GetDescription();
-            var dimensions = element.GetValue<IMember>(m => m.Dimensions);
-            var radix = element.GetValue<IMember>(m => m.Radix);
-            var access = element.GetValue<IMember>(m => m.ExternalAccess);
+            var dimensions = element.GetValue<IMember<IDataType>>(m => m.Dimensions);
+            var radix = element.GetValue<IMember<IDataType>>(m => m.Radix);
+            var access = element.GetValue<IMember<IDataType>>(m => m.ExternalAccess);
 
-            return new DataTypeMember(name, dataType, dimensions, radix, access, description);
+            return new DataTypeMember<IDataType>(name, dataType, dimensions, radix, access, description);
         }
     }
 }

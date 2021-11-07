@@ -1,25 +1,28 @@
-﻿using L5Sharp.Core;
+﻿using System;
+using L5Sharp.Core;
 using L5Sharp.Enums;
+using L5Sharp.Types;
 
 namespace L5Sharp.Configurations
 {
     public class DataTypeMemberConfiguration : IDataTypeMemberConfiguration
     {
-        private readonly DataTypeMember _member;
+        private readonly string _name;
+        private IDataType _dataType;
 
         public DataTypeMemberConfiguration(string name)
         {
-            _member = new DataTypeMember(name, Logix.DataType.Undefined);
+            _name = name;
         }
 
-        public IDataTypeMember Compile()
+        public IDataTypeMember<IDataType> Compile()
         {
-            return _member;
+            return new DataTypeMember<IDataType>(name, new Undefined());;
         }
 
         public IDataTypeMemberConfiguration OfType(IDataType dataType)
         {
-            _member.SetDataType(dataType);
+            _dataType = dataType;
             return this;
         }
 

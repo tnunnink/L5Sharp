@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using L5Sharp.Abstractions;
 using L5Sharp.Enums;
 using L5Sharp.Utilities;
@@ -11,7 +10,7 @@ namespace L5Sharp.Core
     {
         private string _name;
 
-        public DataType(string name, string description = null) : base (name, description)
+        public DataType(string name, string description = null) : base(name, description)
         {
             Validate.DataTypeName(name);
             _name = name;
@@ -19,13 +18,13 @@ namespace L5Sharp.Core
             Members = new DataTypeMembers(this);
         }
 
-        public DataType(string name, IDataTypeMember dataTypeMember, string description = null) 
+        public DataType(string name, IDataTypeMember<IDataType> dataTypeMember, string description = null)
             : this(name, description)
         {
             Members.Add(dataTypeMember);
         }
 
-        public DataType(string name, IEnumerable<IDataTypeMember> members, string description = null) 
+        public DataType(string name, IEnumerable<IDataTypeMember<IDataType>> members, string description = null)
             : this(name, description)
         {
             foreach (var member in members)
@@ -33,17 +32,11 @@ namespace L5Sharp.Core
         }
 
         public override string Name => _name;
-
         public DataTypeFamily Family => DataTypeFamily.None;
-
         public DataTypeClass Class => DataTypeClass.User;
-        
-        public bool IsAtomic => false;
-
         public TagDataFormat DataFormat => TagDataFormat.Decorated;
+        IEnumerable<IMember<IDataType>> IDataType.Members => Members;
         public IDataTypeMembers Members { get; }
-
-        IEnumerable<IMember> IDataType.Members => Members;
 
         public override void SetName(string name)
         {
@@ -51,11 +44,6 @@ namespace L5Sharp.Core
             Validate.DataTypeName(name);
             _name = name;
         }
-
-        public IEnumerable<IDataType> GetDependentTypes() => GetUniqueMemberTypes(this);
-        
-        public IEnumerable<IDataType> GetDependentUserTypes() =>
-            GetUniqueMemberTypes(this).Where(t => t.Class == DataTypeClass.User);
 
         public bool Equals(DataType other)
         {
@@ -92,24 +80,6 @@ namespace L5Sharp.Core
         public static bool operator !=(DataType left, DataType right)
         {
             return !Equals(left, right);
-        }
-
-        /// <summary>
-        /// Recursively walks the member collections and finds all unique data types of the structure
-        /// </summary>
-        /// <param name="dataType">The datatype to walk</param>
-        /// <returns>An enumeration of all unique data types</returns>
-        private static IEnumerable<IDataType> GetUniqueMemberTypes(IDataType dataType)
-        {
-            var types = new List<IDataType>();
-
-            foreach (var member in dataType.Members)
-            {
-                types.Add(member.DataType);
-                types.AddRange(GetUniqueMemberTypes(member.DataType));
-            }
-
-            return types.Distinct();
         }
     }
 }

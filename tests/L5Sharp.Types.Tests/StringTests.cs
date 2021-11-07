@@ -25,7 +25,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void Predefined_String_ShouldHaveMembers()
         {
-            var type = Logix.DataType.String;
+            var type = new String();    
 
             type.Len.Should().NotBeNull();
             type.Data.Should().NotBeNull();
@@ -34,7 +34,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void ParseType_ValidName_ShouldNotBeNull()
         {
-            var type = Logix.DataType.Parse("STRING");
+            var type = Logix.DataType.Create("STRING");
 
             type.Should().NotBeNull();
         }

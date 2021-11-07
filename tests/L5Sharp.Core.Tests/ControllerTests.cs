@@ -3,6 +3,7 @@ using System.Linq;
 using FluentAssertions;
 using L5Sharp.Enums;
 using L5Sharp.Exceptions;
+using L5Sharp.Types;
 using NUnit.Framework;
 
 namespace L5Sharp.Core.Tests
@@ -65,11 +66,11 @@ namespace L5Sharp.Core.Tests
             controller.DataTypes.Add("Test",
                 t => t.HasDescription("This is a test data type")
                     .HasMember("TestMember", c => c
-                        .OfType(Logix.DataType.Alarm)
+                        .OfType(new Alarm())
                         .WithDimension(new Dimensions(4))
                         .HasDescription("This is a test"))
                     .HasMember("AnotherMember", c => c
-                        .OfType(Logix.DataType.Real)
+                        .OfType(new Real())
                         .WithRadix(Radix.Exponential)));
         }
 
@@ -90,16 +91,16 @@ namespace L5Sharp.Core.Tests
         {
             var controller = new Controller("Test");
             var datatype = new DataType("TestType");
-            datatype.Members.Add(new DataTypeMember("Test", Logix.DataType.Bool));
+            datatype.Members.Add(new DataTypeMember<IDataType>("Test", new Bool()));
             controller.DataTypes.Add(datatype);
 
             var type = controller.DataTypes.First();
 
             var member = type.Members.Get("Test");
-            member.SetDataType(Logix.DataType.Dint);
+            //member.(new Dint());
 
-            member.DataType.Should().Be(Logix.DataType.Dint);
-            controller.DataTypes.First().Members.First().DataType.Should().Be(Logix.DataType.Dint);
+            member.DataType.Should().Be(new Dint());
+            controller.DataTypes.First().Members.First().DataType.Should().Be(new Dint());
         }
     }
 }

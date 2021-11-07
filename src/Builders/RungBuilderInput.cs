@@ -13,27 +13,26 @@ namespace L5Sharp.Builders
 
         public IRungBuilderInput And(string text)
         {
-            _context.Append(text);
+            _context.AppendSingle(text);
             return this;
         }
 
-        public IRungBuilderBranch Or(Action<IRungBuilderStart> branch)
+        public IRungBuilderBranch Or(string text)
         {
-            _context.BranchStart();
-            _context.BranchAppend();
-            branch.Invoke(_context.Start);
-            return _context.Branch;
+            _context.AppendBranch(text);
+            return _context.BranchBuilder;
+        }
+
+        public IRungBuilderBranch Or(Action<IRungBuilderSegment> branch)
+        {
+            _context.AppendBranch(branch);
+            return _context.BranchBuilder;
         }
 
         public IRungBuilderOutput Then(string text)
         {
-            _context.Append(text);
-            return _context.Output;
-        }
-
-        public IRungBuilder Compile()
-        {
-            return _context.Builder;
+            _context.AppendSingle(text);
+            return _context.OutputBuilder;
         }
     }
 }

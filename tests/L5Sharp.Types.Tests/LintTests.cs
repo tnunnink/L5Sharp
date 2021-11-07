@@ -23,7 +23,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void Predefined_Lint_ShouldNotBeNull()
         {
-            var type = Logix.DataType.Lint;
+            var type = new Lint();
 
             type.Should().NotBeNull();
             type.Name.Should().Be("LINT");
@@ -36,52 +36,43 @@ namespace L5Sharp.Types.Tests
         {
             var type = new Lint();
 
-            type.DefaultValue.Should().Be(0);
+            type.GetValue().Should().Be(0);
         }
-        
-        [Test]
-        public void DefaultRadix_WhenCalled_ShouldBeExpected()
-        {
-            var type = new Lint();
-
-            type.DefaultRadix.Should().Be(Radix.Decimal);
-        }
-        
 
         [Test]
         public void ParseType_ValidName_ShouldNotBeNull()
         {
-            var type = Logix.DataType.Parse("LINT");
+            var type = Logix.DataType.Create("LINT");
 
             type.Should().NotBeNull();
         }
 
         [Test]
-        public void ParseValue_ValidValue_ShouldReturnExpected()
+        public void SetValue_ValidValue_ShouldReturnExpected()
         {
             var fixture = new Fixture();
             var value = fixture.Create<long>();
-            var type = Logix.DataType.Lint;
+            var type = new Lint();
 
-            var result = type.ParseValue(value.ToString());
+            type.SetValue(value.ToString());
 
-            result.Should().Be(value);
+            type.GetValue().Should().Be(value);
         }
 
         [Test]
-        public void ParseValue_InvalidValue_ShouldBeNull()
+        public void SetValue_InvalidValue_ShouldBeNull()
         {
-            var type = Logix.DataType.Lint;
+            var type = new Lint();
 
-            var result = type.ParseValue("Invalid");
+            type.SetValue("Invalid");
 
-            result.Should().Be(null);
+            type.GetValue().Should().Be(null);
         }
         
         [Test]
         public void SupportsRadix_Decimal_ShouldBeTrue()
         {
-            var type = Logix.DataType.Lint;
+            var type = new Lint();
 
             var value = type.SupportsRadix(Radix.Decimal);
 
@@ -91,43 +82,9 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void SupportsRadix_Null_ShouldBeFalse()
         {
-            var type = Logix.DataType.Lint;
+            var type = new Lint();
 
             var value = type.SupportsRadix(Radix.Null);
-
-            value.Should().BeFalse();
-        }
-        
-        [Test]
-        public void IsValidValue_ValidValue_ShouldBeTrue()
-        {
-            var fixture = new Fixture();
-            var value = fixture.Create<long>();
-            var type = Logix.DataType.Lint;
-
-            var result = type.IsValidValue(value);
-
-            result.Should().BeTrue();
-        }
-        
-        [Test]
-        public void IsValidValue_String_Should()
-        {
-            var fixture = new Fixture();
-            var value = fixture.Create<long>();
-            var type = Logix.DataType.Lint;
-
-            var result = type.IsValidValue(value.ToString());
-
-            result.Should().BeTrue();
-        }
-        
-        [Test]
-        public void IsValidValue_Null_Should()
-        {
-            var type = Logix.DataType.Lint;
-
-            var value = type.IsValidValue(null);
 
             value.Should().BeFalse();
         }

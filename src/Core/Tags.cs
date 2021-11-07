@@ -4,7 +4,7 @@ using L5Sharp.Configurations;
 
 namespace L5Sharp.Core
 {
-    public class Tags : ComponentCollection<ITag>, ITags
+    public class Tags : ComponentCollection<ITag<IDataType>>, ITags
     {
         public Tags(IController controller)
         {

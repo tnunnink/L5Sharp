@@ -1,8 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using FluentAssertions;
-using L5Sharp.Core;
 using L5Sharp.Enums;
+using L5Sharp.Types;
 using NUnit.Framework;
 
 namespace L5Sharp.Tests
@@ -11,35 +10,21 @@ namespace L5Sharp.Tests
     public class LogixTests
     {
         [Test]
-        public void Types_WhenCalled_ShouldNotBeEmpty()
+        public void Names_WhenCalled_ShouldNotBeEmpty()
         {
-            var dataTypes = Logix.DataType.All;
+            var dataTypes = Logix.DataType.Names;
 
             dataTypes.Should().NotBeEmpty();
         }
 
         [Test]
-        public void Atomics_WhenCalled_ShouldNotBeEmpty()
-        {
-            var atomic = Logix.DataType.Atomics.ToList();
-
-            atomic.Should().NotBeEmpty();
-            atomic.Should().Contain(x => x.Name == "BOOL");
-            atomic.Should().Contain(x => x.Name == "SINT");
-            atomic.Should().Contain(x => x.Name == "INT");
-            atomic.Should().Contain(x => x.Name == "DINT");
-            atomic.Should().Contain(x => x.Name == "LINT");
-            atomic.Should().Contain(x => x.Name == "REAL");
-        }
-        
-        [Test]
-        public void ContainsType_TypeThatExistsAsPredefined_ShouldBeTrue()
+        public void Contains_TypeThatExistsAsPredefined_ShouldBeTrue()
         {
             Logix.DataType.Contains("BOOL").Should().BeTrue();
         }
 
         [Test]
-        public void ContainsType_TypeThatDoesNotExistAsPredefined_ShouldBeFalse()
+        public void Contains_TypeThatDoesNotExistAsPredefined_ShouldBeFalse()
         {
             Logix.DataType.Contains("TEMP").Should().BeFalse();
         }
@@ -47,24 +32,25 @@ namespace L5Sharp.Tests
         [Test]
         public void ParseType_RegisteredType_ShouldNotBeNull()
         {
-            var type = Logix.DataType.Parse("Bool");
+            var type = Logix.DataType.Create("Bool");
             type.Should().NotBeNull();
-            type.Should().Be(Logix.DataType.Bool);
+            type.Name.Should().Be("BOOL");
+            type.Should().BeOfType<Bool>();
         }
 
         [Test]
         public void ParseType_StaticField_ShouldNotBeNull()
         {
-            var type = Logix.DataType.Parse("bit");
+            var type = Logix.DataType.Create("bit");
             type.Should().NotBeNull();
-            type.Should().Be(Logix.DataType.Bit);
             type.Name.Should().Be("BOOL");
+            type.Should().BeOfType<Bool>();
         }
 
         [Test]
         public void ParseType_AssemblyValidType_ShouldNotBeExpected()
         {
-            var type = Logix.DataType.Parse("MyPredefined");
+            var type = Logix.DataType.Create("MyPredefined");
             type.Should().NotBeNull();
             type.Name.Should().Be("MyPredefined");
             type.Family.Should().Be(DataTypeFamily.None);
@@ -73,34 +59,18 @@ namespace L5Sharp.Tests
         [Test]
         public void ParseType_AssemblyInvalidType_ShouldNotBeUndefined()
         {
-            var type = Logix.DataType.Parse("MyNullNamePredefined");
+            var type = Logix.DataType.Create("MyNullNamePredefined");
             type.Should().NotBeNull();
-            type.Should().Be(Logix.DataType.Undefined);
+            type.Name.Should().Be("Undefined");
+            type.Should().BeOfType<Undefined>();
         }
         
         [Test]
         public void ParseType_NonExistingType_ShouldNotBeUndefined()
         {
-            var type = Logix.DataType.Parse("Invalid");
-            type.Should().NotBeNull();
-            type.Should().Be(Logix.DataType.Undefined);
-        }
-    }
-
-    public class MyAtomic : Atomic
-    {
-        public override bool IsValidValue(object value)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public override object ParseValue(string value)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        internal MyAtomic(string name, IEnumerable<Member> members = null) : base(name, members)
-        {
+            var type = Logix.DataType.Create("Invalid");
+            type.Name.Should().Be("Undefined");
+            type.Should().BeOfType<Undefined>();
         }
     }
 }

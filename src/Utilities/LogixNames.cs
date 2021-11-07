@@ -36,9 +36,9 @@ namespace L5Sharp.Utilities
         private static readonly Dictionary<Type, string> Components = new Dictionary<Type, string>
         {
             { typeof(IDataType), ComponentNames.DataType },
-            { typeof(IMember), ComponentNames.Member },
+            { typeof(IMember<IDataType>), ComponentNames.Member },
             { typeof(Module), ComponentNames.Module },
-            { typeof(ITag), ComponentNames.Tag },
+            { typeof(ITag<IDataType>), ComponentNames.Tag },
             { typeof(IProgram), ComponentNames.Program },
             { typeof(ITask), ComponentNames.Task }
         };
@@ -46,8 +46,8 @@ namespace L5Sharp.Utilities
         private static readonly Dictionary<Type, string> Containers = new Dictionary<Type, string>
         {
             { typeof(IDataType), ContainerNames.DataTypes },
-            { typeof(IMember), ContainerNames.Members },
-            { typeof(ITag), ContainerNames.Tags },
+            { typeof(IMember<IDataType>), ContainerNames.Members },
+            { typeof(ITag<IDataType>), ContainerNames.Tags },
             { typeof(IProgram), ContainerNames.Programs },
             { typeof(IRoutine), ContainerNames.Routines },
             { typeof(Rung), ContainerNames.Rungs },

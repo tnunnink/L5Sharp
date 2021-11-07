@@ -7,6 +7,7 @@ using ApprovalTests.Reporters;
 using FluentAssertions;
 using L5Sharp.Core;
 using L5Sharp.Extensions;
+using L5Sharp.Types;
 using L5Sharp.Utilities;
 using NUnit.Framework;
 
@@ -57,7 +58,7 @@ namespace L5Sharp.Serialization.Tests
         [Test]
         public void Serialize_Tag_ShouldNotBeNull()
         {
-            var tag = new Tag("TestTag", Logix.DataType.Counter);
+            var tag = new Tag<Counter>("TestTag", new Counter());
 
             var element = tag.Serialize();
 
@@ -68,7 +69,7 @@ namespace L5Sharp.Serialization.Tests
         [UseReporter(typeof(DiffReporter))]
         public void Serialize_Tag_ShouldHaveApprovedOutput()
         {
-            var tag = new Tag("TestTag", Logix.DataType.Counter);
+            var tag = new Tag<Counter>("TestTag", new Counter());
 
             var element = tag.Serialize();
 

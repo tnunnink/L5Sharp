@@ -3,12 +3,12 @@ using L5Sharp.Enums;
 
 namespace L5Sharp
 {
-    public interface IMember : ILogixComponent
+    public interface IMember<out TDataType> : ILogixComponent where TDataType : IDataType
     {
         /// <summary>
         /// The DataType of the member component.
         /// </summary>
-        IDataType DataType { get; }
+        TDataType DataType { get; }
         
         /// <summary>
         /// The Dimensions of the member component
@@ -24,7 +24,5 @@ namespace L5Sharp
         /// This External Access of the member component.
         /// </summary>
         ExternalAccess ExternalAccess { get; }
-        
-        
     }
 }

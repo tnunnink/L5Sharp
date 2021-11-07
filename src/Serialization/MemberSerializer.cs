@@ -9,13 +9,13 @@ using L5Sharp.Utilities;
 
 namespace L5Sharp.Serialization
 {
-    internal class MemberSerializer : IComponentSerializer<IMember>
+    internal class MemberSerializer : IComponentSerializer<IMember<IDataType>>
     {
-        public XElement Serialize(IMember component)
+        public XElement Serialize(IMember<IDataType> component)
         {
             if (component == null) throw new ArgumentNullException(nameof(component));
             
-            var element = new XElement(LogixNames.GetComponentName<IMember>());
+            var element = new XElement(LogixNames.GetComponentName<IMember<IDataType>>());
             element.Add(component.ToAttribute(c => c.Name));
             element.Add(component.ToAttribute(c => c.DataType));
             element.Add(component.ToAttribute(c => c.Dimensions));

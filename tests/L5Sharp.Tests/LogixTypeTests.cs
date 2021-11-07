@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using L5Sharp.Enums;
+using L5Sharp.Types;
 using NUnit.Framework;
 
 namespace L5Sharp.Tests
@@ -10,7 +11,7 @@ namespace L5Sharp.Tests
         [Test]
         public void Get_String_ShouldNotBeNull()
         {
-            var type = Logix.DataType.String;
+            var type = new String();
 
             type.Should().NotBeNull();
             type.Name.Should().Be("STRING");

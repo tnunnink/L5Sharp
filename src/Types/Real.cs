@@ -1,36 +1,63 @@
-﻿using L5Sharp.Core;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using L5Sharp.Enums;
 
 namespace L5Sharp.Types
 {
-    public sealed class Real : Atomic
+    public struct Real : IAtomic<float>
     {
-        public Real() : base(nameof(Real).ToUpper())
+        private float _value;
+        
+        public Real(float value = default)
         {
+            _value = value;
         }
 
-        public override object DefaultValue => default(float);
-        
-        public override Radix DefaultRadix => Radix.Float;
+        public string Name => nameof(Real).ToUpper();
+        public string Description => string.Empty;
+        public DataTypeFamily Family => DataTypeFamily.None;
+        public DataTypeClass Class => DataTypeClass.Atomic;
+        public TagDataFormat DataFormat => TagDataFormat.Decorated;
+        public IEnumerable<IMember<IDataType>> Members => Enumerable.Empty<IMember<IDataType>>();
 
-        public override bool SupportsRadix(Radix radix)
+        public object Default => default(float);
+
+        public float GetValue()
+        {
+            return _value;
+        }
+
+        object IAtomic.GetValue()
+        {
+            return GetValue();
+        }
+
+        public void SetValue(float value)
+        {
+            _value = value;
+        }
+
+        public void SetValue(object value)
+        {
+            _value = value switch
+            {
+                null => throw new ArgumentNullException(nameof(value), "Value can not be null"),
+                float v => v,   
+                string str => ParseValue(str),
+                _ => throw new ArgumentException($"Value not valid type for {Name}")
+            };
+        }
+        
+        public bool SupportsRadix(Radix radix)
         {
             return radix == Radix.Float || radix == Radix.Exponential;
         }
 
-        public override object ParseValue(string value)
+        private static float ParseValue(string value)
         {
-            if (float.TryParse(value, out var result))
-                return result;
-            return null;
-        }
-            
-        public override bool IsValidValue(object value)
-        {
-            if (value is string)
-                value = ParseValue(value.ToString());
-            
-            return value is float;
+            float.TryParse(value, out var result);
+            return result;
         }
     }
 }

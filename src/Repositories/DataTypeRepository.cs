@@ -6,6 +6,7 @@ using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Exceptions;
 using L5Sharp.Extensions;
+using L5Sharp.Types;
 using L5Sharp.Utilities;
 
 [assembly: InternalsVisibleTo("L5Sharp.Repositories.Tests")]
@@ -21,10 +22,10 @@ namespace L5Sharp.Repositories
         public override IDataType Get(string name)
         {
             return Logix.DataType.Contains(name) 
-                ? Logix.DataType.Parse(name) 
+                ? Logix.DataType.Create(name) 
                 : Container.Contains<IDataType>(name) 
                     ? base.Get(name) 
-                    : Logix.DataType.Undefined;
+                    : new Undefined();
         }
 
         public override void Add(IDataType component)
@@ -49,8 +50,8 @@ namespace L5Sharp.Repositories
 
         public IEnumerable<IDataType> WithMemberType(IDataType dataType)
         {
-            return Container.Descendants(LogixNames.GetComponentName<IMember>())
-                .Where(x => x.GetValue<IMember, IDataType, string>(m => m.DataType, s => s) == dataType.Name)
+            return Container.Descendants(LogixNames.GetComponentName<IMember<IDataType>>())
+                .Where(x => x.GetValue<IMember<IDataType>, IDataType, string>(m => m.DataType, s => s) == dataType.Name)
                 .Select(x => Factory.Create(x.Parent));
         }
     }

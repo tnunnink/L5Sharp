@@ -8,17 +8,17 @@ namespace L5Sharp.Builders
         private readonly string _comment;
         private readonly RungBuilderContext _context;
 
-        private RungBuilder(int number, string comment = null)
+        internal RungBuilder(RungBuilderContext context, int number, string comment = null)
         {
+            _context = context;
             _number = number;
             _comment = comment;
-            _context = new RungBuilderContext(this);
         }
 
-        public static IRungBuilderStart New(int number, string comment = null)
+        public static IRungBuilderSegment New(int number, string comment = null)
         {
-            var builder = new RungBuilder(number, comment);
-            return new RungBuilderStart(builder._context);
+            var context = new RungBuilderContext(number, comment);
+            return context.SegmentBuilder;
         }
 
         public IRung Build()

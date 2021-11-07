@@ -460,7 +460,7 @@
         </Instruction>
 
 
-        AND(source_A,source_B,destination)
+        <!--AND(source_A,source_B,destination)
         ARD(channel,destination,serial_port_control,string_length,
         characters_read)
         ARL(channel,destination,serial_port_control,string_length,
@@ -695,7 +695,7 @@
         XIC(data_bit)
         XIO(data_bit)
         XOR(source_A,source_B,destination)
-        XPY(source_A,source_B,destination)
+        XPY(source_A,source_B,destination)-->
 
     </Instruction>
 </Instructions>

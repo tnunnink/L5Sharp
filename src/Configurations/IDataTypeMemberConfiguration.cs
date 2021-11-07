@@ -3,7 +3,7 @@ using L5Sharp.Enums;
 
 namespace L5Sharp.Configurations
 {
-    public interface IDataTypeMemberConfiguration : IComponentConfiguration<IDataTypeMember>
+    public interface IDataTypeMemberConfiguration : IComponentConfiguration<IDataTypeMember<IDataType>>
     {
         IDataTypeMemberConfiguration HasDescription(string description);
         IDataTypeMemberConfiguration OfType(IDataType dataType);

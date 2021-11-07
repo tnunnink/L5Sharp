@@ -14,14 +14,14 @@ namespace L5Sharp.Core
         private const string EnableInRoutineName = "EnableInFalse";
         private readonly List<IRoutine> _routines = new List<IRoutine>();
 
-        public AddOnInstruction(string name, 
+        public AddOnInstruction(string name,
             string description = null, RoutineType type = null, Revision revision = null,
             string revisionExtension = null, string revisionNote = null, string vendor = null,
             bool executePreScan = false, bool executePostScan = false, bool executeEnableInFalse = false,
             DateTime createdDate = default, string createdBy = null,
             DateTime editedDate = default, string editedBy = null,
             Revision softwareRevision = null, string additionalHelpText = null, bool isEncrypted = false,
-            IParameters parameters = null, ITags localTags = null) 
+            IParameters parameters = null, ITags localTags = null)
             : base(name, description)
         {
             Revision = revision ?? new Revision();
@@ -38,9 +38,9 @@ namespace L5Sharp.Core
             SoftwareRevision = softwareRevision;
             AdditionalHelpText = additionalHelpText;
             IsEncrypted = isEncrypted;
-            
+
             Parameters = parameters;
-            
+
             LocalTags = new Tags(this);
             if (localTags != null)
                 LocalTags.AddRange(localTags);
@@ -54,11 +54,32 @@ namespace L5Sharp.Core
 
         public DataTypeClass Class => DataTypeClass.User;
 
-        public bool IsAtomic => false;
-
         public TagDataFormat DataFormat => TagDataFormat.Decorated;
 
+        
+
         public string Signature => $"{Name}({string.Join(",", Operands.Select(m => m.Name))})";
+
+        public INeutralText Of(params ITagMember<IDataType>[] tags)
+        {
+            throw new NotImplementedException();
+        }
+
+        public INeutralText Of(params IAtomic[] values)
+        {
+            throw new NotImplementedException();
+        }
+
+        public INeutralText<TInstruction> Of<TInstruction>(params ITagMember<IDataType>[] tags) where TInstruction : IInstruction, new()
+        {
+            throw new NotImplementedException();
+        }
+
+        public INeutralText<TInstruction> Of<TInstruction>(params IAtomic[] values) where TInstruction : IInstruction, new()
+        {
+            throw new NotImplementedException();
+        }
+
         public RoutineType Type => Routines.Single(r => r.Name == LogicRoutineName).Type;
 
         public Revision Revision { get; private set; }
@@ -93,9 +114,9 @@ namespace L5Sharp.Core
         public IRoutine PreScan => _routines.Single(r => r.Name == PreScanRoutineName);
         public IRoutine PostScan => _routines.Single(r => r.Name == PostScanRoutineName);
         public IRoutine EnableInFalse => _routines.Single(r => r.Name == EnableInRoutineName);
-        public IEnumerable<IMember> Operands => Parameters.Where(p => p.Visible);
+        public IEnumerable<IMember<IDataType>> Operands => Parameters.Where(p => p.Required);
 
-        public IEnumerable<IMember> Members => Parameters;
+        public IEnumerable<IMember<IDataType>> Members => Parameters;
 
         public IParameters Parameters { get; }
 
@@ -125,26 +146,6 @@ namespace L5Sharp.Core
         public void SetVendor(string vendor)
         {
             Vendor = vendor;
-        }
-
-        public IEnumerable<IDataType> GetDependentTypes()
-        {
-            throw new NotImplementedException();
-        }
-
-        public INeutralText GenerateText(params ITagMember[] tags)
-        {
-            throw new NotImplementedException();
-        }
-
-        public INeutralText GenerateText(params object[] tags)
-        {
-            throw new NotImplementedException();
-        }
-
-        public INeutralText<TInstruction> GenerateText<TInstruction>(params ITagMember[] tags) where TInstruction : IInstruction
-        {
-            throw new NotImplementedException();
         }
 
         public void AddPreScanRoutine(RoutineType type)

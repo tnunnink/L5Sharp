@@ -14,7 +14,7 @@ namespace L5Sharp.Types
         
         public override TagDataFormat DataFormat => TagDataFormat.Alarm;
 
-        public IMember EnableIn => Members.SingleOrDefault(m => m.Name == nameof(EnableIn));
+        /*public IMember EnableIn => Members.SingleOrDefault(m => m.Name == nameof(EnableIn));
         public IMember In => Members.SingleOrDefault(m => m.Name == nameof(In));
         public IMember HHLimit => Members.SingleOrDefault(m => m.Name == nameof(HHLimit));
         public IMember HLimit => Members.SingleOrDefault(m => m.Name == nameof(HLimit));
@@ -37,7 +37,7 @@ namespace L5Sharp.Types
         public IMember DeadbandInv => Members.SingleOrDefault(m => m.Name == nameof(DeadbandInv));
         public IMember ROCPosLimitInv => Members.SingleOrDefault(m => m.Name == nameof(ROCPosLimitInv));
         public IMember ROCNegLimitInv => Members.SingleOrDefault(m => m.Name == nameof(ROCNegLimitInv));
-        public IMember ROCPeriodInv => Members.SingleOrDefault(m => m.Name == nameof(ROCPeriodInv));
+        public IMember ROCPeriodInv => Members.SingleOrDefault(m => m.Name == nameof(ROCPeriodInv));*/
         
     }
 }

@@ -6,36 +6,40 @@ using L5Sharp.Utilities;
 
 namespace L5Sharp.Core
 {
-    public class DataTypeMember : LogixComponent, IDataTypeMember, IEquatable<DataTypeMember>
+    public class DataTypeMember<TDataType> : LogixComponent,
+        IDataTypeMember<TDataType>, IEquatable<DataTypeMember<TDataType>>
+        where TDataType : IDataType
     {
-        public DataTypeMember(string name, IDataType dataType, Dimensions dimension = null, Radix radix = null,
+        public DataTypeMember(string name, TDataType dataType, Dimensions dimension = null, Radix radix = null,
             ExternalAccess externalAccess = null, string description = null) : base(name, description)
         {
-            DataType = dataType ?? Logix.DataType.Undefined;
+            DataType = dataType;
             Dimensions = dimension ?? Dimensions.Empty;
-            
-            Radix = radix != null 
-                ? radix.IsValidForType(DataType) 
-                    ? radix : throw new RadixNotSupportedException(radix, DataType)
-                : DataType is IAtomic atomic 
-                    ? atomic.DefaultRadix : Radix.Null;
-            
+
+            Radix = radix != null
+                ? radix.IsValidForType(DataType)
+                    ? radix
+                    : throw new RadixNotSupportedException(radix, DataType)
+                : DataType is IAtomic atomic
+                    ? Radix.Default(atomic)
+                    : Radix.Null;
+
             ExternalAccess = externalAccess == null ? ExternalAccess.ReadWrite : externalAccess;
         }
 
-        public IDataType DataType { get; private set; }
-
+        
+        public TDataType DataType { get; private set; }
         public Dimensions Dimensions { get; private set; }
 
         public Radix Radix { get; private set; }
 
         public ExternalAccess ExternalAccess { get; private set; }
-
-        public void SetDataType(IDataType dataType)
+        
+        public static IDataTypeMember<T> Create<T>(string name, Dimensions dimension = null, Radix radix = null,
+            ExternalAccess externalAccess = null, string description = null) where T : IDataType, new()
         {
-            dataType ??= Logix.DataType.Undefined;
-
-            DataType = dataType;
+            var dataType = new T();
+            return new DataTypeMember<T>(name, dataType, dimension, radix, externalAccess, description);
         }
 
         public void SetDimensions(Dimensions dimensions)
@@ -65,7 +69,7 @@ namespace L5Sharp.Core
             ExternalAccess = externalAccess;
         }
 
-        public bool Equals(DataTypeMember other)
+        public bool Equals(DataTypeMember<TDataType> other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
@@ -78,7 +82,7 @@ namespace L5Sharp.Core
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((DataTypeMember)obj);
+            return obj.GetType() == GetType() && Equals((DataTypeMember<TDataType>)obj);
         }
 
         public override int GetHashCode()
@@ -92,12 +96,12 @@ namespace L5Sharp.Core
             return hashCode.ToHashCode();
         }
 
-        public static bool operator ==(DataTypeMember left, DataTypeMember right)
+        public static bool operator ==(DataTypeMember<TDataType> left, DataTypeMember<TDataType> right)
         {
             return Equals(left, right);
         }
 
-        public static bool operator !=(DataTypeMember left, DataTypeMember right)
+        public static bool operator !=(DataTypeMember<TDataType> left, DataTypeMember<TDataType> right)
         {
             return !Equals(left, right);
         }

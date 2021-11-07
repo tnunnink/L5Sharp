@@ -3,7 +3,7 @@ using L5Sharp.Enums;
 
 namespace L5Sharp.Configurations
 {
-    public interface ITagConfiguration : IComponentConfiguration<ITag>
+    public interface ITagConfiguration : IComponentConfiguration<ITag<IDataType>>
     {
         ITagConfiguration HasDescription(string description);
         ITagConfiguration WithDimensions(Dimensions dimensions);

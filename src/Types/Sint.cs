@@ -1,30 +1,67 @@
-﻿using L5Sharp.Core;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using L5Sharp.Enums;
 
 namespace L5Sharp.Types
 {
-    public class Sint : Atomic
+    public struct Sint : IAtomic<byte>
     {
-        public Sint() : base(nameof(Sint).ToUpper())
+        private byte _value;
+        
+        public Sint(byte value = default)
         {
+            _value = value;
         }
 
-        public override object DefaultValue => default(byte);
+        public string Name => nameof(Sint).ToUpper();
+        public string Description => string.Empty;
+        public DataTypeFamily Family => DataTypeFamily.None;
+        public DataTypeClass Class => DataTypeClass.Atomic;
+        public TagDataFormat DataFormat => TagDataFormat.Decorated;
+        public IEnumerable<IMember<IDataType>> Members => Enumerable.Empty<IMember<IDataType>>();
 
-        public override object ParseValue(string value)
+        public object Default => default(byte);
+
+        public byte GetValue()
         {
-            if (byte.TryParse(value, out var result))
-                return result;
-            
-            return null;
+            return _value;
         }
-            
-        public override bool IsValidValue(object value)
+
+        object IAtomic.GetValue()
         {
-            if (value is string)
-                value = ParseValue(value.ToString());
-            
-            return value is byte;
+            return GetValue();
+        }
+
+        public void SetValue(byte value)
+        {
+            _value = value;
+        }
+
+        public void SetValue(object value)
+        {
+            _value = value switch
+            {
+                null => throw new ArgumentNullException(nameof(value), "Value can not be null"),
+                byte b => b,
+                string str => ParseValue(str),
+                _ => throw new ArgumentException($"Value not valid type for {Name}")
+            };
+        }
+
+        public bool SupportsRadix(Radix radix)
+        {
+            return radix == Radix.Binary
+                   || radix == Radix.Octal
+                   || radix == Radix.Decimal
+                   || radix == Radix.Hex
+                   || radix == Radix.Ascii;
+        }
+
+        private static byte ParseValue(string value)
+        {
+            byte.TryParse(value, out var result);
+            return result;
         }
     }
 }

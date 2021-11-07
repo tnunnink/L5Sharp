@@ -23,64 +23,49 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void Predefined_Dint_ShouldNotBeNull()
         {
-            var type = Logix.DataType.Dint;
+            var type = new Dint();
 
             type.Should().NotBeNull();
             type.Name.Should().Be("DINT");
             type.Class.Should().Be(DataTypeClass.Predefined);
             type.Family.Should().Be(DataTypeFamily.None);
-        }
-
-        [Test]
-        public void DefaultValue_WhenCalled_ShouldBeZero()
-        {
-            var type = new Dint();
-
-            type.DefaultValue.Should().Be(0);
-        }
-        
-        [Test]
-        public void DefaultRadix_WhenCalled_ShouldBeExpected()
-        {
-            var type = new Dint();
-
-            type.DefaultRadix.Should().Be(Radix.Decimal);
+            type.GetValue().Should().Be(0);
         }
 
         [Test]
         public void ParseType_ValidName_ShouldNotBeNull()
         {
-            var type = Logix.DataType.Parse("DINT");
+            var type = Logix.DataType.Create("DINT");
 
             type.Should().NotBeNull();
         }
 
         [Test]
-        public void ParseValue_ValidValue_ShouldReturnExpected()
+        public void SetValue_ValidStringValue_ShouldReturnExpected()
         {
             var fixture = new Fixture();
             var value = fixture.Create<int>();
-            var type = Logix.DataType.Dint;
+            var type = new Dint();
 
-            var result = type.ParseValue(value.ToString());
+            type.SetValue(value.ToString());
 
-            result.Should().Be(value);
+            type.GetValue().Should().Be(value);
         }
 
         [Test]
-        public void ParseValue_InvalidValue_ShouldBeNull()
+        public void SetValue_InvalidValue_ShouldBeNull()
         {
-            var type = Logix.DataType.Dint;
+            var type = new Dint();
 
-            var result = type.ParseValue("Invalid");
+            type.SetValue("Invalid");
 
-            result.Should().Be(null);
+            type.GetValue().Should().Be(0);
         }
         
         [Test]
         public void SupportsRadix_Decimal_ShouldBeTrue()
         {
-            var type = Logix.DataType.Dint;
+            var type = new Dint();
 
             var value = type.SupportsRadix(Radix.Decimal);
 
@@ -90,43 +75,9 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void SupportsRadix_Null_ShouldBeFalse()
         {
-            var type = Logix.DataType.Dint;
+            var type = new Dint();
 
             var value = type.SupportsRadix(Radix.Null);
-
-            value.Should().BeFalse();
-        }
-        
-        [Test]
-        public void IsValidValue_ValidValue_ShouldBeTrue()
-        {
-            var fixture = new Fixture();
-            var value = fixture.Create<int>();
-            var type = Logix.DataType.Dint;
-
-            var result = type.IsValidValue(value);
-
-            result.Should().BeTrue();
-        }
-        
-        [Test]
-        public void IsValidValue_String_Should()
-        {
-            var fixture = new Fixture();
-            var value = fixture.Create<int>();
-            var type = Logix.DataType.Dint;
-
-            var result = type.IsValidValue(value.ToString());
-
-            result.Should().BeTrue();
-        }
-        
-        [Test]
-        public void IsValidValue_Null_Should()
-        {
-            var type = Logix.DataType.Dint;
-
-            var value = type.IsValidValue(null);
 
             value.Should().BeFalse();
         }

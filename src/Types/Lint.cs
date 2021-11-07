@@ -1,35 +1,69 @@
-﻿using L5Sharp.Core;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using L5Sharp.Enums;
 
 namespace L5Sharp.Types
 {
-    public sealed class Lint : Atomic
+    public struct Lint : IAtomic<long>
     {
-        public Lint() : base(nameof(Lint).ToUpper())
+        private long _value;
+        
+        public Lint(long value = default)
         {
+            _value = value;
         }
 
-        public override object DefaultValue => default(long);
+        public string Name => nameof(Lint).ToUpper();
+        public string Description => string.Empty;
+        public DataTypeFamily Family => DataTypeFamily.None;
+        public DataTypeClass Class => DataTypeClass.Atomic;
+        public TagDataFormat DataFormat => TagDataFormat.Decorated;
+        public IEnumerable<IMember<IDataType>> Members => Enumerable.Empty<IMember<IDataType>>();
 
-        public override bool SupportsRadix(Radix radix)
+        public object Default => default(long);
+
+        public long GetValue()
         {
-            return radix == Radix.Binary || radix == Radix.Octal || radix == Radix.Decimal || radix == Radix.Hex
-                   || radix == Radix.Ascii || radix == Radix.DateTime || radix == Radix.DateTimeNs;
+            return _value;
         }
 
-        public override bool IsValidValue(object value)
+        object IAtomic.GetValue()
         {
-            if (value is string)
-                value = ParseValue(value.ToString());
-            
-            return value is long;
+            return GetValue();
         }
 
-        public override object ParseValue(string value)
+        public void SetValue(long value)
         {
-            if (long.TryParse(value, out var result))
-                return result;
-            return null;
+            _value = value;
+        }
+
+        public void SetValue(object value)
+        {
+            _value = value switch
+            {
+                null => throw new ArgumentNullException(nameof(value), "Value can not be null"),
+                long v => v,   
+                string str => ParseValue(str),
+                _ => throw new ArgumentException($"Value not valid type for {Name}")
+            };
+        }
+        
+        public bool SupportsRadix(Radix radix)
+        {
+            return radix == Radix.Binary
+                   || radix == Radix.Octal
+                   || radix == Radix.Decimal
+                   || radix == Radix.Hex
+                   || radix == Radix.Ascii
+                   || radix == Radix.DateTime
+                   || radix == Radix.DateTimeNs;
+        }
+
+        private static long ParseValue(string value)
+        {
+            long.TryParse(value, out var result);
+            return result;
         }
     }
 }

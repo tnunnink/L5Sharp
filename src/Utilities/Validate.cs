@@ -20,11 +20,11 @@ namespace L5Sharp.Utilities
         
         public static void DataTypeName(string name)
         {
-            if (Logix.DataType.All.Any(t => t.Name == name))
+            if (Logix.DataType.Names.Contains(name))
                 throw new ComponentNameCollisionException(name, typeof(Predefined));
         }
         
-        public static void MemberDataType(IMember member, IDataType dataType)
+        public static void MemberDataType(IMember<IDataType> member, IDataType dataType)
         {
             if (member.DataType.Equals(dataType))
                 throw new CircularReferenceException(

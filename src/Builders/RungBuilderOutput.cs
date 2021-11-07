@@ -1,4 +1,6 @@
-﻿namespace L5Sharp.Builders
+﻿using System;
+
+namespace L5Sharp.Builders
 {
     internal class RungBuilderOutput : IRungBuilderOutput
     {
@@ -11,8 +13,14 @@
 
         public IRungBuilderOutput And(string text)
         {
-            _context.BranchOutput(text);
+            _context.AppendBranch(text);
             return this;
+        }
+
+        public IRungBuilderOutput And(Action<IRungBuilderSegment> branch)
+        {
+            _context.AppendBranch(branch);
+            return _context.OutputBuilder;
         }
 
         public IRungBuilder Compile()

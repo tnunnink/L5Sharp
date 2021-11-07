@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using L5Sharp.Core;
 using L5Sharp.Exceptions;
 using L5Sharp.Instructions;
 using L5Sharp.Types;
@@ -14,169 +12,149 @@ namespace L5Sharp
     {
         public static class DataType
         {
-            private static readonly Dictionary<string, IDataType> Registry =
-                new Dictionary<string, IDataType>(StringComparer.OrdinalIgnoreCase);
-            
-            public static readonly Undefined Undefined = new Undefined();
-            public static readonly Bool Bit = new Bool();
-            public static readonly Bool Bool = new Bool();
-            public static readonly Sint Sint = new Sint();
-            public static readonly Int Int = new Int();
-            public static readonly Dint Dint = new Dint();
-            public static readonly Lint Lint = new Lint();
-            public static readonly Real Real = new Real();
-            public static readonly String String = new String();
-            public static readonly Timer Timer = new Timer();
-            public static readonly Counter Counter = new Counter();
-            public static readonly Alarm Alarm = new Alarm();
-            
-            public static IEnumerable<IDataType> All => Registry.Values.ToList();
-            public static IEnumerable<IDataType> Atomics => Registry.Values.Where(t => t is IAtomic).ToList();
+            private static readonly Dictionary<string, Func<IDataType>> Registry =
+                new Dictionary<string, Func<IDataType>>(StringComparer.OrdinalIgnoreCase)
+                {
+                    { nameof(Bool), () => new Bool() },
+                    { "Bit", () => new Bool() }, //Bit is a valid type that appears int the L5X. Its same as a Bool
+                    { nameof(Sint), () => new Sint() },
+                    { nameof(Int), () => new Int() },
+                    { nameof(Dint), () => new Dint() },
+                    { nameof(Lint), () => new Lint() },
+                    { nameof(Real), () => new Real() },
+                    { nameof(Undefined), () => new Undefined() },
+                    { nameof(String), () => new String() },
+                    { nameof(Counter), () => new Counter() },
+                    { nameof(Timer), () => new Timer() },
+                    { nameof(Alarm), () => new Alarm() }
+                };
 
-            public static void Register(IDataType type)
+            /// <summary>
+            /// Gets all registered data type names
+            /// </summary>
+            public static IEnumerable<string> Names => Registry.Keys.ToList();
+
+            /// <summary>
+            /// Registers a data type to the Logix context
+            /// </summary>
+            /// <param name="name">The name of the data type to register</param>
+            /// <param name="create">A delegate for creating the registered data type</param>
+            /// <exception cref="ArgumentException">When name is null or empty</exception>
+            /// <exception cref="ArgumentNullException">When create is null</exception>
+            /// <exception cref="ComponentNameCollisionException">When the provided name already exists in the registry</exception>
+            public static void Register(string name, Func<IDataType> create)
             {
-                if (type == null)
-                    throw new ArgumentNullException(nameof(type), "Type can not be null");
-                    
-                if (Registry.ContainsKey(type.Name))
-                    throw new ComponentNameCollisionException(type.Name, type.GetType());
-                
-                Registry.Add(type.Name, type);
+                if (string.IsNullOrEmpty(name))
+                    throw new ArgumentException("Name can not be null or empty");
+
+                if (create == null)
+                    throw new ArgumentNullException(nameof(create), "Create delegate can not be null or empty");
+
+                if (Registry.ContainsKey(name))
+                    throw new ComponentNameCollisionException(name, typeof(IDataType));
+
+                Registry.Add(name, create);
             }
-            
+
+            /// <summary>
+            /// Determines if the data type name is registered in the current Logix context
+            /// </summary>
+            /// <param name="name">The name of the data type to search</param>
+            /// <returns>True when the registry contains the name of the data type provided</returns>
             public static bool Contains(string name)
             {
-                return Registry.ContainsKey(name)
-                       || FindFieldType(name) != null
-                       || FindAssemblyType(name) != null;
+                return Registry.ContainsKey(name);
             }
 
-            public static IDataType Parse(string name)
+            /// <summary>
+            /// Creates an instance of the given data type
+            /// </summary>
+            /// <param name="name">The name of the data type to create</param>
+            /// <returns>An instance of the IDatatype if it is registered. An instance of Undefined otherwise</returns>
+            public static IDataType Create(string name)
             {
-                if (Registry.ContainsKey(name))
-                    return Registry[name];
-
-                var fieldType = FindFieldType(name);
-                if (fieldType != null)
-                    return fieldType;
-
-                var assemblyType = FindAssemblyType(name);
-
-                try
-                {
-                    return (IDataType)Activator.CreateInstance(assemblyType);
-                }
-                catch (Exception)
-                {
-                    return Undefined;
-                }
+                return Registry.ContainsKey(name) ? Registry[name].Invoke() : new Undefined();
             }
-            
-            private static IDataType FindFieldType(string name)
-            {
-                var field = typeof(DataType).GetField(name, BindingFlags.Public
-                                                              | BindingFlags.Static
-                                                              | BindingFlags.IgnoreCase);
 
-                return (IDataType)field?.GetValue(null);
-            }
-            
             private static Type FindAssemblyType(string name)
             {
                 return GetAssemblyTypes().SingleOrDefault(t => t.Name == name);
             }
-            
+
             private static IEnumerable<Type> GetAssemblyTypes()
             {
                 return from assembly in AppDomain.CurrentDomain.GetAssemblies()
                     from type in assembly.GetTypes()
-                    where type.IsSubclassOf(typeof(Predefined))
+                    where type.IsSubclassOf(typeof(IDataType))
                           && !type.IsAbstract
                           && type.GetConstructor(Type.EmptyTypes) != null
                     select type;
             }
         };
-        
+
         public static class Instruction
         {
-            private static readonly Dictionary<string, IInstruction> Registry =
-                new Dictionary<string, IInstruction>(StringComparer.OrdinalIgnoreCase);
-            
-            public static readonly XIC NULL = new XIC();
-            public static readonly XIC XIC = new XIC();
-            public static readonly XIC XIO = new XIC();
-            public static readonly XIC OTE = new XIC();
-            public static readonly XIC OTL = new XIC();
-            public static readonly XIC OTU = new XIC();
-            public static readonly XIC ONS = new XIC();
-            public static readonly XIC OSR = new XIC();
-            public static readonly XIC OSF = new XIC();
-            public static readonly XIC OSRI = new XIC();
-            public static readonly XIC OSFI = new XIC();
-            public static readonly MOV MOV = new MOV();
-            
-            public static void Register(IInstruction instruction)
-            {
-                if (instruction == null)
-                    throw new ArgumentNullException(nameof(instruction), "Instruction can not be null");
-                    
-                if (Registry.ContainsKey(instruction.Name))
-                    throw new ComponentNameCollisionException(instruction.Name, instruction.GetType());
-                
-                Registry.Add(instruction.Name, instruction);
-            }
-            
-            public static bool Contain(string name)
-            {
-                return Registry.ContainsKey(name)
-                       || FindFieldInstruction(name) != null
-                       || FindAssemblyInstruction(name) != null;
-            }
+            private static readonly Dictionary<string, Func<IInstruction>> Registry =
+                new Dictionary<string, Func<IInstruction>>(StringComparer.OrdinalIgnoreCase)
+                {
+                    { nameof(XIC), () => new XIC() },
+                    { nameof(XIO), () => new XIO() },
+                    { nameof(OTE), () => new OTE() },
+                    { nameof(OTL), () => new OTL() },
+                    { nameof(OTU), () => new OTU() },
+                    { nameof(ONS), () => new ONS() },
+                    { nameof(OSR), () => new OSR() },
+                    { nameof(OSF), () => new OSF() },
+                    { nameof(MOV), () => new MOV() }
+                };
 
-            public static IInstruction Parse(string name)
+            /// <summary>
+            /// Gets all registered instruction names
+            /// </summary>
+            public static IEnumerable<string> Names => Registry.Keys.ToList();
+
+            /// <summary>
+            /// Registers an instruction to the Logix context
+            /// </summary>
+            /// <param name="name">The name of the instruction to register</param>
+            /// <param name="create">A delegate for creating the registered instruction</param>
+            /// <exception cref="ArgumentException">When name is null or empty</exception>
+            /// <exception cref="ArgumentNullException">When create is null</exception>
+            /// <exception cref="ComponentNameCollisionException">When the provided name already exists in the registry</exception>
+            public static void Register(string name, Func<IInstruction> create)
             {
+                if (string.IsNullOrEmpty(name))
+                    throw new ArgumentException("Name can not be null or empty");
+
+                if (create == null)
+                    throw new ArgumentNullException(nameof(create), "Create delegate can not be null or empty");
+
                 if (Registry.ContainsKey(name))
-                    return Registry[name];
+                    throw new ComponentNameCollisionException(name, typeof(IInstruction));
 
-                var fieldType = FindFieldInstruction(name);
-                if (fieldType != null)
-                    return fieldType;
+                Registry.Add(name, create);
+            }
 
-                var assemblyType = FindAssemblyInstruction(name);
+            /// <summary>
+            /// Determines if the instruction name is registered in the current Logix context
+            /// </summary>
+            /// <param name="name">The name of the instruction to search</param>
+            /// <returns>True when the registry contains the name of the instruction provided</returns>
+            public static bool Contains(string name)
+            {
+                return Registry.ContainsKey(name);
+            }
 
-                try
-                {
-                    return (IInstruction)Activator.CreateInstance(assemblyType);
-                }
-                catch (Exception)
-                {
-                    return NULL;
-                }
+            /// <summary>
+            /// Creates an instance of the given instruction
+            /// </summary>
+            /// <param name="name">The name of the instruction to create</param>
+            /// <returns>An instance of the IInstruction if it is registered. An instance of Undefined otherwise</returns>
+            public static IInstruction Create(string name)
+            {
+                return Registry.ContainsKey(name) ? Registry[name].Invoke() : null;
             }
             
-            private static IInstruction FindFieldInstruction(string name)
-            {
-                var field = typeof(Instruction).GetField(name, BindingFlags.Public
-                                                              | BindingFlags.Static
-                                                              | BindingFlags.IgnoreCase);
-
-                return (IInstruction)field?.GetValue(null);
-            }
-            
-            private static Type FindAssemblyInstruction(string name)
-            {
-                return GetAssemblyTypes().SingleOrDefault(t => t.Name == name);
-            }
-            
-            private static IEnumerable<Type> GetAssemblyTypes()
-            {
-                return from assembly in AppDomain.CurrentDomain.GetAssemblies()
-                    from type in assembly.GetTypes()
-                    where type.IsSubclassOf(typeof(L5Sharp.Core.Instruction))
-                          && !type.IsAbstract
-                          && type.GetConstructor(Type.EmptyTypes) != null
-                    select type;
-            }
         };
     }
 }

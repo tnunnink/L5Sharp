@@ -5,15 +5,15 @@ using L5Sharp.Types;
 
 namespace L5Sharp.Instructions
 {
-    public class XIC : Instruction
+    public class OTU : Instruction
     {
-        public XIC() : base(nameof(XIC), "Examine If Closed", GetOperands())
+        public OTU() : base(nameof(OTU), "Output Latch", GetOperands())
         {
         }
-
+        
         public static NeutralText Of(ITagMember<Bool> dataBit)
         {
-            return new NeutralText(new XIC(), dataBit.Name);
+            return new NeutralText(new OTU(), dataBit.Name);    
         }
 
         public IMember<IDataType> DataBit => Operands.SingleOrDefault(p => p.Name == nameof(DataBit));

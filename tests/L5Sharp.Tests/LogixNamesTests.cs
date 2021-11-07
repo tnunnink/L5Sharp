@@ -36,7 +36,7 @@ namespace L5Sharp.Tests
         [Test]
         public void GetContainerName_IMember_ShouldBeDataTypes()
         {
-            var name = LogixNames.GetContainerName<IMember>();
+            var name = LogixNames.GetContainerName<IMember<IDataType>>();
 
             name.Should().Be("Members");
         }
@@ -44,7 +44,7 @@ namespace L5Sharp.Tests
         [Test]
         public void GetContainerName_Member_ShouldBeDataTypes()
         {
-            var name = LogixNames.GetContainerName<DataTypeMember>();
+            var name = LogixNames.GetContainerName<DataTypeMember<IDataType>>();
 
             name.Should().Be("Members");
         }
@@ -52,7 +52,7 @@ namespace L5Sharp.Tests
         [Test]
         public void GetContainerName_ITag_ShouldBeDataTypes()
         {
-            var name = LogixNames.GetContainerName<ITag>();
+            var name = LogixNames.GetContainerName<ITag<IDataType>>();
 
             name.Should().Be("Tags");
         }
@@ -60,7 +60,7 @@ namespace L5Sharp.Tests
         [Test]
         public void GetContainerName_Tag_ShouldBeDataTypes()
         {
-            var name = LogixNames.GetContainerName<Tag>();
+            var name = LogixNames.GetContainerName<Tag<IDataType>>();
 
             name.Should().Be("Tags");
         }

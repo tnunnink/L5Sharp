@@ -1,5 +1,8 @@
 ﻿using FluentAssertions;
 using L5Sharp.Builders;
+using L5Sharp.Core;
+using L5Sharp.Instructions;
+using L5Sharp.Types;
 using NUnit.Framework;
 
 namespace L5Sharp.Configurations.Tests
@@ -38,6 +41,29 @@ namespace L5Sharp.Configurations.Tests
 
             b2.Should().NotBeNull();
         }
+        
+        [Test]
+        public void Branch2_Valid_ShouldBeExpect()
+        {
+            var b2 = RungBuilder.New(2, "This is a test rung comment")
+                .When("XIC(bit1)").And("XI0(bit2)").Then("OTL(bit3)").And("OTU(bit1)")
+                .Compile().Build();
+            
+            b2.Should().NotBeNull();
+        }
+
+        [Test]
+        public void AnotherPlease()
+        {
+            var b = RungBuilder.New(0, "This is a test")
+                .When("XIC(b1)")
+                .Then("OTL(b2)")
+                .And(b => b.When("XIO(b3)").Then("OTU(b1)"))
+                .Compile().Build();
+
+            var result = b.Text;
+            result.Should().NotBeNullOrEmpty();
+        }
 
         [Test]
         public void METHOD()
@@ -45,10 +71,14 @@ namespace L5Sharp.Configurations.Tests
             /*var rung = RungBuilder.New(1, "This is a test rung")
                .When(XIC.Of(new Tag<Bool>("Test1")))
                .And(XIC.Of(new Tag<Bool>("Test2")))
-               .AreEnergized()
                .Then(MOV.Of(10, new Tag("Test", Logix.DataType.Bool)))
-               .End()
+               .Compile()
                .Build();*/
+
+            var tag = new Tag<Int>("Test");
+
+            MOV.Of(new Int(1000), new Tag<Dint>("Test"));
+            
 
             var b3 = RungBuilder.New(2)
                 .When("XIC(bit)")
@@ -66,6 +96,8 @@ namespace L5Sharp.Configurations.Tests
                 .Build();
             
             b3.Should().NotBeNull();
+            
+            
         }
     }
 }

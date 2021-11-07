@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Xml.Linq;
 using L5Sharp.Enums;
 using L5Sharp.Exceptions;
 using L5Sharp.Extensions;
-using L5Sharp.Types;
 using L5Sharp.Utilities;
-using String = L5Sharp.Types.String;
 
 namespace L5Sharp.Core
 {
@@ -19,30 +16,24 @@ namespace L5Sharp.Core
         private static readonly ResourceReader Resources = new ResourceReader(typeof(Predefined));
         private static readonly XDocument PredefinedData = LoadPredefined();
 
-        private static readonly Dictionary<string, IPredefined> RegisteredTypes =
-            new Dictionary<string, IPredefined>(StringComparer.OrdinalIgnoreCase);
+        private readonly Dictionary<string, Member<IDataType>> _members =
+            new Dictionary<string, Member<IDataType>>(StringComparer.OrdinalIgnoreCase);
 
-        private readonly Dictionary<string, Member> _members =
-            new Dictionary<string, Member>(StringComparer.OrdinalIgnoreCase);
-
-        protected Predefined(string name, DataTypeFamily family, IEnumerable<Member> members = null)
+        protected Predefined(string name, DataTypeFamily family, IEnumerable<Member<IDataType>> members = null)
         {
             Validate.Name(name);
             Name = name;
             Family = family ?? throw new ArgumentNullException(nameof(family), "Family can not be null");
 
-            members ??= Array.Empty<Member>();
+            members ??= Array.Empty<Member<IDataType>>();
 
             foreach (var member in members)
             {
                 if (_members.ContainsKey(member.Name))
-                    throw new ComponentNameCollisionException(member.Name, typeof(Member));
+                    throw new ComponentNameCollisionException(member.Name, typeof(Member<IDataType>));
 
                 _members.Add(member.Name, member);
             }
-
-            if (!Logix.DataType.Contains(Name))
-                Logix.DataType.Register(this);
         }
 
         internal Predefined(XElement element)
@@ -53,7 +44,7 @@ namespace L5Sharp.Core
             Family = element.GetValue<IDataType>(d => d.Family)
                      ?? throw new ArgumentNullException(nameof(element), "Family can not be null");
 
-            var members = element.Descendants(LogixNames.GetComponentName<IMember>());
+            var members = element.Descendants(LogixNames.GetComponentName<IMember<IDataType>>());
 
             foreach (var e in members)
             {
@@ -65,49 +56,46 @@ namespace L5Sharp.Core
                     throw new InvalidOperationException(
                         $"Type '{typeName}' has not been defined. Register dependent types before parent type");
 
-                var type = Logix.DataType.Parse(typeName);
+                var type = Logix.DataType.Create(typeName);
 
                 var name = e.GetName();
                 var description = e.GetDescription();
-                var dimension = e.GetValue<IMember>(m => m.Dimensions);
-                var radix = e.GetValue<IMember>(m => m.Radix);
-                var access = e.GetValue<IMember>(m => m.ExternalAccess);
+                var dimension = e.GetValue<IMember<IDataType>>(m => m.Dimensions);
+                var radix = e.GetValue<IMember<IDataType>>(m => m.Radix);
+                var access = e.GetValue<IMember<IDataType>>(m => m.ExternalAccess);
 
-                var member = new Member(name, type, dimension, radix, access, description);
+                var member = new Member<IDataType>(name, type, dimension, radix, access, description);
 
                 _members.Add(member.Name, member);
             }
-
-            if (!Logix.DataType.Contains(Name))
-                Logix.DataType.Register(this);
         }
-
-        /*public static readonly Undefined Undefined = new Undefined();
-        public static readonly Bool Bit = new Bool();
-        public static readonly Bool Bool = new Bool();
-        public static readonly Sint Sint = new Sint();
-        public static readonly Int Int = new Int();
-        public static readonly Dint Dint = new Dint();
-        public static readonly Lint Lint = new Lint();
-        public static readonly Real Real = new Real();
-        public static readonly String String = new String();
-        public static readonly Timer Timer = new Timer();
-        public static readonly Counter Counter = new Counter();
-        public static readonly Alarm Alarm = new Alarm();*/
 
         public string Name { get; }
         public string Description => string.Empty;
         public DataTypeFamily Family { get; }
         public DataTypeClass Class => DataTypeClass.Predefined;
         public virtual TagDataFormat DataFormat => TagDataFormat.Decorated;
-        public IEnumerable<IMember> Members => _members.Values.AsEnumerable();
-        
-        public IMember GetMember(string name)
+        public IEnumerable<IMember<IDataType>> Members => _members.Values.AsEnumerable();
+
+        public IMember<IDataType> GetMember(string name)
         {
             _members.TryGetValue(name, out var member);
             return member;
         }
-        
+
+        public IMember<TType> GetMember<TType>(string name) where TType : IDataType
+        {
+            _members.TryGetValue(name, out var member);
+
+            if (member == null)
+                return null;
+
+            var type = (TType)member.DataType ?? throw new InvalidOperationException();
+
+            return new Member<TType>(member.Name, type, member.Dimensions, member.Radix,
+                member.ExternalAccess, member.Description);
+        }
+
         public override string ToString()
         {
             return Name;

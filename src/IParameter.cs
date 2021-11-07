@@ -1,6 +1,6 @@
 ﻿namespace L5Sharp
 {
-    public interface IParameter : ITag
+    public interface IParameter<out TDataType> : ITag<TDataType> where TDataType : IDataType
     {
         bool Required { get; }
         bool Visible { get; }

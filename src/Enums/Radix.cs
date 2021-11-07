@@ -1,5 +1,6 @@
 ﻿using System;
 using Ardalis.SmartEnum;
+using L5Sharp.Types;
 
 namespace L5Sharp.Enums
 {
@@ -7,6 +8,11 @@ namespace L5Sharp.Enums
     {
         private Radix(string name, int value) : base(name, value)
         {
+        }
+        
+        public static Radix Default(IDataType dataType)
+        {
+            return dataType.Name == nameof(Real).ToUpper() ? Float : Decimal;
         }
 
         public bool IsValidForType(IDataType dataType)

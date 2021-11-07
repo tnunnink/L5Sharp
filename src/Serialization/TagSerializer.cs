@@ -11,7 +11,7 @@ using L5Sharp.Extensions;
 
 namespace L5Sharp.Serialization
 {
-    internal class TagSerializer : IComponentSerializer<ITag>
+    internal class TagSerializer : IComponentSerializer<ITag<IDataType>>
     {
         public const string Data = nameof(Data);
         public const string DataValue = nameof(DataValue);
@@ -23,9 +23,9 @@ namespace L5Sharp.Serialization
         public const string DataValueMember = nameof(DataValueMember);
         public const string StructureMember = nameof(StructureMember);
         
-        public XElement Serialize(ITag component)
+        public XElement Serialize(ITag<IDataType> component)
         {
-            var element = new XElement(nameof(Tag));
+            var element = new XElement(nameof(Tag<IDataType>));
             element.Add(component.ToAttribute(t => t.Name));
             element.Add(component.ToAttribute(t => t.TagType));
             element.Add(component.ToAttribute(t => t.DataType));
@@ -54,9 +54,9 @@ namespace L5Sharp.Serialization
             return element;
         }
 
-        private static XElement GenerateDataElement(ITagMember tag)
+        private static XElement GenerateDataElement(ITagMember<IDataType> tag)
         {
-            var data = new XElement(Data);
+            /*var data = new XElement(Data);
             data.Add(new XAttribute("Format", "Decorated"));
 
             if (tag.IsValueMember)
@@ -87,7 +87,8 @@ namespace L5Sharp.Serialization
             structure.Add(tag.ToAttribute(t => t.DataType));
             structure.Add(tag.Members.Select(m => m.Serialize()));
             data.Add(structure);
-            return data;
+            return data;*/
+            return null;
         }
     }
 }

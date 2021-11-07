@@ -5,7 +5,7 @@ using L5Sharp.Exceptions;
 
 namespace L5Sharp.Core
 {
-    public class DataTypeMembers : ComponentCollection<IDataTypeMember>, IDataTypeMembers
+    public class DataTypeMembers : ComponentCollection<IDataTypeMember<IDataType>>, IDataTypeMembers
     {
         private readonly IDataType _parentType;
 
@@ -14,7 +14,7 @@ namespace L5Sharp.Core
             _parentType = parentType;
         }
         
-        public override void Add(IDataTypeMember component)
+        public override void Add(IDataTypeMember<IDataType> component)
         {
             if (component == null)
                 throw new ArgumentNullException(nameof(component), "Member can not be null");

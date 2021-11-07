@@ -1,6 +1,7 @@
 ﻿using System;
 using FluentAssertions;
 using L5Sharp.Core;
+using L5Sharp.Types;
 using NUnit.Framework;
 
 namespace L5Sharp.Tests
@@ -11,7 +12,7 @@ namespace L5Sharp.Tests
         [Test]
         public void Create_DataTypeMember_ShouldNotBeNull()
         {
-            var member = new DataTypeMember("Test", Logix.DataType.Dint);
+            var member = new DataTypeMember<IDataType>("Test", new Dint());
 
             member.Should().NotBeNull();
         }

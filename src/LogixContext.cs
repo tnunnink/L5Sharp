@@ -94,13 +94,13 @@ namespace L5Sharp
         private void InitializeCache()
         {
             _cache.Add(typeof(IDataType), new ComponentCache<IDataType>());
-            _cache.Add(typeof(ITag), new ComponentCache<ITag>());
+            _cache.Add(typeof(ITag<IDataType>), new ComponentCache<ITag<IDataType>>());
         }
         
         private void InitializeFactories()
         {
             _factories.Add(typeof(IDataType), new DataTypeFactory(this));
-            _factories.Add(typeof(IMember), new MemberFactory(this));
+            _factories.Add(typeof(IMember<IDataType>), new MemberFactory(this));
         }
 
         private static XDocument GenerateContent(ILogixComponent logixComponent, Revision revision)

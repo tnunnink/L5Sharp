@@ -1,9 +1,8 @@
-﻿using L5Sharp.Enums;
-
-namespace L5Sharp
+﻿namespace L5Sharp
 {
     public interface IPredefined : IDataType
     {
-        public IMember GetMember(string name);
+        IMember<IDataType> GetMember(string name);
+        IMember<TType> GetMember<TType>(string name) where TType : IDataType;
     }
 }

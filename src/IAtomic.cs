@@ -2,12 +2,17 @@
 
 namespace L5Sharp
 {
-    internal interface IAtomic : IDataType
+    public interface IAtomic : IDataType
     {
-        public object DefaultValue { get; }
-        public Radix DefaultRadix { get; }
+        object Default { get; }
+        object GetValue();
+        void SetValue(object value);
         bool SupportsRadix(Radix radix);
-        bool IsValidValue(object value);
-        object ParseValue(string value);
+    }
+
+    public interface IAtomic<T> : IAtomic where T : struct
+    {
+        new T GetValue();
+        void SetValue(T value);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using L5Sharp.Core;
+// ReSharper disable InconsistentNaming
 
 namespace L5Sharp.Types
 {
@@ -9,13 +10,13 @@ namespace L5Sharp.Types
         {
                 
         }
-
-        public IMember Pre => Members.SingleOrDefault(m => m.Name == nameof(Pre).ToUpper());
-        public IMember Acc => Members.SingleOrDefault(m => m.Name == nameof(Acc).ToUpper());
-        public IMember Cu => Members.SingleOrDefault(m => m.Name == nameof(Cu).ToUpper());
-        public IMember Cd => Members.SingleOrDefault(m => m.Name == nameof(Cd).ToUpper());
-        public IMember Dn => Members.SingleOrDefault(m => m.Name == nameof(Dn).ToUpper());
-        public IMember Ov => Members.SingleOrDefault(m => m.Name == nameof(Ov).ToUpper());
-        public IMember Un => Members.SingleOrDefault(m => m.Name == nameof(Un).ToUpper());
+        
+        public Dint PRE => GetMember(nameof(PRE)).DataType is Dint d ? d : default;
+        public Dint ACC => GetMember(nameof(ACC)).DataType is Dint d ? d : default;
+        public Bool CU => GetMember(nameof(CU)).DataType is Bool b ? b : default;
+        public Bool CD => GetMember(nameof(CD)).DataType is Bool b ? b : default;
+        public Bool DN => GetMember(nameof(DN)).DataType is Bool b ? b : default;
+        public Bool OV => GetMember(nameof(OV)).DataType is Bool b ? b : default;
+        public Bool UN => GetMember(nameof(UN)).DataType is Bool b ? b : default;
     }
 }
