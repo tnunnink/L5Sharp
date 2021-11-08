@@ -5,7 +5,7 @@ namespace L5Sharp.Core
 {
     public class Member<TDataType> : IMember<TDataType>, IEquatable<Member<TDataType>> where TDataType : IDataType
     {
-        internal Member(string name, TDataType dataType, Dimensions dimension = null, Radix radix = null,
+        public Member(string name, TDataType dataType, Dimensions dimension = null, Radix radix = null,
             ExternalAccess externalAccess = null, string description = null)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name), "Name can not be null");
@@ -23,15 +23,6 @@ namespace L5Sharp.Core
         public Radix Radix { get; }
         public ExternalAccess ExternalAccess { get; }
         public string Description { get; }
-
-        internal static IMember<T> Create<T>(string name,
-            Dimensions dimension = null, Radix radix = null, ExternalAccess externalAccess = null,
-            string description = null)
-            where T : IDataType, new()
-        {
-            var dataType = new T();
-            return new Member<T>(name, dataType, dimension, radix, externalAccess, description);
-        }
 
         public bool Equals(Member<TDataType> other)
         {
@@ -64,4 +55,21 @@ namespace L5Sharp.Core
             return !Equals(left, right);
         }
     }
+
+    public static class Member
+    {
+        public static IMember<IDataType> New(string name, IDataType dataType, Dimensions dimension = null,
+            Radix radix = null, ExternalAccess externalAccess = null, string description = null)
+        {
+            return new Member<IDataType>(name, dataType, dimension, radix, externalAccess, description);
+        }
+        
+        public static IMember<TDataType> OfType<TDataType>(string name, Dimensions dimension = null, Radix radix = null,
+            ExternalAccess externalAccess = null, string description = null)
+            where TDataType : IDataType, new()
+        {
+            var dataType = new TDataType();
+            return new Member<TDataType>(name, dataType, dimension, radix, externalAccess, description);
+        }
+    } 
 }

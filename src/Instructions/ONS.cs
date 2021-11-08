@@ -16,7 +16,7 @@ namespace L5Sharp.Instructions
             return new NeutralText(new ONS(), storage.Name);    
         }
 
-        public IMember<IDataType> StorageBit => Operands.SingleOrDefault(p => p.Name == nameof(StorageBit));
+        public IMember<Bool> StorageBit => GetParameter<Bool>(nameof(StorageBit));
 
         private static IEnumerable<IMember<IDataType>> GetOperands()
         {

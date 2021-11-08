@@ -6,9 +6,9 @@ using L5Sharp.Enums;
 
 namespace L5Sharp.Core
 {
-    public class AddOnInstruction : LogixComponent, IAddOnInstruction
+    public class AddOnInstruction //: LogixComponent, IAddOnInstruction
     {
-        private const string LogicRoutineName = "Logic";
+        /*private const string LogicRoutineName = "Logic";
         private const string PreScanRoutineName = "Prescan";
         private const string PostScanRoutineName = "Postscan";
         private const string EnableInRoutineName = "EnableInFalse";
@@ -60,22 +60,14 @@ namespace L5Sharp.Core
 
         public string Signature => $"{Name}({string.Join(",", Operands.Select(m => m.Name))})";
 
-        public INeutralText Of(params ITagMember<IDataType>[] tags)
+        public IEnumerable<ITagMember<IDataType>> Arguments { get; }
+
+        public NeutralText Of(params ITagMember<IDataType>[] tags)
         {
             throw new NotImplementedException();
         }
 
-        public INeutralText Of(params IAtomic[] values)
-        {
-            throw new NotImplementedException();
-        }
-
-        public INeutralText<TInstruction> Of<TInstruction>(params ITagMember<IDataType>[] tags) where TInstruction : IInstruction, new()
-        {
-            throw new NotImplementedException();
-        }
-
-        public INeutralText<TInstruction> Of<TInstruction>(params IAtomic[] values) where TInstruction : IInstruction, new()
+        public NeutralText Of(params IAtomic[] values)
         {
             throw new NotImplementedException();
         }
@@ -164,6 +156,6 @@ namespace L5Sharp.Core
         {
             var routine = type.Create(LogicRoutineName);
             _routines.Add(routine);
-        }
+        }*/
     }
 }

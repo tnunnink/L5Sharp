@@ -29,7 +29,7 @@ namespace L5Sharp.Types.Tests
             type.Name.Should().Be("DINT");
             type.Class.Should().Be(DataTypeClass.Predefined);
             type.Family.Should().Be(DataTypeFamily.None);
-            type.GetValue().Should().Be(0);
+            type.Get().Should().Be(0);
         }
 
         [Test]
@@ -47,9 +47,9 @@ namespace L5Sharp.Types.Tests
             var value = fixture.Create<int>();
             var type = new Dint();
 
-            type.SetValue(value.ToString());
+            type.Set(value.ToString());
 
-            type.GetValue().Should().Be(value);
+            type.Get().Should().Be(value);
         }
 
         [Test]
@@ -57,9 +57,9 @@ namespace L5Sharp.Types.Tests
         {
             var type = new Dint();
 
-            type.SetValue("Invalid");
+            type.Set("Invalid");
 
-            type.GetValue().Should().Be(0);
+            type.Get().Should().Be(0);
         }
         
         [Test]

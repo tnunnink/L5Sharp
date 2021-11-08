@@ -10,18 +10,18 @@ using L5Sharp.Extensions;
 
 namespace L5Sharp.Factories
 {
-    internal class DataTypeFactory : IComponentFactory<IDataType>
+    internal class DataTypeFactory : IComponentFactory<IUserDefined>
     {
         private readonly LogixContext _context;
-        private readonly IComponentCache<IDataType> _cache;
+        private readonly IComponentCache<IUserDefined> _cache;
 
         public DataTypeFactory(LogixContext context)
         {
             _context = context;
-            _cache = _context.GetCache<IDataType>();
+            _cache = _context.GetCache<IUserDefined>();
         }
 
-        public IDataType Create(XElement element)
+        public IUserDefined Create(XElement element)
         {
             if (element == null)
                 throw new ArgumentNullException(nameof(element));

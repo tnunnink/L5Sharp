@@ -21,7 +21,7 @@ namespace L5Sharp.Core
         public NeutralText(IInstruction instruction)
         {
             Instruction = instruction.Name;
-            _arguments = new List<object>(instruction.Operands.Count());
+            _arguments = new List<object>(instruction.Parameters.Count());
         }
 
         public NeutralText(IInstruction instruction, params object[] args) : this(instruction)

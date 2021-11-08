@@ -1,43 +1,37 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using L5Sharp.Core;
 using L5Sharp.Types;
 
 namespace L5Sharp.Instructions
 {
-    public class MOV : Instruction
+    public class MOV : Instruction,
+        IInstruction<IAtomic, ITagMember<IAtomic>>,
+        IInstruction<ITagMember<IAtomic>, ITagMember<IAtomic>>
     {
         public MOV() : base(nameof(MOV), "Move", GetMembers())
         {
         }
 
-        public static NeutralText Of(ITagMember<IDataType> source, ITagMember<IDataType> destination)
+        public NeutralText Of(IAtomic source, ITagMember<IAtomic> destination)
         {
-            if (destination.DataType != source.DataType)
-                throw new InvalidOperationException();
-            
-            return new NeutralText(new MOV(), source.Name, destination.Name);
+            return new NeutralText(this, source, destination.Name);
         }
 
-        public static NeutralText Of(IAtomic source, ITagMember<IDataType> destination)
+        public NeutralText Of(ITagMember<IAtomic> source, ITagMember<IAtomic> destination)
         {
-            if (destination.DataType != source.Name)
-                throw new InvalidOperationException();
-            
-            return new NeutralText(new MOV(), source.GetValue(), destination.Name);
+            return new NeutralText(this, source.Name, destination.Name);
         }
 
-        public IMember<IDataType> Source => Operands.SingleOrDefault(o => o.Name == nameof(Source));
-
-        public IMember<IDataType> Destination => Operands.SingleOrDefault(o => o.Name == nameof(Destination));
+        public IMember<Dint> Source => GetParameter<Dint>(nameof(Source));
+        public IMember<Dint> Destination => GetParameter<Dint>(nameof(Destination));
 
         private static IEnumerable<IMember<IDataType>> GetMembers()
         {
             return new List<IMember<IDataType>>
             {
-                new Member<IDataType>(nameof(Source), new Dint()),
-                new Member<IDataType>(nameof(Destination), new Dint())
+                Member.New(nameof(Source), new Dint()),
+                Member.New(nameof(Destination), new Dint())
             };
         }
     }

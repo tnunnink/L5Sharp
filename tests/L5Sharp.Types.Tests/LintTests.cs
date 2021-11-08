@@ -36,7 +36,7 @@ namespace L5Sharp.Types.Tests
         {
             var type = new Lint();
 
-            type.GetValue().Should().Be(0);
+            type.Get().Should().Be(0);
         }
 
         [Test]
@@ -54,9 +54,9 @@ namespace L5Sharp.Types.Tests
             var value = fixture.Create<long>();
             var type = new Lint();
 
-            type.SetValue(value.ToString());
+            type.Set(value.ToString());
 
-            type.GetValue().Should().Be(value);
+            type.Get().Should().Be(value);
         }
 
         [Test]
@@ -64,9 +64,9 @@ namespace L5Sharp.Types.Tests
         {
             var type = new Lint();
 
-            type.SetValue("Invalid");
+            type.Set("Invalid");
 
-            type.GetValue().Should().Be(null);
+            type.Get().Should().Be(null);
         }
         
         [Test]

@@ -7,7 +7,6 @@ namespace L5Sharp
     {
         void SetName(string name);
         void SetDescription(string description);
-        //void SetDataType(IDataType dataType); todo this should probably be immutable? if it wasn't, it would not longer be of TDataType and would need to return new instance
         void SetDimensions(Dimensions dimensions);
         void SetRadix(Radix radix);
         void SetExternalAccess(ExternalAccess externalAccess);

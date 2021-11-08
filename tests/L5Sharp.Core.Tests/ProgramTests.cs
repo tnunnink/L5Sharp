@@ -2,6 +2,7 @@
 using FluentAssertions;
 using L5Sharp.Enums;
 using L5Sharp.Exceptions;
+using L5Sharp.Types;
 using NUnit.Framework;
 
 namespace L5Sharp.Core.Tests
@@ -84,7 +85,7 @@ namespace L5Sharp.Core.Tests
         public void GetTag_TagExists_ShouldNotBeNull()
         {
             var program = new Program("Test");
-            var tag = new Tag("Test", Logix.DataType.Bool);
+            var tag = Tag.New("Test", new Bool());
             program.Tags.Add(tag);
 
             var result = program.Tags.Get("Test");
@@ -107,7 +108,7 @@ namespace L5Sharp.Core.Tests
         public void AddTag_ValidName_ShouldNotBeNull()
         {
             var program = new Program("Test");
-            var tag = new Tag("Test", Logix.DataType.Bool);
+            var tag = Tag.New("Test", new Bool());
 
             program.Tags.Add(tag);
 
@@ -118,7 +119,7 @@ namespace L5Sharp.Core.Tests
         public void RemoveTag_Exists_ShouldRemoveFromCollection()
         {
             var program = new Program("Test");
-            var tag = new Tag("Test", Logix.DataType.Bool);
+            var tag = Tag.New("Test", new Bool());
             program.Tags.Add(tag);
 
             program.Tags.Remove(tag.Name);

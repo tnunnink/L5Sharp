@@ -3,7 +3,7 @@ using L5Sharp.Utilities;
 
 namespace L5Sharp.Abstractions
 {
-    public abstract class LogixComponent : IMutableLogixComponent, IEquatable<LogixComponent>
+    public abstract class LogixComponent : ILogixComponent, IEquatable<LogixComponent>
     {
         private string _name;
         private string _description;

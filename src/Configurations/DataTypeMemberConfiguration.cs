@@ -1,7 +1,5 @@
-﻿using System;
-using L5Sharp.Core;
+﻿using L5Sharp.Core;
 using L5Sharp.Enums;
-using L5Sharp.Types;
 
 namespace L5Sharp.Configurations
 {
@@ -9,6 +7,10 @@ namespace L5Sharp.Configurations
     {
         private readonly string _name;
         private IDataType _dataType;
+        private string _description;
+        private Dimensions _dimensions;
+        private Radix _radix;
+        private ExternalAccess _externalAccess;
 
         public DataTypeMemberConfiguration(string name)
         {
@@ -17,7 +19,7 @@ namespace L5Sharp.Configurations
 
         public IDataTypeMember<IDataType> Compile()
         {
-            return new DataTypeMember<IDataType>(name, new Undefined());;
+            return new DataTypeMember<IDataType>(_name, _dataType, _dimensions, _radix, _externalAccess, _description);
         }
 
         public IDataTypeMemberConfiguration OfType(IDataType dataType)
@@ -28,25 +30,25 @@ namespace L5Sharp.Configurations
 
         public IDataTypeMemberConfiguration HasDescription(string description)
         {
-            _member.SetDescription(description);
+            _description = description;
             return this;
         }
 
         public IDataTypeMemberConfiguration WithDimension(Dimensions dimensions)
         {
-            _member.SetDimensions(dimensions);
+            _dimensions = dimensions;
             return this;
         }
 
         public IDataTypeMemberConfiguration WithRadix(Radix radix)
         {
-            _member.SetRadix(radix);
+            _radix = radix;
             return this;
         }
 
         public IDataTypeMemberConfiguration WithAccess(ExternalAccess externalAccess)
         {
-            _member.SetExternalAccess(externalAccess);
+            _externalAccess = externalAccess;
             return this;
         }
     }

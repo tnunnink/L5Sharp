@@ -3,6 +3,7 @@ using System.Linq;
 using FluentAssertions;
 using L5Sharp.Abstractions;
 using L5Sharp.Enums;
+using L5Sharp.Types;
 using NUnit.Framework;
 
 namespace L5Sharp.Core.Tests
@@ -15,21 +16,21 @@ namespace L5Sharp.Core.Tests
         {
         }
 
-        private static IEnumerable<Member> GenerateMembers()
+        private static IEnumerable<Member<IDataType>> GenerateMembers()
         {
-            return new List<Member>
+            return new List<Member<IDataType>>
             {
-                new("Member01", Logix.DataType.Bool),
-                new("Member02", Logix.DataType.Bool),
-                new("Member03", Logix.DataType.Bool),
-                new("Member04", Logix.DataType.Bool),
+                new("Member01", new Bool()),
+                new("Member02", new Bool()),
+                new("Member03", new Bool()),
+                new("Member04", new Bool()),
             };
         }
 
-        public IMember Member01 => Members.SingleOrDefault(m => m.Name == nameof(Member01));
-        public IMember Member02 => Members.SingleOrDefault(m => m.Name == nameof(Member02));
-        public IMember Member03 => Members.SingleOrDefault(m => m.Name == nameof(Member03));
-        public IMember Member04 => Members.SingleOrDefault(m => m.Name == nameof(Member04));
+        public IMember<Bool> Member01 => GetMember<Bool>(nameof(Member01));
+        public IMember<Bool> Member02 => GetMember<Bool>(nameof(Member02));
+        public IMember<Bool> Member03 => GetMember<Bool>(nameof(Member03));
+        public IMember<Bool> Member04 => GetMember<Bool>(nameof(Member04));
 
         [Test]
         public void New_WhenCalled_ShouldNotBeNull()

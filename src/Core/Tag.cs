@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using L5Sharp.Abstractions;
 using L5Sharp.Enums;
 using L5Sharp.Exceptions;
+using L5Sharp.Extensions;
 
 namespace L5Sharp.Core
 {
@@ -30,10 +32,15 @@ namespace L5Sharp.Core
         }
 
         public string FullName => Name;
+
         public string DataType => _dataType.Name;
+
         TDataType IMember<TDataType>.DataType => _dataType;
+
         public Dimensions Dimensions { get; }
+
         public Radix Radix { get; }
+
         public ExternalAccess ExternalAccess { get; private set; }
 
         public TagType TagType => TagType.Base;
@@ -44,25 +51,25 @@ namespace L5Sharp.Core
             : Scope.Null;
 
         public TagUsage Usage { get; private set; }
+
         public bool Constant { get; set; }
+
         public ILogixComponent Parent { get; }
 
-        public object GetValue()
+        public TDataType GetValue()
         {
-            return _dataType is IAtomic atomic ? atomic.GetValue() : null;
+            return _dataType;
         }
 
-        public void SetValue(object value)
+        public void SetValue(IDataType value)
         {
-            if (!(_dataType is IAtomic atomic))
-                return;
+            if (value == null)
+                throw new ArgumentNullException(nameof(value));
 
-            atomic.SetValue(value);
-        }
-
-        public IEnumerable<ITagMember<IDataType>> GetMembers()
-        {
-            throw new NotImplementedException();
+            if (!(value is TDataType type))
+                throw new InvalidTagValueException(value, typeof(TDataType));
+                
+            _dataType = type;
         }
 
         public IEnumerable<string> GetMembersNames()
@@ -70,19 +77,39 @@ namespace L5Sharp.Core
             throw new NotImplementedException();
         }
 
-        public ITagMember<IDataType> GetMember(Func<TDataType, IDataType> expression)
+        public IEnumerable<ITagMember<IDataType>> GetMembers()
         {
             throw new NotImplementedException();
         }
 
-        public ITagMember<IDataType> GetMember(Func<TDataType, IMember<IDataType>> expression)
+        public ITagMember<IDataType> GetMember(string name)
         {
-            var member = expression.Invoke(_dataType);
-            return new Tag<IDataType>(member.Name, member.DataType, member.Dimensions, member.Radix,
-                member.ExternalAccess, member.Description);
+            var member = _dataType.GetMember(name);
+            return new TagMember<IDataType>(member, this);
         }
 
-        public ITagMember<TType> GetMember<TType>(Func<TDataType, TType> expression) where TType : IDataType
+        public ITagMember<TType> GetMember<TType>(Func<TDataType, IMember<TType>> expression) 
+            where TType : IDataType
+        {
+            var member = expression.Invoke(_dataType);
+
+            if (!member.DataType.GetType().IsAssignableFrom(typeof(TType)))
+                throw new InvalidOperationException();
+
+            return new TagMember<TType>(member, this);
+        }
+
+        public void SetMember<TAtomic>(Func<TDataType, IMember<TAtomic>> expression, TAtomic value) where TAtomic : IAtomic
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SetMember<TAtomic>(Func<TDataType, IMember<TAtomic>> expression, Radix radix) where TAtomic : IAtomic
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SetMember<TAtomic>(Func<TDataType, IMember<TAtomic>> expression, string description) where TAtomic : IAtomic
         {
             throw new NotImplementedException();
         }
@@ -135,17 +162,69 @@ namespace L5Sharp.Core
 //            return type.Create<TDataType>(Name, _dataType);
             throw new NotImplementedException();
         }
+
+        /*private void Instantiate()
+        {
+            var members = GenerateMembers(this);
+
+            _members.Clear();
+
+            foreach (var member in members)
+                _members.Add(member.Name, member);
+        }
+
+        private static IEnumerable<TagMember<IDataType>> GenerateMembers(IMember<TDataType> member)
+        {
+            if (member.DataType is IAtomic && member.Dimensions.AreEmpty)
+                return Array.Empty<TagMember<IDataType>>();
+
+            if (!member.Dimensions.AreEmpty)
+                return member.Dimensions.GenerateIndices().Select(i => new TagMember<IDataType>(
+                    new Member<IDataType>(i, member.DataType, Dimensions.Empty,
+                        member.Radix, member.ExternalAccess, member.Description),
+                    member));
+
+            return member.DataType.Members.Select(m => new TagMember<IDataType>(m, member));
+        }*/
     }
 
     public static class Tag
     {
-        public static Tag<TType> New<TType>(string name, Dimensions dimensions = null, Radix radix = null,
+        public static ITag<IDataType> New(string name, IDataType dataType, Dimensions dimensions = null,
+            Radix radix = null, ExternalAccess externalAccess = null, string description = null, TagUsage usage = null,
+            bool constant = false, ILogixComponent parent = null)
+        {
+            return new Tag<IDataType>(name, dataType, dimensions, radix, externalAccess, description, usage, constant,
+                parent);
+        }
+
+        public static ITag<TDataType> OfType<TDataType>(string name, Dimensions dimensions = null, Radix radix = null,
             ExternalAccess externalAccess = null, string description = null, TagUsage usage = null,
             bool constant = false, ILogixComponent parent = null)
-            where TType : IDataType, new()
+            where TDataType : IDataType, new()
         {
-            var dataType = new TType();
-            return new Tag<TType>(name, dataType, dimensions, radix, externalAccess, description, usage, constant,
+            var dataType = new TDataType();
+            return new Tag<TDataType>(name, dataType, dimensions, radix, externalAccess, description, usage, constant,
+                parent);
+        }
+        
+        public static ITag<IAtomic> OfAtomic<TAtomic>(string name, Dimensions dimensions = null, Radix radix = null,
+            ExternalAccess externalAccess = null, string description = null, TagUsage usage = null,
+            bool constant = false, ILogixComponent parent = null)
+            where TAtomic : IAtomic, new()
+        {
+            var dataType = new TAtomic();
+            return new Tag<IAtomic>(name, dataType, dimensions, radix, externalAccess, description, usage, constant,
+                parent);
+        }
+        
+        public static ITag<IPredefined> OfPredefined<TPredefined>(string name, Dimensions dimensions = null, Radix radix = null,
+            ExternalAccess externalAccess = null, string description = null, TagUsage usage = null,
+            bool constant = false, ILogixComponent parent = null)
+            where TPredefined : IPredefined, new()
+        {
+            var dataType = new TPredefined();
+            return new Tag<IPredefined>(name, dataType, dimensions, radix, externalAccess, description, usage, constant,
                 parent);
         }
     }

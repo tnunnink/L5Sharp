@@ -11,13 +11,13 @@ using L5Sharp.Utilities;
 
 namespace L5Sharp.Serialization
 {
-    internal class DataTypeSerializer : IComponentSerializer<IDataType>
+    internal class DataTypeSerializer : IComponentSerializer<IUserDefined>
     {
-        public XElement Serialize(IDataType component)
+        public XElement Serialize(IUserDefined component)
         {
             if (component == null) throw new ArgumentNullException(nameof(component));
 
-            var element = new XElement(LogixNames.GetComponentName<IDataType>());
+            var element = new XElement(LogixNames.GetComponentName<IUserDefined>());
             element.Add(component.ToAttribute(c => c.Name));
             element.Add(component.ToAttribute(c => c.Family));
             element.Add(component.ToAttribute(c => c.Class));

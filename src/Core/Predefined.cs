@@ -87,8 +87,7 @@ namespace L5Sharp.Core
         {
             _members.TryGetValue(name, out var member);
 
-            if (member == null)
-                return null;
+            if (member == null) return null;
 
             var type = (TType)member.DataType ?? throw new InvalidOperationException();
 

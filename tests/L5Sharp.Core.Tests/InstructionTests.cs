@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using L5Sharp.Instructions;
+using NUnit.Framework;
 
 namespace L5Sharp.Core.Tests
 {
@@ -8,7 +9,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void METHOD()
         {
-            var instruction = Logix.Instruction.MOV;
+            var mov = new MOV();
         }
     }
 }

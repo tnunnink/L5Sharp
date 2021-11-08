@@ -38,7 +38,7 @@ namespace L5Sharp.Factories.Tests
        [Test]
        public void Create_ArrayType_ResultShouldExpectedProperties()
        {
-           var element = _document.Descendants(LogixNames.GetComponentName<IDataType>())
+           var element = _document.Descendants(LogixNames.GetComponentName<IUserDefined>())
                .FirstOrDefault(x => x.Attribute("Name")?.Value == "ArrayType");
            
            var result = _factory.Create(element);

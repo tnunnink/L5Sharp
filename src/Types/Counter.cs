@@ -11,12 +11,12 @@ namespace L5Sharp.Types
                 
         }
         
-        public Dint PRE => GetMember(nameof(PRE)).DataType is Dint d ? d : default;
-        public Dint ACC => GetMember(nameof(ACC)).DataType is Dint d ? d : default;
-        public Bool CU => GetMember(nameof(CU)).DataType is Bool b ? b : default;
-        public Bool CD => GetMember(nameof(CD)).DataType is Bool b ? b : default;
-        public Bool DN => GetMember(nameof(DN)).DataType is Bool b ? b : default;
-        public Bool OV => GetMember(nameof(OV)).DataType is Bool b ? b : default;
-        public Bool UN => GetMember(nameof(UN)).DataType is Bool b ? b : default;
+        public IMember<Dint> PRE => GetMember<Dint>(nameof(PRE));
+        public IMember<Dint> ACC => GetMember<Dint>(nameof(ACC));
+        public IMember<Bool> CU => GetMember<Bool>(nameof(CU));
+        public IMember<Bool> CD => GetMember<Bool>(nameof(CD));
+        public IMember<Bool> DN => GetMember<Bool>(nameof(DN));
+        public IMember<Bool> OV => GetMember<Bool>(nameof(OV));
+        public IMember<Bool> UN => GetMember<Bool>(nameof(UN));
     }
 }

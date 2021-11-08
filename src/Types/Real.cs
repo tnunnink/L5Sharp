@@ -19,26 +19,25 @@ namespace L5Sharp.Types
         public DataTypeFamily Family => DataTypeFamily.None;
         public DataTypeClass Class => DataTypeClass.Atomic;
         public TagDataFormat DataFormat => TagDataFormat.Decorated;
-        public IEnumerable<IMember<IDataType>> Members => Enumerable.Empty<IMember<IDataType>>();
 
         public object Default => default(float);
 
-        public float GetValue()
+        public float Get()
         {
             return _value;
         }
 
-        object IAtomic.GetValue()
+        object IAtomic.Get()
         {
-            return GetValue();
+            return Get();
         }
 
-        public void SetValue(float value)
+        public void Set(float value)
         {
             _value = value;
         }
 
-        public void SetValue(object value)
+        public void Set(object value)
         {
             _value = value switch
             {

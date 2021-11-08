@@ -1,28 +1,27 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using L5Sharp.Core;
 using L5Sharp.Types;
 
 namespace L5Sharp.Instructions
 {
-    public class XIC : Instruction
+    public class XIC : Instruction, IInstruction<ITagMember<Bool>>
     {
-        public XIC() : base(nameof(XIC), "Examine If Closed", GetOperands())
+        public XIC() : base(nameof(XIC), "Examine If Closed", GetMembers())
         {
         }
 
-        public static NeutralText Of(ITagMember<Bool> dataBit)
+        public NeutralText Of(ITagMember<Bool> dataBit)
         {
-            return new NeutralText(new XIC(), dataBit.Name);
+            return new NeutralText(this, dataBit.Name);
         }
 
-        public IMember<IDataType> DataBit => Operands.SingleOrDefault(p => p.Name == nameof(DataBit));
+        public IMember<Bool> DataBit => GetParameter<Bool>(nameof(DataBit));
 
-        private static IEnumerable<IMember<IDataType>> GetOperands()
+        private static IEnumerable<IMember<IDataType>> GetMembers()
         {
             return new List<IMember<IDataType>>
             {
-                new Member<IDataType>(nameof(DataBit), new Bool())
+                Member.New(nameof(DataBit), new Bool()),
             };
         }
     }

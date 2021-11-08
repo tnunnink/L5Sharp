@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using FluentAssertions;
 using L5Sharp.Enums;
 using L5Sharp.Exceptions;
+using L5Sharp.Extensions;
+using L5Sharp.Types;
 using NUnit.Framework;
+using String = L5Sharp.Types.String;
 
 namespace L5Sharp.Core.Tests
 {
@@ -13,7 +16,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Name_GetValue_ShouldBeEmpty()
         {
-            var type = Logix.DataType.Undefined;
+            var type = new Undefined();
 
             type.Name.Should().Be("Undefined");
         }
@@ -21,7 +24,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Description_GetValue_ShouldBeEmpty()
         {
-            var type = Logix.DataType.Undefined;
+            var type = new Undefined();
 
             type.Description.Should().BeEmpty();
         }
@@ -29,7 +32,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Class_ValidType_ShouldReturnExpected()
         {
-            var type = Logix.DataType.Undefined;
+            var type = new Undefined();
 
             type.Class.Should().Be(DataTypeClass.Predefined);
         }
@@ -37,7 +40,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void DataFormat_ValidType_ShouldReturnExpected()
         {
-            var type = Logix.DataType.Undefined;
+            var type = new Undefined();
 
             type.DataFormat.Should().Be(TagDataFormat.Decorated);
         }
@@ -45,7 +48,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void GetMember_TypeWithMember_ShouldNotBeNull()
         {
-            var type = Logix.DataType.String;
+            var type = new String();
             var member = type.GetMember("Data");
             member.Should().NotBeNull();
         }
@@ -53,7 +56,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void GetMember_TypeWithoutMember_ShouldBeNull()
         {
-            var type = Logix.DataType.Undefined;
+            var type = new Undefined();
             var member = type.GetMember("Member");
             member.Should().BeNull();
         }
@@ -61,7 +64,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Predefined_WhenCastedToDataType_ShouldThrowInvalidCastException()
         {
-            var atomic = (IDataType)Logix.DataType.Bool;
+            var atomic = (IDataType)new Bool();
 
             FluentActions.Invoking(() => (DataType)atomic).Should().Throw<InvalidCastException>();
         }
@@ -115,13 +118,13 @@ namespace L5Sharp.Core.Tests
             {
             }
 
-            private static IEnumerable<Member> GetMembers()
+            private static IEnumerable<Member<IDataType>> GetMembers()
             {
-                return new List<Member>
+                return new List<Member<IDataType>>
                 {
-                    new("Member01", Logix.DataType.Bool),
-                    new("Member01", Logix.DataType.Bool),
-                    new("Member03", Logix.DataType.Int)
+                    new("Member01", new Bool()),
+                    new("Member01", new Bool()),
+                    new("Member03", new Int())
                 };
             }
         }
@@ -129,8 +132,8 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Equals_TypeOverloadEquals_ShouldBeTrue()
         {
-            var type1 = Logix.DataType.Bool;
-            var type2 = Logix.DataType.Bool;
+            var type1 = new Bool();
+            var type2 = new Bool();
 
             var result = type1.Equals(type2);
 
@@ -140,8 +143,8 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Equals_TypeOverloadNotEquals_ShouldBeFalse()
         {
-            var type1 = Logix.DataType.Bool;
-            var type2 = Logix.DataType.Int;
+            var type1 = new Bool();
+            var type2 = new Int();
 
             var result = type1.Equals(type2);
 
@@ -151,7 +154,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Equals_TypeOverloadNull_ShouldBeFalse()
         {
-            var type = Logix.DataType.Bool;
+            var type = new Bool();
 
             var result = type.Equals(null);
 
@@ -161,8 +164,8 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Equals_ObjectOverloadEquals_ShouldBeTrue()
         {
-            var type1 = Logix.DataType.Bool;
-            var type2 = (object) Logix.DataType.Bool;
+            var type1 = new Bool();
+            var type2 = (object) new Bool();
 
             var result = type1.Equals(type2);
 
@@ -172,7 +175,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Equals_ObjectOverloadSameReference_ShouldBeTrue()
         {
-            var type1 = Logix.DataType.Bool;
+            var type1 = new Bool();
             var type2 = (object) type1;
 
             var result = type1.Equals(type2);
@@ -183,7 +186,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Equals_ObjectOverloadNull_ShouldBeFalse()
         {
-            var type = Logix.DataType.Bool;
+            var type = new Bool();
 
             var result = type.Equals((object) null);
 
@@ -193,7 +196,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Equals_TypeOverloadSameReference_ShouldBeTrue()
         {
-            var type1 = Logix.DataType.Bool;
+            var type1 = new Bool();
 
             var result = type1.Equals(type1);
 
@@ -203,7 +206,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void GetHashCode_WhenCalled_ShouldNotBeZero()
         {
-            var type = Logix.DataType.Undefined;
+            var type = new Undefined();
 
             var hash = type.GetHashCode();
 
@@ -213,8 +216,8 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Equals_OperatorAreEqual_ShouldBeTrue()
         {
-            var type1 = Logix.DataType.Undefined;
-            var type2 = Logix.DataType.Undefined;
+            var type1 = new Undefined();
+            var type2 = new Undefined();
 
             var result = type1 == type2;
 
@@ -224,8 +227,8 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void NotEquals_OperatorAreEqual_ShouldBeFalse()
         {
-            var type1 = Logix.DataType.Undefined;
-            var type2 = Logix.DataType.Undefined;
+            var type1 = new Undefined();
+            var type2 = new Undefined();
 
             var result = type1 != type2;
 

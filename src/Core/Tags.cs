@@ -14,13 +14,13 @@ namespace L5Sharp.Core
         {
         }
         
-        public Tags(IAddOnInstruction instruction)
+        public Tags(IAddOnDefined instruction)
         {
         }
         
         public void Add(string name, IDataType dataType, Action<ITagConfiguration> config = null)
         {
-            var configuration = new TagConfiguration(name, dataType);
+            var configuration = TagConfiguration.New(name);
 
             config?.Invoke(configuration);
 

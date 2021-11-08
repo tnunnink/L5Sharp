@@ -5,26 +5,27 @@ using L5Sharp.Types;
 
 namespace L5Sharp.Instructions
 {
-    public class OSF : Instruction
+    public class OSF : Instruction, IInstruction<ITagMember<Bool>, ITagMember<Bool>>
     {
-        public OSF() : base(nameof(OSF), "One Shot Falling", GetOperands())
+        public OSF() : base(nameof(OSF), "One Shot Falling", GetMembers())
         {
         }
         
-        public static NeutralText Of(ITagMember<Bool> storage, ITagMember<Bool> output)
+        public NeutralText Of(ITagMember<Bool> storage, ITagMember<Bool> output)
         {
-            return new NeutralText(new OSF(), storage.Name, output.Name);    
+            return new NeutralText(this, storage.Name, output.Name);
         }
 
-        public IMember<IDataType> StorageBit => Operands.SingleOrDefault(p => p.Name == nameof(StorageBit));
-        public IMember<IDataType> OutputBit => Operands.SingleOrDefault(p => p.Name == nameof(OutputBit));
+        public IMember<Bool> StorageBit => GetParameter<Bool>(nameof(StorageBit));
 
-        private static IEnumerable<IMember<IDataType>> GetOperands()
+        public IMember<Bool> OutputBit => GetParameter<Bool>(nameof(OutputBit));
+
+        private static IEnumerable<IMember<IDataType>> GetMembers()
         {
             return new List<IMember<IDataType>>
             {
-                new Member<IDataType>(nameof(StorageBit), new Bool()),
-                new Member<IDataType>(nameof(OutputBit), new Bool())
+                Member.New(nameof(StorageBit), new Bool()),
+                Member.New(nameof(OutputBit), new Bool()),
             };
         }
     }

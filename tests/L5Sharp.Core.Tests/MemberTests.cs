@@ -12,7 +12,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void New_ValidNameAndType_ShouldNotBeNull()
         {
-            var member = new Member<Real>("Member", new Real());
+            var member = Member.OfType<Real>("Member");
 
             member.Should().NotBeNull();
         }
@@ -20,21 +20,20 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void New_NullName_ShouldThrowArgumentNullException()
         {
-            FluentActions.Invoking(() => new Member<Dint>(null, new Dint()))
-                .Should().Throw<ArgumentNullException>();
+            FluentActions.Invoking(() => Member.OfType<Dint>(null)).Should().Throw<ArgumentNullException>();
         }
 
         [Test]
         public void New_NullType_ShouldHaveUndefinedDataType()
         {
-            var member = new Member<IDataType>("Name", null);
+            var member = Member.New("Name", null);
             member.DataType.Should().BeNull();
         }
 
         [Test]
         public void New_OverrideProperties_ShouldNotBeNull()
         {
-            var member = new Member<IDataType>("Member", new Real(), new Dimensions(35), Radix.General,
+            var member = Member.New("Member", new Real(), new Dimensions(35), Radix.General,
                 ExternalAccess.ReadOnly, "Test");
 
             member.Should().NotBeNull();
@@ -49,7 +48,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Name_GetValue_ShouldBeExpected()
         {
-            var member = new Member<Real>("Member", new Real());
+            var member = Member.OfType<Real>("Member");
 
             var name = member.Name;
 
@@ -59,7 +58,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void DataType_GetValue_ShouldBeExpected()
         {
-            var member = new Member<Real>("Member", new Real());
+            var member = Member.OfType<Real>("Member");
 
             var dataType = member.DataType;
 
@@ -69,7 +68,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Dimension_GetValue_ShouldBeExpected()
         {
-            var member = new Member<Real>("Member", new Real());
+            var member = Member.OfType<Real>("Member");
 
             var dimension = member.Dimensions;
 
@@ -79,7 +78,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Radix_GetValue_ShouldBeExpected()
         {
-            var member = new Member<Real>("Member", new Real());
+            var member = Member.OfType<Real>("Member");
 
             var radix = member.Radix;
 
@@ -89,7 +88,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void ExternalAccess_GetValue_ShouldBeExpected()
         {
-            var member = new Member<Real>("Member", new Real());
+            var member = Member.OfType<Real>("Member");
 
             var access = member.ExternalAccess;
 
@@ -99,7 +98,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Description_GetValue_ShouldBeExpected()
         {
-            var member = new Member<Real>("Member", new Real());
+            var member = Member.OfType<Real>("Member");
 
             var description = member.Description;
 

@@ -3,7 +3,7 @@ using L5Sharp.Enums;
 
 namespace L5Sharp.Configurations
 {
-    public interface IParameterConfiguration : IComponentConfiguration<IParameter>
+    public interface IParameterConfiguration : IComponentConfiguration<IParameter<IDataType>>
     {
         IParameterConfiguration HasDescription(string description);
         IParameterConfiguration WithDimensions(Dimensions dimensions);

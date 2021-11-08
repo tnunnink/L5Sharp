@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using L5Sharp.Core;
+using L5Sharp.Types;
 using NUnit.Framework;
 
 namespace L5Sharp.Configurations.Tests
@@ -23,10 +24,10 @@ namespace L5Sharp.Configurations.Tests
         {
             var config = new DataTypeMemberConfiguration("Test");
 
-            config.OfType(Logix.DataType.Dint);
+            config.OfType(new Dint());
 
             var result = config.Compile();
-            result.DataType.Should().Be(Logix.DataType.Dint);
+            result.DataType.Should().Be(new Dint());
         }
         
         [Test]

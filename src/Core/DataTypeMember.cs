@@ -27,20 +27,11 @@ namespace L5Sharp.Core
             ExternalAccess = externalAccess == null ? ExternalAccess.ReadWrite : externalAccess;
         }
 
-        
-        public TDataType DataType { get; private set; }
+
+        public TDataType DataType { get; }
         public Dimensions Dimensions { get; private set; }
-
         public Radix Radix { get; private set; }
-
         public ExternalAccess ExternalAccess { get; private set; }
-        
-        public static IDataTypeMember<T> Create<T>(string name, Dimensions dimension = null, Radix radix = null,
-            ExternalAccess externalAccess = null, string description = null) where T : IDataType, new()
-        {
-            var dataType = new T();
-            return new DataTypeMember<T>(name, dataType, dimension, radix, externalAccess, description);
-        }
 
         public void SetDimensions(Dimensions dimensions)
         {
@@ -104,6 +95,24 @@ namespace L5Sharp.Core
         public static bool operator !=(DataTypeMember<TDataType> left, DataTypeMember<TDataType> right)
         {
             return !Equals(left, right);
+        }
+    }
+
+    public static class DataTypeMember
+    {
+        public static IDataTypeMember<IDataType> New(string name, IDataType dataType = null,
+            Dimensions dimension = null,
+            Radix radix = null, ExternalAccess externalAccess = null, string description = null)
+        {
+            return new DataTypeMember<IDataType>(name, dataType, dimension, radix, externalAccess, description);
+        }
+
+        public static IDataTypeMember<TDataType> New<TDataType>(string name, Dimensions dimension = null,
+            Radix radix = null, ExternalAccess externalAccess = null, string description = null)
+            where TDataType : IDataType, new()
+        {
+            var dataType = new TDataType();
+            return new DataTypeMember<TDataType>(name, dataType, dimension, radix, externalAccess, description);
         }
     }
 }

@@ -13,22 +13,13 @@ using L5Sharp.Utilities;
 
 namespace L5Sharp.Repositories
 {
-    internal class DataTypeRepository : Repository<IDataType>, IDataTypeRepository
+    internal class DataTypeRepository : Repository<IUserDefined>, IDataTypeRepository
     {
         public DataTypeRepository(LogixContext context) : base(context)
         {
         }
 
-        public override IDataType Get(string name)
-        {
-            return Logix.DataType.Contains(name) 
-                ? Logix.DataType.Create(name) 
-                : Container.Contains<IDataType>(name) 
-                    ? base.Get(name) 
-                    : new Undefined();
-        }
-
-        public override void Add(IDataType component)
+        public override void Add(IUserDefined component)
         {
             if (Container.Contains<IDataType>(component.Name))
                 throw new ComponentNameCollisionException(component.Name, typeof(IDataType));
@@ -43,7 +34,7 @@ namespace L5Sharp.Repositories
             Container.Add(dependents);
         }
 
-        public override void Update(IDataType component)
+        public override void Update(IUserDefined component)
         {
             throw new System.NotImplementedException();
         }

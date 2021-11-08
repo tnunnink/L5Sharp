@@ -10,24 +10,24 @@ namespace L5Sharp.Instructions
     /// When the OTE instruction is enabled, the controller sets the data bit. When
     /// the OTE instruction is disabled, the controller clears the data bit.
     /// </summary>
-    public class OTE : Instruction
+    public class OTE : Instruction, IInstruction<ITagMember<Bool>>
     {
-        public OTE() : base(nameof(OTE), "Output Energize", GetOperands())
+        public OTE() : base(nameof(OTE), "Output Energize", GetMembers())
         {
         }
         
-        public static NeutralText Of(ITagMember<Bool> dataBit)
+        public NeutralText Of(ITagMember<Bool> dataBit)
         {
-            return new NeutralText(new OTE(), dataBit.Name);    
+            return new NeutralText(this, dataBit.Name);
         }
 
-        public IMember<IDataType> DataBit => Operands.SingleOrDefault(p => p.Name == nameof(DataBit));
+        public IMember<Bool> DataBit => GetParameter<Bool>(nameof(DataBit));
 
-        private static IEnumerable<IMember<IDataType>> GetOperands()
+        private static IEnumerable<IMember<IDataType>> GetMembers()
         {
             return new List<IMember<IDataType>>
             {
-                new Member<IDataType>(nameof(DataBit), new Bool())
+                Member.New(nameof(DataBit), new Bool()),
             };
         }
     }

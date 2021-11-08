@@ -5,43 +5,31 @@ namespace L5Sharp
 {
     public interface IInstruction : ILogixComponent
     {
-        string Signature { get; }
-        IEnumerable<IMember<IDataType>> Operands { get; }
+        NeutralText Signature { get; }
+        IEnumerable<IMember<IDataType>> Parameters { get; }
+        IMember<IDataType> GetParameter(string name);
+        IMember<TType> GetParameter<TType>(string name) where TType : IDataType;
         NeutralText Of(params ITagMember<IDataType>[] tags);
-        NeutralText Of(params IAtomic[] values);
+        NeutralText Of(params object[] values);
     }
 
-    public interface IInstruction<in T1> : IInstruction 
-        where T1 : IDataType
+    public interface IInstruction<in T1> : IInstruction
     {
-        NeutralText Of(ITagMember<T1> tag);
-        NeutralText Of(T1 value);
+        NeutralText Of(T1 parameter1);
     }
     
-    public interface IInstruction<in T1, in T2> : IInstruction 
-        where T1 : IDataType
-        where T2 : IDataType
+    public interface IInstruction<in T1, in T2> : IInstruction
     {
-        NeutralText Of(ITagMember<T1> tag1, ITagMember<T2> tag2);
-        NeutralText Of(T1 value1, T2 value2);
+        NeutralText Of(T1 parameter1, T2 parameter2);
     }
     
-    public interface IInstruction<in T1, in T2, in T3> : IInstruction 
-        where T1 : IDataType
-        where T2 : IDataType
-        where T3 : IDataType
+    public interface IInstruction<in T1, in T2, in T3> : IInstruction
     {
-        NeutralText Of(ITagMember<T1> tag1, ITagMember<T2> tag2, ITagMember<T3> tag3);
-        NeutralText Of(T1 value1, T2 value2, T3 value3);
+        NeutralText Of(T1 parameter1, T2 parameter2, T3 parameter3);
     }
     
-    public interface IInstruction<in T1, in T2, in T3, in T4> : IInstruction 
-        where T1 : IDataType
-        where T2 : IDataType
-        where T3 : IDataType
-        where T4 : IDataType
+    public interface IInstruction<in T1, in T2, in T3, in T4> : IInstruction
     {
-        NeutralText Of(ITagMember<T1> tag1, ITagMember<T2> tag2, ITagMember<T3> tag3, ITagMember<T4> tag4);
-        NeutralText Of(T1 value1, T2 value2, T3 value3, T4 value4);
+        NeutralText Of(T1 parameter1, T2 parameter2, T3 parameter3, T4 parameter4);
     }
 }

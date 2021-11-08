@@ -56,7 +56,7 @@ namespace L5Sharp.Configurations.Tests
         public void AnotherPlease()
         {
             var b = RungBuilder.New(0, "This is a test")
-                .When("XIC(b1)")
+                .When(new XIO().Of(Tag.OfType<Bool>("Test")).Signature)
                 .Then("OTL(b2)")
                 .And(b => b.When("XIO(b3)").Then("OTU(b1)"))
                 .Compile().Build();
@@ -75,10 +75,11 @@ namespace L5Sharp.Configurations.Tests
                .Compile()
                .Build();*/
 
-            var tag = new Tag<Int>("Test");
+            var tag = Tag.OfType<Int>("Test");
 
-            MOV.Of(new Int(1000), new Tag<Dint>("Test"));
-            
+            var b1 = new XIO().Of(Tag.OfType<Bool>("Test"));
+            var text = new MOV().Of(new Dint(1000), Tag.OfAtomic<Dint>("Test"));
+
 
             var b3 = RungBuilder.New(2)
                 .When("XIC(bit)")

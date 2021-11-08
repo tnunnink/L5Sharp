@@ -1,14 +1,28 @@
-﻿namespace L5Sharp
+﻿using L5Sharp.Core;
+using L5Sharp.Enums;
+
+namespace L5Sharp
 {
-    public interface IParameter<out TDataType> : ITag<TDataType> where TDataType : IDataType
+    public interface IParameter<out TDataType> : IMember<TDataType> where TDataType : IDataType
     {
+        TagType TagType { get; }
+        TagUsage Usage { get; }
         bool Required { get; }
         bool Visible { get; }
-        object Min { get; }
-        object Max { get; }
-        object Default { get; }
-        void SetMin(object min);
-        void SetMax(object min);
-        void SetDefault(object min);
+        IAtomic Min { get; }
+        IAtomic Max { get; }
+        IAtomic Default { get; }
+        bool Constant { get; }
+        void SetUsage(TagUsage usage);
+        void IsRequired();
+        void IsVisible();
+        void SetDimensions(Dimensions dimensions);
+        void SetMin(IAtomic value);
+        void SetMax(IAtomic value);
+        void SetDefault(IAtomic value);
+        void SetRadix(Radix radix);
+        void SetExternalAccess(ExternalAccess access);
+        void SetDescription(string description);
+        void IsConstant();
     }
 }

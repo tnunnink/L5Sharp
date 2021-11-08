@@ -28,7 +28,7 @@ namespace L5Sharp.Types.Tests
             type.Name.Should().Be("BOOL");
             type.Class.Should().Be(DataTypeClass.Predefined);
             type.Family.Should().Be(DataTypeFamily.None);
-            type.GetValue().Should().Be(false);
+            type.Get().Should().Be(false);
         }
 
         [Test]
@@ -57,9 +57,9 @@ namespace L5Sharp.Types.Tests
             var value = fixture.Create<bool>();
             var type = new Bool();
 
-            type.SetValue(value.ToString());
+            type.Set(value.ToString());
 
-            type.GetValue().Should().Be(value);
+            type.Get().Should().Be(value);
         }
 
         [Test]
@@ -67,9 +67,9 @@ namespace L5Sharp.Types.Tests
         {
             var type = new Bool();
 
-            type.SetValue("1");
+            type.Set("1");
 
-            type.GetValue().Should().BeTrue();
+            type.Get().Should().BeTrue();
         }
 
         [Test]
@@ -77,9 +77,9 @@ namespace L5Sharp.Types.Tests
         {
             var type = new Bool();
             
-            type.SetValue("Yes");
+            type.Set("Yes");
 
-            type.GetValue().Should().BeTrue();
+            type.Get().Should().BeTrue();
         }
 
         [Test]
@@ -87,9 +87,9 @@ namespace L5Sharp.Types.Tests
         {
             var type = new Bool();
             
-            type.SetValue("0");
+            type.Set("0");
 
-            type.GetValue().Should().BeFalse();
+            type.Get().Should().BeFalse();
         }
 
         [Test]
@@ -97,9 +97,9 @@ namespace L5Sharp.Types.Tests
         {
             var type = new Bool();
             
-            type.SetValue("No");
+            type.Set("No");
 
-            type.GetValue().Should().BeFalse();
+            type.Get().Should().BeFalse();
         }
 
         [Test]
@@ -107,9 +107,9 @@ namespace L5Sharp.Types.Tests
         {
             var type = new Bool();
             
-            type.SetValue("Invalid");
+            type.Set("Invalid");
 
-            type.GetValue().Should().BeFalse();
+            type.Get().Should().BeFalse();
         }
 
         [Test]

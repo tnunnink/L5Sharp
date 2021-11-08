@@ -20,7 +20,7 @@ namespace L5Sharp.Configurations
             _dataType.SetDescription(description);
             return this;
         }
-        public IDataTypeConfiguration HasMember(IDataTypeMember member)
+        public IDataTypeConfiguration HasMember(IDataTypeMember<IDataType> member)
         {
             _dataType.Members.Add(member);
             return this;

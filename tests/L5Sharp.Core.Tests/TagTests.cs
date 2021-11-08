@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Linq;
+using System.Collections.Generic;
 using AutoFixture;
 using FluentAssertions;
 using L5Sharp.Enums;
@@ -235,7 +235,8 @@ namespace L5Sharp.Core.Tests
             var value = fixture.Create<int>();
             var tag = new Tag<IDataType>("Test", new Timer());
 
-            FluentActions.Invoking(() => tag.SetValue(value)).Should().Throw<ComponentNotConfigurableException>();
+            FluentActions.Invoking(() => tag.SetValue(new Dint(value)))
+                .Should().Throw<ComponentNotConfigurableException>();
         }
 
         [Test]
@@ -253,7 +254,7 @@ namespace L5Sharp.Core.Tests
             var expected = fixture.Create<long>();
             var tag = new Tag<IDataType>("Test", new Int());
 
-            FluentActions.Invoking(() => tag.SetValue(expected)).Should().Throw<InvalidTagValueException>();
+            FluentActions.Invoking(() => tag.SetValue(new Lint(expected))).Should().Throw<InvalidTagValueException>();
         }
 
         [Test]
@@ -261,11 +262,11 @@ namespace L5Sharp.Core.Tests
         {
             var fixture = new Fixture();
             var expected = fixture.Create<bool>();
-            var tag = Tag.New<Bool>("Test");
+            var tag = Tag.OfType<Bool>("Test");
 
-            tag.SetValue(expected);
+            tag.SetValue(new Bool(expected));
 
-            tag.GetValue().GetValue().Should().Be(expected);
+            tag.GetValue().Should().Be(expected);
         }
 
         [Test]
@@ -273,11 +274,11 @@ namespace L5Sharp.Core.Tests
         {
             var fixture = new Fixture();
             var expected = fixture.Create<byte>();
-            var tag = Tag.New<Sint>("Test");
+            var tag = Tag.OfType<Sint>("Test");
 
-            tag.SetValue(expected);
+            tag.SetValue(new Sint(expected));
 
-            tag.GetValue().GetValue().Should().Be(expected);
+            tag.GetValue().Should().Be(expected);
         }
 
         [Test]
@@ -285,11 +286,11 @@ namespace L5Sharp.Core.Tests
         {
             var fixture = new Fixture();
             var expected = fixture.Create<short>();
-            var tag = Tag.New<Int>("Test");
+            var tag = Tag.OfType<Int>("Test");
 
-            tag.SetValue(expected);
+            tag.SetValue(new Int(expected));
 
-            tag.GetValue().GetValue().Should().Be(expected);
+            tag.GetValue().Should().Be(expected);
         }
 
         [Test]
@@ -297,11 +298,11 @@ namespace L5Sharp.Core.Tests
         {
             var fixture = new Fixture();
             var expected = fixture.Create<int>();
-            var tag = Tag.New<Dint>("Test");
+            var tag = Tag.OfType<Dint>("Test");
 
-            tag.SetValue(expected);
+            tag.SetValue(new Dint(expected));
 
-            tag.GetValue().GetValue().Should().Be(expected);
+            tag.GetValue().Should().Be(expected);
         }
 
         [Test]
@@ -309,11 +310,11 @@ namespace L5Sharp.Core.Tests
         {
             var fixture = new Fixture();
             var expected = fixture.Create<long>();
-            var tag = Tag.New<Lint>("Test");
+            var tag = Tag.OfType<Lint>("Test");
 
-            tag.SetValue(expected);
+            tag.SetValue(new Lint(expected));
 
-            tag.GetValue().GetValue().Should().Be(expected);
+            tag.GetValue().Should().Be(expected);
         }
 
         [Test]
@@ -321,11 +322,11 @@ namespace L5Sharp.Core.Tests
         {
             var fixture = new Fixture();
             var expected = fixture.Create<float>();
-            var tag = Tag.New<Real>("Test");
+            var tag = Tag.OfType<Real>("Test");
 
-            tag.SetValue(expected);
+            tag.SetValue(new Real(expected));
 
-            tag.GetValue().GetValue().Should().Be(expected);
+            tag.GetValue().Should().Be(expected);
         }
 
         [Test]
@@ -395,11 +396,21 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void GetMember_ValidNameHasMember_ShouldNotBeNull()
         {
-            var tag = Tag.New<Timer>("Test");
+            var tag = Tag.OfType<Timer>("Test");
 
-            var member = tag.GetMember(t => t.ACC);
+            var member = tag.GetMember(t => t.PRE);
 
             member.Should().NotBeNull();
+        }
+        
+        [Test]
+        public void GetMember_GenericTagType_ShouldNotBeNull()
+        {
+            var tag = Tag.New("Test", new Timer());
+
+            var value = tag.GetMember("PRE").GetValue().As<Dint>();
+
+            value.Should().NotBeNull();
         }
 
         [Test]

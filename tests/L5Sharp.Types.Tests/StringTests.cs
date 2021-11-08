@@ -27,8 +27,8 @@ namespace L5Sharp.Types.Tests
         {
             var type = new String();    
 
-            type.Len.Should().NotBeNull();
-            type.Data.Should().NotBeNull();
+            type.LEN.Should().NotBeNull();
+            type.DATA.Should().NotBeNull();
         }
 
         [Test]

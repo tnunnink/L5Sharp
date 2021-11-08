@@ -11,19 +11,11 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void New_ValidInstruction_ShouldHaveExpectedProperties()
         {
-            var text = new NeutralText(Logix.Instruction.MOV);
+            var text = new NeutralText(new MOV());
 
-            text.Instruction.Should().Be(Logix.Instruction.MOV.Name);
+            text.Instruction.Should().Be(nameof(MOV));
             text.Signature.Should().Be("MOV(,)");
             text.Arguments.Should().BeEmpty();
-        }
-
-        [Test]
-        public void GenericTests()
-        {
-            var text = NeutralText.Create<MOV>(10, new Tag<Dint>("Test"));
-            
-            text.Assign(m => m.Destination, new Tag("New Test", Logix.DataType.Dint));
         }
     }
 }
