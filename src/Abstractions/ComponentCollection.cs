@@ -15,6 +15,12 @@ namespace L5Sharp.Abstractions
         public ComponentCollection()
         {
         }
+        
+        public ComponentCollection(int length)
+        {
+            _components = new Dictionary<string, TComponent>(length);
+            _items = new List<string>(length);
+        }
 
         public ComponentCollection(IEnumerable<TComponent> components)
         {

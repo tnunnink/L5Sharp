@@ -21,6 +21,16 @@ namespace L5Sharp.Core.Tests
         }
 
         [Test]
+        public void Array()
+        {
+            var tag = new Tag<Bool>[]
+            {
+                new("Test", new Bool()),
+                
+            };
+        }
+
+        [Test]
         public void New_InvalidTagName_ShouldThrowInvalidNameException()
         {
             var fixture = new Fixture();

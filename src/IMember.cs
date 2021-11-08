@@ -9,7 +9,7 @@ namespace L5Sharp
         /// The DataType of the member component.
         /// </summary>
         TDataType DataType { get; }
-        
+
         /// <summary>
         /// The Dimensions of the member component
         /// </summary>
@@ -24,5 +24,10 @@ namespace L5Sharp
         /// This External Access of the member component.
         /// </summary>
         ExternalAccess ExternalAccess { get; }
+        
+        /// <summary>
+        /// Member Array elements.
+        /// </summary>
+        IMember<TDataType>[] Elements { get; }
     }
 }

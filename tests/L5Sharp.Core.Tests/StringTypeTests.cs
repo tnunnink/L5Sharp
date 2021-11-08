@@ -76,13 +76,13 @@ namespace L5Sharp.Core.Tests
         {
             var type = new StringDefined("Test", 10);
 
-            type.Len.Should().NotBeNull();
-            type.Len.Name.Should().Be("LEN");
-            type.Len.DataType.Should().Be(new Dint());
-            type.Len.Dimensions.Length.Should().Be(0);
-            type.Len.Radix.Should().Be(Radix.Decimal);
-            type.Len.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);
-            type.Len.Description.Should().BeNull();
+            type.LEN.Should().NotBeNull();
+            type.LEN.Name.Should().Be("LEN");
+            type.LEN.DataType.Should().Be(new Dint());
+            type.LEN.Dimensions.Length.Should().Be(0);
+            type.LEN.Radix.Should().Be(Radix.Decimal);
+            type.LEN.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);
+            type.LEN.Description.Should().BeNull();
         }
         
         [Test]
@@ -90,31 +90,13 @@ namespace L5Sharp.Core.Tests
         {
             var type = new StringDefined("Test", 100);
             
-            type.Data.Should().NotBeNull();
-            type.Data.Name.Should().Be("DATA");
-            type.Data.DataType.Should().Be(new Sint());
-            type.Data.Dimensions.Length.Should().Be(100);
-            type.Data.Radix.Should().Be(Radix.Ascii);
-            type.Data.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);
-            type.Data.Description.Should().BeNull();
-        }
-
-        [Test]
-        public void UpdateLength_ValidLength_ShouldUpdateDataMember()
-        {
-            var type = new StringDefined("Test", 100);
-            
-            type.UpdateLength(25);
-
-            type.Data.Dimensions.Length.Should().Be(25);
-        }
-        
-        [Test]
-        public void UpdateLength_InvalidLength_ShouldUpdateDataMember()
-        {
-            var type = new StringDefined("Test", 10);
-            
-            FluentActions.Invoking(() => type.UpdateLength(0)).Should().Throw<ArgumentException>();
+            type.DATA.Should().NotBeNull();
+            type.DATA.Name.Should().Be("DATA");
+            type.DATA.DataType.Should().Be(new Sint());
+            type.DATA.Dimensions.Length.Should().Be(100);
+            type.DATA.Radix.Should().Be(Radix.Ascii);
+            type.DATA.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);
+            type.DATA.Description.Should().BeNull();
         }
     }
 }

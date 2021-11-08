@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using L5Sharp.Abstractions;
 using L5Sharp.Enums;
 using L5Sharp.Exceptions;
@@ -10,6 +11,7 @@ namespace L5Sharp.Core
         IDataTypeMember<TDataType>, IEquatable<DataTypeMember<TDataType>>
         where TDataType : IDataType
     {
+        
         public DataTypeMember(string name, TDataType dataType, Dimensions dimension = null, Radix radix = null,
             ExternalAccess externalAccess = null, string description = null) : base(name, description)
         {
@@ -32,12 +34,13 @@ namespace L5Sharp.Core
         public Dimensions Dimensions { get; private set; }
         public Radix Radix { get; private set; }
         public ExternalAccess ExternalAccess { get; private set; }
+        public IMember<TDataType>[] Elements { get; }
 
         public void SetDimensions(Dimensions dimensions)
         {
             dimensions ??= Dimensions.Empty;
 
-            if (dimensions.IsMultiDimensional)
+            if (dimensions.AreMultiDimensional)
                 throw new InvalidOperationException("Can not set data type member to a multidimensional array");
 
             Dimensions = dimensions;

@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using FluentAssertions;
+using L5Sharp.Abstractions;
 using L5Sharp.Enums;
 using L5Sharp.Types;
 using NUnit.Framework;
@@ -15,6 +17,18 @@ namespace L5Sharp.Core.Tests
             var member = Member.OfType<Real>("Member");
 
             member.Should().NotBeNull();
+        }
+
+        [Test]
+        public void New_ArrayType_ShouldNotBeNull()
+        {
+            var collection = new ComponentCollection<IMember<IDataType>>();
+            
+            var simple = new Member<IDataType>("Test", new Dint());
+            var array = new Member<IDataType>("Test", new Dint(), new Dimensions(10));
+
+            collection.Add(simple);
+            collection.Add(array);
         }
 
         [Test]

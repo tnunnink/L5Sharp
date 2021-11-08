@@ -1,10 +1,6 @@
-﻿using System;
-using AutoFixture;
-using FluentAssertions;
-using L5Sharp.Core;
+﻿using FluentAssertions;
 using L5Sharp.Enums;
 using NUnit.Framework;
-using String = L5Sharp.Types.String;
 
 namespace L5Sharp.Types.Tests
 {
@@ -19,7 +15,7 @@ namespace L5Sharp.Types.Tests
             type.Should().NotBeNull();
             type.Name.Should().Be("STRING");
             type.Class.Should().Be(DataTypeClass.Predefined);
-            type.Family.Should().Be(DataTypeFamily.None);
+            type.Family.Should().Be(DataTypeFamily.String);
         }
 
         [Test]
@@ -29,14 +25,6 @@ namespace L5Sharp.Types.Tests
 
             type.LEN.Should().NotBeNull();
             type.DATA.Should().NotBeNull();
-        }
-
-        [Test]
-        public void ParseType_ValidName_ShouldNotBeNull()
-        {
-            var type = Logix.DataType.Create("STRING");
-
-            type.Should().NotBeNull();
         }
     }
 }

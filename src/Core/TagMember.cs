@@ -34,13 +34,14 @@ namespace L5Sharp.Core
                 ? _member.ExternalAccess
                 : _parent.ExternalAccess;
 
+        public IMember<TDataType>[] Elements { get; }
+
         public string Description => string.IsNullOrEmpty(_description)
             ? $"{_parent.Description} {_member?.Description}"
             : _description;
 
         public ILogixComponent Parent => _parent;
-        
-        
+
         public void SetDescription(string description)
         {
             _description = description;

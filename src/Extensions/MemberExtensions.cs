@@ -8,8 +8,7 @@ namespace L5Sharp.Extensions
         public static IMember<TDataType> As<TDataType>(this IMember<IDataType> member)
             where TDataType : IDataType
         {
-            if (!(member.DataType is TDataType dataType))
-                throw new InvalidCastException();
+            if (!(member.DataType is TDataType dataType)) return null;
 
             return new Member<TDataType>(member.Name, dataType, member.Dimensions, member.Radix, member.ExternalAccess,
                 member.Description);

@@ -5,7 +5,7 @@ using System.Text;
 using L5Sharp.Core;
 using L5Sharp.Enums;
 
-// ReSharper disable InconsistentNaming
+// ReSharper disable InconsistentNaming RSLogix Naming
 
 namespace L5Sharp.Types
 {
@@ -13,49 +13,50 @@ namespace L5Sharp.Types
     {
         private const int PredefinedLength = 82; //This is the built in length of string types in RSLogix
         
-        public String(string value = default)
+        public String()
         {
-            LEN = new Dint();
-            DATA = new Sint[PredefinedLength];
-
+            LEN = Member.OfType<Dint>(nameof(LEN));
+            DATA = Member.OfType<Sint>(nameof(DATA), new Dimensions(PredefinedLength), Radix.Ascii);
+            
             Members = new List<IMember<IDataType>>
             {
-                new Member<IDataType>(nameof(LEN), new Dint()),
-                new Member<IDataType>(nameof(DATA), new Sint(), new Dimensions(PredefinedLength), Radix.Ascii)
+                (IMember<IDataType>)LEN,
+                (IMember<IDataType>)DATA,
             };
-
-            if (!string.IsNullOrEmpty(value))
-                SetValue(value);
         }
 
-        public string Name => nameof(String);
+        private String(string value = default) : this()
+        {
+            if (!string.IsNullOrEmpty(value))
+                Set(value);
+        }
 
+        public string Name => nameof(String).ToUpper();
         public DataTypeFamily Family => DataTypeFamily.String;
-
         public DataTypeClass Class => DataTypeClass.Predefined;
-
         public TagDataFormat DataFormat => TagDataFormat.String;
-
         public string Description => string.Empty;
         public IEnumerable<IMember<IDataType>> Members { get; }
-        public Dint LEN { get; }
-        public Sint[] DATA { get; }
+        public IMember<Dint> LEN { get; }
+        public IMember<Sint> DATA { get; }
 
-        public string GetValue()
+        public string Get()
         {
-            var bytes = DATA.Select(d => d.Get()).ToArray();
+            var bytes = DATA.Elements.Select(d => d.DataType.Get()).ToArray();
             return Encoding.ASCII.GetString(bytes);
         }
 
-        public void SetValue(string value)
+        public void Set(string value)
         {
             var bytes = Encoding.ASCII.GetBytes(value);
 
-            if (bytes.Length > PredefinedLength)
+            if (bytes.Length > LEN.DataType.Get())
                 throw new ArgumentOutOfRangeException();
-
+            
+            ClearData();
+            
             for (var i = 0; i < bytes.Length; i++)
-                DATA[i].Set(bytes[i]);
+                DATA.Elements[i].DataType.Set(bytes[i]);
         }
 
         public static implicit operator String(string input)
@@ -65,7 +66,13 @@ namespace L5Sharp.Types
         
         public static implicit operator string(String input)
         {
-            return input.GetValue();
+            return input.Get();
+        }
+
+        private void ClearData()
+        {
+            foreach (var dataElement in DATA.Elements)
+                dataElement.DataType.Set(0);
         }
     }
 }

@@ -1,12 +1,13 @@
-﻿using L5Sharp.Core;
-using L5Sharp.Enums;
+﻿using L5Sharp.Enums;
 
 namespace L5Sharp.Types
 {
-    public sealed class Undefined : Predefined
+    public sealed class Undefined : IDataType 
     {
-        public Undefined() : base(nameof(Undefined), DataTypeFamily.None)
-        {
-        }
+        public string Name => nameof(Undefined);
+        public string Description => "Data type is not defined";
+        public DataTypeFamily Family => DataTypeFamily.None;
+        public DataTypeClass Class => DataTypeClass.Predefined;
+        public TagDataFormat DataFormat => null;
     }
 }

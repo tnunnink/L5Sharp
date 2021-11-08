@@ -28,6 +28,7 @@ namespace L5Sharp.Core
         public Dimensions Dimensions { get; }
         public Radix Radix { get; }
         public ExternalAccess ExternalAccess { get; }
+        public IMember<TDataType>[] Elements { get; }
         public TagType TagType { get; }
         public TagUsage Usage { get; }
         public bool Required { get; }

@@ -7,82 +7,28 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Core/Parameter.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Extensions/MemberExtensions.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/IString.cs" afterDir="false" />
+    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="reworking to generic types">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Abstractions/LogixComponent.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Abstractions/LogixComponent.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Configurations/DataTypeConfiguration.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Configurations/DataTypeConfiguration.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Configurations/DataTypeMemberConfiguration.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Configurations/DataTypeMemberConfiguration.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Configurations/IDataTypeConfiguration.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Configurations/IDataTypeConfiguration.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Configurations/IParameterConfiguration.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Configurations/IParameterConfiguration.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Configurations/TagConfiguration.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Configurations/TagConfiguration.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/AddOnInstruction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/AddOnInstruction.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Abstractions/ComponentCollection.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Abstractions/ComponentCollection.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Core/DataType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/DataType.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Core/DataTypeMember.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/DataTypeMember.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Core/Dimensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/Dimensions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/Instruction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/Instruction.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Core/Member.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/Member.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/NeutralText.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/NeutralText.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/Predefined.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/Predefined.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/StringType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/StringDefined.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/Parameter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/Parameter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/StringDefined.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/StringDefined.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Core/Tag.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/Tag.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Core/TagMember.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/TagMember.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/Tags.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/Tags.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Extensions/DataTypeExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Extensions/DataTypeExtensions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Factories/DataTypeFactory.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Factories/DataTypeFactory.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/IAddOnDefined.cs" beforeDir="false" afterPath="$PROJECT_DIR$/IAddOnDefined.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/IAddOnInstruction.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/IAtomic.cs" beforeDir="false" afterPath="$PROJECT_DIR$/IAtomic.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Extensions/MemberExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Extensions/MemberExtensions.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/IDataType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/IDataType.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/IDataTypeMember.cs" beforeDir="false" afterPath="$PROJECT_DIR$/IDataTypeMember.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/IInstruction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/IInstruction.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/IMutableLogixComponent.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/IParameter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/IParameter.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/IPredefined.cs" beforeDir="false" afterPath="$PROJECT_DIR$/IPredefined.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ITagMember.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ITagMember.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/IUserDefined.cs" beforeDir="false" afterPath="$PROJECT_DIR$/IUserDefined.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Instructions/MOV.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Instructions/MOV.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Instructions/ONS.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Instructions/ONS.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Instructions/OSF.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Instructions/OSF.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Instructions/OSR.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Instructions/OSR.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Instructions/OTE.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Instructions/OTE.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Instructions/OTL.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Instructions/OTL.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Instructions/OTU.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Instructions/OTU.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Instructions/XIC.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Instructions/XIC.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Instructions/XIO.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Instructions/XIO.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Repositories/DataTypeRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Repositories/DataTypeRepository.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Repositories/IDataTypeRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Repositories/IDataTypeRepository.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Serialization/DataTypeSerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Serialization/DataTypeSerializer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Types/Bool.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Types/Bool.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/IMember.cs" beforeDir="false" afterPath="$PROJECT_DIR$/IMember.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/IString.cs" beforeDir="false" afterPath="$PROJECT_DIR$/IString.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Types/Counter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Types/Counter.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Types/Dint.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Types/Dint.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Types/Int.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Types/Int.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Types/Lint.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Types/Lint.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Types/Real.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Types/Real.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Types/Sint.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Types/Sint.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Types/String.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Types/String.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Types/Timer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Types/Timer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Configurations.Tests/DataTypeMemberConfigurationTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Configurations.Tests/DataTypeMemberConfigurationTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Configurations.Tests/RungBuilderTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Configurations.Tests/RungBuilderTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/InstructionTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/InstructionTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Types/Undefined.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Types/Undefined.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/MemberTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/MemberTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/NeutralTextTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/NeutralTextTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/PredefinedImplementationTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/PredefinedImplementationTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/PredefinedTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/PredefinedTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/ProgramTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/ProgramTests.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/StringTypeTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/StringTypeTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/TagExtensionTests.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/TagInstanceTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/TagInstanceTests.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/TagTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/TagTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/UserDefinedTypeTest.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/UserDefinedTypeTest.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Factories.Tests/DataTypeFactoryTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Factories.Tests/DataTypeFactoryTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Types.Tests/BoolTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Types.Tests/BoolTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Types.Tests/DintTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Types.Tests/DintTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Types.Tests/IntTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Types.Tests/IntTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Types.Tests/LintTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Types.Tests/LintTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Types.Tests/SintTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Types.Tests/SintTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/LogixTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/LogixTests.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Types.Tests/StringTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Types.Tests/StringTests.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -197,7 +143,7 @@
       <workItem from="1635797270780" duration="35098000" />
       <workItem from="1635906514108" duration="50818000" />
       <workItem from="1636047002802" duration="106238000" />
-      <workItem from="1636278251909" duration="53896000" />
+      <workItem from="1636278251909" duration="75611000" />
     </task>
     <task id="LOCAL-00001" summary="renaming">
       <created>1632580540996</created>
@@ -521,7 +467,14 @@
       <option name="project" value="LOCAL" />
       <updated>1636277235566</updated>
     </task>
-    <option name="localTasksCounter" value="47" />
+    <task id="LOCAL-00047" summary="reworking to generic types">
+      <created>1636386561383</created>
+      <option name="number" value="00047" />
+      <option name="presentableId" value="LOCAL-00047" />
+      <option name="project" value="LOCAL" />
+      <updated>1636386561383</updated>
+    </task>
+    <option name="localTasksCounter" value="48" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

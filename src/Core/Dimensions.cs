@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using L5Sharp.Abstractions;
-using L5Sharp.Enums;
 
 namespace L5Sharp.Core
 {
@@ -42,7 +40,7 @@ namespace L5Sharp.Core
         public ushort Z { get; }
         public int Length => Z > 0 ? X * Y * Z : Y > 0 ? X * Y : X;
         public bool AreEmpty => Length == 0;
-        public bool IsMultiDimensional => Y > 0;
+        public bool AreMultiDimensional => Y > 0;
 
         public static Dimensions Empty => new Dimensions();
 
@@ -78,6 +76,16 @@ namespace L5Sharp.Core
             return Z > 0 ? $"{X} {Y} {Z}"
                 : Y > 0 ? $"{X} {Y}"
                 : $"{X}";
+        }
+        
+        public TDataType[] ArrayOf<TDataType>() where TDataType : IDataType, new()
+        {
+            var types = new List<TDataType>();
+
+            for (ushort i = 0; i < X; i++)
+                types.Add(new TDataType());
+
+            return types.ToArray();
         }
 
         public IEnumerable<string> GenerateIndices()

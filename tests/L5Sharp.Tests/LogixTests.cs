@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using FluentAssertions;
+﻿using FluentAssertions;
 using L5Sharp.Enums;
 using L5Sharp.Types;
 using NUnit.Framework;
@@ -71,6 +70,14 @@ namespace L5Sharp.Tests
             var type = Logix.DataType.Create("Invalid");
             type.Name.Should().Be("Undefined");
             type.Should().BeOfType<Undefined>();
+        }
+        
+        [Test]
+        public void ParseType_ValidName_ShouldNotBeNull()
+        {
+            var type = Logix.DataType.Create("STRING");
+
+            type.Should().NotBeNull();
         }
     }
 }

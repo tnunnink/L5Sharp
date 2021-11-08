@@ -35,7 +35,6 @@ namespace L5Sharp.Core
         public DataTypeFamily Family => DataTypeFamily.None;
         public DataTypeClass Class => DataTypeClass.User;
         public TagDataFormat DataFormat => TagDataFormat.Decorated;
-        //IEnumerable<IMember<IDataType>> IDataType.Members => Members;
         public IDataTypeMembers Members { get; }
 
         public override void SetName(string name)

@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using L5Sharp.Core;
+﻿using L5Sharp.Core;
 // ReSharper disable InconsistentNaming
 
 namespace L5Sharp.Types

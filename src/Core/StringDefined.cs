@@ -11,26 +11,23 @@ namespace L5Sharp.Core
 {
     public class StringDefined : LogixComponent, IString
     {
-        private readonly List<Member<IDataType>> _members = new List<Member<IDataType>>();
-
-        public StringDefined(string name, ushort length, string description = null) 
+        public StringDefined(string name, Dimensions dimensions, string description = null) 
             : base(name, description)
         {
             Validate.DataTypeName(name);
             
-            if (string.IsNullOrEmpty(name)) throw new ArgumentNullException(nameof(name));
-            if (length <= 0) throw new ArgumentException("Length must be greater that 0");
+            if (dimensions.AreEmpty || dimensions.AreMultiDimensional) 
+                throw new ArgumentException("Dimension must single dimensional and have length greater that zero");
 
-            Name = name;
-
-            LEN = new Dint();
-            DATA = new Sint[length];
+            LEN = Member.OfType<Dint>(nameof(LEN));
+            DATA = Member.OfType<Sint>(nameof(DATA), dimensions, Radix.Ascii);
             
-            _members.Add(new Member<IDataType>(nameof(LEN), new Dint()));
-            _members.Add(new Member<IDataType>(nameof(DATA), new Sint(), new Dimensions(length), Radix.Ascii));
+            Members = new List<IMember<IDataType>>
+            {
+                (IMember<IDataType>)LEN,
+                (IMember<IDataType>)DATA,
+            };
         }
-
-        public string Name { get; }
 
         public DataTypeFamily Family => DataTypeFamily.String;
 
@@ -38,45 +35,38 @@ namespace L5Sharp.Core
 
         public TagDataFormat DataFormat => TagDataFormat.String;
 
-        public string Description => string.Empty;
+        public IEnumerable<IMember<IDataType>> Members { get; }
+        public IMember<Dint> LEN { get; }
+        public IMember<Sint> DATA { get; }
 
-        public Dint LEN { get; }
-        public Sint[] DATA { get; }
-
-        public IEnumerable<IMember<IDataType>> Members => _members.AsEnumerable();
-
-
-        public string GetValue()
+        public string Get()
         {
-            var bytes = DATA.Select(d => d.Get()).ToArray();
+            var bytes = DATA.Elements.Select(d => d.DataType.Get()).ToArray();
             return Encoding.ASCII.GetString(bytes);
         }
 
-        public void SetValue(string value)
+        public void Set(string value)
         {
             var bytes = Encoding.ASCII.GetBytes(value);
 
-            if (bytes.Length > LEN.Get())
+            if (bytes.Length > LEN.DataType.Get())
                 throw new ArgumentOutOfRangeException();
-
-            for (var i = 0; i < bytes.Length; i++)
-                DATA[i].Set(bytes[i]);
-        }
-
-        public void UpdateLength(ushort length)
-        {
-            /*if (length <= 0)
-                throw new ArgumentException("Length must be greater than 0");
-
-            var data = new Member<IDataType>(MemberNames[1], new Sint(), new Dimensions(length), Radix.Ascii);
             
-            _members.Remove(MemberNames[1]);
-            _members.Add(data.Name, data);*/
+            ClearData();
+            
+            for (var i = 0; i < bytes.Length; i++)
+                DATA.Elements[i].DataType.Set(bytes[i]);
+        }
+        
+        private void ClearData()
+        {
+            foreach (var dataElement in DATA.Elements)
+                dataElement.DataType.Set(0);
         }
 
         public override string ToString()
         {
-            return GetValue();
+            return Get();
         }
     }
 }

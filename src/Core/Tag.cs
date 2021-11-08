@@ -42,6 +42,7 @@ namespace L5Sharp.Core
         public Radix Radix { get; }
 
         public ExternalAccess ExternalAccess { get; private set; }
+        public IMember<TDataType>[] Elements { get; }
 
         public TagType TagType => TagType.Base;
 

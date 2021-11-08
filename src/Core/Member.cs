@@ -1,28 +1,70 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using L5Sharp.Enums;
+using L5Sharp.Exceptions;
 
 namespace L5Sharp.Core
 {
     public class Member<TDataType> : IMember<TDataType>, IEquatable<Member<TDataType>> where TDataType : IDataType
     {
-        public Member(string name, TDataType dataType, Dimensions dimension = null, Radix radix = null,
-            ExternalAccess externalAccess = null, string description = null)
+        private Member(string name, Dimensions dimensions = null, ExternalAccess externalAccess = null,
+            string description = null)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name), "Name can not be null");
-            DataType = dataType;
-            Dimensions = dimension ?? Dimensions.Empty;
-            Radix = !(DataType is IAtomic atomic) ? Radix.Null
-                : radix == null ? Radix.Default(atomic) : radix;
-            ExternalAccess = externalAccess == null ? ExternalAccess.ReadWrite : externalAccess;
+            Dimensions = dimensions ?? Dimensions.Empty;
+            ExternalAccess = externalAccess != null ? externalAccess : ExternalAccess.ReadWrite;
             Description = description;
         }
 
+        public Member(string name, TDataType dataType, Dimensions dimensions = null, Radix radix = null,
+            ExternalAccess externalAccess = null, string description = null)
+            : this(name, dimensions, externalAccess, description)
+        {
+            DataType = Dimensions.AreEmpty ? dataType : default;
+
+            Radix = radix != null
+                ? radix.IsValidForType(dataType)
+                    ? radix
+                    : throw new RadixNotSupportedException(radix, dataType)
+                : dataType is IAtomic atomic
+                    ? Radix.Default(atomic)
+                    : Radix.Null;
+
+            var elements = new List<IMember<TDataType>>(Dimensions);
+            for (var i = 0; i < Dimensions; i++)
+                elements.Add(new Member<TDataType>($"{name}[{i}]", dataType, Dimensions.Empty, radix, externalAccess,
+                    description));
+            Elements = elements.ToArray();
+        }
+
+        public Member(string name, IReadOnlyCollection<TDataType> dataTypes, Dimensions dimensions, Radix radix = null,
+            ExternalAccess externalAccess = null, string description = null)
+            : this(name, dimensions, externalAccess, description)
+        {
+            DataType = default;
+            Radix = Radix.Null;
+
+            if (Dimensions.AreEmpty)
+                throw new ArgumentException("Dimensions must have length greater than zero");
+            if (Dimensions.AreMultiDimensional)
+                throw new ArgumentException("Dimensions must be of single dimension");
+            if (Dimensions.Length != dataTypes.Count)
+                throw new ArgumentException("Dimensions size must match provided data type array");
+
+            var elements = new List<IMember<TDataType>>(Dimensions);
+            elements.AddRange(dataTypes.Select((t, i) =>
+                new Member<TDataType>($"{name}[{i}]", t, Dimensions.Empty, radix, externalAccess, description)));
+            Elements = elements.ToArray();
+        }
+
         public string Name { get; }
+        public string Description { get; }
         public TDataType DataType { get; }
         public Dimensions Dimensions { get; }
         public Radix Radix { get; }
         public ExternalAccess ExternalAccess { get; }
-        public string Description { get; }
+        public IMember<TDataType>[] Elements { get; }
 
         public bool Equals(Member<TDataType> other)
         {
@@ -58,18 +100,32 @@ namespace L5Sharp.Core
 
     public static class Member
     {
-        public static IMember<IDataType> New(string name, IDataType dataType, Dimensions dimension = null,
+        public static IMember<IDataType> New(string name, IDataType dataType, Dimensions dimensions = null,
             Radix radix = null, ExternalAccess externalAccess = null, string description = null)
         {
-            return new Member<IDataType>(name, dataType, dimension, radix, externalAccess, description);
+            return new Member<IDataType>(name, dataType, dimensions, radix, externalAccess, description);
         }
-        
-        public static IMember<TDataType> OfType<TDataType>(string name, Dimensions dimension = null, Radix radix = null,
-            ExternalAccess externalAccess = null, string description = null)
+
+        public static IMember<TDataType> OfType<TDataType>(string name,
+            Radix radix = null, ExternalAccess externalAccess = null, string description = null)
             where TDataType : IDataType, new()
         {
             var dataType = new TDataType();
-            return new Member<TDataType>(name, dataType, dimension, radix, externalAccess, description);
+            return new Member<TDataType>(name, dataType, Dimensions.Empty, radix, externalAccess, description);
         }
-    } 
+
+        public static IMember<IDataType> OfType(string name, IDataType[] dataTypes, Dimensions dimension,
+            Radix radix = null, ExternalAccess externalAccess = null, string description = null)
+        {
+            return new Member<IDataType>(name, dataTypes, dimension, radix, externalAccess, description);
+        }
+
+        public static IMember<TDataType> OfType<TDataType>(string name, Dimensions dimension,
+            Radix radix = null, ExternalAccess externalAccess = null, string description = null)
+            where TDataType : IDataType, new()
+        {
+            return new Member<TDataType>(name, dimension.ArrayOf<TDataType>(), dimension, radix, externalAccess,
+                description);
+        }
+    }
 }
