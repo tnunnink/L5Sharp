@@ -1,53 +1,64 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using L5Sharp.Enums;
+using L5Sharp.Exceptions;
 
 namespace L5Sharp.Types
 {
-    public struct Dint : IAtomic<int>
+    public sealed class Dint : IAtomic<int>, IEquatable<Dint>, IComparable<Dint>
     {
-        private int _value;
-        
-        public Dint(int value = default)
+        public Dint()
         {
-            _value = value;
+            Value = default;
+            Radix = Radix.Decimal;
+        }
+
+        public Dint(int value) : this()
+        {
+            Value = value;
+        }
+
+        public Dint(Radix radix) : this()
+        {
+            SetRadix(radix);
         }
 
         public string Name => nameof(Dint).ToUpper();
-        public string Description => string.Empty;
+        public string Description => $"RSLogix representation of a {typeof(int)}";
         public DataTypeFamily Family => DataTypeFamily.None;
         public DataTypeClass Class => DataTypeClass.Atomic;
         public TagDataFormat DataFormat => TagDataFormat.Decorated;
+        public Radix Radix { get; private set; }
+        public int Value { get; private set; }
+        public string FormattedValue => Radix.Format(this);
+        object IAtomic.Value => Value;
 
-        public object Default => default(int);
-
-        public int Get()
+        public void SetValue(int value)
         {
-            return _value;
+            Value = value;
         }
 
-        object IAtomic.Get()
+        public void SetValue(object value)
         {
-            return Get();
-        }
-
-        public void Set(int value)
-        {
-            _value = value;
-        }
-
-        public void Set(object value)
-        {
-            _value = value switch
+            Value = value switch
             {
                 null => throw new ArgumentNullException(nameof(value), "Value can not be null"),
                 int v => v,   
                 string str => ParseValue(str),
-                _ => throw new ArgumentException($"Value not valid type for {Name}")
+                _ => throw new ArgumentException($"Value type '{value.GetType()}' is not a valid for {GetType()}")
             };
         }
-        
+
+        public void SetRadix(Radix radix)
+        {
+            if (radix == null)
+                throw new ArgumentNullException(nameof(radix));
+
+            if (!SupportsRadix(radix))
+                throw new RadixNotSupportedException(radix, this);
+
+            Radix = radix;
+        }
+
         public bool SupportsRadix(Radix radix)
         {
             return radix == Radix.Binary
@@ -57,10 +68,56 @@ namespace L5Sharp.Types
                    || radix == Radix.Ascii;
         }
 
-        private static int ParseValue(string value)
+        public static implicit operator Dint(int value)
         {
-            int.TryParse(value, out var result);
-            return result;
+            return new Dint(value);
+        }
+
+        public static implicit operator int(Dint atomic)
+        {
+            return atomic.Value;
+        }
+
+        public int CompareTo(Dint other)
+        {
+            return Value.CompareTo(other.Value);
+        }
+
+        public bool Equals(Dint other)
+        {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return Equals(Radix, other.Radix) && Value == other.Value;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            return obj.GetType() == GetType() && Equals((Dint)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Radix, Value);
+        }
+
+        public static bool operator ==(Dint left, Dint right)
+        {
+            return Equals(left, right);
+        }
+
+        public static bool operator !=(Dint left, Dint right)
+        {
+            return !Equals(left, right);
+        }
+
+        private int ParseValue(string value)
+        {
+            if (int.TryParse(value, out var result))
+                return result;
+
+            throw new ArgumentException($"Could not parse string '{value}' to {GetType()}");
         }
     }
 }

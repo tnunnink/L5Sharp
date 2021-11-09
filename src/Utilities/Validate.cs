@@ -20,7 +20,7 @@ namespace L5Sharp.Utilities
         
         public static void DataTypeName(string name)
         {
-            if (Logix.DataType.Names.Contains(name))
+            if (Logix.DataTypes.Contains(name))
                 throw new ComponentNameCollisionException(name, typeof(Predefined));
         }
         
@@ -29,14 +29,6 @@ namespace L5Sharp.Utilities
             if (member.DataType.Equals(dataType))
                 throw new CircularReferenceException(
                     $"Member can not be same type as parent type '{member.DataType.Name}'");
-        }
-
-        public static void Radix(Radix radix, IDataType type)
-        {
-            if (radix == null) throw new ArgumentNullException(nameof(radix), "Radix property can not be null");
-
-            if (!radix.IsValidForType(type))
-                throw new RadixNotSupportedException(radix, type);
         }
     }
 }

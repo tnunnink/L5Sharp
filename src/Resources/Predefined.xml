@@ -1,17 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <DataTypes>
-    <DataType Name="BOOL" Family="NoFamily" Class="ProductDefined"/>
-    <DataType Name="SINT" Family="NoFamily" Class="ProductDefined"/>
-    <DataType Name="INT" Family="NoFamily" Class="ProductDefined"/>
-    <DataType Name="DINT" Family="NoFamily" Class="ProductDefined"/>
-    <DataType Name="LINT" Family="NoFamily" Class="ProductDefined"/>
-    <DataType Name="REAL" Family="NoFamily" Class="ProductDefined"/>
-    <DataType Name="STRING" Family="NoFamily" Class="ProductDefined">
-        <Members>
-            <Member Name="LEN" DataType="DINT" Dimension="0" Radix="Decimal" ExternalAccess="Read/Write"/>
-            <Member Name="DATA" DataType="SINT" Dimension="82" Radix="ASCII" ExternalAccess="Read/Write"/>
-        </Members>
-    </DataType>
     <DataType Name="COUNTER" Family="NoFamily" Class="ProductDefined">
         <Members>
             <Member Name="PRE" DataType="DINT" Dimension="0" Radix="Decimal" ExternalAccess="Read/Write"/>

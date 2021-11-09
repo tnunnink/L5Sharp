@@ -1,14 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using L5Sharp.Abstractions;
 using L5Sharp.Enums;
-using L5Sharp.Exceptions;
-using L5Sharp.Utilities;
 
 namespace L5Sharp.Core
 {
-    public class DataTypeMember<TDataType> : LogixComponent,
-        IDataTypeMember<TDataType>, IEquatable<DataTypeMember<TDataType>>
+    public class DataTypeMember<TDataType> : 
+        LogixComponent,
+        IDataTypeMember<TDataType>,
+        IEquatable<DataTypeMember<TDataType>>
         where TDataType : IDataType
     {
         
@@ -17,24 +16,17 @@ namespace L5Sharp.Core
         {
             DataType = dataType;
             Dimensions = dimension ?? Dimensions.Empty;
-
-            Radix = radix != null
-                ? radix.IsValidForType(DataType)
-                    ? radix
-                    : throw new RadixNotSupportedException(radix, DataType)
-                : DataType is IAtomic atomic
-                    ? Radix.Default(atomic)
-                    : Radix.Null;
-
-            ExternalAccess = externalAccess == null ? ExternalAccess.ReadWrite : externalAccess;
+            ExternalAccess = externalAccess != null ? externalAccess : ExternalAccess.ReadWrite;
+            
+            if (DataType is IAtomic atomic && radix != null)
+                atomic.SetRadix(radix);
         }
-
-
+        
         public TDataType DataType { get; }
         public Dimensions Dimensions { get; private set; }
-        public Radix Radix { get; private set; }
+        public Radix Radix => DataType.Radix;
         public ExternalAccess ExternalAccess { get; private set; }
-        public IMember<TDataType>[] Elements { get; }
+        public IMember<TDataType>[] Elements { get; private set; }
 
         public void SetDimensions(Dimensions dimensions)
         {
@@ -48,11 +40,14 @@ namespace L5Sharp.Core
 
         public void SetRadix(Radix radix)
         {
-            radix ??= Radix.Null;
+            if (DataType is IAtomic atomic)
+                atomic.SetRadix(radix);
 
-            Validate.Radix(radix, DataType);
+            if (Elements.Length == 0) return;
 
-            Radix = radix;
+            foreach (var element in Elements)
+                if (element is IDataTypeMember<TDataType> dataTypeMember)
+                    dataTypeMember.SetRadix(radix);
         }
 
         public void SetExternalAccess(ExternalAccess externalAccess)

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using L5Sharp.Abstractions;
 using L5Sharp.Enums;
 using L5Sharp.Exceptions;
@@ -16,15 +15,11 @@ namespace L5Sharp.Core
             ExternalAccess externalAccess = null, string description = null, TagUsage usage = null,
             bool constant = false, ILogixComponent parent = null) : base(name, description)
         {
-            _dataType = dataType ?? throw new ArgumentNullException(nameof(dataType), "DataType can not be null");
+            _dataType = dataType;
+            if (_dataType is IAtomic atomic && radix != null)
+                atomic.SetRadix(radix);
+
             Dimensions = dimensions ?? Dimensions.Empty;
-            Radix = radix != null
-                ? radix.IsValidForType(dataType)
-                    ? radix
-                    : throw new RadixNotSupportedException(radix, dataType)
-                : dataType is IAtomic atomic
-                    ? Radix.Default(atomic)
-                    : Radix.Null;
             ExternalAccess = externalAccess ?? ExternalAccess.None;
             Usage = usage != null ? usage : TagUsage.Null;
             Constant = constant;
@@ -39,7 +34,7 @@ namespace L5Sharp.Core
 
         public Dimensions Dimensions { get; }
 
-        public Radix Radix { get; }
+        public Radix Radix => _dataType.Radix;
 
         public ExternalAccess ExternalAccess { get; private set; }
         public IMember<TDataType>[] Elements { get; }
@@ -69,7 +64,7 @@ namespace L5Sharp.Core
 
             if (!(value is TDataType type))
                 throw new InvalidTagValueException(value, typeof(TDataType));
-                
+
             _dataType = type;
         }
 
@@ -89,7 +84,7 @@ namespace L5Sharp.Core
             return new TagMember<IDataType>(member, this);
         }
 
-        public ITagMember<TType> GetMember<TType>(Func<TDataType, IMember<TType>> expression) 
+        public ITagMember<TType> GetMember<TType>(Func<TDataType, IMember<TType>> expression)
             where TType : IDataType
         {
             var member = expression.Invoke(_dataType);
@@ -100,17 +95,21 @@ namespace L5Sharp.Core
             return new TagMember<TType>(member, this);
         }
 
-        public void SetMember<TAtomic>(Func<TDataType, IMember<TAtomic>> expression, TAtomic value) where TAtomic : IAtomic
+        public void SetMember<TAtomic>(Func<TDataType, IMember<TAtomic>> expression, TAtomic value)
+            where TAtomic : IAtomic
+        {
+            var member = expression.Invoke(_dataType);
+            member.DataType.SetValue(value);
+        }
+
+        public void SetMember<TAtomic>(Func<TDataType, IMember<TAtomic>> expression, Radix radix)
+            where TAtomic : IAtomic
         {
             throw new NotImplementedException();
         }
 
-        public void SetMember<TAtomic>(Func<TDataType, IMember<TAtomic>> expression, Radix radix) where TAtomic : IAtomic
-        {
-            throw new NotImplementedException();
-        }
-
-        public void SetMember<TAtomic>(Func<TDataType, IMember<TAtomic>> expression, string description) where TAtomic : IAtomic
+        public void SetMember<TAtomic>(Func<TDataType, IMember<TAtomic>> expression, string description)
+            where TAtomic : IAtomic
         {
             throw new NotImplementedException();
         }
@@ -140,12 +139,12 @@ namespace L5Sharp.Core
             Usage = usage;
         }
 
-        public ITag<T> ChangeDataType<T>(T dataType) where T : IDataType
+        public ITag<TType> ChangeDataType<TType>(TType dataType) where TType : IDataType
         {
             if (dataType == null)
                 throw new ArgumentNullException(nameof(dataType), "Dimensions can not be null");
 
-            return new Tag<T>(Name, dataType, Dimensions, Radix, ExternalAccess, Description,
+            return new Tag<TType>(Name, dataType, Dimensions, Radix, ExternalAccess, Description,
                 Usage, Constant, Parent);
         }
 
@@ -154,7 +153,8 @@ namespace L5Sharp.Core
             if (dimensions == null)
                 throw new ArgumentNullException(nameof(dimensions), "Dimensions can not be null");
 
-            return new Tag<TDataType>(Name, _dataType, dimensions, Radix, ExternalAccess, Description, Usage, Constant,
+            return new Tag<TDataType>(Name, _dataType, dimensions, Radix, ExternalAccess, Description, Usage,
+                Constant,
                 Parent);
         }
 
@@ -193,10 +193,14 @@ namespace L5Sharp.Core
     {
         public static ITag<IDataType> New(string name, IDataType dataType, Dimensions dimensions = null,
             Radix radix = null, ExternalAccess externalAccess = null, string description = null, TagUsage usage = null,
-            bool constant = false, ILogixComponent parent = null)
+            bool constant = false)
         {
-            return new Tag<IDataType>(name, dataType, dimensions, radix, externalAccess, description, usage, constant,
-                parent);
+            if (dataType is IUserDefined userDefined)
+                return new Tag<IDataType>(name, userDefined.Instantiate(), dimensions,
+                    radix, externalAccess, description, usage, constant);
+
+            return new Tag<IDataType>(name, dataType, dimensions,
+                radix, externalAccess, description, usage, constant);
         }
 
         public static ITag<TDataType> OfType<TDataType>(string name, Dimensions dimensions = null, Radix radix = null,
@@ -208,8 +212,8 @@ namespace L5Sharp.Core
             return new Tag<TDataType>(name, dataType, dimensions, radix, externalAccess, description, usage, constant,
                 parent);
         }
-        
-        public static ITag<IAtomic> OfAtomic<TAtomic>(string name, Dimensions dimensions = null, Radix radix = null,
+
+        public static ITag<IAtomic> Atomic<TAtomic>(string name, Dimensions dimensions = null, Radix radix = null,
             ExternalAccess externalAccess = null, string description = null, TagUsage usage = null,
             bool constant = false, ILogixComponent parent = null)
             where TAtomic : IAtomic, new()
@@ -218,9 +222,9 @@ namespace L5Sharp.Core
             return new Tag<IAtomic>(name, dataType, dimensions, radix, externalAccess, description, usage, constant,
                 parent);
         }
-        
-        public static ITag<IPredefined> OfPredefined<TPredefined>(string name, Dimensions dimensions = null, Radix radix = null,
-            ExternalAccess externalAccess = null, string description = null, TagUsage usage = null,
+
+        public static ITag<IPredefined> Predefined<TPredefined>(string name, Dimensions dimensions = null,
+            Radix radix = null, ExternalAccess externalAccess = null, string description = null, TagUsage usage = null,
             bool constant = false, ILogixComponent parent = null)
             where TPredefined : IPredefined, new()
         {

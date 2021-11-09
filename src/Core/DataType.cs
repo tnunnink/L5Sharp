@@ -32,10 +32,16 @@ namespace L5Sharp.Core
         }
 
         public override string Name => _name;
+        public Radix Radix => Radix.Null;
         public DataTypeFamily Family => DataTypeFamily.None;
         public DataTypeClass Class => DataTypeClass.User;
         public TagDataFormat DataFormat => TagDataFormat.Decorated;
         public IDataTypeMembers Members { get; }
+
+        public IUserDefined Instantiate()
+        {
+            return new DataType(_name, Members, Description);
+        }
 
         public override void SetName(string name)
         {

@@ -5,14 +5,21 @@ namespace L5Sharp.Types
 {
     public class Timer : Predefined
     {
-        public Timer() : base(LoadElement(nameof(Timer).ToUpper()))
+        public Timer() : base(nameof(Timer).ToUpper())
         {
+            PRE = Member.OfType<Dint>(nameof(PRE));
+            ACC = Member.OfType<Dint>(nameof(ACC));
+            EN = Member.OfType<Bool>(nameof(EN));
+            TT = Member.OfType<Bool>(nameof(TT));
+            DN = Member.OfType<Bool>(nameof(DN));
+
+            RegisterMemberProperties();
         }
 
-        public IMember<Dint> PRE => GetMember<Dint>(nameof(PRE));
-        public IMember<Dint> ACC => GetMember<Dint>(nameof(ACC));
-        public IMember<Bool> EN => GetMember<Bool>(nameof(EN));
-        public IMember<Bool> TT => GetMember<Bool>(nameof(TT));
-        public IMember<Bool> DN => GetMember<Bool>(nameof(DN));
+        public IMember<Dint> PRE { get; }
+        public IMember<Dint> ACC { get; }
+        public IMember<Bool> EN { get; }
+        public IMember<Bool> TT { get; }
+        public IMember<Bool> DN { get; }
     }
 }

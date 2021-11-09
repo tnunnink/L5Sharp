@@ -4,15 +4,16 @@ namespace L5Sharp
 {
     public interface IAtomic : IDataType
     {
-        object Default { get; }
-        object Get();
-        void Set(object value);
+        object Value { get; }
+        string FormattedValue { get; }
+        void SetValue(object value);
+        void SetRadix(Radix radix);
         bool SupportsRadix(Radix radix);
     }
 
     public interface IAtomic<T> : IAtomic where T : struct
     {
-        new T Get();
-        void Set(T value);
+        new T Value { get; }
+        void SetValue(T value);
     }
 }

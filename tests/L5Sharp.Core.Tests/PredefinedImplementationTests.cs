@@ -12,7 +12,7 @@ namespace L5Sharp.Core.Tests
     public class PredefinedImplementationTests : Predefined
     {
         public PredefinedImplementationTests() :
-            base(nameof(PredefinedImplementationTests), DataTypeFamily.None, GenerateMembers())
+            base(nameof(PredefinedImplementationTests))
         {
         }
 
@@ -23,7 +23,7 @@ namespace L5Sharp.Core.Tests
                 new("Member01", new Bool()),
                 new("Member02", new Bool()),
                 new("Member03", new Bool()),
-                new("Member04", new Bool()),
+                new("Member04", new Bool())
             };
         }
 

@@ -6,10 +6,10 @@ namespace L5Sharp
 {
     public interface IString : IDataType
     {
-        IEnumerable<IMember<IDataType>> Members { get; }
+        string Value { get; }
         IMember<Dint> LEN { get; }
         IMember<Sint> DATA { get; }
-        string Get();
-        void Set(string value);
+        IEnumerable<IMember<IDataType>> Members { get; }
+        void SetValue(string value);
     }
 }

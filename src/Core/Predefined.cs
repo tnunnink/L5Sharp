@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Xml.Linq;
 using L5Sharp.Enums;
 using L5Sharp.Exceptions;
@@ -9,7 +10,7 @@ using L5Sharp.Utilities;
 
 namespace L5Sharp.Core
 {
-    public class Predefined : IPredefined, IEquatable<Predefined>
+    public abstract class Predefined : IPredefined, IEquatable<Predefined>
     {
         private const string ResourceNamespace = "Resources";
         private const string ResourceFileName = "Predefined.xml";
@@ -19,30 +20,17 @@ namespace L5Sharp.Core
         private readonly Dictionary<string, Member<IDataType>> _members =
             new Dictionary<string, Member<IDataType>>(StringComparer.OrdinalIgnoreCase);
 
-        protected Predefined(string name, DataTypeFamily family, IEnumerable<Member<IDataType>> members = null)
+        protected Predefined(string name)
         {
             Validate.Name(name);
+            Validate.DataTypeName(name);
             Name = name;
-            Family = family ?? throw new ArgumentNullException(nameof(family), "Family can not be null");
-
-            members ??= Array.Empty<Member<IDataType>>();
-
-            foreach (var member in members)
-            {
-                if (_members.ContainsKey(member.Name))
-                    throw new ComponentNameCollisionException(member.Name, typeof(Member<IDataType>));
-
-                _members.Add(member.Name, member);
-            }
         }
 
         internal Predefined(XElement element)
         {
             Validate.Name(element.GetName());
-
             Name = element.GetName();
-            Family = element.GetValue<IDataType>(d => d.Family)
-                     ?? throw new ArgumentNullException(nameof(element), "Family can not be null");
 
             var members = element.Descendants(LogixNames.GetComponentName<IMember<IDataType>>());
 
@@ -52,11 +40,11 @@ namespace L5Sharp.Core
                 if (typeName == null)
                     throw new ArgumentNullException(nameof(typeName), "DataType can not be null");
 
-                if (!Logix.DataType.Contains(typeName))
+                if (!Logix.ContainsType(typeName))
                     throw new InvalidOperationException(
                         $"Type '{typeName}' has not been defined. Register dependent types before parent type");
 
-                var type = Logix.DataType.Create(typeName);
+                var type = Logix.CreateType(typeName);
 
                 var name = e.GetName();
                 var description = e.GetDescription();
@@ -71,8 +59,9 @@ namespace L5Sharp.Core
         }
 
         public string Name { get; }
-        public string Description => string.Empty;
-        public DataTypeFamily Family { get; }
+        public virtual string Description => null;
+        public Radix Radix => Radix.Null;
+        public DataTypeFamily Family => DataTypeFamily.None;
         public DataTypeClass Class => DataTypeClass.Predefined;
         public virtual TagDataFormat DataFormat => TagDataFormat.Decorated;
         public IEnumerable<IMember<IDataType>> Members => _members.Values.AsEnumerable();
@@ -86,18 +75,7 @@ namespace L5Sharp.Core
         public IMember<TType> GetMember<TType>(string name) where TType : IDataType
         {
             _members.TryGetValue(name, out var member);
-
-            if (member == null) return null;
-
-            var type = (TType)member.DataType ?? throw new InvalidOperationException();
-
-            return new Member<TType>(member.Name, type, member.Dimensions, member.Radix,
-                member.ExternalAccess, member.Description);
-        }
-
-        public override string ToString()
-        {
-            return Name;
+            return member != null ? member.As<TType>() : null;
         }
 
         public bool Equals(Predefined other)
@@ -127,6 +105,29 @@ namespace L5Sharp.Core
         public static bool operator !=(Predefined left, Predefined right)
         {
             return !Equals(left, right);
+        }
+
+        protected void RegisterMemberProperties()
+        {
+            var properties = GetType().GetProperties().Where(p =>
+                p.PropertyType.IsGenericType &&
+                p.PropertyType.GetGenericTypeDefinition().IsAssignableFrom(typeof(IMember<>))).ToList();
+
+            foreach (var property in properties)
+            {
+                var member = (Member<IDataType>) property.GetValue(this);
+                if (member == null) throw new InvalidOperationException("Not sure this should happen?");
+
+                if (_members.ContainsKey(member.Name))
+                    throw new ComponentNameCollisionException(member.Name, typeof(IMember<>));
+
+                _members.Add(member.Name, member);
+            }
+        }
+
+        protected void RegisterMember(IMember<IDataType> member)
+        {
+            _members.Add(member.Name, (Member<IDataType>)member);
         }
 
         internal static XElement LoadElement(string name)

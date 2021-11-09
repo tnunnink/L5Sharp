@@ -11,7 +11,7 @@ namespace L5Sharp.Tests
         [Test]
         public void Names_WhenCalled_ShouldNotBeEmpty()
         {
-            var dataTypes = Logix.DataType.Names;
+            var dataTypes = Logix.DataTypes;
 
             dataTypes.Should().NotBeEmpty();
         }
@@ -19,19 +19,19 @@ namespace L5Sharp.Tests
         [Test]
         public void Contains_TypeThatExistsAsPredefined_ShouldBeTrue()
         {
-            Logix.DataType.Contains("BOOL").Should().BeTrue();
+            Logix.ContainsType("BOOL").Should().BeTrue();
         }
 
         [Test]
         public void Contains_TypeThatDoesNotExistAsPredefined_ShouldBeFalse()
         {
-            Logix.DataType.Contains("TEMP").Should().BeFalse();
+            Logix.ContainsType("TEMP").Should().BeFalse();
         }
         
         [Test]
         public void ParseType_RegisteredType_ShouldNotBeNull()
         {
-            var type = Logix.DataType.Create("Bool");
+            var type = Logix.CreateType("Bool");
             type.Should().NotBeNull();
             type.Name.Should().Be("BOOL");
             type.Should().BeOfType<Bool>();
@@ -40,7 +40,7 @@ namespace L5Sharp.Tests
         [Test]
         public void ParseType_StaticField_ShouldNotBeNull()
         {
-            var type = Logix.DataType.Create("bit");
+            var type = Logix.CreateType("bit");
             type.Should().NotBeNull();
             type.Name.Should().Be("BOOL");
             type.Should().BeOfType<Bool>();
@@ -49,35 +49,39 @@ namespace L5Sharp.Tests
         [Test]
         public void ParseType_AssemblyValidType_ShouldNotBeExpected()
         {
-            var type = Logix.DataType.Create("MyPredefined");
+            var type = Logix.CreateType("MyPredefined");
             type.Should().NotBeNull();
             type.Name.Should().Be("MyPredefined");
             type.Family.Should().Be(DataTypeFamily.None);
         }
-        
+
         [Test]
         public void ParseType_AssemblyInvalidType_ShouldNotBeUndefined()
         {
-            var type = Logix.DataType.Create("MyNullNamePredefined");
+            var type = Logix.CreateType("MyNullNamePredefined");
             type.Should().NotBeNull();
             type.Name.Should().Be("Undefined");
             type.Should().BeOfType<Undefined>();
         }
-        
+
         [Test]
         public void ParseType_NonExistingType_ShouldNotBeUndefined()
         {
-            var type = Logix.DataType.Create("Invalid");
+            var type = Logix.CreateType("Invalid");
             type.Name.Should().Be("Undefined");
             type.Should().BeOfType<Undefined>();
         }
-        
+
         [Test]
         public void ParseType_ValidName_ShouldNotBeNull()
         {
-            var type = Logix.DataType.Create("STRING");
+            var type = Logix.CreateType("string");
 
             type.Should().NotBeNull();
+            type.Name.Should().Be("STRING");
+            type.Class.Should().Be(DataTypeClass.Predefined);
+            type.Family.Should().Be(DataTypeFamily.String);
+            type.Radix.Should().Be(Radix.Null);
         }
     }
 }

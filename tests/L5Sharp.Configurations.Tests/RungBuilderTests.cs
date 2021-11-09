@@ -78,7 +78,7 @@ namespace L5Sharp.Configurations.Tests
             var tag = Tag.OfType<Int>("Test");
 
             var b1 = new XIO().Of(Tag.OfType<Bool>("Test"));
-            var text = new MOV().Of(new Dint(1000), Tag.OfAtomic<Dint>("Test"));
+            var text = new MOV().Of(new Dint(1000), Tag.Atomic<Dint>("Test"));
 
 
             var b3 = RungBuilder.New(2)

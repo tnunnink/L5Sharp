@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using L5Sharp.Enums;
+using L5Sharp.Types;
 using NUnit.Framework;
 
 namespace L5Sharp.Enums.Tests
@@ -33,7 +34,7 @@ namespace L5Sharp.Enums.Tests
             radix.Should().NotBeNull();
             radix.Should().Be(Radix.Binary);
         }
-        
+
         [Test]
         public void Octal_WhenCalled_ShouldBeExpected()
         {
@@ -122,6 +123,16 @@ namespace L5Sharp.Enums.Tests
 
             radix.Should().NotBeNull();
             radix.Should().Be(Radix.UseTypeStyle);
+        }
+
+        [Test]
+        public void Format_BinaryValidInt_ShouldBeExpectedFormat()
+        {
+            var radix = Radix.Binary;
+
+            var result = radix.Format(new Int(20));
+
+            result.Should().Be("2#0000_0000_0001_0100");
         }
     }
 }

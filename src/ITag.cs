@@ -12,7 +12,7 @@ namespace L5Sharp
         void SetName(string name);
         void SetUsage(TagUsage usage);
         void SetExternalAccess(ExternalAccess externalAccess);
-        ITag<T> ChangeDataType<T>(T dataType) where T : IDataType;
+        ITag<TType> ChangeDataType<TType>(TType dataType) where TType : IDataType;
         ITag<TDataType> ChangeDimensions(Dimensions dimensions);
         ITag<TDataType> ChangeTagType(TagType type);
     }

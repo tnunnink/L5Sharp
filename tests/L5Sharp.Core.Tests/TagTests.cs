@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using AutoFixture;
 using FluentAssertions;
 using L5Sharp.Enums;

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using L5Sharp.Enums;
-using L5Sharp.Exceptions;
 
 namespace L5Sharp.Core
 {
@@ -21,15 +20,10 @@ namespace L5Sharp.Core
             ExternalAccess externalAccess = null, string description = null)
             : this(name, dimensions, externalAccess, description)
         {
-            DataType = Dimensions.AreEmpty ? dataType : default;
+            DataType = dataType;
 
-            Radix = radix != null
-                ? radix.IsValidForType(dataType)
-                    ? radix
-                    : throw new RadixNotSupportedException(radix, dataType)
-                : dataType is IAtomic atomic
-                    ? Radix.Default(atomic)
-                    : Radix.Null;
+            if (DataType is IAtomic atomic && radix != null)
+                atomic.SetRadix(radix);
 
             var elements = new List<IMember<TDataType>>(Dimensions);
             for (var i = 0; i < Dimensions; i++)
@@ -42,15 +36,17 @@ namespace L5Sharp.Core
             ExternalAccess externalAccess = null, string description = null)
             : this(name, dimensions, externalAccess, description)
         {
-            DataType = default;
-            Radix = Radix.Null;
+            DataType = dataTypes.FirstOrDefault();
+            
+            if (DataType is IAtomic atomic && radix != null)
+                atomic.SetRadix(radix);
 
             if (Dimensions.AreEmpty)
                 throw new ArgumentException("Dimensions must have length greater than zero");
             if (Dimensions.AreMultiDimensional)
-                throw new ArgumentException("Dimensions must be of single dimension");
+                throw new ArgumentException("Member Dimensions must be of a single dimension");
             if (Dimensions.Length != dataTypes.Count)
-                throw new ArgumentException("Dimensions size must match provided data type array");
+                throw new ArgumentException("Dimensions size must match provided data type array length");
 
             var elements = new List<IMember<TDataType>>(Dimensions);
             elements.AddRange(dataTypes.Select((t, i) =>
@@ -62,7 +58,7 @@ namespace L5Sharp.Core
         public string Description { get; }
         public TDataType DataType { get; }
         public Dimensions Dimensions { get; }
-        public Radix Radix { get; }
+        public Radix Radix => DataType.Radix;
         public ExternalAccess ExternalAccess { get; }
         public IMember<TDataType>[] Elements { get; }
 

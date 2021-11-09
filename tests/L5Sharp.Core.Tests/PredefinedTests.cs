@@ -85,7 +85,7 @@ namespace L5Sharp.Core.Tests
         private class MyPredefined : Predefined
         {
             public MyPredefined() :
-                base(nameof(MyPredefined), DataTypeFamily.None)
+                base(nameof(MyPredefined))
             {
             }
         }
@@ -99,7 +99,7 @@ namespace L5Sharp.Core.Tests
         private class MyNullNamePredefined : Predefined
         {
             public MyNullNamePredefined() :
-                base(null, DataTypeFamily.None)
+                base(null)
             {
             }
         }
@@ -114,7 +114,7 @@ namespace L5Sharp.Core.Tests
         private class MyInvalidMemberPredefined : Predefined
         {
             public MyInvalidMemberPredefined() :
-                base(nameof(MyInvalidMemberPredefined), DataTypeFamily.None, GetMembers())
+                base(nameof(MyInvalidMemberPredefined))
             {
             }
 

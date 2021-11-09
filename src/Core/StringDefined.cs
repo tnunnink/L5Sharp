@@ -29,44 +29,43 @@ namespace L5Sharp.Core
             };
         }
 
+        public Radix Radix => Radix.Null;
         public DataTypeFamily Family => DataTypeFamily.String;
-
         public DataTypeClass Class => DataTypeClass.User;
-
         public TagDataFormat DataFormat => TagDataFormat.String;
-
-        public IEnumerable<IMember<IDataType>> Members { get; }
+        public string Value => GetValue();
         public IMember<Dint> LEN { get; }
         public IMember<Sint> DATA { get; }
+        public IEnumerable<IMember<IDataType>> Members { get; }
 
-        public string Get()
-        {
-            var bytes = DATA.Elements.Select(d => d.DataType.Get()).ToArray();
-            return Encoding.ASCII.GetString(bytes);
-        }
-
-        public void Set(string value)
+        public void SetValue(string value)
         {
             var bytes = Encoding.ASCII.GetBytes(value);
 
-            if (bytes.Length > LEN.DataType.Get())
+            if (bytes.Length > LEN.DataType.Value)
                 throw new ArgumentOutOfRangeException();
             
             ClearData();
             
             for (var i = 0; i < bytes.Length; i++)
-                DATA.Elements[i].DataType.Set(bytes[i]);
-        }
-        
-        private void ClearData()
-        {
-            foreach (var dataElement in DATA.Elements)
-                dataElement.DataType.Set(0);
+                DATA.Elements[i].DataType.SetValue(bytes[i]);
         }
 
         public override string ToString()
         {
-            return Get();
+            return GetValue();
+        }
+
+        private string GetValue()
+        {
+            var bytes = DATA.Elements.Select(d => d.DataType.Value).ToArray();
+            return Encoding.ASCII.GetString(bytes);
+        }
+
+        private void ClearData()
+        {
+            foreach (var dataElement in DATA.Elements)
+                dataElement.DataType.SetValue(0);
         }
     }
 }

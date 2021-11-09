@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
+using AutoFixture;
 using FluentAssertions;
-using L5Sharp.Abstractions;
 using L5Sharp.Enums;
 using L5Sharp.Types;
 using NUnit.Framework;
@@ -12,23 +11,38 @@ namespace L5Sharp.Core.Tests
     public class MemberTests
     {
         [Test]
+        public void Constructor_ValidNameAndType_ShouldNotBeNull()
+        {
+            var member = new Member<IDataType>("Test", new Bool());
+
+            member.Should().NotBeNull();
+        }
+        
+        [Test]
         public void New_ValidNameAndType_ShouldNotBeNull()
         {
-            var member = Member.OfType<Real>("Member");
+            var member = Member.New("Test", new Bool());
+
+            member.Should().NotBeNull();
+        }
+        
+        [Test]
+        public void OfType_ValidNameAndType_ShouldNotBeNull()
+        {
+            var member = Member.OfType<Bool>("Test");
 
             member.Should().NotBeNull();
         }
 
         [Test]
-        public void New_ArrayType_ShouldNotBeNull()
+        public void New_ArrayType_ShouldHaveExpectedLength()
         {
-            var collection = new ComponentCollection<IMember<IDataType>>();
-            
-            var simple = new Member<IDataType>("Test", new Dint());
-            var array = new Member<IDataType>("Test", new Dint(), new Dimensions(10));
+            var fixture = new Fixture();
+            var length = fixture.Create<ushort>();
+            var array = Member.OfType<Dint>("Test", new Dimensions(length));
 
-            collection.Add(simple);
-            collection.Add(array);
+            array.Elements.Length.Should().Be(length);
+            array.Elements.Should().BeOfType<IMember<Dint>[]>();
         }
 
         [Test]
@@ -38,25 +52,27 @@ namespace L5Sharp.Core.Tests
         }
 
         [Test]
-        public void New_NullType_ShouldHaveUndefinedDataType()
+        public void New_NullType_ShouldHaveNullType()
         {
             var member = Member.New("Name", null);
             member.DataType.Should().BeNull();
         }
 
         [Test]
-        public void New_OverrideProperties_ShouldNotBeNull()
+        public void New_OverrideProperties_ShouldHaveExpectedOverloads()
         {
-            var member = Member.New("Member", new Real(), new Dimensions(35), Radix.General,
+            var member = Member.New("Member", new Real(), new Dimensions(35), Radix.Exponential,
                 ExternalAccess.ReadOnly, "Test");
 
             member.Should().NotBeNull();
             member.Name.Should().Be("Member");
-            member.DataType.Should().Be(new Real());
+            member.DataType.Should().BeNull();
             member.Dimensions.Length.Should().Be(35);
-            member.Radix.Should().Be(Radix.General);
+            member.Radix.Should().Be(Radix.Exponential);
             member.ExternalAccess.Should().Be(ExternalAccess.ReadOnly);
             member.Description.Should().Be("Test");
+            member.Elements.Length.Should().Be(35);
+            member.Elements.Should().AllBeOfType<Member<IDataType>>();
         }
 
         [Test]
@@ -117,6 +133,16 @@ namespace L5Sharp.Core.Tests
             var description = member.Description;
 
             description.Should().BeNull();
+        }
+
+        [Test]
+        public void Elements_GetValue_ShouldBeEmptyArray()
+        {
+            var member = Member.OfType<Real>("Member");
+
+            var elements = member.Elements;
+
+            elements.Should().BeEmpty();
         }
     }
 }
