@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--This is a test string type-->
+<RSLogix5000Content SchemaRevision="1.0" SoftwareRevision="32.02" TargetName="MyStringType" TargetType="DataType" ContainsContext="true" Owner="tnunnink, EN Engineering" ExportDate="Mon Nov 08 09:17:28 2021" ExportOptions="References NoRawData L5KData DecoratedData Context Dependencies ForceProtectedEncoding AllProjDocTrans">
+<Controller Use="Context" Name="TestController">
+<DataTypes Use="Context">
+<DataType Use="Target" Name="MyStringType" Family="StringFamily" Class="User">
+<Description>
+<![CDATA[This is a test string type]]>
+</Description>
+<Members>
+<Member Name="LEN" DataType="DINT" Dimension="0" Radix="Decimal" Hidden="false" ExternalAccess="Read/Write"/>
+<Member Name="DATA" DataType="SINT" Dimension="100" Radix="ASCII" Hidden="false" ExternalAccess="Read/Write"/>
+</Members>
+</DataType>
+</DataTypes>
+</Controller>
+</RSLogix5000Content>

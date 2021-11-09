@@ -22,7 +22,7 @@ namespace L5Sharp.Instructions
         {
             return new List<IMember<IDataType>>
             {
-                new Member<IDataType>(nameof(StorageBit), new Bool()),
+                Member.New(nameof(StorageBit), new Bool())
             };
         }
     }

@@ -77,6 +77,17 @@ namespace L5Sharp.Types.Tests
         }
         
         [Test]
+        public void SetValue_ValidDintValue_ShouldReturnExpected()
+        {
+            var type = new Dint();
+            var value = new Dint(_random);
+
+            type.SetValue(value);
+
+            type.Value.Should().Be(value);
+        }
+        
+        [Test]
         public void SetValue_ValidObjectValue_ShouldReturnExpected()
         {
             var type = new Dint();

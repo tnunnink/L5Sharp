@@ -13,7 +13,7 @@ namespace L5Sharp.Types
         
         public Timer(Dint pre) : this()
         {
-            PRE.DataType.SetValue(pre.Value);
+            PRE.DataType.SetValue(pre);
         }
         
         public override IDataType Instantiate()
