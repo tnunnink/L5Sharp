@@ -1,25 +1,30 @@
 ﻿using L5Sharp.Core;
-// ReSharper disable InconsistentNaming
+
+// ReSharper disable InconsistentNaming RSLogix naming
 
 namespace L5Sharp.Types
 {
-    public class Timer : Predefined
+    public sealed class Timer : Predefined
     {
         public Timer() : base(nameof(Timer).ToUpper())
         {
-            PRE = Member.OfType<Dint>(nameof(PRE));
-            ACC = Member.OfType<Dint>(nameof(ACC));
-            EN = Member.OfType<Bool>(nameof(EN));
-            TT = Member.OfType<Bool>(nameof(TT));
-            DN = Member.OfType<Bool>(nameof(DN));
-
             RegisterMemberProperties();
         }
+        
+        public Timer(Dint pre) : this()
+        {
+            PRE.DataType.SetValue(pre.Value);
+        }
+        
+        public override IDataType Instantiate()
+        {
+            return new Timer();
+        }
 
-        public IMember<Dint> PRE { get; }
-        public IMember<Dint> ACC { get; }
-        public IMember<Bool> EN { get; }
-        public IMember<Bool> TT { get; }
-        public IMember<Bool> DN { get; }
+        public IMember<Dint> PRE => Member.OfType<Dint>(nameof(PRE));
+        public IMember<Dint> ACC => Member.OfType<Dint>(nameof(ACC));
+        public IMember<Bool> EN => Member.OfType<Bool>(nameof(EN));
+        public IMember<Bool> TT => Member.OfType<Bool>(nameof(TT));
+        public IMember<Bool> DN => Member.OfType<Bool>(nameof(DN));
     }
 }

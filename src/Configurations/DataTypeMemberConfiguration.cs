@@ -3,23 +3,32 @@ using L5Sharp.Enums;
 
 namespace L5Sharp.Configurations
 {
-    public class DataTypeMemberConfiguration : IDataTypeMemberConfiguration
+    public class DataTypeMemberConfiguration :
+        IComponentConfiguration<IDataTypeMember<IDataType>>,
+        IDataTypeMemberNameConfiguration,
+        IDataTypeMemberTypeConfiguration,
+        IDataTypeMemberConfiguration
     {
-        private readonly string _name;
+        private string _name;
         private IDataType _dataType;
         private string _description;
         private Dimensions _dimensions;
         private Radix _radix;
         private ExternalAccess _externalAccess;
 
-        public DataTypeMemberConfiguration(string name)
+        public DataTypeMemberConfiguration()
         {
-            _name = name;
         }
-
+        
         public IDataTypeMember<IDataType> Compile()
         {
             return new DataTypeMember<IDataType>(_name, _dataType, _dimensions, _radix, _externalAccess, _description);
+        }
+
+        public IDataTypeMemberTypeConfiguration WithName(string name)
+        {
+            _name = name;
+            return this;
         }
 
         public IDataTypeMemberConfiguration OfType(IDataType dataType)
@@ -28,7 +37,7 @@ namespace L5Sharp.Configurations
             return this;
         }
 
-        public IDataTypeMemberConfiguration HasDescription(string description)
+        public IDataTypeMemberConfiguration WithDescription(string description)
         {
             _description = description;
             return this;

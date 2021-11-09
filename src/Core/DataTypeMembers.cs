@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using L5Sharp.Abstractions;
 using L5Sharp.Configurations;
 using L5Sharp.Exceptions;
@@ -9,9 +10,12 @@ namespace L5Sharp.Core
     {
         private readonly IDataType _parentType;
 
-        public DataTypeMembers(IDataType parentType)
+        public DataTypeMembers(IDataType parentType, IEnumerable<IDataTypeMember<IDataType>> members = null)
         {
             _parentType = parentType;
+            
+            if (members!= null)
+                AddRange(members);
         }
         
         public override void Add(IDataTypeMember<IDataType> component)
@@ -26,9 +30,9 @@ namespace L5Sharp.Core
             base.Add(component);
         }
 
-        public void Add(string name, Action<IDataTypeMemberConfiguration> config = null)
+        public void Add(Action<IDataTypeMemberNameConfiguration> config)
         {
-            var configuration = new DataTypeMemberConfiguration(name);
+            var configuration = new DataTypeMemberConfiguration();
             config?.Invoke(configuration);
             Add(configuration);
         }

@@ -2,52 +2,31 @@
 using System.Collections.Generic;
 using L5Sharp.Abstractions;
 using L5Sharp.Enums;
-using L5Sharp.Utilities;
 
 namespace L5Sharp.Core
 {
     public class DataType : LogixComponent, IUserDefined, IEquatable<DataType>
     {
-        private string _name;
-
-        public DataType(string name, string description = null) : base(name, description)
+        public DataType(string name, string description = null, IEnumerable<IDataTypeMember<IDataType>> members = null)
+            : base(name, description)
         {
-            Validate.DataTypeName(name);
-            _name = name;
-
-            Members = new DataTypeMembers(this);
+            Members = new DataTypeMembers(this, members);
         }
-
-        public DataType(string name, IDataTypeMember<IDataType> dataTypeMember, string description = null)
-            : this(name, description)
-        {
-            Members.Add(dataTypeMember);
-        }
-
-        public DataType(string name, IEnumerable<IDataTypeMember<IDataType>> members, string description = null)
-            : this(name, description)
-        {
-            foreach (var member in members)
-                Members.Add(member);
-        }
-
-        public override string Name => _name;
+        
         public Radix Radix => Radix.Null;
         public DataTypeFamily Family => DataTypeFamily.None;
         public DataTypeClass Class => DataTypeClass.User;
         public TagDataFormat DataFormat => TagDataFormat.Decorated;
         public IDataTypeMembers Members { get; }
 
-        public IUserDefined Instantiate()
+        public IDataType Instantiate()
         {
-            return new DataType(_name, Members, Description);
-        }
-
-        public override void SetName(string name)
-        {
-            Validate.Name(name);
-            Validate.DataTypeName(name);
-            _name = name;
+            var members = new DataTypeMembers(this);
+            
+            foreach (var typeMember in Members)
+                members.Add(DataTypeMember.Copy(typeMember));
+            
+            return new DataType(Name, Description, members);
         }
 
         public bool Equals(DataType other)

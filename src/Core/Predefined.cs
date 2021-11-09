@@ -1,67 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using System.Xml.Linq;
 using L5Sharp.Enums;
 using L5Sharp.Exceptions;
 using L5Sharp.Extensions;
+using L5Sharp.Types;
 using L5Sharp.Utilities;
 
 namespace L5Sharp.Core
 {
     public abstract class Predefined : IPredefined, IEquatable<Predefined>
     {
-        private const string ResourceNamespace = "Resources";
-        private const string ResourceFileName = "Predefined.xml";
-        private static readonly ResourceReader Resources = new ResourceReader(typeof(Predefined));
-        private static readonly XDocument PredefinedData = LoadPredefined();
-
-        private readonly Dictionary<string, Member<IDataType>> _members =
-            new Dictionary<string, Member<IDataType>>(StringComparer.OrdinalIgnoreCase);
+        private readonly Dictionary<string, IMember<IDataType>> _members =
+            new Dictionary<string, IMember<IDataType>>(StringComparer.OrdinalIgnoreCase);
 
         protected Predefined(string name)
         {
             Validate.Name(name);
-            Validate.DataTypeName(name);
             Name = name;
-        }
-
-        internal Predefined(XElement element)
-        {
-            Validate.Name(element.GetName());
-            Name = element.GetName();
-
-            var members = element.Descendants(LogixNames.GetComponentName<IMember<IDataType>>());
-
-            foreach (var e in members)
-            {
-                var typeName = e.GetDataTypeName();
-                if (typeName == null)
-                    throw new ArgumentNullException(nameof(typeName), "DataType can not be null");
-
-                if (!Logix.ContainsType(typeName))
-                    throw new InvalidOperationException(
-                        $"Type '{typeName}' has not been defined. Register dependent types before parent type");
-
-                var type = Logix.CreateType(typeName);
-
-                var name = e.GetName();
-                var description = e.GetDescription();
-                var dimension = e.GetValue<IMember<IDataType>>(m => m.Dimensions);
-                var radix = e.GetValue<IMember<IDataType>>(m => m.Radix);
-                var access = e.GetValue<IMember<IDataType>>(m => m.ExternalAccess);
-
-                var member = new Member<IDataType>(name, type, dimension, radix, access, description);
-
-                _members.Add(member.Name, member);
-            }
         }
 
         public string Name { get; }
         public virtual string Description => null;
         public Radix Radix => Radix.Null;
-        public DataTypeFamily Family => DataTypeFamily.None;
+        public virtual DataTypeFamily Family => DataTypeFamily.None;
         public DataTypeClass Class => DataTypeClass.Predefined;
         public virtual TagDataFormat DataFormat => TagDataFormat.Decorated;
         public IEnumerable<IMember<IDataType>> Members => _members.Values.AsEnumerable();
@@ -74,15 +36,19 @@ namespace L5Sharp.Core
 
         public IMember<TType> GetMember<TType>(string name) where TType : IDataType
         {
-            _members.TryGetValue(name, out var member);
-            return member != null ? member.As<TType>() : null;
+            return _members.TryGetValue(name, out var member) ? member.As<TType>() : null;
         }
 
         public bool Equals(Predefined other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return Name == other.Name;
+            return Name == other.Name && Equals(Members, other.Members);
+        }
+
+        public virtual IDataType Instantiate()
+        {
+            return new Undefined();
         }
 
         public override bool Equals(object obj)
@@ -113,13 +79,14 @@ namespace L5Sharp.Core
                 p.PropertyType.IsGenericType &&
                 p.PropertyType.GetGenericTypeDefinition().IsAssignableFrom(typeof(IMember<>))).ToList();
 
-            foreach (var property in properties)
+            foreach (var member in properties.Select(property => (IMember<IDataType>) property.GetValue(this)))
             {
-                var member = (Member<IDataType>) property.GetValue(this);
-                if (member == null) throw new InvalidOperationException("Not sure this should happen?");
-
                 if (_members.ContainsKey(member.Name))
                     throw new ComponentNameCollisionException(member.Name, typeof(IMember<>));
+
+                if (member.DataType.Equals(this))
+                    throw new CircularReferenceException(
+                        $"Member can not be same type as parent type '{member.DataType.Name}'");
 
                 _members.Add(member.Name, member);
             }
@@ -127,21 +94,7 @@ namespace L5Sharp.Core
 
         protected void RegisterMember(IMember<IDataType> member)
         {
-            _members.Add(member.Name, (Member<IDataType>)member);
-        }
-
-        internal static XElement LoadElement(string name)
-        {
-            var element = PredefinedData.Descendants(nameof(DataType))
-                .SingleOrDefault(x => x.Attribute(nameof(Name))?.Value == name);
-
-            return element;
-        }
-
-        private static XDocument LoadPredefined()
-        {
-            using var stream = Resources.GetStream(ResourceFileName, ResourceNamespace);
-            return XDocument.Load(stream);
+            _members.Add(member.Name, member);
         }
     }
 }

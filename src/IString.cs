@@ -9,7 +9,6 @@ namespace L5Sharp
         string Value { get; }
         IMember<Dint> LEN { get; }
         IMember<Sint> DATA { get; }
-        IEnumerable<IMember<IDataType>> Members { get; }
         void SetValue(string value);
     }
 }

@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace L5Sharp.Core
 {
-    public class Dimensions : IEquatable<Dimensions>
+    public class Dimensions : IEquatable<Dimensions>, IPrototype<Dimensions>
     {
         private Dimensions()
         {
@@ -18,31 +18,38 @@ namespace L5Sharp.Core
 
         public Dimensions(ushort x, ushort y) : this(x)
         {
-            if (x == 0)
-                throw new ArgumentException("X must be non zero");
+            if (x == 0 && y > 0)
+                throw new ArgumentException("X must be greater than zero to have two dimensions");
             
-            if (y == 0)
-                throw new ArgumentException("Y must be non zero");
-
             Y = y;
         }
 
         public Dimensions(ushort x, ushort y, ushort z) : this(x, y)
         {
-            if (z == 0)
-                throw new ArgumentException("Z must be non zero");
+            if (y == 0 && z > 0)
+                throw new ArgumentException("Y must be greater than zero to have three dimensions");
 
             Z = z;
         }
 
         public ushort X { get; }
+
         public ushort Y { get; }
+
         public ushort Z { get; }
+
         public int Length => Z > 0 ? X * Y * Z : Y > 0 ? X * Y : X;
+
         public bool AreEmpty => Length == 0;
+
         public bool AreMultiDimensional => Y > 0;
 
         public static Dimensions Empty => new Dimensions();
+
+        public Dimensions Copy()
+        {
+            return new Dimensions(X, Y, Z);
+        }
 
         public static Dimensions Parse(string value)
         {

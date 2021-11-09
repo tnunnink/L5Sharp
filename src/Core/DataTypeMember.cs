@@ -1,27 +1,35 @@
 ﻿using System;
+using System.Collections.Generic;
 using L5Sharp.Abstractions;
 using L5Sharp.Enums;
 
 namespace L5Sharp.Core
 {
-    public class DataTypeMember<TDataType> : 
+    public class DataTypeMember<TDataType> :
         LogixComponent,
         IDataTypeMember<TDataType>,
         IEquatable<DataTypeMember<TDataType>>
         where TDataType : IDataType
     {
-        
-        public DataTypeMember(string name, TDataType dataType, Dimensions dimension = null, Radix radix = null,
-            ExternalAccess externalAccess = null, string description = null) : base(name, description)
+        public DataTypeMember(string name, TDataType dataType, Dimensions dimension, Radix radix,
+            ExternalAccess externalAccess, string description)
+            : base(name, description)
         {
             DataType = dataType;
             Dimensions = dimension ?? Dimensions.Empty;
             ExternalAccess = externalAccess != null ? externalAccess : ExternalAccess.ReadWrite;
-            
+
             if (DataType is IAtomic atomic && radix != null)
                 atomic.SetRadix(radix);
+
+            var elements = new List<IMember<TDataType>>(Dimensions);
+            for (var i = 0; i < Dimensions; i++)
+                elements.Add(new Member<TDataType>($"{name}[{i}]", (TDataType) DataType.Instantiate(),
+                    Dimensions.Empty, radix, externalAccess, description));
+
+            Elements = elements.ToArray();
         }
-        
+
         public TDataType DataType { get; }
         public Dimensions Dimensions { get; private set; }
         public Radix Radix => DataType.Radix;
@@ -98,19 +106,40 @@ namespace L5Sharp.Core
 
     public static class DataTypeMember
     {
-        public static IDataTypeMember<IDataType> New(string name, IDataType dataType = null,
-            Dimensions dimension = null,
+        public static IDataTypeMember<IDataType> New(string name, IDataType dataType, 
             Radix radix = null, ExternalAccess externalAccess = null, string description = null)
+        {
+            return new DataTypeMember<IDataType>(name, dataType, Dimensions.Empty, radix, externalAccess, description);
+        }
+
+        public static IDataTypeMember<IDataType> New(string name, IDataType dataType, Dimensions dimension,
+            Radix radix = null, ExternalAccess externalAccess = null,
+            string description = null)
         {
             return new DataTypeMember<IDataType>(name, dataType, dimension, radix, externalAccess, description);
         }
 
-        public static IDataTypeMember<TDataType> New<TDataType>(string name, Dimensions dimension = null,
+        public static IDataTypeMember<IDataType> Copy(IDataTypeMember<IDataType> member)
+        {
+            var dataType = member.DataType.Instantiate();
+            return new DataTypeMember<IDataType>(member.Name, dataType, new Dimensions(member.Dimensions.X),
+                member.Radix, member.ExternalAccess, member.Description);
+        }
+
+        public static IDataTypeMember<TDataType> OfType<TDataType>(string name, Radix radix = null,
+            ExternalAccess externalAccess = null, string description = null)
+            where TDataType : IDataType, new()
+        {
+            var dataType = new TDataType();
+            return new DataTypeMember<TDataType>(name, dataType, Dimensions.Empty, radix, externalAccess, description);
+        }
+
+        public static IDataTypeMember<TDataType> OfType<TDataType>(string name, Dimensions dimensions,
             Radix radix = null, ExternalAccess externalAccess = null, string description = null)
             where TDataType : IDataType, new()
         {
             var dataType = new TDataType();
-            return new DataTypeMember<TDataType>(name, dataType, dimension, radix, externalAccess, description);
+            return new DataTypeMember<TDataType>(name, dataType, dimensions, radix, externalAccess, description);
         }
     }
 }

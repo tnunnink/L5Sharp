@@ -2,7 +2,7 @@
 
 namespace L5Sharp.Types
 {
-    public sealed class Undefined : IDataType 
+    public sealed class Undefined : IDataType
     {
         public string Name => nameof(Undefined);
         public string Description => "Data type is not defined";
@@ -10,5 +10,9 @@ namespace L5Sharp.Types
         public DataTypeFamily Family => DataTypeFamily.None;
         public DataTypeClass Class => DataTypeClass.Predefined;
         public TagDataFormat DataFormat => null;
+        public IDataType Instantiate()
+        {
+            return new Undefined();
+        }
     }
 }

@@ -3,12 +3,21 @@ using L5Sharp.Enums;
 
 namespace L5Sharp.Configurations
 {
-    public interface IDataTypeMemberConfiguration : IComponentConfiguration<IDataTypeMember<IDataType>>
+    public interface IDataTypeMemberNameConfiguration
     {
-        IDataTypeMemberConfiguration HasDescription(string description);
+        IDataTypeMemberTypeConfiguration WithName(string name);
+    }
+    
+    public interface IDataTypeMemberTypeConfiguration
+    {
         IDataTypeMemberConfiguration OfType(IDataType dataType);
+    }
+    
+    public interface IDataTypeMemberConfiguration
+    {
         IDataTypeMemberConfiguration WithDimension(Dimensions dimensions);
         IDataTypeMemberConfiguration WithRadix(Radix radix);
         IDataTypeMemberConfiguration WithAccess(ExternalAccess externalAccess);
+        IDataTypeMemberConfiguration WithDescription(string description);
     }
 }

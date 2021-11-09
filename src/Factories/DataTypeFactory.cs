@@ -35,7 +35,7 @@ namespace L5Sharp.Factories
             var members = element.GetAll<DataTypeMember<IDataType>>().Select(x => factory.Create(x));
             var description = element.GetDescription();
 
-            var type = new DataType(name, members, description);
+            var type = new DataType(name, description, members);
             
             _cache.Add(type);
             

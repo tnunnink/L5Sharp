@@ -5,6 +5,6 @@ namespace L5Sharp
 {
     public interface IDataTypeMembers : IComponentCollection<IDataTypeMember<IDataType>>
     {
-        void Add(string name, Action<IDataTypeMemberConfiguration> config = null);
+        void Add(Action<IDataTypeMemberNameConfiguration> config);
     }
 }

@@ -6,6 +6,6 @@ namespace L5Sharp.Configurations
     {
         IDataTypeConfiguration HasDescription(string description);
         IDataTypeConfiguration HasMember(IDataTypeMember<IDataType> member);
-        IDataTypeConfiguration HasMember(string name, Action<IDataTypeMemberConfiguration> config = null);
+        IDataTypeConfiguration HasMember(Action<IDataTypeMemberNameConfiguration> config);
     }
 }

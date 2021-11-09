@@ -71,7 +71,8 @@ namespace L5Sharp.Abstractions
 
         public virtual void AddRange(IEnumerable<TComponent> components)
         {
-            if (components == null) return;
+            if (components == null)
+                throw new ArgumentNullException(nameof(components), "Components can not be null");
 
             foreach (var component in components)
                 Add(component);

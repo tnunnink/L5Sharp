@@ -91,6 +91,11 @@ namespace L5Sharp.Types
             return Equals(Radix, other.Radix) && Value == other.Value;
         }
 
+        public IDataType Instantiate()
+        {
+            return new Int();
+        }
+
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;

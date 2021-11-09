@@ -86,6 +86,11 @@ namespace L5Sharp.Types
             return Equals(Radix, other.Radix) && Value.Equals(other.Value);
         }
 
+        public IDataType Instantiate()
+        {
+            return new Real();
+        }
+
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;

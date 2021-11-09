@@ -20,7 +20,7 @@ namespace L5Sharp.Utilities
         
         public static void DataTypeName(string name)
         {
-            if (Logix.DataTypes.Contains(name))
+            if (Logix.ContainsType(name))
                 throw new ComponentNameCollisionException(name, typeof(Predefined));
         }
         

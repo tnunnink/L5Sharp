@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using L5Sharp.Core;
@@ -9,20 +8,17 @@ using L5Sharp.Enums;
 
 namespace L5Sharp.Types
 {
-    public sealed class String : IString, IEquatable<String>, IComparable<String>
+    public sealed class String : Predefined, IString, IEquatable<String>, IComparable<String>
     {
         private const int PredefinedLength = 82; //This is the built in length of string types in RSLogix
         
-        public String()
+        public String() : base(nameof(String).ToUpper())
         {
             LEN = Member.OfType<Dint>(nameof(LEN));
             DATA = Member.OfType<Sint>(nameof(DATA), new Dimensions(PredefinedLength), Radix.Ascii);
             
-            Members = new List<IMember<IDataType>>
-            {
-                (IMember<IDataType>)LEN,
-                (IMember<IDataType>)DATA,
-            };
+            RegisterMember(LEN);
+            RegisterMember(DATA);
         }
 
         private String(string value = default) : this()
@@ -30,17 +26,18 @@ namespace L5Sharp.Types
             if (!string.IsNullOrEmpty(value))
                 SetValue(value);
         }
-
-        public string Name => nameof(String).ToUpper();
-        public string Description => $"RSLogix representation of a {typeof(string)}";
-        public Radix Radix => Radix.Null;
-        public DataTypeFamily Family => DataTypeFamily.String;
-        public DataTypeClass Class => DataTypeClass.Predefined;
-        public TagDataFormat DataFormat => TagDataFormat.String;
+        
+        public override string Description => $"RSLogix representation of a {typeof(string)}";
+        public override DataTypeFamily Family => DataTypeFamily.String;
+        public override TagDataFormat DataFormat => TagDataFormat.String;
         public string Value => GetValue();
         public IMember<Dint> LEN { get; }
         public IMember<Sint> DATA { get; }
-        public IEnumerable<IMember<IDataType>> Members { get; }
+
+        public override IDataType Instantiate()
+        {
+            return new String();
+        }
 
         public void SetValue(string value)
         {
@@ -65,16 +62,16 @@ namespace L5Sharp.Types
             return input.GetValue();
         }
 
+        public int CompareTo(String other)
+        {
+            return string.Compare(Value, other.Value, StringComparison.Ordinal);
+        }
+
         public bool Equals(String other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
             return Equals(Members, other.Members) && Equals(LEN, other.LEN) && Equals(DATA, other.DATA);
-        }
-
-        public int CompareTo(String other)
-        {
-            return string.Compare(Value, other.Value, StringComparison.Ordinal);
         }
 
         public override bool Equals(object obj)

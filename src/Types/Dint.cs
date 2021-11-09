@@ -83,6 +83,11 @@ namespace L5Sharp.Types
             return Value.CompareTo(other.Value);
         }
 
+        public IDataType Instantiate()
+        {
+            return new Dint();
+        }
+
         public bool Equals(Dint other)
         {
             if (ReferenceEquals(null, other)) return false;

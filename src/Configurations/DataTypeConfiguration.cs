@@ -25,15 +25,12 @@ namespace L5Sharp.Configurations
             _dataType.Members.Add(member);
             return this;
         }
-        public IDataTypeConfiguration HasMember(string name, Action<IDataTypeMemberConfiguration> config = null)
+        public IDataTypeConfiguration HasMember(Action<IDataTypeMemberNameConfiguration> config)
         {
-            var configuration = new DataTypeMemberConfiguration(name);
-            
+            var configuration = new DataTypeMemberConfiguration();
             config?.Invoke(configuration);
-            
             var member = configuration.Compile();
             _dataType.Members.Add(member);
-            
             return this;
         }
     }

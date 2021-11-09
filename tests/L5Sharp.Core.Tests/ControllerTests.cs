@@ -65,11 +65,13 @@ namespace L5Sharp.Core.Tests
 
             controller.DataTypes.Add("Test",
                 t => t.HasDescription("This is a test data type")
-                    .HasMember("TestMember", c => c
+                    .HasMember(c => c
+                        .WithName("Test")
                         .OfType(new Alarm())
                         .WithDimension(new Dimensions(4))
-                        .HasDescription("This is a test"))
-                    .HasMember("AnotherMember", c => c
+                        .WithDescription("This is a test"))
+                    .HasMember(c => c
+                        .WithName("AnotherMember")
                         .OfType(new Real())
                         .WithRadix(Radix.Exponential)));
         }
@@ -91,7 +93,7 @@ namespace L5Sharp.Core.Tests
         {
             var controller = new Controller("Test");
             var datatype = new DataType("TestType");
-            datatype.Members.Add(new DataTypeMember<IDataType>("Test", new Bool()));
+            datatype.Members.Add(DataTypeMember.New("Test", new Bool()));
             controller.DataTypes.Add(datatype);
 
             var type = controller.DataTypes.First();
