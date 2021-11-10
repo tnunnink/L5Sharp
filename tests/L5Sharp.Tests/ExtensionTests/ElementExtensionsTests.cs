@@ -7,6 +7,7 @@ using L5Sharp.Abstractions;
 using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Extensions;
+using L5Sharp.Types;
 using NUnit.Framework;
 
 namespace L5Sharp.Tests.ExtensionTests
@@ -25,7 +26,6 @@ namespace L5Sharp.Tests.ExtensionTests
         [Test]
         public void Contains_DataTypeKnownType_ShouldNotBeNull()
         {
-            
         }
 
         [Test]
@@ -52,7 +52,7 @@ namespace L5Sharp.Tests.ExtensionTests
         [Test]
         public void ToAttribute_ValidComponent_ShouldHaveExpectedNameAndValue()
         {
-            var component = new DataType("Test");
+            var component = new DataType("Test", new[] { Member.New("Test", new Dint()) });
 
             var attribute = component.ToAttribute(c => c.Name);
 

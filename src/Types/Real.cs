@@ -9,7 +9,7 @@ namespace L5Sharp.Types
         public Real()
         {
             Value = default;
-            Radix = Radix.Decimal;
+            Radix = Radix.Float;
         }
 
         public Real(float value) : this()

@@ -11,9 +11,9 @@ namespace L5Sharp.Enums
         {
         }
 
-        public abstract string Format(IAtomic atomic);
+        public virtual string Format(IAtomic atomic) => null;
 
-        protected virtual string ConvertAtomic(IAtomic atomic, int baseNumber)
+        private static string ConvertAtomic(IAtomic atomic, int baseNumber)
         {
             return atomic switch
             {
@@ -45,22 +45,12 @@ namespace L5Sharp.Enums
             public NullRadix() : base("NullType", "NullType")
             {
             }
-
-            public override string Format(IAtomic atomic)
-            {
-                return string.Empty;
-            }
         }
         
         private class GeneralRadix : Radix
         {
             public GeneralRadix() : base("General", "General")
             {
-            }
-
-            public override string Format(IAtomic atomic)
-            {
-                return string.Empty;
             }
         }
         
@@ -93,27 +83,12 @@ namespace L5Sharp.Enums
             public OctalRadix() : base("Octal", "Octal")
             {
             }
-
-            public override string Format(IAtomic atomic)
-            {
-                return string.Empty;
-            }
         }
 
         private class DecimalRadix : Radix
         {
             public DecimalRadix() : base("Decimal", "Decimal")
             {
-            }
-
-            public override string Format(IAtomic atomic)
-            {
-                var str = ConvertAtomic(atomic, 10);
-                
-                //todo append correct specifier
-                //todo Insert underscores?
-                
-                return str;
             }
         }
         
@@ -122,22 +97,12 @@ namespace L5Sharp.Enums
             public HexRadix() : base("Hex", "Hex")
             {
             }
-
-            public override string Format(IAtomic atomic)
-            {
-                return string.Empty;
-            }
         }
         
         private class ExponentialRadix : Radix
         {
             public ExponentialRadix() : base("Exponential", "Exponential")
             {
-            }
-
-            public override string Format(IAtomic atomic)
-            {
-                return string.Empty;
             }
         }
         
@@ -146,22 +111,12 @@ namespace L5Sharp.Enums
             public FloatRadix() : base("Float", "Float")
             {
             }
-
-            public override string Format(IAtomic atomic)
-            {
-                return string.Empty;
-            }
         }
         
         private class AsciiRadix : Radix
         {
             public AsciiRadix() : base("ASCII", "ASCII")
             {
-            }
-
-            public override string Format(IAtomic atomic)
-            {
-                return string.Empty;
             }
         }
         
@@ -170,22 +125,12 @@ namespace L5Sharp.Enums
             public UnicodeRadix() : base("Unicode", "Unicode")
             {
             }
-
-            public override string Format(IAtomic atomic)
-            {
-                return string.Empty;
-            }
         }
         
         private class DateTimeRadix : Radix
         {
             public DateTimeRadix() : base("DateTime", "DateTime")
             {
-            }
-
-            public override string Format(IAtomic atomic)
-            {
-                return string.Empty;
             }
         }
         
@@ -194,22 +139,12 @@ namespace L5Sharp.Enums
             public DateTimeNsRadix() : base("DateTimeNs", "DateTimeNs")
             {
             }
-
-            public override string Format(IAtomic atomic)
-            {
-                return string.Empty;
-            }
         }
         
         private class UseTypeStyleRadix : Radix
         {
             public UseTypeStyleRadix() : base("UseTypeStyle", "UseTypeStyle")
             {
-            }
-
-            public override string Format(IAtomic atomic)
-            {
-                return string.Empty;
             }
         }
     }

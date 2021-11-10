@@ -17,18 +17,5 @@ namespace L5Sharp.Utilities
             if (!Regex.IsMatch(name, @"^[a-zA-Z_][a-zA-Z0-9_]{0,39}$"))
                 throw new ComponentNameInvalidException(name);
         }
-        
-        public static void DataTypeName(string name)
-        {
-            if (Logix.ContainsType(name))
-                throw new ComponentNameCollisionException(name, typeof(Predefined));
-        }
-        
-        public static void MemberDataType(IMember<IDataType> member, IDataType dataType)
-        {
-            if (member.DataType.Equals(dataType))
-                throw new CircularReferenceException(
-                    $"Member can not be same type as parent type '{member.DataType.Name}'");
-        }
     }
 }

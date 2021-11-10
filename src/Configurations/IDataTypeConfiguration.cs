@@ -2,10 +2,15 @@
 
 namespace L5Sharp.Configurations
 {
-    public interface IDataTypeConfiguration : IComponentConfiguration<IUserDefined>
+    public interface IDataTypeNameConfiguration
+    {
+        IDataTypeConfiguration HasName(string name);
+    }
+
+    public interface IDataTypeConfiguration
     {
         IDataTypeConfiguration HasDescription(string description);
-        IDataTypeConfiguration HasMember(IDataTypeMember<IDataType> member);
-        IDataTypeConfiguration HasMember(Action<IDataTypeMemberNameConfiguration> config);
+        IDataTypeConfiguration HasMember(IMember<IDataType> member);
+        IDataTypeConfiguration HasMember(Action<IMemberNameConfiguration> config);
     }
 }

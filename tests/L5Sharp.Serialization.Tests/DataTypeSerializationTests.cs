@@ -14,7 +14,7 @@ namespace L5Sharp.Serialization.Tests
         [Test]
         public void Serialize_WhenCalled_ShouldNotBeNull()
         {
-            var type = new DataType("TypeName");
+            var type = new DataType("Test", new[] { Member.New("Test", new Dint()) });
             
             var element = type.Serialize();
 
@@ -25,7 +25,7 @@ namespace L5Sharp.Serialization.Tests
         [UseReporter(typeof(DiffReporter))]
         public void Serialize_WhenCalled_ShouldHaveApprovedOutput()
         {
-            var type = new DataType("TypeName", "Description of the type");
+            var type = new DataType("Test", new[] { Member.New("Test", new Dint()) });
             
             var element = type.Serialize();
 
@@ -36,13 +36,13 @@ namespace L5Sharp.Serialization.Tests
         [UseReporter(typeof(DiffReporter))]
         public void Serialize_WithMembers_ShouldHaveApprovedOutput()
         {
-            var type = new DataType("TypeName", "Description of the type");
-            type.Members.Add(DataTypeMember.New("Member_Bool", new Bool()));
-            type.Members.Add(DataTypeMember.New("Member_Sint", new Sint()));
-            type.Members.Add(DataTypeMember.New("Member_Int", new Int()));
-            type.Members.Add(DataTypeMember.New("Member_Dint", new Dint()));
-            type.Members.Add(DataTypeMember.New("Member_Lint", new Lint()));
-            type.Members.Add(DataTypeMember.New("Member_Real", new Real()));
+            var type = new DataType("Test", new[] { Member.New("Test", new Dint()) });
+            type.Members.Add(Member.New("Member_Bool", new Bool()));
+            type.Members.Add(Member.New("Member_Sint", new Sint()));
+            type.Members.Add(Member.New("Member_Int", new Int()));
+            type.Members.Add(Member.New("Member_Dint", new Dint()));
+            type.Members.Add(Member.New("Member_Lint", new Lint()));
+            type.Members.Add(Member.New("Member_Real", new Real()));
             
             var element = type.Serialize();
 

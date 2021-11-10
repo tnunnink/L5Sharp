@@ -6,9 +6,9 @@ namespace L5Sharp.Core
 {
     public class DataTypes : ComponentCollection<IUserDefined>, IDataTypes
     {
-        public void Add(string name, Action<IDataTypeConfiguration> config = null)
+        public void Add(Action<IDataTypeConfiguration> config)
         {
-            var configuration = new DataTypeConfiguration(name);
+            var configuration = new DataTypeConfiguration();
             config?.Invoke(configuration);
             Add(configuration);
         }

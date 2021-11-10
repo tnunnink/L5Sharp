@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using L5Sharp.Abstractions;
 using L5Sharp.Enums;
 
@@ -7,26 +8,26 @@ namespace L5Sharp.Core
 {
     public class DataType : LogixComponent, IUserDefined, IEquatable<DataType>
     {
-        public DataType(string name, string description = null, IEnumerable<IDataTypeMember<IDataType>> members = null)
+        public DataType(string name, IEnumerable<IMember<IDataType>> members = null, string description = null)
             : base(name, description)
         {
-            Members = new DataTypeMembers(this, members);
+            Members = members == null ? new Members(this) : new Members(this, members);
         }
         
         public Radix Radix => Radix.Null;
         public DataTypeFamily Family => DataTypeFamily.None;
         public DataTypeClass Class => DataTypeClass.User;
         public TagDataFormat DataFormat => TagDataFormat.Decorated;
-        public IDataTypeMembers Members { get; }
+        public IMembers Members { get; }
 
         public IDataType Instantiate()
         {
-            var members = new DataTypeMembers(this);
+            var members = new Members(this);
             
-            foreach (var typeMember in Members)
-                members.Add(DataTypeMember.Copy(typeMember));
+            foreach (var member in Members)
+                members.Add(((Member<IDataType>)member).Copy());
             
-            return new DataType(Name, Description, members);
+            return new DataType(Name, members, Description);
         }
 
         public bool Equals(DataType other)
@@ -34,8 +35,7 @@ namespace L5Sharp.Core
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
             return Name == other.Name
-                   && Equals(Members, other.Members)
-                   && Equals(Family, other.Family)
+                   && Members.SequenceEqual(other.Members)
                    && Description == other.Description;
         }
 

@@ -21,7 +21,7 @@ namespace L5Sharp.Types.Tests
             var type = new Undefined();
 
             type.Name.Should().Be(nameof(Undefined));
-            type.Description.Should().Be("Data type is not defined");
+            type.Description.Should().Be("Undefined DataType");
             type.Family.Should().Be(DataTypeFamily.None);
             type.Class.Should().Be(DataTypeClass.Predefined);
             type.Radix.Should().Be(Radix.Null);

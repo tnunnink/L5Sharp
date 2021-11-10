@@ -1,38 +1,51 @@
 ﻿using System;
-using System.Collections.Generic;
 using FluentAssertions;
 using L5Sharp.Enums;
 using L5Sharp.Exceptions;
-using L5Sharp.Extensions;
 using L5Sharp.Types;
 using NUnit.Framework;
-using String = L5Sharp.Types.String;
 
 namespace L5Sharp.Core.Tests
 {
+
+    public class TestPredefined : Predefined
+    {
+        public TestPredefined() : base(nameof(TestPredefined))
+        {
+            RegisterMember(TestMember);
+        }
+
+        protected override IDataType New()
+        {
+            return new TestPredefined();
+        }
+
+        public IMember<Bool> TestMember => Member.OfType<Bool>(nameof(TestMember));
+    }
+    
     [TestFixture]
     public class PredefinedTests
     {
         [Test]
         public void Name_GetValue_ShouldBeEmpty()
         {
-            var type = new Undefined();
+            var type = new TestPredefined();
 
-            type.Name.Should().Be("Undefined");
+            type.Name.Should().Be("TestPredefined");
         }
         
         [Test]
-        public void Description_GetValue_ShouldBeEmpty()
+        public void Description_GetValue_ShouldBeNull()
         {
-            var type = new Undefined();
+            var type = new TestPredefined();
 
-            type.Description.Should().BeEmpty();
+            type.Description.Should().BeNull();
         }
 
         [Test]
         public void Class_ValidType_ShouldReturnExpected()
         {
-            var type = new Undefined();
+            var type = new TestPredefined();
 
             type.Class.Should().Be(DataTypeClass.Predefined);
         }
@@ -40,23 +53,23 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void DataFormat_ValidType_ShouldReturnExpected()
         {
-            var type = new Undefined();
+            var type = new TestPredefined();
 
             type.DataFormat.Should().Be(TagDataFormat.Decorated);
         }
 
         [Test]
-        public void GetMember_TypeWithMember_ShouldNotBeNull()
+        public void GetMember_ExistingMember_ShouldNotBeNull()
         {
-            var type = new String();
-            var member = type.GetMember("Data");
+            var type = new TestPredefined();
+            var member = type.GetMember("TestMember");
             member.Should().NotBeNull();
         }
 
         [Test]
-        public void GetMember_TypeWithoutMember_ShouldBeNull()
+        public void GetMember_NonExistingMember_ShouldBeNull()
         {
-            var type = new Undefined();
+            var type = new TestPredefined();
             var member = type.GetMember("Member");
             member.Should().BeNull();
         }
@@ -64,32 +77,11 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Predefined_WhenCastedToDataType_ShouldThrowInvalidCastException()
         {
-            var atomic = (IDataType)new Bool();
+            var atomic = (IDataType)new TestPredefined();
 
             FluentActions.Invoking(() => (DataType)atomic).Should().Throw<InvalidCastException>();
         }
 
-        [Test]
-        public void New_PredefinedTypeName_ShouldThrowComponentNameCollisionException()
-        {
-            FluentActions.Invoking(() => new DataType("Undefined")).Should().Throw<ComponentNameCollisionException>();
-        }
-
-        [Test]
-        public void New_MyPredefined_ShouldNotBeNull()
-        {
-            var type = new MyPredefined();
-            type.Should().NotBeNull();
-        }
-
-        private class MyPredefined : Predefined
-        {
-            public MyPredefined() :
-                base(nameof(MyPredefined))
-            {
-            }
-        }
-        
         [Test]
         public void New_MyNullNamePredefined_ShouldThrowArgumentException()
         {
@@ -98,9 +90,13 @@ namespace L5Sharp.Core.Tests
         
         private class MyNullNamePredefined : Predefined
         {
-            public MyNullNamePredefined() :
-                base(null)
+            public MyNullNamePredefined() : base(null)
             {
+            }
+
+            protected override IDataType New()
+            {
+                return new MyNullNamePredefined();
             }
         }
 
@@ -116,123 +112,114 @@ namespace L5Sharp.Core.Tests
             public MyInvalidMemberPredefined() :
                 base(nameof(MyInvalidMemberPredefined))
             {
+                RegisterMember(Member01);
+                RegisterMember(Member02);
             }
 
-            private static IEnumerable<Member<IDataType>> GetMembers()
+            public IMember<Bool> Member01 => Member.OfType<Bool>("Member01");
+            public IMember<Bool> Member02 => Member.OfType<Bool>("Member01");
+            protected override IDataType New()
             {
-                return new List<Member<IDataType>>
-                {
-                    new("Member01", new Bool()),
-                    new("Member01", new Bool()),
-                    new("Member03", new Int())
-                };
+                return new MyInvalidMemberPredefined();
             }
         }
 
         [Test]
-        public void Equals_TypeOverloadEquals_ShouldBeTrue()
+        public void TypedEquals_AreEqual_ShouldBeTrue()
         {
-            var type1 = new Bool();
-            var type2 = new Bool();
+            var first = new TestPredefined();
+            var second = new TestPredefined();
 
-            var result = type1.Equals(type2);
+            var result = first.Equals(second);
 
             result.Should().BeTrue();
         }
 
         [Test]
-        public void Equals_TypeOverloadNotEquals_ShouldBeFalse()
+        public void TypedEquals_AreSame_ShouldBeTrue()
         {
-            var type1 = new Bool();
-            var type2 = new Int();
+            var first = new TestPredefined();
+            var second = first;
 
-            var result = type1.Equals(type2);
-
-            result.Should().BeFalse();
-        }
-        
-        [Test]
-        public void Equals_TypeOverloadNull_ShouldBeFalse()
-        {
-            var type = new Bool();
-
-            var result = type.Equals(null);
-
-            result.Should().BeFalse();
-        }
-        
-        [Test]
-        public void Equals_ObjectOverloadEquals_ShouldBeTrue()
-        {
-            var type1 = new Bool();
-            var type2 = (object) new Bool();
-
-            var result = type1.Equals(type2);
+            var result = first.Equals(second);
 
             result.Should().BeTrue();
         }
-        
+
+
         [Test]
-        public void Equals_ObjectOverloadSameReference_ShouldBeTrue()
+        public void TypedEquals_Null_ShouldBeFalse()
         {
-            var type1 = new Bool();
-            var type2 = (object) type1;
+            var first = new TestPredefined();
 
-            var result = type1.Equals(type2);
-
-            result.Should().BeTrue();
-        }
-        
-        [Test]
-        public void Equals_ObjectOverloadNull_ShouldBeFalse()
-        {
-            var type = new Bool();
-
-            var result = type.Equals((object) null);
+            var result = first.Equals(null);
 
             result.Should().BeFalse();
         }
 
         [Test]
-        public void Equals_TypeOverloadSameReference_ShouldBeTrue()
+        public void ObjectEquals_AreEqual_ShouldBeTrue()
         {
-            var type1 = new Bool();
+            var first = new TestPredefined();
+            var second = new TestPredefined();
 
-            var result = type1.Equals(type1);
+            var result = first.Equals((object)second);
 
             result.Should().BeTrue();
+        }
+
+        [Test]
+        public void ObjectEquals_AreSame_ShouldBeTrue()
+        {
+            var first = new TestPredefined();
+            var second = first;
+
+            var result = first.Equals((object)second);
+
+            result.Should().BeTrue();
+        }
+
+
+        [Test]
+        public void ObjectEquals_Null_ShouldBeFalse()
+        {
+            var first = new TestPredefined();
+
+            var result = first.Equals((object)null);
+
+            result.Should().BeFalse();
+        }
+
+        [Test]
+        public void OperatorEquals_AreEqual_ShouldBeTrue()
+        {
+            var first = new TestPredefined();
+            var second = new TestPredefined();
+
+            var result = first == second;
+
+            result.Should().BeTrue();
+        }
+
+        [Test]
+        public void OperatorNotEquals_AreEqual_ShouldBeFalse()
+        {
+            var first = new TestPredefined();
+            var second = new TestPredefined();
+
+            var result = first != second;
+
+            result.Should().BeFalse();
         }
 
         [Test]
         public void GetHashCode_WhenCalled_ShouldNotBeZero()
         {
-            var type = new Undefined();
+            var first = new TestPredefined();
 
-            var hash = type.GetHashCode();
+            var hash = first.GetHashCode();
 
             hash.Should().NotBe(0);
-        }
-
-        [Test]
-        public void Equals_OperatorAreEqual_ShouldBeTrue()
-        {
-            var type1 = new Undefined();
-            var type2 = new Undefined();
-
-            var result = type1 == type2;
-
-            result.Should().BeTrue();
-        }
-
-        [Test]
-        public void NotEquals_OperatorAreEqual_ShouldBeFalse()
-        {
-            var type1 = new Undefined();
-            var type2 = new Undefined();
-
-            var result = type1 != type2;
-
-            result.Should().BeFalse();
         }
     }
 }

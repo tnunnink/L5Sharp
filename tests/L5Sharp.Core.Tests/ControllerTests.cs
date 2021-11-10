@@ -63,7 +63,7 @@ namespace L5Sharp.Core.Tests
         {
             var controller = new Controller("Test");
 
-            controller.DataTypes.Add("Test",
+            /*controller.DataTypes.Add("Test",
                 t => t.HasDescription("This is a test data type")
                     .HasMember(c => c
                         .WithName("Test")
@@ -73,7 +73,7 @@ namespace L5Sharp.Core.Tests
                     .HasMember(c => c
                         .WithName("AnotherMember")
                         .OfType(new Real())
-                        .WithRadix(Radix.Exponential)));
+                        .WithRadix(Radix.Exponential)));*/
         }
 
         [Test]
@@ -86,23 +86,6 @@ namespace L5Sharp.Core.Tests
             controller.DataTypes.Remove(datatype.Name);
 
             controller.DataTypes.Should().NotContain(datatype);
-        }
-
-        [Test]
-        public void UpdateDataTypeAndSeeHowThatWorks()
-        {
-            var controller = new Controller("Test");
-            var datatype = new DataType("TestType");
-            datatype.Members.Add(DataTypeMember.New("Test", new Bool()));
-            controller.DataTypes.Add(datatype);
-
-            var type = controller.DataTypes.First();
-
-            var member = type.Members.Get("Test");
-            //member.(new Dint());
-
-            member.DataType.Should().Be(new Dint());
-            controller.DataTypes.First().Members.First().DataType.Should().Be(new Dint());
         }
     }
 }

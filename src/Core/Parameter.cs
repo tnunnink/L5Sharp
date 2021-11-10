@@ -87,5 +87,10 @@ namespace L5Sharp.Core
         {
             throw new System.NotImplementedException();
         }
+
+        public IMember<TDataType> Copy()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

@@ -15,8 +15,9 @@ namespace L5Sharp.Types
         {
             PRE.DataType.SetValue(pre);
         }
-        
-        public override IDataType Instantiate()
+
+        public override string Description => $"RSLogix {Name} DataType";
+        protected override IDataType New()
         {
             return new Timer();
         }

@@ -84,16 +84,6 @@ namespace L5Sharp.Core
                 : Y > 0 ? $"{X} {Y}"
                 : $"{X}";
         }
-        
-        public TDataType[] ArrayOf<TDataType>() where TDataType : IDataType, new()
-        {
-            var types = new List<TDataType>();
-
-            for (ushort i = 0; i < X; i++)
-                types.Add(new TDataType());
-
-            return types.ToArray();
-        }
 
         public IEnumerable<string> GenerateIndices()
         {
@@ -151,6 +141,11 @@ namespace L5Sharp.Core
             return new Dimensions(length);
         }
         
+        public static implicit operator ushort(Dimensions dimensions)
+        {
+            return dimensions.X;
+        }
+
         public static implicit operator int(Dimensions dimensions)
         {
             return dimensions.Length;

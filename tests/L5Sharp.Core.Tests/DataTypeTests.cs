@@ -43,7 +43,7 @@ namespace L5Sharp.Core.Tests
             var fixture = new Fixture();
             var description = fixture.Create<string>();
 
-            var type = new DataType("Test", description);
+            var type = new DataType("Test", description: description);
 
             type.Should().NotBeNull();
             type.Name.Should().Be("Test");
@@ -59,13 +59,13 @@ namespace L5Sharp.Core.Tests
         {
             var fixture = new Fixture();
             var description = fixture.Create<string>();
-            var members = new List<IDataTypeMember<IDataType>>
+            var members = new List<IMember<IDataType>>
             {
-                DataTypeMember.New("Member01", new Bool()),
-                DataTypeMember.New("Member02", new Bool())
+                Member.New("Member01", new Bool()),
+                Member.New("Member02", new Bool())
             };
 
-            var type = new DataType("Test", description, members);
+            var type = new DataType("Test", members, description);
 
             type.Should().NotBeNull();
             type.Name.Should().Be("Test");
@@ -81,21 +81,21 @@ namespace L5Sharp.Core.Tests
         {
             var fixture = new Fixture();
             var description = fixture.Create<string>();
-            var members = new List<IDataTypeMember<IDataType>>
+            var members = new List<IMember<IDataType>>
             {
-                DataTypeMember.New("Member01", new Bool()),
-                DataTypeMember.New("Member02", new Bool()),
-                DataTypeMember.New("Member03", new Bool()),
-                DataTypeMember.New("Member04", new Bool()),
-                DataTypeMember.New("Member05", new Int()),
-                DataTypeMember.New("Member06", new Bool()),
-                DataTypeMember.New("Member07", new Bool()),
-                DataTypeMember.New("Member08", new Real()),
-                DataTypeMember.New("Member09", new Bool()),
-                DataTypeMember.New("Member10", new Bool())
+                Member.New("Member01", new Bool()),
+                Member.New("Member02", new Bool()),
+                Member.New("Member03", new Bool()),
+                Member.New("Member04", new Bool()),
+                Member.New("Member05", new Int()),
+                Member.New("Member06", new Bool()),
+                Member.New("Member07", new Bool()),
+                Member.New("Member08", new Real()),
+                Member.New("Member09", new Bool()),
+                Member.New("Member10", new Bool())
             };
 
-            var type = new DataType("Test", description, members);
+            var type = new DataType("Test", members, description);
 
             type.Should().NotBeNull();
             type.Members.Should().HaveCount(10);
@@ -107,7 +107,7 @@ namespace L5Sharp.Core.Tests
         {
             var fixture = new Fixture();
             var description = fixture.Create<string>();
-            var type = new DataType("Test", description);
+            var type = new DataType("Test", description: description);
 
             type.SetName("NewName");
 
@@ -119,7 +119,7 @@ namespace L5Sharp.Core.Tests
         {
             var fixture = new Fixture();
             var description = fixture.Create<string>();
-            var type = new DataType("Test", description);
+            var type = new DataType("Test", description: description);
 
             FluentActions.Invoking(() => type.SetName("Not.Valid%01")).Should().Throw<ComponentNameInvalidException>();
         }
@@ -138,7 +138,7 @@ namespace L5Sharp.Core.Tests
             var fixture = new Fixture();
             var description = fixture.Create<string>();
             var newDescription = fixture.Create<string>();
-            var type = new DataType("Test", description);
+            var type = new DataType("Test", description: description);
 
             type.SetDescription(newDescription);
 
@@ -158,7 +158,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void GetMember_ValidName_ShouldBeExpectedMember()
         {
-            var member = DataTypeMember.New("Member", new Bool());
+            var member = Member.New("Member", new Bool());
             var type = new DataType("Test", members: new[] { member });
 
             var result = type.Members.Get("Member");
@@ -169,7 +169,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void GetMember_Null_ShouldThrowArgumentNullException()
         {
-            var member = DataTypeMember.New("Member", new Bool());
+            var member = Member.New("Member", new Bool());
             var type = new DataType("Test", members: new[] { member });
 
             var result = type.Members.Get((string)null);
@@ -180,7 +180,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void GetMember_MemberThatDoesNotExist_ShouldBeNull()
         {
-            var member = DataTypeMember.New("Member", new Bool());
+            var member = Member.New("Member", new Bool());
             var type = new DataType("Test", members: new[] { member });
 
             var result = type.Members.Get("MemberName");
@@ -191,10 +191,10 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void AddMember_ExistingMember_ShouldThrowMemberNameCollisionException()
         {
-            var member = DataTypeMember.New("Member", new Dint());
+            var member = Member.New("Member", new Dint());
             var type = new DataType("Test", members: new[] { member });
 
-            FluentActions.Invoking(() => type.Members.Add(DataTypeMember.New("Member", new Int()))).Should()
+            FluentActions.Invoking(() => type.Members.Add(Member.New("Member", new Int()))).Should()
                 .Throw<ComponentNameCollisionException>();
         }
 
@@ -205,7 +205,7 @@ namespace L5Sharp.Core.Tests
             var type = new DataType("Test");
 
             FluentActions
-                .Invoking(() => type.Members.Add(DataTypeMember.New(fixture.Create<string>(), new Dint())))
+                .Invoking(() => type.Members.Add(Member.New(fixture.Create<string>(), new Dint())))
                 .Should().Throw<ComponentNameInvalidException>();
         }
 
@@ -214,7 +214,7 @@ namespace L5Sharp.Core.Tests
         {
             var type = new DataType("Test");
 
-            FluentActions.Invoking(() => type.Members.Add(DataTypeMember.New(null, new Dint())))
+            FluentActions.Invoking(() => type.Members.Add(Member.New(null, new Dint())))
                 .Should().Throw<ArgumentException>();
         }
 
@@ -223,7 +223,7 @@ namespace L5Sharp.Core.Tests
         {
             var type = new DataType("Test");
 
-            type.Members.Add(DataTypeMember.New("Member", null));
+            type.Members.Add(Member.New("Member", null));
 
             var member = type.Members.Get("Member");
             member.DataType.Should().BeNull();
@@ -236,7 +236,7 @@ namespace L5Sharp.Core.Tests
 
             FluentActions
                 .Invoking(
-                    () => type.Members.Add(DataTypeMember.New("Member", new Int(), radix: Radix.Float)))
+                    () => type.Members.Add(Member.New("Member", new Int(), radix: Radix.Float)))
                 .Should().Throw<RadixNotSupportedException>();
         }
 
@@ -245,7 +245,7 @@ namespace L5Sharp.Core.Tests
         {
             var type = new DataType("Test");
 
-            type.Members.Add(DataTypeMember.New("Member", new Dint()));
+            type.Members.Add(Member.New("Member", new Dint()));
 
             type.Members.Should().HaveCount(1);
             var member = type.Members.Get("Member");
@@ -259,11 +259,11 @@ namespace L5Sharp.Core.Tests
         }
 
         [Test]
-        public void AddMember_BooleanMember_ShouldHaveBackingMember()
+        public void AddMember_BooleanMember_ShouldContainMember()
         {
             var type = new DataType("Test");
 
-            type.Members.Add(DataTypeMember.New("Member", new Bool()));
+            type.Members.Add(Member.New("Member", new Bool()));
 
             type.Members.Should().HaveCount(1);
         }
@@ -271,7 +271,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void RemoveMember_ExistingMember_MembersShouldEmpty()
         {
-            var member = DataTypeMember.New("Member", new Dint());
+            var member = Member.New("Member", new Dint());
             var type = new DataType("Test", members: new[] { member });
 
             type.Members.Remove("Member");
@@ -282,7 +282,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void RemoveMember_NonExistingMember_MembersShouldSingle()
         {
-            var member = DataTypeMember.New("Member", new Dint());
+            var member = Member.New("Member", new Dint());
             var type = new DataType("Test", members: new[] { member });
 
             type.Members.Remove("Test");
@@ -294,16 +294,16 @@ namespace L5Sharp.Core.Tests
         public void GetDependentTypes_ComplexType_ShouldContainExpectedTypes()
         {
             var type = new DataType("Type01");
-            type.Members.Add(DataTypeMember.New("Member01", new Bool()));
-            type.Members.Add(DataTypeMember.New("Member02", new Counter()));
-            type.Members.Add(DataTypeMember.New("Member03", new Dint()));
-            type.Members.Add(DataTypeMember.New("Member04", new String()));
+            type.Members.Add(Member.New("Member01", new Bool()));
+            type.Members.Add(Member.New("Member02", new Counter()));
+            type.Members.Add(Member.New("Member03", new Dint()));
+            type.Members.Add(Member.New("Member04", new String()));
             var dependentUserType = new DataType("Type02");
-            dependentUserType.Members.Add(DataTypeMember.New("Member01", new Bool()));
-            dependentUserType.Members.Add(DataTypeMember.New("Member02", new Dint()));
-            dependentUserType.Members.Add(DataTypeMember.New("Member03", new String()));
-            dependentUserType.Members.Add(DataTypeMember.New("Member04", new Timer()));
-            type.Members.Add(DataTypeMember.New("Member05", dependentUserType));
+            dependentUserType.Members.Add(Member.New("Member01", new Bool()));
+            dependentUserType.Members.Add(Member.New("Member02", new Dint()));
+            dependentUserType.Members.Add(Member.New("Member03", new String()));
+            dependentUserType.Members.Add(Member.New("Member04", new Timer()));
+            type.Members.Add(Member.New("Member05", dependentUserType));
 
             var dependents = type.GetDependentTypes().ToList();
 
@@ -320,16 +320,16 @@ namespace L5Sharp.Core.Tests
         public void GetDependentUserTypes_ComplexType_ShouldContainExpectedTypes()
         {
             var type = new DataType("Type01");
-            type.Members.Add(DataTypeMember.New("Member01", new Bool()));
-            type.Members.Add(DataTypeMember.New("Member02", new Counter()));
-            type.Members.Add(DataTypeMember.New("Member03", new Dint()));
-            type.Members.Add(DataTypeMember.New("Member04", new String()));
+            type.Members.Add(Member.New("Member01", new Bool()));
+            type.Members.Add(Member.New("Member02", new Counter()));
+            type.Members.Add(Member.New("Member03", new Dint()));
+            type.Members.Add(Member.New("Member04", new String()));
             var dependentUserType = new DataType("Type02");
-            dependentUserType.Members.Add(DataTypeMember.New("Member01", new Bool()));
-            dependentUserType.Members.Add(DataTypeMember.New("Member02", new Dint()));
-            dependentUserType.Members.Add(DataTypeMember.New("Member03", new String()));
-            dependentUserType.Members.Add(DataTypeMember.New("Member04", new Timer()));
-            type.Members.Add(DataTypeMember.New("Member05", dependentUserType));
+            dependentUserType.Members.Add(Member.New("Member01", new Bool()));
+            dependentUserType.Members.Add(Member.New("Member02", new Dint()));
+            dependentUserType.Members.Add(Member.New("Member03", new String()));
+            dependentUserType.Members.Add(Member.New("Member04", new Timer()));
+            type.Members.Add(Member.New("Member05", dependentUserType));
 
             var dependents = type.GetDependentTypes().Where(t => t is IUserDefined).ToList();
 
@@ -348,13 +348,113 @@ namespace L5Sharp.Core.Tests
         {
             var type = new DataType("Test");
 
-            type.Members.Add(c => c.WithName("Test").OfType(new Alarm()));
+            type.Members.Add(c => c.WithName("Test")
+                    .OfType(new Alarm())
+                    .WithAccess(ExternalAccess.ReadOnly));
 
             var result = type.Members.Get("Test");
 
             result.Should().NotBeNull();
             result.DataType.Should().Be(new Alarm());
             result.ExternalAccess.Should().Be(ExternalAccess.ReadOnly);
+        }
+        
+         [Test]
+        public void TypedEquals_AreEqual_ShouldBeTrue()
+        {
+            var first = new DataType("Test");
+            var second = new DataType("Test");
+
+            var result = first.Equals(second);
+
+            result.Should().BeTrue();
+        }
+
+        [Test]
+        public void TypedEquals_AreSame_ShouldBeTrue()
+        {
+            var first = new DataType("Test");
+            var second = first;
+
+            var result = first.Equals(second);
+
+            result.Should().BeTrue();
+        }
+
+
+        [Test]
+        public void TypedEquals_Null_ShouldBeFalse()
+        {
+            var first = new DataType("Test");
+
+            var result = first.Equals(null);
+
+            result.Should().BeFalse();
+        }
+
+        [Test]
+        public void ObjectEquals_AreEqual_ShouldBeTrue()
+        {
+            var first = new DataType("Test");
+            var second = new DataType("Test");
+
+            var result = first.Equals((object)second);
+
+            result.Should().BeTrue();
+        }
+
+        [Test]
+        public void ObjectEquals_AreSame_ShouldBeTrue()
+        {
+            var first = new DataType("Test");
+            var second = first;
+
+            var result = first.Equals((object)second);
+
+            result.Should().BeTrue();
+        }
+
+
+        [Test]
+        public void ObjectEquals_Null_ShouldBeFalse()
+        {
+            var first = new DataType("Test");
+
+            var result = first.Equals((object)null);
+
+            result.Should().BeFalse();
+        }
+
+        [Test]
+        public void OperatorEquals_AreEqual_ShouldBeTrue()
+        {
+            var first = new DataType("Test");
+            var second = new DataType("Test");
+
+            var result = first == second;
+
+            result.Should().BeTrue();
+        }
+
+        [Test]
+        public void OperatorNotEquals_AreEqual_ShouldBeFalse()
+        {
+            var first = new DataType("Test");
+            var second = new DataType("Test");
+
+            var result = first != second;
+
+            result.Should().BeFalse();
+        }
+
+        [Test]
+        public void GetHashCode_WhenCalled_ShouldNotBeZero()
+        {
+            var first = Member.New("Test", new Bool());
+
+            var hash = first.GetHashCode();
+
+            hash.Should().NotBe(0);
         }
     }
 }

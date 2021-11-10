@@ -9,33 +9,12 @@ using NUnit.Framework;
 namespace L5Sharp.Core.Tests
 {
     [TestFixture]
-    public class PredefinedImplementationTests : Predefined
+    public class PredefinedImplementationTests
     {
-        public PredefinedImplementationTests() :
-            base(nameof(PredefinedImplementationTests))
-        {
-        }
-
-        private static IEnumerable<Member<IDataType>> GenerateMembers()
-        {
-            return new List<Member<IDataType>>
-            {
-                new("Member01", new Bool()),
-                new("Member02", new Bool()),
-                new("Member03", new Bool()),
-                new("Member04", new Bool())
-            };
-        }
-
-        public IMember<Bool> Member01 => GetMember<Bool>(nameof(Member01));
-        public IMember<Bool> Member02 => GetMember<Bool>(nameof(Member02));
-        public IMember<Bool> Member03 => GetMember<Bool>(nameof(Member03));
-        public IMember<Bool> Member04 => GetMember<Bool>(nameof(Member04));
-
         [Test]
         public void New_WhenCalled_ShouldNotBeNull()
         {
-            var type = new PredefinedImplementationTests();
+            var type = new ValidPredefined();
 
             type.Should().NotBeNull();
         }
@@ -43,9 +22,28 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Class_WhenCalled_ShouldBePredefined()
         {
-            var type = new PredefinedImplementationTests();
+            var type = new ValidPredefined();
             
             type.Class.Should().Be(DataTypeClass.Predefined);
+        }
+        
+    }
+
+    public class ValidPredefined : Predefined
+    {
+        public ValidPredefined() :
+            base(nameof(ValidPredefined))
+        {
+            RegisterMemberProperties();
+        }
+
+        public IMember<Bool> Member01 => Member.OfType<Bool>(nameof(Member01));
+        public IMember<Int> Member02 => Member.OfType<Int>(nameof(Member02));
+        public IMember<Dint> Member03 => Member.OfType<Dint>(nameof(Member03));
+        public IMember<Real> Member04 => Member.OfType<Real>(nameof(Member04));
+        protected override IDataType New()
+        {
+            return new ValidPredefined();
         }
     }
 }

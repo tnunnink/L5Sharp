@@ -10,10 +10,10 @@ namespace L5Sharp.Core.Tests
     [TestFixture]
     public class UserDefinedTypeTest : DataType
     {
-        public UserDefinedTypeTest() : base(nameof(UserDefinedTypeTest), "My Type description")
+        public UserDefinedTypeTest() : base(nameof(UserDefinedTypeTest), description:  "My Type description")
         {
-            Members.Add(DataTypeMember.New(nameof(MyMember01), new Bool(), description: "This is a test member"));
-            Members.Add(DataTypeMember.New(nameof(MyMember02), new Dint(), new Dimensions(5), Radix.Ascii,
+            Members.Add(Member.New(nameof(MyMember01), new Bool(), description: "This is a test member"));
+            Members.Add(Member.New(nameof(MyMember02), new Dint(), new Dimensions(5), Radix.Ascii,
                 description: "This is a test member array"));
         }
 

@@ -11,7 +11,7 @@ namespace L5Sharp.Configurations.Tests
         [Test]
         public void HasDescription_WhenCalled_ShouldBeExpected()
         {
-            var config = new DataTypeMemberConfiguration();
+            var config = new MemberConfiguration();
 
             config.WithDescription("This is a test");
 
@@ -22,7 +22,7 @@ namespace L5Sharp.Configurations.Tests
         [Test]
         public void OfType_WhenCalled_ShouldBeExpected()
         {
-            var config = new DataTypeMemberConfiguration();
+            var config = new MemberConfiguration();
 
             config.OfType(new Dint());
 
@@ -33,7 +33,7 @@ namespace L5Sharp.Configurations.Tests
         [Test]
         public void WithDimension_WhenCalled_ShouldBeExpected()
         {
-            var config = new DataTypeMemberConfiguration();
+            var config = new MemberConfiguration();
 
             config.WithDimension(new Dimensions(10));
 

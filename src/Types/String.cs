@@ -14,14 +14,14 @@ namespace L5Sharp.Types
         
         public String() : base(nameof(String).ToUpper())
         {
-            LEN = Member.OfType<Dint>(nameof(LEN));
+            LEN = Member.OfType(nameof(LEN), new Dint(PredefinedLength));
             DATA = Member.OfType<Sint>(nameof(DATA), new Dimensions(PredefinedLength), Radix.Ascii);
             
             RegisterMember(LEN);
             RegisterMember(DATA);
         }
 
-        private String(string value = default) : this()
+        public String(string value) : this()
         {
             if (!string.IsNullOrEmpty(value))
                 SetValue(value);
@@ -34,17 +34,21 @@ namespace L5Sharp.Types
         public IMember<Dint> LEN { get; }
         public IMember<Sint> DATA { get; }
 
-        public override IDataType Instantiate()
+        protected override IDataType New()
         {
             return new String();
         }
 
         public void SetValue(string value)
         {
+            if (value == null)
+                throw new ArgumentNullException(nameof(value), "Value can not be null");
+            
             var bytes = Encoding.ASCII.GetBytes(value);
 
             if (bytes.Length > LEN.DataType.Value)
-                throw new ArgumentOutOfRangeException();
+                throw new ArgumentOutOfRangeException(nameof(value),
+                    $"Value length is {bytes.Length}. The value length must be less than the predefined length {PredefinedLength}");
             
             ClearData();
             
@@ -71,7 +75,10 @@ namespace L5Sharp.Types
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return Equals(Members, other.Members) && Equals(LEN, other.LEN) && Equals(DATA, other.DATA);
+            return Value == other.Value && 
+                   Members.SequenceEqual(other.Members) &&
+                   Equals(LEN, other.LEN)
+                   && Equals(DATA, other.DATA);
         }
 
         public override bool Equals(object obj)
@@ -98,7 +105,8 @@ namespace L5Sharp.Types
 
         private string GetValue()
         {
-            var bytes = DATA.Elements.Select(d => d.DataType.Value).ToArray();
+            var bytes = DATA.Elements.Where(d => d.DataType.Value > 0)
+                .Select(d => d.DataType.Value).ToArray();
             return Encoding.ASCII.GetString(bytes);
         }
 

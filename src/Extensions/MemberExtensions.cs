@@ -17,7 +17,7 @@ namespace L5Sharp.Extensions
         public static ITagMember<TDataType> As<TDataType>(this ITagMember<IDataType> member)
             where TDataType : IDataType
         {
-            if (!(member.GetValue() is TDataType dataType))
+            if (!(member.GetData() is TDataType dataType))
                 throw new InvalidCastException();
 
             var casted = new Member<TDataType>(member.Name, dataType, member.Dimensions, member.Radix,

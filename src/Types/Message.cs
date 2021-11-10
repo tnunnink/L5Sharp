@@ -12,7 +12,8 @@ namespace L5Sharp.Types
             RegisterMemberProperties();
         }
         
-        public override IDataType Instantiate()
+        public override string Description => $"RSLogix {Name} DataType";
+        protected override IDataType New()
         {
             return new Message();
         }

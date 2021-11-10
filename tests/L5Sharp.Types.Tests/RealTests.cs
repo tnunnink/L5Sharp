@@ -39,7 +39,7 @@ namespace L5Sharp.Types.Tests
             type.Family.Should().Be(DataTypeFamily.None);
             type.Description.Should().Be("RSLogix representation of a System.Single");
             type.DataFormat.Should().Be(TagDataFormat.Decorated);
-            type.Radix.Should().Be(Radix.Decimal);
+            type.Radix.Should().Be(Radix.Float);
             type.Value.Should().Be(0);
         }
         

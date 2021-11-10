@@ -76,16 +76,7 @@ namespace L5Sharp.Core.Tests
 
             FluentActions.Invoking(() => new Dimensions(0, y)).Should().Throw<ArgumentException>();
         }
-        
-        [Test]
-        public void New_TwoDimensionsYIsZero_ShouldHaveExpectedValues()
-        {
-            var fixture = new Fixture();
-            var x = fixture.Create<ushort>();
 
-            FluentActions.Invoking(() => new Dimensions(x, 0)).Should().Throw<ArgumentException>();
-        }
-        
         [Test]
         public void New_ThreeDimensions_ShouldHaveExpectedValues()
         {
@@ -101,17 +92,7 @@ namespace L5Sharp.Core.Tests
             dimensions.Y.Should().Be(y);
             dimensions.Z.Should().Be(z);
         }
-        
-        [Test]
-        public void New_ThreeDimensionsZIsZero_ShouldHaveExpectedValues()
-        {
-            var fixture = new Fixture();
-            var x = fixture.Create<ushort>();
-            var y = fixture.Create<ushort>();
 
-            FluentActions.Invoking(() => new Dimensions(x, y, 0)).Should().Throw<ArgumentException>();
-        }
-        
         [Test]
         public void New_ThreeDimensionsYIsZero_ShouldHaveExpectedValues()
         {
@@ -130,6 +111,50 @@ namespace L5Sharp.Core.Tests
             var z = fixture.Create<ushort>();
 
             FluentActions.Invoking(() => new Dimensions(0, y, z)).Should().Throw<ArgumentException>();
+        }
+
+        [Test]
+        public void AreEmpty_Empty_ShouldBeTrue()
+        {
+            var dimension = Dimensions.Empty;
+
+            dimension.AreEmpty.Should().BeTrue();
+        }
+        
+        [Test]
+        public void AreEmpty_NotEmpty_ShouldBeFalse()
+        {
+            var dimension = new Dimensions(12);
+
+            dimension.AreEmpty.Should().BeFalse();
+        }
+
+        [Test]
+        public void ImplicitOperator_UShort_ShouldBeExpected()
+        {
+            Dimensions dimensions = 100;
+
+            dimensions.Length.Should().Be(100);
+        }
+        
+        [Test]
+        public void ImplicitOperator_IntFromDimensions_ShouldBeExpected()
+        {
+            Dimensions dimensions = 1000;
+
+            int length = dimensions;
+
+            length.Should().Be(1000);
+        }
+        
+        [Test]
+        public void ImplicitOperator_UShortFromDimensions_ShouldBeExpected()
+        {
+            Dimensions dimensions = 1000;
+
+            ushort length = dimensions;
+
+            length.Should().Be(1000);
         }
 
         [Test]
@@ -301,6 +326,28 @@ namespace L5Sharp.Core.Tests
             var d1 = new Dimensions(5);
 
             var result = d1.Equals((object) null);
+
+            result.Should().BeFalse();
+        }
+        
+        [Test]
+        public void OpEquals_AreEqual_ShouldBeTrue()
+        {
+            var d1 = new Dimensions(5);
+            var d2 = new Dimensions(5);
+
+            var result = d1 == d2;
+
+            result.Should().BeTrue();
+        }
+        
+        [Test]
+        public void OpNotEquals_AreEqual_ShouldBeFalse()
+        {
+            var d1 = new Dimensions(5);
+            var d2 = new Dimensions(5);
+
+            var result = d1 != d2;
 
             result.Should().BeFalse();
         }

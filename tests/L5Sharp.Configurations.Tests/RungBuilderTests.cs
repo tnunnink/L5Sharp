@@ -68,37 +68,19 @@ namespace L5Sharp.Configurations.Tests
         [Test]
         public void METHOD()
         {
-            /*var rung = RungBuilder.New(1, "This is a test rung")
-               .When(XIC.Of(new Tag<Bool>("Test1")))
-               .And(XIC.Of(new Tag<Bool>("Test2")))
-               .Then(MOV.Of(10, new Tag("Test", Logix.DataType.Bool)))
-               .Compile()
-               .Build();*/
-
             var tag = Tag.OfType<Int>("Test");
 
             var b1 = new XIO().Of(Tag.OfType<Bool>("Test"));
-            var text = new MOV().Of(new Dint(1000), Tag.Atomic<Dint>("Test"));
+            var text = new MOV().Of(new Dint(1000), Tag.OfType<Dint>("Test"));
 
 
             var b3 = RungBuilder.New(2)
-                .When("XIC(bit)")
-                .And("XIC(bit)")
-                .Or(b => b.When("XIC(bit)")
-                    .And("XIC(bit)")
-                    .Then("OTE(bit)"))
-                .Or(b => b.Do("OTU(bit)")
-                    .And("XIC(bit)"))
-                .Or(b => b.When("XIC(bit)")
-                    .Or(inner => inner.When("XIC(bit)").Then("OTL(bit)"))
-                    .Then("OTL(bit)"))
-                .Then("OTU(bit)")
-                .Compile()
-                .Build();
+                .When<XIC>(x => 
+                    x.Of(Tag.OfType<Bool>("Test")))
+                .Then("Do something")
+                .Compile().Build();
             
             b3.Should().NotBeNull();
-            
-            
         }
     }
 }

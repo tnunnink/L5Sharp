@@ -9,45 +9,42 @@ namespace L5Sharp.Abstractions
 {
     public class ComponentCollection<TComponent> : IComponentCollection<TComponent> where TComponent : ILogixComponent
     {
-        private readonly Dictionary<string, TComponent> _components = new Dictionary<string, TComponent>();
-        private readonly List<string> _items = new List<string>();
+        private readonly Dictionary<string, TComponent> _components;
+        private readonly List<string> _items;
 
         public ComponentCollection()
         {
+            _components = new Dictionary<string, TComponent>();
+            _items = new List<string>();
         }
-        
+
         public ComponentCollection(int length)
         {
             _components = new Dictionary<string, TComponent>(length);
             _items = new List<string>(length);
         }
 
-        public ComponentCollection(IEnumerable<TComponent> components)
+        public ComponentCollection(IEnumerable<TComponent> components) : this()
         {
-            foreach (var component in components)
-            {
-                if (_components.ContainsKey(component.Name)) continue;
-                _components.Add(component.Name, component);
-                _items.Add(component.Name);
-            }
+            AddComponents(components);
         }
 
-        public virtual bool Contains(string name)
+        public bool Contains(string name)
         {
             return !string.IsNullOrEmpty(name) && _components.ContainsKey(name);
         }
 
-        public virtual TComponent Get(string name)
+        public TComponent Get(string name)
         {
             return !string.IsNullOrEmpty(name) && _components.ContainsKey(name) ? _components[name] : default;
         }
 
-        public virtual TComponent Get(Func<TComponent, bool> predicate)
+        public TComponent Get(Func<TComponent, bool> predicate)
         {
             return _components.Values.SingleOrDefault(predicate);
         }
 
-        public virtual IEnumerable<TComponent> Find(Func<TComponent, bool> predicate)
+        public IEnumerable<TComponent> Find(Func<TComponent, bool> predicate)
         {
             return _components.Values.Where(predicate);
         }
@@ -57,7 +54,33 @@ namespace L5Sharp.Abstractions
             return _components.Values.OrderBy(c => _items.IndexOf(c.Name));
         }
 
-        public virtual void Add(TComponent component)
+        public virtual void Add(TComponent component) => AddComponent(component);
+
+        public virtual void AddRange(IEnumerable<TComponent> components) => AddComponents(components);
+
+        public void Add<TConfiguration>(TConfiguration configuration)
+            where TConfiguration : IComponentConfiguration<TComponent> => AddComponent(configuration);
+
+        public virtual void Insert(int index, TComponent component) => InsertComponent(index, component);
+
+        public virtual void Update(string name, TComponent component) => UpdateComponent(name, component);
+
+        public void Update<TConfiguration>(string name, TConfiguration configuration)
+            where TConfiguration : IComponentConfiguration<TComponent> => UpdateComponent(name, configuration);
+
+        public virtual void Remove(string name) => RemoveComponent(name);
+
+        public IEnumerator GetEnumerator()
+        {
+            return _components.GetEnumerator();
+        }
+
+        IEnumerator<TComponent> IEnumerable<TComponent>.GetEnumerator()
+        {
+            return _components.Values.GetEnumerator();
+        }
+
+        private void AddComponent(TComponent component)
         {
             if (component == null)
                 throw new ArgumentNullException(nameof(component), $"{typeof(TComponent).Name} can not be null");
@@ -69,31 +92,27 @@ namespace L5Sharp.Abstractions
             _items.Add(component.Name);
         }
 
-        public virtual void AddRange(IEnumerable<TComponent> components)
+        private void AddComponent<TConfiguration>(TConfiguration configuration)
+            where TConfiguration : IComponentConfiguration<TComponent>
+        {
+            if (configuration == null)
+                throw new ArgumentNullException(nameof(configuration));
+
+            var component = configuration.Compile();
+
+            AddComponent(component);
+        }
+
+        private void AddComponents(IEnumerable<TComponent> components)
         {
             if (components == null)
                 throw new ArgumentNullException(nameof(components), "Components can not be null");
 
             foreach (var component in components)
-                Add(component);
+                AddComponent(component);
         }
 
-        public void Add<TConfiguration>(TConfiguration configuration)
-            where TConfiguration : IComponentConfiguration<TComponent>
-        {
-            var component = configuration.Compile();
-
-            if (component == null)
-                throw new ArgumentNullException(nameof(component), $"{typeof(TComponent).Name} can not be null");
-
-            if (_components.ContainsKey(component.Name))
-                throw new ComponentNameCollisionException(component.Name, typeof(TComponent));
-
-            _components.Add(component.Name, component);
-            _items.Add(component.Name);
-        }
-
-        public virtual void Insert(int index, TComponent component)
+        private void InsertComponent(int index, TComponent component)
         {
             if (component == null)
                 throw new ArgumentNullException(nameof(component), $"{typeof(TComponent).Name} can not be null");
@@ -105,7 +124,7 @@ namespace L5Sharp.Abstractions
             _items.Insert(index, component.Name);
         }
 
-        public virtual void Remove(string name)
+        private void RemoveComponent(string name)
         {
             if (string.IsNullOrEmpty(name)) return;
             if (!_components.ContainsKey(name)) return;
@@ -114,14 +133,38 @@ namespace L5Sharp.Abstractions
             _items.Remove(name);
         }
 
-        public IEnumerator GetEnumerator()
+        private void UpdateComponent(string name, TComponent component)
         {
-            return _components.GetEnumerator();
+            if (string.IsNullOrEmpty(name))
+                throw new ArgumentException("Component name can not be null or empty");
+
+            if (component == null)
+                throw new ArgumentNullException(nameof(component), $"{typeof(TComponent).Name} can not be null");
+
+            if (!_components.ContainsKey(name))
+                AddComponent(component);
+
+            _components.Remove(name);
+            _components.Add(component.Name, component);
+
+            if (name == component.Name) return;
+
+            var index = _items.IndexOf(name);
+            if (index == -1)
+                throw new InvalidOperationException("This should not happen right?");
+            _items[index] = component.Name;
         }
 
-        IEnumerator<TComponent> IEnumerable<TComponent>.GetEnumerator()
+        private void UpdateComponent<TConfiguration>(string name, TConfiguration configuration)
+            where TConfiguration : IComponentConfiguration<TComponent>
         {
-            return _components.Values.GetEnumerator();
+            if (configuration == null)
+                throw new ArgumentNullException(nameof(configuration),
+                    $"Configuration for {typeof(TComponent).Name} can not be null");
+
+            var component = configuration.Compile();
+
+            UpdateComponent(name, component);
         }
     }
 }

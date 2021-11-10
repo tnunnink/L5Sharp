@@ -31,7 +31,7 @@ namespace L5Sharp.Tests
         }
         
         [Test]
-        public void ParseType_RegisteredType_ShouldNotBeNull()
+        public void CreateType_RegisteredType_ShouldNotBeNull()
         {
             var type = Logix.CreateType("Bool");
             type.Should().NotBeNull();
@@ -40,7 +40,7 @@ namespace L5Sharp.Tests
         }
 
         [Test]
-        public void ParseType_StaticField_ShouldNotBeNull()
+        public void CreateType_StaticField_ShouldNotBeNull()
         {
             var type = Logix.CreateType("bit");
             type.Should().NotBeNull();
@@ -49,7 +49,7 @@ namespace L5Sharp.Tests
         }
 
         [Test]
-        public void ParseType_AssemblyValidType_ShouldNotBeExpected()
+        public void CreateType_AssemblyValidType_ShouldNotBeExpected()
         {
             var type = Logix.CreateType("MyPredefined");
             type.Should().NotBeNull();
@@ -58,7 +58,7 @@ namespace L5Sharp.Tests
         }
 
         [Test]
-        public void ParseType_AssemblyInvalidType_ShouldNotBeUndefined()
+        public void CreateType_AssemblyInvalidType_ShouldNotBeUndefined()
         {
             var type = Logix.CreateType("MyNullNamePredefined");
             type.Should().NotBeNull();
@@ -67,7 +67,7 @@ namespace L5Sharp.Tests
         }
 
         [Test]
-        public void ParseType_NonExistingType_ShouldNotBeUndefined()
+        public void CreateType_NonExistingType_ShouldNotBeUndefined()
         {
             var type = Logix.CreateType("Invalid");
             type.Name.Should().Be("Undefined");
@@ -75,7 +75,7 @@ namespace L5Sharp.Tests
         }
 
         [Test]
-        public void ParseType_ValidName_ShouldNotBeNull()
+        public void CreateType_ValidName_ShouldNotBeNull()
         {
             var type = Logix.CreateType("string");
 
@@ -89,12 +89,12 @@ namespace L5Sharp.Tests
         [Test]
         public void RegisterType_ValidArgument_ShouldContainType()
         {
-            var type = new DataType("TestType", "This is a test type that will be created",
-                new[]
+            var type = new DataType("TestType", new[]
                 {
-                    DataTypeMember.New("Member01", new Dint(25)),
-                    DataTypeMember.New("Member02", new Timer(new Dint(1000)))
-                });
+                    Member.New("Member01", new Dint(25)),
+                    Member.New("Member02", new Timer(new Dint(1000)))
+                },
+                "This is a test type that will be created");
 
             Logix.Register(type.Name, type.Instantiate);
 

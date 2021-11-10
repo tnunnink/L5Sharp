@@ -9,9 +9,10 @@ namespace L5Sharp
         string FullName { get; }
         new string DataType { get; }
         ILogixComponent Parent { get; }
+        IAtomic GetData();
+        void SetData(IAtomic value);
+        void SetRadix(Radix radix);
         void SetDescription(string description);
-        TDataType GetValue();
-        void SetValue(IDataType value);
         IEnumerable<string> GetMembersNames();
         IEnumerable<ITagMember<IDataType>> GetMembers();
         ITagMember<IDataType> GetMember(string name);

@@ -24,7 +24,9 @@ namespace L5Sharp
                 { nameof(String), () => new String() },
                 { nameof(Counter), () => new Counter() },
                 { nameof(Timer), () => new Timer() },
-                { nameof(Alarm), () => new Alarm() }
+                { nameof(Alarm), () => new Alarm() },
+                { nameof(Message), () => new Message() },
+                { nameof(Control), () => new Control() }
             };
 
         private static readonly Dictionary<string, Func<IInstruction>> InstructionRegistry =
@@ -44,20 +46,20 @@ namespace L5Sharp
         /// <summary>
         /// List of all registered Logix Data Types
         /// </summary>
-        public static IEnumerable<string> DataTypes => DataTypeRegistry.Keys.ToList();
+        public static IEnumerable<string> DataTypes => DataTypeRegistry.Keys.AsEnumerable();
 
         /// <summary>
         /// List of all registered Logix Instructions
         /// </summary>
-        public static IEnumerable<string> Instructions => InstructionRegistry.Keys.ToList();
+        public static IEnumerable<string> Instructions => InstructionRegistry.Keys.AsEnumerable();
 
         /// <summary>
-        /// Registers a data type to the Logix context
+        /// Registers a data type to the global Logix context
         /// </summary>
-        /// <param name="name">The name of the data type to register</param>
-        /// <param name="factory">A delegate for creating the registered data type</param>
+        /// <param name="name">The name of the data type to register. The name must be unique (i.e., not the name of a current type</param>
+        /// <param name="factory">A factory delegate for creating the registered data type</param>
         /// <exception cref="ArgumentException">When name is null or empty</exception>
-        /// <exception cref="ArgumentNullException">When create is null</exception>
+        /// <exception cref="ArgumentNullException">When factory is null</exception>
         /// <exception cref="ComponentNameCollisionException">When the provided name already exists in the registry</exception>
         public static void Register(string name, Func<IDataType> factory)
         {
@@ -74,12 +76,12 @@ namespace L5Sharp
         }
 
         /// <summary>
-        /// Registers an instruction to the Logix context
+        /// Registers an instruction to the global Logix context
         /// </summary>
-        /// <param name="name">The name of the instruction to register</param>
-        /// <param name="factory">A delegate for creating the registered instruction</param>
+        /// <param name="name">The name of the instruction to register. The name must be unique (i.e., not the name of a current instruction</param>
+        /// <param name="factory">A factory delegate for creating the registered instruction</param>
         /// <exception cref="ArgumentException">When name is null or empty</exception>
-        /// <exception cref="ArgumentNullException">When create is null</exception>
+        /// <exception cref="ArgumentNullException">When factory is null</exception>
         /// <exception cref="ComponentNameCollisionException">When the provided name already exists in the registry</exception>
         public static void Register(string name, Func<IInstruction> factory)
         {
@@ -94,7 +96,7 @@ namespace L5Sharp
 
             InstructionRegistry.Add(name, factory);
         }
-        
+
         /// <summary>
         /// Determines if the data type name is registered in the current Logix context
         /// </summary>
@@ -125,6 +127,11 @@ namespace L5Sharp
             return DataTypeRegistry.ContainsKey(name) ? DataTypeRegistry[name].Invoke() : new Undefined();
         }
 
+        public static TDataType Create<TDataType>(string name) where TDataType : class, IDataType
+        {
+            return DataTypeRegistry.ContainsKey(name) ? DataTypeRegistry[name].Invoke() as TDataType : default;
+        } 
+
         /// <summary>
         /// Creates an instance of the given instruction
         /// </summary>
@@ -134,20 +141,18 @@ namespace L5Sharp
         {
             return InstructionRegistry.ContainsKey(name) ? InstructionRegistry[name].Invoke() : null;
         }
+        
+        
 
-        private static Type FindAssemblyType(string name)
-        {
-            return GetAssemblyTypes().SingleOrDefault(t => t.Name == name);
-        }
-
-        private static IEnumerable<Type> GetAssemblyTypes()
+        //todo perhaps a nice feature to automatically register user implementations of IDataType or IInstruction?
+        private static IEnumerable<Type> FindConstructableAssemblyImplementations(Type type)
         {
             return from assembly in AppDomain.CurrentDomain.GetAssemblies()
-                from type in assembly.GetTypes()
-                where type.IsSubclassOf(typeof(IDataType))
-                      && !type.IsAbstract
-                      && type.GetConstructor(Type.EmptyTypes) != null
-                select type;
+                from t in assembly.GetTypes()
+                where t.IsSubclassOf(type)
+                      && !t.IsAbstract
+                      && t.GetConstructor(Type.EmptyTypes) != null
+                select t;
         }
     }
 }

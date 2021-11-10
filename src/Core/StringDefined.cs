@@ -5,7 +5,6 @@ using System.Text;
 using L5Sharp.Abstractions;
 using L5Sharp.Enums;
 using L5Sharp.Types;
-using L5Sharp.Utilities;
 
 namespace L5Sharp.Core
 {
@@ -14,8 +13,6 @@ namespace L5Sharp.Core
         public StringDefined(string name, Dimensions dimensions, string description = null) 
             : base(name, description)
         {
-            Validate.DataTypeName(name);
-            
             if (dimensions.AreEmpty || dimensions.AreMultiDimensional) 
                 throw new ArgumentException("Dimension must single dimensional and have length greater that zero");
 
@@ -24,8 +21,8 @@ namespace L5Sharp.Core
             
             Members = new List<IMember<IDataType>>
             {
-                (IMember<IDataType>)LEN,
-                (IMember<IDataType>)DATA,
+                LEN,
+                DATA,
             };
         }
 

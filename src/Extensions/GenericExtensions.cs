@@ -15,7 +15,6 @@ namespace L5Sharp.Extensions
             { typeof(IDataType), new DataTypeSerializer() },
             { typeof(DataType), new DataTypeSerializer() },
             { typeof(IMember<IDataType>), new MemberSerializer() },
-            { typeof(DataTypeMember<IDataType>), new MemberSerializer() },
             { typeof(ITag<IDataType>), new TagSerializer() },
             { typeof(IProgram), new ProgramSerializer() },
             { typeof(ITask), new TaskSerializer() }

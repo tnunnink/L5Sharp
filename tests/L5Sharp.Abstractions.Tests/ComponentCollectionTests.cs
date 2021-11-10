@@ -47,12 +47,12 @@ namespace L5Sharp.Abstractions.Tests
         [Test]
         public void New_Enumerable_ShouldNotBeNull()
         {
-            var list = new List<TestLogixComponent> { new("Test", "Test"), new("Test", "Test") };
+            var list = new List<TestLogixComponent> { new("Test1", "Test"), new("Test2", "Test") };
             
             var collection = new ComponentCollection<TestLogixComponent>(list);
 
             collection.Should().NotBeNull();
-            collection.Should().HaveCount(1);
+            collection.Should().HaveCount(2);
         }
         
         [Test]

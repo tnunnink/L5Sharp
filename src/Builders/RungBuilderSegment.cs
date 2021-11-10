@@ -1,4 +1,7 @@
-﻿namespace L5Sharp.Builders
+﻿using System;
+using L5Sharp.Core;
+
+namespace L5Sharp.Builders
 {
     internal class RungBuilderSegment : IRungBuilderSegment
     {
@@ -12,6 +15,14 @@
         public IRungBuilderInput When(string text)
         {
             _context.AppendSingle(text);
+            return _context.InputBuilder;
+        }
+
+        public IRungBuilderInput When<TInstruction>(Func<TInstruction, NeutralText> of) where TInstruction : IInstruction, new()
+        {
+            var instruction = new TInstruction();
+            var text = of.Invoke(instruction);
+            _context.AppendSingle(text.Signature);
             return _context.InputBuilder;
         }
 

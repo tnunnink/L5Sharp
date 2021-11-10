@@ -18,6 +18,10 @@ namespace L5Sharp
             where TConfiguration : IComponentConfiguration<TComponent>;
 
         void Insert(int index, TComponent component);
+        void Update(string name, TComponent component);
+        void Update<TConfiguration>(string name, TConfiguration configuration) 
+            where TConfiguration : IComponentConfiguration<TComponent>;
+        
         void Remove(string name);
     }
 }

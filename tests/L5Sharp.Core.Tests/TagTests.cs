@@ -172,13 +172,13 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void ChangeDataType_ValidType_ShouldHaveExpectedProperties()
         {
-            var tag = new Tag<IDataType>("Test", new Bool(), dimensions: new Dimensions(10), radix: Radix.Hex,
-                externalAccess: ExternalAccess.ReadOnly, description: "This is a test");
+            var tag = new Tag<IDataType>("Test", new Bool(), new Dimensions(10), Radix.Hex,
+                ExternalAccess.ReadOnly, "This is a test");
 
             var result = tag.ChangeDataType(new Dint());
 
             result.Name.Should().Be("Test");
-            result.DataType.Should().Be(nameof(Dint));
+            result.DataType.Should().Be(nameof(Dint).ToUpper());
             result.Dimensions.Should().Be(new Dimensions(10));
             result.Radix.Should().Be(Radix.Hex);
             result.ExternalAccess.Should().Be(ExternalAccess.ReadOnly);
@@ -212,7 +212,7 @@ namespace L5Sharp.Core.Tests
             var result = tag.ChangeDimensions(new Dimensions(25));
 
             result.Name.Should().Be("Test");
-            result.DataType.Should().Be(nameof(Bool));
+            result.DataType.Should().Be(nameof(Bool).ToUpper());
             result.Dimensions.Should().Be(new Dimensions(25));
             result.Radix.Should().Be(Radix.Hex);
             result.ExternalAccess.Should().Be(ExternalAccess.ReadOnly);
@@ -244,7 +244,7 @@ namespace L5Sharp.Core.Tests
             var value = fixture.Create<int>();
             var tag = new Tag<IDataType>("Test", new Timer());
 
-            FluentActions.Invoking(() => tag.SetValue(new Dint(value)))
+            FluentActions.Invoking(() => tag.SetData(new Dint(value)))
                 .Should().Throw<ComponentNotConfigurableException>();
         }
 
@@ -253,7 +253,7 @@ namespace L5Sharp.Core.Tests
         {
             var tag = new Tag<IDataType>("Test", new Int());
 
-            FluentActions.Invoking(() => tag.SetValue(null)).Should().Throw<InvalidTagValueException>();
+            FluentActions.Invoking(() => tag.SetData(null)).Should().Throw<InvalidTagValueException>();
         }
 
         [Test]
@@ -263,7 +263,7 @@ namespace L5Sharp.Core.Tests
             var expected = fixture.Create<long>();
             var tag = new Tag<IDataType>("Test", new Int());
 
-            FluentActions.Invoking(() => tag.SetValue(new Lint(expected))).Should().Throw<InvalidTagValueException>();
+            FluentActions.Invoking(() => tag.SetData(new Lint(expected))).Should().Throw<InvalidTagValueException>();
         }
 
         [Test]
@@ -273,9 +273,9 @@ namespace L5Sharp.Core.Tests
             var expected = fixture.Create<bool>();
             var tag = Tag.OfType<Bool>("Test");
 
-            tag.SetValue(new Bool(expected));
+            tag.SetData(new Bool(expected));
 
-            tag.GetValue().Should().Be(expected);
+            tag.GetData().Should().Be(expected);
         }
 
         [Test]
@@ -285,9 +285,9 @@ namespace L5Sharp.Core.Tests
             var expected = fixture.Create<byte>();
             var tag = Tag.OfType<Sint>("Test");
 
-            tag.SetValue(new Sint(expected));
+            tag.SetData(new Sint(expected));
 
-            tag.GetValue().Should().Be(expected);
+            tag.GetData().Should().Be(expected);
         }
 
         [Test]
@@ -297,9 +297,9 @@ namespace L5Sharp.Core.Tests
             var expected = fixture.Create<short>();
             var tag = Tag.OfType<Int>("Test");
 
-            tag.SetValue(new Int(expected));
+            tag.SetData(new Int(expected));
 
-            tag.GetValue().Should().Be(expected);
+            tag.GetData().Should().Be(expected);
         }
 
         [Test]
@@ -309,9 +309,9 @@ namespace L5Sharp.Core.Tests
             var expected = fixture.Create<int>();
             var tag = Tag.OfType<Dint>("Test");
 
-            tag.SetValue(new Dint(expected));
+            tag.SetData(new Dint(expected));
 
-            tag.GetValue().Should().Be(expected);
+            tag.GetData().Should().Be(expected);
         }
 
         [Test]
@@ -321,9 +321,9 @@ namespace L5Sharp.Core.Tests
             var expected = fixture.Create<long>();
             var tag = Tag.OfType<Lint>("Test");
 
-            tag.SetValue(new Lint(expected));
+            tag.SetData(new Lint(expected));
 
-            tag.GetValue().Should().Be(expected);
+            tag.GetData().Should().Be(expected);
         }
 
         [Test]
@@ -333,9 +333,9 @@ namespace L5Sharp.Core.Tests
             var expected = fixture.Create<float>();
             var tag = Tag.OfType<Real>("Test");
 
-            tag.SetValue(new Real(expected));
+            tag.SetData(new Real(expected));
 
-            tag.GetValue().Should().Be(expected);
+            tag.GetData().Should().Be(expected);
         }
 
         [Test]
@@ -413,11 +413,21 @@ namespace L5Sharp.Core.Tests
         }
         
         [Test]
+        public void SetMember_ValidNameHasMember_ShouldNotBeNull()
+        {
+            var tag = Tag.OfType<Timer>("Test");
+
+            tag.SetMember(t => t.ACC, new Dint(5000));
+
+            tag.GetMember(t => t.ACC).GetData().As<Dint>().Should().Be(5000);
+        }
+        
+        [Test]
         public void GetMember_GenericTagType_ShouldNotBeNull()
         {
             var tag = Tag.New("Test", new Timer());
 
-            var value = tag.GetMember("PRE").GetValue().As<Dint>();
+            var value = tag.GetMember("PRE").GetData().As<Dint>();
 
             value.Should().NotBeNull();
         }

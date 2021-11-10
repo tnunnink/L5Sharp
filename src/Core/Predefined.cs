@@ -4,7 +4,6 @@ using System.Linq;
 using L5Sharp.Enums;
 using L5Sharp.Exceptions;
 using L5Sharp.Extensions;
-using L5Sharp.Types;
 using L5Sharp.Utilities;
 
 namespace L5Sharp.Core
@@ -43,13 +42,19 @@ namespace L5Sharp.Core
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return Name == other.Name && Equals(Members, other.Members);
+            return Name == other.Name && Members.SequenceEqual(other.Members);
         }
 
-        public virtual IDataType Instantiate()
+        public IDataType Instantiate()
         {
-            return new Undefined();
+            return New();
         }
+
+        /// <summary>
+        /// Return new instance of the current type. This will be used when creating tags for the specified type
+        /// </summary>
+        /// <returns></returns>
+        protected abstract IDataType New();
 
         public override bool Equals(object obj)
         {
@@ -79,21 +84,21 @@ namespace L5Sharp.Core
                 p.PropertyType.IsGenericType &&
                 p.PropertyType.GetGenericTypeDefinition().IsAssignableFrom(typeof(IMember<>))).ToList();
 
-            foreach (var member in properties.Select(property => (IMember<IDataType>) property.GetValue(this)))
-            {
-                if (_members.ContainsKey(member.Name))
-                    throw new ComponentNameCollisionException(member.Name, typeof(IMember<>));
-
-                if (member.DataType.Equals(this))
-                    throw new CircularReferenceException(
-                        $"Member can not be same type as parent type '{member.DataType.Name}'");
-
-                _members.Add(member.Name, member);
-            }
+            foreach (var member in properties.Select(p => (IMember<IDataType>) p.GetValue(this)))
+                RegisterTypeMember(member);
         }
 
-        protected void RegisterMember(IMember<IDataType> member)
+        protected void RegisterMember(IMember<IDataType> member) => RegisterTypeMember(member);
+
+        private void RegisterTypeMember(IMember<IDataType> member)
         {
+            if (_members.ContainsKey(member.Name))
+                throw new ComponentNameCollisionException(member.Name, typeof(IMember<>));
+
+            if (member.DataType.Equals(this))
+                throw new CircularReferenceException(
+                    $"Member can not be same type as parent type '{member.DataType.Name}'");
+            
             _members.Add(member.Name, member);
         }
     }

@@ -13,9 +13,10 @@ namespace L5Sharp.Types
             RegisterMemberProperties();
         }
         
+        public override string Description => $"RSLogix {Name} DataType";
         public override TagDataFormat DataFormat => TagDataFormat.Alarm;
         
-        public override IDataType Instantiate()
+        protected override IDataType New()
         {
             return new Alarm();
         }

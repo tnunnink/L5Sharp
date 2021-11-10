@@ -14,8 +14,10 @@ namespace L5Sharp.Core
 
         internal TagMember(IMember<TDataType> member, ILogixComponent parent)
         {
-            _member = member ?? throw new ArgumentNullException(nameof(member), "Member can not be null");
-            _parent = (TagMember<IDataType>) parent;
+            _member = member ?? 
+                      throw new ArgumentNullException(nameof(member), "Member can not be null");
+            _parent = (TagMember<IDataType>)parent ??
+                      throw new ArgumentNullException(nameof(parent), "TagMember must have parent");
         }
 
         public string Name => _member.Name;
@@ -34,7 +36,7 @@ namespace L5Sharp.Core
                 ? _member.ExternalAccess
                 : _parent.ExternalAccess;
 
-        public IMember<TDataType>[] Elements { get; }
+        public IMember<TDataType>[] Elements => _member.Elements;
 
         public string Description => string.IsNullOrEmpty(_description)
             ? $"{_parent.Description} {_member?.Description}"
@@ -42,25 +44,28 @@ namespace L5Sharp.Core
 
         public ILogixComponent Parent => _parent;
 
-        public void SetDescription(string description)
+        public IAtomic GetData()
         {
-            _description = description;
+            return _member.DataType is IAtomic atomic ? atomic : null;
         }
 
-        public TDataType GetValue()
-        {
-            return _member.DataType;
-        }
-
-        public void SetValue(IDataType value)
+        public void SetData(IAtomic value)
         {
             if (value == null)
                 throw new ArgumentNullException(nameof(value));
 
-            if (!value.GetType().IsAssignableFrom(typeof(TDataType)))
-                throw new InvalidTagValueException(value, typeof(TDataType));
-                
-            //_member.DataType = value;
+            if (!(_member.DataType is IAtomic atomic))
+                throw new ComponentNotConfigurableException("Value", GetType(),
+                    "Tag member is not atomic. Can only set values for atomic types");
+
+            atomic.SetValue(value);
+        }
+
+        public void SetRadix(Radix radix) => _member.SetRadix(radix);
+
+        public void SetDescription(string description)
+        {
+            _description = description;
         }
 
         public IEnumerable<string> GetMembersNames()
@@ -91,7 +96,8 @@ namespace L5Sharp.Core
             throw new NotImplementedException();
         }
 
-        public void SetMember<TAtomic>(Func<TDataType, IMember<TAtomic>> expression, Radix radix) where TAtomic : IAtomic
+        public void SetMember<TAtomic>(Func<TDataType, IMember<TAtomic>> expression, Radix radix)
+            where TAtomic : IAtomic
         {
             throw new NotImplementedException();
         }
@@ -99,12 +105,6 @@ namespace L5Sharp.Core
         public void SetMember<TAtomic>(Func<TDataType, IMember<TAtomic>> expression, string description) where TAtomic : IAtomic
         {
             throw new NotImplementedException();
-        }
-
-        private void PropagateValue<TProperty>(Action<IMember<IDataType>, TProperty> setter, TProperty value)
-        {
-            foreach (var member in _member.DataType.GetMembers())
-                setter.Invoke(member, value);
         }
 
         private static string GetName(ILogixComponent member)

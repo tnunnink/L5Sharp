@@ -32,7 +32,7 @@ namespace L5Sharp.Factories
             var radix = element.GetValue<IMember<IDataType>>(m => m.Radix);
             var access = element.GetValue<IMember<IDataType>>(m => m.ExternalAccess);
 
-            return new DataTypeMember<IDataType>(name, dataType, dimensions, radix, access, description);
+            return Member.New(name, dataType, dimensions, radix, access, description);
         }
     }
 }

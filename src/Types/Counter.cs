@@ -11,7 +11,13 @@ namespace L5Sharp.Types
             RegisterMemberProperties();
         }
         
-        public override IDataType Instantiate()
+        public Counter(Dint pre) : this()
+        {
+            PRE.DataType.SetValue(pre);
+        }
+        
+        public override string Description => $"RSLogix {Name} DataType";
+        protected override IDataType New()
         {
             return new Counter();
         }

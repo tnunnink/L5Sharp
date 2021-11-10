@@ -4,9 +4,4 @@
     {
         T Instantiate();
     }
-
-    public interface IPrototype<out T>
-    {
-        T Copy();
-    }
 }

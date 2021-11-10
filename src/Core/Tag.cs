@@ -52,12 +52,12 @@ namespace L5Sharp.Core
 
         public ILogixComponent Parent { get; }
 
-        public TDataType GetValue()
+        public IAtomic GetData()
         {
-            return _dataType;
+            return _dataType is IAtomic atomic ? atomic : null;
         }
 
-        public void SetValue(IDataType value)
+        public void SetData(IAtomic value)
         {
             if (value == null)
                 throw new ArgumentNullException(nameof(value));
@@ -66,6 +66,11 @@ namespace L5Sharp.Core
                 throw new InvalidTagValueException(value, typeof(TDataType));
 
             _dataType = type;
+        }
+
+        public void SetRadix(Radix radix)
+        {
+            throw new NotImplementedException();
         }
 
         public IEnumerable<string> GetMembersNames()
@@ -110,11 +115,6 @@ namespace L5Sharp.Core
 
         public void SetMember<TAtomic>(Func<TDataType, IMember<TAtomic>> expression, string description)
             where TAtomic : IAtomic
-        {
-            throw new NotImplementedException();
-        }
-
-        public void SetRadix(Radix radix)
         {
             throw new NotImplementedException();
         }
