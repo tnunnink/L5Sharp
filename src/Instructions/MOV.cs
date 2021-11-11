@@ -30,8 +30,8 @@ namespace L5Sharp.Instructions
         {
             return new List<IMember<IDataType>>
             {
-                Member.New(nameof(Source), new Dint()),
-                Member.New(nameof(Destination), new Dint())
+                Member.Create(nameof(Source), new Dint()),
+                Member.Create(nameof(Destination), new Dint())
             };
         }
     }

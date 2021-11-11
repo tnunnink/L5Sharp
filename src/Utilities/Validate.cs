@@ -12,7 +12,7 @@ namespace L5Sharp.Utilities
     {
         public static void Name(string name)
         {
-            if (string.IsNullOrEmpty(name)) throw new ArgumentException("Name property can not be null or empty");
+            if (string.IsNullOrEmpty(name)) throw new ArgumentException("Name can not be null or empty");
 
             if (!Regex.IsMatch(name, @"^[a-zA-Z_][a-zA-Z0-9_]{0,39}$"))
                 throw new ComponentNameInvalidException(name);

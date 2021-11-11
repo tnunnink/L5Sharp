@@ -12,11 +12,10 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void New_ArrayOfAtomic_ShouldHaveExpectedElements()
         {
-            var tag = Tag.New("Test", new Bool(), new Dimensions(5));
+            var tag = Tag.Build("Test", new Bool()).WithDimensions(5).Create();
 
             tag.Elements.Should().NotBeNull();
             tag.Elements.Should().HaveCount(5);
-            tag.Elements.Should().AllBeOfType<Member<IDataType>>();
             tag.Elements.Select(e => e.DataType).Should().AllBeOfType<Bool>();
             tag.Elements.Select(e => e.DataType).Should().AllBeEquivalentTo(new Bool());
         }
@@ -24,7 +23,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void GetElement_ValidIndex_ShouldBeExpected()
         {
-            var tag = Tag.New("Test", new Bool(), new Dimensions(5));
+            var tag = Tag.Build("Test", new Bool()).WithDimensions(5).Create();
 
             var element = tag.GetElement(3);
 
@@ -40,7 +39,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void GetElement_InvalidIndex_ShouldBeNull()
         {
-            var tag = Tag.New("Test", new Bool(), new Dimensions(5));
+            var tag = Tag.Build("Test", new Bool()).WithDimensions(5).Create();
 
             var element = tag.GetElement(6);
 
@@ -50,7 +49,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void SetRadix_ValidRadix_ShouldUpdateAllElementRadixValues()
         {
-            var tag = Tag.New("Test", new Bool(), new Dimensions(5));
+            var tag = Tag.Build("Test", new Bool()).WithDimensions(5).Create();
             tag.Elements.Select(e => e.Radix).Should().AllBeEquivalentTo(Radix.Decimal);
 
             tag.SetRadix(Radix.Binary);
@@ -61,7 +60,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void SetDescription_String_ShouldUpdateAllElementDescriptionValues()
         {
-            var tag = Tag.New("Test", new Bool(), new Dimensions(5));
+             var tag = Tag.Build("Test", new Bool()).WithDimensions(5).Create();
             tag.Elements.Select(e => e.Description).Should().AllBeEquivalentTo<string>(null);
             
             tag.SetDescription("This is a test");
@@ -72,7 +71,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void SetElementDescription_ThenSetTagDescription_TagMemberShouldStillHaveOverridenDescription()
         {
-            var tag = Tag.New("Test", new Bool(), new Dimensions(5));
+             var tag = Tag.Build("Test", new Bool()).WithDimensions(5).Create();
 
             var element = tag.GetElement(0);
             element.SetDescription("Element Description");
@@ -87,7 +86,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void SetElementDescription_ThenSetTagDescription_ThenGetTheTagMemberAgain_ItShouldRetainTheOverridenDescription()
         {
-            var tag = Tag.New("Test", new Bool(), new Dimensions(5));
+             var tag = Tag.Build("Test", new Bool()).WithDimensions(5).Create();
 
             var element = tag.GetElement(0);
             element.SetDescription("Element Description");
@@ -105,7 +104,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void SetElementDescription_ThenSetTagDescription_ThenSetTheMemberDescriptionBack_ItShouldRevertToTagDescription()
         {
-            var tag = Tag.New("Test", new Bool(), new Dimensions(5));
+             var tag = Tag.Build("Test", new Bool()).WithDimensions(5).Create();
 
             var element = tag.GetElement(0);
             element.SetDescription("Element Description");
@@ -122,7 +121,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void SetElement_Description_ShouldBeExpected()
         {
-            var tag = Tag.New("Test", new Bool(), new Dimensions(5));
+             var tag = Tag.Build("Test", new Bool()).WithDimensions(5).Create();
             
             tag.SetElement(0, "This is a test");
 
@@ -136,7 +135,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void SetElement_Radix_ShouldBeExpected()
         {
-            var tag = Tag.New("Test", new Bool(), new Dimensions(5));
+             var tag = Tag.Build("Test", new Bool()).WithDimensions(5).Create();
             
             tag.SetElement(0, Radix.Binary);
 
@@ -150,7 +149,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void SetElement_Atomic_ShouldBeExpected()
         {
-            var tag = Tag.New("Test", new Bool(), new Dimensions(5));
+             var tag = Tag.Build("Test", new Bool()).WithDimensions(5).Create();
             
             tag.SetElement(0, new Bool(true));
 

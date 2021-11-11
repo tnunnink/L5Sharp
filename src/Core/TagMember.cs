@@ -44,19 +44,22 @@ namespace L5Sharp.Core
 
         public TDataType GetData()
         {
-            return _member.DataType;
+            return _member.Dimensions.AreEmpty ? _member.DataType : default;
         }
 
-        public void SetData(IDataType data)
+        public void SetData(IAtomic value)
         {
-            _member.DataType.SetData(data);
+            if (!(_member.DataType is IAtomic atomic))
+                throw new InvalidTagDataException(_member.DataType, value);
+            
+            atomic.SetValue(value);
         }
 
         public void SetRadix(Radix radix) => _member.SetRadix(radix);
 
         public void SetDescription(string description) => _member.SetDescription(description);
 
-        public IEnumerable<string> GetMembersList() => _member.DataType.GetMembers().Select(m => m.Name);
+        public IEnumerable<string> GetMemberList() => _member.DataType.GetMembers().Select(m => m.Name);
 
         public IEnumerable<string> GetDeepMembersList() => _member.DataType.GetMemberNames();
 

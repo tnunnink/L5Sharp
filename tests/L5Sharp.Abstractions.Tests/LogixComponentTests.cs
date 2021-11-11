@@ -42,6 +42,16 @@ namespace L5Sharp.Abstractions.Tests
         }
         
         [Test]
+        public void SetName_SameName_ShouldNotDoAnything()
+        {
+            var sut = new TestLogixComponent("Test", "This is a test");
+
+            sut.SetName("Test");
+
+            sut.Name.Should().Be("Test");
+        }
+        
+        [Test]
         public void SetName_Empty_ShouldThrowArgumentException()
         {
             var sut = new TestLogixComponent("Test", "This is a test");

@@ -58,7 +58,7 @@ namespace L5Sharp.Serialization.Tests
         [Test]
         public void Serialize_Tag_ShouldNotBeNull()
         {
-            var tag = Tag.OfType<Counter>("TestTag");
+            var tag = Tag.Create<Counter>("TestTag");
 
             var element = tag.Serialize();
 
@@ -69,7 +69,7 @@ namespace L5Sharp.Serialization.Tests
         [UseReporter(typeof(DiffReporter))]
         public void Serialize_Tag_ShouldHaveApprovedOutput()
         {
-            var tag = Tag.OfType("TestTag", new Counter());
+            var tag = Tag.Create("TestTag", new Counter());
 
             var element = tag.Serialize();
 

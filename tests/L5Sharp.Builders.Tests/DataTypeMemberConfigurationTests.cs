@@ -1,9 +1,10 @@
 ﻿using FluentAssertions;
+using L5Sharp.Configurations;
 using L5Sharp.Core;
 using L5Sharp.Types;
 using NUnit.Framework;
 
-namespace L5Sharp.Configurations.Tests
+namespace L5Sharp.Builders.Tests
 {
     [TestFixture]
     public class DataTypeMemberConfigurationTests

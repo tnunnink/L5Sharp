@@ -20,7 +20,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "L5Sharp.Factories.Tests", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "L5Sharp.Abstractions.Tests", "..\tests\L5Sharp.Abstractions.Tests\L5Sharp.Abstractions.Tests.csproj", "{4778CD2F-A572-4999-AC41-065AD05F0B35}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "L5Sharp.Configurations.Tests", "..\tests\L5Sharp.Configurations.Tests\L5Sharp.Configurations.Tests.csproj", "{672BA97C-9952-4840-B730-7055B59883BD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "L5Sharp.Builders.Tests", "..\tests\L5Sharp.Builders.Tests\L5Sharp.Builders.Tests.csproj", "{672BA97C-9952-4840-B730-7055B59883BD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "L5Sharp.Instructions.Tests", "..\tests\L5Sharp.Instructions.Tests\L5Sharp.Instructions.Tests.csproj", "{43AD8474-5835-49E5-9A44-59E39791752D}"
 EndProject

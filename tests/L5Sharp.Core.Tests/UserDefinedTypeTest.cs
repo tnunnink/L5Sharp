@@ -10,15 +10,18 @@ namespace L5Sharp.Core.Tests
     [TestFixture]
     public class UserDefinedTypeTest : DataType
     {
-        public UserDefinedTypeTest() : base(nameof(UserDefinedTypeTest), description:  "My Type description")
+        public UserDefinedTypeTest() : base(nameof(UserDefinedTypeTest), description: "My Type description")
         {
-            Members.Add(Member.New(nameof(MyMember01), new Bool(), description: "This is a test member"));
-            Members.Add(Member.New(nameof(MyMember02), new Dint(), new Dimensions(5), Radix.Ascii,
-                description: "This is a test member array"));
+            Members.Add(MyMember01);
+            Members.Add(MyMember02);
         }
 
-        public IMember<IDataType> MyMember01 => Members.SingleOrDefault(m => m.Name == nameof(MyMember01));
-        public IMember<IDataType> MyMember02 => Members.SingleOrDefault(m => m.Name == nameof(MyMember02));
+        public IMember<IDataType> MyMember01 =
+            Member.Create(nameof(MyMember01), new Bool(), description: "This is a test member");
+
+        public IMember<IDataType> MyMember02 = Member.Create(nameof(MyMember02), new Dint(), new Dimensions(5),
+            Radix.Ascii,
+            description: "This is a test member array");
 
 
         [Test]
@@ -37,7 +40,7 @@ namespace L5Sharp.Core.Tests
             MyMember01.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);
 
             MyMember02.Should().NotBeNull();
-            MyMember02.DataType.Should().Be(new Dint());
+            MyMember02.DataType.Should().Be(new Dint(Radix.Ascii));
             MyMember02.Description.Should().Be("This is a test member array");
             MyMember02.Dimensions.Length.Should().Be(5);
             MyMember02.Radix.Should().Be(Radix.Ascii);

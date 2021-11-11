@@ -91,8 +91,8 @@ namespace L5Sharp.Tests
         {
             var type = new DataType("TestType", new[]
                 {
-                    Member.New("Member01", new Dint(25)),
-                    Member.New("Member02", new Timer(new Dint(1000)))
+                    Member.Create<IDataType>("Member01", new Dint(25)),
+                    Member.Create<IDataType>("Member02", new Timer(new Dint(1000)))
                 },
                 "This is a test type that will be created");
 

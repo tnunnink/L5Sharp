@@ -24,8 +24,8 @@ namespace L5Sharp.Instructions
         {
             return new List<IMember<IDataType>>
             {
-                Member.New(nameof(StorageBit), new Bool()),
-                Member.New(nameof(OutputBit), new Bool()),
+                Member.Create(nameof(StorageBit), new Bool()),
+                Member.Create(nameof(OutputBit), new Bool()),
             };
         }
     }

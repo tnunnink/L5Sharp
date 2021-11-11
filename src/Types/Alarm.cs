@@ -21,29 +21,29 @@ namespace L5Sharp.Types
             return new Alarm();
         }
 
-        public IMember<Bool> EnableIn = Member.OfType<Bool>(nameof(EnableIn));
-        public IMember<Real> In = Member.OfType<Real>(nameof(In));
-        public IMember<Real> HHLimit = Member.OfType<Real>(nameof(HHLimit));
-        public IMember<Real> HLimit = Member.OfType<Real>(nameof(HLimit));
-        public IMember<Real> LLimit = Member.OfType<Real>(nameof(LLimit));
-        public IMember<Real> LLLimit = Member.OfType<Real>(nameof(LLLimit));
-        public IMember<Real> Deadband = Member.OfType<Real>(nameof(Deadband));
-        public IMember<Real> ROCPosLimit = Member.OfType<Real>(nameof(ROCPosLimit));
-        public IMember<Real> ROCNegLimit = Member.OfType<Real>(nameof(ROCNegLimit));
-        public IMember<Real> ROCPeriod = Member.OfType<Real>(nameof(ROCPeriod));
-        public IMember<Bool> EnableOut = Member.OfType<Bool>(nameof(EnableOut));
-        public IMember<Bool> HHAlarm = Member.OfType<Bool>(nameof(HHAlarm));
-        public IMember<Bool> HAlarm = Member.OfType<Bool>(nameof(HAlarm));
-        public IMember<Bool> LAlarm = Member.OfType<Bool>(nameof(LAlarm));
-        public IMember<Bool> LLAlarm = Member.OfType<Bool>(nameof(LLAlarm));
-        public IMember<Bool> ROCPosAlarm = Member.OfType<Bool>(nameof(ROCPosAlarm));
-        public IMember<Bool> ROCNegAlarm = Member.OfType<Bool>(nameof(ROCNegAlarm));
-        public IMember<Real> ROC = Member.OfType<Real>(nameof(ROC));
-        public IMember<Dint> Status = Member.OfType<Dint>(nameof(Status));
-        public IMember<Bool> InstructFault = Member.OfType<Bool>(nameof(InstructFault));
-        public IMember<Bool> DeadbandInv = Member.OfType<Bool>(nameof(DeadbandInv));
-        public IMember<Bool> ROCPosLimitInv = Member.OfType<Bool>(nameof(ROCPosLimitInv));
-        public IMember<Bool> ROCNegLimitInv = Member.OfType<Bool>(nameof(ROCNegLimitInv));
-        public IMember<Bool> ROCPeriodInv = Member.OfType<Bool>(nameof(ROCPeriodInv));
+        public IMember<Bool> EnableIn = Member.Create<Bool>(nameof(EnableIn));
+        public IMember<Real> In = Member.Create<Real>(nameof(In));
+        public IMember<Real> HHLimit = Member.Create<Real>(nameof(HHLimit));
+        public IMember<Real> HLimit = Member.Create<Real>(nameof(HLimit));
+        public IMember<Real> LLimit = Member.Create<Real>(nameof(LLimit));
+        public IMember<Real> LLLimit = Member.Create<Real>(nameof(LLLimit));
+        public IMember<Real> Deadband = Member.Create<Real>(nameof(Deadband));
+        public IMember<Real> ROCPosLimit = Member.Create<Real>(nameof(ROCPosLimit));
+        public IMember<Real> ROCNegLimit = Member.Create<Real>(nameof(ROCNegLimit));
+        public IMember<Real> ROCPeriod = Member.Create<Real>(nameof(ROCPeriod));
+        public IMember<Bool> EnableOut = Member.Create<Bool>(nameof(EnableOut));
+        public IMember<Bool> HHAlarm = Member.Create<Bool>(nameof(HHAlarm));
+        public IMember<Bool> HAlarm = Member.Create<Bool>(nameof(HAlarm));
+        public IMember<Bool> LAlarm = Member.Create<Bool>(nameof(LAlarm));
+        public IMember<Bool> LLAlarm = Member.Create<Bool>(nameof(LLAlarm));
+        public IMember<Bool> ROCPosAlarm = Member.Create<Bool>(nameof(ROCPosAlarm));
+        public IMember<Bool> ROCNegAlarm = Member.Create<Bool>(nameof(ROCNegAlarm));
+        public IMember<Real> ROC = Member.Create<Real>(nameof(ROC));
+        public IMember<Dint> Status = Member.Create<Dint>(nameof(Status));
+        public IMember<Bool> InstructFault = Member.Create<Bool>(nameof(InstructFault));
+        public IMember<Bool> DeadbandInv = Member.Create<Bool>(nameof(DeadbandInv));
+        public IMember<Bool> ROCPosLimitInv = Member.Create<Bool>(nameof(ROCPosLimitInv));
+        public IMember<Bool> ROCNegLimitInv = Member.Create<Bool>(nameof(ROCNegLimitInv));
+        public IMember<Bool> ROCPeriodInv = Member.Create<Bool>(nameof(ROCPeriodInv));
     }
 }

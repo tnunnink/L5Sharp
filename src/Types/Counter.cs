@@ -22,12 +22,12 @@ namespace L5Sharp.Types
             return new Counter();
         }
         
-        public IMember<Dint> PRE = Member.OfType<Dint>(nameof(PRE));
-        public IMember<Dint> ACC = Member.OfType<Dint>(nameof(ACC));
-        public IMember<Bool> CU = Member.OfType<Bool>(nameof(CU));
-        public IMember<Bool> CD = Member.OfType<Bool>(nameof(CD));
-        public IMember<Bool> DN = Member.OfType<Bool>(nameof(DN));
-        public IMember<Bool> OV = Member.OfType<Bool>(nameof(OV));
-        public IMember<Bool> UN = Member.OfType<Bool>(nameof(UN));
+        public IMember<Dint> PRE = Member.Create<Dint>(nameof(PRE));
+        public IMember<Dint> ACC = Member.Create<Dint>(nameof(ACC));
+        public IMember<Bool> CU = Member.Create<Bool>(nameof(CU));
+        public IMember<Bool> CD = Member.Create<Bool>(nameof(CD));
+        public IMember<Bool> DN = Member.Create<Bool>(nameof(DN));
+        public IMember<Bool> OV = Member.Create<Bool>(nameof(OV));
+        public IMember<Bool> UN = Member.Create<Bool>(nameof(UN));
     }
 }

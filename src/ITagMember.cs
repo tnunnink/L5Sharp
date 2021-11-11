@@ -10,8 +10,8 @@ namespace L5Sharp
         new string DataType { get; }
         ILogixComponent Parent { get; }
         TDataType GetData();
-        void SetData(IDataType data);
-        IEnumerable<string> GetMembersList();
+        void SetData(IAtomic value);
+        IEnumerable<string> GetMemberList();
         IEnumerable<string> GetDeepMembersList();
         IEnumerable<ITagMember<IDataType>> GetMembers();
         ITagMember<IDataType> GetMember(string name);

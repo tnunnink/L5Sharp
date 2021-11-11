@@ -12,17 +12,26 @@ namespace L5Sharp.Core.Tests
     public class MemberTests
     {
         [Test]
-        public void New_ValidNameAndType_ShouldNotBeNull()
+        public void Create_ValidNameAndType_ShouldNotBeNull()
         {
-            var member = Member.New("Test", new Bool());
+            var type = new DataType("Test");
+            var member = Member.Create("Test", type);
+
+            member.Should().NotBeNull();
+        }
+        
+        [Test]
+        public void Create_TypedValidNameAndType_ShouldNotBeNull()
+        {
+            var member = Member.Create("Test", new Bool());
 
             member.Should().NotBeNull();
         }
 
         [Test]
-        public void OfType_ValidNameAndType_ShouldNotBeNull()
+        public void Create_TypedValidName_ShouldNotBeNull()
         {
-            var member = Member.OfType<Bool>("Test");
+            var member = Member.Create<Bool>("Test");
 
             member.Should().NotBeNull();
         }
@@ -32,7 +41,7 @@ namespace L5Sharp.Core.Tests
         {
             var fixture = new Fixture();
             var length = fixture.Create<ushort>();
-            var array = Member.OfType<Dint>("Test", new Dimensions(length));
+            var array = Member.Create<Dint>("Test", new Dimensions(length));
 
             array.Elements.Length.Should().Be(length);
             array.Elements.Should().BeOfType<IMember<Dint>[]>();
@@ -41,20 +50,20 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void New_NullName_ShouldThrowArgumentNullException()
         {
-            FluentActions.Invoking(() => Member.OfType<Dint>(null)).Should().Throw<ArgumentNullException>();
+            FluentActions.Invoking(() => Member.Create<Dint>(null)).Should().Throw<ArgumentNullException>();
         }
 
         [Test]
         public void New_NullType_ShouldHaveNullType()
         {
-            var member = Member.New("Name", null);
+            var member = Member.Create("Name", null);
             member.DataType.Should().BeNull();
         }
 
         [Test]
         public void New_OverrideProperties_ShouldHaveExpectedOverloads()
         {
-            var member = Member.New("Member", new Real(), new Dimensions(35), Radix.Exponential,
+            var member = Member.Create("Member", (IDataType)new Real(), new Dimensions(35), Radix.Exponential,
                 ExternalAccess.ReadOnly, "Test");
 
             member.Should().NotBeNull();
@@ -71,7 +80,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Name_GetValue_ShouldBeExpected()
         {
-            var member = Member.OfType<Real>("Member");
+            var member = Member.Create<Real>("Member");
 
             var name = member.Name;
 
@@ -81,7 +90,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void DataType_GetValue_ShouldBeExpected()
         {
-            var member = Member.OfType<Real>("Member");
+            var member = Member.Create<Real>("Member");
 
             var dataType = member.DataType;
 
@@ -91,7 +100,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Dimension_GetValue_ShouldBeExpected()
         {
-            var member = Member.OfType<Real>("Member");
+            var member = Member.Create<Real>("Member");
 
             var dimension = member.Dimensions;
 
@@ -101,7 +110,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Radix_GetValue_ShouldBeExpected()
         {
-            var member = Member.OfType<Real>("Member");
+            var member = Member.Create<Real>("Member");
 
             var radix = member.Radix;
 
@@ -111,7 +120,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void ExternalAccess_GetValue_ShouldBeExpected()
         {
-            var member = Member.OfType<Real>("Member");
+            var member = Member.Create<Real>("Member");
 
             var access = member.ExternalAccess;
 
@@ -121,7 +130,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Description_GetValue_ShouldBeExpected()
         {
-            var member = Member.OfType<Real>("Member");
+            var member = Member.Create<Real>("Member");
 
             var description = member.Description;
 
@@ -131,7 +140,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void SetRadix_Null_ShouldThrowArgumentNullException()
         {
-            var member = Member.OfType<Real>("Test");
+            var member = Member.Create<Real>("Test");
 
             FluentActions.Invoking(() => member.SetRadix(null)).Should()
                 .Throw<ArgumentNullException>();
@@ -140,7 +149,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void SetRadix_InvalidRadix_ShouldThrowRadixNotSupportException()
         {
-            var member = Member.OfType<Real>("Test");
+            var member = Member.Create<Real>("Test");
 
             FluentActions.Invoking(() => member.SetRadix(Radix.Decimal)).Should()
                 .Throw<RadixNotSupportedException>();
@@ -149,7 +158,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void SetRadix_ValidRadix_ShouldBeExpectedValue()
         {
-            var member = Member.OfType<Real>("Test");
+            var member = Member.Create<Real>("Test");
 
             member.SetRadix(Radix.Exponential);
 
@@ -157,29 +166,29 @@ namespace L5Sharp.Core.Tests
         }
         
         [Test]
-        public void SetDescription_Null_ShouldBeNull()
+        public void SetDescription_Null_ShouldRevertToDefaultDescription()
         {
-            var member = Member.OfType<Real>("Test", description: "this is a test");
+            var member = Member.Create<Real>("Test", description: "this is a test");
 
             member.SetDescription(null);
 
-            member.Description.Should().BeNull();
+            member.Description.Should().Be("this is a test");
         }
         
         [Test]
-        public void SetDescription_EmptyString_ShouldBeEmpty()
+        public void SetDescription_EmptyString_ShouldRevertToDefaultDescription()
         {
-            var member = Member.OfType<Real>("Test", description: "this is a test");
+            var member = Member.Create<Real>("Test", description: "this is a test");
 
             member.SetDescription(string.Empty);
 
-            member.Description.Should().BeEmpty();
+            member.Description.Should().Be("this is a test");
         }
         
         [Test]
         public void SetDescription_String_ShouldBeEmpty()
         {
-            var member = Member.OfType<Real>("Test");
+            var member = Member.Create<Real>("Test");
 
             member.SetDescription("This is a test");
 
@@ -189,7 +198,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Elements_GetValue_ShouldBeEmptyArray()
         {
-            var member = Member.OfType<Real>("Member");
+            var member = Member.Create<Real>("Member");
 
             var elements = member.Elements;
 
@@ -199,7 +208,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Copy_WhenCalled_ShouldReturnDifferentInstances()
         {
-            var member = Member.OfType<Bool>("Test").As<Member<Bool>>();
+            var member = Member.Create<Bool>("Test").As<Member<Bool>>();
 
             var copy = member.Copy();
 
@@ -211,7 +220,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Copy_WhenCalled_PropertiesShouldBeEqual()
         {
-            var member = Member.OfType<Bool>("Test").As<Member<Bool>>();
+            var member = Member.Create<Bool>("Test").As<Member<Bool>>();
 
             var copy = member.Copy();
 
@@ -221,8 +230,8 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void TypedEquals_AreEqual_ShouldBeTrue()
         {
-            var first = (Member<IDataType>)Member.New("Test", new Bool());
-            var second = (Member<IDataType>)Member.New("Test", new Bool());
+            var first = (Member<Bool>)Member.Create("Test", new Bool());
+            var second = (Member<Bool>)Member.Create("Test", new Bool());
 
             var result = first.Equals(second);
 
@@ -232,7 +241,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void TypedEquals_AreSame_ShouldBeTrue()
         {
-            var first = (Member<IDataType>)Member.New("Test", new Bool());
+            var first = (Member<Bool>)Member.Create("Test", new Bool());
             var second = first;
 
             var result = first.Equals(second);
@@ -244,7 +253,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void TypedEquals_Null_ShouldBeFalse()
         {
-            var first = (Member<IDataType>)Member.New("Test", new Bool());
+            var first = (Member<Bool>)Member.Create("Test", new Bool());
 
             var result = first.Equals(null);
 
@@ -254,8 +263,8 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void ObjectEquals_AreEqual_ShouldBeTrue()
         {
-            var first = Member.New("Test", new Bool());
-            var second = Member.New("Test", new Bool());
+            var first = Member.Create("Test", new Bool());
+            var second = Member.Create("Test", new Bool());
 
             var result = first.Equals(second);
 
@@ -265,7 +274,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void ObjectEquals_AreSame_ShouldBeTrue()
         {
-            var first = Member.New("Test", new Bool());
+            var first = Member.Create("Test", new Bool());
             var second = first;
 
             var result = first.Equals(second);
@@ -277,7 +286,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void ObjectEquals_Null_ShouldBeFalse()
         {
-            var first = Member.New("Test", new Bool());
+            var first = Member.Create("Test", new Bool());
 
             var result = first.Equals(null);
 
@@ -287,8 +296,8 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void OperatorEquals_AreEqual_ShouldBeTrue()
         {
-            var first = (Member<IDataType>)Member.New("Test", new Bool());
-            var second = (Member<IDataType>)Member.New("Test", new Bool());
+            var first = (Member<Bool>)Member.Create("Test", new Bool());
+            var second = (Member<Bool>)Member.Create("Test", new Bool());
 
             var result = first == second;
 
@@ -298,8 +307,8 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void OperatorNotEquals_AreEqual_ShouldBeFalse()
         {
-            var first = (Member<IDataType>)Member.New("Test", new Bool());
-            var second = (Member<IDataType>)Member.New("Test", new Bool());
+            var first = (Member<Bool>)Member.Create("Test", new Bool());
+            var second = (Member<Bool>)Member.Create("Test", new Bool());
 
             var result = first != second;
 
@@ -309,7 +318,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void GetHashCode_WhenCalled_ShouldNotBeZero()
         {
-            var first = Member.New("Test", new Bool());
+            var first = Member.Create("Test", new Bool());
 
             var hash = first.GetHashCode();
 

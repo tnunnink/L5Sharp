@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using L5Sharp.Abstractions;
+using L5Sharp.Builders;
 using L5Sharp.Enums;
 using L5Sharp.Exceptions;
 using L5Sharp.Extensions;
@@ -13,16 +14,16 @@ namespace L5Sharp.Core
         private TDataType _dataType;
         private string _description;
 
-        public Tag(string name, TDataType dataType, Dimensions dimensions, Radix radix,
-            ExternalAccess externalAccess, string description, TagUsage usage,
-            bool constant, ILogixComponent parent = null) : base(name, description)
+        internal Tag(string name, TDataType dataType, Dimensions dimensions = null, Radix radix = null,
+            ExternalAccess externalAccess = null, string description = null, TagUsage usage = null,
+            bool constant = false, ILogixComponent parent = null) : base(name, description)
         {
             _dataType = dataType ?? throw new ArgumentNullException(nameof(dataType), "DataType can not be null");
             if (_dataType is IAtomic atomic && radix != null)
                 atomic.SetRadix(radix);
-            
+
             _description = description;
-            
+
             Dimensions = dimensions ?? Dimensions.Empty;
             ExternalAccess = externalAccess ?? ExternalAccess.None;
             Usage = usage != null ? usage : TagUsage.Null;
@@ -30,7 +31,7 @@ namespace L5Sharp.Core
             Parent = parent;
             Elements = InstantiateElements();
         }
-        
+
         public override string Description => _description;
         public string FullName => Name;
         public string DataType => _dataType.Name;
@@ -48,17 +49,23 @@ namespace L5Sharp.Core
 
         public TagUsage Usage { get; private set; }
         public bool Constant { get; set; }
-        public ILogixComponent Parent { get; }
 
-        
+        //The parent of a tag should be the controller/program/routine that creates it.
+        //Will assign this internally when is added to a collection
+        public ILogixComponent Parent { get; internal set; }
+
+
         public TDataType GetData()
         {
-            return _dataType;
+            return Dimensions.AreEmpty ? _dataType : default;
         }
 
-        public void SetData(IDataType data)
+        public void SetData(IAtomic value)
         {
-            _dataType.SetData(data);
+            if (!(_dataType is IAtomic atomic))
+                throw new InvalidTagDataException(_dataType, value);
+
+            atomic.SetValue(value);
         }
 
         public void SetRadix(Radix radix)
@@ -109,7 +116,7 @@ namespace L5Sharp.Core
             Usage = usage;
         }
 
-        public IEnumerable<string> GetMembersList() => _dataType.GetMembers().Select(m => m.Name);
+        public IEnumerable<string> GetMemberList() => _dataType.GetMembers().Select(m => m.Name);
 
         public IEnumerable<string> GetDeepMembersList() => _dataType.GetMemberNames();
 
@@ -202,7 +209,7 @@ namespace L5Sharp.Core
                 throw new ArgumentNullException(nameof(dataType), "Dimensions can not be null");
 
             return new Tag<TType>(Name, dataType, Dimensions, Radix, ExternalAccess, Description,
-                Usage, Constant, Parent);
+                Usage, Constant);
         }
 
         public ITag<TDataType> ChangeDimensions(Dimensions dimensions)
@@ -211,15 +218,13 @@ namespace L5Sharp.Core
                 throw new ArgumentNullException(nameof(dimensions), "Dimensions can not be null");
 
             return new Tag<TDataType>(Name, _dataType, dimensions, Radix, ExternalAccess, Description, Usage,
-                Constant,
-                Parent);
+                Constant);
         }
 
         public ITag<TDataType> ChangeTagType(TagType type)
         {
             return new Tag<TDataType>(Name, _dataType, Dimensions, Radix, ExternalAccess, Description, Usage,
-                Constant,
-                Parent);
+                Constant);
         }
 
         private IMember<TDataType>[] InstantiateElements()
@@ -228,7 +233,7 @@ namespace L5Sharp.Core
 
             for (var i = 0; i < Dimensions; i++)
             {
-                var member = new Member<TDataType>($"[{i}]", (TDataType)_dataType.Instantiate(),
+                var member = Member.Create($"[{i}]", (TDataType) _dataType.Instantiate(),
                     Dimensions.Empty, Radix, ExternalAccess, Description);
                 elements.Add(member);
             }
@@ -245,56 +250,47 @@ namespace L5Sharp.Core
         private void SetElementDescription(string description)
         {
             foreach (var element in Elements)
-                ((Member<IDataType>)element).SetParentDescription(description);
+            {
+                var casted = (Member<TDataType>)element;
+                casted.SetParentDescription(description);
+            }
         }
     }
 
     public static class Tag
     {
-        public static ITag<IDataType> New(string name, IDataType dataType, Dimensions dimensions = null,
-            Radix radix = null, ExternalAccess externalAccess = null, string description = null, TagUsage usage = null,
-            bool constant = false)
+        public static ITag<IDataType> Create(string name, IDataType dataType)
         {
-            if (dataType is IUserDefined userDefined)
-                return new Tag<IDataType>(name, userDefined.Instantiate(), dimensions, radix, externalAccess,
-                    description, usage, constant);
-
-            return new Tag<IDataType>(name, dataType, dimensions, radix, externalAccess, description, usage, constant);
+            return new Tag<IDataType>(name, dataType);
         }
 
-        public static ITag<TDataType> OfType<TDataType>(string name, TDataType dataType,
-            Dimensions dimensions = null, Radix radix = null, ExternalAccess externalAccess = null,
-            string description = null, TagUsage usage = null, bool constant = false)
+        public static ITag<TDataType> Create<TDataType>(string name) where TDataType : IDataType, new()
+        {
+            return new Tag<TDataType>(name, new TDataType());
+        }
+
+        public static ITag<TDataType> Create<TDataType>(string name, TDataType dataType)
             where TDataType : IDataType, new()
         {
-            return new Tag<TDataType>(name, dataType, dimensions, radix, externalAccess, description, usage, constant);
+            return new Tag<TDataType>(name, dataType);
         }
 
-        public static ITag<TDataType> OfType<TDataType>(string name, string description = null,
-            ExternalAccess externalAccess = null)
+        public static ITagBuilder<IDataType> Build(string name, IDataType dataType)
+        {
+            return new TagBuilder<IDataType>(name, dataType);
+        }
+        
+        public static ITagBuilder<TDataType> Build<TDataType>(string name)
             where TDataType : IDataType, new()
         {
             var dataType = new TDataType();
-            return new Tag<TDataType>(name, dataType, Dimensions.Empty, null, externalAccess, description, null, false);
+            return new TagBuilder<TDataType>(name, dataType);
         }
-
-        public static ITag<IAtomic> Atomic<TAtomic>(string name, Dimensions dimensions = null, Radix radix = null,
-            ExternalAccess externalAccess = null, string description = null, TagUsage usage = null,
-            bool constant = false)
-            where TAtomic : IAtomic, new()
+        
+        public static ITagBuilder<TDataType> Build<TDataType>(string name, TDataType dataType)
+            where TDataType : IDataType, new()
         {
-            var dataType = new TAtomic();
-            return new Tag<IAtomic>(name, dataType, dimensions, radix, externalAccess, description, usage, constant);
-        }
-
-        public static ITag<IPredefined> Predefined<TPredefined>(string name, Dimensions dimensions = null,
-            Radix radix = null, ExternalAccess externalAccess = null, string description = null, TagUsage usage = null,
-            bool constant = false)
-            where TPredefined : IPredefined, new()
-        {
-            var dataType = new TPredefined();
-            return new Tag<IPredefined>(name, dataType, dimensions, radix, externalAccess, description, usage,
-                constant);
+            return new TagBuilder<TDataType>(name, dataType);
         }
     }
 }

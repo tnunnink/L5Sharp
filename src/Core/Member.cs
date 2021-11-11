@@ -17,7 +17,7 @@ namespace L5Sharp.Core
         private string _overridenDescription;
         private readonly string _defaultDescription;
 
-        public Member(string name, TDataType dataType, Dimensions dimensions, Radix radix,
+        internal Member(string name, TDataType dataType, Dimensions dimensions, Radix radix,
             ExternalAccess externalAccess, string description)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name), "Name can not be null");
@@ -71,7 +71,7 @@ namespace L5Sharp.Core
         public IMember<TDataType> Copy()
         {
             var dataType = (TDataType)DataType.Instantiate();
-            return Member.OfType(Name, dataType, Dimensions.Copy(), Radix, ExternalAccess, Description);
+            return Member.Create(Name, dataType, Dimensions.Copy(), Radix, ExternalAccess, Description);
         }
 
         public bool Equals(Member<TDataType> other)
@@ -110,12 +110,12 @@ namespace L5Sharp.Core
             var elements = new List<IMember<TDataType>>(Dimensions);
 
             for (var i = 0; i < Dimensions; i++)
-                elements.Add(new Member<TDataType>($"[{i}]", (TDataType)DataType.Instantiate(),
+                elements.Add(Member.Create($"[{i}]", (TDataType)DataType.Instantiate(),
                     Dimensions.Empty, Radix, ExternalAccess, Description));
 
             return elements.ToArray();
         }
-        
+
         private string GetDescription()
         {
             if (!string.IsNullOrEmpty(_overridenDescription))
@@ -130,46 +130,25 @@ namespace L5Sharp.Core
 
     public static class Member
     {
-        public static IMember<IDataType> New(string name, IDataType dataType,
-            Radix radix = null, ExternalAccess externalAccess = null, string description = null)
-        {
-            return new Member<IDataType>(name, dataType, Dimensions.Empty, radix, externalAccess, description);
-        }
-
-        public static IMember<IDataType> New(string name, IDataType dataType, Dimensions dimensions,
+        public static IMember<IDataType> Create(string name, IDataType dataType, Dimensions dimensions = null,
             Radix radix = null, ExternalAccess externalAccess = null, string description = null)
         {
             return new Member<IDataType>(name, dataType, dimensions, radix, externalAccess, description);
         }
 
-        public static IMember<TDataType> OfType<TDataType>(string name, TDataType dataType,
+        public static IMember<TDataType> Create<TDataType>(string name, Dimensions dimensions = null,
             Radix radix = null, ExternalAccess externalAccess = null, string description = null)
-            where TDataType : IDataType
+            where TDataType : IDataType, new()
         {
-            return new Member<TDataType>(name, dataType, Dimensions.Empty, radix, externalAccess, description);
+            return new Member<TDataType>(name, new TDataType(), dimensions, radix, externalAccess, description);
         }
 
-        public static IMember<TDataType> OfType<TDataType>(string name, TDataType dataType, Dimensions dimensions,
-            Radix radix = null, ExternalAccess externalAccess = null, string description = null)
+        public static IMember<TDataType> Create<TDataType>(string name, TDataType dataType,
+            Dimensions dimensions = null, Radix radix = null, ExternalAccess externalAccess = null,
+            string description = null)
             where TDataType : IDataType
         {
             return new Member<TDataType>(name, dataType, dimensions, radix, externalAccess, description);
-        }
-
-        public static IMember<TDataType> OfType<TDataType>(string name,
-            Radix radix = null, ExternalAccess externalAccess = null, string description = null)
-            where TDataType : IDataType, new()
-        {
-            var dataType = new TDataType();
-            return new Member<TDataType>(name, dataType, Dimensions.Empty, radix, externalAccess, description);
-        }
-
-        public static IMember<TDataType> OfType<TDataType>(string name, Dimensions dimension,
-            Radix radix = null, ExternalAccess externalAccess = null, string description = null)
-            where TDataType : IDataType, new()
-        {
-            var dataType = new TDataType();
-            return new Member<TDataType>(name, dataType, dimension, radix, externalAccess, description);
         }
     }
 }

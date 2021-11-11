@@ -4,29 +4,25 @@ using System.Collections.Generic;
 using System.Linq;
 using L5Sharp.Configurations;
 using L5Sharp.Exceptions;
+using L5Sharp.Utilities;
 
 namespace L5Sharp.Abstractions
 {
     public class ComponentCollection<TComponent> : IComponentCollection<TComponent> where TComponent : ILogixComponent
     {
-        //This is the primary component collection.
-        //Using a hashset with custom equality comparer that will maintain the name constraint.
+        private readonly ComponentNameComparer<TComponent> _comparer = new ComponentNameComparer<TComponent>();
+        //This is the primary collection storing components
+        //Using a hashset with custom equality comparer that will maintain the name constraint and with fast lookup
         private readonly HashSet<TComponent> _components;
         //This collection is for preserving the order of items in which the were added/inserted/removed.
-        //DataType members specifically need this to maintain the structure size.
-        // By using a Func<string> and pointing it to the component name,
-        // we can avoid issues when the client updates the component name.  
+        //DataType members specifically need this to maintain the structure size in RSLogix.
+        //By using a Func<string> and pointing it to the component name,
+        //we can avoid state issues when the client updates the component name.  
         private readonly List<Func<string>> _names; 
 
         public ComponentCollection()
         {
-            _components = new HashSet<TComponent>(new ComponentNameComparer<TComponent>());
-            _names = new List<Func<string>>();
-        }
-
-        public ComponentCollection(int length)
-        {
-            _components = new HashSet<TComponent>(length, new ComponentNameComparer<TComponent>()); 
+            _components = new HashSet<TComponent>(_comparer);
             _names = new List<Func<string>>();
         }
 
@@ -62,19 +58,27 @@ namespace L5Sharp.Abstractions
             return _components.OrderBy(c => _names.FindIndex(func => func.Invoke() == c.Name));
         }
 
+        public int IndexOf(TComponent component)
+        {
+            if (component == null)
+                throw new ArgumentNullException(nameof(component), $"{typeof(TComponent).Name} can not be null");
+            
+            return _names.FindIndex(n => n.Invoke() == component.Name);
+        }
+
         public virtual void Add(TComponent component) => AddComponent(component);
 
-        public virtual void AddRange(IEnumerable<TComponent> components) => AddComponents(components);
+        public void AddRange(IEnumerable<TComponent> components) => AddComponents(components);
 
         public void Add<TConfiguration>(TConfiguration configuration)
             where TConfiguration : IComponentConfiguration<TComponent> => AddComponent(configuration);
 
         public virtual void Insert(int index, TComponent component) => InsertComponent(index, component);
 
-        public virtual void Update(string name, TComponent component) => UpdateComponent(name, component);
+        public virtual void Update(TComponent component) => UpdateComponent(component);
 
-        public void Update<TConfiguration>(string name, TConfiguration configuration)
-            where TConfiguration : IComponentConfiguration<TComponent> => UpdateComponent(name, configuration);
+        public void Update<TConfiguration>(TConfiguration configuration)
+            where TConfiguration : IComponentConfiguration<TComponent> => UpdateComponent(configuration);
 
         public virtual void Remove(string name) => RemoveComponent(name);
 
@@ -88,7 +92,7 @@ namespace L5Sharp.Abstractions
             return _components.GetEnumerator();
         }
 
-        private bool ContainsComponent(string name)
+        private bool ContainsComponentName(string name)
         {
             return _components.Any(c => c.Name == name);
         }
@@ -97,8 +101,10 @@ namespace L5Sharp.Abstractions
         {
             if (component == null)
                 throw new ArgumentNullException(nameof(component), $"{typeof(TComponent).Name} can not be null");
+            
+            Validate.Name(component.Name);
 
-            if (ContainsComponent(component.Name))
+            if (ContainsComponentName(component.Name))
                 throw new ComponentNameCollisionException(component.Name, typeof(TComponent));
 
             _components.Add(component);
@@ -109,7 +115,7 @@ namespace L5Sharp.Abstractions
             where TConfiguration : IComponentConfiguration<TComponent>
         {
             if (configuration == null)
-                throw new ArgumentNullException(nameof(configuration));
+                throw new ArgumentNullException(nameof(configuration), "Configuration can not be null");
 
             var component = configuration.Compile();
 
@@ -129,8 +135,10 @@ namespace L5Sharp.Abstractions
         {
             if (component == null)
                 throw new ArgumentNullException(nameof(component), $"{typeof(TComponent).Name} can not be null");
+            
+            Validate.Name(component.Name);
 
-            if (ContainsComponent(component.Name))
+            if (ContainsComponentName(component.Name))
                 throw new ComponentNameCollisionException(component.Name, typeof(TComponent));
 
             _components.Add(component);
@@ -140,31 +148,30 @@ namespace L5Sharp.Abstractions
         private void RemoveComponent(string name)
         {
             if (string.IsNullOrEmpty(name)) return;
-            if (!ContainsComponent(name)) return;
+            if (!ContainsComponentName(name)) return;
 
             _names.RemoveAt(_names.FindIndex(f => f.Invoke() == name));
             _components.RemoveWhere(c => c.Name == name);
         }
 
-        private void UpdateComponent(string name, TComponent component)
+        private void UpdateComponent(TComponent component)
         {
-            if (string.IsNullOrEmpty(name))
-                throw new ArgumentException("Component name can not be null or empty");
-
             if (component == null)
                 throw new ArgumentNullException(nameof(component), $"{typeof(TComponent).Name} can not be null");
+            
+            Validate.Name(component.Name);
 
-            if (!ContainsComponent(name))
+            if (!ContainsComponentName(component.Name))
                 AddComponent(component);
 
-            _names.Remove(() => name);
-            _components.RemoveWhere(c => c.Name == name);
+            var index = _names.FindIndex(f => f.Invoke() == component.Name);
+            _names[index] = () => component.Name;
             
+            _components.RemoveWhere(c => c.Name == component.Name);
             _components.Add(component);
-            _names.Add(() => component.Name);
         }
 
-        private void UpdateComponent<TConfiguration>(string name, TConfiguration configuration)
+        private void UpdateComponent<TConfiguration>(TConfiguration configuration)
             where TConfiguration : IComponentConfiguration<TComponent>
         {
             if (configuration == null)
@@ -173,7 +180,7 @@ namespace L5Sharp.Abstractions
 
             var component = configuration.Compile();
 
-            UpdateComponent(name, component);
+            UpdateComponent(component);
         }
     }
 }

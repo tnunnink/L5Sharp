@@ -37,10 +37,10 @@ namespace L5Sharp.Core.Tests
             RegisterMemberFields();
         }
 
-        public IMember<Bool> Member01 => Member.OfType<Bool>(nameof(Member01));
-        public IMember<Int> Member02 => Member.OfType<Int>(nameof(Member02));
-        public IMember<Dint> Member03 => Member.OfType<Dint>(nameof(Member03));
-        public IMember<Real> Member04 => Member.OfType<Real>(nameof(Member04));
+        public IMember<Bool> Member01 => Member.Create<Bool>(nameof(Member01));
+        public IMember<Int> Member02 => Member.Create<Int>(nameof(Member02));
+        public IMember<Dint> Member03 => Member.Create<Dint>(nameof(Member03));
+        public IMember<Real> Member04 => Member.Create<Real>(nameof(Member04));
         protected override IDataType New()
         {
             return new ValidPredefined();

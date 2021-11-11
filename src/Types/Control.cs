@@ -16,15 +16,15 @@ namespace L5Sharp.Types
             return new Control();
         }
 
-        public IMember<Dint> LEN = Member.OfType<Dint>(nameof(LEN));
-        public IMember<Dint> POS = Member.OfType<Dint>(nameof(POS));
-        public IMember<Bool> EN = Member.OfType<Bool>(nameof(EN));
-        public IMember<Bool> EU = Member.OfType<Bool>(nameof(EU));
-        public IMember<Bool> DN = Member.OfType<Bool>(nameof(DN));
-        public IMember<Bool> EM = Member.OfType<Bool>(nameof(EM));
-        public IMember<Bool> ER = Member.OfType<Bool>(nameof(ER));
-        public IMember<Bool> UL = Member.OfType<Bool>(nameof(UL));
-        public IMember<Bool> IN = Member.OfType<Bool>(nameof(IN));
-        public IMember<Bool> FD = Member.OfType<Bool>(nameof(FD));
+        public IMember<Dint> LEN = Member.Create<Dint>(nameof(LEN));
+        public IMember<Dint> POS = Member.Create<Dint>(nameof(POS));
+        public IMember<Bool> EN = Member.Create<Bool>(nameof(EN));
+        public IMember<Bool> EU = Member.Create<Bool>(nameof(EU));
+        public IMember<Bool> DN = Member.Create<Bool>(nameof(DN));
+        public IMember<Bool> EM = Member.Create<Bool>(nameof(EM));
+        public IMember<Bool> ER = Member.Create<Bool>(nameof(ER));
+        public IMember<Bool> UL = Member.Create<Bool>(nameof(UL));
+        public IMember<Bool> IN = Member.Create<Bool>(nameof(IN));
+        public IMember<Bool> FD = Member.Create<Bool>(nameof(FD));
     }
 }

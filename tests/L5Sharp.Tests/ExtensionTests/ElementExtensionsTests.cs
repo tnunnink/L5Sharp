@@ -52,7 +52,7 @@ namespace L5Sharp.Tests.ExtensionTests
         [Test]
         public void ToAttribute_ValidComponent_ShouldHaveExpectedNameAndValue()
         {
-            var component = new DataType("Test", new[] { Member.New("Test", new Dint()) });
+            var component = new DataType("Test", new[] { Member.Create("Test", new Dint()) });
 
             var attribute = component.ToAttribute(c => c.Name);
 

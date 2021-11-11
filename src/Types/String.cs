@@ -14,8 +14,8 @@ namespace L5Sharp.Types
         
         public String() : base(nameof(String).ToUpper())
         {
-            LEN = Member.OfType(nameof(LEN), new Dint(PredefinedLength));
-            DATA = Member.OfType<Sint>(nameof(DATA), new Dimensions(PredefinedLength), Radix.Ascii);
+            LEN = Member.Create(nameof(LEN), new Dint(PredefinedLength));
+            DATA = Member.Create<Sint>(nameof(DATA), new Dimensions(PredefinedLength), Radix.Ascii);
             
             RegisterMember(LEN);
             RegisterMember(DATA);

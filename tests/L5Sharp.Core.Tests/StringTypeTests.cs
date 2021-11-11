@@ -33,7 +33,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void New_NullName_ShouldThrowArgumentNullException()
         {
-            FluentActions.Invoking(() => new StringDefined(null, 0)).Should().Throw<ArgumentNullException>();
+            FluentActions.Invoking(() => new StringDefined(null, 0)).Should().Throw<ArgumentException>();
         }
 
         [Test]
@@ -61,7 +61,7 @@ namespace L5Sharp.Core.Tests
         public void Description_GetValue_ShouldBeExpected()
         {
             var type = new StringDefined("Test", 100);
-            type.Description.Should().BeEmpty();
+            type.Description.Should().BeNull();
         }
         
         [Test]
@@ -92,7 +92,7 @@ namespace L5Sharp.Core.Tests
             
             type.DATA.Should().NotBeNull();
             type.DATA.Name.Should().Be("DATA");
-            type.DATA.DataType.Should().Be(new Sint());
+            type.DATA.DataType.Should().Be(new Sint(Radix.Ascii));
             type.DATA.Dimensions.Length.Should().Be(100);
             type.DATA.Radix.Should().Be(Radix.Ascii);
             type.DATA.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);

@@ -20,7 +20,7 @@ namespace L5Sharp.Core.Tests
             return new TestPredefined();
         }
 
-        public IMember<Bool> TestMember => Member.OfType<Bool>(nameof(TestMember));
+        public IMember<Bool> TestMember => Member.Create<Bool>(nameof(TestMember));
     }
     
     [TestFixture]
@@ -100,8 +100,8 @@ namespace L5Sharp.Core.Tests
                 RegisterMember(Member02);
             }
 
-            public IMember<Bool> Member01 => Member.OfType<Bool>("Member01");
-            public IMember<Bool> Member02 => Member.OfType<Bool>("Member01");
+            public IMember<Bool> Member01 => Member.Create<Bool>("Member01");
+            public IMember<Bool> Member02 => Member.Create<Bool>("Member01");
             protected override IDataType New()
             {
                 return new MyInvalidMemberPredefined();

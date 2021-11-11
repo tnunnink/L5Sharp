@@ -4,106 +4,88 @@ using L5Sharp.Abstractions;
 using L5Sharp.Configurations;
 using L5Sharp.Enums;
 using L5Sharp.Exceptions;
-using L5Sharp.Utilities;
 
 namespace L5Sharp.Core
 {
     public class Members : ComponentCollection<IMember<IDataType>>, IMembers
     {
-        private readonly IDataType _parentType;
-        
-        public Members(IDataType parentType)
+        private readonly IUserDefined _dataType;
+
+        public Members(IUserDefined userDefined)
         {
-            _parentType = parentType;
+            _dataType = userDefined ?? throw new ArgumentNullException(nameof(userDefined));
         }
 
-        public Members(IDataType parentType, IEnumerable<IMember<IDataType>> members) : base(members)
+        public Members(IUserDefined userDefined, IEnumerable<IMember<IDataType>> members) : this(userDefined)
         {
-            _parentType = parentType;
+            AddRange(members);
         }
-        
+
         public override void Add(IMember<IDataType> component)
         {
             if (component == null)
                 throw new ArgumentNullException(nameof(component), "Member can not be null");
-            
-            Validate.Name(component.Name);
 
-            if (component.DataType != null && component.DataType.Equals(_parentType))
+            if (component.DataType != null && component.DataType.Equals(_dataType))
                 throw new CircularReferenceException(
                     $"Member can not be same type as parent type '{component.DataType.Name}'");
 
             base.Add(component);
         }
 
-        public void Add(Action<IMemberNameConfiguration> config)
-        {
-            var configuration = new MemberConfiguration();
-            config?.Invoke(configuration);
-            Add(configuration);
-        }
-
-        public override void Update(string name, IMember<IDataType> component)
+        public override void Update(IMember<IDataType> component)
         {
             if (component == null)
                 throw new ArgumentNullException(nameof(component), "Member can not be null");
-            
-            Validate.Name(component.Name);
-            
-            if (component.DataType.Equals(_parentType))
+
+            if (component.DataType.Equals(_dataType))
                 throw new CircularReferenceException(
                     $"Member can not be same type as parent type '{component.DataType.Name}'");
-            
-            base.Update(name, component);
+
+            base.Update(component);
         }
 
-        public void Update(string name, Action<IMemberNameConfiguration> config)
+        public void UpdateDataType(string name, IDataType dataType)
         {
-            var configuration = new MemberConfiguration();
-            config?.Invoke(configuration);
-            Update(name, configuration);
-        }
-
-        public void SetDataType(string name, IDataType dataType)
-        {
-            if (dataType.Equals(_parentType))
+            if (dataType.Equals(_dataType))
                 throw new CircularReferenceException(
                     $"Member can not be same type as parent type '{dataType.Name}'");
-            
+
             var current = Get(name);
             if (current == null)
-                throw new ArgumentNullException(nameof(current), $"Could not find Member with name '{name}'");
+                throw new InvalidOperationException($"Could not find member with name '{name}'");
 
-            var member = Member.New(current.Name, dataType, current.Dimensions, current.Radix, current.ExternalAccess,
+            var member = Member.Create(current.Name, dataType, current.Dimensions, current.Radix,
+                current.ExternalAccess,
                 current.Description);
-            
-            Update(name, member);
+
+            Update(member);
         }
 
-        public void SetDimensions(string name, Dimensions dimensions)
+        public void UpdateDimensions(string name, Dimensions dimensions)
         {
             var current = Get(name);
-
             if (current == null)
-                throw new ArgumentNullException(nameof(current));
+                throw new InvalidOperationException($"Could not find member with name '{name}'");
 
-            var member = Member.New(current.Name, current.DataType, dimensions, current.Radix, current.ExternalAccess,
+            var member = Member.Create(current.Name, current.DataType, dimensions, current.Radix,
+                current.ExternalAccess,
                 current.Description);
-            
-            Update(name, member);
+
+            Update(member);
         }
 
-        public void SetAccess(string name, ExternalAccess externalAccess)
+        public void UpdateAccess(string name, ExternalAccess externalAccess)
         {
             var current = Get(name);
-
             if (current == null)
-                throw new ArgumentNullException(nameof(current));
+                throw new InvalidOperationException($"Could not find member with name '{name}'");
 
-            var member = Member.New(current.Name, current.DataType, current.Dimensions, current.Radix, externalAccess,
+            var member = Member.Create(current.Name, current.DataType, current.Dimensions, current.Radix,
+                externalAccess,
                 current.Description);
-            
-            Update(name, member);
+
+            Update(member);
         }
     }
 }

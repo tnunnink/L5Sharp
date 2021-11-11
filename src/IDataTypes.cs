@@ -6,5 +6,6 @@ namespace L5Sharp
     public interface IDataTypes : IComponentCollection<IUserDefined>
     {
         void Add(Action<IDataTypeConfiguration> config);
+        void Update(string name, Action<IDataTypeConfiguration> config);
     }
 }

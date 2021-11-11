@@ -11,7 +11,7 @@ namespace L5Sharp.Tests
         [Test]
         public void Create_DataTypeMember_ShouldNotBeNull()
         {
-            var member = Member.New("Test", new Dint());
+            var member = Member.Create("Test", new Dint());
 
             member.Should().NotBeNull();
         }

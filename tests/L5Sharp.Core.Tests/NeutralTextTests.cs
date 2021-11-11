@@ -14,7 +14,7 @@ namespace L5Sharp.Core.Tests
             var text = new NeutralText(new MOV());
 
             text.Instruction.Should().Be(nameof(MOV));
-            text.Signature.Should().Be("MOV(,)");
+            text.Signature.Should().Be("MOV()");
             text.Arguments.Should().BeEmpty();
         }
     }

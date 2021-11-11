@@ -22,10 +22,10 @@ namespace L5Sharp.Types
             return new Timer();
         }
 
-        public IMember<Dint> PRE = Member.OfType<Dint>(nameof(PRE));
-        public IMember<Dint> ACC = Member.OfType<Dint>(nameof(ACC));
-        public IMember<Bool> EN = Member.OfType<Bool>(nameof(EN));
-        public IMember<Bool> TT = Member.OfType<Bool>(nameof(TT));
-        public IMember<Bool> DN = Member.OfType<Bool>(nameof(DN));
+        public IMember<Dint> PRE = Member.Create<Dint>(nameof(PRE));
+        public IMember<Dint> ACC = Member.Create<Dint>(nameof(ACC));
+        public IMember<Bool> EN = Member.Create<Bool>(nameof(EN));
+        public IMember<Bool> TT = Member.Create<Bool>(nameof(TT));
+        public IMember<Bool> DN = Member.Create<Bool>(nameof(DN));
     }
 }

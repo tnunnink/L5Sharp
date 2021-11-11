@@ -28,7 +28,7 @@ namespace L5Sharp.Enums
 
             public override ITag<IDataType> Create(string name, IDataType dataType)
             {
-                return Tag.New(name, dataType);
+                return Tag.Create(name, dataType);
             }
         }
 

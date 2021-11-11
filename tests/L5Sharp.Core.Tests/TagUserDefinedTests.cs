@@ -10,8 +10,8 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void New_ValidTypeAndName_TagShouldNotBeNull()
         {
-            var type = new DataType("Test", members: new[] { Member.New("Member01", new Dint()) });
-            var tag = Tag.New("TestTag", type);
+            var type = new DataType("Test", members: new[] { Member.Create("Member01", new Dint()) });
+            var tag = Tag.Create("TestTag", type);
 
             tag.Should().NotBeNull();
         }

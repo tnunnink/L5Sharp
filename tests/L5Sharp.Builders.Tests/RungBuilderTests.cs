@@ -5,7 +5,7 @@ using L5Sharp.Instructions;
 using L5Sharp.Types;
 using NUnit.Framework;
 
-namespace L5Sharp.Configurations.Tests
+namespace L5Sharp.Builders.Tests
 {
     [TestFixture]
     public class RungBuilderTests
@@ -56,7 +56,7 @@ namespace L5Sharp.Configurations.Tests
         public void AnotherPlease()
         {
             var b = RungBuilder.New(0, "This is a test")
-                .When(new XIO().Of(Tag.OfType<Bool>("Test")).Signature)
+                .When(new XIO().Of(Tag.Create<Bool>("Test")).Signature)
                 .Then("OTL(b2)")
                 .And(b => b.When("XIO(b3)").Then("OTU(b1)"))
                 .Compile().Build();
@@ -68,15 +68,15 @@ namespace L5Sharp.Configurations.Tests
         [Test]
         public void METHOD()
         {
-            var tag = Tag.OfType<Int>("Test");
+            var tag = Tag.Create<Int>("Test");
 
-            var b1 = new XIO().Of(Tag.OfType<Bool>("Test"));
-            var text = new MOV().Of(new Dint(1000), Tag.OfType<Dint>("Test"));
+            var b1 = new XIO().Of(Tag.Create<Bool>("Test"));
+            var text = new MOV().Of(new Dint(1000), Tag.Create<Dint>("Test"));
 
 
             var b3 = RungBuilder.New(2)
                 .When<XIC>(x => 
-                    x.Of(Tag.OfType<Bool>("Test")))
+                    x.Of(Tag.Create<Bool>("Test")))
                 .Then("Do something")
                 .Compile().Build();
             

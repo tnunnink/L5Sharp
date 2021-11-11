@@ -18,7 +18,7 @@ namespace L5Sharp.Core
             ProjectCreationDate = DateTime.Now;
             LastModifiedDate = DateTime.Now;
 
-            DataTypes = new DataTypes();
+            DataTypes = new DataTypes(this);
             Tags = new Tags(this);
             Programs = new Programs();
             Tasks = new Tasks();

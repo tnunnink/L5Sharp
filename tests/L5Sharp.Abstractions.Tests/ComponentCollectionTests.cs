@@ -37,24 +37,31 @@ namespace L5Sharp.Abstractions.Tests
         public void New_FromList_ShouldNotBeNull()
         {
             var list = new List<TestLogixComponent> { new("Test", "Test") };
-            
+
             var collection = new ComponentCollection<TestLogixComponent>(list);
 
             collection.Should().NotBeNull();
             collection.Should().HaveCount(1);
         }
-        
+
         [Test]
         public void New_Enumerable_ShouldNotBeNull()
         {
             var list = new List<TestLogixComponent> { new("Test1", "Test"), new("Test2", "Test") };
-            
+
             var collection = new ComponentCollection<TestLogixComponent>(list);
 
             collection.Should().NotBeNull();
             collection.Should().HaveCount(2);
         }
-        
+
+        [Test]
+        public void Count_GetValue_ShouldBeExpected()
+        {
+            var count = _collection.Count;
+            count.Should().Be(3);
+        }
+
         [Test]
         public void Contains_Exists_ShouldBeTrue()
         {
@@ -62,7 +69,7 @@ namespace L5Sharp.Abstractions.Tests
 
             result.Should().BeTrue();
         }
-        
+
         [Test]
         public void Contains_DoesNotExist_ShouldBeFalse()
         {
@@ -78,7 +85,7 @@ namespace L5Sharp.Abstractions.Tests
 
             result.Should().BeFalse();
         }
-        
+
         [Test]
         public void Get_Exists_ShouldBeExpected()
         {
@@ -87,12 +94,12 @@ namespace L5Sharp.Abstractions.Tests
             result.Should().NotBeNull();
             result.Should().Be(_component1);
         }
-        
+
         [Test]
         public void Get_DoesNotExist_ShouldBeNull()
         {
             var component = new TestLogixComponent("Test", "This is a test");
-            
+
             var result = _collection.Get(component.Name);
 
             result.Should().BeNull();
@@ -114,7 +121,7 @@ namespace L5Sharp.Abstractions.Tests
             result.Should().NotBeNull();
             result.Should().Be(_component2);
         }
-        
+
         [Test]
         public void Get_PredicateDoesNotExist_ShouldBeNull()
         {
@@ -122,7 +129,7 @@ namespace L5Sharp.Abstractions.Tests
 
             result.Should().BeNull();
         }
-        
+
         [Test]
         public void ChangeComponentName_ExistingComponent_ShouldUpdateInCollection()
         {
@@ -134,7 +141,7 @@ namespace L5Sharp.Abstractions.Tests
             component.Name.Should().Be("Test");
             component.Should().BeSameAs(_component1);
         }
-        
+
         [Test]
         public void Add_SmallCollection_ShouldHaveExpectedCount()
         {
@@ -143,7 +150,7 @@ namespace L5Sharp.Abstractions.Tests
 
             _collection.Should().HaveCount(103);
         }
-        
+
         [Test]
         public void Add_LargeCollection_ShouldHaveExpectedCount()
         {
@@ -163,7 +170,7 @@ namespace L5Sharp.Abstractions.Tests
             results.Should().Contain(_component2);
             results.Should().NotContain(_component3);
         }
-        
+
         [Test]
         public void Find_PredicateDoesNotExist_ShouldBeEmpty()
         {
@@ -181,13 +188,13 @@ namespace L5Sharp.Abstractions.Tests
             ordered[1].Should().Be(_component2);
             ordered[2].Should().Be(_component3);
         }
-        
+
         [Test]
         public void Ordered_AfterInserting_ShouldHaveExpectedOrder()
         {
-            var component = new TestLogixComponent("Test", "This is a test"); 
+            var component = new TestLogixComponent("Test", "This is a test");
             _collection.Insert(1, component);
-            
+
             var ordered = _collection.Ordered().ToList();
 
             ordered[0].Should().Be(_component1);
@@ -195,7 +202,7 @@ namespace L5Sharp.Abstractions.Tests
             ordered[2].Should().Be(_component2);
             ordered[3].Should().Be(_component3);
         }
-        
+
         [Test]
         public void Ordered_AfterInsertingAndRemoving_ShouldHaveExpectedOrder()
         {
@@ -204,22 +211,44 @@ namespace L5Sharp.Abstractions.Tests
             _collection.Insert(1, c1);
             _collection.Remove(_component1.Name);
             _collection.Insert(1, c2);
-            
+
             var ordered = _collection.Ordered().ToList();
-            
+
             ordered[0].Should().Be(c1);
             ordered[1].Should().Be(c2);
             ordered[2].Should().Be(_component2);
             ordered[3].Should().Be(_component3);
         }
-        
+
+        [Test]
+        public void IndexOf_ValidComponent_ShouldBeExpectedIndex()
+        {
+            var index = _collection.IndexOf(_component2);
+
+            index.Should().Be(1);
+        }
+
+        [Test]
+        public void IndexOf_InvalidComponent_ShouldBeNegativeOne()
+        {
+            var index = _collection.IndexOf(new TestLogixComponent("Invalid", "This does not exist"));
+
+            index.Should().Be(-1);
+        }
+
+        [Test]
+        public void IndexOf_Null_ShouldThrowArgumentNullException()
+        {
+            FluentActions.Invoking(() => _collection.IndexOf(null)).Should().Throw<ArgumentNullException>();
+        }
+
         [Test]
         public void Add_Exists_ShouldThrowComponentNameCollisionException()
         {
             FluentActions.Invoking(() => _collection.Add(_component3)).Should()
                 .Throw<ComponentNameCollisionException>();
         }
-        
+
         [Test]
         public void Add_DoesNotExist_ShouldContainExpected()
         {
@@ -234,7 +263,48 @@ namespace L5Sharp.Abstractions.Tests
         {
             FluentActions.Invoking(() => _collection.Add(null)).Should().Throw<ArgumentNullException>();
         }
-        
+
+        [Test]
+        public void Add_Configuration_ShouldThrowArgumentNullException()
+        {
+            var config = new TestLogixConfiguration();
+            config.SetName("Test").SetDescription("This is a test");
+            var component = config.Compile();
+
+            _collection.Add(config);
+
+            _collection.Should().Contain(component);
+        }
+
+        [Test]
+        public void Add_NullConfiguration_ShouldThrowArgumentNullException()
+        {
+            FluentActions.Invoking(() => _collection.Add<TestLogixConfiguration>(null)).Should()
+                .Throw<ArgumentNullException>();
+        }
+
+        [Test]
+        public void AddRange_Null_ShouldThrowArgumentNullException()
+        {
+            FluentActions.Invoking(() => _collection.AddRange(null)).Should().Throw<ArgumentNullException>();
+        }
+
+
+        [Test]
+        public void AddRange_ValidComponents_ShouldHaveExpectedCount()
+        {
+            var list = new List<TestLogixComponent>()
+            {
+                new("NewItem1", "Test"),
+                new("NewItem2", "Test"),
+                new("NewItem3", "Test")
+            };
+
+            _collection.AddRange(list);
+
+            _collection.Should().HaveCount(6);
+        }
+
         [Test]
         public void Insert_Exists_ShouldThrowComponentNameCollisionException()
         {
@@ -242,7 +312,7 @@ namespace L5Sharp.Abstractions.Tests
             FluentActions.Invoking(() => _collection.Insert(2, component)).Should()
                 .Throw<ComponentNameCollisionException>();
         }
-        
+
         [Test]
         public void Insert_DoesNotExist_ShouldContainExpected()
         {
@@ -265,7 +335,7 @@ namespace L5Sharp.Abstractions.Tests
 
             _collection.Should().NotContain(_component1);
         }
-        
+
         [Test]
         public void Remove_DoesNotExist_ShouldBeFalse()
         {
@@ -279,6 +349,77 @@ namespace L5Sharp.Abstractions.Tests
         public void Remove_Null_ShouldBeFalse()
         {
             FluentActions.Invoking(() => _collection.Remove(null)).Should().NotThrow();
+        }
+
+        [Test]
+        public void Update_Null_ShouldThrowArgumentNullException()
+        {
+            FluentActions.Invoking(() => _collection.Update(null)).Should().Throw<ArgumentNullException>();
+        }
+
+        /*[Test]
+        public void Update_EmptyName_ShouldThrowArgumentException()
+        {
+            var component = new TestLogixComponent(string.Empty, "This is the updated component");
+            
+            FluentActions.Invoking(() => _collection.Update(component))
+                .Should().Throw<ArgumentException>();
+        }*/
+        
+        [Test]
+        public void Update_NonExistingComponent_ShouldAddToCollection()
+        {
+            var component = new TestLogixComponent("NewComponent1", "This is the updated/new component");
+
+            _collection.Update(component);
+
+            _collection.Should().Contain(component);
+            _collection.Should().HaveCount(4);
+        }
+
+        [Test]
+        public void Update_ValidNameAndComponent_ShouldUpdatedExpectedComponent()
+        {
+            var component = new TestLogixComponent("Component1", "This is the updated component");
+
+            _collection.Update(component);
+
+            var result = _collection.Get(component.Name);
+            result.Should().NotBeNull();
+            result.Name.Should().Be("Component1");
+            result.Description.Should().Be("This is the updated component");
+            result.Should().Be(component);
+        }
+
+        [Test]
+        public void Update_ValidNameAndComponent_MaintainOrder()
+        {
+            var component = new TestLogixComponent("Component1", "This is the updated component");
+
+            _collection.Update(component);
+
+            var index = _collection.IndexOf(component);
+            index.Should().Be(0);
+        }
+        
+        [Test]
+        public void Update_Configuration_ShouldThrowArgumentNullException()
+        {
+            var config = new TestLogixConfiguration();
+            config.SetName("Component1").SetDescription("This is and update test config");
+            var component = config.Compile();
+
+            _collection.Update(config);
+
+            _collection.Should().Contain(component);
+            _collection.IndexOf(component).Should().Be(0);
+        }
+
+        [Test]
+        public void Update_NullConfiguration_ShouldThrowArgumentNullException()
+        {
+            FluentActions.Invoking(() => _collection.Update<TestLogixConfiguration>(null)).Should()
+                .Throw<ArgumentNullException>();
         }
 
         [Test]

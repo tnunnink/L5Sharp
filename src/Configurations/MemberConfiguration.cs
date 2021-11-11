@@ -22,7 +22,7 @@ namespace L5Sharp.Configurations
         
         public IMember<IDataType> Compile()
         {
-            return new Member<IDataType>(_name, _dataType, _dimensions, _radix, _externalAccess, _description);
+            return Member.Create(_name, _dataType, _dimensions, _radix, _externalAccess, _description);
         }
 
         public IMemberTypeConfiguration WithName(string name)

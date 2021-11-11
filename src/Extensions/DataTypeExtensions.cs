@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using L5Sharp.Exceptions;
 
@@ -54,24 +55,13 @@ namespace L5Sharp.Extensions
             return types.Distinct();
         }
 
-        public static void SetData(this IDataType target, IDataType source)
+        public static bool HasEquivalentStructure(this IDataType target, IDataType source)
         {
-            if (target.GetType() != source.GetType() || target.Name != source.Name)
-                throw new InvalidTagDataException(target, source);
-
-            if (target is IAtomic atomicTarget && source is IAtomic atomicSource &&
-                atomicTarget.GetType() == atomicSource.GetType())
-            {
-                atomicTarget.SetValue(atomicSource);
-                return;
-            }
-
-            foreach (var member in target.GetMembers())
-            {
-                var data = source.GetMember(member.Name)?.DataType;
-                if (data == null) continue;
-                member.DataType.SetData(data);
-            }
+            if (target == null || source == null) return false;
+            if (target.GetType() != source.GetType()) return false;
+            if (ReferenceEquals(target, source)) return true;
+            if (target is IAtomic) return true;
+            return true;//todo we want to compare member types at this point
         }
     }
 }
