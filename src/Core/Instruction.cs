@@ -43,8 +43,9 @@ namespace L5Sharp.Core
         
         public IMember<TType> GetParameter<TType>(string name) where TType : IDataType
         {
-            _parameters.TryGetValue(name, out var parameter);
-            return parameter.As<TType>();
+            return _parameters.TryGetValue(name, out var member) && member.DataType is TType 
+                ? (IMember<TType>) member 
+                : null;
         }
 
         public NeutralText Of(params ITagMember<IDataType>[] tags)

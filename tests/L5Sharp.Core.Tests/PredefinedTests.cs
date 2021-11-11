@@ -59,22 +59,6 @@ namespace L5Sharp.Core.Tests
         }
 
         [Test]
-        public void GetMember_ExistingMember_ShouldNotBeNull()
-        {
-            var type = new TestPredefined();
-            var member = type.GetMember("TestMember");
-            member.Should().NotBeNull();
-        }
-
-        [Test]
-        public void GetMember_NonExistingMember_ShouldBeNull()
-        {
-            var type = new TestPredefined();
-            var member = type.GetMember("Member");
-            member.Should().BeNull();
-        }
-
-        [Test]
         public void Predefined_WhenCastedToDataType_ShouldThrowInvalidCastException()
         {
             var atomic = (IDataType)new TestPredefined();

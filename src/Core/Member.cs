@@ -6,12 +6,17 @@ using L5Sharp.Exceptions;
 
 namespace L5Sharp.Core
 {
-    public class Member<TDataType> : 
+    public class Member<TDataType> :
         IMember<TDataType>,
         IEquatable<Member<TDataType>>,
         IPrototype<IMember<TDataType>>
         where TDataType : IDataType
     {
+        //this is a work around to accomodate how descriptions are propagated in RSLogix
+        private string _parentDescription;
+        private string _overridenDescription;
+        private readonly string _defaultDescription;
+
         public Member(string name, TDataType dataType, Dimensions dimensions, Radix radix,
             ExternalAccess externalAccess, string description)
         {
@@ -23,12 +28,12 @@ namespace L5Sharp.Core
             if (DataType is IAtomic atomic && radix != null)
                 atomic.SetRadix(radix);
             ExternalAccess = externalAccess != null ? externalAccess : ExternalAccess.ReadWrite;
-            Description = description;
+            _defaultDescription = description;
             Elements = InstantiateElements();
         }
 
         public string Name { get; }
-        public string Description { get; private set; }
+        public string Description => GetDescription();
         public TDataType DataType { get; }
         public Dimensions Dimensions { get; }
         public Radix Radix => DataType.Radix;
@@ -53,9 +58,14 @@ namespace L5Sharp.Core
                     atomicType.SetRadix(radix);
         }
 
+        internal void SetParentDescription(string description)
+        {
+            _parentDescription = description;
+        }
+
         public void SetDescription(string description)
         {
-            Description = description;
+            _overridenDescription = description;
         }
 
         public IMember<TDataType> Copy()
@@ -100,10 +110,21 @@ namespace L5Sharp.Core
             var elements = new List<IMember<TDataType>>(Dimensions);
 
             for (var i = 0; i < Dimensions; i++)
-                elements.Add(new Member<TDataType>($"{Name}[{i}]", (TDataType)DataType.Instantiate(),
+                elements.Add(new Member<TDataType>($"[{i}]", (TDataType)DataType.Instantiate(),
                     Dimensions.Empty, Radix, ExternalAccess, Description));
 
             return elements.ToArray();
+        }
+        
+        private string GetDescription()
+        {
+            if (!string.IsNullOrEmpty(_overridenDescription))
+                return _overridenDescription;
+
+            if (!string.IsNullOrEmpty(_parentDescription) && !string.IsNullOrEmpty(_defaultDescription))
+                return $"{_parentDescription} {_defaultDescription}";
+
+            return !string.IsNullOrEmpty(_parentDescription) ? _parentDescription : _defaultDescription;
         }
     }
 
@@ -127,7 +148,7 @@ namespace L5Sharp.Core
         {
             return new Member<TDataType>(name, dataType, Dimensions.Empty, radix, externalAccess, description);
         }
-        
+
         public static IMember<TDataType> OfType<TDataType>(string name, TDataType dataType, Dimensions dimensions,
             Radix radix = null, ExternalAccess externalAccess = null, string description = null)
             where TDataType : IDataType

@@ -34,7 +34,7 @@ namespace L5Sharp.Core.Tests
         public ValidPredefined() :
             base(nameof(ValidPredefined))
         {
-            RegisterMemberProperties();
+            RegisterMemberFields();
         }
 
         public IMember<Bool> Member01 => Member.OfType<Bool>(nameof(Member01));

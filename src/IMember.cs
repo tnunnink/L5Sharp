@@ -1,5 +1,4 @@
-﻿using System;
-using L5Sharp.Core;
+﻿using L5Sharp.Core;
 using L5Sharp.Enums;
 
 namespace L5Sharp
@@ -30,7 +29,7 @@ namespace L5Sharp
         /// Member Array elements.
         /// </summary>
         IMember<TDataType>[] Elements { get; }
-
+        
         /// <summary>
         /// Sets the radix value of the underlying data type
         /// </summary>

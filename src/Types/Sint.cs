@@ -42,6 +42,7 @@ namespace L5Sharp.Types
             Value = value switch
             {
                 null => throw new ArgumentNullException(nameof(value), "Value can not be null"),
+                Sint a => a,
                 byte b => b,
                 string str => ParseValue(str),
                 _ => throw new ArgumentException($"Value type '{value.GetType()}' is not a valid for {GetType()}")

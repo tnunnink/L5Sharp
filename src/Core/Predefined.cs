@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using L5Sharp.Enums;
 using L5Sharp.Exceptions;
-using L5Sharp.Extensions;
 using L5Sharp.Utilities;
 
 namespace L5Sharp.Core
@@ -26,17 +25,6 @@ namespace L5Sharp.Core
         public DataTypeClass Class => DataTypeClass.Predefined;
         public virtual TagDataFormat DataFormat => TagDataFormat.Decorated;
         public IEnumerable<IMember<IDataType>> Members => _members.Values.AsEnumerable();
-
-        public IMember<IDataType> GetMember(string name)
-        {
-            _members.TryGetValue(name, out var member);
-            return member;
-        }
-
-        public IMember<TType> GetMember<TType>(string name) where TType : IDataType
-        {
-            return _members.TryGetValue(name, out var member) ? member.As<TType>() : null;
-        }
 
         public bool Equals(Predefined other)
         {
@@ -80,11 +68,21 @@ namespace L5Sharp.Core
 
         protected void RegisterMemberProperties()
         {
-            var properties = GetType().GetProperties().Where(p =>
+            var fields = GetType().GetProperties().Where(p =>
                 p.PropertyType.IsGenericType &&
                 p.PropertyType.GetGenericTypeDefinition().IsAssignableFrom(typeof(IMember<>))).ToList();
 
-            foreach (var member in properties.Select(p => (IMember<IDataType>) p.GetValue(this)))
+            foreach (var member in fields.Select(p => (IMember<IDataType>) p.GetValue(this)))
+                RegisterTypeMember(member);
+        }
+        
+        protected void RegisterMemberFields()
+        {
+            var fields = GetType().GetFields().Where(f =>
+                f.FieldType.IsGenericType &&
+                f.FieldType.GetGenericTypeDefinition().IsAssignableFrom(typeof(IMember<>))).ToList();
+
+            foreach (var member in fields.Select(p => (IMember<IDataType>) p.GetValue(this)))
                 RegisterTypeMember(member);
         }
 

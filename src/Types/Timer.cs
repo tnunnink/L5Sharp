@@ -8,7 +8,7 @@ namespace L5Sharp.Types
     {
         public Timer() : base(nameof(Timer).ToUpper())
         {
-            RegisterMemberProperties();
+            RegisterMemberFields();
         }
         
         public Timer(Dint pre) : this()
@@ -22,10 +22,10 @@ namespace L5Sharp.Types
             return new Timer();
         }
 
-        public IMember<Dint> PRE => Member.OfType<Dint>(nameof(PRE));
-        public IMember<Dint> ACC => Member.OfType<Dint>(nameof(ACC));
-        public IMember<Bool> EN => Member.OfType<Bool>(nameof(EN));
-        public IMember<Bool> TT => Member.OfType<Bool>(nameof(TT));
-        public IMember<Bool> DN => Member.OfType<Bool>(nameof(DN));
+        public IMember<Dint> PRE = Member.OfType<Dint>(nameof(PRE));
+        public IMember<Dint> ACC = Member.OfType<Dint>(nameof(ACC));
+        public IMember<Bool> EN = Member.OfType<Bool>(nameof(EN));
+        public IMember<Bool> TT = Member.OfType<Bool>(nameof(TT));
+        public IMember<Bool> DN = Member.OfType<Bool>(nameof(DN));
     }
 }

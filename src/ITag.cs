@@ -8,7 +8,7 @@ namespace L5Sharp
         TagType TagType { get; }
         Scope Scope { get; }
         TagUsage Usage { get; }
-        bool Constant { get; }
+        bool Constant { get; set; }
         void SetName(string name);
         void SetUsage(TagUsage usage);
         void SetExternalAccess(ExternalAccess externalAccess);

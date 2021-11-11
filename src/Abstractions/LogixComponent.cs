@@ -22,6 +22,7 @@ namespace L5Sharp.Abstractions
 
         public virtual void SetName(string name)
         {
+            if (_name == name) return;
             Validate.Name(name);
             _name = name;
         }

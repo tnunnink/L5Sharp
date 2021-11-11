@@ -6,6 +6,7 @@ namespace L5Sharp
 {
     public interface IComponentCollection<TComponent> : IEnumerable<TComponent> where TComponent : ILogixComponent
     {
+        int Count { get; }
         bool Contains(string name);
         TComponent Get(string name);
         TComponent Get(Func<TComponent, bool> predicate);

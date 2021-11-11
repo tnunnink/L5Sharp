@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using L5Sharp.Enums;
 using L5Sharp.Exceptions;
 using L5Sharp.Extensions;
@@ -9,14 +10,13 @@ namespace L5Sharp.Core
     public class TagMember<TDataType> : ITagMember<TDataType> where TDataType : IDataType
     {
         private readonly IMember<TDataType> _member;
-        private readonly TagMember<IDataType> _parent;
-        private string _description;
+        private readonly ITagMember<IDataType> _parent;
 
         internal TagMember(IMember<TDataType> member, ILogixComponent parent)
         {
             _member = member ?? 
                       throw new ArgumentNullException(nameof(member), "Member can not be null");
-            _parent = (TagMember<IDataType>)parent ??
+            _parent = (ITagMember<IDataType>)parent ??
                       throw new ArgumentNullException(nameof(parent), "TagMember must have parent");
         }
 
@@ -38,50 +38,42 @@ namespace L5Sharp.Core
 
         public IMember<TDataType>[] Elements => _member.Elements;
 
-        public string Description => string.IsNullOrEmpty(_description)
-            ? $"{_parent.Description} {_member?.Description}"
-            : _description;
+        public string Description => _member.Description;
 
         public ILogixComponent Parent => _parent;
 
-        public IAtomic GetData()
+        public TDataType GetData()
         {
-            return _member.DataType is IAtomic atomic ? atomic : null;
+            return _member.DataType;
         }
 
-        public void SetData(IAtomic value)
+        public void SetData(IDataType data)
         {
-            if (value == null)
-                throw new ArgumentNullException(nameof(value));
-
-            if (!(_member.DataType is IAtomic atomic))
-                throw new ComponentNotConfigurableException("Value", GetType(),
-                    "Tag member is not atomic. Can only set values for atomic types");
-
-            atomic.SetValue(value);
+            _member.DataType.SetData(data);
         }
 
         public void SetRadix(Radix radix) => _member.SetRadix(radix);
 
-        public void SetDescription(string description)
-        {
-            _description = description;
-        }
+        public void SetDescription(string description) => _member.SetDescription(description);
 
-        public IEnumerable<string> GetMembersNames()
-        {
-            throw new NotImplementedException();
-        }
+        public IEnumerable<string> GetMembersList() => _member.DataType.GetMembers().Select(m => m.Name);
 
-        public IEnumerable<ITagMember<IDataType>> GetMembers()
-        {
-            throw new NotImplementedException();
-        }
+        public IEnumerable<string> GetDeepMembersList() => _member.DataType.GetMemberNames();
+
+        public IEnumerable<ITagMember<IDataType>> GetMembers() => 
+            _member.DataType.GetMembers().Select(m => new TagMember<IDataType>(m, this));
 
         public ITagMember<IDataType> GetMember(string name)
         {
             var member = _member.DataType.GetMember(name);
             return member != null ? new TagMember<IDataType>(member, this) : null;
+        }
+        
+        public ITagMember<IDataType> GetElement(ushort index)
+        {
+            return index < Elements.Length 
+                ? new TagMember<IDataType>((IMember<IDataType>)Elements[index], this) 
+                : null;
         }
 
         public ITagMember<TType> GetMember<TType>(Func<TDataType, IMember<TType>> expression) 
@@ -91,20 +83,59 @@ namespace L5Sharp.Core
             return member != null ? new TagMember<TType>(member, this) : null;
         }
 
-        public void SetMember<TAtomic>(Func<TDataType, IMember<TAtomic>> expression, TAtomic value) where TAtomic : IAtomic
+        public void SetMember<TAtomic>(Func<TDataType, IMember<TAtomic>> expression, TAtomic value) 
+            where TAtomic : IAtomic
         {
-            throw new NotImplementedException();
+            if (expression == null)
+                throw new ArgumentNullException(nameof(expression), "Expression can not be null");
+            
+            var member = expression.Invoke(_member.DataType);
+            member.DataType.SetValue(value);
         }
 
         public void SetMember<TAtomic>(Func<TDataType, IMember<TAtomic>> expression, Radix radix)
             where TAtomic : IAtomic
         {
-            throw new NotImplementedException();
+            if (expression == null)
+                throw new ArgumentNullException(nameof(expression), "Expression can not be null");
+            
+            var member = expression.Invoke(_member.DataType);
+            member.SetRadix(radix);
         }
 
         public void SetMember<TAtomic>(Func<TDataType, IMember<TAtomic>> expression, string description) where TAtomic : IAtomic
         {
-            throw new NotImplementedException();
+            if (expression == null)
+                throw new ArgumentNullException(nameof(expression), "Expression can not be null");
+            
+            var member = expression.Invoke(_member.DataType);
+            member.SetDescription(description);
+        }
+
+        public void SetElement<TAtomic>(ushort index, TAtomic value) where TAtomic : IAtomic
+        {
+            if (index >= Elements.Length) return;
+
+            var element = Elements[index];
+
+            if (element.DataType is IAtomic atomic)
+                atomic.SetValue(value);
+        }
+
+        public void SetElement(ushort index, Radix radix)
+        {
+            if (index >= Elements.Length) return;
+            
+            var element = Elements[index];
+            element.SetRadix(radix);
+        }
+
+        public void SetElement(ushort index, string description)
+        {
+            if (index >= Elements.Length) return;
+            
+            var element = Elements[index];
+            element.SetDescription(description);
         }
 
         private static string GetName(ILogixComponent member)

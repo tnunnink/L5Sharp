@@ -20,9 +20,7 @@ namespace L5Sharp
         void SetMin(IAtomic value);
         void SetMax(IAtomic value);
         void SetDefault(IAtomic value);
-        void SetRadix(Radix radix);
         void SetExternalAccess(ExternalAccess access);
-        void SetDescription(string description);
         void IsConstant();
     }
 }

@@ -1,4 +1,5 @@
 ﻿using L5Sharp.Core;
+
 // ReSharper disable InconsistentNaming RSLogix naming
 
 namespace L5Sharp.Types
@@ -7,6 +8,7 @@ namespace L5Sharp.Types
     {
         public Control() : base(nameof(Control).ToUpper())
         {
+            RegisterMemberFields();
         }
 
         protected override IDataType New()

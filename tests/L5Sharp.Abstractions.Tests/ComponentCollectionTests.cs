@@ -32,7 +32,7 @@ namespace L5Sharp.Abstractions.Tests
 
             collection.Should().NotBeNull();
         }
-        
+
         [Test]
         public void New_FromList_ShouldNotBeNull()
         {
@@ -124,6 +124,36 @@ namespace L5Sharp.Abstractions.Tests
         }
         
         [Test]
+        public void ChangeComponentName_ExistingComponent_ShouldUpdateInCollection()
+        {
+            _component1.SetName("Test");
+
+            var component = _collection.Get("Test");
+
+            component.Should().NotBeNull();
+            component.Name.Should().Be("Test");
+            component.Should().BeSameAs(_component1);
+        }
+        
+        [Test]
+        public void Add_SmallCollection_ShouldHaveExpectedCount()
+        {
+            for (var i = 0; i < 100; i++)
+                _collection.Add(new TestLogixComponent($"Test{i}", "Test component"));
+
+            _collection.Should().HaveCount(103);
+        }
+        
+        [Test]
+        public void Add_LargeCollection_ShouldHaveExpectedCount()
+        {
+            for (var i = 0; i < 10000; i++)
+                _collection.Add(new TestLogixComponent($"Test{i}", "Test component"));
+
+            _collection.Should().HaveCount(10003);
+        }
+
+        [Test]
         public void Find_PredicateExists_ShouldNotBeEmpty()
         {
             var results = _collection.Find(c => c.Description != string.Empty).ToList();
@@ -162,6 +192,23 @@ namespace L5Sharp.Abstractions.Tests
 
             ordered[0].Should().Be(_component1);
             ordered[1].Should().Be(component);
+            ordered[2].Should().Be(_component2);
+            ordered[3].Should().Be(_component3);
+        }
+        
+        [Test]
+        public void Ordered_AfterInsertingAndRemoving_ShouldHaveExpectedOrder()
+        {
+            var c1 = new TestLogixComponent("Test1", "This is a test");
+            var c2 = new TestLogixComponent("Test2", "This is a test");
+            _collection.Insert(1, c1);
+            _collection.Remove(_component1.Name);
+            _collection.Insert(1, c2);
+            
+            var ordered = _collection.Ordered().ToList();
+            
+            ordered[0].Should().Be(c1);
+            ordered[1].Should().Be(c2);
             ordered[2].Should().Be(_component2);
             ordered[3].Should().Be(_component3);
         }

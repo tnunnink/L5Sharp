@@ -15,16 +15,6 @@ namespace L5Sharp.Enums
 
         public abstract ITag<IDataType> Create(string name, IDataType dataType);
 
-        public static T Create<T>(string name, IDataType dataType) where T : ITag<IDataType>
-        {
-            return (T)Activator.CreateInstance(typeof(T),
-                BindingFlags.CreateInstance |
-                BindingFlags.Public |
-                BindingFlags.Instance |
-                BindingFlags.OptionalParamBinding, null, new[] { name, dataType, Type.Missing },
-                CultureInfo.CurrentCulture);
-        }
-
         public static readonly TagType Base = new BaseType();
         public static readonly TagType Alias = new AliasType();
         public static readonly TagType Produced = new ProducedType();
@@ -38,7 +28,7 @@ namespace L5Sharp.Enums
 
             public override ITag<IDataType> Create(string name, IDataType dataType)
             {
-                return new Tag<IDataType>(name, dataType);
+                return Tag.New(name, dataType);
             }
         }
 

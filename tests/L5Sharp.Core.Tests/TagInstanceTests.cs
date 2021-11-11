@@ -14,9 +14,8 @@ namespace L5Sharp.Core.Tests
             var tag = Tag.OfType<String>("Test");
 
             tag.Should().NotBeNull();
-            tag.GetMembers().Should().HaveCount(2);
-            tag.GetMembers().Any(t => t.Name == "LEN").Should().BeTrue();
-            tag.GetMembers().Any(t => t.Name == "DATA").Should().BeTrue();
+            tag.GetMember(m => m.LEN).Should().NotBeNull();
+            tag.GetMember(m => m.DATA).Should().NotBeNull();
         }
         
         [Test]
@@ -25,29 +24,26 @@ namespace L5Sharp.Core.Tests
             var tag = Tag.OfType<Timer>("Test");
 
             tag.Should().NotBeNull();
-            tag.GetMembers().Should().HaveCount(5);
-            tag.GetMembers().Any(t => t.Name == "PRE").Should().BeTrue();
-            tag.GetMembers().Any(t => t.Name == "ACC").Should().BeTrue();
-            tag.GetMembers().Any(t => t.Name == "EN").Should().BeTrue();
-            tag.GetMembers().Any(t => t.Name == "TT").Should().BeTrue();
-            tag.GetMembers().Any(t => t.Name == "DN").Should().BeTrue();
+            tag.GetMember(m => m.PRE).Should().NotBeNull();
+            tag.GetMember(m => m.ACC).Should().NotBeNull();
+            tag.GetMember(m => m.TT).Should().NotBeNull();
+            tag.GetMember(m => m.EN).Should().NotBeNull();
+            tag.GetMember(m => m.DN).Should().NotBeNull();
         }
-
-
+        
         [Test]
         public void Counter_ValidParameters_ShouldHaveValidMembers()
         {
             var tag = Tag.OfType<Counter>("Test");
 
             tag.Should().NotBeNull();
-            tag.GetMembers().Should().HaveCount(7);
-            tag.GetMembers().Any(t => t.Name == "PRE").Should().BeTrue();
-            tag.GetMembers().Any(t => t.Name == "ACC").Should().BeTrue();
-            tag.GetMembers().Any(t => t.Name == "CU").Should().BeTrue();
-            tag.GetMembers().Any(t => t.Name == "CD").Should().BeTrue();
-            tag.GetMembers().Any(t => t.Name == "DN").Should().BeTrue();
-            tag.GetMembers().Any(t => t.Name == "OV").Should().BeTrue();
-            tag.GetMembers().Any(t => t.Name == "UN").Should().BeTrue();
+            tag.GetMember(m => m.PRE).Should().NotBeNull();
+            tag.GetMember(m => m.ACC).Should().NotBeNull();
+            tag.GetMember(m => m.CU).Should().NotBeNull();
+            tag.GetMember(m => m.CD).Should().NotBeNull();
+            tag.GetMember(m => m.DN).Should().NotBeNull();
+            tag.GetMember(m => m.OV).Should().NotBeNull();
+            tag.GetMember(m => m.UN).Should().NotBeNull();
         }
     }
 }

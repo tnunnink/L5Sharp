@@ -9,10 +9,11 @@ namespace L5Sharp.Types
     {
         public Message() : base(nameof(Message).ToUpper())
         {
-            RegisterMemberProperties();
+            RegisterMemberFields();
         }
-        
+
         public override string Description => $"RSLogix {Name} DataType";
+
         protected override IDataType New()
         {
             return new Message();

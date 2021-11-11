@@ -9,24 +9,28 @@ namespace L5Sharp
         string FullName { get; }
         new string DataType { get; }
         ILogixComponent Parent { get; }
-        IAtomic GetData();
-        void SetData(IAtomic value);
-        void SetRadix(Radix radix);
-        void SetDescription(string description);
-        IEnumerable<string> GetMembersNames();
+        TDataType GetData();
+        void SetData(IDataType data);
+        IEnumerable<string> GetMembersList();
+        IEnumerable<string> GetDeepMembersList();
         IEnumerable<ITagMember<IDataType>> GetMembers();
         ITagMember<IDataType> GetMember(string name);
+        ITagMember<IDataType> GetElement(ushort index);
         
         ITagMember<TType> GetMember<TType>(Func<TDataType, IMember<TType>> expression)
             where TType : IDataType;
         
         void SetMember<TAtomic>(Func<TDataType, IMember<TAtomic>> expression, TAtomic value)
             where TAtomic : IAtomic;
-        
+
         void SetMember<TAtomic>(Func<TDataType, IMember<TAtomic>> expression, Radix radix)
             where TAtomic : IAtomic;
-        
+
         void SetMember<TAtomic>(Func<TDataType, IMember<TAtomic>> expression, string description)
             where TAtomic : IAtomic;
+        
+        void SetElement<TAtomic>(ushort index, TAtomic value) where TAtomic : IAtomic;
+        void SetElement(ushort index, Radix radix);
+        void SetElement(ushort index, string description);
     }
 }
