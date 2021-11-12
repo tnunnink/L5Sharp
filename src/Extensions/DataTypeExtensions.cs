@@ -1,10 +1,21 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace L5Sharp.Extensions
 {
     public static class DataTypeExtensions
     {
+        public static bool IsValueType(this IDataType dataType)
+        {
+            return dataType is IAtomic;
+        }
+
+        public static bool AreSameClass(this IDataType dataType, IDataType other)
+        {
+            return dataType.Class.Equals(other.Class);
+        }
+
         public static IMember<IDataType> GetMember(this IDataType dataType, string name)
         {
             return dataType switch
@@ -53,13 +64,33 @@ namespace L5Sharp.Extensions
             return types.Distinct();
         }
 
-        public static bool HasEquivalentStructure(this IDataType target, IDataType source)
+        public static bool StructureEquals(this IDataType target, IDataType source)
         {
-            if (target == null || source == null) return false;
-            if (target.GetType() != source.GetType()) return false;
+            if (source == null) return false;
             if (ReferenceEquals(target, source)) return true;
-            if (target is IAtomic) return true;
-            return true;//todo we want to compare member types at this point
+            if (target.IsValueType() && source.IsValueType() && target.GetType() == source.GetType()) return true;
+            if (target.IsValueType() || source.IsValueType()) return false;
+            return target.Name == source.Name && 
+                   target.GetMembers().SequenceEqual(source.GetMembers(), new MemberStructureComparer());
+        }
+    }
+
+    public class MemberStructureComparer : IEqualityComparer<IMember<IDataType>>
+    {
+        public bool Equals(IMember<IDataType> x, IMember<IDataType> y)
+        {
+            if (ReferenceEquals(x, y)) return true;
+            if (ReferenceEquals(x, null)) return false;
+            if (ReferenceEquals(y, null)) return false;
+            return x.Name.Equals(y.Name)
+                   && x.DataType.Name.Equals(y.DataType.Name)
+                   && Equals(x.Dimensions, y.Dimensions)
+                   && x.DataType.StructureEquals(y.DataType);
+        }
+
+        public int GetHashCode(IMember<IDataType> obj)
+        {
+            return HashCode.Combine(obj.DataType.Name, obj.Dimensions);
         }
     }
 }

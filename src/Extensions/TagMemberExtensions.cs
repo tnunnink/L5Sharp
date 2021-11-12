@@ -17,22 +17,18 @@ namespace L5Sharp.Extensions
             var targetData = target.GetData();
             var sourceData = source.GetData();
             
-            if (targetData.GetType() != sourceData.GetType() || targetData.Name != sourceData.Name)
+            if (!targetData.StructureEquals(sourceData))
                 throw new InvalidTagDataException(targetData, sourceData);
             
+            if (targetData is IAtomic atomic && target.Dimensions.AreEmpty)
+            {
+                atomic.SetValue(sourceData);
+                return;
+            }
+
             foreach (var targetMember in target.GetMembers())
             {
                 var sourceMember = source.GetMember(targetMember.Name);
-                
-                //perhaps they are both user defined types with the same name and different structures?
-                if (sourceMember == null) continue;
-
-                if (targetMember.GetData() is IAtomic atomic && targetMember.Dimensions.AreEmpty)
-                {
-                    atomic.SetValue(sourceMember.GetData());
-                    continue;
-                }
-                
                 targetMember.SetData(sourceMember);
             }
         }
