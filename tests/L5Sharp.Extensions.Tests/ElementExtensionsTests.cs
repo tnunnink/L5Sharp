@@ -26,16 +26,6 @@ namespace L5Sharp.Extensions.Tests
         }
 
         [Test]
-        public void GetFirst_WhenCalled_ShouldBeExpected()
-        {
-            var element = XElement.Load(_fileName);
-
-            var type = element.GetFirst<DataType>("ArrayType");
-
-            type.Should().NotBeNull();
-        }
-
-        [Test]
         public void GetValue_WhenCalled_ShouldReturnExpectedValue()
         {
             var element = XElement.Load(_fileName);
@@ -49,7 +39,7 @@ namespace L5Sharp.Extensions.Tests
         [Test]
         public void ToAttribute_ValidComponent_ShouldHaveExpectedNameAndValue()
         {
-            var component = new DataType("Test", new[] { Member.Create("Test", new Dint()) });
+            var component = new DataType("Test", members: new[] { Member.Create("Test", new Dint()) });
 
             var attribute = component.ToAttribute(c => c.Name);
 

@@ -8,7 +8,7 @@ using L5Sharp.Enums;
 
 namespace L5Sharp.Types
 {
-    public sealed class String : Predefined, IString, IEquatable<String>, IComparable<String>
+    public sealed class String : Predefined, IStringDefined, IEquatable<String>, IComparable<String>
     {
         private const int PredefinedLength = 82; //This is the built in length of string types in RSLogix
         

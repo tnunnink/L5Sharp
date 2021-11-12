@@ -35,21 +35,15 @@ namespace L5SharpTests
 
             types.Should().NotBeEmpty();
         }
-
+        
         [Test]
-        public void DataTypes_GetAll_SimpleTypesReferenceSame()
+        public void Tags_GetKnown_ShouldNotBeNull()
         {
             var context = new LogixContext(_fileName);
 
-            var types = context.DataTypes.GetAll().ToList();
+            var tag = context.Tags.Get("TestArrayTypeTag");
 
-            var complex = types.SingleOrDefault(t => t.Name == "ComplexType");
-            var simple = types.SingleOrDefault(t => t.Name == "SimpleTypes");
-
-            var simpleMember = complex?.Members.Single(m => m.Name == "SimpleMember").DataType;
-
-            simple.Should().BeEquivalentTo(simpleMember);
-            simple.Should().BeSameAs(simpleMember);
+            tag.Should().NotBeNull();
         }
     }
 }

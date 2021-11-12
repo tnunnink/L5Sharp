@@ -1,1 +1,4 @@
-﻿
+﻿<DataType Name="TypeName" Family="NoFamily" Class="User">
+  <Description><![CDATA[Description of the type]]></Description>
+  <Members />
+</DataType>

@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Linq;
+using System.Reflection;
+using System.Xml.Serialization;
 using AutoFixture;
 using FluentAssertions;
 using L5Sharp.Enums;
@@ -323,6 +326,19 @@ namespace L5Sharp.Core.Tests
             var hash = first.GetHashCode();
 
             hash.Should().NotBe(0);
+        }
+        
+        
+        [Test]
+        public void DimensionsAttribute_Get_ShouldBeDimension()
+        {
+            var member = Member.Create("Test", new Bool(), new Dimensions(4));
+
+            var property = member.GetType().GetProperty("Dimensions");
+            var attribute = (XmlAttributeAttribute) property?.GetCustomAttributes(typeof(XmlAttributeAttribute), true).First();
+
+            attribute.Should().NotBeNull();
+            attribute.AttributeName.Should().Be("Dimension");
         }
     }
 }

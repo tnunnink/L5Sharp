@@ -33,7 +33,7 @@ namespace L5Sharp.Core
             return Name == other.Name && Members.SequenceEqual(other.Members);
         }
 
-        public IDataType Instantiate()
+        public IDataType Create()
         {
             return New();
         }

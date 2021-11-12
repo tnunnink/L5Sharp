@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Serialization;
 using L5Sharp.Enums;
 using L5Sharp.Exceptions;
 
@@ -32,9 +33,16 @@ namespace L5Sharp.Core
             Elements = InstantiateElements();
         }
 
+        /// <summary>
+        /// THe name of the data type member. This name is 
+        /// </summary>
         public string Name { get; }
         public string Description => GetDescription();
         public TDataType DataType { get; }
+        
+        //DataType Members dont have the 's' because they are single dimensions
+        //Will use XmlAttribute name to cover up that inconsistency
+        [XmlAttribute("Dimension")] 
         public Dimensions Dimensions { get; }
         public Radix Radix => DataType.Radix;
         public ExternalAccess ExternalAccess { get; }
@@ -70,7 +78,7 @@ namespace L5Sharp.Core
 
         public IMember<TDataType> Copy()
         {
-            var dataType = (TDataType)DataType.Instantiate();
+            var dataType = (TDataType)DataType.Create();
             return Member.Create(Name, dataType, Dimensions.Copy(), Radix, ExternalAccess, Description);
         }
 
@@ -110,7 +118,7 @@ namespace L5Sharp.Core
             var elements = new List<IMember<TDataType>>(Dimensions);
 
             for (var i = 0; i < Dimensions; i++)
-                elements.Add(Member.Create($"[{i}]", (TDataType)DataType.Instantiate(),
+                elements.Add(Member.Create($"[{i}]", (TDataType)DataType.Create(),
                     Dimensions.Empty, Radix, ExternalAccess, Description));
 
             return elements.ToArray();

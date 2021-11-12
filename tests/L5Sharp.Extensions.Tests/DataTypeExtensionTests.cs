@@ -56,7 +56,7 @@ namespace L5Sharp.Extensions.Tests
         [Test]
         public void GetMember_UserDefined_ShouldNotBeNull()
         {
-            var type = new DataType("UserType", new List<IMember<IDataType>>()
+            var type = new DataType("UserType", members: new List<IMember<IDataType>>()
             {
                 Member.Create<Bool>("Test")
             });
@@ -146,14 +146,14 @@ namespace L5Sharp.Extensions.Tests
         [Test]
         public void StructureEquals_UserDefinedDifferentNamesSameMembers_ShouldBeFalse()
         {
-            var target = new DataType("TargetType", new List<IMember<IDataType>>
+            var target = new DataType("TargetType", members: new List<IMember<IDataType>>
             {
                 Member.Create("Member01", new Bool()),
                 Member.Create("Member02", new Int()),
                 Member.Create("Member03", new Timer())
             });
             
-            var source = new DataType("SourceType", new List<IMember<IDataType>>
+            var source = new DataType("SourceType", members: new List<IMember<IDataType>>
             {
                 Member.Create("Member01", new Bool()),
                 Member.Create("Member02", new Int()),
@@ -166,14 +166,14 @@ namespace L5Sharp.Extensions.Tests
         [Test]
         public void StructureEquals_UserDefinedDifferentType_ShouldBeFalse()
         {
-            var target = new DataType("UserType", new List<IMember<IDataType>>
+            var target = new DataType("UserType", members: new List<IMember<IDataType>>
             {
                 Member.Create("Member01", new Bool()),
                 Member.Create("Member02", new Dint()),
                 Member.Create("Member03", new Timer())
             });
             
-            var source = new DataType("UserType", new List<IMember<IDataType>>
+            var source = new DataType("UserType", members: new List<IMember<IDataType>>
             {
                 Member.Create("Member01", new Bool()),
                 Member.Create("Member02", new Int()),
@@ -186,14 +186,14 @@ namespace L5Sharp.Extensions.Tests
         [Test]
         public void StructureEquals_UserDefinedDifferentMemberNames_ShouldBeFalse()
         {
-            var target = new DataType("UserType", new List<IMember<IDataType>>
+            var target = new DataType("UserType", members: new List<IMember<IDataType>>
             {
                 Member.Create("Member01", new Bool()),
                 Member.Create("Member02", new Dint()),
                 Member.Create("Member05", new Timer())
             });
             
-            var source = new DataType("UserType", new List<IMember<IDataType>>
+            var source = new DataType("UserType", members: new List<IMember<IDataType>>
             {
                 Member.Create("Member01", new Bool()),
                 Member.Create("Member05", new Int()),
@@ -206,14 +206,14 @@ namespace L5Sharp.Extensions.Tests
         [Test]
         public void StructureEquals_UserDefinedDifferentDimensions_ShouldBeFalse()
         {
-            var target = new DataType("UserType", new List<IMember<IDataType>>
+            var target = new DataType("UserType", members: new List<IMember<IDataType>>
             {
                 Member.Create("Member01", new Bool()),
                 Member.Create("Member02", new Dint()),
                 Member.Create("Member03", new Timer())
             });
             
-            var source = new DataType("UserType", new List<IMember<IDataType>>
+            var source = new DataType("UserType", members: new List<IMember<IDataType>>
             {
                 Member.Create("Member01", new Bool(), new Dimensions(2)),
                 Member.Create("Member02", new Dint()),
@@ -226,7 +226,7 @@ namespace L5Sharp.Extensions.Tests
         [Test]
         public void StructureEquals_UserDefinedDifferentNumberOfMembers_ShouldBeFalse()
         {
-            var target = new DataType("UserType", new List<IMember<IDataType>>
+            var target = new DataType("UserType", members: new List<IMember<IDataType>>
             {
                 Member.Create("Member01", new Bool()),
                 Member.Create("Member02", new Dint()),
@@ -234,7 +234,7 @@ namespace L5Sharp.Extensions.Tests
                 Member.Create("Member04", new Dint())
             });
             
-            var source = new DataType("UserType", new List<IMember<IDataType>>
+            var source = new DataType("UserType", members: new List<IMember<IDataType>>
             {
                 Member.Create("Member01", new Bool()),
                 Member.Create("Member02", new Dint()),
@@ -247,14 +247,14 @@ namespace L5Sharp.Extensions.Tests
         [Test]
         public void StructureEquals_UserDefinedMembersDifferentOrder_ShouldBeFalse()
         {
-            var target = new DataType("UserType", new List<IMember<IDataType>>
+            var target = new DataType("UserType", members: new List<IMember<IDataType>>
             {
                 Member.Create("Member02", new Dint()),
                 Member.Create("Member01", new Bool()),
                 Member.Create("Member03", new Timer()),
             });
             
-            var source = new DataType("UserType", new List<IMember<IDataType>>
+            var source = new DataType("UserType", members: new List<IMember<IDataType>>
             {
                 Member.Create("Member01", new Bool()),
                 Member.Create("Member02", new Dint()),
@@ -267,14 +267,14 @@ namespace L5Sharp.Extensions.Tests
         [Test]
         public void StructureEquals_UserDefinedSame_ShouldBeTrue()
         {
-            var target = new DataType("UserType", new List<IMember<IDataType>>
+            var target = new DataType("UserType", members: new List<IMember<IDataType>>
             {
                 Member.Create("Member01", new Bool()),
                 Member.Create("Member02", new Int()),
                 Member.Create("Member03", new Timer())
             });
             
-            var source = new DataType("UserType", new List<IMember<IDataType>>
+            var source = new DataType("UserType", members: new List<IMember<IDataType>>
             {
                 Member.Create("Member01", new Bool()),
                 Member.Create("Member02", new Int()),
@@ -289,14 +289,14 @@ namespace L5Sharp.Extensions.Tests
         {
             var member = Member.Create("Member01", new Bool());
             
-            var target = new DataType("UserType", new List<IMember<IDataType>>
+            var target = new DataType("UserType", members: new List<IMember<IDataType>>
             {
                 member,
                 Member.Create("Member02", new Int()),
                 Member.Create("Member03", new Timer())
             });
             
-            var source = new DataType("UserType", new List<IMember<IDataType>>
+            var source = new DataType("UserType", members: new List<IMember<IDataType>>
             {
                 member,
                 Member.Create("Member02", new Int()),
@@ -309,21 +309,21 @@ namespace L5Sharp.Extensions.Tests
         [Test]
         public void StructureEquals_UserDefinedNestedUserDefinedAreAllSame_ShouldBeTrue()
         {
-            var nested = new DataType("NestedType", new List<IMember<IDataType>>
+            var nested = new DataType("NestedType", members: new List<IMember<IDataType>>
             {
                 Member.Create("Member05", new Sint()),
                 Member.Create("Member06", new Real()),
                 Member.Create("Member07", new Message())
             });
             
-            var target = new DataType("UserType", new List<IMember<IDataType>>
+            var target = new DataType("UserType", members: new List<IMember<IDataType>>
             {
                 Member.Create("Member01", new Bool()),
                 Member.Create("Member02", nested),
                 Member.Create("Member03", new Timer())
             });
             
-            var source = new DataType("UserType", new List<IMember<IDataType>>
+            var source = new DataType("UserType", members: new List<IMember<IDataType>>
             {
                 Member.Create("Member01", new Bool()),
                 Member.Create("Member02", nested),

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using AutoFixture;
 using FluentAssertions;
 using L5Sharp.Enums;
@@ -94,7 +95,11 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void New_UserDefined_ShouldNotBeNull()
         {
-            var dataType = new DataType("UserDefined", new[] { Member.Create("TestMember", new Counter()) });
+            var dataType = new DataType("UserDefined", "This is a test", new List<IMember<IDataType>>
+            {
+                Member.Create("TestMember", new Counter())
+            });
+            
             var tag = Tag.Create("Test", dataType);
 
             tag.Should().NotBeNull();

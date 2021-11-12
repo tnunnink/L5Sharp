@@ -8,7 +8,7 @@ namespace L5Sharp.Core
 {
     public class DataType : LogixComponent, IUserDefined, IEquatable<DataType>
     {
-        public DataType(string name, IEnumerable<IMember<IDataType>> members = null, string description = null)
+        public DataType(string name, string description = null, IEnumerable<IMember<IDataType>> members = null)
             : base(name, description)
         {
             Members = members == null ? new Members(this) : new Members(this, members);
@@ -20,14 +20,14 @@ namespace L5Sharp.Core
         public TagDataFormat DataFormat => TagDataFormat.Decorated;
         public IMembers Members { get; }
 
-        public IDataType Instantiate()
+        public IDataType Create()
         {
             var members = new Members(this);
             
             foreach (var member in Members)
                 members.Add(((Member<IDataType>)member).Copy());
             
-            return new DataType(Name, members, Description);
+            return new DataType(Name, Description, members);
         }
 
         public bool Equals(DataType other)

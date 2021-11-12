@@ -1,4 +1,5 @@
-﻿using L5Sharp.Core;
+﻿using System.Xml.Serialization;
+using L5Sharp.Core;
 using L5Sharp.Enums;
 
 namespace L5Sharp
@@ -10,6 +11,7 @@ namespace L5Sharp
         /// </summary>
         TDataType DataType { get; }
 
+        
         /// <summary>
         /// The Dimensions of the member component
         /// </summary>

@@ -1,10 +1,9 @@
-﻿using System.Collections.Generic;
-using L5Sharp.Types;
+﻿using L5Sharp.Types;
 // ReSharper disable InconsistentNaming RSLogix naming
 
 namespace L5Sharp
 {
-    public interface IString : IDataType
+    public interface IStringDefined : IDataType
     {
         string Value { get; }
         IMember<Dint> LEN { get; }

@@ -91,7 +91,7 @@ namespace L5Sharp.Types
             return Equals(Radix, other.Radix) && Value == other.Value;
         }
 
-        public IDataType Instantiate()
+        public IDataType Create()
         {
             return new Sint();
         }
@@ -106,6 +106,11 @@ namespace L5Sharp.Types
         public override int GetHashCode()
         {
             return HashCode.Combine(Radix, Value);
+        }
+        
+        public override string ToString()
+        {
+            return Name;
         }
 
         public static bool operator ==(Sint left, Sint right)

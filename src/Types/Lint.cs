@@ -90,10 +90,10 @@ namespace L5Sharp.Types
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return Equals(Radix, other.Radix) && Value == other.Value;
+            return Name.Equals(other.Name) && Equals(Radix, other.Radix) && Value == other.Value;
         }
 
-        public IDataType Instantiate()
+        public IDataType Create()
         {
             return new Lint();
         }
@@ -107,7 +107,12 @@ namespace L5Sharp.Types
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(Radix, Value);
+            return HashCode.Combine(Name, Radix, Value);
+        }
+        
+        public override string ToString()
+        {
+            return Name;
         }
 
         public static bool operator ==(Lint left, Lint right)

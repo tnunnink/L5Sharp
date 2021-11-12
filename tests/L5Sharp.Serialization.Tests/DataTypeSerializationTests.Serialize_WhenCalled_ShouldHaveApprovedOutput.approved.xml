@@ -1,4 +1,5 @@
-﻿<DataType Name="TypeName" Family="NoFamily" Class="User">
-  <Description><![CDATA[Description of the type]]></Description>
-  <Members />
+﻿<DataType Name="Test" Family="NoFamily" Class="User">
+  <Members>
+    <Member Name="Test" DataType="DINT" Dimensions="0" Radix="Decimal" ExternalAccess="Read/Write" />
+  </Members>
 </DataType>

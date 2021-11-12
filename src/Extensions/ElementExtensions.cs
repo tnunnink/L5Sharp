@@ -5,6 +5,7 @@ using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 using System.Xml;
 using System.Xml.Linq;
+using System.Xml.Serialization;
 using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Utilities;
@@ -15,30 +16,6 @@ namespace L5Sharp.Extensions
 {
     internal static class ElementExtensions
     {
-        public static bool Contains<T>(this XElement element, string name) where T : ILogixComponent
-        {
-            var component = LogixNames.GetComponentName<T>();
-            return element.Descendants(component).FirstOrDefault(x => x.GetName() == name) != null;
-        }
-
-        public static IEnumerable<XElement> GetAll<T>(this XElement element) where T : ILogixComponent
-        {
-            var component = LogixNames.GetComponentName<T>();
-            return element.Descendants(component);
-        }
-
-        public static XElement GetFirst<T>(this XElement element, string name) where T : ILogixComponent
-        {
-            var component = LogixNames.GetComponentName<T>();
-            return element.Descendants(component).FirstOrDefault(x => x.GetName() == name);
-        }
-
-        public static XElement GetSingle<T>(this XElement element, string name) where T : ILogixComponent
-        {
-            var component = LogixNames.GetComponentName<T>();
-            return element.Descendants(component).SingleOrDefault(x => x.GetName() == name);
-        }
-
         public static string GetName(this XElement element) => element.Attribute("Name")?.Value;
 
         public static string GetDescription(this XElement element) => element.Element("Description")?.Value;
@@ -116,6 +93,11 @@ namespace L5Sharp.Extensions
             Expression<Func<TComponent, TaskType>> propertyExpression)
             where TComponent : ILogixComponent
             => element.GetAttributeValueInternal(propertyExpression, v => v != null ? TaskType.FromName(v) : null);
+        
+        public static TagUsage GetValue<TComponent>(this XElement element,
+            Expression<Func<TComponent, TagUsage>> propertyExpression)
+            where TComponent : ILogixComponent
+            => element.GetAttributeValueInternal(propertyExpression, v => v != null ? TagUsage.FromName(v) : null);
 
         public static TaskTrigger GetValue<TComponent>(this XElement element,
             Expression<Func<TComponent, TaskTrigger>> propertyExpression)
@@ -128,20 +110,15 @@ namespace L5Sharp.Extensions
             Expression<Func<TComponent, TProperty>> propertyExpression, Func<string, TReturn> parse)
             where TComponent : ILogixComponent
         {
-            var componentName = LogixNames.GetComponentName<TComponent>();
-
-            if (element.Name != componentName)
-                throw new InvalidOperationException(
-                    $"Element name '{element.Name}' is not expected value '{componentName}'");
-
             if (!(propertyExpression.Body is MemberExpression memberExpression))
                 throw new ArgumentException($"Expression must of type {typeof(MemberExpression)}");
 
             var memberName = memberExpression.Member.Name;
             
             var property = typeof(TComponent).GetProperty(memberName);
-            var attribute = (XmlAttribute) property?.GetCustomAttributes(typeof(XmlAttribute), true).FirstOrDefault();
-            var name = attribute == null ? memberName : attribute.Name;
+            var attribute = (XmlAttributeAttribute) property?
+                .GetCustomAttributes(typeof(XmlAttributeAttribute), true).FirstOrDefault();
+            var name = attribute != null ? attribute.AttributeName : memberName;
             
             var value = element.Attribute(name)?.Value;
 

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 using System.Xml.Linq;
-using L5Sharp.Abstractions;
 using L5Sharp.Core;
 using L5Sharp.Extensions;
 
@@ -20,19 +19,16 @@ namespace L5Sharp.Factories
 
         public IMember<IDataType> Create(XElement element)
         {
-            if (element == null)
-                throw new ArgumentNullException(nameof(element));
-            
-            var typeName = element.GetDataTypeName();
-            var dataType = _context.DataTypes.Get(typeName);
+            if (element == null) return null;
 
             var name = element.GetName();
+            var dataType = _context.TypeRegistry.TryGetType(element.GetDataTypeName());
             var description = element.GetDescription();
-            var dimensions = element.GetValue<IMember<IDataType>>(m => m.Dimensions);
-            var radix = element.GetValue<IMember<IDataType>>(m => m.Radix);
-            var access = element.GetValue<IMember<IDataType>>(m => m.ExternalAccess);
+            var dimensions = element.GetValue<Member<IDataType>>(m => m.Dimensions);
+            var radix = element.GetValue<Member<IDataType>>(m => m.Radix);
+            var access = element.GetValue<Member<IDataType>>(m => m.ExternalAccess);
 
-            return Member.Create(name, (IDataType)dataType, dimensions, radix, access, description);
+            return Member.Create(name, dataType, dimensions, radix, access, description);
         }
     }
 }

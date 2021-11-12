@@ -11,8 +11,8 @@ namespace L5Sharp.Extensions
     {
         private static readonly Dictionary<Type, IComponentSerializer> Serializers = new Dictionary<Type, IComponentSerializer>
         {
-            { typeof(IDataType), new DataTypeSerializer() },
-            { typeof(DataType), new DataTypeSerializer() },
+            { typeof(IUserDefined), new UserDefinedSerializer() },
+            { typeof(DataType), new UserDefinedSerializer() },
             { typeof(IMember<IDataType>), new MemberSerializer() },
             { typeof(ITag<IDataType>), new TagSerializer() },
             { typeof(IProgram), new ProgramSerializer() },
@@ -38,8 +38,7 @@ namespace L5Sharp.Extensions
             if (!(propertyExpression.Body is MemberExpression memberExpression))
                 throw new InvalidOperationException();
 
-            var func = propertyExpression.Compile();
-            var value = func(component);
+            var value = propertyExpression.Compile().Invoke(component);
 
             return new XAttribute(memberExpression.Member.Name, value);
         }

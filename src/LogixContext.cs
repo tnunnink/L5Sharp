@@ -2,111 +2,70 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
-using L5Sharp.Abstractions;
 using L5Sharp.Core;
-using L5Sharp.Enums;
 using L5Sharp.Factories;
 using L5Sharp.Repositories;
-using L5Sharp.Utilities;
 
 namespace L5Sharp
 {
     public class LogixContext
     {
-        private const string RsLogix5000Content = "RSLogix5000Content";
-        private readonly XDocument _document;
-        private readonly XElement _content;
         private readonly Dictionary<Type, IComponentFactory> _factories = new Dictionary<Type, IComponentFactory>();
-        private readonly Dictionary<Type, IComponentCache> _cache = new Dictionary<Type, IComponentCache>();
 
         private LogixContext(XDocument document)
         {
-            if (document == null) throw new ArgumentNullException(nameof(document));
-
-            //todo validate document?
-
-            _document = document;
-            _content = document.Root;
-            
-            InitializeCache();
+            L5X = new L5X(document);
             InitializeFactories();
+            
+            DataTypes = new UserDefinedRepository(this);
+            Tags = new TagRepository(this);
+            
+            TypeRegistry = new LogixTypeRegistry(this);
         }
 
         public LogixContext(string fileName) : this(XDocument.Load(fileName))
         {
         }
 
-        public LogixContext(IController controller, Revision revision) : this(GenerateContent(controller, revision))
-        {
-        }
+        internal L5X L5X { get; }
+        internal LogixTypeRegistry TypeRegistry { get; }
 
-        public string SchemaRevision => _content.Attribute(nameof(SchemaRevision))?.Value;
+        public string SchemaRevision => L5X.SchemaRevision;
+        public string SoftwareRevision => L5X.SoftwareRevision;
+        public string TargetName => L5X.TargetName;
+        public string TargetType => L5X.TargetType;
+        public string ContainsContext => L5X.ContainsContext;
+        public string Owner => L5X.Owner;
 
-        public string SoftwareRevision => _content.Attribute(nameof(SoftwareRevision))?.Value;
-
-        public string TargetName => _content.Attribute(nameof(TargetName))?.Value;
-
-        public string TargetType => _content.Attribute(nameof(TargetType))?.Value;
-
-        public string ContainsContext => _content.Attribute(nameof(ContainsContext))?.Value;
-
-        public string Owner => _content.Attribute(nameof(Owner))?.Value;
-
-        public IDataTypeRepository DataTypes => new DataTypeRepository(this);
+        public IUserDefinedRepository DataTypes { get; }
+        public ITagRepository Tags { get; }
 
         public void Save(string fileName)
         {
-            _document.Save(fileName);
-        }
-
-        public void ClearCache()
-        {
-            foreach (var cache in _cache)
-                cache.Value.Clear();
-        }
-
-        internal IComponentCache<T> GetCache<T>() where T : ILogixComponent
-        {
-            var type = _cache.Keys.FirstOrDefault(t => t.IsAssignableFrom(typeof(T)));
-            
-            if (type == null)
-                throw new InvalidOperationException($"Cache not defined for component of type '{typeof(T)}'");
-
-            return (IComponentCache<T>)_cache[type];
+            L5X.Save(fileName);
         }
 
         internal IComponentFactory<T> GetFactory<T>() where T : ILogixComponent
         {
-            var type = _factories.Keys.FirstOrDefault(t => t.IsAssignableFrom(typeof(T)));
-            
+            var type = _factories.Keys.SingleOrDefault(t => t == typeof(T));
+
             if (type == null)
                 throw new InvalidOperationException($"Factory not defined for component of type '{typeof(T)}'");
 
             return (IComponentFactory<T>)_factories[type];
         }
 
-        internal XElement GetContainer<T>() where T : ILogixComponent
-        {
-            var container = LogixNames.GetContainerName<T>();
-            return _content.Descendants(container).FirstOrDefault();
-        }
-
-        private void InitializeCache()
-        {
-            _cache.Add(typeof(IDataType), new ComponentCache<IDataType>());
-            _cache.Add(typeof(ITag<IDataType>), new ComponentCache<ITag<IDataType>>());
-        }
-        
         private void InitializeFactories()
         {
-            _factories.Add(typeof(IDataType), new DataTypeFactory(this));
+            _factories.Add(typeof(IUserDefined), new UserDefinedFactory(this));
             _factories.Add(typeof(IMember<IDataType>), new MemberFactory(this));
+            _factories.Add(typeof(ITag<IDataType>), new TagFactory(this));
         }
 
         private static XDocument GenerateContent(ILogixComponent logixComponent, Revision revision)
         {
             var declaration = new XDeclaration("1.0", "UTF-8", "yes");
-            var root = new XElement(RsLogix5000Content);
+            var root = new XElement(LogixNames.RsLogix5000Content);
             root.Add(new XAttribute("SchemaRevision", "1.0"));
             root.Add(new XAttribute("SoftwareRevision", revision.ToString()));
             root.Add(new XAttribute("TargetName", logixComponent.Name));
@@ -118,7 +77,7 @@ namespace L5Sharp
 
             if (logixComponent is IController) return new XDocument(declaration, root);
 
-            var controllerElement = new XElement(LogixNames.GetComponentName<IController>());
+            var controllerElement = new XElement(LogixNames.Controller);
             //todo add other properties needed
             root.Add(controllerElement);
 

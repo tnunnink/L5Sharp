@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using System.Collections.Generic;
+using FluentAssertions;
 using L5Sharp;
 using L5Sharp.Core;
 using L5Sharp.Enums;
@@ -30,7 +31,7 @@ namespace L5SharpTests
         {
             Logix.ContainsType("TEMP").Should().BeFalse();
         }
-        
+
         [Test]
         public void CreateType_RegisteredType_ShouldNotBeNull()
         {
@@ -90,14 +91,15 @@ namespace L5SharpTests
         [Test]
         public void RegisterType_ValidArgument_ShouldContainType()
         {
-            var type = new DataType("TestType", new[]
-                {
-                    Member.Create<IDataType>("Member01", new Dint(25)),
-                    Member.Create<IDataType>("Member02", new Timer(new Dint(1000)))
-                },
-                "This is a test type that will be created");
+            var type = new DataType("TestType",
+                "This is a test type that will be created",
+                new List<IMember<IDataType>>
+            {
+                Member.Create<IDataType>("Member01", new Dint(25)),
+                Member.Create<IDataType>("Member02", new Timer(new Dint(1000)))
+            });
 
-            Logix.Register(type.Name, type.Instantiate);
+            Logix.Register(type.Name, type.Create);
 
             Logix.ContainsType(type.Name).Should().BeTrue();
 

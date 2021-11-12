@@ -8,7 +8,7 @@ using L5Sharp.Types;
 
 namespace L5Sharp.Core
 {
-    public class StringDefined : LogixComponent, IString
+    public class StringDefined : LogixComponent, IStringDefined
     {
         public StringDefined(string name, Dimensions dimensions, string description = null) 
             : base(name, description)
@@ -48,7 +48,7 @@ namespace L5Sharp.Core
                 DATA.Elements[i].DataType.SetValue(bytes[i]);
         }
 
-        public IDataType Instantiate()
+        public IDataType Create()
         {
             return new StringDefined(Name, DATA.Dimensions.Copy(), Description);
         }

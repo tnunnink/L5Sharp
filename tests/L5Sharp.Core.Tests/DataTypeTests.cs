@@ -65,7 +65,7 @@ namespace L5Sharp.Core.Tests
                 Member.Create("Member02", new Bool())
             };
 
-            var type = new DataType("Test", members, description);
+            var type = new DataType("Test", description, members);
 
             type.Should().NotBeNull();
             type.Name.Should().Be("Test");
@@ -95,7 +95,7 @@ namespace L5Sharp.Core.Tests
                 Member.Create("Member10", new Bool())
             };
 
-            var type = new DataType("Test", members, description);
+            var type = new DataType("Test", description, members);
 
             type.Should().NotBeNull();
             type.Members.Should().HaveCount(10);

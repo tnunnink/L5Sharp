@@ -1,4 +1,5 @@
-﻿using ApprovalTests;
+﻿using System.Collections.Generic;
+using ApprovalTests;
 using ApprovalTests.Reporters;
 using FluentAssertions;
 using L5Sharp.Core;
@@ -14,7 +15,7 @@ namespace L5Sharp.Serialization.Tests
         [Test]
         public void Serialize_WhenCalled_ShouldNotBeNull()
         {
-            var type = new DataType("Test", new[] { Member.Create("Test", new Dint()) });
+            var type = new DataType("Test", members: new[] { Member.Create("Test", new Dint()) });
             
             var element = type.Serialize();
 
@@ -25,7 +26,7 @@ namespace L5Sharp.Serialization.Tests
         [UseReporter(typeof(DiffReporter))]
         public void Serialize_WhenCalled_ShouldHaveApprovedOutput()
         {
-            var type = new DataType("Test", new[] { Member.Create("Test", new Dint()) });
+            var type = new DataType("Test", members: new[] { Member.Create("Test", new Dint()) });
             
             var element = type.Serialize();
 
@@ -36,13 +37,15 @@ namespace L5Sharp.Serialization.Tests
         [UseReporter(typeof(DiffReporter))]
         public void Serialize_WithMembers_ShouldHaveApprovedOutput()
         {
-            var type = new DataType("Test", new[] { Member.Create("Test", new Dint()) });
-            type.Members.Add(Member.Create("Member_Bool", new Bool()));
-            type.Members.Add(Member.Create("Member_Sint", new Sint()));
-            type.Members.Add(Member.Create("Member_Int", new Int()));
-            type.Members.Add(Member.Create("Member_Dint", new Dint()));
-            type.Members.Add(Member.Create("Member_Lint", new Lint()));
-            type.Members.Add(Member.Create("Member_Real", new Real()));
+            var type = new DataType("Test", "My Test DataType", new List<IMember<IDataType>>
+            {
+                Member.Create("Member_Bool", new Bool()),
+                Member.Create("Member_Sint", new Sint()),
+                Member.Create("Member_Int", new Int()),
+                Member.Create("Member_Dint", new Dint()),
+                Member.Create("Member_Lint", new Lint()),
+                Member.Create("Member_Real", new Real())
+            });
             
             var element = type.Serialize();
 
