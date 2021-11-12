@@ -1,9 +1,4 @@
-﻿using System;
-using System.Globalization;
-using System.Reflection;
-using Ardalis.SmartEnum;
-using L5Sharp.Abstractions;
-using L5Sharp.Core;
+﻿using Ardalis.SmartEnum;
 
 namespace L5Sharp.Enums
 {
@@ -12,8 +7,6 @@ namespace L5Sharp.Enums
         private TagType(string name, string value) : base(name, value)
         {
         }
-
-        public abstract ITag<IDataType> Create(string name, IDataType dataType);
 
         public static readonly TagType Base = new BaseType();
         public static readonly TagType Alias = new AliasType();
@@ -25,22 +18,12 @@ namespace L5Sharp.Enums
             public BaseType() : base(nameof(Base), nameof(Base))
             {
             }
-
-            public override ITag<IDataType> Create(string name, IDataType dataType)
-            {
-                return Tag.Create(name, dataType);
-            }
         }
 
         private class AliasType : TagType
         {
             public AliasType() : base(nameof(Alias), nameof(Alias))
             {
-            }
-
-            public override ITag<IDataType> Create(string name, IDataType dataType)
-            {
-                throw new NotImplementedException();
             }
         }
 
@@ -49,22 +32,12 @@ namespace L5Sharp.Enums
             public ProducedType() : base(nameof(Produced), nameof(Produced))
             {
             }
-
-            public override ITag<IDataType> Create(string name, IDataType dataType)
-            {
-                throw new NotImplementedException();
-            }
         }
 
         private class ConsumedType : TagType
         {
             public ConsumedType() : base(nameof(Consumed), nameof(Consumed))
             {
-            }
-
-            public override ITag<IDataType> Create(string name, IDataType dataType)
-            {
-                throw new NotImplementedException();
             }
         }
     }

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Globalization;
-using System.Reflection;
-using Ardalis.SmartEnum;
-using L5Sharp.Abstractions;
-using L5Sharp.Core;
+﻿using Ardalis.SmartEnum;
 
 namespace L5Sharp.Enums
 {
@@ -11,17 +6,6 @@ namespace L5Sharp.Enums
     {
         private ProgramType(string name, string value) : base(name, value)
         {
-        }
-
-        public abstract IProgram Create(string name);
-
-        public static T Create<T>(string name) where T : IProgram
-        {
-            return (T)Activator.CreateInstance(typeof(T),
-                BindingFlags.CreateInstance |
-                BindingFlags.Public |
-                BindingFlags.Instance |
-                BindingFlags.OptionalParamBinding, null, new[] {name, Type.Missing}, CultureInfo.CurrentCulture);
         }
 
         public static readonly ProgramType Normal = new NormalType();
@@ -32,22 +16,12 @@ namespace L5Sharp.Enums
             public NormalType() : base(nameof(Normal), nameof(Normal))
             {
             }
-
-            public override IProgram Create(string name)
-            {
-                return new Program(name);
-            }
         }
 
         private class EquipmentPhaseType : ProgramType
         {
             public EquipmentPhaseType() : base(nameof(EquipmentPhase), nameof(EquipmentPhase))
             {
-            }
-
-            public override IProgram Create(string name)
-            {
-                throw new NotImplementedException();
             }
         }
     }
