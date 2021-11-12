@@ -3,7 +3,7 @@ using L5Sharp.Enums;
 using L5Sharp.Types;
 using NUnit.Framework;
 
-namespace L5Sharp.Tests
+namespace L5SharpTests
 {
     [TestFixture]
     public class LogixTypeTests

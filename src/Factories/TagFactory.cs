@@ -1,6 +1,7 @@
 ﻿using System.Runtime.CompilerServices;
 using System.Xml.Linq;
 using L5Sharp.Abstractions;
+using L5Sharp.Utilities;
 
 [assembly: InternalsVisibleTo("L5Sharp.Factories.Tests")]
 

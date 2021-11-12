@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using L5Sharp.Abstractions;
-using L5Sharp.Configurations;
 using L5Sharp.Enums;
 using L5Sharp.Exceptions;
 

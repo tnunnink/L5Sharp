@@ -2,9 +2,10 @@
 using System.IO;
 using System.Linq;
 using FluentAssertions;
+using L5Sharp;
 using NUnit.Framework;
 
-namespace L5Sharp.Tests
+namespace L5SharpTests
 {
     [TestFixture]
     public class LogixContextTests

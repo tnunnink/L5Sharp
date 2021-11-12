@@ -1,6 +1,6 @@
 ﻿using System;
 using L5Sharp.Abstractions;
-using L5Sharp.Configurations;
+using L5Sharp.Builders;
 
 namespace L5Sharp.Core
 {
@@ -17,14 +17,10 @@ namespace L5Sharp.Core
         public Tags(IAddOnDefined instruction)
         {
         }
-        
-        public void Add(string name, IDataType dataType, Action<ITagConfiguration> config = null)
+
+        public void Add(string name, IDataType dataType, Action<ITagBuilder<IDataType>> builder = null)
         {
-            var configuration = TagConfiguration.New(name);
-
-            config?.Invoke(configuration);
-
-            Add(configuration);
+            throw new NotImplementedException();
         }
     }
 }

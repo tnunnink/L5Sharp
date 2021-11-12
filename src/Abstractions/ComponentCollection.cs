@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using L5Sharp.Configurations;
 using L5Sharp.Exceptions;
 using L5Sharp.Utilities;
 
@@ -70,15 +69,9 @@ namespace L5Sharp.Abstractions
 
         public void AddRange(IEnumerable<TComponent> components) => AddComponents(components);
 
-        public void Add<TConfiguration>(TConfiguration configuration)
-            where TConfiguration : IComponentConfiguration<TComponent> => AddComponent(configuration);
-
         public virtual void Insert(int index, TComponent component) => InsertComponent(index, component);
 
         public virtual void Update(TComponent component) => UpdateComponent(component);
-
-        public void Update<TConfiguration>(TConfiguration configuration)
-            where TConfiguration : IComponentConfiguration<TComponent> => UpdateComponent(configuration);
 
         public virtual void Remove(string name) => RemoveComponent(name);
 
@@ -109,17 +102,6 @@ namespace L5Sharp.Abstractions
 
             _components.Add(component);
             _names.Add(() => component.Name);
-        }
-
-        private void AddComponent<TConfiguration>(TConfiguration configuration)
-            where TConfiguration : IComponentConfiguration<TComponent>
-        {
-            if (configuration == null)
-                throw new ArgumentNullException(nameof(configuration), "Configuration can not be null");
-
-            var component = configuration.Compile();
-
-            AddComponent(component);
         }
 
         private void AddComponents(IEnumerable<TComponent> components)
@@ -169,18 +151,6 @@ namespace L5Sharp.Abstractions
             
             _components.RemoveWhere(c => c.Name == component.Name);
             _components.Add(component);
-        }
-
-        private void UpdateComponent<TConfiguration>(TConfiguration configuration)
-            where TConfiguration : IComponentConfiguration<TComponent>
-        {
-            if (configuration == null)
-                throw new ArgumentNullException(nameof(configuration),
-                    $"Configuration for {typeof(TComponent).Name} can not be null");
-
-            var component = configuration.Compile();
-
-            UpdateComponent(component);
         }
     }
 }

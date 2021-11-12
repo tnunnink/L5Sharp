@@ -1,9 +1,8 @@
 ﻿using FluentAssertions;
-using L5Sharp.Extensions;
 using L5Sharp.Types;
 using NUnit.Framework;
 
-namespace L5Sharp.Tests.ExtensionTests
+namespace L5Sharp.Extensions.Tests
 {
     [TestFixture]
     public class DataTypeExtensionTests

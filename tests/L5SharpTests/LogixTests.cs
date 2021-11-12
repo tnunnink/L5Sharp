@@ -1,11 +1,12 @@
 ﻿using FluentAssertions;
+using L5Sharp;
 using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Extensions;
 using L5Sharp.Types;
 using NUnit.Framework;
 
-namespace L5Sharp.Tests
+namespace L5SharpTests
 {
     [TestFixture]
     public class LogixTests
@@ -33,7 +34,7 @@ namespace L5Sharp.Tests
         [Test]
         public void CreateType_RegisteredType_ShouldNotBeNull()
         {
-            var type = Logix.CreateType("Bool");
+            var type = Logix.InstantiateType("Bool");
             type.Should().NotBeNull();
             type.Name.Should().Be("BOOL");
             type.Should().BeOfType<Bool>();
@@ -42,7 +43,7 @@ namespace L5Sharp.Tests
         [Test]
         public void CreateType_StaticField_ShouldNotBeNull()
         {
-            var type = Logix.CreateType("bit");
+            var type = Logix.InstantiateType("bit");
             type.Should().NotBeNull();
             type.Name.Should().Be("BOOL");
             type.Should().BeOfType<Bool>();
@@ -51,7 +52,7 @@ namespace L5Sharp.Tests
         [Test]
         public void CreateType_AssemblyValidType_ShouldNotBeExpected()
         {
-            var type = Logix.CreateType("MyPredefined");
+            var type = Logix.InstantiateType("MyPredefined");
             type.Should().NotBeNull();
             type.Name.Should().Be("MyPredefined");
             type.Family.Should().Be(DataTypeFamily.None);
@@ -60,7 +61,7 @@ namespace L5Sharp.Tests
         [Test]
         public void CreateType_AssemblyInvalidType_ShouldNotBeUndefined()
         {
-            var type = Logix.CreateType("MyNullNamePredefined");
+            var type = Logix.InstantiateType("MyNullNamePredefined");
             type.Should().NotBeNull();
             type.Name.Should().Be("Undefined");
             type.Should().BeOfType<Undefined>();
@@ -69,7 +70,7 @@ namespace L5Sharp.Tests
         [Test]
         public void CreateType_NonExistingType_ShouldNotBeUndefined()
         {
-            var type = Logix.CreateType("Invalid");
+            var type = Logix.InstantiateType("Invalid");
             type.Name.Should().Be("Undefined");
             type.Should().BeOfType<Undefined>();
         }
@@ -77,7 +78,7 @@ namespace L5Sharp.Tests
         [Test]
         public void CreateType_ValidName_ShouldNotBeNull()
         {
-            var type = Logix.CreateType("string");
+            var type = Logix.InstantiateType("string");
 
             type.Should().NotBeNull();
             type.Name.Should().Be("STRING");
@@ -100,7 +101,7 @@ namespace L5Sharp.Tests
 
             Logix.ContainsType(type.Name).Should().BeTrue();
 
-            var instance = Logix.CreateType(type.Name);
+            var instance = Logix.InstantiateType(type.Name);
 
             instance.Should().NotBeNull();
             instance.Name.Should().Be("TestType");

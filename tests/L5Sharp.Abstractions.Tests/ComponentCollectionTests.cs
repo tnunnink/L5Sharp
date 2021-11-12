@@ -265,25 +265,6 @@ namespace L5Sharp.Abstractions.Tests
         }
 
         [Test]
-        public void Add_Configuration_ShouldThrowArgumentNullException()
-        {
-            var config = new TestLogixConfiguration();
-            config.SetName("Test").SetDescription("This is a test");
-            var component = config.Compile();
-
-            _collection.Add(config);
-
-            _collection.Should().Contain(component);
-        }
-
-        [Test]
-        public void Add_NullConfiguration_ShouldThrowArgumentNullException()
-        {
-            FluentActions.Invoking(() => _collection.Add<TestLogixConfiguration>(null)).Should()
-                .Throw<ArgumentNullException>();
-        }
-
-        [Test]
         public void AddRange_Null_ShouldThrowArgumentNullException()
         {
             FluentActions.Invoking(() => _collection.AddRange(null)).Should().Throw<ArgumentNullException>();
@@ -400,26 +381,6 @@ namespace L5Sharp.Abstractions.Tests
 
             var index = _collection.IndexOf(component);
             index.Should().Be(0);
-        }
-        
-        [Test]
-        public void Update_Configuration_ShouldThrowArgumentNullException()
-        {
-            var config = new TestLogixConfiguration();
-            config.SetName("Component1").SetDescription("This is and update test config");
-            var component = config.Compile();
-
-            _collection.Update(config);
-
-            _collection.Should().Contain(component);
-            _collection.IndexOf(component).Should().Be(0);
-        }
-
-        [Test]
-        public void Update_NullConfiguration_ShouldThrowArgumentNullException()
-        {
-            FluentActions.Invoking(() => _collection.Update<TestLogixConfiguration>(null)).Should()
-                .Throw<ArgumentNullException>();
         }
 
         [Test]

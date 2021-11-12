@@ -1,10 +1,11 @@
 ﻿using FluentAssertions;
+using L5Sharp;
 using L5Sharp.Abstractions;
 using L5Sharp.Core;
 using L5Sharp.Utilities;
 using NUnit.Framework;
 
-namespace L5Sharp.Tests
+namespace L5SharpTests
 {
     [TestFixture]
     public class LogixNamesTests

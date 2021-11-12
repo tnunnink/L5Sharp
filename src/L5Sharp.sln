@@ -8,7 +8,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "L5Sharp.Core.Tests", "..\te
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "L5Sharp.Serialization.Tests", "..\tests\L5Sharp.Serialization.Tests\L5Sharp.Serialization.Tests.csproj", "{AFE7CA3D-C023-44D8-A7B2-0227986A1EFC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "L5Sharp.Tests", "..\tests\L5Sharp.Tests\L5Sharp.Tests.csproj", "{FED5FACA-5568-4A3F-94C0-536D9E36CA26}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "L5SharpTests", "..\tests\L5SharpTests\L5SharpTests.csproj", "{FED5FACA-5568-4A3F-94C0-536D9E36CA26}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "L5Sharp.Repositories.Tests", "..\tests\L5Sharp.Repositories.Tests\L5Sharp.Repositories.Tests.csproj", "{E9483593-9943-425A-AC88-8DC5F798D894}"
 EndProject
@@ -23,6 +23,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "L5Sharp.Builders.Tests", "..\tests\L5Sharp.Builders.Tests\L5Sharp.Builders.Tests.csproj", "{672BA97C-9952-4840-B730-7055B59883BD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "L5Sharp.Instructions.Tests", "..\tests\L5Sharp.Instructions.Tests\L5Sharp.Instructions.Tests.csproj", "{43AD8474-5835-49E5-9A44-59E39791752D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "L5Sharp.Exceptions.Tests", "..\tests\L5Sharp.Exceptions.Tests\L5Sharp.Exceptions.Tests.csproj", "{435A827E-C3EA-400F-AF68-A30A5795FE5D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "L5Sharp.Extensions.Tests", "..\tests\L5Sharp.Extensions.Tests\L5Sharp.Extensions.Tests.csproj", "{11C37060-6B25-4D47-9072-F15545D26639}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -74,6 +78,14 @@ Global
 		{43AD8474-5835-49E5-9A44-59E39791752D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{43AD8474-5835-49E5-9A44-59E39791752D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{43AD8474-5835-49E5-9A44-59E39791752D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{435A827E-C3EA-400F-AF68-A30A5795FE5D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{435A827E-C3EA-400F-AF68-A30A5795FE5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{435A827E-C3EA-400F-AF68-A30A5795FE5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{435A827E-C3EA-400F-AF68-A30A5795FE5D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{11C37060-6B25-4D47-9072-F15545D26639}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{11C37060-6B25-4D47-9072-F15545D26639}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{11C37060-6B25-4D47-9072-F15545D26639}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{11C37060-6B25-4D47-9072-F15545D26639}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{49824AD6-5AE2-434F-AE18-A3B9011BA06C} = {337B58B2-5647-4088-8CB3-50B3752B04D8}
@@ -86,5 +98,7 @@ Global
 		{4778CD2F-A572-4999-AC41-065AD05F0B35} = {337B58B2-5647-4088-8CB3-50B3752B04D8}
 		{672BA97C-9952-4840-B730-7055B59883BD} = {337B58B2-5647-4088-8CB3-50B3752B04D8}
 		{43AD8474-5835-49E5-9A44-59E39791752D} = {337B58B2-5647-4088-8CB3-50B3752B04D8}
+		{435A827E-C3EA-400F-AF68-A30A5795FE5D} = {337B58B2-5647-4088-8CB3-50B3752B04D8}
+		{11C37060-6B25-4D47-9072-F15545D26639} = {337B58B2-5647-4088-8CB3-50B3752B04D8}
 	EndGlobalSection
 EndGlobal

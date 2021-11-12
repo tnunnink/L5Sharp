@@ -122,37 +122,19 @@ namespace L5Sharp
         /// </summary>
         /// <param name="name">The name of the data type to create</param>
         /// <returns>An instance of the IDatatype if it is registered. An instance of Undefined otherwise</returns>
-        public static IDataType CreateType(string name)
+        public static IDataType InstantiateType(string name)
         {
             return DataTypeRegistry.ContainsKey(name) ? DataTypeRegistry[name].Invoke() : new Undefined();
         }
-
-        public static TDataType Create<TDataType>(string name) where TDataType : class, IDataType
-        {
-            return DataTypeRegistry.ContainsKey(name) ? DataTypeRegistry[name].Invoke() as TDataType : default;
-        } 
 
         /// <summary>
         /// Creates an instance of the given instruction
         /// </summary>
         /// <param name="name">The name of the instruction to create</param>
         /// <returns>An instance of the IInstruction if it is registered. An instance of Undefined otherwise</returns>
-        public static IInstruction CreateInstruction(string name)
+        public static IInstruction InstantiateInstruction(string name)
         {
             return InstructionRegistry.ContainsKey(name) ? InstructionRegistry[name].Invoke() : null;
-        }
-        
-        
-
-        //todo perhaps a nice feature to automatically register user implementations of IDataType or IInstruction?
-        private static IEnumerable<Type> FindConstructableAssemblyImplementations(Type type)
-        {
-            return from assembly in AppDomain.CurrentDomain.GetAssemblies()
-                from t in assembly.GetTypes()
-                where t.IsSubclassOf(type)
-                      && !t.IsAbstract
-                      && t.GetConstructor(Type.EmptyTypes) != null
-                select t;
         }
     }
 }

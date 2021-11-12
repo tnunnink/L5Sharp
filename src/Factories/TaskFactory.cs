@@ -6,6 +6,7 @@ using L5Sharp.Abstractions;
 using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Extensions;
+using L5Sharp.Utilities;
 
 [assembly: InternalsVisibleTo("L5Sharp.Factories.Tests")]
 

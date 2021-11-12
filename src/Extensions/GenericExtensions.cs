@@ -5,7 +5,6 @@ using System.Xml.Linq;
 using L5Sharp.Abstractions;
 using L5Sharp.Core;
 using L5Sharp.Serialization;
-
 namespace L5Sharp.Extensions
 {
     public static class GenericExtensions

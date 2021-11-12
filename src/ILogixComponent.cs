@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace L5Sharp
+﻿namespace L5Sharp
 {
     public interface ILogixComponent
     {
@@ -17,21 +15,5 @@ namespace L5Sharp
         /// This value can be empty or null
         /// </summary>
         public string Description { get; }
-
-        /*/// <summary>
-        /// An event that is raised when the Logix component name changes. 
-        /// </summary>
-        event EventHandler<ComponentNameChangedEventArgs> NameChanged;*/
-    }
-
-    public class ComponentNameChangedEventArgs : EventArgs
-    {
-        public ComponentNameChangedEventArgs(string oldName, string newName)
-        {
-            OldName = oldName;
-            NewName = newName;
-        }
-        public string OldName { get; }
-        public string NewName { get; }
     }
 }

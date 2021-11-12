@@ -21,7 +21,7 @@ namespace L5Sharp.Core
             DataTypes = new DataTypes(this);
             Tags = new Tags(this);
             Programs = new Programs();
-            Tasks = new Tasks();
+            Tasks = new Tasks(this);
         }
 
         public ProcessorType ProcessorType { get; }

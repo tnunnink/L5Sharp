@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using L5Sharp.Configurations;
 
 namespace L5Sharp
 {
@@ -15,15 +14,8 @@ namespace L5Sharp
         int IndexOf(TComponent component);
         void Add(TComponent component);
         void AddRange(IEnumerable<TComponent> components);
-
-        void Add<TConfiguration>(TConfiguration configuration)
-            where TConfiguration : IComponentConfiguration<TComponent>;
-
         void Insert(int index, TComponent component);
         void Update(TComponent component);
-        void Update<TConfiguration>(TConfiguration configuration) 
-            where TConfiguration : IComponentConfiguration<TComponent>;
-        
         void Remove(string name);
     }
 }

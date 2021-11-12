@@ -10,7 +10,7 @@ using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Utilities;
 
-[assembly: InternalsVisibleTo("L5Sharp.Tests")]
+[assembly: InternalsVisibleTo("L5Sharp.Extensions.Tests")]
 
 namespace L5Sharp.Extensions
 {

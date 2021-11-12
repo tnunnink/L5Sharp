@@ -1,16 +1,23 @@
 ﻿using System;
 using L5Sharp.Abstractions;
-using L5Sharp.Configurations;
+using L5Sharp.Builders;
 
 namespace L5Sharp.Core
 {
     public class Tasks : ComponentCollection<ITask>, ITasks
     {
-        public void Add(string name, Action<ITaskConfiguration> config = null)
+        private readonly IController _controller;
+
+        public Tasks(IController controller)
         {
-            var configuration = new TaskConfiguration(name);
-            config?.Invoke(configuration);
-            Add(configuration);
+            _controller = controller;
+        }
+
+        public void Add(Action<ITaskBuilder> builder)
+        {
+            var taskBuilder = new TaskBuilder();
+            builder.Invoke(taskBuilder);
+            Add(taskBuilder.Create());
         }
     }
 }
