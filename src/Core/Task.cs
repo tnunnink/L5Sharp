@@ -7,7 +7,7 @@ using L5Sharp.Exceptions;
 
 namespace L5Sharp.Core
 {
-    public class Task : LogixComponent, ITask
+    public class Task : LogixComponent, ITask, IEquatable<Task>
     {
         private readonly HashSet<string> _programs = new HashSet<string>();
 
@@ -27,11 +27,8 @@ namespace L5Sharp.Core
         public byte Priority { get; private set; }
         public float Rate { get; private set; }
         public float Watchdog { get; private set; }
-        public bool InhibitTask { get; private set; }
-        public bool DisableUpdateOutputs { get; private set; }
-        public TaskTrigger EventTrigger { get; private set; }
-        public string EventTag { get; private set; }
-        public bool EnableTimeout { get; private set; }
+        public bool InhibitTask { get; set; }
+        public bool DisableUpdateOutputs { get; set; }
         public IEnumerable<string> ScheduledPrograms => _programs.AsEnumerable();
 
         public void SetType(TaskType type)
@@ -68,37 +65,7 @@ namespace L5Sharp.Core
             Watchdog = watchdog;
         }
 
-        public void Inhibit()
-        {
-            InhibitTask = true;
-        }
-
-        public void UnInhibit()
-        {
-            InhibitTask = false;
-        }
-
-        public void SetDisableUpdateOutputs(bool disableUpdateOutputs)
-        {
-            DisableUpdateOutputs = disableUpdateOutputs;
-        }
-
-        public void SetEventTrigger(TaskTrigger trigger)
-        {
-            EventTrigger = trigger;
-        }
-
-        public void SetEventTag(string tagName)
-        {
-            EventTag = tagName;
-        }
-
-        public void SetEnableTimeout(bool enableTimeout)
-        {
-            EnableTimeout = enableTimeout;
-        }
-
-        public void AddProgram(string name)
+        public void ScheduleProgram(string name)
         {
             if (string.IsNullOrEmpty(name)) throw new ArgumentException("Can not be null or empty", nameof(name));
             if (_programs.Contains(name)) return;
@@ -112,16 +79,38 @@ namespace L5Sharp.Core
             _programs.Remove(name);
         }
 
-        public IProgram NewProgram(string name)
+        public bool Equals(Task other)
         {
-            if (_programs.Contains(name))
-                throw new ComponentNameCollisionException(name, typeof(Program));
-            
-            var program = new Program(name);
-            
-            AddProgram(program.Name);
-            
-            return program;
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return base.Equals(other)
+                   && ScheduledPrograms.SequenceEqual(other.ScheduledPrograms)
+                   && Equals(Type, other.Type) && Priority == other.Priority && Rate.Equals(other.Rate) &&
+                   Watchdog.Equals(other.Watchdog) && InhibitTask == other.InhibitTask &&
+                   DisableUpdateOutputs == other.DisableUpdateOutputs;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            return obj.GetType() == GetType() && Equals((Task)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(base.GetHashCode(), _programs, Type, Priority, Rate, Watchdog, InhibitTask,
+                DisableUpdateOutputs);
+        }
+
+        public static bool operator ==(Task left, Task right)
+        {
+            return Equals(left, right);
+        }
+
+        public static bool operator !=(Task left, Task right)
+        {
+            return !Equals(left, right);
         }
     }
 }

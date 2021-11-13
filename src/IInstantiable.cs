@@ -2,6 +2,6 @@
 {
     public interface IInstantiable<out T>
     {
-        T Create();
+        T Instantiate();
     }
 }

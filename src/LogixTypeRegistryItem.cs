@@ -21,7 +21,7 @@ namespace L5Sharp
         private IComponentFactory Factory { get; }
         private XElement Element { get; }
 
-        public IDataType Create()
+        public IDataType Instantiate()
         {
             if (Class == DataTypeClass.User)
             {

@@ -23,7 +23,7 @@ namespace L5Sharp
                 return Logix.InstantiateType(name);
             
             var item = _registryItems.SingleOrDefault(i => i.Name == name);
-            return item != null ? item.Create() : new Undefined();
+            return item != null ? item.Instantiate() : new Undefined();
         }
 
         private void RegisterTypes(IEnumerable<XElement> elements, DataTypeClass typeClass,

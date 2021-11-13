@@ -87,7 +87,7 @@ namespace L5Sharp.Types
             return Equals(Radix, other.Radix) && Value.Equals(other.Value);
         }
 
-        public IDataType Create()
+        public IDataType Instantiate()
         {
             return new Real();
         }

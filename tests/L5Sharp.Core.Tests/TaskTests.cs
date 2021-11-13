@@ -67,6 +67,24 @@ namespace L5Sharp.Core.Tests
         }
 
         [Test]
+        public void SetType_ValidType_ShouldBeExpectedType()
+        {
+            var task = new Task("Test");
+            
+            task.SetType(TaskType.Continuous);
+
+            task.Type.Should().Be(TaskType.Continuous);
+        }
+        
+        [Test]
+        public void SetType_Null_ShouldThrowArgumentNullException()
+        {
+            var task = new Task("Test");
+            
+            FluentActions.Invoking(() => task.SetType(null)).Should().Throw<ArgumentNullException>();
+        }
+
+        [Test]
         public void SetRate_ValidRange_ShouldBeExpectedValue()
         {
             var fixture = new Fixture();
@@ -130,7 +148,7 @@ namespace L5Sharp.Core.Tests
         {
             var task = new Task("TestTask");
             
-            task.AddProgram("Program");
+            task.ScheduleProgram("Program");
 
             task.ScheduledPrograms.Should().Contain("Program");
         }
@@ -140,9 +158,9 @@ namespace L5Sharp.Core.Tests
         {
             var task = new Task("TestTask");
             
-            task.AddProgram("Program");
+            task.ScheduleProgram("Program");
 
-            FluentActions.Invoking(() => task.AddProgram("Program")).Should().NotThrow();
+            FluentActions.Invoking(() => task.ScheduleProgram("Program")).Should().NotThrow();
         }
         
         [Test]
@@ -150,43 +168,14 @@ namespace L5Sharp.Core.Tests
         {
             var task = new Task("TestTask");
             
-            FluentActions.Invoking(() => task.AddProgram(null)).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(() => task.ScheduleProgram(null)).Should().Throw<ArgumentException>();
         }
 
-        [Test]
-        public void NewProgram_NonExistingProgram_ShouldAddProgram()
-        {
-            var task = new Task("TestTask");
-            
-            var program = task.NewProgram("Program");
-
-            task.ScheduledPrograms.Should().Contain("Program");
-            program.Should().NotBeNull();
-        }
-
-        [Test]
-        public void NewProgram_ExistingProgram_ShouldThrowNameCollisionException()
-        {
-            var task = new Task("TestTask");
-            
-            task.AddProgram("Program");
-
-            FluentActions.Invoking(() => task.NewProgram("Program")).Should().Throw<ComponentNameCollisionException>();
-        }
-        
-        [Test]
-        public void NewProgram_Null_ShouldThrowArgumentNullException()
-        {
-            var task = new Task("TestTask");
-            
-            FluentActions.Invoking(() => task.NewProgram(null)).Should().Throw<ArgumentException>();
-        }
-        
         [Test]
         public void RemoveProgram_ExistingProgram_ProgramsShouldBeEmpty()
         {
             var task = new Task("TestTask");
-            task.AddProgram("Program");
+            task.ScheduleProgram("Program");
             
             task.RemoveProgram("Program");
             
@@ -210,6 +199,155 @@ namespace L5Sharp.Core.Tests
             var task = new Task("TestTask");
             
             FluentActions.Invoking(() => task.RemoveProgram(null)).Should().Throw<ArgumentException>();
+        }
+
+        [Test]
+        public void Inhibit_WhenCalled_ShouldSetInhibitToTrue()
+        {
+            var task = new Task("TestTask");
+            
+            task.InhibitTask = true;
+
+            task.InhibitTask.Should().BeTrue();
+        }
+        
+        [Test]
+        public void UnInhibit_WhenCalled_ShouldSetInhibitToFalse()
+        {
+            var task = new Task("TestTask");
+            
+            task.InhibitTask = false;
+
+            task.InhibitTask.Should().BeFalse();
+        }
+        
+        [Test]
+        public void DisableUpdateOutputs_WhenCalled_ShouldBeTrue()
+        {
+            var task = new Task("TestTask");
+            
+            task.DisableUpdateOutputs = true;
+
+            task.DisableUpdateOutputs.Should().BeTrue();
+        }
+        
+        [Test]
+        public void DisableUpdateOutputs_WhenCalled_ShouldBeFalse()
+        {
+            var task = new Task("TestTask");
+            
+            task.DisableUpdateOutputs = false;
+
+            task.DisableUpdateOutputs.Should().BeFalse();
+        }
+        
+        [Test]
+        public void TypedEquals_AreEqual_ShouldBeTrue()
+        {
+            var first = new Task("Test");
+            var second = new Task("Test");
+
+            var result = first.Equals(second);
+
+            result.Should().BeTrue();
+        }
+        
+        [Test]
+        public void TypedEquals_AreNotEqual_ShouldBeFalse()
+        {
+            var first = new Task("Test", TaskType.Periodic, 3, 500);
+            var second = new Task("Test", TaskType.Periodic, 4, 500);
+
+            var result = first.Equals(second);
+
+            result.Should().BeFalse();
+        }
+
+        [Test]
+        public void TypedEquals_AreSame_ShouldBeTrue()
+        {
+            var first = new Task("Test");
+            var second = first;
+
+            var result = first.Equals(second);
+
+            result.Should().BeTrue();
+        }
+
+
+        [Test]
+        public void TypedEquals_Null_ShouldBeFalse()
+        {
+            var first = new Task("Test");
+
+            var result = first.Equals(null);
+
+            result.Should().BeFalse();
+        }
+
+        [Test]
+        public void ObjectEquals_AreEqual_ShouldBeTrue()
+        {
+            var first = new Task("Test");
+            var second = new Task("Test");
+
+            var result = first.Equals((object)second);
+
+            result.Should().BeTrue();
+        }
+
+        [Test]
+        public void ObjectEquals_AreSame_ShouldBeTrue()
+        {
+            var first = new Task("Test");
+            var second = first;
+
+            var result = first.Equals((object)second);
+
+            result.Should().BeTrue();
+        }
+
+
+        [Test]
+        public void ObjectEquals_Null_ShouldBeFalse()
+        {
+            var first = new Task("Test");
+
+            var result = first.Equals((object)null);
+
+            result.Should().BeFalse();
+        }
+
+        [Test]
+        public void OperatorEquals_AreEqual_ShouldBeTrue()
+        {
+            var first = new Task("Test");
+            var second = new Task("Test");
+
+            var result = first == second;
+
+            result.Should().BeTrue();
+        }
+
+        [Test]
+        public void OperatorNotEquals_AreEqual_ShouldBeFalse()
+        {
+            var first = new Task("Test");
+            var second = new Task("Test");
+
+            var result = first != second;
+
+            result.Should().BeFalse();
+        }
+
+        [Test]
+        public void GetHashCode_WhenCalled_ShouldNotBeZero()
+        {
+            var first = new Task("Test");
+
+            var hash = first.GetHashCode();
+
+            hash.Should().NotBe(0);
         }
     }
 }

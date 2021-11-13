@@ -120,7 +120,7 @@ namespace L5Sharp.Types.Tests
         {
             var type = new String();
 
-            var instance = type.Create();
+            var instance = type.Instantiate();
 
             instance.Should().NotBeSameAs(type);
         }

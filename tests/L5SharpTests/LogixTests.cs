@@ -99,7 +99,7 @@ namespace L5SharpTests
                 Member.Create<IDataType>("Member02", new Timer(new Dint(1000)))
             });
 
-            Logix.Register(type.Name, type.Create);
+            Logix.Register(type.Name, type.Instantiate);
 
             Logix.ContainsType(type.Name).Should().BeTrue();
 

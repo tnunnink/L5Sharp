@@ -20,12 +20,16 @@ namespace L5Sharp.Core
         public TagDataFormat DataFormat => TagDataFormat.Decorated;
         public IMembers Members { get; }
 
-        public IDataType Create()
+        public IDataType Instantiate()
         {
             var members = new Members(this);
-            
+
             foreach (var member in Members)
-                members.Add(((Member<IDataType>)member).Copy());
+            {
+                var copy = Member.Create<IDataType>(member.Name, member.DataType, member.Dimensions, member.Radix,
+                    member.ExternalAccess, member.Description);
+                members.Add(copy);
+            }
             
             return new DataType(Name, Description, members);
         }

@@ -7,20 +7,15 @@ namespace L5Sharp
     {
         TagType TagType { get; }
         TagUsage Usage { get; }
-        bool Required { get; }
-        bool Visible { get; }
-        IAtomic Min { get; }
-        IAtomic Max { get; }
+        bool Required { get; set; }
+        bool Visible { get; set; }
+        ITag<TDataType> Alias { get; }
         IAtomic Default { get; }
-        bool Constant { get; }
+        bool Constant { get; set; }
+        void SetName(string name);
         void SetUsage(TagUsage usage);
-        void IsRequired();
-        void IsVisible();
         void SetDimensions(Dimensions dimensions);
-        void SetMin(IAtomic value);
-        void SetMax(IAtomic value);
-        void SetDefault(IAtomic value);
         void SetExternalAccess(ExternalAccess access);
-        void IsConstant();
+        void SetDefault(IAtomic value);
     }
 }

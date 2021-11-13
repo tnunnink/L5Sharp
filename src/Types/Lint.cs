@@ -93,7 +93,7 @@ namespace L5Sharp.Types
             return Name.Equals(other.Name) && Equals(Radix, other.Radix) && Value == other.Value;
         }
 
-        public IDataType Create()
+        public IDataType Instantiate()
         {
             return new Lint();
         }

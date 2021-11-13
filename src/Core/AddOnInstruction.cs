@@ -6,9 +6,9 @@ using L5Sharp.Enums;
 
 namespace L5Sharp.Core
 {
-    public class AddOnInstruction //: LogixComponent, IAddOnInstruction
+    public class AddOnInstruction : LogixComponent, IAddOnInstruction
     {
-        /*private const string LogicRoutineName = "Logic";
+        private const string LogicRoutineName = "Logic";
         private const string PreScanRoutineName = "Prescan";
         private const string PostScanRoutineName = "Postscan";
         private const string EnableInRoutineName = "EnableInFalse";
@@ -21,7 +21,8 @@ namespace L5Sharp.Core
             DateTime createdDate = default, string createdBy = null,
             DateTime editedDate = default, string editedBy = null,
             Revision softwareRevision = null, string additionalHelpText = null, bool isEncrypted = false,
-            IParameters parameters = null, ITags localTags = null)
+            IEnumerable<IParameter<IDataType>> parameters = null, 
+            IEnumerable<ITag<IDataType>> localTags = null)
             : base(name, description)
         {
             Revision = revision ?? new Revision();
@@ -39,84 +40,69 @@ namespace L5Sharp.Core
             AdditionalHelpText = additionalHelpText;
             IsEncrypted = isEncrypted;
 
-            Parameters = parameters;
-
-            LocalTags = new Tags(this);
-            if (localTags != null)
-                LocalTags.AddRange(localTags);
+            Parameters = new Parameters(this, parameters);
+            LocalTags = new Tags(this, localTags);
 
             type ??= RoutineType.Ladder;
             InitializeRoutine(type);
         }
 
 
+        public Radix Radix => Radix.Null;
         public DataTypeFamily Family => DataTypeFamily.None;
-
-        public DataTypeClass Class => DataTypeClass.User;
-
+        public DataTypeClass Class => DataTypeClass.AddOnDefined;
         public TagDataFormat DataFormat => TagDataFormat.Decorated;
-
         
+        /*public NeutralText Signature => $"{Name}({string.Join(",", Parameters.Where(p => p.Required).Select(m => m.Name))})";*/
+        public RoutineType Type => Routines.Single(r => r.Name == LogicRoutineName).Type;
+        public Revision Revision { get; private set; }
+        public string RevisionExtension { get; private set; }
+        public string RevisionNote { get; private set; }
+        public string Vendor { get; private set; }
+        public bool ExecutePreScan { get; set; }
+        public bool ExecutePostScan { get; set; }
+        public bool ExecuteEnableInFalse { get; set; }
+        public DateTime CreatedDate { get; private set; }
+        public string CreatedBy { get; private set; }
+        public DateTime EditedDate { get; private set; }
+        public string EditedBy { get; private set; }
+        public Revision SoftwareRevision { get; private set; }
+        public string AdditionalHelpText { get; private set; }
+        public bool IsEncrypted { get; }
+        public IRoutine Logic => _routines.Single(r => r.Name == LogicRoutineName);
+        public IRoutine PreScan => _routines.Single(r => r.Name == PreScanRoutineName);
+        public IRoutine PostScan => _routines.Single(r => r.Name == PostScanRoutineName);
+        public IRoutine EnableInFalse => _routines.Single(r => r.Name == EnableInRoutineName);
+        public IEnumerable<IMember<IDataType>> Members => Parameters.Where(p => p.Usage != TagUsage.InOut);
 
-        public string Signature => $"{Name}({string.Join(",", Operands.Select(m => m.Name))})";
+        public NeutralText Signature { get; }
+        IEnumerable<IMember<IDataType>> IInstruction.Parameters => Parameters;
+        public IParameters Parameters { get; }
+        public ITags LocalTags { get; }
 
-        public IEnumerable<ITagMember<IDataType>> Arguments { get; }
+        public IEnumerable<IRoutine> Routines => _routines.AsReadOnly();
+
+
+        public IMember<IDataType> GetParameter(string name)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IMember<TType> GetParameter<TType>(string name) where TType : IDataType
+        {
+            throw new NotImplementedException();
+        }
 
         public NeutralText Of(params ITagMember<IDataType>[] tags)
         {
             throw new NotImplementedException();
         }
 
-        public NeutralText Of(params IAtomic[] values)
+        public NeutralText Of(params object[] values)
         {
             throw new NotImplementedException();
         }
-
-        public RoutineType Type => Routines.Single(r => r.Name == LogicRoutineName).Type;
-
-        public Revision Revision { get; private set; }
-
-        public string RevisionExtension { get; private set; }
-
-        public string RevisionNote { get; private set; }
-
-        public string Vendor { get; private set; }
-
-        public bool ExecutePreScan { get; private set; }
-
-        public bool ExecutePostScan { get; private set; }
-
-        public bool ExecuteEnableInFalse { get; private set; }
-
-        public DateTime CreatedDate { get; private set; }
-
-        public string CreatedBy { get; private set; }
-
-        public DateTime EditedDate { get; private set; }
-
-        public string EditedBy { get; private set; }
-
-        public Revision SoftwareRevision { get; private set; }
-
-        public string AdditionalHelpText { get; private set; }
-
-        public bool IsEncrypted { get; }
-
-        public IRoutine Logic => _routines.Single(r => r.Name == LogicRoutineName);
-        public IRoutine PreScan => _routines.Single(r => r.Name == PreScanRoutineName);
-        public IRoutine PostScan => _routines.Single(r => r.Name == PostScanRoutineName);
-        public IRoutine EnableInFalse => _routines.Single(r => r.Name == EnableInRoutineName);
-        public IEnumerable<IMember<IDataType>> Operands => Parameters.Where(p => p.Required);
-
-        public IEnumerable<IMember<IDataType>> Members => Parameters;
-
-        public IParameters Parameters { get; }
-
-        public ITags LocalTags { get; }
-
-        public IEnumerable<IRoutine> Routines => _routines.AsReadOnly();
-
-
+        
         public void SetRevision(Revision revision)
         {
             if (revision == null)
@@ -156,6 +142,11 @@ namespace L5Sharp.Core
         {
             var routine = type.Create(LogicRoutineName);
             _routines.Add(routine);
-        }*/
+        }
+
+        public IDataType Instantiate()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

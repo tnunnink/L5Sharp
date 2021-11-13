@@ -9,8 +9,7 @@ namespace L5Sharp.Core
 {
     public class Member<TDataType> :
         IMember<TDataType>,
-        IEquatable<Member<TDataType>>,
-        IPrototype<IMember<TDataType>>
+        IEquatable<Member<TDataType>>
         where TDataType : IDataType
     {
         //this is a work around to accomodate how descriptions are propagated in RSLogix
@@ -76,12 +75,6 @@ namespace L5Sharp.Core
             _overridenDescription = description;
         }
 
-        public IMember<TDataType> Copy()
-        {
-            var dataType = (TDataType)DataType.Create();
-            return Member.Create(Name, dataType, Dimensions.Copy(), Radix, ExternalAccess, Description);
-        }
-
         public bool Equals(Member<TDataType> other)
         {
             if (ReferenceEquals(null, other)) return false;
@@ -118,7 +111,7 @@ namespace L5Sharp.Core
             var elements = new List<IMember<TDataType>>(Dimensions);
 
             for (var i = 0; i < Dimensions; i++)
-                elements.Add(Member.Create($"[{i}]", (TDataType)DataType.Create(),
+                elements.Add(Member.Create($"[{i}]", (TDataType)DataType.Instantiate(),
                     Dimensions.Empty, Radix, ExternalAccess, Description));
 
             return elements.ToArray();

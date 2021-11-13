@@ -84,7 +84,7 @@ namespace L5Sharp.Types
             return Value.CompareTo(other.Value);
         }
 
-        public IDataType Create()
+        public IDataType Instantiate()
         {
             return new Dint();
         }

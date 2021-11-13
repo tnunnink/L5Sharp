@@ -9,24 +9,14 @@ namespace L5Sharp
         byte Priority { get; }
         float Rate { get; }
         float Watchdog { get; }
-        bool InhibitTask { get; }
-        bool DisableUpdateOutputs { get; }
-        TaskTrigger EventTrigger { get; }
-        string EventTag { get; }
-        bool EnableTimeout { get; }
+        bool InhibitTask { get; set; }
+        bool DisableUpdateOutputs { get; set; }
         IEnumerable<string> ScheduledPrograms { get; }
         void SetType(TaskType type);
         void SetPriority(byte priority);
         void SetRate(float rate);
         void SetWatchdog(float watchdog);
-        void Inhibit();
-        void UnInhibit();
-        void SetDisableUpdateOutputs(bool disableUpdateOutputs);
-        void SetEventTrigger(TaskTrigger trigger);
-        void SetEventTag(string tagName);
-        void SetEnableTimeout(bool enableTimeout);
-        void AddProgram(string name);
+        void ScheduleProgram(string name);
         void RemoveProgram(string name);
-        IProgram NewProgram(string name);
     }
 }

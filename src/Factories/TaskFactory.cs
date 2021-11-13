@@ -37,7 +37,7 @@ namespace L5Sharp.Factories
             var programs = element.Descendants("ScheduledProgram").Select(e => e.GetName());
             
             foreach (var program in programs)
-                task.AddProgram(program);
+                task.ScheduleProgram(program);
 
             return task;
         }

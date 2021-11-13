@@ -48,7 +48,7 @@ namespace L5Sharp.Core
                 DATA.Elements[i].DataType.SetValue(bytes[i]);
         }
 
-        public IDataType Create()
+        public IDataType Instantiate()
         {
             return new StringDefined(Name, DATA.Dimensions.Copy(), Description);
         }

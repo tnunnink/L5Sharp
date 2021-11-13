@@ -22,7 +22,7 @@ namespace L5Sharp.Factories
             if (element == null) return null;
 
             var name = element.GetName();
-            var dataType = _context.TypeRegistry.TryGetType(element.GetDataTypeName())?.Create();
+            var dataType = _context.TypeRegistry.TryGetType(element.GetDataTypeName())?.Instantiate();
             var dimensions = element.GetValue<Tag<IDataType>>(t => t.Dimensions);
             var radix = element.GetValue<Tag<IDataType>>(t => t.Radix);
             var access = element.GetValue<Tag<IDataType>>(t => t.ExternalAccess);

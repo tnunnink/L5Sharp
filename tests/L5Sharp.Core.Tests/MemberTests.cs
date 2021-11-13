@@ -157,6 +157,15 @@ namespace L5Sharp.Core.Tests
             FluentActions.Invoking(() => member.SetRadix(Radix.Decimal)).Should()
                 .Throw<RadixNotSupportedException>();
         }
+        
+        [Test]
+        public void SetRadix_NonAtomic_ShouldThrowComponentNotConfigurableException()
+        {
+            var member = Member.Create<Timer>("Test");
+
+            FluentActions.Invoking(() => member.SetRadix(Radix.Decimal)).Should()
+                .Throw<ComponentNotConfigurableException>();
+        }
 
         [Test]
         public void SetRadix_ValidRadix_ShouldBeExpectedValue()
@@ -166,6 +175,16 @@ namespace L5Sharp.Core.Tests
             member.SetRadix(Radix.Exponential);
 
             member.Radix.Should().Be(Radix.Exponential);
+        }
+        
+        [Test]
+        public void SetRadix_ArrayOfAtomicsValidRadix_ElementsShouldAllHaveExpectedRadix()
+        {
+            var member = Member.Create<Sint>("Test", new Dimensions(12));
+
+            member.SetRadix(Radix.Hex);
+
+            member.Elements.Select(e => e.Radix).Should().AllBeEquivalentTo(Radix.Hex);
         }
         
         [Test]
@@ -206,28 +225,6 @@ namespace L5Sharp.Core.Tests
             var elements = member.Elements;
 
             elements.Should().BeEmpty();
-        }
-
-        [Test]
-        public void Copy_WhenCalled_ShouldReturnDifferentInstances()
-        {
-            var member = Member.Create<Bool>("Test").As<Member<Bool>>();
-
-            var copy = member.Copy();
-
-            copy.Should().NotBeSameAs(member);
-            copy.DataType.Should().NotBeSameAs(member.DataType);
-            copy.Dimensions.Should().NotBeSameAs(member.Dimensions);
-        }
-
-        [Test]
-        public void Copy_WhenCalled_PropertiesShouldBeEqual()
-        {
-            var member = Member.Create<Bool>("Test").As<Member<Bool>>();
-
-            var copy = member.Copy();
-
-            copy.Should().BeEquivalentTo(member);
         }
 
         [Test]

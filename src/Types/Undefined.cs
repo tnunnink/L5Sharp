@@ -10,7 +10,7 @@ namespace L5Sharp.Types
         public DataTypeFamily Family => DataTypeFamily.None;
         public DataTypeClass Class => DataTypeClass.Predefined;
         public TagDataFormat DataFormat => null;
-        public IDataType Create()
+        public IDataType Instantiate()
         {
             return new Undefined();
         }

@@ -233,7 +233,7 @@ namespace L5Sharp.Core
 
             for (var i = 0; i < Dimensions; i++)
             {
-                var member = Member.Create($"[{i}]", (TDataType) _dataType.Create(),
+                var member = Member.Create($"[{i}]", (TDataType) _dataType.Instantiate(),
                     Dimensions.Empty, Radix, ExternalAccess, Description);
                 elements.Add(member);
             }

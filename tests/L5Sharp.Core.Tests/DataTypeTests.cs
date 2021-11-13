@@ -49,6 +49,7 @@ namespace L5Sharp.Core.Tests
             type.Name.Should().Be("Test");
             type.Class.Should().Be(DataTypeClass.User);
             type.Family.Should().Be(DataTypeFamily.None);
+            type.Radix.Should().Be(Radix.Null);            
             type.Description.Should().Be(description);
             type.Members.Should().BeEmpty();
             type.DataFormat.Should().Be(TagDataFormat.Decorated);
@@ -339,8 +340,19 @@ namespace L5Sharp.Core.Tests
         }
 
         [Test]
-        public void TypeEquals_Equal_ShouldBeTrue()
+        public void Instantiate_WhenCalled_ShouldReturnDifferentInstance()
         {
+            var type = new DataType("Type01", "This is a test", new List<IMember<IDataType>>
+            {
+                Member.Create("Member01", new Bool()),
+                Member.Create("Member02", new Counter()),
+                Member.Create("Member03", new Dint()),
+                Member.Create("Member04", new String())
+            });
+
+            var instance = type.Instantiate();
+
+            instance.Should().NotBeSameAs(type);
         }
 
         [Test]

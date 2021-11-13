@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using L5Sharp.Abstractions;
 using L5Sharp.Builders;
 
@@ -14,7 +15,7 @@ namespace L5Sharp.Core
         {
         }
         
-        public Tags(IAddOnDefined instruction)
+        public Tags(IAddOnDefined instruction, IEnumerable<ITag<IDataType>> tags = null)
         {
         }
 
