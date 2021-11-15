@@ -1,4 +1,5 @@
 ﻿using System;
+using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Exceptions;
 
@@ -8,6 +9,7 @@ namespace L5Sharp.Types
     {
         public Bool()
         {
+            Name = new ComponentName(nameof(Bool).ToUpper());
             Value = default;
             Radix = Radix.Decimal;
         }
@@ -22,7 +24,7 @@ namespace L5Sharp.Types
             SetRadix(radix);
         }
 
-        public string Name => nameof(Bool).ToUpper();
+        public ComponentName Name { get; }
         public string Description => $"RSLogix representation of a {typeof(bool)}";
         public DataTypeFamily Family => DataTypeFamily.None;
         public DataTypeClass Class => DataTypeClass.Atomic;

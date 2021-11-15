@@ -32,7 +32,7 @@ namespace L5Sharp.Core
         public TagDataFormat DataFormat => TagDataFormat.String;
         public string Value => GetValue();
         public IMember<Dint> LEN { get; }
-        public IMember<Sint> DATA { get; }
+        public IArrayMember<Sint> DATA { get; }
         public IEnumerable<IMember<IDataType>> Members { get; }
 
         public void SetValue(string value)
@@ -45,7 +45,7 @@ namespace L5Sharp.Core
             ClearData();
             
             for (var i = 0; i < bytes.Length; i++)
-                DATA.Elements[i].DataType.SetValue(bytes[i]);
+                DATA[i].DataType.SetValue(bytes[i]);
         }
 
         public IDataType Instantiate()
@@ -60,13 +60,13 @@ namespace L5Sharp.Core
 
         private string GetValue()
         {
-            var bytes = DATA.Elements.Select(d => d.DataType.Value).ToArray();
+            var bytes = DATA.Select(d => d.DataType.Value).ToArray();
             return Encoding.ASCII.GetString(bytes);
         }
 
         private void ClearData()
         {
-            foreach (var dataElement in DATA.Elements)
+            foreach (var dataElement in DATA)
                 dataElement.DataType.SetValue(0);
         }
     }

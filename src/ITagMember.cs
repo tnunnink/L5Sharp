@@ -6,8 +6,9 @@ namespace L5Sharp
 {
     public interface ITagMember<out TDataType> : IMember<TDataType> where TDataType : IDataType
     {
-        string FullName { get; }
+        string MemberName { get; }
         new string DataType { get; }
+        string FullName { get; }
         ILogixComponent Parent { get; }
         TDataType GetData();
         void SetData(IAtomic value);

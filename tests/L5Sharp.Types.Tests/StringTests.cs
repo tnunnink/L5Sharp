@@ -45,7 +45,7 @@ namespace L5Sharp.Types.Tests
             type.DATA.Should().NotBeNull();
             type.DATA.DataType.Should().Be(new Sint(Radix.Ascii));
             type.DATA.Dimensions.Should().Be(new Dimensions(82));
-            type.DATA.Elements.Should().HaveCount(82);
+            type.DATA.Should().HaveCount(82);
         }
 
         [Test]

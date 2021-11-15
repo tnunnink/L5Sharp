@@ -5,11 +5,12 @@ namespace L5Sharp
 {
     public interface ITag<out TDataType> : ITagMember<TDataType> where TDataType : IDataType
     {
+        new ComponentName Name { get; }
         TagType TagType { get; }
         Scope Scope { get; }
         TagUsage Usage { get; }
         bool Constant { get; set; }
-        void SetName(string name);
+        void SetName(ComponentName name);
         void SetUsage(TagUsage usage);
         void SetExternalAccess(ExternalAccess externalAccess);
         ITag<TType> ChangeDataType<TType>(TType dataType) where TType : IDataType;

@@ -20,12 +20,12 @@ namespace L5Sharp.Core
                       throw new ArgumentNullException(nameof(parent), "TagMember must have parent");
         }
 
-        public string Name => _member.Name;
+        public ComponentName Name => _member.Name;
         
-        public string FullName => Parent == null ? Name
+        public string FullName => Parent == null ? Name.ToString()
             : Parent is ITagMember<IDataType> tagMember && !tagMember.Dimensions.AreEmpty ? $"{GetName(Parent)}{Name}"
             : $"{GetName(Parent)}.{Name}";
-
+        
         public string DataType => _member.DataType.Name;
         TDataType IMember<TDataType>.DataType => _member.DataType;
         public Dimensions Dimensions => _member.Dimensions;
@@ -35,8 +35,6 @@ namespace L5Sharp.Core
             _member.ExternalAccess.IsMoreRestrictive(_parent.ExternalAccess)
                 ? _member.ExternalAccess
                 : _parent.ExternalAccess;
-
-        public IMember<TDataType>[] Elements => _member.Elements;
 
         public string Description => _member.Description;
 
@@ -59,7 +57,7 @@ namespace L5Sharp.Core
 
         public void SetDescription(string description) => _member.SetDescription(description);
 
-        public IEnumerable<string> GetMemberList() => _member.DataType.GetMembers().Select(m => m.Name);
+        public IEnumerable<string> GetMemberList() => _member.DataType.GetMembers().Select(m => m.Name.ToString());
 
         public IEnumerable<string> GetDeepMembersList() => _member.DataType.GetMemberNames();
 
@@ -74,8 +72,8 @@ namespace L5Sharp.Core
         
         public ITagMember<IDataType> GetElement(ushort index)
         {
-            return index < Elements.Length 
-                ? new TagMember<IDataType>((IMember<IDataType>)Elements[index], this) 
+            return index < Dimensions.Length && _member is IArrayMember<TDataType> arrayMember
+                ? new TagMember<IDataType>(arrayMember[index], this) 
                 : null;
         }
 
@@ -149,7 +147,7 @@ namespace L5Sharp.Core
                     ? parentMember.Dimensions.Length > 0
                         ? $"{GetName(tagMember.Parent)}{member.Name}"
                         : $"{GetName(tagMember.Parent)}.{member.Name}"
-                    : member.Name;
+                    : member.Name.ToString();
             }
 
             return member.Name;

@@ -1,4 +1,5 @@
 ﻿using System;
+using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Exceptions;
 
@@ -22,7 +23,7 @@ namespace L5Sharp.Types
             SetRadix(radix);
         }
 
-        public string Name => nameof(Dint).ToUpper();
+        public ComponentName Name => nameof(Dint).ToUpper();
         public string Description => $"RSLogix representation of a {typeof(int)}";
         public DataTypeFamily Family => DataTypeFamily.None;
         public DataTypeClass Class => DataTypeClass.Atomic;

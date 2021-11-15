@@ -1,35 +1,30 @@
 ﻿using System;
-using L5Sharp.Utilities;
+using L5Sharp.Core;
 
 namespace L5Sharp.Abstractions
 {
     public abstract class LogixComponent : ILogixComponent, IEquatable<LogixComponent>
     {
-        private string _name;
-        private string _description;
-        
-        protected LogixComponent(string name, string description)
+        protected LogixComponent(ComponentName name, string description)
         {
-            Validate.Name(name);
-            
-            _name = name;
-            _description = description;
+            Name = name;
+            Description = description;
         }
 
-        public virtual string Name => _name;
 
-        public virtual string Description => _description;
+        public ComponentName Name { get; private set; }
+        public string Description { get; private set; }
 
-        public virtual void SetName(string name)
+        public void SetName(ComponentName name)
         {
-            if (_name == name) return;
-            Validate.Name(name);
-            _name = name;
+            if (name == null) throw new ArgumentNullException(nameof(name));
+            if (name == Name) return;
+            Name = name;
         }
 
         public virtual void SetDescription(string description)
         {
-            _description = description;
+            Description = description;
         }
 
         public bool Equals(LogixComponent other)

@@ -7,7 +7,7 @@ namespace L5Sharp
     {
         string Value { get; }
         IMember<Dint> LEN { get; }
-        IMember<Sint> DATA { get; }
+        IArrayMember<Sint> DATA { get; }
         void SetValue(string value);
     }
 }

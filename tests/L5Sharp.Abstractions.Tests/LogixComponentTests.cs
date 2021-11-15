@@ -1,6 +1,7 @@
 ﻿using System;
 using AutoFixture;
 using FluentAssertions;
+using L5Sharp.Core;
 using L5Sharp.Exceptions;
 using NUnit.Framework;
 
@@ -48,7 +49,7 @@ namespace L5Sharp.Abstractions.Tests
 
             sut.SetName("Test");
 
-            sut.Name.Should().Be("Test");
+            sut.Name.ToString().Should().Be("Test");
         }
         
         [Test]
@@ -75,7 +76,7 @@ namespace L5Sharp.Abstractions.Tests
             
             sut.SetName("New_Name");
 
-            sut.Name.Should().Be("New_Name");
+            sut.Name.Should().Be(new ComponentName("New_Name"));
         }
         
         [Test]

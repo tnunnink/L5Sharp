@@ -2,67 +2,69 @@
 using System.Collections.Generic;
 using System.Linq;
 using L5Sharp.Abstractions;
+using L5Sharp.Builders;
 using L5Sharp.Enums;
-using L5Sharp.Exceptions;
 
 namespace L5Sharp.Core
 {
+    /// <inheritdoc cref="L5Sharp.ITask" />
     public class Task : LogixComponent, ITask, IEquatable<Task>
     {
         private readonly HashSet<string> _programs = new HashSet<string>();
 
-        public Task(string name, TaskType type = null, byte priority = 10, float rate = 10, float watchdog = 500,
+        /// <inheritdoc />
+        internal Task(string name, TaskType type = null, 
+            TaskPriority priority = null, ScanRate rate = null, Watchdog watchdog = null,
             bool inhibitTask = false, bool disableUpdateOutputs = false, string description = null)
             : base(name, description)
         {
             Type = type ?? TaskType.Periodic;
-            SetPriority(priority);
-            SetRate(rate);
-            SetWatchdog(watchdog);
+            Priority = priority ?? new TaskPriority(10);
+            Rate = rate ?? new ScanRate(10);
+            Watchdog = watchdog ?? new Watchdog(500);
             InhibitTask = inhibitTask;
             DisableUpdateOutputs = disableUpdateOutputs;
         }
 
+        /// <inheritdoc />
         public TaskType Type { get; private set; }
-        public byte Priority { get; private set; }
-        public float Rate { get; private set; }
-        public float Watchdog { get; private set; }
+
+        /// <inheritdoc />
+        public TaskPriority Priority { get; set; }
+
+        /// <inheritdoc />
+        public ScanRate Rate { get; set; }
+
+        /// <inheritdoc />
+        public Watchdog Watchdog { get; set; }
+
+        /// <inheritdoc />
         public bool InhibitTask { get; set; }
+
+        /// <inheritdoc />
         public bool DisableUpdateOutputs { get; set; }
+
+        /// <inheritdoc />
         public IEnumerable<string> ScheduledPrograms => _programs.AsEnumerable();
 
-        public void SetType(TaskType type)
+        /// <summary>
+        /// Creates a new instance of a <see cref="ITask"/> with default properties.
+        /// </summary>
+        /// <param name="name">The name of the task to create.</param>
+        /// <returns>A new instance of <see cref="ITask"/></returns>
+        public static ITask Create(string name)
         {
-            if (type == null)
-                throw new ArgumentNullException(nameof(type), "Task Type can not be null");
-
-            Type = type;
+            return new Task(name);
         }
-
-        public void SetPriority(byte priority)
+        
+        /// <summary>
+        /// Builds a new instance of <see cref="ITask"/> using the fluent builder API.
+        /// </summary>
+        /// <param name="name">The name of the task to create.</param>
+        /// <returns>A new instance of <see cref="ITaskBuilder"/></returns>
+        public static ITaskBuilder Build(string name)
         {
-            if (priority < 1 || priority > 15)
-                throw new ArgumentOutOfRangeException(nameof(Priority), "Priority must be value between 1 and 15");
-
-            Priority = priority;
-        }
-
-        public void SetRate(float rate)
-        {
-            if (rate < 0.1f || rate > 2000000.0f)
-                throw new ArgumentOutOfRangeException(nameof(Priority),
-                    "Rate must be value between 0.1 and 2,000,000.0 ms");
-
-            Rate = rate;
-        }
-
-        public void SetWatchdog(float watchdog)
-        {
-            if (watchdog < 0.1f || watchdog > 2000000.0f)
-                throw new ArgumentOutOfRangeException(nameof(Watchdog),
-                    "Watchdog must be value between 0.1 and 2,000,000.0 ms");
-
-            Watchdog = watchdog;
+            return new TaskBuilder(name);
         }
 
         public void ScheduleProgram(string name)
@@ -85,11 +87,15 @@ namespace L5Sharp.Core
             if (ReferenceEquals(this, other)) return true;
             return base.Equals(other)
                    && ScheduledPrograms.SequenceEqual(other.ScheduledPrograms)
-                   && Equals(Type, other.Type) && Priority == other.Priority && Rate.Equals(other.Rate) &&
-                   Watchdog.Equals(other.Watchdog) && InhibitTask == other.InhibitTask &&
-                   DisableUpdateOutputs == other.DisableUpdateOutputs;
+                   && Type.Equals(other.Type)
+                   && Priority.Equals(other.Priority)
+                   && Rate.Equals(other.Rate) 
+                   && Watchdog.Equals(other.Watchdog) 
+                   && InhibitTask == other.InhibitTask 
+                   && DisableUpdateOutputs == other.DisableUpdateOutputs;
         }
 
+        /// <inheritdoc />
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
@@ -97,6 +103,7 @@ namespace L5Sharp.Core
             return obj.GetType() == GetType() && Equals((Task)obj);
         }
 
+        /// <inheritdoc />
         public override int GetHashCode()
         {
             return HashCode.Combine(base.GetHashCode(), _programs, Type, Priority, Rate, Watchdog, InhibitTask,

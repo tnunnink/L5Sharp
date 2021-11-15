@@ -136,7 +136,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void SetUsage_ValidUsageForType_ShouldUpdateUsage()
         {
-            var parameter = Parameter.Create<String>("Test");
+            var parameter = Parameter.Create<Dint>("Test");
             
             parameter.SetUsage(TagUsage.Output);
 
@@ -146,15 +146,15 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void SetUsage_InvalidUsageForType_ShouldThrowInvalidOperationException()
         {
-            var parameter = Parameter.Create<Dint>("Test");
+            var parameter = Parameter.Create<Timer>("Test");
             
-            FluentActions.Invoking(() => parameter.SetUsage(TagUsage.InOut)).Should().Throw<InvalidOperationException>();
+            FluentActions.Invoking(() => parameter.SetUsage(TagUsage.Input)).Should().Throw<InvalidOperationException>();
         }
         
         [Test]
         public void SetUsage_Null_ShouldThrowArgumentNullException()
         {
-            var parameter = Parameter.Create<String>("Test");
+            var parameter = Parameter.Create<Dint>("Test");
             
             FluentActions.Invoking(() => parameter.SetUsage(null)).Should().Throw<ArgumentNullException>();
         }
@@ -163,9 +163,84 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void SetUsage_NotInputOutputOrInOut_ShouldThrowArgumentException()
         {
-            var parameter = Parameter.Create<String>("Test");
+            var parameter = Parameter.Create<Real>("Test");
             
             FluentActions.Invoking(() => parameter.SetUsage(TagUsage.Normal)).Should().Throw<ArgumentException>();
         }
+
+        [Test]
+        public void SetDimensions_ValidUsage_ShouldUpdatedDimensionsAndElements()
+        {
+            var parameter = Parameter.Build<Dint>("Test").WithUsage(TagUsage.InOut).Create();
+            
+            parameter.SetDimensions(new Dimensions(5));
+
+            parameter.Dimensions.Should().Be(new Dimensions(5));
+            parameter.Elements.Should().HaveCount(5);
+        }
+        
+        [Test]
+        public void SetDimensions_InvalidUsage_ShouldThrowNInvalidOperationException()
+        {
+            var parameter = Parameter.Build<Dint>("Test").WithUsage(TagUsage.Input).Create();
+
+            FluentActions.Invoking(() => parameter.SetDimensions(new Dimensions(5))).Should()
+                .Throw<InvalidOperationException>();
+        }
+
+        [Test]
+        public void SetDimensions_Null_ShouldThrowArgumentNullException()
+        {
+            var parameter = Parameter.Create<Dint>("Test");
+            
+            FluentActions.Invoking(() => parameter.SetDimensions(null)).Should().Throw<ArgumentNullException>();
+        }
+
+        [Test]
+        public void SetRadix_ValidTypeAndRadix_ShouldUpdateRadixToExpected()
+        {
+            var parameter = Parameter.Create<Dint>("Test");
+            
+            parameter.SetRadix(Radix.Binary);
+
+            parameter.Radix.Should().Be(Radix.Binary);
+        }
+
+        [Test]
+        public void SetRadix_Null_ShouldThrowArgumentNullException()
+        {
+            var parameter = Parameter.Create<Dint>("Test");
+            
+            FluentActions.Invoking(() => parameter.SetRadix(null)).Should().Throw<ArgumentNullException>();
+        }
+        
+        [Test]
+        public void SetRadix_NonAtomic_ShouldThrowInvalidOperationException()
+        {
+            var parameter = Parameter.Create<Timer>("Test");
+            
+            FluentActions.Invoking(() => parameter.SetRadix(Radix.Float)).Should().Throw<InvalidOperationException>();
+        }
+
+        [Test]
+        public void SetExternalAccess_ValidUsageAndAccess_ShouldUpdateToExpectedAccess()
+        {
+            var parameter = Parameter.Create<Dint>("Test");
+            
+            parameter.SetExternalAccess(ExternalAccess.ReadOnly);
+
+            parameter.ExternalAccess.Should().Be(ExternalAccess.ReadOnly);
+        }
+        
+        [Test]
+        public void SetExternalAccess_InvalidUsage_ShouldUpdateToExpectedAccess()
+        {
+            var parameter = Parameter.Build<Dint>("Test").WithUsage(TagUsage.InOut).Create();
+
+            FluentActions.Invoking(() => parameter.SetExternalAccess(ExternalAccess.ReadOnly)).Should()
+                .Throw<InvalidOperationException>();
+        }
+        
+        
     }
 }

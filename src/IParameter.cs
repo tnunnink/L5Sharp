@@ -12,7 +12,7 @@ namespace L5Sharp
         ITag<TDataType> Alias { get; }
         IAtomic Default { get; }
         bool Constant { get; set; }
-        void SetName(string name);
+        void SetName(ComponentName name);
         void SetUsage(TagUsage usage);
         void SetDimensions(Dimensions dimensions);
         void SetExternalAccess(ExternalAccess access);

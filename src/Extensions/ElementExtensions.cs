@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
-using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 using L5Sharp.Core;
 using L5Sharp.Enums;
-using L5Sharp.Utilities;
 
 [assembly: InternalsVisibleTo("L5Sharp.Extensions.Tests")]
 

@@ -1,11 +1,6 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
 using System.Xml.Linq;
-using FluentAssertions;
-using L5Sharp.Abstractions;
-using L5Sharp.Enums;
-using L5Sharp.Utilities;
 using NUnit.Framework;
 
 namespace L5Sharp.Factories.Tests

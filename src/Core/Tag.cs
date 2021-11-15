@@ -12,17 +12,15 @@ namespace L5Sharp.Core
     public sealed class Tag<TDataType> : LogixComponent, ITag<TDataType> where TDataType : IDataType
     {
         private TDataType _dataType;
-        private string _description;
 
         internal Tag(string name, TDataType dataType, Dimensions dimensions = null, Radix radix = null,
             ExternalAccess externalAccess = null, string description = null, TagUsage usage = null,
             bool constant = false, ILogixComponent parent = null) : base(name, description)
         {
-            _dataType = dataType ?? throw new ArgumentNullException(nameof(dataType), "DataType can not be null");
+            _dataType = dataType ?? throw new ArgumentNullException(nameof(dataType));
+            
             if (_dataType is IAtomic atomic && radix != null)
                 atomic.SetRadix(radix);
-
-            _description = description;
 
             Dimensions = dimensions ?? Dimensions.Empty;
             ExternalAccess = externalAccess ?? ExternalAccess.None;
@@ -31,8 +29,7 @@ namespace L5Sharp.Core
             Parent = parent;
             Elements = InstantiateElements();
         }
-
-        public override string Description => _description;
+        
         public string FullName => Name;
         public string DataType => _dataType.Name;
         TDataType IMember<TDataType>.DataType => _dataType;
@@ -96,7 +93,7 @@ namespace L5Sharp.Core
 
         public override void SetDescription(string description)
         {
-            _description = description;
+            base.SetDescription(description);
 
             SetMemberDescriptions(description);
 
@@ -116,7 +113,7 @@ namespace L5Sharp.Core
             Usage = usage;
         }
 
-        public IEnumerable<string> GetMemberList() => _dataType.GetMembers().Select(m => m.Name);
+        public IEnumerable<string> GetMemberList() => _dataType.GetMembers().Select(m => m.Name.ToString());
 
         public IEnumerable<string> GetDeepMembersList() => _dataType.GetMemberNames();
 

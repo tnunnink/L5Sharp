@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
 using System.Xml.Linq;
 using ApprovalTests;
 using ApprovalTests.Reporters;
@@ -8,7 +7,6 @@ using FluentAssertions;
 using L5Sharp.Core;
 using L5Sharp.Extensions;
 using L5Sharp.Types;
-using L5Sharp.Utilities;
 using NUnit.Framework;
 
 namespace L5Sharp.Serialization.Tests

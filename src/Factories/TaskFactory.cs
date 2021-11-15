@@ -2,11 +2,8 @@
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Xml.Linq;
-using L5Sharp.Abstractions;
 using L5Sharp.Core;
-using L5Sharp.Enums;
 using L5Sharp.Extensions;
-using L5Sharp.Utilities;
 
 [assembly: InternalsVisibleTo("L5Sharp.Factories.Tests")]
 
@@ -32,7 +29,7 @@ namespace L5Sharp.Factories
             var inhibitTask = element.GetValue<ITask>(t => t.InhibitTask);
             var disableUpdateOutputs = element.GetValue<ITask>(t => t.DisableUpdateOutputs);
 
-            var task = new Task(name, type, priority, rate, watchdog, inhibitTask, disableUpdateOutputs, description);
+            var task = new Task(name);
 
             var programs = element.Descendants("ScheduledProgram").Select(e => e.GetName());
             

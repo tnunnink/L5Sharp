@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using L5Sharp.Enums;
 using L5Sharp.Exceptions;
-using L5Sharp.Utilities;
 
 namespace L5Sharp.Core
 {
@@ -12,13 +11,12 @@ namespace L5Sharp.Core
         private readonly Dictionary<string, IMember<IDataType>> _members =
             new Dictionary<string, IMember<IDataType>>(StringComparer.OrdinalIgnoreCase);
 
-        protected Predefined(string name)
+        protected Predefined(ComponentName name)
         {
-            Validate.Name(name);
             Name = name;
         }
 
-        public string Name { get; }
+        public ComponentName Name { get; }
         public virtual string Description => null;
         public Radix Radix => Radix.Null;
         public virtual DataTypeFamily Family => DataTypeFamily.None;

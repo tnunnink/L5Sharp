@@ -1,9 +1,11 @@
-﻿namespace L5Sharp
+﻿using L5Sharp.Core;
+
+namespace L5Sharp
 {
     public interface IUserDefined : IDataType
     {
         IMembers Members { get; }
-        void SetName(string name);
+        void SetName(ComponentName name);
         void SetDescription(string description);
     }
 }

@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using L5Sharp.Exceptions;
-using L5Sharp.Extensions;
-using L5Sharp.Utilities;
 
 namespace L5Sharp.Core
 {
@@ -14,9 +12,7 @@ namespace L5Sharp.Core
 
         protected Instruction(string name, string description, IEnumerable<IMember<IDataType>> parameters = null)
         {
-            Validate.Name(name);
-
-            Name = name;
+            Name = new ComponentName(name);
             Description = description;
 
             parameters ??= Array.Empty<IMember<IDataType>>();
@@ -30,7 +26,7 @@ namespace L5Sharp.Core
             }
         }
 
-        public string Name { get; }
+        public ComponentName Name { get; }
         public string Description { get; }
         public NeutralText Signature { get; internal set; }
         public IEnumerable<IMember<IDataType>> Parameters => _parameters.Values.AsEnumerable();

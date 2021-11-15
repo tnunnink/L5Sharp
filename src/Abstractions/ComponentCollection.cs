@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using L5Sharp.Exceptions;
-using L5Sharp.Utilities;
 
 namespace L5Sharp.Abstractions
 {
@@ -94,8 +93,6 @@ namespace L5Sharp.Abstractions
         {
             if (component == null)
                 throw new ArgumentNullException(nameof(component), $"{typeof(TComponent).Name} can not be null");
-            
-            Validate.Name(component.Name);
 
             if (ContainsComponentName(component.Name))
                 throw new ComponentNameCollisionException(component.Name, typeof(TComponent));
@@ -117,8 +114,6 @@ namespace L5Sharp.Abstractions
         {
             if (component == null)
                 throw new ArgumentNullException(nameof(component), $"{typeof(TComponent).Name} can not be null");
-            
-            Validate.Name(component.Name);
 
             if (ContainsComponentName(component.Name))
                 throw new ComponentNameCollisionException(component.Name, typeof(TComponent));
@@ -140,8 +135,6 @@ namespace L5Sharp.Abstractions
         {
             if (component == null)
                 throw new ArgumentNullException(nameof(component), $"{typeof(TComponent).Name} can not be null");
-            
-            Validate.Name(component.Name);
 
             if (!ContainsComponentName(component.Name))
                 AddComponent(component);

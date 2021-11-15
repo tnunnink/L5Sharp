@@ -52,8 +52,6 @@ namespace L5Sharp.Core
         public DataTypeFamily Family => DataTypeFamily.None;
         public DataTypeClass Class => DataTypeClass.AddOnDefined;
         public TagDataFormat DataFormat => TagDataFormat.Decorated;
-        
-        /*public NeutralText Signature => $"{Name}({string.Join(",", Parameters.Where(p => p.Required).Select(m => m.Name))})";*/
         public RoutineType Type => Routines.Single(r => r.Name == LogicRoutineName).Type;
         public Revision Revision { get; private set; }
         public string RevisionExtension { get; private set; }
@@ -76,11 +74,11 @@ namespace L5Sharp.Core
         public IEnumerable<IMember<IDataType>> Members => Parameters.Where(p => p.Usage != TagUsage.InOut);
 
         public NeutralText Signature { get; }
-        IEnumerable<IMember<IDataType>> IInstruction.Parameters => Parameters;
         public IParameters Parameters { get; }
         public ITags LocalTags { get; }
 
         public IEnumerable<IRoutine> Routines => _routines.AsReadOnly();
+        IEnumerable<IMember<IDataType>> IInstruction.Parameters => Parameters;
 
 
         public IMember<IDataType> GetParameter(string name)

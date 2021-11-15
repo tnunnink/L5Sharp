@@ -32,7 +32,7 @@ namespace L5Sharp.Types
         public override TagDataFormat DataFormat => TagDataFormat.String;
         public string Value => GetValue();
         public IMember<Dint> LEN { get; }
-        public IMember<Sint> DATA { get; }
+        public IArrayMember<Sint> DATA { get; }
 
         protected override IDataType New()
         {
@@ -53,7 +53,7 @@ namespace L5Sharp.Types
             ClearData();
             
             for (var i = 0; i < bytes.Length; i++)
-                DATA.Elements[i].DataType.SetValue(bytes[i]);
+                DATA[i].DataType.SetValue(bytes[i]);
         }
 
         public static implicit operator String(string input)
@@ -105,14 +105,14 @@ namespace L5Sharp.Types
 
         private string GetValue()
         {
-            var bytes = DATA.Elements.Where(d => d.DataType.Value > 0)
+            var bytes = DATA.Where(d => d.DataType.Value > 0)
                 .Select(d => d.DataType.Value).ToArray();
             return Encoding.ASCII.GetString(bytes);
         }
 
         private void ClearData()
         {
-            foreach (var dataElement in DATA.Elements)
+            foreach (var dataElement in DATA)
                 dataElement.DataType.SetValue(0);
         }
     }
