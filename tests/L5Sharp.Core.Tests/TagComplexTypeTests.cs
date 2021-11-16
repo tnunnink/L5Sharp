@@ -44,7 +44,7 @@ namespace L5Sharp.Core.Tests
         {
             var tag = Tag.Create<Timer>("Test");
 
-            var member = tag.GetMember("PRE");
+            var member = tag["PRE"];
 
             member.Should().NotBeNull();
         }
@@ -54,7 +54,7 @@ namespace L5Sharp.Core.Tests
         {
             var tag = Tag.Create<Timer>("Test");
 
-            var member = tag.GetMember("MEMBER");
+            var member = tag["Member"];
 
             member.Should().BeNull();
         }
@@ -64,8 +64,8 @@ namespace L5Sharp.Core.Tests
         {
             var tag = Tag.Create<Timer>("Test");
 
-            var first = tag.GetMember("ACC");
-            var second = tag.GetMember("ACC");
+            var first = tag["ACC"];
+            var second = tag["ACC"];
 
             first.GetData().Should().BeSameAs(second.GetData());
         }
@@ -107,7 +107,7 @@ namespace L5Sharp.Core.Tests
         {
             var tag = Tag.Create("Test", (IDataType)new Timer());
 
-            var value = tag.GetMember("PRE").GetData().As<Dint>();
+            var value = tag["PRE"].GetData().As<Dint>();
 
             value.Should().NotBeNull();
         }
@@ -117,7 +117,7 @@ namespace L5Sharp.Core.Tests
         {
             var tag = Tag.Create("Test", (IDataType)new Timer());
 
-            var member = tag.GetMember(null);
+            var member = tag[(string)null];
 
             member.Should().BeNull();
         }
@@ -127,7 +127,7 @@ namespace L5Sharp.Core.Tests
         {
             var tag = Tag.Create("Test", (IDataType)new Timer());
 
-            var member = tag.GetMember("Invalid");
+            var member = tag["Invalid"];
 
             member.Should().BeNull();
         }

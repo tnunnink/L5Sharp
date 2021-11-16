@@ -1,36 +1,18 @@
-﻿using L5Sharp.Enums;
-
-namespace L5Sharp
+﻿namespace L5Sharp
 {
     /// <summary>
-    /// An element of an array
+    /// An <c>Element</c> represents a member of an array.
     /// </summary>
+    /// <remarks>An element is effectively a <see cref="IMember{TDataType}"/> but overrides the name with a simple
+    /// <see cref="string"/> os that if can have the correct index naming that is not subject to Logix name constraints/>
+    /// </remarks>
     /// <typeparam name="TDataType"></typeparam>
-    public interface IElement<out TDataType> where TDataType : IDataType
+    public interface IElement<out TDataType> : IMember<TDataType> where TDataType : IDataType
     {
         /// <summary>
-        /// The index name of the array element.
+        /// The zero based index name of the array element.
         /// </summary>
-        string Index { get; }
-        
-        /// <summary>
-        /// The <see cref="IDataType"/> of the array element. 
-        /// </summary>
-        TDataType DataType { get; }
-        
-        /// <summary>
-        /// The <see cref="L5Sharp.Enums.Radix"/> of the array element.
-        /// </summary>
-        Radix Radix { get; }
-        
-        /// <summary>
-        /// The <see cref="L5Sharp.Enums.ExternalAccess"/> of the array element.
-        /// </summary>
-        ExternalAccess ExternalAccess { get; }
-        
-        /// <summary>
-        /// A comment is a <see cref="string"/> describing the array element.
-        /// </summary>
-        string Comment { get; }
+        /// <example>[0]</example>
+        new string Name { get; }
     }
 }

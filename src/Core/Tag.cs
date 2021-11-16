@@ -1,110 +1,108 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using L5Sharp.Abstractions;
 using L5Sharp.Builders;
 using L5Sharp.Enums;
 using L5Sharp.Exceptions;
-using L5Sharp.Extensions;
 
 namespace L5Sharp.Core
 {
-    public sealed class Tag<TDataType> : LogixComponent, ITag<TDataType> where TDataType : IDataType
+    /// <inheritdoc />
+    public sealed class Tag<TDataType> : ITag<TDataType> where TDataType : IDataType
     {
-        private TDataType _dataType;
+        private readonly TDataType _dataType;
+        private TagMember<TDataType> _tagMember;
 
-        internal Tag(string name, TDataType dataType, Dimensions dimensions = null, Radix radix = null,
+        internal Tag(ComponentName name, TDataType dataType, Dimensions dimensions = null, Radix radix = null,
             ExternalAccess externalAccess = null, string description = null, TagUsage usage = null,
-            bool constant = false, ILogixComponent parent = null) : base(name, description)
+            bool constant = false, ILogixComponent container = null)
         {
             _dataType = dataType ?? throw new ArgumentNullException(nameof(dataType));
-            
-            if (_dataType is IAtomic atomic && radix != null)
-                atomic.SetRadix(radix);
 
-            Dimensions = dimensions ?? Dimensions.Empty;
-            ExternalAccess = externalAccess ?? ExternalAccess.None;
+            externalAccess ??= ExternalAccess.None; //Tags default to None not Read/Write
+            Instantiate(name, dataType, dimensions, radix, externalAccess, description);
+
             Usage = usage != null ? usage : TagUsage.Null;
             Constant = constant;
-            Parent = parent;
-            Elements = InstantiateElements();
+            Container = container;
         }
-        
-        public string FullName => Name;
-        public string DataType => _dataType.Name;
-        TDataType IMember<TDataType>.DataType => _dataType;
-        public Dimensions Dimensions { get; }
-        public Radix Radix => _dataType.Radix;
-        public ExternalAccess ExternalAccess { get; private set; }
-        public IMember<TDataType>[] Elements { get; }
+
+
+        /// <inheritdoc cref="ILogixComponent.Name" />
+        public ComponentName Name => _tagMember.Name;
+
+        string ITagMember<TDataType>.Name => Name;
+
+        /// <inheritdoc cref="ILogixComponent.Description" />
+        public string Description => _tagMember.Description;
+
+        /// <inheritdoc />
+        public string TagName => _tagMember.TagName;
+
+        /// <inheritdoc />
+        public string DataType => _tagMember.DataType;
+
+        /// <inheritdoc />
+        public Dimensions Dimensions => _tagMember.Dimensions;
+
+        /// <inheritdoc />
+        public Radix Radix => _tagMember.Radix;
+
+        /// <inheritdoc />
+        public ExternalAccess ExternalAccess => _tagMember.ExternalAccess;
+
+        /// <inheritdoc />
         public TagType TagType => TagType.Base;
 
-        public Scope Scope => Parent == null ? Scope.Null
-            : Parent is IController ? Scope.Controller
-            : Parent is IProgram ? Scope.Program
+        /// <inheritdoc />
+        public Scope Scope => Container == null ? Scope.Null
+            : Container is IController ? Scope.Controller
+            : Container is IProgram ? Scope.Program
             : Scope.Null;
 
+        /// <inheritdoc />
         public TagUsage Usage { get; private set; }
+
+        /// <inheritdoc />
         public bool Constant { get; set; }
 
-        //The parent of a tag should be the controller/program/routine that creates it.
+        //The Container of a tag should be the controller/program/routine that creates it.
         //Will assign this internally when is added to a collection
-        public ILogixComponent Parent { get; internal set; }
+        /// <inheritdoc />
+        public ILogixComponent Container { get; internal set; }
 
+        //A Tag is always the root and therefore has not "parent"
+        /// <inheritdoc />
+        public ITagMember<IDataType> Parent => null;
 
-        public TDataType GetData()
+        /// <inheritdoc />
+        public IAtomic GetData() => _tagMember.GetData();
+
+        /// <inheritdoc />
+        public void SetData(IAtomic value) => _tagMember.SetData(value);
+
+        /// <inheritdoc />
+        public void SetName(ComponentName name)
         {
-            return Dimensions.AreEmpty ? _dataType : default;
+            if (name == null)
+                throw new ArgumentNullException(nameof(name));
+
+            Instantiate(name, _dataType, Dimensions, Radix, ExternalAccess, Description);
         }
 
-        public void SetData(IAtomic value)
+        /// <inheritdoc />
+        public void SetDimensions(Dimensions dimensions)
         {
-            if (!(_dataType is IAtomic atomic))
-                throw new InvalidTagDataException(_dataType, value);
+            if (dimensions == null)
+                throw new ArgumentNullException(nameof(dimensions));
 
-            atomic.SetValue(value);
+            Instantiate(Name, _dataType, dimensions, Radix, ExternalAccess, Description);
         }
 
-        public void SetRadix(Radix radix)
-        {
-            if (radix == null)
-                throw new ArgumentNullException(nameof(radix));
-
-            if (!(_dataType is IAtomic atomic))
-                throw new ComponentNotConfigurableException(nameof(Radix), GetType(),
-                    "Radix can only be set on atomic members");
-
-            atomic.SetRadix(radix);
-
-            if (Elements.Length == 0) return;
-
-            foreach (var element in Elements)
-                if (element.DataType is IAtomic atomicType)
-                    atomicType.SetRadix(radix);
-        }
-
-        public void SetExternalAccess(ExternalAccess externalAccess)
-        {
-            if (externalAccess == null)
-                throw new ArgumentNullException(nameof(externalAccess), "External Access can not be null");
-
-            ExternalAccess = externalAccess;
-        }
-
-        public override void SetDescription(string description)
-        {
-            base.SetDescription(description);
-
-            SetMemberDescriptions(description);
-
-            if (Elements.Length > 0)
-                SetElementDescription(description);
-        }
-
+        /// <inheritdoc />
         public void SetUsage(TagUsage usage)
         {
             if (usage == null)
-                throw new ArgumentNullException(nameof(usage), "Usage can not be null");
+                throw new ArgumentNullException(nameof(usage));
 
             if (Scope != Scope.Program)
                 throw new ComponentNotConfigurableException(nameof(Usage), typeof(Tag<IDataType>),
@@ -113,93 +111,60 @@ namespace L5Sharp.Core
             Usage = usage;
         }
 
-        public IEnumerable<string> GetMemberList() => _dataType.GetMembers().Select(m => m.Name.ToString());
-
-        public IEnumerable<string> GetDeepMembersList() => _dataType.GetMemberNames();
-
-        public IEnumerable<ITagMember<IDataType>> GetMembers() =>
-            _dataType.GetMembers().Select(m => new TagMember<IDataType>(m, this));
-
-        public ITagMember<IDataType> GetMember(string name)
+        /// <inheritdoc />
+        public void SetExternalAccess(ExternalAccess externalAccess)
         {
-            var member = _dataType.GetMember(name);
-            return member != null ? new TagMember<IDataType>(member, this) : null;
+            if (externalAccess == null)
+                throw new ArgumentNullException(nameof(externalAccess));
+
+            Instantiate(Name, _dataType, Dimensions, Radix, externalAccess, Description);
         }
 
-        public ITagMember<IDataType> GetElement(ushort index)
-        {
-            return index < Elements.Length
-                ? new TagMember<IDataType>((IMember<IDataType>)Elements[index], this)
-                : null;
-        }
+        /// <inheritdoc />
+        public void SetRadix(Radix radix) => _tagMember.SetRadix(radix);
 
+        /// <inheritdoc />
+        public void SetDescription(string description) => _tagMember.SetDescription(description);
+
+        /// <inheritdoc />
+        public IEnumerable<string> GetMemberList() => _tagMember.GetMemberList();
+
+        /// <inheritdoc />
+        public IEnumerable<string> GetDeepMembersList() => _tagMember.GetDeepMembersList();
+
+        /// <inheritdoc />
+        public ITagMember<IDataType> this[string name] => _tagMember[name];
+
+        /// <inheritdoc />
+        public ITagMember<IDataType> this[Func<TDataType, IMember<IDataType>> expression] => _tagMember[expression];
+
+        /// <inheritdoc />
+        public ITagMember<TDataType> this[int index] => _tagMember[index];
+
+        /// <inheritdoc />
+        public IEnumerable<ITagMember<IDataType>> GetMembers() => _tagMember.GetMembers();
+
+        /// <inheritdoc />
+        public IEnumerable<ITagMember<IDataType>> GetMembers(Func<ITagMember<IDataType>, bool> predicate)
+            => _tagMember.GetMembers(predicate);
+
+        /// <inheritdoc />
         public ITagMember<TType> GetMember<TType>(Func<TDataType, IMember<TType>> expression)
-            where TType : IDataType
-        {
-            var member = expression.Invoke(_dataType);
+            where TType : IDataType => _tagMember.GetMember(expression);
 
-            if (!member.DataType.GetType().IsAssignableFrom(typeof(TType)))
-                throw new InvalidOperationException();
-
-            return new TagMember<TType>(member, this);
-        }
-
+        /// <inheritdoc />
         public void SetMember<TAtomic>(Func<TDataType, IMember<TAtomic>> expression, TAtomic value)
-            where TAtomic : IAtomic
-        {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression), "Expression can not be null");
+            where TAtomic : IAtomic => _tagMember.SetMember(expression, value);
 
-            var member = expression.Invoke(_dataType);
-            member.DataType.SetValue(value);
-        }
-
+        /// <inheritdoc />
         public void SetMember<TAtomic>(Func<TDataType, IMember<TAtomic>> expression, Radix radix)
-            where TAtomic : IAtomic
-        {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression), "Expression can not be null");
+            where TAtomic : IAtomic => _tagMember.SetMember(expression, radix);
 
-            var member = expression.Invoke(_dataType);
-            member.SetRadix(radix);
-        }
-
+        /// <inheritdoc />
         public void SetMember<TAtomic>(Func<TDataType, IMember<TAtomic>> expression, string description)
-            where TAtomic : IAtomic
-        {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression), "Expression can not be null");
+            where TAtomic : IAtomic => _tagMember.SetMember(expression, description);
 
-            var member = expression.Invoke(_dataType);
-            member.SetDescription(description);
-        }
-
-        public void SetElement<TAtomic>(ushort index, TAtomic value) where TAtomic : IAtomic
-        {
-            if (index >= Elements.Length) return;
-
-            var element = Elements[index];
-
-            if (element.DataType is IAtomic atomic)
-                atomic.SetValue(value);
-        }
-
-        public void SetElement(ushort index, Radix radix)
-        {
-            if (index >= Elements.Length) return;
-
-            var element = Elements[index];
-            element.SetRadix(radix);
-        }
-
-        public void SetElement(ushort index, string description)
-        {
-            if (index >= Elements.Length) return;
-
-            var element = Elements[index];
-            element.SetDescription(description);
-        }
-
+        /// <inheritdoc />
         public ITag<TType> ChangeDataType<TType>(TType dataType) where TType : IDataType
         {
             if (dataType == null)
@@ -209,82 +174,48 @@ namespace L5Sharp.Core
                 Usage, Constant);
         }
 
-        public ITag<TDataType> ChangeDimensions(Dimensions dimensions)
+        private void Instantiate(ComponentName name, TDataType dataType, Dimensions dimensions, Radix radix,
+            ExternalAccess externalAccess, string description)
         {
-            if (dimensions == null)
-                throw new ArgumentNullException(nameof(dimensions), "Dimensions can not be null");
+            var member = dimensions != null && !dimensions.AreEmpty
+                ? Member.Create(name, dataType, dimensions, radix, externalAccess, description)
+                : Member.Create(name, dataType, radix, externalAccess, description);
 
-            return new Tag<TDataType>(Name, _dataType, dimensions, Radix, ExternalAccess, Description, Usage,
-                Constant);
-        }
-
-        public ITag<TDataType> ChangeTagType(TagType type)
-        {
-            return new Tag<TDataType>(Name, _dataType, Dimensions, Radix, ExternalAccess, Description, Usage,
-                Constant);
-        }
-
-        private IMember<TDataType>[] InstantiateElements()
-        {
-            var elements = new List<IMember<TDataType>>(Dimensions);
-
-            for (var i = 0; i < Dimensions; i++)
-            {
-                var member = Member.Create($"[{i}]", (TDataType) _dataType.Instantiate(),
-                    Dimensions.Empty, Radix, ExternalAccess, Description);
-                elements.Add(member);
-            }
-
-            return elements.ToArray();
-        }
-
-        private void SetMemberDescriptions(string description)
-        {
-            foreach (var member in _dataType.GetMembers())
-                ((Member<IDataType>)member).SetParentDescription(description);
-        }
-
-        private void SetElementDescription(string description)
-        {
-            foreach (var element in Elements)
-            {
-                var casted = (Member<TDataType>)element;
-                casted.SetParentDescription(description);
-            }
+            _tagMember = new TagMember<TDataType>(member, null);
         }
     }
 
     public static class Tag
     {
-        public static ITag<IDataType> Create(string name, IDataType dataType)
+        public static ITag<IDataType> Create(ComponentName name, IDataType dataType)
         {
             return new Tag<IDataType>(name, dataType);
         }
 
-        public static ITag<TDataType> Create<TDataType>(string name) where TDataType : IDataType, new()
+        public static ITag<TDataType> Create<TDataType>(ComponentName name) where TDataType : IDataType, new()
         {
             return new Tag<TDataType>(name, new TDataType());
         }
 
-        public static ITag<TDataType> Create<TDataType>(string name, TDataType dataType)
+        public static ITag<TDataType> Create<TDataType>(ComponentName name, TDataType dataType)
             where TDataType : IDataType, new()
         {
             return new Tag<TDataType>(name, dataType);
         }
 
-        public static ITagBuilder<IDataType> Build(string name, IDataType dataType)
+        public static ITagBuilder<IDataType> Build(ComponentName name, IDataType dataType)
         {
             return new TagBuilder<IDataType>(name, dataType);
         }
-        
-        public static ITagBuilder<TDataType> Build<TDataType>(string name)
+
+        public static ITagBuilder<TDataType> Build<TDataType>(ComponentName name)
             where TDataType : IDataType, new()
         {
             var dataType = new TDataType();
             return new TagBuilder<TDataType>(name, dataType);
         }
-        
-        public static ITagBuilder<TDataType> Build<TDataType>(string name, TDataType dataType)
+
+        public static ITagBuilder<TDataType> Build<TDataType>(ComponentName name, TDataType dataType)
             where TDataType : IDataType, new()
         {
             return new TagBuilder<TDataType>(name, dataType);

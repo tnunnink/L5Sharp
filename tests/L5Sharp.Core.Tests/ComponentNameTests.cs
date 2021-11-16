@@ -16,6 +16,14 @@ namespace L5Sharp.Core.Tests
 
             name.Should().NotBeNull();
         }
+        
+        [Test]
+        public void New_ValidName_ShouldBeExpected()
+        {
+            var name = new ComponentName("Test");
+
+            name.ToString().Should().Be("Test");
+        }
 
         [Test]
         public void New_InvalidName_ShouldThrowComponentNameInvalidException()

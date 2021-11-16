@@ -28,7 +28,7 @@ namespace L5Sharp.Extensions
 
             foreach (var targetMember in target.GetMembers())
             {
-                var sourceMember = source.GetMember(targetMember.Name);
+                var sourceMember = source[targetMember.Name];
                 targetMember.SetData(sourceMember);
             }
         }

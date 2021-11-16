@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Reflection;
 using System.Xml.Serialization;
 using AutoFixture;
 using FluentAssertions;
@@ -46,8 +45,8 @@ namespace L5Sharp.Core.Tests
             var length = fixture.Create<ushort>();
             var array = Member.Create<Dint>("Test", new Dimensions(length));
 
-            array.Elements.Length.Should().Be(length);
-            array.Elements.Should().BeOfType<IMember<Dint>[]>();
+            array.Dimensions.Length.Should().Be(length);
+            array.Should().AllBeOfType<IElement<Dint>>();
         }
 
         [Test]
@@ -76,8 +75,7 @@ namespace L5Sharp.Core.Tests
             member.Radix.Should().Be(Radix.Exponential);
             member.ExternalAccess.Should().Be(ExternalAccess.ReadOnly);
             member.Description.Should().Be("Test");
-            member.Elements.Length.Should().Be(35);
-            member.Elements.Should().AllBeOfType<Member<IDataType>>();
+            member.Should().AllBeOfType<Element<IDataType>>();
         }
 
         [Test]
@@ -184,7 +182,7 @@ namespace L5Sharp.Core.Tests
 
             member.SetRadix(Radix.Hex);
 
-            member.Elements.Select(e => e.Radix).Should().AllBeEquivalentTo(Radix.Hex);
+            member.Select(e => e.Radix).Should().AllBeEquivalentTo(Radix.Hex);
         }
         
         [Test]
@@ -215,16 +213,6 @@ namespace L5Sharp.Core.Tests
             member.SetDescription("This is a test");
 
             member.Description.Should().Be("This is a test");
-        }
-
-        [Test]
-        public void Elements_GetValue_ShouldBeEmptyArray()
-        {
-            var member = Member.Create<Real>("Member");
-
-            var elements = member.Elements;
-
-            elements.Should().BeEmpty();
         }
 
         [Test]
@@ -335,7 +323,7 @@ namespace L5Sharp.Core.Tests
             var attribute = (XmlAttributeAttribute) property?.GetCustomAttributes(typeof(XmlAttributeAttribute), true).First();
 
             attribute.Should().NotBeNull();
-            attribute.AttributeName.Should().Be("Dimension");
+            attribute?.AttributeName.Should().Be("Dimension");
         }
     }
 }

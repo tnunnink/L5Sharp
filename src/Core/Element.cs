@@ -5,21 +5,29 @@ namespace L5Sharp.Core
     /// <inheritdoc />
     public class Element<TDataType> : IElement<TDataType> where TDataType : IDataType
     {
-        internal Element(int index, TDataType dataType, Radix radix, ExternalAccess access, string comment)
+        internal Element(int index, TDataType dataType, Radix radix, ExternalAccess access, string description)
         {
-            Index = $"[{index}]";
+            Name = $"[{index}]";
             DataType = dataType;
             if (DataType is IAtomic atomic)
                 atomic.SetRadix(radix);
             ExternalAccess = access;
-            Comment = comment;
+            Description = description;
         }
 
         /// <inheritdoc />
-        public string Index { get; }
+        public string Name { get; }
+
+        ComponentName ILogixComponent.Name => null;
+
+        /// <inheritdoc />
+        public string Description { get; }
 
         /// <inheritdoc />
         public TDataType DataType { get; }
+
+        /// <inheritdoc />
+        public Dimensions Dimensions => Dimensions.Empty;
 
         /// <inheritdoc />
         public Radix Radix => DataType.Radix;
@@ -27,7 +35,17 @@ namespace L5Sharp.Core
         /// <inheritdoc />
         public ExternalAccess ExternalAccess { get; }
 
+
         /// <inheritdoc />
-        public string Comment { get; }
+        public void SetRadix(Radix radix)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        /// <inheritdoc />
+        public void SetDescription(string description)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

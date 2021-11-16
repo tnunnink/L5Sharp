@@ -21,7 +21,7 @@ namespace L5Sharp.Core
         /// <summary>
         /// Creates a new instance of a <see cref="ComponentName"/> with the provided <see cref="string"/>.
         /// </summary>
-        /// <remarks>A component name is used to uniquely identify any given RSLogix component. </remarks>
+        /// <remarks>A <see cref="ComponentName"/> is used to uniquely identify any given RSLogix component. </remarks>
         /// <param name="name">The name of the component.
         /// Valid name must contain only alphanumeric or '_', start with a letter, and be less then 40 characters.
         /// </param>

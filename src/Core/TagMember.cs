@@ -7,150 +7,163 @@ using L5Sharp.Extensions;
 
 namespace L5Sharp.Core
 {
+    /// <inheritdoc />
     public class TagMember<TDataType> : ITagMember<TDataType> where TDataType : IDataType
     {
         private readonly IMember<TDataType> _member;
-        private readonly ITagMember<IDataType> _parent;
 
-        internal TagMember(IMember<TDataType> member, ILogixComponent parent)
+        internal TagMember(IMember<TDataType> member, ITagMember<IDataType> parent)
         {
-            _member = member ?? 
-                      throw new ArgumentNullException(nameof(member), "Member can not be null");
-            _parent = (ITagMember<IDataType>)parent ??
-                      throw new ArgumentNullException(nameof(parent), "TagMember must have parent");
+            _member = member ?? throw new ArgumentNullException(nameof(member));
+            Parent = parent;
         }
 
-        public ComponentName Name => _member.Name;
-        
-        public string FullName => Parent == null ? Name.ToString()
-            : Parent is ITagMember<IDataType> tagMember && !tagMember.Dimensions.AreEmpty ? $"{GetName(Parent)}{Name}"
-            : $"{GetName(Parent)}.{Name}";
-        
-        public string DataType => _member.DataType.Name;
-        TDataType IMember<TDataType>.DataType => _member.DataType;
-        public Dimensions Dimensions => _member.Dimensions;
-        public Radix Radix => _member.Radix;
-        
-        public ExternalAccess ExternalAccess =>
-            _member.ExternalAccess.IsMoreRestrictive(_parent.ExternalAccess)
-                ? _member.ExternalAccess
-                : _parent.ExternalAccess;
+        /// <inheritdoc />
+        public string Name => _member.Name;
 
+        /// <inheritdoc />
+        public string TagName => Parent == null ? Name
+            : !Parent.Dimensions.AreEmpty ? $"{GetName(Parent)}{Name}"
+            : $"{GetName(Parent)}.{Name}";
+
+        /// <inheritdoc />
+        public string DataType => _member.DataType.Name;
+
+        /// <inheritdoc />
+        public Dimensions Dimensions => _member.Dimensions;
+
+        /// <inheritdoc />
+        public Radix Radix => _member.DataType.Radix;
+
+        /// <inheritdoc />
+        public ExternalAccess ExternalAccess =>
+            Parent == null
+                ? _member.ExternalAccess
+                : _member.ExternalAccess.IsMoreRestrictive(Parent.ExternalAccess)
+                    ? _member.ExternalAccess
+                    : Parent.ExternalAccess;
+
+        /// <inheritdoc />
         public string Description => _member.Description;
 
-        public ILogixComponent Parent => _parent;
+        /// <inheritdoc />
+        public ITagMember<IDataType> Parent { get; }
 
-        public TDataType GetData()
+        /// <inheritdoc />
+        public IAtomic GetData()
         {
-            return _member.Dimensions.AreEmpty ? _member.DataType : default;
+            return _member.DataType is IAtomic atomic ? atomic : default;
         }
 
+        /// <inheritdoc />
         public void SetData(IAtomic value)
         {
             if (!(_member.DataType is IAtomic atomic))
                 throw new InvalidTagDataException(_member.DataType, value);
-            
+
             atomic.SetValue(value);
         }
 
+        /// <inheritdoc />
         public void SetRadix(Radix radix) => _member.SetRadix(radix);
 
+        /// <inheritdoc />
         public void SetDescription(string description) => _member.SetDescription(description);
 
+        /// <inheritdoc />
         public IEnumerable<string> GetMemberList() => _member.DataType.GetMembers().Select(m => m.Name.ToString());
 
+        /// <inheritdoc />
         public IEnumerable<string> GetDeepMembersList() => _member.DataType.GetMemberNames();
 
-        public IEnumerable<ITagMember<IDataType>> GetMembers() => 
-            _member.DataType.GetMembers().Select(m => new TagMember<IDataType>(m, this));
+        /// <inheritdoc />
+        public ITagMember<IDataType> this[string name] => GetMember(name);
 
-        public ITagMember<IDataType> GetMember(string name)
-        {
-            var member = _member.DataType.GetMember(name);
-            return member != null ? new TagMember<IDataType>(member, this) : null;
-        }
-        
-        public ITagMember<IDataType> GetElement(ushort index)
-        {
-            return index < Dimensions.Length && _member is IArrayMember<TDataType> arrayMember
-                ? new TagMember<IDataType>(arrayMember[index], this) 
-                : null;
-        }
+        /// <inheritdoc />
+        public ITagMember<IDataType> this[Func<TDataType, IMember<IDataType>> expression] => GetMember(expression);
 
-        public ITagMember<TType> GetMember<TType>(Func<TDataType, IMember<TType>> expression) 
+        /// <inheritdoc />
+        public ITagMember<TDataType> this[int index] => GetMember(index);
+
+        /// <inheritdoc />
+        public IEnumerable<ITagMember<IDataType>> GetMembers() => GetMembersInternal();
+
+        /// <inheritdoc />
+        public IEnumerable<ITagMember<IDataType>> GetMembers(Func<ITagMember<IDataType>, bool> predicate) =>
+            GetMembersInternal().Where(predicate);
+
+        /// <inheritdoc />
+        public ITagMember<TType> GetMember<TType>(Func<TDataType, IMember<TType>> expression)
             where TType : IDataType
         {
             var member = expression.Invoke(_member.DataType);
-            return member != null ? new TagMember<TType>(member, this) : null;
+            return member != null ? new TagMember<TType>(member, (ITagMember<IDataType>)this) : null;
         }
 
-        public void SetMember<TAtomic>(Func<TDataType, IMember<TAtomic>> expression, TAtomic value) 
+        /// <inheritdoc />
+        public void SetMember<TAtomic>(Func<TDataType, IMember<TAtomic>> expression, TAtomic value)
             where TAtomic : IAtomic
         {
             if (expression == null)
                 throw new ArgumentNullException(nameof(expression), "Expression can not be null");
-            
+
             var member = expression.Invoke(_member.DataType);
             member.DataType.SetValue(value);
         }
 
+        /// <inheritdoc />
         public void SetMember<TAtomic>(Func<TDataType, IMember<TAtomic>> expression, Radix radix)
             where TAtomic : IAtomic
         {
             if (expression == null)
                 throw new ArgumentNullException(nameof(expression), "Expression can not be null");
-            
+
             var member = expression.Invoke(_member.DataType);
             member.SetRadix(radix);
         }
 
-        public void SetMember<TAtomic>(Func<TDataType, IMember<TAtomic>> expression, string description) where TAtomic : IAtomic
+        /// <inheritdoc />
+        public void SetMember<TAtomic>(Func<TDataType, IMember<TAtomic>> expression, string description)
+            where TAtomic : IAtomic
         {
             if (expression == null)
                 throw new ArgumentNullException(nameof(expression), "Expression can not be null");
-            
+
             var member = expression.Invoke(_member.DataType);
             member.SetDescription(description);
         }
-
-        public void SetElement<TAtomic>(ushort index, TAtomic value) where TAtomic : IAtomic
+        
+        private IEnumerable<ITagMember<IDataType>> GetMembersInternal()
         {
-            if (index >= Elements.Length) return;
-
-            var element = Elements[index];
-
-            if (element.DataType is IAtomic atomic)
-                atomic.SetValue(value);
-        }
-
-        public void SetElement(ushort index, Radix radix)
-        {
-            if (index >= Elements.Length) return;
-            
-            var element = Elements[index];
-            element.SetRadix(radix);
-        }
-
-        public void SetElement(ushort index, string description)
-        {
-            if (index >= Elements.Length) return;
-            
-            var element = Elements[index];
-            element.SetDescription(description);
-        }
-
-        private static string GetName(ILogixComponent member)
-        {
-            if (member is ITagMember<IDataType> tagMember)
+            if (_member is IArrayMember<TDataType> arrayMember)
             {
-                return tagMember.Parent is ITagMember<IDataType> parentMember
-                    ? parentMember.Dimensions.Length > 0
-                        ? $"{GetName(tagMember.Parent)}{member.Name}"
-                        : $"{GetName(tagMember.Parent)}.{member.Name}"
-                    : member.Name.ToString();
+                return arrayMember.Select(e =>
+                    new TagMember<IDataType>((IMember<IDataType>)e, (ITagMember<IDataType>)this));
             }
+            
+            return _member.DataType.GetMembers().Select(m => new TagMember<IDataType>(m, (ITagMember<IDataType>)this));
+        }
 
-            return member.Name;
+        private ITagMember<IDataType> GetMember(string name)
+        {
+            var member = _member.DataType.GetMember(name);
+            return member != null ? new TagMember<IDataType>(member, (ITagMember<IDataType>)this) : null;
+        }
+
+        private ITagMember<TDataType> GetMember(int index)
+        {
+            return _member is IArrayMember<TDataType> arrayMember
+                ? new TagMember<TDataType>(arrayMember[index], (ITagMember<IDataType>)this)
+                : null;
+        }
+
+        private static string GetName(ITagMember<IDataType> member)
+        {
+            return member.Parent != null
+                ? member.Dimensions.Length > 0
+                    ? $"{GetName(member.Parent)}{member.Name}"
+                    : $"{GetName(member.Parent)}.{member.Name}"
+                : member.Name;
         }
     }
 }

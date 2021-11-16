@@ -3,7 +3,7 @@
 namespace L5Sharp
 {
     /// <summary>
-    /// A member component that is a collection of <see cref="IElement{TDataType}"/>.
+    /// A <c>Member</c> component that represents a collection of <see cref="IElement{TDataType}"/>.
     /// </summary>
     /// <typeparam name="TDataType">The <see cref="IDataType"/> of the collection of elements of the array.</typeparam>
     public interface IArrayMember<out TDataType> : IMember<TDataType>, IEnumerable<IElement<TDataType>> 

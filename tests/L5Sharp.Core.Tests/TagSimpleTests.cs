@@ -35,8 +35,8 @@ namespace L5Sharp.Core.Tests
             var tag = Tag.Create("Test", (IDataType)new Bool());
 
             tag.Should().NotBeNull();
-            tag.Name.Should().Be("Test");
-            tag.FullName.Should().Be("Test");
+            tag.Name.ToString().Should().Be("Test");
+            tag.TagName.Should().Be("Test");
             tag.DataType.Should().Be(nameof(Bool).ToUpper());
             tag.Dimensions.Should().Be(Dimensions.Empty);
             tag.Radix.Should().Be(Radix.Decimal);
@@ -46,6 +46,7 @@ namespace L5Sharp.Core.Tests
             tag.Usage.Should().Be(TagUsage.Null);
             tag.Scope.Should().Be(Scope.Null);
             tag.Parent.Should().Be(null);
+            tag.Container.Should().Be(null);
             tag.Constant.Should().BeFalse();
             tag.GetData().As<Bool>().Value.Should().BeFalse();
         }
@@ -56,8 +57,8 @@ namespace L5Sharp.Core.Tests
             var tag = Tag.Create<Sint>("Test");
             
             tag.Should().NotBeNull();
-            tag.Name.Should().Be("Test");
-            tag.FullName.Should().Be("Test");
+            tag.Name.ToString().Should().Be("Test");
+            tag.TagName.Should().Be("Test");
             tag.DataType.Should().Be(nameof(Sint).ToUpper());
             tag.Dimensions.Should().Be(Dimensions.Empty);
             tag.Radix.Should().Be(Radix.Decimal);
@@ -67,6 +68,7 @@ namespace L5Sharp.Core.Tests
             tag.Usage.Should().Be(TagUsage.Null);
             tag.Scope.Should().Be(Scope.Null);
             tag.Parent.Should().Be(null);
+            tag.Container.Should().Be(null);
             tag.Constant.Should().BeFalse();
             tag.GetData().Value.Should().Be(0);
         }
@@ -77,8 +79,8 @@ namespace L5Sharp.Core.Tests
             var tag = Tag.Create<Real>("Test");
             
             tag.Should().NotBeNull();
-            tag.Name.Should().Be("Test");
-            tag.FullName.Should().Be("Test");
+            tag.Name.ToString().Should().Be("Test");
+            tag.TagName.Should().Be("Test");
             tag.DataType.Should().Be(nameof(Real).ToUpper());
             tag.Dimensions.Should().Be(Dimensions.Empty);
             tag.Radix.Should().Be(Radix.Float);
@@ -144,7 +146,7 @@ namespace L5Sharp.Core.Tests
 
             tag.SetName("NewName");
 
-            tag.Name.Should().Be("NewName");
+            tag.Name.ToString().Should().Be("NewName");
         }
 
         [Test]
@@ -165,6 +167,36 @@ namespace L5Sharp.Core.Tests
             tag.SetDescription("This is a test description");
 
             tag.Description.Should().Be("This is a test description");
+        }
+
+        [Test]
+        public void SetDimensions_Null_ShouldThrowArgumentNullException()
+        {
+            var tag = Tag.Create("Test", (IDataType)new Bool());
+
+            FluentActions.Invoking(() => tag.SetDimensions(null)).Should().Throw<ArgumentNullException>();
+        }
+
+        [Test]
+        public void SetDimensions_ValidDimensions_ShouldHaveUpdatedDimensions()
+        {
+            var tag = Tag.Create("Test", (IDataType)new Bool());
+
+            tag.SetDimensions(new Dimensions(25));
+
+            tag.Dimensions.Length.Should().Be(25);
+        }
+
+        [Test]
+        public void SetDimensions_ValidType_ShouldHaveExpectedProperties()
+        {
+            var tag = Tag.Build("Test", new Bool()).WithDimensions(10).Create();
+
+            tag.SetDimensions(new Dimensions(25));
+
+            tag.Name.ToString().Should().Be("Test");
+            tag.DataType.Should().Be(nameof(Bool).ToUpper());
+            tag.Dimensions.Should().Be(new Dimensions(25));
         }
 
         [Test]
@@ -230,7 +262,7 @@ namespace L5Sharp.Core.Tests
 
             tag.SetData(new Bool(expected));
 
-            tag.GetData().Should().Be(expected);
+            tag.GetData().Value.Should().Be(expected);
         }
 
         [Test]
@@ -365,46 +397,6 @@ namespace L5Sharp.Core.Tests
 
             result.Name.Should().Be("Test");
             result.DataType.Should().Be(nameof(Dint).ToUpper());
-        }
-
-        [Test]
-        public void ChangeDimensions_Null_ShouldThrowArgumentNullException()
-        {
-            var tag = Tag.Create("Test", (IDataType)new Bool());
-
-            FluentActions.Invoking(() => tag.ChangeDimensions(null)).Should().Throw<ArgumentNullException>();
-        }
-
-        [Test]
-        public void ChangeDimensions_ValidType_ShouldNotBeNull()
-        {
-            var tag = Tag.Create("Test", (IDataType)new Bool());
-
-            var result = tag.ChangeDimensions(new Dimensions(25));
-
-            result.Should().NotBeNull();
-        }
-
-        [Test]
-        public void ChangeDimensions_ValidType_ShouldHaveExpectedProperties()
-        {
-            var tag = Tag.Build("Test", new Bool()).WithDimensions(10).Create();
-
-            var result = tag.ChangeDimensions(new Dimensions(25));
-
-            result.Name.Should().Be("Test");
-            result.DataType.Should().Be(nameof(Bool).ToUpper());
-            result.Dimensions.Should().Be(new Dimensions(25));
-        }
-        
-        [Test]
-        public void ChangeTagType_ValidTypeBase_TagShouldNotBeNull()
-        {
-            var tag = Tag.Create("Test", (IDataType)new Timer());
-
-            var result = tag.ChangeTagType(TagType.Base);
-
-            result.Should().NotBeNull();
         }
     }
 }

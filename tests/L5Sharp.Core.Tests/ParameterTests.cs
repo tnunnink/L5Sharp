@@ -75,7 +75,6 @@ namespace L5Sharp.Core.Tests
             parameter.Alias.Should().BeNull();
             parameter.Description.Should().BeNull();
             parameter.Constant.Should().BeFalse();
-            parameter.Elements.Should().BeEmpty();
             parameter.Default.Should().Be(new Dint());
         }
 
@@ -176,7 +175,6 @@ namespace L5Sharp.Core.Tests
             parameter.SetDimensions(new Dimensions(5));
 
             parameter.Dimensions.Should().Be(new Dimensions(5));
-            parameter.Elements.Should().HaveCount(5);
         }
         
         [Test]
