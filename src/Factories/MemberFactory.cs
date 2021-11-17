@@ -24,7 +24,7 @@ namespace L5Sharp.Factories
             var name = element.GetName();
             var dataType = _context.TypeRegistry.TryGetType(element.GetDataTypeName());
             var description = element.GetDescription();
-            var dimensions = element.GetValue<Member<IDataType>>(m => m.Dimensions);
+            var dimensions = element.GetValue<Member<IDataType>>(m => m.Dimension);
             var radix = element.GetValue<Member<IDataType>>(m => m.Radix);
             var access = element.GetValue<Member<IDataType>>(m => m.ExternalAccess);
 

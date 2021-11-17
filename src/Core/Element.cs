@@ -9,9 +9,9 @@ namespace L5Sharp.Core
         {
             Name = $"[{index}]";
             DataType = dataType;
-            if (DataType is IAtomic atomic)
+            if (DataType is IAtomic atomic && radix != null)
                 atomic.SetRadix(radix);
-            ExternalAccess = access;
+            ExternalAccess = access ?? ExternalAccess.ReadWrite;
             Description = description;
         }
 
@@ -21,13 +21,10 @@ namespace L5Sharp.Core
         ComponentName ILogixComponent.Name => null;
 
         /// <inheritdoc />
-        public string Description { get; }
-
-        /// <inheritdoc />
         public TDataType DataType { get; }
 
         /// <inheritdoc />
-        public Dimensions Dimensions => Dimensions.Empty;
+        public Dimensions Dimension => Dimensions.Empty;
 
         /// <inheritdoc />
         public Radix Radix => DataType.Radix;
@@ -35,17 +32,7 @@ namespace L5Sharp.Core
         /// <inheritdoc />
         public ExternalAccess ExternalAccess { get; }
 
-
         /// <inheritdoc />
-        public void SetRadix(Radix radix)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        /// <inheritdoc />
-        public void SetDescription(string description)
-        {
-            throw new System.NotImplementedException();
-        }
+        public string Description { get; }
     }
 }

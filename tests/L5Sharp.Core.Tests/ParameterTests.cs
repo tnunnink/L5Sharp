@@ -66,7 +66,7 @@ namespace L5Sharp.Core.Tests
 
             parameter.Name.Should().Be("Test");
             parameter.DataType.Should().Be(new Dint());
-            parameter.Dimensions.Should().Be(Dimensions.Empty);
+            parameter.Dimension.Should().Be(Dimensions.Empty);
             parameter.Radix.Should().Be(Radix.Decimal);
             parameter.Required.Should().BeFalse();
             parameter.Visible.Should().BeFalse();
@@ -113,26 +113,6 @@ namespace L5Sharp.Core.Tests
         }
 
         [Test]
-        public void SetDescription_String_ShouldUpdateDescription()
-        {
-            var parameter = Parameter.Create<Sint>("Test");
-            
-            parameter.SetDescription("This is a test");
-
-            parameter.Description.Should().Be("This is a test");
-        }
-        
-        [Test]
-        public void SetDescription_Empty_ShouldUpdateDescription()
-        {
-            var parameter = Parameter.Create<Sint>("Test");
-            
-            parameter.SetDescription(string.Empty);
-
-            parameter.Description.Should().Be(string.Empty);
-        }
-
-        [Test]
         public void SetUsage_ValidUsageForType_ShouldUpdateUsage()
         {
             var parameter = Parameter.Create<Dint>("Test");
@@ -174,7 +154,7 @@ namespace L5Sharp.Core.Tests
             
             parameter.SetDimensions(new Dimensions(5));
 
-            parameter.Dimensions.Should().Be(new Dimensions(5));
+            parameter.Dimension.Should().Be(new Dimensions(5));
         }
         
         [Test]
@@ -192,32 +172,6 @@ namespace L5Sharp.Core.Tests
             var parameter = Parameter.Create<Dint>("Test");
             
             FluentActions.Invoking(() => parameter.SetDimensions(null)).Should().Throw<ArgumentNullException>();
-        }
-
-        [Test]
-        public void SetRadix_ValidTypeAndRadix_ShouldUpdateRadixToExpected()
-        {
-            var parameter = Parameter.Create<Dint>("Test");
-            
-            parameter.SetRadix(Radix.Binary);
-
-            parameter.Radix.Should().Be(Radix.Binary);
-        }
-
-        [Test]
-        public void SetRadix_Null_ShouldThrowArgumentNullException()
-        {
-            var parameter = Parameter.Create<Dint>("Test");
-            
-            FluentActions.Invoking(() => parameter.SetRadix(null)).Should().Throw<ArgumentNullException>();
-        }
-        
-        [Test]
-        public void SetRadix_NonAtomic_ShouldThrowInvalidOperationException()
-        {
-            var parameter = Parameter.Create<Timer>("Test");
-            
-            FluentActions.Invoking(() => parameter.SetRadix(Radix.Float)).Should().Throw<InvalidOperationException>();
         }
 
         [Test]

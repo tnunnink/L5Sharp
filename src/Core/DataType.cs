@@ -26,7 +26,7 @@ namespace L5Sharp.Core
 
             foreach (var member in Members)
             {
-                var copy = Member.Create<IDataType>(member.Name, member.DataType, member.Dimensions, member.Radix,
+                var copy = Member.Create<IDataType>(member.Name, member.DataType, member.Dimension, member.Radix,
                     member.ExternalAccess, member.Description);
                 members.Add(copy);
             }

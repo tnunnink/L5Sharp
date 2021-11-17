@@ -30,7 +30,7 @@ namespace L5Sharp.Core
         public string DataType => _member.DataType.Name;
 
         /// <inheritdoc />
-        public Dimensions Dimensions => _member.Dimensions;
+        public Dimensions Dimensions => _member.Dimension;
 
         /// <inheritdoc />
         public Radix Radix => _member.DataType.Radix;
@@ -65,10 +65,23 @@ namespace L5Sharp.Core
         }
 
         /// <inheritdoc />
-        public void SetRadix(Radix radix) => _member.SetRadix(radix);
+        public void SetRadix(Radix radix)
+        {
+            if (radix == null)
+                throw new ArgumentNullException(nameof(radix));
+
+            if (!(_member.DataType is IAtomic atomic))
+                throw new InvalidOperationException(
+                    $"{_member.DataType.Name} is not Atomic. Radix can only be set on Atomic types");
+            
+            atomic.SetRadix(radix);
+        }
 
         /// <inheritdoc />
-        public void SetDescription(string description) => _member.SetDescription(description);
+        public void SetDescription(string description)
+        {
+            
+        }
 
         /// <inheritdoc />
         public IEnumerable<string> GetMemberList() => _member.DataType.GetMembers().Select(m => m.Name.ToString());
@@ -119,7 +132,7 @@ namespace L5Sharp.Core
                 throw new ArgumentNullException(nameof(expression), "Expression can not be null");
 
             var member = expression.Invoke(_member.DataType);
-            member.SetRadix(radix);
+            member.DataType.SetRadix(radix);
         }
 
         /// <inheritdoc />
@@ -130,9 +143,8 @@ namespace L5Sharp.Core
                 throw new ArgumentNullException(nameof(expression), "Expression can not be null");
 
             var member = expression.Invoke(_member.DataType);
-            member.SetDescription(description);
         }
-        
+
         private IEnumerable<ITagMember<IDataType>> GetMembersInternal()
         {
             if (_member is IArrayMember<TDataType> arrayMember)
@@ -140,7 +152,7 @@ namespace L5Sharp.Core
                 return arrayMember.Select(e =>
                     new TagMember<IDataType>((IMember<IDataType>)e, (ITagMember<IDataType>)this));
             }
-            
+
             return _member.DataType.GetMembers().Select(m => new TagMember<IDataType>(m, (ITagMember<IDataType>)this));
         }
 

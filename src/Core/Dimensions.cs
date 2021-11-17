@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace L5Sharp.Core
 {
-    public class Dimensions : IEquatable<Dimensions>, IPrototype<Dimensions>
+    public class Dimensions : IEquatable<Dimensions>
     {
         private Dimensions()
         {

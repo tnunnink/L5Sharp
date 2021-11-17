@@ -134,7 +134,7 @@ namespace L5Sharp.Core.Tests
 
             members.UpdateDimensions("Member01", new Dimensions(4));
 
-            members.Get("Member01").Dimensions.Length.Should().Be(4);
+            members.Get("Member01").Dimension.Length.Should().Be(4);
         }
 
         [Test]

@@ -54,7 +54,7 @@ namespace L5Sharp.Core
             if (current == null)
                 throw new InvalidOperationException($"Could not find member with name '{name}'");
 
-            var member = Member.Create(current.Name, dataType, current.Dimensions, current.Radix,
+            var member = Member.Create(current.Name, dataType, current.Dimension, current.Radix,
                 current.ExternalAccess,
                 current.Description);
 
@@ -80,7 +80,7 @@ namespace L5Sharp.Core
             if (current == null)
                 throw new InvalidOperationException($"Could not find member with name '{name}'");
 
-            var member = Member.Create(current.Name, current.DataType, current.Dimensions, current.Radix,
+            var member = Member.Create(current.Name, current.DataType, current.Dimension, current.Radix,
                 externalAccess,
                 current.Description);
 

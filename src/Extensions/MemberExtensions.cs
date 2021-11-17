@@ -9,7 +9,7 @@
         /// <returns></returns>
         public static bool IsValueMember(this IMember<IDataType> member)
         {
-            return member.DataType is IAtomic && member.Dimensions.AreEmpty;
+            return member.DataType is IAtomic && member.Dimension.AreEmpty;
         }
 
         /// <summary>
@@ -19,7 +19,7 @@
         /// <returns></returns>
         public static bool IsArrayValueMember(this IMember<IDataType> member)
         {
-            return member.DataType is IAtomic && !member.Dimensions.AreEmpty;
+            return member.DataType is IAtomic && !member.Dimension.AreEmpty;
         }
         
         /// <summary>
@@ -29,7 +29,7 @@
         /// <returns></returns>
         public static bool IsArrayStructureMember(this IMember<IDataType> member)
         {
-            return !(member.DataType is IAtomic) && !member.Dimensions.AreEmpty;
+            return !(member.DataType is IAtomic) && !member.Dimension.AreEmpty;
         }
         
         /// <summary>
@@ -39,7 +39,7 @@
         /// <returns></returns>
         public static bool IsStructureMember(this IMember<IDataType> member)
         {
-            return !(member.DataType is IAtomic) && member.Dimensions.AreEmpty;
+            return !(member.DataType is IAtomic) && member.Dimension.AreEmpty;
         }
     }
 }

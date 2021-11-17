@@ -1,19 +1,12 @@
 ﻿using System;
-using System.Xml.Serialization;
 using L5Sharp.Enums;
-using L5Sharp.Exceptions;
 
 namespace L5Sharp.Core
 {
     /// <inheritdoc cref="IMember{TDataType}" />
-    public class Member<TDataType> : IMember<TDataType>, IEquatable<Member<TDataType>>
+    public sealed class Member<TDataType> : IMember<TDataType>, IEquatable<Member<TDataType>>
         where TDataType : IDataType
     {
-        //this is a work around to accomodate how descriptions are propagated in RSLogix
-        private string _parentDescription;
-        private string _overridenDescription;
-        private readonly string _defaultDescription;
-
         internal Member(ComponentName name, TDataType dataType, Radix radix,
             ExternalAccess externalAccess, string description)
         {
@@ -22,58 +15,34 @@ namespace L5Sharp.Core
             if (DataType is IAtomic atomic && radix != null)
                 atomic.SetRadix(radix);
             ExternalAccess = externalAccess != null ? externalAccess : ExternalAccess.ReadWrite;
-            _defaultDescription = description;
+            Description = description;
         }
 
         /// <inheritdoc />
         public ComponentName Name { get; }
 
         /// <inheritdoc />
-        public string Description => GetDescription();
+        public string Description { get; }
 
         /// <inheritdoc />
         public TDataType DataType { get; }
-        
+
         /// <inheritdoc />
-        [XmlAttribute("Dimension")] //overriding naming for the serialization since data type members are single 'Dimension'
-        public Dimensions Dimensions => Dimensions.Empty;
+        public Dimensions Dimension => Dimensions.Empty;
 
         /// <inheritdoc />
         public Radix Radix => DataType.Radix;
 
         /// <inheritdoc />
         public ExternalAccess ExternalAccess { get; }
-
-        /// <inheritdoc />
-        public void SetRadix(Radix radix)
-        {
-            if (radix == null)
-                throw new ArgumentNullException(nameof(radix));
-
-            if (!(DataType is IAtomic atomic))
-                throw new ComponentNotConfigurableException(nameof(Radix), GetType(),
-                    "Radix can only be set on atomic members");
-
-            atomic.SetRadix(radix);
-        }
-
-        internal void SetParentDescription(string description)
-        {
-            _parentDescription = description;
-        }
-
-        /// <inheritdoc />
-        public void SetDescription(string description)
-        {
-            _overridenDescription = description;
-        }
+        
 
         /// <inheritdoc />
         public bool Equals(Member<TDataType> other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return Name == other.Name && Equals(DataType, other.DataType) && Dimensions == other.Dimensions &&
+            return Name == other.Name && Equals(DataType, other.DataType) && Dimension == other.Dimension &&
                    Equals(Radix, other.Radix) && Equals(ExternalAccess, other.ExternalAccess) &&
                    Description == other.Description;
         }
@@ -89,9 +58,9 @@ namespace L5Sharp.Core
         /// <inheritdoc />
         public override int GetHashCode()
         {
-            return HashCode.Combine(Name, DataType, Dimensions, Radix, ExternalAccess, Description);
+            return HashCode.Combine(Name, DataType, Dimension, Radix, ExternalAccess, Description);
         }
-        
+
         /// <summary>
         /// Determines whether two objects are equal. 
         /// </summary>
@@ -112,17 +81,6 @@ namespace L5Sharp.Core
         public static bool operator !=(Member<TDataType> left, Member<TDataType> right)
         {
             return !Equals(left, right);
-        }
-
-        private string GetDescription()
-        {
-            if (!string.IsNullOrEmpty(_overridenDescription))
-                return _overridenDescription;
-
-            if (!string.IsNullOrEmpty(_parentDescription) && !string.IsNullOrEmpty(_defaultDescription))
-                return $"{_parentDescription} {_defaultDescription}";
-
-            return !string.IsNullOrEmpty(_parentDescription) ? _parentDescription : _defaultDescription;
         }
     }
 

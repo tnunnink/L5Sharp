@@ -45,7 +45,7 @@ namespace L5Sharp.Core.Tests
             var length = fixture.Create<ushort>();
             var array = Member.Create<Dint>("Test", new Dimensions(length));
 
-            array.Dimensions.Length.Should().Be(length);
+            array.Dimension.Length.Should().Be(length);
             array.Should().AllBeOfType<IElement<Dint>>();
         }
 
@@ -69,9 +69,9 @@ namespace L5Sharp.Core.Tests
                 ExternalAccess.ReadOnly, "Test");
 
             member.Should().NotBeNull();
-            member.Name.Should().Be("Member");
+            member.Name.ToString().Should().Be("Member");
             member.DataType.Should().Be(new Real(Radix.Exponential));
-            member.Dimensions.Length.Should().Be(35);
+            member.Dimension.Length.Should().Be(35);
             member.Radix.Should().Be(Radix.Exponential);
             member.ExternalAccess.Should().Be(ExternalAccess.ReadOnly);
             member.Description.Should().Be("Test");
@@ -85,7 +85,7 @@ namespace L5Sharp.Core.Tests
 
             var name = member.Name;
 
-            name.Should().Be("Member");
+            name.ToString().Should().Be("Member");
         }
 
         [Test]
@@ -103,7 +103,7 @@ namespace L5Sharp.Core.Tests
         {
             var member = Member.Create<Real>("Member");
 
-            var dimension = member.Dimensions;
+            var dimension = member.Dimension;
 
             dimension.Length.Should().Be(0);
         }
@@ -136,83 +136,6 @@ namespace L5Sharp.Core.Tests
             var description = member.Description;
 
             description.Should().BeNull();
-        }
-
-        [Test]
-        public void SetRadix_Null_ShouldThrowArgumentNullException()
-        {
-            var member = Member.Create<Real>("Test");
-
-            FluentActions.Invoking(() => member.SetRadix(null)).Should()
-                .Throw<ArgumentNullException>();
-        }
-
-        [Test]
-        public void SetRadix_InvalidRadix_ShouldThrowRadixNotSupportException()
-        {
-            var member = Member.Create<Real>("Test");
-
-            FluentActions.Invoking(() => member.SetRadix(Radix.Decimal)).Should()
-                .Throw<RadixNotSupportedException>();
-        }
-        
-        [Test]
-        public void SetRadix_NonAtomic_ShouldThrowComponentNotConfigurableException()
-        {
-            var member = Member.Create<Timer>("Test");
-
-            FluentActions.Invoking(() => member.SetRadix(Radix.Decimal)).Should()
-                .Throw<ComponentNotConfigurableException>();
-        }
-
-        [Test]
-        public void SetRadix_ValidRadix_ShouldBeExpectedValue()
-        {
-            var member = Member.Create<Real>("Test");
-
-            member.SetRadix(Radix.Exponential);
-
-            member.Radix.Should().Be(Radix.Exponential);
-        }
-        
-        [Test]
-        public void SetRadix_ArrayOfAtomicsValidRadix_ElementsShouldAllHaveExpectedRadix()
-        {
-            var member = Member.Create<Sint>("Test", new Dimensions(12));
-
-            member.SetRadix(Radix.Hex);
-
-            member.Select(e => e.Radix).Should().AllBeEquivalentTo(Radix.Hex);
-        }
-        
-        [Test]
-        public void SetDescription_Null_ShouldRevertToDefaultDescription()
-        {
-            var member = Member.Create<Real>("Test", description: "this is a test");
-
-            member.SetDescription(null);
-
-            member.Description.Should().Be("this is a test");
-        }
-        
-        [Test]
-        public void SetDescription_EmptyString_ShouldRevertToDefaultDescription()
-        {
-            var member = Member.Create<Real>("Test", description: "this is a test");
-
-            member.SetDescription(string.Empty);
-
-            member.Description.Should().Be("this is a test");
-        }
-        
-        [Test]
-        public void SetDescription_String_ShouldBeEmpty()
-        {
-            var member = Member.Create<Real>("Test");
-
-            member.SetDescription("This is a test");
-
-            member.Description.Should().Be("This is a test");
         }
 
         [Test]
@@ -311,19 +234,6 @@ namespace L5Sharp.Core.Tests
             var hash = first.GetHashCode();
 
             hash.Should().NotBe(0);
-        }
-        
-        
-        [Test]
-        public void DimensionsAttribute_Get_ShouldBeDimension()
-        {
-            var member = Member.Create("Test", new Bool(), new Dimensions(4));
-
-            var property = member.GetType().GetProperty("Dimensions");
-            var attribute = (XmlAttributeAttribute) property?.GetCustomAttributes(typeof(XmlAttributeAttribute), true).First();
-
-            attribute.Should().NotBeNull();
-            attribute?.AttributeName.Should().Be("Dimension");
         }
     }
 }

@@ -13,25 +13,42 @@ namespace L5Sharp.Core
         internal ArrayMember(ComponentName name, TDataType dataType, Dimensions dimensions, Radix radix,
             ExternalAccess externalAccess, string description)
         {
-            Name = name;
+            Name = name ?? throw new ArgumentNullException(nameof(name));
             DataType = dataType;
-            Dimensions = dimensions;
-            if (Dimensions.AreMultiDimensional)
+            Dimension = dimensions ?? throw new ArgumentNullException(nameof(dimensions));
+            if (Dimension.AreMultiDimensional)
                 throw new ArgumentException("Member can only have single dimensional arrays");
-            if (DataType is IAtomic atomic)
+            if (DataType is IAtomic atomic && radix != null)
                 atomic.SetRadix(radix);
-            ExternalAccess = externalAccess;
+            ExternalAccess = externalAccess ?? ExternalAccess.ReadWrite;
             Description = description;
-
             _elements = new IElement<TDataType>[dimensions];
             for (var i = 0; i < dimensions; i++)
-                _elements[i] = new Element<TDataType>(i, (TDataType)dataType.Instantiate(), 
-                    radix, externalAccess, description);
+                _elements[i] = new Element<TDataType>(i, (TDataType)dataType.Instantiate(), radix, externalAccess,
+                    description);
         }
 
         /// <inheritdoc />
         public IElement<TDataType> this[int index] => _elements[index];
 
+        /// <inheritdoc />
+        public ComponentName Name { get; }
+
+        /// <inheritdoc />
+        public TDataType DataType { get; }
+
+        /// <inheritdoc />
+        public Dimensions Dimension { get; }
+
+        /// <inheritdoc />
+        public Radix Radix => DataType.Radix;
+
+        /// <inheritdoc />
+        public ExternalAccess ExternalAccess { get; }
+
+        /// <inheritdoc />
+        public string Description { get; }
+        
         /// <inheritdoc />
         public IEnumerator<IElement<TDataType>> GetEnumerator()
         {
@@ -41,36 +58,6 @@ namespace L5Sharp.Core
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
-        }
-
-        /// <inheritdoc />
-        public ComponentName Name { get; }
-
-        /// <inheritdoc />
-        public string Description { get; }
-
-        /// <inheritdoc />
-        public TDataType DataType { get; }
-
-        /// <inheritdoc />
-        public Dimensions Dimensions { get; }
-
-        /// <inheritdoc />
-        public Radix Radix => DataType.Radix;
-
-        /// <inheritdoc />
-        public ExternalAccess ExternalAccess { get; }
-        
-        /// <inheritdoc />
-        public void SetRadix(Radix radix)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        /// <inheritdoc />
-        public void SetDescription(string description)
-        {
-            throw new System.NotImplementedException();
         }
     }
 }

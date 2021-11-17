@@ -16,7 +16,7 @@ namespace L5Sharp.Serialization
             var element = new XElement(LogixNames.Member);
             element.Add(component.ToAttribute(c => c.Name));
             element.Add(component.ToAttribute(c => c.DataType));
-            element.Add(component.ToAttribute(c => c.Dimensions));
+            element.Add(component.ToAttribute(c => c.Dimension));
             element.Add(component.ToAttribute(c => c.Radix));
             element.Add(component.ToAttribute(c => c.ExternalAccess));
             
