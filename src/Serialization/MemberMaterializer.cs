@@ -1,23 +1,22 @@
-﻿using System;
-using System.Runtime.CompilerServices;
+﻿using System.Runtime.CompilerServices;
 using System.Xml.Linq;
 using L5Sharp.Core;
 using L5Sharp.Extensions;
 
 [assembly: InternalsVisibleTo("L5Sharp.Factories.Tests")]
 
-namespace L5Sharp.Factories
+namespace L5Sharp.Serialization
 {
-    internal class MemberFactory : IComponentFactory<IMember<IDataType>>
+    internal class MemberMaterializer : IComponentMaterializer<IMember<IDataType>>
     {
         private readonly LogixContext _context;
 
-        public MemberFactory(LogixContext context)
+        public MemberMaterializer(LogixContext context)
         {
             _context = context;
         }
 
-        public IMember<IDataType> Create(XElement element)
+        public IMember<IDataType> Materialize(XElement element)
         {
             if (element == null) return null;
 

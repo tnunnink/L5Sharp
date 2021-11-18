@@ -3,7 +3,7 @@ using System.Linq;
 using System.Xml.Linq;
 using L5Sharp.Enums;
 using L5Sharp.Extensions;
-using L5Sharp.Factories;
+using L5Sharp.Serialization;
 using L5Sharp.Types;
 
 namespace L5Sharp
@@ -27,10 +27,10 @@ namespace L5Sharp
         }
 
         private void RegisterTypes(IEnumerable<XElement> elements, DataTypeClass typeClass,
-            IComponentFactory factory)
+            IComponentMaterializer materializer)
         {
             foreach (var element in elements)
-                _registryItems.Add(new LogixTypeRegistryItem(element.GetName(), typeClass, element, factory));
+                _registryItems.Add(new LogixTypeRegistryItem(element.GetName(), typeClass, element, materializer));
         }
     }
 }

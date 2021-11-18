@@ -1,23 +1,22 @@
-﻿using System;
-using System.Runtime.CompilerServices;
+﻿using System.Runtime.CompilerServices;
 using System.Xml.Linq;
 using L5Sharp.Core;
 using L5Sharp.Extensions;
 
 [assembly: InternalsVisibleTo("L5Sharp.Factories.Tests")]
 
-namespace L5Sharp.Factories
+namespace L5Sharp.Serialization
 {
-    internal class TagFactory : IComponentFactory<ITag<IDataType>>
+    internal class TagMaterializer : IComponentMaterializer<ITag<IDataType>>
     {
         private readonly LogixContext _context;
 
-        public TagFactory(LogixContext context)
+        public TagMaterializer(LogixContext context)
         {
             _context = context;
         }
 
-        public ITag<IDataType> Create(XElement element)
+        public ITag<IDataType> Materialize(XElement element)
         {
             if (element == null) return null;
 

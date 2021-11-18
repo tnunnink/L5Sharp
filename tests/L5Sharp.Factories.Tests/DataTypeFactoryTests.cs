@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Xml.Linq;
+using L5Sharp.Serialization;
 using NUnit.Framework;
 
 namespace L5Sharp.Factories.Tests
@@ -10,14 +11,14 @@ namespace L5Sharp.Factories.Tests
     {
         private readonly string _fileName = Path.Combine(Environment.CurrentDirectory, @"TestFiles\Test.xml");
         private XDocument _document;
-        private UserDefinedFactory _factory;
+        private UserDefinedMaterializer _materializer;
 
         [SetUp]
         public void Setup()
         {
             _document = XDocument.Load(_fileName);
             
-            _factory = new UserDefinedFactory(null);
+            _materializer = new UserDefinedMaterializer(null);
         }
         
     }

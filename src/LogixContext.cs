@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using L5Sharp.Core;
-using L5Sharp.Factories;
 using L5Sharp.Repositories;
+using L5Sharp.Serialization;
 
 namespace L5Sharp
 {
     public class LogixContext
     {
-        private readonly Dictionary<Type, IComponentFactory> _factories = new Dictionary<Type, IComponentFactory>();
+        private readonly Dictionary<Type, IComponentMaterializer> _factories = new Dictionary<Type, IComponentMaterializer>();
 
         private LogixContext(XDocument document)
         {
@@ -45,21 +45,21 @@ namespace L5Sharp
             L5X.Save(fileName);
         }
 
-        internal IComponentFactory<T> GetFactory<T>() where T : ILogixComponent
+        internal IComponentMaterializer<T> GetFactory<T>() where T : ILogixComponent
         {
             var type = _factories.Keys.SingleOrDefault(t => t == typeof(T));
 
             if (type == null)
                 throw new InvalidOperationException($"Factory not defined for component of type '{typeof(T)}'");
 
-            return (IComponentFactory<T>)_factories[type];
+            return (IComponentMaterializer<T>)_factories[type];
         }
 
         private void InitializeFactories()
         {
-            _factories.Add(typeof(IUserDefined), new UserDefinedFactory(this));
-            _factories.Add(typeof(IMember<IDataType>), new MemberFactory(this));
-            _factories.Add(typeof(ITag<IDataType>), new TagFactory(this));
+            _factories.Add(typeof(IUserDefined), new UserDefinedMaterializer(this));
+            _factories.Add(typeof(IMember<IDataType>), new MemberMaterializer(this));
+            _factories.Add(typeof(ITag<IDataType>), new TagMaterializer(this));
         }
 
         private static XDocument GenerateContent(ILogixComponent logixComponent, Revision revision)

@@ -1,5 +1,6 @@
 ﻿using L5Sharp.Core;
 using L5Sharp.Enums;
+
 // ReSharper disable InconsistentNaming
 
 namespace L5Sharp.Types

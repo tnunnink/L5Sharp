@@ -7,15 +7,15 @@ using L5Sharp.Extensions;
 
 [assembly: InternalsVisibleTo("L5Sharp.Factories.Tests")]
 
-namespace L5Sharp.Factories
+namespace L5Sharp.Serialization
 {
-    internal class TaskFactory : IComponentFactory<ITask>
+    internal class TaskMaterializer : IComponentMaterializer<ITask>
     {
-        public TaskFactory(LogixContext context)
+        public TaskMaterializer(LogixContext context)
         {
         }
         
-        public ITask Create(XElement element)
+        public ITask Materialize(XElement element)
         {
             if (element == null)
                 throw new ArgumentNullException(nameof(element));

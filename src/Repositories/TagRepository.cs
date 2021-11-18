@@ -21,13 +21,13 @@ namespace L5Sharp.Repositories
         public ITag<IDataType> Get(string name)
         {
             var element = _context.L5X.Tags.Descendants().SingleOrDefault(t => t.GetName() == name);
-            return _context.GetFactory<ITag<IDataType>>().Create(element);
+            return _context.GetFactory<ITag<IDataType>>().Materialize(element);
         }
 
         public IEnumerable<ITag<IDataType>> GetAll()
         {
             var factory = _context.GetFactory<ITag<IDataType>>();
-            return _context.L5X.Tags.Descendants().Select(e => factory.Create(e));
+            return _context.L5X.Tags.Descendants().Select(e => factory.Materialize(e));
         }
 
         public void Add(ITag<IDataType> component)

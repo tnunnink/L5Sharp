@@ -6,18 +6,18 @@ using L5Sharp.Extensions;
 
 [assembly: InternalsVisibleTo("L5Sharp.Factories.Tests")]
 
-namespace L5Sharp.Factories
+namespace L5Sharp.Serialization
 {
-    internal class UserDefinedFactory : IComponentFactory<IUserDefined>
+    internal class UserDefinedMaterializer : IComponentMaterializer<IUserDefined>
     {
         private readonly LogixContext _context;
 
-        public UserDefinedFactory(LogixContext context)
+        public UserDefinedMaterializer(LogixContext context)
         {
             _context = context;
         }
 
-        public IUserDefined Create(XElement element)
+        public IUserDefined Materialize(XElement element)
         {
             if (element == null) return null;
 
@@ -25,7 +25,7 @@ namespace L5Sharp.Factories
             var description = element.GetDescription();
 
             var factory = _context.GetFactory<IMember<IDataType>>();
-            var members = element.Descendants(LogixNames.Member).Select(x => factory.Create(x));
+            var members = element.Descendants(LogixNames.Member).Select(x => factory.Materialize(x));
 
             return new DataType(name, description, members);
         }

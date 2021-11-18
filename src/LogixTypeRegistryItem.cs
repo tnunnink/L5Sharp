@@ -1,31 +1,31 @@
 ﻿using System;
 using System.Xml.Linq;
 using L5Sharp.Enums;
-using L5Sharp.Factories;
+using L5Sharp.Serialization;
 using L5Sharp.Types;
 
 namespace L5Sharp
 {
     internal class LogixTypeRegistryItem : IEquatable<LogixTypeRegistryItem>, IInstantiable<IDataType>
     {
-        public LogixTypeRegistryItem(string name, DataTypeClass @class, XElement element, IComponentFactory factory)
+        public LogixTypeRegistryItem(string name, DataTypeClass @class, XElement element, IComponentMaterializer materializer)
         {
             Name = name;
             Class = @class;
             Element = element;
-            Factory = factory;
+            Materializer = materializer;
         }
 
         public string Name { get; }
         private DataTypeClass Class { get; }
-        private IComponentFactory Factory { get; }
+        private IComponentMaterializer Materializer { get; }
         private XElement Element { get; }
 
         public IDataType Instantiate()
         {
             if (Class == DataTypeClass.User)
             {
-                return ((UserDefinedFactory)Factory).Create(Element);
+                return ((UserDefinedMaterializer)Materializer).Materialize(Element);
             }
 
             if (Class == DataTypeClass.AddOnDefined)

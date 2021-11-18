@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 using L5Sharp.Enums;
 using L5Sharp.Exceptions;
 using L5Sharp.Extensions;
-using L5Sharp.Factories;
+using L5Sharp.Serialization;
 
 [assembly: InternalsVisibleTo("L5Sharp.Repositories.Tests")]
 
@@ -27,15 +27,15 @@ namespace L5Sharp.Repositories
         public IUserDefined Get(string name)
         {
             var element = _context.L5X.DataTypes.Descendants().SingleOrDefault(x => x.GetName() == name);
-            var factory = new UserDefinedFactory(_context);
-            return factory.Create(element);
+            var factory = new UserDefinedMaterializer(_context);
+            return factory.Materialize(element);
         }
 
         public IEnumerable<IUserDefined> GetAll()
         {
             var elements = _context.L5X.DataTypes.Descendants();
-            var factory = new UserDefinedFactory(_context);
-            return elements.Select(e => factory.Create(e));
+            var factory = new UserDefinedMaterializer(_context);
+            return elements.Select(e => factory.Materialize(e));
         }
 
         public IEnumerable<IDataType> WithMemberType(IDataType dataType)
