@@ -10,9 +10,10 @@ namespace L5Sharp
         where TDataType : IDataType
     {
         /// <summary>
-        /// Gets an <see cref="IElement{TDataType}"/> at the specified index.
+        /// Gets an <c>Element</c> at the specified index.
         /// </summary>
-        /// <param name="index">The index of the <see cref="IElement{TDataType}"/>.</param>
+        /// <param name="index">The index of the <c>Element</c> to retrieve.</param>
+        /// <returns>An instance of <see cref="IElement{TDataType}"/> if the index is in range of the array.</returns>
         IElement<TDataType> this[int index] { get; }
     }
 }

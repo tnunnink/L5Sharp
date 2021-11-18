@@ -16,12 +16,13 @@ namespace L5Sharp.Core
             Name = name ?? throw new ArgumentNullException(nameof(name));
             DataType = dataType;
             Dimension = dimensions ?? throw new ArgumentNullException(nameof(dimensions));
-            if (Dimension.AreMultiDimensional)
-                throw new ArgumentException("Member can only have single dimensional arrays");
+
             if (DataType is IAtomic atomic && radix != null)
                 atomic.SetRadix(radix);
+            
             ExternalAccess = externalAccess ?? ExternalAccess.ReadWrite;
             Description = description;
+            
             _elements = new IElement<TDataType>[dimensions];
             for (var i = 0; i < dimensions; i++)
                 _elements[i] = new Element<TDataType>(i, (TDataType)dataType.Instantiate(), radix, externalAccess,

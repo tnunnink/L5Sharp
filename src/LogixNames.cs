@@ -19,6 +19,7 @@
         public const string Routines = nameof(Routines);
         public const string Routine = nameof(Routine);
         public const string Rungs = nameof(Rungs);
+        public const string Rung = nameof(Rung);
         public const string Tasks = nameof(Tasks);
         public const string Task = nameof(Task);
 
