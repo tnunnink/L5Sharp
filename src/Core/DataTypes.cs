@@ -2,7 +2,7 @@
 
 namespace L5Sharp.Core
 {
-    public class DataTypes : ComponentCollection<IUserDefined>, IDataTypes
+    public class DataTypes : ComponentCollection<IUserDefined>
     {
         private readonly IController _controller;
 

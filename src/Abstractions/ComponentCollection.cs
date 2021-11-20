@@ -6,6 +6,7 @@ using L5Sharp.Exceptions;
 
 namespace L5Sharp.Abstractions
 {
+    /// <inheritdoc />
     public class ComponentCollection<TComponent> : IComponentCollection<TComponent> where TComponent : ILogixComponent
     {
         private readonly ComponentNameComparer<TComponent> _comparer = new ComponentNameComparer<TComponent>();
@@ -18,44 +19,59 @@ namespace L5Sharp.Abstractions
         //we can avoid state issues when the client updates the component name.  
         private readonly List<Func<string>> _names; 
 
+        /// <summary>
+        /// Creates a new empty instance of <see cref="ComponentCollection{TComponent}"/> for the specified <see cref="ILogixComponent"/>.
+        /// </summary>
         public ComponentCollection()
         {
             _components = new HashSet<TComponent>(_comparer);
             _names = new List<Func<string>>();
         }
 
+        /// <summary>
+        /// Creates a new instance of <see cref="ComponentCollection{TComponent}"/> for the specified
+        /// <see cref="ILogixComponent"/> with the provided collection of components. 
+        /// </summary>
+        /// <param name="components">A collection of components to initialize the collection with.</param>
         public ComponentCollection(IEnumerable<TComponent> components) : this()
         {
             AddComponents(components);
         }
 
+        /// <inheritdoc />
         public int Count => _components.Count;
 
+        /// <inheritdoc />
         public bool Contains(string name)
         {
             return !string.IsNullOrEmpty(name) && _components.Any(c => c.Name == name);
         }
 
+        /// <inheritdoc />
         public TComponent Get(string name)
         {
             return !string.IsNullOrEmpty(name) ? _components.SingleOrDefault(c => c.Name == name) : default;
         }
 
+        /// <inheritdoc />
         public TComponent Get(Func<TComponent, bool> predicate)
         {
-            return _components.SingleOrDefault(predicate);
+            return _components.FirstOrDefault(predicate);
         }
 
+        /// <inheritdoc />
         public IEnumerable<TComponent> Find(Func<TComponent, bool> predicate)
         {
             return _components.Where(predicate);
         }
 
+        /// <inheritdoc />
         public IEnumerable<TComponent> Ordered()
         {
             return _components.OrderBy(c => _names.FindIndex(func => func.Invoke() == c.Name));
         }
 
+        /// <inheritdoc />
         public int IndexOf(TComponent component)
         {
             if (component == null)
@@ -64,16 +80,22 @@ namespace L5Sharp.Abstractions
             return _names.FindIndex(n => n.Invoke() == component.Name);
         }
 
+        /// <inheritdoc />
         public virtual void Add(TComponent component) => AddComponent(component);
 
+        /// <inheritdoc />
         public void AddRange(IEnumerable<TComponent> components) => AddComponents(components);
 
+        /// <inheritdoc />
         public virtual void Insert(int index, TComponent component) => InsertComponent(index, component);
 
+        /// <inheritdoc />
         public virtual void Update(TComponent component) => UpdateComponent(component);
 
+        /// <inheritdoc />
         public virtual void Remove(string name) => RemoveComponent(name);
 
+        /// <inheritdoc />
         public IEnumerator GetEnumerator()
         {
             return _components.GetEnumerator();
@@ -122,15 +144,6 @@ namespace L5Sharp.Abstractions
             _names.Insert(index, () => component.Name);
         }
 
-        private void RemoveComponent(string name)
-        {
-            if (string.IsNullOrEmpty(name)) return;
-            if (!ContainsComponentName(name)) return;
-
-            _names.RemoveAt(_names.FindIndex(f => f.Invoke() == name));
-            _components.RemoveWhere(c => c.Name == name);
-        }
-
         private void UpdateComponent(TComponent component)
         {
             if (component == null)
@@ -144,6 +157,15 @@ namespace L5Sharp.Abstractions
             
             _components.RemoveWhere(c => c.Name == component.Name);
             _components.Add(component);
+        }
+
+        private void RemoveComponent(string name)
+        {
+            if (string.IsNullOrEmpty(name)) return;
+            if (!ContainsComponentName(name)) return;
+
+            _names.RemoveAt(_names.FindIndex(f => f.Invoke() == name));
+            _components.RemoveWhere(c => c.Name == name);
         }
     }
 }

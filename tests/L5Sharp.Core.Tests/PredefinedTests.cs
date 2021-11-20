@@ -31,7 +31,7 @@ namespace L5Sharp.Core.Tests
         {
             var type = new TestPredefined();
 
-            type.Name.Should().Be("TestPredefined");
+            type.Name.ToString().Should().Be("TestPredefined");
         }
         
         [Test]
@@ -82,6 +82,17 @@ namespace L5Sharp.Core.Tests
             {
                 return new MyNullNamePredefined();
             }
+        }
+
+        [Test]
+        public void Instantiate_WhenCalled_ReturnsNewInstanceWithEqualValue()
+        {
+            var type = new TestPredefined();
+
+            var instance = type.Instantiate();
+
+            instance.Should().NotBeSameAs(type);
+            instance.Should().BeEquivalentTo(type);
         }
 
         [Test]

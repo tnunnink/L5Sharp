@@ -12,19 +12,23 @@ namespace L5Sharp.Core
     {
         private readonly IMember<TDataType> _member;
 
-        internal TagMember(IMember<TDataType> member, ITagMember<IDataType> parent)
+        internal TagMember(IMember<TDataType> member, TagMember<IDataType> parent, Tag<IDataType> root)
         {
             _member = member ?? throw new ArgumentNullException(nameof(member));
+
             Parent = parent;
+            Root = root;
         }
 
         /// <inheritdoc />
         public string Name => _member.Name;
 
         /// <inheritdoc />
-        public string TagName => Parent == null ? Name
-            : !Parent.Dimensions.AreEmpty ? $"{GetName(Parent)}{Name}"
-            : $"{GetName(Parent)}.{Name}";
+        public string TagName => Parent == null
+            ? Name
+            : _member.IsArrayElement()
+                ? $"{GetName(Parent)}{Name}"
+                : $"{GetName(Parent)}.{Name}";
 
         /// <inheritdoc />
         public string DataType => _member.DataType.Name;
@@ -46,8 +50,9 @@ namespace L5Sharp.Core
         /// <inheritdoc />
         public string Description => _member.Description;
 
-        /// <inheritdoc />
-        public ITagMember<IDataType> Parent { get; }
+
+        private Tag<IDataType> Root { get; }
+        private TagMember<IDataType> Parent { get; }
 
         /// <inheritdoc />
         public IAtomic GetData()
@@ -73,21 +78,20 @@ namespace L5Sharp.Core
             if (!(_member.DataType is IAtomic atomic))
                 throw new InvalidOperationException(
                     $"{_member.DataType.Name} is not Atomic. Radix can only be set on Atomic types");
-            
+
             atomic.SetRadix(radix);
         }
 
         /// <inheritdoc />
         public void SetDescription(string description)
         {
-            
         }
 
         /// <inheritdoc />
-        public IEnumerable<string> GetMemberList() => _member.DataType.GetMembers().Select(m => m.Name.ToString());
+        public IEnumerable<string> GetMemberNames() => _member.DataType.GetMembers().Select(m => m.Name.ToString());
 
         /// <inheritdoc />
-        public IEnumerable<string> GetDeepMembersList() => _member.DataType.GetMemberNames();
+        public IEnumerable<string> GetDeepMembersNames() => _member.DataType.GetMemberNames();
 
         /// <inheritdoc />
         public ITagMember<IDataType> this[string name] => GetMember(name);
@@ -110,7 +114,7 @@ namespace L5Sharp.Core
             where TType : IDataType
         {
             var member = expression.Invoke(_member.DataType);
-            return member != null ? new TagMember<TType>(member, (ITagMember<IDataType>)this) : null;
+            return member != null ? new TagMember<TType>(member, this as TagMember<IDataType>, Root) : null;
         }
 
         /// <inheritdoc />
@@ -150,29 +154,30 @@ namespace L5Sharp.Core
             if (_member is IArrayMember<TDataType> arrayMember)
             {
                 return arrayMember.Select(e =>
-                    new TagMember<IDataType>((IMember<IDataType>)e, (ITagMember<IDataType>)this));
+                    new TagMember<IDataType>((IMember<IDataType>)e, this as TagMember<IDataType>, Root));
             }
 
-            return _member.DataType.GetMembers().Select(m => new TagMember<IDataType>(m, (ITagMember<IDataType>)this));
+            return _member.DataType.GetMembers()
+                .Select(m => new TagMember<IDataType>(m, this as TagMember<IDataType>, Root));
         }
 
         private ITagMember<IDataType> GetMember(string name)
         {
             var member = _member.DataType.GetMember(name);
-            return member != null ? new TagMember<IDataType>(member, (ITagMember<IDataType>)this) : null;
+            return member != null ? new TagMember<IDataType>(member, this as TagMember<IDataType>, Root) : null;
         }
 
         private ITagMember<TDataType> GetMember(int index)
         {
             return _member is IArrayMember<TDataType> arrayMember
-                ? new TagMember<TDataType>(arrayMember[index], (ITagMember<IDataType>)this)
+                ? new TagMember<TDataType>(arrayMember[index], this as TagMember<IDataType>, Root)
                 : null;
         }
 
-        private static string GetName(ITagMember<IDataType> member)
+        private static string GetName(TagMember<IDataType> member)
         {
             return member.Parent != null
-                ? member.Dimensions.Length > 0
+                ? member.Parent.Dimensions.Length > 0
                     ? $"{GetName(member.Parent)}{member.Name}"
                     : $"{GetName(member.Parent)}.{member.Name}"
                 : member.Name;

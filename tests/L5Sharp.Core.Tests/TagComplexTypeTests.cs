@@ -10,37 +10,37 @@ namespace L5Sharp.Core.Tests
     public class TagComplexTypeTests
     {
         [Test]
-        public void GetMemberList_WhenCalledHasMembers_ShouldNotBeEmpty()
+        public void GetMemberNames_WhenCalledHasMembers_ShouldNotBeEmpty()
         {
             var tag = Tag.Create("Test", (IDataType)new Counter());
 
-            var members = tag.GetMemberList();
+            var members = tag.GetMemberNames();
 
             members.Should().NotBeEmpty();
         }
 
         [Test]
-        public void GetDeepMemberList_WhenCalledHasMembers_ShouldNotBeEmpty()
+        public void GetDeepMembersNames_WhenCalledHasMembers_ShouldNotBeEmpty()
         {
             var tag = Tag.Create("Test", (IDataType)new Counter());
 
-            var members = tag.GetDeepMembersList();
+            var members = tag.GetDeepMembersNames();
 
             members.Should().NotBeEmpty();
         }
 
         [Test]
-        public void GetDeepMemberList_NestedStructure_ShouldContainDotProperties()
+        public void GetDeepMembersNames_NestedStructure_ShouldContainDotProperties()
         {
             var tag = Tag.Create("Test", (IDataType)new Message());
 
-            var members = tag.GetDeepMembersList();
+            var members = tag.GetDeepMembersNames();
 
             members.Should().Contain(s => s.Contains('.'));
         }
         
         [Test]
-        public void GetMember_NameOverloadValidNameHasMember_ShouldNotBeNull()
+        public void StringIndex_ValidNameHasMember_ShouldNotBeNull()
         {
             var tag = Tag.Create<Timer>("Test");
 
@@ -50,7 +50,7 @@ namespace L5Sharp.Core.Tests
         }
 
         [Test]
-        public void GetMember_NameOverloadNonExistingMember_ShouldBeNull()
+        public void StringIndex_NonExistingMember_ShouldBeNull()
         {
             var tag = Tag.Create<Timer>("Test");
 
@@ -60,7 +60,7 @@ namespace L5Sharp.Core.Tests
         }
 
         [Test]
-        public void GetMembers_NameOverloadSameMember_DataShouldReferenceSameInstance()
+        public void StringIndex_SameMember_DataShouldReferenceSameInstance()
         {
             var tag = Tag.Create<Timer>("Test");
 
@@ -71,21 +71,21 @@ namespace L5Sharp.Core.Tests
         }
 
         [Test]
-        public void GetMember_FuncOverloadValidNameHasMember_ShouldNotBeNull()
+        public void ExpressionIndex_ValidNameHasMember_ShouldNotBeNull()
         {
             var tag = Tag.Create<Timer>("Test");
 
-            var member = tag.GetMember(t => t.PRE);
+            var member = tag[t => t.PRE];
 
             member.Should().NotBeNull();
         }
 
         [Test]
-        public void GetMembers_FuncOverloadSameMember_DataShouldReferenceSameInstance()
+        public void ExpressionIndex_SameMember_DataShouldReferenceSameInstance()
         {
             var tag = Tag.Create<Timer>("Test");
 
-            var first = tag.GetMember(d => d.ACC);
+            var first = tag[t => t.PRE];
             var second = tag.GetMember(d => d.ACC);
 
             first.GetData().Should().BeSameAs(second.GetData());

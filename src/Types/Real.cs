@@ -23,7 +23,9 @@ namespace L5Sharp.Types
             SetRadix(radix);
         }
 
+        /// <inheritdoc />
         public ComponentName Name => nameof(Real).ToUpper();
+        
         public string Description => $"RSLogix representation of a {typeof(float)}";
         public DataTypeFamily Family => DataTypeFamily.None;
         public DataTypeClass Class => DataTypeClass.Atomic;

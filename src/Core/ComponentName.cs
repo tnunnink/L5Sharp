@@ -14,7 +14,7 @@ namespace L5Sharp.Core
     /// <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
     /// `Logix 5000 Controllers Import/Export`</a>
     /// </footer>
-    public class ComponentName : IEquatable<ComponentName>
+    public class ComponentName : IEquatable<ComponentName>, IComparable<ComponentName>, IPrototype<ComponentName>
     {
         private readonly string _name;
 
@@ -50,6 +50,12 @@ namespace L5Sharp.Core
         }
 
         /// <inheritdoc />
+        public ComponentName Copy()
+        {
+            return new ComponentName(string.Copy(_name));
+        }
+
+        /// <inheritdoc />
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
@@ -63,7 +69,6 @@ namespace L5Sharp.Core
             return (_name != null ? _name.GetHashCode() : 0);
         }
 
-        
         /// <summary>
         /// Determines if two <see cref="ComponentName"/> objects are equal.
         /// </summary>
@@ -110,6 +115,13 @@ namespace L5Sharp.Core
         public override string ToString()
         {
             return _name;
+        }
+
+        /// <inheritdoc />
+        public int CompareTo(ComponentName other)
+        {
+            if (ReferenceEquals(this, other)) return 0;
+            return ReferenceEquals(null, other) ? 1 : string.Compare(_name, other._name, StringComparison.Ordinal);
         }
     }
 }

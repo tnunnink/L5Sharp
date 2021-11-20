@@ -199,7 +199,8 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Parse_Null_ShouldThrowArgumentNullException()
         {
-            FluentActions.Invoking(() => Dimensions.Parse(null)).Should().Throw<ArgumentNullException>();
+            var dimensions = Dimensions.Parse(null);
+            dimensions.Should().Be(Dimensions.Empty);
         }
         
         [Test]
@@ -230,6 +231,19 @@ namespace L5Sharp.Core.Tests
         {
             FluentActions.Invoking(() => Dimensions.Parse("1 4 3 8")).Should()
                 .Throw<ArgumentException>();
+        }
+        
+        [Test]
+        public void Parse_OneDimensionZero_ShouldHaveExpectedValues()
+        {
+            var dimensions = Dimensions.Parse("0");
+
+            dimensions.Should().NotBeNull();
+            dimensions.X.Should().Be(0);
+            dimensions.Y.Should().Be(0);
+            dimensions.Z.Should().Be(0);
+            dimensions.Length.Should().Be(0);
+            dimensions.Should().BeEquivalentTo(Dimensions.Empty);   
         }
 
         [Test]

@@ -64,7 +64,7 @@ namespace L5Sharp.Core.Tests
         {
             var parameter = Parameter.Create<Dint>("Test");
 
-            parameter.Name.Should().Be("Test");
+            parameter.Name.ToString().Should().Be("Test");
             parameter.DataType.Should().Be(new Dint());
             parameter.Dimension.Should().Be(Dimensions.Empty);
             parameter.Radix.Should().Be(Radix.Decimal);
@@ -85,7 +85,7 @@ namespace L5Sharp.Core.Tests
             
             parameter.SetName("Different");
 
-            parameter.Name.Should().Be("Different");
+            parameter.Name.ToString().Should().Be("Different");
         }
 
         [Test]

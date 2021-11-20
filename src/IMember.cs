@@ -4,12 +4,16 @@ using L5Sharp.Enums;
 namespace L5Sharp
 {
     /// <summary>
-    /// Represents a member component.
+    /// Represents a member of a complex data type.
     /// </summary>
     /// <remarks>
-    /// Members define complex data structures like <see cref="IUserDefined"/>, <see cref="IPredefined"/>, or <see cref="IAddOnDefined"/>.
+    /// Members define complex data structures such as <see cref="IUserDefined"/>, <see cref="IPredefined"/>, or <see cref="IAddOnDefined"/>.
     /// </remarks>
-    /// <typeparam name="TDataType">The <see cref="IDataType"/> that is the member's type</typeparam>
+    /// <typeparam name="TDataType">The <see cref="IDataType"/> of the member.</typeparam>
+    /// <footer>
+    /// <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
+    /// `Logix 5000 Controllers Import/Export`</a>
+    /// </footer>
     public interface IMember<out TDataType> : ILogixComponent where TDataType : IDataType
     {
         /// <summary>

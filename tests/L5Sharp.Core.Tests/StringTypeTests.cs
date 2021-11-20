@@ -40,7 +40,7 @@ namespace L5Sharp.Core.Tests
         public void Name_GetValue_ShouldBeExpected()
         {
             var type = new StringDefined("Test", 100);
-            type.Name.Should().Be("Test");
+            type.Name.ToString().Should().Be("Test");
         }
         
         [Test]
@@ -77,7 +77,7 @@ namespace L5Sharp.Core.Tests
             var type = new StringDefined("Test", 10);
 
             type.LEN.Should().NotBeNull();
-            type.LEN.Name.Should().Be("LEN");
+            type.LEN.Name.ToString().Should().Be("LEN");
             type.LEN.DataType.Should().Be(new Dint());
             type.LEN.Dimension.Length.Should().Be(0);
             type.LEN.Radix.Should().Be(Radix.Decimal);
@@ -91,7 +91,7 @@ namespace L5Sharp.Core.Tests
             var type = new StringDefined("Test", 100);
             
             type.DATA.Should().NotBeNull();
-            type.DATA.Name.Should().Be("DATA");
+            type.DATA.Name.ToString().Should().Be("DATA");
             type.DATA.DataType.Should().Be(new Sint(Radix.Ascii));
             type.DATA.Dimension.Length.Should().Be(100);
             type.DATA.Radix.Should().Be(Radix.Ascii);

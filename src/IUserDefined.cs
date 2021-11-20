@@ -4,7 +4,7 @@ namespace L5Sharp
 {
     public interface IUserDefined : IDataType
     {
-        IMembers Members { get; }
+        IComponentCollection<IMember<IDataType>> Members { get; }
         void SetName(ComponentName name);
         void SetDescription(string description);
     }

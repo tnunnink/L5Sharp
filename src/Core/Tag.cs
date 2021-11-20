@@ -70,10 +70,6 @@ namespace L5Sharp.Core
         /// <inheritdoc />
         public ILogixComponent Container { get; internal set; }
 
-        //A Tag is always the root and therefore has not "parent"
-        /// <inheritdoc />
-        public ITagMember<IDataType> Parent => null;
-
         /// <inheritdoc />
         public IAtomic GetData() => _tagMember.GetData();
 
@@ -127,10 +123,10 @@ namespace L5Sharp.Core
         public void SetDescription(string description) => _tagMember.SetDescription(description);
 
         /// <inheritdoc />
-        public IEnumerable<string> GetMemberList() => _tagMember.GetMemberList();
+        public IEnumerable<string> GetMemberNames() => _tagMember.GetMemberNames();
 
         /// <inheritdoc />
-        public IEnumerable<string> GetDeepMembersList() => _tagMember.GetDeepMembersList();
+        public IEnumerable<string> GetDeepMembersNames() => _tagMember.GetDeepMembersNames();
 
         /// <inheritdoc />
         public ITagMember<IDataType> this[string name] => _tagMember[name];
@@ -181,44 +177,7 @@ namespace L5Sharp.Core
                 ? Member.Create(name, dataType, dimensions, radix, externalAccess, description)
                 : Member.Create(name, dataType, radix, externalAccess, description);
 
-            _tagMember = new TagMember<TDataType>(member, null);
-        }
-    }
-
-    public static class Tag
-    {
-        public static ITag<IDataType> Create(ComponentName name, IDataType dataType)
-        {
-            return new Tag<IDataType>(name, dataType);
-        }
-
-        public static ITag<TDataType> Create<TDataType>(ComponentName name) where TDataType : IDataType, new()
-        {
-            return new Tag<TDataType>(name, new TDataType());
-        }
-
-        public static ITag<TDataType> Create<TDataType>(ComponentName name, TDataType dataType)
-            where TDataType : IDataType, new()
-        {
-            return new Tag<TDataType>(name, dataType);
-        }
-
-        public static ITagBuilder<IDataType> Build(ComponentName name, IDataType dataType)
-        {
-            return new TagBuilder<IDataType>(name, dataType);
-        }
-
-        public static ITagBuilder<TDataType> Build<TDataType>(ComponentName name)
-            where TDataType : IDataType, new()
-        {
-            var dataType = new TDataType();
-            return new TagBuilder<TDataType>(name, dataType);
-        }
-
-        public static ITagBuilder<TDataType> Build<TDataType>(ComponentName name, TDataType dataType)
-            where TDataType : IDataType, new()
-        {
-            return new TagBuilder<TDataType>(name, dataType);
+            _tagMember = new TagMember<TDataType>(member, null, this as Tag<IDataType>);
         }
     }
 }

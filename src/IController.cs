@@ -8,7 +8,7 @@ namespace L5Sharp
     {
         ProcessorType ProcessorType { get; }
         Revision Revision { get; }
-        IDataTypes DataTypes { get; }
+        IComponentCollection<IUserDefined> DataTypes { get; }
         ITags Tags { get; }
         IPrograms Programs { get; }
         ITasks Tasks { get; }

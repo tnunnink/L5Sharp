@@ -32,7 +32,7 @@ namespace L5Sharp.Core
 
         public DateTime LastModifiedDate { get; }
 
-        public IDataTypes DataTypes { get; }
+        public IComponentCollection<IUserDefined> DataTypes { get; }
         public ITags Tags { get; }
         public IPrograms Programs { get; }
         public ITasks Tasks { get; }

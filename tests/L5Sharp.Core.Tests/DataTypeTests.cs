@@ -112,7 +112,7 @@ namespace L5Sharp.Core.Tests
 
             type.SetName("NewName");
 
-            type.Name.Should().Be("NewName");
+            type.Name.ToString().Should().Be("NewName");
         }
 
         [Test]
@@ -237,7 +237,7 @@ namespace L5Sharp.Core.Tests
 
             FluentActions
                 .Invoking(
-                    () => type.Members.Add(Member.Create("Member", new Int(), radix: Radix.Float)))
+                    () => type.Members.Add(Member.Create("Member", new Int(), Radix.Float)))
                 .Should().Throw<RadixNotSupportedException>();
         }
 

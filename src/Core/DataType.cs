@@ -11,22 +11,22 @@ namespace L5Sharp.Core
         public DataType(string name, string description = null, IEnumerable<IMember<IDataType>> members = null)
             : base(name, description)
         {
-            Members = members == null ? new Members(this) : new Members(this, members);
+            Members = members == null ? new DataTypeMembers(this) : new DataTypeMembers(this, members);
         }
         
         public Radix Radix => Radix.Null;
         public DataTypeFamily Family => DataTypeFamily.None;
         public DataTypeClass Class => DataTypeClass.User;
         public TagDataFormat DataFormat => TagDataFormat.Decorated;
-        public IMembers Members { get; }
+        public IComponentCollection<IMember<IDataType>> Members { get; }
 
         public IDataType Instantiate()
         {
-            var members = new Members(this);
+            var members = new DataTypeMembers(this);
 
             foreach (var member in Members)
             {
-                var copy = Member.Create<IDataType>(member.Name, member.DataType, member.Dimension, member.Radix,
+                var copy = Member.Create<IDataType>(member.Name, member.DataType.Instantiate(), member.Dimension.Copy(), member.Radix,
                     member.ExternalAccess, member.Description);
                 members.Add(copy);
             }
@@ -34,6 +34,7 @@ namespace L5Sharp.Core
             return new DataType(Name, Description, members);
         }
 
+        /// <inheritdoc />
         public bool Equals(DataType other)
         {
             if (ReferenceEquals(null, other)) return false;
@@ -43,6 +44,7 @@ namespace L5Sharp.Core
                    && Description == other.Description;
         }
 
+        /// <inheritdoc />
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
@@ -50,11 +52,13 @@ namespace L5Sharp.Core
             return obj.GetType() == GetType() && Equals((DataType)obj);
         }
 
+        /// <inheritdoc />
         public override int GetHashCode()
         {
             return HashCode.Combine(Name);
         }
 
+        /// <inheritdoc />
         public override string ToString()
         {
             return Name;

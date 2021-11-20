@@ -12,10 +12,11 @@ namespace L5Sharp.Core
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
             DataType = dataType;
-            if (DataType is IAtomic atomic && radix != null)
-                atomic.SetRadix(radix);
             ExternalAccess = externalAccess != null ? externalAccess : ExternalAccess.ReadWrite;
             Description = description;
+            
+            if (DataType is IAtomic atomic && radix != null)
+                atomic.SetRadix(radix);
         }
 
         /// <inheritdoc />

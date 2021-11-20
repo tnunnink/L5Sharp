@@ -6,24 +6,44 @@ using L5Sharp.Exceptions;
 
 namespace L5Sharp.Core
 {
+    /// <inheritdoc cref="L5Sharp.IPredefined" />
     public abstract class Predefined : IPredefined, IEquatable<Predefined>
     {
         private readonly Dictionary<string, IMember<IDataType>> _members =
             new Dictionary<string, IMember<IDataType>>(StringComparer.OrdinalIgnoreCase);
 
+        /// <summary>
+        /// Creates a new instance of a <c>Predefined</c> type with the provided component name./>
+        /// </summary>
+        /// <param name="name">The value of the <see cref="ComponentName"/>.</param>
+        /// <exception cref="ArgumentNullException">Throw when name is null.</exception> 
         protected Predefined(ComponentName name)
         {
-            Name = name;
+            Name = name ?? throw new ArgumentNullException(nameof(name));
         }
 
+        /// <inheritdoc />
         public ComponentName Name { get; }
+
+        /// <inheritdoc />
         public virtual string Description => null;
+
+        /// <inheritdoc />
         public Radix Radix => Radix.Null;
+
+        /// <inheritdoc />
         public virtual DataTypeFamily Family => DataTypeFamily.None;
+
+        /// <inheritdoc />
         public DataTypeClass Class => DataTypeClass.Predefined;
+
+        /// <inheritdoc />
         public virtual TagDataFormat DataFormat => TagDataFormat.Decorated;
+
+        /// <inheritdoc />
         public IEnumerable<IMember<IDataType>> Members => _members.Values.AsEnumerable();
 
+        /// <inheritdoc />
         public bool Equals(Predefined other)
         {
             if (ReferenceEquals(null, other)) return false;
@@ -31,6 +51,7 @@ namespace L5Sharp.Core
             return Name == other.Name && Members.SequenceEqual(other.Members);
         }
 
+        /// <inheritdoc />
         public IDataType Instantiate()
         {
             return New();
@@ -42,6 +63,7 @@ namespace L5Sharp.Core
         /// <returns></returns>
         protected abstract IDataType New();
 
+        /// <inheritdoc />
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
@@ -49,6 +71,7 @@ namespace L5Sharp.Core
             return obj.GetType() == GetType() && Equals((Predefined)obj);
         }
 
+        /// <inheritdoc />
         public override int GetHashCode()
         {
             return HashCode.Combine(_members, Name, Family);
@@ -64,16 +87,10 @@ namespace L5Sharp.Core
             return !Equals(left, right);
         }
 
-        protected void RegisterMemberProperties()
-        {
-            var fields = GetType().GetProperties().Where(p =>
-                p.PropertyType.IsGenericType &&
-                p.PropertyType.GetGenericTypeDefinition().IsAssignableFrom(typeof(IMember<>))).ToList();
-
-            foreach (var member in fields.Select(p => (IMember<IDataType>) p.GetValue(this)))
-                RegisterTypeMember(member);
-        }
-        
+        /// <summary>
+        /// Adds all instance fields of type <see cref="IMember{TDataType}"/> to the <see cref="Members"/> collection
+        /// using reflection so that the developer does not need to register each member individually.
+        /// </summary>
         protected void RegisterMemberFields()
         {
             var fields = GetType().GetFields().Where(f =>
@@ -84,6 +101,10 @@ namespace L5Sharp.Core
                 RegisterTypeMember(member);
         }
 
+        /// <summary>
+        /// Registers the <c>Member</c> to the <see cref="Members"/> collection.
+        /// </summary>
+        /// <param name="member"></param>
         protected void RegisterMember(IMember<IDataType> member) => RegisterTypeMember(member);
 
         private void RegisterTypeMember(IMember<IDataType> member)

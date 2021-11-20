@@ -46,7 +46,7 @@ namespace L5Sharp.Core.Tests
             var array = Member.Create<Dint>("Test", new Dimensions(length));
 
             array.Dimension.Length.Should().Be(length);
-            array.Should().AllBeOfType<IElement<Dint>>();
+            array.Should().AllBeOfType<Element<Dint>>();
         }
 
         [Test]
@@ -60,6 +60,21 @@ namespace L5Sharp.Core.Tests
         {
             var member = Member.Create("Name", null);
             member.DataType.Should().BeNull();
+        }
+        
+        [Test]
+        public void New_OverloadExceptDimensions_ShouldHaveExpectedValues()
+        {
+            var member = Member.Create("Member", (IDataType)new Real(), Radix.Exponential,
+                ExternalAccess.ReadOnly, "Test");
+
+            member.Should().NotBeNull();
+            member.Name.ToString().Should().Be("Member");
+            member.DataType.Should().BeOfType<Real>();
+            member.Dimension.Should().Be(Dimensions.Empty);
+            member.Radix.Should().Be(Radix.Exponential);
+            member.ExternalAccess.Should().Be(ExternalAccess.ReadOnly);
+            member.Description.Should().Be("Test");
         }
 
         [Test]

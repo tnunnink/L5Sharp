@@ -22,7 +22,7 @@ namespace L5Sharp.Core.Tests
         {
             var name = new ComponentName("Test");
 
-            name.ToString().Should().Be("Test");
+            name.Should().Be("Test");
         }
 
         [Test]
@@ -84,11 +84,184 @@ namespace L5Sharp.Core.Tests
         }
         
         [Test]
-        public void Set_StartsWithUnderscore_ShouldThrowComponentNameInvalidException()
+        public void Set_StartsInvalidCharacter_ShouldThrowComponentNameInvalidException()
         {
             var name = new ComponentName("Test");
 
-            FluentActions.Invoking(() => name = "_Test").Should().Throw<ComponentNameInvalidException>();
+            FluentActions.Invoking(() => name = "$Test").Should().Throw<ComponentNameInvalidException>();
+        }
+
+        [Test]
+        public void CompareTo_Equal_ShouldBeZero()
+        {
+            var first = new ComponentName("Test");
+            var second = new ComponentName("Test");
+
+            var result = first.CompareTo(second);
+
+            result.Should().Be(0);
+        }
+        
+        [Test]
+        public void CompareTo_Different_ShouldNotBeZero()
+        {
+            var first = new ComponentName("Test1");
+            var second = new ComponentName("Test2");
+
+            var result = first.CompareTo(second);
+
+            result.Should().NotBe(0);
+        }
+        
+        [Test]
+        public void CompareTo_Same_ShouldBeZero()
+        {
+            var first = new ComponentName("Test1");
+            var second = first;
+
+            var result = first.CompareTo(second);
+
+            result.Should().Be(0);
+        }
+        
+        [Test]
+        public void CompareTo_Null_ShouldNotBeZero()
+        {
+            var first = new ComponentName("Test");
+
+            var result = first.CompareTo(null);
+
+            result.Should().NotBe(0);
+        }
+
+        [Test]
+        public void ImplicitOperator_String_ShouldBeOfTypeString()
+        {
+            var name = new ComponentName("Test");
+
+            string value = name;
+
+            value.Should().BeOfType<string>();
+            value.Should().Be("Test");
+        }
+        
+        
+        [Test]
+        public void ImplicitOperator_ComponentName_ShouldBeOfTypeComponentName()
+        {
+            ComponentName name = "Test";
+
+            name.Should().BeOfType<ComponentName>();
+            name.ToString().Should().Be("Test");
+        }
+
+        [Test]
+        public void Copy_WhenCalled_ReturnsDifferentInstanceWithSameValue()
+        {
+            var name = new ComponentName("Test");
+
+            var copy = name.Copy();
+
+            copy.Should().NotBeSameAs(name);
+            copy.Should().BeEquivalentTo(name);
+        }
+        
+        [Test]
+        public void TypedEquals_AreEqual_ShouldBeTrue()
+        {
+            var first = new ComponentName("Test");
+            var second = new ComponentName("Test");
+
+            var result = first.Equals(second);
+
+            result.Should().BeTrue();
+        }
+
+        [Test]
+        public void TypedEquals_AreSame_ShouldBeTrue()
+        {
+            var first = new ComponentName("Test");
+            var second = first;
+
+            var result = first.Equals(second);
+
+            result.Should().BeTrue();
+        }
+
+
+        [Test]
+        public void TypedEquals_Null_ShouldBeFalse()
+        {
+            var first = new ComponentName("Test");
+
+            var result = first.Equals(null);
+
+            result.Should().BeFalse();
+        }
+
+        [Test]
+        public void ObjectEquals_AreEqual_ShouldBeTrue()
+        {
+            var first = new ComponentName("Test");
+            var second = new ComponentName("Test");
+
+            var result = first.Equals((object)second);
+
+            result.Should().BeTrue();
+        }
+
+        [Test]
+        public void ObjectEquals_AreSame_ShouldBeTrue()
+        {
+            var first = new ComponentName("Test");
+            var second = first;
+
+            var result = first.Equals((object)second);
+
+            result.Should().BeTrue();
+        }
+
+
+        [Test]
+        public void ObjectEquals_Null_ShouldBeFalse()
+        {
+            var first = new ComponentName("Test");
+
+            var result = first.Equals((object)null);
+
+            result.Should().BeFalse();
+        }
+
+        [Test]
+        public void OperatorEquals_AreEqual_ShouldBeTrue()
+        {
+            var first = new ComponentName("Test");
+            var second = new ComponentName("Test");
+
+            var result = first == second;
+
+            result.Should().BeTrue();
+        }
+
+        [Test]
+        public void OperatorNotEquals_AreEqual_ShouldBeFalse()
+        {
+            var first = new ComponentName("Test");
+            var second = new ComponentName("Test");
+
+            var result = first != second;
+
+            result.Should().BeFalse();
+        }
+
+        [Test]
+        public void GetHashCode_WhenCalled_ShouldNotBeZero()
+        {
+            var first = new ComponentName("Test");
+
+            var hash = first.GetHashCode();
+
+            hash.Should().NotBe(0);
         }
     }
 }
