@@ -3,7 +3,7 @@ using System.Xml.Linq;
 using L5Sharp.Core;
 using L5Sharp.Extensions;
 
-[assembly: InternalsVisibleTo("L5Sharp.Factories.Tests")]
+[assembly: InternalsVisibleTo("L5Sharp.Serialization.Tests")]
 
 namespace L5Sharp.Serialization
 {

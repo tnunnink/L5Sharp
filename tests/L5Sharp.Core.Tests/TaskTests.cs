@@ -30,12 +30,12 @@ namespace L5Sharp.Core.Tests
         {
             var task = Task.Create("TaskName");
 
-            task.Name.Should().Be("TaskName");
+            task.Name.ToString().Should().Be("TaskName");
             task.Type.Should().Be(TaskType.Periodic);
             task.Description.Should().BeNull();
-            task.Rate.Should().Be(10);
-            task.Priority.Should().Be(10);
-            task.Watchdog.Should().Be(500);
+            task.Rate.Should().Be(new ScanRate(10));
+            task.Priority.Should().Be(new TaskPriority(10));
+            task.Watchdog.Should().Be(new Watchdog(500));
             task.InhibitTask.Should().Be(false);
             task.DisableUpdateOutputs.Should().Be(false);
         }
@@ -48,7 +48,7 @@ namespace L5Sharp.Core.Tests
             task.Type.Should().Be(TaskType.Periodic);
         }
 
-        /*[Test]
+        [Test]
         public void SetName_ValidName_ShouldBeExpectedValue()
         {
             var task = Task.Create("TestTask");
@@ -58,15 +58,13 @@ namespace L5Sharp.Core.Tests
             task.Name.Should().Be("NewTask");
         }
 
-
         [Test]
-        public void SetName_InvalidType_ShouldThrowInvalidNameException()
+        public void SetName_Null_ShouldThrowArgumentNullException()
         {
             var task = Task.Create("TestTask");
 
-            FluentActions.Invoking(() => task.SetName("Invalid Name 01")).Should()
-                .Throw<ComponentNameInvalidException>();
-        }*/
+            FluentActions.Invoking(() => task.SetName(null)).Should().Throw<ArgumentNullException>();
+        }
 
         /*[Test]
         public void SetType_ValidType_ShouldBeExpectedType()
@@ -93,9 +91,9 @@ namespace L5Sharp.Core.Tests
             var rate = fixture.Create<float>();
             var task = Task.Create("TestTask");
 
-            task.Rate = new ScanRate(rate);
+            task.SetRate(new ScanRate(rate));
 
-            task.Rate.Should().Be(rate);
+            task.Rate.Equals(rate).Should().BeTrue();
         }
 
         [Test]
@@ -103,7 +101,7 @@ namespace L5Sharp.Core.Tests
         {
             var task = Task.Create("TestTask");
 
-            FluentActions.Invoking(() => task.Rate = new ScanRate(5000000)).Should()
+            FluentActions.Invoking(() => task.SetRate(new ScanRate(5000000))).Should()
                 .Throw<ArgumentOutOfRangeException>();
         }
 

@@ -128,6 +128,12 @@ namespace L5Sharp.Core
 
             atomic.SetValue(value);
         }
+
+        /// <inheritdoc />
+        public IMember<TDataType> Copy()
+        {
+            return null;
+        }
     }
 
     public static class Parameter

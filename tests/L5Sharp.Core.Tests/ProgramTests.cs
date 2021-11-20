@@ -32,7 +32,7 @@ namespace L5Sharp.Core.Tests
         {
             var program = new Program("Test");
 
-            program.Name.Should().Be("Test");
+            program.Name.ToString().Should().Be("Test");
             program.Type.Should().Be(ProgramType.Normal);
             program.MainRoutineName.Should().BeNull();
             program.FaultRoutineName.Should().BeNull();
@@ -49,7 +49,7 @@ namespace L5Sharp.Core.Tests
         {
             var program = new Program("Test", "This is a test", "MainRoutine", "FaultRoutine", true, true, true);
 
-            program.Name.Should().Be("Test");
+            program.Name.ToString().Should().Be("Test");
             program.Type.Should().Be(ProgramType.Normal);
             program.MainRoutineName.Should().Be("MainRoutine");
             program.FaultRoutineName.Should().Be("FaultRoutine");
@@ -91,7 +91,7 @@ namespace L5Sharp.Core.Tests
             var result = program.Tags.Get("Test");
 
             result.Should().NotBeNull();
-            result.Name.Should().Be("Test");
+            result.Name.ToString().Should().Be("Test");
         }
 
         [Test]

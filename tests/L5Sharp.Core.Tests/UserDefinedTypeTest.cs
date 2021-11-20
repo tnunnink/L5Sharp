@@ -27,7 +27,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void ShouldBeInitializedAsExpected()
         {
-            Name.Should().Be("UserDefinedTypeTest");
+            Name.ToString().Should().Be("UserDefinedTypeTest");
             Description.Should().Be("My Type description");
             Family.Should().Be(DataTypeFamily.None);
             Class.Should().Be(DataTypeClass.User);

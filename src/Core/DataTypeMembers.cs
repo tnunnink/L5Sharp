@@ -42,12 +42,18 @@ namespace L5Sharp.Core
         }
 
         /// <inheritdoc />
+        /// <remarks>
+        /// Will check the provided member type to ensure it is not the same as the parent type.
+        /// This is not allowed in Logix as it causes a circular reference.
+        /// </remarks>
+        /// <exception cref="ArgumentNullException">Thrown when the component is null.</exception>
+        /// <exception cref="CircularReferenceException">Thrown when the member data type is equal to the parent type.</exception>
         public override void Add(IMember<IDataType> component)
         {
             if (component == null)
                 throw new ArgumentNullException(nameof(component), "Member can not be null");
 
-            if (component.DataType.Equals(_dataType))
+            if (component.DataType != null && component.DataType.Equals(_dataType))
                 throw new CircularReferenceException(
                     $"Member can not be same type as parent type '{component.DataType.Name}'");
 
@@ -60,7 +66,7 @@ namespace L5Sharp.Core
             if (component == null)
                 throw new ArgumentNullException(nameof(component), "Member can not be null");
 
-            if (component.DataType.Equals(_dataType))
+            if (component.DataType != null && component.DataType.Equals(_dataType))
                 throw new CircularReferenceException(
                     $"Member can not be same type as parent type '{component.DataType.Name}'");
 

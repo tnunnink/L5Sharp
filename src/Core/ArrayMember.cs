@@ -81,6 +81,13 @@ namespace L5Sharp.Core
         }
 
         /// <inheritdoc />
+        public IMember<TDataType> Copy()
+        {
+            return new ArrayMember<TDataType>(Name.Copy(), (TDataType)DataType.Instantiate(), Dimension.Copy(), Radix,
+                ExternalAccess, Description);
+        }
+
+        /// <inheritdoc />
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;

@@ -24,11 +24,22 @@ namespace L5Sharp.Types
             SetRadix(radix);
         }
 
+        /// <inheritdoc />
         public ComponentName Name { get; }
+
+        /// <inheritdoc />
         public string Description => $"RSLogix representation of a {typeof(bool)}";
+
+        /// <inheritdoc />
         public DataTypeFamily Family => DataTypeFamily.None;
+
+        /// <inheritdoc />
         public DataTypeClass Class => DataTypeClass.Atomic;
+
+        /// <inheritdoc />
         public TagDataFormat DataFormat => TagDataFormat.Decorated;
+
+        /// <inheritdoc />
         public Radix Radix { get; private set; }
         public bool Value { get; private set; }
         public string FormattedValue => Radix.Format(this);

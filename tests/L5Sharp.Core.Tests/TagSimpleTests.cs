@@ -113,7 +113,7 @@ namespace L5Sharp.Core.Tests
             var expected = fixture.Create<int>();
             var tag = Tag.Create("Test", new Dint(expected));
 
-            var value = tag.GetData();
+            var value = tag.GetData().Value;
 
             value.Should().Be(expected);
         }
@@ -271,7 +271,7 @@ namespace L5Sharp.Core.Tests
 
             tag.SetData(new Sint(expected));
 
-            tag.GetData().Should().Be(expected);
+            tag.GetData().Value.Should().Be(expected);
         }
 
         [Test]
@@ -283,7 +283,7 @@ namespace L5Sharp.Core.Tests
 
             tag.SetData(new Int(expected));
 
-            tag.GetData().Should().Be(expected);
+            tag.GetData().Value.Should().Be(expected);
         }
 
         [Test]
@@ -295,7 +295,7 @@ namespace L5Sharp.Core.Tests
 
             tag.SetData(new Dint(expected));
 
-            tag.GetData().Should().Be(expected);
+            tag.GetData().Value.Should().Be(expected);
         }
 
         [Test]
@@ -307,7 +307,7 @@ namespace L5Sharp.Core.Tests
 
             tag.SetData(new Lint(expected));
 
-            tag.GetData().Should().Be(expected);
+            tag.GetData().Value.Should().Be(expected);
         }
 
         [Test]
@@ -319,7 +319,7 @@ namespace L5Sharp.Core.Tests
 
             tag.SetData(new Real(expected));
 
-            tag.GetData().Should().Be(expected);
+            tag.GetData().Value.Should().Be(expected);
         }
 
         [Test]

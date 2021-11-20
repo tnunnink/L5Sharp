@@ -3,6 +3,9 @@ using L5Sharp.Exceptions;
 
 namespace L5Sharp.Extensions
 {
+    /// <summary>
+    /// Extension methods for <see cref="ITagMember{TDataType}"/>.
+    /// </summary>
     public static class TagMemberExtensions
     {
         public static void SetData<TDataType>(this ITagMember<TDataType> target, ITagMember<TDataType> source)

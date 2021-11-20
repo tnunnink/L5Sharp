@@ -69,4 +69,8 @@
       <ProjectReference Include="..\..\src\L5Sharp.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Content Include="TestFiles\Test.xml" />
+    </ItemGroup>
+
 </Project>

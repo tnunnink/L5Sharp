@@ -14,7 +14,7 @@ namespace L5Sharp.Core
             DataType = dataType;
             ExternalAccess = externalAccess != null ? externalAccess : ExternalAccess.ReadWrite;
             Description = description;
-            
+
             if (DataType is IAtomic atomic && radix != null)
                 atomic.SetRadix(radix);
         }
@@ -46,6 +46,13 @@ namespace L5Sharp.Core
             return Name == other.Name && Equals(DataType, other.DataType) && Dimension == other.Dimension &&
                    Equals(Radix, other.Radix) && Equals(ExternalAccess, other.ExternalAccess) &&
                    Description == other.Description;
+        }
+
+        /// <inheritdoc />
+        public IMember<TDataType> Copy()
+        {
+            return new Member<TDataType>(Name.Copy(), (TDataType)DataType.Instantiate(), Radix, ExternalAccess,
+                Description);
         }
 
         /// <inheritdoc />

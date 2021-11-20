@@ -11,8 +11,7 @@ namespace L5Sharp.Core
     public class Task : LogixComponent, ITask, IEquatable<Task>
     {
         private readonly HashSet<string> _programs = new HashSet<string>();
-
-        /// <inheritdoc />
+        
         internal Task(string name, TaskType type = null, 
             TaskPriority priority = null, ScanRate rate = null, Watchdog watchdog = null,
             bool inhibitTask = false, bool disableUpdateOutputs = false, string description = null)
@@ -30,13 +29,13 @@ namespace L5Sharp.Core
         public TaskType Type { get; private set; }
 
         /// <inheritdoc />
-        public TaskPriority Priority { get; set; }
+        public TaskPriority Priority { get; private set; }
 
         /// <inheritdoc />
-        public ScanRate Rate { get; set; }
+        public ScanRate Rate { get; private set; }
 
         /// <inheritdoc />
-        public Watchdog Watchdog { get; set; }
+        public Watchdog Watchdog { get; private set; }
 
         /// <inheritdoc />
         public bool InhibitTask { get; set; }
@@ -67,6 +66,18 @@ namespace L5Sharp.Core
             return new TaskBuilder(name);
         }
 
+        /// <inheritdoc />
+        /// <exception cref="ArgumentNullException">Thrown when the scan rate is null.</exception>
+        public void SetRate(ScanRate rate)
+        {
+            if (rate == null)
+                throw new ArgumentNullException(nameof(rate));
+
+            Rate = rate;
+        }
+
+        /// <inheritdoc />
+        /// <exception cref="ArgumentNullException">Thrown when the name is null.</exception>
         public void ScheduleProgram(string name)
         {
             if (string.IsNullOrEmpty(name)) throw new ArgumentException("Can not be null or empty", nameof(name));
@@ -74,6 +85,8 @@ namespace L5Sharp.Core
             _programs.Add(name);
         }
 
+        /// <inheritdoc />
+        /// <exception cref="ArgumentNullException">Thrown when the name is null.</exception>
         public void RemoveProgram(string name)
         {
             if (string.IsNullOrEmpty(name)) throw new ArgumentException("Can not be null or empty", nameof(name));
@@ -81,6 +94,7 @@ namespace L5Sharp.Core
             _programs.Remove(name);
         }
 
+        /// <inheritdoc />
         public bool Equals(Task other)
         {
             if (ReferenceEquals(null, other)) return false;
@@ -110,11 +124,23 @@ namespace L5Sharp.Core
                 DisableUpdateOutputs);
         }
 
+        /// <summary>
+        /// Indicates whether one object is equal to another object of the same type.
+        /// </summary>
+        /// <param name="left">The left instance of the object.</param>
+        /// <param name="right">The right instance of the object.</param>
+        /// <returns>True if the two objects are equal, otherwise false.</returns>
         public static bool operator ==(Task left, Task right)
         {
             return Equals(left, right);
         }
 
+        /// <summary>
+        /// Indicates whether one object is not equal to another object of the same type.
+        /// </summary>
+        /// <param name="left">The left instance of the object.</param>
+        /// <param name="right">The right instance of the object.</param>
+        /// <returns>True if the two objects are not equal, otherwise false.</returns>
         public static bool operator !=(Task left, Task right)
         {
             return !Equals(left, right);

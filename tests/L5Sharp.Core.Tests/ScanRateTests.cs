@@ -46,8 +46,15 @@ namespace L5Sharp.Core.Tests
 
             value.Should().Be(5000);
         }
-        
-        
+
+        [Test]
+        public void ImplicitOperator_Float_ShouldBeExpected()
+        {
+            ScanRate rate = 10f;
+
+            rate.Equals(10f).Should().BeTrue();
+        }
+
         [Test]
         public void TypedEquals_AreEqual_ShouldBeTrue()
         {

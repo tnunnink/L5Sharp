@@ -5,47 +5,75 @@ using L5Sharp.Enums;
 namespace L5Sharp
 {
     /// <summary>
-    /// Represents a RSLogix Task component.
+    /// Represents a Logix <c>Task</c> component and the properties associated with configuring a Task.
     /// </summary>
+    /// <remarks>
+    /// <c>Task</c> can be a <see cref="L5Sharp.Enums.TaskType.Continuous"/>,
+    /// <see cref="L5Sharp.Enums.TaskType.Periodic"/>, or <see cref="L5Sharp.Enums.TaskType.Event"/> type Task.
+    /// </remarks>
+    /// <footer>
+    /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
+    /// `Logix 5000 Controllers Import/Export`</a> for more information.
+    /// </footer> 
     public interface ITask : ILogixComponent
     {
         /// <summary>
-        /// The type of the Task.
+        /// Get the type of the <c>Task</c>.
         /// </summary>
         TaskType Type { get; }
         
         /// <summary>
-        /// The priority setting of the Task.
+        /// Get the priority setting of the <c>Task</c>.
         /// </summary>
-        TaskPriority Priority { get; set; }
+        TaskPriority Priority { get; }
         
         /// <summary>
-        /// The scan rate setting of the Task.
+        /// The scan rate setting of the <c>Task</c>.
         /// </summary>
-        ScanRate Rate { get; set; }
+        ScanRate Rate { get; }
         
         /// <summary>
-        /// The watch dog setting of the Task.
+        /// The watch dog setting of the <c>Task</c>.
         /// </summary>
-        Watchdog Watchdog { get; set; }
+        Watchdog Watchdog { get; }
         
         /// <summary>
-        /// Setting that indicates the task is inhibited
+        /// Setting that indicates the <c>Task</c> is inhibited.
         /// </summary>
         bool InhibitTask { get; set; }
         
         /// <summary>
-        /// Setting that indicates the task is disabling updated to outputs
+        /// Setting that indicates the <c>Task</c> is disabling updated to outputs.
         /// </summary>
         bool DisableUpdateOutputs { get; set; }
         
         /// <summary>
-        /// A collection of program names that are scheduled for the current task.
+        /// A collection of program names that are scheduled for the current <c>Task</c>.
         /// </summary>
         IEnumerable<string> ScheduledPrograms { get; }
+
+        /// <summary>
+        /// Sets the component name of the <c>Task</c>.
+        /// </summary>
+        /// <param name="name">The value of the name to set.</param>
+        void SetName(ComponentName name);
+
+        /// <summary>
+        /// Sets the <see cref="ScanRate"/> of the of <c>Task</c>.
+        /// </summary>
+        /// <param name="rate">The value of the <c>ScanRate</c> to set.</param>
+        void SetRate(ScanRate rate);
         
-        
+        /// <summary>
+        /// Add a program to the <c>Task's</c> <see cref="ScheduledPrograms"/> collection.
+        /// </summary>
+        /// <param name="name">The name of the <c>ScheduledProgram</c> to add.</param>
         void ScheduleProgram(string name);
+        
+        /// <summary>
+        /// Removes a program from the <c>Task's</c> <see cref="ScheduledPrograms"/> collection.
+        /// </summary>
+        /// <param name="name">The name of the <c>ScheduledProgram</c> to remove.</param>
         void RemoveProgram(string name);
     }
 }

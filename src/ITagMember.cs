@@ -66,7 +66,7 @@ namespace L5Sharp
         void SetRadix(Radix radix);
         
         /// <summary>
-        /// Overrides the member description with the provided string comment. 
+        /// Sets the member description with the provided string value. 
         /// </summary>
         /// <remarks>
         /// A <c>TagMember</c> comment is maintained by root tag instance. Setting a comment on a member overrides the description for the

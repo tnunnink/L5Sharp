@@ -1,7 +1,7 @@
 ﻿namespace L5Sharp
 {
     /// <summary>
-    /// An <c>Element</c> represents a member of an array.
+    /// Represents a member of an array.
     /// </summary>
     /// <remarks>An element is effectively a <see cref="IMember{TDataType}"/> but overrides the name with a simple
     /// <see cref="string"/> so that it can have the correct index naming that is not subject to Logix name constraints.

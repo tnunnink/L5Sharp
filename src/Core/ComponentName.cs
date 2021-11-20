@@ -11,9 +11,9 @@ namespace L5Sharp.Core
     /// Valid name must contain only alphanumeric or '_', start with a letter, and be between 1 and 40 characters.
     /// </remarks>
     /// <footer>
-    /// <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
-    /// `Logix 5000 Controllers Import/Export`</a>
-    /// </footer>
+    /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
+    /// `Logix 5000 Controllers Import/Export`</a> for more information.
+    /// </footer> 
     public class ComponentName : IEquatable<ComponentName>, IComparable<ComponentName>, IPrototype<ComponentName>
     {
         private readonly string _name;

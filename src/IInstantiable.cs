@@ -7,7 +7,7 @@
     public interface IInstantiable<out TDataType> where TDataType : IDataType
     {
         /// <summary>
-        /// Created a new instance of the <c>DataType</c> component.
+        /// Creates a new instance of the <c>DataType</c> component with default values.
         /// </summary>
         /// <returns></returns>
         TDataType Instantiate();

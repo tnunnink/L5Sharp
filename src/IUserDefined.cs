@@ -2,6 +2,9 @@
 
 namespace L5Sharp
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public interface IUserDefined : IDataType
     {
         IComponentCollection<IMember<IDataType>> Members { get; }

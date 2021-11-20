@@ -45,10 +45,7 @@ namespace L5Sharp.Core
             return obj.GetType() == GetType() && Equals((ScanRate)obj);
         }
 
-        /// <summary>
-        /// Generates a hashcode for the current instance.
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc />
         public override int GetHashCode()
         {
             return _rate.GetHashCode();
@@ -84,6 +81,16 @@ namespace L5Sharp.Core
         public static implicit operator float(ScanRate rate)
         {
             return rate._rate;
+        }
+        
+        /// <summary>
+        /// Implicitly converts from a <see cref="float"/> to a <see cref="ScanRate"/>.
+        /// </summary>
+        /// <param name="rate">the value of the rate.</param>
+        /// <returns>A <c>ScanRate</c> representing the value provided by rate.</returns>
+        public static implicit operator ScanRate(float rate)
+        {
+            return new ScanRate(rate);
         }
 
         /// <inheritdoc />

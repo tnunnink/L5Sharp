@@ -40,7 +40,56 @@ namespace L5Sharp.Core.Tests
             element.Radix.Should().Be(Radix.Decimal);
             element.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);
         }
+
+        [Test]
+        public void Copy_WhenCalled_ShouldNotBeSameButEqual()
+        {
+            var element = new Element<Dint>("[0]", new Dint(), Radix.Binary, ExternalAccess.ReadOnly,
+                "Test Description");
+
+            var copy = element.Copy();
+
+            copy.Should().NotBeNull();
+            copy.Should().NotBeSameAs(element);
+            copy.Should().BeEquivalentTo(element);
+        }
         
+        [Test]
+        public void Copy_WhenCalled_PropertiesShouldNotBeSameButEqual()
+        {
+            var element = new Element<Dint>("[0]", new Dint(), Radix.Binary, ExternalAccess.ReadOnly,
+                "Test Description");
+
+            var copy = element.Copy();
+
+            copy.Name.Should().NotBeSameAs(element.Name);
+            copy.DataType.Should().NotBeSameAs(element.DataType);
+            copy.Dimension.Should().NotBeSameAs(element.Dimension);
+            copy.Description.Should().NotBeSameAs(element.Description);
+        }
+
+        [Test]
+        public void Copy_AsMember_ShouldNotBeSameButEqual()
+        {
+            var element = new Element<Dint>("[0]", new Dint());
+
+            var member = (IMember<Dint>)element;
+
+            var copy = member.Copy();
+
+            copy.Should().NotBeSameAs(element);
+        }
+
+        [Test]
+        public void ComponentName_Get_ShouldBeNull()
+        {
+            var element = new Element<Dint>("[0]", new Dint());
+
+            var component = (ILogixComponent)element;
+
+            component.Name.Should().BeNull();
+        }
+
         [Test]
         public void TypedEquals_AreEqual_ShouldBeTrue()
         {

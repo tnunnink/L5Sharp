@@ -2,15 +2,17 @@
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using L5Sharp.Enums;
+using L5Sharp.Extensions;
 
 [assembly: InternalsVisibleTo("L5Sharp.Core.Tests")]
 
 namespace L5Sharp.Core
 {
     /// <inheritdoc cref="L5Sharp.IElement{TDataType}" />
-    public class Element<TDataType> : IElement<TDataType>, IEquatable<Element<TDataType>> where TDataType : IDataType
+    public class Element<TDataType> : IElement<TDataType>, IEquatable<Element<TDataType>>,
+        IPrototype<IElement<TDataType>> where TDataType : IDataType
     {
-        internal Element(string index, TDataType dataType, 
+        internal Element(string index, TDataType dataType,
             Radix radix = null, ExternalAccess access = null, string description = null)
         {
             Name = index;
@@ -55,6 +57,15 @@ namespace L5Sharp.Core
                    && Equals(ExternalAccess, other.ExternalAccess)
                    && Description == other.Description;
         }
+
+        /// <inheritdoc />
+        public IElement<TDataType> Copy()
+        {
+            return new Element<TDataType>(Name.SafeCopy(), (TDataType)DataType.Instantiate(), Radix, ExternalAccess,
+                Description.SafeCopy());
+        }
+
+        IMember<TDataType> IPrototype<IMember<TDataType>>.Copy() => Copy();
 
         /// <inheritdoc />
         public override bool Equals(object obj)

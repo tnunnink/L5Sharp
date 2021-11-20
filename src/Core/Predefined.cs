@@ -58,11 +58,21 @@ namespace L5Sharp.Core
         }
 
         /// <summary>
-        /// Return new instance of the current type. This will be used when creating tags for the specified type
+        /// Creates new instance of the current type with default values.
         /// </summary>
-        /// <returns></returns>
+        /// <remarks>
+        ///  The <c>Predefined</c> calls this when <see cref="Instantiate"/> is called. This abstraction is here to let the
+        /// base class define the code for instantiating a new version of itself. Simply return <c>new  MyPredefined()</c>.
+        /// </remarks>
+        /// <returns>A new instance of the current type with default values.</returns>
         protected abstract IDataType New();
-
+        
+        /// <inheritdoc />
+        public override string ToString()
+        {
+            return Name;
+        }
+        
         /// <inheritdoc />
         public override bool Equals(object obj)
         {
@@ -77,11 +87,23 @@ namespace L5Sharp.Core
             return HashCode.Combine(_members, Name, Family);
         }
 
+        /// <summary>
+        /// Indicates whether one object is equal to another object of the same type.
+        /// </summary>
+        /// <param name="left">The left instance of the object.</param>
+        /// <param name="right">The right instance of the object.</param>
+        /// <returns>True if the two objects are equal, otherwise false.</returns>
         public static bool operator ==(Predefined left, Predefined right)
         {
             return Equals(left, right);
         }
 
+        /// <summary>
+        /// Indicates whether one object is not equal to another object of the same type.
+        /// </summary>
+        /// <param name="left">The left instance of the object.</param>
+        /// <param name="right">The right instance of the object.</param>
+        /// <returns>True if the two objects are not equal, otherwise false.</returns>
         public static bool operator !=(Predefined left, Predefined right)
         {
             return !Equals(left, right);

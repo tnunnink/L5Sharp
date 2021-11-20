@@ -13,25 +13,24 @@ namespace L5Sharp.Core
         {
             Members = members == null ? new DataTypeMembers(this) : new DataTypeMembers(this, members);
         }
-        
+
+        /// <inheritdoc />
         public Radix Radix => Radix.Null;
+
+        /// <inheritdoc />
         public DataTypeFamily Family => DataTypeFamily.None;
+
+        /// <inheritdoc />
         public DataTypeClass Class => DataTypeClass.User;
+
+        /// <inheritdoc />
         public TagDataFormat DataFormat => TagDataFormat.Decorated;
         public IComponentCollection<IMember<IDataType>> Members { get; }
 
+        /// <inheritdoc />
         public IDataType Instantiate()
         {
-            var members = new DataTypeMembers(this);
-
-            foreach (var member in Members)
-            {
-                var copy = Member.Create<IDataType>(member.Name, member.DataType.Instantiate(), member.Dimension.Copy(), member.Radix,
-                    member.ExternalAccess, member.Description);
-                members.Add(copy);
-            }
-            
-            return new DataType(Name, Description, members);
+            return new DataType(Name.Copy(), string.Copy(Description), Members.Select(m => m.Copy()));
         }
 
         /// <inheritdoc />
@@ -64,11 +63,23 @@ namespace L5Sharp.Core
             return Name;
         }
 
+        /// <summary>
+        /// Indicates whether one object is equal to another object of the same type.
+        /// </summary>
+        /// <param name="left">The left instance of the object.</param>
+        /// <param name="right">The right instance of the object.</param>
+        /// <returns>True if the two objects are equal, otherwise false.</returns>
         public static bool operator ==(DataType left, DataType right)
         {
             return Equals(left, right);
         }
 
+        /// <summary>
+        /// Indicates whether one object is not equal to another object of the same type.
+        /// </summary>
+        /// <param name="left">The left instance of the object.</param>
+        /// <param name="right">The right instance of the object.</param>
+        /// <returns>True if the two objects are not equal, otherwise false.</returns>
         public static bool operator !=(DataType left, DataType right)
         {
             return !Equals(left, right);

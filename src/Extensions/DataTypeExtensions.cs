@@ -4,6 +4,9 @@ using System.Linq;
 
 namespace L5Sharp.Extensions
 {
+    /// <summary>
+    /// Extension methods for <see cref="IDataType"/>.
+    /// </summary>
     public static class DataTypeExtensions
     {
         public static bool IsValueType(this IDataType dataType)
@@ -11,6 +14,12 @@ namespace L5Sharp.Extensions
             return dataType is IAtomic;
         }
 
+        /// <summary>
+        /// Determines if two <c>DataTypes</c> are of the same <see cref="L5Sharp.Enums.DataTypeClass"/>
+        /// </summary>
+        /// <param name="dataType">The current data type to compare.</param>
+        /// <param name="other">The other data type to compare.</param>
+        /// <returns>true is the <c>DataTypes</c> have the same value of <c>DataTypeClass</c></returns>
         public static bool AreSameClass(this IDataType dataType, IDataType other)
         {
             return dataType.Class.Equals(other.Class);

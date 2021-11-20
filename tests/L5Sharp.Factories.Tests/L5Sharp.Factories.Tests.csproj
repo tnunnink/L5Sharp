@@ -14,9 +14,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Content Include="TestFiles\Test.xml">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </Content>
       <None Remove="TestFiles\ETBB Master Template Gen5.xml" />
     </ItemGroup>
 

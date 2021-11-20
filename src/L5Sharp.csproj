@@ -17,7 +17,6 @@
 
     <ItemGroup>
       <None Remove="Resources\Predefined.xml" />
-      <EmbeddedResource Include="Resources\Predefined.xml" />
     </ItemGroup>
 
 </Project>

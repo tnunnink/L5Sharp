@@ -4,7 +4,7 @@ using System.Xml.Linq;
 using L5Sharp.Core;
 using L5Sharp.Extensions;
 
-[assembly: InternalsVisibleTo("L5Sharp.Factories.Tests")]
+[assembly: InternalsVisibleTo("L5Sharp.Serialization.Tests")]
 
 namespace L5Sharp.Serialization
 {
@@ -21,7 +21,7 @@ namespace L5Sharp.Serialization
         {
             if (element == null) return null;
 
-            var name = element.GetName();
+            var name = element.GetValue<IUserDefined>(x => x.Name);
             var description = element.GetDescription();
 
             var factory = _context.GetFactory<IMember<IDataType>>();

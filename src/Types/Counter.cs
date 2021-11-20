@@ -17,6 +17,7 @@ namespace L5Sharp.Types
         }
         
         public override string Description => $"RSLogix {Name} DataType";
+        
         protected override IDataType New()
         {
             return new Counter();
