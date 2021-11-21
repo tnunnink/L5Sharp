@@ -39,11 +39,11 @@ namespace L5Sharp.Core
             Constant = constant;
         }
 
+        public string Name { get; }
         public TDataType DataType { get; }
         public Dimensions Dimension { get; private set; }
         public Radix Radix => DataType.Radix;
         public ExternalAccess ExternalAccess { get; private set; }
-        public IElement<TDataType>[] Elements { get; private set; }
         public TagType TagType => Alias == null ? TagType.Base : TagType.Alias;
         public TagUsage Usage { get; private set; }
 
@@ -102,12 +102,6 @@ namespace L5Sharp.Core
                 throw new InvalidOperationException("Radix can only be set on atomic members");
 
             atomic.SetRadix(radix);
-
-            if (Elements.Length == 0) return;
-
-            foreach (var element in Elements)
-                if (element.DataType is IAtomic atomicType)
-                    atomicType.SetRadix(radix);
         }
 
         public void SetExternalAccess(ExternalAccess access)

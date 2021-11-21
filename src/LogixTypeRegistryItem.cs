@@ -8,32 +8,23 @@ namespace L5Sharp
 {
     internal class LogixTypeRegistryItem : IEquatable<LogixTypeRegistryItem>, IInstantiable<IDataType>
     {
-        public LogixTypeRegistryItem(string name, DataTypeClass @class, XElement element, IComponentMaterializer materializer)
+        public LogixTypeRegistryItem(string name, DataTypeClass @class, XElement element, 
+            Func<XElement, IDataType> factory)
         {
             Name = name;
             Class = @class;
             Element = element;
-            Materializer = materializer;
+            Factory = factory;
         }
 
         public string Name { get; }
         private DataTypeClass Class { get; }
-        private IComponentMaterializer Materializer { get; }
+        private Func<XElement, IDataType> Factory { get; }
         private XElement Element { get; }
 
         public IDataType Instantiate()
         {
-            if (Class == DataTypeClass.User)
-            {
-                return ((UserDefinedMaterializer)Materializer).Materialize(Element);
-            }
-
-            if (Class == DataTypeClass.AddOnDefined)
-            {
-                //return ((AddOnDefinedFactory)Factory).Create(Element);
-            }
-
-            return new Undefined();
+            return Factory.Invoke(Element);
         }
 
         public bool Equals(LogixTypeRegistryItem other)

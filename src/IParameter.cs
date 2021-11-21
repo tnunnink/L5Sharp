@@ -3,8 +3,10 @@ using L5Sharp.Enums;
 
 namespace L5Sharp
 {
-    public interface IParameter<out TDataType> : IMember<TDataType> where TDataType : IDataType
+    public interface IParameter<out TDataType> : ILogixComponent, IMember<TDataType> where TDataType : IDataType
     {
+        new ComponentName Name { get; }
+        new string Description { get; }
         TagType TagType { get; }
         TagUsage Usage { get; }
         bool Required { get; set; }

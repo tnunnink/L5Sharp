@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using L5Sharp.Enums;
 using L5Sharp.Extensions;
-using L5Sharp.Serialization;
 using L5Sharp.Types;
 
 namespace L5Sharp
@@ -14,7 +14,9 @@ namespace L5Sharp
 
         public LogixTypeRegistry(LogixContext context)
         {
-            RegisterTypes(context.L5X.DataTypes.Elements(), DataTypeClass.User, context.GetFactory<IUserDefined>());
+            RegisterTypes(context.L5X.DataTypes.Elements(),
+                DataTypeClass.User, 
+                e => context.Serializer.Deserialize<IUserDefined>(e));
         }
 
         public IDataType TryGetType(string name)
@@ -26,11 +28,11 @@ namespace L5Sharp
             return item != null ? item.Instantiate() : new Undefined();
         }
 
-        private void RegisterTypes(IEnumerable<XElement> elements, DataTypeClass typeClass,
-            IComponentMaterializer materializer)
+        private void RegisterTypes(IEnumerable<XElement> elements, DataTypeClass typeClass, 
+            Func<XElement, IDataType> factory)
         {
             foreach (var element in elements)
-                _registryItems.Add(new LogixTypeRegistryItem(element.GetName(), typeClass, element, materializer));
+                _registryItems.Add(new LogixTypeRegistryItem(element.GetName(), typeClass, element, factory));
         }
     }
 }

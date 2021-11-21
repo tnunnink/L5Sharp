@@ -11,6 +11,7 @@ namespace L5Sharp.Types
             RegisterMemberFields();
         }
 
+        /// <inheritdoc />
         protected override IDataType New()
         {
             return new Control();

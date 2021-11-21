@@ -135,8 +135,7 @@ namespace L5Sharp.Core
                 throw new ComponentNameCollisionException(member.Name, typeof(IMember<>));
 
             if (member.DataType.Equals(this))
-                throw new CircularReferenceException(
-                    $"Member can not be same type as parent type '{member.DataType.Name}'");
+                throw new CircularReferenceException(member.DataType);
             
             _members.Add(member.Name, member);
         }

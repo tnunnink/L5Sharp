@@ -84,6 +84,11 @@ namespace L5Sharp.Builders
             return this;
         }
 
+        public IParameter<TDataType> Build()
+        {
+            throw new System.NotImplementedException();
+        }
+
         public IParameter<TDataType> Create()
         {
             return new Parameter<TDataType>(_name, _dataType, _usage, _required, _visible, _dimensions, _radix, _access,

@@ -45,7 +45,6 @@ namespace L5Sharp.Core.Tests
             tag.TagType.Should().Be(TagType.Base);
             tag.Usage.Should().Be(TagUsage.Null);
             tag.Scope.Should().Be(Scope.Null);
-            tag.Container.Should().Be(null);
             tag.Constant.Should().BeFalse();
             tag.GetData().As<Bool>().Value.Should().BeFalse();
         }
@@ -66,7 +65,6 @@ namespace L5Sharp.Core.Tests
             tag.TagType.Should().Be(TagType.Base);
             tag.Usage.Should().Be(TagUsage.Null);
             tag.Scope.Should().Be(Scope.Null);
-            tag.Container.Should().Be(null);
             tag.Constant.Should().BeFalse();
             tag.GetData().Value.Should().Be(0);
         }

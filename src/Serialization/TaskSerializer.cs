@@ -1,10 +1,12 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Xml.Linq;
+using L5Sharp.Core;
 using L5Sharp.Extensions;
 
 namespace L5Sharp.Serialization
 {
-    public class TaskSerializer : IComponentSerializer<ITask>
+    public class TaskSerializer : IXSerializer<ITask>
     {
         private static readonly string ScheduledProgram = nameof(ScheduledProgram);
         private static readonly string Name = nameof(Name);
@@ -34,6 +36,30 @@ namespace L5Sharp.Serialization
             element.Add(scheduled);
 
             return element;
+        }
+
+        public ITask Deserialize(XElement element)
+        {
+            if (element == null)
+                throw new ArgumentNullException(nameof(element));
+
+            var name = element.GetName();
+            var description = element.GetDescription();
+            var type = element.GetAttribute<ITask>(t => t.Type);
+            var priority = element.GetAttribute<ITask>(t => t.Priority);
+            var rate = element.GetAttribute<ITask>(t => t.Rate);
+            var watchdog = element.GetAttribute<ITask>(t => t.Watchdog);
+            var inhibitTask = element.GetAttribute<ITask>(t => t.InhibitTask);
+            var disableUpdateOutputs = element.GetAttribute<ITask>(t => t.DisableUpdateOutputs);
+
+            var task = new Task(name);
+
+            var programs = element.Descendants("ScheduledProgram").Select(e => e.GetName());
+            
+            foreach (var program in programs)
+                task.ScheduleProgram(program);
+
+            return task;
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using L5Sharp.Core;
+﻿using System;
+using L5Sharp.Core;
 using L5Sharp.Enums;
 
 namespace L5Sharp
@@ -9,72 +10,131 @@ namespace L5Sharp
     public static class Member
     {
         /// <summary>
-        /// Creates an instance of <see cref="IMember{IDataType}"/> with the specified arguments.
+        /// Creates a new generic typed single <c>Member</c> with the specified arguments.
         /// </summary>
-        /// <param name="name">The <see cref="ComponentName"/> value of the member.</param>
-        /// <param name="dataType">The <see cref="IDataType"/> of the member.</param>
-        /// <param name="radix">The <see cref="Radix"/> option of the member.</param>
-        /// <param name="externalAccess">The <see cref="ExternalAccess"/> option of the member.</param>
-        /// <param name="description">The member description value.</param>
-        /// <returns>A new instance of <see cref="IMember{IDataType}"/></returns>
+        /// <param name="name">The <c>ComponentName</c> of the member.</param>
+        /// <param name="dataType">The <c>DataType</c> of the member.</param>
+        /// <param name="radix">The <c>Radix</c> option of the member.</param>
+        /// <param name="externalAccess">The <c>ExternalAccess</c> option of the member.</param>
+        /// <param name="description">The description of the member.</param>
+        /// <returns>A new <c>Member</c> instance with the specified arguments.</returns>
+        /// <exception cref="ArgumentNullException">Thrown if name is null.</exception>
         public static IMember<IDataType> Create(ComponentName name, IDataType dataType,
             Radix radix = null, ExternalAccess externalAccess = null, string description = null)
         {
+            if (name == null)
+                throw new ArgumentNullException(nameof(name));
+            
             return new Member<IDataType>(name, dataType, radix, externalAccess, description);
         }
 
         /// <summary>
-        /// Creates a strongly typed instance of <see cref="IMember{TDataType}"/> with the specified arguments.
+        /// Creates a new strongly typed single <c>Member</c> with the specified arguments.
         /// </summary>
-        /// <param name="name">The <see cref="ComponentName"/> value of the member.</param>
-        /// <param name="radix">The <see cref="Radix"/> option of the member.</param>
-        /// <param name="externalAccess">The <see cref="ExternalAccess"/> option of the member.</param>
-        /// <param name="description">The member description value.</param>
-        /// <typeparam name="TDataType">The <see cref="IDataType"/> of the member.
-        /// TDataType must implement IDataType and have parameterless constructor</typeparam>
-        /// <returns>A new instance of <see cref="IMember{TDataType}"/></returns>
+        /// <param name="name">The <c>ComponentName</c> of the member.</param>
+        /// <param name="radix">The <c>Radix</c> option of the member.</param>
+        /// <param name="externalAccess">The <c>ExternalAccess</c> option of the member.</param>
+        /// <param name="description">The Description of the member.</param>
+        /// <typeparam name="TDataType">
+        /// The DataType of the member.
+        /// TDataType must implement IDataType and have parameterless constructor for it to be instantiated.
+        /// </typeparam>
+        /// <returns>A new <c>Member</c> instance with the specified arguments.</returns>
+        /// <exception cref="ArgumentNullException">Thrown if name is null.</exception>
         public static IMember<TDataType> Create<TDataType>(ComponentName name, Radix radix = null,
             ExternalAccess externalAccess = null, string description = null)
             where TDataType : IDataType, new()
         {
+            if (name == null)
+                throw new ArgumentNullException(nameof(name));
+            
             return new Member<TDataType>(name, new TDataType(), radix, externalAccess, description);
         }
-
+        
         /// <summary>
-        /// Creates a strongly typed instance of <see cref="IMember{TDataType}"/> with the specified arguments.
+        /// Creates a new strongly typed single <c>Member</c> with the specified arguments.
         /// </summary>
-        /// <param name="name">The <see cref="ComponentName"/> value of the member.</param>
-        /// <param name="dataType">The <see cref="TDataType"/> value of the member.</param>
-        /// <param name="radix">The <see cref="Radix"/> option of the member.</param>
-        /// <param name="externalAccess">The <see cref="ExternalAccess"/> option of the member.</param>
-        /// <param name="description">The member description value.</param>
-        /// <typeparam name="TDataType">The <see cref="IDataType"/> of the member.
-        /// TDataType must implement IDataType and have parameterless constructor</typeparam>
-        /// <returns>A new instance of <see cref="IMember{TDataType}"/></returns>
+        /// <param name="name">The <c>ComponentName</c> of the member.</param>
+        /// <param name="dataType">The default <c>DataType</c> instance of the member.</param>
+        /// <param name="radix">The <c>Radix</c> option of the member.</param>
+        /// <param name="externalAccess">The <c>ExternalAccess</c> option of the member.</param>
+        /// <param name="description">The Description of the member.</param>
+        /// <typeparam name="TDataType">The DataType of the member.</typeparam>
+        /// <returns>A new <c>Member</c> instance with the specified arguments.</returns>
+        /// <exception cref="ArgumentNullException">Thrown if name is null.</exception>
         public static IMember<TDataType> Create<TDataType>(ComponentName name, TDataType dataType, Radix radix = null,
             ExternalAccess externalAccess = null, string description = null)
             where TDataType : IDataType
         {
+            if (name == null)
+                throw new ArgumentNullException(nameof(name));
+            
             return new Member<TDataType>(name, dataType, radix, externalAccess, description);
         }
 
+        /// <summary>
+        /// Creates a new generic typed <c>ArrayMember</c> with the specified arguments.
+        /// </summary>
+        /// <param name="name">The <c>ComponentName</c> of the member.</param>
+        /// <param name="dataType">The <c>DataType</c> of the member.</param>
+        /// <param name="dimensions">The <c>Dimensions</c> of the member.</param>
+        /// <param name="radix">The <c>Radix</c> option of the member.</param>
+        /// <param name="externalAccess">The <c>ExternalAccess</c> option of the member.</param>
+        /// <param name="description">The description of the member.</param>
+        /// <returns>A new <c>Member</c> instance with the specified arguments.</returns>
+        /// <exception cref="ArgumentNullException">Thrown if name is null.</exception>
         public static IArrayMember<IDataType> Create(ComponentName name, IDataType dataType, Dimensions dimensions,
             Radix radix = null, ExternalAccess externalAccess = null, string description = null)
         {
+            if (name == null)
+                throw new ArgumentNullException(nameof(name));
+            
             return new ArrayMember<IDataType>(name, dataType, dimensions, radix, externalAccess, description);
         }
 
+        /// <summary>
+        /// Creates a new strongly typed <c>ArrayMember</c> with the specified arguments.
+        /// </summary>
+        /// <param name="name">The <c>ComponentName</c> of the member.</param>
+        /// <param name="dimensions">The <c>Dimensions</c> of the member.</param>
+        /// <param name="radix">The <c>Radix</c> option of the member.</param>
+        /// <param name="externalAccess">The <c>ExternalAccess</c> option of the member.</param>
+        /// <param name="description">The Description of the member.</param>
+        /// <typeparam name="TDataType">
+        /// The DataType of the member.
+        /// TDataType must implement IDataType and have parameterless constructor for it to be instantiated.
+        /// </typeparam>
+        /// <returns>A new <c>Member</c> instance with the specified arguments.</returns>
+        /// <exception cref="ArgumentNullException">Thrown if name is null.</exception>
         public static IArrayMember<TDataType> Create<TDataType>(ComponentName name, Dimensions dimensions,
             Radix radix = null, ExternalAccess externalAccess = null, string description = null)
             where TDataType : IDataType, new()
         {
+            if (name == null)
+                throw new ArgumentNullException(nameof(name));
+            
             return new ArrayMember<TDataType>(name, new TDataType(), dimensions, radix, externalAccess, description);
         }
 
+        /// <summary>
+        /// Creates a new strongly typed <c>ArrayMember</c> with the specified arguments.
+        /// </summary>
+        /// <param name="name">The <c>ComponentName</c> of the member.</param>
+        /// <param name="dataType">The default <c>DataType</c> instance of the member.</param>
+        /// /// <param name="dimensions">The <c>Dimensions</c> of the member.</param>
+        /// <param name="radix">The <c>Radix</c> option of the member.</param>
+        /// <param name="externalAccess">The <c>ExternalAccess</c> option of the member.</param>
+        /// <param name="description">The Description of the member.</param>
+        /// <typeparam name="TDataType">The DataType of the member.</typeparam>
+        /// <returns>A new <c>Member</c> instance with the specified arguments.</returns>
+        /// <exception cref="ArgumentNullException">Thrown if name is null.</exception>
         public static IArrayMember<TDataType> Create<TDataType>(ComponentName name, TDataType dataType,
             Dimensions dimensions, Radix radix = null, ExternalAccess externalAccess = null, string description = null)
             where TDataType : IDataType
         {
+            if (name == null)
+                throw new ArgumentNullException(nameof(name));
+            
             return new ArrayMember<TDataType>(name, dataType, dimensions, radix, externalAccess, description);
         }
     }

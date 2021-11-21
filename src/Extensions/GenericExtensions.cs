@@ -7,36 +7,13 @@ using L5Sharp.Core;
 using L5Sharp.Serialization;
 namespace L5Sharp.Extensions
 {
-    public static class GenericExtensions
+    internal static class GenericExtensions
     {
-        private static readonly Dictionary<Type, IComponentSerializer> Serializers = new Dictionary<Type, IComponentSerializer>
-        {
-            { typeof(IUserDefined), new UserDefinedSerializer() },
-            { typeof(DataType), new UserDefinedSerializer() },
-            { typeof(IMember<IDataType>), new MemberSerializer() },
-            { typeof(ITag<IDataType>), new TagSerializer() },
-            { typeof(IProgram), new ProgramSerializer() },
-            { typeof(ITask), new TaskSerializer() }
-        };
-        
-        public static XElement Serialize<T>(this T component) where T : ILogixComponent
-        {
-            var type = typeof(T);
-
-            if (!Serializers.ContainsKey(type))
-                throw new InvalidOperationException($"Serializer not defined for component of type '{type}'");
-
-            var serializer = (IComponentSerializer<T>)Serializers[type];
-
-            return serializer.Serialize(component);
-        }
-        
         public static XAttribute ToAttribute<TComponent, TProperty>(this TComponent component,
             Expression<Func<TComponent, TProperty>> propertyExpression)
-            where TComponent : ILogixComponent
         {
             if (!(propertyExpression.Body is MemberExpression memberExpression))
-                throw new InvalidOperationException();
+                throw new InvalidOperationException("Expression must be of type MemberExpression");
 
             var value = propertyExpression.Compile().Invoke(component);
 
@@ -45,13 +22,11 @@ namespace L5Sharp.Extensions
 
         public static XElement ToElement<TComponent, TProperty>(this TComponent component,
             Expression<Func<TComponent, TProperty>> propertyExpression, bool useCDataElement = true)
-            where TComponent : ILogixComponent
         {
             if (!(propertyExpression.Body is MemberExpression memberExpression))
-                throw new InvalidOperationException();
-
-            var func = propertyExpression.Compile();
-            var value = func(component);
+                throw new InvalidOperationException("Expression must be of type MemberExpression");
+            
+            var value = propertyExpression.Compile().Invoke(component);
 
             return useCDataElement
                 ? new XElement(memberExpression.Member.Name, new XCData(value.ToString()))

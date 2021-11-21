@@ -12,7 +12,7 @@ namespace L5Sharp
     public interface ITagMember<out TDataType> where TDataType : IDataType
     {
         /// <summary>
-        /// The <c>Name</c> of a <c>TagMember</c> refers to the individual tag member name.
+        /// Gets the member name of the current <c>TagMember</c>
         /// </summary>
         /// <remarks>
         /// To get the full tag name use the <see cref="TagName"/> property of the <see cref="ITagMember{TDataType}"/>.
@@ -23,9 +23,14 @@ namespace L5Sharp
         string Name { get; }
 
         /// <summary>
-        /// The <c>TagName</c> represents the full path (i.e. from the root <c>Tag</c>) to the <c>TagMember</c> name.
+        /// Gets the current <c>TagMember</c> full name including the root <c>Tag</c> name.
         /// </summary>
         string TagName { get; }
+        
+        /// <summary>
+        /// Gets the current <c>TagMember</c> full name without the root <c>Tag</c> name.
+        /// </summary>
+        string Operand { get; }
 
         /// <summary>
         /// The name of the <see cref="IDataType"/> for the <c>TagMember</c>.
@@ -74,6 +79,11 @@ namespace L5Sharp
         /// </remarks>
         /// <param name="description">The value of the string description to set.</param>
         void SetDescription(string description);
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        ITagMember<IDataType> Parent { get; }
 
         /// <summary>
         /// Gets the member's atomic value if is a value type.

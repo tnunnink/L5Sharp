@@ -66,6 +66,21 @@ namespace L5Sharp.Core.Tests
         }
 
         [Test]
+        public void Copy_WhenCalled_ShouldNotBeSameButEqual()
+        {
+            var member = Member.Create<Dint>("Test", new Dimensions(10), Radix.Binary, ExternalAccess.ReadOnly,
+                "This is a test");
+
+            var copy = member.Copy();
+
+            copy.Should().NotBeSameAs(member);
+            copy.Name.Should().NotBeSameAs(member.Name);
+            copy.DataType.Should().NotBeSameAs(member.DataType);
+            copy.Dimension.Should().NotBeSameAs(member.Dimension);
+            copy.Description.Should().NotBeSameAs(member.Description);
+        }
+
+        [Test]
         public void TypedEquals_AreEqual_ShouldBeTrue()
         {
             var first = (ArrayMember<Dint>)Member.Create<Dint>("Test", new Dimensions(10));

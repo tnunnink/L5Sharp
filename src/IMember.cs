@@ -15,9 +15,13 @@ namespace L5Sharp
     /// <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
     /// `Logix 5000 Controllers Import/Export`</a>
     /// </footer>
-    public interface IMember<out TDataType> : ILogixComponent, IPrototype<IMember<TDataType>> 
+    public interface IMember<out TDataType> : IPrototype<IMember<TDataType>> 
         where TDataType : IDataType
     {
+        string Name { get; }
+        
+        string Description { get; }
+        
         /// <summary>
         /// The data type of the <c>Member</c> Logix Component.
         /// </summary>

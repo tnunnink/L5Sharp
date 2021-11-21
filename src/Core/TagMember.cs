@@ -12,23 +12,21 @@ namespace L5Sharp.Core
     {
         private readonly IMember<TDataType> _member;
 
-        internal TagMember(IMember<TDataType> member, TagMember<IDataType> parent, Tag<IDataType> root)
+        internal TagMember(IMember<TDataType> member, ITagMember<IDataType> parent, ITag<IDataType> baseTag)
         {
             _member = member ?? throw new ArgumentNullException(nameof(member));
-
+            Base = baseTag ?? throw new ArgumentNullException(nameof(baseTag));
             Parent = parent;
-            Root = root;
         }
 
         /// <inheritdoc />
         public string Name => _member.Name;
 
         /// <inheritdoc />
-        public string TagName => Parent == null
-            ? Name
-            : _member.IsArrayElement()
-                ? $"{GetName(Parent)}{Name}"
-                : $"{GetName(Parent)}.{Name}";
+        public string TagName => GetTagName((ITagMember<IDataType>)this);
+
+        /// <inheritdoc />
+        public string Operand => GetTagName((ITagMember<IDataType>)this).Replace(Base.Name, string.Empty);
 
         /// <inheritdoc />
         public string DataType => _member.DataType.Name;
@@ -48,11 +46,14 @@ namespace L5Sharp.Core
                     : Parent.ExternalAccess;
 
         /// <inheritdoc />
-        public string Description => _member.Description;
+        public string Description => Base.Comments.HasComment(Operand)
+            ? Base.Comments.GetComment(Operand)
+            : CalculateDescription();
 
+        /// <inheritdoc />
+        public ITagMember<IDataType> Parent { get; }
 
-        private Tag<IDataType> Root { get; }
-        private TagMember<IDataType> Parent { get; }
+        private ITag<IDataType> Base { get; }
 
         /// <inheritdoc />
         public IAtomic GetData()
@@ -85,6 +86,10 @@ namespace L5Sharp.Core
         /// <inheritdoc />
         public void SetDescription(string description)
         {
+            if (string.IsNullOrEmpty(description))
+                Base.Comments.Reset(Operand);
+
+            Base.Comments.Override(new Comment(Operand, description));
         }
 
         /// <inheritdoc />
@@ -114,7 +119,7 @@ namespace L5Sharp.Core
             where TType : IDataType
         {
             var member = expression.Invoke(_member.DataType);
-            return member != null ? new TagMember<TType>(member, this as TagMember<IDataType>, Root) : null;
+            return member != null ? new TagMember<TType>(member, (ITagMember<IDataType>)this, Base) : null;
         }
 
         /// <inheritdoc />
@@ -154,33 +159,60 @@ namespace L5Sharp.Core
             if (_member is IArrayMember<TDataType> arrayMember)
             {
                 return arrayMember.Select(e =>
-                    new TagMember<IDataType>((IMember<IDataType>)e, this as TagMember<IDataType>, Root));
+                    new TagMember<IDataType>((IMember<IDataType>)e, (ITagMember<IDataType>)this, Base));
             }
 
             return _member.DataType.GetMembers()
-                .Select(m => new TagMember<IDataType>(m, this as TagMember<IDataType>, Root));
+                .Select(m => new TagMember<IDataType>(m, (ITagMember<IDataType>)this, Base));
         }
 
         private ITagMember<IDataType> GetMember(string name)
         {
             var member = _member.DataType.GetMember(name);
-            return member != null ? new TagMember<IDataType>(member, this as TagMember<IDataType>, Root) : null;
+            return member != null ? new TagMember<IDataType>(member, (ITagMember<IDataType>)this, Base) : null;
         }
 
         private ITagMember<TDataType> GetMember(int index)
         {
             return _member is IArrayMember<TDataType> arrayMember
-                ? new TagMember<TDataType>(arrayMember[index], this as TagMember<IDataType>, Root)
+                ? new TagMember<TDataType>(arrayMember[index], (ITagMember<IDataType>)this, Base)
                 : null;
         }
 
-        private static string GetName(TagMember<IDataType> member)
+        /// <summary>
+        /// Recursively traverses up the member chain to build the full string name of the current tag member. 
+        /// </summary>
+        /// <param name="member">The current member to evaluate.</param>
+        /// <returns>The full string tag name of the the tag member.</returns>
+        private static string GetTagName(ITagMember<IDataType> member)
         {
             return member.Parent != null
-                ? member.Parent.Dimensions.Length > 0
-                    ? $"{GetName(member.Parent)}{member.Name}"
-                    : $"{GetName(member.Parent)}.{member.Name}"
+                ? member.IsArrayElement()
+                    ? $"{GetTagName(member.Parent)}{member.Name}"
+                    : $"{GetTagName(member.Parent)}.{member.Name}"
                 : member.Name;
+        }
+
+        /// <summary>
+        /// Determines the value of the default "Pass Through Description" for the tag member.
+        /// </summary>
+        /// <returns>A string value of the member description</returns>
+        private string CalculateDescription()
+        {
+            //If the parent is null this is the root member and we can just return the root's description.
+            if (Parent == null) return Base.Description;
+
+            //The rest is based on the if the root type is user defined or not.
+            var typeClass = Base.GetTypeClass();
+
+            //If not, simply look to the parent description.
+            if (typeClass != DataTypeClass.User)
+                return Parent.Description;
+
+            //If so, then we concatenate descriptions based on if it is an element of array or member of a type. 
+            return this.IsArrayElement()
+                ? $"{Base.Description} {Parent.Description}".Trim()
+                : $"{Base.Description} {_member.Description}".Trim();
         }
     }
 }

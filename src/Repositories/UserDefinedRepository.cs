@@ -27,15 +27,13 @@ namespace L5Sharp.Repositories
         public IUserDefined Get(string name)
         {
             var element = _context.L5X.DataTypes.Descendants().SingleOrDefault(x => x.GetName() == name);
-            var factory = new UserDefinedMaterializer(_context);
-            return factory.Materialize(element);
+            return _context.Serializer.Deserialize<IUserDefined>(element);
         }
 
         public IEnumerable<IUserDefined> GetAll()
         {
             var elements = _context.L5X.DataTypes.Descendants();
-            var factory = new UserDefinedMaterializer(_context);
-            return elements.Select(e => factory.Materialize(e));
+            return elements.Select(e => _context.Serializer.Deserialize<IUserDefined>(e));
         }
 
         public IEnumerable<IDataType> WithMemberType(IDataType dataType)
@@ -51,10 +49,11 @@ namespace L5Sharp.Repositories
             if (Exists(component.Name))
                 throw new ComponentNameCollisionException(component.Name, typeof(IDataType));
 
-            var element = component.Serialize();
+            var element = _context.Serializer.Serialize(component);
             _context.L5X.DataTypes.Add(element);
 
-            var dependents = component.GetDependentTypes().Where(t => t.Class == DataTypeClass.User)
+            var dependents = component.GetDependentTypes()
+                .Where(t => t.Class == DataTypeClass.User)
                 .Cast<IUserDefined>();
             
             foreach (var dependent in dependents)

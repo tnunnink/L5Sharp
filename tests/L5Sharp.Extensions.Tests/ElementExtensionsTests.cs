@@ -31,7 +31,7 @@ namespace L5Sharp.Extensions.Tests
             var element = XElement.Load(_fileName);
             var target = element.Descendants("DataType").FirstOrDefault();
 
-            var value = target.GetValue<IDataType>(t => t.Class);
+            var value = target.GetAttribute<IDataType>(t => t.Class);
 
             value.Should().NotBeNull();
         }

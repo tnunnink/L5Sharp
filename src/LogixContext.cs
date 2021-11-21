@@ -10,24 +10,26 @@ namespace L5Sharp
 {
     public class LogixContext
     {
-        private readonly Dictionary<Type, IComponentMaterializer> _factories = new Dictionary<Type, IComponentMaterializer>();
-
         private LogixContext(XDocument document)
         {
             L5X = new L5X(document);
-            InitializeFactories();
-            
+            Serializer = new SerializationContext(this);
+            TypeRegistry = new LogixTypeRegistry(this);
+
             DataTypes = new UserDefinedRepository(this);
             Tags = new TagRepository(this);
-            
-            TypeRegistry = new LogixTypeRegistry(this);
         }
 
+        /// <summary>
+        /// Creates a new Logix Context for the provided L5X file.
+        /// </summary>
+        /// <param name="fileName">The full file name and path to the L5X.</param>
         public LogixContext(string fileName) : this(XDocument.Load(fileName))
         {
         }
 
         internal L5X L5X { get; }
+        internal SerializationContext Serializer { get; }
         internal LogixTypeRegistry TypeRegistry { get; }
 
         public string SchemaRevision => L5X.SchemaRevision;
@@ -40,19 +42,20 @@ namespace L5Sharp
         public IUserDefinedRepository DataTypes { get; }
         public ITagRepository Tags { get; }
 
+
         public void Save(string fileName)
         {
             L5X.Save(fileName);
         }
 
-        internal IComponentMaterializer<T> GetFactory<T>() where T : ILogixComponent
+        /*internal IXMaterializer<T> GetFactory<T>() where T : ILogixComponent
         {
             var type = _factories.Keys.SingleOrDefault(t => t == typeof(T));
 
             if (type == null)
                 throw new InvalidOperationException($"Factory not defined for component of type '{typeof(T)}'");
 
-            return (IComponentMaterializer<T>)_factories[type];
+            return (IXMaterializer<T>)_factories[type];
         }
 
         private void InitializeFactories()
@@ -60,7 +63,7 @@ namespace L5Sharp
             _factories.Add(typeof(IUserDefined), new UserDefinedMaterializer(this));
             _factories.Add(typeof(IMember<IDataType>), new MemberMaterializer(this));
             _factories.Add(typeof(ITag<IDataType>), new TagMaterializer(this));
-        }
+        }*/
 
         private static XDocument GenerateContent(ILogixComponent logixComponent, Revision revision)
         {

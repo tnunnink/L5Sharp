@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using L5Sharp.Builders;
 using L5Sharp.Enums;
 using L5Sharp.Exceptions;
 
@@ -11,32 +10,38 @@ namespace L5Sharp.Core
     {
         private readonly TDataType _dataType;
         private TagMember<TDataType> _tagMember;
+        private string _description;
 
         internal Tag(ComponentName name, TDataType dataType, Dimensions dimensions = null, Radix radix = null,
             ExternalAccess externalAccess = null, string description = null, TagUsage usage = null,
-            bool constant = false, ILogixComponent container = null)
+            bool constant = false)
         {
+            //Initialize tag level state.
             _dataType = dataType ?? throw new ArgumentNullException(nameof(dataType));
-
-            externalAccess ??= ExternalAccess.None; //Tags default to None not Read/Write
-            Instantiate(name, dataType, dimensions, radix, externalAccess, description);
-
+            _description = description;
             Usage = usage != null ? usage : TagUsage.Null;
+            Scope = Scope.Null;
             Constant = constant;
-            Container = container;
+            Comments = new Comments(this as ITag<IDataType>);
+            
+            //Initialize tag member root.
+            externalAccess ??= ExternalAccess.None; //Tags default to 'None' External Access unlike members.
+            Instantiate(name, dataType, dimensions, radix, externalAccess, description);
         }
-
-
-        /// <inheritdoc cref="ILogixComponent.Name" />
+        
+        /// <inheritdoc cref="ITag{TDataType}.Name" />
         public ComponentName Name => _tagMember.Name;
 
         string ITagMember<TDataType>.Name => Name;
 
-        /// <inheritdoc cref="ILogixComponent.Description" />
-        public string Description => _tagMember.Description;
+        /// <inheritdoc cref="ITag{TDataType}.Name" />
+        public string Description => DetermineDescription();
 
         /// <inheritdoc />
         public string TagName => _tagMember.TagName;
+
+        /// <inheritdoc />
+        public string Operand => _tagMember.Name;
 
         /// <inheritdoc />
         public string DataType => _tagMember.DataType;
@@ -54,10 +59,7 @@ namespace L5Sharp.Core
         public TagType TagType => TagType.Base;
 
         /// <inheritdoc />
-        public Scope Scope => Container == null ? Scope.Null
-            : Container is IController ? Scope.Controller
-            : Container is IProgram ? Scope.Program
-            : Scope.Null;
+        public Scope Scope { get; }
 
         /// <inheritdoc />
         public TagUsage Usage { get; private set; }
@@ -65,16 +67,14 @@ namespace L5Sharp.Core
         /// <inheritdoc />
         public bool Constant { get; set; }
 
-        //The Container of a tag should be the controller/program/routine that creates it.
-        //Will assign this internally when is added to a collection
-        /// <inheritdoc />
-        public ILogixComponent Container { get; internal set; }
-
         /// <inheritdoc />
         public IAtomic GetData() => _tagMember.GetData();
 
         /// <inheritdoc />
         public void SetData(IAtomic value) => _tagMember.SetData(value);
+
+        /// <inheritdoc />
+        public Comments Comments { get; }
 
         /// <inheritdoc />
         public void SetName(ComponentName name)
@@ -120,7 +120,13 @@ namespace L5Sharp.Core
         public void SetRadix(Radix radix) => _tagMember.SetRadix(radix);
 
         /// <inheritdoc />
-        public void SetDescription(string description) => _tagMember.SetDescription(description);
+        public void SetDescription(string description)
+        {
+            _description = description;
+        }
+
+        /// <inheritdoc />
+        public ITagMember<IDataType> Parent => null;
 
         /// <inheritdoc />
         public IEnumerable<string> GetMemberNames() => _tagMember.GetMemberNames();
@@ -177,7 +183,17 @@ namespace L5Sharp.Core
                 ? Member.Create(name, dataType, dimensions, radix, externalAccess, description)
                 : Member.Create(name, dataType, radix, externalAccess, description);
 
-            _tagMember = new TagMember<TDataType>(member, null, this as Tag<IDataType>);
+            _tagMember = new TagMember<TDataType>(member, Parent, (ITag<IDataType>)(ITag<TDataType>)this);
+        }
+
+        private string DetermineDescription()
+        {
+            if (!string.IsNullOrEmpty(_description)) return _description;
+
+            if (_dataType is IUserDefined userDefined)
+                return userDefined.Description;
+
+            return null;
         }
     }
 }

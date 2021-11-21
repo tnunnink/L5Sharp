@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Linq;
-using System.Xml.Serialization;
 using AutoFixture;
 using FluentAssertions;
 using L5Sharp.Enums;
-using L5Sharp.Exceptions;
 using L5Sharp.Types;
 using NUnit.Framework;
 
@@ -46,7 +43,7 @@ namespace L5Sharp.Core.Tests
             var array = Member.Create<Dint>("Test", new Dimensions(length));
 
             array.Dimension.Length.Should().Be(length);
-            array.Should().AllBeOfType<Element<Dint>>();
+            array.Should().AllBeOfType<Member<Dint>>();
         }
 
         [Test]
@@ -69,7 +66,7 @@ namespace L5Sharp.Core.Tests
                 ExternalAccess.ReadOnly, "Test");
 
             member.Should().NotBeNull();
-            member.Name.ToString().Should().Be("Member");
+            member.Name.Should().Be("Member");
             member.DataType.Should().BeOfType<Real>();
             member.Dimension.Should().Be(Dimensions.Empty);
             member.Radix.Should().Be(Radix.Exponential);
@@ -84,13 +81,13 @@ namespace L5Sharp.Core.Tests
                 ExternalAccess.ReadOnly, "Test");
 
             member.Should().NotBeNull();
-            member.Name.ToString().Should().Be("Member");
+            member.Name.Should().Be("Member");
             member.DataType.Should().Be(new Real(Radix.Exponential));
             member.Dimension.Length.Should().Be(35);
             member.Radix.Should().Be(Radix.Exponential);
             member.ExternalAccess.Should().Be(ExternalAccess.ReadOnly);
             member.Description.Should().Be("Test");
-            member.Should().AllBeOfType<Element<IDataType>>();
+            member.Should().AllBeOfType<Member<IDataType>>();
         }
 
         [Test]
@@ -100,7 +97,7 @@ namespace L5Sharp.Core.Tests
 
             var name = member.Name;
 
-            name.ToString().Should().Be("Member");
+            name.Should().Be("Member");
         }
 
         [Test]
@@ -151,6 +148,20 @@ namespace L5Sharp.Core.Tests
             var description = member.Description;
 
             description.Should().BeNull();
+        }
+
+        [Test]
+        public void Copy_WhenCalled_ShouldNotBeSameButEqual()
+        {
+            var member = Member.Create<Dint>("Test", Radix.Binary, ExternalAccess.ReadOnly, "This is a test");
+
+            var copy = member.Copy();
+
+            copy.Should().NotBeSameAs(member);
+            copy.Name.Should().NotBeSameAs(member.Name);
+            copy.DataType.Should().NotBeSameAs(member.DataType);
+            copy.Dimension.Should().NotBeSameAs(member.Dimension);
+            copy.Description.Should().NotBeSameAs(member.Description);
         }
 
         [Test]

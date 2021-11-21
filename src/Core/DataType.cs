@@ -6,12 +6,19 @@ using L5Sharp.Enums;
 
 namespace L5Sharp.Core
 {
+    /// <inheritdoc cref="L5Sharp.IUserDefined" />
     public class DataType : LogixComponent, IUserDefined, IEquatable<DataType>
     {
+        /// <summary>
+        /// Creates a new instance of a <c>UserDefined</c> data type with the provided arguments.
+        /// </summary>
+        /// <param name="name">The component name of the type.</param>
+        /// <param name="description">the string description of the type.</param>
+        /// <param name="members">The collection of members to add to the type.</param>
         public DataType(string name, string description = null, IEnumerable<IMember<IDataType>> members = null)
             : base(name, description)
         {
-            Members = members == null ? new DataTypeMembers(this) : new DataTypeMembers(this, members);
+            Members = new UserDefinedMembers(this, members);
         }
 
         /// <inheritdoc />
@@ -25,12 +32,20 @@ namespace L5Sharp.Core
 
         /// <inheritdoc />
         public TagDataFormat DataFormat => TagDataFormat.Decorated;
-        public IComponentCollection<IMember<IDataType>> Members { get; }
+
+        /// <inheritdoc />
+        public IUserDefinedMembers Members { get; }
 
         /// <inheritdoc />
         public IDataType Instantiate()
         {
             return new DataType(Name.Copy(), string.Copy(Description), Members.Select(m => m.Copy()));
+        }
+        
+        public static IDataType Create(ComponentName name, string description = null,
+            IEnumerable<IMember<IDataType>> members = null)
+        {
+            return new DataType(name, description, members);
         }
 
         /// <inheritdoc />

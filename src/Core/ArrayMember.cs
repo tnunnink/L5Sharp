@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using L5Sharp.Enums;
+using L5Sharp.Extensions;
 
 namespace L5Sharp.Core
 {
@@ -10,7 +11,7 @@ namespace L5Sharp.Core
     public class ArrayMember<TDataType> : IArrayMember<TDataType>, IEquatable<ArrayMember<TDataType>>
         where TDataType : IDataType
     {
-        private readonly List<IElement<TDataType>> _elements;
+        private readonly List<IMember<TDataType>> _elements;
 
         internal ArrayMember(ComponentName name, TDataType dataType, Dimensions dimensions, Radix radix,
             ExternalAccess externalAccess, string description)
@@ -24,22 +25,22 @@ namespace L5Sharp.Core
             if (DataType is IAtomic atomic && radix != null)
                 atomic.SetRadix(radix);
 
-            _elements = new List<IElement<TDataType>>(dimensions.Length);
+            _elements = new List<IMember<TDataType>>(dimensions.Length);
             var indices = Dimension.GenerateIndices().ToList();
 
             for (var i = 0; i < Dimension; i++)
             {
-                var element = new Element<TDataType>(indices[i], (TDataType)DataType.Instantiate(),
-                    Radix, ExternalAccess, Description);
+                var element = new Member<TDataType>(indices[i], (TDataType)DataType.Instantiate(),
+                    Radix, ExternalAccess, Description.SafeCopy());
                 _elements.Add(element);
             }
         }
 
         /// <inheritdoc />
-        public IElement<TDataType> this[int index] => _elements[index];
+        public IMember<TDataType> this[int index] => _elements[index];
 
         /// <inheritdoc />
-        public ComponentName Name { get; }
+        public string Name { get; }
 
         /// <inheritdoc />
         public TDataType DataType { get; }
@@ -57,7 +58,7 @@ namespace L5Sharp.Core
         public string Description { get; }
 
         /// <inheritdoc />
-        public IEnumerator<IElement<TDataType>> GetEnumerator()
+        public IEnumerator<IMember<TDataType>> GetEnumerator()
         {
             return _elements.GetEnumerator();
         }
@@ -83,8 +84,8 @@ namespace L5Sharp.Core
         /// <inheritdoc />
         public IMember<TDataType> Copy()
         {
-            return new ArrayMember<TDataType>(Name.Copy(), (TDataType)DataType.Instantiate(), Dimension.Copy(), Radix,
-                ExternalAccess, Description);
+            return new ArrayMember<TDataType>(Name.SafeCopy(), (TDataType)DataType.Instantiate(), Dimension.Copy(),
+                Radix, ExternalAccess, Description.SafeCopy());
         }
 
         /// <inheritdoc />

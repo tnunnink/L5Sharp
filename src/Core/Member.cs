@@ -1,5 +1,6 @@
 ﻿using System;
 using L5Sharp.Enums;
+using L5Sharp.Extensions;
 
 namespace L5Sharp.Core
 {
@@ -7,7 +8,7 @@ namespace L5Sharp.Core
     public sealed class Member<TDataType> : IMember<TDataType>, IEquatable<Member<TDataType>>
         where TDataType : IDataType
     {
-        internal Member(ComponentName name, TDataType dataType, Radix radix,
+        internal Member(string name, TDataType dataType, Radix radix,
             ExternalAccess externalAccess, string description)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
@@ -20,7 +21,7 @@ namespace L5Sharp.Core
         }
 
         /// <inheritdoc />
-        public ComponentName Name { get; }
+        public string Name { get; }
 
         /// <inheritdoc />
         public string Description { get; }
@@ -36,7 +37,13 @@ namespace L5Sharp.Core
 
         /// <inheritdoc />
         public ExternalAccess ExternalAccess { get; }
-
+        
+        /// <inheritdoc />
+        public IMember<TDataType> Copy()
+        {
+            return new Member<TDataType>(Name.SafeCopy(), (TDataType)DataType.Instantiate(), Radix, ExternalAccess,
+                Description.SafeCopy());
+        }
 
         /// <inheritdoc />
         public bool Equals(Member<TDataType> other)
@@ -46,13 +53,6 @@ namespace L5Sharp.Core
             return Name == other.Name && Equals(DataType, other.DataType) && Dimension == other.Dimension &&
                    Equals(Radix, other.Radix) && Equals(ExternalAccess, other.ExternalAccess) &&
                    Description == other.Description;
-        }
-
-        /// <inheritdoc />
-        public IMember<TDataType> Copy()
-        {
-            return new Member<TDataType>(Name.Copy(), (TDataType)DataType.Instantiate(), Radix, ExternalAccess,
-                Description);
         }
 
         /// <inheritdoc />

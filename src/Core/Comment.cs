@@ -1,33 +1,31 @@
 ﻿namespace L5Sharp.Core
 {
+    /// <summary>
+    /// Represents a string comment for a component member.  
+    /// </summary>
     public class Comment
     {
-        public Comment(string operand, string comment)
+        /// <summary>
+        /// Creates a new instance of a Comment with the provided operand and comment value
+        /// </summary>
+        /// <param name="operand">The string operand value.</param>
+        /// <param name="value">The string comment value.</param>
+        public Comment(string operand, string value)
         {
             Operand = operand;
-            Value = comment;
+            Value = value;
         }
 
+        /// <summary>
+        /// Gets the value of the <c>Operand</c> for which the comments is applied to.
+        /// </summary>
         public string Operand { get; }
-        public string Value { get; private set; }
         
         /// <summary>
-        /// Overrides the description ...
+        /// Gets the value of the comment.
         /// </summary>
-        /// <param name="comment"></param>
-        public void Override(string comment)
-        {
-            Value = comment;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="comment"></param>
-        /// <returns></returns>
-        public static implicit operator string(Comment comment)
-        {
-            return comment.Value;
-        }
+        public string Value { get; }
     }
+    
+    
 }
