@@ -29,6 +29,11 @@ namespace L5Sharp
         bool Contains(string name);
         
         /// <summary>
+        /// Determines if the collection contains an item that satisfies the provided delegate predicate.
+        /// </summary>
+        bool Contains(Func<TComponent, bool> predicate);
+        
+        /// <summary>
         /// Gets a component instance with the provided name.
         /// </summary>
         TComponent Get(string name);

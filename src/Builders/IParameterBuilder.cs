@@ -3,8 +3,7 @@ using L5Sharp.Enums;
 
 namespace L5Sharp.Builders
 {
-    public interface IParameterBuilder<TDataType> : IComponentBuilder<IParameter<TDataType>>
-        where TDataType : IDataType
+    public interface IParameterBuilder<TDataType>
     {
         IParameterBuilder<TDataType> WithUsage(TagUsage usage);
         IParameterBuilder<TDataType> WithDimensions(Dimensions dimensions);

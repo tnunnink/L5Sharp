@@ -230,7 +230,7 @@ namespace L5Sharp.Core.Tests
         public void Parse_MoreThanThreeDimensions_ShouldThrowInvalidOperationException()
         {
             FluentActions.Invoking(() => Dimensions.Parse("1 4 3 8")).Should()
-                .Throw<ArgumentException>();
+                .Throw<ArgumentOutOfRangeException>();
         }
         
         [Test]

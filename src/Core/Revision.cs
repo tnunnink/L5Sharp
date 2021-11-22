@@ -15,7 +15,14 @@ namespace L5Sharp.Core
                 : throw new ArgumentOutOfRangeException(nameof(minor), $"'{minor}' is not between 1 and 255");
         }
 
+        /// <summary>
+        /// Gets the value of the Major revision number.
+        /// </summary>
         public byte Major { get; }
+        
+        /// <summary>
+        /// Gets the value of the Minor revision number.
+        /// </summary>
         public byte Minor { get; }
 
         public Revision ChangeMajor(byte major)
@@ -53,6 +60,7 @@ namespace L5Sharp.Core
             return obj.GetType() == GetType() && Equals((Revision)obj);
         }
 
+        /// <inheritdoc />
         public override int GetHashCode()
         {
             return HashCode.Combine(Major, Minor);

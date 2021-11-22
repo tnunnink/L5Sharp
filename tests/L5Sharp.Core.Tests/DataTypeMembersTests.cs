@@ -1,16 +1,16 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using FluentAssertions;
 using L5Sharp.Enums;
 using L5Sharp.Exceptions;
 using L5Sharp.Types;
 using NUnit.Framework;
-using NUnit.Framework.Internal;
 
 namespace L5Sharp.Core.Tests
 {
     [TestFixture]
-    public class UserDefinedMembersTests
+    public class DataTypeMembersTests
     {
         private DataType _userDefined;
 
@@ -23,7 +23,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void New_ValidParentType_ShouldNotBeNull()
         {
-            var members = new UserDefinedMembers(_userDefined);
+            var members = new DataTypeMembers(_userDefined);
 
             members.Should().NotBeNull();
         }
@@ -31,7 +31,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void New_MembersOverload_ShouldHaveExpectedCount()
         {
-            var members = new UserDefinedMembers(_userDefined, new[] { Member.Create<Bool>("Member01") });
+            var members = new DataTypeMembers(_userDefined, new[] { Member.Create<Bool>("Member01") });
 
             members.Should().HaveCount(1);
         }
@@ -324,8 +324,26 @@ namespace L5Sharp.Core.Tests
         {
             var members = CreateSeededMembers();
 
-            FluentActions.Invoking(() => members.Rename("Member00", "Member02")).Should()
+            FluentActions.Invoking(() => members.Rename("Member00", "Member05")).Should()
                 .Throw<InvalidOperationException>();
+        }
+        
+        [Test]
+        public void Rename_CurrentNull_ShouldThrowException()
+        {
+            var members = CreateSeededMembers();
+
+            FluentActions.Invoking(() => members.Rename(null, "Member05")).Should()
+                .Throw<ArgumentNullException>();
+        }
+        
+        [Test]
+        public void Rename_NameNull_ShouldThrowException()
+        {
+            var members = CreateSeededMembers();
+
+            FluentActions.Invoking(() => members.Rename("Member01", null)).Should()
+                .Throw<ArgumentNullException>();
         }
 
         [Test]
@@ -349,9 +367,21 @@ namespace L5Sharp.Core.Tests
             members.Should().HaveCount(3);
         }
 
-        private UserDefinedMembers CreateSeededMembers()
+        [Test]
+        public void GetEnumerator_AsEnumerable_ShouldNotBeNull()
         {
-            return new UserDefinedMembers(_userDefined, new List<IMember<IDataType>>
+            var members = CreateSeededMembers();
+
+            var enumerable = (IEnumerable)members;
+
+            var enumerator = enumerable.GetEnumerator();
+
+            enumerator.Should().NotBeNull();
+        }
+
+        private DataTypeMembers CreateSeededMembers()
+        {
+            return new DataTypeMembers(_userDefined, new List<IMember<IDataType>>
             {
                 Member.Create<Dint>("Member01"),
                 Member.Create<Real>("Member02"),

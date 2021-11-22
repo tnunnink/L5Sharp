@@ -8,7 +8,7 @@ namespace L5Sharp
     /// </summary>
     /// <remarks>
     /// Members define complex data structures such as <see cref="IUserDefined"/>, <see cref="IPredefined"/>,
-    /// or <see cref="IAddOnDefined"/>.
+    /// <see cref="IAddOnDefined"/>, and <see cref="IModuleDefined"/>.
     /// </remarks>
     /// <typeparam name="TDataType">The <see cref="IDataType"/> of the member.</typeparam>
     /// <footer>
@@ -18,27 +18,33 @@ namespace L5Sharp
     public interface IMember<out TDataType> : IPrototype<IMember<TDataType>> 
         where TDataType : IDataType
     {
+        /// <summary>
+        /// Gets the <c>Name</c> of the <c>Member</c> component.
+        /// </summary>
         string Name { get; }
         
+        /// <summary>
+        /// Gets the <c>Description</c>  of the <c>Member</c> component.
+        /// </summary>
         string Description { get; }
         
         /// <summary>
-        /// The data type of the <c>Member</c> Logix Component.
+        /// The <c>DataType</c> of the <c>Member</c> Component.
         /// </summary>
         TDataType DataType { get; }
 
         /// <summary>
-        /// The <see cref="Dimension"/> of the <see cref="IMember{TDataType}"/> Logix Component.
+        /// Gets the <c>Dimension</c> of the <c>Member</c> component.
         /// </summary>
         Dimensions Dimension { get; }
 
         /// <summary>
-        /// The <see cref="L5Sharp.Enums.Radix"/> of the <see cref="IMember{TDataType}"/> Logix Component.
+        /// Gets the <c>Radix</c> of the <c>Member</c> component.
         /// </summary>
         Radix Radix { get; }
 
         /// <summary>
-        /// The <see cref="ExternalAccess"/> of the <see cref="IMember{TDataType}"/> Logix Component.
+        /// Gets the <c>ExternalAccess</c> of the <c>Member</c> component.
         /// </summary>
         ExternalAccess ExternalAccess { get; }
     }

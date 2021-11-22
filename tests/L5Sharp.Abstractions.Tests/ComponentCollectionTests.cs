@@ -81,7 +81,7 @@ namespace L5Sharp.Abstractions.Tests
         [Test]
         public void Contains_Null_ShouldBeFalse()
         {
-            var result = _collection.Contains(null);
+            var result = _collection.Contains((string)null);
 
             result.Should().BeFalse();
         }

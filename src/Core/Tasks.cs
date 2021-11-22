@@ -1,4 +1,6 @@
-﻿using L5Sharp.Abstractions;
+﻿using System;
+using L5Sharp.Abstractions;
+using L5Sharp.Enums;
 
 namespace L5Sharp.Core
 {
@@ -15,7 +17,20 @@ namespace L5Sharp.Core
         {
             _controller = controller;
         }
-        
-        
+
+        /// <inheritdoc />
+        public override void Add(ITask component)
+        {
+            if (component.Type == TaskType.Continuous && _controller.Tasks.HasContinuous())
+                throw new InvalidOperationException();
+            
+            base.Add(component);
+        }
+
+        /// <inheritdoc />
+        public bool HasContinuous()
+        {
+            return Contains(t => t.Type == TaskType.Continuous);
+        }
     }
 }

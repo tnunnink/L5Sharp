@@ -18,7 +18,7 @@ namespace L5Sharp.Core
         public DataType(string name, string description = null, IEnumerable<IMember<IDataType>> members = null)
             : base(name, description)
         {
-            Members = new UserDefinedMembers(this, members);
+            Members = new DataTypeMembers(this, members);
         }
 
         /// <inheritdoc />
@@ -34,7 +34,7 @@ namespace L5Sharp.Core
         public TagDataFormat DataFormat => TagDataFormat.Decorated;
 
         /// <inheritdoc />
-        public IUserDefinedMembers Members { get; }
+        public IMemberCollection<IMember<IDataType>> Members { get; }
 
         /// <inheritdoc />
         public IDataType Instantiate()

@@ -18,13 +18,10 @@ namespace L5Sharp
         bool MajorFault { get; }
         bool SafetyEnabled { get; }
         KeyingState State { get; }
-
         IEnumerable<Port> Ports { get; }
-        IEnumerable<IModule> Modules { get; }
         IEnumerable<Connection> Connections { get; }
-
-        void SetCatalogNumber(string catalogNumber);
-        void SetVendor(string vendor);
-        void SetRevision(Revision revision);
+        ITag<IModuleDefined> Config { get; }
+        ITag<IModuleDefined> Input { get; }
+        ITag<IModuleDefined> Output { get; }
     }
 }

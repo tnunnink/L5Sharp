@@ -28,7 +28,7 @@ namespace L5Sharp.Types
         public ComponentName Name { get; }
 
         /// <inheritdoc />
-        public string Description => $"RSLogix representation of a {typeof(bool)}";
+        public string Description => $"Logix representation of a {typeof(bool)}";
 
         /// <inheritdoc />
         public DataTypeFamily Family => DataTypeFamily.None;
@@ -41,15 +41,21 @@ namespace L5Sharp.Types
 
         /// <inheritdoc />
         public Radix Radix { get; private set; }
+
+        /// <inheritdoc />
         public bool Value { get; private set; }
+
+        /// <inheritdoc />
         public string FormattedValue => Radix.Format(this);
         object IAtomic.Value => Value;
 
+        /// <inheritdoc />
         public void SetValue(bool value)
         {
             Value = value;
         }
 
+        /// <inheritdoc />
         public void SetValue(object value)
         {
             Value = value switch
@@ -62,6 +68,7 @@ namespace L5Sharp.Types
             };
         }
 
+        /// <inheritdoc />
         public void SetRadix(Radix radix)
         {
             if (radix == null)
@@ -71,6 +78,18 @@ namespace L5Sharp.Types
                 throw new RadixNotSupportedException(radix, this);
 
             Radix = radix;
+        }
+
+        /// <inheritdoc />
+        public bool SupportsRadix(Radix radix)
+        {
+            return radix == Radix.Binary || radix == Radix.Octal || radix == Radix.Decimal || radix == Radix.Hex;
+        }
+
+        /// <inheritdoc />
+        public IDataType Instantiate()
+        {
+            return new Bool();
         }
 
         public static implicit operator Bool(bool value)
@@ -83,11 +102,7 @@ namespace L5Sharp.Types
             return atomic.Value;
         }
 
-        public bool SupportsRadix(Radix radix)
-        {
-            return radix == Radix.Binary || radix == Radix.Octal || radix == Radix.Decimal || radix == Radix.Hex;
-        }
-
+        /// <inheritdoc />
         public bool Equals(Bool other)
         {
             if (ReferenceEquals(null, other)) return false;
@@ -95,11 +110,7 @@ namespace L5Sharp.Types
             return Equals(Radix, other.Radix) && Value == other.Value;
         }
 
-        public IDataType Instantiate()
-        {
-            return new Bool();
-        }
-
+        /// <inheritdoc />
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
@@ -107,11 +118,13 @@ namespace L5Sharp.Types
             return obj.GetType() == GetType() && Equals((Bool)obj);
         }
 
+        /// <inheritdoc />
         public override int GetHashCode()
         {
             return HashCode.Combine(Radix, Value);
         }
 
+        /// <inheritdoc />
         public override string ToString()
         {
             return Name;
@@ -127,6 +140,7 @@ namespace L5Sharp.Types
             return !Equals(left, right);
         }
 
+        /// <inheritdoc />
         public int CompareTo(Bool other)
         {
             return Value.CompareTo(other.Value);

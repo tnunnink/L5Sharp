@@ -17,6 +17,8 @@ namespace L5Sharp
             RegisterTypes(context.L5X.DataTypes.Elements(),
                 DataTypeClass.User, 
                 e => context.Serializer.Deserialize<IUserDefined>(e));
+            
+            
         }
 
         public IDataType TryGetType(string name)

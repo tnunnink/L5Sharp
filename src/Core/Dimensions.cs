@@ -43,7 +43,7 @@ namespace L5Sharp.Core
             Y = y;
         }
 
-        
+
         /// <summary>
         /// Creates a three dimensional instance with the provided values. 
         /// </summary>
@@ -130,16 +130,13 @@ namespace L5Sharp.Core
 
             var numbers = value.Split(' ').Select(v => Convert.ToUInt16(v)).ToList();
 
-            if (numbers.Count > 3 || numbers.Count < 1)
-                throw new ArgumentException(
-                    $"Value '{value}' has a invalid number of arguments. Expects between 1 and 3 arguments.");
-
             return numbers.Count switch
             {
                 3 => new Dimensions(numbers[0], numbers[1], numbers[2]),
                 2 => new Dimensions(numbers[0], numbers[1]),
                 1 => new Dimensions(numbers[0]),
-                _ => Empty
+                _ => throw new ArgumentOutOfRangeException(nameof(numbers.Count),
+                    $"Value '{value}' has a invalid number of arguments. Expects between 1 and 3 arguments.")
             };
         }
 

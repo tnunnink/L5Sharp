@@ -1,22 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using L5Sharp.Abstractions;
 using L5Sharp.Builders;
 using L5Sharp.Enums;
 
 namespace L5Sharp.Core
 {
     /// <inheritdoc cref="L5Sharp.ITask" />
-    public class Task : LogixComponent, ITask, IEquatable<Task>
+    public class Task : ITask, IEquatable<Task>
     {
         private readonly HashSet<string> _programs = new HashSet<string>();
-        
-        internal Task(string name, TaskType type = null, 
+
+        internal Task(ComponentName name, TaskType type = null,
             TaskPriority priority = null, ScanRate rate = null, Watchdog watchdog = null,
             bool inhibitTask = false, bool disableUpdateOutputs = false, string description = null)
-            : base(name, description)
         {
+            Name = name;
+            Description = description;
             Type = type ?? TaskType.Periodic;
             Priority = priority ?? new TaskPriority(10);
             Rate = rate ?? new ScanRate(10);
@@ -26,22 +26,28 @@ namespace L5Sharp.Core
         }
 
         /// <inheritdoc />
-        public TaskType Type { get; private set; }
+        public ComponentName Name { get; }
 
         /// <inheritdoc />
-        public TaskPriority Priority { get; private set; }
+        public string Description { get; }
 
         /// <inheritdoc />
-        public ScanRate Rate { get; private set; }
+        public TaskType Type { get; }
 
         /// <inheritdoc />
-        public Watchdog Watchdog { get; private set; }
+        public TaskPriority Priority { get; }
 
         /// <inheritdoc />
-        public bool InhibitTask { get; set; }
+        public ScanRate Rate { get; }
 
         /// <inheritdoc />
-        public bool DisableUpdateOutputs { get; set; }
+        public Watchdog Watchdog { get; }
+
+        /// <inheritdoc />
+        public bool InhibitTask { get; }
+
+        /// <inheritdoc />
+        public bool DisableUpdateOutputs { get; }
 
         /// <inheritdoc />
         public IEnumerable<string> ScheduledPrograms => _programs.AsEnumerable();
@@ -55,7 +61,7 @@ namespace L5Sharp.Core
         {
             return new Task(name);
         }
-        
+
         /// <summary>
         /// Builds a new instance of <see cref="ITask"/> using the fluent builder API.
         /// </summary>
@@ -64,16 +70,6 @@ namespace L5Sharp.Core
         public static ITaskBuilder Build(string name)
         {
             return new TaskBuilder(name);
-        }
-
-        /// <inheritdoc />
-        /// <exception cref="ArgumentNullException">Thrown when the scan rate is null.</exception>
-        public void SetRate(ScanRate rate)
-        {
-            if (rate == null)
-                throw new ArgumentNullException(nameof(rate));
-
-            Rate = rate;
         }
 
         /// <inheritdoc />
@@ -99,14 +95,11 @@ namespace L5Sharp.Core
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return base.Equals(other)
-                   && ScheduledPrograms.SequenceEqual(other.ScheduledPrograms)
-                   && Type.Equals(other.Type)
-                   && Priority.Equals(other.Priority)
-                   && Rate.Equals(other.Rate) 
-                   && Watchdog.Equals(other.Watchdog) 
-                   && InhibitTask == other.InhibitTask 
-                   && DisableUpdateOutputs == other.DisableUpdateOutputs;
+            return _programs.SequenceEqual(other._programs) && Equals(Name, other.Name) &&
+                   Description == other.Description &&
+                   Equals(Type, other.Type) && Equals(Priority, other.Priority) && Equals(Rate, other.Rate) &&
+                   Equals(Watchdog, other.Watchdog) && InhibitTask == other.InhibitTask &&
+                   DisableUpdateOutputs == other.DisableUpdateOutputs;
         }
 
         /// <inheritdoc />
@@ -120,8 +113,17 @@ namespace L5Sharp.Core
         /// <inheritdoc />
         public override int GetHashCode()
         {
-            return HashCode.Combine(base.GetHashCode(), _programs, Type, Priority, Rate, Watchdog, InhibitTask,
-                DisableUpdateOutputs);
+            var hashCode = new HashCode();
+            hashCode.Add(_programs);
+            hashCode.Add(Name);
+            hashCode.Add(Description);
+            hashCode.Add(Type);
+            hashCode.Add(Priority);
+            hashCode.Add(Rate);
+            hashCode.Add(Watchdog);
+            hashCode.Add(InhibitTask);
+            hashCode.Add(DisableUpdateOutputs);
+            return hashCode.ToHashCode();
         }
 
         /// <summary>

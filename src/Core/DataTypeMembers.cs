@@ -9,14 +9,14 @@ using L5Sharp.Exceptions;
 
 namespace L5Sharp.Core
 {
-    internal sealed class UserDefinedMembers : IUserDefinedMembers
+    internal class DataTypeMembers : IMemberCollection<IMember<IDataType>>
     {
         private readonly List<IMember<IDataType>> _members = new List<IMember<IDataType>>();
-        private readonly IUserDefined _dataType;
+        private readonly IDataType _dataType;
 
-        public UserDefinedMembers(IUserDefined userDefined, IEnumerable<IMember<IDataType>> members = null)
+        public DataTypeMembers(IDataType parent, IEnumerable<IMember<IDataType>> members = null)
         {
-            _dataType = userDefined ?? throw new ArgumentNullException(nameof(userDefined));
+            _dataType = parent ?? throw new ArgumentNullException(nameof(parent));
             AddRange(members);
         }
 
@@ -98,7 +98,8 @@ namespace L5Sharp.Core
 
             var index = _members.FindIndex(m => m.Name == current);
 
-            if (index < 0) return;
+            if (index < 0)
+                throw new InvalidOperationException($"Could not find current member '{current}'");
 
             var member = _members[index];
 

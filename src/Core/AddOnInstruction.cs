@@ -74,7 +74,7 @@ namespace L5Sharp.Core
         public IEnumerable<IMember<IDataType>> Members => Parameters.Where(p => p.Usage != TagUsage.InOut);
 
         public NeutralText Signature { get; }
-        public IParameters Parameters { get; }
+        public IMemberCollection<IParameter<IDataType>> Parameters { get; }
         public ITags LocalTags { get; }
 
         public IEnumerable<IRoutine> Routines => _routines.AsReadOnly();

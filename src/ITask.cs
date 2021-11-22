@@ -40,30 +40,18 @@ namespace L5Sharp
         /// <summary>
         /// Setting that indicates the <c>Task</c> is inhibited.
         /// </summary>
-        bool InhibitTask { get; set; }
+        bool InhibitTask { get; }
         
         /// <summary>
         /// Setting that indicates the <c>Task</c> is disabling updated to outputs.
         /// </summary>
-        bool DisableUpdateOutputs { get; set; }
+        bool DisableUpdateOutputs { get; }
         
         /// <summary>
         /// A collection of program names that are scheduled for the current <c>Task</c>.
         /// </summary>
         IEnumerable<string> ScheduledPrograms { get; }
 
-        /// <summary>
-        /// Sets the component name of the <c>Task</c>.
-        /// </summary>
-        /// <param name="name">The value of the name to set.</param>
-        void SetName(ComponentName name);
-
-        /// <summary>
-        /// Sets the <see cref="ScanRate"/> of the of <c>Task</c>.
-        /// </summary>
-        /// <param name="rate">The value of the <c>ScanRate</c> to set.</param>
-        void SetRate(ScanRate rate);
-        
         /// <summary>
         /// Add a program to the <c>Task's</c> <see cref="ScheduledPrograms"/> collection.
         /// </summary>

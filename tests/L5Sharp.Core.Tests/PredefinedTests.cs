@@ -7,7 +7,6 @@ using NUnit.Framework;
 
 namespace L5Sharp.Core.Tests
 {
-
     public class TestPredefined : Predefined
     {
         public TestPredefined() : base(nameof(TestPredefined))
@@ -22,7 +21,7 @@ namespace L5Sharp.Core.Tests
 
         public IMember<Bool> TestMember => Member.Create<Bool>(nameof(TestMember));
     }
-    
+
     [TestFixture]
     public class PredefinedTests
     {
@@ -33,7 +32,7 @@ namespace L5Sharp.Core.Tests
 
             type.Name.ToString().Should().Be("TestPredefined");
         }
-        
+
         [Test]
         public void Description_GetValue_ShouldBeNull()
         {
@@ -71,7 +70,7 @@ namespace L5Sharp.Core.Tests
         {
             FluentActions.Invoking(() => new MyNullNamePredefined()).Should().Throw<ArgumentException>();
         }
-        
+
         private class MyNullNamePredefined : Predefined
         {
             public MyNullNamePredefined() : base(null)
@@ -101,7 +100,7 @@ namespace L5Sharp.Core.Tests
             FluentActions.Invoking(() => new MyInvalidMemberPredefined()).Should()
                 .Throw<ComponentNameCollisionException>();
         }
-        
+
         private class MyInvalidMemberPredefined : Predefined
         {
             public MyInvalidMemberPredefined() :
@@ -113,10 +112,47 @@ namespace L5Sharp.Core.Tests
 
             public IMember<Bool> Member01 => Member.Create<Bool>("Member01");
             public IMember<Bool> Member02 => Member.Create<Bool>("Member01");
+
             protected override IDataType New()
             {
                 return new MyInvalidMemberPredefined();
             }
+        }
+
+        [Test]
+        public void New_CircularReferencePredefined_ShouldThrowCircularReferenceException()
+        {
+            FluentActions.Invoking(() => new CircularReferencePredefined()).Should()
+                .Throw<CircularReferenceException>();
+        }
+
+        private class CircularReferencePredefined : Predefined
+        {
+            public CircularReferencePredefined() :
+                base(nameof(CircularReferencePredefined))
+            {
+                //RegisterMemberFields();
+            }
+
+            public IMember<Bool> Member01 = Member.Create<Bool>("Member01");
+
+            public IMember<Real> Member02 =
+                Member.Create<Real>("Member02");
+
+            protected override IDataType New()
+            {
+                return new CircularReferencePredefined();
+            }
+        }
+
+        [Test]
+        public void ToString_WhenCalled_ShouldBeExpected()
+        {
+            var type = new TestPredefined();
+
+            var str = type.ToString();
+
+            str.Should().Be("TestPredefined");
         }
 
         [Test]

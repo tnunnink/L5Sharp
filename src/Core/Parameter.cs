@@ -6,18 +6,16 @@ using L5Sharp.Extensions;
 
 namespace L5Sharp.Core
 {
-    public class Parameter<TDataType> : LogixComponent, IParameter<TDataType> where TDataType : IDataType
+    public class Parameter<TDataType> : IParameter<TDataType> where TDataType : IDataType
     {
-        private bool _visible;
-        private bool _required;
-
         internal Parameter(string name, TDataType dataType, TagUsage usage = null, bool required = false,
             bool visible = false, Dimensions dimensions = null, Radix radix = null,
             ExternalAccess externalAccess = null,
             string description = null, bool constant = false)
-            : base(name, description)
         {
-            DataType = dataType ?? throw new ArgumentNullException(nameof(dataType));
+            Name = name;
+            Description = description;
+            DataType = dataType;
 
             usage ??= DataType is IAtomic ? TagUsage.Input : TagUsage.InOut;
             SetUsage(usage);
@@ -25,50 +23,66 @@ namespace L5Sharp.Core
             dimensions ??= Dimensions.Empty;
             SetDimensions(dimensions);
 
-            if (DataType is IAtomic atomic)
-                if (radix != null)
-                    atomic.SetRadix(radix);
+            if (DataType is IAtomic atomic && radix != null)
+                atomic.SetRadix(radix);
 
             externalAccess = Usage == TagUsage.InOut ? ExternalAccess.Null
                 : externalAccess != null ? externalAccess
                 : Usage == TagUsage.Input ? ExternalAccess.ReadWrite : ExternalAccess.ReadOnly;
             SetExternalAccess(externalAccess);
 
-            _required = required;
-            _visible = visible;
+            Required = Usage == TagUsage.InOut || required;
+            Visible = Required || visible;
             Constant = constant;
         }
 
+
+        /// <inheritdoc />
         public string Name { get; }
+
+        /// <inheritdoc />
+        public string Description { get; }
+
+        /// <inheritdoc />
         public TDataType DataType { get; }
+
+        /// <inheritdoc />
         public Dimensions Dimension { get; private set; }
+
+        /// <inheritdoc />
         public Radix Radix => DataType.Radix;
+
+        /// <inheritdoc />
         public ExternalAccess ExternalAccess { get; private set; }
+
+        /// <inheritdoc />
         public TagType TagType => Alias == null ? TagType.Base : TagType.Alias;
+
+        /// <inheritdoc />
         public TagUsage Usage { get; private set; }
 
-        public bool Required
-        {
-            get => Usage == TagUsage.InOut || _required;
-            set => _required = value;
-        }
+        /// <inheritdoc />
+        public bool Required { get; }
 
-        public bool Visible
-        {
-            get => Required || _visible;
-            set => _visible = value;
-        }
+        /// <inheritdoc />
+        public bool Visible { get; }
 
+        /// <inheritdoc />
         public ITag<TDataType> Alias => null; //todo still need to decide how to handle aliases
+
+        /// <inheritdoc />
         public IAtomic Default => DataType is IAtomic atomic ? atomic : null;
-        public bool Constant { get; set; }
 
-        public void SetName(string name)
+        /// <inheritdoc />
+        public bool Constant { get; }
+
+        /// <inheritdoc />
+        public IMember<TDataType> Copy()
         {
-            throw new NotImplementedException();
+            return null;
         }
-
-        public void SetUsage(TagUsage usage)
+        
+        private void SetUsage(TagUsage usage)
         {
             if (usage == null) throw new ArgumentNullException(nameof(usage));
 
@@ -82,8 +96,8 @@ namespace L5Sharp.Core
 
             Usage = usage;
         }
-
-        public void SetDimensions(Dimensions dimensions)
+        
+        private void SetDimensions(Dimensions dimensions)
         {
             if (dimensions == null) throw new ArgumentNullException(nameof(dimensions));
 
@@ -92,19 +106,8 @@ namespace L5Sharp.Core
 
             Dimension = dimensions;
         }
-
-        public void SetRadix(Radix radix)
-        {
-            if (radix == null)
-                throw new ArgumentNullException(nameof(radix));
-
-            if (!(DataType is IAtomic atomic))
-                throw new InvalidOperationException("Radix can only be set on atomic members");
-
-            atomic.SetRadix(radix);
-        }
-
-        public void SetExternalAccess(ExternalAccess access)
+        
+        private void SetExternalAccess(ExternalAccess access)
         {
             if (Usage == TagUsage.InOut && access != ExternalAccess.Null)
                 throw new InvalidOperationException("External Access is only configurable for Input/Output parameters");
@@ -112,59 +115,6 @@ namespace L5Sharp.Core
             if (access == null) throw new ArgumentNullException(nameof(access));
 
             ExternalAccess = access;
-        }
-
-        public void SetDefault(IAtomic value)
-        {
-            if (value == null) throw new ArgumentNullException(nameof(value));
-
-            if (!(DataType is IAtomic atomic)) return;
-
-            atomic.SetValue(value);
-        }
-
-        /// <inheritdoc />
-        public IMember<TDataType> Copy()
-        {
-            return null;
-        }
-    }
-
-    public static class Parameter
-    {
-        public static IParameter<IDataType> Create(string name, IDataType dataType)
-        {
-            return new Parameter<IDataType>(name, dataType);
-        }
-
-        public static IParameter<TDataType> Create<TDataType>(string name)
-            where TDataType : IDataType, new()
-        {
-            return new Parameter<TDataType>(name, new TDataType());
-        }
-
-        public static IParameter<TDataType> Create<TDataType>(string name, TDataType dataType)
-            where TDataType : IDataType, new()
-        {
-            return new Parameter<TDataType>(name, dataType);
-        }
-
-        public static IParameterBuilder<IDataType> Build(string name, IDataType dataType)
-        {
-            return new ParameterBuilder<IDataType>(name, dataType);
-        }
-
-        public static IParameterBuilder<TDataType> Build<TDataType>(string name)
-            where TDataType : IDataType, new()
-        {
-            var dataType = new TDataType();
-            return new ParameterBuilder<TDataType>(name, dataType);
-        }
-
-        public static IParameterBuilder<TDataType> Build<TDataType>(string name, TDataType dataType)
-            where TDataType : IDataType, new()
-        {
-            return new ParameterBuilder<TDataType>(name, dataType);
         }
     }
 }

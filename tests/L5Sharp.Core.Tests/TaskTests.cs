@@ -49,103 +49,6 @@ namespace L5Sharp.Core.Tests
         }
 
         [Test]
-        public void SetName_ValidName_ShouldBeExpectedValue()
-        {
-            var task = Task.Create("TestTask");
-
-            task.SetName("NewTask");
-
-            task.Name.Should().Be("NewTask");
-        }
-
-        [Test]
-        public void SetName_Null_ShouldThrowArgumentNullException()
-        {
-            var task = Task.Create("TestTask");
-
-            FluentActions.Invoking(() => task.SetName(null)).Should().Throw<ArgumentNullException>();
-        }
-
-        /*[Test]
-        public void SetType_ValidType_ShouldBeExpectedType()
-        {
-            var task = Task.Create("Test");
-
-            task.SetType(TaskType.Continuous);
-
-            task.Type.Should().Be(TaskType.Continuous);
-        }
-
-        [Test]
-        public void SetType_Null_ShouldThrowArgumentNullException()
-        {
-            var task = Task.Create("Test");
-
-            FluentActions.Invoking(() => task.SetType(null)).Should().Throw<ArgumentNullException>();
-        }*/
-
-        [Test]
-        public void SetRate_ValidRange_ShouldBeExpectedValue()
-        {
-            var fixture = new Fixture();
-            var rate = fixture.Create<float>();
-            var task = Task.Create("TestTask");
-
-            task.SetRate(new ScanRate(rate));
-
-            task.Rate.Equals(rate).Should().BeTrue();
-        }
-
-        [Test]
-        public void SetRate_InvalidRange_ShouldThrowArgumentOutOfRangeException()
-        {
-            var task = Task.Create("TestTask");
-
-            FluentActions.Invoking(() => task.SetRate(new ScanRate(5000000))).Should()
-                .Throw<ArgumentOutOfRangeException>();
-        }
-
-        /*[Test]
-        public void SetPriority_ValidRange_ShouldBeExpectedValue()
-        {
-            var task = Task.Create("TestTask");
-
-            task.SetPriority(5);
-
-            task.Priority.Should().Be(5);
-        }
-
-        [Test]
-        public void SetPriority_InvalidRange_ShouldThrowArgumentOutOfRangeException()
-        {
-            var task = Task.Create("TestTask");
-
-            FluentActions.Invoking(() => task.SetPriority(20)).Should().Throw<ArgumentOutOfRangeException>();
-        }
-
-        [Test]
-        public void SetWatchdog_ValidRange_ShouldBeExpectedValue()
-        {
-            var fixture = new Fixture();
-            var watchdog = fixture.Create<int>();
-            var task = Task.Create("TestTask");
-
-            task.SetWatchdog(watchdog);
-
-            task.Watchdog.Should().Be(watchdog);
-        }
-
-        [Test]
-        public void SetWatchdog_InvalidRange_ShouldThrowArgumentOutOfRangeException()
-        {
-            var task = Task.Create("TestTask");
-
-            FluentActions.Invoking(() => task.SetWatchdog(5000000)).Should().Throw<ArgumentOutOfRangeException>();
-        }
-        */
-
-
-        [Test]
         public void AddProgram_NonExistingProgram_ShouldAddProgram()
         {
             var task = Task.Create("TestTask");
@@ -204,46 +107,6 @@ namespace L5Sharp.Core.Tests
         }
 
         [Test]
-        public void Inhibit_WhenCalled_ShouldSetInhibitToTrue()
-        {
-            var task = Task.Create("TestTask");
-
-            task.InhibitTask = true;
-
-            task.InhibitTask.Should().BeTrue();
-        }
-
-        [Test]
-        public void UnInhibit_WhenCalled_ShouldSetInhibitToFalse()
-        {
-            var task = Task.Create("TestTask");
-
-            task.InhibitTask = false;
-
-            task.InhibitTask.Should().BeFalse();
-        }
-
-        [Test]
-        public void DisableUpdateOutputs_WhenCalled_ShouldBeTrue()
-        {
-            var task = Task.Create("TestTask");
-
-            task.DisableUpdateOutputs = true;
-
-            task.DisableUpdateOutputs.Should().BeTrue();
-        }
-
-        [Test]
-        public void DisableUpdateOutputs_WhenCalled_ShouldBeFalse()
-        {
-            var task = Task.Create("TestTask");
-
-            task.DisableUpdateOutputs = false;
-
-            task.DisableUpdateOutputs.Should().BeFalse();
-        }
-
-        [Test]
         public void TypedEquals_AreEqual_ShouldBeTrue()
         {
             var first = (Task)Task.Create("Test");
@@ -253,17 +116,6 @@ namespace L5Sharp.Core.Tests
 
             result.Should().BeTrue();
         }
-
-        /*[Test]
-        public void TypedEquals_AreNotEqual_ShouldBeFalse()
-        {
-            var first = (Task)Task.Create("Test", TaskType.Periodic, 3, 500);
-            var second = (Task)Task.Create("Test", TaskType.Periodic, 4, 500);
-
-            var result = first.Equals(second);
-
-            result.Should().BeFalse();
-        }*/
 
         [Test]
         public void TypedEquals_AreSame_ShouldBeTrue()

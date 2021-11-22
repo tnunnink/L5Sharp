@@ -16,6 +16,14 @@ namespace L5Sharp.Core.Tests
     public class DataTypeTests
     {
         [Test]
+        public void Create_ValidArguments_ShouldNotBeNull()
+        {
+            var type = DataType.Create("Mytype");
+
+            type.Should().NotBeNull();
+        }
+        
+        [Test]
         public void New_NullName_ShouldThrowArgumentNullException()
         {
             FluentActions.Invoking(() => new DataType(null)).Should()

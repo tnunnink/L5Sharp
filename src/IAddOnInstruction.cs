@@ -23,7 +23,7 @@ namespace L5Sharp
         string AdditionalHelpText { get; }
         bool IsEncrypted { get; }
         IRoutine Logic { get; }
-        new IParameters Parameters { get; }
+        new IMemberCollection<IParameter<IDataType>> Parameters { get; }
         ITags LocalTags { get; }
         IEnumerable<IRoutine> Routines { get; }
         void SetName(ComponentName name);

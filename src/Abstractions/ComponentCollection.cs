@@ -48,6 +48,15 @@ namespace L5Sharp.Abstractions
         }
 
         /// <inheritdoc />
+        public bool Contains(Func<TComponent, bool> predicate)
+        {
+            if (predicate == null)
+                throw new ArgumentNullException(nameof(predicate));
+            
+            return _components.Any(predicate);
+        }
+
+        /// <inheritdoc />
         public TComponent Get(string name)
         {
             return !string.IsNullOrEmpty(name) ? _components.SingleOrDefault(c => c.Name == name) : default;

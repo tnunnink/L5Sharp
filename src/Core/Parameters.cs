@@ -1,20 +1,47 @@
-﻿using System;
-using System.Collections.Generic;
-using L5Sharp.Abstractions;
-using L5Sharp.Builders;
+﻿using System.Collections.Generic;
 
 namespace L5Sharp.Core
 {
-    public class Parameters : ComponentCollection<IParameter<IDataType>>, IParameters
+    internal class Parameters : DataTypeMembers, IMemberCollection<IParameter<IDataType>>
     {
-        public Parameters(IAddOnDefined addOnDefined, IEnumerable<IParameter<IDataType>> parameters = null)
+        public Parameters(IDataType parent, IEnumerable<IMember<IDataType>> members = null)
+            : base(parent, members)
         {
-            
         }
         
-        public void Add(string name, IDataType dataType, Action<IParameterBuilder<IDataType>> builder = null)
+        public new IEnumerator<IParameter<IDataType>> GetEnumerator()
         {
-            throw new NotImplementedException();
+            return (IEnumerator<IParameter<IDataType>>)base.GetEnumerator();
+        }
+
+        public new IParameter<IDataType> Get(ComponentName name)
+        {
+            return (IParameter<IDataType>) base.Get(name);
+        }
+
+        public void Add(IParameter<IDataType> member)
+        {
+            base.Add(member);
+        }
+
+        public void AddRange(IEnumerable<IParameter<IDataType>> members)
+        {
+            base.AddRange(members);
+        }
+
+        public void Update(IParameter<IDataType> member)
+        {
+            base.Update(member);
+        }
+
+        public void UpdateRange(IEnumerable<IParameter<IDataType>> members)
+        {
+            base.UpdateRange(members);
+        }
+
+        public void Insert(int index, IParameter<IDataType> member)
+        {
+            base.Insert(index, member);
         }
     }
 }
