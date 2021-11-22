@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using FluentAssertions;
 using L5Sharp.Enums;
 using L5Sharp.Exceptions;
 using L5Sharp.Types;
 using NUnit.Framework;
+using NUnit.Framework.Internal;
 
 namespace L5Sharp.Core.Tests
 {
@@ -150,7 +152,7 @@ namespace L5Sharp.Core.Tests
             FluentActions.Invoking(() => members.Add(Member.Create<Bool>("Member01"))).Should()
                 .Throw<ComponentNameCollisionException>();
         }
-        
+
         [Test]
         public void AddRange_ValidMembers_ShouldHaveExpectedCount()
         {
@@ -245,7 +247,7 @@ namespace L5Sharp.Core.Tests
 
             members.Should().HaveCount(3);
         }
-        
+
         [Test]
         public void Update_ExistingMember_ShouldChangeTheCurrentMember()
         {
@@ -260,7 +262,7 @@ namespace L5Sharp.Core.Tests
             result.Radix.Should().Be(Radix.Binary);
             result.ExternalAccess.Should().Be(ExternalAccess.ReadOnly);
         }
-        
+
         [Test]
         public void UpdateRange_ValidMembers_ShouldHaveExpectedCount()
         {
@@ -295,6 +297,35 @@ namespace L5Sharp.Core.Tests
             members.Remove("Member01");
 
             members.Should().NotContain(m => m.Name == "Member01");
+        }
+
+        [Test]
+        public void Rename_ExistingMemberToDifferentName_ShouldHaveNewNotOld()
+        {
+            var members = CreateSeededMembers();
+
+            members.Rename("Member01", "Member05");
+
+            members.Should().Contain(m => m.Name == "Member05");
+            members.Should().NotContain(m => m.Name == "Member01");
+        }
+
+        [Test]
+        public void Rename_ExistingMemberToExistingName_ShouldThrowException()
+        {
+            var members = CreateSeededMembers();
+
+            FluentActions.Invoking(() => members.Rename("Member01", "Member02")).Should()
+                .Throw<ComponentNameCollisionException>();
+        }
+
+        [Test]
+        public void Rename_NonExisting_ShouldThrowException()
+        {
+            var members = CreateSeededMembers();
+
+            FluentActions.Invoking(() => members.Rename("Member00", "Member02")).Should()
+                .Throw<InvalidOperationException>();
         }
 
         [Test]

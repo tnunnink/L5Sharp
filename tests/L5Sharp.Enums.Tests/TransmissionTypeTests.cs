@@ -1,32 +1,31 @@
 ﻿using FluentAssertions;
-using L5Sharp.Core;
 using NUnit.Framework;
 
 namespace L5Sharp.Enums.Tests
 {
     [TestFixture]
-    public class TaskTypeTests
+    public class TransmissionTypeTests
     {
         [Test]
-        public void New_Continuous_ShouldNotBeNull()
+        public void New_Null_ShouldNotBeNull()
         {
-            var type = TaskType.Continuous;
+            var type = TransmissionType.Null;
 
             type.Should().NotBeNull();
         }
         
         [Test]
-        public void New_Periodic_ShouldNotBeNull()
+        public void New_Multicast_ShouldNotBeNull()
         {
-            var type = TaskType.Periodic;
+            var type = TransmissionType.Multicast;
 
             type.Should().NotBeNull();
         }
         
         [Test]
-        public void New_Event_ShouldNotBeNull()
+        public void New_Unicast_ShouldNotBeNull()
         {
-            var type = TaskType.Event;
+            var type = TransmissionType.Unicast;
 
             type.Should().NotBeNull();
         }

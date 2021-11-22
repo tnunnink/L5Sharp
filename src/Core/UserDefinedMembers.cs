@@ -93,9 +93,12 @@ namespace L5Sharp.Core
             if (current == null) throw new ArgumentNullException(nameof(current));
             if (name == null) throw new ArgumentNullException(nameof(name));
 
+            if (Contains(name))
+                throw new ComponentNameCollisionException(name, typeof(IMember<IDataType>));
+
             var index = _members.FindIndex(m => m.Name == current);
-            
-            if (index < 0) throw new InvalidOperationException("Could not find member");
+
+            if (index < 0) return;
 
             var member = _members[index];
 

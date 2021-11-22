@@ -81,7 +81,7 @@ namespace L5Sharp
         void SetDescription(string description);
         
         /// <summary>
-        /// 
+        /// Gets the parent member of the current tag member.
         /// </summary>
         ITagMember<IDataType> Parent { get; }
 
@@ -91,6 +91,10 @@ namespace L5Sharp
         /// <returns></returns>
         IAtomic GetData();
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
         void SetData(IAtomic value);
         
         /// <summary>
