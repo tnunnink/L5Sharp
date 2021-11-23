@@ -52,7 +52,7 @@ namespace L5Sharp.Serialization
             var inhibitTask = element.GetAttribute<ITask>(t => t.InhibitTask);
             var disableUpdateOutputs = element.GetAttribute<ITask>(t => t.DisableUpdateOutputs);
 
-            var task = new Task(name);
+            var task = Task.Create(name);
 
             var programs = element.Descendants("ScheduledProgram").Select(e => e.GetName());
             

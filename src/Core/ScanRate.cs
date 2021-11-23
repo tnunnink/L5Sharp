@@ -5,9 +5,12 @@ namespace L5Sharp.Core
 {
     /// <summary>
     /// Represents a scan rate in milliseconds.
-    /// <see cref="ScanRate"/> is a property of a <see cref="ITask"/>
     /// </summary>
-    public class ScanRate : IEquatable<ScanRate>
+    /// <remarks>
+    /// <c>ScanRate</c> is a property of a <see cref="ITask"/>. It represents the rate at which the task with evaluate
+    /// logic contained within the task.
+    /// </remarks>
+    public readonly struct ScanRate : IEquatable<ScanRate>
     {
         private readonly float _rate;
 
@@ -25,24 +28,16 @@ namespace L5Sharp.Core
             _rate = rate;
         }
 
-        /// <summary>
-        /// Determines if the current <see cref="ScanRate"/> instance equals another.
-        /// </summary>
-        /// <param name="other">The other instance to compare</param>
-        /// <returns><c>True</c> if both instances refer to the same object or if the scan rate values are
-        /// equivalent. </returns>
+        /// <inheritdoc />
         public bool Equals(ScanRate other)
         {
-            if (ReferenceEquals(null, other)) return false;
-            return ReferenceEquals(this, other) || _rate.Equals(other._rate);
+            return _rate.Equals(other._rate);
         }
 
         /// <inheritdoc />
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((ScanRate)obj);
+            return obj is ScanRate other && Equals(other);
         }
 
         /// <inheritdoc />
@@ -82,7 +77,7 @@ namespace L5Sharp.Core
         {
             return rate._rate;
         }
-        
+
         /// <summary>
         /// Implicitly converts from a <see cref="float"/> to a <see cref="ScanRate"/>.
         /// </summary>
@@ -92,7 +87,7 @@ namespace L5Sharp.Core
         {
             return new ScanRate(rate);
         }
-
+        
         /// <inheritdoc />
         public override string ToString()
         {

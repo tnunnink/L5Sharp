@@ -3,10 +3,12 @@
 namespace L5Sharp.Core
 {
     /// <summary>
-    /// Represents a task priority which is a number between 1 and 15.
-    /// <see cref="TaskPriority"/> is a property of <see cref="ITask"/> 
+    /// Represents a priority number for the <c>Task</c>.
     /// </summary>
-    public class TaskPriority : IEquatable<TaskPriority>
+    /// <remarks>
+    /// <c>TaskPriority</c> is a property of a <see cref="ITask"/>. It represents the ...
+    /// </remarks>
+    public readonly struct TaskPriority : IEquatable<TaskPriority>
     {
         private readonly byte _priority;
         
@@ -24,25 +26,16 @@ namespace L5Sharp.Core
             _priority = priority;
         }
 
-        /// <summary>
-        /// Determines if the current <see cref="TaskPriority"/> instance equals another.
-        /// </summary>
-        /// <param name="other">The other instance to compare</param>
-        /// <returns><c>True</c> if both instances refer to the same object or if the priority values are
-        /// equivalent. </returns>
+        /// <inheritdoc />
         public bool Equals(TaskPriority other)
         {
-            if (ReferenceEquals(null, other)) return false;
-            if (ReferenceEquals(this, other)) return true;
             return _priority == other._priority;
         }
 
         /// <inheritdoc />
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((TaskPriority)obj);
+            return obj is TaskPriority other && Equals(other);
         }
 
         /// <inheritdoc />
@@ -74,14 +67,25 @@ namespace L5Sharp.Core
         }
 
         /// <summary>
-        /// Implicitly converts from a <see cref="TaskPriority"/> to a float
+        /// Implicitly converts from a <see cref="TaskPriority"/> to a <see cref="byte"/>
         /// </summary>
-        /// <param name="priority">The instance of the <see cref="TaskPriority"/></param>
+        /// <param name="priority">The value of the <c>TaskPriority</c></param>
         /// <returns></returns>
         public static implicit operator byte(TaskPriority priority)
         {
             return priority._priority;
         }
+
+        /// <summary>
+        /// Implicitly converts from a <see cref="byte"/> to a <see cref="TaskPriority"/>
+        /// </summary>
+        /// <param name="priority">The value of the priority.</param>
+        /// <returns></returns>
+        public static implicit operator TaskPriority(byte priority)
+        {
+            return new TaskPriority(priority);
+        }
+
 
         /// <inheritdoc />
         public override string ToString()

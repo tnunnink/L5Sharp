@@ -7,44 +7,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Core/ModuleDefined.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LogixParameterFactory.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Serialization/ModuleDefinedSerializer.cs" afterDir="false" />
+    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="development">
+      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/TaskPriorityTests.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/WatchdogTests.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Abstractions/ComponentCollection.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Abstractions/ComponentCollection.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Builders/IParameterBuilder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Builders/IParameterBuilder.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/AddOnInstruction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/AddOnInstruction.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/DataType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/DataType.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/Dimensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/Dimensions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/Module.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/Module.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/Parameter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/Parameter.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/Parameters.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/Parameters.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/Revision.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/Revision.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/ScanRate.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/ScanRate.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Core/Task.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/Task.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/Tasks.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/Tasks.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/UserDefinedMembers.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/DataTypeMembers.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/IAddOnInstruction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/IAddOnInstruction.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/IComponentCollection.cs" beforeDir="false" afterPath="$PROJECT_DIR$/IComponentCollection.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/IController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/IController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/IMember.cs" beforeDir="false" afterPath="$PROJECT_DIR$/IMember.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/IModule.cs" beforeDir="false" afterPath="$PROJECT_DIR$/IModule.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/IModuleDefined.cs" beforeDir="false" afterPath="$PROJECT_DIR$/IModuleDefined.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/IParameter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/IParameter.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/IParameters.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ITask.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ITask.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ITasks.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ITasks.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/IUserDefined.cs" beforeDir="false" afterPath="$PROJECT_DIR$/IUserDefined.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/IUserDefinedMembers.cs" beforeDir="false" afterPath="$PROJECT_DIR$/IMemberCollection.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LogixTypeRegistry.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LogixTypeRegistry.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Types/Bool.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Types/Bool.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Abstractions.Tests/ComponentCollectionTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Abstractions.Tests/ComponentCollectionTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/DataTypeTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/DataTypeTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/DimensionsTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/DimensionsTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/ParameterTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/ParameterTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/PredefinedTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/PredefinedTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/TaskPriority.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/TaskPriority.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/Watchdog.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/Watchdog.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Serialization/TaskSerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Serialization/TaskSerializer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/ScanRateTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/ScanRateTests.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/TaskTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/TaskTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/UserDefinedMembersTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/DataTypeMembersTests.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -181,14 +154,7 @@
       <workItem from="1637414691688" duration="45385000" />
       <workItem from="1637506583106" duration="213000" />
       <workItem from="1637506825526" duration="29331000" />
-      <workItem from="1637618026597" duration="4072000" />
-    </task>
-    <task id="LOCAL-00022" summary="development">
-      <created>1634059871394</created>
-      <option name="number" value="00022" />
-      <option name="presentableId" value="LOCAL-00022" />
-      <option name="project" value="LOCAL" />
-      <updated>1634059871394</updated>
+      <workItem from="1637618026597" duration="7129000" />
     </task>
     <task id="LOCAL-00023" summary="development">
       <created>1634085087195</created>
@@ -526,48 +492,55 @@
       <option name="project" value="LOCAL" />
       <updated>1637545514243</updated>
     </task>
-    <option name="localTasksCounter" value="71" />
+    <task id="LOCAL-00071" summary="development">
+      <created>1637622356313</created>
+      <option name="number" value="00071" />
+      <option name="presentableId" value="LOCAL-00071" />
+      <option name="project" value="LOCAL" />
+      <updated>1637622356314</updated>
+    </task>
+    <option name="localTasksCounter" value="72" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="UnitTestsCoverage.Settings">
-    <option name="coveragePercentColumnWidth" value="59" />
+    <option name="coveragePercentColumnWidth" value="52" />
     <option name="sortOrder" value="DESCENDING" />
     <option name="sortedColumn" value="1" />
-    <option name="symbolColumnWidth" value="360" />
+    <option name="symbolColumnWidth" value="294" />
     <coverage-tree-state>
       <expand>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 67% 2781/8345" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 68% 2720/8489" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 67% 2781/8345" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 48% 2015/3856" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 68% 2720/8489" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 49% 1957/3839" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 67% 2781/8345" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 48% 2015/3856" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="(1.0.0.0, .NETStandard,Version=v2.1) 48% 2015/3856" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 68% 2720/8489" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 49% 1957/3839" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="(1.0.0.0, .NETStandard,Version=v2.1) 49% 1957/3839" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 67% 2781/8345" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 48% 2015/3856" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="(1.0.0.0, .NETStandard,Version=v2.1) 48% 2015/3856" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 48% 2015/3856" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 68% 2720/8489" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 49% 1957/3839" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="(1.0.0.0, .NETStandard,Version=v2.1) 49% 1957/3839" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 49% 1957/3839" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 67% 2781/8345" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 48% 2015/3856" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="(1.0.0.0, .NETStandard,Version=v2.1) 48% 2015/3856" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 48% 2015/3856" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="Core 49% 709/1402" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 68% 2720/8489" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 49% 1957/3839" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="(1.0.0.0, .NETStandard,Version=v2.1) 49% 1957/3839" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 49% 1957/3839" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Core 51% 675/1385" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
       </expand>
       <select />
@@ -611,11 +584,11 @@
     <MESSAGE value="reworking tag member to accomodate array and domain type updates" />
     <MESSAGE value="member updates" />
     <MESSAGE value="Renamed factories to Materializer and moved to serialization. Moved Member Factory methods to separate file in main namespace" />
-    <MESSAGE value="development" />
     <MESSAGE value="Serialization rework and reorg and updates to Member making name a string" />
     <MESSAGE value="Adding samples and documentation" />
     <MESSAGE value="Enumeration tests" />
-    <option name="LAST_COMMIT_MESSAGE" value="Enumeration tests" />
+    <MESSAGE value="development" />
+    <option name="LAST_COMMIT_MESSAGE" value="development" />
   </component>
   <component name="XDebuggerManager">
     <pin-to-top-manager>

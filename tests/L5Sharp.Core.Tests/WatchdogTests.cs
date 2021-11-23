@@ -5,57 +5,73 @@ using NUnit.Framework;
 namespace L5Sharp.Core.Tests
 {
     [TestFixture]
-    public class ScanRateTests
+    public class WatchdogTests
     {
         [Test]
-        public void New_ValidRange_ShouldNotBeNull()
+        public void New_Default_ShouldNotBeNull()
         {
-            var rate = new ScanRate(1000);
+            var priority = new Watchdog();
 
-            rate.Should().NotBeNull();
+            priority.Should().NotBeNull();
+        }
+        
+        [Test]
+        public void Default_WhenCalled_ShouldNotBeNull()
+        {
+            var priority = Watchdog.Default();
+
+            priority.Should().NotBeNull();
+        }
+        
+        [Test]
+        public void New_ValidArgument_ShouldNotBeNull()
+        {
+            var priority = new Watchdog(1000);
+
+            priority.Should().NotBeNull();
         }
 
         [Test]
-        public void New_Zero_ShouldThrowArgumentOutOfRangeException()
+        public void New_ValidArgument_ShouldHaveValue()
         {
-            FluentActions.Invoking(() => new ScanRate(0)).Should().Throw<ArgumentOutOfRangeException>();
+            var priority = new Watchdog(5000);
+
+            priority.Equals(5000).Should().BeTrue();
         }
 
         [Test]
-        public void New_Over2M_ShouldThrowArgumentOutOfRangeException()
+        public void New_UnderRange_ShouldThrowException()
         {
-            FluentActions.Invoking(() => new ScanRate(2000000.1f)).Should().Throw<ArgumentOutOfRangeException>();
+            FluentActions.Invoking(() => new Watchdog(0)).Should().Throw<ArgumentOutOfRangeException>();
         }
 
         [Test]
-        public void New_ValidRange_ShouldBeExpectedValue()
+        public void New_OverRange_ShouldThrowException()
         {
-            var rate = new ScanRate(5000);
-
-            rate.Should().Be(new ScanRate(5000));
+            FluentActions.Invoking(() => new Watchdog(10000000)).Should().Throw<ArgumentOutOfRangeException>();
         }
 
         [Test]
-        public void ImplicitOperator_Float_ShouldBeExpected()
+        public void ImplicitOperator_Byte_ShouldBeExpected()
         {
-            ScanRate rate = 10f;
+            Watchdog priority = 1000f;
 
-            rate.Equals(10f).Should().BeTrue();
+            priority.Equals(1000f).Should().BeTrue();
         }
 
         [Test]
         public void ImplicitOperator_ScanRate_ShouldBeExpected()
         {
-            float rate = new ScanRate(5000);
+            float priority = new Watchdog(1000f);
 
-            rate.Equals(5000).Should().BeTrue();
+            priority.Equals(1000f).Should().BeTrue();
         }
 
         [Test]
         public void TypedEquals_AreEqual_ShouldBeTrue()
         {
-            var first = new ScanRate(1000);
-            var second = new ScanRate(1000);
+            var first = new Watchdog(1000);
+            var second = new Watchdog(1000);
 
             var result = first.Equals(second);
 
@@ -65,8 +81,8 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void TypedEquals_AreNotEqual_ShouldBeFalse()
         {
-            var first = new ScanRate(1000);
-            var second = new ScanRate(2000);
+            var first = new Watchdog(1000);
+            var second = new Watchdog(1100);
 
             var result = first.Equals(second);
 
@@ -76,7 +92,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void TypedEquals_AreSame_ShouldBeTrue()
         {
-            var first = new ScanRate(1000);
+            var first = new Watchdog(1000);
             var second = first;
 
             var result = first.Equals(second);
@@ -84,22 +100,11 @@ namespace L5Sharp.Core.Tests
             result.Should().BeTrue();
         }
 
-
-        [Test]
-        public void TypedEquals_Null_ShouldBeFalse()
-        {
-            var first = new ScanRate(1000);
-
-            var result = first.Equals(null);
-
-            result.Should().BeFalse();
-        }
-
         [Test]
         public void ObjectEquals_AreEqual_ShouldBeTrue()
         {
-            var first = new ScanRate(1000);
-            var second = new ScanRate(1000);
+            var first = new Watchdog(1000);
+            var second = new Watchdog(1000);
 
             var result = first.Equals((object)second);
 
@@ -109,7 +114,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void ObjectEquals_AreSame_ShouldBeTrue()
         {
-            var first = new ScanRate(1000);
+            var first = new Watchdog(1000);
             var second = first;
 
             var result = first.Equals((object)second);
@@ -117,22 +122,11 @@ namespace L5Sharp.Core.Tests
             result.Should().BeTrue();
         }
 
-
-        [Test]
-        public void ObjectEquals_Null_ShouldBeFalse()
-        {
-            var first = new ScanRate(1000);
-
-            var result = first.Equals((object)null);
-
-            result.Should().BeFalse();
-        }
-
         [Test]
         public void OperatorEquals_AreEqual_ShouldBeTrue()
         {
-            var first = new ScanRate(1000);
-            var second = new ScanRate(1000);
+            var first = new Watchdog(1000);
+            var second = new Watchdog(1000);
 
             var result = first == second;
 
@@ -142,8 +136,8 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void OperatorNotEquals_AreEqual_ShouldBeFalse()
         {
-            var first = new ScanRate(1000);
-            var second = new ScanRate(1000);
+            var first = new Watchdog(1000);
+            var second = new Watchdog(1000);
 
             var result = first != second;
 
@@ -153,7 +147,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void GetHashCode_WhenCalled_ShouldNotBeZero()
         {
-            var first = new ScanRate(1000);
+            var first = new Watchdog(1000);
 
             var hash = first.GetHashCode();
 
@@ -163,7 +157,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void ToString_WhenCalled_ShouldReturnExpectedValue()
         {
-            var rate = new ScanRate(1000);
+            var rate = new Watchdog(1000);
 
             var value = rate.ToString();
 

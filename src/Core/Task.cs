@@ -11,16 +11,16 @@ namespace L5Sharp.Core
     {
         private readonly HashSet<string> _programs = new HashSet<string>();
 
-        internal Task(ComponentName name, TaskType type = null,
-            TaskPriority priority = null, ScanRate rate = null, Watchdog watchdog = null,
-            bool inhibitTask = false, bool disableUpdateOutputs = false, string description = null)
+        internal Task(ComponentName name, TaskType type,
+            TaskPriority priority, ScanRate rate, Watchdog watchdog,
+            bool inhibitTask, bool disableUpdateOutputs, string description)
         {
             Name = name;
             Description = description;
             Type = type ?? TaskType.Periodic;
-            Priority = priority ?? new TaskPriority(10);
-            Rate = rate ?? new ScanRate(10);
-            Watchdog = watchdog ?? new Watchdog(500);
+            Priority = priority;
+            Rate = rate;
+            Watchdog = watchdog;
             InhibitTask = inhibitTask;
             DisableUpdateOutputs = disableUpdateOutputs;
         }
@@ -59,7 +59,8 @@ namespace L5Sharp.Core
         /// <returns>A new instance of <see cref="ITask"/></returns>
         public static ITask Create(string name)
         {
-            return new Task(name);
+            return new Task(name, TaskType.Periodic, new TaskPriority(10), new ScanRate(500), new Watchdog(500), false,
+                false, string.Empty);
         }
 
         /// <summary>

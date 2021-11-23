@@ -4,16 +4,17 @@ using System.Globalization;
 namespace L5Sharp.Core
 {
     /// <summary>
-    /// Represents a watch dog in milliseconds.
-    /// <see cref="Watchdog"/> is a property of a <see cref="ITask"/>
+    /// Represents a watchdog in milliseconds for the <c>Task</c>.
     /// </summary>
-    public class Watchdog : IEquatable<Watchdog>
+    /// <remarks>
+    /// <c>Watchdog</c> is a property of a <see cref="ITask"/>. It represents the ...
+    /// </remarks>
+    public readonly struct Watchdog : IEquatable<Watchdog>
     {
         private readonly float _watchdog;
 
-
         /// <summary>
-        /// Creates a new instance of <see cref="Watchdog"/> with the specified value.
+        /// Creates a new instance of <c>Watchdog</c> with the specified value.
         /// </summary>
         /// <param name="watchdog">The value of the watchdog in milliseconds.
         /// Must be a value between 0.1 and 2M.</param>
@@ -29,23 +30,24 @@ namespace L5Sharp.Core
         }
 
         /// <summary>
-        /// Determines if the current <see cref="Watchdog"/> instance equals another.
+        /// Creates a new instance of a <c>Watchdog</c> with default value of 500ms.
         /// </summary>
-        /// <param name="other">The other instance to compare</param>
-        /// <returns><c>True</c> if both instances refer to the same object or if the watchdog values are
-        /// equivalent. </returns>
+        /// <returns>A new <c>Watchdog</c> value.</returns>
+        public static Watchdog Default()
+        {
+            return new Watchdog(500);
+        }
+
+        /// <inheritdoc />
         public bool Equals(Watchdog other)
         {
-            if (ReferenceEquals(null, other)) return false;
-            return ReferenceEquals(this, other) || _watchdog.Equals(other._watchdog);
+            return _watchdog.Equals(other._watchdog);
         }
 
         /// <inheritdoc />
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((Watchdog)obj);
+            return obj is Watchdog other && Equals(other);
         }
 
         /// <inheritdoc />
@@ -79,11 +81,21 @@ namespace L5Sharp.Core
         /// <summary>
         /// Implicitly converts from a <see cref="Watchdog"/> to a <see cref="float"/>
         /// </summary>
-        /// <param name="watchdog">The instance of the <see cref="Watchdog"/></param>
-        /// <returns>A <see cref="float"/> representing the value of the <see cref="Watchdog"/></returns>
+        /// <param name="watchdog">The <c>Watchdog</c> value to convert</param>
+        /// <returns>A new float value.</returns>
         public static implicit operator float(Watchdog watchdog)
         {
             return watchdog._watchdog;
+        }
+        
+        /// <summary>
+        /// Implicitly converts from a <see cref="float"/> to a <see cref="Watchdog"/>
+        /// </summary>
+        /// <param name="watchdog">The <c>Watchdog</c> value to convert</param>
+        /// <returns>A new <c>Watchdog</c> value.</returns>
+        public static implicit operator Watchdog(float watchdog)
+        {
+            return new Watchdog(watchdog);
         }
 
         /// <inheritdoc />

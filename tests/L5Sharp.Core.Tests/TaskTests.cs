@@ -11,7 +11,7 @@ namespace L5Sharp.Core.Tests
     public class TaskTests
     {
         [Test]
-        public void New_ValidName_ShouldNotBeNull()
+        public void Create_ValidName_ShouldNotBeNull()
         {
             var task = Task.Create("Test");
 
@@ -19,14 +19,14 @@ namespace L5Sharp.Core.Tests
         }
 
         [Test]
-        public void New_InvalidName_ShouldThrowInvalidNameException()
+        public void Create_InvalidName_ShouldThrowInvalidNameException()
         {
             FluentActions.Invoking(() => Task.Create("Test_Task_#!_001")).Should()
                 .Throw<ComponentNameInvalidException>();
         }
 
         [Test]
-        public void New_ValidName_ShouldHaveExpectDefaults()
+        public void Create_ValidName_ShouldHaveExpectDefaults()
         {
             var task = Task.Create("TaskName");
 
@@ -41,11 +41,34 @@ namespace L5Sharp.Core.Tests
         }
 
         [Test]
-        public void Type_GetValue_ShouldBePeriodic()
+        public void Create_GetValue_ShouldBePeriodic()
         {
             var task = Task.Create("Test");
 
             task.Type.Should().Be(TaskType.Periodic);
+        }
+
+        [Test]
+        public void Build_NoOverloads_ShouldNotBeNull()
+        {
+            var task = Task.Build("Test").Create();
+
+            task.Should().NotBeNull();
+        }
+        
+        [Test]
+        public void Build_Overloads_ShouldHaveExpected()
+        {
+            var task = Task.Build("Test")
+                .OfType(TaskType.Periodic)
+                .WithDescription("This is a test")
+                .WithRate(new ScanRate(1000))
+                .Create();
+
+            task.Name.ToString().Should().Be("Test");
+            task.Description.Should().Be("This is a test");
+            task.Type.Should().Be(TaskType.Periodic);
+            task.Rate.Should().Be(new ScanRate(1000));
         }
 
         [Test]
