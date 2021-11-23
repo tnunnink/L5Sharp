@@ -6,11 +6,15 @@ using L5Sharp.Extensions;
 
 namespace L5Sharp.Serialization
 {
-    public class TaskSerializer : IXSerializer<ITask>
+    /// <summary>
+    /// Serlialization for a <see cref="ITask"/> component. 
+    /// </summary>
+    internal class TaskSerializer : IXSerializer<ITask>
     {
         private static readonly string ScheduledProgram = nameof(ScheduledProgram);
         private static readonly string Name = nameof(Name);
-        
+
+        /// <inheritdoc />
         public XElement Serialize(ITask component)
         {
             var element = new XElement(LogixNames.Task);
@@ -29,7 +33,7 @@ namespace L5Sharp.Serialization
             if (programs.Count <= 0) return element;
 
             var scheduled = new XElement(nameof(component.ScheduledPrograms));
-            
+
             foreach (var program in programs)
                 scheduled.Add(new XElement(ScheduledProgram, new XAttribute(Name, program)));
 
@@ -38,6 +42,7 @@ namespace L5Sharp.Serialization
             return element;
         }
 
+        /// <inheritdoc />
         public ITask Deserialize(XElement element)
         {
             if (element == null)
@@ -52,10 +57,10 @@ namespace L5Sharp.Serialization
             var inhibitTask = element.GetAttribute<ITask>(t => t.InhibitTask);
             var disableUpdateOutputs = element.GetAttribute<ITask>(t => t.DisableUpdateOutputs);
 
-            var task = Task.Create(name);
+            var task = new Task(name, type, priority, rate, watchdog, inhibitTask, disableUpdateOutputs, description);
 
             var programs = element.Descendants("ScheduledProgram").Select(e => e.GetName());
-            
+
             foreach (var program in programs)
                 task.ScheduleProgram(program);
 

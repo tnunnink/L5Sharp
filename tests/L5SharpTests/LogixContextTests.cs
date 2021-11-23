@@ -21,7 +21,7 @@ namespace L5SharpTests
         [Test]
         public void New_ValidFile_ShouldNotBeNull()
         {
-            var sut = new LogixContext(_fileName);
+            var sut = LogixContext.Load(_fileName);
 
             sut.Should().NotBeNull();
         }
@@ -29,7 +29,7 @@ namespace L5SharpTests
         [Test]
         public void DataTypes_GetAll_ShouldNotBeEmpty()
         {
-            var context = new LogixContext(_fileName);
+            var context = LogixContext.Load(_fileName);
 
             var types = context.DataTypes.GetAll().ToList();
 
@@ -39,7 +39,7 @@ namespace L5SharpTests
         [Test]
         public void Tags_GetKnown_ShouldNotBeNull()
         {
-            var context = new LogixContext(_fileName);
+            var context = LogixContext.Load(_fileName);
 
             var tag = context.Tags.Get("TestArrayTypeTag");
 

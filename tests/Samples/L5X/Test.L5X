@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<RSLogix5000Content SchemaRevision="1.0" SoftwareRevision="32.02" TargetName="TestController" TargetType="Controller" ContainsContext="false" Owner="tnunnink, EN Engineering" ExportDate="Tue Nov 16 20:36:45 2021" ExportOptions="NoRawData L5KData DecoratedData ForceProtectedEncoding AllProjDocTrans">
-<Controller Use="Target" Name="TestController" ProcessorType="1756-L83E" MajorRev="32" MinorRev="11" ProjectCreationDate="Mon Sep 27 15:23:27 2021" LastModifiedDate="Sat Nov 13 15:05:59 2021" SFCExecutionControl="CurrentActive" SFCRestartPosition="MostRecent" SFCLastScan="DontScan" ProjectSN="16#0000_0000"
+<RSLogix5000Content SchemaRevision="1.0" SoftwareRevision="32.02" TargetName="TestController" TargetType="Controller" ContainsContext="false" Owner="tnunnink, EN Engineering" ExportDate="Tue Nov 23 11:26:55 2021" ExportOptions="NoRawData L5KData DecoratedData ForceProtectedEncoding AllProjDocTrans">
+<Controller Use="Target" Name="TestController" ProcessorType="1756-L83E" MajorRev="32" MinorRev="11" ProjectCreationDate="Mon Sep 27 15:23:27 2021" LastModifiedDate="Tue Nov 23 11:26:41 2021" SFCExecutionControl="CurrentActive" SFCRestartPosition="MostRecent" SFCLastScan="DontScan" ProjectSN="16#0000_0000"
  MatchProjectToController="false" CanUseRPIFromProducer="false" InhibitAutomaticFirmwareUpdate="0" PassThroughConfiguration="EnabledWithAppend" DownloadProjectDocumentationAndExtendedProperties="true" DownloadProjectCustomProperties="true" ReportMinorOverflow="false">
 <Description>
 <![CDATA[This is a test project]]>
@@ -105,6 +105,18 @@ Dint Array]]>
 <Member Name="Invalid01" DataType="NULL" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write">
 <Description>
 <![CDATA[Test]]>
+</Description>
+</Member>
+</Members>
+</DataType>
+<DataType Name="ModuleType" Family="NoFamily" Class="User">
+<Description>
+<![CDATA[This is a test of a type that references Module-Defined types]]>
+</Description>
+<Members>
+<Member Name="AIChannel" DataType="CHANNEL_AI:O:0" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[This is a test]]>
 </Description>
 </Member>
 </Members>
@@ -417,6 +429,9 @@ Dint Array]]>
 </Data>
 </Tag>
 <Tag Name="TestAlarmTag" TagType="Base" DataType="ALARM" Constant="false" ExternalAccess="None">
+<Description>
+<![CDATA[Alarm]]>
+</Description>
 <Data Format="L5K">
 <![CDATA[[1,0.00000000e+000,3.40282347e+038,3.40282347e+038,-3.40282347e+038,-3.40282347e+038,0.00000000e+000
 		,0.00000000e+000,0.00000000e+000,0.00000000e+000,0,0.00000000e+000,0,5.60519386e-045,0.00000000e+000
@@ -464,11 +479,9 @@ Dint Array]]>
 </Data>
 </Tag>
 <Tag Name="TestArrayTypeTag" TagType="Base" DataType="ArrayType" Constant="false" ExternalAccess="Read Only">
-<Comments>
-<Comment Operand=".SINTARRAY">
-<![CDATA[Override]]>
-</Comment>
-</Comments>
+<Description>
+<![CDATA[Base]]>
+</Description>
 <Data Format="L5K">
 <![CDATA[[[2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0
 		,2#0,2#0,2#0,2#0,2#0],[0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0],[0,0]]]]>
@@ -540,9 +553,12 @@ Dint Array]]>
 </Data>
 </Tag>
 <Tag Name="TestComplexTag" TagType="Base" DataType="ComplexType" Constant="false" ExternalAccess="None">
+<Description>
+<![CDATA[Base]]>
+</Description>
 <Comments>
-<Comment Operand=".SIMPLEMEMBER.SINTMEMBER">
-<![CDATA[Okay...]]>
+<Comment Operand=".SIMPLEMEMBER">
+<![CDATA[Simple]]>
 </Comment>
 </Comments>
 <Data Format="L5K">
@@ -621,16 +637,10 @@ Dint Array]]>
 <AlarmConfig/>
 </Data>
 </Tag>
-<Tag Name="TestStringTag" TagType="Base" DataType="MyStringType" Constant="false" ExternalAccess="None">
-<Data Format="L5K">
-<![CDATA[[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
-		]]]>
-</Data>
-<Data Format="String" Length="0">
-<![CDATA['']]>
-</Data>
-</Tag>
-<Tag Name="TestTag01" TagType="Base" DataType="SimpleType" Constant="false" ExternalAccess="Read Only">
+<Tag Name="TestSimpleTag" TagType="Base" DataType="SimpleType" Constant="false" ExternalAccess="Read Only">
+<Description>
+<![CDATA[Base]]>
+</Description>
 <Data Format="L5K">
 <![CDATA[[0,0,14,1,0]]]>
 </Data>
@@ -642,6 +652,23 @@ Dint Array]]>
 <DataValueMember Name="DintMember" DataType="BOOL" Value="1"/>
 <DataValueMember Name="LintMember" DataType="LINT" Radix="Decimal" Value="0"/>
 </Structure>
+</Data>
+</Tag>
+<Tag Name="TestStringTag" TagType="Base" DataType="MyStringType" Constant="false" ExternalAccess="None">
+<Description>
+<![CDATA[String]]>
+</Description>
+<Comments>
+<Comment Operand=".DATA">
+<![CDATA[Data]]>
+</Comment>
+</Comments>
+<Data Format="L5K">
+<![CDATA[[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
+		]]]>
+</Data>
+<Data Format="String" Length="0">
+<![CDATA['']]>
 </Data>
 </Tag>
 <Tag Name="TestTimer" TagType="Base" DataType="TIMER" Constant="false" ExternalAccess="None">
@@ -662,6 +689,17 @@ Dint Array]]>
 </Data>
 </Tag>
 <Tag Name="TimerArray" TagType="Base" DataType="TIMER" Dimensions="5" Constant="false" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[Base Timer]]>
+</Description>
+<Comments>
+<Comment Operand="[1]">
+<![CDATA[Index 1]]>
+</Comment>
+<Comment Operand="[1].PRE">
+<![CDATA[PRE 1]]>
+</Comment>
+</Comments>
 <Data Format="L5K">
 <![CDATA[[[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0]]]]>
 </Data>
@@ -715,6 +753,14 @@ Dint Array]]>
 </Array>
 </Data>
 </Tag>
+<Tag Name="_Test" TagType="Base" DataType="DINT" Radix="Decimal" Constant="false" ExternalAccess="Read/Write">
+<Data Format="L5K">
+<![CDATA[0]]>
+</Data>
+<Data Format="Decorated">
+<DataValue DataType="DINT" Radix="Decimal" Value="0"/>
+</Data>
+</Tag>
 </Tags>
 <Programs>
 <Program Name="EquipmentPhaseProgram" Type="EquipmentPhase" TestEdits="false" Disabled="false" InitialStepIndex="0" InitialState="Idle" CompleteStateIfNotImpl="StateComplete" LossOfCommCmd="None" ExternalRequestAction="None" UseAsFolder="false" AutoValueAssignStepToPhase="true"
@@ -759,12 +805,12 @@ Dint Array]]>
 </Rung>
 <Rung Number="1" Type="N">
 <Text>
-<![CDATA[MOV(1000,TestTag01.IntMember);]]>
+<![CDATA[MOV(1000,TestSimpleTag.IntMember);]]>
 </Text>
 </Rung>
 <Rung Number="2" Type="N">
 <Text>
-<![CDATA[aoi_Test(aoiTestInstance,TestTag01,SimpleInt,RealArray);]]>
+<![CDATA[aoi_Test(aoiTestInstance,TestSimpleTag,SimpleInt,RealArray);]]>
 </Text>
 </Rung>
 </RLLContent>
@@ -778,6 +824,13 @@ Dint Array]]>
 </Routine>
 </Routines>
 </Program>
+<Program Name="Program_01" TestEdits="false" Disabled="false" UseAsFolder="false">
+<Description>
+<![CDATA[This is a test program under task 02]]>
+</Description>
+<Tags/>
+<Routines/>
+</Program>
 </Programs>
 <Tasks>
 <Task Name="Continuous" Type="CONTINUOUS" Priority="10" Watchdog="500" DisableUpdateOutputs="false" InhibitTask="false">
@@ -788,7 +841,7 @@ Dint Array]]>
 <ScheduledProgram Name="MainProgram"/>
 </ScheduledPrograms>
 </Task>
-<Task Name="EventTask" Type="EVENT" Rate="10" Priority="10" Watchdog="500" DisableUpdateOutputs="true" InhibitTask="false">
+<Task Name="Event" Type="EVENT" Rate="10" Priority="10" Watchdog="500" DisableUpdateOutputs="true" InhibitTask="false">
 <Description>
 <![CDATA[TestEvent Task]]>
 </Description>
@@ -797,9 +850,22 @@ Dint Array]]>
 <ScheduledProgram Name="EventProgram01"/>
 </ScheduledPrograms>
 </Task>
-<Task Name="TestTask" Type="PERIODIC" Rate="10" Priority="10" Watchdog="500" DisableUpdateOutputs="false" InhibitTask="false">
+<Task Name="Periodic" Type="PERIODIC" Rate="10" Priority="10" Watchdog="500" DisableUpdateOutputs="false" InhibitTask="false">
 <ScheduledPrograms>
 <ScheduledProgram Name="EquipmentPhaseProgram"/>
+</ScheduledPrograms>
+</Task>
+<Task Name="Task_01" Type="PERIODIC" Rate="1000" Priority="5" Watchdog="5000" DisableUpdateOutputs="true" InhibitTask="true">
+<Description>
+<![CDATA[This is a test task 01]]>
+</Description>
+</Task>
+<Task Name="Task_02" Type="PERIODIC" Rate="10" Priority="10" Watchdog="500" DisableUpdateOutputs="false" InhibitTask="false">
+<Description>
+<![CDATA[This is another test task]]>
+</Description>
+<ScheduledPrograms>
+<ScheduledProgram Name="Program_01"/>
 </ScheduledPrograms>
 </Task>
 </Tasks>

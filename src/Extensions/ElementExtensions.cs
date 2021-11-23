@@ -89,6 +89,18 @@ namespace L5Sharp.Extensions
             => element.GetAttributeInternal(propertyExpression,
                 v => v != null ? ExternalAccess.FromName(v) : null);
 
+        public static TaskPriority GetAttribute<TComponent>(this XElement element,
+            Expression<Func<TComponent, TaskPriority>> propertyExpression)
+            => element.GetAttributeInternal(propertyExpression, v => v != null ? TaskPriority.Parse(v) : default);
+        
+        public static ScanRate GetAttribute<TComponent>(this XElement element,
+            Expression<Func<TComponent, ScanRate>> propertyExpression)
+            => element.GetAttributeInternal(propertyExpression, v => v != null ? ScanRate.Parse(v) : default);
+        
+        public static Watchdog GetAttribute<TComponent>(this XElement element,
+            Expression<Func<TComponent, Watchdog>> propertyExpression)
+            => element.GetAttributeInternal(propertyExpression, v => v != null ? Watchdog.Parse(v) : default);
+
         public static TaskType GetAttribute<TComponent>(this XElement element,
             Expression<Func<TComponent, TaskType>> propertyExpression)
             => element.GetAttributeInternal(propertyExpression, v => v != null ? TaskType.FromName(v) : null);

@@ -86,7 +86,17 @@ namespace L5Sharp.Core
             return new TaskPriority(priority);
         }
 
-
+        /// <summary>
+        /// Parses a string value into a <c>TaskPriority</c>
+        /// </summary>
+        /// <param name="str">The string value to parse</param>
+        /// <returns>A TaskPriority value if the parse was successful, default if not</returns>
+        public static TaskPriority Parse(string str)
+        {
+            byte.TryParse(str, out var result);
+            return new TaskPriority(result);
+        }
+        
         /// <inheritdoc />
         public override string ToString()
         {

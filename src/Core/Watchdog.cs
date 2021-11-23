@@ -97,7 +97,18 @@ namespace L5Sharp.Core
         {
             return new Watchdog(watchdog);
         }
-
+        
+        /// <summary>
+        /// Parses a string value into a <c>Watchdog</c>.
+        /// </summary>
+        /// <param name="str">The string value to parse.</param>
+        /// <returns>A Watchdog value if the parse was successful, default if not.</returns>
+        public static Watchdog Parse(string str)
+        {
+            float.TryParse(str, out var result);
+            return new Watchdog(result);
+        }
+        
         /// <inheritdoc />
         public override string ToString()
         {

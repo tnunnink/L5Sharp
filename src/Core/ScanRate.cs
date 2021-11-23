@@ -88,6 +88,17 @@ namespace L5Sharp.Core
             return new ScanRate(rate);
         }
         
+        /// <summary>
+        /// Parses a string value into a <c>ScanRate</c>.
+        /// </summary>
+        /// <param name="str">The string value to parse.</param>
+        /// <returns>A ScanRate value if the parse was successful, default if not.</returns>
+        public static ScanRate Parse(string str)
+        {
+            float.TryParse(str, out var result);
+            return new ScanRate(result);
+        }
+        
         /// <inheritdoc />
         public override string ToString()
         {

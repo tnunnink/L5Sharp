@@ -134,15 +134,6 @@ namespace L5Sharp.Core.Tests
         }
 
         [Test]
-        public void SetData_Extension_ShouldThrowNotConfigurableException()
-        {
-            var target = Tag.Create("TargetTag", new Timer(3000));
-            var source = Tag.Create("SourceTag", new Timer(5000));
-
-            target.SetData(source);
-        }
-
-        [Test]
         public void SetMember_Radix_ShouldUpdateRadix()
         {
             var tag = Tag.Create<Timer>("Test");
@@ -152,7 +143,7 @@ namespace L5Sharp.Core.Tests
             tag.GetMember(t => t.ACC).Radix.Should().Be(Radix.Binary);
         }
 
-        [Test]
+        /*[Test]
         public void SetMember_Description_ShouldBeExpectedDescription()
         {
             var tag = Tag.Create<Counter>("Test");
@@ -160,7 +151,7 @@ namespace L5Sharp.Core.Tests
             tag.SetMember(c => c.CD, "This member is the counter down bit");
 
             tag.GetMember(c => c.CD).Description.Should().Be("This member is the counter down bit");
-        }
+        }*/
 
         [Test]
         public void DotDownTesting()

@@ -75,8 +75,7 @@ namespace L5Sharp.Builders.Tests
 
 
             var b3 = RungBuilder.New(2)
-                .When<XIC>(x => 
-                    x.Of(Tag.Create<Bool>("Test")))
+                .When<XIC>(x => x.Of(Tag.Create<Bool>("Test")))
                 .Then("Do something")
                 .Compile().Build();
             
