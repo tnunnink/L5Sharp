@@ -163,8 +163,8 @@ namespace L5Sharp.Core
             where TAtomic : IAtomic => _tagMember.SetMember(expression, radix);
 
         /// <inheritdoc />
-        public void SetMember<TAtomic>(Func<TDataType, IMember<TAtomic>> expression, string description)
-            where TAtomic : IAtomic => _tagMember.SetMember(expression, description);
+        public void SetMember<TType>(Func<TDataType, IMember<TType>> expression, string description)
+            where TType : IDataType => _tagMember.SetMember(expression, description);
 
         /// <inheritdoc />
         public ITag<TType> ChangeDataType<TType>(TType dataType) where TType : IDataType

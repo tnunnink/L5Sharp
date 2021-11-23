@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using L5Sharp.Enums;
 using L5Sharp.Exceptions;
 
@@ -63,7 +64,7 @@ namespace L5Sharp.Extensions
         public static DataTypeClass GetTypeClass<TDataType>(this ITagMember<TDataType> tagMember)
             where TDataType : IDataType
         {
-            var type = tagMember.GetType().GetGenericTypeDefinition();
+            var type = tagMember.GetType().GetGenericArguments()[0];
 
             if (typeof(IAtomic).IsAssignableFrom(type))
                 return DataTypeClass.Atomic;

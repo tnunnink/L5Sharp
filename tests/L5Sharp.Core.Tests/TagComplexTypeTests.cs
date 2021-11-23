@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using System.Collections.Generic;
+using FluentAssertions;
 using L5Sharp.Enums;
 using L5Sharp.Extensions;
 using L5Sharp.Types;
@@ -38,7 +39,7 @@ namespace L5Sharp.Core.Tests
 
             members.Should().Contain(s => s.Contains('.'));
         }
-        
+
         [Test]
         public void StringIndex_ValidNameHasMember_ShouldNotBeNull()
         {
@@ -86,7 +87,7 @@ namespace L5Sharp.Core.Tests
             var tag = Tag.Create<Timer>("Test");
 
             var first = tag[t => t.PRE];
-            var second = tag.GetMember(d => d.ACC);
+            var second = tag[t => t.PRE];
 
             first.GetData().Should().BeSameAs(second.GetData());
         }
@@ -131,7 +132,7 @@ namespace L5Sharp.Core.Tests
 
             member.Should().BeNull();
         }
-        
+
         [Test]
         public void SetData_Extension_ShouldThrowNotConfigurableException()
         {
@@ -155,10 +156,48 @@ namespace L5Sharp.Core.Tests
         public void SetMember_Description_ShouldBeExpectedDescription()
         {
             var tag = Tag.Create<Counter>("Test");
-            
+
             tag.SetMember(c => c.CD, "This member is the counter down bit");
 
             tag.GetMember(c => c.CD).Description.Should().Be("This member is the counter down bit");
         }
+
+        [Test]
+        public void DotDownTesting()
+        {
+            var tag = Tag.Create<MyNestedType>("Test");
+
+            var simple = tag.GetMember(t => t.SimpleBool);
+            simple.Should().NotBeNull();
+
+            var stringDataElement = tag
+                .GetMember(t => t.String)
+                .GetMember(t => t.DATA[4]);
+            
+            stringDataElement.Should().NotBeNull();
+
+            var timerMember = tag.GetMember(t => t.Timer).GetMember(t => t.PRE);
+
+            timerMember.Should().NotBeNull();
+            
+            var indexing = tag["Timer"]["PRE"];
+            
+            indexing.Should().NotBeNull();
+        }
+    }
+
+    public class MyNestedType : DataType
+    {
+        public MyNestedType() :
+            base(nameof(MyNestedType), "This is a test data type")
+        {
+            Members.Add(SimpleBool);
+            Members.Add(String);
+            Members.Add(Timer);
+        }
+
+        public IMember<Bool> SimpleBool = Member.Create<Bool>(nameof(SimpleBool));
+        public IMember<String> String = Member.Create<String>(nameof(String));
+        public IMember<Timer> Timer = Member.Create<Timer>(nameof(Timer));
     }
 }

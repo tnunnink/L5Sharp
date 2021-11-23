@@ -79,8 +79,7 @@ namespace L5Sharp.Core.Tests
         }
 
         [Test]
-        public void
-            SetElementDescription_ThenSetTagDescription_ThenGetTheTagMemberAgain_ItShouldRetainTheOverridenDescription()
+        public void SetElementDescription_ThenSetTagDescription_ThenGetTheTagMemberAgain_ItShouldRetainTheDescription()
         {
             var tag = Tag.Build("Test", new Bool()).WithDimensions(5).Create();
 
@@ -99,7 +98,7 @@ namespace L5Sharp.Core.Tests
 
         [Test]
         public void
-            SetElementDescription_ThenSetTagDescription_ThenSetTheMemberDescriptionBack_ItShouldRevertToTagDescription()
+            SetElementDescription_ThenSetTagDescription_ThenResetElementDescriptionBack_ItShouldRevertToTagDescription()
         {
             var tag = Tag.Build("Test", new Bool()).WithDimensions(5).Create();
 
@@ -150,11 +149,11 @@ namespace L5Sharp.Core.Tests
 
             tag[0].SetData(new Bool(true));
 
-            tag[0].DataType.As<Bool>().Should().Be(true);
-            tag[1].DataType.As<Bool>().Should().Be(false);
-            tag[2].DataType.As<Bool>().Should().Be(false);
-            tag[3].DataType.As<Bool>().Should().Be(false);
-            tag[4].DataType.As<Bool>().Should().Be(false);
+            tag[0].GetData().As<Bool>().Should().Be(true);
+            tag[1].GetData().As<Bool>().Should().Be(false);
+            tag[2].GetData().As<Bool>().Should().Be(false);
+            tag[3].GetData().As<Bool>().Should().Be(false);
+            tag[4].GetData().As<Bool>().Should().Be(false);
         }
     }
 }

@@ -120,32 +120,6 @@ namespace L5Sharp.Core.Tests
         }
 
         [Test]
-        public void New_CircularReferencePredefined_ShouldThrowCircularReferenceException()
-        {
-            FluentActions.Invoking(() => new CircularReferencePredefined()).Should()
-                .Throw<CircularReferenceException>();
-        }
-
-        private class CircularReferencePredefined : Predefined
-        {
-            public CircularReferencePredefined() :
-                base(nameof(CircularReferencePredefined))
-            {
-                //RegisterMemberFields();
-            }
-
-            public IMember<Bool> Member01 = Member.Create<Bool>("Member01");
-
-            public IMember<Real> Member02 =
-                Member.Create<Real>("Member02");
-
-            protected override IDataType New()
-            {
-                return new CircularReferencePredefined();
-            }
-        }
-
-        [Test]
         public void ToString_WhenCalled_ShouldBeExpected()
         {
             var type = new TestPredefined();

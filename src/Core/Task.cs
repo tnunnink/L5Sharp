@@ -59,9 +59,36 @@ namespace L5Sharp.Core
         /// <returns>A new instance of <see cref="ITask"/></returns>
         public static ITask Create(string name)
         {
-            return new Task(name, TaskType.Periodic, new TaskPriority(10), new ScanRate(500), new Watchdog(500), false,
-                false, string.Empty);
+            return new Task(name, TaskType.Periodic, new TaskPriority(10), new ScanRate(10), new Watchdog(500),
+                false, false, null);
         }
+
+        /// <summary>
+        /// Creates a new instance of a <see cref="ITask"/> with default properties.
+        /// </summary>
+        /// <param name="name">The name of the task to create.</param>
+        /// <param name="type">The type of the task to create.</param>
+        /// <returns>A new instance of <see cref="ITask"/></returns>
+        public static ITask Create(string name, TaskType type)
+        {
+            return new Task(name, type, new TaskPriority(10), new ScanRate(10), new Watchdog(500),
+                false, false, null);
+        }
+
+        /// <summary>
+        /// Creates a new instance of a <see cref="ITask"/> with default properties.
+        /// </summary>
+        /// <param name="name">The name of the task to create.</param>
+        /// <param name="type">The type of the task to create.</param>
+        /// <param name="priority">The priority for the new task.</param>
+        /// <param name="rate">The scan rate of the new task.</param>
+        /// <param name="watchdog">The watchdog of the new task.</param>
+        /// <returns>A new instance of <see cref="ITask"/></returns>
+        public static ITask Create(string name, TaskType type, TaskPriority priority, ScanRate rate, Watchdog watchdog)
+        {
+            return new Task(name, type, priority, rate, watchdog, false, false, null);
+        }
+
 
         /// <summary>
         /// Builds a new instance of <see cref="ITask"/> using the fluent builder API.

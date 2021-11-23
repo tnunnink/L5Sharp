@@ -57,24 +57,7 @@ namespace L5Sharp.Core.Tests
             FluentActions.Invoking(() => controller.DataTypes.Add(datatype)).Should()
                 .Throw<ComponentNameCollisionException>();
         }
-
-        [Test]
-        public void AddDataType_Configuration_DataTypesShouldHaveExpected()
-        {
-            var controller = new Controller("Test");
-
-            /*controller.DataTypes.Add("Test",
-                t => t.HasDescription("This is a test data type")
-                    .HasMember(c => c
-                        .WithName("Test")
-                        .OfType(new Alarm())
-                        .WithDimension(new Dimensions(4))
-                        .WithDescription("This is a test"))
-                    .HasMember(c => c
-                        .WithName("AnotherMember")
-                        .OfType(new Real())
-                        .WithRadix(Radix.Exponential)));*/
-        }
+        
 
         [Test]
         public void RemoveDataType_ValidDataType_DataTypesShouldHaveComponent()

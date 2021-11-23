@@ -22,15 +22,30 @@ namespace L5Sharp.Core
         public override void Add(ITask component)
         {
             if (component.Type == TaskType.Continuous && _controller.Tasks.HasContinuous())
-                throw new InvalidOperationException();
+                throw new ArgumentException();
             
             base.Add(component);
+        }
+
+        /// <inheritdoc />
+        public override void Update(ITask component)
+        {
+            if (component.Type == TaskType.Continuous && _controller.Tasks.HasContinuous())
+                throw new ArgumentException();
+            
+            base.Update(component);
         }
 
         /// <inheritdoc />
         public bool HasContinuous()
         {
             return Contains(t => t.Type == TaskType.Continuous);
+        }
+
+        /// <inheritdoc />
+        public bool AtCapacity()
+        {
+            return Count == 32;
         }
     }
 }

@@ -81,22 +81,30 @@ namespace L5Sharp.Core
                     $"{_member.DataType.Name} is not Atomic. Radix can only be set on Atomic types");
 
             atomic.SetRadix(radix);
+
+            if (!(_member is IArrayMember<IAtomic> array)) return;
+
+            foreach (var element in array)
+                element.DataType.SetRadix(radix);
         }
 
         /// <inheritdoc />
         public void SetDescription(string description)
         {
             if (string.IsNullOrEmpty(description))
+            {
                 Base.Comments.Reset(Operand);
+                return;
+            }
 
             Base.Comments.Override(new Comment(Operand, description));
         }
 
         /// <inheritdoc />
-        public IEnumerable<string> GetMemberNames() => _member.DataType.GetMembers().Select(m => m.Name.ToString());
+        public IEnumerable<string> GetMemberNames() => _member.GetMemberNames();
 
         /// <inheritdoc />
-        public IEnumerable<string> GetDeepMembersNames() => _member.DataType.GetMemberNames();
+        public IEnumerable<string> GetDeepMembersNames() => _member.GetDeepMemberNames();
 
         /// <inheritdoc />
         public ITagMember<IDataType> this[string name] => GetMember(name);
@@ -142,16 +150,31 @@ namespace L5Sharp.Core
 
             var member = expression.Invoke(_member.DataType);
             member.DataType.SetRadix(radix);
+
+            if (!(member is IArrayMember<IAtomic> array)) return;
+
+            foreach (var element in array)
+                element.DataType.SetRadix(radix);
         }
 
         /// <inheritdoc />
-        public void SetMember<TAtomic>(Func<TDataType, IMember<TAtomic>> expression, string description)
-            where TAtomic : IAtomic
+        public void SetMember<TType>(Func<TDataType, IMember<TType>> expression, string description)
+            where TType : IDataType
         {
             if (expression == null)
                 throw new ArgumentNullException(nameof(expression), "Expression can not be null");
 
             var member = expression.Invoke(_member.DataType);
+
+            var operand = member is IArrayMember<IDataType> ? member.Name : $".{member.Name}";
+
+            if (string.IsNullOrEmpty(description))
+            {
+                Base.Comments.Reset(operand);
+                return;
+            }
+
+            Base.Comments.Override(new Comment(operand, description));
         }
 
         private IEnumerable<ITagMember<IDataType>> GetMembersInternal()
@@ -174,7 +197,7 @@ namespace L5Sharp.Core
 
         private ITagMember<TDataType> GetMember(int index)
         {
-            return _member is IArrayMember<TDataType> arrayMember
+            return _member is IArrayMember<TDataType> arrayMember && index >= 0 && index < Dimensions.Length
                 ? new TagMember<TDataType>(arrayMember[index], (ITagMember<IDataType>)this, Base)
                 : null;
         }

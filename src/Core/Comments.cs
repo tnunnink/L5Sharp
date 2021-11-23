@@ -117,8 +117,7 @@ namespace L5Sharp.Core
 
         private bool IsValidOperand(string operand)
         {
-            return _tag.Name.Equals(operand) ||
-                   _tag.GetDeepMembersNames().Any(m => m.Contains(operand));
+            return _tag.GetDeepMembersNames().Any(m => m.Contains(operand));
         }
     }
 }

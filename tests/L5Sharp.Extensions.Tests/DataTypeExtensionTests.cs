@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using FluentAssertions;
 using L5Sharp.Core;
 using L5Sharp.Types;
@@ -65,6 +66,40 @@ namespace L5Sharp.Extensions.Tests
 
             member.Should().NotBeNull();
         }
+
+        [Test]
+        public void GetMemberNames_TypeWithMembers_ShouldNotBeEmpty()
+        {
+            var type = DataType.Create("TypeWithMembers", members: new List<IMember<IDataType>>
+            {
+                Member.Create<Dint>("Member01")
+            });
+
+            var names = type.GetDeepMemberNames();
+
+            names.Should().NotBeEmpty();
+        }
+
+        [Test]
+        public void GetMemberNames_TypeWithArrayMember_ShouldHaveAllElementNames()
+        {
+            var type = DataType.Create("TypeWithMembers", members: new List<IMember<IDataType>>
+            {
+                Member.Create<Dint>("Member01", new Dimensions(5))
+            });
+
+            var names = type.GetDeepMemberNames().ToList();
+
+            names.Should().NotBeEmpty();
+            names.Should().HaveCount(6);
+            names.Should().Contain("Member01");
+            names.Should().Contain("Member01[0]");
+            names.Should().Contain("Member01[1]");
+            names.Should().Contain("Member01[2]");
+            names.Should().Contain("Member01[3]");
+            names.Should().Contain("Member01[4]");
+        }
+
         
         [Test]
         public void GetDependentTypes_TypeWithMembers_ShouldNotBeEmpty()

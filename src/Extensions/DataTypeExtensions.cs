@@ -9,6 +9,11 @@ namespace L5Sharp.Extensions
     /// </summary>
     public static class DataTypeExtensions
     {
+        /// <summary>
+        /// Indicates whether the current <c>DataType</c> is <see cref="IAtomic"/> (i.e. a value type).
+        /// </summary>
+        /// <param name="dataType">The current data type.</param>
+        /// <returns>true if the current data type is <see cref="IAtomic"/>, otherwise false.</returns>
         public static bool IsValueType(this IDataType dataType)
         {
             return dataType is IAtomic;
@@ -25,6 +30,12 @@ namespace L5Sharp.Extensions
             return dataType.Class.Equals(other.Class);
         }
 
+        /// <summary>
+        /// Gets a single member with the specified name from the provided <c>DataType</c>.
+        /// </summary>
+        /// <param name="dataType">The current data type.</param>
+        /// <param name="name">The name of the member to retrieve.</param>
+        /// <returns>A <c>Member</c> instance specified by the provided name if it exists, null if it does not.</returns>
         public static IMember<IDataType> GetMember(this IDataType dataType, string name)
         {
             return dataType switch
@@ -36,6 +47,11 @@ namespace L5Sharp.Extensions
             };
         }
 
+        /// <summary>
+        /// Gets the collection of <c>Members</c> for the provided <c>DataType</c>.
+        /// </summary>
+        /// <param name="dataType">The current data type.</param>
+        /// <returns>A collection of members for the provided data type if there are any, an empty collection if not.</returns>
         public static IEnumerable<IMember<IDataType>> GetMembers(this IDataType dataType)
         {
             return dataType switch
@@ -46,20 +62,44 @@ namespace L5Sharp.Extensions
                 _ => Enumerable.Empty<IMember<IDataType>>()
             };
         }
-
+        
+        /// <summary>
+        /// Gets member names of the given <c>DataType</c>.
+        /// </summary>
+        /// <param name="dataType">The current data type.</param>
+        /// <returns>A collection of string names that represent the full member name path from the root data type.</returns>
         public static IEnumerable<string> GetMemberNames(this IDataType dataType)
+        {
+            return dataType.GetMembers().Select(member => member.Name);
+        }
+
+        /// <summary>
+        /// Gets all nested member names of the given <c>DataType</c>.
+        /// </summary>
+        /// <param name="dataType">The current data type.</param>
+        /// <returns>A collection of string names that represent the full member name path from the root data type.</returns>
+        public static IEnumerable<string> GetDeepMemberNames(this IDataType dataType)
         {
             var names = new List<string>();
 
             foreach (var member in dataType.GetMembers())
             {
                 names.Add(member.Name);
-                names.AddRange(member.DataType.GetMemberNames().Select(n => $"{member.Name}.{n}"));
+
+                if (member is IArrayMember<IDataType> array)
+                    names.AddRange(array.Select(e => $"{member.Name}{e.Name}"));
+
+                names.AddRange(member.DataType.GetDeepMemberNames().Select(n => $"{member.Name}.{n}"));
             }
 
             return names;
         }
 
+        /// <summary>
+        /// Gets all nested dependent types for the provided data type.
+        /// </summary>
+        /// <param name="dataType">The current data type.</param>
+        /// <returns>A collection of unique data types that the current type depends on.</returns>
         public static IEnumerable<IDataType> GetDependentTypes(this IDataType dataType)
         {
             var types = new List<IDataType>();
@@ -79,7 +119,7 @@ namespace L5Sharp.Extensions
             if (ReferenceEquals(target, source)) return true;
             if (target.IsValueType() && source.IsValueType() && target.GetType() == source.GetType()) return true;
             if (target.IsValueType() || source.IsValueType()) return false;
-            return target.Name == source.Name && 
+            return target.Name == source.Name &&
                    target.GetMembers().SequenceEqual(source.GetMembers(), new MemberStructureComparer());
         }
     }

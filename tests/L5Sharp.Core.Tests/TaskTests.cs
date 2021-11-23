@@ -41,6 +41,29 @@ namespace L5Sharp.Core.Tests
         }
 
         [Test]
+        public void Create_TypeOverload_ShouldHaveExpectedType()
+        {
+            var task = Task.Create("TaskName", TaskType.Continuous);
+
+            task.Name.ToString().Should().Be("TaskName");
+            task.Type.Should().Be(TaskType.Continuous);
+            
+        }
+
+        [Test]
+        public void Create_ParameterOverload_ShouldHaveExpectedType()
+        {
+            var task = Task.Create("TaskName", TaskType.Periodic, new TaskPriority(1), new ScanRate(1000),
+                new Watchdog(5000));
+
+            task.Name.ToString().Should().Be("TaskName");
+            task.Type.Should().Be(TaskType.Periodic);
+            task.Priority.Should().Be(new TaskPriority(1));
+            task.Rate.Should().Be(new ScanRate(1000));
+            task.Watchdog.Should().Be(new Watchdog(5000));
+        }
+
+        [Test]
         public void Create_GetValue_ShouldBePeriodic()
         {
             var task = Task.Create("Test");
@@ -55,7 +78,7 @@ namespace L5Sharp.Core.Tests
 
             task.Should().NotBeNull();
         }
-        
+
         [Test]
         public void Build_Overloads_ShouldHaveExpected()
         {
@@ -133,7 +156,7 @@ namespace L5Sharp.Core.Tests
         public void TypedEquals_AreEqual_ShouldBeTrue()
         {
             var first = (Task)Task.Create("Test");
-            var second =(Task)Task.Create("Test");
+            var second = (Task)Task.Create("Test");
 
             var result = first.Equals(second);
 

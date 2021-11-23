@@ -168,7 +168,13 @@ namespace L5Sharp
         void SetMember<TAtomic>(Func<TDataType, IMember<TAtomic>> expression, Radix radix)
             where TAtomic : IAtomic;
 
-        void SetMember<TAtomic>(Func<TDataType, IMember<TAtomic>> expression, string description)
-            where TAtomic : IAtomic;
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="expression"></param>
+        /// <param name="description"></param>
+        /// <typeparam name="TType"></typeparam>
+        void SetMember<TType>(Func<TDataType, IMember<TType>> expression, string description)
+            where TType : IDataType;
     }
 }
