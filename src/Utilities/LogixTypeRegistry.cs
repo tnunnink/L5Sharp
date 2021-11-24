@@ -6,7 +6,7 @@ using L5Sharp.Enums;
 using L5Sharp.Extensions;
 using L5Sharp.Types;
 
-namespace L5Sharp
+namespace L5Sharp.Utilities
 {
     internal class LogixTypeRegistry
     {

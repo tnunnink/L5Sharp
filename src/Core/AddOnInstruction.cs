@@ -6,7 +6,7 @@ using L5Sharp.Enums;
 
 namespace L5Sharp.Core
 {
-    public class AddOnInstruction : LogixComponent, IAddOnInstruction
+    public class AddOnInstruction : IAddOnInstruction
     {
         private const string LogicRoutineName = "Logic";
         private const string PreScanRoutineName = "Prescan";
@@ -23,8 +23,9 @@ namespace L5Sharp.Core
             Revision softwareRevision = null, string additionalHelpText = null, bool isEncrypted = false,
             IEnumerable<IParameter<IDataType>> parameters = null, 
             IEnumerable<ITag<IDataType>> localTags = null)
-            : base(name, description)
         {
+            Name = name ?? throw new ArgumentNullException(nameof(name));
+            Description = description;
             Revision = revision ?? new Revision();
             RevisionExtension = revisionExtension;
             RevisionNote = revisionNote;
@@ -48,6 +49,8 @@ namespace L5Sharp.Core
         }
 
 
+        public ComponentName Name { get; }
+        public string Description { get; }
         public Radix Radix => Radix.Null;
         public DataTypeFamily Family => DataTypeFamily.None;
         public DataTypeClass Class => DataTypeClass.AddOnDefined;
@@ -78,6 +81,7 @@ namespace L5Sharp.Core
         public ITags LocalTags { get; }
 
         public IEnumerable<IRoutine> Routines => _routines.AsReadOnly();
+
         IEnumerable<IMember<IDataType>> IInstruction.Parameters => Parameters;
 
 

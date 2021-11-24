@@ -1,5 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 using System.Xml.Linq;
+using L5Sharp.Utilities;
 
 [assembly: InternalsVisibleTo("L5SharpTests")]
 
@@ -15,18 +16,6 @@ namespace L5Sharp
             _document = document;
             _content = document.Root;
         }
-
-        public string SchemaRevision => _content.Attribute(nameof(SchemaRevision))?.Value;
-
-        public string SoftwareRevision => _content.Attribute(nameof(SoftwareRevision))?.Value;
-
-        public string TargetName => _content.Attribute(nameof(TargetName))?.Value;
-
-        public string TargetType => _content.Attribute(nameof(TargetType))?.Value;
-
-        public string ContainsContext => _content.Attribute(nameof(ContainsContext))?.Value;
-
-        public string Owner => _content.Attribute(nameof(Owner))?.Value;
 
         public XElement DataTypes => _content.Element(LogixNames.Controller)?.Element(LogixNames.DataTypes);
 

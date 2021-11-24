@@ -26,13 +26,5 @@ namespace L5Sharp
         new IMemberCollection<IParameter<IDataType>> Parameters { get; }
         ITags LocalTags { get; }
         IEnumerable<IRoutine> Routines { get; }
-        void SetName(ComponentName name);
-        void SetDescription(string description);
-        void SetRevision(Revision revision);
-        void SetRevisionExtension(string revisionExtension);
-        void SetRevisionNote(string note);
-        void SetVendor(string vendor);
-        public void AddPreScanRoutine(RoutineType type);
-        public void AddPostScanRoutine(RoutineType type);
     }
 }

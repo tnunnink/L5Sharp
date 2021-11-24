@@ -130,7 +130,7 @@ namespace L5Sharp.Abstractions.Tests
             result.Should().BeNull();
         }
 
-        [Test]
+        /*[Test]
         public void ChangeComponentName_ExistingComponent_ShouldUpdateInCollection()
         {
             _component1.SetName("Test");
@@ -140,7 +140,7 @@ namespace L5Sharp.Abstractions.Tests
             component.Should().NotBeNull();
             component.Name.Should().Be("Test");
             component.Should().BeSameAs(_component1);
-        }
+        }*/
 
         [Test]
         public void Add_SmallCollection_ShouldHaveExpectedCount()

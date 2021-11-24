@@ -62,26 +62,6 @@ namespace L5Sharp.Core.Tests
         }
 
         [Test]
-        public void Enable_WhenCalled_DisabledShouldBeFalse()
-        {
-            var program = new Program("Test", disabled: true);
-            
-            program.Enable();
-
-            program.Disabled.Should().BeFalse();
-        }
-        
-        [Test]
-        public void Disable_WhenCalled_DisabledShouldBeTrue()
-        {
-            var program = new Program("Test");
-            
-            program.Disable();
-
-            program.Disabled.Should().BeTrue();
-        }
-
-        [Test]
         public void GetTag_TagExists_ShouldNotBeNull()
         {
             var program = new Program("Test");

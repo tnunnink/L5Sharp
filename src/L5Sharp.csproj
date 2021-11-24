@@ -19,4 +19,8 @@
       <None Remove="Resources\Predefined.xml" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Expressions" />
+    </ItemGroup>
+
 </Project>

@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using L5Sharp.Abstractions;
 using L5Sharp.Core;
 using L5Sharp.Enums;
@@ -16,7 +18,7 @@ namespace L5Sharp.Repositories
             _context = context;
         }
 
-        public bool Exists(string name)
+        public bool Contains(string name)
         {
             return _context.L5X.Programs.Descendants().Any(x => x.GetName() == name);
         }
@@ -40,6 +42,11 @@ namespace L5Sharp.Repositories
         public IEnumerable<IProgram> GetAll()
         {
             throw new System.NotImplementedException();
+        }
+
+        public IEnumerable<IProgram> Find(Expression<Func<IProgram, bool>> predicate)
+        {
+            throw new NotImplementedException();
         }
 
         public void Add(IProgram component)

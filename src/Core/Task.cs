@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Serialization;
 using L5Sharp.Builders;
 using L5Sharp.Enums;
 

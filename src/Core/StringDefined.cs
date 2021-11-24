@@ -8,11 +8,13 @@ using L5Sharp.Types;
 
 namespace L5Sharp.Core
 {
-    public class StringDefined : LogixComponent, IStringDefined
+    public class StringDefined : IStringDefined
     {
-        public StringDefined(string name, Dimensions dimensions, string description = null) 
-            : base(name, description)
+        public StringDefined(string name, Dimensions dimensions, string description = null)
         {
+            Name = name ?? throw new ArgumentNullException(nameof(name));
+            Description = description;
+            
             if (dimensions.AreEmpty || dimensions.AreMultiDimensional) 
                 throw new ArgumentException("Dimension must single dimensional and have length greater that zero");
 
@@ -26,6 +28,8 @@ namespace L5Sharp.Core
             };
         }
 
+        public ComponentName Name { get; }
+        public string Description { get; }
         public Radix Radix => Radix.Null;
         public DataTypeFamily Family => DataTypeFamily.String;
         public DataTypeClass Class => DataTypeClass.User;
@@ -34,6 +38,7 @@ namespace L5Sharp.Core
         public IMember<Dint> LEN { get; }
         public IArrayMember<Sint> DATA { get; }
         public IEnumerable<IMember<IDataType>> Members { get; }
+
 
         public void SetValue(string value)
         {

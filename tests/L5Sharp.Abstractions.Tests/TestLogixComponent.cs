@@ -1,9 +1,16 @@
-﻿namespace L5Sharp.Abstractions.Tests
+﻿using L5Sharp.Core;
+
+namespace L5Sharp.Abstractions.Tests
 {
-    public class TestLogixComponent : LogixComponent
+    public class TestLogixComponent : ILogixComponent
     {
-        public TestLogixComponent(string name, string description) : base(name, description)
+        public TestLogixComponent(string name, string description)
         {
+            Name = name;
+            Description = description;
         }
+
+        public ComponentName Name { get; }
+        public string Description { get; }
     }
 }

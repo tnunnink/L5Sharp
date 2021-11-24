@@ -7,8 +7,6 @@ namespace L5Sharp
         ProgramType Type { get; }
         bool TestEdits { get; }
         bool Disabled { get; }
-        void Enable();
-        void Disable();
         ITags Tags { get; }
         IComponentCollection<IRoutine> Routines { get; }
     }

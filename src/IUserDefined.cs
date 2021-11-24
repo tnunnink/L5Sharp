@@ -1,7 +1,4 @@
-﻿using System;
-using L5Sharp.Core;
-
-namespace L5Sharp
+﻿namespace L5Sharp
 {
     /// <summary>
     /// A <c>DataType</c> that represents a <c>UserDefined</c> Logix Component. 
@@ -20,18 +17,5 @@ namespace L5Sharp
         /// Member collection of the <c>UserDefined</c> that defined the complex structure of the type. 
         /// </summary>
         IMemberCollection<IMember<IDataType>> Members { get; }
-        
-        /// <summary>
-        /// Sets the <c>Name</c> of the <c>UserDefined</c> type to the provided value.
-        /// </summary>
-        /// <param name="name">The value of the name to set.</param>
-        /// <exception cref="ArgumentNullException">Throw when the name reference is null.</exception>
-        void SetName(ComponentName name);
-        
-        /// <summary>
-        /// Sets the <c>Description</c> of the <c>UserDefined</c> type to the provided value.
-        /// </summary>
-        /// <param name="description"></param>
-        void SetDescription(string description);
     }
 }

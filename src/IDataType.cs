@@ -1,4 +1,5 @@
-﻿using L5Sharp.Enums;
+﻿using System.Xml.Serialization;
+using L5Sharp.Enums;
 
 namespace L5Sharp
 {
@@ -34,7 +35,6 @@ namespace L5Sharp
         /// <summary>
         /// Gets the <c>Class</c> of the <c>DataType</c>.
         /// </summary>
-        /// 
         DataTypeClass Class { get; }
         
         /// <summary>

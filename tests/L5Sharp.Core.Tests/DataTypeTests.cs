@@ -112,59 +112,6 @@ namespace L5Sharp.Core.Tests
         }
 
         [Test]
-        public void Name_SetValueValidName_ShouldBeExpectedValue()
-        {
-            var fixture = new Fixture();
-            var description = fixture.Create<string>();
-            var type = new DataType("Test", description: description);
-
-            type.SetName("NewName");
-
-            type.Name.ToString().Should().Be("NewName");
-        }
-
-        [Test]
-        public void Name_SetValueInvalidName_ShouldThrowInvalidTagNameException()
-        {
-            var fixture = new Fixture();
-            var description = fixture.Create<string>();
-            var type = new DataType("Test", description: description);
-
-            FluentActions.Invoking(() => type.SetName("Not.Valid%01")).Should().Throw<ComponentNameInvalidException>();
-        }
-
-        [Test]
-        public void Name_SetValueNull_ShouldThrowInvalidTagNameException()
-        {
-            var type = new DataType("Test");
-
-            FluentActions.Invoking(() => type.SetName(null)).Should().Throw<ArgumentException>();
-        }
-
-        [Test]
-        public void Description_SetValueValidValue_ShouldBeExpectedValue()
-        {
-            var fixture = new Fixture();
-            var description = fixture.Create<string>();
-            var newDescription = fixture.Create<string>();
-            var type = new DataType("Test", description: description);
-
-            type.SetDescription(newDescription);
-
-            type.Description.Should().Be(newDescription);
-        }
-
-        [Test]
-        public void Description_SetValueNull_ShouldBeNull()
-        {
-            var type = new DataType("Test");
-
-            type.SetDescription(null);
-
-            type.Description.Should().BeNull();
-        }
-
-        [Test]
         public void GetDependentTypes_ComplexType_ShouldContainExpectedTypes()
         {
             var type = new DataType("Type01");

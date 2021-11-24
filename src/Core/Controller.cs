@@ -4,11 +4,13 @@ using L5Sharp.Enums;
 
 namespace L5Sharp.Core
 {
-    public class Controller : LogixComponent, IController
+    public class Controller : IController
     {
         public Controller(string name, Revision revision = null, ProcessorType processorType = null,
-            string description = null) : base(name, description)
+            string description = null)
         {
+            Name = name;
+            Description = description;
             ProcessorType = processorType;
             Revision = revision;
             ProjectCreationDate = DateTime.Now;
@@ -20,6 +22,8 @@ namespace L5Sharp.Core
             Tasks = new Tasks(this);
         }
 
+        public ComponentName Name { get; }
+        public string Description { get; }
         public ProcessorType ProcessorType { get; }
 
         public Revision Revision { get; set; }

@@ -2,50 +2,63 @@
 
 namespace L5Sharp.Core
 {
+    /// <summary>
+    /// Represents a revision or a number that is expressed by a Major and Minor revision.
+    /// </summary>
     public class Revision : IEquatable<Revision>
     {
-        public Revision(byte major = 1, byte minor = 1)
+        /// <summary>
+        /// Creates a new instance of a <c>Revision</c> withe the optional major and minor versions.
+        /// </summary>
+        /// <param name="major">The value of the major revision.</param>
+        /// <param name="minor">The value of the minor revision.</param>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        public Revision(ushort major = 1, ushort minor = 0)
         {
-            Major = IsValidMajor(major)
-                ? major
-                : throw new ArgumentOutOfRangeException(nameof(major), $"'{major}' is not between 1 and 127");
-
-            Minor = IsValidMinor(minor)
-                ? minor
-                : throw new ArgumentOutOfRangeException(nameof(minor), $"'{minor}' is not between 1 and 255");
+            Major = major;
+            Minor = minor;
         }
 
         /// <summary>
         /// Gets the value of the Major revision number.
         /// </summary>
-        public byte Major { get; }
+        public ushort Major { get; }
         
         /// <summary>
         /// Gets the value of the Minor revision number.
         /// </summary>
-        public byte Minor { get; }
+        public ushort Minor { get; }
 
-        public Revision ChangeMajor(byte major)
+        /// <summary>
+        /// Gets an instance of a default <c>Revision</c> (i.e. 1.0)
+        /// </summary>
+        public Revision Default => new Revision();
+        
+
+        /// <summary>
+        /// Parses the string input into a new instance of <see cref="Revision"/>
+        /// </summary>
+        /// <param name="value">The string value to parse.</param>
+        /// <returns></returns>
+        public static Revision Parse(string value)
         {
-            if (!IsValidMajor(major))
-                throw new ArgumentOutOfRangeException(nameof(major), $"'{major}' is not between 1 and 127");
-
-            return new Revision(major, Minor);
+            //todo validate input.
+            
+            var revisions = value.Split('.');
+            
+            var major = byte.Parse(revisions[0]);
+            var minor = byte.Parse(revisions[1]);
+            
+            return new Revision(major, minor);
         }
 
-        public Revision ChangeMinor(byte minor)
-        {
-            if (!IsValidMinor(minor))
-                throw new ArgumentOutOfRangeException(nameof(minor), $"'{minor}' is not between 1 and 255");
-
-            return new Revision(Major, minor);
-        }
-
+        /// <inheritdoc />
         public override string ToString()
         {
             return $"{Major}.{Minor}";
         }
 
+        /// <inheritdoc />
         public bool Equals(Revision other)
         {
             if (ReferenceEquals(null, other)) return false;
@@ -53,6 +66,7 @@ namespace L5Sharp.Core
             return Major == other.Major && Minor == other.Minor;
         }
 
+        /// <inheritdoc />
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
@@ -75,15 +89,7 @@ namespace L5Sharp.Core
         {
             return !Equals(left, right);
         }
-
-        private static bool IsValidMajor(byte major)
-        {
-            return major >= 1 && major <= 127;
-        }
-
-        private static bool IsValidMinor(byte major)
-        {
-            return major >= 1 && major <= 255;
-        }
+        
+        
     }
 }

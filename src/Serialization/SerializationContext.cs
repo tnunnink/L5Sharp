@@ -13,6 +13,7 @@ namespace L5Sharp.Serialization
             _serializers.Add(typeof(IUserDefined), new UserDefinedSerializer(context));
             _serializers.Add(typeof(IMember<IDataType>), new MemberSerializer(context));
             _serializers.Add(typeof(ITag<IDataType>), new TagSerializer(context));
+            _serializers.Add(typeof(ITask), new TaskSerializer());
             
         }
         

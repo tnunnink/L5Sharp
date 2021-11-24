@@ -1,12 +1,40 @@
-﻿using System.Collections.Generic;
-using L5Sharp.Abstractions;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq.Expressions;
 
 namespace L5Sharp.Repositories
 {
-    public interface IReadOnlyRepository<out T> where T : ILogixComponent
+    /// <summary>
+    /// A base for implementing read operations over the L5X
+    /// </summary>
+    /// <typeparam name="TComponent">The type of the component.</typeparam>
+    public interface IReadOnlyRepository<TComponent> where TComponent : ILogixComponent
     {
-        bool Exists(string name);
-        T Get(string name);
-        IEnumerable<T> GetAll();
+        /// <summary>
+        /// Determines if the current component with the provided name is contained within the current context.
+        /// </summary>
+        /// <param name="name">The name of the component to search.</param>
+        /// <returns>true if the current context contains the component with the specified name. Otherwise, false.</returns>
+        bool Contains(string name);
+        
+        /// <summary>
+        /// Gets a component instance with the provided name in the current context.
+        /// </summary>
+        /// <param name="name">The name of the component to get.</param>
+        /// <returns>An instance of the component with the specified name if found. Otherwise, null.</returns>
+        TComponent Get(string name);
+        
+        /// <summary>
+        /// Gets all component instances for the given type in the current context.
+        /// </summary>
+        /// <returns>A collection of all components of the given type.</returns>
+        IEnumerable<TComponent> GetAll();
+        
+        /// <summary>
+        /// Finds all components that satisfy the provided expression delegate. 
+        /// </summary>
+        /// <param name="predicate"></param>
+        /// <returns></returns>
+        IEnumerable<TComponent> Find(Expression<Func<TComponent, bool>> predicate);
     }
 }

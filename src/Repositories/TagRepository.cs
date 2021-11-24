@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using L5Sharp.Extensions;
 
 namespace L5Sharp.Repositories
@@ -13,7 +15,7 @@ namespace L5Sharp.Repositories
             _context = context;
         }
 
-        public bool Exists(string name)
+        public bool Contains(string name)
         {
             throw new System.NotImplementedException();
         }
@@ -27,6 +29,11 @@ namespace L5Sharp.Repositories
         public IEnumerable<ITag<IDataType>> GetAll()
         {
             return _context.L5X.Tags.Descendants().Select(e => _context.Serializer.Deserialize<ITag<IDataType>>(e));
+        }
+
+        public IEnumerable<ITag<IDataType>> Find(Expression<Func<ITag<IDataType>, bool>> predicate)
+        {
+            throw new NotImplementedException();
         }
 
         public void Add(ITag<IDataType> component)

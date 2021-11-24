@@ -11,34 +11,9 @@ namespace L5Sharp
     public interface ILogixContext
     {
         /// <summary>
-        /// Gets the <c>SchemaRevision</c> of the L5X. 
+        /// Gets the <c>Content</c> for the current L5X.
         /// </summary>
-        string SchemaRevision { get; }
-        
-        /// <summary>
-        /// Gets the <c>SoftwareRevision</c> of the L5X. 
-        /// </summary>
-        string SoftwareRevision { get; }
-        
-        /// <summary>
-        /// Gets the <c>TargetName</c> of the L5X. 
-        /// </summary>
-        string TargetName { get; }
-        
-        /// <summary>
-        /// Gets the <c>TargetType</c> of the L5X. 
-        /// </summary>
-        string TargetType { get; }
-        
-        /// <summary>
-        /// Gets the <c>ContainsContext</c> of the L5X. 
-        /// </summary>
-        string ContainsContext { get; }
-        
-        /// <summary>
-        /// Gets the <c>Owner</c> of the L5X. 
-        /// </summary>
-        string Owner { get; }
+        L5XInfo Info { get; }       
         
         /// <summary>
         /// Gets the <c>DataTypes</c> repository for the L5X. 

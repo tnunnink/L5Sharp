@@ -3,7 +3,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 using System.Xml.Linq;
-using System.Xml.Serialization;
 using L5Sharp.Core;
 using L5Sharp.Enums;
 
@@ -121,13 +120,8 @@ namespace L5Sharp.Extensions
         {
             if (!(propertyExpression.Body is MemberExpression memberExpression))
                 throw new ArgumentException($"Expression must of type {typeof(MemberExpression)}");
-
-            var memberName = memberExpression.Member.Name;
-
-            var property = typeof(TComponent).GetProperty(memberName);
-            var attribute = (XmlAttributeAttribute)property?
-                .GetCustomAttributes(typeof(XmlAttributeAttribute), true).FirstOrDefault();
-            var name = attribute != null ? attribute.AttributeName : memberName;
+            
+            var name = memberExpression.Member.GetXName();
 
             var value = element.Attribute(name)?.Value;
 

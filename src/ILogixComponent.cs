@@ -1,4 +1,5 @@
-﻿using L5Sharp.Core;
+﻿using System.Xml.Serialization;
+using L5Sharp.Core;
 
 namespace L5Sharp
 {
@@ -28,6 +29,7 @@ namespace L5Sharp
         /// <summary>
         /// A <see cref="string"/> that describes the Logix component.
         /// </summary>
+        [XmlElement(nameof(Description))]
         public string Description { get; }
     }
 }

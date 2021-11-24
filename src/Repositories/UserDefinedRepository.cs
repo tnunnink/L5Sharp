@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 using L5Sharp.Enums;
 using L5Sharp.Exceptions;
@@ -19,7 +21,7 @@ namespace L5Sharp.Repositories
             _context = context;
         }
 
-        public bool Exists(string name)
+        public bool Contains(string name)
         {
             return _context.L5X.DataTypes.Descendants().Any(x => x.GetName() == name);
         }
@@ -36,6 +38,11 @@ namespace L5Sharp.Repositories
             return elements.Select(e => _context.Serializer.Deserialize<IUserDefined>(e));
         }
 
+        public IEnumerable<IUserDefined> Find(Expression<Func<IUserDefined, bool>> predicate)
+        {
+            throw new NotImplementedException();
+        }
+
         public IEnumerable<IDataType> WithMemberType(IDataType dataType)
         {
             /*return Container.Descendants(LogixNames.GetComponentName<IMember<IDataType>>())
@@ -46,7 +53,7 @@ namespace L5Sharp.Repositories
 
         public void Add(IUserDefined component)
         {
-            if (Exists(component.Name))
+            if (Contains(component.Name))
                 throw new ComponentNameCollisionException(component.Name, typeof(IDataType));
 
             var element = _context.Serializer.Serialize(component);

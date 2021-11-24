@@ -1,6 +1,6 @@
-﻿namespace L5Sharp
+﻿namespace L5Sharp.Utilities
 {
-    public static class LogixNames
+    internal static class LogixNames
     {
         public const string RsLogix5000Content = nameof(RsLogix5000Content);
         public const string Controller = nameof(Controller);

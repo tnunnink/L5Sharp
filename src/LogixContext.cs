@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using System.Xml.Linq;
 using L5Sharp.Core;
 using L5Sharp.Repositories;
 using L5Sharp.Serialization;
+using L5Sharp.Utilities;
 
 namespace L5Sharp
 {
@@ -19,6 +17,8 @@ namespace L5Sharp
         private LogixContext(XDocument document)
         {
             L5X = new L5X(document);
+            Info = new L5XInfo(document.Root);
+            
             Serializer = new SerializationContext(this);
             TypeRegistry = new LogixTypeRegistry(this);
 
@@ -46,23 +46,8 @@ namespace L5Sharp
         }
 
         /// <inheritdoc />
-        public string SchemaRevision => L5X.SchemaRevision;
-
-        /// <inheritdoc />
-        public string SoftwareRevision => L5X.SoftwareRevision;
-
-        /// <inheritdoc />
-        public string TargetName => L5X.TargetName;
-
-        /// <inheritdoc />
-        public string TargetType => L5X.TargetType;
-
-        /// <inheritdoc />
-        public string ContainsContext => L5X.ContainsContext;
-
-        /// <inheritdoc />
-        public string Owner => L5X.Owner;
-
+        public L5XInfo Info { get; }
+        
         /// <inheritdoc />
         public IUserDefinedRepository DataTypes { get; }
 

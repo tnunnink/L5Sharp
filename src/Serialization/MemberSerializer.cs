@@ -2,6 +2,7 @@
 using System.Runtime.CompilerServices;
 using System.Xml.Linq;
 using L5Sharp.Extensions;
+using L5Sharp.Utilities;
 
 [assembly: InternalsVisibleTo("L5Sharp.Serialization.Tests")]
 

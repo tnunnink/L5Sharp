@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Xml.Linq;
 using L5Sharp.Enums;
-using L5Sharp.Serialization;
-using L5Sharp.Types;
 
-namespace L5Sharp
+namespace L5Sharp.Utilities
 {
     internal class LogixTypeRegistryItem : IEquatable<LogixTypeRegistryItem>, IInstantiable<IDataType>
     {
