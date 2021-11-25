@@ -1,4 +1,6 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Xml.Linq;
 using L5Sharp.Utilities;
 
@@ -15,6 +17,18 @@ namespace L5Sharp
         {
             _document = document;
             _content = document.Root;
+        }
+
+        public XElement GetContainer<TComponent>() where TComponent : ILogixComponent
+        {
+            var name = LogixNames.GetContainerName<TComponent>();
+            return _content.Descendants(name).FirstOrDefault();
+        }
+        
+        public IEnumerable<XElement> GetComponents<TComponent>() where TComponent : ILogixComponent
+        {
+            var name = LogixNames.GetComponentName<TComponent>();
+            return _content.Descendants(name);
         }
 
         public XElement DataTypes => _content.Element(LogixNames.Controller)?.Element(LogixNames.DataTypes);

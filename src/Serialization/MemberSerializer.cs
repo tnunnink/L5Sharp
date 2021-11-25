@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 using System.Xml.Linq;
+using L5Sharp.Core;
+using L5Sharp.Enums;
 using L5Sharp.Extensions;
 using L5Sharp.Utilities;
 
@@ -40,10 +42,10 @@ namespace L5Sharp.Serialization
 
             var name = element.GetName();
             var dataType = _context.TypeRegistry.TryGetType(element.GetDataTypeName());
-            var description = element.GetDescription();
-            var dimensions = element.GetAttribute<IMember<IDataType>>(m => m.Dimension);
-            var radix = element.GetAttribute<IMember<IDataType>>(m => m.Radix);
-            var access = element.GetAttribute<IMember<IDataType>>(m => m.ExternalAccess);
+            var description = element.GetValue<IMember<IDataType>, string>(m => m.Description);
+            var dimensions = element.GetValue<IMember<IDataType>, Dimensions>(m => m.Dimension);
+            var radix = element.GetValue<IMember<IDataType>, Radix>(m => m.Radix);
+            var access = element.GetValue<IMember<IDataType>, ExternalAccess>(m => m.ExternalAccess);
 
             return Member.Create(name, dataType, dimensions, radix, access, description);
         }

@@ -1,4 +1,8 @@
-﻿namespace L5Sharp.Utilities
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace L5Sharp.Utilities
 {
     internal static class LogixNames
     {
@@ -12,6 +16,8 @@
         public const string Module = nameof(Module);
         public const string AddOnInstructionDefinitions = nameof(AddOnInstructionDefinitions);
         public const string AddOnInstructionDefinition = nameof(AddOnInstructionDefinition);
+        public const string Parameters = nameof(Parameters);
+        public const string Parameter = nameof(Parameter);
         public const string Tags = nameof(Tags);
         public const string Tag = nameof(Tag);
         public const string Programs = nameof(Programs);
@@ -23,79 +29,47 @@
         public const string Tasks = nameof(Tasks);
         public const string Task = nameof(Task);
 
-        /*public static string GetComponentName<T>() where T : ILogixComponent
+        public static string GetComponentName<TComponent>()
         {
-            var key = FindKey<T>();
-            
-            if (!Components.ContainsKey(key))
-                throw new InvalidOperationException($"No component name defined for type '{key}'");
+            var key = FindKey<TComponent>();
 
-            return Components[key];
+            if (key == null)
+                throw new InvalidOperationException($"No component key defined for type '{typeof(TComponent)}'");
+
+            return NameMap[key].Item1;
         }
 
-        public static string GetContainerName<T>() where T : ILogixComponent
+        public static string GetContainerName<TComponent>()
         {
-            var key = FindKey<T>();
-            
-            if (!Containers.ContainsKey(key))
-                throw new InvalidOperationException($"No container name defined for type '{key}'");
+            var key = FindKey<TComponent>();
 
-            return Containers[key];
+            if (key == null)
+                throw new InvalidOperationException($"No component key defined for type '{typeof(TComponent)}'");
+
+            return NameMap[key].Item2;
         }
 
-        private static Type FindKey<T>()
+        private static Type FindKey<TComponent>()
         {
-            return Components.Keys.FirstOrDefault(t => t.IsAssignableFrom(typeof(T)));
+            return NameMap.Keys.FirstOrDefault(t => t.IsAssignableFrom(typeof(TComponent)));
         }
 
-        private static readonly Dictionary<Type, string> Components = new Dictionary<Type, string>
-        {
-            { typeof(IUserDefined), ComponentNames.DataType },
-            { typeof(IMember<IDataType>), ComponentNames.Member },
-            { typeof(Module), ComponentNames.Module },
-            { typeof(IAddOnDefined), ComponentNames.AddOnInstructionDefinition },
-            { typeof(ITag<IDataType>), ComponentNames.Tag },
-            { typeof(IProgram), ComponentNames.Program },
-            { typeof(ITask), ComponentNames.Task }
-        };
-
-        private static readonly Dictionary<Type, string> Containers = new Dictionary<Type, string>
-        {
-            { typeof(IUserDefined), ContainerNames.DataTypes },
-            { typeof(IMember<IDataType>), ContainerNames.Members },
-            { typeof(IAddOnDefined), ComponentNames.AddOnInstructionDefinition },
-            { typeof(ITag<IDataType>), ContainerNames.Tags },
-            { typeof(IProgram), ContainerNames.Programs },
-            { typeof(IRoutine), ContainerNames.Routines },
-            { typeof(Rung), ContainerNames.Rungs },
-            { typeof(ITask), ContainerNames.Tasks }
-        };*/
-
-        /*public static class ContainerNames
-        {
-            public const string Controller = nameof(Controller);
-            public const string DataTypes = nameof(DataTypes);
-            public const string Members = nameof(Members);
-            public const string Modules = nameof(Modules);
-            public const string AddOnInstructionDefinitions = nameof(AddOnInstructionDefinitions);
-            public const string Tags = nameof(Tags);
-            public const string Programs = nameof(Programs);
-            public const string Routines = nameof(Routines);
-            public const string Rungs = nameof(Rungs);
-            public const string Tasks = nameof(Tasks);
-        }*/
-        
-        /*private static class ComponentNames
-        {
-            public const string Controller = nameof(Controller);
-            public const string DataType = nameof(DataType);
-            public const string Member = nameof(Member);
-            public const string Module = nameof(Module);
-            public const string AddOnInstructionDefinition = nameof(AddOnInstructionDefinition);
-            public const string Tag = nameof(Tag);
-            public const string Program = nameof(Program);
-            public const string Routine = nameof(Routine);
-            public const string Task = nameof(Task);   
-        }*/
+        private static readonly Dictionary<Type, Tuple<string, string>> NameMap =
+            new Dictionary<Type, Tuple<string, string>>
+            {
+                { typeof(IUserDefined), new Tuple<string, string>(DataType, DataTypes) },
+                { typeof(IMember<IDataType>), new Tuple<string, string>(Member, Members) },
+                { typeof(IModule), new Tuple<string, string>(Module, Modules) },
+                {
+                    typeof(IAddOnDefined),
+                    new Tuple<string, string>(AddOnInstructionDefinition, AddOnInstructionDefinitions)
+                },
+                { typeof(IParameter<IDataType>), new Tuple<string, string>(Parameter, Parameters) },
+                { typeof(ITag<IDataType>), new Tuple<string, string>(Tag, Tags) },
+                { typeof(IProgram), new Tuple<string, string>(Program, Programs) },
+                { typeof(IRoutine), new Tuple<string, string>(Routine, Routines) },
+                { typeof(IRung), new Tuple<string, string>(Rung, Rungs) },
+                { typeof(ITask), new Tuple<string, string>(Task, Tasks) }
+            };
     }
 }

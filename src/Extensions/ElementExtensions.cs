@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 using System.Xml.Linq;
-using L5Sharp.Core;
-using L5Sharp.Enums;
 
 [assembly: InternalsVisibleTo("L5Sharp.Extensions.Tests")]
 
@@ -12,120 +9,33 @@ namespace L5Sharp.Extensions
 {
     internal static class ElementExtensions
     {
+        /// <summary>
+        /// Helper for getting the component name attribute for the current element.
+        /// </summary>
+        /// <param name="element">The current element.</param>
+        /// <returns>The string name for attribute value for the component.</returns>
         public static string GetName(this XElement element) => element.Attribute("Name")?.Value;
 
-        public static string GetDescription(this XElement element) => element.Element("Description")?.Value;
-
+        /// <summary>
+        /// Helper for getting the component data type name attribute.
+        /// </summary>
+        /// <param name="element">The current element.</param>
+        /// <returns>The string data type name attribute value for the component.</returns>
         public static string GetDataTypeName(this XElement element) => element.Attribute("DataType")?.Value;
 
-        public static TReturn GetAttribute<TComponent, TProperty, TReturn>(this XElement element,
-            Expression<Func<TComponent, TProperty>> propertyExpression, Func<string, TReturn> parse) =>
-            element.GetAttributeInternal(propertyExpression, parse);
-
-        public static TProperty GetAttribute<TComponent, TProperty>(this XElement element,
-            Expression<Func<TComponent, TProperty>> propertyExpression, Func<string, TProperty> parse)
-            => element.GetAttributeInternal(propertyExpression, parse);
-
-        #region TypedValueExtensions
-
-        public static string GetAttribute<TComponent>(this XElement element,
-            Expression<Func<TComponent, string>> propertyExpression)
-            => element.GetAttributeInternal(propertyExpression, s => s);
-
-        public static bool GetAttribute<TComponent>(this XElement element,
-            Expression<Func<TComponent, bool>> propertyExpression)
-            => element.GetAttributeInternal(propertyExpression, Convert.ToBoolean);
-
-        public static byte GetAttribute<TComponent>(this XElement element,
-            Expression<Func<TComponent, byte>> propertyExpression)
-            => element.GetAttributeInternal(propertyExpression, Convert.ToByte);
-
-        public static ushort GetAttribute<TComponent>(this XElement element,
-            Expression<Func<TComponent, ushort>> propertyExpression)
-            => element.GetAttributeInternal(propertyExpression, Convert.ToUInt16);
-
-        public static short GetAttribute<TComponent>(this XElement element,
-            Expression<Func<TComponent, short>> propertyExpression)
-            => element.GetAttributeInternal(propertyExpression, Convert.ToInt16);
-
-        public static uint GetAttribute<TComponent>(this XElement element,
-            Expression<Func<TComponent, uint>> propertyExpression)
-            => element.GetAttributeInternal(propertyExpression, Convert.ToUInt32);
-
-        public static int GetAttribute<TComponent>(this XElement element,
-            Expression<Func<TComponent, int>> propertyExpression)
-            => element.GetAttributeInternal(propertyExpression, Convert.ToInt32);
-
-        public static float GetAttribute<TComponent>(this XElement element,
-            Expression<Func<TComponent, float>> propertyExpression)
-            => element.GetAttributeInternal(propertyExpression, Convert.ToSingle);
-
-        public static ComponentName GetAttribute<TComponent>(this XElement element,
-            Expression<Func<TComponent, ComponentName>> propertyExpression)
-            => element.GetAttributeInternal(propertyExpression, s => new ComponentName(s));
-
-        public static DataTypeFamily GetAttribute<TComponent>(this XElement element,
-            Expression<Func<TComponent, DataTypeFamily>> propertyExpression)
-            => element.GetAttributeInternal(propertyExpression,
-                v => v != null ? DataTypeFamily.FromName(v) : null);
-
-        public static DataTypeClass GetAttribute<TComponent>(this XElement element,
-            Expression<Func<TComponent, DataTypeClass>> propertyExpression)
-            =>
-                element.GetAttributeInternal(propertyExpression,
-                    v => v != null ? DataTypeClass.FromName(v) : null);
-
-        public static Dimensions GetAttribute<TComponent>(this XElement element,
-            Expression<Func<TComponent, Dimensions>> propertyExpression)
-            => element.GetAttributeInternal(propertyExpression, v => v != null ? Dimensions.Parse(v) : null);
-
-        public static Radix GetAttribute<TComponent>(this XElement element,
-            Expression<Func<TComponent, Radix>> propertyExpression)
-            => element.GetAttributeInternal(propertyExpression, v => v != null ? Radix.FromName(v) : null);
-
-        public static ExternalAccess GetAttribute<TComponent>(this XElement element,
-            Expression<Func<TComponent, ExternalAccess>> propertyExpression)
-            => element.GetAttributeInternal(propertyExpression,
-                v => v != null ? ExternalAccess.FromName(v) : null);
-
-        public static TaskPriority GetAttribute<TComponent>(this XElement element,
-            Expression<Func<TComponent, TaskPriority>> propertyExpression)
-            => element.GetAttributeInternal(propertyExpression, v => v != null ? TaskPriority.Parse(v) : default);
-        
-        public static ScanRate GetAttribute<TComponent>(this XElement element,
-            Expression<Func<TComponent, ScanRate>> propertyExpression)
-            => element.GetAttributeInternal(propertyExpression, v => v != null ? ScanRate.Parse(v) : default);
-        
-        public static Watchdog GetAttribute<TComponent>(this XElement element,
-            Expression<Func<TComponent, Watchdog>> propertyExpression)
-            => element.GetAttributeInternal(propertyExpression, v => v != null ? Watchdog.Parse(v) : default);
-
-        public static TaskType GetAttribute<TComponent>(this XElement element,
-            Expression<Func<TComponent, TaskType>> propertyExpression)
-            => element.GetAttributeInternal(propertyExpression, v => v != null ? TaskType.FromName(v) : null);
-
-        public static TagUsage GetAttribute<TComponent>(this XElement element,
-            Expression<Func<TComponent, TagUsage>> propertyExpression)
-            => element.GetAttributeInternal(propertyExpression, v => v != null ? TagUsage.FromName(v) : null);
-
-        public static TaskTrigger GetAttribute<TComponent>(this XElement element,
-            Expression<Func<TComponent, TaskTrigger>> propertyExpression)
-            => element.GetAttributeInternal(propertyExpression, v => v != null ? TaskTrigger.FromName(v) : null);
-
-        #endregion
-
-
-        private static TReturn GetAttributeInternal<TComponent, TProperty, TReturn>(this XElement element,
-            Expression<Func<TComponent, TProperty>> propertyExpression, Func<string, TReturn> parse)
+        /// <summary>
+        /// Generic helper for getting element values from a given L5X element.
+        /// </summary>
+        /// <param name="element">The current element.</param>
+        /// <param name="propertyExpression">Expression for the component indicating which property to get.</param>
+        /// <typeparam name="TComponent">The type of the component that this element represents.</typeparam>
+        /// <typeparam name="TProperty">The type of the property of the component to retrieve from the element.</typeparam>
+        /// <returns>A strongly typed property value that is the value of the XAttribute or XElement data.</returns>
+        public static TProperty GetValue<TComponent, TProperty>(this XElement element,
+            Expression<Func<TComponent, TProperty>> propertyExpression)
         {
-            if (!(propertyExpression.Body is MemberExpression memberExpression))
-                throw new ArgumentException($"Expression must of type {typeof(MemberExpression)}");
-            
-            var name = memberExpression.Member.GetXName();
-
-            var value = element.Attribute(name)?.Value;
-
-            return parse(value);
+            var getter = propertyExpression.ToXExpression();
+            return getter.Invoke(element);
         }
     }
 }

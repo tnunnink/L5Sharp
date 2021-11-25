@@ -8,17 +8,17 @@ namespace L5Sharp.Extensions
     internal static class ExpressionExtensions
     {
         /// <summary>
-        /// Converts an expression for a given type to an expression of the 
+        /// 
         /// </summary>
         /// <param name="expression"></param>
-        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="TType"></typeparam>
+        /// <typeparam name="TReturn"></typeparam>
         /// <returns></returns>
-        /// <exception cref="InvalidOperationException"></exception>
-        public static Func<XElement, bool> ToElementFunc<T>(this Expression<Func<T, bool>> expression)
+        public static Func<XElement, TReturn> ToXExpression<TType, TReturn>(this Expression<Func<TType, TReturn>> expression)
         {
-            var elementVisitor = new XElementVisitor();
+            var elementVisitor = new XElementVisitor<TType, TReturn>();
 
-            var converted = (Expression<Func<XElement, bool>>) elementVisitor.Visit(expression);
+            var converted = (Expression<Func<XElement, TReturn>>) elementVisitor.Visit(expression);
             
             return converted?.Compile();
         }

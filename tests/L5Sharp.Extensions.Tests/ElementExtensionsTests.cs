@@ -4,6 +4,7 @@ using System.Linq;
 using System.Xml.Linq;
 using FluentAssertions;
 using L5Sharp.Core;
+using L5Sharp.Enums;
 using L5Sharp.Types;
 using NUnit.Framework;
 
@@ -31,7 +32,7 @@ namespace L5Sharp.Extensions.Tests
             var element = XElement.Load(_fileName);
             var target = element.Descendants("DataType").FirstOrDefault();
 
-            var value = target.GetAttribute<IDataType>(t => t.Class);
+            var value = target.GetValue<IDataType, Radix>(d => d.Radix);
 
             value.Should().NotBeNull();
         }

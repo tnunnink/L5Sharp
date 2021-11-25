@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq.Expressions;
-using L5Sharp.Utilities;
+using FluentAssertions;
 using NUnit.Framework;
 
 namespace L5Sharp.Extensions.Tests
@@ -13,9 +13,11 @@ namespace L5Sharp.Extensions.Tests
         {
             Expression<Func<ITask, bool>> expression = t => t.Priority == 1;
 
-            var visitor = new XElementVisitor();
+            var converted = expression.ToXExpression();
 
-            var result = visitor.Visit(expression);
+            converted.Should().NotBeNull();
+            /*converted.ToString().Should()
+                .Be("e => e.Attribute(Priority) != null && e.Attribute(Priority).Value == Convert(1, TaskPriority)");*/
         }
     }
 }

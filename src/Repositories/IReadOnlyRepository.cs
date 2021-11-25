@@ -31,6 +31,13 @@ namespace L5Sharp.Repositories
         IEnumerable<TComponent> GetAll();
         
         /// <summary>
+        /// Gets the first component that satisfies the provided expression delegate. 
+        /// </summary>
+        /// <param name="predicate"></param>
+        /// <returns></returns>
+        TComponent GetFirst(Expression<Func<TComponent, bool>> predicate);
+        
+        /// <summary>
         /// Finds all components that satisfy the provided expression delegate. 
         /// </summary>
         /// <param name="predicate"></param>

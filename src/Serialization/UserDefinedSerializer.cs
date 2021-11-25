@@ -43,8 +43,8 @@ namespace L5Sharp.Serialization
         {
             if (element == null) return null;
 
-            var name = element.GetAttribute<IUserDefined>(x => x.Name);
-            var description = element.GetDescription();
+            var name = element.GetName();
+            var description = element.GetValue<IDataType, string>(x => x.Description);
             
             var members = element.Descendants(LogixNames.Member).Select(e =>
                 _context.Serializer.Deserialize<IMember<IDataType>>(e));
