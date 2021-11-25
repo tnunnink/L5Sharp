@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Xml.Linq;
@@ -18,30 +19,33 @@ namespace L5Sharp
             _document = document;
             _content = document.Root;
         }
+        
+        public XElement GetFirst(Func<XElement, bool> predicate)
+        {
+            return _content.Descendants().FirstOrDefault(predicate);
+        }
+        
+        public XElement GetSingle(Func<XElement, bool> predicate)
+        {
+            return _content.Descendants().SingleOrDefault(predicate);
+        }
+        
+        public IEnumerable<XElement> GetAll(Func<XElement, bool> predicate)
+        {
+            return _content.Descendants().Where(predicate);
+        }
 
-        public XElement GetContainer<TComponent>() where TComponent : ILogixComponent
+        public XElement GetContainer<TComponent>()
         {
             var name = LogixNames.GetContainerName<TComponent>();
             return _content.Descendants(name).FirstOrDefault();
         }
         
-        public IEnumerable<XElement> GetComponents<TComponent>() where TComponent : ILogixComponent
+        public IEnumerable<XElement> GetComponents<TComponent>()
         {
             var name = LogixNames.GetComponentName<TComponent>();
             return _content.Descendants(name);
         }
-
-        public XElement DataTypes => _content.Element(LogixNames.Controller)?.Element(LogixNames.DataTypes);
-
-        public XElement Modules => _content.Element(LogixNames.Controller)?.Element(LogixNames.Modules);
-
-        public XElement Instructions =>
-            _content.Element(LogixNames.Controller)?.Element(LogixNames.AddOnInstructionDefinitions);
-
-        public XElement Tags => _content.Element(LogixNames.Controller)?.Element(LogixNames.Tags);
-        public XElement Programs => _content.Element(LogixNames.Controller)?.Element(LogixNames.Programs);
-
-        public XElement Tasks => _content.Element(LogixNames.Controller)?.Element(LogixNames.Tasks);
 
         public void Save(string fileName)
         {

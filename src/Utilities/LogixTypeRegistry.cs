@@ -14,11 +14,12 @@ namespace L5Sharp.Utilities
 
         public LogixTypeRegistry(LogixContext context)
         {
-            RegisterTypes(context.L5X.DataTypes.Elements(),
+            RegisterTypes(context.L5X.GetComponents<IDataType>().Elements(),
                 DataTypeClass.User, 
                 e => context.Serializer.Deserialize<IUserDefined>(e));
             
-            
+            //todo module defined
+            //todo add on defined
         }
 
         public IDataType TryGetType(string name)
