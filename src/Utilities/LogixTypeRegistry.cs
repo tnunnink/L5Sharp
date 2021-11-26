@@ -14,12 +14,17 @@ namespace L5Sharp.Utilities
 
         public LogixTypeRegistry(LogixContext context)
         {
-            RegisterTypes(context.L5X.GetComponents<IDataType>().Elements(),
+            RegisterTypes(context.L5X.GetComponents<IDataType>(),
                 DataTypeClass.User, 
-                e => context.Serializer.Deserialize<IUserDefined>(e));
+                e => context.Serialization.Deserialize<IUserDefined>(e));
             
-            //todo module defined
-            //todo add on defined
+            /*RegisterTypes(context.L5X.GetComponents<IModuleDefined>(),
+                DataTypeClass.Io, 
+                e => context.Serialization.Deserialize<IModuleDefined>(e));*/
+            
+            RegisterTypes(context.L5X.GetComponents<IAddOnInstruction>(),
+                DataTypeClass.AddOnDefined, 
+                e => context.Serialization.Deserialize<IAddOnInstruction>(e));
         }
 
         public IDataType TryGetType(string name)
@@ -28,7 +33,7 @@ namespace L5Sharp.Utilities
                 return Logix.InstantiateType(name);
             
             var item = _registryItems.SingleOrDefault(i => i.Name == name);
-            return item != null ? item.Instantiate() : new Undefined();
+            return item != null ? item.Instantiate() : new Undefined(name);
         }
 
         private void RegisterTypes(IEnumerable<XElement> elements, DataTypeClass typeClass, 

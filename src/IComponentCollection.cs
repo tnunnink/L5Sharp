@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using L5Sharp.Core;
 
 namespace L5Sharp
 {
@@ -26,7 +27,7 @@ namespace L5Sharp
         /// <summary>
         /// Determines if the provided name is contained in the current collection.
         /// </summary>
-        bool Contains(string name);
+        bool Contains(ComponentName name);
         
         /// <summary>
         /// Determines if the collection contains an item that satisfies the provided delegate predicate.
@@ -36,7 +37,7 @@ namespace L5Sharp
         /// <summary>
         /// Gets a component instance with the provided name.
         /// </summary>
-        TComponent Get(string name);
+        TComponent Get(ComponentName name);
         
         /// <summary>
         /// Gets the first component instance that satisfies the provided predicate delegate. 
@@ -47,51 +48,41 @@ namespace L5Sharp
         /// Gets all component instances that satisfy the provided predicate delegate. 
         /// </summary>
         IEnumerable<TComponent> Find(Func<TComponent, bool> predicate);
-        
+
         /// <summary>
-        /// Returns the component collection in the preserved order that it is configured. 
+        /// Clears all components from the current collection.
         /// </summary>
-        IEnumerable<TComponent> Ordered();
-        
-        /// <summary>
-        /// Gets the integer index of the given component.
-        /// </summary>
-        /// <param name="component">The component for which to find the index of.</param>
-        /// <returns>
-        /// The integer number representing the index of the specified component.
-        /// -1 if the component does not exist in the collection
-        /// </returns>
-        int IndexOf(TComponent component);
-        
+        void Clear();
+
         /// <summary>
         /// Adds the provided component to the collection.
         /// </summary>
         /// <param name="component">The component to add to the collection.</param>
         void Add(TComponent component);
-        
+
         /// <summary>
         /// Adds the provided collection of components to the current collection.
         /// </summary>
         /// <param name="components">The collection of components to add to the collection.</param>
         void AddRange(IEnumerable<TComponent> components);
-        
-        /// <summary>
-        /// Inserts the provided component into the collection at the specified index.
-        /// </summary>
-        /// <param name="index">The integer index to add the provided component at.</param>
-        /// <param name="component">The component to add to the collection.</param>
-        void Insert(int index, TComponent component);
-        
+
         /// <summary>
         /// Updates the specified component if it exists, adds the component to the collection if is does not.
         /// </summary>
         /// <param name="component">The component to update on the collection.</param>
         void Update(TComponent component);
-        
+
         /// <summary>
         /// Removes the component with the provided name from the collection.
         /// </summary>
         /// <param name="name">The name of the component to remove from the collection.</param>
-        void Remove(string name);
+        void Remove(ComponentName name);
+
+        /// <summary>
+        /// Replaces the specified component with the new provided component.
+        /// </summary>
+        /// <param name="name">The name of the component to replace.</param>
+        /// <param name="component"></param>
+        void Replace(ComponentName name, TComponent component);
     }
 }

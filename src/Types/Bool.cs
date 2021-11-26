@@ -37,7 +37,7 @@ namespace L5Sharp.Types
         public DataTypeClass Class => DataTypeClass.Atomic;
 
         /// <inheritdoc />
-        public TagDataFormat DataFormat => TagDataFormat.Decorated;
+        public DataFormat Format => DataFormat.Decorated;
 
         /// <inheritdoc />
         public Radix Radix { get; private set; }
@@ -45,9 +45,10 @@ namespace L5Sharp.Types
         /// <inheritdoc />
         public bool Value { get; private set; }
 
+        object IAtomic.Value => Value;
+
         /// <inheritdoc />
         public string FormattedValue => Radix.Format(this);
-        object IAtomic.Value => Value;
 
         /// <inheritdoc />
         public void SetValue(bool value)

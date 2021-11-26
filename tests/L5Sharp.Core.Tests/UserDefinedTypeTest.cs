@@ -8,7 +8,7 @@ using NUnit.Framework;
 namespace L5Sharp.Core.Tests
 {
     [TestFixture]
-    public class UserDefinedTypeTest : DataType
+    public class UserDefinedTypeTest : UserDefined
     {
         public UserDefinedTypeTest() : base(nameof(UserDefinedTypeTest), description: "My Type description")
         {

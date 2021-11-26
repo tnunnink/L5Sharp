@@ -28,6 +28,16 @@ namespace L5Sharp.Utilities
         public const string Rung = nameof(Rung);
         public const string Tasks = nameof(Tasks);
         public const string Task = nameof(Task);
+        
+        public const string Data = nameof(Data);
+        public const string DataValue = nameof(DataValue);
+        public const string Array = nameof(Array);
+        public const string Index = nameof(Index);
+        public const string Element = nameof(Element);
+        public const string Structure = nameof(Structure);
+        public const string ArrayMember = nameof(ArrayMember);
+        public const string DataValueMember = nameof(DataValueMember);
+        public const string StructureMember = nameof(StructureMember);
 
         public static string GetComponentName<TComponent>()
         {
@@ -61,7 +71,7 @@ namespace L5Sharp.Utilities
                 { typeof(IMember<IDataType>), new Tuple<string, string>(Member, Members) },
                 { typeof(IModule), new Tuple<string, string>(Module, Modules) },
                 {
-                    typeof(IAddOnDefined),
+                    typeof(IAddOnInstruction),
                     new Tuple<string, string>(AddOnInstructionDefinition, AddOnInstructionDefinitions)
                 },
                 { typeof(IParameter<IDataType>), new Tuple<string, string>(Parameter, Parameters) },

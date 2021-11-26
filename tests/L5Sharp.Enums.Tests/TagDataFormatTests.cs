@@ -10,7 +10,7 @@ namespace L5Sharp.Enums.Tests
         [Test]
         public void New_Decorated_ShouldNotBeNullAndHaveExpectedValue()
         {
-            var format = TagDataFormat.Decorated;
+            var format = DataFormat.Decorated;
 
             format.Should().NotBeNull();
             format.Name.Should().Be("Decorated");
@@ -19,7 +19,7 @@ namespace L5Sharp.Enums.Tests
         [Test]
         public void New_L5K_ShouldNotBeNullAndHaveExpectedValue()
         {
-            var format = TagDataFormat.L5K;
+            var format = DataFormat.L5K;
 
             format.Should().NotBeNull();
             format.Name.Should().Be("L5K");
@@ -29,7 +29,7 @@ namespace L5Sharp.Enums.Tests
         [Test]
         public void New_String_ShouldNotBeNullAndHaveExpectedValue()
         {
-            var format = TagDataFormat.String;
+            var format = DataFormat.String;
 
             format.Should().NotBeNull();
             format.Name.Should().Be("String");
@@ -39,7 +39,7 @@ namespace L5Sharp.Enums.Tests
         [Test]
         public void New_Alarm_ShouldNotBeNullAndHaveExpectedValue()
         {
-            var format = TagDataFormat.Alarm;
+            var format = DataFormat.Alarm;
 
             format.Should().NotBeNull();
             format.Name.Should().Be("Alarm");

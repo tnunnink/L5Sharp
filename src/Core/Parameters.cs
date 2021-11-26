@@ -2,7 +2,7 @@
 
 namespace L5Sharp.Core
 {
-    internal class Parameters : DataTypeMembers, IMemberCollection<IParameter<IDataType>>
+    internal class Parameters : UserDefinedMembers, IMemberCollection<IParameter<IDataType>>
     {
         public Parameters(IDataType parent, IEnumerable<IMember<IDataType>> members = null)
             : base(parent, members)

@@ -92,7 +92,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void New_UserDefined_ShouldNotBeNull()
         {
-            var dataType = new DataType("UserDefined", "This is a test", new List<IMember<IDataType>>
+            var dataType = new UserDefined("UserDefined", "This is a test", new List<IMember<IDataType>>
             {
                 Member.Create("TestMember", new Counter())
             });

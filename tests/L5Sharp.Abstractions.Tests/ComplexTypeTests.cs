@@ -1,34 +1,36 @@
 ﻿using System;
 using FluentAssertions;
+using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Exceptions;
 using L5Sharp.Types;
 using NUnit.Framework;
 
-namespace L5Sharp.Core.Tests
+namespace L5Sharp.Abstractions.Tests
 {
-    public class TestPredefined : Predefined
+    public class TestComplex : ComplexType
     {
-        public TestPredefined() : base(nameof(TestPredefined))
+        public TestComplex() : base(nameof(TestComplex))
         {
-            RegisterMember(TestMember);
         }
+
+        public override DataTypeClass Class => DataTypeClass.Predefined;
 
         protected override IDataType New()
         {
-            return new TestPredefined();
+            return new TestComplex();
         }
 
-        public IMember<Bool> TestMember => Member.Create<Bool>(nameof(TestMember));
+        public IMember<Bool> TestMember = Member.Create<Bool>(nameof(TestMember));
     }
 
     [TestFixture]
-    public class PredefinedTests
+    public class ComplexTypeTests
     {
         [Test]
         public void Name_GetValue_ShouldBeEmpty()
         {
-            var type = new TestPredefined();
+            var type = new TestComplex();
 
             type.Name.ToString().Should().Be("TestPredefined");
         }
@@ -36,7 +38,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Description_GetValue_ShouldBeNull()
         {
-            var type = new TestPredefined();
+            var type = new TestComplex();
 
             type.Description.Should().BeNull();
         }
@@ -44,7 +46,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Class_ValidType_ShouldReturnExpected()
         {
-            var type = new TestPredefined();
+            var type = new TestComplex();
 
             type.Class.Should().Be(DataTypeClass.Predefined);
         }
@@ -52,17 +54,17 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void DataFormat_ValidType_ShouldReturnExpected()
         {
-            var type = new TestPredefined();
+            var type = new TestComplex();
 
-            type.DataFormat.Should().Be(TagDataFormat.Decorated);
+            type.Format.Should().Be(DataFormat.Decorated);
         }
 
         [Test]
         public void Predefined_WhenCastedToDataType_ShouldThrowInvalidCastException()
         {
-            var atomic = (IDataType)new TestPredefined();
+            var atomic = (IDataType)new TestComplex();
 
-            FluentActions.Invoking(() => (DataType)atomic).Should().Throw<InvalidCastException>();
+            FluentActions.Invoking(() => (UserDefined)atomic).Should().Throw<InvalidCastException>();
         }
 
         [Test]
@@ -71,11 +73,13 @@ namespace L5Sharp.Core.Tests
             FluentActions.Invoking(() => new MyNullNamePredefined()).Should().Throw<ArgumentException>();
         }
 
-        private class MyNullNamePredefined : Predefined
+        private class MyNullNamePredefined : ComplexType
         {
             public MyNullNamePredefined() : base(null)
             {
             }
+
+            public override DataTypeClass Class { get; }
 
             protected override IDataType New()
             {
@@ -86,7 +90,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Instantiate_WhenCalled_ReturnsNewInstanceWithEqualValue()
         {
-            var type = new TestPredefined();
+            var type = new TestComplex();
 
             var instance = type.Instantiate();
 
@@ -101,17 +105,17 @@ namespace L5Sharp.Core.Tests
                 .Throw<ComponentNameCollisionException>();
         }
 
-        private class MyInvalidMemberPredefined : Predefined
+        private class MyInvalidMemberPredefined : ComplexType
         {
             public MyInvalidMemberPredefined() :
                 base(nameof(MyInvalidMemberPredefined))
             {
-                RegisterMember(Member01);
-                RegisterMember(Member02);
             }
 
-            public IMember<Bool> Member01 => Member.Create<Bool>("Member01");
-            public IMember<Bool> Member02 => Member.Create<Bool>("Member01");
+            public IMember<Bool> Member01 = Member.Create<Bool>("Member01");
+            public IMember<Bool> Member02 = Member.Create<Bool>("Member01");
+
+            public override DataTypeClass Class { get; }
 
             protected override IDataType New()
             {
@@ -122,7 +126,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void ToString_WhenCalled_ShouldBeExpected()
         {
-            var type = new TestPredefined();
+            var type = new TestComplex();
 
             var str = type.ToString();
 
@@ -132,8 +136,8 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void TypedEquals_AreEqual_ShouldBeTrue()
         {
-            var first = new TestPredefined();
-            var second = new TestPredefined();
+            var first = new TestComplex();
+            var second = new TestComplex();
 
             var result = first.Equals(second);
 
@@ -143,7 +147,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void TypedEquals_AreSame_ShouldBeTrue()
         {
-            var first = new TestPredefined();
+            var first = new TestComplex();
             var second = first;
 
             var result = first.Equals(second);
@@ -155,7 +159,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void TypedEquals_Null_ShouldBeFalse()
         {
-            var first = new TestPredefined();
+            var first = new TestComplex();
 
             var result = first.Equals(null);
 
@@ -165,8 +169,8 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void ObjectEquals_AreEqual_ShouldBeTrue()
         {
-            var first = new TestPredefined();
-            var second = new TestPredefined();
+            var first = new TestComplex();
+            var second = new TestComplex();
 
             var result = first.Equals((object)second);
 
@@ -176,7 +180,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void ObjectEquals_AreSame_ShouldBeTrue()
         {
-            var first = new TestPredefined();
+            var first = new TestComplex();
             var second = first;
 
             var result = first.Equals((object)second);
@@ -188,7 +192,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void ObjectEquals_Null_ShouldBeFalse()
         {
-            var first = new TestPredefined();
+            var first = new TestComplex();
 
             var result = first.Equals((object)null);
 
@@ -198,8 +202,8 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void OperatorEquals_AreEqual_ShouldBeTrue()
         {
-            var first = new TestPredefined();
-            var second = new TestPredefined();
+            var first = new TestComplex();
+            var second = new TestComplex();
 
             var result = first == second;
 
@@ -209,8 +213,8 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void OperatorNotEquals_AreEqual_ShouldBeFalse()
         {
-            var first = new TestPredefined();
-            var second = new TestPredefined();
+            var first = new TestComplex();
+            var second = new TestComplex();
 
             var result = first != second;
 
@@ -220,7 +224,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void GetHashCode_WhenCalled_ShouldNotBeZero()
         {
-            var first = new TestPredefined();
+            var first = new TestComplex();
 
             var hash = first.GetHashCode();
 

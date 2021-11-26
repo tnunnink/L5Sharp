@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using L5Sharp.Core;
 using L5Sharp.Exceptions;
 
 namespace L5Sharp.Abstractions
@@ -9,15 +10,9 @@ namespace L5Sharp.Abstractions
     /// <inheritdoc />
     public class ComponentCollection<TComponent> : IComponentCollection<TComponent> where TComponent : ILogixComponent
     {
-        private readonly ComponentNameComparer<TComponent> _comparer = new ComponentNameComparer<TComponent>();
-        //This is the primary collection storing components
         //Using a hashset with custom equality comparer that will maintain the name constraint and with fast lookup
         private readonly HashSet<TComponent> _components;
-        //This collection is for preserving the order of items in which the were added/inserted/removed.
-        //DataType members specifically need this to maintain the structure size in RSLogix.
-        //By using a Func<string> and pointing it to the component name,
-        //we can avoid state issues when the client updates the component name.  
-        private readonly List<Func<string>> _names; 
+        private readonly ComponentNameComparer<TComponent> _comparer = new ComponentNameComparer<TComponent>();
 
         /// <summary>
         /// Creates a new empty instance of <see cref="ComponentCollection{TComponent}"/> for the specified <see cref="ILogixComponent"/>.
@@ -25,7 +20,6 @@ namespace L5Sharp.Abstractions
         public ComponentCollection()
         {
             _components = new HashSet<TComponent>(_comparer);
-            _names = new List<Func<string>>();
         }
 
         /// <summary>
@@ -42,7 +36,7 @@ namespace L5Sharp.Abstractions
         public int Count => _components.Count;
 
         /// <inheritdoc />
-        public bool Contains(string name)
+        public bool Contains(ComponentName name)
         {
             return !string.IsNullOrEmpty(name) && _components.Any(c => c.Name == name);
         }
@@ -52,12 +46,12 @@ namespace L5Sharp.Abstractions
         {
             if (predicate == null)
                 throw new ArgumentNullException(nameof(predicate));
-            
+
             return _components.Any(predicate);
         }
 
         /// <inheritdoc />
-        public TComponent Get(string name)
+        public TComponent Get(ComponentName name)
         {
             return !string.IsNullOrEmpty(name) ? _components.SingleOrDefault(c => c.Name == name) : default;
         }
@@ -75,18 +69,9 @@ namespace L5Sharp.Abstractions
         }
 
         /// <inheritdoc />
-        public IEnumerable<TComponent> Ordered()
+        public void Clear()
         {
-            return _components.OrderBy(c => _names.FindIndex(func => func.Invoke() == c.Name));
-        }
-
-        /// <inheritdoc />
-        public int IndexOf(TComponent component)
-        {
-            if (component == null)
-                throw new ArgumentNullException(nameof(component), $"{typeof(TComponent).Name} can not be null");
-            
-            return _names.FindIndex(n => n.Invoke() == component.Name);
+            _components.Clear();
         }
 
         /// <inheritdoc />
@@ -96,13 +81,16 @@ namespace L5Sharp.Abstractions
         public void AddRange(IEnumerable<TComponent> components) => AddComponents(components);
 
         /// <inheritdoc />
-        public virtual void Insert(int index, TComponent component) => InsertComponent(index, component);
-
-        /// <inheritdoc />
         public virtual void Update(TComponent component) => UpdateComponent(component);
 
         /// <inheritdoc />
-        public virtual void Remove(string name) => RemoveComponent(name);
+        public virtual void Remove(ComponentName name) => RemoveComponent(name);
+
+        /// <inheritdoc />
+        public void Replace(ComponentName name, TComponent component)
+        {
+            throw new NotImplementedException();
+        }
 
         /// <inheritdoc />
         public IEnumerator GetEnumerator()
@@ -110,71 +98,61 @@ namespace L5Sharp.Abstractions
             return _components.GetEnumerator();
         }
 
-        IEnumerator<TComponent> IEnumerable<TComponent>.GetEnumerator()
-        {
-            return _components.GetEnumerator();
-        }
-
-        private bool ContainsComponentName(string name)
+        private bool ContainsComponent(ComponentName name)
         {
             return _components.Any(c => c.Name == name);
         }
 
         private void AddComponent(TComponent component)
         {
-            if (component == null)
-                throw new ArgumentNullException(nameof(component), $"{typeof(TComponent).Name} can not be null");
+            if (component == null) return;
 
-            if (ContainsComponentName(component.Name))
+            if (ContainsComponent(component.Name))
                 throw new ComponentNameCollisionException(component.Name, typeof(TComponent));
 
             _components.Add(component);
-            _names.Add(() => component.Name);
         }
 
         private void AddComponents(IEnumerable<TComponent> components)
         {
-            if (components == null)
-                throw new ArgumentNullException(nameof(components), "Components can not be null");
+            if (components == null) return;
 
             foreach (var component in components)
                 AddComponent(component);
         }
 
-        private void InsertComponent(int index, TComponent component)
-        {
-            if (component == null)
-                throw new ArgumentNullException(nameof(component), $"{typeof(TComponent).Name} can not be null");
-
-            if (ContainsComponentName(component.Name))
-                throw new ComponentNameCollisionException(component.Name, typeof(TComponent));
-
-            _components.Add(component);
-            _names.Insert(index, () => component.Name);
-        }
-
         private void UpdateComponent(TComponent component)
         {
-            if (component == null)
-                throw new ArgumentNullException(nameof(component), $"{typeof(TComponent).Name} can not be null");
+            if (component == null) return;
 
-            if (!ContainsComponentName(component.Name))
-                AddComponent(component);
+            if (!ContainsComponent(component.Name))
+                _components.Add(component);
 
-            var index = _names.FindIndex(f => f.Invoke() == component.Name);
-            _names[index] = () => component.Name;
-            
             _components.RemoveWhere(c => c.Name == component.Name);
             _components.Add(component);
         }
 
-        private void RemoveComponent(string name)
+        private void RemoveComponent(ComponentName name)
         {
-            if (string.IsNullOrEmpty(name)) return;
-            if (!ContainsComponentName(name)) return;
-
-            _names.RemoveAt(_names.FindIndex(f => f.Invoke() == name));
+            if (name == null) return;
+            if (!ContainsComponent(name)) return;
             _components.RemoveWhere(c => c.Name == name);
+        }
+        
+        private void ReplaceComponent(ComponentName name, TComponent component)
+        {
+            if (name == null) return;
+            if (component == null) return;
+            
+            if (ContainsComponent(name))
+                _components.RemoveWhere(c => c.Name == name);
+            
+            _components.Add(component);
+        }
+
+        IEnumerator<TComponent> IEnumerable<TComponent>.GetEnumerator()
+        {
+            return _components.GetEnumerator();
         }
     }
 }

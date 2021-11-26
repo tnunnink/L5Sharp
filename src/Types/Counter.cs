@@ -1,23 +1,33 @@
-﻿using L5Sharp.Core;
+﻿using L5Sharp.Abstractions;
+using L5Sharp.Core;
+using L5Sharp.Enums;
 
 // ReSharper disable InconsistentNaming RSLogix naming
 
 namespace L5Sharp.Types
 {
-    public sealed class Counter : Predefined
+    public sealed class Counter : ComplexType
     {
+        /// <summary>
+        /// Creates a new instance of a counter type.
+        /// </summary>
         public Counter() : base(nameof(Counter).ToUpper())
         {
-            RegisterMemberFields();
         }
         
+        /// <summary>
+        /// Creates new instance of a counter type with provided default PRE member value. 
+        /// </summary>
+        /// <param name="pre">The value of the preset member to initialize</param>
         public Counter(Dint pre) : this()
         {
             PRE.DataType.SetValue(pre);
         }
-        
-        public override string Description => $"RSLogix {Name} DataType";
-        
+
+        /// <inheritdoc />
+        public override DataTypeClass Class => DataTypeClass.Predefined;
+
+        /// <inheritdoc />
         protected override IDataType New()
         {
             return new Counter();

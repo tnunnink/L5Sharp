@@ -1,12 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using FluentAssertions;
-using L5Sharp.Abstractions;
+﻿using FluentAssertions;
 using L5Sharp.Enums;
 using L5Sharp.Types;
 using NUnit.Framework;
 
-namespace L5Sharp.Core.Tests
+namespace L5Sharp.Abstractions.Tests
 {
     [TestFixture]
     public class PredefinedImplementationTests
@@ -29,18 +26,19 @@ namespace L5Sharp.Core.Tests
         
     }
 
-    public class ValidPredefined : Predefined
+    public class ValidPredefined : ComplexType
     {
         public ValidPredefined() :
             base(nameof(ValidPredefined))
         {
-            RegisterMemberFields();
         }
 
         public IMember<Bool> Member01 => Member.Create<Bool>(nameof(Member01));
         public IMember<Int> Member02 => Member.Create<Int>(nameof(Member02));
         public IMember<Dint> Member03 => Member.Create<Dint>(nameof(Member03));
         public IMember<Real> Member04 => Member.Create<Real>(nameof(Member04));
+        public override DataTypeClass Class => DataTypeClass.User;
+
         protected override IDataType New()
         {
             return new ValidPredefined();

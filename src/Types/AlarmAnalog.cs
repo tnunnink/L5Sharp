@@ -1,16 +1,24 @@
-﻿using L5Sharp.Core;
+﻿using L5Sharp.Abstractions;
+using L5Sharp.Core;
 using L5Sharp.Enums;
 
 // ReSharper disable InconsistentNaming Logix naming
 
 namespace L5Sharp.Types
 {
-    public class AlarmAnalog : Predefined
+    public class AlarmAnalog : ComplexType
     {
         public AlarmAnalog() : base("ALARM_ANALOG")
         {
         }
+        
+        /// <inheritdoc />
+        public override DataTypeClass Class => DataTypeClass.Predefined;
+        
+        /// <inheritdoc />
+        public override DataFormat Format => DataFormat.Alarm;
 
+        /// <inheritdoc />
         protected override IDataType New()
         {
             return new AlarmAnalog();

@@ -1,22 +1,33 @@
-﻿using L5Sharp.Core;
+﻿using L5Sharp.Abstractions;
+using L5Sharp.Core;
+using L5Sharp.Enums;
 
 // ReSharper disable InconsistentNaming RSLogix naming
 
 namespace L5Sharp.Types
 {
-    public sealed class Timer : Predefined
+    public sealed class Timer : ComplexType
     {
+        /// <summary>
+        /// Creates a new instance of a timer type.
+        /// </summary>
         public Timer() : base(nameof(Timer).ToUpper())
         {
-            RegisterMemberFields();
         }
         
+        /// <summary>
+        /// Creates new instance of a timer type with provided default PRE member value. 
+        /// </summary>
+        /// <param name="pre">The value of the preset member to initialize</param>
         public Timer(Dint pre) : this()
         {
             PRE.DataType.SetValue(pre);
         }
 
-        public override string Description => $"RSLogix {Name} DataType";
+        /// <inheritdoc />
+        public override DataTypeClass Class => DataTypeClass.Predefined;
+
+        /// <inheritdoc />
         protected override IDataType New()
         {
             return new Timer();

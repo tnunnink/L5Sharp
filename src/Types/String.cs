@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Text;
+using L5Sharp.Abstractions;
 using L5Sharp.Core;
 using L5Sharp.Enums;
 
@@ -8,17 +9,12 @@ using L5Sharp.Enums;
 
 namespace L5Sharp.Types
 {
-    public sealed class String : Predefined, IStringDefined, IEquatable<String>, IComparable<String>
+    public sealed class String : ComplexType, IStringDefined, IEquatable<String>, IComparable<String>
     {
         private const int PredefinedLength = 82; //This is the built in length of string types in RSLogix
-        
-        public String() : base(nameof(String).ToUpper())
+
+        public String() : base(nameof(String).ToUpper(), $"RSLogix representation of a {typeof(string)}")
         {
-            LEN = Member.Create(nameof(LEN), new Dint(PredefinedLength));
-            DATA = Member.Create<Sint>(nameof(DATA), new Dimensions(PredefinedLength), Radix.Ascii);
-            
-            RegisterMember(LEN);
-            RegisterMember(DATA);
         }
 
         public String(string value) : this()
@@ -26,32 +22,46 @@ namespace L5Sharp.Types
             if (!string.IsNullOrEmpty(value))
                 SetValue(value);
         }
-        
-        public override string Description => $"RSLogix representation of a {typeof(string)}";
-        public override DataTypeFamily Family => DataTypeFamily.String;
-        public override TagDataFormat DataFormat => TagDataFormat.String;
-        public string Value => GetValue();
-        public IMember<Dint> LEN { get; }
-        public IArrayMember<Sint> DATA { get; }
 
+        /// <inheritdoc />
+        public override DataTypeFamily Family => DataTypeFamily.String;
+
+        /// <inheritdoc />
+        public override DataTypeClass Class => DataTypeClass.Predefined;
+
+        /// <inheritdoc />
+        public override DataFormat Format => DataFormat.String;
+
+        /// <inheritdoc />
+        public string Value => GetValue();
+
+        /// <inheritdoc />
+        public IMember<Dint> LEN { get; } = Member.Create(nameof(LEN), new Dint(PredefinedLength));
+
+        /// <inheritdoc />
+        public IArrayMember<Sint> DATA { get; } =
+            Member.Create<Sint>(nameof(DATA), new Dimensions(PredefinedLength), Radix.Ascii);
+
+        /// <inheritdoc />
         protected override IDataType New()
         {
             return new String();
         }
 
+        /// <inheritdoc />
         public void SetValue(string value)
         {
             if (value == null)
                 throw new ArgumentNullException(nameof(value), "Value can not be null");
-            
+
             var bytes = Encoding.ASCII.GetBytes(value);
 
             if (bytes.Length > LEN.DataType.Value)
                 throw new ArgumentOutOfRangeException(nameof(value),
                     $"Value length is {bytes.Length}. The value length must be less than the predefined length {PredefinedLength}");
-            
+
             ClearData();
-            
+
             for (var i = 0; i < bytes.Length; i++)
                 DATA[i].DataType.SetValue(bytes[i]);
         }
@@ -66,21 +76,24 @@ namespace L5Sharp.Types
             return input.GetValue();
         }
 
+        /// <inheritdoc />
         public int CompareTo(String other)
         {
             return string.Compare(Value, other.Value, StringComparison.Ordinal);
         }
 
+        /// <inheritdoc />
         public bool Equals(String other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return Value == other.Value && 
+            return Value == other.Value &&
                    Members.SequenceEqual(other.Members) &&
                    Equals(LEN, other.LEN)
                    && Equals(DATA, other.DATA);
         }
 
+        /// <inheritdoc />
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
@@ -88,6 +101,7 @@ namespace L5Sharp.Types
             return obj.GetType() == GetType() && Equals((String)obj);
         }
 
+        /// <inheritdoc />
         public override int GetHashCode()
         {
             return HashCode.Combine(Members, LEN, DATA);

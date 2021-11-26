@@ -21,7 +21,7 @@ namespace L5Sharp.Extensions
         public static bool IsValueMember<TDataType>(this ITagMember<TDataType> member)
             where TDataType : IDataType
         {
-            return member.GetTypeClass() == DataTypeClass.Atomic && member.Dimensions.AreEmpty;
+            return typeof(IAtomic).IsAssignableFrom(typeof(TDataType)) && member.Dimensions.AreEmpty;
         }
 
         /// <summary>
@@ -32,7 +32,7 @@ namespace L5Sharp.Extensions
         public static bool IsStructureMember<TDataType>(this ITagMember<TDataType> member)
             where TDataType : IDataType
         {
-            return member.GetTypeClass() != DataTypeClass.Atomic && member.Dimensions.AreEmpty;
+            return typeof(IComplexType).IsAssignableFrom(typeof(TDataType)) && member.Dimensions.AreEmpty;
         }
 
         /// <summary>
@@ -57,7 +57,7 @@ namespace L5Sharp.Extensions
             return !member.Parent.Dimensions.AreEmpty;
         }
 
-        /// <summary>
+        /*/// <summary>
         /// Gets the <see cref="DataTypeClass"/> of the current <c>TagMember</c>.
         /// </summary>
         /// <returns>A <c>DataTypeClass</c> value representing the type of the generic tag.</returns>
@@ -79,7 +79,7 @@ namespace L5Sharp.Extensions
                 return DataTypeClass.AddOnDefined;
 
             return typeof(IModuleDefined).IsAssignableFrom(type) ? DataTypeClass.Io : null;
-        }
+        }*/
 
         public static void SetData<TDataType>(this ITagMember<TDataType> target, ITagMember<TDataType> source)
             where TDataType : IDataType

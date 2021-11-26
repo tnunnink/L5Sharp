@@ -37,7 +37,7 @@ namespace L5Sharp.Types.Tests
             type.Class.Should().Be(DataTypeClass.Predefined);
             type.Family.Should().Be(DataTypeFamily.String);
             type.Description.Should().Be("RSLogix representation of a System.String");
-            type.DataFormat.Should().Be(TagDataFormat.String);
+            type.Format.Should().Be(DataFormat.String);
             type.Value.Should().BeEmpty();
             type.Radix.Should().Be(Radix.Null);
             type.LEN.Should().NotBeNull();

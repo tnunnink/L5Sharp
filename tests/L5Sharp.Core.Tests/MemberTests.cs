@@ -13,7 +13,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Create_ValidNameAndType_ShouldNotBeNull()
         {
-            var type = new DataType("Test");
+            var type = new UserDefined("Test");
             var member = Member.Create("Test", type);
 
             member.Should().NotBeNull();

@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using L5Sharp.Abstractions;
 using L5Sharp.Enums;
+using L5Sharp.Extensions;
 
 namespace L5Sharp.Core
 {
     /// <inheritdoc cref="L5Sharp.IUserDefined" />
-    public class DataType : IUserDefined, IEquatable<DataType>
+    public class UserDefined : IUserDefined, IEquatable<UserDefined>
     {
         /// <summary>
         /// Creates a new instance of a <c>UserDefined</c> data type with the provided arguments.
@@ -15,13 +15,12 @@ namespace L5Sharp.Core
         /// <param name="name">The component name of the type.</param>
         /// <param name="description">the string description of the type.</param>
         /// <param name="members">The collection of members to add to the type.</param>
-        public DataType(ComponentName name, string description = null, IEnumerable<IMember<IDataType>> members = null)
+        public UserDefined(ComponentName name, string description = null, IEnumerable<IMember<IDataType>> members = null)
         {
-            Name = name ?? throw new ArgumentNullException(nameof(name));
+            Name = name;
             Description = description;
-            Members = new DataTypeMembers(this, members);
+            Members = new UserDefinedMembers(this, members);
         }
-
 
         /// <inheritdoc />
         public ComponentName Name { get; }
@@ -39,17 +38,19 @@ namespace L5Sharp.Core
         public DataTypeClass Class => DataTypeClass.User;
 
         /// <inheritdoc />
-        public TagDataFormat DataFormat => TagDataFormat.Decorated;
+        public DataFormat Format => DataFormat.Decorated;
 
         /// <inheritdoc />
         public IMemberCollection<IMember<IDataType>> Members { get; }
 
+        IEnumerable<IMember<IDataType>> IComplexType.Members => Members;
+
         /// <inheritdoc />
         public IDataType Instantiate()
         {
-            return new DataType(Name.Copy(), string.Copy(Description), Members.Select(m => m.Copy()));
+            return new UserDefined(Name.Copy(), Description.SafeCopy(), Members.Select(m => m.Copy()));
         }
-        
+
         /// <summary>
         /// Creates a new <c>UserDefined</c> data type with the provided values.
         /// </summary>
@@ -60,11 +61,11 @@ namespace L5Sharp.Core
         public static IUserDefined Create(ComponentName name, string description = null,
             IEnumerable<IMember<IDataType>> members = null)
         {
-            return new DataType(name, description, members);
+            return new UserDefined(name, description, members);
         }
 
         /// <inheritdoc />
-        public bool Equals(DataType other)
+        public bool Equals(UserDefined other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
@@ -78,7 +79,7 @@ namespace L5Sharp.Core
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((DataType)obj);
+            return obj.GetType() == GetType() && Equals((UserDefined)obj);
         }
 
         /// <inheritdoc />
@@ -99,7 +100,7 @@ namespace L5Sharp.Core
         /// <param name="left">The left instance of the object.</param>
         /// <param name="right">The right instance of the object.</param>
         /// <returns>True if the two objects are equal, otherwise false.</returns>
-        public static bool operator ==(DataType left, DataType right)
+        public static bool operator ==(UserDefined left, UserDefined right)
         {
             return Equals(left, right);
         }
@@ -110,7 +111,7 @@ namespace L5Sharp.Core
         /// <param name="left">The left instance of the object.</param>
         /// <param name="right">The right instance of the object.</param>
         /// <returns>True if the two objects are not equal, otherwise false.</returns>
-        public static bool operator !=(DataType left, DataType right)
+        public static bool operator !=(UserDefined left, UserDefined right)
         {
             return !Equals(left, right);
         }

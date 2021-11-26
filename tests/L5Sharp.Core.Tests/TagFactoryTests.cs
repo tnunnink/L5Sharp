@@ -10,7 +10,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Create_DefaultOverload_ShouldBeOfTypeIDataType()
         {
-            var dataType = new DataType("MyType");
+            var dataType = new UserDefined("MyType");
             var tag = Tag.Create("Test", dataType);
 
             tag.Should().NotBeNull();

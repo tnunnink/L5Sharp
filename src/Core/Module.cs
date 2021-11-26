@@ -40,8 +40,8 @@ namespace L5Sharp.Core
 
         public IEnumerable<Port> Ports { get; }
         public IEnumerable<Connection> Connections { get; }
-        public ITag<IModuleDefined> Config { get; }
-        public ITag<IModuleDefined> Input { get; }
-        public ITag<IModuleDefined> Output { get; }
+        public ITag<IComplexType> Config { get; }
+        public ITag<IComplexType> Input { get; }
+        public ITag<IComplexType> Output { get; }
     }
 }

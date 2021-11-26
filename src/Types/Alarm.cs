@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using L5Sharp.Abstractions;
 using L5Sharp.Core;
 using L5Sharp.Enums;
 
@@ -6,16 +7,19 @@ using L5Sharp.Enums;
 
 namespace L5Sharp.Types
 {
-    public class Alarm : Predefined
+    public class Alarm : ComplexType
     {
         public Alarm() : base(nameof(Alarm).ToUpper())
         {
-            RegisterMemberFields();
         }
         
-        public override string Description => $"RSLogix {Name} DataType";
-        public override TagDataFormat DataFormat => TagDataFormat.Alarm;
-        
+        /// <inheritdoc />
+        public override DataTypeClass Class => DataTypeClass.Predefined;
+
+        /// <inheritdoc />
+        public override DataFormat Format => DataFormat.Alarm;
+
+        /// <inheritdoc />
         protected override IDataType New()
         {
             return new Alarm();

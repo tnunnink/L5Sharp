@@ -1,19 +1,21 @@
-﻿using L5Sharp.Core;
+﻿using L5Sharp.Abstractions;
+using L5Sharp.Core;
 using L5Sharp.Enums;
 
 // ReSharper disable InconsistentNaming RSLogix naming
 
 namespace L5Sharp.Types
 {
-    public class Message : Predefined
+    public class Message : ComplexType
     {
         public Message() : base(nameof(Message).ToUpper())
         {
-            RegisterMemberFields();
         }
 
-        public override string Description => $"RSLogix {Name} DataType";
+        /// <inheritdoc />
+        public override DataTypeClass Class => DataTypeClass.Predefined;
 
+        /// <inheritdoc />
         protected override IDataType New()
         {
             return new Message();

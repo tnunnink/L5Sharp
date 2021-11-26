@@ -1,5 +1,4 @@
-﻿using System.Xml.Serialization;
-using L5Sharp.Enums;
+﻿using L5Sharp.Enums;
 
 namespace L5Sharp
 {
@@ -40,6 +39,6 @@ namespace L5Sharp
         /// <summary>
         /// Gets the <c>DataFormat</c> of the <c>DataType</c> indicating how the data for the type is formatted on import/export.
         /// </summary>
-        TagDataFormat DataFormat { get; }
+        DataFormat Format { get; }
     }
 }

@@ -9,12 +9,12 @@ using L5Sharp.Exceptions;
 
 namespace L5Sharp.Core
 {
-    internal class DataTypeMembers : IMemberCollection<IMember<IDataType>>
+    internal class UserDefinedMembers : IMemberCollection<IMember<IDataType>>
     {
         private readonly List<IMember<IDataType>> _members = new List<IMember<IDataType>>();
         private readonly IDataType _dataType;
 
-        public DataTypeMembers(IDataType parent, IEnumerable<IMember<IDataType>> members = null)
+        public UserDefinedMembers(IDataType parent, IEnumerable<IMember<IDataType>> members = null)
         {
             _dataType = parent ?? throw new ArgumentNullException(nameof(parent));
             AddRange(members);

@@ -1,16 +1,23 @@
-﻿using L5Sharp.Core;
+﻿using L5Sharp.Abstractions;
 using L5Sharp.Enums;
 
 // ReSharper disable InconsistentNaming
 
 namespace L5Sharp.Types
 {
-    public class AlarmDigital : Predefined
+    public class AlarmDigital : ComplexType
     {
         public AlarmDigital() : base("ALARM_DIGITAL")
         {
         }
 
+        /// <inheritdoc />
+        public override DataTypeClass Class => DataTypeClass.Predefined;
+        
+        /// <inheritdoc />
+        public override DataFormat Format => DataFormat.Alarm;
+
+        /// <inheritdoc />
         protected override IDataType New()
         {
             return new AlarmDigital();

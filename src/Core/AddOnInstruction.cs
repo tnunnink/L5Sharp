@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using L5Sharp.Abstractions;
 using L5Sharp.Enums;
 
 namespace L5Sharp.Core
@@ -42,7 +41,7 @@ namespace L5Sharp.Core
             IsEncrypted = isEncrypted;
 
             Parameters = new Parameters(this, parameters);
-            LocalTags = new Tags(this, localTags);
+            /*LocalTags = new Tags(this, localTags);*/
 
             type ??= RoutineType.Ladder;
             InitializeRoutine(type);
@@ -54,7 +53,7 @@ namespace L5Sharp.Core
         public Radix Radix => Radix.Null;
         public DataTypeFamily Family => DataTypeFamily.None;
         public DataTypeClass Class => DataTypeClass.AddOnDefined;
-        public TagDataFormat DataFormat => TagDataFormat.Decorated;
+        public DataFormat Format => DataFormat.Decorated;
         public RoutineType Type => Routines.Single(r => r.Name == LogicRoutineName).Type;
         public Revision Revision { get; private set; }
         public string RevisionExtension { get; private set; }
@@ -78,7 +77,7 @@ namespace L5Sharp.Core
 
         public NeutralText Signature { get; }
         public IMemberCollection<IParameter<IDataType>> Parameters { get; }
-        public ITags LocalTags { get; }
+        public IComponentCollection<ITag<IDataType>> LocalTags { get; }
 
         public IEnumerable<IRoutine> Routines => _routines.AsReadOnly();
 

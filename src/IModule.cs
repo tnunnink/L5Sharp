@@ -20,8 +20,8 @@ namespace L5Sharp
         KeyingState State { get; }
         IEnumerable<Port> Ports { get; }
         IEnumerable<Connection> Connections { get; }
-        ITag<IModuleDefined> Config { get; }
-        ITag<IModuleDefined> Input { get; }
-        ITag<IModuleDefined> Output { get; }
+        ITag<IComplexType> Config { get; }
+        ITag<IComplexType> Input { get; }
+        ITag<IComplexType> Output { get; }
     }
 }

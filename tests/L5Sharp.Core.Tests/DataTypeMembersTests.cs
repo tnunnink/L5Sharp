@@ -12,18 +12,18 @@ namespace L5Sharp.Core.Tests
     [TestFixture]
     public class DataTypeMembersTests
     {
-        private DataType _userDefined;
+        private UserDefined _userDefined;
 
         [SetUp]
         public void Setup()
         {
-            _userDefined = new DataType("MyType", "This is a test user type");
+            _userDefined = new UserDefined("MyType", "This is a test user type");
         }
 
         [Test]
         public void New_ValidParentType_ShouldNotBeNull()
         {
-            var members = new DataTypeMembers(_userDefined);
+            var members = new UserDefinedMembers(_userDefined);
 
             members.Should().NotBeNull();
         }
@@ -31,7 +31,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void New_MembersOverload_ShouldHaveExpectedCount()
         {
-            var members = new DataTypeMembers(_userDefined, new[] { Member.Create<Bool>("Member01") });
+            var members = new UserDefinedMembers(_userDefined, new[] { Member.Create<Bool>("Member01") });
 
             members.Should().HaveCount(1);
         }
@@ -379,9 +379,9 @@ namespace L5Sharp.Core.Tests
             enumerator.Should().NotBeNull();
         }
 
-        private DataTypeMembers CreateSeededMembers()
+        private UserDefinedMembers CreateSeededMembers()
         {
-            return new DataTypeMembers(_userDefined, new List<IMember<IDataType>>
+            return new UserDefinedMembers(_userDefined, new List<IMember<IDataType>>
             {
                 Member.Create<Dint>("Member01"),
                 Member.Create<Real>("Member02"),

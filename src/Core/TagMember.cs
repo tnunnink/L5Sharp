@@ -226,10 +226,8 @@ namespace L5Sharp.Core
             if (Parent == null) return Base.Description;
 
             //The rest is based on the if the root type is user defined or not.
-            var typeClass = Base.GetTypeClass();
-
             //If not, simply look to the parent description.
-            if (typeClass != DataTypeClass.User)
+            if (typeof(IUserDefined).IsAssignableFrom(typeof(TDataType)))
                 return Parent.Description;
 
             //If so, then we concatenate descriptions based on if it is an element of array or member of a type. 

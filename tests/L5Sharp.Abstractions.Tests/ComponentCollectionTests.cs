@@ -180,69 +180,6 @@ namespace L5Sharp.Abstractions.Tests
         }
 
         [Test]
-        public void Ordered_WhenCalled_ShouldHaveExpectedOrder()
-        {
-            var ordered = _collection.Ordered().ToList();
-
-            ordered[0].Should().Be(_component1);
-            ordered[1].Should().Be(_component2);
-            ordered[2].Should().Be(_component3);
-        }
-
-        [Test]
-        public void Ordered_AfterInserting_ShouldHaveExpectedOrder()
-        {
-            var component = new TestLogixComponent("Test", "This is a test");
-            _collection.Insert(1, component);
-
-            var ordered = _collection.Ordered().ToList();
-
-            ordered[0].Should().Be(_component1);
-            ordered[1].Should().Be(component);
-            ordered[2].Should().Be(_component2);
-            ordered[3].Should().Be(_component3);
-        }
-
-        [Test]
-        public void Ordered_AfterInsertingAndRemoving_ShouldHaveExpectedOrder()
-        {
-            var c1 = new TestLogixComponent("Test1", "This is a test");
-            var c2 = new TestLogixComponent("Test2", "This is a test");
-            _collection.Insert(1, c1);
-            _collection.Remove(_component1.Name);
-            _collection.Insert(1, c2);
-
-            var ordered = _collection.Ordered().ToList();
-
-            ordered[0].Should().Be(c1);
-            ordered[1].Should().Be(c2);
-            ordered[2].Should().Be(_component2);
-            ordered[3].Should().Be(_component3);
-        }
-
-        [Test]
-        public void IndexOf_ValidComponent_ShouldBeExpectedIndex()
-        {
-            var index = _collection.IndexOf(_component2);
-
-            index.Should().Be(1);
-        }
-
-        [Test]
-        public void IndexOf_InvalidComponent_ShouldBeNegativeOne()
-        {
-            var index = _collection.IndexOf(new TestLogixComponent("Invalid", "This does not exist"));
-
-            index.Should().Be(-1);
-        }
-
-        [Test]
-        public void IndexOf_Null_ShouldThrowArgumentNullException()
-        {
-            FluentActions.Invoking(() => _collection.IndexOf(null)).Should().Throw<ArgumentNullException>();
-        }
-
-        [Test]
         public void Add_Exists_ShouldThrowComponentNameCollisionException()
         {
             FluentActions.Invoking(() => _collection.Add(_component3)).Should()
@@ -284,29 +221,6 @@ namespace L5Sharp.Abstractions.Tests
             _collection.AddRange(list);
 
             _collection.Should().HaveCount(6);
-        }
-
-        [Test]
-        public void Insert_Exists_ShouldThrowComponentNameCollisionException()
-        {
-            var component = new TestLogixComponent("Component1", "This is a duplicate");
-            FluentActions.Invoking(() => _collection.Insert(2, component)).Should()
-                .Throw<ComponentNameCollisionException>();
-        }
-
-        [Test]
-        public void Insert_DoesNotExist_ShouldContainExpected()
-        {
-            var component = new TestLogixComponent("Test", "This is a test");
-            _collection.Insert(0, component);
-
-            _collection.Should().Contain(component);
-        }
-
-        [Test]
-        public void Insert_Null_ShouldThrowArgumentNullException()
-        {
-            FluentActions.Invoking(() => _collection.Insert(0, null)).Should().Throw<ArgumentNullException>();
         }
 
         [Test]
@@ -370,17 +284,6 @@ namespace L5Sharp.Abstractions.Tests
             result.Name.Should().Be("Component1");
             result.Description.Should().Be("This is the updated component");
             result.Should().Be(component);
-        }
-
-        [Test]
-        public void Update_ValidNameAndComponent_MaintainOrder()
-        {
-            var component = new TestLogixComponent("Component1", "This is the updated component");
-
-            _collection.Update(component);
-
-            var index = _collection.IndexOf(component);
-            index.Should().Be(0);
         }
 
         [Test]

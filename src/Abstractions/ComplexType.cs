@@ -1,32 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using L5Sharp.Core;
 using L5Sharp.Enums;
-using L5Sharp.Exceptions;
 
-namespace L5Sharp.Core
+namespace L5Sharp.Abstractions
 {
-    /// <inheritdoc cref="L5Sharp.IPredefined" />
-    public abstract class Predefined : IPredefined, IEquatable<Predefined>
+    public abstract class ComplexType : IComplexType, IEquatable<ComplexType>
     {
-        private readonly Dictionary<string, IMember<IDataType>> _members =
-            new Dictionary<string, IMember<IDataType>>(StringComparer.OrdinalIgnoreCase);
-
         /// <summary>
-        /// Creates a new instance of a <c>Predefined</c> type with the provided component name./>
+        /// Creates new instance of a generic complex type.
         /// </summary>
-        /// <param name="name">The value of the <see cref="ComponentName"/>.</param>
-        /// <exception cref="ArgumentNullException">Throw when name is null.</exception> 
-        protected Predefined(ComponentName name)
+        /// <param name="name"></param>
+        /// <param name="description"></param>
+        /// <param name="members"></param>
+        protected ComplexType(string name, string description = null, IEnumerable<IMember<IDataType>> members = null)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
+            Description = description;
+            Members = members ?? FindMemberFields();
         }
 
         /// <inheritdoc />
         public ComponentName Name { get; }
 
         /// <inheritdoc />
-        public virtual string Description => null;
+        public string Description { get; }
 
         /// <inheritdoc />
         public Radix Radix => Radix.Null;
@@ -35,21 +34,13 @@ namespace L5Sharp.Core
         public virtual DataTypeFamily Family => DataTypeFamily.None;
 
         /// <inheritdoc />
-        public DataTypeClass Class => DataTypeClass.Predefined;
+        public abstract DataTypeClass Class { get; }
 
         /// <inheritdoc />
-        public virtual TagDataFormat DataFormat => TagDataFormat.Decorated;
+        public virtual DataFormat Format => DataFormat.Decorated;
 
         /// <inheritdoc />
-        public IEnumerable<IMember<IDataType>> Members => _members.Values.AsEnumerable();
-
-        /// <inheritdoc />
-        public bool Equals(Predefined other)
-        {
-            if (ReferenceEquals(null, other)) return false;
-            if (ReferenceEquals(this, other)) return true;
-            return Name == other.Name && Members.SequenceEqual(other.Members);
-        }
+        public virtual IEnumerable<IMember<IDataType>> Members { get; }
 
         /// <inheritdoc />
         public IDataType Instantiate()
@@ -66,25 +57,35 @@ namespace L5Sharp.Core
         /// </remarks>
         /// <returns>A new instance of the current type with default values.</returns>
         protected abstract IDataType New();
-        
+
         /// <inheritdoc />
-        public override string ToString()
+        public bool Equals(ComplexType other)
         {
-            return Name;
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return Name == other.Name
+                   && Description == other.Description
+                   && Members.SequenceEqual(other.Members);
         }
-        
+
         /// <inheritdoc />
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((Predefined)obj);
+            return obj.GetType() == GetType() && Equals((ComplexType)obj);
         }
 
         /// <inheritdoc />
         public override int GetHashCode()
         {
-            return HashCode.Combine(_members, Name, Family);
+            return HashCode.Combine(Name, Description, Members);
+        }
+
+        /// <inheritdoc />
+        public override string ToString()
+        {
+            return Name;
         }
 
         /// <summary>
@@ -93,7 +94,7 @@ namespace L5Sharp.Core
         /// <param name="left">The left instance of the object.</param>
         /// <param name="right">The right instance of the object.</param>
         /// <returns>True if the two objects are equal, otherwise false.</returns>
-        public static bool operator ==(Predefined left, Predefined right)
+        public static bool operator ==(ComplexType left, ComplexType right)
         {
             return Equals(left, right);
         }
@@ -104,40 +105,22 @@ namespace L5Sharp.Core
         /// <param name="left">The left instance of the object.</param>
         /// <param name="right">The right instance of the object.</param>
         /// <returns>True if the two objects are not equal, otherwise false.</returns>
-        public static bool operator !=(Predefined left, Predefined right)
+        public static bool operator !=(ComplexType left, ComplexType right)
         {
             return !Equals(left, right);
         }
-
+        
         /// <summary>
         /// Adds all instance fields of type <see cref="IMember{TDataType}"/> to the <see cref="Members"/> collection
         /// using reflection so that the developer does not need to register each member individually.
         /// </summary>
-        protected void RegisterMemberFields()
+        private IEnumerable<IMember<IDataType>> FindMemberFields()
         {
             var fields = GetType().GetFields().Where(f =>
                 f.FieldType.IsGenericType &&
                 f.FieldType.GetGenericTypeDefinition().IsAssignableFrom(typeof(IMember<>))).ToList();
 
-            foreach (var member in fields.Select(p => (IMember<IDataType>) p.GetValue(this)))
-                RegisterTypeMember(member);
-        }
-
-        /// <summary>
-        /// Registers the <c>Member</c> to the <see cref="Members"/> collection.
-        /// </summary>
-        /// <param name="member"></param>
-        protected void RegisterMember(IMember<IDataType> member) => RegisterTypeMember(member);
-
-        private void RegisterTypeMember(IMember<IDataType> member)
-        {
-            if (_members.ContainsKey(member.Name))
-                throw new ComponentNameCollisionException(member.Name, typeof(IMember<>));
-
-            if (member.DataType.Equals(this))
-                throw new CircularReferenceException(member.DataType);
-            
-            _members.Add(member.Name, member);
+            return fields.Select(f => (IMember<IDataType>)f.GetValue(this));
         }
     }
 }

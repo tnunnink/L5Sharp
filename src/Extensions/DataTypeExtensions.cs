@@ -38,13 +38,10 @@ namespace L5Sharp.Extensions
         /// <returns>A <c>Member</c> instance specified by the provided name if it exists, null if it does not.</returns>
         public static IMember<IDataType> GetMember(this IDataType dataType, string name)
         {
-            return dataType switch
-            {
-                IUserDefined userType => userType.Members.Get(name),
-                IPredefined predefined => predefined.Members.SingleOrDefault(m => m.Name == name),
-                IAddOnDefined addOnDefined => addOnDefined.Members.SingleOrDefault(m => m.Name == name),
-                _ => null
-            };
+            if (!(dataType is IComplexType complexType))
+                return null;
+
+            return complexType.Members.SingleOrDefault(m => m.Name == name);
         }
 
         /// <summary>
@@ -54,13 +51,10 @@ namespace L5Sharp.Extensions
         /// <returns>A collection of members for the provided data type if there are any, an empty collection if not.</returns>
         public static IEnumerable<IMember<IDataType>> GetMembers(this IDataType dataType)
         {
-            return dataType switch
-            {
-                IUserDefined userType => userType.Members,
-                IPredefined predefined => predefined.Members,
-                IAddOnDefined addOnDefined => addOnDefined.Members,
-                _ => Enumerable.Empty<IMember<IDataType>>()
-            };
+            if (!(dataType is IComplexType complexType))
+                return Enumerable.Empty<IMember<IDataType>>();
+
+            return complexType.Members;
         }
         
         /// <summary>

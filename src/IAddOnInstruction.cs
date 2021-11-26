@@ -5,7 +5,7 @@ using L5Sharp.Enums;
 
 namespace L5Sharp
 {
-    public interface IAddOnInstruction : IAddOnDefined, IInstruction
+    public interface IAddOnInstruction : IComplexType, IInstruction
     {
         RoutineType Type { get; }
         Revision Revision { get; }
@@ -24,7 +24,7 @@ namespace L5Sharp
         bool IsEncrypted { get; }
         IRoutine Logic { get; }
         new IMemberCollection<IParameter<IDataType>> Parameters { get; }
-        ITags LocalTags { get; }
+        IComponentCollection<ITag<IDataType>> LocalTags { get; }
         IEnumerable<IRoutine> Routines { get; }
     }
 }

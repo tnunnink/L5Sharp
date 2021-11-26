@@ -177,7 +177,7 @@ namespace L5Sharp.Core.Tests
         }
     }
 
-    public class MyNestedType : DataType
+    public class MyNestedType : UserDefined
     {
         public MyNestedType() :
             base(nameof(MyNestedType), "This is a test data type")

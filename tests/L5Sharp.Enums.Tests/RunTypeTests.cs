@@ -93,29 +93,5 @@ namespace L5Sharp.Enums.Tests
 
             type.Should().NotBeNull();
         }
-        
-        [Test]
-        public void New_dD_ShouldNotBeNull()
-        {
-            var type = RungType.dD;
-
-            type.Should().NotBeNull();
-        }
-        
-        [Test]
-        public void New_dI_ShouldNotBeNull()
-        {
-            var type = RungType.dI;
-
-            type.Should().NotBeNull();
-        }
-        
-        [Test]
-        public void New_dIR_ShouldNotBeNull()
-        {
-            var type = RungType.dIR;
-
-            type.Should().NotBeNull();
-        }
     }
 }

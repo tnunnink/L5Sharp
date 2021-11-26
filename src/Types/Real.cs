@@ -29,7 +29,7 @@ namespace L5Sharp.Types
         public string Description => $"RSLogix representation of a {typeof(float)}";
         public DataTypeFamily Family => DataTypeFamily.None;
         public DataTypeClass Class => DataTypeClass.Atomic;
-        public TagDataFormat DataFormat => TagDataFormat.Decorated;
+        public DataFormat Format => DataFormat.Decorated;
         public Radix Radix { get; private set; }
         public float Value { get; private set; }
         public string FormattedValue => Radix.Format(this);

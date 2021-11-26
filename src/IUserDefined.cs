@@ -11,11 +11,11 @@
     /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
     /// `Logix 5000 Controllers Import/Export`</a> for more information.
     /// </footer> 
-    public interface IUserDefined : IDataType
+    public interface IUserDefined : IComplexType
     {
         /// <summary>
         /// Member collection of the <c>UserDefined</c> that defined the complex structure of the type. 
         /// </summary>
-        IMemberCollection<IMember<IDataType>> Members { get; }
+        new IMemberCollection<IMember<IDataType>> Members { get; }
     }
 }

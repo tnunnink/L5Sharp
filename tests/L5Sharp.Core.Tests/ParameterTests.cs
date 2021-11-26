@@ -52,7 +52,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Create_UserType_ShouldNotBeNull()
         {
-            var dataType = new DataType("Test");
+            var dataType = new UserDefined("Test");
             var parameter = Parameter.Create("Test", dataType);
 
             parameter.Should().NotBeNull();

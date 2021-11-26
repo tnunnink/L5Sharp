@@ -7,7 +7,7 @@ using L5Sharp.Extensions;
 namespace L5Sharp.Core
 {
     /// <inheritdoc />
-    public class ModuleDefined : IModuleDefined
+    public class ModuleDefined : IComplexType
     {
         internal ModuleDefined(string name, IEnumerable<IMember<IDataType>> members)
         {
@@ -18,16 +18,10 @@ namespace L5Sharp.Core
         /// <inheritdoc />
         public string Name { get; }
 
-        ComponentName ILogixComponent.Name => Name;
+        ComponentName ILogixComponent.Name => null; //todo dont love this. Type could be casted and get null for name...
 
         /// <inheritdoc />
         public string Description => null;
-
-        /// <inheritdoc />
-        public IDataType Instantiate()
-        {
-            return new ModuleDefined(Name.SafeCopy(), Members.Select(m => m.Copy()));
-        }
 
         /// <inheritdoc />
         public Radix Radix => Radix.Null;
@@ -39,9 +33,15 @@ namespace L5Sharp.Core
         public DataTypeClass Class => DataTypeClass.Io;
 
         /// <inheritdoc />
-        public TagDataFormat DataFormat => TagDataFormat.Decorated;
+        public DataFormat Format => DataFormat.Decorated;
 
         /// <inheritdoc />
         public IEnumerable<IMember<IDataType>> Members { get; }
+
+        /// <inheritdoc />
+        public IDataType Instantiate()
+        {
+            return new ModuleDefined(Name.SafeCopy(), Members.Select(m => m.Copy()));
+        }
     }
 }

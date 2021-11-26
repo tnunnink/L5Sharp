@@ -13,7 +13,6 @@ namespace L5Sharp
         private static readonly Dictionary<string, Func<IDataType>> DataTypeRegistry =
             new Dictionary<string, Func<IDataType>>(StringComparer.OrdinalIgnoreCase)
             {
-                { nameof(Undefined), () => new Undefined() },
                 { nameof(Bool), () => new Bool() },
                 { "Bit", () => new Bool() }, //Bit is a valid type that appears in the L5X and is the same as a Bool
                 { nameof(Sint), () => new Sint() },
@@ -124,7 +123,7 @@ namespace L5Sharp
         /// <returns>An instance of the IDatatype if it is registered. An instance of Undefined otherwise</returns>
         public static IDataType InstantiateType(string name)
         {
-            return DataTypeRegistry.ContainsKey(name) ? DataTypeRegistry[name].Invoke() : new Undefined();
+            return DataTypeRegistry.ContainsKey(name) ? DataTypeRegistry[name].Invoke() : new Undefined(name);
         }
 
         /// <summary>

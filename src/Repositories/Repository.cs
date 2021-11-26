@@ -38,14 +38,14 @@ namespace L5Sharp.Repositories
         public virtual TComponent Get(string name)
         {
             var element = Context.L5X.GetComponents<TComponent>().FirstOrDefault(x => x.GetName() == name);
-            return Context.Serializer.Deserialize<TComponent>(element);
+            return Context.Serialization.Deserialize<TComponent>(element);
         }
 
         /// <inheritdoc />
         public virtual IEnumerable<TComponent> GetAll()
         {
             var elements = Context.L5X.GetComponents<TComponent>();
-            return elements.Select(e => Context.Serializer.Deserialize<TComponent>(e));
+            return elements.Select(e => Context.Serialization.Deserialize<TComponent>(e));
         }
 
         /// <inheritdoc />
@@ -53,7 +53,7 @@ namespace L5Sharp.Repositories
         {
             var filter = predicate.ToXExpression();
             var element = Context.L5X.GetComponents<TComponent>().FirstOrDefault(filter);
-            return Context.Serializer.Deserialize<TComponent>(element);
+            return Context.Serialization.Deserialize<TComponent>(element);
         }
 
         /// <inheritdoc />
@@ -61,7 +61,7 @@ namespace L5Sharp.Repositories
         {
             var filter = predicate.ToXExpression();
             var elements = Context.L5X.GetComponents<TComponent>().Where(filter);
-            return elements.Select(e => Context.Serializer.Deserialize<TComponent>(e));
+            return elements.Select(e => Context.Serialization.Deserialize<TComponent>(e));
         }
 
         public virtual void Add(TComponent component)
@@ -72,7 +72,7 @@ namespace L5Sharp.Repositories
             if (Contains(component.Name))
                 throw new ComponentNameCollisionException(component.Name, component.GetType());
             
-            var element = Context.Serializer.Serialize(component);
+            var element = Context.Serialization.Serialize(component);
             
             Context.L5X.GetContainer<TComponent>().Add(element);
         }

@@ -38,53 +38,5 @@ namespace L5Sharp.Enums.Tests
 
             sut.Should().HaveCount(5);
         }
-
-        [Test]
-        public void FromType_IAtomic_ShouldBeAtomic()
-        {
-            var sut = DataTypeClass.FromType<IAtomic>();
-
-            sut.Should().Be(DataTypeClass.Atomic);
-        }
-        
-        [Test]
-        public void FromType_IPredefined_ShouldBePredefined()
-        {
-            var sut = DataTypeClass.FromType<IPredefined>();
-
-            sut.Should().Be(DataTypeClass.Predefined);
-        }
-        
-        [Test]
-        public void FromType_IUserDefined_ShouldBeUser()
-        {
-            var sut = DataTypeClass.FromType<IUserDefined>();
-
-            sut.Should().Be(DataTypeClass.User);
-        }
-        
-        [Test]
-        public void FromType_IModuleDefined_ShouldBeIo()
-        {
-            var sut = DataTypeClass.FromType<IModuleDefined>();
-
-            sut.Should().Be(DataTypeClass.Io);
-        }
-        
-        [Test]
-        public void FromType_IAddOnDefined_ShouldBeAddOn()
-        {
-            var sut = DataTypeClass.FromType<IAddOnDefined>();
-
-            sut.Should().Be(DataTypeClass.AddOnDefined);
-        }
-        
-        [Test]
-        public void FromType_IAddOnDefined_ShouldBeNull()
-        {
-            var sut = DataTypeClass.FromType<IDataType>();
-
-            sut.Should().Be(null);
-        }
     }
 }

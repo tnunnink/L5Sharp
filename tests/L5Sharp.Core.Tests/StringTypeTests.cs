@@ -68,7 +68,7 @@ namespace L5Sharp.Core.Tests
         public void DataFormat_GetValue_ShouldBeExpected()
         {
             var type = new StringDefined("Test", 100);
-            type.DataFormat.Should().Be(TagDataFormat.String);
+            type.Format.Should().Be(DataFormat.String);
         }
 
         [Test]

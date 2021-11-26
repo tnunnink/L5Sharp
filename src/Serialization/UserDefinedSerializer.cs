@@ -33,7 +33,7 @@ namespace L5Sharp.Serialization
                 element.Add(component.ToElement(c => c.Description));
 
             var members = new XElement(nameof(component.Members));
-            members.Add(component.Members.Select(m => _context.Serializer.Serialize(m)));
+            members.Add(component.Members.Select(m => _context.Serialization.Serialize(m)));
             element.Add(members);
 
             return element;
@@ -47,9 +47,9 @@ namespace L5Sharp.Serialization
             var description = element.GetValue<IDataType, string>(x => x.Description);
             
             var members = element.Descendants(LogixNames.Member).Select(e =>
-                _context.Serializer.Deserialize<IMember<IDataType>>(e));
+                _context.Serialization.Deserialize<IMember<IDataType>>(e));
 
-            return new DataType(name, description, members);
+            return new UserDefined(name, description, members);
         }
     }
 }

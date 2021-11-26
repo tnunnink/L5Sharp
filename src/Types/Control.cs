@@ -1,15 +1,18 @@
-﻿using L5Sharp.Core;
+﻿using L5Sharp.Abstractions;
+using L5Sharp.Enums;
 
 // ReSharper disable InconsistentNaming RSLogix naming
 
 namespace L5Sharp.Types
 {
-    public class Control : Predefined
+    public class Control : ComplexType
     {
         public Control() : base(nameof(Control).ToUpper())
         {
-            RegisterMemberFields();
         }
+
+        /// <inheritdoc />
+        public override DataTypeClass Class => DataTypeClass.Predefined;
 
         /// <inheritdoc />
         protected override IDataType New()

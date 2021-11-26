@@ -33,7 +33,7 @@ namespace L5Sharp.Core
         public Radix Radix => Radix.Null;
         public DataTypeFamily Family => DataTypeFamily.String;
         public DataTypeClass Class => DataTypeClass.User;
-        public TagDataFormat DataFormat => TagDataFormat.String;
+        public DataFormat Format => DataFormat.String;
         public string Value => GetValue();
         public IMember<Dint> LEN { get; }
         public IArrayMember<Sint> DATA { get; }

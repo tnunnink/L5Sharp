@@ -28,7 +28,7 @@ namespace L5Sharp.Types.Tests
             type.Class.Should().Be(DataTypeClass.Atomic);
             type.Family.Should().Be(DataTypeFamily.None);
             type.Description.Should().Be("RSLogix representation of a System.Boolean");
-            type.DataFormat.Should().Be(TagDataFormat.Decorated);
+            type.Format.Should().Be(DataFormat.Decorated);
             type.Radix.Should().Be(Radix.Decimal);
             type.Value.Should().BeFalse();
         }
