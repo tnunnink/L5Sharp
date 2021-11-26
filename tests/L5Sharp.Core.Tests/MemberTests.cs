@@ -18,7 +18,7 @@ namespace L5Sharp.Core.Tests
 
             member.Should().NotBeNull();
         }
-        
+
         [Test]
         public void Create_TypedValidNameAndType_ShouldNotBeNull()
         {
@@ -36,17 +36,6 @@ namespace L5Sharp.Core.Tests
         }
 
         [Test]
-        public void New_ArrayType_ShouldHaveExpectedLength()
-        {
-            var fixture = new Fixture();
-            var length = fixture.Create<ushort>();
-            var array = Member.Create<Dint>("Test", new Dimensions(length));
-
-            array.Dimension.Length.Should().Be(length);
-            array.Should().AllBeOfType<Member<Dint>>();
-        }
-
-        [Test]
         public void New_NullName_ShouldThrowArgumentNullException()
         {
             FluentActions.Invoking(() => Member.Create<Dint>(null)).Should().Throw<ArgumentNullException>();
@@ -58,11 +47,11 @@ namespace L5Sharp.Core.Tests
             var member = Member.Create("Name", null);
             member.DataType.Should().BeNull();
         }
-        
+
         [Test]
-        public void New_OverloadExceptDimensions_ShouldHaveExpectedValues()
+        public void New_Overloaded_ShouldHaveExpectedValues()
         {
-            var member = Member.Create("Member", (IDataType)new Real(), Radix.Exponential,
+            var member = Member.Create("Member", (IDataType)new Real(), Dimensions.Empty, Radix.Exponential,
                 ExternalAccess.ReadOnly, "Test");
 
             member.Should().NotBeNull();
@@ -72,22 +61,6 @@ namespace L5Sharp.Core.Tests
             member.Radix.Should().Be(Radix.Exponential);
             member.ExternalAccess.Should().Be(ExternalAccess.ReadOnly);
             member.Description.Should().Be("Test");
-        }
-
-        [Test]
-        public void New_OverrideProperties_ShouldHaveExpectedOverloads()
-        {
-            var member = Member.Create("Member", (IDataType)new Real(), new Dimensions(35), Radix.Exponential,
-                ExternalAccess.ReadOnly, "Test");
-
-            member.Should().NotBeNull();
-            member.Name.Should().Be("Member");
-            member.DataType.Should().Be(new Real(Radix.Exponential));
-            member.Dimension.Length.Should().Be(35);
-            member.Radix.Should().Be(Radix.Exponential);
-            member.ExternalAccess.Should().Be(ExternalAccess.ReadOnly);
-            member.Description.Should().Be("Test");
-            member.Should().AllBeOfType<Member<IDataType>>();
         }
 
         [Test]
@@ -153,7 +126,8 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Copy_WhenCalled_ShouldNotBeSameButEqual()
         {
-            var member = Member.Create<Dint>("Test", Radix.Binary, ExternalAccess.ReadOnly, "This is a test");
+            var member = Member.Create<Dint>("Test", Dimensions.Empty, Radix.Binary, ExternalAccess.ReadOnly,
+                "This is a test");
 
             var copy = member.Copy();
 

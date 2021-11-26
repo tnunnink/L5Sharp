@@ -14,6 +14,7 @@ namespace L5Sharp.Serialization
     internal class UserDefinedSerializer : IXSerializer<IUserDefined>
     {
         private readonly LogixContext _context;
+        private const string ElementName = LogixNames.DataType;
 
         public UserDefinedSerializer(LogixContext context)
         {
@@ -24,7 +25,7 @@ namespace L5Sharp.Serialization
         {
             if (component == null) throw new ArgumentNullException(nameof(component));
 
-            var element = new XElement(LogixNames.DataType);
+            var element = new XElement(ElementName);
             element.Add(component.ToAttribute(c => c.Name));
             element.Add(component.ToAttribute(c => c.Family));
             element.Add(component.ToAttribute(c => c.Class));
@@ -33,7 +34,9 @@ namespace L5Sharp.Serialization
                 element.Add(component.ToElement(c => c.Description));
 
             var members = new XElement(nameof(component.Members));
-            members.Add(component.Members.Select(m => _context.Serialization.Serialize(m)));
+            var memberSerializer = new UserDefinedMemberSerializer(_context);
+            members.Add(component.Members.Select(m => memberSerializer.Serialize(m)));
+            
             element.Add(members);
 
             return element;
@@ -41,13 +44,17 @@ namespace L5Sharp.Serialization
 
         public IUserDefined Deserialize(XElement element)
         {
-            if (element == null) return null;
+            if (element == null)
+                throw new ArgumentNullException(nameof(element));
+
+            if (element.Name != ElementName)
+                throw new ArgumentException($"Element name '{element.Name}' invalid. Expecting '{ElementName}'");
 
             var name = element.GetName();
             var description = element.GetValue<IDataType, string>(x => x.Description);
-            
-            var members = element.Descendants(LogixNames.Member).Select(e =>
-                _context.Serialization.Deserialize<IMember<IDataType>>(e));
+
+            var memberSerializer = new UserDefinedMemberSerializer(_context);
+            var members = element.Descendants(LogixNames.Member).Select(e => memberSerializer.Deserialize(e));
 
             return new UserDefined(name, description, members);
         }

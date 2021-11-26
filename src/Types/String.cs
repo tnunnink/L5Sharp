@@ -40,7 +40,7 @@ namespace L5Sharp.Types
 
         /// <inheritdoc />
         public IArrayMember<Sint> DATA { get; } =
-            Member.Create<Sint>(nameof(DATA), new Dimensions(PredefinedLength), Radix.Ascii);
+            Member.Array<Sint>(nameof(DATA), new Dimensions(PredefinedLength), Radix.Ascii);
 
         /// <inheritdoc />
         protected override IDataType New()

@@ -179,9 +179,7 @@ namespace L5Sharp.Core
         private void Instantiate(ComponentName name, TDataType dataType, Dimensions dimensions, Radix radix,
             ExternalAccess externalAccess, string description)
         {
-            var member = dimensions != null && !dimensions.AreEmpty
-                ? Member.Create(name, dataType, dimensions, radix, externalAccess, description)
-                : Member.Create(name, dataType, radix, externalAccess, description);
+            var member = Member.Create(name, dataType, dimensions, radix, externalAccess, description);
 
             _tagMember = new TagMember<TDataType>(member, Parent, (ITag<IDataType>)(ITag<TDataType>)this);
         }

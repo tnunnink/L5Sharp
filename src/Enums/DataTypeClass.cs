@@ -20,7 +20,7 @@ namespace L5Sharp.Enums
         /// <summary>
         /// Represents a unknown data type class.
         /// </summary>
-        public static readonly DataTypeClass Undefined = new DataTypeClass("Undefined", -1);
+        public static readonly DataTypeClass Unknown = new DataTypeClass("Unknown", -1);
 
         /// <summary>
         /// Represents a data type that has value and radix. See <see cref="IAtomic"/>

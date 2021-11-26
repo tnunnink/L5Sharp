@@ -11,7 +11,7 @@ namespace L5Sharp.Serialization
         public SerializationContext(LogixContext context)
         {
             _serializers.Add(typeof(IUserDefined), new UserDefinedSerializer(context));
-            _serializers.Add(typeof(IMember<IDataType>), new MemberSerializer(context));
+            _serializers.Add(typeof(IMember<IDataType>), new UserDefinedMemberSerializer(context));
             _serializers.Add(typeof(ITag<IDataType>), new TagSerializer(context));
             _serializers.Add(typeof(ITask), new TaskSerializer());
             

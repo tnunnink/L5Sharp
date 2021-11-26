@@ -13,7 +13,7 @@ using String = L5Sharp.Types.String;
 namespace L5Sharp.Core.Tests
 {
     [TestFixture]
-    public class DataTypeTests
+    public class UserDefinedTests
     {
         [Test]
         public void Create_ValidArguments_ShouldNotBeNull()
@@ -26,14 +26,14 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void New_NullName_ShouldThrowArgumentNullException()
         {
-            FluentActions.Invoking(() => new UserDefined(null)).Should()
+            FluentActions.Invoking(() => UserDefined.Create(null)).Should()
                 .Throw<ArgumentException>();
         }
 
         [Test]
         public void New_EmptyName_ShouldThrowArgumentNullException()
         {
-            FluentActions.Invoking(() => new UserDefined(string.Empty)).Should()
+            FluentActions.Invoking(() => UserDefined.Create(string.Empty)).Should()
                 .Throw<ArgumentException>();
         }
 
@@ -41,7 +41,7 @@ namespace L5Sharp.Core.Tests
         public void New_InvalidName_ShouldThrowInvalidTagNameException()
         {
             var fixture = new Fixture();
-            FluentActions.Invoking(() => new UserDefined(fixture.Create<string>())).Should()
+            FluentActions.Invoking(() => UserDefined.Create(fixture.Create<string>())).Should()
                 .Throw<ComponentNameInvalidException>();
         }
 
@@ -51,7 +51,7 @@ namespace L5Sharp.Core.Tests
             var fixture = new Fixture();
             var description = fixture.Create<string>();
 
-            var type = new UserDefined("Test", description: description);
+            var type = UserDefined.Create("Test", description: description);
 
             type.Should().NotBeNull();
             type.Name.Should().Be("Test");
@@ -74,7 +74,7 @@ namespace L5Sharp.Core.Tests
                 Member.Create("Member02", new Bool())
             };
 
-            var type = new UserDefined("Test", description, members);
+            var type = UserDefined.Create("Test", description, members);
 
             type.Should().NotBeNull();
             type.Name.Should().Be("Test");
@@ -104,7 +104,7 @@ namespace L5Sharp.Core.Tests
                 Member.Create("Member10", new Bool())
             };
 
-            var type = new UserDefined("Test", description, members);
+            var type = UserDefined.Create("Test", description, members);
 
             type.Should().NotBeNull();
             type.Members.Should().HaveCount(10);
@@ -131,12 +131,12 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void GetDependentTypes_ComplexType_ShouldContainExpectedTypes()
         {
-            var type = new UserDefined("Type01");
+            var type = UserDefined.Create("Type01");
             type.Members.Add(Member.Create("Member01", new Bool()));
             type.Members.Add(Member.Create("Member02", new Counter()));
             type.Members.Add(Member.Create("Member03", new Dint()));
             type.Members.Add(Member.Create("Member04", new String()));
-            var dependentUserType = new UserDefined("Type02");
+            var dependentUserType = UserDefined.Create("Type02");
             dependentUserType.Members.Add(Member.Create("Member01", new Bool()));
             dependentUserType.Members.Add(Member.Create("Member02", new Dint()));
             dependentUserType.Members.Add(Member.Create("Member03", new String()));
@@ -157,12 +157,12 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void GetDependentUserTypes_ComplexType_ShouldContainExpectedTypes()
         {
-            var type = new UserDefined("Type01");
+            var type = UserDefined.Create("Type01");
             type.Members.Add(Member.Create("Member01", new Bool()));
             type.Members.Add(Member.Create("Member02", new Counter()));
             type.Members.Add(Member.Create("Member03", new Dint()));
             type.Members.Add(Member.Create("Member04", new String()));
-            var dependentUserType = new UserDefined("Type02");
+            var dependentUserType = UserDefined.Create("Type02");
             dependentUserType.Members.Add(Member.Create("Member01", new Bool()));
             dependentUserType.Members.Add(Member.Create("Member02", new Dint()));
             dependentUserType.Members.Add(Member.Create("Member03", new String()));
@@ -179,7 +179,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Instantiate_WhenCalled_ShouldReturnDifferentInstance()
         {
-            var type = new UserDefined("Type01", "This is a test", new List<IMember<IDataType>>
+            var type = UserDefined.Create("Type01", "This is a test", new List<IMember<IDataType>>
             {
                 Member.Create("Member01", new Bool()),
                 Member.Create("Member02", new Counter()),
@@ -195,8 +195,8 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void TypedEquals_AreEqual_ShouldBeTrue()
         {
-            var first = new UserDefined("Test");
-            var second = new UserDefined("Test");
+            var first = UserDefined.Create("Test");
+            var second = UserDefined.Create("Test");
 
             var result = first.Equals(second);
 
@@ -206,7 +206,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void TypedEquals_AreSame_ShouldBeTrue()
         {
-            var first = new UserDefined("Test");
+            var first = UserDefined.Create("Test");
             var second = first;
 
             var result = first.Equals(second);
@@ -218,7 +218,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void TypedEquals_Null_ShouldBeFalse()
         {
-            var first = new UserDefined("Test");
+            var first = UserDefined.Create("Test");
 
             var result = first.Equals(null);
 
@@ -228,8 +228,8 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void ObjectEquals_AreEqual_ShouldBeTrue()
         {
-            var first = new UserDefined("Test");
-            var second = new UserDefined("Test");
+            var first = UserDefined.Create("Test");
+            var second = UserDefined.Create("Test");
 
             var result = first.Equals((object)second);
 
@@ -239,7 +239,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void ObjectEquals_AreSame_ShouldBeTrue()
         {
-            var first = new UserDefined("Test");
+            var first = UserDefined.Create("Test");
             var second = first;
 
             var result = first.Equals((object)second);
@@ -251,7 +251,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void ObjectEquals_Null_ShouldBeFalse()
         {
-            var first = new UserDefined("Test");
+            var first = UserDefined.Create("Test");
 
             var result = first.Equals((object)null);
 
@@ -261,8 +261,8 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void OperatorEquals_AreEqual_ShouldBeTrue()
         {
-            var first = new UserDefined("Test");
-            var second = new UserDefined("Test");
+            var first = UserDefined.Create("Test");
+            var second = UserDefined.Create("Test");
 
             var result = first == second;
 
@@ -272,8 +272,8 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void OperatorNotEquals_AreEqual_ShouldBeFalse()
         {
-            var first = new UserDefined("Test");
-            var second = new UserDefined("Test");
+            var first = UserDefined.Create("Test");
+            var second = UserDefined.Create("Test");
 
             var result = first != second;
 

@@ -19,7 +19,7 @@ namespace L5Sharp.Core
                 throw new ArgumentException("Dimension must single dimensional and have length greater that zero");
 
             LEN = Member.Create<Dint>(nameof(LEN));
-            DATA = Member.Create<Sint>(nameof(DATA), dimensions, Radix.Ascii);
+            DATA = Member.Array<Sint>(nameof(DATA), dimensions, Radix.Ascii);
             
             Members = new List<IMember<IDataType>>
             {

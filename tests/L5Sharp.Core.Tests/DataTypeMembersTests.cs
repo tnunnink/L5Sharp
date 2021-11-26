@@ -252,7 +252,7 @@ namespace L5Sharp.Core.Tests
         public void Update_ExistingMember_ShouldChangeTheCurrentMember()
         {
             var members = CreateSeededMembers();
-            var member = Member.Create<Dint>("Member02", Radix.Binary, ExternalAccess.ReadOnly);
+            var member = Member.Create<Dint>("Member02", Dimensions.Empty, Radix.Binary, ExternalAccess.ReadOnly);
 
             members.Update(member);
 

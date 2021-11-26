@@ -103,10 +103,8 @@ namespace L5Sharp.Core
 
             var member = _members[index];
 
-            var renamed = member.Dimension.AreEmpty
-                ? Member.Create(name, member.DataType, member.Radix, member.ExternalAccess, member.Description)
-                : Member.Create(name, member.DataType, member.Dimension, member.Radix, member.ExternalAccess,
-                    member.Description);
+            var renamed = Member.Create(name, member.DataType, member.Dimension, member.Radix, member.ExternalAccess,
+                member.Description);
 
             _members[index] = renamed;
         }
