@@ -190,16 +190,6 @@ namespace L5Sharp.Types.Tests
         }
 
         [Test]
-        public void SupportsRadix_Decimal_ShouldBeTrue()
-        {
-            var type = new Bool();
-
-            var value = type.SupportsRadix(Radix.Decimal);
-
-            value.Should().BeTrue();
-        }
-
-        [Test]
         public void ImplicitOperator_Bool_ShouldBeTrue()
         {
             var type = new Bool();
@@ -215,16 +205,6 @@ namespace L5Sharp.Types.Tests
             var type = new Bool();
 
             bool value = type;
-
-            value.Should().BeFalse();
-        }
-
-        [Test]
-        public void SupportsRadix_Float_ShouldBeFalse()
-        {
-            var type = new Bool();
-
-            var value = type.SupportsRadix(Radix.Float);
 
             value.Should().BeFalse();
         }

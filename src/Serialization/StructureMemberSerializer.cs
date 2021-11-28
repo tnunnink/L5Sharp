@@ -1,30 +1,30 @@
 ﻿using System;
+using System.Linq;
 using System.Xml.Linq;
-using L5Sharp.Core;
-using L5Sharp.Enums;
 using L5Sharp.Extensions;
 using L5Sharp.Utilities;
 
 namespace L5Sharp.Serialization
 {
-    internal class DataValueMemberSerializer : IXSerializer<IMember<IDataType>>
+    internal class StructureMemberSerializer : IXSerializer<IMember<IDataType>>
     {
-        private const string ElementName = LogixNames.DataValueMember;
-        
+        private const string ElementName = LogixNames.StructureMember;
+
         public XElement Serialize(IMember<IDataType> component)
         {
             if (component == null)
                 throw new ArgumentNullException(nameof(component));
             
-            if (!(component.DataType is IAtomic atomic))
-                throw new InvalidOperationException("DataValueMembers must have an atomic data type.");
+            if (!(component.DataType is IComplexType complex))
+                throw new InvalidOperationException("StructureMembers must have a complex data type.");
             
             var element = new XElement(ElementName);
             
             element.Add(component.ToAttribute(m => m.Name));
             element.Add(component.ToAttribute(m => m.DataType));
-            element.Add(component.ToAttribute(m => m.Radix));
-            element.Add(atomic.ToAttribute(m => m.Value));
+            
+            var elements = complex.Members.Select(m => m.Serialize(m.GetDataElementName()));
+            element.Add(elements);
 
             return element;
         }
@@ -39,12 +39,11 @@ namespace L5Sharp.Serialization
                     $"Expecting element with name {LogixNames.DataValueMember} but got {element.Name}");
 
             var name = element.GetName();
-            var dataType = (IAtomic) Logix.DataType.Instantiate(element.GetDataTypeName());
-            var radix = element.GetValue<IMember<IAtomic>, Radix>(e => e.Radix);
-            var value = element.GetValue<IAtomic, object>(a => a.Value);
-            dataType.SetValue(value);
+            
+            var serializer = new StructureSerializer();
+            var dataType = serializer.Deserialize(element);
 
-            return Member.Create(name, dataType, Dimensions.Empty, radix);
+            return Member.Create(name, dataType);
         }
     }
 }

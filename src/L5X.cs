@@ -30,7 +30,12 @@ namespace L5Sharp
             return _content.Descendants().SingleOrDefault(predicate);
         }
         
-        public IEnumerable<XElement> GetAll(Func<XElement, bool> predicate)
+        public IEnumerable<XElement> Descendants(XName name)
+        {
+            return _content.Descendants(name);
+        }
+        
+        public IEnumerable<XElement> FindAll(Func<XElement, bool> predicate)
         {
             return _content.Descendants().Where(predicate);
         }

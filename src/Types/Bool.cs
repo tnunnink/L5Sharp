@@ -1,12 +1,19 @@
 ﻿using System;
+using System.Xml.Serialization;
 using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Exceptions;
 
 namespace L5Sharp.Types
 {
+    /// <summary>
+    /// Represents a boolean Logix data type
+    /// </summary>
     public sealed class Bool : IAtomic<bool>, IEquatable<Bool>, IComparable<Bool>
     {
+        /// <summary>
+        /// Creates a new instance of a boolean type.
+        /// </summary>
         public Bool()
         {
             Name = new ComponentName(nameof(Bool).ToUpper());
@@ -14,11 +21,19 @@ namespace L5Sharp.Types
             Radix = Radix.Decimal;
         }
 
+        /// <summary>
+        /// Creates a new instance of a boolean type with the provided value.
+        /// </summary>
+        /// <param name="value">The value to initialize the type with.</param>
         public Bool(bool value) : this()
         {
             Value = value;
         }
 
+        /// <summary>
+        /// Creates a new instance of a boolean type with the provided radix.
+        /// </summary>
+        /// <param name="radix">The radix to initialize the type with.</param>
         public Bool(Radix radix) : this()
         {
             SetRadix(radix);
@@ -48,6 +63,7 @@ namespace L5Sharp.Types
         object IAtomic.Value => Value;
 
         /// <inheritdoc />
+        [XmlAttribute(nameof(Value))]
         public string FormattedValue => Radix.Format(this);
 
         /// <inheritdoc />
@@ -82,22 +98,26 @@ namespace L5Sharp.Types
         }
 
         /// <inheritdoc />
-        public bool SupportsRadix(Radix radix)
-        {
-            return radix == Radix.Binary || radix == Radix.Octal || radix == Radix.Decimal || radix == Radix.Hex;
-        }
-
-        /// <inheritdoc />
         public IDataType Instantiate()
         {
             return new Bool();
         }
 
+        /// <summary>
+        /// Converts the provided <see cref="bool"/> to a <see cref="Bool"/> type.
+        /// </summary>
+        /// <param name="value">The type value to convert.</param>
+        /// <returns>A <see cref="bool"/> type value</returns>
         public static implicit operator Bool(bool value)
         {
             return new Bool(value);
         }
 
+        /// <summary>
+        /// Converts the provided <see cref="Bool"/> to a <see cref="bool"/> value.
+        /// </summary>
+        /// <param name="atomic">The type value to convert.</param>
+        /// <returns>A <see cref="Bool"/> type value.</returns>
         public static implicit operator bool(Bool atomic)
         {
             return atomic.Value;
@@ -155,6 +175,11 @@ namespace L5Sharp.Types
             return string.Equals(value, "1", StringComparison.OrdinalIgnoreCase)
                    || string.Equals(value, "True", StringComparison.OrdinalIgnoreCase)
                    || string.Equals(value, "Yes", StringComparison.OrdinalIgnoreCase);
+        }
+
+        private static bool SupportsRadix(Radix radix)
+        {
+            return radix == Radix.Binary || radix == Radix.Octal || radix == Radix.Decimal || radix == Radix.Hex;
         }
     }
 }

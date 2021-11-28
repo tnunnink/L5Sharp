@@ -1,11 +1,11 @@
 ﻿namespace L5Sharp
 {
     /// <summary>
-    /// A <c>DataType</c> that represents a <c>UserDefined</c> Logix Component. 
+    /// Represents a Logix User Defined data type component. 
     /// </summary>
     /// <remarks>
     /// User defined data types are those that (as the name implies) are created and configured by the user or developer.
-    /// These types are high level components in the L5X under the element <DataTypes/>.
+    /// These types are high level components in the L5X, which can be accessed using the <see cref="ILogixContext"/>.
     /// </remarks>
     /// <footer>
     /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">

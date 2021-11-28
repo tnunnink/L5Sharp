@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using L5Sharp.Utilities;
 
 namespace L5Sharp.Extensions
 {
@@ -21,7 +23,7 @@ namespace L5Sharp.Extensions
 
             return array.Select(element => $"{element.Name}");
         }
-        
+
         /// <summary>
         /// Gets all nested member names of the given <c>DataType</c>.
         /// </summary>
@@ -42,6 +44,68 @@ namespace L5Sharp.Extensions
             }
 
             return names;
+        }
+
+        /// <summary>
+        /// Determines if the current member is a dimensionless value type
+        /// </summary>
+        /// <param name="member">The current member.</param>
+        /// <returns>
+        /// true if the current member data type is <see cref="IAtomic"/> and the member dimensions are empty.
+        /// Otherwise, false.
+        /// </returns>
+        public static bool IsValueMember<TDataType>(this IMember<TDataType> member)
+            where TDataType : IDataType
+        {
+            return member.DataType is IAtomic && member.Dimension.AreEmpty;
+        }
+        
+        /// <summary>
+        /// Determines if the current member is a dimensionless complex type .
+        /// </summary>
+        /// <param name="member">The current member.</param>
+        /// <returns>
+        /// true if the current member data type is <see cref="IComplexType"/> and the member dimensions are empty.
+        /// Otherwise, false.
+        /// </returns>
+        public static bool IsStructureMember<TDataType>(this IMember<TDataType> member)
+            where TDataType : IDataType
+        {
+            return member.DataType is IComplexType && member.Dimension.AreEmpty;
+        }
+
+        /// <summary>
+        /// Determines if the current member is an array.
+        /// </summary>
+        /// <param name="member">The current member.</param>
+        /// <returns>
+        /// true if the current member dimensions are not empty. Otherwise, false.
+        /// </returns>
+        public static bool IsArrayMember<TDataType>(this IMember<TDataType> member)
+            where TDataType : IDataType
+        {
+            return !member.Dimension.AreEmpty;
+        }
+
+        /// <summary>
+        /// Gets a member serializer based on the current member data type and dimensions.
+        /// </summary>
+        /// <param name="member">The current member</param>
+        /// <returns>A new IXSerializer for a generic member.</returns>
+        /// <exception cref="InvalidOperationException">Thrown if the serializer could not be determined.</exception>
+        internal static string GetDataElementName(this IMember<IDataType> member)
+        {
+            if (member.IsValueMember())
+                return LogixNames.DataValueMember;
+
+            if (member.IsArrayMember())
+                return LogixNames.ArrayMember;
+
+            if (member.IsStructureMember())
+                return LogixNames.Structure;
+
+            throw new InvalidOperationException(
+                $"Could not determine member name for '{member.GetType()}'");
         }
     }
 }

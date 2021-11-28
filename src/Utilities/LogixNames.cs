@@ -6,6 +6,7 @@ namespace L5Sharp.Utilities
 {
     internal static class LogixNames
     {
+        //Logix Component names
         public const string RsLogix5000Content = nameof(RsLogix5000Content);
         public const string Controller = nameof(Controller);
         public const string DataTypes = nameof(DataTypes);
@@ -28,7 +29,7 @@ namespace L5Sharp.Utilities
         public const string Rung = nameof(Rung);
         public const string Tasks = nameof(Tasks);
         public const string Task = nameof(Task);
-        
+        //Logix data structure names
         public const string Data = nameof(Data);
         public const string DataValue = nameof(DataValue);
         public const string Array = nameof(Array);
@@ -67,6 +68,7 @@ namespace L5Sharp.Utilities
         private static readonly Dictionary<Type, Tuple<string, string>> NameMap =
             new Dictionary<Type, Tuple<string, string>>
             {
+                { typeof(IController), new Tuple<string, string>(Controller, string.Empty) },
                 { typeof(IUserDefined), new Tuple<string, string>(DataType, DataTypes) },
                 { typeof(IMember<IDataType>), new Tuple<string, string>(Member, Members) },
                 { typeof(IModule), new Tuple<string, string>(Module, Modules) },

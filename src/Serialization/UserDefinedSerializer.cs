@@ -13,13 +13,7 @@ namespace L5Sharp.Serialization
 {
     internal class UserDefinedSerializer : IXSerializer<IUserDefined>
     {
-        private readonly LogixContext _context;
         private const string ElementName = LogixNames.DataType;
-
-        public UserDefinedSerializer(LogixContext context)
-        {
-            _context = context;
-        }
 
         public XElement Serialize(IUserDefined component)
         {
@@ -34,7 +28,7 @@ namespace L5Sharp.Serialization
                 element.Add(component.ToElement(c => c.Description));
 
             var members = new XElement(nameof(component.Members));
-            var memberSerializer = new UserDefinedMemberSerializer(_context);
+            var memberSerializer = new UserDefinedMemberSerializer();
             members.Add(component.Members.Select(m => memberSerializer.Serialize(m)));
             
             element.Add(members);
@@ -53,7 +47,7 @@ namespace L5Sharp.Serialization
             var name = element.GetName();
             var description = element.GetValue<IDataType, string>(x => x.Description);
 
-            var memberSerializer = new UserDefinedMemberSerializer(_context);
+            var memberSerializer = new UserDefinedMemberSerializer();
             var members = element.Descendants(LogixNames.Member).Select(e => memberSerializer.Deserialize(e));
 
             return new UserDefined(name, description, members);

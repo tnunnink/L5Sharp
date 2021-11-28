@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Xml.Serialization;
 
 namespace L5Sharp.Core
 {
@@ -22,11 +23,13 @@ namespace L5Sharp.Core
         /// <summary>
         /// Gets the value of the Major revision number.
         /// </summary>
+        [XmlAttribute("MajorRev")]
         public ushort Major { get; }
         
         /// <summary>
         /// Gets the value of the Minor revision number.
         /// </summary>
+        [XmlAttribute("MinorRev")]
         public ushort Minor { get; }
 
         /// <summary>

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using L5Sharp.Core;
 using L5Sharp.Enums;
 
@@ -27,7 +29,8 @@ namespace L5Sharp
                 throw new ArgumentNullException(nameof(name));
 
             if (dimensions != null && !dimensions.AreEmpty)
-                return new ArrayMember<IDataType>(name, dataType, dimensions, radix, externalAccess, description);
+                return new ArrayMember<IDataType>(name, dataType, dimensions, radix, externalAccess, description,
+                    Enumerable.Empty<IMember<IDataType>>());
 
             return new Member<IDataType>(name, dataType, radix, externalAccess, description);
         }
@@ -56,7 +59,7 @@ namespace L5Sharp
 
             if (dimensions != null && !dimensions.AreEmpty)
                 return new ArrayMember<TDataType>(name, new TDataType(), dimensions, radix, externalAccess,
-                    description);
+                    description, Enumerable.Empty<IMember<IDataType>>());
 
             return new Member<TDataType>(name, new TDataType(), radix, externalAccess, description);
         }
@@ -81,7 +84,8 @@ namespace L5Sharp
                 throw new ArgumentNullException(nameof(name));
 
             if (dimensions != null && !dimensions.AreEmpty)
-                return new ArrayMember<TDataType>(name, dataType, dimensions, radix, externalAccess, description);
+                return new ArrayMember<TDataType>(name, dataType, dimensions, radix, externalAccess, description,
+                    Enumerable.Empty<IMember<IDataType>>());
 
             return new Member<TDataType>(name, dataType, radix, externalAccess, description);
         }
@@ -96,15 +100,17 @@ namespace L5Sharp
         /// <param name="radix">The <c>Radix</c> option of the member.</param>
         /// <param name="externalAccess">The <c>ExternalAccess</c> option of the member.</param>
         /// <param name="description">The description of the member.</param>
+        /// <param name="members">A collection of members to initialize the array with.</param>
         /// <returns>A new <c>Member</c> instance with the specified arguments.</returns>
         /// <exception cref="ArgumentNullException">Thrown if name is null.</exception>
         public static IArrayMember<IDataType> Array(ComponentName name, IDataType dataType, Dimensions dimensions,
-            Radix radix = null, ExternalAccess externalAccess = null, string description = null)
+            Radix radix = null, ExternalAccess externalAccess = null, string description = null,
+            IEnumerable<IMember<IDataType>> members = null)
         {
             if (name == null)
                 throw new ArgumentNullException(nameof(name));
 
-            return new ArrayMember<IDataType>(name, dataType, dimensions, radix, externalAccess, description);
+            return new ArrayMember<IDataType>(name, dataType, dimensions, radix, externalAccess, description, members);
         }
 
         /// <summary>
@@ -115,6 +121,7 @@ namespace L5Sharp
         /// <param name="radix">The <c>Radix</c> option of the member.</param>
         /// <param name="externalAccess">The <c>ExternalAccess</c> option of the member.</param>
         /// <param name="description">The Description of the member.</param>
+        /// <param name="members">A collection of members to initialize the array with.</param>
         /// <typeparam name="TDataType">
         /// The DataType of the member.
         /// TDataType must implement IDataType and have parameterless constructor for it to be instantiated.
@@ -122,13 +129,15 @@ namespace L5Sharp
         /// <returns>A new <c>Member</c> instance with the specified arguments.</returns>
         /// <exception cref="ArgumentNullException">Thrown if name is null.</exception>
         public static IArrayMember<TDataType> Array<TDataType>(ComponentName name, Dimensions dimensions,
-            Radix radix = null, ExternalAccess externalAccess = null, string description = null)
+            Radix radix = null, ExternalAccess externalAccess = null, string description = null,
+            IEnumerable<IMember<IDataType>> members = null)
             where TDataType : IDataType, new()
         {
             if (name == null)
                 throw new ArgumentNullException(nameof(name));
 
-            return new ArrayMember<TDataType>(name, new TDataType(), dimensions, radix, externalAccess, description);
+            return new ArrayMember<TDataType>(name, new TDataType(), dimensions, radix, externalAccess, description,
+                members);
         }
 
         /// <summary>
@@ -136,21 +145,23 @@ namespace L5Sharp
         /// </summary>
         /// <param name="name">The <c>ComponentName</c> of the member.</param>
         /// <param name="dataType">The default <c>DataType</c> instance of the member.</param>
-        /// /// <param name="dimensions">The <c>Dimensions</c> of the member.</param>
+        /// <param name="dimensions">The <c>Dimensions</c> of the member.</param>
         /// <param name="radix">The <c>Radix</c> option of the member.</param>
         /// <param name="externalAccess">The <c>ExternalAccess</c> option of the member.</param>
         /// <param name="description">The Description of the member.</param>
+        /// <param name="members">A collection of members to initialize the array with.</param>
         /// <typeparam name="TDataType">The DataType of the member.</typeparam>
         /// <returns>A new <c>Member</c> instance with the specified arguments.</returns>
         /// <exception cref="ArgumentNullException">Thrown if name is null.</exception>
         public static IArrayMember<TDataType> Array<TDataType>(ComponentName name, TDataType dataType,
-            Dimensions dimensions, Radix radix = null, ExternalAccess externalAccess = null, string description = null)
+            Dimensions dimensions, Radix radix = null, ExternalAccess externalAccess = null, string description = null,
+            IEnumerable<IMember<IDataType>> members = null)
             where TDataType : IDataType
         {
             if (name == null)
                 throw new ArgumentNullException(nameof(name));
 
-            return new ArrayMember<TDataType>(name, dataType, dimensions, radix, externalAccess, description);
+            return new ArrayMember<TDataType>(name, dataType, dimensions, radix, externalAccess, description, members);
         }
     }
 }

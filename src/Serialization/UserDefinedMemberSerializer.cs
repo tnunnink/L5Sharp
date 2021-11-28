@@ -12,13 +12,7 @@ namespace L5Sharp.Serialization
 {
     internal class UserDefinedMemberSerializer : IXSerializer<IMember<IDataType>>
     {
-        private readonly LogixContext _context;
         private const string ElementName = LogixNames.Member;
-
-        public UserDefinedMemberSerializer(LogixContext context)
-        {
-            _context = context;
-        }
 
         public XElement Serialize(IMember<IDataType> component)
         {
@@ -48,7 +42,7 @@ namespace L5Sharp.Serialization
                 throw new ArgumentException($"Element name '{element.Name}' invalid. Expecting '{ElementName}'");
 
             var name = element.GetName();
-            var dataType = _context.TypeRegistry.TryGetType(element.GetDataTypeName());
+            var dataType = new LogixTypeProvider(element.Document?.Root).GetDataType(element.GetDataTypeName());
             var dimensions = element.GetValue<IMember<IDataType>, Dimensions>(m => m.Dimension);
             var radix = element.GetValue<IMember<IDataType>, Radix>(m => m.Radix);
             var access = element.GetValue<IMember<IDataType>, ExternalAccess>(m => m.ExternalAccess);

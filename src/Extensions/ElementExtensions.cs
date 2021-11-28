@@ -2,6 +2,8 @@
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 using System.Xml.Linq;
+using L5Sharp.Serialization;
+using L5Sharp.Utilities;
 
 [assembly: InternalsVisibleTo("L5Sharp.Extensions.Tests")]
 
@@ -36,6 +38,33 @@ namespace L5Sharp.Extensions
         {
             var getter = propertyExpression.ToXExpression();
             return getter.Invoke(element);
+        }
+        
+        public static XAttribute ToAttribute<TComponent, TProperty>(this TComponent component,
+            Expression<Func<TComponent, TProperty>> expression, string nameOverride = null)
+        {
+            if (!(expression.Body is MemberExpression memberExpression))
+                throw new InvalidOperationException($"Expression must be {typeof(MemberExpression)}");
+
+            var name = nameOverride ?? memberExpression.Member.GetXName();
+            var value = expression.Compile().Invoke(component);
+
+            return new XAttribute(name, value);
+        }
+
+        public static XElement ToElement<TComponent, TProperty>(this TComponent component,
+            Expression<Func<TComponent, TProperty>> expression, bool useCDataElement = true,
+            string nameOverride = null)
+        {
+            if (!(expression.Body is MemberExpression memberExpression))
+                throw new InvalidOperationException($"Expression must be {typeof(MemberExpression)}");
+
+            var name = nameOverride ?? memberExpression.Member.GetXName();
+            var value = expression.Compile().Invoke(component);
+
+            return useCDataElement
+                ? new XElement(name, new XCData(value.ToString()))
+                : new XElement(name, value);
         }
     }
 }

@@ -5,7 +5,7 @@ using NUnit.Framework;
 namespace L5Sharp.Enums.Tests
 {
     [TestFixture]
-    public class TagDataFormatTests
+    public class DataFormatTests
     {
         [Test]
         public void New_Decorated_ShouldNotBeNullAndHaveExpectedValue()
@@ -15,17 +15,8 @@ namespace L5Sharp.Enums.Tests
             format.Should().NotBeNull();
             format.Name.Should().Be("Decorated");
         }
-        
-        [Test]
-        public void New_L5K_ShouldNotBeNullAndHaveExpectedValue()
-        {
-            var format = DataFormat.L5K;
 
-            format.Should().NotBeNull();
-            format.Name.Should().Be("L5K");
-        }
-        
-        
+
         [Test]
         public void New_String_ShouldNotBeNullAndHaveExpectedValue()
         {

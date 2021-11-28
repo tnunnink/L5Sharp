@@ -56,30 +56,7 @@ namespace L5Sharp.Extensions
         {
             return !member.Parent.Dimensions.AreEmpty;
         }
-
-        /*/// <summary>
-        /// Gets the <see cref="DataTypeClass"/> of the current <c>TagMember</c>.
-        /// </summary>
-        /// <returns>A <c>DataTypeClass</c> value representing the type of the generic tag.</returns>
-        public static DataTypeClass GetTypeClass<TDataType>(this ITagMember<TDataType> tagMember)
-            where TDataType : IDataType
-        {
-            var type = tagMember.GetType().GetGenericArguments()[0];
-
-            if (typeof(IAtomic).IsAssignableFrom(type))
-                return DataTypeClass.Atomic;
-
-            if (typeof(IUserDefined).IsAssignableFrom(type))
-                return DataTypeClass.User;
-
-            if (typeof(IPredefined).IsAssignableFrom(type))
-                return DataTypeClass.Predefined;
-
-            if (typeof(IAddOnDefined).IsAssignableFrom(type))
-                return DataTypeClass.AddOnDefined;
-
-            return typeof(IModuleDefined).IsAssignableFrom(type) ? DataTypeClass.Io : null;
-        }*/
+        
 
         public static void SetData<TDataType>(this ITagMember<TDataType> target, ITagMember<TDataType> source)
             where TDataType : IDataType

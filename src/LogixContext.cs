@@ -11,17 +11,12 @@ namespace L5Sharp
     public class LogixContext : ILogixContext
     {
         internal L5X L5X { get; }
-        internal SerializationContext Serialization { get; }
-        internal LogixTypeRegistry TypeRegistry { get; }
 
         private LogixContext(XDocument document)
         {
             L5X = new L5X(document);
-            Info = new L5XInfo(document.Root);
-            
-            Serialization = new SerializationContext(this);
-            TypeRegistry = new LogixTypeRegistry(this);
 
+            Info = new L5XInfo(document.Root);
             DataTypes = new UserDefinedRepository(this);
             Tags = new TagRepository(this);
             Tasks = new TaskRepository(this);
