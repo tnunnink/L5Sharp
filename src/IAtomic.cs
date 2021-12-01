@@ -33,6 +33,13 @@ namespace L5Sharp
         /// </summary>
         /// <param name="radix">The radix value to set.</param>
         void SetRadix(Radix radix);
+
+        /// <summary>
+        /// Determines if the provided radix is supported by the current atomic type.
+        /// </summary>
+        /// <param name="radix">The value of the radix to determine support for.</param>
+        /// <returns>true if the provided radix value is valid for the current atomic type. Otherwise, false.</returns>
+        bool SupportsRadix(Radix radix);
     }
 
     /// <summary>

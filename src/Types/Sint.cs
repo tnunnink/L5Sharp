@@ -23,21 +23,38 @@ namespace L5Sharp.Types
             SetRadix(radix);
         }
 
+        /// <inheritdoc />
         public ComponentName Name => nameof(Sint).ToUpper();
+
+        /// <inheritdoc />
         public string Description => $"RSLogix representation of a {typeof(byte)}";
+
+        /// <inheritdoc />
         public DataTypeFamily Family => DataTypeFamily.None;
+
+        /// <inheritdoc />
         public DataTypeClass Class => DataTypeClass.Atomic;
+
+        /// <inheritdoc />
         public DataFormat Format => DataFormat.Decorated;
+
+        /// <inheritdoc />
         public Radix Radix { get; private set; }
+
+        /// <inheritdoc />
         public byte Value { get; private set; }
+
+        /// <inheritdoc />
         public string FormattedValue => Radix.Format(this);
         object IAtomic.Value => Value;
-        
+
+        /// <inheritdoc />
         public void SetValue(byte value)
         {
             Value = value;
         }
 
+        /// <inheritdoc />
         public void SetValue(object value)
         {
             Value = value switch
@@ -50,6 +67,7 @@ namespace L5Sharp.Types
             };
         }
 
+        /// <inheritdoc />
         public void SetRadix(Radix radix)
         {
             if (radix == null)
@@ -61,6 +79,7 @@ namespace L5Sharp.Types
             Radix = radix;
         }
 
+        /// <inheritdoc />
         public bool SupportsRadix(Radix radix)
         {
             return radix == Radix.Binary
@@ -69,7 +88,13 @@ namespace L5Sharp.Types
                    || radix == Radix.Hex
                    || radix == Radix.Ascii;
         }
-        
+
+        /// <inheritdoc />
+        public IDataType Instantiate()
+        {
+            return new Sint();
+        }
+
         public static implicit operator Sint(byte value)
         {
             return new Sint(value);
@@ -80,11 +105,13 @@ namespace L5Sharp.Types
             return atomic.Value;
         }
 
+        /// <inheritdoc />
         public int CompareTo(Sint other)
         {
             return Value.CompareTo(other.Value);
         }
 
+        /// <inheritdoc />
         public bool Equals(Sint other)
         {
             if (ReferenceEquals(null, other)) return false;
@@ -92,11 +119,7 @@ namespace L5Sharp.Types
             return Equals(Radix, other.Radix) && Value == other.Value;
         }
 
-        public IDataType Instantiate()
-        {
-            return new Sint();
-        }
-
+        /// <inheritdoc />
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
@@ -104,11 +127,13 @@ namespace L5Sharp.Types
             return obj.GetType() == GetType() && Equals((Sint)obj);
         }
 
+        /// <inheritdoc />
         public override int GetHashCode()
         {
             return HashCode.Combine(Radix, Value);
         }
-        
+
+        /// <inheritdoc />
         public override string ToString()
         {
             return Name;

@@ -20,6 +20,9 @@
       <None Update="DataValueSerializerTests.Serialize_Bool_ShouldBeApproved.approved.xml">
         <DependentUpon>DataValueSerializerTests.cs</DependentUpon>
       </None>
+      <None Update="DataValueMemberSerializerTests.Serialize_Bool_ShouldBeApproved.approved.xml">
+        <DependentUpon>DataValueMemberSerializerTests.cs</DependentUpon>
+      </None>
     </ItemGroup>
 
     <ItemGroup>

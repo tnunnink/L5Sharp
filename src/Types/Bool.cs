@@ -103,6 +103,12 @@ namespace L5Sharp.Types
             return new Bool();
         }
 
+        /// <inheritdoc />
+        public bool SupportsRadix(Radix radix)
+        {
+            return radix == Radix.Binary || radix == Radix.Octal || radix == Radix.Decimal || radix == Radix.Hex;
+        }
+
         /// <summary>
         /// Converts the provided <see cref="bool"/> to a <see cref="Bool"/> type.
         /// </summary>
@@ -175,11 +181,6 @@ namespace L5Sharp.Types
             return string.Equals(value, "1", StringComparison.OrdinalIgnoreCase)
                    || string.Equals(value, "True", StringComparison.OrdinalIgnoreCase)
                    || string.Equals(value, "Yes", StringComparison.OrdinalIgnoreCase);
-        }
-
-        private static bool SupportsRadix(Radix radix)
-        {
-            return radix == Radix.Binary || radix == Radix.Octal || radix == Radix.Decimal || radix == Radix.Hex;
         }
     }
 }

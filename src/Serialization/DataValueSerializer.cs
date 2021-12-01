@@ -18,7 +18,7 @@ namespace L5Sharp.Serialization
             var element = new XElement(ElementName);
             element.Add(component.ToAttribute(c => c.Name, LogixNames.DataType));
             element.Add(component.ToAttribute(c => c.Radix));
-            element.Add(component.ToAttribute(c => c.Value));
+            element.Add(component.ToAttribute(c => c.FormattedValue));
 
             return element;
         }
