@@ -158,7 +158,7 @@ namespace L5Sharp.Enums
                     throw new ArgumentNullException(nameof(input));
 
                 if (!input.StartsWith(Specifier))
-                    throw new ArgumentException($"Input must start with recognized specifier {Specifier}");
+                    throw new ArgumentException($"Input must start with {Binary} specifier '{Specifier}'");
 
                 var value = input.Replace(Specifier, string.Empty).Replace(Separator, string.Empty);
 
@@ -169,8 +169,7 @@ namespace L5Sharp.Enums
                     16 => Convert.ToInt16(value, 2),
                     32 => Convert.ToInt32(value, 2),
                     64 => Convert.ToInt64(value, 2),
-                    _ => throw new ArgumentOutOfRangeException(
-                        $"The value length {value.Length} is not valid for the {Binary} Radix")
+                    _ => throw new ArgumentException($"The value length {value.Length} is not valid for {Binary} Radix")
                 };
             }
         }

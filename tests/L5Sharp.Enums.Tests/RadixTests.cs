@@ -16,14 +16,6 @@ namespace L5Sharp.Enums.Tests
             radix.Should().Be(Radix.Null);
         }
 
-        [Test]
-        public void Binary_WhenCalled_ShouldBeExpected()
-        {
-            var radix = Radix.Binary;
-
-            radix.Should().NotBeNull();
-            radix.Should().Be(Radix.Binary);
-        }
 
         [Test]
         public void Octal_WhenCalled_ShouldBeExpected()
@@ -95,56 +87,6 @@ namespace L5Sharp.Enums.Tests
 
             radix.Should().NotBeNull();
             radix.Should().Be(Radix.DateTimeNs);
-        }
-
-        [Test]
-        public void Format_BinaryValidBool_ShouldBeExpected()
-        {
-            var radix = Radix.Binary;
-
-            var result = radix.Format(new Bool());
-
-            result.Should().Be("2#0");
-        }
-
-        [Test]
-        public void Format_BinaryValidSint_ShouldBeExpectedFormat()
-        {
-            var radix = Radix.Binary;
-
-            var result = radix.Format(new Sint(20));
-
-            result.Should().Be("2#0001_0100");
-        }
-
-        [Test]
-        public void Format_BinaryValidInt_ShouldBeExpectedFormat()
-        {
-            var radix = Radix.Binary;
-
-            var result = radix.Format(new Int(20));
-
-            result.Should().Be("2#0000_0000_0001_0100");
-        }
-
-        [Test]
-        public void Format_BinaryValidDint_ShouldBeExpectedFormat()
-        {
-            var radix = Radix.Binary;
-
-            var result = radix.Format(new Dint(20));
-
-            result.Should().Be("2#0000_0000_0000_0000_0000_0000_0001_0100");
-        }
-
-        [Test]
-        public void Format_BinaryValidLint_ShouldBeExpectedFormat()
-        {
-            var radix = Radix.Binary;
-
-            var result = radix.Format(new Lint(20));
-
-            result.Should().Be("2#0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0001_0100");
         }
 
         [Test]
