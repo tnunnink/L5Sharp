@@ -12,42 +12,12 @@ namespace L5Sharp.Enums
     /// </summary>
     public abstract class Radix : SmartEnum<Radix, string>
     {
-        private const string Separator = "_";
-
         private Radix(string name, string value) : base(name, value)
         {
         }
 
         /// <summary>
-        /// Formats an atomic value to the string representation of the value. 
-        /// </summary>
-        /// <param name="atomic">The current atomic type to format.</param>
-        /// <returns>A string that represents the value of the atomic formatted based on the rules of the current radix type.</returns>
-        public abstract string Format(IAtomic atomic);
-
-        /// <summary>
-        /// Parses a string representation of 
-        /// </summary>
-        /// <param name="input"></param>
-        /// <returns></returns>
-        public abstract object Parse(string input);
-
-        private static string ChangeBase(IAtomic atomic, int baseNumber)
-        {
-            return atomic switch
-            {
-                Bool b => b ? "1" : "0",
-                Sint s => Convert.ToString(s.Value, baseNumber),
-                Int i => Convert.ToString(i.Value, baseNumber),
-                Dint d => Convert.ToString(d.Value, baseNumber),
-                Lint l => Convert.ToString(l.Value, baseNumber),
-                _ => throw new NotSupportedException(
-                    $"{atomic.GetType()} is not supported by the function {nameof(ChangeBase)}")
-            };
-        }
-
-        /// <summary>
-        /// Represents a Null radix, or absence of a value.
+        /// Represents a Null radix, or absence of a Radix value.
         /// </summary>
         /// <remarks>
         /// Only <see cref="IAtomic"/> types have non-null Radix. <see cref="IComplexType"/> types all have null Radix.
@@ -102,6 +72,56 @@ namespace L5Sharp.Enums
         /// </summary>
         public static readonly Radix DateTimeNs = new DateTimeNsRadix();
 
+        /// <summary>
+        /// Formats an atomic value to the string representation of the value. 
+        /// </summary>
+        /// <param name="atomic">The current atomic type to format.</param>
+        /// <returns>A string that represents the value of the atomic formatted based on the rules of the current radix type.</returns>
+        public abstract string Format(IAtomic atomic);
+
+        /// <summary>
+        /// Parses a string representation of a given Radix formatted value into an object. 
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public abstract object Parse(string input);
+
+        /// <summary>
+        /// Attempts to call the <see cref="Parse"/> method and return a result if the parse was successful.
+        /// </summary>
+        /// <param name="input">The input string to parse.</param>
+        /// <param name="result">The resulting parse object value.</param>
+        /// <returns>
+        /// true if the parse was successful and didn't throw any exceptions. false if not.
+        /// </returns>
+        public bool TryParse(string input, out object result)
+        {
+            try
+            {
+                result = Parse(input);
+                return true;
+            }
+            catch (Exception)
+            {
+                result = null;
+                return false;
+            }
+        }
+
+        private static string ChangeBase(IAtomic atomic, int baseNumber)
+        {
+            return atomic switch
+            {
+                Bool b => b ? "1" : "0",
+                Sint s => Convert.ToString(s.Value, baseNumber),
+                Int i => Convert.ToString(i.Value, baseNumber),
+                Dint d => Convert.ToString(d.Value, baseNumber),
+                Lint l => Convert.ToString(l.Value, baseNumber),
+                _ => throw new NotSupportedException(
+                    $"{atomic.GetType()} is not supported by the function {nameof(ChangeBase)}")
+            };
+        }
+
         private class NullRadix : Radix
         {
             public NullRadix() : base("NullType", "NullType")
@@ -121,7 +141,9 @@ namespace L5Sharp.Enums
 
         private class BinaryRadix : Radix
         {
+            private const string Separator = "_";
             private const string Specifier = "2#";
+            private const int BaseNumber = 2;
 
             public BinaryRadix() : base(nameof(Binary), nameof(Binary))
             {
@@ -135,7 +157,7 @@ namespace L5Sharp.Enums
                 if (!atomic.SupportsRadix(this))
                     throw new RadixNotSupportedException(this, atomic);
 
-                var str = ChangeBase(atomic, 2);
+                var str = ChangeBase(atomic, BaseNumber);
 
                 str = atomic switch
                 {
@@ -144,7 +166,8 @@ namespace L5Sharp.Enums
                     Int _ => str.PadLeft(16, '0'),
                     Dint _ => str.PadLeft(32, '0'),
                     Lint _ => str.PadLeft(64, '0'),
-                    _ => throw new NotSupportedException($"{atomic.GetType()} not supported for {Binary} Radix.")
+                    _ => throw new NotSupportedException(
+                        $"{atomic.GetType()} not supported by {Binary} Radix.")
                 };
 
                 str = Regex.Replace(str, @"(?<=\d)(?=(\d\d\d\d)+(?!\d))", Separator);
@@ -158,25 +181,28 @@ namespace L5Sharp.Enums
                     throw new ArgumentNullException(nameof(input));
 
                 if (!input.StartsWith(Specifier))
-                    throw new ArgumentException($"Input must start with {Binary} specifier '{Specifier}'");
+                    throw new ArgumentException($"Input must start with {Binary} specifier '{Specifier}'.");
 
                 var value = input.Replace(Specifier, string.Empty).Replace(Separator, string.Empty);
 
                 return value.Length switch
                 {
                     1 => value == "1",
-                    8 => Convert.ToByte(value, 2),
-                    16 => Convert.ToInt16(value, 2),
-                    32 => Convert.ToInt32(value, 2),
-                    64 => Convert.ToInt64(value, 2),
-                    _ => throw new ArgumentException($"The value length {value.Length} is not valid for {Binary} Radix")
+                    var n when n > 1 && n <= 8 => Convert.ToByte(value, BaseNumber),
+                    var n when n > 8 && n <= 16 => Convert.ToInt16(value, BaseNumber),
+                    var n when n > 16 && n <= 32 => Convert.ToInt32(value, BaseNumber),
+                    var n when n > 32 && n <= 64 => Convert.ToInt64(value, BaseNumber),
+                    _ => throw new ArgumentOutOfRangeException(nameof(value.Length),
+                        $"The value {value.Length} is out of range for {Binary} Radix.")
                 };
             }
         }
 
         private class OctalRadix : Radix
         {
+            private const string Separator = "_";
             private const string Specifier = "8#";
+            private const int BaseNumber = 8;
 
             public OctalRadix() : base(nameof(Octal), nameof(Octal))
             {
@@ -190,7 +216,7 @@ namespace L5Sharp.Enums
                 if (!atomic.SupportsRadix(this))
                     throw new RadixNotSupportedException(this, atomic);
 
-                var str = ChangeBase(atomic, 8);
+                var str = ChangeBase(atomic, BaseNumber);
 
                 str = atomic switch
                 {
@@ -202,7 +228,8 @@ namespace L5Sharp.Enums
                     _ => throw new NotSupportedException($"{atomic.GetType()} not supported for {Octal} Radix.")
                 };
 
-                str = Regex.Replace(str, @"(?<=\d)(?=(\d\d\d)+(?!\d))", "_");
+                str = Regex.Replace(str, @"(?<=\d)(?=(\d\d\d)+(?!\d))", Separator);
+
                 return $"{Specifier}{str}";
             }
 
@@ -212,19 +239,19 @@ namespace L5Sharp.Enums
                     throw new ArgumentNullException(nameof(input));
 
                 if (!input.StartsWith(Specifier))
-                    throw new ArgumentException($"Input must start with recognized specifier {Specifier}");
+                    throw new ArgumentException($"Input must start with {Octal} specifier '{Specifier}'.");
 
                 var value = input.Replace(Specifier, string.Empty).Replace(Separator, string.Empty);
 
                 return value.Length switch
                 {
                     1 => value == "1",
-                    3 => Convert.ToByte(value, 8),
-                    6 => Convert.ToInt16(value, 8),
-                    11 => Convert.ToInt32(value, 8),
-                    22 => Convert.ToInt64(value, 8),
-                    _ => throw new ArgumentOutOfRangeException(
-                        $"The value length {value.Length} is not valid for the {Octal} Radix")
+                    var n when n > 1 && n <= 3 => Convert.ToByte(value, BaseNumber),
+                    var n when n > 3 && n <= 6 => Convert.ToInt16(value, BaseNumber),
+                    var n when n > 6 && n <= 11 => Convert.ToInt32(value, BaseNumber),
+                    var n when n > 11 && n <= 22 => Convert.ToInt64(value, BaseNumber),
+                    _ => throw new ArgumentOutOfRangeException(nameof(value.Length),
+                        $"The value {value.Length} is out of range for {Octal} Radix.")
                 };
             }
         }
@@ -263,13 +290,15 @@ namespace L5Sharp.Enums
                 if (long.TryParse(input, out var longValue))
                     return longValue;
 
-                throw new NotSupportedException();
+                throw new ArgumentException($"Input value '{input}' not valid for {Decimal} Radix.");
             }
         }
 
         private class HexRadix : Radix
         {
+            private const string Separator = "_";
             private const string Specifier = "16#";
+            private const int BaseNumber = 16;
 
             public HexRadix() : base(nameof(Hex), nameof(Hex))
             {
@@ -283,7 +312,7 @@ namespace L5Sharp.Enums
                 if (!atomic.SupportsRadix(this))
                     throw new RadixNotSupportedException(this, atomic);
 
-                var str = ChangeBase(atomic, 16);
+                var str = ChangeBase(atomic, BaseNumber);
 
                 str = atomic switch
                 {
@@ -295,7 +324,8 @@ namespace L5Sharp.Enums
                     _ => throw new NotSupportedException($"{atomic.GetType()} not supported for {Hex} Radix.")
                 };
 
-                str = Regex.Replace(str, @"(?<=\d)(?=(\d\d\d\d)+(?!\d))", "_");
+                str = Regex.Replace(str, @"(?<=\d)(?=(\d\d\d\d)+(?!\d))", Separator);
+
                 return $"{Specifier}{str}";
             }
 
@@ -305,19 +335,19 @@ namespace L5Sharp.Enums
                     throw new ArgumentNullException(nameof(input));
 
                 if (!input.StartsWith(Specifier))
-                    throw new ArgumentException($"Input must start with recognized specifier {Specifier}");
+                    throw new ArgumentException($"Input must start with {Hex} specifier '{Specifier}'.");
 
                 var value = input.Replace(Specifier, string.Empty).Replace(Separator, string.Empty);
 
                 return value.Length switch
                 {
                     1 => value == "1",
-                    2 => Convert.ToByte(value, 16),
-                    4 => Convert.ToInt16(value, 16),
-                    8 => Convert.ToInt32(value, 16),
-                    16 => Convert.ToInt64(value, 16),
-                    _ => throw new ArgumentOutOfRangeException(
-                        $"The value length {value.Length} is not valid for the {Hex} Radix")
+                    2 => Convert.ToByte(value, BaseNumber),
+                    4 => Convert.ToInt16(value, BaseNumber),
+                    8 => Convert.ToInt32(value, BaseNumber),
+                    16 => Convert.ToInt64(value, BaseNumber),
+                    _ => throw new ArgumentOutOfRangeException(nameof(value.Length),
+                        $"The value {value.Length} is out of range for {Hex} Radix.")
                 };
             }
         }
@@ -336,7 +366,8 @@ namespace L5Sharp.Enums
                 if (!atomic.SupportsRadix(this))
                     throw new RadixNotSupportedException(this, atomic);
 
-                return ((float)atomic.Value).ToString("e8", CultureInfo.InvariantCulture);
+                var value = (float)atomic.Value;
+                return value.ToString("e8", CultureInfo.InvariantCulture);
             }
 
             public override object Parse(string input)
@@ -344,10 +375,7 @@ namespace L5Sharp.Enums
                 if (string.IsNullOrEmpty(input))
                     throw new ArgumentNullException(nameof(input));
 
-                if (float.TryParse(input, out var value))
-                    return value;
-
-                return null;
+                return float.Parse(input);
             }
         }
 
@@ -365,17 +393,24 @@ namespace L5Sharp.Enums
                 if (!atomic.SupportsRadix(this))
                     throw new RadixNotSupportedException(this, atomic);
 
-                return ((float)atomic.Value).ToString(CultureInfo.InvariantCulture);
+                var value = (float)atomic.Value;
+                return value.ToString("0.0######", CultureInfo.InvariantCulture);
             }
 
             public override object Parse(string input)
             {
-                throw new NotImplementedException();
+                if (string.IsNullOrEmpty(input))
+                    throw new ArgumentNullException(nameof(input));
+
+                return float.Parse(input);
             }
         }
 
         private class AsciiRadix : Radix
         {
+            private const string Separator = "$";
+            private const int BaseNumber = 16;
+
             public AsciiRadix() : base(nameof(Ascii).ToUpper(), nameof(Ascii).ToUpper())
             {
             }
@@ -388,28 +423,43 @@ namespace L5Sharp.Enums
                 if (!atomic.SupportsRadix(this))
                     throw new RadixNotSupportedException(this, atomic);
 
-                var str = ChangeBase(atomic, 16);
+                var str = ChangeBase(atomic, BaseNumber);
 
                 str = atomic switch
                 {
-                    Sint _ => str.PadLeft(0, '0'),
+                    Sint _ => str.PadLeft(2, '0'),
                     Int _ => str.PadLeft(4, '0'),
                     Dint _ => str.PadLeft(8, '0'),
                     Lint _ => str.PadLeft(16, '0'),
                     _ => throw new NotSupportedException($"{atomic.GetType()} not supported for {Ascii} Radix.")
                 };
 
-                return Regex.Replace(str, @"(?=(\d\d)+(?!\d))", "$");
+                return Regex.Replace(str, @"(?=(\d\d)+(?!\d))", Separator);
             }
 
             public override object Parse(string input)
             {
-                throw new NotImplementedException();
+                if (string.IsNullOrEmpty(input))
+                    throw new ArgumentNullException(nameof(input));
+
+                var value = input.Replace(Separator, string.Empty);
+
+                return value.Length switch
+                {
+                    2 => Convert.ToByte(value, BaseNumber),
+                    4 => Convert.ToInt16(value, BaseNumber),
+                    8 => Convert.ToInt32(value, BaseNumber),
+                    16 => Convert.ToInt64(value, BaseNumber),
+                    _ => throw new ArgumentOutOfRangeException(nameof(value.Length),
+                        $"The value {value.Length} is out of range for {Hex} Radix.")
+                };
             }
         }
 
         private class DateTimeRadix : Radix
         {
+            private const string Specifier = "DT#";
+
             public DateTimeRadix() : base(nameof(DateTime), nameof(DateTime))
             {
             }
@@ -430,12 +480,21 @@ namespace L5Sharp.Enums
                 // ReSharper disable once StringLiteralTypo
                 var formatted = offset.ToString("yyyy-MM-dd-HH:mm:ss.ffffff(UTCzzz)");
 
-                return $"DT#{formatted}";
+                return $"{Specifier}{formatted}";
             }
 
             public override object Parse(string input)
             {
-                throw new NotImplementedException();
+                if (string.IsNullOrEmpty(input))
+                    throw new ArgumentNullException(nameof(input));
+
+                if (!input.StartsWith(Specifier))
+                    throw new ArgumentException($"Input must start with {Hex} specifier '{Specifier}'.");
+
+                var value = input.Replace(Specifier, string.Empty);
+
+                return System.DateTime.ParseExact(value, "yyyy-MM-dd-HH:mm:ss.ffffff(UTCzzz)",
+                    CultureInfo.InvariantCulture);
             }
         }
 

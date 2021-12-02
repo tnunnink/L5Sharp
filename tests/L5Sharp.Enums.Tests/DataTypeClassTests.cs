@@ -30,13 +30,5 @@ namespace L5Sharp.Enums.Tests
 
             sut.Should().NotBeNull();
         }
-        
-        [Test]
-        public void List_WhenCalled_ShouldHaveExpectedCount()
-        {
-            var sut = DataTypeClass.List;
-
-            sut.Should().HaveCount(5);
-        }
     }
 }

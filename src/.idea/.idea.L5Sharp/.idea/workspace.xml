@@ -8,10 +8,22 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Enums.Tests/RadixBinaryTests.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Enums.Tests/RadixAsciiTests.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Enums.Tests/RadixDateTimeNsTests.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Enums.Tests/RadixDateTimeTests.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Enums.Tests/RadixDecimalTests.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Enums.Tests/RadixExponentialTests.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Enums.Tests/RadixFloatTests.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Enums.Tests/RadixHexTests.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Enums.Tests/RadixOctalTests.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Enums/Radix.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Enums/Radix.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Enums.Tests/RadixTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Enums.Tests/RadixTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Types/Bool.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Types/Bool.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Enums.Tests/DataTypeClassTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Enums.Tests/DataTypeClassTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Enums.Tests/RadixBinaryTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Enums.Tests/RadixBinaryTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Enums.Tests/RadixTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Enums.Tests/RadixNullTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Enums.Tests/RunTypeTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Enums.Tests/RungTypeTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/Samples/Test.ACD" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/Samples/Test.ACD" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -170,14 +182,9 @@
       <workItem from="1637700052474" duration="71260000" />
       <workItem from="1637948416281" duration="71295000" />
       <workItem from="1638309712697" duration="5938000" />
-      <workItem from="1638328621052" duration="1916000" />
-    </task>
-    <task id="LOCAL-00034" summary="development">
-      <created>1635545378668</created>
-      <option name="number" value="00034" />
-      <option name="presentableId" value="LOCAL-00034" />
-      <option name="project" value="LOCAL" />
-      <updated>1635545378668</updated>
+      <workItem from="1638328621052" duration="1981000" />
+      <workItem from="1638368428504" duration="21384000" />
+      <workItem from="1638407017759" duration="2106000" />
     </task>
     <task id="LOCAL-00035" summary="development">
       <created>1635598630861</created>
@@ -515,40 +522,47 @@
       <option name="project" value="LOCAL" />
       <updated>1638324485463</updated>
     </task>
-    <option name="localTasksCounter" value="83" />
+    <task id="LOCAL-00083" summary="radix development">
+      <created>1638330594994</created>
+      <option name="number" value="00083" />
+      <option name="presentableId" value="LOCAL-00083" />
+      <option name="project" value="LOCAL" />
+      <updated>1638330594996</updated>
+    </task>
+    <option name="localTasksCounter" value="84" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="UnitTestsCoverage.Settings">
-    <option name="coveragePercentColumnWidth" value="52" />
+    <option name="coveragePercentColumnWidth" value="51" />
     <option name="sortOrder" value="DESCENDING" />
     <option name="sortedColumn" value="1" />
-    <option name="symbolColumnWidth" value="294" />
+    <option name="symbolColumnWidth" value="291" />
     <coverage-tree-state>
       <expand>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 76% 2034/8630" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 64% 3360/9255" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 76% 2034/8630" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 57% 1676/3933" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 64% 3360/9255" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 46% 2299/4227" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 76% 2034/8630" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 57% 1676/3933" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="(1.0.0.0, .NETStandard,Version=v2.1) 57% 1676/3933" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 64% 3360/9255" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 46% 2299/4227" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="(1.0.0.0, .NETStandard,Version=v2.1) 46% 2299/4227" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 76% 2034/8630" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 57% 1676/3933" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="(1.0.0.0, .NETStandard,Version=v2.1) 57% 1676/3933" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 57% 1676/3933" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 64% 3360/9255" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 46% 2299/4227" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="(1.0.0.0, .NETStandard,Version=v2.1) 46% 2299/4227" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 46% 2299/4227" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
       </expand>
       <select />

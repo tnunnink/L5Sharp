@@ -1,5 +1,6 @@
 ﻿using System;
 using FluentAssertions;
+using L5Sharp.Exceptions;
 using L5Sharp.Types;
 using NUnit.Framework;
 
@@ -8,7 +9,6 @@ namespace L5Sharp.Enums.Tests
     [TestFixture]
     public class RadixBinaryTests
     {
-        
         [Test]
         public void Binary_WhenCalled_ShouldBeExpected()
         {
@@ -25,6 +25,12 @@ namespace L5Sharp.Enums.Tests
         }
 
         [Test]
+        public void Format_NonSupportedAtomic_ShouldThrowRadixNotSupportedException()
+        {
+            FluentActions.Invoking(() => Radix.Binary.Format(new Real())).Should().Throw<RadixNotSupportedException>();
+        }
+
+        [Test]
         public void Format_BoolFalse_ShouldBeExpected()
         {
             var result = Radix.Binary.Format(new Bool());
@@ -36,7 +42,7 @@ namespace L5Sharp.Enums.Tests
         public void Format_BoolTrue_ShouldBeExpected()
         {
             var result = Radix.Binary.Format(new Bool(true));
-            
+
             result.Should().Be("2#1");
         }
 
@@ -73,39 +79,75 @@ namespace L5Sharp.Enums.Tests
         }
 
         [Test]
+        public void Parse_Null_ShouldThrowArgumentNullException()
+        {
+            FluentActions.Invoking(() => Radix.Binary.Parse(null)).Should().Throw<ArgumentNullException>();
+        }
+
+        [Test]
+        public void Parse_InvalidSpecifier_ShouldThrowArgumentException()
+        {
+            FluentActions.Invoking(() => Radix.Binary.Parse("00010100")).Should().Throw<ArgumentException>()
+                .WithMessage("Input must start with Binary specifier '2#'.");
+        }
+
+        [Test]
+        public void Parse_LengthZero_ShouldThrowArgumentOutOfRangeException()
+        {
+            FluentActions.Invoking(() => Radix.Binary.Parse("2#"))
+                .Should().Throw<ArgumentOutOfRangeException>()
+                .WithMessage("The value 0 is out of range for Binary Radix. (Parameter 'Length')");
+        }
+
+        [Test]
+        public void Parse_LengthGreaterThan64_ShouldThrowArgumentOutOfRangeException()
+        {
+            FluentActions.Invoking(() => Radix.Binary.Parse(
+                        "2#0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0001_0100_0000"))
+                .Should().Throw<ArgumentOutOfRangeException>()
+                .WithMessage("The value 68 is out of range for Binary Radix. (Parameter 'Length')");
+        }
+
+        [Test]
         public void Parse_ValidBool_ShouldBeExpected()
         {
             var value = Radix.Binary.Parse("2#0");
 
             value.Should().Be(false);
         }
-        
+
         [Test]
         public void Parse_ValidSint_ShouldBeExpected()
         {
-            var value = Radix.Binary.Parse("2#0000_0001");
+            var value = Radix.Binary.Parse("2#0001_0100");
 
-            value.Should().Be(1);
+            value.Should().Be(20);
         }
 
         [Test]
-        public void Parse_Null_ShouldThrowArgumentNullException()
+        public void Parse_ValidInt_ShouldBeExpected()
         {
-            FluentActions.Invoking(() => Radix.Binary.Parse(null)).Should().Throw<ArgumentNullException>();
+            var value = Radix.Binary.Parse("2#0000_0000_0001_0100");
+
+            value.Should().Be(20);
         }
-        
+
         [Test]
-        public void Parse_InvalidSpecifier_ShouldThrowArgumentException()
+        public void Parse_ValidDint_ShouldBeExpected()
         {
-            FluentActions.Invoking(() => Radix.Binary.Parse("00010100")).Should().Throw<ArgumentException>()
-                .WithMessage("Input must start with Binary specifier '2#'");
+            var value = Radix.Binary.Parse("2#0000_0000_0000_0000_0000_0000_0001_0100");
+
+            value.Should().Be(20);
         }
-        
+
+
         [Test]
-        public void Parse_InvalidLength_ShouldThrowArgumentException()
+        public void Parse_ValidLint_ShouldBeExpected()
         {
-            FluentActions.Invoking(() => Radix.Binary.Parse("2#0_0010")).Should().Throw<ArgumentException>()
-                .WithMessage("The value length 5 is not valid for Binary Radix");
+            var value = Radix.Binary.Parse(
+                "2#0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0001_0100");
+
+            value.Should().Be(20);
         }
     }
 }

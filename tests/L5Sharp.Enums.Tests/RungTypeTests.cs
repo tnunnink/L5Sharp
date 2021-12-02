@@ -4,7 +4,7 @@ using NUnit.Framework;
 namespace L5Sharp.Enums.Tests
 {
     [TestFixture]
-    public class RunTypeTests
+    public class RungTypeTests
     {
         [Test]
         public void New_Normal_ShouldNotBeNull()

@@ -173,10 +173,13 @@ namespace L5Sharp.Types
             return Value.CompareTo(other.Value);
         }
 
-        private static bool ParseValue(string value)
+        private bool ParseValue(string value)
         {
             if (bool.TryParse(value, out var result))
                 return result;
+
+            if (Radix.TryParse(value, out var parsed))
+                return (bool)parsed;
 
             return string.Equals(value, "1", StringComparison.OrdinalIgnoreCase)
                    || string.Equals(value, "True", StringComparison.OrdinalIgnoreCase)
