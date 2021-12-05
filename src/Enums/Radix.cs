@@ -88,7 +88,7 @@ namespace L5Sharp.Enums
         public static readonly Radix DateTimeNs = new DateTimeNsRadix();
 
         /// <summary>
-        /// Determines the default Radix value for the provided data type.
+        /// Gets the default Radix for the provided data type.
         /// </summary>
         /// <param name="dataType">The data type to determine the default radix for.</param>
         /// <returns>
@@ -204,14 +204,16 @@ namespace L5Sharp.Enums
         }
 
         /// <summary>
-        /// Converts an atomic value to the string representation of the value. 
+        /// Converts an atomic value to the current radix base value. 
         /// </summary>
-        /// <param name="atomic">The current atomic type to format.</param>
-        /// <returns>A string that represents the value of the atomic formatted based on the rules of the current radix type.</returns>
+        /// <param name="atomic">The current atomic type to convert.</param>
+        /// <returns>
+        /// A string that represents the value of the atomic type in the current radix base number style.
+        /// </returns>
         public abstract string Convert(IAtomic atomic);
 
         /// <summary>
-        /// Parses a string representation of a given Radix formatted value into an object value. 
+        /// Parses a string input of a given Radix formatted value into an object value. 
         /// </summary>
         /// <param name="input">The string value to parse.</param>
         /// <returns>An object representing the value of the formatted string.</returns>
