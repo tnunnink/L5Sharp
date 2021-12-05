@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -26,6 +25,7 @@ namespace L5Sharp.Utilities
         public override Expression Visit(Expression node)
         {
             if (_typeParameter != null) return base.Visit(node);
+            
 
             var lambda = ValidateExpression(node);
 
@@ -67,7 +67,7 @@ namespace L5Sharp.Utilities
 
             //A converter must be retrieved for the current property type and wrapped around the value expression.
             var propertyType = ((PropertyInfo)node.Member).PropertyType;
-            var converter = GetConverter(propertyType);
+            var converter = LogixParser.Get(propertyType);
 
             var convertExpression = Expression.Invoke(Expression.Constant(converter), valueExpression);
 
@@ -107,24 +107,6 @@ namespace L5Sharp.Utilities
             var xInfo = expression.Member.GetXMethod();
             var elementName = Expression.Constant(xName);
             return Expression.Call(_elementParameter, xInfo, elementName);
-        }
-
-        /// <summary>
-        /// Gets a converter for the specified type wither from the global LogixParser or from the TypeDescriptor for the type.
-        /// </summary>
-        /// <param name="type">The type to get a converter for.</param>
-        /// <returns>A func that represents the code for converting from a string to an object of the provided type.</returns>
-        private static Func<string, object> GetConverter(Type type)
-        {
-            if (LogixParsers.Contains(type))
-                return LogixParsers.Get(type);
-
-            var converter = TypeDescriptor.GetConverter(type);
-
-            if (converter.CanConvertFrom(typeof(string)))
-                return s => converter.ConvertFrom(s);
-
-            return s => s;
         }
 
         /// <summary>

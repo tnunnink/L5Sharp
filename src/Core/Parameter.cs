@@ -23,9 +23,6 @@ namespace L5Sharp.Core
             dimensions ??= Dimensions.Empty;
             SetDimensions(dimensions);
 
-            if (DataType is IAtomic atomic && radix != null)
-                atomic.SetRadix(radix);
-
             externalAccess = Usage == TagUsage.InOut ? ExternalAccess.Null
                 : externalAccess != null ? externalAccess
                 : Usage == TagUsage.Input ? ExternalAccess.ReadWrite : ExternalAccess.ReadOnly;
@@ -50,7 +47,7 @@ namespace L5Sharp.Core
         public Dimensions Dimension { get; private set; }
 
         /// <inheritdoc />
-        public Radix Radix => DataType.Radix;
+        public Radix Radix { get; }
 
         /// <inheritdoc />
         public ExternalAccess ExternalAccess { get; private set; }

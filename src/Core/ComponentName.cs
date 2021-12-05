@@ -37,28 +37,28 @@ namespace L5Sharp.Core
             _name = name;
         }
 
-        /// <summary>
-        /// Determines if the current <see cref="ComponentName"/> instance equals another.
-        /// </summary>
-        /// <param name="other">The other <see cref="ComponentName"/> to compare</param>
-        /// <returns><see langword="true"/> when the names are equal or if they refer to the same instance. Otherwise, <see langword="false"/></returns>
-        public bool Equals(ComponentName other)
-        {
-            if (ReferenceEquals(null, other)) return false;
-            if (ReferenceEquals(this, other)) return true;
-            return _name == other._name;
-        }
-
         /// <inheritdoc />
         public ComponentName Copy()
         {
             return new ComponentName(string.Copy(_name));
         }
 
-        /// <inheritdoc />
-        public override bool Equals(object obj)
+        /// <summary>
+        /// Determines if the current <see cref="ComponentName"/> instance equals another.
+        /// </summary>
+        /// <param name="other">The other <see cref="ComponentName"/> to compare</param>
+        /// <returns><see langword="true"/> when the names are equal or if they refer to the same instance. Otherwise, <see langword="false"/></returns>
+        public bool Equals(ComponentName? other)
         {
-            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(other, null)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return _name == other._name;
+        }
+
+        /// <inheritdoc />
+        public override bool Equals(object? obj)
+        {
+            if (ReferenceEquals(obj, null)) return false;
             if (ReferenceEquals(this, obj)) return true;
             return obj.GetType() == GetType() && Equals((ComponentName)obj);
         }
@@ -66,7 +66,7 @@ namespace L5Sharp.Core
         /// <inheritdoc />
         public override int GetHashCode()
         {
-            return (_name != null ? _name.GetHashCode() : 0);
+            return _name.GetHashCode();
         }
 
         /// <summary>
@@ -120,8 +120,7 @@ namespace L5Sharp.Core
         /// <inheritdoc />
         public int CompareTo(ComponentName other)
         {
-            if (ReferenceEquals(this, other)) return 0;
-            return ReferenceEquals(null, other) ? 1 : string.Compare(_name, other._name, StringComparison.Ordinal);
+            return ReferenceEquals(this, other) ? 0 : string.Compare(_name, other._name, StringComparison.Ordinal);
         }
     }
 }

@@ -1,42 +1,30 @@
 ﻿using System;
-using System.Xml.Serialization;
 using L5Sharp.Core;
 using L5Sharp.Enums;
-using L5Sharp.Exceptions;
 
 namespace L5Sharp.Types
 {
     /// <summary>
-    /// Represents a boolean Logix data type
+    /// Represents a BOOL Logix atomic data type.
     /// </summary>
     public sealed class Bool : IAtomic<bool>, IEquatable<Bool>, IComparable<Bool>
     {
         /// <summary>
-        /// Creates a new instance of a boolean type.
+        /// Creates a new default instance of a Bool.
         /// </summary>
         public Bool()
         {
             Name = new ComponentName(nameof(Bool).ToUpper());
             Value = default;
-            Radix = Radix.Decimal;
         }
 
         /// <summary>
-        /// Creates a new instance of a boolean type with the provided value.
+        /// Creates a new instance of a Bool with the provided value.
         /// </summary>
         /// <param name="value">The value to initialize the type with.</param>
         public Bool(bool value) : this()
         {
             Value = value;
-        }
-
-        /// <summary>
-        /// Creates a new instance of a boolean type with the provided radix.
-        /// </summary>
-        /// <param name="radix">The radix to initialize the type with.</param>
-        public Bool(Radix radix) : this()
-        {
-            SetRadix(radix);
         }
 
         /// <inheritdoc />
@@ -52,49 +40,27 @@ namespace L5Sharp.Types
         public DataTypeClass Class => DataTypeClass.Atomic;
 
         /// <inheritdoc />
-        public DataFormat Format => DataFormat.Decorated;
-
-        /// <inheritdoc />
-        public Radix Radix { get; private set; }
-
-        /// <inheritdoc />
-        public bool Value { get; private set; }
+        public bool Value { get; }
 
         object IAtomic.Value => Value;
 
         /// <inheritdoc />
-        [XmlAttribute(nameof(Value))]
-        public string FormattedValue => Radix.Format(this);
-
-        /// <inheritdoc />
-        public void SetValue(bool value)
+        public IAtomic<bool> Update(bool value)
         {
-            Value = value;
+            return new Bool(value);
         }
 
         /// <inheritdoc />
-        public void SetValue(object value)
+        public IAtomic Update(object value)
         {
-            Value = value switch
+            return value switch
             {
                 null => throw new ArgumentNullException(nameof(value), "Value can not be null"),
-                Bool a => a,
-                bool b => b,
-                string str => ParseValue(str),
+                Bool atomic => new Bool(atomic),
+                bool typed => new Bool(typed),   
+                string str => new Bool(Parse(str)),
                 _ => throw new ArgumentException($"Value type '{value.GetType()}' is not a valid for {GetType()}")
             };
-        }
-
-        /// <inheritdoc />
-        public void SetRadix(Radix radix)
-        {
-            if (radix == null)
-                throw new ArgumentNullException(nameof(radix));
-
-            if (!SupportsRadix(radix))
-                throw new RadixNotSupportedException(radix, this);
-
-            Radix = radix;
         }
 
         /// <inheritdoc />
@@ -103,17 +69,11 @@ namespace L5Sharp.Types
             return new Bool();
         }
 
-        /// <inheritdoc />
-        public bool SupportsRadix(Radix radix)
-        {
-            return radix == Radix.Binary || radix == Radix.Octal || radix == Radix.Decimal || radix == Radix.Hex;
-        }
-
         /// <summary>
-        /// Converts the provided <see cref="bool"/> to a <see cref="Bool"/> type.
+        /// Converts the provided <see cref="bool"/> to a <see cref="Bool"/> value.
         /// </summary>
-        /// <param name="value">The type value to convert.</param>
-        /// <returns>A <see cref="bool"/> type value</returns>
+        /// <param name="value">The value to convert.</param>
+        /// <returns>A <see cref="Bool"/> value.</returns>
         public static implicit operator Bool(bool value)
         {
             return new Bool(value);
@@ -122,47 +82,64 @@ namespace L5Sharp.Types
         /// <summary>
         /// Converts the provided <see cref="Bool"/> to a <see cref="bool"/> value.
         /// </summary>
-        /// <param name="atomic">The type value to convert.</param>
-        /// <returns>A <see cref="Bool"/> type value.</returns>
+        /// <param name="atomic">The value to convert.</param>
+        /// <returns>A <see cref="bool"/> type value.</returns>
         public static implicit operator bool(Bool atomic)
         {
             return atomic.Value;
         }
 
-        /// <inheritdoc />
-        public bool Equals(Bool other)
+        /// <summary>
+        /// Converts the provided <see cref="string"/> to a <see cref="Bool"/> value. 
+        /// </summary>
+        /// <param name="input">The string value to convert.</param>
+        /// <returns>
+        /// If the string value is able to be parsed, a new instance of a <see cref="Bool"/> with the value
+        /// provided. If not, then a default instance value.
+        /// </returns>
+        public static implicit operator Bool(string input)
         {
-            if (ReferenceEquals(null, other)) return false;
-            if (ReferenceEquals(this, other)) return true;
-            return Equals(Radix, other.Radix) && Value == other.Value;
+            return new Bool(Parse(input));
         }
 
         /// <inheritdoc />
-        public override bool Equals(object obj)
+        public bool Equals(Bool? other)
         {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((Bool)obj);
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return Value == other.Value;
+        }
+
+        /// <inheritdoc />
+        public override bool Equals(object? obj)
+        {
+            return ReferenceEquals(this, obj) || obj is Bool other && Equals(other);
         }
 
         /// <inheritdoc />
         public override int GetHashCode()
         {
-            return HashCode.Combine(Radix, Value);
+            return Value.GetHashCode();
         }
 
-        /// <inheritdoc />
-        public override string ToString()
-        {
-            return Name;
-        }
-
-        public static bool operator ==(Bool left, Bool right)
+        /// <summary>
+        /// Determines whether the objects are equal.
+        /// </summary>
+        /// <param name="left">An object to compare.</param>
+        /// <param name="right">An object to compare.</param>
+        /// <returns>true if the objects are equal, otherwise, false.</returns>
+        public static bool operator ==(Bool? left, Bool? right)
         {
             return Equals(left, right);
         }
 
-        public static bool operator !=(Bool left, Bool right)
+        /// <summary>
+        /// Determines whether the objects are not equal.
+        /// </summary>
+        /// <param name="left">An object to compare.</param>
+        /// <param name="right">An object to compare.</param>
+        /// <returns>true if the objects are not equal, otherwise, false.</returns>
+        public static bool operator !=(Bool? left, Bool? right)
         {
             return !Equals(left, right);
         }
@@ -173,17 +150,20 @@ namespace L5Sharp.Types
             return Value.CompareTo(other.Value);
         }
 
-        private bool ParseValue(string value)
+        private static bool Parse(string value)
         {
+            if (string.IsNullOrEmpty(value))
+                throw new ArgumentNullException(nameof(value));
+
             if (bool.TryParse(value, out var result))
                 return result;
 
-            if (Radix.TryParse(value, out var parsed))
-                return (bool)parsed;
+            if (string.Equals(value, "1", StringComparison.OrdinalIgnoreCase)
+                || string.Equals(value, "true", StringComparison.OrdinalIgnoreCase)
+                || string.Equals(value, "yes", StringComparison.OrdinalIgnoreCase))
+                return true;
 
-            return string.Equals(value, "1", StringComparison.OrdinalIgnoreCase)
-                   || string.Equals(value, "True", StringComparison.OrdinalIgnoreCase)
-                   || string.Equals(value, "Yes", StringComparison.OrdinalIgnoreCase);
+            return Radix.ParseValue<Bool>(value);
         }
     }
 }

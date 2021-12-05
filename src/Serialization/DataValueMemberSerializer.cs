@@ -16,7 +16,7 @@ namespace L5Sharp.Serialization
             if (component == null)
                 throw new ArgumentNullException(nameof(component));
             
-            if (!(component.DataType is IAtomic atomic))
+            if (component.DataType is not IAtomic atomic)
                 throw new InvalidOperationException("DataValueMembers must have an atomic data type.");
             
             var element = new XElement(ElementName);
@@ -42,7 +42,7 @@ namespace L5Sharp.Serialization
             var dataType = (IAtomic) Logix.DataType.Instantiate(element.GetDataTypeName());
             var radix = element.GetValue<IMember<IAtomic>, Radix>(e => e.Radix);
             var value = element.GetValue<IAtomic, object>(a => a.Value);
-            dataType.SetValue(value);
+            dataType.Update(value);
 
             return Member.Create(name, dataType, Dimensions.Empty, radix);
         }

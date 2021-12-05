@@ -33,7 +33,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void New_NullName_ShouldThrowArgumentNullException()
         {
-            FluentActions.Invoking(() => new StringDefined(null, 0)).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(() => new StringDefined(null!, 0)).Should().Throw<ArgumentException>();
         }
 
         [Test]
@@ -77,7 +77,7 @@ namespace L5Sharp.Core.Tests
             var type = new StringDefined("Test", 10);
 
             type.LEN.Should().NotBeNull();
-            type.LEN.Name.ToString().Should().Be("LEN");
+            type.LEN.Name.Should().Be("LEN");
             type.LEN.DataType.Should().Be(new Dint());
             type.LEN.Dimension.Length.Should().Be(0);
             type.LEN.Radix.Should().Be(Radix.Decimal);
@@ -91,8 +91,8 @@ namespace L5Sharp.Core.Tests
             var type = new StringDefined("Test", 100);
             
             type.DATA.Should().NotBeNull();
-            type.DATA.Name.ToString().Should().Be("DATA");
-            type.DATA.DataType.Should().Be(new Sint(Radix.Ascii));
+            type.DATA.Name.Should().Be("DATA");
+            type.DATA.DataType.Should().BeOfType<Sint>();
             type.DATA.Dimension.Length.Should().Be(100);
             type.DATA.Radix.Should().Be(Radix.Ascii);
             type.DATA.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);

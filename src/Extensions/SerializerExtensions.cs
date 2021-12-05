@@ -15,12 +15,6 @@ namespace L5Sharp.Extensions
             { LogixNames.Member, new UserDefinedMemberSerializer() },
             { LogixNames.Tag, new TagSerializer() },
             { LogixNames.Task, new TaskSerializer() },
-            { LogixNames.DataValue, new DataValueSerializer() },
-            { LogixNames.Array, new ArraySerializer() },
-            { LogixNames.Structure, new StructureSerializer() },
-            { LogixNames.DataValueMember, new DataValueMemberSerializer() },
-            { LogixNames.ArrayMember, new ArrayMemberSerializer() },
-            { LogixNames.StructureMember, new StructureMemberSerializer() }
         };
         
         public static XElement Serialize<T>(this T component, string serializerName = null)

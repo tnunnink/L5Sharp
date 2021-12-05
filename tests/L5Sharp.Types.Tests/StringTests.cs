@@ -23,8 +23,6 @@ namespace L5Sharp.Types.Tests
         {
             var type = new String();
             
-            var value = type.Value;
-
             type.Value.Should().BeEmpty();
         }
 
@@ -41,9 +39,9 @@ namespace L5Sharp.Types.Tests
             type.Value.Should().BeEmpty();
             type.Radix.Should().Be(Radix.Null);
             type.LEN.Should().NotBeNull();
-            type.LEN.DataType.Should().Be(new Dint(82));
+            type.LEN.DataType.Should().BeOfType<Dint>();
             type.DATA.Should().NotBeNull();
-            type.DATA.DataType.Should().Be(new Sint(Radix.Ascii));
+            type.DATA.DataType.Should().BeOfType<Sint>();
             type.DATA.Dimension.Should().Be(new Dimensions(82));
             type.DATA.Should().HaveCount(82);
         }
@@ -61,7 +59,7 @@ namespace L5Sharp.Types.Tests
         {
             var type = new String();
             
-            FluentActions.Invoking(() => type.SetValue(null)).Should().Throw<ArgumentNullException>();
+            FluentActions.Invoking(() => type.SetValue(null!)).Should().Throw<ArgumentNullException>();
         }
         
         [Test]
@@ -77,7 +75,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void SetValue_OutOfRangeString_ShouldThrowArgumentOutOfRangeException()
         {
-            var type = new String();
+            String type = "";
 
             FluentActions.Invoking(() =>
             type =

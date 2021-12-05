@@ -1,5 +1,4 @@
 ﻿using System;
-using AutoFixture;
 using FluentAssertions;
 using L5Sharp.Enums;
 using L5Sharp.Types;
@@ -38,7 +37,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void New_NullName_ShouldThrowArgumentNullException()
         {
-            FluentActions.Invoking(() => Member.Create<Dint>(null)).Should().Throw<ArgumentNullException>();
+            FluentActions.Invoking(() => Member.Create<Dint>(null!)).Should().Throw<ArgumentNullException>();
         }
 
         [Test]

@@ -19,7 +19,7 @@ namespace L5Sharp.Enums.Tests
         [Test]
         public void Format_WhenCalled_ReturnsNull()
         {
-            var formatted = Radix.Null.Format(new Dint());
+            var formatted = Radix.Null.Convert(new Dint());
 
             formatted.Should().BeNull();
         }

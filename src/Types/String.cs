@@ -30,9 +30,6 @@ namespace L5Sharp.Types
         public override DataTypeClass Class => DataTypeClass.Predefined;
 
         /// <inheritdoc />
-        public override DataFormat Format => DataFormat.String;
-
-        /// <inheritdoc />
         public string Value => GetValue();
 
         /// <inheritdoc />
@@ -63,7 +60,7 @@ namespace L5Sharp.Types
             ClearData();
 
             for (var i = 0; i < bytes.Length; i++)
-                DATA[i].DataType.SetValue(bytes[i]);
+                DATA[i].DataType.Update(bytes[i]);
         }
 
         public static implicit operator String(string input)
@@ -77,13 +74,7 @@ namespace L5Sharp.Types
         }
 
         /// <inheritdoc />
-        public int CompareTo(String other)
-        {
-            return string.Compare(Value, other.Value, StringComparison.Ordinal);
-        }
-
-        /// <inheritdoc />
-        public bool Equals(String other)
+        public bool Equals(String? other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
@@ -94,7 +85,7 @@ namespace L5Sharp.Types
         }
 
         /// <inheritdoc />
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
@@ -117,6 +108,12 @@ namespace L5Sharp.Types
             return !Equals(left, right);
         }
 
+        /// <inheritdoc />
+        public int CompareTo(String other)
+        {
+            return string.Compare(Value, other.Value, StringComparison.Ordinal);
+        }
+
         private string GetValue()
         {
             var bytes = DATA.Where(d => d.DataType.Value > 0)
@@ -127,7 +124,7 @@ namespace L5Sharp.Types
         private void ClearData()
         {
             foreach (var dataElement in DATA)
-                dataElement.DataType.SetValue(0);
+                dataElement.DataType.Update(0);
         }
     }
 }

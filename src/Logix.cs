@@ -58,14 +58,14 @@ namespace L5Sharp
             Instruction.Registry.Add(name, factory);
         }
 
-        
+
         /// <summary>
         /// Predefined set of Logix Data Types. 
         /// </summary>
         public static class DataType
         {
             internal static readonly Dictionary<string, Func<IDataType>> Registry =
-                new Dictionary<string, Func<IDataType>>(StringComparer.OrdinalIgnoreCase)
+                new(StringComparer.OrdinalIgnoreCase)
                 {
                     { nameof(Bool), () => new Bool() },
                     { "Bit", () => new Bool() }, //Bit is a valid type that appears in the L5X and is the same as a Bool
@@ -104,6 +104,9 @@ namespace L5Sharp
             /// </returns>
             public static IDataType Instantiate(string name)
             {
+                if (string.IsNullOrEmpty(name))
+                    throw new ArgumentNullException(nameof(name));
+
                 return Registry.ContainsKey(name) ? Registry[name].Invoke() : null;
             }
         }
@@ -131,14 +134,14 @@ namespace L5Sharp
             /// List of all registered Logix Instructions.
             /// </summary>
             public static IEnumerable<string> List => Registry.Keys.AsEnumerable();
-            
+
             /// <summary>
             /// Determines if the provided instruction name is registered in the current Logix context.
             /// </summary>
             /// <param name="name">The name of the instruction to find.</param>
             /// <returns>true if the <see cref="IInstruction"/> is defined in the registered collection.</returns>
             public static bool Contains(string name) => Registry.ContainsKey(name);
-            
+
             /// <summary>
             /// Creates an instance of the given instruction.
             /// </summary>

@@ -5,133 +5,161 @@ using L5Sharp.Exceptions;
 
 namespace L5Sharp.Types
 {
+    /// <summary>
+    /// Represents a INT Logix atomic data type.
+    /// </summary>
     public sealed class Lint : IAtomic<long>, IEquatable<Lint>, IComparable<Lint>
     {
+        /// <summary>
+        /// Creates a new default instance of a Lint.
+        /// </summary>
         public Lint()
         {
+            Name = nameof(Lint).ToUpper();
             Value = default;
-            Radix = Radix.Decimal;
         }
 
+        /// <summary>
+        /// Creates a new instance of a Lint with the provided value.
+        /// </summary>
+        /// <param name="value">The value to initialize the type with.</param>
         public Lint(long value) : this()
         {
             Value = value;
         }
 
-        public Lint(Radix radix) : this()
-        {
-            SetRadix(radix);
-        }
+        /// <inheritdoc />
+        public ComponentName Name { get; }
 
-        public ComponentName Name => nameof(Lint).ToUpper();
+        /// <inheritdoc />
         public string Description => $"RSLogix representation of a {typeof(long)}";
+
+        /// <inheritdoc />
         public DataTypeFamily Family => DataTypeFamily.None;
+
+        /// <inheritdoc />
         public DataTypeClass Class => DataTypeClass.Atomic;
-        public DataFormat Format => DataFormat.Decorated;
-        public Radix Radix { get; private set; }
-        public long Value { get; private set; }
-        public string FormattedValue => Radix.Format(this);
+
+        /// <inheritdoc />
+        public long Value { get; }
+
         object IAtomic.Value => Value;
 
-        public void SetValue(long value)
+        /// <inheritdoc />
+        public IAtomic<long> Update(long value)
         {
-            Value = value;
+            return new Lint(value);
         }
 
-        public void SetValue(object value)
+        /// <inheritdoc />
+        public IAtomic Update(object value)
         {
-            Value = value switch
+            return value switch
             {
                 null => throw new ArgumentNullException(nameof(value), "Value can not be null"),
-                Lint a => a,
-                long v => v,
-                string str => ParseValue(str),
+                Lint atomic => new Lint(atomic),
+                long typed => new Lint(typed),
+                string str => new Lint(Parse(str)),
                 _ => throw new ArgumentException($"Value type '{value.GetType()}' is not a valid for {GetType()}")
             };
         }
 
-        public void SetRadix(Radix radix)
+        /// <inheritdoc />
+        public IDataType Instantiate()
         {
-            if (radix == null)
-                throw new ArgumentNullException(nameof(radix));
-
-            if (!SupportsRadix(radix))
-                throw new RadixNotSupportedException(radix, this);
-
-            Radix = radix;
+            return new Lint();
         }
-
-        public bool SupportsRadix(Radix radix)
-        {
-            return radix == Radix.Binary
-                   || radix == Radix.Octal
-                   || radix == Radix.Decimal
-                   || radix == Radix.Hex
-                   || radix == Radix.Ascii
-                   || radix == Radix.DateTime
-                   || radix == Radix.DateTimeNs;
-        }
-
+        
+        /// <summary>
+        /// Converts the provided <see cref="long"/> to a <see cref="Lint"/> value.
+        /// </summary>
+        /// <param name="value">The value to convert.</param>
+        /// <returns>A <see cref="Lint"/> value.</returns>
         public static implicit operator Lint(long value)
         {
             return new Lint(value);
         }
 
+        /// <summary>
+        /// Converts the provided <see cref="Lint"/> to a <see cref="long"/> value.
+        /// </summary>
+        /// <param name="atomic">The value to convert.</param>
+        /// <returns>A <see cref="long"/> type value.</returns>
         public static implicit operator long(Lint atomic)
         {
             return atomic.Value;
         }
 
-        public int CompareTo(Lint other)
+        /// <summary>
+        /// Converts the provided <see cref="string"/> to a <see cref="Lint"/> value. 
+        /// </summary>
+        /// <param name="input">The string value to convert.</param>
+        /// <returns>
+        /// If the string value is able to be parsed, a new instance of a <see cref="Lint"/> with the value
+        /// provided. If not, then a default instance value.
+        /// </returns>
+        public static implicit operator Lint(string input)
         {
-            return Value.CompareTo(other.Value);
+            return new Lint(Parse(input));
         }
 
-        public bool Equals(Lint other)
+        /// <inheritdoc />
+        public bool Equals(Lint? other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return Name.Equals(other.Name) && Equals(Radix, other.Radix) && Value == other.Value;
+            return Value == other.Value;
         }
 
-        public IDataType Instantiate()
-        {
-            return new Lint();
-        }
-
-        public override bool Equals(object obj)
+        /// <inheritdoc />
+        public override bool Equals(object? obj)
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
             return obj.GetType() == GetType() && Equals((Lint)obj);
         }
 
+        /// <inheritdoc />
         public override int GetHashCode()
         {
-            return HashCode.Combine(Name, Radix, Value);
-        }
-        
-        public override string ToString()
-        {
-            return Name;
+            return Value.GetHashCode();
         }
 
+        /// <summary>
+        /// Determines whether the objects are equal.
+        /// </summary>
+        /// <param name="left">An object to compare.</param>
+        /// <param name="right">An object to compare.</param>
+        /// <returns>true if the objects are equal, otherwise, false.</returns>
         public static bool operator ==(Lint left, Lint right)
         {
             return Equals(left, right);
         }
 
+        /// <summary>
+        /// Determines whether the objects are not equal.
+        /// </summary>
+        /// <param name="left">An object to compare.</param>
+        /// <param name="right">An object to compare.</param>
+        /// <returns>true if the objects are not equal, otherwise, false.</returns>
         public static bool operator !=(Lint left, Lint right)
         {
             return !Equals(left, right);
         }
 
-        private long ParseValue(string value)
+        /// <inheritdoc />
+        public int CompareTo(Lint? other)
         {
-            if (long.TryParse(value, out var result))
-                return result;
+            if (ReferenceEquals(this, other)) return 0;
+            return ReferenceEquals(null, other) ? 1 : Value.CompareTo(other.Value);
+        }
 
-            throw new ArgumentException($"Could not parse string '{value}' to {GetType()}");
+        private static long Parse(string value)
+        {
+            if (string.IsNullOrEmpty(value))
+                throw new ArgumentNullException(nameof(value));
+
+            return long.TryParse(value, out var result) ? result : Radix.ParseValue<Lint>(value);
         }
     }
 }

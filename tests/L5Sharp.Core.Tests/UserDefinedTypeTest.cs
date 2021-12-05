@@ -40,7 +40,7 @@ namespace L5Sharp.Core.Tests
             MyMember01.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);
 
             MyMember02.Should().NotBeNull();
-            MyMember02.DataType.Should().Be(new Dint(Radix.Ascii));
+            MyMember02.DataType.Should().Be(new Dint());
             MyMember02.Description.Should().Be("This is a test member array");
             MyMember02.Dimension.Length.Should().Be(5);
             MyMember02.Radix.Should().Be(Radix.Ascii);

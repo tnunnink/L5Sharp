@@ -75,7 +75,7 @@ namespace L5Sharp.Extensions
 
             if (targetData is IAtomic atomic && target.Dimensions.AreEmpty)
             {
-                atomic.SetValue(sourceData);
+                atomic = sourceData;
                 return;
             }
 

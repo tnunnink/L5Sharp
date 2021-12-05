@@ -52,7 +52,7 @@ namespace L5Sharp.Serialization
             if (!(dataType is IAtomic atomic)) return Member.Create(name, dataType);
             
             var value = element.GetValue<IAtomic, object>(a => a.Value);
-            atomic.SetValue(value);
+            atomic.Update(value);
 
             return Member.Create(name, atomic);
         }

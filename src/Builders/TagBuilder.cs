@@ -71,14 +71,6 @@ namespace L5Sharp.Builders
             return this;
         }
 
-        public ITagBuilder<TDataType> WithMemberValue<TAtomic>(Func<TDataType, IMember<TAtomic>> memberExpression,
-            IAtomic value) where TAtomic : IAtomic
-        {
-            var member = memberExpression.Invoke(_dataType);
-            member.DataType.SetValue(value);
-            return this;
-        }
-
         public ITag<TDataType> Create()
         {
             var tag = new Tag<TDataType>(_name, _dataType, _dimensions, _radix, _access, _description, _usage,

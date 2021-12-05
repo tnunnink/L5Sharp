@@ -21,7 +21,7 @@ namespace L5Sharp.Enums.Tests
         {
             var radix = Radix.Ascii;
 
-            var result = radix.Format(new Sint(20));
+            var result = radix.Convert(new Sint(20));
 
             result.Should().Be("$14");
         }
@@ -31,7 +31,7 @@ namespace L5Sharp.Enums.Tests
         {
             var radix = Radix.Ascii;
 
-            var result = radix.Format(new Int(20));
+            var result = radix.Convert(new Int(20));
 
             result.Should().Be("$00$14");
         }
@@ -41,7 +41,7 @@ namespace L5Sharp.Enums.Tests
         {
             var radix = Radix.Ascii;
 
-            var result = radix.Format(new Dint(20));
+            var result = radix.Convert(new Dint(20));
 
             result.Should().Be("$00$00$00$14");
         }
@@ -51,7 +51,7 @@ namespace L5Sharp.Enums.Tests
         {
             var radix = Radix.Ascii;
 
-            var result = radix.Format(new Lint(20));
+            var result = radix.Convert(new Lint(20));
 
             result.Should().Be("$00$00$00$00$00$00$00$14");
         }

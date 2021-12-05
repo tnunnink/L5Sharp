@@ -85,7 +85,6 @@ namespace L5SharpTests
             type.Name.Should().Be("STRING");
             type.Class.Should().Be(DataTypeClass.Predefined);
             type.Family.Should().Be(DataTypeFamily.String);
-            type.Radix.Should().Be(Radix.Null);
         }
 
         [Test]

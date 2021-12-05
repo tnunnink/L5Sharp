@@ -35,7 +35,7 @@ namespace L5Sharp.Core
         public Dimensions Dimensions => _member.Dimension;
 
         /// <inheritdoc />
-        public Radix Radix => _member.DataType.Radix;
+        public Radix Radix => _member.Radix;
 
         /// <inheritdoc />
         public ExternalAccess ExternalAccess =>
@@ -64,13 +64,13 @@ namespace L5Sharp.Core
         /// <inheritdoc />
         public void SetData(IAtomic value)
         {
-            if (!(_member.DataType is IAtomic atomic))
+            if (_member.DataType is not IAtomic atomic)
                 throw new InvalidTagDataException(_member.DataType, value);
 
-            atomic.SetValue(value);
+            atomic.Update(value);
         }
 
-        /// <inheritdoc />
+        /*/// <inheritdoc />
         public void SetRadix(Radix radix)
         {
             if (radix == null)
@@ -86,7 +86,7 @@ namespace L5Sharp.Core
 
             foreach (var element in array)
                 element.DataType.SetRadix(radix);
-        }
+        }*/
 
         /// <inheritdoc />
         public void SetDescription(string description)
@@ -138,10 +138,10 @@ namespace L5Sharp.Core
                 throw new ArgumentNullException(nameof(expression), "Expression can not be null");
 
             var member = expression.Invoke(_member.DataType);
-            member.DataType.SetValue(value);
+            member.DataType.Update(value);
         }
 
-        /// <inheritdoc />
+        /*/// <inheritdoc />
         public void SetMember<TAtomic>(Func<TDataType, IMember<TAtomic>> expression, Radix radix)
             where TAtomic : IAtomic
         {
@@ -151,11 +151,11 @@ namespace L5Sharp.Core
             var member = expression.Invoke(_member.DataType);
             member.DataType.SetRadix(radix);
 
-            if (!(member is IArrayMember<IAtomic> array)) return;
+            if (member is not IArrayMember<IAtomic> array) return;
 
             foreach (var element in array)
                 element.DataType.SetRadix(radix);
-        }
+        }*/
 
         /// <inheritdoc />
         public void SetMember<TType>(Func<TDataType, IMember<TType>> expression, string description)

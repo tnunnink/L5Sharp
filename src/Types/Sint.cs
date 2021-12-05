@@ -1,30 +1,36 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using L5Sharp.Core;
 using L5Sharp.Enums;
-using L5Sharp.Exceptions;
 
 namespace L5Sharp.Types
 {
+    /// <summary>
+    /// Represents a SINT Logix atomic data type.
+    /// </summary>
     public sealed class Sint : IAtomic<byte>, IEquatable<Sint>, IComparable<Sint>
     {
+        /// <summary>
+        /// Creates a new default instance of a Sint.
+        /// </summary>
         public Sint()
         {
+            Name = nameof(Sint).ToUpper();
             Value = default;
-            Radix = Radix.Decimal;
         }
 
+        /// <summary>
+        /// Creates a new instance of a Sint with the provided value.
+        /// </summary>
+        /// <param name="value">The value to initialize the type with.</param>
         public Sint(byte value) : this()
         {
             Value = value;
         }
 
-        public Sint(Radix radix) : this()
-        {
-            SetRadix(radix);
-        }
-
         /// <inheritdoc />
-        public ComponentName Name => nameof(Sint).ToUpper();
+        public ComponentName Name { get; }
 
         /// <inheritdoc />
         public string Description => $"RSLogix representation of a {typeof(byte)}";
@@ -36,57 +42,27 @@ namespace L5Sharp.Types
         public DataTypeClass Class => DataTypeClass.Atomic;
 
         /// <inheritdoc />
-        public DataFormat Format => DataFormat.Decorated;
+        public byte Value { get; }
 
-        /// <inheritdoc />
-        public Radix Radix { get; private set; }
-
-        /// <inheritdoc />
-        public byte Value { get; private set; }
-
-        /// <inheritdoc />
-        public string FormattedValue => Radix.Format(this);
         object IAtomic.Value => Value;
 
         /// <inheritdoc />
-        public void SetValue(byte value)
+        public IAtomic<byte> Update(byte value)
         {
-            Value = value;
+            return new Sint(value);
         }
 
         /// <inheritdoc />
-        public void SetValue(object value)
+        public IAtomic Update(object value)
         {
-            Value = value switch
+            return value switch
             {
                 null => throw new ArgumentNullException(nameof(value), "Value can not be null"),
-                Sint a => a,
-                byte b => b,
-                string str => ParseValue(str),
+                Sint atomic => new Sint(atomic),
+                byte typed => new Sint(typed),
+                string str => new Sint(Parse(str)),
                 _ => throw new ArgumentException($"Value type '{value.GetType()}' is not a valid for {GetType()}")
             };
-        }
-
-        /// <inheritdoc />
-        public void SetRadix(Radix radix)
-        {
-            if (radix == null)
-                throw new ArgumentNullException(nameof(radix));
-
-            if (!SupportsRadix(radix))
-                throw new RadixNotSupportedException(radix, this);
-
-            Radix = radix;
-        }
-
-        /// <inheritdoc />
-        public bool SupportsRadix(Radix radix)
-        {
-            return radix == Radix.Binary
-                   || radix == Radix.Octal
-                   || radix == Radix.Decimal
-                   || radix == Radix.Hex
-                   || radix == Radix.Ascii;
         }
 
         /// <inheritdoc />
@@ -95,32 +71,49 @@ namespace L5Sharp.Types
             return new Sint();
         }
 
+        /// <summary>
+        /// Converts the provided <see cref="byte"/> to a <see cref="Sint"/> value.
+        /// </summary>
+        /// <param name="value">The value to convert.</param>
+        /// <returns>A <see cref="Sint"/> value.</returns>
         public static implicit operator Sint(byte value)
         {
             return new Sint(value);
         }
 
+        /// <summary>
+        /// Converts the provided <see cref="Sint"/> to a <see cref="byte"/> value.
+        /// </summary>
+        /// <param name="atomic">The value to convert.</param>
+        /// <returns>A <see cref="byte"/> type value.</returns>
         public static implicit operator byte(Sint atomic)
         {
             return atomic.Value;
         }
 
-        /// <inheritdoc />
-        public int CompareTo(Sint other)
+        /// <summary>
+        /// Converts the provided <see cref="string"/> to a <see cref="Sint"/> value. 
+        /// </summary>
+        /// <param name="input">The string value to convert.</param>
+        /// <returns>
+        /// If the string value is able to be parsed, a new instance of a <see cref="Sint"/> with the value
+        /// provided. If not, then a default instance value.
+        /// </returns>
+        public static implicit operator Sint(string input)
         {
-            return Value.CompareTo(other.Value);
+            return new Sint(Parse(input));
         }
 
         /// <inheritdoc />
-        public bool Equals(Sint other)
+        public bool Equals(Sint? other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return Equals(Radix, other.Radix) && Value == other.Value;
+            return Value == other.Value;
         }
 
         /// <inheritdoc />
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
@@ -130,31 +123,49 @@ namespace L5Sharp.Types
         /// <inheritdoc />
         public override int GetHashCode()
         {
-            return HashCode.Combine(Radix, Value);
+            return Value.GetHashCode();
         }
 
-        /// <inheritdoc />
-        public override string ToString()
-        {
-            return Name;
-        }
-
+        /// <summary>
+        /// Determines whether the objects are equal.
+        /// </summary>
+        /// <param name="left">An object to compare.</param>
+        /// <param name="right">An object to compare.</param>
+        /// <returns>true if the objects are equal, otherwise, false.</returns>
         public static bool operator ==(Sint left, Sint right)
         {
             return Equals(left, right);
         }
 
+        /// <summary>
+        /// Determines whether the objects are not equal.
+        /// </summary>
+        /// <param name="left">An object to compare.</param>
+        /// <param name="right">An object to compare.</param>
+        /// <returns>true if the objects are not equal, otherwise, false.</returns>
         public static bool operator !=(Sint left, Sint right)
         {
             return !Equals(left, right);
         }
 
-        private byte ParseValue(string value)
+        /// <inheritdoc />
+        public int CompareTo(Sint? other)
         {
+            if (ReferenceEquals(this, other)) return 0;
+            return ReferenceEquals(null, other) ? 1 : Value.CompareTo(other.Value);
+        }
+
+        private static byte Parse(string value)
+        {
+            if (string.IsNullOrEmpty(value))
+                throw new ArgumentNullException(nameof(value));
+
             if (byte.TryParse(value, out var result))
                 return result;
 
-            throw new ArgumentException($"Could not parse string '{value}' to {GetType()}");
+            return Radix.ParseValue<Sint>(value);
+
+            //throw new ArgumentException($"Could not parse string '{value}' to {GetType()}");
         }
     }
 }

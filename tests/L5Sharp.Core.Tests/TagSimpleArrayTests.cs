@@ -41,6 +41,7 @@ namespace L5Sharp.Core.Tests
             element.Should().BeNull();
         }
 
+        /*
         [Test]
         public void SetRadix_ValidRadix_ShouldUpdateAllElementRadixValues()
         {
@@ -50,7 +51,7 @@ namespace L5Sharp.Core.Tests
             tag.SetRadix(Radix.Binary);
 
             tag.GetMembers().Select(e => e.Radix).Should().AllBeEquivalentTo(Radix.Binary);
-        }
+        }*/
 
         [Test]
         public void SetDescription_String_ShouldUpdateAllElementDescriptionValues()
@@ -128,7 +129,7 @@ namespace L5Sharp.Core.Tests
             tag[4].Description.Should().BeNull();
         }
 
-        [Test]
+        /*[Test]
         public void SetElement_Radix_ShouldBeExpected()
         {
             var tag = Tag.Build("Test", new Bool()).WithDimensions(5).Create();
@@ -140,7 +141,7 @@ namespace L5Sharp.Core.Tests
             tag[2].Radix.Should().Be(Radix.Decimal);
             tag[3].Radix.Should().Be(Radix.Decimal);
             tag[4].Radix.Should().Be(Radix.Decimal);
-        }
+        }*/
 
         [Test]
         public void SetElement_Atomic_ShouldBeExpected()

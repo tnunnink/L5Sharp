@@ -21,7 +21,7 @@ namespace L5Sharp.Types
         /// <param name="pre">The value of the preset member to initialize</param>
         public Counter(Dint pre) : this()
         {
-            PRE.DataType.SetValue(pre);
+            PRE.DataType.Update(pre);
         }
 
         /// <inheritdoc />

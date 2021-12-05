@@ -21,19 +21,19 @@ namespace L5Sharp.Enums.Tests
         [Test]
         public void Format_Null_ShouldThrowArgumentNullException()
         {
-            FluentActions.Invoking(() => Radix.Decimal.Format(null)).Should().Throw<ArgumentNullException>();
+            FluentActions.Invoking(() => Radix.Decimal.Convert(null)).Should().Throw<ArgumentNullException>();
         }
 
         [Test]
         public void Format_NonSupportedAtomic_ShouldThrowRadixNotSupportedException()
         {
-            FluentActions.Invoking(() => Radix.Decimal.Format(new Real())).Should().Throw<RadixNotSupportedException>();
+            FluentActions.Invoking(() => Radix.Decimal.Convert(new Real())).Should().Throw<RadixNotSupportedException>();
         }
 
         [Test]
         public void Format_BoolFalse_ShouldBeExpected()
         {
-            var result = Radix.Decimal.Format(new Bool());
+            var result = Radix.Decimal.Convert(new Bool());
 
             result.Should().Be("0");
         }
@@ -41,7 +41,7 @@ namespace L5Sharp.Enums.Tests
         [Test]
         public void Format_BoolTrue_ShouldBeExpected()
         {
-            var result = Radix.Decimal.Format(new Bool(true));
+            var result = Radix.Decimal.Convert(new Bool(true));
 
             result.Should().Be("1");
         }
@@ -49,7 +49,7 @@ namespace L5Sharp.Enums.Tests
         [Test]
         public void Format_ValidSint_ShouldBeExpectedFormat()
         {
-            var result = Radix.Decimal.Format(new Sint(20));
+            var result = Radix.Decimal.Convert(new Sint(20));
 
             result.Should().Be("20");
         }
@@ -57,7 +57,7 @@ namespace L5Sharp.Enums.Tests
         [Test]
         public void Format_ValidInt_ShouldBeExpectedFormat()
         {
-            var result = Radix.Decimal.Format(new Int(20));
+            var result = Radix.Decimal.Convert(new Int(20));
 
             result.Should().Be("20");
         }
@@ -65,7 +65,7 @@ namespace L5Sharp.Enums.Tests
         [Test]
         public void Format_ValidDint_ShouldBeExpectedFormat()
         {
-            var result = Radix.Decimal.Format(new Dint(20));
+            var result = Radix.Decimal.Convert(new Dint(20));
 
             result.Should().Be("20");
         }
@@ -73,7 +73,7 @@ namespace L5Sharp.Enums.Tests
         [Test]
         public void Format_ValidLint_ShouldBeExpectedFormat()
         {
-            var result = Radix.Decimal.Format(new Lint(20));
+            var result = Radix.Decimal.Convert(new Lint(20));
 
             result.Should().Be("20");
         }

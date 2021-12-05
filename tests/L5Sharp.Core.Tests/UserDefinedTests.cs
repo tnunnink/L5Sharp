@@ -26,7 +26,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void New_NullName_ShouldThrowArgumentNullException()
         {
-            FluentActions.Invoking(() => UserDefined.Create(null)).Should()
+            FluentActions.Invoking(() => UserDefined.Create(null!)).Should()
                 .Throw<ArgumentException>();
         }
 
@@ -57,10 +57,8 @@ namespace L5Sharp.Core.Tests
             type.Name.Should().Be("Test");
             type.Class.Should().Be(DataTypeClass.User);
             type.Family.Should().Be(DataTypeFamily.None);
-            type.Radix.Should().Be(Radix.Null);
             type.Description.Should().Be(description);
             type.Members.Should().BeEmpty();
-            type.Format.Should().Be(DataFormat.Decorated);
         }
 
         [Test]
@@ -251,7 +249,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void ObjectEquals_Null_ShouldBeFalse()
         {
-            var first = UserDefined.Create("Test");
+            var first = (UserDefined)UserDefined.Create("Test");
 
             var result = first.Equals((object)null);
 
@@ -261,8 +259,8 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void OperatorEquals_AreEqual_ShouldBeTrue()
         {
-            var first = UserDefined.Create("Test");
-            var second = UserDefined.Create("Test");
+            var first = (UserDefined)UserDefined.Create("Test");
+            var second = (UserDefined)UserDefined.Create("Test");
 
             var result = first == second;
 
@@ -272,8 +270,8 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void OperatorNotEquals_AreEqual_ShouldBeFalse()
         {
-            var first = UserDefined.Create("Test");
-            var second = UserDefined.Create("Test");
+            var first = (UserDefined)UserDefined.Create("Test");
+            var second = (UserDefined)UserDefined.Create("Test");
 
             var result = first != second;
 

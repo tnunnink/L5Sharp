@@ -2,7 +2,6 @@
 using AutoFixture;
 using FluentAssertions;
 using L5Sharp.Enums;
-using L5Sharp.Exceptions;
 using NUnit.Framework;
 
 namespace L5Sharp.Types.Tests
@@ -28,8 +27,6 @@ namespace L5Sharp.Types.Tests
             type.Class.Should().Be(DataTypeClass.Atomic);
             type.Family.Should().Be(DataTypeFamily.None);
             type.Description.Should().Be("RSLogix representation of a System.Boolean");
-            type.Format.Should().Be(DataFormat.Decorated);
-            type.Radix.Should().Be(Radix.Decimal);
             type.Value.Should().BeFalse();
         }
         
@@ -42,159 +39,122 @@ namespace L5Sharp.Types.Tests
         }
 
         [Test]
-        public void New_RadixOverload_ShouldHaveExpectedRadix()
-        {
-            var type = new Bool(Radix.Octal);
-
-            type.Radix.Should().Be(Radix.Octal);
-        }
-
-        [Test]
-        public void SetValue_Null_ShouldReturnExpected()
+        public void Update_Null_ShouldThrowArgumentNullException()
         {
             var type = new Bool();
 
-            FluentActions.Invoking(() => type.SetValue(null)).Should().Throw<ArgumentNullException>();
+            FluentActions.Invoking(() => type.Update(null!)).Should().Throw<ArgumentNullException>();
         }
         
+        //todo maybe this should work...    
         [Test]
-        public void SetValue_Zero_ShouldReturnExpected()
+        public void Update_Zero_ShouldThrowArgumentException()
         {
             var type = new Bool();
 
-            FluentActions.Invoking(() => type.SetValue(0)).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(() => type.Update(0)).Should().Throw<ArgumentException>();
         }
         
         [Test]
-        public void SetValue_ValidValue_ShouldReturnExpected()
+        public void Update_ValidValue_ShouldReturnExpected()
         {
             var fixture = new Fixture();
             var value = fixture.Create<bool>();
             var type = new Bool();
 
-            type.SetValue(value);
+            type.Update(value);
 
             type.Value.Should().Be(value);
         }
         
         [Test]
-        public void SetValue_ValidValueAsObject_ShouldReturnExpected()
+        public void Update_ValidValueAsObject_ShouldReturnExpected()
         {
             var fixture = new Fixture();
             var value = fixture.Create<bool>();
             var type = new Bool();
 
-            type.SetValue((object) value);
+            type.Update((object) value);
 
             type.Value.Should().Be(value);
         }
 
         [Test]
-        public void SetValue_ValidStringValue_ShouldReturnExpected()
+        public void Update_ValidStringValue_ShouldReturnExpected()
         {
             var fixture = new Fixture();
             var value = fixture.Create<bool>();
             var type = new Bool();
 
-            type.SetValue(value.ToString());
+            type.Update(value.ToString());
 
             type.Value.Should().Be(value);
         }
 
         [Test]
-        public void SetValue_ValidValueBoolOne_ShouldBeTrue()
+        public void Update_ValidValueBoolOne_ShouldBeTrue()
         {
-            var type = new Bool();
-
-            type.SetValue("1");
+            Bool type ="1";
 
             type.Value.Should().BeTrue();
         }
 
         [Test]
-        public void SetValue_ValidValueBoolYes_ShouldBeTrue()
+        public void Update_ValidValueBoolYes_ShouldBeTrue()
         {
             var type = new Bool();
             
-            type.SetValue("Yes");
+            type.Update("Yes");
 
             type.Value.Should().BeTrue();
         }
 
         [Test]
-        public void SetValue_ValidValueBoolZero_ShouldBeFalse()
+        public void Update_ValidValueBoolZero_ShouldBeFalse()
         {
             var type = new Bool();
             
-            type.SetValue("0");
+            type.Update("0");
 
             type.Value.Should().BeFalse();
         }
 
         [Test]
-        public void SetValue_ValidValueBoolNo_ShouldBeFalse()
+        public void Update_ValidValueBoolNo_ShouldBeFalse()
         {
             var type = new Bool();
             
-            type.SetValue("No");
+            type.Update("No");
 
             type.Value.Should().BeFalse();
         }
 
         [Test]
-        public void SetValue_InvalidString_ShouldBeZero()
+        public void Update_InvalidString_ShouldBeZero()
         {
             var fixture = new Fixture();
             var value = fixture.Create<string>();
             var type = new Bool();
 
-            FluentActions.Invoking(() => type.SetValue(value)).Should().Throw<ArgumentException>()
+            FluentActions.Invoking(() => type.Update(value)).Should().Throw<ArgumentException>()
                 .WithMessage($"Could not parse string '{value}' to {typeof(Bool)}");
         }
         
         [Test]
-        public void SetValue_InvalidType_ShouldBeZero()
+        public void Update_InvalidType_ShouldBeZero()
         {
             var fixture = new Fixture();
             var value = fixture.Create<int>();
             var type = new Sint();
 
-            FluentActions.Invoking(() => type.SetValue(value)).Should().Throw<ArgumentException>()
+            FluentActions.Invoking(() => type.Update(value)).Should().Throw<ArgumentException>()
                 .WithMessage($"Value type '{value.GetType()}' is not a valid for {typeof(Bool)}");
-        }
-
-        [Test]
-        public void SetRadix_ValidRadix_ShouldBeExpected()
-        {
-            var type = new Bool();
-            
-            type.SetRadix(Radix.Binary);
-
-            type.Radix.Should().Be(Radix.Binary);
-        }
-        
-        [Test]
-        public void SetRadix_InvalidRadix_ShouldThrowRadixNotSupportedException()
-        {
-            var type = new Bool();
-
-            FluentActions.Invoking(() => type.SetRadix(Radix.Float)).Should().Throw<RadixNotSupportedException>();
-        }
-        
-        [Test]
-        public void SetRadix_Null_ShouldThrowArgumentNullException()
-        {
-            var type = new Bool();
-
-            FluentActions.Invoking(() => type.SetRadix(null)).Should().Throw<ArgumentNullException>();
         }
 
         [Test]
         public void ImplicitOperator_Bool_ShouldBeTrue()
         {
-            var type = new Bool();
-
-            type = true;
+            Bool type = true;
 
             type.Value.Should().BeTrue();
         }

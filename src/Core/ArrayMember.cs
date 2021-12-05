@@ -13,17 +13,15 @@ namespace L5Sharp.Core
     {
         private readonly List<IMember<TDataType>> _elements;
 
-        internal ArrayMember(ComponentName name, TDataType dataType, Dimensions dimensions, Radix radix,
-            ExternalAccess externalAccess, string description, IEnumerable<IMember<IDataType>> elements)
+        internal ArrayMember(string name, TDataType dataType, Dimensions dimensions, Radix? radix,
+            ExternalAccess? externalAccess, string? description, IEnumerable<IMember<IDataType>>? elements)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
             DataType = dataType;
             Dimension = dimensions ?? throw new ArgumentNullException(nameof(dimensions));
+            Radix = radix ?? Radix.Default(dataType);
             ExternalAccess = externalAccess ?? ExternalAccess.ReadWrite;
-            Description = description;
-
-            if (DataType is IAtomic atomic && radix != null)
-                atomic.SetRadix(radix);
+            Description = description ?? string.Empty;
 
             _elements = new List<IMember<TDataType>>(dimensions.Length);
             var indices = Dimension.GenerateIndices().ToList();
@@ -31,13 +29,13 @@ namespace L5Sharp.Core
             for (var i = 0; i < Dimension; i++)
             {
                 var element = new Member<TDataType>(indices[i], (TDataType)DataType.Instantiate(),
-                    Radix, ExternalAccess, Description.SafeCopy());
+                    Radix, ExternalAccess, Description?.SafeCopy());
                 _elements.Add(element);
             }
             
             if (elements != null) return;
             
-            //initialize elements / assign value.
+            //todo initialize elements / assign value.
         }
 
         /// <inheritdoc />
@@ -47,19 +45,19 @@ namespace L5Sharp.Core
         public string Name { get; }
 
         /// <inheritdoc />
+        public string? Description { get; }
+
+        /// <inheritdoc />
         public TDataType DataType { get; }
 
         /// <inheritdoc />
         public Dimensions Dimension { get; }
 
         /// <inheritdoc />
-        public Radix Radix => DataType.Radix;
+        public Radix Radix { get; }
 
         /// <inheritdoc />
         public ExternalAccess ExternalAccess { get; }
-
-        /// <inheritdoc />
-        public string Description { get; }
 
         /// <inheritdoc />
         public IEnumerator<IMember<TDataType>> GetEnumerator()
@@ -73,9 +71,16 @@ namespace L5Sharp.Core
         }
 
         /// <inheritdoc />
-        public bool Equals(ArrayMember<TDataType> other)
+        public IMember<TDataType> Copy()
         {
-            if (ReferenceEquals(null, other)) return false;
+            return new ArrayMember<TDataType>(Name.SafeCopy(), (TDataType)DataType.Instantiate(), Dimension.Copy(),
+                Radix, ExternalAccess, Description?.SafeCopy(), Enumerable.Empty<IMember<IDataType>>());
+        }
+
+        /// <inheritdoc />
+        public bool Equals(ArrayMember<TDataType>? other)
+        {
+            if (ReferenceEquals(other, null)) return false;
             if (ReferenceEquals(this, other)) return true;
             return Equals(Name, other.Name)
                    && EqualityComparer<TDataType>.Default.Equals(DataType, other.DataType)
@@ -86,16 +91,9 @@ namespace L5Sharp.Core
         }
 
         /// <inheritdoc />
-        public IMember<TDataType> Copy()
+        public override bool Equals(object? obj)
         {
-            return new ArrayMember<TDataType>(Name.SafeCopy(), (TDataType)DataType.Instantiate(), Dimension.Copy(),
-                Radix, ExternalAccess, Description.SafeCopy(), Enumerable.Empty<IMember<IDataType>>());
-        }
-
-        /// <inheritdoc />
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(obj, null)) return false;
             if (ReferenceEquals(this, obj)) return true;
             return obj.GetType() == GetType() && Equals((ArrayMember<TDataType>)obj);
         }

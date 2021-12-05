@@ -27,17 +27,6 @@ namespace L5Sharp.Extensions.Tests
         }
 
         [Test]
-        public void GetValue_WhenCalled_ShouldReturnExpectedValue()
-        {
-            var element = XElement.Load(_fileName);
-            var target = element.Descendants("DataType").FirstOrDefault();
-
-            var value = target.GetValue<IDataType, Radix>(d => d.Radix);
-
-            value.Should().NotBeNull();
-        }
-
-        [Test]
         public void ToAttribute_ValidComponent_ShouldHaveExpectedNameAndValue()
         {
             var component = new UserDefined("Test", members: new[] { Member.Create("Test", new Dint()) });

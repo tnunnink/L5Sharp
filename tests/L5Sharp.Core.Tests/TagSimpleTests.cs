@@ -194,7 +194,7 @@ namespace L5Sharp.Core.Tests
             tag.Dimensions.Should().Be(new Dimensions(25));
         }
 
-        [Test]
+        /*[Test]
         public void SetRadix_Null_ShouldThrowArgumentNullException()
         {
             var tag = Tag.Create("Test", (IDataType)new Dint());
@@ -218,7 +218,7 @@ namespace L5Sharp.Core.Tests
             tag.SetRadix(Radix.Binary);
 
             tag.Radix.Should().Be(Radix.Binary);
-        }
+        }*/
 
         [Test]
         public void SetData_Null_ShouldThrowArgumentNullException()

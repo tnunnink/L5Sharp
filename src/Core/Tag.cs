@@ -117,9 +117,6 @@ namespace L5Sharp.Core
         }
 
         /// <inheritdoc />
-        public void SetRadix(Radix radix) => _tagMember.SetRadix(radix);
-
-        /// <inheritdoc />
         public void SetDescription(string description)
         {
             _description = description;

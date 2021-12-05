@@ -50,7 +50,7 @@ namespace L5Sharp.Core
             ClearData();
             
             for (var i = 0; i < bytes.Length; i++)
-                DATA[i].DataType.SetValue(bytes[i]);
+                DATA[i].DataType.Update(bytes[i]);
         }
 
         public IDataType Instantiate()
@@ -72,7 +72,7 @@ namespace L5Sharp.Core
         private void ClearData()
         {
             foreach (var dataElement in DATA)
-                dataElement.DataType.SetValue(0);
+                dataElement.DataType.Update(0);
         }
     }
 }

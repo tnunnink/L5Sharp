@@ -2,7 +2,6 @@
 using AutoFixture;
 using FluentAssertions;
 using L5Sharp.Enums;
-using L5Sharp.Exceptions;
 using NUnit.Framework;
 
 namespace L5Sharp.Types.Tests
@@ -37,8 +36,6 @@ namespace L5Sharp.Types.Tests
             type.Class.Should().Be(DataTypeClass.Atomic);
             type.Family.Should().Be(DataTypeFamily.None);
             type.Description.Should().Be("RSLogix representation of a System.Int16");
-            type.Format.Should().Be(DataFormat.Decorated);
-            type.Radix.Should().Be(Radix.Decimal);
             type.Value.Should().Be(0);
         }
         
@@ -51,125 +48,69 @@ namespace L5Sharp.Types.Tests
         }
 
         [Test]
-        public void New_RadixOverload_ShouldHaveExpectedRadix()
-        {
-            var type = new Int(Radix.Binary);
-
-            type.Radix.Should().Be(Radix.Binary);
-        }
-
-        [Test]
-        public void SetValue_Null_ShouldReturnExpected()
+        public void Update_Null_ShouldReturnExpected()
         {
             var type = new Int();
 
-            FluentActions.Invoking(() => type.SetValue(null)).Should().Throw<ArgumentNullException>();
+            FluentActions.Invoking(() => type.Update(null!)).Should().Throw<ArgumentNullException>();
         }
 
         [Test]
-        public void SetValue_ValidValue_ShouldReturnExpected()
+        public void Update_ValidValue_ShouldReturnExpected()
         {
             var type = new Int();
 
-            type.SetValue(_random);
+            type.Update(_random);
 
             type.Value.Should().Be(_random);
         }
         
         [Test]
-        public void SetValue_ValidObjectValue_ShouldReturnExpected()
+        public void Update_ValidObjectValue_ShouldReturnExpected()
         {
             var type = new Int();
 
-            type.SetValue((object) _random);
+            type.Update((object) _random);
 
             type.Value.Should().Be(_random);
         }
 
         [Test]
-        public void SetValue_ValidStringValue_ShouldReturnExpected()
+        public void Update_ValidStringValue_ShouldReturnExpected()
         {
             var type = new Int();
 
-            type.SetValue(_random.ToString());
+            type.Update(_random.ToString());
 
             type.Value.Should().Be(_random);
         }
         
         [Test]
-        public void SetValue_InvalidString_ShouldThrowArgumentException()
+        public void Update_InvalidString_ShouldThrowArgumentException()
         {
             var fixture = new Fixture();
             var value = fixture.Create<string>();
             var type = new Int(_random);
 
-            FluentActions.Invoking(() => type.SetValue(value)).Should().Throw<ArgumentException>()
+            FluentActions.Invoking(() => type.Update(value)).Should().Throw<ArgumentException>()
                 .WithMessage($"Could not parse string '{value}' to {typeof(Int)}");
         }
         
         [Test]
-        public void SetValue_InvalidType_ShouldBeZero()
+        public void Update_InvalidType_ShouldBeZero()
         {
             var fixture = new Fixture();
             var value = fixture.Create<int>();
             var type = new Int();
 
-            FluentActions.Invoking(() => type.SetValue(value)).Should().Throw<ArgumentException>()
+            FluentActions.Invoking(() => type.Update(value)).Should().Throw<ArgumentException>()
                 .WithMessage($"Value type '{value.GetType()}' is not a valid for {typeof(Int)}");
-        }
-
-        [Test]
-        public void SetRadix_ValidRadix_ShouldBeExpected()
-        {
-            var type = new Int();
-            
-            type.SetRadix(Radix.Binary);
-
-            type.Radix.Should().Be(Radix.Binary);
-        }
-        
-        [Test]
-        public void SetRadix_InvalidRadix_ShouldThrowRadixNotSupportedException()
-        {
-            var type = new Int();
-
-            FluentActions.Invoking(() => type.SetRadix(Radix.Float)).Should().Throw<RadixNotSupportedException>();
-        }
-        
-        [Test]
-        public void SetRadix_Null_ShouldThrowArgumentNullException()
-        {
-            var type = new Int();
-
-            FluentActions.Invoking(() => type.SetRadix(null)).Should().Throw<ArgumentNullException>();
-        }
-
-        [Test]
-        public void SupportsRadix_Decimal_ShouldBeTrue()
-        {
-            var type = new Int();
-
-            var value = type.SupportsRadix(Radix.Decimal);
-
-            value.Should().BeTrue();
-        }
-
-        [Test]
-        public void SupportsRadix_Float_ShouldBeFalse()
-        {
-            var type = new Int();
-
-            var value = type.SupportsRadix(Radix.Float);
-
-            value.Should().BeFalse();
         }
 
         [Test]
         public void ImplicitOperator_Bool_ShouldBeTrue()
         {
-            var type = new Int();
-
-            type = _random;
+            Int type = _random;
 
             type.Value.Should().Be(_random);
         }
@@ -177,9 +118,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void ImplicitOperator_bool_ShouldBeTrue()
         {
-            var type = new Int(_random);
-
-            short value = type;
+            short value = new Int(_random);
 
             value.Should().Be(_random);
         }

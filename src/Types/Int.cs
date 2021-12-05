@@ -1,136 +1,164 @@
 ﻿using System;
 using L5Sharp.Core;
 using L5Sharp.Enums;
-using L5Sharp.Exceptions;
 
 namespace L5Sharp.Types
 {
+    /// <summary>
+    /// Represents a INT Logix atomic data type.
+    /// </summary>
     public sealed class Int : IAtomic<short>, IEquatable<Int>, IComparable<Int>
     {
+        /// <summary>
+        /// Creates a new default instance of a Int.
+        /// </summary>
         public Int()
         {
+            Name = nameof(Int).ToUpper();
             Value = default;
-            Radix = Radix.Decimal;
         }
 
+        /// <summary>
+        /// Creates a new instance of a Int with the provided value.
+        /// </summary>
+        /// <param name="value">The value to initialize the type with.</param>
         public Int(short value) : this()
         {
             Value = value;
         }
 
-        public Int(Radix radix) : this()
-        {
-            SetRadix(radix);
-        }
+        /// <inheritdoc />
+        public ComponentName Name { get; }
 
-        public ComponentName Name => nameof(Int).ToUpper();
+        /// <inheritdoc />
         public string Description => $"RSLogix representation of a {typeof(short)}";
+
+        /// <inheritdoc />
         public DataTypeFamily Family => DataTypeFamily.None;
+
+        /// <inheritdoc />
         public DataTypeClass Class => DataTypeClass.Atomic;
-        public DataFormat Format => DataFormat.Decorated;
-        public Radix Radix { get; private set; }
-        public short Value { get; private set; }
-        public string FormattedValue => Radix.Format(this);
+
+        /// <inheritdoc />
+        public short Value { get; }
 
         object IAtomic.Value => Value;
 
-        public void SetValue(short value)
-        {
-            Value = value;
-        }
-
-        public void SetValue(object value)
-        {
-            Value = value switch
-            {
-                null => throw new ArgumentNullException(nameof(value), "Value can not be null"),
-                Int a => a,
-                short v => v,
-                string str => ParseValue(str),
-                _ => throw new ArgumentException($"Value type '{value.GetType()}' is not a valid for {GetType()}")
-            };
-        }
-
-        public void SetRadix(Radix radix)
-        {
-            if (radix == null)
-                throw new ArgumentNullException(nameof(radix));
-
-            if (!SupportsRadix(radix))
-                throw new RadixNotSupportedException(radix, this);
-
-            Radix = radix;
-        }
-
-        public bool SupportsRadix(Radix radix)
-        {
-            return radix == Radix.Binary
-                   || radix == Radix.Octal
-                   || radix == Radix.Decimal
-                   || radix == Radix.Hex
-                   || radix == Radix.Ascii;
-        }
-
-        public static implicit operator Int(short value)
+        /// <inheritdoc />
+        public IAtomic<short> Update(short value)
         {
             return new Int(value);
         }
 
-        public static implicit operator short(Int atomic)
+        /// <inheritdoc />
+        public IAtomic Update(object value)
         {
-            return atomic.Value;
+            return value switch
+            {
+                null => throw new ArgumentNullException(nameof(value), "Value can not be null"),
+                Int atomic => new Int(atomic),
+                short typed => new Int(typed),
+                string str => new Int(Parse(str)),
+                _ => throw new ArgumentException($"Value type '{value.GetType()}' is not a valid for {GetType()}")
+            };
         }
 
-        public int CompareTo(Int other)
-        {
-            return Value.CompareTo(other.Value);
-        }
-
-        public bool Equals(Int other)
-        {
-            if (ReferenceEquals(null, other)) return false;
-            if (ReferenceEquals(this, other)) return true;
-            return Equals(Radix, other.Radix) && Value == other.Value;
-        }
-
+        /// <inheritdoc />
         public IDataType Instantiate()
         {
             return new Int();
         }
 
-        public override bool Equals(object obj)
+        /// <summary>
+        /// Converts the provided <see cref="short"/> to a <see cref="Int"/> value.
+        /// </summary>
+        /// <param name="value">The value to convert.</param>
+        /// <returns>A <see cref="Int"/> value.</returns>
+        public static implicit operator Int(short value)
+        {
+            return new Int(value);
+        }
+
+        /// <summary>
+        /// Converts the provided <see cref="Int"/> to a <see cref="short"/> value.
+        /// </summary>
+        /// <param name="atomic">The value to convert.</param>
+        /// <returns>A <see cref="short"/> type value.</returns>
+        public static implicit operator short(Int atomic)
+        {
+            return atomic.Value;
+        }
+
+        /// <summary>
+        /// Converts the provided <see cref="string"/> to a <see cref="Int"/> value. 
+        /// </summary>
+        /// <param name="input">The string value to convert.</param>
+        /// <returns>
+        /// If the string value is able to be parsed, a new instance of a <see cref="Int"/> with the value
+        /// provided. If not, then a default instance value.
+        /// </returns>
+        public static implicit operator Int(string input)
+        {
+            return new Int(Parse(input));
+        }
+
+        /// <inheritdoc />
+        public bool Equals(Int? other)
+        {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return Value == other.Value;
+        }
+
+        /// <inheritdoc />
+        public override bool Equals(object? obj)
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
             return obj.GetType() == GetType() && Equals((Int)obj);
         }
 
+        /// <inheritdoc />
         public override int GetHashCode()
         {
-            return HashCode.Combine(Radix, Value);
-        }
-        
-        public override string ToString()
-        {
-            return Name;
+            return Value.GetHashCode();
         }
 
+        /// <summary>
+        /// Determines whether the objects are equal.
+        /// </summary>
+        /// <param name="left">An object to compare.</param>
+        /// <param name="right">An object to compare.</param>
+        /// <returns>true if the objects are equal, otherwise, false.</returns>
         public static bool operator ==(Int left, Int right)
         {
             return Equals(left, right);
         }
 
+        /// <summary>
+        /// Determines whether the objects are not equal.
+        /// </summary>
+        /// <param name="left">An object to compare.</param>
+        /// <param name="right">An object to compare.</param>
+        /// <returns>true if the objects are not equal, otherwise, false.</returns>
         public static bool operator !=(Int left, Int right)
         {
             return !Equals(left, right);
         }
 
-        private short ParseValue(string value)
+        /// <inheritdoc />
+        public int CompareTo(Int? other)
         {
-            if (short.TryParse(value, out var result))
-                return result;
+            if (ReferenceEquals(this, other)) return 0;
+            return ReferenceEquals(null, other) ? 1 : Value.CompareTo(other.Value);
+        }
 
-            throw new ArgumentException($"Could not parse string '{value}' to {GetType()}");
+        private static short Parse(string value)
+        {
+            if (string.IsNullOrEmpty(value))
+                throw new ArgumentNullException(nameof(value));
+
+            return short.TryParse(value, out var result) ? result : Radix.ParseValue<Int>(value);
         }
     }
 }
