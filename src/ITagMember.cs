@@ -9,19 +9,8 @@ namespace L5Sharp
     /// 
     /// </summary>
     /// <typeparam name="TDataType"></typeparam>
-    public interface ITagMember<out TDataType> where TDataType : IDataType
+    public interface ITagMember<out TDataType> : IMember<TDataType> where TDataType : IDataType
     {
-        /// <summary>
-        /// Gets the member name of the current <c>TagMember</c>
-        /// </summary>
-        /// <remarks>
-        /// To get the full tag name use the <see cref="TagName"/> property of the <see cref="ITagMember{TDataType}"/>.
-        /// </remarks>
-        /// <example>
-        /// For example...
-        /// </example>
-        string Name { get; }
-
         /// <summary>
         /// Gets the current <c>TagMember</c> full name including the root <c>Tag</c> name.
         /// </summary>
@@ -33,43 +22,15 @@ namespace L5Sharp
         string Operand { get; }
 
         /// <summary>
-        /// The name of the <see cref="IDataType"/> for the <c>TagMember</c>.
+        /// Gets the name of the <see cref="IDataType"/> for the TagMember.
         /// </summary>
-        string DataType { get; }
+        new string DataType { get; }
 
-        /// <summary>
+        /*/// <summary>
         /// The value of the <see cref="L5Sharp.Core.Dimensions"/> for the <c>TagMember</c>.
         /// </summary>
-        Dimensions Dimensions { get; }
+        Dimensions Dimensions { get; }*/
 
-        /// <summary>
-        /// The value of the <see cref="L5Sharp.Enums.Radix"/> for the <c>TagMember</c>.
-        /// </summary>
-        Radix Radix { get; }
-
-        /// <summary>
-        /// The value of the <see cref="L5Sharp.Enums.ExternalAccess"/> for the <c>TagMember</c>.
-        /// </summary>
-        ExternalAccess ExternalAccess { get; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        string Description { get; }
-
-        /// <summary>
-        /// Sets the value of the <see cref="Radix"/> property for the <c>TagMember</c>
-        /// </summary>
-        /// <param name="radix">
-        /// The value of the <see cref="L5Sharp.Enums.Radix"/> to set.
-        /// Radix can not be null and can only be set on a <c>TagMember</c> of type <see cref="IAtomic"/>.
-        /// </param>
-        /// <exception cref="ArgumentNullException">Thrown when radix is null.</exception>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown when the <see cref="DataType"/> does not represent an Atomic type.
-        /// </exception>
-        //void SetRadix(Radix radix);
-        
         /// <summary>
         /// Sets the member description with the provided string value. 
         /// </summary>
@@ -77,8 +38,8 @@ namespace L5Sharp
         /// A <c>TagMember</c> comment is maintained by root tag instance. Setting a comment on a member overrides the description for the
         /// Logix uses a feature called "Pass Through Description" to help developers maintain documentation. This 
         /// </remarks>
-        /// <param name="description">The value of the string description to set.</param>
-        void SetDescription(string description);
+        /// <param name="comment">The value of the string description to set.</param>
+        void Comment(string comment);
         
         /// <summary>
         /// Gets the parent member of the current tag member.

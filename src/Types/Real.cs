@@ -1,7 +1,5 @@
 ﻿using System;
-using L5Sharp.Core;
 using L5Sharp.Enums;
-using L5Sharp.Exceptions;
 
 namespace L5Sharp.Types
 {
@@ -29,7 +27,7 @@ namespace L5Sharp.Types
         }
 
         /// <inheritdoc />
-        public ComponentName Name { get; }
+        public string Name { get; }
 
         /// <inheritdoc />
         public string Description => $"RSLogix representation of a {typeof(float)}";
@@ -59,7 +57,7 @@ namespace L5Sharp.Types
                 null => throw new ArgumentNullException(nameof(value), "Value can not be null"),
                 Real atomic => new Real(atomic),
                 float typed => new Real(typed),
-                string str => new Real(Parse(str)),
+                string str => new Real(Radix.ParseValue<Real>(str)),
                 _ => throw new ArgumentException($"Value type '{value.GetType()}' is not a valid for {GetType()}")
             };
         }
@@ -100,7 +98,7 @@ namespace L5Sharp.Types
         /// </returns>
         public static implicit operator Real(string input)
         {
-            return new Real(Parse(input));
+            return new Real(Radix.ParseValue<Real>(input));
         }
 
         /// <inheritdoc />
@@ -152,14 +150,6 @@ namespace L5Sharp.Types
         {
             if (ReferenceEquals(this, other)) return 0;
             return ReferenceEquals(null, other) ? 1 : Value.CompareTo(other.Value);
-        }
-
-        private static float Parse(string value)
-        {
-            if (string.IsNullOrEmpty(value))
-                throw new ArgumentNullException(nameof(value));
-
-            return float.TryParse(value, out var result) ? result : Radix.ParseValue<Real>(value);
         }
     }
 }

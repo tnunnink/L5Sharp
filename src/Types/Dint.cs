@@ -1,5 +1,4 @@
 ﻿using System;
-using L5Sharp.Core;
 using L5Sharp.Enums;
 
 namespace L5Sharp.Types
@@ -28,7 +27,7 @@ namespace L5Sharp.Types
         }
 
         /// <inheritdoc />
-        public ComponentName Name { get; }
+        public string Name { get; }
 
         /// <inheritdoc />
         public string Description => $"RSLogix representation of a {typeof(int)}";
@@ -59,7 +58,7 @@ namespace L5Sharp.Types
                 null => throw new ArgumentNullException(nameof(value), "Value can not be null"),
                 Dint atomic => new Dint(atomic),
                 int typed => new Dint(typed),
-                string str => new Dint(Parse(str)),
+                string str => new Dint(Radix.ParseValue<Dint>(str)),
                 _ => throw new ArgumentException($"Value type '{value.GetType()}' is not a valid for {GetType()}")
             };
         }
@@ -100,7 +99,7 @@ namespace L5Sharp.Types
         /// </returns>
         public static implicit operator Dint(string input)
         {
-            return new Dint(Parse(input));
+            return new Dint(Radix.ParseValue<Dint>(input));
         }
 
         /// <inheritdoc />
@@ -151,17 +150,6 @@ namespace L5Sharp.Types
         public int CompareTo(Dint other)
         {
             return Value.CompareTo(other.Value);
-        }
-
-        private static int Parse(string value)
-        {
-            if (string.IsNullOrEmpty(value))
-                throw new ArgumentNullException(nameof(value));
-
-            if (int.TryParse(value, out var result))
-                return result;
-
-            return Radix.ParseValue<Dint>(value);
         }
     }
 }

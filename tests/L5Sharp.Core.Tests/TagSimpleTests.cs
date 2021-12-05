@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using AutoFixture;
 using FluentAssertions;
+using L5Sharp.Components;
 using L5Sharp.Enums;
 using L5Sharp.Exceptions;
 using L5Sharp.Types;
@@ -75,7 +76,7 @@ namespace L5Sharp.Core.Tests
             var tag = Tag.Create<Real>("Test");
             
             tag.Should().NotBeNull();
-            tag.Name.ToString().Should().Be("Test");
+            tag.Name.Should().Be("Test");
             tag.TagName.Should().Be("Test");
             tag.DataType.Should().Be(nameof(Real).ToUpper());
             tag.Dimensions.Should().Be(Dimensions.Empty);
@@ -141,7 +142,7 @@ namespace L5Sharp.Core.Tests
 
             tag.SetName("NewName");
 
-            tag.Name.ToString().Should().Be("NewName");
+            tag.Name.Should().Be("NewName");
         }
 
         [Test]
@@ -149,7 +150,7 @@ namespace L5Sharp.Core.Tests
         {
             var tag = Tag.Create("Test", (IDataType)new Dint());
 
-            tag.SetDescription(null);
+            tag.Comment(null);
 
             tag.Description.Should().Be(null);
         }
@@ -159,7 +160,7 @@ namespace L5Sharp.Core.Tests
         {
             var tag = Tag.Create("Test", (IDataType)new Dint());
 
-            tag.SetDescription("This is a test description");
+            tag.Comment("This is a test description");
 
             tag.Description.Should().Be("This is a test description");
         }
@@ -185,11 +186,13 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void SetDimensions_ValidType_ShouldHaveExpectedProperties()
         {
-            var tag = Tag.Build("Test", new Bool()).WithDimensions(10).Create();
+            var tag = Tag.Build("Test", new Bool())
+                .WithDimensions(10)
+                .Create();
 
             tag.SetDimensions(new Dimensions(25));
 
-            tag.Name.ToString().Should().Be("Test");
+            tag.Name.Should().Be("Test");
             tag.DataType.Should().Be(nameof(Bool).ToUpper());
             tag.Dimensions.Should().Be(new Dimensions(25));
         }

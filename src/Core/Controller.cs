@@ -18,7 +18,7 @@ namespace L5Sharp.Core
         }
 
         /// <inheritdoc />
-        public ComponentName Name { get; }
+        public string Name { get; }
 
         /// <inheritdoc />
         public string Description { get; }

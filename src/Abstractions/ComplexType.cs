@@ -8,36 +8,33 @@ namespace L5Sharp.Abstractions
 {
     public abstract class ComplexType : IComplexType, IEquatable<ComplexType>
     {
-        /// <summary>
-        /// Creates new instance of a generic complex type.
-        /// </summary>
-        /// <param name="name"></param>
-        /// <param name="description"></param>
-        /// <param name="members"></param>
-        protected ComplexType(string name, string description = null, IEnumerable<IMember<IDataType>> members = null)
+        protected internal ComplexType(string name, string? description = null, 
+            IEnumerable<IMember<IDataType>>? members = null)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
-            Description = description;
+            Description = description ?? string.Empty;
+            Members = members ?? FindMemberFields();
+        }
+        
+        protected ComplexType(ComponentName name, string? description = null, 
+            IEnumerable<IMember<IDataType>>? members = null)
+        {
+            Name = name ?? throw new ArgumentNullException(nameof(name));
+            Description = description ?? string.Empty;
             Members = members ?? FindMemberFields();
         }
 
         /// <inheritdoc />
-        public ComponentName Name { get; }
+        public string Name { get; }
 
         /// <inheritdoc />
         public string Description { get; }
-
-        /// <inheritdoc />
-        public Radix Radix => Radix.Null;
 
         /// <inheritdoc />
         public virtual DataTypeFamily Family => DataTypeFamily.None;
 
         /// <inheritdoc />
         public abstract DataTypeClass Class { get; }
-
-        /// <inheritdoc />
-        public virtual DataFormat Format => DataFormat.Decorated;
 
         /// <inheritdoc />
         public virtual IEnumerable<IMember<IDataType>> Members { get; }
@@ -52,14 +49,14 @@ namespace L5Sharp.Abstractions
         /// Creates new instance of the current type with default values.
         /// </summary>
         /// <remarks>
-        ///  The <c>Predefined</c> calls this when <see cref="Instantiate"/> is called. This abstraction is here to let the
+        /// Called when <see cref="Instantiate"/> is called. This abstraction is here to let the
         /// base class define the code for instantiating a new version of itself. Simply return <c>new  MyPredefined()</c>.
         /// </remarks>
         /// <returns>A new instance of the current type with default values.</returns>
         protected abstract IDataType New();
 
         /// <inheritdoc />
-        public bool Equals(ComplexType other)
+        public bool Equals(ComplexType? other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
@@ -69,7 +66,7 @@ namespace L5Sharp.Abstractions
         }
 
         /// <inheritdoc />
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
@@ -91,9 +88,9 @@ namespace L5Sharp.Abstractions
         /// <summary>
         /// Indicates whether one object is equal to another object of the same type.
         /// </summary>
-        /// <param name="left">The left instance of the object.</param>
-        /// <param name="right">The right instance of the object.</param>
-        /// <returns>True if the two objects are equal, otherwise false.</returns>
+        /// <param name="left">An instance of the object to compare.</param>
+        /// <param name="right">An instance of the object to compare.</param>
+        /// <returns>ture if the objects are equal, otherwise false.</returns>
         public static bool operator ==(ComplexType left, ComplexType right)
         {
             return Equals(left, right);
@@ -102,9 +99,9 @@ namespace L5Sharp.Abstractions
         /// <summary>
         /// Indicates whether one object is not equal to another object of the same type.
         /// </summary>
-        /// <param name="left">The left instance of the object.</param>
-        /// <param name="right">The right instance of the object.</param>
-        /// <returns>True if the two objects are not equal, otherwise false.</returns>
+        /// <param name="left">An instance of the object to compare.</param>
+        /// <param name="right">An instance of the object to compare.</param>
+        /// <returns>ture if the objects are not equal, otherwise false.</returns>
         public static bool operator !=(ComplexType left, ComplexType right)
         {
             return !Equals(left, right);

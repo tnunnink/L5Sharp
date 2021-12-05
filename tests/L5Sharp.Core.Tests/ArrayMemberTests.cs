@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using FluentAssertions;
+using L5Sharp.Components;
 using L5Sharp.Enums;
 using L5Sharp.Types;
 using NUnit.Framework;
@@ -76,7 +77,7 @@ namespace L5Sharp.Core.Tests
             copy.Should().NotBeSameAs(member);
             copy.Name.Should().NotBeSameAs(member.Name);
             copy.DataType.Should().NotBeSameAs(member.DataType);
-            copy.Dimension.Should().NotBeSameAs(member.Dimension);
+            copy.Dimensions.Should().NotBeSameAs(member.Dimensions);
             copy.Description.Should().NotBeSameAs(member.Description);
         }
 

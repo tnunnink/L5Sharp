@@ -23,7 +23,7 @@ namespace L5Sharp.Core
             SafetyEnabled = safetyEnabled;
         }
 
-        public ComponentName Name { get; }
+        public string Name { get; }
         public string Description { get; }
         public string CatalogNumber { get; }
         public ushort Vendor { get; }

@@ -1,4 +1,5 @@
 ﻿using L5Sharp.Abstractions;
+using L5Sharp.Components;
 using L5Sharp.Enums;
 
 // ReSharper disable InconsistentNaming RSLogix naming

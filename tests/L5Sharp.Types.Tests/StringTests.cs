@@ -35,14 +35,12 @@ namespace L5Sharp.Types.Tests
             type.Class.Should().Be(DataTypeClass.Predefined);
             type.Family.Should().Be(DataTypeFamily.String);
             type.Description.Should().Be("RSLogix representation of a System.String");
-            type.Format.Should().Be(DataFormat.String);
             type.Value.Should().BeEmpty();
-            type.Radix.Should().Be(Radix.Null);
             type.LEN.Should().NotBeNull();
             type.LEN.DataType.Should().BeOfType<Dint>();
             type.DATA.Should().NotBeNull();
             type.DATA.DataType.Should().BeOfType<Sint>();
-            type.DATA.Dimension.Should().Be(new Dimensions(82));
+            type.DATA.Dimensions.Should().Be(new Dimensions(82));
             type.DATA.Should().HaveCount(82);
         }
 

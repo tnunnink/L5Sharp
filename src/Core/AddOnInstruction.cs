@@ -48,7 +48,7 @@ namespace L5Sharp.Core
         }
 
 
-        public ComponentName Name { get; }
+        public string Name { get; }
         public string Description { get; }
         public Radix Radix => Radix.Null;
         public DataTypeFamily Family => DataTypeFamily.None;

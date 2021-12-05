@@ -10,7 +10,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void New_Undefined_ShouldNotBeNull()
         {
-            var type = new Undefined("Test");
+            var type = new Undefined<IAtomic>("Test");
             
             type.Should().NotBeNull();
         }
@@ -18,9 +18,9 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void New_Undefined_ShouldHaveExpectedDefaults()
         {
-            var type = new Undefined("Test");
+            var type = new Undefined<IComplexType>("Test");
 
-            type.Name.Should().Be(nameof(Undefined));
+            type.Name.Should().Be(nameof(Undefined<IComplexType>));
             type.Description.Should().Be("Undefined DataType");
             type.Family.Should().Be(DataTypeFamily.None);
             type.Class.Should().Be(DataTypeClass.Predefined);

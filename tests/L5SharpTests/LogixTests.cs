@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using FluentAssertions;
 using L5Sharp;
+using L5Sharp.Components;
 using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Extensions;
@@ -65,7 +66,7 @@ namespace L5SharpTests
             var type = Logix.DataType.Instantiate("MyNullNamePredefined");
             type.Should().NotBeNull();
             type.Name.Should().Be("Undefined");
-            type.Should().BeOfType<Undefined>();
+            type.Should().BeOfType<Undefined<IComplexType>>();
         }
 
         [Test]
@@ -73,7 +74,7 @@ namespace L5SharpTests
         {
             var type = Logix.DataType.Instantiate("Invalid");
             type.Name.Should().Be("Undefined");
-            type.Should().BeOfType<Undefined>();
+            type.Should().BeOfType<Undefined<IComplexType>>();
         }
 
         [Test]

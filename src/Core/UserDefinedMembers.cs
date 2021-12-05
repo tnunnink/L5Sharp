@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using L5Sharp.Components;
 using L5Sharp.Exceptions;
 
 [assembly: InternalsVisibleTo("L5Sharp.Core.Tests")]
@@ -103,7 +104,7 @@ namespace L5Sharp.Core
 
             var member = _members[index];
 
-            var renamed = Member.Create(name, member.DataType, member.Dimension, member.Radix, member.ExternalAccess,
+            var renamed = Member.Create(name, member.DataType, member.Dimensions, member.Radix, member.ExternalAccess,
                 member.Description);
 
             _members[index] = renamed;

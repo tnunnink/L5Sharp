@@ -127,13 +127,13 @@ namespace L5Sharp.Extensions
             if (ReferenceEquals(y, null)) return false;
             return x.Name.Equals(y.Name)
                    && x.DataType.Name.Equals(y.DataType.Name)
-                   && Equals(x.Dimension, y.Dimension)
+                   && Equals(x.Dimensions, y.Dimensions)
                    && x.DataType.StructureEquals(y.DataType);
         }
 
         public int GetHashCode(IMember<IDataType> obj)
         {
-            return HashCode.Combine(obj.DataType.Name, obj.Dimension);
+            return HashCode.Combine(obj.DataType.Name, obj.Dimensions);
         }
     }
 }

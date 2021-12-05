@@ -14,7 +14,7 @@ namespace L5Sharp.Core
         {
         }
 
-        public ComponentName Name { get; }
+        public string Name { get; }
         public string Description { get; }
         public RoutineType Type => RoutineType.Ladder;
         public IEnumerable<IRung> Rungs => _rungs.AsEnumerable();

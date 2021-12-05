@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using FluentAssertions;
+using L5Sharp.Components;
 using L5Sharp.Enums;
 using L5Sharp.Types;
 using NUnit.Framework;
@@ -59,7 +60,7 @@ namespace L5Sharp.Core.Tests
             var tag = Tag.Build("Test", new Bool()).WithDimensions(5).Create();
             tag.GetMembers().Select(e => e.Description).Should().AllBeEquivalentTo<string>(null);
 
-            tag.SetDescription("This is a test");
+            tag.Comment("This is a test");
             tag.Description.Should().Be("This is a test");
             tag.GetMembers().Select(e => e.Description).Should().AllBeEquivalentTo("This is a test");
         }
@@ -70,10 +71,10 @@ namespace L5Sharp.Core.Tests
             var tag = Tag.Build("Test", new Bool()).WithDimensions(5).Create();
 
             var element = tag[0];
-            element.SetDescription("Element Description");
+            element.Comment("Element Description");
             element.Description.Should().Be("Element Description");
 
-            tag.SetDescription("Tag Description");
+            tag.Comment("Tag Description");
             tag.Description.Should().Be("Tag Description");
 
             element.Description.Should().Be("Element Description");
@@ -85,10 +86,10 @@ namespace L5Sharp.Core.Tests
             var tag = Tag.Build("Test", new Bool()).WithDimensions(5).Create();
 
             var element = tag[0];
-            element.SetDescription("Element Description");
+            element.Comment("Element Description");
             element.Description.Should().Be("Element Description");
 
-            tag.SetDescription("Tag Description");
+            tag.Comment("Tag Description");
             tag.Description.Should().Be("Tag Description");
 
             element.Description.Should().Be("Element Description");
@@ -104,14 +105,14 @@ namespace L5Sharp.Core.Tests
             var tag = Tag.Build("Test", new Bool()).WithDimensions(5).Create();
 
             var element = tag[0];
-            element.SetDescription("Element Description");
+            element.Comment("Element Description");
             element.Description.Should().Be("Element Description");
 
-            tag.SetDescription("Tag Description");
+            tag.Comment("Tag Description");
             tag.Description.Should().Be("Tag Description");
             element.Description.Should().Be("Element Description");
 
-            element.SetDescription(string.Empty);
+            element.Comment(string.Empty);
             element.Description.Should().Be("Tag Description");
         }
 
@@ -120,7 +121,7 @@ namespace L5Sharp.Core.Tests
         {
             var tag = Tag.Build("Test", new Bool()).WithDimensions(5).Create();
 
-            tag[0].SetDescription("This is a test");
+            tag[0].Comment("This is a test");
 
             tag[0].Description.Should().Be("This is a test");
             tag[1].Description.Should().BeNull();

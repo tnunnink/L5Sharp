@@ -58,7 +58,7 @@ namespace L5Sharp.Extensions
         }
         
 
-        public static void SetData<TDataType>(this ITagMember<TDataType> target, ITagMember<TDataType> source)
+        /*public static void SetData<TDataType>(this ITagMember<TDataType> target, ITagMember<TDataType> source)
             where TDataType : IDataType
         {
             if (target == null)
@@ -84,6 +84,6 @@ namespace L5Sharp.Extensions
                 var sourceMember = source[targetMember.Name];
                 targetMember.SetData(sourceMember);
             }
-        }
+        }*/
     }
 }

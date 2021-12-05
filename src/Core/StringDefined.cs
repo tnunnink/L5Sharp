@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using L5Sharp.Abstractions;
+using L5Sharp.Components;
 using L5Sharp.Enums;
 using L5Sharp.Types;
 
@@ -28,7 +29,7 @@ namespace L5Sharp.Core
             };
         }
 
-        public ComponentName Name { get; }
+        public string Name { get; }
         public string Description { get; }
         public Radix Radix => Radix.Null;
         public DataTypeFamily Family => DataTypeFamily.String;
@@ -55,7 +56,7 @@ namespace L5Sharp.Core
 
         public IDataType Instantiate()
         {
-            return new StringDefined(Name, DATA.Dimension.Copy(), Description);
+            return new StringDefined(Name, DATA.Dimensions.Copy(), Description);
         }
 
         public override string ToString()

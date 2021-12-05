@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using L5Sharp.Core;
 using L5Sharp.Enums;
 
 namespace L5Sharp.Types
@@ -30,7 +27,7 @@ namespace L5Sharp.Types
         }
 
         /// <inheritdoc />
-        public ComponentName Name { get; }
+        public string Name { get; }
 
         /// <inheritdoc />
         public string Description => $"RSLogix representation of a {typeof(byte)}";
@@ -60,7 +57,7 @@ namespace L5Sharp.Types
                 null => throw new ArgumentNullException(nameof(value), "Value can not be null"),
                 Sint atomic => new Sint(atomic),
                 byte typed => new Sint(typed),
-                string str => new Sint(Parse(str)),
+                string str => new Sint(Radix.ParseValue<Sint>(str)),
                 _ => throw new ArgumentException($"Value type '{value.GetType()}' is not a valid for {GetType()}")
             };
         }
@@ -101,7 +98,7 @@ namespace L5Sharp.Types
         /// </returns>
         public static implicit operator Sint(string input)
         {
-            return new Sint(Parse(input));
+            return new Sint(Radix.ParseValue<Sint>(input));
         }
 
         /// <inheritdoc />
@@ -153,19 +150,6 @@ namespace L5Sharp.Types
         {
             if (ReferenceEquals(this, other)) return 0;
             return ReferenceEquals(null, other) ? 1 : Value.CompareTo(other.Value);
-        }
-
-        private static byte Parse(string value)
-        {
-            if (string.IsNullOrEmpty(value))
-                throw new ArgumentNullException(nameof(value));
-
-            if (byte.TryParse(value, out var result))
-                return result;
-
-            return Radix.ParseValue<Sint>(value);
-
-            //throw new ArgumentException($"Could not parse string '{value}' to {GetType()}");
         }
     }
 }

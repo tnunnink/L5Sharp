@@ -1,5 +1,4 @@
 ﻿using System;
-using L5Sharp.Core;
 using L5Sharp.Enums;
 
 namespace L5Sharp.Types
@@ -28,7 +27,7 @@ namespace L5Sharp.Types
         }
 
         /// <inheritdoc />
-        public ComponentName Name { get; }
+        public string Name { get; }
 
         /// <inheritdoc />
         public string Description => $"RSLogix representation of a {typeof(short)}";
@@ -58,7 +57,7 @@ namespace L5Sharp.Types
                 null => throw new ArgumentNullException(nameof(value), "Value can not be null"),
                 Int atomic => new Int(atomic),
                 short typed => new Int(typed),
-                string str => new Int(Parse(str)),
+                string str => new Int(Radix.ParseValue<Int>(str)),
                 _ => throw new ArgumentException($"Value type '{value.GetType()}' is not a valid for {GetType()}")
             };
         }
@@ -99,7 +98,7 @@ namespace L5Sharp.Types
         /// </returns>
         public static implicit operator Int(string input)
         {
-            return new Int(Parse(input));
+            return new Int(Radix.ParseValue<Int>(input));
         }
 
         /// <inheritdoc />
@@ -151,14 +150,6 @@ namespace L5Sharp.Types
         {
             if (ReferenceEquals(this, other)) return 0;
             return ReferenceEquals(null, other) ? 1 : Value.CompareTo(other.Value);
-        }
-
-        private static short Parse(string value)
-        {
-            if (string.IsNullOrEmpty(value))
-                throw new ArgumentNullException(nameof(value));
-
-            return short.TryParse(value, out var result) ? result : Radix.ParseValue<Int>(value);
         }
     }
 }

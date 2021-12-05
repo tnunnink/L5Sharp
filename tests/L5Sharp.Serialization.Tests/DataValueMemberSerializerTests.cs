@@ -2,6 +2,7 @@
 using ApprovalTests;
 using ApprovalTests.Reporters;
 using FluentAssertions;
+using L5Sharp.Components;
 using L5Sharp.Types;
 using NUnit.Framework;
 

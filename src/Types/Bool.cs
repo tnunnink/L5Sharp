@@ -1,5 +1,4 @@
 ﻿using System;
-using L5Sharp.Core;
 using L5Sharp.Enums;
 
 namespace L5Sharp.Types
@@ -14,7 +13,7 @@ namespace L5Sharp.Types
         /// </summary>
         public Bool()
         {
-            Name = new ComponentName(nameof(Bool).ToUpper());
+            Name = nameof(Bool).ToUpper();
             Value = default;
         }
 
@@ -26,9 +25,18 @@ namespace L5Sharp.Types
         {
             Value = value;
         }
+        
+        /// <summary>
+        /// Creates a new instance of a Bool with the provided number.
+        /// </summary>
+        /// <param name="number">A number that will be evaluated to true if greater that zero, otherwise false</param>
+        public Bool(int number) : this()
+        {
+            Value = number > 0;
+        }
 
         /// <inheritdoc />
-        public ComponentName Name { get; }
+        public string Name { get; }
 
         /// <inheritdoc />
         public string Description => $"Logix representation of a {typeof(bool)}";
@@ -57,7 +65,8 @@ namespace L5Sharp.Types
             {
                 null => throw new ArgumentNullException(nameof(value), "Value can not be null"),
                 Bool atomic => new Bool(atomic),
-                bool typed => new Bool(typed),   
+                bool typed => new Bool(typed),
+                int n => new Bool(n),
                 string str => new Bool(Parse(str)),
                 _ => throw new ArgumentException($"Value type '{value.GetType()}' is not a valid for {GetType()}")
             };
@@ -152,16 +161,8 @@ namespace L5Sharp.Types
 
         private static bool Parse(string value)
         {
-            if (string.IsNullOrEmpty(value))
-                throw new ArgumentNullException(nameof(value));
-
             if (bool.TryParse(value, out var result))
                 return result;
-
-            if (string.Equals(value, "1", StringComparison.OrdinalIgnoreCase)
-                || string.Equals(value, "true", StringComparison.OrdinalIgnoreCase)
-                || string.Equals(value, "yes", StringComparison.OrdinalIgnoreCase))
-                return true;
 
             return Radix.ParseValue<Bool>(value);
         }

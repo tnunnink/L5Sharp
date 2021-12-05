@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Ardalis.SmartEnum;
+using L5Sharp.Extensions;
 using L5Sharp.Types;
 
 namespace L5Sharp.Enums
@@ -13,15 +14,14 @@ namespace L5Sharp.Enums
     /// </summary>
     public abstract class Radix : SmartEnum<Radix, string>
     {
-        //todo ideally make these all regex match expressions?
         private static readonly Dictionary<string, Func<string, bool>> Identifiers = new()
         {
             { nameof(Binary), s => s.StartsWith(BinaryRadix.Specifier) },
             { nameof(Octal), s => s.StartsWith(OctalRadix.Specifier) },
-            { nameof(Decimal), s => Regex.IsMatch(s, @"^\d+$") },
+            { nameof(Decimal), s => s.IsWholeNumber() },
             { nameof(Hex), s => s.StartsWith(HexRadix.Specifier) },
             { nameof(Float), s => s.Contains(".") },
-            { nameof(Exponential), s => s.Contains("e+") },
+            { nameof(Exponential), s => s.IsExponential() },
             { nameof(Ascii), s => s.Contains("$") },
             { nameof(DateTime), s => s.StartsWith("DT#") },
             { nameof(DateTimeNs), s => s.StartsWith("LDT#") }
@@ -58,7 +58,7 @@ namespace L5Sharp.Enums
         public static readonly Radix Decimal = new DecimalRadix();
 
         /// <summary>
-        /// Represents a Hex number base format.
+        /// Represents a Hexadecimal number base format.
         /// </summary>
         public static readonly Radix Hex = new HexRadix();
 
@@ -88,7 +88,7 @@ namespace L5Sharp.Enums
         public static readonly Radix DateTimeNs = new DateTimeNsRadix();
 
         /// <summary>
-        /// Gets the default Radix for the provided data type.
+        /// Gets the default Radix type for the provided data type.
         /// </summary>
         /// <param name="dataType">The data type to determine the default radix for.</param>
         /// <returns>
@@ -105,10 +105,13 @@ namespace L5Sharp.Enums
         }
 
         /// <summary>
-        /// Determines a Radix type based on the provided string formatted value.
+        /// Determines a Radix type based on the provided string value.
         /// </summary>
+        /// <remarks>
+        /// For instance where the radix is not know, it can be inferred from the identifier of the string input.
+        /// </remarks>
         /// <param name="value">The string input to infer the Radix type for.</param>
-        /// <returns>A Radix representing the type that </returns>
+        /// <returns>A Radix type representing the format of the string input.</returns>
         public static Radix Infer(string value)
         {
             var radix = Identifiers.FirstOrDefault(i => i.Value.Invoke(value)).Key;
@@ -133,6 +136,7 @@ namespace L5Sharp.Enums
         public static object ParseValue(string input)
         {
             var parser = DetermineParser(input);
+            
             return parser(input);
         }
 
@@ -140,7 +144,7 @@ namespace L5Sharp.Enums
         /// Parsed a string input and returns the value as an <see cref="IAtomic"/> value type.
         /// </summary>
         /// <remarks>
-        /// This method is similar to <see cref="ParseValue"/>, except it will return the parsed input value as the
+        /// This method is similar to <see cref="ParseValue"/>, except it will return the parsed input as the
         /// atomic value type that is specified by the generic parameter.
         /// </remarks>
         /// <param name="input">The string value to parse.</param>
@@ -163,7 +167,7 @@ namespace L5Sharp.Enums
         /// Attempts to call the <see cref="Parse"/> method and return a result if the parse was successful.
         /// </summary>
         /// <param name="input">The input string to parse.</param>
-        /// <param name="result">The resulting parse object value.</param>
+        /// <param name="result">The resulting parsed object value.</param>
         /// <returns>
         /// true if the parse was successful and didn't throw any exceptions. false if not.
         /// </returns>
@@ -310,7 +314,7 @@ namespace L5Sharp.Enums
                     throw new ArgumentNullException(nameof(input));
 
                 if (!input.StartsWith(Specifier))
-                    throw new ArgumentException($"Input must start with {Binary} specifier '{Specifier}'.");
+                    throw new FormatException($"Input '{input}' does not start with {Binary} specifier '{Specifier}'.");
 
                 var value = input.Replace(Specifier, string.Empty).Replace(ByteSeparator, string.Empty);
 
@@ -365,7 +369,7 @@ namespace L5Sharp.Enums
                     throw new ArgumentNullException(nameof(input));
 
                 if (!input.StartsWith(Specifier))
-                    throw new ArgumentException($"Input must start with {Octal} specifier '{Specifier}'.");
+                    throw new FormatException($"Input '{input}' does not start with {Octal} specifier '{Specifier}'.");
 
                 var value = input.Replace(Specifier, string.Empty).Replace(ByteSeparator, string.Empty);
 
@@ -401,6 +405,9 @@ namespace L5Sharp.Enums
                 if (string.IsNullOrEmpty(input))
                     throw new ArgumentNullException(nameof(input));
 
+                if (!input.IsWholeNumber())
+                    throw new FormatException($"'{input}' is not a whole number");
+
                 if (byte.TryParse(input, out var byteValue))
                     return byteValue;
 
@@ -413,7 +420,7 @@ namespace L5Sharp.Enums
                 if (long.TryParse(input, out var longValue))
                     return longValue;
 
-                throw new ArgumentException($"Input value '{input}' not valid for {Decimal} Radix.");
+                throw new ArgumentException($"Input '{input}' not valid for {Decimal} Radix.");
             }
         }
 

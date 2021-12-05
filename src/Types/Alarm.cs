@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using L5Sharp.Abstractions;
+using L5Sharp.Components;
 using L5Sharp.Core;
 using L5Sharp.Enums;
 
@@ -15,9 +16,6 @@ namespace L5Sharp.Types
         
         /// <inheritdoc />
         public override DataTypeClass Class => DataTypeClass.Predefined;
-
-        /// <inheritdoc />
-        public override DataFormat Format => DataFormat.Alarm;
 
         /// <inheritdoc />
         protected override IDataType New()

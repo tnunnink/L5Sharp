@@ -4,7 +4,7 @@ using System.Linq;
 using L5Sharp.Core;
 using L5Sharp.Enums;
 
-namespace L5Sharp
+namespace L5Sharp.Components
 {
     /// <summary>
     /// Static factory class that creates instances of components that implement <see cref="IMember{TDataType}"/>. 

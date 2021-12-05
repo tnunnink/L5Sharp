@@ -26,7 +26,7 @@ namespace L5Sharp.Core
             }
         }
 
-        public ComponentName Name { get; }
+        public string Name { get; }
         public string Description { get; }
         public NeutralText Signature { get; internal set; }
         public IEnumerable<IMember<IDataType>> Parameters => _parameters.Values.AsEnumerable();

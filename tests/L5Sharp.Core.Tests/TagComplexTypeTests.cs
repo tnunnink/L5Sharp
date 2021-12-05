@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using FluentAssertions;
+using L5Sharp.Components;
 using L5Sharp.Enums;
 using L5Sharp.Extensions;
 using L5Sharp.Types;

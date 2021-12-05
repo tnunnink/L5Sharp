@@ -44,7 +44,7 @@ namespace L5Sharp.Core
         public TDataType DataType { get; }
 
         /// <inheritdoc />
-        public Dimensions Dimension { get; private set; }
+        public Dimensions Dimensions { get; private set; }
 
         /// <inheritdoc />
         public Radix Radix { get; }
@@ -101,7 +101,7 @@ namespace L5Sharp.Core
             if (!dimensions.AreEmpty && Usage != TagUsage.InOut)
                 throw new InvalidOperationException("Dimensions are only configurable for InOut parameters");
 
-            Dimension = dimensions;
+            Dimensions = dimensions;
         }
         
         private void SetExternalAccess(ExternalAccess access)

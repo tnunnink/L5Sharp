@@ -11,6 +11,7 @@ namespace L5Sharp.Core
     public class TagMember<TDataType> : ITagMember<TDataType> where TDataType : IDataType
     {
         private readonly IMember<TDataType> _member;
+        private TDataType _dataType;
 
         internal TagMember(IMember<TDataType> member, ITagMember<IDataType> parent, ITag<IDataType> baseTag)
         {
@@ -32,7 +33,7 @@ namespace L5Sharp.Core
         public string DataType => _member.DataType.Name;
 
         /// <inheritdoc />
-        public Dimensions Dimensions => _member.Dimension;
+        public Dimensions Dimensions => _member.Dimensions;
 
         /// <inheritdoc />
         public Radix Radix => _member.Radix;
@@ -50,10 +51,18 @@ namespace L5Sharp.Core
             ? Base.Comments.GetComment(Operand)
             : CalculateDescription();
 
+        TDataType IMember<TDataType>.DataType => _dataType;
+
         /// <inheritdoc />
         public ITagMember<IDataType> Parent { get; }
 
         private ITag<IDataType> Base { get; }
+
+        /// <inheritdoc />
+        public IMember<TDataType> Copy()
+        {
+            throw new NotImplementedException();
+        }
 
         /// <inheritdoc />
         public IAtomic GetData()
@@ -70,34 +79,16 @@ namespace L5Sharp.Core
             atomic.Update(value);
         }
 
-        /*/// <inheritdoc />
-        public void SetRadix(Radix radix)
-        {
-            if (radix == null)
-                throw new ArgumentNullException(nameof(radix));
-
-            if (!(_member.DataType is IAtomic atomic))
-                throw new InvalidOperationException(
-                    $"{_member.DataType.Name} is not Atomic. Radix can only be set on Atomic types");
-
-            atomic.SetRadix(radix);
-
-            if (!(_member is IArrayMember<IAtomic> array)) return;
-
-            foreach (var element in array)
-                element.DataType.SetRadix(radix);
-        }*/
-
         /// <inheritdoc />
-        public void SetDescription(string description)
+        public void Comment(string comment)
         {
-            if (string.IsNullOrEmpty(description))
+            if (string.IsNullOrEmpty(comment))
             {
                 Base.Comments.Reset(Operand);
                 return;
             }
 
-            Base.Comments.Override(new Comment(Operand, description));
+            Base.Comments.Override(new Comment(Operand, comment));
         }
 
         /// <inheritdoc />
@@ -156,6 +147,7 @@ namespace L5Sharp.Core
             foreach (var element in array)
                 element.DataType.SetRadix(radix);
         }*/
+
 
         /// <inheritdoc />
         public void SetMember<TType>(Func<TDataType, IMember<TType>> expression, string description)

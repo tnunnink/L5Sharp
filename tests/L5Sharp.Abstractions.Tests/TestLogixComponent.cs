@@ -10,7 +10,7 @@ namespace L5Sharp.Abstractions.Tests
             Description = description;
         }
 
-        public ComponentName Name { get; }
+        public string Name { get; }
         public string Description { get; }
     }
 }

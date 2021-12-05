@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Xml.Linq;
+using L5Sharp.Components;
 using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Extensions;
@@ -24,7 +25,7 @@ namespace L5Sharp.Serialization
             
             element.Add(component.ToAttribute(m => m.Name));
             element.Add(component.ToAttribute(m => m.DataType));
-            element.Add(component.ToAttribute(m => m.Dimension));
+            element.Add(component.ToAttribute(m => m.Dimensions));
             element.Add(component.ToAttribute(m => m.Radix));
 
             var serializer = new ArrayElementSerializer();
@@ -43,7 +44,7 @@ namespace L5Sharp.Serialization
                 throw new ArgumentException($"Element name '{element.Name}' invalid. Expecting '{ElementName}'");
 
             var name = element.GetName();
-            var dimensions = element.GetValue<IArrayMember<IDataType>, Dimensions>(m => m.Dimension);
+            var dimensions = element.GetValue<IArrayMember<IDataType>, Dimensions>(m => m.Dimensions);
             var radix = element.GetValue<IArrayMember<IDataType>, Radix>(m => m.Radix);
             
             var serializer = new ArrayElementSerializer();

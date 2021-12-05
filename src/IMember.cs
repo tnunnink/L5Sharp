@@ -1,4 +1,5 @@
-﻿using L5Sharp.Core;
+﻿using L5Sharp.Components;
+using L5Sharp.Core;
 using L5Sharp.Enums;
 
 namespace L5Sharp
@@ -17,19 +18,9 @@ namespace L5Sharp
     /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
     /// `Logix 5000 Controllers Import/Export`</a> for more information.
     /// </footer>
-    public interface IMember<out TDataType> : IPrototype<IMember<TDataType>> 
+    public interface IMember<out TDataType> : ILogixComponent, IPrototype<IMember<TDataType>> 
         where TDataType : IDataType
     {
-        /// <summary>
-        /// Gets the Name of the Member component.
-        /// </summary>
-        string Name { get; }
-        
-        /// <summary>
-        /// Gets the Description of the Member component.
-        /// </summary>
-        string? Description { get; }
-        
         /// <summary>
         /// The DataType of the Member Component.
         /// </summary>
@@ -38,7 +29,7 @@ namespace L5Sharp
         /// <summary>
         /// Gets the Dimension of the Member component.
         /// </summary>
-        Dimensions Dimension { get; }
+        Dimensions Dimensions { get; }
 
         /// <summary>
         /// Gets the Radix of the Member component.

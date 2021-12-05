@@ -57,7 +57,7 @@ namespace L5Sharp.Extensions
         public static bool IsValueMember<TDataType>(this IMember<TDataType> member)
             where TDataType : IDataType
         {
-            return member.DataType is IAtomic && member.Dimension.AreEmpty;
+            return member.DataType is IAtomic && member.Dimensions.AreEmpty;
         }
         
         /// <summary>
@@ -71,7 +71,7 @@ namespace L5Sharp.Extensions
         public static bool IsStructureMember<TDataType>(this IMember<TDataType> member)
             where TDataType : IDataType
         {
-            return member.DataType is IComplexType && member.Dimension.AreEmpty;
+            return member.DataType is IComplexType && member.Dimensions.AreEmpty;
         }
 
         /// <summary>
@@ -84,7 +84,7 @@ namespace L5Sharp.Extensions
         public static bool IsArrayMember<TDataType>(this IMember<TDataType> member)
             where TDataType : IDataType
         {
-            return !member.Dimension.AreEmpty;
+            return !member.Dimensions.AreEmpty;
         }
 
         /// <summary>

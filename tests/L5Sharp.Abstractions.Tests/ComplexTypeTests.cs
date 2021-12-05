@@ -1,5 +1,6 @@
 ﻿using System;
 using FluentAssertions;
+using L5Sharp.Components;
 using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Exceptions;
@@ -32,7 +33,7 @@ namespace L5Sharp.Abstractions.Tests
         {
             var type = new TestComplex();
 
-            type.Name.ToString().Should().Be("TestPredefined");
+            type.Name.Should().Be("TestPredefined");
         }
 
         [Test]
@@ -52,14 +53,6 @@ namespace L5Sharp.Abstractions.Tests
         }
 
         [Test]
-        public void DataFormat_ValidType_ShouldReturnExpected()
-        {
-            var type = new TestComplex();
-
-            type.Format.Should().Be(DataFormat.Decorated);
-        }
-
-        [Test]
         public void Predefined_WhenCastedToDataType_ShouldThrowInvalidCastException()
         {
             var atomic = (IDataType)new TestComplex();
@@ -75,7 +68,7 @@ namespace L5Sharp.Abstractions.Tests
 
         private class MyNullNamePredefined : ComplexType
         {
-            public MyNullNamePredefined() : base(null)
+            public MyNullNamePredefined() : base((ComponentName)null)
             {
             }
 

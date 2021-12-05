@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using FluentAssertions;
+using L5Sharp.Components;
 using L5Sharp.Enums;
 using L5Sharp.Exceptions;
 using L5Sharp.Types;

@@ -18,13 +18,10 @@ namespace L5Sharp.Core
         /// <inheritdoc />
         public string Name { get; }
 
-        ComponentName ILogixComponent.Name => null; //todo dont love this. Type could be casted and get null for name...
+        string ILogixComponent.Name => null; //todo dont love this. Type could be casted and get null for name...
 
         /// <inheritdoc />
-        public string Description => null;
-
-        /// <inheritdoc />
-        public Radix Radix => Radix.Null;
+        public string Description => string.Empty;
 
         /// <inheritdoc />
         public DataTypeFamily Family => DataTypeFamily.None;
@@ -33,15 +30,12 @@ namespace L5Sharp.Core
         public DataTypeClass Class => DataTypeClass.Io;
 
         /// <inheritdoc />
-        public DataFormat Format => DataFormat.Decorated;
-
-        /// <inheritdoc />
         public IEnumerable<IMember<IDataType>> Members { get; }
 
         /// <inheritdoc />
         public IDataType Instantiate()
         {
-            return new ModuleDefined(Name.SafeCopy(), Members.Select(m => m.Copy()));
+            return new ModuleDefined(string.Copy(Name), Members.Select(m => m.Copy()));
         }
     }
 }

@@ -11,16 +11,6 @@ namespace L5Sharp
     public interface ITag<out TDataType> : ILogixComponent, ITagMember<TDataType> where TDataType : IDataType
     {
         /// <summary>
-        /// Gets the name of the <c>Tag</c> component.
-        /// </summary>
-        new ComponentName Name { get; }
-        
-        /// <summary>
-        /// Gets the description of the <c>Tag</c> component.
-        /// </summary>
-        new string Description { get; }
-        
-        /// <summary>
         /// Gets the <c>TagType</c> of the <c>Tag</c> component.
         /// </summary>
         TagType TagType { get; }

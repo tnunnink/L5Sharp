@@ -2,8 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Serialization;
 using L5Sharp.Enums;
-using L5Sharp.Extensions;
 
 namespace L5Sharp.Core
 {
@@ -18,18 +18,19 @@ namespace L5Sharp.Core
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
             DataType = dataType;
-            Dimension = dimensions ?? throw new ArgumentNullException(nameof(dimensions));
+            Dimensions = dimensions ?? throw new ArgumentNullException(nameof(dimensions));
             Radix = radix ?? Radix.Default(dataType);
             ExternalAccess = externalAccess ?? ExternalAccess.ReadWrite;
             Description = description ?? string.Empty;
 
             _elements = new List<IMember<TDataType>>(dimensions.Length);
-            var indices = Dimension.GenerateIndices().ToList();
-
-            for (var i = 0; i < Dimension; i++)
+            
+            var indices = Dimensions.GenerateIndices().ToList();
+            
+            for (var i = 0; i < Dimensions; i++)
             {
                 var element = new Member<TDataType>(indices[i], (TDataType)DataType.Instantiate(),
-                    Radix, ExternalAccess, Description?.SafeCopy());
+                    Radix, ExternalAccess, string.Copy(Description));
                 _elements.Add(element);
             }
             
@@ -45,13 +46,14 @@ namespace L5Sharp.Core
         public string Name { get; }
 
         /// <inheritdoc />
-        public string? Description { get; }
+        public string Description { get; }
 
         /// <inheritdoc />
         public TDataType DataType { get; }
 
         /// <inheritdoc />
-        public Dimensions Dimension { get; }
+        [XmlAttribute("Dimension")] // accounts for naming difference between data type members and tags.
+        public Dimensions Dimensions { get; }
 
         /// <inheritdoc />
         public Radix Radix { get; }
@@ -73,8 +75,8 @@ namespace L5Sharp.Core
         /// <inheritdoc />
         public IMember<TDataType> Copy()
         {
-            return new ArrayMember<TDataType>(Name.SafeCopy(), (TDataType)DataType.Instantiate(), Dimension.Copy(),
-                Radix, ExternalAccess, Description?.SafeCopy(), Enumerable.Empty<IMember<IDataType>>());
+            return new ArrayMember<TDataType>(string.Copy(Name), (TDataType)DataType.Instantiate(), Dimensions.Copy(),
+                Radix, ExternalAccess, string.Copy(Description), Enumerable.Empty<IMember<IDataType>>());
         }
 
         /// <inheritdoc />
@@ -84,7 +86,7 @@ namespace L5Sharp.Core
             if (ReferenceEquals(this, other)) return true;
             return Equals(Name, other.Name)
                    && EqualityComparer<TDataType>.Default.Equals(DataType, other.DataType)
-                   && Equals(Dimension, other.Dimension)
+                   && Equals(Dimensions, other.Dimensions)
                    && Equals(ExternalAccess, other.ExternalAccess)
                    && Description == other.Description
                    && _elements.SequenceEqual(other._elements);
@@ -101,7 +103,7 @@ namespace L5Sharp.Core
         /// <inheritdoc />
         public override int GetHashCode()
         {
-            return HashCode.Combine(_elements, Name, DataType, Dimension, ExternalAccess, Description);
+            return HashCode.Combine(_elements, Name, DataType, Dimensions, ExternalAccess, Description);
         }
 
         /// <summary>

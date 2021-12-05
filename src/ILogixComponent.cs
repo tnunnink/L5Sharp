@@ -24,12 +24,12 @@ namespace L5Sharp
         /// information.
         /// </remarks>
         /// </summary>
-        public ComponentName Name { get; }
+        string Name { get; }
         
         /// <summary>
         /// A <see cref="string"/> that describes the Logix component.
         /// </summary>
         [XmlElement(nameof(Description))]
-        public string Description { get; }
+        string Description { get; }
     }
 }

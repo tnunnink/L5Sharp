@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using L5Sharp.Components;
 using L5Sharp.Enums;
 using L5Sharp.Exceptions;
 
@@ -12,13 +13,13 @@ namespace L5Sharp.Core
         private TagMember<TDataType> _tagMember;
         private string _description;
 
-        internal Tag(ComponentName name, TDataType dataType, Dimensions dimensions = null, Radix radix = null,
-            ExternalAccess externalAccess = null, string description = null, TagUsage usage = null,
+        internal Tag(ComponentName name, TDataType dataType, Dimensions? dimensions = null, Radix? radix = null,
+            ExternalAccess? externalAccess = null, string? description = null, TagUsage? usage = null,
             bool constant = false)
         {
             //Initialize tag level state.
             _dataType = dataType ?? throw new ArgumentNullException(nameof(dataType));
-            _description = description;
+            _description = description ?? string.Empty;
             Usage = usage != null ? usage : TagUsage.Null;
             Scope = Scope.Null;
             Constant = constant;
@@ -30,9 +31,7 @@ namespace L5Sharp.Core
         }
         
         /// <inheritdoc cref="ITag{TDataType}.Name" />
-        public ComponentName Name => _tagMember.Name;
-
-        string ITagMember<TDataType>.Name => Name;
+        public string Name => _tagMember.Name;
 
         /// <inheritdoc cref="ITag{TDataType}.Name" />
         public string Description => DetermineDescription();
@@ -45,6 +44,8 @@ namespace L5Sharp.Core
 
         /// <inheritdoc />
         public string DataType => _tagMember.DataType;
+
+        TDataType IMember<TDataType>.DataType => _dataType;
 
         /// <inheritdoc />
         public Dimensions Dimensions => _tagMember.Dimensions;
@@ -117,9 +118,9 @@ namespace L5Sharp.Core
         }
 
         /// <inheritdoc />
-        public void SetDescription(string description)
+        public void Comment(string comment)
         {
-            _description = description;
+            _description = comment;
         }
 
         /// <inheritdoc />
@@ -189,6 +190,11 @@ namespace L5Sharp.Core
                 return userDefined.Description;
 
             return null;
+        }
+
+        public IMember<TDataType> Copy()
+        {
+            throw new NotImplementedException();
         }
     }
 }

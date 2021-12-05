@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using L5Sharp.Builders;
+using L5Sharp.Components;
 using L5Sharp.Core;
 using L5Sharp.Instructions;
 using L5Sharp.Types;

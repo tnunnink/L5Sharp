@@ -21,7 +21,7 @@ namespace L5Sharp.Core
             Routines = new ComponentCollection<IRoutine>();
         }
 
-        public ComponentName Name { get; }
+        public string Name { get; }
         public string Description { get; }
         public ProgramType Type => ProgramType.Normal;
         public bool TestEdits { get; }

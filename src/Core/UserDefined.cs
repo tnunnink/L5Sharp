@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using L5Sharp.Enums;
-using L5Sharp.Extensions;
 
 namespace L5Sharp.Core
 {
@@ -15,31 +14,25 @@ namespace L5Sharp.Core
         /// <param name="name">The component name of the type.</param>
         /// <param name="description">the string description of the type.</param>
         /// <param name="members">The collection of members to add to the type.</param>
-        internal UserDefined(ComponentName name, string description = null, 
-            IEnumerable<IMember<IDataType>> members = null)
+        internal UserDefined(string name, string? description = null, 
+            IEnumerable<IMember<IDataType>>? members = null)
         {
             Name = name;
-            Description = description;
+            Description = description ?? string.Empty;
             Members = new UserDefinedMembers(this, members);
         }
 
         /// <inheritdoc />
-        public ComponentName Name { get; }
+        public string Name { get; }
 
         /// <inheritdoc />
         public string Description { get; }
-
-        /// <inheritdoc />
-        public Radix Radix => Radix.Null;
 
         /// <inheritdoc />
         public DataTypeFamily Family => DataTypeFamily.None;
 
         /// <inheritdoc />
         public DataTypeClass Class => DataTypeClass.User;
-
-        /// <inheritdoc />
-        public DataFormat Format => DataFormat.Decorated;
 
         /// <inheritdoc />
         public IMemberCollection<IMember<IDataType>> Members { get; }
@@ -49,7 +42,7 @@ namespace L5Sharp.Core
         /// <inheritdoc />
         public IDataType Instantiate()
         {
-            return new UserDefined(Name.Copy(), Description.SafeCopy(), Members.Select(m => m.Copy()));
+            return new UserDefined(string.Copy(Name), string.Copy(Description), Members.Select(m => m.Copy()));
         }
 
         /// <summary>
@@ -59,14 +52,14 @@ namespace L5Sharp.Core
         /// <param name="description">the description of the data type.</param>
         /// <param name="members">The collection of members to initialize the data type with.</param>
         /// <returns>A new instance of the <c>UserDefined</c> data type.</returns>
-        public static IUserDefined Create(ComponentName name, string description = null,
-            IEnumerable<IMember<IDataType>> members = null)
+        public static IUserDefined Create(ComponentName name, string? description = null,
+            IEnumerable<IMember<IDataType>>? members = null)
         {
             return new UserDefined(name, description, members);
         }
 
         /// <inheritdoc />
-        public bool Equals(UserDefined other)
+        public bool Equals(UserDefined? other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
@@ -76,7 +69,7 @@ namespace L5Sharp.Core
         }
 
         /// <inheritdoc />
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;

@@ -1,5 +1,4 @@
-﻿using L5Sharp.Core;
-using L5Sharp.Enums;
+﻿using L5Sharp.Enums;
 
 namespace L5Sharp.Types
 {
@@ -10,7 +9,7 @@ namespace L5Sharp.Types
     /// This is a replacement for null type. If the data type that is read from a L5X is unknown and can not be created,
     /// Undefined will stand in as the placeholder for the data type.
     /// </remarks>
-    public sealed class Undefined : IDataType
+    public sealed class Undefined<TDataType> : IDataType where TDataType : IDataType
     {
         /// <summary>
         /// Creates a new instance of an undefined type with the provided type name.
@@ -27,7 +26,7 @@ namespace L5Sharp.Types
         public string TypeName { get; }
 
         /// <inheritdoc />
-        public ComponentName Name => nameof(Undefined);
+        public string Name { get; }
 
         /// <inheritdoc />
         public string Description => "Undefined DataType";
@@ -47,7 +46,7 @@ namespace L5Sharp.Types
         /// <inheritdoc />
         public IDataType Instantiate()
         {
-            return new Undefined(TypeName);
+            return new Undefined<IDataType>(TypeName);
         }
     }
 }

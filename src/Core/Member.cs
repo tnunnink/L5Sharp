@@ -1,6 +1,6 @@
 ﻿using System;
+using System.Xml.Serialization;
 using L5Sharp.Enums;
-using L5Sharp.Extensions;
 
 namespace L5Sharp.Core
 {
@@ -22,13 +22,14 @@ namespace L5Sharp.Core
         public string Name { get; }
 
         /// <inheritdoc />
-        public string? Description { get; }
+        public string Description { get; }
 
         /// <inheritdoc />
         public TDataType DataType { get; }
 
         /// <inheritdoc />
-        public Dimensions Dimension => Dimensions.Empty;
+        [XmlAttribute("Dimension")]
+        public Dimensions Dimensions => Dimensions.Empty;
 
         /// <inheritdoc />
         public Radix Radix { get; }
@@ -39,8 +40,8 @@ namespace L5Sharp.Core
         /// <inheritdoc />
         public IMember<TDataType> Copy()
         {
-            return new Member<TDataType>(Name.SafeCopy(), (TDataType)DataType.Instantiate(), Radix, ExternalAccess,
-                Description?.SafeCopy());
+            return new Member<TDataType>(string.Copy(Name), (TDataType)DataType.Instantiate(), Radix, ExternalAccess,
+                string.Copy(Description));
         }
 
         /// <inheritdoc />
@@ -48,7 +49,7 @@ namespace L5Sharp.Core
         {
             if (ReferenceEquals(other, null)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return Name == other.Name && Equals(DataType, other.DataType) && Dimension == other.Dimension &&
+            return Name == other.Name && Equals(DataType, other.DataType) && Dimensions == other.Dimensions &&
                    Equals(Radix, other.Radix) && Equals(ExternalAccess, other.ExternalAccess) &&
                    Description == other.Description;
         }
@@ -64,7 +65,7 @@ namespace L5Sharp.Core
         /// <inheritdoc />
         public override int GetHashCode()
         {
-            return HashCode.Combine(Name, DataType, Dimension, Radix, ExternalAccess, Description);
+            return HashCode.Combine(Name, DataType, Dimensions, Radix, ExternalAccess, Description);
         }
 
         /// <summary>

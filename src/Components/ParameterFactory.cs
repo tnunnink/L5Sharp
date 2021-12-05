@@ -2,7 +2,7 @@
 using L5Sharp.Builders;
 using L5Sharp.Core;
 
-namespace L5Sharp
+namespace L5Sharp.Components
 {
     /// <summary>
     /// 
