@@ -66,7 +66,7 @@ namespace L5SharpTests
             var type = Logix.DataType.Instantiate("MyNullNamePredefined");
             type.Should().NotBeNull();
             type.Name.Should().Be("Undefined");
-            type.Should().BeOfType<Undefined<IComplexType>>();
+            type.Should().BeOfType<Undefined>();
         }
 
         [Test]
@@ -74,7 +74,7 @@ namespace L5SharpTests
         {
             var type = Logix.DataType.Instantiate("Invalid");
             type.Name.Should().Be("Undefined");
-            type.Should().BeOfType<Undefined<IComplexType>>();
+            type.Should().BeOfType<Undefined>();
         }
 
         [Test]

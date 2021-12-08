@@ -60,13 +60,12 @@ namespace L5Sharp.Utilities
             return NameMap[key].Item2;
         }
 
-        private static Type FindKey<TComponent>()
+        private static Type? FindKey<TComponent>()
         {
             return NameMap.Keys.FirstOrDefault(t => t.IsAssignableFrom(typeof(TComponent)));
         }
 
-        private static readonly Dictionary<Type, Tuple<string, string>> NameMap =
-            new Dictionary<Type, Tuple<string, string>>
+        private static readonly Dictionary<Type, Tuple<string, string>> NameMap = new()
             {
                 { typeof(IController), new Tuple<string, string>(Controller, string.Empty) },
                 { typeof(IUserDefined), new Tuple<string, string>(DataType, DataTypes) },

@@ -6,7 +6,7 @@ namespace L5Sharp.Types.Tests
 {
     [TestFixture]
     public class UndefinedTests
-    {
+    {/*
         [Test]
         public void New_Undefined_ShouldNotBeNull()
         {
@@ -24,8 +24,6 @@ namespace L5Sharp.Types.Tests
             type.Description.Should().Be("Undefined DataType");
             type.Family.Should().Be(DataTypeFamily.None);
             type.Class.Should().Be(DataTypeClass.Predefined);
-            type.Radix.Should().Be(Radix.Null);
-            type.Format.Should().BeNull();
-        }
+        }*/
     }
 }

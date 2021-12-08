@@ -8,11 +8,11 @@ namespace L5Sharp.Core
     public sealed class Member<TDataType> : IMember<TDataType>, IEquatable<Member<TDataType>>
         where TDataType : IDataType
     {
-        internal Member(string name, TDataType dataType, Radix? radix,
+        internal Member(string name, TDataType? dataType, Radix? radix,
             ExternalAccess? externalAccess, string? description)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
-            DataType = dataType;
+            DataType = dataType ?? throw new ArgumentNullException(nameof(dataType));
             Radix = radix ?? Radix.Default(dataType);
             ExternalAccess = externalAccess ?? ExternalAccess.ReadWrite;
             Description = description ?? string.Empty;

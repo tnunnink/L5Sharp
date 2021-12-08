@@ -63,9 +63,10 @@ namespace L5Sharp.Types
         {
             return value switch
             {
-                null => throw new ArgumentNullException(nameof(value), "Value can not be null"),
+                null => throw new ArgumentNullException(nameof(value)),
                 Bool atomic => new Bool(atomic),
                 bool typed => new Bool(typed),
+                byte n => new Bool(n),
                 int n => new Bool(n),
                 string str => new Bool(Parse(str)),
                 _ => throw new ArgumentException($"Value type '{value.GetType()}' is not a valid for {GetType()}")

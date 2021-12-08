@@ -83,7 +83,7 @@ namespace L5Sharp.Enums.Tests
         [Test]
         public void Infer_BinaryValue_ShouldBeBinaryRadix()
         {
-            var input = "";
+            var input = "2#0000_0101";
 
             var radix = Radix.Infer(input);
 
@@ -105,19 +105,9 @@ namespace L5Sharp.Enums.Tests
         {
             const string value = "8#014";
 
-            var parsed = (int)Radix.ParseValue(value);
+            var parsed = (byte)Radix.ParseValue(value);
 
-            parsed.Should().Be(20);
-        }
-
-        [Test]
-        public void ByteToInt()
-        {
-            byte b = 20;
-
-            int i = b;
-
-            i.Should().Be(20);
+            parsed.Should().Be(0x0C);
         }
     }
 }

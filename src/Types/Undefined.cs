@@ -9,21 +9,24 @@ namespace L5Sharp.Types
     /// This is a replacement for null type. If the data type that is read from a L5X is unknown and can not be created,
     /// Undefined will stand in as the placeholder for the data type.
     /// </remarks>
-    public sealed class Undefined<TDataType> : IDataType where TDataType : IDataType
+    public sealed class Undefined : IDataType
     {
         /// <summary>
-        /// Creates a new instance of an undefined type with the provided type name.
+        /// Creates a new instance of an undefined data type.
         /// </summary>
-        /// <param name="typeName">A name of the type that is not able to be created or inferred.</param>
-        public Undefined(string typeName)
+        internal Undefined()
         {
-            TypeName = typeName;
+            Name = nameof(Undefined);
         }
         
         /// <summary>
-        /// Gets the string name of the data type that has not definition.
+        /// Creates a new instance of an undefined type with the provided type name.
         /// </summary>
-        public string TypeName { get; }
+        /// <param name="name">Name of the type for which no definition has been found.</param>
+        internal Undefined(string name)
+        {
+            Name = name;
+        }
 
         /// <inheritdoc />
         public string Name { get; }
@@ -32,21 +35,15 @@ namespace L5Sharp.Types
         public string Description => "Undefined DataType";
 
         /// <inheritdoc />
-        public Radix Radix => Radix.Null;
-
-        /// <inheritdoc />
         public DataTypeFamily Family => DataTypeFamily.None;
 
         /// <inheritdoc />
-        public DataTypeClass Class => null;
-
-        /// <inheritdoc />
-        public DataFormat Format => null;
+        public DataTypeClass Class => DataTypeClass.Unknown;
 
         /// <inheritdoc />
         public IDataType Instantiate()
         {
-            return new Undefined<IDataType>(TypeName);
+            return new Undefined(Name);
         }
     }
 }

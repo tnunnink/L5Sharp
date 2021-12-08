@@ -16,7 +16,7 @@ namespace L5Sharp.Types.Tests
 
             type.Should().NotBeNull();
         }
-        
+
         [Test]
         public void New_Default_ShouldHaveExpectedDefaults()
         {
@@ -26,16 +26,40 @@ namespace L5Sharp.Types.Tests
             type.Name.Should().Be(nameof(Bool).ToUpper());
             type.Class.Should().Be(DataTypeClass.Atomic);
             type.Family.Should().Be(DataTypeFamily.None);
-            type.Description.Should().Be("RSLogix representation of a System.Boolean");
+            type.Description.Should().Be("Logix representation of a System.Boolean");
             type.Value.Should().BeFalse();
         }
-        
+
         [Test]
         public void New_ValueOverload_ShouldHaveExpectedValue()
         {
             var type = new Bool(true);
-            
+
             type.Value.Should().BeTrue();
+        }
+
+        [Test]
+        public void New_IntZeroOverload_ShouldBeFalse()
+        {
+            var type = new Bool(0);
+
+            type.Value.Should().BeFalse();
+        }
+
+        [Test]
+        public void New_IntPositiveOverload_ShouldBeTrue()
+        {
+            var type = new Bool(1);
+
+            type.Value.Should().BeTrue();
+        }
+
+        [Test]
+        public void New_IntNegativeOverload_ShouldBeFalse()
+        {
+            var type = new Bool(-1);
+
+            type.Value.Should().BeFalse();
         }
 
         [Test]
@@ -45,16 +69,17 @@ namespace L5Sharp.Types.Tests
 
             FluentActions.Invoking(() => type.Update(null!)).Should().Throw<ArgumentNullException>();
         }
-        
-        //todo maybe this should work...    
+
         [Test]
         public void Update_Zero_ShouldThrowArgumentException()
         {
             var type = new Bool();
 
-            FluentActions.Invoking(() => type.Update(0)).Should().Throw<ArgumentException>();
+            var updated = type.Update(0);
+
+            updated.Value.Should().Be(false);
         }
-        
+
         [Test]
         public void Update_ValidValue_ShouldReturnExpected()
         {
@@ -62,11 +87,11 @@ namespace L5Sharp.Types.Tests
             var value = fixture.Create<bool>();
             var type = new Bool();
 
-            type.Update(value);
+            var updated = type.Update(value);
 
-            type.Value.Should().Be(value);
+            updated.Value.Should().Be(value);
         }
-        
+
         [Test]
         public void Update_ValidValueAsObject_ShouldReturnExpected()
         {
@@ -74,9 +99,21 @@ namespace L5Sharp.Types.Tests
             var value = fixture.Create<bool>();
             var type = new Bool();
 
-            type.Update((object) value);
+            var updated = type.Update((object)value);
 
-            type.Value.Should().Be(value);
+            updated.Value.Should().Be(value);
+        }
+        
+        [Test]
+        public void Update_ValidBoolAsObject_ShouldReturnExpected()
+        {
+            var fixture = new Fixture();
+            var value = fixture.Create<bool>();
+            var type = new Bool();
+
+            var updated = type.Update((object)new Bool(value));
+
+            updated.Value.Should().Be(value);
         }
 
         [Test]
@@ -86,47 +123,29 @@ namespace L5Sharp.Types.Tests
             var value = fixture.Create<bool>();
             var type = new Bool();
 
-            type.Update(value.ToString());
+            var updated = type.Update(value.ToString());
 
-            type.Value.Should().Be(value);
+            updated.Value.Should().Be(value);
         }
 
         [Test]
-        public void Update_ValidValueBoolOne_ShouldBeTrue()
-        {
-            Bool type ="1";
-
-            type.Value.Should().BeTrue();
-        }
-
-        [Test]
-        public void Update_ValidValueBoolYes_ShouldBeTrue()
+        public void Update_ValidStringOne_ShouldBeTrue()
         {
             var type = new Bool();
-            
-            type.Update("Yes");
 
-            type.Value.Should().BeTrue();
+            var updated = type.Update("1");
+            
+            updated.Value.Should().Be(true);
         }
 
         [Test]
-        public void Update_ValidValueBoolZero_ShouldBeFalse()
+        public void Update_ValidStringZero_ShouldBeFalse()
         {
             var type = new Bool();
-            
-            type.Update("0");
 
-            type.Value.Should().BeFalse();
-        }
+            var updated = type.Update("0");
 
-        [Test]
-        public void Update_ValidValueBoolNo_ShouldBeFalse()
-        {
-            var type = new Bool();
-            
-            type.Update("No");
-
-            type.Value.Should().BeFalse();
+            updated.Value.Should().Be(false);
         }
 
         [Test]
@@ -137,15 +156,16 @@ namespace L5Sharp.Types.Tests
             var type = new Bool();
 
             FluentActions.Invoking(() => type.Update(value)).Should().Throw<ArgumentException>()
-                .WithMessage($"Could not parse string '{value}' to {typeof(Bool)}");
+                .WithMessage(
+                    $"Could not parse string '{value}' to {typeof(Bool)}. Verify that the string is an accepted Radix format.");
         }
-        
+
         [Test]
         public void Update_InvalidType_ShouldBeZero()
         {
             var fixture = new Fixture();
-            var value = fixture.Create<int>();
-            var type = new Sint();
+            var value = fixture.Create<float>();
+            var type = new Bool();
 
             FluentActions.Invoking(() => type.Update(value)).Should().Throw<ArgumentException>()
                 .WithMessage($"Value type '{value.GetType()}' is not a valid for {typeof(Bool)}");
@@ -158,15 +178,29 @@ namespace L5Sharp.Types.Tests
 
             type.Value.Should().BeTrue();
         }
-        
+
         [Test]
         public void ImplicitOperator_bool_ShouldBeTrue()
         {
-            var type = new Bool();
-
-            bool value = type;
+            bool value = new Bool();
 
             value.Should().BeFalse();
+        }
+        
+        [Test]
+        public void ImplicitOperator_ValidString_ShouldBeTrue()
+        {
+            Bool type = "1";
+
+            type.Value.Should().BeTrue();
+        }
+        
+        [Test]
+        public void ImplicitOperator_InvalidString_ShouldThrowArgumentException()
+        {
+            Bool type = false;
+            
+            FluentActions.Invoking(() => type = "test").Should().Throw<ArgumentException>();
         }
 
         [Test]
@@ -179,7 +213,7 @@ namespace L5Sharp.Types.Tests
 
             result.Should().BeTrue();
         }
-        
+
         [Test]
         public void TypeEquals_AreSame_ShouldBeTrue()
         {
@@ -189,8 +223,8 @@ namespace L5Sharp.Types.Tests
 
             result.Should().BeTrue();
         }
-        
-        
+
+
         [Test]
         public void TypeEquals_Null_ShouldBeFalse()
         {
@@ -200,7 +234,7 @@ namespace L5Sharp.Types.Tests
 
             result.Should().BeFalse();
         }
-        
+
         [Test]
         public void ObjectEquals_AreEqual_ShouldBeTrue()
         {
@@ -211,7 +245,7 @@ namespace L5Sharp.Types.Tests
 
             result.Should().BeTrue();
         }
-        
+
         [Test]
         public void ObjectEquals_AreSame_ShouldBeTrue()
         {
@@ -221,7 +255,7 @@ namespace L5Sharp.Types.Tests
 
             result.Should().BeTrue();
         }
-        
+
         [Test]
         public void ObjectEquals_Null_ShouldBeFalse()
         {
@@ -242,7 +276,7 @@ namespace L5Sharp.Types.Tests
 
             result.Should().BeTrue();
         }
-        
+
         [Test]
         public void OperatorNotEquals_AreEqual_ShouldBeFalse()
         {
@@ -257,7 +291,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void GetHashCode_WhenCalled_ShouldNotBeZero()
         {
-            var type = new Bool();
+            var type = new Bool(true);
 
             var hash = type.GetHashCode();
 

@@ -1,6 +1,5 @@
 ﻿using System;
 using FluentAssertions;
-using L5Sharp.Exceptions;
 using L5Sharp.Types;
 using NUnit.Framework;
 
@@ -19,19 +18,19 @@ namespace L5Sharp.Enums.Tests
         }
 
         [Test]
-        public void Format_Null_ShouldThrowArgumentNullException()
+        public void Convert_Null_ShouldThrowArgumentNullException()
         {
-            FluentActions.Invoking(() => Radix.Binary.Convert(null)).Should().Throw<ArgumentNullException>();
+            FluentActions.Invoking(() => Radix.Binary.Convert(null!)).Should().Throw<ArgumentNullException>();
         }
 
         [Test]
-        public void Format_NonSupportedAtomic_ShouldThrowRadixNotSupportedException()
+        public void Convert_NonSupportedAtomic_ShouldThrowRadixNotSupportedException()
         {
-            FluentActions.Invoking(() => Radix.Binary.Convert(new Real())).Should().Throw<RadixNotSupportedException>();
+            FluentActions.Invoking(() => Radix.Binary.Convert(new Real())).Should().Throw<NotSupportedException>();
         }
 
         [Test]
-        public void Format_BoolFalse_ShouldBeExpected()
+        public void Convert_BoolFalse_ShouldBeExpected()
         {
             var result = Radix.Binary.Convert(new Bool());
 
@@ -39,7 +38,7 @@ namespace L5Sharp.Enums.Tests
         }
 
         [Test]
-        public void Format_BoolTrue_ShouldBeExpected()
+        public void Convert_BoolTrue_ShouldBeExpected()
         {
             var result = Radix.Binary.Convert(new Bool(true));
 
@@ -47,7 +46,7 @@ namespace L5Sharp.Enums.Tests
         }
 
         [Test]
-        public void Format_ValidSint_ShouldBeExpectedFormat()
+        public void Convert_ValidSint_ShouldBeExpectedConvert()
         {
             var result = Radix.Binary.Convert(new Sint(20));
 
@@ -55,7 +54,7 @@ namespace L5Sharp.Enums.Tests
         }
 
         [Test]
-        public void Format_ValidInt_ShouldBeExpectedFormat()
+        public void Convert_ValidInt_ShouldBeExpectedConvert()
         {
             var result = Radix.Binary.Convert(new Int(20));
 
@@ -63,7 +62,7 @@ namespace L5Sharp.Enums.Tests
         }
 
         [Test]
-        public void Format_ValidDint_ShouldBeExpectedFormat()
+        public void Convert_ValidDint_ShouldBeExpectedConvert()
         {
             var result = Radix.Binary.Convert(new Dint(20));
 
@@ -71,7 +70,7 @@ namespace L5Sharp.Enums.Tests
         }
 
         [Test]
-        public void Format_ValidLint_ShouldBeExpectedFormat()
+        public void Convert_ValidLint_ShouldBeExpectedConvert()
         {
             var result = Radix.Binary.Convert(new Lint(20));
 
@@ -81,14 +80,16 @@ namespace L5Sharp.Enums.Tests
         [Test]
         public void Parse_Null_ShouldThrowArgumentNullException()
         {
-            FluentActions.Invoking(() => Radix.Binary.Parse(null)).Should().Throw<ArgumentNullException>();
+            FluentActions.Invoking(() => Radix.Binary.Parse(null!)).Should().Throw<ArgumentNullException>();
         }
 
         [Test]
         public void Parse_InvalidSpecifier_ShouldThrowArgumentException()
         {
-            FluentActions.Invoking(() => Radix.Binary.Parse("00010100")).Should().Throw<ArgumentException>()
-                .WithMessage("Input must start with Binary specifier '2#'.");
+            const string invalid = "00010100";
+
+            FluentActions.Invoking(() => Radix.Binary.Parse(invalid)).Should().Throw<FormatException>()
+                .WithMessage($"Input '{invalid}' does not have expected format for Binary Radix");
         }
 
         [Test]

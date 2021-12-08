@@ -23,7 +23,7 @@ namespace L5Sharp.Utilities
 
             var element = FindTypeDefinition(name);
 
-            return element != null ? GetTypeSerializer(element).Deserialize(element) : new Undefined<IDataType>(name);
+            return element != null ? GetTypeSerializer(element).Deserialize(element) : new Undefined(name);
         }
 
         private IXSerializer<IDataType> GetTypeSerializer(XElement element)
