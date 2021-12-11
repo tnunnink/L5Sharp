@@ -57,7 +57,9 @@ namespace L5Sharp.Types
             {
                 null => throw new ArgumentNullException(nameof(value), "Value can not be null"),
                 Dint atomic => new Dint(atomic),
-                int typed => new Dint(typed),
+                byte n => new Dint(n),
+                short n => new Dint(n),
+                int n => new Dint(n),
                 string str => new Dint(Radix.ParseValue<Dint>(str)),
                 _ => throw new ArgumentException($"Value type '{value.GetType()}' is not a valid for {GetType()}")
             };

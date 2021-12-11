@@ -103,11 +103,11 @@ namespace L5Sharp.Types.Tests
             var type = new Dint(_random);
 
             FluentActions.Invoking(() => type.Update(value)).Should().Throw<ArgumentException>()
-                .WithMessage($"Could not parse string '{value}' to {typeof(Dint)}");
+                .WithMessage($"Could not parse string '{value}' to {typeof(Dint)}. Verify that the string is an accepted Radix format.");
         }
-        
+
         [Test]
-        public void SetValue_InvalidType_ShouldThrowArgumentException()
+        public void Update_InvalidType_ShouldThrowArgumentException()
         {
             var fixture = new Fixture();
             var value = fixture.Create<float>();
@@ -115,6 +115,16 @@ namespace L5Sharp.Types.Tests
 
             FluentActions.Invoking(() => type.Update(value)).Should().Throw<ArgumentException>()
                 .WithMessage($"Value type '{value.GetType()}' is not a valid for {typeof(Dint)}");
+        }
+
+        [Test]
+        public void Instantiate_WhenCalled_ShouldEqualDefaultInstance()
+        {
+            var type = new Dint(_random);
+
+            var instance = type.Instantiate();
+
+            instance.Should().BeEquivalentTo(new Dint());
         }
 
         [Test]
@@ -131,6 +141,14 @@ namespace L5Sharp.Types.Tests
             int value = new Dint(_random);
 
             value.Should().Be(_random);
+        }
+        
+        [Test]
+        public void ImplicitOperator_ValidString_ShouldBeExpected()
+        {
+            Dint type = _random.ToString();
+
+            type.Value.Should().Be(_random);
         }
 
         [Test]
@@ -219,13 +237,13 @@ namespace L5Sharp.Types.Tests
         }
 
         [Test]
-        public void GetHashCode_WhenCalled_ShouldNotBeZero()
+        public void GetHashCode_DefaultValue_ShouldBeZero()
         {
             var type = new Dint();
 
             var hash = type.GetHashCode();
 
-            hash.Should().NotBe(0);
+            hash.Should().Be(0);
         }
 
         [Test]

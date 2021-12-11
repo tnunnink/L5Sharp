@@ -23,13 +23,13 @@ namespace L5Sharp.Enums.Tests
         [Test]
         public void Format_Null_ShouldThrowArgumentNullException()
         {
-            FluentActions.Invoking(() => Radix.Float.Convert(null)).Should().Throw<ArgumentNullException>();
+            FluentActions.Invoking(() => Radix.Float.Convert(null!)).Should().Throw<ArgumentNullException>();
         }
 
         [Test]
         public void Format_NonSupportedAtomic_ShouldThrowRadixNotSupportedException()
         {
-            FluentActions.Invoking(() => Radix.Float.Convert(new Dint())).Should().Throw<RadixNotSupportedException>();
+            FluentActions.Invoking(() => Radix.Float.Convert(new Dint())).Should().Throw<NotSupportedException>();
         }
 
         [Test]

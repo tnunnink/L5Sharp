@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using AutoFixture;
 using FluentAssertions;
+using L5Sharp.Enums;
+using L5Sharp.Types;
 using NUnit.Framework;
 
 namespace L5Sharp.Core.Tests
@@ -16,7 +19,7 @@ namespace L5Sharp.Core.Tests
 
             dimensions.Should().NotBeNull();
         }
-        
+
         [Test]
         public void Empty_WhenCalled_ShouldHaveAllZeros()
         {
@@ -27,13 +30,13 @@ namespace L5Sharp.Core.Tests
             dimensions.Y.Should().Be(0);
             dimensions.Z.Should().Be(0);
         }
-        
+
         [Test]
         public void New_OneDimension_ShouldHaveExpectedValues()
         {
             var fixture = new Fixture();
             var x = fixture.Create<ushort>();
-            
+
             var dimensions = new Dimensions(x);
 
             dimensions.ToString().Should().Be(x.ToString());
@@ -41,7 +44,7 @@ namespace L5Sharp.Core.Tests
             dimensions.Y.Should().Be(0);
             dimensions.Z.Should().Be(0);
         }
-        
+
         [Test]
         public void New_OneDimensionZero_ShouldHaveExpectedValues()
         {
@@ -52,14 +55,14 @@ namespace L5Sharp.Core.Tests
             dimensions.Y.Should().Be(0);
             dimensions.Z.Should().Be(0);
         }
-        
+
         [Test]
         public void New_TwoDimensions_ShouldHaveExpectedValues()
         {
             var fixture = new Fixture();
             var x = fixture.Create<ushort>();
             var y = fixture.Create<ushort>();
-            
+
             var dimensions = new Dimensions(x, y);
 
             dimensions.ToString().Should().Be($"{x} {y}");
@@ -67,7 +70,7 @@ namespace L5Sharp.Core.Tests
             dimensions.Y.Should().Be(y);
             dimensions.Z.Should().Be(0);
         }
-        
+
         [Test]
         public void New_TwoDimensionsXIsZero_ShouldHaveExpectedValues()
         {
@@ -84,7 +87,7 @@ namespace L5Sharp.Core.Tests
             var x = fixture.Create<ushort>();
             var y = fixture.Create<ushort>();
             var z = fixture.Create<ushort>();
-            
+
             var dimensions = new Dimensions(x, y, z);
 
             dimensions.ToString().Should().Be($"{x} {y} {z}");
@@ -102,7 +105,7 @@ namespace L5Sharp.Core.Tests
 
             FluentActions.Invoking(() => new Dimensions(x, 0, z)).Should().Throw<ArgumentException>();
         }
-        
+
         [Test]
         public void New_ThreeDimensionsXIsZero_ShouldHaveExpectedValues()
         {
@@ -120,7 +123,7 @@ namespace L5Sharp.Core.Tests
 
             dimension.AreEmpty.Should().BeTrue();
         }
-        
+
         [Test]
         public void AreEmpty_NotEmpty_ShouldBeFalse()
         {
@@ -130,13 +133,40 @@ namespace L5Sharp.Core.Tests
         }
 
         [Test]
+        public void AreMultiDimensional_MultiDimensional_ShouldBeTure()
+        {
+            var dimension = new Dimensions(1, 2);
+
+            dimension.AreMultiDimensional.Should().BeTrue();
+        }
+
+        [Test]
+        public void AreMultiDimensional_SingleDimensional_ShouldBeFalse()
+        {
+            var dimension = new Dimensions(1);
+
+            dimension.AreMultiDimensional.Should().BeFalse();
+        }
+
+        [Test]
+        public void Copy_WhenCalled_ShouldBeEqualButNotSame()
+        {
+            var dimension = new Dimensions(3);
+
+            var copy = dimension.Copy();
+
+            copy.Should().NotBeSameAs(dimension);
+            copy.Should().BeEquivalentTo(dimension);
+        }
+
+        [Test]
         public void ImplicitOperator_UShort_ShouldBeExpected()
         {
             Dimensions dimensions = 100;
 
             dimensions.Length.Should().Be(100);
         }
-        
+
         [Test]
         public void ImplicitOperator_IntFromDimensions_ShouldBeExpected()
         {
@@ -146,7 +176,7 @@ namespace L5Sharp.Core.Tests
 
             length.Should().Be(1000);
         }
-        
+
         [Test]
         public void ImplicitOperator_UShortFromDimensions_ShouldBeExpected()
         {
@@ -158,51 +188,148 @@ namespace L5Sharp.Core.Tests
         }
 
         [Test]
-        public void GenerateIndices_OneDimension_ShouldNotBeNullAndHaveExpectedLength()
+        public void GenerateMembers_SeedTypeNUll_ShouldThrowArgumentException()
         {
             var fixture = new Fixture();
             var x = fixture.Create<ushort>();
             var dimensions = new Dimensions(x);
 
-            var indices = dimensions.GenerateIndices().ToList();
+            FluentActions.Invoking(() => dimensions.GenerateMembers((IDataType)null)).Should()
+                .Throw<ArgumentNullException>();
+        }
 
-            indices.Should().NotBeEmpty();
-            indices.Should().HaveCount(x);
+        [Test]
+        public void GenerateMembers_SeedType_ShouldHaveExpectedLength()
+        {
+            var fixture = new Fixture();
+            var x = fixture.Create<ushort>();
+            var dimensions = new Dimensions(x);
+
+            var members = dimensions.GenerateMembers(new Bool()).ToList();
+
+            members.Should().NotBeNull();
+            members.Should().HaveCount(x);
+            members.Should().AllBeOfType<Member<Bool>>();
+        }
+
+        [Test]
+        public void GenerateMembers_SeedTypeOverloaded_ShouldHaveExpectedParameters()
+        {
+            var fixture = new Fixture();
+            var x = fixture.Create<ushort>();
+            var dimensions = new Dimensions(x);
+
+            var members = dimensions
+                .GenerateMembers(new Bool(), Radix.Binary, ExternalAccess.ReadOnly, "This is a test").ToList();
+
+            members.All(m => m.Radix == Radix.Binary).Should().BeTrue();
+            members.All(m => m.ExternalAccess == ExternalAccess.ReadOnly).Should().BeTrue();
+            members.All(m => m.Description == "This is a test").Should().BeTrue();
+        }
+
+        [Test]
+        public void GenerateMembers_ElementsNull_ShouldThrowArgumentException()
+        {
+            var fixture = new Fixture();
+            var x = fixture.Create<ushort>();
+            var dimensions = new Dimensions(x);
+
+            FluentActions.Invoking(() => dimensions.GenerateMembers(((List<IDataType>)null)!)).Should()
+                .Throw<ArgumentNullException>();
+        }
+
+        [Test]
+        public void GenerateMembers_ZeroElements_ShouldThrowArgumentOutOfRangeException()
+        {
+            var fixture = new Fixture();
+            var x = fixture.Create<ushort>();
+            var dimensions = new Dimensions(x);
+
+            var elements = new List<Bool>();
+
+            FluentActions.Invoking(() => dimensions.GenerateMembers(elements)).Should()
+                .Throw<ArgumentOutOfRangeException>();
         }
         
+        
         [Test]
-        public void GenerateIndices_TwoDimension_ShouldNotBeNullAndHaveExpectedLength()
+        public void GenerateMembers_GreaterThanDimensionsLength_ShouldThrowArgumentOutOfRangeException()
+        {
+            var dimensions = new Dimensions(5);
+
+            var elements = new List<Bool>(20);
+
+            FluentActions.Invoking(() => dimensions.GenerateMembers(elements)).Should()
+                .Throw<ArgumentOutOfRangeException>();
+        }
+
+        [Test]
+        public void GenerateMembers_ElementsOverload_ElementsShouldHaveExpectedValues()
+        {
+            var dimensions = new Dimensions(5);
+            var item1 = new Bool();
+            var item2 = new Bool();
+            var item3 = new Bool();
+            var item4 = new Bool();
+            var item5 = new Bool();
+            var elements = new List<Bool>
+            {
+                item1,
+                item2,
+                item3,
+                item4,
+                item5
+            };
+
+            var members = dimensions.GenerateMembers(elements).ToList();
+
+            members.Should().NotBeNull();
+            members.Should().HaveCount(5);
+            members.Should().AllBeOfType<Member<Bool>>();
+            members[0].DataType.Should().BeSameAs(item1);
+            members[1].DataType.Should().BeSameAs(item2);
+            members[2].DataType.Should().BeSameAs(item3);
+            members[3].DataType.Should().BeSameAs(item4);
+            members[4].DataType.Should().BeSameAs(item5);
+        }
+
+        [Test]
+        public void GenerateMembers_TwoDimension_ShouldNotBeNullAndHaveExpectedLength()
         {
             var fixture = new Fixture();
             var x = fixture.Create<ushort>();
             var y = fixture.Create<ushort>();
             var dimensions = new Dimensions(x, y);
 
-            var indices = dimensions.GenerateIndices().ToList();
+            var members = dimensions.GenerateMembers(new Bool(), Radix.Decimal, ExternalAccess.None, "This is a test")
+                .ToList();
 
-            indices.Should().NotBeEmpty();
-            indices.Should().HaveCount(x * y);
+            members.Should().NotBeNull();
+            members.Should().HaveCount(dimensions.Length);
+            members.Should().AllBeOfType<Member<Bool>>();
         }
-        
+
         [Test]
         public void GenerateIndices_ThreeDimension_ShouldNotBeNullAndHaveExpectedLength()
         {
             //Hard coding these because I don't want a crazy large array for unit testing
             var dimensions = new Dimensions(5, 6, 7);
 
-            var indices = dimensions.GenerateIndices().ToList();
+            var members = dimensions.GenerateMembers(new Bool(), Radix.Decimal, ExternalAccess.None, "This is a test")
+                .ToList();
 
-            indices.Should().NotBeEmpty();
-            indices.Should().HaveCount(210);
+            members.Should().NotBeNull();
+            members.Should().HaveCount(dimensions.Length);
+            members.Should().AllBeOfType<Member<Bool>>();
         }
-        
+
         [Test]
         public void Parse_Null_ShouldThrowArgumentNullException()
         {
-            var dimensions = Dimensions.Parse(null);
+            var dimensions = Dimensions.Parse(null!);
             dimensions.Should().Be(Dimensions.Empty);
         }
-        
+
         [Test]
         public void Parse_Empty_ShouldBeEmpty()
         {
@@ -210,14 +337,14 @@ namespace L5Sharp.Core.Tests
 
             dimension.Should().Be(Dimensions.Empty);
         }
-        
+
         [Test]
         public void Parse_SingleSpace_ShouldBeEmpty()
         {
             FluentActions.Invoking(() => Dimensions.Parse(" ")).Should()
                 .Throw<ArgumentException>();
         }
-        
+
         [Test]
         public void Parse_InvalidPattern_ShouldThrowInvalidOperationException()
         {
@@ -225,14 +352,14 @@ namespace L5Sharp.Core.Tests
             FluentActions.Invoking(() => Dimensions.Parse(fixture.Create<string>())).Should()
                 .Throw<ArgumentException>();
         }
-        
+
         [Test]
         public void Parse_MoreThanThreeDimensions_ShouldThrowInvalidOperationException()
         {
             FluentActions.Invoking(() => Dimensions.Parse("1 4 3 8")).Should()
                 .Throw<ArgumentOutOfRangeException>();
         }
-        
+
         [Test]
         public void Parse_OneDimensionZero_ShouldHaveExpectedValues()
         {
@@ -243,7 +370,7 @@ namespace L5Sharp.Core.Tests
             dimensions.Y.Should().Be(0);
             dimensions.Z.Should().Be(0);
             dimensions.Length.Should().Be(0);
-            dimensions.Should().BeEquivalentTo(Dimensions.Empty);   
+            dimensions.Should().BeEquivalentTo(Dimensions.Empty);
         }
 
         [Test]
@@ -257,7 +384,7 @@ namespace L5Sharp.Core.Tests
             dimensions.Z.Should().Be(0);
             dimensions.Length.Should().Be(3);
         }
-        
+
         [Test]
         public void Parse_TwoDimension_ShouldHaveExpectedValues()
         {
@@ -269,7 +396,7 @@ namespace L5Sharp.Core.Tests
             dimensions.Z.Should().Be(0);
             dimensions.Length.Should().Be(30);
         }
-        
+
         [Test]
         public void Parse_ThreeDimension_ShouldHaveExpectedValues()
         {
@@ -292,7 +419,7 @@ namespace L5Sharp.Core.Tests
 
             result.Should().BeTrue();
         }
-        
+
         [Test]
         public void Equals_TypeOverloadSame_ShouldBeTrue()
         {
@@ -302,7 +429,7 @@ namespace L5Sharp.Core.Tests
 
             result.Should().BeTrue();
         }
-        
+
         [Test]
         public void Equals_TypeOverloadNull_ShouldBeFalse()
         {
@@ -312,38 +439,38 @@ namespace L5Sharp.Core.Tests
 
             result.Should().BeFalse();
         }
-        
+
         [Test]
         public void Equals_ObjectOverloadEquals_ShouldBeTrue()
         {
             var d1 = new Dimensions(5);
-            var d2 = (object) new Dimensions(5);
+            var d2 = (object)new Dimensions(5);
 
             var result = d1.Equals(d2);
 
             result.Should().BeTrue();
         }
-        
+
         [Test]
         public void Equals_ObjectOverloadSame_ShouldBeTrue()
         {
             var d1 = new Dimensions(5);
 
-            var result = d1.Equals((object) d1);
+            var result = d1.Equals((object)d1);
 
             result.Should().BeTrue();
         }
-        
+
         [Test]
         public void Equals_ObjectOverloadNull_ShouldBeFalse()
         {
             var d1 = new Dimensions(5);
 
-            var result = d1.Equals((object) null);
+            var result = d1.Equals((object)null);
 
             result.Should().BeFalse();
         }
-        
+
         [Test]
         public void OpEquals_AreEqual_ShouldBeTrue()
         {
@@ -354,7 +481,7 @@ namespace L5Sharp.Core.Tests
 
             result.Should().BeTrue();
         }
-        
+
         [Test]
         public void OpNotEquals_AreEqual_ShouldBeFalse()
         {
@@ -365,7 +492,7 @@ namespace L5Sharp.Core.Tests
 
             result.Should().BeFalse();
         }
-        
+
         [Test]
         public void GetHashCode_WhenCalled_ShouldNotBeZero()
         {

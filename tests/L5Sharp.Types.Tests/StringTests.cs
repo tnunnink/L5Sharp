@@ -57,15 +57,13 @@ namespace L5Sharp.Types.Tests
         {
             var type = new String();
             
-            FluentActions.Invoking(() => type.SetValue(null!)).Should().Throw<ArgumentNullException>();
+            FluentActions.Invoking(() => type.Update(null!)).Should().Throw<ArgumentNullException>();
         }
         
         [Test]
         public void SetValue_EmptyString_ShouldBeEmpty()
         {
-            String type = "This is a test";
-            
-            type = string.Empty;
+            String type = string.Empty;
 
             type.Value.Should().BeEmpty();
         }
@@ -88,9 +86,9 @@ namespace L5Sharp.Types.Tests
             var value = fixture.Create<string>();
             var type = new String();
             
-            type.SetValue(value);
+            var updated = type.Update(value);
 
-            type.Value.Should().Be(value);
+            updated.Value.Should().Be(value);
         }
 
         [Test]
@@ -102,11 +100,9 @@ namespace L5Sharp.Types.Tests
         }
         
         [Test]
-        public void ImplicitOperator_ClrType_ShouldBeExpected()
+        public void ImplicitOperator_string_ShouldBeExpected()
         {
-            var type = new String("This is a test");
-
-            string test = type;
+            string test = new String("This is a test");
 
             test.Should().Be("This is a test");
         }

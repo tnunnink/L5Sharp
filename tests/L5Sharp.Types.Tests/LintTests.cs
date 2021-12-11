@@ -60,9 +60,9 @@ namespace L5Sharp.Types.Tests
         {
             var type = new Lint();
 
-            type.Update(_random);
+            var updated = type.Update(_random);
 
-            type.Value.Should().Be(_random);
+            updated.Value.Should().Be(_random);
         }
         
         [Test]
@@ -70,9 +70,9 @@ namespace L5Sharp.Types.Tests
         {
             var type = new Lint();
 
-            type.Update((object) _random);
+            var updated = type.Update((object) _random);
 
-            type.Value.Should().Be(_random);
+            updated.Value.Should().Be(_random);
         }
 
         [Test]
@@ -80,9 +80,9 @@ namespace L5Sharp.Types.Tests
         {
             var type = new Lint();
 
-            type.Update(_random.ToString());
+            var updated = type.Update(_random.ToString());
 
-            type.Value.Should().Be(_random);
+            updated.Value.Should().Be(_random);
         }
         
         [Test]
@@ -93,7 +93,7 @@ namespace L5Sharp.Types.Tests
             var type = new Lint(_random);
 
             FluentActions.Invoking(() => type.Update(value)).Should().Throw<ArgumentException>()
-                .WithMessage($"Could not parse string '{value}' to {typeof(Lint)}");
+                .WithMessage($"Could not parse string '{value}' to {typeof(Lint)}. Verify that the string is an accepted Radix format.");
         }
         
         [Test]
@@ -105,6 +105,16 @@ namespace L5Sharp.Types.Tests
 
             FluentActions.Invoking(() => type.Update(value)).Should().Throw<ArgumentException>()
                 .WithMessage($"Value type '{value.GetType()}' is not a valid for {typeof(Lint)}");
+        }
+        
+        [Test]
+        public void Instantiate_WhenCalled_ShouldEqualDefaultInstance()
+        {
+            var type = new Lint(_random);
+
+            var instance = type.Instantiate();
+
+            instance.Should().BeEquivalentTo(new Lint());
         }
 
         [Test]
@@ -121,6 +131,14 @@ namespace L5Sharp.Types.Tests
             long value = new Lint(_random);
 
             value.Should().Be(_random);
+        }
+        
+        [Test]
+        public void ImplicitOperator_ValidString_ShouldBeExpected()
+        {
+            Lint type = _random.ToString();
+
+            type.Value.Should().Be(_random);
         }
 
         [Test]
@@ -209,13 +227,13 @@ namespace L5Sharp.Types.Tests
         }
 
         [Test]
-        public void GetHashCode_WhenCalled_ShouldNotBeZero()
+        public void GetHashCode_DefaultValue_ShouldBeZero()
         {
             var type = new Lint();
 
             var hash = type.GetHashCode();
 
-            hash.Should().NotBe(0);
+            hash.Should().Be(0);
         }
 
         [Test]

@@ -61,9 +61,9 @@ namespace L5Sharp.Types.Tests
         {
             var type = new Real();
 
-            type.Update(_random);
+            var updated = type.Update(_random);
 
-            type.Value.Should().Be(_random);
+            updated.Value.Should().Be(_random);
         }
         
         [Test]
@@ -71,9 +71,9 @@ namespace L5Sharp.Types.Tests
         {
             var type = new Real();
 
-            type.Update((object) _random);
+            var updated = type.Update((object) _random);
 
-            type.Value.Should().Be(_random);
+            updated.Value.Should().Be(_random);
         }
 
         [Test]
@@ -81,9 +81,9 @@ namespace L5Sharp.Types.Tests
         {
             var type = new Real();
 
-            type.Update(_random.ToString(CultureInfo.InvariantCulture));
+            var updated = type.Update("1.34");
 
-            type.Value.Should().Be(_random);
+            updated.Value.Should().Be(1.34f);
         }
         
         [Test]
@@ -94,7 +94,7 @@ namespace L5Sharp.Types.Tests
             var type = new Real(_random);
 
             FluentActions.Invoking(() => type.Update(value)).Should().Throw<ArgumentException>()
-                .WithMessage($"Could not parse string '{value}' to {typeof(Real)}");
+                .WithMessage($"Could not parse string '{value}' to {typeof(Real)}. Verify that the string is an accepted Radix format.");
         }
         
         [Test]
@@ -106,6 +106,16 @@ namespace L5Sharp.Types.Tests
 
             FluentActions.Invoking(() => type.Update(value)).Should().Throw<ArgumentException>()
                 .WithMessage($"Value type '{value.GetType()}' is not a valid for {typeof(Real)}");
+        }
+        
+        [Test]
+        public void Instantiate_WhenCalled_ShouldEqualDefaultInstance()
+        {
+            var type = new Real(_random);
+
+            var instance = type.Instantiate();
+
+            instance.Should().BeEquivalentTo(new Real());
         }
 
         [Test]
@@ -122,6 +132,14 @@ namespace L5Sharp.Types.Tests
             float value = new Real(_random);
 
             value.Should().Be(_random);
+        }
+        
+        [Test]
+        public void ImplicitOperator_ValidString_ShouldBeExpected()
+        {
+            Real type = "1.1";
+
+            type.Value.Should().Be(1.1f);
         }
 
         [Test]
@@ -210,15 +228,15 @@ namespace L5Sharp.Types.Tests
         }
 
         [Test]
-        public void GetHashCode_WhenCalled_ShouldNotBeZero()
+        public void GetHashCode_DefaultValue_ShouldBeZero()
         {
             var type = new Real();
 
             var hash = type.GetHashCode();
 
-            hash.Should().NotBe(0);
+            hash.Should().Be(0);
         }
-
+        
         [Test]
         public void CompareTo_ValidOther_ShouldBeZero()
         {

@@ -25,9 +25,9 @@ namespace L5Sharp.Enums.Tests
         }
 
         [Test]
-        public void Format_NonSupportedAtomic_ShouldThrowRadixNotSupportedException()
+        public void Format_NonSupportedAtomic_ShouldThrowNotSupportedException()
         {
-            FluentActions.Invoking(() => Radix.Decimal.Convert(new Real())).Should().Throw<RadixNotSupportedException>();
+            FluentActions.Invoking(() => Radix.Decimal.Convert(new Real())).Should().Throw<NotSupportedException>();
         }
 
         [Test]

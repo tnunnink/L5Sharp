@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using L5Sharp.Abstractions;
 using L5Sharp.Components;
 using L5Sharp.Enums;
 using L5Sharp.Types;
@@ -20,7 +19,7 @@ namespace L5Sharp.Core
                 throw new ArgumentException("Dimension must single dimensional and have length greater that zero");
 
             LEN = Member.Create<Dint>(nameof(LEN));
-            DATA = Member.Array<Sint>(nameof(DATA), dimensions, Radix.Ascii);
+            DATA = ArrayMember.Create<Sint>(nameof(DATA), dimensions, Radix.Ascii);
             
             Members = new List<IMember<IDataType>>
             {
@@ -31,13 +30,17 @@ namespace L5Sharp.Core
 
         public string Name { get; }
         public string Description { get; }
-        public Radix Radix => Radix.Null;
         public DataTypeFamily Family => DataTypeFamily.String;
         public DataTypeClass Class => DataTypeClass.User;
         public DataFormat Format => DataFormat.String;
         public string Value => GetValue();
         public IMember<Dint> LEN { get; }
         public IArrayMember<Sint> DATA { get; }
+        public IStringDefined Update(string value)
+        {
+            throw new NotImplementedException();
+        }
+
         public IEnumerable<IMember<IDataType>> Members { get; }
 
 

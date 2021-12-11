@@ -5,23 +5,37 @@ using L5Sharp.Abstractions;
 using L5Sharp.Components;
 using L5Sharp.Core;
 using L5Sharp.Enums;
+using L5Sharp.Extensions;
 
-// ReSharper disable InconsistentNaming RSLogix Naming
+// ReSharper disable InconsistentNaming Logix Naming
 
 namespace L5Sharp.Types
 {
+    /// <summary>
+    /// Represents a predefined String Logix data type.
+    /// </summary>
     public sealed class String : ComplexType, IStringDefined, IEquatable<String>, IComparable<String>
     {
         private const int PredefinedLength = 82; //This is the built in length of string types in RSLogix
 
-        public String() : base(nameof(String).ToUpper(), $"RSLogix representation of a {typeof(string)}")
+        public String() : base(nameof(String).ToUpper(), $"Logix representation of a {typeof(string)}")
         {
+            LEN = Member.Create(nameof(LEN), new Dint(PredefinedLength));
         }
 
         public String(string value) : this()
         {
-            if (!string.IsNullOrEmpty(value))
-                SetValue(value);
+            if (value == null)
+                throw new ArgumentNullException(nameof(value), "Value can not be null");
+
+            var bytes = Encoding.ASCII.GetBytes(value);
+
+            if (bytes.Length > LEN.DataType.Value)
+                throw new ArgumentOutOfRangeException(nameof(value),
+                    $"Value length {bytes.Length} must be less than the predefined length {PredefinedLength}");
+
+            DATA = bytes.Select(b => new Sint(b))
+                .ToArrayMember(nameof(DATA), new Dimensions(PredefinedLength), Radix.Ascii);
         }
 
         /// <inheritdoc />
@@ -31,58 +45,41 @@ namespace L5Sharp.Types
         public override DataTypeClass Class => DataTypeClass.Predefined;
 
         /// <inheritdoc />
-        public string Value => GetValue();
+        public string Value =>
+            Encoding.ASCII.GetString(DATA.Where(d => d.DataType.Value > 0).Select(d => d.DataType.Value).ToArray());
 
         /// <inheritdoc />
-        public IMember<Dint> LEN { get; } = Member.Create(nameof(LEN), new Dint(PredefinedLength));
+        public IMember<Dint> LEN { get; }
 
         /// <inheritdoc />
-        public IArrayMember<Sint> DATA { get; } =
-            Member.Array<Sint>(nameof(DATA), new Dimensions(PredefinedLength), Radix.Ascii);
+        public IArrayMember<Sint> DATA { get; }
 
         /// <inheritdoc />
-        protected override IDataType New()
-        {
-            return new String();
-        }
+        protected override IDataType New() => new String();
 
         /// <inheritdoc />
-        public void SetValue(string value)
-        {
-            if (value == null)
-                throw new ArgumentNullException(nameof(value), "Value can not be null");
+        public IStringDefined Update(string value) => new String(value);
 
-            var bytes = Encoding.ASCII.GetBytes(value);
+        /// <summary>
+        /// Converts the provided <see cref="string"/> to a <see cref="String"/> value.
+        /// </summary>
+        /// <param name="input">The value to convert.</param>
+        /// <returns>A <see cref="String"/> type value.</returns>
+        public static implicit operator String(string input) => new(input);
 
-            if (bytes.Length > LEN.DataType.Value)
-                throw new ArgumentOutOfRangeException(nameof(value),
-                    $"Value length is {bytes.Length}. The value length must be less than the predefined length {PredefinedLength}");
-
-            ClearData();
-
-            for (var i = 0; i < bytes.Length; i++)
-                DATA[i].DataType.Update(bytes[i]);
-        }
-
-        public static implicit operator String(string input)
-        {
-            return new String(input);
-        }
-
-        public static implicit operator string(String input)
-        {
-            return input.GetValue();
-        }
+        /// <summary>
+        /// Converts the provided <see cref="String"/> to a <see cref="string"/> value.
+        /// </summary>
+        /// <param name="input">The value to convert.</param>
+        /// <returns>A <see cref="string"/> type value.</returns>
+        public static implicit operator string(String input) => input.Value;
 
         /// <inheritdoc />
         public bool Equals(String? other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return Value == other.Value &&
-                   Members.SequenceEqual(other.Members) &&
-                   Equals(LEN, other.LEN)
-                   && Equals(DATA, other.DATA);
+            return Value == other.Value;
         }
 
         /// <inheritdoc />
@@ -96,36 +93,26 @@ namespace L5Sharp.Types
         /// <inheritdoc />
         public override int GetHashCode()
         {
-            return HashCode.Combine(Members, LEN, DATA);
+            return Value.GetHashCode();
         }
 
-        public static bool operator ==(String left, String right)
-        {
-            return Equals(left, right);
-        }
+        /// <summary>
+        /// Determines whether the objects are equal.
+        /// </summary>
+        /// <param name="left">An object to compare.</param>
+        /// <param name="right">An object to compare.</param>
+        /// <returns>true if the objects are equal, otherwise, false.</returns>
+        public static bool operator ==(String left, String right) => Equals(left, right);
 
-        public static bool operator !=(String left, String right)
-        {
-            return !Equals(left, right);
-        }
+        /// <summary>
+        /// Determines whether the objects are not equal.
+        /// </summary>
+        /// <param name="left">An object to compare.</param>
+        /// <param name="right">An object to compare.</param>
+        /// <returns>true if the objects are not equal, otherwise, false.</returns>
+        public static bool operator !=(String left, String right) => !Equals(left, right);
 
         /// <inheritdoc />
-        public int CompareTo(String other)
-        {
-            return string.Compare(Value, other.Value, StringComparison.Ordinal);
-        }
-
-        private string GetValue()
-        {
-            var bytes = DATA.Where(d => d.DataType.Value > 0)
-                .Select(d => d.DataType.Value).ToArray();
-            return Encoding.ASCII.GetString(bytes);
-        }
-
-        private void ClearData()
-        {
-            foreach (var dataElement in DATA)
-                dataElement.DataType.Update(0);
-        }
+        public int CompareTo(String other) => string.Compare(Value, other.Value, StringComparison.Ordinal);
     }
 }

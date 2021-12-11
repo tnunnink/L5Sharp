@@ -1,4 +1,5 @@
-﻿using L5Sharp.Enums;
+﻿using System;
+using L5Sharp.Enums;
 
 namespace L5Sharp
 {

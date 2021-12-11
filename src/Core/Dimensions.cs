@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using L5Sharp.Enums;
 
 namespace L5Sharp.Core
 {
@@ -62,42 +63,42 @@ namespace L5Sharp.Core
         }
 
         /// <summary>
-        /// Gets the value of the <c>X</c> or first dimensional unit.
+        /// Gets the value of the X or first dimensional unit.
         /// </summary>
         public ushort X { get; }
 
         /// <summary>
-        /// Gets the value of the <c>Y</c> or second dimensional unit. 
+        /// Gets the value of the Y or second dimensional unit. 
         /// </summary>
         public ushort Y { get; }
 
         /// <summary>
-        /// Gets the value of the <c>Z</c> or third dimensional unit. 
+        /// Gets the value of the Z or third dimensional unit. 
         /// </summary>
         public ushort Z { get; }
 
         /// <summary>
-        /// The total length of the dimension. 
+        /// Gets the total length of the Dimensions. 
         /// </summary>
         public int Length => Z > 0 ? X * Y * Z : Y > 0 ? X * Y : X;
 
         /// <summary>
-        /// Indicates whether the current <c>Dimensions</c> are empty.
+        /// Indicates whether the current Dimensions are empty.
         /// </summary>
         public bool AreEmpty => Length == 0;
 
         /// <summary>
-        /// Indicates whether the current <c>Dimensions</c> are multi-dimensional.
+        /// Indicates whether the current Dimensions are multi-dimensional.
         /// </summary>
         /// <remarks>
-        /// Multi-dimensional simply means that the dimensions have a value fo Y or Y and Z.
+        /// Multi-dimensional simply means that the dimensions have a value for Y or Z.
         /// </remarks>
         public bool AreMultiDimensional => Y > 0;
 
         /// <summary>
         /// Gets a new instance of empty <c>Dimensions</c>
         /// </summary>
-        public static Dimensions Empty => new Dimensions();
+        public static Dimensions Empty => new();
 
         /// <inheritdoc />
         public Dimensions Copy()
@@ -106,7 +107,7 @@ namespace L5Sharp.Core
         }
 
         /// <summary>
-        /// Parses a string into an instance of <c>Dimensions</c>.
+        /// Parses a string into an instance of Dimensions.
         /// </summary>
         /// <param name="value">The <see cref="string"/> value to parse.</param>
         /// <returns>
@@ -141,7 +142,7 @@ namespace L5Sharp.Core
         }
 
         /// <summary>
-        /// Generates a string value that represents the <c>Dimensions</c> in the valid format.
+        /// Generates a string value that represents the Dimensions in the L5X format.
         /// </summary>
         /// <returns>A string of numbers separated by a single space.</returns>
         public override string ToString()
@@ -152,10 +153,150 @@ namespace L5Sharp.Core
         }
 
         /// <summary>
-        /// Generates a collection of string names that represent the index names for an array of elements.
+        /// Generates a collection of typed Members using the current Dimensions and provided member parameters. 
         /// </summary>
-        /// <returns>A collection of string names representing the indices of an array</returns>
-        public IEnumerable<string> GenerateIndices()
+        /// <param name="seedType">The data type to instantiate for each element of the collection.</param>
+        /// <param name="radix">The Radix value to set for each element of the collection.</param>
+        /// <param name="access">The ExternalAccess to set for each element of the collection.</param>
+        /// <param name="description">The description to set for each element of the collection.</param>
+        /// <typeparam name="TDataType">The IDataType that the collection represents.</typeparam>
+        /// <returns>A collection of members of the specified TDataType.</returns>
+        /// <exception cref="ArgumentNullException">Thrown if <see cref="seedType"/> is null.</exception>
+        public IEnumerable<IMember<TDataType>> GenerateMembers<TDataType>(TDataType seedType,
+            Radix? radix = null, ExternalAccess? access = null, string? description = null)
+            where TDataType : IDataType
+        {
+            if (seedType is null)
+                throw new ArgumentNullException(nameof(seedType));
+
+            var indices = GenerateIndices().ToArray();
+
+            var members = new List<IMember<TDataType>>();
+
+            for (var i = 0; i < Length; i++)
+                members.Add(new Member<TDataType>(indices[i], (TDataType)seedType.Instantiate(), radix, access,
+                    description));
+
+            return members;
+        }
+
+        /// <summary>
+        /// Generates a collection of typed Members using the current Dimensions and provided member parameters.
+        /// </summary>
+        /// <param name="elements">A collection of data type elements to initialize the member collection.</param>
+        /// <param name="radix">The Radix value to set for each element of the collection.</param>
+        /// <param name="access">The ExternalAccess to set for each element of the collection.</param>
+        /// <param name="description">The description to set for each element of the collection.</param>
+        /// <typeparam name="TDataType">The IDataType that the collection represents.</typeparam>
+        /// <returns>A collection of members of the specified TDataType.</returns>
+        /// <exception cref="ArgumentNullException">Throw if elements is null.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// Thrown if elements count is 0 or greater than the length of the dimension length.
+        /// </exception>
+        public IEnumerable<IMember<TDataType>> GenerateMembers<TDataType>(List<TDataType> elements,
+            Radix? radix = null, ExternalAccess? access = null, string? description = null)
+            where TDataType : IDataType
+        {
+            if (elements is null)
+                throw new ArgumentNullException(nameof(elements));
+
+            if (elements.Count == 0 || elements.Count > Length)
+                throw new ArgumentOutOfRangeException(
+                    $"Elements count '{elements.Count}' must be greater than zero and less than or equal to the length of the Dimensions.");
+
+            var indices = GenerateIndices().ToArray();
+
+            var members = new List<IMember<TDataType>>();
+
+            for (var i = 0; i < Length; i++)
+            {
+                var instance = i <= elements.Count ? elements[i] : elements[0].Instantiate();
+
+                members.Add(new Member<TDataType>(indices[i], (TDataType)instance, radix, access, description));
+            }
+
+            return members;
+        }
+
+        /// <summary>
+        /// Converts the provided <see cref="ushort"/> to a <see cref="Dimensions"/> value. 
+        /// </summary>
+        /// <param name="length">The length value to convert.</param>
+        /// <returns>
+        /// A Dimensions value representing the provided ushort length.
+        /// </returns>
+        public static implicit operator Dimensions(ushort length)
+        {
+            return new Dimensions(length);
+        }
+
+        /// <summary>
+        /// Converts the provided <see cref="Dimensions"/> to a <see cref="ushort"/> value. 
+        /// </summary>
+        /// <param name="dimensions">The Dimensions value to convert.</param>
+        /// <returns>
+        /// A ushort value representing the provided Dimensions instance. 
+        /// </returns>
+        public static implicit operator ushort(Dimensions dimensions)
+        {
+            return dimensions.X;
+        }
+
+        /// <summary>
+        /// Converts the provided <see cref="Dimensions"/> to a <see cref="int"/> value. 
+        /// </summary>
+        /// <param name="dimensions">The Dimensions value to convert.</param>
+        /// <returns>
+        /// A int value representing the provided Dimensions <see cref="Length"/>. 
+        /// </returns>
+        public static implicit operator int(Dimensions dimensions)
+        {
+            return dimensions.Length;
+        }
+
+        /// <inheritdoc />
+        public bool Equals(Dimensions? other)
+        {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return X == other.X && Y == other.Y && Z == other.Z;
+        }
+
+        /// <inheritdoc />
+        public override bool Equals(object? obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            return obj.GetType() == GetType() && Equals((Dimensions)obj);
+        }
+
+        /// <inheritdoc />
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(X, Y, Z);
+        }
+
+        /// <summary>
+        /// Determines whether the objects are equal.
+        /// </summary>
+        /// <param name="left">An object to compare.</param>
+        /// <param name="right">An object to compare.</param>
+        /// <returns>true if the objects are equal, otherwise, false.</returns>
+        public static bool operator ==(Dimensions left, Dimensions right) => Equals(left, right);
+
+        /// <summary>
+        /// Determines whether the objects are not equal.
+        /// </summary>
+        /// <param name="left">An object to compare.</param>
+        /// <param name="right">An object to compare.</param>
+        /// <returns>true if the objects are not equal, otherwise, false.</returns>
+        public static bool operator !=(Dimensions left, Dimensions right) => !Equals(left, right);
+
+        /// <summary>
+        /// Generates a collection of index names for the current dimensions instance.
+        /// </summary>
+        /// <returns>A collection of string index names</returns>
+        private IEnumerable<string> GenerateIndices()
         {
             var indices = new List<string>();
 
@@ -175,53 +316,6 @@ namespace L5Sharp.Core
             }
 
             return indices;
-        }
-
-        /// <inheritdoc />
-        public bool Equals(Dimensions other)
-        {
-            if (ReferenceEquals(null, other)) return false;
-            if (ReferenceEquals(this, other)) return true;
-            return X == other.X && Y == other.Y && Z == other.Z;
-        }
-
-        /// <inheritdoc />
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((Dimensions)obj);
-        }
-
-        /// <inheritdoc />
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(X, Y, Z);
-        }
-
-        public static bool operator ==(Dimensions left, Dimensions right)
-        {
-            return Equals(left, right);
-        }
-
-        public static bool operator !=(Dimensions left, Dimensions right)
-        {
-            return !Equals(left, right);
-        }
-
-        public static implicit operator Dimensions(ushort length)
-        {
-            return new Dimensions(length);
-        }
-
-        public static implicit operator ushort(Dimensions dimensions)
-        {
-            return dimensions.X;
-        }
-
-        public static implicit operator int(Dimensions dimensions)
-        {
-            return dimensions.Length;
         }
 
         private static string GenerateIndex(ushort x)

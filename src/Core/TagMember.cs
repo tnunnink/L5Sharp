@@ -73,10 +73,8 @@ namespace L5Sharp.Core
         /// <inheritdoc />
         public void SetData(IAtomic value)
         {
-            if (_member.DataType is not IAtomic atomic)
-                throw new InvalidTagDataException(_member.DataType, value);
-
-            atomic.Update(value);
+            if (_member.DataType is IAtomic atomic)
+                atomic.Update(value);
         }
 
         /// <inheritdoc />

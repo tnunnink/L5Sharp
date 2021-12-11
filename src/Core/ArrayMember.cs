@@ -11,32 +11,39 @@ namespace L5Sharp.Core
     public class ArrayMember<TDataType> : IArrayMember<TDataType>, IEquatable<ArrayMember<TDataType>>
         where TDataType : IDataType
     {
-        private readonly List<IMember<TDataType>> _elements;
+        private readonly List<IMember<TDataType>> _elements = new();
 
-        internal ArrayMember(string name, TDataType dataType, Dimensions dimensions, Radix? radix,
-            ExternalAccess? externalAccess, string? description, IEnumerable<IMember<IDataType>>? elements)
+        internal ArrayMember(string name, TDataType seedType, Dimensions dimensions,
+            Radix? radix, ExternalAccess? externalAccess, string? description)
         {
+            if (seedType is null)
+                throw new ArgumentNullException(nameof(seedType));
+
             Name = name ?? throw new ArgumentNullException(nameof(name));
-            DataType = dataType;
             Dimensions = dimensions ?? throw new ArgumentNullException(nameof(dimensions));
-            Radix = radix ?? Radix.Default(dataType);
+            Radix = radix is not null && radix.SupportsType(seedType) ? radix : Radix.Default(seedType);
             ExternalAccess = externalAccess ?? ExternalAccess.ReadWrite;
             Description = description ?? string.Empty;
+            _elements.AddRange(Dimensions.GenerateMembers(seedType, Radix, ExternalAccess, Description));
+        }
 
-            _elements = new List<IMember<TDataType>>(dimensions.Length);
-            
-            var indices = Dimensions.GenerateIndices().ToList();
-            
-            for (var i = 0; i < Dimensions; i++)
-            {
-                var element = new Member<TDataType>(indices[i], (TDataType)DataType.Instantiate(),
-                    Radix, ExternalAccess, string.Copy(Description));
-                _elements.Add(element);
-            }
-            
-            if (elements != null) return;
-            
-            //todo initialize elements / assign value.
+        internal ArrayMember(string name, List<TDataType> elements, Dimensions? dimensions,
+            Radix? radix, ExternalAccess? externalAccess, string? description)
+        {
+            if (elements is null)
+                throw new ArgumentNullException(nameof(elements));
+
+            if (elements.Count > ushort.MaxValue)
+                throw new ArgumentException(
+                    $"Elements length '{elements.Count}' must be less than '{ushort.MaxValue}'.");
+
+            Name = name ?? throw new ArgumentNullException(nameof(name));
+            Dimensions = dimensions ?? new Dimensions((ushort)elements.Count);
+            Radix = radix is not null && radix.SupportsType(typeof(TDataType)) 
+                ? radix : Radix.Default(typeof(TDataType));
+            ExternalAccess = externalAccess ?? ExternalAccess.ReadWrite;
+            Description = description ?? string.Empty;
+            _elements.AddRange(Dimensions.GenerateMembers(elements, Radix, ExternalAccess, Description));
         }
 
         /// <inheritdoc />
@@ -49,7 +56,10 @@ namespace L5Sharp.Core
         public string Description { get; }
 
         /// <inheritdoc />
-        public TDataType DataType { get; }
+        /// <remarks>
+        /// The data type instance of the array member will always be the first index of the array.
+        /// </remarks>
+        public TDataType DataType => _elements[0].DataType;
 
         /// <inheritdoc />
         [XmlAttribute("Dimension")] // accounts for naming difference between data type members and tags.
@@ -75,8 +85,8 @@ namespace L5Sharp.Core
         /// <inheritdoc />
         public IMember<TDataType> Copy()
         {
-            return new ArrayMember<TDataType>(string.Copy(Name), (TDataType)DataType.Instantiate(), Dimensions.Copy(),
-                Radix, ExternalAccess, string.Copy(Description), Enumerable.Empty<IMember<IDataType>>());
+            return new ArrayMember<TDataType>(string.Copy(Name), DataType, Dimensions.Copy(),
+                Radix, ExternalAccess, string.Copy(Description));
         }
 
         /// <inheritdoc />
@@ -103,7 +113,7 @@ namespace L5Sharp.Core
         /// <inheritdoc />
         public override int GetHashCode()
         {
-            return HashCode.Combine(_elements, Name, DataType, Dimensions, ExternalAccess, Description);
+            return HashCode.Combine(Name, DataType, Dimensions, ExternalAccess, Description, _elements);
         }
 
         /// <summary>

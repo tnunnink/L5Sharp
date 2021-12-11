@@ -50,7 +50,8 @@ namespace L5Sharp.Serialization
             var serializer = new ArrayElementSerializer();
             var members = element.Elements().Select(e => serializer.Deserialize(e)).ToArray();
 
-            return Member.Array(name, members[0].DataType, dimensions, radix, members: members);
+            throw new NotImplementedException();
+            /*return ArrayMember.Create(name, members, dimensions, radix);*/
         }
     }
 }

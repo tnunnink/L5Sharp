@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using L5Sharp.Core;
+using L5Sharp.Enums;
 
 namespace L5Sharp.Extensions
 {
@@ -36,27 +38,17 @@ namespace L5Sharp.Extensions
         /// <param name="dataType">The current data type.</param>
         /// <param name="name">The name of the member to retrieve.</param>
         /// <returns>A <c>Member</c> instance specified by the provided name if it exists, null if it does not.</returns>
-        public static IMember<IDataType> GetMember(this IDataType dataType, string name)
-        {
-            if (!(dataType is IComplexType complexType))
-                return null;
-
-            return complexType.Members.SingleOrDefault(m => m.Name == name);
-        }
+        public static IMember<IDataType>? GetMember(this IDataType dataType, string name) =>
+            dataType is IComplexType complexType ? complexType.Members.SingleOrDefault(m => m.Name == name) : null;
 
         /// <summary>
         /// Gets the collection of <c>Members</c> for the provided <c>DataType</c>.
         /// </summary>
         /// <param name="dataType">The current data type.</param>
         /// <returns>A collection of members for the provided data type if there are any, an empty collection if not.</returns>
-        public static IEnumerable<IMember<IDataType>> GetMembers(this IDataType dataType)
-        {
-            if (!(dataType is IComplexType complexType))
-                return Enumerable.Empty<IMember<IDataType>>();
+        public static IEnumerable<IMember<IDataType>> GetMembers(this IDataType dataType) =>
+            dataType is IComplexType complexType ? complexType.Members : Enumerable.Empty<IMember<IDataType>>();
 
-            return complexType.Members;
-        }
-        
         /// <summary>
         /// Gets member names of the given <c>DataType</c>.
         /// </summary>
@@ -106,6 +98,22 @@ namespace L5Sharp.Extensions
 
             return types.Distinct();
         }
+
+        /// <summary>
+        /// Creates an array member representing the current collection of data type instances.
+        /// </summary>
+        /// <param name="dataTypes">The current collection of data type instances to initialize the ArrayMember with.</param>
+        /// <param name="name">The name of the ArrayMember.</param>
+        /// <param name="dimensions">The dimensions of the ArrayMember.</param>
+        /// <param name="radix">The Radix of the ArrayMember.</param>
+        /// <param name="access">The ExternalAccess of the ArrayMember.</param>
+        /// <param name="description">The Description of the ArrayMember.</param>
+        /// <typeparam name="TDataType"></typeparam>
+        /// <returns></returns>
+        public static IArrayMember<TDataType> ToArrayMember<TDataType>(this IEnumerable<TDataType> dataTypes,
+            ComponentName name, Dimensions? dimensions = null, Radix? radix = null, ExternalAccess? access = null,
+            string? description = null) where TDataType : IDataType =>
+            new ArrayMember<TDataType>(name, dataTypes.ToList(), dimensions, radix, access, description);
 
         public static bool StructureEquals(this IDataType target, IDataType source)
         {

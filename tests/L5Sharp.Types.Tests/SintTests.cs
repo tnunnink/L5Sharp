@@ -2,7 +2,6 @@
 using AutoFixture;
 using FluentAssertions;
 using L5Sharp.Enums;
-using L5Sharp.Exceptions;
 using NUnit.Framework;
 
 namespace L5Sharp.Types.Tests
@@ -10,13 +9,13 @@ namespace L5Sharp.Types.Tests
     [TestFixture]
     public class SintTests
     {
-        private byte _randomByte;
+        private byte _random;
 
         [SetUp]
         public void Setup()
         {
             var fixture = new Fixture();
-            _randomByte = fixture.Create<byte>();
+            _random = fixture.Create<byte>();
         }
         
         [Test]
@@ -43,9 +42,9 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void New_ValueOverload_ShouldHaveExpectedValue()
         {
-            var type = new Sint(_randomByte);
+            var type = new Sint(_random);
             
-            type.Value.Should().Be(_randomByte);
+            type.Value.Should().Be(_random);
         }
 
         [Test]
@@ -61,9 +60,9 @@ namespace L5Sharp.Types.Tests
         {
             var type = new Sint();
 
-            type.Update(_randomByte);
+            var updated = type.Update(_random);
 
-            type.Value.Should().Be(_randomByte);
+            updated.Value.Should().Be(_random);
         }
         
         [Test]
@@ -71,9 +70,9 @@ namespace L5Sharp.Types.Tests
         {
             var type = new Sint();
 
-            type.Update((object) _randomByte);
+            var updated = type.Update((object) _random);
 
-            type.Value.Should().Be(_randomByte);
+            updated.Value.Should().Be(_random);
         }
 
         [Test]
@@ -81,9 +80,9 @@ namespace L5Sharp.Types.Tests
         {
             var type = new Sint();
 
-            type.Update(_randomByte.ToString());
+            var updated = type.Update(_random.ToString());
 
-            type.Value.Should().Be(_randomByte);
+            updated.Value.Should().Be(_random);
         }
         
         [Test]
@@ -91,10 +90,10 @@ namespace L5Sharp.Types.Tests
         {
             var fixture = new Fixture();
             var value = fixture.Create<string>();
-            var type = new Sint(_randomByte);
+            var type = new Sint(_random);
 
             FluentActions.Invoking(() => type.Update(value)).Should().Throw<ArgumentException>()
-                .WithMessage($"Could not parse string '{value}' to {typeof(Sint)}");
+                .WithMessage($"Could not parse string '{value}' to {typeof(Sint)}. Verify that the string is an accepted Radix format.");
         }
         
         [Test]
@@ -107,25 +106,39 @@ namespace L5Sharp.Types.Tests
             FluentActions.Invoking(() => type.Update(value)).Should().Throw<ArgumentException>()
                 .WithMessage($"Value type '{value.GetType()}' is not a valid for {typeof(Sint)}");
         }
-
+        
         [Test]
-        public void ImplicitOperator_Bool_ShouldBeTrue()
+        public void Instantiate_WhenCalled_ShouldEqualDefaultInstance()
         {
-            var type = new Sint();
+            var type = new Sint(_random);
 
-            type = _randomByte;
+            var instance = type.Instantiate();
 
-            type.Value.Should().Be(_randomByte);
+            instance.Should().BeEquivalentTo(new Sint());
         }
 
         [Test]
-        public void ImplicitOperator_bool_ShouldBeTrue()
+        public void ImplicitOperator_Sint_ShouldBeExpected()
         {
-            var type = new Sint(_randomByte);
+            Sint type = _random;
 
-            byte value = type;
+            type.Value.Should().Be(_random);
+        }
 
-            value.Should().Be(_randomByte);
+        [Test]
+        public void ImplicitOperator_byte_ShouldBeExpected()
+        {
+            byte value = new Sint(_random);
+
+            value.Should().Be(_random);
+        }
+        
+        [Test]
+        public void ImplicitOperator_ValidString_ShouldBeExpected()
+        {
+            Sint type = _random.ToString();
+
+            type.Value.Should().Be(_random);
         }
 
         [Test]
@@ -214,13 +227,13 @@ namespace L5Sharp.Types.Tests
         }
 
         [Test]
-        public void GetHashCode_WhenCalled_ShouldNotBeZero()
+        public void GetHashCode_DefaultValue_ShouldBeZero()
         {
             var type = new Sint();
 
             var hash = type.GetHashCode();
 
-            hash.Should().NotBe(0);
+            hash.Should().Be(0);
         }
 
         [Test]

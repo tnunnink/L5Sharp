@@ -172,6 +172,16 @@ namespace L5Sharp.Types.Tests
         }
 
         [Test]
+        public void Instantiate_WhenCalled_ShouldEqualDefaultInstance()
+        {
+            var type = new Bool(true);
+
+            var instance = type.Instantiate();
+
+            instance.Should().BeEquivalentTo(new Bool());
+        }
+
+        [Test]
         public void ImplicitOperator_Bool_ShouldBeTrue()
         {
             Bool type = true;

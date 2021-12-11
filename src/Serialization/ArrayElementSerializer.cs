@@ -50,10 +50,10 @@ namespace L5Sharp.Serialization
                 ? Logix.DataType.Instantiate(element.Parent.GetDataTypeName())
                 : new StructureSerializer().Deserialize(element.Element(LogixNames.Structure));
 
-            if (!(dataType is IAtomic atomic)) return Member.Create(name, dataType);
+            if (dataType is not IAtomic atomic) return Member.Create(name, dataType);
             
             var value = element.GetValue<IAtomic, object>(a => a.Value);
-            atomic.Update(value);
+            atomic = atomic.Update(value);
 
             return Member.Create(name, atomic);
         }

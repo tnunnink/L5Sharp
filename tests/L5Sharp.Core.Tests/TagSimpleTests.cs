@@ -231,7 +231,7 @@ namespace L5Sharp.Core.Tests
             FluentActions.Invoking(() => tag.SetData(null)).Should().Throw<ArgumentNullException>();
         }
 
-        [Test]
+        /*[Test]
         public void SetData_InvalidDataType_ShouldThrowInvalidTagDataException()
         {
             var fixture = new Fixture();
@@ -239,7 +239,7 @@ namespace L5Sharp.Core.Tests
             var tag = Tag.Create("Test", (IDataType)new Timer());
 
             FluentActions.Invoking(() => tag.SetData(new Dint(value))).Should().Throw<InvalidTagDataException>();
-        }
+        }*/
 
         [Test]
         public void SetData_IsDifferentAtomicType_ShouldThrowInvalidTagValueException()

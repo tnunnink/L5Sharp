@@ -1,6 +1,5 @@
 ﻿using System;
 using FluentAssertions;
-using L5Sharp.Exceptions;
 using L5Sharp.Types;
 using NUnit.Framework;
 
@@ -21,13 +20,13 @@ namespace L5Sharp.Enums.Tests
         [Test]
         public void Format_Null_ShouldThrowArgumentNullException()
         {
-            FluentActions.Invoking(() => Radix.Octal.Convert(null)).Should().Throw<ArgumentNullException>();
+            FluentActions.Invoking(() => Radix.Octal.Convert(null!)).Should().Throw<ArgumentNullException>();
         }
 
         [Test]
-        public void Format_NonSupportedAtomic_ShouldThrowRadixNotSupportedException()
+        public void Format_NonSupportedAtomic_ShouldThrowNotSupportedException()
         {
-            FluentActions.Invoking(() => Radix.Octal.Convert(new Real())).Should().Throw<RadixNotSupportedException>();
+            FluentActions.Invoking(() => Radix.Octal.Convert(new Real())).Should().Throw<NotSupportedException>();
         }
 
         [Test]
@@ -81,7 +80,7 @@ namespace L5Sharp.Enums.Tests
         [Test]
         public void Parse_Null_ShouldThrowArgumentNullException()
         {
-            FluentActions.Invoking(() => Radix.Octal.Parse(null)).Should().Throw<ArgumentNullException>();
+            FluentActions.Invoking(() => Radix.Octal.Parse(null!)).Should().Throw<ArgumentNullException>();
         }
 
         [Test]
