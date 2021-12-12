@@ -8,7 +8,7 @@ namespace L5Sharp.Extensions
 {
     internal static class SerializerExtensions
     {
-        private static readonly Dictionary<string, IXSerializer> Serializers = new Dictionary<string, IXSerializer>
+        private static readonly Dictionary<string, IXSerializer> Serializers = new()
         {
             { LogixNames.Controller, new ControllerSerializer() },
             { LogixNames.DataType, new UserDefinedSerializer() },
@@ -17,7 +17,7 @@ namespace L5Sharp.Extensions
             { LogixNames.Task, new TaskSerializer() },
         };
         
-        public static XElement Serialize<T>(this T component, string serializerName = null)
+        public static XElement Serialize<T>(this T component, string? serializerName = null)
         {
             var name = serializerName ?? LogixNames.GetComponentName<T>();
             var serializer = GetSerializer<T>(name);

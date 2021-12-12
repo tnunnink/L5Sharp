@@ -31,6 +31,7 @@ namespace L5Sharp.Utilities
         public const string Task = nameof(Task);
         //Logix data structure names
         public const string Data = nameof(Data);
+        public const string Value = nameof(Value);
         public const string DataValue = nameof(DataValue);
         public const string Array = nameof(Array);
         public const string Index = nameof(Index);

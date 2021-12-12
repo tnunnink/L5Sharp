@@ -91,7 +91,7 @@ namespace L5SharpTests
         [Test]
         public void RegisterType_ValidArgument_ShouldContainType()
         {
-            var type = new UserDefined("TestType",
+            var type = UserDefined.Create("TestType",
                 "This is a test type that will be created",
                 new List<IMember<IDataType>>
             {

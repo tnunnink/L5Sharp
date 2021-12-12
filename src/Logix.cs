@@ -107,7 +107,7 @@ namespace L5Sharp
                 if (string.IsNullOrEmpty(name))
                     throw new ArgumentNullException(nameof(name));
 
-                return Registry.ContainsKey(name) ? Registry[name].Invoke() : null;
+                return Registry.ContainsKey(name) ? Registry[name].Invoke() : new Undefined(name);
             }
         }
 

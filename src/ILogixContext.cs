@@ -13,7 +13,7 @@ namespace L5Sharp
         /// <summary>
         /// Gets the <c>Content</c> for the current L5X.
         /// </summary>
-        L5XInfo Info { get; }       
+        LogixContextInfo Info { get; }       
         
         /// <summary>
         /// Gets the <c>DataTypes</c> repository for the L5X. 

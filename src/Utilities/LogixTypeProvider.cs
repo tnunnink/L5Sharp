@@ -7,23 +7,39 @@ using L5Sharp.Types;
 
 namespace L5Sharp.Utilities
 {
+    /// <summary>
+    /// Helper class for going out and finding and creating an instance of the current element's data type.
+    /// </summary>
     internal class LogixTypeProvider
     {
-        private readonly XElement _content;
+        private readonly string _typeName;
+        private readonly XDocument? _document;
 
-        public LogixTypeProvider(XElement content)
+        public LogixTypeProvider(XElement element)
         {
-            _content = content ?? throw new ArgumentNullException(nameof(content));
+            if (element is null)
+                throw new ArgumentNullException(nameof(element));
+            
+            if (element.Attribute(LogixNames.DataType) is null)
+                throw new ArgumentException("Provided element does not have a data type attribute");
+            
+            _document = element.Document;
+            _typeName = element.Attribute(LogixNames.DataType)?.Value!;
         }
 
-        public IDataType GetDataType(string name)
+        public IDataType FindType()
         {
-            if (Logix.DataType.Contains(name))
-                return Logix.DataType.Instantiate(name);
+            //First we can simply ask if this is a known type.
+            if (Logix.DataType.Contains(_typeName))
+                return Logix.DataType.Instantiate(_typeName);
 
-            var element = FindTypeDefinition(name);
+            //Otherwise we need to find where in the XDocument the data type could be defined
+            var definition = FindTypeDefinition(_typeName);
 
-            return element != null ? GetTypeSerializer(element).Deserialize(element) : new Undefined(name);
+            //Parse type definition if found. Otherwise return Undefined.
+            return definition != null 
+                ? GetTypeSerializer(definition).Deserialize(definition) 
+                : new Undefined(_typeName);
         }
 
         private IXSerializer<IDataType> GetTypeSerializer(XElement element)
@@ -40,23 +56,29 @@ namespace L5Sharp.Utilities
             throw new NotSupportedException();
         }
 
-        private XElement FindTypeDefinition(string name)
+        private XElement? FindTypeDefinition(string name)
         {
-            var userDefined = _content.Descendants(LogixNames.DataType).FirstOrDefault(x => x.GetName() == name);
+            //If we could not get a document, then there is nothing to search.
+            if (_document is null) return null;
+            
+            //Is this a User Defined type that exists in the L5X?
+            var userDefined = _document.Descendants(LogixNames.DataType).FirstOrDefault(x => x.GetName() == name);
             if (userDefined != null)
                 return userDefined;
 
-            var moduleDefined = _content.Descendants(LogixNames.Module)
+            //Is this a Module Defined type that exists in the L5X?
+            var moduleDefined = _document.Descendants(LogixNames.Module)
                 .Descendants().Where(x => x.Attribute(LogixNames.DataType) != null)
                 .FirstOrDefault(x => x.GetDataTypeName() == name);
             
             if (moduleDefined != null)
                 return moduleDefined;
 
-            var addOnDefined = _content.Descendants(LogixNames.AddOnInstructionDefinition)
+            //Is this a AOI Defined type that exists in the L5X?
+            var addOnDefined = _document.Descendants(LogixNames.AddOnInstructionDefinition)
                 .FirstOrDefault(x => x.GetName() == name);
 
-            return addOnDefined;
+            return addOnDefined ?? null;
         }
     }
 }

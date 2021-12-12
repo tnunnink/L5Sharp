@@ -25,6 +25,12 @@ namespace L5Sharp.Extensions
         /// <returns>The string data type name attribute value for the component.</returns>
         public static string? GetDataTypeName(this XElement element) => element.Attribute("DataType")?.Value;
 
+        public static IDataType GetDataType(this XElement element)
+        {
+            var provider = new LogixTypeProvider(element);
+            return provider.FindType();
+        }
+
         /// <summary>
         /// Generic helper for getting element values from a given L5X element.
         /// </summary>
@@ -33,8 +39,7 @@ namespace L5Sharp.Extensions
         /// <typeparam name="TComponent">The type of the component that this element represents.</typeparam>
         /// <typeparam name="TProperty">The type of the property of the component to retrieve from the element.</typeparam>
         /// <returns>A strongly typed property value that is the value of the XAttribute or XElement data.</returns>
-        [return: MaybeNull]
-        public static TProperty GetValue<TComponent, TProperty>(this XElement element,
+        public static TProperty? GetValue<TComponent, TProperty>(this XElement element,
             Expression<Func<TComponent, TProperty>> expression)
         {
             if (expression.Body is not MemberExpression memberExpression)
@@ -47,8 +52,8 @@ namespace L5Sharp.Extensions
             if (value == null) return default;
 
             var converter = LogixParser.Get(typeof(TProperty));
-            
-            return (TProperty) converter.Invoke(value);
+
+            return (TProperty)converter.Invoke(value);
         }
 
         public static XAttribute ToAttribute<TComponent, TProperty>(this TComponent component,
@@ -58,7 +63,7 @@ namespace L5Sharp.Extensions
                 throw new InvalidOperationException($"Expression must be {typeof(MemberExpression)}");
 
             var name = nameOverride ?? memberExpression.Member.GetXName();
-            
+
             var value = expression.Compile().Invoke(component);
 
             return new XAttribute(name, value);
@@ -72,7 +77,7 @@ namespace L5Sharp.Extensions
                 throw new InvalidOperationException($"Expression must be {typeof(MemberExpression)}");
 
             var name = nameOverride ?? memberExpression.Member.GetXName();
-            
+
             var value = expression.Compile().Invoke(component);
 
             return useCDataElement

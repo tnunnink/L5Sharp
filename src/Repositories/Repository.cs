@@ -29,38 +29,41 @@ namespace L5Sharp.Repositories
         }
 
         /// <inheritdoc />
-        public virtual bool Contains(string name)
-        {
-            return Context.L5X.GetComponents<TComponent>().Any(x => x.GetName() == name);
-        }
+        public virtual bool Contains(string name) => Context.GetComponents<TComponent>().Any(x => x.GetName() == name);
 
         /// <inheritdoc />
-        public virtual TComponent Get(string name)
+        public virtual TComponent? Get(string name)
         {
-            var element = Context.L5X.GetComponents<TComponent>().FirstOrDefault(x => x.GetName() == name);
-            return element.Deserialize<TComponent>();
+            var element = Context.GetComponents<TComponent>().FirstOrDefault(x => x.GetName() == name);
+
+            return element is not null ? element.Deserialize<TComponent>() : default;
         }
 
         /// <inheritdoc />
         public virtual IEnumerable<TComponent> GetAll()
         {
-            var elements = Context.L5X.GetComponents<TComponent>();
+            var elements = Context.GetComponents<TComponent>();
+
             return elements.Select(e => e.Deserialize<TComponent>());
         }
 
         /// <inheritdoc />
-        public virtual TComponent GetFirst(Expression<Func<TComponent, bool>> predicate)
+        public virtual TComponent? GetFirst(Expression<Func<TComponent, bool>> predicate)
         {
             var filter = predicate.ToXExpression();
-            var element = Context.L5X.GetComponents<TComponent>().FirstOrDefault(filter);
-            return element.Deserialize<TComponent>();
+
+            var element = Context.GetComponents<TComponent>().FirstOrDefault(filter);
+
+            return element is not null ? element.Deserialize<TComponent>() : default;
         }
 
         /// <inheritdoc />
         public virtual IEnumerable<TComponent> Find(Expression<Func<TComponent, bool>> predicate)
         {
             var filter = predicate.ToXExpression();
-            var elements = Context.L5X.GetComponents<TComponent>().Where(filter);
+
+            var elements = Context.GetComponents<TComponent>().Where(filter);
+
             return elements.Select(e => e.Deserialize<TComponent>());
         }
 
@@ -71,10 +74,10 @@ namespace L5Sharp.Repositories
 
             if (Contains(component.Name))
                 throw new ComponentNameCollisionException(component.Name, component.GetType());
-            
+
             var element = component.Serialize();
-            
-            Context.L5X.GetContainer<TComponent>().Add(element);
+
+            Context.GetContainer<TComponent>().Add(element);
         }
 
         public virtual void Update(TComponent component)
@@ -84,7 +87,7 @@ namespace L5Sharp.Repositories
 
         public virtual void Remove(ComponentName name)
         {
-            Context.L5X.GetComponents<TComponent>().FirstOrDefault(x => x.GetName() == name)?.Remove();
+            Context.GetComponents<TComponent>().FirstOrDefault(x => x.GetName() == name)?.Remove();
         }
     }
 }

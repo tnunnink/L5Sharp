@@ -77,7 +77,7 @@ namespace L5Sharp.Enums.Tests
         [Test]
         public void Parse_Null_ShouldThrowArgumentNullException()
         {
-            FluentActions.Invoking(() => Radix.Float.Parse(null)).Should().Throw<ArgumentNullException>();
+            FluentActions.Invoking(() => Radix.Float.Parse(null!)).Should().Throw<ArgumentNullException>();
         }
         
         [Test]
@@ -89,11 +89,9 @@ namespace L5Sharp.Enums.Tests
         [Test]
         public void Parse_Float_ShouldBeExpected()
         {
-            var fixture = new Fixture();
-            var value = fixture.Create<float>();
-            var result = Radix.Float.Parse(value.ToString(CultureInfo.InvariantCulture));
+            var result = Radix.Float.Parse(1.23.ToString(CultureInfo.InvariantCulture));
 
-            result.Should().Be(value);
+            result.Should().Be(1.23f);
         }
     }
 }

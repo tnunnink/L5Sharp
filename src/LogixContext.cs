@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Linq;
+using System.Xml.Schema;
 using L5Sharp.Core;
 using L5Sharp.Repositories;
 using L5Sharp.Serialization;
@@ -10,24 +13,18 @@ namespace L5Sharp
     /// <inheritdoc />
     public class LogixContext : ILogixContext
     {
-        internal L5X L5X { get; }
+        internal XDocument L5X { get; }
 
         private LogixContext(XDocument document)
         {
-            L5X = new L5X(document);
-
-            Info = new L5XInfo(document.Root);
+            ValidateFile(document);
+            
+            L5X = document;
+            
+            Info = new LogixContextInfo(L5X.Root!);
             DataTypes = new UserDefinedRepository(this);
             Tags = new TagRepository(this);
             Tasks = new TaskRepository(this);
-        }
-
-        /// <summary>
-        /// Creates a new Logix Context for the provided L5X file.
-        /// </summary>
-        /// <param name="fileName">The full file name and path to the L5X.</param>
-        private LogixContext(string fileName) : this(XDocument.Load(fileName))
-        {
         }
 
         /// <summary>
@@ -37,12 +34,13 @@ namespace L5Sharp
         /// <returns>A new context instance if the file exists and is a valid L5X file.</returns>
         public static ILogixContext Load(string fileName)
         {
-            return new LogixContext(fileName);
+            var document = XDocument.Load(fileName);
+            return new LogixContext(document);
         }
 
         /// <inheritdoc />
-        public L5XInfo Info { get; }
-        
+        public LogixContextInfo Info { get; }
+
         /// <inheritdoc />
         public IUserDefinedRepository DataTypes { get; }
 
@@ -51,11 +49,30 @@ namespace L5Sharp
 
         /// <inheritdoc />
         public ITaskRepository Tasks { get; }
-        
+
         /// <inheritdoc />
         public void Save(string fileName)
         {
             L5X.Save(fileName);
+        }
+
+        internal XElement? GetContainer<TComponent>()
+        {
+            var containerName = LogixNames.GetContainerName<TComponent>();
+            
+            return L5X.Descendants(containerName).FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Gets all Logix components for the specified component type in the current context.
+        /// </summary>
+        /// <typeparam name="TComponent"></typeparam>
+        /// <returns></returns>
+        internal IEnumerable<XElement> GetComponents<TComponent>()
+        {
+            var componentName = LogixNames.GetComponentName<TComponent>();
+            
+            return L5X.Descendants(componentName);
         }
 
         private static XDocument GenerateContent(ILogixComponent logixComponent, Revision revision)
@@ -78,6 +95,14 @@ namespace L5Sharp
             root.Add(controllerElement);
 
             return new XDocument(declaration, root);
+        }
+
+        private static void ValidateFile(XDocument document)
+        {
+            if (document is null)
+                throw new ArgumentNullException(nameof(document));
+            
+            //todo get xsd resource and call document.Validate();
         }
     }
 }

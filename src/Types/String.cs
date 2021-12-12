@@ -18,21 +18,31 @@ namespace L5Sharp.Types
     {
         private const int PredefinedLength = 82; //This is the built in length of string types in RSLogix
 
+        /// <summary>
+        /// Creates a new instance of a String Logix data type with default values.
+        /// </summary>
         public String() : base(nameof(String).ToUpper(), $"Logix representation of a {typeof(string)}")
         {
             LEN = Member.Create(nameof(LEN), new Dint(PredefinedLength));
+            DATA = ArrayMember.Create<Sint>(nameof(DATA), new Dimensions(PredefinedLength), Radix.Ascii);
         }
 
+        /// <summary>
+        /// Creates a new instance of a String Logix data type with the provided string value.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
         public String(string value) : this()
         {
             if (value == null)
-                throw new ArgumentNullException(nameof(value), "Value can not be null");
+                throw new ArgumentNullException(nameof(value));
 
             var bytes = Encoding.ASCII.GetBytes(value);
 
             if (bytes.Length > LEN.DataType.Value)
                 throw new ArgumentOutOfRangeException(nameof(value),
-                    $"Value length {bytes.Length} must be less than the predefined length {PredefinedLength}");
+                    $"Value length '{bytes.Length}' must be less than the predefined length '{PredefinedLength}'");
 
             DATA = bytes.Select(b => new Sint(b))
                 .ToArrayMember(nameof(DATA), new Dimensions(PredefinedLength), Radix.Ascii);
@@ -91,10 +101,7 @@ namespace L5Sharp.Types
         }
 
         /// <inheritdoc />
-        public override int GetHashCode()
-        {
-            return Value.GetHashCode();
-        }
+        public override int GetHashCode() => Value.GetHashCode();
 
         /// <summary>
         /// Determines whether the objects are equal.
@@ -113,6 +120,11 @@ namespace L5Sharp.Types
         public static bool operator !=(String left, String right) => !Equals(left, right);
 
         /// <inheritdoc />
-        public int CompareTo(String other) => string.Compare(Value, other.Value, StringComparison.Ordinal);
+        public int CompareTo(String? other)
+        {
+            if (ReferenceEquals(this, other)) return 0;
+            if (ReferenceEquals(other, null)) return -1;
+            return string.Compare(Value, other.Value, StringComparison.Ordinal);
+        }
     }
 }

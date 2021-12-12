@@ -1,6 +1,5 @@
 ﻿using System;
 using FluentAssertions;
-using L5Sharp.Exceptions;
 using L5Sharp.Types;
 using NUnit.Framework;
 
@@ -21,7 +20,7 @@ namespace L5Sharp.Enums.Tests
         [Test]
         public void Format_Null_ShouldThrowArgumentNullException()
         {
-            FluentActions.Invoking(() => Radix.Decimal.Convert(null)).Should().Throw<ArgumentNullException>();
+            FluentActions.Invoking(() => Radix.Decimal.Convert(null!)).Should().Throw<ArgumentNullException>();
         }
 
         [Test]
@@ -81,14 +80,14 @@ namespace L5Sharp.Enums.Tests
         [Test]
         public void Parse_Null_ShouldThrowArgumentNullException()
         {
-            FluentActions.Invoking(() => Radix.Decimal.Parse(null)).Should().Throw<ArgumentNullException>();
+            FluentActions.Invoking(() => Radix.Decimal.Parse(null!)).Should().Throw<ArgumentNullException>();
         }
         
         [Test]
         public void Parse_Invalid_ShouldThrowArgumentException()
         {
-            FluentActions.Invoking(() => Radix.Decimal.Parse("null")).Should().Throw<ArgumentException>()
-                .WithMessage("Input value 'null' not valid for Decimal Radix.");
+            FluentActions.Invoking(() => Radix.Decimal.Parse("null")).Should().Throw<FormatException>()
+                .WithMessage("Input 'null' does not have expected Decimal format.");
         }
 
         [Test]

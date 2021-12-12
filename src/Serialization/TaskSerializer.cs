@@ -15,6 +15,9 @@ namespace L5Sharp.Serialization
         
         public XElement Serialize(ITask component)
         {
+            if (component is null)
+                throw new ArgumentNullException(nameof(component));
+            
             var element = new XElement(LogixNames.Task);
             element.Add(component.ToAttribute(c => c.Name));
             element.Add(component.ToAttribute(c => c.Type));

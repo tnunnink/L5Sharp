@@ -22,7 +22,7 @@ namespace L5Sharp.Repositories
         /// </summary>
         /// <param name="name">The name of the component to get.</param>
         /// <returns>An instance of the component with the specified name if found. Otherwise, null.</returns>
-        TComponent Get(string name);
+        TComponent? Get(string name);
         
         /// <summary>
         /// Gets all component instances for the given type in the current context.
@@ -35,7 +35,7 @@ namespace L5Sharp.Repositories
         /// </summary>
         /// <param name="predicate"></param>
         /// <returns></returns>
-        TComponent GetFirst(Expression<Func<TComponent, bool>> predicate);
+        TComponent? GetFirst(Expression<Func<TComponent, bool>> predicate);
         
         /// <summary>
         /// Finds all components that satisfy the provided expression delegate. 

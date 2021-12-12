@@ -20,4 +20,11 @@
       <None Remove="Resources\Predefined.xml" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Remove="Resources\L5X.xsd" />
+      <EmbeddedResource Include="Resources\L5X.xsd">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+    </ItemGroup>
+
 </Project>

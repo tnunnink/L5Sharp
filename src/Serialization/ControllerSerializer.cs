@@ -59,7 +59,7 @@ namespace L5Sharp.Serialization
             var modifiedDate = DateTime.ParseExact(element.Attribute("LastModifiedDate")?.Value,
                 "ddd MMM d HH:mm:ss yyyy", CultureInfo.CurrentCulture);
 
-            return new Controller(name, processorType, revision, creationDate, modifiedDate, description);
+            return new Controller(name!, processorType!, revision, creationDate, modifiedDate, description);
         }
     }
 }

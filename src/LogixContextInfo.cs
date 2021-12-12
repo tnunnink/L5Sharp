@@ -8,19 +8,16 @@ namespace L5Sharp
     /// <summary>
     /// Represents the <c>RSLogix5000Content</c> information is the header data for all L5X files.
     /// </summary>
-    public class L5XInfo
+    public class LogixContextInfo
     {
-        /// <summary>
-        /// Creates a new instance of the <c>LogixContent</c> object. 
-        /// </summary>
-        internal L5XInfo(XElement element)
+        internal LogixContextInfo(XElement element)
         {
-            SchemaRevision = Revision.Parse(element.Attribute(nameof(SchemaRevision))?.Value);
-            SoftwareRevision = Revision.Parse(element.Attribute(nameof(SoftwareRevision))?.Value);
-            TargetName = new ComponentName(element.Attribute(nameof(TargetName))?.Value);
-            TargetType = element.Attribute(nameof(TargetType))?.Value;
+            SchemaRevision = Revision.Parse(element.Attribute(nameof(SchemaRevision))?.Value!);
+            SoftwareRevision = Revision.Parse(element.Attribute(nameof(SoftwareRevision))?.Value!);
+            TargetName = new ComponentName(element.Attribute(nameof(TargetName))?.Value!);
+            TargetType = element.Attribute(nameof(TargetType))?.Value!;
             ContainsContext = bool.Parse(element.Attribute(nameof(ContainsContext))?.Value!);
-            Owner = element.Attribute(nameof(Owner))?.Value;
+            Owner = element.Attribute(nameof(Owner))?.Value!;
             ExportDate = DateTime.ParseExact(element.Attribute(nameof(ExportDate))?.Value, "ddd MMM d HH:mm:ss yyyy",
                 CultureInfo.CurrentCulture);
         }

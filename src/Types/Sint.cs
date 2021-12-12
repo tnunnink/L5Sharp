@@ -30,7 +30,7 @@ namespace L5Sharp.Types
         public string Name { get; }
 
         /// <inheritdoc />
-        public string Description => $"RSLogix representation of a {typeof(byte)}";
+        public string Description => $"Logix representation of a {typeof(byte)}";
 
         /// <inheritdoc />
         public DataTypeFamily Family => DataTypeFamily.None;
@@ -44,10 +44,7 @@ namespace L5Sharp.Types
         object IAtomic.Value => Value;
 
         /// <inheritdoc />
-        public IAtomic<byte> Update(byte value)
-        {
-            return new Sint(value);
-        }
+        public IAtomic<byte> Update(byte value) => new Sint(value);
 
         /// <inheritdoc />
         public IAtomic Update(object value)
@@ -63,30 +60,21 @@ namespace L5Sharp.Types
         }
 
         /// <inheritdoc />
-        public IDataType Instantiate()
-        {
-            return new Sint();
-        }
+        public IDataType Instantiate() => new Sint();
 
         /// <summary>
         /// Converts the provided <see cref="byte"/> to a <see cref="Sint"/> value.
         /// </summary>
         /// <param name="value">The value to convert.</param>
         /// <returns>A <see cref="Sint"/> value.</returns>
-        public static implicit operator Sint(byte value)
-        {
-            return new Sint(value);
-        }
+        public static implicit operator Sint(byte value) => new(value);
 
         /// <summary>
         /// Converts the provided <see cref="Sint"/> to a <see cref="byte"/> value.
         /// </summary>
         /// <param name="atomic">The value to convert.</param>
         /// <returns>A <see cref="byte"/> type value.</returns>
-        public static implicit operator byte(Sint atomic)
-        {
-            return atomic.Value;
-        }
+        public static implicit operator byte(Sint atomic) => atomic.Value;
 
         /// <summary>
         /// Converts the provided <see cref="string"/> to a <see cref="Sint"/> value. 
@@ -96,10 +84,7 @@ namespace L5Sharp.Types
         /// If the string value is able to be parsed, a new instance of a <see cref="Sint"/> with the value
         /// provided. If not, then a default instance value.
         /// </returns>
-        public static implicit operator Sint(string input)
-        {
-            return new Sint(Radix.ParseValue<Sint>(input));
-        }
+        public static implicit operator Sint(string input) => new(Radix.ParseValue<Sint>(input));
 
         /// <inheritdoc />
         public bool Equals(Sint? other)
@@ -118,10 +103,7 @@ namespace L5Sharp.Types
         }
 
         /// <inheritdoc />
-        public override int GetHashCode()
-        {
-            return Value.GetHashCode();
-        }
+        public override int GetHashCode() => Value.GetHashCode();
 
         /// <summary>
         /// Determines whether the objects are equal.
@@ -129,10 +111,7 @@ namespace L5Sharp.Types
         /// <param name="left">An object to compare.</param>
         /// <param name="right">An object to compare.</param>
         /// <returns>true if the objects are equal, otherwise, false.</returns>
-        public static bool operator ==(Sint left, Sint right)
-        {
-            return Equals(left, right);
-        }
+        public static bool operator ==(Sint left, Sint right) => Equals(left, right);
 
         /// <summary>
         /// Determines whether the objects are not equal.
@@ -140,10 +119,7 @@ namespace L5Sharp.Types
         /// <param name="left">An object to compare.</param>
         /// <param name="right">An object to compare.</param>
         /// <returns>true if the objects are not equal, otherwise, false.</returns>
-        public static bool operator !=(Sint left, Sint right)
-        {
-            return !Equals(left, right);
-        }
+        public static bool operator !=(Sint left, Sint right) => !Equals(left, right);
 
         /// <inheritdoc />
         public int CompareTo(Sint? other)

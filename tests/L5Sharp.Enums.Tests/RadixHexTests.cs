@@ -94,8 +94,8 @@ namespace L5Sharp.Enums.Tests
         [Test]
         public void Parse_InvalidSpecifier_ShouldThrowArgumentException()
         {
-            FluentActions.Invoking(() => Radix.Hex.Parse("0000_0024")).Should().Throw<ArgumentException>()
-                .WithMessage("Input must start with Hex specifier '16#'.");
+            FluentActions.Invoking(() => Radix.Hex.Parse("0000_0024")).Should().Throw<FormatException>()
+                .WithMessage("Input '0000_0024' does not have expected Hex format.");
         }
 
         [Test]

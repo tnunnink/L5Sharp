@@ -8,7 +8,7 @@ namespace L5Sharp
     public interface IComplexType : IDataType
     {
         /// <summary>
-        /// Gets the member collection for the current complex data type.
+        /// Gets the Member collection for the current complex data type.
         /// </summary>
         IEnumerable<IMember<IDataType>> Members { get; }
     }

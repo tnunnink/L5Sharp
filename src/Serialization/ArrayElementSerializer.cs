@@ -44,16 +44,18 @@ namespace L5Sharp.Serialization
             if (element.Name != ElementName)
                 throw new ArgumentException($"Element name '{element.Name}' invalid. Expecting '{ElementName}'");
 
+            //todo this is not right we need index
             var name = element.GetName();
 
-            var dataType = element.Attribute("Value") != null
-                ? Logix.DataType.Instantiate(element.Parent.GetDataTypeName())
-                : new StructureSerializer().Deserialize(element.Element(LogixNames.Structure));
+            var dataType = element.Element(LogixNames.Structure) is null
+                           && element.Attribute("Value") is not null
+                ? element.GetDataType()
+                : new StructureSerializer().Deserialize(element.Element(LogixNames.Structure)!);
 
-            if (dataType is not IAtomic atomic) return Member.Create(name, dataType);
-            
+            if (dataType is not IAtomic atomic) return Member.Create(name!, dataType);
+
             var value = element.GetValue<IAtomic, object>(a => a.Value);
-            atomic = atomic.Update(value);
+            atomic = atomic.Update(value!);
 
             return Member.Create(name, atomic);
         }

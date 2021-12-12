@@ -298,8 +298,7 @@ namespace L5Sharp.Enums
                 Int i => System.Convert.ToString(i.Value, baseNumber),
                 Dint d => System.Convert.ToString(d.Value, baseNumber),
                 Lint l => System.Convert.ToString(l.Value, baseNumber),
-                _ => throw new NotSupportedException(
-                    $"{atomic.GetType()} is not supported by the function {nameof(ChangeBase)}")
+                _ => string.Empty
             };
         }
 
@@ -316,14 +315,14 @@ namespace L5Sharp.Enums
 
             return radix is not null ? FromName(radix).Parse : Null.Parse;
         }
-
+        
         private void ValidateType(IAtomic atomic)
         {
             if (atomic == null)
                 throw new ArgumentNullException(nameof(atomic));
 
             if (!SupportsType(atomic))
-                throw new NotSupportedException($"{atomic.GetType()} is not supported by {Name} Radix");
+                throw new NotSupportedException($"{atomic.GetType()} is not supported by {Name} Radix.");
         }
         
         private void ValidateFormat(string input)
@@ -332,7 +331,7 @@ namespace L5Sharp.Enums
                 throw new ArgumentNullException(nameof(input));
 
             if (!Identifiers[Name].Invoke(input))
-                throw new FormatException($"Input '{input}' does not have expected format for {Name} Radix");
+                throw new FormatException($"Input '{input}' does not have expected {Name} format.");
         }
 
         private class NullRadix : Radix

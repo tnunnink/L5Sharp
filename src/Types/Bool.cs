@@ -25,7 +25,7 @@ namespace L5Sharp.Types
         {
             Value = value;
         }
-        
+
         /// <summary>
         /// Creates a new instance of a Bool with the provided number.
         /// </summary>
@@ -53,10 +53,7 @@ namespace L5Sharp.Types
         object IAtomic.Value => Value;
 
         /// <inheritdoc />
-        public IAtomic<bool> Update(bool value)
-        {
-            return new Bool(value);
-        }
+        public IAtomic<bool> Update(bool value) => new Bool(value);
 
         /// <inheritdoc />
         public IAtomic Update(object value)
@@ -74,30 +71,21 @@ namespace L5Sharp.Types
         }
 
         /// <inheritdoc />
-        public IDataType Instantiate()
-        {
-            return new Bool();
-        }
+        public IDataType Instantiate() => new Bool();
 
         /// <summary>
         /// Converts the provided <see cref="bool"/> to a <see cref="Bool"/> value.
         /// </summary>
         /// <param name="value">The value to convert.</param>
         /// <returns>A <see cref="Bool"/> value.</returns>
-        public static implicit operator Bool(bool value)
-        {
-            return new Bool(value);
-        }
+        public static implicit operator Bool(bool value) => new(value);
 
         /// <summary>
         /// Converts the provided <see cref="Bool"/> to a <see cref="bool"/> value.
         /// </summary>
         /// <param name="atomic">The value to convert.</param>
         /// <returns>A <see cref="bool"/> type value.</returns>
-        public static implicit operator bool(Bool atomic)
-        {
-            return atomic.Value;
-        }
+        public static implicit operator bool(Bool atomic) => atomic.Value;
 
         /// <summary>
         /// Converts the provided <see cref="string"/> to a <see cref="Bool"/> value. 
@@ -107,10 +95,7 @@ namespace L5Sharp.Types
         /// If the string value is able to be parsed, a new instance of a <see cref="Bool"/> with the value
         /// provided. If not, then a default instance value.
         /// </returns>
-        public static implicit operator Bool(string input)
-        {
-            return new Bool(Parse(input));
-        }
+        public static implicit operator Bool(string input) => new(Parse(input));
 
         /// <inheritdoc />
         public bool Equals(Bool? other)
@@ -121,16 +106,10 @@ namespace L5Sharp.Types
         }
 
         /// <inheritdoc />
-        public override bool Equals(object? obj)
-        {
-            return ReferenceEquals(this, obj) || obj is Bool other && Equals(other);
-        }
+        public override bool Equals(object? obj) => ReferenceEquals(this, obj) || obj is Bool other && Equals(other);
 
         /// <inheritdoc />
-        public override int GetHashCode()
-        {
-            return Value.GetHashCode();
-        }
+        public override int GetHashCode() => Value.GetHashCode();
 
         /// <summary>
         /// Determines whether the objects are equal.
@@ -138,10 +117,7 @@ namespace L5Sharp.Types
         /// <param name="left">An object to compare.</param>
         /// <param name="right">An object to compare.</param>
         /// <returns>true if the objects are equal, otherwise, false.</returns>
-        public static bool operator ==(Bool? left, Bool? right)
-        {
-            return Equals(left, right);
-        }
+        public static bool operator ==(Bool? left, Bool? right) => Equals(left, right);
 
         /// <summary>
         /// Determines whether the objects are not equal.
@@ -149,15 +125,13 @@ namespace L5Sharp.Types
         /// <param name="left">An object to compare.</param>
         /// <param name="right">An object to compare.</param>
         /// <returns>true if the objects are not equal, otherwise, false.</returns>
-        public static bool operator !=(Bool? left, Bool? right)
-        {
-            return !Equals(left, right);
-        }
+        public static bool operator !=(Bool? left, Bool? right) => !Equals(left, right);
 
         /// <inheritdoc />
-        public int CompareTo(Bool other)
+        public int CompareTo(Bool? other)
         {
-            return Value.CompareTo(other.Value);
+            if (ReferenceEquals(this, other)) return 0;
+            return ReferenceEquals(null, other) ? 1 : Value.CompareTo(other.Value);
         }
 
         private static bool Parse(string value)

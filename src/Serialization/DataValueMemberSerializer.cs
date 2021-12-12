@@ -11,17 +11,17 @@ namespace L5Sharp.Serialization
     internal class DataValueMemberSerializer : IXSerializer<IMember<IDataType>>
     {
         private const string ElementName = LogixNames.DataValueMember;
-        
+
         public XElement Serialize(IMember<IDataType> component)
         {
             if (component == null)
                 throw new ArgumentNullException(nameof(component));
-            
+
             if (component.DataType is not IAtomic atomic)
                 throw new InvalidOperationException("DataValueMembers must have an atomic data type.");
-            
+
             var element = new XElement(ElementName);
-            
+
             element.Add(component.ToAttribute(m => m.Name));
             element.Add(component.ToAttribute(m => m.DataType));
             element.Add(component.ToAttribute(m => m.Radix));
@@ -29,7 +29,7 @@ namespace L5Sharp.Serialization
 
             return element;
         }
-
+        
         public IMember<IDataType> Deserialize(XElement element)
         {
             if (element == null)
@@ -40,12 +40,13 @@ namespace L5Sharp.Serialization
                     $"Expecting element with name {LogixNames.DataValueMember} but got {element.Name}");
 
             var name = element.GetName();
-            var dataType = (IAtomic) Logix.DataType.Instantiate(element.GetDataTypeName());
+            var atomic = (IAtomic)element.GetDataType();
             var radix = element.GetValue<IMember<IAtomic>, Radix>(e => e.Radix);
             var value = element.GetValue<IAtomic, object>(a => a.Value);
-            dataType.Update(value);
+            
+            atomic = atomic.Update(value!);
 
-            return Member.Create(name, dataType, Dimensions.Empty, radix);
+            return Member.Create(name!, atomic, radix: radix);
         }
     }
 }

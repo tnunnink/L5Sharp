@@ -86,8 +86,8 @@ namespace L5Sharp.Enums.Tests
         [Test]
         public void Parse_InvalidSpecifier_ShouldThrowArgumentException()
         {
-            FluentActions.Invoking(() => Radix.Octal.Parse("00_000_000_024")).Should().Throw<ArgumentException>()
-                .WithMessage("Input must start with Octal specifier '8#'.");
+            FluentActions.Invoking(() => Radix.Octal.Parse("00_000_000_024")).Should().Throw<FormatException>()
+                .WithMessage("Input '00_000_000_024' does not have expected Octal format.");
         }
 
         [Test]

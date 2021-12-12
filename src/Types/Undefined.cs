@@ -12,14 +12,6 @@ namespace L5Sharp.Types
     public sealed class Undefined : IDataType
     {
         /// <summary>
-        /// Creates a new instance of an undefined data type.
-        /// </summary>
-        internal Undefined()
-        {
-            Name = nameof(Undefined);
-        }
-        
-        /// <summary>
         /// Creates a new instance of an undefined type with the provided type name.
         /// </summary>
         /// <param name="name">Name of the type for which no definition has been found.</param>

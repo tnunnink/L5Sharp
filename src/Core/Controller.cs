@@ -7,10 +7,10 @@ namespace L5Sharp.Core
     public class Controller : IController
     {
         internal Controller(string name, ProcessorType processorType, Revision revision, DateTime createdOn,
-            DateTime modifiedOn, string description)
+            DateTime modifiedOn, string? description)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
-            Description = description;
+            Description = description ?? string.Empty;
             ProcessorType = processorType;
             Revision = revision;
             ProjectCreationDate = createdOn;
@@ -36,18 +36,18 @@ namespace L5Sharp.Core
         public DateTime LastModifiedDate { get; }
 
         /// <summary>
-        /// Creates a new instance with the provided arguments. 
+        /// Creates a new Controller instance with the provided arguments. 
         /// </summary>
-        /// <param name="name">The name of the controller.</param>
-        /// <param name="revision">The revision of the controller.</param>
-        /// <param name="processorType">The processor type of the controller.</param>
-        /// <param name="description">The description of the controller.</param>
+        /// <param name="name">The name of the Controller.</param>
+        /// <param name="revision">The revision of the Controller.</param>
+        /// <param name="processorType">The processor type of the Controller.</param>
+        /// <param name="description">The description of the Controller.</param>
         /// <param name="createdOf">The date/time the project was created.</param>
         /// <param name="modifiedOn">The date/time the project was last modified.</param>
         public static IController Create(ComponentName name, ProcessorType processorType, Revision revision,
-            string description = null, DateTime createdOf = default, DateTime modifiedOn = default)
+            string? description = null, DateTime createdOf = default, DateTime modifiedOn = default)
         {
-            if (name == null)
+            if (name is null)
                 throw new ArgumentNullException(nameof(name));
 
             return new Controller(name, processorType, revision, createdOf, modifiedOn, description);

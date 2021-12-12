@@ -43,7 +43,7 @@ namespace L5Sharp.Serialization
                 throw new ArgumentException($"Element name '{element.Name}' invalid. Expecting '{ElementName}'");
 
             var name = element.GetName() ?? throw new ArgumentNullException();
-            var dataType = new LogixTypeProvider(element.Document?.Root).GetDataType(element.GetDataTypeName());
+            var dataType = element.GetDataType();
             var dimensions = element.GetValue<IMember<IDataType>, Dimensions>(m => m.Dimensions);
             var radix = element.GetValue<IMember<IDataType>, Radix>(m => m.Radix);
             var access = element.GetValue<IMember<IDataType>, ExternalAccess>(m => m.ExternalAccess);

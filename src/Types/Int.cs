@@ -30,7 +30,7 @@ namespace L5Sharp.Types
         public string Name { get; }
 
         /// <inheritdoc />
-        public string Description => $"RSLogix representation of a {typeof(short)}";
+        public string Description => $"Logix representation of a {typeof(short)}";
 
         /// <inheritdoc />
         public DataTypeFamily Family => DataTypeFamily.None;
@@ -44,10 +44,7 @@ namespace L5Sharp.Types
         object IAtomic.Value => Value;
 
         /// <inheritdoc />
-        public IAtomic<short> Update(short value)
-        {
-            return new Int(value);
-        }
+        public IAtomic<short> Update(short value) => new Int(value);
 
         /// <inheritdoc />
         public IAtomic Update(object value)
@@ -64,30 +61,21 @@ namespace L5Sharp.Types
         }
 
         /// <inheritdoc />
-        public IDataType Instantiate()
-        {
-            return new Int();
-        }
+        public IDataType Instantiate() => new Int();
 
         /// <summary>
         /// Converts the provided <see cref="short"/> to a <see cref="Int"/> value.
         /// </summary>
         /// <param name="value">The value to convert.</param>
         /// <returns>A <see cref="Int"/> value.</returns>
-        public static implicit operator Int(short value)
-        {
-            return new Int(value);
-        }
+        public static implicit operator Int(short value) => new(value);
 
         /// <summary>
         /// Converts the provided <see cref="Int"/> to a <see cref="short"/> value.
         /// </summary>
         /// <param name="atomic">The value to convert.</param>
         /// <returns>A <see cref="short"/> type value.</returns>
-        public static implicit operator short(Int atomic)
-        {
-            return atomic.Value;
-        }
+        public static implicit operator short(Int atomic) => atomic.Value;
 
         /// <summary>
         /// Converts the provided <see cref="string"/> to a <see cref="Int"/> value. 
@@ -97,10 +85,7 @@ namespace L5Sharp.Types
         /// If the string value is able to be parsed, a new instance of a <see cref="Int"/> with the value
         /// provided. If not, then a default instance value.
         /// </returns>
-        public static implicit operator Int(string input)
-        {
-            return new Int(Radix.ParseValue<Int>(input));
-        }
+        public static implicit operator Int(string input) => new(Radix.ParseValue<Int>(input));
 
         /// <inheritdoc />
         public bool Equals(Int? other)
@@ -119,10 +104,7 @@ namespace L5Sharp.Types
         }
 
         /// <inheritdoc />
-        public override int GetHashCode()
-        {
-            return Value.GetHashCode();
-        }
+        public override int GetHashCode() => Value.GetHashCode();
 
         /// <summary>
         /// Determines whether the objects are equal.
@@ -130,10 +112,7 @@ namespace L5Sharp.Types
         /// <param name="left">An object to compare.</param>
         /// <param name="right">An object to compare.</param>
         /// <returns>true if the objects are equal, otherwise, false.</returns>
-        public static bool operator ==(Int left, Int right)
-        {
-            return Equals(left, right);
-        }
+        public static bool operator ==(Int left, Int right) => Equals(left, right);
 
         /// <summary>
         /// Determines whether the objects are not equal.
@@ -141,10 +120,7 @@ namespace L5Sharp.Types
         /// <param name="left">An object to compare.</param>
         /// <param name="right">An object to compare.</param>
         /// <returns>true if the objects are not equal, otherwise, false.</returns>
-        public static bool operator !=(Int left, Int right)
-        {
-            return !Equals(left, right);
-        }
+        public static bool operator !=(Int left, Int right) => !Equals(left, right);
 
         /// <inheritdoc />
         public int CompareTo(Int? other)

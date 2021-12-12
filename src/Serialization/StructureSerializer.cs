@@ -35,10 +35,10 @@ namespace L5Sharp.Serialization
                 throw new ArgumentException(
                     $"Element name '{element.Name}' invalid. Expecting '{ElementName}' or {LogixNames.StructureMember}");
 
-            var name = element.GetDataTypeName();
+            var name = element.Attribute(LogixNames.DataType)?.Value;
             var members = element.Elements().Select(e => e.Deserialize<IMember<IDataType>>());
 
-            return new DataType(name, DataTypeClass.Unknown, string.Empty, members);
+            return new DataType(name!, DataTypeClass.Unknown, string.Empty, members);
         }
     }
 }
