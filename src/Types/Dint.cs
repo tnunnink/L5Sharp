@@ -9,7 +9,7 @@ namespace L5Sharp.Types
     public sealed class Dint : IAtomic<int>, IEquatable<Dint>, IComparable<Dint>
     {
        /// <summary>
-        /// Creates a new default instance of a Dint.
+        /// Creates a new default instance of a Dint type.
         /// </summary>
         public Dint()
         {
@@ -30,66 +30,53 @@ namespace L5Sharp.Types
         public string Name { get; }
 
         /// <inheritdoc />
-        public string Description => $"RSLogix representation of a {typeof(int)}";
+        public string Description => $"Logix representation of a {typeof(int)}";
 
         /// <inheritdoc />
         public DataTypeFamily Family => DataTypeFamily.None;
 
         /// <inheritdoc />
         public DataTypeClass Class => DataTypeClass.Atomic;
-
-
+        
         /// <inheritdoc />
-        public int Value { get; }
+        public int Value { get; private set; }
 
         object IAtomic.Value => Value;
 
         /// <inheritdoc />
-        public IAtomic<int> Update(int value)
-        {
-            return new Dint(value);
-        }
+        public void SetValue(int value) => Value = value;
 
         /// <inheritdoc />
-        public IAtomic Update(object value)
+        public void SetValue(object value)
         {
-            return value switch
+            Value = value switch
             {
                 null => throw new ArgumentNullException(nameof(value), "Value can not be null"),
-                Dint atomic => new Dint(atomic),
-                byte n => new Dint(n),
-                short n => new Dint(n),
-                int n => new Dint(n),
-                string str => new Dint(Radix.ParseValue<Dint>(str)),
+                Dint atomic => atomic,
+                byte n => n,
+                short n => n,
+                int n => n,
+                string str => Radix.ParseValue<Dint>(str),
                 _ => throw new ArgumentException($"Value type '{value.GetType()}' is not a valid for {GetType()}")
             };
         }
 
         /// <inheritdoc />
-        public IDataType Instantiate()
-        {
-            return new Dint();
-        }
+        public IDataType Instantiate() => new Dint();
 
         /// <summary>
         /// Converts the provided <see cref="int"/> to a <see cref="Dint"/> value.
         /// </summary>
         /// <param name="value">The value to convert.</param>
         /// <returns>A <see cref="Dint"/> value.</returns>
-        public static implicit operator Dint(int value)
-        {
-            return new Dint(value);
-        }
+        public static implicit operator Dint(int value) => new(value);
 
         /// <summary>
         /// Converts the provided <see cref="Dint"/> to a <see cref="int"/> value.
         /// </summary>
         /// <param name="atomic">The value to convert.</param>
         /// <returns>A <see cref="int"/> type value.</returns>
-        public static implicit operator int(Dint atomic)
-        {
-            return atomic.Value;
-        }
+        public static implicit operator int(Dint atomic) => atomic.Value;
 
         /// <summary>
         /// Converts the provided <see cref="string"/> to a <see cref="Dint"/> value. 
@@ -99,10 +86,7 @@ namespace L5Sharp.Types
         /// If the string value is able to be parsed, a new instance of a <see cref="Dint"/> with the value
         /// provided. If not, then a default instance value.
         /// </returns>
-        public static implicit operator Dint(string input)
-        {
-            return new Dint(Radix.ParseValue<Dint>(input));
-        }
+        public static implicit operator Dint(string input) => Radix.ParseValue<Dint>(input);
 
         /// <inheritdoc />
         public bool Equals(Dint? other)
@@ -121,10 +105,7 @@ namespace L5Sharp.Types
         }
 
         /// <inheritdoc />
-        public override int GetHashCode()
-        {
-            return Value.GetHashCode();
-        }
+        public override int GetHashCode() => Name.GetHashCode();
 
         /// <summary>
         /// Determines whether the objects are equal.
@@ -132,10 +113,7 @@ namespace L5Sharp.Types
         /// <param name="left">An object to compare.</param>
         /// <param name="right">An object to compare.</param>
         /// <returns>true if the objects are equal, otherwise, false.</returns>
-        public static bool operator ==(Dint left, Dint right)
-        {
-            return Equals(left, right);
-        }
+        public static bool operator ==(Dint left, Dint right) => Equals(left, right);
 
         /// <summary>
         /// Determines whether the objects are not equal.
@@ -143,15 +121,13 @@ namespace L5Sharp.Types
         /// <param name="left">An object to compare.</param>
         /// <param name="right">An object to compare.</param>
         /// <returns>true if the objects are not equal, otherwise, false.</returns>
-        public static bool operator !=(Dint left, Dint right)
-        {
-            return !Equals(left, right);
-        }
+        public static bool operator !=(Dint left, Dint right) => !Equals(left, right);
 
         /// <inheritdoc />
-        public int CompareTo(Dint other)
+        public int CompareTo(Dint? other)
         {
-            return Value.CompareTo(other.Value);
+            if (ReferenceEquals(this, other)) return 0;
+            return ReferenceEquals(null, other) ? 1 : Value.CompareTo(other.Value);
         }
     }
 }

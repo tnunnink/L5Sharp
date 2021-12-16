@@ -16,7 +16,7 @@ namespace L5Sharp.Extensions.Tests
         {
             var type = new Dint();
 
-            type.IsValueType().Should().BeTrue();
+            type.IsAtomicType().Should().BeTrue();
         }
 
         [Test]
@@ -24,7 +24,7 @@ namespace L5Sharp.Extensions.Tests
         {
             var type = new Timer();
 
-            type.IsValueType().Should().BeFalse();
+            type.IsAtomicType().Should().BeFalse();
         }
 
         [Test]

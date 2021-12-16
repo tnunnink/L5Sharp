@@ -35,7 +35,7 @@ namespace L5Sharp.Types.Tests
             type.Name.Should().Be(nameof(Int).ToUpper());
             type.Class.Should().Be(DataTypeClass.Atomic);
             type.Family.Should().Be(DataTypeFamily.None);
-            type.Description.Should().Be("RSLogix representation of a System.Int16");
+            type.Description.Should().Be("Logix representation of a System.Int16");
             type.Value.Should().Be(0);
         }
         
@@ -46,64 +46,104 @@ namespace L5Sharp.Types.Tests
             
             type.Value.Should().Be(_random);
         }
-
+        
         [Test]
-        public void Update_Null_ShouldReturnExpected()
+        public void GetValue_AsAtomic_ShouldBeExpected()
         {
-            var type = new Int();
+            var type = (IAtomic) new Int();
 
-            FluentActions.Invoking(() => type.Update(null!)).Should().Throw<ArgumentNullException>();
+            type.Value.Should().Be(0);
         }
 
         [Test]
-        public void Update_ValidValue_ShouldReturnExpected()
+        public void SetValue_Null_ShouldBeExpected()
         {
             var type = new Int();
 
-            var updated = type.Update(_random);
+            FluentActions.Invoking(() => type.SetValue(null!)).Should().Throw<ArgumentNullException>();
+        }
 
-            updated.Value.Should().Be(_random);
+        [Test]
+        public void SetValue_ValidShort_ShouldBeExpected()
+        {
+            var type = new Int();
+
+            type.SetValue(_random);
+
+            type.Value.Should().Be(_random);
         }
         
         [Test]
-        public void Update_ValidObjectValue_ShouldReturnExpected()
+        public void SetValue_SameType_ShouldBeExpected()
         {
             var type = new Int();
 
-            var updated = type.Update((object) _random);
+            type.SetValue(new Int(_random));
 
-            updated.Value.Should().Be(_random);
-        }
-
-        [Test]
-        public void Update_ValidStringValue_ShouldReturnExpected()
-        {
-            var type = new Int();
-
-            var updated = type.Update(_random.ToString());
-
-            updated.Value.Should().Be(_random);
+            type.Value.Should().Be(_random);
         }
         
         [Test]
-        public void Update_InvalidString_ShouldThrowArgumentException()
+        public void SetValue_SameTypeAsObject_ShouldBeExpected()
+        {
+            var type = new Int();
+
+            type.SetValue((object)new Int(_random));
+
+            type.Value.Should().Be(_random);
+        }
+        
+        [Test]
+        public void SetValue_ValidByte_ShouldBeExpected()
+        {
+            var fixture = new Fixture();
+            var value = fixture.Create<byte>();
+            var type = new Int();
+
+            type.SetValue(value);
+
+            type.Value.Should().Be(value);
+        }
+        
+        [Test]
+        public void SetValue_ValidObjectValue_ShouldBeExpected()
+        {
+            var type = new Int();
+
+            type.SetValue((object) _random);
+
+            type.Value.Should().Be(_random);
+        }
+
+        [Test]
+        public void SetValue_ValidStringValue_ShouldBeExpected()
+        {
+            var type = new Int();
+
+            type.SetValue(_random.ToString());
+
+            type.Value.Should().Be(_random);
+        }
+        
+        [Test]
+        public void SetValue_InvalidString_ShouldThrowArgumentException()
         {
             var fixture = new Fixture();
             var value = fixture.Create<string>();
             var type = new Int(_random);
 
-            FluentActions.Invoking(() => type.Update(value)).Should().Throw<ArgumentException>()
+            FluentActions.Invoking(() => type.SetValue(value)).Should().Throw<ArgumentException>()
                 .WithMessage($"Could not parse string '{value}' to {typeof(Int)}. Verify that the string is an accepted Radix format.");
         }
         
         [Test]
-        public void Update_InvalidType_ShouldBeZero()
+        public void SetValue_InvalidType_ShouldBeZero()
         {
             var fixture = new Fixture();
             var value = fixture.Create<int>();
             var type = new Int();
 
-            FluentActions.Invoking(() => type.Update(value)).Should().Throw<ArgumentException>()
+            FluentActions.Invoking(() => type.SetValue(value)).Should().Throw<ArgumentException>()
                 .WithMessage($"Value type '{value.GetType()}' is not a valid for {typeof(Int)}");
         }
         
@@ -227,13 +267,33 @@ namespace L5Sharp.Types.Tests
         }
 
         [Test]
-        public void GetHashCode_DefaultValue_ShouldBeZero()
+        public void GetHashCode_DefaultValue_ShouldBeHashOfName()
         {
             var type = new Int();
 
             var hash = type.GetHashCode();
 
-            hash.Should().Be(0);
+            hash.Should().Be(type.Name.GetHashCode());
+        }
+        
+        [Test]
+        public void CompareTo_Same_ShouldBeZero()
+        {
+            var type = new Int();
+
+            var compare = type.CompareTo(type);
+
+            compare.Should().Be(0);
+        }
+        
+        [Test]
+        public void CompareTo_Null_ShouldBeOne()
+        {
+            var type = new Int();
+
+            var compare = type.CompareTo(null);
+
+            compare.Should().Be(1);
         }
 
         [Test]

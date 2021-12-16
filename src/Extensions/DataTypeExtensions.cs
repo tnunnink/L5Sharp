@@ -12,13 +12,23 @@ namespace L5Sharp.Extensions
     public static class DataTypeExtensions
     {
         /// <summary>
-        /// Indicates whether the current <c>DataType</c> is <see cref="IAtomic"/> (i.e. a value type).
+        /// Indicates whether the current IDataType is <see cref="IAtomic"/>.
         /// </summary>
         /// <param name="dataType">The current data type.</param>
-        /// <returns>true if the current data type is <see cref="IAtomic"/>, otherwise false.</returns>
-        public static bool IsValueType(this IDataType dataType)
+        /// <returns>true if the current data type is IAtomic. Otherwise, false.</returns>
+        public static bool IsAtomicType(this IDataType dataType)
         {
             return dataType is IAtomic;
+        }
+        
+        /// <summary>
+        /// Indicates whether the current IDataType is <see cref="IComplexType"/>.
+        /// </summary>
+        /// <param name="dataType">The current data type.</param>
+        /// <returns>true if the current data type is IComplexType. Otherwise, false.</returns>
+        public static bool IsComplexType(this IDataType dataType)
+        {
+            return dataType is IComplexType;
         }
 
         /// <summary>
@@ -72,8 +82,7 @@ namespace L5Sharp.Extensions
             {
                 names.Add(member.Name);
 
-                if (member is IArrayMember<IDataType> array)
-                    names.AddRange(array.Select(e => $"{member.Name}{e.Name}"));
+                names.AddRange(member.Select(e => $"{member.Name}{e.Name}"));
 
                 names.AddRange(member.DataType.GetDeepMemberNames().Select(n => $"{member.Name}.{n}"));
             }
@@ -110,17 +119,17 @@ namespace L5Sharp.Extensions
         /// <param name="description">The Description of the ArrayMember.</param>
         /// <typeparam name="TDataType"></typeparam>
         /// <returns></returns>
-        public static IArrayMember<TDataType> ToArrayMember<TDataType>(this IEnumerable<TDataType> dataTypes,
-            ComponentName name, Dimensions? dimensions = null, Radix? radix = null, ExternalAccess? access = null,
+        /*public static IMember<TDataType> ToArrayMember<TDataType>(this IEnumerable<TDataType> dataTypes,
+            ComponentName name, Dimensions dimensions, Radix? radix = null, ExternalAccess? access = null,
             string? description = null) where TDataType : IDataType =>
-            new ArrayMember<TDataType>(name, dataTypes.ToList(), dimensions, radix, access, description);
+            new Member<TDataType>(name, dataTypes.ToList(), dimensions, radix, access, description);*/
 
         public static bool StructureEquals(this IDataType target, IDataType source)
         {
             if (source == null) return false;
             if (ReferenceEquals(target, source)) return true;
-            if (target.IsValueType() && source.IsValueType() && target.GetType() == source.GetType()) return true;
-            if (target.IsValueType() || source.IsValueType()) return false;
+            if (target.IsAtomicType() && source.IsAtomicType() && target.GetType() == source.GetType()) return true;
+            if (target.IsAtomicType() || source.IsAtomicType()) return false;
             return target.Name == source.Name &&
                    target.GetMembers().SequenceEqual(source.GetMembers(), new MemberStructureComparer());
         }

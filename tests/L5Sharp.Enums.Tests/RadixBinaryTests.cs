@@ -24,7 +24,7 @@ namespace L5Sharp.Enums.Tests
         }
 
         [Test]
-        public void Convert_NonSupportedAtomic_ShouldThrowRadixNotSupportedException()
+        public void Convert_NonSupportedAtomic_ShouldThrowNotSupportedException()
         {
             FluentActions.Invoking(() => Radix.Binary.Convert(new Real())).Should().Throw<NotSupportedException>();
         }
@@ -89,7 +89,7 @@ namespace L5Sharp.Enums.Tests
             const string invalid = "00010100";
 
             FluentActions.Invoking(() => Radix.Binary.Parse(invalid)).Should().Throw<FormatException>()
-                .WithMessage($"Input '{invalid}' does not have expected format for Binary Radix");
+                .WithMessage($"Input '{invalid}' does not have expected Binary format.");
         }
 
         [Test]
@@ -101,7 +101,7 @@ namespace L5Sharp.Enums.Tests
         }
 
         [Test]
-        public void Parse_LengthGreaterThan64_ShouldThrowArgumentOutOfRangeException()
+        public void Parse_LengthGreaterThan68_ShouldThrowArgumentOutOfRangeException()
         {
             FluentActions.Invoking(() => Radix.Binary.Parse(
                         "2#0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0001_0100_0000"))

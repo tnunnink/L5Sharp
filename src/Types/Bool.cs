@@ -9,7 +9,7 @@ namespace L5Sharp.Types
     public sealed class Bool : IAtomic<bool>, IEquatable<Bool>, IComparable<Bool>
     {
         /// <summary>
-        /// Creates a new default instance of a Bool.
+        /// Creates a new default instance of a Bool type.
         /// </summary>
         public Bool()
         {
@@ -48,17 +48,17 @@ namespace L5Sharp.Types
         public DataTypeClass Class => DataTypeClass.Atomic;
 
         /// <inheritdoc />
-        public bool Value { get; }
+        public bool Value { get; private set; }
 
         object IAtomic.Value => Value;
 
         /// <inheritdoc />
-        public IAtomic<bool> Update(bool value) => new Bool(value);
+        public void SetValue(bool value) => Value = value;
 
         /// <inheritdoc />
-        public IAtomic Update(object value)
+        public void SetValue(object value)
         {
-            return value switch
+            Value = value switch
             {
                 null => throw new ArgumentNullException(nameof(value)),
                 Bool atomic => new Bool(atomic),
@@ -109,7 +109,7 @@ namespace L5Sharp.Types
         public override bool Equals(object? obj) => ReferenceEquals(this, obj) || obj is Bool other && Equals(other);
 
         /// <inheritdoc />
-        public override int GetHashCode() => Value.GetHashCode();
+        public override int GetHashCode() => Name.GetHashCode();
 
         /// <summary>
         /// Determines whether the objects are equal.

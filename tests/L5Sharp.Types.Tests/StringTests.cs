@@ -34,7 +34,7 @@ namespace L5Sharp.Types.Tests
             type.Name.Should().Be("STRING");
             type.Class.Should().Be(DataTypeClass.Predefined);
             type.Family.Should().Be(DataTypeFamily.String);
-            type.Description.Should().Be("RSLogix representation of a System.String");
+            type.Description.Should().Be("Logix representation of a System.String");
             type.Value.Should().BeEmpty();
             type.LEN.Should().NotBeNull();
             type.LEN.DataType.Should().BeOfType<Dint>();
@@ -57,7 +57,7 @@ namespace L5Sharp.Types.Tests
         {
             var type = new String();
             
-            FluentActions.Invoking(() => type.Update(null!)).Should().Throw<ArgumentNullException>();
+            FluentActions.Invoking(() => type.SetValue(null!)).Should().Throw<ArgumentNullException>();
         }
         
         [Test]
@@ -86,9 +86,9 @@ namespace L5Sharp.Types.Tests
             var value = fixture.Create<string>();
             var type = new String();
             
-            var updated = type.Update(value);
+            type.SetValue(value);
 
-            updated.Value.Should().Be(value);
+            type.Value.Should().Be(value);
         }
 
         [Test]
@@ -221,6 +221,26 @@ namespace L5Sharp.Types.Tests
             var hash = type.GetHashCode();
 
             hash.Should().NotBe(0);
+        }
+        
+        [Test]
+        public void CompareTo_Same_ShouldBeZero()
+        {
+            var type = new String();
+
+            var compare = type.CompareTo(type);
+
+            compare.Should().Be(0);
+        }
+        
+        [Test]
+        public void CompareTo_Null_ShouldBeOne()
+        {
+            var type = new String();
+
+            var compare = type.CompareTo(null);
+
+            compare.Should().Be(1);
         }
 
         [Test]

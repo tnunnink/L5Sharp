@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using FluentAssertions;
 using L5Sharp.Components;
 using L5Sharp.Enums;
@@ -44,8 +45,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void New_NullType_ShouldHaveNullType()
         {
-            var member = Member.Create("Name", null);
-            member.DataType.Should().BeNull();
+            FluentActions.Invoking(() => Member.Create("Name", null!)).Should().Throw<ArgumentNullException>();
         }
 
         [Test]
@@ -71,6 +71,16 @@ namespace L5Sharp.Core.Tests
             var name = member.Name;
 
             name.Should().Be("Member");
+        }
+
+        [Test]
+        public void Description_GetValue_ShouldBeExpected()
+        {
+            var member = Member.Create<Real>("Member");
+
+            var description = member.Description;
+
+            description.Should().BeNull();
         }
 
         [Test]
@@ -112,15 +122,32 @@ namespace L5Sharp.Core.Tests
 
             access.Should().Be(ExternalAccess.ReadWrite);
         }
-
+        
+        
         [Test]
-        public void Description_GetValue_ShouldBeExpected()
+        public void Index_Get_ShouldReturnValidElement()
         {
-            var member = Member.Create<Real>("Member");
+            var member = Member.Create<Dint>("Test", new Dimensions(10));
 
-            var description = member.Description;
+            var element = member[5];
 
-            description.Should().BeNull();
+            element.Should().NotBeNull();
+            element?.Name.Should().Be("[5]");
+            element?.DataType.Should().BeOfType<Dint>();
+            element?.Radix.Should().Be(Radix.Decimal);
+            element?.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);
+            element?.Description.Should().BeNull();
+        }
+        
+        [Test]
+        public void IterateCollection_ShouldAllNotBeNull()
+        {
+            var member = Member.Create<Dint>("Test", new Dimensions(10));
+
+            foreach (var element in member)
+            {
+                element.Should().NotBeNull();
+            }
         }
 
         [Test]
@@ -234,6 +261,16 @@ namespace L5Sharp.Core.Tests
             var hash = first.GetHashCode();
 
             hash.Should().NotBe(0);
+        }
+
+        [Test]
+        public void GetEnumerator_Object_ShouldNotBeNull()
+        {
+            var first = (IEnumerable)Member.Create<Dint>("Test", new Dimensions(10));
+
+            var enumerator = first.GetEnumerator();
+
+            enumerator.Should().NotBeNull();
         }
     }
 }

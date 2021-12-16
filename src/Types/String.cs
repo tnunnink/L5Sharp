@@ -5,7 +5,6 @@ using L5Sharp.Abstractions;
 using L5Sharp.Components;
 using L5Sharp.Core;
 using L5Sharp.Enums;
-using L5Sharp.Extensions;
 
 // ReSharper disable InconsistentNaming Logix Naming
 
@@ -14,7 +13,7 @@ namespace L5Sharp.Types
     /// <summary>
     /// Represents a predefined String Logix data type.
     /// </summary>
-    public sealed class String : ComplexType, IStringDefined, IEquatable<String>, IComparable<String>
+    public sealed class String : ComplexType, IStringType, IEquatable<String>, IComparable<String>
     {
         private const int PredefinedLength = 82; //This is the built in length of string types in RSLogix
 
@@ -24,7 +23,7 @@ namespace L5Sharp.Types
         public String() : base(nameof(String).ToUpper(), $"Logix representation of a {typeof(string)}")
         {
             LEN = Member.Create(nameof(LEN), new Dint(PredefinedLength));
-            DATA = ArrayMember.Create<Sint>(nameof(DATA), new Dimensions(PredefinedLength), Radix.Ascii);
+            DATA = Member.Create<Sint>(nameof(DATA), new Dimensions(PredefinedLength), Radix.Ascii);
         }
 
         /// <summary>
@@ -35,17 +34,7 @@ namespace L5Sharp.Types
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         public String(string value) : this()
         {
-            if (value == null)
-                throw new ArgumentNullException(nameof(value));
-
-            var bytes = Encoding.ASCII.GetBytes(value);
-
-            if (bytes.Length > LEN.DataType.Value)
-                throw new ArgumentOutOfRangeException(nameof(value),
-                    $"Value length '{bytes.Length}' must be less than the predefined length '{PredefinedLength}'");
-
-            DATA = bytes.Select(b => new Sint(b))
-                .ToArrayMember(nameof(DATA), new Dimensions(PredefinedLength), Radix.Ascii);
+            SetData(value);
         }
 
         /// <inheritdoc />
@@ -62,13 +51,19 @@ namespace L5Sharp.Types
         public IMember<Dint> LEN { get; }
 
         /// <inheritdoc />
-        public IArrayMember<Sint> DATA { get; }
+        public IMember<Sint> DATA { get; }
 
         /// <inheritdoc />
         protected override IDataType New() => new String();
 
         /// <inheritdoc />
-        public IStringDefined Update(string value) => new String(value);
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when the provided value is null.
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// Thrown when the length of the provided string is longer than the predefined length (LEN Member value).
+        /// </exception>
+        public void SetValue(string value) => SetData(value);
 
         /// <summary>
         /// Converts the provided <see cref="string"/> to a <see cref="String"/> value.
@@ -123,8 +118,28 @@ namespace L5Sharp.Types
         public int CompareTo(String? other)
         {
             if (ReferenceEquals(this, other)) return 0;
-            if (ReferenceEquals(other, null)) return -1;
-            return string.Compare(Value, other.Value, StringComparison.Ordinal);
+            return ReferenceEquals(other, null) ? 1 : string.Compare(Value, other.Value, StringComparison.Ordinal);
+        }
+
+        /// <summary>
+        /// Helper to set the underlying DATA member with the provided string value.
+        /// </summary>
+        /// <param name="value">The string value to parse and set DATA with.</param>
+        /// <exception cref="ArgumentNullException">Thrown when the value is null.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown when the length of the provided value is longer than the predefined length.</exception>
+        private void SetData(string value)
+        {
+            if (value == null)
+                throw new ArgumentNullException(nameof(value));
+
+            var bytes = Encoding.ASCII.GetBytes(value);
+
+            if (bytes.Length > LEN.DataType.Value)
+                throw new ArgumentOutOfRangeException(nameof(value),
+                    $"Value length '{bytes.Length}' must be less than the predefined length '{PredefinedLength}'");
+
+            for (var i = 0; i < bytes.Length; i++)
+                DATA[i]?.DataType.SetValue(bytes[i]);
         }
     }
 }

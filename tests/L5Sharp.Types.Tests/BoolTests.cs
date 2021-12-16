@@ -63,111 +63,119 @@ namespace L5Sharp.Types.Tests
         }
 
         [Test]
-        public void Update_Null_ShouldThrowArgumentNullException()
+        public void GetValue_AsAtomic_ShouldBeExpected()
         {
-            var type = new Bool();
+            var type = (IAtomic) new Bool();
 
-            FluentActions.Invoking(() => type.Update(null!)).Should().Throw<ArgumentNullException>();
+            type.Value.Should().Be(false);
         }
 
         [Test]
-        public void Update_Zero_ShouldThrowArgumentException()
+        public void SetValue_Null_ShouldThrowArgumentNullException()
         {
             var type = new Bool();
 
-            var updated = type.Update(0);
-
-            updated.Value.Should().Be(false);
+            FluentActions.Invoking(() => type.SetValue(null!)).Should().Throw<ArgumentNullException>();
         }
 
         [Test]
-        public void Update_ValidValue_ShouldReturnExpected()
+        public void SetValue_Zero_ShouldThrowArgumentException()
+        {
+            var type = new Bool();
+
+            type.SetValue(0);
+
+            type.Value.Should().Be(false);
+        }
+
+        [Test]
+        public void SetValue_ValidValue_ShouldReturnExpected()
         {
             var fixture = new Fixture();
             var value = fixture.Create<bool>();
             var type = new Bool();
 
-            var updated = type.Update(value);
+            type.SetValue(value);
 
-            updated.Value.Should().Be(value);
+            type.Value.Should().Be(value);
         }
 
         [Test]
-        public void Update_ValidValueAsObject_ShouldReturnExpected()
+        public void SetValue_ValidValueAsObject_ShouldReturnExpected()
         {
             var fixture = new Fixture();
             var value = fixture.Create<bool>();
             var type = new Bool();
 
-            var updated = type.Update((object)value);
+            type.SetValue((object)value);
 
-            updated.Value.Should().Be(value);
+            type.Value.Should().Be(value);
         }
         
         [Test]
-        public void Update_ValidBoolAsObject_ShouldReturnExpected()
+        public void SetValue_ValidBoolAsObject_ShouldReturnExpected()
         {
             var fixture = new Fixture();
             var value = fixture.Create<bool>();
             var type = new Bool();
 
-            var updated = type.Update((object)new Bool(value));
+            type.SetValue((object)new Bool(value));
 
-            updated.Value.Should().Be(value);
+            type.Value.Should().Be(value);
         }
 
         [Test]
-        public void Update_ValidStringValue_ShouldReturnExpected()
+        public void SetValue_ValidStringValue_ShouldReturnExpected()
         {
             var fixture = new Fixture();
             var value = fixture.Create<bool>();
             var type = new Bool();
 
-            var updated = type.Update(value.ToString());
+            type.SetValue(value.ToString());
 
-            updated.Value.Should().Be(value);
+            type.Value.Should().Be(value);
         }
 
         [Test]
-        public void Update_ValidStringOne_ShouldBeTrue()
+        public void SetValue_ValidStringOne_ShouldBeTrue()
         {
             var type = new Bool();
 
-            var updated = type.Update("1");
+            type.SetValue("1");
             
-            updated.Value.Should().Be(true);
+            type.Value.Should().Be(true);
         }
 
         [Test]
-        public void Update_ValidStringZero_ShouldBeFalse()
+        public void SetValue_ValidStringZero_ShouldBeFalse()
         {
             var type = new Bool();
 
-            var updated = type.Update("0");
+            type.SetValue("0");
 
-            updated.Value.Should().Be(false);
+            type.Value.Should().Be(false);
         }
 
         [Test]
-        public void Update_InvalidString_ShouldBeZero()
+        public void SetValue_InvalidString_ShouldBeZero()
         {
             var fixture = new Fixture();
             var value = fixture.Create<string>();
             var type = new Bool();
 
-            FluentActions.Invoking(() => type.Update(value)).Should().Throw<ArgumentException>()
+            FluentActions.Invoking(() => type.SetValue(value)).Should().Throw<ArgumentException>()
                 .WithMessage(
                     $"Could not parse string '{value}' to {typeof(Bool)}. Verify that the string is an accepted Radix format.");
         }
 
         [Test]
-        public void Update_InvalidType_ShouldBeZero()
+        public void SetValue_InvalidType_ShouldBeZero()
         {
             var fixture = new Fixture();
             var value = fixture.Create<float>();
             var type = new Bool();
 
-            FluentActions.Invoking(() => type.Update(value)).Should().Throw<ArgumentException>()
+            FluentActions.Invoking(() => type.SetValue(value)).Should().Throw<ArgumentException>()
                 .WithMessage($"Value type '{value.GetType()}' is not a valid for {typeof(Bool)}");
         }
 
@@ -299,13 +307,33 @@ namespace L5Sharp.Types.Tests
         }
 
         [Test]
-        public void GetHashCode_WhenCalled_ShouldNotBeZero()
+        public void GetHashCode_DefaultValue_ShouldBeHashOfName()
         {
-            var type = new Bool(true);
+            var type = new Bool();
 
             var hash = type.GetHashCode();
 
-            hash.Should().NotBe(0);
+            hash.Should().Be(type.Name.GetHashCode());
+        }
+
+        [Test]
+        public void CompareTo_Same_ShouldBeZero()
+        {
+            var type = new Bool();
+
+            var compare = type.CompareTo(type);
+
+            compare.Should().Be(0);
+        }
+        
+        [Test]
+        public void CompareTo_Null_ShouldBeOne()
+        {
+            var type = new Bool();
+
+            var compare = type.CompareTo(null);
+
+            compare.Should().Be(1);
         }
 
         [Test]

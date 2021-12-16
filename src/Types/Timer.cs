@@ -22,7 +22,7 @@ namespace L5Sharp.Types
         /// <param name="pre">The value of the preset member to initialize</param>
         public Timer(Dint pre) : this()
         {
-            PRE.DataType.Update(pre);
+            PRE.DataType.SetValue(pre);
         }
 
         /// <inheritdoc />

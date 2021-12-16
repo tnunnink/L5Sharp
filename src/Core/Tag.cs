@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using L5Sharp.Components;
 using L5Sharp.Enums;
@@ -55,6 +56,8 @@ namespace L5Sharp.Core
 
         /// <inheritdoc />
         public ExternalAccess ExternalAccess => _tagMember.ExternalAccess;
+
+        IMember<TDataType>? IMember<TDataType>.this[int index] => null;
 
         /// <inheritdoc />
         public TagType TagType => TagType.Base;
@@ -195,6 +198,16 @@ namespace L5Sharp.Core
         public IMember<TDataType> Copy()
         {
             throw new NotImplementedException();
+        }
+
+        public IEnumerator<IMember<TDataType>> GetEnumerator()
+        {
+            throw new NotImplementedException();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
     }
 }

@@ -9,7 +9,7 @@ namespace L5Sharp.Types
     public sealed class Lint : IAtomic<long>, IEquatable<Lint>, IComparable<Lint>
     {
         /// <summary>
-        /// Creates a new default instance of a Lint.
+        /// Creates a new default instance of a Lint type.
         /// </summary>
         public Lint()
         {
@@ -30,7 +30,7 @@ namespace L5Sharp.Types
         public string Name { get; }
 
         /// <inheritdoc />
-        public string Description => $"RSLogix representation of a {typeof(long)}";
+        public string Description => $"Logix representation of a {typeof(long)}";
 
         /// <inheritdoc />
         public DataTypeFamily Family => DataTypeFamily.None;
@@ -39,57 +39,45 @@ namespace L5Sharp.Types
         public DataTypeClass Class => DataTypeClass.Atomic;
 
         /// <inheritdoc />
-        public long Value { get; }
+        public long Value { get; private set; }
 
         object IAtomic.Value => Value;
 
         /// <inheritdoc />
-        public IAtomic<long> Update(long value)
-        {
-            return new Lint(value);
-        }
+        public void SetValue(long value) => Value = value;
 
         /// <inheritdoc />
-        public IAtomic Update(object value)
+        public void SetValue(object value)
         {
-            return value switch
+            Value = value switch
             {
                 null => throw new ArgumentNullException(nameof(value), "Value can not be null"),
-                Lint atomic => new Lint(atomic),
-                byte n => new Lint(n),
-                short n => new Lint(n),
-                int n => new Lint(n),
-                long n => new Lint(n),
-                string str => new Lint(Radix.ParseValue<Lint>(str)),
+                Lint atomic => atomic,
+                byte n => n,
+                short n => n,
+                int n => n,
+                long n => n,
+                string str => Radix.ParseValue<Lint>(str),
                 _ => throw new ArgumentException($"Value type '{value.GetType()}' is not a valid for {GetType()}")
             };
         }
 
         /// <inheritdoc />
-        public IDataType Instantiate()
-        {
-            return new Lint();
-        }
-        
+        public IDataType Instantiate() => new Lint();
+
         /// <summary>
         /// Converts the provided <see cref="long"/> to a <see cref="Lint"/> value.
         /// </summary>
         /// <param name="value">The value to convert.</param>
         /// <returns>A <see cref="Lint"/> value.</returns>
-        public static implicit operator Lint(long value)
-        {
-            return new Lint(value);
-        }
+        public static implicit operator Lint(long value) => new(value);
 
         /// <summary>
         /// Converts the provided <see cref="Lint"/> to a <see cref="long"/> value.
         /// </summary>
         /// <param name="atomic">The value to convert.</param>
         /// <returns>A <see cref="long"/> type value.</returns>
-        public static implicit operator long(Lint atomic)
-        {
-            return atomic.Value;
-        }
+        public static implicit operator long(Lint atomic) => atomic.Value;
 
         /// <summary>
         /// Converts the provided <see cref="string"/> to a <see cref="Lint"/> value. 
@@ -99,10 +87,7 @@ namespace L5Sharp.Types
         /// If the string value is able to be parsed, a new instance of a <see cref="Lint"/> with the value
         /// provided. If not, then a default instance value.
         /// </returns>
-        public static implicit operator Lint(string input)
-        {
-            return new Lint(Radix.ParseValue<Lint>(input));
-        }
+        public static implicit operator Lint(string input) => Radix.ParseValue<Lint>(input);
 
         /// <inheritdoc />
         public bool Equals(Lint? other)
@@ -121,10 +106,7 @@ namespace L5Sharp.Types
         }
 
         /// <inheritdoc />
-        public override int GetHashCode()
-        {
-            return Value.GetHashCode();
-        }
+        public override int GetHashCode() => Name.GetHashCode();
 
         /// <summary>
         /// Determines whether the objects are equal.
@@ -132,10 +114,7 @@ namespace L5Sharp.Types
         /// <param name="left">An object to compare.</param>
         /// <param name="right">An object to compare.</param>
         /// <returns>true if the objects are equal, otherwise, false.</returns>
-        public static bool operator ==(Lint left, Lint right)
-        {
-            return Equals(left, right);
-        }
+        public static bool operator ==(Lint left, Lint right) => Equals(left, right);
 
         /// <summary>
         /// Determines whether the objects are not equal.
@@ -143,10 +122,7 @@ namespace L5Sharp.Types
         /// <param name="left">An object to compare.</param>
         /// <param name="right">An object to compare.</param>
         /// <returns>true if the objects are not equal, otherwise, false.</returns>
-        public static bool operator !=(Lint left, Lint right)
-        {
-            return !Equals(left, right);
-        }
+        public static bool operator !=(Lint left, Lint right) => !Equals(left, right);
 
         /// <inheritdoc />
         public int CompareTo(Lint? other)

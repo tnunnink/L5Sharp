@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using L5Sharp.Enums;
@@ -46,6 +47,8 @@ namespace L5Sharp.Core
                     ? _member.ExternalAccess
                     : Parent.ExternalAccess;
 
+        IMember<TDataType>? IMember<TDataType>.this[int index] => null;
+
         /// <inheritdoc />
         public string Description => Base.Comments.HasComment(Operand)
             ? Base.Comments.GetComment(Operand)
@@ -74,7 +77,7 @@ namespace L5Sharp.Core
         public void SetData(IAtomic value)
         {
             if (_member.DataType is IAtomic atomic)
-                atomic.Update(value);
+                atomic.SetValue(value);
         }
 
         /// <inheritdoc />
@@ -127,7 +130,7 @@ namespace L5Sharp.Core
                 throw new ArgumentNullException(nameof(expression), "Expression can not be null");
 
             var member = expression.Invoke(_member.DataType);
-            member.DataType.Update(value);
+            member.DataType.SetValue(value);
         }
 
         /*/// <inheritdoc />
@@ -156,7 +159,7 @@ namespace L5Sharp.Core
 
             var member = expression.Invoke(_member.DataType);
 
-            var operand = member is IArrayMember<IDataType> ? member.Name : $".{member.Name}";
+            var operand = member is Member<IDataType> ? member.Name : $".{member.Name}";
 
             if (string.IsNullOrEmpty(description))
             {
@@ -169,7 +172,7 @@ namespace L5Sharp.Core
 
         private IEnumerable<ITagMember<IDataType>> GetMembersInternal()
         {
-            if (_member is IArrayMember<TDataType> arrayMember)
+            if (_member is Member<TDataType> arrayMember)
             {
                 return arrayMember.Select(e =>
                     new TagMember<IDataType>((IMember<IDataType>)e, (ITagMember<IDataType>)this, Base));
@@ -187,7 +190,7 @@ namespace L5Sharp.Core
 
         private ITagMember<TDataType> GetMember(int index)
         {
-            return _member is IArrayMember<TDataType> arrayMember && index >= 0 && index < Dimensions.Length
+            return _member is Member<TDataType> arrayMember && index >= 0 && index < Dimensions.Length
                 ? new TagMember<TDataType>(arrayMember[index], (ITagMember<IDataType>)this, Base)
                 : null;
         }
@@ -224,6 +227,16 @@ namespace L5Sharp.Core
             return this.IsArrayElement()
                 ? $"{Base.Description} {Parent.Description}".Trim()
                 : $"{Base.Description} {_member.Description}".Trim();
+        }
+
+        public IEnumerator<IMember<TDataType>> GetEnumerator()
+        {
+            throw new NotImplementedException();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
     }
 }

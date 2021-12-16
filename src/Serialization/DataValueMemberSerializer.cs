@@ -44,7 +44,7 @@ namespace L5Sharp.Serialization
             var radix = element.GetValue<IMember<IAtomic>, Radix>(e => e.Radix);
             var value = element.GetValue<IAtomic, object>(a => a.Value);
             
-            atomic = atomic.Update(value!);
+            atomic.SetValue(value!);
 
             return Member.Create(name!, atomic, radix: radix);
         }

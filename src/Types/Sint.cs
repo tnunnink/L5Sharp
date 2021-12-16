@@ -9,7 +9,7 @@ namespace L5Sharp.Types
     public sealed class Sint : IAtomic<byte>, IEquatable<Sint>, IComparable<Sint>
     {
         /// <summary>
-        /// Creates a new default instance of a Sint.
+        /// Creates a new default instance of a Sint type.
         /// </summary>
         public Sint()
         {
@@ -39,22 +39,22 @@ namespace L5Sharp.Types
         public DataTypeClass Class => DataTypeClass.Atomic;
 
         /// <inheritdoc />
-        public byte Value { get; }
+        public byte Value { get; private set; }
 
         object IAtomic.Value => Value;
 
         /// <inheritdoc />
-        public IAtomic<byte> Update(byte value) => new Sint(value);
+        public void SetValue(byte value) => Value = value;
 
         /// <inheritdoc />
-        public IAtomic Update(object value)
+        public void SetValue(object value)
         {
-            return value switch
+            Value = value switch
             {
                 null => throw new ArgumentNullException(nameof(value), "Value can not be null"),
-                Sint atomic => new Sint(atomic),
-                byte typed => new Sint(typed),
-                string str => new Sint(Radix.ParseValue<Sint>(str)),
+                Sint atomic => atomic,
+                byte n => n,
+                string str => Radix.ParseValue<Sint>(str),
                 _ => throw new ArgumentException($"Value type '{value.GetType()}' is not a valid for {GetType()}")
             };
         }
@@ -84,7 +84,7 @@ namespace L5Sharp.Types
         /// If the string value is able to be parsed, a new instance of a <see cref="Sint"/> with the value
         /// provided. If not, then a default instance value.
         /// </returns>
-        public static implicit operator Sint(string input) => new(Radix.ParseValue<Sint>(input));
+        public static implicit operator Sint(string input) => Radix.ParseValue<Sint>(input);
 
         /// <inheritdoc />
         public bool Equals(Sint? other)
@@ -101,9 +101,9 @@ namespace L5Sharp.Types
             if (ReferenceEquals(this, obj)) return true;
             return obj.GetType() == GetType() && Equals((Sint)obj);
         }
-
+        
         /// <inheritdoc />
-        public override int GetHashCode() => Value.GetHashCode();
+        public override int GetHashCode() => Name.GetHashCode();
 
         /// <summary>
         /// Determines whether the objects are equal.

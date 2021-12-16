@@ -1,4 +1,5 @@
-﻿using L5Sharp.Enums;
+﻿using System;
+using L5Sharp.Enums;
 
 namespace L5Sharp.Types
 {
@@ -12,11 +13,22 @@ namespace L5Sharp.Types
     public sealed class Undefined : IDataType
     {
         /// <summary>
+        /// Creates a new default instance of an Undefined type.
+        /// </summary>
+        public Undefined()
+        {
+            Name = nameof(Undefined);
+        }
+        
+        /// <summary>
         /// Creates a new instance of an undefined type with the provided type name.
         /// </summary>
         /// <param name="name">Name of the type for which no definition has been found.</param>
-        internal Undefined(string name)
+        public Undefined(string name)
         {
+            if (string.IsNullOrEmpty(name))
+                throw new ArgumentException("Name can not be null or empty.");
+            
             Name = name;
         }
 

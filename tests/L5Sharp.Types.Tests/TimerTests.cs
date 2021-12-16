@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using L5Sharp.Enums;
 using NUnit.Framework;
 
 namespace L5Sharp.Types.Tests
@@ -7,10 +8,37 @@ namespace L5Sharp.Types.Tests
     public class TimerTests
     {
         [Test]
-        public void New_WhenCalled_ShouldNotBeNull()
+        public void Constructor_WhenCalled_ShouldNotBeNull()
         {
             var type = new Timer();
             type.Should().NotBeNull();
+        }
+        
+        [Test]
+        public void Constructor_ValidDint_ShouldHaveExpectedPREValue()
+        {
+            var type = new Timer(new Dint(5000));
+            
+            type.PRE.DataType.Value.Should().Be(5000);
+        }
+        
+        [Test]
+        public void Class_GetValue_ShouldBeExpected()
+        {
+            var type = new Timer();
+            
+            type.Class.Should().Be(DataTypeClass.Predefined);
+        }
+
+        [Test]
+        public void Instantiate_WhenCalled_ShouldBeEqualToDefault()
+        {
+            var type = new Timer();
+
+            var instance = type.Instantiate();
+
+            instance.Should().NotBeNull();
+            instance.Should().BeEquivalentTo(new Timer());
         }
 
         [Test]

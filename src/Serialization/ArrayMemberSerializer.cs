@@ -17,10 +17,7 @@ namespace L5Sharp.Serialization
         {
             if (component == null)
                 throw new ArgumentNullException(nameof(component));
-            
-            if (!(component is IArrayMember<IDataType> arrayMember))
-                throw new InvalidOperationException("ArrayMembers must be of type IArrayMember.");
-            
+
             var element = new XElement(ElementName);
             
             element.Add(component.ToAttribute(m => m.Name));
@@ -29,7 +26,7 @@ namespace L5Sharp.Serialization
             element.Add(component.ToAttribute(m => m.Radix));
 
             var serializer = new ArrayElementSerializer();
-            var elements = arrayMember.Select(m => serializer.Serialize(m));
+            var elements = component.Select(m => serializer.Serialize(m));
             element.Add(elements);
 
             return element;
@@ -44,8 +41,8 @@ namespace L5Sharp.Serialization
                 throw new ArgumentException($"Element name '{element.Name}' invalid. Expecting '{ElementName}'");
 
             var name = element.GetName();
-            var dimensions = element.GetValue<IArrayMember<IDataType>, Dimensions>(m => m.Dimensions);
-            var radix = element.GetValue<IArrayMember<IDataType>, Radix>(m => m.Radix);
+            var dimensions = element.GetValue<IMember<IDataType>, Dimensions>(m => m.Dimensions);
+            var radix = element.GetValue<IMember<IDataType>, Radix>(m => m.Radix);
             
             var serializer = new ArrayElementSerializer();
             var members = element.Elements().Select(e => serializer.Deserialize(e)).ToArray();

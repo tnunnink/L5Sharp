@@ -8,7 +8,7 @@ using L5Sharp.Types;
 
 namespace L5Sharp.Core
 {
-    public class StringDefined : IStringDefined
+    public class StringDefined : IStringType
     {
         public StringDefined(string name, Dimensions dimensions, string description = null)
         {
@@ -19,7 +19,7 @@ namespace L5Sharp.Core
                 throw new ArgumentException("Dimension must single dimensional and have length greater that zero");
 
             LEN = Member.Create<Dint>(nameof(LEN));
-            DATA = ArrayMember.Create<Sint>(nameof(DATA), dimensions, Radix.Ascii);
+            DATA = Member.Create<Sint>(nameof(DATA), dimensions, Radix.Ascii);
             
             Members = new List<IMember<IDataType>>
             {
@@ -35,8 +35,8 @@ namespace L5Sharp.Core
         public DataFormat Format => DataFormat.String;
         public string Value => GetValue();
         public IMember<Dint> LEN { get; }
-        public IArrayMember<Sint> DATA { get; }
-        public IStringDefined Update(string value)
+        public IMember<Sint> DATA { get; }
+        public void Update(string value)
         {
             throw new NotImplementedException();
         }
@@ -54,7 +54,7 @@ namespace L5Sharp.Core
             ClearData();
             
             for (var i = 0; i < bytes.Length; i++)
-                DATA[i].DataType.Update(bytes[i]);
+                DATA[i].DataType.SetValue(bytes[i]);
         }
 
         public IDataType Instantiate()
@@ -76,7 +76,7 @@ namespace L5Sharp.Core
         private void ClearData()
         {
             foreach (var dataElement in DATA)
-                dataElement.DataType.Update(0);
+                dataElement.DataType.SetValue(0);
         }
     }
 }

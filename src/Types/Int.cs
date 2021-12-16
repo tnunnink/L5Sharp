@@ -9,7 +9,7 @@ namespace L5Sharp.Types
     public sealed class Int : IAtomic<short>, IEquatable<Int>, IComparable<Int>
     {
         /// <summary>
-        /// Creates a new default instance of a Int.
+        /// Creates a new default instance of a Int type.
         /// </summary>
         public Int()
         {
@@ -39,23 +39,23 @@ namespace L5Sharp.Types
         public DataTypeClass Class => DataTypeClass.Atomic;
 
         /// <inheritdoc />
-        public short Value { get; }
+        public short Value { get; private set; }
 
         object IAtomic.Value => Value;
 
         /// <inheritdoc />
-        public IAtomic<short> Update(short value) => new Int(value);
+        public void SetValue(short value) => Value = value;
 
         /// <inheritdoc />
-        public IAtomic Update(object value)
+        public void SetValue(object value)
         {
-            return value switch
+            Value = value switch
             {
-                null => throw new ArgumentNullException(nameof(value), "Value can not be null"),
-                Int atomic => new Int(atomic),
-                byte n => new Int(n),
-                short n => new Int(n),
-                string str => new Int(Radix.ParseValue<Int>(str)),
+                null => throw new ArgumentNullException(nameof(value), "Can not set Atomic value to null."),
+                Int atomic => atomic,
+                byte n => n,
+                short n => n,
+                string str => Radix.ParseValue<Int>(str),
                 _ => throw new ArgumentException($"Value type '{value.GetType()}' is not a valid for {GetType()}")
             };
         }
@@ -104,7 +104,7 @@ namespace L5Sharp.Types
         }
 
         /// <inheritdoc />
-        public override int GetHashCode() => Value.GetHashCode();
+        public override int GetHashCode() => Name.GetHashCode();
 
         /// <summary>
         /// Determines whether the objects are equal.

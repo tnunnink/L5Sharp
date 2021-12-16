@@ -169,15 +169,10 @@ namespace L5Sharp.Core
             if (seedType is null)
                 throw new ArgumentNullException(nameof(seedType));
 
-            var indices = GenerateIndices().ToArray();
+            var indices = GenerateIndices();
 
-            var members = new List<IMember<TDataType>>();
-
-            for (var i = 0; i < Length; i++)
-                members.Add(new Member<TDataType>(indices[i], (TDataType)seedType.Instantiate(), radix, access,
-                    description));
-
-            return members;
+            return indices.Select(i =>
+                new Member<TDataType>(i, (TDataType)seedType.Instantiate(), Empty, radix, access, description));
         }
 
         /// <summary>
@@ -200,7 +195,7 @@ namespace L5Sharp.Core
             if (elements is null)
                 throw new ArgumentNullException(nameof(elements));
 
-            if (elements.Count == 0 || elements.Count > Length)
+            if (elements.Count <= 0 || elements.Count > Length)
                 throw new ArgumentOutOfRangeException(
                     $"Elements count '{elements.Count}' must be greater than zero and less than or equal to the length of the Dimensions.");
 
@@ -210,9 +205,9 @@ namespace L5Sharp.Core
 
             for (var i = 0; i < Length; i++)
             {
-                var instance = i <= elements.Count ? elements[i] : elements[0].Instantiate();
+                var instance = i < elements.Count ? elements[i] : elements[0].Instantiate();
 
-                members.Add(new Member<TDataType>(indices[i], (TDataType)instance, radix, access, description));
+                members.Add(new Member<TDataType>(indices[i], (TDataType)instance, Empty, radix, access, description));
             }
 
             return members;

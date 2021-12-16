@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using L5Sharp.Abstractions;
 using L5Sharp.Builders;
 using L5Sharp.Enums;
@@ -52,6 +54,8 @@ namespace L5Sharp.Core
         /// <inheritdoc />
         public ExternalAccess ExternalAccess { get; private set; }
 
+        public IMember<TDataType>? this[int index] => throw new NotImplementedException();
+
         /// <inheritdoc />
         public TagType TagType => Alias == null ? TagType.Base : TagType.Alias;
 
@@ -87,7 +91,7 @@ namespace L5Sharp.Core
                 throw new ArgumentException(
                     $"Usage '{usage}' not valid for Parameter. Parameter usage must be Input, Output, or InOut");
 
-            if (!DataType.IsValueType() && usage != TagUsage.InOut)
+            if (!DataType.IsAtomicType() && usage != TagUsage.InOut)
                 throw new InvalidOperationException(
                     $"Usage '{usage}' is not valid for complex types. DataType must be Bool, Sint, Int, Dint, or Real");
 
@@ -112,6 +116,16 @@ namespace L5Sharp.Core
             if (access == null) throw new ArgumentNullException(nameof(access));
 
             ExternalAccess = access;
+        }
+
+        public IEnumerator<IMember<TDataType>> GetEnumerator()
+        {
+            throw new NotImplementedException();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
     }
 }

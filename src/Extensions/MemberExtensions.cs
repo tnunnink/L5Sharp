@@ -18,10 +18,7 @@ namespace L5Sharp.Extensions
         public static IEnumerable<string> GetMemberNames<TDataType>(this IMember<TDataType> member)
             where TDataType : IDataType
         {
-            if (!(member is IArrayMember<IDataType> array))
-                return member.DataType.GetMemberNames();
-
-            return array.Select(element => $"{element.Name}");
+            return !member.IsArray() ? member.DataType.GetMemberNames() : member.Select(element => $"{element.Name}");
         }
 
         /// <summary>
@@ -34,10 +31,10 @@ namespace L5Sharp.Extensions
         {
             var names = new List<string>();
 
-            if (!(member is IArrayMember<IDataType> array))
+            if (!member.IsArray())
                 return member.DataType.GetDeepMemberNames();
 
-            foreach (var element in array)
+            foreach (var element in member)
             {
                 names.Add($"{element.Name}");
                 names.AddRange(element.DataType.GetDeepMemberNames());
@@ -47,44 +44,72 @@ namespace L5Sharp.Extensions
         }
 
         /// <summary>
-        /// Determines if the current member is a dimensionless value type
+        /// Determines if the current Member is a dimensionless value type.
         /// </summary>
-        /// <param name="member">The current member.</param>
+        /// <param name="member">The current Member.</param>
         /// <returns>
-        /// true if the current member data type is <see cref="IAtomic"/> and the member dimensions are empty.
-        /// Otherwise, false.
+        /// true if the current Member's DataType property implements <see cref="IAtomic"/> and the member Dimensions
+        /// are empty. Otherwise, false.
         /// </returns>
-        public static bool IsValueMember<TDataType>(this IMember<TDataType> member)
+        public static bool IsValue<TDataType>(this IMember<TDataType> member)
             where TDataType : IDataType
         {
-            return member.DataType is IAtomic && member.Dimensions.AreEmpty;
+            return member.DataType.IsAtomicType() && member.Dimensions.AreEmpty;
         }
         
         /// <summary>
-        /// Determines if the current member is a dimensionless complex type .
+        /// Determines if the current Member is a dimensionless complex type.
         /// </summary>
-        /// <param name="member">The current member.</param>
+        /// <param name="member">The current Member.</param>
         /// <returns>
-        /// true if the current member data type is <see cref="IComplexType"/> and the member dimensions are empty.
-        /// Otherwise, false.
+        /// true if the current Member's DataType property implements <see cref="IComplexType"/> and the member
+        /// Dimensions are empty. Otherwise, false.
         /// </returns>
-        public static bool IsStructureMember<TDataType>(this IMember<TDataType> member)
+        public static bool IsStructure<TDataType>(this IMember<TDataType> member)
             where TDataType : IDataType
         {
-            return member.DataType is IComplexType && member.Dimensions.AreEmpty;
+            return member.DataType.IsComplexType() && member.Dimensions.AreEmpty;
         }
 
         /// <summary>
-        /// Determines if the current member is an array.
+        /// Determines if the current Member is an array.
         /// </summary>
-        /// <param name="member">The current member.</param>
+        /// <param name="member">The current Member.</param>
         /// <returns>
-        /// true if the current member dimensions are not empty. Otherwise, false.
+        /// true if the current Member's Dimensions property are not empty. Otherwise, false.
         /// </returns>
-        public static bool IsArrayMember<TDataType>(this IMember<TDataType> member)
+        public static bool IsArray<TDataType>(this IMember<TDataType> member)
             where TDataType : IDataType
         {
             return !member.Dimensions.AreEmpty;
+        }
+        
+        /// <summary>
+        /// Determines if the current Member is an array of Atomic types.
+        /// </summary>
+        /// <param name="member">The current Member.</param>
+        /// <returns>
+        /// true if the current Member's Dimensions property are not empty and is data type implements <see cref="IAtomic"/>.
+        /// Otherwise, false.
+        /// </returns>
+        public static bool IsAtomicArray<TDataType>(this IMember<TDataType> member)
+            where TDataType : IDataType
+        {
+            return !member.Dimensions.AreEmpty && member.DataType.IsAtomicType();
+        }
+        
+        /// <summary>
+        /// Determines if the current Member is an array of Complex types.
+        /// </summary>
+        /// <param name="member">The current Member.</param>
+        /// <returns>
+        /// true if the current Member's Dimensions property are not empty and is data type implements
+        /// <see cref="IComplexType"/>. Otherwise, false.
+        /// </returns>
+        public static bool IsComplexArray<TDataType>(this IMember<TDataType> member)
+            where TDataType : IDataType
+        {
+            return !member.Dimensions.AreEmpty && member.DataType.IsComplexType();
         }
 
         /// <summary>
@@ -95,13 +120,13 @@ namespace L5Sharp.Extensions
         /// <exception cref="InvalidOperationException">Thrown if the serializer could not be determined.</exception>
         internal static string GetDataElementName(this IMember<IDataType> member)
         {
-            if (member.IsValueMember())
+            if (member.IsValue())
                 return LogixNames.DataValueMember;
 
-            if (member.IsArrayMember())
+            if (member.IsArray())
                 return LogixNames.ArrayMember;
 
-            if (member.IsStructureMember())
+            if (member.IsStructure())
                 return LogixNames.Structure;
 
             throw new InvalidOperationException(

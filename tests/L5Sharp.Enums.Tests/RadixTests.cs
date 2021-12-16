@@ -109,5 +109,13 @@ namespace L5Sharp.Enums.Tests
 
             parsed.Should().Be(0x0C);
         }
+
+        [Test]
+        public void SupportsType_NonAtomic_ShouldBeFalse()
+        {
+            var result = Radix.Decimal.SupportsType(typeof(object));
+
+            result.Should().BeFalse();
+        }
     }
 }
