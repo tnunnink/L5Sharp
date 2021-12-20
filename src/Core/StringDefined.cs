@@ -59,7 +59,7 @@ namespace L5Sharp.Core
 
         public IDataType Instantiate()
         {
-            return new StringDefined(Name, DATA.Dimensions.Copy(), Description);
+            return new StringDefined(Name, DATA.Dimension.Copy(), Description);
         }
 
         public override string ToString()

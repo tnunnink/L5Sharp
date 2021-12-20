@@ -6,7 +6,7 @@ namespace L5Sharp.Types
     /// <summary>
     /// Represents a DINT Logix atomic data type.
     /// </summary>
-    public sealed class Dint : IAtomic<int>, IEquatable<Dint>, IComparable<Dint>
+    public sealed class Dint : IAtomicType<int>, IEquatable<Dint>, IComparable<Dint>
     {
        /// <summary>
         /// Creates a new default instance of a Dint type.
@@ -41,7 +41,7 @@ namespace L5Sharp.Types
         /// <inheritdoc />
         public int Value { get; private set; }
 
-        object IAtomic.Value => Value;
+        object IAtomicType.Value => Value;
 
         /// <inheritdoc />
         public void SetValue(int value) => Value = value;

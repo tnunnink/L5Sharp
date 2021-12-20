@@ -6,7 +6,7 @@ namespace L5Sharp.Types
     /// <summary>
     /// Represents a SINT Logix atomic data type.
     /// </summary>
-    public sealed class Sint : IAtomic<byte>, IEquatable<Sint>, IComparable<Sint>
+    public sealed class Sint : IAtomicType<byte>, IEquatable<Sint>, IComparable<Sint>
     {
         /// <summary>
         /// Creates a new default instance of a Sint type.
@@ -41,7 +41,7 @@ namespace L5Sharp.Types
         /// <inheritdoc />
         public byte Value { get; private set; }
 
-        object IAtomic.Value => Value;
+        object IAtomicType.Value => Value;
 
         /// <inheritdoc />
         public void SetValue(byte value) => Value = value;

@@ -6,7 +6,7 @@ namespace L5Sharp.Types
     /// <summary>
     /// Represents a INT Logix atomic data type.
     /// </summary>
-    public sealed class Real : IAtomic<float>, IEquatable<Real>, IComparable<Real>
+    public sealed class Real : IAtomicType<float>, IEquatable<Real>, IComparable<Real>
     {
         /// <summary>
         /// Creates a new default instance of a Real type.
@@ -41,7 +41,7 @@ namespace L5Sharp.Types
         /// <inheritdoc />
         public float Value { get; private set; }
 
-        object IAtomic.Value => Value;
+        object IAtomicType.Value => Value;
 
         /// <inheritdoc />
         public void SetValue(float value) => Value = value;

@@ -65,7 +65,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void GetValue_AsAtomic_ShouldBeExpected()
         {
-            var type = (IAtomic) new Bool();
+            var type = (IAtomicType) new Bool();
 
             type.Value.Should().Be(false);
         }

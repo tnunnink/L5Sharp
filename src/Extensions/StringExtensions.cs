@@ -181,5 +181,15 @@ namespace L5Sharp.Extensions
         {
             return items.Aggregate(value, (str, cItem) => str.Replace(cItem, replacement));
         }
+
+        public static string ConsumeWhile(this string value, Func<char, bool> condition, out string consumed)
+        {
+            if (value.IsEmpty())
+                throw new ArgumentException("String value must be non empty.");
+            
+            consumed = string.Join(string.Empty, value.TakeWhile(condition));
+
+            return value.Remove(0, consumed.Length);
+        }
     }
 }

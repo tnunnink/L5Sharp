@@ -144,7 +144,7 @@ namespace L5Sharp.Core.Tests
             tag[4].Radix.Should().Be(Radix.Decimal);
         }*/
 
-        [Test]
+        /*[Test]
         public void SetElement_Atomic_ShouldBeExpected()
         {
             var tag = Tag.Build("Test", new Bool()).WithDimensions(5).Create();
@@ -156,6 +156,6 @@ namespace L5Sharp.Core.Tests
             tag[2].GetData().As<Bool>().Should().Be(false);
             tag[3].GetData().As<Bool>().Should().Be(false);
             tag[4].GetData().As<Bool>().Should().Be(false);
-        }
+        }*/
     }
 }

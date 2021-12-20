@@ -4,7 +4,7 @@
     /// Represents a Logix User Defined data type component. 
     /// </summary>
     /// <remarks>
-    /// User defined data types are those that (as the name implies) are created and configured by the user or developer.
+    /// <c>UserDefined</c> data types are those that (as the name implies) are created and configured by the user.
     /// These types are high level components in the L5X, which can be accessed using the <see cref="ILogixContext"/>.
     /// </remarks>
     /// <footer>

@@ -23,7 +23,7 @@ namespace L5Sharp.Enums
         public static readonly DataTypeClass Unknown = new DataTypeClass("Unknown", -1);
 
         /// <summary>
-        /// Represents a data type that has value and radix. See <see cref="IAtomic"/>
+        /// Represents a data type that has value and radix. See <see cref="IAtomicType"/>
         /// </summary>
         /// <example>
         /// Bool, Sint, Int, Dint, Lint, Real.

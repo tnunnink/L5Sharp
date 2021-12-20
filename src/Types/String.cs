@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using L5Sharp.Abstractions;
@@ -20,10 +21,11 @@ namespace L5Sharp.Types
         /// <summary>
         /// Creates a new instance of a String Logix data type with default values.
         /// </summary>
-        public String() : base(nameof(String).ToUpper(), $"Logix representation of a {typeof(string)}")
+        public String() : base(nameof(String).ToUpper(), $"Logix representation of a {typeof(string)}",
+            GenerateMembers())
         {
-            LEN = Member.Create(nameof(LEN), new Dint(PredefinedLength));
-            DATA = Member.Create<Sint>(nameof(DATA), new Dimensions(PredefinedLength), Radix.Ascii);
+            LEN = (IMember<Dint>)Members.Single(m => m.Name == nameof(LEN));
+            DATA = (IMember<Sint>)Members.Single(m => m.Name == nameof(DATA));
         }
 
         /// <summary>
@@ -139,7 +141,16 @@ namespace L5Sharp.Types
                     $"Value length '{bytes.Length}' must be less than the predefined length '{PredefinedLength}'");
 
             for (var i = 0; i < bytes.Length; i++)
-                DATA[i]?.DataType.SetValue(bytes[i]);
+                DATA[i].DataType.SetValue(bytes[i]);
+        }
+
+        private static IEnumerable<IMember<IDataType>> GenerateMembers()
+        {
+            return new List<IMember<IDataType>>
+            {
+                Member.Create(nameof(LEN), new Dint(PredefinedLength)),
+                Member.Create<Sint>(nameof(DATA), new Dimensions(PredefinedLength), Radix.Ascii)
+            };
         }
     }
 }

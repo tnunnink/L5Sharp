@@ -74,6 +74,25 @@ namespace L5Sharp.Core
         public IRoutine PostScan => _routines.Single(r => r.Name == PostScanRoutineName);
         public IRoutine EnableInFalse => _routines.Single(r => r.Name == EnableInRoutineName);
         public IEnumerable<IMember<IDataType>> Members => Parameters.Where(p => p.Usage != TagUsage.InOut);
+        public IMember<IDataType>? GetMember(string name)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<IMember<IDataType>> GetMembers()
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<string> GetMemberNames()
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<IDataType> GetDependentTypes()
+        {
+            throw new NotImplementedException();
+        }
 
         public NeutralText Signature { get; }
         public IMemberCollection<IParameter<IDataType>> Parameters { get; }

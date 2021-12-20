@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Xml.Serialization;
 using L5Sharp.Enums;
 
 namespace L5Sharp.Core
@@ -13,17 +12,30 @@ namespace L5Sharp.Core
     {
         private readonly List<IMember<TDataType>> _elements = new();
         
-        internal Member(string name, TDataType dataType, Dimensions? dimensions,
+        internal Member(string name, TDataType dataType, Dimensions? dimension,
             Radix? radix, ExternalAccess? externalAccess, string? description)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
             DataType = dataType ?? throw new ArgumentNullException(nameof(dataType));
-            Dimensions = dimensions ?? Dimensions.Empty;
-            Radix = radix is not null && radix.SupportsType(DataType) ? radix : Radix.Default(dataType);
+            Dimension = dimension ?? Dimensions.Empty;
+            Radix = radix is not null && radix.SupportsType(DataType) ? radix : Radix.Default(DataType);
             ExternalAccess = externalAccess ?? ExternalAccess.ReadWrite;
             Description = description ?? string.Empty;
             
-            _elements.AddRange(Dimensions.GenerateMembers(DataType, Radix, ExternalAccess, Description));
+            _elements.AddRange(Dimension.GenerateMembers(DataType, Radix, ExternalAccess, Description));
+        }
+        
+        internal Member(string name, List<TDataType> elements, Dimensions? dimension,
+            Radix? radix, ExternalAccess? externalAccess, string? description)
+        {
+            Name = name ?? throw new ArgumentNullException(nameof(name));
+            DataType = elements.Count > 0 ? elements[0] : throw new ArgumentNullException(nameof(elements));
+            Dimension = dimension ?? Dimensions.Empty;
+            Radix = radix is not null && radix.SupportsType(DataType) ? radix : Radix.Default(DataType);
+            ExternalAccess = externalAccess ?? ExternalAccess.ReadWrite;
+            Description = description ?? string.Empty;
+            
+            _elements.AddRange(Dimension.GenerateMembers(elements, Radix, ExternalAccess, Description));
         }
 
         /// <inheritdoc />
@@ -36,8 +48,7 @@ namespace L5Sharp.Core
         public TDataType DataType { get; }
 
         /// <inheritdoc />
-        [XmlAttribute("Dimension")] // accounts for naming difference between data type members and tags.
-        public Dimensions Dimensions { get; }
+        public Dimensions Dimension { get; }
 
         /// <inheritdoc />
         public Radix Radix { get; }
@@ -46,12 +57,11 @@ namespace L5Sharp.Core
         public ExternalAccess ExternalAccess { get; }
         
         /// <inheritdoc />
-        public IMember<TDataType>? this[int index] 
-            => !Dimensions.AreEmpty && index >= 0 && index < Dimensions.Length ?  _elements[index] : null;
+        public IMember<TDataType> this[int index] => _elements[index];
 
         /// <inheritdoc />
         public IMember<TDataType> Copy() =>
-            new Member<TDataType>(string.Copy(Name), (TDataType)DataType.Instantiate(), Dimensions.Copy(),
+            new Member<TDataType>(string.Copy(Name), (TDataType)DataType.Instantiate(), Dimension.Copy(),
                 Radix, ExternalAccess, string.Copy(Description));
 
         /// <inheritdoc />
@@ -61,7 +71,7 @@ namespace L5Sharp.Core
             if (ReferenceEquals(this, other)) return true;
             return Name == other.Name
                    && Equals(DataType, other.DataType)
-                   && Equals(Dimensions, other.Dimensions)
+                   && Equals(Dimension, other.Dimension)
                    && Equals(Radix, other.Radix)
                    && Equals(ExternalAccess, other.ExternalAccess)
                    && Description == other.Description
@@ -78,7 +88,7 @@ namespace L5Sharp.Core
 
         /// <inheritdoc />
         public override int GetHashCode() =>
-            HashCode.Combine(Name, DataType, Dimensions, ExternalAccess, Description, _elements);
+            HashCode.Combine(Name, DataType, Dimension, ExternalAccess, Description, _elements);
 
         /// <summary>
         /// Determines whether two objects are equal. 

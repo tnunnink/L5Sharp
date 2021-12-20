@@ -6,7 +6,7 @@ namespace L5Sharp.Types
     /// <summary>
     /// Represents a BOOL Logix atomic data type.
     /// </summary>
-    public sealed class Bool : IAtomic<bool>, IEquatable<Bool>, IComparable<Bool>
+    public sealed class Bool : IAtomicType<bool>, IEquatable<Bool>, IComparable<Bool>
     {
         /// <summary>
         /// Creates a new default instance of a Bool type.
@@ -50,7 +50,7 @@ namespace L5Sharp.Types
         /// <inheritdoc />
         public bool Value { get; private set; }
 
-        object IAtomic.Value => Value;
+        object IAtomicType.Value => Value;
 
         /// <inheritdoc />
         public void SetValue(bool value) => Value = value;

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Xml.Linq;
+using L5Sharp.Common;
 using L5Sharp.Serialization;
-using L5Sharp.Utilities;
 
 namespace L5Sharp.Extensions
 {
@@ -20,13 +20,16 @@ namespace L5Sharp.Extensions
         public static XElement Serialize<T>(this T component, string? serializerName = null)
         {
             var name = serializerName ?? LogixNames.GetComponentName<T>();
+            
             var serializer = GetSerializer<T>(name);
+            
             return serializer.Serialize(component);
         }
 
         public static T Deserialize<T>(this XElement element)
         {
             var serializer = GetSerializer<T>(element.Name.ToString());
+            
             return serializer.Deserialize(element);
         }
 

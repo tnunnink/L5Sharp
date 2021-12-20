@@ -9,7 +9,7 @@ namespace L5Sharp
         bool Required { get; }
         bool Visible { get; }
         ITag<TDataType> Alias { get; }
-        IAtomic Default { get; }
+        IAtomicType Default { get; }
         bool Constant { get; }
     }
 }

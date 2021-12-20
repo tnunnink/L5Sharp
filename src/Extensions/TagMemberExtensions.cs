@@ -15,13 +15,13 @@ namespace L5Sharp.Extensions
         /// </summary>
         /// <param name="member">The current member to inspect</param>
         /// <returns>
-        /// <b>True</b> if the current member data type is <see cref="IAtomic"/> and the member dimensions are empty.
+        /// <b>True</b> if the current member data type is <see cref="IAtomicType"/> and the member dimensions are empty.
         /// Otherwise, <b>True</b>/>
         /// </returns>
         public static bool IsValueMember<TDataType>(this ITagMember<TDataType> member)
             where TDataType : IDataType
         {
-            return typeof(IAtomic).IsAssignableFrom(typeof(TDataType)) && member.Dimensions.AreEmpty;
+            return typeof(IAtomicType).IsAssignableFrom(typeof(TDataType)) && member.Dimensions.AreEmpty;
         }
 
         /// <summary>

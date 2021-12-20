@@ -50,7 +50,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void GetValue_AsAtomic_ShouldBeExpected()
         {
-            var type = (IAtomic) new Sint();
+            var type = (IAtomicType) new Sint();
 
             type.Value.Should().Be(0);
         }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq.Expressions;
 using System.Xml.Linq;
-using L5Sharp.Utilities;
+using L5Sharp.Common;
 
 namespace L5Sharp.Extensions
 {

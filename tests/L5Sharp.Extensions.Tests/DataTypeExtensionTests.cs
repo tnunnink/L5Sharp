@@ -12,40 +12,6 @@ namespace L5Sharp.Extensions.Tests
     public class DataTypeExtensionTests
     {
         [Test]
-        public void IsValueType_AtomicType_ShouldBeTrue()
-        {
-            var type = new Dint();
-
-            type.IsAtomicType().Should().BeTrue();
-        }
-
-        [Test]
-        public void IsValueType_Predefined_ShouldBeFalse()
-        {
-            var type = new Timer();
-
-            type.IsAtomicType().Should().BeFalse();
-        }
-
-        [Test]
-        public void AreSameClass_AreSame_ShouldBeTrue()
-        {
-            var type1 = new Counter();
-            var type2 = new Timer();
-
-            type1.AreSameClass(type2).Should().BeTrue();
-        }
-        
-        [Test]
-        public void AreSameClass_AreNotSame_ShouldBeFalse()
-        {
-            var type1 = new Counter();
-            var type2 = new Int();
-
-            type1.AreSameClass(type2).Should().BeFalse();
-        }
-
-        [Test]
         public void GetMember_Predefined_ShouldNotBeNull()
         {
             var type = new Timer();
@@ -76,7 +42,7 @@ namespace L5Sharp.Extensions.Tests
                 Member.Create<Dint>("Member01")
             });
 
-            var names = type.GetDeepMemberNames();
+            var names = type.GetMemberNames();
 
             names.Should().NotBeEmpty();
         }
@@ -89,7 +55,7 @@ namespace L5Sharp.Extensions.Tests
                 Member.Create<Dint>("Member01", new Dimensions(5))
             });
 
-            var names = type.GetDeepMemberNames().ToList();
+            var names = type.GetMemberNames().ToList();
 
             names.Should().NotBeEmpty();
             names.Should().HaveCount(6);
@@ -135,16 +101,16 @@ namespace L5Sharp.Extensions.Tests
             target.StructureEquals(null).Should().BeFalse();
         }
         
-        [Test]
+        /*[Test]
         public void StructureEquals_AtomicSource_ShouldBeFalse()
         {
             var target = new Timer();
             var source = new Bool();
             
             target.StructureEquals(source).Should().BeFalse();
-        }
+        }*/
         
-        [Test]
+        /*[Test]
         public void StructureEquals_AtomicTarget_ShouldBeFalse()
         {
             var target = new Bool();
@@ -160,7 +126,7 @@ namespace L5Sharp.Extensions.Tests
             var source = new Bool();
             
             target.StructureEquals(source).Should().BeTrue();
-        }
+        }*/
         
         [Test]
         public void StructureEquals_DifferentPredefined_ShouldBeFalse()

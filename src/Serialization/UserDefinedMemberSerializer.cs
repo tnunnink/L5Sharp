@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 using System.Xml.Linq;
+using L5Sharp.Common;
 using L5Sharp.Components;
 using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Extensions;
-using L5Sharp.Utilities;
 
 [assembly: InternalsVisibleTo("L5Sharp.Serialization.Tests")]
 
@@ -24,7 +24,7 @@ namespace L5Sharp.Serialization
             
             element.Add(component.ToAttribute(c => c.Name));
             element.Add(component.ToAttribute(c => c.DataType));
-            element.Add(component.ToAttribute(c => c.Dimensions));
+            element.Add(component.ToAttribute(c => c.Dimension));
             element.Add(component.ToAttribute(c => c.Radix));
             element.Add(component.ToAttribute(c => c.ExternalAccess));
 
@@ -44,7 +44,7 @@ namespace L5Sharp.Serialization
 
             var name = element.GetName() ?? throw new ArgumentNullException();
             var dataType = element.GetDataType();
-            var dimensions = element.GetValue<IMember<IDataType>, Dimensions>(m => m.Dimensions);
+            var dimensions = element.GetValue<IMember<IDataType>, Dimensions>(m => m.Dimension);
             var radix = element.GetValue<IMember<IDataType>, Radix>(m => m.Radix);
             var access = element.GetValue<IMember<IDataType>, ExternalAccess>(m => m.ExternalAccess);
             var description = element.GetValue<IMember<IDataType>, string>(m => m.Description);

@@ -4,7 +4,7 @@ using System.ComponentModel;
 using L5Sharp.Core;
 using L5Sharp.Enums;
 
-namespace L5Sharp.Utilities
+namespace L5Sharp.Common
 {
     /// <summary>
     /// Static class containing mappings for converting string values (XML typed value) to the strongly type object.

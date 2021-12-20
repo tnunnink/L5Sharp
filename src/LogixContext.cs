@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using System.Xml.Schema;
+using L5Sharp.Common;
 using L5Sharp.Core;
 using L5Sharp.Repositories;
 using L5Sharp.Serialization;
-using L5Sharp.Utilities;
 
 namespace L5Sharp
 {

@@ -19,7 +19,7 @@ namespace L5Sharp.Core
             Description = description;
             DataType = dataType;
 
-            usage ??= DataType is IAtomic ? TagUsage.Input : TagUsage.InOut;
+            usage ??= DataType is IAtomicType ? TagUsage.Input : TagUsage.InOut;
             SetUsage(usage);
 
             dimensions ??= Dimensions.Empty;
@@ -46,7 +46,7 @@ namespace L5Sharp.Core
         public TDataType DataType { get; }
 
         /// <inheritdoc />
-        public Dimensions Dimensions { get; private set; }
+        public Dimensions Dimension { get; private set; }
 
         /// <inheritdoc />
         public Radix Radix { get; }
@@ -72,7 +72,7 @@ namespace L5Sharp.Core
         public ITag<TDataType> Alias => null; //todo still need to decide how to handle aliases
 
         /// <inheritdoc />
-        public IAtomic Default => DataType is IAtomic atomic ? atomic : null;
+        public IAtomicType Default => DataType is IAtomicType atomic ? atomic : null;
 
         /// <inheritdoc />
         public bool Constant { get; }
@@ -91,7 +91,7 @@ namespace L5Sharp.Core
                 throw new ArgumentException(
                     $"Usage '{usage}' not valid for Parameter. Parameter usage must be Input, Output, or InOut");
 
-            if (!DataType.IsAtomicType() && usage != TagUsage.InOut)
+            if (DataType is not IAtomicType && usage != TagUsage.InOut)
                 throw new InvalidOperationException(
                     $"Usage '{usage}' is not valid for complex types. DataType must be Bool, Sint, Int, Dint, or Real");
 
@@ -105,7 +105,7 @@ namespace L5Sharp.Core
             if (!dimensions.AreEmpty && Usage != TagUsage.InOut)
                 throw new InvalidOperationException("Dimensions are only configurable for InOut parameters");
 
-            Dimensions = dimensions;
+            Dimension = dimensions;
         }
         
         private void SetExternalAccess(ExternalAccess access)

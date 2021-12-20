@@ -1,4 +1,4 @@
-﻿using System;
+﻿/*using System;
 using System.Collections.Generic;
 using AutoFixture;
 using FluentAssertions;
@@ -221,7 +221,7 @@ namespace L5Sharp.Core.Tests
             tag.SetRadix(Radix.Binary);
 
             tag.Radix.Should().Be(Radix.Binary);
-        }*/
+        }#1#
 
         [Test]
         public void SetData_Null_ShouldThrowArgumentNullException()
@@ -239,7 +239,7 @@ namespace L5Sharp.Core.Tests
             var tag = Tag.Create("Test", (IDataType)new Timer());
 
             FluentActions.Invoking(() => tag.SetData(new Dint(value))).Should().Throw<InvalidTagDataException>();
-        }*/
+        }#1#
 
         [Test]
         public void SetData_IsDifferentAtomicType_ShouldThrowInvalidTagValueException()
@@ -397,4 +397,4 @@ namespace L5Sharp.Core.Tests
             result.DataType.Should().Be(nameof(Dint).ToUpper());
         }
     }
-}
+}*/

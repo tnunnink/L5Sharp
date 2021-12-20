@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Xml.Linq;
+using L5Sharp.Common;
 using L5Sharp.Components;
 using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Extensions;
-using L5Sharp.Utilities;
 
 namespace L5Sharp.Serialization
 {
@@ -17,7 +17,7 @@ namespace L5Sharp.Serialization
             if (component == null)
                 throw new ArgumentNullException(nameof(component));
 
-            if (component.DataType is not IAtomic atomic)
+            if (component.DataType is not IAtomicType atomic)
                 throw new InvalidOperationException("DataValueMembers must have an atomic data type.");
 
             var element = new XElement(ElementName);
@@ -40,9 +40,9 @@ namespace L5Sharp.Serialization
                     $"Expecting element with name {LogixNames.DataValueMember} but got {element.Name}");
 
             var name = element.GetName();
-            var atomic = (IAtomic)element.GetDataType();
-            var radix = element.GetValue<IMember<IAtomic>, Radix>(e => e.Radix);
-            var value = element.GetValue<IAtomic, object>(a => a.Value);
+            var atomic = (IAtomicType)element.GetDataType();
+            var radix = element.GetValue<IMember<IAtomicType>, Radix>(e => e.Radix);
+            var value = element.GetValue<IAtomicType, object>(a => a.Value);
             
             atomic.SetValue(value!);
 

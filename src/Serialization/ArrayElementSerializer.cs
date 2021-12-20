@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Xml.Linq;
+using L5Sharp.Common;
 using L5Sharp.Components;
 using L5Sharp.Extensions;
-using L5Sharp.Utilities;
 
 namespace L5Sharp.Serialization
 {
@@ -21,7 +21,7 @@ namespace L5Sharp.Serialization
 
             switch (component.DataType)
             {
-                case IAtomic atomic:
+                case IAtomicType atomic:
                     element.Add(atomic.ToAttribute(x => x.Value));
                     break;
                 case IComplexType complexType:
@@ -52,9 +52,9 @@ namespace L5Sharp.Serialization
                 ? element.GetDataType()
                 : new StructureSerializer().Deserialize(element.Element(LogixNames.Structure)!);
 
-            if (dataType is not IAtomic atomic) return Member.Create(name!, dataType);
+            if (dataType is not IAtomicType atomic) return Member.Create(name!, dataType);
 
-            var value = element.GetValue<IAtomic, object>(a => a.Value);
+            var value = element.GetValue<IAtomicType, object>(a => a.Value);
             atomic.SetValue(value!);
 
             return Member.Create(name, atomic);

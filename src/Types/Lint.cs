@@ -6,7 +6,7 @@ namespace L5Sharp.Types
     /// <summary>
     /// Represents a INT Logix atomic data type.
     /// </summary>
-    public sealed class Lint : IAtomic<long>, IEquatable<Lint>, IComparable<Lint>
+    public sealed class Lint : IAtomicType<long>, IEquatable<Lint>, IComparable<Lint>
     {
         /// <summary>
         /// Creates a new default instance of a Lint type.
@@ -41,7 +41,7 @@ namespace L5Sharp.Types
         /// <inheritdoc />
         public long Value { get; private set; }
 
-        object IAtomic.Value => Value;
+        object IAtomicType.Value => Value;
 
         /// <inheritdoc />
         public void SetValue(long value) => Value = value;

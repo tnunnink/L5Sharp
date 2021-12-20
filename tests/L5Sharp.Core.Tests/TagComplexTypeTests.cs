@@ -61,7 +61,7 @@ namespace L5Sharp.Core.Tests
             member.Should().BeNull();
         }
 
-        [Test]
+        /*[Test]
         public void StringIndex_SameMember_DataShouldReferenceSameInstance()
         {
             var tag = Tag.Create<Timer>("Test");
@@ -70,30 +70,10 @@ namespace L5Sharp.Core.Tests
             var second = tag["ACC"];
 
             first.GetData().Should().BeSameAs(second.GetData());
-        }
-
-        [Test]
-        public void ExpressionIndex_ValidNameHasMember_ShouldNotBeNull()
-        {
-            var tag = Tag.Create<Timer>("Test");
-
-            var member = tag[t => t.PRE];
-
-            member.Should().NotBeNull();
-        }
-
-        [Test]
-        public void ExpressionIndex_SameMember_DataShouldReferenceSameInstance()
-        {
-            var tag = Tag.Create<Timer>("Test");
-
-            var first = tag[t => t.PRE];
-            var second = tag[t => t.PRE];
-
-            first.GetData().Should().BeSameAs(second.GetData());
-        }
+        }*/
 
 
+        /*
         [Test]
         public void SetMember_ValidNameHasMember_ShouldNotBeNull()
         {
@@ -102,8 +82,9 @@ namespace L5Sharp.Core.Tests
             tag.SetMember(t => t.ACC, new Dint(5001));
 
             tag.GetMember(t => t.ACC).GetData().As<Dint>().Should().Be(5001);
-        }
+        }*/
 
+        /*
         [Test]
         public void GetMember_GenericTagType_ShouldNotBeNull()
         {
@@ -113,6 +94,7 @@ namespace L5Sharp.Core.Tests
 
             value.Should().NotBeNull();
         }
+        */
 
         [Test]
         public void GetMember_Null_ShouldBeNull()
@@ -134,6 +116,7 @@ namespace L5Sharp.Core.Tests
             member.Should().BeNull();
         }
 
+        /*
         [Test]
         public void SetMember_Radix_ShouldUpdateRadix()
         {
@@ -142,7 +125,7 @@ namespace L5Sharp.Core.Tests
             tag.SetMember(t => t.ACC, Radix.Binary);
 
             tag.GetMember(t => t.ACC).Radix.Should().Be(Radix.Binary);
-        }
+        }*/
 
         /*[Test]
         public void SetMember_Description_ShouldBeExpectedDescription()
@@ -159,20 +142,24 @@ namespace L5Sharp.Core.Tests
         {
             var tag = Tag.Create<MyNestedType>("Test");
 
-            var simple = tag.GetMember(t => t.SimpleBool);
+            var simple = tag.GetMember(t => t.Indy);
             simple.Should().NotBeNull();
 
             var stringDataElement = tag
-                .GetMember(t => t.String)
-                .GetMember(t => t.DATA[4]);
+                .GetMember(t => t.Str)
+                ?.GetMember(t => t.DATA[4]);
             
             stringDataElement.Should().NotBeNull();
 
-            var timerMember = tag.GetMember(t => t.Timer).GetMember(t => t.PRE);
+            var timerMember = tag
+                .GetMember(t => t.Tmr)
+                ?.GetMember(t => t.PRE);
 
             timerMember.Should().NotBeNull();
             
-            var indexing = tag["Timer"]["PRE"];
+            var indexing = tag["Timer"]?["PRE"];
+            
+            var example = tag["Timer.PRE"];
             
             indexing.Should().NotBeNull();
         }
@@ -183,13 +170,13 @@ namespace L5Sharp.Core.Tests
         public MyNestedType() :
             base(nameof(MyNestedType), "This is a test data type")
         {
-            Members.Add(SimpleBool);
-            Members.Add(String);
-            Members.Add(Timer);
+            Members.Add(Indy);
+            Members.Add(Str);
+            Members.Add(Tmr);
         }
 
-        public IMember<Bool> SimpleBool = Member.Create<Bool>(nameof(SimpleBool));
-        public IMember<String> String = Member.Create<String>(nameof(String));
-        public IMember<Timer> Timer = Member.Create<Timer>(nameof(Timer));
+        public IMember<Bool> Indy = Member.Create<Bool>(nameof(Indy));
+        public IMember<String> Str = Member.Create<String>(nameof(Str));
+        public IMember<Timer> Tmr = Member.Create<Timer>(nameof(Tmr));
     }
 }

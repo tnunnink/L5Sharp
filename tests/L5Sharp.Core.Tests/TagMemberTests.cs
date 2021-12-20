@@ -9,7 +9,7 @@ namespace L5Sharp.Core.Tests
     [TestFixture]
     public class TagMemberTests
     {
-        [Test]
+        /*[Test]
         public void ComplexGetMember_ShouldHaveExpectedValues()
         {
             var tag = Tag.Create<Timer>("Test");
@@ -23,6 +23,6 @@ namespace L5Sharp.Core.Tests
             member.Dimensions.Should().Be(Dimensions.Empty);
             member.Radix.Should().Be(Radix.Decimal);
             member.ExternalAccess.Should().Be(ExternalAccess.None);
-        }
+        }*/
     }
 }

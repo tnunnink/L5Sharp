@@ -50,7 +50,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void GetValue_AsAtomic_ShouldBeExpected()
         {
-            var type = (IAtomic) new Int();
+            var type = (IAtomicType) new Int();
 
             type.Value.Should().Be(0);
         }
@@ -72,27 +72,7 @@ namespace L5Sharp.Types.Tests
 
             type.Value.Should().Be(_random);
         }
-        
-        [Test]
-        public void SetValue_SameType_ShouldBeExpected()
-        {
-            var type = new Int();
 
-            type.SetValue(new Int(_random));
-
-            type.Value.Should().Be(_random);
-        }
-        
-        [Test]
-        public void SetValue_SameTypeAsObject_ShouldBeExpected()
-        {
-            var type = new Int();
-
-            type.SetValue((object)new Int(_random));
-
-            type.Value.Should().Be(_random);
-        }
-        
         [Test]
         public void SetValue_ValidByte_ShouldBeExpected()
         {
@@ -104,7 +84,39 @@ namespace L5Sharp.Types.Tests
 
             type.Value.Should().Be(value);
         }
+
+        [Test]
+        public void SetValue_SameType_ShouldBeExpected()
+        {
+            var type = new Int();
+
+            type.SetValue(new Int(_random));
+
+            type.Value.Should().Be(_random);
+        }
+
+        [Test]
+        public void SetValue_SameTypeAsObject_ShouldBeExpected()
+        {
+            var type = new Int();
+
+            type.SetValue((object)new Int(_random));
+
+            type.Value.Should().Be(_random);
+        }
         
+        [Test]
+        public void SetValue_Sint_ShouldBeExpected()
+        {
+            var fixture = new Fixture();
+            var value = fixture.Create<byte>();
+            var type = new Int();
+
+            type.SetValue(new Sint(value));
+
+            type.Value.Should().Be(value);
+        }
+
         [Test]
         public void SetValue_ValidObjectValue_ShouldBeExpected()
         {

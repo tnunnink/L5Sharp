@@ -5,7 +5,7 @@ using L5Sharp.Extensions;
 using L5Sharp.Serialization;
 using L5Sharp.Types;
 
-namespace L5Sharp.Utilities
+namespace L5Sharp.Common
 {
     /// <summary>
     /// Helper class for going out and finding and creating an instance of the current element's data type.

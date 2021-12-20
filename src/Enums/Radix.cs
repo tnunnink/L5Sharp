@@ -35,7 +35,7 @@ namespace L5Sharp.Enums
         /// Represents a Null radix, or absence of a Radix value.
         /// </summary>
         /// <remarks>
-        /// Only <see cref="IAtomic"/> types have non-null Radix. <see cref="IComplexType"/> types all have null Radix.
+        /// Only <see cref="IAtomicType"/> types have non-null Radix. <see cref="IComplexType"/> types all have null Radix.
         /// </remarks>
         public static readonly Radix Null = new NullRadix();
 
@@ -119,7 +119,7 @@ namespace L5Sharp.Enums
         /// </returns>
         public static Radix Default(Type type)
         {
-            if (!typeof(IAtomic).IsAssignableFrom(type))
+            if (!typeof(IAtomicType).IsAssignableFrom(type))
                 return Null;
 
             return type == typeof(Real) ? Float : Decimal;
@@ -141,7 +141,7 @@ namespace L5Sharp.Enums
         /// </returns>
         public bool SupportsType(Type type)
         {
-            if (!typeof(IAtomic).IsAssignableFrom(type))
+            if (!typeof(IAtomicType).IsAssignableFrom(type))
                 return Equals(Null);
 
             if (type == typeof(Bool))
@@ -200,18 +200,18 @@ namespace L5Sharp.Enums
         }
 
         /// <summary>
-        /// Parsed a string input and returns the value as an <see cref="IAtomic"/> value type.
+        /// Parsed a string input and returns the value as an <see cref="IAtomicType"/> value type.
         /// </summary>
         /// <remarks>
         /// This method is similar to <see cref="ParseValue"/>, except it will return the parsed input as the
         /// atomic value type that is specified by the generic parameter.
         /// </remarks>
         /// <param name="input">The string value to parse.</param>
-        /// <typeparam name="TAtomic">The <see cref="IAtomic"/> type to return.</typeparam>
+        /// <typeparam name="TAtomic">The <see cref="IAtomicType"/> type to return.</typeparam>
         /// <returns>
         /// An IAtomic value type instance representing the value of the parsed string input.
         /// </returns>
-        public static TAtomic ParseValue<TAtomic>(string input) where TAtomic : IAtomic, new()
+        public static TAtomic ParseValue<TAtomic>(string input) where TAtomic : IAtomicType, new()
         {
             var parser = GetParser(input);
 
@@ -235,7 +235,7 @@ namespace L5Sharp.Enums
         /// <returns>
         /// A string that represents the value of the atomic type in the current radix base number style.
         /// </returns>
-        public abstract string? Convert(IAtomic atomic);
+        public abstract string? Convert(IAtomicType atomic);
 
         /// <summary>
         /// Parses a string input of a given Radix formatted value into an object value. 
@@ -253,7 +253,7 @@ namespace L5Sharp.Enums
         /// A string representing the value of the atomic in the specified base number.
         /// If not convertable, returns an empty string.
         /// </returns>
-        private static string ChangeBase(IAtomic atomic, int baseNumber)
+        private static string ChangeBase(IAtomicType atomic, int baseNumber)
         {
             return atomic switch
             {
@@ -280,7 +280,7 @@ namespace L5Sharp.Enums
             return radix is not null ? FromName(radix).Parse : Null.Parse;
         }
 
-        private void ValidateType(IAtomic atomic)
+        private void ValidateType(IAtomicType atomic)
         {
             if (atomic == null)
                 throw new ArgumentNullException(nameof(atomic));
@@ -304,7 +304,7 @@ namespace L5Sharp.Enums
             {
             }
 
-            public override string? Convert(IAtomic atomic)
+            public override string? Convert(IAtomicType atomic)
             {
                 return null;
             }
@@ -326,7 +326,7 @@ namespace L5Sharp.Enums
             {
             }
 
-            public override string Convert(IAtomic atomic)
+            public override string Convert(IAtomicType atomic)
             {
                 ValidateType(atomic);
 
@@ -377,7 +377,7 @@ namespace L5Sharp.Enums
             {
             }
 
-            public override string Convert(IAtomic atomic)
+            public override string Convert(IAtomicType atomic)
             {
                 ValidateType(atomic);
 
@@ -423,7 +423,7 @@ namespace L5Sharp.Enums
             {
             }
 
-            public override string Convert(IAtomic atomic)
+            public override string Convert(IAtomicType atomic)
             {
                 ValidateType(atomic);
 
@@ -461,7 +461,7 @@ namespace L5Sharp.Enums
             {
             }
 
-            public override string Convert(IAtomic atomic)
+            public override string Convert(IAtomicType atomic)
             {
                 ValidateType(atomic);
 
@@ -507,7 +507,7 @@ namespace L5Sharp.Enums
             {
             }
 
-            public override string Convert(IAtomic atomic)
+            public override string Convert(IAtomicType atomic)
             {
                 ValidateType(atomic);
 
@@ -533,7 +533,7 @@ namespace L5Sharp.Enums
             {
             }
 
-            public override string Convert(IAtomic atomic)
+            public override string Convert(IAtomicType atomic)
             {
                 ValidateType(atomic);
 
@@ -562,7 +562,7 @@ namespace L5Sharp.Enums
             {
             }
 
-            public override string Convert(IAtomic atomic)
+            public override string Convert(IAtomicType atomic)
             {
                 ValidateType(atomic);
 
@@ -606,7 +606,7 @@ namespace L5Sharp.Enums
             {
             }
 
-            public override string Convert(IAtomic atomic)
+            public override string Convert(IAtomicType atomic)
             {
                 ValidateType(atomic);
 
@@ -640,7 +640,7 @@ namespace L5Sharp.Enums
             {
             }
 
-            public override string Convert(IAtomic atomic)
+            public override string Convert(IAtomicType atomic)
             {
                 ValidateType(atomic);
 

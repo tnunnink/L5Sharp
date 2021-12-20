@@ -1,59 +1,17 @@
 ﻿using System;
 using FluentAssertions;
-using L5Sharp.Components;
 using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Exceptions;
-using L5Sharp.Types;
 using NUnit.Framework;
 
 namespace L5Sharp.Abstractions.Tests
 {
-    public class TestComplex : ComplexType
-    {
-        public TestComplex() : base(nameof(TestComplex))
-        {
-        }
-
-        public override DataTypeClass Class => DataTypeClass.Predefined;
-
-        protected override IDataType New()
-        {
-            return new TestComplex();
-        }
-
-        public IMember<Bool> TestMember = Member.Create<Bool>(nameof(TestMember));
-    }
-
     [TestFixture]
     public class ComplexTypeTests
     {
         [Test]
-        public void Name_GetValue_ShouldBeEmpty()
-        {
-            var type = new TestComplex();
-
-            type.Name.Should().Be("TestPredefined");
-        }
-
-        [Test]
-        public void Description_GetValue_ShouldBeNull()
-        {
-            var type = new TestComplex();
-
-            type.Description.Should().BeNull();
-        }
-
-        [Test]
-        public void Class_ValidType_ShouldReturnExpected()
-        {
-            var type = new TestComplex();
-
-            type.Class.Should().Be(DataTypeClass.Predefined);
-        }
-
-        [Test]
-        public void Predefined_WhenCastedToDataType_ShouldThrowInvalidCastException()
+        public void ComplexType_WhenCastedToUserDefined_ShouldThrowInvalidCastException()
         {
             var atomic = (IDataType)new TestComplex();
 
@@ -66,18 +24,61 @@ namespace L5Sharp.Abstractions.Tests
             FluentActions.Invoking(() => new MyNullNamePredefined()).Should().Throw<ArgumentException>();
         }
 
-        private class MyNullNamePredefined : ComplexType
+        [Test]
+        public void New_InvalidMemberType_ShouldThrowComponentNameCollisionException()
         {
-            public MyNullNamePredefined() : base((ComponentName)null)
-            {
-            }
+            FluentActions.Invoking(() => new MyInvalidMemberPredefined()).Should()
+                .Throw<ComponentNameCollisionException>();
+        }
 
-            public override DataTypeClass Class { get; }
+        [Test]
+        public void New_MemberLessComplex_ShouldNotBeNullAndHaveEmptyMembers()
+        {
+            var type = new MemberLessComplex();
 
-            protected override IDataType New()
-            {
-                return new MyNullNamePredefined();
-            }
+            type.Should().NotBeNull();
+            type.Members.Should().BeEmpty();
+        }
+
+        [Test]
+        public void New_MemberConstructorComplex_ShouldNotBeNullAndHaveExpectedMembers()
+        {
+            var type = new MemberConstructorComplex();
+
+            type.Should().NotBeNull();
+            type.Members.Should().HaveCount(3);
+        }
+
+        [Test]
+        public void New_ComplexType_ShouldNotBeNull()
+        {
+            var type = new TestComplex();
+
+            type.Should().NotBeNull();
+        }
+
+        [Test]
+        public void Name_GetValue_ShouldBeEmpty()
+        {
+            var type = new TestComplex();
+
+            type.Name.Should().Be(nameof(TestComplex));
+        }
+
+        [Test]
+        public void Description_GetValue_ShouldBeNull()
+        {
+            var type = new TestComplex();
+
+            type.Description.Should().BeEmpty();
+        }
+
+        [Test]
+        public void Class_ValidType_ShouldReturnExpected()
+        {
+            var type = new TestComplex();
+
+            type.Class.Should().Be(DataTypeClass.Predefined);
         }
 
         [Test]
@@ -92,28 +93,33 @@ namespace L5Sharp.Abstractions.Tests
         }
 
         [Test]
-        public void New_InvalidMemberType_ShouldThrowComponentNameCollisionException()
+        public void GetMember_ImmediateMember_ShouldNotBeNull()
         {
-            FluentActions.Invoking(() => new MyInvalidMemberPredefined()).Should()
-                .Throw<ComponentNameCollisionException>();
+            var type = new TestComplex();
+
+            var member = type.GetMember("Nested");
+
+            member.Should().NotBeNull();
         }
-
-        private class MyInvalidMemberPredefined : ComplexType
+        
+        [Test]
+        public void GetMember_NestedMember_ShouldNotBeNull()
         {
-            public MyInvalidMemberPredefined() :
-                base(nameof(MyInvalidMemberPredefined))
-            {
-            }
+            var type = new TestComplex();
 
-            public IMember<Bool> Member01 = Member.Create<Bool>("Member01");
-            public IMember<Bool> Member02 = Member.Create<Bool>("Member01");
+            var member = type.GetMember("Nested.M1");
 
-            public override DataTypeClass Class { get; }
+            member.Should().NotBeNull();
+        }
+        
+        [Test]
+        public void GetMember_NonExistingMember_ShouldBeNull()
+        {
+            var type = new TestComplex();
 
-            protected override IDataType New()
-            {
-                return new MyInvalidMemberPredefined();
-            }
+            var member = type.GetMember("Nested.M5");
+
+            member.Should().BeNull();
         }
 
         [Test]
@@ -123,7 +129,7 @@ namespace L5Sharp.Abstractions.Tests
 
             var str = type.ToString();
 
-            str.Should().Be("TestPredefined");
+            str.Should().Be(nameof(TestComplex));
         }
 
         [Test]

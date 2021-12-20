@@ -4,7 +4,6 @@ using L5Sharp;
 using L5Sharp.Components;
 using L5Sharp.Core;
 using L5Sharp.Enums;
-using L5Sharp.Extensions;
 using L5Sharp.Types;
 using NUnit.Framework;
 
@@ -103,14 +102,14 @@ namespace L5SharpTests
 
             Logix.DataType.Contains(type.Name).Should().BeTrue();
 
-            var instance = Logix.DataType.Instantiate(type.Name);
+            var instance = (UserDefined) Logix.DataType.Instantiate(type.Name);
 
             instance.Should().NotBeNull();
             instance.Name.Should().Be("TestType");
             instance.Description.Should().Be("This is a test type that will be created");
             instance.GetMember("Member01").Should().NotBeNull();
-            instance.GetMember("Member01").DataType.As<Dint>().Value.Should().Be(0);
-            instance.GetMember("Member02").DataType.As<Timer>().PRE.DataType.Value.Should().Be(0);
+            instance.GetMember("Member01")?.DataType.As<Dint>().Value.Should().Be(0);
+            instance.GetMember("Member02")?.DataType.As<Timer>().PRE.DataType.Value.Should().Be(0);
             instance.Should().NotBeSameAs(type);
         }
     }

@@ -7,19 +7,19 @@ using L5Sharp.Types;
 namespace L5Sharp.Instructions
 {
     public class MOV : Instruction,
-        IInstruction<IAtomic, ITagMember<IAtomic>>,
-        IInstruction<ITagMember<IAtomic>, ITagMember<IAtomic>>
+        IInstruction<IAtomicType, ITagMember<IAtomicType>>,
+        IInstruction<ITagMember<IAtomicType>, ITagMember<IAtomicType>>
     {
         public MOV() : base(nameof(MOV), "Move", GetMembers())
         {
         }
 
-        public NeutralText Of(IAtomic source, ITagMember<IAtomic> destination)
+        public NeutralText Of(IAtomicType source, ITagMember<IAtomicType> destination)
         {
             return new NeutralText(this, source, destination.Name);
         }
 
-        public NeutralText Of(ITagMember<IAtomic> source, ITagMember<IAtomic> destination)
+        public NeutralText Of(ITagMember<IAtomicType> source, ITagMember<IAtomicType> destination)
         {
             return new NeutralText(this, source.Name, destination.Name);
         }

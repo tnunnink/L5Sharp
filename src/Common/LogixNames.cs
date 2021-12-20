@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace L5Sharp.Utilities
+namespace L5Sharp.Common
 {
     internal static class LogixNames
     {

@@ -12,13 +12,15 @@ namespace L5Sharp.Core
 {
     internal class UserDefinedMembers : IMemberCollection<IMember<IDataType>>
     {
-        private readonly List<IMember<IDataType>> _members = new List<IMember<IDataType>>();
+        private readonly List<IMember<IDataType>> _members = new();
         private readonly IDataType _dataType;
 
-        public UserDefinedMembers(IDataType parent, IEnumerable<IMember<IDataType>> members = null)
+        public UserDefinedMembers(IDataType parent, IEnumerable<IMember<IDataType>>? members = null)
         {
             _dataType = parent ?? throw new ArgumentNullException(nameof(parent));
-            AddRange(members);
+
+            if (members is not null)
+                AddRange(members);
         }
 
         public int Count => _members.Count;
@@ -48,7 +50,7 @@ namespace L5Sharp.Core
 
         public void AddRange(IEnumerable<IMember<IDataType>> members)
         {
-            if (members == null) return;
+            if (members is null) return;
 
             foreach (var member in members)
                 Add(member);
@@ -104,7 +106,7 @@ namespace L5Sharp.Core
 
             var member = _members[index];
 
-            var renamed = Member.Create(name, member.DataType, member.Dimensions, member.Radix, member.ExternalAccess,
+            var renamed = Member.Create(name, member.DataType, member.Dimension, member.Radix, member.ExternalAccess,
                 member.Description);
 
             _members[index] = renamed;
