@@ -69,5 +69,31 @@ namespace L5Sharp
         /// When index is less than 0 or greater than <see cref="Core.Dimensions.Length"/>
         /// </exception>
         IMember<TDataType> this[int index] { get; }
+        
+        /// <summary>
+        /// Determines if the current <c>IMember</c> is an <c>IAtomicType</c>.
+        /// </summary>
+        /// <returns>
+        /// true if the current <c>IMember</c> <see cref="DataType"/> property implements <see cref="IAtomicType"/>;
+        /// otherwise, false.
+        /// </returns>
+        bool HasValue { get; }
+        
+        /// <summary>
+        /// Determines if the current <c>IMember</c> is an  <c>IComplexType</c>.
+        /// </summary>
+        /// <returns>
+        /// true if the current <c>IMember</c> <see cref="DataType"/> property implements <see cref="IComplexType"/>;
+        /// otherwise, false.
+        /// </returns>
+        bool HasStructure { get; }
+        
+        /// <summary>
+        /// Determines if the current <c>IMember</c> is an array of elements.
+        /// </summary>
+        /// <returns>
+        /// true if the current <c>IMember</c> <see cref="Dimension"/> are not empty; otherwise, false.
+        /// </returns>
+        bool HasArray { get; }
     }
 }

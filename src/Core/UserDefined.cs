@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using L5Sharp.Abstractions;
 using L5Sharp.Enums;
@@ -41,8 +42,14 @@ namespace L5Sharp.Core
         /// <param name="members">The collection of members to initialize the data type with.</param>
         /// <returns>A new instance of the <c>UserDefined</c> data type.</returns>
         public static IUserDefined Create(ComponentName name, string? description = null,
-            IEnumerable<IMember<IDataType>>? members = null) =>
-            new UserDefined(name, description, members);
+            IEnumerable<IMember<IDataType>>? members = null)
+        {
+            if (name is null)
+                throw new ArgumentNullException(nameof(name));
+            
+            return new UserDefined(name, description, members);
+        }
+            
 
         /*/// <inheritdoc />
         public bool Equals(UserDefined? other)

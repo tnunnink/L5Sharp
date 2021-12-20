@@ -24,7 +24,7 @@ namespace L5Sharp.Serialization
             element.Add(component.ToAttribute(m => m.Name));
             element.Add(component.ToAttribute(m => m.DataType));
             
-            var elements = complex.Members.Select(m => m.Serialize(m.GetDataElementName()));
+            var elements = complex.Members.Select(m => m.Serialize());
             element.Add(elements);
 
             return element;

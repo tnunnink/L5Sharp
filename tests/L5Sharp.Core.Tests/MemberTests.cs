@@ -80,7 +80,7 @@ namespace L5Sharp.Core.Tests
 
             var description = member.Description;
 
-            description.Should().BeNull();
+            description.Should().BeEmpty();
         }
 
         [Test]
@@ -132,11 +132,11 @@ namespace L5Sharp.Core.Tests
             var element = member[5];
 
             element.Should().NotBeNull();
-            element?.Name.Should().Be("[5]");
-            element?.DataType.Should().BeOfType<Dint>();
-            element?.Radix.Should().Be(Radix.Decimal);
-            element?.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);
-            element?.Description.Should().BeNull();
+            element.Name.Should().Be("[5]");
+            element.DataType.Should().BeOfType<Dint>();
+            element.Radix.Should().Be(Radix.Decimal);
+            element.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);
+            element.Description.Should().BeEmpty();
         }
         
         [Test]

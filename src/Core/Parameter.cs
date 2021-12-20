@@ -55,6 +55,9 @@ namespace L5Sharp.Core
         public ExternalAccess ExternalAccess { get; private set; }
 
         public IMember<TDataType>? this[int index] => throw new NotImplementedException();
+        public bool HasValue { get; }
+        public bool HasStructure { get; }
+        public bool HasArray { get; }
 
         /// <inheritdoc />
         public TagType TagType => Alias == null ? TagType.Base : TagType.Alias;

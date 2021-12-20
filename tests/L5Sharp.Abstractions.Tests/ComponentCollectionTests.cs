@@ -152,15 +152,6 @@ namespace L5Sharp.Abstractions.Tests
         }
 
         [Test]
-        public void Add_LargeCollection_ShouldHaveExpectedCount()
-        {
-            for (var i = 0; i < 10000; i++)
-                _collection.Add(new TestLogixComponent($"Test{i}", "Test component"));
-
-            _collection.Should().HaveCount(10003);
-        }
-
-        [Test]
         public void Find_PredicateExists_ShouldNotBeEmpty()
         {
             var results = _collection.Find(c => c.Description != string.Empty).ToList();

@@ -5,7 +5,7 @@ using L5Sharp.Types;
 
 namespace L5Sharp.Abstractions.Tests
 {
-        public class TestComplex : ComplexType
+    public class TestComplex : ComplexType
     {
         public TestComplex() : base(nameof(TestComplex))
         {
@@ -16,21 +16,25 @@ namespace L5Sharp.Abstractions.Tests
         protected override IDataType New() => new TestComplex();
 
         public IMember<Bool> TestMember = Member.Create<Bool>(nameof(TestMember));
-        
-        public IMember<NestedType> Nested = Member.Create<NestedType>(nameof(Nested));
+
+        public IMember<NestedComplex> Nested = Member.Create<NestedComplex>(nameof(Nested));
     }
-    
-    public class MemberLessComplex : ComplexType
+
+    public class NestedComplex : ComplexType
     {
-        public MemberLessComplex() : base(nameof(MemberLessComplex))
+        public NestedComplex() : base(nameof(NestedComplex))
         {
         }
 
         public override DataTypeClass Class => DataTypeClass.Predefined;
 
-        protected override IDataType New() => new TestComplex();
+        protected override IDataType New() => new NestedComplex();
+
+        public IMember<Dint> M1 = Member.Create<Dint>(nameof(M1));
+        public IMember<Dint> M2 = Member.Create<Dint>(nameof(M2));
+        public IMember<Dint> M3 { get; } = Member.Create<Dint>(nameof(M3));
     }
-    
+
     public class MemberConstructorComplex : ComplexType
     {
         public MemberConstructorComplex() : base(nameof(MemberLessComplex), string.Empty, new List<IMember<IDataType>>
@@ -46,57 +50,33 @@ namespace L5Sharp.Abstractions.Tests
 
         protected override IDataType New() => new TestComplex();
     }
-    
-    public class MemberComboComplex : ComplexType
+
+    public class MemberLessComplex : ComplexType
     {
-        public MemberComboComplex() : base(nameof(MemberComboComplex), string.Empty, new List<IMember<IDataType>>
-        {
-            Member.Create<Bool>("Indy"),
-            Member.Create<Sint>("Value"),
-            Member.Create<Timer>("TON"),
-        })
+        public MemberLessComplex() : base(nameof(MemberLessComplex))
         {
         }
 
         public override DataTypeClass Class => DataTypeClass.Predefined;
 
         protected override IDataType New() => new TestComplex();
-        
-        public IMember<Dint> M1 = Member.Create<Dint>(nameof(M1));
-        public IMember<Dint> M2 = Member.Create<Dint>(nameof(M2));
-        public IMember<Dint> M3 = Member.Create<Dint>(nameof(M3));
     }
 
-    public class NestedType : ComplexType
+    public class NullNameComplex : ComplexType
     {
-        public NestedType() : base(nameof(NestedType))
-        {
-        }
-
-        public override DataTypeClass Class => DataTypeClass.Predefined;
-
-        protected override IDataType New() => new NestedType();
-
-        public IMember<Dint> M1 = Member.Create<Dint>(nameof(M1));
-        public IMember<Dint> M2 = Member.Create<Dint>(nameof(M2));
-        public IMember<Dint> M3 { get; } = Member.Create<Dint>(nameof(M3));
-    }
-
-    public class MyNullNamePredefined : ComplexType
-    {
-        public MyNullNamePredefined() : base(null!)
+        public NullNameComplex() : base(null!)
         {
         }
 
         public override DataTypeClass Class => DataTypeClass.Unknown;
 
-        protected override IDataType New() => new MyNullNamePredefined();
+        protected override IDataType New() => new NullNameComplex();
     }
 
-    public class MyInvalidMemberPredefined : ComplexType
+    public class DuplicateMemberNameComplex : ComplexType
     {
-        public MyInvalidMemberPredefined() :
-            base(nameof(MyInvalidMemberPredefined))
+        public DuplicateMemberNameComplex() :
+            base(nameof(DuplicateMemberNameComplex))
         {
         }
 
@@ -105,6 +85,19 @@ namespace L5Sharp.Abstractions.Tests
 
         public override DataTypeClass Class => DataTypeClass.Predefined;
 
-        protected override IDataType New() => new MyInvalidMemberPredefined();
+        protected override IDataType New() => new DuplicateMemberNameComplex();
+    }
+
+    public class NullMemberComplex : ComplexType
+    {
+        public NullMemberComplex() : base(nameof(NullMemberComplex))
+        {
+        }
+
+        public override DataTypeClass Class => DataTypeClass.Predefined;
+
+        protected override IDataType New() => new TestComplex();
+
+        public IMember<Dint> Member { get; set; }
     }
 }

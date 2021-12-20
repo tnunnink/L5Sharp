@@ -60,6 +60,15 @@ namespace L5Sharp.Core
         public IMember<TDataType> this[int index] => _elements[index];
 
         /// <inheritdoc />
+        public bool HasValue => DataType is IAtomicType;
+
+        /// <inheritdoc />
+        public bool HasStructure => DataType is IComplexType;
+
+        /// <inheritdoc />
+        public bool HasArray => !Dimension.AreEmpty;
+
+        /// <inheritdoc />
         public IMember<TDataType> Copy() =>
             new Member<TDataType>(string.Copy(Name), (TDataType)DataType.Instantiate(), Dimension.Copy(),
                 Radix, ExternalAccess, string.Copy(Description));

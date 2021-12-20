@@ -89,7 +89,7 @@ namespace L5Sharp.Abstractions
                 names.Add(member.Name);
 
                 if (member.DataType is IComplexType complexType)
-                    names.AddRange(complexType.GetMemberNames());
+                    names.AddRange(complexType.GetMemberNames().Select(n => $"{member.Name}.{n}"));
             }
 
             return names;
@@ -169,9 +169,13 @@ namespace L5Sharp.Abstractions
         /// </summary>
         /// <param name="members">A collection of <c>IMember</c> instance to validate.</param>
         /// <returns>The provided collection of valid members.</returns>
-        /// <exception cref="ComponentNameCollisionException">If a duplicate name is encountered.</exception>
-        /// <exception cref="CircularReferenceException">If a member of the provided collection references the current data type.</exception>
-        private IEnumerable<IMember<IDataType>> ValidateMembers(IEnumerable<IMember<IDataType>> members)
+        /// <exception cref="ComponentNameCollisionException">
+        /// If a duplicate name is encountered.
+        /// </exception>
+        /// <exception cref="CircularReferenceException">
+        /// If a member of the provided collection references the current data type.
+        /// </exception>
+        private static IEnumerable<IMember<IDataType>> ValidateMembers(IEnumerable<IMember<IDataType>> members)
         {
             var registry = new Dictionary<string, IMember<IDataType>>();
 
@@ -182,9 +186,6 @@ namespace L5Sharp.Abstractions
 
                 if (registry.ContainsKey(member.Name))
                     throw new ComponentNameCollisionException(member.Name, member.GetType());
-
-                if (member.DataType.Equals(this))
-                    throw new CircularReferenceException(this);
 
                 registry.Add(member.Name, member);
             }

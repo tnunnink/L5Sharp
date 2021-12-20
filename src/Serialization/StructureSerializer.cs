@@ -20,7 +20,7 @@ namespace L5Sharp.Serialization
             var element = new XElement(ElementName);
             element.Add(component.ToAttribute(c => c.Name, LogixNames.DataType));
 
-            var elements = component.Members.Select(m => m.Serialize(m.GetDataElementName()));
+            var elements = component.Members.Select(m => m.Serialize());
             element.Add(elements);
 
             return element;
