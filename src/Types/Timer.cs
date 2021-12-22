@@ -7,6 +7,9 @@ using L5Sharp.Enums;
 
 namespace L5Sharp.Types
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public sealed class Timer : ComplexType
     {
         /// <summary>
@@ -34,10 +37,31 @@ namespace L5Sharp.Types
             return new Timer();
         }
 
+        /// <summary>
+        /// The preset value specifies the value (1 msec units) which the accumulated value must reach
+        /// before the instruction sets the .DN bit.
+        /// </summary>
         public IMember<Dint> PRE = Member.Create<Dint>(nameof(PRE));
+        
+        /// <summary>
+        /// The accumulated value specifies the number of milliseconds that have elapsed since the
+        /// Timer instruction was enabled.
+        /// </summary>
         public IMember<Dint> ACC = Member.Create<Dint>(nameof(ACC));
+        
+        /// <summary>
+        /// The enable bit indicates that the Timer instruction is enabled.
+        /// </summary>
         public IMember<Bool> EN = Member.Create<Bool>(nameof(EN));
+        
+        /// <summary>
+        /// The timing bit indicates that a timing operation is in process
+        /// </summary>
         public IMember<Bool> TT = Member.Create<Bool>(nameof(TT));
+        
+        /// <summary>
+        /// The done bit is set when .ACC ≥ .PRE.
+        /// </summary>
         public IMember<Bool> DN = Member.Create<Bool>(nameof(DN));
     }
 }

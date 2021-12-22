@@ -24,7 +24,7 @@ namespace L5Sharp
         bool IsEncrypted { get; }
         IRoutine Logic { get; }
         new MemberCollection<IParameter<IDataType>> Parameters { get; }
-        IComponents<ITag<IDataType>> LocalTags { get; }
+        IComponentCollection<ITag<IDataType>> LocalTags { get; }
         IEnumerable<IRoutine> Routines { get; }
     }
 }

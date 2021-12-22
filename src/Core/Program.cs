@@ -18,7 +18,7 @@ namespace L5Sharp.Core
             UseAsFolder = useAsFolder;
 
             /*Tags = new Tags(this);*/
-            Routines = new ComponentCollection<IRoutine>();
+            /*Routines = new ComponentList<IRoutine>();*/
         }
 
         public string Name { get; }
@@ -26,8 +26,8 @@ namespace L5Sharp.Core
         public ProgramType Type => ProgramType.Normal;
         public bool TestEdits { get; }
         public bool Disabled { get; }
-        public IComponents<ITag<IDataType>> Tags { get; }
-        public IComponents<IRoutine> Routines { get; }
+        public IComponentCollection<ITag<IDataType>> Tags { get; }
+        public IComponentCollection<IRoutine> Routines { get; }
         public bool UseAsFolder { get; }
         public string MainRoutineName { get; }
         public string FaultRoutineName { get; }

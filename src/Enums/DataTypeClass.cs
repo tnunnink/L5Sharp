@@ -5,13 +5,7 @@ namespace L5Sharp.Enums
     /// <summary>
     /// Represents a set of categories that a <c>DataType</c> can belong to.
     /// </summary>
-    /// <remarks>
-    /// L5X only exports User class types.
-    /// <see cref="Atomic"/> types are value types (i.e. Bool, Int, Real, etc..).
-    /// <see cref="Predefined"/> types represent other built in types (i.e. Timer, Counter, Message, etc.).
-    /// 
-    /// </remarks>
-    public class DataTypeClass : SmartEnum<DataTypeClass>
+    public sealed class DataTypeClass : SmartEnum<DataTypeClass>
     {
         private DataTypeClass(string name, int value) : base(name, value)
         {

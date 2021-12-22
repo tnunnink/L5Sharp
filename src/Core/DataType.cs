@@ -17,9 +17,7 @@ namespace L5Sharp.Core
         public override DataTypeClass Class { get; }
 
         /// <inheritdoc />
-        protected override IDataType New()
-        {
-            return new DataType(string.Copy(Name), Class, string.Copy(Description), Members.Select(m => m.Copy()));
-        }
+        protected override IDataType New() => new DataType(string.Copy(Name), Class, string.Copy(Description),
+            Members.Select(m => m.Copy()));
     }
 }

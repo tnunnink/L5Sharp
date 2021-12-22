@@ -29,8 +29,8 @@ namespace L5Sharp.Core
             Radix? radix, ExternalAccess? externalAccess, string? description)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
-            DataType = elements.Count > 0 ? elements[0] : throw new ArgumentNullException(nameof(elements));
-            Dimension = dimension ?? Dimensions.Empty;
+            DataType = elements.Count > 0 ? elements[0] : throw new ArgumentException("Elements must have at least 1 item.");
+            Dimension = dimension ?? new Dimensions((ushort)elements.Count);
             Radix = radix is not null && radix.SupportsType(DataType) ? radix : Radix.Default(DataType);
             ExternalAccess = externalAccess ?? ExternalAccess.ReadWrite;
             Description = description ?? string.Empty;

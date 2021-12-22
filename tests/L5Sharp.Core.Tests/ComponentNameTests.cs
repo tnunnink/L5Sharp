@@ -129,7 +129,7 @@ namespace L5Sharp.Core.Tests
         {
             var first = new ComponentName("Test");
 
-            var result = first.CompareTo(null);
+            var result = first.CompareTo(null!);
 
             result.Should().NotBe(0);
         }

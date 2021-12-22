@@ -1,11 +1,13 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using FluentAssertions;
 using L5Sharp.Components;
-using L5Sharp.Enums;
 using L5Sharp.Exceptions;
 using L5Sharp.Types;
 using NUnit.Framework;
+using String = L5Sharp.Types.String;
 
 namespace L5Sharp.Core.Tests
 {
@@ -26,7 +28,7 @@ namespace L5Sharp.Core.Tests
                 Member.Create<Timer>("M5")
             };
         }
-        
+
         [Test]
         public void New_DefaultOverload_ShouldNotBeNullAndEmpty()
         {
@@ -127,181 +129,22 @@ namespace L5Sharp.Core.Tests
         }
 
         [Test]
-        public void Get_Null_ShouldBeNull()
+        public void Get_Null_ShouldThrowArgumentNullException()
         {
             var members = new MemberCollection<IMember<IDataType>>(_members);
 
-            var result = members.Get(null!);
-
-            result.Should().BeNull();
+            FluentActions.Invoking(() => members.Get(null!)).Should().Throw<ArgumentNullException>();
         }
 
         [Test]
-        public void Add_ValidMember_ShouldBeContainedInMembers()
-        {
-            var members = new MemberCollection<IMember<IDataType>>(_members);
-            var member = Member.Create<Dint>("TestMember");
-
-            members.Add(member);
-
-            members.Should().Contain(member);
-        }
-
-        [Test]
-        public void Add_SelfReferencingMember_ShouldThrowCircularReferenceException()
-        {
-            var members = new MemberCollection<IMember<IDataType>>(_members);
-            var member = Member.Create<Int>("TestMember");
-
-            FluentActions.Invoking(() => members.Add(member)).Should().Throw<CircularReferenceException>();
-        }
-
-        [Test]
-        public void Add_Null_ShouldNotChangeCount()
+        public void Iterate_EachMember_ShouldNotBeNull()
         {
             var members = new MemberCollection<IMember<IDataType>>(_members);
 
-            members.Add(null);
-
-            members.Should().HaveCount(3);
-        }
-
-        [Test]
-        public void Add_ExistingName_ShouldThrowComponentNameCollisionException()
-        {
-            var members = new MemberCollection<IMember<IDataType>>(_members);
-
-            FluentActions.Invoking(() => members.Add(Member.Create<Bool>("Member01"))).Should()
-                .Throw<ComponentNameCollisionException>();
-        }
-
-        [Test]
-        public void AddRange_ValidMembers_ShouldHaveExpectedCount()
-        {
-            var members = new MemberCollection<IMember<IDataType>>(_members);
-            
-            var collection = new List<IMember<IDataType>>
+            foreach (var member in members)
             {
-                Member.Create<Sint>("Member04"),
-                Member.Create<Sint>("Member05"),
-                Member.Create<Sint>("Member06")
-            };
-
-            members.AddRange(collection);
-
-            members.Should().HaveCount(6);
-        }
-
-        [Test]
-        public void AddRange_Null_ShouldNotChangeCount()
-        {
-            var members = new MemberCollection<IMember<IDataType>>(_members);
-
-            members.AddRange(null!);
-
-            members.Should().HaveCount(3);
-        }
-
-        [Test]
-        public void Update_ValidMember_ShouldBeContainedInMembers()
-        {
-            var members = new MemberCollection<IMember<IDataType>>(_members);
-            var member = Member.Create<Dint>("TestMember");
-
-            members.Update(member);
-
-            members.Should().Contain(member);
-        }
-
-        [Test]
-        public void Update_SelfReferencingMember_ShouldThrowCircularReferenceException()
-        {
-            var members = new MemberCollection<IMember<IDataType>>(_members);
-            var member = Member.Create<Int>("TestMember");
-
-            FluentActions.Invoking(() => members.Update(member)).Should().Throw<CircularReferenceException>();
-        }
-
-        [Test]
-        public void Update_Null_ShouldHaveSameCount()
-        {
-            var members = new MemberCollection<IMember<IDataType>>(_members);
-
-            members.Update(null);
-
-            members.Should().HaveCount(3);
-        }
-
-        [Test]
-        public void Update_ExistingMember_ShouldChangeTheCurrentMember()
-        {
-            var members = new MemberCollection<IMember<IDataType>>(_members);
-            var member = Member.Create<Dint>("Member02", Dimensions.Empty, Radix.Binary, ExternalAccess.ReadOnly);
-
-            members.Update(member);
-
-            var result = members.Get("Member02");
-            result.Should().NotBeNull();
-            result?.DataType.Should().BeOfType<Dint>();
-            result?.Radix.Should().Be(Radix.Binary);
-            result?.ExternalAccess.Should().Be(ExternalAccess.ReadOnly);
-        }
-
-        /*[Test]
-        public void UpdateRange_ValidMembers_ShouldHaveExpectedCount()
-        {
-            var members = new MemberCollection<IMember<IDataType>>(_members);
-            var collection = new List<IMember<IDataType>>
-            {
-                Member.Create<Sint>("Member02"),
-                Member.Create<Real>("Member05"),
-                Member.Create<Sint>("Member06")
-            };
-
-            members.UpdateRange(collection);
-
-            members.Should().HaveCount(5);
-        }
-
-        [Test]
-        public void UpdateRange_Null_ShouldNotChangeCount()
-        {
-            var members = new MemberCollection<IMember<IDataType>>(_members);
-
-            members.UpdateRange(null);
-
-            members.Should().HaveCount(3);
-        }*/
-
-        [Test]
-        public void Remove_ExistingName_ShouldShouldNotContainName()
-        {
-            var members = new MemberCollection<IMember<IDataType>>(_members);
-
-            members.Remove("Member01");
-
-            members.Should().NotContain(m => m.Name == "Member01");
-        }
-
-        [Test]
-        public void Remove_NonExistingName_ShouldNotChangeCout()
-        {
-            var members = new MemberCollection<IMember<IDataType>>(_members);
-            var member = Member.Create<Dint>("TestMember");
-
-            members.Remove(member.Name);
-
-            members.Should().HaveCount(3);
-        }
-
-        [Test]
-        public void Remove_Null_ShouldNotChangeCount()
-        {
-            var members = new MemberCollection<IMember<IDataType>>(_members);
-
-            members.Remove(null!);
-
-            members.Should().HaveCount(3);
+                member.Should().NotBeNull();
+            }
         }
 
         [Test]
@@ -314,6 +157,124 @@ namespace L5Sharp.Core.Tests
             var enumerator = enumerable.GetEnumerator();
 
             enumerator.Should().NotBeNull();
+        }
+
+        [Test]
+        public void DeepContains_ExistingMember_ShouldBeTrue()
+        {
+            var members = new MemberCollection<IMember<IDataType>>(_members);
+
+            var result = members.DeepContains("M5.PRE");
+
+            result.Should().BeTrue();
+        }
+
+        [Test]
+        public void DeepContains_NonExistingMember_ShouldBeFalse()
+        {
+            var members = new MemberCollection<IMember<IDataType>>(_members);
+
+            var result = members.DeepContains("M1.DATA");
+
+            result.Should().BeFalse();
+        }
+
+        [Test]
+        public void DeepContains_Null_ShouldBeFalse()
+        {
+            var members = new MemberCollection<IMember<IDataType>>(_members);
+
+            var result = members.DeepContains(null!);
+
+            result.Should().BeFalse();
+        }
+        
+        [Test]
+        public void DeepGet_ExistingMember_ShouldNotBeNull()
+        {
+            var members = new MemberCollection<IMember<IDataType>>(_members);
+
+            var result = members.DeepGet("M5.PRE");
+
+            result.Should().NotBeNull();
+        }
+
+        [Test]
+        public void DeepGet_ExistingMember_ShouldHaveExpectedName()
+        {
+            var members = new MemberCollection<IMember<IDataType>>(_members);
+
+            var result = members.DeepGet("M5.PRE");
+
+            result?.Name.Should().Be("PRE");
+            result?.DataType.Should().BeOfType<Dint>();
+        }
+
+        [Test]
+        public void DeepGet_NonExistingMember_ShouldBeNull()
+        {
+            var members = new MemberCollection<IMember<IDataType>>(_members);
+
+            var result = members.DeepGet("M1.DATA");
+
+            result.Should().BeNull();
+        }
+        
+        [Test]
+        public void DeepGet_Empty_ShouldThrowArgumentNullException()
+        {
+            var members = new MemberCollection<IMember<IDataType>>(_members);
+
+            FluentActions.Invoking(() => members.DeepGet(string.Empty)).Should().Throw<ArgumentException>();
+        }
+
+        [Test]
+        public void DeepGet_Null_ShouldThrowArgumentNullException()
+        {
+            var members = new MemberCollection<IMember<IDataType>>(_members);
+
+            FluentActions.Invoking(() => members.DeepGet(null!)).Should().Throw<ArgumentNullException>();
+        }
+
+        [Test]
+        public void DeepGetAll_WhenCalled_ShouldHaveExpectedCount()
+        {
+            var members = new MemberCollection<IMember<IDataType>>(_members);
+
+            var all = members.DeepGetAll();
+
+            all.Should().HaveCount(12);
+        }
+
+        [Test]
+        public void DeepNames_WhenCalled_ShouldHaveExpectedCount()
+        {
+            var members = new MemberCollection<IMember<IDataType>>(_members);
+
+            var all = members.DeepNames();
+
+            all.Should().HaveCount(12);
+        }
+        
+        [Test]
+        public void DeepNames_WhenCalled_ShouldContainExpectedNames()
+        {
+            var members = new MemberCollection<IMember<IDataType>>(_members);
+
+            var all = members.DeepNames().ToList();
+
+            all.Should().Contain("M1");
+            all.Should().Contain("M2");
+            all.Should().Contain("M3");
+            all.Should().Contain("M4");
+            all.Should().Contain("M4.LEN");
+            all.Should().Contain("M4.DATA");
+            all.Should().Contain("M5");
+            all.Should().Contain("M5.PRE");
+            all.Should().Contain("M5.ACC");
+            all.Should().Contain("M5.DN");
+            all.Should().Contain("M5.EN");
+            all.Should().Contain("M5.TT");
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace L5Sharp
+﻿using System.Collections.Generic;
+
+namespace L5Sharp
 {
     /// <summary>
     /// Represents an <c>IDataType</c> that has <c>IMember</c> collection.
@@ -15,5 +17,18 @@
         /// <remarks>
         /// </remarks>
         IMemberCollection<IMember<IDataType>> Members { get; }
+        
+        /// <summary>
+        /// Gets all nested dependent <c>IDataType</c> objects for the current <c>IComplexType</c>.
+        /// </summary>
+        /// <remarks>
+        /// This method will recursively traverse the nested hierarchy of data type members to get a unique set
+        /// of dependent data types for the current <c>IComplexType</c>.
+        /// </remarks>
+        /// <returns>
+        /// A collection of unique data types that the current <c>IComplexType</c> depends on, if any exists.
+        /// If none exist, an empty collection of <c>IDataType</c>.
+        /// </returns>
+        IEnumerable<IDataType> GetDependentTypes();
     }
 }

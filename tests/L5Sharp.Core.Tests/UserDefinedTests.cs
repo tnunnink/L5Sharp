@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using AutoFixture;
 using FluentAssertions;
 using L5Sharp.Components;
@@ -109,7 +110,7 @@ namespace L5Sharp.Core.Tests
         }
 
         [Test]
-        public void CastedDown()
+        public void CastedToComplexType_ShouldHaveSameMemberCount()
         {
             var type = UserDefined.Create("Test", "This is a test", new List<IMember<IDataType>>
             {
@@ -140,12 +141,41 @@ namespace L5Sharp.Core.Tests
 
             instance.Should().NotBeSameAs(type);
         }
+        
+        [Test]
+        public void GetDependentTypes_WhenCalled_ShouldContainExpectedTypes()
+        {
+            var type = UserDefined.Create("Type01", "This is a test", new List<IMember<IDataType>>
+            {
+                Member.Create("Member01", new Bool()),
+                Member.Create("Member02", new Counter()),
+                Member.Create("Member03", new Dint()),
+                Member.Create("Member04", new String())
+            });
+
+            var dependents = type.GetDependentTypes().ToList();
+
+            dependents.Should().HaveCount(5);
+            dependents.Should().Contain(new Bool());
+            dependents.Should().Contain(new Counter());
+            dependents.Should().Contain(new Dint());
+            dependents.Should().Contain(new String());
+            dependents.Should().Contain(new Sint());
+        }
+
+        [Test]
+        public void ToString_WhenCalled_ShouldBeName()
+        {
+            var type = UserDefined.Create("Test");
+
+            type.ToString().Should().Be("Test");
+        }
 
         [Test]
         public void TypedEquals_AreEqual_ShouldBeTrue()
         {
-            var first = UserDefined.Create("Test");
-            var second = UserDefined.Create("Test");
+            var first = (UserDefined)UserDefined.Create("Test");
+            var second = (UserDefined)UserDefined.Create("Test");
 
             var result = first.Equals(second);
 
@@ -155,10 +185,9 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void TypedEquals_AreSame_ShouldBeTrue()
         {
-            var first = UserDefined.Create("Test");
-            var second = first;
+            var first = (UserDefined)UserDefined.Create("Test");
 
-            var result = first.Equals(second);
+            var result = first.Equals(first);
 
             result.Should().BeTrue();
         }
@@ -167,7 +196,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void TypedEquals_Null_ShouldBeFalse()
         {
-            var first = UserDefined.Create("Test");
+            var first = (UserDefined)UserDefined.Create("Test");
 
             var result = first.Equals(null);
 
@@ -232,7 +261,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void GetHashCode_WhenCalled_ShouldNotBeZero()
         {
-            var first = Member.Create("Test", new Bool());
+            var first = UserDefined.Create("Test");
 
             var hash = first.GetHashCode();
 

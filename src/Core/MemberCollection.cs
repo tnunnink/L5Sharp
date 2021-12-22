@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using L5Sharp.Abstractions;
+using L5Sharp.Extensions;
 
 [assembly: InternalsVisibleTo("L5Sharp.Core.Tests")]
 
 namespace L5Sharp.Core
 {
     /// <inheritdoc cref="L5Sharp.IMemberCollection{TMember}" />
-    public sealed class MemberCollection<TMember> : ComponentCollection<TMember>, IMemberCollection<TMember>
+    public class MemberCollection<TMember> : ComponentCollection<TMember>, IMemberCollection<TMember>
         where TMember : IMember<IDataType>
     {
         private const char MemberSeparator = '.';
@@ -23,15 +24,18 @@ namespace L5Sharp.Core
         internal MemberCollection(IEnumerable<TMember>? members = null) : base(members)
         {
         }
-        
+
         /// <inheritdoc />
-        public IEnumerable<string> GetNames() => Collection.Keys;
+        public bool DeepContains(string? name) => name is not null && FindMemberByName(this, name) is not null;
 
         /// <inheritdoc />
         public TMember? DeepGet(string name)
         {
-            if (string.IsNullOrEmpty(name))
-                throw new ArgumentException("Name not be null or empty.");
+            if (name is null)
+                throw new ArgumentNullException(nameof(name));
+            
+            if (name.IsEmpty())
+                throw new ArgumentException("Name not be empty.");
 
             return FindMemberByName(this, name);
         }
@@ -53,35 +57,19 @@ namespace L5Sharp.Core
         }
 
         /// <inheritdoc />
-        public IEnumerable<string> DeepGetNames()
+        public IEnumerable<string> DeepNames()
         {
             var names = new List<string>();
 
-            foreach (var (name member) in Collection)
+            foreach (var (name, member) in Collection)
             {
                 names.Add(name);
 
                 if (member.DataType is IComplexType complex)
-                    names.AddRange(complex.Members.GetNames().Select(n => $"{member.Name}.{n}"));
+                    names.AddRange(complex.Members.DeepNames().Select(n => $"{member.Name}.{n}"));
             }
 
             return names;
-        }
-
-        /// <inheritdoc />
-        public IEnumerable<IDataType> GetDependentTypes()
-        {
-            var types = new List<IDataType>();
-
-            foreach (var (_, member) in Collection)
-            {
-                types.Add(member.DataType);
-
-                if (member.DataType is IComplexType complex)
-                    types.AddRange(complex.Members.GetDependentTypes());
-            }
-
-            return types.Distinct();
         }
 
         /// <summary>

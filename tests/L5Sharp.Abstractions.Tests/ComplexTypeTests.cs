@@ -6,7 +6,6 @@ using L5Sharp.Enums;
 using L5Sharp.Exceptions;
 using L5Sharp.Types;
 using NUnit.Framework;
-using String = L5Sharp.Types.String;
 
 namespace L5Sharp.Abstractions.Tests
 {
@@ -123,50 +122,12 @@ namespace L5Sharp.Abstractions.Tests
         {
             var type = new TestComplex();
 
-            var dependents = type.Members.GetDependentTypes().ToList();
+            var dependents = type.GetDependentTypes().ToList();
 
             dependents.Should().NotBeEmpty();
             dependents.Should().Contain(new Bool());
-            dependents.Should().Contain(new Int());
             dependents.Should().Contain(new Dint());
-            dependents.Should().Contain(new String());
-            dependents.Should().Contain(new Timer());
-        }
-
-        [Test]
-        public void GetMember_Null_ShouldThrowArgumentException()
-        {
-            var type = new TestComplex();
-
-            FluentActions.Invoking(() => type.Members.Get(null!)).Should().Throw<ArgumentException>();
-        }
-
-        [Test]
-        public void GetMember_Empty_ShouldThrowArgumentException()
-        {
-            var type = new TestComplex();
-
-            FluentActions.Invoking(() => type.Members.Get(string.Empty)).Should().Throw<ArgumentException>();
-        }
-
-        [Test]
-        public void DeepGet_ImmediateMember_ShouldNotBeNull()
-        {
-            var type = new TestComplex();
-
-            var member = type.Members.DeepGet("Nested");
-
-            member.Should().NotBeNull();
-        }
-
-        [Test]
-        public void DeepGet_NestedMember_ShouldNotBeNull()
-        {
-            var type = new TestComplex();
-
-            var member = type.Members.DeepGet("Nested.M1");
-
-            member.Should().NotBeNull();
+            dependents.Should().Contain(new NestedComplex());
         }
 
         [Test]

@@ -7,10 +7,11 @@ namespace L5Sharp.Abstractions
     /// Custom equality comparer that compares Logix components by name.
     /// </summary>
     /// <typeparam name="TComponent">The type of Logix component.</typeparam>
-    public class ComponentNameComparer<TComponent> : IEqualityComparer<TComponent> where TComponent : ILogixComponent
+    public class ComponentNameComparer<TComponent> : IEqualityComparer<TComponent> 
+        where TComponent : ILogixComponent
     {
         /// <inheritdoc />
-        public bool Equals(TComponent x, TComponent y)
+        public bool Equals(TComponent? x, TComponent? y)
         {
             if (ReferenceEquals(x, y)) return true;
             if (ReferenceEquals(x, null)) return false;

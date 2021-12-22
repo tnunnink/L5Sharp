@@ -66,6 +66,25 @@ namespace L5Sharp.Abstractions
         /// </remarks>
         /// <returns>A new instance of the current <c>DataType</c> with default values.</returns>
         protected abstract IDataType New();
+        
+        
+        /// <inheritdoc />
+        public IEnumerable<IDataType> GetDependentTypes()
+        {
+            var set = new HashSet<IDataType>(new ComponentNameComparer<IDataType>());
+
+            foreach (var member in Members)
+            {
+                set.Add(member.DataType);
+
+                if (member.DataType is not IComplexType complex) continue;
+
+                foreach (var dataType in complex.GetDependentTypes())
+                    set.Add(dataType);
+            }
+
+            return set;
+        }
 
         /// <inheritdoc />
         public bool Equals(ComplexType? other)

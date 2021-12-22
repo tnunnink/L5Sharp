@@ -1,53 +1,46 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using L5Sharp.Core;
 
 namespace L5Sharp
 {
     /// <summary>
-    /// 
+    /// A collection of objets that implement <see cref="ILogixComponent"/>.
     /// </summary>
-    /// <typeparam name="TComponent"></typeparam>
-    public interface IComponentCollection<TComponent> : IComponents<TComponent>
+    /// <remarks>
+    /// A <c>ComponentCollection</c> represents a collection of Logix components.
+    /// Logix components are items of an L5X that can be identified by their name (i.e. Tag, DataType, etc.).
+    /// <c>IComponentCollection</c> provides a reusable default implementation for maintaining components by key (name). 
+    /// </remarks>
+    /// <typeparam name="TComponent">The component type that this collection represents</typeparam>
+    /// /// <footer>
+    /// <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
+    /// `Logix 5000 Controllers Import/Export`</a>
+    /// </footer>
+    public interface IComponentCollection<out TComponent> : IEnumerable<TComponent> 
         where TComponent : ILogixComponent
     {
         /// <summary>
-        /// Clears all <see cref="TComponent"/> objects from the current collection.
+        /// Gets the number of components currently in the collection.
         /// </summary>
-        void Clear();
+        int Count { get; }
 
         /// <summary>
-        /// Adds the provided <see cref="TComponent"/> to the collection.
+        /// Determines if the provided name is contained in the current collection.
         /// </summary>
-        /// <param name="component">The <see cref="TComponent"/> to add to the collection.</param>
-        void Add(TComponent component);
+        /// <param name="name">The name of the component to search for.</param>
+        /// <returns>true if the collection contains a component with the provided name; otherwise, false.</returns>
+        bool Contains(string name);
 
         /// <summary>
-        /// Adds the provided collection of <see cref="TComponent"/> objects to the current collection.
+        /// Gets a component instance with the provided name.
         /// </summary>
-        /// <param name="components">The collection of <see cref="TComponent"/> objects to add to the collection.</param>
-        void AddRange(IEnumerable<TComponent> components);
-
-        /// <summary>
-        /// Updates the provided <see cref="TComponent"/> on the current collection.
-        /// </summary>
-        /// <remarks>
-        /// If the provided <see cref="TComponent"/> does not exist, then it will be added to the collection.
-        /// If it does exist, then it will be replaced.
-        /// </remarks>
-        /// <param name="component">The <see cref="TComponent"/> to update on the collection.</param>
-        void Update(TComponent component);
-
-        /// <summary>
-        /// Removes a <see cref="TComponent"/> with the provided name from the collection.
-        /// </summary>
-        /// <param name="name">The name of the component to remove from the collection.</param>
-        void Remove(ComponentName name);
-
-        /// <summary>
-        /// Replaces the specified component with the new provided component.
-        /// </summary>
-        /// <param name="name">The name of the component to replace.</param>
-        /// <param name="component"></param>
-        void Replace(ComponentName name, TComponent component);
+        /// <param name="name">The name of the component to get.</param>
+        /// <returns>
+        /// If a component with the specified name is found in the collection,
+        /// the <see cref="TComponent"/> instance with the specified name; otherwise, null.
+        /// </returns>
+        /// <exception cref="ArgumentException">name is null or empty.</exception>
+        TComponent? Get(string name);
     }
 }

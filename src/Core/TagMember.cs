@@ -118,7 +118,7 @@ namespace L5Sharp.Core
 
         /// <inheritdoc />
         public IEnumerable<string> GetDeepMembersNames() => _member.DataType is IComplexType complexType
-            ? complexType.Members.GetNames()
+            ? complexType.Members.DeepNames()
             : Enumerable.Empty<string>();
 
         /*private ITagMember<IDataType>? GetMemberInternal(string name)

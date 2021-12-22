@@ -1,50 +1,62 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using L5Sharp.Core;
 using L5Sharp.Exceptions;
 
 namespace L5Sharp.Abstractions
 {
-    
-    public class ComponentCollection<TComponent> : Components<TComponent>, IComponentCollection<TComponent>
+    /// <summary>
+    /// Represents a collection of <see cref="ILogixComponent"/> objects.
+    /// </summary>
+    /// <remarks>
+    /// Base collection for all component collections that is used to encapsulate the functionality around maintaining
+    /// collections of Logix components. 
+    /// </remarks>
+    /// <typeparam name="TComponent">The type of component the current collection represents.</typeparam>
+    public abstract class ComponentCollection<TComponent> : IComponentCollection<TComponent>
         where TComponent : ILogixComponent
     {
         /// <summary>
-        /// Creates a new instance of <see cref="ComponentCollection{TComponent}"/> for the specified
+        /// The primary collection of <see cref="TComponent"/> objects.
+        /// </summary>
+        protected readonly Dictionary<string, TComponent> Collection = new();
+
+        /// <summary>
+        /// Creates a new instance of <see cref="ComponentList{TComponent}"/> for the specified
         /// <see cref="ILogixComponent"/> with the provided collection of components. 
         /// </summary>
         /// <param name="components">A collection of components to initialize the collection with.</param>
-        internal ComponentCollection(IEnumerable<TComponent>? components = null) 
-            : base(components)
+        internal ComponentCollection(IEnumerable<TComponent>? components = null)
         {
-        }
-        
-        /// <inheritdoc />
-        public void Clear()
-        {
-            Collection.Clear();
+            if (components is not null)
+                RegisterComponents(components);
         }
 
         /// <inheritdoc />
-        public virtual void Add(TComponent component)
-        {
-            if (component is null)
-                throw new ArgumentNullException(nameof(component));
-
-            if (Collection.ContainsKey(component.Name))
-                throw new ComponentNameCollisionException(component.Name, typeof(TComponent));
-
-            Collection.Add(component.Name, component);
-        }
+        public int Count => Collection.Count;
 
         /// <inheritdoc />
-        public virtual void AddRange(IEnumerable<TComponent> components)
+        public bool Contains(string name) => !string.IsNullOrEmpty(name) && Collection.ContainsKey(name);
+
+        /// <inheritdoc />
+        public TComponent? Get(string name) =>
+            Collection.TryGetValue(name, out var component) ? component : default;
+
+
+        /// <summary>
+        /// Initializes the base collection with the provided components collection.
+        /// </summary>
+        /// <param name="components">A collection of components to initialize the collection with.</param>
+        /// <exception cref="ArgumentNullException">If the provided component is null.</exception>
+        /// <exception cref="ComponentNameCollisionException">If a duplicate name is encountered.</exception>
+        private void RegisterComponents(IEnumerable<TComponent> components)
         {
-            if (components is null)
-                throw new ArgumentNullException(nameof(components));
-            
             foreach (var component in components)
             {
+                if (component is null)
+                    throw new ArgumentNullException(nameof(component));
+
                 if (Collection.ContainsKey(component.Name))
                     throw new ComponentNameCollisionException(component.Name, component.GetType());
 
@@ -53,44 +65,14 @@ namespace L5Sharp.Abstractions
         }
 
         /// <inheritdoc />
-        public virtual void Update(TComponent component)
+        public IEnumerator<TComponent> GetEnumerator()
         {
-            if (component is null)
-                throw new ArgumentNullException(nameof(component));
-
-            if (!Collection.ContainsKey(component.Name))
-                Add(component);
-
-            Collection[component.Name] = component;
+            return Collection.Values.GetEnumerator();
         }
 
-        /// <inheritdoc />
-        public virtual void Remove(ComponentName name)
+        IEnumerator IEnumerable.GetEnumerator()
         {
-            if (string.IsNullOrEmpty(name))
-                throw new ArgumentException();
-
-            if (!Collection.ContainsKey(name))
-                return;
-
-            Collection.Remove(name);
-        }
-
-        /// <inheritdoc />
-        public virtual void Replace(ComponentName name, TComponent component)
-        {
-            if (component is null)
-                throw new ArgumentNullException(nameof(component));
-
-            if (!Collection.ContainsKey(name))
-                return;
-
-            Collection.Remove(name);
-            
-            if (Collection.ContainsKey(component.Name))
-                throw new ComponentNameCollisionException(component.Name, typeof(TComponent));
-            
-            Collection.Add(component.Name, component);
+            return GetEnumerator();
         }
     }
 }

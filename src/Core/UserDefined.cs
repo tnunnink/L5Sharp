@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using L5Sharp.Abstractions;
 using L5Sharp.Enums;
 
 namespace L5Sharp.Core
@@ -19,7 +20,7 @@ namespace L5Sharp.Core
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
             Description = description ?? string.Empty;
-            Members = new MemberCollection<IMember<IDataType>>(members);
+            Members = new MemberList<IMember<IDataType>>(this, members);
         }
 
         /// <inheritdoc />
@@ -35,7 +36,25 @@ namespace L5Sharp.Core
         public DataTypeClass Class => DataTypeClass.User;
 
         /// <inheritdoc />
-        public MemberCollection<IMember<IDataType>> Members { get; }
+        public IMemberList<IMember<IDataType>> Members { get; }
+
+        /// <inheritdoc />
+        public IEnumerable<IDataType> GetDependentTypes()
+        {
+            var set = new HashSet<IDataType>(new ComponentNameComparer<IDataType>());
+
+            foreach (var member in Members)
+            {
+                set.Add(member.DataType);
+
+                if (member.DataType is not IComplexType complex) continue;
+
+                foreach (var dataType in complex.GetDependentTypes())
+                    set.Add(dataType);
+            }
+
+            return set;
+        }
 
         /// <inheritdoc />
         public IDataType Instantiate() =>
