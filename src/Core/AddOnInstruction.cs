@@ -1,4 +1,4 @@
-﻿using System;
+﻿/*using System;
 using System.Collections.Generic;
 using System.Linq;
 using L5Sharp.Enums;
@@ -41,7 +41,7 @@ namespace L5Sharp.Core
             IsEncrypted = isEncrypted;
 
             Parameters = new Parameters(this, parameters);
-            /*LocalTags = new Tags(this, localTags);*/
+            /*LocalTags = new Tags(this, localTags);#1#
 
             type ??= RoutineType.Ladder;
             InitializeRoutine(type);
@@ -169,4 +169,4 @@ namespace L5Sharp.Core
             throw new NotImplementedException();
         }
     }
-}
+}*/

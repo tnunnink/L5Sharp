@@ -1,74 +1,76 @@
-﻿using System.Collections.Generic;
-using L5Sharp.Core;
+﻿using System;
+using System.Collections.Generic;
 
 namespace L5Sharp
 {
     /// <summary>
-    /// A collection of <see cref="IMember{TDataType}"/>
+    /// 
     /// </summary>
-    public interface IMemberCollection<TMember> : IEnumerable<TMember> where TMember : IMember<IDataType>
+    /// <typeparam name="TMember"></typeparam>
+    public interface IMemberCollection<out TMember> : IComponents<TMember> where TMember : IMember<IDataType>
     {
         /// <summary>
-        /// Gets the number of members in the collection.
+        /// Gets an <c>IMember</c> object with the provided name.
         /// </summary>
-        int Count { get; }
-        
-        /// <summary>
-        /// Indicates that the component with the provided name exists in the collection.
-        /// </summary>
-        /// <param name="name">The name of the member to find.</param>
-        /// <returns>true if the collection contains a member instance with the specified name.</returns>
-        bool Contains(ComponentName name);
-        
-        /// <summary>
-        /// Gets a member from the collection by the provided name.
-        /// </summary>
-        /// <param name="name">the name of the member to get.</param>
-        /// <returns>The instance of the member with the specified name if found, null if not.</returns>
-        TMember Get(ComponentName name);
-        
-        /// <summary>
-        /// Adds a member to the collection.
-        /// </summary>
-        /// <param name="member">The member to add.</param>
-        void Add(TMember member);
+        /// <remarks>
+        /// This method will recursively traverse the nested hierarchy of data type members to find the specified name.
+        /// Users can specify the full path to a specific member (e.g. Pump.Indy.Timer.DN),
+        /// or simply the name of an immediate child member (e.g. Pump). 
+        /// </remarks>
+        /// <param name="name">The name of the member to get.</param>
+        /// <returns>
+        /// If the member with the specified name is found as an immediate or nested member of the <c>IComplexType</c>,
+        /// the <c>IMember</c> instance with the specified name; otherwise, null.
+        /// </returns>
+        /// <exception cref="ArgumentException">name is null or empty.</exception>
+        TMember? DeepGet(string name);
 
         /// <summary>
-        /// Adds a collection of members to the collection
+        /// Gets all <c>IMember</c> objects, including nested members, in the current <c>IMemberCollection</c>.
         /// </summary>
-        /// <param name="members">The enumerable collection of members to add.</param>
-        void AddRange(IEnumerable<TMember> members);
-        
-        /// <summary>
-        /// Updates an existing member with the provided member instance if found, adds the member if not.
-        /// </summary>
-        /// <param name="member">The member to update.</param>
-        void Update(TMember member);
+        /// <remarks>
+        /// This method will recursively traverse the nested hierarchy of <c>IComplexType</c> members to get a deep collection
+        /// of member instance for the current <c>IComplexType</c>.
+        /// For immediate objects only, use <see cref="IComponents{TComponent}.Get"/>.
+        /// </remarks>
+        /// <returns>
+        /// A collection of <c>IMember</c> objects that represent all immediate and nested child members of the current
+        /// <c>IMemberCollection</c> if any exists.
+        /// If none exist, an empty collection of <c>IMember</c>.
+        /// </returns>
+        IEnumerable<TMember> DeepGetAll();
 
         /// <summary>
-        /// Updates a collection of members on the collection.
+        /// Gets all <c>IMember</c> names, including nested members, for the current <c>IComplexType</c>.
         /// </summary>
-        /// <param name="members">The enumerable collection of members to update.</param>
-        void UpdateRange(IEnumerable<TMember> members);
-        
-        /// <summary>
-        /// Inserts the provided member at the specified index of the collection.
-        /// </summary>
-        /// <param name="index">The index at which to insert the member.</param>
-        /// <param name="member">The member to insert.</param>
-        void Insert(int index, TMember member);
+        /// <remarks>
+        /// This method will recursively traverse the nested hierarchy of data type members to get a deep collection
+        /// of names for each <c>IMember</c> object.
+        /// </remarks>
+        /// <returns>A collection of string names.</returns>
+        IEnumerable<string> DeepGetNames();
 
         /// <summary>
-        /// Renames a member in the current collection from the current name to the new name.
+        /// Gets all <c>IMember</c> names, including nested members, for the current <c>IComplexType</c>.
         /// </summary>
-        /// <param name="current">The current member name of the instance to rename.</param>
-        /// <param name="name">The name to rename the member to.</param>
-        void Rename(ComponentName current, ComponentName name);
-        
+        /// <remarks>
+        /// This method will recursively traverse the nested hierarchy of data type members to get a deep collection
+        /// of names for each <c>IMember</c> object.
+        /// </remarks>
+        /// <returns>A collection of string names.</returns>
+        IEnumerable<string> GetNames();
+
         /// <summary>
-        /// Removes a member from the collection.
+        /// Gets all nested dependent <c>IDataType</c> objects for the current <c>IComplexType</c>.
         /// </summary>
-        /// <param name="name">The name of the member to remove from the collection.</param>
-        void Remove(ComponentName name);
+        /// <remarks>
+        /// This method will recursively traverse the nested hierarchy of data type members to get a deep collection
+        /// of dependent data types for the current <c>IComplexType</c>.
+        /// </remarks>
+        /// <returns>
+        /// A collection of unique data types that the current <c>IComplexType</c> depends on, if any exists.
+        /// If none exist, an empty collection of <c>IDataType</c>.
+        /// </returns>
+        IEnumerable<IDataType> GetDependentTypes();
     }
 }

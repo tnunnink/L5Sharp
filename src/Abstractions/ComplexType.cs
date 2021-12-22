@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Exceptions;
-using L5Sharp.Extensions;
 
 // For testing purposes
 [assembly: InternalsVisibleTo("L5Sharp.Abstractions.Tests")]
@@ -34,9 +34,9 @@ namespace L5Sharp.Abstractions
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
             Description = description ?? string.Empty;
-
-            members ??= FindMembers();
-            Members = ValidateMembers(members);
+            Members = members is not null
+                ? new MemberCollection<IMember<IDataType>>(members)
+                : new MemberCollection<IMember<IDataType>>(FindMembers());
         }
 
         /// <inheritdoc />
@@ -52,64 +52,7 @@ namespace L5Sharp.Abstractions
         public abstract DataTypeClass Class { get; }
 
         /// <inheritdoc />
-        public virtual IEnumerable<IMember<IDataType>> Members { get; }
-
-        /// <inheritdoc />
-        public IMember<IDataType>? GetMember(string name)
-        {
-            if (string.IsNullOrEmpty(name))
-                throw new ArgumentException("Name must be not be null or empty.");
-
-            return GetMemberInternal(this, name);
-        }
-
-        /// <inheritdoc />
-        public IEnumerable<IMember<IDataType>> GetMembers()
-        {
-            var members = new List<IMember<IDataType>>();
-
-            foreach (var member in Members)
-            {
-                members.Add(member);
-
-                if (member.DataType is IComplexType complex)
-                    members.AddRange(complex.GetMembers());
-            }
-
-            return members;
-        }
-
-        /// <inheritdoc />
-        public IEnumerable<string> GetMemberNames()
-        {
-            var names = new List<string>();
-
-            foreach (var member in Members)
-            {
-                names.Add(member.Name);
-
-                if (member.DataType is IComplexType complexType)
-                    names.AddRange(complexType.GetMemberNames().Select(n => $"{member.Name}.{n}"));
-            }
-
-            return names;
-        }
-
-        /// <inheritdoc />
-        public IEnumerable<IDataType> GetDependentTypes()
-        {
-            var types = new List<IDataType>();
-
-            foreach (var member in Members)
-            {
-                types.Add(member.DataType);
-
-                if (member.DataType is IComplexType complexType)
-                    types.AddRange(complexType.GetDependentTypes());
-            }
-
-            return types.Distinct();
-        }
+        public virtual IMemberCollection<IMember<IDataType>> Members { get; }
 
         /// <inheritdoc />
         public IDataType Instantiate() => New();
@@ -163,35 +106,7 @@ namespace L5Sharp.Abstractions
         /// <param name="right">An instance of the object to compare.</param>
         /// <returns>ture if the objects are not equal, otherwise false.</returns>
         public static bool operator !=(ComplexType left, ComplexType right) => !Equals(left, right);
-
-        /// <summary>
-        /// Validates the provided set of members to ensure no duplicate names or circular type references are found.
-        /// </summary>
-        /// <param name="members">A collection of <c>IMember</c> instance to validate.</param>
-        /// <returns>The provided collection of valid members.</returns>
-        /// <exception cref="ComponentNameCollisionException">
-        /// If a duplicate name is encountered.
-        /// </exception>
-        /// <exception cref="CircularReferenceException">
-        /// If a member of the provided collection references the current data type.
-        /// </exception>
-        private static IEnumerable<IMember<IDataType>> ValidateMembers(IEnumerable<IMember<IDataType>> members)
-        {
-            var registry = new Dictionary<string, IMember<IDataType>>();
-
-            foreach (var member in members)
-            {
-                if (member is null)
-                    throw new ArgumentNullException(nameof(member), "Member must be initialized before validation");
-
-                if (registry.ContainsKey(member.Name))
-                    throw new ComponentNameCollisionException(member.Name, member.GetType());
-
-                registry.Add(member.Name, member);
-            }
-
-            return registry.Values;
-        }
+        
 
         /// <summary>
         /// Gets all <c>IMember</c> properties and fields defined for the current <c>IComplexType</c> using reflection.
@@ -245,39 +160,6 @@ namespace L5Sharp.Abstractions
                 p.PropertyType.GetGenericTypeDefinition().IsAssignableFrom(typeof(IMember<>))).ToList();
 
             return properties.Select(f => (IMember<IDataType>)f.GetValue(this));
-        }
-
-        /// <summary>
-        /// Gets an <c>IMember</c> with the provided name from the current <c>IComplexType</c>
-        /// </summary>
-        /// <param name="type">The root <c>IComplexType</c> to start traversal of members.</param>
-        /// <param name="name">The full member path to the desired <c>IMember</c> instance.</param>
-        /// <returns>
-        /// If the member name is found in either immediate or nested members, then a <c>IMember</c>
-        /// instance with the specified name; otherwise, null.
-        /// </returns>
-        private static IMember<IDataType>? GetMemberInternal(IComplexType? type, string name)
-        {
-            IMember<IDataType>? member = default;
-
-            // Get the last member name of the input name. This is the member we are targeting.
-            // If we don't end up with it we want to return null.
-            var target = name.Split('.').Last();
-
-            while (type is not null && !name.IsEmpty())
-            {
-                // This gets and removes the first member name of the string name
-                name = name.ConsumeWhile(c => c != '.', out var memberName).TrimStart('.');
-
-                // Get the member by name for the current complex type.
-                member = type.Members.SingleOrDefault(x => x.Name == memberName);
-
-                // Set the next type for iteration.
-                // If the member is null or the member data type is not complex, we will jump out of the loop.
-                type = member?.DataType as IComplexType;
-            }
-
-            return member?.Name == target ? member : null;
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace L5Sharp
+﻿using L5Sharp.Core;
+
+namespace L5Sharp
 {
     /// <summary>
     /// Represents a Logix User Defined data type component. 
@@ -16,6 +18,6 @@
         /// <summary>
         /// Member collection of the <c>UserDefined</c> that defined the complex structure of the type. 
         /// </summary>
-        new IMemberCollection<IMember<IDataType>> Members { get; }
+        new MemberCollection<IMember<IDataType>> Members { get; }
     }
 }

@@ -28,7 +28,7 @@ namespace L5Sharp.Repositories
             base.Add(component);
             
             //We also want to add dependent user defined types.
-            var dependents = component.GetDependentTypes()
+            var dependents = component.Members.GetDependentTypes()
                 .Where(t => t.Class == DataTypeClass.User)
                 .Cast<IUserDefined>();
 

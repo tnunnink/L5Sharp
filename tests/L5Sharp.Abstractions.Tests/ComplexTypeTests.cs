@@ -6,6 +6,7 @@ using L5Sharp.Enums;
 using L5Sharp.Exceptions;
 using L5Sharp.Types;
 using NUnit.Framework;
+using String = L5Sharp.Types.String;
 
 namespace L5Sharp.Abstractions.Tests
 {
@@ -97,6 +98,14 @@ namespace L5Sharp.Abstractions.Tests
 
             type.Family.Should().Be(DataTypeFamily.None);
         }
+        
+        [Test]
+        public void Members_ValidType_ShouldNotBeEmpty()
+        {
+            var type = new TestComplex();
+
+            type.Members.Should().NotBeEmpty();
+        }
 
         [Test]
         public void Instantiate_WhenCalled_ReturnsNewInstanceWithEqualValue()
@@ -108,13 +117,28 @@ namespace L5Sharp.Abstractions.Tests
             instance.Should().NotBeSameAs(type);
             instance.Should().BeEquivalentTo(type);
         }
+        
+        [Test]
+        public void GetDependentTypes_WhenCalled_ShouldContainExpectedTypes()
+        {
+            var type = new TestComplex();
+
+            var dependents = type.Members.GetDependentTypes().ToList();
+
+            dependents.Should().NotBeEmpty();
+            dependents.Should().Contain(new Bool());
+            dependents.Should().Contain(new Int());
+            dependents.Should().Contain(new Dint());
+            dependents.Should().Contain(new String());
+            dependents.Should().Contain(new Timer());
+        }
 
         [Test]
         public void GetMember_Null_ShouldThrowArgumentException()
         {
             var type = new TestComplex();
 
-            FluentActions.Invoking(() => type.GetMember(null!)).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(() => type.Members.Get(null!)).Should().Throw<ArgumentException>();
         }
 
         [Test]
@@ -122,113 +146,27 @@ namespace L5Sharp.Abstractions.Tests
         {
             var type = new TestComplex();
 
-            FluentActions.Invoking(() => type.GetMember(string.Empty)).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(() => type.Members.Get(string.Empty)).Should().Throw<ArgumentException>();
         }
 
         [Test]
-        public void GetMember_ImmediateMember_ShouldNotBeNull()
+        public void DeepGet_ImmediateMember_ShouldNotBeNull()
         {
             var type = new TestComplex();
 
-            var member = type.GetMember("Nested");
+            var member = type.Members.DeepGet("Nested");
 
             member.Should().NotBeNull();
         }
 
         [Test]
-        public void GetMember_NestedMember_ShouldNotBeNull()
+        public void DeepGet_NestedMember_ShouldNotBeNull()
         {
             var type = new TestComplex();
 
-            var member = type.GetMember("Nested.M1");
+            var member = type.Members.DeepGet("Nested.M1");
 
             member.Should().NotBeNull();
-        }
-
-        [Test]
-        public void GetMember_NonExistingMember_ShouldBeNull()
-        {
-            var type = new TestComplex();
-
-            var member = type.GetMember("Nested.M5");
-
-            member.Should().BeNull();
-        }
-
-        [Test]
-        public void GetMembers_WhenCalled_ShouldHaveExpectedCount()
-        {
-            var type = new TestComplex();
-
-            var members = type.GetMembers();
-
-            members.Should().HaveCount(5);
-        }
-
-        [Test]
-        public void GetMembers_NoMembers_ShouldBeEmpty()
-        {
-            var type = new MemberLessComplex();
-
-            var members = type.GetMembers();
-
-            members.Should().BeEmpty();
-        }
-
-        [Test]
-        public void GetMemberNames_TypeWithMembers_ShouldNotBeEmpty()
-        {
-            var type = new TestComplex();
-
-            var names = type.GetMemberNames();
-
-            names.Should().NotBeEmpty();
-        }
-        
-        [Test]
-        public void GetMemberNames_TypeWithNestedMembers_ShouldHaveExpected()
-        {
-            var type = new TestComplex();
-
-            var names = type.GetMemberNames().ToList();
-
-            names.Should().HaveCount(5);
-            names.Should().Contain("TestMember");
-            names.Should().Contain("Nested");
-            names.Should().Contain("Nested.M1");
-            names.Should().Contain("Nested.M2");
-            names.Should().Contain("Nested.M3");
-        }
-        
-        [Test]
-        public void GetMemberNames_TypeWithoutMembers_ShouldBeEmpty()
-        {
-            var type = new MemberLessComplex();
-
-            var names = type.GetMemberNames();
-
-            names.Should().BeEmpty();
-        }
-
-        [Test]
-        public void GetDependentTypes_TypeWithMembers_ShouldNotBeEmpty()
-        {
-            var type = new TestComplex();
-
-            type.GetDependentTypes().Should().NotBeEmpty();
-        }
-
-        [Test]
-        public void GetDependentType_TypeWithMembers_ShouldHaveExpectedTypes()
-        {
-            var type = new TestComplex();
-
-            var dependents = type.GetDependentTypes().ToList();
-
-            dependents.Should().HaveCount(3);
-            dependents.Should().Contain(t => t is Bool);
-            dependents.Should().Contain(t => t is Dint);
-            dependents.Should().Contain(t => t is NestedComplex);
         }
 
         [Test]

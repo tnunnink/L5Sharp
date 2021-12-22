@@ -63,19 +63,6 @@ namespace L5Sharp.Core.Tests
         }
 
         [Test]
-        public void GetTag_TagExists_ShouldNotBeNull()
-        {
-            var program = new Program("Test");
-            var tag = Tag.Create("Test", new Bool());
-            program.Tags.Add(tag);
-
-            var result = program.Tags.Get("Test");
-
-            result.Should().NotBeNull();
-            result.Name.ToString().Should().Be("Test");
-        }
-
-        [Test]
         public void GetTag_DoesNotExists_ShouldBeNull()
         {
             var program = new Program("Test");
@@ -83,29 +70,6 @@ namespace L5Sharp.Core.Tests
             var result = program.Tags.Get("Test");
 
             result.Should().BeNull();
-        }
-
-        [Test]
-        public void AddTag_ValidName_ShouldNotBeNull()
-        {
-            var program = new Program("Test");
-            var tag = Tag.Create("Test", new Bool());
-
-            program.Tags.Add(tag);
-
-            program.Tags.Should().Contain(tag);
-        }
-        
-        [Test]
-        public void RemoveTag_Exists_ShouldRemoveFromCollection()
-        {
-            var program = new Program("Test");
-            var tag = Tag.Create("Test", new Bool());
-            program.Tags.Add(tag);
-
-            program.Tags.Remove(tag.Name);
-
-            program.Tags.Should().NotContain(tag);
         }
     }
 }

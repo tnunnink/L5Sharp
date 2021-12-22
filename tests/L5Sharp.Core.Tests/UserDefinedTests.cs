@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using AutoFixture;
 using FluentAssertions;
 using L5Sharp.Components;
 using L5Sharp.Enums;
 using L5Sharp.Exceptions;
-using L5Sharp.Extensions;
 using L5Sharp.Types;
 using NUnit.Framework;
 using String = L5Sharp.Types.String;
@@ -125,54 +123,6 @@ namespace L5Sharp.Core.Tests
 
             var complex = (IComplexType)type;
             complex.Members.Should().HaveCount(2);
-        }
-
-        [Test]
-        public void GetDependentTypes_ComplexType_ShouldContainExpectedTypes()
-        {
-            var type = UserDefined.Create("Type01");
-            type.Members.Add(Member.Create("Member01", new Bool()));
-            type.Members.Add(Member.Create("Member02", new Counter()));
-            type.Members.Add(Member.Create("Member03", new Dint()));
-            type.Members.Add(Member.Create("Member04", new String()));
-            var dependentUserType = UserDefined.Create("Type02");
-            dependentUserType.Members.Add(Member.Create("Member01", new Bool()));
-            dependentUserType.Members.Add(Member.Create("Member02", new Dint()));
-            dependentUserType.Members.Add(Member.Create("Member03", new String()));
-            dependentUserType.Members.Add(Member.Create("Member04", new Timer()));
-            type.Members.Add(Member.Create("Member05", dependentUserType));
-
-            var dependents = type.GetDependentTypes().ToList();
-
-            dependents.Should().NotBeEmpty();
-            dependents.Should().Contain(new Bool());
-            dependents.Should().Contain(new Counter());
-            dependents.Should().Contain(new Dint());
-            dependents.Should().Contain(new String());
-            dependents.Should().Contain(new Timer());
-            dependents.Should().Contain(dependentUserType);
-        }
-
-        [Test]
-        public void GetDependentUserTypes_ComplexType_ShouldContainExpectedTypes()
-        {
-            var type = UserDefined.Create("Type01");
-            type.Members.Add(Member.Create("Member01", new Bool()));
-            type.Members.Add(Member.Create("Member02", new Counter()));
-            type.Members.Add(Member.Create("Member03", new Dint()));
-            type.Members.Add(Member.Create("Member04", new String()));
-            var dependentUserType = UserDefined.Create("Type02");
-            dependentUserType.Members.Add(Member.Create("Member01", new Bool()));
-            dependentUserType.Members.Add(Member.Create("Member02", new Dint()));
-            dependentUserType.Members.Add(Member.Create("Member03", new String()));
-            dependentUserType.Members.Add(Member.Create("Member04", new Timer()));
-            type.Members.Add(Member.Create("Member05", dependentUserType));
-
-            var dependents = type.GetDependentTypes().Where(t => t is IUserDefined).ToList();
-
-            dependents.Should().NotBeEmpty();
-            dependents.Should().HaveCount(1);
-            dependents.Should().Contain(dependentUserType);
         }
 
         [Test]

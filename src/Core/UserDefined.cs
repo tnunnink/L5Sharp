@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using L5Sharp.Abstractions;
 using L5Sharp.Enums;
 
 namespace L5Sharp.Core
 {
     /// <inheritdoc cref="L5Sharp.IUserDefined" />
-    public class UserDefined : ComplexType, IUserDefined
+    public class UserDefined : IUserDefined, IEquatable<UserDefined>
     {
         /// <summary>
         /// Creates a new instance of a <c>UserDefined</c> data type with the provided arguments.
@@ -16,23 +15,31 @@ namespace L5Sharp.Core
         /// <param name="description">the string description of the type.</param>
         /// <param name="members">The collection of members to add to the type.</param>
         internal UserDefined(string name, string? description = null,
-            IEnumerable<IMember<IDataType>>? members = null) : base(name, description)
+            IEnumerable<IMember<IDataType>>? members = null)
         {
-            Members = new UserDefinedMembers(this, members);
+            Name = name ?? throw new ArgumentNullException(nameof(name));
+            Description = description ?? string.Empty;
+            Members = new MemberCollection<IMember<IDataType>>(members);
         }
 
         /// <inheritdoc />
-        public override DataTypeClass Class => DataTypeClass.User;
+        public string Name { get; }
 
         /// <inheritdoc />
-        public new IMemberCollection<IMember<IDataType>> Members { get; }
-        
-        IEnumerable<IMember<IDataType>> IComplexType.Members => Members;
+        public string Description { get; }
 
         /// <inheritdoc />
-        protected override IDataType New() =>
+        public DataTypeFamily Family => DataTypeFamily.None;
+
+        /// <inheritdoc />
+        public DataTypeClass Class => DataTypeClass.User;
+
+        /// <inheritdoc />
+        public MemberCollection<IMember<IDataType>> Members { get; }
+
+        /// <inheritdoc />
+        public IDataType Instantiate() =>
             new UserDefined(string.Copy(Name), string.Copy(Description), Members.Select(m => m.Copy()));
-
 
         /// <summary>
         /// Creates a new <c>UserDefined</c> data type with the provided values.
@@ -46,19 +53,19 @@ namespace L5Sharp.Core
         {
             if (name is null)
                 throw new ArgumentNullException(nameof(name));
-            
+
             return new UserDefined(name, description, members);
         }
-            
 
-        /*/// <inheritdoc />
+
+        /// <inheritdoc />
         public bool Equals(UserDefined? other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
             return Name == other.Name
-                   && Members.SequenceEqual(other.Members)
-                   && Description == other.Description;
+                   && Description == other.Description
+                   && Members.SequenceEqual(other.Members);
         }
 
         /// <inheritdoc />
@@ -70,7 +77,7 @@ namespace L5Sharp.Core
         }
 
         /// <inheritdoc />
-        public override int GetHashCode() => HashCode.Combine(Name);
+        public override int GetHashCode() => HashCode.Combine(Name, Description, Members);
 
         /// <inheritdoc />
         public override string ToString() => Name;
@@ -89,6 +96,8 @@ namespace L5Sharp.Core
         /// <param name="left">The left instance of the object.</param>
         /// <param name="right">The right instance of the object.</param>
         /// <returns>True if the two objects are not equal, otherwise false.</returns>
-        public static bool operator !=(UserDefined left, UserDefined right) => !Equals(left, right);*/
+        public static bool operator !=(UserDefined left, UserDefined right) => !Equals(left, right);
+
+        IMemberCollection<IMember<IDataType>> IComplexType.Members => Members;
     }
 }

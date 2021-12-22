@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using L5Sharp.Core;
 using L5Sharp.Enums;
 using NUnit.Framework;
 
@@ -72,6 +73,16 @@ namespace L5Sharp.Types.Tests
             type.EN.Should().BeSameAs(type.EN);
             type.PRE.Should().BeSameAs(type.PRE);
             type.ACC.Should().BeSameAs(type.ACC);
+        }
+
+        [Test]
+        public void CastingMembers_ToMutableCollection_ShouldNotBeProhibited()
+        {
+            var type = new Timer();
+            
+            var members = (MemberCollection<IMember<IDataType>>)type.Members;
+            
+            members.Should().NotBeNull();
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using FluentAssertions;
 using L5Sharp.Exceptions;
 using NUnit.Framework;
@@ -81,7 +80,7 @@ namespace L5Sharp.Abstractions.Tests
         [Test]
         public void Contains_Null_ShouldBeFalse()
         {
-            var result = _collection.Contains((string)null);
+            var result = _collection.Contains(null!);
 
             result.Should().BeFalse();
         }
@@ -108,24 +107,7 @@ namespace L5Sharp.Abstractions.Tests
         [Test]
         public void Get_Null_ShouldBeNull()
         {
-            var result = _collection.Get((string)null);
-
-            result.Should().BeNull();
-        }
-
-        [Test]
-        public void Get_PredicateExists_ShouldNotBeNullAndBeExpected()
-        {
-            var result = _collection.Get(c => c.Name == "Component2");
-
-            result.Should().NotBeNull();
-            result.Should().Be(_component2);
-        }
-
-        [Test]
-        public void Get_PredicateDoesNotExist_ShouldBeNull()
-        {
-            var result = _collection.Get(c => c.Name == "Test");
+            var result = _collection.Get(null!);
 
             result.Should().BeNull();
         }
@@ -149,25 +131,6 @@ namespace L5Sharp.Abstractions.Tests
                 _collection.Add(new TestLogixComponent($"Test{i}", "Test component"));
 
             _collection.Should().HaveCount(103);
-        }
-
-        [Test]
-        public void Find_PredicateExists_ShouldNotBeEmpty()
-        {
-            var results = _collection.Find(c => c.Description != string.Empty).ToList();
-
-            results.Should().NotBeEmpty();
-            results.Should().Contain(_component1);
-            results.Should().Contain(_component2);
-            results.Should().NotContain(_component3);
-        }
-
-        [Test]
-        public void Find_PredicateDoesNotExist_ShouldBeEmpty()
-        {
-            var result = _collection.Find(c => c.Description.Contains("Name"));
-
-            result.Should().BeEmpty();
         }
 
         [Test]
@@ -195,7 +158,7 @@ namespace L5Sharp.Abstractions.Tests
         [Test]
         public void AddRange_Null_ShouldThrowArgumentNullException()
         {
-            FluentActions.Invoking(() => _collection.AddRange(null)).Should().Throw<ArgumentNullException>();
+            FluentActions.Invoking(() => _collection.AddRange(null!)).Should().Throw<ArgumentNullException>();
         }
 
 
@@ -234,7 +197,7 @@ namespace L5Sharp.Abstractions.Tests
         [Test]
         public void Remove_Null_ShouldBeFalse()
         {
-            FluentActions.Invoking(() => _collection.Remove(null)).Should().NotThrow();
+            FluentActions.Invoking(() => _collection.Remove(null!)).Should().NotThrow();
         }
 
         [Test]
@@ -243,14 +206,14 @@ namespace L5Sharp.Abstractions.Tests
             FluentActions.Invoking(() => _collection.Update(null)).Should().Throw<ArgumentNullException>();
         }
 
-        /*[Test]
+        [Test]
         public void Update_EmptyName_ShouldThrowArgumentException()
         {
             var component = new TestLogixComponent(string.Empty, "This is the updated component");
             
             FluentActions.Invoking(() => _collection.Update(component))
                 .Should().Throw<ArgumentException>();
-        }*/
+        }
         
         [Test]
         public void Update_NonExistingComponent_ShouldAddToCollection()
@@ -272,15 +235,15 @@ namespace L5Sharp.Abstractions.Tests
 
             var result = _collection.Get(component.Name);
             result.Should().NotBeNull();
-            result.Name.Should().Be("Component1");
-            result.Description.Should().Be("This is the updated component");
+            result?.Name.Should().Be("Component1");
+            result?.Description.Should().Be("This is the updated component");
             result.Should().Be(component);
         }
 
         [Test]
         public void GetEnumerator_WhenCalled_ShouldNotBeNull()
         {
-            var enumerator = _collection.GetEnumerator();
+            using var enumerator = _collection.GetEnumerator();
 
             enumerator.Should().NotBeNull();
         }
