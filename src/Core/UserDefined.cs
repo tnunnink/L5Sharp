@@ -12,6 +12,9 @@ namespace L5Sharp.Core
         /// <summary>
         /// Creates a new instance of a <c>UserDefined</c> data type with the provided arguments.
         /// </summary>
+        /// <remarks>
+        /// To create an instance of a <c>IUserDefined</c> use <see cref="Create"/>.
+        /// </remarks>
         /// <param name="name">The component name of the type.</param>
         /// <param name="description">the string description of the type.</param>
         /// <param name="members">The collection of members to add to the type.</param>

@@ -6,7 +6,7 @@
     public class Comment
     {
         /// <summary>
-        /// Creates a new instance of a Comment with the provided operand and comment value
+        /// Creates a new instance of a <c>Comment</c> with the provided operand and value.
         /// </summary>
         /// <param name="operand">The string operand value.</param>
         /// <param name="value">The string comment value.</param>
@@ -17,12 +17,12 @@
         }
 
         /// <summary>
-        /// Gets the value of the <c>Operand</c> for which the comments is applied to.
+        /// Gets the <c>Operand</c>, or member path, for which the comments is applied to.
         /// </summary>
         public string Operand { get; }
         
         /// <summary>
-        /// Gets the value of the comment.
+        /// Gets the <c>Value</c> of the comment.
         /// </summary>
         public string Value { get; }
     }

@@ -3,6 +3,7 @@ using ApprovalTests;
 using ApprovalTests.Reporters;
 using FluentAssertions;
 using L5Sharp.Components;
+using L5Sharp.Enums;
 using L5Sharp.Types;
 using NUnit.Framework;
 
@@ -98,26 +99,36 @@ namespace L5Sharp.Serialization.Tests
         public void Deserialize_ValidElement_ShouldNotBeNull()
         {
             var element = new XElement("DataValueMember");
+            element.Add(new XAttribute("Name", "Test"));
             element.Add(new XAttribute("DataType", "BOOL"));
+            element.Add(new XAttribute("Radix", "Decimal"));
+            element.Add(new XAttribute("Value", "0"));
+            
             var serializer = new DataValueMemberSerializer();
 
             var component = serializer.Deserialize(element);
 
             component.Should().NotBeNull();
+            
         }
         
         [Test]
         public void Deserialize_ValidBoolElement_ShouldHaveExpectedProperties()
         {
             var element = new XElement("DataValueMember");
+            element.Add(new XAttribute("Name", "Test"));
             element.Add(new XAttribute("DataType", "BOOL"));
             element.Add(new XAttribute("Radix", "Decimal"));
-            element.Add(new XAttribute("Value", "0"));
+            element.Add(new XAttribute("Value", "1"));
+            
             var serializer = new DataValueMemberSerializer();
 
             var component = serializer.Deserialize(element);
 
-            component.Name.Should().Be("BOOL");
+            component.Name.Should().Be("Test");
+            component.DataType.Should().BeOfType<Bool>();
+            component.Radix.Should().Be(Radix.Decimal);
+            ((Bool)component.DataType).Value.Should().Be(true);
         }
     }
 }

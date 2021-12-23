@@ -52,13 +52,13 @@ namespace L5Sharp.Abstractions
         public abstract DataTypeClass Class { get; }
 
         /// <inheritdoc />
-        public virtual IMemberCollection<IMember<IDataType>> Members { get; }
+        public IMemberCollection<IMember<IDataType>> Members { get; }
 
         /// <inheritdoc />
         public IDataType Instantiate() => New();
 
         /// <summary>
-        /// Creates new instance of the current type with default values.
+        /// Creates a new instance of the current type with default values.
         /// </summary>
         /// <remarks>
         /// Called when <see cref="Instantiate"/> is called. This abstraction is here to let the

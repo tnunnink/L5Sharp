@@ -91,8 +91,8 @@ namespace L5Sharp.Builders
 
         public IParameter<TDataType> Create()
         {
-            return new Parameter<TDataType>(_name, _dataType, _usage, _required, _visible, _dimensions, _radix, _access,
-                _description, _constant);
+            return new Parameter<TDataType>(_name, _dataType, _dimensions, _radix, _access, _description,
+                _usage, _required, _visible, _constant);
         }
     }
 }

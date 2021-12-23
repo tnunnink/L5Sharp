@@ -1,4 +1,5 @@
-﻿using L5Sharp.Types;
+﻿using System;
+using L5Sharp.Types;
 
 // ReSharper disable InconsistentNaming RSLogix naming
 
@@ -10,27 +11,34 @@ namespace L5Sharp
     public interface IStringType : IDataType
     {
         /// <summary>
-        /// Gets the value of the string type.
+        /// Gets the current string value of the <c>IStringType</c>.
         /// </summary>
         string Value { get; }
 
         /// <summary>
-        /// Gets the Length Member of the string type.
+        /// Gets the LEN <c>IMember</c> of the <c>IStringType</c>.
         /// </summary>
-        /// <remarks>
-        /// This member represents the length of the string defined type
-        /// </remarks>
+        /// <value>
+        /// Member that holds the decimal format value representing the maximum length of the string value. 
+        /// </value>
         IMember<Dint> LEN { get; }
 
         /// <summary>
-        /// Gets the Data Member of the string type.
+        /// Gets the DATA <c>IMember</c> of the <c>IStringType</c>.
         /// </summary>
+        /// <value>
+        /// Member that holds the ASCII format sequence of characters that comprise the string value.
+        /// </value>
         IMember<Sint> DATA { get; }
         
         /// <summary>
-        /// Sets the value of the string to the provided string value. 
+        /// Sets <see cref="Value"/> to the provided string value for the <c>IStringType</c>. 
         /// </summary>
         /// <param name="value">The value to set.</param>
+        /// <exception cref="ArgumentNullException">When value is null.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// When the length of value is longer than the predefined length (LEN Member value).
+        /// </exception>
         void SetValue(string value);
     }
 }

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using L5Sharp.Enums;
-using L5Sharp.Extensions;
 
 namespace L5Sharp.Core
 {
@@ -37,59 +36,68 @@ namespace L5Sharp.Core
         public Radix Radix => _member.Radix;
 
         /// <inheritdoc />
-        public ExternalAccess ExternalAccess =>
-            Parent == null
+        public ExternalAccess ExternalAccess => Parent is null
                 ? _member.ExternalAccess
-                : _member.ExternalAccess.IsMoreRestrictive(Parent.ExternalAccess)
-                    ? _member.ExternalAccess
-                    : Parent.ExternalAccess;
+                : ExternalAccess.MostRestrictive(_member.ExternalAccess, Parent.ExternalAccess);
 
         /// <inheritdoc />
-        public string Description => Root.Comments.HasComment(Operand)
-            ? Root.Comments.GetComment(Operand)
+        public string Description => Root.Comments.Contains(Operand)
+            ? Root.Comments.Get(Operand)
             : CalculateDescription();
 
         /// <inheritdoc />
-        public object? Value => _member.DataType is IAtomicType atomic ? atomic.Value : null;
+        public object? Value => _member.DataType switch
+        {
+            IAtomicType atomic => atomic.Value,
+            IStringType stringType => stringType.Value,
+            _ => null
+        };
 
         /// <inheritdoc />
         public ITagMember<IDataType>? Parent { get; }
 
         /// <inheritdoc />
         public ITag<IDataType> Root { get; }
-
+        
+        /// <inheritdoc />
+        public void Comment(string comment) => Root.Comments.Set(new Comment(Operand, comment));
 
         /// <inheritdoc />
-        public void Comment(string comment)
-        {
-            if (string.IsNullOrEmpty(comment))
-            {
-                Root.Comments.Reset(Operand);
-                return;
-            }
-
-            Root.Comments.Override(new Comment(Operand, comment));
-        }
-
         public void SetValue(IAtomicType value)
         {
-            throw new NotImplementedException();
+            if (value is null)
+                throw new ArgumentNullException(nameof(value));
+            
+            if (_member.DataType is not IAtomicType atomicType)
+                throw new InvalidOperationException(
+                    $"Can not set value for '{GetType()}'. Type must be atomic.");
+
+            atomicType.SetValue(value);
         }
 
+        /// <inheritdoc />
         public bool TrySetValue(IAtomicType value)
         {
-            throw new NotImplementedException();
+            if (_member.DataType is not IAtomicType atomicType)
+                return false;
+
+            //todo probably need a can set or maybe use try catch?
+            
+            atomicType.SetValue(value);
+
+            return true;
         }
 
         /// <inheritdoc />
-        public ITagMember<TDataType>? this[int index] => _member[index] is not null
-            ? new TagMember<TDataType>(_member[index]!, Root, (ITagMember<IDataType>)this)
+        public ITagMember<TDataType>? this[int index] => _member.HasArray && index < _member.Dimension.Length
+            ? new TagMember<TDataType>(_member[index], Root, (ITagMember<IDataType>)this)
             : null;
 
         /// <inheritdoc />
-        public ITagMember<IDataType> this[string name] => _member.DataType is IComplexType complexType
-            ? new TagMember<IDataType>(complexType.Members.DeepGet(name), Root, (ITagMember<IDataType>)this)
-            : null;
+        public ITagMember<IDataType>? this[string name] =>
+            _member.DataType is IComplexType complexType && complexType.Members.DeepContains(name)
+                ? new TagMember<IDataType>(complexType.Members.DeepGet(name)!, Root, (ITagMember<IDataType>)this)
+                : null;
 
         /// <inheritdoc />
         public ITagMember<TType> GetMember<TType>(Func<TDataType, IMember<TType>> expression)
@@ -100,16 +108,9 @@ namespace L5Sharp.Core
         }
 
         /// <inheritdoc />
-        public IEnumerable<ITagMember<IDataType>> GetMembers()
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc />
-        public IEnumerable<ITagMember<IDataType>> GetMembers(Func<ITagMember<IDataType>, bool> predicate)
-        {
-            throw new NotImplementedException();
-        }
+        public IEnumerable<ITagMember<IDataType>> GetMembers() => _member.DataType is IComplexType complexType
+            ? complexType.Members.Select(m => new TagMember<IDataType>(m, Root, (ITagMember<IDataType>)this))
+            : Enumerable.Empty<ITagMember<IDataType>>();
 
         /// <inheritdoc />
         public IEnumerable<string> GetMemberNames() => _member.DataType is IComplexType complexType
@@ -121,21 +122,6 @@ namespace L5Sharp.Core
             ? complexType.Members.DeepNames()
             : Enumerable.Empty<string>();
 
-        /*private ITagMember<IDataType>? GetMemberInternal(string name)
-        {
-            var member = _member.DataType.GetMember(name);
-            return member != null ? new TagMember<IDataType>(member, Root, (ITagMember<IDataType>)this) : null;
-        }
-
-        private IEnumerable<ITagMember<IDataType>> GetMembersInternal()
-        {
-            return _member.IsArray()
-                ? _member.Select(m =>
-                    new TagMember<IDataType>((IMember<IDataType>)m, Root, (ITagMember<IDataType>)this))
-                : _member.DataType.GetMembers().Select(m =>
-                    new TagMember<IDataType>(m, Root, (ITagMember<IDataType>)this));
-        }*/
-
         /// <summary>
         /// Recursively traverses up the member chain to build the full string name of the current tag member. 
         /// </summary>
@@ -144,9 +130,9 @@ namespace L5Sharp.Core
         private static string GetTagName(ITagMember<IDataType> member)
         {
             return member.Parent != null
-                ? member.IsArrayElement()
-                    ? $"{GetTagName(member.Parent)}{member.Name}"
-                    : $"{GetTagName(member.Parent)}.{member.Name}"
+                ? member.Parent.Dimensions.AreEmpty
+                    ? $"{GetTagName(member.Parent)}.{member.Name}"
+                    : $"{GetTagName(member.Parent)}{member.Name}"
                 : member.Name;
         }
 
@@ -165,9 +151,9 @@ namespace L5Sharp.Core
                 return Parent.Description;
 
             //If so, then we concatenate descriptions based on if it is an element of array or member of a type. 
-            return this.IsArrayElement()
-                ? $"{Root.Description} {Parent.Description}".Trim()
-                : $"{Root.Description} {_member.Description}".Trim();
+            return Dimensions.AreEmpty
+                ? $"{Root.Description} {_member.Description}".Trim()
+                : $"{Root.Description} {Parent.Description}".Trim();
         }
     }
 }

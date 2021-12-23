@@ -277,6 +277,14 @@ namespace L5Sharp.Types.Tests
         }
         
         [Test]
+        public void ToString_WhenCalled_ShouldBeName()
+        {
+            var type = new Dint();
+
+            type.ToString().Should().Be(type.Name);
+        }
+        
+        [Test]
         public void CompareTo_Same_ShouldBeZero()
         {
             var type = new Dint();

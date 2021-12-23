@@ -206,8 +206,8 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void ObjectEquals_AreEqual_ShouldBeTrue()
         {
-            var first = UserDefined.Create("Test");
-            var second = UserDefined.Create("Test");
+            var first = (UserDefined)UserDefined.Create("Test");
+            var second = (UserDefined)UserDefined.Create("Test");
 
             var result = first.Equals((object)second);
 
@@ -217,7 +217,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void ObjectEquals_AreSame_ShouldBeTrue()
         {
-            var first = UserDefined.Create("Test");
+            var first = (UserDefined)UserDefined.Create("Test");
             var second = first;
 
             var result = first.Equals((object)second);

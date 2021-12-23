@@ -12,19 +12,20 @@ namespace L5Sharp.Extensions
     internal static class ElementExtensions
     {
         /// <summary>
-        /// Helper for getting the component name attribute for the current element.
+        /// Helper for getting the current element's component name value.
         /// </summary>
         /// <param name="element">The current element.</param>
         /// <returns>The string name for attribute value for the component.</returns>
-        public static string? GetName(this XElement element) => element.Attribute("Name")?.Value;
+        public static string? GetComponentName(this XElement element) => element.Attribute("Name")?.Value;
 
         /// <summary>
-        /// Helper for getting the component data type name attribute.
+        /// Helper for getting the current element's data type instance.
         /// </summary>
         /// <param name="element">The current element.</param>
-        /// <returns>The string data type name attribute value for the component.</returns>
-        public static string? GetDataTypeName(this XElement element) => element.Attribute("DataType")?.Value;
-
+        /// <returns>
+        /// If the data type is known or defined in the current XDocument, then an instance of  <see cref="IDataType"/>
+        /// representing that type; otherwise, and instance of <see cref="Types.Undefined"/>.
+        /// </returns>
         public static IDataType GetDataType(this XElement element)
         {
             var provider = new LogixTypeProvider(element);
@@ -56,6 +57,16 @@ namespace L5Sharp.Extensions
             return (TProperty)converter.Invoke(value);
         }
 
+        /// <summary>
+        /// Helper for converting a <see cref="TComponent"/> property to an <c>XAttribute</c> for serialization.
+        /// </summary>
+        /// <param name="component">The current <c>ILogixComponent</c> instance.</param>
+        /// <param name="expression">A member expression that points to the specified property to convert.</param>
+        /// <param name="nameOverride">An optional parameter that overrides the name of the attribute being converted.</param>
+        /// <typeparam name="TComponent"></typeparam>
+        /// <typeparam name="TProperty"></typeparam>
+        /// <returns></returns>
+        /// <exception cref="InvalidOperationException"></exception>
         public static XAttribute ToAttribute<TComponent, TProperty>(this TComponent component,
             Expression<Func<TComponent, TProperty>> expression, string? nameOverride = null)
         {
@@ -73,7 +84,7 @@ namespace L5Sharp.Extensions
             Expression<Func<TComponent, TProperty>> expression, bool useCDataElement = true,
             string? nameOverride = null)
         {
-            if (!(expression.Body is MemberExpression memberExpression))
+            if (expression.Body is not MemberExpression memberExpression)
                 throw new InvalidOperationException($"Expression must be {typeof(MemberExpression)}");
 
             var name = nameOverride ?? memberExpression.Member.GetXName();

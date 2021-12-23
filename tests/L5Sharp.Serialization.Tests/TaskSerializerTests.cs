@@ -105,13 +105,13 @@ namespace L5Sharp.Serialization.Tests
         private XElement GetContinuousTaskElement()
         {
             return XDocument.Load(_fileName).Descendants(LogixNames.Task)
-                .FirstOrDefault(e => e.GetName() == "Continuous");
+                .FirstOrDefault(e => e.GetComponentName() == "Continuous");
         }
         
         private XElement GetPeriodicTaskElement()
         {
             return XDocument.Load(_fileName).Descendants(LogixNames.Task)
-                .FirstOrDefault(e => e.GetName() == "Periodic");
+                .FirstOrDefault(e => e.GetComponentName() == "Periodic");
         }
     }
 }

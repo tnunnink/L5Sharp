@@ -155,8 +155,6 @@ namespace L5Sharp
         /// <returns></returns>
         IEnumerable<ITagMember<IDataType>> GetMembers();
 
-        IEnumerable<ITagMember<IDataType>> GetMembers(Func<ITagMember<IDataType>, bool> predicate);
-
         /// <summary>
         /// Gets a list of child member names of the current <c>TagMember</c>
         /// </summary>
@@ -182,12 +180,5 @@ namespace L5Sharp
         /// If none exist, returns an empty collection.
         /// </returns>
         IEnumerable<string> GetDeepMembersNames();
-
-        /*
-        void SetMember<TAtomic>(Func<TDataType, IMember<TAtomic>> expression, TAtomic value)
-            where TAtomic : IAtomic;
-
-        void SetMember<TType>(Func<TDataType, IMember<TType>> expression, string description)
-            where TType : IDataType;*/
     }
 }

@@ -1,8 +1,5 @@
-﻿using System.Collections.Generic;
-using FluentAssertions;
+﻿using FluentAssertions;
 using L5Sharp.Components;
-using L5Sharp.Enums;
-using L5Sharp.Extensions;
 using L5Sharp.Types;
 using NUnit.Framework;
 
@@ -12,35 +9,65 @@ namespace L5Sharp.Core.Tests
     public class TagComplexTypeTests
     {
         [Test]
-        public void GetMemberNames_WhenCalledHasMembers_ShouldNotBeEmpty()
+        public void GetMemberNames_HasMembers_ShouldHaveExpectedCount()
         {
-            var tag = Tag.Create("Test", (IDataType)new Counter());
+            var tag = Tag.Create("Test", new Timer());
 
             var members = tag.GetMemberNames();
 
-            members.Should().NotBeEmpty();
+            members.Should().HaveCount(5);
         }
 
         [Test]
-        public void GetDeepMembersNames_WhenCalledHasMembers_ShouldNotBeEmpty()
+        public void GetDeepMembersNames_HasMembers_ShouldNotBeEmpty()
         {
-            var tag = Tag.Create("Test", (IDataType)new Counter());
+            var tag = Tag.Create("Test", new Timer());
 
             var members = tag.GetDeepMembersNames();
 
-            members.Should().NotBeEmpty();
+            members.Should().HaveCount(5);
         }
 
         [Test]
-        public void GetDeepMembersNames_NestedStructure_ShouldContainDotProperties()
+        public void GetDeepMembersNames_NestedStructure_ShouldContainDot()
         {
-            var tag = Tag.Create("Test", (IDataType)new Message());
+            var tag = Tag.Create("Test", new Message());
 
             var members = tag.GetDeepMembersNames();
 
             members.Should().Contain(s => s.Contains('.'));
         }
 
+        [Test]
+        public void NameIndex_Null_ShouldBeNull()
+        {
+            var tag = Tag.Create<Timer>("Test");
+
+            var member = tag[null!];
+
+            member.Should().BeNull();
+        }
+        
+        [Test]
+        public void NameIndex_EmptyString_ShouldBeNull()
+        {
+            var tag = Tag.Create<Timer>("Test");
+
+            var member = tag[string.Empty];
+
+            member.Should().BeNull();
+        }
+
+        [Test]
+        public void NameIndex_NonExistingMember_ShouldBeNull()
+        {
+            var tag = Tag.Create<Timer>("Test");
+
+            var member = tag["Invalid"];
+
+            member.Should().BeNull();
+        }
+        
         [Test]
         public void StringIndex_ValidNameHasMember_ShouldNotBeNull()
         {
@@ -52,116 +79,49 @@ namespace L5Sharp.Core.Tests
         }
 
         [Test]
-        public void StringIndex_NonExistingMember_ShouldBeNull()
+        public void NameIndex_ValidNested_ShouldBeExpected()
         {
-            var tag = Tag.Create<Timer>("Test");
+            var tag = Tag.Create<MyNestedType>("Test");
+            
+            var member = tag["Tmr.PRE"];
 
-            var member = tag["Member"];
-
-            member.Should().BeNull();
+            member.Should().NotBeNull();
+            member?.Name.Should().Be("PRE");
+            member?.DataType.Should().Be(nameof(Dint).ToUpper());
         }
-
-        /*[Test]
-        public void StringIndex_SameMember_DataShouldReferenceSameInstance()
-        {
-            var tag = Tag.Create<Timer>("Test");
-
-            var first = tag["ACC"];
-            var second = tag["ACC"];
-
-            first.GetData().Should().BeSameAs(second.GetData());
-        }*/
-
-
-        /*
+        
         [Test]
-        public void SetMember_ValidNameHasMember_ShouldNotBeNull()
+        public void NameIndex_ChainedCalls_ShouldBeExpected()
         {
-            var tag = Tag.Create<Timer>("Test");
+            var tag = Tag.Create<MyNestedType>("Test");
+            
+            var member = tag["Tmr"]?["PRE"];
 
-            tag.SetMember(t => t.ACC, new Dint(5001));
-
-            tag.GetMember(t => t.ACC).GetData().As<Dint>().Should().Be(5001);
-        }*/
-
-        /*
-        [Test]
-        public void GetMember_GenericTagType_ShouldNotBeNull()
-        {
-            var tag = Tag.Create("Test", (IDataType)new Timer());
-
-            var value = tag["PRE"].GetData().As<Dint>();
-
-            value.Should().NotBeNull();
-        }
-        */
-
-        [Test]
-        public void GetMember_Null_ShouldBeNull()
-        {
-            var tag = Tag.Create("Test", (IDataType)new Timer());
-
-            var member = tag[(string)null];
-
-            member.Should().BeNull();
+            member.Should().NotBeNull();
+            member?.Name.Should().Be("PRE");
+            member?.DataType.Should().Be(nameof(Dint).ToUpper());
         }
 
         [Test]
-        public void GetMember_InvalidMemberHasMember_MemberShouldBeNull()
-        {
-            var tag = Tag.Create("Test", (IDataType)new Timer());
-
-            var member = tag["Invalid"];
-
-            member.Should().BeNull();
-        }
-
-        /*
-        [Test]
-        public void SetMember_Radix_ShouldUpdateRadix()
+        public void GetMember_ValidMember_ShouldNotBeNull()
         {
             var tag = Tag.Create<Timer>("Test");
 
-            tag.SetMember(t => t.ACC, Radix.Binary);
+            var member = tag.GetMember(t => t.PRE);
 
-            tag.GetMember(t => t.ACC).Radix.Should().Be(Radix.Binary);
-        }*/
-
-        /*[Test]
-        public void SetMember_Description_ShouldBeExpectedDescription()
-        {
-            var tag = Tag.Create<Counter>("Test");
-
-            tag.SetMember(c => c.CD, "This member is the counter down bit");
-
-            tag.GetMember(c => c.CD).Description.Should().Be("This member is the counter down bit");
-        }*/
-
+            member.Should().NotBeNull();
+        }
+        
         [Test]
-        public void DotDownTesting()
+        public void GetMember_ChainedCalls_ShouldNotBeNull()
         {
             var tag = Tag.Create<MyNestedType>("Test");
 
-            var simple = tag.GetMember(t => t.Indy);
-            simple.Should().NotBeNull();
+            var member = tag.GetMember(t => t.Str).GetMember(t => t.DATA[0]);
 
-            var stringDataElement = tag
-                .GetMember(t => t.Str)
-                ?.GetMember(t => t.DATA[4]);
-            
-            stringDataElement.Should().NotBeNull();
-
-            var timerMember = tag
-                .GetMember(t => t.Tmr)
-                ?.GetMember(t => t.PRE);
-
-            timerMember.Should().NotBeNull();
-            
-            var indexing = tag["Timer"]?["PRE"];
-            
-            var example = tag["Timer.PRE"];
-            
-            indexing.Should().NotBeNull();
+            member.Should().NotBeNull();
+            member.Name.Should().Be("[0]");
+            member.DataType.Should().Be(nameof(Sint).ToUpper());
         }
     }
 

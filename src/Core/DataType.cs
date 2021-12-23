@@ -5,9 +5,12 @@ using L5Sharp.Enums;
 
 namespace L5Sharp.Core
 {
-    internal class DataType : ComplexType
+    /// <summary>
+    /// A generic implementation of the <c>IComplexType</c>. 
+    /// </summary>
+    public class DataType : ComplexType
     {
-        public DataType(string name, DataTypeClass typeClass, string? description = null,
+        internal DataType(string name, DataTypeClass typeClass, string? description = null,
             IEnumerable<IMember<IDataType>>? members = null) : base(name, description, members)
         {
             Class = typeClass;

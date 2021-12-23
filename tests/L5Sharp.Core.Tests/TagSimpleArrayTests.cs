@@ -11,9 +11,18 @@ namespace L5Sharp.Core.Tests
     public class TagSimpleArrayTests
     {
         [Test]
-        public void New_ArrayOfAtomic_ShouldHaveExpectedElements()
+        public void Create_ArrayOfAtomic_ShouldHaveExpectedElements()
         {
-            var tag = Tag.Build("Test", new Bool()).WithDimensions(5).Create();
+            var tag = Tag.Create<Bool>("Test", 5);
+
+            tag.Should().NotBeNull();
+            tag.Dimensions.Length.Should().Be(5);
+        }
+
+        [Test]
+        public void Create_ArrayOfComplex_ShouldHaveExpectedElements()
+        {
+            var tag = Tag.Create<Timer>("Test", 5);
 
             tag.Should().NotBeNull();
             tag.Dimensions.Length.Should().Be(5);
@@ -22,140 +31,23 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void GetIndexer_ValidIndex_ShouldBeExpected()
         {
-            var tag = Tag.Build("Test", new Bool()).WithDimensions(5).Create();
+            var tag = Tag.Create<Bool>("Test", 5);
 
             var element = tag[3];
 
             element.Should().NotBeNull();
-            element.Name.Should().Be("[3]");
-            element.DataType.Should().Be(nameof(Bool).ToUpper());
-            element.ExternalAccess.Should().Be(ExternalAccess.None);
+            element?.Name.Should().Be("[3]");
+            element?.DataType.Should().Be(nameof(Bool).ToUpper());
         }
 
         [Test]
-        public void GetElement_InvalidIndex_ShouldBeNull()
+        public void GetIndexer_InvalidIndex_ShouldBeNull()
         {
-            var tag = Tag.Build("Test", new Bool()).WithDimensions(5).Create();
+            var tag = Tag.Create<Bool>("Test", 5);
 
             var element = tag[6];
 
             element.Should().BeNull();
         }
-
-        /*
-        [Test]
-        public void SetRadix_ValidRadix_ShouldUpdateAllElementRadixValues()
-        {
-            var tag = Tag.Build("Test", new Bool()).WithDimensions(5).Create();
-            tag.GetMembers().Select(e => e.Radix).Should().AllBeEquivalentTo(Radix.Decimal);
-
-            tag.SetRadix(Radix.Binary);
-
-            tag.GetMembers().Select(e => e.Radix).Should().AllBeEquivalentTo(Radix.Binary);
-        }*/
-
-        [Test]
-        public void SetDescription_String_ShouldUpdateAllElementDescriptionValues()
-        {
-            var tag = Tag.Build("Test", new Bool()).WithDimensions(5).Create();
-            tag.GetMembers().Select(e => e.Description).Should().AllBeEquivalentTo<string>(null);
-
-            tag.Comment("This is a test");
-            tag.Description.Should().Be("This is a test");
-            tag.GetMembers().Select(e => e.Description).Should().AllBeEquivalentTo("This is a test");
-        }
-
-        [Test]
-        public void SetElementDescription_ThenSetTagDescription_TagMemberShouldStillHaveOverridenDescription()
-        {
-            var tag = Tag.Build("Test", new Bool()).WithDimensions(5).Create();
-
-            var element = tag[0];
-            element.Comment("Element Description");
-            element.Description.Should().Be("Element Description");
-
-            tag.Comment("Tag Description");
-            tag.Description.Should().Be("Tag Description");
-
-            element.Description.Should().Be("Element Description");
-        }
-
-        [Test]
-        public void SetElementDescription_ThenSetTagDescription_ThenGetTheTagMemberAgain_ItShouldRetainTheDescription()
-        {
-            var tag = Tag.Build("Test", new Bool()).WithDimensions(5).Create();
-
-            var element = tag[0];
-            element.Comment("Element Description");
-            element.Description.Should().Be("Element Description");
-
-            tag.Comment("Tag Description");
-            tag.Description.Should().Be("Tag Description");
-
-            element.Description.Should().Be("Element Description");
-
-            element = tag[0];
-            element.Description.Should().Be("Element Description");
-        }
-
-        [Test]
-        public void
-            SetElementDescription_ThenSetTagDescription_ThenResetElementDescriptionBack_ItShouldRevertToTagDescription()
-        {
-            var tag = Tag.Build("Test", new Bool()).WithDimensions(5).Create();
-
-            var element = tag[0];
-            element.Comment("Element Description");
-            element.Description.Should().Be("Element Description");
-
-            tag.Comment("Tag Description");
-            tag.Description.Should().Be("Tag Description");
-            element.Description.Should().Be("Element Description");
-
-            element.Comment(string.Empty);
-            element.Description.Should().Be("Tag Description");
-        }
-
-        [Test]
-        public void SetElement_Description_ShouldBeExpected()
-        {
-            var tag = Tag.Build("Test", new Bool()).WithDimensions(5).Create();
-
-            tag[0].Comment("This is a test");
-
-            tag[0].Description.Should().Be("This is a test");
-            tag[1].Description.Should().BeNull();
-            tag[2].Description.Should().BeNull();
-            tag[3].Description.Should().BeNull();
-            tag[4].Description.Should().BeNull();
-        }
-
-        /*[Test]
-        public void SetElement_Radix_ShouldBeExpected()
-        {
-            var tag = Tag.Build("Test", new Bool()).WithDimensions(5).Create();
-
-            tag[0].SetRadix(Radix.Binary);
-
-            tag[0].Radix.Should().Be(Radix.Binary);
-            tag[1].Radix.Should().Be(Radix.Decimal);
-            tag[2].Radix.Should().Be(Radix.Decimal);
-            tag[3].Radix.Should().Be(Radix.Decimal);
-            tag[4].Radix.Should().Be(Radix.Decimal);
-        }*/
-
-        /*[Test]
-        public void SetElement_Atomic_ShouldBeExpected()
-        {
-            var tag = Tag.Build("Test", new Bool()).WithDimensions(5).Create();
-
-            tag[0].SetData(new Bool(true));
-
-            tag[0].GetData().As<Bool>().Should().Be(true);
-            tag[1].GetData().As<Bool>().Should().Be(false);
-            tag[2].GetData().As<Bool>().Should().Be(false);
-            tag[3].GetData().As<Bool>().Should().Be(false);
-            tag[4].GetData().As<Bool>().Should().Be(false);
-        }*/
     }
 }

@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using L5Sharp;
-using L5Sharp.Abstractions;
-using L5Sharp.Components;
-using L5Sharp.Core;
+﻿using L5Sharp.Components;
 using L5Sharp.Enums;
 using L5Sharp.Types;
 using NUnit.Framework;
@@ -21,6 +17,11 @@ namespace L5SharpTests
                 .WithAccess(ExternalAccess.ReadOnly)
                 .WithDescription("This is a test tag")
                 .Create();
+        }
+
+        [Test]
+        public void METHOD()
+        {
         }
     }
 }

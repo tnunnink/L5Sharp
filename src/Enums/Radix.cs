@@ -235,7 +235,7 @@ namespace L5Sharp.Enums
         /// <returns>
         /// A string that represents the value of the atomic type in the current radix base number style.
         /// </returns>
-        public abstract string? Convert(IAtomicType atomic);
+        public abstract string Convert(IAtomicType atomic);
 
         /// <summary>
         /// Parses a string input of a given Radix formatted value into an object value. 
@@ -304,9 +304,9 @@ namespace L5Sharp.Enums
             {
             }
 
-            public override string? Convert(IAtomicType atomic)
+            public override string Convert(IAtomicType atomic)
             {
-                return null;
+                return string.Empty;
             }
 
             public override object? Parse(string input)

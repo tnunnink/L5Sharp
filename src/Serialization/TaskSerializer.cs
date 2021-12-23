@@ -48,7 +48,7 @@ namespace L5Sharp.Serialization
             if (element == null)
                 throw new ArgumentNullException(nameof(element));
 
-            var name = element.GetName();
+            var name = element.GetComponentName();
             var description = element.GetValue<ITask, string>(m => m.Description);
             var type = element.GetValue<ITask, TaskType>(t => t.Type);
             var priority = element.GetValue<ITask, TaskPriority>(t => t.Priority);
@@ -59,7 +59,7 @@ namespace L5Sharp.Serialization
 
             var task = new Task(name, type, priority, rate, watchdog, inhibitTask, disableUpdateOutputs, description);
 
-            var programs = element.Descendants(ScheduledProgram).Select(e => e.GetName());
+            var programs = element.Descendants(ScheduledProgram).Select(e => e.GetComponentName());
 
             foreach (var program in programs)
                 task.ScheduleProgram(program);

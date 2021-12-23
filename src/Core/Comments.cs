@@ -11,9 +11,7 @@ namespace L5Sharp.Core
     public class Comments : IEnumerable<Comment>
     {
         private readonly ITag<IDataType> _tag;
-
-        private readonly Dictionary<string, Comment> _comments =
-            new Dictionary<string, Comment>(StringComparer.OrdinalIgnoreCase);
+        private readonly Dictionary<string, Comment> _comments = new(StringComparer.OrdinalIgnoreCase);
 
         internal Comments(ITag<IDataType> tag)
         {
@@ -23,40 +21,45 @@ namespace L5Sharp.Core
         /// <summary>
         /// Determines if the current comment collection contains a comments for the specified operand.
         /// </summary>
-        /// <param name="operand">The value of the operand to search</param>
+        /// <param name="operand">The value of the operand to search.</param>
         /// <returns>
-        /// True if the operand is contained in the comments collection.
-        /// False if not, or if the operand is null, empty, or is noty a valid operand for the current tag.
+        /// true if the operand is contained in the comments collection.
+        /// false if operand is null, empty, or is not contained in the comments collection.
         /// </returns>
-        public bool HasComment(string operand)
-        {
-            if (string.IsNullOrEmpty(operand))
-                return false;
-
-            return _tag.GetDeepMembersNames().Any(m => m.Contains(operand)) && _comments.ContainsKey(operand);
-        }
+        public bool Contains(string operand) => !string.IsNullOrEmpty(operand) && _comments.ContainsKey(operand);
 
         /// <summary>
         /// Gets the value of the comment for the specified operand.
         /// </summary>
         /// <param name="operand">The value of the operand to find a comments for.</param>
-        /// <returns>the string value of the comment if is is found, null if not.</returns>
+        /// <returns>The string value of the comment if the operand is found; otherwise, and empty string.</returns>
         /// <exception cref="ArgumentException">Thrown when operand is null.</exception>
-        public string GetComment(string operand)
+        public string Get(string operand)
         {
             if (string.IsNullOrEmpty(operand))
-                throw new ArgumentException("Operand can me null");
+                throw new ArgumentException("Operand can not be null or empty.");
 
-            _comments.TryGetValue(operand, out var comment);
-            return comment?.Value;
+            if (!_comments.ContainsKey(operand))
+                throw new InvalidOperationException(
+                    $"The specified operand '{operand}' does not exist on the collection.");
+
+            return _comments[operand].Value;
         }
 
         /// <summary>
-        /// Updates or adds a comment to the collection.
+        /// Add, updates, or removes a comment from the collection depending on the provided comment value.
         /// </summary>
-        /// <param name="comment">The comment to update.</param>
-        /// <exception cref="ArgumentNullException">Thrown when the comment is null.</exception>
-        public void Override(Comment comment)
+        /// <remarks>
+        /// If the provided comment value is non null or empty and does not currently exist on the collection,
+        /// it will be added. If the provided comment is exists and is different, it will be updated. If the provided
+        /// comment exists and is a empty string, the comment will be removed from the collection.
+        /// </remarks>
+        /// <param name="comment">The comment to set.</param>
+        /// <exception cref="ArgumentNullException">When comment is null.</exception>
+        /// <exception cref="InvalidOperationException">
+        /// When the provided comment operand is not a valid member of the current tag.
+        /// </exception>
+        public void Set(Comment comment)
         {
             if (comment == null)
                 throw new ArgumentNullException(nameof(comment));
@@ -65,35 +68,18 @@ namespace L5Sharp.Core
                 throw new InvalidOperationException(
                     $"Could not find operand '{comment.Operand}' on current tag {_tag.Name}");
 
-            if (_comments.ContainsKey(comment.Operand))
+            var exists = _comments.ContainsKey(comment.Operand);
+            
+            if (string.IsNullOrEmpty(comment.Value) && !exists)
+                _comments.Remove(comment.Operand);
+
+            if (string.IsNullOrEmpty(comment.Value))
+                _comments.Remove(comment.Operand);
+
+            if (exists)
                 _comments[comment.Operand] = comment;
 
             _comments.Add(comment.Operand, comment);
-        }
-
-        /// <summary>
-        /// Removes the comment from the collection.
-        /// </summary>
-        /// <param name="operand">The operand name of the comment to remove.</param>
-        public void Reset(string operand)
-        {
-            if (string.IsNullOrEmpty(operand))
-                throw new ArgumentException("Operand can not be null or empty");
-
-            if (!IsValidOperand(operand))
-                throw new InvalidOperationException(
-                    $"Could not find operand '{operand}' on current tag {_tag.Name}");
-
-            if (!_comments.ContainsKey(operand)) return;
-
-            _comments.Remove(operand);
-        }
-
-        /// <summary>
-        /// Clears all comments from the current collection.
-        /// </summary>
-        public void Clear(string baseMemberName)
-        {
         }
 
         /// <summary>
@@ -115,6 +101,11 @@ namespace L5Sharp.Core
             return GetEnumerator();
         }
 
+        /// <summary>
+        /// Helper to determine if the provided operand name is a member of the root tag.
+        /// </summary>
+        /// <param name="operand"></param>
+        /// <returns></returns>
         private bool IsValidOperand(string operand)
         {
             return _tag.GetDeepMembersNames().Any(m => m.Contains(operand));

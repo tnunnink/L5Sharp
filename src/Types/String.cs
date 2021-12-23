@@ -139,6 +139,9 @@ namespace L5Sharp.Types
             if (bytes.Length > LEN.DataType.Value)
                 throw new ArgumentOutOfRangeException(nameof(value),
                     $"Value length '{bytes.Length}' must be less than the predefined length '{PredefinedLength}'");
+            
+            foreach (var element in DATA)
+                element.DataType.SetValue(0);
 
             for (var i = 0; i < bytes.Length; i++)
                 DATA[i].DataType.SetValue(bytes[i]);

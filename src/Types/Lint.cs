@@ -107,6 +107,9 @@ namespace L5Sharp.Types
 
         /// <inheritdoc />
         public override int GetHashCode() => Name.GetHashCode();
+        
+        /// <inheritdoc />
+        public override string ToString() => Name;
 
         /// <summary>
         /// Determines whether the objects are equal.

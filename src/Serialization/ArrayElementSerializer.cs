@@ -45,7 +45,7 @@ namespace L5Sharp.Serialization
                 throw new ArgumentException($"Element name '{element.Name}' invalid. Expecting '{ElementName}'");
 
             //todo this is not right we need index
-            var name = element.GetName();
+            var name = element.GetComponentName();
 
             var dataType = element.Element(LogixNames.Structure) is null
                            && element.Attribute("Value") is not null

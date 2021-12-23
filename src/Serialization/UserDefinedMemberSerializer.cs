@@ -42,7 +42,7 @@ namespace L5Sharp.Serialization
             if (element.Name != ElementName)
                 throw new ArgumentException($"Element name '{element.Name}' invalid. Expecting '{ElementName}'");
 
-            var name = element.GetName() ?? throw new ArgumentNullException();
+            var name = element.GetComponentName() ?? throw new ArgumentNullException();
             var dataType = element.GetDataType();
             var dimensions = element.GetValue<IMember<IDataType>, Dimensions>(m => m.Dimension);
             var radix = element.GetValue<IMember<IDataType>, Radix>(m => m.Radix);

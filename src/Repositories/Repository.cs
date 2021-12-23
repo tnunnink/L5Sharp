@@ -29,12 +29,12 @@ namespace L5Sharp.Repositories
         }
 
         /// <inheritdoc />
-        public virtual bool Contains(string name) => Context.GetComponents<TComponent>().Any(x => x.GetName() == name);
+        public virtual bool Contains(string name) => Context.GetComponents<TComponent>().Any(x => x.GetComponentName() == name);
 
         /// <inheritdoc />
         public virtual TComponent? Get(string name)
         {
-            var element = Context.GetComponents<TComponent>().FirstOrDefault(x => x.GetName() == name);
+            var element = Context.GetComponents<TComponent>().FirstOrDefault(x => x.GetComponentName() == name);
 
             return element is not null ? element.Deserialize<TComponent>() : default;
         }
@@ -87,7 +87,7 @@ namespace L5Sharp.Repositories
 
         public virtual void Remove(ComponentName name)
         {
-            Context.GetComponents<TComponent>().FirstOrDefault(x => x.GetName() == name)?.Remove();
+            Context.GetComponents<TComponent>().FirstOrDefault(x => x.GetComponentName() == name)?.Remove();
         }
     }
 }

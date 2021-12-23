@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using L5Sharp.Core;
 using L5Sharp.Exceptions;
 using L5Sharp.Instructions;
 using L5Sharp.Types;

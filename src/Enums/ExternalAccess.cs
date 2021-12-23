@@ -1,4 +1,5 @@
-﻿using Ardalis.SmartEnum;
+﻿using System;
+using Ardalis.SmartEnum;
 
 namespace L5Sharp.Enums
 {
@@ -33,9 +34,23 @@ namespace L5Sharp.Enums
         }
 
         /// <summary>
-        /// Represents the absence of a <c>ExternalAccess</c> value.
+        /// Gets the most restrictive of the two provided <c>ExternalAccess</c> objects.
         /// </summary>
-        public static readonly ExternalAccess Null = new ExternalAccess("Null", -1);
+        /// <param name="first">The first <c>ExternalAccess</c> object to compare.</param>
+        /// <param name="second">The second <c>ExternalAccess</c> object to compare.</param>
+        /// <returns>first if <see cref="ExternalAccess.Value"/> is less than second; otherwise; second.</returns>
+        /// <exception cref="ArgumentNullException">When either first or second is null.</exception>
+        public static ExternalAccess MostRestrictive(ExternalAccess first, ExternalAccess second)
+        {
+            if (first is null)
+                throw new ArgumentNullException(nameof(first));
+            
+            if (second is null)
+                throw new ArgumentNullException(nameof(second));
+
+            return first.Value < second.Value ? first : second;
+        }
+        
 
         /// <summary>
         /// Represents no read or write access.

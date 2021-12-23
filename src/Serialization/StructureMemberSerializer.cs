@@ -39,7 +39,7 @@ namespace L5Sharp.Serialization
                 throw new ArgumentException(
                     $"Expecting element with name {LogixNames.DataValueMember} but got {element.Name}");
 
-            var name = element.GetName();
+            var name = element.GetComponentName();
             
             var serializer = new StructureSerializer();
             var dataType = serializer.Deserialize(element);

@@ -7,11 +7,11 @@ using L5Sharp.Enums;
 namespace L5Sharp.Core
 {
     /// <inheritdoc cref="IMember{TDataType}" />
-    public sealed class Member<TDataType> : IMember<TDataType>, IEquatable<Member<TDataType>>
+    public class Member<TDataType> : IMember<TDataType>, IEquatable<Member<TDataType>>
         where TDataType : IDataType
     {
         private readonly List<IMember<TDataType>> _elements = new();
-        
+
         internal Member(string name, TDataType dataType, Dimensions? dimension,
             Radix? radix, ExternalAccess? externalAccess, string? description)
         {
@@ -21,21 +21,8 @@ namespace L5Sharp.Core
             Radix = radix is not null && radix.SupportsType(DataType) ? radix : Radix.Default(DataType);
             ExternalAccess = externalAccess ?? ExternalAccess.ReadWrite;
             Description = description ?? string.Empty;
-            
+
             _elements.AddRange(Dimension.GenerateMembers(DataType, Radix, ExternalAccess, Description));
-        }
-        
-        internal Member(string name, List<TDataType> elements, Dimensions? dimension,
-            Radix? radix, ExternalAccess? externalAccess, string? description)
-        {
-            Name = name ?? throw new ArgumentNullException(nameof(name));
-            DataType = elements.Count > 0 ? elements[0] : throw new ArgumentException("Elements must have at least 1 item.");
-            Dimension = dimension ?? new Dimensions((ushort)elements.Count);
-            Radix = radix is not null && radix.SupportsType(DataType) ? radix : Radix.Default(DataType);
-            ExternalAccess = externalAccess ?? ExternalAccess.ReadWrite;
-            Description = description ?? string.Empty;
-            
-            _elements.AddRange(Dimension.GenerateMembers(elements, Radix, ExternalAccess, Description));
         }
 
         /// <inheritdoc />
@@ -55,7 +42,7 @@ namespace L5Sharp.Core
 
         /// <inheritdoc />
         public ExternalAccess ExternalAccess { get; }
-        
+
         /// <inheritdoc />
         public IMember<TDataType> this[int index] => _elements[index];
 
@@ -114,7 +101,7 @@ namespace L5Sharp.Core
         /// <param name="right">The right object to compare.</param>
         /// <returns>True if the left object is not equal to the right object. Otherwise, False</returns>
         public static bool operator !=(Member<TDataType> left, Member<TDataType> right) => !Equals(left, right);
-        
+
         /// <inheritdoc />
         public IEnumerator<IMember<TDataType>> GetEnumerator() => _elements.GetEnumerator();
 

@@ -40,7 +40,9 @@ namespace L5Sharp.Extensions
                 : "Attribute";
             
             var signature = new[] {typeof (XName)};
-            return typeof(XElement).GetMethod(methodName, signature);
+
+            // We know the methods we are calling exist so don't need to worry about potential null reference.
+            return typeof(XElement).GetMethod(methodName, signature)!;
         }
     }
 }

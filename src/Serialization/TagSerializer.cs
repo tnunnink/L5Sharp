@@ -20,7 +20,7 @@ namespace L5Sharp.Serialization
         {
             if (element == null) return null;
 
-            var name = element.GetName();
+            var name = element.GetComponentName();
             //var dataType = _context.TypeProvider.GetDataType(element.GetDataTypeName())?.Instantiate();
             var dimensions = element.GetValue<Tag<IDataType>, Dimensions>(t => t.Dimensions);
             var radix = element.GetValue<Tag<IDataType>, Radix>(t => t.Radix);

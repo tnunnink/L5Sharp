@@ -44,7 +44,7 @@ namespace L5Sharp.Serialization
             if (element.Name != ElementName)
                 throw new ArgumentException($"Element name '{element.Name}' invalid. Expecting '{ElementName}'");
 
-            var name = element.GetName();
+            var name = element.GetComponentName();
             var description = element.GetValue<IDataType, string>(x => x.Description);
 
             var memberSerializer = new UserDefinedMemberSerializer();

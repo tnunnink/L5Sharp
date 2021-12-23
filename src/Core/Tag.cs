@@ -9,24 +9,24 @@ namespace L5Sharp.Core
     public sealed class Tag<TDataType> : ITag<TDataType> where TDataType : IDataType
     {
         private readonly TDataType _dataType;
-        private ITagMember<TDataType> _tagMember;
+        private readonly ITagMember<TDataType> _tagMember;
         private string _description;
 
         internal Tag(ComponentName name, TDataType dataType, Dimensions? dimensions = null, Radix? radix = null,
             ExternalAccess? externalAccess = null, string? description = null, TagUsage? usage = null,
             bool constant = false)
         {
-            //Initialize tag level state.
-            _dataType = dataType ?? throw new ArgumentNullException(nameof(dataType));
+            //_dataType = dataType ?? throw new ArgumentNullException(nameof(dataType));
             _description = description ?? string.Empty;
             Usage = usage != null ? usage : TagUsage.Null;
             Scope = Scope.Null;
             Constant = constant;
-            Comments = new Comments(this as ITag<IDataType>);
+            Comments = new Comments(Root);
             
-            //Initialize tag member root.
+           
             externalAccess ??= ExternalAccess.None; //Tags default to 'None' External Access unlike members.
-            Instantiate(name, dataType, dimensions, radix, externalAccess, description);
+            
+            //Instantiate(name, dataType, dimensions, radix, externalAccess, description);
             
             var member = Member.Create(name, dataType, dimensions, radix, externalAccess, description);
 
@@ -74,7 +74,7 @@ namespace L5Sharp.Core
         public Scope Scope { get; }
 
         /// <inheritdoc />
-        public TagUsage Usage { get; private set; }
+        public TagUsage Usage { get; }
 
         /// <inheritdoc />
         public bool Constant { get; set; }
@@ -88,15 +88,11 @@ namespace L5Sharp.Core
             _description = comment;
         }
 
-        public void SetValue(IAtomicType value)
-        {
-            throw new NotImplementedException();
-        }
+        /// <inheritdoc />
+        public void SetValue(IAtomicType value) => _tagMember.SetValue(value);
 
-        public bool TrySetValue(IAtomicType value)
-        {
-            throw new NotImplementedException();
-        }
+        /// <inheritdoc />
+        public bool TrySetValue(IAtomicType value) => _tagMember.TrySetValue(value);
 
         /// <inheritdoc />
         public ITagMember<TDataType>? this[int index] => _tagMember[index];
@@ -112,22 +108,18 @@ namespace L5Sharp.Core
         public IEnumerable<ITagMember<IDataType>> GetMembers() => _tagMember.GetMembers();
 
         /// <inheritdoc />
-        public IEnumerable<ITagMember<IDataType>> GetMembers(Func<ITagMember<IDataType>, bool> predicate)
-            => _tagMember.GetMembers(predicate);
-
-        /// <inheritdoc />
         public IEnumerable<string> GetMemberNames() => _tagMember.GetMemberNames();
 
         /// <inheritdoc />
         public IEnumerable<string> GetDeepMembersNames() => _tagMember.GetDeepMembersNames();
 
-        private void Instantiate(ComponentName name, TDataType dataType, Dimensions dimensions, Radix radix,
+        /*private void Instantiate(ComponentName name, TDataType dataType, Dimensions dimensions, Radix radix,
             ExternalAccess externalAccess, string description)
         {
             var member = Member.Create(name, dataType, dimensions, radix, externalAccess, description);
 
             _tagMember = new TagMember<TDataType>(member, Root, Parent);
-        }
+        }*/
 
         private string DetermineDescription()
         {

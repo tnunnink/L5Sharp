@@ -62,21 +62,21 @@ namespace L5Sharp.Common
             if (_document is null) return null;
             
             //Is this a User Defined type that exists in the L5X?
-            var userDefined = _document.Descendants(LogixNames.DataType).FirstOrDefault(x => x.GetName() == name);
+            var userDefined = _document.Descendants(LogixNames.DataType).FirstOrDefault(x => x.GetComponentName() == name);
             if (userDefined != null)
                 return userDefined;
 
             //Is this a Module Defined type that exists in the L5X?
             var moduleDefined = _document.Descendants(LogixNames.Module)
                 .Descendants().Where(x => x.Attribute(LogixNames.DataType) != null)
-                .FirstOrDefault(x => x.GetDataTypeName() == name);
+                .FirstOrDefault(x => x.Attribute(LogixNames.DataType)?.Value == name);
             
             if (moduleDefined != null)
                 return moduleDefined;
 
             //Is this a AOI Defined type that exists in the L5X?
             var addOnDefined = _document.Descendants(LogixNames.AddOnInstructionDefinition)
-                .FirstOrDefault(x => x.GetName() == name);
+                .FirstOrDefault(x => x.GetComponentName() == name);
 
             return addOnDefined ?? null;
         }
