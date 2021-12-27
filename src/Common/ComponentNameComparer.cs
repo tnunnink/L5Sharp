@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace L5Sharp.Abstractions
+namespace L5Sharp.Common
 {
     /// <summary>
-    /// Custom equality comparer that compares Logix components by name.
+    /// Custom equality comparer that compares Logix components by name only.
     /// </summary>
     /// <typeparam name="TComponent">The type of Logix component.</typeparam>
     public class ComponentNameComparer<TComponent> : IEqualityComparer<TComponent> 

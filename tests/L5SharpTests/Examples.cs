@@ -1,7 +1,4 @@
-﻿using L5Sharp.Components;
-using L5Sharp.Enums;
-using L5Sharp.Types;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 
 namespace L5SharpTests
 {
@@ -11,17 +8,7 @@ namespace L5SharpTests
         [Test]
         public void Test()
         {
-            var tag = Tag.Build<Sint>("NewTag")
-                .WithDimensions(10)
-                .WithRadix(Radix.Hex)
-                .WithAccess(ExternalAccess.ReadOnly)
-                .WithDescription("This is a test tag")
-                .Create();
-        }
-
-        [Test]
-        public void METHOD()
-        {
+            
         }
     }
 }

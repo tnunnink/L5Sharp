@@ -17,9 +17,7 @@ namespace L5Sharp.Core.Tests
             var second = fixture.Create<ushort>();
             var length = first * second;
 
-            var tag = Tag.Build("Test", new Dint())
-                .WithDimensions(new Dimensions(first, second))
-                .Create();
+            var tag = Tag.Create<Dint>("Test", new Dimensions(first, second));
 
             tag.Dimensions.Length.Should().Be(length);
         }

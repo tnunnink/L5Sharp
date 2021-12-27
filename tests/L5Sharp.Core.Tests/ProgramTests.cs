@@ -61,15 +61,5 @@ namespace L5Sharp.Core.Tests
             program.Tags.Should().BeEmpty();
             program.Routines.Should().BeEmpty();
         }
-
-        [Test]
-        public void GetTag_DoesNotExists_ShouldBeNull()
-        {
-            var program = new Program("Test");
-
-            var result = program.Tags.Get("Test");
-
-            result.Should().BeNull();
-        }
     }
 }

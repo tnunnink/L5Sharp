@@ -9,7 +9,7 @@ namespace L5Sharp.Serialization
 {
     internal class DataValueMemberSerializer : IXSerializer<IMember<IDataType>>
     {
-        private const string ElementName = LogixNames.DataValueMember;
+        private static readonly XName ElementName = LogixNames.DataValueMember;
 
         public XElement Serialize(IMember<IDataType> component)
         {
@@ -30,7 +30,7 @@ namespace L5Sharp.Serialization
 
             return element;
         }
-        
+
         public IMember<IDataType> Deserialize(XElement element)
         {
             if (element == null)
@@ -42,12 +42,12 @@ namespace L5Sharp.Serialization
 
             var name = element.GetComponentName();
             var atomic = (IAtomicType)element.GetDataType();
-            var radix = element.GetValue<IMember<IAtomicType>, Radix>(e => e.Radix);
-            var value = element.GetValue<IAtomicType, object>(a => a.Value);
+            var radix = element.GetValue<IMember<IDataType>, Radix>(m => m.Radix);
+            var value = element.GetValue<IAtomicType, object>(x => x.Value);
             
             atomic.SetValue(value!);
 
-            return Member.Create(name!, atomic, radix: radix);
+            return Member.Create(name, atomic, radix: radix);
         }
     }
 }

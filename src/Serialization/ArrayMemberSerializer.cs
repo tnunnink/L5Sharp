@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Linq;
 using System.Xml.Linq;
 using L5Sharp.Common;
-using L5Sharp.Components;
 using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Extensions;
@@ -11,7 +9,7 @@ namespace L5Sharp.Serialization
 {
     internal class ArrayMemberSerializer : IXSerializer<IMember<IDataType>>
     {
-        private const string ElementName = LogixNames.ArrayMember;
+        private static readonly XName ElementName = LogixNames.ArrayMember;
 
         public XElement Serialize(IMember<IDataType> component)
         {
@@ -25,9 +23,9 @@ namespace L5Sharp.Serialization
             element.Add(component.ToAttribute(m => m.Dimension));
             element.Add(component.ToAttribute(m => m.Radix));
 
-            var serializer = new ArrayElementSerializer();
+            /*var serializer = new ArrayElementSerializer();
             var elements = component.Select(m => serializer.Serialize(m));
-            element.Add(elements);
+            element.Add(elements);*/
 
             return element;
         }
@@ -44,8 +42,8 @@ namespace L5Sharp.Serialization
             var dimensions = element.GetValue<IMember<IDataType>, Dimensions>(m => m.Dimension);
             var radix = element.GetValue<IMember<IDataType>, Radix>(m => m.Radix);
             
-            var serializer = new ArrayElementSerializer();
-            var members = element.Elements().Select(e => serializer.Deserialize(e)).ToArray();
+            /*var serializer = new ArrayElementSerializer();
+            var members = element.Elements().Select(e => serializer.Deserialize(e)).ToArray();*/
 
             throw new NotImplementedException();
             /*return ArrayMember.Create(name, members, dimensions, radix);*/

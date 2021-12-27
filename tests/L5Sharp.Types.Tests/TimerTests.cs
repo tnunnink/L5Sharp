@@ -80,7 +80,7 @@ namespace L5Sharp.Types.Tests
         {
             var type = new Timer();
             
-            var members = (MemberCollection<IMember<IDataType>>)type.Members;
+            var members = (ReadOnlyMembers<IMember<IDataType>>)type.Members;
             
             members.Should().NotBeNull();
         }

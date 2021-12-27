@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using L5Sharp.Abstractions;
+using L5Sharp.Common;
 using L5Sharp.Enums;
 
 namespace L5Sharp.Core
@@ -23,7 +24,7 @@ namespace L5Sharp.Core
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
             Description = description ?? string.Empty;
-            Members = new MemberList<IMember<IDataType>>(this, members);
+            Members = new Members<IMember<IDataType>>(this, members);
         }
 
         /// <inheritdoc />
@@ -39,7 +40,7 @@ namespace L5Sharp.Core
         public DataTypeClass Class => DataTypeClass.User;
 
         /// <inheritdoc />
-        public IMemberList<IMember<IDataType>> Members { get; }
+        public IMembers<IMember<IDataType>> Members { get; }
 
         /// <inheritdoc />
         public IEnumerable<IDataType> GetDependentTypes()
@@ -120,6 +121,6 @@ namespace L5Sharp.Core
         /// <returns>True if the two objects are not equal, otherwise false.</returns>
         public static bool operator !=(UserDefined left, UserDefined right) => !Equals(left, right);
 
-        IMemberCollection<IMember<IDataType>> IComplexType.Members => Members;
+        IReadOnlyMembers<IMember<IDataType>> IComplexType.Members => Members;
     }
 }

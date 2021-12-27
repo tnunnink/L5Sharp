@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 using System.Xml.Linq;
@@ -12,11 +11,14 @@ namespace L5Sharp.Extensions
     internal static class ElementExtensions
     {
         /// <summary>
-        /// Helper for getting the current element's component name value.
+        /// Helper for getting the current element's component name.
         /// </summary>
         /// <param name="element">The current element.</param>
-        /// <returns>The string name for attribute value for the component.</returns>
-        public static string? GetComponentName(this XElement element) => element.Attribute("Name")?.Value;
+        /// <returns>The string value of the element's attribute 'Name'.</returns>
+        /// <exception cref="InvalidOperationException">When the element attribute is null (does not exist for the current element).</exception>
+        public static string GetComponentName(this XElement element) =>
+            element.Attribute(LogixNames.Name)?.Value
+            ?? throw new InvalidOperationException("The current element does not have an attribute with name 'Name'");
 
         /// <summary>
         /// Helper for getting the current element's data type instance.
@@ -50,11 +52,7 @@ namespace L5Sharp.Extensions
 
             var value = element.Attribute(name)?.Value;
 
-            if (value == null) return default;
-
-            var converter = LogixParser.Get(typeof(TProperty));
-
-            return (TProperty)converter.Invoke(value);
+            return value is not null ? LogixParser.Parse<TProperty>(value) : default;
         }
 
         /// <summary>
@@ -68,7 +66,7 @@ namespace L5Sharp.Extensions
         /// <returns></returns>
         /// <exception cref="InvalidOperationException"></exception>
         public static XAttribute ToAttribute<TComponent, TProperty>(this TComponent component,
-            Expression<Func<TComponent, TProperty>> expression, string? nameOverride = null)
+            Expression<Func<TComponent, TProperty>> expression, XName? nameOverride = null)
         {
             if (expression.Body is not MemberExpression memberExpression)
                 throw new InvalidOperationException($"Expression must be {typeof(MemberExpression)}");

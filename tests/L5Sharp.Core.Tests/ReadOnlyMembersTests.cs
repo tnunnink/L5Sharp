@@ -12,7 +12,7 @@ using String = L5Sharp.Types.String;
 namespace L5Sharp.Core.Tests
 {
     [TestFixture]
-    public class MemberCollectionTests
+    public class ReadOnlyMembersTests
     {
         private List<IMember<IDataType>> _members;
 
@@ -32,7 +32,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void New_DefaultOverload_ShouldNotBeNullAndEmpty()
         {
-            var members = new MemberCollection<IMember<IDataType>>();
+            var members = new ReadOnlyMembers<IMember<IDataType>>();
 
             members.Should().NotBeNull();
             members.Should().BeEmpty();
@@ -41,7 +41,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void New_MembersOverload_ShouldHaveExpectedCount()
         {
-            var members = new MemberCollection<IMember<IDataType>>(_members);
+            var members = new ReadOnlyMembers<IMember<IDataType>>(_members);
 
             members.Should().HaveCount(5);
         }
@@ -56,44 +56,24 @@ namespace L5Sharp.Core.Tests
                 Member.Create<Dint>("M1"),
             };
 
-            FluentActions.Invoking(() => new MemberCollection<IMember<IDataType>>(members)).Should()
+            FluentActions.Invoking(() => new ReadOnlyMembers<IMember<IDataType>>(members)).Should()
                 .Throw<ComponentNameCollisionException>();
         }
 
         [Test]
         public void Count_WhenCalled_ShouldBeExpected()
         {
-            var members = new MemberCollection<IMember<IDataType>>(_members);
+            var members = new ReadOnlyMembers<IMember<IDataType>>(_members);
 
             members.Count.Should().Be(5);
         }
 
         [Test]
-        public void Contains_ExistingMember_ShouldBeTrue()
-        {
-            var members = new MemberCollection<IMember<IDataType>>(_members);
-
-            var result = members.Contains("M1");
-
-            result.Should().BeTrue();
-        }
-
-        [Test]
-        public void Contains_NonExistingMember_ShouldBeFalse()
-        {
-            var members = new MemberCollection<IMember<IDataType>>(_members);
-
-            var result = members.Contains("M0");
-
-            result.Should().BeFalse();
-        }
-
-        [Test]
         public void Contains_Null_ShouldBeFalse()
         {
-            var members = new MemberCollection<IMember<IDataType>>(_members);
+            var members = new ReadOnlyMembers<IMember<IDataType>>(_members);
 
-            var result = members.Contains(null!);
+            var result = Enumerable.Contains(members, null!);
 
             result.Should().BeFalse();
         }
@@ -101,9 +81,9 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Get_ExistingMember_ShouldNotBeNull()
         {
-            var members = new MemberCollection<IMember<IDataType>>(_members);
+            var members = new ReadOnlyMembers<IMember<IDataType>>(_members);
 
-            var result = members.Get("M1");
+            var result = members.GetMember("M1");
 
             result.Should().NotBeNull();
         }
@@ -111,9 +91,9 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Get_ExistingMember_ShouldHaveExpectedName()
         {
-            var members = new MemberCollection<IMember<IDataType>>(_members);
+            var members = new ReadOnlyMembers<IMember<IDataType>>(_members);
 
-            var result = members.Get("M1");
+            var result = members.GetMember("M1");
 
             result?.Name.Should().Be("M1");
         }
@@ -121,9 +101,9 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Get_NonExistingMember_ShouldBeNull()
         {
-            var members = new MemberCollection<IMember<IDataType>>(_members);
+            var members = new ReadOnlyMembers<IMember<IDataType>>(_members);
 
-            var result = members.Get("M0");
+            var result = members.GetMember("M0");
 
             result.Should().BeNull();
         }
@@ -131,15 +111,15 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Get_Null_ShouldThrowArgumentNullException()
         {
-            var members = new MemberCollection<IMember<IDataType>>(_members);
+            var members = new ReadOnlyMembers<IMember<IDataType>>(_members);
 
-            FluentActions.Invoking(() => members.Get(null!)).Should().Throw<ArgumentNullException>();
+            FluentActions.Invoking(() => members.GetMember(null!)).Should().Throw<ArgumentNullException>();
         }
 
         [Test]
         public void Iterate_EachMember_ShouldNotBeNull()
         {
-            var members = new MemberCollection<IMember<IDataType>>(_members);
+            var members = new ReadOnlyMembers<IMember<IDataType>>(_members);
 
             foreach (var member in members)
             {
@@ -150,7 +130,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void GetEnumerator_AsEnumerable_ShouldNotBeNull()
         {
-            var members = new MemberCollection<IMember<IDataType>>(_members);
+            var members = new ReadOnlyMembers<IMember<IDataType>>(_members);
 
             var enumerable = (IEnumerable)members;
 
@@ -162,9 +142,9 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void DeepContains_ExistingMember_ShouldBeTrue()
         {
-            var members = new MemberCollection<IMember<IDataType>>(_members);
+            var members = new ReadOnlyMembers<IMember<IDataType>>(_members);
 
-            var result = members.DeepContains("M5.PRE");
+            var result = members.Contains("M5.PRE");
 
             result.Should().BeTrue();
         }
@@ -172,9 +152,9 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void DeepContains_NonExistingMember_ShouldBeFalse()
         {
-            var members = new MemberCollection<IMember<IDataType>>(_members);
+            var members = new ReadOnlyMembers<IMember<IDataType>>(_members);
 
-            var result = members.DeepContains("M1.DATA");
+            var result = members.Contains("M1.DATA");
 
             result.Should().BeFalse();
         }
@@ -182,9 +162,9 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void DeepContains_Null_ShouldBeFalse()
         {
-            var members = new MemberCollection<IMember<IDataType>>(_members);
+            var members = new ReadOnlyMembers<IMember<IDataType>>(_members);
 
-            var result = members.DeepContains(null!);
+            var result = members.Contains(null!);
 
             result.Should().BeFalse();
         }
@@ -192,9 +172,9 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void DeepGet_ExistingMember_ShouldNotBeNull()
         {
-            var members = new MemberCollection<IMember<IDataType>>(_members);
+            var members = new ReadOnlyMembers<IMember<IDataType>>(_members);
 
-            var result = members.DeepGet("M5.PRE");
+            var result = members.GetMember("M5.PRE");
 
             result.Should().NotBeNull();
         }
@@ -202,9 +182,9 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void DeepGet_ExistingMember_ShouldHaveExpectedName()
         {
-            var members = new MemberCollection<IMember<IDataType>>(_members);
+            var members = new ReadOnlyMembers<IMember<IDataType>>(_members);
 
-            var result = members.DeepGet("M5.PRE");
+            var result = members.GetMember("M5.PRE");
 
             result?.Name.Should().Be("PRE");
             result?.DataType.Should().BeOfType<Dint>();
@@ -213,9 +193,9 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void DeepGet_NonExistingMember_ShouldBeNull()
         {
-            var members = new MemberCollection<IMember<IDataType>>(_members);
+            var members = new ReadOnlyMembers<IMember<IDataType>>(_members);
 
-            var result = members.DeepGet("M1.DATA");
+            var result = members.GetMember("M1.DATA");
 
             result.Should().BeNull();
         }
@@ -223,25 +203,25 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void DeepGet_Empty_ShouldThrowArgumentNullException()
         {
-            var members = new MemberCollection<IMember<IDataType>>(_members);
+            var members = new ReadOnlyMembers<IMember<IDataType>>(_members);
 
-            FluentActions.Invoking(() => members.DeepGet(string.Empty)).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(() => members.GetMember(string.Empty)).Should().Throw<ArgumentException>();
         }
 
         [Test]
         public void DeepGet_Null_ShouldThrowArgumentNullException()
         {
-            var members = new MemberCollection<IMember<IDataType>>(_members);
+            var members = new ReadOnlyMembers<IMember<IDataType>>(_members);
 
-            FluentActions.Invoking(() => members.DeepGet(null!)).Should().Throw<ArgumentNullException>();
+            FluentActions.Invoking(() => members.GetMember(null!)).Should().Throw<ArgumentNullException>();
         }
 
         [Test]
         public void DeepGetAll_WhenCalled_ShouldHaveExpectedCount()
         {
-            var members = new MemberCollection<IMember<IDataType>>(_members);
+            var members = new ReadOnlyMembers<IMember<IDataType>>(_members);
 
-            var all = members.DeepGetAll();
+            var all = members.GetMembers();
 
             all.Should().HaveCount(12);
         }
@@ -249,9 +229,9 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void DeepNames_WhenCalled_ShouldHaveExpectedCount()
         {
-            var members = new MemberCollection<IMember<IDataType>>(_members);
+            var members = new ReadOnlyMembers<IMember<IDataType>>(_members);
 
-            var all = members.DeepNames();
+            var all = members.GetNames();
 
             all.Should().HaveCount(12);
         }
@@ -259,9 +239,9 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void DeepNames_WhenCalled_ShouldContainExpectedNames()
         {
-            var members = new MemberCollection<IMember<IDataType>>(_members);
+            var members = new ReadOnlyMembers<IMember<IDataType>>(_members);
 
-            var all = members.DeepNames().ToList();
+            var all = members.GetNames().ToList();
 
             all.Should().Contain("M1");
             all.Should().Contain("M2");

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Xml.Serialization;
-using L5Sharp.Builders;
 using L5Sharp.Enums;
 
 namespace L5Sharp.Core
@@ -91,7 +89,7 @@ namespace L5Sharp.Core
         }
 
 
-        /// <summary>
+        /*/// <summary>
         /// Builds a new instance of <see cref="ITask"/> using the fluent builder API.
         /// </summary>
         /// <param name="name">The name of the task to create.</param>
@@ -99,7 +97,7 @@ namespace L5Sharp.Core
         public static ITaskBuilder Build(string name)
         {
             return new TaskBuilder(name);
-        }
+        }*/
 
         /// <inheritdoc />
         /// <exception cref="ArgumentNullException">Thrown when the name is null.</exception>

@@ -1,19 +1,20 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using L5Sharp.Abstractions;
+using L5Sharp.Exceptions;
 using L5Sharp.Extensions;
 
 [assembly: InternalsVisibleTo("L5Sharp.Core.Tests")]
 
 namespace L5Sharp.Core
 {
-    /// <inheritdoc cref="L5Sharp.IMemberCollection{TMember}" />
-    public class MemberCollection<TMember> : ComponentCollection<TMember>, IMemberCollection<TMember>
-        where TMember : IMember<IDataType>
+    /// <inheritdoc />
+    public class ReadOnlyMembers<TMember> : IReadOnlyMembers<TMember> where TMember : IMember<IDataType>
     {
         private const char MemberSeparator = '.';
+        protected List<TMember> Members = new();
 
         /// <summary>
         /// Creates a new instance of a <c>IMembers</c> collection.
@@ -21,15 +22,19 @@ namespace L5Sharp.Core
         /// <param name="members">
         /// A collection of <c>IMember</c> objects to initialize the <c>IMembers</c> collection with.
         /// </param>
-        internal MemberCollection(IEnumerable<TMember>? members = null) : base(members)
+        public ReadOnlyMembers(IEnumerable<TMember>? members = null)
         {
+            if (members is not null)
+                RegisterMembers(members);
         }
 
-        /// <inheritdoc />
-        public bool DeepContains(string? name) => name is not null && FindMemberByName(this, name) is not null;
+        public int Count { get; }
 
         /// <inheritdoc />
-        public TMember? DeepGet(string name)
+        public bool Contains(string? name) => name is not null && FindMemberByName(this, name) is not null;
+
+        /// <inheritdoc />
+        public TMember? GetMember(string name)
         {
             if (name is null)
                 throw new ArgumentNullException(nameof(name));
@@ -41,35 +46,55 @@ namespace L5Sharp.Core
         }
 
         /// <inheritdoc />
-        public IEnumerable<TMember> DeepGetAll()
+        public IEnumerable<TMember> GetMembers()
         {
             var members = new List<TMember>();
 
-            foreach (var (_, member) in Collection)
+            foreach (var member in Members)
             {
                 members.Add(member);
 
                 if (member.DataType is IComplexType complex)
-                    members.AddRange((IEnumerable<TMember>)complex.Members.DeepGetAll());
+                    members.AddRange((IEnumerable<TMember>)complex.Members.GetMembers());
             }
 
             return members;
         }
 
         /// <inheritdoc />
-        public IEnumerable<string> DeepNames()
+        public IEnumerable<string> GetNames()
         {
             var names = new List<string>();
 
-            foreach (var (name, member) in Collection)
+            foreach (var member in Members)
             {
-                names.Add(name);
+                names.Add(member.Name);
 
                 if (member.DataType is IComplexType complex)
-                    names.AddRange(complex.Members.DeepNames().Select(n => $"{member.Name}.{n}"));
+                    names.AddRange(complex.Members.GetNames().Select(n => $"{member.Name}.{n}"));
             }
 
             return names;
+        }
+        
+        /// <summary>
+        /// Initializes the base collection with the provided components collection.
+        /// </summary>
+        /// <param name="members">A collection of components to initialize the collection with.</param>
+        /// <exception cref="ArgumentNullException">If the provided component is null.</exception>
+        /// <exception cref="ComponentNameCollisionException">If a duplicate name is encountered.</exception>
+        private void RegisterMembers(IEnumerable<TMember> members)
+        {
+            foreach (var member in members)
+            {
+                if (member is null)
+                    throw new ArgumentNullException(nameof(member));
+
+                if (Members.Any(m => m.Name == member.Name))
+                    throw new ComponentNameCollisionException(member.Name, member.GetType());
+
+                Members.Add(member);
+            }
         }
 
         /// <summary>
@@ -97,6 +122,17 @@ namespace L5Sharp.Core
                 name = string.Join(MemberSeparator, names.Skip(1));
                 members = (IEnumerable<TMember>)complexType.Members;
             }
+        }
+
+        /// <inheritdoc />
+        public IEnumerator<TMember> GetEnumerator()
+        {
+            return Members.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
     }
 }

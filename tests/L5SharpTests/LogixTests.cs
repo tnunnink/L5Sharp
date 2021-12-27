@@ -107,9 +107,9 @@ namespace L5SharpTests
             instance.Should().NotBeNull();
             instance.Name.Should().Be("TestType");
             instance.Description.Should().Be("This is a test type that will be created");
-            instance.Members.Get("Member01").Should().NotBeNull();
-            instance.Members.Get("Member01")?.DataType.As<Dint>().Value.Should().Be(0);
-            instance.Members.Get("Member02")?.DataType.As<Timer>().PRE.DataType.Value.Should().Be(0);
+            instance.Members.GetMember("Member01").Should().NotBeNull();
+            instance.Members.GetMember("Member01")?.DataType.As<Dint>().Value.Should().Be(0);
+            instance.Members.GetMember("Member02")?.DataType.As<Timer>().PRE.DataType.Value.Should().Be(0);
             instance.Should().NotBeSameAs(type);
         }
     }

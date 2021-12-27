@@ -1,5 +1,4 @@
 ﻿using System;
-using AutoFixture;
 using FluentAssertions;
 using L5Sharp.Enums;
 using L5Sharp.Exceptions;
@@ -69,29 +68,6 @@ namespace L5Sharp.Core.Tests
             var task = Task.Create("Test");
 
             task.Type.Should().Be(TaskType.Periodic);
-        }
-
-        [Test]
-        public void Build_NoOverloads_ShouldNotBeNull()
-        {
-            var task = Task.Build("Test").Create();
-
-            task.Should().NotBeNull();
-        }
-
-        [Test]
-        public void Build_Overloads_ShouldHaveExpected()
-        {
-            var task = Task.Build("Test")
-                .OfType(TaskType.Periodic)
-                .WithDescription("This is a test")
-                .WithRate(new ScanRate(1000))
-                .Create();
-
-            task.Name.ToString().Should().Be("Test");
-            task.Description.Should().Be("This is a test");
-            task.Type.Should().Be(TaskType.Periodic);
-            task.Rate.Should().Be(new ScanRate(1000));
         }
 
         [Test]

@@ -13,7 +13,7 @@ namespace L5Sharp.Serialization
 {
     internal class UserDefinedSerializer : IXSerializer<IUserDefined>
     {
-        private const string ElementName = LogixNames.DataType;
+        private static readonly XName ElementName = LogixNames.DataType;
 
         public XElement Serialize(IUserDefined component)
         {

@@ -3,17 +3,17 @@
 namespace L5Sharp
 {
     /// <summary>
-    /// Represents a context for reading and writing to a specific L5X file.
+    /// A <c>LogixContext</c> instance represents a set of  that are used to query and update a specified L5X file.
     /// </summary>
     /// <remarks>
-    /// <c>LogixContext</c> is the main entry point for a 
+    /// <c>LogixContext</c> is the main entry point for operating over and L5X file. 
     /// </remarks>
     public interface ILogixContext
     {
         /// <summary>
         /// Gets the <c>Content</c> for the current L5X.
         /// </summary>
-        LogixContextInfo Info { get; }       
+        LogixContextInfo Info { get; }  
         
         /// <summary>
         /// Gets the <c>DataTypes</c> repository for the L5X. 

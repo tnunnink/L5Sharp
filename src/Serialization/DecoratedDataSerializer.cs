@@ -8,7 +8,7 @@ namespace L5Sharp.Serialization
 {
     internal class DecoratedDataSerializer : IXSerializer<IDataType>
     {
-        private const string ElementName = LogixNames.Data;
+        private static readonly XName ElementName = LogixNames.Data;
         
         public XElement Serialize(IDataType component)
         {

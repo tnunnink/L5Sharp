@@ -18,6 +18,6 @@ namespace L5Sharp
         /// <summary>
         /// Member collection of the <c>UserDefined</c> that defined the complex structure of the type. 
         /// </summary>
-        new IMemberList<IMember<IDataType>> Members { get; }
+        new IMembers<IMember<IDataType>> Members { get; }
     }
 }

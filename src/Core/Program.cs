@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using L5Sharp.Abstractions;
 using L5Sharp.Enums;
 
@@ -26,8 +27,8 @@ namespace L5Sharp.Core
         public ProgramType Type => ProgramType.Normal;
         public bool TestEdits { get; }
         public bool Disabled { get; }
-        public IComponentCollection<ITag<IDataType>> Tags { get; }
-        public IComponentCollection<IRoutine> Routines { get; }
+        public IEnumerable<ITag<IDataType>> Tags { get; }
+        public IEnumerable<IRoutine> Routines { get; }
         public bool UseAsFolder { get; }
         public string MainRoutineName { get; }
         public string FaultRoutineName { get; }

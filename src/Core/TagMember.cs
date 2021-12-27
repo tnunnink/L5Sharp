@@ -95,8 +95,8 @@ namespace L5Sharp.Core
 
         /// <inheritdoc />
         public ITagMember<IDataType>? this[string name] =>
-            _member.DataType is IComplexType complexType && complexType.Members.DeepContains(name)
-                ? new TagMember<IDataType>(complexType.Members.DeepGet(name)!, Root, (ITagMember<IDataType>)this)
+            _member.DataType is IComplexType complexType && complexType.Members.Contains(name)
+                ? new TagMember<IDataType>(complexType.Members.GetMember(name)!, Root, (ITagMember<IDataType>)this)
                 : null;
 
         /// <inheritdoc />
@@ -119,7 +119,7 @@ namespace L5Sharp.Core
 
         /// <inheritdoc />
         public IEnumerable<string> GetDeepMembersNames() => _member.DataType is IComplexType complexType
-            ? complexType.Members.DeepNames()
+            ? complexType.Members.GetNames()
             : Enumerable.Empty<string>();
 
         /// <summary>

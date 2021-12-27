@@ -1,4 +1,5 @@
-﻿using L5Sharp.Enums;
+﻿using System.Collections.Generic;
+using L5Sharp.Enums;
 
 namespace L5Sharp
 {
@@ -7,7 +8,7 @@ namespace L5Sharp
         ProgramType Type { get; }
         bool TestEdits { get; }
         bool Disabled { get; }
-        IComponentCollection<ITag<IDataType>> Tags { get; }
-        IComponentCollection<IRoutine> Routines { get; }
+        IEnumerable<ITag<IDataType>> Tags { get; }
+        IEnumerable<IRoutine> Routines { get; }
     }
 }

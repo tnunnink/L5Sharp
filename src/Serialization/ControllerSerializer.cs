@@ -10,7 +10,7 @@ namespace L5Sharp.Serialization
 {
     internal class ControllerSerializer : IXSerializer<IController>
     {
-        private const string ElementName = LogixNames.Controller;
+        private static readonly XName ElementName = LogixNames.Controller;
 
         public XElement Serialize(IController component)
         {

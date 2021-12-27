@@ -11,10 +11,10 @@ namespace L5Sharp.Common
     /// </summary>
     public static class LogixParser
     {
-        private static readonly Dictionary<Type, Func<string, object>> Parsers = new()
+        private static readonly Dictionary<Type, Func<string, object?>> Parsers = new()
         {
             //Enums
-            { typeof(ConnectionPriority), s => ConnectionPriority.FromName(s) },
+            { typeof(ConnectionPriority), s => ConnectionPriority.TryFromName(s, false, out var value) ? value : default },
             { typeof(ConnectionType), s => ConnectionType.FromName(s) },
             { typeof(DataTypeClass), s => DataTypeClass.FromName(s) },
             { typeof(DataTypeFamily), s => DataTypeFamily.FromName(s) },
@@ -38,8 +38,28 @@ namespace L5Sharp.Common
             { typeof(Dimensions), Dimensions.Parse },
             { typeof(TaskPriority), s => TaskPriority.Parse(s) },
             { typeof(ScanRate), s => ScanRate.Parse(s) },
-            { typeof(Watchdog), s => Watchdog.Parse(s) },
+            { typeof(Watchdog), s => Watchdog.Parse(s) }
         };
+
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="input"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        /// <exception cref="InvalidOperationException"></exception>
+        public static T? Parse<T>(string input)
+        {
+            var type = typeof(T);
+
+            var parser = Get(type);
+
+            if (parser is null)
+                throw new InvalidOperationException($"No parse function has been defined for type '{type.Name}'");
+
+            return (T?)parser(input);
+        }
 
         /// <summary>
         /// Gets a parser function for the specified type.
@@ -51,9 +71,9 @@ namespace L5Sharp.Common
         /// </remarks>
         /// <param name="type">The type to parse.</param>
         /// <returns>
-        /// A func that represents the delegate for converting from a string to an object of the provided type.
+        /// A func that can convert from a string to an object for the provided type is the func is defined; otherwise, null.
         /// </returns>
-        public static Func<string, object> Get(Type type)
+        public static Func<string, object?>? Get(Type type)
         {
             if (Parsers.ContainsKey(type))
                 return Parsers[type];
@@ -63,7 +83,7 @@ namespace L5Sharp.Common
             if (converter.CanConvertFrom(typeof(string)))
                 return s => converter.ConvertFrom(s);
 
-            return s => s;
+            return null;
         }
     }
 }

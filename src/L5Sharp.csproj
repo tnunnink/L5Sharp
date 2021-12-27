@@ -14,6 +14,7 @@
     <ItemGroup>
       <None Remove="Resources\Predefined.db" />
       <None Remove="L5Sharp.sln.DotSettings" />
+      <None Remove="Builders\**" />
     </ItemGroup>
 
     <ItemGroup>
@@ -25,6 +26,11 @@
       <EmbeddedResource Include="Resources\L5X.xsd">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </EmbeddedResource>
+      <EmbeddedResource Remove="Builders\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Remove="Builders\**" />
     </ItemGroup>
 
 </Project>

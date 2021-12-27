@@ -16,7 +16,7 @@ namespace L5Sharp
         /// </summary>
         /// <remarks>
         /// </remarks>
-        IMemberCollection<IMember<IDataType>> Members { get; }
+        IReadOnlyMembers<IMember<IDataType>> Members { get; }
         
         /// <summary>
         /// Gets all nested dependent <c>IDataType</c> objects for the current <c>IComplexType</c>.

@@ -9,7 +9,7 @@ namespace L5Sharp.Serialization
 {
     internal class StructureMemberSerializer : IXSerializer<IMember<IDataType>>
     {
-        private const string ElementName = LogixNames.StructureMember;
+        private static readonly XName ElementName = LogixNames.StructureMember;
 
         public XElement Serialize(IMember<IDataType> component)
         {
@@ -40,7 +40,6 @@ namespace L5Sharp.Serialization
                     $"Expecting element with name {LogixNames.DataValueMember} but got {element.Name}");
 
             var name = element.GetComponentName();
-            
             var serializer = new StructureSerializer();
             var dataType = serializer.Deserialize(element);
 

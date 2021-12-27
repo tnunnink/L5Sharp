@@ -18,13 +18,13 @@ namespace L5Sharp.Common
     /// </remarks>
     internal class XElementVisitor<TType, TReturn> : ExpressionVisitor
     {
-        private ParameterExpression _typeParameter;
+        private ParameterExpression? _typeParameter;
         private readonly ParameterExpression _elementParameter = Expression.Parameter(typeof(XElement), "e");
-        private readonly List<Expression> _nullChecks = new List<Expression>();
+        private readonly List<Expression> _nullChecks = new();
 
         public override Expression Visit(Expression node)
         {
-            if (_typeParameter != null) return base.Visit(node);
+            if (_typeParameter is not null) return base.Visit(node);
             
 
             var lambda = ValidateExpression(node);
@@ -120,7 +120,7 @@ namespace L5Sharp.Common
         /// </exception>
         private static LambdaExpression ValidateExpression(Expression node)
         {
-            if (!(node is LambdaExpression lambda))
+            if (node is not LambdaExpression lambda)
                 throw new ArgumentException($"Expression must be of type {typeof(LambdaExpression)}");
 
             if (lambda.Parameters.Count != 1)

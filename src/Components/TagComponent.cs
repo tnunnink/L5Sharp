@@ -1,5 +1,4 @@
 ﻿using System;
-using L5Sharp.Builders;
 using L5Sharp.Core;
 using L5Sharp.Enums;
 
@@ -86,7 +85,7 @@ namespace L5Sharp.Components
             return new Tag<TDataType>(name, dataType, dimensions, radix, externalAccess, description, usage, constant);
         }
 
-        public static ITagBuilder<IDataType> Build(ComponentName name, IDataType dataType)
+        /*public static ITagBuilder<IDataType> Build(ComponentName name, IDataType dataType)
         {
             return new TagBuilder<IDataType>(name, dataType);
         }
@@ -102,6 +101,6 @@ namespace L5Sharp.Components
             where TDataType : IDataType, new()
         {
             return new TagBuilder<TDataType>(name, dataType);
-        }
+        }*/
     }
 }

@@ -10,7 +10,7 @@ namespace L5Sharp.Serialization
 {
     internal class StructureSerializer : IXSerializer<IComplexType>
     {
-        private const string ElementName = LogixNames.Structure;
+        private static readonly XName ElementName = LogixNames.Structure;
 
         public XElement Serialize(IComplexType component)
         {
@@ -36,7 +36,7 @@ namespace L5Sharp.Serialization
                     $"Element name '{element.Name}' invalid. Expecting '{ElementName}' or {LogixNames.StructureMember}");
 
             var name = element.Attribute(LogixNames.DataType)?.Value;
-            var members = element.Elements().Select(e => e.Deserialize<IMember<IDataType>>());
+            var members = element.Elements().Select(e => e.Deserialize<IMember<IDataType>>(e.Name));
 
             return new DataType(name!, DataTypeClass.Unknown, string.Empty, members);
         }

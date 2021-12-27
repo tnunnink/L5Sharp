@@ -1,4 +1,4 @@
-﻿using System;
+﻿/*using System;
 using System.Xml.Linq;
 using L5Sharp.Common;
 using L5Sharp.Components;
@@ -6,23 +6,23 @@ using L5Sharp.Extensions;
 
 namespace L5Sharp.Serialization
 {
-    internal class ArrayElementSerializer : IXSerializer<IMember<IDataType>>
+    internal class ArrayElementSerializer : IXSerializer<IDataType>
     {
         private const string ElementName = LogixNames.Element;
 
-        public XElement Serialize(IMember<IDataType> component)
+        public XElement Serialize(IDataType component)
         {
             if (component == null)
                 throw new ArgumentNullException(nameof(component));
 
             var element = new XElement(LogixNames.Element);
 
-            element.Add(component.ToAttribute(x => x.Name, LogixNames.Index));
+            element.Add(new XAttribute(LogixNames.Index, component.Name));
 
-            switch (component.DataType)
+            switch (component)
             {
                 case IAtomicType atomic:
-                    element.Add(atomic.ToAttribute(x => x.Value));
+                    element.Add(new XAttribute(LogixNames.Value, component.Radix.Convert(atomic)));
                     break;
                 case IComplexType complexType:
                 {
@@ -43,9 +43,8 @@ namespace L5Sharp.Serialization
 
             if (element.Name != ElementName)
                 throw new ArgumentException($"Element name '{element.Name}' invalid. Expecting '{ElementName}'");
-
-            //todo this is not right we need index
-            var name = element.GetComponentName();
+            
+            var name = element.Attribute(LogixNames.Index);
 
             var dataType = element.Element(LogixNames.Structure) is null
                            && element.Attribute("Value") is not null
@@ -60,4 +59,4 @@ namespace L5Sharp.Serialization
             return Member.Create(name, atomic);
         }
     }
-}
+}*/

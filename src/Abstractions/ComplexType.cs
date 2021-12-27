@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using L5Sharp.Common;
 using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Exceptions;
@@ -35,8 +36,8 @@ namespace L5Sharp.Abstractions
             Name = name ?? throw new ArgumentNullException(nameof(name));
             Description = description ?? string.Empty;
             Members = members is not null
-                ? new MemberCollection<IMember<IDataType>>(members)
-                : new MemberCollection<IMember<IDataType>>(FindMembers());
+                ? new ReadOnlyMembers<IMember<IDataType>>(members)
+                : new ReadOnlyMembers<IMember<IDataType>>(FindMembers());
         }
 
         /// <inheritdoc />
@@ -52,7 +53,7 @@ namespace L5Sharp.Abstractions
         public abstract DataTypeClass Class { get; }
 
         /// <inheritdoc />
-        public IMemberCollection<IMember<IDataType>> Members { get; }
+        public IReadOnlyMembers<IMember<IDataType>> Members { get; }
 
         /// <inheritdoc />
         public IDataType Instantiate() => New();

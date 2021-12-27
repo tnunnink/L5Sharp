@@ -4,8 +4,8 @@ using L5Sharp.Exceptions;
 
 namespace L5Sharp.Core
 {
-    /// <inheritdoc cref="L5Sharp.IMemberList{TMember}" />
-    public sealed class MemberList<TMember> : MemberCollection<TMember>, IMemberList<TMember>
+    /// <inheritdoc cref="IMembers{TMember}" />
+    public sealed class Members<TMember> : ReadOnlyMembers<TMember>, IMembers<TMember>
         where TMember : IMember<IDataType>
     {
         private readonly IComplexType _parent;
@@ -17,7 +17,7 @@ namespace L5Sharp.Core
         /// The root parent type of the member collection. Nested members can not reference this type.
         /// </param>
         /// <param name="members">A collection of members to initialize the collection with.</param>
-        internal MemberList(IComplexType parent, IEnumerable<TMember>? members = null) : base(members)
+        internal Members(IComplexType parent, IEnumerable<TMember>? members = null) : base(members)
         {
             _parent = parent;
         }
@@ -27,7 +27,7 @@ namespace L5Sharp.Core
         /// </summary>
         public void Clear()
         {
-            Collection.Clear();
+            Members.Clear();
         }
 
         /// <summary>
@@ -42,13 +42,13 @@ namespace L5Sharp.Core
             if (member is null)
                 throw new ArgumentNullException(nameof(member));
 
-            if (Collection.ContainsKey(member.Name))
+            if (Contains(member.Name))
                 throw new ComponentNameCollisionException(member.Name, member.GetType());
 
             if (member.DataType.Equals(_parent))
                 throw new CircularReferenceException(_parent);
 
-            Collection.Add(member.Name, member);
+            Members.Add(member);
         }
 
         /// <summary>
@@ -65,13 +65,13 @@ namespace L5Sharp.Core
 
             foreach (var member in members)
             {
-                if (Collection.ContainsKey(member.Name))
+                if (Contains(member.Name))
                     throw new ComponentNameCollisionException(member.Name, member.GetType());
 
                 if (member.DataType.Equals(_parent))
                     throw new CircularReferenceException(_parent);
 
-                Collection.Add(member.Name, member);
+                Members.Add(member);
             }
         }
 
@@ -90,13 +90,15 @@ namespace L5Sharp.Core
             if (member is null)
                 throw new ArgumentNullException(nameof(member));
 
-            if (!Collection.ContainsKey(member.Name))
+            if (!Contains(member.Name))
                 Add(member);
 
             if (member.DataType.Equals(_parent))
                 throw new CircularReferenceException(_parent);
 
-            Collection[member.Name] = member;
+            var index = Members.IndexOf(member);
+
+            Members[index] = member;
         }
 
         /// <summary>
@@ -109,10 +111,12 @@ namespace L5Sharp.Core
             if (string.IsNullOrEmpty(name))
                 throw new ArgumentException("name can not be null or empty");
 
-            if (!Collection.ContainsKey(name))
+            if (!Contains(name))
                 return;
+            
+            var index = Members.FindIndex(m => m.Name == name);
 
-            Collection.Remove(name);
+            Members.RemoveAt(index);
         }
     }
 }
