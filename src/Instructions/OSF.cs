@@ -6,7 +6,7 @@ using L5Sharp.Types;
 
 namespace L5Sharp.Instructions
 {
-    public class OSF : Instruction, IInstruction<ITagMember<Bool>, ITagMember<Bool>>
+    public class OSF : Instruction
     {
         public OSF() : base(nameof(OSF), "One Shot Falling", GetMembers())
         {

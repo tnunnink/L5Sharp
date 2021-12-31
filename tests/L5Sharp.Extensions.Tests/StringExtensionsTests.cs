@@ -93,5 +93,53 @@ namespace L5Sharp.Extensions.Tests
 
             number.HasFloatFormat().Should().BeFalse();
         }
+
+        [Test]
+        public void IsBalanced_EmptyString_ShouldBeTrue()
+        {
+            var input = string.Empty;
+
+            input.IsBalanced('(', ')').Should().BeTrue();
+        }
+        
+        [Test]
+        public void IsBalanced_UnBalanced_ShouldBeFalse()
+        {
+            const string input = "(This is a test";
+
+            input.IsBalanced('(', ')').Should().BeFalse();
+        }
+        
+        [Test]
+        public void IsBalanced_Balanced_ShouldBeTrue()
+        {
+            const string input = "(This is a test)";
+
+            input.IsBalanced('(', ')').Should().BeTrue();
+        }
+        
+        [Test]
+        public void IsBalanced_NestedBalanced_ShouldBeTrue()
+        {
+            const string input = "(This is () (a test))";
+
+            input.IsBalanced('(', ')').Should().BeTrue();
+        }
+        
+        [Test]
+        public void IsBalanced_NestedUnBalanced_ShouldBeFalse()
+        {
+            const string input = "(This is a() (test)";
+
+            input.IsBalanced('(', ')').Should().BeFalse();
+        }
+        
+        [Test]
+        public void IsBalanced_ClosingBeforeOpening_ShouldBeFalse()
+        {
+            const string input = "This is a ) (test";
+
+            input.IsBalanced('(', ')').Should().BeFalse();
+        }
     }
 }

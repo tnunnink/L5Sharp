@@ -11,7 +11,7 @@ namespace L5Sharp.Instructions
     /// When the OTE instruction is enabled, the controller sets the data bit. When
     /// the OTE instruction is disabled, the controller clears the data bit.
     /// </summary>
-    public class OTE : Instruction, IInstruction<ITagMember<Bool>>
+    public class OTE : Instruction
     {
         public OTE() : base(nameof(OTE), "Output Energize", GetMembers())
         {

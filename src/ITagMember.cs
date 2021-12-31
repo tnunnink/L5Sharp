@@ -9,49 +9,49 @@ namespace L5Sharp
     /// Represents a child tag of a given root <see cref="ITag{TDataType}"/>.
     /// </summary>
     /// <remarks>
-    /// <c>TagMember</c> instances act as wrappers around <see cref="IMember{TDataType}"/>.
+    /// <c>ITagMember</c> instances act as wrappers around <see cref="IMember{TDataType}"/>.
     /// They are meant to be immutable objects (which resembles their character in Logix) that only reveal the state of
     /// the underlying data type instance.
     /// Note that when you set the <see cref="Value"/> or <see cref="ILogixComponent.Description"/> of the current
-    /// <c>TagMember</c>, you are really setting the value of the underlying <c>DataType</c> or root <c>Tag</c> instance, respectively.
-    /// Also, a <c>TagMember</c> is not constructed with the root <c>Tag</c>, but rather is instantiated when a call to a
-    /// method or indexer that returns a <c>TagMember</c> is made. 
+    /// <c>ITagMember</c>, you are really setting the value of the underlying <c>DataType</c> or root <c>Tag</c> instance, respectively.
+    /// Also, a <c>ITagMember</c> is not constructed with the root <c>Tag</c>, but rather is instantiated when a call to a
+    /// method or indexer that returns a <c>ITagMember</c> is made. 
     /// </remarks>
-    /// <typeparam name="TDataType">The <see cref="IDataType"/> of the <c>TagMember</c>.</typeparam>
+    /// <typeparam name="TDataType">The <see cref="IDataType"/> of the <c>ITagMember</c>.</typeparam>
     public interface ITagMember<out TDataType> : ILogixComponent where TDataType : IDataType
     {
         /// <summary>
-        /// Gets the full name of the <c>TagMember</c> including the root <c>Tag</c> name.
+        /// Gets the full name of the <c>ITagMember</c> including the root <c>Tag</c> name.
         /// </summary>
         string TagName { get; }
         
         /// <summary>
-        /// Gets the full name of the <c>TagMember</c> without the root Tag name.
+        /// Gets the full name of the <c>ITagMember</c> without the root Tag name.
         /// </summary>
         string Operand { get; }
 
         /// <summary>
-        /// Gets the DataType name of the <c>TagMember</c>.
+        /// Gets the DataType name of the <c>ITagMember</c>.
         /// </summary>
         string DataType { get; }
 
         /// <summary>
-        /// Gets the Dimensions of the <c>TagMember</c>.
+        /// Gets the Dimensions of the <c>ITagMember</c>.
         /// </summary>
         Dimensions Dimensions { get; }
 
         /// <summary>
-        /// Gets the Radix of the <c>TagMember</c>.
+        /// Gets the Radix of the <c>ITagMember</c>.
         /// </summary>
         /// <value>
-        /// If the current <c>TagMember</c> is a <see cref="IComplexType"/>, returns <see cref="Enums.Radix.Null"/>.
-        /// If the <c>TagMember</c> type is <see cref="IAtomicType"/>, the will return the member's configured
+        /// If the current <c>ITagMember</c> is a <see cref="IComplexType"/>, returns <see cref="Enums.Radix.Null"/>.
+        /// If the <c>ITagMember</c> type is <see cref="IAtomicType"/>, the will return the member's configured
         /// <c>Radix</c> value.
         /// </value>
         Radix Radix { get; }
         
         /// <summary>
-        /// Gets the ExternalAccess of the <c>TagMember</c>.
+        /// Gets the ExternalAccess of the <c>ITagMember</c>.
         /// </summary>
         ExternalAccess ExternalAccess { get; }
 
@@ -60,28 +60,28 @@ namespace L5Sharp
         /// </summary>
         /// <value>
         /// For Atomic typed <c>TagMembers</c>, returns the value of the <see cref="IAtomicType"/> type.
-        /// If the current <c>TagMember</c> instance is a complex type, returns null.
+        /// If the current <c>ITagMember</c> instance is a complex type, returns null.
         /// </value>
         object? Value { get; }
 
         /// <summary>
-        /// Gets the parent of the current <c>TagMember</c> instance.
+        /// Gets the parent of the current <c>ITagMember</c> instance.
         /// </summary>
         /// <value>
-        /// A <c>TagMember</c> for all non-root <c>Tag</c> instances. If the current instance is the root, returns null. 
+        /// A <c>ITagMember</c> for all non-root <c>Tag</c> instances. If the current instance is the root, returns null. 
         /// </value>
         ITagMember<IDataType>? Parent { get; }
         
         /// <summary>
-        /// Gets the root of the current <c>TagMember</c> instance.
+        /// Gets the root of the current <c>ITagMember</c> instance.
         /// </summary>
         ITag<IDataType> Root { get; }
 
         /// <summary>
-        /// Sets the <c>TagMember</c> <see cref="ILogixComponent.Description"/> with the provided string comment. 
+        /// Sets the <c>ITagMember</c> <see cref="ILogixComponent.Description"/> with the provided string comment. 
         /// </summary>
         /// <remarks>
-        /// <c>TagMember</c> comments are stored and maintained by root <c>Tag</c> instance.
+        /// <c>ITagMember</c> comments are stored and maintained by root <c>Tag</c> instance.
         /// Setting a comment on a member "overrides" the description of the underlying member.
         /// Setting the comment to an empty or null value resets the description to the value of the underlying member.
         /// This functionality mimics the feature called "Pass Through Description" provided by Logix to
@@ -91,47 +91,48 @@ namespace L5Sharp
         void Comment(string comment);
 
         /// <summary>
-        /// Sets the <see cref="Value"/> of the current <c>TagMember</c>.
+        /// Sets the <see cref="Value"/> property of the current <c>ITagMember</c> instance.
         /// </summary>
-        /// <remarks>
-        /// If the current <c>TagMember</c> is an
-        /// </remarks>
-        /// <param name="value">The atomic value type to set.</param>
-        /// <exception cref="ArgumentException">
-        /// Throw when the provided value is null or not valid for the current <c>TagMember</c> type.
-        /// </exception>
+        /// <param name="value">The <c>IAtomicType</c> value to set.</param>
+        /// <exception cref="ArgumentNullException">When value is null.</exception>
+        /// <exception cref="ArgumentException">When value is not valid for the current <c>ITagMember</c> type.</exception>
         /// <exception cref="InvalidOperationException">
-        /// Thrown when the current <c>TagMember</c> type is not an <c>IAtomicType</c>.
+        /// When the current <c>ITagMember</c> data type is not a type that implements <c>IAtomicType</c>.
         /// </exception>
+        /// <seealso cref="TrySetValue"/>
         void SetValue(IAtomicType value);
 
         /// <summary>
-        /// Sets the <see cref="Value"/> property of the current <c>TagMember</c> if it is an <c>IAtomicType</c> member.
+        /// Sets the <see cref="Value"/> property of the current <c>ITagMember</c> instance.
         /// </summary>
+        /// <param name="value">The <c>IAtomicType</c> value to set.</param>
+        /// <returns>
+        /// true if the value property was successfully set; otherwise, false. 
+        /// </returns>
         /// <remarks>
         /// This method differs from <see cref="SetValue"/> in that if the provided value is invalid or the
-        /// current <c>TagMember</c> is not an <c>IAtomicType</c>, it will return without throwing an exception.
+        /// current <c>ITagMember</c> is not an <c>IAtomicType</c>, it will not throw an exception,
+        /// but instead return false, indicating that the call failed.
         /// </remarks>
-        /// <param name="value">The atomic value to set.</param>
         bool TrySetValue(IAtomicType value);
 
         /// <summary>
-        /// Gets an element of the current <c>TagMember</c> array at the provided index.
+        /// Gets an element of the current <c>ITagMember</c> array at the provided index.
         /// </summary>
         /// <remarks>
-        /// Like <see cref="IMember{TDataType}"/>, only a <c>TagMember</c> with non-empty dimensions will have elements
-        /// accessible by index. Otherwise the <c>TagMember</c> is not an array and therefore contains no elements.
+        /// Like <see cref="IMember{TDataType}"/>, only a <c>ITagMember</c> with non-empty dimensions will have elements
+        /// accessible by index. Otherwise the <c>ITagMember</c> is not an array and therefore contains no elements.
         /// This index getter will not fail if the provided index is invalid. It will simply return null.
         /// </remarks>
         /// <param name="index">The array index of the member instance.</param>
         /// <returns>
-        /// A <c>TagMember</c> instance representing the element of the provided index.
+        /// A <c>ITagMember</c> instance representing the element of the provided index.
         /// If the provided index is invalid (i.e. less than zero or greater than the dimensional length), then null.
         /// </returns>
         ITagMember<TDataType>? this[int index] { get; }
 
         /// <summary>
-        /// Gets a child <c>TagMember</c> of the current <c>TagMember</c> instance with the provided TagName. 
+        /// Gets a child <c>ITagMember</c> of the current <c>ITagMember</c> instance with the provided TagName. 
         /// </summary>
         /// <param name="name">The name of the child member to retrieve.</param>
         /// <returns>
@@ -150,13 +151,13 @@ namespace L5Sharp
             where TType : IDataType;
 
         /// <summary>
-        /// Gets all child members of the current <c>TagMember</c> instance.
+        /// Gets all child members of the current <c>ITagMember</c> instance.
         /// </summary>
         /// <returns></returns>
         IEnumerable<ITagMember<IDataType>> GetMembers();
 
         /// <summary>
-        /// Gets a list of child member names of the current <c>TagMember</c>
+        /// Gets a list of child member names of the current <c>ITagMember</c>
         /// </summary>
         /// <remarks>
         /// Only returns list of immediate child member names. This method does not recursively traverse nested members.
@@ -169,7 +170,7 @@ namespace L5Sharp
         IEnumerable<string> GetMemberNames();
         
         /// <summary>
-        /// Gets list of all nested child member names of the current <c>TagMember</c>
+        /// Gets list of all nested child member names of the current <c>ITagMember</c>
         /// </summary>
         /// <remarks>
         /// Will recursively traverse all nested child members to get a full list of member names. 

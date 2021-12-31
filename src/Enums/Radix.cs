@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using Ardalis.SmartEnum;
 using L5Sharp.Extensions;
 using L5Sharp.Types;
+using L5Sharp.Types.Atomic;
 
 namespace L5Sharp.Enums
 {
@@ -220,12 +222,41 @@ namespace L5Sharp.Enums
             if (value is null or string)
                 throw new ArgumentException(
                     $"Could not parse string '{input}' to {typeof(TAtomic)}. Verify that the string is an accepted Radix format.");
-            
+
             var atomic = new TAtomic();
-            
+
             atomic.SetValue(value);
 
             return atomic;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="result"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
+        public static bool TryParseValue(string input, out object? result)
+        {
+            try
+            {
+                var parser = GetParser(input);
+
+                var value = parser(input);
+
+                if (value is null or string)
+                    throw new ArgumentException(
+                        $"Could not parse string '{input}'. Verify that the string is an accepted Radix format.");
+
+                result = value;
+                return true;
+            }
+            catch (Exception)
+            {
+                result = null;
+                return false;
+            }
         }
 
         /// <summary>
@@ -631,6 +662,7 @@ namespace L5Sharp.Enums
                     CultureInfo.InvariantCulture);
             }
         }
+
 
         private class DateTimeNsRadix : Radix
         {

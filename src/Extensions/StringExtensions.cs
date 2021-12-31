@@ -191,5 +191,23 @@ namespace L5Sharp.Extensions
 
             return value.Remove(0, consumed.Length);
         }
+
+        public static bool IsBalanced(this string value, char opening, char closing)
+        {
+            var characters = new Stack<char>();
+
+            foreach (var c in value)
+            {
+                if (Equals(c, opening))
+                    characters.Push(c);
+
+                if (!Equals(c, closing)) continue;
+
+                if (!characters.TryPop(out _))
+                    return false;
+            }
+
+            return characters.Count == 0;
+        }
     }
 }

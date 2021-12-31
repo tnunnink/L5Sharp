@@ -11,14 +11,23 @@ namespace L5Sharp.Extensions
     internal static class ElementExtensions
     {
         /// <summary>
-        /// Helper for getting the current element's component name.
+        /// Gets the component name value from the current <see cref="XElement"/> instance.
         /// </summary>
-        /// <param name="element">The current element.</param>
-        /// <returns>The string value of the element's attribute 'Name'.</returns>
-        /// <exception cref="InvalidOperationException">When the element attribute is null (does not exist for the current element).</exception>
+        /// <param name="element">The current <see cref="XElement"/> instance.</param>
+        /// <returns>The string value of the 'Name' attribute.</returns>
+        /// <exception cref="InvalidOperationException">When the current element does not have a name value.</exception>
         public static string GetComponentName(this XElement element) =>
             element.Attribute(LogixNames.Name)?.Value
             ?? throw new InvalidOperationException("The current element does not have an attribute with name 'Name'");
+        
+        /// <summary>
+        /// Gets the component description value from the current <see cref="XElement"/> instance.
+        /// </summary>
+        /// <param name="element">The current <see cref="XElement"/> instance.</param>
+        /// <returns>The string value of the 'Description' element if it exists; otherwise, empty string.</returns>
+        public static string GetComponentDescription(this XElement element) =>
+            element.Element(LogixNames.Description)?.Value
+            ?? string.Empty;
 
         /// <summary>
         /// Helper for getting the current element's data type instance.
@@ -35,63 +44,75 @@ namespace L5Sharp.Extensions
         }
 
         /// <summary>
-        /// Generic helper for getting element values from a given L5X element.
+        /// Get a specified property value from current <see cref="XElement"/> instance.
         /// </summary>
-        /// <param name="element">The current element.</param>
-        /// <param name="expression">Expression for the component indicating which property to get.</param>
-        /// <typeparam name="TComponent">The type of the component that this element represents.</typeparam>
-        /// <typeparam name="TProperty">The type of the property of the component to retrieve from the element.</typeparam>
-        /// <returns>A strongly typed property value that is the value of the XAttribute or XElement data.</returns>
-        public static TProperty? GetValue<TComponent, TProperty>(this XElement element,
-            Expression<Func<TComponent, TProperty>> expression)
+        /// <param name="element">The current <see cref="XElement"/> instance.</param>
+        /// <param name="propertySelector">An expression that selects the property of the specified type.</param>
+        /// <param name="isElement">
+        /// A indication as to whether to read the selected property as an <see cref="XElement"/>,
+        /// or an <see cref="XAttribute"/> (which is the default).
+        /// </param>
+        /// <param name="nameOverride">A string override to replace the default name (name of the property) being used.</param>
+        /// <typeparam name="TComplex">The type of the object for which the property is selected.</typeparam>
+        /// <typeparam name="TProperty">The type of the property being selected from <see cref="element"/>.</typeparam>
+        /// <returns>
+        /// A strongly typed property value that is the value of the <see cref="XAttribute"/> or <see cref="XElement"/>
+        /// retrieved from the current <see cref="element"/> instance.
+        /// </returns>
+        /// <exception cref="ArgumentException">When propertySelector is not a <see cref="MemberExpression"/>.</exception>
+        public static TProperty? GetValue<TComplex, TProperty>(this XElement element,
+            Expression<Func<TComplex, TProperty>> propertySelector,
+            bool isElement = false, string? nameOverride = null)
         {
-            if (expression.Body is not MemberExpression memberExpression)
-                throw new InvalidOperationException($"Expression must be {typeof(MemberExpression)}");
+            if (propertySelector.Body is not MemberExpression memberExpression)
+                throw new ArgumentException($"PropertySelector expression must be {typeof(MemberExpression)}");
 
-            var name = memberExpression.Member.GetXName();
+            var name = nameOverride ?? memberExpression.Member.Name;
 
-            var value = element.Attribute(name)?.Value;
+            var value = isElement ? element.Element(name)?.Value : element.Attribute(name)?.Value;
 
             return value is not null ? LogixParser.Parse<TProperty>(value) : default;
         }
 
         /// <summary>
-        /// Helper for converting a <see cref="TComponent"/> property to an <c>XAttribute</c> for serialization.
+        /// Adds a specified property of a given complex instance to the current <see cref="XElement"/> instance. 
         /// </summary>
-        /// <param name="component">The current <c>ILogixComponent</c> instance.</param>
-        /// <param name="expression">A member expression that points to the specified property to convert.</param>
-        /// <param name="nameOverride">An optional parameter that overrides the name of the attribute being converted.</param>
-        /// <typeparam name="TComponent"></typeparam>
-        /// <typeparam name="TProperty"></typeparam>
-        /// <returns></returns>
-        /// <exception cref="InvalidOperationException"></exception>
-        public static XAttribute ToAttribute<TComponent, TProperty>(this TComponent component,
-            Expression<Func<TComponent, TProperty>> expression, XName? nameOverride = null)
+        /// <param name="element">The current <c>XElement</c> instance.</param>
+        /// <param name="instance">The instance of the type from which the selected property will be added.</param>
+        /// <param name="propertySelector">An expression that selects the property of the provided type to add to the <c>XElement</c>.</param>
+        /// <param name="isElement">A indication as to write the selected property as an element instance of an attribute (which is the default).</param>
+        /// <param name="nameOverride">A string override to replace the default name (name of the property) of the content being added to the <c>XElement</c>.</param>
+        /// <typeparam name="TComplex">The type of the object for which a member property will be added.</typeparam>
+        /// <typeparam name="TProperty">The type of the property being added to the <c>XElement</c>.</typeparam>
+        /// <exception cref="ArgumentNullException">When instance is null.</exception>
+        /// <exception cref="ArgumentException">When propertySelector is not a <see cref="MemberExpression"/>.</exception>
+        /// <remarks>
+        /// This is a helper method for quickly adding content to a given XElement.
+        /// By default, this method will add properties as XAttributes with the name property specified by <see cref="propertySelector"/>.
+        /// This functionality can be overriden with <see cref="isElement"/> and <see cref="nameOverride"/>.
+        /// All content written as a child <c>XElement</c> will be wrapped in <see cref="XCData"/> element (since this is default for content in L5X).
+        /// This method will also call <see cref="object.ToString()"/> to attempt to get the string value of the selected property.
+        /// If the property is null or empty, then no content will be added.
+        /// </remarks>
+        public static void AddValue<TComplex, TProperty>(this XElement element, TComplex instance,
+            Expression<Func<TComplex, TProperty>> propertySelector,
+            bool isElement = false, string? nameOverride = null)
         {
-            if (expression.Body is not MemberExpression memberExpression)
-                throw new InvalidOperationException($"Expression must be {typeof(MemberExpression)}");
+            if (instance is null)
+                throw new ArgumentNullException(nameof(instance));
 
-            var name = nameOverride ?? memberExpression.Member.GetXName();
+            if (propertySelector.Body is not MemberExpression memberExpression)
+                throw new ArgumentException($"PropertySelector expression must be {typeof(MemberExpression)}");
 
-            var value = expression.Compile().Invoke(component);
+            var name = nameOverride ?? memberExpression.Member.Name;
 
-            return new XAttribute(name, value);
-        }
+            var value = propertySelector.Compile().Invoke(instance)?.ToString() ?? string.Empty;
 
-        public static XElement ToElement<TComponent, TProperty>(this TComponent component,
-            Expression<Func<TComponent, TProperty>> expression, bool useCDataElement = true,
-            string? nameOverride = null)
-        {
-            if (expression.Body is not MemberExpression memberExpression)
-                throw new InvalidOperationException($"Expression must be {typeof(MemberExpression)}");
+            if (value.IsEmpty()) return;
 
-            var name = nameOverride ?? memberExpression.Member.GetXName();
+            object content = isElement ? new XElement(name, new XCData(value)) : new XAttribute(name, value);
 
-            var value = expression.Compile().Invoke(component);
-
-            return useCDataElement
-                ? new XElement(name, new XCData(value.ToString()))
-                : new XElement(name, value);
+            element.Add(content);
         }
     }
 }

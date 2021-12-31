@@ -18,7 +18,8 @@ namespace L5Sharp.Serialization
                 throw new ArgumentNullException(nameof(component));
 
             var element = new XElement(ElementName);
-            element.Add(component.ToAttribute(c => c.Name, LogixNames.DataType));
+            
+            element.AddValue(component, c => c.Name, nameOverride: LogixNames.DataType);
 
             var elements = component.Members.Select(m => m.Serialize());
             element.Add(elements);
@@ -36,7 +37,7 @@ namespace L5Sharp.Serialization
                     $"Element name '{element.Name}' invalid. Expecting '{ElementName}' or {LogixNames.StructureMember}");
 
             var name = element.Attribute(LogixNames.DataType)?.Value;
-            var members = element.Elements().Select(e => e.Deserialize<IMember<IDataType>>(e.Name));
+            var members = element.Elements().Select(e => e.Deserialize<IMember<IDataType>>(e.Name.ToString()));
 
             return new DataType(name!, DataTypeClass.Unknown, string.Empty, members);
         }

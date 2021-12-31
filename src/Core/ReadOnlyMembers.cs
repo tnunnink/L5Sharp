@@ -2,11 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using L5Sharp.Exceptions;
 using L5Sharp.Extensions;
-
-[assembly: InternalsVisibleTo("L5Sharp.Core.Tests")]
 
 namespace L5Sharp.Core
 {
@@ -14,7 +11,6 @@ namespace L5Sharp.Core
     public class ReadOnlyMembers<TMember> : IReadOnlyMembers<TMember> where TMember : IMember<IDataType>
     {
         private const char MemberSeparator = '.';
-        protected List<TMember> Members = new();
 
         /// <summary>
         /// Creates a new instance of a <c>IMembers</c> collection.
@@ -28,7 +24,13 @@ namespace L5Sharp.Core
                 RegisterMembers(members);
         }
 
-        public int Count { get; }
+        /// <summary>
+        /// Internal Member Collection  
+        /// </summary>
+        protected readonly List<TMember> Members = new();
+
+        /// <inheritdoc />
+        public int Count => Members.Count;
 
         /// <inheritdoc />
         public bool Contains(string? name) => name is not null && FindMemberByName(this, name) is not null;

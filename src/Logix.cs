@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using L5Sharp.Core;
 using L5Sharp.Exceptions;
-using L5Sharp.Instructions;
 using L5Sharp.Types;
-using String = L5Sharp.Types.String;
+using L5Sharp.Types.Atomic;
+using L5Sharp.Types.Predefined;
+using String = L5Sharp.Types.Predefined.String;
 
 namespace L5Sharp
 {
@@ -37,7 +37,7 @@ namespace L5Sharp
             DataType.Registry.Add(name, factory);
         }
 
-        /// <summary>
+        /*/// <summary>
         /// Registers an instruction to the global Logix context
         /// </summary>
         /// <param name="name">The name of the instruction to register. The name must be unique (i.e., not the name of a current instruction</param>
@@ -57,7 +57,7 @@ namespace L5Sharp
                 throw new ComponentNameCollisionException(name, typeof(IInstruction));
 
             Instruction.Registry.Add(name, factory);
-        }
+        }*/
 
 
         /// <summary>
@@ -112,10 +112,8 @@ namespace L5Sharp
             }
         }
 
-        /// <summary>
-        /// Predefined set of Logix Instructions. 
-        /// </summary>
-        public static class Instruction
+        
+        /*public static class Instruction
         {
             internal static readonly Dictionary<string, Func<IInstruction>> Registry =
                 new Dictionary<string, Func<IInstruction>>(StringComparer.OrdinalIgnoreCase)
@@ -153,6 +151,6 @@ namespace L5Sharp
             {
                 return Registry.ContainsKey(name) ? Registry[name].Invoke() : null;
             }
-        }
+        }*/
     }
 }

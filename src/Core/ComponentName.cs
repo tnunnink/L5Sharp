@@ -100,7 +100,7 @@ namespace L5Sharp.Core
         {
             return name._name;
         }
-        
+
         /// <summary>
         /// Converts between a <see cref="string"/> and a <see cref="ComponentName"/>
         /// </summary>
@@ -118,9 +118,10 @@ namespace L5Sharp.Core
         }
 
         /// <inheritdoc />
-        public int CompareTo(ComponentName other)
+        public int CompareTo(ComponentName? other)
         {
-            return ReferenceEquals(this, other) ? 0 : string.Compare(_name, other._name, StringComparison.Ordinal);
+            if (ReferenceEquals(this, other)) return 0;
+            return ReferenceEquals(null, other) ? 1 : string.Compare(_name, other._name, StringComparison.Ordinal);
         }
     }
 }

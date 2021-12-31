@@ -23,6 +23,9 @@
       <None Update="DataValueMemberSerializerTests.Serialize_Dint_ShouldBeApproved.approved.xml">
         <DependentUpon>DataValueMemberSerializerTests.cs</DependentUpon>
       </None>
+      <None Update="RungSerializerTests.Serialize_Bool_ShouldBeApproved.approved.xml">
+        <DependentUpon>RungSerializerTests.cs</DependentUpon>
+      </None>
     </ItemGroup>
 
     <ItemGroup>

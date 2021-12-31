@@ -19,7 +19,7 @@ namespace L5Sharp.Core
         /// <param name="name">The component name of the type.</param>
         /// <param name="description">the string description of the type.</param>
         /// <param name="members">The collection of members to add to the type.</param>
-        internal UserDefined(string name, string? description = null,
+        protected UserDefined(string name, string? description = null,
             IEnumerable<IMember<IDataType>>? members = null)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));

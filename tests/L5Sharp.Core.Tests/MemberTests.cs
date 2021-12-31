@@ -4,8 +4,9 @@ using FluentAssertions;
 using L5Sharp.Components;
 using L5Sharp.Enums;
 using L5Sharp.Types;
+using L5Sharp.Types.Atomic;
 using NUnit.Framework;
-using String = L5Sharp.Types.String; 
+using String = L5Sharp.Types.Predefined.String; 
 
 namespace L5Sharp.Core.Tests
 {
@@ -15,7 +16,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Create_ValidNameAndType_ShouldNotBeNull()
         {
-            var type = new UserDefined("Test");
+            var type = UserDefined.Create("Test");
             var member = Member.Create("Test", type);
 
             member.Should().NotBeNull();

@@ -3,7 +3,7 @@
 namespace L5Sharp
 {
     /// <summary>
-    /// Represents a member component of an <see cref="IAddOnInstruction"/>.
+    /// Represents Logix Parameter, or a member of the <see cref="IAddOnInstruction"/> component.
     /// </summary>
     /// <remarks>
     /// <c>IParameter</c> is a specialized type of <c>IMember</c> that adds properties to determine the usage for the
@@ -30,19 +30,28 @@ namespace L5Sharp
         TagUsage Usage { get; }
         
         /// <summary>
-        /// Gets the value indicating whether the current <c>IParameter</c> is required.
+        /// Gets the <c>bool</c> indicating if the current <c>IParameter</c> is required.
         /// </summary>
         bool Required { get; }
         
         /// <summary>
-        /// Gets the value indicating whether the current <c>IParameter</c> is visible.
+        /// Gets the <c>bool</c> indicating if the current <c>IParameter</c> is visible.
         /// </summary>
         bool Visible { get; }
         
-        ITag<TDataType>? Alias { get; }
+        /// <summary>
+        /// Gets the <c>ITag</c> that represents the alias of the current <c>IParameter</c>.
+        /// </summary>
+        string? Alias { get; }
         
-        IAtomicType Default { get; }
+        /// <summary>
+        /// Gets the <c>IAtomicType</c> value that represents the default value of the <c>IParameter</c>.
+        /// </summary>
+        IAtomicType? Default { get; }
         
+        /// <summary>
+        /// Gets the <c>bool</c> indicating if the current <c>IParameter</c> is a constant.
+        /// </summary>
         bool Constant { get; }
     }
 }

@@ -18,10 +18,10 @@ namespace L5Sharp.Serialization
 
             var element = new XElement(ElementName);
             
-            element.Add(component.ToAttribute(m => m.Name));
-            element.Add(component.ToAttribute(m => m.DataType));
-            element.Add(component.ToAttribute(m => m.Dimension));
-            element.Add(component.ToAttribute(m => m.Radix));
+            element.AddValue(component, m => m.Name);
+            element.AddValue(component, m => m.DataType);
+            element.AddValue(component, m => m.Dimension);
+            element.AddValue(component, m => m.Radix);
 
             /*var serializer = new ArrayElementSerializer();
             var elements = component.Select(m => serializer.Serialize(m));

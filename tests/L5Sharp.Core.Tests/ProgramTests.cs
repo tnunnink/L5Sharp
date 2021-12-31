@@ -1,9 +1,7 @@
-﻿using AutoFixture;
+﻿/*using AutoFixture;
 using FluentAssertions;
-using L5Sharp.Components;
 using L5Sharp.Enums;
 using L5Sharp.Exceptions;
-using L5Sharp.Types;
 using NUnit.Framework;
 
 namespace L5Sharp.Core.Tests
@@ -33,7 +31,7 @@ namespace L5Sharp.Core.Tests
         {
             var program = new Program("Test");
 
-            program.Name.ToString().Should().Be("Test");
+            program.Name.Should().Be("Test");
             program.Type.Should().Be(ProgramType.Normal);
             program.MainRoutineName.Should().BeNull();
             program.FaultRoutineName.Should().BeNull();
@@ -50,7 +48,7 @@ namespace L5Sharp.Core.Tests
         {
             var program = new Program("Test", "This is a test", "MainRoutine", "FaultRoutine", true, true, true);
 
-            program.Name.ToString().Should().Be("Test");
+            program.Name.Should().Be("Test");
             program.Type.Should().Be(ProgramType.Normal);
             program.MainRoutineName.Should().Be("MainRoutine");
             program.FaultRoutineName.Should().Be("FaultRoutine");
@@ -62,4 +60,4 @@ namespace L5Sharp.Core.Tests
             program.Routines.Should().BeEmpty();
         }
     }
-}
+}*/

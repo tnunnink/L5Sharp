@@ -2,36 +2,117 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using L5Sharp.Extensions;
 
 namespace L5Sharp.Core
 {
-    public readonly struct NeutralText
+    /// <summary>
+    /// 
+    /// </summary>
+    public sealed class NeutralText : IEquatable<NeutralText>
     {
-        private readonly List<object> _arguments;
+        private const string InstructionPattern = @"[a-zA-Z0-9_]+\(.*?\)";
+        private readonly string _text;
+        private readonly List<IInstruction> _instructions;
 
-        public NeutralText(string text)
+        /// <summary>
+        /// Creates a new default instance of <c>NeutralText</c>.
+        /// </summary>
+        public NeutralText()
         {
-            if (!Regex.IsMatch(text, @"^[a-zA-Z0-9_]*\(.*?\)$"))
-                throw new ArgumentException();
-
-            Instruction = Regex.Match(text, @"^[a-zA-Z0-9_]+").Value;
-            _arguments = new List<object>(Regex.Match(text, @"(?<=\().+?(?=\))").Value.Split(','));
+            _text = ";";
+            _instructions = new List<IInstruction>();
         }
 
-        public NeutralText(IInstruction instruction)
+        /// <summary>
+        /// Creates a new instance of <c>NeutralText</c> with the provided string text input.
+        /// </summary>
+        /// <param name="text">A string input that represents a neutral text format. The text may contain </param>
+        /// <exception cref="ArgumentNullException">When text is null.</exception>
+        /// <exception cref="FormatException">When text is null.</exception>
+        public NeutralText(string text) : this()
         {
-            Instruction = instruction.Name;
-            _arguments = new List<object>(instruction.Parameters.Count());
+            if (text is null)
+                throw new ArgumentNullException(nameof(text));
+
+            if (text.IsEmpty()) return;
+
+            ValidateText(text);
+
+            _text = text;
+
+            var instructions = Regex.Matches(text, InstructionPattern, RegexOptions.Compiled)
+                .Select(m => Instruction.FromText(m.Value));
+
+            _instructions.AddRange(instructions);
         }
 
-        public NeutralText(IInstruction instruction, params object[] args) : this(instruction)
+        /// <summary>
+        /// 
+        /// </summary>
+        public IEnumerable<IInstruction> Instructions => _instructions;
+
+        /// <summary>
+        /// Represents a new default instance of the 
+        /// </summary>
+        /// <returns></returns>
+        public static NeutralText Empty => new();
+
+        /// <summary>
+        /// Converts a <c>NeutralText</c> object to a <c>string</c> object.
+        /// </summary>
+        /// <param name="text">the <c>NeutralText</c> instance to convert.</param>
+        /// <returns>A <c>string</c> that represents the value of the <c>NeutralText</c>.</returns>
+        public static implicit operator string(NeutralText text) => text._text;
+
+        /// <summary>
+        /// Converts a <c>string</c> object to a <c>NeutralText</c> object.
+        /// </summary>
+        /// <param name="text">the <c>string</c> instance to convert.</param>
+        /// <returns>A <c>NeutralText</c> that represents the value of the <c>string</c>.</returns>
+        public static implicit operator NeutralText(string text) => new(text);
+
+        private static void ValidateText(string text)
         {
-            //todo validate arrays
-            _arguments = new List<object>(args);
+            if (text.Contains('[') && !text.IsBalanced('[', ']'))
+                throw new FormatException("Text input must have balanced '[]' characters.");
+
+            if (text.Contains('(') && !text.IsBalanced('(', ')'))
+                throw new FormatException("Text input must have balanced '()' characters.");
         }
 
-        public string Instruction { get; }
-        public string Signature => $"{Instruction}({string.Join(",", _arguments)})";
-        public IEnumerable<object> Arguments => _arguments;
+        /// <inheritdoc />
+        public override string ToString() => _text;
+
+        /// <inheritdoc />
+        public bool Equals(NeutralText? other)
+        {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return _text == other._text;
+        }
+
+        /// <inheritdoc />
+        public override bool Equals(object? obj) =>
+            ReferenceEquals(this, obj) || obj is NeutralText other && Equals(other);
+
+        /// <inheritdoc />
+        public override int GetHashCode() => HashCode.Combine(_text);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
+        public static bool operator ==(NeutralText? left, NeutralText? right) => Equals(left, right);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
+        public static bool operator !=(NeutralText? left, NeutralText? right) => !Equals(left, right);
     }
 }

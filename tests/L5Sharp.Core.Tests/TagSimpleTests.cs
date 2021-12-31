@@ -6,8 +6,10 @@ using L5Sharp.Components;
 using L5Sharp.Enums;
 using L5Sharp.Exceptions;
 using L5Sharp.Types;
+using L5Sharp.Types.Atomic;
+using L5Sharp.Types.Predefined;
 using NUnit.Framework;
-using String = L5Sharp.Types.String;
+using String = L5Sharp.Types.Predefined.String;
 
 namespace L5Sharp.Core.Tests
 {
@@ -100,7 +102,7 @@ namespace L5Sharp.Core.Tests
 
             tag.Should().NotBeNull();
             tag.DataType.Should().Be(dataType.Name);
-            tag.Should().BeOfType<Tag<IDataType>>();
+            tag.Should().BeOfType<Tag<IUserDefined>>();
         }
 
         [Test]

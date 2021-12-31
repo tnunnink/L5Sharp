@@ -17,19 +17,19 @@ namespace L5Sharp.Serialization
 
         public XElement Serialize(IMember<IDataType> component)
         {
-            if (component == null)
+            if (component is null)
                 throw new ArgumentNullException(nameof(component));
 
             var element = new XElement(ElementName);
-            
-            element.Add(component.ToAttribute(c => c.Name));
-            element.Add(component.ToAttribute(c => c.DataType));
-            element.Add(component.ToAttribute(c => c.Dimension));
-            element.Add(component.ToAttribute(c => c.Radix));
-            element.Add(component.ToAttribute(c => c.ExternalAccess));
 
-            if (!string.IsNullOrEmpty(component.Description))
-                element.Add(component.ToElement(x => x.Description));
+            element.AddValue(component, c => c.Name);
+            element.AddValue(component, c => c.DataType.ToString());
+            element.AddValue(component, c => c.Dimension);
+            element.AddValue(component, c => c.Radix);
+            element.AddValue(component, c => c.ExternalAccess);
+
+            if (!component.Description.IsEmpty())
+                element.AddValue(component, x => x.Description, true);
 
             return element;
         }
@@ -42,12 +42,12 @@ namespace L5Sharp.Serialization
             if (element.Name != ElementName)
                 throw new ArgumentException($"Element name '{element.Name}' invalid. Expecting '{ElementName}'");
 
-            var name = element.GetComponentName() ?? throw new ArgumentNullException();
+            var name = element.GetComponentName();
             var dataType = element.GetDataType();
-            var dimensions = element.GetValue<IMember<IDataType>, Dimensions>(m => m.Dimension);
-            var radix = element.GetValue<IMember<IDataType>, Radix>(m => m.Radix);
-            var access = element.GetValue<IMember<IDataType>, ExternalAccess>(m => m.ExternalAccess);
-            var description = element.GetValue<IMember<IDataType>, string>(m => m.Description);
+            var dimensions = element.GetValue<Member<IDataType>, Dimensions>(m => m.Dimension);
+            var radix = element.GetValue<Member<IDataType>, Radix>(m => m.Radix);
+            var access = element.GetValue<Member<IDataType>, ExternalAccess>(m => m.ExternalAccess);
+            var description = element.GetValue<Member<IDataType>, string>(m => m.Description);
 
             return Member.Create(name, dataType, dimensions, radix, access, description);
         }

@@ -33,11 +33,11 @@ namespace L5Sharp.Common
             if (Logix.DataType.Contains(_typeName))
                 return Logix.DataType.Instantiate(_typeName);
 
-            //Otherwise we need to find where in the XDocument the data type could be defined
+            //Otherwise we need to find the definition from the element's XDocument (if not null).
             var definition = FindTypeDefinition(_typeName);
 
-            //Parse type definition if found. Otherwise return Undefined.
-            return definition != null 
+            //Deserialize type definition if found. Otherwise return Undefined.
+            return definition is not null 
                 ? GetTypeSerializer(definition).Deserialize(definition) 
                 : new Undefined(_typeName);
         }
@@ -45,7 +45,7 @@ namespace L5Sharp.Common
         private IXSerializer<IDataType> GetTypeSerializer(XElement element)
         {
             if (element.Name == LogixNames.DataType)
-                return (IXSerializer<IDataType>) new UserDefinedSerializer();
+                return (IXSerializer<IDataType>) new DataTypeSerializer();
 
             if (element.Name == LogixNames.Structure || element.Name == LogixNames.StructureMember)
                 return (IXSerializer<IDataType>) new StructureSerializer();

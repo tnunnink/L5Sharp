@@ -6,15 +6,16 @@ namespace L5Sharp.Core
     public class Parameter<TDataType> : Member<TDataType>, IParameter<TDataType> where TDataType : IDataType
     {
         internal Parameter(string name, TDataType dataType, Dimensions? dimensions = null, Radix? radix = null,
-            ExternalAccess? externalAccess = null, string? description = null, TagUsage? usage = null,
-            bool required = false, bool visible = false, bool constant = false)
+            ExternalAccess? externalAccess = null, string? description = null, TagUsage? usage = null, 
+            string? alias = null, bool required = false, bool visible = false, bool constant = false)
             : base(name, dataType, dimensions, radix, externalAccess, description)
         {
             
             Usage = usage is not null && usage.SupportsType(DataType.GetType()) 
                 ? usage :
                 DataType is IAtomicType ? TagUsage.Input : TagUsage.InOut;
-            
+            Alias = alias;
+            Default = DataType is IAtomicType atomicType ? atomicType : default;
             Required = Usage == TagUsage.InOut || required;
             Visible = Required || visible;
             Constant = constant;
@@ -33,10 +34,10 @@ namespace L5Sharp.Core
         public bool Visible { get; }
 
         /// <inheritdoc />
-        public ITag<TDataType>? Alias { get; }
+        public string? Alias { get; }
 
         /// <inheritdoc />
-        public IAtomicType Default { get; }
+        public IAtomicType? Default { get; }
 
         /// <inheritdoc />
         public bool Constant { get; }

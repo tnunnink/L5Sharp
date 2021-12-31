@@ -36,6 +36,7 @@ namespace L5Sharp.Common
 
             //Values
             { typeof(Dimensions), Dimensions.Parse },
+            { typeof(NeutralText), s => new NeutralText(s) },
             { typeof(TaskPriority), s => TaskPriority.Parse(s) },
             { typeof(ScanRate), s => ScanRate.Parse(s) },
             { typeof(Watchdog), s => Watchdog.Parse(s) }

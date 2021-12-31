@@ -1,12 +1,11 @@
-﻿using System.Linq;
-using L5Sharp.Abstractions;
+﻿using L5Sharp.Abstractions;
 using L5Sharp.Components;
-using L5Sharp.Core;
 using L5Sharp.Enums;
+using L5Sharp.Types.Atomic;
 
 // ReSharper disable InconsistentNaming I want to keep the naming consistent with Logix (for now).
 
-namespace L5Sharp.Types
+namespace L5Sharp.Types.Predefined
 {
     public class Alarm : ComplexType
     {

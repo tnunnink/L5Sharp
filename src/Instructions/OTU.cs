@@ -6,7 +6,7 @@ using L5Sharp.Types;
 
 namespace L5Sharp.Instructions
 {
-    public class OTU : Instruction, IInstruction<ITagMember<Bool>>
+    public class OTU : Instruction
     {
         public OTU() : base(nameof(OTU), "Output Latch", GetMembers())
         {

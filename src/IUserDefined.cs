@@ -1,6 +1,4 @@
-﻿using L5Sharp.Core;
-
-namespace L5Sharp
+﻿namespace L5Sharp
 {
     /// <summary>
     /// Represents a Logix User Defined data type component. 

@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Xml.Linq;
+using System.Runtime.CompilerServices;
+using L5Sharp.Core;
+
+[assembly: InternalsVisibleTo("L5Sharp.Common.Tests")]
 
 namespace L5Sharp.Common
 {
@@ -12,65 +15,63 @@ namespace L5Sharp.Common
     internal static class LogixNames
     {
         //Component names
-        public static XName RsLogix5000Content = XName.Get(nameof(RsLogix5000Content));
-        public static XName Controller = XName.Get(nameof(Controller));
-        public static XName DataTypes = XName.Get(nameof(DataTypes));
-        public static XName DataType = XName.Get(nameof(DataType));
-        public static XName Members = XName.Get(nameof(Members));
-        public static XName Member = XName.Get(nameof(Member));
-        public static XName Modules = XName.Get(nameof(Modules));
-        public static XName Module = XName.Get(nameof(Module));
-        public static XName AddOnInstructionDefinitions = XName.Get(nameof(AddOnInstructionDefinitions));
-        public static XName AddOnInstructionDefinition = XName.Get(nameof(AddOnInstructionDefinition));
-        public static XName Parameters = XName.Get(nameof(Parameters));
-        public static XName Parameter = XName.Get(nameof(Parameter));
-        public static XName Tags = XName.Get(nameof(Tags));
-        public static XName Tag = XName.Get(nameof(Tag));
-        public static XName Programs = XName.Get(nameof(Programs));
-        public static XName Program = XName.Get(nameof(Program));
-        public static XName Routines = XName.Get(nameof(Routines));
-        public static XName Routine = XName.Get(nameof(Routine));
-        public static XName Rungs = XName.Get(nameof(Rungs));
-        public static XName Rung = XName.Get(nameof(Rung));
-        public static XName Tasks = XName.Get(nameof(Tasks));
-        public static XName Task = XName.Get(nameof(Task));
+        public static string RsLogix5000Content = nameof(RsLogix5000Content);
+        public static string Controller = nameof(Controller);
+        public static string DataTypes = nameof(DataTypes);
+        public static string DataType = nameof(DataType);
+        public static string Members = nameof(Members);
+        public static string Member = nameof(Member);
+        public static string Modules = nameof(Modules);
+        public static string Module = nameof(Module);
+        public static string AddOnInstructionDefinitions = nameof(AddOnInstructionDefinitions);
+        public static string AddOnInstructionDefinition = nameof(AddOnInstructionDefinition);
+        public static string Parameters = nameof(Parameters);
+        public static string Parameter = nameof(Parameter);
+        public static string Tags = nameof(Tags);
+        public static string Tag = nameof(Tag);
+        public static string Programs = nameof(Programs);
+        public static string Program = nameof(Program);
+        public static string Routines = nameof(Routines);
+        public static string Routine = nameof(Routine);
+        public static string RllContent = nameof(RllContent);
+        public static string StContent = nameof(StContent);
+        public static string Rungs = nameof(Rungs);
+        public static string Rung = nameof(Rung);
+        public static string Tasks = nameof(Tasks);
+        public static string Task = nameof(Task);
         //Logix data structure names
-        public static XName Data = XName.Get(nameof(Data));
-        public static XName Value = XName.Get(nameof(Value));
-        public static XName DataValue = XName.Get(nameof(DataValue));
-        public static XName Array = XName.Get(nameof(Array));
-        public static XName Index = XName.Get(nameof(Index));
-        public static XName Element = XName.Get(nameof(Element));
-        public static XName Structure = XName.Get(nameof(Structure));
-        public static XName ArrayMember = XName.Get(nameof(ArrayMember));
-        public static XName DataValueMember = XName.Get(nameof(DataValueMember));
-        public static XName StructureMember = XName.Get(nameof(StructureMember));
+        public static string Data = nameof(Data);
+        public static string Value = nameof(Value);
+        public static string DataValue = nameof(DataValue);
+        public static string Array = nameof(Array);
+        public static string Index = nameof(Index);
+        public static string Element = nameof(Element);
+        public static string Structure = nameof(Structure);
+        public static string ArrayMember = nameof(ArrayMember);
+        public static string DataValueMember = nameof(DataValueMember);
+        public static string StructureMember = nameof(StructureMember);
         //Attribute Names
-        public static XName Name = XName.Get(nameof(Name));
-        public static XName Description = XName.Get(nameof(Description));
-        public static XName Dimension = XName.Get(nameof(Dimension));
-        public static XName Dimensions = XName.Get(nameof(Dimensions));
-        public static XName Radix = XName.Get(nameof(Radix));
-        public static XName ExternalAccess = XName.Get(nameof(ExternalAccess));
+        public static string Name = nameof(Name);
+        public static string Description = nameof(Description);
         
-
-
-        private static readonly Dictionary<Type, Tuple<XName, XName>> ComponentNameMap = new()
+        //Component Map Collection
+        private static readonly Dictionary<Type, Tuple<string, string>> ComponentNameMap = new()
         {
-            { typeof(IController), new Tuple<XName, XName>(Controller, string.Empty) },
-            { typeof(IUserDefined), new Tuple<XName, XName>(DataType, DataTypes) },
-            { typeof(IMember<IDataType>), new Tuple<XName, XName>(Member, Members) },
-            { typeof(IModule), new Tuple<XName, XName>(Module, Modules) },
+            { typeof(IController), new Tuple<string, string>(Controller, string.Empty) },
+            { typeof(IUserDefined), new Tuple<string, string>(DataType, DataTypes) },
+            { typeof(IMember<IDataType>), new Tuple<string, string>(Member, Members) },
+            { typeof(IModule), new Tuple<string, string>(Module, Modules) },
             {
                 typeof(IAddOnInstruction),
-                new Tuple<XName, XName>(AddOnInstructionDefinition, AddOnInstructionDefinitions)
+                new Tuple<string, string>(AddOnInstructionDefinition, AddOnInstructionDefinitions)
             },
-            { typeof(IParameter<IDataType>), new Tuple<XName, XName>(Parameter, Parameters) },
-            { typeof(ITag<IDataType>), new Tuple<XName, XName>(Tag, Tags) },
-            { typeof(IProgram), new Tuple<XName, XName>(Program, Programs) },
-            { typeof(IRoutine), new Tuple<XName, XName>(Routine, Routines) },
-            { typeof(IRung), new Tuple<XName, XName>(Rung, Rungs) },
-            { typeof(ITask), new Tuple<XName, XName>(Task, Tasks) }
+            { typeof(IParameter<IDataType>), new Tuple<string, string>(Parameter, Parameters) },
+            { typeof(ITag<IDataType>), new Tuple<string, string>(Tag, Tags) },
+            { typeof(IProgram), new Tuple<string, string>(Program, Programs) },
+            { typeof(IRoutine<ILogixContent>), new Tuple<string, string>(Routine, Routines) },
+            { typeof(IRllContent), new Tuple<string, string>(RllContent, string.Empty) },
+            { typeof(Rung), new Tuple<string, string>(Rung, Rungs) },
+            { typeof(ITask), new Tuple<string, string>(Task, Tasks) }
         };
 
         /// <summary>
@@ -79,7 +80,7 @@ namespace L5Sharp.Common
         /// <typeparam name="TComponent">The type of the <c>ILogixComponent</c> to get a XName for.</typeparam>
         /// <returns>A <c>XName</c> that corresponds to the L5X element name for the type of component specified.</returns>
         /// <exception cref="InvalidOperationException">When the specified <see cref="TComponent"/> has not mapping defined.</exception>
-        public static XName GetComponentName<TComponent>()
+        public static string GetComponentName<TComponent>()
         {
             var key = FindKey<TComponent>();
 
@@ -96,7 +97,7 @@ namespace L5Sharp.Common
         /// <typeparam name="TComponent">The type of the <c>ILogixComponent</c> to get a XName for.</typeparam>
         /// <returns>A <c>XName</c> that corresponds to the L5X component's container name for the type of component specified.</returns>
         /// <exception cref="InvalidOperationException">When the specified <see cref="TComponent"/> has not mapping defined.</exception>
-        public static XName GetContainerName<TComponent>()
+        public static string GetContainerName<TComponent>()
         {
             var key = FindKey<TComponent>();
 
@@ -106,10 +107,8 @@ namespace L5Sharp.Common
 
             return ComponentNameMap[key].Item2;
         }
-        
-        private static Type? FindKey<TComponent>()
-        {
-            return ComponentNameMap.Keys.FirstOrDefault(t => t.IsAssignableFrom(typeof(TComponent)));
-        }
+
+        private static Type? FindKey<TComponent>() =>
+            ComponentNameMap.Keys.FirstOrDefault(t => t.IsAssignableFrom(typeof(TComponent)));
     }
 }

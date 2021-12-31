@@ -125,13 +125,13 @@ namespace L5Sharp.Core.Tests
         }
         
         [Test]
-        public void CompareTo_Null_ShouldNotBeZero()
+        public void CompareTo_Null_ShouldBeOne()
         {
             var first = new ComponentName("Test");
 
             var result = first.CompareTo(null!);
 
-            result.Should().NotBe(0);
+            result.Should().Be(1);
         }
 
         [Test]

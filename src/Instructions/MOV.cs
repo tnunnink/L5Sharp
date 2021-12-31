@@ -6,9 +6,7 @@ using L5Sharp.Types;
 
 namespace L5Sharp.Instructions
 {
-    public class MOV : Instruction,
-        IInstruction<IAtomicType, ITagMember<IAtomicType>>,
-        IInstruction<ITagMember<IAtomicType>, ITagMember<IAtomicType>>
+    public class MOV : Instruction
     {
         public MOV() : base(nameof(MOV), "Move", GetMembers())
         {

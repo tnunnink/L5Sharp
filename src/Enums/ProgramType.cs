@@ -8,7 +8,14 @@ namespace L5Sharp.Enums
         {
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public static readonly ProgramType Normal = new NormalType();
+        
+        /// <summary>
+        /// 
+        /// </summary>
         public static readonly ProgramType EquipmentPhase = new EquipmentPhaseType();
 
         private class NormalType : ProgramType

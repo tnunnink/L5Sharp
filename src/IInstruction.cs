@@ -3,33 +3,32 @@ using L5Sharp.Core;
 
 namespace L5Sharp
 {
-    public interface IInstruction : ILogixComponent
+    /// <summary>
+    /// 
+    /// </summary>
+    public interface IInstruction
     {
-        NeutralText Signature { get; }
-        IEnumerable<IMember<IDataType>> Parameters { get; }
-        IMember<IDataType> GetParameter(string name);
-        IMember<TType> GetParameter<TType>(string name) where TType : IDataType;
-        NeutralText Of(params ITagMember<IDataType>[] tags);
-        NeutralText Of(params object[] values);
-    }
+        /// <summary>
+        /// Gets the name of the current <see cref="IInstruction"/> instance.
+        /// </summary>
+        string Name { get; }
+        
+        /// <summary>
+        /// Gets the collection of <see cref="Argument"/> for the current <c>IInstruction</c> instance.
+        /// </summary>
+        IEnumerable<Argument> Arguments { get; }
 
-    public interface IInstruction<in T1> : IInstruction
-    {
-        NeutralText Of(T1 parameter1);
-    }
-    
-    public interface IInstruction<in T1, in T2> : IInstruction
-    {
-        NeutralText Of(T1 parameter1, T2 parameter2);
-    }
-    
-    public interface IInstruction<in T1, in T2, in T3> : IInstruction
-    {
-        NeutralText Of(T1 parameter1, T2 parameter2, T3 parameter3);
-    }
-    
-    public interface IInstruction<in T1, in T2, in T3, in T4> : IInstruction
-    {
-        NeutralText Of(T1 parameter1, T2 parameter2, T3 parameter3, T4 parameter4);
+        /// <summary>
+        /// Generates the <see cref="NeutralText"/> instance for the current <c>IInstruction</c>.
+        /// </summary>
+        /// <returns>A new <see cref="NeutralText"/> object that represents the instruction text.</returns>
+        NeutralText ToText();
+
+        /// <summary>
+        /// Generates a new <see cref="IInstruction"/> instance with the provided string arguments.
+        /// </summary>
+        /// <param name="arguments">Set of string arguments to instantiate the <see cref="IInstruction"/> with.</param>
+        /// <returns>A new <see cref="IInstruction"/> with the provided arguments.</returns>
+        IInstruction Of(params string[] arguments);
     }
 }

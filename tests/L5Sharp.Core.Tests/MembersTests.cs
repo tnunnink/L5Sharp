@@ -1,10 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using FluentAssertions;
 using L5Sharp.Components;
-using L5Sharp.Enums;
 using L5Sharp.Exceptions;
 using L5Sharp.Types;
+using L5Sharp.Types.Atomic;
+using L5Sharp.Types.Predefined;
 using NUnit.Framework;
+using String = L5Sharp.Types.Predefined.String;
 
 namespace L5Sharp.Core.Tests
 {
@@ -12,12 +15,12 @@ namespace L5Sharp.Core.Tests
     public class MembersTests
     {
         private List<IMember<IDataType>> _members;
-        private DataType _dataType;
+        private IUserDefined _dataType;
 
         [SetUp]
         public void Setup()
         {
-            _dataType = new DataType("Test", DataTypeClass.Unknown, "This is a test");
+            _dataType = UserDefined.Create("Test", "This is a test");
             _members = new List<IMember<IDataType>>
             {
                 Member.Create<Bool>("M1"),
@@ -27,7 +30,44 @@ namespace L5Sharp.Core.Tests
                 Member.Create<Timer>("M5")
             };
         }
-        
+
+        [Test]
+        public void Clear_WhenCalled_ShouldBeEmpty()
+        {
+            var members = new Members<IMember<IDataType>>(_dataType, _members);
+            
+            members.Clear();
+
+            members.Should().BeEmpty();
+        }
+
+        [Test]
+        public void Add_Null_ShouldThrowArgumentNullException()
+        {
+            var members = new Members<IMember<IDataType>>(_dataType, _members);
+
+            FluentActions.Invoking(() => members.Add(null)).Should().Throw<ArgumentNullException>();
+        }
+
+        [Test]
+        public void Add_ExistingName_ShouldThrowComponentNameCollisionException()
+        {
+            var members = new Members<IMember<IDataType>>(_dataType, _members);
+
+            FluentActions.Invoking(() => members.Add(Member.Create<Bool>("M1"))).Should()
+                .Throw<ComponentNameCollisionException>();
+        }
+
+        [Test]
+        public void Add_SelfReferencingMember_ShouldThrowCircularReferenceException()
+        {
+            var members = new Members<IMember<IDataType>>(_dataType, _members);
+
+            var member = Member.Create("TestMember", _dataType);
+
+            FluentActions.Invoking(() => members.Add(member)).Should().Throw<CircularReferenceException>();
+        }
+
         [Test]
         public void Add_ValidMember_ShouldBeContainedInMembers()
         {
@@ -40,103 +80,129 @@ namespace L5Sharp.Core.Tests
         }
 
         [Test]
-        public void Add_SelfReferencingMember_ShouldThrowCircularReferenceException()
+        public void AddRange_Null_ShouldThrowArgumentNullException()
         {
             var members = new Members<IMember<IDataType>>(_dataType, _members);
-            var member = Member.Create<Int>("TestMember");
 
-            FluentActions.Invoking(() => members.Add(member)).Should().Throw<CircularReferenceException>();
+            FluentActions.Invoking(() => members.AddRange(null!)).Should().Throw<ArgumentNullException>();
         }
 
         [Test]
-        public void Add_Null_ShouldNotChangeCount()
+        public void AddRange_DuplicateName_ShouldThrowComponentNameCollisionException()
         {
             var members = new Members<IMember<IDataType>>(_dataType, _members);
 
-            members.Add(null);
+            var collection = new List<IMember<IDataType>>
+            {
+                Member.Create<Sint>("M6"),
+                Member.Create<Sint>("M7"),
+                Member.Create<Sint>("M6")
+            };
 
-            members.Should().HaveCount(3);
-        }
-
-        [Test]
-        public void Add_ExistingName_ShouldThrowComponentNameCollisionException()
-        {
-            var members = new Members<IMember<IDataType>>(_dataType, _members);
-
-            FluentActions.Invoking(() => members.Add(Member.Create<Bool>("Member01"))).Should()
+            FluentActions.Invoking(() => members.AddRange(collection)).Should()
                 .Throw<ComponentNameCollisionException>();
+        }
+
+        [Test]
+        public void AddRange_SelfReferencingMember_ShouldThrowCircularReferenceException()
+        {
+            var members = new Members<IMember<IDataType>>(_dataType, _members);
+
+            var collection = new List<IMember<IDataType>>
+            {
+                Member.Create<Sint>("M6"),
+                Member.Create("M7", _dataType),
+                Member.Create<Sint>("M8")
+            };
+
+            FluentActions.Invoking(() => members.AddRange(collection)).Should().Throw<CircularReferenceException>();
         }
 
         [Test]
         public void AddRange_ValidMembers_ShouldHaveExpectedCount()
         {
             var members = new Members<IMember<IDataType>>(_dataType, _members);
-            
+
             var collection = new List<IMember<IDataType>>
             {
-                Member.Create<Sint>("Member04"),
-                Member.Create<Sint>("Member05"),
-                Member.Create<Sint>("Member06")
+                Member.Create<Sint>("M6"),
+                Member.Create<Sint>("M7"),
+                Member.Create<Sint>("M8")
             };
 
             members.AddRange(collection);
 
-            members.Should().HaveCount(6);
+            members.Should().HaveCount(8);
         }
 
         [Test]
-        public void AddRange_Null_ShouldNotChangeCount()
+        public void Update_Null_ShouldThrowArgumentNullException()
         {
             var members = new Members<IMember<IDataType>>(_dataType, _members);
 
-            members.AddRange(null!);
-
-            members.Should().HaveCount(3);
-        }
-
-        [Test]
-        public void Update_ValidMember_ShouldBeContainedInMembers()
-        {
-            var members = new Members<IMember<IDataType>>(_dataType, _members);
-            var member = Member.Create<Dint>("TestMember");
-
-            members.Update(member);
-
-            members.Should().Contain(member);
+            FluentActions.Invoking(() => members.Update(null)).Should().Throw<ArgumentNullException>();
         }
 
         [Test]
         public void Update_SelfReferencingMember_ShouldThrowCircularReferenceException()
         {
             var members = new Members<IMember<IDataType>>(_dataType, _members);
-            var member = Member.Create<Int>("TestMember");
+            var member = Member.Create("TestMember", _dataType);
 
             FluentActions.Invoking(() => members.Update(member)).Should().Throw<CircularReferenceException>();
         }
 
         [Test]
-        public void Update_Null_ShouldHaveSameCount()
+        public void Update_NonExistingMember_ShouldAddMember()
         {
             var members = new Members<IMember<IDataType>>(_dataType, _members);
 
-            members.Update(null);
-
-            members.Should().HaveCount(3);
-        }
-
-        [Test]
-        public void Update_ExistingMember_ShouldChangeTheCurrentMember()
-        {
-            var members = new Members<IMember<IDataType>>(_dataType, _members);
-            var member = Member.Create<Dint>("Member02", Dimensions.Empty, Radix.Binary, ExternalAccess.ReadOnly);
+            var member = Member.Create<Int>("Test");
 
             members.Update(member);
 
-            var result = members.GetMember("Member02");
-            result.Should().NotBeNull();
-            result?.DataType.Should().BeOfType<Dint>();
-            result?.Radix.Should().Be(Radix.Binary);
-            result?.ExternalAccess.Should().Be(ExternalAccess.ReadOnly);
+            members.Should().HaveCount(6);
+            members.Should().Contain(member);
+        }
+
+        [Test]
+        public void Update_ExistingMember_ShouldAddMember()
+        {
+            var members = new Members<IMember<IDataType>>(_dataType, _members);
+
+            var member = Member.Create<Int>("M3");
+
+            members.Update(member);
+
+            members.Should().HaveCount(5);
+            members.Should().Contain(member);
+            members.GetMember("M3")?.DataType.Should().BeOfType<Int>();
+        }
+
+        [Test]
+        public void Remove_Null_ShouldThrowArgumentNullException()
+        {
+            var members = new Members<IMember<IDataType>>(_dataType, _members);
+
+            FluentActions.Invoking(() => members.Remove(null!)).Should().Throw<ArgumentNullException>();
+        }
+        
+        [Test]
+        public void Remove_Empty_ShouldThrowArgumentNullException()
+        {
+            var members = new Members<IMember<IDataType>>(_dataType, _members);
+
+            FluentActions.Invoking(() => members.Remove(string.Empty)).Should().Throw<ArgumentException>();
+        }
+
+        [Test]
+        public void Remove_NonExistingName_ShouldNotChangeCount()
+        {
+            var members = new Members<IMember<IDataType>>(_dataType, _members);
+
+            members.Remove("Test");
+
+            members.Should().HaveCount(5);
         }
 
         [Test]
@@ -144,30 +210,9 @@ namespace L5Sharp.Core.Tests
         {
             var members = new Members<IMember<IDataType>>(_dataType, _members);
 
-            members.Remove("Member01");
+            members.Remove("M1");
 
-            members.Should().NotContain(m => m.Name == "Member01");
-        }
-
-        [Test]
-        public void Remove_NonExistingName_ShouldNotChangeCount()
-        {
-            var members = new Members<IMember<IDataType>>(_dataType, _members);
-            var member = Member.Create<Dint>("TestMember");
-
-            members.Remove(member.Name);
-
-            members.Should().HaveCount(3);
-        }
-
-        [Test]
-        public void Remove_Null_ShouldNotChangeCount()
-        {
-            var members = new Members<IMember<IDataType>>(_dataType, _members);
-
-            members.Remove(null!);
-
-            members.Should().HaveCount(3);
+            members.Should().NotContain(m => m.Name == "M1");
         }
     }
 }

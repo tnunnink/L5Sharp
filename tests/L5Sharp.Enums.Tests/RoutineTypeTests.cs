@@ -19,7 +19,7 @@ namespace L5Sharp.Enums.Tests
         [Test]
         public void New_Ladder_ShouldNotBeNull()
         {
-            var sut = RoutineType.Ladder;
+            var sut = RoutineType.Rll;
 
             sut.Should().NotBeNull();
             sut.Name.Should().Be("RLL");
@@ -28,7 +28,7 @@ namespace L5Sharp.Enums.Tests
         [Test]
         public void New_FunctionBlock_ShouldNotBeNull()
         {
-            var sut = RoutineType.FunctionBlock;
+            var sut = RoutineType.Fbd;
 
             sut.Should().NotBeNull();
             sut.Name.Should().Be("FBD");
@@ -37,7 +37,7 @@ namespace L5Sharp.Enums.Tests
         [Test]
         public void New_SequentialFunction_ShouldNotBeNull()
         {
-            var sut = RoutineType.SequentialFunction;
+            var sut = RoutineType.Sfc;
 
             sut.Should().NotBeNull();
             sut.Name.Should().Be("SFC");
@@ -46,7 +46,7 @@ namespace L5Sharp.Enums.Tests
         [Test]
         public void New_StructuredText_ShouldNotBeNull()
         {
-            var sut = RoutineType.StructuredText;
+            var sut = RoutineType.St;
 
             sut.Should().NotBeNull();
             sut.Name.Should().Be("ST");

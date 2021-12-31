@@ -1,57 +1,57 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using L5Sharp.Exceptions;
+using System.Text.RegularExpressions;
 
 namespace L5Sharp.Core
 {
+    /// <inheritdoc />
     public class Instruction : IInstruction
     {
-        private readonly Dictionary<string, IMember<IDataType>>
-            _parameters = new Dictionary<string, IMember<IDataType>>();
-
-        protected Instruction(string name, string description, IEnumerable<IMember<IDataType>> parameters = null)
+        /// <summary>
+        /// Creates a new instance of a <c>Instruction</c> with the provided arguments.
+        /// </summary>
+        /// <param name="element">The element name of the <c>Instruction</c>.</param>
+        /// <param name="arguments">The collection of string arguments.</param>
+        /// <exception cref="ArgumentNullException">When element is null.</exception>
+        private Instruction(string element, IEnumerable<string>? arguments = null)
         {
-            Name = new ComponentName(name);
-            Description = description;
-
-            parameters ??= Array.Empty<IMember<IDataType>>();
-
-            foreach (var parameter in parameters)
-            {
-                if (_parameters.ContainsKey(parameter.Name))
-                    throw new ComponentNameCollisionException(parameter.Name, typeof(IMember<IDataType>));
-
-                _parameters.Add(parameter.Name, parameter);
-            }
+            Name = element ?? throw new ArgumentNullException(nameof(element));
+            Arguments = arguments is not null 
+                ? arguments.Select(a => new Argument(a)) 
+                : Enumerable.Empty<Argument>();
         }
 
+        /// <inheritdoc />
         public string Name { get; }
-        public string Description { get; }
-        public NeutralText Signature { get; internal set; }
-        public IEnumerable<IMember<IDataType>> Parameters => _parameters.Values.AsEnumerable();
 
-        public IMember<IDataType> GetParameter(string name)
+        /// <inheritdoc />
+        public IEnumerable<Argument> Arguments { get; }
+
+        /// <summary>
+        /// Creates a new <c>IInstruction</c> with the provided text.
+        /// </summary>
+        /// <param name="text"></param>
+        /// <returns></returns>
+        /// <exception cref="FormatException"></exception>
+        public static IInstruction FromText(string text)
         {
-            _parameters.TryGetValue(name, out var parameter);
-            return parameter;
-        }
-        
-        public IMember<TType> GetParameter<TType>(string name) where TType : IDataType
-        {
-            return _parameters.TryGetValue(name, out var member) && member.DataType is TType 
-                ? (IMember<TType>) member 
-                : null;
+            if (text is null)
+                throw new ArgumentNullException(nameof(text));
+            
+            if (!Regex.IsMatch(text, @"^[a-zA-Z0-9_]+\(.*?\)$", RegexOptions.Compiled))
+                throw new FormatException($"Text input '{text}' does not have expected format.");
+
+            var name = Regex.Match(text, @"^[a-zA-Z0-9_]+").Value;
+            var arguments = new List<string>(Regex.Match(text, @"(?<=\().+?(?=\))").Value.Split(','));
+
+            return new Instruction(name, arguments);
         }
 
-        public NeutralText Of(params ITagMember<IDataType>[] tags)
-        {
-            return new NeutralText(this, tags.Select(t => t.Name));
-        }
+        /// <inheritdoc />
+        public NeutralText ToText() => new($"{Name}({string.Join(',', Arguments.Select(a => a.Reference))})");
 
-        public NeutralText Of(params object[] values)
-        {
-            return new NeutralText(this, values);
-        }
+        /// <inheritdoc />
+        public IInstruction Of(params string[] arguments) => new Instruction(Name, arguments);
     }
 }

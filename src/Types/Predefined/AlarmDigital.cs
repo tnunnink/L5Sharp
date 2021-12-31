@@ -1,10 +1,11 @@
 ﻿using L5Sharp.Abstractions;
 using L5Sharp.Components;
 using L5Sharp.Enums;
+using L5Sharp.Types.Atomic;
 
 // ReSharper disable InconsistentNaming
 
-namespace L5Sharp.Types
+namespace L5Sharp.Types.Predefined
 {
     public class AlarmDigital : ComplexType
     {

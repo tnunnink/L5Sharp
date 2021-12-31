@@ -21,9 +21,9 @@ namespace L5Sharp.Serialization
 
             var element = new XElement(ElementName);
 
-            element.Add(component.ToAttribute(m => m.Name));
-            element.Add(component.ToAttribute(m => m.DataType));
-            element.Add(component.ToAttribute(m => m.Radix));
+            element.AddValue(component, m => m.Name);
+            element.AddValue(component, m => m.DataType);
+            element.AddValue(component, m => m.Radix);
 
             var value = component.Radix.Convert(atomic);
             element.Add(new XAttribute(LogixNames.Value, value));

@@ -12,23 +12,24 @@ namespace L5Sharp.Serialization
     {
         private static readonly string ScheduledProgram = nameof(ScheduledProgram);
         private static readonly string Name = nameof(Name);
-        
+
         public XElement Serialize(ITask component)
         {
             if (component is null)
                 throw new ArgumentNullException(nameof(component));
-            
-            var element = new XElement(LogixNames.Task);
-            element.Add(component.ToAttribute(c => c.Name));
-            element.Add(component.ToAttribute(c => c.Type));
-            element.Add(component.ToAttribute(c => c.Priority));
-            element.Add(component.ToAttribute(c => c.Rate));
-            element.Add(component.ToAttribute(c => c.Watchdog));
-            element.Add(component.ToAttribute(c => c.InhibitTask));
-            element.Add(component.ToAttribute(c => c.DisableUpdateOutputs));
 
-            if (!string.IsNullOrEmpty(component.Description))
-                element.Add(component.ToElement(c => c.Description));
+            var element = new XElement(LogixNames.Task);
+            
+            element.AddValue(component, c => c.Name);
+            element.AddValue(component, c => c.Type);
+            element.AddValue(component, c => c.Priority);
+            element.AddValue(component, c => c.Rate);
+            element.AddValue(component, c => c.Watchdog);
+            element.AddValue(component, c => c.InhibitTask);
+            element.AddValue(component, c => c.DisableUpdateOutputs);
+
+            if (!component.Description.IsEmpty())
+                element.AddValue(component, x => x.Description, true);
 
             var programs = component.ScheduledPrograms.ToList();
             if (programs.Count <= 0) return element;

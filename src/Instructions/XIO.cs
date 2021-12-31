@@ -5,7 +5,7 @@ using L5Sharp.Types;
 
 namespace L5Sharp.Instructions
 {
-    public class XIO : Instruction, IInstruction<ITagMember<Bool>>
+    public class XIO : Instruction
     {
         public XIO() : base(nameof(XIO), "Examine If Open", GetMembers())
         {

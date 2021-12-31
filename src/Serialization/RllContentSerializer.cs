@@ -1,0 +1,46 @@
+﻿using System;
+using System.Linq;
+using System.Xml.Linq;
+using L5Sharp.Common;
+using L5Sharp.Core;
+using L5Sharp.Extensions;
+
+namespace L5Sharp.Serialization
+{
+    /// <summary>
+    /// Provides serialization of a <see cref="IRllContent"/> as represented in the L5X format. 
+    /// </summary>
+    public class RllContentSerializer : IXSerializer<IRllContent>
+    {
+        private static readonly XName ElementName = LogixNames.RllContent;
+        
+        /// <inheritdoc />
+        public XElement Serialize(IRllContent component)
+        {
+            if (component is null)
+                throw new ArgumentNullException(nameof(component));
+
+            var element = new XElement(ElementName);
+
+            var rungs = new XElement(LogixNames.Rungs);
+            rungs.Add(component.Select(r => r.Serialize()));
+            element.Add(rungs);
+
+            return element;
+        }
+
+        /// <inheritdoc />
+        public IRllContent Deserialize(XElement element)
+        {
+            if (element == null)
+                throw new ArgumentNullException(nameof(element));
+
+            if (element.Name != ElementName)
+                throw new ArgumentException($"Element name '{element.Name}' invalid. Expecting '{ElementName}'");
+
+            var rungs = element.Descendants(LogixNames.Rung).Select(e => e.Deserialize<Rung>());
+
+            return new Rll(rungs);
+        }
+    }
+}

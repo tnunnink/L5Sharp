@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using L5Sharp.Exceptions;
+using L5Sharp.Extensions;
 
 namespace L5Sharp.Core
 {
@@ -17,7 +18,7 @@ namespace L5Sharp.Core
         /// The root parent type of the member collection. Nested members can not reference this type.
         /// </param>
         /// <param name="members">A collection of members to initialize the collection with.</param>
-        internal Members(IComplexType parent, IEnumerable<TMember>? members = null) : base(members)
+        public Members(IComplexType parent, IEnumerable<TMember>? members = null) : base(members)
         {
             _parent = parent;
         }
@@ -90,14 +91,17 @@ namespace L5Sharp.Core
             if (member is null)
                 throw new ArgumentNullException(nameof(member));
 
-            if (!Contains(member.Name))
-                Add(member);
-
             if (member.DataType.Equals(_parent))
                 throw new CircularReferenceException(_parent);
 
-            var index = Members.IndexOf(member);
+            var index = Members.FindIndex(m => m.Name == member.Name);
 
+            if (index < 0)
+            {
+                Add(member);
+                return;
+            }
+            
             Members[index] = member;
         }
 
@@ -105,16 +109,20 @@ namespace L5Sharp.Core
         /// Removes a <c>IMember</c> with the provided name from the collection.
         /// </summary>
         /// <param name="name">The name of the <c>IMember</c> to remove from the collection.</param>
-        /// <exception cref="ArgumentException">When name is null or empty.</exception>
+        /// <exception cref="ArgumentNullException">When name is null.</exception>
+        /// <exception cref="ArgumentException">When name is empty.</exception>
         public void Remove(string name)
         {
-            if (string.IsNullOrEmpty(name))
-                throw new ArgumentException("name can not be null or empty");
+            if (name is null)
+                throw new ArgumentNullException(nameof(name));
 
-            if (!Contains(name))
-                return;
-            
+            if (name.IsEmpty())
+                throw new ArgumentException("name can not be empty");
+
             var index = Members.FindIndex(m => m.Name == name);
+
+            if (index < 0)
+                return;
 
             Members.RemoveAt(index);
         }

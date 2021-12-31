@@ -15,15 +15,15 @@ namespace L5Sharp.Serialization
         {
             if (component == null)
                 throw new ArgumentNullException(nameof(component));
-            
-            if (!(component.DataType is IComplexType complex))
+
+            if (component.DataType is not IComplexType complex)
                 throw new InvalidOperationException("StructureMembers must have a complex data type.");
-            
+
             var element = new XElement(ElementName);
-            
-            element.Add(component.ToAttribute(m => m.Name));
-            element.Add(component.ToAttribute(m => m.DataType));
-            
+
+            element.AddValue(component, m => m.Name);
+            element.AddValue(component, m => m.DataType);
+
             var elements = complex.Members.Select(m => m.Serialize());
             element.Add(elements);
 

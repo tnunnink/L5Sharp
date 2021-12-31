@@ -2,6 +2,7 @@
 using FluentAssertions;
 using L5Sharp.Components;
 using L5Sharp.Types;
+using L5Sharp.Types.Atomic;
 using NUnit.Framework;
 
 namespace L5Sharp.Core.Tests
