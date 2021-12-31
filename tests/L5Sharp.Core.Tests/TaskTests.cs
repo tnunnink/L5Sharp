@@ -1,7 +1,6 @@
 ﻿using System;
 using FluentAssertions;
 using L5Sharp.Enums;
-using L5Sharp.Exceptions;
 using NUnit.Framework;
 
 namespace L5Sharp.Core.Tests
@@ -10,28 +9,27 @@ namespace L5Sharp.Core.Tests
     public class TaskTests
     {
         [Test]
-        public void Create_ValidName_ShouldNotBeNull()
+        public void New_NullName_ShouldThrowArgumentNullException()
         {
-            var task = Task.Create("Test");
+            FluentActions.Invoking(() => new Task(null!)).Should().Throw<ArgumentNullException>();
+        }
+        
+        [Test]
+        public void New_ValidName_ShouldNotBeNull()
+        {
+            var task = new Task("Test");
 
             task.Should().NotBeNull();
         }
 
         [Test]
-        public void Create_InvalidName_ShouldThrowInvalidNameException()
+        public void New_ValidName_ShouldHaveExpectDefaults()
         {
-            FluentActions.Invoking(() => Task.Create("Test_Task_#!_001")).Should()
-                .Throw<ComponentNameInvalidException>();
-        }
+            var task = new Task("Test");
 
-        [Test]
-        public void Create_ValidName_ShouldHaveExpectDefaults()
-        {
-            var task = Task.Create("TaskName");
-
-            task.Name.ToString().Should().Be("TaskName");
+            task.Name.Should().Be("Test");
             task.Type.Should().Be(TaskType.Periodic);
-            task.Description.Should().BeNull();
+            task.Description.Should().BeEmpty();
             task.Rate.Should().Be(new ScanRate(10));
             task.Priority.Should().Be(new TaskPriority(10));
             task.Watchdog.Should().Be(new Watchdog(500));
@@ -40,40 +38,19 @@ namespace L5Sharp.Core.Tests
         }
 
         [Test]
-        public void Create_TypeOverload_ShouldHaveExpectedType()
+        public void New_Overloaded_ShouldHaveExpectedValues()
         {
-            var task = Task.Create("TaskName", TaskType.Continuous);
+            var task = new Task("Test", TaskType.Continuous, "This is a test task");
 
-            task.Name.ToString().Should().Be("TaskName");
+            task.Name.Should().Be("TaskName");
             task.Type.Should().Be(TaskType.Continuous);
-            
-        }
-
-        [Test]
-        public void Create_ParameterOverload_ShouldHaveExpectedType()
-        {
-            var task = Task.Create("TaskName", TaskType.Periodic, new TaskPriority(1), new ScanRate(1000),
-                new Watchdog(5000));
-
-            task.Name.ToString().Should().Be("TaskName");
-            task.Type.Should().Be(TaskType.Periodic);
-            task.Priority.Should().Be(new TaskPriority(1));
-            task.Rate.Should().Be(new ScanRate(1000));
-            task.Watchdog.Should().Be(new Watchdog(5000));
-        }
-
-        [Test]
-        public void Create_GetValue_ShouldBePeriodic()
-        {
-            var task = Task.Create("Test");
-
-            task.Type.Should().Be(TaskType.Periodic);
+            task.Description.Should().Be("This is a test task");
         }
 
         [Test]
         public void AddProgram_NonExistingProgram_ShouldAddProgram()
         {
-            var task = Task.Create("TestTask");
+            var task = new Task("Test");
 
             task.ScheduleProgram("Program");
 
@@ -83,7 +60,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void AddProgram_ExistingProgram_ShouldNotThrow()
         {
-            var task = Task.Create("TestTask");
+            var task = new Task("Test");
 
             task.ScheduleProgram("Program");
 
@@ -93,15 +70,15 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void AddProgram_Null_ShouldThrowArgumentException()
         {
-            var task = Task.Create("TestTask");
+            var task = new Task("Test");
 
-            FluentActions.Invoking(() => task.ScheduleProgram(null)).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(() => task.ScheduleProgram(null!)).Should().Throw<ArgumentException>();
         }
 
         [Test]
         public void RemoveProgram_ExistingProgram_ProgramsShouldBeEmpty()
         {
-            var task = Task.Create("TestTask");
+            var task = new Task("Test");
             task.ScheduleProgram("Program");
 
             task.RemoveProgram("Program");
@@ -112,7 +89,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void RemoveProgram_NonExistingProgram_ProgramsShouldBeEmpty()
         {
-            var task = Task.Create("TestTask");
+            var task = new Task("Test");
 
             task.RemoveProgram("Test");
 
@@ -123,7 +100,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void RemoveProgram_Null_ShouldThrowArgumentException()
         {
-            var task = Task.Create("TestTask");
+            var task = new Task("Test");
 
             FluentActions.Invoking(() => task.RemoveProgram(null)).Should().Throw<ArgumentException>();
         }
@@ -131,8 +108,8 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void TypedEquals_AreEqual_ShouldBeTrue()
         {
-            var first = (Task)Task.Create("Test");
-            var second = (Task)Task.Create("Test");
+            var first = new Task("Test");
+            var second = new Task("Test");
 
             var result = first.Equals(second);
 
@@ -142,10 +119,9 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void TypedEquals_AreSame_ShouldBeTrue()
         {
-            var first = (Task)Task.Create("Test");
-            var second = first;
+            var first = new Task("Test");
 
-            var result = first.Equals(second);
+            var result = first.Equals(first);
 
             result.Should().BeTrue();
         }
@@ -154,7 +130,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void TypedEquals_Null_ShouldBeFalse()
         {
-            var first = (Task)Task.Create("Test");
+            var first = new Task("Test");
 
             var result = first.Equals(null);
 
@@ -164,8 +140,8 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void ObjectEquals_AreEqual_ShouldBeTrue()
         {
-            var first = (Task)Task.Create("Test");
-            var second = (Task)Task.Create("Test");
+            var first = new Task("Test");
+            var second = new Task("Test");
 
             var result = first.Equals((object)second);
 
@@ -175,10 +151,9 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void ObjectEquals_AreSame_ShouldBeTrue()
         {
-            var first = (Task)Task.Create("Test");
-            var second = first;
+            var first = new Task("Test");
 
-            var result = first.Equals((object)second);
+            var result = first.Equals((object)first);
 
             result.Should().BeTrue();
         }
@@ -187,7 +162,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void ObjectEquals_Null_ShouldBeFalse()
         {
-            var first = Task.Create("Test");
+            var first = new Task("Test");
 
             var result = first.Equals((object)null);
 
@@ -197,8 +172,8 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void OperatorEquals_AreEqual_ShouldBeTrue()
         {
-            var first = (Task)Task.Create("Test");
-            var second = (Task)Task.Create("Test");
+            var first = new Task("Test");
+            var second = new Task("Test");
 
             var result = first == second;
 
@@ -208,8 +183,8 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void OperatorNotEquals_AreEqual_ShouldBeFalse()
         {
-            var first = (Task)Task.Create("Test");
-            var second = (Task)Task.Create("Test");
+            var first = new Task("Test");
+            var second = new Task("Test");
 
             var result = first != second;
 
@@ -219,7 +194,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void GetHashCode_WhenCalled_ShouldNotBeZero()
         {
-            var first = Task.Create("Test");
+            var first = new Task("Test");
 
             var hash = first.GetHashCode();
 

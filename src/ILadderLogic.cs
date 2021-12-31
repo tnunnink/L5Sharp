@@ -7,10 +7,10 @@ namespace L5Sharp
     /// <summary>
     /// Represents a Logix Ladder Logic Routine content. 
     /// </summary>
-    public interface IRllContent : ILogixContent, IEnumerable<Rung>
+    public interface ILadderLogic : ILogixContent, IEnumerable<Rung>
     {
         /// <summary>
-        /// Gets the number of <see cref="Rung"/> objects in the current <see cref="IRllContent"/>.
+        /// Gets the number of <see cref="Rung"/> objects in the current <see cref="ILadderLogic"/>.
         /// </summary>
         int Count { get; }
         
@@ -25,20 +25,20 @@ namespace L5Sharp
         Rung this[int number] { get; set; }
 
         /// <summary>
-        /// Clears all <see cref="Rung"/> objects from the current <see cref="IRllContent"/>.
+        /// Clears all <see cref="Rung"/> objects from the current <see cref="ILadderLogic"/>.
         /// </summary>
         void Clear();
 
         /// <summary>
-        /// Determines whether the provided  <see cref="Core.NeutralText"/> is contained in the current <see cref="IRllContent"/>.
+        /// Determines whether the provided  <see cref="Core.NeutralText"/> is contained in the current <see cref="ILadderLogic"/>.
         /// </summary>
-        /// <param name="text">The <see cref="Core.NeutralText"/> to locate in the <see cref="IRllContent"/>.</param>
-        /// <returns>true if the provided <see cref="Core.NeutralText"/> exists in the current <see cref="IRllContent"/>; otherwise, false</returns>
+        /// <param name="text">The <see cref="Core.NeutralText"/> to locate in the <see cref="ILadderLogic"/>.</param>
+        /// <returns>true if the provided <see cref="Core.NeutralText"/> exists in the current <see cref="ILadderLogic"/>; otherwise, false</returns>
         bool ContainsText(NeutralText text);
 
         /// <summary>
         /// Gets the first occurrence of the <see cref="Rung"/> that matches the provided condition in the
-        /// current <see cref="IRllContent"/> instance.
+        /// current <see cref="ILadderLogic"/> instance.
         /// </summary>
         /// <param name="match">
         /// The <see cref="Predicate{Rung}"/> delegate that defines the conditions of the object to search for.
@@ -54,7 +54,7 @@ namespace L5Sharp
         IEnumerable<Rung> FindAll(Predicate<Rung> match);
 
         /// <summary>
-        /// Adds the provided <see cref="Rung"/> to the current <see cref="IRllContent"/>.
+        /// Adds the provided <see cref="Rung"/> to the current <see cref="ILadderLogic"/>.
         /// </summary>
         /// <param name="rung">The <see cref="Rung"/> object to add.</param>
         /// <exception cref="ArgumentNullException">When rung is null.</exception>
@@ -65,7 +65,7 @@ namespace L5Sharp
         void Add(Rung rung);
 
         /// <summary>
-        /// Adds a new <see cref="Rung"/> with the provided <see cref="Core.NeutralText"/> to the current <see cref="IRllContent"/>.
+        /// Adds a new <see cref="Rung"/> with the provided <see cref="Core.NeutralText"/> to the current <see cref="ILadderLogic"/>.
         /// </summary>
         /// <param name="text">The <see cref="Core.NeutralText"/> that represents the logic for the new <see cref="Rung"/>.</param>
         /// <exception cref="ArgumentNullException">When text is null.</exception>
@@ -73,36 +73,36 @@ namespace L5Sharp
         void Add(NeutralText text);
 
         /// <summary>
-        /// Adds the provided collection of <see cref="Rung"/> objects to the current <see cref="IRllContent"/>.
+        /// Adds the provided collection of <see cref="Rung"/> objects to the current <see cref="ILadderLogic"/>.
         /// </summary>
         /// <param name="rungs">The collection of <see cref="Rung"/> to add.</param>
         /// <exception cref="ArgumentNullException">When rungs is null.</exception>
         void AddRange(IEnumerable<Rung> rungs);
 
         /// <summary>
-        /// Inserts the provided <see cref="Rung"/> to the current <see cref="IRllContent"/> at the specified number.
+        /// Inserts the provided <see cref="Rung"/> to the current <see cref="ILadderLogic"/> at the specified number.
         /// </summary>
         /// <param name="number">The number at which to insert the provided <see cref="Rung"/>.</param>
         /// <param name="rung">The <see cref="Rung"/> instance to insert.</param>
-        /// <exception cref="ArgumentOutOfRangeException">When the number is outside the bounds of the <see cref="IRllContent"/> collection.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">When the number is outside the bounds of the <see cref="ILadderLogic"/> collection.</exception>
         /// <seealso cref="Insert(int,L5Sharp.Core.NeutralText)"/>
         void Insert(int number, Rung rung);
 
         /// <summary>
-        /// Inserts a new <see cref="Rung"/> with the provided <see cref="Core.NeutralText"/> to the current <see cref="IRllContent"/> at the specified number.
+        /// Inserts a new <see cref="Rung"/> with the provided <see cref="Core.NeutralText"/> to the current <see cref="ILadderLogic"/> at the specified number.
         /// </summary>
         /// <param name="number">The number at which to insert the provided <see cref="Rung"/>.</param>
         /// <param name="text">The <see cref="Core.NeutralText"/> that represents the logic for the new <see cref="Rung"/>.</param>
-        /// <exception cref="ArgumentOutOfRangeException">When the number is outside the bounds of the <see cref="IRllContent"/> collection.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">When the number is outside the bounds of the <see cref="ILadderLogic"/> collection.</exception>
         /// <seealso cref="Insert(int,L5Sharp.Core.Rung)"/>
         void Insert(int number, NeutralText text);
 
         /// <summary>
-        /// Removes a <see cref="Rung"/> object with the specified number from the current <see cref="IRllContent"/>.
+        /// Removes a <see cref="Rung"/> object with the specified number from the current <see cref="ILadderLogic"/>.
         /// </summary>
         /// <param name="number">The number of the <see cref="Rung"/> to remove.</param>
         /// <returns>true if the <see cref="Rung"/> was found and removed. otherwise; false.</returns>
-        /// <exception cref="ArgumentOutOfRangeException">When the number is outside the bounds of the <see cref="IRllContent"/> collection.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">When the number is outside the bounds of the <see cref="ILadderLogic"/> collection.</exception>
         void Remove(int number);
 
         /// <summary>
@@ -110,7 +110,7 @@ namespace L5Sharp
         /// </summary>
         /// <param name="number">The number at which to update the provided <see cref="Rung"/>.</param>
         /// <param name="text">The <see cref="Core.NeutralText"/> that represents the logic for the new <see cref="Rung"/>.</param>
-        /// <exception cref="ArgumentOutOfRangeException">When the number is outside the bounds of the <see cref="IRllContent"/> collection.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">When the number is outside the bounds of the <see cref="ILadderLogic"/> collection.</exception>
         void Update(int number, NeutralText text);
 
         /// <summary>
@@ -118,7 +118,7 @@ namespace L5Sharp
         /// </summary>
         /// <param name="number">The number of the <see cref="Rung"/> to comment.</param>
         /// <param name="comment">The string comment to apply to the specified <see cref="Rung"/>.</param>
-        /// <exception cref="ArgumentOutOfRangeException">When the number is outside the bounds of the <see cref="IRllContent"/> collection.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">When the number is outside the bounds of the <see cref="ILadderLogic"/> collection.</exception>
         void Comment(int number, string comment);
     }
 }

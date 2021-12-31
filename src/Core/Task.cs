@@ -8,20 +8,35 @@ namespace L5Sharp.Core
     /// <inheritdoc cref="L5Sharp.ITask" />
     public class Task : ITask, IEquatable<Task>
     {
-        private readonly HashSet<string> _programs = new HashSet<string>();
+        private readonly HashSet<string> _programs = new();
 
-        internal Task(ComponentName name, TaskType type,
-            TaskPriority priority, ScanRate rate, Watchdog watchdog,
-            bool inhibitTask, bool disableUpdateOutputs, string description)
+        internal Task(ComponentName name, TaskType? type = null,
+            TaskPriority priority = default, ScanRate rate = default, Watchdog watchdog = default,
+            bool inhibitTask = false, bool disableUpdateOutputs = false,
+            TaskEventInfo? eventInfo = null, IEnumerable<string>? scheduledPrograms = null, string? description = null)
         {
-            Name = name;
-            Description = description;
+            Name = name ?? throw new ArgumentNullException(nameof(name));
+            Description = description ?? string.Empty;
             Type = type ?? TaskType.Periodic;
             Priority = priority;
             Rate = rate;
             Watchdog = watchdog;
             InhibitTask = inhibitTask;
             DisableUpdateOutputs = disableUpdateOutputs;
+            EventInfo = eventInfo;
+
+        }
+
+        /// <summary>
+        /// Creates a new <see cref="Task"/> with the provided name an optional arguments.
+        /// </summary>
+        /// <param name="name">The name of the <see cref="Task"/>.</param>
+        /// <param name="type">The <see cref="Enums.TaskType"/> of the <see cref="Task"/> instance.</param>
+        /// <param name="description">The description of the <see cref="Task"/>.</param>
+        /// <exception cref="ArgumentNullException">name is null.</exception>
+        public Task(ComponentName name, TaskType? type = null, string? description = null) :
+            this(name, type, new TaskPriority(10), new ScanRate(10), new Watchdog(500), description: description)
+        {
         }
 
         /// <inheritdoc />
@@ -48,56 +63,11 @@ namespace L5Sharp.Core
         /// <inheritdoc />
         public bool DisableUpdateOutputs { get; }
 
+        public TaskEventInfo? EventInfo { get; }
+
         /// <inheritdoc />
         public IEnumerable<string> ScheduledPrograms => _programs.AsEnumerable();
-
-        /// <summary>
-        /// Creates a new instance of a <see cref="ITask"/> with default properties.
-        /// </summary>
-        /// <param name="name">The name of the task to create.</param>
-        /// <returns>A new instance of <see cref="ITask"/></returns>
-        public static ITask Create(string name)
-        {
-            return new Task(name, TaskType.Periodic, new TaskPriority(10), new ScanRate(10), new Watchdog(500),
-                false, false, null);
-        }
-
-        /// <summary>
-        /// Creates a new instance of a <see cref="ITask"/> with default properties.
-        /// </summary>
-        /// <param name="name">The name of the task to create.</param>
-        /// <param name="type">The type of the task to create.</param>
-        /// <returns>A new instance of <see cref="ITask"/></returns>
-        public static ITask Create(string name, TaskType type)
-        {
-            return new Task(name, type, new TaskPriority(10), new ScanRate(10), new Watchdog(500),
-                false, false, null);
-        }
-
-        /// <summary>
-        /// Creates a new instance of a <see cref="ITask"/> with default properties.
-        /// </summary>
-        /// <param name="name">The name of the task to create.</param>
-        /// <param name="type">The type of the task to create.</param>
-        /// <param name="priority">The priority for the new task.</param>
-        /// <param name="rate">The scan rate of the new task.</param>
-        /// <param name="watchdog">The watchdog of the new task.</param>
-        /// <returns>A new instance of <see cref="ITask"/></returns>
-        public static ITask Create(string name, TaskType type, TaskPriority priority, ScanRate rate, Watchdog watchdog)
-        {
-            return new Task(name, type, priority, rate, watchdog, false, false, null);
-        }
-
-
-        /*/// <summary>
-        /// Builds a new instance of <see cref="ITask"/> using the fluent builder API.
-        /// </summary>
-        /// <param name="name">The name of the task to create.</param>
-        /// <returns>A new instance of <see cref="ITaskBuilder"/></returns>
-        public static ITaskBuilder Build(string name)
-        {
-            return new TaskBuilder(name);
-        }*/
+        
 
         /// <inheritdoc />
         /// <exception cref="ArgumentNullException">Thrown when the name is null.</exception>
@@ -118,19 +88,23 @@ namespace L5Sharp.Core
         }
 
         /// <inheritdoc />
-        public bool Equals(Task other)
+        public bool Equals(Task? other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return _programs.SequenceEqual(other._programs) && Equals(Name, other.Name) &&
+            return Equals(Name, other.Name) && 
                    Description == other.Description &&
-                   Equals(Type, other.Type) && Equals(Priority, other.Priority) && Equals(Rate, other.Rate) &&
-                   Equals(Watchdog, other.Watchdog) && InhibitTask == other.InhibitTask &&
-                   DisableUpdateOutputs == other.DisableUpdateOutputs;
+                   Equals(Type, other.Type) &&
+                   Equals(Priority, other.Priority) &&
+                   Equals(Rate, other.Rate) &&
+                   Equals(Watchdog, other.Watchdog) &&
+                   InhibitTask == other.InhibitTask &&
+                   DisableUpdateOutputs == other.DisableUpdateOutputs &&
+                   _programs.SequenceEqual(other._programs);
         }
 
         /// <inheritdoc />
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
@@ -141,7 +115,6 @@ namespace L5Sharp.Core
         public override int GetHashCode()
         {
             var hashCode = new HashCode();
-            hashCode.Add(_programs);
             hashCode.Add(Name);
             hashCode.Add(Description);
             hashCode.Add(Type);
@@ -150,6 +123,7 @@ namespace L5Sharp.Core
             hashCode.Add(Watchdog);
             hashCode.Add(InhibitTask);
             hashCode.Add(DisableUpdateOutputs);
+            hashCode.Add(_programs);
             return hashCode.ToHashCode();
         }
 
@@ -159,10 +133,7 @@ namespace L5Sharp.Core
         /// <param name="left">The left instance of the object.</param>
         /// <param name="right">The right instance of the object.</param>
         /// <returns>True if the two objects are equal, otherwise false.</returns>
-        public static bool operator ==(Task left, Task right)
-        {
-            return Equals(left, right);
-        }
+        public static bool operator ==(Task left, Task right) => Equals(left, right);
 
         /// <summary>
         /// Indicates whether one object is not equal to another object of the same type.
@@ -170,9 +141,6 @@ namespace L5Sharp.Core
         /// <param name="left">The left instance of the object.</param>
         /// <param name="right">The right instance of the object.</param>
         /// <returns>True if the two objects are not equal, otherwise false.</returns>
-        public static bool operator !=(Task left, Task right)
-        {
-            return !Equals(left, right);
-        }
+        public static bool operator !=(Task left, Task right) => !Equals(left, right);
     }
 }

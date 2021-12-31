@@ -19,22 +19,22 @@ namespace L5Sharp
     public interface ITask : ILogixComponent
     {
         /// <summary>
-        /// Get the type of the <c>Task</c>.
+        /// Get the <see cref="Enums.TaskType"/> value of the <see cref="ITask"/>.
         /// </summary>
         TaskType Type { get; }
         
         /// <summary>
-        /// Get the priority setting of the <c>Task</c>.
+        /// Get the <see cref="Core.TaskPriority"/> value of the <see cref="ITask"/>.
         /// </summary>
         TaskPriority Priority { get; }
         
         /// <summary>
-        /// The scan rate setting of the <c>Task</c>.
+        /// Get the <see cref="Core.ScanRate"/> value of the <see cref="ITask"/>.
         /// </summary>
         ScanRate Rate { get; }
         
         /// <summary>
-        /// The watch dog setting of the <c>Task</c>.
+        /// Get the <see cref="Core.Watchdog"/> value of the <see cref="ITask"/>.
         /// </summary>
         Watchdog Watchdog { get; }
         
@@ -49,20 +49,16 @@ namespace L5Sharp
         bool DisableUpdateOutputs { get; }
         
         /// <summary>
-        /// A collection of program names that are scheduled for the current <c>Task</c>.
+        /// Gets the <see cref="TaskEventInfo"/> object that contains the event configuration for the <see cref="ITask"/>.
         /// </summary>
-        IEnumerable<string> ScheduledPrograms { get; }
-
-        /// <summary>
-        /// Add a program to the <c>Task's</c> <see cref="ScheduledPrograms"/> collection.
-        /// </summary>
-        /// <param name="name">The name of the <c>ScheduledProgram</c> to add.</param>
-        void ScheduleProgram(string name);
+        /// <remarks>
+        /// <see cref="EventInfo"/> is only available for the <see cref="Enums.TaskType.Event"/> task types.
+        /// </remarks>
+        TaskEventInfo? EventInfo { get; }
         
         /// <summary>
-        /// Removes a program from the <c>Task's</c> <see cref="ScheduledPrograms"/> collection.
+        /// Gets the collection of program names that are scheduled for the current <see cref="ITask"/>.
         /// </summary>
-        /// <param name="name">The name of the <c>ScheduledProgram</c> to remove.</param>
-        void RemoveProgram(string name);
+        IEnumerable<string> ScheduledPrograms { get; }
     }
 }

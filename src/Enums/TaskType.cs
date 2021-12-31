@@ -3,7 +3,7 @@
 namespace L5Sharp.Enums
 {
     /// <summary>
-    /// Represents an enumeration of all <c>TaskTypes</c> (i.e. Continuous, Periodic, Event)
+    /// Provides an enumeration of all Logix Task types.
     /// </summary>
     public sealed class TaskType : SmartEnum<TaskType, string>
     {
@@ -12,21 +12,18 @@ namespace L5Sharp.Enums
         }
 
         /// <summary>
-        /// A Continuous TaskType.
+        /// Represents a Continuous <see cref="TagType"/>, or a task that is configured to run continuously.
         /// </summary>
-        public static readonly TaskType Continuous = 
-            new TaskType(nameof(Continuous).ToUpper(), nameof(Continuous).ToUpper());
+        public static readonly TaskType Continuous = new(nameof(Continuous), nameof(Continuous).ToUpper());
         
         /// <summary>
-        /// A Periodic TaskType.
+        /// Represents a Periodic <see cref="TagType"/>, or a task that is configured to run at a specified rate.
         /// </summary>
-        public static readonly TaskType Periodic = 
-            new TaskType(nameof(Periodic).ToUpper(), nameof(Periodic).ToUpper());
+        public static readonly TaskType Periodic = new(nameof(Periodic), nameof(Periodic).ToUpper());
         
         /// <summary>
-        /// A Event TaskType.
+        /// Represents an Event <see cref="TagType"/>, or a task that is configured to run when a specified event occurs.
         /// </summary>
-        public static readonly TaskType Event = 
-            new TaskType(nameof(Event).ToUpper(), nameof(Event).ToUpper());
+        public static readonly TaskType Event = new(nameof(Event), nameof(Event).ToUpper());
     }
 }

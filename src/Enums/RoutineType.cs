@@ -30,7 +30,7 @@ namespace L5Sharp.Enums
         /// <returns>The <see cref="RoutineType"/> instance that represents the specified type.</returns>
         public static RoutineType ForType<TContent>() where TContent : ILogixContent
         {
-            if (typeof(TContent).IsAssignableFrom(typeof(Rll)))
+            if (typeof(TContent).IsAssignableFrom(typeof(LadderLogic)))
                 return Rll;
             
             if (typeof(TContent).IsAssignableFrom(typeof(TContent)))
@@ -89,7 +89,7 @@ namespace L5Sharp.Enums
 
             public override ILogixContent CreateContent()
             {
-                return new Rll();
+                return new LadderLogic();
             }
         }
         

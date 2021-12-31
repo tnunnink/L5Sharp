@@ -29,7 +29,7 @@ namespace L5Sharp.Common
             { typeof(Scope), s => Scope.FromName(s) },
             { typeof(TagType), s => TagType.FromName(s) },
             { typeof(TagUsage), s => TagUsage.FromName(s) },
-            { typeof(TaskTrigger), s => TaskTrigger.FromName(s) },
+            { typeof(TaskEventTrigger), s => TaskEventTrigger.FromName(s) },
             { typeof(TaskType), s => TaskType.FromName(s) },
             { typeof(TransmissionType), s => TransmissionType.FromName(s) },
             { typeof(Use), s => Use.FromName(s) },

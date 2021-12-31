@@ -3,21 +3,23 @@
 namespace L5Sharp.Core
 {
     /// <summary>
-    /// Represents a priority number for the <c>Task</c>.
+    /// A configurable property of a <see cref="ITask"/> that controls the order in which the Logix Controller
+    /// will scan the given Task.
     /// </summary>
     /// <remarks>
-    /// <c>TaskPriority</c> is a property of a <see cref="ITask"/>. It represents the ...
+    /// <see cref="TaskPriority"/> is a simple byte value that must be between 1 and 15.
+    /// Attempting to set the priority to a value outside that range will result in an <see cref="ArgumentOutOfRangeException"/>.
+    /// This parameter will control the scan order of task components as related to other tasks.
     /// </remarks>
     public readonly struct TaskPriority : IEquatable<TaskPriority>
     {
         private readonly byte _priority;
-        
+
         /// <summary>
-        /// Creates a new instance of <see cref="TaskPriority"/> with the specified value.
+        /// Creates a new instance of <see cref="TaskPriority"/> with the provided value.
         /// </summary>
-        /// <param name="priority">The value of the priority. Must be a value between 1 and 15</param>
-        /// <exception cref="ArgumentOutOfRangeException">Throw when the provided priority is not within the
-        /// specified range</exception>
+        /// <param name="priority">The value of the priority. Must be a value between 1 and 15.</param>
+        /// <exception cref="ArgumentOutOfRangeException">priority is less than 1 -or- greater than 15.</exception>
         public TaskPriority(byte priority)
         {
             if (priority < 1 || priority > 15)
@@ -26,81 +28,54 @@ namespace L5Sharp.Core
             _priority = priority;
         }
 
+        /// <summary>
+        /// Converts a <see cref="TaskPriority"/> to a <see cref="byte"/>
+        /// </summary>
+        /// <param name="priority">The value to convert.</param>
+        /// <returns>A <see cref="byte"/> value.</returns>
+        public static implicit operator byte(TaskPriority priority) => priority._priority;
+
+        /// <summary>
+        /// Converts a <see cref="byte"/> to a <see cref="TaskPriority"/>
+        /// </summary>
+        /// <param name="priority">The value to convert.</param>
+        /// <returns>A <see cref="TaskPriority"/> value.</returns>
+        public static implicit operator TaskPriority(byte priority) => new(priority);
+
+        /// <summary>
+        /// Parses a string value into a <see cref="TaskPriority"/>.
+        /// </summary>
+        /// <param name="str">The string to parse.</param>
+        /// <returns>A <see cref="TaskPriority"/> value if the parse was successful; otherwise; the default value.</returns>
+        public static TaskPriority Parse(string str) =>
+            byte.TryParse(str, out var result) ? new TaskPriority(result) : default;
+
         /// <inheritdoc />
-        public bool Equals(TaskPriority other)
-        {
-            return _priority == other._priority;
-        }
+        public bool Equals(TaskPriority other) => _priority == other._priority;
 
         /// <inheritdoc />
-        public override bool Equals(object obj)
-        {
-            return obj is TaskPriority other && Equals(other);
-        }
+        public override string ToString() => _priority.ToString();
 
         /// <inheritdoc />
-        public override int GetHashCode()
-        {
-            return _priority.GetHashCode();
-        }
+        public override bool Equals(object obj) => obj is TaskPriority other && Equals(other);
 
-        /// <summary>
-        /// Determines if two <see cref="TaskPriority"/> objects are equal.
-        /// </summary>
-        /// <param name="left">The left item to compare.</param>
-        /// <param name="right">The right item to compare.</param>
-        /// <returns>True if they are equal</returns>
-        public static bool operator ==(TaskPriority left, TaskPriority right)
-        {
-            return Equals(left, right);
-        }
-
-        /// <summary>
-        /// Determines if two <see cref="TaskPriority"/> objects are not equal.
-        /// </summary>
-        /// <param name="left">The left item to compare.</param>
-        /// <param name="right">The right item to compare.</param>
-        /// <returns>True if they are not equal</returns>
-        public static bool operator !=(TaskPriority left, TaskPriority right)
-        {
-            return !Equals(left, right);
-        }
-
-        /// <summary>
-        /// Implicitly converts from a <see cref="TaskPriority"/> to a <see cref="byte"/>
-        /// </summary>
-        /// <param name="priority">The value of the <c>TaskPriority</c></param>
-        /// <returns></returns>
-        public static implicit operator byte(TaskPriority priority)
-        {
-            return priority._priority;
-        }
-
-        /// <summary>
-        /// Implicitly converts from a <see cref="byte"/> to a <see cref="TaskPriority"/>
-        /// </summary>
-        /// <param name="priority">The value of the priority.</param>
-        /// <returns></returns>
-        public static implicit operator TaskPriority(byte priority)
-        {
-            return new TaskPriority(priority);
-        }
-
-        /// <summary>
-        /// Parses a string value into a <c>TaskPriority</c>
-        /// </summary>
-        /// <param name="str">The string value to parse</param>
-        /// <returns>A TaskPriority value if the parse was successful, default if not</returns>
-        public static TaskPriority Parse(string str)
-        {
-            byte.TryParse(str, out var result);
-            return new TaskPriority(result);
-        }
-        
         /// <inheritdoc />
-        public override string ToString()
-        {
-            return _priority.ToString();
-        }
+        public override int GetHashCode() => _priority.GetHashCode();
+
+        /// <summary>
+        /// Determines if the provided objects are equal.
+        /// </summary>
+        /// <param name="left">An object to compare.</param>
+        /// <param name="right">An object to compare.</param>
+        /// <returns>true if the provided objects are equal; otherwise, false.</returns>
+        public static bool operator ==(TaskPriority left, TaskPriority right) => Equals(left, right);
+
+        /// <summary>
+        /// Determines if the provided objects are not equal.
+        /// </summary>
+        /// <param name="left">An object to compare.</param>
+        /// <param name="right">An object to compare.</param>
+        /// <returns>true if the provided objects are not equal; otherwise, false.</returns>
+        public static bool operator !=(TaskPriority left, TaskPriority right) => !Equals(left, right);
     }
 }

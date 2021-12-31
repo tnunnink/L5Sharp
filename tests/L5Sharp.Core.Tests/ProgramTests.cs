@@ -1,7 +1,9 @@
-﻿/*using AutoFixture;
+﻿using System;
+using System.Linq;
 using FluentAssertions;
+using L5Sharp.Components;
 using L5Sharp.Enums;
-using L5Sharp.Exceptions;
+using L5Sharp.Types.Atomic;
 using NUnit.Framework;
 
 namespace L5Sharp.Core.Tests
@@ -10,54 +12,71 @@ namespace L5Sharp.Core.Tests
     public class ProgramTests
     {
         [Test]
-        public void New_InvalidName_ShouldThrowComponentNameInvalidException()
+        public void Create_NullName_ShouldThrowArgumentNullException()
         {
-            var fixture = new Fixture();
-
-            FluentActions.Invoking(() => new Program(fixture.Create<string>())).Should()
-                .Throw<ComponentNameInvalidException>();
+            FluentActions.Invoking(() => Program.Create(null!))
+                .Should().Throw<ArgumentNullException>();
         }
         
         [Test]
-        public void New_ValidName_ShouldNotBeNull()
+        public void Create_ValidName_ShouldNotBeNull()
         {
-            var program = new Program("Test");
+            var program = Program.Create("Test");
 
             program.Should().NotBeNull();
         }
         
         [Test]
-        public void New_ValidName_ShouldHaveExpectedDefaults()
+        public void Create_ValidName_ShouldHaveExpectedDefaults()
         {
-            var program = new Program("Test");
+            var program = Program.Create("Test");
 
             program.Name.Should().Be("Test");
+            program.Description.Should().BeEmpty();
             program.Type.Should().Be(ProgramType.Normal);
-            program.MainRoutineName.Should().BeNull();
-            program.FaultRoutineName.Should().BeNull();
-            program.UseAsFolder.Should().BeFalse();
             program.TestEdits.Should().BeFalse();
             program.Disabled.Should().BeFalse();
-            program.Description.Should().BeNull();
+            program.MainRoutineName.Should().Be(string.Empty);
+            program.FaultRoutineName.Should().Be(string.Empty);
+            program.UseAsFolder.Should().BeFalse();
             program.Tags.Should().BeEmpty();
             program.Routines.Should().BeEmpty();
+        }
+
+        [Test]
+        public void AddTag_ValidTag_ShouldHaveExpectedTag()
+        {
+            var program = Program.Create("Test");
+            var tag = Tag.Create<Bool>("TestTag");
+            
+            program.Tags.Add(tag);
+
+            program.Tags.Should().HaveCount(1);
+            program.Tags.Should().Contain(tag);
         }
         
         [Test]
-        public void New_Overridden_ShouldHaveExpectedValues()
+        public void AddRoutine_ValidRoutine_ShouldHaveExpectedRoutine()
         {
-            var program = new Program("Test", "This is a test", "MainRoutine", "FaultRoutine", true, true, true);
+            var program = Program.Create("Test");
+            var routine = Routine.Create<LadderLogic>("TestRoutine");
+            
+            program.Routines.Add(routine);
 
-            program.Name.Should().Be("Test");
-            program.Type.Should().Be(ProgramType.Normal);
-            program.MainRoutineName.Should().Be("MainRoutine");
-            program.FaultRoutineName.Should().Be("FaultRoutine");
-            program.UseAsFolder.Should().BeTrue();
-            program.TestEdits.Should().BeTrue();
-            program.Disabled.Should().BeTrue();
-            program.Description.Should().Be("This is a test");
-            program.Tags.Should().BeEmpty();
-            program.Routines.Should().BeEmpty();
+            program.Routines.Should().HaveCount(1);
+            program.Routines.Should().Contain(routine);
+        }
+
+        [Test]
+        public void AddRoutineWithRung_ShouldHaveExpected()
+        {
+            var program = Program.Create("Test");
+            var routine = Routine.Create<LadderLogic>("TestRoutine");
+            routine.Content.Add(new Rung("NOP();", "This is a test rung"));
+            
+            program.Routines.Add(routine);
+
+            program.Routines.FirstOrDefault(r => r.Content.HasContent).Should().NotBeNull();
         }
     }
-}*/
+}

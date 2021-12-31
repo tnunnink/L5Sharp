@@ -69,7 +69,7 @@ namespace L5Sharp.Common
             { typeof(ITag<IDataType>), new Tuple<string, string>(Tag, Tags) },
             { typeof(IProgram), new Tuple<string, string>(Program, Programs) },
             { typeof(IRoutine<ILogixContent>), new Tuple<string, string>(Routine, Routines) },
-            { typeof(IRllContent), new Tuple<string, string>(RllContent, string.Empty) },
+            { typeof(ILadderLogic), new Tuple<string, string>(RllContent, string.Empty) },
             { typeof(Rung), new Tuple<string, string>(Rung, Rungs) },
             { typeof(ITask), new Tuple<string, string>(Task, Tasks) }
         };

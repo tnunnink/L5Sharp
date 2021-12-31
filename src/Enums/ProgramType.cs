@@ -2,6 +2,9 @@
 
 namespace L5Sharp.Enums
 {
+    /// <summary>
+    /// Provides an enumeration of all Logix Program types.
+    /// </summary>
     public abstract class ProgramType : SmartEnum<ProgramType, string>
     {
         private ProgramType(string name, string value) : base(name, value)

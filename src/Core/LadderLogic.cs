@@ -7,15 +7,15 @@ using L5Sharp.Enums;
 namespace L5Sharp.Core
 {
     /// <inheritdoc />
-    public class Rll : IRllContent
+    public class LadderLogic : ILadderLogic
     {
         private readonly List<Rung> _rungs = new();
 
         /// <summary>
-        /// Creates a new <see cref="Rll"/> instance with the provided optional collection of <see cref="Rung"/> objects.
+        /// Creates a new <see cref="LadderLogic"/> instance with the provided optional collection of <see cref="Rung"/> objects.
         /// </summary>
         /// <param name="rungs">A collection of <see cref="Rung"/> to initialize the collection with.</param>
-        public Rll(IEnumerable<Rung>? rungs = null)
+        public LadderLogic(IEnumerable<Rung>? rungs = null)
         {
             if (rungs is not null)
                 AddRange(rungs);

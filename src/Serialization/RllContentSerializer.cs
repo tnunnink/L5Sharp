@@ -8,14 +8,14 @@ using L5Sharp.Extensions;
 namespace L5Sharp.Serialization
 {
     /// <summary>
-    /// Provides serialization of a <see cref="IRllContent"/> as represented in the L5X format. 
+    /// Provides serialization of a <see cref="ILadderLogic"/> as represented in the L5X format. 
     /// </summary>
-    public class RllContentSerializer : IXSerializer<IRllContent>
+    public class RllContentSerializer : IXSerializer<ILadderLogic>
     {
         private static readonly XName ElementName = LogixNames.RllContent;
         
         /// <inheritdoc />
-        public XElement Serialize(IRllContent component)
+        public XElement Serialize(ILadderLogic component)
         {
             if (component is null)
                 throw new ArgumentNullException(nameof(component));
@@ -30,7 +30,7 @@ namespace L5Sharp.Serialization
         }
 
         /// <inheritdoc />
-        public IRllContent Deserialize(XElement element)
+        public ILadderLogic Deserialize(XElement element)
         {
             if (element == null)
                 throw new ArgumentNullException(nameof(element));
@@ -40,7 +40,7 @@ namespace L5Sharp.Serialization
 
             var rungs = element.Descendants(LogixNames.Rung).Select(e => e.Deserialize<Rung>());
 
-            return new Rll(rungs);
+            return new LadderLogic(rungs);
         }
     }
 }

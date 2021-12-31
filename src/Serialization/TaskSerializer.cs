@@ -19,25 +19,20 @@ namespace L5Sharp.Serialization
                 throw new ArgumentNullException(nameof(component));
 
             var element = new XElement(LogixNames.Task);
-            
+
             element.AddValue(component, c => c.Name);
+            element.AddValue(component, c => c.Description, true);
             element.AddValue(component, c => c.Type);
-            element.AddValue(component, c => c.Priority);
             element.AddValue(component, c => c.Rate);
+            element.AddValue(component, c => c.Priority);
             element.AddValue(component, c => c.Watchdog);
             element.AddValue(component, c => c.InhibitTask);
             element.AddValue(component, c => c.DisableUpdateOutputs);
 
-            if (!component.Description.IsEmpty())
-                element.AddValue(component, x => x.Description, true);
-
-            var programs = component.ScheduledPrograms.ToList();
-            if (programs.Count <= 0) return element;
-
             var scheduled = new XElement(nameof(component.ScheduledPrograms));
 
-            foreach (var program in programs)
-                scheduled.Add(new XElement(ScheduledProgram, new XAttribute(Name, program)));
+            scheduled.Add(component.ScheduledPrograms
+                .Select(p => new XElement(ScheduledProgram, new XAttribute(Name, p))));
 
             element.Add(scheduled);
 
@@ -57,13 +52,13 @@ namespace L5Sharp.Serialization
             var watchdog = element.GetValue<ITask, Watchdog>(t => t.Watchdog);
             var inhibitTask = element.GetValue<ITask, bool>(t => t.InhibitTask);
             var disableUpdateOutputs = element.GetValue<ITask, bool>(t => t.DisableUpdateOutputs);
-
-            var task = new Task(name, type, priority, rate, watchdog, inhibitTask, disableUpdateOutputs, description);
-
+            
+            //var eventInfoElement = element.Element(LogixNames.)
+            
             var programs = element.Descendants(ScheduledProgram).Select(e => e.GetComponentName());
 
-            foreach (var program in programs)
-                task.ScheduleProgram(program);
+            var task = new Task(name, type, priority, rate, watchdog, 
+                inhibitTask, disableUpdateOutputs, null, programs, description);
 
             return task;
         }

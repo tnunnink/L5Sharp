@@ -7,7 +7,7 @@ namespace L5Sharp.Core
     /// Represents a Rung of Ladder Logic.
     /// </summary>
     /// <remarks>
-    /// Rungs make up the content of the <see cref="IRllContent"/> object. Rung's <see cref="Text"/> property contains
+    /// Rungs make up the content of the <see cref="ILadderLogic"/> object. Rung's <see cref="Text"/> property contains
     /// the <see cref="Core.NeutralText"/> value which defines the logic for the instance.
     /// </remarks>
     public class Rung : IEquatable<Rung>

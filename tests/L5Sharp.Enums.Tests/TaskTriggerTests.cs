@@ -9,7 +9,7 @@ namespace L5Sharp.Enums.Tests
         [Test]
         public void New_AxisHome_ShouldNotBeNull()
         {
-            var type = TaskTrigger.AxisHome;
+            var type = TaskEventTrigger.AxisHome;
 
             type.Should().NotBeNull();
         }
@@ -17,7 +17,7 @@ namespace L5Sharp.Enums.Tests
         [Test]
         public void New_AxisRegistration1_ShouldNotBeNull()
         {
-            var type = TaskTrigger.AxisRegistration1;
+            var type = TaskEventTrigger.AxisRegistration1;
 
             type.Should().NotBeNull();
         }
@@ -25,7 +25,7 @@ namespace L5Sharp.Enums.Tests
         [Test]
         public void New_AxisRegistration2_ShouldNotBeNull()
         {
-            var type = TaskTrigger.AxisRegistration2;
+            var type = TaskEventTrigger.AxisRegistration2;
 
             type.Should().NotBeNull();
         }
@@ -33,7 +33,7 @@ namespace L5Sharp.Enums.Tests
         [Test]
         public void New_AxisWatch_ShouldNotBeNull()
         {
-            var type = TaskTrigger.AxisWatch;
+            var type = TaskEventTrigger.AxisWatch;
 
             type.Should().NotBeNull();
         }
@@ -41,7 +41,7 @@ namespace L5Sharp.Enums.Tests
         [Test]
         public void New_ConsumedTag_ShouldNotBeNull()
         {
-            var type = TaskTrigger.ConsumedTag;
+            var type = TaskEventTrigger.ConsumedTag;
 
             type.Should().NotBeNull();
         }
@@ -49,7 +49,7 @@ namespace L5Sharp.Enums.Tests
         [Test]
         public void New_WindowsEvent_ShouldNotBeNull()
         {
-            var type = TaskTrigger.WindowsEvent;
+            var type = TaskEventTrigger.WindowsEvent;
 
             type.Should().NotBeNull();
         }
@@ -57,7 +57,7 @@ namespace L5Sharp.Enums.Tests
         [Test]
         public void New_EventInstructionOnly_ShouldNotBeNull()
         {
-            var type = TaskTrigger.EventInstructionOnly;
+            var type = TaskEventTrigger.EventInstructionOnly;
 
             type.Should().NotBeNull();
         }
@@ -65,7 +65,7 @@ namespace L5Sharp.Enums.Tests
         [Test]
         public void New_MotionGroupExecution_ShouldNotBeNull()
         {
-            var type = TaskTrigger.MotionGroupExecution;
+            var type = TaskEventTrigger.MotionGroupExecution;
 
             type.Should().NotBeNull();
         }
@@ -73,7 +73,7 @@ namespace L5Sharp.Enums.Tests
         [Test]
         public void New_ModuleInputDataStateChange_ShouldNotBeNull()
         {
-            var type = TaskTrigger.ModuleInputDataStateChange;
+            var type = TaskEventTrigger.ModuleInputDataStateChange;
 
             type.Should().NotBeNull();
         }
