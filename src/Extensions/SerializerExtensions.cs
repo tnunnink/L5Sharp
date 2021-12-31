@@ -15,7 +15,7 @@ namespace L5Sharp.Extensions
             { LogixNames.Member, new UserDefinedMemberSerializer() },
             { LogixNames.Tag, new TagSerializer() },
             { LogixNames.Rung, new RungSerializer() },
-            { LogixNames.RllContent, new RllContentSerializer() },
+            { LogixNames.RllContent, new LadderLogicSerializer() },
             { LogixNames.Task, new TaskSerializer() },
             { LogixNames.DataValueMember, new DataValueMemberSerializer() },
             { LogixNames.ArrayMember, new ArrayMemberSerializer() },

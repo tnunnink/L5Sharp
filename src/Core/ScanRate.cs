@@ -4,11 +4,13 @@ using System.Globalization;
 namespace L5Sharp.Core
 {
     /// <summary>
-    /// Represents a scan rate in milliseconds.
+    /// A configurable property of a <see cref="ITask"/> that controls the rate at which the task will be evaluated or scanned.
     /// </summary>
     /// <remarks>
-    /// <c>ScanRate</c> is a property of a <see cref="ITask"/>. It represents the rate at which the task with evaluate
-    /// logic contained within the task.
+    /// <see cref="ScanRate"/> is a simple float value that must be between 0.1 and 2,000,000.0ms.
+    /// Attempting to set the <see cref="ScanRate"/> to a value outside that range will result in an
+    /// <see cref="ArgumentOutOfRangeException"/>.
+    /// This parameter will control the rate at which the <see cref="ITask"/> component is scanned.
     /// </remarks>
     public readonly struct ScanRate : IEquatable<ScanRate>
     {
@@ -21,88 +23,61 @@ namespace L5Sharp.Core
         /// <exception cref="ArgumentOutOfRangeException">Throw when the provided rate is outside the specified range</exception>
         public ScanRate(float rate)
         {
-            if (rate < 0.1f || rate > 2000000.0f)
+            if (rate is < 0.1f or > 2000000.0f)
                 throw new ArgumentOutOfRangeException(nameof(rate),
                     "Rate must be value between 0.1 and 2,000,000.0 ms");
 
             _rate = rate;
         }
 
+        /// <summary>
+        /// Converts a <see cref="ScanRate"/> to a <see cref="float"/>.
+        /// </summary>
+        /// <param name="rate">The value to convert.</param>
+        /// <returns>A <see cref="float"/> value.</returns>
+        public static implicit operator float(ScanRate rate) => rate._rate;
+
+        /// <summary>
+        /// Converts a <see cref="float"/> to a <see cref="ScanRate"/>.
+        /// </summary>
+        /// <param name="rate">The value to convert.</param>
+        /// <returns>A <see cref="ScanRate"/> value.</returns>
+        public static implicit operator ScanRate(float rate) => new(rate);
+
+        /// <summary>
+        /// Parses a string value into a <see cref="ScanRate"/>.
+        /// </summary>
+        /// <param name="str">The string to parse.</param>
+        /// <returns>A <see cref="ScanRate"/> value if the parse was successful; otherwise; the default value.</returns>
+        public static ScanRate Parse(string str) =>
+            float.TryParse(str, out var result) ? new ScanRate(result) : default;
+
         /// <inheritdoc />
-        public bool Equals(ScanRate other)
-        {
-            return _rate.Equals(other._rate);
-        }
+        public override string ToString() => _rate.ToString(CultureInfo.CurrentCulture);
 
         /// <inheritdoc />
-        public override bool Equals(object obj)
-        {
-            return obj is ScanRate other && Equals(other);
-        }
+        public bool Equals(ScanRate other) => _rate.Equals(other._rate);
 
         /// <inheritdoc />
-        public override int GetHashCode()
-        {
-            return _rate.GetHashCode();
-        }
+        public override bool Equals(object obj) => obj is ScanRate other && Equals(other);
 
-        /// <summary>
-        /// Determines if two <see cref="ScanRate"/> objects are equal.
-        /// </summary>
-        /// <param name="left">The left item to compare.</param>
-        /// <param name="right">The right item to compare.</param>
-        /// <returns>True if they are equal</returns>
-        public static bool operator ==(ScanRate left, ScanRate right)
-        {
-            return Equals(left, right);
-        }
-
-        /// <summary>
-        /// Determines if two <see cref="ScanRate"/> objects are not equal.
-        /// </summary>
-        /// <param name="left">The left item to compare.</param>
-        /// <param name="right">The right item to compare.</param>
-        /// <returns>True if they are not equal</returns>
-        public static bool operator !=(ScanRate left, ScanRate right)
-        {
-            return !Equals(left, right);
-        }
-
-        /// <summary>
-        /// Implicitly converts from a <see cref="ScanRate"/> to a <see cref="float"/>
-        /// </summary>
-        /// <param name="rate">The instance of the <see cref="ScanRate"/></param>
-        /// <returns>A <see cref="float"/> representing the value of the <see cref="ScanRate"/></returns>
-        public static implicit operator float(ScanRate rate)
-        {
-            return rate._rate;
-        }
-
-        /// <summary>
-        /// Implicitly converts from a <see cref="float"/> to a <see cref="ScanRate"/>.
-        /// </summary>
-        /// <param name="rate">the value of the rate.</param>
-        /// <returns>A <c>ScanRate</c> representing the value provided by rate.</returns>
-        public static implicit operator ScanRate(float rate)
-        {
-            return new ScanRate(rate);
-        }
-        
-        /// <summary>
-        /// Parses a string value into a <c>ScanRate</c>.
-        /// </summary>
-        /// <param name="str">The string value to parse.</param>
-        /// <returns>A ScanRate value if the parse was successful, default if not.</returns>
-        public static ScanRate Parse(string str)
-        {
-            float.TryParse(str, out var result);
-            return new ScanRate(result);
-        }
-        
         /// <inheritdoc />
-        public override string ToString()
-        {
-            return _rate.ToString(CultureInfo.CurrentCulture);
-        }
+        public override int GetHashCode() => _rate.GetHashCode();
+
+        /// <summary>
+        /// Determines if the provided objects are equal.
+        /// </summary>
+        /// <param name="left">An object to compare.</param>
+        /// <param name="right">An object to compare.</param>
+        /// <returns>true if the provided objects are equal; otherwise, false.</returns>
+        public static bool operator ==(ScanRate left, ScanRate right) => Equals(left, right);
+
+        /// <summary>
+        /// Determines if the provided objects are not equal.
+        /// </summary>
+        /// <param name="left">An object to compare.</param>
+        /// <param name="right">An object to compare.</param>
+        /// <returns>true if the provided objects are not equal; otherwise, false.</returns>
+        public static bool operator !=(ScanRate left, ScanRate right) => !Equals(left, right);
     }
 }

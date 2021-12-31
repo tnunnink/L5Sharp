@@ -4,6 +4,7 @@ namespace L5Sharp.Enums
 {
     /// <summary>
     /// Provides an enumeration of all Logix Task types.
+    /// Value must be <b>Continuous</b>, <b>Periodic</b>, or <b>Event</b>.
     /// </summary>
     public sealed class TaskType : SmartEnum<TaskType, string>
     {

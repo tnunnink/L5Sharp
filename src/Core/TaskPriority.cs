@@ -8,7 +8,8 @@ namespace L5Sharp.Core
     /// </summary>
     /// <remarks>
     /// <see cref="TaskPriority"/> is a simple byte value that must be between 1 and 15.
-    /// Attempting to set the priority to a value outside that range will result in an <see cref="ArgumentOutOfRangeException"/>.
+    /// Attempting to set the <see cref="TaskPriority"/> to a value outside that range will result in an
+    /// <see cref="ArgumentOutOfRangeException"/>.
     /// This parameter will control the scan order of task components as related to other tasks.
     /// </remarks>
     public readonly struct TaskPriority : IEquatable<TaskPriority>
@@ -22,21 +23,21 @@ namespace L5Sharp.Core
         /// <exception cref="ArgumentOutOfRangeException">priority is less than 1 -or- greater than 15.</exception>
         public TaskPriority(byte priority)
         {
-            if (priority < 1 || priority > 15)
+            if (priority is < 1 or > 15)
                 throw new ArgumentOutOfRangeException(nameof(priority), "Priority must be value between 1 and 15");
 
             _priority = priority;
         }
 
         /// <summary>
-        /// Converts a <see cref="TaskPriority"/> to a <see cref="byte"/>
+        /// Converts a <see cref="TaskPriority"/> to a <see cref="byte"/>.
         /// </summary>
         /// <param name="priority">The value to convert.</param>
         /// <returns>A <see cref="byte"/> value.</returns>
         public static implicit operator byte(TaskPriority priority) => priority._priority;
 
         /// <summary>
-        /// Converts a <see cref="byte"/> to a <see cref="TaskPriority"/>
+        /// Converts a <see cref="byte"/> to a <see cref="TaskPriority"/>.
         /// </summary>
         /// <param name="priority">The value to convert.</param>
         /// <returns>A <see cref="TaskPriority"/> value.</returns>

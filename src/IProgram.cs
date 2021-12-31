@@ -9,7 +9,7 @@ namespace L5Sharp
     public interface IProgram : ILogixComponent
     {
         /// <summary>
-        /// Gets the <see cref="Enums.ProgramType"/> value for the current <see cref="IProgram"/>.
+        /// Gets the <see cref="Enums.ProgramType"/> value for the <see cref="IProgram"/>.
         /// </summary>
         ProgramType Type { get; }
         
@@ -36,7 +36,7 @@ namespace L5Sharp
         ComponentName FaultRoutineName { get; }
         
         /// <summary>
-        /// A value indicating whether the current <see cref="IProgram"/> is a logical contained for child programs.
+        /// A value indicating whether the current <see cref="IProgram"/> is a logical container for child programs.
         /// </summary>
         bool UseAsFolder { get; }
 

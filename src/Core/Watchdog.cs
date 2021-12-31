@@ -4,10 +4,13 @@ using System.Globalization;
 namespace L5Sharp.Core
 {
     /// <summary>
-    /// Represents a watchdog in milliseconds for the <c>Task</c>.
+    /// A configurable property of a <see cref="ITask"/> that specified how long a task can rung before triggering a major fault.
     /// </summary>
     /// <remarks>
-    /// <c>Watchdog</c> is a property of a <see cref="ITask"/>. It represents the ...
+    /// <see cref="Watchdog"/> is a simple float value that must be between 0.1 and 2,000,000.0 ms.
+    /// Attempting to set the <see cref="Watchdog"/> to a value outside that range will result in an
+    /// <see cref="ArgumentOutOfRangeException"/>.
+    /// This parameter will control how long a task can rung before triggering a major fault.
     /// </remarks>
     public readonly struct Watchdog : IEquatable<Watchdog>
     {
@@ -22,7 +25,7 @@ namespace L5Sharp.Core
         /// specified range.</exception>
         public Watchdog(float watchdog)
         {
-            if (watchdog < 0.1f || watchdog > 2000000.0f)
+            if (watchdog is < 0.1f or > 2000000.0f)
                 throw new ArgumentOutOfRangeException(nameof(watchdog),
                     "Watchdog must be value between 0.1 and 2,000,000.0 ms");
 
@@ -30,89 +33,59 @@ namespace L5Sharp.Core
         }
 
         /// <summary>
-        /// Creates a new instance of a <c>Watchdog</c> with default value of 500ms.
+        /// 
         /// </summary>
         /// <returns>A new <c>Watchdog</c> value.</returns>
-        public static Watchdog Default()
-        {
-            return new Watchdog(500);
-        }
+        public static Watchdog Default() => new(500);
+
+        /// <summary>
+        /// Converts a <see cref="Watchdog"/> to a <see cref="float"/>.
+        /// </summary>
+        /// <param name="watchdog">The value to convert.</param>
+        /// <returns>A <see cref="float"/> value.</returns>
+        public static implicit operator float(Watchdog watchdog) => watchdog._watchdog;
+
+        /// <summary>
+        /// Converts a <see cref="float"/> to a <see cref="Watchdog"/>.
+        /// </summary>
+        /// <param name="watchdog">The value to convert.</param>
+        /// <returns>A <see cref="Watchdog"/> value.</returns>
+        public static implicit operator Watchdog(float watchdog) => new(watchdog);
+
+        /// <summary>
+        /// Parses a string value into a <see cref="Watchdog"/>.
+        /// </summary>
+        /// <param name="str">The string to parse.</param>
+        /// <returns>A <see cref="Watchdog"/> value if the parse was successful; otherwise; the default value.</returns>
+        public static Watchdog Parse(string str) =>
+            float.TryParse(str, out var result) ? new Watchdog(result) : default;
 
         /// <inheritdoc />
-        public bool Equals(Watchdog other)
-        {
-            return _watchdog.Equals(other._watchdog);
-        }
+        public override string ToString() => _watchdog.ToString(CultureInfo.CurrentCulture);
 
         /// <inheritdoc />
-        public override bool Equals(object obj)
-        {
-            return obj is Watchdog other && Equals(other);
-        }
+        public bool Equals(Watchdog other) => _watchdog.Equals(other._watchdog);
 
         /// <inheritdoc />
-        public override int GetHashCode()
-        {
-            return _watchdog.GetHashCode();
-        }
+        public override bool Equals(object obj) => obj is Watchdog other && Equals(other);
 
-        /// <summary>
-        /// Determines if two <see cref="Watchdog"/> objects are equal.
-        /// </summary>
-        /// <param name="left">The left item to compare.</param>
-        /// <param name="right">The right item to compare.</param>
-        /// <returns>True if they are equal</returns>
-        public static bool operator ==(Watchdog left, Watchdog right)
-        {
-            return Equals(left, right);
-        }
-
-        /// <summary>
-        /// Determines if two <see cref="Watchdog"/> objects are not equal.
-        /// </summary>
-        /// <param name="left">The left item to compare.</param>
-        /// <param name="right">The right item to compare.</param>
-        /// <returns>True if they are not equal</returns>
-        public static bool operator !=(Watchdog left, Watchdog right)
-        {
-            return !Equals(left, right);
-        }
-
-        /// <summary>
-        /// Implicitly converts from a <see cref="Watchdog"/> to a <see cref="float"/>
-        /// </summary>
-        /// <param name="watchdog">The <c>Watchdog</c> value to convert</param>
-        /// <returns>A new float value.</returns>
-        public static implicit operator float(Watchdog watchdog)
-        {
-            return watchdog._watchdog;
-        }
-        
-        /// <summary>
-        /// Implicitly converts from a <see cref="float"/> to a <see cref="Watchdog"/>
-        /// </summary>
-        /// <param name="watchdog">The <c>Watchdog</c> value to convert</param>
-        /// <returns>A new <c>Watchdog</c> value.</returns>
-        public static implicit operator Watchdog(float watchdog)
-        {
-            return new Watchdog(watchdog);
-        }
-        
-        /// <summary>
-        /// Parses a string value into a <c>Watchdog</c>.
-        /// </summary>
-        /// <param name="str">The string value to parse.</param>
-        /// <returns>A Watchdog value if the parse was successful, default if not.</returns>
-        public static Watchdog Parse(string str)
-        {
-            float.TryParse(str, out var result);
-            return new Watchdog(result);
-        }
-        
         /// <inheritdoc />
-        public override string ToString()
-        {
-            return _watchdog.ToString(CultureInfo.CurrentCulture);
-        }
+        public override int GetHashCode() => _watchdog.GetHashCode();
+
+        /// <summary>
+        /// Determines if the provided objects are equal.
+        /// </summary>
+        /// <param name="left">An object to compare.</param>
+        /// <param name="right">An object to compare.</param>
+        /// <returns>true if the provided objects are equal; otherwise, false.</returns>
+        public static bool operator ==(Watchdog left, Watchdog right) => Equals(left, right);
+
+        /// <summary>
+        /// Determines if the provided objects are not equal.
+        /// </summary>
+        /// <param name="left">An object to compare.</param>
+        /// <param name="right">An object to compare.</param>
+        /// <returns>true if the provided objects are not equal; otherwise, false.</returns>
+        public static bool operator !=(Watchdog left, Watchdog right) => !Equals(left, right);
     }
 }

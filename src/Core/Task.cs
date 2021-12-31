@@ -8,8 +8,6 @@ namespace L5Sharp.Core
     /// <inheritdoc cref="L5Sharp.ITask" />
     public class Task : ITask, IEquatable<Task>
     {
-        private readonly HashSet<string> _programs = new();
-
         internal Task(ComponentName name, TaskType? type = null,
             TaskPriority priority = default, ScanRate rate = default, Watchdog watchdog = default,
             bool inhibitTask = false, bool disableUpdateOutputs = false,
@@ -24,7 +22,9 @@ namespace L5Sharp.Core
             InhibitTask = inhibitTask;
             DisableUpdateOutputs = disableUpdateOutputs;
             EventInfo = eventInfo;
-
+            ScheduledPrograms = scheduledPrograms is not null
+                ? new List<ComponentName>(scheduledPrograms.Select(p => new ComponentName(p)))
+                : new List<ComponentName>();
         }
 
         /// <summary>
@@ -63,29 +63,11 @@ namespace L5Sharp.Core
         /// <inheritdoc />
         public bool DisableUpdateOutputs { get; }
 
+        /// <inheritdoc />
         public TaskEventInfo? EventInfo { get; }
 
         /// <inheritdoc />
-        public IEnumerable<string> ScheduledPrograms => _programs.AsEnumerable();
-        
-
-        /// <inheritdoc />
-        /// <exception cref="ArgumentNullException">Thrown when the name is null.</exception>
-        public void ScheduleProgram(string name)
-        {
-            if (string.IsNullOrEmpty(name)) throw new ArgumentException("Can not be null or empty", nameof(name));
-            if (_programs.Contains(name)) return;
-            _programs.Add(name);
-        }
-
-        /// <inheritdoc />
-        /// <exception cref="ArgumentNullException">Thrown when the name is null.</exception>
-        public void RemoveProgram(string name)
-        {
-            if (string.IsNullOrEmpty(name)) throw new ArgumentException("Can not be null or empty", nameof(name));
-            if (!_programs.Contains(name)) return;
-            _programs.Remove(name);
-        }
+        public IList<ComponentName> ScheduledPrograms { get; }
 
         /// <inheritdoc />
         public bool Equals(Task? other)
@@ -100,7 +82,7 @@ namespace L5Sharp.Core
                    Equals(Watchdog, other.Watchdog) &&
                    InhibitTask == other.InhibitTask &&
                    DisableUpdateOutputs == other.DisableUpdateOutputs &&
-                   _programs.SequenceEqual(other._programs);
+                   ScheduledPrograms.SequenceEqual(other.ScheduledPrograms);
         }
 
         /// <inheritdoc />
@@ -123,7 +105,7 @@ namespace L5Sharp.Core
             hashCode.Add(Watchdog);
             hashCode.Add(InhibitTask);
             hashCode.Add(DisableUpdateOutputs);
-            hashCode.Add(_programs);
+            hashCode.Add(ScheduledPrograms);
             return hashCode.ToHashCode();
         }
 

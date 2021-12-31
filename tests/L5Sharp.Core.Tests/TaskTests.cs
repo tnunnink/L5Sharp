@@ -52,7 +52,7 @@ namespace L5Sharp.Core.Tests
         {
             var task = new Task("Test");
 
-            task.ScheduleProgram("Program");
+            task.ScheduledPrograms.Add("Program");
 
             task.ScheduledPrograms.Should().Contain("Program");
         }
@@ -62,9 +62,9 @@ namespace L5Sharp.Core.Tests
         {
             var task = new Task("Test");
 
-            task.ScheduleProgram("Program");
+            task.ScheduledPrograms.Add("Program");
 
-            FluentActions.Invoking(() => task.ScheduleProgram("Program")).Should().NotThrow();
+            FluentActions.Invoking(() => task.ScheduledPrograms.Add("Program")).Should().NotThrow();
         }
 
         [Test]
@@ -72,16 +72,16 @@ namespace L5Sharp.Core.Tests
         {
             var task = new Task("Test");
 
-            FluentActions.Invoking(() => task.ScheduleProgram(null!)).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(() => task.ScheduledPrograms.Add(null!)).Should().Throw<ArgumentException>();
         }
 
         [Test]
         public void RemoveProgram_ExistingProgram_ProgramsShouldBeEmpty()
         {
             var task = new Task("Test");
-            task.ScheduleProgram("Program");
+            task.ScheduledPrograms.Add("Program");
 
-            task.RemoveProgram("Program");
+            task.ScheduledPrograms.Remove("Program");
 
             task.ScheduledPrograms.Should().BeEmpty();
         }
@@ -91,7 +91,7 @@ namespace L5Sharp.Core.Tests
         {
             var task = new Task("Test");
 
-            task.RemoveProgram("Test");
+            task.ScheduledPrograms.Add("Test");
 
             task.ScheduledPrograms.Should().BeEmpty();
         }
@@ -102,7 +102,7 @@ namespace L5Sharp.Core.Tests
         {
             var task = new Task("Test");
 
-            FluentActions.Invoking(() => task.RemoveProgram(null)).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(() => task.ScheduledPrograms.Remove(null!)).Should().Throw<ArgumentException>();
         }
 
         [Test]
