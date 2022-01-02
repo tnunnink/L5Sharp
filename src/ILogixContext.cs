@@ -26,13 +26,15 @@ namespace L5Sharp
         ITagRepository Tags { get; }
         
         /// <summary>
-        /// Gets the <c>Tasks</c> repository for the L5X. 
+        /// A <see cref="IReadOnlyRepository{TComponent}"/> of <see cref="ITask"/> components for reading Logix Tasks
+        /// from the current <see cref="LogixContext"/>. 
         /// </summary>
-        ITaskRepository Tasks { get; }
+        IReadOnlyRepository<ITask> Tasks { get; }
         
         /// <summary>
-        /// Saves the current context to the provided file name. 
+        /// /// Saves the content of the <see cref="ILogixContext"/> to the provided file name.
         /// </summary>
+        /// <param name="fileName">The full path to the desired file name for which to save the content.</param>
         void Save(string fileName);
     }
 }

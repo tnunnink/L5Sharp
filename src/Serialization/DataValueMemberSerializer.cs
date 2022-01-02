@@ -21,9 +21,9 @@ namespace L5Sharp.Serialization
 
             var element = new XElement(ElementName);
 
-            element.AddValue(component, m => m.Name);
-            element.AddValue(component, m => m.DataType);
-            element.AddValue(component, m => m.Radix);
+            element.AddAttribute(component, m => m.Name);
+            element.AddAttribute(component, m => m.DataType);
+            element.AddAttribute(component, m => m.Radix);
 
             var value = component.Radix.Convert(atomic);
             element.Add(new XAttribute(LogixNames.Value, value));
@@ -42,8 +42,8 @@ namespace L5Sharp.Serialization
 
             var name = element.GetComponentName();
             var atomic = (IAtomicType)element.GetDataType();
-            var radix = element.GetValue<IMember<IDataType>, Radix>(m => m.Radix);
-            var value = element.GetValue<IAtomicType, object>(x => x.Value);
+            var radix = element.GetAttribute<IMember<IDataType>, Radix>(m => m.Radix);
+            var value = element.GetAttribute<IAtomicType, object>(x => x.Value);
             
             atomic.SetValue(value!);
 

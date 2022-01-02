@@ -19,19 +19,17 @@ namespace L5Sharp.Serialization
 
             var element = new XElement(ElementName);
 
-            element.AddValue(component, c => c.Name);
-            element.AddValue(component, c => c.ProcessorType);
-            element.AddValue(component, c => c.Revision.Major);
-            element.AddValue(component, c => c.Revision.Minor);
+            element.AddAttribute(component, c => c.Name);
+            element.AddElement(component, c => c.Description);
+            element.AddAttribute(component, c => c.ProcessorType);
+            element.AddAttribute(component, c => c.Revision.Major);
+            element.AddAttribute(component, c => c.Revision.Minor);
 
             element.Add(new XAttribute(nameof(component.ProjectCreationDate),
                 component.ProjectCreationDate.ToString("ddd MMM d HH:mm:ss yyyy")));
 
             element.Add(new XAttribute(nameof(component.LastModifiedDate),
                 component.ProjectCreationDate.ToString("ddd MMM d HH:mm:ss yyyy")));
-
-            if (!component.Description.IsEmpty())
-                element.AddValue(component, x => x.Description, true);
 
             return element;
         }
@@ -46,11 +44,11 @@ namespace L5Sharp.Serialization
                     $"Element name '{element.Name}' invalid. Expecting '{ElementName}'.");
 
             var name = element.GetComponentName();
-            var processorType = element.GetValue<IController, ProcessorType>(c => c.ProcessorType);
-            var description = element.GetValue<IController, string>(c => c.Description);
+            var processorType = element.GetAttribute<IController, ProcessorType>(c => c.ProcessorType);
+            var description = element.GetAttribute<IController, string>(c => c.Description);
 
-            var major = element.GetValue<IController, ushort>(c => c.Revision.Major);
-            var minor = element.GetValue<IController, ushort>(c => c.Revision.Minor);
+            var major = element.GetAttribute<IController, ushort>(c => c.Revision.Major);
+            var minor = element.GetAttribute<IController, ushort>(c => c.Revision.Minor);
             var revision = new Revision(major, minor);
 
             var creationDate = DateTime.ParseExact(element.Attribute("ProjectCreationDate")?.Value,

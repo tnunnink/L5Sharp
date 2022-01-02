@@ -22,8 +22,9 @@ namespace L5Sharp.Serialization
 
             var element = new XElement(ElementName);
             
-            element.AddValue(component, c => c.Name);
-            element.AddValue(component, c => c.Type);
+            element.AddAttribute(component, c => c.Name);
+            element.AddElement(component, c => c.Description);
+            element.AddAttribute(component, c => c.Type);
             element.Add(component.Content.Serialize());
 
             return element;
@@ -40,7 +41,7 @@ namespace L5Sharp.Serialization
 
             var name = element.GetComponentName();
             var description = element.GetComponentDescription();
-            var type = element.GetValue<IRoutine<ILogixContent>, RoutineType>(r => r.Type);
+            var type = element.GetAttribute<IRoutine<ILogixContent>, RoutineType>(r => r.Type);
             
             //todo content ??
             /*var content = element.Element(LogixNames.RllContent) is not null 

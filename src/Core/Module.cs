@@ -25,7 +25,7 @@ namespace L5Sharp.Core
 
         public string Name { get; }
         public string Description { get; }
-        public string CatalogNumber { get; }
+        public CatalogNumber CatalogNumber { get; }
         public ushort Vendor { get; }
         public ushort ProductType { get; }
         public ushort ProductCode { get; }

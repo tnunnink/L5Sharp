@@ -1,40 +1,10 @@
 ﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<RSLogix5000Content SchemaRevision="1.0" SoftwareRevision="32.02" TargetName="TestProgram" TargetType="Program" ContainsContext="true" Owner="tnunnink, EN Engineering" ExportDate="Fri Oct 15 14:39:52 2021" ExportOptions="References NoRawData L5KData DecoratedData Context Dependencies ForceProtectedEncoding AllProjDocTrans">
+<RSLogix5000Content SchemaRevision="1.0" SoftwareRevision="32.02" TargetName="Test" TargetType="Program" ContainsContext="true" Owner="tnunnink, EN Engineering" ExportDate="Sat Jan 01 13:55:48 2022" ExportOptions="References NoRawData L5KData DecoratedData Context Dependencies ForceProtectedEncoding AllProjDocTrans">
 <Controller Use="Context" Name="TestController">
-<DataTypes Use="Context">
-</DataTypes>
-<Tags Use="Context">
-<Tag Name="SimpleSint" TagType="Base" DataType="SINT" Radix="Decimal" Constant="false" ExternalAccess="None">
-<Comments>
-<Comment Operand=".0">
-<![CDATA[This is a test]]>
-</Comment>
-</Comments>
-<Data Format="L5K">
-<![CDATA[0]]>
-</Data>
-<Data Format="Decorated">
-<DataValue DataType="SINT" Radix="Decimal" Value="0"/>
-</Data>
-</Tag>
-</Tags>
 <Programs Use="Context">
-<Program Use="Target" Name="TestProgram" TestEdits="false" MainRoutineName="TestRoutine" Disabled="false" UseAsFolder="false">
-<Tags>
-<Tag Name="Test" TagType="Base" DataType="TIMER" Radix="Decimal" Constant="false" ExternalAccess="None">
-</Tag>
-</Tags>
-<Routines>
-<Routine Name="TestRoutine" Type="RLL">
-<RLLContent>
-<Rung Number="0" Type="N">
-<Text>
-<![CDATA[XIC(Test)OTE(SimpleSint.0);]]>
-</Text>
-</Rung>
-</RLLContent>
-</Routine>
-</Routines>
+<Program Use="Target" Name="Test" TestEdits="false" Disabled="false" UseAsFolder="false">
+<Tags/>
+<Routines/>
 </Program>
 </Programs>
 </Controller>

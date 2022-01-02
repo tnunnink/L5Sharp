@@ -30,40 +30,32 @@ namespace L5Sharp
         /// Get the <see cref="Enums.TaskType"/> value of the <see cref="ITask"/>.
         /// </summary>
         TaskType Type { get; }
-        
-        /// <summary>
-        /// Get the <see cref="Core.TaskPriority"/> value of the <see cref="ITask"/>.
-        /// </summary>
-        TaskPriority Priority { get; }
-        
+
         /// <summary>
         /// Get the <see cref="Core.ScanRate"/> value of the <see cref="ITask"/>.
         /// </summary>
         ScanRate Rate { get; }
-        
+
+        /// <summary>
+        /// Get the <see cref="Core.TaskPriority"/> value of the <see cref="ITask"/>.
+        /// </summary>
+        TaskPriority Priority { get; }
+
         /// <summary>
         /// Get the <see cref="Core.Watchdog"/> value of the <see cref="ITask"/>.
         /// </summary>
         Watchdog Watchdog { get; }
-        
-        /// <summary>
-        /// Gets the value indicating whether the <see cref="ITask"/> is inhibited.
-        /// </summary>
-        bool InhibitTask { get; }
-        
+
         /// <summary>
         /// Gets the value indicating whether the <see cref="ITask"/> is disabling updates to output.
         /// </summary>
         bool DisableUpdateOutputs { get; }
-        
+
         /// <summary>
-        /// Gets the <see cref="TaskEventInfo"/> object that contains the event configuration for the <see cref="ITask"/>.
+        /// Gets the value indicating whether the <see cref="ITask"/> is inhibited.
         /// </summary>
-        /// <remarks>
-        /// <see cref="EventInfo"/> is only available for the <see cref="Enums.TaskType.Event"/> task types.
-        /// </remarks>
-        TaskEventInfo? EventInfo { get; }
-        
+        bool InhibitTask { get; }
+
         /// <summary>
         /// Gets the collection of <see cref="Core.ComponentName"/> that represent the set of <see cref="IProgram"/>
         /// objects scheduled for the current <see cref="ITask"/> instance.
@@ -74,6 +66,6 @@ namespace L5Sharp
         /// validation will be performed to ensure the set of <see cref="ScheduledPrograms"/> follows the
         /// Logix guidelines for updating a <see cref="ITask"/> component.
         /// </remarks>
-        IList<ComponentName> ScheduledPrograms { get; }
+        IEnumerable<ComponentName> ScheduledPrograms { get; }
     }
 }

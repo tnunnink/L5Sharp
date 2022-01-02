@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Xml.Linq;
 using L5Sharp.Core;
 
 [assembly: InternalsVisibleTo("L5Sharp.Common.Tests")]
@@ -53,8 +54,12 @@ namespace L5Sharp.Common
         //Attribute Names
         public static string Name = nameof(Name);
         public static string Description = nameof(Description);
-        
+        //Other..
+        public static string EventInfo = nameof(EventInfo);
+
+
         //Component Map Collection
+
         private static readonly Dictionary<Type, Tuple<string, string>> ComponentNameMap = new()
         {
             { typeof(IController), new Tuple<string, string>(Controller, string.Empty) },

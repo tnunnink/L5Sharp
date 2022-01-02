@@ -6,7 +6,7 @@ namespace L5Sharp
 {
     public interface IModule : ILogixComponent
     {
-        string CatalogNumber { get; }
+        CatalogNumber CatalogNumber { get; }
         ushort Vendor { get; }
         ushort ProductType { get; }
         ushort ProductCode { get; }

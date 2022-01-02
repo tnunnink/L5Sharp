@@ -1,5 +1,4 @@
-﻿using System.Net;
-using Ardalis.SmartEnum;
+﻿using Ardalis.SmartEnum;
 
 namespace L5Sharp.Core
 {

@@ -7,7 +7,7 @@ namespace L5Sharp
     /// <summary>
     /// Represents a Logix Ladder Logic Routine content. 
     /// </summary>
-    public interface ILadderLogic : ILogixContent, IEnumerable<Rung>
+    public interface ILadderLogic : ILogixContent, IEnumerable<Rung>, IEquatable<ILadderLogic>
     {
         /// <summary>
         /// Gets the number of <see cref="Rung"/> objects in the current <see cref="ILadderLogic"/>.
@@ -23,35 +23,6 @@ namespace L5Sharp
         /// Rung number property.
         /// </remarks>
         Rung this[int number] { get; set; }
-
-        /// <summary>
-        /// Clears all <see cref="Rung"/> objects from the current <see cref="ILadderLogic"/>.
-        /// </summary>
-        void Clear();
-
-        /// <summary>
-        /// Determines whether the provided  <see cref="Core.NeutralText"/> is contained in the current <see cref="ILadderLogic"/>.
-        /// </summary>
-        /// <param name="text">The <see cref="Core.NeutralText"/> to locate in the <see cref="ILadderLogic"/>.</param>
-        /// <returns>true if the provided <see cref="Core.NeutralText"/> exists in the current <see cref="ILadderLogic"/>; otherwise, false</returns>
-        bool ContainsText(NeutralText text);
-
-        /// <summary>
-        /// Gets the first occurrence of the <see cref="Rung"/> that matches the provided condition in the
-        /// current <see cref="ILadderLogic"/> instance.
-        /// </summary>
-        /// <param name="match">
-        /// The <see cref="Predicate{Rung}"/> delegate that defines the conditions of the object to search for.
-        /// </param>
-        /// <returns>The first <see cref="Rung"/> that matches the condition of the specified predicate if found; otherwise; null</returns>
-        Rung? Find(Predicate<Rung> match);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="match"></param>
-        /// <returns></returns>
-        IEnumerable<Rung> FindAll(Predicate<Rung> match);
 
         /// <summary>
         /// Adds the provided <see cref="Rung"/> to the current <see cref="ILadderLogic"/>.
@@ -78,6 +49,43 @@ namespace L5Sharp
         /// <param name="rungs">The collection of <see cref="Rung"/> to add.</param>
         /// <exception cref="ArgumentNullException">When rungs is null.</exception>
         void AddRange(IEnumerable<Rung> rungs);
+
+        /// <summary>
+        /// Clears all <see cref="Rung"/> objects from the current <see cref="ILadderLogic"/>.
+        /// </summary>
+        void Clear();
+
+        /// <summary>
+        /// Applies the provided comment value to the specified <see cref="Rung"/> number.
+        /// </summary>
+        /// <param name="number">The number of the <see cref="Rung"/> to comment.</param>
+        /// <param name="comment">The string comment to apply to the specified <see cref="Rung"/>.</param>
+        /// <exception cref="ArgumentOutOfRangeException">When the number is outside the bounds of the <see cref="ILadderLogic"/> collection.</exception>
+        void Comment(int number, string comment);
+
+        /// <summary>
+        /// Determines whether the provided  <see cref="Core.NeutralText"/> is contained in the current <see cref="ILadderLogic"/>.
+        /// </summary>
+        /// <param name="text">The <see cref="Core.NeutralText"/> to locate in the <see cref="ILadderLogic"/>.</param>
+        /// <returns>true if the provided <see cref="Core.NeutralText"/> exists in the current <see cref="ILadderLogic"/>; otherwise, false</returns>
+        bool ContainsText(NeutralText text);
+
+        /// <summary>
+        /// Gets the first occurrence of the <see cref="Rung"/> that matches the provided condition in the
+        /// current <see cref="ILadderLogic"/> instance.
+        /// </summary>
+        /// <param name="match">
+        /// The <see cref="Predicate{Rung}"/> delegate that defines the conditions of the object to search for.
+        /// </param>
+        /// <returns>The first <see cref="Rung"/> that matches the condition of the specified predicate if found; otherwise; null</returns>
+        Rung? Find(Predicate<Rung> match);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="match"></param>
+        /// <returns></returns>
+        IEnumerable<Rung> FindAll(Predicate<Rung> match);
 
         /// <summary>
         /// Inserts the provided <see cref="Rung"/> to the current <see cref="ILadderLogic"/> at the specified number.
@@ -112,13 +120,5 @@ namespace L5Sharp
         /// <param name="text">The <see cref="Core.NeutralText"/> that represents the logic for the new <see cref="Rung"/>.</param>
         /// <exception cref="ArgumentOutOfRangeException">When the number is outside the bounds of the <see cref="ILadderLogic"/> collection.</exception>
         void Update(int number, NeutralText text);
-
-        /// <summary>
-        /// Applies the provided comment value to the specified <see cref="Rung"/> number.
-        /// </summary>
-        /// <param name="number">The number of the <see cref="Rung"/> to comment.</param>
-        /// <param name="comment">The string comment to apply to the specified <see cref="Rung"/>.</param>
-        /// <exception cref="ArgumentOutOfRangeException">When the number is outside the bounds of the <see cref="ILadderLogic"/> collection.</exception>
-        void Comment(int number, string comment);
     }
 }

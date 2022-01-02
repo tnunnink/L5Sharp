@@ -22,10 +22,10 @@ namespace L5Sharp.Serialization
 
             var element = new XElement(ElementName);
             
-            element.AddValue(component, c => c.Number);
-            element.AddValue(component, c => c.Type);
-            element.AddValue(component,c => c.Comment, true);
-            element.AddValue(component, c => c.Text, true);
+            element.AddAttribute(component, c => c.Number);
+            element.AddAttribute(component, c => c.Type);
+            element.AddElement(component,c => c.Comment);
+            element.AddElement(component, c => c.Text);
             
             return element;
         }
@@ -39,10 +39,10 @@ namespace L5Sharp.Serialization
             if (element.Name != ElementName)
                 throw new ArgumentException($"Element name '{element.Name}' invalid. Expecting '{ElementName}'");
 
-            var number = element.GetValue<Rung, int>(r => r.Number);
-            var type = element.GetValue<Rung, RungType>(r => r.Type);
-            var comment = element.GetValue<Rung, string>(r => r.Comment);
-            var text = element.GetValue<Rung, NeutralText>(r => r.Text);
+            var number = element.GetAttribute<Rung, int>(r => r.Number);
+            var type = element.GetAttribute<Rung, RungType>(r => r.Type);
+            var comment = element.GetElement<Rung, string>(r => r.Comment);
+            var text = element.GetElement<Rung, NeutralText>(r => r.Text);
 
             return new Rung(number, type, comment, text);
         }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using L5Sharp.Core;
+using L5Sharp.Exceptions;
 
 namespace L5Sharp
 {
@@ -12,8 +13,35 @@ namespace L5Sharp
     /// The <see cref="IComponentCollection{TComponent}"/> maintains items by the string name of
     /// an <see cref="ILogixComponent"/>.
     /// </remarks>
-    public interface IComponentCollection<TComponent> : ICollection<TComponent> where TComponent : ILogixComponent
+    public interface IComponentCollection<TComponent> : IEnumerable<TComponent> 
+        where TComponent : ILogixComponent
     {
+        /// <summary>
+        /// Gets the number of components in the <see cref="ComponentCollection{TComponent}"/>.
+        /// </summary>
+        int Count { get; }
+
+        /// <summary>
+        /// Adds the provided component to the <see cref="ComponentCollection{TComponent}"/>.
+        /// </summary>
+        /// <param name="component">The component to add.</param>
+        /// <exception cref="ArgumentNullException">component is null.</exception>
+        /// <exception cref="ComponentNameCollisionException">component name is a duplicate.</exception>
+        void Add(TComponent component);
+
+        /// <summary>
+        /// Clears all components from the <see cref="ComponentCollection{TComponent}"/>.
+        /// </summary>
+        void Clear();
+
+        /// <summary>
+        /// Determines if the provided component name is contained in the <see cref="ComponentCollection{TComponent}"/>.
+        /// </summary>
+        /// <param name="name">The name of the component to locate.</param>
+        /// <returns>true if the component is not null and is found in the collection; otherwise, false.</returns>
+        /// <exception cref="ArgumentNullException">name is null.</exception>
+        bool Contains(ComponentName name);
+
         /// <summary>
         /// Gets the first occurrence in the <see cref="IComponentCollection{TComponent}"/> of a component that matches
         /// the provided predicate condition.

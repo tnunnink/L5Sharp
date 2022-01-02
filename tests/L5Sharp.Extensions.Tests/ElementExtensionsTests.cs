@@ -55,7 +55,7 @@ namespace L5Sharp.Extensions.Tests
         {
             var element = new XElement("Test", new XAttribute("Radix", "Decimal"));
 
-            FluentActions.Invoking(() => element.GetValue<IMember<IDataType>, object>(m => m[0])).Should()
+            FluentActions.Invoking(() => element.GetAttribute<IMember<IDataType>, object>(m => m[0])).Should()
                 .Throw<ArgumentException>();
         }
 
@@ -64,7 +64,7 @@ namespace L5Sharp.Extensions.Tests
         {
             var element = new XElement("Test", new XAttribute("Radix", "Decimal"));
 
-            var externalAccess = element.GetValue<IMember<IDataType>, ExternalAccess>(m => m.ExternalAccess);
+            var externalAccess = element.GetAttribute<IMember<IDataType>, ExternalAccess>(m => m.ExternalAccess);
 
             externalAccess.Should().BeNull();
         }
@@ -74,74 +74,74 @@ namespace L5Sharp.Extensions.Tests
         {
             var element = new XElement("Test", new XAttribute("Radix", "Decimal"));
 
-            var radix = element.GetValue<IMember<IDataType>, Radix>(m => m.Radix);
+            var radix = element.GetAttribute<IMember<IDataType>, Radix>(m => m.Radix);
 
             radix.Should().NotBeNull();
             radix.Should().Be(Radix.Decimal);
         }
         
         [Test]
-        public void Add_NullInstance_ShouldThrowArgumentNullException()
+        public void AddAttribute_NullInstance_ShouldThrowArgumentNullException()
         {
             var element = new XElement("Test");
 
-            FluentActions.Invoking(() => element.AddValue<string, int>(null!, c => c.Length))
+            FluentActions.Invoking(() => element.AddAttribute<string, int>(null!, c => c.Length))
                 .Should().Throw<ArgumentNullException>();
         }
         
         [Test]
-        public void Add_NonMemberExpression_ShouldThrowArgumentException()
+        public void AddAttribute_NonMemberExpression_ShouldThrowArgumentException()
         {
             var element = new XElement("Test");
             const string instance = "This is a string";
 
-            FluentActions.Invoking(() => element.AddValue(instance, c => c.Substring(0, 1)))
+            FluentActions.Invoking(() => element.AddAttribute(instance, c => c.Substring(0, 1)))
                 .Should().Throw<ArgumentException>();
         }
         
         [Test]
-        public void Add_EmptyValue_ShouldThrowArgumentException()
+        public void AddAttribute_EmptyValue_ShouldThrowArgumentException()
         {
             var element = new XElement("Test");
             var member = Member.Create<Int>("Test");
             
-            element.AddValue(member, m => m.Description);
+            element.AddAttribute(member, m => m.Description);
 
             element.Attributes().Should().HaveCount(0);
             element.Elements().Should().HaveCount(0);
         }
 
         [Test]
-        public void Add_ValidMember_ShouldHaveExpectedNameAndValue()
+        public void AddAttribute_ValidMember_ShouldHaveExpectedNameAndValue()
         {
             var element = new XElement("Test");
             var dt = DateTime.UnixEpoch;
 
-            element.AddValue(dt, t => t.Year);
+            element.AddAttribute(dt, t => t.Year);
 
             element.Attribute("Year").Should().NotBeNull();
             element.Attribute("Year")?.Value.Should().Be("1970");
         }
         
         [Test]
-        public void Add_ValidMemberIsElementOverride_ShouldHaveExpectedNameAndValue()
+        public void AddElement_ValidMember_ShouldHaveExpectedNameAndValue()
         {
             var element = new XElement("Test");
             var dt = DateTime.UnixEpoch;
 
-            element.AddValue(dt, t => t.Year, true);
+            element.AddElement(dt, t => t.Year);
 
             element.Element("Year").Should().NotBeNull();
             element.Element("Year")?.Value.Should().Be("1970");
         }
         
         [Test]
-        public void Add_ValidMemberNameOverride_ShouldHaveExpectedNameAndValue()
+        public void AddAttribute_ValidMemberNameOverride_ShouldHaveExpectedNameAndValue()
         {
             var element = new XElement("Test");
             var dt = DateTime.UnixEpoch;
 
-            element.AddValue(dt, t => t.Year, nameOverride: "CurrentYear");
+            element.AddAttribute(dt, t => t.Year, nameOverride: "CurrentYear");
 
             element.Attribute("CurrentYear").Should().NotBeNull();
             element.Attribute("CurrentYear")?.Value.Should().Be("1970");

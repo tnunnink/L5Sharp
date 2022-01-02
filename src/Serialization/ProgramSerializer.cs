@@ -22,22 +22,22 @@ namespace L5Sharp.Serialization
 
             var element = new XElement(ElementName);
             
-            element.AddValue(component, c => c.Name);
-            element.AddValue(component, c => c.Description, true);
-            element.AddValue(component, c => c.Type);
-            element.AddValue(component, c => c.TestEdits);
-            element.AddValue(component, c => c.Disabled);
+            element.AddAttribute(component, c => c.Name);
+            element.AddElement(component, c => c.Description);
+            element.AddAttribute(component, c => c.Type);
+            element.AddAttribute(component, c => c.TestEdits);
+            element.AddAttribute(component, c => c.Disabled);
 
             if (component.Tags.Count > 0)
             {
-                var tags = new XElement(LogixNames.Tags);
+                var tags = new XElement(nameof(component.Tags));
                 tags.Add(component.Tags.Select(t => t.Serialize()));
                 element.Add(tags);
             }
             
             if (component.Routines.Count > 0)
             {
-                var routines = new XElement(LogixNames.Routines);
+                var routines = new XElement(nameof(component.Routines));
                 routines.Add(component.Routines.Select(t => t.Serialize()));
                 element.Add(routines);
             }
@@ -53,15 +53,12 @@ namespace L5Sharp.Serialization
             if (element.Name != ElementName)
                 throw new ArgumentException($"Element name '{element.Name}' invalid. Expecting '{ElementName}'");
 
+            var type = element.GetAttribute<IProgram, ProgramType>(p => p.Type);
+            
             var name = element.GetComponentName();
             var description = element.GetComponentDescription();
-            var type = element.GetValue<IProgram, ProgramType>(p => p.Type);
-
-            //todo this is close but...we need to build the instance based on type.
-
-            var testEdits = element.GetValue<IProgram, bool>(p => p.TestEdits);
-            var disabled = element.GetValue<IProgram, bool>(p => p.Disabled);
-
+            var testEdits = element.GetAttribute<IProgram, bool>(p => p.TestEdits);
+            var disabled = element.GetAttribute<IProgram, bool>(p => p.Disabled);
 
             var tags = element.Descendants(LogixNames.Tag)
                 .Select(e => e.Deserialize<ITag<IDataType>>());

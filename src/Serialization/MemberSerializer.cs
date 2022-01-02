@@ -22,14 +22,12 @@ namespace L5Sharp.Serialization
 
             var element = new XElement(ElementName);
 
-            element.AddValue(component, c => c.Name);
-            element.AddValue(component, c => c.DataType.ToString());
-            element.AddValue(component, c => c.Dimension);
-            element.AddValue(component, c => c.Radix);
-            element.AddValue(component, c => c.ExternalAccess);
-
-            if (!component.Description.IsEmpty())
-                element.AddValue(component, x => x.Description, true);
+            element.AddAttribute(component, c => c.Name);
+            element.AddElement(component, c => c.Description);
+            element.AddAttribute(component, c => c.DataType.ToString());
+            element.AddAttribute(component, c => c.Dimension);
+            element.AddAttribute(component, c => c.Radix);
+            element.AddAttribute(component, c => c.ExternalAccess);
 
             return element;
         }
@@ -43,11 +41,11 @@ namespace L5Sharp.Serialization
                 throw new ArgumentException($"Element name '{element.Name}' invalid. Expecting '{ElementName}'");
 
             var name = element.GetComponentName();
+            var description = element.GetComponentDescription();
             var dataType = element.GetDataType();
-            var dimensions = element.GetValue<Member<IDataType>, Dimensions>(m => m.Dimension);
-            var radix = element.GetValue<Member<IDataType>, Radix>(m => m.Radix);
-            var access = element.GetValue<Member<IDataType>, ExternalAccess>(m => m.ExternalAccess);
-            var description = element.GetValue<Member<IDataType>, string>(m => m.Description);
+            var dimensions = element.GetAttribute<Member<IDataType>, Dimensions>(m => m.Dimension);
+            var radix = element.GetAttribute<Member<IDataType>, Radix>(m => m.Radix);
+            var access = element.GetAttribute<Member<IDataType>, ExternalAccess>(m => m.ExternalAccess);
 
             return Member.Create(name, dataType, dimensions, radix, access, description);
         }

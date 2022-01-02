@@ -4,9 +4,9 @@ using Ardalis.SmartEnum;
 namespace L5Sharp.Enums
 {
     /// <summary>
-    /// An enumeration of all Logix ExternalAccess options.
+    /// An enumeration of all Logix <see cref="ExternalAccess"/> options.
     /// <remarks>
-    /// ExternalAccess is a Logix setting that determines the ability to read from or write to a given component.
+    /// <see cref="ExternalAccess"/> is a Logix setting that determines the ability to read from or write to a given component.
     /// </remarks>
     /// </summary>
     public sealed class ExternalAccess : SmartEnum<ExternalAccess>
@@ -34,7 +34,7 @@ namespace L5Sharp.Enums
         }
 
         /// <summary>
-        /// Gets the most restrictive of the two provided <c>ExternalAccess</c> objects.
+        /// Gets the most restrictive of the two provided <see cref="ExternalAccess"/> objects.
         /// </summary>
         /// <param name="first">The first <c>ExternalAccess</c> object to compare.</param>
         /// <param name="second">The second <c>ExternalAccess</c> object to compare.</param>
@@ -53,18 +53,18 @@ namespace L5Sharp.Enums
         
 
         /// <summary>
-        /// Represents no read or write access.
+        /// Represents no read or write <see cref="ExternalAccess"/>.
         /// </summary>
-        public static readonly ExternalAccess None = new ExternalAccess("None", 0);
+        public static readonly ExternalAccess None = new(nameof(None), 0);
 
         /// <summary>
-        /// Represents read but not write access.
+        /// Represents read but not write <see cref="ExternalAccess"/>.
         /// </summary>
-        public static readonly ExternalAccess ReadOnly = new ExternalAccess("Read Only", 1);
+        public static readonly ExternalAccess ReadOnly = new("Read Only", 1);
 
         /// <summary>
-        /// Represents read and write access.
+        /// Represents read and write <see cref="ExternalAccess"/>.
         /// </summary>
-        public static readonly ExternalAccess ReadWrite = new ExternalAccess("Read/Write", 2);
+        public static readonly ExternalAccess ReadWrite = new("Read/Write", 2);
     }
 }

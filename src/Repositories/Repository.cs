@@ -48,7 +48,7 @@ namespace L5Sharp.Repositories
         }
 
         /// <inheritdoc />
-        public virtual TComponent? GetFirst(Expression<Func<TComponent, bool>> predicate)
+        public virtual TComponent? Find(Expression<Func<TComponent, bool>> predicate)
         {
             var filter = predicate.ToXExpression();
 
@@ -58,7 +58,7 @@ namespace L5Sharp.Repositories
         }
 
         /// <inheritdoc />
-        public virtual IEnumerable<TComponent> Find(Expression<Func<TComponent, bool>> predicate)
+        public virtual IEnumerable<TComponent> FindAll(Expression<Func<TComponent, bool>> predicate)
         {
             var filter = predicate.ToXExpression();
 

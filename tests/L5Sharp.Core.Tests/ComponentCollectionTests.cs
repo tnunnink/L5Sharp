@@ -68,15 +68,7 @@ namespace L5Sharp.Core.Tests
 
             collection.Count.Should().BePositive();
         }
-
-        [Test]
-        public void IsReadOnly_WhenCalled_ShouldBeFalse()
-        {
-            var collection = new ComponentCollection<MyComponent>(_components);
-
-            collection.IsReadOnly.Should().BeFalse();
-        }
-
+        
         [Test]
         public void Add_Null_ShouldThrowArgumentNullException()
         {
@@ -140,17 +132,6 @@ namespace L5Sharp.Core.Tests
             var result = collection.Contains(new MyComponent("Test1"));
 
             result.Should().BeTrue();
-        }
-
-        [Test]
-        public void CopyTo_WhenCalled_ShouldHaveCount()
-        {
-            var collection = new ComponentCollection<MyComponent>(_components);
-            var array = new MyComponent[3];
-
-            collection.CopyTo(array, 0);
-
-            array.Should().HaveCount(3);
         }
 
         [Test]
@@ -240,39 +221,11 @@ namespace L5Sharp.Core.Tests
         }
 
         [Test]
-        public void Remove_NullComponent_ShouldThrowArgumentNullException()
-        {
-            var collection = new ComponentCollection<MyComponent>(_components);
-
-            FluentActions.Invoking(() => collection.Remove((MyComponent)null)).Should().Throw<ArgumentNullException>();
-        }
-
-        [Test]
-        public void Remove_NonExistingComponent_ShouldBeFalse()
-        {
-            var collection = new ComponentCollection<MyComponent>(_components);
-
-            var removed = collection.Remove(new MyComponent("Test"));
-
-            removed.Should().BeFalse();
-        }
-
-        [Test]
-        public void Remove_ExistingComponent_ShouldBeTrue()
-        {
-            var collection = new ComponentCollection<MyComponent>(_components);
-
-            var removed = collection.Remove(new MyComponent("Test2"));
-
-            removed.Should().BeTrue();
-        }
-
-        [Test]
         public void Remove_NullName_ShouldThrowArgumentNullException()
         {
             var collection = new ComponentCollection<MyComponent>(_components);
 
-            FluentActions.Invoking(() => collection.Remove(((ComponentName)null)!))
+            FluentActions.Invoking(() => collection.Remove(null!))
                 .Should().Throw<ArgumentNullException>();
         }
 

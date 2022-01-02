@@ -18,10 +18,10 @@ namespace L5Sharp.Serialization
 
             var element = new XElement(ElementName);
             
-            element.AddValue(component, m => m.Name);
-            element.AddValue(component, m => m.DataType);
-            element.AddValue(component, m => m.Dimension);
-            element.AddValue(component, m => m.Radix);
+            element.AddAttribute(component, m => m.Name);
+            element.AddAttribute(component, m => m.DataType);
+            element.AddAttribute(component, m => m.Dimension);
+            element.AddAttribute(component, m => m.Radix);
 
             /*var serializer = new ArrayElementSerializer();
             var elements = component.Select(m => serializer.Serialize(m));
@@ -39,8 +39,8 @@ namespace L5Sharp.Serialization
                 throw new ArgumentException($"Element name '{element.Name}' invalid. Expecting '{ElementName}'");
 
             var name = element.GetComponentName();
-            var dimensions = element.GetValue<IMember<IDataType>, Dimensions>(m => m.Dimension);
-            var radix = element.GetValue<IMember<IDataType>, Radix>(m => m.Radix);
+            var dimensions = element.GetAttribute<IMember<IDataType>, Dimensions>(m => m.Dimension);
+            var radix = element.GetAttribute<IMember<IDataType>, Radix>(m => m.Radix);
             
             /*var serializer = new ArrayElementSerializer();
             var members = element.Elements().Select(e => serializer.Deserialize(e)).ToArray();*/

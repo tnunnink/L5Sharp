@@ -4,7 +4,7 @@ using L5Sharp.Enums;
 namespace L5Sharp.Core
 {
     /// <inheritdoc />
-    public class Controller : IController
+    public sealed class Controller : IController
     {
         internal Controller(string name, ProcessorType processorType, Revision revision, DateTime createdOn,
             DateTime modifiedOn, string? description)

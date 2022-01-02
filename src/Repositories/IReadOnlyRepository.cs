@@ -35,13 +35,13 @@ namespace L5Sharp.Repositories
         /// </summary>
         /// <param name="predicate"></param>
         /// <returns></returns>
-        TComponent? GetFirst(Expression<Func<TComponent, bool>> predicate);
+        TComponent? Find(Expression<Func<TComponent, bool>> predicate);
         
         /// <summary>
         /// Finds all components that satisfy the provided expression delegate. 
         /// </summary>
         /// <param name="predicate"></param>
         /// <returns></returns>
-        IEnumerable<TComponent> Find(Expression<Func<TComponent, bool>> predicate);
+        IEnumerable<TComponent> FindAll(Expression<Func<TComponent, bool>> predicate);
     }
 }

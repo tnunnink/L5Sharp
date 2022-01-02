@@ -20,12 +20,10 @@ namespace L5Sharp.Serialization
                 throw new ArgumentNullException(nameof(component));
 
             var element = new XElement(ElementName);
-            element.AddValue(component,c => c.Name);
-            element.AddValue(component,c => c.Family);
-            element.AddValue(component,c => c.Class);
-
-            if (!component.Description.IsEmpty())
-                element.AddValue(component, x => x.Description, true);
+            element.AddAttribute(component,c => c.Name);
+            element.AddElement(component,c => c.Description);
+            element.AddAttribute(component,c => c.Family);
+            element.AddAttribute(component,c => c.Class);
 
             var members = new XElement(nameof(component.Members));
             members.Add(component.Members.Select(m => m.Serialize()));
@@ -43,7 +41,7 @@ namespace L5Sharp.Serialization
                 throw new ArgumentException($"Element name '{element.Name}' invalid. Expecting '{ElementName}'");
 
             var name = element.GetComponentName();
-            var description = element.GetValue<IDataType, string>(x => x.Description);
+            var description = element.GetAttribute<IDataType, string>(x => x.Description);
             var members = element.Descendants(LogixNames.Member).Select(e => e.Deserialize<IMember<IDataType>>());
 
             return UserDefined.Create(name, description, members);

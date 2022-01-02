@@ -1,12 +1,24 @@
-﻿using L5Sharp.Core;
+﻿using System;
+using L5Sharp.Core;
 using L5Sharp.Enums;
 
 namespace L5Sharp
 {
     /// <summary>
-    /// Represents a Logix Program component.
+    /// Represents a Logix <b>Program</b> component.
     /// </summary>
-    public interface IProgram : ILogixComponent
+    /// <remarks>
+    /// <para>
+    /// <see cref="IProgram"/> is the base interface for all <see cref="Enums.ProgramType"/> implementations.
+    /// <see cref="IProgram"/> is a container for <see cref="IRoutine{TContent}"/> and <see cref="ITag{TDataType}"/>
+    /// components. 
+    /// </para>
+    /// </remarks>
+    /// <footer>
+    /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
+    /// `Logix 5000 Controllers Import/Export`</a> for more information.
+    /// </footer> 
+    public interface IProgram : ILogixComponent, IEquatable<IProgram>
     {
         /// <summary>
         /// Gets the <see cref="Enums.ProgramType"/> value for the <see cref="IProgram"/>.
@@ -27,13 +39,13 @@ namespace L5Sharp
         /// Gets the name of the <see cref="IRoutine{TContent}"/> that represents the main entry point routine
         /// for the <see cref="IProgram"/>.
         /// </summary>
-        ComponentName MainRoutineName { get; }
+        string MainRoutineName { get; }
         
         /// <summary>
         /// Gets the name of the <see cref="IRoutine{TContent}"/> that represents the routine that is executed when
         /// a fault occurs for the <see cref="IProgram"/>. 
         /// </summary>
-        ComponentName FaultRoutineName { get; }
+        string FaultRoutineName { get; }
         
         /// <summary>
         /// A value indicating whether the current <see cref="IProgram"/> is a logical container for child programs.

@@ -48,7 +48,7 @@ namespace L5Sharp
         public ITagRepository Tags { get; }
 
         /// <inheritdoc />
-        public ITaskRepository Tasks { get; }
+        public IReadOnlyRepository<ITask> Tasks { get; }
 
         /// <inheritdoc />
         public void Save(string fileName)
@@ -73,28 +73,6 @@ namespace L5Sharp
             var componentName = LogixNames.GetComponentName<TComponent>();
             
             return L5X.Descendants(componentName);
-        }
-
-        private static XDocument GenerateContent(ILogixComponent logixComponent, Revision revision)
-        {
-            var declaration = new XDeclaration("1.0", "UTF-8", "yes");
-            var root = new XElement(LogixNames.RsLogix5000Content);
-            root.Add(new XAttribute("SchemaRevision", "1.0"));
-            root.Add(new XAttribute("SoftwareRevision", revision.ToString()));
-            root.Add(new XAttribute("TargetName", logixComponent.Name));
-            root.Add(new XAttribute("TargetType", logixComponent.GetType().Name));
-            root.Add(new XAttribute("ContainsContext", logixComponent.GetType() != typeof(IController)));
-            root.Add(new XAttribute("Owner", $"{Environment.UserName}, {Environment.UserDomainName}"));
-            root.Add(new XAttribute("ExportDate", DateTime.Now));
-            root.Add(new XAttribute("ExportOptions", ""));
-
-            if (logixComponent is IController) return new XDocument(declaration, root);
-
-            var controllerElement = new XElement(LogixNames.Controller);
-            //todo add other properties needed
-            root.Add(controllerElement);
-
-            return new XDocument(declaration, root);
         }
 
         private static void ValidateFile(XDocument document)

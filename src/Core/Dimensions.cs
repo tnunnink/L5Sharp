@@ -13,7 +13,7 @@ namespace L5Sharp.Core
     /// Logix <c>Dimensions</c> can have one, two, or three dimensions.
     /// These dimensions are represented by the properties X, Y, and Z.
     /// </remarks>
-    public class Dimensions : IEquatable<Dimensions>, IPrototype<Dimensions>
+    public sealed class Dimensions : IEquatable<Dimensions>, IPrototype<Dimensions>
     {
         private Dimensions()
         {
@@ -101,10 +101,8 @@ namespace L5Sharp.Core
         public static Dimensions Empty => new();
 
         /// <inheritdoc />
-        public Dimensions Copy()
-        {
-            return Z > 0 ? new Dimensions(X, Y, Z) : Y > 0 ? new Dimensions(X, Y) : X > 0 ? new Dimensions(X) : Empty;
-        }
+        public Dimensions Copy() => 
+            Z > 0 ? new Dimensions(X, Y, Z) : Y > 0 ? new Dimensions(X, Y) : X > 0 ? new Dimensions(X) : Empty;
 
         /// <summary>
         /// Parses a string into an instance of Dimensions.
@@ -220,10 +218,7 @@ namespace L5Sharp.Core
         /// <returns>
         /// A Dimensions value representing the provided ushort length.
         /// </returns>
-        public static implicit operator Dimensions(ushort length)
-        {
-            return new Dimensions(length);
-        }
+        public static implicit operator Dimensions(ushort length) => new Dimensions(length);
 
         /// <summary>
         /// Converts the provided <see cref="Dimensions"/> to a <see cref="ushort"/> value. 
@@ -232,10 +227,7 @@ namespace L5Sharp.Core
         /// <returns>
         /// A ushort value representing the provided Dimensions instance. 
         /// </returns>
-        public static implicit operator ushort(Dimensions dimensions)
-        {
-            return dimensions.X;
-        }
+        public static implicit operator ushort(Dimensions dimensions) => dimensions.X;
 
         /// <summary>
         /// Converts the provided <see cref="Dimensions"/> to a <see cref="int"/> value. 
@@ -244,10 +236,7 @@ namespace L5Sharp.Core
         /// <returns>
         /// A int value representing the provided Dimensions <see cref="Length"/>. 
         /// </returns>
-        public static implicit operator int(Dimensions dimensions)
-        {
-            return dimensions.Length;
-        }
+        public static implicit operator int(Dimensions dimensions) => dimensions.Length;
 
         /// <inheritdoc />
         public bool Equals(Dimensions? other)
@@ -258,18 +247,10 @@ namespace L5Sharp.Core
         }
 
         /// <inheritdoc />
-        public override bool Equals(object? obj)
-        {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((Dimensions)obj);
-        }
+        public override bool Equals(object? obj) => Equals(obj as Dimensions);
 
         /// <inheritdoc />
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(X, Y, Z);
-        }
+        public override int GetHashCode() => HashCode.Combine(X, Y, Z);
 
         /// <summary>
         /// Determines whether the objects are equal.
@@ -313,19 +294,10 @@ namespace L5Sharp.Core
             return indices;
         }
 
-        private static string GenerateIndex(ushort x)
-        {
-            return $"[{x}]";
-        }
+        private static string GenerateIndex(ushort x) => $"[{x}]";
 
-        private static string GenerateIndex(ushort x, ushort y)
-        {
-            return $"[{x},{y}]";
-        }
+        private static string GenerateIndex(ushort x, ushort y) => $"[{x},{y}]";
 
-        private static string GenerateIndex(ushort x, ushort y, ushort z)
-        {
-            return $"[{x},{y},{z}]";
-        }
+        private static string GenerateIndex(ushort x, ushort y, ushort z) => $"[{x},{y},{z}]";
     }
 }

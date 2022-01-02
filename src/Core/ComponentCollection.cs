@@ -42,22 +42,10 @@ namespace L5Sharp.Core
         }
 
 
-        /// <summary>
-        /// Gets the number of items in the <see cref="ComponentCollection{TComponent}"/>.
-        /// </summary>
+        /// <inheritdoc />
         public int Count => _components.Count;
 
-        /// <summary>
-        /// Gets value indicating whether the <see cref="ComponentCollection{TComponent}"/> is read-only. 
-        /// </summary>
-        public bool IsReadOnly => false;
-
-        /// <summary>
-        /// Adds the provided component to the <see cref="ComponentCollection{TComponent}"/>.
-        /// </summary>
-        /// <param name="component">The component to add.</param>
-        /// <exception cref="ArgumentNullException">component is null.</exception>
-        /// <exception cref="ComponentNameCollisionException">component name is a duplicate.</exception>
+        /// <inheritdoc />
         public void Add(TComponent component)
         {
             if (component is null)
@@ -69,23 +57,13 @@ namespace L5Sharp.Core
             _components.Add(component.Name, component);
         }
 
-        /// <summary>
-        /// Clears all components from the <see cref="ComponentCollection{TComponent}"/>.
-        /// </summary>
+        /// <inheritdoc />
         public void Clear() => _components.Clear();
 
-        /// <summary>
-        /// Determines if the provided component is contained in the <see cref="ComponentCollection{TComponent}"/>.
-        /// </summary>
-        /// <param name="component">The component to locate.</param>
-        /// <returns>true if the component is not null and is found in the collection; otherwise, false.</returns>
-        /// <exception cref="ArgumentNullException">component is null.</exception>
-        public bool Contains(TComponent component) => component is not null
-            ? _components.ContainsKey(component.Name)
-            : throw new ArgumentNullException(nameof(component));
-
         /// <inheritdoc />
-        public void CopyTo(TComponent[] array, int arrayIndex) => _components.Values.CopyTo(array, arrayIndex);
+        public bool Contains(ComponentName name) => name is not null
+            ? _components.ContainsKey(name)
+            : throw new ArgumentNullException(nameof(name));
 
         /// <inheritdoc />
         public TComponent? Find(Predicate<TComponent> match) => match is not null
@@ -104,20 +82,6 @@ namespace L5Sharp.Core
                 throw new ArgumentNullException(nameof(name));
 
             return _components.ContainsKey(name) ? _components[name] : default;
-        }
-
-        /// <summary>
-        /// Removes the provided component from the <see cref="ComponentCollection{TComponent}"/>.
-        /// </summary>
-        /// <param name="component">The component to remove.</param>
-        /// <returns>true if the component is successfully found and removed; otherwise, false.</returns>
-        /// <exception cref="ArgumentNullException">component is null.</exception>
-        public bool Remove(TComponent component)
-        {
-            if (component is null)
-                throw new ArgumentNullException(nameof(component));
-
-            return _components.Remove(component.Name);
         }
 
         /// <inheritdoc />

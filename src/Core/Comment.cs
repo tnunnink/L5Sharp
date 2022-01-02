@@ -3,7 +3,7 @@
     /// <summary>
     /// Represents a string comment for a component member.  
     /// </summary>
-    public class Comment
+    public sealed class Comment
     {
         /// <summary>
         /// Creates a new instance of a <c>Comment</c> with the provided operand and value.

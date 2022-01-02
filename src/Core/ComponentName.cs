@@ -5,7 +5,7 @@ using L5Sharp.Exceptions;
 namespace L5Sharp.Core
 {
     /// <summary>
-    /// Represents the name of an Logix Component.
+    /// Represents the string name of a Logix component.
     /// </summary>
     /// <remarks>
     /// Valid name must contain only alphanumeric or '_', start with a letter, and be between 1 and 40 characters.
@@ -37,11 +37,25 @@ namespace L5Sharp.Core
             _name = name;
         }
 
+        /// <summary>
+        /// Converts between a <see cref="ComponentName"/> and a <see cref="string"/>
+        /// </summary>
+        /// <param name="name">The <see cref="ComponentName"/> to instance to convert</param>
+        /// <returns>A <see cref="string"/> representing the value of the <see cref="ComponentName"/></returns>
+        public static implicit operator string(ComponentName name) => name._name;
+
+        /// <summary>
+        /// Converts between a <see cref="string"/> and a <see cref="ComponentName"/>
+        /// </summary>
+        /// <param name="name">The <see cref="string"/> to value to convert</param>
+        /// <returns>A <see cref="ComponentName"/> representing the value </returns>
+        public static implicit operator ComponentName(string name) => new(name);
+
         /// <inheritdoc />
-        public ComponentName Copy()
-        {
-            return new ComponentName(string.Copy(_name));
-        }
+        public ComponentName Copy() => new(string.Copy(_name));
+
+        /// <inheritdoc />
+        public override string ToString() => _name;
 
         /// <summary>
         /// Determines if the current <see cref="ComponentName"/> instance equals another.
@@ -64,10 +78,7 @@ namespace L5Sharp.Core
         }
 
         /// <inheritdoc />
-        public override int GetHashCode()
-        {
-            return _name.GetHashCode();
-        }
+        public override int GetHashCode() => _name.GetHashCode();
 
         /// <summary>
         /// Determines if two <see cref="ComponentName"/> objects are equal.
@@ -75,10 +86,7 @@ namespace L5Sharp.Core
         /// <param name="left">The left item to compare.</param>
         /// <param name="right">The right item to compare.</param>
         /// <returns>True if they are equal</returns>
-        public static bool operator ==(ComponentName left, ComponentName right)
-        {
-            return Equals(left, right);
-        }
+        public static bool operator ==(ComponentName left, ComponentName right) => Equals(left, right);
 
         /// <summary>
         /// Determines if two <see cref="ComponentName"/> objects are not equal.
@@ -86,36 +94,7 @@ namespace L5Sharp.Core
         /// <param name="left">The left item to compare.</param>
         /// <param name="right">The right item to compare.</param>
         /// <returns><see langword="true"/> if they are not equal</returns>
-        public static bool operator !=(ComponentName left, ComponentName right)
-        {
-            return !Equals(left, right);
-        }
-
-        /// <summary>
-        /// Converts between a <see cref="ComponentName"/> and a <see cref="string"/>
-        /// </summary>
-        /// <param name="name">The <see cref="ComponentName"/> to instance to convert</param>
-        /// <returns>A <see cref="string"/> representing the value of the <see cref="ComponentName"/></returns>
-        public static implicit operator string(ComponentName name)
-        {
-            return name._name;
-        }
-
-        /// <summary>
-        /// Converts between a <see cref="string"/> and a <see cref="ComponentName"/>
-        /// </summary>
-        /// <param name="name">The <see cref="string"/> to value to convert</param>
-        /// <returns>A <see cref="ComponentName"/> representing the value </returns>
-        public static implicit operator ComponentName(string name)
-        {
-            return new ComponentName(name);
-        }
-
-        /// <inheritdoc />
-        public override string ToString()
-        {
-            return _name;
-        }
+        public static bool operator !=(ComponentName left, ComponentName right) => !Equals(left, right);
 
         /// <inheritdoc />
         public int CompareTo(ComponentName? other)

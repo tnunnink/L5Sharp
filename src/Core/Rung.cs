@@ -10,7 +10,7 @@ namespace L5Sharp.Core
     /// Rungs make up the content of the <see cref="ILadderLogic"/> object. Rung's <see cref="Text"/> property contains
     /// the <see cref="Core.NeutralText"/> value which defines the logic for the instance.
     /// </remarks>
-    public class Rung : IEquatable<Rung>
+    public sealed class Rung : IEquatable<Rung>
     {
         /// <summary>
         /// Creates a new instance of a <c>Rung</c> with the provided parameters.

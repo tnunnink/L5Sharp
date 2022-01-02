@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Xml.Linq;
 using L5Sharp.Common;
-using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Extensions;
 
@@ -20,14 +19,14 @@ namespace L5Sharp.Serialization
 
             var element = new XElement(LogixNames.Task);
 
-            element.AddValue(component, c => c.Name);
-            element.AddValue(component, c => c.Description, true);
-            element.AddValue(component, c => c.Type);
-            element.AddValue(component, c => c.Rate);
-            element.AddValue(component, c => c.Priority);
-            element.AddValue(component, c => c.Watchdog);
-            element.AddValue(component, c => c.InhibitTask);
-            element.AddValue(component, c => c.DisableUpdateOutputs);
+            element.AddAttribute(component, c => c.Name);
+            element.AddElement(component, c => c.Description);
+            element.AddAttribute(component, c => c.Type);
+            element.AddAttribute(component, c => c.Rate);
+            element.AddAttribute(component, c => c.Priority);
+            element.AddAttribute(component, c => c.Watchdog);
+            element.AddAttribute(component, c => c.DisableUpdateOutputs);
+            element.AddAttribute(component, c => c.InhibitTask);
 
             var scheduled = new XElement(nameof(component.ScheduledPrograms));
 
@@ -43,24 +42,13 @@ namespace L5Sharp.Serialization
         {
             if (element == null)
                 throw new ArgumentNullException(nameof(element));
-
-            var name = element.GetComponentName();
-            var description = element.GetValue<ITask, string>(m => m.Description);
-            var type = element.GetValue<ITask, TaskType>(t => t.Type);
-            var priority = element.GetValue<ITask, TaskPriority>(t => t.Priority);
-            var rate = element.GetValue<ITask, ScanRate>(t => t.Rate);
-            var watchdog = element.GetValue<ITask, Watchdog>(t => t.Watchdog);
-            var inhibitTask = element.GetValue<ITask, bool>(t => t.InhibitTask);
-            var disableUpdateOutputs = element.GetValue<ITask, bool>(t => t.DisableUpdateOutputs);
             
-            //var eventInfoElement = element.Element(LogixNames.)
-            
-            var programs = element.Descendants(ScheduledProgram).Select(e => e.GetComponentName());
+            var type = element.GetAttribute<ITask, TaskType>(t => t.Type);
 
-            var task = new Task(name, type, priority, rate, watchdog, 
-                inhibitTask, disableUpdateOutputs, null, programs, description);
+            if (type is null)
+                throw new ArgumentException("The provided XElement must have an attribute 'Type' to create a ITask.");
 
-            return task;
+            return type.FromElement(element);
         }
     }
 }

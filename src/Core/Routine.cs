@@ -5,7 +5,7 @@ using L5Sharp.Enums;
 namespace L5Sharp.Core
 {
     /// <inheritdoc cref="L5Sharp.IRoutine{TContent}" />
-    public class Routine<TContent> : IRoutine<TContent>, IEquatable<Routine<TContent>>
+    public sealed class Routine<TContent> : IRoutine<TContent>, IEquatable<Routine<TContent>>
         where TContent : ILogixContent
     {
         /// <summary>

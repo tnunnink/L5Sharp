@@ -9,7 +9,7 @@ namespace L5Sharp.Core
     /// <summary>
     /// A generic implementation of the <c>IComplexType</c>. 
     /// </summary>
-    public class DataType : ComplexType
+    public sealed  class DataType : ComplexType
     {
         internal DataType(string name, DataTypeClass typeClass, string? description = null,
             IEnumerable<IMember<IDataType>>? members = null) : base(name, description, members)

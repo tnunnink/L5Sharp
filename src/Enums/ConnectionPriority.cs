@@ -2,15 +2,33 @@
 
 namespace L5Sharp.Enums
 {
-    public class ConnectionPriority : SmartEnum<ConnectionPriority>
+    /// <summary>
+    /// An enumeration of all <see cref="ConnectionPriority"/> for a Logix <see cref="Core.Connection"/>. 
+    /// </summary>
+    public sealed class ConnectionPriority : SmartEnum<ConnectionPriority, string>
     {
-        private ConnectionPriority(string name, int value) : base(name, value)
+        private ConnectionPriority(string name, string value) : base(name, value)
         {
         }
 
-        public static readonly ConnectionPriority Low = new ConnectionPriority("Low", 0);
-        public static readonly ConnectionPriority High = new ConnectionPriority("High", 1);
-        public static readonly ConnectionPriority Scheduled = new ConnectionPriority("Scheduled", 2);
-        public static readonly ConnectionPriority Urgent = new ConnectionPriority("Urgent", 3);
+        /// <summary>
+        /// Represents a <b>Low</b> <see cref="ConnectionPriority"/>.
+        /// </summary>
+        public static readonly ConnectionPriority Low = new(nameof(Low), nameof(Low));
+        
+        /// <summary>
+        /// Represents a <b>High</b> <see cref="ConnectionPriority"/>.
+        /// </summary>
+        public static readonly ConnectionPriority High = new(nameof(High), nameof(High));
+        
+        /// <summary>
+        /// Represents a <b>Scheduled</b> <see cref="ConnectionPriority"/>.
+        /// </summary>
+        public static readonly ConnectionPriority Scheduled = new(nameof(Scheduled), nameof(Scheduled));
+        
+        /// <summary>
+        /// Represents a <b>Urgent</b> <see cref="ConnectionPriority"/>.
+        /// </summary>
+        public static readonly ConnectionPriority Urgent = new(nameof(Urgent), nameof(Urgent));
     }
 }
