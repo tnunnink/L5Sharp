@@ -44,7 +44,7 @@ namespace L5Sharp.Serialization
             var description = element.GetAttribute<IDataType, string>(x => x.Description);
             var members = element.Descendants(LogixNames.Member).Select(e => e.Deserialize<IMember<IDataType>>());
 
-            return UserDefined.Create(name, description, members);
+            return new UserDefined(name, description, members);
         }
     }
 }

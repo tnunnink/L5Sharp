@@ -64,7 +64,7 @@ namespace L5Sharp
         Revision SoftwareRevision { get; }
         string AdditionalHelpText { get; }
         bool IsEncrypted { get; }
-        IMembers<IParameter<IDataType>> Parameters { get; }
+        IMemberCollection<IParameter<IDataType>> Parameters { get; }
         IEnumerable<ITag<IDataType>> LocalTags { get; }
         IEnumerable<IRoutine<ILogixContent>> Routines { get; }
     }

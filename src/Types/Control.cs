@@ -1,13 +1,13 @@
 ﻿using L5Sharp.Abstractions;
 using L5Sharp.Components;
+using L5Sharp.Core;
 using L5Sharp.Enums;
-using L5Sharp.Types.Atomic;
 
 // ReSharper disable InconsistentNaming RSLogix naming
 
-namespace L5Sharp.Types.Predefined
+namespace L5Sharp.Types
 {
-    public class Control : ComplexType
+    public sealed class Control : ComplexType
     {
         public Control() : base(nameof(Control).ToUpper())
         {
@@ -17,10 +17,7 @@ namespace L5Sharp.Types.Predefined
         public override DataTypeClass Class => DataTypeClass.Predefined;
 
         /// <inheritdoc />
-        protected override IDataType New()
-        {
-            return new Control();
-        }
+        protected override IDataType New() => new Control();
 
         public IMember<Dint> LEN = Member.Create<Dint>(nameof(LEN));
         public IMember<Dint> POS = Member.Create<Dint>(nameof(POS));

@@ -6,10 +6,8 @@ using L5Sharp.Components;
 using L5Sharp.Enums;
 using L5Sharp.Exceptions;
 using L5Sharp.Types;
-using L5Sharp.Types.Atomic;
-using L5Sharp.Types.Predefined;
 using NUnit.Framework;
-using String = L5Sharp.Types.Predefined.String;
+using String = L5Sharp.Types.String;
 
 namespace L5Sharp.Core.Tests
 {
@@ -93,7 +91,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Create_UserDefined_ShouldNotBeNull()
         {
-            var dataType = UserDefined.Create("UserDefined", "This is a test", new List<IMember<IDataType>>
+            var dataType = new UserDefined("UserDefined", "This is a test", new List<IMember<IDataType>>
             {
                 Member.Create("TestMember", new Counter())
             });

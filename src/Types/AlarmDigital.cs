@@ -1,13 +1,13 @@
 ﻿using L5Sharp.Abstractions;
 using L5Sharp.Components;
+using L5Sharp.Core;
 using L5Sharp.Enums;
-using L5Sharp.Types.Atomic;
 
 // ReSharper disable InconsistentNaming
 
-namespace L5Sharp.Types.Predefined
+namespace L5Sharp.Types
 {
-    public class AlarmDigital : ComplexType
+    public sealed class AlarmDigital : ComplexType
     {
         public AlarmDigital() : base("ALARM_DIGITAL")
         {
@@ -17,10 +17,7 @@ namespace L5Sharp.Types.Predefined
         public override DataTypeClass Class => DataTypeClass.Predefined;
 
         /// <inheritdoc />
-        protected override IDataType New()
-        {
-            return new AlarmDigital();
-        }
+        protected override IDataType New() => new AlarmDigital();
 
         public IMember<Bool> EnableIn = Member.Create<Bool>(nameof(EnableIn));
         public IMember<Bool> In = Member.Create<Bool>(nameof(In));

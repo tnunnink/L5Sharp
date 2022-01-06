@@ -5,8 +5,6 @@ using L5Sharp.Components;
 using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Types;
-using L5Sharp.Types.Atomic;
-using L5Sharp.Types.Predefined;
 using NUnit.Framework;
 
 namespace L5SharpTests
@@ -87,32 +85,6 @@ namespace L5SharpTests
             type.Name.Should().Be("STRING");
             type.Class.Should().Be(DataTypeClass.Predefined);
             type.Family.Should().Be(DataTypeFamily.String);
-        }
-
-        [Test]
-        public void RegisterType_ValidArgument_ShouldContainType()
-        {
-            var type = UserDefined.Create("TestType",
-                "This is a test type that will be created",
-                new List<IMember<IDataType>>
-            {
-                Member.Create<IDataType>("Member01", new Dint(25)),
-                Member.Create<IDataType>("Member02", new Timer(new Dint(1000)))
-            });
-
-            Logix.Register(type.Name, type.Instantiate);
-
-            Logix.DataType.Contains(type.Name).Should().BeTrue();
-
-            var instance = (UserDefined) Logix.DataType.Instantiate(type.Name);
-
-            instance.Should().NotBeNull();
-            instance.Name.Should().Be("TestType");
-            instance.Description.Should().Be("This is a test type that will be created");
-            instance.Members.GetMember("Member01").Should().NotBeNull();
-            instance.Members.GetMember("Member01")?.DataType.As<Dint>().Value.Should().Be(0);
-            instance.Members.GetMember("Member02")?.DataType.As<Timer>().PRE.DataType.Value.Should().Be(0);
-            instance.Should().NotBeSameAs(type);
         }
     }
 }

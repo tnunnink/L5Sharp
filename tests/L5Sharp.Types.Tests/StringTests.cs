@@ -3,9 +3,8 @@ using AutoFixture;
 using FluentAssertions;
 using L5Sharp.Core;
 using L5Sharp.Enums;
-using L5Sharp.Types.Atomic;
 using NUnit.Framework;
-using String = L5Sharp.Types.Predefined.String;
+using String = L5Sharp.Types.String;
 
 namespace L5Sharp.Types.Tests
 {
@@ -43,7 +42,6 @@ namespace L5Sharp.Types.Tests
             type.DATA.Should().NotBeNull();
             type.DATA.DataType.Should().BeOfType<Sint>();
             type.DATA.Dimension.Should().Be(new Dimensions(82));
-            type.DATA.Should().HaveCount(82);
         }
 
         [Test]

@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using L5Sharp.Exceptions;
 using L5Sharp.Types;
-using L5Sharp.Types.Atomic;
-using L5Sharp.Types.Predefined;
-using String = L5Sharp.Types.Predefined.String;
+using String = L5Sharp.Types.String;
 
 namespace L5Sharp
 {

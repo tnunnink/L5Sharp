@@ -6,10 +6,8 @@ using FluentAssertions;
 using L5Sharp.Components;
 using L5Sharp.Exceptions;
 using L5Sharp.Types;
-using L5Sharp.Types.Atomic;
-using L5Sharp.Types.Predefined;
 using NUnit.Framework;
-using String = L5Sharp.Types.Predefined.String;
+using String = L5Sharp.Types.String;
 
 namespace L5Sharp.Core.Tests
 {

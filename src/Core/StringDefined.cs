@@ -6,12 +6,11 @@ using L5Sharp.Abstractions;
 using L5Sharp.Components;
 using L5Sharp.Enums;
 using L5Sharp.Types;
-using L5Sharp.Types.Atomic;
 
 namespace L5Sharp.Core
 {
     /// <inheritdoc cref="L5Sharp.IStringType" />
-    public class StringDefined : ComplexType, IStringType, IEquatable<StringDefined>
+    public sealed class StringDefined : ComplexType, IStringType, IEquatable<StringDefined>
     {
         /// <summary>
         /// Creates a new instance of a <c>StringDefined</c> type with the provided arguments.
@@ -22,13 +21,17 @@ namespace L5Sharp.Core
         /// <param name="name">The name of the type.</param>
         /// <param name="dimensions">The dimensional length of the type.</param>
         /// <param name="description">The description of the type.</param>
-        private StringDefined(string name, Dimensions dimensions, string? description = null)
-            : base(name, description, GenerateMembers(dimensions))
+        private StringDefined(string name, Dimensions dimensions, string? description = null) 
+            : base(name, GenerateMembers(dimensions))
         {
+            Description = description ?? string.Empty;
             LEN = (IMember<Dint>)Members.Single(m => m.Name == nameof(LEN));
-            DATA = (IMember<Sint>)Members.Single(m => m.Name == nameof(DATA));
+            DATA = (IMember<IArrayType<Sint>>)Members.Single(m => m.Name == nameof(DATA));
         }
 
+
+        /// <inheritdoc />
+        public override string Description { get; }
 
         /// <inheritdoc />
         public override DataTypeFamily Family => DataTypeFamily.String;
@@ -38,13 +41,14 @@ namespace L5Sharp.Core
 
         /// <inheritdoc />
         public string Value =>
-            Encoding.ASCII.GetString(DATA.Where(d => d.DataType.Value > 0).Select(d => d.DataType.Value).ToArray());
+            Encoding.ASCII.GetString(DATA.DataType.Where(d => d.DataType.Value > 0).Select(d => d.DataType.Value)
+                .ToArray());
 
         /// <inheritdoc />
         public IMember<Dint> LEN { get; }
 
         /// <inheritdoc />
-        public IMember<Sint> DATA { get; }
+        public IMember<IArrayType<Sint>> DATA { get; }
 
         /// <summary>
         /// Creates a new instance of a <c>IStringType</c> type with the provided arguments.
@@ -59,7 +63,7 @@ namespace L5Sharp.Core
         {
             if (name is null)
                 throw new ArgumentNullException(nameof(name));
-            
+
             if (dimensions.AreEmpty || dimensions.AreMultiDimensional)
                 throw new ArgumentException("Dimension must single dimensional and have length greater that zero");
 
@@ -81,34 +85,29 @@ namespace L5Sharp.Core
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return base.Equals(other) && Value == other.Value;
+            return Value == other.Value;
         }
 
         /// <inheritdoc />
-        public override bool Equals(object? obj)
-        {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((StringDefined)obj);
-        }
+        public override bool Equals(object? obj) => obj is StringDefined stringDefined && Equals(stringDefined);
 
         /// <inheritdoc />
-        public override int GetHashCode() => HashCode.Combine(base.GetHashCode(), Value);
+        public override int GetHashCode() => Value.GetHashCode();
 
         /// <summary>
-        /// 
+        /// Determines if the provided objects are equal.
         /// </summary>
-        /// <param name="left"></param>
-        /// <param name="right"></param>
-        /// <returns></returns>
+        /// <param name="left">An object to compare.</param>
+        /// <param name="right">An object to compare.</param>
+        /// <returns>true if the provided objects are equal; otherwise, false.</returns>
         public static bool operator ==(StringDefined? left, StringDefined? right) => Equals(left, right);
 
         /// <summary>
-        /// 
+        /// Determines if the provided objects are not equal.
         /// </summary>
-        /// <param name="left"></param>
-        /// <param name="right"></param>
-        /// <returns></returns>
+        /// <param name="left">An object to compare.</param>
+        /// <param name="right">An object to compare.</param>
+        /// <returns>true if the provided objects are not equal; otherwise, false.</returns>
         public static bool operator !=(StringDefined? left, StringDefined? right) => !Equals(left, right);
 
         /// <summary>
@@ -141,12 +140,12 @@ namespace L5Sharp.Core
             if (bytes.Length > LEN.DataType.Value)
                 throw new ArgumentOutOfRangeException(nameof(value),
                     $"Value length '{bytes.Length}' must be less than the LEN value of '{LEN.DataType.Value}'");
-            
-            foreach (var dataElement in DATA)
+
+            foreach (var dataElement in DATA.DataType)
                 dataElement.DataType.SetValue(0);
 
             for (var i = 0; i < bytes.Length; i++)
-                DATA[i].DataType.SetValue(bytes[i]);
+                DATA.DataType[i].DataType.SetValue(bytes[i]);
         }
     }
 }

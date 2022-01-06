@@ -3,7 +3,7 @@
 namespace L5Sharp
 {
     /// <summary>
-    /// Represents an <c>IDataType</c> that has <c>IMember</c> collection.
+    /// Represents a complex data structure, or an <see cref="IDataType"/> with a collection of <see cref="IMember{TDataType}"/>.
     /// </summary>
     /// <remarks>
     /// This type is the basis for forming complex structure of nested members and data types.
@@ -16,7 +16,15 @@ namespace L5Sharp
         /// </summary>
         /// <remarks>
         /// </remarks>
-        IReadOnlyMembers<IMember<IDataType>> Members { get; }
+        IEnumerable<IMember<IDataType>> Members { get; }
+
+        /*/// <summary>
+        /// Determines if the current <see cref="IComplexType"/> is equal to another based on the provided comparison parameter.
+        /// </summary>
+        /// <param name="other">Another <see cref="IComplexType"/> instance to compare.</param>
+        /// <param name="comparison">An equality comparison option to determine how to compare the types.</param>
+        /// <returns>true if the</returns>
+        bool Equals(IComplexType? other, DataTypeComparison comparison);*/
         
         /// <summary>
         /// Gets all nested dependent <c>IDataType</c> objects for the current <c>IComplexType</c>.

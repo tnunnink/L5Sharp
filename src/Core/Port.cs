@@ -4,7 +4,7 @@ namespace L5Sharp.Core
 {
     public class Port
     {
-        public Port(int id, object address, string type, bool upstream)
+        internal Port(int id, string address, string type, bool upstream)
         {
             Id = id;
             Address = address;
@@ -12,11 +12,27 @@ namespace L5Sharp.Core
             Upstream = upstream;
         }
         
+        /// <summary>
+        /// Gets the ID for the <see cref="Port"/>.
+        /// </summary>
         public int Id { get; }
-        public object Address { get; }
+        
+        /// <summary>
+        /// Gets the address for the <see cref="Port"/>.
+        /// </summary>
+        public string Address { get; }
+        
+        /// <summary>
+        /// Gets the port type for the <see cref="Port"/>.
+        /// </summary>
         public string Type { get; }
+        
+        /// <summary>
+        /// Gets the value indicating whether the
+        /// </summary>
         public bool Upstream { get; }
-        public Bus Bus { get; }
+        
+        public Bus? Bus { get; }
     }
 
     public class Bus

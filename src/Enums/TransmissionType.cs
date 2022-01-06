@@ -2,6 +2,9 @@
 
 namespace L5Sharp.Enums
 {
+    /// <summary>
+    /// Represents an enumer
+    /// </summary>
     public class TransmissionType : SmartEnum<TransmissionType>
     {
         public TransmissionType(string name, int value) : base(name, value)

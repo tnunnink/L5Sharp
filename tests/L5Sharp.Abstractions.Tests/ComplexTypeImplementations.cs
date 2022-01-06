@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using L5Sharp.Components;
+using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Types;
-using L5Sharp.Types.Atomic;
-using L5Sharp.Types.Predefined;
 
 namespace L5Sharp.Abstractions.Tests
 {
@@ -14,7 +13,6 @@ namespace L5Sharp.Abstractions.Tests
         }
 
         public override DataTypeClass Class => DataTypeClass.Predefined;
-
         protected override IDataType New() => new TestComplex();
 
         public IMember<Bool> TestMember = Member.Create<Bool>(nameof(TestMember));
@@ -29,7 +27,6 @@ namespace L5Sharp.Abstractions.Tests
         }
 
         public override DataTypeClass Class => DataTypeClass.Predefined;
-
         protected override IDataType New() => new NestedComplex();
 
         public IMember<Dint> M1 = Member.Create<Dint>(nameof(M1));
@@ -39,7 +36,7 @@ namespace L5Sharp.Abstractions.Tests
 
     public class MemberConstructorComplex : ComplexType
     {
-        public MemberConstructorComplex() : base(nameof(MemberLessComplex), string.Empty, new List<IMember<IDataType>>
+        public MemberConstructorComplex() : base(nameof(MemberLessComplex), new List<IMember<IDataType>>
         {
             Member.Create<Bool>("Indy"),
             Member.Create<Sint>("Value"),
@@ -49,8 +46,7 @@ namespace L5Sharp.Abstractions.Tests
         }
 
         public override DataTypeClass Class => DataTypeClass.Predefined;
-
-        protected override IDataType New() => new TestComplex();
+        protected override IDataType New() => new MemberConstructorComplex();
     }
 
     public class MemberLessComplex : ComplexType
@@ -60,8 +56,8 @@ namespace L5Sharp.Abstractions.Tests
         }
 
         public override DataTypeClass Class => DataTypeClass.Predefined;
-
-        protected override IDataType New() => new TestComplex();
+        
+        protected override IDataType New() => new MemberLessComplex();
     }
 
     public class NullNameComplex : ComplexType
@@ -71,7 +67,7 @@ namespace L5Sharp.Abstractions.Tests
         }
 
         public override DataTypeClass Class => DataTypeClass.Unknown;
-
+        
         protected override IDataType New() => new NullNameComplex();
     }
 
@@ -86,7 +82,7 @@ namespace L5Sharp.Abstractions.Tests
         public IMember<Bool> Member02 = Member.Create<Bool>("Member01");
 
         public override DataTypeClass Class => DataTypeClass.Predefined;
-
+        
         protected override IDataType New() => new DuplicateMemberNameComplex();
     }
 
@@ -97,8 +93,7 @@ namespace L5Sharp.Abstractions.Tests
         }
 
         public override DataTypeClass Class => DataTypeClass.Predefined;
-
-        protected override IDataType New() => new TestComplex();
+        protected override IDataType New() => new NullMemberComplex();
 
         public IMember<Dint> Member { get; set; }
     }

@@ -1,13 +1,13 @@
 ﻿using L5Sharp.Abstractions;
 using L5Sharp.Components;
+using L5Sharp.Core;
 using L5Sharp.Enums;
-using L5Sharp.Types.Atomic;
 
 // ReSharper disable InconsistentNaming Logix naming
 
-namespace L5Sharp.Types.Predefined
+namespace L5Sharp.Types
 {
-    public class AlarmAnalog : ComplexType
+    public sealed class AlarmAnalog : ComplexType
     {
         public AlarmAnalog() : base("ALARM_ANALOG")
         {
@@ -17,10 +17,7 @@ namespace L5Sharp.Types.Predefined
         public override DataTypeClass Class => DataTypeClass.Predefined;
 
         /// <inheritdoc />
-        protected override IDataType New()
-        {
-            return new AlarmAnalog();
-        }
+        protected override IDataType New() => new AlarmAnalog();
 
         public IMember<Bool> EnableIn = Member.Create<Bool>(nameof(EnableIn));
         public IMember<Real> In = Member.Create<Real>(nameof(In));

@@ -1,8 +1,6 @@
 ﻿using FluentAssertions;
 using L5Sharp.Components;
 using L5Sharp.Types;
-using L5Sharp.Types.Atomic;
-using L5Sharp.Types.Predefined;
 using NUnit.Framework;
 
 namespace L5Sharp.Core.Tests
@@ -119,7 +117,7 @@ namespace L5Sharp.Core.Tests
         {
             var tag = Tag.Create<MyNestedType>("Test");
 
-            var member = tag.GetMember(t => t.Str).GetMember(t => t.DATA[0]);
+            var member = tag.GetMember(t => t.Str).GetMember(t => t.DATA.DataType[4]);
 
             member.Should().NotBeNull();
             member.Name.Should().Be("[0]");

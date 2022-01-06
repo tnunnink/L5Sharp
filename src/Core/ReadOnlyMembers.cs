@@ -57,7 +57,7 @@ namespace L5Sharp.Core
                 members.Add(member);
 
                 if (member.DataType is IComplexType complex)
-                    members.AddRange((IEnumerable<TMember>)complex.Members.GetMembers());
+                    members.AddRange((IEnumerable<TMember>)complex.Members);
             }
 
             return members;
@@ -73,7 +73,7 @@ namespace L5Sharp.Core
                 names.Add(member.Name);
 
                 if (member.DataType is IComplexType complex)
-                    names.AddRange(complex.Members.GetNames().Select(n => $"{member.Name}.{n}"));
+                    names.AddRange(complex.Members.Select(n => $"{member.Name}.{n}"));
             }
 
             return names;

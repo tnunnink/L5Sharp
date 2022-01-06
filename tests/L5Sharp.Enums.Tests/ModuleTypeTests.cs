@@ -8,7 +8,7 @@ namespace L5Sharp.Enums.Tests
         [Test]
         public void METHOD()
         {
-            var type = ModuleType.Digital;
+            var type = ModuleCategory.Digital;
         }
     }
 }

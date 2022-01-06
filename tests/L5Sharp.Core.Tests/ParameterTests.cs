@@ -5,7 +5,6 @@ using L5Sharp.Components;
 using L5Sharp.Enums;
 using L5Sharp.Exceptions;
 using L5Sharp.Types;
-using L5Sharp.Types.Atomic;
 using NUnit.Framework;
 
 namespace L5Sharp.Core.Tests
@@ -32,7 +31,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Create_NullName_ShouldThrowArgumentNullException()
         {
-            FluentActions.Invoking(() => Parameter.Create(null, new Bool())).Should()
+            FluentActions.Invoking(() => Parameter.Create(null!, new Bool())).Should()
                 .Throw<ArgumentException>();
         }
         
@@ -54,7 +53,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Create_UserType_ShouldNotBeNull()
         {
-            var dataType = UserDefined.Create("Test");
+            var dataType = new UserDefined("Test");
             var parameter = Parameter.Create("Test", dataType);
 
             parameter.Should().NotBeNull();

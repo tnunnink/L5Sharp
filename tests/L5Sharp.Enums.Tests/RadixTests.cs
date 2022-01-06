@@ -1,7 +1,6 @@
 ﻿using FluentAssertions;
 using L5Sharp.Core;
 using L5Sharp.Types;
-using L5Sharp.Types.Atomic;
 using NUnit.Framework;
 
 namespace L5Sharp.Enums.Tests
@@ -12,7 +11,7 @@ namespace L5Sharp.Enums.Tests
         [Test]
         public void Default_UserDefined_ShouldBeNullRadix()
         {
-            var userDefined = UserDefined.Create("Test", "This is a test");
+            var userDefined = new UserDefined("Test", "This is a test");
 
             var radix = Radix.Default(userDefined);
 

@@ -8,8 +8,8 @@ namespace L5Sharp.Enums
         {
         }
         
-        public static readonly ProductionTrigger Cyclic = new ProductionTrigger("Cyclic", 0);
-        public static readonly ProductionTrigger Cos = new ProductionTrigger("COS", 1);
-        public static readonly ProductionTrigger Application = new ProductionTrigger("Application", 2);
+        public static readonly ProductionTrigger Cyclic = new ProductionTrigger(nameof(Cyclic), 0);
+        public static readonly ProductionTrigger Cos = new ProductionTrigger(nameof(Cos), 1);
+        public static readonly ProductionTrigger Application = new ProductionTrigger(nameof(Application), 2);
     }
 }

@@ -1,13 +1,13 @@
 ﻿using L5Sharp.Abstractions;
 using L5Sharp.Components;
+using L5Sharp.Core;
 using L5Sharp.Enums;
-using L5Sharp.Types.Atomic;
 
 // ReSharper disable InconsistentNaming RSLogix naming
 
-namespace L5Sharp.Types.Predefined
+namespace L5Sharp.Types
 {
-    public class Message : ComplexType
+    public sealed class Message : ComplexType
     {
         public Message() : base(nameof(Message).ToUpper())
         {
@@ -17,10 +17,7 @@ namespace L5Sharp.Types.Predefined
         public override DataTypeClass Class => DataTypeClass.Predefined;
 
         /// <inheritdoc />
-        protected override IDataType New()
-        {
-            return new Message();
-        }
+        protected override IDataType New() => new Message();
 
         public IMember<Int> Flags = Member.Create<Int>(nameof(Flags),radix: Radix.Hex);
         public IMember<Bool> EW = Member.Create<Bool>(nameof(EW));

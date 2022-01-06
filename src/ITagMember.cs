@@ -132,7 +132,7 @@ namespace L5Sharp
         ITagMember<TDataType>? this[int index] { get; }
 
         /// <summary>
-        /// Gets a child <c>ITagMember</c> of the current <c>ITagMember</c> instance with the provided TagName. 
+        /// Gets a child tag member with the specified name of the current member instance. 
         /// </summary>
         /// <param name="name">The name of the child member to retrieve.</param>
         /// <returns>

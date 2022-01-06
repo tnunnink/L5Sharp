@@ -7,7 +7,6 @@ using System.Text.RegularExpressions;
 using Ardalis.SmartEnum;
 using L5Sharp.Extensions;
 using L5Sharp.Types;
-using L5Sharp.Types.Atomic;
 
 namespace L5Sharp.Enums
 {

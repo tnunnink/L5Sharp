@@ -28,7 +28,7 @@ namespace L5Sharp.Core
             
             //Instantiate(name, dataType, dimensions, radix, externalAccess, description);
             
-            var member = Member.Create(name, dataType, dimensions, radix, externalAccess, description);
+            var member = Member.Create(name, dataType, radix, externalAccess, description);
 
             _tagMember = new TagMember<TDataType>(member, Root, Parent);
         }

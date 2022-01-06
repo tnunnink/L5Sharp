@@ -96,13 +96,21 @@ namespace L5Sharp.Core
         public bool AreMultiDimensional => Y > 0;
 
         /// <summary>
+        /// Gets the value for the number or parameters or coordinates in the <see cref="Dimensions"/> instance.
+        /// </summary>
+        /// <value>
+        /// An integer value 1, 2, or 3 that represents the number of dimensional parameters for the current object. 
+        /// </value>
+        /// <remarks>
+        /// More plainly, this property indicates whether the current <see cref="Dimensions"/> are one, two, or three
+        /// dimensional based on the values of X, Y, and Z. 
+        /// </remarks>
+        public int DegreesOfFreedom => Z > 0 ? 3 : Y > 0 ? 2 : X > 0 ? 1 : 0;
+
+        /// <summary>
         /// Gets a new instance of empty <c>Dimensions</c>
         /// </summary>
         public static Dimensions Empty => new();
-
-        /// <inheritdoc />
-        public Dimensions Copy() => 
-            Z > 0 ? new Dimensions(X, Y, Z) : Y > 0 ? new Dimensions(X, Y) : X > 0 ? new Dimensions(X) : Empty;
 
         /// <summary>
         /// Parses a string into an instance of Dimensions.
@@ -139,76 +147,68 @@ namespace L5Sharp.Core
             };
         }
 
+        /// <inheritdoc />
+        public Dimensions Copy() =>
+            Z > 0 ? new Dimensions(X, Y, Z) : Y > 0 ? new Dimensions(X, Y) : X > 0 ? new Dimensions(X) : Empty;
+
         /// <summary>
-        /// Generates a string value that represents the Dimensions in the L5X format.
+        /// Generates a string value that represents the <see cref="Dimensions"/> in the L5X format.
         /// </summary>
         /// <returns>A string of numbers separated by a single space.</returns>
-        public override string ToString()
-        {
-            return Z > 0 ? $"{X} {Y} {Z}"
-                : Y > 0 ? $"{X} {Y}"
-                : $"{X}";
-        }
+        public override string ToString() => Z > 0 ? $"{X} {Y} {Z}" : Y > 0 ? $"{X} {Y}" : $"{X}";
 
         /// <summary>
-        /// Generates a collection of typed Members using the current Dimensions and provided member parameters. 
+        /// Generates a string value that represents the <see cref="Dimensions"/> in the array bracket notation.
         /// </summary>
-        /// <param name="seedType">The data type to instantiate for each element of the collection.</param>
-        /// <param name="radix">The Radix value to set for each element of the collection.</param>
-        /// <param name="access">The ExternalAccess to set for each element of the collection.</param>
-        /// <param name="description">The description to set for each element of the collection.</param>
-        /// <typeparam name="TDataType">The IDataType that the collection represents.</typeparam>
-        /// <returns>A collection of members of the specified TDataType.</returns>
-        /// <exception cref="ArgumentNullException">Thrown if <see cref="seedType"/> is null.</exception>
-        public IEnumerable<IMember<TDataType>> GenerateMembers<TDataType>(TDataType seedType,
+        public string ToBracketNotation() => Z > 0 ? $"[{X},{Y},{Z}]" : Y > 0 ? $"[{X},{Y}]" : X > 0 ? $"[{X}]" : "[]";
+
+        /// <summary>
+        /// Creates a collection of <see cref="IMember{TDataType}"/> with the length of the current <see cref="Length"/>. 
+        /// </summary>
+        /// <param name="radix">The <see cref="Enums.Radix"/> value to set for each
+        /// <see cref="IMember{TDataType}"/> of the collection.</param>
+        /// <param name="access">The <see cref="Enums.ExternalAccess"/> value to set for each
+        /// <see cref="IMember{TDataType}"/> of the collection.</param>
+        /// <param name="description">The string description value to set for each
+        /// <see cref="IMember{TDataType}"/> of the collection.</param>
+        /// <typeparam name="TDataType">The <see cref="IDataType"/> that the collection represents.</typeparam>
+        /// <returns>A collection of <see cref="IMember{TDataType}"/>.</returns>
+        public IEnumerable<IMember<TDataType>> CreateMembers<TDataType>(Radix? radix = null,
+            ExternalAccess? access = null,
+            string? description = null) where TDataType : IDataType, new() =>
+            GenerateIndices().Select(i => new Member<TDataType>(i, new TDataType(), radix, access, description));
+
+        
+        public IEnumerable<IMember<TDataType>> CreateMembers<TDataType>(TDataType dataType,
             Radix? radix = null, ExternalAccess? access = null, string? description = null)
             where TDataType : IDataType
         {
-            if (seedType is null)
-                throw new ArgumentNullException(nameof(seedType));
+            if (dataType is null)
+                throw new ArgumentNullException(nameof(dataType));
 
-            var indices = GenerateIndices();
-
-            return indices.Select(i =>
-                new Member<TDataType>(i, (TDataType)seedType.Instantiate(), Empty, radix, access, description));
+            return GenerateIndices().Select(i => new Member<TDataType>(i, (TDataType)dataType.Instantiate(),
+                radix, access, description));
         }
-
-        /// <summary>
-        /// Generates a collection of typed Members using the current Dimensions and provided member parameters.
-        /// </summary>
-        /// <param name="elements">A collection of data type elements to initialize the member collection.</param>
-        /// <param name="radix">The Radix value to set for each element of the collection.</param>
-        /// <param name="access">The ExternalAccess to set for each element of the collection.</param>
-        /// <param name="description">The description to set for each element of the collection.</param>
-        /// <typeparam name="TDataType">The IDataType that the collection represents.</typeparam>
-        /// <returns>A collection of members of the specified TDataType.</returns>
-        /// <exception cref="ArgumentNullException">Throw if elements is null.</exception>
-        /// <exception cref="ArgumentOutOfRangeException">
-        /// Thrown if elements count is 0 or greater than the length of the dimension length.
-        /// </exception>
-        public IEnumerable<IMember<TDataType>> GenerateMembers<TDataType>(List<TDataType> elements,
+        
+        public IEnumerable<IMember<TDataType>> CreateMembers<TDataType>(IEnumerable<TDataType> dataTypes,
             Radix? radix = null, ExternalAccess? access = null, string? description = null)
             where TDataType : IDataType
         {
-            if (elements is null)
-                throw new ArgumentNullException(nameof(elements));
+            if (dataTypes is null)
+                throw new ArgumentNullException(nameof(dataTypes));
+            
+            //todo this is probably all to many iterations and could be optimized...
 
-            if (elements.Count <= 0 || elements.Count > Length)
-                throw new ArgumentOutOfRangeException(
-                    $"Elements count '{elements.Count}' must be greater than zero and less than or equal to the length of the Dimensions.");
+            var collection = dataTypes.ToList();
 
-            var indices = GenerateIndices().ToArray();
+            var first = collection.First();
 
-            var members = new List<IMember<TDataType>>();
+            if (first is null)
+                throw new ArgumentException("The provided seed collection can not be empty.");
 
-            for (var i = 0; i < Length; i++)
-            {
-                var instance = i < elements.Count ? elements[i] : elements[0].Instantiate();
-
-                members.Add(new Member<TDataType>(indices[i], (TDataType)instance, Empty, radix, access, description));
-            }
-
-            return members;
+            return GenerateIndices().Zip(collection, (i, t) =>
+                new Member<TDataType>(i, t is not null ? t : (TDataType)first.Instantiate(), 
+                    radix, access, description));
         }
 
         /// <summary>
@@ -218,16 +218,7 @@ namespace L5Sharp.Core
         /// <returns>
         /// A Dimensions value representing the provided ushort length.
         /// </returns>
-        public static implicit operator Dimensions(ushort length) => new Dimensions(length);
-
-        /// <summary>
-        /// Converts the provided <see cref="Dimensions"/> to a <see cref="ushort"/> value. 
-        /// </summary>
-        /// <param name="dimensions">The Dimensions value to convert.</param>
-        /// <returns>
-        /// A ushort value representing the provided Dimensions instance. 
-        /// </returns>
-        public static implicit operator ushort(Dimensions dimensions) => dimensions.X;
+        public static implicit operator Dimensions(ushort length) => new(length);
 
         /// <summary>
         /// Converts the provided <see cref="Dimensions"/> to a <see cref="int"/> value. 

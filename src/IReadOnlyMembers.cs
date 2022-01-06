@@ -11,10 +11,10 @@ namespace L5Sharp
     /// members  in order to examine all descendant <c>IMember</c> objects. This makes finding and getting instance
     /// of nested <c>IMember</c> objects easier for the user. As the name implies, this collection only exposes methods
     /// for reading from the collection, as some <c>IComplexTypes</c> members are not mutable. For a mutable collection
-    /// of <c>IMembers</c>, use <see cref="IMembers{TMember}"/>.
+    /// of <c>IMembers</c>, use <see cref="IMemberCollection{TMember}"/>.
     /// </remarks>
     /// <typeparam name="TMember">The <see cref="IMember{TDataType}"/> type that the collection represents.</typeparam>
-    /// <seealso cref="IMembers{TMember}"/>
+    /// <seealso cref="IMemberCollection{TMember}"/>
     public interface IReadOnlyMembers<out TMember> : IEnumerable<TMember> where TMember : IMember<IDataType>
     {
         /// <summary>

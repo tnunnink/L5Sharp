@@ -12,20 +12,20 @@ namespace L5Sharp.Enums
         }
 
         /// <summary>
+        /// Represents a <b>Scheduled</b> <see cref="ConnectionPriority"/>.
+        /// </summary>
+        public static readonly ConnectionPriority Scheduled = new(nameof(Scheduled), nameof(Scheduled));
+
+        /// <summary>
         /// Represents a <b>Low</b> <see cref="ConnectionPriority"/>.
         /// </summary>
         public static readonly ConnectionPriority Low = new(nameof(Low), nameof(Low));
-        
+
         /// <summary>
         /// Represents a <b>High</b> <see cref="ConnectionPriority"/>.
         /// </summary>
         public static readonly ConnectionPriority High = new(nameof(High), nameof(High));
-        
-        /// <summary>
-        /// Represents a <b>Scheduled</b> <see cref="ConnectionPriority"/>.
-        /// </summary>
-        public static readonly ConnectionPriority Scheduled = new(nameof(Scheduled), nameof(Scheduled));
-        
+
         /// <summary>
         /// Represents a <b>Urgent</b> <see cref="ConnectionPriority"/>.
         /// </summary>

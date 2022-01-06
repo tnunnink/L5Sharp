@@ -39,7 +39,7 @@ namespace L5Sharp.Serialization
             var name = element.Attribute(LogixNames.DataType)?.Value;
             var members = element.Elements().Select(e => e.Deserialize<IMember<IDataType>>(e.Name.ToString()));
 
-            return new DataType(name!, DataTypeClass.Unknown, string.Empty, members);
+            return new StructureType(name!, DataTypeClass.Unknown, members);
         }
     }
 }

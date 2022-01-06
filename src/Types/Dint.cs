@@ -1,7 +1,7 @@
 ﻿using System;
 using L5Sharp.Enums;
 
-namespace L5Sharp.Types.Atomic
+namespace L5Sharp.Types
 {
     /// <summary>
     /// Represents a DINT Logix atomic data type.

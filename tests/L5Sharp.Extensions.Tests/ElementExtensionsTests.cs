@@ -4,7 +4,6 @@ using FluentAssertions;
 using L5Sharp.Components;
 using L5Sharp.Enums;
 using L5Sharp.Types;
-using L5Sharp.Types.Atomic;
 using NUnit.Framework;
 
 namespace L5Sharp.Extensions.Tests
@@ -48,15 +47,6 @@ namespace L5Sharp.Extensions.Tests
             var type = element.GetDataType();
 
             type.Should().BeOfType<Bool>();
-        }
-
-        [Test]
-        public void GetValue_NonPropertyExpression_ShouldThrowInvalidOperationException()
-        {
-            var element = new XElement("Test", new XAttribute("Radix", "Decimal"));
-
-            FluentActions.Invoking(() => element.GetAttribute<IMember<IDataType>, object>(m => m[0])).Should()
-                .Throw<ArgumentException>();
         }
 
         [Test]

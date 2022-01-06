@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using L5Sharp.Enums;
 
@@ -8,16 +9,36 @@ namespace L5Sharp.Core
     {
         private const string CatalogPattern = @"^([\d]{4})-([A-Z]+)(\d+)([A-Z]*)$";
 
+        private readonly string _catalogNumber;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="catalogNumber"></param>
+        /// <exception cref="ArgumentNullException"></exception>
         public CatalogNumber(string catalogNumber)
         {
             if (string.IsNullOrEmpty(catalogNumber))
                 throw new ArgumentNullException(nameof(catalogNumber));
 
+            _catalogNumber = catalogNumber;
+
+            AnalyzeNumber(catalogNumber);
+        }
+
+        /// <summary>
+        /// Attempt to determine values based on conventions...
+        /// </summary>
+        /// <param name="catalogNumber"></param>
+        private void AnalyzeNumber(string catalogNumber)
+        {
             var match = Regex.Match(catalogNumber, CatalogPattern, RegexOptions.Compiled);
 
-            if (!match.Success || match.Groups.Count != 4)
-                throw new FormatException(
-                    $"The provided catalog number '{catalogNumber}' does not have a valid format.");
+            if (!match.Success)
+            {
+                Channels = 0;
+                return;
+            };
 
             Bulletin = new Bulletin(match.Groups[0].Value);
             //todo figure out module type
@@ -26,39 +47,18 @@ namespace L5Sharp.Core
         }
 
         /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="bulletin"></param>
-        /// <param name="moduleType"></param>
-        /// <param name="channels"></param>
-        /// <param name="featureCode"></param>
-        /// <exception cref="ArgumentNullException"></exception>
-        public CatalogNumber(Bulletin bulletin, ModuleType moduleType, short channels, string? featureCode = null)
-        {
-            Bulletin = bulletin ?? throw new ArgumentNullException(nameof(bulletin));
-            ModuleType = moduleType ?? throw new ArgumentNullException(nameof(moduleType));
-            Channels = channels;
-            FeatureCode = featureCode ?? string.Empty;
-        }
-
-        /// <summary>
-        /// Gets the value of the <see cref="CatalogNumber"/>.
-        /// </summary>
-        public string Number => $"{Bulletin}-{ModuleType}{Channels}{FeatureCode}";
-
-        /// <summary>
         /// Gets the <see cref="Bulletin"/> value of the <see cref="CatalogNumber"/>.
         /// </summary>
-        public Bulletin Bulletin { get; }
+        public Bulletin? Bulletin { get; set; }
 
-        public ModuleType ModuleType { get; }
+        public IEnumerable<ModuleCategory> Categories { get; }
 
-        public short Channels { get; }
+        public short Channels { get; set; }
 
-        public string FeatureCode { get; }
+        public string? FeatureCode { get; set; }
 
-        
-        public static implicit operator string(CatalogNumber value) => value.Number;
+
+        public static implicit operator string(CatalogNumber value) => value._catalogNumber;
         
         public static implicit operator CatalogNumber(string value) => new(value);
     }

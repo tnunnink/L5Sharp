@@ -1,6 +1,5 @@
 ﻿using System;
 using L5Sharp.Types;
-using L5Sharp.Types.Atomic;
 
 // ReSharper disable InconsistentNaming RSLogix naming
 
@@ -30,7 +29,7 @@ namespace L5Sharp
         /// <value>
         /// Member that holds the ASCII format sequence of characters that comprise the string value.
         /// </value>
-        IMember<Sint> DATA { get; }
+        IMember<IArrayType<Sint>> DATA { get; }
         
         /// <summary>
         /// Sets <see cref="Value"/> to the provided string value for the <c>IStringType</c>. 

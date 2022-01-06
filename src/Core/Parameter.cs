@@ -8,7 +8,7 @@ namespace L5Sharp.Core
         internal Parameter(string name, TDataType dataType, Dimensions? dimensions = null, Radix? radix = null,
             ExternalAccess? externalAccess = null, string? description = null, TagUsage? usage = null, 
             string? alias = null, bool required = false, bool visible = false, bool constant = false)
-            : base(name, dataType, dimensions, radix, externalAccess, description)
+            : base(name, dataType, radix, externalAccess, description)
         {
             
             Usage = usage is not null && usage.SupportsType(DataType.GetType()) 

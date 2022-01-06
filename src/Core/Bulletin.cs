@@ -6,7 +6,7 @@ namespace L5Sharp.Core
     /// A value type that represents a Logix Bulletin number,
     /// or a four digit identifier for the Logix controller family.
     /// </summary>
-    public class Bulletin : IEquatable<Bulletin>, IComparable<Bulletin>
+    public sealed class Bulletin : IEquatable<Bulletin>, IComparable<Bulletin>
     {
         private readonly short _identifier;
 
@@ -31,6 +31,9 @@ namespace L5Sharp.Core
         /// <exception cref="ArgumentException">identifier is null -or- not able to be parsed to a short type.</exception>
         public Bulletin(string identifier)
         {
+            if (string.IsNullOrEmpty(identifier))
+                throw new ArgumentException("The provided identifier can not be null or empty.");
+            
             if (identifier.Length != 4)
                 throw new ArgumentException(
                     $"The provided identifier '{identifier}' does not have a valid length. Bulletin numbers must be 4 digits.");

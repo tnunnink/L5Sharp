@@ -1,27 +1,27 @@
 ﻿using System;
 using L5Sharp.Enums;
 
-namespace L5Sharp.Types.Atomic
+namespace L5Sharp.Types
 {
     /// <summary>
-    /// Represents a INT Logix atomic data type.
+    /// Represents a SINT Logix atomic data type.
     /// </summary>
-    public sealed class Real : IAtomicType<float>, IEquatable<Real>, IComparable<Real>
+    public sealed class Sint : IAtomicType<byte>, IEquatable<Sint>, IComparable<Sint>
     {
         /// <summary>
-        /// Creates a new default instance of a Real type.
+        /// Creates a new default instance of a Sint type.
         /// </summary>
-        public Real()
+        public Sint()
         {
-            Name = nameof(Real).ToUpper();
+            Name = nameof(Sint).ToUpper();
             Value = default;
         }
 
         /// <summary>
-        /// Creates a new instance of a Real with the provided value.
+        /// Creates a new instance of a Sint with the provided value.
         /// </summary>
         /// <param name="value">The value to initialize the type with.</param>
-        public Real(float value) : this()
+        public Sint(byte value) : this()
         {
             Value = value;
         }
@@ -30,7 +30,7 @@ namespace L5Sharp.Types.Atomic
         public string Name { get; }
 
         /// <inheritdoc />
-        public string Description => $"Logix representation of a {typeof(float)}";
+        public string Description => $"Logix representation of a {typeof(byte)}";
 
         /// <inheritdoc />
         public DataTypeFamily Family => DataTypeFamily.None;
@@ -39,12 +39,12 @@ namespace L5Sharp.Types.Atomic
         public DataTypeClass Class => DataTypeClass.Atomic;
 
         /// <inheritdoc />
-        public float Value { get; private set; }
+        public byte Value { get; private set; }
 
         object IAtomicType.Value => Value;
 
         /// <inheritdoc />
-        public void SetValue(float value) => Value = value;
+        public void SetValue(byte value) => Value = value;
 
         /// <inheritdoc />
         public void SetValue(object value)
@@ -52,46 +52,46 @@ namespace L5Sharp.Types.Atomic
             Value = value switch
             {
                 null => throw new ArgumentNullException(nameof(value), "Value can not be null"),
-                Real atomic => atomic,
-                float typed => typed,
-                string str => Radix.ParseValue<Real>(str),
+                Sint atomic => atomic,
+                byte n => n,
+                string str => Radix.ParseValue<Sint>(str),
                 _ => throw new ArgumentException($"Value type '{value.GetType()}' is not a valid for {GetType()}")
             };
         }
 
         /// <inheritdoc />
-        public IDataType Instantiate() => new Real();
+        public IDataType Instantiate() => new Sint();
 
         /// <summary>
-        /// Converts the provided <see cref="float"/> to a <see cref="Real"/> value.
+        /// Converts the provided <see cref="byte"/> to a <see cref="Sint"/> value.
         /// </summary>
         /// <param name="value">The value to convert.</param>
-        /// <returns>A <see cref="Real"/> value.</returns>
-        public static implicit operator Real(float value) => new(value);
+        /// <returns>A <see cref="Sint"/> value.</returns>
+        public static implicit operator Sint(byte value) => new(value);
 
         /// <summary>
-        /// Converts the provided <see cref="Real"/> to a <see cref="float"/> value.
+        /// Converts the provided <see cref="Sint"/> to a <see cref="byte"/> value.
         /// </summary>
         /// <param name="atomic">The value to convert.</param>
-        /// <returns>A <see cref="float"/> type value.</returns>
-        public static implicit operator float(Real atomic) => atomic.Value;
+        /// <returns>A <see cref="byte"/> type value.</returns>
+        public static implicit operator byte(Sint atomic) => atomic.Value;
 
         /// <summary>
-        /// Converts the provided <see cref="string"/> to a <see cref="Real"/> value. 
+        /// Converts the provided <see cref="string"/> to a <see cref="Sint"/> value. 
         /// </summary>
         /// <param name="input">The string value to convert.</param>
         /// <returns>
-        /// If the string value is able to be parsed, a new instance of a <see cref="Real"/> with the value
+        /// If the string value is able to be parsed, a new instance of a <see cref="Sint"/> with the value
         /// provided. If not, then a default instance value.
         /// </returns>
-        public static implicit operator Real(string input) => Radix.ParseValue<Real>(input);
+        public static implicit operator Sint(string input) => Radix.ParseValue<Sint>(input);
 
         /// <inheritdoc />
-        public bool Equals(Real? other)
+        public bool Equals(Sint? other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return Math.Abs(Value - other.Value) < float.Epsilon;
+            return Value == other.Value;
         }
 
         /// <inheritdoc />
@@ -99,9 +99,9 @@ namespace L5Sharp.Types.Atomic
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((Real)obj);
+            return obj.GetType() == GetType() && Equals((Sint)obj);
         }
-
+        
         /// <inheritdoc />
         public override int GetHashCode() => Name.GetHashCode();
         
@@ -114,7 +114,7 @@ namespace L5Sharp.Types.Atomic
         /// <param name="left">An object to compare.</param>
         /// <param name="right">An object to compare.</param>
         /// <returns>true if the objects are equal, otherwise, false.</returns>
-        public static bool operator ==(Real left, Real right) => Equals(left, right);
+        public static bool operator ==(Sint left, Sint right) => Equals(left, right);
 
         /// <summary>
         /// Determines whether the objects are not equal.
@@ -122,10 +122,10 @@ namespace L5Sharp.Types.Atomic
         /// <param name="left">An object to compare.</param>
         /// <param name="right">An object to compare.</param>
         /// <returns>true if the objects are not equal, otherwise, false.</returns>
-        public static bool operator !=(Real left, Real right) => !Equals(left, right);
+        public static bool operator !=(Sint left, Sint right) => !Equals(left, right);
 
         /// <inheritdoc />
-        public int CompareTo(Real? other)
+        public int CompareTo(Sint? other)
         {
             if (ReferenceEquals(this, other)) return 0;
             return ReferenceEquals(null, other) ? 1 : Value.CompareTo(other.Value);

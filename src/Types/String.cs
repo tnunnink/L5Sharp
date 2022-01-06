@@ -6,11 +6,10 @@ using L5Sharp.Abstractions;
 using L5Sharp.Components;
 using L5Sharp.Core;
 using L5Sharp.Enums;
-using L5Sharp.Types.Atomic;
 
 // ReSharper disable InconsistentNaming Logix Naming
 
-namespace L5Sharp.Types.Predefined
+namespace L5Sharp.Types
 {
     /// <summary>
     /// Represents a predefined String Logix data type.
@@ -22,11 +21,10 @@ namespace L5Sharp.Types.Predefined
         /// <summary>
         /// Creates a new instance of a String Logix data type with default values.
         /// </summary>
-        public String() : base(nameof(String).ToUpper(), $"Logix representation of a {typeof(string)}",
-            GenerateMembers())
+        public String() : base(nameof(String).ToUpper(), GenerateMembers())
         {
             LEN = (IMember<Dint>)Members.Single(m => m.Name == nameof(LEN));
-            DATA = (IMember<Sint>)Members.Single(m => m.Name == nameof(DATA));
+            DATA = (IMember<IArrayType<Sint>>)Members.Single(m => m.Name == nameof(DATA));
         }
 
         /// <summary>
@@ -41,6 +39,9 @@ namespace L5Sharp.Types.Predefined
         }
 
         /// <inheritdoc />
+        public override string Description => $"Logix representation of a {typeof(string)}";
+
+        /// <inheritdoc />
         public override DataTypeFamily Family => DataTypeFamily.String;
 
         /// <inheritdoc />
@@ -48,13 +49,13 @@ namespace L5Sharp.Types.Predefined
 
         /// <inheritdoc />
         public string Value =>
-            Encoding.ASCII.GetString(DATA.Where(d => d.DataType.Value > 0).Select(d => d.DataType.Value).ToArray());
+            Encoding.ASCII.GetString(DATA.DataType.Where(d => d.DataType.Value > 0).Select(d => d.DataType.Value).ToArray());
 
         /// <inheritdoc />
         public IMember<Dint> LEN { get; }
 
         /// <inheritdoc />
-        public IMember<Sint> DATA { get; }
+        public IMember<IArrayType<Sint>> DATA { get; }
 
         /// <inheritdoc />
         protected override IDataType New() => new String();
@@ -91,30 +92,25 @@ namespace L5Sharp.Types.Predefined
         }
 
         /// <inheritdoc />
-        public override bool Equals(object? obj)
-        {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((String)obj);
-        }
+        public override bool Equals(object? obj) => obj is String str && Equals(str);
 
         /// <inheritdoc />
         public override int GetHashCode() => Value.GetHashCode();
 
         /// <summary>
-        /// Determines whether the objects are equal.
+        /// Determines if the provided objects are equal.
         /// </summary>
         /// <param name="left">An object to compare.</param>
         /// <param name="right">An object to compare.</param>
-        /// <returns>true if the objects are equal, otherwise, false.</returns>
+        /// <returns>true if the provided objects are equal; otherwise, false.</returns>
         public static bool operator ==(String left, String right) => Equals(left, right);
 
         /// <summary>
-        /// Determines whether the objects are not equal.
+        /// Determines if the provided objects not are equal.
         /// </summary>
         /// <param name="left">An object to compare.</param>
         /// <param name="right">An object to compare.</param>
-        /// <returns>true if the objects are not equal, otherwise, false.</returns>
+        /// <returns>true if the provided objects are not equal; otherwise, false.</returns>
         public static bool operator !=(String left, String right) => !Equals(left, right);
 
         /// <inheritdoc />
@@ -141,11 +137,11 @@ namespace L5Sharp.Types.Predefined
                 throw new ArgumentOutOfRangeException(nameof(value),
                     $"Value length '{bytes.Length}' must be less than the predefined length '{PredefinedLength}'");
             
-            foreach (var element in DATA)
+            foreach (var element in DATA.DataType)
                 element.DataType.SetValue(0);
 
             for (var i = 0; i < bytes.Length; i++)
-                DATA[i].DataType.SetValue(bytes[i]);
+                DATA.DataType[i].DataType.SetValue(bytes[i]);
         }
 
         private static IEnumerable<IMember<IDataType>> GenerateMembers()

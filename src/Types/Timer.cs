@@ -1,11 +1,11 @@
 ﻿using L5Sharp.Abstractions;
 using L5Sharp.Components;
+using L5Sharp.Core;
 using L5Sharp.Enums;
-using L5Sharp.Types.Atomic;
 
 // ReSharper disable InconsistentNaming RSLogix naming
 
-namespace L5Sharp.Types.Predefined
+namespace L5Sharp.Types
 {
     /// <summary>
     /// 
@@ -18,7 +18,7 @@ namespace L5Sharp.Types.Predefined
         public Timer() : base(nameof(Timer).ToUpper())
         {
         }
-        
+
         /// <summary>
         /// Creates new instance of a timer type with provided default PRE member value. 
         /// </summary>
@@ -32,33 +32,30 @@ namespace L5Sharp.Types.Predefined
         public override DataTypeClass Class => DataTypeClass.Predefined;
 
         /// <inheritdoc />
-        protected override IDataType New()
-        {
-            return new Timer();
-        }
+        protected override IDataType New() => new Timer();
 
         /// <summary>
         /// The preset value specifies the value (1 msec units) which the accumulated value must reach
         /// before the instruction sets the .DN bit.
         /// </summary>
         public IMember<Dint> PRE = Member.Create<Dint>(nameof(PRE));
-        
+
         /// <summary>
         /// The accumulated value specifies the number of milliseconds that have elapsed since the
         /// Timer instruction was enabled.
         /// </summary>
         public IMember<Dint> ACC = Member.Create<Dint>(nameof(ACC));
-        
+
         /// <summary>
         /// The enable bit indicates that the Timer instruction is enabled.
         /// </summary>
         public IMember<Bool> EN = Member.Create<Bool>(nameof(EN));
-        
+
         /// <summary>
         /// The timing bit indicates that a timing operation is in process
         /// </summary>
         public IMember<Bool> TT = Member.Create<Bool>(nameof(TT));
-        
+
         /// <summary>
         /// The done bit is set when .ACC ≥ .PRE.
         /// </summary>

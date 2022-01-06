@@ -16,6 +16,6 @@
         /// <summary>
         /// Member collection of the <c>UserDefined</c> that defined the complex structure of the type. 
         /// </summary>
-        new IMembers<IMember<IDataType>> Members { get; }
+        new IComponentCollection<IMember<IDataType>> Members { get; }
     }
 }

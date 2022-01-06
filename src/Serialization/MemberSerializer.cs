@@ -46,7 +46,9 @@ namespace L5Sharp.Serialization
             var dimensions = element.GetAttribute<Member<IDataType>, Dimensions>(m => m.Dimension);
             var radix = element.GetAttribute<Member<IDataType>, Radix>(m => m.Radix);
             var access = element.GetAttribute<Member<IDataType>, ExternalAccess>(m => m.ExternalAccess);
-
+            
+            
+            
             return Member.Create(name, dataType, dimensions, radix, access, description);
         }
     }

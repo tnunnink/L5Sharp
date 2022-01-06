@@ -1,17 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace L5Sharp.Common
 {
     /// <summary>
-    /// Custom equality comparer that compares Logix components by name only.
+    /// An <see cref="IEqualityComparer{T}"/> that compares <see cref="ILogixComponent"/> by the string name.
     /// </summary>
-    /// <typeparam name="TComponent">The type of Logix component.</typeparam>
-    public class ComponentNameComparer<TComponent> : IEqualityComparer<TComponent> 
-        where TComponent : ILogixComponent
+    public class ComponentNameComparer : IEqualityComparer<ILogixComponent>
     {
+        private ComponentNameComparer()
+        {
+        }
+
+        /// <summary>
+        /// Gets the singleton instance of the <see cref="ComponentNameComparer"/>.
+        /// </summary>
+        public static ComponentNameComparer Instance { get; } = new();
+
+
         /// <inheritdoc />
-        public bool Equals(TComponent? x, TComponent? y)
+        public bool Equals(ILogixComponent? x, ILogixComponent? y)
         {
             if (ReferenceEquals(x, y)) return true;
             if (ReferenceEquals(x, null)) return false;
@@ -21,9 +28,6 @@ namespace L5Sharp.Common
         }
 
         /// <inheritdoc />
-        public int GetHashCode(TComponent obj)
-        {
-            return HashCode.Combine(obj.Name);
-        }
+        public int GetHashCode(ILogixComponent obj) => obj.GetHashCode();
     }
 }

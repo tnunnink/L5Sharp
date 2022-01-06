@@ -89,15 +89,10 @@ namespace L5Sharp.Core
         }
 
         /// <inheritdoc />
-        public ITagMember<TDataType>? this[int index] => _member.HasArray && index < _member.Dimension.Length
-            ? new TagMember<TDataType>(_member[index], Root, (ITagMember<IDataType>)this)
-            : null;
+        public ITagMember<TDataType>? this[int index] => throw new NotImplementedException();
 
         /// <inheritdoc />
-        public ITagMember<IDataType>? this[string name] =>
-            _member.DataType is IComplexType complexType && complexType.Members.Contains(name)
-                ? new TagMember<IDataType>(complexType.Members.GetMember(name)!, Root, (ITagMember<IDataType>)this)
-                : null;
+        public ITagMember<IDataType>? this[string name] => throw new NotImplementedException();
 
         /// <inheritdoc />
         public ITagMember<TType> GetMember<TType>(Func<TDataType, IMember<TType>> expression)
@@ -118,9 +113,7 @@ namespace L5Sharp.Core
             : Enumerable.Empty<string>();
 
         /// <inheritdoc />
-        public IEnumerable<string> GetDeepMembersNames() => _member.DataType is IComplexType complexType
-            ? complexType.Members.GetNames()
-            : Enumerable.Empty<string>();
+        public IEnumerable<string> GetDeepMembersNames() => throw new NotImplementedException();
 
         /// <summary>
         /// Recursively traverses up the member chain to build the full string name of the current tag member. 

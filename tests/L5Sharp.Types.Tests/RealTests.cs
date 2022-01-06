@@ -3,7 +3,6 @@ using System.Globalization;
 using AutoFixture;
 using FluentAssertions;
 using L5Sharp.Enums;
-using L5Sharp.Types.Atomic;
 using NUnit.Framework;
 
 namespace L5Sharp.Types.Tests

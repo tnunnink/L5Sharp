@@ -18,13 +18,4 @@
       <ProjectReference Include="..\..\src\L5Sharp.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <None Update="UserDefinedTypeTest.ShouldHaveApprovedOutput.approved.xml">
-        <DependentUpon>UserDefinedTypeTest.cs</DependentUpon>
-      </None>
-      <None Update="UserDefinedTypeTest.ShouldHaveApprovedOutput.approved.xml.bak">
-        <DependentUpon>UserDefinedTypeTest.cs</DependentUpon>
-      </None>
-    </ItemGroup>
-
 </Project>
