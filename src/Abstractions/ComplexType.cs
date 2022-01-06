@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using L5Sharp.Common;
-using L5Sharp.Core;
 using L5Sharp.Enums;
 
 // For testing purposes
@@ -25,9 +23,7 @@ namespace L5Sharp.Abstractions
         protected ComplexType(string name, IEnumerable<IMember<IDataType>>? members = null)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
-            Members = members is not null
-                ? new ReadOnlyMembers<IMember<IDataType>>(members)
-                : new ReadOnlyMembers<IMember<IDataType>>(FindMembers());
+            Members = members ?? FindMembers();
         }
 
         /// <inheritdoc />
@@ -56,25 +52,7 @@ namespace L5Sharp.Abstractions
         /// This method is called by <see cref="Instantiate"/> in order to generate new instances of the <see cref="IDataType"/>.
         /// 
         /// </remarks>
-        protected abstract IDataType New(); 
-
-        /// <inheritdoc />
-        public IEnumerable<IDataType> GetDependentTypes()
-        {
-            var set = new HashSet<IDataType>(ComponentNameComparer.Instance);
-
-            foreach (var member in Members)
-            {
-                set.Add(member.DataType);
-
-                if (member.DataType is not IComplexType complex) continue;
-
-                foreach (var dataType in complex.GetDependentTypes())
-                    set.Add(dataType);
-            }
-
-            return set;
-        }
+        protected abstract IDataType New();
 
         /// <inheritdoc />
         public override string ToString() => Name;

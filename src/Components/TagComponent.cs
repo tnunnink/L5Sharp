@@ -14,8 +14,6 @@ namespace L5Sharp.Components
         /// </summary>
         /// <param name="name">The name of the <c>ITag</c>. The name must satisfy Logix naming constraints.</param>
         /// <param name="dataType">The data type of the <c>ITag</c>.</param>
-        /// <param name="dimensions">The dimensions of the <c>ITag</c>.
-        /// If not provided, will default to <see cref="Dimensions.Empty"/>.</param>
         /// <param name="radix">The radix of the <c>ITag</c>.
         /// If not provided, will default to <see cref="Radix.Default(IDataType)"/>.</param>
         /// <param name="externalAccess">The external access of the <c>ITag</c>.
@@ -26,17 +24,15 @@ namespace L5Sharp.Components
         /// <param name="constant"></param>
         /// <returns>A new <c>ITag</c> instance with the specified arguments.</returns>
         /// <exception cref="ArgumentNullException">When name or dataType are null.</exception>
-        public static ITag<IDataType> Create(ComponentName name, IDataType dataType, Dimensions? dimensions = null,
+        public static ITag<IDataType> Create(ComponentName name, IDataType dataType,
             Radix? radix = null, ExternalAccess? externalAccess = null, string? description = null,
             TagUsage? usage = null, bool constant = false) => 
-            Create<IDataType>(name, dataType, dimensions, radix, externalAccess, description, usage, constant);
+            Create<IDataType>(name, dataType, radix, externalAccess, description, usage, constant);
 
         /// <summary>
         /// Creates a new <c>ITag</c> instance with the provided arguments.
         /// </summary>
         /// <param name="name">The name of the <c>ITag</c>. The name must satisfy Logix naming constraints.</param>
-        /// <param name="dimensions">The dimensions of the <c>ITag</c>.
-        /// If not provided, will default to <see cref="Dimensions.Empty"/>.</param>
         /// <param name="radix">The radix of the <c>ITag</c>.
         /// If not provided, will default to <see cref="Radix.Default(IDataType)"/>.</param>
         /// <param name="externalAccess">The external access of the <c>ITag</c>.
@@ -47,19 +43,17 @@ namespace L5Sharp.Components
         /// <param name="constant"></param>
         /// <returns>A new <c>ITag</c> instance with the specified arguments.</returns>
         /// <exception cref="ArgumentNullException">When name or dataType are null.</exception>
-        public static ITag<TDataType> Create<TDataType>(ComponentName name, Dimensions? dimensions = null,
-            Radix? radix = null, ExternalAccess? externalAccess = null, string? description = null,
+        public static ITag<TDataType> Create<TDataType>(ComponentName name, Radix? radix = null,
+            ExternalAccess? externalAccess = null, string? description = null,
             TagUsage? usage = null, bool constant = false) 
             where TDataType : IDataType, new() => 
-            Create(name, new TDataType(), dimensions, radix, externalAccess, description, usage, constant);
+            Create(name, new TDataType(), radix, externalAccess, description, usage, constant);
 
         /// <summary>
         /// Creates a new <c>ITag</c> instance with the provided arguments.
         /// </summary>
         /// <param name="name">The name of the <c>ITag</c>. The name must satisfy Logix naming constraints.</param>
         /// <param name="dataType">The data type of the <c>ITag</c>.</param>
-        /// <param name="dimensions">The dimensions of the <c>ITag</c>.
-        /// If not provided, will default to <see cref="Dimensions.Empty"/>.</param>
         /// <param name="radix">The radix of the <c>ITag</c>.
         /// If not provided, will default to <see cref="Radix.Default(IDataType)"/>.</param>
         /// <param name="externalAccess">The external access of the <c>ITag</c>.
@@ -71,9 +65,9 @@ namespace L5Sharp.Components
         /// <typeparam name="TDataType">The DataType of the <c>ITag</c>.</typeparam>
         /// <returns>A new <c>ITag</c> instance with the specified arguments.</returns>
         /// <exception cref="ArgumentNullException">When name or dataType are null.</exception>
-        public static ITag<TDataType> Create<TDataType>(ComponentName name, TDataType dataType,
-            Dimensions? dimensions = null, Radix? radix = null, ExternalAccess? externalAccess = null,
-            string? description = null, TagUsage? usage = null, bool constant = false)
+        public static ITag<TDataType> Create<TDataType>(ComponentName name, TDataType dataType, 
+            Radix? radix = null, ExternalAccess? externalAccess = null, string? description = null,
+            TagUsage? usage = null, bool constant = false)
             where TDataType : IDataType
         {
             if (name is null)
@@ -82,25 +76,7 @@ namespace L5Sharp.Components
             if (dataType is null)
                 throw new ArgumentNullException(nameof(dataType));
 
-            return new Tag<TDataType>(name, dataType, dimensions, radix, externalAccess, description, usage, constant);
+            return new Tag<TDataType>(name, dataType, radix, externalAccess, description, usage, constant);
         }
-
-        /*public static ITagBuilder<IDataType> Build(ComponentName name, IDataType dataType)
-        {
-            return new TagBuilder<IDataType>(name, dataType);
-        }
-
-        public static ITagBuilder<TDataType> Build<TDataType>(ComponentName name)
-            where TDataType : IDataType, new()
-        {
-            var dataType = new TDataType();
-            return new TagBuilder<TDataType>(name, dataType);
-        }
-
-        public static ITagBuilder<TDataType> Build<TDataType>(ComponentName name, TDataType dataType)
-            where TDataType : IDataType, new()
-        {
-            return new TagBuilder<TDataType>(name, dataType);
-        }*/
     }
 }

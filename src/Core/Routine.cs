@@ -5,8 +5,7 @@ using L5Sharp.Enums;
 namespace L5Sharp.Core
 {
     /// <inheritdoc cref="L5Sharp.IRoutine{TContent}" />
-    public sealed class Routine<TContent> : IRoutine<TContent>, IEquatable<Routine<TContent>>
-        where TContent : ILogixContent
+    public sealed class Routine<TContent> : IRoutine<TContent> where TContent : ILogixContent
     {
         /// <summary>
         /// Creates a new <see cref="Routine{TContent}"/> instance with the provided arguments.
@@ -36,40 +35,5 @@ namespace L5Sharp.Core
 
         /// <inheritdoc />
         public TContent Content { get; }
-
-        /// <inheritdoc />
-        public bool Equals(Routine<TContent>? other)
-        {
-            if (ReferenceEquals(null, other)) return false;
-            if (ReferenceEquals(this, other)) return true;
-            return Name == other.Name &&
-                   Description == other.Description &&
-                   Type.Equals(other.Type) &&
-                   EqualityComparer<TContent>.Default.Equals(Content, other.Content);
-        }
-
-        /// <inheritdoc />
-        public override bool Equals(object? obj)
-        {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((Routine<TContent>)obj);
-        }
-
-        /// <inheritdoc />
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(Name, Description, Type, Content);
-        }
-
-        public static bool operator ==(Routine<TContent>? left, Routine<TContent>? right)
-        {
-            return Equals(left, right);
-        }
-
-        public static bool operator !=(Routine<TContent>? left, Routine<TContent>? right)
-        {
-            return !Equals(left, right);
-        }
     }
 }

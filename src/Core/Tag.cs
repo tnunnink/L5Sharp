@@ -9,33 +9,36 @@ namespace L5Sharp.Core
     public sealed class Tag<TDataType> : ITag<TDataType> where TDataType : IDataType
     {
         private readonly TDataType _dataType;
-        private readonly ITagMember<TDataType> _tagMember;
+        private ITagMember<TDataType> _tagMember;
         private string _description;
 
-        internal Tag(ComponentName name, TDataType dataType, Dimensions? dimensions = null, Radix? radix = null,
-            ExternalAccess? externalAccess = null, string? description = null, TagUsage? usage = null,
-            bool constant = false)
+        internal Tag(string name, TDataType dataType, Radix? radix = null, ExternalAccess? externalAccess = null,
+            string? description = null, TagUsage? usage = null, bool constant = false)
         {
-            //_dataType = dataType ?? throw new ArgumentNullException(nameof(dataType));
+            Name = name ?? throw new ArgumentNullException(nameof(name));
+            _dataType = dataType ?? throw new ArgumentNullException(nameof(dataType));
+            Dimensions = _dataType is IArrayType<IDataType> arrayType ? arrayType.Dimensions : Dimensions.Empty;
+            Radix = radix is not null && radix.SupportsType(_dataType) ? radix : Radix.Default(_dataType);
+            ExternalAccess = externalAccess ?? ExternalAccess.None;
             _description = description ?? string.Empty;
+            
             Usage = usage != null ? usage : TagUsage.Null;
             Scope = Scope.Null;
             Constant = constant;
             Comments = new Comments(Root);
-            
-           
-            externalAccess ??= ExternalAccess.None; //Tags default to 'None' External Access unlike members.
-            
-            //Instantiate(name, dataType, dimensions, radix, externalAccess, description);
-            
-            var member = Member.Create(name, dataType, radix, externalAccess, description);
 
+            InstantiateMember();
+        }
+
+        private void InstantiateMember()
+        {
+            var member = new Member<TDataType>(Name, _dataType, Radix, ExternalAccess, Description);
             _tagMember = new TagMember<TDataType>(member, Root, Parent);
         }
 
 
         /// <inheritdoc />
-        public string Name => _tagMember.Name;
+        public string Name { get; }
 
         /// <inheritdoc />
         public string Description => DetermineDescription();
@@ -47,16 +50,16 @@ namespace L5Sharp.Core
         public string Operand => _tagMember.Name;
 
         /// <inheritdoc />
-        public string DataType => _tagMember.DataType;
+        public string DataType => _dataType.Name;
 
         /// <inheritdoc />
-        public Dimensions Dimensions => _tagMember.Dimensions;
+        public Dimensions Dimensions { get; }
 
         /// <inheritdoc />
-        public Radix Radix => _tagMember.Radix;
+        public Radix Radix { get; }
 
         /// <inheritdoc />
-        public ExternalAccess ExternalAccess => _tagMember.ExternalAccess;
+        public ExternalAccess ExternalAccess { get; }
 
         /// <inheritdoc />
         public object? Value => _tagMember.Value;
@@ -77,7 +80,7 @@ namespace L5Sharp.Core
         public TagUsage Usage { get; }
 
         /// <inheritdoc />
-        public bool Constant { get; set; }
+        public bool Constant { get; }
         
         /// <inheritdoc />
         public Comments Comments { get; }
@@ -112,14 +115,6 @@ namespace L5Sharp.Core
 
         /// <inheritdoc />
         public IEnumerable<string> GetDeepMembersNames() => _tagMember.GetDeepMembersNames();
-
-        /*private void Instantiate(ComponentName name, TDataType dataType, Dimensions dimensions, Radix radix,
-            ExternalAccess externalAccess, string description)
-        {
-            var member = Member.Create(name, dataType, dimensions, radix, externalAccess, description);
-
-            _tagMember = new TagMember<TDataType>(member, Root, Parent);
-        }*/
 
         private string DetermineDescription()
         {

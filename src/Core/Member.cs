@@ -42,7 +42,7 @@ namespace L5Sharp.Core
         public bool IsStructureMember => DataType is IComplexType;
 
         /// <inheritdoc />
-        public bool IsArrayMember => DataType is IArrayType<TDataType>;
+        public bool IsArrayMember => DataType is IArrayType<IDataType>;
 
         /// <inheritdoc />
         public IMember<TDataType> Copy() =>

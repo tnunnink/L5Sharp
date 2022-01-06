@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using L5Sharp.Exceptions;
 
 namespace L5Sharp
 {
@@ -18,12 +16,12 @@ namespace L5Sharp
     public interface IMemberCollection<TMember> : IComponentCollection<TMember> where TMember : IMember<IDataType>
     {
         /// <summary>
-        /// Adds a collection of <c>IMember</c> objects to the <c>IMembers</c> collection.
+        /// Inserts the provided <see cref="IMember{TDataType}"/> at the specified index location of the collection.
         /// </summary>
-        /// <param name="members">The collection of <c>IMember</c> objects to add to the collection.</param>
-        /// <exception cref="ArgumentNullException">When members is null.</exception>
-        /// <exception cref="ComponentNameCollisionException">When a member name already exists in the collection.</exception>
-        /// <exception cref="CircularReferenceException">When a member type is equivalent to the parent type of the collection.</exception>
-        void AddRange(IEnumerable<TMember> members);
+        /// <param name="index">The index at which to insert the member.</param>
+        /// <param name="member">The <see cref="IMember{TDataType}"/> to insert.</param>
+        /// <exception cref="ArgumentOutOfRangeException">The provided index is not valid.</exception>
+        /// <exception cref="ArgumentNullException">member is null.</exception>
+        void Insert(int index, TMember member);
     }
 }

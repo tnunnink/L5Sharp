@@ -51,8 +51,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void New_Overloaded_ShouldHaveExpectedValues()
         {
-            var member = Member.Create("Member", (IDataType)new Real(), Dimensions.Empty, Radix.Exponential,
-                ExternalAccess.ReadOnly, "Test");
+            var member = Member.Create("Member", (IDataType)new Real(), Radix.Exponential, ExternalAccess.ReadOnly, "Test");
 
             member.Should().NotBeNull();
             member.Name.Should().Be("Member");
@@ -170,12 +169,19 @@ namespace L5Sharp.Core.Tests
 
             member.IsArrayMember.Should().BeTrue();
         }
+        
+        [Test]
+        public void IsArrayMember_ComplexTypeArray_ShouldBeTrue()
+        {
+            var member = Member.Create<Timer>("Test", new Dimensions(5));
+
+            member.IsArrayMember.Should().BeTrue();
+        }
 
         [Test]
         public void Copy_WhenCalled_ShouldNotBeSameButEqual()
         {
-            var member = Member.Create<Dint>("Test", Dimensions.Empty, Radix.Binary, ExternalAccess.ReadOnly,
-                "This is a test");
+            var member = Member.Create<Dint>("Test", Radix.Binary, ExternalAccess.ReadOnly, "This is a test");
 
             var copy = member.Copy();
 

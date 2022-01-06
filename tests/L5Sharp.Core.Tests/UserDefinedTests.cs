@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using AutoFixture;
 using FluentAssertions;
 using L5Sharp.Components;
@@ -15,14 +14,6 @@ namespace L5Sharp.Core.Tests
     [TestFixture]
     public class UserDefinedTests
     {
-        [Test]
-        public void Create_ValidArguments_ShouldNotBeNull()
-        {
-            var type = new UserDefined("Mytype");
-
-            type.Should().NotBeNull();
-        }
-
         [Test]
         public void New_NullName_ShouldThrowArgumentNullException()
         {
@@ -46,12 +37,20 @@ namespace L5Sharp.Core.Tests
         }
 
         [Test]
+        public void New_ValidName_ShouldNotBeNull()
+        {
+            var type = new UserDefined("Test");
+
+            type.Should().NotBeNull();
+        }
+
+        [Test]
         public void New_ValidNameAndDescription_ShouldBeExpected()
         {
             var fixture = new Fixture();
             var description = fixture.Create<string>();
 
-            var type = new UserDefined("Test", description: description);
+            var type = new UserDefined("Test", description);
 
             type.Should().NotBeNull();
             type.Name.Should().Be("Test");
@@ -140,27 +139,6 @@ namespace L5Sharp.Core.Tests
             var instance = type.Instantiate();
 
             instance.Should().NotBeSameAs(type);
-        }
-        
-        [Test]
-        public void GetDependentTypes_WhenCalled_ShouldContainExpectedTypes()
-        {
-            var type = new UserDefined("Type01", "This is a test", new List<IMember<IDataType>>
-            {
-                Member.Create("Member01", new Bool()),
-                Member.Create("Member02", new Counter()),
-                Member.Create("Member03", new Dint()),
-                Member.Create("Member04", new String())
-            });
-
-            var dependents = type.GetDependentTypes().ToList();
-
-            dependents.Should().HaveCount(5);
-            dependents.Should().Contain(new Bool());
-            dependents.Should().Contain(new Counter());
-            dependents.Should().Contain(new Dint());
-            dependents.Should().Contain(new String());
-            dependents.Should().Contain(new Sint());
         }
 
         [Test]

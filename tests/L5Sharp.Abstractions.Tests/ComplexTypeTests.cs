@@ -118,19 +118,6 @@ namespace L5Sharp.Abstractions.Tests
         }
         
         [Test]
-        public void GetDependentTypes_WhenCalled_ShouldContainExpectedTypes()
-        {
-            var type = new TestComplex();
-
-            var dependents = type.GetDependentTypes().ToList();
-
-            dependents.Should().NotBeEmpty();
-            dependents.Should().Contain(new Bool());
-            dependents.Should().Contain(new Dint());
-            dependents.Should().Contain(new NestedComplex());
-        }
-
-        [Test]
         public void ToString_WhenCalled_ShouldBeExpected()
         {
             var type = new TestComplex();
@@ -138,104 +125,6 @@ namespace L5Sharp.Abstractions.Tests
             var str = type.ToString();
 
             str.Should().Be(nameof(TestComplex));
-        }
-
-        [Test]
-        public void TypedEquals_AreEqual_ShouldBeTrue()
-        {
-            var first = new TestComplex();
-            var second = new TestComplex();
-
-            var result = first.Equals(second);
-
-            result.Should().BeTrue();
-        }
-
-        [Test]
-        public void TypedEquals_AreSame_ShouldBeTrue()
-        {
-            var first = new TestComplex();
-            var second = first;
-
-            var result = first.Equals(second);
-
-            result.Should().BeTrue();
-        }
-
-
-        [Test]
-        public void TypedEquals_Null_ShouldBeFalse()
-        {
-            var first = new TestComplex();
-
-            var result = first.Equals(null);
-
-            result.Should().BeFalse();
-        }
-
-        [Test]
-        public void ObjectEquals_AreEqual_ShouldBeTrue()
-        {
-            var first = new TestComplex();
-            var second = new TestComplex();
-
-            var result = first.Equals((object)second);
-
-            result.Should().BeTrue();
-        }
-
-        [Test]
-        public void ObjectEquals_AreSame_ShouldBeTrue()
-        {
-            var first = new TestComplex();
-            var second = first;
-
-            var result = first.Equals((object)second);
-
-            result.Should().BeTrue();
-        }
-
-
-        [Test]
-        public void ObjectEquals_Null_ShouldBeFalse()
-        {
-            var first = new TestComplex();
-
-            var result = first.Equals((object)null);
-
-            result.Should().BeFalse();
-        }
-
-        [Test]
-        public void OperatorEquals_AreEqual_ShouldBeTrue()
-        {
-            var first = new TestComplex();
-            var second = new TestComplex();
-
-            var result = first == second;
-
-            result.Should().BeTrue();
-        }
-
-        [Test]
-        public void OperatorNotEquals_AreEqual_ShouldBeFalse()
-        {
-            var first = new TestComplex();
-            var second = new TestComplex();
-
-            var result = first != second;
-
-            result.Should().BeFalse();
-        }
-
-        [Test]
-        public void GetHashCode_WhenCalled_ShouldNotBeZero()
-        {
-            var first = new TestComplex();
-
-            var hash = first.GetHashCode();
-
-            hash.Should().NotBe(0);
         }
     }
 }

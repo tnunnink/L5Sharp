@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using L5Sharp.Common;
 using L5Sharp.Exceptions;
 
 namespace L5Sharp.Core
@@ -10,7 +9,7 @@ namespace L5Sharp.Core
     /// <summary>
     /// 
     /// </summary>
-    public class MemberCollection : IComponentCollection<IMember<IDataType>>
+    public class MemberCollection : IMemberCollection<IMember<IDataType>>
     {
         private readonly List<IMember<IDataType>> _members;
         private readonly IComplexType _parent;
@@ -60,7 +59,13 @@ namespace L5Sharp.Core
         public IEnumerable<IMember<IDataType>> FindAll(Predicate<IMember<IDataType>> match) => _members.FindAll(match);
 
         /// <inheritdoc />
-        public IMember<IDataType>? Get(ComponentName name) => _members.SingleOrDefault(m => m.Name == name);
+        public IMember<IDataType>? Get(ComponentName name) => _members.Find(m => m.Name == name);
+
+        /// <inheritdoc />
+        public void Insert(int index, IMember<IDataType> member)
+        {
+            throw new NotImplementedException();
+        }
 
         /// <inheritdoc />
         public bool Remove(ComponentName name)

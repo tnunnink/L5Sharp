@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using L5Sharp.Common;
 using L5Sharp.Enums;
 
 namespace L5Sharp.Core
@@ -37,27 +36,9 @@ namespace L5Sharp.Core
         public DataTypeClass Class => DataTypeClass.User;
 
         /// <inheritdoc />
-        public IComponentCollection<IMember<IDataType>> Members { get; }
+        public IMemberCollection<IMember<IDataType>> Members { get; }
 
         IEnumerable<IMember<IDataType>> IComplexType.Members => Members;
-
-        /// <inheritdoc />
-        public IEnumerable<IDataType> GetDependentTypes()
-        {
-            var set = new HashSet<IDataType>(ComponentNameComparer.Instance);
-
-            foreach (var member in Members)
-            {
-                set.Add(member.DataType);
-
-                if (member.DataType is not IComplexType complex) continue;
-
-                foreach (var dataType in complex.GetDependentTypes())
-                    set.Add(dataType);
-            }
-
-            return set;
-        }
 
         /// <inheritdoc />
         public IDataType Instantiate() =>

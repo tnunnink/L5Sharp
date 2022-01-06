@@ -10,6 +10,7 @@ namespace L5Sharp.Core
     public class ArrayType<TDataType> : IArrayType<TDataType> where TDataType : IDataType
     {
         private readonly Dictionary<string, IMember<TDataType>> _elements;
+
         private TDataType SeedType => _elements.First().Value.DataType;
 
         /// <summary>

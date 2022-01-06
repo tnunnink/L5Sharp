@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using System;
+using FluentAssertions;
 using L5Sharp.Core;
 using L5Sharp.Enums;
 using NUnit.Framework;
@@ -80,9 +81,7 @@ namespace L5Sharp.Types.Tests
         {
             var type = new Timer();
             
-            var members = (ReadOnlyMembers<IMember<IDataType>>)type.Members;
-            
-            members.Should().NotBeNull();
+            FluentActions.Invoking(() => (MemberCollection)type.Members).Should().Throw<InvalidCastException>();
         }
     }
 }

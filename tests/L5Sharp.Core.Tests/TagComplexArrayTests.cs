@@ -1,4 +1,4 @@
-﻿using AutoFixture;
+﻿/*using AutoFixture;
 using FluentAssertions;
 using L5Sharp.Components;
 using L5Sharp.Types;
@@ -22,4 +22,4 @@ namespace L5Sharp.Core.Tests
             tag.Dimensions.Length.Should().Be(length);
         }
     }
-}
+}*/

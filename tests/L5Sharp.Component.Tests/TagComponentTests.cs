@@ -36,7 +36,7 @@ namespace L5Sharp.Component.Tests
         [Test]
         public void Create_WithDimensions_ShouldNotBeNull()
         {
-            var tag = Tag.Create<Bool>("Test", new Dimensions(5));
+            var tag = Tag.Create<Bool>("Test");
 
             tag.Should().NotBeNull();
         }

@@ -129,7 +129,7 @@ namespace L5Sharp.Core.Tests
         {
             var collection = new ComponentCollection<MyComponent>(_components);
 
-            var result = collection.Contains(new MyComponent("Test1"));
+            var result = collection.Contains("Test1");
 
             result.Should().BeTrue();
         }

@@ -24,13 +24,13 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void New_EmptyString_ShouldThrowArgumentNullException()
         {
-            FluentActions.Invoking(() => new Bulletin(string.Empty)).Should().Throw<ArgumentNullException>();
+            FluentActions.Invoking(() => new Bulletin(string.Empty)).Should().Throw<ArgumentException>();
         }
 
         [Test]
         public void New_NullString_ShouldThrowArgumentNullException()
         {
-            FluentActions.Invoking(() => new Bulletin(null!)).Should().Throw<ArgumentNullException>();
+            FluentActions.Invoking(() => new Bulletin(null!)).Should().Throw<ArgumentException>();
         }
     }
 }
