@@ -20,7 +20,7 @@ namespace L5Sharp.Serialization
             
             element.AddAttribute(component, m => m.Name);
             element.AddAttribute(component, m => m.DataType);
-            element.AddAttribute(component, m => m.Dimension);
+            element.AddAttribute(component, m => m.Dimensions);
             element.AddAttribute(component, m => m.Radix);
 
             /*var serializer = new ArrayElementSerializer();
@@ -39,7 +39,7 @@ namespace L5Sharp.Serialization
                 throw new ArgumentException($"Element name '{element.Name}' invalid. Expecting '{ElementName}'");
 
             var name = element.GetComponentName();
-            var dimensions = element.GetAttribute<IMember<IDataType>, Dimensions>(m => m.Dimension);
+            var dimensions = element.GetAttribute<IMember<IDataType>, Dimensions>(m => m.Dimensions);
             var radix = element.GetAttribute<IMember<IDataType>, Radix>(m => m.Radix);
             
             /*var serializer = new ArrayElementSerializer();

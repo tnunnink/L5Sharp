@@ -26,11 +26,8 @@ namespace L5Sharp.Core
         /// <exception cref="FormatException">tagName does not have a valid format.</exception>
         public TagName(string tagName)
         {
-            if (tagName is null)
-                throw new ArgumentNullException(nameof(tagName));
-
-            if (tagName.IsEmpty())
-                throw new ArgumentException();
+            if (string.IsNullOrEmpty(tagName))
+                throw new ArgumentException("TagName can not be null or empty.");
 
             if (!Regex.IsMatch(tagName, @"^[\w\.[\],]+$", RegexOptions.Compiled))
                 throw new FormatException();
@@ -41,36 +38,63 @@ namespace L5Sharp.Core
         /// <summary>
         /// Gets the base tag portion of the <see cref="TagName"/> value.
         /// </summary>
+        /// <remarks>
+        /// The base name of the the tag represents the root or first member of the members collection.
+        /// </remarks>
         public string Base =>
             Regex.Matches(_tagName, MembersPattern, RegexOptions.Compiled).Select(m => m.Value).First();
 
         /// <summary>
         /// Gets the operand portion of the <see cref="TagName"/> value.
         /// </summary>
+        /// <remarks>
+        /// The operand of a tag name represents the part of the name after the base name. This value will always be
+        /// the full tag name value without the leading base name. The operand will include any leading '.' character.
+        /// </remarks>
+        /// <seealso cref="Path"/>
         public string Operand => _tagName.Remove(0, Base.Length);
+
+        /// <summary>
+        /// Gets the member path of the <see cref="TagName"/> value.
+        /// </summary>
+        /// <remarks>
+        /// The path of a tag name represents a name relative to the base name. The value will always be the full tag name
+        /// without the leading base name. This is similar to <see cref="Operand"/> except that is also removes any
+        /// leading '.' character. 
+        /// </remarks>
+        /// <seealso cref="Operand"/>
+        public string Path => !Operand.IsEmpty() ? Operand.Remove(0, 1) : string.Empty;
 
         /// <summary>
         /// Gets the set of member names for the current <see cref="TagName"/>.
         /// </summary>
+        /// <remarks>
+        /// The members of a tag name represent all the individual constituent parts of the full name. This includes
+        /// the index array names if any exist. 
+        /// </remarks>
         public IEnumerable<string> Members =>
             Regex.Matches(_tagName, MembersPattern, RegexOptions.Compiled).Select(m => m.Value);
 
         /// <summary>
-        /// Combines two strings, as base and member names, into a single <see cref="TagName"/> value.
+        /// Combines two strings into a single <see cref="TagName"/> value.
         /// </summary>
-        /// <param name="baseName">The string that represents the base tag name value.</param>
-        /// <param name="memberName">The string that represents a member tag name value.</param>
-        /// <returns>A new <see cref="TagName"/> value that is the combination of the provided member names.</returns>
-        public static TagName Combine(string baseName, string memberName) =>
-            new(memberName.StartsWith(ArrayBracket)
-                ? $"{baseName}{memberName}"
-                : $"{baseName}{MemberSeparator}{memberName}");
+        /// <param name="left">The string that represents the left part of the tag name value.</param>
+        /// <param name="right">The string that represents the right part of the tag name value.</param>
+        /// <returns>A new <see cref="TagName"/> value that is the combination of the provided names.</returns>
+        /// <remarks>
+        /// This method effectively concatenates the strings but inserts a '.' if right is not a index
+        /// bracket (i.e. array member name.
+        /// </remarks>
+        public static TagName Combine(string left, string right) =>
+            new(right.StartsWith(ArrayBracket)
+                ? $"{left}{right}"
+                : $"{left}{MemberSeparator}{right}");
 
         /// <summary>
         /// Combines a collection of member names into a single <see cref="TagName"/> value.
         /// </summary>
-        /// <param name="members">The collection of strings that represent the members name of the tag name value.</param>
-        /// <returns>A new <see cref="TagName"/> value that is the combination of the provided collection.</returns>
+        /// <param name="members">The collection of strings that represent the member names of the tag name value.</param>
+        /// <returns>A new <see cref="TagName"/>A new <see cref="TagName"/> value that is the combination of all provided member names.</returns>
         /// <exception cref="ArgumentException">If a provided name does not match the member pattern format.</exception>
         public static TagName Combine(IEnumerable<string> members)
         {
@@ -79,7 +103,7 @@ namespace L5Sharp.Core
             foreach (var name in members)
             {
                 if (!Regex.IsMatch(name, MembersPattern))
-                    throw new ArgumentException();
+                    throw new ArgumentException($"The provided name '{name}' is not a valid member name format.");
 
                 if (!name.StartsWith(ArrayBracket) && builder.Length > 1)
                     builder.Append(MemberSeparator);
@@ -91,17 +115,17 @@ namespace L5Sharp.Core
         }
 
         /// <summary>
-        /// 
+        /// Converts a <see cref="TagName"/> to a <see cref="string"/> value.
         /// </summary>
-        /// <param name="tagName"></param>
-        /// <returns></returns>
+        /// <param name="tagName">The <see cref="TagName"/> value to convert.</param>
+        /// <returns>A new <see cref="string"/> value representing the value of the tag name.</returns>
         public static implicit operator string(TagName tagName) => tagName._tagName;
 
         /// <summary>
-        /// 
+        /// Converts a <see cref="string"/> to a <see cref="TagName"/> value.
         /// </summary>
-        /// <param name="tagName"></param>
-        /// <returns></returns>
+        /// <param name="tagName">The <see cref="string"/> value to convert.</param>
+        /// <returns>A new <see cref="TagName"/> value representing the value of the tag name.</returns>
         public static implicit operator TagName(string tagName) => new(tagName);
 
         /// <inheritdoc />

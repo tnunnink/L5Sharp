@@ -1,68 +1,131 @@
 ﻿using System;
 using System.Collections.Generic;
 using L5Sharp.Core;
-using L5Sharp.Enums;
 
 namespace L5Sharp
 {
     /// <summary>
-    /// Represents a child tag of a given root <see cref="ITag{TDataType}"/>.
+    /// Represents a member of a <see cref="ITag{TDataType}"/> type that has a complex structure.
     /// </summary>
+    /// <typeparam name="TDataType">The <see cref="IDataType"/> of the member.</typeparam>
     /// <remarks>
-    /// <c>ITagMember</c> instances act as wrappers around <see cref="IMember{TDataType}"/>.
-    /// They are meant to be immutable objects (which resembles their character in Logix) that only reveal the state of
-    /// the underlying data type instance.
+    /// <see cref="ITagMember{TDataType}"/> is effectively a wrapper for a given <see cref="IMember{TDataType}"/> that
+    /// is defined by a tag's root data type. A <see cref="ITagMember{TDataType}"/> is internally constructed when a call
+    /// for a descendent member is made via the methods for retrieving members.
+    /// These members are meant to be immutable objects (which resembles their character in Logix)
+    /// that only reveal the state of the underlying data type instance.
     /// Note that when you set the <see cref="Value"/> or <see cref="ILogixComponent.Description"/> of the current
-    /// <c>ITagMember</c>, you are really setting the value of the underlying <c>DataType</c> or root <c>Tag</c> instance, respectively.
-    /// Also, a <c>ITagMember</c> is not constructed with the root <c>Tag</c>, but rather is instantiated when a call to a
-    /// method or indexer that returns a <c>ITagMember</c> is made. 
+    /// member, you are really mutating the state of the underlying <see cref="IDataType"/> or root
+    /// <see cref="ITag{TDataType}"/> instance, respectively.
     /// </remarks>
-    /// <typeparam name="TDataType">The <see cref="IDataType"/> of the <c>ITagMember</c>.</typeparam>
-    public interface ITagMember<out TDataType> : ILogixComponent where TDataType : IDataType
+    /// <footer>
+    /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
+    /// `Logix 5000 Controllers Import/Export`</a> for more information.
+    /// </footer>
+    public interface ITagMember<out TDataType> : IMember<TDataType> where TDataType : IDataType
     {
         /// <summary>
         /// Gets the <see cref="TagName"/> value of the current <see cref="ITagMember{TDataType}"/> instance.
         /// </summary>
         TagName TagName { get; }
-
-        /// <summary>
-        /// Gets the name of the <see cref="IDataType"/> that the <see cref="ITag{TDataType}"/> represents.
-        /// </summary>
-        string DataType { get; }
-
-        /// <summary>
-        /// Gets the <see cref="Core.Dimensions"/> value of the current <see cref="ITagMember{TDataType}"/> instance.
-        /// </summary>
-        Dimensions Dimensions { get; }
-
-        /// <summary>
-        /// Gets the <see cref="Enums.Radix"/> value of the current <see cref="ITagMember{TDataType}"/> instance.
-        /// </summary>
-        Radix Radix { get; }
         
-        /// <summary>
-        /// Gets the <see cref="Enums.ExternalAccess"/> value of the current <see cref="ITagMember{TDataType}"/> instance.
-        /// </summary>
-        ExternalAccess ExternalAccess { get; }
-
         /// <summary>
         /// Gets value of the current <see cref="ITagMember{TDataType}"/>.
         /// </summary>
         /// <value>
         /// For <see cref="IAtomicType"/> members, returns the value of the underlying type instance.
-        /// If the current tag member is a <see cref="IComplexType"/> or <see cref="IArrayType{TDataType}"/>, return a null object value.
+        /// If the current tag member is a <see cref="IComplexType"/> or <see cref="IArrayType{TDataType}"/>,
+        /// return a null object value.
         /// </value>
         object? Value { get; }
 
         /// <summary>
-        /// Gets the parent member of the current tag member instance.
+        /// Gets the parent <see cref="ITagMember{TDataType}"/> of the current member instance.
         /// </summary>
         ITagMember<IDataType>? Parent { get; }
         
         /// <summary>
-        /// Gets the root <see cref="ITag{TDataType}"/> instance.
+        /// Gets the root <see cref="ITag{TDataType}"/> of the current member instance.
         /// </summary>
         ITag<IDataType> Root { get; }
+
+        /// <summary>
+        /// Gets a <see cref="ITagMember{TDataType}"/> at the specified one-dimensional index from the
+        /// underlying <see cref="IArrayType{TDataType}"/>.
+        /// </summary>
+        /// <param name="x">The index of the three dimensional array.</param>
+        /// <returns>
+        /// A new <see cref="ITagMember{TDataType}"/> element from the specified index.
+        /// </returns>
+        /// <exception cref="InvalidOperationException">
+        /// <see cref="ITagMember{TDataType}"/> data type is not an <see cref="IArrayType{TDataType}"/>
+        /// -or- the dimensions of the current tag type are not a one-dimensional array.</exception>
+        /// <exception cref="ArgumentException">index does not form a valid index of the current array dimensions.</exception>
+        /// <remarks>
+        /// Like <see cref="IArrayType{TDataType}"/>, this overload is for one-dimensional array types only.
+        /// If the current tag is not a one-dimensional array of some <see cref="IDataType"/>, this call will fail.  
+        /// </remarks>
+        ITagMember<IDataType> this[int x] { get; }
+
+        /// <summary>
+        /// Gets a <see cref="ITagMember{TDataType}"/> at the specified two-dimensional index from the
+        /// underlying <see cref="IArrayType{TDataType}"/>.
+        /// </summary>
+        /// <param name="x">The X index of the two dimensional array.</param>
+        /// <param name="y">The Y index of the two dimensional array.</param>
+        /// <returns>
+        /// A new <see cref="ITagMember{TDataType}"/> element from the specified index.
+        /// </returns>
+        /// <exception cref="InvalidOperationException">
+        /// <see cref="ITagMember{TDataType}"/> data type is not an <see cref="IArrayType{TDataType}"/>
+        /// -or- the dimensions of the current tag type are not a two-dimensional array.</exception>
+        /// <exception cref="ArgumentException">X and Y do not form a valid index of the current array dimensions.</exception>
+        /// <remarks>
+        /// Like <see cref="IArrayType{TDataType}"/>, this overload is for two-dimensional array types only.
+        /// If the current tag is not a two-dimensional array of some <see cref="IDataType"/>, this call will fail.  
+        /// </remarks>
+        ITagMember<IDataType> this[int x, int y] { get; }
+
+        /// <summary>
+        /// Gets a <see cref="ITagMember{TDataType}"/> at the specified three-dimensional index from the
+        /// underlying <see cref="IArrayType{TDataType}"/>.
+        /// </summary>
+        /// <param name="x">The X index of the three dimensional array.</param>
+        /// <param name="y">The Y index of the three dimensional array.</param>
+        /// <param name="z">The X index of the three dimensional array.</param>
+        /// <returns>
+        /// A new <see cref="ITagMember{TDataType}"/> element from the specified index.
+        /// </returns>
+        /// <exception cref="InvalidOperationException">
+        /// <see cref="ITagMember{TDataType}"/> data type is not an <see cref="IArrayType{TDataType}"/>
+        /// -or- the dimensions of the current tag type are not a three-dimensional array.</exception>
+        /// <exception cref="ArgumentException">X, Y, and Z do not form a valid index of the current array dimensions.</exception>
+        /// <remarks>
+        /// Like <see cref="IArrayType{TDataType}"/>, this overload is for three-dimensional array types only.
+        /// If the current tag is not a three-dimensional array of some <see cref="IDataType"/>, this call will fail.  
+        /// </remarks>
+        ITagMember<IDataType> this[int x, int y, int z] { get; }
+
+        /// <summary>
+        /// Gets a descendent <see cref="ITagMember{TDataType}"/> instance with the specified tag name value. 
+        /// </summary>
+        /// <param name="tagName">The <see cref="TagName"/> value of the descendent member to get.</param>
+        /// <returns>
+        /// A new <see cref="ITagMember{TDataType}"/> instance that represents the descendent member.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">tagName is null.</exception>
+        /// <exception cref="InvalidOperationException">
+        /// A member with the specified tag name value does not exist as a descendent member of the current instance.
+        /// </exception>
+        /// <remarks>
+        /// This method gets immediate and nested descendent members from the current <see cref="ITagMember{TDataType}"/>
+        /// based on the specified tag name value. This means the user can provide the full "dot-down" path to a nested
+        /// member for retrieval. This method also retrieves both members of an <see cref="IComplexType"/> and/or
+        /// <see cref="IArrayType{TDataType}"/> objects. This method will work as long as the provided path is valid.
+        /// </remarks>
+        /// <seealso cref="GetMember{TType}"/>
+        /// <seealso cref="TryGetMember"/>
+        ITagMember<IDataType> this[TagName tagName] { get; }
 
         /// <summary>
         /// Sets the <c>ITagMember</c> <see cref="ILogixComponent.Description"/> with the provided string comment. 
@@ -78,67 +141,44 @@ namespace L5Sharp
         void Comment(string comment);
 
         /// <summary>
-        /// Sets the <see cref="Value"/> property of the current <c>ITagMember</c> instance.
+        /// Determines if the provided <see cref="TagName"/> value exists as a descendent member of the <see cref="ITagMember{TDataType}"/> instance.
         /// </summary>
-        /// <param name="value">The <c>IAtomicType</c> value to set.</param>
-        /// <exception cref="ArgumentNullException">When value is null.</exception>
-        /// <exception cref="ArgumentException">When value is not valid for the current <c>ITagMember</c> type.</exception>
-        /// <exception cref="InvalidOperationException">
-        /// When the current <c>ITagMember</c> data type is not a type that implements <c>IAtomicType</c>.
-        /// </exception>
-        /// <seealso cref="TrySetValue"/>
-        void SetValue(IAtomicType value);
+        /// <param name="tagName">The <see cref="TagName"/> value to search for in the nested member hierarchy.</param>
+        /// <returns>true if a descendent member with the specified tag name path exists; otherwise, false.</returns>
+        bool Contains(TagName tagName);
 
         /// <summary>
-        /// Sets the <see cref="Value"/> property of the current <c>ITagMember</c> instance.
+        /// Gets a <see cref="ITagMember{TDataType}"/> using the provided member selector delegate function.
         /// </summary>
-        /// <param name="value">The <c>IAtomicType</c> value to set.</param>
+        /// <param name="selector">
+        /// A func delegate that selects a <see cref="IMember{TDataType}"/> of the current tag data type.
+        /// </param>
+        /// <typeparam name="TMemberType">
+        /// The <see cref="IDataType"/> of the member that is being selected.
+        /// This allows the returned <see cref="ITagMember{TDataType}"/> to be strongly typed which enables chaining calls.
+        /// </typeparam>
         /// <returns>
-        /// true if the value property was successfully set; otherwise, false. 
+        /// A new <see cref="ITagMember{TDataType}"/> instance that represents the selected child member of the current
+        /// tag data type.
         /// </returns>
-        /// <remarks>
-        /// This method differs from <see cref="SetValue"/> in that if the provided value is invalid or the
-        /// current <c>ITagMember</c> is not an <c>IAtomicType</c>, it will not throw an exception,
-        /// but instead return false, indicating that the call failed.
-        /// </remarks>
-        bool TrySetValue(IAtomicType value);
+        ITagMember<TMemberType> GetMember<TMemberType>(Func<TDataType, IMember<TMemberType>> selector)
+            where TMemberType : IDataType;
 
         /// <summary>
-        /// Gets a tag member element of the current <see cref="ITagMember{TDataType}"/> array at the provided index.
-        /// </summary>
-        /// <remarks>
-        /// Like <see cref="IArrayType{TDataType}"/>, only a 
-        /// </remarks>
-        /// <param name="x">The index of the element to get.</param>
-        /// <returns>
-        /// A <see cref="ITagMember{TDataType}"/> instance representing the element of the provided index.
-        /// </returns>
-        /// <exception cref="ArgumentOutOfRangeException">The provided index is not within the bounds of the array.</exception>
-        /// <exception cref="InvalidOperationException">The current type is not an <see cref="IArrayType{TDataType}"/>.</exception>
-        ITagMember<TDataType> this[int x] { get; }
-        
-        ITagMember<TDataType> this[int x, int y] { get; }
-        
-        ITagMember<TDataType> this[int x, int y, int z] { get; }
-
-        /// <summary>
-        /// Gets a child tag member with the specified name of the current member instance. 
-        /// </summary>
-        /// <param name="name">The name of the child member to retrieve.</param>
-        /// <returns>
-        /// A new instance a <see cref="ITagMember{TDataType}"/> that represents the child member if it exists.
-        /// If not found, then will return null.
-        /// </returns>
-        ITagMember<IDataType> this[TagName name] { get; }
-        
-        ITagMember<TType> GetMember<TType>(Func<TDataType, IMember<TType>> expression)
-            where TType : IDataType;
-        
-        /// <summary>
-        /// Gets all <see cref="ITagMember{TDataType}"/> instances that are immediate children of the current <see cref="ITag{TDataType}"/>.
+        /// Gets all <see cref="ITagMember{TDataType}"/> instances that are immediate descendents of the current <see cref="ITag{TDataType}"/>.
         /// </summary>
         /// <returns>A collection of <see cref="ITagMember{TDataType}"/> objects if any are found; otherwise, an empty collection.</returns>
         IEnumerable<ITagMember<IDataType>> GetMembers();
+
+        /// <summary>
+        /// Gets all descendent member <see cref="TagName"/> values of the current <see cref="ITagMember{TDataType}"/>.
+        /// </summary>
+        /// <returns>A collection of all member <see cref="TagName"/> values if any exist.</returns>
+        /// <remarks>
+        /// This method returns tag name values relative to the current member instance. This does so by traversing the
+        /// nested member hierarchy of the current data type.
+        /// </remarks>
+        IEnumerable<TagName> GetTagNames();
 
         /// <summary>
         /// Attempts to get a descendent <see cref="ITagMember{TDataType}"/> with the provided <see cref="TagName"/> value.
@@ -151,15 +191,31 @@ namespace L5Sharp
         /// current <see cref="ITagMember{TDataType}"/> instance; otherwise, false.
         /// </returns>
         bool TryGetMember(TagName name, out ITagMember<IDataType>? tagMember);
-        
+
         /// <summary>
-        /// Gets all descendent member <see cref="TagName"/> values of the current <see cref="ITagMember{TDataType}"/>.
+        /// Attempts to sets the <see cref="Value"/> property of the current <see cref="ITagMember{TDataType}"/> instance.
         /// </summary>
-        /// <returns>A collection of all member <see cref="TagName"/> values if any exist.</returns>
+        /// <param name="value">The <see cref="IAtomicType"/> value to set.</param>
+        /// <returns>
+        /// true if <see cref="Value"/> was successfully set; otherwise, false. 
+        /// </returns>
         /// <remarks>
-        /// This method returns tag name values relative to the current member instance. This does so by traversing the
-        /// nested member hierarchy of the current data type.
+        /// This method differs from <see cref="SetValue"/> in that if the provided value is invalid or the
+        /// current member type is not an <see cref="IAtomicType"/>, instead of throwing an exception,
+        /// it will return a result indicating whether the function succeeded of failed.
         /// </remarks>
-        IEnumerable<TagName> GetTagNames();
+        bool TrySetValue(IAtomicType? value);
+
+        /// <summary>
+        /// Sets the <see cref="Value"/> property of the current <see cref="ITagMember{TDataType}"/> instance.
+        /// </summary>
+        /// <param name="value">The <see cref="IAtomicType"/> value to set.</param>
+        /// <exception cref="ArgumentNullException">When value is null.</exception>
+        /// <exception cref="ArgumentException">When value is not valid for the current member type.</exception>
+        /// <exception cref="InvalidOperationException">
+        /// When the current member type is not a type that implements <see cref="IAtomicType"/>.
+        /// </exception>
+        /// <seealso cref="TrySetValue"/>
+        void SetValue(IAtomicType value);
     }
 }

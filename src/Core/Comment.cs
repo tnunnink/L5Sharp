@@ -8,18 +8,18 @@
         /// <summary>
         /// Creates a new instance of a <c>Comment</c> with the provided operand and value.
         /// </summary>
-        /// <param name="operand">The string operand value.</param>
+        /// <param name="tagName">The string operand value.</param>
         /// <param name="value">The string comment value.</param>
-        public Comment(string operand, string value)
+        internal Comment(TagName tagName, string value)
         {
-            Operand = operand;
+            TagName = tagName;
             Value = value;
         }
 
         /// <summary>
         /// Gets the <c>Operand</c>, or member path, for which the comments is applied to.
         /// </summary>
-        public string Operand { get; }
+        public TagName TagName { get; }
         
         /// <summary>
         /// Gets the <c>Value</c> of the comment.

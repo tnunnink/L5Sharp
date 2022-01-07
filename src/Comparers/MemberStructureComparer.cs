@@ -25,11 +25,11 @@ namespace L5Sharp.Comparers
             if (ReferenceEquals(y, null)) return false;
             return x.Name.Equals(y.Name) &&
                    x.DataType.StructureEquals(y.DataType) &&
-                   x.Dimension.Equals(y.Dimension);
+                   x.Dimensions.Equals(y.Dimensions);
         }
 
         /// <inheritdoc />
         public override int GetHashCode(IMember<IDataType> obj) =>
-            obj.Name.GetHashCode() ^ obj.DataType.GetHashCode() ^ obj.Dimension.GetHashCode();
+            obj.Name.GetHashCode() ^ obj.DataType.GetHashCode() ^ obj.Dimensions.GetHashCode();
     }
 }

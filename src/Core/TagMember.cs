@@ -22,15 +22,20 @@ namespace L5Sharp.Core
         public string Name => _member.Name;
 
         /// <inheritdoc />
+        public string Description => Root.Comments.Contains(TagName)
+            ? Root.Comments.Get(TagName)
+            : CalculateDescription();
+
+        /// <inheritdoc />
         public TagName TagName => Parent is null
             ? new TagName(Name)
             : TagName.Combine(Parent.TagName, Name);
 
         /// <inheritdoc />
-        public string DataType => _member.DataType.Name;
+        public TDataType DataType => _member.DataType;
 
         /// <inheritdoc />
-        public Dimensions Dimensions => _member.Dimension;
+        public Dimensions Dimensions => _member.Dimensions;
 
         /// <inheritdoc />
         public Radix Radix => _member.Radix;
@@ -41,9 +46,13 @@ namespace L5Sharp.Core
             : ExternalAccess.MostRestrictive(_member.ExternalAccess, Parent.ExternalAccess);
 
         /// <inheritdoc />
-        public string Description => Root.Comments.Contains(TagName.Operand)
-            ? Root.Comments.Get(TagName.Operand)
-            : CalculateDescription();
+        public bool IsValueMember => _member.IsValueMember;
+
+        /// <inheritdoc />
+        public bool IsStructureMember => _member.IsStructureMember;
+
+        /// <inheritdoc />
+        public bool IsArrayMember => _member.IsArrayMember;
 
         /// <inheritdoc />
         public object? Value => _member.DataType switch
@@ -60,7 +69,65 @@ namespace L5Sharp.Core
         public ITag<IDataType> Root { get; }
 
         /// <inheritdoc />
-        public void Comment(string comment) => Root.Comments.Set(new Comment(TagName.Operand, comment));
+        public ITagMember<IDataType> this[int x] => _member.DataType is IArrayType<IDataType> arrayType
+            ? new TagMember<IDataType>(arrayType[x], Root, (ITagMember<IDataType>)this)
+            : throw new InvalidOperationException(
+                $"Tag of type '{GetType()}' is not a valid '{typeof(IArrayType<IDataType>)}'");
+
+        /// <inheritdoc />
+        public ITagMember<IDataType> this[int x, int y] => _member.DataType is IArrayType<IDataType> arrayType
+            ? new TagMember<IDataType>(arrayType[x, y], Root, (ITagMember<IDataType>)this)
+            : throw new InvalidOperationException();
+
+        /// <inheritdoc />
+        public ITagMember<IDataType> this[int x, int y, int z] => _member.DataType is IArrayType<IDataType> arrayType
+            ? new TagMember<IDataType>(arrayType[x, y, z], Root, (ITagMember<IDataType>)this)
+            : throw new InvalidOperationException();
+
+        /// <inheritdoc />
+        public ITagMember<IDataType> this[TagName tagName] => GetMemberInternal(tagName);
+
+        /// <inheritdoc />
+        public void Comment(string comment) => Root.Comments.Set(new Comment(TagName, comment));
+
+        /// <inheritdoc />
+        public bool Contains(TagName tagName) => GetTagNames().Contains(tagName);
+
+        /// <inheritdoc />
+        public ITagMember<TMemberType> GetMember<TMemberType>(Func<TDataType, IMember<TMemberType>> selector)
+            where TMemberType : IDataType
+        {
+            var parent = (ITagMember<IDataType>)this;
+
+            var member = selector.Invoke(_member.DataType);
+
+            return new TagMember<TMemberType>(member, Root, parent);
+        }
+
+        /// <inheritdoc />
+        public IEnumerable<ITagMember<IDataType>> GetMembers() =>
+            _member.DataType.GetMembers().Select(m => new TagMember<IDataType>(m, Root, (ITagMember<IDataType>)this));
+
+        /// <inheritdoc />
+        public IEnumerable<TagName> GetTagNames() =>
+            _member.DataType.GetTagNames().Select(n => TagName.Combine(TagName, n));
+
+        /// <inheritdoc />
+        public bool TryGetMember(TagName name, out ITagMember<IDataType>? tagMember)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc />
+        public bool TrySetValue(IAtomicType? value)
+        {
+            if (value is null || value.GetType() != _member.DataType.GetType() ||
+                _member.DataType is not IAtomicType atomicType) return false;
+
+            atomicType.SetValue(value);
+
+            return true;
+        }
 
         /// <inheritdoc />
         public void SetValue(IAtomicType value)
@@ -75,64 +142,12 @@ namespace L5Sharp.Core
             atomicType.SetValue(value);
         }
 
-        /// <inheritdoc />
-        public bool TrySetValue(IAtomicType value)
+        private ITagMember<IDataType> GetMemberInternal(TagName tagName)
         {
-            if (_member.DataType is not IAtomicType atomicType)
-                return false;
+            //Allow both relative and absolute path from the current member to be used.
+            var path = tagName.Base.Equals(Root.Name) ? tagName.Path : tagName.ToString();
 
-            //todo probably need a can set or maybe use try catch?
-
-            atomicType.SetValue(value);
-
-            return true;
-        }
-
-        /// <inheritdoc />
-        public ITagMember<TDataType> this[int x] => _member.DataType is IArrayType<TDataType> arrayType
-            ? new TagMember<TDataType>(arrayType[x], Root, (ITagMember<IDataType>)this)
-            : throw new InvalidOperationException();
-
-        /// <inheritdoc />
-        public ITagMember<TDataType> this[int x, int y] => _member.DataType is IArrayType<TDataType> arrayType
-            ? new TagMember<TDataType>(arrayType[x, y], Root, (ITagMember<IDataType>)this)
-            : throw new InvalidOperationException();
-
-        /// <inheritdoc />
-        public ITagMember<TDataType> this[int x, int y, int z]  => _member.DataType is IArrayType<TDataType> arrayType
-            ? new TagMember<TDataType>(arrayType[x, y, z], Root, (ITagMember<IDataType>)this)
-            : throw new InvalidOperationException();
-        
-        /// <inheritdoc />
-        public ITagMember<IDataType> this[TagName name] => GetMemberInternal(name);
-
-        /// <inheritdoc />
-        public ITagMember<TType> GetMember<TType>(Func<TDataType, IMember<TType>> expression)
-            where TType : IDataType
-        {
-            var parent = (ITagMember<IDataType>)this;
-
-            var member = expression.Invoke(_member.DataType);
-
-            return new TagMember<TType>(member, Root, parent);
-        }
-
-        /// <inheritdoc />
-        public IEnumerable<ITagMember<IDataType>> GetMembers() =>
-            _member.DataType.GetMembers().Select(m => new TagMember<IDataType>(m, Root, (ITagMember<IDataType>)this));
-
-        /// <inheritdoc />
-        public IEnumerable<TagName> GetTagNames() => _member.DataType.GetTagNames();
-
-        /// <inheritdoc />
-        public bool TryGetMember(TagName name, out ITagMember<IDataType>? tagMember)
-        {
-            throw new NotImplementedException();
-        }
-
-        private ITagMember<IDataType> GetMemberInternal(TagName name)
-        {
-            var members = _member.DataType.GetMembersTo(name);
+            var members = _member.DataType.GetMembersTo(path);
 
             var parent = (ITagMember<IDataType>)this;
 
@@ -146,23 +161,25 @@ namespace L5Sharp.Core
         }
 
         /// <summary>
-        /// Determines the value of the default "Pass Through Description" for the tag member.
+        /// Determines the value of the member description based on the rules of the "Pass-Through-Description".
         /// </summary>
-        /// <returns>A string value of the member description</returns>
+        /// <returns>A string description for the current member.</returns>
         private string CalculateDescription()
         {
-            //If the parent is null this is the root member and we can just return the root's description.
-            if (Parent == null) return Root.Description;
+            if (!Root.DataType.Class.Equals(DataTypeClass.User))
+                return Parent is not null ? Parent.Description : string.Empty;
 
-            //The rest is based on the if the root type is user defined or not.
-            //If not, simply look to the parent description.
-            if (typeof(IUserDefined).IsAssignableFrom(typeof(TDataType)))
-                return Parent.Description;
+            if (Parent is null)
+                return _member.DataType.Description;
 
-            //If so, then we concatenate descriptions based on if it is an element of array or member of a type. 
-            return Dimensions.AreEmpty
+            return IsArrayMember
                 ? $"{Root.Description} {_member.Description}".Trim()
                 : $"{Root.Description} {Parent.Description}".Trim();
+        }
+
+        public IMember<TDataType> Copy()
+        {
+            throw new NotImplementedException();
         }
     }
 }

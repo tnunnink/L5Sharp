@@ -23,7 +23,7 @@ namespace L5Sharp
         /// </summary>
         /// <param name="x">The index of the one dimensional array.</param>
         /// <returns>
-        /// An <see cref="IMember{TDataType}"/> element of the array if the index within range.
+        /// An <see cref="IMember{TDataType}"/> element of the array if the index is within range.
         /// </returns>
         /// <exception cref="ArgumentException">X does not form a valid index of the current array dimensions.</exception>
         /// <exception cref="InvalidOperationException"><see cref="IArrayType{TDataType}"/> is not one dimensional.</exception>
@@ -39,7 +39,7 @@ namespace L5Sharp
         /// <param name="x">The X index of the two dimensional array.</param>
         /// <param name="y">The Y index of the two dimensional array.</param>
         /// <returns>
-        /// An <see cref="IMember{TDataType}"/> element of the array if the index within range.
+        /// An <see cref="IMember{TDataType}"/> element of the array if the index is within range.
         /// </returns>
         /// <exception cref="ArgumentException">X and Y do not form a valid index of the current array dimensions.</exception>
         /// <exception cref="InvalidOperationException"><see cref="IArrayType{TDataType}"/> is not two dimensional.</exception>

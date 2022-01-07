@@ -1,10 +1,87 @@
-﻿using NUnit.Framework;
+﻿using FluentAssertions;
+using L5Sharp.Components;
+using L5Sharp.Types;
+using NUnit.Framework;
 
 namespace L5Sharp.Core.Tests
 {
     [TestFixture]
     public class TagCommentTests
     {
+        private const string InitialDescription = "This is the initial description";
+        
+        [Test]
+        public void Atomic_Null_ShouldBeExpected()
+        {
+            var tag = Tag.Create<Dint>("Test", description: InitialDescription);
+            
+            tag.Description.Should().Be(InitialDescription);
+
+            tag.Comment(null!);
+
+            tag.Description.Should().BeEmpty();
+        }
+        
+        [Test]
+        public void Atomic_Empty_ShouldBeExpected()
+        {
+            var tag = Tag.Create<Dint>("Test", description: InitialDescription);
+            
+            tag.Description.Should().Be(InitialDescription);
+
+            tag.Comment(string.Empty);
+
+            tag.Description.Should().BeEmpty();
+        }
+
+        [Test]
+        public void Atomic_ValidComment_ShouldBeExpected()
+        {
+            var tag = Tag.Create<Dint>("Test", description: InitialDescription);
+            
+            tag.Description.Should().Be(InitialDescription);
+
+            tag.Comment("This is a test description");
+
+            tag.Description.Should().Be("This is a test description");
+        }
+
+        [Test]
+        public void Predefined_Null_ShouldBeExpected()
+        {
+            var tag = Tag.Create<Timer>("Test", description: InitialDescription);
+            
+            tag.Description.Should().Be(InitialDescription);
+
+            tag.Comment(null!);
+
+            tag.Description.Should().BeEmpty();
+        }
+        
+        [Test]
+        public void Predefined_Empty_ShouldBeExpected()
+        {
+            var tag = Tag.Create<Timer>("Test", description: InitialDescription);
+            
+            tag.Description.Should().Be(InitialDescription);
+
+            tag.Comment(string.Empty);
+
+            tag.Description.Should().BeEmpty();
+        }
+
+        [Test]
+        public void Predefined_ValidComment_ShouldBeExpected()
+        {
+            var tag = Tag.Create<Timer>("Test", description: InitialDescription);
+            
+            tag.Description.Should().Be(InitialDescription);
+
+            tag.Comment("This is a test description");
+
+            tag.Description.Should().Be("This is a test description");
+        }
+        
         /*[Test]
         public void SetDescription_String_ShouldUpdateAllElementDescriptionValues()
         {

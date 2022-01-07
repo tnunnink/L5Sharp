@@ -17,7 +17,7 @@ namespace L5Sharp.Component.Tests
         }
 
         [Test]
-        public void Create_NameAndTyped_ShouldNotBeNull()
+        public void Create_Name_ShouldNotBeNull()
         {
             var tag = Tag.Create<Bool>("Test");
 
@@ -25,18 +25,17 @@ namespace L5Sharp.Component.Tests
         }
 
         [Test]
-        public void Create_NameAndTypeProvided_ShouldNotBeNull()
+        public void Create_NameAndType_ShouldNotBeNull()
         {
-            var tag = Tag.Create("Test", new Bool(true));
+            var tag = Tag.Create("Test", new Bool());
 
             tag.Should().NotBeNull();
-            tag.Value.Should().Be(true);
         }
 
         [Test]
-        public void Create_WithDimensions_ShouldNotBeNull()
+        public void Create_NameAndTypeAndDimensions_ShouldNotBeNull()
         {
-            var tag = Tag.Create<Bool>("Test");
+            var tag = Tag.Create("Test", new Bool(), new Dimensions(5));
 
             tag.Should().NotBeNull();
         }

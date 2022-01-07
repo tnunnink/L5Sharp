@@ -86,7 +86,7 @@ namespace L5Sharp.Core.Tests
             type.LEN.Name.Should().Be("LEN");
             type.LEN.DataType.Should().BeOfType<Dint>();
             type.LEN.DataType.Value.Should().Be(10);
-            type.LEN.Dimension.Length.Should().Be(0);
+            type.LEN.Dimensions.Length.Should().Be(0);
             type.LEN.Radix.Should().Be(Radix.Decimal);
             type.LEN.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);
             type.LEN.Description.Should().BeEmpty();
@@ -100,7 +100,7 @@ namespace L5Sharp.Core.Tests
             type.DATA.Should().NotBeNull();
             type.DATA.Name.Should().Be("DATA");
             type.DATA.DataType.Should().BeOfType<Sint>();
-            type.DATA.Dimension.Length.Should().Be(100);
+            type.DATA.Dimensions.Length.Should().Be(100);
             type.DATA.Radix.Should().Be(Radix.Ascii);
             type.DATA.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);
             type.DATA.Description.Should().BeEmpty();

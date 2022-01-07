@@ -11,7 +11,7 @@ namespace L5Sharp.Core
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
             DataType = dataType ?? throw new ArgumentNullException(nameof(dataType));
-            Dimension = dataType is IArrayType<TDataType> arrayType ? arrayType.Dimensions : Dimensions.Empty;
+            Dimensions = dataType is IArrayType<IDataType> arrayType ? arrayType.Dimensions : Dimensions.Empty;
             Radix = radix is not null && radix.SupportsType(DataType) ? radix : Radix.Default(DataType);
             ExternalAccess = externalAccess ?? ExternalAccess.ReadWrite;
             Description = description ?? string.Empty;
@@ -27,7 +27,7 @@ namespace L5Sharp.Core
         public TDataType DataType { get; }
 
         /// <inheritdoc />
-        public Dimensions Dimension { get; }
+        public Dimensions Dimensions { get; }
 
         /// <inheritdoc />
         public Radix Radix { get; }

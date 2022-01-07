@@ -14,9 +14,11 @@ namespace L5Sharp.Core.Tests
         {
         }
 
-        public IMember<Bool> Indy = Member.Create<Bool>(nameof(Indy));
-        public IMember<String> Str = Member.Create<String>(nameof(Str));
-        public IMember<Timer> Tmr = Member.Create<Timer>(nameof(Tmr));
+        public override string Description => "This is the user defined description";
+
+        public IMember<Bool> Indy = Member.Create<Bool>(nameof(Indy), description:"Test Bool Member");
+        public IMember<String> Str = Member.Create<String>(nameof(Str), description:"Test String Member");
+        public IMember<Timer> Tmr = Member.Create<Timer>(nameof(Tmr), description:"Test Timer Member");
         public override DataTypeClass Class => DataTypeClass.User;
         protected override IDataType New() => new MyNestedType();
     }

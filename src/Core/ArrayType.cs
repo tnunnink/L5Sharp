@@ -96,7 +96,7 @@ namespace L5Sharp.Core
         /// <inheritdoc />
         public IMember<TDataType> this[int x, int y, int z] => Dimensions.DegreesOfFreedom == 3
             ? GetElement($"[{x},{y},{z}]")
-            : throw new InvalidOperationException($"The current array is not a three-dimensional array.");
+            : throw new InvalidOperationException("The current array is not a three-dimensional array.");
 
         /// <inheritdoc />
         public IDataType Instantiate()

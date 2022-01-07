@@ -135,7 +135,7 @@ namespace L5Sharp.Core.Tests
             first.Should().NotBeNull();
             first.Name.Should().Be("[0]");
             first.DataType.Should().BeOfType<Bool>();
-            first.Dimension.Should().Be(Dimensions.Empty);
+            first.Dimensions.Should().Be(Dimensions.Empty);
             first.Radix.Should().Be(Radix.Decimal);
             first.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);
             first.Description.Should().BeEmpty();
@@ -151,7 +151,7 @@ namespace L5Sharp.Core.Tests
             first.Should().NotBeNull();
             first.Name.Should().Be("[1,2]");
             first.DataType.Should().BeOfType<Bool>();
-            first.Dimension.Should().Be(Dimensions.Empty);
+            first.Dimensions.Should().Be(Dimensions.Empty);
             first.Radix.Should().Be(Radix.Decimal);
             first.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);
             first.Description.Should().BeEmpty();

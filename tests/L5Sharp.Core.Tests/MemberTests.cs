@@ -56,7 +56,7 @@ namespace L5Sharp.Core.Tests
             member.Should().NotBeNull();
             member.Name.Should().Be("Member");
             member.DataType.Should().BeOfType<Real>();
-            member.Dimension.Should().Be(Dimensions.Empty);
+            member.Dimensions.Should().Be(Dimensions.Empty);
             member.Radix.Should().Be(Radix.Exponential);
             member.ExternalAccess.Should().Be(ExternalAccess.ReadOnly);
             member.Description.Should().Be("Test");
@@ -97,7 +97,7 @@ namespace L5Sharp.Core.Tests
         {
             var member = Member.Create<Real>("Member");
 
-            var dimension = member.Dimension;
+            var dimension = member.Dimensions;
 
             dimension.Length.Should().Be(0);
         }
@@ -188,7 +188,7 @@ namespace L5Sharp.Core.Tests
             copy.Should().NotBeSameAs(member);
             copy.Name.Should().NotBeSameAs(member.Name);
             copy.DataType.Should().NotBeSameAs(member.DataType);
-            copy.Dimension.Should().NotBeSameAs(member.Dimension);
+            copy.Dimensions.Should().NotBeSameAs(member.Dimensions);
             copy.Description.Should().NotBeSameAs(member.Description);
         }
     }

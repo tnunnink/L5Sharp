@@ -7,48 +7,53 @@ namespace L5Sharp.Core
     /// <inheritdoc />
     public sealed class Tag<TDataType> : ITag<TDataType> where TDataType : IDataType
     {
-        private readonly TDataType _dataType;
         private readonly ITagMember<TDataType> _tagMember;
-        private string _description;
 
         internal Tag(string name, TDataType dataType, Radix? radix = null, ExternalAccess? externalAccess = null,
             string? description = null, TagUsage? usage = null, bool constant = false)
         {
-            Name = name ?? throw new ArgumentNullException(nameof(name));
-            _dataType = dataType ?? throw new ArgumentNullException(nameof(dataType));
-            Dimensions = _dataType is IArrayType<IDataType> arrayType ? arrayType.Dimensions : Dimensions.Empty;
-            Radix = radix is not null && radix.SupportsType(_dataType) ? radix : Radix.Default(_dataType);
-            ExternalAccess = externalAccess ?? ExternalAccess.None;
-            _description = description ?? string.Empty;
+            externalAccess ??= ExternalAccess.None;
+            var member = new Member<TDataType>(name, dataType, radix, externalAccess, description);
+            _tagMember = new TagMember<TDataType>(member, Root, Parent);
+            
             Usage = usage != null ? usage : TagUsage.Null;
             Scope = Scope.Null;
             Constant = constant;
             Comments = new Comments(Root);
 
-            var member = new Member<TDataType>(Name, _dataType, Radix, ExternalAccess, Description);
-            _tagMember = new TagMember<TDataType>(member, Root, Parent);
+            if (!string.IsNullOrEmpty(description))
+                Comments.Set(new Comment(TagName, description));
         }
 
         /// <inheritdoc />
-        public string Name { get; }
+        public string Name => _tagMember.Name;
 
         /// <inheritdoc />
-        public string Description => DetermineDescription();
+        public string Description => _tagMember.Description;
 
         /// <inheritdoc />
         public TagName TagName => _tagMember.TagName;
 
         /// <inheritdoc />
-        public string DataType => _tagMember.DataType;
+        public TDataType DataType => _tagMember.DataType;
 
         /// <inheritdoc />
-        public Dimensions Dimensions { get; }
+        public Dimensions Dimensions => _tagMember.Dimensions;
 
         /// <inheritdoc />
-        public Radix Radix { get; }
+        public Radix Radix => _tagMember.Radix;
 
         /// <inheritdoc />
-        public ExternalAccess ExternalAccess { get; }
+        public ExternalAccess ExternalAccess => _tagMember.ExternalAccess;
+
+        /// <inheritdoc />
+        public bool IsValueMember => _tagMember.IsValueMember;
+
+        /// <inheritdoc />
+        public bool IsStructureMember => _tagMember.IsStructureMember;
+
+        /// <inheritdoc />
+        public bool IsArrayMember => _tagMember.IsArrayMember;
 
         /// <inheritdoc />
         public object? Value => _tagMember.Value;
@@ -75,32 +80,32 @@ namespace L5Sharp.Core
         public Comments Comments { get; }
 
         /// <inheritdoc />
-        public void Comment(string comment)
-        {
-            _description = comment;
-        }
+        public void Comment(string comment) => _tagMember.Comment(comment);
+
+        /// <inheritdoc />
+        public bool Contains(TagName tagName) => _tagMember.Contains(tagName);
 
         /// <inheritdoc />
         public void SetValue(IAtomicType value) => _tagMember.SetValue(value);
 
         /// <inheritdoc />
-        public bool TrySetValue(IAtomicType value) => _tagMember.TrySetValue(value);
+        public bool TrySetValue(IAtomicType? value) => _tagMember.TrySetValue(value);
 
         /// <inheritdoc />
-        public ITagMember<TDataType> this[int x] => _tagMember[x];
+        public ITagMember<IDataType> this[int x] => _tagMember[x];
 
         /// <inheritdoc />
-        public ITagMember<TDataType> this[int x, int y] => _tagMember[x, y];
+        public ITagMember<IDataType> this[int x, int y] => _tagMember[x, y];
 
         /// <inheritdoc />
-        public ITagMember<TDataType> this[int x, int y, int z] => _tagMember[x, y, z];
+        public ITagMember<IDataType> this[int x, int y, int z] => _tagMember[x, y, z];
 
         /// <inheritdoc />
-        public ITagMember<IDataType> this[TagName name] => _tagMember[name];
+        public ITagMember<IDataType> this[TagName tagName] => _tagMember[tagName];
 
         /// <inheritdoc />
-        public ITagMember<TType> GetMember<TType>(Func<TDataType, IMember<TType>> expression)
-            where TType : IDataType => _tagMember.GetMember(expression);
+        public ITagMember<TType> GetMember<TType>(Func<TDataType, IMember<TType>> selector)
+            where TType : IDataType => _tagMember.GetMember(selector);
 
         /// <inheritdoc />
         public IEnumerable<ITagMember<IDataType>> GetMembers() => _tagMember.GetMembers();
@@ -112,14 +117,9 @@ namespace L5Sharp.Core
         /// <inheritdoc />
         public IEnumerable<TagName> GetTagNames() => _tagMember.GetTagNames();
 
-        private string DetermineDescription()
+        public IMember<TDataType> Copy()
         {
-            if (!string.IsNullOrEmpty(_description)) return _description;
-
-            if (_dataType is IUserDefined userDefined)
-                return userDefined.Description;
-
-            return string.Empty;
+            throw new NotImplementedException();
         }
     }
 }

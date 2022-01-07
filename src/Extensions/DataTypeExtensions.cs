@@ -106,8 +106,8 @@ namespace L5Sharp.Extensions
         /// </remarks>
         public static IEnumerable<IMember<IDataType>> GetMembersTo(this IDataType dataType, TagName tagName)
         {
-            if (tagName is null)
-                throw new ArgumentNullException(nameof(tagName));
+            if (string.IsNullOrEmpty(tagName))
+                throw new ArgumentException("TagName can not be null or empty.");
 
             var results = new List<IMember<IDataType>>();
 
@@ -124,8 +124,8 @@ namespace L5Sharp.Extensions
             }
 
             if (results.Count != tagName.Members.Count())
-                throw new InvalidOperationException(
-                    $"The path specified by '{tagName}' does not exist as a valid sequence of child members for '{dataType.GetType()}'");
+                throw new KeyNotFoundException(
+                    $"The member '{tagName}' does not exist as a valid descendent of '{dataType.GetType()}'");
 
             return results;
         }

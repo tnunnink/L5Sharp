@@ -72,7 +72,7 @@ namespace L5Sharp.Core
 
         /// <inheritdoc />
         protected override IDataType New() =>
-            new StringDefined(string.Copy(Name), DATA.Dimension.Copy(), string.Copy(Description));
+            new StringDefined(string.Copy(Name), DATA.Dimensions.Copy(), string.Copy(Description));
 
         /// <inheritdoc />
         public void SetValue(string value) => SetData(value);
