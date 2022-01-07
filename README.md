@@ -3,7 +3,7 @@
 
 # L5Sharp
 
-C# object oriented API for querying and manipulating RSLogix L5X import/export files. The primary purpose of this library is to aid in the creation of tools that automate tasks related RSLogix PLC development. This project is still under development, but please feel free to reach out if you are interested in contributing.
+C# object oriented API for querying and manipulating RSLogix L5X import/export files. The primary purpose of this library is to aid in the creation of tools that automate tasks related RSLogix PLC development. This project is still under development.
 
 
 ## Usage/Examples
