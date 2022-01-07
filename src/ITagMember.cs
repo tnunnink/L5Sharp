@@ -21,59 +21,46 @@ namespace L5Sharp
     public interface ITagMember<out TDataType> : ILogixComponent where TDataType : IDataType
     {
         /// <summary>
-        /// Gets the full name of the <c>ITagMember</c> including the root <c>Tag</c> name.
+        /// Gets the <see cref="TagName"/> value of the current <see cref="ITagMember{TDataType}"/> instance.
         /// </summary>
-        string TagName { get; }
-        
-        /// <summary>
-        /// Gets the full name of the <c>ITagMember</c> without the root Tag name.
-        /// </summary>
-        string Operand { get; }
+        TagName TagName { get; }
 
         /// <summary>
-        /// Gets the DataType name of the <c>ITagMember</c>.
+        /// Gets the name of the <see cref="IDataType"/> that the <see cref="ITag{TDataType}"/> represents.
         /// </summary>
         string DataType { get; }
 
         /// <summary>
-        /// Gets the Dimensions of the <c>ITagMember</c>.
+        /// Gets the <see cref="Core.Dimensions"/> value of the current <see cref="ITagMember{TDataType}"/> instance.
         /// </summary>
         Dimensions Dimensions { get; }
 
         /// <summary>
-        /// Gets the Radix of the <c>ITagMember</c>.
+        /// Gets the <see cref="Enums.Radix"/> value of the current <see cref="ITagMember{TDataType}"/> instance.
         /// </summary>
-        /// <value>
-        /// If the current <c>ITagMember</c> is a <see cref="IComplexType"/>, returns <see cref="Enums.Radix.Null"/>.
-        /// If the <c>ITagMember</c> type is <see cref="IAtomicType"/>, the will return the member's configured
-        /// <c>Radix</c> value.
-        /// </value>
         Radix Radix { get; }
         
         /// <summary>
-        /// Gets the ExternalAccess of the <c>ITagMember</c>.
+        /// Gets the <see cref="Enums.ExternalAccess"/> value of the current <see cref="ITagMember{TDataType}"/> instance.
         /// </summary>
         ExternalAccess ExternalAccess { get; }
 
         /// <summary>
-        /// Gets the Atomic value of the TagMember.
+        /// Gets value of the current <see cref="ITagMember{TDataType}"/>.
         /// </summary>
         /// <value>
-        /// For Atomic typed <c>TagMembers</c>, returns the value of the <see cref="IAtomicType"/> type.
-        /// If the current <c>ITagMember</c> instance is a complex type, returns null.
+        /// For <see cref="IAtomicType"/> members, returns the value of the underlying type instance.
+        /// If the current tag member is a <see cref="IComplexType"/> or <see cref="IArrayType{TDataType}"/>, return a null object value.
         /// </value>
         object? Value { get; }
 
         /// <summary>
-        /// Gets the parent of the current <c>ITagMember</c> instance.
+        /// Gets the parent member of the current tag member instance.
         /// </summary>
-        /// <value>
-        /// A <c>ITagMember</c> for all non-root <c>Tag</c> instances. If the current instance is the root, returns null. 
-        /// </value>
         ITagMember<IDataType>? Parent { get; }
         
         /// <summary>
-        /// Gets the root of the current <c>ITagMember</c> instance.
+        /// Gets the root <see cref="ITag{TDataType}"/> instance.
         /// </summary>
         ITag<IDataType> Root { get; }
 
@@ -117,19 +104,22 @@ namespace L5Sharp
         bool TrySetValue(IAtomicType value);
 
         /// <summary>
-        /// Gets an element of the current <c>ITagMember</c> array at the provided index.
+        /// Gets a tag member element of the current <see cref="ITagMember{TDataType}"/> array at the provided index.
         /// </summary>
         /// <remarks>
-        /// Like <see cref="IMember{TDataType}"/>, only a <c>ITagMember</c> with non-empty dimensions will have elements
-        /// accessible by index. Otherwise the <c>ITagMember</c> is not an array and therefore contains no elements.
-        /// This index getter will not fail if the provided index is invalid. It will simply return null.
+        /// Like <see cref="IArrayType{TDataType}"/>, only a 
         /// </remarks>
-        /// <param name="index">The array index of the member instance.</param>
+        /// <param name="x">The index of the element to get.</param>
         /// <returns>
-        /// A <c>ITagMember</c> instance representing the element of the provided index.
-        /// If the provided index is invalid (i.e. less than zero or greater than the dimensional length), then null.
+        /// A <see cref="ITagMember{TDataType}"/> instance representing the element of the provided index.
         /// </returns>
-        ITagMember<TDataType>? this[int index] { get; }
+        /// <exception cref="ArgumentOutOfRangeException">The provided index is not within the bounds of the array.</exception>
+        /// <exception cref="InvalidOperationException">The current type is not an <see cref="IArrayType{TDataType}"/>.</exception>
+        ITagMember<TDataType> this[int x] { get; }
+        
+        ITagMember<TDataType> this[int x, int y] { get; }
+        
+        ITagMember<TDataType> this[int x, int y, int z] { get; }
 
         /// <summary>
         /// Gets a child tag member with the specified name of the current member instance. 
@@ -139,47 +129,37 @@ namespace L5Sharp
         /// A new instance a <see cref="ITagMember{TDataType}"/> that represents the child member if it exists.
         /// If not found, then will return null.
         /// </returns>
-        ITagMember<IDataType>? this[string name] { get; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="expression"></param>
-        /// <typeparam name="TType"></typeparam>
-        /// <returns></returns>
+        ITagMember<IDataType> this[TagName name] { get; }
+        
         ITagMember<TType> GetMember<TType>(Func<TDataType, IMember<TType>> expression)
             where TType : IDataType;
-
+        
         /// <summary>
-        /// Gets all child members of the current <c>ITagMember</c> instance.
+        /// Gets all <see cref="ITagMember{TDataType}"/> instances that are immediate children of the current <see cref="ITag{TDataType}"/>.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A collection of <see cref="ITagMember{TDataType}"/> objects if any are found; otherwise, an empty collection.</returns>
         IEnumerable<ITagMember<IDataType>> GetMembers();
 
         /// <summary>
-        /// Gets a list of child member names of the current <c>ITagMember</c>
+        /// Attempts to get a descendent <see cref="ITagMember{TDataType}"/> with the provided <see cref="TagName"/> value.
         /// </summary>
-        /// <remarks>
-        /// Only returns list of immediate child member names. This method does not recursively traverse nested members.
-        /// For a full nested list of member names use <see cref="GetDeepMembersNames"/>.
-        /// </remarks>
+        /// <param name="name">The tag name value of the <see cref="ITagMember{TDataType}"/> to get.</param>
+        /// <param name="tagMember">When the method returns, contains an instance of the
+        /// <see cref="ITagMember{TDataType}"/> that represents the descendent member if found; otherwise, null.</param>
         /// <returns>
-        /// An enumerable collection of string names that represent the member's name (not TagName or Operand).
-        /// If no child members exist, returns an empty collection.
+        /// true if the member with the specified tag name was found as a descendent of the
+        /// current <see cref="ITagMember{TDataType}"/> instance; otherwise, false.
         /// </returns>
-        IEnumerable<string> GetMemberNames();
+        bool TryGetMember(TagName name, out ITagMember<IDataType>? tagMember);
         
         /// <summary>
-        /// Gets list of all nested child member names of the current <c>ITagMember</c>
+        /// Gets all descendent member <see cref="TagName"/> values of the current <see cref="ITagMember{TDataType}"/>.
         /// </summary>
+        /// <returns>A collection of all member <see cref="TagName"/> values if any exist.</returns>
         /// <remarks>
-        /// Will recursively traverse all nested child members to get a full list of member names. 
-        /// For a list of immediate child member names use <see cref="GetMemberNames"/>.
+        /// This method returns tag name values relative to the current member instance. This does so by traversing the
+        /// nested member hierarchy of the current data type.
         /// </remarks>
-        /// <returns>
-        /// An enumerable collection of string names that represent the child members if any exist.
-        /// If none exist, returns an empty collection.
-        /// </returns>
-        IEnumerable<string> GetDeepMembersNames();
+        IEnumerable<TagName> GetTagNames();
     }
 }

@@ -37,28 +37,30 @@ namespace L5Sharp.Core.Tests
         }
 
         [Test]
-        public void Members_WhenCalled_ShouldHaveExpectedCount()
+        public void New_Valid_ShouldHaveExpectedProperties()
         {
             var tagName = new TagName("MyTag.Member01.Indication_Active_Tag");
 
+            tagName.Base.Should().Be("MyTag");
+            tagName.Operand.Should().Be(".Member01.Indication_Active_Tag");
             tagName.Members.Should().HaveCount(3);
         }
 
         [Test]
-        public void Base_WhenCalled_ShouldBeExpected()
+        public void Members_WhenCalled_ShouldContainExpectedValues()
         {
             var tagName = new TagName("MyTag.Member01.Indication_Active_Tag");
 
-            var result = tagName.BaseName;
-
-            result.Should().Be("MyTag");
+            tagName.Members.Should().Contain("MyTag");
+            tagName.Members.Should().Contain("Member01");
+            tagName.Members.Should().Contain("Indication_Active_Tag");
         }
 
         [Test]
         public void Combine_TwoMemberNames_ShouldBeExpected()
         {
-            var baseName = "MyTag";
-            var memberName = "Member_01";
+            const string baseName = "MyTag";
+            const string memberName = "Member_01";
 
             var tagName = TagName.Combine(baseName, memberName);
 

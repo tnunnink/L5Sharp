@@ -91,24 +91,15 @@ namespace L5Sharp.Core
         }
 
         /// <inheritdoc />
-        public IEnumerator<Comment> GetEnumerator()
-        {
-            return _comments.Values.GetEnumerator();
-        }
+        public IEnumerator<Comment> GetEnumerator() => _comments.Values.GetEnumerator();
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
         /// <summary>
         /// Helper to determine if the provided operand name is a member of the root tag.
         /// </summary>
         /// <param name="operand"></param>
         /// <returns></returns>
-        private bool IsValidOperand(string operand)
-        {
-            return _tag.GetDeepMembersNames().Any(m => m.Contains(operand));
-        }
+        private bool IsValidOperand(string operand) => _tag.GetTagNames().Any(m => m.Operand == operand);
     }
 }

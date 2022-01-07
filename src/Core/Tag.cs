@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using L5Sharp.Components;
 using L5Sharp.Enums;
 
 namespace L5Sharp.Core
@@ -9,7 +8,7 @@ namespace L5Sharp.Core
     public sealed class Tag<TDataType> : ITag<TDataType> where TDataType : IDataType
     {
         private readonly TDataType _dataType;
-        private ITagMember<TDataType> _tagMember;
+        private readonly ITagMember<TDataType> _tagMember;
         private string _description;
 
         internal Tag(string name, TDataType dataType, Radix? radix = null, ExternalAccess? externalAccess = null,
@@ -21,21 +20,14 @@ namespace L5Sharp.Core
             Radix = radix is not null && radix.SupportsType(_dataType) ? radix : Radix.Default(_dataType);
             ExternalAccess = externalAccess ?? ExternalAccess.None;
             _description = description ?? string.Empty;
-            
             Usage = usage != null ? usage : TagUsage.Null;
             Scope = Scope.Null;
             Constant = constant;
             Comments = new Comments(Root);
 
-            InstantiateMember();
-        }
-
-        private void InstantiateMember()
-        {
             var member = new Member<TDataType>(Name, _dataType, Radix, ExternalAccess, Description);
             _tagMember = new TagMember<TDataType>(member, Root, Parent);
         }
-
 
         /// <inheritdoc />
         public string Name { get; }
@@ -44,13 +36,10 @@ namespace L5Sharp.Core
         public string Description => DetermineDescription();
 
         /// <inheritdoc />
-        public string TagName => _tagMember.TagName;
+        public TagName TagName => _tagMember.TagName;
 
         /// <inheritdoc />
-        public string Operand => _tagMember.Name;
-
-        /// <inheritdoc />
-        public string DataType => _dataType.Name;
+        public string DataType => _tagMember.DataType;
 
         /// <inheritdoc />
         public Dimensions Dimensions { get; }
@@ -81,7 +70,7 @@ namespace L5Sharp.Core
 
         /// <inheritdoc />
         public bool Constant { get; }
-        
+
         /// <inheritdoc />
         public Comments Comments { get; }
 
@@ -98,10 +87,16 @@ namespace L5Sharp.Core
         public bool TrySetValue(IAtomicType value) => _tagMember.TrySetValue(value);
 
         /// <inheritdoc />
-        public ITagMember<TDataType>? this[int index] => _tagMember[index];
+        public ITagMember<TDataType> this[int x] => _tagMember[x];
 
         /// <inheritdoc />
-        public ITagMember<IDataType>? this[string name] => _tagMember[name];
+        public ITagMember<TDataType> this[int x, int y] => _tagMember[x, y];
+
+        /// <inheritdoc />
+        public ITagMember<TDataType> this[int x, int y, int z] => _tagMember[x, y, z];
+
+        /// <inheritdoc />
+        public ITagMember<IDataType> this[TagName name] => _tagMember[name];
 
         /// <inheritdoc />
         public ITagMember<TType> GetMember<TType>(Func<TDataType, IMember<TType>> expression)
@@ -111,10 +106,11 @@ namespace L5Sharp.Core
         public IEnumerable<ITagMember<IDataType>> GetMembers() => _tagMember.GetMembers();
 
         /// <inheritdoc />
-        public IEnumerable<string> GetMemberNames() => _tagMember.GetMemberNames();
+        public bool TryGetMember(TagName name, out ITagMember<IDataType>? tagMember) =>
+            _tagMember.TryGetMember(name, out tagMember);
 
         /// <inheritdoc />
-        public IEnumerable<string> GetDeepMembersNames() => _tagMember.GetDeepMembersNames();
+        public IEnumerable<TagName> GetTagNames() => _tagMember.GetTagNames();
 
         private string DetermineDescription()
         {

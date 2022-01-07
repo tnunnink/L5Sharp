@@ -42,10 +42,10 @@ namespace L5Sharp
         public LogixContextInfo Info { get; }
 
         /// <inheritdoc />
-        public IUserDefinedRepository DataTypes { get; }
+        public IRepository<IUserDefined> DataTypes { get; }
 
         /// <inheritdoc />
-        public ITagRepository Tags { get; }
+        public IRepository<ITag<IDataType>> Tags { get; }
 
         /// <inheritdoc />
         public IReadOnlyRepository<ITask> Tasks { get; }

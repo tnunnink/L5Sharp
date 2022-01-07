@@ -18,12 +18,12 @@ namespace L5Sharp
         /// <summary>
         /// Gets the <c>DataTypes</c> repository for the L5X. 
         /// </summary>
-        IUserDefinedRepository DataTypes { get; }
+        IRepository<IUserDefined> DataTypes { get; }
         
         /// <summary>
         /// Gets the <c>Tags</c> repository for the L5X. 
         /// </summary>
-        ITagRepository Tags { get; }
+        IRepository<ITag<IDataType>> Tags { get; }
         
         /// <summary>
         /// A <see cref="IReadOnlyRepository{TComponent}"/> of <see cref="ITask"/> components for reading Logix Tasks

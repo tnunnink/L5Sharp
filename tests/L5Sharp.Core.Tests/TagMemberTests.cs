@@ -20,7 +20,6 @@ namespace L5Sharp.Core.Tests
             member.Name.Should().Be("DN");
             member.Description.Should().BeEmpty();
             member.TagName.Should().Be("Test.DN");
-            member.Operand.Should().Be(".DN");
             member.DataType.Should().Be("BOOL");
             member.Dimensions.Should().Be(Dimensions.Empty);
             member.Radix.Should().Be(Radix.Decimal);
@@ -87,7 +86,6 @@ namespace L5Sharp.Core.Tests
             member.Name.Should().Be("PRE");
             member.Description.Should().BeEmpty();
             member.TagName.Should().Be("Test.Tmr.PRE");
-            member.Operand.Should().Be(".Tmr.PRE");
             member.DataType.Should().Be("DINT");
             member.Dimensions.Should().Be(Dimensions.Empty);
             member.Radix.Should().Be(Radix.Decimal);

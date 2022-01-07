@@ -249,7 +249,7 @@ namespace L5Sharp.Core.Tests
         {
             var tag = Tag.Create("Test", new Bool());
 
-            var members = tag.GetMemberNames();
+            var members = tag.GetTagNames();
 
             members.Should().BeEmpty();
         }

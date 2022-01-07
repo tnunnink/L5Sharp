@@ -39,10 +39,15 @@ namespace L5Sharp.Core
         }
 
         /// <summary>
-        /// Gets the base member name of the <see cref="TagName"/>
+        /// Gets the base tag portion of the <see cref="TagName"/> value.
         /// </summary>
-        public string BaseName =>
+        public string Base =>
             Regex.Matches(_tagName, MembersPattern, RegexOptions.Compiled).Select(m => m.Value).First();
+
+        /// <summary>
+        /// Gets the operand portion of the <see cref="TagName"/> value.
+        /// </summary>
+        public string Operand => _tagName.Remove(0, Base.Length);
 
         /// <summary>
         /// Gets the set of member names for the current <see cref="TagName"/>.

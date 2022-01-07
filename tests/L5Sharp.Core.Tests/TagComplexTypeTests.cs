@@ -13,29 +13,9 @@ namespace L5Sharp.Core.Tests
         {
             var tag = Tag.Create("Test", new Timer());
 
-            var members = tag.GetMemberNames();
+            var members = tag.GetTagNames();
 
             members.Should().HaveCount(5);
-        }
-
-        [Test]
-        public void GetDeepMembersNames_HasMembers_ShouldNotBeEmpty()
-        {
-            var tag = Tag.Create("Test", new Timer());
-
-            var members = tag.GetDeepMembersNames();
-
-            members.Should().HaveCount(5);
-        }
-
-        [Test]
-        public void GetDeepMembersNames_NestedStructure_ShouldContainDot()
-        {
-            var tag = Tag.Create("Test", new Message());
-
-            var members = tag.GetDeepMembersNames();
-
-            members.Should().Contain(s => s.Contains('.'));
         }
 
         [Test]
@@ -117,7 +97,10 @@ namespace L5Sharp.Core.Tests
         {
             var tag = Tag.Create<MyNestedType>("Test");
 
-            var member = tag.GetMember(t => t.Str).GetMember(t => t.DATA.DataType[4]);
+            var member = tag
+                .GetMember(t => t.Str)
+                .GetMember(t => t.DATA)
+                .GetMember(t => t[0]);
 
             member.Should().NotBeNull();
             member.Name.Should().Be("[0]");

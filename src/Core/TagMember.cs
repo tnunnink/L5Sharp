@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using L5Sharp.Enums;
+using L5Sharp.Extensions;
 
 namespace L5Sharp.Core
 {
@@ -21,10 +22,9 @@ namespace L5Sharp.Core
         public string Name => _member.Name;
 
         /// <inheritdoc />
-        public string TagName => GetTagName((ITagMember<IDataType>)this);
-
-        /// <inheritdoc />
-        public string Operand => GetTagName((ITagMember<IDataType>)this).Replace(Root.Name, string.Empty);
+        public TagName TagName => Parent is null
+            ? new TagName(Name)
+            : TagName.Combine(Parent.TagName, Name);
 
         /// <inheritdoc />
         public string DataType => _member.DataType.Name;
@@ -37,12 +37,12 @@ namespace L5Sharp.Core
 
         /// <inheritdoc />
         public ExternalAccess ExternalAccess => Parent is null
-                ? _member.ExternalAccess
-                : ExternalAccess.MostRestrictive(_member.ExternalAccess, Parent.ExternalAccess);
+            ? _member.ExternalAccess
+            : ExternalAccess.MostRestrictive(_member.ExternalAccess, Parent.ExternalAccess);
 
         /// <inheritdoc />
-        public string Description => Root.Comments.Contains(Operand)
-            ? Root.Comments.Get(Operand)
+        public string Description => Root.Comments.Contains(TagName.Operand)
+            ? Root.Comments.Get(TagName.Operand)
             : CalculateDescription();
 
         /// <inheritdoc />
@@ -58,16 +58,16 @@ namespace L5Sharp.Core
 
         /// <inheritdoc />
         public ITag<IDataType> Root { get; }
-        
+
         /// <inheritdoc />
-        public void Comment(string comment) => Root.Comments.Set(new Comment(Operand, comment));
+        public void Comment(string comment) => Root.Comments.Set(new Comment(TagName.Operand, comment));
 
         /// <inheritdoc />
         public void SetValue(IAtomicType value)
         {
             if (value is null)
                 throw new ArgumentNullException(nameof(value));
-            
+
             if (_member.DataType is not IAtomicType atomicType)
                 throw new InvalidOperationException(
                     $"Can not set value for '{GetType()}'. Type must be atomic.");
@@ -82,51 +82,67 @@ namespace L5Sharp.Core
                 return false;
 
             //todo probably need a can set or maybe use try catch?
-            
+
             atomicType.SetValue(value);
 
             return true;
         }
 
         /// <inheritdoc />
-        public ITagMember<TDataType>? this[int index] => throw new NotImplementedException();
+        public ITagMember<TDataType> this[int x] => _member.DataType is IArrayType<TDataType> arrayType
+            ? new TagMember<TDataType>(arrayType[x], Root, (ITagMember<IDataType>)this)
+            : throw new InvalidOperationException();
 
         /// <inheritdoc />
-        public ITagMember<IDataType>? this[string name] => throw new NotImplementedException();
+        public ITagMember<TDataType> this[int x, int y] => _member.DataType is IArrayType<TDataType> arrayType
+            ? new TagMember<TDataType>(arrayType[x, y], Root, (ITagMember<IDataType>)this)
+            : throw new InvalidOperationException();
+
+        /// <inheritdoc />
+        public ITagMember<TDataType> this[int x, int y, int z]  => _member.DataType is IArrayType<TDataType> arrayType
+            ? new TagMember<TDataType>(arrayType[x, y, z], Root, (ITagMember<IDataType>)this)
+            : throw new InvalidOperationException();
+        
+        /// <inheritdoc />
+        public ITagMember<IDataType> this[TagName name] => GetMemberInternal(name);
 
         /// <inheritdoc />
         public ITagMember<TType> GetMember<TType>(Func<TDataType, IMember<TType>> expression)
             where TType : IDataType
         {
+            var parent = (ITagMember<IDataType>)this;
+
             var member = expression.Invoke(_member.DataType);
-            return new TagMember<TType>(member, Root, (ITagMember<IDataType>)this);
+
+            return new TagMember<TType>(member, Root, parent);
         }
 
         /// <inheritdoc />
-        public IEnumerable<ITagMember<IDataType>> GetMembers() => _member.DataType is IComplexType complexType
-            ? complexType.Members.Select(m => new TagMember<IDataType>(m, Root, (ITagMember<IDataType>)this))
-            : Enumerable.Empty<ITagMember<IDataType>>();
+        public IEnumerable<ITagMember<IDataType>> GetMembers() =>
+            _member.DataType.GetMembers().Select(m => new TagMember<IDataType>(m, Root, (ITagMember<IDataType>)this));
 
         /// <inheritdoc />
-        public IEnumerable<string> GetMemberNames() => _member.DataType is IComplexType complexType
-            ? complexType.Members.Select(m => m.Name)
-            : Enumerable.Empty<string>();
+        public IEnumerable<TagName> GetTagNames() => _member.DataType.GetTagNames();
 
         /// <inheritdoc />
-        public IEnumerable<string> GetDeepMembersNames() => throw new NotImplementedException();
-
-        /// <summary>
-        /// Recursively traverses up the member chain to build the full string name of the current tag member. 
-        /// </summary>
-        /// <param name="member">The current member to evaluate.</param>
-        /// <returns>The full string tag name of the the tag member.</returns>
-        private static string GetTagName(ITagMember<IDataType> member)
+        public bool TryGetMember(TagName name, out ITagMember<IDataType>? tagMember)
         {
-            return member.Parent != null
-                ? member.Parent.Dimensions.AreEmpty
-                    ? $"{GetTagName(member.Parent)}.{member.Name}"
-                    : $"{GetTagName(member.Parent)}{member.Name}"
-                : member.Name;
+            throw new NotImplementedException();
+        }
+
+        private ITagMember<IDataType> GetMemberInternal(TagName name)
+        {
+            var members = _member.DataType.GetMembersTo(name);
+
+            var parent = (ITagMember<IDataType>)this;
+
+            foreach (var member in members)
+            {
+                var current = new TagMember<IDataType>(member, Root, parent);
+                parent = current;
+            }
+
+            return parent;
         }
 
         /// <summary>
