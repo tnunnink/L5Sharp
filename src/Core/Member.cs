@@ -43,10 +43,5 @@ namespace L5Sharp.Core
 
         /// <inheritdoc />
         public bool IsArrayMember => DataType is IArrayType<IDataType>;
-
-        /// <inheritdoc />
-        public IMember<TDataType> Copy() =>
-            new Member<TDataType>(string.Copy(Name), (TDataType)DataType.Instantiate(),
-                Radix, ExternalAccess, string.Copy(Description));
     }
 }

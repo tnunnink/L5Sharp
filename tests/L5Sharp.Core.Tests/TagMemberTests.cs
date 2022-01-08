@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using FluentAssertions;
 using L5Sharp.Components;
 using L5Sharp.Enums;
@@ -20,7 +21,7 @@ namespace L5Sharp.Core.Tests
             member.Name.Should().Be("DN");
             member.Description.Should().BeEmpty();
             member.TagName.Should().Be("Test.DN");
-            member.DataType.Should().Be("BOOL");
+            member.DataType.Should().BeOfType<Bool>();
             member.Dimensions.Should().Be(Dimensions.Empty);
             member.Radix.Should().Be(Radix.Decimal);
             member.ExternalAccess.Should().Be(ExternalAccess.None);
@@ -30,25 +31,21 @@ namespace L5Sharp.Core.Tests
         }
 
         [Test]
-        public void NameIndexer_NonExisting_ShouldBeNull()
+        public void NameIndexer_NonExisting_ShouldThrowKeyNotFoundException()
         {
             var tag = Tag.Create<MyNestedType>("Test");
             var timer = tag.GetMember(m => m.Tmr);
 
-            var member = timer["Invalid"];
-
-            member.Should().BeNull();
+            FluentActions.Invoking(() => timer["Invalid"]).Should().Throw<KeyNotFoundException>();
         }
         
         [Test]
-        public void NameIndexer_Null_ShouldBeNull()
+        public void NameIndexer_Null_ShouldThrowArgumentNullException()
         {
             var tag = Tag.Create<MyNestedType>("Test");
             var timer = tag.GetMember(m => m.Tmr);
 
-            var member = timer[null!];
-            
-            member.Should().BeNull();
+            FluentActions.Invoking(() =>  timer[null!]).Should().Throw<ArgumentNullException>();
         }
         
         [Test]
@@ -84,9 +81,8 @@ namespace L5Sharp.Core.Tests
             var member = timer.GetMember(m => m.PRE);
 
             member.Name.Should().Be("PRE");
-            member.Description.Should().BeEmpty();
             member.TagName.Should().Be("Test.Tmr.PRE");
-            member.DataType.Should().Be("DINT");
+            member.DataType.Should().BeOfType<Dint>();
             member.Dimensions.Should().Be(Dimensions.Empty);
             member.Radix.Should().Be(Radix.Decimal);
             member.ExternalAccess.Should().Be(ExternalAccess.None);
@@ -128,9 +124,9 @@ namespace L5Sharp.Core.Tests
             var tag = Tag.Create<Timer>("Test");
             var member = tag["PRE"];
             
-            member?.SetValue(new Dint(500));
+            member.SetValue(new Dint(500));
 
-            member?.Value.Should().Be(500);
+            member.Value.Should().Be(500);
         }
     }
 }

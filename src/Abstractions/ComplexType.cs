@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using L5Sharp.Enums;
+using L5Sharp.Exceptions;
 
 // For testing purposes
 [assembly: InternalsVisibleTo("L5Sharp.Abstractions.Tests")]
@@ -10,16 +11,33 @@ using L5Sharp.Enums;
 namespace L5Sharp.Abstractions
 {
     /// <summary>
-    /// Represents an abstract implementation of a <see cref="IComplexType"/>. 
+    /// Represents an abstract base class for <see cref="IComplexType"/> instances.
     /// </summary>
+    /// <remarks>
+    /// <para>
+    /// All predefined classes and custom user classed can derive from <see cref="ComplexType"/>.
+    /// The user is responsible for specifying the <see cref="Class"/> and implementing the <see cref="New"/> so that
+    /// the type can be instantiated by other parts of the code base. This base class will also use reflection to
+    /// find field and property members of the the derived class that implement <see cref="IMember{TDataType}"/>
+    /// in order to initialize the <see cref="Members"/> collection.
+    /// If the user provided members in the base constructor, this will be bypasses.
+    /// </para>
+    /// </remarks>
     public abstract class ComplexType : IComplexType
     {
         /// <summary>
-        /// 
+        /// Creates a new <see cref="ComplexType"/> instance with the provided name and optional members.
         /// </summary>
-        /// <param name="name"></param>
-        /// <param name="members"></param>
-        /// <exception cref="ArgumentNullException"></exception>
+        /// <param name="name">The name of the type.</param>
+        /// <param name="members">An optional collection of member to initialize the type with.</param>
+        /// <exception cref="ArgumentNullException">name is null.</exception>
+        /// <remarks>
+        /// This constructor will attempt to find field/property members of the derived type using reflection in order
+        /// to initialize it's member collection. This is done so that the derived classed do not need to explicitly
+        /// provided the collection of members. Note that if the member properties not initialized when the base
+        /// constructor is called, the null references..
+        ///  
+        /// </remarks>
         protected ComplexType(string name, IEnumerable<IMember<IDataType>>? members = null)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
@@ -49,8 +67,8 @@ namespace L5Sharp.Abstractions
         /// </summary>
         /// <returns>A new <see cref="IDataType"/> instance with default values.</returns>
         /// <remarks>
-        /// This method is called by <see cref="Instantiate"/> in order to generate new instances of the <see cref="IDataType"/>.
-        /// 
+        /// This method is called by <see cref="Instantiate"/> in order to generate new instances
+        /// of the <see cref="IDataType"/>.
         /// </remarks>
         protected abstract IDataType New();
 
@@ -73,6 +91,9 @@ namespace L5Sharp.Abstractions
 
             members.AddRange(FindMemberFields());
             members.AddRange(FindMemberProperties());
+
+            if (members.GroupBy(m => m.Name).Any(i => i.Count() > 1))
+                throw new ComponentNameCollisionException();
 
             return members;
         }

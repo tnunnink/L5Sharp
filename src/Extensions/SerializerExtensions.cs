@@ -13,6 +13,9 @@ namespace L5Sharp.Extensions
             { LogixNames.Controller, new ControllerSerializer() },
             { LogixNames.DataType, new DataTypeSerializer() },
             { LogixNames.Member, new UserDefinedMemberSerializer() },
+            { LogixNames.Module, new ModuleSerializer() },
+            { LogixNames.Port, new PortSerializer() },
+            { LogixNames.Connection, new ConnectionSerializer() },
             { LogixNames.Tag, new TagSerializer() },
             { LogixNames.Rung, new RungSerializer() },
             { LogixNames.RllContent, new LadderLogicSerializer() },
@@ -44,6 +47,6 @@ namespace L5Sharp.Extensions
         private static IXSerializer<T> GetSerializer<T>(string name) => 
             Serializers.TryGetValue(name, out var serializer) 
                 ? (IXSerializer<T>)serializer 
-                : throw new InvalidOperationException();
+                : throw new InvalidOperationException($"No serializer has been defined for'{name}'");
     }
 }

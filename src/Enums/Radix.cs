@@ -120,6 +120,9 @@ namespace L5Sharp.Enums
         /// </returns>
         public static Radix Default(Type type)
         {
+            if (typeof(IArrayType<IDataType>).IsAssignableFrom(type))
+                type = type.GetGenericArguments()[0];
+            
             if (!typeof(IAtomicType).IsAssignableFrom(type))
                 return Null;
 
@@ -142,6 +145,9 @@ namespace L5Sharp.Enums
         /// </returns>
         public bool SupportsType(Type type)
         {
+            if (typeof(IArrayType<IDataType>).IsAssignableFrom(type))
+                type = type.GetGenericArguments()[0];
+            
             if (!typeof(IAtomicType).IsAssignableFrom(type))
                 return Equals(Null);
 

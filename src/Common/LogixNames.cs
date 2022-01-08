@@ -24,6 +24,8 @@ namespace L5Sharp.Common
         public static string Member = nameof(Member);
         public static string Modules = nameof(Modules);
         public static string Module = nameof(Module);
+        public static string Port = nameof(Port);
+        public static string Connection = nameof(Connection);
         public static string AddOnInstructionDefinitions = nameof(AddOnInstructionDefinitions);
         public static string AddOnInstructionDefinition = nameof(AddOnInstructionDefinition);
         public static string Parameters = nameof(Parameters);
@@ -40,6 +42,7 @@ namespace L5Sharp.Common
         public static string Rung = nameof(Rung);
         public static string Tasks = nameof(Tasks);
         public static string Task = nameof(Task);
+
         //Logix data structure names
         public static string Data = nameof(Data);
         public static string Value = nameof(Value);
@@ -51,14 +54,17 @@ namespace L5Sharp.Common
         public static string ArrayMember = nameof(ArrayMember);
         public static string DataValueMember = nameof(DataValueMember);
         public static string StructureMember = nameof(StructureMember);
+        
         //Attribute Names
         public static string Name = nameof(Name);
         public static string Description = nameof(Description);
+
         //Other..
         public static string EventInfo = nameof(EventInfo);
 
 
         //Component Map Collection
+
 
         private static readonly Dictionary<Type, Tuple<string, string>> ComponentNameMap = new()
         {

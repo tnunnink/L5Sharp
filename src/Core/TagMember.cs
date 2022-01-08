@@ -9,7 +9,7 @@ namespace L5Sharp.Core
     /// <inheritdoc />
     public class TagMember<TDataType> : ITagMember<TDataType> where TDataType : IDataType
     {
-        private readonly IMember<TDataType> _member;
+        private IMember<TDataType> _member;
 
         internal TagMember(IMember<TDataType> member, ITag<IDataType> root, ITagMember<IDataType>? parent)
         {
@@ -85,7 +85,10 @@ namespace L5Sharp.Core
             : throw new InvalidOperationException();
 
         /// <inheritdoc />
-        public ITagMember<IDataType> this[TagName tagName] => GetMemberInternal(tagName);
+        public ITagMember<IDataType> this[TagName tagName] =>
+            GetMemberInternal(tagName) ??
+            throw new KeyNotFoundException(
+                $"The member '{tagName}' does not exist as a valid descendent of '{DataType.GetType()}'");
 
         /// <inheritdoc />
         public void Comment(string comment) => Root.Comments.Set(new Comment(TagName, comment));
@@ -113,9 +116,10 @@ namespace L5Sharp.Core
             _member.DataType.GetTagNames().Select(n => TagName.Combine(TagName, n));
 
         /// <inheritdoc />
-        public bool TryGetMember(TagName name, out ITagMember<IDataType>? tagMember)
+        public bool TryGetMember(TagName tagName, out ITagMember<IDataType>? tagMember)
         {
-            throw new NotImplementedException();
+            tagMember = GetMemberInternal(tagName);
+            return tagMember is not null;
         }
 
         /// <inheritdoc />
@@ -142,12 +146,16 @@ namespace L5Sharp.Core
             atomicType.SetValue(value);
         }
 
-        private ITagMember<IDataType> GetMemberInternal(TagName tagName)
+        private ITagMember<IDataType>? GetMemberInternal(TagName tagName)
         {
-            //Allow both relative and absolute path from the current member to be used.
+            if (tagName is null)
+                throw new ArgumentNullException(nameof(tagName));
+            
             var path = tagName.Base.Equals(Root.Name) ? tagName.Path : tagName.ToString();
 
             var members = _member.DataType.GetMembersTo(path);
+
+            if (members is null) return null;
 
             var parent = (ITagMember<IDataType>)this;
 
@@ -170,16 +178,11 @@ namespace L5Sharp.Core
                 return Parent is not null ? Parent.Description : string.Empty;
 
             if (Parent is null)
-                return _member.DataType.Description;
+                return DataType.Description;
 
             return IsArrayMember
-                ? $"{Root.Description} {_member.Description}".Trim()
-                : $"{Root.Description} {Parent.Description}".Trim();
-        }
-
-        public IMember<TDataType> Copy()
-        {
-            throw new NotImplementedException();
+                ? $"{Root.Description} {Parent.Description}".Trim()
+                : $"{Root.Description} {_member.Description}".Trim();
         }
     }
 }

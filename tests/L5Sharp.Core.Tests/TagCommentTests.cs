@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using System.Linq;
+using FluentAssertions;
 using L5Sharp.Components;
 using L5Sharp.Types;
 using NUnit.Framework;
@@ -81,12 +82,21 @@ namespace L5Sharp.Core.Tests
 
             tag.Description.Should().Be("This is a test description");
         }
-        
-        /*[Test]
-        public void SetDescription_String_ShouldUpdateAllElementDescriptionValues()
+
+        [Test]
+        public void ArrayOfAtomic_ValidComment_ShouldPropagate()
         {
-            var tag = Tag.Build("Test", new Bool()).WithDimensions(5).Create();
-            tag.GetMembers().Select(e => e.Description).Should().AllBeEquivalentTo<string>(null);
+            var tag = Tag.Create<Bool>("Test", new Dimensions(5));
+
+            tag.Comment("This is a test");
+            tag.Description.Should().Be("This is a test");
+            tag.GetMembers().Select(e => e.Description).Should().AllBeEquivalentTo("This is a test");
+        }
+        
+        [Test]
+        public void ArrayOfPredefined_ValidComment_ShouldPropagate()
+        {
+            var tag = Tag.Create<Timer>("Test", new Dimensions(5));
 
             tag.Comment("This is a test");
             tag.Description.Should().Be("This is a test");
@@ -94,9 +104,23 @@ namespace L5Sharp.Core.Tests
         }
 
         [Test]
-        public void SetElementDescription_ThenSetTagDescription_TagMemberShouldStillHaveOverridenDescription()
+        public void ArrayOfAtomic_SetSingleElement_ShouldBeExpected()
         {
-            var tag = Tag.Build("Test", new Bool()).WithDimensions(5).Create();
+            var tag = Tag.Create<Bool>("Test", new Dimensions(5));
+
+            tag[0].Comment("This is a test");
+
+            tag[0].Description.Should().Be("This is a test");
+            tag[1].Description.Should().BeEmpty();
+            tag[2].Description.Should().BeEmpty();
+            tag[3].Description.Should().BeEmpty();
+            tag[4].Description.Should().BeEmpty();
+        }
+
+        [Test]
+        public void ArrayOfAtomic_SetElementThenTagComment_TagMemberShouldStillHaveOverridenDescription()
+        {
+            var tag = Tag.Create<Bool>("Test", new Dimensions(5));
 
             var element = tag[0];
             element.Comment("Element Description");
@@ -109,28 +133,22 @@ namespace L5Sharp.Core.Tests
         }
 
         [Test]
-        public void SetElementDescription_ThenSetTagDescription_ThenGetTheTagMemberAgain_ItShouldRetainTheDescription()
+        public void ArrayOfAtomic_SetElementDescription_ElementShouldRetainCommentAfterGettingNewInstance()
         {
-            var tag = Tag.Build("Test", new Bool()).WithDimensions(5).Create();
+            var tag = Tag.Create<Bool>("Test", new Dimensions(5));
 
-            var element = tag[0];
-            element.Comment("Element Description");
-            element.Description.Should().Be("Element Description");
+            var e1 = tag[0];
+            e1.Comment("Element Description");
+            e1.Description.Should().Be("Element Description");
 
-            tag.Comment("Tag Description");
-            tag.Description.Should().Be("Tag Description");
-
-            element.Description.Should().Be("Element Description");
-
-            element = tag[0];
-            element.Description.Should().Be("Element Description");
+            var e2 = tag[0];
+            e2.Description.Should().Be("Element Description");
         }
 
         [Test]
-        public void
-            SetElementDescription_ThenSetTagDescription_ThenResetElementDescriptionBack_ItShouldRevertToTagDescription()
+        public void ArrayOfAtomic_ResettingElementDescription_ShouldRevertToParentTagDescription()
         {
-            var tag = Tag.Build("Test", new Bool()).WithDimensions(5).Create();
+            var tag = Tag.Create<Bool>("Test", new Dimensions(5));
 
             var element = tag[0];
             element.Comment("Element Description");
@@ -143,19 +161,5 @@ namespace L5Sharp.Core.Tests
             element.Comment(string.Empty);
             element.Description.Should().Be("Tag Description");
         }
-
-        [Test]
-        public void SetElement_Description_ShouldBeExpected()
-        {
-            var tag = Tag.Build("Test", new Bool()).WithDimensions(5).Create();
-
-            tag[0].Comment("This is a test");
-
-            tag[0].Description.Should().Be("This is a test");
-            tag[1].Description.Should().BeNull();
-            tag[2].Description.Should().BeNull();
-            tag[3].Description.Should().BeNull();
-            tag[4].Description.Should().BeNull();
-        }*/
     }
 }

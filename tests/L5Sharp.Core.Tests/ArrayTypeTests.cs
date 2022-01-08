@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Linq;
 using FluentAssertions;
 using L5Sharp.Abstractions;
 using L5Sharp.Enums;
@@ -96,6 +97,16 @@ namespace L5Sharp.Core.Tests
             array.Class.Should().Be(DataTypeClass.User);
             array.Family.Should().Be(DataTypeFamily.None);
             array.Dimensions.Length.Should().Be(10);
+        }
+
+        [Test]
+        public void New_OverloadedParameters_AllMembersShouldHaveExpectedValues()
+        {
+            var type = new ArrayType<Int>(10, new Int(), Radix.Binary, ExternalAccess.ReadOnly, "This is a test");
+
+            type.Select(e => e.Radix).Should().AllBeEquivalentTo(Radix.Binary);
+            type.Select(e => e.ExternalAccess).Should().AllBeEquivalentTo(ExternalAccess.ReadOnly);
+            type.Select(e => e.Description).Should().AllBeEquivalentTo("This is a test");
         }
 
         [Test]

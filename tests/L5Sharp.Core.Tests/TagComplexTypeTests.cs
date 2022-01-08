@@ -82,8 +82,7 @@ namespace L5Sharp.Core.Tests
         {
             var tag = Tag.Create<Timer>("Test");
 
-            FluentActions.Invoking(() => tag[null!]).Should().Throw<ArgumentException>()
-                .WithMessage("TagName can not be null or empty.");
+            FluentActions.Invoking(() => tag[null!]).Should().Throw<ArgumentNullException>();
         }
 
         [Test]
@@ -170,7 +169,7 @@ namespace L5Sharp.Core.Tests
 
             member.Should().NotBeNull();
             member.Name.Should().Be("[0]");
-            member.DataType.Should().Be(nameof(Sint).ToUpper());
+            member.DataType.Should().BeOfType<Sint>();
         }
 
         [Test]

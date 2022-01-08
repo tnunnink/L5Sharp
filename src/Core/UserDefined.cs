@@ -42,7 +42,9 @@ namespace L5Sharp.Core
 
         /// <inheritdoc />
         public IDataType Instantiate() =>
-            new UserDefined(string.Copy(Name), string.Copy(Description), Members.Select(m => m.Copy()));
+            new UserDefined(string.Copy(Name), string.Copy(Description), 
+                Members.Select(m => new Member<IDataType>(string.Copy(m.Name), m.DataType.Instantiate(),
+                    m.Radix, m.ExternalAccess, string.Copy(m.Description))));
 
         /// <inheritdoc />
         public override string ToString() => Name;

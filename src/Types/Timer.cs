@@ -13,16 +13,16 @@ namespace L5Sharp.Types
     public sealed class Timer : ComplexType
     {
         /// <summary>
-        /// Creates a new instance of a timer type.
+        /// Creates a new <see cref="Timer"/> data type instance.
         /// </summary>
         public Timer() : base(nameof(Timer).ToUpper())
         {
         }
 
         /// <summary>
-        /// Creates new instance of a timer type with provided default PRE member value. 
+        /// Creates a new <see cref="Timer"/> data type instance with the provided <see cref="PRE"/> value. 
         /// </summary>
-        /// <param name="pre">The value of the preset member to initialize</param>
+        /// <param name="pre">The <see cref="Dint"/> value to initialize <see cref="PRE"/> with.</param>
         public Timer(Dint pre) : this()
         {
             PRE.DataType.SetValue(pre);

@@ -1,54 +1,42 @@
-﻿using Ardalis.SmartEnum;
-
-namespace L5Sharp.Core
+﻿namespace L5Sharp.Core
 {
+    /// <summary>
+    /// Represents ta <see cref="IModule"/> port...
+    /// </summary>
     public class Port
     {
-        internal Port(int id, string address, string type, bool upstream)
+        internal Port(int id, string address, string type, bool upstream, Bus? bus = null)
         {
             Id = id;
             Address = address;
             Type = type;
             Upstream = upstream;
+            Bus = bus;
         }
         
         /// <summary>
-        /// Gets the ID for the <see cref="Port"/>.
+        /// Gets the Id of the <see cref="Port"/>.
         /// </summary>
         public int Id { get; }
         
         /// <summary>
-        /// Gets the address for the <see cref="Port"/>.
+        /// Gets the address of the <see cref="Port"/>.
         /// </summary>
         public string Address { get; }
         
         /// <summary>
-        /// Gets the port type for the <see cref="Port"/>.
+        /// Gets the type of the <see cref="Port"/>.
         /// </summary>
         public string Type { get; }
         
         /// <summary>
-        /// Gets the value indicating whether the
+        /// Gets the value indicating whether the...
         /// </summary>
         public bool Upstream { get; }
         
+        /// <summary>
+        /// 
+        /// </summary>
         public Bus? Bus { get; }
-    }
-
-    public class Bus
-    {
-        public byte Size { get; }
-        public Baud Baud { get; }
-    }
-
-    public sealed class Baud : SmartEnum<Baud>
-    {
-        private Baud(string name, int value) : base(name, value)
-        {
-        }
-
-        public static readonly Baud _57_6 = new Baud("57.6", 0);
-        public static readonly Baud _115_2 = new Baud("115.2", 1);
-        public static readonly Baud _230_4 = new Baud("230.4", 2);
     }
 }

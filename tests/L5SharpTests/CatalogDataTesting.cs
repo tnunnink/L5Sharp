@@ -38,5 +38,15 @@ namespace L5SharpTests
 
             File.WriteAllLines(@"C:\Users\tnunnink\desktop\results.txt", categories);
         }
+        
+        [Test]
+        public void GetAllPorts()
+        {
+            var document = XDocument.Load(FileName);
+
+            var ports = document.Descendants("Port").Select(e => e.Attribute("Type")?.Value).Distinct();
+
+            File.WriteAllLines(@"C:\Users\tnunnink\desktop\PortTypes.txt", ports);
+        }
     }
 }

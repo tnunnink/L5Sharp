@@ -104,7 +104,7 @@ namespace L5Sharp.Extensions
         /// <remarks>
         /// This method will recursively traverse the nested hierarchy of data type members to find all tag names.
         /// </remarks>
-        public static IEnumerable<IMember<IDataType>> GetMembersTo(this IDataType dataType, TagName tagName)
+        public static IEnumerable<IMember<IDataType>>? GetMembersTo(this IDataType dataType, TagName tagName)
         {
             if (string.IsNullOrEmpty(tagName))
                 throw new ArgumentException("TagName can not be null or empty.");
@@ -112,7 +112,7 @@ namespace L5Sharp.Extensions
             var results = new List<IMember<IDataType>>();
 
             var members = dataType.GetMembers().ToList();
-
+            
             foreach (var memberName in tagName.Members)
             {
                 var member = members.Find(m => m.Name == memberName);
@@ -123,11 +123,7 @@ namespace L5Sharp.Extensions
                 members = member.DataType.GetMembers().ToList();
             }
 
-            if (results.Count != tagName.Members.Count())
-                throw new KeyNotFoundException(
-                    $"The member '{tagName}' does not exist as a valid descendent of '{dataType.GetType()}'");
-
-            return results;
+            return results.Count == tagName.Members.Count() ? results : null;
         }
 
         /// <summary>

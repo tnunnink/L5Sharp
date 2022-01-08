@@ -63,6 +63,19 @@ namespace L5Sharp.Core.Tests
         }
 
         [Test]
+        public void New_ArrayMember_ShouldHaveExpectedProperties()
+        {
+            var member = Member.Create<Bool>("Test", new Dimensions(5));
+
+            member.Should().NotBeNull();
+            member.DataType.Should().BeOfType<ArrayType<Bool>>();
+            member.Dimensions.Should().BeEquivalentTo(new Dimensions(5));
+            member.Radix.Should().Be(Radix.Decimal);
+            member.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);
+            member.Description.Should().BeEmpty();
+        }
+
+        [Test]
         public void Name_GetValue_ShouldBeExpected()
         {
             var member = Member.Create<Real>("Member");
@@ -129,7 +142,7 @@ namespace L5Sharp.Core.Tests
 
             member.IsValueMember.Should().BeTrue();
         }
-        
+
         [Test]
         public void IsValueMember_IsComplexMember_ShouldBeFalse()
         {
@@ -137,7 +150,7 @@ namespace L5Sharp.Core.Tests
 
             member.IsValueMember.Should().BeFalse();
         }
-        
+
         [Test]
         public void IsStructureMember_IsAtomicMember_ShouldBeFalse()
         {
@@ -145,7 +158,7 @@ namespace L5Sharp.Core.Tests
 
             member.IsStructureMember.Should().BeFalse();
         }
-        
+
         [Test]
         public void IsStructureMember_IsComplexMember_ShouldBeTrue()
         {
@@ -153,7 +166,7 @@ namespace L5Sharp.Core.Tests
 
             member.IsStructureMember.Should().BeTrue();
         }
-        
+
         [Test]
         public void IsArrayMember_DimensionsEmpty_ShouldBeFalse()
         {
@@ -161,7 +174,7 @@ namespace L5Sharp.Core.Tests
 
             member.IsArrayMember.Should().BeFalse();
         }
-        
+
         [Test]
         public void IsArrayMember_DimensionsNotEmpty_ShouldBeTrue()
         {
@@ -169,27 +182,13 @@ namespace L5Sharp.Core.Tests
 
             member.IsArrayMember.Should().BeTrue();
         }
-        
+
         [Test]
         public void IsArrayMember_ComplexTypeArray_ShouldBeTrue()
         {
             var member = Member.Create<Timer>("Test", new Dimensions(5));
 
             member.IsArrayMember.Should().BeTrue();
-        }
-
-        [Test]
-        public void Copy_WhenCalled_ShouldNotBeSameButEqual()
-        {
-            var member = Member.Create<Dint>("Test", Radix.Binary, ExternalAccess.ReadOnly, "This is a test");
-
-            var copy = member.Copy();
-
-            copy.Should().NotBeSameAs(member);
-            copy.Name.Should().NotBeSameAs(member.Name);
-            copy.DataType.Should().NotBeSameAs(member.DataType);
-            copy.Dimensions.Should().NotBeSameAs(member.Dimensions);
-            copy.Description.Should().NotBeSameAs(member.Description);
         }
     }
 }

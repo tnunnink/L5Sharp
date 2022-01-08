@@ -13,7 +13,7 @@ namespace L5Sharp
         /// Gets the string catalog number of the <see cref="IModule"/>.
         /// </summary>
         string CatalogNumber { get; }
-        
+
         /// <summary>
         /// Gets the vendor number of the <see cref="IModule"/>.
         /// </summary>
@@ -36,17 +36,17 @@ namespace L5Sharp
         /// Gets the <see cref="Revision"/> number for the <see cref="IModule"/>.
         /// </summary>
         Revision Revision { get; }
-        
-        /// <summary>
-        /// Gets the port ID value that represents the port for which the current <see cref="IModule"/> is connected.
-        /// </summary>
-        int ParentModPortId { get; }
-        
+
         /// <summary>
         /// Gets the name of the <see cref="IModule"/> that is the parent of the the current <see cref="IModule"/>
         /// </summary>
         string ParentModule { get; }
-        
+
+        /// <summary>
+        /// Gets the port ID value that represents the port for which the current <see cref="IModule"/> is connected.
+        /// </summary>
+        int ParentModPortId { get; }
+
         /// <summary>
         /// Gets a value indicating whether the <see cref="IModule"/> is inhibited.
         /// </summary>

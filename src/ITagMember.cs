@@ -183,14 +183,14 @@ namespace L5Sharp
         /// <summary>
         /// Attempts to get a descendent <see cref="ITagMember{TDataType}"/> with the provided <see cref="TagName"/> value.
         /// </summary>
-        /// <param name="name">The tag name value of the <see cref="ITagMember{TDataType}"/> to get.</param>
+        /// <param name="tagName">The tag name value of the <see cref="ITagMember{TDataType}"/> to get.</param>
         /// <param name="tagMember">When the method returns, contains an instance of the
         /// <see cref="ITagMember{TDataType}"/> that represents the descendent member if found; otherwise, null.</param>
         /// <returns>
         /// true if the member with the specified tag name was found as a descendent of the
         /// current <see cref="ITagMember{TDataType}"/> instance; otherwise, false.
         /// </returns>
-        bool TryGetMember(TagName name, out ITagMember<IDataType>? tagMember);
+        bool TryGetMember(TagName tagName, out ITagMember<IDataType>? tagMember);
 
         /// <summary>
         /// Attempts to sets the <see cref="Value"/> property of the current <see cref="ITagMember{TDataType}"/> instance.

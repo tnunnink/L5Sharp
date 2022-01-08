@@ -99,7 +99,7 @@ namespace L5Sharp.Core.Tests
             
             type.DATA.Should().NotBeNull();
             type.DATA.Name.Should().Be("DATA");
-            type.DATA.DataType.Should().BeOfType<Sint>();
+            type.DATA.DataType.Should().BeOfType<ArrayType<Sint>>();
             type.DATA.Dimensions.Length.Should().Be(100);
             type.DATA.Radix.Should().Be(Radix.Ascii);
             type.DATA.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);

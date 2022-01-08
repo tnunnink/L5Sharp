@@ -12,7 +12,7 @@ namespace L5Sharp.Core
         internal Tag(string name, TDataType dataType, Radix? radix = null, ExternalAccess? externalAccess = null,
             string? description = null, TagUsage? usage = null, bool constant = false)
         {
-            externalAccess ??= ExternalAccess.None;
+            externalAccess ??= ExternalAccess.None; // tags are different than members in the default.
             var member = new Member<TDataType>(name, dataType, radix, externalAccess, description);
             _tagMember = new TagMember<TDataType>(member, Root, Parent);
             
@@ -21,6 +21,7 @@ namespace L5Sharp.Core
             Constant = constant;
             Comments = new Comments(Root);
 
+            //We need to store the default description if it is provided.
             if (!string.IsNullOrEmpty(description))
                 Comments.Set(new Comment(TagName, description));
         }
@@ -111,15 +112,10 @@ namespace L5Sharp.Core
         public IEnumerable<ITagMember<IDataType>> GetMembers() => _tagMember.GetMembers();
 
         /// <inheritdoc />
-        public bool TryGetMember(TagName name, out ITagMember<IDataType>? tagMember) =>
-            _tagMember.TryGetMember(name, out tagMember);
+        public bool TryGetMember(TagName tagName, out ITagMember<IDataType>? tagMember) =>
+            _tagMember.TryGetMember(tagName, out tagMember);
 
         /// <inheritdoc />
         public IEnumerable<TagName> GetTagNames() => _tagMember.GetTagNames();
-
-        public IMember<TDataType> Copy()
-        {
-            throw new NotImplementedException();
-        }
     }
 }

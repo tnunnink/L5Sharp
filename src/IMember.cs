@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using L5Sharp.Components;
+﻿using L5Sharp.Components;
 using L5Sharp.Core;
 using L5Sharp.Enums;
 
@@ -25,8 +23,7 @@ namespace L5Sharp
     /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
     /// `Logix 5000 Controllers Import/Export`</a> for more information.
     /// </footer>
-    public interface IMember<out TDataType> : ILogixComponent, IPrototype<IMember<TDataType>>
-        where TDataType : IDataType
+    public interface IMember<out TDataType> : ILogixComponent where TDataType : IDataType
     {
         /// <summary>
         /// Gets the <see cref="IDataType"/> instance of the current member.
