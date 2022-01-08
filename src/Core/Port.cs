@@ -35,7 +35,7 @@
         public bool Upstream { get; }
         
         /// <summary>
-        /// 
+        /// Gets the <see cref="Bus"/> value of the current <see cref="Port"/>.
         /// </summary>
         public Bus? Bus { get; }
     }

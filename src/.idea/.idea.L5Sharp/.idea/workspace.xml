@@ -7,41 +7,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Core/Bus.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Serialization/ConnectionSerializer.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Serialization/PortSerializer.cs" afterDir="false" />
+    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="tag and member development. Module serialization updates">
+      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/ModuleTests.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Abstractions/ComplexType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Abstractions/ComplexType.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Common/LogixNames.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Common/LogixNames.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/Connection.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/Connection.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/Member.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/Member.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Core/Module.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/Module.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Core/Port.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/Port.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/StructureType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/StructureType.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/Tag.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/Tag.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/TagMember.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/TagMember.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/UserDefined.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/UserDefined.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Enums/Radix.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Enums/Radix.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Exceptions/ComponentNameCollisionException.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Exceptions/ComponentNameCollisionException.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Extensions/DataTypeExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Extensions/DataTypeExtensions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Extensions/SerializerExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Extensions/SerializerExtensions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/IInstantiable.cs" beforeDir="false" afterPath="$PROJECT_DIR$/IInstantiable.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/IMember.cs" beforeDir="false" afterPath="$PROJECT_DIR$/IMember.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/IModule.cs" beforeDir="false" afterPath="$PROJECT_DIR$/IModule.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ITagMember.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ITagMember.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Serialization/ModuleSerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Serialization/ModuleSerializer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Types/Timer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Types/Timer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/ArrayTypeTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/ArrayTypeTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/MemberTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/MemberTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/MyNestedType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/MyNestedType.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/StringDefinedTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/StringDefinedTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/TagCommentTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/TagCommentTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/TagComplexTypeTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/TagComplexTypeTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/TagMemberTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/TagMemberTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/TagMyNestedTypeTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/TagMyNestedTypeTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5SharpTests/CatalogDataTesting.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5SharpTests/CatalogDataTesting.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/Samples/L5X/EN2T.L5X" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/Samples/L5X/EN2T.L5X" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -252,14 +222,7 @@
       <workItem from="1641414329853" duration="6811000" />
       <workItem from="1641438154875" duration="39426000" />
       <workItem from="1641561927199" duration="19324000" />
-      <workItem from="1641647923365" duration="14343000" />
-    </task>
-    <task id="LOCAL-00057" summary="random clean up">
-      <created>1636679529017</created>
-      <option name="number" value="00057" />
-      <option name="presentableId" value="LOCAL-00057" />
-      <option name="project" value="LOCAL" />
-      <updated>1636679529017</updated>
+      <workItem from="1641647923365" duration="16520000" />
     </task>
     <task id="LOCAL-00058" summary="developing extension methods">
       <created>1636686979108</created>
@@ -597,7 +560,14 @@
       <option name="project" value="LOCAL" />
       <updated>1641585066012</updated>
     </task>
-    <option name="localTasksCounter" value="106" />
+    <task id="LOCAL-00106" summary="tag and member development. Module serialization updates">
+      <created>1641664246783</created>
+      <option name="number" value="00106" />
+      <option name="presentableId" value="LOCAL-00106" />
+      <option name="project" value="LOCAL" />
+      <updated>1641664246784</updated>
+    </task>
+    <option name="localTasksCounter" value="107" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -656,7 +626,6 @@
       <path value="$PROJECT_DIR$/../.." />
     </ignored-roots>
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="Enumeration tests" />
     <MESSAGE value="development" />
     <MESSAGE value="expression development" />
     <MESSAGE value="New test files" />
@@ -681,7 +650,8 @@
     <MESSAGE value="Tag names and member collection development. Preparing for Tag member rework" />
     <MESSAGE value="Tag member re-working" />
     <MESSAGE value="tag component development and testing" />
-    <option name="LAST_COMMIT_MESSAGE" value="tag component development and testing" />
+    <MESSAGE value="tag and member development. Module serialization updates" />
+    <option name="LAST_COMMIT_MESSAGE" value="tag and member development. Module serialization updates" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

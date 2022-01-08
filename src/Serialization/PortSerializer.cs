@@ -48,6 +48,8 @@ namespace L5Sharp.Serialization
             var address = element.GetAttribute<Port, string>(c => c.Address) ?? string.Empty;
             var type = element.GetAttribute<Port, string>(c => c.Type) ?? string.Empty;
             var upstream = element.GetAttribute<Port, bool>(c => c.Upstream);
+
+            var busElement = element.Element("Bus");
             
 
             return new Port(id, address, type, upstream);

@@ -7,10 +7,15 @@ namespace L5Sharp.Core
     /// <inheritdoc />
     public class Module : IModule
     {
-        internal Module(string name, string? description, string catalogNumber, ushort vendor, ushort productType,
-            ushort productCode, Revision revision, string parentModule, int parentModPortId,
-            bool inhibited, bool majorFault, bool safetyEnabled, KeyingState state, IEnumerable<Port> ports,
-            IEnumerable<Connection>? connections = null, ITag<IComplexType>? config = null)
+        internal Module(string name, 
+            string catalogNumber, ushort vendor, ushort productType, ushort productCode, Revision revision,
+            IEnumerable<Port> ports,
+            string? parentModule = null, int parentModPortId = 0,
+            bool inhibited = false, bool majorFault = false, bool safetyEnabled = false,
+            KeyingState? state = null,
+            IEnumerable<Connection>? connections = null,
+            ITag<IComplexType>? config = null,
+            string? description = null)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
             Description = description ?? string.Empty;
@@ -19,14 +24,14 @@ namespace L5Sharp.Core
             ProductType = productType;
             ProductCode = productCode;
             Revision = revision;
+            ParentModule = parentModule ?? string.Empty;
             ParentModPortId = parentModPortId;
-            ParentModule = parentModule;
             Inhibited = inhibited;
             MajorFault = majorFault;
             SafetyEnabled = safetyEnabled;
-            State = state;
+            State = state ?? KeyingState.CompatibleModule;
             Ports = ports;
-            Connections = connections;
+            Connections = connections ?? new List<Connection>();
             Config = config;
         }
 
