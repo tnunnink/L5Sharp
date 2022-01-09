@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Xml.Linq;
 using L5Sharp.Core;
 using L5Sharp.Enums;
 
@@ -13,6 +14,8 @@ namespace L5Sharp.Common
     {
         private static readonly Dictionary<Type, Func<string, object?>> Parsers = new()
         {
+            //Primitives
+            { typeof(object), s => s.ToString() },
             //Enums
             { typeof(ConnectionPriority), s => ConnectionPriority.TryFromName(s, false, out var value) ? value : default },
             { typeof(ConnectionType), s => ConnectionType.FromName(s) },
@@ -34,7 +37,7 @@ namespace L5Sharp.Common
             { typeof(TransmissionType), s => TransmissionType.FromName(s) },
             { typeof(Use), s => Use.FromName(s) },
 
-            //Values
+            //Value Types
             { typeof(Dimensions), Dimensions.Parse },
             { typeof(NeutralText), s => new NeutralText(s) },
             { typeof(TaskPriority), s => TaskPriority.Parse(s) },

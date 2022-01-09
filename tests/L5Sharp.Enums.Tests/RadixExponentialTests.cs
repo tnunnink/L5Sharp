@@ -23,19 +23,19 @@ namespace L5Sharp.Enums.Tests
         [Test]
         public void Format_Null_ShouldThrowArgumentNullException()
         {
-            FluentActions.Invoking(() => Radix.Exponential.Convert(null)).Should().Throw<ArgumentNullException>();
+            FluentActions.Invoking(() => Radix.Exponential.Format(null)).Should().Throw<ArgumentNullException>();
         }
 
         [Test]
         public void Format_NonSupportedAtomic_ShouldThrowNotSupportedException()
         {
-            FluentActions.Invoking(() => Radix.Exponential.Convert(new Dint())).Should().Throw<NotSupportedException>();
+            FluentActions.Invoking(() => Radix.Exponential.Format(new Dint())).Should().Throw<NotSupportedException>();
         }
 
         [Test]
         public void Format_Zero_ShouldBeExpectedFormat()
         {
-            var result = Radix.Exponential.Convert(new Real());
+            var result = Radix.Exponential.Format(new Real());
 
             result.Should().Be("0.00000000e+000");
         }
@@ -45,7 +45,7 @@ namespace L5Sharp.Enums.Tests
         {
             var fixture = new Fixture();
             var value = fixture.Create<float>();
-            var result = Radix.Exponential.Convert(new Real(value));
+            var result = Radix.Exponential.Format(new Real(value));
 
             result.Should().Be(value.ToString("e8", CultureInfo.InvariantCulture));
         }
@@ -53,7 +53,7 @@ namespace L5Sharp.Enums.Tests
         [Test]
         public void Format_CustomRealSevenDecimal_ShouldBeExpectedFormat()
         {
-            var result = Radix.Exponential.Convert(new Real(1.123e3f));
+            var result = Radix.Exponential.Format(new Real(1.123e3f));
 
             result.Should().Be("1.12300000e+003");
         }

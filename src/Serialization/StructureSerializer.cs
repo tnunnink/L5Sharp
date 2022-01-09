@@ -21,8 +21,8 @@ namespace L5Sharp.Serialization
             
             element.AddAttribute(component, c => c.Name, nameOverride: LogixNames.DataType);
 
-            var elements = component.Members.Select(m => m.Serialize());
-            element.Add(elements);
+            var members = component.Members.Select(m => m.Serialize());
+            element.Add(members);
 
             return element;
         }
@@ -39,6 +39,10 @@ namespace L5Sharp.Serialization
             var name = element.Attribute(LogixNames.DataType)?.Value;
             var members = element.Elements().Select(e => e.Deserialize<IMember<IDataType>>(e.Name.ToString()));
 
+            //can we get class based on parent?
+            //Module = IO
+            //AOI = AddOnDefined
+            //Otherwise = Unknown?
             return new StructureType(name!, DataTypeClass.Unknown, members);
         }
     }

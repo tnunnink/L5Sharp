@@ -21,7 +21,7 @@ namespace L5Sharp.Enums.Tests
         {
             var radix = Radix.DateTime;
 
-            var result = radix.Convert(new Lint(1638277952000000));
+            var result = radix.Format(new Lint(1638277952000000));
 
             result.Should().Be("DT#2021-11-30-07:12:32.000000(UTC-06:00)");
         }

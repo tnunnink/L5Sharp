@@ -160,6 +160,26 @@ namespace L5Sharp.Types.Tests
         }
         
         [Test]
+        public void Format_DefaultRadix_ShouldBeExpected()
+        {
+            var type = new Lint();
+
+            var format = type.Format();
+
+            format.Should().Be("0");
+        }
+        
+        [Test]
+        public void Format_OverloadedRadix_ShouldBeExpected()
+        {
+            var type = new Lint();
+
+            var format = type.Format(Radix.Binary);
+
+            format.Should().Be("2#0000_0000_0000_0000_0000_0000_0000_0000");
+        }
+        
+        [Test]
         public void Instantiate_WhenCalled_ShouldEqualDefaultInstance()
         {
             var type = new Lint(_random);

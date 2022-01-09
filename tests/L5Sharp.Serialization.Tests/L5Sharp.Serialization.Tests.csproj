@@ -26,6 +26,9 @@
       <None Update="RungSerializerTests.Serialize_Bool_ShouldBeApproved.approved.xml">
         <DependentUpon>RungSerializerTests.cs</DependentUpon>
       </None>
+      <None Update="PortSerializerTests.Serialize_ValidComponent_ShouldBeApproved.approved.xml">
+        <DependentUpon>PortSerializerTests.cs</DependentUpon>
+      </None>
     </ItemGroup>
 
     <ItemGroup>

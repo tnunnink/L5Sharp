@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using L5Sharp.Abstractions;
 using L5Sharp.Enums;
+
+[assembly: InternalsVisibleTo("L5Sharp.Internal.Tests")]
 
 namespace L5Sharp.Core
 {

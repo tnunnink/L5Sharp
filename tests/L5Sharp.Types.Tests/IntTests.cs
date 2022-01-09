@@ -144,8 +144,7 @@ namespace L5Sharp.Types.Tests
             var value = fixture.Create<string>();
             var type = new Int(_random);
 
-            FluentActions.Invoking(() => type.SetValue(value)).Should().Throw<ArgumentException>()
-                .WithMessage($"Could not parse string '{value}' to {typeof(Int)}. Verify that the string is an accepted Radix format.");
+            FluentActions.Invoking(() => type.SetValue(value)).Should().Throw<ArgumentException>();
         }
         
         [Test]
@@ -155,8 +154,27 @@ namespace L5Sharp.Types.Tests
             var value = fixture.Create<int>();
             var type = new Int();
 
-            FluentActions.Invoking(() => type.SetValue(value)).Should().Throw<ArgumentException>()
-                .WithMessage($"Value type '{value.GetType()}' is not a valid for {typeof(Int)}");
+            FluentActions.Invoking(() => type.SetValue(value)).Should().Throw<ArgumentException>();
+        }
+        
+        [Test]
+        public void Format_DefaultRadix_ShouldBeExpected()
+        {
+            var type = new Int();
+
+            var format = type.Format();
+
+            format.Should().Be("0");
+        }
+        
+        [Test]
+        public void Format_OverloadedRadix_ShouldBeExpected()
+        {
+            var type = new Int();
+
+            var format = type.Format(Radix.Binary);
+
+            format.Should().Be("2#0000_0000_0000_0000");
         }
         
         [Test]

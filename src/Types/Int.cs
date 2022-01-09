@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using L5Sharp.Enums;
 
 namespace L5Sharp.Types
@@ -9,7 +10,7 @@ namespace L5Sharp.Types
     public sealed class Int : IAtomicType<short>, IEquatable<Int>, IComparable<Int>
     {
         /// <summary>
-        /// Creates a new default instance of a Int type.
+        /// Creates a new <see cref="Int"/> with a default value.
         /// </summary>
         public Int()
         {
@@ -18,7 +19,7 @@ namespace L5Sharp.Types
         }
 
         /// <summary>
-        /// Creates a new instance of a Int with the provided value.
+        /// Creates a new <see cref="Int"/> with the provided value.
         /// </summary>
         /// <param name="value">The value to initialize the type with.</param>
         public Int(short value) : this()
@@ -49,16 +50,20 @@ namespace L5Sharp.Types
         /// <inheritdoc />
         public void SetValue(object value)
         {
-            Value = value switch
-            {
-                null => throw new ArgumentNullException(nameof(value), "Can not set Atomic value to null."),
-                Int atomic => atomic,
-                byte n => n,
-                short n => n,
-                string str => Radix.ParseValue<Int>(str),
-                _ => throw new ArgumentException($"Value type '{value.GetType()}' is not a valid for {GetType()}")
-            };
+            if (value is null)
+                throw new ArgumentNullException(nameof(value));
+            
+            var converter = TypeDescriptor.GetConverter(GetType());
+
+            if (!converter.CanConvertFrom(value.GetType()))
+                throw new ArgumentException($"Value of type '{value.GetType()}' is not a valid for {GetType()}");
+
+            Value = (Int)converter.ConvertFrom(value)!;
         }
+
+        /// <inheritdoc />
+        public string Format(Radix? radix = null) =>
+            radix is not null ? radix.Format(this) : Radix.Default(this).Format(this);
 
         /// <inheritdoc />
         public IDataType Instantiate() => new Int();
@@ -85,7 +90,7 @@ namespace L5Sharp.Types
         /// If the string value is able to be parsed, a new instance of a <see cref="Int"/> with the value
         /// provided. If not, then a default instance value.
         /// </returns>
-        public static implicit operator Int(string input) => new(Radix.ParseValue<Int>(input));
+        public static implicit operator Int(string input) => Radix.ParseValue<Int>(input);
 
         /// <inheritdoc />
         public bool Equals(Int? other)
@@ -105,7 +110,7 @@ namespace L5Sharp.Types
 
         /// <inheritdoc />
         public override int GetHashCode() => Name.GetHashCode();
-        
+
         /// <inheritdoc />
         public override string ToString() => Name;
 

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.ComponentModel;
+using L5Sharp.Converters;
 using L5Sharp.Enums;
 
 namespace L5Sharp.Types
@@ -6,6 +8,7 @@ namespace L5Sharp.Types
     /// <summary>
     /// Represents a INT Logix atomic data type.
     /// </summary>
+    [TypeConverter(typeof(LintConverter))]
     public sealed class Lint : IAtomicType<long>, IEquatable<Lint>, IComparable<Lint>
     {
         /// <summary>
@@ -49,18 +52,20 @@ namespace L5Sharp.Types
         /// <inheritdoc />
         public void SetValue(object value)
         {
-            Value = value switch
-            {
-                null => throw new ArgumentNullException(nameof(value), "Value can not be null"),
-                Lint atomic => atomic,
-                byte n => n,
-                short n => n,
-                int n => n,
-                long n => n,
-                string str => Radix.ParseValue<Lint>(str),
-                _ => throw new ArgumentException($"Value type '{value.GetType()}' is not a valid for {GetType()}")
-            };
+            if (value is null)
+                throw new ArgumentNullException(nameof(value));
+            
+            var converter = TypeDescriptor.GetConverter(GetType());
+
+            if (!converter.CanConvertFrom(value.GetType()))
+                throw new ArgumentException($"Value of type '{value.GetType()}' is not a valid for {GetType()}");
+
+            Value = (Lint)converter.ConvertFrom(value)!;
         }
+
+        /// <inheritdoc />
+        public string Format(Radix? radix = null) =>
+            radix is not null ? radix.Format(this) : Radix.Default(this).Format(this);
 
         /// <inheritdoc />
         public IDataType Instantiate() => new Lint();

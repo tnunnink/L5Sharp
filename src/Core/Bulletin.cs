@@ -48,17 +48,17 @@ namespace L5Sharp.Core
         /// <summary>
         /// A <see cref="Bulletin"/> instance of the ControlLogix family (Number = 1756).
         /// </summary>
-        public static Bulletin ControlLogix = new(1756);
+        public static Bulletin ControlLogix => new(1756);
         
         /// <summary>
         /// A <see cref="Bulletin"/> instance of the CompactLogix family (Number = 1769).
         /// </summary>
-        public static Bulletin CompactLogix = new(1769);
+        public static Bulletin CompactLogix => new(1769);
         
         /// <summary>
         /// A <see cref="Bulletin"/> instance of the SoftLogix family (Number = 1789).
         /// </summary>
-        public static Bulletin SoftLogix = new(1789);
+        public static Bulletin SoftLogix => new(1789);
 
         /// <summary>
         /// Converts a <see cref="Bulletin"/> value to a <see cref="short"/>.

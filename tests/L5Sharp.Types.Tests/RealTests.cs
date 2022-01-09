@@ -121,8 +121,7 @@ namespace L5Sharp.Types.Tests
             var value = fixture.Create<string>();
             var type = new Real(_random);
 
-            FluentActions.Invoking(() => type.SetValue(value)).Should().Throw<ArgumentException>()
-                .WithMessage($"Could not parse string '{value}' to {typeof(Real)}. Verify that the string is an accepted Radix format.");
+            FluentActions.Invoking(() => type.SetValue(value)).Should().Throw<ArgumentException>();
         }
         
         [Test]
@@ -132,8 +131,27 @@ namespace L5Sharp.Types.Tests
             var value = fixture.Create<bool>();
             var type = new Real();
 
-            FluentActions.Invoking(() => type.SetValue(value)).Should().Throw<ArgumentException>()
-                .WithMessage($"Value type '{value.GetType()}' is not a valid for {typeof(Real)}");
+            FluentActions.Invoking(() => type.SetValue(value)).Should().Throw<ArgumentException>();
+        }
+        
+        [Test]
+        public void Format_DefaultRadix_ShouldBeExpected()
+        {
+            var type = new Real();
+
+            var format = type.Format();
+
+            format.Should().Be("0.0");
+        }
+        
+        [Test]
+        public void Format_OverloadedRadix_ShouldBeExpected()
+        {
+            var type = new Real();
+
+            var format = type.Format(Radix.Exponential);
+
+            format.Should().Be("0.00000000e+000");
         }
         
         [Test]

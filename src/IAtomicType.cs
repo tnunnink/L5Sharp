@@ -1,4 +1,5 @@
 ﻿using System;
+using L5Sharp.Enums;
 
 namespace L5Sharp
 {
@@ -35,6 +36,16 @@ namespace L5Sharp
         /// When the provided object type is not able to be converted or parsed to the current <c>IAtomicType</c> value.
         /// </exception>
         void SetValue(object value);
+
+        /// <summary>
+        /// Formats the <see cref="Value"/> of the <see cref="IAtomicType"/> using the provided <see cref="Enums.Radix"/>.  
+        /// </summary>
+        /// <param name="radix">
+        /// The <see cref="Enums.Radix"/> format of the value.
+        /// If not provided, will use the default Radix for the current data type.
+        /// </param>
+        /// <returns>A string value representing the current atomic value formatted in the specified Radix.</returns>
+        string Format(Radix? radix = null);
     }
 
     /// <summary>

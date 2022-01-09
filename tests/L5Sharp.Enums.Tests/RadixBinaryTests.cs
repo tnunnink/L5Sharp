@@ -18,61 +18,61 @@ namespace L5Sharp.Enums.Tests
         }
 
         [Test]
-        public void Convert_Null_ShouldThrowArgumentNullException()
+        public void Format_Null_ShouldThrowArgumentNullException()
         {
-            FluentActions.Invoking(() => Radix.Binary.Convert(null!)).Should().Throw<ArgumentNullException>();
+            FluentActions.Invoking(() => Radix.Binary.Format(null!)).Should().Throw<ArgumentNullException>();
         }
 
         [Test]
-        public void Convert_NonSupportedAtomic_ShouldThrowNotSupportedException()
+        public void Format_NonSupportedAtomic_ShouldThrowNotSupportedException()
         {
-            FluentActions.Invoking(() => Radix.Binary.Convert(new Real())).Should().Throw<NotSupportedException>();
+            FluentActions.Invoking(() => Radix.Binary.Format(new Real())).Should().Throw<NotSupportedException>();
         }
 
         [Test]
-        public void Convert_BoolFalse_ShouldBeExpected()
+        public void Format_BoolFalse_ShouldBeExpected()
         {
-            var result = Radix.Binary.Convert(new Bool());
+            var result = Radix.Binary.Format(new Bool());
 
             result.Should().Be("2#0");
         }
 
         [Test]
-        public void Convert_BoolTrue_ShouldBeExpected()
+        public void Format_BoolTrue_ShouldBeExpected()
         {
-            var result = Radix.Binary.Convert(new Bool(true));
+            var result = Radix.Binary.Format(new Bool(true));
 
             result.Should().Be("2#1");
         }
 
         [Test]
-        public void Convert_ValidSint_ShouldBeExpectedConvert()
+        public void Format_ValidSint_ShouldBeExpectedFormat()
         {
-            var result = Radix.Binary.Convert(new Sint(20));
+            var result = Radix.Binary.Format(new Sint(20));
 
             result.Should().Be("2#0001_0100");
         }
 
         [Test]
-        public void Convert_ValidInt_ShouldBeExpectedConvert()
+        public void Format_ValidInt_ShouldBeExpectedFormat()
         {
-            var result = Radix.Binary.Convert(new Int(20));
+            var result = Radix.Binary.Format(new Int(20));
 
             result.Should().Be("2#0000_0000_0001_0100");
         }
 
         [Test]
-        public void Convert_ValidDint_ShouldBeExpectedConvert()
+        public void Format_ValidDint_ShouldBeExpectedFormat()
         {
-            var result = Radix.Binary.Convert(new Dint(20));
+            var result = Radix.Binary.Format(new Dint(20));
 
             result.Should().Be("2#0000_0000_0000_0000_0000_0000_0001_0100");
         }
 
         [Test]
-        public void Convert_ValidLint_ShouldBeExpectedConvert()
+        public void Format_ValidLint_ShouldBeExpectedFormat()
         {
-            var result = Radix.Binary.Convert(new Lint(20));
+            var result = Radix.Binary.Format(new Lint(20));
 
             result.Should().Be("2#0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0001_0100");
         }
@@ -95,18 +95,15 @@ namespace L5Sharp.Enums.Tests
         [Test]
         public void Parse_LengthZero_ShouldThrowArgumentOutOfRangeException()
         {
-            FluentActions.Invoking(() => Radix.Binary.Parse("2#"))
-                .Should().Throw<ArgumentOutOfRangeException>()
-                .WithMessage("The value 0 is out of range for Binary Radix. (Parameter 'Length')");
+            FluentActions.Invoking(() => Radix.Binary.Parse("2#")).Should().Throw<ArgumentOutOfRangeException>();
         }
 
         [Test]
         public void Parse_LengthGreaterThan68_ShouldThrowArgumentOutOfRangeException()
         {
             FluentActions.Invoking(() => Radix.Binary.Parse(
-                        "2#0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0001_0100_0000"))
-                .Should().Throw<ArgumentOutOfRangeException>()
-                .WithMessage("The value 68 is out of range for Binary Radix. (Parameter 'Length')");
+                    "2#0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0001_0100_0000"))
+                .Should().Throw<ArgumentOutOfRangeException>();
         }
 
         [Test]
@@ -114,7 +111,7 @@ namespace L5Sharp.Enums.Tests
         {
             var value = Radix.Binary.Parse("2#0");
 
-            value.Should().Be(false);
+            value.Should().BeEquivalentTo(new Bool());
         }
 
         [Test]
@@ -122,7 +119,7 @@ namespace L5Sharp.Enums.Tests
         {
             var value = Radix.Binary.Parse("2#0001_0100");
 
-            value.Should().Be(20);
+            value.Should().Be(new Sint(20));
         }
 
         [Test]
@@ -130,7 +127,7 @@ namespace L5Sharp.Enums.Tests
         {
             var value = Radix.Binary.Parse("2#0000_0000_0001_0100");
 
-            value.Should().Be(20);
+            value.Should().Be(new Int(20));
         }
 
         [Test]
@@ -138,7 +135,7 @@ namespace L5Sharp.Enums.Tests
         {
             var value = Radix.Binary.Parse("2#0000_0000_0000_0000_0000_0000_0001_0100");
 
-            value.Should().Be(20);
+            value.Should().Be(new Dint(20));
         }
 
 
@@ -148,7 +145,7 @@ namespace L5Sharp.Enums.Tests
             var value = Radix.Binary.Parse(
                 "2#0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0001_0100");
 
-            value.Should().Be(20);
+            value.Should().Be(new Lint(20));
         }
     }
 }

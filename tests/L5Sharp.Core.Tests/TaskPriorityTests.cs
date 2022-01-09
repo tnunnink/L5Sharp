@@ -38,7 +38,7 @@ namespace L5Sharp.Core.Tests
         }
 
         [Test]
-        public void ImplicitOperator_ScanRate_ShouldBeExpected()
+        public void ImplicitOperator_Type_ShouldBeExpected()
         {
             byte priority = new TaskPriority(10);
 

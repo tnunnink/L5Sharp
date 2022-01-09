@@ -17,16 +17,14 @@ namespace L5Sharp.Serialization
                 throw new ArgumentNullException(nameof(component));
 
             if (component.DataType is not IAtomicType atomic)
-                throw new InvalidOperationException("DataValueMembers must have an atomic data type.");
+                throw new InvalidOperationException($"{ElementName} must have an atomic data type.");
 
             var element = new XElement(ElementName);
 
             element.AddAttribute(component, m => m.Name);
             element.AddAttribute(component, m => m.DataType);
             element.AddAttribute(component, m => m.Radix);
-
-            var value = component.Radix.Convert(atomic);
-            element.Add(new XAttribute(LogixNames.Value, value));
+            element.AddAttribute(component, c => component.Radix.Format(atomic), nameOverride: LogixNames.Value);
 
             return element;
         }
@@ -43,11 +41,13 @@ namespace L5Sharp.Serialization
             var name = element.GetComponentName();
             var atomic = (IAtomicType)element.GetDataType();
             var radix = element.GetAttribute<IMember<IDataType>, Radix>(m => m.Radix);
-            var value = element.GetAttribute<IAtomicType, object>(x => x.Value);
-            
-            atomic.SetValue(value!);
 
-            return Member.Create(name, atomic, radix: radix);
+            var value = element.Attribute(LogixNames.Value)?.Value ??
+                        throw new ArgumentException("The provided element does not have a value attribute");
+
+            atomic.SetValue(value);
+
+            return Member.Create(name, atomic, radix);
         }
     }
 }

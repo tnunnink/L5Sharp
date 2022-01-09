@@ -130,8 +130,8 @@ namespace L5Sharp.Types.Tests
             var fixture = new Fixture();
             var value = fixture.Create<bool>();
             var type = new Bool();
-
-            type.SetValue(value.ToString());
+            
+            type.SetValue(value ? "1" : "0");
 
             type.Value.Should().Be(value);
         }
@@ -163,9 +163,7 @@ namespace L5Sharp.Types.Tests
             var value = fixture.Create<string>();
             var type = new Bool();
 
-            FluentActions.Invoking(() => type.SetValue(value)).Should().Throw<ArgumentException>()
-                .WithMessage(
-                    $"Could not parse string '{value}' to {typeof(Bool)}. Verify that the string is an accepted Radix format.");
+            FluentActions.Invoking(() => type.SetValue(value)).Should().Throw<ArgumentException>();
         }
 
         [Test]
@@ -175,8 +173,27 @@ namespace L5Sharp.Types.Tests
             var value = fixture.Create<float>();
             var type = new Bool();
 
-            FluentActions.Invoking(() => type.SetValue(value)).Should().Throw<ArgumentException>()
-                .WithMessage($"Value type '{value.GetType()}' is not a valid for {typeof(Bool)}");
+            FluentActions.Invoking(() => type.SetValue(value)).Should().Throw<ArgumentException>();
+        }
+
+        [Test]
+        public void Format_DefaultRadix_ShouldBeExpected()
+        {
+            var type = new Bool();
+
+            var format = type.Format();
+
+            format.Should().Be("0");
+        }
+        
+        [Test]
+        public void Format_OverloadedRadix_ShouldBeExpected()
+        {
+            var type = new Bool();
+
+            var format = type.Format(Radix.Binary);
+
+            format.Should().Be("2#0");
         }
 
         [Test]

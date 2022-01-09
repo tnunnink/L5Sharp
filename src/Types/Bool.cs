@@ -1,4 +1,6 @@
 ﻿using System;
+using System.ComponentModel;
+using L5Sharp.Converters;
 using L5Sharp.Enums;
 
 namespace L5Sharp.Types
@@ -6,6 +8,7 @@ namespace L5Sharp.Types
     /// <summary>
     /// Represents a BOOL Logix atomic data type.
     /// </summary>
+    [TypeConverter(typeof(BoolConverter))]
     public sealed class Bool : IAtomicType<bool>, IEquatable<Bool>, IComparable<Bool>
     {
         /// <summary>
@@ -58,17 +61,20 @@ namespace L5Sharp.Types
         /// <inheritdoc />
         public void SetValue(object value)
         {
-            Value = value switch
-            {
-                null => throw new ArgumentNullException(nameof(value)),
-                Bool atomic => new Bool(atomic),
-                bool typed => new Bool(typed),
-                byte n => new Bool(n),
-                int n => new Bool(n),
-                string str => new Bool(Parse(str)),
-                _ => throw new ArgumentException($"Value type '{value.GetType()}' is not a valid for {GetType()}")
-            };
+            if (value is null)
+                throw new ArgumentNullException(nameof(value));
+            
+            var converter = TypeDescriptor.GetConverter(GetType());
+
+            if (!converter.CanConvertFrom(value.GetType()))
+                throw new ArgumentException($"Value of type '{value.GetType()}' is not a valid for {GetType()}");
+
+            Value = (Bool)converter.ConvertFrom(value)!;
         }
+
+        /// <inheritdoc />
+        public string Format(Radix? radix = null) =>
+            radix is not null ? radix.Format(this) : Radix.Default(this).Format(this);
 
         /// <inheritdoc />
         public IDataType Instantiate() => new Bool();
@@ -95,7 +101,7 @@ namespace L5Sharp.Types
         /// If the string value is able to be parsed, a new instance of a <see cref="Bool"/> with the value
         /// provided. If not, then a default instance value.
         /// </returns>
-        public static implicit operator Bool(string input) => new(Parse(input));
+        public static implicit operator Bool(string input) => Radix.ParseValue<Bool>(input);
 
         /// <inheritdoc />
         public bool Equals(Bool? other)
@@ -135,14 +141,6 @@ namespace L5Sharp.Types
         {
             if (ReferenceEquals(this, other)) return 0;
             return ReferenceEquals(null, other) ? 1 : Value.CompareTo(other.Value);
-        }
-
-        private static bool Parse(string value)
-        {
-            if (bool.TryParse(value, out var result))
-                return result;
-
-            return Radix.ParseValue<Bool>(value);
         }
     }
 }
