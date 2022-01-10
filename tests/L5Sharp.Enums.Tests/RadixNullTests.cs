@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using System;
+using FluentAssertions;
 using L5Sharp.Types;
 using NUnit.Framework;
 
@@ -19,17 +20,13 @@ namespace L5Sharp.Enums.Tests
         [Test]
         public void Format_WhenCalled_ReturnsNull()
         {
-            var formatted = Radix.Null.Format(new Dint());
-
-            formatted.Should().BeNull();
+            FluentActions.Invoking(() => Radix.Null.Format(new Dint())).Should().Throw<NotSupportedException>();
         }
-        
+
         [Test]
         public void Parse_WhenCalled_ReturnsNull()
         {
-            var parsed = Radix.Null.Parse("Doesn't matter");
-
-            parsed.Should().BeNull();
+            FluentActions.Invoking(() => Radix.Null.Parse("Doesn't matter")).Should().Throw<NotSupportedException>();
         }
     }
 }

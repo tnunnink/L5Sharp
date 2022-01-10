@@ -14,8 +14,6 @@ namespace L5Sharp.Common
     {
         private static readonly Dictionary<Type, Func<string, object?>> Parsers = new()
         {
-            //Primitives
-            { typeof(object), s => s.ToString() },
             //Enums
             { typeof(ConnectionPriority), s => ConnectionPriority.TryFromName(s, false, out var value) ? value : default },
             { typeof(ConnectionType), s => ConnectionType.FromName(s) },

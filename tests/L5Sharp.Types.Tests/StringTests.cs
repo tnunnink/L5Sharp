@@ -40,7 +40,7 @@ namespace L5Sharp.Types.Tests
             type.LEN.Should().NotBeNull();
             type.LEN.DataType.Should().BeOfType<Dint>();
             type.DATA.Should().NotBeNull();
-            type.DATA.DataType.Should().BeOfType<Sint>();
+            type.DATA.DataType.Should().BeOfType<ArrayType<Sint>>();
             type.DATA.Dimensions.Should().Be(new Dimensions(82));
         }
 

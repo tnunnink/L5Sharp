@@ -162,7 +162,7 @@ namespace L5Sharp.Types.Tests
 
             var format = type.Format(Radix.Binary);
 
-            format.Should().Be("2#0000_0000_0000_0000");
+            format.Should().Be("2#0000_0000_0000_0000_0000_0000_0000_0000");
         }
 
         [Test]

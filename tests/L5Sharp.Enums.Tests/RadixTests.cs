@@ -87,7 +87,7 @@ namespace L5Sharp.Enums.Tests
 
             var parsed = Radix.ParseValue(value);
 
-            parsed.Should().Be(5);
+            parsed.Value.Should().Be(5);
         }
 
         [Test]
@@ -97,7 +97,7 @@ namespace L5Sharp.Enums.Tests
 
             var parsed = Radix.ParseValue(value);
 
-            parsed.Should().Be(0x0C);
+            parsed.Value.Should().Be(0x0C);
         }
 
         [Test]

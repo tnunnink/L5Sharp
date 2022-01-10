@@ -32,7 +32,7 @@ namespace L5Sharp.Converters
                 short v => new Int(v),
                 Sint v => new Int(v.Value),
                 Int v => v,
-                string v => Radix.ParseValue<Lint>(v),
+                string v => Radix.ParseValue<Int>(v),
                 _ => base.ConvertFrom(context, culture, value)
                      ?? throw new NotSupportedException(
                          $"The provided value of type {value.GetType()} is not supported for conversion.")
@@ -44,9 +44,11 @@ namespace L5Sharp.Converters
             return destinationType == typeof(short) ||
                    destinationType == typeof(int) ||
                    destinationType == typeof(long) ||
+                   destinationType == typeof(float) ||
                    destinationType == typeof(Int) ||
                    destinationType == typeof(Dint) ||
                    destinationType == typeof(Lint) ||
+                   destinationType == typeof(Real) ||
                    destinationType == typeof(string) ||
                    base.CanConvertFrom(context, destinationType);
         }
@@ -54,16 +56,19 @@ namespace L5Sharp.Converters
         public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value,
             Type destinationType)
         {
-            if (value is not Sint typed)
-                throw new InvalidOperationException($"Value must be of type {typeof(Sint)}.");
+            if (value is not Int typed)
+                throw new InvalidOperationException($"Value must be of type {typeof(Int)}.");
 
             return destinationType switch
             {
-                not null when destinationType == typeof(short) => (short)typed.Value,
+                not null when destinationType == typeof(short) => typed.Value,
                 not null when destinationType == typeof(int) => (int)typed.Value,
                 not null when destinationType == typeof(long) => (long)typed.Value,
+                not null when destinationType == typeof(float) => (float)typed.Value,
+                not null when destinationType == typeof(Int) => typed,
                 not null when destinationType == typeof(Dint) => new Dint(typed.Value),
                 not null when destinationType == typeof(Lint) => new Lint(typed.Value),
+                not null when destinationType == typeof(Real) => new Real(typed.Value),
                 not null when destinationType == typeof(string) => typed.Format(Radix.Default(typed)),
                 _ => base.ConvertTo(context, culture, value, destinationType!) ??
                      throw new NotSupportedException(

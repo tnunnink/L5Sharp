@@ -16,7 +16,7 @@ namespace L5Sharp.Enums.Tests
             radix.Should().NotBeNull();
             radix.Should().Be(Radix.Decimal);
         }
-        
+
         [Test]
         public void Format_Null_ShouldThrowArgumentNullException()
         {
@@ -44,7 +44,7 @@ namespace L5Sharp.Enums.Tests
 
             result.Should().Be("1");
         }
-        
+
         [Test]
         public void Format_ValidSint_ShouldBeExpectedFormat()
         {
@@ -82,7 +82,7 @@ namespace L5Sharp.Enums.Tests
         {
             FluentActions.Invoking(() => Radix.Decimal.Parse(null!)).Should().Throw<ArgumentNullException>();
         }
-        
+
         [Test]
         public void Parse_Invalid_ShouldThrowArgumentException()
         {
@@ -91,52 +91,35 @@ namespace L5Sharp.Enums.Tests
         }
 
         [Test]
-        public void Parse_Zero_ShouldBeExpected()
-        {
-            var value = Radix.Decimal.Parse("0");
-
-            value.Should().Be(new Bool());
-        }
-        
-        
-        [Test]
-        public void Parse_One_ShouldBeExpected()
-        {
-            var value = Radix.Decimal.Parse("1");
-
-            value.Should().Be(1);
-        }
-
-        [Test]
         public void Parse_Byte_ShouldBeExpected()
         {
-            var value = Radix.Decimal.Parse(byte.MaxValue.ToString());
+            var atomic = (Sint)Radix.Decimal.Parse(byte.MaxValue.ToString());
 
-            value.Should().Be(new Sint(byte.MaxValue));
+            atomic.Value.Should().Be(new Sint(byte.MaxValue));
         }
-        
+
         [Test]
         public void Parse_Short_ShouldBeExpected()
         {
-            var value = Radix.Decimal.Parse(short.MaxValue.ToString());
+            var atomic = (Int)Radix.Decimal.Parse(short.MaxValue.ToString());
 
-            value.Should().Be(new Int(short.MaxValue));
+            atomic.Value.Should().Be(new Int(short.MaxValue));
         }
-        
+
         [Test]
         public void Parse_Int_ShouldBeExpected()
         {
-            var value = Radix.Decimal.Parse(int.MaxValue.ToString());
+            var atomic = (Dint)Radix.Decimal.Parse(int.MaxValue.ToString());
 
-            value.Should().Be(int.MaxValue);
+            atomic.Value.Should().Be(int.MaxValue);
         }
-        
+
         [Test]
         public void Parse_Long_ShouldBeExpected()
         {
-            var value = Radix.Decimal.Parse(long.MaxValue.ToString());
+            var atomic = (Lint)Radix.Decimal.Parse(long.MaxValue.ToString());
 
-            value.Should().Be(long.MaxValue);
+            atomic.Value.Should().Be(long.MaxValue);
         }
     }
 }

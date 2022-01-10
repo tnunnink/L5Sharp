@@ -75,7 +75,7 @@ namespace L5Sharp.Enums.Tests
         {
             var result = Radix.Exponential.Parse("1.12300000e+002");
 
-            result.Should().Be(112.3f);
+            result.Value.Should().Be(112.3f);
         }
 
     }

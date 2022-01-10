@@ -16,24 +16,6 @@ namespace L5Sharp.Enums
         }
 
         /// <summary>
-        /// Determines whether the current instance has more restrictive access the another. 
-        /// </summary>
-        /// <remarks>
-        /// External access restriction is based on the enum integer value.
-        /// The restriction levels are less restrictive in increasing order of value.
-        /// In other words, <see cref="None"/> is more restrictive than <see cref="ReadOnly"/>
-        /// which are both more restrictive than <see cref="ReadWrite"/>.
-        /// </remarks>
-        /// <param name="other">The <c>ExternalAccess</c> option to compare with.</param>
-        /// <returns>
-        /// true if the current access is more restrictive than the other; otherwise, false
-        /// </returns>
-        public bool IsMoreRestrictive(ExternalAccess? other)
-        {
-            return other is not null && Value < other.Value;
-        }
-
-        /// <summary>
         /// Gets the most restrictive of the two provided <see cref="ExternalAccess"/> objects.
         /// </summary>
         /// <param name="first">The first <c>ExternalAccess</c> object to compare.</param>

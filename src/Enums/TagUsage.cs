@@ -10,6 +10,9 @@ namespace L5Sharp.Enums
         {
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public static readonly TagUsage Null = new TagUsage(nameof(Null), nameof(Null));
         public static readonly TagUsage Normal = new TagUsage(nameof(Normal), nameof(Normal));
         public static readonly TagUsage Local = new TagUsage(nameof(Local), nameof(Local));

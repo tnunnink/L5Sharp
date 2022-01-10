@@ -58,12 +58,12 @@ namespace L5Sharp.Converters
         public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value,
             Type destinationType)
         {
-            if (value is not Sint typed)
-                throw new InvalidOperationException($"Value must be of type {typeof(Sint)}.");
+            if (value is not Lint typed)
+                throw new InvalidOperationException($"Value must be of type {typeof(Lint)}.");
 
             return destinationType switch
             {
-                not null when destinationType == typeof(long) => (long)typed.Value,
+                not null when destinationType == typeof(long) => typed.Value,
                 not null when destinationType == typeof(Lint) => new Lint(typed.Value),
                 not null when destinationType == typeof(string) => typed.Format(Radix.Default(typed)),
                 _ => base.ConvertTo(context, culture, value, destinationType!) ??

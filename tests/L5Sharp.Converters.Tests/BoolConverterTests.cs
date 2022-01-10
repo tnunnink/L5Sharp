@@ -4,7 +4,6 @@ using AutoFixture;
 using FluentAssertions;
 using L5Sharp.Enums;
 using L5Sharp.Types;
-using L5SharpTests;
 using L5SharpTests.Specimens;
 using NUnit.Framework;
 

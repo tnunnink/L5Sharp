@@ -47,8 +47,10 @@ namespace L5Sharp.Converters
         {
             return destinationType == typeof(int) ||
                    destinationType == typeof(long) ||
+                   destinationType == typeof(float) ||
                    destinationType == typeof(Dint) ||
                    destinationType == typeof(Lint) ||
+                   destinationType == typeof(Real) ||
                    destinationType == typeof(string) ||
                    base.CanConvertFrom(context, destinationType);
         }
@@ -56,15 +58,17 @@ namespace L5Sharp.Converters
         public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value,
             Type destinationType)
         {
-            if (value is not Sint typed)
-                throw new InvalidOperationException($"Value must be of type {typeof(Sint)}.");
+            if (value is not Dint typed)
+                throw new InvalidOperationException($"Value must be of type {typeof(Dint)}.");
 
             return destinationType switch
             {
-                not null when destinationType == typeof(int) => (int)typed.Value,
+                not null when destinationType == typeof(int) => typed.Value,
                 not null when destinationType == typeof(long) => (long)typed.Value,
+                not null when destinationType == typeof(float) => (float)typed.Value,
                 not null when destinationType == typeof(Dint) => new Dint(typed.Value),
                 not null when destinationType == typeof(Lint) => new Lint(typed.Value),
+                not null when destinationType == typeof(Real) => new Real(typed.Value),
                 not null when destinationType == typeof(string) => typed.Format(Radix.Default(typed)),
                 _ => base.ConvertTo(context, culture, value, destinationType!) ??
                      throw new NotSupportedException(

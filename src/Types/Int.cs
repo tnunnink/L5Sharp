@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using L5Sharp.Converters;
 using L5Sharp.Enums;
 
 namespace L5Sharp.Types
@@ -7,6 +8,7 @@ namespace L5Sharp.Types
     /// <summary>
     /// Represents a INT Logix atomic data type.
     /// </summary>
+    [TypeConverter(typeof(IntConverter))]
     public sealed class Int : IAtomicType<short>, IEquatable<Int>, IComparable<Int>
     {
         /// <summary>

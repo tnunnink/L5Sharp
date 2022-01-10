@@ -112,7 +112,7 @@ namespace L5Sharp.Enums.Tests
         {
             var value = Radix.Octal.Parse("8#0");
 
-            value.Should().Be(false);
+            value.Value.Should().Be(false);
         }
 
         [Test]
@@ -120,7 +120,7 @@ namespace L5Sharp.Enums.Tests
         {
             var value = Radix.Octal.Parse("8#024");
 
-            value.Should().Be(20);
+            value.Value.Should().Be(20);
         }
 
         [Test]
@@ -128,7 +128,7 @@ namespace L5Sharp.Enums.Tests
         {
             var value = Radix.Octal.Parse("8#000_024");
 
-            value.Should().Be(20);
+            value.Value.Should().Be(20);
         }
 
         [Test]
@@ -136,7 +136,7 @@ namespace L5Sharp.Enums.Tests
         {
             var value = Radix.Octal.Parse("8#00_000_000_024");
 
-            value.Should().Be(20);
+            value.Value.Should().Be(20);
         }
 
 
@@ -145,7 +145,7 @@ namespace L5Sharp.Enums.Tests
         {
             var value = Radix.Octal.Parse("8#0_000_000_000_000_000_000_024");
 
-            value.Should().Be(20);
+            value.Value.Should().Be(20);
         }
     }
 }
