@@ -3,16 +3,27 @@
 namespace L5Sharp.Enums
 {
     /// <summary>
-    /// Represents an enumer
+    /// Represents an enumeration of all <see cref="TransmissionType"/> options for a given <see cref="Core.Connection"/>.
     /// </summary>
-    public class TransmissionType : SmartEnum<TransmissionType>
+    public sealed class TransmissionType : SmartEnum<TransmissionType, string>
     {
-        public TransmissionType(string name, int value) : base(name, value)
+        private TransmissionType(string name, string value) : base(name, value)
         {
         }
 
-        public static readonly TransmissionType Null = new TransmissionType("Null", 0);
-        public static readonly TransmissionType Multicast = new TransmissionType("Multicast", 1);
-        public static readonly TransmissionType Unicast = new TransmissionType("Unicast", 2);
+        /// <summary>
+        /// Represents a Null <see cref="TransmissionType"/> value.
+        /// </summary>
+        public static readonly TransmissionType Null = new(nameof(Null), nameof(Null));
+        
+        /// <summary>
+        /// Represents a Multicast <see cref="TransmissionType"/> value.
+        /// </summary>
+        public static readonly TransmissionType Multicast = new(nameof(Multicast), nameof(Multicast));
+        
+        /// <summary>
+        /// Represents a Unicast <see cref="TransmissionType"/> value.
+        /// </summary>
+        public static readonly TransmissionType Unicast = new(nameof(Unicast), nameof(Unicast));
     }
 }

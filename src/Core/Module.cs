@@ -7,7 +7,7 @@ namespace L5Sharp.Core
     /// <inheritdoc />
     public class Module : IModule
     {
-        internal Module(string name, 
+        internal Module(string name,
             string catalogNumber, ushort vendor, ushort productType, ushort productCode, Revision revision,
             IEnumerable<Port> ports,
             string? parentModule = null, int parentModPortId = 0,
@@ -35,7 +35,22 @@ namespace L5Sharp.Core
             Config = config;
         }
 
-
+        /// <summary>
+        /// Creates a new <see cref="Module"/> with the provided name and 
+        /// </summary>
+        /// <param name="name">The name of the module.</param>
+        /// <param name="catalogNumber"></param>
+        /// <param name="vendor"></param>
+        /// <param name="productType"></param>
+        /// <param name="productCode"></param>
+        /// <param name="revision"></param>
+        /// <param name="ports"></param>
+        public Module(ComponentName name, string catalogNumber, ushort vendor,
+            ushort productType, ushort productCode, Revision revision, IEnumerable<Port> ports)
+            : this(name, catalogNumber, vendor, productType, productCode, revision, ports, string.Empty)
+        {
+        }
+        
         /// <inheritdoc />
         public string Name { get; }
 

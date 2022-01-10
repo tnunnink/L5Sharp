@@ -5,16 +5,16 @@ namespace L5Sharp.Enums
     /// <summary>
     /// An enumeration of all Logix <see cref="DataTypeClass"/> for a given <see cref="IDataType"/>.
     /// </summary>
-    public sealed class DataTypeClass : SmartEnum<DataTypeClass>
+    public sealed class DataTypeClass : SmartEnum<DataTypeClass, string>
     {
-        private DataTypeClass(string name, int value) : base(name, value)
+        private DataTypeClass(string name, string value) : base(name, value)
         {
         }
         
         /// <summary>
         /// Represents an <b>Unknown</b> <see cref="DataTypeClass"/>.
         /// </summary>
-        public static readonly DataTypeClass Unknown = new(nameof(Unknown), -1);
+        public static readonly DataTypeClass Unknown = new(nameof(Unknown), nameof(Unknown));
 
         /// <summary>
         /// Represents an <b>Atomic</b> <see cref="DataTypeClass"/>.
@@ -22,7 +22,7 @@ namespace L5Sharp.Enums
         /// <example>
         /// Bool, Sint, Int, Dint, Lint, Real.
         /// </example>
-        public static readonly DataTypeClass Atomic = new(nameof(Atomic), 0);
+        public static readonly DataTypeClass Atomic = new(nameof(Atomic), nameof(Atomic));
 
         /// <summary>
         /// Represents an <b>Predefined</b> <see cref="DataTypeClass"/>.
@@ -30,21 +30,21 @@ namespace L5Sharp.Enums
         /// <example>
         /// String, Timer, Counter, Message.
         /// </example>
-        public static readonly DataTypeClass Predefined = new(nameof(Predefined), 1);
+        public static readonly DataTypeClass Predefined = new(nameof(Predefined), nameof(Predefined));
 
         /// <summary>
         /// Represents an <b>ModuleDefined</b> <see cref="DataTypeClass"/>.
         /// </summary>
-        public static readonly DataTypeClass Io = new(nameof(Io), 2);
+        public static readonly DataTypeClass Io = new(nameof(Io), nameof(Io));
 
         /// <summary>
         /// Represents an <b>UserDefined</b> <see cref="DataTypeClass"/>.
         /// </summary>
-        public static readonly DataTypeClass User = new(nameof(User), 3);
+        public static readonly DataTypeClass User = new(nameof(User), nameof(User));
         
         /// <summary>
         /// Represents an <b>AddOnDefined</b> <see cref="DataTypeClass"/>.
         /// </summary>
-        public static readonly DataTypeClass AddOnDefined = new(nameof(AddOnDefined), 4);
+        public static readonly DataTypeClass AddOnDefined = new(nameof(AddOnDefined), nameof(AddOnDefined));
     }
 }

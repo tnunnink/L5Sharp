@@ -93,7 +93,7 @@ namespace L5Sharp.Serialization.Tests
             var task = serializer.Deserialize(element);
 
             task.Name.Should().Be(new ComponentName("Periodic"));
-            task.Description.Should().BeNull();
+            task.Description.Should().BeEmpty();
             task.Type.Should().Be(TaskType.Periodic);
             task.Priority.Should().Be(new TaskPriority(10));
             task.Rate.Should().Be(new ScanRate(10));

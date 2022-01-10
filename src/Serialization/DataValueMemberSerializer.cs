@@ -24,7 +24,9 @@ namespace L5Sharp.Serialization
             element.AddAttribute(component, m => m.Name);
             element.AddAttribute(component, m => m.DataType);
             element.AddAttribute(component, m => m.Radix);
-            element.AddAttribute(component, c => component.Radix.Format(atomic), nameOverride: LogixNames.Value);
+
+            var value = atomic.Format(component.Radix);
+            element.Add(new XAttribute(LogixNames.Value, value));
 
             return element;
         }
@@ -41,10 +43,8 @@ namespace L5Sharp.Serialization
             var name = element.GetComponentName();
             var atomic = (IAtomicType)element.GetDataType();
             var radix = element.GetAttribute<IMember<IDataType>, Radix>(m => m.Radix);
-
             var value = element.Attribute(LogixNames.Value)?.Value ??
-                        throw new ArgumentException("The provided element does not have a value attribute");
-
+                        throw new ArgumentException("The provided element does not have a value attribute.");
             atomic.SetValue(value);
 
             return Member.Create(name, atomic, radix);

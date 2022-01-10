@@ -3,7 +3,7 @@
 namespace L5Sharp.Enums
 {
     /// <summary>
-    /// Provides an enumeration of all Logix Program types.
+    /// Provides an enumeration of all Logix <see cref="ProgramType"/> options or a given <see cref="IProgram"/>.
     /// </summary>
     public abstract class ProgramType : SmartEnum<ProgramType, string>
     {
@@ -12,12 +12,12 @@ namespace L5Sharp.Enums
         }
 
         /// <summary>
-        /// 
+        /// Represents a Normal <see cref="ProgramType"/> value.
         /// </summary>
         public static readonly ProgramType Normal = new NormalType();
         
         /// <summary>
-        /// 
+        /// Represents a EquipmentPhase <see cref="ProcessorType"/> value.
         /// </summary>
         public static readonly ProgramType EquipmentPhase = new EquipmentPhaseType();
 

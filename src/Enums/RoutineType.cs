@@ -69,7 +69,7 @@ namespace L5Sharp.Enums
 
         private class TypelessType : RoutineType
         {
-            public TypelessType() : base("Typeless", "Typeless")
+            public TypelessType() : base(nameof(Typeless), "Typeless")
             {
                 
             }
@@ -82,7 +82,7 @@ namespace L5Sharp.Enums
         
         private class LadderLogicType : RoutineType
         {
-            public LadderLogicType() : base("RLL", "RLL")
+            public LadderLogicType() : base(nameof(Rll), nameof(Rll).ToUpper())
             {
                 
             }
@@ -95,7 +95,7 @@ namespace L5Sharp.Enums
         
         private class FunctionBlockType : RoutineType
         {
-            public FunctionBlockType() : base("FBD", "FBD")
+            public FunctionBlockType() : base(nameof(Fbd), nameof(Fbd).ToUpper())
             {
                 
             }
@@ -108,7 +108,7 @@ namespace L5Sharp.Enums
         
         private class SequentialFunctionType : RoutineType
         {
-            public SequentialFunctionType() : base("SFC", "SFC")
+            public SequentialFunctionType() : base(nameof(Sfc), nameof(Sfc).ToUpper())
             {
                 
             }
@@ -121,7 +121,7 @@ namespace L5Sharp.Enums
         
         private class StructuredTextType : RoutineType
         {
-            public StructuredTextType() : base("ST", "ST")
+            public StructuredTextType() : base(nameof(St), nameof(St).ToUpper())
             {
                 
             }

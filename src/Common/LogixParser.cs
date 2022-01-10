@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Xml.Linq;
 using L5Sharp.Core;
 using L5Sharp.Enums;
 
@@ -15,24 +14,24 @@ namespace L5Sharp.Common
         private static readonly Dictionary<Type, Func<string, object?>> Parsers = new()
         {
             //Enums
-            { typeof(ConnectionPriority), s => ConnectionPriority.TryFromName(s, false, out var value) ? value : default },
-            { typeof(ConnectionType), s => ConnectionType.FromName(s) },
-            { typeof(DataTypeClass), s => DataTypeClass.FromName(s) },
-            { typeof(DataTypeFamily), s => DataTypeFamily.FromName(s) },
-            { typeof(ExternalAccess), s => ExternalAccess.FromName(s) },
-            { typeof(KeyingState), s => KeyingState.FromName(s) },
-            { typeof(ProcessorType), s => ProcessorType.FromName(s) },
-            { typeof(ProductionTrigger), s => ProductionTrigger.FromName(s) },
-            { typeof(ProgramType), s => ProgramType.FromName(s) },
-            { typeof(Radix), s => Radix.FromName(s) },
-            { typeof(RoutineType), s => RoutineType.FromName(s) },
-            { typeof(RungType), s => RungType.FromName(s) },
-            { typeof(Scope), s => Scope.FromName(s) },
-            { typeof(TagType), s => TagType.FromName(s) },
-            { typeof(TagUsage), s => TagUsage.FromName(s) },
-            { typeof(TaskEventTrigger), s => TaskEventTrigger.FromName(s) },
-            { typeof(TaskType), s => TaskType.FromName(s) },
-            { typeof(TransmissionType), s => TransmissionType.FromName(s) },
+            { typeof(ConnectionPriority), s => ConnectionPriority.TryFromValue(s, out var value) ? value : default },
+            { typeof(ConnectionType), s => ConnectionType.TryFromValue(s, out var value) ? value : default },
+            { typeof(DataTypeClass), s => DataTypeClass.TryFromValue(s, out var value) ? value : default },
+            { typeof(DataTypeFamily), s => DataTypeFamily.TryFromValue(s, out var value) ? value : default },
+            { typeof(ExternalAccess), s => ExternalAccess.TryFromName(s, out var value) ? value : default },
+            { typeof(KeyingState), s => KeyingState.TryFromValue(s, out var value) ? value : default },
+            { typeof(ProcessorType), s => ProcessorType.TryFromValue(s, out var value) ? value : default },
+            { typeof(ProductionTrigger), s => ProductionTrigger.TryFromValue(s, out var value) ? value : default },
+            { typeof(ProgramType), s => ProgramType.TryFromValue(s, out var value) ? value : default },
+            { typeof(Radix), s => Radix.TryFromValue(s, out var value) ? value : default },
+            { typeof(RoutineType), s => RoutineType.TryFromValue(s, out var value) ? value : default },
+            { typeof(RungType), s => RungType.TryFromValue(s, out var value) ? value : default },
+            { typeof(Scope), s => Scope.TryFromValue(s, out var value) ? value : default },
+            { typeof(TagType), s => TagType.TryFromValue(s, out var value) ? value : default },
+            { typeof(TagUsage), s => TagUsage.TryFromValue(s, out var value) ? value : default },
+            { typeof(TaskEventTrigger), s => TaskEventTrigger.TryFromValue(s, out var value) ? value : default },
+            { typeof(TaskType), s => TaskType.TryFromValue(s, out var value) ? value : default },
+            { typeof(TransmissionType), s => TransmissionType.TryFromValue(s, out var value) ? value : default },
             { typeof(Use), s => Use.FromName(s) },
 
             //Value Types

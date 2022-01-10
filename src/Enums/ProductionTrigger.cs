@@ -2,14 +2,28 @@
 
 namespace L5Sharp.Enums
 {
-    public class ProductionTrigger : SmartEnum<ProductionTrigger>
+    /// <summary>
+    /// An enumeration of all Logix <see cref="ProductionTrigger"/> options for a given <see cref="Core.Connection"/>.
+    /// </summary>
+    public class ProductionTrigger : SmartEnum<ProductionTrigger, string>
     {
-        private ProductionTrigger(string name, int value) : base(name, value)
+        private ProductionTrigger(string name, string value) : base(name, value)
         {
         }
         
-        public static readonly ProductionTrigger Cyclic = new ProductionTrigger(nameof(Cyclic), 0);
-        public static readonly ProductionTrigger Cos = new ProductionTrigger(nameof(Cos), 1);
-        public static readonly ProductionTrigger Application = new ProductionTrigger(nameof(Application), 2);
+        /// <summary>
+        /// Represents a Cyclic <see cref="ProductionTrigger"/> value.
+        /// </summary>
+        public static readonly ProductionTrigger Cyclic = new(nameof(Cyclic), nameof(Cyclic));
+        
+        /// <summary>
+        /// Represents a COS <see cref="ProductionTrigger"/> value.
+        /// </summary>
+        public static readonly ProductionTrigger Cos = new(nameof(Cos), nameof(Cos));
+        
+        /// <summary>
+        /// Represents a Application <see cref="ProductionTrigger"/> value.
+        /// </summary>
+        public static readonly ProductionTrigger Application = new(nameof(Application), nameof(Application));
     }
 }

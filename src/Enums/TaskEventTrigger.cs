@@ -2,20 +2,63 @@
 
 namespace L5Sharp.Enums
 {
-    public class TaskEventTrigger : SmartEnum<TaskEventTrigger>
+    /// <summary>
+    /// An enumeration of all <see cref="TaskEventTrigger"/> options for a given <see cref="Core.EventTask"/>.
+    /// </summary>
+    public class TaskEventTrigger : SmartEnum<TaskEventTrigger, string>
     {
-        private TaskEventTrigger(string name, int value) : base(name, value)
+        private TaskEventTrigger(string name, string value) : base(name, value)
         {
         }
 
-        public static readonly TaskEventTrigger AxisHome = new("Axis Home", 0);
-        public static readonly TaskEventTrigger AxisWatch = new("Axis Watch", 1);
-        public static readonly TaskEventTrigger AxisRegistration1 = new("Axis Registration 1", 2);
-        public static readonly TaskEventTrigger AxisRegistration2 = new("Axis Registration 2", 3);
-        public static readonly TaskEventTrigger MotionGroupExecution = new("Motion Group Execution", 4);
-        public static readonly TaskEventTrigger EventInstructionOnly = new("EVENT Instruction Only", 5);
-        public static readonly TaskEventTrigger ModuleInputDataStateChange = new("Module Input Data State Change", 6);
-        public static readonly TaskEventTrigger ConsumedTag = new("Consumed Tag", 7);
-        public static readonly TaskEventTrigger WindowsEvent = new("Windows Event", 8);
+        /// <summary>
+        /// Represents an AxisHome <see cref="TaskEventTrigger"/> value.
+        /// </summary>
+        public static readonly TaskEventTrigger AxisHome = new(nameof(AxisHome), "Axis Home");
+        
+        /// <summary>
+        /// Represents an AxisWatch <see cref="TaskEventTrigger"/> value.
+        /// </summary>
+        public static readonly TaskEventTrigger AxisWatch = new(nameof(AxisWatch), "Axis Watch");
+
+        /// <summary>
+        /// Represents an AxisRegistration1 <see cref="TaskEventTrigger"/> value.
+        /// </summary>
+        public static readonly TaskEventTrigger AxisRegistration1 =
+            new(nameof(AxisRegistration1), "Axis Registration 1");
+
+        /// <summary>
+        /// Represents an AxisRegistration2 <see cref="TaskEventTrigger"/> value.
+        /// </summary>
+        public static readonly TaskEventTrigger AxisRegistration2 =
+            new(nameof(AxisRegistration2), "Axis Registration 2");
+
+        /// <summary>
+        /// Represents an MotionGroupExecution <see cref="TaskEventTrigger"/> value.
+        /// </summary>
+        public static readonly TaskEventTrigger MotionGroupExecution =
+            new(nameof(MotionGroupExecution), "Motion Group Execution");
+
+        /// <summary>
+        /// Represents an EventInstructionOnly <see cref="TaskEventTrigger"/> value.
+        /// </summary>
+        public static readonly TaskEventTrigger EventInstructionOnly =
+            new(nameof(EventInstructionOnly), "EVENT Instruction Only");
+
+        /// <summary>
+        /// Represents an ModuleInputDataStateChange <see cref="TaskEventTrigger"/> value.
+        /// </summary>
+        public static readonly TaskEventTrigger ModuleInputDataStateChange =
+            new(nameof(ModuleInputDataStateChange), "Module Input Data State Change");
+
+        /// <summary>
+        /// Represents an ConsumedTag <see cref="TaskEventTrigger"/> value.
+        /// </summary>
+        public static readonly TaskEventTrigger ConsumedTag = new(nameof(ConsumedTag), "Consumed Tag");
+        
+        /// <summary>
+        /// Represents an WindowsEvent <see cref="TaskEventTrigger"/> value.
+        /// </summary>
+        public static readonly TaskEventTrigger WindowsEvent = new(nameof(WindowsEvent), "Windows Event");
     }
 }
