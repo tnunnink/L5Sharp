@@ -54,8 +54,8 @@ namespace L5Sharp.Enums
                 var inhibitTask = element.GetAttribute<ITask, bool>(t => t.InhibitTask);
                 var programs = element.Descendants("ScheduledProgram").Select(e => e.GetComponentName());
 
-                return new ContinuousTask(name, description, default, priority, watchdog,
-                    disableUpdateOutputs, inhibitTask, programs);
+                return new ContinuousTask(name, default, priority, watchdog, disableUpdateOutputs,
+                    inhibitTask, programs, description);
             }
         }
 

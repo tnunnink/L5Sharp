@@ -372,27 +372,31 @@ namespace L5Sharp.Extensions.Tests
         }
         
         [Test]
-        public void GetMembersTo_Null_ShouldThrowArgumentNullException()
+        public void GetMembersTo_Null_ShouldThrowArgumentException()
         {
             var type = new Bool();
 
-            FluentActions.Invoking(() => type.GetMembersTo(null!)).Should().Throw<ArgumentNullException>();
+            FluentActions.Invoking(() => type.GetMembersTo(null!)).Should().Throw<ArgumentException>();
         }
 
         [Test]
-        public void GetMembersTo_Atomic_ShouldReturn()
+        public void GetMembersTo_Atomic_ShouldBeEmpty()
         {
             var type = new Bool();
 
-            FluentActions.Invoking(() => type.GetMembersTo("Bit.Member")).Should().Throw<InvalidOperationException>();
+            var members = type.GetMembersTo("MemberName");
+
+            members.Should().BeEmpty();
         }
 
         [Test]
-        public void GetMembersTo_ComplexAndInvalidPath_ShouldHaveExpectedCount()
+        public void GetMembersTo_ComplexAndInvalidPath_ShouldBeEmpty()
         {
             var type = new Timer();
 
-            FluentActions.Invoking(() => type.GetMembersTo("PRESET")).Should().Throw<InvalidOperationException>();
+            var members = type.GetMembersTo("PRESET");
+
+            members.Should().BeEmpty();
         }
 
         [Test]

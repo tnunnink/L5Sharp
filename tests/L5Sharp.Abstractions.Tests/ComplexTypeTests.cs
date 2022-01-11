@@ -43,10 +43,9 @@ namespace L5Sharp.Abstractions.Tests
         }
 
         [Test]
-        public void New_MemberCircularReference_ShouldThrowCircularReferenceException()
+        public void New_NullMemberComplex_ShouldThrowArgumentNullException()
         {
-            FluentActions.Invoking(() => new NullMemberComplex()).Should()
-                .Throw<ArgumentNullException>();
+            FluentActions.Invoking(() => new NullMemberComplex()).Should().Throw<ArgumentNullException>();
         }
 
         [Test]

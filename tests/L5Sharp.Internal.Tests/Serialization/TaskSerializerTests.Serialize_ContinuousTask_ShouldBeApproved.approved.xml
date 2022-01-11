@@ -1,0 +1,1 @@
+﻿<Task Name="Test" Type="CONTINUOUS" Priority="10" Watchdog="500" DisableUpdateOutputs="false" InhibitTask="false" />

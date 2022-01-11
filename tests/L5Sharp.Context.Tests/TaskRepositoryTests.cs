@@ -35,7 +35,7 @@ namespace L5Sharp.Context.Tests
 
             var tasks = context.Tasks.GetAll();
 
-            tasks.Should().HaveCount(3);
+            tasks.Should().HaveCount(5);
         }
 
         [Test]

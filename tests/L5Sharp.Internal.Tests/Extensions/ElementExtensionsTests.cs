@@ -41,7 +41,7 @@ namespace L5Sharp.Internal.Tests.Extensions
         }
 
         [Test]
-        public void GetDataType_ElementWithValidType_ShouldBeExpectedType()
+        public void GetDataType_ElementWithAtomicType_ShouldBeExpectedType()
         {
             var element = new XElement("Test", new XAttribute("DataType", "BOOL"));
 

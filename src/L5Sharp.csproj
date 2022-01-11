@@ -42,4 +42,8 @@
       <Compile Remove="Instructions\**" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Serialization\Extensions" />
+    </ItemGroup>
+
 </Project>

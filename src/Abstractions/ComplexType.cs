@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using L5Sharp.Enums;
@@ -41,7 +42,7 @@ namespace L5Sharp.Abstractions
         protected ComplexType(string name, IEnumerable<IMember<IDataType>>? members = null)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
-            Members = members ?? FindMembers();
+            Members = ValidateMembers(members ?? FindMembers());
         }
 
         /// <inheritdoc />
@@ -76,6 +77,31 @@ namespace L5Sharp.Abstractions
         public override string ToString() => Name;
 
         /// <summary>
+        /// Validates the provided member collection by ensuring they are not null and member names are unique. 
+        /// </summary>
+        /// <param name="members">The member collection to validate.</param>
+        /// <returns>A new collection of members that have been validated.</returns>
+        /// <exception cref="ArgumentNullException">members contains a null instance.</exception>
+        /// <exception cref="ComponentNameCollisionException">A duplicate member name exists in members.</exception>
+        private static IEnumerable<IMember<IDataType>> ValidateMembers(IEnumerable<IMember<IDataType>> members)
+        {
+            var valid = new Dictionary<string, IMember<IDataType>>();
+
+            foreach (var member in members)
+            {
+                if (member is null)
+                    throw new ArgumentNullException(nameof(members), "Can not register null members.");
+
+                if (valid.ContainsKey(member.Name))
+                    throw new ComponentNameCollisionException(member.Name, member.GetType());
+
+                valid.Add(member.Name, member);
+            }
+
+            return valid.Values.AsEnumerable();
+        }
+
+        /// <summary>
         /// Gets all <c>IMember</c> properties and fields defined for the current <c>IComplexType</c> using reflection.
         /// </summary>
         /// <remarks>
@@ -91,9 +117,6 @@ namespace L5Sharp.Abstractions
 
             members.AddRange(FindMemberFields());
             members.AddRange(FindMemberProperties());
-
-            if (members.GroupBy(m => m.Name).Any(i => i.Count() > 1))
-                throw new ComponentNameCollisionException();
 
             return members;
         }

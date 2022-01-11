@@ -22,7 +22,7 @@ namespace L5Sharp.Enums.Tests
             var sut = RoutineType.Rll;
 
             sut.Should().NotBeNull();
-            sut.Name.Should().Be("RLL");
+            sut.Name.Should().Be("Rll");
         }
         
         [Test]
@@ -31,7 +31,7 @@ namespace L5Sharp.Enums.Tests
             var sut = RoutineType.Fbd;
 
             sut.Should().NotBeNull();
-            sut.Name.Should().Be("FBD");
+            sut.Name.Should().Be("Fbd");
         }
         
         [Test]
@@ -40,7 +40,7 @@ namespace L5Sharp.Enums.Tests
             var sut = RoutineType.Sfc;
 
             sut.Should().NotBeNull();
-            sut.Name.Should().Be("SFC");
+            sut.Name.Should().Be("Sfc");
         }
         
         [Test]
@@ -49,25 +49,7 @@ namespace L5Sharp.Enums.Tests
             var sut = RoutineType.St;
 
             sut.Should().NotBeNull();
-            sut.Name.Should().Be("ST");
+            sut.Name.Should().Be("St");
         }
-        
-        /*[Test]
-        public void New_External_ShouldNotBeNull()
-        {
-            var sut = RoutineType.External;
-
-            sut.Should().NotBeNull();
-            sut.Name.Should().Be("External");
-        }
-        
-        [Test]
-        public void New_Encrypted_ShouldNotBeNull()
-        {
-            var sut = RoutineType.Encrypted;
-
-            sut.Should().NotBeNull();
-            sut.Name.Should().Be("Encrypted");
-        }*/
     }
 }

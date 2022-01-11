@@ -10,14 +10,16 @@ namespace L5Sharp.Enums.Tests
         public void None_WhenCalled_ShouldNotBeNull()
         {
             DataTypeFamily.None.Should().NotBeNull();
-            DataTypeFamily.None.Name.Should().Be("NoFamily");
+            DataTypeFamily.None.Name.Should().Be("None");
+            DataTypeFamily.None.Value.Should().Be("NoFamily");
         }
         
         [Test]
         public void String_WhenCalled_ShouldNotBeNull()
         {
             DataTypeFamily.String.Should().NotBeNull();
-            DataTypeFamily.String.Name.Should().Be("StringFamily");
+            DataTypeFamily.String.Name.Should().Be("String");
+            DataTypeFamily.String.Value.Should().Be("StringFamily");
         }
     }
 }

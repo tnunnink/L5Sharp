@@ -1,13 +1,10 @@
 ﻿using System;
-using System.IO;
-using System.Linq;
 using System.Xml.Linq;
+using ApprovalTests;
+using ApprovalTests.Reporters;
 using FluentAssertions;
-using L5Sharp.Common;
 using L5Sharp.Core;
 using L5Sharp.Enums;
-using L5Sharp.Extensions;
-using L5Sharp.Serialization;
 using L5Sharp.Serialization.Core;
 using NUnit.Framework;
 
@@ -16,25 +13,41 @@ namespace L5Sharp.Internal.Tests.Serialization
     [TestFixture]
     public class TaskSerializerTests
     {
-        private readonly string _fileName = Path.Combine(Environment.CurrentDirectory, @"TestFiles\Test.L5X");
-
         [Test]
-        public void TestFileExists()
+        public void Serialize_Null_ShouldThrowArgumentNullException()
         {
-            FileAssert.Exists(_fileName);
+            var serializer = new TaskSerializer();
+
+            FluentActions.Invoking(() => serializer.Serialize(null!)).Should().Throw<ArgumentNullException>();
         }
 
         [Test]
-        public void GetContinuousTaskElement_ShouldNotBeNull()
+        public void Serialize_ContinuousTask_ShouldNotBeNull()
         {
-            var element = GetContinuousTaskElement();
-            element.Should().NotBeNull();
+            var task = new ContinuousTask("Test");
+            var serializer = new TaskSerializer();
+
+            var xml = serializer.Serialize(task);
+
+            xml.Should().NotBeNull();
+        }
+
+        [Test]
+        [UseReporter(typeof(DiffReporter))]
+        public void Serialize_ContinuousTask_ShouldBeApproved()
+        {
+            var task = new ContinuousTask("Test");
+            var serializer = new TaskSerializer();
+
+            var xml = serializer.Serialize(task);
+
+            Approvals.VerifyXml(xml.ToString());
         }
 
         [Test]
         public void Deserialize_ContinuousTask_ShouldNotBeNull()
         {
-            var element = GetContinuousTaskElement();
+            var element = XElement.Parse(GetContinuousTaskData());
             var serializer = new TaskSerializer();
 
             var task = serializer.Deserialize(element);
@@ -47,13 +60,13 @@ namespace L5Sharp.Internal.Tests.Serialization
         {
             var serializer = new TaskSerializer();
 
-            FluentActions.Invoking(() => serializer.Deserialize(null)).Should().Throw<ArgumentNullException>();
+            FluentActions.Invoking(() => serializer.Deserialize(null!)).Should().Throw<ArgumentNullException>();
         }
 
         [Test]
         public void Deserialize_ContinuousTask_ShouldHaveExpectedProperties()
         {
-            var element = GetContinuousTaskElement();
+            var element = XElement.Parse(GetContinuousTaskData());
             var serializer = new TaskSerializer();
 
             var task = serializer.Deserialize(element);
@@ -67,53 +80,71 @@ namespace L5Sharp.Internal.Tests.Serialization
             task.InhibitTask.Should().Be(false);
             task.DisableUpdateOutputs.Should().Be(false);
         }
-        
-        [Test]
-        public void GetPeriodicTaskElement_ShouldNotBeNull()
-        {
-            var element = GetPeriodicTaskElement();
-            element.Should().NotBeNull();
-        }
 
         [Test]
         public void Deserialize_PeriodicTask_ShouldNotBeNull()
         {
-            var element = GetPeriodicTaskElement();
+            var element = XElement.Parse(GetPeriodicTaskData());
             var serializer = new TaskSerializer();
 
             var task = serializer.Deserialize(element);
 
             task.Should().NotBeNull();
         }
-        
+
         [Test]
         public void Deserialize_PeriodicTask_ShouldHaveExpectedProperties()
         {
-            var element = GetPeriodicTaskElement();
+            var element = XElement.Parse(GetPeriodicTaskData());
             var serializer = new TaskSerializer();
 
             var task = serializer.Deserialize(element);
 
             task.Name.Should().Be(new ComponentName("Periodic"));
-            task.Description.Should().BeEmpty();
+            task.Description.Should().Be("This is a test task 01");
             task.Type.Should().Be(TaskType.Periodic);
-            task.Priority.Should().Be(new TaskPriority(10));
-            task.Rate.Should().Be(new ScanRate(10));
-            task.Watchdog.Should().Be(new Watchdog(500));
-            task.InhibitTask.Should().Be(false);
-            task.DisableUpdateOutputs.Should().Be(false);
-        }
-
-        private XElement GetContinuousTaskElement()
-        {
-            return XDocument.Load(_fileName).Descendants(LogixNames.Task)
-                .FirstOrDefault(e => e.GetComponentName() == "Continuous");
+            task.Priority.Should().Be(new TaskPriority(5));
+            task.Rate.Should().Be(new ScanRate(1000));
+            task.Watchdog.Should().Be(new Watchdog(5000));
+            task.InhibitTask.Should().Be(true);
+            task.DisableUpdateOutputs.Should().Be(true);
         }
         
-        private XElement GetPeriodicTaskElement()
+        private static string GetContinuousTaskData()
         {
-            return XDocument.Load(_fileName).Descendants(LogixNames.Task)
-                .FirstOrDefault(e => e.GetComponentName() == "Periodic");
+            return
+                @"<Task Name=""Continuous"" Type=""CONTINUOUS"" Priority=""10"" Watchdog=""500"" DisableUpdateOutputs=""false"" InhibitTask=""false"">
+                <Description>
+                <![CDATA[Test continuous task]]>
+                </Description>
+                <ScheduledPrograms>
+                <ScheduledProgram Name=""MainProgram""/>
+                </ScheduledPrograms>
+                </Task>";
+        }
+        
+        private static string GetPeriodicTaskData()
+        {
+            return
+                @"<Task Name=""Periodic"" Type=""PERIODIC"" Rate=""1000"" Priority=""5"" Watchdog=""5000"" DisableUpdateOutputs=""true"" InhibitTask=""true"">
+                <Description>
+                <![CDATA[This is a test task 01]]>
+                </Description>
+                </Task>";
+        }
+        
+        private static string GetEventTaskData()
+        {
+            return
+                @"<Task Name=""Event"" Type=""EVENT"" Rate=""10"" Priority=""10"" Watchdog=""500"" DisableUpdateOutputs=""true"" InhibitTask=""false"">
+                <Description>
+                <![CDATA[TestEvent Task]]>
+                </Description>
+                <EventInfo EventTrigger=""EVENT Instruction Only"" EnableTimeout=""false""/>
+                <ScheduledPrograms>
+                <ScheduledProgram Name=""EventProgram01""/>
+                </ScheduledPrograms>
+                </Task>";
         }
     }
 }

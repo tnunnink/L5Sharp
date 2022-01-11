@@ -5,8 +5,6 @@ using System.Runtime.CompilerServices;
 using System.Xml.Linq;
 using L5Sharp.Core;
 
-[assembly: InternalsVisibleTo("L5Sharp.Common.Tests")]
-
 namespace L5Sharp.Common
 {
     /// <summary>
@@ -24,7 +22,9 @@ namespace L5Sharp.Common
         public static string Member = nameof(Member);
         public static string Modules = nameof(Modules);
         public static string Module = nameof(Module);
+        public static string Ports = nameof(Ports);
         public static string Port = nameof(Port);
+        public static string Connections = nameof(Connections);
         public static string Connection = nameof(Connection);
         public static string AddOnInstructionDefinitions = nameof(AddOnInstructionDefinitions);
         public static string AddOnInstructionDefinition = nameof(AddOnInstructionDefinition);
@@ -54,7 +54,7 @@ namespace L5Sharp.Common
         public static string ArrayMember = nameof(ArrayMember);
         public static string DataValueMember = nameof(DataValueMember);
         public static string StructureMember = nameof(StructureMember);
-        
+
         //Attribute Names
         public static string Name = nameof(Name);
         public static string Description = nameof(Description);
@@ -64,8 +64,6 @@ namespace L5Sharp.Common
 
 
         //Component Map Collection
-
-
         private static readonly Dictionary<Type, Tuple<string, string>> ComponentNameMap = new()
         {
             { typeof(IController), new Tuple<string, string>(Controller, string.Empty) },
@@ -76,38 +74,41 @@ namespace L5Sharp.Common
                 typeof(IAddOnInstruction),
                 new Tuple<string, string>(AddOnInstructionDefinition, AddOnInstructionDefinitions)
             },
+            { typeof(Port), new Tuple<string, string>(Port, Ports) },
+            { typeof(Connection), new Tuple<string, string>(Connection, Connections) },
             { typeof(IParameter<IDataType>), new Tuple<string, string>(Parameter, Parameters) },
             { typeof(ITag<IDataType>), new Tuple<string, string>(Tag, Tags) },
             { typeof(IProgram), new Tuple<string, string>(Program, Programs) },
             { typeof(IRoutine<ILogixContent>), new Tuple<string, string>(Routine, Routines) },
             { typeof(ILadderLogic), new Tuple<string, string>(RllContent, string.Empty) },
+            { typeof(IStructuredText), new Tuple<string, string>(StContent, string.Empty) },
             { typeof(Rung), new Tuple<string, string>(Rung, Rungs) },
             { typeof(ITask), new Tuple<string, string>(Task, Tasks) }
         };
 
         /// <summary>
-        /// A helper for dynamically getting a component/L5X <c>XName</c> based on the object type. 
+        /// A helper for dynamically getting a component <see cref="XName"/> based on the specified object type. 
         /// </summary>
-        /// <typeparam name="TComponent">The type of the <c>ILogixComponent</c> to get a XName for.</typeparam>
-        /// <returns>A <c>XName</c> that corresponds to the L5X element name for the type of component specified.</returns>
-        /// <exception cref="InvalidOperationException">When the specified <see cref="TComponent"/> has not mapping defined.</exception>
+        /// <typeparam name="TComponent">The component type to get an XName for.</typeparam>
+        /// <returns>A <see cref="string"/> that represents the L5X element name for the type of component specified.</returns>
+        /// <exception cref="InvalidOperationException">When the specified <see cref="TComponent"/> has no mapping defined.</exception>
         public static string GetComponentName<TComponent>()
         {
             var key = FindKey<TComponent>();
 
             if (key == null)
                 throw new InvalidOperationException(
-                    $"No component name mapping defined for type '{typeof(TComponent)}'");
+                    $"No component type to name mapping defined for type '{typeof(TComponent)}'");
 
             return ComponentNameMap[key].Item1;
         }
 
         /// <summary>
-        /// A helper for dynamically getting a component/L5X <c>XName</c> based on the object type. 
+        /// A helper for dynamically getting a container <see cref="XName"/> based on the specified object type. 
         /// </summary>
-        /// <typeparam name="TComponent">The type of the <c>ILogixComponent</c> to get a XName for.</typeparam>
-        /// <returns>A <c>XName</c> that corresponds to the L5X component's container name for the type of component specified.</returns>
-        /// <exception cref="InvalidOperationException">When the specified <see cref="TComponent"/> has not mapping defined.</exception>
+        /// <typeparam name="TComponent">The component type to get an XName for.</typeparam>
+        /// <returns>A <see cref="string"/> that represents the L5X container element name for the type of component specified.</returns>
+        /// <exception cref="InvalidOperationException">When the specified <see cref="TComponent"/> has no mapping defined.</exception>
         public static string GetContainerName<TComponent>()
         {
             var key = FindKey<TComponent>();

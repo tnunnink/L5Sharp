@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using L5Sharp.Common;
+using L5Sharp.Core;
 using NUnit.Framework;
 
 namespace L5Sharp.Internal.Tests.Common
@@ -43,6 +44,30 @@ namespace L5Sharp.Internal.Tests.Common
             LogixNames.ArrayMember.Should().NotBeNull();
             LogixNames.DataValueMember.Should().NotBeNull();
             LogixNames.StructureMember.Should().NotBeNull();
+        }
+
+        [Test]
+        public void GetComponentName_Controller_ShouldBeExpected()
+        {
+            var name = LogixNames.GetContainerName<Controller>();
+
+            name.Should().Be(LogixNames.Controller);
+        }
+        
+        [Test]
+        public void GetComponentName_UserDefined_ShouldBeExpected()
+        {
+            var name = LogixNames.GetContainerName<UserDefined>();
+
+            name.Should().Be(LogixNames.DataType);
+        }
+        
+        [Test]
+        public void GetComponentName_Member_ShouldBeExpected()
+        {
+            var name = LogixNames.GetContainerName<Member<IDataType>>();
+
+            name.Should().Be(LogixNames.Member);
         }
     }
 }

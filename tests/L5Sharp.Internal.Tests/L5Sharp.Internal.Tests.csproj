@@ -139,6 +139,12 @@
       <None Update="Serialization\ControllerSerializerTests.Serialize_WhenCalled_ShouldNotBeApproved.received.xml">
         <DependentUpon>ControllerSerializerTests.cs</DependentUpon>
       </None>
+      <None Update="Serialization\TaskSerializerTests.Serialize_ContinuousTask_ShouldBeApproved.approved.xml">
+        <DependentUpon>TaskSerializerTests.cs</DependentUpon>
+      </None>
+      <None Update="Serialization\TaskSerializerTests.Serialize_ContinuousTask_ShouldBeApproved.received.xml">
+        <DependentUpon>TaskSerializerTests.cs</DependentUpon>
+      </None>
     </ItemGroup>
 
 </Project>

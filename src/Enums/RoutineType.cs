@@ -69,7 +69,7 @@ namespace L5Sharp.Enums
 
         private class TypelessType : RoutineType
         {
-            public TypelessType() : base(nameof(Typeless), "Typeless")
+            public TypelessType() : base(nameof(Typeless), nameof(Typeless))
             {
                 
             }

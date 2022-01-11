@@ -30,25 +30,5 @@ namespace L5Sharp.Core.Tests
             instruction.Arguments.Should().HaveCount(1);
             instruction.Arguments.Should().Contain(a => a.Reference == "SomeBit");
         }
-        
-        [Test]
-        public void ToText_WhenCalled_ShouldHaveExpectedValue()
-        {
-            var instruction = Instruction.FromText("XIC(SomeBit)");
-
-            var text = instruction.ToText();
-
-            text.Should().Be("XIC(SomeBit)");
-        }
-        
-        [Test]
-        public void Of_WhenCalled_ShouldHaveExpectedValue()
-        {
-            var instruction = Instruction.FromText("XIC(SomeBit)");
-
-            instruction = instruction.Of("ANewBit");
-
-            instruction.ToText().Should().Be("XIC(ANewBit)");
-        }
     }
 }

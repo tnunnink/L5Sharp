@@ -15,10 +15,11 @@ namespace L5Sharp.Repositories
             _context = context;
         }
 
-        public bool Contains(string name) => _context.GetComponents<ITask>().Any(t => t.Name == name);
+        public bool Contains(string name) => _context.GetComponents<ITask>().Any(t => t.GetComponentName() == name);
 
-        public ITask? Get(string name) =>
-            _context.GetComponents<ITask>().FirstOrDefault(t => t.Name == name)?.Deserialize<ITask>();
+        public ITask? Get(string name) => 
+            _context.GetComponents<ITask>().FirstOrDefault(t => t.GetComponentName() == name)?.Deserialize<ITask>();
+
 
         public IEnumerable<ITask> GetAll() => _context.GetComponents<ITask>().Select(e => e.Deserialize<ITask>());
 

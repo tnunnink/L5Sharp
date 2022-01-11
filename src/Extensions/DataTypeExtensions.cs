@@ -88,23 +88,18 @@ namespace L5Sharp.Extensions
         }
 
         /// <summary>
-        /// Gets all nested <see cref="IMember{TDataType}"/> objects up and to the final member name specified
-        /// by the provided <see cref="TagName"/> value. 
+        /// Gets a collection of members that represent the sequence of members to a specific descendant member.
         /// </summary>
         /// <param name="dataType">The current <see cref="IDataType"/> instance.</param>
-        /// <param name="tagName">The full tag name for which to retrieve all nested members for.</param>
+        /// <param name="tagName">The <see cref="TagName"/> value that represents a path to a descendant member.</param>
         /// <returns>
-        /// A sequence of <see cref="IMember{TDataType}"/> that represent all the members specified in the provided tag name value.
+        /// If all members of the provided tag name exist as a descendants of the current data type, a sequence of
+        /// <see cref="IMember{TDataType}"/> that (in order) represent the instances of each member in the provided
+        /// tag name value. If the tag name does not represent a valid descendant, then an empty collection of
+        /// <see cref="IMember{TDataType}"/>.
         /// </returns>
-        /// <exception cref="ArgumentNullException">tagName is null.</exception>
-        /// <exception cref="InvalidOperationException">
-        /// The path defined by the provided tag name is not valid as a hierarchical path to a descendent member
-        /// of the <see cref="IDataType"/>.
-        /// </exception>
-        /// <remarks>
-        /// This method will recursively traverse the nested hierarchy of data type members to find all tag names.
-        /// </remarks>
-        public static IEnumerable<IMember<IDataType>>? GetMembersTo(this IDataType dataType, TagName tagName)
+        /// <exception cref="ArgumentException">tagName is null or empty.</exception>
+        public static IEnumerable<IMember<IDataType>> GetMembersTo(this IDataType dataType, TagName tagName)
         {
             if (string.IsNullOrEmpty(tagName))
                 throw new ArgumentException("TagName can not be null or empty.");
@@ -123,7 +118,7 @@ namespace L5Sharp.Extensions
                 members = member.DataType.GetMembers().ToList();
             }
 
-            return results.Count == tagName.Members.Count() ? results : null;
+            return results.Count == tagName.Members.Count() ? results : Enumerable.Empty<IMember<IDataType>>();
         }
 
         /// <summary>

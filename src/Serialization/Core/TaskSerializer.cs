@@ -21,18 +21,18 @@ namespace L5Sharp.Serialization.Core
 
             element.AddAttribute(component, c => c.Name);
             element.AddElement(component, c => c.Description);
-            element.AddAttribute(component, c => c.Type);
-            element.AddAttribute(component, c => c.Rate);
+            element.AddAttribute(component, c => c.Type.Value, nameOverride: nameof(component.Type));
+            element.AddAttribute(component, c => c.Rate, t => t.Type != TaskType.Continuous);
             element.AddAttribute(component, c => c.Priority);
             element.AddAttribute(component, c => c.Watchdog);
             element.AddAttribute(component, c => c.DisableUpdateOutputs);
             element.AddAttribute(component, c => c.InhibitTask);
 
+            if (!component.ScheduledPrograms.Any()) return element;
+            
             var scheduled = new XElement(nameof(component.ScheduledPrograms));
-
             scheduled.Add(component.ScheduledPrograms
                 .Select(p => new XElement(ScheduledProgram, new XAttribute(Name, p))));
-
             element.Add(scheduled);
 
             return element;

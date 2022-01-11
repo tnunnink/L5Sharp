@@ -13,7 +13,7 @@ namespace L5Sharp.Enums.Tests
             var sut = Scope.Controller;
 
             sut.Should().NotBeNull();
-            sut.Name.Should().Be("ControllerScope");
+            sut.Value.Should().Be("ControllerScope");
         }
         
         [Test]
@@ -22,7 +22,7 @@ namespace L5Sharp.Enums.Tests
             var sut = Scope.Program;
 
             sut.Should().NotBeNull();
-            sut.Name.Should().Be("ProgramScope");
+            sut.Value.Should().Be("ProgramScope");
         }
         
         [Test]
@@ -31,7 +31,7 @@ namespace L5Sharp.Enums.Tests
             var sut = Scope.Routine;
 
             sut.Should().NotBeNull();
-            sut.Name.Should().Be("RoutineScope");
+            sut.Value.Should().Be("RoutineScope");
         }
         
         [Test]
@@ -40,7 +40,7 @@ namespace L5Sharp.Enums.Tests
             var sut = Scope.Null;
 
             sut.Should().NotBeNull();
-            sut.Name.Should().Be("NullScope");
+            sut.Value.Should().Be("NullScope");
         }
     }
 }
