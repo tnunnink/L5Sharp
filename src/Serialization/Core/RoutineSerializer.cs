@@ -5,7 +5,7 @@ using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Extensions;
 
-namespace L5Sharp.Serialization
+namespace L5Sharp.Serialization.Core
 {
     /// <summary>
     /// Provides serialization of a <see cref="IRoutine{TContent}"/> as represented in the L5X format. 

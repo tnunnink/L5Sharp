@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Runtime.CompilerServices;
 using System.Xml.Linq;
 using L5Sharp.Common;
 using L5Sharp.Components;
@@ -7,7 +6,7 @@ using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Extensions;
 
-namespace L5Sharp.Serialization
+namespace L5Sharp.Serialization.Core
 {
     internal class UserDefinedMemberSerializer : IXSerializer<IMember<IDataType>>
     {

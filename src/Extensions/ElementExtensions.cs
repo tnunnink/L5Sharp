@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Xml.Linq;
 using L5Sharp.Common;
+using L5Sharp.Core;
+using L5Sharp.Serialization;
 using L5Sharp.Serialization.Providers;
 using L5Sharp.Types;
 
@@ -46,6 +48,11 @@ namespace L5Sharp.Extensions
         /// </returns>
         public static IDataType GetDataType(this XElement element)
         {
+            var typeName = element.Attribute(LogixNames.DataType)?.Value;
+            
+            if (typeName is not null && DataType.Exists(typeName))
+                return DataType.New(typeName);
+
             return TypeProviders.TryGetValue(element.Name.ToString(), out var provider)
                 ? provider.FindType(element)
                 : new Undefined();

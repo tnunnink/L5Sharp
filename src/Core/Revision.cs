@@ -23,19 +23,17 @@ namespace L5Sharp.Core
         /// <summary>
         /// Gets the value of the Major revision number.
         /// </summary>
-        [XmlAttribute("MajorRev")]
         public ushort Major { get; }
         
         /// <summary>
         /// Gets the value of the Minor revision number.
         /// </summary>
-        [XmlAttribute("MinorRev")]
         public ushort Minor { get; }
 
         /// <summary>
         /// Gets an instance of a default <c>Revision</c> (i.e. 1.0)
         /// </summary>
-        public Revision Default => new Revision();
+        public Revision Default => new();
         
 
         /// <summary>

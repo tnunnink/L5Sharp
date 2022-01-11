@@ -25,16 +25,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <None Update="Serialization\ControllerSerializerTests.Serialize_WhenCalled_ShouldNotBeApproved.approved.xml">
-        <ParentExtension>.cs</ParentExtension>
-        <ParentFile>ControllerSerializerTests</ParentFile>
-        <DependentUpon>ControllerSerializerTests.cs</DependentUpon>
-      </None>
-      <None Update="Serialization\ControllerSerializerTests.Serialize_WhenCalled_ShouldNotBeApproved.approved.xml.bak">
-        <ParentExtension>.cs</ParentExtension>
-        <ParentFile>ControllerSerializerTests</ParentFile>
-        <DependentUpon>ControllerSerializerTests.cs</DependentUpon>
-      </None>
       <None Update="Serialization\DataValueMemberSerializerTests.Serialize_Bool_ShouldBeApproved.approved.xml">
         <DependentUpon>DataValueMemberSerializerTests.cs</DependentUpon>
         <ParentExtension>.cs</ParentExtension>
@@ -145,6 +135,9 @@
       </None>
       <None Update="Serialization\ArrayElementSerializerTests.Serialize_ValueValueTypeMember_ShouldBeApproved.received.xml">
         <DependentUpon>ArrayElementSerializerTests.cs</DependentUpon>
+      </None>
+      <None Update="Serialization\ControllerSerializerTests.Serialize_WhenCalled_ShouldNotBeApproved.received.xml">
+        <DependentUpon>ControllerSerializerTests.cs</DependentUpon>
       </None>
     </ItemGroup>
 

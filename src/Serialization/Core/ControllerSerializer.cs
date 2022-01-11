@@ -6,7 +6,7 @@ using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Extensions;
 
-namespace L5Sharp.Serialization
+namespace L5Sharp.Serialization.Core
 {
     internal class ControllerSerializer : IXSerializer<IController>
     {
@@ -22,8 +22,8 @@ namespace L5Sharp.Serialization
             element.AddAttribute(component, c => c.Name);
             element.AddElement(component, c => c.Description);
             element.AddAttribute(component, c => c.ProcessorType);
-            element.AddAttribute(component, c => c.Revision.Major);
-            element.AddAttribute(component, c => c.Revision.Minor);
+            element.AddAttribute(component, c => c.Revision.Major, nameOverride:"MajorRev");
+            element.AddAttribute(component, c => c.Revision.Minor, nameOverride:"MinorRev");
 
             element.Add(new XAttribute(nameof(component.ProjectCreationDate),
                 component.ProjectCreationDate.ToString("ddd MMM d HH:mm:ss yyyy")));

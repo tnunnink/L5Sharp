@@ -2,6 +2,7 @@
 using System.Xml.Linq;
 using L5Sharp.Common;
 using L5Sharp.Core;
+using L5Sharp.Serialization.Data;
 
 namespace L5Sharp.Serialization.Providers
 {

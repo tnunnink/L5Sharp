@@ -1,6 +1,6 @@
 ﻿using System.Xml.Linq;
 
-namespace L5Sharp.Serialization.Providers
+namespace L5Sharp.Serialization
 {
     internal interface IXDataTypeProvider
     {

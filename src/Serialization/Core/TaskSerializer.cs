@@ -5,7 +5,7 @@ using L5Sharp.Common;
 using L5Sharp.Enums;
 using L5Sharp.Extensions;
 
-namespace L5Sharp.Serialization
+namespace L5Sharp.Serialization.Core
 {
     internal class TaskSerializer : IXSerializer<ITask>
     {

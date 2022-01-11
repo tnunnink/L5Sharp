@@ -4,6 +4,7 @@ using ApprovalTests.Reporters;
 using FluentAssertions;
 using L5Sharp.Core;
 using L5Sharp.Enums;
+using L5Sharp.Serialization.Core;
 using NUnit.Framework;
 
 namespace L5Sharp.Serialization.Tests
@@ -64,8 +65,8 @@ namespace L5Sharp.Serialization.Tests
             var element = new XElement("Rung");
             element.Add(new XAttribute("Number", "0"));
             element.Add(new XAttribute("Type", "N"));
-            element.Add(new XAttribute("Comment", "This is a test comment"));
-            element.Add(new XAttribute("Text", "XIC(Bit1)XIO(Bit2)OTE(Bit3);"));
+            element.Add(new XElement("Comment", "This is a test comment"));
+            element.Add(new XElement("Text", "XIC(Bit1)XIO(Bit2)OTE(Bit3);"));
             return element;
         }
     }

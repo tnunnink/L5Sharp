@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Xml.Linq;
-using L5Sharp.Extensions;
 using L5Sharp.Common;
 using L5Sharp.Core;
 using L5Sharp.Enums;
+using L5Sharp.Extensions;
 
-namespace L5Sharp.Serialization
+namespace L5Sharp.Serialization.Core
 {
     /// <summary>
     /// Provides serialization of a <see cref="Rung"/> as represented in the L5X format. 
@@ -23,7 +23,7 @@ namespace L5Sharp.Serialization
             var element = new XElement(ElementName);
             
             element.AddAttribute(component, c => c.Number);
-            element.AddAttribute(component, c => c.Type);
+            element.AddAttribute(component, c => c.Type.Value, nameOverride: nameof(component.Type));
             element.AddElement(component,c => c.Comment);
             element.AddElement(component, c => c.Text);
             

@@ -4,7 +4,7 @@ using L5Sharp.Common;
 using L5Sharp.Core;
 using L5Sharp.Extensions;
 
-namespace L5Sharp.Serialization
+namespace L5Sharp.Serialization.Core
 {
     /// <summary>
     /// A <see cref="IXSerializer{T}"/> for the <see cref="Port"/> component.
