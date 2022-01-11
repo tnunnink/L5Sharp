@@ -2,12 +2,13 @@
 using System.ComponentModel;
 using AutoFixture;
 using FluentAssertions;
+using L5Sharp.Converters;
 using L5Sharp.Enums;
 using L5Sharp.Types;
 using L5SharpTests.Specimens;
 using NUnit.Framework;
 
-namespace L5Sharp.Converters.Tests
+namespace L5Sharp.Internal.Tests.Converters
 {
     [TestFixture]
     public class BoolConverterTests

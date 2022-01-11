@@ -17,28 +17,10 @@
 
     <ItemGroup>
       <None Remove="TestFiles\Test.xml" />
-      <None Update="DataValueMemberSerializerTests.Serialize_Bool_ShouldBeApproved.approved.xml">
-        <DependentUpon>DataValueMemberSerializerTests.cs</DependentUpon>
-      </None>
-      <None Update="DataValueMemberSerializerTests.Serialize_Dint_ShouldBeApproved.approved.xml">
-        <DependentUpon>DataValueMemberSerializerTests.cs</DependentUpon>
-      </None>
-      <None Update="RungSerializerTests.Serialize_Bool_ShouldBeApproved.approved.xml">
-        <DependentUpon>RungSerializerTests.cs</DependentUpon>
-      </None>
-      <None Update="PortSerializerTests.Serialize_ValidComponent_ShouldBeApproved.approved.xml">
-        <DependentUpon>PortSerializerTests.cs</DependentUpon>
-      </None>
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\..\src\L5Sharp.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Content Include="TestFiles\Test.L5X">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </Content>
     </ItemGroup>
 
 </Project>

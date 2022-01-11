@@ -7,8 +7,6 @@ using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Extensions;
 
-[assembly: InternalsVisibleTo("L5Sharp.Serialization.Tests")]
-
 namespace L5Sharp.Serialization
 {
     internal class UserDefinedMemberSerializer : IXSerializer<IMember<IDataType>>

@@ -1,11 +1,8 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Globalization;
-using System.Runtime.CompilerServices;
 using L5Sharp.Enums;
 using L5Sharp.Types;
-
-[assembly: InternalsVisibleTo("L5Sharp.Converters.Tests")]
 
 namespace L5Sharp.Converters
 {

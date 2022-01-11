@@ -3,10 +3,11 @@ using System.Xml.Linq;
 using FluentAssertions;
 using L5Sharp.Components;
 using L5Sharp.Enums;
+using L5Sharp.Extensions;
 using L5Sharp.Types;
 using NUnit.Framework;
 
-namespace L5Sharp.Extensions.Tests
+namespace L5Sharp.Internal.Tests.Extensions
 {
     [TestFixture]
     public class ElementExtensionsTests

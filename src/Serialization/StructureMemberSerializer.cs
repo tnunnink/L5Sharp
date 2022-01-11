@@ -3,6 +3,7 @@ using System.Linq;
 using System.Xml.Linq;
 using L5Sharp.Common;
 using L5Sharp.Components;
+using L5Sharp.Core;
 using L5Sharp.Extensions;
 
 namespace L5Sharp.Serialization
@@ -24,8 +25,8 @@ namespace L5Sharp.Serialization
             element.AddAttribute(component, m => m.Name);
             element.AddAttribute(component, m => m.DataType);
 
-            var elements = complex.Members.Select(m => m.Serialize());
-            element.Add(elements);
+            var members = complex.Members.Select(m => GetSerializer(m).Serialize(m));
+            element.Add(members); 
 
             return element;
         }
@@ -40,10 +41,25 @@ namespace L5Sharp.Serialization
                     $"Expecting element with name {LogixNames.DataValueMember} but got {element.Name}");
 
             var name = element.GetComponentName();
+            
             var serializer = new StructureSerializer();
             var dataType = serializer.Deserialize(element);
 
-            return Member.Create(name, dataType);
+            return new Member<IDataType>(name, dataType);
         }
+        private static IXSerializer<IMember<IDataType>> GetSerializer(IMember<IDataType> member)
+        {
+            if (member.IsValueMember)
+                return new DataValueMemberSerializer();
+            
+            if (member.IsStructureMember)
+                return new StructureMemberSerializer();
+            
+            if (member.IsArrayMember)
+                return new ArrayMemberSerializer();
+
+            throw new NotSupportedException($"No data member serializer is defined for member {member.Name}");
+        }
+        
     }
 }

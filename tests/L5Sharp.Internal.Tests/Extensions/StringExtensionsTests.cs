@@ -1,8 +1,9 @@
 ﻿using AutoFixture;
 using FluentAssertions;
+using L5Sharp.Extensions;
 using NUnit.Framework;
 
-namespace L5Sharp.Extensions.Tests
+namespace L5Sharp.Internal.Tests.Extensions
 {
     [TestFixture]
     public class StringExtensionsTests

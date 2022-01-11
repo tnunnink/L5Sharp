@@ -6,8 +6,8 @@ namespace L5Sharp.Core
     /// <inheritdoc cref="IMember{TDataType}" />
     public class Member<TDataType> : IMember<TDataType> where TDataType : IDataType
     {
-        internal Member(string name, TDataType dataType, Radix? radix, ExternalAccess? externalAccess,
-            string? description)
+        internal Member(string name, TDataType dataType, Radix? radix = null, ExternalAccess? externalAccess = null,
+            string? description = null)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
             DataType = dataType ?? throw new ArgumentNullException(nameof(dataType));

@@ -19,11 +19,7 @@ namespace L5Sharp.Extensions
             { LogixNames.Tag, new TagSerializer() },
             { LogixNames.Rung, new RungSerializer() },
             { LogixNames.RllContent, new LadderLogicSerializer() },
-            { LogixNames.Task, new TaskSerializer() },
-            { LogixNames.DataValueMember, new DataValueMemberSerializer() },
-            { LogixNames.ArrayMember, new ArrayMemberSerializer() },
-            { LogixNames.StructureMember, new StructureMemberSerializer() },
-            { LogixNames.Structure, new StructureSerializer() }
+            { LogixNames.Task, new TaskSerializer() }
         };
 
         public static XElement Serialize<T>(this T component, string? serializerName = null)

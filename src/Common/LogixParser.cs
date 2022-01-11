@@ -44,20 +44,18 @@ namespace L5Sharp.Common
 
         
         /// <summary>
-        /// 
+        /// Parses the provided string input to the specified generic type base ont predefined Logix parsing functions or type converters.
         /// </summary>
-        /// <param name="input"></param>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        /// <exception cref="InvalidOperationException"></exception>
+        /// <param name="input">The string input to parse.</param>
+        /// <typeparam name="T">The type of property to return.</typeparam>
+        /// <returns>The resulting parsed value.</returns>
+        /// <exception cref="InvalidOperationException">When a parser was not found to the specified type.</exception>
         public static T? Parse<T>(string input)
         {
-            var type = typeof(T);
-
-            var parser = Get(type);
+            var parser = Get(typeof(T));
 
             if (parser is null)
-                throw new InvalidOperationException($"No parse function has been defined for type '{type.Name}'");
+                throw new InvalidOperationException($"No parse function has been defined for type '{typeof(T)}'");
 
             return (T?)parser(input);
         }

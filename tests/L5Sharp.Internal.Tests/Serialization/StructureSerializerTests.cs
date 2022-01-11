@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Linq;
 using ApprovalTests;
 using ApprovalTests.Reporters;
@@ -7,11 +8,12 @@ using FluentAssertions;
 using L5Sharp.Components;
 using L5Sharp.Core;
 using L5Sharp.Enums;
+using L5Sharp.Serialization;
 using L5Sharp.Types;
 using NUnit.Framework;
 using String = L5Sharp.Types.String;
 
-namespace L5Sharp.Serialization.Tests
+namespace L5Sharp.Internal.Tests.Serialization
 {
     [TestFixture]
     public class StructureSerializerTests
@@ -49,21 +51,16 @@ namespace L5Sharp.Serialization.Tests
 
         [Test]
         [UseReporter(typeof(DiffReporter))]
-        public void Serialize_ValidComponent_ShouldBeApproved()
+        public void Serialize_DataValueValueMembers_ShouldBeApproved()
         {
             var component = new StructureType("Test", DataTypeClass.Unknown, new List<IMember<IDataType>>
             {
-                Member.Create<Bool>("RunMode"),
-                Member.Create<Bool>("ConnectionFaulted"),
-                Member.Create<Bool>("DiagnosticActive"),
+                Member.Create<Bool>("BoolMember"),
                 Member.Create<Sint>("SintMember"),
                 Member.Create<Int>("IntMember"),
                 Member.Create<Dint>("DintMember"),
                 Member.Create<Lint>("LintMember"),
                 Member.Create<Real>("RealMember"),
-                Member.Create<String>("StringMember"),
-                Member.Create<Timer>("TimerMember"),
-                Member.Create<Message>("MessageMember")
             });
             
             var serializer = new StructureSerializer();
@@ -73,6 +70,24 @@ namespace L5Sharp.Serialization.Tests
             Approvals.VerifyXml(xml.ToString());
         }
         
+        [Test]
+        [UseReporter(typeof(DiffReporter))]
+        public void Serialize_StructureMembers_ShouldBeApproved()
+        {
+            var component = new StructureType("Test", DataTypeClass.Unknown, new List<IMember<IDataType>>
+            {
+                Member.Create<String>("StringMember"),
+                Member.Create<Timer>("SintMember"),
+                Member.Create<Counter>("IntMember"),
+            });
+            
+            var serializer = new StructureSerializer();
+
+            var xml = serializer.Serialize(component);
+
+            Approvals.VerifyXml(xml.ToString());
+        }
+
         [Test]
         public void Deserialize_Null_ShouldThrowArgumentNullException()
         {
@@ -90,7 +105,7 @@ namespace L5Sharp.Serialization.Tests
 
             FluentActions.Invoking(() => serializer.Deserialize(element)).Should().Throw<ArgumentException>();
         }
-        
+
         [Test]
         public void Deserialize_ValidElement_ShouldNotBeNull()
         {
@@ -101,9 +116,9 @@ namespace L5Sharp.Serialization.Tests
 
             component.Should().NotBeNull();
         }
-        
+
         [Test]
-        public void Deserialize_ValidBoolElement_ShouldHaveExpectedProperties()
+        public void Deserialize_ValidElement_ShouldHaveExpectedProperties()
         {
             var element = XElement.Parse(GetTestXml());
             var serializer = new StructureSerializer();
@@ -111,6 +126,7 @@ namespace L5Sharp.Serialization.Tests
             var component = serializer.Deserialize(element);
 
             component.Name.Should().Be("AB:5000_AI8:I:0");
+            component.Members.ToList().Should().NotBeNull();
         }
         
         private static string GetTestXml()

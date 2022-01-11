@@ -20,9 +20,9 @@ namespace L5Sharp.Serialization
             var element = new XElement(ElementName);
             
             element.AddAttribute(component, c => c.Name, nameOverride: LogixNames.DataType);
-
-            var members = component.Members.Select(m => m.Serialize());
-            element.Add(members);
+            
+            var members = component.Members.Select(m => GetSerializer(m).Serialize(m));
+            element.Add(members); 
 
             return element;
         }
@@ -32,18 +32,43 @@ namespace L5Sharp.Serialization
             if (element == null)
                 throw new ArgumentNullException(nameof(element));
 
-            if (element.Name != ElementName || element.Name == LogixNames.StructureMember)
+            if (element.Name != ElementName && element.Name != LogixNames.StructureMember)
                 throw new ArgumentException(
-                    $"Element name '{element.Name}' invalid. Expecting '{ElementName}' or {LogixNames.StructureMember}");
+                    $"Element name '{element.Name}' invalid. Expecting '{ElementName}' or '{LogixNames.StructureMember}'");
 
             var name = element.Attribute(LogixNames.DataType)?.Value;
-            var members = element.Elements().Select(e => e.Deserialize<IMember<IDataType>>(e.Name.ToString()));
-
-            //can we get class based on parent?
-            //Module = IO
-            //AOI = AddOnDefined
-            //Otherwise = Unknown?
+            
+            var members = element.Elements().Select(e => GetSerializer(e).Deserialize(e));
+            
             return new StructureType(name!, DataTypeClass.Unknown, members);
+        }
+
+        private static IXSerializer<IMember<IDataType>> GetSerializer(IMember<IDataType> member)
+        {
+            if (member.IsValueMember)
+                return new DataValueMemberSerializer();
+            
+            if (member.IsStructureMember)
+                return new StructureMemberSerializer();
+            
+            if (member.IsArrayMember)
+                return new ArrayMemberSerializer();
+
+            throw new NotSupportedException($"No data member serializer is defined for member {member.Name}");
+        }
+        
+        private static IXSerializer<IMember<IDataType>> GetSerializer(XElement element)
+        {
+            if (element.Name == LogixNames.DataValueMember)
+                return new DataValueMemberSerializer();
+            
+            if (element.Name == LogixNames.StructureMember)
+                return new StructureMemberSerializer();
+            
+            if (element.Name == LogixNames.ArrayMember)
+                return new ArrayMemberSerializer();
+
+            throw new NotSupportedException($"No data member serializer is defined for element {element.Name}");
         }
     }
 }

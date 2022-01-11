@@ -23,9 +23,9 @@ namespace L5Sharp.Core
         /// <see cref="IArrayType{TDataType}"/> can construct an instance internally, which means you don't need
         /// to provide it.
         /// </param>
-        /// <param name="radix"></param>
-        /// <param name="externalAccess"></param>
-        /// <param name="description"></param>
+        /// <param name="radix">An optional radix to initialize each element of the array with.</param>
+        /// <param name="externalAccess">An optional external access to initialize each element of the array with.</param>
+        /// <param name="description">An optional description to initialize each element of the array with.</param>
         /// <exception cref="ArgumentNullException">dimensions are null.</exception>
         /// <exception cref="ArgumentException">dimensions are empty.</exception>
         public ArrayType(Dimensions dimensions, TDataType? dataType = default,
@@ -46,13 +46,17 @@ namespace L5Sharp.Core
         }
 
         /// <summary>
-        /// 
+        /// Creates new <see cref="ArrayType{TDataType}"/> with the provided dimensions and initial data type collection.
         /// </summary>
-        /// <param name="dimensions"></param>
-        /// <param name="dataTypes"></param>
-        /// <exception cref="ArgumentNullException"></exception>
-        /// <exception cref="ArgumentException"></exception>
-        public ArrayType(Dimensions dimensions, IEnumerable<TDataType> dataTypes)
+        /// <param name="dimensions">The dimensions of the array type.</param>
+        /// <param name="dataTypes">A collection of types to initialize the array with. This will</param>
+        /// <param name="radix">An optional radix to initialize each element of the array with.</param>
+        /// <param name="externalAccess">An optional external access to initialize each element of the array with.</param>
+        /// <param name="description">An optional description to initialize each element of the array with.</param>
+        /// <exception cref="ArgumentNullException">dimensions or dataTypes are null.</exception>
+        /// <exception cref="ArgumentException">dimensions are empty.</exception>
+        public ArrayType(Dimensions dimensions, IEnumerable<TDataType> dataTypes,
+            Radix? radix = null, ExternalAccess? externalAccess = null, string? description = null)
         {
             if (dimensions is null)
                 throw new ArgumentNullException(nameof(dimensions));
@@ -65,7 +69,8 @@ namespace L5Sharp.Core
             if (dataTypes is null)
                 throw new ArgumentNullException(nameof(dataTypes));
 
-            _elements = dimensions.CreateMembers(dataTypes).ToDictionary(x => x.Name);
+            _elements = dimensions.CreateMembers(dataTypes, radix, externalAccess, description)
+                .ToDictionary(x => x.Name);
         }
 
         /// <inheritdoc />

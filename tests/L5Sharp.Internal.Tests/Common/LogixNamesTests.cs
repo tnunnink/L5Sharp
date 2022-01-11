@@ -1,7 +1,8 @@
 ﻿using FluentAssertions;
+using L5Sharp.Common;
 using NUnit.Framework;
 
-namespace L5Sharp.Common.Tests
+namespace L5Sharp.Internal.Tests.Common
 {
     [TestFixture]
     public class LogixNamesTests

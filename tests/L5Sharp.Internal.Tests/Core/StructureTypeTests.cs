@@ -8,7 +8,7 @@ using L5Sharp.Enums;
 using L5Sharp.Types;
 using NUnit.Framework;
 
-namespace L5Sharp.Internal.Tests
+namespace L5Sharp.Internal.Tests.Core
 {
     [TestFixture]
     public class StructureTypeTests

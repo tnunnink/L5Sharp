@@ -2,14 +2,15 @@
 using System.ComponentModel;
 using AutoFixture;
 using FluentAssertions;
+using L5Sharp.Converters;
 using L5Sharp.Types;
 using L5SharpTests.Specimens;
 using NUnit.Framework;
 
-namespace L5Sharp.Converters.Tests
+namespace L5Sharp.Internal.Tests.Converters
 {
     [TestFixture]
-    public class DintConverterTests
+    public class SintConverterTests
     {
         private Fixture _fixture;
         private TypeConverter _converter;
@@ -24,7 +25,7 @@ namespace L5Sharp.Converters.Tests
             _fixture.Customizations.Add(new DintGenerator());
             _fixture.Customizations.Add(new LintGenerator());
 
-            _converter = TypeDescriptor.GetConverter(typeof(Dint));
+            _converter = TypeDescriptor.GetConverter(typeof(Sint));
         }
         
         [Test]
@@ -46,51 +47,12 @@ namespace L5Sharp.Converters.Tests
 
             result.Should().BeTrue();
         }
-        
-        [Test]
-        public void CanConvertFrom_short_ShouldBeTrue()
-        {
-            var value = _fixture.Create<short>();
-
-            var result = _converter.CanConvertFrom(value.GetType());
-
-            result.Should().BeTrue();
-        }
-        
-        [Test]
-        public void CanConvertFrom_int_ShouldBeTrue()
-        {
-            var value = _fixture.Create<int>();
-
-            var result = _converter.CanConvertFrom(value.GetType());
-
-            result.Should().BeTrue();
-        }
 
         [Test]
         public void CanConvertFrom_Sint_ShouldBeTrue()
         {
+            
             var value = _fixture.Create<Sint>();
-
-            var result = _converter.CanConvertFrom(value.GetType());
-
-            result.Should().BeTrue();
-        }
-        
-        [Test]
-        public void CanConvertFrom_Int_ShouldBeTrue()
-        {
-            var value = _fixture.Create<Int>();
-
-            var result = _converter.CanConvertFrom(value.GetType());
-
-            result.Should().BeTrue();
-        }
-        
-        [Test]
-        public void CanConvertFrom_Dint_ShouldBeTrue()
-        {
-            var value = _fixture.Create<Dint>();
 
             var result = _converter.CanConvertFrom(value.GetType());
 
@@ -120,27 +82,7 @@ namespace L5Sharp.Converters.Tests
         {
             var value = _fixture.Create<byte>();
 
-            var result = (Dint)_converter.ConvertFrom(value);
-
-            result.Should().Be(result);
-        }
-        
-        [Test]
-        public void ConvertFrom_short_ShouldBeExpected()
-        {
-            var value = _fixture.Create<short>();
-
-            var result = (Dint)_converter.ConvertFrom(value);
-
-            result.Should().Be(result);
-        }
-        
-        [Test]
-        public void ConvertFrom_int_ShouldBeExpected()
-        {
-            var value = _fixture.Create<int>();
-
-            var result = (Dint)_converter.ConvertFrom(value);
+            var result = (Sint)_converter.ConvertFrom(value);
 
             result.Should().Be(result);
         }
@@ -150,27 +92,7 @@ namespace L5Sharp.Converters.Tests
         {
             var value = _fixture.Create<Sint>();
 
-            var result = (Dint)_converter.ConvertFrom(value);
-
-            result.Should().Be(result);
-        }
-        
-        [Test]
-        public void ConvertFrom_Int_ShouldBeExpected()
-        {
-            var value = _fixture.Create<Int>();
-
-            var result = (Dint)_converter.ConvertFrom(value);
-
-            result.Should().Be(result);
-        }
-        
-        [Test]
-        public void ConvertFrom_Dint_ShouldBeExpected()
-        {
-            var value = _fixture.Create<Dint>();
-
-            var result = (Dint)_converter.ConvertFrom(value);
+            var result = (Sint)_converter.ConvertFrom(value);
 
             result.Should().Be(result);
         }
@@ -178,13 +100,33 @@ namespace L5Sharp.Converters.Tests
         [Test]
         public void ConvertFrom_string_ShouldBeExpected()
         {
-            var value = _fixture.Create<int>().ToString();
+            var value = _fixture.Create<byte>().ToString();
 
-            var result = (Dint)_converter.ConvertFrom(value);
+            var result = (Sint)_converter.ConvertFrom(value);
 
             result.Should().Be(result);
         }
 
+        [Test]
+        public void CanConvertTo_byte_ShouldBeTrue()
+        {
+            var value = _fixture.Create<byte>();
+
+            var result = _converter.CanConvertTo(value.GetType());
+
+            result.Should().BeTrue();
+        }
+        
+        [Test]
+        public void CanConvertTo_short_ShouldBeTrue()
+        {
+            var value = _fixture.Create<short>();
+
+            var result = _converter.CanConvertTo(value.GetType());
+
+            result.Should().BeTrue();
+        }
+        
         [Test]
         public void CanConvertTo_int_ShouldBeTrue()
         {
@@ -215,6 +157,26 @@ namespace L5Sharp.Converters.Tests
             result.Should().BeTrue();
         }
 
+        [Test]
+        public void CanConvertTo_Sint_ShouldBeTrue()
+        {
+            var value = _fixture.Create<Sint>();
+
+            var result = _converter.CanConvertTo(value.GetType());
+
+            result.Should().BeTrue();
+        }
+        
+        [Test]
+        public void CanConvertTo_Int_ShouldBeTrue()
+        {
+            var value = _fixture.Create<Int>();
+
+            var result = _converter.CanConvertTo(value.GetType());
+
+            result.Should().BeTrue();
+        }
+        
         [Test]
         public void CanConvertTo_Dint_ShouldBeTrue()
         {
@@ -258,7 +220,7 @@ namespace L5Sharp.Converters.Tests
         [Test]
         public void ConvertTo_Null_ShouldThrowInvalidOperationException()
         {
-            var converter = new DintConverter();
+            var converter = new SintConverter();
 
             FluentActions.Invoking(() => converter.ConvertTo(null!, typeof(bool))!).Should()
                 .Throw<InvalidOperationException>();
@@ -267,16 +229,36 @@ namespace L5Sharp.Converters.Tests
         [Test]
         public void ConvertTo_NotSupported_ShouldThrowNotSupportedException()
         {
-            var converter = new DintConverter();
+            var converter = new SintConverter();
 
-            FluentActions.Invoking(() => converter.ConvertTo(new Dint(), typeof(bool))!).Should()
+            FluentActions.Invoking(() => converter.ConvertTo(new Sint(), typeof(bool))!).Should()
                 .Throw<NotSupportedException>();
         }
 
         [Test]
+        public void ConvertTo_byte_ShouldBeExpected()
+        {
+            var value = _fixture.Create<Sint>();
+
+            var result = (byte)_converter.ConvertTo(value, typeof(byte))!;
+
+            result.Should().Be(value);
+        }
+        
+        [Test]
+        public void ConvertTo_short_ShouldBeExpected()
+        {
+            var value = _fixture.Create<Sint>();
+
+            var result = (short)_converter.ConvertTo(value, typeof(short))!;
+
+            result.Should().Be(value);
+        }
+        
+        [Test]
         public void ConvertTo_int_ShouldBeExpected()
         {
-            var value = _fixture.Create<Dint>();
+            var value = _fixture.Create<Sint>();
 
             var result = (int)_converter.ConvertTo(value, typeof(int))!;
 
@@ -286,7 +268,7 @@ namespace L5Sharp.Converters.Tests
         [Test]
         public void ConvertTo_long_ShouldBeExpected()
         {
-            var value = _fixture.Create<Dint>();
+            var value = _fixture.Create<Sint>();
 
             var result = (long)_converter.ConvertTo(value, typeof(long))!;
 
@@ -296,7 +278,7 @@ namespace L5Sharp.Converters.Tests
         [Test]
         public void ConvertTo_float_ShouldBeExpected()
         {
-            var value = _fixture.Create<Dint>();
+            var value = _fixture.Create<Sint>();
 
             var result = (float)_converter.ConvertTo(value, typeof(float))!;
 
@@ -304,9 +286,29 @@ namespace L5Sharp.Converters.Tests
         }
 
         [Test]
+        public void ConvertTo_Sint_ShouldBeExpected()
+        {
+            var value = _fixture.Create<Sint>();
+
+            var result = (Sint)_converter.ConvertTo(value, typeof(Sint));
+
+            result.Should().Be(value);
+        }
+        
+        [Test]
+        public void ConvertTo_Int_ShouldBeExpected()
+        {
+            var value = _fixture.Create<Sint>();
+
+            var result = (Int)_converter.ConvertTo(value, typeof(Int));
+
+            result?.Value.Should().Be(value);
+        }
+        
+        [Test]
         public void ConvertTo_Dint_ShouldBeExpected()
         {
-            var value = _fixture.Create<Dint>();
+            var value = _fixture.Create<Sint>();
 
             var result = (Dint)_converter.ConvertTo(value, typeof(Dint));
 
@@ -316,7 +318,7 @@ namespace L5Sharp.Converters.Tests
         [Test]
         public void ConvertTo_Lint_ShouldBeExpected()
         {
-            var value = _fixture.Create<Dint>();
+            var value = _fixture.Create<Sint>();
 
             var result = (Lint)_converter.ConvertTo(value, typeof(Lint));
 
@@ -326,7 +328,7 @@ namespace L5Sharp.Converters.Tests
         [Test]
         public void ConvertTo_Real_ShouldBeExpected()
         {
-            var value = _fixture.Create<Dint>();
+            var value = _fixture.Create<Sint>();
 
             var result = (Real)_converter.ConvertTo(value, typeof(Real));
 
@@ -336,7 +338,7 @@ namespace L5Sharp.Converters.Tests
         [Test]
         public void ConvertTo_string_ShouldBeExpected()
         {
-            var value = _fixture.Create<Dint>();
+            var value = _fixture.Create<Sint>();
 
             var result = (string)_converter.ConvertTo(value, typeof(string));
 

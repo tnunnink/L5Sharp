@@ -1,15 +1,22 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
-using System.Runtime.CompilerServices;
 using System.Xml.Linq;
 using L5Sharp.Common;
-
-[assembly: InternalsVisibleTo("L5Sharp.Extensions.Tests")]
+using L5Sharp.Serialization.Providers;
+using L5Sharp.Types;
 
 namespace L5Sharp.Extensions
 {
     internal static class ElementExtensions
     {
+        private static readonly Dictionary<string, IXDataTypeProvider> TypeProviders = new()
+        {
+            { LogixNames.Member, new ArrayElementTypeProvider() },
+            { LogixNames.Element, new ArrayElementTypeProvider() },
+            { LogixNames.Tag, new ArrayElementTypeProvider() },
+        };
+
         /// <summary>
         /// Gets the component name value from the current <see cref="XElement"/> instance.
         /// </summary>
@@ -19,7 +26,7 @@ namespace L5Sharp.Extensions
         public static string GetComponentName(this XElement element) =>
             element.Attribute(LogixNames.Name)?.Value
             ?? throw new InvalidOperationException("The current element does not have an attribute with name 'Name'");
-        
+
         /// <summary>
         /// Gets the component description value from the current <see cref="XElement"/> instance.
         /// </summary>
@@ -39,8 +46,9 @@ namespace L5Sharp.Extensions
         /// </returns>
         public static IDataType GetDataType(this XElement element)
         {
-            var provider = new LogixTypeProvider(element);
-            return provider.FindType();
+            return TypeProviders.TryGetValue(element.Name.ToString(), out var provider)
+                ? provider.FindType(element)
+                : new Undefined();
         }
 
         /// <summary>
@@ -78,7 +86,7 @@ namespace L5Sharp.Extensions
 
             return value is not null ? LogixParser.Parse<TProperty>(value) : default;
         }
-        
+
         /// <summary>
         /// Gets the value of a specified <see cref="XAttribute"/> from the current <see cref="XElement"/> instance.
         /// </summary>
@@ -153,7 +161,7 @@ namespace L5Sharp.Extensions
                 throw new ArgumentException($"PropertySelector expression must be {typeof(MemberExpression)}");
 
             if (addCondition is not null && !addCondition(instance)) return;
-            
+
             var name = nameOverride ?? memberExpression.Member.Name;
 
             var value = propertySelector.Compile().Invoke(instance);
@@ -162,7 +170,7 @@ namespace L5Sharp.Extensions
 
             element.Add(new XAttribute(name, value));
         }
-        
+
         /// <summary>
         /// Adds the specified property of a given complex object as a child <see cref="XElement"/>
         /// to the current <see cref="XElement"/> instance. 
@@ -201,7 +209,7 @@ namespace L5Sharp.Extensions
                 throw new ArgumentException($"PropertySelector expression must be {typeof(MemberExpression)}");
 
             if (addCondition is not null && !addCondition(instance)) return;
-            
+
             var name = nameOverride ?? memberExpression.Member.Name;
 
             var value = propertySelector.Compile().Invoke(instance);

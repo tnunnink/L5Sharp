@@ -2,6 +2,7 @@
 using System.Xml.Linq;
 using L5Sharp.Common;
 using L5Sharp.Components;
+using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Extensions;
 
@@ -41,8 +42,8 @@ namespace L5Sharp.Serialization
                     $"Expecting element with name {LogixNames.DataValueMember} but got {element.Name}");
 
             var name = element.GetComponentName();
-            var atomic = (IAtomicType)element.GetDataType();
-            var radix = element.GetAttribute<IMember<IDataType>, Radix>(m => m.Radix);
+            var atomic = (IAtomicType)DataType.New(element.Attribute(LogixNames.DataType)?.Value!);
+            var radix = element.GetAttribute<IMember<IDataType>, Radix>(m => m.Radix) ?? Radix.Default(atomic);
             var value = element.Attribute(LogixNames.Value)?.Value ??
                         throw new ArgumentException("The provided element does not have a value attribute.");
             atomic.SetValue(value);

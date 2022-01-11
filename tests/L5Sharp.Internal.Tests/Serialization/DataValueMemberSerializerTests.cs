@@ -5,10 +5,11 @@ using FluentAssertions;
 using L5Sharp.Components;
 using L5Sharp.Core;
 using L5Sharp.Enums;
+using L5Sharp.Serialization;
 using L5Sharp.Types;
 using NUnit.Framework;
 
-namespace L5Sharp.Serialization.Tests
+namespace L5Sharp.Internal.Tests.Serialization
 {
     [TestFixture]
     public class DataValueMemberSerializerTests

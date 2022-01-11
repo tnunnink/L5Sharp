@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Xml.Linq;
 using L5Sharp.Common;
 using L5Sharp.Core;
@@ -17,15 +18,16 @@ namespace L5Sharp.Serialization
                 throw new ArgumentNullException(nameof(component));
 
             var element = new XElement(ElementName);
-            
+
             element.AddAttribute(component, m => m.Name);
             element.AddAttribute(component, m => m.DataType);
             element.AddAttribute(component, m => m.Dimensions);
             element.AddAttribute(component, m => m.Radix);
 
-            /*var serializer = new ArrayElementSerializer();
-            var elements = component.Select(m => serializer.Serialize(m));
-            element.Add(elements);*/
+            var serializer = new ArrayElementSerializer();
+            var arrayType = (IArrayType<IDataType>)component.DataType;
+            var elements = arrayType.Select(m => serializer.Serialize(m));
+            element.Add(elements);
 
             return element;
         }
@@ -41,12 +43,13 @@ namespace L5Sharp.Serialization
             var name = element.GetComponentName();
             var dimensions = element.GetAttribute<IMember<IDataType>, Dimensions>(m => m.Dimensions);
             var radix = element.GetAttribute<IMember<IDataType>, Radix>(m => m.Radix);
-            
-            /*var serializer = new ArrayElementSerializer();
-            var members = element.Elements().Select(e => serializer.Deserialize(e)).ToArray();*/
 
-            throw new NotImplementedException();
-            /*return ArrayMember.Create(name, members, dimensions, radix);*/
+            var serializer = new ArrayElementSerializer();
+            var members = element.Elements().Select(e => serializer.Deserialize(e));
+
+            var arrayType = new ArrayType<IDataType>(dimensions!, members.Select(m => m.DataType), radix);
+            
+            return new Member<IArrayType<IDataType>>(name, arrayType, radix);
         }
     }
 }

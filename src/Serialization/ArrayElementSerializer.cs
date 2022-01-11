@@ -1,33 +1,33 @@
-﻿/*using System;
+﻿using System;
+using System.Xml;
 using System.Xml.Linq;
 using L5Sharp.Common;
-using L5Sharp.Components;
+using L5Sharp.Core;
 using L5Sharp.Extensions;
 
 namespace L5Sharp.Serialization
 {
-    internal class ArrayElementSerializer : IXSerializer<IDataType>
+    internal class ArrayElementSerializer : IXSerializer<IMember<IDataType>>
     {
-        private const string ElementName = LogixNames.Element;
-
-        public XElement Serialize(IDataType component)
+        private static readonly XName ElementName = LogixNames.Element;
+        
+        public XElement Serialize(IMember<IDataType> component)
         {
             if (component == null)
                 throw new ArgumentNullException(nameof(component));
 
-            var element = new XElement(LogixNames.Element);
-
+            var element = new XElement(ElementName);
             element.Add(new XAttribute(LogixNames.Index, component.Name));
 
-            switch (component)
+            switch (component.DataType)
             {
                 case IAtomicType atomic:
-                    element.Add(new XAttribute(LogixNames.Value, component.Radix.Convert(atomic)));
+                    element.Add(new XAttribute(LogixNames.Value, atomic.Format(component.Radix)));
                     break;
                 case IComplexType complexType:
                 {
-                    var structureSerializer = new StructureSerializer();
-                    var structure = structureSerializer.Serialize(complexType);
+                    var serializer = new StructureSerializer();
+                    var structure = serializer.Serialize(complexType);
                     element.Add(structure);
                     break;
                 }
@@ -43,20 +43,11 @@ namespace L5Sharp.Serialization
 
             if (element.Name != ElementName)
                 throw new ArgumentException($"Element name '{element.Name}' invalid. Expecting '{ElementName}'");
-            
-            var name = element.Attribute(LogixNames.Index);
 
-            var dataType = element.Element(LogixNames.Structure) is null
-                           && element.Attribute("Value") is not null
-                ? element.GetDataType()
-                : new StructureSerializer().Deserialize(element.Element(LogixNames.Structure)!);
+            var index = element.Attribute(LogixNames.Index)?.Value;
+            var dataType = element.GetDataType();
 
-            if (dataType is not IAtomicType atomic) return Member.Create(name!, dataType);
-
-            var value = element.GetValue<IAtomicType, object>(a => a.Value);
-            atomic.SetValue(value!);
-
-            return Member.Create(name, atomic);
+            return new Member<IDataType>(index!, dataType);
         }
     }
-}*/
+}

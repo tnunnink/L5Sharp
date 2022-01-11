@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using L5Sharp.Exceptions;
 using L5Sharp.Types;
 using String = L5Sharp.Types.String;
 
+[assembly: InternalsVisibleTo("L5Sharp.Internal.Tests")]
+    
 namespace L5Sharp
 {
     /// <summary>
