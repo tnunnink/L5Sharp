@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Xml.Linq;
 using System.Xml.Schema;
 using L5Sharp.Common;
 using L5Sharp.Core;
 using L5Sharp.Repositories;
 using L5Sharp.Serialization;
+
+[assembly: InternalsVisibleTo("L5Sharp.Internal.Tests")]
 
 namespace L5Sharp
 {
