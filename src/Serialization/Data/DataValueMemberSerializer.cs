@@ -25,7 +25,6 @@ namespace L5Sharp.Serialization.Data
             element.AddAttribute(component, m => m.Name);
             element.AddAttribute(component, m => m.DataType);
             
-            //Looks like radix is added only when the type is not a Bool...
             element.AddAttribute(component, m => m.Radix,
                 m => !string.Equals(m.DataType.Name, nameof(Bool), StringComparison.OrdinalIgnoreCase));
             

@@ -107,5 +107,34 @@ namespace L5Sharp.Enums.Tests
 
             result.Should().BeFalse();
         }
+
+
+        [Test]
+        public void SupportsType_IDataType_ShouldBeFalse()
+        {
+            var result = Radix.Decimal.SupportsType(typeof(IDataType));
+
+            result.Should().BeFalse();
+        }
+
+        [Test]
+        public void SupportsType_BoolAsIDataType_ShouldBeTrue()
+        {
+            var type = (IDataType)new Bool();
+
+            var supported = Radix.Decimal.SupportsType(type);
+
+            supported.Should().BeTrue();
+        }
+
+        [Test]
+        public void SupportsType_BoolArrayAsIDataType_ShouldBeTrue()
+        {
+            var type = new ArrayType<IDataType>(new Dimensions(5), new Bool());
+
+            var supported = Radix.Decimal.SupportsType(type);
+
+            supported.Should().BeTrue();
+        }
     }
 }

@@ -137,7 +137,23 @@ namespace L5Sharp.Enums
         /// </summary>
         /// <param name="dataType">The data type instance to evaluate.</param>
         /// <returns>true if the current radix value is valid for the given data type instance. Otherwise, false.</returns>
-        public bool SupportsType(IDataType dataType) => SupportsType(dataType.GetType());
+        public bool SupportsType(IDataType dataType)
+        {
+            if (dataType is IArrayType<IDataType> arrayType)
+                dataType = arrayType.First().DataType;
+
+            if (dataType is not IAtomicType atomicType)
+                return Equals(Null);
+
+            return atomicType switch
+            {
+                Bool => Equals(Binary) || Equals(Octal) || Equals(Decimal) || Equals(Hex),
+                Lint => Equals(Binary) || Equals(Octal) || Equals(Decimal) || Equals(Hex) || Equals(Ascii) ||
+                        Equals(DateTime) || Equals(DateTimeNs),
+                Real => Equals(Float) || Equals(Exponential),
+                _ => Equals(Binary) || Equals(Octal) || Equals(Decimal) || Equals(Hex) || Equals(Ascii)
+            };
+        }
 
         /// <summary>
         /// Determines if the current <see cref="Radix"/> supports the provided Type.

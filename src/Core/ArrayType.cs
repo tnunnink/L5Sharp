@@ -74,7 +74,7 @@ namespace L5Sharp.Core
         }
 
         /// <inheritdoc />
-        public string Name => $"{SeedType.Name}{Dimensions.ToBracketNotation()}";
+        public string Name => SeedType.Name;
 
         /// <inheritdoc />
         public string Description => string.Empty;

@@ -16,6 +16,7 @@ namespace L5Sharp.Serialization.Data
                 throw new ArgumentNullException(nameof(component));
 
             var element = new XElement(ElementName);
+            
             element.Add(new XAttribute(LogixNames.Index, component.Name));
 
             switch (component.DataType)

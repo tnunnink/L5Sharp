@@ -145,6 +145,24 @@
       <None Update="Serialization\TaskSerializerTests.Serialize_ContinuousTask_ShouldBeApproved.received.xml">
         <DependentUpon>TaskSerializerTests.cs</DependentUpon>
       </None>
+      <None Update="Serialization\ArraySerializerTests.Serialize_StructureTypeArray_ShouldBeApproved.approved.xml">
+        <DependentUpon>ArraySerializerTests.cs</DependentUpon>
+      </None>
+      <None Update="Serialization\ArraySerializerTests.Serialize_StructureTypeArray_ShouldBeApproved.received.xml">
+        <DependentUpon>ArraySerializerTests.cs</DependentUpon>
+      </None>
+      <None Update="Serialization\ArraySerializerTests.Serialize_ValueTypeArray_ShouldBeApproved.received.xml">
+        <DependentUpon>ArraySerializerTests.cs</DependentUpon>
+      </None>
+      <None Update="Serialization\ArraySerializerTests.Serialize_StructureTypeArray_ShouldBeApproved.approved.xml.bak">
+        <DependentUpon>ArraySerializerTests.cs</DependentUpon>
+      </None>
+      <None Update="Serialization\DataValueMemberSerializerTests.Serialize_Bool_ShouldBeApproved.received.xml">
+        <DependentUpon>DataValueMemberSerializerTests.cs</DependentUpon>
+      </None>
+      <None Update="Serialization\ArrayElementSerializerTests.Serialize_ValueStructureTypeMember_ShouldBeApproved.received.xml">
+        <DependentUpon>ArrayElementSerializerTests.cs</DependentUpon>
+      </None>
     </ItemGroup>
 
 </Project>
