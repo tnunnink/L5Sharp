@@ -73,8 +73,16 @@ namespace L5Sharp.Types
         }
 
         /// <inheritdoc />
-        public string Format(Radix? radix = null) =>
-            radix is not null ? radix.Format(this) : Radix.Default(this).Format(this);
+        public string Format(Radix? radix = null)
+        {
+            radix ??= Radix.Default(this);
+
+            if (!radix.SupportsType(this))
+                throw new ArgumentException($"The provided Radix is not supported by the atomic type '{GetType()}'");
+
+            return radix.Format(this);
+        }
+            
 
         /// <inheritdoc />
         public IDataType Instantiate() => new Bool();

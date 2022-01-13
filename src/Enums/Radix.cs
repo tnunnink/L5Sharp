@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using Ardalis.SmartEnum;
 using L5Sharp.Extensions;
@@ -102,41 +101,30 @@ namespace L5Sharp.Enums
         public static readonly Radix DateTimeNs = new DateTimeNsRadix();
 
         /// <summary>
-        /// Gets the default Radix type for the provided data type instance.
+        /// Gets the default <see cref="Radix"/> type for the provided data type instance.
         /// </summary>
-        /// <param name="dataType">The data type to determine the default Radix for.</param>
+        /// <param name="dataType">The data type instance to evaluate.</param>
         /// <returns>
         /// <see cref="Null"/> for all non atomic types.
         /// <see cref="Float"/> for <see cref="Real"/> types.
         /// <see cref="Decimal"/> for all other atomic types.
         /// </returns>
-        public static Radix Default(IDataType dataType) => Default(dataType.GetType());
-
-        /// <summary>
-        /// Gets the default Radix type for the provided Type.
-        /// </summary>
-        /// <param name="type">The type to determine the default Radix for.</param>
-        /// <returns>
-        /// /// <see cref="Null"/> for all non atomic types.
-        /// <see cref="Float"/> for <see cref="Real"/> types.
-        /// <see cref="Decimal"/> for all other atomic types.
-        /// </returns>
-        public static Radix Default(Type type)
+        public static Radix Default(IDataType dataType)
         {
-            if (typeof(IArrayType<IDataType>).IsAssignableFrom(type))
-                type = type.GetGenericArguments()[0];
+            if (dataType is IArrayType<IDataType> arrayType)
+                dataType = arrayType.First().DataType;
 
-            if (!typeof(IAtomicType).IsAssignableFrom(type))
+            if (dataType is not IAtomicType atomicType)
                 return Null;
 
-            return type == typeof(Real) ? Float : Decimal;
+            return atomicType is Real ? Float : Decimal;
         }
 
         /// <summary>
-        /// Determines if the current Radix value supports the provided data type instance.
+        /// Determines if the current <see cref="Radix"/> supports the provided data type instance.
         /// </summary>
         /// <param name="dataType">The data type instance to evaluate.</param>
-        /// <returns>true if the current radix value is valid for the given data type instance. Otherwise, false.</returns>
+        /// <returns>true if the current radix value is valid for the given data type instance; otherwise, false.</returns>
         public bool SupportsType(IDataType dataType)
         {
             if (dataType is IArrayType<IDataType> arrayType)
@@ -153,34 +141,6 @@ namespace L5Sharp.Enums
                 Real => Equals(Float) || Equals(Exponential),
                 _ => Equals(Binary) || Equals(Octal) || Equals(Decimal) || Equals(Hex) || Equals(Ascii)
             };
-        }
-
-        /// <summary>
-        /// Determines if the current <see cref="Radix"/> supports the provided Type.
-        /// </summary>
-        /// <param name="type">The type to be evaluated for support.</param>
-        /// <returns>
-        /// true if the current Radix value is supported for the given Type. Otherwise, false.
-        /// </returns>
-        public bool SupportsType(Type type)
-        {
-            if (typeof(IArrayType<IDataType>).IsAssignableFrom(type))
-                type = type.GetGenericArguments()[0];
-
-            if (!typeof(IAtomicType).IsAssignableFrom(type))
-                return Equals(Null);
-
-            if (type == typeof(Bool))
-                return Equals(Binary) || Equals(Octal) || Equals(Decimal) || Equals(Hex);
-
-            if (type == typeof(Lint))
-                return Equals(Binary) || Equals(Octal) || Equals(Decimal) || Equals(Hex) || Equals(Ascii) ||
-                       Equals(DateTime) || Equals(DateTimeNs);
-
-            if (type == typeof(Real))
-                return Equals(Float) || Equals(Exponential);
-
-            return Equals(Binary) || Equals(Octal) || Equals(Decimal) || Equals(Hex) || Equals(Ascii);
         }
 
         /// <summary>
@@ -202,7 +162,7 @@ namespace L5Sharp.Enums
             var parser = DetermineParser(input);
 
             if (parser is null)
-                throw new ArgumentException(
+                throw new FormatException(
                     $"Could not determine Radix from input '{input}'. " +
                     "Verify that the input string is an accepted Radix format");
 
@@ -305,7 +265,7 @@ namespace L5Sharp.Enums
                 Int i => Convert.ToString(i.Value, baseNumber),
                 Dint d => Convert.ToString(d.Value, baseNumber),
                 Lint l => Convert.ToString(l.Value, baseNumber),
-                _ => string.Empty
+                _ => throw new ArgumentOutOfRangeException(nameof(atomic), atomic, null)
             };
         }
 
@@ -597,7 +557,7 @@ namespace L5Sharp.Enums
             private const int BaseNumber = 16;
             private const string ByteSeparator = "$";
 
-            public AsciiRadix() : base(nameof(Ascii).ToUpper(), nameof(Ascii).ToUpper())
+            public AsciiRadix() : base(nameof(Ascii), nameof(Ascii).ToUpper())
             {
             }
 
@@ -640,6 +600,8 @@ namespace L5Sharp.Enums
         private class DateTimeRadix : Radix
         {
             private const string Specifier = "DT#";
+            private const string MsSeparator = "_";
+            private const string InsertPattern = @"(?<=\d\d\d)(?=(\d\d\d)+(?!\d))";
 
             public DateTimeRadix() : base(nameof(DateTime), nameof(DateTime))
             {
@@ -649,27 +611,34 @@ namespace L5Sharp.Enums
             {
                 ValidateType(atomic);
 
-                //Calculate local time from provided long value.
-                var seconds = (long)atomic.Value / 1000000;
-                var dateTime = System.DateTime.UnixEpoch.AddSeconds(seconds).ToLocalTime();
-                var offset = System.DateTime.SpecifyKind(dateTime, DateTimeKind.Local);
+                var timestamp = (long)atomic.Value;
+                
+                var milliseconds = timestamp / 1000;
+                var microseconds = timestamp % 1000;
 
-                // ReSharper disable once StringLiteralTypo
-                var formatted = offset.ToString("yyyy-MM-dd-HH:mm:ss.ffffff(UTCzzz)");
+                var localTime = DateTimeOffset.FromUnixTimeMilliseconds(milliseconds)
+                    .AddTicks(microseconds * 10)
+                    .ToLocalTime();
 
-                return $"{Specifier}{formatted}";
+                var formatted = localTime.ToString("yyyy-MM-dd-HH:mm:ss.ffffff(UTCzzz)");
+
+                var str = Regex.Replace(formatted, InsertPattern, MsSeparator, RegexOptions.Compiled);
+
+                return $"{Specifier}{str}";
             }
 
             public override IAtomicType Parse(string input)
             {
                 ValidateFormat(input);
 
-                var value = input.Replace(Specifier, string.Empty);
+                var value = input.Replace(Specifier, string.Empty).Replace(MsSeparator, string.Empty);
 
                 var time = System.DateTime.ParseExact(value, "yyyy-MM-dd-HH:mm:ss.ffffff(UTCzzz)",
-                    CultureInfo.InvariantCulture);
+                    CultureInfo.InvariantCulture).ToUniversalTime();
 
-                return new Lint(time.Ticks);
+                var timestamp = (time.Ticks - System.DateTime.UnixEpoch.Ticks) / 10;
+
+                return new Lint(timestamp);
             }
         }
 

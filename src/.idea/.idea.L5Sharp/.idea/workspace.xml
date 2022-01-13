@@ -7,31 +7,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="Adding data serializers">
-      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Internal.Tests/Serialization/ArrayMemberSerializerTests.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Internal.Tests/Serialization/ArraySerializerTests.Serialize_StructureTypeArray_ShouldBeApproved.approved.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Internal.Tests/Serialization/ArraySerializerTests.Serialize_StructureTypeArray_ShouldBeApproved.approved.xml.bak" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Internal.Tests/Serialization/ArraySerializerTests.Serialize_ValueTypeArray_ShouldBeApproved.approved.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Internal.Tests/Serialization/ArraySerializerTests.Serialize_ValueTypeArray_ShouldBeApproved.approved.xml.bak" afterDir="false" />
+    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/../tests/Samples/Test.ENE.tnunnink.BAK013.acd" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tests/Samples/Test.ENE.tnunnink.BAK014.acd" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tests/Samples/Test.ENE.tnunnink.BAK015.acd" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/ArrayType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/ArrayType.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Enums/Radix.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Enums/Radix.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Serialization/Data/ArrayElementSerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Serialization/Data/ArrayElementSerializer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Serialization/Data/ArraySerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Serialization/Data/ArraySerializer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Serialization/Data/DataValueMemberSerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Serialization/Data/DataValueMemberSerializer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Extensions/StringExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Extensions/StringExtensions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Types/Bool.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Types/Bool.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Enums.Tests/RadixDateTimeTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Enums.Tests/RadixDateTimeTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Enums.Tests/RadixDecimalTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Enums.Tests/RadixDecimalTests.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Enums.Tests/RadixTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Enums.Tests/RadixTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Internal.Tests/L5Sharp.Internal.Tests.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Internal.Tests/L5Sharp.Internal.Tests.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Internal.Tests/Serialization/ArrayElementSerializerTests.Serialize_ValueStructureTypeMember_ShouldBeApproved.approved.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Internal.Tests/Serialization/ArrayElementSerializerTests.Serialize_ValueStructureTypeMember_ShouldBeApproved.approved.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Internal.Tests/Serialization/ArrayElementSerializerTests.Serialize_ValueStructureTypeMember_ShouldBeApproved.approved.xml.bak" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Internal.Tests/Serialization/ArrayElementSerializerTests.Serialize_ValueStructureTypeMember_ShouldBeApproved.approved.xml.bak" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Internal.Tests/Serialization/ArraySerializerTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Internal.Tests/Serialization/ArraySerializerTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Internal.Tests/Serialization/DataValueMemberSerializerTests.Serialize_Bool_ShouldBeApproved.approved.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Internal.Tests/Serialization/DataValueMemberSerializerTests.Serialize_Bool_ShouldBeApproved.approved.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Internal.Tests/Serialization/DataValueMemberSerializerTests.Serialize_Bool_ShouldBeApproved.approved.xml.bak" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Internal.Tests/Serialization/DataValueMemberSerializerTests.Serialize_Bool_ShouldBeApproved.approved.xml.bak" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Internal.Tests/Serialization/DataValueMemberSerializerTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Internal.Tests/Serialization/DataValueMemberSerializerTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Internal.Tests/Serialization/StructureSerializerTests.Serialize_DataValueValueMembers_ShouldBeApproved.approved.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Internal.Tests/Serialization/StructureSerializerTests.Serialize_DataValueValueMembers_ShouldBeApproved.approved.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Internal.Tests/Serialization/StructureSerializerTests.Serialize_DataValueValueMembers_ShouldBeApproved.approved.xml.bak" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Internal.Tests/Serialization/StructureSerializerTests.Serialize_DataValueValueMembers_ShouldBeApproved.approved.xml.bak" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Internal.Tests/Serialization/StructureSerializerTests.Serialize_StructureMembers_ShouldBeApproved.approved.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Internal.Tests/Serialization/StructureSerializerTests.Serialize_StructureMembers_ShouldBeApproved.approved.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Internal.Tests/Serialization/StructureSerializerTests.Serialize_StructureMembers_ShouldBeApproved.approved.xml.bak" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Internal.Tests/Serialization/StructureSerializerTests.Serialize_StructureMembers_ShouldBeApproved.approved.xml.bak" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/Samples/Test.ACD" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/Samples/Test.ACD" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -109,6 +95,7 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/f3dd31a3d4374d7d9525d887480dae958f4788/6C/Boolean.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$USER_HOME$/AppData/Local/Symbols/src/nunit/nunit/c933a883ea25263ec575a654dae69fa38000edd9/src/NUnitFramework/framework/Internal/Reflect.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/f3dd31a3d4374d7d9525d887480dae958f4788/8A/DateTimeParse.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/ed590fbceb913a99e94e76d63c3750b020ef661227a0d2b5aebeaa9ae1f8/DateTime.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/d3bfdb86da53416a9a76296e6325a7b366588/46/ThrowHelper.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/f90429cc0220488dbef4a1bcd913cfad9d800/BF/LateBoundTestFramework.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/f3dd31a3d4374d7d9525d887480dae958f4788/394/FileStream.Windows.cs" root0="SKIP_HIGHLIGHTING" />
@@ -161,6 +148,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="XThreadsFramesViewSplitterKey" value="0.496997" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
@@ -251,14 +239,9 @@
       <workItem from="1641734909983" duration="43083000" />
       <workItem from="1641835263415" duration="4203000" />
       <workItem from="1641849673776" duration="20172000" />
-      <workItem from="1641912264573" duration="23942000" />
-    </task>
-    <task id="LOCAL-00069" summary="Adding samples and documentation">
-      <created>1637518693166</created>
-      <option name="number" value="00069" />
-      <option name="presentableId" value="LOCAL-00069" />
-      <option name="project" value="LOCAL" />
-      <updated>1637518693166</updated>
+      <workItem from="1641912264573" duration="23972000" />
+      <workItem from="1642012358999" duration="1347000" />
+      <workItem from="1642034679981" duration="16262000" />
     </task>
     <task id="LOCAL-00070" summary="Enumeration tests">
       <created>1637545514243</created>
@@ -596,57 +579,74 @@
       <option name="project" value="LOCAL" />
       <updated>1641935172506</updated>
     </task>
-    <option name="localTasksCounter" value="118" />
+    <task id="LOCAL-00118" summary="Serializer testing and radix updates">
+      <created>1641961012808</created>
+      <option name="number" value="00118" />
+      <option name="presentableId" value="LOCAL-00118" />
+      <option name="project" value="LOCAL" />
+      <updated>1641961012808</updated>
+    </task>
+    <option name="localTasksCounter" value="119" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="UnitTestsCoverage.Settings">
-    <option name="coveragePercentColumnWidth" value="77" />
+    <option name="coveragePercentColumnWidth" value="75" />
     <option name="sortOrder" value="DESCENDING" />
     <option name="sortedColumn" value="1" />
-    <option name="symbolColumnWidth" value="260" />
+    <option name="symbolColumnWidth" value="255" />
     <coverage-tree-state>
       <expand>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 92% 968/11608" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 92% 995/11735" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 92% 968/11608" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 81% 743/3929" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 92% 995/11735" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 81% 733/3923" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 92% 968/11608" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 81% 743/3929" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="(1.0.0.0, .NETStandard,Version=v2.1) 81% 743/3929" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 92% 995/11735" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 81% 733/3923" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="(1.0.0.0, .NETStandard,Version=v2.1) 81% 733/3923" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 92% 968/11608" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 81% 743/3929" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="(1.0.0.0, .NETStandard,Version=v2.1) 81% 743/3929" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 81% 743/3929" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 92% 995/11735" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 81% 733/3923" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="(1.0.0.0, .NETStandard,Version=v2.1) 81% 733/3923" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 81% 733/3923" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 92% 968/11608" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 81% 743/3929" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="(1.0.0.0, .NETStandard,Version=v2.1) 81% 743/3929" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 81% 743/3929" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="Serialization 34% 369/555" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 92% 995/11735" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 81% 733/3923" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="(1.0.0.0, .NETStandard,Version=v2.1) 81% 733/3923" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 81% 733/3923" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Enums 90% 61/587" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 92% 968/11608" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 81% 743/3929" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="(1.0.0.0, .NETStandard,Version=v2.1) 81% 743/3929" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 81% 743/3929" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="Serialization 34% 369/555" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="Data 84% 29/180" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 92% 995/11735" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 81% 733/3923" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="(1.0.0.0, .NETStandard,Version=v2.1) 81% 733/3923" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 81% 733/3923" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Enums 90% 61/587" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Radix 86% 42/293" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+        </path>
+        <path>
+          <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
+          <item name="Total 92% 995/11735" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 81% 733/3923" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="(1.0.0.0, .NETStandard,Version=v2.1) 81% 733/3923" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 81% 733/3923" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Enums 90% 61/587" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Radix 86% 42/293" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="DateTimeRadix 65% 7/20" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
       </expand>
       <select />
@@ -672,7 +672,6 @@
       <path value="$PROJECT_DIR$/../.." />
     </ignored-roots>
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="working" />
     <MESSAGE value="reworking logix components to string name internally. Updated types and moved factory classes to new namespace" />
     <MESSAGE value="radix development" />
     <MESSAGE value="Radix/Types/Members" />
@@ -697,7 +696,8 @@
     <MESSAGE value="Serialization updates and testing. Clean up and test fixing." />
     <MESSAGE value="updated gitignore" />
     <MESSAGE value="Adding data serializers" />
-    <option name="LAST_COMMIT_MESSAGE" value="Adding data serializers" />
+    <MESSAGE value="Serializer testing and radix updates" />
+    <option name="LAST_COMMIT_MESSAGE" value="Serializer testing and radix updates" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -767,6 +767,8 @@
         <watch expression="name" />
         <watch expression="((L5Sharp.Core.Tag&lt;L5Sharp.Types.Real&gt;) tag)._tagMember.DataType" />
         <watch expression="datetime" />
+        <watch expression="milliseconds" />
+        <watch expression="milliseconds" />
       </configuration>
     </watches-manager>
   </component>

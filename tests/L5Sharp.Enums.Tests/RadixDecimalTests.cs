@@ -1,5 +1,6 @@
 ﻿using System;
 using FluentAssertions;
+using L5Sharp.Core;
 using L5Sharp.Types;
 using NUnit.Framework;
 
@@ -120,6 +121,67 @@ namespace L5Sharp.Enums.Tests
             var atomic = (Lint)Radix.Decimal.Parse(long.MaxValue.ToString());
 
             atomic.Value.Should().Be(long.MaxValue);
+        }
+
+        [Test]
+        public void SupportsType_Bool_ShouldBeTrue()
+        {
+            var type = new Bool();
+
+            var supported = Radix.Decimal.SupportsType(type);
+
+            supported.Should().BeTrue();
+        }
+        
+        [Test]
+        public void SupportsType_Int_ShouldBeTrue()
+        {
+            var type = new Int();
+
+            var supported = Radix.Decimal.SupportsType(type);
+
+            supported.Should().BeTrue();
+        }
+        
+        [Test]
+        public void SupportsType_Sint_ShouldBeTrue()
+        {
+            var type = new Sint();
+
+            var supported = Radix.Decimal.SupportsType(type);
+
+            supported.Should().BeTrue();
+        }
+
+        [Test]
+        public void SupportsType_Dint_ShouldBeTrue()
+        {
+            var type = new Dint();
+
+            var supported = Radix.Decimal.SupportsType(type);
+
+            supported.Should().BeTrue();
+        }
+        
+        
+        [Test]
+        public void SupportsType_Lint_ShouldBeTrue()
+        {
+            var type = new Lint();
+
+            var supported = Radix.Decimal.SupportsType(type);
+
+            supported.Should().BeTrue();
+        }
+
+        [Test]
+        public void SupportsType_Real_ShouldBeFalse()
+        {
+            var type = new Real();
+
+            var supported = Radix.Decimal.SupportsType(type);
+
+            supported.Should().BeFalse();
         }
     }
 }

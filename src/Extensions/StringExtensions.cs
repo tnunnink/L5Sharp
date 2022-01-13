@@ -111,7 +111,7 @@ namespace L5Sharp.Extensions
         /// <returns>true if the string has expected format. Leading '+' and '-' are removed. otherwise, false.</returns>
         public static bool HasExponentialFormat(this string value)
         {
-            //we don't care if it is positive or negative
+            //we don't care if it is positive or negative, so remove it.
             if (value.StartsWith("+") || value.StartsWith("-"))
             {
                 value = value.Remove(0, 1);
