@@ -250,6 +250,39 @@ namespace L5Sharp.Enums.Tests
 
             parsed.Value.Should().Be(1641016800000000);
         }
+        
+        [Test]
+        public void TryParseValue_InvalidString_ShouldBeFalseAndNull()
+        {
+            var fixture = new Fixture();
+
+            var parsed = Radix.TryParseValue(fixture.Create<string>(), out var atomicType);
+
+            parsed.Should().BeFalse();
+            atomicType.Should().BeNull();
+        }
+
+        [Test]
+        public void TryParseValue_ValidBinary_ShouldBeExpectedValue()
+        {
+            const string value = "2#0000_0101";
+
+            var parsed = Radix.TryParseValue(value, out var atomicType);
+
+            parsed.Should().BeTrue();
+            atomicType?.Value.Should().Be(5);
+        }
+        
+        [Test]
+        public void TryParseValue_ValidHexInvalidLength_ShouldBeExpectedValue()
+        {
+            const string value = "16#0000_0101_0000_0000_0000_0000_0000";
+
+            var parsed = Radix.TryParseValue(value, out var atomicType);
+
+            parsed.Should().BeFalse();
+            atomicType.Should().BeNull();
+        }
 
         [Test]
         public void SupportsType_Null_ShouldBeFalse()

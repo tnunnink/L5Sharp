@@ -194,20 +194,16 @@ namespace L5Sharp.Enums
 
             var converter = TypeDescriptor.GetConverter(typeof(TAtomic));
 
-            if (!converter.CanConvertFrom(value.GetType()))
-                throw new InvalidCastException(
-                    $"The parsed value of type {value.GetType()} cannot be converted to the specified atomic type {typeof(TAtomic)}.");
-
             return (TAtomic)converter.ConvertFrom(value)!;
         }
 
         /// <summary>
-        /// 
+        /// Attempts to parse the provided string input into an <see cref="IAtomicType"/> value.
         /// </summary>
-        /// <param name="input"></param>
-        /// <param name="result"></param>
-        /// <returns></returns>
-        /// <exception cref="ArgumentException"></exception>
+        /// <param name="input">The string input to parse.</param>
+        /// <param name="result">When the method returns, contains the value of the parse string if the parse was
+        /// successful; otherwise, null.</param>
+        /// <returns>true if the string input was successfully parsed; otherwise, false.</returns>
         public static bool TryParseValue(string input, out IAtomicType? result)
         {
             var parser = DetermineParser(input);
@@ -600,8 +596,9 @@ namespace L5Sharp.Enums
         private class DateTimeRadix : Radix
         {
             private const string Specifier = "DT#";
-            private const string MsSeparator = "_";
+            private const string Separator = "_";
             private const string InsertPattern = @"(?<=\d\d\d)(?=(\d\d\d)+(?!\d))";
+            private const long TicksPerMicrosecond = TimeSpan.TicksPerMillisecond / 1000;
 
             public DateTimeRadix() : base(nameof(DateTime), nameof(DateTime))
             {
@@ -612,17 +609,16 @@ namespace L5Sharp.Enums
                 ValidateType(atomic);
 
                 var timestamp = (long)atomic.Value;
-                
+
                 var milliseconds = timestamp / 1000;
                 var microseconds = timestamp % 1000;
+                var ticks = microseconds * TicksPerMicrosecond;
 
-                var localTime = DateTimeOffset.FromUnixTimeMilliseconds(milliseconds)
-                    .AddTicks(microseconds * 10)
-                    .ToLocalTime();
+                var localTime = DateTimeOffset.FromUnixTimeMilliseconds(milliseconds).AddTicks(ticks).ToLocalTime();
 
                 var formatted = localTime.ToString("yyyy-MM-dd-HH:mm:ss.ffffff(UTCzzz)");
 
-                var str = Regex.Replace(formatted, InsertPattern, MsSeparator, RegexOptions.Compiled);
+                var str = Regex.Replace(formatted, InsertPattern, Separator, RegexOptions.Compiled);
 
                 return $"{Specifier}{str}";
             }
@@ -631,12 +627,12 @@ namespace L5Sharp.Enums
             {
                 ValidateFormat(input);
 
-                var value = input.Replace(Specifier, string.Empty).Replace(MsSeparator, string.Empty);
+                var value = input.Replace(Specifier, string.Empty).Replace(Separator, string.Empty);
 
                 var time = System.DateTime.ParseExact(value, "yyyy-MM-dd-HH:mm:ss.ffffff(UTCzzz)",
                     CultureInfo.InvariantCulture).ToUniversalTime();
 
-                var timestamp = (time.Ticks - System.DateTime.UnixEpoch.Ticks) / 10;
+                var timestamp = (time.Ticks - System.DateTime.UnixEpoch.Ticks) / TicksPerMicrosecond;
 
                 return new Lint(timestamp);
             }
@@ -646,6 +642,8 @@ namespace L5Sharp.Enums
         private class DateTimeNsRadix : Radix
         {
             private const string Specifier = "LDT#";
+            private const string Separator = "_";
+            private const string InsertPattern = @"(?<=\d\d\d)(?=(\d\d\d)+(?!\d))";
 
             public DateTimeNsRadix() : base(nameof(DateTimeNs), nameof(DateTimeNs))
             {
@@ -655,27 +653,33 @@ namespace L5Sharp.Enums
             {
                 ValidateType(atomic);
 
-                //Calculate local time from provided long value.
-                var seconds = (long)atomic.Value / 100;
-                var dateTime = System.DateTime.UnixEpoch.AddTicks(seconds).ToLocalTime();
-                var offset = System.DateTime.SpecifyKind(dateTime, DateTimeKind.Local);
+                var timestamp = (long)atomic.Value;
 
-                // ReSharper disable once StringLiteralTypo (this is on UTC zzz)
-                var formatted = offset.ToString("yyyy-MM-dd-HH:mm:ss.fffffff(UTCzzz)");
+                var milliseconds = timestamp / 1000000;
+                var microseconds = timestamp % 1000000;
+                var ticks = microseconds / 100;
 
-                return $"{Specifier}{formatted}";
+                var localTime = DateTimeOffset.FromUnixTimeMilliseconds(milliseconds).AddTicks(ticks).ToLocalTime();
+
+                var formatted = localTime.ToString("yyyy-MM-dd-HH:mm:ss.fffffff00(UTCzzz)");
+
+                var str = Regex.Replace(formatted, InsertPattern, Separator, RegexOptions.Compiled);
+
+                return $"{Specifier}{str}";
             }
 
             public override IAtomicType Parse(string input)
             {
                 ValidateFormat(input);
 
-                var value = input.Replace(Specifier, string.Empty);
+                var value = input.Replace(Specifier, string.Empty).Replace(Separator, string.Empty);
 
-                var time = System.DateTime.ParseExact(value, "yyyy-MM-dd-HH:mm:ss.ffffff(UTCzzz)",
-                    CultureInfo.InvariantCulture);
+                var time = System.DateTime.ParseExact(value, "yyyy-MM-dd-HH:mm:ss.fffffff00(UTCzzz)",
+                    CultureInfo.InvariantCulture).ToUniversalTime();
 
-                return new Lint(time.Ticks);
+                var timestamp = (time.Ticks - System.DateTime.UnixEpoch.Ticks) * 100;
+
+                return new Lint(timestamp);
             }
         }
     }

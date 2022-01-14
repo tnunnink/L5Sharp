@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using L5Sharp.Enums;
 
 namespace L5Sharp.Core
@@ -10,10 +9,10 @@ namespace L5Sharp.Core
         /// <summary>
         /// Creates a new <see cref="Routine{TContent}"/> instance with the provided arguments.
         /// </summary>
-        /// <param name="name">The <see cref="ComponentName"/> of the <c>RllRoutine</c>.</param>
-        /// <param name="type"></param>
-        /// <param name="description">The string description of the <c>RllRoutine</c>.</param>
-        /// <param name="content"></param>
+        /// <param name="name">The name of the routine.</param>
+        /// <param name="type">The type of content that the routine contains. See <see cref="RoutineType"/>.</param>
+        /// <param name="description">The string description of the routine.</param>
+        /// <param name="content">The content of the routine. See <see cref="ILogixContent"/>.</param>
         /// <exception cref="ArgumentNullException">When name is null.</exception>
         internal Routine(string name, RoutineType? type = null, string? description = null,
             TContent? content = default)

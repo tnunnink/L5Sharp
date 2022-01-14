@@ -16,13 +16,14 @@ namespace L5Sharp
         RoutineType Type { get; }
         
         /// <summary>
-        /// Gets the <see cref="ILogixContent"/> of the current <see cref="IRoutine{TContent}"/>.
+        /// Gets the content of the <see cref="IRoutine{TContent}"/>.
         /// </summary>
         /// <value>
-        /// 
+        /// An object that implements the <see cref="ILogixContent"/>. The object is a collection of other value types
+        /// that compose the logic of the routine.
         /// </value>
         /// <remarks>
-        /// 
+        /// The content of a routine represents the logic or code of the routine...
         /// </remarks>
         TContent Content { get; }
     }

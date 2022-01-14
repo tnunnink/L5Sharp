@@ -47,20 +47,5 @@ namespace L5Sharp.Enums
         /// Represents a Static <see cref="TagType"/> value.
         /// </summary>
         public static readonly TagUsage Static = new(nameof(Static), nameof(Static));
-        
-        /// <summary>
-        /// Determines if the current Radix value supports the provided Type.
-        /// </summary>
-        /// <param name="type">The type to be evaluated for support.</param>
-        /// <returns>
-        /// true if the current Radix value is supported for the given Type. Otherwise, false.
-        /// </returns>
-        public bool SupportsType(Type type)
-        {
-            if (!typeof(IAtomicType).IsAssignableFrom(type))
-                return Equals(Null);
-
-            return true;
-        }
     }
 }

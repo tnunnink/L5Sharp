@@ -11,9 +11,7 @@ namespace L5Sharp.Core
             : base(name, dataType, radix, externalAccess, description)
         {
             
-            Usage = usage is not null && usage.SupportsType(DataType.GetType()) 
-                ? usage :
-                DataType is IAtomicType ? TagUsage.Input : TagUsage.InOut;
+            Usage = usage ?? (DataType is IAtomicType ? TagUsage.Input : TagUsage.InOut);
             Alias = alias;
             Default = DataType is IAtomicType atomicType ? atomicType : default;
             Required = Usage == TagUsage.InOut || required;
