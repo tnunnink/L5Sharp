@@ -52,7 +52,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Serialization\Extensions" />
+      <Folder Include="Serialization\Providers" />
     </ItemGroup>
 
 </Project>

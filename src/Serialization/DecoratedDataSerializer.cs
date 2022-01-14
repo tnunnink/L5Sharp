@@ -4,7 +4,7 @@ using System.Xml.Linq;
 using L5Sharp.Common;
 using L5Sharp.Extensions;
 
-namespace L5Sharp.Serialization.Core
+namespace L5Sharp.Serialization
 {
     internal class DecoratedDataSerializer : IXSerializer<IDataType>
     {

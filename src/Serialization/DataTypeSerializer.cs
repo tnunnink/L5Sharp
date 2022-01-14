@@ -5,7 +5,7 @@ using L5Sharp.Common;
 using L5Sharp.Core;
 using L5Sharp.Extensions;
 
-namespace L5Sharp.Serialization.Core
+namespace L5Sharp.Serialization
 {
     internal class DataTypeSerializer : IXSerializer<IUserDefined>
     {

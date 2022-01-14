@@ -1,7 +1,7 @@
 ﻿using System.Xml.Linq;
 using L5Sharp.Core;
 
-namespace L5Sharp.Serialization.Core
+namespace L5Sharp.Serialization
 {
     public class CommentsSerializer : IXSerializer<Comments>
     {

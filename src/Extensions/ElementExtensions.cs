@@ -1,24 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Xml.Linq;
 using L5Sharp.Common;
 using L5Sharp.Core;
-using L5Sharp.Serialization;
-using L5Sharp.Serialization.Providers;
 using L5Sharp.Types;
 
 namespace L5Sharp.Extensions
 {
     internal static class ElementExtensions
     {
-        private static readonly Dictionary<string, IXDataTypeProvider> TypeProviders = new()
-        {
-            { LogixNames.Member, new ArrayElementTypeProvider() },
-            { LogixNames.Element, new ArrayElementTypeProvider() },
-            { LogixNames.Tag, new ArrayElementTypeProvider() },
-        };
-
         /// <summary>
         /// Gets the component name value from the current <see cref="XElement"/> instance.
         /// </summary>
@@ -43,8 +33,9 @@ namespace L5Sharp.Extensions
         /// </summary>
         /// <param name="element">The current element.</param>
         /// <returns>
-        /// If the data type is known or defined in the current XDocument, then an instance of  <see cref="IDataType"/>
-        /// representing that type; otherwise, and instance of <see cref="Types.Undefined"/>.
+        /// If the data type is a known type that exists in the static <see cref="DataType"/> class,
+        /// then a new instance of that <see cref="IDataType"/>;
+        /// otherwise, and instance of <see cref="Types.Undefined"/>.
         /// </returns>
         public static IDataType GetDataType(this XElement element)
         {
@@ -53,9 +44,7 @@ namespace L5Sharp.Extensions
             if (typeName is not null && DataType.Exists(typeName))
                 return DataType.New(typeName);
 
-            return TypeProviders.TryGetValue(element.Name.ToString(), out var provider)
-                ? provider.FindType(element)
-                : new Undefined();
+            return typeName is not null ? new Undefined(typeName) : new Undefined();
         }
 
         /// <summary>

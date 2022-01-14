@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Xml.Linq;
 using L5Sharp.Common;
 using L5Sharp.Serialization;
-using L5Sharp.Serialization.Core;
 
 namespace L5Sharp.Extensions
 {

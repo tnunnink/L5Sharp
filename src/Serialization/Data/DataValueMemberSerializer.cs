@@ -27,8 +27,9 @@ namespace L5Sharp.Serialization.Data
             
             element.AddAttribute(component, m => m.Radix,
                 m => !string.Equals(m.DataType.Name, nameof(Bool), StringComparison.OrdinalIgnoreCase));
-            
-            element.Add(new XAttribute(LogixNames.Value, atomic.Format(component.Radix)));
+
+            var value = component.DataType is Bool ? atomic.Format() : atomic.Format(component.Radix);
+            element.Add(new XAttribute(LogixNames.Value, value));
 
             return element;
         }
