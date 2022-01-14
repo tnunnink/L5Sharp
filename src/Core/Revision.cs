@@ -6,8 +6,10 @@ namespace L5Sharp.Core
     /// <summary>
     /// Represents a revision or a number that is expressed by a Major and Minor revision.
     /// </summary>
-    public class Revision : IEquatable<Revision>
+    public sealed class Revision : IEquatable<Revision>, IComparable<Revision>
     {
+        private const string RevisionSeparator = ".";
+        
         /// <summary>
         /// Creates a new instance of a <c>Revision</c> withe the optional major and minor versions.
         /// </summary>
@@ -37,30 +39,39 @@ namespace L5Sharp.Core
         
 
         /// <summary>
-        /// Parses the string input into a new instance of <see cref="Revision"/>
+        /// Parses the string input into a new <see cref="Revision"/> value.
         /// </summary>
-        /// <param name="value">The string value to parse.</param>
-        /// <returns></returns>
+        /// <param name="value">The string revision value to parse.</param>
+        /// <returns>A new Revision value that represents the value of the provided string revision.</returns>
+        /// <exception cref="ArgumentException">value is empty, null, does not have the character '.', has more or less
+        /// than 2 revision numbers, or can not be parsed to a byte.</exception>
         public static Revision Parse(string value)
         {
-            //todo validate input.
-            
+            if (string.IsNullOrEmpty(value))
+                throw new ArgumentException("Value can not be null or empty");
+
+            if (!value.Contains(RevisionSeparator))
+                throw new ArgumentException($"Value must have character '{RevisionSeparator}'.");
+
             var revisions = value.Split('.');
+
+            if (revisions.Length != 2)
+                throw new ArgumentException("Value must only have a major and minor revision number.");
+
+            if (!byte.TryParse(revisions[0], out var major))
+                throw new ArgumentException("Major revision could not be parsed. Make sure the value is a byte.");
             
-            var major = byte.Parse(revisions[0]);
-            var minor = byte.Parse(revisions[1]);
-            
+            if (!byte.TryParse(revisions[1], out var minor))
+                throw new ArgumentException("Minor revision could not be parsed. Make sure the value is a byte.");
+
             return new Revision(major, minor);
         }
 
         /// <inheritdoc />
-        public override string ToString()
-        {
-            return $"{Major}.{Minor}";
-        }
+        public override string ToString() => $"{Major}{RevisionSeparator}{Minor}";
 
         /// <inheritdoc />
-        public bool Equals(Revision other)
+        public bool Equals(Revision? other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
@@ -68,29 +79,34 @@ namespace L5Sharp.Core
         }
 
         /// <inheritdoc />
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((Revision)obj);
-        }
+        public override bool Equals(object? obj) => Equals(obj as Revision);
 
         /// <inheritdoc />
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(Major, Minor);
-        }
+        public override int GetHashCode() => HashCode.Combine(Major, Minor);
 
-        public static bool operator ==(Revision left, Revision right)
-        {
-            return Equals(left, right);
-        }
+        /// <summary>
+        /// Determines if the provided objects are equal.
+        /// </summary>
+        /// <param name="left">An object to compare.</param>
+        /// <param name="right">An object to compare.</param>
+        /// <returns>true if the provided objects are equal; otherwise, false.</returns>
+        public static bool operator ==(Revision left, Revision right) => Equals(left, right);
 
-        public static bool operator !=(Revision left, Revision right)
+        /// <summary>
+        /// Determines if the provided objects are not equal.
+        /// </summary>
+        /// <param name="left">An object to compare.</param>
+        /// <param name="right">An object to compare.</param>
+        /// <returns>true if the provided objects are not equal; otherwise, false.</returns>
+        public static bool operator !=(Revision left, Revision right) => !Equals(left, right);
+
+        /// <inheritdoc />
+        public int CompareTo(Revision? other)
         {
-            return !Equals(left, right);
+            if (ReferenceEquals(this, other)) return 0;
+            if (ReferenceEquals(null, other)) return 1;
+            var majorComparison = Major.CompareTo(other.Major);
+            return majorComparison != 0 ? majorComparison : Minor.CompareTo(other.Minor);
         }
-        
-        
     }
 }

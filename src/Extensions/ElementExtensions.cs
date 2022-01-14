@@ -160,9 +160,9 @@ namespace L5Sharp.Extensions
 
             var name = nameOverride ?? memberExpression.Member.Name;
 
-            var value = propertySelector.Compile().Invoke(instance);
+            var value = propertySelector.Compile().Invoke(instance)?.ToString();
 
-            if (string.IsNullOrEmpty(value?.ToString())) return;
+            if (string.IsNullOrEmpty(value)) return;
 
             element.Add(new XAttribute(name, value));
         }
@@ -208,11 +208,11 @@ namespace L5Sharp.Extensions
 
             var name = nameOverride ?? memberExpression.Member.Name;
 
-            var value = propertySelector.Compile().Invoke(instance);
+            var value = propertySelector.Compile().Invoke(instance)?.ToString();
 
-            if (string.IsNullOrEmpty(value?.ToString())) return;
+            if (string.IsNullOrEmpty(value)) return;
 
-            element.Add(new XElement(name, new XCData(value.ToString())));
+            element.Add(new XElement(name, new XCData(value)));
         }
     }
 }

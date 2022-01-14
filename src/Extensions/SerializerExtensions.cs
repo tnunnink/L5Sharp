@@ -12,7 +12,7 @@ namespace L5Sharp.Extensions
         {
             { LogixNames.Controller, new ControllerSerializer() },
             { LogixNames.DataType, new DataTypeSerializer() },
-            { LogixNames.Member, new UserDefinedMemberSerializer() },
+            { LogixNames.Member, new MemberSerializer() },
             { LogixNames.Module, new ModuleSerializer() },
             { LogixNames.Port, new PortSerializer() },
             { LogixNames.Connection, new ConnectionSerializer() },

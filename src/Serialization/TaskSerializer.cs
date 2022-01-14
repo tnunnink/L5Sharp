@@ -43,12 +43,10 @@ namespace L5Sharp.Serialization
         {
             if (element == null)
                 throw new ArgumentNullException(nameof(element));
-
-
-            var type = element.GetAttribute<ITask, TaskType>(t => t.Type);
-
+            
             var name = element.GetComponentName();
             var description = element.GetComponentDescription();
+            var type = element.GetAttribute<ITask, TaskType>(t => t.Type);
             var rate = element.GetAttribute<ITask, ScanRate>(t => t.Rate);
             var priority = element.GetAttribute<ITask, TaskPriority>(t => t.Priority);
             var watchdog = element.GetAttribute<ITask, Watchdog>(t => t.Watchdog);
@@ -56,25 +54,24 @@ namespace L5Sharp.Serialization
             var inhibitTask = element.GetAttribute<ITask, bool>(t => t.InhibitTask);
             var programs = element.Descendants(ScheduledProgram).Select(e => e.GetComponentName());
 
+            if (type is null)
+                throw new ArgumentException("Provided element must have a task type attribute");
 
             if (type == TaskType.Continuous)
                 return new ContinuousTask(name, rate, priority, watchdog, disableUpdateOutputs,
                     inhibitTask, programs, description);
 
             if (type == TaskType.Periodic)
-                return new ContinuousTask(name, rate, priority, watchdog, disableUpdateOutputs,
+                return new PeriodicTask(name, rate, priority, watchdog, disableUpdateOutputs,
                     inhibitTask, programs, description);
-
-            if (type != TaskType.Event)
-                throw new NotSupportedException("");
 
             var eventInfo = element.Element(LogixNames.EventInfo);
             var eventTrigger = eventInfo?.GetAttribute<IEventTask, TaskEventTrigger>(t => t.EventTrigger);
             var enableTimeout = eventInfo?.GetAttribute<IEventTask, bool>(t => t.EnableTimeout) ?? false;
             var eventTag = eventInfo?.GetAttribute<IEventTask, string?>(t => t.EventTag);
 
-            return new EventTask(name, description, rate, priority, watchdog,
-                disableUpdateOutputs, inhibitTask, programs, eventTrigger, enableTimeout, eventTag);
+            return new EventTask(name, rate, priority, watchdog, disableUpdateOutputs,
+                inhibitTask, programs, eventTrigger, enableTimeout, eventTag, description);
         }
     }
 }

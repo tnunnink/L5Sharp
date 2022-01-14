@@ -11,7 +11,7 @@ namespace L5Sharp.Context.Tests
         [Test]
         public void Contains_ValidTask_ShouldBeTrue()
         {
-            var context = LogixContext.Load(Known.L5X);
+            var context = new LogixContext(Known.L5X);
 
             var task = context.Tasks.Contains("Task_01");
 
@@ -21,7 +21,7 @@ namespace L5Sharp.Context.Tests
         [Test]
         public void Get_ValidTask_ShouldNotBeNull()
         {
-            var context = LogixContext.Load(Known.L5X);
+            var context = new LogixContext(Known.L5X);
 
             var task = context.Tasks.Get("Task_01");
 
@@ -31,7 +31,7 @@ namespace L5Sharp.Context.Tests
         [Test]
         public void GetAll_WhenCalled_ShouldHaveExpectedCount()
         {
-            var context = LogixContext.Load(Known.L5X);
+            var context = new LogixContext(Known.L5X);
 
             var tasks = context.Tasks.GetAll();
 
@@ -41,7 +41,7 @@ namespace L5Sharp.Context.Tests
         [Test]
         public void FindAll_PriorityValue_ShouldHaveExpectedCount()
         {
-            var context = LogixContext.Load(Known.L5X);
+            var context = new LogixContext(Known.L5X);
 
             var results = context.Tasks.FindAll(t => t.Priority == 10);
             
@@ -51,7 +51,7 @@ namespace L5Sharp.Context.Tests
         [Test]
         public void FindAll_RateValue_ShouldHaveExpectedCount()
         {
-            var context = LogixContext.Load(Known.L5X);
+            var context = new LogixContext(Known.L5X);
 
             var results = context.Tasks.FindAll(t => t.Rate == 1000);
             
@@ -61,7 +61,7 @@ namespace L5Sharp.Context.Tests
         [Test]
         public void FindAll_DescriptionEquals_ShouldHaveExpectedCount()
         {
-            var context = LogixContext.Load(Known.L5X);
+            var context = new LogixContext(Known.L5X);
 
             var results = context.Tasks.FindAll(t => t.Description == "Test continuous task");
             
@@ -71,7 +71,7 @@ namespace L5Sharp.Context.Tests
         [Test]
         public void FindAll_DescriptionContains_ShouldHaveExpectedCount()
         {
-            var context = LogixContext.Load(Known.L5X);
+            var context = new LogixContext(Known.L5X);
 
             var results = context.Tasks.FindAll(t => t.Description.Contains("Test", StringComparison.OrdinalIgnoreCase));
             
@@ -81,7 +81,7 @@ namespace L5Sharp.Context.Tests
         [Test]
         public void Find_ListContainsDescription_ShouldWork()
         {
-            var context = LogixContext.Load(Known.L5X);
+            var context = new LogixContext(Known.L5X);
 
             var list = new List<string>
             {

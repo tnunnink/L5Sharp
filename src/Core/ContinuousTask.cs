@@ -17,19 +17,19 @@ namespace L5Sharp.Core
         }
 
         /// <summary>
-        /// Creates a new <see cref="ContinuousTask"/> with the provided name and optional description.
+        /// Creates a new <see cref="ContinuousTask"/> with the provided name.
         /// </summary>
-        /// <param name="name">The name of the <see cref="ContinuousTask"/>.</param>
+        /// <param name="name">The name of the task.</param>
         public ContinuousTask(ComponentName name)
             : this(name, new ScanRate(10), new TaskPriority(10), new Watchdog(500))
         {
         }
 
         /// <summary>
-        /// Creates a new <see cref="ContinuousTask"/> with the provided name and optional description.
+        /// Creates a new <see cref="ContinuousTask"/> with the provided name and description.
         /// </summary>
-        /// <param name="name">The name of the <see cref="ContinuousTask"/>.</param>
-        /// <param name="description">The description of the <see cref="ContinuousTask"/>.</param>
+        /// <param name="name">The name of the task.</param>
+        /// <param name="description">The description of the task.</param>
         public ContinuousTask(ComponentName name, string description)
             : this(name, new ScanRate(10), new TaskPriority(10), new Watchdog(500), description: description)
         {

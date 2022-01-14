@@ -17,6 +17,7 @@ namespace L5Sharp.Serialization
                 throw new ArgumentNullException(nameof(component));
 
             var element = new XElement(ElementName);
+            
             element.AddAttribute(component,c => c.Name);
             element.AddElement(component,c => c.Description);
             element.AddAttribute(component,c => c.Family);

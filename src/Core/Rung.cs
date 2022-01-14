@@ -10,7 +10,7 @@ namespace L5Sharp.Core
     /// Rungs make up the content of the <see cref="ILadderLogic"/> object. Rung's <see cref="Text"/> property contains
     /// the <see cref="Core.NeutralText"/> value which defines the logic for the instance.
     /// </remarks>
-    public sealed class Rung : IEquatable<Rung>
+    public sealed class Rung
     {
         /// <summary>
         /// Creates a new instance of a <c>Rung</c> with the provided parameters.
@@ -62,35 +62,14 @@ namespace L5Sharp.Core
         /// Gets the <see cref="Core.NeutralText"/> value of the <see cref="Rung"/> instance.
         /// </summary>
         public NeutralText Text { get; }
-
-        /// <summary>
-        /// Determines whether the current object's <see cref="Text"/> property is equal to that of another <see cref="Rung"/>. 
-        /// </summary>
-        /// <param name="other">Another <see cref="Rung"/> object to compare.</param>
-        /// <returns>true if both objects refer to the same instance -or- both objects <see cref="Text"/> are equal; otherwise, false.</returns>
-        public bool LogicEquals(Rung? other)
-        {
-            if (ReferenceEquals(null, other)) return false;
-            return ReferenceEquals(this, other) || Text.Equals(other.Text);
-        }
-
-        /// <inheritdoc />
-        public bool Equals(Rung? other)
-        {
-            if (ReferenceEquals(null, other)) return false;
-            if (ReferenceEquals(this, other)) return true;
-            return Number == other.Number &&
-                   Type.Equals(other.Type) &&
-                   Comment == other.Comment &&
-                   Text.Equals(other.Text);
-        }
+       
 
         /// <inheritdoc />
         public override bool Equals(object? obj)
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((Rung)obj);
+            return obj.GetType() == GetType() && Text.Equals(((Rung)obj).Text);
         }
 
         /// <inheritdoc />

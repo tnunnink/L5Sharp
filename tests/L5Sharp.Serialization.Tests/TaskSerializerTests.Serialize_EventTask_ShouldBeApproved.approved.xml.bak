@@ -1,0 +1,3 @@
+﻿<Task Name="Test" Type="EVENT" Rate="10" Priority="10" Watchdog="500" DisableUpdateOutputs="False" InhibitTask="False">
+  <Description><![CDATA[This is a test event task]]></Description>
+</Task>

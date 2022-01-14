@@ -197,6 +197,9 @@
         <ParentFile>TaskSerializerTests</ParentFile>
         <DependentUpon>TaskSerializerTests.cs</DependentUpon>
       </None>
+      <None Update="TaskSerializerTests.Serialize_EventTask_ShouldBeApproved.approved.xml">
+        <DependentUpon>TaskSerializerTests.cs</DependentUpon>
+      </None>
     </ItemGroup>
 
     <ItemGroup>

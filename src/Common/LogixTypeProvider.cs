@@ -1,8 +1,10 @@
-﻿/*using System;
+﻿using System;
 using System.Linq;
 using System.Xml.Linq;
+using L5Sharp.Core;
 using L5Sharp.Extensions;
 using L5Sharp.Serialization;
+using L5Sharp.Serialization.Data;
 using L5Sharp.Types;
 
 namespace L5Sharp.Common
@@ -29,9 +31,8 @@ namespace L5Sharp.Common
 
         public IDataType FindType()
         {
-            //First we can simply ask if this is a known type.
-            if (Logix.DataType.Contains(_typeName))
-                return Logix.DataType.Instantiate(_typeName);
+            if (DataType.Exists(_typeName))
+                return DataType.New(_typeName);
 
             //Otherwise we need to find the definition from the element's XDocument (if not null).
             var definition = FindTypeDefinition(_typeName);
@@ -42,10 +43,10 @@ namespace L5Sharp.Common
                 : new Undefined(_typeName);
         }
 
-        private IXSerializer<IDataType> GetTypeSerializer(XElement element)
+        private static IXSerializer<IDataType> GetTypeSerializer(XElement element)
         {
             if (element.Name == LogixNames.DataType)
-                return (IXSerializer<IDataType>) new DataTypeSerializer();
+                return new DataTypeSerializer() as IXSerializer<IDataType>;
 
             if (element.Name == LogixNames.Structure || element.Name == LogixNames.StructureMember)
                 return (IXSerializer<IDataType>) new StructureSerializer();
@@ -62,17 +63,17 @@ namespace L5Sharp.Common
             if (_document is null) return null;
             
             //Is this a User Defined type that exists in the L5X?
-            var userDefined = _document.Descendants(LogixNames.DataType).FirstOrDefault(x => x.GetComponentName() == name);
-            if (userDefined != null)
-                return userDefined;
+            var userDefined = _document.Descendants(LogixNames.DataType)
+                .FirstOrDefault(x => x.GetComponentName() == name);
+            
+            if (userDefined != null) return userDefined;
 
             //Is this a Module Defined type that exists in the L5X?
             var moduleDefined = _document.Descendants(LogixNames.Module)
                 .Descendants().Where(x => x.Attribute(LogixNames.DataType) != null)
                 .FirstOrDefault(x => x.Attribute(LogixNames.DataType)?.Value == name);
             
-            if (moduleDefined != null)
-                return moduleDefined;
+            if (moduleDefined != null) return moduleDefined;
 
             //Is this a AOI Defined type that exists in the L5X?
             var addOnDefined = _document.Descendants(LogixNames.AddOnInstructionDefinition)
@@ -81,4 +82,4 @@ namespace L5Sharp.Common
             return addOnDefined ?? null;
         }
     }
-}*/
+}

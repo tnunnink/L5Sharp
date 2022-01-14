@@ -8,7 +8,7 @@ using L5Sharp.Extensions;
 
 namespace L5Sharp.Serialization
 {
-    internal class UserDefinedMemberSerializer : IXSerializer<IMember<IDataType>>
+    internal class MemberSerializer : IXSerializer<IMember<IDataType>>
     {
         private static readonly XName ElementName = LogixNames.Member;
 
@@ -21,9 +21,10 @@ namespace L5Sharp.Serialization
 
             element.AddAttribute(component, c => c.Name);
             element.AddElement(component, c => c.Description);
-            element.AddAttribute(component, c => c.DataType.ToString());
+            element.AddAttribute(component, c => c.DataType);
             element.AddAttribute(component, c => c.Dimensions);
             element.AddAttribute(component, c => c.Radix);
+            element.Add(new XAttribute("Hidden", false));
             element.AddAttribute(component, c => c.ExternalAccess);
 
             return element;
@@ -43,10 +44,12 @@ namespace L5Sharp.Serialization
             var dimensions = element.GetAttribute<Member<IDataType>, Dimensions>(m => m.Dimensions);
             var radix = element.GetAttribute<Member<IDataType>, Radix>(m => m.Radix);
             var access = element.GetAttribute<Member<IDataType>, ExternalAccess>(m => m.ExternalAccess);
+
+            if (dimensions is null || dimensions.AreEmpty)
+                return new Member<IDataType>(name, dataType, radix, access, description);
             
-            
-            
-            return Member.Create(name, dataType, dimensions, radix, access, description);
+            var arrayType = new ArrayType<IDataType>(dimensions, dataType, radix, access, description);
+            return new Member<IDataType>(name, arrayType, radix, access, description);
         }
     }
 }

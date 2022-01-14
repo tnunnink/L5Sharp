@@ -17,7 +17,7 @@ namespace L5Sharp.Context.Tests
         [Test]
         public void Load_ValidFile_ShouldNotBeNull()
         {
-            var context = LogixContext.Load(Known.L5X);
+            var context = new LogixContext(Known.L5X);
 
             context.Should().NotBeNull();
         }
@@ -25,16 +25,14 @@ namespace L5Sharp.Context.Tests
         [Test]
         public void Content_ValidFile_ShouldHaveExpectedProperties()
         {
-            var context = LogixContext.Load(Known.L5X);
+            var context = new LogixContext(Known.L5X);
 
-            var info = context.Info;
-
-            info.SchemaRevision.Should().Be(new Revision());
-            info.SoftwareRevision.Should().Be(new Revision(32, 2));
-            info.TargetName.Should().Be(new ComponentName("TestController"));
-            info.TargetType.Should().Be("Controller");
-            info.Owner.Should().Be("tnunnink, EN Engineering");
-            info.ExportDate.Year.Should().BeGreaterOrEqualTo(2021);
+            context.SchemaRevision.Should().Be(new Revision());
+            context.SoftwareRevision.Should().Be(new Revision(32, 2));
+            context.TargetName.Should().Be(new ComponentName("TestController"));
+            context.TargetType.Should().Be("Controller");
+            context.Owner.Should().Be("tnunnink, EN Engineering");
+            context.ExportDate.Year.Should().BeGreaterOrEqualTo(2021);
         }
     }
 }

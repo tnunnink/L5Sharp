@@ -51,8 +51,4 @@
       <Compile Remove="Instructions\**" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Serialization\Providers" />
-    </ItemGroup>
-
 </Project>
