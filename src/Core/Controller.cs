@@ -7,7 +7,7 @@ namespace L5Sharp.Core
     public sealed class Controller : IController
     {
         internal Controller(string name, ProcessorType processorType, Revision revision, DateTime createdOn,
-            DateTime modifiedOn, string? description)
+            DateTime modifiedOn, string? description = null)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
             Description = description ?? string.Empty;
@@ -15,6 +15,18 @@ namespace L5Sharp.Core
             Revision = revision;
             ProjectCreationDate = createdOn;
             LastModifiedDate = modifiedOn;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="processorType"></param>
+        /// <param name="revision"></param>
+        /// <param name="description"></param>
+        public Controller(ComponentName name, ProcessorType processorType, Revision revision,
+            string? description = null) : this(name, processorType, revision, DateTime.Now, DateTime.Now)
+        {
         }
 
         /// <inheritdoc />
@@ -34,23 +46,5 @@ namespace L5Sharp.Core
 
         /// <inheritdoc />
         public DateTime LastModifiedDate { get; }
-
-        /// <summary>
-        /// Creates a new Controller instance with the provided arguments. 
-        /// </summary>
-        /// <param name="name">The name of the Controller.</param>
-        /// <param name="revision">The revision of the Controller.</param>
-        /// <param name="processorType">The processor type of the Controller.</param>
-        /// <param name="description">The description of the Controller.</param>
-        /// <param name="createdOf">The date/time the project was created.</param>
-        /// <param name="modifiedOn">The date/time the project was last modified.</param>
-        public static IController Create(ComponentName name, ProcessorType processorType, Revision revision,
-            string? description = null, DateTime createdOf = default, DateTime modifiedOn = default)
-        {
-            if (name is null)
-                throw new ArgumentNullException(nameof(name));
-
-            return new Controller(name, processorType, revision, createdOf, modifiedOn, description);
-        }
     }
 }

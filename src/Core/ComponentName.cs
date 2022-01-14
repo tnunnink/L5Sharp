@@ -42,7 +42,8 @@ namespace L5Sharp.Core
         /// </summary>
         /// <param name="name">The <see cref="ComponentName"/> to instance to convert</param>
         /// <returns>A <see cref="string"/> representing the value of the <see cref="ComponentName"/></returns>
-        public static implicit operator string(ComponentName name) => name._name;
+        public static implicit operator string(ComponentName name) =>
+            name is not null ? name._name : throw new ArgumentNullException(nameof(name));
 
         /// <summary>
         /// Converts between a <see cref="string"/> and a <see cref="ComponentName"/>

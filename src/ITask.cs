@@ -66,6 +66,6 @@ namespace L5Sharp
         /// validation will be performed to ensure the set of <see cref="ScheduledPrograms"/> follows the
         /// Logix guidelines for updating a <see cref="ITask"/> component.
         /// </remarks>
-        IEnumerable<ComponentName> ScheduledPrograms { get; }
+        IEnumerable<string> ScheduledPrograms { get; }
     }
 }

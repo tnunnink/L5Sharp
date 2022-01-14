@@ -10,7 +10,7 @@ using L5Sharp.Serialization.Data;
 using L5Sharp.Types;
 using NUnit.Framework;
 
-namespace L5Sharp.Internal.Tests.Serialization
+namespace L5Sharp.Serialization.Tests
 {
     [TestFixture]
     public class ArrayElementSerializerTests

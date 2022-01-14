@@ -1,4 +1,5 @@
-﻿using AutoFixture;
+﻿using System;
+using AutoFixture;
 using FluentAssertions;
 using L5Sharp.Enums;
 using L5Sharp.Exceptions;
@@ -10,19 +11,27 @@ namespace L5Sharp.Core.Tests
     public class ControllerTests
     {
         [Test]
-        public void New_ValidName_ShouldNotBeNull()
+        public void New_NullName_ShouldThrowArgumentNullException()
         {
-            var controller = Controller.Create("Test", ProcessorType.L74, new Revision(32, 01));
-
-            controller.Should().NotBeNull();
+            FluentActions.Invoking(() => new Controller(null!, ProcessorType.L71, new Revision()))
+                .Should().Throw<ArgumentNullException>();
         }
-
+        
         [Test]
         public void New_InvalidName_ShouldThrowInvalidNameException()
         {
             var fixture = new Fixture();
-            FluentActions.Invoking(() => Controller.Create(fixture.Create<string>(), ProcessorType.L71, new Revision()))
+            
+            FluentActions.Invoking(() => new Controller(fixture.Create<string>(), ProcessorType.L71, new Revision()))
                 .Should().Throw<ComponentNameInvalidException>();
+        }
+
+        [Test]
+        public void New_ValidName_ShouldNotBeNull()
+        {
+            var controller = new Controller("Test", ProcessorType.L74, new Revision(32, 01));
+
+            controller.Should().NotBeNull();
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Xml.Linq;
 using ApprovalTests;
 using ApprovalTests.Reporters;
@@ -9,19 +10,19 @@ using L5Sharp.Serialization.Data;
 using L5Sharp.Types;
 using NUnit.Framework;
 
-namespace L5Sharp.Internal.Tests.Serialization
+namespace L5Sharp.Serialization.Tests
 {
     [TestFixture]
-    public class ArraySerializerTests
+    public class ArrayMemberSerializerTests
     {
-        private ArraySerializer _serializer;
+        private ArrayMemberSerializer _serializer;
 
         [SetUp]
         public void Setup()
         {
-            _serializer = new ArraySerializer();
+            _serializer = new ArrayMemberSerializer();
         }
-        
+
         [Test]
         public void Serialize_Null_ShouldThrowArgumentNullException()
         {
@@ -31,8 +32,8 @@ namespace L5Sharp.Internal.Tests.Serialization
         [Test]
         public void Serialize_WhenCalled_ShouldNotBeNull()
         {
-            var element = new ArrayType<Bool>(new Dimensions(10));
-            
+            var element = new Member<ArrayType<Bool>>("Test", new ArrayType<Bool>(new Dimensions(5)));
+
             var xml = _serializer.Serialize(element);
 
             xml.Should().NotBeNull();
@@ -42,19 +43,19 @@ namespace L5Sharp.Internal.Tests.Serialization
         [UseReporter(typeof(DiffReporter))]
         public void Serialize_ValueTypeArray_ShouldBeApproved()
         {
-            var element = new ArrayType<Bool>(new Dimensions(10));
-            
+            var element = new Member<ArrayType<Bool>>("Test", new ArrayType<Bool>(new Dimensions(5)));
+
             var xml = _serializer.Serialize(element);
 
             Approvals.VerifyXml(xml.ToString());
         }
-        
+
         [Test]
         [UseReporter(typeof(DiffReporter))]
         public void Serialize_StructureTypeArray_ShouldBeApproved()
         {
-            var element = new ArrayType<Timer>(new Dimensions(10));
-            
+            var element = new Member<ArrayType<Bool>>("Test", new ArrayType<Bool>(new Dimensions(5)));
+
             var xml = _serializer.Serialize(element);
 
             Approvals.VerifyXml(xml.ToString());
@@ -71,15 +72,15 @@ namespace L5Sharp.Internal.Tests.Serialization
         {
             const string xml = @"<Invalid></Invalid>";
             var element = XElement.Parse(xml);
-            
+
             FluentActions.Invoking(() => _serializer.Deserialize(element)).Should().Throw<ArgumentException>();
         }
 
         [Test]
         public void Deserialize_ValueTypeArray_ShouldNotBeNull()
         {
-            var element = XElement.Parse(GetValueArrayXml());
-            
+            var element = XElement.Parse(GetValueArrayMemberXml()).Elements().First();
+
             var component = _serializer.Deserialize(element);
 
             component.Should().NotBeNull();
@@ -88,22 +89,22 @@ namespace L5Sharp.Internal.Tests.Serialization
         [Test]
         public void Deserialize_ValueTypeArray_ShouldHaveExpectedProperties()
         {
-            var element = XElement.Parse(GetValueArrayXml());
+            var element = XElement.Parse(GetValueArrayMemberXml()).Elements().First();
 
             var component = _serializer.Deserialize(element);
 
-            component.Name.Should().Be("REAL");
+            component.Name.Should().Be("BoolArray");
+            component.DataType.Should().BeOfType<ArrayType<IDataType>>();
             component.Dimensions.Should().Be(new Dimensions(5));
-            component.Class.Should().Be(DataTypeClass.Atomic);
-            component.Family.Should().Be(DataTypeFamily.None);
+            component.Radix.Should().Be(Radix.Binary);
             component.Description.Should().BeEmpty();
         }
-        
+
         [Test]
         public void Deserialize_StructureTypeArray_ShouldNotBeNull()
         {
             var element = XElement.Parse(GetStructureArrayXml());
-            
+
             var component = _serializer.Deserialize(element);
 
             component.Should().NotBeNull();
@@ -113,27 +114,63 @@ namespace L5Sharp.Internal.Tests.Serialization
         public void Deserialize_StructureTypeArray_ShouldHaveExpectedProperties()
         {
             var element = XElement.Parse(GetStructureArrayXml());
-            
+
             var component = _serializer.Deserialize(element);
 
             component.Name.Should().Be("TIMER");
             component.Dimensions.Should().Be(new Dimensions(5));
-            component.Class.Should().Be(DataTypeClass.Unknown);
-            component.Family.Should().Be(DataTypeFamily.None);
+            component.Radix.Should().Be(Radix.Binary);
             component.Description.Should().BeEmpty();
         }
 
-        private static string GetValueArrayXml()
+        private static string GetValueArrayMemberXml()
         {
-            return @"<Array DataType=""REAL"" Dimensions=""5"" Radix=""Float"">
-                <Element Index=""[0]"" Value=""0.0""/>
-                <Element Index=""[1]"" Value=""1.1""/>
-                <Element Index=""[2]"" Value=""2.2""/>
-                <Element Index=""[3]"" Value=""3.3""/>
-                <Element Index=""[4]"" Value=""4.4""/>
-                </Array>";
+            return @"<Structure DataType=""ArrayType"">
+                <ArrayMember Name=""BoolArray"" DataType=""BOOL"" Dimensions=""5"" Radix=""Binary"">
+                <Element Index=""[0]"" Value=""0""/>
+                <Element Index=""[1]"" Value=""0""/>
+                <Element Index=""[2]"" Value=""0""/>
+                <Element Index=""[3]"" Value=""0""/>
+                <Element Index=""[4]"" Value=""0""/>
+                </ArrayMember>
+                <ArrayMember Name=""SintArray"" DataType=""SINT"" Dimensions=""5"" Radix=""ASCII"">
+                <Element Index=""[0]"" Value=""'$00'""/>
+                <Element Index=""[1]"" Value=""'$00'""/>
+                <Element Index=""[2]"" Value=""'$00'""/>
+                <Element Index=""[3]"" Value=""'$00'""/>
+                <Element Index=""[4]"" Value=""'$00'""/>
+                </ArrayMember>
+                <ArrayMember Name=""IntArray"" DataType=""INT"" Dimensions=""5"" Radix=""Octal"">
+                <Element Index=""[0]"" Value=""8#000_000""/>
+                <Element Index=""[1]"" Value=""8#000_000""/>
+                <Element Index=""[2]"" Value=""8#000_000""/>
+                <Element Index=""[3]"" Value=""8#000_000""/>
+                <Element Index=""[4]"" Value=""8#000_000""/>
+                </ArrayMember>
+                <ArrayMember Name=""DintArray"" DataType=""DINT"" Dimensions=""5"" Radix=""Hex"">
+                <Element Index=""[0]"" Value=""16#0000_0000""/>
+                <Element Index=""[1]"" Value=""16#0000_0000""/>
+                <Element Index=""[2]"" Value=""16#0000_0000""/>
+                <Element Index=""[3]"" Value=""16#0000_0000""/>
+                <Element Index=""[4]"" Value=""16#0000_0000""/>
+                </ArrayMember>
+                <ArrayMember Name=""LintArray"" DataType=""LINT"" Dimensions=""5"" Radix=""Date/Time"">
+                <Element Index=""[0]"" Value=""DT#1970-01-01-00:00:00.000_000Z""/>
+                <Element Index=""[1]"" Value=""DT#1970-01-01-00:00:00.000_000Z""/>
+                <Element Index=""[2]"" Value=""DT#1970-01-01-00:00:00.000_000Z""/>
+                <Element Index=""[3]"" Value=""DT#1970-01-01-00:00:00.000_000Z""/>
+                <Element Index=""[4]"" Value=""DT#1970-01-01-00:00:00.000_000Z""/>
+                </ArrayMember>
+                <ArrayMember Name=""RealArray"" DataType=""REAL"" Dimensions=""5"" Radix=""Exponential"">
+                <Element Index=""[0]"" Value=""0.00000000e+000""/>
+                <Element Index=""[1]"" Value=""0.00000000e+000""/>
+                <Element Index=""[2]"" Value=""0.00000000e+000""/>
+                <Element Index=""[3]"" Value=""0.00000000e+000""/>
+                <Element Index=""[4]"" Value=""0.00000000e+000""/>
+                </ArrayMember>
+                </Structure>";
         }
-        
+
         private static string GetStructureArrayXml()
         {
             return @"<Array DataType=""TIMER"" Dimensions=""5"">

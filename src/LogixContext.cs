@@ -9,8 +9,6 @@ using L5Sharp.Core;
 using L5Sharp.Repositories;
 using L5Sharp.Serialization;
 
-[assembly: InternalsVisibleTo("L5Sharp.Internal.Tests")]
-
 namespace L5Sharp
 {
     /// <inheritdoc />

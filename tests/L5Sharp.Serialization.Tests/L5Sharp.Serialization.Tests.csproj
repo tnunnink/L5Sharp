@@ -17,6 +17,186 @@
 
     <ItemGroup>
       <None Remove="TestFiles\Test.xml" />
+      <None Update="ArrayElementSerializerTests.Serialize_ValueStructureTypeMember_ShouldBeApproved.approved.xml">
+        <DependentUpon>ArrayElementSerializerTests.cs</DependentUpon>
+        <ParentExtension>.cs</ParentExtension>
+        <ParentFile>ArrayElementSerializerTests</ParentFile>
+      </None>
+      <None Update="ArrayElementSerializerTests.Serialize_ValueStructureTypeMember_ShouldBeApproved.approved.xml.bak">
+        <ParentExtension>.cs</ParentExtension>
+        <ParentFile>ArrayElementSerializerTests</ParentFile>
+        <DependentUpon>ArrayElementSerializerTests.cs</DependentUpon>
+      </None>
+      <None Update="ArrayElementSerializerTests.Serialize_ValueValueTypeMember_ShouldBeApproved.approved.xml">
+        <ParentExtension>.cs</ParentExtension>
+        <ParentFile>ArrayElementSerializerTests</ParentFile>
+        <DependentUpon>ArrayElementSerializerTests.cs</DependentUpon>
+      </None>
+      <None Update="ArrayElementSerializerTests.Serialize_ValueValueTypeMember_ShouldBeApproved.approved.xml.bak">
+        <ParentExtension>.cs</ParentExtension>
+        <ParentFile>ArrayElementSerializerTests</ParentFile>
+        <DependentUpon>ArrayElementSerializerTests.cs</DependentUpon>
+      </None>
+      <None Update="ArraySerializerTests.Serialize_StructureTypeArray_ShouldBeApproved.approved.xml">
+        <DependentUpon>ArraySerializerTests.cs</DependentUpon>
+        <ParentExtension>.cs</ParentExtension>
+        <ParentFile>ArraySerializerTests</ParentFile>
+      </None>
+      <None Update="ArraySerializerTests.Serialize_ValueTypeArray_ShouldBeApproved.approved.xml">
+        <ParentExtension>.cs</ParentExtension>
+        <ParentFile>ArraySerializerTests</ParentFile>
+        <DependentUpon>ArraySerializerTests.cs</DependentUpon>
+      </None>
+      <None Update="ArraySerializerTests.Serialize_StructureTypeArray_ShouldBeApproved.approved.xml.bak">
+        <DependentUpon>ArraySerializerTests.cs</DependentUpon>
+        <ParentExtension>.cs</ParentExtension>
+        <ParentFile>ArraySerializerTests</ParentFile>
+      </None>
+      <None Update="ArraySerializerTests.Serialize_ValueTypeArray_ShouldBeApproved.approved.xml.bak">
+        <ParentExtension>.cs</ParentExtension>
+        <ParentFile>ArraySerializerTests</ParentFile>
+        <DependentUpon>ArraySerializerTests.cs</DependentUpon>
+      </None>
+      <None Update="ControllerSerializerTests.Serialize_WhenCalled_ShouldNotBeApproved.approved.xml.bak">
+        <ParentExtension>.cs</ParentExtension>
+        <ParentFile>ControllerSerializerTests</ParentFile>
+        <DependentUpon>ControllerSerializerTests.cs</DependentUpon>
+      </None>
+      <None Update="ControllerSerializerTests.Serialize_WhenCalled_ShouldNotBeApproved.approved.xml">
+        <ParentExtension>.cs</ParentExtension>
+        <ParentFile>ControllerSerializerTests</ParentFile>
+        <DependentUpon>ControllerSerializerTests.cs</DependentUpon>
+      </None>
+      <None Update="DataValueMemberSerializerTests.Serialize_Bool_ShouldBeApproved.approved.xml">
+        <DependentUpon>DataValueMemberSerializerTests.cs</DependentUpon>
+        <ParentExtension>.cs</ParentExtension>
+        <ParentFile>DataValueMemberSerializerTests</ParentFile>
+      </None>
+      <None Update="DataValueMemberSerializerTests.Serialize_Bool_ShouldBeApproved.approved.xml.bak">
+        <ParentExtension>.cs</ParentExtension>
+        <ParentFile>DataValueMemberSerializerTests</ParentFile>
+        <DependentUpon>DataValueMemberSerializerTests.cs</DependentUpon>
+      </None>
+      <None Update="DataValueMemberSerializerTests.Serialize_Dint_ShouldBeApproved.approved.xml">
+        <DependentUpon>DataValueMemberSerializerTests.cs</DependentUpon>
+        <ParentExtension>.cs</ParentExtension>
+        <ParentFile>DataValueMemberSerializerTests</ParentFile>
+      </None>
+      <None Update="DataValueMemberSerializerTests.Serialize_Dint_ShouldBeApproved.approved.xml.bak">
+        <ParentExtension>.cs</ParentExtension>
+        <ParentFile>DataValueMemberSerializerTests</ParentFile>
+        <DependentUpon>DataValueMemberSerializerTests.cs</DependentUpon>
+      </None>
+      <None Update="DataValueMemberSerializerTests.Serialize_Int_ShouldBeApproved.approved.xml">
+        <ParentExtension>.cs</ParentExtension>
+        <ParentFile>DataValueMemberSerializerTests</ParentFile>
+        <DependentUpon>DataValueMemberSerializerTests.cs</DependentUpon>
+      </None>
+      <None Update="DataValueMemberSerializerTests.Serialize_Int_ShouldBeApproved.approved.xml.bak">
+        <ParentExtension>.cs</ParentExtension>
+        <ParentFile>DataValueMemberSerializerTests</ParentFile>
+        <DependentUpon>DataValueMemberSerializerTests.cs</DependentUpon>
+      </None>
+      <None Update="DataValueMemberSerializerTests.Serialize_Lint_ShouldBeApproved.approved.xml">
+        <ParentExtension>.cs</ParentExtension>
+        <ParentFile>DataValueMemberSerializerTests</ParentFile>
+        <DependentUpon>DataValueMemberSerializerTests.cs</DependentUpon>
+      </None>
+      <None Update="DataValueMemberSerializerTests.Serialize_Lint_ShouldBeApproved.approved.xml.bak">
+        <ParentExtension>.cs</ParentExtension>
+        <ParentFile>DataValueMemberSerializerTests</ParentFile>
+        <DependentUpon>DataValueMemberSerializerTests.cs</DependentUpon>
+      </None>
+      <None Update="DataValueMemberSerializerTests.Serialize_Real_ShouldBeApproved.approved.xml">
+        <ParentExtension>.cs</ParentExtension>
+        <ParentFile>DataValueMemberSerializerTests</ParentFile>
+        <DependentUpon>DataValueMemberSerializerTests.cs</DependentUpon>
+      </None>
+      <None Update="DataValueMemberSerializerTests.Serialize_Real_ShouldBeApproved.approved.xml.bak">
+        <ParentExtension>.cs</ParentExtension>
+        <ParentFile>DataValueMemberSerializerTests</ParentFile>
+        <DependentUpon>DataValueMemberSerializerTests.cs</DependentUpon>
+      </None>
+      <None Update="DataValueMemberSerializerTests.Serialize_Sint_ShouldBeApproved.approved.xml">
+        <ParentExtension>.cs</ParentExtension>
+        <ParentFile>DataValueMemberSerializerTests</ParentFile>
+        <DependentUpon>DataValueMemberSerializerTests.cs</DependentUpon>
+      </None>
+      <None Update="DataValueMemberSerializerTests.Serialize_Sint_ShouldBeApproved.approved.xml.bak">
+        <ParentExtension>.cs</ParentExtension>
+        <ParentFile>DataValueMemberSerializerTests</ParentFile>
+        <DependentUpon>DataValueMemberSerializerTests.cs</DependentUpon>
+      </None>
+      <None Update="PortSerializerTests.Serialize_ValidComponentNoBus_ShouldBeApproved.approved.xml">
+        <ParentExtension>.cs</ParentExtension>
+        <ParentFile>PortSerializerTests</ParentFile>
+        <DependentUpon>PortSerializerTests.cs</DependentUpon>
+      </None>
+      <None Update="PortSerializerTests.Serialize_ValidComponentNoBus_ShouldBeApproved.approved.xml.bak">
+        <ParentExtension>.cs</ParentExtension>
+        <ParentFile>PortSerializerTests</ParentFile>
+        <DependentUpon>PortSerializerTests.cs</DependentUpon>
+      </None>
+      <None Update="PortSerializerTests.Serialize_ValidComponent_ShouldBeApproved.approved.xml">
+        <DependentUpon>PortSerializerTests.cs</DependentUpon>
+        <ParentExtension>.cs</ParentExtension>
+        <ParentFile>PortSerializerTests</ParentFile>
+      </None>
+      <None Update="PortSerializerTests.Serialize_ValidComponent_ShouldBeApproved.approved.xml.bak">
+        <ParentExtension>.cs</ParentExtension>
+        <ParentFile>PortSerializerTests</ParentFile>
+        <DependentUpon>PortSerializerTests.cs</DependentUpon>
+      </None>
+      <None Update="RungSerializerTests.Serialize_Bool_ShouldBeApproved.approved.xml">
+        <DependentUpon>RungSerializerTests.cs</DependentUpon>
+        <ParentExtension>.cs</ParentExtension>
+        <ParentFile>RungSerializerTests</ParentFile>
+      </None>
+      <None Update="RungSerializerTests.Serialize_Bool_ShouldBeApproved.approved.xml.bak">
+        <ParentExtension>.cs</ParentExtension>
+        <ParentFile>RungSerializerTests</ParentFile>
+        <DependentUpon>RungSerializerTests.cs</DependentUpon>
+      </None>
+      <None Update="StructureSerializerTests.Serialize_EmptyStructure_ShouldBeApproved.approved.xml.bak">
+        <ParentExtension>.cs</ParentExtension>
+        <ParentFile>StructureSerializerTests</ParentFile>
+        <DependentUpon>StructureSerializerTests.cs</DependentUpon>
+      </None>
+      <None Update="StructureSerializerTests.Serialize_EmptyStructure_ShouldBeApproved.approved.xml">
+        <ParentExtension>.cs</ParentExtension>
+        <ParentFile>StructureSerializerTests</ParentFile>
+        <DependentUpon>StructureSerializerTests.cs</DependentUpon>
+      </None>
+      <None Update="StructureSerializerTests.Serialize_DataValueValueMembers_ShouldBeApproved.approved.xml">
+        <DependentUpon>StructureSerializerTests.cs</DependentUpon>
+        <ParentExtension>.cs</ParentExtension>
+        <ParentFile>StructureSerializerTests</ParentFile>
+      </None>
+      <None Update="StructureSerializerTests.Serialize_DataValueValueMembers_ShouldBeApproved.approved.xml.bak">
+        <ParentExtension>.cs</ParentExtension>
+        <ParentFile>StructureSerializerTests</ParentFile>
+        <DependentUpon>StructureSerializerTests.cs</DependentUpon>
+      </None>
+      <None Update="StructureSerializerTests.Serialize_StructureMembers_ShouldBeApproved.approved.xml.bak">
+        <ParentExtension>.cs</ParentExtension>
+        <ParentFile>StructureSerializerTests</ParentFile>
+        <DependentUpon>StructureSerializerTests.cs</DependentUpon>
+      </None>
+      <None Update="StructureSerializerTests.Serialize_StructureMembers_ShouldBeApproved.approved.xml">
+        <DependentUpon>StructureSerializerTests.cs</DependentUpon>
+        <ParentExtension>.cs</ParentExtension>
+        <ParentFile>StructureSerializerTests</ParentFile>
+      </None>
+      <None Update="TaskSerializerTests.Serialize_ContinuousTask_ShouldBeApproved.approved.xml">
+        <DependentUpon>TaskSerializerTests.cs</DependentUpon>
+        <ParentExtension>.cs</ParentExtension>
+        <ParentFile>TaskSerializerTests</ParentFile>
+      </None>
+      <None Update="TaskSerializerTests.Serialize_ContinuousTask_ShouldBeApproved.approved.xml.bak">
+        <ParentExtension>.cs</ParentExtension>
+        <ParentFile>TaskSerializerTests</ParentFile>
+        <DependentUpon>TaskSerializerTests.cs</DependentUpon>
+      </None>
     </ItemGroup>
 
     <ItemGroup>

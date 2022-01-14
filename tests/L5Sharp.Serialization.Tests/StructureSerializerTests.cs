@@ -14,7 +14,7 @@ using L5Sharp.Types;
 using NUnit.Framework;
 using String = L5Sharp.Types.String;
 
-namespace L5Sharp.Internal.Tests.Serialization
+namespace L5Sharp.Serialization.Tests
 {
     [TestFixture]
     public class StructureSerializerTests

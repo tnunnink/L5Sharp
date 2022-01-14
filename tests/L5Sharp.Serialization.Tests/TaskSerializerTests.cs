@@ -8,7 +8,7 @@ using L5Sharp.Enums;
 using L5Sharp.Serialization.Core;
 using NUnit.Framework;
 
-namespace L5Sharp.Internal.Tests.Serialization
+namespace L5Sharp.Serialization.Tests
 {
     [TestFixture]
     public class TaskSerializerTests

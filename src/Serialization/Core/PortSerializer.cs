@@ -9,7 +9,7 @@ namespace L5Sharp.Serialization.Core
     /// <summary>
     /// A <see cref="IXSerializer{T}"/> for the <see cref="Port"/> component.
     /// </summary>
-    public class PortSerializer : IXSerializer<Port>
+    internal class PortSerializer : IXSerializer<Port>
     {
         private static readonly XName ElementName = LogixNames.Port;
 
