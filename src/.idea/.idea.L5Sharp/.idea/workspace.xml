@@ -8,43 +8,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Exceptions/L5XParseException.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Extensions/AssemblyExtensions.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Serialization.Tests/DataTypeSerializerTests.Serialize_AtomicType_ShouldBeApproved.approved.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Serialization.Tests/DataTypeSerializerTests.Serialize_AtomicType_ShouldBeApproved.approved.xml.bak" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Serialization.Tests/DataTypeSerializerTests.Serialize_AtomicType_ShouldBeApproved.received.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Serialization.Tests/DataTypeSerializerTests.Serialize_BasicType_ShouldBeApproved.approved.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Serialization.Tests/DataTypeSerializerTests.Serialize_BasicType_ShouldBeApproved.approved.xml.bak" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Serialization.Tests/DataTypeSerializerTests.Serialize_BasicType_ShouldBeApproved.received.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Serialization.Tests/DataTypeSerializerTests.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Serialization.Tests/MemberSerializerTests.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Serialization.Tests/TaskSerializerTests.Serialize_EventTask_ShouldBeApproved.approved.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Serialization.Tests/TaskSerializerTests.Serialize_EventTask_ShouldBeApproved.approved.xml.bak" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Serialization.Tests/TaskSerializerTests.Serialize_PeriodicTask_ShouldBeApproved.approved.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Serialization.Tests/TaskSerializerTests.Serialize_PeriodicTask_ShouldBeApproved.approved.xml.bak" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Common/LogixTypeProvider.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Common/LogixTypeProvider.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/ContinuousTask.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/ContinuousTask.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/EventTask.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/EventTask.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/PeriodicTask.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/PeriodicTask.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/Revision.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/Revision.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/Rung.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/Rung.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Extensions/ElementExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Extensions/ElementExtensions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Extensions/SerializerExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Extensions/SerializerExtensions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ILogixContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ILogixContext.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LogixContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LogixContext.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LogixContextInfo.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Serialization/DataTypeSerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Serialization/DataTypeSerializer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Serialization/MemberSerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Serialization/MemberSerializer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Serialization/TaskSerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Serialization/TaskSerializer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Context.Tests/BasicTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Context.Tests/BasicTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Context.Tests/TaskRepositoryTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Context.Tests/TaskRepositoryTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Serialization.Tests/L5Sharp.Serialization.Tests.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Serialization.Tests/L5Sharp.Serialization.Tests.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Serialization.Tests/TaskSerializerTests.Serialize_ContinuousTask_ShouldBeApproved.approved.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Serialization.Tests/TaskSerializerTests.Serialize_ContinuousTask_ShouldBeApproved.approved.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Serialization.Tests/TaskSerializerTests.Serialize_ContinuousTask_ShouldBeApproved.approved.xml.bak" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Serialization.Tests/TaskSerializerTests.Serialize_ContinuousTask_ShouldBeApproved.approved.xml.bak" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Serialization.Tests/TaskSerializerTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Serialization.Tests/TaskSerializerTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/Samples/Test.ACD" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/Samples/Test.ACD" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -271,14 +235,8 @@
       <workItem from="1642034679981" duration="16589000" />
       <workItem from="1642107273749" duration="12299000" />
       <workItem from="1642168262891" duration="3220000" />
-      <workItem from="1642178134007" duration="9232000" />
-    </task>
-    <task id="LOCAL-00073" summary="development">
-      <created>1637687458860</created>
-      <option name="number" value="00073" />
-      <option name="presentableId" value="LOCAL-00073" />
-      <option name="project" value="LOCAL" />
-      <updated>1637687458861</updated>
+      <workItem from="1642178134007" duration="9427000" />
+      <workItem from="1642214104162" duration="204000" />
     </task>
     <task id="LOCAL-00074" summary="development">
       <created>1637699776132</created>
@@ -616,7 +574,14 @@
       <option name="project" value="LOCAL" />
       <updated>1642127528624</updated>
     </task>
-    <option name="localTasksCounter" value="122" />
+    <task id="LOCAL-00122" summary="Serialization and context updates. Random clean up and testing">
+      <created>1642188103162</created>
+      <option name="number" value="00122" />
+      <option name="presentableId" value="LOCAL-00122" />
+      <option name="project" value="LOCAL" />
+      <updated>1642188103162</updated>
+    </task>
+    <option name="localTasksCounter" value="123" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -626,7 +591,7 @@
     <option name="coveragePercentColumnWidth" value="78" />
     <option name="sortOrder" value="DESCENDING" />
     <option name="sortedColumn" value="1" />
-    <option name="symbolColumnWidth" value="221" />
+    <option name="symbolColumnWidth" value="241" />
     <coverage-tree-state>
       <expand>
         <path>
@@ -683,7 +648,6 @@
       <path value="$PROJECT_DIR$/../.." />
     </ignored-roots>
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="Random updates" />
     <MESSAGE value="Combine ArrayMember into Member. Made Atomic type SetValue not immutable. Finished type test coverage." />
     <MESSAGE value="ComplexType development" />
     <MESSAGE value="Complex type and member reworking" />
@@ -708,7 +672,8 @@
     <MESSAGE value="Radix testing and updates" />
     <MESSAGE value="Radix and random testing clean ups" />
     <MESSAGE value="Reorganizing serialization tests" />
-    <option name="LAST_COMMIT_MESSAGE" value="Reorganizing serialization tests" />
+    <MESSAGE value="Serialization and context updates. Random clean up and testing" />
+    <option name="LAST_COMMIT_MESSAGE" value="Serialization and context updates. Random clean up and testing" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -716,40 +681,19 @@
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/Core/TagName.cs</url>
           <line>104</line>
-          <properties documentPath="C:\Users\tnunnink\dev\projects\L5Sharp\src\Core\TagName.cs" initialLine="103" containingFunctionPresentation="method 'Combine'">
-            <startOffsets>
-              <option value="4894" />
-            </startOffsets>
-            <endOffsets>
-              <option value="4935" />
-            </endOffsets>
-          </properties>
+          <properties documentPath="C:\Users\tnunnink\dev\projects\L5Sharp\src\Core\TagName.cs" initialLine="103" containingFunctionPresentation="method 'Combine'" />
           <option name="timeStamp" value="7" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/TagComplexTypeTests.cs</url>
           <line>162</line>
-          <properties documentPath="C:\Users\tnunnink\dev\projects\L5Sharp\tests\L5Sharp.Core.Tests\TagComplexTypeTests.cs" initialLine="163" containingFunctionPresentation="method 'GetMember_ChainedCalls_ShouldNotBeNull'">
-            <startOffsets>
-              <option value="4752" />
-            </startOffsets>
-            <endOffsets>
-              <option value="4795" />
-            </endOffsets>
-          </properties>
+          <properties documentPath="C:\Users\tnunnink\dev\projects\L5Sharp\tests\L5Sharp.Core.Tests\TagComplexTypeTests.cs" initialLine="163" containingFunctionPresentation="method 'GetMember_ChainedCalls_ShouldNotBeNull'" />
           <option name="timeStamp" value="9" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/Serialization/Data/ArrayMemberSerializer.cs</url>
           <line>51</line>
-          <properties documentPath="C:\Users\tnunnink\dev\projects\L5Sharp\src\Serialization\Data\ArrayMemberSerializer.cs" initialLine="51" containingFunctionPresentation="method 'Deserialize'">
-            <startOffsets>
-              <option value="1952" />
-            </startOffsets>
-            <endOffsets>
-              <option value="2017" />
-            </endOffsets>
-          </properties>
+          <properties documentPath="C:\Users\tnunnink\dev\projects\L5Sharp\src\Serialization\Data\ArrayMemberSerializer.cs" initialLine="51" containingFunctionPresentation="method 'Deserialize'" />
           <option name="timeStamp" value="20" />
         </line-breakpoint>
       </breakpoints>
