@@ -1,16 +1,23 @@
 ﻿using System;
 using System.Linq;
 using System.Xml.Linq;
-using L5Sharp.Common;
 using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Extensions;
+using L5Sharp.Helpers;
 
 namespace L5Sharp.Serialization
 {
     internal class ModuleSerializer : IXSerializer<IModule>
     {
+        private readonly LogixContext _context;
+        private const string Communications = "Communications";
         private static readonly XName ElementName = LogixNames.Module;
+
+        public ModuleSerializer(LogixContext context)
+        {
+            _context = context;
+        }
 
         public XElement Serialize(IModule component)
         {
@@ -36,11 +43,20 @@ namespace L5Sharp.Serialization
             keyingState.AddAttribute(component, c => c.State);
             element.Add(keyingState);
             
-            //ports
+            var ports = new XElement(nameof(component.Ports));
+            ports.Add(component.Ports.Select(p => _context.Serializer.Serialize(p)));
+            element.Add(ports);
+
+            var communications = new XElement(Communications);
+
+            var config = _context.Serializer.Serialize(component.Config);
+            communications.Add(config);
             
-            //communications
-            //  config tag
-            //  connections
+            var connections = new XElement(nameof(component.Connections));
+            connections.Add(component.Connections.Select(c => _context.Serializer.Serialize(c)));
+            communications.Add(connections);
+            
+            element.Add(communications);
 
             return element;
         }
@@ -65,9 +81,17 @@ namespace L5Sharp.Serialization
             var majorFault = element.GetAttribute<Module, bool>(c => c.MajorFault);
             var safetyEnabled = element.GetAttribute<Module, bool>(c => c.SafetyEnabled);
             var state = element.Element("EKey")?.GetAttribute<Module, KeyingState>(c => c.State);
-            var ports = element.Descendants(LogixNames.Port).Select(e => e.Deserialize<Port>());
+            var ports = element.Descendants(LogixNames.Port).Select(e =>
+            {
+                var serializer = new PortSerializer();
+                return serializer.Deserialize(e);
+            });
 
-            throw new NotImplementedException();
+            var communications = element.Element(Communications);
+            var config = _context.Serializer.Serialize(communications?.Element("ConfigTag"));
+
+            return new Module(name, catalogNumber!, vendor, productType, productCode, new Revision(), ports,
+                parentModule, parentModPortId, inhibited, majorFault, safetyEnabled, state);
         }
     }
 }

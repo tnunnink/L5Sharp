@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Linq;
-using System.Reflection;
 using System.Xml.Linq;
-using System.Xml.Schema;
-using L5Sharp.Common;
 using L5Sharp.Core;
 using L5Sharp.Exceptions;
+using L5Sharp.Helpers;
 using L5Sharp.Repositories;
 
 namespace L5Sharp
@@ -17,8 +13,6 @@ namespace L5Sharp
     public class LogixContext : ILogixContext
     {
         private readonly string _fileName;
-        private const string L5XSchema = "L5Sharp.Resources.L5X.xsd";
-        private XDocument L5X { get; }
 
         /// <summary>
         /// Creates a new <see cref="LogixContext"/> instance with the provided file name.
@@ -39,41 +33,44 @@ namespace L5Sharp
 
             var document = XDocument.Load(_fileName);
 
-            //todo need to decide how to get valid schema file.
-            //We should probably create our own using exports and xsd generation tools, but that would take a long time.
-            //ValidateFile(document);
+            L5X = new L5X(document);
+            Serializer = new LogixContextSerializer(this);
+            Types = new LogixContextTypes(this);
 
-            L5X = document;
-
-            DataTypes = new UserDefinedRepository(this);
+            UserDefined = new UserDefinedRepository(this);
             Tags = new TagRepository(this);
+            Programs = new ProgramRepository(this);
             Tasks = new TaskRepository(this);
         }
 
-        /// <inheritdoc />
-        public Revision SchemaRevision => Revision.Parse(L5X.Root?.Attribute(nameof(SchemaRevision))?.Value!);
+        internal L5X L5X { get; }
+        public LogixContextSerializer Serializer { get; }
+        public LogixContextTypes Types { get; }
 
         /// <inheritdoc />
-        public Revision SoftwareRevision => Revision.Parse(L5X.Root?.Attribute(nameof(SoftwareRevision))?.Value!);
+        public Revision SchemaRevision => Revision.Parse(L5X.Root.Attribute(nameof(SchemaRevision))?.Value!);
 
         /// <inheritdoc />
-        public ComponentName TargetName => new ComponentName(L5X.Root?.Attribute(nameof(TargetName))?.Value!);
+        public Revision SoftwareRevision => Revision.Parse(L5X.Root.Attribute(nameof(SoftwareRevision))?.Value!);
 
         /// <inheritdoc />
-        public string TargetType => L5X.Root?.Attribute(nameof(TargetType))?.Value!;
+        public ComponentName TargetName => new(L5X.Root.Attribute(nameof(TargetName))?.Value!);
 
         /// <inheritdoc />
-        public bool ContainsContext => bool.Parse(L5X.Root?.Attribute(nameof(ContainsContext))?.Value!);
+        public string TargetType => L5X.Root.Attribute(nameof(TargetType))?.Value!;
 
         /// <inheritdoc />
-        public string Owner => L5X.Root?.Attribute(nameof(Owner))?.Value!;
+        public bool ContainsContext => bool.Parse(L5X.Root.Attribute(nameof(ContainsContext))?.Value!);
 
         /// <inheritdoc />
-        public DateTime ExportDate => DateTime.ParseExact(L5X.Root?.Attribute(nameof(ExportDate))?.Value,
+        public string Owner => L5X.Root.Attribute(nameof(Owner))?.Value!;
+
+        /// <inheritdoc />
+        public DateTime ExportDate => DateTime.ParseExact(L5X.Root.Attribute(nameof(ExportDate))?.Value,
             "ddd MMM d HH:mm:ss yyyy", CultureInfo.CurrentCulture);
 
         /// <inheritdoc />
-        public IRepository<IUserDefined> DataTypes { get; }
+        public IRepository<IUserDefined> UserDefined { get; }
 
         /// <inheritdoc />
         public IRepository<ITag<IDataType>> Tags { get; }
@@ -91,43 +88,5 @@ namespace L5Sharp
 
             L5X.Save(fileName);
         }
-
-        internal XElement? GetContainer<TComponent>()
-        {
-            var containerName = LogixNames.GetContainerName<TComponent>();
-
-            return L5X.Descendants(containerName).FirstOrDefault();
-        }
-
-        /// <summary>
-        /// Gets all Logix components for the specified component type in the current context.
-        /// </summary>
-        /// <typeparam name="TComponent"></typeparam>
-        /// <returns></returns>
-        internal IEnumerable<XElement> GetComponents<TComponent>()
-        {
-            var componentName = LogixNames.GetComponentName<TComponent>();
-
-            return L5X.Descendants(componentName);
-        }
-
-        private void ValidateFile(XDocument document)
-        {
-            var assembly = Assembly.GetExecutingAssembly();
-            using var stream = assembly.GetManifestResourceStream(L5XSchema);
-
-            if (stream is null)
-                throw new InvalidOperationException(
-                    $"Could not load embedded resource '{L5XSchema} from current assembly.");
-
-            var schema = XmlSchema.Read(stream, null);
-            var schemaSet = new XmlSchemaSet();
-            schemaSet.Add(schema);
-
-            document.Validate(schemaSet, ValidationEventHandler);
-        }
-
-        private void ValidationEventHandler(object sender, ValidationEventArgs e) =>
-            throw new L5XParseException(e.Message, _fileName, e.Exception);
     }
 }

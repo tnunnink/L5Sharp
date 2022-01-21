@@ -35,7 +35,7 @@ namespace L5Sharp.Internal.Tests.Extensions
         {
             var element = new XElement("Test", new XAttribute("DataType", "Invalid"));
 
-            var type = element.GetDataType();
+            var type = element.GetDataTypeName();
 
             type.Should().BeOfType<Undefined>();
         }
@@ -45,7 +45,7 @@ namespace L5Sharp.Internal.Tests.Extensions
         {
             var element = new XElement("Test", new XAttribute("DataType", "BOOL"));
 
-            var type = element.GetDataType();
+            var type = element.GetDataTypeName();
 
             type.Should().BeOfType<Bool>();
         }

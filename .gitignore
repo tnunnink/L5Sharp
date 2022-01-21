@@ -5,6 +5,7 @@
 
 # Local Files
 /data/
+/Template.xml
 
 # User-specific files
 *.rsuser

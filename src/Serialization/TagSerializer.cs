@@ -1,15 +1,21 @@
 ﻿using System;
 using System.Xml.Linq;
-using L5Sharp.Common;
 using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Extensions;
+using L5Sharp.Helpers;
 
 namespace L5Sharp.Serialization
 {
     internal class TagSerializer : IXSerializer<ITag<IDataType>>
     {
+        private readonly LogixContext _context;
         private static readonly XName ElementName = LogixNames.Tag;
+
+        public TagSerializer(LogixContext context)
+        {
+            _context = context;
+        }
         
         public XElement Serialize(ITag<IDataType> component)
         {
@@ -25,7 +31,7 @@ namespace L5Sharp.Serialization
                 throw new ArgumentException($"Element name '{element.Name}' invalid. Expecting '{ElementName}'");
 
             var name = element.GetComponentName();
-            var dataType = element.GetDataType();
+            var dataType = _context.Types.GetDataType(element.GetDataTypeName());
             var dimensions = element.GetAttribute<Tag<IDataType>, Dimensions>(t => t.Dimensions);
             var radix = element.GetAttribute<Tag<IDataType>, Radix>(t => t.Radix);
             var access = element.GetAttribute<Tag<IDataType>, ExternalAccess>(t => t.ExternalAccess);

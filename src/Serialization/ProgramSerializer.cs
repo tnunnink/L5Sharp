@@ -1,16 +1,22 @@
 ﻿using System;
 using System.Linq;
 using System.Xml.Linq;
-using L5Sharp.Common;
 using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Extensions;
+using L5Sharp.Helpers;
 
 namespace L5Sharp.Serialization
 {
     internal class ProgramSerializer : IXSerializer<Program>
     {
+        private readonly LogixContext _context;
         private static readonly XName ElementName = LogixNames.Program;
+
+        public ProgramSerializer(LogixContext context)
+        {
+            _context = context;
+        }
 
         public XElement Serialize(Program component)
         {
@@ -28,14 +34,14 @@ namespace L5Sharp.Serialization
             if (component.Tags.Count > 0)
             {
                 var tags = new XElement(nameof(component.Tags));
-                tags.Add(component.Tags.Select(t => t.Serialize()));
+                tags.Add(component.Tags.Select(t => _context.Serializer.Serialize(t)));
                 element.Add(tags);
             }
             
             if (component.Routines.Count > 0)
             {
                 var routines = new XElement(nameof(component.Routines));
-                routines.Add(component.Routines.Select(t => t.Serialize()));
+                routines.Add(component.Routines.Select(t => _context.Serializer.Serialize(t)));
                 element.Add(routines);
             }
 
@@ -58,10 +64,10 @@ namespace L5Sharp.Serialization
             var disabled = element.GetAttribute<IProgram, bool>(p => p.Disabled);
 
             var tags = element.Descendants(LogixNames.Tag)
-                .Select(e => e.Deserialize<ITag<IDataType>>());
+                .Select(e => _context.Serializer.Deserialize<ITag<IDataType>>(e));
             
             var routines = element.Descendants(LogixNames.Routine)
-                .Select(e => e.Deserialize<IRoutine<ILogixContent>>());
+                .Select(e => _context.Serializer.Deserialize<IRoutine<ILogixContent>>(e));
 
             return new Program(name, description, testEdits: testEdits, disabled: disabled,
                 tags: tags, routines: routines);

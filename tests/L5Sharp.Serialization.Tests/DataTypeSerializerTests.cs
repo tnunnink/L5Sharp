@@ -14,12 +14,14 @@ namespace L5Sharp.Serialization.Tests
     [TestFixture]
     public class DataTypeSerializerTests
     {
-        private DataTypeSerializer _serializer;
+        private UserDefinedSerializer _serializer;
+        
 
         [SetUp]
         public void Setup()
         {
-            _serializer = new DataTypeSerializer();
+            var context = new LogixContext(""); //todo need sample file I guess
+            _serializer = new UserDefinedSerializer(context);
         }
         
         [Test]

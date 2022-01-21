@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq.Expressions;
 using System.Xml.Linq;
-using L5Sharp.Common;
 using L5Sharp.Core;
+using L5Sharp.Helpers;
 using L5Sharp.Types;
 
 namespace L5Sharp.Extensions
@@ -29,23 +29,15 @@ namespace L5Sharp.Extensions
             ?? string.Empty;
 
         /// <summary>
-        /// Helper for getting the current element's data type instance.
+        /// Helper for getting the current element's data type name.
         /// </summary>
         /// <param name="element">The current element.</param>
         /// <returns>
-        /// If the data type is a known type that exists in the static <see cref="DataType"/> class,
-        /// then a new instance of that <see cref="IDataType"/>;
-        /// otherwise, and instance of <see cref="Types.Undefined"/>.
         /// </returns>
-        public static IDataType GetDataType(this XElement element)
-        {
-            var typeName = element.Attribute(LogixNames.DataType)?.Value;
-            
-            if (typeName is not null && DataType.Exists(typeName))
-                return DataType.New(typeName);
-
-            return typeName is not null ? new Undefined(typeName) : new Undefined();
-        }
+        public static string GetDataTypeName(this XElement element) =>
+            element.Attribute(LogixNames.DataType)?.Value ??
+            throw new InvalidOperationException(
+                "The current element does not have an attribute with name 'DataType'");
 
         /// <summary>
         /// Gets the value of a specified <see cref="XAttribute"/> from the current <see cref="XElement"/> instance.

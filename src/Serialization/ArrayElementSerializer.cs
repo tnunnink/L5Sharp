@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Xml.Linq;
-using L5Sharp.Common;
 using L5Sharp.Core;
 using L5Sharp.Extensions;
+using L5Sharp.Helpers;
 
-namespace L5Sharp.Serialization.Data
+namespace L5Sharp.Serialization
 {
     internal class ArrayElementSerializer : IXSerializer<IMember<IDataType>>
     {
@@ -70,12 +70,10 @@ namespace L5Sharp.Serialization.Data
                 return serializer.Deserialize(structure);
             }
 
-            var typeName = element.Parent?.Attribute(LogixNames.DataType)?.Value!;
+            var dataType = (IAtomicType)DataType.Create(element.Parent?.GetDataTypeName()!);
             var value = element.Attribute(LogixNames.Value)?.Value!;
-            
-            var atomicType = (IAtomicType)DataType.New(typeName);
-            atomicType.SetValue(value);
-            return atomicType;
+            dataType.SetValue(value);
+            return dataType;
         }
     }
 }

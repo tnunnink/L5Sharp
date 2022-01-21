@@ -1,16 +1,22 @@
 ﻿using System;
 using System.Xml.Linq;
-using L5Sharp.Common;
 using L5Sharp.Components;
 using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Extensions;
+using L5Sharp.Helpers;
 
 namespace L5Sharp.Serialization
 {
     internal class MemberSerializer : IXSerializer<IMember<IDataType>>
     {
+        private readonly LogixContext _context;
         private static readonly XName ElementName = LogixNames.Member;
+
+        public MemberSerializer(LogixContext context)
+        {
+            _context = context;
+        }
 
         public XElement Serialize(IMember<IDataType> component)
         {
@@ -40,7 +46,7 @@ namespace L5Sharp.Serialization
 
             var name = element.GetComponentName();
             var description = element.GetComponentDescription();
-            var dataType = element.GetDataType();
+            var dataType = _context.Types.GetDataType(element.GetDataTypeName());
             var dimensions = element.GetAttribute<Member<IDataType>, Dimensions>(m => m.Dimensions);
             var radix = element.GetAttribute<Member<IDataType>, Radix>(m => m.Radix);
             var access = element.GetAttribute<Member<IDataType>, ExternalAccess>(m => m.ExternalAccess);

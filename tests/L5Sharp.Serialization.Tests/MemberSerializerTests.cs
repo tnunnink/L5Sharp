@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Xml.Linq;
 using ApprovalTests;
 using ApprovalTests.Reporters;
@@ -20,7 +19,8 @@ namespace L5Sharp.Serialization.Tests
         [SetUp]
         public void Setup()
         {
-            _serializer = new MemberSerializer();
+            var context = new LogixContext(""); //todo need sample file I guess
+            _serializer = new MemberSerializer(context);
         }
         
         [Test]

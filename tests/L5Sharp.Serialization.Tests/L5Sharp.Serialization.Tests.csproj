@@ -16,7 +16,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <None Remove="TestFiles\Test.xml" />
       <None Update="ArrayElementSerializerTests.Serialize_ValueStructureTypeMember_ShouldBeApproved.approved.xml">
         <DependentUpon>ArrayElementSerializerTests.cs</DependentUpon>
         <ParentExtension>.cs</ParentExtension>
@@ -199,6 +198,9 @@
       </None>
       <None Update="TaskSerializerTests.Serialize_EventTask_ShouldBeApproved.approved.xml">
         <DependentUpon>TaskSerializerTests.cs</DependentUpon>
+      </None>
+      <None Update="TestFiles\Test.xml">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
     </ItemGroup>
 

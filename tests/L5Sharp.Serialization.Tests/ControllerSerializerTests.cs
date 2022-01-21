@@ -12,12 +12,20 @@ namespace L5Sharp.Serialization.Tests
     [TestFixture]
     public class ControllerSerializerTests
     {
+        private ControllerSerializer _serializer;
+
+        [SetUp]
+        public void Setup()
+        {
+            _serializer = new ControllerSerializer();
+        }
+        
         [Test]
         public void Serialize_WhenCalled_ShouldNotBeNull()
         {
             var controller = new Controller("Test", ProcessorType.L74, new Revision());
 
-            var serialized = controller.Serialize();
+            var serialized = _serializer.Serialize(controller);
 
             serialized.Should().NotBeNull();
         }
@@ -28,7 +36,7 @@ namespace L5Sharp.Serialization.Tests
         {
             var controller = new Controller("Test", ProcessorType.L74, new Revision());
 
-            var serialized = controller.Serialize();
+            var serialized = _serializer.Serialize(controller);
 
             Approvals.VerifyXml(serialized.ToString());
         }

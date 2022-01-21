@@ -47,10 +47,13 @@ namespace L5Sharp
         /// </summary>
         DateTime ExportDate { get; }
         
+        LogixContextSerializer Serializer { get; }
+        LogixContextTypes Types { get; }
+
         /// <summary>
         /// Get the <see cref="IUserDefined"/> repository instance for the current <see cref="ILogixContext"/>.
         /// </summary>
-        IRepository<IUserDefined> DataTypes { get; }
+        IRepository<IUserDefined> UserDefined { get; }
         
         /// <summary>
         /// Get the <see cref="ITag{TDataType}"/> repository instance for the current <see cref="ILogixContext"/>. 

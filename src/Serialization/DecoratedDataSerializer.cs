@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Xml.Linq;
-using L5Sharp.Common;
 using L5Sharp.Extensions;
+using L5Sharp.Helpers;
 
 namespace L5Sharp.Serialization
 {
@@ -30,7 +30,7 @@ namespace L5Sharp.Serialization
                     $"Element name '{element.Name}' invalid. Expecting '{ElementName}'.");
 
             var root = element.Elements().FirstOrDefault();
-            return root?.Deserialize<IDataType>();
+            throw new NotImplementedException();
         }
     }
 }

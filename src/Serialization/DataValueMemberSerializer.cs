@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Xml.Linq;
-using L5Sharp.Common;
 using L5Sharp.Components;
+using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Extensions;
+using L5Sharp.Helpers;
 using L5Sharp.Types;
 
-namespace L5Sharp.Serialization.Data
+namespace L5Sharp.Serialization
 {
     internal class DataValueMemberSerializer : IXSerializer<IMember<IDataType>>
     {
@@ -44,7 +45,7 @@ namespace L5Sharp.Serialization.Data
                     $"Expecting element with name {LogixNames.DataValueMember} but got {element.Name}");
 
             var name = element.GetComponentName();
-            var atomic = (IAtomicType)element.GetDataType();
+            var atomic = (IAtomicType)DataType.Create(element.GetDataTypeName());
             var radix = element.GetAttribute<IMember<IDataType>, Radix>(m => m.Radix) ?? Radix.Default(atomic);
             var value = element.Attribute(LogixNames.Value)?.Value!;
             atomic.SetValue(value);

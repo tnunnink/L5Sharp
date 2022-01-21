@@ -9,7 +9,6 @@ using L5Sharp.Components;
 using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Serialization;
-using L5Sharp.Serialization.Data;
 using L5Sharp.Types;
 using NUnit.Framework;
 using String = L5Sharp.Types.String;

@@ -9,7 +9,8 @@ using String = L5Sharp.Types.String;
 namespace L5Sharp.Core
 {
     /// <summary>
-    /// 
+    /// A singleton registry containing all <see cref="IDataType"/> that are atomic, predefined, or registered when
+    /// loading a L5X file using a <see cref="LogixContext"/>.
     /// </summary>
     public static class DataType
     {
@@ -34,13 +35,19 @@ namespace L5Sharp.Core
         /// <summary>
         /// List of all registered <see cref="IDataType"/> names.
         /// </summary>
-        public static IEnumerable<string> List => Registry.Keys.AsEnumerable();
+        public static IEnumerable<string> All => Registry.Keys.AsEnumerable();
 
         /// <summary>
-        /// Gets a list of all <see cref="IAtomicType"/> names.
+        /// Gets a list of all registered data type names that are <see cref="DataTypeClass.Atomic"/> types. 
         /// </summary>
         public static IEnumerable<string> Atomics =>
             Registry.Where(t => t.Value.Class.Equals(DataTypeClass.Atomic)).Select(t => t.Key);
+
+        /// <summary>
+        /// Gets a list of all registered data type names that are <see cref="DataTypeClass.Predefined"/> types. 
+        /// </summary>
+        public static IEnumerable<string> Predefined =>
+            Registry.Where(t => t.Value.Class.Equals(DataTypeClass.Predefined)).Select(t => t.Key);
 
         /// <summary>
         /// Determines if the provided data type name is registered in the current Logix context.
@@ -50,14 +57,7 @@ namespace L5Sharp.Core
         public static bool Exists(string name) => Registry.ContainsKey(name);
 
         /// <summary>
-        /// Determines if the provided data type name is the name of an <see cref="IAtomicType"/>.
-        /// </summary>
-        /// <param name="name">The name of the type to check.</param>
-        /// <returns>true if the provided name is the name of a predefined atomic type; otherwise false.</returns>
-        public static bool IsAtomic(string name) => Atomics.Contains(name);
-
-        /// <summary>
-        /// Creates a new <see cref="IDataType"/> using provided name.
+        /// Creates a new <see cref="IDataType"/> instance using the provided name.
         /// </summary>
         /// <param name="name">The name of the data type to create.</param>
         /// <returns>
@@ -65,7 +65,7 @@ namespace L5Sharp.Core
         /// otherwise a <see cref="Types.Undefined"/> type of the provided name.
         /// </returns>
         /// <exception cref="ArgumentNullException">name is null or empty.</exception>
-        public static IDataType New(string name)
+        public static IDataType Create(string name)
         {
             if (string.IsNullOrEmpty(name))
                 throw new ArgumentException("Name can not be null or empty");
@@ -74,7 +74,7 @@ namespace L5Sharp.Core
         }
 
         /// <summary>
-        /// Registers a <see cref="IDataType"/> to the static DataType class.
+        /// Registers the provided data type the the global <see cref="DataType"/> registry. 
         /// </summary>
         /// <param name="dataType">The <see cref="IDataType"/> to register.</param>
         /// <exception cref="ArgumentNullException">dataType is null.</exception>
@@ -88,6 +88,21 @@ namespace L5Sharp.Core
                 throw new ComponentNameCollisionException(dataType.Name, typeof(IDataType));
 
             Registry.Add(dataType.Name, dataType);
+        }
+
+        /// <summary>
+        /// Attempts to register the provided data type to the global <see cref="DataType"/> registry. .
+        /// </summary>
+        /// <param name="dataType">The <see cref="IDataType"/> instance to register.</param>
+        /// <returns>true if the provided dataType is not null and not already contained in the current registry;
+        /// otherwise false.</returns>
+        public static bool TryRegister(IDataType? dataType)
+        {
+            if (dataType is null || Registry.ContainsKey(dataType.Name))
+                return false;
+
+            Registry.Add(dataType.Name, dataType);
+            return true;
         }
     }
 }

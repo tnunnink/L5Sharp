@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
-using L5Sharp.Common;
 using L5Sharp.Core;
+using L5Sharp.Helpers;
 using NUnit.Framework;
 
 namespace L5Sharp.Internal.Tests.Common

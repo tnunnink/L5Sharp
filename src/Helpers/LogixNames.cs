@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Xml.Linq;
 using L5Sharp.Core;
 
-namespace L5Sharp.Common
+namespace L5Sharp.Helpers
 {
     /// <summary>
     /// Helper class that contains all Logix L5X component and attribute XName values as strongly typed members so to
