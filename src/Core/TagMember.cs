@@ -146,6 +146,21 @@ namespace L5Sharp.Core
             atomicType.SetValue(value);
         }
 
+        /// <inheritdoc />
+        public void SetData(IComplexType dataType)
+        {
+            if (dataType is null)
+                throw new ArgumentNullException(nameof(dataType));
+
+            if (DataType is not IComplexType complexType)
+                throw new InvalidOperationException();
+
+            if (!DataType.StructureEquals(dataType))
+                throw new ArgumentException();
+
+            //todo figure out how to do this...
+        }
+
         private ITagMember<IDataType>? GetMemberInternal(TagName tagName)
         {
             if (tagName is null)

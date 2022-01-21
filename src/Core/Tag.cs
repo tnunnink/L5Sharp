@@ -90,6 +90,9 @@ namespace L5Sharp.Core
         public void SetValue(IAtomicType value) => _tagMember.SetValue(value);
 
         /// <inheritdoc />
+        public void SetData(IComplexType dataType) => _tagMember.SetData(dataType);
+
+        /// <inheritdoc />
         public bool TrySetValue(IAtomicType? value) => _tagMember.TrySetValue(value);
 
         /// <inheritdoc />

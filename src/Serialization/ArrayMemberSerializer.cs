@@ -17,15 +17,17 @@ namespace L5Sharp.Serialization
             if (component == null)
                 throw new ArgumentNullException(nameof(component));
 
+            if (component.DataType is not IArrayType<IDataType> arrayType)
+                throw new ArgumentException("Provided component is not an array type.");
+
             var element = new XElement(ElementName);
 
             element.AddAttribute(component, m => m.Name);
-            element.AddAttribute(component, m => m.DataType);
+            element.AddAttribute(component, m => m.DataType.Name, nameOverride: nameof(component.DataType));
             element.AddAttribute(component, m => m.Dimensions);
-            element.AddAttribute(component, m => m.Radix);
+            element.AddAttribute(component, m => m.Radix, m => m.Radix != Radix.Null);
 
             var serializer = new ArrayElementSerializer();
-            var arrayType = (IArrayType<IDataType>)component.DataType;
             var elements = arrayType.Select(m => serializer.Serialize(m));
             element.Add(elements);
 

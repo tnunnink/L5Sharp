@@ -1,7 +1,7 @@
 ﻿<Structure DataType="Test">
   <StructureMember Name="StringMember" DataType="STRING">
     <DataValueMember Name="LEN" DataType="DINT" Radix="Decimal" Value="82" />
-    <ArrayMember Name="DATA" DataType="L5Sharp.Core.ArrayType`1[L5Sharp.Types.Sint]" Dimensions="82" Radix="ASCII">
+    <ArrayMember Name="DATA" DataType="SINT" Dimensions="82" Radix="Ascii">
       <Element Index="[0]" Value="$00" />
       <Element Index="[1]" Value="$00" />
       <Element Index="[2]" Value="$00" />

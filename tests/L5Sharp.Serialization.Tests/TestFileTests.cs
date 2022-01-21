@@ -6,7 +6,7 @@ using NUnit.Framework;
 namespace L5Sharp.Serialization.Tests
 {
     [TestFixture]
-    public class TestFileExistsTests
+    public class TestFileTests
     {
         public static readonly string L5X = Path.Combine(Environment.CurrentDirectory, @"TestFiles\Test.xml");
         

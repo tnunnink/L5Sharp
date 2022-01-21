@@ -29,6 +29,13 @@ namespace L5Sharp.Serialization.Tests
         }
 
         [Test]
+        public void Serialize_NonArrayType_ShouldThrowArgumentException()
+        {
+            FluentActions.Invoking(() => _serializer.Serialize(new Member<IDataType>("Test", new Bool()))).Should()
+                .Throw<ArgumentException>();
+        }
+
+        [Test]
         public void Serialize_WhenCalled_ShouldNotBeNull()
         {
             var element = new Member<ArrayType<Bool>>("Test", new ArrayType<Bool>(new Dimensions(5)));
@@ -53,7 +60,7 @@ namespace L5Sharp.Serialization.Tests
         [UseReporter(typeof(DiffReporter))]
         public void Serialize_StructureTypeArray_ShouldBeApproved()
         {
-            var element = new Member<ArrayType<Bool>>("Test", new ArrayType<Bool>(new Dimensions(5)));
+            var element = new Member<ArrayType<Timer>>("Test", new ArrayType<Timer>(new Dimensions(5)));
 
             var xml = _serializer.Serialize(element);
 
@@ -116,9 +123,10 @@ namespace L5Sharp.Serialization.Tests
 
             var component = _serializer.Deserialize(element);
 
-            component.Name.Should().Be("TIMER");
+            component.Name.Should().Be("Test");
+            component.DataType.Should().BeOfType<ArrayType<IDataType>>();
             component.Dimensions.Should().Be(new Dimensions(5));
-            component.Radix.Should().Be(Radix.Binary);
+            component.Radix.Should().Be(Radix.Null);
             component.Description.Should().BeEmpty();
         }
 
@@ -172,7 +180,7 @@ namespace L5Sharp.Serialization.Tests
 
         private static string GetStructureArrayXml()
         {
-            return @"<Array DataType=""TIMER"" Dimensions=""5"">
+            return @"<ArrayMember Name=""Test"" DataType=""TIMER"" Dimensions=""5"">
                 <Element Index=""[0]"">
                 <Structure DataType=""TIMER"">
                 <DataValueMember Name=""PRE"" DataType=""DINT"" Radix=""Decimal"" Value=""0""/>
@@ -218,7 +226,7 @@ namespace L5Sharp.Serialization.Tests
                 <DataValueMember Name=""DN"" DataType=""BOOL"" Value=""0""/>
                 </Structure>
                 </Element>
-                </Array>";
+                </ArrayMember>";
         }
     }
 }

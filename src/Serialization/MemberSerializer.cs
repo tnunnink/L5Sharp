@@ -27,7 +27,7 @@ namespace L5Sharp.Serialization
 
             element.AddAttribute(component, c => c.Name);
             element.AddElement(component, c => c.Description);
-            element.AddAttribute(component, c => c.DataType);
+            element.AddAttribute(component, c => c.DataType.Name, nameOverride: nameof(component.DataType));
             element.AddAttribute(component, c => c.Dimensions);
             element.AddAttribute(component, c => c.Radix);
             element.Add(new XAttribute("Hidden", false));

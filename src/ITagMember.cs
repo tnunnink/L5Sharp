@@ -217,5 +217,11 @@ namespace L5Sharp
         /// </exception>
         /// <seealso cref="TrySetValue"/>
         void SetValue(IAtomicType value);
+
+        /// <summary>
+        /// Sets the value of all members of the current <see cref="ITagMember{TDataType}"/> instance.
+        /// </summary>
+        /// <param name="dataType">A data type instance that is of the same typ</param>
+        void SetData(IComplexType dataType);
     }
 }

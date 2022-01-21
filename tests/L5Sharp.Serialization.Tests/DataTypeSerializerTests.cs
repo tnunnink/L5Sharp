@@ -20,7 +20,7 @@ namespace L5Sharp.Serialization.Tests
         [SetUp]
         public void Setup()
         {
-            var context = new LogixContext(""); //todo need sample file I guess
+            var context = new LogixContext(TestFileTests.L5X);
             _serializer = new UserDefinedSerializer(context);
         }
         

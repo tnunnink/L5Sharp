@@ -22,6 +22,12 @@ namespace L5Sharp.Context.Tests
 
             context.Should().NotBeNull();
         }
+        
+        [Test]
+        public void KnownTemplateFileShouldExists()
+        {
+            FileAssert.Exists(Known.Template);
+        }
 
         [Test]
         public void Content_ValidFile_ShouldHaveExpectedProperties()

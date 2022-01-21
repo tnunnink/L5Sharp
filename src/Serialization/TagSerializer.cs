@@ -39,10 +39,15 @@ namespace L5Sharp.Serialization
             var constant = element.GetAttribute<Tag<IDataType>, bool>(m => m.Constant);
             var description = element.GetAttribute<Tag<IDataType>, string>(m => m.Description);
             
-            //todo with how this is now we would need to determine if data type is an array type.
-            //todo also we would need to deserialize the tag data and apply it.
+            var type = dimensions is not null && dimensions.AreEmpty 
+                ? new ArrayType<IDataType>(dimensions, dataType, radix, access, description)
+                : dataType;
 
-            return new Tag<IDataType>(name, dataType, radix, access, description, usage, constant);
+            var tag = new Tag<IDataType>(name, type, radix, access, description, usage, constant);
+
+            //todo set tag data.
+
+            return tag;
         }
     }
 }
