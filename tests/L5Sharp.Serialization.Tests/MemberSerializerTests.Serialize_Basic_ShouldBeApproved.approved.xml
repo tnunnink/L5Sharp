@@ -1,1 +1,1 @@
-﻿<Member Name="Test" DataType="BOOL" Dimensions="0" Radix="Decimal" Hidden="false" ExternalAccess="Read/Write" />
+﻿<Member Name="Test" DataType="BOOL" Dimension="0" Radix="Decimal" Hidden="false" ExternalAccess="Read/Write" />

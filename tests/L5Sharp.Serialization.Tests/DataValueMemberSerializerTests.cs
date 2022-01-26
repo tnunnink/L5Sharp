@@ -30,6 +30,14 @@ namespace L5Sharp.Serialization.Tests
         }
 
         [Test]
+        public void Serialize_NonAtomic_ShouldThrowArgumentException()
+        {
+            FluentActions.Invoking(() => _serializer.Serialize(new Member<IDataType>("InvalidType", new Timer())))
+                .Should().Throw<ArgumentException>()
+                .WithMessage("DataValueMember must have an atomic data type.");
+        }
+
+        [Test]
         public void Serialize_WhenCalled_ShouldNotBeNull()
         {
             var component = Member.Create<Dint>("Test");
@@ -88,7 +96,7 @@ namespace L5Sharp.Serialization.Tests
         public void Serialize_Lint_ShouldBeApproved()
         {
             var component = Member.Create<Lint>("Test");
-            
+
             var xml = _serializer.Serialize(component);
 
             Approvals.VerifyXml(xml.ToString());
@@ -104,7 +112,6 @@ namespace L5Sharp.Serialization.Tests
 
             Approvals.VerifyXml(xml.ToString());
         }
-
 
         [Test]
         public void Deserialize_Null_ShouldThrowArgumentNullException()
@@ -147,7 +154,7 @@ namespace L5Sharp.Serialization.Tests
             component.Radix.Should().Be(Radix.Decimal);
             component.DataType.Value.Should().Be(true);
         }
-        
+
         [Test]
         public void Deserialize_ValidSint_ShouldHaveExpectedProperties()
         {
@@ -162,7 +169,7 @@ namespace L5Sharp.Serialization.Tests
             component.Radix.Should().Be(Radix.Decimal);
             component.DataType.Value.Should().Be(0);
         }
-        
+
         [Test]
         public void Deserialize_ValidInt_ShouldHaveExpectedProperties()
         {
@@ -177,8 +184,8 @@ namespace L5Sharp.Serialization.Tests
             component.Radix.Should().Be(Radix.Decimal);
             component.DataType.Value.Should().Be(0);
         }
-        
-         
+
+
         [Test]
         public void Deserialize_ValidDint_ShouldHaveExpectedProperties()
         {
@@ -193,8 +200,8 @@ namespace L5Sharp.Serialization.Tests
             component.Radix.Should().Be(Radix.Decimal);
             component.DataType.Value.Should().Be(0);
         }
-        
-         
+
+
         [Test]
         public void Deserialize_ValidLint_ShouldHaveExpectedProperties()
         {
@@ -209,7 +216,7 @@ namespace L5Sharp.Serialization.Tests
             component.Radix.Should().Be(Radix.Decimal);
             component.DataType.Value.Should().Be(0);
         }
-        
+
         [Test]
         public void Deserialize_ValidReal_ShouldHaveExpectedProperties()
         {

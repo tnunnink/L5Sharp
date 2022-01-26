@@ -4,14 +4,15 @@ using System.Xml.Linq;
 using L5Sharp.Core;
 using L5Sharp.Extensions;
 using L5Sharp.Helpers;
+using L5Sharp.Serialization;
 using L5Sharp.Types;
 
 namespace L5Sharp
 {
     /// <summary>
-    /// A
+    /// A class that indexes all data types of a L5X so that we can easily deserialize them when they are requested.
     /// </summary>
-    public class LogixContextTypes
+    internal class LogixContextTypes
     {
         private readonly LogixContext _context;
         private readonly Dictionary<string, XElement> _index;
@@ -35,10 +36,40 @@ namespace L5Sharp
         {
             if (DataType.Exists(name))
                 return DataType.Create(name);
-            
-            return _index.TryGetValue(name, out var type)
-                ? _context.Serializer.Deserialize<IDataType>(type, type.Name.ToString())
-                : new Undefined(name);
+
+            return _index.TryGetValue(name, out var type) ? DeserializeType(type) : new Undefined(name);
+        }
+
+        private IDataType DeserializeType(XElement element)
+        {
+            if (element.Name == LogixNames.DataType)
+                return DeserializeUserDefined(element);
+
+            if (element.Name == LogixNames.Structure)
+                return DeserializeStructure(element);
+
+            if (element.Name == LogixNames.AddOnInstructionDefinition)
+                return DeserializeAddOnDefined(element);
+
+            throw new InvalidOperationException(
+                $"The provided element name {element.Name} is not supported for data type serialization.");
+        }
+
+        private IDataType DeserializeUserDefined(XElement element)
+        {
+            var serialize = new UserDefinedSerializer(_context);
+            return serialize.Deserialize(element);
+        }
+
+        private IDataType DeserializeStructure(XElement element)
+        {
+            var serialize = new StructureSerializer();
+            return serialize.Deserialize(element);
+        }
+
+        private IDataType DeserializeAddOnDefined(XElement element)
+        {
+            throw new NotImplementedException();
         }
 
         private void RegisterUserDefinedTypes(XContainer document)

@@ -45,8 +45,8 @@ namespace L5Sharp.Serialization
                 throw new ArgumentException($"Element name '{element.Name}' invalid. Expecting '{ElementName}'");
 
             var name = element.GetComponentName();
-            var description = element.GetAttribute<IDataType, string>(x => x.Description);
-            var members = element.Descendants(LogixNames.Member)
+            var description = element.GetComponentDescription();
+            var members = element.Descendants(LogixNames.Member).Where(e => !bool.Parse(e.Attribute("Hidden")?.Value))
                 .Select(e => _context.Serializer.Deserialize<IMember<IDataType>>(e));
 
             return new UserDefined(name, description, members);

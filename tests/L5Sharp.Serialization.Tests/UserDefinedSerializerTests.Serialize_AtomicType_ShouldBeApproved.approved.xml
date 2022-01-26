@@ -1,0 +1,19 @@
+﻿<DataType Name="Test" Family="None" Class="User">
+  <Description><![CDATA[This is a test user defined type]]></Description>
+  <Members>
+    <Member Name="Member01" DataType="BOOL" Dimension="0" Radix="Binary" Hidden="false" ExternalAccess="Read Only">
+      <Description><![CDATA[This is a test member]]></Description>
+    </Member>
+    <Member Name="Member02" DataType="INT" Dimension="0" Radix="Octal" Hidden="false" ExternalAccess="None">
+      <Description><![CDATA[This is a test member]]></Description>
+    </Member>
+    <Member Name="Member03" DataType="DINT" Dimension="0" Radix="Decimal" Hidden="false" ExternalAccess="Read Only">
+      <Description><![CDATA[This is a test member]]></Description>
+    </Member>
+    <Member Name="Member04" DataType="LINT" Dimension="0" Radix="Hex" Hidden="false" ExternalAccess="Read/Write">
+      <Description><![CDATA[This is a test member]]></Description>
+    </Member>
+    <Member Name="Member04" DataType="SINT" Dimension="0" Radix="Ascii" Hidden="false" ExternalAccess="Read/Write" />
+    <Member Name="Member05" DataType="REAL" Dimension="0" Radix="Float" Hidden="false" ExternalAccess="Read/Write" />
+  </Members>
+</DataType>

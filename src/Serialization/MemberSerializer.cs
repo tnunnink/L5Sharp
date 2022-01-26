@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Xml.Linq;
-using L5Sharp.Components;
 using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Extensions;
@@ -10,6 +9,8 @@ namespace L5Sharp.Serialization
 {
     internal class MemberSerializer : IXSerializer<IMember<IDataType>>
     {
+        //Override the default property name.
+        private const string Dimension = "Dimension";
         private readonly LogixContext _context;
         private static readonly XName ElementName = LogixNames.Member;
 
@@ -28,7 +29,7 @@ namespace L5Sharp.Serialization
             element.AddAttribute(component, c => c.Name);
             element.AddElement(component, c => c.Description);
             element.AddAttribute(component, c => c.DataType.Name, nameOverride: nameof(component.DataType));
-            element.AddAttribute(component, c => c.Dimensions);
+            element.AddAttribute(component, c => c.Dimensions, nameOverride: Dimension);
             element.AddAttribute(component, c => c.Radix);
             element.Add(new XAttribute("Hidden", false));
             element.AddAttribute(component, c => c.ExternalAccess);
@@ -47,13 +48,13 @@ namespace L5Sharp.Serialization
             var name = element.GetComponentName();
             var description = element.GetComponentDescription();
             var dataType = _context.Types.GetDataType(element.GetDataTypeName());
-            var dimensions = element.GetAttribute<Member<IDataType>, Dimensions>(m => m.Dimensions);
+            var dimensions = element.GetAttribute<Member<IDataType>, Dimensions>(m => m.Dimensions, Dimension);
             var radix = element.GetAttribute<Member<IDataType>, Radix>(m => m.Radix);
             var access = element.GetAttribute<Member<IDataType>, ExternalAccess>(m => m.ExternalAccess);
 
             if (dimensions is null || dimensions.AreEmpty)
                 return new Member<IDataType>(name, dataType, radix, access, description);
-            
+
             var arrayType = new ArrayType<IDataType>(dimensions, dataType, radix, access, description);
             return new Member<IDataType>(name, arrayType, radix, access, description);
         }

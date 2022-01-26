@@ -3,7 +3,7 @@ using L5Sharp.Core;
 
 namespace L5Sharp.Serialization
 {
-    public class CommentsSerializer : IXSerializer<Comments>
+    internal class CommentsSerializer : IXSerializer<Comments>
     {
         public XElement Serialize(Comments component)
         {

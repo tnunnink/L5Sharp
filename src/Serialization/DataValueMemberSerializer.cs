@@ -19,7 +19,7 @@ namespace L5Sharp.Serialization
                 throw new ArgumentNullException(nameof(component));
 
             if (component.DataType is not IAtomicType atomic)
-                throw new InvalidOperationException($"{ElementName} must have an atomic data type.");
+                throw new ArgumentException($"{ElementName} must have an atomic data type.");
 
             var element = new XElement(ElementName);
 
@@ -41,8 +41,7 @@ namespace L5Sharp.Serialization
                 throw new ArgumentNullException(nameof(element));
 
             if (element.Name != ElementName)
-                throw new ArgumentException(
-                    $"Expecting element with name {LogixNames.DataValueMember} but got {element.Name}");
+                throw new ArgumentException($"Element name '{element.Name}' invalid. Expecting '{ElementName}'");
 
             var name = element.GetComponentName();
             var atomic = (IAtomicType)DataType.Create(element.GetDataTypeName());

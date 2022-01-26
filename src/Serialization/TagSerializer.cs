@@ -19,7 +19,28 @@ namespace L5Sharp.Serialization
         
         public XElement Serialize(ITag<IDataType> component)
         {
-            throw new NotImplementedException();
+            if (component == null)
+                throw new ArgumentNullException(nameof(component));
+
+            var element = new XElement(ElementName);
+            
+            element.AddAttribute(component, c => c.Name);
+            element.AddElement(component, c => c.Description);
+            element.AddAttribute(component, c => c.TagType);
+            element.AddAttribute(component, c => c.DataType);
+            element.AddAttribute(component, c => c.Dimensions);
+            element.AddAttribute(component, c => c.Radix, t => t.IsValueMember);
+            element.AddAttribute(component, c => c.Constant);
+            element.AddAttribute(component, c => c.ExternalAccess);
+            
+            //todo comments.
+            //todo eng unit?
+
+            var decoratedSerializer = new DecoratedDataSerializer();
+            var data = decoratedSerializer.Serialize(component.DataType);
+            element.Add(data);
+
+            return element;
         }
 
         public ITag<IDataType> Deserialize(XElement element)

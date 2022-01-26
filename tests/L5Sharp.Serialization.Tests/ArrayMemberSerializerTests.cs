@@ -107,6 +107,81 @@ namespace L5Sharp.Serialization.Tests
         }
 
         [Test]
+        public void Deserialize_SintMember_shouldHaveExpectedProperties()
+        {
+            var element = XElement.Parse(GetValueArrayMemberXml()).Elements().ToArray()[1];
+
+            var component = _serializer.Deserialize(element);
+
+            component.Name.Should().Be("SintArray");
+            component.DataType.Should().BeOfType<ArrayType<IDataType>>();
+            component.Dimensions.Should().Be(new Dimensions(5));
+            component.Radix.Should().Be(Radix.Ascii);
+            component.Description.Should().BeEmpty();
+            component.As<ArrayType<Sint>>().Should().NotBeNull();
+        }
+        
+        [Test]
+        public void Deserialize_IntMember_ShouldHaveExpectedProperties()
+        {
+            var element = XElement.Parse(GetValueArrayMemberXml()).Elements().ToArray()[2];
+
+            var component = _serializer.Deserialize(element);
+
+            component.Name.Should().Be("IntArray");
+            component.DataType.Should().BeOfType<ArrayType<IDataType>>();
+            component.Dimensions.Should().Be(new Dimensions(5));
+            component.Radix.Should().Be(Radix.Octal);
+            component.Description.Should().BeEmpty();
+            component.DataType.As<ArrayType<IDataType>>().Select(e => e.DataType).Should().AllBeOfType<Int>();
+        }
+        
+        [Test]
+        public void Deserialize_DintMember_ShouldHaveExpectedProperties()
+        {
+            var element = XElement.Parse(GetValueArrayMemberXml()).Elements().ToArray()[3];
+
+            var component = _serializer.Deserialize(element);
+
+            component.Name.Should().Be("DintArray");
+            component.DataType.Should().BeOfType<ArrayType<IDataType>>();
+            component.Dimensions.Should().Be(new Dimensions(5));
+            component.Radix.Should().Be(Radix.Hex);
+            component.Description.Should().BeEmpty();
+            component.DataType.As<ArrayType<IDataType>>().Select(e => e.DataType).Should().AllBeOfType<Dint>();
+        }
+        
+        [Test]
+        public void Deserialize_LintMember_ShouldHaveExpectedProperties()
+        {
+            var element = XElement.Parse(GetValueArrayMemberXml()).Elements().ToArray()[4];
+
+            var component = _serializer.Deserialize(element);
+
+            component.Name.Should().Be("LintArray");
+            component.DataType.Should().BeOfType<ArrayType<IDataType>>();
+            component.Dimensions.Should().Be(new Dimensions(5));
+            component.Radix.Should().Be(Radix.DateTime);
+            component.Description.Should().BeEmpty();
+            component.DataType.As<ArrayType<IDataType>>().Select(e => e.DataType).Should().AllBeOfType<Lint>();
+        }
+        
+        [Test]
+        public void Deserialize_RealMember_ShouldHaveExpectedProperties()
+        {
+            var element = XElement.Parse(GetValueArrayMemberXml()).Elements().ToArray()[5];
+
+            var component = _serializer.Deserialize(element);
+
+            component.Name.Should().Be("RealArray");
+            component.DataType.Should().BeOfType<ArrayType<IDataType>>();
+            component.Dimensions.Should().Be(new Dimensions(5));
+            component.Radix.Should().Be(Radix.Exponential);
+            component.Description.Should().BeEmpty();
+            component.DataType.As<ArrayType<IDataType>>().Select(e => e.DataType).Should().AllBeOfType<Real>();
+        }
+
+        [Test]
         public void Deserialize_StructureTypeArray_ShouldNotBeNull()
         {
             var element = XElement.Parse(GetStructureArrayXml());

@@ -18,6 +18,22 @@ namespace L5Sharp.Serialization
 
             var element = new XElement(ElementName);
 
+            switch (component)
+            {
+                case IAtomicType atomicType:
+                    var dataValueSerializer = new DataValueSerializer();
+                    element.Add(dataValueSerializer.Serialize(atomicType));
+                    break;
+                case IArrayType<IDataType> arrayType:
+                    var arraySerializer = new ArraySerializer();
+                    element.Add(arraySerializer.Serialize(arrayType));
+                    break;
+                case IComplexType complexType:
+                    var structureSerializer = new StructureSerializer();
+                    element.Add(structureSerializer.Serialize(complexType));
+                    break;
+            }
+
             return element;
         }
 

@@ -44,8 +44,8 @@ namespace L5Sharp
         }
 
         internal L5X L5X { get; }
-        public LogixContextSerializer Serializer { get; }
-        public LogixContextTypes Types { get; }
+        internal LogixContextSerializer Serializer { get; }
+        internal LogixContextTypes Types { get; }
 
         /// <inheritdoc />
         public Revision SchemaRevision => Revision.Parse(L5X.Root.Attribute(nameof(SchemaRevision))?.Value!);

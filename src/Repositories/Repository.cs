@@ -12,7 +12,7 @@ namespace L5Sharp.Repositories
     /// Generic abstract implementation of the read only repository.
     /// </summary>
     /// <typeparam name="TComponent"></typeparam>
-    internal abstract class Repository<TComponent> : IRepository<TComponent> where TComponent : ILogixComponent
+    public abstract class Repository<TComponent> : IRepository<TComponent> where TComponent : ILogixComponent
     {
         /// <summary>
         /// The current logix context for the repository.

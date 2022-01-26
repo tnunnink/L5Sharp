@@ -46,9 +46,6 @@ namespace L5Sharp
         /// Gets the date time that the L5X file was exported.
         /// </summary>
         DateTime ExportDate { get; }
-        
-        LogixContextSerializer Serializer { get; }
-        LogixContextTypes Types { get; }
 
         /// <summary>
         /// Get the <see cref="IUserDefined"/> repository instance for the current <see cref="ILogixContext"/>.

@@ -18,21 +18,26 @@ namespace L5Sharp.Serialization.Tests
     [TestFixture]
     public class StructureSerializerTests
     {
+        private StructureSerializer _serializer;
+
+        [SetUp]
+        public void Setup()
+        {
+            _serializer = new StructureSerializer();
+        }
+        
         [Test]
         public void Serialize_Null_ShouldThrowArgumentNullException()
         {
-            var serializer = new StructureSerializer();
-
-            FluentActions.Invoking(() => serializer.Serialize(null!)).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(() => _serializer.Serialize(null!)).Should().Throw<ArgumentException>();
         }
         
         [Test]
         public void Serialize_WhenCalled_ShouldNotBeNull()
         {
             var component = new StructureType("Test", DataTypeClass.Unknown);
-            var serializer = new StructureSerializer();
 
-            var xml = serializer.Serialize(component);
+            var xml = _serializer.Serialize(component);
 
             xml.Should().NotBeNull();
         }
@@ -42,9 +47,8 @@ namespace L5Sharp.Serialization.Tests
         public void Serialize_EmptyStructure_ShouldBeApproved()
         {
             var component = new StructureType("Test", DataTypeClass.Unknown);
-            var serializer = new StructureSerializer();
 
-            var xml = serializer.Serialize(component);
+            var xml = _serializer.Serialize(component);
 
             Approvals.VerifyXml(xml.ToString());
         }
@@ -62,10 +66,8 @@ namespace L5Sharp.Serialization.Tests
                 Member.Create<Lint>("LintMember"),
                 Member.Create<Real>("RealMember"),
             });
-            
-            var serializer = new StructureSerializer();
 
-            var xml = serializer.Serialize(component);
+            var xml = _serializer.Serialize(component);
 
             Approvals.VerifyXml(xml.ToString());
         }
@@ -80,10 +82,8 @@ namespace L5Sharp.Serialization.Tests
                 Member.Create<Timer>("SintMember"),
                 Member.Create<Counter>("IntMember"),
             });
-            
-            var serializer = new StructureSerializer();
 
-            var xml = serializer.Serialize(component);
+            var xml = _serializer.Serialize(component);
 
             Approvals.VerifyXml(xml.ToString());
         }
@@ -91,9 +91,7 @@ namespace L5Sharp.Serialization.Tests
         [Test]
         public void Deserialize_Null_ShouldThrowArgumentNullException()
         {
-            var serializer = new StructureSerializer();
-
-            FluentActions.Invoking(() => serializer.Deserialize(null!)).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(() => _serializer.Deserialize(null!)).Should().Throw<ArgumentException>();
         }
 
         [Test]
@@ -101,35 +99,54 @@ namespace L5Sharp.Serialization.Tests
         {
             const string xml = @"<Invalid></Invalid>";
             var element = XElement.Parse(xml);
-            var serializer = new StructureSerializer();
 
-            FluentActions.Invoking(() => serializer.Deserialize(element)).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(() => _serializer.Deserialize(element)).Should().Throw<ArgumentException>();
         }
-
+        
         [Test]
-        public void Deserialize_ValidElement_ShouldNotBeNull()
+        public void Deserialize_SimpleArrayStructure_ShouldNotBeNull()
         {
-            var element = XElement.Parse(GetTestXml());
-            var serializer = new StructureSerializer();
+            var element = XElement.Parse(GetSimpleArrayStructure());
 
-            var component = serializer.Deserialize(element);
+            var component = _serializer.Deserialize(element);
 
             component.Should().NotBeNull();
         }
 
         [Test]
-        public void Deserialize_ValidElement_ShouldHaveExpectedProperties()
+        public void Deserialize_SimpleArrayStructure_ShouldHaveExpectedProperties()
         {
-            var element = XElement.Parse(GetTestXml());
-            var serializer = new StructureSerializer();
+            var element = XElement.Parse(GetSimpleArrayStructure());
 
-            var component = serializer.Deserialize(element);
+            var component = _serializer.Deserialize(element);
+
+            component.Name.Should().Be("ArrayType");
+            component.Members.ToList().Should().HaveCount(5);
+            component.Members.Should().AllBeOfType<Member<IDataType>>();
+        }
+
+        [Test]
+        public void Deserialize_ModuleType_ShouldNotBeNull()
+        {
+            var element = XElement.Parse(GetModuleTypeStructure());
+
+            var component = _serializer.Deserialize(element);
+
+            component.Should().NotBeNull();
+        }
+
+        [Test]
+        public void Deserialize_ModuleType_ShouldHaveExpectedProperties()
+        {
+            var element = XElement.Parse(GetModuleTypeStructure());
+
+            var component = _serializer.Deserialize(element);
 
             component.Name.Should().Be("AB:5000_AI8:I:0");
             component.Members.ToList().Should().NotBeNull();
         }
         
-        private static string GetTestXml()
+        private static string GetModuleTypeStructure()
         {
             return @"<Structure DataType=""AB:5000_AI8:I:0"">
                         <DataValueMember Name=""RunMode"" DataType=""BOOL"" Value=""0""/>
@@ -289,6 +306,73 @@ namespace L5Sharp.Serialization.Tests
                         <DataValueMember Name=""RollingTimestamp"" DataType=""INT"" Radix=""Decimal"" Value=""0""/>
                         </StructureMember>
                         </Structure>";
+        } 
+        
+        private static string GetSimpleArrayStructure()
+        {
+            return @"<Structure DataType=""ArrayType"">
+                        <ArrayMember Name=""BoolArray"" DataType=""BOOL"" Dimensions=""32"" Radix=""Decimal"">
+                            <Element Index=""[0]"" Value=""0""/>
+                            <Element Index=""[1]"" Value=""0""/>
+                            <Element Index=""[2]"" Value=""0""/>
+                            <Element Index=""[3]"" Value=""0""/>
+                            <Element Index=""[4]"" Value=""0""/>
+                            <Element Index=""[5]"" Value=""0""/>
+                            <Element Index=""[6]"" Value=""0""/>
+                            <Element Index=""[7]"" Value=""0""/>
+                            <Element Index=""[8]"" Value=""0""/>
+                            <Element Index=""[9]"" Value=""0""/>
+                            <Element Index=""[10]"" Value=""0""/>
+                            <Element Index=""[11]"" Value=""0""/>
+                            <Element Index=""[12]"" Value=""0""/>
+                            <Element Index=""[13]"" Value=""0""/>
+                            <Element Index=""[14]"" Value=""0""/>
+                            <Element Index=""[15]"" Value=""0""/>
+                            <Element Index=""[16]"" Value=""0""/>
+                            <Element Index=""[17]"" Value=""0""/>
+                            <Element Index=""[18]"" Value=""0""/>
+                            <Element Index=""[19]"" Value=""0""/>
+                            <Element Index=""[20]"" Value=""0""/>
+                            <Element Index=""[21]"" Value=""0""/>
+                            <Element Index=""[22]"" Value=""0""/>
+                            <Element Index=""[23]"" Value=""0""/>
+                            <Element Index=""[24]"" Value=""0""/>
+                            <Element Index=""[25]"" Value=""0""/>
+                            <Element Index=""[26]"" Value=""0""/>
+                            <Element Index=""[27]"" Value=""0""/>
+                            <Element Index=""[28]"" Value=""0""/>
+                            <Element Index=""[29]"" Value=""0""/>
+                            <Element Index=""[30]"" Value=""0""/>
+                            <Element Index=""[31]"" Value=""0""/>
+                        </ArrayMember>
+                        <ArrayMember Name=""SintArray"" DataType=""SINT"" Dimensions=""6"" Radix=""Octal"">
+                            <Element Index=""[0]"" Value=""8#000""/>
+                            <Element Index=""[1]"" Value=""8#000""/>
+                            <Element Index=""[2]"" Value=""8#000""/>
+                            <Element Index=""[3]"" Value=""8#000""/>
+                            <Element Index=""[4]"" Value=""8#000""/>
+                            <Element Index=""[5]"" Value=""8#000""/>
+                        </ArrayMember>
+                        <ArrayMember Name=""IntArray"" DataType=""INT"" Dimensions=""8"" Radix=""Decimal"">
+                            <Element Index=""[0]"" Value=""0""/>
+                            <Element Index=""[1]"" Value=""0""/>
+                            <Element Index=""[2]"" Value=""0""/>
+                            <Element Index=""[3]"" Value=""0""/>
+                            <Element Index=""[4]"" Value=""0""/>
+                            <Element Index=""[5]"" Value=""0""/>
+                            <Element Index=""[6]"" Value=""0""/>
+                            <Element Index=""[7]"" Value=""0""/>
+                        </ArrayMember>
+                        <ArrayMember Name=""DintArray"" DataType=""DINT"" Dimensions=""3"" Radix=""Decimal"">
+                            <Element Index=""[0]"" Value=""0""/>
+                            <Element Index=""[1]"" Value=""0""/>
+                            <Element Index=""[2]"" Value=""0""/>
+                        </ArrayMember>
+                        <ArrayMember Name=""LintArray"" DataType=""LINT"" Dimensions=""2"" Radix=""ASCII"">
+                            <Element Index=""[0]"" Value=""'$00$00$00$00$00$00$00$00'""/>
+                            <Element Index=""[1]"" Value=""'$00$00$00$00$00$00$00$00'""/>
+                        </ArrayMember>
+                    </Structure>";
         }
     }
 }

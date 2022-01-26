@@ -1,1 +1,1 @@
-﻿<Member Name="Test" DataType="TIMER" Dimensions="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write" />
+﻿<Member Name="Test" DataType="TIMER" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write" />

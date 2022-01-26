@@ -30,7 +30,7 @@ namespace L5Sharp.Serialization.Tests
             serialized.Should().NotBeNull();
         }
         
-        [Test]
+        /*[Test]
         [UseReporter(typeof(DiffReporter))]
         public void Serialize_WhenCalled_ShouldNotBeApproved()
         {
@@ -39,6 +39,6 @@ namespace L5Sharp.Serialization.Tests
             var serialized = _serializer.Serialize(controller);
 
             Approvals.VerifyXml(serialized.ToString());
-        }
+        }*/
     }
 }

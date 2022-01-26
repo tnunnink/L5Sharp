@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Xml.Linq;
 using ApprovalTests;
 using ApprovalTests.Reporters;
@@ -108,6 +109,21 @@ namespace L5Sharp.Serialization.Tests
 
             component.Should().NotBeNull();
         }
+        
+        [Test]
+        public void Deserialize_SimpleMember_ShouldHaveExpectedProperties()
+        {
+            var element = XElement.Parse(GetSimpleMemberXml());
+
+            var component = _serializer.Deserialize(element);
+
+            component.Name.Should().Be("SimpleMember");
+            component.DataType.Should().BeOfType<UserDefined>();
+            component.Dimensions.Should().Be(Dimensions.Empty);
+            component.Radix.Should().Be(Radix.Null);
+            component.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);
+            component.Description.Should().Be("User defined simple member type");
+        }
 
         [Test]
         public void Deserialize_AtomicMember_ShouldHaveExpectedProperties()
@@ -122,6 +138,23 @@ namespace L5Sharp.Serialization.Tests
             component.Radix.Should().Be(Radix.Decimal);
             component.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);
             component.Description.Should().Be("Simple Member");
+        }
+        
+        [Test]
+        public void Deserialize_ArrayMember_ShouldHaveExpectedProperties()
+        {
+            var element = XElement.Parse(GetArrayMemberXml());
+
+            var component = _serializer.Deserialize(element);
+
+            component.Name.Should().Be("IntArray");
+            component.DataType.Should().BeOfType<ArrayType<IDataType>>();
+            component.Dimensions.Should().Be(new Dimensions(5));
+            component.Radix.Should().Be(Radix.Octal);
+            component.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);
+            component.Description.Should().Be("Test Int Array");
+            component.DataType.As<ArrayType<IDataType>>().Dimensions.Length.Should().Be(5);
+            component.DataType.As<ArrayType<IDataType>>().Select(m => m.DataType).Should().AllBeOfType<Int>();
         }
         
         private static string GetAtomicMemberXml()

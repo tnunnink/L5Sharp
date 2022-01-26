@@ -1,3 +1,3 @@
-﻿<Member Name="Test" DataType="BOOL" Dimensions="0" Radix="Binary" Hidden="false" ExternalAccess="Read Only">
+﻿<Member Name="Test" DataType="BOOL" Dimension="0" Radix="Binary" Hidden="false" ExternalAccess="Read Only">
   <Description><![CDATA[This is a test member]]></Description>
 </Member>
