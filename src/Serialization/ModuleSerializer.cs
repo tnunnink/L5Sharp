@@ -25,7 +25,7 @@ namespace L5Sharp.Serialization
                 throw new ArgumentNullException(nameof(component));
 
             var element = new XElement(ElementName);
-            
+
             element.AddAttribute(component, c => c.Name);
             element.AddAttribute(component, c => c.CatalogNumber);
             element.AddAttribute(component, c => c.Vendor);
@@ -42,20 +42,16 @@ namespace L5Sharp.Serialization
             var keyingState = new XElement("EKey");
             keyingState.AddAttribute(component, c => c.State);
             element.Add(keyingState);
-            
-            var ports = new XElement(nameof(component.Ports));
-            ports.Add(component.Ports.Select(p => _context.Serializer.Serialize(p)));
+
+            var module = (Module)component;
+            var ports = new XElement(LogixNames.Ports);
+            ports.Add(module.Ports.Select(p => _context.Serializer.Serialize(p)));
             element.Add(ports);
 
             var communications = new XElement(Communications);
 
-            var config = _context.Serializer.Serialize(component.Config);
-            communications.Add(config);
-            
-            var connections = new XElement(nameof(component.Connections));
-            connections.Add(component.Connections.Select(c => _context.Serializer.Serialize(c)));
-            communications.Add(connections);
-            
+            //connections....
+
             element.Add(communications);
 
             return element;
@@ -71,27 +67,29 @@ namespace L5Sharp.Serialization
 
             var name = element.GetComponentName();
             var description = element.GetComponentDescription();
-            var catalogNumber = element.GetAttribute<Module, string>(c => c.CatalogNumber);
-            var vendor = element.GetAttribute<Module, ushort>(c => c.Vendor);
-            var productType = element.GetAttribute<Module, ushort>(c => c.ProductType);
-            var productCode = element.GetAttribute<Module, ushort>(c => c.ProductCode);
-            var parentModule = element.GetAttribute<Module, string>(c => c.ParentModule);
-            var parentModPortId = element.GetAttribute<Module, int>(c => c.ParentModPortId);
+            var catalogNumber = element.GetAttribute<IModule, string>(c => c.CatalogNumber);
+            var vendor = element.GetAttribute<IModule, ushort>(c => c.Vendor);
+            var productType = element.GetAttribute<IModule, ushort>(c => c.ProductType);
+            var productCode = element.GetAttribute<IModule, ushort>(c => c.ProductCode);
+            var major = element.Attribute("Major")?.Value;
+            var minor = element.Attribute("Minor")?.Value;
+            var revision = Revision.Parse($"{major}.{minor}");
+            var parentModule = element.GetAttribute<IModule, string>(c => c.ParentModule);
+            var parentModPortId = element.GetAttribute<IModule, int>(c => c.ParentModPortId);
             var inhibited = element.GetAttribute<Module, bool>(c => c.Inhibited);
             var majorFault = element.GetAttribute<Module, bool>(c => c.MajorFault);
             var safetyEnabled = element.GetAttribute<Module, bool>(c => c.SafetyEnabled);
             var state = element.Element("EKey")?.GetAttribute<Module, KeyingState>(c => c.State);
+
             var ports = element.Descendants(LogixNames.Port).Select(e =>
             {
-                var serializer = new PortSerializer();
+                var serializer = new PortSerializer(_context);
                 return serializer.Deserialize(e);
             });
 
-            var communications = element.Element(Communications);
-            var config = _context.Serializer.Serialize(communications?.Element("ConfigTag"));
-
-            return new Module(name, catalogNumber!, vendor, productType, productCode, new Revision(), ports,
-                parentModule, parentModPortId, inhibited, majorFault, safetyEnabled, state);
+            return new Module(name, catalogNumber!, vendor, productType, productCode, revision,
+                parentModule!, parentModPortId, ports, state, inhibited, majorFault, safetyEnabled,
+                description: description);
         }
     }
 }

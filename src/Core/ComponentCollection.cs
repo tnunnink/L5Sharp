@@ -46,7 +46,7 @@ namespace L5Sharp.Core
         public int Count => _components.Count;
 
         /// <inheritdoc />
-        public void Add(TComponent component)
+        public virtual void Add(TComponent component)
         {
             if (component is null)
                 throw new ArgumentNullException(nameof(component));

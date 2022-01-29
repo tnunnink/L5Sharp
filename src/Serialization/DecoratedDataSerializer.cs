@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using System.Xml.Linq;
 using L5Sharp.Core;
 using L5Sharp.Extensions;
@@ -7,6 +6,9 @@ using L5Sharp.Helpers;
 
 namespace L5Sharp.Serialization
 {
+    /// <summary>
+    /// Serializer that will pass through data type to other serializers based on it's type.
+    /// </summary>
     internal class DecoratedDataSerializer : IXSerializer<IDataType>
     {
         private static readonly XName ElementName = LogixNames.Data;
@@ -16,25 +18,21 @@ namespace L5Sharp.Serialization
             if (component == null)
                 throw new ArgumentNullException(nameof(component));
 
-            var element = new XElement(ElementName);
-
             switch (component)
             {
                 case IAtomicType atomicType:
                     var dataValueSerializer = new DataValueSerializer();
-                    element.Add(dataValueSerializer.Serialize(atomicType));
-                    break;
+                    return (dataValueSerializer.Serialize(atomicType));
                 case IArrayType<IDataType> arrayType:
                     var arraySerializer = new ArraySerializer();
-                    element.Add(arraySerializer.Serialize(arrayType));
-                    break;
+                    return arraySerializer.Serialize(arrayType);
                 case IComplexType complexType:
                     var structureSerializer = new StructureSerializer();
-                    element.Add(structureSerializer.Serialize(complexType));
-                    break;
+                    return structureSerializer.Serialize(complexType);
+                default:
+                    throw new NotSupportedException(
+                        $"The provided type is not supported for the serializer of type {GetType()}");
             }
-
-            return element;
         }
 
         public IDataType Deserialize(XElement element)
@@ -42,32 +40,27 @@ namespace L5Sharp.Serialization
             if (element == null)
                 throw new ArgumentNullException(nameof(element));
 
-            if (element.Name != ElementName)
-                throw new ArgumentException(
-                    $"Element name '{element.Name}' invalid. Expecting '{ElementName}'.");
-
-            var root = element.Elements().First();
-
-            if (root.Name == LogixNames.DataValue)
+            if (element.Name == LogixNames.DataValue)
             {
-                var atomic = (IAtomicType)DataType.Create(root.GetDataTypeName());
-                var value = root.Attribute(LogixNames.Value)?.Value;
+                var atomic = (IAtomicType)DataType.Create(element.GetDataTypeName());
+                var value = element.Attribute(LogixNames.Value)?.Value;
                 atomic.SetValue(value!);
                 return atomic;
             }
 
-            if (root.Name == LogixNames.Array)
+            if (element.Name == LogixNames.Array)
             {
                 var arraySerializer = new ArraySerializer();
-                return arraySerializer.Deserialize(root);
+                return arraySerializer.Deserialize(element);
             }
 
-            if (root.Name != LogixNames.Structure)
+            if (element.Name != LogixNames.Structure)
                 throw new NotSupportedException(
-                    $"The provided element {ElementName} data member with name {root.Name} is not supported for serialization");
-            
+                    $"The provided element {ElementName} data member with name {element.Name} is not supported for" +
+                    $" the serializer of type {GetType()}");
+
             var structureSerializer = new StructureSerializer();
-            return structureSerializer.Deserialize(root);
+            return structureSerializer.Deserialize(element);
         }
     }
 }

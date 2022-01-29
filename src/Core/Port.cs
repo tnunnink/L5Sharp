@@ -1,19 +1,19 @@
-﻿namespace L5Sharp.Core
+﻿using System;
+
+namespace L5Sharp.Core
 {
     /// <summary>
-    /// Represents ta <see cref="IModule"/> port...
+    /// A component of a <see cref="IModule"/> that represents the connection location of the device.
+    /// the device.
     /// </summary>
-    public sealed class Port
+    /// <remarks>
+    /// The Port may be the slot on the chassis or backplane where the <see cref="IModule"/> resides.
+    /// This may also be the network address (IP) of the device. Each Port may also have a <see cref="Bus"/> that
+    /// contains child Modules. Each Port is identifiable by the <see cref="Id"/> property. 
+    /// </remarks>
+    public sealed class Port : IEquatable<Port>
     {
-        /// <summary>
-        /// Creates a new <see cref="Port"/> with the provided parameters.
-        /// </summary>
-        /// <param name="id">The id value tag identifies the port instance.</param>
-        /// <param name="address">The string address of the port. This is typically the slot number of IP address.</param>
-        /// <param name="type">The type of port.</param>
-        /// <param name="upstream">The value indicating content is upstream of the current port. Default is false.</param>
-        /// <param name="bus">The <see cref="Bus"/> value of the current port. Default is an empty bus (i.e. no bus).</param>
-        public Port(int id, string address, string type, bool upstream = false, Bus bus = default)
+        internal Port(int id, string address, string type, bool upstream = false, Bus? bus = null)
         {
             Id = id;
             Address = address;
@@ -25,26 +25,72 @@
         /// <summary>
         /// Gets the Id of the <see cref="Port"/>.
         /// </summary>
+        /// <remarks>
+        /// All Modules have at least oe port. Each is identified by the Id property. The <see cref="Port"/> equality
+        /// members are defined using the Id value. This value is internally generated.
+        /// </remarks>
         public int Id { get; }
-        
+
         /// <summary>
         /// Gets the address of the <see cref="Port"/>.
         /// </summary>
+        /// <remarks>
+        /// The address of a port represents the slot or IP address for the port. This value is used in the
+        /// <see cref="IModule"/> to determine the slot and IP properties. This value is assigned when creating the
+        /// Module component. 
+        /// </remarks>
         public string Address { get; }
-        
+
         /// <summary>
-        /// Gets the type of the <see cref="Port"/>.
+        /// Gets the value that represents the <see cref="Port"/> type.
         /// </summary>
+        /// <remarks>
+        /// This value appears to be specific to the product. Ports with IP will have 'Network' for their value.
+        /// </remarks>
         public string Type { get; }
-        
+
         /// <summary>
         /// Gets the value indicating whether the there are devices upstream of the current <see cref="Port"/>.
         /// </summary>
         public bool Upstream { get; }
-        
+
         /// <summary>
-        /// Gets the <see cref="Bus"/> value of the current <see cref="Port"/>.
+        /// Gets the <see cref="Bus"/> for the <see cref="Port"/> object.
         /// </summary>
-        public Bus Bus { get; }
+        /// <remarks>
+        /// A port's bus represents the backplane or chassis on which Modules accessible to the port.
+        /// Some Modules may not have a Bus, therefor making this property nullable. 
+        /// </remarks>
+        public Bus? Bus { get; }
+
+        /// <inheritdoc />
+        public bool Equals(Port? other)
+        {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return Id == other.Id;
+        }
+
+        /// <inheritdoc />
+        public override bool Equals(object? obj) => ReferenceEquals(this, obj) || obj is Port other && Equals(other);
+
+        /// <inheritdoc />
+        public override int GetHashCode() => Id;
+
+        /// <summary>
+        /// Determines if the provided objects are equal.
+        /// </summary>
+        /// <param name="left">An object to compare.</param>
+        /// <param name="right">An object to compare.</param>
+        /// <returns>true if the provided objects are equal; otherwise, false.</returns>
+        public static bool operator ==(Port? left, Port? right) => Equals(left, right);
+
+        /// <summary>
+        /// Determines if the provided objects are not equal.
+        /// </summary>
+        /// <param name="left">An object to compare.</param>
+        /// <param name="right">An object to compare.</param>
+        /// <returns>true if the provided objects are not equal; otherwise, false.</returns>
+        public static bool operator !=(Port? left, Port? right) => !Equals(left, right);
     }
 }

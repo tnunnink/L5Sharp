@@ -11,21 +11,27 @@ namespace L5Sharp.Serialization.Tests
     [TestFixture]
     public class PortSerializerTests
     {
+        private PortSerializer _serializer;
+
+        [SetUp]
+        public void Setup()
+        {
+            var context = new LogixContext(TestFileTests.L5X);
+            _serializer = new PortSerializer(context);
+        }
+        
         [Test]
         public void Serialize_Null_ShouldThrowArgumentNullException()
         {
-            var serializer = new PortSerializer();
-
-            FluentActions.Invoking(() => serializer.Serialize(null!)).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(() => _serializer.Serialize(null!)).Should().Throw<ArgumentException>();
         }
         
         [Test]
         public void Serialize_WhenCalled_ShouldNotBeNull()
         {
             var component = new Port(1, "0", "ICP", false, new Bus(10));
-            var serializer = new PortSerializer();
 
-            var xml = serializer.Serialize(component);
+            var xml = _serializer.Serialize(component);
 
             xml.Should().NotBeNull();
         }
@@ -35,9 +41,8 @@ namespace L5Sharp.Serialization.Tests
         public void Serialize_ValidComponent_ShouldBeApproved()
         {
             var component = new Port(1, "0", "ICP", false, new Bus(10));
-            var serializer = new PortSerializer();
 
-            var xml = serializer.Serialize(component);
+            var xml = _serializer.Serialize(component);
 
             Approvals.VerifyXml(xml.ToString());
         }
@@ -47,9 +52,8 @@ namespace L5Sharp.Serialization.Tests
         public void Serialize_ValidComponentNoBus_ShouldBeApproved()
         {
             var component = new Port(1, "10.11.12.13", "Ethernet", true);
-            var serializer = new PortSerializer();
 
-            var xml = serializer.Serialize(component);
+            var xml = _serializer.Serialize(component);
 
             Approvals.VerifyXml(xml.ToString());
         }
@@ -57,9 +61,7 @@ namespace L5Sharp.Serialization.Tests
         [Test]
         public void Deserialize_Null_ShouldThrowArgumentNullException()
         {
-            var serializer = new PortSerializer();
-
-            FluentActions.Invoking(() => serializer.Deserialize(null!)).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(() => _serializer.Deserialize(null!)).Should().Throw<ArgumentException>();
         }
 
         [Test]
@@ -69,9 +71,8 @@ namespace L5Sharp.Serialization.Tests
                 <Bus Size=""17""/>
                 </Invalid>";
             var element = XElement.Parse(xml);
-            var serializer = new PortSerializer();
 
-            FluentActions.Invoking(() => serializer.Deserialize(element)).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(() => _serializer.Deserialize(element)).Should().Throw<ArgumentException>();
         }
 
         [Test]
@@ -82,9 +83,8 @@ namespace L5Sharp.Serialization.Tests
                 </Port>";
 
             var element = XElement.Parse(xml);
-            var serializer = new PortSerializer();
 
-            var component = serializer.Deserialize(element);
+            var component = _serializer.Deserialize(element);
 
             component.Should().NotBeNull();
         }
@@ -97,15 +97,14 @@ namespace L5Sharp.Serialization.Tests
                 </Port>";
 
             var element = XElement.Parse(xml);
-            var serializer = new PortSerializer();
 
-            var component = serializer.Deserialize(element);
+            var component = _serializer.Deserialize(element);
 
             component.Id.Should().Be(1);
             component.Address.Should().Be("0");
             component.Type.Should().Be("5094");
             component.Upstream.Should().Be(false);
-            component.Bus.Should().Be(new Bus(17));
+            component.Bus?.Size.Should().Be(17);
         }
         
         [Test]
@@ -114,15 +113,14 @@ namespace L5Sharp.Serialization.Tests
             const string xml = @"<Port Id=""1"" Address=""10.11.12.13"" Type=""Ethernet"" Upstream=""true""></Port>";
 
             var element = XElement.Parse(xml);
-            var serializer = new PortSerializer();
 
-            var component = serializer.Deserialize(element);
+            var component = _serializer.Deserialize(element);
 
             component.Id.Should().Be(1);
             component.Address.Should().Be("10.11.12.13");
             component.Type.Should().Be("Ethernet");
             component.Upstream.Should().Be(true);
-            component.Bus.Should().Be(Bus.Empty);
+            component.Bus.Should().BeNull();
         }
     }
 }

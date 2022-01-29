@@ -35,7 +35,8 @@ namespace L5Sharp
 
             L5X = new L5X(document);
             Serializer = new LogixContextSerializer(this);
-            Types = new LogixContextTypes(this);
+            TypeIndex = new LogixContextTypes(this);
+            ModuleIndex = new LogixContextModules(this);
 
             UserDefined = new UserDefinedRepository(this);
             Tags = new TagRepository(this);
@@ -45,7 +46,8 @@ namespace L5Sharp
 
         internal L5X L5X { get; }
         internal LogixContextSerializer Serializer { get; }
-        internal LogixContextTypes Types { get; }
+        internal LogixContextTypes TypeIndex { get; }
+        internal LogixContextModules ModuleIndex { get; }
 
         /// <inheritdoc />
         public Revision SchemaRevision => Revision.Parse(L5X.Root.Attribute(nameof(SchemaRevision))?.Value!);

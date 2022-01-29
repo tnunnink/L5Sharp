@@ -9,7 +9,7 @@ namespace L5Sharp.Core
     /// <inheritdoc />
     public class TagMember<TDataType> : ITagMember<TDataType> where TDataType : IDataType
     {
-        private IMember<TDataType> _member;
+        private readonly IMember<TDataType> _member;
 
         internal TagMember(IMember<TDataType> member, ITag<IDataType> root, ITagMember<IDataType>? parent)
         {
@@ -22,8 +22,8 @@ namespace L5Sharp.Core
         public string Name => _member.Name;
 
         /// <inheritdoc />
-        public string Description => Root.Comments.Contains(TagName)
-            ? Root.Comments.Get(TagName)
+        public string Description => ((Tag<IDataType>)Root).Comments.Contains(TagName)
+            ? ((Tag<IDataType>)Root).Comments.Get(TagName)
             : CalculateDescription();
 
         /// <inheritdoc />
@@ -91,7 +91,7 @@ namespace L5Sharp.Core
                 $"The member '{tagName}' does not exist as a valid descendent of '{DataType.GetType()}'");
 
         /// <inheritdoc />
-        public void Comment(string comment) => Root.Comments.Set(new Comment(TagName, comment));
+        public void Comment(string comment) => ((Tag<IDataType>)Root).Comments.Set(TagName, comment);
 
         /// <inheritdoc />
         public bool Contains(TagName tagName) => GetTagNames().Contains(tagName);

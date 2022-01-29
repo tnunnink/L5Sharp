@@ -5,16 +5,22 @@ using System.Collections.Generic;
 namespace L5Sharp.Core
 {
     /// <summary>
-    /// A collection of <see cref="L5Sharp.Core.Comment"/>
+    /// A collection tag name and comment value pairs for a certain tag.
     /// </summary>
-    public class Comments : IEnumerable<Comment>
+    internal class Comments : IEnumerable<KeyValuePair<TagName, string>>
     {
-        private readonly ITag<IDataType> _tag;
-        private readonly Dictionary<TagName, Comment> _comments = new();
+        private readonly Dictionary<TagName, string> _comments = new();
 
-        internal Comments(ITag<IDataType> tag)
+        /// <summary>
+        /// Creates a new <see cref="Comments"/> collection with the provided comments.
+        /// </summary>
+        /// <param name="comments">An optional collection of comments to initialize the collection with.</param>
+        public Comments(IEnumerable<KeyValuePair<TagName, string>>? comments = null)
         {
-            _tag = tag ?? throw new ArgumentNullException(nameof(tag));
+            if (comments is null) 
+                return;
+
+            _comments = new Dictionary<TagName, string>(comments);
         }
 
         /// <summary>
@@ -32,17 +38,13 @@ namespace L5Sharp.Core
         /// </summary>
         /// <param name="tagName">The value of the tag name to find a comments for.</param>
         /// <returns>The string value of the comment if the operand is found; otherwise, and empty string.</returns>
-        /// <exception cref="ArgumentException">Thrown when operand is null.</exception>
+        /// <exception cref="ArgumentException">When tagName is null.</exception>
         public string Get(TagName tagName)
         {
             if (string.IsNullOrEmpty(tagName))
                 throw new ArgumentException("TagName can not be null or empty.");
 
-            if (!_comments.ContainsKey(tagName))
-                throw new InvalidOperationException(
-                    $"The specified operand '{tagName}' does not exist on the collection.");
-
-            return _comments[tagName].Value;
+            return _comments[tagName];
         }
 
         /// <summary>
@@ -53,48 +55,33 @@ namespace L5Sharp.Core
         /// it will be added. If the provided comment exists and is different, it will be updated. If the provided
         /// comment exists and is a empty or null value, the comment will be removed from the collection.
         /// </remarks>
-        /// <param name="comment">The comment to set.</param>
+        /// <param name="tagName">The <see cref="TagName"/> for which to set the comment.</param>
+        /// <param name="comment">The string comment value.</param>
         /// <exception cref="ArgumentNullException">When comment is null.</exception>
-        /// <exception cref="InvalidOperationException">
-        /// When the provided comment operand is not a valid member of the current tag.
-        /// </exception>
-        public void Set(Comment comment)
+        public void Set(TagName tagName, string comment)
         {
             if (comment == null)
                 throw new ArgumentNullException(nameof(comment));
 
-            if (!IsValidTagName(comment.TagName))
-                throw new InvalidOperationException(
-                    $"Could not find operand '{comment.TagName}' on current tag {_tag.Name}");
-
-            if (string.IsNullOrEmpty(comment.Value))
+            if (string.IsNullOrEmpty(comment))
             {
-                if (_comments.ContainsKey(comment.TagName))
-                    _comments.Remove(comment.TagName);
+                if (_comments.ContainsKey(tagName))
+                    _comments.Remove(comment);
                 return;
             }
 
-            if (_comments.ContainsKey(comment.TagName))
+            if (_comments.ContainsKey(tagName))
             {
-                _comments[comment.TagName] = comment;
+                _comments[tagName] = comment;
                 return;
             }
             
-            _comments.Add(comment.TagName, comment);
+            _comments.Add(tagName, comment);
         }
 
         /// <inheritdoc />
-        public IEnumerator<Comment> GetEnumerator() => _comments.Values.GetEnumerator();
+        public IEnumerator<KeyValuePair<TagName, string>> GetEnumerator() => _comments.GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-
-        /// <summary>
-        /// Helper to determine if the provided tag name exists for the current root tag.
-        /// </summary>
-        /// <param name="tagName">The <see cref="TagName"/> value to verify.</param>
-        /// <returns>
-        /// true if the tag name is the name of the root tag or if it is the name of one of the tag's members; otherwise, false.
-        /// </returns>
-        private bool IsValidTagName(TagName tagName) => _tag.TagName.Equals(tagName) || _tag.Contains(tagName);
     }
 }

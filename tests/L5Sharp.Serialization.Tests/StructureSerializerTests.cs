@@ -124,6 +124,16 @@ namespace L5Sharp.Serialization.Tests
             component.Members.ToList().Should().HaveCount(5);
             component.Members.Should().AllBeOfType<Member<IDataType>>();
         }
+        
+        [Test]
+        public void Deserialize_ComplexType_ShouldNotBeNull()
+        {
+            var element = XElement.Parse(GetComplexTypeStructure());
+
+            var component = _serializer.Deserialize(element);
+
+            component.Should().NotBeNull();
+        }
 
         [Test]
         public void Deserialize_ModuleType_ShouldNotBeNull()
@@ -145,7 +155,143 @@ namespace L5Sharp.Serialization.Tests
             component.Name.Should().Be("AB:5000_AI8:I:0");
             component.Members.ToList().Should().NotBeNull();
         }
+
+        private static string GetComplexTypeStructure()
+        {
+            return @"<Structure DataType=""ComplexType"">
+                <StructureMember Name=""SimpleMember"" DataType=""SimpleType"">
+                    <DataValueMember Name=""BoolMember"" DataType=""BOOL"" Value=""0""/>
+                    <DataValueMember Name=""SintMember"" DataType=""SINT"" Radix=""Hex"" Value=""16#00""/>
+                    <DataValueMember Name=""IntMember"" DataType=""INT"" Radix=""Octal"" Value=""8#000_000""/>
+                    <DataValueMember Name=""DintMember"" DataType=""DINT"" Radix=""ASCII""
+                                     Value=""'$00$00$00$00'""/>
+                    <DataValueMember Name=""LintMember"" DataType=""LINT"" Radix=""Decimal"" Value=""0""/>
+                </StructureMember>
+                <StructureMember Name=""CounterMember"" DataType=""COUNTER"">
+                    <DataValueMember Name=""PRE"" DataType=""DINT"" Radix=""Decimal"" Value=""0""/>
+                    <DataValueMember Name=""ACC"" DataType=""DINT"" Radix=""Decimal"" Value=""0""/>
+                    <DataValueMember Name=""CU"" DataType=""BOOL"" Value=""0""/>
+                    <DataValueMember Name=""CD"" DataType=""BOOL"" Value=""0""/>
+                    <DataValueMember Name=""DN"" DataType=""BOOL"" Value=""0""/>
+                    <DataValueMember Name=""OV"" DataType=""BOOL"" Value=""0""/>
+                    <DataValueMember Name=""UN"" DataType=""BOOL"" Value=""0""/>
+                </StructureMember>
+                <StructureMember Name=""TimeMember"" DataType=""TIMER"">
+                    <DataValueMember Name=""PRE"" DataType=""DINT"" Radix=""Decimal"" Value=""0""/>
+                    <DataValueMember Name=""ACC"" DataType=""DINT"" Radix=""Decimal"" Value=""0""/>
+                    <DataValueMember Name=""EN"" DataType=""BOOL"" Value=""0""/>
+                    <DataValueMember Name=""TT"" DataType=""BOOL"" Value=""0""/>
+                    <DataValueMember Name=""DN"" DataType=""BOOL"" Value=""0""/>
+                </StructureMember>
+                <StructureMember Name=""AlarmMember"" DataType=""ALARM"">
+                    <DataValueMember Name=""EnableIn"" DataType=""BOOL"" Value=""1""/>
+                    <DataValueMember Name=""In"" DataType=""REAL"" Radix=""Float"" Value=""0.0""/>
+                    <DataValueMember Name=""HHLimit"" DataType=""REAL"" Radix=""Float""
+                                     Value=""3.40282347e+038""/>
+                    <DataValueMember Name=""HLimit"" DataType=""REAL"" Radix=""Float""
+                                     Value=""3.40282347e+038""/>
+                    <DataValueMember Name=""LLimit"" DataType=""REAL"" Radix=""Float""
+                                     Value=""-3.40282347e+038""/>
+                    <DataValueMember Name=""LLLimit"" DataType=""REAL"" Radix=""Float""
+                                     Value=""-3.40282347e+038""/>
+                    <DataValueMember Name=""Deadband"" DataType=""REAL"" Radix=""Float"" Value=""0.0""/>
+                    <DataValueMember Name=""ROCPosLimit"" DataType=""REAL"" Radix=""Float"" Value=""0.0""/>
+                    <DataValueMember Name=""ROCNegLimit"" DataType=""REAL"" Radix=""Float"" Value=""0.0""/>
+                    <DataValueMember Name=""ROCPeriod"" DataType=""REAL"" Radix=""Float"" Value=""0.0""/>
+                    <DataValueMember Name=""EnableOut"" DataType=""BOOL"" Value=""0""/>
+                    <DataValueMember Name=""HHAlarm"" DataType=""BOOL"" Value=""0""/>
+                    <DataValueMember Name=""HAlarm"" DataType=""BOOL"" Value=""0""/>
+                    <DataValueMember Name=""LAlarm"" DataType=""BOOL"" Value=""0""/>
+                    <DataValueMember Name=""LLAlarm"" DataType=""BOOL"" Value=""0""/>
+                    <DataValueMember Name=""ROCPosAlarm"" DataType=""BOOL"" Value=""0""/>
+                    <DataValueMember Name=""ROCNegAlarm"" DataType=""BOOL"" Value=""0""/>
+                    <DataValueMember Name=""ROC"" DataType=""REAL"" Radix=""Float"" Value=""0.0""/>
+                    <DataValueMember Name=""Status"" DataType=""DINT"" Radix=""Hex"" Value=""16#0000_0000""/>
+                    <DataValueMember Name=""InstructFault"" DataType=""BOOL"" Value=""0""/>
+                    <DataValueMember Name=""DeadbandInv"" DataType=""BOOL"" Value=""0""/>
+                    <DataValueMember Name=""ROCPosLimitInv"" DataType=""BOOL"" Value=""0""/>
+                    <DataValueMember Name=""ROCNegLimitInv"" DataType=""BOOL"" Value=""0""/>
+                    <DataValueMember Name=""ROCPeriodInv"" DataType=""BOOL"" Value=""0""/>
+                </StructureMember>
+                <StructureMember Name=""AOIType"" DataType=""aoi_Test"">
+                    <DataValueMember Name=""EnableIn"" DataType=""BOOL"" Value=""1""/>
+                    <DataValueMember Name=""EnableOut"" DataType=""BOOL"" Value=""0""/>
+                    <DataValueMember Name=""InputTest"" DataType=""BOOL"" Value=""0""/>
+                    <DataValueMember Name=""OutputTest"" DataType=""DINT"" Radix=""Decimal"" Value=""0""/>
+                    <DataValueMember Name=""Config"" DataType=""INT"" Radix=""Decimal"" Value=""0""/>
+                    <DataValueMember Name=""Test"" DataType=""BOOL"" Value=""0""/>
+                </StructureMember>
+                <ArrayMember Name=""SimplArray"" DataType=""SimpleType"" Dimensions=""5"">
+                    <Element Index=""[0]"">
+                        <Structure DataType=""SimpleType"">
+                            <DataValueMember Name=""BoolMember"" DataType=""BOOL"" Value=""0""/>
+                            <DataValueMember Name=""SintMember"" DataType=""SINT"" Radix=""Hex""
+                                             Value=""16#00""/>
+                            <DataValueMember Name=""IntMember"" DataType=""INT"" Radix=""Octal""
+                                             Value=""8#000_000""/>
+                            <DataValueMember Name=""DintMember"" DataType=""DINT"" Radix=""ASCII""
+                                             Value=""'$00$00$00$00'""/>
+                            <DataValueMember Name=""LintMember"" DataType=""LINT"" Radix=""Decimal""
+                                             Value=""0""/>
+                        </Structure>
+                    </Element>
+                    <Element Index=""[1]"">
+                        <Structure DataType=""SimpleType"">
+                            <DataValueMember Name=""BoolMember"" DataType=""BOOL"" Value=""0""/>
+                            <DataValueMember Name=""SintMember"" DataType=""SINT"" Radix=""Hex""
+                                             Value=""16#00""/>
+                            <DataValueMember Name=""IntMember"" DataType=""INT"" Radix=""Octal""
+                                             Value=""8#000_000""/>
+                            <DataValueMember Name=""DintMember"" DataType=""DINT"" Radix=""ASCII""
+                                             Value=""'$00$00$00$00'""/>
+                            <DataValueMember Name=""LintMember"" DataType=""LINT"" Radix=""Decimal""
+                                             Value=""0""/>
+                        </Structure>
+                    </Element>
+                    <Element Index=""[2]"">
+                        <Structure DataType=""SimpleType"">
+                            <DataValueMember Name=""BoolMember"" DataType=""BOOL"" Value=""0""/>
+                            <DataValueMember Name=""SintMember"" DataType=""SINT"" Radix=""Hex""
+                                             Value=""16#00""/>
+                            <DataValueMember Name=""IntMember"" DataType=""INT"" Radix=""Octal""
+                                             Value=""8#000_000""/>
+                            <DataValueMember Name=""DintMember"" DataType=""DINT"" Radix=""ASCII""
+                                             Value=""'$00$00$00$00'""/>
+                            <DataValueMember Name=""LintMember"" DataType=""LINT"" Radix=""Decimal""
+                                             Value=""0""/>
+                        </Structure>
+                    </Element>
+                    <Element Index=""[3]"">
+                        <Structure DataType=""SimpleType"">
+                            <DataValueMember Name=""BoolMember"" DataType=""BOOL"" Value=""0""/>
+                            <DataValueMember Name=""SintMember"" DataType=""SINT"" Radix=""Hex""
+                                             Value=""16#00""/>
+                            <DataValueMember Name=""IntMember"" DataType=""INT"" Radix=""Octal""
+                                             Value=""8#000_000""/>
+                            <DataValueMember Name=""DintMember"" DataType=""DINT"" Radix=""ASCII""
+                                             Value=""'$00$00$00$00'""/>
+                            <DataValueMember Name=""LintMember"" DataType=""LINT"" Radix=""Decimal""
+                                             Value=""0""/>
+                        </Structure>
+                    </Element>
+                    <Element Index=""[4]"">
+                        <Structure DataType=""SimpleType"">
+                            <DataValueMember Name=""BoolMember"" DataType=""BOOL"" Value=""0""/>
+                            <DataValueMember Name=""SintMember"" DataType=""SINT"" Radix=""Hex""
+                                             Value=""16#00""/>
+                            <DataValueMember Name=""IntMember"" DataType=""INT"" Radix=""Octal""
+                                             Value=""8#000_000""/>
+                            <DataValueMember Name=""DintMember"" DataType=""DINT"" Radix=""ASCII""
+                                             Value=""'$00$00$00$00'""/>
+                            <DataValueMember Name=""LintMember"" DataType=""LINT"" Radix=""Decimal""
+                                             Value=""0""/>
+                        </Structure>
+                    </Element>
+                </ArrayMember>
+            </Structure>";
+        }
         
+
         private static string GetModuleTypeStructure()
         {
             return @"<Structure DataType=""AB:5000_AI8:I:0"">

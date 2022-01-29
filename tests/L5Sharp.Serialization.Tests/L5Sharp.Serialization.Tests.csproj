@@ -199,14 +199,17 @@
       <None Update="TaskSerializerTests.Serialize_EventTask_ShouldBeApproved.approved.xml">
         <DependentUpon>TaskSerializerTests.cs</DependentUpon>
       </None>
-      <None Update="TestFiles\Test.xml">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
       <None Update="ArrayMemberSerializerTests.Serialize_StructureTypeArray_ShouldBeApproved.approved.xml">
         <DependentUpon>ArrayMemberSerializerTests.cs</DependentUpon>
       </None>
       <None Update="MemberSerializerTests.Serialize_AtomicArray_ShouldBeApproved.approved.xml">
         <DependentUpon>MemberSerializerTests.cs</DependentUpon>
+      </None>
+      <None Update="TestFiles\Test.xml">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="CommentSerializerTests.Serialize_Bool_ShouldBeApproved.approved.xml">
+        <DependentUpon>CommentSerializerTests.cs</DependentUpon>
       </None>
     </ItemGroup>
 

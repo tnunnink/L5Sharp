@@ -10,20 +10,17 @@ namespace L5Sharp.Core
         private readonly ITagMember<TDataType> _tagMember;
 
         internal Tag(string name, TDataType dataType, Radix? radix = null, ExternalAccess? externalAccess = null,
-            string? description = null, TagUsage? usage = null, bool constant = false)
+            string? description = null, TagUsage? usage = null, bool constant = false, Comments? comments = null)
         {
-            externalAccess ??= ExternalAccess.None; // tags are different than members in the default.
             var member = new Member<TDataType>(name, dataType, radix, externalAccess, description);
             _tagMember = new TagMember<TDataType>(member, Root, Parent);
             
             Usage = usage != null ? usage : TagUsage.Null;
-            Scope = Scope.Null;
             Constant = constant;
-            Comments = new Comments(Root);
-
-            //We need to store the default description if it is provided.
+            
+            Comments = new Comments(comments);
             if (!string.IsNullOrEmpty(description))
-                Comments.Set(new Comment(TagName, description));
+                Comments.Set(TagName, description);
         }
 
         /// <inheritdoc />
@@ -69,16 +66,15 @@ namespace L5Sharp.Core
         public TagType TagType => TagType.Base;
 
         /// <inheritdoc />
-        public Scope Scope { get; }
-
-        /// <inheritdoc />
         public TagUsage Usage { get; }
 
         /// <inheritdoc />
         public bool Constant { get; }
 
-        /// <inheritdoc />
-        public Comments Comments { get; }
+        /// <summary>
+        /// Gets the collection of comments for the current <see cref="ITag{TDataType}"/>.
+        /// </summary>
+        internal Comments Comments { get; }
 
         /// <inheritdoc />
         public void Comment(string comment) => _tagMember.Comment(comment);

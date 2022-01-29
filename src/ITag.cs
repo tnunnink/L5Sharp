@@ -13,12 +13,7 @@ namespace L5Sharp
         /// Gets the <c>TagType</c> of the <c>ITag</c> component.
         /// </summary>
         TagType TagType { get; }
-        
-        /// <summary>
-        /// Gets the <c>Scope</c> of the <c>ITag</c> component.
-        /// </summary>
-        Scope Scope { get; }
-        
+
         /// <summary>
         /// Gets the <c>TagUsage</c> of the <c>ITag</c> component.
         /// </summary>
@@ -32,6 +27,6 @@ namespace L5Sharp
         /// <summary>
         /// Gets the collection of member comments for the current <c>Tag</c>.
         /// </summary>
-        Comments Comments {get;}
+        //Comments Comments {get;}
     }
 }

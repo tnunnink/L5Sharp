@@ -21,16 +21,14 @@ namespace L5Sharp.Serialization
                 throw new ArgumentNullException(nameof(component));
 
             var element = new XElement(ElementName);
-            element.AddAttribute(component,c => c.Name);
-            element.AddAttribute(component,c => c.Rpi);
-            element.AddAttribute(component,c => c.Type);
-            element.AddAttribute(component,c => c.Priority);
-            element.AddAttribute(component,c => c.InputConnectionType);
-            element.AddAttribute(component,c => c.InputProductionTrigger);
-            element.AddAttribute(component,c => c.OutputRedundantOwner);
-            element.AddAttribute(component,c => c.InputSuffix);
-            element.AddAttribute(component,c => c.OutputSuffix);
-            element.AddAttribute(component,c => c.EventId);
+            element.AddAttribute(component, c => c.Name);
+            element.AddAttribute(component, c => c.Rpi);
+            element.AddAttribute(component, c => c.Type);
+            element.AddAttribute(component, c => c.Priority);
+            element.AddAttribute(component, c => c.InputConnectionType);
+            element.AddAttribute(component, c => c.InputProductionTrigger);
+            element.AddAttribute(component, c => c.OutputRedundantOwner);
+            element.AddAttribute(component, c => c.EventId);
 
             return element;
         }
@@ -52,18 +50,11 @@ namespace L5Sharp.Serialization
             var inputProductionTrigger =
                 element.GetAttribute<Connection, ProductionTrigger>(c => c.InputProductionTrigger);
             var outputRedundantOwner = element.GetAttribute<Connection, bool>(c => c.OutputRedundantOwner);
-            var inputSuffix = element.GetAttribute<Connection, string>(c => c.InputSuffix);
-            var outputSuffix = element.GetAttribute<Connection, string>(c => c.OutputSuffix);
             var eventId = element.GetAttribute<Connection, int>(c => c.EventId);
             var unicast = element.GetAttribute<Connection, bool>(c => c.Unicast);
 
-            //These types will be structure types?
-            var inputTag = element.Element("InputTag");
-            var outputTag = element.Element("OutputTag");
-
-            return new Connection(name, rpi, type, priority,
-                inputConnectionType, inputProductionTrigger, outputRedundantOwner, inputSuffix, outputSuffix, unicast,
-                eventId);
+            return new Connection(name, rpi, type, priority, inputConnectionType, inputProductionTrigger,
+                outputRedundantOwner, unicast, eventId);
         }
     }
 }

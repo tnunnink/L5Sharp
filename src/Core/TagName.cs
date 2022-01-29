@@ -86,7 +86,7 @@ namespace L5Sharp.Core
         /// bracket (i.e. array member name.
         /// </remarks>
         public static TagName Combine(string left, string right) =>
-            new(right.StartsWith(ArrayBracket)
+            new(right.StartsWith(ArrayBracket) || right.StartsWith(MemberSeparator)
                 ? $"{left}{right}"
                 : $"{left}{MemberSeparator}{right}");
 

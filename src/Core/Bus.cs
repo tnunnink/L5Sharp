@@ -1,90 +1,81 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace L5Sharp.Core
 {
     /// <summary>
-    /// Represents a Logix <see cref="Bus"/> or value type that determines the size of a IO rack.
+    /// A Logix <see cref="Bus"/> is an object that represents a collection of <see cref="IModule"/>.
     /// </summary>
-    public readonly struct Bus : IEquatable<Bus>
+    public sealed class Bus : IEnumerable<IModule>
     {
-        private readonly byte _size;
-        
+        private readonly List<IModule> _modules;
+
         /// <summary>
-        /// Creates a new <see cref="Bus"/> value with the specified size parameter.
+        /// Creates a new <see cref="Bus"/> with the provided collection.
         /// </summary>
         /// <param name="size"></param>
-        public Bus(byte size)
+        /// <param name="modules">A collection of modules to initialize the collection with.</param>
+        internal Bus(int size, IEnumerable<IModule> modules)
         {
-            _size = size;
+            var list = modules.ToList();
+            
+            if (list.Count > size)
+                throw new ArgumentException();
+            
+            _modules = new List<IModule>(size);
+            _modules.AddRange(list);
         }
 
         /// <summary>
-        /// Determines if the provided slot number is within range of the current bus size.
+        /// Creates a new empty <see cref="Bus"/> with unspecified capacity.
         /// </summary>
-        /// <param name="slot">The slot number to evaluate.</param>
-        /// <returns>
-        /// true if the provided number less than or equal to the size of the <see cref="Bus"/>.
-        /// </returns>
-        public bool IsValidSlot(byte slot) => slot <= _size;
+        public Bus()
+        {
+            _modules = new List<IModule>();
+        }
 
         /// <summary>
-        /// Gets a value indicating whether the bus has a size.
+        /// Creates a new <see cref="Bus"/> value with the specified size parameter.
         /// </summary>
-        public bool IsEmpty => _size == 0;
+        /// <param name="size">The size of the <see cref="Bus"/>.</param>
+        public Bus(int size)
+        {
+            _modules = new List<IModule>(size);
+        }
 
         /// <summary>
-        /// Gets a value of an empty <see cref="Bus"/>.
+        /// Gets the value of the current <see cref="Bus"/> size.
         /// </summary>
-        public static Bus Empty => new();
+        public int Size => _modules.Capacity;
+
+        /// <summary>
+        /// Gets a value indicating whether the <see cref="Bus"/> has any modules.
+        /// </summary>
+        public bool IsEmpty => _modules.Any();
+
+        /// <summary>
+        /// Adds a <see cref="IModule"/> to the current <see cref="Bus"/>.
+        /// </summary>
+        /// <param name="module">The <see cref="IModule"/> instance to add.</param>
+        public void AddModule(IModule module)
+        {
+            _modules.Add(module);
+        }
+
+        /// <summary>
+        /// Adds the provided collection of <see cref="IModule"/> to the <see cref="Bus"/> in the order they are provided.
+        /// </summary>
+        /// <param name="modules">The collection of <see cref="IModule"/> to add.</param>
+        public void AddModules(IEnumerable<IModule> modules)
+        {
+            _modules.AddRange(modules);
+        }
 
         /// <inheritdoc />
-        public override string ToString() => _size.ToString();
+        public IEnumerator<IModule> GetEnumerator() => _modules.GetEnumerator();
 
-        /// <summary>
-        /// Converts a <see cref="Bus"/> to a <see cref="byte"/> value.
-        /// </summary>
-        /// <param name="value">The <see cref="Bus"/> value to convert.</param>
-        /// <returns>A new <see cref="byte"/> value.</returns>
-        public static implicit operator byte(Bus value) => value._size;
-        
-        /// <summary>
-        /// Converts a <see cref="byte"/> to a <see cref="Bus"/> value.
-        /// </summary>
-        /// <param name="value">The <see cref="byte"/> value to convert.</param>
-        /// <returns>A new <see cref="Bus"/> value.</returns>
-        public static implicit operator Bus(byte value) => new(value);
-
-        /// <summary>
-        /// Converts a <see cref="string"/> to a <see cref="Bus"/> value.
-        /// </summary>
-        /// <param name="value">The <see cref="string"/> value to convert.</param>
-        /// <returns>A new <see cref="Bus"/> value.</returns>
-        public static implicit operator Bus(string value) => new(byte.Parse(value));
-
-
-        /// <inheritdoc />
-        public bool Equals(Bus other) => _size == other._size;
-
-        /// <inheritdoc />
-        public override bool Equals(object? obj) => obj is Bus other && Equals(other);
-
-        /// <inheritdoc />
-        public override int GetHashCode() => _size.GetHashCode();
-
-        /// <summary>
-        /// Determines if the provided objects are equal.
-        /// </summary>
-        /// <param name="left">An object to compare.</param>
-        /// <param name="right">An object to compare.</param>
-        /// <returns>true if the provided objects are equal; otherwise, false.</returns>
-        public static bool operator ==(Bus left, Bus right) => left.Equals(right);
-
-        /// <summary>
-        /// Determines if the provided objects are not equal.
-        /// </summary>
-        /// <param name="left">An object to compare.</param>
-        /// <param name="right">An object to compare.</param>
-        /// <returns>true if the provided objects are not equal; otherwise, false.</returns>
-        public static bool operator !=(Bus left, Bus right) => !left.Equals(right);
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 }

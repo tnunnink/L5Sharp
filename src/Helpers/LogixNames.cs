@@ -23,6 +23,7 @@ namespace L5Sharp.Helpers
         public static string Module = nameof(Module);
         public static string Ports = nameof(Ports);
         public static string Port = nameof(Port);
+        public static string Bus = nameof(Bus); 
         public static string Connections = nameof(Connections);
         public static string Connection = nameof(Connection);
         public static string AddOnInstructionDefinitions = nameof(AddOnInstructionDefinitions);
@@ -60,9 +61,13 @@ namespace L5Sharp.Helpers
 
         //Other..
         public static string EventInfo = nameof(EventInfo);
-
+        public static string Comment = nameof(Comment);
+        public static string Comments = nameof(Comments);
+        
 
         //Component Map Collection
+
+
         private static readonly Dictionary<Type, Tuple<string, string>> ComponentNameMap = new()
         {
             { typeof(IController), new Tuple<string, string>(Controller, string.Empty) },

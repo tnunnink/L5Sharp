@@ -1,15 +1,16 @@
 ﻿using System;
 using FluentAssertions;
+using L5Sharp.Core;
 using L5Sharp.Enums;
 using NUnit.Framework;
 
-namespace L5Sharp.Core.Tests
+namespace L5Sharp.Internal.Tests.Core
 {
     [TestFixture]
     public class ConnectionTests
     {
         [Test]
-        public void New_NullName_shouldThrowArgumentNullException()
+        public void New_NullName_ShouldThrowArgumentNullException()
         {
             FluentActions.Invoking(() => new Connection(null!, 10, ConnectionType.Input)).Should()
                 .Throw<ArgumentNullException>();
@@ -35,12 +36,8 @@ namespace L5Sharp.Core.Tests
             connection.InputConnectionType.Should().Be(TransmissionType.Multicast);
             connection.InputProductionTrigger.Should().Be(ProductionTrigger.Cyclic);
             connection.OutputRedundantOwner.Should().Be(false);
-            connection.InputSuffix.Should().Be("I");
-            connection.OutputSuffix.Should().Be("O");
             connection.Unicast.Should().Be(false);
             connection.EventId.Should().Be(0);
-            connection.InputTag.Should().BeNull();
-            connection.OutputTag.Should().BeNull();
         }
     }
 }

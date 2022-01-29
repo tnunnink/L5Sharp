@@ -1,7 +1,8 @@
 ﻿using FluentAssertions;
+using L5Sharp.Core;
 using NUnit.Framework;
 
-namespace L5Sharp.Core.Tests
+namespace L5Sharp.Internal.Tests.Core
 {
     [TestFixture]
     public class PortTests
@@ -23,7 +24,7 @@ namespace L5Sharp.Core.Tests
             port.Address.Should().Be("0");
             port.Type.Should().Be("ICP");
             port.Upstream.Should().Be(false);
-            port.Bus.Should().Be(Bus.Empty);
+            port.Bus.Should().BeNull();
         }
         
         [Test]
@@ -35,7 +36,7 @@ namespace L5Sharp.Core.Tests
             port.Address.Should().Be("0");
             port.Type.Should().Be("ICP");
             port.Upstream.Should().Be(true);
-            port.Bus.Should().Be(new Bus(1));
+            port.Bus?.Size.Should().Be(1);
         }
     }
 }

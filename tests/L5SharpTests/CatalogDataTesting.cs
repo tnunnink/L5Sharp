@@ -10,7 +10,7 @@ namespace L5SharpTests
     [TestFixture]
     public class CatalogDataTesting
     {
-        private const string FileName = @"C:\Users\tnunnink\dev\projects\L5Sharp\data\CatalogSvcsDatabase.xml";
+        private const string FileName = @"C:\Users\tnunnink\dev\projects\L5Sharp\data\CatalogSvcsDatabaseV2.xml";
         
         [Test]
         public void FileExists()

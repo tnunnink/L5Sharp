@@ -26,7 +26,6 @@ namespace L5Sharp.Core.Tests
             tag.ExternalAccess.Should().Be(ExternalAccess.None);
             tag.TagType.Should().Be(TagType.Base);
             tag.Usage.Should().Be(TagUsage.Null);
-            tag.Scope.Should().Be(Scope.Null);
             tag.Constant.Should().BeFalse();
             tag.IsValueMember.Should().BeFalse();
             tag.IsStructureMember.Should().BeTrue();

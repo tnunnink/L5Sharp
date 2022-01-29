@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Xml.Linq;
 using L5Sharp.Core;
 using L5Sharp.Enums;
@@ -16,14 +17,14 @@ namespace L5Sharp.Serialization
         {
             _context = context;
         }
-        
+
         public XElement Serialize(ITag<IDataType> component)
         {
             if (component == null)
                 throw new ArgumentNullException(nameof(component));
 
             var element = new XElement(ElementName);
-            
+
             element.AddAttribute(component, c => c.Name);
             element.AddElement(component, c => c.Description);
             element.AddAttribute(component, c => c.TagType);
@@ -32,12 +33,15 @@ namespace L5Sharp.Serialization
             element.AddAttribute(component, c => c.Radix, t => t.IsValueMember);
             element.AddAttribute(component, c => c.Constant);
             element.AddAttribute(component, c => c.ExternalAccess);
-            
-            //todo comments.
-            //todo eng unit?
 
-            var decoratedSerializer = new DecoratedDataSerializer();
-            var data = decoratedSerializer.Serialize(component.DataType);
+            var tag = (Tag<IDataType>)component;
+            var commentSerializer = new CommentSerializer(component.Name);
+            element.Add(commentSerializer.Serialize(tag.Comments));
+            
+            //todo same with engineering units and perhaps ranges min/max
+
+            var dataSerializer = new FormattedDataSerializer();
+            var data = dataSerializer.Serialize(component.DataType);
             element.Add(data);
 
             return element;
@@ -52,22 +56,31 @@ namespace L5Sharp.Serialization
                 throw new ArgumentException($"Element name '{element.Name}' invalid. Expecting '{ElementName}'");
 
             var name = element.GetComponentName();
-            var dataType = _context.Types.GetDataType(element.GetDataTypeName());
+            var dataType = _context.TypeIndex.GetDataType(element.GetDataTypeName());
             var dimensions = element.GetAttribute<Tag<IDataType>, Dimensions>(t => t.Dimensions);
             var radix = element.GetAttribute<Tag<IDataType>, Radix>(t => t.Radix);
             var access = element.GetAttribute<Tag<IDataType>, ExternalAccess>(t => t.ExternalAccess);
             var usage = element.GetAttribute<Tag<IDataType>, TagUsage>(m => m.Usage);
             var constant = element.GetAttribute<Tag<IDataType>, bool>(m => m.Constant);
             var description = element.GetAttribute<Tag<IDataType>, string>(m => m.Description);
-            
-            var type = dimensions is not null && dimensions.AreEmpty 
+
+            //var commentSerializer = new CommentSerializer();
+
+            var type = dimensions is not null && dimensions.AreEmpty
                 ? new ArrayType<IDataType>(dimensions, dataType, radix, access, description)
                 : dataType;
 
             var tag = new Tag<IDataType>(name, type, radix, access, description, usage, constant);
 
-            //todo set tag data.
-
+            var dataSerializer = new FormattedDataSerializer();
+            var formattedData = element.Descendants(LogixNames.Data)
+                .FirstOrDefault(e => e.Attribute("Format") is not null);
+            if (formattedData is not null)
+            {
+                var data = dataSerializer.Deserialize(formattedData);
+                //todo update tag values with deserialized data.
+            }
+            
             return tag;
         }
     }

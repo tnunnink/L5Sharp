@@ -1,4 +1,6 @@
-﻿using FluentAssertions;
+﻿using System;
+using System.Collections.Generic;
+using FluentAssertions;
 using L5Sharp.Types;
 using NUnit.Framework;
 
@@ -24,6 +26,14 @@ namespace L5Sharp.Enums.Tests
             var result = radix.Format(new Sint(20));
 
             result.Should().Be("$14");
+        }
+
+        [Test]
+        public void Format_Ascii_ShouldBeExpected()
+        {
+            var ascii = Radix.Ascii.Format(new Dint(123456));
+
+            ascii.Should().Be("$00$00$00p");
         }
 
         [Test]
@@ -54,6 +64,19 @@ namespace L5Sharp.Enums.Tests
             var result = radix.Format(new Lint(20));
 
             result.Should().Be("$00$00$00$00$00$00$00$14");
+        }
+
+        [Test]
+        public void Testing()
+        {
+            var list = new List<char>();
+            for (var i = 0; i < 300; i++)
+            {
+                var c = Convert.ToChar(i);
+                list.Add(c);
+            }
+
+            list.Should().NotBeEmpty();
         }
     }
 }
