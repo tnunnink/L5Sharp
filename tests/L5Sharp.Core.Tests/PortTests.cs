@@ -1,8 +1,7 @@
 ﻿using FluentAssertions;
-using L5Sharp.Core;
 using NUnit.Framework;
 
-namespace L5Sharp.Internal.Tests.Core
+namespace L5Sharp.Core.Tests
 {
     [TestFixture]
     public class PortTests

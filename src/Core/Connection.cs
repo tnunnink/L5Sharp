@@ -8,7 +8,20 @@ namespace L5Sharp.Core
     /// </summary>
     public sealed class Connection
     {
-        internal Connection(string name, int rpi, ConnectionType? type, 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="rpi"></param>
+        /// <param name="type"></param>
+        /// <param name="priority"></param>
+        /// <param name="inputConnectionType"></param>
+        /// <param name="inputProductionTrigger"></param>
+        /// <param name="outputRedundantOwner"></param>
+        /// <param name="unicast"></param>
+        /// <param name="eventId"></param>
+        /// <exception cref="ArgumentNullException"></exception>
+        public Connection(string name, int rpi, ConnectionType? type, 
             ConnectionPriority? priority = null,
             TransmissionType? inputConnectionType = null,
             ProductionTrigger? inputProductionTrigger = null, 

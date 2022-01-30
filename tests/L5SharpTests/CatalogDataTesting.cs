@@ -10,8 +10,9 @@ namespace L5SharpTests
     [TestFixture]
     public class CatalogDataTesting
     {
-        private const string FileName = @"C:\Users\tnunnink\dev\projects\L5Sharp\data\CatalogSvcsDatabaseV2.xml";
-        
+        private const string FileName =
+            @"C:\Users\tnunnink\Local\Projects\L5Sharp\tests\Samples\CatalogData\CatalogSvcsDatabaseV2.xml";
+
         [Test]
         public void FileExists()
         {
@@ -38,7 +39,7 @@ namespace L5SharpTests
 
             File.WriteAllLines(@"C:\Users\tnunnink\desktop\results.txt", categories);
         }
-        
+
         [Test]
         public void GetAllPorts()
         {
@@ -47,6 +48,18 @@ namespace L5SharpTests
             var ports = document.Descendants("Port").Select(e => e.Attribute("Type")?.Value).Distinct();
 
             File.WriteAllLines(@"C:\Users\tnunnink\desktop\PortTypes.txt", ports);
+        }
+
+        [Test]
+        public void GetWithMultiplePorts()
+        {
+            var document = XDocument.Load(FileName);
+
+            var ports = document.Descendants("Ports").Where(x => x.Elements().Count() > 2);
+
+            var parents = ports.Select(p => p.Parent?.ToString());
+
+            File.WriteAllLines(@"C:\Users\tnunnink\desktop\MultiplePorts.txt", parents);
         }
     }
 }

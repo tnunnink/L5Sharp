@@ -81,11 +81,9 @@ namespace L5Sharp.Serialization.Tests
             component.State.Should().Be(KeyingState.CompatibleModule);
             component.Slot.Should().Be(4);
             component.IP.Should().BeNull();
-            component.Bus.Should().BeNull();
-            component.Connection.Should().BeNull();
-            component.Config.Should().BeNull();
-            component.Input.Should().BeNull();
-            component.Output.Should().BeNull();
+            component.Ports.Should().HaveCount(1);
+            component.Modules.Should().BeNull();
+            
         }
 
         private static string GetTestModule()

@@ -1,10 +1,9 @@
 ﻿using System;
 using FluentAssertions;
-using L5Sharp.Core;
 using L5Sharp.Enums;
 using NUnit.Framework;
 
-namespace L5Sharp.Internal.Tests.Core
+namespace L5Sharp.Core.Tests
 {
     [TestFixture]
     public class ConnectionTests

@@ -11,13 +11,7 @@ namespace L5Sharp.Serialization
     /// </summary>
     internal class PortSerializer : IXSerializer<Port>
     {
-        private readonly LogixContext _context;
         private static readonly XName ElementName = LogixNames.Port;
-
-        public PortSerializer(LogixContext context)
-        {
-            _context = context;
-        }
 
         /// <inheritdoc />
         public XElement Serialize(Port component)
@@ -33,8 +27,8 @@ namespace L5Sharp.Serialization
 
             if (component.Bus is null) return element;
 
-            var bus = new XElement(nameof(component.Bus));
-            bus.AddAttribute(component, c => c.Bus!.Size, p => p.Bus is not null);
+            var serializer = new BusSerializer();
+            var bus = serializer.Serialize(component.Bus);
             element.Add(bus);
 
             return element;
@@ -59,9 +53,8 @@ namespace L5Sharp.Serialization
             if (busElement is null)
                 return new Port(id, address, type, upstream);
 
-            var serializer = new BusSerializer(_context);
+            var serializer = new BusSerializer();
             var bus = serializer.Deserialize(busElement);
-
             return new Port(id, address, type, upstream, bus);
         }
     }

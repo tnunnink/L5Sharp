@@ -16,8 +16,7 @@ namespace L5Sharp.Serialization.Tests
         [SetUp]
         public void Setup()
         {
-            var context = new LogixContext(TestFileTests.L5X);
-            _serializer = new PortSerializer(context);
+            _serializer = new PortSerializer();
         }
         
         [Test]

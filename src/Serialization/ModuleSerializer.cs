@@ -49,7 +49,7 @@ namespace L5Sharp.Serialization
             element.Add(ports);
 
             var communications = new XElement(Communications);
-
+            //config
             //connections....
 
             element.Add(communications);
@@ -83,9 +83,14 @@ namespace L5Sharp.Serialization
 
             var ports = element.Descendants(LogixNames.Port).Select(e =>
             {
-                var serializer = new PortSerializer(_context);
+                var serializer = new PortSerializer();
                 return serializer.Deserialize(e);
             });
+            
+            //config
+            //connection
+            //input
+            //output
 
             return new Module(name, catalogNumber!, vendor, productType, productCode, revision,
                 parentModule!, parentModPortId, ports, state, inhibited, majorFault, safetyEnabled,

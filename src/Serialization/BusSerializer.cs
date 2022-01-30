@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Xml.Linq;
 using L5Sharp.Core;
 using L5Sharp.Extensions;
@@ -9,13 +8,7 @@ namespace L5Sharp.Serialization
 {
     internal class BusSerializer : IXSerializer<Bus>
     {
-        private readonly LogixContext _context;
         private static readonly XName ElementName = LogixNames.Bus;
-
-        public BusSerializer(LogixContext context)
-        {
-            _context = context;
-        }
 
         public XElement Serialize(Bus component)
         {
@@ -23,7 +16,9 @@ namespace L5Sharp.Serialization
                 throw new ArgumentNullException(nameof(component));
             
             var element = new XElement(ElementName);
+            
             element.AddAttribute(component, b => b.Size);
+            element.AddAttribute(component, b => b.Baud);
 
             return element;
         }
@@ -36,11 +31,10 @@ namespace L5Sharp.Serialization
             if (element.Name != ElementName)
                 throw new ArgumentException($"Element name '{element.Name}' invalid. Expecting '{ElementName}'");
 
-            var moduleName = element.Ancestors(LogixNames.Module).First().GetComponentName();
-            
-            var size = element.GetAttribute<Bus, int>(b => b.Size);
+            var size = element.GetAttribute<Bus, int?>(b => b.Size);
+            var baud = element.GetAttribute<Bus, float?>(b => b.Baud);
 
-            return new Bus(size);
+            return new Bus(size, baud);
         }
     }
 }

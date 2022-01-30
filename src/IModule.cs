@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Net;
+﻿using System.Net;
 using L5Sharp.Core;
 using L5Sharp.Enums;
 
@@ -96,18 +95,25 @@ namespace L5Sharp
         int ParentModPortId { get; }
         
         /// <summary>
+        /// Gets the collection of <see cref="Ports"/> for the <see cref="IModule"/>.
+        /// </summary>
+        /// <remarks>
+        /// Each Module will have at least one port to define how it is connected withing the network. Some Modules may
+        /// have multiple Ports, in which case the additional ports usually define the connection to child modules downstream
+        /// of the current device. This property is mostly informational and used internally to maintain the hierarchical
+        /// structure of the IO tree.
+        /// </remarks>
+        PortCollection Ports { get; }
+        
+        /// <summary>
         /// Gets the <see cref="Core.Connection"/> object containing configuration for the <see cref="IModule"/> connection.
         /// </summary>
         Connection? Connection { get; }
         
         /// <summary>
-        /// Gets the <see cref="Bus"/> or backplane instance of the <see cref="IModule"/>.
+        /// Gets the <see cref="IModuleCollection"/> containing the child Module objects of the <see cref="IModule"/> instance. 
         /// </summary>
-        /// <remarks>
-        /// The <see cref="Bus"/> represents the collection of child modules for the current Module object. Use this
-        /// property and it's members to add and/or remove a <see cref="IModule"/> from the local chassis of the module. 
-        /// </remarks>
-        Bus? Bus { get; }
+        IModuleCollection? Modules { get; }
         
         /// <summary>
         /// Gets the config <see cref="ITag{TDataType}"/> for the <see cref="IModule"/>.
