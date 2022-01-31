@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Schema;
@@ -44,6 +47,13 @@ namespace L5Sharp
         {
             _document.Save(fileName);
         }
+        
+        /*public async Task SaveAsync(string fileName, CancellationToken? token = null)
+        {
+            token ??= CancellationToken.None;
+            
+            await _document.SaveAsync(new MemoryStream(), SaveOptions.None, token);
+        }*/
         
         private void ValidateFile(XDocument document)
         {

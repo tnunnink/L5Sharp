@@ -211,6 +211,9 @@
       <None Update="CommentSerializerTests.Serialize_Bool_ShouldBeApproved.approved.xml">
         <DependentUpon>CommentSerializerTests.cs</DependentUpon>
       </None>
+      <None Update="ConnectionSerializerTests.Serialize_ValidComponent_ShouldBeApproved.approved.xml">
+        <DependentUpon>ConnectionSerializerTests.cs</DependentUpon>
+      </None>
     </ItemGroup>
 
     <ItemGroup>

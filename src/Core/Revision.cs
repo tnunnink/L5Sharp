@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Xml.Serialization;
 
 namespace L5Sharp.Core
@@ -9,7 +10,7 @@ namespace L5Sharp.Core
     public sealed class Revision : IEquatable<Revision>, IComparable<Revision>
     {
         private const string RevisionSeparator = ".";
-        
+
         /// <summary>
         /// Creates a new instance of a <c>Revision</c> withe the optional major and minor versions.
         /// </summary>
@@ -26,17 +27,12 @@ namespace L5Sharp.Core
         /// Gets the value of the Major revision number.
         /// </summary>
         public ushort Major { get; }
-        
+
         /// <summary>
         /// Gets the value of the Minor revision number.
         /// </summary>
         public ushort Minor { get; }
 
-        /// <summary>
-        /// Gets an instance of a default <c>Revision</c> (i.e. 1.0)
-        /// </summary>
-        public Revision Default => new();
-        
 
         /// <summary>
         /// Parses the string input into a new <see cref="Revision"/> value.
@@ -58,14 +54,20 @@ namespace L5Sharp.Core
             if (revisions.Length != 2)
                 throw new ArgumentException("Value must only have a major and minor revision number.");
 
-            if (!byte.TryParse(revisions[0], out var major))
-                throw new ArgumentException("Major revision could not be parsed. Make sure the value is a byte.");
-            
-            if (!byte.TryParse(revisions[1], out var minor))
-                throw new ArgumentException("Minor revision could not be parsed. Make sure the value is a byte.");
+            if (!ushort.TryParse(revisions[0], out var major))
+                throw new ArgumentException("Major revision could not be parsed. Make sure the value is a ushort.");
+
+            if (!ushort.TryParse(revisions[1], out var minor))
+                throw new ArgumentException("Minor revision could not be parsed. Make sure the value is a ushort.");
 
             return new Revision(major, minor);
         }
+
+        public static implicit operator double(Revision revision) =>
+            float.Parse($"{revision.Major}{RevisionSeparator}{revision.Minor}");
+
+        public static implicit operator Revision(double revision) =>
+            Parse(revision.ToString(CultureInfo.InvariantCulture));
 
         /// <inheritdoc />
         public override string ToString() => $"{Major}{RevisionSeparator}{Minor}";

@@ -10,11 +10,10 @@ namespace L5Sharp.Core
     /// </remarks>
     public class ProductType : IEquatable<ProductType>
     {
-        private ProductType(ushort id, ushort code, string name)
+        private ProductType(ushort id, string? name = null)
         {
             Id = id;
-            Code = code;
-            Name = name;
+            Name = name ?? string.Empty;
         }
         
         /// <summary>
@@ -22,10 +21,14 @@ namespace L5Sharp.Core
         /// </summary>
         public ushort Id { get; }
         
-        public ushort Code { get; }
+        /// <summary>
+        /// Gets the value that represents the <see cref="ProductType"/> name.
+        /// </summary>
         public string Name { get; }
         
-        public static ProductType Unkown => new(0, 0, string.Empty);
+        public static implicit operator ushort(ProductType vendor) => vendor.Id;
+        
+        public static implicit operator ProductType(ushort vendorId) => new(vendorId);
 
         /// <inheritdoc />
         public bool Equals(ProductType? other)
@@ -36,18 +39,25 @@ namespace L5Sharp.Core
         }
 
         /// <inheritdoc />
-        public override bool Equals(object? obj)
-        {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((ProductType)obj);
-        }
+        public override bool Equals(object? obj) => Equals(obj as ProductType);
 
         /// <inheritdoc />
         public override int GetHashCode() => Id.GetHashCode();
 
+        /// <summary>
+        /// Determines if the provided objects are equal.
+        /// </summary>
+        /// <param name="left">An object to compare.</param>
+        /// <param name="right">An object to compare.</param>
+        /// <returns>true if the provided objects are equal; otherwise, false.</returns>
         public static bool operator ==(ProductType? left, ProductType? right) => Equals(left, right);
 
+        /// <summary>
+        /// Determines if the provided objects are not equal.
+        /// </summary>
+        /// <param name="left">An object to compare.</param>
+        /// <param name="right">An object to compare.</param>
+        /// <returns>true if the provided objects are not equal; otherwise, false.</returns>
         public static bool operator !=(ProductType? left, ProductType? right) => !Equals(left, right);
     }
 }

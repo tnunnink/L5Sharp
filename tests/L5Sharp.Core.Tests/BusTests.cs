@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
@@ -51,6 +52,14 @@ namespace L5Sharp.Core.Tests
         }
 
         [Test]
+        public void New_Default_IsEthernetShouldBeTrue()
+        {
+            var bus = new Bus();
+
+            bus.IsEthernet.Should().BeTrue();
+        }
+
+        [Test]
         public void New_SizeOverload_SizeShouldBeExpected()
         {
             var bus = new Bus(10);
@@ -91,9 +100,11 @@ namespace L5Sharp.Core.Tests
         }
 
         [Test]
-        public void New_SizeOverLoad()
+        public void New_SizeOverLoad_IsBackplaneShouldBeTure()
         {
-            
+            var bus = new Bus(10);
+
+            bus.IsBackplane.Should().BeTrue();
         }
 
         [Test]
@@ -128,8 +139,7 @@ namespace L5Sharp.Core.Tests
         public void Add_NullPort_ShouldThrowInvalidOperationException()
         {
             var bus = new Bus();
-            var definition = new ModuleDefinition("1756-AENT", Vendor.Unkown, ProductType.Unkown, new Revision(1, 1));
-            var module = new Module("Test", definition, null!, "This is a test");
+            var module = new Module("Test", "1756-AENT", 1, 1, 1.1, null!);
 
             FluentActions.Invoking(() => bus.Add(module))
                 .Should().Throw<ArgumentException>()
@@ -141,9 +151,8 @@ namespace L5Sharp.Core.Tests
         public void Add_NoUpstreamPort_ShouldThrowInvalidOperationException()
         {
             var bus = new Bus();
-            var port = new Port(2, "192.168.1.1", "Ethernet", false);
-            var definition = new ModuleDefinition("1756-AENT", Vendor.Unkown, ProductType.Unkown, new Revision(1, 1));
-            var module = new Module("Test", definition, port, "This is a test");
+            var port = new Port(2, "192.168.1.1", "Ethernet");
+            var module = new Module("Test", "1756-AENT", 1, 1, 1.1, new[] { port });
 
             FluentActions.Invoking(() => bus.Add(module))
                 .Should().Throw<ArgumentException>()
@@ -156,8 +165,7 @@ namespace L5Sharp.Core.Tests
         {
             var bus = new Bus();
             var port = new Port(2, "192.168.1.1", "Ethernet", true);
-            var definition = new ModuleDefinition("1756-AENT", Vendor.Unkown, ProductType.Unkown, new Revision(1, 1));
-            var module = new Module("Test", definition, port, "This is a test");
+            var module = new Module("Test", "1756-AENT", 1, 1, 1.1, new[] { port });
 
             bus.Add(module);
 
@@ -170,9 +178,7 @@ namespace L5Sharp.Core.Tests
             var bus = new Bus();
             var module = CreateValidModule();
 
-            bus.Add(module);
-            
-            
+            FluentActions.Invoking(() => bus.Add(module));
         }
 
         [Test]
@@ -180,8 +186,7 @@ namespace L5Sharp.Core.Tests
         {
             var bus = new Bus();
             var port = new Port(1, "1.1", "ICP", true);
-            var definition = new ModuleDefinition("1756-AENT", Vendor.Unkown, ProductType.Unkown, new Revision(1, 1));
-            var module = new Module("Test", definition, port, "This is a test");
+            var module = new Module("Test", "1756-AENT", 1, 1, 1.1, new[] { port });
 
             FluentActions.Invoking(() => bus.Add(module))
                 .Should().Throw<ArgumentException>()
@@ -193,8 +198,7 @@ namespace L5Sharp.Core.Tests
         {
             var bus = new Bus();
             var port = new Port(1, "-1", "ICP", true);
-            var definition = new ModuleDefinition("1756-AENT", Vendor.Unkown, ProductType.Unkown, new Revision(1, 1));
-            var module = new Module("Test", definition, port, "This is a test");
+            var module = new Module("Test", "1756-AENT", 1, 1, 1.1, new[] { port });
 
             FluentActions.Invoking(() => bus.Add(module))
                 .Should().Throw<ArgumentException>()
@@ -207,8 +211,7 @@ namespace L5Sharp.Core.Tests
         {
             var bus = new Bus(10);
             var port = new Port(1, "11", "ICP", true);
-            var definition = new ModuleDefinition("1756-AENT", Vendor.Unkown, ProductType.Unkown, new Revision(1, 1));
-            var module = new Module("Test", definition, port, "This is a test");
+            var module = new Module("Test", "1756-AENT", 1, 1, 1.1, new[] { port });
 
             FluentActions.Invoking(() => bus.Add(module))
                 .Should().Throw<ArgumentException>()
@@ -221,8 +224,7 @@ namespace L5Sharp.Core.Tests
         {
             var bus = new Bus(10);
             var port = new Port(1, "1", "ICP", true);
-            var definition = new ModuleDefinition("1756-AENT", Vendor.Unkown, ProductType.Unkown, new Revision(1, 1));
-            var module = new Module("Test", definition, port, "This is a test");
+            var module = new Module("Test", "1756-AENT", 1, 1, 1.1, new[] { port });
 
             bus.Add(module);
 
@@ -248,8 +250,7 @@ namespace L5Sharp.Core.Tests
             bus.Add(module1);
 
             var port = new Port(1, "1", "ICP", true);
-            var definition = new ModuleDefinition("1756-AENT", Vendor.Unkown, ProductType.Unkown, new Revision(1, 1));
-            var module2 = new Module("Module2", definition, port, "This is a test");
+            var module2 = new Module("Module2", "1756-AENT", 1, 1, 1.1, new[] { port });
 
             FluentActions.Invoking(() => bus.Add(module2)).Should().Throw<InvalidOperationException>()
                 .WithMessage("The current Bus already has a module at the specified slot number 1");
@@ -266,22 +267,10 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void AddMany_ValidCollection_ShouldHaveExpectedCount()
         {
-            var m1 = new Module("Test1",
-                new ModuleDefinition("1756-AENT", Vendor.Unkown, ProductType.Unkown, new Revision(1, 1)),
-                new Port(1, "1", "ICP", true));
-
-            var m2 = new Module("Test2",
-                new ModuleDefinition("1756-AENT", Vendor.Unkown, ProductType.Unkown, new Revision(1, 1)),
-                new Port(1, "2", "ICP", true));
-
-            var m3 = new Module("Test3",
-                new ModuleDefinition("1756-AENT", Vendor.Unkown, ProductType.Unkown, new Revision(1, 1)),
-                new Port(1, "3", "ICP", true));
-
-            var modules = new List<IModule>()
-            {
-                m1, m2, m3
-            };
+            var m1 = new Module("Test1", "1756-AENT", 1, 1, 1.1, new[] { new Port(1, "1", "ICP", true) });
+            var m2 = new Module("Test2", "1756-AENT", 1, 1, 1.1, new[] { new Port(1, "2", "ICP", true) });
+            var m3 = new Module("Test3", "1756-AENT", 1, 1, 1.1, new[] { new Port(1, "3", "ICP", true) });
+            var modules = new List<IModule> { m1, m2, m3 };
             var bus = new Bus(7);
 
             bus.AddMany(modules);
@@ -443,7 +432,7 @@ namespace L5Sharp.Core.Tests
 
             FluentActions.Invoking(() => bus.TryAdd(null!)).Should().Throw<ArgumentNullException>();
         }
-        
+
         [Test]
         public void TryAdd_BusAlreadyHasName_ShouldBeFalse()
         {
@@ -455,21 +444,20 @@ namespace L5Sharp.Core.Tests
 
             result.Should().BeFalse();
         }
-        
+
         [Test]
         public void TryAdd_SlotAlreadyHasModule_ShouldBeFalse()
         {
             var bus = new Bus(10);
             var port = new Port(1, "1", "ICP", true);
-            var definition = new ModuleDefinition("1756-AENT", Vendor.Unkown, ProductType.Unkown, new Revision(1, 1));
-            var first = new Module("First", definition, port, "This is a test");
+            var first = new Module("First", "1756-AENT", 1, 1, 1.1, new[] { port });
             bus.Add(first);
 
             var result = bus.TryAdd(CreateValidModule());
 
             result.Should().BeFalse();
         }
-        
+
         [Test]
         public void TryAdd_Valid_ShouldBeTrue()
         {
@@ -480,7 +468,7 @@ namespace L5Sharp.Core.Tests
 
             result.Should().BeTrue();
         }
-        
+
         [Test]
         public void TryAdd_Valid_SlotShouldContainModule()
         {
@@ -492,11 +480,20 @@ namespace L5Sharp.Core.Tests
             bus[1].Should().BeSameAs(module);
         }
 
+        [Test]
+        public void GetEnumerator_AsEnumerable_ShouldNotBeNull()
+        {
+            var bus = new Bus(10);
+
+            var enumerable = (IEnumerable)bus;
+
+            enumerable.Should().NotBeNull();
+        }
+
         private static IModule CreateValidModule()
         {
             var port = new Port(1, "1", "ICP", true);
-            var definition = new ModuleDefinition("1756-AENT", Vendor.Unkown, ProductType.Unkown, new Revision(1, 1));
-            return new Module("Test", definition, port, "This is a test");
+            return new Module("Test", "1756-AENT", 1, 1, 1.1, new[] { port });
         }
     }
 }

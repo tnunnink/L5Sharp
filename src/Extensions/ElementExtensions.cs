@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Xml.Linq;
 using L5Sharp.Core;
@@ -70,7 +71,7 @@ namespace L5Sharp.Extensions
 
             var name = nameOverride ?? memberExpression.Member.Name;
 
-            var value = element.Attribute(name)?.Value;
+            var value = element.GetAttribute(name)?.Value;
 
             return value is not null ? LogixParser.Parse<TProperty>(value) : default;
         }
@@ -205,6 +206,18 @@ namespace L5Sharp.Extensions
             if (string.IsNullOrEmpty(value)) return;
 
             element.Add(new XElement(name, new XCData(value)));
+        }
+
+        /// <summary>
+        /// Gets a XAttribute having the specified name of the current XElement Ignoring the case. 
+        /// </summary>
+        /// <param name="element">The current XElement to get the XAttribute for.</param>
+        /// <param name="name">The name of the XAttribute to get.</param>
+        /// <returns></returns>
+        private static XAttribute? GetAttribute(this XElement element, string name)
+        {
+            return element.Attributes().SingleOrDefault(a =>
+                string.Equals(a.Name.LocalName, name, StringComparison.OrdinalIgnoreCase));
         }
     }
 }

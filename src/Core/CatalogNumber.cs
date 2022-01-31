@@ -5,61 +5,90 @@ using L5Sharp.Enums;
 
 namespace L5Sharp.Core
 {
-    public class CatalogNumber
+    /// <summary>
+    /// Represents an alpha-numeric string identification number of a Logix <see cref="IModule"/> component.
+    /// </summary>
+    /// <remarks>
+    /// For most Rockwell devices, the catalog follows a standard pattern, which contains a <see cref="Bulletin"/> prefix
+    /// followed by a set of characters indicating the device type or category, and optionally characters to indicate other
+    /// components of features of the Module. However, some Module, and typically those not made by Rockwell, don't adhere
+    /// to the same conventions. 
+    /// </remarks>
+    public class CatalogNumber : IEquatable<CatalogNumber>
     {
         private const string CatalogPattern = @"^([\d]{4})-([A-Z]+)(\d+)([A-Z]*)$";
+        private const string BulletinPattern = @"[\d]{4}";
 
         private readonly string _catalogNumber;
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="catalogNumber"></param>
-        /// <exception cref="ArgumentNullException"></exception>
+        
         public CatalogNumber(string catalogNumber)
         {
             if (string.IsNullOrEmpty(catalogNumber))
                 throw new ArgumentNullException(nameof(catalogNumber));
 
             _catalogNumber = catalogNumber;
-
-            AnalyzeNumber(catalogNumber);
         }
 
-        /// <summary>
-        /// Attempt to determine values based on conventions...
-        /// </summary>
-        /// <param name="catalogNumber"></param>
-        private void AnalyzeNumber(string catalogNumber)
-        {
-            var match = Regex.Match(catalogNumber, CatalogPattern, RegexOptions.Compiled);
-
-            if (!match.Success)
-            {
-                Channels = 0;
-                return;
-            };
-
-            Bulletin = new Bulletin(match.Groups[0].Value);
-            //todo figure out module type
-            Channels = short.TryParse(match.Groups[2].Value, out var channels) ? channels : default;
-            FeatureCode = match.Groups[3].Value ?? string.Empty;
-        }
 
         /// <summary>
-        /// Gets the <see cref="Bulletin"/> value of the <see cref="CatalogNumber"/>.
+        /// Gets the value of the <see cref="Bulletin"/> that could be inferred from the current <see cref="CatalogNumber"/>.
         /// </summary>
-        public Bulletin? Bulletin { get; set; }
+        /// <remarks>
+        /// Since not all Modules have a 4 digit <see cref="Bulletin"/>, this is a nullable property. If not identifiable,
+        /// this value will remain null.
+        /// </remarks>
+        public Bulletin? Bulletin => Regex.Match(_catalogNumber, BulletinPattern, RegexOptions.Compiled).Value;
 
+        /// <summary>
+        /// Gets a collection of <see cref="ModuleCategory"/> that could be inferred from the from the current
+        /// <see cref="CatalogNumber"/>.
+        /// </summary>
         public IEnumerable<ModuleCategory> Categories { get; }
 
-        public short Channels { get; set; }
 
-        public string? FeatureCode { get; set; }
-
-
+        /// <summary>
+        /// Converts a <see cref="CatalogNumber"/> value to a <see cref="string"/> value.
+        /// </summary>
+        /// <param name="value">The value of the <see cref="CatalogNumber"/> to convert.</param>
+        /// <returns>A new <see cref="string"/> value representing the value of the <see cref="CatalogNumber"/>.</returns>
         public static implicit operator string(CatalogNumber value) => value._catalogNumber;
         
+        /// <summary>
+        /// Converts a <see cref="string"/> value to a <see cref="CatalogNumber"/> value.
+        /// </summary>
+        /// <param name="value">The value of the <see cref="string"/> to convert.</param>
+        /// <returns>A new <see cref="CatalogNumber"/> value representing the value of the <see cref="string"/>.</returns>
         public static implicit operator CatalogNumber(string value) => new(value);
+
+        /// <inheritdoc />
+        public bool Equals(CatalogNumber? other)
+        {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return _catalogNumber == other._catalogNumber;
+        }
+
+        /// <inheritdoc />
+        public override bool Equals(object? obj) => Equals(obj as CatalogNumber);
+
+        /// <inheritdoc />
+        public override int GetHashCode() => _catalogNumber.GetHashCode();
+
+        /// <summary>
+        /// Determines if the provided objects are equal.
+        /// </summary>
+        /// <param name="left">An object to compare.</param>
+        /// <param name="right">An object to compare.</param>
+        /// <returns>true if the provided objects are equal; otherwise, false.</returns>
+        public static bool operator ==(CatalogNumber? left, CatalogNumber? right) => Equals(left, right);
+
+        /// <summary>
+        /// Determines if the provided objects are not equal.
+        /// </summary>
+        /// <param name="left">An object to compare.</param>
+        /// <param name="right">An object to compare.</param>
+        /// <returns>true if the provided objects are not equal; otherwise, false.</returns>
+        public static bool operator !=(CatalogNumber? left, CatalogNumber? right) => !Equals(left, right);
     }
 }

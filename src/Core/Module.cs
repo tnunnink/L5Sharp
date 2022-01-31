@@ -42,25 +42,32 @@ namespace L5Sharp.Core
         }
 
         /// <summary>
-        /// Creates a new <see cref="IModule"/> with the provided name, definition, and port.
+        /// 
         /// </summary>
         /// <param name="name"></param>
-        /// <param name="definition"></param>
-        /// <param name="port"></param>
+        /// <param name="catalogNumber"></param>
+        /// <param name="vendor"></param>
+        /// <param name="productType"></param>
+        /// <param name="revision"></param>
+        /// <param name="ports"></param>
+        /// <param name="connection"></param>
         /// <param name="description"></param>
         /// <exception cref="ArgumentNullException"></exception>
-        public Module(ComponentName name, ModuleDefinition definition, Port port, string? description = null)
+        public Module(ComponentName name, 
+            CatalogNumber catalogNumber, Vendor vendor, ProductType productType, Revision revision,
+            IEnumerable<Port> ports, Connection? connection = null, string? description = null)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
             Description = description ?? string.Empty;
-            CatalogNumber = definition.CatalogNumber;
-            Vendor = definition.Vendor.Id;
-            ProductType = definition.ProductType.Id;
-            ProductCode = definition.ProductType.Code;
-            Revision = definition.Revision;
+            CatalogNumber = catalogNumber;
+            Vendor = vendor.Id;
+            ProductType = productType.Id;
+            //ProductCode = productType.Code; need to add this somewhere
+            Revision = revision;
             State = KeyingState.CompatibleModule;
+            Ports = new PortCollection(ports);
+            Connection = connection;
             ParentModule = string.Empty;
-            Ports = new PortCollection(new []{port});
         }
 
         /// <inheritdoc />

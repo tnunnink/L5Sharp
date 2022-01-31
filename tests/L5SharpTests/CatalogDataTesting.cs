@@ -61,5 +61,17 @@ namespace L5SharpTests
 
             File.WriteAllLines(@"C:\Users\tnunnink\desktop\MultiplePorts.txt", parents);
         }
+
+        [Test]
+        public void GetDevicesWithInputCategory()
+        {
+            var document = XDocument.Load(FileName);
+
+            var ports = document.Descendants("Category").Where(x => x.Elements().Count() > 2);
+
+            var parents = ports.Select(p => p.Parent?.ToString());
+
+            File.WriteAllLines(@"C:\Users\tnunnink\desktop\MultiplePorts.txt", parents);
+        }
     }
 }

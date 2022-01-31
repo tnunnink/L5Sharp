@@ -1,5 +1,4 @@
-﻿using System;
-using Ardalis.SmartEnum;
+﻿using Ardalis.SmartEnum;
 
 namespace L5Sharp.Enums
 {
@@ -11,6 +10,8 @@ namespace L5Sharp.Enums
         private ModuleCategory(string name, int value) : base(name, value)
         {
         }
+        
+        
 
         /// <summary>
         /// Represents an Analog <see cref="ModuleCategory"/>.

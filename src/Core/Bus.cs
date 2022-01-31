@@ -63,7 +63,7 @@ namespace L5Sharp.Core
         /// Gets a value indicating whether the <see cref="Bus"/> is a backplane containing a fixed size.
         /// </summary>
         /// <remarks>
-        /// When <see cref="Size"/> is not null then we are assuming the Bus represents a backplane or a fixed length
+        /// When <see cref="Size"/> is not null, then we are assuming the Bus represents a backplane, or a fixed length
         /// collection of Modules that are assignable by index or slot number. If null, then we assume this is a network
         /// type Bus having an unconstrained length of Modules.
         /// </remarks>
@@ -75,7 +75,7 @@ namespace L5Sharp.Core
         /// the size is unconstrained.
         /// </summary>
         /// <remarks>
-        /// When <see cref="Size"/> is not null then we are assuming the Bus represents a backplane or a fixed length
+        /// When <see cref="Size"/> is not null, then we are assuming the Bus represents a backplane, or a fixed length
         /// collection of Modules that are assignable by index or slot number. If null, then we assume this is a Ethernet
         /// type Bus having an unconstrained length of Modules.
         /// </remarks>
@@ -111,7 +111,7 @@ namespace L5Sharp.Core
         /// </summary>
         /// <param name="module">The <see cref="IModule"/> instance to add.</param>
         /// <exception cref="ArgumentNullException">modules is null.</exception>
-        /// <exception cref="ComponentNameCollisionException">module name is already defined on the collection.</exception>
+        /// <exception cref="ComponentNameCollisionException">module name already exists on the collection.</exception>
         /// <exception cref="ArgumentException">module does not have an upstream port defined
         /// -or- module is not ethernet based and the slot number could not be parsed.</exception>
         /// <exception cref="InvalidOperationException">Bus is full
@@ -120,6 +120,7 @@ namespace L5Sharp.Core
         /// <remarks>
         /// 
         /// </remarks>
+        /// <seealso cref="TryAdd"/>
         public void Add(IModule? module) => AddModuleInternal(module);
 
         /// <summary>
@@ -233,6 +234,7 @@ namespace L5Sharp.Core
             {
                 if (port.Type != "Ethernet")
                     throw new ArgumentException("Can only add Modules with a port type of Ethernet to the current Bus");
+                return;
             }
 
             if (!int.TryParse(port.Address, out var slot))
