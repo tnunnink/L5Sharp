@@ -3,14 +3,14 @@
 namespace L5Sharp.Core
 {
     /// <summary>
-    /// An entity that identifies a Logix Vendor. 
+    /// An entity that identifies a Logix Module Vendor. 
     /// </summary>
     /// <remarks>
     /// The L5X only exports the Vendor Id.
     /// </remarks>
     public class Vendor : IEquatable<Vendor>
     {
-        private Vendor(ushort id, string? name = null)
+        internal Vendor(ushort id, string? name = null)
         {
             Id = id;
             Name = name ?? string.Empty;
@@ -29,8 +29,23 @@ namespace L5Sharp.Core
         /// </summary>
         public string Name { get; }
 
+        /// <summary>
+        /// Creates an instance of an unknown <see cref="Vendor"/>
+        /// </summary>
+        public static Vendor Unknown => new(0);
+
+        /// <summary>
+        /// Converts a <see cref="Vendor"/> object to a <see cref="ushort"/> that represents the Id.
+        /// </summary>
+        /// <param name="vendor">The <see cref="Vendor"/> object to convert.</param>
+        /// <returns>A <see cref="ushort"/> representing the value of the Vendor Id.</returns>
         public static implicit operator ushort(Vendor vendor) => vendor.Id;
         
+        /// <summary>
+        /// Converts a <see cref="ushort"/> value to a <see cref="Vendor"/> object that represents the Id.
+        /// </summary>
+        /// <param name="vendorId">The <see cref="ushort"/> value to convert.</param>
+        /// <returns>A <see cref="Vendor"/> with the Id of the converted value.</returns>
         public static implicit operator Vendor(ushort vendorId) => new(vendorId);
 
         /// <inheritdoc />

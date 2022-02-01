@@ -5,11 +5,8 @@ using L5Sharp.Repositories;
 namespace L5Sharp
 {
     /// <summary>
-    /// A <c>LogixContext</c> instance represents a set of  that are used to query and update a specified L5X file.
+    /// The entry point for querying and manipulating an L5X file. Context is the 
     /// </summary>
-    /// <remarks>
-    /// <c>LogixContext</c> is the main entry point for operating over and L5X file. 
-    /// </remarks>
     public interface ILogixContext
     {
         /// <summary>

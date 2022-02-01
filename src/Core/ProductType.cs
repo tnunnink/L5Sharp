@@ -10,7 +10,7 @@ namespace L5Sharp.Core
     /// </remarks>
     public class ProductType : IEquatable<ProductType>
     {
-        private ProductType(ushort id, string? name = null)
+        internal ProductType(ushort id, string? name = null)
         {
             Id = id;
             Name = name ?? string.Empty;
