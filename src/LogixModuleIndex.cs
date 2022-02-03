@@ -8,12 +8,12 @@ using L5Sharp.Serialization;
 
 namespace L5Sharp
 {
-    internal class LogixContextModules
+    internal class LogixModuleIndex
     {
         private readonly LogixContext _context;
         private readonly Dictionary<string, IEnumerable<XElement>> _index;
 
-        internal LogixContextModules(LogixContext context)
+        internal LogixModuleIndex(LogixContext context)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
             _index = new Dictionary<string, IEnumerable<XElement>>();

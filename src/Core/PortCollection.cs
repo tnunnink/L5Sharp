@@ -1,5 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Net;
 
 namespace L5Sharp.Core
 {
@@ -12,24 +15,35 @@ namespace L5Sharp.Core
 
         internal PortCollection(IEnumerable<Port> ports)
         {
+            if (ports is null)
+                throw new ArgumentNullException(nameof(ports));
+
             _ports = new List<Port>(ports);
         }
 
         /// <summary>
-        /// Gets the port with the specified id or index.
+        /// Gets the first port having a parsable slot for the address.
         /// </summary>
-        /// <param name="id">The in</param>
-        public Port? this[int id] => _ports[id];
+        public Port? ChassisPort => _ports.FirstOrDefault(p => int.TryParse(p.Address, out _));
+        
+        /// <summary>
+        /// Gets the first port having a parsable IP for the address.
+        /// </summary>
+        public Port? NetworkPort => _ports.FirstOrDefault(p => IPAddress.TryParse(p.Address, out _));
+
+        /// <summary>
+        /// Gets the upstream connecting port of the <see cref="PortCollection"/>.
+        /// </summary>
+        public Port Upstream => _ports.First(p => p.Upstream);
+
+        /// <summary>
+        /// Gets all downstream ports of the <see cref="PortCollection"/>.
+        /// </summary>
+        public IEnumerable<Port> Downstream => _ports.Where(p => !p.Upstream);
 
         /// <inheritdoc />
-        public IEnumerator<Port> GetEnumerator()
-        {
-            return _ports.GetEnumerator();
-        }
+        public IEnumerator<Port> GetEnumerator() => _ports.GetEnumerator();
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 }

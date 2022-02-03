@@ -18,10 +18,14 @@ namespace L5Sharp.Core
     {
         private const string CatalogPattern = @"^([\d]{4})-([A-Z]+)(\d+)([A-Z]*)$";
         private const string BulletinPattern = @"[\d]{4}";
-
         private readonly string _catalogNumber;
 
-        
+
+        /// <summary>
+        /// Creates a new <see cref="CatalogNumber"/> instance with the provided input value. 
+        /// </summary>
+        /// <param name="catalogNumber">The value of the catalog number to create.</param>
+        /// <exception cref="ArgumentNullException">catalogNumber is null or empty.</exception>
         public CatalogNumber(string catalogNumber)
         {
             if (string.IsNullOrEmpty(catalogNumber))
@@ -29,7 +33,6 @@ namespace L5Sharp.Core
 
             _catalogNumber = catalogNumber;
         }
-
 
         /// <summary>
         /// Gets the value of the <see cref="Bulletin"/> that could be inferred from the current <see cref="CatalogNumber"/>.
@@ -40,12 +43,6 @@ namespace L5Sharp.Core
         /// </remarks>
         public Bulletin? Bulletin => Regex.Match(_catalogNumber, BulletinPattern, RegexOptions.Compiled).Value;
 
-        /// <summary>
-        /// Gets a collection of <see cref="ModuleCategory"/> that could be inferred from the from the current
-        /// <see cref="CatalogNumber"/>.
-        /// </summary>
-        public IEnumerable<ModuleCategory> Categories { get; }
-
 
         /// <summary>
         /// Converts a <see cref="CatalogNumber"/> value to a <see cref="string"/> value.
@@ -53,13 +50,16 @@ namespace L5Sharp.Core
         /// <param name="value">The value of the <see cref="CatalogNumber"/> to convert.</param>
         /// <returns>A new <see cref="string"/> value representing the value of the <see cref="CatalogNumber"/>.</returns>
         public static implicit operator string(CatalogNumber value) => value._catalogNumber;
-        
+
         /// <summary>
         /// Converts a <see cref="string"/> value to a <see cref="CatalogNumber"/> value.
         /// </summary>
         /// <param name="value">The value of the <see cref="string"/> to convert.</param>
         /// <returns>A new <see cref="CatalogNumber"/> value representing the value of the <see cref="string"/>.</returns>
         public static implicit operator CatalogNumber(string value) => new(value);
+
+        /// <inheritdoc />
+        public override string ToString() => _catalogNumber;
 
         /// <inheritdoc />
         public bool Equals(CatalogNumber? other)

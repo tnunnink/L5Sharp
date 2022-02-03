@@ -4,22 +4,16 @@ using L5Sharp.Enums;
 namespace L5Sharp.Core
 {
     /// <summary>
-    /// A set of properties that defines the Logix <see cref="IModule"/>.  
+    /// A set of properties that defines the Logix <see cref="IModule"/>.
     /// </summary>
+    /// <remarks>
+    /// This object must be retrieved from the <see cref="LogixCatalog"/> service object. It serves mostly as a container
+    /// of data that can be retrieved in order to created a valid <see cref="IModule"/> instance using a known
+    /// <see cref="CatalogNumber"/>. 
+    /// </remarks>
     public class ModuleDefinition
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="catalogNumber"></param>
-        /// <param name="vendor"></param>
-        /// <param name="productType"></param>
-        /// <param name="productCode"></param>
-        /// <param name="revisions"></param>
-        /// <param name="categories"></param>
-        /// <param name="ports"></param>
-        /// <param name="description"></param>
-        public ModuleDefinition(CatalogNumber catalogNumber, Vendor vendor, ProductType productType,
+        internal ModuleDefinition(CatalogNumber catalogNumber, Vendor vendor, ProductType productType,
             ushort productCode,
             IEnumerable<Revision> revisions,
             IEnumerable<ModuleCategory> categories,

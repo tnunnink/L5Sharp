@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Xml.Linq;
 using L5Sharp.Core;
 using L5Sharp.Enums;
-using L5Sharp.Helpers;
+using Module = L5Sharp.Core.Module;
 
 namespace L5Sharp
 {
@@ -34,10 +35,11 @@ namespace L5Sharp
         private const string Description = "Description";
         private const string Number = "Number";
         private const string DefaultMinorRev = "DefaultMinorRev";
-        private const string Series = "Series";
         private const string Type = "Type";
 
-        private const string RockwellCatalogServicePath =
+        private const string RockwellCatalogServiceLocalResource = @"Resources.CatalogDatabase.xml";
+
+        private const string RockwellCatalogServiceLocalPath =
             @"Rockwell Automation\Catalog Services\CatalogSvcsDatabaseV2.xml";
 
         private readonly XDocument _catalog;
@@ -47,17 +49,36 @@ namespace L5Sharp
         /// </summary>
         public LogixCatalog()
         {
-            var programData = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
-            var serviceFile = Path.Combine(programData, RockwellCatalogServicePath);
+            var document = GetLocalCatalog();
 
-            var info = new FileInfo(serviceFile);
-
-            if (!info.Exists)
+            if (document is not null)
             {
-                //todo use backup embedded resource?
+                _catalog = document;
+                return;
             }
 
-            _catalog = XDocument.Load(info.FullName);
+            var assembly = Assembly.GetExecutingAssembly();
+            using var stream = assembly.GetManifestResourceStream(RockwellCatalogServiceLocalResource);
+            _catalog = XDocument.Load(stream);
+        }
+
+        /// <summary>
+        /// Create a new <see cref="IModule"/> instance with the provided name and catalog number.
+        /// </summary>
+        /// <param name="name">The name of the Module to create.</param>
+        /// <param name="catalogNumber">The catalog number of the Module being created.</param>
+        /// <param name="description">The optional description of the Module being created.</param>
+        /// <returns>A new <see cref="IModule"/> instance with the configured properties based on the provided catalog number.</returns>
+        /// <exception cref="ArgumentException">catalogNumber was not found in the current catalog service file.</exception>
+        public IModule Create(ComponentName name, CatalogNumber catalogNumber, string? description = null)
+        {
+            var definition = Lookup(catalogNumber);
+
+            if (definition is null)
+                throw new ArgumentException(
+                    $"The provided catalog number {catalogNumber} has not module definition in the current catalog.");
+
+            return new Module(name, definition, description);
         }
 
         /// <summary>
@@ -66,37 +87,52 @@ namespace L5Sharp
         /// <param name="catalogNumber">The catalog number of the <see cref="IModule"/> to lookup.</param>
         /// <returns>An <see cref="ModuleDefinition"/> instance for the specified catalogNumber if found in the current
         /// catalog service file; otherwise, null.</returns>
-        /// <exception cref="ArgumentNullException">catalogNumber is null</exception>
+        /// <exception cref="ArgumentNullException">When catalogNumber is nul.l</exception>
         public ModuleDefinition? Lookup(CatalogNumber catalogNumber)
         {
             if (catalogNumber is null)
                 throw new ArgumentNullException(nameof(catalogNumber));
 
-            var device = _catalog.Descendants("RADevice")
-                .FirstOrDefault(e => e.Descendants(nameof(CatalogNumber)).First().Value == catalogNumber);
+            var device = _catalog.Descendants(RaDevice)
+                .FirstOrDefault(e => e.Descendants(CatalogNumber).First().Value == catalogNumber);
 
             return device is not null ? MaterializeDefinition(device) : null;
         }
 
         /// <summary>
-        /// Finds all <see cref="ModuleDefinition"/> instance with the provided <see cref="Vendor"/> id.
+        /// Finds all <see cref="ModuleDefinition"/> instances having the specified <see cref="Vendor"/>.
         /// </summary>
         /// <param name="vendor">The vendor for which to get module definitions for.</param>
         /// <returns>A collection of <see cref="ModuleDefinition"/> with the specified Vendor if any exist in the current
         /// catalog; otherwise, an empty collection.</returns>
+        /// <exception cref="ArgumentNullException">When vendor is null.</exception>
         public IEnumerable<ModuleDefinition> FindByVendor(Vendor vendor)
         {
-            throw new NotImplementedException();
+            if (vendor is null)
+                throw new ArgumentNullException(nameof(vendor));
+
+            var devices = _catalog.Descendants(RaDevice)
+                .Where(e => e.Descendants(VendorId).First().Value == vendor.Id.ToString());
+
+            return devices.Select(MaterializeDefinition);
         }
 
+        /// <summary>
+        /// Fins all <see cref="ModuleDefinition"/> instances have the specified <see cref="ModuleCategory"/>.
+        /// </summary>
+        /// <param name="category">The category for which to get module definitions for.</param>
+        /// <returns>>A collection of <see cref="ModuleDefinition"/> with the specified Category if any exist in the
+        /// catalog; otherwise, an empty collection.</returns>
+        /// <exception cref="ArgumentNullException">When category is null.</exception>
         public IEnumerable<ModuleDefinition> FindWithCategory(ModuleCategory category)
         {
-            throw new NotImplementedException();
-        }
+            if (category is null)
+                throw new ArgumentNullException(nameof(category));
 
-        public IEnumerable<ModuleDefinition> FindWithCategies(IEnumerable<ModuleCategory> categories)
-        {
-            throw new NotImplementedException();
+            var devices = _catalog.Descendants(RaDevice)
+                .Where(e => e.Descendants(Category).Any(c => c.Attribute(Name)?.Value == category.ToString()));
+
+            return devices.Select(MaterializeDefinition);
         }
 
         private static ModuleDefinition MaterializeDefinition(XElement element)
@@ -105,7 +141,8 @@ namespace L5Sharp
                 throw new ArgumentNullException(nameof(element));
 
             if (element.Name != RaDevice)
-                throw new ArgumentException();
+                throw new ArgumentException(
+                    $"The provided element name {element.Name} did not match the expected name {RaDevice}");
 
             var catalogNumber = GetCatalogNumber(element);
             var vendor = GetVendor(element);
@@ -116,7 +153,8 @@ namespace L5Sharp
             var ports = GetPorts(element);
             var description = GetDescription(element);
 
-            return new ModuleDefinition(catalogNumber, vendor, productType, productCode, revisions, categories, ports, description);
+            return new ModuleDefinition(catalogNumber, vendor, productType, productCode, revisions, categories, ports,
+                description);
         }
 
         private static CatalogNumber GetCatalogNumber(XContainer element)
@@ -127,10 +165,7 @@ namespace L5Sharp
 
         private static Vendor GetVendor(XContainer element)
         {
-            var vendor = element.Descendants(VendorId).FirstOrDefault();
-
-            if (vendor is null)
-                throw new InvalidOperationException("The device element did not have a valid Vendor");
+            var vendor = element.Descendants(VendorId).First();
 
             var id = ushort.Parse(vendor.Value);
             var name = vendor.Attribute(Name)?.Value;
@@ -140,11 +175,8 @@ namespace L5Sharp
 
         private static ProductType GetProductType(XContainer element)
         {
-            var productType = element.Descendants(ProductType).FirstOrDefault();
+            var productType = element.Descendants(ProductType).First();
 
-            if (productType is null)
-                throw new InvalidOperationException("The device element did not have a valid Product Type");
-            
             var id = ushort.Parse(productType.Value);
             var name = productType.Attribute(Name)?.Value;
 
@@ -153,23 +185,18 @@ namespace L5Sharp
 
         private static ushort GetProductCode(XContainer element)
         {
-            var productCode = element.Descendants(ProductCode).FirstOrDefault();
-            
-            if (productCode is null)
-                throw new InvalidOperationException("The device element did not have a valid Product Code");
-
-            return ushort.Parse(productCode.Value);
+            return ushort.Parse(element.Descendants(ProductCode).First().Value);
         }
-        
-        
+
         private static IEnumerable<Revision> GetRevisions(XContainer element)
         {
             var revisions = element.Descendants(MajorRev);
 
-            foreach (var category in revisions)
+            foreach (var revision in revisions)
             {
-                var major = category.Attribute(Number)?.Value;
-                var minor = category.Attribute(DefaultMinorRev)?.Value;
+                var major = revision.Attribute(Number)?.Value;
+                var minor = revision.Attribute(DefaultMinorRev)?.Value;
+                //todo should add Series?
 
                 yield return Revision.Parse($"{major}.{minor}");
             }
@@ -182,7 +209,7 @@ namespace L5Sharp
             foreach (var category in categories)
             {
                 var name = category.Attribute(Name)?.Value;
-                
+
                 if (ModuleCategory.TryFromName(name, out var moduleCategory))
                     yield return moduleCategory;
             }
@@ -195,15 +222,33 @@ namespace L5Sharp
             foreach (var port in ports)
             {
                 var number = int.Parse(port.Attribute(Number)?.Value!);
-                var type = port.Attribute(Type)?.Value;
-
-                yield return new Port(number, "", type!);
+                var type = port.Attribute(Type)?.Value!;
+                var upstream = port.Elements().All(e => e.Value != "DownstreamOnly");
+                
+                yield return new Port(number, type, upstream);
             }
         }
 
         private static string GetDescription(XContainer element)
         {
-            return element.Descendants(LogixNames.Description).FirstOrDefault()?.Value ?? string.Empty;
+            return element.Descendants(Description).First().Value;
+        }
+
+        private static XDocument? GetLocalCatalog()
+        {
+            var programData = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
+            var serviceFile = Path.Combine(programData, RockwellCatalogServiceLocalPath);
+
+            var info = new FileInfo(serviceFile);
+
+            if (!info.Exists || info.Extension != ".xml")
+                return null;
+
+            var document = XDocument.Load(info.FullName);
+
+            //todo validate document to ensure we are loading what we think we are and that Rockwell didn't change something.
+
+            return document;
         }
     }
 }

@@ -12,12 +12,12 @@ namespace L5Sharp
         /// <summary>
         /// Gets the string catalog number of the <see cref="IModule"/>.
         /// </summary>
-        string CatalogNumber { get; }
+        CatalogNumber CatalogNumber { get; }
 
         /// <summary>
         /// Gets the vendor number of the <see cref="IModule"/>.
         /// </summary>
-        ushort Vendor { get; }
+        Vendor Vendor { get; }
         
         /// <summary>
         /// Gets the product type number of the <see cref="IModule"/> 
@@ -25,7 +25,7 @@ namespace L5Sharp
         /// <value>
         /// An unsigned 16 bit integer that represents an ID for the <see cref="ProductType"/>.
         /// </value>
-        ushort ProductType { get; }
+        ProductType ProductType { get; }
         
         /// <summary>
         /// Gets the product code of the <see cref="IModule"/>.
@@ -109,12 +109,7 @@ namespace L5Sharp
         /// Gets the <see cref="Core.Connection"/> object containing configuration for the <see cref="IModule"/> connection.
         /// </summary>
         Connection? Connection { get; }
-        
-        /// <summary>
-        /// Gets the <see cref="IModuleCollection"/> containing the child Module objects of the <see cref="IModule"/> instance. 
-        /// </summary>
-        IModuleCollection? Modules { get; }
-        
+
         /// <summary>
         /// Gets the config <see cref="ITag{TDataType}"/> for the <see cref="IModule"/>.
         /// </summary>

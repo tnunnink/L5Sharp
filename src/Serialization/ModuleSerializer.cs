@@ -43,9 +43,12 @@ namespace L5Sharp.Serialization
             keyingState.AddAttribute(component, c => c.State);
             element.Add(keyingState);
 
-            var module = (Module)component;
             var ports = new XElement(LogixNames.Ports);
-            ports.Add(module.Ports.Select(p => _context.Serializer.Serialize(p)));
+            ports.Add(component.Ports.Select(p =>
+            {
+                var serializer = new PortSerializer();
+                return serializer.Serialize(p);
+            }));
             element.Add(ports);
 
             var communications = new XElement(Communications);
@@ -67,9 +70,9 @@ namespace L5Sharp.Serialization
 
             var name = element.GetComponentName();
             var description = element.GetComponentDescription();
-            var catalogNumber = element.GetAttribute<IModule, string>(c => c.CatalogNumber);
-            var vendor = element.GetAttribute<IModule, ushort>(c => c.Vendor);
-            var productType = element.GetAttribute<IModule, ushort>(c => c.ProductType);
+            var catalogNumber = element.GetAttribute<IModule, CatalogNumber>(c => c.CatalogNumber);
+            var vendor = element.GetAttribute<IModule, Vendor>(c => c.Vendor);
+            var productType = element.GetAttribute<IModule, ProductType>(c => c.ProductType);
             var productCode = element.GetAttribute<IModule, ushort>(c => c.ProductCode);
             var major = element.Attribute("Major")?.Value;
             var minor = element.Attribute("Minor")?.Value;
@@ -86,13 +89,13 @@ namespace L5Sharp.Serialization
                 var serializer = new PortSerializer();
                 return serializer.Deserialize(e);
             });
-            
+
             //config
             //connection
             //input
             //output
 
-            return new Module(name, catalogNumber!, vendor, productType, productCode, revision,
+            return new Module(name, catalogNumber!, vendor!, productType!, productCode, revision,
                 parentModule!, parentModPortId, ports, state, inhibited, majorFault, safetyEnabled,
                 description: description);
         }

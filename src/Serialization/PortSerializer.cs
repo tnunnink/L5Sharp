@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Xml.Linq;
 using L5Sharp.Core;
 using L5Sharp.Extensions;
@@ -26,11 +27,10 @@ namespace L5Sharp.Serialization
             element.AddAttribute(component, c => c.Upstream);
 
             if (component.Bus is null) return element;
-
-            var serializer = new BusSerializer();
-            var bus = serializer.Serialize(component.Bus);
+            
+            var bus = new XElement(LogixNames.Bus);
+            bus.AddAttribute(component, c => c.Bus!.Size, p => p.Bus?.Size > 0);
             element.Add(bus);
-
             return element;
         }
 
@@ -47,15 +47,10 @@ namespace L5Sharp.Serialization
             var address = element.GetAttribute<Port, string>(c => c.Address) ?? string.Empty;
             var type = element.GetAttribute<Port, string>(c => c.Type) ?? string.Empty;
             var upstream = element.GetAttribute<Port, bool>(c => c.Upstream);
-
-            var busElement = element.Element(LogixNames.Bus);
-
-            if (busElement is null)
-                return new Port(id, address, type, upstream);
-
-            var serializer = new BusSerializer();
-            var bus = serializer.Deserialize(busElement);
-            return new Port(id, address, type, upstream, bus);
+            var moduleName = element.Ancestors(LogixNames.Module).FirstOrDefault()?.GetComponentName();
+            int.TryParse(element.Element(LogixNames.Bus)?.Attribute("Size")?.Value, out var size);
+            
+            return new Port(id, type, upstream, address, size, moduleName);
         }
     }
 }

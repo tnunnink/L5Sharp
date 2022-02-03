@@ -12,12 +12,12 @@ namespace L5Sharp
     /// <summary>
     /// A class that indexes all data types of a L5X so that we can easily deserialize them when they are requested.
     /// </summary>
-    internal class LogixContextTypes
+    internal class LogixTypeIndex
     {
         private readonly LogixContext _context;
         private readonly Dictionary<string, XElement> _index;
 
-        internal LogixContextTypes(LogixContext context)
+        internal LogixTypeIndex(LogixContext context)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
             _index = new Dictionary<string, XElement>(StringComparer.OrdinalIgnoreCase);

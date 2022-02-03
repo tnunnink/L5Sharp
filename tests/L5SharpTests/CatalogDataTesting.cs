@@ -37,7 +37,7 @@ namespace L5SharpTests
 
             var categories = document.Descendants("Category").Select(e => e.Attribute("Name")?.Value).Distinct();
 
-            File.WriteAllLines(@"C:\Users\tnunnink\desktop\results.txt", categories);
+            File.WriteAllLines(@"C:\Users\tnunnink\desktop\categories.txt", categories);
         }
 
         [Test]
@@ -48,6 +48,25 @@ namespace L5SharpTests
             var ports = document.Descendants("Port").Select(e => e.Attribute("Type")?.Value).Distinct();
 
             File.WriteAllLines(@"C:\Users\tnunnink\desktop\PortTypes.txt", ports);
+        }
+
+        [Test]
+        public void GetAllDevicesWithMultiplePortsWithoutExtensionProperties()
+        {
+            var document = XDocument.Load(FileName);
+
+            var ports = document.Descendants("RADevice")
+                .Where(e => e.Descendants("Port").Count() > 1
+                            && e.Descendants("PortExtProperty").All(d => d.Value != "DownstreamOnly"))
+                .Select(e =>
+                {
+                    return
+                        $"{e.Descendants("CatalogNumber").First().Value};" +
+                        $" {string.Join(",", e.Descendants("Category").Select(a => a.Attribute("Name")?.Value))}; " +
+                        $"{string.Join(",", e.Descendants("Port").Select(a => a.Attribute("Type")?.Value))}";
+                });
+
+            File.WriteAllLines(@"C:\Users\tnunnink\desktop\MultiplePortsDevices.txt", ports);
         }
 
         [Test]

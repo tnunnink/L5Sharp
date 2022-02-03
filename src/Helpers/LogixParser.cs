@@ -39,10 +39,13 @@ namespace L5Sharp.Helpers
             { typeof(NeutralText), s => new NeutralText(s) },
             { typeof(TaskPriority), s => TaskPriority.Parse(s) },
             { typeof(ScanRate), s => ScanRate.Parse(s) },
-            { typeof(Watchdog), s => Watchdog.Parse(s) }
+            { typeof(Watchdog), s => Watchdog.Parse(s) },
+            { typeof(CatalogNumber), s => new CatalogNumber(s) },
+            { typeof(Vendor), Vendor.Parse },
+            { typeof(ProductType), ProductType.Parse },
         };
 
-        
+
         /// <summary>
         /// Parses the provided string input to the specified generic type base ont predefined Logix parsing functions or type converters.
         /// </summary>

@@ -2,256 +2,207 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using L5Sharp.Exceptions;
 
 namespace L5Sharp.Core
 {
     /// <summary>
-    /// A Logix <see cref="Bus"/> is an object that represents a collection of <see cref="IModule"/>.
+    /// A Logix <see cref="Bus"/> is an object that represents collection of <see cref="IModule"/> components assigned to 
+    /// a specific <see cref="Port"/>.
     /// </summary>
     public sealed class Bus : IEnumerable<IModule>
     {
-        private readonly List<IModule?> _modules;
+        private readonly Port _port;
+        private readonly Dictionary<string, IModule> _modules;
 
-        /// <summary>
-        /// Creates a new <see cref="Bus"/> with the optional size and baud rate.
-        /// </summary>
-        /// <param name="size">The size of the Bus. This sets the capacity of the collection.</param>
-        /// <param name="baud">The baud rate of the Bus.</param>
-        public Bus(int? size = default, float? baud = default)
+        private static readonly List<string> NetworkTypes = new()
         {
-            Size = size;
-            Baud = baud;
+            "Ethernet",
+            "ControlNet",
+            "DeviceNet",
+            "RIO"
+        };
 
-            _modules = size is not null ? new List<IModule?>(new IModule[size.Value]) : new List<IModule?>();
+        internal Bus(Port port, int size)
+        {
+            _port = port ?? throw new ArgumentNullException(nameof(port));
+            _modules = new Dictionary<string, IModule>();
+            Size = size;
         }
 
         /// <summary>
-        /// Gets the number of Modules in the current <see cref="Bus"/>.
+        /// Gets the type indicating which port types can be added to the <see cref="Bus"/>.
         /// </summary>
-        /// <remarks>
-        /// The count represents the number of non null slots in the <see cref="Bus"/>.
-        /// </remarks>
-        public int Count => _modules.Count(m => m is not null);
+        public string Type => _port.Type;
+
+        /// <summary>
+        /// Gets the number of Modules in the <see cref="Bus"/>.
+        /// </summary>
+        public int Count => _modules.Count;
 
         /// <summary>
         /// Gets the value of the current <see cref="Bus"/> size.
         /// </summary>
-        /// <remarks>
-        /// Is the Size is null, the <see cref="Bus"/> represents an unbounded collection of Modules. This
-        /// is typical for Ethernet based Bus networks. If Size has a value, the <see cref="Bus"/> represents a
-        /// fixed length collection and will contain null references for empty slots or indices.
-        /// </remarks>
-        public int? Size { get; }
+        public int Size { get; }
 
         /// <summary>
-        /// Gets the value of the Baud rate for the <see cref="Bus"/> connection.
+        /// Gets a value indicating whether the <see cref="Bus"/> is empty or has not Modules.
         /// </summary>
-        public float? Baud { get; }
+        public bool IsEmpty => _modules.Count == 0;
 
         /// <summary>
-        /// Gets a value indicating whether the <see cref="Bus"/> has any modules.
+        /// Gets a value indicating whether the <see cref="Bus"/> is full and can not add new Modules.
         /// </summary>
-        public bool IsEmpty => _modules.All(m => m is null);
+        public bool IsFull => IsFixed && _modules.Count == Size;
 
         /// <summary>
-        /// Gets a value indicating whether the <see cref="Bus"/> is full.
+        /// Gets a value indicating whether the <see cref="Bus"/> is of fixed size or unbounded.
         /// </summary>
-        public bool IsFull => Size is not null && _modules.All(m => m is not null);
+        public bool IsFixed => Size > 0;
 
         /// <summary>
-        /// Gets a value indicating whether the <see cref="Bus"/> is a backplane containing a fixed size.
+        /// Gets a value indicating whether the <see cref="Bus"/> contains Modules with slot based addresses.
         /// </summary>
-        /// <remarks>
-        /// When <see cref="Size"/> is not null, then we are assuming the Bus represents a backplane, or a fixed length
-        /// collection of Modules that are assignable by index or slot number. If null, then we assume this is a network
-        /// type Bus having an unconstrained length of Modules.
-        /// </remarks>
-        /// <seealso cref="IsEthernet"/>
-        public bool IsBackplane => Size is not null;
+        public bool IsChassis => !NetworkTypes.Contains(Type) && _modules.Keys.All(k => int.TryParse(k, out _));
 
         /// <summary>
-        /// Gets a valid indicating whether the <see cref="Bus"/> is a set of Ethernet based devices and that
-        /// the size is unconstrained.
+        /// Gets a value indicating whether the <see cref="Bus"/> contains Modules with IP based addresses.
         /// </summary>
-        /// <remarks>
-        /// When <see cref="Size"/> is not null, then we are assuming the Bus represents a backplane, or a fixed length
-        /// collection of Modules that are assignable by index or slot number. If null, then we assume this is a Ethernet
-        /// type Bus having an unconstrained length of Modules.
-        /// </remarks>
-        /// <seealso cref="IsBackplane"/>
-        public bool IsEthernet => Size is null;
+        public bool IsNetwork => NetworkTypes.Contains(Type) && _modules.Keys.All(k => IPAddress.TryParse(k, out _));
 
         /// <summary>
-        /// Gets a <see cref="IModule"/> at the specified slot number.
+        /// Gets a Module with the specified address (slot or IP) from the <see cref="Bus"/>.
         /// </summary>
-        /// <param name="slot">The slot number at which to get the Module.</param>
-        /// <returns>
-        /// For Ethernet type Bus objects, returns a Module at the specified index if valid; otherwise throws exception.
-        /// For Backplane type Bus objects, returns the Module instance in the specified slot if it exists; otherwise null. 
-        /// </returns>
-        /// <remarks>
-        /// This getter is mostly for backplane type Bus objects as they will have an initialized set of indices after
-        /// construction. Accessing a module by index for Ethernet type Bus may result in <see cref="ArgumentOutOfRangeException"/>
-        /// if the specified index is not within range of the current collection count.
-        /// </remarks>
-        public IModule? this[int slot] => _modules[slot];
+        /// <param name="address">The string address value that represents the slot or IP of the device to get.</param>
+        public IModule this[string address] => _modules[address];
 
         /// <summary>
-        /// Gets a <see cref="IModule"/> with the specified name.
+        /// Adds a new <see cref="IModule"/> instance to the current <see cref="Bus"/> using the provided name and catalog number to lookup and
+        /// created the specified Module.
         /// </summary>
-        /// <param name="name">The name of the Module to get.</param>
-        /// <returns>
-        /// The <see cref="IModule"/> instance with the specified name if one exists on the Bus; otherwise, null. 
-        /// </returns>
-        public IModule? this[ComponentName name] => _modules.FirstOrDefault(m => m is not null && m.Name == name);
-
-        /// <summary>
-        /// Adds a <see cref="IModule"/> to the current <see cref="Bus"/>.
-        /// </summary>
-        /// <param name="module">The <see cref="IModule"/> instance to add.</param>
-        /// <exception cref="ArgumentNullException">modules is null.</exception>
-        /// <exception cref="ComponentNameCollisionException">module name already exists on the collection.</exception>
-        /// <exception cref="ArgumentException">module does not have an upstream port defined
-        /// -or- module is not ethernet based and the slot number could not be parsed.</exception>
-        /// <exception cref="InvalidOperationException">Bus is full
-        /// -or- the specified slot is already taken by another module. </exception>
-        /// <exception cref="ArgumentOutOfRangeException">module slot number is out of range.</exception>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <seealso cref="TryAdd"/>
-        public void Add(IModule? module) => AddModuleInternal(module);
-
-        /// <summary>
-        /// Adds the provided collection of <see cref="IModule"/> to the <see cref="Bus"/> in the order they are provided.
-        /// </summary>
-        /// <param name="modules">The collection of <see cref="IModule"/> to add.</param>
-        /// <exception cref="ArgumentNullException">modules is null.</exception>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        public void AddMany(IEnumerable<IModule?> modules)
+        /// <param name="name">The name of the Module to add to the Bus.</param>
+        /// <param name="catalogNumber">The catalog number of the Module to create.</param>
+        /// <param name="slot">The slot number to assign the Module to on the current chassis.</param>
+        /// <param name="description">The optional description of the Module.</param>
+        /// <exception cref="InvalidOperationException"></exception>
+        public void AddModule(ComponentName name, CatalogNumber catalogNumber, int slot, string? description = null)
         {
-            if (modules is null)
-                throw new ArgumentNullException(nameof(modules));
-
-            foreach (var module in modules)
-                AddModuleInternal(module);
-        }
-
-        /// <summary>
-        /// Determines if the current <see cref="Bus"/> contains a <see cref="IModule"/> with the specified name.
-        /// </summary>
-        /// <param name="moduleName">The name of the Module to search for.</param>
-        public bool Contains(string moduleName) => _modules.Any(m => m is not null && m.Name == moduleName);
-
-        /// <summary>
-        /// Removes the <see cref="IModule"/> with the specified name from the <see cref="Bus"/>.
-        /// </summary>
-        /// <param name="moduleName">The name of the Module to remove from the Bus.</param>
-        /// <returns>true is the Module was found and removed; false if it was not found.</returns>
-        public bool Remove(string moduleName) => _modules.RemoveAll(m => m is not null && m.Name == moduleName) == 1;
-
-        /// <summary>
-        /// Removes the <see cref="IModule"/> at the specified slot number from the <see cref="Bus"/>.
-        /// </summary>
-        /// <param name="slot">The slot of the Module to remove from the Bus.</param>
-        public void RemoveAt(int slot)
-        {
-            if (slot < 0 || slot >= Size)
-                throw new ArgumentOutOfRangeException(nameof(slot),
-                    "The provided module slot number is out of range for the current Bus size.");
-
-            _modules[slot] = null;
-        }
-
-        /// <summary>
-        /// Attempts to add the provided <see cref="IModule"/> to the <see cref="Bus"/>.
-        /// </summary>
-        /// <param name="module">The Module to add.</param>
-        /// <returns>true if the Module was added to the Bus; otherwise, false.</returns>
-        /// <exception cref="ArgumentNullException">when module is null.</exception>
-        public bool TryAdd(IModule? module)
-        {
-            if (module is null)
-                throw new ArgumentNullException(nameof(module));
-
-            var port = module.Ports.FirstOrDefault(p => p.Upstream);
-
-            if (port is null || Contains(module.Name) || IsFull)
-                return false;
-
-            if (port.Type == "Ethernet")
-            {
-                _modules.Add(module);
-                return true;
-            }
-
-            if (!int.TryParse(port.Address, out var slot) || !IsValidSlot(slot)) return false;
-            _modules[slot] = module;
-            return true;
-        }
-
-        private void AddModuleInternal(IModule? module)
-        {
-            if (module is null)
-                throw new ArgumentNullException(nameof(module));
-
-            if (IsFull)
+            if (!IsChassis)
                 throw new InvalidOperationException(
-                    "The current Bus is full and can not add new modules. Remove modules before adding further items.");
+                    "The current Bus is not a chassis type Bus and can not add Modules by slot number.");
 
-            if (Contains(module.Name))
-                throw new ComponentNameCollisionException(module.Name, module.GetType());
+            var address = IsValidAvailableAddress(slot) ? slot.ToString() : NextAvailableSlot();
 
-            var port = module.Ports.FirstOrDefault(p => p is not null && p.Upstream);
+            AddModule(name, catalogNumber, address, description);
+        }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="catalogNumber"></param>
+        /// <param name="ipAddress"></param>
+        /// <param name="description"></param>
+        /// <exception cref="InvalidOperationException"></exception>
+        /// <exception cref="ArgumentException"></exception>
+        public void AddModule(ComponentName name, CatalogNumber catalogNumber, IPAddress ipAddress,
+            string? description = null)
+        {
+            if (!IsNetwork)
+                throw new InvalidOperationException(
+                    "The current Bus is not a network type Bus and can not add Modules by IP address.");
+
+            var address = IsValidAvailableAddress(ipAddress)
+                ? ipAddress.ToString()
+                : throw new ArgumentException(
+                    $"The provided address '{ipAddress}' is not valid or available for the current Bus.");
+
+            AddModule(name, catalogNumber, address, description);
+        }
+
+        private void AddModule(ComponentName name, CatalogNumber catalogNumber, string address, string? description)
+        {
+            ValidateName(name);
+
+            var definition = GetDefinition(catalogNumber);
+            var ports = GenerateConnectingPorts(definition.Ports.ToList(), name, address);
+
+            var module = new Module(name, definition.CatalogNumber, definition.Vendor, definition.ProductType,
+                definition.ProductCode, definition.Revisions.Max(), _port.ModuleName, _port.Id,
+                ports, description: description);
+
+            _modules[address] = module;
+        }
+
+        private ModuleDefinition GetDefinition(CatalogNumber catalogNumber)
+        {
+            if (catalogNumber is null)
+                throw new ArgumentNullException(nameof(catalogNumber));
+
+            var catalog = new LogixCatalog();
+
+            var definition = catalog.Lookup(catalogNumber);
+
+            if (definition is null)
+                throw new ArgumentException(
+                    $"The provided catalog number '{catalogNumber}' was not found in the catalog service file.");
+            
+            var port = definition.Ports.FirstOrDefault(p => p.Type == Type && p.Upstream);
+            
             if (port is null)
                 throw new ArgumentException(
-                    "The provided Module does not have an upstream port." +
-                    " In order to add a Module to the current Bus, it must have an upstream port defined");
+                    $"No upstream port of type '{Type}' defined for module '{catalogNumber}'.");
 
-            ValidatePort(port);
-
-            if (port.Type == "Ethernet")
-            {
-                _modules.Add(module);
-                return;
-            }
-
-            var slot = GetSlotNumber(port);
-            _modules[slot] = module;
+            return definition;
         }
 
-        private static int GetSlotNumber(Port port) => int.Parse(port.Address);
-
-        private bool IsValidSlot(int? slot) => slot > 0 && slot < Size && _modules[slot.Value] is null;
-
-        private void ValidatePort(Port port)
+        private IEnumerable<Port> GenerateConnectingPorts(IReadOnlyCollection<Port> ports, string moduleName,
+            string address)
         {
-            if (IsEthernet)
-            {
-                if (port.Type != "Ethernet")
-                    throw new ArgumentException("Can only add Modules with a port type of Ethernet to the current Bus");
-                return;
-            }
+            var connectingPorts = new List<Port>();
 
-            if (!int.TryParse(port.Address, out var slot))
-                throw new ArgumentException(
-                    $"Could not determine the slot number for the provided Module Address '{port.Address}'");
+            var port = ports.First(p => p.Type == Type && p.Upstream);
 
-            if (slot < 0 || slot >= Size)
-                throw new ArgumentOutOfRangeException(nameof(slot),
-                    "The provided Module slot number is out of range for the current Bus size.");
+            var upstreamPort = new Port(port.Id, port.Type, true, address, moduleName: moduleName);
 
-            if (_modules[slot] is not null)
-                throw new InvalidOperationException(
-                    $"The current Bus already has a module at the specified slot number {slot}");
+            var downstreamPorts = ports.Where(p => p.Id != port.Id)
+                .Select(p => new Port(p.Id, p.Type, false, p.Address, moduleName: moduleName));
+
+            connectingPorts.Add(upstreamPort);
+            connectingPorts.AddRange(downstreamPorts);
+
+            return connectingPorts;
         }
+
+        private void ValidateName(ComponentName name)
+        {
+            if (name is null)
+                throw new ArgumentNullException(nameof(name));
+
+            if (_modules.Any(m => m.Value.Name == name))
+                throw new ComponentNameCollisionException(name, typeof(IModule));
+        }
+
+        private string NextAvailableSlot()
+        {
+            if (IsFull)
+                throw new InvalidOperationException("The current Bus is full and can not assign additional modules.");
+
+            var max = IsFixed ? Size : int.MaxValue;
+
+            return Enumerable.Range(0, max).Except(_modules.Keys.Select(int.Parse)).First().ToString();
+        }
+
+        private bool IsValidAvailableAddress(int slot) => IsFixed
+            ? slot >= 0 && slot < Size && !_modules.ContainsKey(slot.ToString())
+            : slot >= 0 && !_modules.ContainsKey(slot.ToString());
+
+        private bool IsValidAvailableAddress(IPAddress? ipAddress) =>
+            ipAddress is not null && !_modules.ContainsKey(ipAddress.ToString());
 
         /// <inheritdoc />
-        public IEnumerator<IModule> GetEnumerator() => _modules.GetEnumerator();
+        public IEnumerator<IModule> GetEnumerator() => _modules.Values.GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }

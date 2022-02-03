@@ -10,7 +10,7 @@ namespace L5Sharp.Core
     public class Module : IModule
     {
         internal Module(string name,
-            string catalogNumber, ushort vendor, ushort productType, ushort productCode, Revision revision,
+            CatalogNumber catalogNumber, Vendor vendor, ProductType productType, ushort productCode, Revision revision,
             string parentModule, int parentModPortId,
             IEnumerable<Port> ports, KeyingState? state = null,
             bool inhibited = false, bool majorFault = false, bool safetyEnabled = false,
@@ -36,38 +36,46 @@ namespace L5Sharp.Core
             Config = config;
             Input = input;
             Output = output;
-
-            var children = Ports.Where(p => !p.Upstream && p.Bus is not null).ToList();
-            Modules = children.Count > 0 ? new ModuleCollection(children) : null;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="name"></param>
-        /// <param name="catalogNumber"></param>
-        /// <param name="vendor"></param>
-        /// <param name="productType"></param>
-        /// <param name="revision"></param>
-        /// <param name="ports"></param>
-        /// <param name="connection"></param>
-        /// <param name="description"></param>
-        /// <exception cref="ArgumentNullException"></exception>
-        public Module(ComponentName name, 
-            CatalogNumber catalogNumber, Vendor vendor, ProductType productType, Revision revision,
-            IEnumerable<Port> ports, Connection? connection = null, string? description = null)
+        public Module(ComponentName name, ModuleDefinition definition, string? description = null)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
             Description = description ?? string.Empty;
-            CatalogNumber = catalogNumber;
-            Vendor = vendor.Id;
-            ProductType = productType.Id;
-            //ProductCode = productType.Code; need to add this somewhere
-            Revision = revision;
-            State = KeyingState.CompatibleModule;
-            Ports = new PortCollection(ports);
-            Connection = connection;
+
+            if (definition is null)
+                throw new ArgumentNullException(nameof(definition));
+
+            CatalogNumber = definition.CatalogNumber;
+            Vendor = definition.Vendor;
+            ProductType = definition.ProductType;
+            ProductCode = definition.ProductCode;
+            Revision = definition.Revisions.Max();
             ParentModule = string.Empty;
+            State = KeyingState.CompatibleModule;
+            Ports = new PortCollection(definition.Ports);
+        }
+
+        public Module(ComponentName name, CatalogNumber catalogNumber, string? description = null)
+        {
+            Name = name ?? throw new ArgumentNullException(nameof(name));
+            Description = description ?? string.Empty;
+
+            var catalog = new LogixCatalog();
+            var definition = catalog.Lookup(catalogNumber);
+
+            if (definition is null)
+                throw new ArgumentException(
+                    $"Could not find the specified catalog number '{catalogNumber}' in the catalog service file.");
+
+            CatalogNumber = definition.CatalogNumber;
+            Vendor = definition.Vendor;
+            ProductType = definition.ProductType;
+            ProductCode = definition.ProductCode;
+            Revision = definition.Revisions.Max();
+            ParentModule = string.Empty;
+            State = KeyingState.CompatibleModule;
+            Ports = new PortCollection(definition.Ports);
         }
 
         /// <inheritdoc />
@@ -77,13 +85,13 @@ namespace L5Sharp.Core
         public string Description { get; }
 
         /// <inheritdoc />
-        public string CatalogNumber { get; }
+        public CatalogNumber CatalogNumber { get; }
 
         /// <inheritdoc />
-        public ushort Vendor { get; }
+        public Vendor Vendor { get; }
 
         /// <inheritdoc />
-        public ushort ProductType { get; }
+        public ProductType ProductType { get; }
 
         /// <inheritdoc />
         public ushort ProductCode { get; }
@@ -122,9 +130,6 @@ namespace L5Sharp.Core
         public Connection? Connection { get; }
 
         /// <inheritdoc />
-        public IModuleCollection? Modules { get; }
-
-        /// <inheritdoc />
         public ITag<IComplexType>? Config { get; }
 
         /// <inheritdoc />
@@ -133,27 +138,10 @@ namespace L5Sharp.Core
         /// <inheritdoc />
         public ITag<IDataType>? Output { get; }
 
+        private int? GetSlotNumber() =>
+            Ports.ChassisPort is not null ? int.Parse(Ports.ChassisPort.Address) : null;
 
-        private int? GetSlotNumber()
-        {
-            foreach (var port in Ports.Where(port => port.Type != "Ethernet"))
-            {
-                if (int.TryParse(port.Address, out var slot))
-                    return slot;
-            }
-
-            return null;
-        }
-
-        private IPAddress? GetIpAddress()
-        {
-            foreach (var port in Ports.Where(port => port.Type == "Ethernet"))
-            {
-                if (IPAddress.TryParse(port.Address, out var address))
-                    return address;
-            }
-
-            return null;
-        }
+        private IPAddress? GetIpAddress() =>
+            Ports.NetworkPort is not null ? IPAddress.Parse(Ports.NetworkPort.Address) : null;
     }
 }

@@ -45,7 +45,6 @@
       <EmbeddedResource Remove="Builders\**" />
       <EmbeddedResource Remove="Instructions\**" />
       <None Remove="Resources\CatalogSvcsDatabaseV2.xml" />
-      <EmbeddedResource Include="Resources\CatalogSvcsDatabaseV2.xml" />
     </ItemGroup>
 
     <ItemGroup>

@@ -15,7 +15,7 @@ namespace L5Sharp.Core
             Id = id;
             Name = name ?? string.Empty;
         }
-        
+
         /// <summary>
         /// Gets the value that uniquely identifies the <see cref="Vendor"/>. 
         /// </summary>
@@ -23,7 +23,7 @@ namespace L5Sharp.Core
         /// This value is exported in the L5X and is used for Vendor name lookups.
         /// </remarks>
         public ushort Id { get; }
-        
+
         /// <summary>
         /// Gets the value that represents the <see cref="Vendor"/> name.
         /// </summary>
@@ -40,13 +40,20 @@ namespace L5Sharp.Core
         /// <param name="vendor">The <see cref="Vendor"/> object to convert.</param>
         /// <returns>A <see cref="ushort"/> representing the value of the Vendor Id.</returns>
         public static implicit operator ushort(Vendor vendor) => vendor.Id;
-        
+
         /// <summary>
         /// Converts a <see cref="ushort"/> value to a <see cref="Vendor"/> object that represents the Id.
         /// </summary>
         /// <param name="vendorId">The <see cref="ushort"/> value to convert.</param>
         /// <returns>A <see cref="Vendor"/> with the Id of the converted value.</returns>
         public static implicit operator Vendor(ushort vendorId) => new(vendorId);
+
+        /// <summary>
+        /// Creates a new <see cref="Vendor"/> using the provided vendor Id.
+        /// </summary>
+        /// <param name="vendorId">The unique valid that identifies the Vendor.</param>
+        /// <returns>A new <see cref="Vendor"/> object with the provided Id.</returns>
+        public static Vendor Parse(string vendorId) => ushort.TryParse(vendorId, out var id) ? new Vendor(id) : Unknown;
 
         /// <inheritdoc />
         public bool Equals(Vendor? other)
