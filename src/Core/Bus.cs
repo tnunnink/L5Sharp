@@ -86,7 +86,7 @@ namespace L5Sharp.Core
         /// <param name="slot">The slot number to assign the Module to on the current chassis.</param>
         /// <param name="description">The optional description of the Module.</param>
         /// <exception cref="InvalidOperationException"></exception>
-        public void AddModule(ComponentName name, CatalogNumber catalogNumber, int slot, string? description = null)
+        public IModule AddModule(ComponentName name, CatalogNumber catalogNumber, int slot, string? description = null)
         {
             if (!IsChassis)
                 throw new InvalidOperationException(
@@ -94,7 +94,7 @@ namespace L5Sharp.Core
 
             var address = IsValidAvailableAddress(slot) ? slot.ToString() : NextAvailableSlot();
 
-            AddModule(name, catalogNumber, address, description);
+            return AddModule(name, catalogNumber, address, description);
         }
 
         /// <summary>
@@ -106,7 +106,7 @@ namespace L5Sharp.Core
         /// <param name="description"></param>
         /// <exception cref="InvalidOperationException"></exception>
         /// <exception cref="ArgumentException"></exception>
-        public void AddModule(ComponentName name, CatalogNumber catalogNumber, IPAddress ipAddress,
+        public IModule AddModule(ComponentName name, CatalogNumber catalogNumber, IPAddress ipAddress,
             string? description = null)
         {
             if (!IsNetwork)
@@ -118,22 +118,52 @@ namespace L5Sharp.Core
                 : throw new ArgumentException(
                     $"The provided address '{ipAddress}' is not valid or available for the current Bus.");
 
-            AddModule(name, catalogNumber, address, description);
+            return AddModule(name, catalogNumber, address, description);
         }
 
-        private void AddModule(ComponentName name, CatalogNumber catalogNumber, string address, string? description)
+        private IModule AddModule(ComponentName name, CatalogNumber catalogNumber, string address, string? description)
         {
             ValidateName(name);
 
             var definition = GetDefinition(catalogNumber);
-            var ports = GenerateConnectingPorts(definition.Ports.ToList(), name, address);
 
-            var module = new Module(name, definition.CatalogNumber, definition.Vendor, definition.ProductType,
-                definition.ProductCode, definition.Revisions.Max(), _port.ModuleName, _port.Id,
-                ports, description: description);
+            ConfigurePortAddress(definition.Ports, address);
+
+            var module = new Module(name, definition, _port, description);
 
             _modules[address] = module;
+
+            return module;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="slot"></param>
+        /// <returns></returns>
+        public bool Contains(int slot) => _modules.ContainsKey(slot.ToString());
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="ipAddress"></param>
+        /// <returns></returns>
+        public bool Contains(IPAddress ipAddress) => _modules.ContainsKey(ipAddress.ToString());
+
+        /// <summary>
+        /// Removes the Module at the specified slot address if it exists.
+        /// </summary>
+        /// <param name="slot">The slot number at which to remove then Module.</param>
+        /// <returns>true if the Module was found and removed. If not found, false.</returns>
+        public bool RemoveAt(int slot) => _modules.Remove(slot.ToString());
+
+        /// <summary>
+        /// Removes the Module with the specified IP address if it exists.
+        /// </summary>
+        /// <param name="ipAddress">The IP address for which to remove then Module.</param>
+        /// <returns>true if the Module was found and removed. If not found, false.</returns>
+        public bool RemoveAt(IPAddress ipAddress) => _modules.Remove(ipAddress.ToString());
+
 
         private ModuleDefinition GetDefinition(CatalogNumber catalogNumber)
         {
@@ -157,22 +187,19 @@ namespace L5Sharp.Core
             return definition;
         }
 
-        private IEnumerable<Port> GenerateConnectingPorts(IReadOnlyCollection<Port> ports, string moduleName,
-            string address)
+        private void ConfigurePortAddress(IEnumerable<PortDefinition> ports, string address)
         {
-            var connectingPorts = new List<Port>();
+            foreach (var port in ports)
+            {
+                if (port.Type == Type)
+                {
+                    port.Address = address;
+                    port.Upstream = true;
+                    continue;
+                }
 
-            var port = ports.First(p => p.Type == Type && p.Upstream);
-
-            var upstreamPort = new Port(port.Id, port.Type, true, address, moduleName: moduleName);
-
-            var downstreamPorts = ports.Where(p => p.Id != port.Id)
-                .Select(p => new Port(p.Id, p.Type, false, p.Address, moduleName: moduleName));
-
-            connectingPorts.Add(upstreamPort);
-            connectingPorts.AddRange(downstreamPorts);
-
-            return connectingPorts;
+                port.Upstream = false;
+            }
         }
 
         private void ValidateName(ComponentName name)

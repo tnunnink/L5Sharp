@@ -2,11 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Xml.Linq;
 using L5Sharp.Core;
 using L5Sharp.Enums;
-using Module = L5Sharp.Core.Module;
 
 namespace L5Sharp
 {
@@ -36,8 +34,7 @@ namespace L5Sharp
         private const string Number = "Number";
         private const string DefaultMinorRev = "DefaultMinorRev";
         private const string Type = "Type";
-
-        private const string RockwellCatalogServiceLocalResource = @"Resources.CatalogDatabase.xml";
+        private const string DownstreamOnly = "DownstreamOnly";
 
         private const string RockwellCatalogServiceLocalPath =
             @"Rockwell Automation\Catalog Services\CatalogSvcsDatabaseV2.xml";
@@ -49,17 +46,7 @@ namespace L5Sharp
         /// </summary>
         public LogixCatalog()
         {
-            var document = GetLocalCatalog();
-
-            if (document is not null)
-            {
-                _catalog = document;
-                return;
-            }
-
-            var assembly = Assembly.GetExecutingAssembly();
-            using var stream = assembly.GetManifestResourceStream(RockwellCatalogServiceLocalResource);
-            _catalog = XDocument.Load(stream);
+            _catalog = GetLocalCatalog();
         }
 
         /// <summary>
@@ -196,7 +183,6 @@ namespace L5Sharp
             {
                 var major = revision.Attribute(Number)?.Value;
                 var minor = revision.Attribute(DefaultMinorRev)?.Value;
-                //todo should add Series?
 
                 yield return Revision.Parse($"{major}.{minor}");
             }
@@ -215,7 +201,7 @@ namespace L5Sharp
             }
         }
 
-        private static IEnumerable<Port> GetPorts(XContainer element)
+        private static IEnumerable<PortDefinition> GetPorts(XContainer element)
         {
             var ports = element.Descendants(Port);
 
@@ -223,9 +209,9 @@ namespace L5Sharp
             {
                 var number = int.Parse(port.Attribute(Number)?.Value!);
                 var type = port.Attribute(Type)?.Value!;
-                var upstream = port.Elements().All(e => e.Value != "DownstreamOnly");
-                
-                yield return new Port(number, type, upstream);
+                var downstreamOnly = port.Elements().Any(e => e.Value == DownstreamOnly);
+
+                yield return new PortDefinition(number, type, false, downstreamOnly: downstreamOnly);
             }
         }
 
@@ -234,7 +220,7 @@ namespace L5Sharp
             return element.Descendants(Description).First().Value;
         }
 
-        private static XDocument? GetLocalCatalog()
+        private static XDocument GetLocalCatalog()
         {
             var programData = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
             var serviceFile = Path.Combine(programData, RockwellCatalogServiceLocalPath);
@@ -242,7 +228,7 @@ namespace L5Sharp
             var info = new FileInfo(serviceFile);
 
             if (!info.Exists || info.Extension != ".xml")
-                return null;
+                throw new ArgumentException();
 
             var document = XDocument.Load(info.FullName);
 

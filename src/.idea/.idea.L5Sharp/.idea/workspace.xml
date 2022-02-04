@@ -8,33 +8,33 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/CatalogNumberTests.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/PortDefinition.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/ModuleDefinitionTests.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/ProductTypeTests.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/VendorTests.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Serialization.Tests/ModuleSerializerTests.Serialize_ValueTypeArray_ShouldBeApproved.received.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Core/Bus.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/Bus.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/CatalogNumber.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/CatalogNumber.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Core/Module.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/Module.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/ModuleCollection.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/ModuleCollection.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/ModuleCollection.cs" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Core/ModuleDefinition.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/ModuleDefinition.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Core/Port.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/Port.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Core/PortCollection.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/PortCollection.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Core/ProductType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/ProductType.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Core/Vendor.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/Vendor.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Helpers/LogixParser.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Helpers/LogixParser.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/IEquipmentPhaseProgram.cs" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/IModule.cs" beforeDir="false" afterPath="$PROJECT_DIR$/IModule.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/IModuleCollection.cs" beforeDir="false" afterPath="$PROJECT_DIR$/IModuleCollection.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/IModuleCollection.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.sln.DotSettings" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.sln.DotSettings" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/LogixCatalog.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LogixCatalog.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/LogixContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LogixContext.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LogixContextModules.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LogixModuleIndex.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LogixContextTypes.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LogixTypeIndex.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Resources/CatalogSvcsDatabaseV2.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Resources/CatalogDatabase.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Serialization/BusSerializer.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/LogixContextSerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LogixSerializer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LogixModuleIndex.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LogixModuleIndex.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Resources/CatalogDatabase.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Serialization/ModuleSerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Serialization/ModuleSerializer.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Serialization/PortSerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Serialization/PortSerializer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Catalog.Tests/LogixCatalogTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Catalog.Tests/LogixCatalogTests.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/BusTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/BusTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/ModuleTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/ModuleTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/PortTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/PortTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/PortTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/PortDefinitionTests.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Serialization.Tests/ModuleSerializerTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Serialization.Tests/ModuleSerializerTests.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Serialization.Tests/PortSerializerTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Serialization.Tests/PortSerializerTests.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../tests/L5SharpTests/CatalogDataTesting.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5SharpTests/CatalogDataTesting.cs" afterDir="false" />
@@ -279,14 +279,9 @@
       <workItem from="1643667401713" duration="9617000" />
       <workItem from="1643681579083" duration="231000" />
       <workItem from="1643720737704" duration="4440000" />
-      <workItem from="1643745675090" duration="72577000" />
-    </task>
-    <task id="LOCAL-00082" summary="radix development">
-      <created>1638324485461</created>
-      <option name="number" value="00082" />
-      <option name="presentableId" value="LOCAL-00082" />
-      <option name="project" value="LOCAL" />
-      <updated>1638324485463</updated>
+      <workItem from="1643745675090" duration="85001000" />
+      <workItem from="1643991063511" duration="2166000" />
+      <workItem from="1644005786299" duration="3617000" />
     </task>
     <task id="LOCAL-00083" summary="radix development">
       <created>1638330594994</created>
@@ -624,7 +619,14 @@
       <option name="project" value="LOCAL" />
       <updated>1643681505791</updated>
     </task>
-    <option name="localTasksCounter" value="131" />
+    <task id="LOCAL-00131" summary="Lots of module development and updates">
+      <created>1643923282926</created>
+      <option name="number" value="00131" />
+      <option name="presentableId" value="LOCAL-00131" />
+      <option name="project" value="LOCAL" />
+      <updated>1643923282926</updated>
+    </task>
+    <option name="localTasksCounter" value="132" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -639,33 +641,33 @@
       <expand>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 6% 12236/12980" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 6% 12464/13258" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 6% 12236/12980" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 11% 4005/4487" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 6% 12464/13258" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 7% 4194/4524" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 6% 12236/12980" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 11% 4005/4487" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="(1.0.0.0, .NETStandard,Version=v2.1) 11% 4005/4487" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 6% 12464/13258" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 7% 4194/4524" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="(1.0.0.0, .NETStandard,Version=v2.1) 7% 4194/4524" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 6% 12236/12980" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 11% 4005/4487" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="(1.0.0.0, .NETStandard,Version=v2.1) 11% 4005/4487" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 11% 4005/4487" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 6% 12464/13258" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 7% 4194/4524" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="(1.0.0.0, .NETStandard,Version=v2.1) 7% 4194/4524" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 7% 4194/4524" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 6% 12236/12980" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 11% 4005/4487" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="(1.0.0.0, .NETStandard,Version=v2.1) 11% 4005/4487" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 11% 4005/4487" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="Core 18% 1108/1358" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 6% 12464/13258" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 7% 4194/4524" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="(1.0.0.0, .NETStandard,Version=v2.1) 7% 4194/4524" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 7% 4194/4524" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Core 13% 1231/1412" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
       </expand>
       <select />
@@ -691,7 +693,6 @@
       <path value="$PROJECT_DIR$/../.." />
     </ignored-roots>
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="Tag member re-working" />
     <MESSAGE value="tag component development and testing" />
     <MESSAGE value="tag and member development. Module serialization updates" />
     <MESSAGE value="module dev" />
@@ -716,7 +717,8 @@
     <MESSAGE value="Module component development and testing" />
     <MESSAGE value="Module development and testing." />
     <MESSAGE value="catalog service development" />
-    <option name="LAST_COMMIT_MESSAGE" value="catalog service development" />
+    <MESSAGE value="Lots of module development and updates" />
+    <option name="LAST_COMMIT_MESSAGE" value="Lots of module development and updates" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

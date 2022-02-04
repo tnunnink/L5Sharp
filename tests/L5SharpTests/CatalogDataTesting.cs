@@ -51,6 +51,28 @@ namespace L5SharpTests
         }
 
         [Test]
+        public void GetUniqueVendors()
+        {
+            var document = XDocument.Load(FileName);
+
+            var vendors = document.Descendants("VendorID").Select(e => $"{e.Value}, {e.Attribute("Name")?.Value}")
+                .GroupBy(x => x).Select(s => $"{s.Key}, {s.Count()}");
+
+            File.WriteAllLines(@"C:\Users\tnunnink\desktop\Vendors.txt", vendors);
+        }
+        
+        [Test]
+        public void GetUniqueProductTypes()
+        {
+            var document = XDocument.Load(FileName);
+
+            var productTypes = document.Descendants("ProductType").Select(e => $"{e.Value}, {e.Attribute("Name")?.Value}")
+                .GroupBy(x => x).OrderByDescending(x => x.Count()).Select(s => $"{s.Key}, {s.Count()}");
+
+            File.WriteAllLines(@"C:\Users\tnunnink\desktop\ProductTypes.txt", productTypes);
+        }
+
+        [Test]
         public void GetAllDevicesWithMultiplePortsWithoutExtensionProperties()
         {
             var document = XDocument.Load(FileName);

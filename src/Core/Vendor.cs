@@ -10,7 +10,12 @@ namespace L5Sharp.Core
     /// </remarks>
     public class Vendor : IEquatable<Vendor>
     {
-        internal Vendor(ushort id, string? name = null)
+        /// <summary>
+        /// Creates a new <see cref="Vendor"/> entity with the provided id and name.
+        /// </summary>
+        /// <param name="id">The unique Id of the Vendor.</param>
+        /// <param name="name">The name of the Vendor. Will default to empty if not provided.</param>
+        public Vendor(ushort id, string? name = null)
         {
             Id = id;
             Name = name ?? string.Empty;
@@ -30,9 +35,24 @@ namespace L5Sharp.Core
         public string Name { get; }
 
         /// <summary>
-        /// Creates an instance of an unknown <see cref="Vendor"/>
+        /// Represents an Unknown <see cref="Vendor"/> with no id or name.
         /// </summary>
         public static Vendor Unknown => new(0);
+
+        /// <summary>
+        /// Gets the Rockwell Automation Vendor instance (id=1).
+        /// </summary>
+        public static Vendor Rockwell => new(1, "Rockwell Automation/Allen-Bradley");
+
+        /// <summary>
+        /// Gets the Prosoft Technology Vendor instance (id=309).
+        /// </summary>
+        public static Vendor Prosoft => new(309, "Prosoft Technology");
+        
+        /// <summary>
+        /// Gets the Spectrum Controls Vendor instance (id=58).
+        /// </summary>
+        public static Vendor Spectrum => new(58, "Spectrum Controls, Inc.");
 
         /// <summary>
         /// Converts a <see cref="Vendor"/> object to a <see cref="ushort"/> that represents the Id.
@@ -54,6 +74,9 @@ namespace L5Sharp.Core
         /// <param name="vendorId">The unique valid that identifies the Vendor.</param>
         /// <returns>A new <see cref="Vendor"/> object with the provided Id.</returns>
         public static Vendor Parse(string vendorId) => ushort.TryParse(vendorId, out var id) ? new Vendor(id) : Unknown;
+
+        /// <inheritdoc />
+        public override string ToString() => Name;
 
         /// <inheritdoc />
         public bool Equals(Vendor? other)

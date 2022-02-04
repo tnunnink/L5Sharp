@@ -10,7 +10,12 @@ namespace L5Sharp.Core
     /// </remarks>
     public class ProductType : IEquatable<ProductType>
     {
-        internal ProductType(ushort id, string? name = null)
+        /// <summary>
+        /// Creates a new <see cref="ProductType"/> entity with the provided id and name.
+        /// </summary>
+        /// <param name="id">The unique Id of the ProductType.</param>
+        /// <param name="name">The name of the ProductType. Will default to empty if not provided.</param>
+        public ProductType(ushort id, string? name = null)
         {
             Id = id;
             Name = name ?? string.Empty;
@@ -26,11 +31,44 @@ namespace L5Sharp.Core
         /// </summary>
         public string Name { get; }
 
+        /// <summary>
+        /// Represents an Unknown <see cref="ProductType"/> with no id or name.
+        /// </summary>
         public static ProductType Unknown => new(0);
+        
+        /// <summary>
+        /// Gets the General Purpose Discrete I/O ProductType instance (id=7).
+        /// </summary>
+        public static ProductType Discrete => new(7, "General Purpose Discrete I/O");
+        
+        /// <summary>
+        /// Gets the General Purpose Analog I/O ProductType instance (id=10).
+        /// </summary>
+        public static ProductType Analog => new(10, "General Purpose Analog I/O");
+        
+        /// <summary>
+        /// Gets the General Purpose Discrete ProductType instance (id=14).
+        /// </summary>
+        public static ProductType Controller => new(14, "Programmable Logic Controller");
+        
+        /// <summary>
+        /// Gets the General Purpose Discrete ProductType instance (id=12).
+        /// </summary>
+        public static ProductType Communications => new(12, "Communications Adapter");
 
-        public static implicit operator ushort(ProductType vendor) => vendor.Id;
+        /// <summary>
+        /// Converts a <see cref="ProductType"/> object to a <see cref="ushort"/> that represents the Id.
+        /// </summary>
+        /// <param name="productType">The <see cref="ProductType"/> object to convert.</param>
+        /// <returns>A <see cref="ushort"/> representing the value of the ProductType Id.</returns>
+        public static implicit operator ushort(ProductType productType) => productType.Id;
 
-        public static implicit operator ProductType(ushort vendorId) => new(vendorId);
+        /// <summary>
+        /// Converts a <see cref="ushort"/> value to a <see cref="ProductType"/> object that represents the Id.
+        /// </summary>
+        /// <param name="productTypeId">The <see cref="ushort"/> value to convert.</param>
+        /// <returns>A <see cref="ProductType"/> with the Id of the converted value.</returns>
+        public static implicit operator ProductType(ushort productTypeId) => new(productTypeId);
 
         /// <summary>
         /// Creates a new <see cref="ProductType"/> using the provided product Id.
@@ -39,6 +77,9 @@ namespace L5Sharp.Core
         /// <returns>A new <see cref="ProductType"/> object with the provided Id.</returns>
         public static ProductType Parse(string productId) =>
             ushort.TryParse(productId, out var id) ? new ProductType(id) : Unknown;
+
+        /// <inheritdoc />
+        public override string ToString() => Name;
 
         /// <inheritdoc />
         public bool Equals(ProductType? other)

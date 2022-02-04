@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace L5Sharp.Core
+﻿namespace L5Sharp.Core
 {
     /// <summary>
     /// A component of a <see cref="IModule"/> that represents a connection of the device. to other devices on the network.
@@ -13,23 +11,22 @@ namespace L5Sharp.Core
     /// </remarks>
     public sealed class Port
     {
-        public Port(int id, string type, bool upstream = true, string? address = null, int busSize = default,
-            string? moduleName = null)
+        internal Port(IModule module, PortDefinition definition)
         {
-            ModuleName = moduleName ?? string.Empty;
-            Id = id;
-            Type = type ?? throw new ArgumentNullException(nameof(type));
-            Upstream = upstream;
-            Address = address ?? string.Empty;
+            Module = module;
+            Id = definition.Id;
+            Type = definition.Type;
+            Upstream = definition.Upstream;
+            Address = definition.Address;
 
             if (!Upstream)
-                Bus = new Bus(this, busSize);
+                Bus = new Bus(this, definition.BusSize);
         }
 
         /// <summary>
-        /// Gets the name of the Module that is the owner of the current Port.
+        /// Gets the <see cref="IModule"/> instance that owns the current <see cref="Port"/>.
         /// </summary>
-        public string ModuleName { get; }
+        public IModule Module { get; }
 
         /// <summary>
         /// Gets the Id of the <see cref="Port"/>.

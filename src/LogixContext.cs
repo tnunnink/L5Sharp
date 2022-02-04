@@ -35,7 +35,7 @@ namespace L5Sharp
             var document = XDocument.Load(_fileName);
 
             L5X = new L5X(document);
-            Serializer = new LogixContextSerializer(this);
+            Serializer = new LogixSerializer(this);
             TypeIndex = new LogixTypeIndex(this);
             ModuleIndex = new LogixModuleIndex(this);
 
@@ -46,7 +46,7 @@ namespace L5Sharp
         }
 
         internal L5X L5X { get; }
-        internal LogixContextSerializer Serializer { get; }
+        internal LogixSerializer Serializer { get; }
         internal LogixTypeIndex TypeIndex { get; }
         internal LogixModuleIndex ModuleIndex { get; }
 

@@ -13,12 +13,9 @@ namespace L5Sharp.Core
     {
         private readonly List<Port> _ports;
 
-        internal PortCollection(IEnumerable<Port> ports)
+        internal PortCollection(IModule module, IEnumerable<PortDefinition> portDefinitions)
         {
-            if (ports is null)
-                throw new ArgumentNullException(nameof(ports));
-
-            _ports = new List<Port>(ports);
+            _ports = new List<Port>(portDefinitions.Select(d => new Port(module, d)));
         }
 
         /// <summary>
@@ -40,6 +37,18 @@ namespace L5Sharp.Core
         /// Gets all downstream ports of the <see cref="PortCollection"/>.
         /// </summary>
         public IEnumerable<Port> Downstream => _ports.Where(p => !p.Upstream);
+
+        /// <summary>
+        /// Gets the <see cref="Port"/> with the specified id.  
+        /// </summary>
+        /// <param name="id"></param>
+        public Port? this[int id] => _ports.SingleOrDefault(p => p.Id == id);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public Port? Default() => _ports.FirstOrDefault(p => !p.Upstream);
 
         /// <inheritdoc />
         public IEnumerator<Port> GetEnumerator() => _ports.GetEnumerator();

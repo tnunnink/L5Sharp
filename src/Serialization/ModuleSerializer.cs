@@ -33,8 +33,8 @@ namespace L5Sharp.Serialization
             element.AddAttribute(component, c => c.ProductCode);
             element.AddAttribute(component, c => c.Revision.Major, nameOverride: "Major");
             element.AddAttribute(component, c => c.Revision.Minor, nameOverride: "Minor");
-            element.AddAttribute(component, c => c.ParentModule);
-            element.AddAttribute(component, c => c.ParentModPortId);
+            element.Add(new XAttribute("ParentModule", component.ParentPort?.Module.Name ?? string.Empty));
+            element.Add(new XAttribute("ParentModPortId", component.ParentPort?.Id ?? 0));
             element.AddAttribute(component, c => c.Inhibited);
             element.AddAttribute(component, c => c.MajorFault);
             element.AddAttribute(component, c => c.SafetyEnabled);
@@ -47,14 +47,16 @@ namespace L5Sharp.Serialization
             ports.Add(component.Ports.Select(p =>
             {
                 var serializer = new PortSerializer();
-                return serializer.Serialize(p);
+                var size = p.Bus?.Size ?? 0;
+                return serializer.Serialize(new PortDefinition(p.Id, p.Type, p.Upstream, p.Address, size));
             }));
-            element.Add(ports);
+
 
             var communications = new XElement(Communications);
             //config
             //connections....
 
+            element.Add(ports);
             element.Add(communications);
 
             return element;
@@ -77,8 +79,8 @@ namespace L5Sharp.Serialization
             var major = element.Attribute("Major")?.Value;
             var minor = element.Attribute("Minor")?.Value;
             var revision = Revision.Parse($"{major}.{minor}");
-            var parentModule = element.GetAttribute<IModule, string>(c => c.ParentModule);
-            var parentModPortId = element.GetAttribute<IModule, int>(c => c.ParentModPortId);
+            var parentModule = element.Attribute("ParentModule")?.Value;
+            int.TryParse(element.Attribute("ParentModPortId")?.Value, out var parentModPortId);
             var inhibited = element.GetAttribute<Module, bool>(c => c.Inhibited);
             var majorFault = element.GetAttribute<Module, bool>(c => c.MajorFault);
             var safetyEnabled = element.GetAttribute<Module, bool>(c => c.SafetyEnabled);
@@ -94,10 +96,14 @@ namespace L5Sharp.Serialization
             //connection
             //input
             //output
+            
+            var parentPort = !string.IsNullOrEmpty(parentModule) && parentModule != name
+                ? _context.ModuleIndex.GetModule(parentModule)?.Ports[parentModPortId]
+                : null;
 
-            return new Module(name, catalogNumber!, vendor!, productType!, productCode, revision,
-                parentModule!, parentModPortId, ports, state, inhibited, majorFault, safetyEnabled,
-                description: description);
+            return new Module(name, catalogNumber!, vendor!, productType!, productCode, revision, ports,
+                parentModule, parentModPortId, parentPort, state, inhibited, majorFault, safetyEnabled,
+                null, null, null, null, description);
         }
     }
 }

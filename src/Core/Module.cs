@@ -11,12 +11,11 @@ namespace L5Sharp.Core
     {
         internal Module(string name,
             CatalogNumber catalogNumber, Vendor vendor, ProductType productType, ushort productCode, Revision revision,
-            string parentModule, int parentModPortId,
-            IEnumerable<Port> ports, KeyingState? state = null,
-            bool inhibited = false, bool majorFault = false, bool safetyEnabled = false,
-            Connection? connection = null,
-            ITag<IComplexType>? config = null, ITag<IComplexType>? input = null, ITag<IComplexType>? output = null,
-            string? description = null)
+            IEnumerable<PortDefinition> ports, string? parentModule, int parentModPortId, Port? parentPort,
+            KeyingState? state, bool inhibited, bool majorFault, bool safetyEnabled,
+            Connection? connection,
+            ITag<IComplexType>? config, ITag<IComplexType>? input, ITag<IComplexType>? output,
+            string? description)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
             Description = description ?? string.Empty;
@@ -25,17 +24,34 @@ namespace L5Sharp.Core
             ProductType = productType;
             ProductCode = productCode;
             Revision = revision;
-            ParentModule = parentModule;
-            ParentModPortId = parentModPortId;
             State = state ?? KeyingState.CompatibleModule;
             Inhibited = inhibited;
             MajorFault = majorFault;
             SafetyEnabled = safetyEnabled;
-            Ports = new PortCollection(ports);
+            Ports = ConfigurePorts(parentPort, ports);
+            ParentPort = parentModule == name ? Ports[parentModPortId] : parentPort;
             Connection = connection;
             Config = config;
             Input = input;
             Output = output;
+        }
+
+        internal Module(ComponentName name, ModuleDefinition definition, Port parentPort, string? description = null)
+        {
+            Name = name ?? throw new ArgumentNullException(nameof(name));
+            Description = description ?? string.Empty;
+
+            if (definition is null)
+                throw new ArgumentNullException(nameof(definition));
+
+            CatalogNumber = definition.CatalogNumber;
+            Vendor = definition.Vendor;
+            ProductType = definition.ProductType;
+            ProductCode = definition.ProductCode;
+            Revision = definition.Revisions.Max();
+            State = KeyingState.CompatibleModule;
+            ParentPort = parentPort;
+            Ports = ConfigurePorts(parentPort, definition.Ports);
         }
 
         public Module(ComponentName name, ModuleDefinition definition, string? description = null)
@@ -51,11 +67,21 @@ namespace L5Sharp.Core
             ProductType = definition.ProductType;
             ProductCode = definition.ProductCode;
             Revision = definition.Revisions.Max();
-            ParentModule = string.Empty;
             State = KeyingState.CompatibleModule;
-            Ports = new PortCollection(definition.Ports);
+            Ports = new PortCollection(this, definition.Ports);
         }
 
+        /// <summary>
+        /// Creates a new <see cref="IModule"/> object with the provided name and catalog number.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="catalogNumber"></param>
+        /// <param name="description"></param>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentException"></exception>
+        /// <remarks>
+        /// This method will use the <see cref="LogixCatalog"/> to lookup the specified catalog number.
+        /// </remarks>
         public Module(ComponentName name, CatalogNumber catalogNumber, string? description = null)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
@@ -73,9 +99,8 @@ namespace L5Sharp.Core
             ProductType = definition.ProductType;
             ProductCode = definition.ProductCode;
             Revision = definition.Revisions.Max();
-            ParentModule = string.Empty;
             State = KeyingState.CompatibleModule;
-            Ports = new PortCollection(definition.Ports);
+            Ports = new PortCollection(this, definition.Ports);
         }
 
         /// <inheritdoc />
@@ -118,10 +143,7 @@ namespace L5Sharp.Core
         public IPAddress? IP => GetIpAddress();
 
         /// <inheritdoc />
-        public string ParentModule { get; }
-
-        /// <inheritdoc />
-        public int ParentModPortId { get; }
+        public Port? ParentPort { get; }
 
         /// <inheritdoc />
         public PortCollection Ports { get; }
@@ -143,5 +165,28 @@ namespace L5Sharp.Core
 
         private IPAddress? GetIpAddress() =>
             Ports.NetworkPort is not null ? IPAddress.Parse(Ports.NetworkPort.Address) : null;
+
+        private PortCollection ConfigurePorts(Port? parentPort, IEnumerable<PortDefinition> portDefinitions)
+        {
+            var ports = portDefinitions.ToList();
+
+            if (parentPort is null)
+                return new PortCollection(this, ports);
+
+            var upstream = ports.FirstOrDefault(p => p.Type == parentPort.Type && !p.DownstreamOnly);
+
+            //todo custom exception?
+            if (upstream is null)
+                throw new ArgumentException(
+                    $"The provided PortDefinitions are incompatible with parent port of type {parentPort.Type}. " +
+                    $"Supply at least one upstream capable port of type {parentPort.Type} in order to configure a connection.");
+
+            upstream.Upstream = true;
+
+            var downstream = ports.Where(p => p.Id != upstream.Id).ToList();
+            downstream.ForEach(p => p.Upstream = false);
+
+            return new PortCollection(this, ports);
+        }
     }
 }

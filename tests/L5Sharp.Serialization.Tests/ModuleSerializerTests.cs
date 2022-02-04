@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
 using System.Xml.Linq;
 using ApprovalTests;
 using ApprovalTests.Reporters;
@@ -70,13 +69,12 @@ namespace L5Sharp.Serialization.Tests
 
             component.Name.Should().Be("Local_Mod_4");
             component.Description.Should().BeEmpty();
-            component.CatalogNumber.Should().Be("1756sc-CTR8/A");
-            component.Vendor.Should().Be(58);
-            component.ProductType.Should().Be(109);
+            component.CatalogNumber.Should().Be(new CatalogNumber("1756sc-CTR8/A"));
+            component.Vendor.Should().Be(new Vendor(58));
+            component.ProductType.Should().Be(new ProductType(109));
             component.ProductCode.Should().Be(15);
             component.Revision.Should().Be(new Revision(1, 1));
-            component.ParentModule.Should().Be("Local");
-            component.ParentModPortId.Should().Be(1);
+            component.ParentPort.Should().BeNull();
             component.Inhibited.Should().BeFalse();
             component.MajorFault.Should().BeFalse();
             component.SafetyEnabled.Should().BeFalse();

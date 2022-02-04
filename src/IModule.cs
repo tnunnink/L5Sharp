@@ -75,24 +75,18 @@ namespace L5Sharp
         /// property will be null.
         /// </remarks>
         IPAddress? IP { get; }
-        
+
         /// <summary>
-        /// Gets the value of the parent Module that the <see cref="IModule"/> is connected to.
+        /// Gets the parent <see cref="Port"/> of the upstream Module that the current <see cref="IModule"/> is connected.
         /// </summary>
         /// <remarks>
-        /// This property is needed by the L5X to determine the hierarchical structure of the IO tree. This is property
-        /// is set internally when configuring or serializing modules to and from the L5X. 
+        /// The L5X hierarchy relies on knowing the parent relation for each Module in the context. This implementation
+        /// relies on getting a strong reference to the upstream Port/Module to help maintain the state of the hierarchy.
+        /// This allows child modules can be validated and configured as they are added or created.
+        /// Note that this member is set internally when adding child modules or deserializing modules from the L5X.
+        /// If a Module is orphaned or the parent is undetermined, this property will be null.
         /// </remarks>
-        string ParentModule { get; }
-        
-        /// <summary>
-        /// Gets the value of the parent Module Port id that the <see cref="IModule"/> is connected to.
-        /// </summary>
-        /// <remarks>
-        /// This property is needed by the L5X to determine the hierarchical structure of the IO tree. This is property
-        /// is set internally when configuring or serializing modules to and from the L5X. 
-        /// </remarks>
-        int ParentModPortId { get; }
+        Port? ParentPort { get; }
         
         /// <summary>
         /// Gets the collection of <see cref="Ports"/> for the <see cref="IModule"/>.

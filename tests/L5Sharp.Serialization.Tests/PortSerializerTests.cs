@@ -28,7 +28,7 @@ namespace L5Sharp.Serialization.Tests
         [Test]
         public void Serialize_WhenCalled_ShouldNotBeNull()
         {
-            var component = new Port(1, "ICP", false, "0");
+            var component = new PortDefinition(1, "ICP", false, "0");
 
             var xml = _serializer.Serialize(component);
 
@@ -39,7 +39,7 @@ namespace L5Sharp.Serialization.Tests
         [UseReporter(typeof(DiffReporter))]
         public void Serialize_ValidComponent_ShouldBeApproved()
         {
-            var component = new Port(1, "ICP", false, "0");
+            var component = new PortDefinition(1, "ICP", false, "0");
 
             var xml = _serializer.Serialize(component);
 
@@ -50,7 +50,7 @@ namespace L5Sharp.Serialization.Tests
         [UseReporter(typeof(DiffReporter))]
         public void Serialize_ValidComponentNoBus_ShouldBeApproved()
         {
-            var component = new Port(1, "Ethernet", true, "10.11.12.13");
+            var component = new PortDefinition(1, "Ethernet", true, "10.11.12.13");
 
             var xml = _serializer.Serialize(component);
 
@@ -103,7 +103,7 @@ namespace L5Sharp.Serialization.Tests
             component.Address.Should().Be("0");
             component.Type.Should().Be("5094");
             component.Upstream.Should().Be(false);
-            component.Bus?.Size.Should().Be(17);
+            component.BusSize.Should().Be(17);
         }
         
         [Test]
@@ -119,7 +119,7 @@ namespace L5Sharp.Serialization.Tests
             component.Address.Should().Be("10.11.12.13");
             component.Type.Should().Be("Ethernet");
             component.Upstream.Should().Be(true);
-            component.Bus.Should().BeNull();
+            component.BusSize.Should().Be(0);
         }
     }
 }

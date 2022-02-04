@@ -13,11 +13,22 @@ namespace L5Sharp.Core
     /// </remarks>
     public class ModuleDefinition
     {
-        internal ModuleDefinition(CatalogNumber catalogNumber, Vendor vendor, ProductType productType,
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="catalogNumber"></param>
+        /// <param name="vendor"></param>
+        /// <param name="productType"></param>
+        /// <param name="productCode"></param>
+        /// <param name="revisions"></param>
+        /// <param name="categories"></param>
+        /// <param name="ports"></param>
+        /// <param name="description"></param>
+        public ModuleDefinition(CatalogNumber catalogNumber, Vendor vendor, ProductType productType,
             ushort productCode,
             IEnumerable<Revision> revisions,
             IEnumerable<ModuleCategory> categories,
-            IEnumerable<Port> ports,
+            IEnumerable<PortDefinition> ports,
             string description)
         {
             CatalogNumber = catalogNumber;
@@ -68,6 +79,6 @@ namespace L5Sharp.Core
         /// <summary>
         /// Gets the set of <see cref="Ports"/> that should be defined on the Module.
         /// </summary>
-        public IEnumerable<Port> Ports { get; }
+        public IEnumerable<PortDefinition> Ports { get; }
     }
 }

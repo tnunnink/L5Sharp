@@ -1,0 +1,8 @@
+﻿<Module Name="Test" CatalogNumber="1756-L83E" Vendor="Rockwell Automation/Allen-Bradley" ProductType="L5Sharp.Core.ProductType" ProductCode="166" Major="32" Minor="1" ParentModPortId="0" Inhibited="False" MajorFault="False" SafetyEnabled="False">
+  <EKey State="CompatibleModule" />
+  <Ports>
+    <Port Id="1" Type="ICP" Upstream="True" />
+    <Port Id="2" Type="Ethernet" Upstream="True" />
+  </Ports>
+  <Communications />
+</Module>

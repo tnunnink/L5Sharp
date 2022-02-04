@@ -9,7 +9,7 @@ namespace L5Sharp
     /// <summary>
     /// A helper class that contains all predefined serializer instances that can be used on a per context basis.
     /// </summary>
-    public class LogixContextSerializer
+    public class LogixSerializer
     {
         private readonly Dictionary<string, IXSerializer> _serializers;
 
@@ -17,7 +17,7 @@ namespace L5Sharp
         /// 
         /// </summary>
         /// <param name="context"></param>
-        internal LogixContextSerializer(LogixContext context)
+        internal LogixSerializer(LogixContext context)
         {
             _serializers = new Dictionary<string, IXSerializer>
             {

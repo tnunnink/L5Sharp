@@ -11,37 +11,20 @@ namespace L5Sharp
     internal class LogixModuleIndex
     {
         private readonly LogixContext _context;
-        private readonly Dictionary<string, IEnumerable<XElement>> _index;
+        private readonly Dictionary<string, XElement> _index;
 
         internal LogixModuleIndex(LogixContext context)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
-            _index = new Dictionary<string, IEnumerable<XElement>>();
+            _index = new Dictionary<string, XElement>();
 
             RegisterModules(_context.L5X.Root);
         }
 
-        /// <summary>
-        /// Gets all child modules of the current parent module name and port number
-        /// </summary>
-        /// <param name="moduleName">The name of the parent module to get children for.</param>
-        /// <param name="portId">The port id of the module for which to get the children for.</param>
-        /// <returns></returns>
-        public IEnumerable<IModule> GetChildren(string moduleName, int portId)
-        {
-            return _index.TryGetValue(moduleName, out var modules)
-                ? DeserializeModules(modules.Where(x =>
-                {
-                    var value = x.Attribute("ParentModPortId")?.Value;
-                    return int.TryParse(value, out var id) && id == portId;
-                }))
-                : Enumerable.Empty<IModule>();
-        }
-
-        private IEnumerable<IModule> DeserializeModules(IEnumerable<XElement> elements)
+        public IModule? GetModule(string name)
         {
             var serializer = new ModuleSerializer(_context);
-            return elements.Select(e => serializer.Deserialize(e));
+            return _index.ContainsKey(name) ? serializer.Deserialize(_index[name]) : null;
         }
 
         private void RegisterModules(XContainer document)
@@ -50,9 +33,7 @@ namespace L5Sharp
 
             foreach (var module in modules)
             {
-                var moduleName = module.GetComponentName();
-                var children = modules.Where(x => x.Attribute("ParentModule")?.Value == moduleName).ToList();
-                _index.TryAdd(moduleName, children);
+                _index.TryAdd(module.GetComponentName(), module);
             }
         }
     }
