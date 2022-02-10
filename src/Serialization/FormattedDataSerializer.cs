@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Xml.Linq;
 using L5Sharp.Enums;
 using L5Sharp.Helpers;
@@ -60,7 +61,7 @@ namespace L5Sharp.Serialization
                 throw new InvalidOperationException(
                     $"Could not determine the correct serializer for the provided element with name '{element.Name}'");
 
-            return serializer.Deserialize(element);
+            return serializer.Deserialize(element.Elements().First());
         }
     }
 }

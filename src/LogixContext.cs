@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Globalization;
 using System.IO;
-using System.Threading.Tasks;
 using System.Xml.Linq;
 using L5Sharp.Core;
 using L5Sharp.Exceptions;
-using L5Sharp.Helpers;
 using L5Sharp.Repositories;
 
 namespace L5Sharp
@@ -37,7 +35,6 @@ namespace L5Sharp
             L5X = new L5X(document);
             Serializer = new LogixSerializer(this);
             TypeIndex = new LogixTypeIndex(this);
-            ModuleIndex = new LogixModuleIndex(this);
 
             UserDefined = new UserDefinedRepository(this);
             Tags = new TagRepository(this);
@@ -48,7 +45,6 @@ namespace L5Sharp
         internal L5X L5X { get; }
         internal LogixSerializer Serializer { get; }
         internal LogixTypeIndex TypeIndex { get; }
-        internal LogixModuleIndex ModuleIndex { get; }
 
         /// <inheritdoc />
         public Revision SchemaRevision => Revision.Parse(L5X.Root.Attribute(nameof(SchemaRevision))?.Value!);
@@ -88,7 +84,6 @@ namespace L5Sharp
         public void Save(string? fileName = null)
         {
             fileName ??= _fileName;
-
             L5X.Save(fileName);
         }
     }

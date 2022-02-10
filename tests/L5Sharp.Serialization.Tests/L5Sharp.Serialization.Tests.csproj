@@ -214,6 +214,9 @@
       <None Update="ConnectionSerializerTests.Serialize_ValidComponent_ShouldBeApproved.approved.xml">
         <DependentUpon>ConnectionSerializerTests.cs</DependentUpon>
       </None>
+      <None Update="ModuleSerializerTests.Serialize_ValueTypeArray_ShouldBeApproved.approved.xml">
+        <DependentUpon>ModuleSerializerTests.cs</DependentUpon>
+      </None>
     </ItemGroup>
 
     <ItemGroup>

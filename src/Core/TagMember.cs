@@ -161,7 +161,7 @@ namespace L5Sharp.Core
             //todo figure out how to do this...
         }
 
-        private ITagMember<IDataType>? GetMemberInternal(TagName tagName)
+        private ITagMember<IDataType> GetMemberInternal(TagName tagName)
         {
             if (tagName is null)
                 throw new ArgumentNullException(nameof(tagName));
@@ -169,8 +169,6 @@ namespace L5Sharp.Core
             var path = tagName.Base.Equals(Root.Name) ? tagName.Path : tagName.ToString();
 
             var members = _member.DataType.GetMembersTo(path);
-
-            if (members is null) return null;
 
             var parent = (ITagMember<IDataType>)this;
 

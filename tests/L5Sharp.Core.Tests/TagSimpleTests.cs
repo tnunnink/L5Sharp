@@ -42,7 +42,7 @@ namespace L5Sharp.Core.Tests
             tag.DataType.Should().BeOfType<Bool>();
             tag.Dimensions.Should().Be(Dimensions.Empty);
             tag.Radix.Should().Be(Radix.Decimal);
-            tag.ExternalAccess.Should().Be(ExternalAccess.None);
+            tag.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);
             tag.Description.Should().BeEmpty();
             tag.TagType.Should().Be(TagType.Base);
             tag.Usage.Should().Be(TagUsage.Null);
@@ -63,7 +63,7 @@ namespace L5Sharp.Core.Tests
             tag.DataType.Should().BeOfType<Sint>();
             tag.Dimensions.Should().Be(Dimensions.Empty);
             tag.Radix.Should().Be(Radix.Decimal);
-            tag.ExternalAccess.Should().Be(ExternalAccess.None);
+            tag.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);
             tag.Description.Should().BeEmpty();
             tag.TagType.Should().Be(TagType.Base);
             tag.Usage.Should().Be(TagUsage.Null);
@@ -84,7 +84,7 @@ namespace L5Sharp.Core.Tests
             tag.DataType.Should().BeOfType<Real>();
             tag.Dimensions.Should().Be(Dimensions.Empty);
             tag.Radix.Should().Be(Radix.Float);
-            tag.ExternalAccess.Should().Be(ExternalAccess.None);
+            tag.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);
             tag.Description.Should().BeEmpty();
             tag.TagType.Should().Be(TagType.Base);
             tag.Usage.Should().Be(TagUsage.Null);

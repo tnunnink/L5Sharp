@@ -4,30 +4,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using L5Sharp.Exceptions;
+using L5Sharp.Extensions;
 
 namespace L5Sharp.Core
 {
     /// <summary>
-    /// A Logix <see cref="Bus"/> is an object that represents collection of <see cref="IModule"/> components assigned to 
-    /// a specific <see cref="Port"/>.
+    /// Represents a collection of <see cref="Module"/> components assigned to  a specific <see cref="Port"/>.
     /// </summary>
-    public sealed class Bus : IEnumerable<IModule>
+    public sealed class Bus : IEnumerable<Module>
     {
         private readonly Port _port;
-        private readonly Dictionary<string, IModule> _modules;
+        private readonly Dictionary<string, Module> _modules;
 
-        private static readonly List<string> NetworkTypes = new()
-        {
-            "Ethernet",
-            "ControlNet",
-            "DeviceNet",
-            "RIO"
-        };
-
-        internal Bus(Port port, int size)
+        internal Bus(Port port, byte size)
         {
             _port = port ?? throw new ArgumentNullException(nameof(port));
-            _modules = new Dictionary<string, IModule>();
+            _modules = new Dictionary<string, Module> { { _port.Address, _port.Module } };
             Size = size;
         }
 
@@ -44,7 +36,7 @@ namespace L5Sharp.Core
         /// <summary>
         /// Gets the value of the current <see cref="Bus"/> size.
         /// </summary>
-        public int Size { get; }
+        public byte Size { get; }
 
         /// <summary>
         /// Gets a value indicating whether the <see cref="Bus"/> is empty or has not Modules.
@@ -64,172 +56,122 @@ namespace L5Sharp.Core
         /// <summary>
         /// Gets a value indicating whether the <see cref="Bus"/> contains Modules with slot based addresses.
         /// </summary>
-        public bool IsChassis => !NetworkTypes.Contains(Type) && _modules.Keys.All(k => int.TryParse(k, out _));
+        public bool IsChassis => Type != "Ethernet" && _modules.Keys.All(k => k.IsByte());
 
         /// <summary>
         /// Gets a value indicating whether the <see cref="Bus"/> contains Modules with IP based addresses.
         /// </summary>
-        public bool IsNetwork => NetworkTypes.Contains(Type) && _modules.Keys.All(k => IPAddress.TryParse(k, out _));
+        public bool IsEthernet => Type == "Ethernet" && _modules.Keys.All(k => k.IsIPv4());
 
         /// <summary>
         /// Gets a Module with the specified address (slot or IP) from the <see cref="Bus"/>.
         /// </summary>
         /// <param name="address">The string address value that represents the slot or IP of the device to get.</param>
-        public IModule this[string address] => _modules[address];
+        public Module this[string address] => _modules[address];
 
         /// <summary>
-        /// Adds a new <see cref="IModule"/> instance to the current <see cref="Bus"/> using the provided name and catalog number to lookup and
-        /// created the specified Module.
+        /// Adds the provided <see cref="Module"/> to the Bus collection at the address specified by the connecting port. 
         /// </summary>
-        /// <param name="name">The name of the Module to add to the Bus.</param>
-        /// <param name="catalogNumber">The catalog number of the Module to create.</param>
-        /// <param name="slot">The slot number to assign the Module to on the current chassis.</param>
-        /// <param name="description">The optional description of the Module.</param>
-        /// <exception cref="InvalidOperationException"></exception>
-        public IModule AddModule(ComponentName name, CatalogNumber catalogNumber, int slot, string? description = null)
+        /// <param name="module">The <see cref="Module"/> instance to add to the Bus.</param>
+        /// <exception cref="ArgumentNullException"><c>module</c> is null.</exception>
+        /// <exception cref="ComponentNameCollisionException"><c>module</c> name already exists on the bus.</exception>
+        /// <exception cref="ArgumentException">
+        /// <c>module</c> parent parameters do not match the bus' parent port -or-
+        /// there is no non-null connecting port with a type that matches the bus type -or-
+        /// the connecting port address is not available or valid for the current bus.
+        /// .</exception>
+        public void Add(Module module)
         {
-            if (!IsChassis)
-                throw new InvalidOperationException(
-                    "The current Bus is not a chassis type Bus and can not add Modules by slot number.");
+            ValidateModule(module);
 
-            var address = IsValidAvailableAddress(slot) ? slot.ToString() : NextAvailableSlot();
-
-            return AddModule(name, catalogNumber, address, description);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="name"></param>
-        /// <param name="catalogNumber"></param>
-        /// <param name="ipAddress"></param>
-        /// <param name="description"></param>
-        /// <exception cref="InvalidOperationException"></exception>
-        /// <exception cref="ArgumentException"></exception>
-        public IModule AddModule(ComponentName name, CatalogNumber catalogNumber, IPAddress ipAddress,
-            string? description = null)
-        {
-            if (!IsNetwork)
-                throw new InvalidOperationException(
-                    "The current Bus is not a network type Bus and can not add Modules by IP address.");
-
-            var address = IsValidAvailableAddress(ipAddress)
-                ? ipAddress.ToString()
-                : throw new ArgumentException(
-                    $"The provided address '{ipAddress}' is not valid or available for the current Bus.");
-
-            return AddModule(name, catalogNumber, address, description);
-        }
-
-        private IModule AddModule(ComponentName name, CatalogNumber catalogNumber, string address, string? description)
-        {
-            ValidateName(name);
-
-            var definition = GetDefinition(catalogNumber);
-
-            ConfigurePortAddress(definition.Ports, address);
-
-            var module = new Module(name, definition, _port, description);
+            var address = module.Ports.Connecting()?.Address!;
 
             _modules[address] = module;
-
-            return module;
         }
 
         /// <summary>
+        /// Determines if the provided address is a valid address for the current Bus and that it is available for use.
+        /// </summary>
+        /// <param name="address">The address to validate and return if available.</param>
+        /// <returns>If the provided address is valid and available, the provided address; otherwise the next available
+        /// address for the chassis or ethernet bus.</returns>
+        /// <remarks>
         /// 
-        /// </summary>
-        /// <param name="slot"></param>
-        /// <returns></returns>
-        public bool Contains(int slot) => _modules.ContainsKey(slot.ToString());
-        
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="ipAddress"></param>
-        /// <returns></returns>
-        public bool Contains(IPAddress ipAddress) => _modules.ContainsKey(ipAddress.ToString());
-
-        /// <summary>
-        /// Removes the Module at the specified slot address if it exists.
-        /// </summary>
-        /// <param name="slot">The slot number at which to remove then Module.</param>
-        /// <returns>true if the Module was found and removed. If not found, false.</returns>
-        public bool RemoveAt(int slot) => _modules.Remove(slot.ToString());
-
-        /// <summary>
-        /// Removes the Module with the specified IP address if it exists.
-        /// </summary>
-        /// <param name="ipAddress">The IP address for which to remove then Module.</param>
-        /// <returns>true if the Module was found and removed. If not found, false.</returns>
-        public bool RemoveAt(IPAddress ipAddress) => _modules.Remove(ipAddress.ToString());
-
-
-        private ModuleDefinition GetDefinition(CatalogNumber catalogNumber)
+        /// </remarks>
+        public string GetAddress(string address)
         {
-            if (catalogNumber is null)
-                throw new ArgumentNullException(nameof(catalogNumber));
+            return IsAvailableAddress(address) ? address : NextAvailable();
+        }
 
-            var catalog = new LogixCatalog();
+        private void ValidateModule(Module module)
+        {
+            if (module is null)
+                throw new ArgumentNullException(nameof(module));
 
-            var definition = catalog.Lookup(catalogNumber);
+            if (_modules.Any(p => p.Value.Name == module.Name))
+                throw new ComponentNameCollisionException(module.Name, typeof(Module));
 
-            if (definition is null)
+            if (module.ParentModule != _port.Module.Name)
                 throw new ArgumentException(
-                    $"The provided catalog number '{catalogNumber}' was not found in the catalog service file.");
-            
-            var port = definition.Ports.FirstOrDefault(p => p.Type == Type && p.Upstream);
-            
-            if (port is null)
+                    $"The provide module parent '{module.ParentModule}' does not match the Bus parent '{_port.Module.Name}'.");
+
+            if (module.ParentPortId != _port.Id)
                 throw new ArgumentException(
-                    $"No upstream port of type '{Type}' defined for module '{catalogNumber}'.");
+                    $"The provide module port '{module.ParentPortId}' does not match the Bus port '{_port.Id}'.");
 
-            return definition;
+            if (module.Ports.Connecting() is null)
+                throw new ArgumentException(
+                    "No upstream port defined for the provided module. Module must have an upstream port to be added to bus.");
+
+            if (module.Ports.Connecting()?.Type != Type)
+                throw new ArgumentException(
+                    $"The provide module upstream port of type '{module.Ports.Connecting()?.Type}' must match Bus type '{Type}'.");
+
+            if (!IsAvailableAddress(module.Ports.Connecting()?.Address))
+                throw new ArgumentException(
+                    $"The provided module upstream port address '{module.Ports.Connecting()?.Address}' is not a valid available address for the Bus.");
         }
 
-        private void ConfigurePortAddress(IEnumerable<PortDefinition> ports, string address)
-        {
-            foreach (var port in ports)
-            {
-                if (port.Type == Type)
-                {
-                    port.Address = address;
-                    port.Upstream = true;
-                    continue;
-                }
-
-                port.Upstream = false;
-            }
-        }
-
-        private void ValidateName(ComponentName name)
-        {
-            if (name is null)
-                throw new ArgumentNullException(nameof(name));
-
-            if (_modules.Any(m => m.Value.Name == name))
-                throw new ComponentNameCollisionException(name, typeof(IModule));
-        }
-
-        private string NextAvailableSlot()
+        private string NextAvailable()
         {
             if (IsFull)
                 throw new InvalidOperationException("The current Bus is full and can not assign additional modules.");
 
-            var max = IsFixed ? Size : int.MaxValue;
+            if (IsChassis)
+            {
+                var range = IsFixed ? Size : byte.MaxValue;
+                
+                return Enumerable.Range(byte.MinValue, range)
+                    .Except(_modules.Keys.Select(int.Parse))
+                    .First()
+                    .ToString();
+            }
 
-            return Enumerable.Range(0, max).Except(_modules.Keys.Select(int.Parse)).First().ToString();
+            if (IsEthernet)
+            {
+                //todo need to create way to generate next available IP on default 192.168.1.1 network
+                return IPAddress.Any.ToString();
+            }
+
+            throw new InvalidOperationException(
+                "The current Bus is neither an Ethernet nor Chassis Bus and can not determine a next available address");
         }
 
-        private bool IsValidAvailableAddress(int slot) => IsFixed
-            ? slot >= 0 && slot < Size && !_modules.ContainsKey(slot.ToString())
-            : slot >= 0 && !_modules.ContainsKey(slot.ToString());
+        private bool IsAvailableAddress(string? address)
+        {
+            if (string.IsNullOrEmpty(address) || _modules.ContainsKey(address))
+                return false;
 
-        private bool IsValidAvailableAddress(IPAddress? ipAddress) =>
-            ipAddress is not null && !_modules.ContainsKey(ipAddress.ToString());
+            if (IsChassis && byte.TryParse(address, out var slot) && SlotInRange(slot))
+                return true;
+
+            return IsEthernet && address.IsIPv4();
+        }
+
+        private bool SlotInRange(byte slot) => !IsFixed || slot < Size;
 
         /// <inheritdoc />
-        public IEnumerator<IModule> GetEnumerator() => _modules.Values.GetEnumerator();
+        public IEnumerator<Module> GetEnumerator() => _modules.Values.GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }

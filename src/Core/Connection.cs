@@ -4,29 +4,32 @@ using L5Sharp.Enums;
 namespace L5Sharp.Core
 {
     /// <summary>
-    /// A set or properties for a given <see cref="IModule"/> connection. 
+    /// A component of a <see cref="Module"/> that represents the properties and data of the connection to the field device.
     /// </summary>
     public sealed class Connection
     {
         /// <summary>
-        /// 
+        /// Creates a new <see cref="Connection"/> object with the provided parameters.
         /// </summary>
-        /// <param name="name"></param>
-        /// <param name="rpi"></param>
-        /// <param name="type"></param>
+        /// <param name="name">The name of the connection.</param>
+        /// <param name="rpi">the request packet interval of the connection (ms).</param>
+        /// <param name="type">The <see cref="ConnectionType"/></param>
         /// <param name="priority"></param>
         /// <param name="inputConnectionType"></param>
         /// <param name="inputProductionTrigger"></param>
         /// <param name="outputRedundantOwner"></param>
         /// <param name="unicast"></param>
         /// <param name="eventId"></param>
+        /// <param name="input"></param>
+        /// <param name="output"></param>
         /// <exception cref="ArgumentNullException"></exception>
         public Connection(string name, int rpi, ConnectionType? type, 
             ConnectionPriority? priority = null,
             TransmissionType? inputConnectionType = null,
             ProductionTrigger? inputProductionTrigger = null, 
             bool outputRedundantOwner = false,
-            bool unicast = false, int eventId = 0)
+            bool unicast = false, int eventId = 0,
+            ITag<IDataType>? input = null, ITag<IDataType>? output = null)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
             Rpi = rpi;
@@ -37,6 +40,8 @@ namespace L5Sharp.Core
             OutputRedundantOwner = outputRedundantOwner;
             Unicast = unicast;
             EventId = eventId;
+            Input = input;
+            Output = output;
         }
 
         /// <summary>
@@ -83,5 +88,15 @@ namespace L5Sharp.Core
         /// Gets the value of the Event ID used in conjunction with an event task for the <see cref="Connection"/>.
         /// </summary>
         public int EventId { get; }
+
+        /// <summary>
+        /// Gets the Tag that represents the input channel data for the <see cref="Connection"/>.
+        /// </summary>
+        public ITag<IDataType>? Input { get; }
+
+        /// <summary>
+        /// Gets the Tag that represents the output channel data for the <see cref="Connection"/>.
+        /// </summary>
+        public ITag<IDataType>? Output { get; }
     }
 }

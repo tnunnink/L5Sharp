@@ -2,9 +2,7 @@
 using System.Linq;
 using System.Linq.Expressions;
 using System.Xml.Linq;
-using L5Sharp.Core;
 using L5Sharp.Helpers;
-using L5Sharp.Types;
 
 namespace L5Sharp.Extensions
 {
@@ -155,7 +153,7 @@ namespace L5Sharp.Extensions
 
             var value = propertySelector.Compile().Invoke(instance)?.ToString();
 
-            if (string.IsNullOrEmpty(value)) return;
+            if (value is null) return;
 
             element.Add(new XAttribute(name, value));
         }

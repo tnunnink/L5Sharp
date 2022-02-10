@@ -8,18 +8,12 @@ using L5Sharp.Helpers;
 
 namespace L5Sharp.Serialization
 {
-    internal class ModuleSerializer : IXSerializer<IModule>
+    internal class ModuleSerializer : IXSerializer<Module>
     {
-        private readonly LogixContext _context;
         private const string Communications = "Communications";
         private static readonly XName ElementName = LogixNames.Module;
 
-        public ModuleSerializer(LogixContext context)
-        {
-            _context = context;
-        }
-
-        public XElement Serialize(IModule component)
+        public XElement Serialize(Module component)
         {
             if (component == null)
                 throw new ArgumentNullException(nameof(component));
@@ -27,14 +21,15 @@ namespace L5Sharp.Serialization
             var element = new XElement(ElementName);
 
             element.AddAttribute(component, c => c.Name);
+            element.AddElement(component, c => c.Description);
             element.AddAttribute(component, c => c.CatalogNumber);
-            element.AddAttribute(component, c => c.Vendor);
-            element.AddAttribute(component, c => c.ProductType);
+            element.AddAttribute(component, c => c.Vendor.Id, nameOverride: "Vendor");
+            element.AddAttribute(component, c => c.ProductType.Id, nameOverride: "ProductType");
             element.AddAttribute(component, c => c.ProductCode);
             element.AddAttribute(component, c => c.Revision.Major, nameOverride: "Major");
             element.AddAttribute(component, c => c.Revision.Minor, nameOverride: "Minor");
-            element.Add(new XAttribute("ParentModule", component.ParentPort?.Module.Name ?? string.Empty));
-            element.Add(new XAttribute("ParentModPortId", component.ParentPort?.Id ?? 0));
+            element.AddAttribute(component, c => c.ParentModule);
+            element.AddAttribute(component, c => c.ParentPortId, nameOverride: "ParentModPortId");
             element.AddAttribute(component, c => c.Inhibited);
             element.AddAttribute(component, c => c.MajorFault);
             element.AddAttribute(component, c => c.SafetyEnabled);
@@ -50,19 +45,31 @@ namespace L5Sharp.Serialization
                 var size = p.Bus?.Size ?? 0;
                 return serializer.Serialize(new PortDefinition(p.Id, p.Type, p.Upstream, p.Address, size));
             }));
-
+            element.Add(ports);
 
             var communications = new XElement(Communications);
-            //config
-            //connections....
 
-            element.Add(ports);
+            if (component.Tags.Config is not null)
+            {
+                var structureSerializer = new StructureSerializer();
+                var config = structureSerializer.Serialize((IComplexType)component.Tags.Config.DataType);
+                communications.Add(config);
+            }
+
+            var connections = new XElement(LogixNames.Connections);
+            connections.Add(component.Connections.Select(c =>
+            {
+                var serializer = new ConnectionSerializer();
+                return serializer.Serialize(c);
+            }));
+            communications.Add(connections);
+
             element.Add(communications);
 
             return element;
         }
 
-        public IModule Deserialize(XElement element)
+        public Module Deserialize(XElement element)
         {
             if (element == null)
                 throw new ArgumentNullException(nameof(element));
@@ -72,14 +79,14 @@ namespace L5Sharp.Serialization
 
             var name = element.GetComponentName();
             var description = element.GetComponentDescription();
-            var catalogNumber = element.GetAttribute<IModule, CatalogNumber>(c => c.CatalogNumber);
-            var vendor = element.GetAttribute<IModule, Vendor>(c => c.Vendor);
-            var productType = element.GetAttribute<IModule, ProductType>(c => c.ProductType);
-            var productCode = element.GetAttribute<IModule, ushort>(c => c.ProductCode);
+            var catalogNumber = element.GetAttribute<Module, CatalogNumber>(c => c.CatalogNumber);
+            var vendor = element.GetAttribute<Module, Vendor>(c => c.Vendor);
+            var productType = element.GetAttribute<Module, ProductType>(c => c.ProductType);
+            var productCode = element.GetAttribute<Module, ushort>(c => c.ProductCode);
             var major = element.Attribute("Major")?.Value;
             var minor = element.Attribute("Minor")?.Value;
             var revision = Revision.Parse($"{major}.{minor}");
-            var parentModule = element.Attribute("ParentModule")?.Value;
+            var parentModule = element.GetAttribute<Module, string>(c => c.ParentModule);
             int.TryParse(element.Attribute("ParentModPortId")?.Value, out var parentModPortId);
             var inhibited = element.GetAttribute<Module, bool>(c => c.Inhibited);
             var majorFault = element.GetAttribute<Module, bool>(c => c.MajorFault);
@@ -90,20 +97,30 @@ namespace L5Sharp.Serialization
             {
                 var serializer = new PortSerializer();
                 return serializer.Deserialize(e);
-            });
+            }).ToList();
 
-            //config
-            //connection
-            //input
-            //output
-            
-            var parentPort = !string.IsNullOrEmpty(parentModule) && parentModule != name
-                ? _context.ModuleIndex.GetModule(parentModule)?.Ports[parentModPortId]
-                : null;
+            var configType = element.Descendants("ConfigTag").Select(e =>
+            {
+                var structureSerializer = new StructureSerializer();
+                return structureSerializer.Deserialize(e.Descendants(LogixNames.Structure).First());
+            }).FirstOrDefault();
 
-            return new Module(name, catalogNumber!, vendor!, productType!, productCode, revision, ports,
-                parentModule, parentModPortId, parentPort, state, inhibited, majorFault, safetyEnabled,
-                null, null, null, null, description);
+            var slot = ports.Where(p => !p.Upstream && p.Type != "Ethernet" && int.TryParse(p.Address, out _))
+                .Select(p => p.Address)
+                .FirstOrDefault();
+
+            var configTagName = slot is not null ? $"{parentModule}:{slot}:C" : $"{name}:C";
+            var config = configType is not null ? new Tag<IDataType>(configTagName, configType) : null;
+
+            var connections = element.Descendants(LogixNames.Connection).Select(e =>
+            {
+                var serializer = new ConnectionSerializer();
+                return serializer.Deserialize(e);
+            }).AsEnumerable();
+
+            return new Module(name, description, catalogNumber!, vendor!, productType!, productCode, revision,
+                ports, parentModule, parentModPortId, state, inhibited, majorFault,
+                safetyEnabled, config, connections);
         }
     }
 }

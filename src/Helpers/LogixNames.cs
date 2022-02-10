@@ -63,6 +63,8 @@ namespace L5Sharp.Helpers
         public static string EventInfo = nameof(EventInfo);
         public static string Comment = nameof(Comment);
         public static string Comments = nameof(Comments);
+        public static string InputTag = nameof(InputTag);
+        public static string OutputTag = nameof(OutputTag);
         
 
         //Component Map Collection
@@ -73,7 +75,7 @@ namespace L5Sharp.Helpers
             { typeof(IController), new Tuple<string, string>(Controller, string.Empty) },
             { typeof(IUserDefined), new Tuple<string, string>(DataType, DataTypes) },
             { typeof(IMember<IDataType>), new Tuple<string, string>(Member, Members) },
-            { typeof(IModule), new Tuple<string, string>(Module, Modules) },
+            { typeof(Module), new Tuple<string, string>(Module, Modules) },
             {
                 typeof(IAddOnInstruction),
                 new Tuple<string, string>(AddOnInstructionDefinition, AddOnInstructionDefinitions)
@@ -89,6 +91,8 @@ namespace L5Sharp.Helpers
             { typeof(Rung), new Tuple<string, string>(Rung, Rungs) },
             { typeof(ITask), new Tuple<string, string>(Task, Tasks) }
         };
+
+        
 
         /// <summary>
         /// A helper for dynamically getting a component <see cref="XName"/> based on the specified object type. 

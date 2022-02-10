@@ -24,7 +24,7 @@ namespace L5Sharp
                 { LogixNames.Controller, new ControllerSerializer() },
                 { LogixNames.DataType, new UserDefinedSerializer(context) },
                 { LogixNames.Member, new MemberSerializer(context) },
-                { LogixNames.Module, new ModuleSerializer(context) },
+                { LogixNames.Module, new ModuleSerializer() },
                 { LogixNames.Tag, new TagSerializer(context) },
                 { LogixNames.Rung, new RungSerializer() },
                 { LogixNames.RllContent, new LadderLogicSerializer(context) },

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Xml.Linq;
 using L5Sharp.Core;
 using L5Sharp.Enums;
+using L5Sharp.Exceptions;
 
 namespace L5Sharp
 {
@@ -19,7 +20,7 @@ namespace L5Sharp
     /// the default embedded resource may not contain various Modules as it is dependant on installation of AOPs and EDS
     /// definitions. 
     /// </remarks>
-    public class LogixCatalog
+    public class LogixCatalog : ICatalogService
     {
         private const string RaDevice = "RADevice";
         private const string CatalogNumber = "CatalogNumber";
@@ -50,32 +51,14 @@ namespace L5Sharp
         }
 
         /// <summary>
-        /// Create a new <see cref="IModule"/> instance with the provided name and catalog number.
-        /// </summary>
-        /// <param name="name">The name of the Module to create.</param>
-        /// <param name="catalogNumber">The catalog number of the Module being created.</param>
-        /// <param name="description">The optional description of the Module being created.</param>
-        /// <returns>A new <see cref="IModule"/> instance with the configured properties based on the provided catalog number.</returns>
-        /// <exception cref="ArgumentException">catalogNumber was not found in the current catalog service file.</exception>
-        public IModule Create(ComponentName name, CatalogNumber catalogNumber, string? description = null)
-        {
-            var definition = Lookup(catalogNumber);
-
-            if (definition is null)
-                throw new ArgumentException(
-                    $"The provided catalog number {catalogNumber} has not module definition in the current catalog.");
-
-            return new Module(name, definition, description);
-        }
-
-        /// <summary>
         /// Gets a <see cref="ModuleDefinition"/> instance for the provided <see cref="CatalogNumber"/>.
         /// </summary>
-        /// <param name="catalogNumber">The catalog number of the <see cref="IModule"/> to lookup.</param>
-        /// <returns>An <see cref="ModuleDefinition"/> instance for the specified catalogNumber if found in the current
+        /// <param name="catalogNumber">The catalog number of the <see cref="Module"/> to lookup.</param>
+        /// <returns>A <see cref="ModuleDefinition"/> instance for the specified catalogNumber if found in the current
         /// catalog service file; otherwise, null.</returns>
-        /// <exception cref="ArgumentNullException">When catalogNumber is nul.l</exception>
-        public ModuleDefinition? Lookup(CatalogNumber catalogNumber)
+        /// <exception cref="ArgumentNullException">When catalogNumber is null.</exception>
+        /// <exception cref="ModuleNotFoundException">The provided catalog number was not found.</exception>
+        public ModuleDefinition Lookup(CatalogNumber catalogNumber)
         {
             if (catalogNumber is null)
                 throw new ArgumentNullException(nameof(catalogNumber));
@@ -83,7 +66,10 @@ namespace L5Sharp
             var device = _catalog.Descendants(RaDevice)
                 .FirstOrDefault(e => e.Descendants(CatalogNumber).First().Value == catalogNumber);
 
-            return device is not null ? MaterializeDefinition(device) : null;
+            if (device is null)
+                throw new ModuleNotFoundException(catalogNumber);
+
+            return MaterializeDefinition(device);
         }
 
         /// <summary>

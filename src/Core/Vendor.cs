@@ -3,10 +3,13 @@
 namespace L5Sharp.Core
 {
     /// <summary>
-    /// An entity that identifies a Logix Module Vendor. 
+    /// An entity that represents the vendor of a given <see cref="Module"/>.
     /// </summary>
     /// <remarks>
-    /// The L5X only exports the Vendor Id.
+    /// This object is a simple entity type wrapper that groups the vendor id and name.
+    /// Vendor's are defined by Rockwell and assigned unique Id and name.
+    /// This information is obtained from the L5X or from the <see cref="LogixCatalog"/> service by lookup of a given
+    /// <see cref="CatalogNumber"/>. Use <see cref="Rockwell"/> as it is the most common vendor for compatible devices.
     /// </remarks>
     public class Vendor : IEquatable<Vendor>
     {
@@ -43,16 +46,6 @@ namespace L5Sharp.Core
         /// Gets the Rockwell Automation Vendor instance (id=1).
         /// </summary>
         public static Vendor Rockwell => new(1, "Rockwell Automation/Allen-Bradley");
-
-        /// <summary>
-        /// Gets the Prosoft Technology Vendor instance (id=309).
-        /// </summary>
-        public static Vendor Prosoft => new(309, "Prosoft Technology");
-        
-        /// <summary>
-        /// Gets the Spectrum Controls Vendor instance (id=58).
-        /// </summary>
-        public static Vendor Spectrum => new(58, "Spectrum Controls, Inc.");
 
         /// <summary>
         /// Converts a <see cref="Vendor"/> object to a <see cref="ushort"/> that represents the Id.

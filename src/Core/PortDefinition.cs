@@ -1,10 +1,10 @@
 ﻿namespace L5Sharp.Core
 {
     /// <summary>
-    /// A set of properties that defines a <see cref="Port"/> for a given <see cref="IModule"/>. 
+    /// A set of properties that defines a <see cref="Port"/> for a given <see cref="Module"/>. 
     /// </summary>
     /// <remarks>
-    /// This class is used by a <see cref="IModule"/> to instantiate valid <see cref="Port"/> instance on construction.
+    /// This class is used by a <see cref="Module"/> to instantiate valid <see cref="Port"/> instance on construction.
     /// </remarks>
     public sealed class PortDefinition
     {
@@ -17,7 +17,7 @@
         /// <param name="address">The address of the port (slot or IP).</param>
         /// <param name="busSize">The size of the port's bus or chassis if known.</param>
         /// <param name="downstreamOnly">Indicates whether the port is only available for downstream connection.</param>
-        public PortDefinition(int id, string type, bool upstream, string? address = null, int busSize = default,
+        public PortDefinition(int id, string type, bool upstream, string? address = null, byte busSize = default,
             bool downstreamOnly = default)
         {
             Id = id;
@@ -56,6 +56,6 @@
         /// <summary>
         /// Gets the size of the port bus.
         /// </summary>
-        public int BusSize { get; set; }
+        public byte BusSize { get; set; }
     }
 }

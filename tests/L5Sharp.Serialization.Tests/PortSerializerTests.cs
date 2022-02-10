@@ -39,7 +39,7 @@ namespace L5Sharp.Serialization.Tests
         [UseReporter(typeof(DiffReporter))]
         public void Serialize_ValidComponent_ShouldBeApproved()
         {
-            var component = new PortDefinition(1, "ICP", false, "0");
+            var component = new PortDefinition(1, "ICP", false, "0", 10);
 
             var xml = _serializer.Serialize(component);
 

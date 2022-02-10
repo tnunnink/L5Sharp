@@ -66,7 +66,7 @@ namespace L5Sharp.Core.Tests
         {
             var array = new ArrayType<Bool>(10);
 
-            array.Name.Should().Be("BOOL[10]");
+            array.Name.Should().Be("BOOL");
             array.Description.Should().BeEmpty();
             array.Class.Should().Be(DataTypeClass.Atomic);
             array.Family.Should().Be(DataTypeFamily.None);
@@ -78,7 +78,7 @@ namespace L5Sharp.Core.Tests
         {
             var array = new ArrayType<String>(10);
 
-            array.Name.Should().Be("STRING[10]");
+            array.Name.Should().Be("STRING");
             array.Description.Should().BeEmpty();
             array.Class.Should().Be(DataTypeClass.Predefined);
             array.Family.Should().Be(DataTypeFamily.String);
@@ -92,7 +92,7 @@ namespace L5Sharp.Core.Tests
 
             var array = new ArrayType<IUserDefined>(10, userType);
 
-            array.Name.Should().Be("Test[10]");
+            array.Name.Should().Be("Test");
             array.Description.Should().BeEmpty();
             array.Class.Should().Be(DataTypeClass.User);
             array.Family.Should().Be(DataTypeFamily.None);

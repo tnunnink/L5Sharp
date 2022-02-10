@@ -85,7 +85,7 @@ namespace L5Sharp.Core.Tests
             member.DataType.Should().BeOfType<Dint>();
             member.Dimensions.Should().Be(Dimensions.Empty);
             member.Radix.Should().Be(Radix.Decimal);
-            member.ExternalAccess.Should().Be(ExternalAccess.None);
+            member.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);
             member.Parent.Should().BeSameAs(timer);
             member.Root.Should().BeSameAs(tag);
             member.Value.Should().Be(0);

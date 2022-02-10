@@ -69,26 +69,6 @@ namespace L5Sharp.Core.Tests
             vendor.Id.Should().Be(1);
             vendor.Name.Should().Be("Rockwell Automation/Allen-Bradley");
         }
-        
-        [Test]
-        public void Prosoft_WhenCalled_ShouldBeZero()
-        {
-            var vendor = Vendor.Prosoft;
-
-            vendor.Should().NotBeNull();
-            vendor.Id.Should().Be(309);
-            vendor.Name.Should().Be("Prosoft Technology");
-        }
-        
-        [Test]
-        public void Spectrum_WhenCalled_ShouldBeZero()
-        {
-            var vendor = Vendor.Spectrum;
-
-            vendor.Should().NotBeNull();
-            vendor.Id.Should().Be(58);
-            vendor.Name.Should().Be("Spectrum Controls, Inc.");
-        }
 
         [Test]
         public void Parse_ValidNumber_ShouldBeExpected()

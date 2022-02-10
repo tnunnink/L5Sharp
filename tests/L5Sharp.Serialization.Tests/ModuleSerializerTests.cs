@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Net;
 using System.Xml.Linq;
 using ApprovalTests;
 using ApprovalTests.Reporters;
@@ -19,10 +20,9 @@ namespace L5Sharp.Serialization.Tests
         [SetUp]
         public void Setup()
         {
-            var context = new LogixContext(L5X);
-            _serializer = new ModuleSerializer(context);
+            _serializer = new ModuleSerializer();
         }
-        
+
         [Test]
         public void Serialize_Null_ShouldThrowArgumentNullException()
         {
@@ -32,7 +32,7 @@ namespace L5Sharp.Serialization.Tests
         [Test]
         public void Serialize_WhenCalled_ShouldNotBeNull()
         {
-            var module = new Module("Test", "1756-L83E", "This is a test module");
+            var module = new Module("Test", "1756-EN2T", 0, IPAddress.Parse("1.2.3.4"), "This is a test module");
 
             var xml = _serializer.Serialize(module);
 
@@ -43,7 +43,7 @@ namespace L5Sharp.Serialization.Tests
         [UseReporter(typeof(DiffReporter))]
         public void Serialize_ValueTypeArray_ShouldBeApproved()
         {
-            var module = new Module("Test", "1756-L83E", "This is a test module");
+            var module = new Module("Test", "1756-EN2T", 0, IPAddress.Parse("1.2.3.4"), "This is a test module");
 
             var xml = _serializer.Serialize(module);
 
@@ -74,15 +74,19 @@ namespace L5Sharp.Serialization.Tests
             component.ProductType.Should().Be(new ProductType(109));
             component.ProductCode.Should().Be(15);
             component.Revision.Should().Be(new Revision(1, 1));
-            component.ParentPort.Should().BeNull();
+            component.ParentModule.Should().Be("Local");
+            component.ParentPortId.Should().Be(1);
             component.Inhibited.Should().BeFalse();
             component.MajorFault.Should().BeFalse();
             component.SafetyEnabled.Should().BeFalse();
             component.State.Should().Be(KeyingState.CompatibleModule);
             component.Slot.Should().Be(4);
-            //component.IP.Should().BeNull();
+            component.IP.Should().BeNull();
             component.Ports.Should().HaveCount(1);
-
+            component.Connections.Should().HaveCount(1);
+            component.Tags.Config.Should().NotBeNull();
+            component.Tags.Input.Should().NotBeNull();
+            component.Tags.Output.Should().NotBeNull();
         }
 
         private static string GetTestModule()

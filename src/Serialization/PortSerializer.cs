@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Xml.Linq;
 using L5Sharp.Core;
 using L5Sharp.Extensions;
@@ -29,7 +28,7 @@ namespace L5Sharp.Serialization
             if (component.Upstream) return element;
             
             var bus = new XElement(LogixNames.Bus);
-            bus.AddAttribute(component, c => c.BusSize, p => p.BusSize > 0);
+            bus.AddAttribute(component, c => c.BusSize, p => p.BusSize > 0, "Size");
             element.Add(bus);
             
             return element;
@@ -48,9 +47,9 @@ namespace L5Sharp.Serialization
             var address = element.GetAttribute<Port, string>(c => c.Address) ?? string.Empty;
             var type = element.GetAttribute<Port, string>(c => c.Type) ?? string.Empty;
             var upstream = element.GetAttribute<Port, bool>(c => c.Upstream);
-            int.TryParse(element.Element(LogixNames.Bus)?.Attribute("Size")?.Value, out var size);
+            var busSize = element.Element(LogixNames.Bus)?.GetAttribute<Bus, byte>(b => b.Size) ?? 0;
             
-            return new PortDefinition(id, type, upstream, address, size);
+            return new PortDefinition(id, type, upstream, address, busSize);
         }
     }
 }

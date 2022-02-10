@@ -1,9 +1,11 @@
-﻿namespace L5Sharp.Repositories
+﻿using L5Sharp.Core;
+
+namespace L5Sharp.Repositories
 {
     /// <summary>
-    /// A repository for Logix <see cref="IModule"/> components.
+    /// A repository for Logix <see cref="Module"/> components.
     /// </summary>
-    internal class ModuleRepository : Repository<IModule>
+    internal class ModuleRepository : Repository<Module>
     {
         /// <summary>
         /// Creates a new instance of the <see cref="ModuleRepository"/> object.
