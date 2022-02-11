@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using Ardalis.SmartEnum;
 using L5Sharp.Extensions;
@@ -572,7 +573,25 @@ namespace L5Sharp.Enums
                     _ => throw new NotSupportedException($"{atomic.GetType()} not supported for {Ascii} Radix.")
                 };
 
-                return Regex.Replace(str, @"(?=(\w\w)+(?!\w))", ByteSeparator);
+                var builder = new StringBuilder();
+                var segments = str.Segment(2);
+
+                foreach (var segment in segments)
+                {
+                    var character = Convert.ToChar(Convert.ToUInt16(segment, BaseNumber));
+
+                    if (character == 9 || character == 10 || character == 12 || character == 13 ||
+                        character > 31 && character < 127)
+                    {
+                        builder.Append(character);
+                        continue;
+                    }
+
+                    builder.Append(ByteSeparator);
+                    builder.Append(segment);
+                }
+
+                return builder.ToString();
             }
 
             public override IAtomicType Parse(string input)

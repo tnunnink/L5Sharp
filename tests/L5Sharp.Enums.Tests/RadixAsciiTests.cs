@@ -33,7 +33,7 @@ namespace L5Sharp.Enums.Tests
         {
             var ascii = Radix.Ascii.Format(new Dint(123456));
 
-            ascii.Should().Be("$00$00$00p");
+            ascii.Should().Be("$00$01$E2@");
         }
 
         [Test]
@@ -63,13 +63,14 @@ namespace L5Sharp.Enums.Tests
 
             var result = radix.Format(new Lint(20));
 
-            result.Should().Be("$00$00$00$00$00$00$00$14");
+            result.Should().Be("$00$00$00$0$000$00$00$00$14");
         }
 
         [Test]
         public void Testing()
         {
             var list = new List<char>();
+            
             for (var i = 0; i < 300; i++)
             {
                 var c = Convert.ToChar(i);

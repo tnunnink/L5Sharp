@@ -207,15 +207,17 @@ namespace L5Sharp.Extensions
         {
             return items.Aggregate(value, (str, cItem) => str.Replace(cItem, replacement));
         }
-
-        public static string ConsumeWhile(this string value, Func<char, bool> condition, out string consumed)
+        
+        public static IEnumerable<string> Segment(this string input, int length)
         {
-            if (value.IsEmpty())
-                throw new ArgumentException("String value must be non empty.");
+            if (input is null)
+                throw new ArgumentNullException(nameof(input));
 
-            consumed = string.Join(string.Empty, value.TakeWhile(condition));
+            if (length <= 0)
+                throw new ArgumentOutOfRangeException(nameof(length), "Length must be greater than 0");
 
-            return value.Remove(0, consumed.Length);
+            for (var i = 0; i < input.Length; i += length)
+                yield return input.Substring(i, Math.Min(length, input.Length - 1));
         }
 
         public static bool IsBalanced(this string value, char opening, char closing)
