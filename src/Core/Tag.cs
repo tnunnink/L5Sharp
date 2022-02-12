@@ -58,10 +58,10 @@ namespace L5Sharp.Core
         public object? Value => _tagMember.Value;
 
         /// <inheritdoc />
-        public ITagMember<IDataType>? Parent => null;
+        public ITagMember<IDataType>? Parent => _tagMember.Parent;
 
         /// <inheritdoc />
-        public ITag<IDataType> Root => (ITag<IDataType>)(ITag<TDataType>)this;
+        public ITag<IDataType> Root => _tagMember.Root;
 
         /// <inheritdoc />
         public TagType TagType => TagType.Base;
@@ -85,35 +85,34 @@ namespace L5Sharp.Core
         public ITagMember<IDataType> this[int x, int y, int z] => _tagMember[x, y, z];
 
         /// <inheritdoc />
-        public ITagMember<IDataType> this[TagName tagName] => _tagMember[tagName];
-
-        /// <inheritdoc />
         public void Comment(string comment) => _tagMember.Comment(comment);
 
         /// <inheritdoc />
-        public bool Contains(TagName tagName) => _tagMember.Contains(tagName);
+        public ITagMember<IDataType>? FindMember(TagName tagName) => _tagMember.FindMember(tagName);
 
         /// <inheritdoc />
-        public ITagMember<TType> GetMember<TType>(Func<TDataType, IMember<TType>> selector)
-            where TType : IDataType => _tagMember.GetMember(selector);
+        public bool HasMember(TagName tagName) => _tagMember.HasMember(tagName);
 
         /// <inheritdoc />
-        public IEnumerable<ITagMember<IDataType>> GetMembers() => _tagMember.GetMembers();
+        public ITagMember<IDataType> Member(TagName tagName) => _tagMember.Member(tagName);
 
         /// <inheritdoc />
-        public IEnumerable<TagName> GetTagNames() => _tagMember.GetTagNames();
+        public ITagMember<TType> Member<TType>(Func<TDataType, IMember<TType>> selector)
+            where TType : IDataType => _tagMember.Member(selector);
 
         /// <inheritdoc />
-        public bool TryGetMember(TagName tagName, out ITagMember<IDataType>? tagMember) =>
-            _tagMember.TryGetMember(tagName, out tagMember);
+        public IEnumerable<ITagMember<IDataType>> Members() => _tagMember.Members();
+
+        /// <inheritdoc />
+        public IEnumerable<TagName> TagNames() => _tagMember.TagNames();
 
         /// <inheritdoc />
         public bool TrySetValue(IAtomicType? value) => _tagMember.TrySetValue(value);
 
         /// <inheritdoc />
-        public void SetData(IComplexType dataType) => _tagMember.SetData(dataType);
+        public void SetValue(IAtomicType value) => _tagMember.SetValue(value);
 
         /// <inheritdoc />
-        public void SetValue(IAtomicType value) => _tagMember.SetValue(value);
+        public void SetData(IComplexType dataType) => _tagMember.SetData(dataType);
     }
 }

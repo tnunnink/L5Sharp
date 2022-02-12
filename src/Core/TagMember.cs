@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using L5Sharp.Enums;
+using L5Sharp.Exceptions;
 using L5Sharp.Extensions;
 
 namespace L5Sharp.Core
@@ -10,8 +11,7 @@ namespace L5Sharp.Core
     public class TagMember<TDataType> : ITagMember<TDataType> where TDataType : IDataType
     {
         private readonly IMember<TDataType> _member;
-
-
+        
         internal TagMember(IMember<TDataType> member, ITag<IDataType> root, ITagMember<IDataType>? parent)
         {
             _member = member ?? throw new ArgumentNullException(nameof(member));
@@ -85,42 +85,71 @@ namespace L5Sharp.Core
             : throw new InvalidOperationException();
 
         /// <inheritdoc />
-        public ITagMember<IDataType> this[TagName tagName] =>
-            GetMemberInternal(tagName) ??
-            throw new KeyNotFoundException(
-                $"The member '{tagName}' does not exist as a valid descendent of '{DataType.GetType()}'");
-
-        /// <inheritdoc />
         public void Comment(string comment) => Root.Comments.Apply(TagName, comment);
 
         /// <inheritdoc />
-        public bool Contains(TagName tagName) => GetTagNames().Contains(tagName);
+        public ITagMember<IDataType>? FindMember(TagName tagName)
+        {
+            if (tagName is null)
+                throw new ArgumentNullException(nameof(tagName));
+            
+            var path = tagName.Base.Equals(Root.Name) ? tagName.Path : tagName.ToString();
+
+            var members = _member.DataType.GetMembersTo(path).ToList();
+
+            if (!members.Any())
+                return null;
+            
+            var current = (ITagMember<IDataType>)this;
+
+            foreach (var member in members.Select(m => new TagMember<IDataType>(m, Root, current)))
+                current = member;
+
+            return current;
+        }
 
         /// <inheritdoc />
-        public ITagMember<TMemberType> GetMember<TMemberType>(Func<TDataType, IMember<TMemberType>> selector)
+        public bool HasMember(TagName tagName) => TagNames().Contains(tagName);
+
+        /// <inheritdoc />
+        public ITagMember<IDataType> Member(TagName tagName)
+        {
+            if (tagName is null)
+                throw new ArgumentNullException(nameof(tagName));
+
+            var path = tagName.Base.Equals(Root.Name) ? tagName.Path : tagName.ToString();
+
+            var members = _member.DataType.GetMembersTo(path).ToList();
+
+            if (!members.Any())
+                throw new InvalidMemberPathException(tagName, _member.DataType.Name);
+
+            var current = (ITagMember<IDataType>)this;
+
+            foreach (var member in members.Select(m => new TagMember<IDataType>(m, Root, current)))
+                current = member;
+
+            return current;
+        }
+
+        /// <inheritdoc />
+        public ITagMember<TMemberType> Member<TMemberType>(Func<TDataType, IMember<TMemberType>> selector)
             where TMemberType : IDataType
         {
-            var parent = (ITagMember<IDataType>)this;
+            var current = (ITagMember<IDataType>)this;
 
             var member = selector.Invoke(_member.DataType);
 
-            return new TagMember<TMemberType>(member, Root, parent);
+            return new TagMember<TMemberType>(member, Root, current);
         }
 
         /// <inheritdoc />
-        public IEnumerable<ITagMember<IDataType>> GetMembers() =>
+        public IEnumerable<ITagMember<IDataType>> Members() =>
             _member.DataType.GetMembers().Select(m => new TagMember<IDataType>(m, Root, (ITagMember<IDataType>)this));
 
         /// <inheritdoc />
-        public IEnumerable<TagName> GetTagNames() =>
+        public IEnumerable<TagName> TagNames() =>
             _member.DataType.GetTagNames().Select(n => TagName.Combine(TagName, n));
-
-        /// <inheritdoc />
-        public bool TryGetMember(TagName tagName, out ITagMember<IDataType>? tagMember)
-        {
-            tagMember = GetMemberInternal(tagName);
-            return tagMember is not null;
-        }
 
         /// <inheritdoc />
         public bool TrySetValue(IAtomicType? value)
@@ -160,27 +189,7 @@ namespace L5Sharp.Core
 
             //todo figure out how to do this...
         }
-
-        private ITagMember<IDataType> GetMemberInternal(TagName tagName)
-        {
-            if (tagName is null)
-                throw new ArgumentNullException(nameof(tagName));
-
-            var path = tagName.Base.Equals(Root.Name) ? tagName.Path : tagName.ToString();
-
-            var members = _member.DataType.GetMembersTo(path);
-
-            var parent = (ITagMember<IDataType>)this;
-
-            foreach (var member in members)
-            {
-                var current = new TagMember<IDataType>(member, Root, parent);
-                parent = current;
-            }
-
-            return parent;
-        }
-
+        
         /// <summary>
         /// Determines the value of the member description based on the rules of the "Pass-Through-Description".
         /// </summary>

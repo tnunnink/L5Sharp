@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using L5Sharp.Enums;
+using L5Sharp.Extensions;
 
 namespace L5Sharp.Core
 {
@@ -63,32 +64,56 @@ namespace L5Sharp.Core
         }
 
         /// <summary>
-        /// Gets the value of the X or first dimensional unit.
+        /// Gets the value of the X or first dimensional unit of the <see cref="Dimensions"/> object.
         /// </summary>
+        /// <value>
+        /// An unsigned short that represents the length the first dimensional parameter.
+        /// </value>
         public ushort X { get; }
 
         /// <summary>
-        /// Gets the value of the Y or second dimensional unit. 
+        /// Gets the value of the Y or second dimensional unit of the <see cref="Dimensions"/> object. 
         /// </summary>
+        /// <value>
+        /// An unsigned short that represents the length the second dimensional parameter.
+        /// </value>
         public ushort Y { get; }
 
         /// <summary>
-        /// Gets the value of the Z or third dimensional unit. 
+        /// Gets the value of the Z or third dimensional unit of the <see cref="Dimensions"/> object. 
         /// </summary>
+        /// <value>
+        /// An unsigned short that represents the length the third dimensional parameter.
+        /// </value>
         public ushort Z { get; }
 
         /// <summary>
-        /// Gets the total length of the Dimensions. 
+        /// Gets the value of the total length of <see cref="Dimensions"/>. 
         /// </summary>
+        /// <value>
+        /// An integer that represents the combined length of all three dimensional parameters.
+        /// </value>
         public int Length => Z > 0 ? X * Y * Z : Y > 0 ? X * Y : X;
 
         /// <summary>
-        /// Indicates whether the current Dimensions are empty.
+        /// Indicates whether <see cref="Dimensions"/> are empty or <see cref="Length"/> equals zero.
         /// </summary>
         public bool AreEmpty => Length == 0;
 
         /// <summary>
-        /// Indicates whether the current Dimensions are multi-dimensional.
+        /// Gets the set of indices for the <see cref="Dimensions"/> object.
+        /// </summary>
+        /// <value>
+        /// An enumerable collection of bracket notation index strings that represent the indices of a
+        /// dimension array. If <see cref="Dimensions"/> are empty, then an empty collection.
+        /// </value>
+        /// <remarks>
+        /// The indices are determined be the dimensions (x, y, z) of the object.
+        /// </remarks>
+        public IEnumerable<string> Indices => GenerateIndices();
+
+        /// <summary>
+        /// Indicates whether <see cref="Dimensions"/> are multi-dimensional.
         /// </summary>
         /// <remarks>
         /// Multi-dimensional simply means that the dimensions have a value for Y or Z.
@@ -96,7 +121,7 @@ namespace L5Sharp.Core
         public bool AreMultiDimensional => Y > 0;
 
         /// <summary>
-        /// Gets the value for the number or parameters or coordinates in the <see cref="Dimensions"/> instance.
+        /// Gets the value for the number or parameters or coordinates in the <see cref="Dimensions"/> object.
         /// </summary>
         /// <value>
         /// An integer value 1, 2, or 3 that represents the number of dimensional parameters for the current object. 
@@ -108,12 +133,13 @@ namespace L5Sharp.Core
         public int DegreesOfFreedom => Z > 0 ? 3 : Y > 0 ? 2 : X > 0 ? 1 : 0;
 
         /// <summary>
-        /// Gets a new instance of empty <c>Dimensions</c>
+        /// Represents an empty <see cref="Dimensions"/> object, or object with all three dimensional parameters equal
+        /// to zero.
         /// </summary>
         public static Dimensions Empty => new();
 
         /// <summary>
-        /// Parses a string into an instance of Dimensions.
+        /// Parses a string into a <see cref="Dimensions"/> object value.
         /// </summary>
         /// <param name="value">The <see cref="string"/> value to parse.</param>
         /// <returns>
@@ -129,8 +155,10 @@ namespace L5Sharp.Core
         /// </remarks>
         public static Dimensions Parse(string value)
         {
-            if (string.IsNullOrEmpty(value))
-                return Empty;
+            if (value is null)
+                throw new ArgumentNullException(nameof(value));
+            
+            if (value.IsEmpty()) return Empty;
 
             if (!Regex.IsMatch(value, @"(?=\d+)^[\d\s]+$"))
                 throw new ArgumentException($"Value '{value}' does not match expected pattern");
@@ -143,7 +171,7 @@ namespace L5Sharp.Core
                 2 => new Dimensions(numbers[0], numbers[1]),
                 1 => new Dimensions(numbers[0]),
                 _ => throw new ArgumentOutOfRangeException(nameof(numbers.Count),
-                    $"Value '{value}' has a invalid number of arguments. Expects between 1 and 3 arguments.")
+                    $"Value '{value}' has a invalid number of arguments. Expecting between 1 and 3 arguments.")
             };
         }
 
@@ -160,6 +188,9 @@ namespace L5Sharp.Core
         /// <summary>
         /// Generates a string value that represents the <see cref="Dimensions"/> in the array bracket notation.
         /// </summary>
+        /// <example>
+        /// 
+        /// </example>
         public string ToBracketNotation() => Z > 0 ? $"[{X},{Y},{Z}]" : Y > 0 ? $"[{X},{Y}]" : X > 0 ? $"[{X}]" : "[]";
 
         /// <summary>
@@ -177,39 +208,6 @@ namespace L5Sharp.Core
             ExternalAccess? access = null,
             string? description = null) where TDataType : IDataType, new() =>
             GenerateIndices().Select(i => new Member<TDataType>(i, new TDataType(), radix, access, description));
-
-        
-        public IEnumerable<IMember<TDataType>> CreateMembers<TDataType>(TDataType dataType,
-            Radix? radix = null, ExternalAccess? access = null, string? description = null)
-            where TDataType : IDataType
-        {
-            if (dataType is null)
-                throw new ArgumentNullException(nameof(dataType));
-
-            return GenerateIndices().Select(i => new Member<TDataType>(i, (TDataType)dataType.Instantiate(),
-                radix, access, description));
-        }
-        
-        public IEnumerable<IMember<TDataType>> CreateMembers<TDataType>(IEnumerable<TDataType> dataTypes,
-            Radix? radix = null, ExternalAccess? access = null, string? description = null)
-            where TDataType : IDataType
-        {
-            if (dataTypes is null)
-                throw new ArgumentNullException(nameof(dataTypes));
-            
-            //todo this is probably all to many iterations and could be optimized...
-
-            var collection = dataTypes.ToList();
-
-            var first = collection.First();
-
-            if (first is null)
-                throw new ArgumentException("The provided seed collection can not be empty.");
-
-            return GenerateIndices().Zip(collection, (i, t) =>
-                new Member<TDataType>(i, t is not null ? t : (TDataType)first.Instantiate(), 
-                    radix, access, description));
-        }
 
         /// <summary>
         /// Converts the provided <see cref="ushort"/> to a <see cref="Dimensions"/> value. 

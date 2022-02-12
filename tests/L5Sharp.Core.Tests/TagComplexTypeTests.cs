@@ -37,7 +37,7 @@ namespace L5Sharp.Core.Tests
         {
             var tag = Tag.Create("Test", new Timer());
 
-            var tagNames = tag.GetTagNames();
+            var tagNames = tag.TagNames();
 
             tagNames.Should().HaveCount(5);
         }
@@ -47,7 +47,7 @@ namespace L5Sharp.Core.Tests
         {
             var tag = Tag.Create("Test", new Timer());
 
-            var tagNames = tag.GetTagNames().ToList();
+            var tagNames = tag.TagNames().ToList();
 
             tagNames.Should().Contain("Test.PRE");
             tagNames.Should().Contain("Test.ACC");
@@ -61,7 +61,7 @@ namespace L5Sharp.Core.Tests
         {
             var tag = Tag.Create<Timer>("Test");
 
-            var result = tag.Contains(null!);
+            var result = tag.HasMember(null!);
 
             result.Should().BeFalse();
         }
@@ -71,7 +71,7 @@ namespace L5Sharp.Core.Tests
         {
             var tag = Tag.Create<Timer>("Test");
 
-            var result = tag.Contains("Test.PRE");
+            var result = tag.HasMember("Test.PRE");
 
             result.Should().BeTrue();
         }
@@ -81,7 +81,7 @@ namespace L5Sharp.Core.Tests
         {
             var tag = Tag.Create<Timer>("Test");
 
-            FluentActions.Invoking(() => tag[null!]).Should().Throw<ArgumentNullException>();
+            FluentActions.Invoking(() => tag.Member(null!)).Should().Throw<ArgumentNullException>();
         }
 
         [Test]
@@ -89,7 +89,7 @@ namespace L5Sharp.Core.Tests
         {
             var tag = Tag.Create<Timer>("Test");
 
-            FluentActions.Invoking(() => tag[string.Empty]).Should().Throw<ArgumentException>()
+            FluentActions.Invoking(() => tag.Member(string.Empty)).Should().Throw<ArgumentException>()
                 .WithMessage("TagName can not be null or empty.");
         }
 
@@ -98,7 +98,7 @@ namespace L5Sharp.Core.Tests
         {
             var tag = Tag.Create<Timer>("Test");
 
-            FluentActions.Invoking(() => tag["Invalid"]).Should().Throw<KeyNotFoundException>()
+            FluentActions.Invoking(() => tag.Member("Invalid")).Should().Throw<KeyNotFoundException>()
                 .WithMessage($"The member 'Invalid' does not exist as a valid descendent of '{typeof(Timer)}'");
         }
 
@@ -107,7 +107,7 @@ namespace L5Sharp.Core.Tests
         {
             var tag = Tag.Create<Timer>("Test");
 
-            var member = tag["PRE"];
+            var member = tag.Member("PRE");
 
             member.Should().NotBeNull();
         }
@@ -117,7 +117,7 @@ namespace L5Sharp.Core.Tests
         {
             var tag = Tag.Create<Timer>("Test");
 
-            var member = tag["Test.PRE"];
+            var member = tag.Member("Test.PRE");
 
             member.Should().NotBeNull();
         }
@@ -127,7 +127,7 @@ namespace L5Sharp.Core.Tests
         {
             var tag = Tag.Create<MyNestedType>("Test");
 
-            var member = tag["Tmr.PRE"];
+            var member = tag.Member("Tmr.PRE");
 
             member.Should().NotBeNull();
             member.Name.Should().Be("PRE");
@@ -139,7 +139,7 @@ namespace L5Sharp.Core.Tests
         {
             var tag = Tag.Create<MyNestedType>("Test");
 
-            var member = tag["Tmr"]["PRE"];
+            var member = tag.Member("Tmr").Member("PRE");
 
             member.Should().NotBeNull();
             member.Name.Should().Be("PRE");
@@ -151,7 +151,7 @@ namespace L5Sharp.Core.Tests
         {
             var tag = Tag.Create<Timer>("Test");
 
-            var member = tag.GetMember(t => t.PRE);
+            var member = tag.Member(t => t.PRE);
 
             member.Should().NotBeNull();
         }
@@ -162,9 +162,9 @@ namespace L5Sharp.Core.Tests
             var tag = Tag.Create<MyNestedType>("Test");
 
             var member = tag
-                .GetMember(t => t.Str)
-                .GetMember(t => t.DATA)
-                .GetMember(t => t[0]);
+                .Member(t => t.Str)
+                .Member(t => t.DATA)
+                .Member(t => t[0]);
 
             member.Should().NotBeNull();
             member.Name.Should().Be("[0]");
@@ -176,7 +176,7 @@ namespace L5Sharp.Core.Tests
         {
             var tag = Tag.Create<Timer>("Test");
 
-            var members = tag.GetMembers();
+            var members = tag.Members();
 
             members.Should().HaveCount(5);
         }

@@ -229,7 +229,7 @@ namespace L5Sharp.Core.Tests
 
             tag.Value.Should().Be(expected);
         }
-        
+
         [Test]
         public void TrySetValue_Null_ShouldBeFalse()
         {
@@ -239,7 +239,7 @@ namespace L5Sharp.Core.Tests
 
             result.Should().BeFalse();
         }
-        
+
         [Test]
         public void TrySetValue_NonAtomic_ShouldBeFalse()
         {
@@ -272,13 +272,13 @@ namespace L5Sharp.Core.Tests
             result.Should().BeTrue();
             tag.Value.Should().Be(expected);
         }
-        
+
         [Test]
         public void Contains_Member_ShouldBeFalse()
         {
             var tag = Tag.Create<Bool>("Test");
 
-            var result = tag.Contains("Member");
+            var result = tag.HasMember("Member");
 
             result.Should().BeFalse();
         }
@@ -290,13 +290,13 @@ namespace L5Sharp.Core.Tests
 
             FluentActions.Invoking(() => tag[1]).Should().Throw<InvalidOperationException>();
         }
-        
+
         [Test]
-        public void NameGetter_NonArray_ShouldThrowInvalidOperationException()
+        public void NameGetter_InvalidMember_ShouldThrowInvalidMemberPathException()
         {
             var tag = Tag.Create<Bool>("Test");
 
-            FluentActions.Invoking(() => tag["Member"]).Should().Throw<KeyNotFoundException>();
+            FluentActions.Invoking(() => tag.Member("Member")).Should().Throw<InvalidMemberPathException>();
         }
 
         [Test]
@@ -304,7 +304,7 @@ namespace L5Sharp.Core.Tests
         {
             var tag = Tag.Create("Test", new Bool());
 
-            var members = tag.GetTagNames();
+            var members = tag.TagNames();
 
             members.Should().BeEmpty();
         }

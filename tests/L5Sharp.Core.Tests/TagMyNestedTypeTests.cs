@@ -40,7 +40,7 @@ namespace L5Sharp.Core.Tests
         {
             var tag = Tag.Create<MyNestedType>("Test", externalAccess: ExternalAccess.ReadOnly);
 
-            var members = tag.GetMembers();
+            var members = tag.Members();
 
             members.Select(m => m.ExternalAccess).Should().AllBeEquivalentTo(ExternalAccess.ReadOnly);
         }
@@ -58,13 +58,13 @@ namespace L5Sharp.Core.Tests
         {
             var tag = Tag.Create<MyNestedType>("Test");
 
-            var indy = tag.GetMember(m => m.Indy);
+            var indy = tag.Member(m => m.Indy);
             indy.Description.Should().Be("This is the user defined description Test Bool Member");
             
-            var str = tag.GetMember(m => m.Str);
+            var str = tag.Member(m => m.Str);
             str.Description.Should().Be("This is the user defined description Test String Member");
             
-            var tmr = tag.GetMember(m => m.Tmr);
+            var tmr = tag.Member(m => m.Tmr);
             tmr.Description.Should().Be("This is the user defined description Test Timer Member");
         }
         
@@ -75,9 +75,9 @@ namespace L5Sharp.Core.Tests
 
             tag.Comment("Override Description");
             
-            tag.GetMember(m => m.Indy).Description.Should().Be("Override Description Test Bool Member");
-            tag.GetMember(m => m.Str).Description.Should().Be("Override Description Test String Member");
-            tag.GetMember(m => m.Tmr).Description.Should().Be("Override Description Test Timer Member");
+            tag.Member(m => m.Indy).Description.Should().Be("Override Description Test Bool Member");
+            tag.Member(m => m.Str).Description.Should().Be("Override Description Test String Member");
+            tag.Member(m => m.Tmr).Description.Should().Be("Override Description Test Timer Member");
         }
         
         [Test]
@@ -87,15 +87,15 @@ namespace L5Sharp.Core.Tests
 
             tag.Comment("Override Description");
             
-            tag.GetMember(m => m.Indy).Description.Should().Be("Override Description Test Bool Member");
-            tag.GetMember(m => m.Str).Description.Should().Be("Override Description Test String Member");
-            tag.GetMember(m => m.Tmr).Description.Should().Be("Override Description Test Timer Member");
+            tag.Member(m => m.Indy).Description.Should().Be("Override Description Test Bool Member");
+            tag.Member(m => m.Str).Description.Should().Be("Override Description Test String Member");
+            tag.Member(m => m.Tmr).Description.Should().Be("Override Description Test Timer Member");
             
             tag.Comment(string.Empty);
             
-            tag.GetMember(m => m.Indy).Description.Should().Be("This is the user defined description Test Bool Member");
-            tag.GetMember(m => m.Str).Description.Should().Be("This is the user defined description Test String Member");
-            tag.GetMember(m => m.Tmr).Description.Should().Be("This is the user defined description Test Timer Member");
+            tag.Member(m => m.Indy).Description.Should().Be("This is the user defined description Test Bool Member");
+            tag.Member(m => m.Str).Description.Should().Be("This is the user defined description Test String Member");
+            tag.Member(m => m.Tmr).Description.Should().Be("This is the user defined description Test Timer Member");
         }
         
         [Test]
@@ -103,12 +103,12 @@ namespace L5Sharp.Core.Tests
         {
             var tag = Tag.Create<MyNestedType>("Test");
 
-            tag.GetMember(m => m.Indy).Comment("This is a member comment");
-            tag.GetMember(m => m.Indy).Description.Should().Be("This is a member comment");
+            tag.Member(m => m.Indy).Comment("This is a member comment");
+            tag.Member(m => m.Indy).Description.Should().Be("This is a member comment");
             
             tag.Comment("Override Description");
 
-            tag.GetMember(m => m.Indy).Description.Should().Be("This is a member comment");
+            tag.Member(m => m.Indy).Description.Should().Be("This is a member comment");
         }
         
         [Test]
@@ -118,7 +118,7 @@ namespace L5Sharp.Core.Tests
             
             tag.Comment("Test Description");
 
-            var nested = tag.GetMember(m => m.Simple).GetMembers();
+            var nested = tag.Member(m => m.Simple).Members();
 
             nested.Select(m => m.Description).Should().AllBeEquivalentTo("Test Description");
         }
@@ -128,7 +128,7 @@ namespace L5Sharp.Core.Tests
         {
             var tag = Tag.Create<MyNestedType>("Test");
 
-            var member = tag["Test.Simple.M3"];
+            var member = tag.Member("Test.Simple.M3");
 
             member.Should().NotBeNull();
             member.Name.Should().Be("M3");
@@ -141,7 +141,7 @@ namespace L5Sharp.Core.Tests
         {
             var tag = Tag.Create<MyNestedType>("Test");
 
-            var member = tag.GetMember(m => m.Simple).GetMember(m => m.M3);
+            var member = tag.Member(m => m.Simple).Member(m => m.M3);
 
             member.Should().NotBeNull();
             member.Name.Should().Be("M3");

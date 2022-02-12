@@ -49,7 +49,7 @@ namespace L5Sharp.Serialization
             var serializer = new ArrayElementSerializer();
             var members = element.Elements().Select(e => serializer.Deserialize(e));
 
-            var arrayType = new ArrayType<IDataType>(dimensions!, members.Select(m => m.DataType), radix);
+            var arrayType = new ArrayType<IDataType>(dimensions!, members.Select(m => m.DataType).ToList(), radix);
             
             return new Member<IArrayType<IDataType>>(name, arrayType, radix);
         }

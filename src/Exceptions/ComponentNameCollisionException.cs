@@ -8,26 +8,24 @@ namespace L5Sharp.Exceptions
     /// <remarks>
     /// Logix identifies various components by name. Therefore the name of a component must be unique.
     /// </remarks>
-    public class ComponentNameCollisionException : Exception
+    public class ComponentNameCollisionException : LogixException
     {
         private const string Reason = "Component names must be unique";
 
         /// <summary>
-        /// A default constructor that throws the exception with the default message. Use this if the name and type
-        /// are not known.
-        /// </summary>
-        public ComponentNameCollisionException() : base(Reason)
-        {
-        }
-
-        /// <summary>
-        /// Creates a new instance of the exception with the provided name and type parameter.
+        /// Creates a new <see cref="ComponentNameCollisionException"/> with the specified name and component type. 
         /// </summary>
         /// <param name="name">The name of the component that already exists.</param>
         /// <param name="type">The type of the component that the exception is being thrown for.</param>
         public ComponentNameCollisionException(string name, Type type) : base(
             $"The component '{type}' with name '{name}' already exists in the current context. {Reason}")
         {
+            Name = name;
         }
+
+        /// <summary>
+        /// The name of the component that already exists.
+        /// </summary>
+        public string Name { get; }
     }
 }

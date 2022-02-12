@@ -45,7 +45,7 @@ namespace L5Sharp.Serialization
 
             var radix = element.GetAttribute<IMember<IDataType>, Radix>(e => e.Radix);
 
-            return new ArrayType<IDataType>(dimensions!, members.Select(m => m.DataType), radix);
+            return new ArrayType<IDataType>(dimensions!, members.Select(m => m.DataType).ToList(), radix);
         }
     }
 }

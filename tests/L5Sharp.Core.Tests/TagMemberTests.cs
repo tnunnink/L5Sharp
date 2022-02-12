@@ -16,7 +16,7 @@ namespace L5Sharp.Core.Tests
         {
             var tag = Tag.Create<Timer>("Test");
 
-            var member = tag.GetMember(m => m.DN);
+            var member = tag.Member(m => m.DN);
 
             member.Name.Should().Be("DN");
             member.Description.Should().BeEmpty();
@@ -33,27 +33,27 @@ namespace L5Sharp.Core.Tests
         public void NameIndexer_NonExisting_ShouldThrowKeyNotFoundException()
         {
             var tag = Tag.Create<MyNestedType>("Test");
-            var timer = tag.GetMember(m => m.Tmr);
+            var timer = tag.Member(m => m.Tmr);
 
-            FluentActions.Invoking(() => timer["Invalid"]).Should().Throw<KeyNotFoundException>();
+            FluentActions.Invoking(() => timer.Member("Invalid")).Should().Throw<KeyNotFoundException>();
         }
         
         [Test]
         public void NameIndexer_Null_ShouldThrowArgumentNullException()
         {
             var tag = Tag.Create<MyNestedType>("Test");
-            var timer = tag.GetMember(m => m.Tmr);
+            var timer = tag.Member(m => m.Tmr);
 
-            FluentActions.Invoking(() =>  timer[null!]).Should().Throw<ArgumentNullException>();
+            FluentActions.Invoking(() =>  timer.Member(null!)).Should().Throw<ArgumentNullException>();
         }
         
         [Test]
         public void NameIndexer_ValidMember_ShouldNotBeNull()
         {
             var tag = Tag.Create<MyNestedType>("Test");
-            var timer = tag.GetMember(m => m.Tmr);
+            var timer = tag.Member(m => m.Tmr);
 
-            var member = timer["PRE"];
+            var member = timer.Member("PRE");
             
             member.Should().NotBeNull();
         }
@@ -63,9 +63,9 @@ namespace L5Sharp.Core.Tests
         {
             var tag = Tag.Create<MyNestedType>("Test");
 
-            var timer = tag.GetMember(m => m.Tmr);
+            var timer = tag.Member(m => m.Tmr);
 
-            var member = timer.GetMember(m => m.PRE);
+            var member = timer.Member(m => m.PRE);
 
             member.Should().NotBeNull();
         }
@@ -75,9 +75,9 @@ namespace L5Sharp.Core.Tests
         {
             var tag = Tag.Create<MyNestedType>("Test");
 
-            var timer = tag.GetMember(m => m.Tmr);
+            var timer = tag.Member(m => m.Tmr);
 
-            var member = timer.GetMember(m => m.PRE);
+            var member = timer.Member(m => m.PRE);
 
             member.Name.Should().Be("PRE");
             member.TagName.Should().Be("Test.Tmr.PRE");
@@ -92,34 +92,34 @@ namespace L5Sharp.Core.Tests
         public void SetValue_Null_ShouldThrowArgumentNullException()
         {
             var tag = Tag.Create<Timer>("Test");
-            var member = tag["PRE"];
+            var member = tag.Member("PRE");
             
-            FluentActions.Invoking(() => member?.SetValue(null!)).Should().Throw<ArgumentNullException>();
+            FluentActions.Invoking(() => member.SetValue(null!)).Should().Throw<ArgumentNullException>();
         }
         
         [Test]
         public void SetValue_InvalidType_ShouldThrowArgumentException()
         {
             var tag = Tag.Create<Timer>("Test");
-            var member = tag["PRE"];
+            var member = tag.Member("PRE");
             
-            FluentActions.Invoking(() => member?.SetValue(new Bool(true))).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(() => member.SetValue(new Bool(true))).Should().Throw<ArgumentException>();
         }
         
         [Test]
         public void SetValue_NonAtomic_ShouldThrowInvalidOperationException()
         {
             var tag = Tag.Create<MyNestedType>("Test");
-            var member = tag["Tmr"];
+            var member = tag.Member("Tmr");
             
-            FluentActions.Invoking(() => member?.SetValue(new Bool(true))).Should().Throw<InvalidOperationException>();
+            FluentActions.Invoking(() => member.SetValue(new Bool(true))).Should().Throw<InvalidOperationException>();
         }
 
         [Test]
         public void SetValue_ValidValue_ValueShouldBeExpected()
         {
             var tag = Tag.Create<Timer>("Test");
-            var member = tag["PRE"];
+            var member = tag.Member("PRE");
             
             member.SetValue(new Dint(500));
 

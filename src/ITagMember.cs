@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using L5Sharp.Core;
+using L5Sharp.Exceptions;
 
 namespace L5Sharp
 {
@@ -107,27 +108,6 @@ namespace L5Sharp
         ITagMember<IDataType> this[int x, int y, int z] { get; }
 
         /// <summary>
-        /// Gets a descendent <see cref="ITagMember{TDataType}"/> instance with the specified tag name value. 
-        /// </summary>
-        /// <param name="tagName">The <see cref="TagName"/> value of the descendent member to get.</param>
-        /// <returns>
-        /// A new <see cref="ITagMember{TDataType}"/> instance that represents the descendent member.
-        /// </returns>
-        /// <exception cref="ArgumentNullException">tagName is null.</exception>
-        /// <exception cref="InvalidOperationException">
-        /// A member with the specified tag name value does not exist as a descendent member of the current instance.
-        /// </exception>
-        /// <remarks>
-        /// This method gets immediate and nested descendent members from the current <see cref="ITagMember{TDataType}"/>
-        /// based on the specified tag name value. This means the user can provide the full "dot-down" path to a nested
-        /// member for retrieval. This method also retrieves both members of an <see cref="IComplexType"/> and/or
-        /// <see cref="IArrayType{TDataType}"/> objects. This method will work as long as the provided path is valid.
-        /// </remarks>
-        /// <seealso cref="GetMember{TType}"/>
-        /// <seealso cref="TryGetMember"/>
-        ITagMember<IDataType> this[TagName tagName] { get; }
-
-        /// <summary>
         /// Sets the <c>ITagMember</c> <see cref="ILogixComponent.Description"/> with the provided string comment. 
         /// </summary>
         /// <remarks>
@@ -141,11 +121,43 @@ namespace L5Sharp
         void Comment(string comment);
 
         /// <summary>
+        /// Searches the current tag member <see cref="DataType"/> for the specified tag member.
+        /// </summary>
+        /// <param name="tagName">The tag name value of the <see cref="ITagMember{TDataType}"/> to search for.</param>
+        /// <returns>
+        /// The instance of the <see cref="ITagMember{TDataType}"/> specified by the provided tag name if found;
+        /// otherwise, null.
+        /// </returns>
+        ITagMember<IDataType>? FindMember(TagName tagName);
+
+        /// <summary>
         /// Determines if the provided <see cref="TagName"/> value exists as a descendent member of the <see cref="ITagMember{TDataType}"/> instance.
         /// </summary>
         /// <param name="tagName">The <see cref="TagName"/> value to search for in the nested member hierarchy.</param>
         /// <returns>true if a descendent member with the specified tag name path exists; otherwise, false.</returns>
-        bool Contains(TagName tagName);
+        bool HasMember(TagName tagName);
+
+        /// <summary>
+        /// Gets a descendent <see cref="ITagMember{TDataType}"/> instance with the specified tag name value. 
+        /// </summary>
+        /// <param name="tagName">The <see cref="TagName"/> value of the descendent member to get.</param>
+        /// <returns>
+        /// A new <see cref="ITagMember{TDataType}"/> instance that represents the descendent member with the specified
+        /// tag name.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">tagName is null.</exception>
+        /// <exception cref="InvalidMemberPathException">
+        /// A member with the specified tag name does not exist as a descendent member of the tag member data type.
+        /// </exception>
+        /// <remarks>
+        /// This method gets immediate and nested descendent members from the current <see cref="ITagMember{TDataType}"/>
+        /// based on the specified tag name value. This means the user can provide the full "dot-down" path to a nested
+        /// member for retrieval. This method also retrieves both members of an <see cref="IComplexType"/> and/or
+        /// <see cref="IArrayType{TDataType}"/> objects. This method will work as long as the provided path is valid.
+        /// </remarks>
+        /// <seealso cref="Member{TMemberType}"/>
+        /// <seealso cref="FindMember"/>
+        ITagMember<IDataType> Member(TagName tagName);
 
         /// <summary>
         /// Gets a <see cref="ITagMember{TDataType}"/> using the provided member selector delegate function.
@@ -161,14 +173,14 @@ namespace L5Sharp
         /// A new <see cref="ITagMember{TDataType}"/> instance that represents the selected child member of the current
         /// tag data type.
         /// </returns>
-        ITagMember<TMemberType> GetMember<TMemberType>(Func<TDataType, IMember<TMemberType>> selector)
+        ITagMember<TMemberType> Member<TMemberType>(Func<TDataType, IMember<TMemberType>> selector)
             where TMemberType : IDataType;
 
         /// <summary>
         /// Gets all <see cref="ITagMember{TDataType}"/> instances that are immediate descendents of the current <see cref="ITag{TDataType}"/>.
         /// </summary>
         /// <returns>A collection of <see cref="ITagMember{TDataType}"/> objects if any are found; otherwise, an empty collection.</returns>
-        IEnumerable<ITagMember<IDataType>> GetMembers();
+        IEnumerable<ITagMember<IDataType>> Members();
 
         /// <summary>
         /// Gets all descendent member <see cref="TagName"/> values of the current <see cref="ITagMember{TDataType}"/>.
@@ -178,19 +190,7 @@ namespace L5Sharp
         /// This method returns tag name values relative to the current member instance. This does so by traversing the
         /// nested member hierarchy of the current data type.
         /// </remarks>
-        IEnumerable<TagName> GetTagNames();
-
-        /// <summary>
-        /// Attempts to get a descendent <see cref="ITagMember{TDataType}"/> with the provided <see cref="TagName"/> value.
-        /// </summary>
-        /// <param name="tagName">The tag name value of the <see cref="ITagMember{TDataType}"/> to get.</param>
-        /// <param name="tagMember">When the method returns, contains an instance of the
-        /// <see cref="ITagMember{TDataType}"/> that represents the descendent member if found; otherwise, null.</param>
-        /// <returns>
-        /// true if the member with the specified tag name was found as a descendent of the
-        /// current <see cref="ITagMember{TDataType}"/> instance; otherwise, false.
-        /// </returns>
-        bool TryGetMember(TagName tagName, out ITagMember<IDataType>? tagMember);
+        IEnumerable<TagName> TagNames();
 
         /// <summary>
         /// Attempts to sets the <see cref="Value"/> property of the current <see cref="ITagMember{TDataType}"/> instance.

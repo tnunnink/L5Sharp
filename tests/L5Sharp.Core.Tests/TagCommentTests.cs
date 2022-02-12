@@ -90,7 +90,7 @@ namespace L5Sharp.Core.Tests
 
             tag.Comment("This is a test");
             tag.Description.Should().Be("This is a test");
-            tag.GetMembers().Select(e => e.Description).Should().AllBeEquivalentTo("This is a test");
+            tag.Members().Select(e => e.Description).Should().AllBeEquivalentTo("This is a test");
         }
         
         [Test]
@@ -100,7 +100,7 @@ namespace L5Sharp.Core.Tests
 
             tag.Comment("This is a test");
             tag.Description.Should().Be("This is a test");
-            tag.GetMembers().Select(e => e.Description).Should().AllBeEquivalentTo("This is a test");
+            tag.Members().Select(e => e.Description).Should().AllBeEquivalentTo("This is a test");
         }
 
         [Test]

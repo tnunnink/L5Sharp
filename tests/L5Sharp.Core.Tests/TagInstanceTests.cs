@@ -15,8 +15,8 @@ namespace L5Sharp.Core.Tests
             var tag = Tag.Create<String>("Test");
 
             tag.Should().NotBeNull();
-            tag.GetMember(m => m.LEN).Should().NotBeNull();
-            tag.GetMember(m => m.DATA).Should().NotBeNull();
+            tag.Member(m => m.LEN).Should().NotBeNull();
+            tag.Member(m => m.DATA).Should().NotBeNull();
         }
         
         [Test]
@@ -25,11 +25,11 @@ namespace L5Sharp.Core.Tests
             var tag = Tag.Create<Timer>("Test");
 
             tag.Should().NotBeNull();
-            tag.GetMember(m => m.PRE).Should().NotBeNull();
-            tag.GetMember(m => m.ACC).Should().NotBeNull();
-            tag.GetMember(m => m.TT).Should().NotBeNull();
-            tag.GetMember(m => m.EN).Should().NotBeNull();
-            tag.GetMember(m => m.DN).Should().NotBeNull();
+            tag.Member(m => m.PRE).Should().NotBeNull();
+            tag.Member(m => m.ACC).Should().NotBeNull();
+            tag.Member(m => m.TT).Should().NotBeNull();
+            tag.Member(m => m.EN).Should().NotBeNull();
+            tag.Member(m => m.DN).Should().NotBeNull();
         }
         
         [Test]
@@ -38,13 +38,13 @@ namespace L5Sharp.Core.Tests
             var tag = Tag.Create<Counter>("Test");
 
             tag.Should().NotBeNull();
-            tag.GetMember(m => m.PRE).Should().NotBeNull();
-            tag.GetMember(m => m.ACC).Should().NotBeNull();
-            tag.GetMember(m => m.CU).Should().NotBeNull();
-            tag.GetMember(m => m.CD).Should().NotBeNull();
-            tag.GetMember(m => m.DN).Should().NotBeNull();
-            tag.GetMember(m => m.OV).Should().NotBeNull();
-            tag.GetMember(m => m.UN).Should().NotBeNull();
+            tag.Member(m => m.PRE).Should().NotBeNull();
+            tag.Member(m => m.ACC).Should().NotBeNull();
+            tag.Member(m => m.CU).Should().NotBeNull();
+            tag.Member(m => m.CD).Should().NotBeNull();
+            tag.Member(m => m.DN).Should().NotBeNull();
+            tag.Member(m => m.OV).Should().NotBeNull();
+            tag.Member(m => m.UN).Should().NotBeNull();
         }
         
         [Test]
@@ -53,30 +53,30 @@ namespace L5Sharp.Core.Tests
             var tag = Tag.Create("Test", new Alarm());
 
             tag.Should().NotBeNull();
-            tag.GetMember(m => m.EnableIn).Should().NotBeNull();
-            tag.GetMember(m => m.In).Should().NotBeNull();
-            tag.GetMember(m => m.HHLimit).Should().NotBeNull();
-            tag.GetMember(m => m.HLimit).Should().NotBeNull();
-            tag.GetMember(m => m.LLimit).Should().NotBeNull();
-            tag.GetMember(m => m.LLLimit).Should().NotBeNull();
-            tag.GetMember(m => m.Deadband).Should().NotBeNull();
-            tag.GetMember(m => m.ROCPosLimit).Should().NotBeNull();
-            tag.GetMember(m => m.ROCNegLimit).Should().NotBeNull();
-            tag.GetMember(m => m.ROCPeriod).Should().NotBeNull();
-            tag.GetMember(m => m.EnableOut).Should().NotBeNull();
-            tag.GetMember(m => m.HHAlarm).Should().NotBeNull();
-            tag.GetMember(m => m.HAlarm).Should().NotBeNull();
-            tag.GetMember(m => m.LAlarm).Should().NotBeNull();
-            tag.GetMember(m => m.LLAlarm).Should().NotBeNull();
-            tag.GetMember(m => m.ROCPosAlarm).Should().NotBeNull();
-            tag.GetMember(m => m.ROCNegAlarm).Should().NotBeNull();
-            tag.GetMember(m => m.ROC).Should().NotBeNull();
-            tag.GetMember(m => m.Status).Should().NotBeNull();
-            tag.GetMember(m => m.InstructFault).Should().NotBeNull();
-            tag.GetMember(m => m.DeadbandInv).Should().NotBeNull();
-            tag.GetMember(m => m.ROCPosLimitInv).Should().NotBeNull();
-            tag.GetMember(m => m.ROCNegLimitInv).Should().NotBeNull();
-            tag.GetMember(m => m.ROCPeriodInv).Should().NotBeNull();
+            tag.Member(m => m.EnableIn).Should().NotBeNull();
+            tag.Member(m => m.In).Should().NotBeNull();
+            tag.Member(m => m.HHLimit).Should().NotBeNull();
+            tag.Member(m => m.HLimit).Should().NotBeNull();
+            tag.Member(m => m.LLimit).Should().NotBeNull();
+            tag.Member(m => m.LLLimit).Should().NotBeNull();
+            tag.Member(m => m.Deadband).Should().NotBeNull();
+            tag.Member(m => m.ROCPosLimit).Should().NotBeNull();
+            tag.Member(m => m.ROCNegLimit).Should().NotBeNull();
+            tag.Member(m => m.ROCPeriod).Should().NotBeNull();
+            tag.Member(m => m.EnableOut).Should().NotBeNull();
+            tag.Member(m => m.HHAlarm).Should().NotBeNull();
+            tag.Member(m => m.HAlarm).Should().NotBeNull();
+            tag.Member(m => m.LAlarm).Should().NotBeNull();
+            tag.Member(m => m.LLAlarm).Should().NotBeNull();
+            tag.Member(m => m.ROCPosAlarm).Should().NotBeNull();
+            tag.Member(m => m.ROCNegAlarm).Should().NotBeNull();
+            tag.Member(m => m.ROC).Should().NotBeNull();
+            tag.Member(m => m.Status).Should().NotBeNull();
+            tag.Member(m => m.InstructFault).Should().NotBeNull();
+            tag.Member(m => m.DeadbandInv).Should().NotBeNull();
+            tag.Member(m => m.ROCPosLimitInv).Should().NotBeNull();
+            tag.Member(m => m.ROCNegLimitInv).Should().NotBeNull();
+            tag.Member(m => m.ROCPeriodInv).Should().NotBeNull();
         }
     }
 }

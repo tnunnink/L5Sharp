@@ -31,18 +31,13 @@ namespace L5Sharp.Core
         public ArrayType(Dimensions dimensions, TDataType? dataType = default,
             Radix? radix = null, ExternalAccess? externalAccess = null, string? description = null)
         {
-            if (dimensions is null)
-                throw new ArgumentNullException(nameof(dimensions));
-
-            if (dimensions.AreEmpty)
-                throw new ArgumentException("The provided dimensions can not be empty.");
+            ValidateDimensions(dimensions);
 
             Dimensions = dimensions;
 
             dataType ??= CreateType();
 
-            _elements = dimensions.CreateMembers(dataType, radix, externalAccess, description)
-                .ToDictionary(m => m.Name);
+            _elements = CreateMembers(dataType, radix, externalAccess, description).ToDictionary(m => m.Name);
         }
 
         /// <summary>
@@ -55,22 +50,20 @@ namespace L5Sharp.Core
         /// <param name="description">An optional description to initialize each element of the array with.</param>
         /// <exception cref="ArgumentNullException">dimensions or dataTypes are null.</exception>
         /// <exception cref="ArgumentException">dimensions are empty.</exception>
-        public ArrayType(Dimensions dimensions, IEnumerable<TDataType> dataTypes,
+        public ArrayType(Dimensions dimensions, ICollection<TDataType> dataTypes,
             Radix? radix = null, ExternalAccess? externalAccess = null, string? description = null)
         {
-            if (dimensions is null)
-                throw new ArgumentNullException(nameof(dimensions));
-
-            if (dimensions.AreEmpty)
-                throw new ArgumentException("The provided dimensions can not be empty.");
+            ValidateDimensions(dimensions);
 
             Dimensions = dimensions;
 
             if (dataTypes is null)
                 throw new ArgumentNullException(nameof(dataTypes));
 
-            _elements = dimensions.CreateMembers(dataTypes, radix, externalAccess, description)
-                .ToDictionary(x => x.Name);
+            if (!dataTypes.Any())
+                throw new ArgumentException("The provided data type collection must have at least one item.");
+
+            _elements = CreateMembers(dataTypes, radix, externalAccess, description).ToDictionary(x => x.Name);
         }
 
         /// <inheritdoc />
@@ -147,6 +140,26 @@ namespace L5Sharp.Core
                     $"The specified type '{typeof(TDataType)} does not have a default parameterless constructor.");
 
             return Activator.CreateInstance<TDataType>();
+        }
+        
+        private IEnumerable<IMember<TDataType>> CreateMembers(TDataType dataType,
+            Radix? radix = null, ExternalAccess? access = null, string? description = null) =>
+            Dimensions.Indices.Select(i => new Member<TDataType>(i, (TDataType)dataType.Instantiate(),
+                radix, access, description));
+
+        private IEnumerable<IMember<TDataType>> CreateMembers(ICollection<TDataType> dataTypes,
+            Radix? radix = null, ExternalAccess? access = null, string? description = null) =>
+            Dimensions.Indices.Zip(dataTypes, (i, t) =>
+                new Member<TDataType>(i, t is not null ? t : (TDataType)dataTypes.First().Instantiate(),
+                    radix, access, description));
+
+        private static void ValidateDimensions(Dimensions dimensions)
+        {
+            if (dimensions is null)
+                throw new ArgumentNullException(nameof(dimensions));
+
+            if (dimensions.AreEmpty)
+                throw new ArgumentException("The provided dimensions can not be empty.");
         }
     }
 }
