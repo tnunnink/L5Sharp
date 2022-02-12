@@ -17,18 +17,19 @@ namespace L5Sharp
     public interface IDataType : ILogixComponent, IInstantiable<IDataType>
     {
         /// <summary>
-        /// Gets the <c>DataTypeFamily</c> of the current <c>IDataType</c> instance.
+        /// Gets the value of the <see cref="DataTypeFamily"/> for the <see cref="IDataType"/> instance.
         /// </summary>
         /// <value>
-        /// Represents 
+        /// An enum value indicating whether the data type belongs to the string family or has no family.
         /// </value>
         DataTypeFamily Family { get; }
         
         /// <summary>
-        /// Gets the <c>DataTypeClass</c> of the current <c>IDataType</c> instance.
+        /// Gets the value of the <see cref="DataTypeClass"/> for the <see cref="IDataType"/> instance.
         /// </summary>
         /// <value>
-        /// The enumeration option for the current <c>IDataType</c>
+        /// An enum value indicating the class for which the current data type belongs.
+        /// This could be atomic, user, predefined, etc.
         /// </value>
         DataTypeClass Class { get; }
     }

@@ -29,7 +29,7 @@ namespace L5Sharp.Serialization.Tests
         public void Serialize_WhenCalled_ShouldNotBeNull()
         {
             var comments = new Comments();
-            comments.Set(new TagName("TagName.MemberName"), "this is a test comment");
+            comments.Apply(new TagName("TagName.MemberName"), "this is a test comment");
 
             var xml = _serializer.Serialize(comments);
 
@@ -41,7 +41,7 @@ namespace L5Sharp.Serialization.Tests
         public void Serialize_Bool_ShouldBeApproved()
         {
             var comments = new Comments();
-            comments.Set(new TagName("TagName.MemberName"), "this is a test comment");
+            comments.Apply(new TagName("TagName.MemberName"), "this is a test comment");
 
             var xml = _serializer.Serialize(comments);
 

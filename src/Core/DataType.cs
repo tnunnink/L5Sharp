@@ -72,37 +72,5 @@ namespace L5Sharp.Core
 
             return Registry.ContainsKey(name) ? Registry[name].Instantiate() : new Undefined(name);
         }
-
-        /// <summary>
-        /// Registers the provided data type the the global <see cref="DataType"/> registry. 
-        /// </summary>
-        /// <param name="dataType">The <see cref="IDataType"/> to register.</param>
-        /// <exception cref="ArgumentNullException">dataType is null.</exception>
-        /// <exception cref="ComponentNameCollisionException">dataType name already exists.</exception>
-        public static void Register(IDataType dataType)
-        {
-            if (dataType is null)
-                throw new ArgumentNullException(nameof(dataType));
-
-            if (Registry.ContainsKey(dataType.Name))
-                throw new ComponentNameCollisionException(dataType.Name, typeof(IDataType));
-
-            Registry.Add(dataType.Name, dataType);
-        }
-
-        /// <summary>
-        /// Attempts to register the provided data type to the global <see cref="DataType"/> registry. .
-        /// </summary>
-        /// <param name="dataType">The <see cref="IDataType"/> instance to register.</param>
-        /// <returns>true if the provided dataType is not null and not already contained in the current registry;
-        /// otherwise false.</returns>
-        public static bool TryRegister(IDataType? dataType)
-        {
-            if (dataType is null || Registry.ContainsKey(dataType.Name))
-                return false;
-
-            Registry.Add(dataType.Name, dataType);
-            return true;
-        }
     }
 }

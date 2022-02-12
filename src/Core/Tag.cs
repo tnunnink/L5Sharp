@@ -12,15 +12,16 @@ namespace L5Sharp.Core
         internal Tag(string name, TDataType dataType, Radix? radix = null, ExternalAccess? externalAccess = null,
             string? description = null, TagUsage? usage = null, bool constant = false, Comments? comments = null)
         {
+            var root = (ITag<IDataType>)(ITag<TDataType>)this;
             var member = new Member<TDataType>(name, dataType, radix, externalAccess, description);
-            _tagMember = new TagMember<TDataType>(member, Root, Parent);
-            
+            _tagMember = new TagMember<TDataType>(member, root, null);
+
             Usage = usage != null ? usage : TagUsage.Null;
             Constant = constant;
-            
+
             Comments = new Comments(comments);
             if (!string.IsNullOrEmpty(description))
-                Comments.Set(TagName, description);
+                Comments.Apply(TagName, description);
         }
 
         /// <inheritdoc />
@@ -70,26 +71,9 @@ namespace L5Sharp.Core
 
         /// <inheritdoc />
         public bool Constant { get; }
-
-        /// <summary>
-        /// Gets the collection of comments for the current <see cref="ITag{TDataType}"/>.
-        /// </summary>
-        internal Comments Comments { get; }
-
+        
         /// <inheritdoc />
-        public void Comment(string comment) => _tagMember.Comment(comment);
-
-        /// <inheritdoc />
-        public bool Contains(TagName tagName) => _tagMember.Contains(tagName);
-
-        /// <inheritdoc />
-        public void SetValue(IAtomicType value) => _tagMember.SetValue(value);
-
-        /// <inheritdoc />
-        public void SetData(IComplexType dataType) => _tagMember.SetData(dataType);
-
-        /// <inheritdoc />
-        public bool TrySetValue(IAtomicType? value) => _tagMember.TrySetValue(value);
+        public Comments Comments { get; }
 
         /// <inheritdoc />
         public ITagMember<IDataType> this[int x] => _tagMember[x];
@@ -104,6 +88,12 @@ namespace L5Sharp.Core
         public ITagMember<IDataType> this[TagName tagName] => _tagMember[tagName];
 
         /// <inheritdoc />
+        public void Comment(string comment) => _tagMember.Comment(comment);
+
+        /// <inheritdoc />
+        public bool Contains(TagName tagName) => _tagMember.Contains(tagName);
+
+        /// <inheritdoc />
         public ITagMember<TType> GetMember<TType>(Func<TDataType, IMember<TType>> selector)
             where TType : IDataType => _tagMember.GetMember(selector);
 
@@ -111,10 +101,19 @@ namespace L5Sharp.Core
         public IEnumerable<ITagMember<IDataType>> GetMembers() => _tagMember.GetMembers();
 
         /// <inheritdoc />
+        public IEnumerable<TagName> GetTagNames() => _tagMember.GetTagNames();
+
+        /// <inheritdoc />
         public bool TryGetMember(TagName tagName, out ITagMember<IDataType>? tagMember) =>
             _tagMember.TryGetMember(tagName, out tagMember);
 
         /// <inheritdoc />
-        public IEnumerable<TagName> GetTagNames() => _tagMember.GetTagNames();
+        public bool TrySetValue(IAtomicType? value) => _tagMember.TrySetValue(value);
+
+        /// <inheritdoc />
+        public void SetData(IComplexType dataType) => _tagMember.SetData(dataType);
+
+        /// <inheritdoc />
+        public void SetValue(IAtomicType value) => _tagMember.SetValue(value);
     }
 }

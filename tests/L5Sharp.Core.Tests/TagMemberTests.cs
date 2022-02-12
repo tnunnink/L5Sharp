@@ -26,7 +26,6 @@ namespace L5Sharp.Core.Tests
             member.Radix.Should().Be(Radix.Decimal);
             member.ExternalAccess.Should().Be(ExternalAccess.None);
             //member.Parent.Should().BeSameAs(tag);
-            member.Root.Should().BeSameAs(tag);
             member.Value.Should().Be(false);
         }
 
@@ -86,8 +85,6 @@ namespace L5Sharp.Core.Tests
             member.Dimensions.Should().Be(Dimensions.Empty);
             member.Radix.Should().Be(Radix.Decimal);
             member.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);
-            member.Parent.Should().BeSameAs(timer);
-            member.Root.Should().BeSameAs(tag);
             member.Value.Should().Be(0);
         }
         

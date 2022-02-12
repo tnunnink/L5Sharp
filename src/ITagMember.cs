@@ -5,7 +5,7 @@ using L5Sharp.Core;
 namespace L5Sharp
 {
     /// <summary>
-    /// Represents a member of a <see cref="ITag{TDataType}"/> type that has a complex structure.
+    /// Represents a member of a <see cref="ITag{TDataType}"/> component that has a complex structure or type.
     /// </summary>
     /// <typeparam name="TDataType">The <see cref="IDataType"/> of the member.</typeparam>
     /// <remarks>

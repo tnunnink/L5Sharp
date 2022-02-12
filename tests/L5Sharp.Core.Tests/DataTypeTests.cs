@@ -72,40 +72,5 @@ namespace L5Sharp.Core.Tests
 
             dataType.Should().BeEquivalentTo(new Undefined("SomeType"));
         }
-
-        [Test]
-        public void Register_ValidInstance_ShouldBeIsRegistered()
-        {
-            var type = new UserDefined("Test");
-
-            DataType.Register(type);
-
-            DataType.Exists("Test").Should().BeTrue();
-        }
-
-        [Test]
-        public void Register_ValidInstance_ShouldBeCreatable()
-        {
-            var type = new UserDefined("Test");
-
-            DataType.Register(type);
-
-            var instance = DataType.Create("Test");
-            instance.Should().NotBeNull();
-        }
-
-        [Test]
-        public void Register_Null_ShouldThrowArgumentNullException()
-        {
-            FluentActions.Invoking(() => DataType.Register(null!)).Should().Throw<ArgumentNullException>();
-        }
-
-        [Test]
-        public void Register_ExistingName_ShouldThrowComponentNameCollisionException()
-        {
-            var type = new UserDefined("BOOL");
-
-            FluentActions.Invoking(() => DataType.Register(type)).Should().Throw<ComponentNameCollisionException>();
-        }
     }
 }

@@ -5,7 +5,8 @@ using L5Sharp.Enums;
 namespace L5Sharp
 {
     /// <summary>
-    /// Represents a generic Logix member component that acts as a named instance of a specified <see cref="IDataType"/>.
+    /// Represents a generic Logix member component that is a named instance of a specified <see cref="IDataType"/>
+    /// that is a child of a given <see cref="IComplexType"/> or <see cref="ITag{TDataType}"/>.
     /// </summary>
     /// <remarks>
     /// <para>
@@ -37,6 +38,9 @@ namespace L5Sharp
         /// <summary>
         /// Gets the <see cref="Core.Dimensions"/> value of the current member.
         /// </summary>
+        /// <remarks>
+        /// Member dimensions can only be single dimensional. Any attempt to may a multidimensional member should fail.
+        /// </remarks>
         Dimensions Dimensions { get; }
 
         /// <summary>

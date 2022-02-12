@@ -12,10 +12,8 @@ namespace L5Sharp
     public interface IComplexType : IDataType
     {
         /// <summary>
-        /// Gets the collection of <c>IMember</c> objects for the current <c>IComplexType</c>.
+        /// Gets the collection of <see cref="IMember{TDataType}"/> objects for the complex data type.
         /// </summary>
-        /// <remarks>
-        /// </remarks>
         IEnumerable<IMember<IDataType>> Members { get; }
     }
 }

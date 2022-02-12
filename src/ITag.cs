@@ -27,6 +27,6 @@ namespace L5Sharp
         /// <summary>
         /// Gets the collection of member comments for the current <c>Tag</c>.
         /// </summary>
-        //Comments Comments {get;}
+        Comments Comments {get;}
     }
 }

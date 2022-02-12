@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using L5Sharp.Extensions;
 
 namespace L5Sharp.Core
 {
     /// <summary>
     /// A collection tag name and comment value pairs for a certain tag.
     /// </summary>
-    internal class Comments : IEnumerable<KeyValuePair<TagName, string>>
+    public class Comments : IEnumerable<KeyValuePair<TagName, string>>
     {
-        private readonly Dictionary<TagName, string> _comments = new();
+        private readonly Dictionary<TagName, string> _comments;
 
         /// <summary>
         /// Creates a new <see cref="Comments"/> collection with the provided comments.
@@ -17,67 +18,80 @@ namespace L5Sharp.Core
         /// <param name="comments">An optional collection of comments to initialize the collection with.</param>
         public Comments(IEnumerable<KeyValuePair<TagName, string>>? comments = null)
         {
-            if (comments is null) 
+            if (comments is null)
+            {
+                _comments = new Dictionary<TagName, string>();
                 return;
+            }
 
             _comments = new Dictionary<TagName, string>(comments);
         }
 
         /// <summary>
-        /// Determines if the current comment collection contains a comments for the specified tag name.
-        /// </summary>
-        /// <param name="tagName">The value of the operand to search.</param>
-        /// <returns>
-        /// true if the operand is contained in the comments collection.
-        /// false if operand is null, empty, or is not contained in the comments collection.
-        /// </returns>
-        public bool Contains(TagName tagName) => !string.IsNullOrEmpty(tagName) && _comments.ContainsKey(tagName);
-
-        /// <summary>
-        /// Gets the value of the comment for the specified tag name.
-        /// </summary>
-        /// <param name="tagName">The value of the tag name to find a comments for.</param>
-        /// <returns>The string value of the comment if the operand is found; otherwise, and empty string.</returns>
-        /// <exception cref="ArgumentException">When tagName is null.</exception>
-        public string Get(TagName tagName)
-        {
-            if (string.IsNullOrEmpty(tagName))
-                throw new ArgumentException("TagName can not be null or empty.");
-
-            return _comments[tagName];
-        }
-
-        /// <summary>
-        /// Adds, updates, or removes a comment from the collection depending on the provided comment value.
+        /// Applies the provided comment to the specified tag name.
         /// </summary>
         /// <remarks>
-        /// If the provided comment value is non-null or empty and does not currently exist on the collection,
-        /// it will be added. If the provided comment exists and is different, it will be updated. If the provided
-        /// comment exists and is a empty or null value, the comment will be removed from the collection.
+        /// If the provided comment value is non-null or empty it will be added or updated depending on its existence in
+        /// the current collection. If the provided comment is an empty or null string,
+        /// the comment will be removed (or reset) from the collection.
         /// </remarks>
         /// <param name="tagName">The <see cref="TagName"/> for which to set the comment.</param>
         /// <param name="comment">The string comment value.</param>
-        /// <exception cref="ArgumentNullException">When comment is null.</exception>
-        public void Set(TagName tagName, string comment)
+        /// <exception cref="ArgumentNullException"><c>tagName</c> is null.</exception>
+        public void Apply(TagName tagName, string? comment)
         {
-            if (comment == null)
-                throw new ArgumentNullException(nameof(comment));
-
+            if (tagName is null)
+                throw new ArgumentNullException(nameof(tagName));
+            
             if (string.IsNullOrEmpty(comment))
             {
-                if (_comments.ContainsKey(tagName))
-                    _comments.Remove(comment);
+                _comments.Remove(tagName);
                 return;
             }
 
-            if (_comments.ContainsKey(tagName))
-            {
-                _comments[tagName] = comment;
-                return;
-            }
-            
-            _comments.Add(tagName, comment);
+            _comments[tagName] = comment;
         }
+
+        /// <summary>
+        /// Determines whether <see cref="Comments"/> contains the specified tag name.
+        /// </summary>
+        /// <param name="comment">The comment to locate in the collection.</param>
+        /// <returns>
+        /// true if <see cref="Comments"/> contains the specified comment.
+        /// false if comment is null, empty, or is not contained in <see cref="Comments"/>.
+        /// </returns>
+        public bool ContainsComment(string comment) => !string.IsNullOrEmpty(comment) && _comments.ContainsValue(comment);
+
+        /// <summary>
+        /// Determines whether <see cref="Comments"/> contains the specified tag name.
+        /// </summary>
+        /// <param name="tagName">The tag name to locate in the collection.</param>
+        /// <returns>
+        /// true if <see cref="Comments"/> contains the specified tag name.
+        /// false if tagName is null, empty, or is not contained in <see cref="Comments"/>.
+        /// </returns>
+        public bool ContainsTag(TagName? tagName) => tagName is not null && _comments.ContainsKey(tagName);
+
+        /// <summary>
+        /// Gets the comment value for the specified tag name.
+        /// </summary>
+        /// <param name="tagName">The tag name for which to find a comment.</param>
+        /// <returns>The comment value of the specified tag name if found; otherwise, an empty string.</returns>
+        /// <exception cref="ArgumentNullException">tagName is null.</exception>
+        public string Get(TagName? tagName)
+        {
+            if (tagName is null)
+                throw new ArgumentNullException(nameof(tagName));
+
+            return _comments.TryGetValue(tagName, out var comment) ? comment : string.Empty;
+        }
+
+        /// <summary>
+        /// Removes the provided tag name key from the comments collection if it is found.
+        /// </summary>
+        /// <param name="tagName"></param>
+        /// <exception cref="ArgumentNullException"></exception>
+        public bool Reset(TagName tagName) => _comments.Remove(tagName);
 
         /// <inheritdoc />
         public IEnumerator<KeyValuePair<TagName, string>> GetEnumerator() => _comments.GetEnumerator();
