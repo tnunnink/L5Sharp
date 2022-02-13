@@ -110,6 +110,12 @@ namespace L5Sharp.Core.Tests
         }
 
         [Test]
+        public void New_CollectionOverload_ShouldHaveExpectedElements()
+        {
+            
+        }
+
+        [Test]
         public void IndexGetter_OneDimensionInvalidIndex_ShouldThrowArgumentOutOfRangeException()
         {
             var array = new ArrayType<Bool>(5);

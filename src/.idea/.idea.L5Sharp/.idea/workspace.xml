@@ -7,14 +7,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="Tag, data type, and dimensions updates and testing">
+    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Extensions/DataTypeExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Extensions/DataTypeExtensions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/PortTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/PortTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/TagComplexTypeTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/TagComplexTypeTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/TagMemberTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/TagMemberTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Internal.Tests/Common/LogixNamesTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Internal.Tests/Common/LogixNamesTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Internal.Tests/Extensions/ElementExtensionsTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Internal.Tests/Extensions/ElementExtensionsTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/ArrayTypeTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/ArrayTypeTests.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -263,14 +258,8 @@
       <workItem from="1644330192316" duration="73014000" />
       <workItem from="1644628993936" duration="11933000" />
       <workItem from="1644678888374" duration="5056000" />
-      <workItem from="1644701958804" duration="1514000" />
-    </task>
-    <task id="LOCAL-00088" summary="radix development">
-      <created>1638968162412</created>
-      <option name="number" value="00088" />
-      <option name="presentableId" value="LOCAL-00088" />
-      <option name="project" value="LOCAL" />
-      <updated>1638968162412</updated>
+      <workItem from="1644701958804" duration="1643000" />
+      <workItem from="1644762901502" duration="630000" />
     </task>
     <task id="LOCAL-00089" summary="Radix/Types/Members">
       <created>1639249226365</created>
@@ -608,48 +597,74 @@
       <option name="project" value="LOCAL" />
       <updated>1644701994607</updated>
     </task>
-    <option name="localTasksCounter" value="137" />
+    <task id="LOCAL-00137" summary="fixing broken tests">
+      <created>1644714754092</created>
+      <option name="number" value="00137" />
+      <option name="presentableId" value="LOCAL-00137" />
+      <option name="project" value="LOCAL" />
+      <updated>1644714754092</updated>
+    </task>
+    <option name="localTasksCounter" value="138" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="UnitTestsCoverage.Settings">
-    <option name="coveragePercentColumnWidth" value="74" />
+    <option name="coveragePercentColumnWidth" value="73" />
     <option name="sortOrder" value="DESCENDING" />
     <option name="sortedColumn" value="1" />
-    <option name="symbolColumnWidth" value="261" />
+    <option name="symbolColumnWidth" value="256" />
     <coverage-tree-state>
       <expand>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 93% 973/13772" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 95% 681/13772" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 93% 973/13772" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 85% 695/4669" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 95% 681/13772" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 87% 610/4669" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 93% 973/13772" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 85% 695/4669" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="(1.0.0.0, .NETStandard,Version=v2.1) 85% 695/4669" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 95% 681/13772" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 87% 610/4669" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="(1.0.0.0, .NETStandard,Version=v2.1) 87% 610/4669" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 93% 973/13772" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 85% 695/4669" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="(1.0.0.0, .NETStandard,Version=v2.1) 85% 695/4669" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 85% 695/4669" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 95% 681/13772" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 87% 610/4669" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="(1.0.0.0, .NETStandard,Version=v2.1) 87% 610/4669" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 87% 610/4669" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 93% 973/13772" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 85% 695/4669" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="(1.0.0.0, .NETStandard,Version=v2.1) 85% 695/4669" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 85% 695/4669" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="Exceptions 53% 17/36" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 95% 681/13772" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 87% 610/4669" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="(1.0.0.0, .NETStandard,Version=v2.1) 87% 610/4669" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 87% 610/4669" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Core 91% 133/1490" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+        </path>
+        <path>
+          <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
+          <item name="Total 95% 681/13772" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 87% 610/4669" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="(1.0.0.0, .NETStandard,Version=v2.1) 87% 610/4669" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 87% 610/4669" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Core 91% 133/1490" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="ArrayType&lt;TDataType&gt; 96% 2/52" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+        </path>
+        <path>
+          <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
+          <item name="Total 95% 681/13772" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 87% 610/4669" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="(1.0.0.0, .NETStandard,Version=v2.1) 87% 610/4669" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 87% 610/4669" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Core 91% 133/1490" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="ArrayType&lt;TDataType&gt; 96% 2/52" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="ArrayType(Dimensions,ICollection&lt;TDataType&gt;,Radix,ExternalAccess,string) 82% 2/11" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
       </expand>
       <select />
@@ -675,7 +690,6 @@
       <path value="$PROJECT_DIR$/../.." />
     </ignored-roots>
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="Updating to string enum values and adding comment documentation" />
     <MESSAGE value="serialization updates and testing. getting data structure serializers working." />
     <MESSAGE value="Got rid of Logix class" />
     <MESSAGE value="adjusted serialization organization" />
@@ -700,7 +714,8 @@
     <MESSAGE value="Radix testing" />
     <MESSAGE value="random clean up and testing" />
     <MESSAGE value="Tag, data type, and dimensions updates and testing" />
-    <option name="LAST_COMMIT_MESSAGE" value="Tag, data type, and dimensions updates and testing" />
+    <MESSAGE value="fixing broken tests" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixing broken tests" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
