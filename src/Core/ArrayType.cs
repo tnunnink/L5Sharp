@@ -50,7 +50,7 @@ namespace L5Sharp.Core
         /// <param name="description">An optional description to initialize each element of the array with.</param>
         /// <exception cref="ArgumentNullException">dimensions or dataTypes are null.</exception>
         /// <exception cref="ArgumentException">dimensions are empty.</exception>
-        public ArrayType(Dimensions dimensions, ICollection<TDataType> dataTypes,
+        public ArrayType(Dimensions dimensions, IList<TDataType> dataTypes,
             Radix? radix = null, ExternalAccess? externalAccess = null, string? description = null)
         {
             ValidateDimensions(dimensions);
@@ -98,7 +98,7 @@ namespace L5Sharp.Core
 
         /// <inheritdoc />
         public IDataType Instantiate()
-            => new ArrayType<TDataType>(Dimensions.Copy(), (TDataType)_elements.First().Value.DataType.Instantiate());
+            => new ArrayType<TDataType>(Dimensions.Copy(), (TDataType) _elements.First().Value.DataType.Instantiate());
 
         /// <inheritdoc />
         public IEnumerator<IMember<TDataType>> GetEnumerator() => _elements.Values.GetEnumerator();
@@ -141,17 +141,24 @@ namespace L5Sharp.Core
 
             return Activator.CreateInstance<TDataType>();
         }
-        
+
         private IEnumerable<IMember<TDataType>> CreateMembers(TDataType dataType,
             Radix? radix = null, ExternalAccess? access = null, string? description = null) =>
-            Dimensions.Indices.Select(i => new Member<TDataType>(i, (TDataType)dataType.Instantiate(),
+            Dimensions.Indices.Select(i => new Member<TDataType>(i, (TDataType) dataType.Instantiate(),
                 radix, access, description));
 
-        private IEnumerable<IMember<TDataType>> CreateMembers(ICollection<TDataType> dataTypes,
-            Radix? radix = null, ExternalAccess? access = null, string? description = null) =>
-            Dimensions.Indices.Zip(dataTypes, (i, t) =>
-                new Member<TDataType>(i, t is not null ? t : (TDataType)dataTypes.First().Instantiate(),
-                    radix, access, description));
+        private IEnumerable<IMember<TDataType>> CreateMembers(IList<TDataType> dataTypes,
+            Radix? radix = null, ExternalAccess? access = null, string? description = null)
+        {
+            var indices = Dimensions.Indices.ToArray();
+
+            for (var i = 0; i < indices.Length; i++)
+            {
+                var instance = i < dataTypes.Count ? dataTypes[i] : dataTypes.First().Instantiate();
+                yield return new Member<TDataType>(indices[i], (TDataType) instance, radix, access, description);
+            }
+        }
+
 
         private static void ValidateDimensions(Dimensions dimensions)
         {
