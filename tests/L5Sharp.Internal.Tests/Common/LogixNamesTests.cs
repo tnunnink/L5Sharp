@@ -49,7 +49,7 @@ namespace L5Sharp.Internal.Tests.Common
         [Test]
         public void GetComponentName_Controller_ShouldBeExpected()
         {
-            var name = LogixNames.GetContainerName<Controller>();
+            var name = LogixNames.GetComponentName<Controller>();
 
             name.Should().Be(LogixNames.Controller);
         }
@@ -57,7 +57,7 @@ namespace L5Sharp.Internal.Tests.Common
         [Test]
         public void GetComponentName_UserDefined_ShouldBeExpected()
         {
-            var name = LogixNames.GetContainerName<UserDefined>();
+            var name = LogixNames.GetComponentName<UserDefined>();
 
             name.Should().Be(LogixNames.DataType);
         }
@@ -65,7 +65,7 @@ namespace L5Sharp.Internal.Tests.Common
         [Test]
         public void GetComponentName_Member_ShouldBeExpected()
         {
-            var name = LogixNames.GetContainerName<Member<IDataType>>();
+            var name = LogixNames.GetComponentName<Member<IDataType>>();
 
             name.Should().Be(LogixNames.Member);
         }

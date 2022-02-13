@@ -101,8 +101,8 @@ namespace L5Sharp.Extensions
         /// <exception cref="ArgumentException">tagName is null or empty.</exception>
         public static IEnumerable<IMember<IDataType>> GetMembersTo(this IDataType dataType, TagName tagName)
         {
-            if (string.IsNullOrEmpty(tagName))
-                throw new ArgumentException("TagName can not be null or empty.");
+            if (tagName is null)
+                throw new ArgumentNullException(nameof(tagName));
 
             var results = new List<IMember<IDataType>>();
 

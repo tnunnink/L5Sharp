@@ -4,6 +4,7 @@ using System.Linq;
 using FluentAssertions;
 using L5Sharp.Components;
 using L5Sharp.Enums;
+using L5Sharp.Exceptions;
 using L5Sharp.Types;
 using NUnit.Framework;
 
@@ -23,7 +24,7 @@ namespace L5Sharp.Core.Tests
             tag.DataType.Should().BeOfType<Timer>();
             tag.Dimensions.Should().Be(Dimensions.Empty);
             tag.Radix.Should().Be(Radix.Null);
-            tag.ExternalAccess.Should().Be(ExternalAccess.None);
+            tag.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);
             tag.TagType.Should().Be(TagType.Base);
             tag.Usage.Should().Be(TagUsage.Null);
             tag.Constant.Should().BeFalse();
@@ -98,8 +99,8 @@ namespace L5Sharp.Core.Tests
         {
             var tag = Tag.Create<Timer>("Test");
 
-            FluentActions.Invoking(() => tag.Member("Invalid")).Should().Throw<KeyNotFoundException>()
-                .WithMessage($"The member 'Invalid' does not exist as a valid descendent of '{typeof(Timer)}'");
+            FluentActions.Invoking(() => tag.Member("Invalid")).Should().Throw<InvalidMemberPathException>()
+                .WithMessage("The tag name 'Invalid' is not a valid member path for type 'TIMER'.");
         }
 
         [Test]

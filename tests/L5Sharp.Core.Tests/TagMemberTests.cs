@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using FluentAssertions;
 using L5Sharp.Components;
 using L5Sharp.Enums;
+using L5Sharp.Exceptions;
 using L5Sharp.Types;
 using NUnit.Framework;
 
@@ -24,18 +25,18 @@ namespace L5Sharp.Core.Tests
             member.DataType.Should().BeOfType<Bool>();
             member.Dimensions.Should().Be(Dimensions.Empty);
             member.Radix.Should().Be(Radix.Decimal);
-            member.ExternalAccess.Should().Be(ExternalAccess.None);
-            //member.Parent.Should().BeSameAs(tag);
+            member.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);
+            member.Root.Should().BeSameAs(tag);
             member.Value.Should().Be(false);
         }
 
         [Test]
-        public void NameIndexer_NonExisting_ShouldThrowKeyNotFoundException()
+        public void NameIndexer_NonExisting_ShouldThrowInvalidMemberPathException()
         {
             var tag = Tag.Create<MyNestedType>("Test");
             var timer = tag.Member(m => m.Tmr);
 
-            FluentActions.Invoking(() => timer.Member("Invalid")).Should().Throw<KeyNotFoundException>();
+            FluentActions.Invoking(() => timer.Member("Invalid")).Should().Throw<InvalidMemberPathException>();
         }
         
         [Test]

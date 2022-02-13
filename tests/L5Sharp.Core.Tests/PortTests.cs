@@ -47,7 +47,7 @@ namespace L5Sharp.Core.Tests
         }
         
         [Test]
-        public void New_FirstPort_PortShouldHaveExpectedProperties()
+        public void Primary_WhenCalled_PortShouldHaveExpectedProperties()
         {
             var module = new Module("Test", "1756-EN2T");
             
@@ -55,9 +55,9 @@ namespace L5Sharp.Core.Tests
 
             port.Id.Should().Be(1);
             port.Type.Should().Be("ICP");
-            port.Upstream.Should().BeFalse();
+            port.Upstream.Should().BeTrue();
             port.Address.Should().Be("0");
-            port.Bus.Should().NotBeNull();
+            port.Bus.Should().BeNull();
             port.Module.Should().BeSameAs(module);
         }
 
@@ -80,7 +80,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void NewModule_ValidModuleForChassisTypePort_ShouldNotBeNull()
         {
-            var parent = new Module("Test", "1756-EN2T");
+            var parent = new Module("Test", "1756-EN2T", IPAddress.Any);
 
             var port = parent.Ports.Primary();
 
@@ -92,7 +92,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void NewModule_ValidModuleForChassisTypePort_ModuleShouldHaveExpectedProperties()
         {
-            var parent = new Module("Test", "1756-EN2T");
+            var parent = new Module("Test", "1756-EN2T", IPAddress.Any);
 
             var port = parent.Ports.Primary();
 
@@ -118,7 +118,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void NewModule_ValidModuleForChassisTypePort_ParentLocalBusShouldContainChild()
         {
-            var parent = new Module("Test", "1756-EN2T");
+            var parent = new Module("Test", "1756-EN2T", IPAddress.Any);
 
             var port = parent.Ports.Primary();
 

@@ -37,7 +37,7 @@ namespace L5Sharp.Internal.Tests.Extensions
 
             var type = element.GetDataTypeName();
 
-            type.Should().BeOfType<Undefined>();
+            type.Should().Be("Invalid");
         }
 
         [Test]
@@ -47,7 +47,7 @@ namespace L5Sharp.Internal.Tests.Extensions
 
             var type = element.GetDataTypeName();
 
-            type.Should().BeOfType<Bool>();
+            type.Should().Be("BOOL");
         }
 
         [Test]
@@ -98,7 +98,7 @@ namespace L5Sharp.Internal.Tests.Extensions
             
             element.AddAttribute(member, m => m.Description);
 
-            element.Attributes().Should().HaveCount(0);
+            element.Attributes().Should().HaveCount(1);
             element.Elements().Should().HaveCount(0);
         }
 
