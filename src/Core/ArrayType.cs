@@ -19,7 +19,7 @@ namespace L5Sharp.Core
         /// <param name="dimensions">The <see cref="Core.Dimensions"/> that define the array.</param>
         /// <param name="dataType">
         /// An optional <see cref="IDataType"/> instance used to initialize the collection.
-        /// If the specified <see cref="TDataType"/> is not abstract and has a default parameterless constructor,
+        /// If the specified type is not abstract and has a default parameterless constructor,
         /// <see cref="IArrayType{TDataType}"/> can construct an instance internally, which means you don't need
         /// to provide it.
         /// </param>
@@ -123,9 +123,9 @@ namespace L5Sharp.Core
         /// <summary>
         /// Creates an instance of the specified data type.
         /// </summary>
-        /// <returns>A new <see cref="TDataType"/> instance.</returns>
+        /// <returns>A new data type instance.</returns>
         /// <exception cref="ArgumentException">
-        /// <see cref="TDataType"/> is abstract or does not have default parameterless constructor.
+        /// The specified type is abstract or does not have default parameterless constructor.
         /// </exception>
         private static TDataType CreateType()
         {
@@ -141,7 +141,7 @@ namespace L5Sharp.Core
 
             return Activator.CreateInstance<TDataType>();
         }
-        
+
         private IEnumerable<IMember<TDataType>> CreateMembers(TDataType dataType,
             Radix? radix = null, ExternalAccess? access = null, string? description = null) =>
             Dimensions.Indices.Select(i => new Member<TDataType>(i, (TDataType)dataType.Instantiate(),

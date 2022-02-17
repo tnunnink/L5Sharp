@@ -44,7 +44,7 @@ namespace L5Sharp.Serialization
                     $"Element name '{element.Name}' invalid. Expecting '{ElementName}'.");
 
             var name = element.GetComponentName();
-            var processorType = element.GetAttribute<IController, ProcessorType>(c => c.ProcessorType);
+            var processorType = element.GetAttribute<IController, string>(c => c.ProcessorType);
             var description = element.GetAttribute<IController, string>(c => c.Description);
 
             var major = element.GetAttribute<IController, ushort>(c => c.Revision.Major);

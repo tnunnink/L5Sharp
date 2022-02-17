@@ -46,6 +46,9 @@ namespace L5Sharp.Enums
         /// </summary>
         public static readonly ConnectionType SafetyInput = new(nameof(SafetyInput), nameof(SafetyInput));
         
+        /// <summary>
+        /// Represents an SafetyOutput <see cref="ConnectionType"/> value.
+        /// </summary>
         public static readonly ConnectionType SafetyOutput = new(nameof(SafetyOutput), nameof(SafetyOutput));
     }
 }

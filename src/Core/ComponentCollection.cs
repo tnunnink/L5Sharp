@@ -94,7 +94,7 @@ namespace L5Sharp.Core
         }
 
         /// <inheritdoc />
-        public void Upsert(TComponent component)
+        public void Update(TComponent component)
         {
             if (component is null)
                 throw new ArgumentNullException(nameof(component));
@@ -109,13 +109,13 @@ namespace L5Sharp.Core
         }
 
         /// <inheritdoc />
-        public void Upsert(IEnumerable<TComponent> components)
+        public void UpdateMany(IEnumerable<TComponent> components)
         {
             if (components is null)
                 throw new ArgumentNullException(nameof(components));
 
             foreach (var component in components)
-                Upsert(component);
+                Update(component);
         }
 
         /// <inheritdoc />

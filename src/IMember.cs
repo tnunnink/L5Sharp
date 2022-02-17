@@ -1,6 +1,6 @@
-﻿using L5Sharp.Components;
-using L5Sharp.Core;
+﻿using L5Sharp.Core;
 using L5Sharp.Enums;
+using L5Sharp.Factories;
 
 namespace L5Sharp
 {
@@ -61,8 +61,7 @@ namespace L5Sharp
         /// Indicates whether the current member instance is a value type member.
         /// </summary>
         /// <returns>
-        /// true if the current member <see cref="TDataType"/> is an <see cref="IAtomicType"/>; otherwise, false.
-        /// otherwise, false.
+        /// true if the member data type is an <see cref="IAtomicType"/>; otherwise, false.
         /// </returns>
         bool IsValueMember { get; }
 
@@ -70,8 +69,7 @@ namespace L5Sharp
         /// Indicates whether the current member instance is a structure or complex type member.
         /// </summary>
         /// <returns>
-        /// true if the current member <see cref="TDataType"/> is an <see cref="IComplexType"/>; otherwise, false.
-        /// otherwise, false.
+        /// true if the member data type is an <see cref="IComplexType"/>; otherwise, false.
         /// </returns>
         bool IsStructureMember { get; }
 
@@ -79,7 +77,7 @@ namespace L5Sharp
         /// Indicates whether the current member instance is an array type member.
         /// </summary>
         /// <returns>
-        /// true if the current member <see cref="TDataType"/> is an <see cref="IArrayType{TDataType}"/>; otherwise, false.
+        /// true if the member data type is an <see cref="IArrayType{TDataType}"/>; otherwise, false.
         /// </returns>
         bool IsArrayMember { get; }
     }

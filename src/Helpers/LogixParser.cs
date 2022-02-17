@@ -20,7 +20,6 @@ namespace L5Sharp.Helpers
             { typeof(DataTypeFamily), s => DataTypeFamily.TryFromValue(s, out var value) ? value : default },
             { typeof(ExternalAccess), s => ExternalAccess.TryFromName(s, out var value) ? value : default },
             { typeof(KeyingState), s => KeyingState.TryFromValue(s, out var value) ? value : default },
-            { typeof(ProcessorType), s => ProcessorType.TryFromValue(s, out var value) ? value : default },
             { typeof(ProductionTrigger), s => ProductionTrigger.TryFromValue(s, out var value) ? value : default },
             { typeof(ProgramType), s => ProgramType.TryFromValue(s, out var value) ? value : default },
             { typeof(Radix), s => Radix.TryFromValue(s, out var value) ? value : default },

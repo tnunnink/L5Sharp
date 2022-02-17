@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
 using L5Sharp.Abstractions;
-using L5Sharp.Components;
 using L5Sharp.Core;
 using L5Sharp.Enums;
+using L5Sharp.Factories;
 using L5Sharp.Types;
 using NUnit.Framework;
 using String = L5Sharp.Types.String;
@@ -317,7 +317,7 @@ namespace L5Sharp.Extensions.Tests
         {
             var type = new Timer();
 
-            FluentActions.Invoking(() => type.ContainsMember(null!)).Should().Throw<ArgumentNullException>();
+            FluentActions.Invoking(() => type.HasMember(null!)).Should().Throw<ArgumentNullException>();
         }
 
         [Test]
@@ -325,7 +325,7 @@ namespace L5Sharp.Extensions.Tests
         {
             var type = new Bool();
 
-            var result = type.ContainsMember("MemberName");
+            var result = type.HasMember("MemberName");
 
             result.Should().BeFalse();
         }
@@ -335,7 +335,7 @@ namespace L5Sharp.Extensions.Tests
         {
             var type = new Timer();
 
-            var result = type.ContainsMember("PRE");
+            var result = type.HasMember("PRE");
 
             result.Should().BeTrue();
         }
@@ -345,7 +345,7 @@ namespace L5Sharp.Extensions.Tests
         {
             var type = new Timer();
 
-            var result = type.ContainsMember("PRESET");
+            var result = type.HasMember("PRESET");
 
             result.Should().BeFalse();
         }
@@ -355,7 +355,7 @@ namespace L5Sharp.Extensions.Tests
         {
             var type = new ArrayType<Bool>(5);
 
-            var result = type.ContainsMember("[3]");
+            var result = type.HasMember("[3]");
 
             result.Should().BeTrue();
         }
@@ -365,7 +365,7 @@ namespace L5Sharp.Extensions.Tests
         {
             var type = new ArrayType<Bool>(5);
 
-            var result = type.ContainsMember("[5]");
+            var result = type.HasMember("[5]");
 
 
             result.Should().BeFalse();

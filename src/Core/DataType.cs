@@ -2,15 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using L5Sharp.Enums;
-using L5Sharp.Exceptions;
 using L5Sharp.Types;
 using String = L5Sharp.Types.String;
 
 namespace L5Sharp.Core
 {
     /// <summary>
-    /// A singleton registry containing all <see cref="IDataType"/> that are atomic, predefined, or registered when
-    /// loading a L5X file using a <see cref="LogixContext"/>.
+    /// A static class containing known <see cref="IDataType"/> objects that can be instantiated upon request.
     /// </summary>
     public static class DataType
     {
@@ -61,10 +59,11 @@ namespace L5Sharp.Core
         /// </summary>
         /// <param name="name">The name of the data type to create.</param>
         /// <returns>
-        /// if the provided name is a valid registered data type, a new new instance of the specified type;
-        /// otherwise a <see cref="Types.Undefined"/> type of the provided name.
+        /// If the provided name is a type that is part of the predefined registry,
+        /// a new new <see cref="IDataType"/> instance representing the specified name;
+        /// otherwise a <see cref="Types.Undefined"/> instance wrapping the provided name.
         /// </returns>
-        /// <exception cref="ArgumentNullException">name is null or empty.</exception>
+        /// <exception cref="ArgumentException">name is null or empty.</exception>
         public static IDataType Create(string name)
         {
             if (string.IsNullOrEmpty(name))

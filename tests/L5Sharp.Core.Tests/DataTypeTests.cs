@@ -1,6 +1,5 @@
 ﻿using System;
 using FluentAssertions;
-using L5Sharp.Exceptions;
 using L5Sharp.Types;
 using NUnit.Framework;
 
@@ -34,7 +33,7 @@ namespace L5Sharp.Core.Tests
         }
 
         [Test]
-        public void IsRegistered_RegisteredName_ShouldBeTrue()
+        public void Exists_ExistingName_ShouldBeTrue()
         {
             var exists = DataType.Exists("bool");
 
@@ -42,11 +41,23 @@ namespace L5Sharp.Core.Tests
         }
 
         [Test]
-        public void IsRegistered_NonRegisteredName_ShouldBeFalse()
+        public void Exists_NonExistingName_ShouldBeFalse()
         {
             var exists = DataType.Exists("SomeType");
 
             exists.Should().BeFalse();
+        }
+
+        [Test]
+        public void Create_Null_ShouldThrowArgumentException()
+        {
+            FluentActions.Invoking(() => DataType.Create(null!)).Should().Throw<ArgumentException>();
+        }
+        
+        [Test]
+        public void Create_Empty_ShouldThrowArgumentException()
+        {
+            FluentActions.Invoking(() => DataType.Create(string.Empty)).Should().Throw<ArgumentException>();
         }
 
         [Test]
@@ -58,7 +69,7 @@ namespace L5Sharp.Core.Tests
         }
 
         [Test]
-        public void Create_ExistingType_ShouldNotBeExpected()
+        public void Create_ExistingType_ShouldBeExpected()
         {
             var dataType = DataType.Create("Bool");
 

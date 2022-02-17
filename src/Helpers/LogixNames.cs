@@ -99,7 +99,7 @@ namespace L5Sharp.Helpers
         /// </summary>
         /// <typeparam name="TComponent">The component type to get an XName for.</typeparam>
         /// <returns>A <see cref="string"/> that represents the L5X element name for the type of component specified.</returns>
-        /// <exception cref="InvalidOperationException">When the specified <see cref="TComponent"/> has no mapping defined.</exception>
+        /// <exception cref="InvalidOperationException">When the specified component has no mapping defined.</exception>
         public static string GetComponentName<TComponent>()
         {
             var key = FindKey<TComponent>();
@@ -116,7 +116,7 @@ namespace L5Sharp.Helpers
         /// </summary>
         /// <typeparam name="TComponent">The component type to get an XName for.</typeparam>
         /// <returns>A <see cref="string"/> that represents the L5X container element name for the type of component specified.</returns>
-        /// <exception cref="InvalidOperationException">When the specified <see cref="TComponent"/> has no mapping defined.</exception>
+        /// <exception cref="InvalidOperationException">When the specified component has no mapping defined.</exception>
         public static string GetContainerName<TComponent>()
         {
             var key = FindKey<TComponent>();

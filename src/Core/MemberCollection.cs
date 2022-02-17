@@ -64,7 +64,16 @@ namespace L5Sharp.Core
         /// <inheritdoc />
         public void Insert(int index, IMember<IDataType> member)
         {
-            throw new NotImplementedException();
+            if (member is null)
+                throw new ArgumentNullException(nameof(member));
+
+            if (_members.Any(m => m.Name == member.Name))
+                throw new ComponentNameCollisionException(member.Name, member.GetType());
+
+            if (member.DataType.Equals(_parent))
+                throw new CircularReferenceException(_parent);
+
+            _members.Insert(index, member);
         }
 
         /// <inheritdoc />
@@ -79,7 +88,7 @@ namespace L5Sharp.Core
         }
 
         /// <inheritdoc />
-        public void Upsert(IMember<IDataType> member)
+        public void Update(IMember<IDataType> member)
         {
             if (member is null)
                 throw new ArgumentNullException(nameof(member));
@@ -99,13 +108,13 @@ namespace L5Sharp.Core
         }
 
         /// <inheritdoc />
-        public void Upsert(IEnumerable<IMember<IDataType>> components)
+        public void UpdateMany(IEnumerable<IMember<IDataType>> components)
         {
             if (components is null)
                 throw new ArgumentNullException(nameof(components));
 
             foreach (var component in components)
-                Upsert(component);
+                Update(component);
         }
 
         /// <inheritdoc />

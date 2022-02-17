@@ -1,9 +1,10 @@
 ﻿using Ardalis.SmartEnum;
+using L5Sharp.Core;
 
 namespace L5Sharp.Enums
 {
     /// <summary>
-    /// An enumeration of all <see cref="KeyingState"/> values for a given Logix <see cref="IModule"/>
+    /// An enumeration of all <see cref="KeyingState"/> values for a given Logix <see cref="Module"/>
     /// </summary>
     public class KeyingState : SmartEnum<KeyingState, string>
     {

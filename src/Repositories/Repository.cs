@@ -68,6 +68,7 @@ namespace L5Sharp.Repositories
             return elements.Select(e => Context.Serializer.Deserialize<TComponent>(e));
         }
 
+        /// <inheritdoc />
         public virtual void Add(TComponent component)
         {
             if (component == null)
@@ -81,11 +82,13 @@ namespace L5Sharp.Repositories
             Context.L5X.GetContainer<TComponent>().Add(element);
         }
 
+        /// <inheritdoc />
         public virtual void Update(TComponent component)
         {
             throw new NotImplementedException();
         }
 
+        /// <inheritdoc />
         public virtual void Remove(ComponentName name)
         {
             Context.L5X.GetComponents<TComponent>().FirstOrDefault(x => x.GetComponentName() == name)?.Remove();

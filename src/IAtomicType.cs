@@ -4,12 +4,16 @@ using L5Sharp.Enums;
 namespace L5Sharp
 {
     /// <summary>
-    /// Represents a Logix <c>IDataType</c> that is a fundamental value type.
+    /// A fundamental <see cref="IDataType"/> that contains a unit of value.
     /// </summary>
     /// <remarks>
-    /// <c>IAtomicType</c> correspond to .NET CLR data types such as bool, short, int, long, float, etc.
-    /// All <c>IAtomicTypes</c> are predefined and instantiable via the global <see cref="Logix"/> helper class.
+    /// Logix atomic types are types that have value (i.e. BOOL, SINT, INT, DINT, REAL, etc.).
+    /// These type are synonymous with value types in .NET. Hence, the <see cref="IAtomicType"/> adds a non generic
+    /// member that will hold the reference to the data type value, as well as methods for setting and formatting
+    /// the value. Atomic types, though classes, should be considered value types as they simply wrap primitive .NET CLR
+    /// types. 
     /// </remarks>
+    /// <seealso cref="IAtomicType{T}"/>
     /// <footer>
     /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
     /// `Logix 5000 Controllers Import/Export`</a> for more information.

@@ -254,7 +254,7 @@ namespace L5Sharp.Core.Tests
         {
             var collection = new ComponentCollection<MyComponent>(_components);
 
-            FluentActions.Invoking(() => collection.Upsert((MyComponent)null)).Should().Throw<ArgumentNullException>();
+            FluentActions.Invoking(() => collection.Update((MyComponent)null)).Should().Throw<ArgumentNullException>();
         }
 
         [Test]
@@ -262,7 +262,7 @@ namespace L5Sharp.Core.Tests
         {
             var collection = new ComponentCollection<MyComponent>(_components);
 
-            collection.Upsert(new MyComponent("Test"));
+            collection.Update(new MyComponent("Test"));
 
             collection.Should().HaveCount(_components.Count + 1);
         }
@@ -272,7 +272,7 @@ namespace L5Sharp.Core.Tests
         {
             var collection = new ComponentCollection<MyComponent>(_components);
 
-            collection.Upsert(new MyComponent("Test1"));
+            collection.Update(new MyComponent("Test1"));
 
             collection.Should().HaveCount(_components.Count);
         }
@@ -282,7 +282,7 @@ namespace L5Sharp.Core.Tests
         {
             var collection = new ComponentCollection<MyComponent>(_components);
 
-            collection.Upsert(new MyComponent("Test3", "this is an updated description"));
+            collection.Update(new MyComponent("Test3", "this is an updated description"));
 
             var component = collection.Single(c => c.Name == "Test3");
             component.Description.Should().Be("this is an updated description");
@@ -293,7 +293,7 @@ namespace L5Sharp.Core.Tests
         {
             var collection = new ComponentCollection<MyComponent>(_components);
 
-            FluentActions.Invoking(() => collection.Upsert(((List<MyComponent>)null)!)).Should()
+            FluentActions.Invoking(() => collection.UpdateMany(((List<MyComponent>)null)!)).Should()
                 .Throw<ArgumentNullException>();
         }
 
@@ -309,7 +309,7 @@ namespace L5Sharp.Core.Tests
                 new("Test5", "This is a new test component"),
             };
 
-            collection.Upsert(components);
+            collection.UpdateMany(components);
 
             collection.Should().HaveCount(5);
         }

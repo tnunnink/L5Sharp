@@ -6,7 +6,7 @@ using L5Sharp.Enums;
 namespace L5Sharp.Core
 {
     /// <summary>
-    /// Represents an alpha-numeric string identification number of a Logix <see cref="IModule"/> component.
+    /// Represents an alpha-numeric string identification number of a Logix <see cref="Module"/> component.
     /// </summary>
     /// <remarks>
     /// For most Rockwell devices, the catalog follows a standard pattern, which contains a <see cref="Bulletin"/> prefix

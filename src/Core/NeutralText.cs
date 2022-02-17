@@ -72,15 +72,6 @@ namespace L5Sharp.Core
         /// <returns>A <c>NeutralText</c> that represents the value of the <c>string</c>.</returns>
         public static implicit operator NeutralText(string text) => new(text);
 
-        private static void ValidateText(string text)
-        {
-            if (text.Contains('[') && !text.IsBalanced('[', ']'))
-                throw new FormatException("Text input must have balanced '[]' characters.");
-
-            if (text.Contains('(') && !text.IsBalanced('(', ')'))
-                throw new FormatException("Text input must have balanced '()' characters.");
-        }
-
         /// <inheritdoc />
         public override string ToString() => _text;
 
@@ -100,19 +91,28 @@ namespace L5Sharp.Core
         public override int GetHashCode() => HashCode.Combine(_text);
 
         /// <summary>
-        /// 
+        /// Determines if the provided objects are equal.
         /// </summary>
-        /// <param name="left"></param>
-        /// <param name="right"></param>
-        /// <returns></returns>
+        /// <param name="left">An object to compare.</param>
+        /// <param name="right">An object to compare.</param>
+        /// <returns>true if the provided objects are equal; otherwise, false.</returns>
         public static bool operator ==(NeutralText? left, NeutralText? right) => Equals(left, right);
 
         /// <summary>
-        /// 
+        /// Determines if the provided objects are not equal.
         /// </summary>
-        /// <param name="left"></param>
-        /// <param name="right"></param>
-        /// <returns></returns>
+        /// <param name="left">An object to compare.</param>
+        /// <param name="right">An object to compare.</param>
+        /// <returns>true if the provided objects are not equal; otherwise, false.</returns>
         public static bool operator !=(NeutralText? left, NeutralText? right) => !Equals(left, right);
+
+        private static void ValidateText(string text)
+        {
+            if (text.Contains('[') && !text.IsBalanced('[', ']'))
+                throw new FormatException("Text input must have balanced '[]' characters.");
+
+            if (text.Contains('(') && !text.IsBalanced('(', ')'))
+                throw new FormatException("Text input must have balanced '()' characters.");
+        }
     }
 }

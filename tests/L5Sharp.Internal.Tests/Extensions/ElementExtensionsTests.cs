@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Xml.Linq;
 using FluentAssertions;
-using L5Sharp.Components;
 using L5Sharp.Enums;
 using L5Sharp.Extensions;
+using L5Sharp.Factories;
 using L5Sharp.Types;
 using NUnit.Framework;
 

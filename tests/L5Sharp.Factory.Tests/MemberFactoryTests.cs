@@ -1,11 +1,11 @@
 ﻿using System;
 using FluentAssertions;
-using L5Sharp.Components;
 using L5Sharp.Core;
+using L5Sharp.Factories;
 using L5Sharp.Types;
 using NUnit.Framework;
 
-namespace L5Sharp.Component.Tests
+namespace L5Sharp.Factory.Tests
 {
     [TestFixture]
     public class MemberComponentTests

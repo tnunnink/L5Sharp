@@ -14,7 +14,7 @@ namespace L5Sharp.Core
     /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
     /// `Logix 5000 Controllers Import/Export`</a> for more information.
     /// </footer> 
-    public class ComponentName : IEquatable<ComponentName>, IComparable<ComponentName>, IPrototype<ComponentName>
+    public class ComponentName : IEquatable<ComponentName>, IComparable<ComponentName>
     {
         private readonly string _name;
 
@@ -52,7 +52,10 @@ namespace L5Sharp.Core
         /// <returns>A <see cref="ComponentName"/> representing the value </returns>
         public static implicit operator ComponentName(string name) => new(name);
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Creates a new instance of the current <see cref="ComponentName"/> with the same value.
+        /// </summary>
+        /// <returns>A new <see cref="ComponentName"/> object with the same value.</returns>
         public ComponentName Copy() => new(string.Copy(_name));
 
         /// <inheritdoc />

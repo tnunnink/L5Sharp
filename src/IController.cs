@@ -1,6 +1,5 @@
 ﻿using System;
 using L5Sharp.Core;
-using L5Sharp.Enums;
 
 namespace L5Sharp
 {
@@ -21,7 +20,7 @@ namespace L5Sharp
         /// <summary>
         /// Gets processor type of the current controller.
         /// </summary>
-        ProcessorType ProcessorType { get; }
+        string ProcessorType { get; }
         
         /// <summary>
         /// Gets the controller revision.

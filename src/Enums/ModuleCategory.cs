@@ -1,17 +1,17 @@
 ﻿using Ardalis.SmartEnum;
+using L5Sharp.Core;
 
 namespace L5Sharp.Enums
 {
     /// <summary>
-    /// Represents an enumeration of <see cref="ModuleCategory"/> for a given <see cref="IModule"/>.
+    /// Represents an enumeration of <see cref="ModuleCategory"/> for a given <see cref="Module"/>.
     /// </summary>
     public sealed class ModuleCategory : SmartEnum<ModuleCategory>
     {
         private ModuleCategory(string name, int value) : base(name, value)
         {
         }
-        
-        
+
 
         /// <summary>
         /// Represents an Analog <see cref="ModuleCategory"/>.

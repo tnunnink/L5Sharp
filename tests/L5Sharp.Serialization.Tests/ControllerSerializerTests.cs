@@ -23,7 +23,7 @@ namespace L5Sharp.Serialization.Tests
         [Test]
         public void Serialize_WhenCalled_ShouldNotBeNull()
         {
-            var controller = new Controller("Test", ProcessorType.L74, new Revision());
+            var controller = new Controller("Test", "1756-L74", new Revision());
 
             var serialized = _serializer.Serialize(controller);
 

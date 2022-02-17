@@ -84,7 +84,7 @@ namespace L5Sharp
         /// </summary>
         /// <param name="component">The component to upsert.</param>
         /// <exception cref="ArgumentNullException">component is null.</exception>
-        void Upsert(TComponent component);
+        void Update(TComponent component);
 
         /// <summary>
         /// Updates or adds the provided component collection to the <see cref="IComponentCollection{TComponent}"/>
@@ -92,6 +92,6 @@ namespace L5Sharp
         /// </summary>
         /// <param name="components">The collection of components to upsert.</param>
         /// <exception cref="ArgumentNullException">components is null.</exception>
-        void Upsert(IEnumerable<TComponent> components);
+        void UpdateMany(IEnumerable<TComponent> components);
     }
 }

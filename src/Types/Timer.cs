@@ -1,14 +1,14 @@
 ﻿using L5Sharp.Abstractions;
-using L5Sharp.Components;
 using L5Sharp.Core;
 using L5Sharp.Enums;
+using L5Sharp.Factories;
 
 // ReSharper disable InconsistentNaming RSLogix naming
 
 namespace L5Sharp.Types
 {
     /// <summary>
-    /// 
+    /// A predefined data type that is built into Logix and used with timer instructions.
     /// </summary>
     public sealed class Timer : ComplexType
     {
@@ -34,31 +34,47 @@ namespace L5Sharp.Types
         /// <inheritdoc />
         protected override IDataType New() => new Timer();
 
+        
         /// <summary>
+        /// Gets the <see cref="PRE"/> member of the <see cref="Timer"/> data type.
+        /// </summary>
+        /// <remarks>
         /// The preset value specifies the value (1 msec units) which the accumulated value must reach
         /// before the instruction sets the .DN bit.
-        /// </summary>
+        /// </remarks>
         public IMember<Dint> PRE = Member.Create<Dint>(nameof(PRE));
 
         /// <summary>
+        /// Gets the <see cref="ACC"/> member of the <see cref="Timer"/> data type.
+        /// </summary>
+        /// <remarks>
         /// The accumulated value specifies the number of milliseconds that have elapsed since the
         /// Timer instruction was enabled.
-        /// </summary>
+        /// </remarks>
         public IMember<Dint> ACC = Member.Create<Dint>(nameof(ACC));
 
         /// <summary>
-        /// The enable bit indicates that the Timer instruction is enabled.
+        /// Gets the <see cref="EN"/> member of the <see cref="Timer"/> data type.
         /// </summary>
+        /// <remarks>
+        /// The enable bit indicates that the Timer instruction is enabled.
+        /// </remarks>
         public IMember<Bool> EN = Member.Create<Bool>(nameof(EN));
 
         /// <summary>
-        /// The timing bit indicates that a timing operation is in process
+        /// Gets the <see cref="TT"/> member of the <see cref="Timer"/> data type.
         /// </summary>
+        /// <remarks>
+        /// The timing bit indicates that a timing operation is in process
+        /// </remarks>
         public IMember<Bool> TT = Member.Create<Bool>(nameof(TT));
 
         /// <summary>
-        /// The done bit is set when .ACC ≥ .PRE.
+        /// Gets the <see cref="DN"/> member of the <see cref="Timer"/> data type.
         /// </summary>
+        /// <remarks>
+        /// The done bit is set when .ACC ≥ .PRE.
+        /// </remarks>
         public IMember<Bool> DN = Member.Create<Bool>(nameof(DN));
     }
 }

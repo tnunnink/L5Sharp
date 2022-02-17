@@ -121,16 +121,6 @@ namespace L5Sharp
         void Comment(string comment);
 
         /// <summary>
-        /// Searches the current tag member <see cref="DataType"/> for the specified tag member.
-        /// </summary>
-        /// <param name="tagName">The tag name value of the <see cref="ITagMember{TDataType}"/> to search for.</param>
-        /// <returns>
-        /// The instance of the <see cref="ITagMember{TDataType}"/> specified by the provided tag name if found;
-        /// otherwise, null.
-        /// </returns>
-        ITagMember<IDataType>? FindMember(TagName tagName);
-
-        /// <summary>
         /// Determines if the provided <see cref="TagName"/> value exists as a descendent member of the <see cref="ITagMember{TDataType}"/> instance.
         /// </summary>
         /// <param name="tagName">The <see cref="TagName"/> value to search for in the nested member hierarchy.</param>
@@ -156,7 +146,6 @@ namespace L5Sharp
         /// <see cref="IArrayType{TDataType}"/> objects. This method will work as long as the provided path is valid.
         /// </remarks>
         /// <seealso cref="Member{TMemberType}"/>
-        /// <seealso cref="FindMember"/>
         ITagMember<IDataType> Member(TagName tagName);
 
         /// <summary>
@@ -173,6 +162,7 @@ namespace L5Sharp
         /// A new <see cref="ITagMember{TDataType}"/> instance that represents the selected child member of the current
         /// tag data type.
         /// </returns>
+        /// <seealso cref="Member"/>
         ITagMember<TMemberType> Member<TMemberType>(Func<TDataType, IMember<TMemberType>> selector)
             where TMemberType : IDataType;
 

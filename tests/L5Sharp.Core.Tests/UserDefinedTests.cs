@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using AutoFixture;
 using FluentAssertions;
-using L5Sharp.Components;
 using L5Sharp.Enums;
 using L5Sharp.Exceptions;
+using L5Sharp.Factories;
 using L5Sharp.Types;
 using NUnit.Framework;
 using String = L5Sharp.Types.String;

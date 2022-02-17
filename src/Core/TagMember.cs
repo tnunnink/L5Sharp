@@ -88,27 +88,6 @@ namespace L5Sharp.Core
         public void Comment(string comment) => Root.Comments.Apply(TagName, comment);
 
         /// <inheritdoc />
-        public ITagMember<IDataType>? FindMember(TagName tagName)
-        {
-            if (tagName is null)
-                throw new ArgumentNullException(nameof(tagName));
-            
-            var path = tagName.Base.Equals(Root.Name) ? tagName.Path : tagName.ToString();
-
-            var members = _member.DataType.GetMembersTo(path).ToList();
-
-            if (!members.Any())
-                return null;
-            
-            var current = (ITagMember<IDataType>)this;
-
-            foreach (var member in members.Select(m => new TagMember<IDataType>(m, Root, current)))
-                current = member;
-
-            return current;
-        }
-
-        /// <inheritdoc />
         public bool HasMember(TagName tagName) => TagNames().Contains(tagName);
 
         /// <inheritdoc />
@@ -158,7 +137,6 @@ namespace L5Sharp.Core
                 _member.DataType is not IAtomicType atomicType) return false;
 
             atomicType.SetValue(value);
-
             return true;
         }
 
@@ -180,10 +158,7 @@ namespace L5Sharp.Core
         {
             if (dataType is null)
                 throw new ArgumentNullException(nameof(dataType));
-
-            if (DataType is not IComplexType complexType)
-                throw new InvalidOperationException();
-
+            
             if (!DataType.StructureEquals(dataType))
                 throw new ArgumentException();
 

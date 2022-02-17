@@ -2,7 +2,7 @@
 using L5Sharp.Core;
 using L5Sharp.Enums;
 
-namespace L5Sharp.Components
+namespace L5Sharp.Factories
 {
     /// <summary>
     /// Static factory class that creates instances of components that implement <see cref="ITag{TDataType}"/>. 

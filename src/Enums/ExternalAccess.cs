@@ -20,7 +20,8 @@ namespace L5Sharp.Enums
         /// </summary>
         /// <param name="first">The first <c>ExternalAccess</c> object to compare.</param>
         /// <param name="second">The second <c>ExternalAccess</c> object to compare.</param>
-        /// <returns>first if <see cref="ExternalAccess.Value"/> is less than second; otherwise; second.</returns>
+        /// <returns>If first has a value less than second, then will return first;
+        /// otherwise, second.</returns>
         /// <exception cref="ArgumentNullException">When either first or second is null.</exception>
         public static ExternalAccess MostRestrictive(ExternalAccess first, ExternalAccess second)
         {

@@ -24,7 +24,7 @@ namespace L5Sharp.Enums
         public abstract ILogixContent CreateContent();
 
         /// <summary>
-        /// Gets the <see cref="RoutineType"/> option based on the specified <see cref="TContent"/> type.
+        /// Gets the <see cref="RoutineType"/> option based on the specified content type.
         /// </summary>
         /// <typeparam name="TContent">The <see cref="ILogixContent"/> type to get a <see cref="RoutineType"/> option for.</typeparam>
         /// <returns>The <see cref="RoutineType"/> instance that represents the specified type.</returns>

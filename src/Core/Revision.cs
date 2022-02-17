@@ -63,9 +63,19 @@ namespace L5Sharp.Core
             return new Revision(major, minor);
         }
 
+        /// <summary>
+        /// Converts a <see cref="Revision"/> to a <see cref="double"/>.
+        /// </summary>
+        /// <param name="revision">The revision value to convert.</param>
+        /// <returns>A new <see cref="double"/> value representing a major and minor revision.</returns>
         public static implicit operator double(Revision revision) =>
             float.Parse($"{revision.Major}{RevisionSeparator}{revision.Minor}");
 
+        /// <summary>
+        /// Converts a <see cref="double"/> to a <see cref="Revision"/>.
+        /// </summary>
+        /// <param name="revision">The revision value to convert.</param>
+        /// <returns>A new <see cref="Revision"/> value representing a major and minor revision.</returns>
         public static implicit operator Revision(double revision) =>
             Parse(revision.ToString(CultureInfo.InvariantCulture));
 

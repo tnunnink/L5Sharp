@@ -14,7 +14,7 @@ namespace L5Sharp.Core
     /// Logix <c>Dimensions</c> can have one, two, or three dimensions.
     /// These dimensions are represented by the properties X, Y, and Z.
     /// </remarks>
-    public sealed class Dimensions : IEquatable<Dimensions>, IPrototype<Dimensions>
+    public sealed class Dimensions : IEquatable<Dimensions>
     {
         private Dimensions()
         {
@@ -175,7 +175,10 @@ namespace L5Sharp.Core
             };
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Creates a new instance of the current <see cref="Dimensions"/> with the same value.
+        /// </summary>
+        /// <returns>A new <see cref="Dimensions"/> object with the same value.</returns>
         public Dimensions Copy() =>
             Z > 0 ? new Dimensions(X, Y, Z) : Y > 0 ? new Dimensions(X, Y) : X > 0 ? new Dimensions(X) : Empty;
 

@@ -4,6 +4,9 @@ using System.Reflection;
 
 namespace L5Sharp.Extensions
 {
+    /// <summary>
+    /// A set of helper extensions for the <see cref="Assembly"/> class.
+    /// </summary>
     public static class AssemblyExtensions
     {
         /// <summary>

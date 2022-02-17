@@ -17,7 +17,7 @@ namespace L5Sharp.Enums
         public static readonly ProgramType Normal = new NormalType();
         
         /// <summary>
-        /// Represents a EquipmentPhase <see cref="ProcessorType"/> value.
+        /// Represents a EquipmentPhase <see cref="ProgramType"/> value.
         /// </summary>
         public static readonly ProgramType EquipmentPhase = new EquipmentPhaseType();
 

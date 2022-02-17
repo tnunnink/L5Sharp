@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
 using L5Sharp.Comparers;
-using L5Sharp.Components;
+using L5Sharp.Factories;
 using L5Sharp.Types;
 using NUnit.Framework;
 

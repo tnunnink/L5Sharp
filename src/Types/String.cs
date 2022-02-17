@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using L5Sharp.Abstractions;
-using L5Sharp.Components;
 using L5Sharp.Core;
 using L5Sharp.Enums;
+using L5Sharp.Factories;
 
 // ReSharper disable InconsistentNaming Logix Naming
 

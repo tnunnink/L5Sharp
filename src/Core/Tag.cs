@@ -88,9 +88,6 @@ namespace L5Sharp.Core
         public void Comment(string comment) => _tagMember.Comment(comment);
 
         /// <inheritdoc />
-        public ITagMember<IDataType>? FindMember(TagName tagName) => _tagMember.FindMember(tagName);
-
-        /// <inheritdoc />
         public bool HasMember(TagName tagName) => _tagMember.HasMember(tagName);
 
         /// <inheritdoc />

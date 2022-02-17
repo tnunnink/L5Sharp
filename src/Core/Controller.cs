@@ -1,12 +1,11 @@
 ﻿using System;
-using L5Sharp.Enums;
 
 namespace L5Sharp.Core
 {
     /// <inheritdoc />
     public sealed class Controller : IController
     {
-        internal Controller(string name, ProcessorType processorType, Revision revision, DateTime createdOn,
+        internal Controller(string name, string processorType, Revision revision, DateTime createdOn,
             DateTime modifiedOn, string? description = null)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
@@ -24,7 +23,7 @@ namespace L5Sharp.Core
         /// <param name="processorType"></param>
         /// <param name="revision"></param>
         /// <param name="description"></param>
-        public Controller(ComponentName name, ProcessorType processorType, Revision revision,
+        public Controller(ComponentName name, string processorType, Revision revision,
             string? description = null) : this(name, processorType, revision, DateTime.Now, DateTime.Now)
         {
         }
@@ -36,7 +35,7 @@ namespace L5Sharp.Core
         public string Description { get; }
 
         /// <inheritdoc />
-        public ProcessorType ProcessorType { get; }
+        public string ProcessorType { get; }
 
         /// <inheritdoc />
         public Revision Revision { get; }

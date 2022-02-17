@@ -12,56 +12,6 @@ namespace L5Sharp.Extensions
     public static class DataTypeExtensions
     {
         /// <summary>
-        /// Determines if a member with the provided <see cref="TagName"/> exists as a descendant member of the
-        /// current <see cref="IDataType"/>.
-        /// </summary>
-        /// <param name="dataType">The current <see cref="IDataType"/> instance.</param>
-        /// <param name="tagName">The <see cref="TagName"/> of the descendant member to find.</param>
-        /// <returns>true if a <see cref="IMember{TDataType}"/> with the specified name is contained in the nested
-        /// hierarchy of the current <see cref="IDataType"/>; otherwise, false.</returns>
-        /// <exception cref="ArgumentNullException">tagName is null.</exception>
-        /// <remarks>
-        /// This method will recursively traverse the nested hierarchy of data type members to find all tag names.
-        /// </remarks>
-        public static bool ContainsMember(this IDataType dataType, TagName tagName)
-        {
-            if (tagName is null)
-                throw new ArgumentNullException(nameof(tagName));
-
-            var members = dataType.GetMembers().ToList();
-
-            foreach (var memberName in tagName.Members)
-            {
-                var member = members.Find(m => m.Name == memberName);
-
-                if (member is null)
-                    return false;
-
-                members = member.DataType.GetMembers().ToList();
-            }
-
-            return true;
-        }
-
-        /// <summary>
-        /// Determines if two <see cref="IDataType"/> instances have an equal structure.
-        /// </summary>
-        /// <param name="dataType">The current <see cref="IDataType"/> instance.</param>
-        /// <param name="other">The other <see cref="IDataType"/> to compare.</param>
-        /// <returns>true if both <see cref="IDataType"/> objects have equal structure; otherwise, false.</returns>
-        /// <remarks>
-        /// An equivalent structure means both <see cref="IDataType"/> instances have equal names and all descendent members
-        /// have equal name, data type, and dimensions. Each descendent member will in turn call
-        /// <see cref="StructureEquals"/> on it's own type. This means that the entire hierarchical type structure is
-        /// compared for equality. 
-        /// </remarks>
-        public static bool StructureEquals(this IDataType dataType, IDataType other)
-        {
-            var comparer = DataTypeStructureComparer.Instance;
-            return comparer.Equals(dataType, other);
-        } 
-
-        /// <summary>
         /// Gets a <see cref="IMember{TDataType}"/> with the specified member name from the <see cref="IDataType"/>
         /// if it exists.
         /// </summary>
@@ -166,6 +116,56 @@ namespace L5Sharp.Extensions
             }
 
             return set;
+        }
+
+        /// <summary>
+        /// Determines if a member with the provided <see cref="TagName"/> exists as a descendant member of the
+        /// current <see cref="IDataType"/>.
+        /// </summary>
+        /// <param name="dataType">The current <see cref="IDataType"/> instance.</param>
+        /// <param name="tagName">The <see cref="TagName"/> of the descendant member to find.</param>
+        /// <returns>true if a <see cref="IMember{TDataType}"/> with the specified name is contained in the nested
+        /// hierarchy of the current <see cref="IDataType"/>; otherwise, false.</returns>
+        /// <exception cref="ArgumentNullException">tagName is null.</exception>
+        /// <remarks>
+        /// This method will recursively traverse the nested hierarchy of data type members to find all tag names.
+        /// </remarks>
+        public static bool HasMember(this IDataType dataType, TagName tagName)
+        {
+            if (tagName is null)
+                throw new ArgumentNullException(nameof(tagName));
+
+            var members = dataType.GetMembers().ToList();
+
+            foreach (var memberName in tagName.Members)
+            {
+                var member = members.Find(m => m.Name == memberName);
+
+                if (member is null)
+                    return false;
+
+                members = member.DataType.GetMembers().ToList();
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Determines if two <see cref="IDataType"/> instances have an equal structure.
+        /// </summary>
+        /// <param name="dataType">The current <see cref="IDataType"/> instance.</param>
+        /// <param name="other">The other <see cref="IDataType"/> to compare.</param>
+        /// <returns>true if both <see cref="IDataType"/> objects have equal structure; otherwise, false.</returns>
+        /// <remarks>
+        /// An equivalent structure means both <see cref="IDataType"/> instances have equal names and all descendent members
+        /// have equal name, data type, and dimensions. Each descendent member will in turn call
+        /// <see cref="StructureEquals"/> on it's own type. This means that the entire hierarchical type structure is
+        /// compared for equality. 
+        /// </remarks>
+        public static bool StructureEquals(this IDataType dataType, IDataType other)
+        {
+            var comparer = DataTypeStructureComparer.Instance;
+            return comparer.Equals(dataType, other);
         }
     }
 }

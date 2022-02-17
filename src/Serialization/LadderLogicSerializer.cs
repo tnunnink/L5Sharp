@@ -10,7 +10,7 @@ namespace L5Sharp.Serialization
     /// <summary>
     /// Provides serialization of a <see cref="ILadderLogic"/> as represented in the L5X format. 
     /// </summary>
-    public class LadderLogicSerializer : IXSerializer<ILadderLogic>
+    internal class LadderLogicSerializer : IXSerializer<ILadderLogic>
     {
         private readonly LogixContext _context;
         private static readonly XName ElementName = LogixNames.RllContent;

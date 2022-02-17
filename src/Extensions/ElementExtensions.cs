@@ -58,7 +58,7 @@ namespace L5Sharp.Extensions
         /// This method acts as a helper for getting and parsing a given <see cref="XAttribute"/> value.
         /// Since (for the most part) the name of our properties match the L5X name, we use expressions to determine the
         /// the name and type to be parsed. The name of the attribute to get can be overriden with
-        /// the <see cref="nameOverride"/> argument. 
+        /// the <c>nameOverride</c> argument. 
         /// </remarks>
         /// <seealso cref="GetElement{TComplex,TProperty}"/>
         public static TProperty? GetAttribute<TComplex, TProperty>(this XElement element,
@@ -132,10 +132,10 @@ namespace L5Sharp.Extensions
         /// <exception cref="ArgumentException">When propertySelector is not a <see cref="MemberExpression"/>.</exception>
         /// <remarks>
         /// This is a helper method for quickly adding content as an <see cref="XAttribute"/> to a given XElement.
-        /// By default, this method will add an attribute with the name of the property specified by <see cref="propertySelector"/>.
-        /// This can be overriden with <see cref="nameOverride"/> argument.
-        /// An optional predicate <see cref="addCondition"/> can be specified to add the attribute only when the condition is met.
-        /// If the property is null or empty, then no content will be added.
+        /// By default, this method will add an attribute with the name of the property specified by <c>propertySelector</c>.
+        /// This can be overriden with <c>nameOverride</c> argument.
+        /// An optional predicate <c>addCondition</c> can be specified to add the attribute only when the condition is met.
+        /// If the property is null, then no content will be added.
         /// </remarks>
         public static void AddAttribute<TComplex, TProperty>(this XElement element, TComplex instance,
             Expression<Func<TComplex, TProperty>> propertySelector,
@@ -180,9 +180,9 @@ namespace L5Sharp.Extensions
         /// <exception cref="ArgumentException">When propertySelector is not a <see cref="MemberExpression"/>.</exception>
         /// <remarks>
         /// This is a helper method for quickly adding content as an <see cref="XElement"/> to a given <see cref="XElement"/>.
-        /// By default, this method will add an element with the name of the property specified by <see cref="propertySelector"/>.
-        /// This can be overriden with <see cref="nameOverride"/> argument.
-        /// An optional predicate <see cref="addCondition"/> can be specified to add the attribute only when the condition is met.
+        /// By default, this method will add an element with the name of the property specified by <c>propertySelector</c>.
+        /// This can be overriden with <c>nameOverride</c> argument.
+        /// An optional predicate <c>addCondition</c> can be specified to add the attribute only when the condition is met.
         /// If the property is null or empty, then no content will be added.
         /// </remarks>
         public static void AddElement<TComplex, TProperty>(this XElement element, TComplex instance,
