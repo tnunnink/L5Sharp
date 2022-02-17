@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Linq;
-using System.Net;
 using L5Sharp.Extensions;
 
 namespace L5Sharp.Core
@@ -79,93 +77,5 @@ namespace L5Sharp.Core
         /// Only downstream modules will have a valid Bus. 
         /// </remarks>
         public Bus? Bus { get; }
-
-        /// <summary>
-        /// Creates a child <see cref="Module"/> and adds to the current <see cref="Bus"/> of the Port.
-        /// </summary>
-        /// <param name="name">The name of the module.</param>
-        /// <param name="catalogNumber">The catalog number of the module.</param>
-        /// <param name="slot">The slot number that identifies where on the bus to add the new module.
-        /// If the provided slot number is not available, then it will be placed at the next available slot.</param>
-        /// <param name="description">The option description of the module.</param>
-        /// <returns>The instance of the <see cref="Module"/> that was created and added to the bus.</returns>
-        /// <exception cref="InvalidOperationException">The current port is not a downstream local port with a non-null bus.</exception>
-        public Module NewModule(ComponentName name, CatalogNumber catalogNumber, byte slot = default,
-            string? description = null)
-        {
-            if (Bus is null)
-                throw new InvalidOperationException(
-                    "The current port does not have a Bus defined. Can only add modules to downstream ports.");
-
-            var catalog = new LogixCatalog();
-            var definition = catalog.Lookup(catalogNumber);
-
-            ConfigurePorts(definition, slot);
-
-            var module = new Module(name, definition, Module.Name, Id, description);
-
-            Bus.Add(module);
-
-            return module;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="name"></param>
-        /// <param name="catalogNumber"></param>
-        /// <param name="slot">The slot number of the current</param>
-        /// <param name="ipAddress">The optional IP address of the module if the specified module has a network type port.
-        /// 
-        /// </param>
-        /// <param name="description">The description of the module.</param>
-        /// <returns></returns>
-        /// <exception cref="InvalidOperationException"></exception>
-        public Module NewModule(ComponentName name, CatalogNumber catalogNumber, byte slot, IPAddress ipAddress,
-            string? description = null)
-        {
-            if (Bus is null)
-                throw new InvalidOperationException(
-                    "The current port does not have a Bus defined. Can only add modules to downstream ports.");
-
-            var catalog = new LogixCatalog();
-            var definition = catalog.Lookup(catalogNumber);
-
-            ConfigurePorts(definition, slot, ipAddress);
-
-            var module = new Module(name, definition, Module.Name, Id, description);
-
-            Bus.Add(module);
-
-            return module;
-        }
-
-        private void ConfigurePorts(ModuleDefinition definition, byte slot, IPAddress ipAddress)
-        {
-            var address = Type == "Ethernet" ? ipAddress.ToString() : slot.ToString();
-
-            foreach (var port in definition.Ports)
-            {
-                port.Upstream = port.Type == Type && !port.DownstreamOnly;
-                port.Address = port.Upstream ? Bus!.GetAddress(address) :
-                    port.Type == "Ethernet" ? ipAddress.ToString() : slot.ToString();
-            }
-
-            if (!definition.Ports.Any(p => p.Upstream))
-                throw new ArgumentException();
-        }
-
-        private void ConfigurePorts(ModuleDefinition definition, byte slot)
-        {
-            var address = slot.ToString();
-
-            foreach (var port in definition.Ports)
-            {
-                port.Upstream = port.Type == Type && !port.DownstreamOnly;
-
-                if (port.Upstream)
-                    port.Address = Bus!.GetAddress(address);
-            }
-        }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Net;
 using FluentAssertions;
+using L5Sharp.Enums;
 using L5Sharp.Exceptions;
 using NUnit.Framework;
 
@@ -89,11 +90,10 @@ namespace L5Sharp.Core.Tests
         {
             var bus = CreateChassisBus();
             
-            //by default no upstream ports are created, so adding this should throw and argument exception with the message.
+            //by default no upstream ports are created, so adding this should throw and argument exception.
             var module = new Module("Child", "1756-EN2T");
 
-            FluentActions.Invoking(() => bus.Add(module)).Should()
-                .Throw<ArgumentException>();
+            FluentActions.Invoking(() => bus.Add(module)).Should().Throw<ArgumentException>();
         }
 
         [Test]
@@ -101,40 +101,57 @@ namespace L5Sharp.Core.Tests
         {
             
         }
-
+        
         [Test]
-        public void DetermineAddress_ValidAddress_ShouldBeProvided()
+        public void New_ValidModuleForChassisTypePort_ShouldNotBeNull()
         {
-            const string provided = "1";
-            var bus = CreateChassisBus();
+            var parent = new Module("Test", "1756-EN2T", IPAddress.Any);
 
-            var address = bus.GetAddress(provided);
+            var bus = parent.Ports.Local()?.Bus;
 
-            address.Should().Be(provided);
+            var module = bus?.New("Child", "1756-IF8", "1");
+
+            module.Should().NotBeNull();
         }
         
         [Test]
-        public void DetermineAddress_InvalidAddressType_ShouldBeNextAvailable()
+        public void New_ValidModuleForChassisTypePort_ModuleShouldHaveExpectedProperties()
         {
-            const string provided = "192.168.1.2";
-            var bus = CreateChassisBus();
+            var parent = new Module("Test", "1756-EN2T", IPAddress.Any);
 
-            var address = bus.GetAddress(provided);
+            var bus = parent.Ports.Local()?.Bus!;
 
-            address.Should().NotBe(provided);
-            address.Should().Be("1");
+            var module = bus?.New("Child", "1756-IF8", "1");
+
+            module?.Name.Should().Be("Child");
+            module?.Description.Should().BeEmpty();
+            module?.CatalogNumber.Should().Be(new CatalogNumber("1756-IF8"));
+            module?.Vendor.Should().Be(Vendor.Rockwell);
+            module?.ProductType.Should().Be(ProductType.Analog);
+            module?.ProductCode.Should().NotBe(0);
+            module?.Inhibited.Should().BeFalse();
+            module?.MajorFault.Should().BeFalse();
+            module?.SafetyEnabled.Should().BeFalse();
+            module?.Slot.Should().Be(1);
+            module?.IP.Should().BeNull();
+            module?.State.Should().Be(KeyingState.CompatibleModule);
+            module?.ParentModule.Should().Be("Test");
+            module?.ParentPortId.Should().Be(1);
+            module?.Ports.Should().HaveCount(1);
         }
         
         [Test]
-        public void DetermineAddress_ValidButNotAvailable_ShouldBeNextAvailable()
+        public void New_ValidModuleForChassisTypePort_BusShouldContainChild()
         {
-            const string provided = "0";
-            var bus = CreateChassisBus();
+            var parent = new Module("Test", "1756-EN2T", IPAddress.Any);
 
-            var address = bus.GetAddress(provided);
+            var bus = parent.Ports.Local()?.Bus!;
 
-            address.Should().NotBe(provided);
-            address.Should().Be("1");
+            var module = bus?.New("Child", "1756-IF8", "1");
+
+            var child = bus?["1"];
+
+            child.Should().BeSameAs(module);
         }
 
         [Test]

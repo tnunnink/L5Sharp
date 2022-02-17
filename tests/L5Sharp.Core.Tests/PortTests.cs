@@ -76,57 +76,5 @@ namespace L5Sharp.Core.Tests
             port?.Bus.Should().NotBeNull();
             port?.Module.Should().BeSameAs(module);
         }
-
-        [Test]
-        public void NewModule_ValidModuleForChassisTypePort_ShouldNotBeNull()
-        {
-            var parent = new Module("Test", "1756-EN2T", IPAddress.Any);
-
-            var port = parent.Ports.Primary();
-
-            var module = port.NewModule("Child", "1756-IF8", 1);
-
-            module.Should().NotBeNull();
-        }
-        
-        [Test]
-        public void NewModule_ValidModuleForChassisTypePort_ModuleShouldHaveExpectedProperties()
-        {
-            var parent = new Module("Test", "1756-EN2T", IPAddress.Any);
-
-            var port = parent.Ports.Primary();
-
-            var module = port.NewModule("Child", "1756-IF8", 1);
-
-            module.Name.Should().Be("Child");
-            module.Description.Should().BeEmpty();
-            module.CatalogNumber.Should().Be(new CatalogNumber("1756-IF8"));
-            module.Vendor.Should().Be(Vendor.Rockwell);
-            module.ProductType.Should().Be(ProductType.Analog);
-            module.ProductCode.Should().NotBe(0);
-            module.Inhibited.Should().BeFalse();
-            module.MajorFault.Should().BeFalse();
-            module.SafetyEnabled.Should().BeFalse();
-            module.Slot.Should().Be(1);
-            module.IP.Should().BeNull();
-            module.State.Should().Be(KeyingState.CompatibleModule);
-            module.ParentModule.Should().Be("Test");
-            module.ParentPortId.Should().Be(1);
-            module.Ports.Should().HaveCount(1);
-        }
-        
-        [Test]
-        public void NewModule_ValidModuleForChassisTypePort_ParentLocalBusShouldContainChild()
-        {
-            var parent = new Module("Test", "1756-EN2T", IPAddress.Any);
-
-            var port = parent.Ports.Primary();
-
-            var module = port.NewModule("Child", "1756-IF8", 1);
-
-            var child = parent.Ports.Local()?.Bus?["1"];
-
-            child.Should().BeSameAs(module);
-        }
     }
 }
