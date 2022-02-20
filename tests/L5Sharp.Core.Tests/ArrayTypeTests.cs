@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
 using L5Sharp.Abstractions;
@@ -112,7 +113,33 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void New_CollectionOverload_ShouldHaveExpectedElements()
         {
-            
+            var collection = new List<Bool>
+            {
+                new(true),
+                new(true),
+                new(true),
+                new(true),
+                new(true)
+            };
+
+            var array = new ArrayType<Bool>(10, collection);
+
+            array.Should().NotBeNull();
+            array.Name.Should().Be("BOOL");
+            array.Description.Should().BeEmpty();
+            array.Class.Should().Be(DataTypeClass.Atomic);
+            array.Family.Should().Be(DataTypeFamily.None);
+            array.Dimensions.Length.Should().Be(10);
+            array[0].DataType.Value.Should().Be(true);
+            array[1].DataType.Value.Should().Be(true);
+            array[2].DataType.Value.Should().Be(true);
+            array[3].DataType.Value.Should().Be(true);
+            array[4].DataType.Value.Should().Be(true);
+            array[5].DataType.Value.Should().Be(false);
+            array[6].DataType.Value.Should().Be(false);
+            array[7].DataType.Value.Should().Be(false);
+            array[8].DataType.Value.Should().Be(false);
+            array[9].DataType.Value.Should().Be(false);
         }
 
         [Test]
