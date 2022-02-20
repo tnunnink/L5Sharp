@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using L5Sharp.Abstractions;
 using L5Sharp.Enums;
 
@@ -8,7 +7,7 @@ namespace L5Sharp.Core
     /// <summary>
     /// Represents a Logix Event Task component.
     /// </summary>
-    public sealed class EventTask : TaskBase, IEventTask
+    public sealed class EventTask : TaskBase
     {
         internal EventTask(ComponentName name, ScanRate rate = default,
             TaskPriority priority = default, Watchdog watchdog = default, bool disableUpdateOutputs = false,
@@ -43,13 +42,19 @@ namespace L5Sharp.Core
         /// <inheritdoc />
         public override TaskType Type => TaskType.Event;
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Gets the <see cref="Enums.TaskEventTrigger"/> setting of the <see cref="EventTask"/> instance.
+        /// </summary>
         public TaskEventTrigger EventTrigger { get; }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Gets the value indicating whether the <see cref="EventTask"/> timeout setting is enabled.
+        /// </summary>
         public bool EnableTimeout { get; }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Gets the tag name that triggers the <see cref="EventTask"/>.
+        /// </summary>
         public string? EventTag { get; }
     }
 }

@@ -1,11 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Linq;
 using FluentAssertions;
 using L5Sharp.Enums;
 using L5Sharp.Exceptions;
 using L5Sharp.Factories;
 using L5Sharp.Types;
 using NUnit.Framework;
+using String = L5Sharp.Types.String;
 
 namespace L5Sharp.Core.Tests
 {
@@ -13,7 +14,7 @@ namespace L5Sharp.Core.Tests
     public class TagMemberTests
     {
         [Test]
-        public void ComplexGetMember_ShouldHaveExpectedValues()
+        public void ComplexMember_ShouldHaveExpectedValues()
         {
             var tag = Tag.Create<Timer>("Test");
 
@@ -27,11 +28,46 @@ namespace L5Sharp.Core.Tests
             member.Radix.Should().Be(Radix.Decimal);
             member.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);
             member.Root.Should().BeSameAs(tag);
+            member.Parent.Should().NotBeNull();
             member.Value.Should().Be(false);
+            member.IsArrayMember.Should().BeFalse();
+            member.IsValueMember.Should().BeTrue();
+            member.IsStructureMember.Should().BeFalse();
+        }
+        
+        [Test]
+        public void HasMember_Null_ShouldThrowArgumentNullException()
+        {
+            var tag = Tag.Create<MyNestedType>("Test");
+            var timer = tag.Member(m => m.Tmr);
+
+            FluentActions.Invoking(() => timer.HasMember(null!)).Should().Throw<ArgumentNullException>();
         }
 
         [Test]
-        public void NameIndexer_NonExisting_ShouldThrowInvalidMemberPathException()
+        public void HasMember_ValidMember_ShouldBeTrue()
+        {
+            var tag = Tag.Create<MyNestedType>("Test");
+            var timer = tag.Member(m => m.Tmr);
+
+            var result = timer.HasMember("PRE");
+
+            result.Should().BeTrue();
+        }
+
+        [Test]
+        public void HasMember_InvalidMember_ShouldBeFalse()
+        {
+            var tag = Tag.Create<MyNestedType>("Test");
+            var timer = tag.Member(m => m.Tmr);
+
+            var result = timer.HasMember("PRESET");
+
+            result.Should().BeFalse();
+        }
+
+        [Test]
+        public void Member_NonExisting_ShouldThrowInvalidMemberPathException()
         {
             var tag = Tag.Create<MyNestedType>("Test");
             var timer = tag.Member(m => m.Tmr);
@@ -40,7 +76,7 @@ namespace L5Sharp.Core.Tests
         }
         
         [Test]
-        public void NameIndexer_Null_ShouldThrowArgumentNullException()
+        public void Member_Null_ShouldThrowArgumentNullException()
         {
             var tag = Tag.Create<MyNestedType>("Test");
             var timer = tag.Member(m => m.Tmr);
@@ -49,7 +85,7 @@ namespace L5Sharp.Core.Tests
         }
         
         [Test]
-        public void NameIndexer_ValidMember_ShouldNotBeNull()
+        public void Member_ValidMember_ShouldNotBeNull()
         {
             var tag = Tag.Create<MyNestedType>("Test");
             var timer = tag.Member(m => m.Tmr);
@@ -60,10 +96,9 @@ namespace L5Sharp.Core.Tests
         }
 
         [Test]
-        public void GetMember_MemberExists_ShouldNotBeNull()
+        public void Member_MemberExists_ShouldNotBeNull()
         {
             var tag = Tag.Create<MyNestedType>("Test");
-
             var timer = tag.Member(m => m.Tmr);
 
             var member = timer.Member(m => m.PRE);
@@ -72,10 +107,9 @@ namespace L5Sharp.Core.Tests
         }
 
         [Test]
-        public void GetMember_MemberExists_ShouldHaveExpectedPropertyValues()
+        public void Member_MemberExists_ShouldHaveExpectedPropertyValues()
         {
             var tag = Tag.Create<MyNestedType>("Test");
-
             var timer = tag.Member(m => m.Tmr);
 
             var member = timer.Member(m => m.PRE);
@@ -88,7 +122,75 @@ namespace L5Sharp.Core.Tests
             member.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);
             member.Value.Should().Be(0);
         }
+
+        [Test]
+        public void Members_WhenCalled_ShouldHaveExpectedCount()
+        {
+            var tag = Tag.Create<MyNestedType>("Test");
+            var timer = tag.Member(m => m.Tmr);
+
+            var members = timer.Members();
+
+            members.Should().HaveCount(5);
+        }
         
+        [Test]
+        public void Members_WhenCalled_ShouldHaveExpectedMemberTagNames()
+        {
+            var tag = Tag.Create<MyNestedType>("Test");
+            var timer = tag.Member(m => m.Tmr);
+
+            var members = timer.Members();
+
+            members.Should().Contain(m => m.TagName == "Test.Tmr.DN");
+        }
+
+        [Test]
+        public void TagNames_WhenCalled_ShouldHaveExpectedCount()
+        {
+            var tag = Tag.Create<MyNestedType>("Test");
+            var timer = tag.Member(m => m.Tmr);
+
+            var members = timer.TagNames();
+
+            members.Should().HaveCount(5);
+        }
+        
+        [Test]
+        public void TagNames_WhenCalled_ShouldHaveExpectedNames()
+        {
+            var tag = Tag.Create<MyNestedType>("Test");
+            var timer = tag.Member(m => m.Tmr);
+
+            var members = timer.TagNames().ToList();
+
+            members.Should().Contain("Test.Tmr.DN");
+            members.Should().Contain("Test.Tmr.TT");
+            members.Should().Contain("Test.Tmr.EN");
+            members.Should().Contain("Test.Tmr.PRE");
+            members.Should().Contain("Test.Tmr.ACC");
+        }
+
+        [Test]
+        public void SingleIndex_ValidIndex_ShouldNotBeNull()
+        {
+            var tag = Tag.Create<String>("Test");
+            var data = tag.Member("DATA");
+
+            var element = data[10];
+
+            element.Should().NotBeNull();
+        }
+        
+        [Test]
+        public void SingleIndex_InvalidIndex_ShouldThrowArgumentException()
+        {
+            var tag = Tag.Create<String>("Test");
+            var data = tag.Member("DATA");
+
+            FluentActions.Invoking(() => data[-1]).Should().Throw<ArgumentOutOfRangeException>();
+        }
+
         [Test]
         public void SetValue_Null_ShouldThrowArgumentNullException()
         {
@@ -125,6 +227,26 @@ namespace L5Sharp.Core.Tests
             member.SetValue(new Dint(500));
 
             member.Value.Should().Be(500);
+        }
+        
+        [Test]
+        public void SetData_Null_ShouldThrowArgumentNullException()
+        {
+            var tag = Tag.Create<MyNestedType>("Test");
+            var member = tag.Member(m => m.Tmr);
+
+            FluentActions.Invoking(() => member.SetData(null!)).Should().Throw<ArgumentNullException>();
+        }
+
+        [Test]
+        public void SetData_ValidDataType_ShouldUpdateMemberValues()
+        {
+            var tag = Tag.Create<MyNestedType>("Test");
+            var member = tag.Member(m => m.Tmr);
+            
+            member.SetData(new Timer(5000));
+
+            member.Member(m => m.PRE).Value.Should().Be(5000);
         }
     }
 }

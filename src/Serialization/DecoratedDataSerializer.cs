@@ -11,8 +11,6 @@ namespace L5Sharp.Serialization
     /// </summary>
     internal class DecoratedDataSerializer : IXSerializer<IDataType>
     {
-        private static readonly XName ElementName = LogixNames.Data;
-
         public XElement Serialize(IDataType component)
         {
             if (component == null)
@@ -22,7 +20,7 @@ namespace L5Sharp.Serialization
             {
                 case IAtomicType atomicType:
                     var dataValueSerializer = new DataValueSerializer();
-                    return (dataValueSerializer.Serialize(atomicType));
+                    return dataValueSerializer.Serialize(atomicType);
                 case IArrayType<IDataType> arrayType:
                     var arraySerializer = new ArraySerializer();
                     return arraySerializer.Serialize(arrayType);
@@ -30,8 +28,8 @@ namespace L5Sharp.Serialization
                     var structureSerializer = new StructureSerializer();
                     return structureSerializer.Serialize(complexType);
                 default:
-                    throw new NotSupportedException(
-                        $"The provided type is not supported for the serializer of type {GetType()}");
+                    throw new ArgumentException(
+                        $"Data type {component.GetType()} is valid for the serializer {GetType()}");
             }
         }
 
@@ -40,27 +38,25 @@ namespace L5Sharp.Serialization
             if (element == null)
                 throw new ArgumentNullException(nameof(element));
 
-            if (element.Name == LogixNames.DataValue)
+            var name = Enum.Parse<L5XElement>(element.Name.ToString());
+
+            // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
+            // Only following element names are valid for 
+            switch (name)
             {
-                var atomic = (IAtomicType)DataType.Create(element.GetDataTypeName());
-                var value = element.Attribute(LogixNames.Value)?.Value;
-                atomic.SetValue(value!);
-                return atomic;
+                case L5XElement.DataValue:
+                    var dataValueSerializer = new DataValueSerializer();
+                    return dataValueSerializer.Deserialize(element);
+                case L5XElement.Array:
+                    var arraySerializer = new ArraySerializer();
+                    return arraySerializer.Deserialize(element);
+                case L5XElement.Structure:
+                    var structureSerializer = new StructureSerializer();
+                    return structureSerializer.Deserialize(element);
+                default:
+                    throw new ArgumentException(
+                        $"Element '{name}' not valid for the serializer {GetType()}.");
             }
-
-            if (element.Name == LogixNames.Array)
-            {
-                var arraySerializer = new ArraySerializer();
-                return arraySerializer.Deserialize(element);
-            }
-
-            if (element.Name != LogixNames.Structure)
-                throw new NotSupportedException(
-                    $"The provided element {ElementName} data member with name {element.Name} is not supported for" +
-                    $" the serializer of type {GetType()}");
-
-            var structureSerializer = new StructureSerializer();
-            return structureSerializer.Deserialize(element);
         }
     }
 }

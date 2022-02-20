@@ -8,7 +8,7 @@ using NUnit.Framework;
 namespace L5Sharp.Factory.Tests
 {
     [TestFixture]
-    public class MemberComponentTests
+    public class MemberFactoryTests
     {
         [Test]
         public void Create_NullName_ShouldThrowArgumentNullException()

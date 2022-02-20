@@ -71,16 +71,15 @@ namespace L5Sharp.Serialization
                 : dataType;
 
             var tag = new Tag<IDataType>(name, type, radix, access, description, usage, constant);
-
-            var dataSerializer = new FormattedDataSerializer();
-            var formattedData = element.Descendants(LogixNames.Data)
-                .FirstOrDefault(e => e.Attribute("Format") is not null);
-            if (formattedData is not null)
-            {
-                var data = dataSerializer.Deserialize(formattedData);
-                //todo update tag values with deserialized data.
-            }
             
+            var formattedData = element.Descendants(LogixNames.Data)
+                .FirstOrDefault(e => e.Attribute("Format")?.Value != TagDataFormat.L5K);
+
+            if (formattedData is null) return tag;
+            
+            var dataSerializer = new FormattedDataSerializer();
+            var data = dataSerializer.Deserialize(formattedData);
+            tag.SetData(data);
             return tag;
         }
     }

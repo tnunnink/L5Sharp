@@ -47,7 +47,7 @@ namespace L5Sharp
         /// <summary>
         /// Get the <see cref="IUserDefined"/> repository instance for the current <see cref="ILogixContext"/>.
         /// </summary>
-        IRepository<IUserDefined> UserDefined { get; }
+        IRepository<IUserDefined> DataTypes { get; }
         
         /// <summary>
         /// Get the <see cref="ITag{TDataType}"/> repository instance for the current <see cref="ILogixContext"/>. 

@@ -217,7 +217,7 @@ namespace L5Sharp.Extensions
                 throw new ArgumentOutOfRangeException(nameof(length), "Length must be greater than 0");
 
             for (var i = 0; i < input.Length; i += length)
-                yield return input.Substring(i, Math.Min(length, input.Length - 1));
+                yield return input.Substring(i, i + length < input.Length ? length : input.Length - i);
         }
 
         public static bool IsBalanced(this string value, char opening, char closing)

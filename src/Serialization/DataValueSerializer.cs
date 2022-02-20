@@ -19,13 +19,7 @@ namespace L5Sharp.Serialization
             var element = new XElement(ElementName);
 
             element.AddAttribute(component, m => m.Name, nameOverride: LogixNames.DataType);
-
-            /*
-            if (component is not Bool)
-                element.Add(new XAttribute("Radix", _radix));
-                */
-            
-            //var value = component is not Bool ? component.Format(_radix) : component.Format();
+            //todo what about radix...
             element.Add(new XAttribute(LogixNames.Value, component.Format()));
 
             return element;
@@ -40,6 +34,7 @@ namespace L5Sharp.Serialization
                 throw new ArgumentException($"Element name '{element.Name}' invalid. Expecting '{ElementName}'");
             
             var atomic = (IAtomicType)DataType.Create(element.GetDataTypeName());
+            //todo what about radix...
             var radix = element.GetAttribute<IMember<IDataType>, Radix>(m => m.Radix) ?? Radix.Default(atomic);
             var value = element.Attribute(LogixNames.Value)?.Value!;
             

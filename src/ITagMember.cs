@@ -54,14 +54,16 @@ namespace L5Sharp
         /// Gets a <see cref="ITagMember{TDataType}"/> at the specified one-dimensional index from the
         /// underlying <see cref="IArrayType{TDataType}"/>.
         /// </summary>
-        /// <param name="x">The index of the three dimensional array.</param>
+        /// <param name="x">The index of the one dimensional array.</param>
         /// <returns>
         /// A new <see cref="ITagMember{TDataType}"/> element from the specified index.
         /// </returns>
         /// <exception cref="InvalidOperationException">
         /// <see cref="ITagMember{TDataType}"/> data type is not an <see cref="IArrayType{TDataType}"/>
         /// -or- the dimensions of the current tag type are not a one-dimensional array.</exception>
-        /// <exception cref="ArgumentException">index does not form a valid index of the current array dimensions.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// index does not form a valid index of the current array dimensions.
+        /// </exception>
         /// <remarks>
         /// Like <see cref="IArrayType{TDataType}"/>, this overload is for one-dimensional array types only.
         /// If the current tag is not a one-dimensional array of some <see cref="IDataType"/>, this call will fail.  
@@ -69,62 +71,29 @@ namespace L5Sharp
         ITagMember<IDataType> this[int x] { get; }
 
         /// <summary>
-        /// Gets a <see cref="ITagMember{TDataType}"/> at the specified two-dimensional index from the
-        /// underlying <see cref="IArrayType{TDataType}"/>.
-        /// </summary>
-        /// <param name="x">The X index of the two dimensional array.</param>
-        /// <param name="y">The Y index of the two dimensional array.</param>
-        /// <returns>
-        /// A new <see cref="ITagMember{TDataType}"/> element from the specified index.
-        /// </returns>
-        /// <exception cref="InvalidOperationException">
-        /// <see cref="ITagMember{TDataType}"/> data type is not an <see cref="IArrayType{TDataType}"/>
-        /// -or- the dimensions of the current tag type are not a two-dimensional array.</exception>
-        /// <exception cref="ArgumentException">X and Y do not form a valid index of the current array dimensions.</exception>
-        /// <remarks>
-        /// Like <see cref="IArrayType{TDataType}"/>, this overload is for two-dimensional array types only.
-        /// If the current tag is not a two-dimensional array of some <see cref="IDataType"/>, this call will fail.  
-        /// </remarks>
-        ITagMember<IDataType> this[int x, int y] { get; }
-
-        /// <summary>
-        /// Gets a <see cref="ITagMember{TDataType}"/> at the specified three-dimensional index from the
-        /// underlying <see cref="IArrayType{TDataType}"/>.
-        /// </summary>
-        /// <param name="x">The X index of the three dimensional array.</param>
-        /// <param name="y">The Y index of the three dimensional array.</param>
-        /// <param name="z">The X index of the three dimensional array.</param>
-        /// <returns>
-        /// A new <see cref="ITagMember{TDataType}"/> element from the specified index.
-        /// </returns>
-        /// <exception cref="InvalidOperationException">
-        /// <see cref="ITagMember{TDataType}"/> data type is not an <see cref="IArrayType{TDataType}"/>
-        /// -or- the dimensions of the current tag type are not a three-dimensional array.</exception>
-        /// <exception cref="ArgumentException">X, Y, and Z do not form a valid index of the current array dimensions.</exception>
-        /// <remarks>
-        /// Like <see cref="IArrayType{TDataType}"/>, this overload is for three-dimensional array types only.
-        /// If the current tag is not a three-dimensional array of some <see cref="IDataType"/>, this call will fail.  
-        /// </remarks>
-        ITagMember<IDataType> this[int x, int y, int z] { get; }
-
-        /// <summary>
-        /// Sets the <c>ITagMember</c> <see cref="ILogixComponent.Description"/> with the provided string comment. 
+        /// Sets the tag member <see cref="ILogixComponent.Description"/> with the provided string comment. 
         /// </summary>
         /// <remarks>
-        /// <c>ITagMember</c> comments are stored and maintained by root <c>Tag</c> instance.
+        /// Tag member comments are stored and maintained by the root <see cref="ITag{TDataType}"/> instance.
         /// Setting a comment on a member "overrides" the description of the underlying member.
         /// Setting the comment to an empty or null value resets the description to the value of the underlying member.
         /// This functionality mimics the feature called "Pass Through Description" provided by Logix to
-        /// help developers maintain documentation for tags. 
+        /// help developers maintain documentation for tags. Note that this does not actually modify the state of the
+        /// underlying data type member, it updates the <see cref="ITag{TDataType}"/> comments collection of the of the
+        /// <see cref="Root"/> tag. 
         /// </remarks>
         /// <param name="comment">The value of the comment to set.</param>
         void Comment(string comment);
 
         /// <summary>
-        /// Determines if the provided <see cref="TagName"/> value exists as a descendent member of the <see cref="ITagMember{TDataType}"/> instance.
+        /// Determines if the provided <see cref="TagName"/> value exists as a descendent member of
+        /// the <see cref="ITagMember{TDataType}"/> instance.
         /// </summary>
         /// <param name="tagName">The <see cref="TagName"/> value to search for in the nested member hierarchy.</param>
         /// <returns>true if a descendent member with the specified tag name path exists; otherwise, false.</returns>
+        /// <remarks>You can provide either the fully qualified member name path (including the current base member
+        /// name) or just the path relative to the current base member (not including the base name).</remarks>
+        /// <exception cref="ArgumentNullException">tagName is null.</exception>
         bool HasMember(TagName tagName);
 
         /// <summary>
@@ -162,6 +131,12 @@ namespace L5Sharp
         /// A new <see cref="ITagMember{TDataType}"/> instance that represents the selected child member of the current
         /// tag data type.
         /// </returns>
+        /// <remarks>
+        /// This method provides a strongly typed way to retrieve tag member component using the specified data type
+        /// of the tag member. This is made possible via the generic arguments. Though more verbose, this returns
+        /// a strongly type child member so that the user can avoid potential need for casting. Note that this relies
+        /// on the underlying data type of the tag member being specified so that the member properties are available
+        /// for selection.</remarks>
         /// <seealso cref="Member"/>
         ITagMember<TMemberType> Member<TMemberType>(Func<TDataType, IMember<TMemberType>> selector)
             where TMemberType : IDataType;
@@ -212,6 +187,6 @@ namespace L5Sharp
         /// Sets the value of all members of the current <see cref="ITagMember{TDataType}"/> instance.
         /// </summary>
         /// <param name="dataType">A data type instance that is of the same typ</param>
-        void SetData(IComplexType dataType);
+        void SetData(IDataType dataType);
     }
 }

@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using L5Sharp.Abstractions;
+﻿using L5Sharp.Abstractions;
 using L5Sharp.Enums;
 using L5Sharp.Factories;
 using L5Sharp.Types;
@@ -21,6 +20,7 @@ namespace L5Sharp.Core.Tests
         public IMember<String> Str = Member.Create<String>(nameof(Str), description:"Test String Member");
         public IMember<Timer> Tmr = Member.Create<Timer>(nameof(Tmr), description:"Test Timer Member");
         public IMember<MySimpleType> Simple = Member.Create<MySimpleType>(nameof(Simple));
+
         public override DataTypeClass Class => DataTypeClass.User;
         protected override IDataType New() => new MyNestedType();
     }

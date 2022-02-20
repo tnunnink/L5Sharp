@@ -17,7 +17,7 @@ namespace L5Sharp.Core.Tests
         {
             var module = new Module("Test", "1756-EN2T", IPAddress.Any);
             var bus = module.Ports.Local()?.Bus;
-            
+
             bus?.Type.Should().Be("ICP");
             bus?.Size.Should().Be(0);
             bus?.Count.Should().Be(1);
@@ -57,7 +57,7 @@ namespace L5Sharp.Core.Tests
             module.Should().NotBeNull();
             module.Name.Should().Be("Test");
         }
-        
+
         [Test]
         public void IndexGetter_InvalidAddress_ShouldThrowKeyNotFoundException()
         {
@@ -74,7 +74,7 @@ namespace L5Sharp.Core.Tests
             FluentActions.Invoking(() => bus?.Add(null!)).Should()
                 .Throw<ArgumentNullException>();
         }
-        
+
         [Test]
         public void Add_DuplicateName_ShouldThrowArgumentNullException()
         {
@@ -89,7 +89,7 @@ namespace L5Sharp.Core.Tests
         public void Add_NoUpstreamPort_ShouldThrowArgumentException()
         {
             var bus = CreateChassisBus();
-            
+
             //by default no upstream ports are created, so adding this should throw and argument exception.
             var module = new Module("Child", "1756-EN2T");
 
@@ -99,29 +99,28 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Add_ValidModule_ShouldHaveExpectedCount()
         {
-            
         }
-        
+
         [Test]
-        public void New_ValidModuleForChassisTypePort_ShouldNotBeNull()
+        public void New_ValidModule_ShouldNotBeNull()
         {
             var parent = new Module("Test", "1756-EN2T", IPAddress.Any);
 
             var bus = parent.Ports.Local()?.Bus;
 
-            var module = bus?.New("Child", "1756-IF8", "1");
+            var module = bus?.New("Child", "1756-IF8", 1);
 
             module.Should().NotBeNull();
         }
-        
+
         [Test]
-        public void New_ValidModuleForChassisTypePort_ModuleShouldHaveExpectedProperties()
+        public void New_ValidModule_ModuleShouldHaveExpectedProperties()
         {
             var parent = new Module("Test", "1756-EN2T", IPAddress.Any);
 
             var bus = parent.Ports.Local()?.Bus!;
 
-            var module = bus?.New("Child", "1756-IF8", "1");
+            var module = bus?.New("Child", "1756-IF8", 1);
 
             module?.Name.Should().Be("Child");
             module?.Description.Should().BeEmpty();
@@ -139,7 +138,7 @@ namespace L5Sharp.Core.Tests
             module?.ParentPortId.Should().Be(1);
             module?.Ports.Should().HaveCount(1);
         }
-        
+
         [Test]
         public void New_ValidModuleForChassisTypePort_BusShouldContainChild()
         {
@@ -147,11 +146,48 @@ namespace L5Sharp.Core.Tests
 
             var bus = parent.Ports.Local()?.Bus!;
 
-            var module = bus?.New("Child", "1756-IF8", "1");
+            var module = bus?.New("Child", "1756-IF8", 1);
 
             var child = bus?["1"];
 
             child.Should().BeSameAs(module);
+        }
+
+        [Test]
+        public void New_ExistingModuleName_ShouldThrowComponentNameCollisionException()
+        {
+            var module = new Module("Test", "1756-EN2T", IPAddress.Any);
+            var bus = module.Ports.Local()?.Bus!;
+
+            FluentActions.Invoking(() => bus?.New("Test", "1756-IF8")).Should()
+                .Throw<ComponentNameCollisionException>();
+        }
+        
+        [Test]
+        public void New_NonExistingModule_ShouldThrowModuleNotFoundException()
+        {
+            var module = new Module("Test", "1756-EN2T", IPAddress.Any);
+            
+            var bus = module.Ports.Local()?.Bus!;
+
+            FluentActions.Invoking(() => bus?.New("Test", "1756-ABCD")).Should().Throw<ModuleNotFoundException>();
+        }
+        
+        [Test]
+        public void New_InvalidModuleType_ShouldThrowModuleNotFoundException()
+        {
+            var module = new Module("Test", "1756-EN2T", IPAddress.Any);
+            
+            var bus = module.Ports.Local()?.Bus!;
+
+            FluentActions.Invoking(() => bus?.New("Test", "17-ABCD")).Should().Throw<ModuleNotFoundException>();
+        }
+
+        [Test]
+        public void New_IsFull_ShouldThrowInvalidArgumentException()
+        {
+            //right now there is now way to set chassis size. Would need this to have IsFull be true and test exception...
+            var module = new Module("Test", "1756-EN2T", IPAddress.Any);
         }
 
         [Test]

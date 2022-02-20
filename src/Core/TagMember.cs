@@ -11,7 +11,7 @@ namespace L5Sharp.Core
     public class TagMember<TDataType> : ITagMember<TDataType> where TDataType : IDataType
     {
         private readonly IMember<TDataType> _member;
-        
+
         internal TagMember(IMember<TDataType> member, ITag<IDataType> root, ITagMember<IDataType>? parent)
         {
             _member = member ?? throw new ArgumentNullException(nameof(member));
@@ -72,23 +72,21 @@ namespace L5Sharp.Core
         public ITagMember<IDataType> this[int x] => _member.DataType is IArrayType<IDataType> arrayType
             ? new TagMember<IDataType>(arrayType[x], Root, (ITagMember<IDataType>)this)
             : throw new InvalidOperationException(
-                $"Tag of type '{GetType()}' is not a valid '{typeof(IArrayType<IDataType>)}'");
-
-        /// <inheritdoc />
-        public ITagMember<IDataType> this[int x, int y] => _member.DataType is IArrayType<IDataType> arrayType
-            ? new TagMember<IDataType>(arrayType[x, y], Root, (ITagMember<IDataType>)this)
-            : throw new InvalidOperationException();
-
-        /// <inheritdoc />
-        public ITagMember<IDataType> this[int x, int y, int z] => _member.DataType is IArrayType<IDataType> arrayType
-            ? new TagMember<IDataType>(arrayType[x, y, z], Root, (ITagMember<IDataType>)this)
-            : throw new InvalidOperationException();
+                $"Tag of type '{GetType()}' is not an '{typeof(IArrayType<IDataType>)}'");
 
         /// <inheritdoc />
         public void Comment(string comment) => Root.Comments.Apply(TagName, comment);
 
         /// <inheritdoc />
-        public bool HasMember(TagName tagName) => TagNames().Contains(tagName);
+        public bool HasMember(TagName tagName)
+        {
+            if (tagName is null)
+                throw new ArgumentNullException(nameof(tagName));
+
+            var childTag = tagName.Base == Name ? new TagName(tagName.Path) : tagName;
+
+            return _member.DataType.GetTagNames().Any(t => t == childTag);
+        }
 
         /// <inheritdoc />
         public ITagMember<IDataType> Member(TagName tagName)
@@ -154,17 +152,14 @@ namespace L5Sharp.Core
         }
 
         /// <inheritdoc />
-        public void SetData(IComplexType dataType)
+        public void SetData(IDataType dataType)
         {
             if (dataType is null)
                 throw new ArgumentNullException(nameof(dataType));
-            
-            if (!DataType.StructureEquals(dataType))
-                throw new ArgumentException();
 
-            //todo figure out how to do this...
+            _member.DataType.SetData(dataType);
         }
-        
+
         /// <summary>
         /// Determines the value of the member description based on the rules of the "Pass-Through-Description".
         /// </summary>

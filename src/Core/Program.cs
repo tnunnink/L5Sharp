@@ -22,8 +22,8 @@ namespace L5Sharp.Core
             UseAsFolder = useAsFolder;
             MainRoutineName = mainRoutineName ?? string.Empty;
             FaultRoutineName = faultRoutineName ?? string.Empty;
-            Tags = new ComponentCollection<ITag<IDataType>>(tags);
-            Routines = new ComponentCollection<IRoutine<ILogixContent>>(routines);
+            Tags = new ComponentCollection<ITag<IDataType>>(tags ?? Enumerable.Empty<ITag<IDataType>>());
+            Routines = new ComponentCollection<IRoutine<ILogixContent>>(routines ?? Enumerable.Empty<IRoutine<ILogixContent>>());
         }
 
         /// <inheritdoc />

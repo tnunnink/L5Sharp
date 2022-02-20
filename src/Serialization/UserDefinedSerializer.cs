@@ -10,7 +10,7 @@ namespace L5Sharp.Serialization
     internal class UserDefinedSerializer : IXSerializer<IUserDefined>
     {
         private readonly LogixContext _context;
-        private static readonly XName ElementName = LogixNames.DataType;
+        private static readonly XName ElementName = L5XElement.DataType.ToXName();
 
         public UserDefinedSerializer(LogixContext context)
         {

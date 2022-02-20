@@ -18,21 +18,17 @@ namespace L5Sharp.Comparers
         /// Gets the singleton instance of the <see cref="ComponentNameComparer"/>.
         /// </summary>
         public static DataTypeStructureComparer Instance { get; } = new();
-        
+
         /// <inheritdoc />
         public bool Equals(IDataType? x, IDataType? y)
         {
             if (ReferenceEquals(x, y)) return true;
             if (ReferenceEquals(x, null)) return false;
             if (ReferenceEquals(y, null)) return false;
-            return x.Name == y.Name
-                   && x.GetMembers().SequenceEqual(y.GetMembers(), MemberStructureComparer.Instance);
+            return x.Name == y.Name && x.GetMembers().SequenceEqual(y.GetMembers(), MemberStructureComparer.Instance);
         }
 
         /// <inheritdoc />
-        public int GetHashCode(IDataType obj)
-        {
-            throw new NotImplementedException();
-        }
+        public int GetHashCode(IDataType obj) => obj.Name.GetHashCode() ^ obj.GetMembers().GetHashCode();
     }
 }

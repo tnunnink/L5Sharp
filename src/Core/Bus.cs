@@ -88,37 +88,98 @@ namespace L5Sharp.Core
 
             _modules[address] = module;
         }
-        
+
         /// <summary>
-        /// Creates a new <see cref="Module"/> with the provided name and catalog number, and assigns it to the specified
-        /// address on the <see cref="Bus"/> collection.
+        /// Creates a new <see cref="Module"/> with the provided name and catalog number, and assigns it to the address
+        /// determined using the provided IP address and/or slot number.
         /// </summary>
         /// <param name="name">The name of the module to create.</param>
         /// <param name="catalogNumber">The catalog number of the module to create.</param>
-        /// <param name="address">The address at which to place the module on the Bus (Slot/IP/Node).</param>
+        /// <param name="slot">The slot number of the module. If not provided will default to 0.</param>
+        /// <param name="ipAddress">The IP Address of the module.</param>
         /// <param name="description">The optional description for the module.</param>
         /// <param name="catalogService">The optional service provider that is responsible for retrieving
         /// the <see cref="ModuleDefinition"/> for the specified catalog number. By default this will use the
         /// <see cref="LogixCatalog"/> built in service provider.</param>
         /// <returns>The <see cref="Module"/> instance that was created using the provided parameters.</returns>
-        public Module New(ComponentName name, CatalogNumber catalogNumber, string address, string? description = null,
-            ICatalogService? catalogService = null)
+        /// <exception cref="ModuleNotFoundException"><c>catalogNumber</c> could not be found by the catalog service provider.</exception>
+        /// <exception cref="InvalidOperationException">The Bus instance is full and can not add new modules.</exception>
+        /// <exception cref="ArgumentException">The module definition obtained for the specified catalog number
+        /// does not have a valid upstream connection port for the current Bus type.</exception>
+        /// <exception cref="ComponentNameCollisionException"><c>name</c> already exists on the current Bus instance.</exception>
+        /// <seealso cref="New(L5Sharp.Core.ComponentName,L5Sharp.Core.CatalogNumber,System.Net.IPAddress,byte,string?,L5Sharp.ICatalogService?)"/>
+        /// <seealso cref="New(L5Sharp.Core.ComponentName,L5Sharp.Core.ModuleDefinition,string?)"/>
+        public Module New(ComponentName name, CatalogNumber catalogNumber,
+            byte slot = default, IPAddress? ipAddress = null,
+            string? description = null, ICatalogService? catalogService = null) =>
+            NewModule(name, catalogNumber, slot, ipAddress, description, catalogService);
+
+        /// <summary>
+        /// Creates a new <see cref="Module"/> with the provided name and catalog number, and assigns it to the address
+        /// determined using the provided IP address and/or slot number.
+        /// </summary>
+        /// <param name="name">The name of the module to create.</param>
+        /// <param name="catalogNumber">The catalog number of the module to create.</param>
+        /// <param name="ipAddress">The IP Address of the module.</param>
+        /// <param name="slot">The slot number of the module. If not provided will default to 0.</param>
+        /// <param name="description">The optional description for the module.</param>
+        /// <param name="catalogService">The optional service provider that is responsible for retrieving
+        /// the <see cref="ModuleDefinition"/> for the specified catalog number. By default this will use the
+        /// <see cref="LogixCatalog"/> built in service provider.</param>
+        /// <returns>The <see cref="Module"/> instance that was created using the provided parameters.</returns>
+        /// <exception cref="ModuleNotFoundException"><c>catalogNumber</c> could not be found by the catalog service provider.</exception>
+        /// <exception cref="InvalidOperationException">The Bus instance is full and can not add new modules.</exception>
+        /// <exception cref="ArgumentException">The module definition obtained for the specified catalog number
+        /// does not have a valid upstream connection port for the current Bus type.</exception>
+        /// <exception cref="ComponentNameCollisionException"><c>name</c> already exists on the current Bus instance.</exception>
+        /// <seealso cref="New(L5Sharp.Core.ComponentName,L5Sharp.Core.CatalogNumber,byte,System.Net.IPAddress?,string?,L5Sharp.ICatalogService?)"/>
+        /// <seealso cref="New(L5Sharp.Core.ComponentName,L5Sharp.Core.ModuleDefinition,string?)"/>
+        public Module New(ComponentName name, CatalogNumber catalogNumber, IPAddress ipAddress, byte slot = default,
+            string? description = null, ICatalogService? catalogService = null) =>
+            NewModule(name, catalogNumber, slot, ipAddress, description, catalogService);
+
+        /// <summary>
+        /// Creates a new <see cref="Module"/> with the provided name and module definition,
+        /// and assigns it to the <see cref="Bus"/> collection at the address configured on the connecting port definition.
+        /// </summary>
+        /// <param name="name">The name of the module to create.</param>
+        /// <param name="definition">The definition of the module to create.</param>
+        /// <param name="description">The optional description for the module.</param>
+        /// <returns>The <see cref="Module"/> instance that was created using the provided parameters.</returns>
+        /// <exception cref="ArgumentNullException"><c>definition</c> is null.</exception>
+        /// <exception cref="ArgumentException"><c>definition</c> does not have a configured upstream port that
+        /// matches the bus <see cref="Type"/>.</exception>
+        public Module New(ComponentName name, ModuleDefinition definition, string? description = null)
         {
-            var catalog = catalogService ?? new LogixCatalog();
-            var definition = catalog.Lookup(catalogNumber);
+            if (definition is null)
+                throw new ArgumentNullException(nameof(definition));
 
-            address = IsAvailable(address) ? address : NextAvailable();
-            ConfigurePort(definition, address);
+            var connecting = definition.Ports.FirstOrDefault(p => p.Upstream && p.Type == Type && !p.DownstreamOnly);
 
-            var module = new Module(name, definition, _port.Module.Name, _port.Id, description);
+            if (connecting is null)
+                throw new ArgumentException(
+                    $"The provided definition does not have an upstream connection port of type '{Type}'.");
 
-            ValidateModule(module);
-
-            _modules.Add(address, module);
-            return module;
+            return NewModule(name, definition, connecting.Address, description);
         }
-        
-        private void ConfigurePort(ModuleDefinition definition, string address)
+
+
+        /// <inheritdoc />
+        public IEnumerator<Module> GetEnumerator() => _modules.Values.GetEnumerator();
+
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+        private void ConfigureDownstreamPort(ModuleDefinition definition, string address)
+        {
+            var local = definition.Ports.FirstOrDefault(p => p.Type != _port.Type);
+
+            if (local is null) return;
+
+            local.Upstream = false;
+            local.Address = address;
+        }
+
+        private void ConfigureUpstreamPort(ModuleDefinition definition, string address)
         {
             var connecting = definition.Ports.FirstOrDefault(p => p.Type == _port.Type && !p.DownstreamOnly);
 
@@ -129,6 +190,25 @@ namespace L5Sharp.Core
 
             connecting.Upstream = true;
             connecting.Address = address;
+        }
+
+        private string DetermineDownstreamAddress(byte slot, IPAddress? ipAddress)
+        {
+            if (IsChassis && ipAddress is not null)
+                return ipAddress.ToString();
+
+            return IsEthernet ? slot.ToString() : string.Empty;
+        }
+
+        private string DetermineUpstreamAddress(byte slot, IPAddress? ipAddress)
+        {
+            if (IsChassis && IsAvailable(slot.ToString()))
+                return slot.ToString();
+
+            if (IsEthernet && ipAddress is not null && IsAvailable(ipAddress.ToString()))
+                return ipAddress.ToString();
+
+            return NextAvailable();
         }
 
         private bool IsAvailable(string? address)
@@ -142,6 +222,34 @@ namespace L5Sharp.Core
             return IsEthernet && address.IsIPv4();
         }
 
+        private Module NewModule(ComponentName name, CatalogNumber catalogNumber,
+            byte slot = default, IPAddress? ipAddress = null,
+            string? description = null, ICatalogService? catalogService = null)
+        {
+            var catalog = catalogService ?? new LogixCatalog();
+            var definition = catalog.Lookup(catalogNumber);
+
+            var upstreamAddress = DetermineUpstreamAddress(slot, ipAddress);
+            ConfigureUpstreamPort(definition, upstreamAddress);
+
+            var downstreamAddress = DetermineUpstreamAddress(slot, ipAddress);
+            ConfigureDownstreamPort(definition, downstreamAddress);
+
+            return NewModule(name, definition, upstreamAddress, description);
+        }
+
+        private Module NewModule(ComponentName name, ModuleDefinition definition, string address,
+            string? description = null)
+        {
+            var module = new Module(name, definition, _port.Module.Name, _port.Id, description);
+
+            ValidateModule(module);
+
+            _modules.Add(address, module);
+
+            return module;
+        }
+
         private string NextAvailable()
         {
             if (IsFull)
@@ -150,7 +258,7 @@ namespace L5Sharp.Core
             if (IsChassis)
             {
                 var range = IsFixed ? Size : byte.MaxValue;
-                
+
                 return Enumerable.Range(byte.MinValue, range)
                     .Except(_modules.Keys.Select(int.Parse))
                     .First()
@@ -189,16 +297,11 @@ namespace L5Sharp.Core
 
             if (module.Ports.Connecting()?.Type != Type)
                 throw new ArgumentException(
-                    $"The provide module upstream port of type '{module.Ports.Connecting()?.Type}' must match Bus type '{Type}'.");
+                    $"The provide module's upstream port of type '{module.Ports.Connecting()?.Type}'does not match bus type '{Type}'.");
 
             if (!IsAvailable(module.Ports.Connecting()?.Address))
                 throw new ArgumentException(
                     $"The provided module upstream port address '{module.Ports.Connecting()?.Address}' is not a valid available address for the Bus.");
         }
-
-        /// <inheritdoc />
-        public IEnumerator<Module> GetEnumerator() => _modules.Values.GetEnumerator();
-
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 }

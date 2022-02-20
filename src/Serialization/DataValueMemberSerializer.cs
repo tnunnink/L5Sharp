@@ -11,7 +11,7 @@ namespace L5Sharp.Serialization
 {
     internal class DataValueMemberSerializer : IXSerializer<IMember<IDataType>>
     {
-        private static readonly XName ElementName = LogixNames.DataValueMember;
+        private static readonly XName ElementName = XName.Get(L5XElement.DataValueMember.ToString());
 
         public XElement Serialize(IMember<IDataType> component)
         {
@@ -41,7 +41,7 @@ namespace L5Sharp.Serialization
                 throw new ArgumentNullException(nameof(element));
 
             if (element.Name != ElementName)
-                throw new ArgumentException($"Element name '{element.Name}' invalid. Expecting '{ElementName}'");
+                throw new ArgumentException($"Element '{element.Name}' not valid for the serializer {GetType()}.");
 
             var name = element.GetComponentName();
             var atomic = (IAtomicType)DataType.Create(element.GetDataTypeName());

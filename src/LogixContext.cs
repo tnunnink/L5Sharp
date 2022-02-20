@@ -36,7 +36,7 @@ namespace L5Sharp
             Serializer = new LogixSerializer(this);
             TypeIndex = new LogixTypeIndex(this);
 
-            UserDefined = new UserDefinedRepository(this);
+            DataTypes = new UserDefinedRepository(this);
             Tags = new TagRepository(this);
             Programs = new ProgramRepository(this);
             Tasks = new TaskRepository(this);
@@ -69,7 +69,7 @@ namespace L5Sharp
             "ddd MMM d HH:mm:ss yyyy", CultureInfo.CurrentCulture);
 
         /// <inheritdoc />
-        public IRepository<IUserDefined> UserDefined { get; }
+        public IRepository<IUserDefined> DataTypes { get; }
 
         /// <inheritdoc />
         public IRepository<ITag<IDataType>> Tags { get; }

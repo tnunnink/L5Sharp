@@ -78,6 +78,18 @@ namespace L5Sharp
         /// <exception cref="ArgumentNullException">name is null.</exception>
         bool Remove(ComponentName name);
 
+        /*/// <summary>
+        /// Changes the name of a component in the <see cref="IComponentCollection{TComponent}"/> from the current name
+        /// to the provided new name. 
+        /// </summary>
+        /// <param name="currentName">The current name of the component.</param>
+        /// <param name="newName">The new name of the component.</param>
+        /// <returns>
+        /// true if a component with current name was found and renamed.
+        /// false if no component with the provided current name was found.
+        /// </returns>
+        bool Rename(ComponentName currentName, ComponentName newName);*/
+
         /// <summary>
         /// Updates or adds the provided component to the <see cref="IComponentCollection{TComponent}"/>
         /// based on its existence in the collection.

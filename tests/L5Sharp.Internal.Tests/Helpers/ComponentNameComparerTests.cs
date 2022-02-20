@@ -4,7 +4,7 @@ using L5Sharp.Factories;
 using L5Sharp.Types;
 using NUnit.Framework;
 
-namespace L5Sharp.Internal.Tests.Common
+namespace L5Sharp.Internal.Tests.Helpers
 {
     [TestFixture]
     public class ComponentNameComparerTests

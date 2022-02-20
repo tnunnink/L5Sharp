@@ -1,9 +1,10 @@
-﻿using FluentAssertions;
+﻿using System;
+using FluentAssertions;
 using L5Sharp.Core;
 using L5Sharp.Helpers;
 using NUnit.Framework;
 
-namespace L5Sharp.Internal.Tests.Common
+namespace L5Sharp.Internal.Tests.Helpers
 {
     [TestFixture]
     public class LogixNamesTests
@@ -47,6 +48,12 @@ namespace L5Sharp.Internal.Tests.Common
         }
 
         [Test]
+        public void GetComponentName_Invalid_ShouldThrowInvalidOperationException()
+        {
+            FluentActions.Invoking(LogixNames.GetComponentName<string>).Should().Throw<InvalidOperationException>();
+        }
+
+        [Test]
         public void GetComponentName_Controller_ShouldBeExpected()
         {
             var name = LogixNames.GetComponentName<Controller>();
@@ -68,6 +75,28 @@ namespace L5Sharp.Internal.Tests.Common
             var name = LogixNames.GetComponentName<Member<IDataType>>();
 
             name.Should().Be(LogixNames.Member);
+        }
+        
+        [Test]
+        public void GetContainerName_Invalid_ShouldThrowInvalidOperationException()
+        {
+            FluentActions.Invoking(LogixNames.GetContainerName<string>).Should().Throw<InvalidOperationException>();
+        }
+        
+        [Test]
+        public void GetContainerName_UserDefined_ShouldBeExpected()
+        {
+            var name = LogixNames.GetContainerName<UserDefined>();
+
+            name.Should().Be(LogixNames.DataTypes);
+        }
+        
+        [Test]
+        public void GetContainerName_Member_ShouldBeExpected()
+        {
+            var name = LogixNames.GetContainerName<Member<IDataType>>();
+
+            name.Should().Be(LogixNames.Members);
         }
     }
 }

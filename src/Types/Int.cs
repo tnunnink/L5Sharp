@@ -58,7 +58,7 @@ namespace L5Sharp.Types
             var converter = TypeDescriptor.GetConverter(GetType());
 
             if (!converter.CanConvertFrom(value.GetType()))
-                throw new ArgumentException($"Value of type '{value.GetType()}' is not a valid for {GetType()}");
+                throw new ArgumentException($"Value of type '{value.GetType()}' can not be set for type {GetType()}");
 
             Value = (Int)converter.ConvertFrom(value)!;
         }

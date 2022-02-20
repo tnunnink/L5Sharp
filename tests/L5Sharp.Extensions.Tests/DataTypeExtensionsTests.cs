@@ -434,6 +434,134 @@ namespace L5Sharp.Extensions.Tests
             members.Should().Contain(m => m.Name == "[1]");
             members.Should().Contain(m => m.Name == "ACC");
         }
+
+        [Test]
+        public void SetData_IncompatibleAtomics_WillThrowArgumentException()
+        {
+            var target = new Int(20);
+            var source = new Dint(100);
+
+            FluentActions.Invoking(() => target.SetData(source)).Should().Throw<ArgumentException>();
+        }
+        
+        [Test]
+        public void SetData_DifferentButConvertableAtomics_WillSetData()
+        {
+            var target = new Dint(100);
+            var source = new Int(30);
+
+            target.SetData(source);
+            
+            target.Value.Should().Be(30);
+        }
+        
+        [Test]
+        public void SetData_SourceSmallerThanTarget_TargetShouldHaveExpectedData()
+        {
+            var target = new ArrayType<Int>(5);
+            var types = new List<Int> { 10, 20, 30 };
+            
+            var source = types.ToArrayType();
+
+            target.SetData(source);
+
+            target[0].DataType.Value.Should().Be(10);
+            target[1].DataType.Value.Should().Be(20);
+            target[2].DataType.Value.Should().Be(30);
+            target[3].DataType.Value.Should().Be(0);
+            target[4].DataType.Value.Should().Be(0);
+        }
+        
+        [Test]
+        public void SetData_TargetSmallerThanSource_TargetShouldHaveExpectedData()
+        {
+            var target = new ArrayType<Int>(3);
+            var types = new List<Int> { 10, 20, 30, 40, 50 };
+            
+            var source = types.ToArrayType();
+
+            target.SetData(source);
+
+            target[0].DataType.Value.Should().Be(10);
+            target[1].DataType.Value.Should().Be(20);
+            target[2].DataType.Value.Should().Be(30);
+        }
+        
+        [Test]
+        public void SetData_SameSizedArrays_TargetShouldHaveExpectedData()
+        {
+            var target = new ArrayType<Int>(5);
+            var types = new List<Int> { 10, 20, 30, 40, 50 };
+            
+            var source = types.ToArrayType();
+
+            target.SetData(source);
+
+            target[0].DataType.Value.Should().Be(10);
+            target[1].DataType.Value.Should().Be(20);
+            target[2].DataType.Value.Should().Be(30);
+            target[3].DataType.Value.Should().Be(40);
+            target[4].DataType.Value.Should().Be(50);
+        }
+
+        [Test]
+        public void SetData_DifferentComplexTypes_ShouldHaveExpectedData()
+        {
+            var target = new MyNestedType();
+            var source = new MyOtherNestedType();
+            source.Indy.DataType.SetValue(true);
+            source.Str.DataType.SetValue("This is a test value");
+
+            target.SetData(source);
+
+            target.Indy.DataType.Value.Should().BeTrue();
+            target.Str.DataType.Value.Should().Be("This is a test value");
+            target.Tmr.DataType.PRE.DataType.Value.Should().Be(0);
+            target.Counters.DataType[0].DataType.PRE.DataType.Value.Should().Be(0);
+        }
+
+        [Test]
+        public void SetData_SameComplexTypes_ShouldHaveExpectedData()
+        {
+            var target = new MyNestedType();
+            var source = GetTypeWithData();
+
+            target.SetData(source);
+
+            target.Indy.DataType.Value.Should().BeTrue();
+            target.Str.DataType.Value.Should().Be("This is a test value");
+            target.Tmr.DataType.PRE.DataType.Value.Should().Be(5000);
+            target.Tmr.DataType.ACC.DataType.Value.Should().Be(0);
+            target.Tmr.DataType.DN.DataType.Value.Should().Be(true);
+            target.Tmr.DataType.TT.DataType.Value.Should().Be(false);
+            target.Tmr.DataType.EN.DataType.Value.Should().Be(false);
+            target.Counters.DataType[0].DataType.PRE.DataType.Value.Should().Be(0);
+            target.Counters.DataType[0].DataType.OV.DataType.Value.Should().Be(false);
+            target.Counters.DataType[1].DataType.PRE.DataType.Value.Should().Be(1000);
+            target.Counters.DataType[1].DataType.OV.DataType.Value.Should().Be(true);
+            target.Counters.DataType[2].DataType.PRE.DataType.Value.Should().Be(2000);
+            target.Counters.DataType[2].DataType.OV.DataType.Value.Should().Be(true);
+            target.Counters.DataType[3].DataType.PRE.DataType.Value.Should().Be(3000);
+            target.Counters.DataType[3].DataType.OV.DataType.Value.Should().Be(true);
+            target.Counters.DataType[4].DataType.PRE.DataType.Value.Should().Be(0);
+            target.Counters.DataType[4].DataType.OV.DataType.Value.Should().Be(false);
+        }
+
+        private static IDataType GetTypeWithData()
+        {
+            var source = new MyNestedType();
+            source.Indy.DataType.SetValue(true);
+            source.Tmr.DataType.PRE.DataType.SetValue(5000);
+            source.Tmr.DataType.DN.DataType.SetValue(true);
+            source.Str.DataType.SetValue("This is a test value");
+            source.Counters.DataType[1].DataType.OV.DataType.SetValue(true);
+            source.Counters.DataType[2].DataType.OV.DataType.SetValue(true);
+            source.Counters.DataType[3].DataType.OV.DataType.SetValue(true);
+            source.Counters.DataType[1].DataType.PRE.DataType.SetValue(1000);
+            source.Counters.DataType[2].DataType.PRE.DataType.SetValue(2000);
+            source.Counters.DataType[3].DataType.PRE.DataType.SetValue(3000);
+            return source;
+        }
     }
     
     public class MyNestedType : ComplexType

@@ -12,7 +12,6 @@ namespace L5Sharp
     /// the parent <c>IComplexType</c>.
     /// </remarks>
     /// <typeparam name="TMember">The <see cref="IMember{TDataType}"/> type that the collection represents.</typeparam>
-    /// <seealso cref="IReadOnlyMembers{TMember}"/>
     public interface IMemberCollection<TMember> : IComponentCollection<TMember> where TMember : IMember<IDataType>
     {
         /// <summary>

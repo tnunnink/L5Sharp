@@ -60,7 +60,7 @@ namespace L5Sharp.Core
         /// true if <see cref="Comments"/> contains the specified comment.
         /// false if comment is null, empty, or is not contained in <see cref="Comments"/>.
         /// </returns>
-        public bool ContainsComment(string comment) => !string.IsNullOrEmpty(comment) && _comments.ContainsValue(comment);
+        public bool ContainsValue(string comment) => !string.IsNullOrEmpty(comment) && _comments.ContainsValue(comment);
 
         /// <summary>
         /// Determines whether <see cref="Comments"/> contains the specified tag name.

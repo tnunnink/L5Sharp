@@ -10,9 +10,6 @@ namespace L5Sharp.Serialization
 {
     internal class TaskSerializer : IXSerializer<ITask>
     {
-        private static readonly string ScheduledProgram = nameof(ScheduledProgram);
-        private static readonly string Name = nameof(Name);
-
         public XElement Serialize(ITask component)
         {
             if (component is null)
@@ -32,8 +29,11 @@ namespace L5Sharp.Serialization
             if (!component.ScheduledPrograms.Any()) return element;
 
             var scheduled = new XElement(nameof(component.ScheduledPrograms));
+            
             scheduled.Add(component.ScheduledPrograms
-                .Select(p => new XElement(ScheduledProgram, new XAttribute(Name, p))));
+                .Select(p => new XElement(L5XElement.ScheduledProgram.ToXName(),
+                    new XAttribute(L5XAttribute.Name.ToString(), p))));
+            
             element.Add(scheduled);
 
             return element;
@@ -43,7 +43,7 @@ namespace L5Sharp.Serialization
         {
             if (element == null)
                 throw new ArgumentNullException(nameof(element));
-            
+
             var name = element.GetComponentName();
             var description = element.GetComponentDescription();
             var type = element.GetAttribute<ITask, TaskType>(t => t.Type);
@@ -52,7 +52,7 @@ namespace L5Sharp.Serialization
             var watchdog = element.GetAttribute<ITask, Watchdog>(t => t.Watchdog);
             var disableUpdateOutputs = element.GetAttribute<ITask, bool>(t => t.DisableUpdateOutputs);
             var inhibitTask = element.GetAttribute<ITask, bool>(t => t.InhibitTask);
-            var programs = element.Descendants(ScheduledProgram).Select(e => e.GetComponentName());
+            var programs = element.Descendants(L5XElement.ScheduledProgram.ToXName()).Select(e => e.GetComponentName());
 
             if (type is null)
                 throw new ArgumentException("Provided element must have a task type attribute");
@@ -65,10 +65,10 @@ namespace L5Sharp.Serialization
                 return new PeriodicTask(name, rate, priority, watchdog, disableUpdateOutputs,
                     inhibitTask, programs, description);
 
-            var eventInfo = element.Element(LogixNames.EventInfo);
-            var eventTrigger = eventInfo?.GetAttribute<IEventTask, TaskEventTrigger>(t => t.EventTrigger);
-            var enableTimeout = eventInfo?.GetAttribute<IEventTask, bool>(t => t.EnableTimeout) ?? false;
-            var eventTag = eventInfo?.GetAttribute<IEventTask, string?>(t => t.EventTag);
+            var eventInfo = element.Element(L5XElement.EventInfo.ToXName());
+            var eventTrigger = eventInfo?.GetAttribute<EventTask, TaskEventTrigger>(t => t.EventTrigger);
+            var enableTimeout = eventInfo?.GetAttribute<EventTask, bool>(t => t.EnableTimeout) ?? false;
+            var eventTag = eventInfo?.GetAttribute<EventTask, string?>(t => t.EventTag);
 
             return new EventTask(name, rate, priority, watchdog, disableUpdateOutputs,
                 inhibitTask, programs, eventTrigger, enableTimeout, eventTag, description);

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using L5Sharp.Enums;
+using L5Sharp.Exceptions;
 
 namespace L5Sharp.Core
 {
@@ -16,10 +17,49 @@ namespace L5Sharp.Core
             var member = new Member<TDataType>(name, dataType, radix, externalAccess, description);
             _tagMember = new TagMember<TDataType>(member, root, null);
 
-            Usage = usage != null ? usage : TagUsage.Null;
+            Usage = usage ?? TagUsage.Null;
             Constant = constant;
-
             Comments = new Comments(comments);
+
+            if (!string.IsNullOrEmpty(description))
+                Comments.Apply(TagName, description);
+        }
+
+        /// <summary>
+        /// Creates a new <see cref="Tag{TDataType}"/> instance with the provided name and data type.
+        /// </summary>
+        /// <param name="name">The component name of the tag.</param>
+        /// <param name="dataType">The data type instance of the tag.</param>
+        /// <param name="radix">The optional radix of the tag.
+        /// If not provided will use the result of <see cref="Enums.Radix.Default"/>.</param>
+        /// <param name="externalAccess">The optional external access of the tag.
+        /// If not provided will use <see cref="Enums.ExternalAccess.ReadWrite"/>.</param>
+        /// <param name="description">The optional description of the tag.
+        /// If not provided will use <see cref="String.Empty"/>.</param>
+        /// <param name="usage">The optional usage of the tag.
+        /// If not provided will use <see cref="Enums.TagUsage.Null"/>.</param>
+        /// <exception cref="ArgumentNullException"><c>name</c> or <c>dataType</c> are null.</exception>
+        /// <exception cref="ComponentNameInvalidException">
+        /// <c>name</c> does not satisfy the <see cref="ComponentName"/> constraints.
+        /// </exception>
+        /// <remarks>
+        /// This is the primary public constructor for creating <see cref="Tag{TDataType}"/> components.
+        /// For a more succinct way of creating instances of <see cref="ITag{TDataType}"/>, use the factory class
+        /// <see cref="Factories.Tag"/>.
+        /// </remarks>
+        public Tag(ComponentName name, TDataType dataType, Radix? radix = null, ExternalAccess? externalAccess = null,
+            string? description = null, TagUsage? usage = null)
+        {
+            if (name is null)
+                throw new ArgumentNullException(nameof(name));
+
+            var root = (ITag<IDataType>)(ITag<TDataType>)this;
+            var member = new Member<TDataType>(name, dataType, radix, externalAccess, description);
+            _tagMember = new TagMember<TDataType>(member, root, null);
+
+            Usage = usage ?? TagUsage.Null;
+            Comments = new Comments();
+
             if (!string.IsNullOrEmpty(description))
                 Comments.Apply(TagName, description);
         }
@@ -71,7 +111,7 @@ namespace L5Sharp.Core
 
         /// <inheritdoc />
         public bool Constant { get; }
-        
+
         /// <inheritdoc />
         public Comments Comments { get; }
 
@@ -79,10 +119,16 @@ namespace L5Sharp.Core
         public ITagMember<IDataType> this[int x] => _tagMember[x];
 
         /// <inheritdoc />
-        public ITagMember<IDataType> this[int x, int y] => _tagMember[x, y];
+        public ITagMember<IDataType> this[int x, int y] => _tagMember.DataType is IArrayType<IDataType> arrayType
+            ? new TagMember<IDataType>(arrayType[x, y], Root, (ITag<IDataType>)(ITag<TDataType>)this)
+            : throw new InvalidOperationException(
+                $"Tag of type '{GetType()}' is not an '{typeof(IArrayType<IDataType>)}'");
 
         /// <inheritdoc />
-        public ITagMember<IDataType> this[int x, int y, int z] => _tagMember[x, y, z];
+        public ITagMember<IDataType> this[int x, int y, int z] => _tagMember.DataType is IArrayType<IDataType> arrayType
+            ? new TagMember<IDataType>(arrayType[x, y, z], Root, (ITag<IDataType>)(ITag<TDataType>)this)
+            : throw new InvalidOperationException(
+                $"Tag of type '{GetType()}' is not an '{typeof(IArrayType<IDataType>)}'");
 
         /// <inheritdoc />
         public void Comment(string comment) => _tagMember.Comment(comment);
@@ -110,6 +156,6 @@ namespace L5Sharp.Core
         public void SetValue(IAtomicType value) => _tagMember.SetValue(value);
 
         /// <inheritdoc />
-        public void SetData(IComplexType dataType) => _tagMember.SetData(dataType);
+        public void SetData(IDataType dataType) => _tagMember.SetData(dataType);
     }
 }

@@ -57,7 +57,7 @@ namespace L5Sharp.Extensions
             var results = new List<IMember<IDataType>>();
 
             var members = dataType.GetMembers().ToList();
-            
+
             foreach (var memberName in tagName.Members)
             {
                 var member = members.Find(m => m.Name == memberName);
@@ -148,6 +148,37 @@ namespace L5Sharp.Extensions
             }
 
             return true;
+        }
+
+        /// <summary>
+        /// Recursively sets the values for all atomic type members of the target data type instance with the data
+        /// from the source data type instance.
+        /// </summary>
+        /// <param name="target">The target data type for which data will be written.</param>
+        /// <param name="source">The source data type for which the data will be read.</param>
+        /// <remarks>
+        /// <para>
+        /// This method will traverse the data type member hierarchy and set the value of all atomic members of the target
+        /// type with the data of the provided source type. This traversal will be in order of the members retrieved by the
+        /// <see cref="GetMembers"/> method, which is to say in the order that the members exists for each data type instance.
+        /// This means that setting the data for different data types may not necessarily fail, but simply write values
+        /// to "non-matching" members of the data type structure.
+        /// </para>
+        /// <para>
+        /// If the data types are not both <see cref="IAtomicType"/>, no state/value will be affected (as none exists).
+        /// If the both data types are <see cref="IAtomicType"/>, then the method will call <see cref="IAtomicType.SetValue"/>.
+        /// </para>
+        /// </remarks>
+        public static void SetData(this IDataType target, IDataType source)
+        {
+            if (target is IAtomicType targetValue && source is IAtomicType sourceValue)
+                targetValue.SetValue(sourceValue.Value);
+
+            var memberPairs = target.GetMembers()
+                .Zip(source.GetMembers(), (x, y) => new { First = x.DataType, Second = y.DataType });
+
+            foreach (var pair in memberPairs)
+                SetData(pair.First, pair.Second);
         }
 
         /// <summary>

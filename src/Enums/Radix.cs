@@ -588,7 +588,7 @@ namespace L5Sharp.Enums
                     }
 
                     builder.Append(ByteSeparator);
-                    builder.Append(segment);
+                    builder.Append(segment.ToUpper());
                 }
 
                 return builder.ToString();
@@ -600,15 +600,17 @@ namespace L5Sharp.Enums
 
                 var value = input.Replace(ByteSeparator, string.Empty);
 
-                return value.Length switch
+                IAtomicType hex = value.Length switch
                 {
-                    2 => new Sint(Convert.ToByte(value, BaseNumber)),
-                    4 => new Int(Convert.ToInt16(value, BaseNumber)),
-                    8 => new Dint(Convert.ToInt32(value, BaseNumber)),
-                    16 => new Lint(Convert.ToInt64(value, BaseNumber)),
+                    > 1 and <= 2 => new Sint(Convert.ToByte(value, BaseNumber)),
+                    > 2 and <= 4 => new Int(Convert.ToInt16(value, BaseNumber)),
+                    > 4 and <= 8 => new Dint(Convert.ToInt32(value, BaseNumber)),
+                    > 8 and <= 16 => new Lint(Convert.ToInt64(value, BaseNumber)),
                     _ => throw new ArgumentOutOfRangeException(nameof(value.Length),
                         $"The value {value.Length} is out of range for {Name} Radix.")
                 };
+
+                return hex;
             }
         }
 

@@ -15,6 +15,48 @@ namespace L5Sharp.Core.Tests
     public class TagSimpleTests
     {
         [Test]
+        public void New_ValidArguments_ShouldNotBeNull()
+        {
+            var tag = new Tag<Bool>("Test", new Bool());
+
+            tag.Should().NotBeNull();
+        }
+
+        [Test]
+        public void New_NullName_ShouldThrowArgumentNullException()
+        {
+            FluentActions.Invoking(() => new Tag<Bool>(null!, new Bool())).Should().Throw<ArgumentNullException>();
+        }
+
+        [Test]
+        public void New_NullDataType_ShouldThrowArgumentNullException()
+        {
+            FluentActions.Invoking(() => new Tag<Bool>("Test", null!)).Should().Throw<ArgumentNullException>();
+        }
+
+        [Test]
+        public void New_Overloaded_ShouldHaveExpectedProperties()
+        {
+            var tag = new Tag<Bool>("Test", new Bool(), Radix.Binary, ExternalAccess.ReadOnly, "This is a test",
+                TagUsage.Input);
+
+            tag.Name.Should().Be("Test");
+            tag.DataType.Should().BeOfType<Bool>();
+            tag.Dimensions.Should().BeEquivalentTo(Dimensions.Empty);
+            tag.Radix.Should().Be(Radix.Binary);
+            tag.ExternalAccess.Should().Be(ExternalAccess.ReadOnly);
+            tag.Description.Should().Be("This is a test");
+            tag.Usage.Should().Be(TagUsage.Input);
+            tag.Root.Should().BeSameAs(tag);
+            tag.Parent.Should().BeNull();
+            tag.IsArrayMember.Should().BeFalse();
+            tag.IsStructureMember.Should().BeFalse();
+            tag.IsValueMember.Should().BeTrue();
+            tag.TagName.Should().Be("Test");
+            tag.Value.Should().Be(false);
+        }
+
+        [Test]
         public void Create_ValidTagName_ShouldNotBeNull()
         {
             var tag = Tag.Create<Bool>("Test");
@@ -128,7 +170,7 @@ namespace L5Sharp.Core.Tests
             var tag = Tag.Create("Test", new String(expected));
 
             var value = tag.Value;
-            
+
             value.Should().Be(expected);
         }
 
@@ -274,7 +316,37 @@ namespace L5Sharp.Core.Tests
         }
 
         [Test]
-        public void Contains_Member_ShouldBeFalse()
+        public void SetData_Null_ShouldThrowArgumentNullException()
+        {
+            var tag = Tag.Create<Dint>("Test");
+
+            FluentActions.Invoking(() => tag.SetData(null!)).Should().Throw<ArgumentNullException>();
+        }
+
+        [Test]
+        public void SetData_InvalidType_ShouldNotSetValue()
+        {
+            var tag = Tag.Create<Dint>("Test");
+
+            tag.SetData(new Timer(5000));
+
+            tag.Value.Should().Be(0);
+        }
+
+        [Test]
+        public void SetData_ValidType_ShouldUpdateValue()
+        {
+            var fixture = new Fixture();
+            var expected = fixture.Create<int>();
+            var tag = Tag.Create<Dint>("Test");
+
+            tag.SetData(new Dint(expected));
+
+            tag.Value.Should().Be(expected);
+        }
+
+        [Test]
+        public void HasMember_Member_ShouldBeFalse()
         {
             var tag = Tag.Create<Bool>("Test");
 
@@ -284,7 +356,7 @@ namespace L5Sharp.Core.Tests
         }
 
         [Test]
-        public void IndexGetter_NonArray_ShouldThrowInvalidOperationException()
+        public void Index_NonArray_ShouldThrowInvalidOperationException()
         {
             var tag = Tag.Create<Bool>("Test");
 
@@ -292,7 +364,7 @@ namespace L5Sharp.Core.Tests
         }
 
         [Test]
-        public void NameGetter_InvalidMember_ShouldThrowInvalidMemberPathException()
+        public void Member_InvalidMember_ShouldThrowInvalidMemberPathException()
         {
             var tag = Tag.Create<Bool>("Test");
 

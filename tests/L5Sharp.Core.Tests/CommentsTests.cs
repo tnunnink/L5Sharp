@@ -87,7 +87,7 @@ namespace L5Sharp.Core.Tests
         {
             var comments = new Comments(GetComments());
 
-            var result = comments.ContainsComment(null!);
+            var result = comments.ContainsValue(null!);
 
             result.Should().BeFalse();
         }
@@ -97,7 +97,7 @@ namespace L5Sharp.Core.Tests
         {
             var comments = new Comments(GetComments());
 
-            var result = comments.ContainsComment(string.Empty);
+            var result = comments.ContainsValue(string.Empty);
 
             result.Should().BeFalse();
         }
@@ -107,7 +107,7 @@ namespace L5Sharp.Core.Tests
         {
             var comments = new Comments(GetComments());
 
-            var result = comments.ContainsComment("This is a test comment");
+            var result = comments.ContainsValue("This is a test comment");
 
             result.Should().BeFalse();
         }
@@ -117,7 +117,7 @@ namespace L5Sharp.Core.Tests
         {
             var comments = new Comments(GetComments());
 
-            var result = comments.ContainsComment("This is a test comment #1");
+            var result = comments.ContainsValue("This is a test comment #1");
 
             result.Should().BeTrue();
         }

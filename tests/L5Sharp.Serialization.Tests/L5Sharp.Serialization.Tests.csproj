@@ -217,6 +217,9 @@
       <None Update="ModuleSerializerTests.Serialize_ValueTypeArray_ShouldBeApproved.approved.xml">
         <DependentUpon>ModuleSerializerTests.cs</DependentUpon>
       </None>
+      <None Update="DecoratedDataSerializerTests.Serialize_CounterArray_ShouldBeApproved.approved.xml">
+        <DependentUpon>DecoratedDataSerializerTests.cs</DependentUpon>
+      </None>
     </ItemGroup>
 
     <ItemGroup>

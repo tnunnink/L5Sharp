@@ -7,7 +7,7 @@ using L5Sharp.Exceptions;
 namespace L5Sharp.Core
 {
     /// <inheritdoc />
-    public class ComponentCollection<TComponent> : IComponentCollection<TComponent>
+    public sealed class ComponentCollection<TComponent> : IComponentCollection<TComponent>
         where TComponent : ILogixComponent
     {
         private readonly Dictionary<string, TComponent> _components;
@@ -31,10 +31,10 @@ namespace L5Sharp.Core
         /// If a component is null, or the name is a duplicate (i.e. already added to the collection),
         /// it will be ignored as it is considered invalid.  
         /// </remarks>
-        public ComponentCollection(IEnumerable<TComponent>? components) : this()
+        public ComponentCollection(IEnumerable<TComponent> components) : this()
         {
             if (components is null)
-                return;
+                throw new ArgumentNullException(nameof(components));
 
             foreach (var component in components)
                 if (component is not null && !_components.ContainsKey(component.Name))
@@ -46,13 +46,13 @@ namespace L5Sharp.Core
         public int Count => _components.Count;
 
         /// <inheritdoc />
-        public virtual void Add(TComponent component)
+        public void Add(TComponent component)
         {
             if (component is null)
                 throw new ArgumentNullException(nameof(component));
 
             if (_components.ContainsKey(component.Name))
-                throw new ComponentNameCollisionException(component.Name, typeof(TComponent));
+                throw new ComponentNameCollisionException(component.Name, component.GetType());
 
             _components.Add(component.Name, component);
         }
@@ -61,9 +61,7 @@ namespace L5Sharp.Core
         public void Clear() => _components.Clear();
 
         /// <inheritdoc />
-        public bool Contains(ComponentName name) => name is not null
-            ? _components.ContainsKey(name)
-            : throw new ArgumentNullException(nameof(name));
+        public bool Contains(ComponentName name) => _components.ContainsKey(name);
 
         /// <inheritdoc />
         public TComponent? Find(Predicate<TComponent> match) => match is not null
@@ -98,12 +96,6 @@ namespace L5Sharp.Core
         {
             if (component is null)
                 throw new ArgumentNullException(nameof(component));
-
-            if (!_components.ContainsKey(component.Name))
-            {
-                _components.Add(component.Name, component);
-                return;
-            }
 
             _components[component.Name] = component;
         }

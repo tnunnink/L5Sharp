@@ -31,6 +31,8 @@ namespace L5Sharp.Core.Tests
             tag.IsValueMember.Should().BeFalse();
             tag.IsStructureMember.Should().BeTrue();
             tag.IsArrayMember.Should().BeFalse();
+            tag.Parent.Should().BeNull();
+            tag.Root.Should().BeSameAs(tag);
         }
         
         [Test]
@@ -58,17 +60,15 @@ namespace L5Sharp.Core.Tests
         }
 
         [Test]
-        public void Contains_Null_ShouldBeFalse()
+        public void HasMember_Null_ShouldBeFalse()
         {
             var tag = Tag.Create<Timer>("Test");
 
-            var result = tag.HasMember(null!);
-
-            result.Should().BeFalse();
+            FluentActions.Invoking(() => tag.HasMember(null!)).Should().Throw<ArgumentNullException>();
         }
 
         [Test]
-        public void Contains_ValidExistingTagName_ShouldBeTrue()
+        public void HasMember_ValidExistingTagName_ShouldBeTrue()
         {
             var tag = Tag.Create<Timer>("Test");
 

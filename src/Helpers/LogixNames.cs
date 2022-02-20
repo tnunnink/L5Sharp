@@ -72,8 +72,8 @@ namespace L5Sharp.Helpers
 
         private static readonly Dictionary<Type, Tuple<string, string>> ComponentNameMap = new()
         {
-            { typeof(IController), new Tuple<string, string>(Controller, string.Empty) },
-            { typeof(IUserDefined), new Tuple<string, string>(DataType, DataTypes) },
+            { typeof(IController), new Tuple<string, string>(L5XElement.Controller.ToString(), string.Empty) },
+            { typeof(IUserDefined), new Tuple<string, string>(L5XElement.DataType.ToString(), L5XElement.DataTypes.ToString()) },
             { typeof(IMember<IDataType>), new Tuple<string, string>(Member, Members) },
             { typeof(Module), new Tuple<string, string>(Module, Modules) },
             {

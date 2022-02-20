@@ -47,10 +47,8 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void New_NullComponents_ShouldBeValidEmptyCollection()
         {
-            var collection = new ComponentCollection<MyComponent>(null!);
-
-            collection.Should().NotBeNull();
-            collection.Should().BeEmpty();
+            FluentActions.Invoking(() => new ComponentCollection<MyComponent>(null!)).Should()
+                .Throw<ArgumentNullException>();
         }
 
         [Test]
@@ -68,7 +66,7 @@ namespace L5Sharp.Core.Tests
 
             collection.Count.Should().BePositive();
         }
-        
+
         [Test]
         public void Add_Null_ShouldThrowArgumentNullException()
         {
@@ -250,15 +248,15 @@ namespace L5Sharp.Core.Tests
         }
 
         [Test]
-        public void Upsert_NullComponent_ShouldThrowArgumentNullException()
+        public void Update_NullComponent_ShouldThrowArgumentNullException()
         {
             var collection = new ComponentCollection<MyComponent>(_components);
 
-            FluentActions.Invoking(() => collection.Update((MyComponent)null)).Should().Throw<ArgumentNullException>();
+            FluentActions.Invoking(() => collection.Update(null)).Should().Throw<ArgumentNullException>();
         }
 
         [Test]
-        public void Upsert_NonExistingComponent_ShouldHaveExpectedCount()
+        public void Update_NonExistingComponent_ShouldHaveExpectedCount()
         {
             var collection = new ComponentCollection<MyComponent>(_components);
 
@@ -268,7 +266,7 @@ namespace L5Sharp.Core.Tests
         }
 
         [Test]
-        public void Upsert_ExistingComponent_ShouldHaveExpectedCount()
+        public void Update_ExistingComponent_ShouldHaveExpectedCount()
         {
             var collection = new ComponentCollection<MyComponent>(_components);
 
@@ -278,7 +276,7 @@ namespace L5Sharp.Core.Tests
         }
 
         [Test]
-        public void Upsert_ExistingComponent_ShouldHaveUpdatedDescription()
+        public void Update_ExistingComponent_ShouldHaveUpdatedDescription()
         {
             var collection = new ComponentCollection<MyComponent>(_components);
 
@@ -289,16 +287,16 @@ namespace L5Sharp.Core.Tests
         }
 
         [Test]
-        public void Upsert_NullComponents_ShouldThrowArgumentNullException()
+        public void UpdateMany_NullComponents_ShouldThrowArgumentNullException()
         {
             var collection = new ComponentCollection<MyComponent>(_components);
 
-            FluentActions.Invoking(() => collection.UpdateMany(((List<MyComponent>)null)!)).Should()
+            FluentActions.Invoking(() => collection.UpdateMany(null!)).Should()
                 .Throw<ArgumentNullException>();
         }
 
         [Test]
-        public void Upsert_ValidComponents_ShouldHaveExpectedCount()
+        public void UpdateMany_ValidComponents_ShouldHaveExpectedCount()
         {
             var collection = new ComponentCollection<MyComponent>(_components);
 
@@ -343,7 +341,7 @@ namespace L5Sharp.Core.Tests
             Description = description ?? string.Empty;
         }
 
-        public string Name { get; }
+        public string Name { get; set; }
         public string Description { get; }
     }
 }
