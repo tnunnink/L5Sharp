@@ -34,17 +34,17 @@ namespace L5Sharp.Extensions
         /// <returns>A new <see cref="XElement"/> instance that represents the serialized L5X of the component.</returns>
         public static XElement Serialize<TComponent>(this TComponent component)
             where TComponent : ILogixComponent => GetSerializer<TComponent>().Serialize(component);
-        
+
+        /// <summary>
+        /// Deserialized an <see cref="XElement"/> instance to a <see cref="ILogixComponent"/> using the serializer
+        /// defined for the component type.
+        /// </summary>
+        /// <param name="element">The <see cref="XElement"/> instance to deserialize.</param>
+        /// <typeparam name="TComponent">The type of logix component to deserialize.</typeparam>
+        /// <returns>A new <see cref="ILogixComponent"/> type that represents the deserialized component of the current element.</returns>
         public static TComponent Deserialize<TComponent>(this XElement element)
             where TComponent : ILogixComponent => GetSerializer<TComponent>().Deserialize(element);
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="name"></param>
-        /// <typeparam name="TComponent"></typeparam>
-        /// <returns></returns>
-        /// <exception cref="InvalidOperationException"></exception>
         private static IL5XSerializer<TComponent> GetSerializer<TComponent>()
             where TComponent : ILogixComponent => Serializers.TryGetValue(typeof(TComponent), out var serializer)
             ? (IL5XSerializer<TComponent>)serializer

@@ -12,6 +12,19 @@ namespace L5Sharp.Core
     /// </summary>
     public static class DataType
     {
+        /*private static readonly Dictionary<string, Func<string, Radix, object, IAtomicType>> AtomicGenerators = 
+            new(StringComparer.OrdinalIgnoreCase)
+        {
+            { nameof(Bool), new Bool() },
+            //Bit is a valid type that appears in the L5X and is the same as a Bool
+            { "Bit", new Bool() },
+            { nameof(Sint), new Sint() },
+            { nameof(Int), new Int() },
+            { nameof(Dint), new Dint() },
+            { nameof(Lint), new Lint() },
+            { nameof(Real), new Real() }
+        };*/
+
         private static readonly Dictionary<string, IDataType> Registry = new(StringComparer.OrdinalIgnoreCase)
         {
             { nameof(Bool), new Bool() },
@@ -29,6 +42,11 @@ namespace L5Sharp.Core
             { nameof(Message), new Message() },
             { nameof(Control), new Control() }
         };
+
+        /// <summary>
+        /// Gets a new <see cref="Bool"/> atomic instance value. 
+        /// </summary>
+        public static Bool Bool => (Bool)Registry[nameof(Bool)];
 
         /// <summary>
         /// List of all registered <see cref="IDataType"/> names.
@@ -70,6 +88,45 @@ namespace L5Sharp.Core
                 throw new ArgumentException("Name can not be null or empty");
 
             return Registry.ContainsKey(name) ? Registry[name].Instantiate() : new Undefined(name);
+        }
+
+        /// <summary>
+        /// Creates a new <see cref="IAtomicType"/> with the provided type name, radix, and value.
+        /// </summary>
+        /// <param name="name">The name of the atomic type to create.</param>
+        /// <param name="radix">The radix of the atomic type.</param>
+        /// <param name="value">The value to initialize the type with.</param>
+        /// <returns>A new <see cref="IAtomicType"/> value instance with the provided arguments.</returns>
+        /// <exception cref="ArgumentException">name is null or empty -or- name is not a valid atomic type name.</exception>
+        public static IAtomicType Atomic(string name, Radix radix, object? value = null)
+        {
+            if (string.IsNullOrEmpty(name))
+                throw new ArgumentException("Name can not be null or empty");
+
+            if (!Atomics.Contains(name))
+                throw new ArgumentException($"The data type name '{name}' is not an atomic type");
+
+            //todo actually need a constructor that would take radix and value
+            var type = (IAtomicType)Registry[name];
+
+            return type;
+        }
+        
+        /// <summary>
+        /// Creates a new <see cref="IComplexType"/> with the provided data type name.
+        /// </summary>
+        /// <param name="name">The name of the predefined complex type to create.</param>
+        /// <returns>A new <see cref="IComplexType"/> instance identified by the provided name.</returns>
+        /// <exception cref="ArgumentException">name is null or empty -or- name is not a valid predefined complex type name.</exception>
+        public static IComplexType Complex(string name)
+        {
+            if (string.IsNullOrEmpty(name))
+                throw new ArgumentException("Name can not be null or empty");
+
+            if (!Predefined.Contains(name))
+                throw new ArgumentException($"The data type name '{name}' is not a predefined type");
+
+            return (IComplexType)Registry[name];
         }
     }
 }

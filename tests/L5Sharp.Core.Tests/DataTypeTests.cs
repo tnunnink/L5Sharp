@@ -1,5 +1,6 @@
 ﻿using System;
 using FluentAssertions;
+using L5Sharp.Enums;
 using L5Sharp.Types;
 using NUnit.Framework;
 
@@ -82,6 +83,15 @@ namespace L5Sharp.Core.Tests
             var dataType = DataType.Create("SomeType");
 
             dataType.Should().BeEquivalentTo(new Undefined("SomeType"));
+        }
+
+        [Test]
+        public void Atomic_ValidName_ShouldNotBeNull()
+        {
+            var type = DataType.Atomic("bool", Radix.Binary, true);
+
+            type.Name.Should().Be("BOOL");
+            type.Value.Should().Be(true);
         }
     }
 }

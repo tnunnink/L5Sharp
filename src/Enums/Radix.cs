@@ -188,8 +188,7 @@ namespace L5Sharp.Enums
 
             if (parser is null)
                 throw new ArgumentException(
-                    $"Could not determine Radix from input '{input}'. " +
-                    "Verify that the input string is an accepted Radix format");
+                    $"Could not determine Radix from input '{input}'. Verify that the input string is an accepted Radix format");
 
             var value = parser(input);
 
