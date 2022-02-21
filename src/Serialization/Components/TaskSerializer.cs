@@ -6,16 +6,18 @@ using L5Sharp.Enums;
 using L5Sharp.Extensions;
 using L5Sharp.Helpers;
 
-namespace L5Sharp.Serialization
+namespace L5Sharp.Serialization.Components
 {
-    internal class TaskSerializer : IXSerializer<ITask>
+    internal class TaskSerializer : IL5XSerializer<ITask>
     {
+        private static readonly XName ElementName = L5XElement.Task.ToXName();
+        
         public XElement Serialize(ITask component)
         {
             if (component is null)
                 throw new ArgumentNullException(nameof(component));
 
-            var element = new XElement(LogixNames.Task);
+            var element = new XElement(ElementName);
 
             element.AddAttribute(component, c => c.Name);
             element.AddElement(component, c => c.Description);
@@ -43,6 +45,9 @@ namespace L5Sharp.Serialization
         {
             if (element == null)
                 throw new ArgumentNullException(nameof(element));
+            
+            if (element.Name != ElementName)
+                throw new ArgumentException($"Element '{element.Name}' not valid for the serializer {GetType()}.");
 
             var name = element.GetComponentName();
             var description = element.GetComponentDescription();

@@ -5,18 +5,13 @@ using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Extensions;
 using L5Sharp.Helpers;
+using L5Sharp.Serialization.Data;
 
-namespace L5Sharp.Serialization
+namespace L5Sharp.Serialization.Components
 {
-    internal class TagSerializer : IXSerializer<ITag<IDataType>>
+    internal class TagSerializer : IL5XSerializer<ITag<IDataType>>
     {
-        private readonly LogixContext _context;
-        private static readonly XName ElementName = LogixNames.Tag;
-
-        public TagSerializer(LogixContext context)
-        {
-            _context = context;
-        }
+        private static readonly XName ElementName = L5XElement.Tag.ToXName();
 
         public XElement Serialize(ITag<IDataType> component)
         {
@@ -33,11 +28,10 @@ namespace L5Sharp.Serialization
             element.AddAttribute(component, c => c.Radix, t => t.IsValueMember);
             element.AddAttribute(component, c => c.Constant);
             element.AddAttribute(component, c => c.ExternalAccess);
-
-            var tag = (Tag<IDataType>)component;
-            var commentSerializer = new CommentSerializer(component.Name);
-            element.Add(commentSerializer.Serialize(tag.Comments));
             
+            var commentSerializer = new CommentSerializer();
+            element.Add(commentSerializer.Serialize(component.Comments));
+
             //todo same with engineering units and perhaps ranges min/max
 
             var dataSerializer = new FormattedDataSerializer();
@@ -53,10 +47,10 @@ namespace L5Sharp.Serialization
                 throw new ArgumentNullException(nameof(element));
 
             if (element.Name != ElementName)
-                throw new ArgumentException($"Element name '{element.Name}' invalid. Expecting '{ElementName}'");
+                throw new ArgumentException($"Element '{element.Name}' not valid for the serializer {GetType()}.");
 
             var name = element.GetComponentName();
-            var dataType = _context.TypeIndex.GetDataType(element.GetDataTypeName());
+            var dataType = element.GetDataType();
             var dimensions = element.GetAttribute<Tag<IDataType>, Dimensions>(t => t.Dimensions);
             var radix = element.GetAttribute<Tag<IDataType>, Radix>(t => t.Radix);
             var access = element.GetAttribute<Tag<IDataType>, ExternalAccess>(t => t.ExternalAccess);
@@ -64,19 +58,21 @@ namespace L5Sharp.Serialization
             var constant = element.GetAttribute<Tag<IDataType>, bool>(m => m.Constant);
             var description = element.GetAttribute<Tag<IDataType>, string>(m => m.Description);
 
-            //var commentSerializer = new CommentSerializer();
-
+            var commentSerializer = new CommentSerializer();
+            var commentsElement = element.Elements(L5XElement.Comments.ToXName()).FirstOrDefault();
+            var comments = commentsElement is not null ? commentSerializer.Deserialize(commentsElement) : null; 
+                
             var type = dimensions is not null && dimensions.AreEmpty
                 ? new ArrayType<IDataType>(dimensions, dataType, radix, access, description)
                 : dataType;
 
-            var tag = new Tag<IDataType>(name, type, radix, access, description, usage, constant);
-            
-            var formattedData = element.Descendants(LogixNames.Data)
-                .FirstOrDefault(e => e.Attribute("Format")?.Value != TagDataFormat.L5K);
+            var tag = new Tag<IDataType>(name, type, radix, access, description, usage, constant, comments);
+
+            var formattedData = element.Descendants(L5XElement.Data.ToXName())
+                .FirstOrDefault(e => e.Attribute(L5XAttribute.Format.ToXName())?.Value != TagDataFormat.L5K);
 
             if (formattedData is null) return tag;
-            
+
             var dataSerializer = new FormattedDataSerializer();
             var data = dataSerializer.Deserialize(formattedData);
             tag.SetData(data);

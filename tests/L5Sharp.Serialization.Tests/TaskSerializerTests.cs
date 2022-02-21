@@ -6,6 +6,7 @@ using ApprovalTests.Reporters;
 using FluentAssertions;
 using L5Sharp.Core;
 using L5Sharp.Enums;
+using L5Sharp.Serialization.Components;
 using NUnit.Framework;
 
 namespace L5Sharp.Serialization.Tests
@@ -95,6 +96,16 @@ namespace L5Sharp.Serialization.Tests
         public void Deserialize_Null_ShouldThrowArgumentNullException()
         {
             FluentActions.Invoking(() => _serializer.Deserialize(null!)).Should().Throw<ArgumentNullException>();
+        }
+        
+        [Test]
+        public void Deserialize_InvalidElementName_ShouldThrowArgumentException()
+        {
+            const string xml = @"<Invalid></Invalid>";
+            var element = XElement.Parse(xml);
+
+            FluentActions.Invoking(() => _serializer.Deserialize(element)).Should().Throw<ArgumentException>()
+                .WithMessage($"Element 'Invalid' not valid for the serializer {_serializer.GetType()}.");
         }
 
         [Test]

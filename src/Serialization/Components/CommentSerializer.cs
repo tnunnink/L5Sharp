@@ -6,18 +6,12 @@ using L5Sharp.Core;
 using L5Sharp.Extensions;
 using L5Sharp.Helpers;
 
-namespace L5Sharp.Serialization
+namespace L5Sharp.Serialization.Components
 {
-    internal class CommentSerializer : IXSerializer<Comments>
+    internal class CommentSerializer : IL5XSerializer<Comments>
     {
-        private readonly TagName _tagName;
-        private static readonly XName ElementName = LogixNames.Comments;
+        private static readonly XName ElementName = L5XElement.Comments.ToXName();
 
-        public CommentSerializer(TagName tagName)
-        {
-            _tagName = tagName;
-        }
-        
         public XElement Serialize(Comments component)
         {
             if (component == null)
@@ -27,8 +21,8 @@ namespace L5Sharp.Serialization
 
             var comments = component.Select(c =>
             {
-                var comment = new XElement(LogixNames.Comment);
-                comment.Add(new XAttribute(nameof(c.Key.Operand), c.Key.Operand));
+                var comment = new XElement(L5XElement.Comment.ToXName());
+                comment.Add(new XAttribute(L5XAttribute.Operand.ToXName(), c.Key.Operand));
                 comment.Add(new XCData(c.Value));
                 return comment;
             });
@@ -44,11 +38,16 @@ namespace L5Sharp.Serialization
                 throw new ArgumentNullException(nameof(element));
 
             if (element.Name != ElementName)
-                throw new ArgumentException($"Element name '{element.Name}' invalid. Expecting '{ElementName}'");
+                throw new ArgumentException($"Element '{element.Name}' not valid for the serializer {GetType()}.");
+
+            var baseName = element.Ancestors(L5XElement.Tag.ToXName()).FirstOrDefault()?.GetComponentName();
+
+            if (baseName is null)
+                throw new ArgumentException("The provided comments do not have a base tag name");
 
             var comments = element.Elements().Select(e =>
             {
-                var tagName = TagName.Combine(_tagName, e.Attribute(nameof(_tagName.Operand))?.Value!);
+                var tagName = TagName.Combine(baseName, e.Attribute(L5XAttribute.Operand.ToXName())?.Value!);
                 var comment = e.Value;
                 return new KeyValuePair<TagName, string>(tagName, comment);
             });

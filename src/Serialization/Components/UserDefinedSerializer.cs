@@ -5,17 +5,11 @@ using L5Sharp.Core;
 using L5Sharp.Extensions;
 using L5Sharp.Helpers;
 
-namespace L5Sharp.Serialization
+namespace L5Sharp.Serialization.Components
 {
-    internal class UserDefinedSerializer : IXSerializer<IUserDefined>
+    internal class UserDefinedSerializer : IL5XSerializer<IUserDefined>
     {
-        private readonly LogixContext _context;
         private static readonly XName ElementName = L5XElement.DataType.ToXName();
-
-        public UserDefinedSerializer(LogixContext context)
-        {
-            _context = context;
-        }
 
         public XElement Serialize(IUserDefined component)
         {
@@ -30,7 +24,11 @@ namespace L5Sharp.Serialization
             element.AddAttribute(component, c => c.Class);
 
             var members = new XElement(nameof(component.Members));
-            members.Add(component.Members.Select(m => _context.Serializer.Serialize(m)));
+            members.Add(component.Members.Select(m =>
+            {
+                var serializer = new MemberSerializer();
+                return serializer.Serialize(m);
+            }));
             element.Add(members);
 
             return element;
@@ -42,12 +40,17 @@ namespace L5Sharp.Serialization
                 throw new ArgumentNullException(nameof(element));
 
             if (element.Name != ElementName)
-                throw new ArgumentException($"Element name '{element.Name}' invalid. Expecting '{ElementName}'");
+                throw new ArgumentException($"Element '{element.Name}' not valid for the serializer {GetType()}.");
 
             var name = element.GetComponentName();
             var description = element.GetComponentDescription();
-            var members = element.Descendants(LogixNames.Member).Where(e => !bool.Parse(e.Attribute("Hidden")?.Value))
-                .Select(e => _context.Serializer.Deserialize<IMember<IDataType>>(e));
+            var members = element.Descendants(L5XElement.Member.ToXName())
+                .Where(e => !bool.Parse(e.Attribute("Hidden")?.Value!))
+                .Select(e =>
+                {
+                    var serializer = new MemberSerializer();
+                    return serializer.Deserialize(e);
+                });
 
             return new UserDefined(name, description, members);
         }

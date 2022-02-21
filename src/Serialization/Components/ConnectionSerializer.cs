@@ -5,15 +5,16 @@ using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Extensions;
 using L5Sharp.Helpers;
+using L5Sharp.Serialization.Data;
 
-namespace L5Sharp.Serialization
+namespace L5Sharp.Serialization.Components
 {
     /// <summary>
     /// A serializer for a logix <see cref="Connection"/> component.
     /// </summary>
-    public class ConnectionSerializer : IXSerializer<Connection>
+    public class ConnectionSerializer : IL5XSerializer<Connection>
     {
-        private static readonly XName ElementName = LogixNames.Connection;
+        private static readonly XName ElementName = L5XElement.Connection.ToXName();
 
         /// <inheritdoc />
         public XElement Serialize(Connection component)
@@ -41,7 +42,7 @@ namespace L5Sharp.Serialization
                 throw new ArgumentNullException(nameof(element));
 
             if (element.Name != ElementName)
-                throw new ArgumentException($"Element name '{element.Name}' invalid. Expecting '{ElementName}'");
+                throw new ArgumentException($"Element '{element.Name}' not valid for the serializer {GetType()}.");
 
             var name = element.GetComponentName();
             var rpi = element.GetAttribute<Connection, int>(c => c.Rpi);
@@ -56,12 +57,12 @@ namespace L5Sharp.Serialization
 
             var inputSuffix = element.Attribute("InputTagSuffix")?.Value ?? "I";
             var inputTagName = DetermineTagName(element, inputSuffix);
-            var inputType = GenerateDataType(element, LogixNames.InputTag);
+            var inputType = GenerateDataType(element, L5XElement.InputTag.ToString());
             var inputTag = inputType is not null ? new Tag<IDataType>(inputTagName, inputType) : null;
 
             var outputSuffix = element.Attribute("OutputTagSuffix")?.Value ?? "O";
             var outputTagName = DetermineTagName(element, outputSuffix);
-            var outputType = GenerateDataType(element, LogixNames.OutputTag);
+            var outputType = GenerateDataType(element, L5XElement.OutputTag.ToString());
             var outputTag = outputType is not null ? new Tag<IDataType>(outputTagName, outputType) : null;
 
             return new Connection(name, rpi, type, priority, inputConnectionType, inputProductionTrigger,
@@ -73,7 +74,7 @@ namespace L5Sharp.Serialization
             var serializer = new FormattedDataSerializer();
 
             var tagElement = element.Descendants(tagName).FirstOrDefault();
-            var formattedData = tagElement?.Descendants(LogixNames.Data)
+            var formattedData = tagElement?.Descendants(L5XElement.Data.ToXName())
                 .FirstOrDefault(e => e.Attribute("Format")?.Value == TagDataFormat.Decorated.Name);
 
             return formattedData is not null
@@ -83,10 +84,12 @@ namespace L5Sharp.Serialization
 
         private static string DetermineTagName(XNode element, string suffix)
         {
-            var moduleName = element.Ancestors(LogixNames.Module).FirstOrDefault()?.Attribute("Name")?.Value;
-            var parentName = element.Ancestors(LogixNames.Module).FirstOrDefault()?.Attribute("ParentModule")?.Value;
+            var moduleName = element.Ancestors(L5XElement.Module.ToXName())
+                .FirstOrDefault()?.Attribute("Name")?.Value;
+            var parentName = element.Ancestors(L5XElement.Module.ToXName())
+                .FirstOrDefault()?.Attribute("ParentModule")?.Value;
 
-            var slot = element.Ancestors(LogixNames.Port)
+            var slot = element.Ancestors(L5XElement.Port.ToXName())
                 .Where(p => !bool.Parse(p.Attribute("Upstream")?.Value!)
                             && p.Attribute("Type")?.Value != "Ethernet"
                             && int.TryParse(p.Attribute("Address")?.Value, out _))

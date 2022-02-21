@@ -33,8 +33,6 @@ namespace L5Sharp
             var document = XDocument.Load(_fileName);
 
             L5X = new L5X(document);
-            Serializer = new LogixSerializer(this);
-            TypeIndex = new LogixTypeIndex(this);
 
             DataTypes = new UserDefinedRepository(this);
             Tags = new TagRepository(this);
@@ -43,8 +41,6 @@ namespace L5Sharp
         }
 
         internal L5X L5X { get; }
-        internal LogixSerializer Serializer { get; }
-        internal LogixTypeIndex TypeIndex { get; }
 
         /// <inheritdoc />
         public Revision SchemaRevision => Revision.Parse(L5X.Root.Attribute(nameof(SchemaRevision))?.Value!);

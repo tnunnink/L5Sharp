@@ -5,11 +5,11 @@ using L5Sharp.Enums;
 using L5Sharp.Extensions;
 using L5Sharp.Helpers;
 
-namespace L5Sharp.Serialization
+namespace L5Sharp.Serialization.Data
 {
-    internal class DataValueSerializer : IXSerializer<IAtomicType>
+    internal class DataValueSerializer : IL5XSerializer<IAtomicType>
     {
-        private static readonly XName ElementName = LogixNames.DataValue;
+        private static readonly XName ElementName = L5XElement.DataValue.ToXName();
         
         public XElement Serialize(IAtomicType component)
         {
@@ -18,9 +18,9 @@ namespace L5Sharp.Serialization
 
             var element = new XElement(ElementName);
 
-            element.AddAttribute(component, m => m.Name, nameOverride: LogixNames.DataType);
+            element.AddAttribute(component, m => m.Name, nameOverride: L5XElement.DataType.ToString());
             //todo what about radix...
-            element.Add(new XAttribute(LogixNames.Value, component.Format()));
+            element.Add(new XAttribute(L5XAttribute.Value.ToXName(), component.Format()));
 
             return element;
         }
@@ -31,12 +31,12 @@ namespace L5Sharp.Serialization
                 throw new ArgumentNullException(nameof(element));
 
             if (element.Name != ElementName)
-                throw new ArgumentException($"Element name '{element.Name}' invalid. Expecting '{ElementName}'");
+                throw new ArgumentException($"Element '{element.Name}' not valid for the serializer {GetType()}.");
             
             var atomic = (IAtomicType)DataType.Create(element.GetDataTypeName());
             //todo what about radix...
             var radix = element.GetAttribute<IMember<IDataType>, Radix>(m => m.Radix) ?? Radix.Default(atomic);
-            var value = element.Attribute(LogixNames.Value)?.Value!;
+            var value = element.Attribute(L5XAttribute.Value.ToXName())?.Value!;
             
             atomic.SetValue(value);
 

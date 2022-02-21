@@ -5,11 +5,11 @@ using L5Sharp.Core;
 using L5Sharp.Extensions;
 using L5Sharp.Helpers;
 
-namespace L5Sharp.Serialization
+namespace L5Sharp.Serialization.Data
 {
-    internal class StructureMemberSerializer : IXSerializer<IMember<IDataType>>
+    internal class StructureMemberSerializer : IL5XSerializer<IMember<IDataType>>
     {
-        private static readonly XName ElementName = LogixNames.StructureMember;
+        private static readonly XName ElementName = L5XElement.StructureMember.ToXName();
 
         public XElement Serialize(IMember<IDataType> component)
         {
@@ -36,8 +36,7 @@ namespace L5Sharp.Serialization
                 throw new ArgumentNullException(nameof(element));
 
             if (element.Name != ElementName)
-                throw new ArgumentException(
-                    $"Expecting element with name {LogixNames.DataValueMember} but got {element.Name}");
+                throw new ArgumentException($"Element '{element.Name}' not valid for the serializer {GetType()}.");
 
             var name = element.GetComponentName();
             
@@ -46,7 +45,7 @@ namespace L5Sharp.Serialization
 
             return new Member<IDataType>(name, dataType);
         }
-        private static IXSerializer<IMember<IDataType>> GetSerializer(IMember<IDataType> member)
+        private static IL5XSerializer<IMember<IDataType>> GetSerializer(IMember<IDataType> member)
         {
             if (member.IsValueMember)
                 return new DataValueMemberSerializer();

@@ -2,18 +2,18 @@
 using System.Linq;
 using System.Xml.Linq;
 using L5Sharp.Enums;
+using L5Sharp.Extensions;
 using L5Sharp.Helpers;
 
-namespace L5Sharp.Serialization
+namespace L5Sharp.Serialization.Data
 {
     /// <summary>
     /// Serializer used for decorated L5X data element. The format attribute is used to pass through the serialization
     /// to more specific serializers.
     /// </summary>
-    internal class FormattedDataSerializer : IXSerializer<IDataType>
+    internal class FormattedDataSerializer : IL5XSerializer<IDataType>
     {
-        private const string Format = "Format";
-        private static readonly XName ElementName = LogixNames.Data;
+        private static readonly XName ElementName = L5XElement.Data.ToXName();
 
         public XElement Serialize(IDataType component)
         {
@@ -23,9 +23,9 @@ namespace L5Sharp.Serialization
             var element = new XElement(ElementName);
 
             var format = TagDataFormat.FromDataType(component);
-            element.Add(new XAttribute(Format, format));
+            element.Add(new XAttribute(L5XAttribute.Format.ToXName(), format));
 
-            IXSerializer<IDataType>? serializer = null;
+            IL5XSerializer<IDataType>? serializer = null;
 
             format
                 .When(TagDataFormat.Decorated).Then(() => { serializer = new DecoratedDataSerializer(); });
@@ -43,16 +43,16 @@ namespace L5Sharp.Serialization
                 throw new ArgumentNullException(nameof(element));
             
             if (element.Name != ElementName)
-                throw new ArgumentException($"Element name '{element.Name}' invalid. Expecting '{ElementName}'");
+                throw new ArgumentException($"Element '{element.Name}' not valid for the serializer {GetType()}.");
 
-            var formatName = element.Attribute(Format)?.Value;
+            var formatName = element.Attribute(L5XAttribute.Format.ToXName())?.Value;
             if (formatName is null)
                 throw new ArgumentException(
                     $"The provided element with name {element.Name} does not have a format attribute");
             
             var format = TagDataFormat.FromName(formatName);
 
-            IXSerializer<IDataType>? serializer = null;
+            IL5XSerializer<IDataType>? serializer = null;
 
             format
                 .When(TagDataFormat.Decorated).Then(() => { serializer = new DecoratedDataSerializer(); });

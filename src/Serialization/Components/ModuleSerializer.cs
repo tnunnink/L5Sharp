@@ -5,13 +5,14 @@ using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Extensions;
 using L5Sharp.Helpers;
+using L5Sharp.Serialization.Data;
 
-namespace L5Sharp.Serialization
+namespace L5Sharp.Serialization.Components
 {
-    internal class ModuleSerializer : IXSerializer<Module>
+    internal class ModuleSerializer : IL5XSerializer<Module>
     {
         private const string Communications = "Communications";
-        private static readonly XName ElementName = LogixNames.Module;
+        private static readonly XName ElementName = L5XElement.Module.ToXName();
 
         public XElement Serialize(Module component)
         {
@@ -38,7 +39,7 @@ namespace L5Sharp.Serialization
             keyingState.AddAttribute(component, c => c.State);
             element.Add(keyingState);
 
-            var ports = new XElement(LogixNames.Ports);
+            var ports = new XElement(L5XElement.Ports.ToXName());
             ports.Add(component.Ports.Select(p =>
             {
                 var serializer = new PortSerializer();
@@ -56,7 +57,7 @@ namespace L5Sharp.Serialization
                 communications.Add(config);
             }
 
-            var connections = new XElement(LogixNames.Connections);
+            var connections = new XElement(L5XElement.Connections.ToXName());
             connections.Add(component.Connections.Select(c =>
             {
                 var serializer = new ConnectionSerializer();
@@ -75,7 +76,7 @@ namespace L5Sharp.Serialization
                 throw new ArgumentNullException(nameof(element));
 
             if (element.Name != ElementName)
-                throw new ArgumentException($"Element name '{element.Name}' invalid. Expecting '{ElementName}'");
+                throw new ArgumentException($"Element '{element.Name}' not valid for the serializer {GetType()}.");
 
             var name = element.GetComponentName();
             var description = element.GetComponentDescription();
@@ -93,7 +94,7 @@ namespace L5Sharp.Serialization
             var safetyEnabled = element.GetAttribute<Module, bool>(c => c.SafetyEnabled);
             var state = element.Element("EKey")?.GetAttribute<Module, KeyingState>(c => c.State);
 
-            var ports = element.Descendants(LogixNames.Port).Select(e =>
+            var ports = element.Descendants(L5XElement.Port.ToXName()).Select(e =>
             {
                 var serializer = new PortSerializer();
                 return serializer.Deserialize(e);
@@ -102,7 +103,7 @@ namespace L5Sharp.Serialization
             var configType = element.Descendants("ConfigTag").Select(e =>
             {
                 var structureSerializer = new StructureSerializer();
-                return structureSerializer.Deserialize(e.Descendants(LogixNames.Structure).First());
+                return structureSerializer.Deserialize(e.Descendants(L5XElement.Structure.ToXName()).First());
             }).FirstOrDefault();
 
             var slot = ports.Where(p => !p.Upstream && p.Type != "Ethernet" && int.TryParse(p.Address, out _))
@@ -112,7 +113,7 @@ namespace L5Sharp.Serialization
             var configTagName = slot is not null ? $"{parentModule}:{slot}:C" : $"{name}:C";
             var config = configType is not null ? new Tag<IDataType>(configTagName, configType) : null;
 
-            var connections = element.Descendants(LogixNames.Connection).Select(e =>
+            var connections = element.Descendants(L5XElement.Connection.ToXName()).Select(e =>
             {
                 var serializer = new ConnectionSerializer();
                 return serializer.Deserialize(e);

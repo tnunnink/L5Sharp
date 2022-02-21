@@ -67,7 +67,7 @@ namespace L5Sharp.Helpers
 
             //A converter must be retrieved for the current property type and wrapped around the value expression.
             var propertyType = ((PropertyInfo)node.Member).PropertyType;
-            var converter = LogixParser.Get(propertyType);
+            var converter = L5XParser.Get(propertyType);
 
             var convertExpression = Expression.Invoke(Expression.Constant(converter), valueExpression);
 

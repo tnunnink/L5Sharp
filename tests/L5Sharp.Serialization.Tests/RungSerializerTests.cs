@@ -1,9 +1,11 @@
-﻿using System.Xml.Linq;
+﻿using System;
+using System.Xml.Linq;
 using ApprovalTests;
 using ApprovalTests.Reporters;
 using FluentAssertions;
 using L5Sharp.Core;
 using L5Sharp.Enums;
+using L5Sharp.Serialization.Components;
 using NUnit.Framework;
 
 namespace L5Sharp.Serialization.Tests
@@ -11,13 +13,20 @@ namespace L5Sharp.Serialization.Tests
     [TestFixture]
     public class RungSerializerTests
     {
+        private RungSerializer _serializer;
+
+        [SetUp]
+        public void Setup()
+        {
+            _serializer = new RungSerializer();
+        }
+        
         [Test]
         public void Serialize_WhenCalled_ShouldNotBeNull()
         {
             var component = new Rung(1, RungType.Normal, "This is a test comment", new NeutralText("XIC(Test);"));
-            var serializer = new RungSerializer();
 
-            var xml = serializer.Serialize(component);
+            var xml = _serializer.Serialize(component);
 
             xml.Should().NotBeNull();
         }
@@ -27,20 +36,28 @@ namespace L5Sharp.Serialization.Tests
         public void Serialize_Bool_ShouldBeApproved()
         {
             var component = new Rung(1, RungType.Normal, "This is a test comment", new NeutralText("XIC(Test);"));
-            var serializer = new RungSerializer();
 
-            var xml = serializer.Serialize(component);
+            var xml = _serializer.Serialize(component);
 
             Approvals.VerifyXml(xml.ToString());
+        }
+        
+        [Test]
+        public void Deserialize_InvalidElementName_ShouldThrowArgumentException()
+        {
+            const string xml = @"<Invalid></Invalid>";
+            var element = XElement.Parse(xml);
+
+            FluentActions.Invoking(() => _serializer.Deserialize(element)).Should().Throw<ArgumentException>()
+                .WithMessage($"Element 'Invalid' not valid for the serializer {_serializer.GetType()}.");
         }
 
         [Test]
         public void Deserialize_ValidElement_ShouldNotBeNull()
         {
             var element = GenerateElement();
-            var serializer = new RungSerializer();
 
-            var component = serializer.Deserialize(element);
+            var component = _serializer.Deserialize(element);
 
             component.Should().NotBeNull();
         }
@@ -49,9 +66,8 @@ namespace L5Sharp.Serialization.Tests
         public void Deserialize_ValidBoolElement_ShouldHaveExpectedProperties()
         {
             var element = GenerateElement();
-            var serializer = new RungSerializer();
 
-            var component = serializer.Deserialize(element);
+            var component = _serializer.Deserialize(element);
 
             component.Number.Should().Be(0);
             component.Type.Should().Be(RungType.Normal);

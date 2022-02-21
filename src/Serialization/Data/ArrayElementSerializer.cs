@@ -4,11 +4,11 @@ using L5Sharp.Core;
 using L5Sharp.Extensions;
 using L5Sharp.Helpers;
 
-namespace L5Sharp.Serialization
+namespace L5Sharp.Serialization.Data
 {
-    internal class ArrayElementSerializer : IXSerializer<IMember<IDataType>>
+    internal class ArrayElementSerializer : IL5XSerializer<IMember<IDataType>>
     {
-        private static readonly XName ElementName = LogixNames.Element;
+        private static readonly XName ElementName = L5XElement.Element.ToXName();
         
         public XElement Serialize(IMember<IDataType> component)
         {
@@ -17,12 +17,12 @@ namespace L5Sharp.Serialization
 
             var element = new XElement(ElementName);
             
-            element.AddAttribute(component, c => c.Name, nameOverride: LogixNames.Index);
+            element.AddAttribute(component, c => c.Name, nameOverride: L5XAttribute.Index.ToString());
 
             switch (component.DataType)
             {
                 case IAtomicType atomic:
-                    element.Add(new XAttribute(LogixNames.Value, atomic.Format(component.Radix)));
+                    element.Add(new XAttribute(L5XAttribute.Value.ToXName(), atomic.Format(component.Radix)));
                     break;
                 case IComplexType complexType:
                 {
@@ -42,9 +42,9 @@ namespace L5Sharp.Serialization
                 throw new ArgumentNullException(nameof(element));
 
             if (element.Name != ElementName)
-                throw new ArgumentException($"Element name '{element.Name}' invalid. Expecting '{ElementName}'");
+                throw new ArgumentException($"Element '{element.Name}' not valid for the serializer {GetType()}.");
 
-            var index = element.Attribute(LogixNames.Index)?.Value!;
+            var index = element.Attribute(L5XAttribute.Index.ToXName())?.Value!;
             var dataType = GetElementType(element);
 
             return new Member<IDataType>(index, dataType);
@@ -62,7 +62,7 @@ namespace L5Sharp.Serialization
         /// </remarks>
         private static IDataType GetElementType(XElement element)
         {
-            var structure = element.Element(LogixNames.Structure);
+            var structure = element.Element(L5XElement.Structure.ToXName());
 
             if (structure is not null)
             {
@@ -71,7 +71,7 @@ namespace L5Sharp.Serialization
             }
 
             var dataType = (IAtomicType)DataType.Create(element.Parent?.GetDataTypeName()!);
-            var value = element.Attribute(LogixNames.Value)?.Value!;
+            var value = element.Attribute(L5XAttribute.Value.ToXName())?.Value!;
             dataType.SetValue(value);
             return dataType;
         }

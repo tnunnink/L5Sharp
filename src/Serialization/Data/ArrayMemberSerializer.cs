@@ -6,11 +6,11 @@ using L5Sharp.Enums;
 using L5Sharp.Extensions;
 using L5Sharp.Helpers;
 
-namespace L5Sharp.Serialization
+namespace L5Sharp.Serialization.Data
 {
-    internal class ArrayMemberSerializer : IXSerializer<IMember<IDataType>>
+    internal class ArrayMemberSerializer : IL5XSerializer<IMember<IDataType>>
     {
-        private static readonly XName ElementName = LogixNames.ArrayMember;
+        private static readonly XName ElementName = L5XElement.ArrayMember.ToXName();
 
         public XElement Serialize(IMember<IDataType> component)
         {
@@ -40,7 +40,7 @@ namespace L5Sharp.Serialization
                 throw new ArgumentNullException(nameof(element));
 
             if (element.Name != ElementName)
-                throw new ArgumentException($"Element name '{element.Name}' invalid. Expecting '{ElementName}'");
+                throw new ArgumentException($"Element '{element.Name}' not valid for the serializer {GetType()}.");
 
             var name = element.GetComponentName();
             var dimensions = element.GetAttribute<IMember<IDataType>, Dimensions>(m => m.Dimensions);

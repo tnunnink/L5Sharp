@@ -4,6 +4,7 @@ using ApprovalTests;
 using ApprovalTests.Reporters;
 using FluentAssertions;
 using L5Sharp.Core;
+using L5Sharp.Serialization.Components;
 using NUnit.Framework;
 
 namespace L5Sharp.Serialization.Tests
@@ -16,7 +17,7 @@ namespace L5Sharp.Serialization.Tests
         [SetUp]
         public void Setup()
         {
-            _serializer = new CommentSerializer("TagName");
+            _serializer = new CommentSerializer();
         }
 
         [Test]
@@ -60,19 +61,28 @@ namespace L5Sharp.Serialization.Tests
             const string xml = @"<Invalid></Invalid>";
             var element = XElement.Parse(xml);
 
+            FluentActions.Invoking(() => _serializer.Deserialize(element)).Should().Throw<ArgumentException>()
+                .WithMessage($"Element 'Invalid' not valid for the serializer {_serializer.GetType()}.");
+        }
+
+        [Test]
+        public void Deserialize_NotParentTagElement_ShouldThrowArgumentException()
+        {
+            const string xml = @"<Comments>
+                <Comment Operand="".0"">
+                <![CDATA[This is a test]]>
+                </Comment>
+                </Comments>";
+            
+            var element = XElement.Parse(xml);
+
             FluentActions.Invoking(() => _serializer.Deserialize(element)).Should().Throw<ArgumentException>();
         }
 
         [Test]
         public void Deserialize_Valid_ShouldNotBeNull()
         {
-            const string xml =  @"<Comments>
-                <Comment Operand="".0"">
-                <![CDATA[This is a test]]>
-                </Comment>
-                </Comments>";
-
-            var element = XElement.Parse(xml);
+            var element = XElement.Parse(GetSimpleCommentsTag()).Element("Comments")!;
 
             var component = _serializer.Deserialize(element);
 
@@ -82,19 +92,31 @@ namespace L5Sharp.Serialization.Tests
         [Test]
         public void Deserialize_ValidBool_ShouldHaveExpectedProperties()
         {
-            const string xml =  @"<Comments>
-                <Comment Operand="".0"">
-                <![CDATA[This is a test]]>
-                </Comment>
-                </Comments>";
-
-            var element = XElement.Parse(xml);
+            var element = XElement.Parse(GetSimpleCommentsTag()).Element("Comments")!;
 
             var component = _serializer.Deserialize(element);
 
-            var comment = component.Get("TagName.0");
+            var comment = component.Get("SimpleSint.0");
             comment.Should().NotBeNull();
             comment.Should().Be("This is a test");
+        }
+
+        private static string GetSimpleCommentsTag()
+        {
+            return
+                @"<Tag Name=""SimpleSint"" TagType=""Base"" DataType=""SINT"" Radix=""Hex"" Constant=""false"" ExternalAccess=""None"">
+                <Comments>
+                <Comment Operand="".0"">
+                <![CDATA[This is a test]]>
+                </Comment>
+                </Comments>
+                <Data Format=""L5K"">
+                <![CDATA[5]]>
+                </Data>
+                <Data Format=""Decorated"">
+                <DataValue DataType=""SINT"" Radix=""Hex"" Value=""16#05""/>
+                </Data>
+                </Tag>";
         }
     }
 }

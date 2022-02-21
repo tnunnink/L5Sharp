@@ -9,7 +9,7 @@ namespace L5Sharp.Helpers
     /// <summary>
     /// Static class containing mappings for converting string values (XML typed value) to the strongly type object.
     /// </summary>
-    public static class LogixParser
+    public static class L5XParser
     {
         private static readonly Dictionary<Type, Func<string, object?>> Parsers = new()
         {

@@ -9,6 +9,7 @@ using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Factories;
 using L5Sharp.Serialization;
+using L5Sharp.Serialization.Data;
 using L5Sharp.Types;
 using NUnit.Framework;
 using String = L5Sharp.Types.String;
@@ -100,7 +101,8 @@ namespace L5Sharp.Serialization.Tests
             const string xml = @"<Invalid></Invalid>";
             var element = XElement.Parse(xml);
 
-            FluentActions.Invoking(() => _serializer.Deserialize(element)).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(() => _serializer.Deserialize(element)).Should().Throw<ArgumentException>()
+                .WithMessage($"Element 'Invalid' not valid for the serializer {_serializer.GetType()}.");
         }
         
         [Test]

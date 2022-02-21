@@ -5,14 +5,14 @@ using L5Sharp.Enums;
 using L5Sharp.Extensions;
 using L5Sharp.Helpers;
 
-namespace L5Sharp.Serialization
+namespace L5Sharp.Serialization.Components
 {
     /// <summary>
     /// Provides serialization of a <see cref="Rung"/> as represented in the L5X format. 
     /// </summary>
-    internal class RungSerializer : IXSerializer<Rung>
+    internal class RungSerializer : IL5XSerializer<Rung>
     {
-        private static readonly XName ElementName = LogixNames.Rung;
+        private static readonly XName ElementName = L5XElement.Rung.ToXName();
 
         /// <inheritdoc />
         public XElement Serialize(Rung component)
@@ -37,7 +37,7 @@ namespace L5Sharp.Serialization
                 throw new ArgumentNullException(nameof(element));
 
             if (element.Name != ElementName)
-                throw new ArgumentException($"Element name '{element.Name}' invalid. Expecting '{ElementName}'");
+                throw new ArgumentException($"Element '{element.Name}' not valid for the serializer {GetType()}.");
 
             var number = element.GetAttribute<Rung, int>(r => r.Number);
             var type = element.GetAttribute<Rung, RungType>(r => r.Type);

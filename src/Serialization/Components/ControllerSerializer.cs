@@ -2,15 +2,14 @@
 using System.Globalization;
 using System.Xml.Linq;
 using L5Sharp.Core;
-using L5Sharp.Enums;
 using L5Sharp.Extensions;
 using L5Sharp.Helpers;
 
-namespace L5Sharp.Serialization
+namespace L5Sharp.Serialization.Components
 {
-    internal class ControllerSerializer : IXSerializer<IController>
+    internal class ControllerSerializer : IL5XSerializer<IController>
     {
-        private static readonly XName ElementName = LogixNames.Controller;
+        private static readonly XName ElementName = L5XElement.Controller.ToXName();
 
         public XElement Serialize(IController component)
         {
@@ -22,8 +21,8 @@ namespace L5Sharp.Serialization
             element.AddAttribute(component, c => c.Name);
             element.AddElement(component, c => c.Description);
             element.AddAttribute(component, c => c.ProcessorType);
-            element.AddAttribute(component, c => c.Revision.Major, nameOverride:"MajorRev");
-            element.AddAttribute(component, c => c.Revision.Minor, nameOverride:"MinorRev");
+            element.AddAttribute(component, c => c.Revision.Major, nameOverride: "MajorRev");
+            element.AddAttribute(component, c => c.Revision.Minor, nameOverride: "MinorRev");
 
             element.Add(new XAttribute(nameof(component.ProjectCreationDate),
                 component.ProjectCreationDate.ToString("ddd MMM d HH:mm:ss yyyy")));
@@ -40,8 +39,7 @@ namespace L5Sharp.Serialization
                 throw new ArgumentNullException(nameof(element));
 
             if (element.Name != ElementName)
-                throw new ArgumentException(
-                    $"Element name '{element.Name}' invalid. Expecting '{ElementName}'.");
+                throw new ArgumentException($"Element '{element.Name}' not valid for the serializer {GetType()}.");
 
             var name = element.GetComponentName();
             var processorType = element.GetAttribute<IController, string>(c => c.ProcessorType);

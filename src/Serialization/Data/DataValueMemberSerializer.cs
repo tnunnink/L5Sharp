@@ -7,11 +7,11 @@ using L5Sharp.Factories;
 using L5Sharp.Helpers;
 using L5Sharp.Types;
 
-namespace L5Sharp.Serialization
+namespace L5Sharp.Serialization.Data
 {
-    internal class DataValueMemberSerializer : IXSerializer<IMember<IDataType>>
+    internal class DataValueMemberSerializer : IL5XSerializer<IMember<IDataType>>
     {
-        private static readonly XName ElementName = XName.Get(L5XElement.DataValueMember.ToString());
+        private static readonly XName ElementName = L5XElement.DataValueMember.ToXName();
 
         public XElement Serialize(IMember<IDataType> component)
         {
@@ -30,7 +30,7 @@ namespace L5Sharp.Serialization
                 m => !string.Equals(m.DataType.Name, nameof(Bool), StringComparison.OrdinalIgnoreCase));
 
             var value = component.DataType is Bool ? atomic.Format() : atomic.Format(component.Radix);
-            element.Add(new XAttribute(LogixNames.Value, value));
+            element.Add(new XAttribute(L5XAttribute.Value.ToXName(), value));
 
             return element;
         }
@@ -46,7 +46,7 @@ namespace L5Sharp.Serialization
             var name = element.GetComponentName();
             var atomic = (IAtomicType)DataType.Create(element.GetDataTypeName());
             var radix = element.GetAttribute<IMember<IDataType>, Radix>(m => m.Radix) ?? Radix.Default(atomic);
-            var value = element.Attribute(LogixNames.Value)?.Value!;
+            var value = element.Attribute(L5XAttribute.Value.ToXName())?.Value!;
             atomic.SetValue(value);
 
             return Member.Create(name, atomic, radix);

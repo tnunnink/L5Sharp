@@ -3,9 +3,9 @@
 namespace L5Sharp.Serialization
 {
     /// <summary>
-    /// A base class used for collections of serializers. 
+    /// A base interface used for collections of serializers. 
     /// </summary>
-    internal interface IXSerializer
+    internal interface IL5XSerializer
     {
     }
     
@@ -13,7 +13,7 @@ namespace L5Sharp.Serialization
     /// A typed serializer that defines the methods for serializing and deserializing objects to <see cref="XElement"/>.
     /// </summary>
     /// <typeparam name="T">The type of object used in serialization.</typeparam>
-    internal interface IXSerializer<T> : IXSerializer
+    internal interface IL5XSerializer<T> : IL5XSerializer
     {
         /// <summary>
         /// Serializes the provided objet to an <see cref="XElement"/> object.

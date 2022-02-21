@@ -1,15 +1,13 @@
 using System;
 using System.Xml.Linq;
-using L5Sharp.Core;
-using L5Sharp.Extensions;
 using L5Sharp.Helpers;
 
-namespace L5Sharp.Serialization
+namespace L5Sharp.Serialization.Data
 {
     /// <summary>
     /// Serializer that will pass through data type to other serializers based on it's type.
     /// </summary>
-    internal class DecoratedDataSerializer : IXSerializer<IDataType>
+    internal class DecoratedDataSerializer : IL5XSerializer<IDataType>
     {
         public XElement Serialize(IDataType component)
         {

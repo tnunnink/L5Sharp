@@ -7,6 +7,7 @@ using FluentAssertions;
 using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Factories;
+using L5Sharp.Serialization.Components;
 using L5Sharp.Types;
 using NUnit.Framework;
 
@@ -16,13 +17,11 @@ namespace L5Sharp.Serialization.Tests
     public class UserDefinedSerializerTests
     {
         private UserDefinedSerializer _serializer;
-
-
+        
         [SetUp]
         public void Setup()
         {
-            var context = new LogixContext(TestFileTests.L5X);
-            _serializer = new UserDefinedSerializer(context);
+            _serializer = new UserDefinedSerializer();
         }
 
         [Test]
@@ -70,7 +69,7 @@ namespace L5Sharp.Serialization.Tests
 
             Approvals.VerifyXml(xml.ToString());
         }
-        
+
         [Test]
         public void Deserialize_Null_ShouldThrowArgumentNullException()
         {
@@ -83,7 +82,8 @@ namespace L5Sharp.Serialization.Tests
             const string xml = @"<Invalid></Invalid>";
             var element = XElement.Parse(xml);
 
-            FluentActions.Invoking(() => _serializer.Deserialize(element)).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(() => _serializer.Deserialize(element)).Should().Throw<ArgumentException>()
+                .WithMessage($"Element 'Invalid' not valid for the serializer {_serializer.GetType()}.");
         }
 
         [Test]
@@ -127,7 +127,7 @@ namespace L5Sharp.Serialization.Tests
             boolMember?.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);
             boolMember?.Description.Should().Be("Test Boolean update");
         }
-        
+
         [Test]
         public void Deserialize_SimpleType_ShouldHaveExpectedSintMember()
         {
@@ -144,7 +144,7 @@ namespace L5Sharp.Serialization.Tests
             member?.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);
             member?.Description.Should().Be("Test Sint");
         }
-        
+
         [Test]
         public void Deserialize_SimpleType_ShouldHaveExpectedIntMember()
         {
@@ -161,7 +161,7 @@ namespace L5Sharp.Serialization.Tests
             member?.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);
             member?.Description.Should().Be("Test Int");
         }
-        
+
         [Test]
         public void Deserialize_SimpleType_ShouldHaveExpectedDintMember()
         {
@@ -178,7 +178,7 @@ namespace L5Sharp.Serialization.Tests
             member?.ExternalAccess.Should().Be(ExternalAccess.None);
             member?.Description.Should().Be("Test Dint comment");
         }
-        
+
         [Test]
         public void Deserialize_SimpleType_ShouldHaveExpectedLintMember()
         {
@@ -242,47 +242,6 @@ namespace L5Sharp.Serialization.Tests
             </DataType>";
         }
 
-        private static string GetComplexTypeXml()
-        {
-            return @"<DataType Name=""ComplexType"" Family=""NoFamily"" Class=""User"">
-                <Description>
-                <![CDATA[Test data type with more complex members]]>
-                </Description>
-                <Members>
-                <Member Name=""SimpleMember"" DataType=""SimpleType"" Dimension=""0"" Radix=""NullType"" Hidden=""false"" ExternalAccess=""Read/Write"">
-                <Description>
-                <![CDATA[User defined complex type]]>
-                </Description>
-                </Member>
-                <Member Name=""CounterMember"" DataType=""COUNTER"" Dimension=""0"" Radix=""NullType"" Hidden=""false"" ExternalAccess=""Read/Write"">
-                <Description>
-                <![CDATA[Test counter member]]>
-                </Description>
-                </Member>
-                <Member Name=""TimeMember"" DataType=""TIMER"" Dimension=""0"" Radix=""NullType"" Hidden=""false"" ExternalAccess=""Read/Write"">
-                <Description>
-                <![CDATA[Test Timer member]]>
-                </Description>
-                </Member>
-                <Member Name=""AlarmMember"" DataType=""ALARM"" Dimension=""0"" Radix=""NullType"" Hidden=""false"" ExternalAccess=""Read/Write"">
-                <Description>
-                <![CDATA[Test Analog Alarm]]>
-                </Description>
-                </Member>
-                <Member Name=""AOIType"" DataType=""aoi_Test"" Dimension=""0"" Radix=""NullType"" Hidden=""false"" ExternalAccess=""Read/Write"">
-                <Description>
-                <![CDATA[Test aoi]]>
-                </Description>
-                </Member>
-                <Member Name=""SimpleArray"" DataType=""SimpleType"" Dimension=""5"" Radix=""NullType"" Hidden=""false"" ExternalAccess=""Read/Write"">
-                <Description>
-                <![CDATA[Test simple array type]]>
-                </Description>
-                </Member>
-                </Members>
-                </DataType>";
-        }
-
         private static string GetArrayTypeXml()
         {
             return @"<DataType Name=""ArrayType"" Family=""NoFamily"" Class=""User"">
@@ -319,6 +278,47 @@ namespace L5Sharp.Serialization.Tests
                 <Member Name=""BoolArray"" DataType=""BOOL"" Dimension=""32"" Radix=""Binary"" Hidden=""false"" ExternalAccess=""Read/Write"">
                 <Description>
                 <![CDATA[Test Bool Array]]>
+                </Description>
+                </Member>
+                </Members>
+                </DataType>";
+        }
+
+        private static string GetComplexTypeXml()
+        {
+            return @"<DataType Name=""ComplexType"" Family=""NoFamily"" Class=""User"">
+                <Description>
+                <![CDATA[Test data type with more complex members]]>
+                </Description>
+                <Members>
+                <Member Name=""SimpleMember"" DataType=""SimpleType"" Dimension=""0"" Radix=""NullType"" Hidden=""false"" ExternalAccess=""Read/Write"">
+                <Description>
+                <![CDATA[User defined complex type]]>
+                </Description>
+                </Member>
+                <Member Name=""CounterMember"" DataType=""COUNTER"" Dimension=""0"" Radix=""NullType"" Hidden=""false"" ExternalAccess=""Read/Write"">
+                <Description>
+                <![CDATA[Test counter member]]>
+                </Description>
+                </Member>
+                <Member Name=""TimeMember"" DataType=""TIMER"" Dimension=""0"" Radix=""NullType"" Hidden=""false"" ExternalAccess=""Read/Write"">
+                <Description>
+                <![CDATA[Test Timer member]]>
+                </Description>
+                </Member>
+                <Member Name=""AlarmMember"" DataType=""ALARM"" Dimension=""0"" Radix=""NullType"" Hidden=""false"" ExternalAccess=""Read/Write"">
+                <Description>
+                <![CDATA[Test Analog Alarm]]>
+                </Description>
+                </Member>
+                <Member Name=""AOIType"" DataType=""aoi_Test"" Dimension=""0"" Radix=""NullType"" Hidden=""false"" ExternalAccess=""Read/Write"">
+                <Description>
+                <![CDATA[Test aoi]]>
+                </Description>
+                </Member>
+                <Member Name=""SimpleArray"" DataType=""SimpleType"" Dimension=""5"" Radix=""NullType"" Hidden=""false"" ExternalAccess=""Read/Write"">
+                <Description>
+                <![CDATA[Test simple array type]]>
                 </Description>
                 </Member>
                 </Members>

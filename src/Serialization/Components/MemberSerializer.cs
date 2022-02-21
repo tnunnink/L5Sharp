@@ -5,19 +5,13 @@ using L5Sharp.Enums;
 using L5Sharp.Extensions;
 using L5Sharp.Helpers;
 
-namespace L5Sharp.Serialization
+namespace L5Sharp.Serialization.Components
 {
-    internal class MemberSerializer : IXSerializer<IMember<IDataType>>
+    internal class MemberSerializer : IL5XSerializer<IMember<IDataType>>
     {
         //Override the default property name.
         private const string Dimension = "Dimension";
-        private readonly LogixContext _context;
-        private static readonly XName ElementName = LogixNames.Member;
-
-        public MemberSerializer(LogixContext context)
-        {
-            _context = context;
-        }
+        private static readonly XName ElementName = L5XElement.Member.ToXName();
 
         public XElement Serialize(IMember<IDataType> component)
         {
@@ -43,11 +37,11 @@ namespace L5Sharp.Serialization
                 throw new ArgumentNullException(nameof(element));
 
             if (element.Name != ElementName)
-                throw new ArgumentException($"Element name '{element.Name}' invalid. Expecting '{ElementName}'");
+                throw new ArgumentException($"Element '{element.Name}' not valid for the serializer {GetType()}.");
 
             var name = element.GetComponentName();
             var description = element.GetComponentDescription();
-            var dataType = _context.TypeIndex.GetDataType(element.GetDataTypeName());
+            var dataType = element.GetDataType();
             var dimensions = element.GetAttribute<Member<IDataType>, Dimensions>(m => m.Dimensions, Dimension);
             var radix = element.GetAttribute<Member<IDataType>, Radix>(m => m.Radix);
             var access = element.GetAttribute<Member<IDataType>, ExternalAccess>(m => m.ExternalAccess);

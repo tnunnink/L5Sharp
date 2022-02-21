@@ -6,11 +6,11 @@ using L5Sharp.Enums;
 using L5Sharp.Extensions;
 using L5Sharp.Helpers;
 
-namespace L5Sharp.Serialization
+namespace L5Sharp.Serialization.Data
 {
-    internal class ArraySerializer : IXSerializer<IArrayType<IDataType>>
+    internal class ArraySerializer : IL5XSerializer<IArrayType<IDataType>>
     {
-        private static readonly XName ElementName = LogixNames.Array;
+        private static readonly XName ElementName = L5XElement.Array.ToXName();
 
         public XElement Serialize(IArrayType<IDataType> component)
         {
@@ -19,7 +19,7 @@ namespace L5Sharp.Serialization
 
             var element = new XElement(ElementName);
 
-            element.AddAttribute(component, c => c.Name, nameOverride: LogixNames.DataType);
+            element.AddAttribute(component, c => c.Name, nameOverride: L5XElement.DataType.ToString());
             element.AddAttribute(component, c => c.Dimensions);
             //todo radix?
 
@@ -36,7 +36,7 @@ namespace L5Sharp.Serialization
                 throw new ArgumentNullException(nameof(element));
 
             if (element.Name != ElementName)
-                throw new ArgumentException($"Element name '{element.Name}' invalid. Expecting '{ElementName}'");
+                throw new ArgumentException($"Element '{element.Name}' not valid for the serializer {GetType()}.");
 
             var dimensions = element.GetAttribute<IArrayType<IDataType>, Dimensions>(t => t.Dimensions);
             

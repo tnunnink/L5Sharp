@@ -7,6 +7,7 @@ using FluentAssertions;
 using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Factories;
+using L5Sharp.Serialization.Components;
 using L5Sharp.Types;
 using NUnit.Framework;
 
@@ -20,8 +21,7 @@ namespace L5Sharp.Serialization.Tests
         [SetUp]
         public void Setup()
         {
-            var context = new LogixContext(TestFileTests.L5X);
-            _serializer = new MemberSerializer(context);
+            _serializer = new MemberSerializer();
         }
         
         [Test]
@@ -97,32 +97,18 @@ namespace L5Sharp.Serialization.Tests
             const string xml = @"<Invalid></Invalid>";
             var element = XElement.Parse(xml);
 
-            FluentActions.Invoking(() => _serializer.Deserialize(element)).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(() => _serializer.Deserialize(element)).Should().Throw<ArgumentException>()
+                .WithMessage($"Element 'Invalid' not valid for the serializer {_serializer.GetType()}.");
         }
 
         [Test]
-        public void Deserialize_SimpleMember_ShouldNotBeNull()
+        public void Deserialize_AtomicMember_ShouldNotBeNull()
         {
-            var element = XElement.Parse(GetSimpleMemberXml());
+            var element = XElement.Parse(GetAtomicMemberXml());
 
             var component = _serializer.Deserialize(element);
 
             component.Should().NotBeNull();
-        }
-        
-        [Test]
-        public void Deserialize_SimpleMember_ShouldHaveExpectedProperties()
-        {
-            var element = XElement.Parse(GetSimpleMemberXml());
-
-            var component = _serializer.Deserialize(element);
-
-            component.Name.Should().Be("SimpleMember");
-            component.DataType.Should().BeOfType<UserDefined>();
-            component.Dimensions.Should().Be(Dimensions.Empty);
-            component.Radix.Should().Be(Radix.Null);
-            component.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);
-            component.Description.Should().Be("User defined simple member type");
         }
 
         [Test]
@@ -139,7 +125,7 @@ namespace L5Sharp.Serialization.Tests
             component.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);
             component.Description.Should().Be("Simple Member");
         }
-        
+
         [Test]
         public void Deserialize_ArrayMember_ShouldHaveExpectedProperties()
         {
@@ -156,7 +142,22 @@ namespace L5Sharp.Serialization.Tests
             component.DataType.As<ArrayType<IDataType>>().Dimensions.Length.Should().Be(5);
             component.DataType.As<ArrayType<IDataType>>().Select(m => m.DataType).Should().AllBeOfType<Int>();
         }
-        
+
+        [Test]
+        public void Deserialize_SimpleMember_ShouldHaveExpectedProperties()
+        {
+            var element = XElement.Parse(GetSimpleMemberXml());
+
+            var component = _serializer.Deserialize(element);
+
+            component.Name.Should().Be("SimpleMember");
+            component.DataType.Should().BeOfType<Undefined>();
+            component.Dimensions.Should().Be(Dimensions.Empty);
+            component.Radix.Should().Be(Radix.Null);
+            component.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);
+            component.Description.Should().Be("User defined simple member type");
+        }
+
         private static string GetAtomicMemberXml()
         {
             return @"<Member Name=""Test"" DataType=""BOOL"" Dimension=""0"" Radix=""Decimal"" Hidden=""false"" ExternalAccess=""Read/Write"">

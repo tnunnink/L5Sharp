@@ -19,10 +19,25 @@
         /// Represents the <see cref="Value"/> L5X attribute name.
         /// </summary>
         Value,
+        
+        /// <summary>
+        /// Represents the <see cref="DataType"/> L5X attribute name.
+        /// </summary>
+        DataType,
 
         /// <summary>
         /// Represents the <see cref="Index"/> L5X attribute name.
         /// </summary>
-        Index
+        Index,
+        
+        /// <summary>
+        /// Represents the <see cref="Operand"/> L5X attribute name.
+        /// </summary>
+        Operand,
+        
+        /// <summary>
+        /// Represents the <see cref="Format"/> L5X attribute name.
+        /// </summary>
+        Format
     }
 }

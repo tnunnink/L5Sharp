@@ -2,7 +2,9 @@
 using System.Linq;
 using System.Linq.Expressions;
 using System.Xml.Linq;
+using L5Sharp.Core;
 using L5Sharp.Helpers;
+using L5Sharp.Types;
 
 namespace L5Sharp.Extensions
 {
@@ -15,7 +17,7 @@ namespace L5Sharp.Extensions
         /// <returns>The string value of the 'Name' attribute.</returns>
         /// <exception cref="InvalidOperationException">When the current element does not have a name value.</exception>
         public static string GetComponentName(this XElement element) =>
-            element.Attribute(LogixNames.Name)?.Value
+            element.Attribute(L5XAttribute.Name.ToXName())?.Value
             ?? throw new InvalidOperationException("The current element does not have an attribute with name 'Name'");
 
         /// <summary>
@@ -24,7 +26,7 @@ namespace L5Sharp.Extensions
         /// <param name="element">The current <see cref="XElement"/> instance.</param>
         /// <returns>The string value of the 'Description' element if it exists; otherwise, empty string.</returns>
         public static string GetComponentDescription(this XElement element) =>
-            element.Element(LogixNames.Description)?.Value
+            element.Element(L5XAttribute.Description.ToXName())?.Value
             ?? string.Empty;
 
         /// <summary>
@@ -34,9 +36,30 @@ namespace L5Sharp.Extensions
         /// <returns>
         /// </returns>
         public static string GetDataTypeName(this XElement element) =>
-            element.Attribute(LogixNames.DataType)?.Value ??
+            element.Attribute(L5XAttribute.DataType.ToXName())?.Value ??
             throw new InvalidOperationException(
                 "The current element does not have an attribute with name 'DataType'");
+
+        /// <summary>
+        /// Gets a new <see cref="IDataType"/> instance based ont the current element's data type name.
+        /// </summary>
+        /// <param name="element">The current element.</param>
+        /// <returns>If the data type name exists in the static <see cref="DataType"/> class, a new instance created
+        /// from the static class. If not, but the element is part of an <see cref="XDocument"/>, and the data type
+        /// name exists as a type that can be deserialized, then a new deserialized instance of the type. Otherwise,
+        /// a new <see cref="Undefined"/> type wrapping the data type name.</returns>
+        public static IDataType GetDataType(this XElement element)
+        {
+            var name = element.GetDataTypeName();
+
+            if (DataType.Exists(name))
+                return DataType.Create(name);
+
+            if (element.Document is null) return new Undefined(name);
+            
+            var index = new L5XTypeIndex(element.Document);
+            return index.GetDataType(name);
+        }
 
         /// <summary>
         /// Gets the value of a specified <see cref="XAttribute"/> from the current <see cref="XElement"/> instance.
@@ -71,7 +94,7 @@ namespace L5Sharp.Extensions
 
             var value = element.GetAttribute(name)?.Value;
 
-            return value is not null ? LogixParser.Parse<TProperty>(value) : default;
+            return value is not null ? L5XParser.Parse<TProperty>(value) : default;
         }
 
         /// <summary>
@@ -107,7 +130,7 @@ namespace L5Sharp.Extensions
 
             var value = element.Element(name)?.Value;
 
-            return value is not null ? LogixParser.Parse<TProperty>(value) : default;
+            return value is not null ? L5XParser.Parse<TProperty>(value) : default;
         }
 
         /// <summary>

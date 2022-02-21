@@ -6,6 +6,7 @@ using ApprovalTests.Reporters;
 using FluentAssertions;
 using L5Sharp.Core;
 using L5Sharp.Enums;
+using L5Sharp.Serialization.Data;
 using L5Sharp.Types;
 using NUnit.Framework;
 
@@ -14,21 +15,26 @@ namespace L5Sharp.Serialization.Tests
     [TestFixture]
     public class ArrayElementSerializerTests
     {
+        private ArrayElementSerializer _serializer;
+
+        [SetUp]
+        public void Setup()
+        {
+            _serializer = new ArrayElementSerializer();
+        }
+        
         [Test]
         public void Serialize_Null_ShouldThrowArgumentNullException()
         {
-            var serializer = new ArrayElementSerializer();
-
-            FluentActions.Invoking(() => serializer.Serialize(null!)).Should().Throw<ArgumentNullException>();
+            FluentActions.Invoking(() => _serializer.Serialize(null!)).Should().Throw<ArgumentNullException>();
         }
 
         [Test]
         public void Serialize_WhenCalled_ShouldNotBeNull()
         {
             var element = new Member<Bool>("[1]", new Bool());
-            var serializer = new ArrayElementSerializer();
-
-            var xml = serializer.Serialize(element);
+            
+            var xml = _serializer.Serialize(element);
 
             xml.Should().NotBeNull();
         }
@@ -38,9 +44,8 @@ namespace L5Sharp.Serialization.Tests
         public void Serialize_ValueValueTypeMember_ShouldBeApproved()
         {
             var element = new Member<Bool>("[1]", new Bool());
-            var serializer = new ArrayElementSerializer();
 
-            var xml = serializer.Serialize(element);
+            var xml = _serializer.Serialize(element);
 
             Approvals.VerifyXml(xml.ToString());
         }
@@ -50,9 +55,8 @@ namespace L5Sharp.Serialization.Tests
         public void Serialize_ValueStructureTypeMember_ShouldBeApproved()
         {
             var element = new Member<Timer>("[1]", new Timer());
-            var serializer = new ArrayElementSerializer();
 
-            var xml = serializer.Serialize(element);
+            var xml = _serializer.Serialize(element);
 
             Approvals.VerifyXml(xml.ToString());
         }
@@ -60,9 +64,7 @@ namespace L5Sharp.Serialization.Tests
         [Test]
         public void Deserialize_Null_ShouldThrowArgumentNullException()
         {
-            var serializer = new ArrayElementSerializer();
-
-            FluentActions.Invoking(() => serializer.Deserialize(null!)).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(() => _serializer.Deserialize(null!)).Should().Throw<ArgumentException>();
         }
 
         [Test]
@@ -70,18 +72,17 @@ namespace L5Sharp.Serialization.Tests
         {
             const string xml = @"<Invalid></Invalid>";
             var element = XElement.Parse(xml);
-            var serializer = new ArrayElementSerializer();
 
-            FluentActions.Invoking(() => serializer.Deserialize(element)).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(() => _serializer.Deserialize(element)).Should().Throw<ArgumentException>()
+                .WithMessage($"Element 'Invalid' not valid for the serializer {_serializer.GetType()}.");
         }
 
         [Test]
         public void Deserialize_ValidValueArrayElement_ShouldNotBeNull()
         {
             var element = XElement.Parse(GetValueArrayXml()).Elements().First();
-            var serializer = new ArrayElementSerializer();
 
-            var component = serializer.Deserialize(element);
+            var component = _serializer.Deserialize(element);
 
             component.Should().NotBeNull();
         }
@@ -90,9 +91,8 @@ namespace L5Sharp.Serialization.Tests
         public void Deserialize_ValidValueArrayElement_ShouldHaveExpectedProperties()
         {
             var element = XElement.Parse(GetValueArrayXml()).Elements().First();
-            var serializer = new ArrayElementSerializer();
 
-            var component = serializer.Deserialize(element);
+            var component = _serializer.Deserialize(element);
 
             component.Name.Should().Be("[0]");
             component.DataType.Should().BeOfType<Real>();
@@ -107,9 +107,8 @@ namespace L5Sharp.Serialization.Tests
         public void Deserialize_ValidStructureArrayElement_ShouldNotBeNull()
         {
             var element = XElement.Parse(GetStructureArrayXml()).Elements().First();
-            var serializer = new ArrayElementSerializer();
 
-            var component = serializer.Deserialize(element);
+            var component = _serializer.Deserialize(element);
 
             component.Should().NotBeNull();
         }
@@ -118,9 +117,8 @@ namespace L5Sharp.Serialization.Tests
         public void Deserialize_ValidStructureArrayElement_ShouldHaveExpectedProperties()
         {
             var element = XElement.Parse(GetStructureArrayXml()).Elements().First();
-            var serializer = new ArrayElementSerializer();
 
-            var component = serializer.Deserialize(element);
+            var component = _serializer.Deserialize(element);
 
             component.Name.Should().Be("[0]");
             component.DataType.Should().BeOfType<StructureType>();

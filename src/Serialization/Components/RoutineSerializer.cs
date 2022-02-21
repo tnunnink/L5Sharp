@@ -5,21 +5,12 @@ using L5Sharp.Enums;
 using L5Sharp.Extensions;
 using L5Sharp.Helpers;
 
-namespace L5Sharp.Serialization
+namespace L5Sharp.Serialization.Components
 {
-    /// <summary>
-    /// Provides serialization of a <see cref="IRoutine{TContent}"/> as represented in the L5X format. 
-    /// </summary>
-    internal class RoutineSerializer : IXSerializer<IRoutine<ILogixContent>>
+    internal class RoutineSerializer : IL5XSerializer<IRoutine<ILogixContent>>
     {
-        private readonly LogixContext _context;
-        private static readonly XName ElementName = LogixNames.Routine;
+        private static readonly XName ElementName = L5XElement.Routine.ToXName();
 
-        public RoutineSerializer(LogixContext context)
-        {
-            _context = context;
-        }
-        
         /// <inheritdoc />
         public XElement Serialize(IRoutine<ILogixContent> component)
         {
@@ -31,7 +22,7 @@ namespace L5Sharp.Serialization
             element.AddAttribute(component, c => c.Name);
             element.AddElement(component, c => c.Description);
             element.AddAttribute(component, c => c.Type);
-            element.Add(_context.Serializer.Serialize(component.Content));
+            //todo logix content
 
             return element;
         }
