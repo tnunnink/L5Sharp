@@ -214,7 +214,7 @@ namespace L5Sharp.Enums.Tests
         [Test]
         public void ParseValue_ValidAscii_ShouldBeExpectedValue()
         {
-            const string value = "$05";
+            const string value = "'$05'";
 
             var parsed = Radix.ParseValue(value);
 

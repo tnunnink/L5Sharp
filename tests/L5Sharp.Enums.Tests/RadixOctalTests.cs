@@ -66,7 +66,7 @@ namespace L5Sharp.Enums.Tests
         {
             var result = Radix.Octal.Format(new Dint(20));
 
-            result.Should().Be("8#00_000_000_024");
+            result.Should().Be("8#000_000_000_024");
         }
 
         [Test]
@@ -74,7 +74,7 @@ namespace L5Sharp.Enums.Tests
         {
             var result = Radix.Octal.Format(new Lint(20));
 
-            result.Should().Be("8#0_000_000_000_000_000_000_024");
+            result.Should().Be("8#000_000_000_000_000_000_000_024");
         }
 
         [Test]
@@ -91,20 +91,16 @@ namespace L5Sharp.Enums.Tests
         }
 
         [Test]
-        public void Parse_LengthZero_ShouldThrowArgumentOutOfRangeException()
+        public void Parse_LengthZero_ShouldThrowArgumentException()
         {
-            FluentActions.Invoking(() => Radix.Octal.Parse("8#"))
-                .Should().Throw<ArgumentOutOfRangeException>()
-                .WithMessage("The value 0 is out of range for Octal Radix. (Parameter 'Length')");
+            FluentActions.Invoking(() => Radix.Octal.Parse("8#")).Should().Throw<ArgumentException>();
         }
-
+        
         [Test]
-        public void Parse_LengthGreaterThan22_ShouldThrowArgumentOutOfRangeException()
+        public void Parse_OutOfRangeValue_ShouldThrowArgumentOutOfRangeException()
         {
             FluentActions.Invoking(() => Radix.Octal.Parse(
-                        "8#00_000_000_000_000_000_000_024"))
-                .Should().Throw<ArgumentOutOfRangeException>()
-                .WithMessage("The value 23 is out of range for Octal Radix. (Parameter 'Length')");
+                "8#000_000_000_000_000_000_000_000_024")).Should().Throw<ArgumentOutOfRangeException>();
         }
 
         [Test]

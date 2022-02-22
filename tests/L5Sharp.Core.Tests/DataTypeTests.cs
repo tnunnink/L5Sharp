@@ -1,6 +1,5 @@
 ﻿using System;
 using FluentAssertions;
-using L5Sharp.Enums;
 using L5Sharp.Types;
 using NUnit.Framework;
 
@@ -54,7 +53,7 @@ namespace L5Sharp.Core.Tests
         {
             FluentActions.Invoking(() => DataType.Create(null!)).Should().Throw<ArgumentException>();
         }
-        
+
         [Test]
         public void Create_Empty_ShouldThrowArgumentException()
         {
@@ -86,12 +85,77 @@ namespace L5Sharp.Core.Tests
         }
 
         [Test]
-        public void Atomic_ValidName_ShouldNotBeNull()
+        public void Atomic_InvalidName_ShouldThrowArgumentException()
         {
-            var type = DataType.Atomic("bool", Radix.Binary, true);
+            FluentActions.Invoking(() => DataType.Atomic("Timer", 1234)).Should().Throw<ArgumentException>();
+        }
 
+        [Test]
+        public void Atomic_NullName_ShouldThrowArgumentException()
+        {
+            FluentActions.Invoking(() => DataType.Atomic(null!, 1234)).Should().Throw<ArgumentException>();
+        }
+
+        [Test]
+        public void Atomic_EmptyName_ShouldThrowArgumentException()
+        {
+            FluentActions.Invoking(() => DataType.Atomic(string.Empty, 1234)).Should().Throw<ArgumentException>();
+        }
+
+        [Test]
+        public void Atomic_ValidBool_ShouldBeExpected()
+        {
+            var type = DataType.Atomic("bool", true);
+
+            type.Should().BeOfType<Bool>();
             type.Name.Should().Be("BOOL");
             type.Value.Should().Be(true);
+        }
+
+        [Test]
+        public void Atomic_ValidSint_ShouldBeExpected()
+        {
+            var type = DataType.Atomic("sint", "1");
+
+            type.Should().BeOfType<Sint>();
+            type.Name.Should().Be("SINT");
+            type.Value.Should().Be(1);
+        }
+        
+        [Test]
+        public void Complex_NullName_ShouldThrowArgumentException()
+        {
+            FluentActions.Invoking(() => DataType.Complex(null!)).Should().Throw<ArgumentException>();
+        }
+
+        [Test]
+        public void Complex_EmptyName_ShouldThrowArgumentException()
+        {
+            FluentActions.Invoking(() => DataType.Complex(string.Empty)).Should().Throw<ArgumentException>();
+        }
+
+        [Test]
+        public void Complex_InvalidName_ShouldThrowArgumentException()
+        {
+            FluentActions.Invoking(() => DataType.Complex("Bool")).Should().Throw<ArgumentException>();
+        }
+        
+        [Test]
+        public void Complex_ValidTimer_ShouldBeExpected()
+        {
+            var type = DataType.Complex("timer");
+
+            type.Should().BeOfType<Timer>();
+            type.Name.Should().Be("TIMER");
+        }
+
+        [Test]
+        public void Complex_ValidCounter_ShouldBeExpected()
+        {
+            var type = DataType.Complex("counter");
+
+            type.Should().BeOfType<Counter>();
+            type.Name.Should().Be("COUNTER");
         }
     }
 }

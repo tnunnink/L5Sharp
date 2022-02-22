@@ -16,7 +16,7 @@ namespace L5Sharp.Enums.Tests
             radix.Should().NotBeNull();
             radix.Should().Be(Radix.Hex);
         }
-        
+
         [Test]
         public void Format_Null_ShouldThrowArgumentNullException()
         {
@@ -28,7 +28,7 @@ namespace L5Sharp.Enums.Tests
         {
             FluentActions.Invoking(() => Radix.Hex.Format(new Real())).Should().Throw<NotSupportedException>();
         }
-        
+
         [Test]
         public void Format_ValidBoolFalse_ShouldBeExpected()
         {
@@ -36,7 +36,7 @@ namespace L5Sharp.Enums.Tests
 
             result.Should().Be("16#0");
         }
-        
+
         [Test]
         public void Format_ValidBoolTrue_ShouldBeExpected()
         {
@@ -68,7 +68,7 @@ namespace L5Sharp.Enums.Tests
 
             result.Should().Be("16#0000_0014");
         }
-        
+
         [Test]
         public void Format_Dint1234567_ShouldBeExpectedFormat()
         {
@@ -84,7 +84,7 @@ namespace L5Sharp.Enums.Tests
 
             result.Should().Be("16#0000_0000_0000_0014");
         }
-        
+
         [Test]
         public void Parse_Null_ShouldThrowArgumentNullException()
         {
@@ -99,22 +99,18 @@ namespace L5Sharp.Enums.Tests
         }
 
         [Test]
-        public void Parse_LengthZero_ShouldThrowArgumentOutOfRangeException()
+        public void Parse_LengthZero_ShouldThrowArgumentException()
         {
-            FluentActions.Invoking(() => Radix.Hex.Parse("16#"))
-                .Should().Throw<ArgumentOutOfRangeException>()
-                .WithMessage("The value 0 is out of range for Hex Radix. (Parameter 'Length')");
+            FluentActions.Invoking(() => Radix.Hex.Parse("16#")).Should().Throw<ArgumentException>();
         }
 
         [Test]
-        public void Parse_LengthGreaterThan16_ShouldThrowArgumentOutOfRangeException()
+        public void Parse_OutOfRangeValue_ShouldThrowArgumentOutOfRangeException()
         {
             FluentActions.Invoking(() => Radix.Hex.Parse(
-                    "16#00000_0000_0000_0024"))
-                .Should().Throw<ArgumentOutOfRangeException>()
-                .WithMessage("The value 17 is out of range for Hex Radix. (Parameter 'Length')");
+                "16#0000_0000_0000_0000_0024_0000")).Should().Throw<ArgumentOutOfRangeException>();
         }
-        
+
         [Test]
         public void Parse_ValidBool_ShouldBeExpected()
         {

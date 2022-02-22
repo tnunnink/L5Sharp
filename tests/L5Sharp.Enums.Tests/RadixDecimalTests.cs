@@ -92,6 +92,14 @@ namespace L5Sharp.Enums.Tests
         }
 
         [Test]
+        public void Parse_InvalidLength_ShouldThrowArgumentOutOfRangeException()
+        {
+            FluentActions.Invoking(() => Radix.Decimal.Parse("92233720368547758070"))
+                .Should().Throw<ArgumentOutOfRangeException>()
+                .WithMessage("Input '92233720368547758070' is out of range for the Decimal Radix. (Parameter 'Input')");
+        }
+
+        [Test]
         public void Parse_Byte_ShouldBeExpected()
         {
             var atomic = (Sint)Radix.Decimal.Parse(byte.MaxValue.ToString());

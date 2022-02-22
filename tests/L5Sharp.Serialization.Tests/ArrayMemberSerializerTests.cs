@@ -120,7 +120,6 @@ namespace L5Sharp.Serialization.Tests
             component.Dimensions.Should().Be(new Dimensions(5));
             component.Radix.Should().Be(Radix.Ascii);
             component.Description.Should().BeEmpty();
-            component.As<ArrayType<Sint>>().Should().NotBeNull();
         }
         
         [Test]

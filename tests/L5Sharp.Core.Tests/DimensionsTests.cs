@@ -208,20 +208,6 @@ namespace L5Sharp.Core.Tests
 
             length.Should().Be(1000);
         }
-        
-        [Test]
-        public void CreateMembers_NoOverload_ShouldHaveCount()
-        {
-            var fixture = new Fixture();
-            var x = fixture.Create<ushort>();
-            var dimensions = new Dimensions(x);
-
-            var members = dimensions.CreateMembers<Bool>().ToList();
-
-            members.Should().NotBeNull();
-            members.Should().HaveCount(x);
-            members.Should().AllBeOfType<Member<Bool>>();
-        }
 
         [Test]
         public void Parse_Null_ShouldThrowArgumentNullException()

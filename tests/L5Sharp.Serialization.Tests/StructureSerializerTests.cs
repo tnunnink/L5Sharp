@@ -124,7 +124,6 @@ namespace L5Sharp.Serialization.Tests
 
             component.Name.Should().Be("ArrayType");
             component.Members.ToList().Should().HaveCount(5);
-            component.Members.Should().AllBeOfType<Member<IDataType>>();
         }
         
         [Test]

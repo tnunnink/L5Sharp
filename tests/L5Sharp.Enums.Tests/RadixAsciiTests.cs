@@ -24,7 +24,7 @@ namespace L5Sharp.Enums.Tests
 
             var result = radix.Format(new Sint(20));
 
-            result.Should().Be("$14");
+            result.Should().Be("'$14'");
         }
 
         [Test]
@@ -32,7 +32,7 @@ namespace L5Sharp.Enums.Tests
         {
             var ascii = Radix.Ascii.Format(new Dint(123456));
 
-            ascii.Should().Be("$00$01$E2@");
+            ascii.Should().Be("'$00$01$E2@'");
         }
 
         [Test]
@@ -42,7 +42,7 @@ namespace L5Sharp.Enums.Tests
 
             var result = radix.Format(new Int(20));
 
-            result.Should().Be("$00$14");
+            result.Should().Be("'$00$14'");
         }
 
         [Test]
@@ -52,7 +52,7 @@ namespace L5Sharp.Enums.Tests
 
             var result = radix.Format(new Dint(20));
 
-            result.Should().Be("$00$00$00$14");
+            result.Should().Be("'$00$00$00$14'");
         }
 
         [Test]
@@ -62,7 +62,7 @@ namespace L5Sharp.Enums.Tests
 
             var result = radix.Format(new Lint(20));
 
-            result.Should().Be("$00$00$00$00$00$00$00$14");
+            result.Should().Be("'$00$00$00$00$00$00$00$14'");
         }
 
         [Test]
@@ -75,7 +75,7 @@ namespace L5Sharp.Enums.Tests
                 var formatted = Radix.Ascii.Format(value);
                 var expected = Convert.ToChar(i).ToString();
 
-                formatted.Should().Be(expected);
+                formatted.Should().Be($"'{expected}'");
             }
         }
 
@@ -102,20 +102,20 @@ namespace L5Sharp.Enums.Tests
         [Test]
         public void Parse_LengthZero_ShouldThrowArgumentOutOfRangeException()
         {
-            FluentActions.Invoking(() => Radix.Ascii.Parse("$")).Should().Throw<ArgumentOutOfRangeException>();
+            FluentActions.Invoking(() => Radix.Ascii.Parse("''")).Should().Throw<ArgumentException>();
         }
 
         [Test]
         public void Parse_LengthTooLarge_ShouldThrowArgumentOutOfRangeException()
         {
-            FluentActions.Invoking(() => Radix.Ascii.Parse("$00$00$00$00$00$00$00$00$00")).Should()
+            FluentActions.Invoking(() => Radix.Ascii.Parse("'$00$00$00$00$00$00$00$00$00'")).Should()
                 .Throw<ArgumentOutOfRangeException>();
         }
 
         [Test]
         public void Parse_ValidSint_ShouldBeExpected()
         {
-            var value = Radix.Ascii.Parse("$14");
+            var value = Radix.Ascii.Parse("'$14'");
 
             value.Should().Be(new Sint(20));
         }
@@ -123,9 +123,17 @@ namespace L5Sharp.Enums.Tests
         [Test]
         public void Parse_ValidDint_ShouldBeExpected()
         {
-            var value = Radix.Ascii.Parse("$00$01$E2@");
+            var value = Radix.Ascii.Parse("'$00$01$E2@'");
 
             value.Should().Be(new Dint(123456));
+        }
+        
+        [Test]
+        public void Parse_Valid_ShouldBeExpected()
+        {
+            var value = Radix.Ascii.Parse("'$12D$F1A'");
+
+            value.Should().Be(new Dint(306508097));
         }
     }
 }

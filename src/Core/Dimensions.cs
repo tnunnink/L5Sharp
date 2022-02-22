@@ -197,22 +197,6 @@ namespace L5Sharp.Core
         public string ToBracketNotation() => Z > 0 ? $"[{X},{Y},{Z}]" : Y > 0 ? $"[{X},{Y}]" : X > 0 ? $"[{X}]" : "[]";
 
         /// <summary>
-        /// Creates a collection of <see cref="IMember{TDataType}"/> with the length of the current <see cref="Length"/>. 
-        /// </summary>
-        /// <param name="radix">The <see cref="Enums.Radix"/> value to set for each
-        /// <see cref="IMember{TDataType}"/> of the collection.</param>
-        /// <param name="access">The <see cref="Enums.ExternalAccess"/> value to set for each
-        /// <see cref="IMember{TDataType}"/> of the collection.</param>
-        /// <param name="description">The string description value to set for each
-        /// <see cref="IMember{TDataType}"/> of the collection.</param>
-        /// <typeparam name="TDataType">The <see cref="IDataType"/> that the collection represents.</typeparam>
-        /// <returns>A collection of <see cref="IMember{TDataType}"/>.</returns>
-        public IEnumerable<IMember<TDataType>> CreateMembers<TDataType>(Radix? radix = null,
-            ExternalAccess? access = null,
-            string? description = null) where TDataType : IDataType, new() =>
-            GenerateIndices().Select(i => new Member<TDataType>(i, new TDataType(), radix, access, description));
-
-        /// <summary>
         /// Converts the provided <see cref="ushort"/> to a <see cref="Dimensions"/> value. 
         /// </summary>
         /// <param name="length">The length value to convert.</param>

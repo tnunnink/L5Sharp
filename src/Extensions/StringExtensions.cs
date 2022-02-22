@@ -138,7 +138,7 @@ namespace L5Sharp.Extensions
         /// </returns>
         public static bool HasAsciiFormat(this string value)
         {
-            return !value.IsEmpty() && value.StartsWith("$");
+            return !value.IsEmpty() && value.StartsWith("'") && value.EndsWith("'");
         }
 
         /// <summary>

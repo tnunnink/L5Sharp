@@ -84,7 +84,7 @@ namespace L5Sharp.Enums.Tests
         }
 
         [Test]
-        public void Parse_InvalidSpecifier_ShouldThrowArgumentException()
+        public void Parse_NoSpecifier_ShouldThrowArgumentException()
         {
             const string invalid = "00010100";
 
@@ -93,25 +93,34 @@ namespace L5Sharp.Enums.Tests
         }
 
         [Test]
-        public void Parse_LengthZero_ShouldThrowArgumentOutOfRangeException()
+        public void Parse_LengthZero_ShouldThrowArgumentException()
         {
-            FluentActions.Invoking(() => Radix.Binary.Parse("2#")).Should().Throw<ArgumentOutOfRangeException>();
+            FluentActions.Invoking(() => Radix.Binary.Parse("2#")).Should().Throw<ArgumentException>();
         }
 
         [Test]
         public void Parse_LengthGreaterThan68_ShouldThrowArgumentOutOfRangeException()
         {
-            FluentActions.Invoking(() => Radix.Binary.Parse(
-                    "2#0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0001_0100_0000"))
-                .Should().Throw<ArgumentOutOfRangeException>();
+            var result = Radix.Binary.Parse(
+                "2#0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0001_0100_0000");
+
+            result.Should().NotBeNull();
         }
 
         [Test]
-        public void Parse_ValidBool_ShouldBeExpected()
+        public void Parse_BoolFalse_ShouldBeFalse()
         {
-            var value = Radix.Binary.Parse("2#0");
+            var atomic = Radix.Binary.Parse("2#0");
 
-            value.Should().BeEquivalentTo(new Bool());
+            atomic.Value.Should().Be(false);
+        }
+        
+        [Test]
+        public void Parse_BoolTrue_ShouldBeTrue()
+        {
+            var atomic = Radix.Binary.Parse("2#1");
+
+            atomic.Value.Should().Be(true);
         }
 
         [Test]
