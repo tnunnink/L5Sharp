@@ -9,17 +9,17 @@ using L5Sharp.Extensions;
 namespace L5Sharp.Core
 {
     /// <summary>
-    /// Represents a collection of <see cref="Module"/> components assigned to  a specific <see cref="Port"/>.
+    /// Represents a collection of <see cref="IModule"/> components assigned to  a specific <see cref="Port"/>.
     /// </summary>
-    public sealed class Bus : IEnumerable<Module>
+    public sealed class Bus : IEnumerable<IModule>
     {
         private readonly Port _port;
-        private readonly Dictionary<string, Module> _modules;
+        private readonly Dictionary<string, IModule> _modules;
 
         internal Bus(Port port, byte size)
         {
             _port = port ?? throw new ArgumentNullException(nameof(port));
-            _modules = new Dictionary<string, Module> { { _port.Address, _port.Module } };
+            _modules = new Dictionary<string, IModule> { { _port.Address, _port.Module } };
             Size = size;
         }
 
@@ -67,7 +67,7 @@ namespace L5Sharp.Core
         /// Gets a <see cref="Module"/> at the specified address (slot or IP).
         /// </summary>
         /// <param name="address">The string address value that represents the slot or IP of the device to get.</param>
-        public Module this[string address] => _modules[address];
+        public IModule this[string address] => _modules[address];
 
         /// <summary>
         /// Adds the provided <see cref="Module"/> to the Bus collection at the address specified by the connecting port. 
@@ -80,7 +80,7 @@ namespace L5Sharp.Core
         /// there is no non-null connecting port with a type that matches the bus type -or-
         /// the connecting port address is not available or valid for the current bus.
         /// .</exception>
-        public void Add(Module module)
+        public void Add(IModule module)
         {
             ValidateModule(module);
 
@@ -109,7 +109,7 @@ namespace L5Sharp.Core
         /// <exception cref="ComponentNameCollisionException"><c>name</c> already exists on the current Bus instance.</exception>
         /// <seealso cref="New(L5Sharp.Core.ComponentName,L5Sharp.Core.CatalogNumber,System.Net.IPAddress,byte,string?,L5Sharp.ICatalogService?)"/>
         /// <seealso cref="New(L5Sharp.Core.ComponentName,L5Sharp.Core.ModuleDefinition,string?)"/>
-        public Module New(ComponentName name, CatalogNumber catalogNumber,
+        public IModule New(ComponentName name, CatalogNumber catalogNumber,
             byte slot = default, IPAddress? ipAddress = null,
             string? description = null, ICatalogService? catalogService = null) =>
             NewModule(name, catalogNumber, slot, ipAddress, description, catalogService);
@@ -134,7 +134,7 @@ namespace L5Sharp.Core
         /// <exception cref="ComponentNameCollisionException"><c>name</c> already exists on the current Bus instance.</exception>
         /// <seealso cref="New(L5Sharp.Core.ComponentName,L5Sharp.Core.CatalogNumber,byte,System.Net.IPAddress?,string?,L5Sharp.ICatalogService?)"/>
         /// <seealso cref="New(L5Sharp.Core.ComponentName,L5Sharp.Core.ModuleDefinition,string?)"/>
-        public Module New(ComponentName name, CatalogNumber catalogNumber, IPAddress ipAddress, byte slot = default,
+        public IModule New(ComponentName name, CatalogNumber catalogNumber, IPAddress ipAddress, byte slot = default,
             string? description = null, ICatalogService? catalogService = null) =>
             NewModule(name, catalogNumber, slot, ipAddress, description, catalogService);
 
@@ -149,7 +149,7 @@ namespace L5Sharp.Core
         /// <exception cref="ArgumentNullException"><c>definition</c> is null.</exception>
         /// <exception cref="ArgumentException"><c>definition</c> does not have a configured upstream port that
         /// matches the bus <see cref="Type"/>.</exception>
-        public Module New(ComponentName name, ModuleDefinition definition, string? description = null)
+        public IModule New(ComponentName name, ModuleDefinition definition, string? description = null)
         {
             if (definition is null)
                 throw new ArgumentNullException(nameof(definition));
@@ -165,7 +165,7 @@ namespace L5Sharp.Core
 
 
         /// <inheritdoc />
-        public IEnumerator<Module> GetEnumerator() => _modules.Values.GetEnumerator();
+        public IEnumerator<IModule> GetEnumerator() => _modules.Values.GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
@@ -232,7 +232,7 @@ namespace L5Sharp.Core
             var upstreamAddress = DetermineUpstreamAddress(slot, ipAddress);
             ConfigureUpstreamPort(definition, upstreamAddress);
 
-            var downstreamAddress = DetermineUpstreamAddress(slot, ipAddress);
+            var downstreamAddress = DetermineDownstreamAddress(slot, ipAddress);
             ConfigureDownstreamPort(definition, downstreamAddress);
 
             return NewModule(name, definition, upstreamAddress, description);
@@ -275,7 +275,7 @@ namespace L5Sharp.Core
                 "The current Bus is neither an Ethernet nor Chassis Bus and can not determine a next available address");
         }
 
-        private void ValidateModule(Module module)
+        private void ValidateModule(IModule module)
         {
             if (module is null)
                 throw new ArgumentNullException(nameof(module));

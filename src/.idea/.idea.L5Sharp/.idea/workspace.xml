@@ -7,17 +7,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="Serialization testing, repository development and testing. Random cleanup and reorg. Moving context to L5X specific  directory in potential prep for splitting library.">
-      <change beforePath="$PROJECT_DIR$/Abstractions/ControllerBase.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Abstractions/ControllerBase.cs" afterDir="false" />
+    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="Renamed LogixCatalog.cs to ModuleCatalog.cs">
+      <change afterPath="$PROJECT_DIR$/IModuleRepository.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Context.Tests/ModuleRepositoryTests.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Core/Bus.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/Bus.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/Controller.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/Controller.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/LogixCatalog.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/ModuleCatalog.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/Module.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/Module.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/ModuleDefinition.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/ModuleDefinition.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/ProductType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/ProductType.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/Vendor.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/Vendor.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/IModule.cs" beforeDir="false" afterPath="$PROJECT_DIR$/IModule.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Catalog.Tests/LogixCatalogTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Catalog.Tests/LogixCatalogTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ILogixContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ILogixContext.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5XContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5XContext.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Repositories/ModuleRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Repositories/ModuleRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Serialization/Components/ModuleSerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Serialization/Components/ModuleSerializer.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -280,14 +277,7 @@
       <workItem from="1645043352307" duration="41185000" />
       <workItem from="1645213929372" duration="16214000" />
       <workItem from="1645285653758" duration="29897000" />
-      <workItem from="1645651624470" duration="990000" />
-    </task>
-    <task id="LOCAL-00099" summary="Development and testing">
-      <created>1640979292739</created>
-      <option name="number" value="00099" />
-      <option name="presentableId" value="LOCAL-00099" />
-      <option name="project" value="LOCAL" />
-      <updated>1640979292739</updated>
+      <workItem from="1645651624470" duration="4673000" />
     </task>
     <task id="LOCAL-00100" summary="Development and testing">
       <created>1640986360494</created>
@@ -625,7 +615,14 @@
       <option name="project" value="LOCAL" />
       <updated>1645652465465</updated>
     </task>
-    <option name="localTasksCounter" value="148" />
+    <task id="LOCAL-00148" summary="Renamed LogixCatalog.cs to ModuleCatalog.cs">
+      <created>1645652635360</created>
+      <option name="number" value="00148" />
+      <option name="presentableId" value="LOCAL-00148" />
+      <option name="project" value="LOCAL" />
+      <updated>1645652635360</updated>
+    </task>
+    <option name="localTasksCounter" value="149" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -640,25 +637,25 @@
       <expand>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 94% 270/4900" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 91% 424/4900" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 94% 270/4900" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 94% 270/4900" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 91% 424/4900" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 91% 424/4900" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 94% 270/4900" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 94% 270/4900" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="(1.0.0.0, .NETStandard,Version=v2.1) 94% 270/4900" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 91% 424/4900" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 91% 424/4900" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="(1.0.0.0, .NETStandard,Version=v2.1) 91% 424/4900" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 94% 270/4900" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 94% 270/4900" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="(1.0.0.0, .NETStandard,Version=v2.1) 94% 270/4900" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 94% 270/4900" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 91% 424/4900" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 91% 424/4900" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="(1.0.0.0, .NETStandard,Version=v2.1) 91% 424/4900" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 91% 424/4900" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
       </expand>
       <select />
@@ -684,7 +681,6 @@
       <path value="$PROJECT_DIR$/../.." />
     </ignored-roots>
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="Serialization and context updates. Random clean up and testing" />
     <MESSAGE value="gitignore" />
     <MESSAGE value="serialization" />
     <MESSAGE value="serialization testing" />
@@ -709,7 +705,8 @@
     <MESSAGE value="Serialization testing. Other random comments and testing cleanup. Updates to type converters." />
     <MESSAGE value="Making module interface and random renaming" />
     <MESSAGE value="Serialization testing, repository development and testing. Random cleanup and reorg. Moving context to L5X specific  directory in potential prep for splitting library." />
-    <option name="LAST_COMMIT_MESSAGE" value="Serialization testing, repository development and testing. Random cleanup and reorg. Moving context to L5X specific  directory in potential prep for splitting library." />
+    <MESSAGE value="Renamed LogixCatalog.cs to ModuleCatalog.cs" />
+    <option name="LAST_COMMIT_MESSAGE" value="Renamed LogixCatalog.cs to ModuleCatalog.cs" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<RSLogix5000Content SchemaRevision="1.0" SoftwareRevision="32.02" TargetName="TestController" TargetType="Controller" ContainsContext="false" Owner="tnunnink, EN Engineering" ExportDate="Wed Feb 23 08:11:18 2022" ExportOptions="NoRawData L5KData DecoratedData ForceProtectedEncoding AllProjDocTrans">
-<Controller Use="Target" Name="TestController" ProcessorType="1756-L83E" MajorRev="32" MinorRev="11" ProjectCreationDate="Mon Sep 27 15:23:27 2021" LastModifiedDate="Wed Feb 23 08:10:51 2022" SFCExecutionControl="CurrentActive" SFCRestartPosition="MostRecent" SFCLastScan="DontScan" ProjectSN="16#0000_0000"
+<RSLogix5000Content SchemaRevision="1.0" SoftwareRevision="32.02" TargetName="TestController" TargetType="Controller" ContainsContext="false" Owner="tnunnink, EN Engineering" ExportDate="Wed Feb 23 16:45:52 2022" ExportOptions="NoRawData L5KData DecoratedData ForceProtectedEncoding AllProjDocTrans">
+<Controller Use="Target" Name="TestController" ProcessorType="1756-L83E" MajorRev="32" MinorRev="11" ProjectCreationDate="Mon Sep 27 15:23:27 2021" LastModifiedDate="Wed Feb 23 16:45:39 2022" SFCExecutionControl="CurrentActive" SFCRestartPosition="MostRecent" SFCLastScan="DontScan" ProjectSN="16#0000_0000"
  MatchProjectToController="false" CanUseRPIFromProducer="false" InhibitAutomaticFirmwareUpdate="0" PassThroughConfiguration="EnabledWithAppend" DownloadProjectDocumentationAndExtendedProperties="true" DownloadProjectCustomProperties="true" ReportMinorOverflow="false">
 <Description>
 <![CDATA[This is a test project]]>
@@ -7448,7 +7448,7 @@ Dint Array]]>
 </Routine>
 </Routines>
 </Program>
-<Program Name="NProgram" TestEdits="false" Disabled="false" UseAsFolder="false">
+<Program Name="NProgram" TestEdits="false" MainRoutineName="Main" FaultRoutineName="Fault" Disabled="false" UseAsFolder="false">
 <Description>
 <![CDATA[Test Program]]>
 </Description>
@@ -7634,7 +7634,18 @@ Dint Array]]>
 </Data>
 </Tag>
 </Tags>
-<Routines/>
+<Routines>
+<Routine Name="Fault" Type="RLL"/>
+<Routine Name="Main" Type="RLL">
+<RLLContent>
+<Rung Number="0" Type="N">
+<Text>
+<![CDATA[XIC(LocalBool)MOV(1234,LocalDint);]]>
+</Text>
+</Rung>
+</RLLContent>
+</Routine>
+</Routines>
 </Program>
 </Programs>
 <Tasks>

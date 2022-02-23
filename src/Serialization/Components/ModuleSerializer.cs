@@ -9,12 +9,12 @@ using L5Sharp.Serialization.Data;
 
 namespace L5Sharp.Serialization.Components
 {
-    internal class ModuleSerializer : IL5XSerializer<Module>
+    internal class ModuleSerializer : IL5XSerializer<IModule>
     {
         private const string Communications = "Communications";
         private static readonly XName ElementName = L5XElement.Module.ToXName();
 
-        public XElement Serialize(Module component)
+        public XElement Serialize(IModule component)
         {
             if (component == null)
                 throw new ArgumentNullException(nameof(component));
@@ -70,7 +70,7 @@ namespace L5Sharp.Serialization.Components
             return element;
         }
 
-        public Module Deserialize(XElement element)
+        public IModule Deserialize(XElement element)
         {
             if (element == null)
                 throw new ArgumentNullException(nameof(element));
@@ -80,19 +80,19 @@ namespace L5Sharp.Serialization.Components
 
             var name = element.GetComponentName();
             var description = element.GetComponentDescription();
-            var catalogNumber = element.GetAttribute<Module, CatalogNumber>(c => c.CatalogNumber);
-            var vendor = element.GetAttribute<Module, Vendor>(c => c.Vendor);
-            var productType = element.GetAttribute<Module, ProductType>(c => c.ProductType);
-            var productCode = element.GetAttribute<Module, ushort>(c => c.ProductCode);
+            var catalogNumber = element.GetAttribute<IModule, CatalogNumber>(c => c.CatalogNumber);
+            var vendor = element.GetAttribute<IModule, Vendor>(c => c.Vendor);
+            var productType = element.GetAttribute<IModule, ProductType>(c => c.ProductType);
+            var productCode = element.GetAttribute<IModule, ushort>(c => c.ProductCode);
             var major = element.Attribute("Major")?.Value;
             var minor = element.Attribute("Minor")?.Value;
             var revision = Revision.Parse($"{major}.{minor}");
-            var parentModule = element.GetAttribute<Module, string>(c => c.ParentModule);
+            var parentModule = element.GetAttribute<IModule, string>(c => c.ParentModule);
             int.TryParse(element.Attribute("ParentModPortId")?.Value, out var parentModPortId);
-            var inhibited = element.GetAttribute<Module, bool>(c => c.Inhibited);
-            var majorFault = element.GetAttribute<Module, bool>(c => c.MajorFault);
-            var safetyEnabled = element.GetAttribute<Module, bool>(c => c.SafetyEnabled);
-            var state = element.Element("EKey")?.GetAttribute<Module, KeyingState>(c => c.State);
+            var inhibited = element.GetAttribute<IModule, bool>(c => c.Inhibited);
+            var majorFault = element.GetAttribute<IModule, bool>(c => c.MajorFault);
+            var safetyEnabled = element.GetAttribute<IModule, bool>(c => c.SafetyEnabled);
+            var state = element.Element("EKey")?.GetAttribute<IModule, KeyingState>(c => c.State);
 
             var ports = element.Descendants(L5XElement.Port.ToXName()).Select(e =>
             {

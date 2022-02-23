@@ -20,7 +20,7 @@ namespace L5Sharp
         /// <summary>
         /// Get the <see cref="IModule"/> repository instance for the current <see cref="ILogixContext"/>.
         /// </summary>
-        IRepository<IModule> Modules { get; }
+        IModuleRepository Modules { get; }
         
         /// <summary>
         /// Get the <see cref="ITag{TDataType}"/> repository instance for the current <see cref="ILogixContext"/>. 
