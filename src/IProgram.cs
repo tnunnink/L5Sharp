@@ -5,13 +5,6 @@ namespace L5Sharp
     /// <summary>
     /// Represents a Logix <b>Program</b> component.
     /// </summary>
-    /// <remarks>
-    /// <para>
-    /// <see cref="IProgram"/> is the base interface for all <see cref="Enums.ProgramType"/> implementations.
-    /// <see cref="IProgram"/> is a container for <see cref="IRoutine{TContent}"/> and <see cref="ITag{TDataType}"/>
-    /// components. 
-    /// </para>
-    /// </remarks>
     /// <footer>
     /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
     /// `Logix 5000 Controllers Import/Export`</a> for more information.

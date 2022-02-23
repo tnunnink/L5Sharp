@@ -12,13 +12,13 @@ namespace L5Sharp.Internal.Tests.Helpers
         [Test]
         public void GetComponentName_Invalid_ShouldThrowInvalidOperationException()
         {
-            FluentActions.Invoking(LogixNames.GetComponentName<string>).Should().Throw<InvalidOperationException>();
+            FluentActions.Invoking(L5XNames.GetComponentName<string>).Should().Throw<InvalidOperationException>();
         }
 
         [Test]
         public void GetComponentName_Controller_ShouldBeExpected()
         {
-            var name = LogixNames.GetComponentName<Controller>();
+            var name = L5XNames.GetComponentName<Controller>();
 
             name.Should().Be(L5XElement.Controller.ToString());
         }
@@ -26,7 +26,7 @@ namespace L5Sharp.Internal.Tests.Helpers
         [Test]
         public void GetComponentName_UserDefined_ShouldBeExpected()
         {
-            var name = LogixNames.GetComponentName<UserDefined>();
+            var name = L5XNames.GetComponentName<UserDefined>();
 
             name.Should().Be(L5XElement.DataType.ToString());
         }
@@ -34,7 +34,7 @@ namespace L5Sharp.Internal.Tests.Helpers
         [Test]
         public void GetComponentName_Member_ShouldBeExpected()
         {
-            var name = LogixNames.GetComponentName<Member<IDataType>>();
+            var name = L5XNames.GetComponentName<Member<IDataType>>();
 
             name.Should().Be(L5XElement.Member.ToString());
         }
@@ -42,13 +42,13 @@ namespace L5Sharp.Internal.Tests.Helpers
         [Test]
         public void GetContainerName_Invalid_ShouldThrowInvalidOperationException()
         {
-            FluentActions.Invoking(LogixNames.GetContainerName<string>).Should().Throw<InvalidOperationException>();
+            FluentActions.Invoking(L5XNames.GetContainerName<string>).Should().Throw<InvalidOperationException>();
         }
         
         [Test]
         public void GetContainerName_UserDefined_ShouldBeExpected()
         {
-            var name = LogixNames.GetContainerName<UserDefined>();
+            var name = L5XNames.GetContainerName<UserDefined>();
 
             name.Should().Be(L5XElement.DataTypes.ToString());
         }
@@ -56,7 +56,7 @@ namespace L5Sharp.Internal.Tests.Helpers
         [Test]
         public void GetContainerName_Member_ShouldBeExpected()
         {
-            var name = LogixNames.GetContainerName<Member<IDataType>>();
+            var name = L5XNames.GetContainerName<Member<IDataType>>();
 
             name.Should().Be(L5XElement.Members.ToString());
         }

@@ -31,14 +31,14 @@ namespace L5Sharp
         
         public XElement GetContainer<TComponent>()
         {
-            var containerName = LogixNames.GetContainerName<TComponent>();
+            var containerName = L5XNames.GetContainerName<TComponent>();
 
             return _document.Descendants(containerName).First();
         }
         
         public IEnumerable<XElement> GetComponents<TComponent>()
         {
-            var componentName = LogixNames.GetComponentName<TComponent>();
+            var componentName = L5XNames.GetComponentName<TComponent>();
 
             return _document.Descendants(componentName);
         }

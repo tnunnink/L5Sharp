@@ -74,7 +74,7 @@ namespace L5Sharp
         public IRepository<IUserDefined> DataTypes { get; }
 
         /// <inheritdoc />
-        public IRepository<Module> Modules { get; }
+        public IRepository<IModule> Modules { get; }
 
         /// <inheritdoc />
         public IRepository<ITag<IDataType>> Tags { get; }

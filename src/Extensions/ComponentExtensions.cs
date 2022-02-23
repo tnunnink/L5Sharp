@@ -17,7 +17,7 @@ namespace L5Sharp.Extensions
             { typeof(IController), new ControllerSerializer() },
             { typeof(IUserDefined), new UserDefinedSerializer() },
             { typeof(IMember<>), new MemberSerializer() },
-            { typeof(Module), new ModuleSerializer() },
+            { typeof(IModule), new ModuleSerializer() },
             { typeof(ITag<>), new TagSerializer() },
             { typeof(IProgram), new ProgramSerializer() },
             { typeof(IRoutine<>), new RoutineSerializer() },

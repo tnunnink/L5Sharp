@@ -10,7 +10,7 @@ namespace L5Sharp.Helpers
     /// Helper class that contains all Logix L5X component and attribute XName values as strongly typed members so to
     /// avoid using magic strings and allow us to update them in a central location as necessary.
     /// </summary>
-    internal static class LogixNames
+    internal static class L5XNames
     {
         //Component Map Collection
         private static readonly Dictionary<Type, Tuple<string, string>> ComponentNameMap = new()
@@ -24,7 +24,7 @@ namespace L5Sharp.Helpers
                 typeof(IMember<IDataType>),
                 new Tuple<string, string>(L5XElement.Member.ToString(), L5XElement.Members.ToString())
             },
-            { typeof(Module), new Tuple<string, string>(L5XElement.Module.ToString(), L5XElement.Modules.ToString()) },
+            { typeof(IModule), new Tuple<string, string>(L5XElement.Module.ToString(), L5XElement.Modules.ToString()) },
             {
                 typeof(IAddOnInstruction),
                 new Tuple<string, string>(L5XElement.AddOnInstructionDefinition.ToString(),

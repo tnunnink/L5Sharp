@@ -55,9 +55,9 @@ namespace L5Sharp
         IRepository<IUserDefined> DataTypes { get; }
         
         /// <summary>
-        /// Get the <see cref="Module"/> repository instance for the current <see cref="ILogixContext"/>.
+        /// Get the <see cref="IModule"/> repository instance for the current <see cref="ILogixContext"/>.
         /// </summary>
-        IRepository<Module> Modules { get; }
+        IRepository<IModule> Modules { get; }
         
         /// <summary>
         /// Get the <see cref="ITag{TDataType}"/> repository instance for the current <see cref="ILogixContext"/>. 
