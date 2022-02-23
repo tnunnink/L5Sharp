@@ -7,7 +7,7 @@ using L5Sharp.Enums;
 namespace L5Sharp.Core
 {
     /// <inheritdoc cref="ILadderLogic" />
-    public class LadderLogic : ILadderLogic, IEquatable<LadderLogic>
+    public class LadderLogic : ILadderLogic
     {
         private readonly List<Rung> _rungs = new();
 
@@ -143,42 +143,5 @@ namespace L5Sharp.Core
         public IEnumerator<Rung> GetEnumerator() => _rungs.GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-
-        /// <inheritdoc />
-        public bool Equals(LadderLogic? other)
-        {
-            if (ReferenceEquals(null, other)) return false;
-            return ReferenceEquals(this, other) || _rungs.SequenceEqual(other._rungs);
-        }
-
-        /// <inheritdoc />
-        public bool Equals(ILadderLogic other) => other is LadderLogic logic && Equals(logic);
-
-        /// <inheritdoc />
-        public override bool Equals(object? obj)
-        {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((LadderLogic)obj);
-        }
-
-        /// <inheritdoc />
-        public override int GetHashCode() => _rungs.GetHashCode();
-
-        /// <summary>
-        /// Determines if the provided objects are equal.
-        /// </summary>
-        /// <param name="left">An object to compare.</param>
-        /// <param name="right">An object to compare.</param>
-        /// <returns>true if the provided objects are equal; otherwise, false.</returns>
-        public static bool operator ==(LadderLogic? left, LadderLogic? right) => Equals(left, right);
-
-        /// <summary>
-        /// Determines if the provided objects are not equal.
-        /// </summary>
-        /// <param name="left">An object to compare.</param>
-        /// <param name="right">An object to compare.</param>
-        /// <returns>true if the provided objects are not equal; otherwise, false.</returns>
-        public static bool operator !=(LadderLogic? left, LadderLogic? right) => !Equals(left, right);
     }
 }

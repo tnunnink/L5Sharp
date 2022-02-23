@@ -44,7 +44,6 @@ namespace L5Sharp.Serialization.Components
             var name = element.GetComponentName();
             var processorType = element.GetAttribute<IController, string>(c => c.ProcessorType);
             var description = element.GetAttribute<IController, string>(c => c.Description);
-
             var major = element.GetAttribute<IController, ushort>(c => c.Revision.Major);
             var minor = element.GetAttribute<IController, ushort>(c => c.Revision.Minor);
             var revision = new Revision(major, minor);
@@ -55,7 +54,7 @@ namespace L5Sharp.Serialization.Components
             var modifiedDate = DateTime.ParseExact(element.Attribute("LastModifiedDate")?.Value,
                 "ddd MMM d HH:mm:ss yyyy", CultureInfo.CurrentCulture);
 
-            return new Controller(name!, processorType!, revision, creationDate, modifiedDate, description);
+            return new Controller(name, processorType!, revision, creationDate, modifiedDate, description);
         }
     }
 }

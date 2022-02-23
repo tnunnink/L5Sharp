@@ -1,4 +1,5 @@
-﻿namespace L5Sharp.Helpers
+﻿// ReSharper disable InconsistentNaming we want to match the XMl naming to prevent comparison issues.
+namespace L5Sharp.Helpers
 {
     /// <summary>
     /// An enumeration of L5X element names for ease of referencing these value without using magic strings.
@@ -121,9 +122,9 @@
         Routine,
 
         /// <summary>
-        /// Represents the <see cref="RllContent"/> L5X element name.
+        /// Represents the <see cref="RLLContent"/> L5X element name.
         /// </summary>
-        RllContent,
+        RLLContent,
 
         /// <summary>
         /// Represents the <see cref="StContent"/> L5X element name.
@@ -219,5 +220,15 @@
         /// Represents the <see cref="OutputTag"/> L5X element name.
         /// </summary>
         OutputTag,
+        
+        /// <summary>
+        /// Represents the <see cref="AlarmDigitalParameters"/> L5X element name.
+        /// </summary>
+        AlarmDigitalParameters,
+        
+        /// <summary>
+        /// Represents the <see cref="AlarmAnalogParameters"/> L5X element name.
+        /// </summary>
+        AlarmAnalogParameters,
     }
 }

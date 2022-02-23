@@ -111,6 +111,54 @@ namespace L5Sharp.Enums.Tests
             FluentActions.Invoking(() => Radix.Ascii.Parse("'$00$00$00$00$00$00$00$00$00'")).Should()
                 .Throw<ArgumentOutOfRangeException>();
         }
+        
+        [Test]
+        public void Parse_Tab_ShouldBeExpected()
+        {
+            var atomic = Radix.Ascii.Parse("'$t'");
+
+            atomic.Value.Should().Be(9);
+        }
+        
+        [Test]
+        public void Parse_LineFeed_ShouldBeExpected()
+        {
+            var atomic = Radix.Ascii.Parse("'$l'");
+
+            atomic.Value.Should().Be(10);
+        }
+        
+        [Test]
+        public void Parse_FormFeed_ShouldBeExpected()
+        {
+            var atomic = Radix.Ascii.Parse("'$p'");
+
+            atomic.Value.Should().Be(12);
+        }
+        
+        [Test]
+        public void Parse_Return_ShouldBeExpected()
+        {
+            var atomic = Radix.Ascii.Parse("'$r'");
+
+            atomic.Value.Should().Be(13);
+        }
+        
+        [Test]
+        public void Parse_DollarSign_ShouldBeExpected()
+        {
+            var atomic = Radix.Ascii.Parse("'$$'");
+
+            atomic.Value.Should().Be(36);
+        }
+        
+        [Test]
+        public void Parse_SingleQuote_ShouldBeExpected()
+        {
+            var atomic = Radix.Ascii.Parse("'$''");
+
+            atomic.Value.Should().Be(39);
+        }
 
         [Test]
         public void Parse_ValidSint_ShouldBeExpected()

@@ -113,7 +113,19 @@ namespace L5Sharp.Types.Tests
         }
         
         [Test]
-        public void SetValue_ValidBoolAsObject_ShouldReturnExpected()
+        public void SetValue_boolAsObject_ShouldReturnExpected()
+        {
+            var fixture = new Fixture();
+            var value = fixture.Create<bool>();
+            var type = new Bool();
+
+            type.SetValue((object)value);
+
+            type.Value.Should().Be(value);
+        }
+        
+        [Test]
+        public void SetValue_BoolAsObject_ShouldReturnExpected()
         {
             var fixture = new Fixture();
             var value = fixture.Create<bool>();
@@ -152,6 +164,26 @@ namespace L5Sharp.Types.Tests
             var type = new Bool();
 
             type.SetValue("0");
+
+            type.Value.Should().Be(false);
+        }
+        
+        [Test]
+        public void SetValue_ValidStringTrue_ShouldBeTrue()
+        {
+            var type = new Bool();
+
+            type.SetValue("true");
+            
+            type.Value.Should().Be(true);
+        }
+
+        [Test]
+        public void SetValue_ValidStringFalse_ShouldBeFalse()
+        {
+            var type = new Bool();
+
+            type.SetValue("false");
 
             type.Value.Should().Be(false);
         }

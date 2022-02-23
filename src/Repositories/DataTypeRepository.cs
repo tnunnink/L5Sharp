@@ -1,15 +1,12 @@
 ﻿using System.Linq;
-using System.Runtime.CompilerServices;
 using L5Sharp.Enums;
 using L5Sharp.Extensions;
 
-[assembly: InternalsVisibleTo("L5Sharp.Repositories.Tests")]
-
 namespace L5Sharp.Repositories
 {
-    internal class UserDefinedRepository : Repository<IUserDefined>
+    internal class DataTypeRepository : Repository<IUserDefined>
     {
-        public UserDefinedRepository(LogixContext context) : base(context)
+        public DataTypeRepository(LogixContext context) : base(context)
         {
         }
 

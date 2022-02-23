@@ -4,7 +4,7 @@ using L5Sharp.Enums;
 namespace L5Sharp.Core
 {
     /// <summary>
-    /// Represents a Rung of Ladder Logic.
+    /// Represents a Rung of Ladder Logic, or the logix content that is contained by the <see cref="LadderLogic"/> component.
     /// </summary>
     /// <remarks>
     /// Rungs make up the content of the <see cref="ILadderLogic"/> object. Rung's <see cref="Text"/> property contains
@@ -13,12 +13,12 @@ namespace L5Sharp.Core
     public sealed class Rung
     {
         /// <summary>
-        /// Creates a new instance of a <c>Rung</c> with the provided parameters.
+        /// Creates a new <see cref="Rung"/> with the provided parameters.
         /// </summary>
-        /// <param name="number">The number of the <c>Rung</c>.</param>
-        /// <param name="type">The type of the <c>Rung</c>.</param>
-        /// <param name="comment">The string comment of the <c>Rung</c>.</param>
-        /// <param name="text">The <c>NeutralText</c> content of the <c>Rung</c>.</param>
+        /// <param name="number">The number of the rung.</param>
+        /// <param name="type">The type of the rung.</param>
+        /// <param name="comment">The comment of the rung.</param>
+        /// <param name="text">The <see cref="Core.NeutralText"/> content of the rung.</param>
         internal Rung(int number = 0, RungType? type = null, string? comment = null, NeutralText? text = null)
         {
             Number = number;
@@ -30,11 +30,8 @@ namespace L5Sharp.Core
         /// <summary>
         /// Creates a new <see cref="Rung"/> instance with the provided text and comment values.
         /// </summary>
-        /// <param name="text">The <see cref="Core.NeutralText"/> value to set.</param>
-        /// <param name="comment">The string value to set.</param>
-        /// <remarks>
-        /// 
-        /// </remarks>
+        /// <param name="text">The <see cref="Core.NeutralText"/> content of the rung.</param>
+        /// <param name="comment">The optional comment of the rung. Will default to empty string.</param>
         public Rung(NeutralText text, string? comment = null)
         {
             Number = 0;
@@ -44,7 +41,7 @@ namespace L5Sharp.Core
         }
 
         /// <summary>
-        /// Gets the integer number of the <see cref="Rung"/> instance.
+        /// Gets the number of the <see cref="Rung"/> for which it is contained within a routine.
         /// </summary>
         public int Number { get; }
 
@@ -62,7 +59,9 @@ namespace L5Sharp.Core
         /// Gets the <see cref="Core.NeutralText"/> value of the <see cref="Rung"/> instance.
         /// </summary>
         public NeutralText Text { get; }
-       
+
+        /// <inheritdoc />
+        public override string ToString() => Text;
 
         /// <inheritdoc />
         public override bool Equals(object? obj)
@@ -73,7 +72,7 @@ namespace L5Sharp.Core
         }
 
         /// <inheritdoc />
-        public override int GetHashCode() => HashCode.Combine(Number, Type, Comment, Text);
+        public override int GetHashCode() => Text.GetHashCode();
 
         /// <summary>
         /// Determines if the provided objects are equal.

@@ -1,0 +1,18 @@
+﻿<RLLContent>
+  <Rung Number="0" Type="N">
+    <Comment><![CDATA[This is a test comment]]></Comment>
+    <Text><![CDATA[XIC(Test);]]></Text>
+  </Rung>
+  <Rung Number="1" Type="N">
+    <Comment><![CDATA[This is a test comment]]></Comment>
+    <Text><![CDATA[TON(TestTimer,0,0);]]></Text>
+  </Rung>
+  <Rung Number="2" Type="N">
+    <Comment><![CDATA[This is a test comment]]></Comment>
+    <Text><![CDATA[OTU(Test);]]></Text>
+  </Rung>
+  <Rung Number="3" Type="N">
+    <Comment><![CDATA[This is a test comment]]></Comment>
+    <Text><![CDATA[OTL(Test);]]></Text>
+  </Rung>
+</RLLContent>

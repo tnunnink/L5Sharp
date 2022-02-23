@@ -4,13 +4,11 @@ using System.Xml.Linq;
 using L5Sharp.Enums;
 using L5Sharp.Extensions;
 using L5Sharp.Helpers;
+using L5Sharp.Types;
+using String = L5Sharp.Types.String;
 
 namespace L5Sharp.Serialization.Data
 {
-    /// <summary>
-    /// Serializer used for decorated L5X data element. The format attribute is used to pass through the serialization
-    /// to more specific serializers.
-    /// </summary>
     internal class FormattedDataSerializer : IL5XSerializer<IDataType>
     {
         private static readonly XName ElementName = L5XElement.Data.ToXName();
@@ -25,43 +23,60 @@ namespace L5Sharp.Serialization.Data
             var format = TagDataFormat.FromDataType(component);
             element.Add(new XAttribute(L5XAttribute.Format.ToXName(), format));
 
-            IL5XSerializer<IDataType>? serializer = null;
-
             format
-                .When(TagDataFormat.Decorated).Then(() => { serializer = new DecoratedDataSerializer(); });
+                .When(TagDataFormat.Decorated).Then(() =>
+                {
+                    var serializer = new DecoratedDataSerializer();
+                    element.Add(serializer.Serialize(component));
+                })
+                .When(TagDataFormat.Alarm).Then(() =>
+                {
+                    var serializer = new AlarmDataSerializer();
+                    element.Add(serializer.Serialize(component));
+                })
+                .When(TagDataFormat.String).Then(() =>
+                {
+                    var str = (String)component;
+                    element.Add(new XAttribute(L5XAttribute.Length.ToXName(), str.LEN.DataType.Value));
+                    element.Add(new XCData($"'{str.Value}'"));
+                });
 
-            if (serializer is null)
-                throw new InvalidOperationException(
-                    $"Could not determine the correct serializer for the provided type {component.GetType()}");
-
-            return serializer.Serialize(component);
+            return element;
         }
 
         public IDataType Deserialize(XElement element)
         {
             if (element == null)
                 throw new ArgumentNullException(nameof(element));
-            
+
             if (element.Name != ElementName)
                 throw new ArgumentException($"Element '{element.Name}' not valid for the serializer {GetType()}.");
 
-            var formatName = element.Attribute(L5XAttribute.Format.ToXName())?.Value;
-            if (formatName is null)
+            TagDataFormat.TryFromName(element.Attribute(L5XAttribute.Format.ToXName())?.Value, out var format);
+
+            if (format is null)
                 throw new ArgumentException(
-                    $"The provided element with name {element.Name} does not have a format attribute");
+                    "The provided element does not contains a supported format attribute value");
             
-            var format = TagDataFormat.FromName(formatName);
-
-            IL5XSerializer<IDataType>? serializer = null;
-
+            IDataType dataType = new Undefined();
+            
             format
-                .When(TagDataFormat.Decorated).Then(() => { serializer = new DecoratedDataSerializer(); });
+                .When(TagDataFormat.Decorated).Then(() =>
+                {
+                    var serializer = new DecoratedDataSerializer();
+                    dataType = serializer.Deserialize(element.Elements().First());
+                })
+                .When(TagDataFormat.Alarm).Then(() =>
+                {
+                    var serializer = new AlarmDataSerializer();
+                    dataType = serializer.Deserialize(element.Elements().First());
+                })
+                .When(TagDataFormat.String).Then(() =>
+                {
+                    dataType = new String(element.Value);
+                });
 
-            if (serializer is null)
-                throw new InvalidOperationException(
-                    $"Could not determine the correct serializer for the provided element with name '{element.Name}'");
-
-            return serializer.Deserialize(element.Elements().First());
+            return dataType;
         }
     }
 }

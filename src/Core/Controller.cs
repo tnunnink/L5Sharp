@@ -1,49 +1,31 @@
 ﻿using System;
+using L5Sharp.Abstractions;
 
 namespace L5Sharp.Core
 {
     /// <inheritdoc />
-    public sealed class Controller : IController
+    public sealed class Controller : ControllerBase
     {
         internal Controller(string name, string processorType, Revision revision, DateTime createdOn,
-            DateTime modifiedOn, string? description = null)
+            DateTime modifiedOn, string? description = null) : 
+            base(name, processorType, revision, createdOn, modifiedOn, description)
         {
-            Name = name ?? throw new ArgumentNullException(nameof(name));
-            Description = description ?? string.Empty;
-            ProcessorType = processorType;
-            Revision = revision;
-            ProjectCreationDate = createdOn;
-            LastModifiedDate = modifiedOn;
         }
 
         /// <summary>
-        /// 
+        /// Creates a new <see cref="Controller"/> with the specified name and catalog number.
         /// </summary>
-        /// <param name="name"></param>
-        /// <param name="processorType"></param>
-        /// <param name="revision"></param>
-        /// <param name="description"></param>
-        public Controller(ComponentName name, string processorType, Revision revision,
-            string? description = null) : this(name, processorType, revision, DateTime.Now, DateTime.Now)
+        /// <param name="name">The name of the controller to create.</param>
+        /// <param name="processorType">The catalog number of the controller to create.</param>
+        /// <param name="revision">The optional revision of the controller. Will default to latest revision.</param>
+        /// <param name="description">The optional description of the controller. Will default to empty string.</param>
+        /// <param name="catalogService">The optional catalog service provided used to lookup the module definition
+        /// for the controller module using the provided catalog number.
+        /// By default will use <see cref="LogixCatalog"/> service.</param>
+        public Controller(ComponentName name, CatalogNumber processorType, Revision? revision = null,
+            string? description = null, ICatalogService? catalogService = null) :
+            base(name, processorType, revision, description, catalogService)
         {
         }
-
-        /// <inheritdoc />
-        public string Name { get; }
-
-        /// <inheritdoc />
-        public string Description { get; }
-
-        /// <inheritdoc />
-        public string ProcessorType { get; }
-
-        /// <inheritdoc />
-        public Revision Revision { get; }
-
-        /// <inheritdoc />
-        public DateTime ProjectCreationDate { get; }
-
-        /// <inheritdoc />
-        public DateTime LastModifiedDate { get; }
     }
 }

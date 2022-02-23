@@ -22,6 +22,12 @@ namespace L5Sharp.Serialization.Tests
         }
         
         [Test]
+        public void Serialize_Null_ShouldThrowArgumentNullException()
+        {
+            FluentActions.Invoking(() => _serializer.Serialize(null!)).Should().Throw<ArgumentNullException>();
+        }
+        
+        [Test]
         public void Serialize_WhenCalled_ShouldNotBeNull()
         {
             var component = new Rung(1, RungType.Normal, "This is a test comment", new NeutralText("XIC(Test);"));
@@ -42,6 +48,12 @@ namespace L5Sharp.Serialization.Tests
             Approvals.VerifyXml(xml.ToString());
         }
         
+        [Test]
+        public void Deserialize_Null_ShouldThrowArgumentNullException()
+        {
+            FluentActions.Invoking(() => _serializer.Deserialize(null!)).Should().Throw<ArgumentException>();
+        }
+
         [Test]
         public void Deserialize_InvalidElementName_ShouldThrowArgumentException()
         {

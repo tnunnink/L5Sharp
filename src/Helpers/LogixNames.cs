@@ -51,7 +51,7 @@ namespace L5Sharp.Helpers
                 typeof(IRoutine<ILogixContent>),
                 new Tuple<string, string>(L5XElement.Routine.ToString(), L5XElement.Routine.ToString())
             },
-            { typeof(ILadderLogic), new Tuple<string, string>(L5XElement.RllContent.ToString(), string.Empty) },
+            { typeof(ILadderLogic), new Tuple<string, string>(L5XElement.RLLContent.ToString(), string.Empty) },
             { typeof(IStructuredText), new Tuple<string, string>(L5XElement.StContent.ToString(), string.Empty) },
             { typeof(Rung), new Tuple<string, string>(L5XElement.Rung.ToString(), L5XElement.Rungs.ToString()) },
             { typeof(ITask), new Tuple<string, string>(L5XElement.Task.ToString(), L5XElement.Tasks.ToString()) }

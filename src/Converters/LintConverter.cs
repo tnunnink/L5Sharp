@@ -37,7 +37,7 @@ namespace L5Sharp.Converters
                 Int v => new Lint(v.Value),
                 Dint v => new Lint(v.Value),
                 Lint v => v,
-                string v => Radix.ParseValue<Lint>(v),
+                string v => long.TryParse(v, out var result) ? new Lint(result) : Radix.ParseValue<Lint>(v),
                 _ => base.ConvertFrom(context, culture, value)
                      ?? throw new NotSupportedException(
                          $"The provided value of type {value.GetType()} is not supported for conversion.")

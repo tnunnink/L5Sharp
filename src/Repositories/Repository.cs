@@ -41,12 +41,8 @@ namespace L5Sharp.Repositories
         }
 
         /// <inheritdoc />
-        public virtual IEnumerable<TComponent> GetAll()
-        {
-            var elements = Context.L5X.GetComponents<TComponent>();
-
-            return elements.Select(e => e.Deserialize<TComponent>());
-        }
+        public virtual IEnumerable<TComponent> GetAll() => 
+            Context.L5X.GetComponents<TComponent>().Select(e => e.Deserialize<TComponent>());
 
         /// <inheritdoc />
         public virtual TComponent? Find(Expression<Func<TComponent, bool>> predicate)

@@ -21,8 +21,8 @@ namespace L5Sharp.Serialization.Data
 
             element.AddAttribute(component, c => c.Name, nameOverride: L5XElement.DataType.ToString());
             element.AddAttribute(component, c => c.Dimensions);
-            //todo radix?
-
+            element.AddAttribute(component, c => c.First().Radix, t => t.First().Radix != Radix.Null);
+            
             var serializer = new ArrayElementSerializer();
             var elements = component.Select(e => serializer.Serialize(e));
             element.Add(elements);
@@ -42,7 +42,6 @@ namespace L5Sharp.Serialization.Data
             
             var serializer = new ArrayElementSerializer();
             var members = element.Elements().Select(e => serializer.Deserialize(e));
-
             var radix = element.GetAttribute<IMember<IDataType>, Radix>(e => e.Radix);
 
             return new ArrayType<IDataType>(dimensions!, members.Select(m => m.DataType).ToList(), radix);

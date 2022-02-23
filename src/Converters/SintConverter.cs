@@ -25,7 +25,7 @@ namespace L5Sharp.Converters
             {
                 byte v => new Sint(v),
                 Sint v => v,
-                string v => Radix.ParseValue<Sint>(v),
+                string v => byte.TryParse(v, out var result) ? new Sint(result) : Radix.ParseValue<Sint>(v),
                 _ => base.ConvertFrom(context, culture, value)
                      ?? throw new NotSupportedException(
                          $"The provided value of type {value.GetType()} is not supported for conversion.")

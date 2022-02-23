@@ -6,7 +6,7 @@ using L5Sharp.Enums;
 namespace L5Sharp
 {
     /// <summary>
-    /// Represents the IAddOnInstructionDefinition component of an L5X export.
+    /// Represents a Logix <b>AddOnInstruction</b> component. 
     /// </summary>
     public interface IAddOnInstruction : IComplexType
     {

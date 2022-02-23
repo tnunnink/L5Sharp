@@ -237,5 +237,22 @@ namespace L5Sharp.Extensions
 
             return characters.Count == 0;
         }
+
+        /// <summary>
+        /// Removes the first and last occurrence of the specified string if they exist.
+        /// </summary>
+        /// <param name="value">The string value to trim.</param>
+        /// <param name="character">the character to remove.</param>
+        /// <returns>A new string value with the specified character removed from the beginning and end.</returns>
+        public static string TrimSingle(this string value, char character)
+        {
+            if (value.StartsWith(character) && value.EndsWith(character))
+                return value.Substring(1, value.Length - 2);
+
+            if (value.StartsWith(character))
+                return value.Substring(1, value.Length - 1);
+            
+            return value.EndsWith(character) ? value[..^2] : value;
+        }
     }
 }

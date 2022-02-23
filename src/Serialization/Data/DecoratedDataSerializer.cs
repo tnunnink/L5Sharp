@@ -4,9 +4,6 @@ using L5Sharp.Helpers;
 
 namespace L5Sharp.Serialization.Data
 {
-    /// <summary>
-    /// Serializer that will pass through data type to other serializers based on it's type.
-    /// </summary>
     internal class DecoratedDataSerializer : IL5XSerializer<IDataType>
     {
         public XElement Serialize(IDataType component)

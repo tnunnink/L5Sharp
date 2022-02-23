@@ -50,16 +50,6 @@ namespace L5Sharp.Serialization.Data
             return new Member<IDataType>(index, dataType);
         }
         
-        /// <summary>
-        /// Gets the data type for the current element of the array.
-        /// </summary>
-        /// <param name="element">The <see cref="XElement"/> that represents the current array element.</param>
-        /// <returns>A <see cref="IDataType"/> instance based on the current XML structure.</returns>
-        /// <remarks>
-        /// An array can either be a value type array, in which it has a value attribute and a parent Array element to
-        /// determine an atomic type from, or it can be a complex structure array, in which it has a child structure element
-        /// that can be parsed into a complex type using a structure serializer.
-        /// </remarks>
         private static IDataType GetElementType(XElement element)
         {
             var structure = element.Element(L5XElement.Structure.ToXName());
@@ -70,10 +60,9 @@ namespace L5Sharp.Serialization.Data
                 return serializer.Deserialize(structure);
             }
 
-            var dataType = (IAtomicType)DataType.Create(element.Parent?.GetDataTypeName()!);
+            var name = element.Parent?.GetDataTypeName()!;
             var value = element.Attribute(L5XAttribute.Value.ToXName())?.Value!;
-            dataType.SetValue(value);
-            return dataType;
+            return DataType.Atomic(name, value);
         }
     }
 }

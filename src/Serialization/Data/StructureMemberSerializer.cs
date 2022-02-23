@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Xml.Linq;
 using L5Sharp.Core;
+using L5Sharp.Enums;
 using L5Sharp.Extensions;
 using L5Sharp.Helpers;
 
@@ -16,16 +17,30 @@ namespace L5Sharp.Serialization.Data
             if (component == null)
                 throw new ArgumentNullException(nameof(component));
 
-            if (component.DataType is not IComplexType complex)
-                throw new InvalidOperationException("StructureMembers must have a complex data type.");
-
             var element = new XElement(ElementName);
 
             element.AddAttribute(component, m => m.Name);
             element.AddAttribute(component, m => m.DataType);
 
-            var members = complex.Members.Select(m => GetSerializer(m).Serialize(m));
-            element.Add(members); 
+            var members = component.DataType.GetMembers().Select(m =>
+            {
+                if (m.IsValueMember)
+                {
+                    var dataValueMemberSerializer = new DataValueMemberSerializer();
+                    return dataValueMemberSerializer.Serialize(m);
+                }
+
+                if (m.IsArrayMember)
+                {
+                    var arrayMemberSerializer = new ArrayMemberSerializer();
+                    return arrayMemberSerializer.Serialize(m);
+                }
+
+                var structureMemberSerializer = new StructureMemberSerializer();
+                return structureMemberSerializer.Serialize(m);
+            });
+            
+            element.Add(members);
 
             return element;
         }
@@ -39,25 +54,17 @@ namespace L5Sharp.Serialization.Data
                 throw new ArgumentException($"Element '{element.Name}' not valid for the serializer {GetType()}.");
 
             var name = element.GetComponentName();
-            
-            var serializer = new StructureSerializer();
-            var dataType = serializer.Deserialize(element);
+
+            var typeName = element.GetDataTypeName();
+            var members = element.Elements().Select(e =>
+            {
+                var l5XElement = Enum.Parse<L5XElement>(e.Name.ToString());
+                return ((IL5XSerializer<IMember<IDataType>>)l5XElement.GetSerializer()).Deserialize(e);
+            });
+
+            var dataType = new StructureType(typeName, DataTypeClass.Unknown, members);
 
             return new Member<IDataType>(name, dataType);
         }
-        private static IL5XSerializer<IMember<IDataType>> GetSerializer(IMember<IDataType> member)
-        {
-            if (member.IsValueMember)
-                return new DataValueMemberSerializer();
-            
-            if (member.IsStructureMember)
-                return new StructureMemberSerializer();
-            
-            if (member.IsArrayMember)
-                return new ArrayMemberSerializer();
-
-            throw new NotSupportedException($"No data member serializer is defined for member {member.Name}");
-        }
-        
     }
 }

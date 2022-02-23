@@ -43,11 +43,21 @@ namespace L5Sharp
         /// Gets the date time that the L5X file was exported.
         /// </summary>
         DateTime ExportDate { get; }
+        
+        /// <summary>
+        /// Gets the <see cref="IController"/> instance of the current <see cref="ILogixContext"/>.
+        /// </summary>
+        IController Controller { get; }
 
         /// <summary>
         /// Get the <see cref="IUserDefined"/> repository instance for the current <see cref="ILogixContext"/>.
         /// </summary>
         IRepository<IUserDefined> DataTypes { get; }
+        
+        /// <summary>
+        /// Get the <see cref="Module"/> repository instance for the current <see cref="ILogixContext"/>.
+        /// </summary>
+        IRepository<Module> Modules { get; }
         
         /// <summary>
         /// Get the <see cref="ITag{TDataType}"/> repository instance for the current <see cref="ILogixContext"/>. 

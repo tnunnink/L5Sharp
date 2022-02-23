@@ -42,7 +42,7 @@ namespace L5Sharp.Converters
                 Int v => new Bool(v != 0),
                 Dint v => new Bool(v != 0),
                 Lint v => new Bool(v != 0),
-                string v => Radix.ParseValue<Bool>(v),
+                string v => bool.TryParse(v, out var result) ? new Bool(result) : Radix.ParseValue<Bool>(v),
                 _ => base.ConvertFrom(context, culture, value)
                      ?? throw new NotSupportedException(
                          $"The provided value of type {value.GetType()} is not supported for conversion.")

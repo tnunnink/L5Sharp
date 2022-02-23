@@ -4,11 +4,12 @@ using L5Sharp.Core;
 namespace L5Sharp
 {
     /// <summary>
-    /// Represents a Logix Controller component. 
+    /// Represents a Logix <b>Controller</b> component. 
     /// </summary>
     /// <remarks>
-    /// A Controller component is the root of the L5X content element and can be accessed using the <see cref="ILogixContext"/>.
-    /// The controller entity only contains member properties. It does not maintain component collections (i.e. DataTypes, Tags, etc.).
+    /// A Controller component is the root container of an L5X context and can be accessed using the <see cref="ILogixContext"/>.
+    /// The controller entity only contains member properties or properties of the root controller element.
+    /// It does not maintain child component collections (i.e. DataTypes, Tags, etc.).
     /// To access these components, use the <see cref="ILogixContext"/> repository instances.
     /// </remarks>
     /// <footer>
@@ -18,22 +19,22 @@ namespace L5Sharp
     public interface IController : ILogixComponent
     {
         /// <summary>
-        /// Gets processor type of the current controller.
+        /// Gets the <see cref="Core.CatalogNumber"/> of the <see cref="IController"/>.
         /// </summary>
-        string ProcessorType { get; }
+        CatalogNumber ProcessorType { get; }
         
         /// <summary>
-        /// Gets the controller revision.
+        /// Gets the <see cref="Core.Revision"/> of the <see cref="IController"/>.
         /// </summary>
         Revision Revision { get; }
         
         /// <summary>
-        /// Gets the project creation date time of the controller.
+        /// Gets the project creation date time of the <see cref="IController"/>.
         /// </summary>
         DateTime ProjectCreationDate { get; }
         
         /// <summary>
-        /// Gets the last modified date/time of the controller.
+        /// Gets the last modified date/time of the <see cref="IController"/>.
         /// </summary>
         DateTime LastModifiedDate { get; }
     }

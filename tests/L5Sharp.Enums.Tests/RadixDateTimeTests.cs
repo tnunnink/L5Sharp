@@ -36,7 +36,7 @@ namespace L5Sharp.Enums.Tests
 
             var result = radix.Format(new Lint(1638277952000000));
 
-            result.Should().Be("DT#2021-11-30-07:12:32.000_000(UTC-06:00)");
+            result.Should().Be("DT#2021-11-30-13:12:32.000_000Z");
         }
 
         [Test]
@@ -46,13 +46,13 @@ namespace L5Sharp.Enums.Tests
 
             var result = radix.Format(new Lint(1641016800100100));
 
-            result.Should().Be("DT#2022-01-01-00:00:00.100_100(UTC-06:00)");
+            result.Should().Be("DT#2022-01-01-06:00:00.100_100Z");
         }
 
         [Test]
         public void Parse_NoSpecifier_ShouldThrowFormatException()
         {
-            FluentActions.Invoking(() => Radix.DateTime.Parse("2021-11-30-07:12:32.000_000(UTC-06:00)")).Should()
+            FluentActions.Invoking(() => Radix.DateTime.Parse("2021-11-30-07:12:32.000_000Z")).Should()
                 .Throw<FormatException>();
         }
 
@@ -61,7 +61,7 @@ namespace L5Sharp.Enums.Tests
         {
             var radix = Radix.DateTime;
 
-            var result = radix.Parse("DT#2021-11-30-07:12:32.000_000(UTC-06:00)");
+            var result = radix.Parse("DT#2021-11-30-13:12:32.000_000Z");
 
             result.Value.Should().Be(1638277952000000);
         }
@@ -71,7 +71,7 @@ namespace L5Sharp.Enums.Tests
         {
             var radix = Radix.DateTime;
 
-            var result = radix.Parse("DT#2022-01-01-00:00:00.100_100(UTC-06:00)");
+            var result = radix.Parse("DT#2022-01-01-06:00:00.100_100Z");
 
             result.Value.Should().Be(1641016800100100);
         }

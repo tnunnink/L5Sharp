@@ -244,7 +244,7 @@ namespace L5Sharp.Enums.Tests
         [Test]
         public void ParseValue_ValidDateTime_ShouldBeExpected()
         {
-            const string value = "DT#2022-01-01-00:00:00.000_000(UTC-06:00)";
+            const string value = "DT#2022-01-01-06:00:00.000_000Z";
 
             var parsed = Radix.ParseValue(value);
 

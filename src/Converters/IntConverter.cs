@@ -29,7 +29,7 @@ namespace L5Sharp.Converters
                 short v => new Int(v),
                 Sint v => new Int(v.Value),
                 Int v => v,
-                string v => Radix.ParseValue<Int>(v),
+                string v => short.TryParse(v, out var result) ? new Int(result) : Radix.ParseValue<Int>(v),
                 _ => base.ConvertFrom(context, culture, value)
                      ?? throw new NotSupportedException(
                          $"The provided value of type {value.GetType()} is not supported for conversion.")

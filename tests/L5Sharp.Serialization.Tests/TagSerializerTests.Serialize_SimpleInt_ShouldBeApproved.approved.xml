@@ -1,0 +1,5 @@
+﻿<Tag Name="Test" TagType="Base" DataType="INT" Radix="Decimal" Constant="False" ExternalAccess="Read/Write">
+  <Data Format="Decorated">
+    <DataValue DataType="INT" Value="0" />
+  </Data>
+</Tag>

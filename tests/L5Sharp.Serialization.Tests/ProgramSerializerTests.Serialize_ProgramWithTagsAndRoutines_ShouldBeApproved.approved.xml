@@ -1,0 +1,40 @@
+﻿<Program Name="Test" Type="Normal" TestEdits="False" Disabled="False" UseAsFolder="False">
+  <Description><![CDATA[This is a test program]]></Description>
+  <Tags>
+    <Tag Name="TestBool" TagType="Base" DataType="BOOL" Radix="Decimal" Constant="False" ExternalAccess="Read/Write">
+      <Data Format="Decorated">
+        <DataValue DataType="BOOL" Value="0" />
+      </Data>
+    </Tag>
+    <Tag Name="TestDint" TagType="Base" DataType="DINT" Radix="Decimal" Constant="False" ExternalAccess="Read/Write">
+      <Data Format="Decorated">
+        <DataValue DataType="DINT" Value="0" />
+      </Data>
+    </Tag>
+    <Tag Name="TestTimer" TagType="Base" DataType="TIMER" Constant="False" ExternalAccess="Read/Write">
+      <Data Format="Decorated">
+        <Structure DataType="TIMER">
+          <DataValueMember Name="PRE" DataType="DINT" Radix="Decimal" Value="0" />
+          <DataValueMember Name="ACC" DataType="DINT" Radix="Decimal" Value="0" />
+          <DataValueMember Name="EN" DataType="BOOL" Value="0" />
+          <DataValueMember Name="TT" DataType="BOOL" Value="0" />
+          <DataValueMember Name="DN" DataType="BOOL" Value="0" />
+        </Structure>
+      </Data>
+    </Tag>
+    <Tag Name="TestInt" TagType="Base" DataType="INT" Radix="Decimal" Constant="False" ExternalAccess="Read/Write">
+      <Data Format="Decorated">
+        <DataValue DataType="INT" Value="0" />
+      </Data>
+    </Tag>
+  </Tags>
+  <Routines>
+    <Routine Name="Test" Type="Rll">
+      <RLLContent>
+        <Rung Number="0" Type="N">
+          <Text><![CDATA[XIC(LocalBool)MOV(1234,LocalDint);]]></Text>
+        </Rung>
+      </RLLContent>
+    </Routine>
+  </Routines>
+</Program>

@@ -525,7 +525,7 @@ namespace L5Sharp.Enums
             public override IAtomicType Parse(string input)
             {
                 ValidateFormat(input);
-                
+
                 return new Real(float.Parse(input));
             }
         }
@@ -538,6 +538,16 @@ namespace L5Sharp.Enums
             private const char ByteSeparator = '$';
             private const char PaddingCharacter = '0';
             private const string Pattern = @"\$[A-Fa-f0-9]{2}|\$[tlpr'$]{1}|[\x00-\x7F]";
+
+            private static readonly Dictionary<string, string> SpecialCharacters = new()
+            {
+                { "$t", "09" },
+                { "$l", "0A" },
+                { "$p", "0C" },
+                { "$r", "0D" },
+                { "$$", "24" },
+                { "$'", "27" }
+            };
 
             public AsciiRadix() : base(nameof(Ascii), nameof(Ascii).ToUpper())
             {
@@ -557,7 +567,7 @@ namespace L5Sharp.Enums
             {
                 ValidateFormat(input);
 
-                var value = GenerateHex(input.Trim(Specifier));
+                var value = GenerateHex(input.TrimSingle(Specifier));
 
                 return ConvertToAtomic(value, BitsPerByte, BaseNumber);
             }
@@ -594,17 +604,15 @@ namespace L5Sharp.Enums
 
                 foreach (Match match in matches)
                 {
-                    var data = match.Value.StartsWith(ByteSeparator)
-                        ? match.Value.TrimStart(ByteSeparator)
-                        : match.Value;
-
-                    if (data.Length == 1)
+                    var value = match.Value.Length switch
                     {
-                        builder.Append($"{Convert.ToInt32(char.Parse(data)):X}");
-                        continue;
-                    }
+                        3 => match.Value.TrimStart(ByteSeparator),
+                        2 => SpecialCharacters[match.Value],
+                        1 => $"{Convert.ToInt32(char.Parse(match.Value)):X}",
+                        _ => string.Empty
+                    };
 
-                    builder.Append(data);
+                    builder.Append(value);
                 }
 
                 return builder.ToString();
@@ -615,10 +623,11 @@ namespace L5Sharp.Enums
         {
             private const string Specifier = "DT#";
             private const string Separator = "_";
+            private const string Suffix = "Z";
             private const string InsertPattern = @"(?<=\d\d\d)(?=(\d\d\d)+(?!\d))";
             private const long TicksPerMicrosecond = TimeSpan.TicksPerMillisecond / 1000;
 
-            public DateTimeRadix() : base(nameof(DateTime), nameof(DateTime))
+            public DateTimeRadix() : base(nameof(DateTime), "Date/Time")
             {
             }
 
@@ -632,23 +641,25 @@ namespace L5Sharp.Enums
                 var microseconds = timestamp % 1000;
                 var ticks = microseconds * TicksPerMicrosecond;
 
-                var localTime = DateTimeOffset.FromUnixTimeMilliseconds(milliseconds).AddTicks(ticks).ToLocalTime();
+                var time = DateTimeOffset.FromUnixTimeMilliseconds(milliseconds).AddTicks(ticks);
 
-                var formatted = localTime.ToString("yyyy-MM-dd-HH:mm:ss.ffffff(UTCzzz)");
+                var formatted = time.ToString("yyyy-MM-dd-HH:mm:ss.ffffff");
 
                 var str = Regex.Replace(formatted, InsertPattern, Separator, RegexOptions.Compiled);
 
-                return $"{Specifier}{str}";
+                return $"{Specifier}{str}{Suffix}";
             }
 
             public override IAtomicType Parse(string input)
             {
                 ValidateFormat(input);
 
-                var value = input.Replace(Specifier, string.Empty).Replace(Separator, string.Empty);
+                var value = input.Replace(Specifier, string.Empty)
+                    .Replace(Separator, string.Empty)
+                    .Replace(Suffix, string.Empty);
 
-                var time = System.DateTime.ParseExact(value, "yyyy-MM-dd-HH:mm:ss.ffffff(UTCzzz)",
-                    CultureInfo.InvariantCulture).ToUniversalTime();
+                var time = System.DateTime.ParseExact(value, "yyyy-MM-dd-HH:mm:ss.ffffff",
+                    CultureInfo.InvariantCulture);
 
                 var timestamp = (time.Ticks - System.DateTime.UnixEpoch.Ticks) / TicksPerMicrosecond;
 
@@ -663,7 +674,7 @@ namespace L5Sharp.Enums
             private const string Separator = "_";
             private const string InsertPattern = @"(?<=\d\d\d)(?=(\d\d\d)+(?!\d))";
 
-            public DateTimeNsRadix() : base(nameof(DateTimeNs), nameof(DateTimeNs))
+            public DateTimeNsRadix() : base(nameof(DateTimeNs), "Date/Time (ns)")
             {
             }
 

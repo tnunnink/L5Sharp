@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Xml.Linq;
 using L5Sharp.Core;
 using L5Sharp.Enums;
@@ -10,8 +11,7 @@ namespace L5Sharp.Serialization.Components
     internal class RoutineSerializer : IL5XSerializer<IRoutine<ILogixContent>>
     {
         private static readonly XName ElementName = L5XElement.Routine.ToXName();
-
-        /// <inheritdoc />
+        
         public XElement Serialize(IRoutine<ILogixContent> component)
         {
             if (component is null)
@@ -22,12 +22,16 @@ namespace L5Sharp.Serialization.Components
             element.AddAttribute(component, c => c.Name);
             element.AddElement(component, c => c.Description);
             element.AddAttribute(component, c => c.Type);
-            //todo logix content
+
+            if (component.Content is ILadderLogic ladderLogic)
+            {
+                var serializer = new LadderLogicSerializer();
+                element.Add(serializer.Serialize(ladderLogic));
+            }
 
             return element;
         }
-
-        /// <inheritdoc />
+        
         public IRoutine<ILogixContent> Deserialize(XElement element)
         {
             if (element == null)
@@ -38,13 +42,21 @@ namespace L5Sharp.Serialization.Components
 
             var name = element.GetComponentName();
             var description = element.GetComponentDescription();
-            var type = element.GetAttribute<IRoutine<ILogixContent>, RoutineType>(r => r.Type);
-            
-            //todo content ??
-            /*var content = element.Element(LogixNames.RllContent) is not null 
-                ? element.Element(LogixNames.RllContent).Deserialize<IRllContent>() : null;*/
+            var type = element.GetAttribute<IRoutine<ILogixContent>, RoutineType>(r => r.Type)!;
 
-            return new Routine<ILogixContent>(name, type, description);
+            var content = type.CreateContent();
+
+            type
+                .When(RoutineType.Rll).Then(() =>
+                {
+                    var rll = element.Elements().FirstOrDefault();
+                    if (rll is null) return;
+                    var serializer = new LadderLogicSerializer();
+                    content = serializer.Deserialize(rll);
+
+                });
+
+            return new Routine<ILogixContent>(name, type, description, content);
         }
     }
 }

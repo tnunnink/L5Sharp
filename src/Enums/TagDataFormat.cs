@@ -26,7 +26,8 @@ namespace L5Sharp.Enums
         {
             return dataType switch
             {
-                Types.Alarm => Alarm,
+                Types.AlarmDigital => Alarm,
+                Types.AlarmAnalog => Alarm,
                 Types.String => String,
                 _ => Decorated
             };

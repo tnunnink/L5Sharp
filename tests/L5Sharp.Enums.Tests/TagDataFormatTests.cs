@@ -52,9 +52,17 @@ namespace L5Sharp.Enums.Tests
         }
         
         [Test]
-        public void FromDataType_Alarm_ShouldBeString()
+        public void FromDataType_AlarmDigital_ShouldBeAlarm()
         {
-            var format = TagDataFormat.FromDataType(new Alarm());
+            var format = TagDataFormat.FromDataType(new AlarmDigital());
+
+            format.Should().Be(TagDataFormat.Alarm);
+        }
+        
+        [Test]
+        public void FromDataType_AlarmAnalog_ShouldBeAlarm()
+        {
+            var format = TagDataFormat.FromDataType(new AlarmAnalog());
 
             format.Should().Be(TagDataFormat.Alarm);
         }

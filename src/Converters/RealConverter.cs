@@ -41,7 +41,7 @@ namespace L5Sharp.Converters
                 Dint v => new Real(v.Value),
                 Lint v => new Real(v.Value),
                 Real v => v,
-                string v => Radix.ParseValue<Real>(v),
+                string v => float.TryParse(v, out var result) ? new Real(result) : Radix.ParseValue<Real>(v),
                 _ => base.ConvertFrom(context, culture, value)
                      ?? throw new NotSupportedException(
                          $"The provided value of type {value.GetType()} is not supported for conversion.")

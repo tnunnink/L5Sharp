@@ -3,7 +3,7 @@
 namespace L5Sharp
 {
     /// <summary>
-    /// Represents a Logix DataType component. This interface is a base for all data type objects,
+    /// Represents a Logix <b>DataType</b> component. This interface is a base for all data type objects,
     /// including <see cref="IAtomicType"/> and <see cref="IComplexType"/>.
     /// </summary>
     /// <remarks>

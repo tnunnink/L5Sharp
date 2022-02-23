@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Xml.Linq;
 using L5Sharp.Core;
 using L5Sharp.Exceptions;
+using L5Sharp.Extensions;
 using L5Sharp.Repositories;
 
 namespace L5Sharp
@@ -34,7 +36,8 @@ namespace L5Sharp
 
             L5X = new L5X(document);
 
-            DataTypes = new UserDefinedRepository(this);
+            DataTypes = new DataTypeRepository(this);
+            Modules = new ModuleRepository(this);
             Tags = new TagRepository(this);
             Programs = new ProgramRepository(this);
             Tasks = new TaskRepository(this);
@@ -65,7 +68,13 @@ namespace L5Sharp
             "ddd MMM d HH:mm:ss yyyy", CultureInfo.CurrentCulture);
 
         /// <inheritdoc />
+        public IController Controller => L5X.GetComponents<IController>().First().Deserialize<IController>();
+
+        /// <inheritdoc />
         public IRepository<IUserDefined> DataTypes { get; }
+
+        /// <inheritdoc />
+        public IRepository<Module> Modules { get; }
 
         /// <inheritdoc />
         public IRepository<ITag<IDataType>> Tags { get; }

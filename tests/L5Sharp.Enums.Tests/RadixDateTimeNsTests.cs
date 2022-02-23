@@ -96,15 +96,5 @@ namespace L5Sharp.Enums.Tests
 
             result.Value.Should().Be(1641016800000000000);
         }
-        
-        [Test]
-        public void Parse_ValidTimeExample3_ShouldBeExpectedValue()
-        {
-            var radix = Radix.DateTimeNs;
-            
-            var result = radix.Parse("LDT#2022-01-01-00:00:00.000_001_001(UTC-06:00)");
-
-            result.Value.Should().Be(164101680000000100);
-        }
     }
 }

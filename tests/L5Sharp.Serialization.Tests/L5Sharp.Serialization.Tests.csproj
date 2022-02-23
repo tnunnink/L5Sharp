@@ -223,6 +223,48 @@
       <None Update="DataValueSerializerTests.Serialize_Bool_ShouldBeApproved.approved.xml">
         <DependentUpon>DataValueSerializerTests.cs</DependentUpon>
       </None>
+      <None Update="DataValueSerializerTests.Serialize_Bool_ShouldBeApproved.approved.xml.bak">
+        <DependentUpon>DataValueSerializerTests.cs</DependentUpon>
+      </None>
+      <None Update="StructureSerializerTests.SerializeArrayMembers_ShouldBeApproved.approved.xml">
+        <DependentUpon>StructureSerializerTests.cs</DependentUpon>
+      </None>
+      <None Update="StructureMemberSerializerTests.Serialize_DataValueValueMembers_ShouldBeApproved.approved.xml">
+        <DependentUpon>StructureMemberSerializerTests.cs</DependentUpon>
+      </None>
+      <None Update="AlarmDataSerializerTests.Serialize_AlarmAnalog_ShouldBeApproved.approved.xml">
+        <DependentUpon>AlarmDataSerializerTests.cs</DependentUpon>
+      </None>
+      <None Update="FormattedDataSerializerTests.Serialize_AlarmType_ShouldBeApproved.approved.xml">
+        <DependentUpon>FormattedDataSerializerTests.cs</DependentUpon>
+      </None>
+      <None Update="FormattedDataSerializerTests.Serialize_AlarmType_ShouldBeApproved.approved.xml.bak">
+        <DependentUpon>FormattedDataSerializerTests.cs</DependentUpon>
+      </None>
+      <None Update="TagSerializerTests.Serialize_SimpleBool_ShouldBeApproved.approved.xml">
+        <DependentUpon>TagSerializerTests.cs</DependentUpon>
+      </None>
+      <None Update="TagSerializerTests.Serialize_SimpleBoolArray_ShouldBeApproved.approved.xml">
+        <DependentUpon>TagSerializerTests.cs</DependentUpon>
+      </None>
+      <None Update="TagSerializerTests.Serialize_String_ShouldBeApproved.approved.xml">
+        <DependentUpon>TagSerializerTests.cs</DependentUpon>
+      </None>
+      <None Update="TagSerializerTests.Serialize_AlarmDigital_ShouldBeApproved.approved.xml">
+        <DependentUpon>TagSerializerTests.cs</DependentUpon>
+      </None>
+      <None Update="TagSerializerTests.Serialize_UserDefined_ShouldBeApproved.approved.xml">
+        <DependentUpon>TagSerializerTests.cs</DependentUpon>
+      </None>
+      <None Update="ProgramSerializerTests.Serialize_BasicProgram_ShouldBeApproved.approved.xml">
+        <DependentUpon>ProgramSerializerTests.cs</DependentUpon>
+      </None>
+      <None Update="LadderLogicSerializerTests.Serialize_ValidType_ShouldBeApproved.approved.xml">
+        <DependentUpon>LadderLogicSerializerTests.cs</DependentUpon>
+      </None>
+      <None Update="ProgramSerializerTests.Serialize_ProgramWithTagsAndRoutines_ShouldBeApproved.approved.xml">
+        <DependentUpon>ProgramSerializerTests.cs</DependentUpon>
+      </None>
     </ItemGroup>
 
     <ItemGroup>

@@ -38,6 +38,11 @@
         /// <summary>
         /// Represents the <see cref="Format"/> L5X attribute name.
         /// </summary>
-        Format
+        Format,
+        
+        /// <summary>
+        /// Represents the <see cref="Length"/> L5X attribute name.
+        /// </summary>
+        Length
     }
 }

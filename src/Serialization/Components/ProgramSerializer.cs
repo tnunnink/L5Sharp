@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Xml.Linq;
 using L5Sharp.Core;
-using L5Sharp.Enums;
 using L5Sharp.Extensions;
 using L5Sharp.Helpers;
 
@@ -23,29 +22,26 @@ namespace L5Sharp.Serialization.Components
             element.AddElement(component, c => c.Description);
             element.AddAttribute(component, c => c.Type);
             element.AddAttribute(component, c => c.TestEdits);
+            element.AddAttribute(component, c => c.MainRoutineName, p => !p.MainRoutineName.IsEmpty());
+            element.AddAttribute(component, c => c.FaultRoutineName, p => !p.FaultRoutineName.IsEmpty());
             element.AddAttribute(component, c => c.Disabled);
+            element.AddAttribute(component, c => c.UseAsFolder);
 
-            if (component.Tags.Count > 0)
+            var tags = new XElement(nameof(component.Tags));
+            tags.Add(component.Tags.Select(t =>
             {
-                var tags = new XElement(nameof(component.Tags));
-                tags.Add(component.Tags.Select(t =>
-                {
-                    var serializer = new TagSerializer();
-                    return serializer.Serialize(t);
-                }));
-                element.Add(tags);
-            }
+                var serializer = new TagSerializer();
+                return serializer.Serialize(t);
+            }));
+            element.Add(tags);
 
-            if (component.Routines.Count > 0)
+            var routines = new XElement(nameof(component.Routines));
+            routines.Add(component.Routines.Select(r =>
             {
-                var routines = new XElement(nameof(component.Routines));
-                routines.Add(component.Routines.Select(r =>
-                {
-                    var serializer = new RoutineSerializer();
-                    return serializer.Serialize(r);
-                }));
-                element.Add(routines);
-            }
+                var serializer = new RoutineSerializer();
+                return serializer.Serialize(r);
+            }));
+            element.Add(routines);
 
             return element;
         }
@@ -58,12 +54,13 @@ namespace L5Sharp.Serialization.Components
             if (element.Name != ElementName)
                 throw new ArgumentException($"Element '{element.Name}' not valid for the serializer {GetType()}.");
 
-            var type = element.GetAttribute<IProgram, ProgramType>(p => p.Type);
-
             var name = element.GetComponentName();
             var description = element.GetComponentDescription();
             var testEdits = element.GetAttribute<IProgram, bool>(p => p.TestEdits);
+            var mainRoutineName = element.GetAttribute<IProgram, string>(p => p.MainRoutineName);
+            var faultRoutineName = element.GetAttribute<IProgram, string>(p => p.FaultRoutineName);
             var disabled = element.GetAttribute<IProgram, bool>(p => p.Disabled);
+            var useAsFolder = element.GetAttribute<IProgram, bool>(p => p.UseAsFolder);
 
             var tags = element.Descendants(L5XElement.Tag.ToXName())
                 .Select(e =>
@@ -79,8 +76,9 @@ namespace L5Sharp.Serialization.Components
                     return serializer.Deserialize(e);
                 });
 
-            return new Program(name, description, testEdits: testEdits, disabled: disabled,
-                tags: tags, routines: routines);
+            return new Program(name, description, mainRoutineName, faultRoutineName, 
+                useAsFolder, testEdits, disabled,
+                tags, routines);
         }
     }
 }

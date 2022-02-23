@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Reflection;
 using System.Xml.Linq;
 using System.Xml.Serialization;
@@ -16,13 +17,15 @@ namespace L5Sharp.Extensions
         /// </returns>
         public static XName GetXName(this MemberInfo member)
         {
-           var xName = (string)member.CustomAttributes
-                .FirstOrDefault(x => x.AttributeType == typeof(XmlAttributeAttribute)
-                                     || x.AttributeType == typeof(XmlElementAttribute))
-                ?.ConstructorArguments.First().Value;
+            var attribute =
+                member.CustomAttributes.FirstOrDefault(x =>
+                    x.AttributeType == typeof(XmlAttributeAttribute) 
+                    || x.AttributeType == typeof(XmlElementAttribute));
 
+            if (attribute is not null && attribute.ConstructorArguments.Any())
+                return XName.Get(attribute.ConstructorArguments.First().Value.ToString());
 
-            return xName ?? member.Name;
+            return member.Name;
         }
 
         /// <summary>
@@ -38,8 +41,8 @@ namespace L5Sharp.Extensions
             var methodName = member.CustomAttributes.Any(x => x.AttributeType == typeof(XmlElementAttribute))
                 ? "Element"
                 : "Attribute";
-            
-            var signature = new[] {typeof (XName)};
+
+            var signature = new[] { typeof(XName) };
 
             // We know the methods we are calling exist so don't need to worry about potential null reference.
             return typeof(XElement).GetMethod(methodName, signature)!;

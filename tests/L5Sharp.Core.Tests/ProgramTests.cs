@@ -15,14 +15,14 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Create_NullName_ShouldThrowArgumentNullException()
         {
-            FluentActions.Invoking(() => Program.Create(null!))
+            FluentActions.Invoking(() => new Program(null!))
                 .Should().Throw<ArgumentNullException>();
         }
         
         [Test]
         public void Create_ValidName_ShouldNotBeNull()
         {
-            var program = Program.Create("Test");
+            var program = new Program("Test");
 
             program.Should().NotBeNull();
         }
@@ -30,7 +30,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Create_ValidName_ShouldHaveExpectedDefaults()
         {
-            var program = Program.Create("Test");
+            var program = new Program("Test");
 
             program.Name.Should().Be("Test");
             program.Description.Should().BeEmpty();
@@ -47,7 +47,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void AddTag_ValidTag_ShouldHaveExpectedTag()
         {
-            var program = Program.Create("Test");
+            var program = new Program("Test");
             var tag = Tag.Create<Bool>("TestTag");
             
             program.Tags.Add(tag);
@@ -59,7 +59,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void AddTag_Duplicate_ShouldThrowException()
         {
-            var program = Program.Create("Test");
+            var program = new Program("Test");
             program.Tags.Add(Tag.Create<Counter>("Test"));
 
             FluentActions.Invoking(() => program.Tags.Add(Tag.Create<Bool>("Test")))
@@ -69,7 +69,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void AddRoutine_ValidRoutine_ShouldHaveExpectedRoutine()
         {
-            var program = Program.Create("Test");
+            var program = new Program("Test");
             var routine = Routine.Create<LadderLogic>("TestRoutine");
             
             program.Routines.Add(routine);
@@ -81,111 +81,13 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void AddRoutineWithRung_ShouldHaveExpected()
         {
-            var program = Program.Create("Test");
+            var program = new Program("Test");
             var routine = Routine.Create<LadderLogic>("TestRoutine");
             routine.Content.Add(new Rung("NOP();", "This is a test rung"));
             
             program.Routines.Add(routine);
 
             program.Routines.FirstOrDefault(r => r.Content.HasContent).Should().NotBeNull();
-        }
-        
-        
-        [Test]
-        public void TypedEquals_AreEqual_ShouldBeTrue()
-        {
-            var first = Program.Create("Test");
-            var second = Program.Create("Test");
-
-            var result = first.Equals(second);
-
-            result.Should().BeTrue();
-        }
-
-        [Test]
-        public void TypedEquals_AreSame_ShouldBeTrue()
-        {
-            var first = Program.Create("Test");
-
-            var result = first.Equals(first);
-
-            result.Should().BeTrue();
-        }
-
-
-        [Test]
-        public void TypedEquals_Null_ShouldBeFalse()
-        {
-            var first = Program.Create("Test");
-
-            var result = first.Equals(null);
-
-            result.Should().BeFalse();
-        }
-
-        [Test]
-        public void ObjectEquals_AreEqual_ShouldBeTrue()
-        {
-            var first = Program.Create("Test");
-            var second = Program.Create("Test");
-
-            var result = first.Equals(second);
-
-            result.Should().BeTrue();
-        }
-
-        [Test]
-        public void ObjectEquals_AreSame_ShouldBeTrue()
-        {
-            var first = Program.Create("Test");
-
-            // ReSharper disable once EqualExpressionComparison for coverage purposes
-            var result = first.Equals(first);
-
-            result.Should().BeTrue();
-        }
-
-
-        [Test]
-        public void ObjectEquals_Null_ShouldBeFalse()
-        {
-            var first = Program.Create("Test");
-
-            var result = first.Equals(null);
-
-            result.Should().BeFalse();
-        }
-
-        [Test]
-        public void OperatorEquals_AreEqual_ShouldBeTrue()
-        {
-            var first = (Program)Program.Create("Test");
-            var second = (Program)Program.Create("Test");
-
-            var result = first == second;
-
-            result.Should().BeTrue();
-        }
-
-        [Test]
-        public void OperatorNotEquals_AreEqual_ShouldBeFalse()
-        {
-            var first = (Program)Program.Create("Test");
-            var second = (Program)Program.Create("Test");
-
-            var result = first != second;
-
-            result.Should().BeFalse();
-        }
-
-        [Test]
-        public void GetHashCode_WhenCalled_ShouldNotBeZero()
-        {
-            var first = (Program)Program.Create("Test");
-
-            var hash = first.GetHashCode();
-
-            hash.Should().NotBe(0);
         }
     }
 }

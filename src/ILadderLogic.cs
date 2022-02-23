@@ -7,7 +7,7 @@ namespace L5Sharp
     /// <summary>
     /// Represents a Logix Ladder Logic Routine content. 
     /// </summary>
-    public interface ILadderLogic : ILogixContent, IEnumerable<Rung>, IEquatable<ILadderLogic>
+    public interface ILadderLogic : ILogixContent, IEnumerable<Rung>
     {
         /// <summary>
         /// Gets the number of <see cref="Rung"/> objects in the current <see cref="ILadderLogic"/>.

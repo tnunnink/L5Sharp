@@ -25,7 +25,6 @@ namespace L5Sharp.Helpers
         public override Expression Visit(Expression node)
         {
             if (_typeParameter is not null) return base.Visit(node);
-            
 
             var lambda = ValidateExpression(node);
 

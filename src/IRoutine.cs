@@ -3,7 +3,7 @@
 namespace L5Sharp
 {
     /// <summary>
-    /// 
+    /// Represents a Logix <b>Routine</b> component. 
     /// </summary>
     public interface IRoutine<out TContent> : ILogixComponent where TContent : ILogixContent 
     {

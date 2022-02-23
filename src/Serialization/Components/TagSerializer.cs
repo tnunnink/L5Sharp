@@ -23,19 +23,23 @@ namespace L5Sharp.Serialization.Components
             element.AddAttribute(component, c => c.Name);
             element.AddElement(component, c => c.Description);
             element.AddAttribute(component, c => c.TagType);
-            element.AddAttribute(component, c => c.DataType);
-            element.AddAttribute(component, c => c.Dimensions);
+            element.AddAttribute(component, c => c.DataType.Name, nameOverride: nameof(component.DataType));
+            element.AddAttribute(component, c => c.Dimensions, t => !t.Dimensions.AreEmpty);
             element.AddAttribute(component, c => c.Radix, t => t.IsValueMember);
             element.AddAttribute(component, c => c.Constant);
             element.AddAttribute(component, c => c.ExternalAccess);
+
+            if (component.Comments.Any())
+            {
+                var commentSerializer = new CommentSerializer();
+                element.Add(commentSerializer.Serialize(component.Comments));    
+            }
             
-            var commentSerializer = new CommentSerializer();
-            element.Add(commentSerializer.Serialize(component.Comments));
 
             //todo same with engineering units and perhaps ranges min/max
 
-            var dataSerializer = new FormattedDataSerializer();
-            var data = dataSerializer.Serialize(component.DataType);
+            var formattedDataSerializer = new FormattedDataSerializer();
+            var data = formattedDataSerializer.Serialize(component.DataType);
             element.Add(data);
 
             return element;
@@ -50,13 +54,13 @@ namespace L5Sharp.Serialization.Components
                 throw new ArgumentException($"Element '{element.Name}' not valid for the serializer {GetType()}.");
 
             var name = element.GetComponentName();
+            var description = element.GetComponentDescription();
             var dataType = element.GetDataType();
             var dimensions = element.GetAttribute<Tag<IDataType>, Dimensions>(t => t.Dimensions);
             var radix = element.GetAttribute<Tag<IDataType>, Radix>(t => t.Radix);
             var access = element.GetAttribute<Tag<IDataType>, ExternalAccess>(t => t.ExternalAccess);
             var usage = element.GetAttribute<Tag<IDataType>, TagUsage>(m => m.Usage);
             var constant = element.GetAttribute<Tag<IDataType>, bool>(m => m.Constant);
-            var description = element.GetAttribute<Tag<IDataType>, string>(m => m.Description);
 
             var commentSerializer = new CommentSerializer();
             var commentsElement = element.Elements(L5XElement.Comments.ToXName()).FirstOrDefault();

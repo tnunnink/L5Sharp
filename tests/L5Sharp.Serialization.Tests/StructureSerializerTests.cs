@@ -8,7 +8,6 @@ using FluentAssertions;
 using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Factories;
-using L5Sharp.Serialization;
 using L5Sharp.Serialization.Data;
 using L5Sharp.Types;
 using NUnit.Framework;
@@ -65,7 +64,23 @@ namespace L5Sharp.Serialization.Tests
                 Member.Create<Int>("IntMember"),
                 Member.Create<Dint>("DintMember"),
                 Member.Create<Lint>("LintMember"),
-                Member.Create<Real>("RealMember"),
+                Member.Create<Real>("RealMember")
+            });
+
+            var xml = _serializer.Serialize(component);
+
+            Approvals.VerifyXml(xml.ToString());
+        }
+        
+        [Test]
+        [UseReporter(typeof(DiffReporter))]
+        public void SerializeArrayMembers_ShouldBeApproved()
+        {
+            var component = new StructureType("Test", DataTypeClass.Unknown, new List<IMember<IDataType>>
+            {
+                Member.Create<Dint>("SimpleMember", new Dimensions(10)),
+                Member.Create<Timer>("ComplexMember", 5),
+                Member.Create<String>("StringMember", 2)
             });
 
             var xml = _serializer.Serialize(component);

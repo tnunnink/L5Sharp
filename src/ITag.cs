@@ -5,9 +5,9 @@ using L5Sharp.Enums;
 namespace L5Sharp
 {
     /// <summary>
-    /// Represents a Logix Tag component.
+    /// Represents a Logix <b>Tag</b> component. 
     /// </summary>
-    /// <typeparam name="TDataType">The <see cref="IDataType"/> of the <c>ITag</c>.</typeparam>
+    /// <typeparam name="TDataType">The <see cref="IDataType"/> of the tag.</typeparam>
     public interface ITag<out TDataType> : ITagMember<TDataType> where TDataType : IDataType
     {
         /// <summary>
