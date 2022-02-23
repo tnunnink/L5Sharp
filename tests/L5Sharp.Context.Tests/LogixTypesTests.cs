@@ -9,7 +9,7 @@ namespace L5Sharp.Context.Tests
         [Test]
         public void Types_WhenCalled_ShouldNotBeEmpty()
         {
-            var context = new LogixContext(Known.Template);
+            var context = new L5XContext(Known.Template);
 
             context.Should().NotBeNull();
         }

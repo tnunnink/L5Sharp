@@ -1,60 +1,49 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Schema;
-using L5Sharp.Exceptions;
-using L5Sharp.Helpers;
 
-namespace L5Sharp
+namespace L5Sharp.L5X
 {
-    internal class L5X
+    internal class L5XDocument
     {
         private const string L5XSchema = "L5Sharp.Resources.L5X.xsd";
         private readonly XDocument _document;
 
-        public L5X(XDocument document)
+        public L5XDocument(XDocument document)
         {
             //todo need to decide how to get valid schema file.
             //We should probably create our own using exports and xsd generation tools, but that would take a long time.
             //ValidateFile(document);
-            
+
             _document = document;
         }
 
         public XElement Root => _document.Root!;
-        
-        public XElement GetContainer<TComponent>()
-        {
-            var containerName = L5XNames.GetContainerName<TComponent>();
 
-            return _document.Descendants(containerName).First();
-        }
-        
         public IEnumerable<XElement> GetComponents<TComponent>()
-        {
-            var componentName = L5XNames.GetComponentName<TComponent>();
+            where TComponent : ILogixComponent =>
+            _document.Descendants(L5XNames.GetComponentName<TComponent>());
 
-            return _document.Descendants(componentName);
-        }
+        public XElement GetContainer<TComponent>()
+            where TComponent : ILogixComponent =>
+            _document.Descendants(L5XNames.GetContainerName<TComponent>()).First();
 
         public void Save(string fileName)
         {
             _document.Save(fileName);
         }
-        
+
         /*public async Task SaveAsync(string fileName, CancellationToken? token = null)
         {
             token ??= CancellationToken.None;
             
             await _document.SaveAsync(new MemoryStream(), SaveOptions.None, token);
         }*/
-        
+
         private void ValidateFile(XDocument document)
         {
             var assembly = Assembly.GetExecutingAssembly();

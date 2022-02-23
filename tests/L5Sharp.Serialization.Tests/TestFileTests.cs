@@ -19,7 +19,7 @@ namespace L5Sharp.Serialization.Tests
         [Test]
         public void Load_ValidFile_ShouldNotBeNull()
         {
-            var context = new LogixContext(L5X);
+            var context = new L5XContext(L5X);
 
             context.Should().NotBeNull();
         }

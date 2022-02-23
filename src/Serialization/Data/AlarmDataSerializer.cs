@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Xml.Linq;
-using L5Sharp.Helpers;
+using L5Sharp.L5X;
 using L5Sharp.Types;
 
 namespace L5Sharp.Serialization.Data

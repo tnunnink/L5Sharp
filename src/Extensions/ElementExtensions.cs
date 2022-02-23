@@ -3,7 +3,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Xml.Linq;
 using L5Sharp.Core;
-using L5Sharp.Helpers;
+using L5Sharp.L5X;
 using L5Sharp.Types;
 
 namespace L5Sharp.Extensions

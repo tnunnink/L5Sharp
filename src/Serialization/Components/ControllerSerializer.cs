@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Xml.Linq;
 using L5Sharp.Core;
 using L5Sharp.Extensions;
-using L5Sharp.Helpers;
+using L5Sharp.L5X;
 
 namespace L5Sharp.Serialization.Components
 {
@@ -42,11 +42,11 @@ namespace L5Sharp.Serialization.Components
                 throw new ArgumentException($"Element '{element.Name}' not valid for the serializer {GetType()}.");
 
             var name = element.GetComponentName();
-            var processorType = element.GetAttribute<IController, string>(c => c.ProcessorType);
-            var description = element.GetAttribute<IController, string>(c => c.Description);
-            var major = element.GetAttribute<IController, ushort>(c => c.Revision.Major);
-            var minor = element.GetAttribute<IController, ushort>(c => c.Revision.Minor);
-            var revision = new Revision(major, minor);
+            var description = element.GetComponentDescription();
+            var processorType = element.GetAttribute<IController, CatalogNumber>(c => c.ProcessorType);
+            var major = element.Attribute("MajorRev")?.Value;
+            var minor = element.Attribute("MinorRev")?.Value;
+            var revision = Revision.Parse($"{major}.{minor}");
 
             var creationDate = DateTime.ParseExact(element.Attribute("ProjectCreationDate")?.Value,
                 "ddd MMM d HH:mm:ss yyyy", CultureInfo.CurrentCulture);

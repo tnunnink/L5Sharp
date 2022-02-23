@@ -1,7 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>netstandard2.1</TargetFramework>
         <LangVersion>9</LangVersion>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <Nullable>enable</Nullable>
@@ -11,6 +10,7 @@
         <AssemblyVersion>1.0.0.0</AssemblyVersion>
         <FileVersion>1.0.0.0</FileVersion>
         <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+        <TargetFramework>netstandard2.1</TargetFramework>
     </PropertyGroup>
 
     <ItemGroup>

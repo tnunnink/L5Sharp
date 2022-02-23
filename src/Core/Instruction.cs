@@ -49,7 +49,7 @@ namespace L5Sharp.Core
         }
 
         /// <inheritdoc />
-        public NeutralText ToText() => new($"{Name}({string.Join(',', Arguments.Select(a => a.Reference))})");
+        public NeutralText ToText() => new($"{Name}({string.Join(",", Arguments.Select(a => a.Reference))})");
 
         /// <inheritdoc />
         public IInstruction Of(params string[] arguments) => new Instruction(Name, arguments);

@@ -1,5 +1,5 @@
 ﻿// ReSharper disable InconsistentNaming we want to match the XMl naming to prevent comparison issues.
-namespace L5Sharp.Helpers
+namespace L5Sharp.L5X
 {
     /// <summary>
     /// An enumeration of L5X element names for ease of referencing these value without using magic strings.

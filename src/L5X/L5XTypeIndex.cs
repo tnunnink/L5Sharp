@@ -6,7 +6,7 @@ using L5Sharp.Serialization.Components;
 using L5Sharp.Serialization.Data;
 using L5Sharp.Types;
 
-namespace L5Sharp.Helpers
+namespace L5Sharp.L5X
 {
     /// <summary>
     /// A helper for finding and deserializing data types across an L5X document.
@@ -56,7 +56,7 @@ namespace L5Sharp.Helpers
 
             if (element.Name == L5XElement.AddOnInstructionDefinition.ToXName())
             {
-                throw new NotImplementedException();
+                return new Undefined();
             }
             
             throw new InvalidOperationException(

@@ -88,7 +88,7 @@ namespace L5Sharp.Core
             ReferenceEquals(this, obj) || obj is NeutralText other && Equals(other);
 
         /// <inheritdoc />
-        public override int GetHashCode() => HashCode.Combine(_text);
+        public override int GetHashCode() => _text.GetHashCode();
 
         /// <summary>
         /// Determines if the provided objects are equal.

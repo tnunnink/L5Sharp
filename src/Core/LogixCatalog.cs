@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
-using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Exceptions;
 
-namespace L5Sharp
+namespace L5Sharp.Core
 {
     /// <summary>
     /// A service that allows lookups for <see cref="Core.ModuleDefinition"/> objects based on

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using L5Sharp.Enums;
 using L5Sharp.Extensions;
 
 namespace L5Sharp.Core
@@ -226,7 +225,7 @@ namespace L5Sharp.Core
         public override bool Equals(object? obj) => Equals(obj as Dimensions);
 
         /// <inheritdoc />
-        public override int GetHashCode() => HashCode.Combine(X, Y, Z);
+        public override int GetHashCode() => X.GetHashCode() ^ Y.GetHashCode() ^ Z.GetHashCode();
 
         /// <summary>
         /// Determines whether the objects are equal.

@@ -94,7 +94,7 @@ namespace L5Sharp.Core
         public override bool Equals(object? obj) => Equals(obj as Revision);
 
         /// <inheritdoc />
-        public override int GetHashCode() => HashCode.Combine(Major, Minor);
+        public override int GetHashCode() => Major.GetHashCode() ^ Minor.GetHashCode();
 
         /// <summary>
         /// Determines if the provided objects are equal.

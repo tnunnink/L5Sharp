@@ -4,7 +4,7 @@ using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Extensions;
 using L5Sharp.Factories;
-using L5Sharp.Helpers;
+using L5Sharp.L5X;
 using L5Sharp.Types;
 
 namespace L5Sharp.Serialization.Data

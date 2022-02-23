@@ -2,7 +2,7 @@
 {
     internal class TagRepository : Repository<ITag<IDataType>>
     {
-        public TagRepository(LogixContext context) : base(context)
+        public TagRepository(L5XContext context) : base(context)
         {
         }
     }

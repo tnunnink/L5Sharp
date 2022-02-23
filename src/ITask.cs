@@ -61,8 +61,8 @@ namespace L5Sharp
         /// objects scheduled for the current <see cref="ITask"/> instance.
         /// </summary>
         /// <remarks>
-        /// This collection may be mutated independently of an L5X, or outside the scope of a <see cref="LogixContext"/>.
-        /// However, when attempting to update the entity for a given <see cref="LogixContext"/> instance,
+        /// This collection may be mutated independently of an L5X, or outside the scope of a <see cref="L5XContext"/>.
+        /// However, when attempting to update the entity for a given <see cref="L5XContext"/> instance,
         /// validation will be performed to ensure the set of <see cref="ScheduledPrograms"/> follows the
         /// Logix guidelines for updating a <see cref="ITask"/> component.
         /// </remarks>

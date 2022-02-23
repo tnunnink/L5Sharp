@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Xml.Linq;
-using L5Sharp.Helpers;
+using L5Sharp.L5X;
 using L5Sharp.Serialization;
 using L5Sharp.Serialization.Data;
 

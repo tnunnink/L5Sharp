@@ -6,23 +6,24 @@ using System.Xml.Linq;
 using L5Sharp.Core;
 using L5Sharp.Exceptions;
 using L5Sharp.Extensions;
+using L5Sharp.L5X;
 using L5Sharp.Repositories;
 
 namespace L5Sharp
 {
     /// <inheritdoc />
-    public class LogixContext : ILogixContext
+    public class L5XContext : ILogixContext
     {
         private readonly string _fileName;
 
         /// <summary>
-        /// Creates a new <see cref="LogixContext"/> instance with the provided file name.
+        /// Creates a new <see cref="L5XContext"/> instance with the provided file name.
         /// </summary>
         /// <param name="fileName">The full path the L5X file to load.</param>
         /// <exception cref="ArgumentException">fileName is null or empty string.</exception>
         /// <exception cref="FileNotFoundException">fileName does not exist.</exception>
         /// <exception cref="L5XParseException">The provided L5X document is not valid.</exception>
-        public LogixContext(string fileName)
+        public L5XContext(string fileName)
         {
             if (string.IsNullOrEmpty(fileName))
                 throw new ArgumentException("Filename can not be null or empty");
@@ -34,7 +35,7 @@ namespace L5Sharp
 
             var document = XDocument.Load(_fileName);
 
-            L5X = new L5X(document);
+            L5X = new L5XDocument(document);
 
             DataTypes = new DataTypeRepository(this);
             Modules = new ModuleRepository(this);
@@ -43,27 +44,41 @@ namespace L5Sharp
             Tasks = new TaskRepository(this);
         }
 
-        internal L5X L5X { get; }
+        internal L5XDocument L5X { get; }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Gets the value of the schema revision for the current L5X context.
+        /// </summary>
         public Revision SchemaRevision => Revision.Parse(L5X.Root.Attribute(nameof(SchemaRevision))?.Value!);
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Gets the value of the software revision for the current L5X context.
+        /// </summary>
         public Revision SoftwareRevision => Revision.Parse(L5X.Root.Attribute(nameof(SoftwareRevision))?.Value!);
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Gets the name of the Logix component that is the target of the current L5X context.
+        /// </summary>
         public ComponentName TargetName => new(L5X.Root.Attribute(nameof(TargetName))?.Value!);
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Gets the type of Logix component that is the target of the current L5X context.
+        /// </summary>
         public string TargetType => L5X.Root.Attribute(nameof(TargetType))?.Value!;
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Gets the value indicating whether the current L5X is contextual..
+        /// </summary>
         public bool ContainsContext => bool.Parse(L5X.Root.Attribute(nameof(ContainsContext))?.Value!);
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Gets the owner that exported the current L5X file.
+        /// </summary>
         public string Owner => L5X.Root.Attribute(nameof(Owner))?.Value!;
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Gets the date time that the L5X file was exported.
+        /// </summary>
         public DateTime ExportDate => DateTime.ParseExact(L5X.Root.Attribute(nameof(ExportDate))?.Value,
             "ddd MMM d HH:mm:ss yyyy", CultureInfo.CurrentCulture);
 
@@ -86,9 +101,17 @@ namespace L5Sharp
         public IReadOnlyRepository<ITask> Tasks { get; }
 
         /// <inheritdoc />
-        public void Save(string? fileName = null)
+        public void Save()
         {
-            fileName ??= _fileName;
+            L5X.Save(_fileName);
+        }
+        
+        /// <summary>
+        /// Save the current content of the <see cref="L5XContext"/> to the specified file name.
+        /// </summary>
+        /// <param name="fileName"></param>
+        public void Save(string fileName)
+        {
             L5X.Save(fileName);
         }
     }

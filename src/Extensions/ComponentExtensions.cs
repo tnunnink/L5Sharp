@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Linq;
-using L5Sharp.Core;
 using L5Sharp.Serialization;
 using L5Sharp.Serialization.Components;
 
@@ -16,11 +16,11 @@ namespace L5Sharp.Extensions
         {
             { typeof(IController), new ControllerSerializer() },
             { typeof(IUserDefined), new UserDefinedSerializer() },
-            { typeof(IMember<>), new MemberSerializer() },
+            { typeof(IMember<IDataType>), new MemberSerializer() },
             { typeof(IModule), new ModuleSerializer() },
-            { typeof(ITag<>), new TagSerializer() },
+            { typeof(ITag<IDataType>), new TagSerializer() },
             { typeof(IProgram), new ProgramSerializer() },
-            { typeof(IRoutine<>), new RoutineSerializer() },
+            { typeof(IRoutine<ILogixContent>), new RoutineSerializer() },
             { typeof(ITask), new TaskSerializer() }
         };
 
@@ -46,8 +46,14 @@ namespace L5Sharp.Extensions
             where TComponent : ILogixComponent => GetSerializer<TComponent>().Deserialize(element);
 
         private static IL5XSerializer<TComponent> GetSerializer<TComponent>()
-            where TComponent : ILogixComponent => Serializers.TryGetValue(typeof(TComponent), out var serializer)
-            ? (IL5XSerializer<TComponent>)serializer
-            : throw new InvalidOperationException($"No serializer defined for'{typeof(TComponent)}'");
+            where TComponent : ILogixComponent
+        {
+            var serializer = Serializers.FirstOrDefault(t => t.Key == typeof(TComponent)).Value;
+
+            if (serializer is null)
+                throw new InvalidOperationException($"No serializer defined for'{typeof(TComponent)}'");
+
+            return (IL5XSerializer<TComponent>)serializer;
+        }
     }
 }

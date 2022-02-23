@@ -2,7 +2,7 @@
 {
     internal class ProgramRepository : Repository<IProgram>
     {
-        public ProgramRepository(LogixContext context) : base(context)
+        public ProgramRepository(L5XContext context) : base(context)
         {
         }
     }

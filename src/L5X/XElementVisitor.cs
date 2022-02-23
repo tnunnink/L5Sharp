@@ -6,7 +6,7 @@ using System.Reflection;
 using System.Xml.Linq;
 using L5Sharp.Extensions;
 
-namespace L5Sharp.Helpers
+namespace L5Sharp.L5X
 {
     /// <summary>
     /// Converts the provided type expression to an expression that takes an XElement and returns the specified return type.

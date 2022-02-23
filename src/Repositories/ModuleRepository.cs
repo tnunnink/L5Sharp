@@ -9,7 +9,7 @@
         /// Creates a new instance of the <see cref="ModuleRepository"/> object.
         /// </summary>
         /// <param name="context">The logix context for which to read/write data to.</param>
-        public ModuleRepository(LogixContext context) : base(context)
+        public ModuleRepository(L5XContext context) : base(context)
         {
         }
         

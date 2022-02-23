@@ -6,7 +6,7 @@ namespace L5Sharp.Repositories
 {
     internal class DataTypeRepository : Repository<IUserDefined>
     {
-        public DataTypeRepository(LogixContext context) : base(context)
+        public DataTypeRepository(L5XContext context) : base(context)
         {
         }
 
@@ -14,13 +14,24 @@ namespace L5Sharp.Repositories
         {
             base.Add(component);
             
-            //We also want to add dependent user defined types.
             var dependents = component.GetDependentTypes()
                 .Where(t => t.Class == DataTypeClass.User)
                 .Cast<IUserDefined>();
 
             foreach (var dependent in dependents)
                 base.Add(dependent);
+        }
+
+        public override void Update(IUserDefined component)
+        {
+            base.Update(component);
+            
+            var dependents = component.GetDependentTypes()
+                .Where(t => t.Class == DataTypeClass.User)
+                .Cast<IUserDefined>();
+
+            foreach (var dependent in dependents)
+                base.Update(dependent);
         }
     }
 }

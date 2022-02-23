@@ -1,4 +1,4 @@
-﻿namespace L5Sharp.Helpers
+﻿namespace L5Sharp.L5X
 {
     /// <summary>
     /// An enumeration of L5X element attributes for ease of referencing these value without using magic strings.

@@ -3,7 +3,7 @@ using System.Linq;
 using System.Xml.Linq;
 using L5Sharp.Enums;
 using L5Sharp.Extensions;
-using L5Sharp.Helpers;
+using L5Sharp.L5X;
 using L5Sharp.Types;
 using String = L5Sharp.Types.String;
 
