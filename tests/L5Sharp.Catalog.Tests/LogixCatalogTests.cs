@@ -9,7 +9,7 @@ namespace L5Sharp.Catalog.Tests
         [Test]
         public void New_Default_ShouldNotBeNull()
         {
-            var catalog = new LogixCatalog();
+            var catalog = new ModuleCatalog();
 
             catalog.Should().NotBeNull();
         }
@@ -17,7 +17,7 @@ namespace L5Sharp.Catalog.Tests
         [Test]
         public void Lookup_ValidNumber_ShouldNotBeNull()
         {
-            var catalog = new LogixCatalog();
+            var catalog = new ModuleCatalog();
 
             var definition = catalog.Lookup("1756-L83E");
 
@@ -27,7 +27,7 @@ namespace L5Sharp.Catalog.Tests
         [Test]
         public void Lookup_L83E_ShouldHaveExpectedProperties()
         {
-            var catalog = new LogixCatalog();
+            var catalog = new ModuleCatalog();
 
             var definition = catalog.Lookup("1756-L83E");
 

@@ -29,7 +29,7 @@ namespace L5Sharp.Abstractions
             if (processorType is null)
                 throw new ArgumentNullException(nameof(processorType));
 
-            catalogService ??= new LogixCatalog();
+            catalogService ??= new ModuleCatalog();
             var definition = catalogService.Lookup(processorType);
 
             ProcessorType = definition.CatalogNumber;

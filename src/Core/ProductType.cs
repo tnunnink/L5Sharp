@@ -8,7 +8,7 @@ namespace L5Sharp.Core
     /// <remarks>
     /// This object is a simple entity type wrapper that groups the product type id and name.
     /// Product types are defined by Rockwell and assigned unique Id and name.
-    /// This information is obtained from the L5X or from the <see cref="LogixCatalog"/> service by lookup of a given
+    /// This information is obtained from the L5X or from the <see cref="ModuleCatalog"/> service by lookup of a given
     /// <see cref="CatalogNumber"/>. Some known/common types that are available as static members of this class
     /// include <see cref="Discrete"/>, <see cref="Analog"/>, <see cref="Controller"/>, and <see cref="Communications"/>.
     /// </remarks>

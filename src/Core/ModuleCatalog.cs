@@ -19,7 +19,7 @@ namespace L5Sharp.Core
     /// the default embedded resource may not contain various Modules as it is dependant on installation of AOPs and EDS
     /// definitions. 
     /// </remarks>
-    public class LogixCatalog : ICatalogService
+    public class ModuleCatalog : ICatalogService
     {
         private const string RaDevice = "RADevice";
         private const string CatalogNumber = "CatalogNumber";
@@ -42,9 +42,9 @@ namespace L5Sharp.Core
         private readonly XDocument _catalog;
 
         /// <summary>
-        /// Creates a new instance of the <see cref="LogixCatalog"/> service.
+        /// Creates a new instance of the <see cref="ModuleCatalog"/> service.
         /// </summary>
-        public LogixCatalog()
+        public ModuleCatalog()
         {
             _catalog = GetLocalCatalog();
         }
@@ -213,11 +213,10 @@ namespace L5Sharp.Core
             var info = new FileInfo(serviceFile);
 
             if (!info.Exists || info.Extension != ".xml")
-                throw new ArgumentException();
+                throw new ArgumentException(
+                    $"The catalog service file {serviceFile} does not exist on the current environment.");
 
             var document = XDocument.Load(info.FullName);
-
-            //todo validate document to ensure we are loading what we think we are and that Rockwell didn't change something.
 
             return document;
         }

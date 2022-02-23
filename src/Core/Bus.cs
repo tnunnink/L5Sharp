@@ -100,7 +100,7 @@ namespace L5Sharp.Core
         /// <param name="description">The optional description for the module.</param>
         /// <param name="catalogService">The optional service provider that is responsible for retrieving
         /// the <see cref="ModuleDefinition"/> for the specified catalog number. By default this will use the
-        /// <see cref="LogixCatalog"/> built in service provider.</param>
+        /// <see cref="ModuleCatalog"/> built in service provider.</param>
         /// <returns>The <see cref="Module"/> instance that was created using the provided parameters.</returns>
         /// <exception cref="ModuleNotFoundException"><c>catalogNumber</c> could not be found by the catalog service provider.</exception>
         /// <exception cref="InvalidOperationException">The Bus instance is full and can not add new modules.</exception>
@@ -125,7 +125,7 @@ namespace L5Sharp.Core
         /// <param name="description">The optional description for the module.</param>
         /// <param name="catalogService">The optional service provider that is responsible for retrieving
         /// the <see cref="ModuleDefinition"/> for the specified catalog number. By default this will use the
-        /// <see cref="LogixCatalog"/> built in service provider.</param>
+        /// <see cref="ModuleCatalog"/> built in service provider.</param>
         /// <returns>The <see cref="Module"/> instance that was created using the provided parameters.</returns>
         /// <exception cref="ModuleNotFoundException"><c>catalogNumber</c> could not be found by the catalog service provider.</exception>
         /// <exception cref="InvalidOperationException">The Bus instance is full and can not add new modules.</exception>
@@ -226,7 +226,7 @@ namespace L5Sharp.Core
             byte slot = default, IPAddress? ipAddress = null,
             string? description = null, ICatalogService? catalogService = null)
         {
-            var catalog = catalogService ?? new LogixCatalog();
+            var catalog = catalogService ?? new ModuleCatalog();
             var definition = catalog.Lookup(catalogNumber);
 
             var upstreamAddress = DetermineUpstreamAddress(slot, ipAddress);

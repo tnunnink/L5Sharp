@@ -39,7 +39,7 @@ namespace L5Sharp
         /// </summary>
         /// <remarks>
         /// This is a unique value that identifies the module and is assigned by Logix. It can be determined from the
-        /// L5X content or from obtaining a <see cref="ModuleDefinition"/> from the <see cref="LogixCatalog"/> service.
+        /// L5X content or from obtaining a <see cref="ModuleDefinition"/> from the <see cref="ModuleCatalog"/> service.
         /// This property is validated by Logix upon import of the L5X. 
         /// </remarks>
         ushort ProductCode { get; }

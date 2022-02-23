@@ -21,7 +21,7 @@ namespace L5Sharp.Core
         /// <param name="description">The optional description of the controller. Will default to empty string.</param>
         /// <param name="catalogService">The optional catalog service provided used to lookup the module definition
         /// for the controller module using the provided catalog number.
-        /// By default will use <see cref="LogixCatalog"/> service.</param>
+        /// By default will use <see cref="ModuleCatalog"/> service.</param>
         public Controller(ComponentName name, CatalogNumber processorType, Revision? revision = null,
             string? description = null, ICatalogService? catalogService = null) :
             base(name, processorType, revision, description, catalogService)

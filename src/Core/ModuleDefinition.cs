@@ -10,7 +10,7 @@ namespace L5Sharp.Core
     /// A set of properties that defines a <see cref="Module"/> component.
     /// </summary>
     /// <remarks>
-    /// This object must be retrieved from the <see cref="LogixCatalog"/> service object. It serves mostly as a container
+    /// This object must be retrieved from the <see cref="ModuleCatalog"/> service object. It serves mostly as a container
     /// of data that can be retrieved in order to created a valid <see cref="Module"/> instance using a known
     /// <see cref="CatalogNumber"/>. 
     /// </remarks>
