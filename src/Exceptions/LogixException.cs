@@ -7,7 +7,7 @@ namespace L5Sharp.Exceptions
     /// </summary>
     public class LogixException : Exception
     {
-        private const string DefaultMessage = "";
+        private const string DefaultMessage = "...";
         
         /// <summary>
         /// Creates a new <see cref="LogixException"/> with the default message.

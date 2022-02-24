@@ -1,11 +1,9 @@
-﻿using System;
-
-namespace L5Sharp.Exceptions
+﻿namespace L5Sharp.Exceptions
 {
     /// <summary>
     /// An exception that is thrown when a component name does not conform to the Logix naming constraints.
     /// </summary>
-    public class ComponentNameInvalidException : Exception
+    public class ComponentNameInvalidException : LogixException
     {
         private const string ConstraintMessage =
             "Name must contain only alphanumeric or '_', start with a letter or '_', and be less than 40 characters";

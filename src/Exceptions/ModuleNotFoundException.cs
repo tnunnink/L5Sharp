@@ -1,12 +1,11 @@
-﻿using System;
-using L5Sharp.Core;
+﻿using L5Sharp.Core;
 
 namespace L5Sharp.Exceptions
 {
     /// <summary>
     /// Represents an exception that is thrown when a catalog number is not found by a given <see cref="ICatalogService"/>.
     /// </summary>
-    public class ModuleNotFoundException : Exception
+    public class ModuleNotFoundException : LogixException
     {
         /// <summary>
         /// Creates a new <see cref="ModuleNotFoundException"/> with the provided catalog number.

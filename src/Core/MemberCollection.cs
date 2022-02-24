@@ -41,7 +41,7 @@ namespace L5Sharp.Core
                 throw new ComponentNameCollisionException(member.Name, member.GetType());
 
             if (member.DataType.Equals(_parent))
-                throw new CircularReferenceException(_parent);
+                throw new CircularReferenceException(_parent.Name);
 
             _members.Add(member);
         }
@@ -71,7 +71,7 @@ namespace L5Sharp.Core
                 throw new ComponentNameCollisionException(member.Name, member.GetType());
 
             if (member.DataType.Equals(_parent))
-                throw new CircularReferenceException(_parent);
+                throw new CircularReferenceException(_parent.Name);
 
             _members.Insert(index, member);
         }
@@ -94,7 +94,7 @@ namespace L5Sharp.Core
                 throw new ArgumentNullException(nameof(member));
 
             if (member.DataType.Equals(_parent))
-                throw new CircularReferenceException(_parent);
+                throw new CircularReferenceException(_parent.Name);
 
             var index = _members.FindIndex(m => m.Name == member.Name);
 

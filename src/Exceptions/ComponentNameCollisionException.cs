@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Reflection;
 
 namespace L5Sharp.Exceptions
 {
@@ -17,8 +17,8 @@ namespace L5Sharp.Exceptions
         /// </summary>
         /// <param name="name">The name of the component that already exists.</param>
         /// <param name="type">The type of the component that the exception is being thrown for.</param>
-        public ComponentNameCollisionException(string name, Type type) : base(
-            $"The component '{type}' with name '{name}' already exists in the current context. {Reason}")
+        public ComponentNameCollisionException(string name, MemberInfo type) : base(
+            $"The {type.Name} component with name '{name}' already exists in the current context. {Reason}")
         {
             Name = name;
         }
