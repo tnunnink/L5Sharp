@@ -22,7 +22,6 @@ namespace L5Sharp
         /// <param name="fileName">The full path the L5X file to load.</param>
         /// <exception cref="ArgumentException">fileName is null or empty string.</exception>
         /// <exception cref="FileNotFoundException">fileName does not exist.</exception>
-        /// <exception cref="L5XParseException">The provided L5X document is not valid.</exception>
         public L5XContext(string fileName)
         {
             if (string.IsNullOrEmpty(fileName))

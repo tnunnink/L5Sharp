@@ -52,8 +52,4 @@
       <Compile Remove="Instructions\**" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Formatters" />
-    </ItemGroup>
-
 </Project>

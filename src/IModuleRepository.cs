@@ -17,9 +17,8 @@ namespace L5Sharp
         /// <returns>If found, a <see cref="IModule"/> instance, including children modules, with the specified name.
         /// Otherwise, null.</returns>
         /// <remarks>
-        /// This is analogous to <see cref="IRepository{TComponent}.Find(ComponentName)"/> in that it searches the context
-        /// for the specified name and returns null if not found. This method, however, will return all descendant modules
-        /// of the found module.
+        /// This is analogous to Find in that it searches the context for the specified name and returns null if not found.
+        /// This method, however, will return all descendant modules of the found module.
         /// </remarks>
         IModule? DeepFind(ComponentName name);
 
@@ -31,8 +30,8 @@ namespace L5Sharp
         /// found in the current <see cref="ILogixContent"/>.</returns>
         /// <exception cref="ComponentNotFoundException">A module with the provided name was not found.</exception>
         /// <remarks>
-        /// This is analogous to <see cref="IRepository{TComponent}.Get(ComponentName)"/> in that it searches the context
-        /// for the specified name. This method, however, will return all descendant modules of the found module.
+        /// This is analogous to Get in that it searches the context for the specified name.
+        /// This method, however, will return all descendant modules of the found module.
         /// </remarks>
         IModule DeepGet(ComponentName name);
 

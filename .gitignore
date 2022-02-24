@@ -5,6 +5,7 @@
 
 # Local Files
 /data/
+/local/
 /tests/L5Sharp.Context.Tests/TestFiles/Template.xml
 
 # User-specific files

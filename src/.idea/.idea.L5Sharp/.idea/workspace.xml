@@ -7,23 +7,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="Added unsigned atomic types and fixed Sint to be sbyte">
-      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Exceptions.Tests/CircularReferenceExceptionTests.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Exceptions.Tests/ComponentNameInvalidExceptionTests.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Exceptions.Tests/ComponentNotFoundExceptionTests.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Exceptions.Tests/ComponentReferencedExceptionTests.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Exceptions.Tests/LogixExceptionTests.cs" afterDir="false" />
+    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="Updated and tested exceptions">
+      <change afterPath="$PROJECT_DIR$/Extensions/GenericExtensions.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Formatters/BinaryFormatter.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/MemberCollection.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/MemberCollection.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Exceptions/CircularReferenceException.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Exceptions/CircularReferenceException.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Exceptions/ComponentNameCollisionException.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Exceptions/ComponentNameCollisionException.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Exceptions/ComponentNameInvalidException.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Exceptions/ComponentNameInvalidException.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Exceptions/ComponentReferencedException.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Exceptions/ComponentReferencedException.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Exceptions/L5XParseException.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Exceptions/LogixException.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Exceptions/LogixException.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Exceptions/ModuleNotFoundException.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Exceptions/ModuleNotFoundException.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/L5Sharp.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Exceptions.Tests/ComponentNameCollectionExceptionTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Exceptions.Tests/ComponentNameCollectionExceptionTests.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -289,14 +277,7 @@
       <workItem from="1645043352307" duration="41185000" />
       <workItem from="1645213929372" duration="16214000" />
       <workItem from="1645285653758" duration="29897000" />
-      <workItem from="1645651624470" duration="26267000" />
-    </task>
-    <task id="LOCAL-00102" summary="Development and testing">
-      <created>1641440839458</created>
-      <option name="number" value="00102" />
-      <option name="presentableId" value="LOCAL-00102" />
-      <option name="project" value="LOCAL" />
-      <updated>1641440839459</updated>
+      <workItem from="1645651624470" duration="28769000" />
     </task>
     <task id="LOCAL-00103" summary="Tag names and member collection development. Preparing for Tag member rework">
       <created>1641511681267</created>
@@ -634,7 +615,14 @@
       <option name="project" value="LOCAL" />
       <updated>1645724943010</updated>
     </task>
-    <option name="localTasksCounter" value="151" />
+    <task id="LOCAL-00151" summary="Updated and tested exceptions">
+      <created>1645730276543</created>
+      <option name="number" value="00151" />
+      <option name="presentableId" value="LOCAL-00151" />
+      <option name="project" value="LOCAL" />
+      <updated>1645730276543</updated>
+    </task>
+    <option name="localTasksCounter" value="152" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -669,6 +657,14 @@
           <item name="(1.0.0.0, .NETStandard,Version=v2.1) 86% 762/5382" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
           <item name="L5Sharp 86% 762/5382" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
+        <path>
+          <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
+          <item name="Total 86% 762/5382" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 86% 762/5382" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="(1.0.0.0, .NETStandard,Version=v2.1) 86% 762/5382" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 86% 762/5382" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Enums 95% 28/528" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+        </path>
       </expand>
       <select />
     </coverage-tree-state>
@@ -693,7 +689,6 @@
       <path value="$PROJECT_DIR$/../.." />
     </ignored-roots>
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="serialization testing" />
     <MESSAGE value="module development and testing" />
     <MESSAGE value="Module component development and testing" />
     <MESSAGE value="Module development and testing." />
@@ -718,7 +713,8 @@
     <MESSAGE value="Renamed LogixCatalog.cs to ModuleCatalog.cs" />
     <MESSAGE value="Adding ModuleRepository.cs and updated test xml and started module repo testing" />
     <MESSAGE value="Added unsigned atomic types and fixed Sint to be sbyte" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added unsigned atomic types and fixed Sint to be sbyte" />
+    <MESSAGE value="Updated and tested exceptions" />
+    <option name="LAST_COMMIT_MESSAGE" value="Updated and tested exceptions" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
