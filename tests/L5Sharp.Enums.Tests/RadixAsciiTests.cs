@@ -1,6 +1,7 @@
 ﻿using System;
 using FluentAssertions;
 using L5Sharp.Types;
+using L5Sharp.Types.Atomics;
 using NUnit.Framework;
 
 namespace L5Sharp.Enums.Tests
@@ -68,7 +69,7 @@ namespace L5Sharp.Enums.Tests
         [Test]
         public void Format_AllValuesFrom32To126_ShouldMatchTheConvertedCharacter()
         {
-            for (byte i = 32; i < 127; i++)
+            for (sbyte i = 32; i < 127; i++)
             {
                 var value = new Sint(i);
 

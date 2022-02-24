@@ -5,7 +5,8 @@ using L5Sharp.Enums;
 using L5Sharp.Extensions;
 using L5Sharp.L5X;
 using L5Sharp.Types;
-using String = L5Sharp.Types.String;
+using L5Sharp.Types.Predefined;
+using String = L5Sharp.Types.Predefined.String;
 
 namespace L5Sharp.Serialization.Data
 {

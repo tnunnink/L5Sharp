@@ -3,17 +3,18 @@ using System.ComponentModel;
 using System.Globalization;
 using L5Sharp.Enums;
 using L5Sharp.Types;
+using L5Sharp.Types.Atomics;
 
 namespace L5Sharp.Converters
 {
     /// <summary>
-    /// A <see cref="TypeConverter"/> for the <see cref="Types.Sint"/> object.
+    /// A <see cref="TypeConverter"/> for the <see cref="Sint"/> object.
     /// </summary>
     internal class SintConverter : TypeConverter
     {
         public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
         {
-            return sourceType == typeof(byte) ||
+            return sourceType == typeof(sbyte) ||
                    sourceType == typeof(Sint) ||
                    sourceType == typeof(string) ||
                    base.CanConvertFrom(context, sourceType);
@@ -23,9 +24,9 @@ namespace L5Sharp.Converters
         {
             return value switch
             {
-                byte v => new Sint(v),
+                sbyte v => new Sint(v),
                 Sint v => v,
-                string v => byte.TryParse(v, out var result) ? new Sint(result) : Radix.ParseValue<Sint>(v),
+                string v => sbyte.TryParse(v, out var result) ? new Sint(result) : Radix.ParseValue<Sint>(v),
                 _ => base.ConvertFrom(context, culture, value)
                      ?? throw new NotSupportedException(
                          $"The provided value of type {value.GetType()} is not supported for conversion.")
@@ -34,7 +35,7 @@ namespace L5Sharp.Converters
 
         public override bool CanConvertTo(ITypeDescriptorContext context, Type destinationType)
         {
-            return destinationType == typeof(byte) ||
+            return destinationType == typeof(sbyte) ||
                    destinationType == typeof(short) ||
                    destinationType == typeof(int) ||
                    destinationType == typeof(long) ||
@@ -56,7 +57,7 @@ namespace L5Sharp.Converters
 
             return destinationType switch
             {
-                not null when destinationType == typeof(byte) => typed.Value,
+                not null when destinationType == typeof(sbyte) => typed.Value,
                 not null when destinationType == typeof(short) => (short)typed.Value,
                 not null when destinationType == typeof(int) => (int)typed.Value,
                 not null when destinationType == typeof(long) => (long)typed.Value,

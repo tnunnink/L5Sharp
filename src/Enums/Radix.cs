@@ -7,7 +7,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using Ardalis.SmartEnum;
 using L5Sharp.Extensions;
-using L5Sharp.Types;
+using L5Sharp.Types.Atomics;
 
 // ReSharper disable StringLiteralTypo
 
@@ -35,9 +35,13 @@ namespace L5Sharp.Enums
         {
             { typeof(Bool), 0 },
             { typeof(Sint), 1 },
+            { typeof(USint), 1 },
             { typeof(Int), 2 },
+            { typeof(UInt), 2 },
             { typeof(Dint), 4 },
-            { typeof(Lint), 8 }
+            { typeof(UDint), 4 },
+            { typeof(Lint), 8 },
+            { typeof(ULint), 8 }
         };
 
         private Radix(string name, string value) : base(name, value)
@@ -265,11 +269,15 @@ namespace L5Sharp.Enums
         {
             return atomic switch
             {
-                Bool b => b ? "1" : "0",
-                Sint s => Convert.ToString(s.Value, baseNumber),
-                Int i => Convert.ToString(i.Value, baseNumber),
-                Dint d => Convert.ToString(d.Value, baseNumber),
-                Lint l => Convert.ToString(l.Value, baseNumber),
+                Bool v => v ? "1" : "0",
+                Sint v => Convert.ToString(v.Value, baseNumber),
+                USint v => Convert.ToString(v.Value, baseNumber),
+                Int v => Convert.ToString(v.Value, baseNumber),
+                UInt v => Convert.ToString(v.Value, baseNumber),
+                Dint v => Convert.ToString(v.Value, baseNumber),
+                UDint v => Convert.ToString(v.Value, baseNumber),
+                Lint v => Convert.ToString(v.Value, baseNumber),
+                //ULint v => Convert.ToString(v.Value, baseNumber),
                 _ => throw new NotSupportedException(
                     $"The atomic of type '{atomic.GetType()}' is not supported for conversion.")
             };
@@ -285,7 +293,7 @@ namespace L5Sharp.Enums
             return byteLength switch
             {
                 0 => new Bool(value == "1"),
-                > 0 and <= 1 => new Sint(Convert.ToByte(value, baseNumber)),
+                > 0 and <= 1 => new Sint(Convert.ToSByte(value, baseNumber)),
                 > 1 and <= 2 => new Int(Convert.ToInt16(value, baseNumber)),
                 > 2 and <= 4 => new Dint(Convert.ToInt32(value, baseNumber)),
                 > 4 and <= 8 => new Lint(Convert.ToInt64(value, baseNumber)),
@@ -432,17 +440,29 @@ namespace L5Sharp.Enums
             {
                 ValidateFormat(input);
 
+                if (sbyte.TryParse(input, out var sbyteValue))
+                    return new Sint(sbyteValue);
+                
                 if (byte.TryParse(input, out var byteValue))
-                    return new Sint(byteValue);
+                    return new USint(byteValue);
 
                 if (short.TryParse(input, out var shortValue))
                     return new Int(shortValue);
+                
+                if (ushort.TryParse(input, out var ushortValue))
+                    return new UInt(ushortValue);
 
                 if (int.TryParse(input, out var intValue))
                     return new Dint(intValue);
+                
+                if (uint.TryParse(input, out var uintValue))
+                    return new UDint(uintValue);
 
                 if (long.TryParse(input, out var longValue))
                     return new Lint(longValue);
+                
+                if (ulong.TryParse(input, out var ulongValue))
+                    return new ULint(ulongValue);
 
                 throw new ArgumentOutOfRangeException(nameof(input),
                     $"Input '{input}' is out of range for the {Name} Radix.");

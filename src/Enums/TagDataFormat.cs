@@ -1,4 +1,5 @@
 ﻿using Ardalis.SmartEnum;
+using L5Sharp.Types.Predefined;
 
 namespace L5Sharp.Enums
 {
@@ -26,9 +27,9 @@ namespace L5Sharp.Enums
         {
             return dataType switch
             {
-                Types.AlarmDigital => Alarm,
-                Types.AlarmAnalog => Alarm,
-                Types.String => String,
+                AlarmDigital => Alarm,
+                AlarmAnalog => Alarm,
+                Types.Predefined.String => String,
                 _ => Decorated
             };
         }

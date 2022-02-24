@@ -11,7 +11,7 @@ namespace L5Sharp
     /// subject to the Logix naming constraints defined by a <see cref="ComponentName"/>. Logix internally may create
     /// components that do not adhere to the naming constraints, which is why the property is a simple string.
     /// Names should be unique any attempt to create duplicated names should fail.
-    /// Components also contain a simple string description that does not adhere to any constraints. 
+    /// Components also contain a simple string description. The description does not adhere to any constraints. 
     /// </remarks>
     /// <footer>
     /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">

@@ -1,5 +1,6 @@
 ﻿using System;
 using L5Sharp.Types;
+using L5Sharp.Types.Atomics;
 
 // ReSharper disable InconsistentNaming RSLogix naming
 

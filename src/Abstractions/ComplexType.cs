@@ -37,7 +37,6 @@ namespace L5Sharp.Abstractions
         /// to initialize it's member collection. This is done so that the derived classed do not need to explicitly
         /// provided the collection of members. Note that if the member properties not initialized when the base
         /// constructor is called, the null references..
-        ///  
         /// </remarks>
         protected ComplexType(string name, IEnumerable<IMember<IDataType>>? members = null)
         {

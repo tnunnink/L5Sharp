@@ -3,19 +3,22 @@ using System.ComponentModel;
 using System.Globalization;
 using L5Sharp.Enums;
 using L5Sharp.Types;
+using L5Sharp.Types.Atomics;
 
 namespace L5Sharp.Converters
 {
     /// <summary>
-    /// A <see cref="TypeConverter"/> for the <see cref="Types.Int"/> object.
+    /// A <see cref="TypeConverter"/> for the <see cref="Int"/> object.
     /// </summary>
     internal class IntConverter : TypeConverter
     {
         public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
         {
-            return sourceType == typeof(byte) ||
+            return sourceType == typeof(sbyte) ||
+                   sourceType == typeof(byte) ||
                    sourceType == typeof(short) ||
                    sourceType == typeof(Sint) ||
+                   sourceType == typeof(USint) ||
                    sourceType == typeof(Int) ||
                    sourceType == typeof(string) ||
                    base.CanConvertFrom(context, sourceType);
@@ -25,9 +28,11 @@ namespace L5Sharp.Converters
         {
             return value switch
             {
+                sbyte v => new Int(v),
                 byte v => new Int(v),
                 short v => new Int(v),
                 Sint v => new Int(v.Value),
+                USint v => new Int(v.Value),
                 Int v => v,
                 string v => short.TryParse(v, out var result) ? new Int(result) : Radix.ParseValue<Int>(v),
                 _ => base.ConvertFrom(context, culture, value)

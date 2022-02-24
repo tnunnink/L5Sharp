@@ -3,21 +3,26 @@ using System.ComponentModel;
 using System.Globalization;
 using L5Sharp.Enums;
 using L5Sharp.Types;
+using L5Sharp.Types.Atomics;
 
 namespace L5Sharp.Converters
 {
     /// <summary>
-    /// A <see cref="TypeConverter"/> for the <see cref="Types.Dint"/> object.
+    /// A <see cref="TypeConverter"/> for the <see cref="Dint"/> object.
     /// </summary>
     internal class DintConverter : TypeConverter
     {
         public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
         {
-            return sourceType == typeof(byte) ||
+            return sourceType == typeof(sbyte) ||
+                   sourceType == typeof(byte) ||
                    sourceType == typeof(short) ||
+                   sourceType == typeof(ushort) ||
                    sourceType == typeof(int) ||
                    sourceType == typeof(Sint) ||
+                   sourceType == typeof(USint) ||
                    sourceType == typeof(Int) ||
+                   sourceType == typeof(UInt) ||
                    sourceType == typeof(Dint) ||
                    sourceType == typeof(string) ||
                    base.CanConvertFrom(context, sourceType);
@@ -27,11 +32,15 @@ namespace L5Sharp.Converters
         {
             return value switch
             {
+                sbyte v => new Dint(v),
                 byte v => new Dint(v),
                 short v => new Dint(v),
+                ushort v => new Dint(v),
                 int v => new Dint(v),
                 Sint v => new Dint(v.Value),
+                USint v => new Dint(v.Value),
                 Int v => new Dint(v.Value),
+                UInt v => new Dint(v.Value),
                 Dint v => v,
                 string v => int.TryParse(v, out var result) ? new Dint(result) : Radix.ParseValue<Dint>(v),
                 _ => base.ConvertFrom(context, culture, value)

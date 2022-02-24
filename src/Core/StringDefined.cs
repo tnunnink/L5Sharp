@@ -6,6 +6,7 @@ using L5Sharp.Abstractions;
 using L5Sharp.Enums;
 using L5Sharp.Factories;
 using L5Sharp.Types;
+using L5Sharp.Types.Atomics;
 
 namespace L5Sharp.Core
 {
@@ -41,7 +42,8 @@ namespace L5Sharp.Core
 
         /// <inheritdoc />
         public string Value =>
-            Encoding.ASCII.GetString(DATA.DataType.Where(d => d.DataType.Value > 0).Select(d => d.DataType.Value)
+            Encoding.ASCII.GetString(DATA.DataType.Where(d => d.DataType.Value > 0)
+                .Select(d => (byte)d.DataType.Value)
                 .ToArray());
 
         /// <inheritdoc />

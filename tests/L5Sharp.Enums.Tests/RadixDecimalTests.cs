@@ -2,6 +2,7 @@
 using FluentAssertions;
 using L5Sharp.Core;
 using L5Sharp.Types;
+using L5Sharp.Types.Atomics;
 using NUnit.Framework;
 
 namespace L5Sharp.Enums.Tests
@@ -104,7 +105,7 @@ namespace L5Sharp.Enums.Tests
         {
             var atomic = (Sint)Radix.Decimal.Parse(byte.MaxValue.ToString());
 
-            atomic.Value.Should().Be(new Sint(byte.MaxValue));
+            atomic.Value.Should().Be(new Sint(sbyte.MaxValue));
         }
 
         [Test]

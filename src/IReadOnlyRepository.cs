@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using L5Sharp.Core;
 
-namespace L5Sharp.Repositories
+namespace L5Sharp
 {
     /// <summary>
     /// A base for implementing read operations over the L5X.
@@ -51,5 +51,11 @@ namespace L5Sharp.Repositories
         /// </summary>
         /// <returns>A collection of all components of the given type.</returns>
         IEnumerable<TComponent> GetAll();
+
+        /// <summary>
+        /// Gets the name of all components in the context.
+        /// </summary>
+        /// <returns>An enumeration of string values representing the names for each component in the context.</returns>
+        IEnumerable<string> Names();
     }
 }

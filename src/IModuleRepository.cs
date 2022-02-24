@@ -1,4 +1,5 @@
-﻿using L5Sharp.Core;
+﻿using System.Collections.Generic;
+using L5Sharp.Core;
 using L5Sharp.Exceptions;
 using L5Sharp.Repositories;
 
@@ -42,6 +43,6 @@ namespace L5Sharp
         /// <returns>
         /// The 'Local' or root <see cref="IModule"/> of the module tree hierarchy, including all descendant modules.
         /// </returns>
-        IModule Tree();
+        IModule Local();
     }
 }

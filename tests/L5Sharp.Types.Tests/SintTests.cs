@@ -2,6 +2,7 @@
 using AutoFixture;
 using FluentAssertions;
 using L5Sharp.Enums;
+using L5Sharp.Types.Atomics;
 using NUnit.Framework;
 
 namespace L5Sharp.Types.Tests
@@ -9,13 +10,13 @@ namespace L5Sharp.Types.Tests
     [TestFixture]
     public class SintTests
     {
-        private byte _random;
+        private sbyte _random;
 
         [SetUp]
         public void Setup()
         {
             var fixture = new Fixture();
-            _random = fixture.Create<byte>();
+            _random = fixture.Create<sbyte>();
         }
         
         [Test]
@@ -71,6 +72,12 @@ namespace L5Sharp.Types.Tests
             type.SetValue(_random);
 
             type.Value.Should().Be(_random);
+        }
+
+        [Test]
+        public void SetValue_NegativeNumber_ShouldBeExpected()
+        {
+            
         }
         
         [Test]
@@ -164,7 +171,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void ImplicitOperator_byte_ShouldBeExpected()
         {
-            byte value = new Sint(_random);
+            sbyte value = new Sint(_random);
 
             value.Should().Be(_random);
         }

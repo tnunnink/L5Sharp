@@ -2,6 +2,7 @@
 using AutoFixture;
 using FluentAssertions;
 using L5Sharp.Enums;
+using L5Sharp.Types.Atomics;
 using NUnit.Framework;
 
 namespace L5Sharp.Types.Tests
@@ -109,7 +110,7 @@ namespace L5Sharp.Types.Tests
         public void SetValue_Sint_ShouldBeExpected()
         {
             var fixture = new Fixture();
-            var value = fixture.Create<byte>();
+            var value = fixture.Create<sbyte>();
             var type = new Int();
 
             type.SetValue(new Sint(value));

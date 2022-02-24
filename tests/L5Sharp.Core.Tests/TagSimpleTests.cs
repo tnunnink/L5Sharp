@@ -5,9 +5,10 @@ using FluentAssertions;
 using L5Sharp.Enums;
 using L5Sharp.Exceptions;
 using L5Sharp.Factories;
-using L5Sharp.Types;
+using L5Sharp.Types.Atomics;
+using L5Sharp.Types.Predefined;
 using NUnit.Framework;
-using String = L5Sharp.Types.String;
+using String = L5Sharp.Types.Predefined.String;
 
 namespace L5Sharp.Core.Tests
 {
@@ -216,7 +217,7 @@ namespace L5Sharp.Core.Tests
         public void SetValue_IsValidSint_ShouldBeExpectedValue()
         {
             var fixture = new Fixture();
-            var expected = fixture.Create<byte>();
+            var expected = fixture.Create<sbyte>();
             var tag = Tag.Create<Sint>("Test");
 
             tag.SetValue(new Sint(expected));

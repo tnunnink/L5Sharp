@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using L5Sharp.Enums;
-using L5Sharp.Types;
-using String = L5Sharp.Types.String;
+using L5Sharp.Types.Atomics;
+using L5Sharp.Types.Predefined;
+using String = L5Sharp.Types.Predefined.String;
 
 namespace L5Sharp.Core
 {
@@ -61,7 +62,7 @@ namespace L5Sharp.Core
         /// <returns>
         /// If the provided name is a type that is part of the predefined registry,
         /// a new new <see cref="IDataType"/> instance representing the specified name;
-        /// otherwise a <see cref="Types.Undefined"/> instance wrapping the provided name.
+        /// otherwise a <see cref="Undefined"/> instance wrapping the provided name.
         /// </returns>
         /// <exception cref="ArgumentException">name is null or empty.</exception>
         public static IDataType Create(string name)

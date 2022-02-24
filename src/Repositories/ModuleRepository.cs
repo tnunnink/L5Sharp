@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using L5Sharp.Core;
 using L5Sharp.Extensions;
 
@@ -54,7 +55,7 @@ namespace L5Sharp.Repositories
             return module;
         }
 
-        public IModule Tree() => DeepGet("Local");
+        public IModule Local() => DeepGet("Local");
 
         public override void Add(IModule component)
         {
@@ -63,7 +64,7 @@ namespace L5Sharp.Repositories
             var bus = component.Ports.Local()?.Bus;
             if (bus is null) return;
 
-            foreach (var module in bus)
+            foreach (var module in bus.Where(m => m.Name != component.Name))
                 Add(module);
         }
 
@@ -73,7 +74,7 @@ namespace L5Sharp.Repositories
             
             var children = Context.L5X.GetComponents<IModule>()
                 .Where(x => x.Attribute("ParentModule")?.Value == name.ToString())
-                .Select(x => x.GetComponentName());
+                .Select(x => x.GetComponentName()).ToList();
 
             foreach (var child in children)
                 Remove(child);
@@ -86,7 +87,7 @@ namespace L5Sharp.Repositories
             var bus = component.Ports.Local()?.Bus;
             if (bus is null) return;
 
-            foreach (var module in bus)
+            foreach (var module in bus.Where(m => m.Name != component.Name))
                 Update(module);
         }
     }

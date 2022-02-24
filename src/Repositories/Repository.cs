@@ -94,6 +94,10 @@ namespace L5Sharp.Repositories
             Context.L5X.GetComponents<TComponent>().Select(e => e.Deserialize<TComponent>());
 
         /// <inheritdoc />
+        public IEnumerable<string> Names()
+            => Context.L5X.GetComponents<TComponent>().Select(x => x.GetComponentName());
+
+        /// <inheritdoc />
         public virtual void Remove(ComponentName name)
         {
             if (name is null)

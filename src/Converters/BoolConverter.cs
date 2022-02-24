@@ -3,12 +3,13 @@ using System.ComponentModel;
 using System.Globalization;
 using L5Sharp.Enums;
 using L5Sharp.Types;
+using L5Sharp.Types.Atomics;
 
 
 namespace L5Sharp.Converters
 {
     /// <summary>
-    /// A <see cref="TypeConverter"/> for the <see cref="Types.Bool"/> object.
+    /// A <see cref="TypeConverter"/> for the <see cref="Bool"/> object.
     /// </summary>
     internal class BoolConverter : TypeConverter
     {

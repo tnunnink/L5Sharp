@@ -9,6 +9,8 @@ using L5Sharp.Factories;
 using L5Sharp.Serialization;
 using L5Sharp.Serialization.Data;
 using L5Sharp.Types;
+using L5Sharp.Types.Atomics;
+using L5Sharp.Types.Predefined;
 using NUnit.Framework;
 
 namespace L5Sharp.Serialization.Tests

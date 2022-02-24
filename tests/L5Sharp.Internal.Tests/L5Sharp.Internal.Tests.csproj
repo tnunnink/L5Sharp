@@ -21,10 +21,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Content Include="TestFiles\Test.L5X" />
-    </ItemGroup>
-
-    <ItemGroup>
       <None Update="Serialization\ArrayElementSerializerTests.Serialize_ValueTypeMember_ShouldBeApproved.received.xml">
         <DependentUpon>ArrayElementSerializerTests.cs</DependentUpon>
       </None>

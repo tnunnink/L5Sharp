@@ -45,5 +45,7 @@ namespace L5Sharp.Repositories
         }
 
         public IEnumerable<ITask> GetAll() => _context.L5X.GetComponents<ITask>().Select(t => t.Deserialize<ITask>());
+
+        public IEnumerable<string> Names() => _context.L5X.GetComponents<ITask>().Select(x => x.GetComponentName());
     }
 }

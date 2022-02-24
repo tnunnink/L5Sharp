@@ -3,6 +3,8 @@ using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Factories;
 using L5Sharp.Types;
+using L5Sharp.Types.Atomics;
+using L5Sharp.Types.Predefined;
 
 namespace L5Sharp.Abstractions.Tests
 {

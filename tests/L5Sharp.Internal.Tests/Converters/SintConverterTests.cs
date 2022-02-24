@@ -3,8 +3,8 @@ using System.ComponentModel;
 using AutoFixture;
 using FluentAssertions;
 using L5Sharp.Converters;
-using L5Sharp.Types;
-using L5SharpTests.Specimens;
+using L5Sharp.Internal.Tests.Specimens;
+using L5Sharp.Types.Atomics;
 using NUnit.Framework;
 
 namespace L5Sharp.Internal.Tests.Converters
@@ -39,9 +39,9 @@ namespace L5Sharp.Internal.Tests.Converters
         }
 
         [Test]
-        public void CanConvertFrom_byte_ShouldBeTrue()
+        public void CanConvertFrom_sbyte_ShouldBeTrue()
         {
-            var value = _fixture.Create<byte>();
+            var value = _fixture.Create<sbyte>();
 
             var result = _converter.CanConvertFrom(value.GetType());
 
@@ -78,9 +78,9 @@ namespace L5Sharp.Internal.Tests.Converters
         }
 
         [Test]
-        public void ConvertFrom_byte_ShouldBeExpected()
+        public void ConvertFrom_sbyte_ShouldBeExpected()
         {
-            var value = _fixture.Create<byte>();
+            var value = _fixture.Create<sbyte>();
 
             var result = (Sint)_converter.ConvertFrom(value);
 
@@ -100,7 +100,7 @@ namespace L5Sharp.Internal.Tests.Converters
         [Test]
         public void ConvertFrom_string_ShouldBeExpected()
         {
-            var value = _fixture.Create<byte>().ToString();
+            var value = _fixture.Create<sbyte>().ToString();
 
             var result = (Sint)_converter.ConvertFrom(value);
 
@@ -108,9 +108,9 @@ namespace L5Sharp.Internal.Tests.Converters
         }
 
         [Test]
-        public void CanConvertTo_byte_ShouldBeTrue()
+        public void CanConvertTo_sbyte_ShouldBeTrue()
         {
-            var value = _fixture.Create<byte>();
+            var value = _fixture.Create<sbyte>();
 
             var result = _converter.CanConvertTo(value.GetType());
 
@@ -240,7 +240,7 @@ namespace L5Sharp.Internal.Tests.Converters
         {
             var value = _fixture.Create<Sint>();
 
-            var result = (byte)_converter.ConvertTo(value, typeof(byte))!;
+            var result = (sbyte)_converter.ConvertTo(value, typeof(sbyte))!;
 
             result.Should().Be(value);
         }

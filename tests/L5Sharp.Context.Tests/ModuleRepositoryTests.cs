@@ -72,6 +72,26 @@ namespace L5Sharp.Context.Tests
         }
 
         [Test]
+        public void DeepFind_ExistingModule_ShouldNotBeNull()
+        {
+            var context = new L5XContext(Known.L5X);
+
+            var module = context.Modules.DeepFind("Local_Mod_1");
+
+            module.Should().NotBeNull();
+        }
+        
+        [Test]
+        public void DeepFind_ExistingModule_ShouldHaveExpectedChildren()
+        {
+            var context = new L5XContext(Known.L5X);
+
+            var module = context.Modules.DeepFind("Local_Mod_1");
+
+            module?.Ports.Local()?.Bus?.Count.Should().Be(4);
+        }
+
+        [Test]
         public void FindAll_Predicate_HasComponents_ShouldNotBeEmpty()
         {
             var context = new L5XContext(Known.L5X);
@@ -103,6 +123,20 @@ namespace L5Sharp.Context.Tests
         }
 
         [Test]
+        public void Get_EachName_ShouldNotBeNull()
+        {
+            var context = new L5XContext(Known.L5X);
+            
+            var names = context.Modules.Names();
+
+            foreach (var name in names)
+            {
+                var module = context.Modules.Get(name);
+                module.Should().NotBeNull();
+            }
+        }
+
+        [Test]
         public void Get_NonExistingType_ShouldThrowComponentNotFoundException()
         {
             var context = new L5XContext(Known.L5X);
@@ -116,9 +150,19 @@ namespace L5Sharp.Context.Tests
         {
             var context = new L5XContext(Known.L5X);
 
-            var components = context.Modules.GetAll();
+            var components = context.Modules.GetAll().ToList();
 
             components.Should().NotBeEmpty();
+        }
+
+        [Test]
+        public void Names_WhenCalled_ShouldNotBeEmpty()
+        {
+            var context = new L5XContext(Known.L5X);
+
+            var names = context.Modules.Names().ToList();
+
+            names.Should().NotBeEmpty();
         }
 
         [Test]
@@ -157,12 +201,12 @@ namespace L5Sharp.Context.Tests
         {
             var context = new L5XContext(Known.L5X);
 
-            var parent = new Module("Test", "1756-EN2T", IPAddress.Parse("192.168.1.1"));
+            var parent = new Module("Parent", "1756-EN2T", IPAddress.Parse("192.168.1.1"));
             parent.Ports.Local()?.Bus?.New("Child", "1756-IF8", 1);
 
             context.Modules.Add(parent);
 
-            context.Modules.Contains("Test").Should().BeTrue();
+            context.Modules.Contains("Parent").Should().BeTrue();
             context.Modules.Contains("Child").Should().BeTrue();
         }
         

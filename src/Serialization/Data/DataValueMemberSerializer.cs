@@ -6,6 +6,7 @@ using L5Sharp.Extensions;
 using L5Sharp.Factories;
 using L5Sharp.L5X;
 using L5Sharp.Types;
+using L5Sharp.Types.Atomics;
 
 namespace L5Sharp.Serialization.Data
 {

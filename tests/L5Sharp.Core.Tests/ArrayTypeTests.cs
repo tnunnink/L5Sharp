@@ -6,8 +6,9 @@ using FluentAssertions;
 using L5Sharp.Abstractions;
 using L5Sharp.Enums;
 using L5Sharp.Types;
+using L5Sharp.Types.Atomics;
 using NUnit.Framework;
-using String = L5Sharp.Types.String;
+using String = L5Sharp.Types.Predefined.String;
 
 namespace L5Sharp.Core.Tests
 {
