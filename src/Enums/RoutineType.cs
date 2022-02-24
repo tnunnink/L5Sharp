@@ -30,15 +30,10 @@ namespace L5Sharp.Enums
         /// <returns>The <see cref="RoutineType"/> instance that represents the specified type.</returns>
         public static RoutineType ForType<TContent>() where TContent : ILogixContent
         {
-            if (typeof(TContent).IsAssignableFrom(typeof(LadderLogic)))
+            if (typeof(ILadderLogic).IsAssignableFrom(typeof(TContent)))
                 return Rll;
             
-            if (typeof(TContent).IsAssignableFrom(typeof(TContent)))
-                return Fbd;
-            
-            //todo need to finish this method...
-
-            return Typeless;
+            return typeof(IStructuredText).IsAssignableFrom(typeof(TContent)) ? St : Typeless;
         }
 
         /// <summary>
@@ -99,7 +94,7 @@ namespace L5Sharp.Enums
 
             public override ILogixContent CreateContent()
             {
-                throw new NotImplementedException();
+                throw new NotSupportedException($"Can not create content for RoutineType '{Name}'.");
             }
         }
         
@@ -112,7 +107,7 @@ namespace L5Sharp.Enums
 
             public override ILogixContent CreateContent()
             {
-                throw new NotImplementedException();
+                throw new NotSupportedException($"Can not create content for RoutineType '{Name}'.");
             }
         }
         
@@ -125,7 +120,7 @@ namespace L5Sharp.Enums
 
             public override ILogixContent CreateContent()
             {
-                throw new NotImplementedException();
+                throw new NotSupportedException($"Can not create content for RoutineType '{Name}'.");
             }
         }
     }

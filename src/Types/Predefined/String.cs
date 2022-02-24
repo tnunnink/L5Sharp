@@ -70,7 +70,23 @@ namespace L5Sharp.Types.Predefined
         /// <exception cref="ArgumentOutOfRangeException">
         /// Thrown when the length of the provided string is longer than the predefined length (LEN Member value).
         /// </exception>
-        public void SetValue(string value) => SetData(value);
+        public void SetValue(string value)
+        {
+            if (value == null)
+                throw new ArgumentNullException(nameof(value));
+
+            var bytes = Encoding.ASCII.GetBytes(value).Select(b => (sbyte)b).ToArray();
+
+            if (bytes.Length > LEN.DataType.Value)
+                throw new ArgumentOutOfRangeException(nameof(value),
+                    $"Value length '{bytes.Length}' must be less than the predefined length '{PredefinedLength}'");
+            
+            foreach (var element in DATA.DataType)
+                element.DataType.SetValue(0);
+
+            for (var i = 0; i < bytes.Length; i++)
+                DATA.DataType[i].DataType.SetValue(bytes[i]);
+        }
 
         /// <summary>
         /// Converts the provided <see cref="string"/> to a <see cref="String"/> value.
@@ -134,7 +150,7 @@ namespace L5Sharp.Types.Predefined
             if (value == null)
                 throw new ArgumentNullException(nameof(value));
 
-            var bytes = Encoding.ASCII.GetBytes(value);
+            var bytes = Encoding.ASCII.GetBytes(value).Select(b => (sbyte)b).ToArray();
 
             if (bytes.Length > LEN.DataType.Value)
                 throw new ArgumentOutOfRangeException(nameof(value),

@@ -1,7 +1,5 @@
 ﻿using System;
 using FluentAssertions;
-using L5Sharp.Core;
-using L5Sharp.Types;
 using L5Sharp.Types.Atomics;
 using NUnit.Framework;
 
@@ -101,35 +99,67 @@ namespace L5Sharp.Enums.Tests
         }
 
         [Test]
-        public void Parse_Byte_ShouldBeExpected()
+        public void Parse_sbyte_ShouldBeExpected()
         {
-            var atomic = (Sint)Radix.Decimal.Parse(byte.MaxValue.ToString());
+            var atomic = (Sint)Radix.Decimal.Parse(sbyte.MaxValue.ToString());
 
             atomic.Value.Should().Be(new Sint(sbyte.MaxValue));
         }
+        
+        [Test]
+        public void Parse_byte_ShouldBeExpected()
+        {
+            var atomic = (USint)Radix.Decimal.Parse(byte.MaxValue.ToString());
+
+            atomic.Value.Should().Be(new USint(byte.MaxValue));
+        }
 
         [Test]
-        public void Parse_Short_ShouldBeExpected()
+        public void Parse_short_ShouldBeExpected()
         {
             var atomic = (Int)Radix.Decimal.Parse(short.MaxValue.ToString());
 
             atomic.Value.Should().Be(new Int(short.MaxValue));
         }
+        
+        [Test]
+        public void Parse_ushort_ShouldBeExpected()
+        {
+            var atomic = (UInt)Radix.Decimal.Parse(ushort.MaxValue.ToString());
+
+            atomic.Value.Should().Be(new UInt(ushort.MaxValue));
+        }
 
         [Test]
-        public void Parse_Int_ShouldBeExpected()
+        public void Parse_int_ShouldBeExpected()
         {
             var atomic = (Dint)Radix.Decimal.Parse(int.MaxValue.ToString());
 
             atomic.Value.Should().Be(int.MaxValue);
         }
+        
+        [Test]
+        public void Parse_uint_ShouldBeExpected()
+        {
+            var atomic = (UDint)Radix.Decimal.Parse(uint.MaxValue.ToString());
+
+            atomic.Value.Should().Be(uint.MaxValue);
+        }
 
         [Test]
-        public void Parse_Long_ShouldBeExpected()
+        public void Parse_long_ShouldBeExpected()
         {
             var atomic = (Lint)Radix.Decimal.Parse(long.MaxValue.ToString());
 
             atomic.Value.Should().Be(long.MaxValue);
+        }
+        
+        [Test]
+        public void Parse_ulong_ShouldBeExpected()
+        {
+            var atomic = (ULint)Radix.Decimal.Parse(ulong.MaxValue.ToString());
+
+            atomic.Value.Should().Be(ulong.MaxValue);
         }
 
         [Test]
@@ -141,11 +171,11 @@ namespace L5Sharp.Enums.Tests
 
             supported.Should().BeTrue();
         }
-        
+
         [Test]
-        public void SupportsType_Int_ShouldBeTrue()
+        public void SupportsType_Sint_ShouldBeTrue()
         {
-            var type = new Int();
+            var type = new Sint();
 
             var supported = Radix.Decimal.SupportsType(type);
 
@@ -153,9 +183,19 @@ namespace L5Sharp.Enums.Tests
         }
         
         [Test]
-        public void SupportsType_Sint_ShouldBeTrue()
+        public void SupportsType_USint_ShouldBeTrue()
         {
-            var type = new Sint();
+            var type = new USint();
+
+            var supported = Radix.Decimal.SupportsType(type);
+
+            supported.Should().BeTrue();
+        }
+
+        [Test]
+        public void SupportsType_Int_ShouldBeTrue()
+        {
+            var type = new Int();
 
             var supported = Radix.Decimal.SupportsType(type);
 

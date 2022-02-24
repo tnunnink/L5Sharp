@@ -31,19 +31,6 @@ namespace L5Sharp.Enums
             { nameof(DateTimeNs), s => s.HasDateTimeNsFormat() }
         };
 
-        private static readonly Dictionary<Type, int> ByteTable = new()
-        {
-            { typeof(Bool), 0 },
-            { typeof(Sint), 1 },
-            { typeof(USint), 1 },
-            { typeof(Int), 2 },
-            { typeof(UInt), 2 },
-            { typeof(Dint), 4 },
-            { typeof(UDint), 4 },
-            { typeof(Lint), 8 },
-            { typeof(ULint), 8 }
-        };
-
         private Radix(string name, string value) : base(name, value)
         {
         }
@@ -256,33 +243,6 @@ namespace L5Sharp.Enums
         /// <returns>An object representing the value of the formatted string.</returns>
         public abstract IAtomicType Parse(string input);
 
-        /// <summary>
-        /// Converts the atomic value into the specified base number type.
-        /// </summary>
-        /// <param name="atomic">The atomic type to convert.</param>
-        /// <param name="baseNumber">The base number to convert to.</param>
-        /// <returns>
-        /// A string representing the value of the atomic in the specified base number.
-        /// If not convertable, returns an empty string.
-        /// </returns>
-        private static string ChangeBase(IAtomicType atomic, int baseNumber)
-        {
-            return atomic switch
-            {
-                Bool v => v ? "1" : "0",
-                Sint v => Convert.ToString(v.Value, baseNumber),
-                USint v => Convert.ToString(v.Value, baseNumber),
-                Int v => Convert.ToString(v.Value, baseNumber),
-                UInt v => Convert.ToString(v.Value, baseNumber),
-                Dint v => Convert.ToString(v.Value, baseNumber),
-                UDint v => Convert.ToString(v.Value, baseNumber),
-                Lint v => Convert.ToString(v.Value, baseNumber),
-                //ULint v => Convert.ToString(v.Value, baseNumber),
-                _ => throw new NotSupportedException(
-                    $"The atomic of type '{atomic.GetType()}' is not supported for conversion.")
-            };
-        }
-
         private static IAtomicType ConvertToAtomic(string value, int bitsPerByte, int baseNumber)
         {
             if (string.IsNullOrEmpty(value))
@@ -302,9 +262,6 @@ namespace L5Sharp.Enums
                     "Must be between 0 and 8 bytes.")
             };
         }
-
-        private static int DetermineLength(IAtomicType atomic, int bitsPerByte) =>
-            ByteTable[atomic.GetType()] * bitsPerByte;
 
         /// <summary>
         /// Gets a parse function based on the provided string input.
@@ -357,7 +314,6 @@ namespace L5Sharp.Enums
             private const int CharsPerByte = 8;
             private const string Specifier = "2#";
             private const string ByteSeparator = "_";
-            private const char PaddingCharacter = '0';
             private const string Pattern = @"(?<=\d)(?=(\d\d\d\d)+(?!\d))";
 
             public BinaryRadix() : base(nameof(Binary), nameof(Binary))
@@ -368,10 +324,11 @@ namespace L5Sharp.Enums
             {
                 ValidateType(atomic);
 
-                var value = ChangeBase(atomic, BaseNumber)
-                    .PadLeft(DetermineLength(atomic, CharsPerByte), PaddingCharacter);
+                var value = (ValueType)atomic.Value;
 
-                var formatted = Regex.Replace(value, Pattern, ByteSeparator, RegexOptions.Compiled);
+                var converted = value is not bool b ? value.ToBase(BaseNumber) : b ? "1" : "0";
+
+                var formatted = Regex.Replace(converted, Pattern, ByteSeparator, RegexOptions.Compiled);
 
                 return $"{Specifier}{formatted}";
             }
@@ -392,7 +349,6 @@ namespace L5Sharp.Enums
             private const int CharsPerByte = 3;
             private const string Specifier = "8#";
             private const string ByteSeparator = "_";
-            private const char PaddingCharacter = '0';
             private const string Pattern = @"(?<=\d)(?=(\d\d\d)+(?!\d))";
 
             public OctalRadix() : base(nameof(Octal), nameof(Octal))
@@ -403,10 +359,11 @@ namespace L5Sharp.Enums
             {
                 ValidateType(atomic);
 
-                var value = ChangeBase(atomic, BaseNumber)
-                    .PadLeft(DetermineLength(atomic, CharsPerByte), PaddingCharacter);
+                var value = (ValueType)atomic.Value;
 
-                var formatted = Regex.Replace(value, Pattern, ByteSeparator, RegexOptions.Compiled);
+                var converted = value is not bool b ? value.ToBase(BaseNumber) : b ? "1" : "0";
+
+                var formatted = Regex.Replace(converted, Pattern, ByteSeparator, RegexOptions.Compiled);
 
                 return $"{Specifier}{formatted}";
             }
@@ -423,8 +380,6 @@ namespace L5Sharp.Enums
 
         private class DecimalRadix : Radix
         {
-            private const int BaseNumber = 10;
-
             public DecimalRadix() : base(nameof(Decimal), nameof(Decimal))
             {
             }
@@ -433,7 +388,10 @@ namespace L5Sharp.Enums
             {
                 ValidateType(atomic);
 
-                return ChangeBase(atomic, BaseNumber);
+                if (atomic is Bool b)
+                    return b ? "1" : "0";
+
+                return atomic.Value.ToString();
             }
 
             public override IAtomicType Parse(string input)
@@ -442,25 +400,25 @@ namespace L5Sharp.Enums
 
                 if (sbyte.TryParse(input, out var sbyteValue))
                     return new Sint(sbyteValue);
-                
+
                 if (byte.TryParse(input, out var byteValue))
                     return new USint(byteValue);
 
                 if (short.TryParse(input, out var shortValue))
                     return new Int(shortValue);
-                
+
                 if (ushort.TryParse(input, out var ushortValue))
                     return new UInt(ushortValue);
 
                 if (int.TryParse(input, out var intValue))
                     return new Dint(intValue);
-                
+
                 if (uint.TryParse(input, out var uintValue))
                     return new UDint(uintValue);
 
                 if (long.TryParse(input, out var longValue))
                     return new Lint(longValue);
-                
+
                 if (ulong.TryParse(input, out var ulongValue))
                     return new ULint(ulongValue);
 
@@ -475,7 +433,6 @@ namespace L5Sharp.Enums
             private const int BitsPerByte = 2;
             private const string Specifier = "16#";
             private const string ByteSeparator = "_";
-            private const char PaddingCharacter = '0';
             private const string Pattern = @"(?<=\w)(?=(\w\w\w\w)+(?!\w))";
 
             public HexRadix() : base(nameof(Hex), nameof(Hex))
@@ -486,10 +443,11 @@ namespace L5Sharp.Enums
             {
                 ValidateType(atomic);
 
-                var value = ChangeBase(atomic, BaseNumber)
-                    .PadLeft(DetermineLength(atomic, BitsPerByte), PaddingCharacter);
+                var value = (ValueType)atomic.Value;
 
-                var formatted = Regex.Replace(value, Pattern, ByteSeparator, RegexOptions.Compiled);
+                var converted = value is not bool b ? value.ToBase(BaseNumber) : b ? "1" : "0";
+
+                var formatted = Regex.Replace(converted, Pattern, ByteSeparator, RegexOptions.Compiled);
 
                 return $"{Specifier}{formatted}";
             }
@@ -556,7 +514,6 @@ namespace L5Sharp.Enums
             private const int BitsPerByte = 2;
             private const char Specifier = '\'';
             private const char ByteSeparator = '$';
-            private const char PaddingCharacter = '0';
             private const string Pattern = @"\$[A-Fa-f0-9]{2}|\$[tlpr'$]{1}|[\x00-\x7F]";
 
             private static readonly Dictionary<string, string> SpecialCharacters = new()
@@ -577,10 +534,13 @@ namespace L5Sharp.Enums
             {
                 ValidateType(atomic);
 
-                var value = ChangeBase(atomic, BaseNumber)
-                    .PadLeft(DetermineLength(atomic, BitsPerByte), PaddingCharacter);
+                var value = (ValueType)atomic.Value;
 
-                return $"{Specifier}{GenerateAscii(value)}{Specifier}";
+                var converted = value.ToBase(BaseNumber);
+
+                var formatted = GenerateAscii(converted);
+
+                return $"{Specifier}{formatted}{Specifier}";
             }
 
             public override IAtomicType Parse(string input)
@@ -686,7 +646,6 @@ namespace L5Sharp.Enums
                 return new Lint(timestamp);
             }
         }
-
 
         private class DateTimeNsRadix : Radix
         {

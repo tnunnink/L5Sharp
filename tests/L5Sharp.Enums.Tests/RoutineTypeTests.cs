@@ -1,5 +1,5 @@
-﻿using FluentAssertions;
-using L5Sharp.Enums;
+﻿using System;
+using FluentAssertions;
 using NUnit.Framework;
 
 namespace L5Sharp.Enums.Tests
@@ -50,6 +50,55 @@ namespace L5Sharp.Enums.Tests
 
             sut.Should().NotBeNull();
             sut.Name.Should().Be("St");
+        }
+
+        [Test]
+        public void CreateContent_Typeless_ShouldThrowNotSupportException()
+        {
+            FluentActions.Invoking(() => RoutineType.Typeless.CreateContent()).Should().Throw<NotSupportedException>();
+        }
+        
+        [Test]
+        public void CreateContent_Rll_ShouldNotBeNull()
+        {
+            var content = RoutineType.Rll.CreateContent();
+
+            content.Should().NotBeNull();
+        }
+        
+        [Test]
+        public void CreateContent_St_ShouldThrowNotSupportException()
+        {
+            FluentActions.Invoking(() => RoutineType.St.CreateContent()).Should().Throw<NotSupportedException>();
+        }
+        
+        [Test]
+        public void CreateContent_Fbd_ShouldThrowNotSupportException()
+        {
+            FluentActions.Invoking(() => RoutineType.Fbd.CreateContent()).Should().Throw<NotSupportedException>();
+        }
+        
+        [Test]
+        public void CreateContent_Sfc_ShouldThrowNotSupportException()
+        {
+            FluentActions.Invoking(() => RoutineType.Sfc.CreateContent()).Should().Throw<NotSupportedException>();
+        }
+
+        [Test]
+        public void FromType_ILadderLogic_ShouldBeRll()
+        {
+            var type = RoutineType.ForType<ILadderLogic>();
+
+            type.Should().Be(RoutineType.Rll);
+        }
+        
+        
+        [Test]
+        public void FromType_IStructuredText_ShouldBeRll()
+        {
+            var type = RoutineType.ForType<IStructuredText>();
+
+            type.Should().Be(RoutineType.St);
         }
     }
 }

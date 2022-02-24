@@ -7,11 +7,20 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="Updated and tested exceptions">
-      <change afterPath="$PROJECT_DIR$/Extensions/GenericExtensions.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Formatters/BinaryFormatter.cs" afterDir="false" />
+    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="Random updates and removal of builders and instructions for now. Will implement at later time.">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/Routine.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/Routine.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/StringDefined.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/StringDefined.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Enums/Radix.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Enums/Radix.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Enums/RoutineType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Enums/RoutineType.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Extensions/GenericExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Extensions/ValueTypeExtensions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Formatters/BinaryFormatter.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Types/Predefined/String.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Types/Predefined/String.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/ControllerTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/ControllerTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Enums.Tests/RadixDecimalTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Enums.Tests/RadixDecimalTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Enums.Tests/RoutineTypeTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Enums.Tests/RoutineTypeTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Types.Tests/SintTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Types.Tests/SintTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/Samples/Test.ACD.Recovery" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/Samples/Test.ACD.Recovery" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -58,7 +67,6 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/7d7899a78e7cef6dab3d14eb6a6ae6d2c047f92f89b5a93e53a905cd7d15315/Object.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/d3bfdb86da53416a9a76296e6325a7b366588/47/Utilities.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/f3dd31a3d4374d7d9525d887480dae958f4788/412/Dictionary.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Instructions/XIC.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/d392db2fb3d64f4fa564a7b744fc78015f800/ec/6efe67ae/Assert.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/L5X/L5XNames.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/f3dd31a3d4374d7d9525d887480dae958f4788/37/Object.cs" root0="SKIP_HIGHLIGHTING" />
@@ -277,14 +285,7 @@
       <workItem from="1645043352307" duration="41185000" />
       <workItem from="1645213929372" duration="16214000" />
       <workItem from="1645285653758" duration="29897000" />
-      <workItem from="1645651624470" duration="28769000" />
-    </task>
-    <task id="LOCAL-00103" summary="Tag names and member collection development. Preparing for Tag member rework">
-      <created>1641511681267</created>
-      <option name="number" value="00103" />
-      <option name="presentableId" value="LOCAL-00103" />
-      <option name="project" value="LOCAL" />
-      <updated>1641511681267</updated>
+      <workItem from="1645651624470" duration="34657000" />
     </task>
     <task id="LOCAL-00104" summary="Tag member re-working">
       <created>1641526008309</created>
@@ -622,7 +623,14 @@
       <option name="project" value="LOCAL" />
       <updated>1645730276543</updated>
     </task>
-    <option name="localTasksCounter" value="152" />
+    <task id="LOCAL-00152" summary="Random updates and removal of builders and instructions for now. Will implement at later time.">
+      <created>1645732997675</created>
+      <option name="number" value="00152" />
+      <option name="presentableId" value="LOCAL-00152" />
+      <option name="project" value="LOCAL" />
+      <updated>1645732997675</updated>
+    </task>
+    <option name="localTasksCounter" value="153" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -637,33 +645,33 @@
       <expand>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 86% 762/5382" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 95% 266/5420" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 86% 762/5382" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 86% 762/5382" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 95% 266/5420" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 95% 266/5420" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 86% 762/5382" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 86% 762/5382" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="(1.0.0.0, .NETStandard,Version=v2.1) 86% 762/5382" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 95% 266/5420" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 95% 266/5420" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="(1.0.0.0, .NETStandard,Version=v2.1) 95% 266/5420" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 86% 762/5382" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 86% 762/5382" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="(1.0.0.0, .NETStandard,Version=v2.1) 86% 762/5382" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 86% 762/5382" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 95% 266/5420" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 95% 266/5420" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="(1.0.0.0, .NETStandard,Version=v2.1) 95% 266/5420" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 95% 266/5420" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 86% 762/5382" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 86% 762/5382" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="(1.0.0.0, .NETStandard,Version=v2.1) 86% 762/5382" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 86% 762/5382" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="Enums 95% 28/528" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 95% 266/5420" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 95% 266/5420" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="(1.0.0.0, .NETStandard,Version=v2.1) 95% 266/5420" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 95% 266/5420" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Abstractions 99% 1/112" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
       </expand>
       <select />
@@ -689,7 +697,6 @@
       <path value="$PROJECT_DIR$/../.." />
     </ignored-roots>
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="module development and testing" />
     <MESSAGE value="Module component development and testing" />
     <MESSAGE value="Module development and testing." />
     <MESSAGE value="catalog service development" />
@@ -714,7 +721,8 @@
     <MESSAGE value="Adding ModuleRepository.cs and updated test xml and started module repo testing" />
     <MESSAGE value="Added unsigned atomic types and fixed Sint to be sbyte" />
     <MESSAGE value="Updated and tested exceptions" />
-    <option name="LAST_COMMIT_MESSAGE" value="Updated and tested exceptions" />
+    <MESSAGE value="Random updates and removal of builders and instructions for now. Will implement at later time." />
+    <option name="LAST_COMMIT_MESSAGE" value="Random updates and removal of builders and instructions for now. Will implement at later time." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

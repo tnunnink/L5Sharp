@@ -36,7 +36,7 @@ namespace L5Sharp.Types.Tests
             type.Name.Should().Be(nameof(Sint).ToUpper());
             type.Class.Should().Be(DataTypeClass.Atomic);
             type.Family.Should().Be(DataTypeFamily.None);
-            type.Description.Should().Be("Logix representation of a System.Byte");
+            type.Description.Should().Be("Logix representation of a System.SByte");
             type.Value.Should().Be(0);
         }
         

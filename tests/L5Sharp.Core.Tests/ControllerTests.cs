@@ -32,5 +32,18 @@ namespace L5Sharp.Core.Tests
 
             controller.Should().NotBeNull();
         }
+
+        [Test]
+        public void New_Valid_ShouldHaveExpectedProperties()
+        {
+            var controller = new Controller("Test", "1756-L74", 31.1);
+
+            controller.Name.Should().Be("Test");
+            controller.Description.Should().BeEmpty();
+            controller.ProcessorType.Should().Be(new CatalogNumber("1756-L74"));
+            controller.Revision.Should().Be(new Revision(31, 1));
+            controller.LastModifiedDate.Should().BeAfter(DateTime.Today);
+            controller.ProjectCreationDate.Should().BeAfter(DateTime.Today);
+        }
     }
 }

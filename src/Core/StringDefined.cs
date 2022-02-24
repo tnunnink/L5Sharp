@@ -137,7 +137,7 @@ namespace L5Sharp.Core
             if (value == null)
                 throw new ArgumentNullException(nameof(value));
 
-            var bytes = Encoding.ASCII.GetBytes(value);
+            var bytes = Encoding.ASCII.GetBytes(value).Select(b => (sbyte)b).ToArray();
 
             if (bytes.Length > LEN.DataType.Value)
                 throw new ArgumentOutOfRangeException(nameof(value),

@@ -18,7 +18,7 @@ namespace L5Sharp.Core
             TContent? content = default)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
-            Type = type ?? RoutineType.Rll;
+            Type = type is null || type == RoutineType.Typeless ? RoutineType.Rll : type;
             Description = description ?? string.Empty;
             Content = content ?? (TContent)Type.CreateContent();
         }
