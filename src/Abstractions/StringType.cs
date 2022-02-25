@@ -65,9 +65,13 @@ namespace L5Sharp.Abstractions
         public IDataType Instantiate() => New();
 
         /// <summary>
-        /// 
+        /// Creates a new instance of the <see cref="IComplexType"/> with default values.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A new <see cref="IDataType"/> instance with default values.</returns>
+        /// <remarks>
+        /// This method is called by <see cref="Instantiate"/> in order to generate new instances
+        /// of the <see cref="IDataType"/>.
+        /// </remarks>
         protected abstract IDataType New();
 
         /// <inheritdoc />
@@ -88,7 +92,10 @@ namespace L5Sharp.Abstractions
             for (var i = 0; i < bytes.Length; i++)
                 DATA.DataType[i].DataType.SetValue(bytes[i]);
         }
-        
+
+        /// <inheritdoc />
+        public override string ToString() => Name;
+
         /// <inheritdoc />
         public IEnumerator<char> GetEnumerator() => Value.GetEnumerator();
 

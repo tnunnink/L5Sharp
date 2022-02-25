@@ -1,6 +1,6 @@
 ﻿using L5Sharp.Core;
 
-namespace L5Sharp
+namespace L5Sharp.Repositories
 {
     /// <summary>
     /// A base for implementing write operations over the L5X.

@@ -1,9 +1,7 @@
-﻿using System.Collections.Generic;
-using L5Sharp.Core;
+﻿using L5Sharp.Core;
 using L5Sharp.Exceptions;
-using L5Sharp.Repositories;
 
-namespace L5Sharp
+namespace L5Sharp.Repositories
 {
     /// <summary>
     /// A repository that provides additional APIs for querying and manipulating modules.

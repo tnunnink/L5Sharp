@@ -15,7 +15,7 @@ namespace L5Sharp.Abstractions
     /// </summary>
     /// <remarks>
     /// <para>
-    /// All predefined classes and custom user classed can derive from <see cref="ComplexTypeBase"/>.
+    /// All predefined classes and custom user classed can derive from <see cref="ComplexType"/>.
     /// The user is responsible for specifying the <see cref="Class"/> and implementing the <see cref="New"/> so that
     /// the type can be instantiated by other parts of the code base. This base class will also use reflection to
     /// find field and property members of the the derived class that implement <see cref="IMember{TDataType}"/>
@@ -23,10 +23,10 @@ namespace L5Sharp.Abstractions
     /// If the user provided members in the base constructor, this will be bypasses.
     /// </para>
     /// </remarks>
-    public abstract class ComplexTypeBase : IComplexType
+    public abstract class ComplexType : IComplexType
     {
         /// <summary>
-        /// Creates a new <see cref="ComplexTypeBase"/> instance with the provided name and optional members.
+        /// Creates a new <see cref="ComplexType"/> instance with the provided name and optional members.
         /// </summary>
         /// <param name="name">The name of the type.</param>
         /// <param name="members">An optional collection of member to initialize the type with.</param>
@@ -37,7 +37,7 @@ namespace L5Sharp.Abstractions
         /// provided the collection of members. Note that if the member properties not initialized when the base
         /// constructor is called, the null references..
         /// </remarks>
-        protected ComplexTypeBase(string name, IEnumerable<IMember<IDataType>>? members = null)
+        protected ComplexType(string name, IEnumerable<IMember<IDataType>>? members = null)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
             Members = ValidateMembers(members ?? FindMembers());

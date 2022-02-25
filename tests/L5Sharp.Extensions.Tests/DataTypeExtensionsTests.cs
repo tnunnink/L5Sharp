@@ -565,7 +565,7 @@ namespace L5Sharp.Extensions.Tests
         }
     }
     
-    public class MyNestedType : ComplexTypeBase
+    public class MyNestedType : ComplexType
     {
         public MyNestedType() : base(nameof(MyNestedType))
         {
@@ -580,7 +580,7 @@ namespace L5Sharp.Extensions.Tests
         protected override IDataType New() => new MyNestedType();
     }
     
-    public class MyOtherNestedType : ComplexTypeBase
+    public class MyOtherNestedType : ComplexType
     {
         public MyOtherNestedType() : base(nameof(MyOtherNestedType))
         {

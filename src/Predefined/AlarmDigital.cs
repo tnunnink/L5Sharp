@@ -10,7 +10,7 @@ namespace L5Sharp.Predefined
     /// <summary>
     /// A predefined or built in data type in Logix that is a part of the alarm instruction set.
     /// </summary>
-    public sealed class AlarmDigital : ComplexTypeBase
+    public sealed class AlarmDigital : ComplexType
     {
         /// <summary>
         /// Creates a new <see cref="AlarmDigital"/> data type instance.

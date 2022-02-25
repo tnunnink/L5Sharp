@@ -10,7 +10,7 @@ namespace L5Sharp.Predefined
     /// <summary>
     /// A predefined or built in data type used with ... instructions. 
     /// </summary>
-    public sealed class Control : ComplexTypeBase
+    public sealed class Control : ComplexType
     {
         /// <summary>
         /// Creates a new <see cref="Control"/> data type instance.

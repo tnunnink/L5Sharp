@@ -32,9 +32,6 @@ namespace L5Sharp.Core
             new StringDefined(string.Copy(Name), (ushort)LEN.DataType.Value, string.Copy(Description));
 
         /// <inheritdoc />
-        public override string ToString() => Name;
-
-        /// <inheritdoc />
         public bool Equals(StringDefined? other)
         {
             if (ReferenceEquals(null, other)) return false;

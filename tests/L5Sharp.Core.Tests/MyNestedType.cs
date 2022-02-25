@@ -9,7 +9,7 @@ namespace L5Sharp.Core.Tests
     /// <summary>
     /// A test type used to test nested complex data structure code
     /// </summary>
-    public class MyNestedType : ComplexTypeBase
+    public class MyNestedType : ComplexType
     {
         public MyNestedType() : base(nameof(MyNestedType))
         {
@@ -26,7 +26,7 @@ namespace L5Sharp.Core.Tests
         protected override IDataType New() => new MyNestedType();
     }
 
-    public class MySimpleType : ComplexTypeBase
+    public class MySimpleType : ComplexType
     {
         public MySimpleType() : base(nameof(MySimpleType))
         {

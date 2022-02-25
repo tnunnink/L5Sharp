@@ -6,7 +6,7 @@ using L5Sharp.Predefined;
 
 namespace L5Sharp.Abstractions.Tests
 {
-    public class TestComplex : ComplexTypeBase
+    public class TestComplex : ComplexType
     {
         public TestComplex() : base(nameof(TestComplex))
         {
@@ -20,7 +20,7 @@ namespace L5Sharp.Abstractions.Tests
         public IMember<NestedComplex> Nested = Member.Create<NestedComplex>(nameof(Nested));
     }
 
-    public class NestedComplex : ComplexTypeBase
+    public class NestedComplex : ComplexType
     {
         public NestedComplex() : base(nameof(NestedComplex))
         {
@@ -34,7 +34,7 @@ namespace L5Sharp.Abstractions.Tests
         public IMember<Dint> M3 { get; } = Member.Create<Dint>(nameof(M3));
     }
 
-    public class MemberConstructorComplex : ComplexTypeBase
+    public class MemberConstructorComplex : ComplexType
     {
         public MemberConstructorComplex() : base(nameof(MemberLessComplex), new List<IMember<IDataType>>
         {
@@ -49,7 +49,7 @@ namespace L5Sharp.Abstractions.Tests
         protected override IDataType New() => new MemberConstructorComplex();
     }
 
-    public class MemberLessComplex : ComplexTypeBase
+    public class MemberLessComplex : ComplexType
     {
         public MemberLessComplex() : base(nameof(MemberLessComplex))
         {
@@ -60,7 +60,7 @@ namespace L5Sharp.Abstractions.Tests
         protected override IDataType New() => new MemberLessComplex();
     }
 
-    public class NullNameComplex : ComplexTypeBase
+    public class NullNameComplex : ComplexType
     {
         public NullNameComplex() : base(null!)
         {
@@ -71,7 +71,7 @@ namespace L5Sharp.Abstractions.Tests
         protected override IDataType New() => new NullNameComplex();
     }
 
-    public class DuplicateMemberNameComplex : ComplexTypeBase
+    public class DuplicateMemberNameComplex : ComplexType
     {
         public DuplicateMemberNameComplex() :
             base(nameof(DuplicateMemberNameComplex))
@@ -86,7 +86,7 @@ namespace L5Sharp.Abstractions.Tests
         protected override IDataType New() => new DuplicateMemberNameComplex();
     }
 
-    public class NullMemberComplex : ComplexTypeBase
+    public class NullMemberComplex : ComplexType
     {
         public NullMemberComplex() : base(nameof(NullMemberComplex))
         {

@@ -10,7 +10,7 @@ namespace L5Sharp.Predefined
     /// <summary>
     /// A predefined or built in data type used with message instructions. 
     /// </summary>
-    public sealed class Message : ComplexTypeBase
+    public sealed class Message : ComplexType
     {
         /// <summary>
         /// Creates a new <see cref="Message"/> data type instance.

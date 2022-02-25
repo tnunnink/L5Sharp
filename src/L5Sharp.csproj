@@ -2,19 +2,27 @@
 
     <PropertyGroup>
         <LangVersion>9</LangVersion>
-        <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <Nullable>enable</Nullable>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
         <Title>L5Sharp</Title>
         <Authors>Timothy Nunnink</Authors>
         <Version>1.0.0</Version>
         <AssemblyVersion>1.0.0.0</AssemblyVersion>
         <FileVersion>1.0.0.0</FileVersion>
-        <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
         <TargetFramework>netstandard2.1</TargetFramework>
+        <Description>Adds change notification, change tracking, and validation logic for simple entity objects using wrappers.</Description>
+        <RepositoryUrl>https://github.com/tnunnink/L5Sharp</RepositoryUrl>
+        <PackageTags>csharp allen-bradely l5x logix plc-programming rockwell-automation logix5000</PackageTags>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <!--<PackageIcon>icon.png</PackageIcon>-->
+        <RepositoryType>git</RepositoryType>
+        <PackageReleaseNotes>Initial release.</PackageReleaseNotes>
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Ardalis.SmartEnum" Version="2.0.1" />
+        <PackageReference Include="Ardalis.SmartEnum" Version="2.0.1"/>
     </ItemGroup>
 
     <ItemGroup>
@@ -27,29 +35,15 @@
     </ItemGroup>
 
     <ItemGroup>
-      <None Remove="Resources\Predefined.db" />
-      <None Remove="L5Sharp.sln.DotSettings" />
-      <None Remove="Builders\**" />
-      <None Remove="Instructions\**" />
+        <None Remove="L5Sharp.sln.DotSettings"/>
     </ItemGroup>
 
     <ItemGroup>
-      <None Remove="Resources\Predefined.xml" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <None Remove="Resources\L5X.xsd" />
-      <EmbeddedResource Include="Resources\L5X.xsd">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </EmbeddedResource>
-      <EmbeddedResource Remove="Builders\**" />
-      <EmbeddedResource Remove="Instructions\**" />
-      <None Remove="Resources\CatalogSvcsDatabaseV2.xml" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Compile Remove="Builders\**" />
-      <Compile Remove="Instructions\**" />
+        <None Remove="Resources\L5X.xsd"/>
+        <!--<None Include="Resources\icon.png" Pack="true" PackagePath="\"/>-->
+        <EmbeddedResource Include="Resources\L5X.xsd">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </EmbeddedResource>
     </ItemGroup>
 
 </Project>

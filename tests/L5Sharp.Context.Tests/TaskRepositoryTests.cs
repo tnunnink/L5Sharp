@@ -13,7 +13,7 @@ namespace L5Sharp.Context.Tests
         {
             var context = new L5XContext(Known.L5X);
 
-            var task = context.Tasks.Contains("Task_01");
+            var task = context.Tasks.Contains("Continuous");
 
             task.Should().BeTrue(); 
         }
@@ -23,7 +23,7 @@ namespace L5Sharp.Context.Tests
         {
             var context = new L5XContext(Known.L5X);
 
-            var task = context.Tasks.Get("Task_01");
+            var task = context.Tasks.Get("Continuous");
 
             task.Should().NotBeNull();
         }
@@ -35,7 +35,7 @@ namespace L5Sharp.Context.Tests
 
             var tasks = context.Tasks.GetAll();
 
-            tasks.Should().HaveCount(5);
+            tasks.Should().HaveCount(3);
         }
 
         [Test]
@@ -45,7 +45,7 @@ namespace L5Sharp.Context.Tests
 
             var results = context.Tasks.FindAll(t => t.Priority == 10);
             
-            results.Should().HaveCount(4);
+            results.Should().NotBeEmpty();
         }
         
         [Test]
@@ -53,9 +53,9 @@ namespace L5Sharp.Context.Tests
         {
             var context = new L5XContext(Known.L5X);
 
-            var results = context.Tasks.FindAll(t => t.Rate == 1000);
+            var results = context.Tasks.FindAll(t => t.Rate >= 1000);
             
-            results.Should().HaveCount(1);
+            results.Should().HaveCount(0);
         }
         
         [Test]
@@ -75,7 +75,7 @@ namespace L5Sharp.Context.Tests
 
             var results = context.Tasks.FindAll(t => t.Description.Contains("Test", StringComparison.OrdinalIgnoreCase));
             
-            results.Should().HaveCount(4);
+            results.Should().HaveCount(2);
         }
 
         [Test]
@@ -85,7 +85,7 @@ namespace L5Sharp.Context.Tests
 
             var list = new List<string>
             {
-                "This is a test task 01"
+                "TestEvent Task"
             };
 
             var results = context.Tasks.FindAll(t => list.Contains(t.Description));

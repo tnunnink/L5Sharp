@@ -182,7 +182,7 @@ namespace L5Sharp.Core
         public bool RemoveAt(string address) => address != _port.Address && _modules.Remove(address);
 
         /// <summary>
-        /// Removes the <see cref="IModule"/> with the specified name from the <see cref="Bus"/> is it exists.
+        /// Removes the <see cref="IModule"/> with the specified name from the <see cref="Bus"/> if it exists.
         /// </summary>
         /// <param name="name">The name of the module to remove.</param>
         /// <returns>true if the module was found and removed from the Bus.

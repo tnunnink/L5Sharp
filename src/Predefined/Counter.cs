@@ -10,7 +10,7 @@ namespace L5Sharp.Predefined
     /// <summary>
     /// A predefined or built in data type used with counter instructions. 
     /// </summary>
-    public sealed class Counter : ComplexTypeBase
+    public sealed class Counter : ComplexType
     {
         /// <summary>
         /// Creates a new <see cref="Counter"/> data type instance.

@@ -10,7 +10,7 @@ namespace L5Sharp.Predefined
     /// <summary>
     /// A predefined data type that is built into Logix and used with timer instructions.
     /// </summary>
-    public sealed class Timer : ComplexTypeBase
+    public sealed class Timer : ComplexType
     {
         /// <summary>
         /// Creates a new <see cref="Timer"/> data type instance.

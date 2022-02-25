@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using L5Sharp.Core;
 
-namespace L5Sharp
+namespace L5Sharp.Repositories
 {
     /// <summary>
     /// A base for implementing read operations over the L5X.

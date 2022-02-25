@@ -31,9 +31,9 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void New_AbstractType_ShouldThrowArgumentException()
         {
-            FluentActions.Invoking(() => new ArrayType<ComplexTypeBase>(10))
+            FluentActions.Invoking(() => new ArrayType<ComplexType>(10))
                 .Should().Throw<ArgumentException>().WithMessage(
-                    $"The specified type '{typeof(ComplexTypeBase)} is abstract. Abstract types can not be instantiated.");
+                    $"The specified type '{typeof(ComplexType)} is abstract. Abstract types can not be instantiated.");
         }
 
         [Test]
