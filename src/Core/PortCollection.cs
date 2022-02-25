@@ -60,24 +60,26 @@ namespace L5Sharp.Core
         public Port? Local() => _ports.Values.FirstOrDefault(p => !p.Upstream);
 
         /// <summary>
-        /// Gets the IP address of an Ethernet type port if it is available.
+        /// Gets the Ethernet type port if one exists for the current <see cref="PortCollection"/>.
         /// </summary>
-        /// <returns></returns>
-        public byte? GetSlotAddress()
-        {
-            var port = _ports.Values.FirstOrDefault(p => p.Type != "Ethernet");
-            return port is not null && byte.TryParse(port.Address, out var slot) ? slot : null;
-        }
-
+        /// <remarks>
+        /// The Ethernet port represents a port for which connections are made using Ethernet/IP network.
+        /// Not all modules will have an Ethernet type port, hence why the port is nullable reference. 
+        /// </remarks>
+        public Port? Ethernet => _ports.Values.FirstOrDefault(p => p.Type == "Ethernet");
+        
         /// <summary>
-        /// Gets the IP address of an Ethernet type port if it is available.
+        /// Gets the Ethernet type port if one exists for the current <see cref="PortCollection"/>.
         /// </summary>
-        /// <returns>The <see cref="IPAddress"/> of the Ethernet port if one is defined; otherwise, null.</returns>
-        public IPAddress? GetIPAddress()
-        {
-            var port = _ports.Values.FirstOrDefault(p => p.Type == "Ethernet");
-            return port is not null && IPAddress.TryParse(port.Address, out var ipAddress) ? ipAddress : null;
-        }
+        /// <remarks>
+        /// The Chassis port represents a port for which connections are made on a rack or backplane.
+        /// Not all modules will have an Chassis type port, hence why the port is nullable reference.
+        /// This port is effectively the opposite of <see cref="Ethernet"/>, meaning it will return the first port where
+        /// the port type is not 'Ethernet'. We are calling this 'Chassis' port since it will typically refer to the backplane
+        /// or rack. But note that this is not always the case. The first non ethernet type port may be something like ControlNet.
+        /// In all cases the ports should refer to byte based addressing, as opposed to IP based addressing.
+        /// </remarks>
+        public Port? Chassis => _ports.Values.FirstOrDefault(p => p.Type != "Ethernet");
 
         /// <inheritdoc />
         public IEnumerator<Port> GetEnumerator() => _ports.Values.GetEnumerator();

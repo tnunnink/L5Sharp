@@ -76,7 +76,7 @@ namespace L5Sharp
         /// Not all modules will have a slot number, which is why this is a nullable int.
         /// The slot number is effectively the index of the Module on the <see cref="Bus"/>.
         /// </remarks>
-        int? Slot { get; }
+        int Slot { get; }
 
         /// <summary>
         /// Gets the value of the configured <see cref="IPAddress"/> for the <see cref="Module"/>.
@@ -85,7 +85,7 @@ namespace L5Sharp
         /// Only Ethernet based modules will have an IP Address. If the module does not have 'Ethernet' type port,
         /// then this property will be null.
         /// </remarks>
-        IPAddress? IP { get; }
+        IPAddress IP { get; }
 
         /// <summary>
         /// Gets the name of the parent module that this module is connected to upstream.
@@ -112,7 +112,7 @@ namespace L5Sharp
         int ParentPortId { get; }
 
         /// <summary>
-        /// Gets the collection of <see cref="Port"/> for the <see cref="Module"/>.
+        /// Gets the collection of <see cref="Port"/> for the <see cref="IModule"/>.
         /// </summary>
         /// <remarks>
         /// Each module will have at least one port to define how it is connected within the network. Some modules may
@@ -134,7 +134,7 @@ namespace L5Sharp
         IReadOnlyCollection<Connection> Connections { get; }
 
         /// <summary>
-        /// Gets a custom collection of <see cref="ITag{TDataType}"/> instances for the current <see cref="Module"/>.
+        /// Gets a custom collection of <see cref="ITag{TDataType}"/> instances for the current <see cref="IModule"/>.
         /// </summary>
         /// <remarks>
         /// This collection aggregates the config, input, and output tags for a given module. Each module may or may not
@@ -146,5 +146,10 @@ namespace L5Sharp
         /// module would require.
         /// </remarks>
         ModuleTags Tags { get; }
+
+        /// <summary>
+        /// Gets the <see cref="IModuleCollection"/>, containing child instances that are connected locally to the <see cref="IModule"/>. 
+        /// </summary>
+        IModuleCollection Modules { get; }
     }
 }

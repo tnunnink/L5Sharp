@@ -64,22 +64,22 @@ namespace L5Sharp.Core
         public bool IsEthernet => Type == "Ethernet" && _modules.Keys.All(k => k.IsIPv4());
 
         /// <summary>
-        /// Gets a <see cref="Module"/> at the specified address (slot or IP).
+        /// Gets a <see cref="IModule"/> at the specified address (slot or IP).
         /// </summary>
         /// <param name="address">The string address value that represents the slot or IP of the device to get.</param>
-        public IModule this[string address] => _modules[address];
+        public IModule? this[string address] => _modules.TryGetValue(address, out var module) ? module : null;
 
         /// <summary>
-        /// Adds the provided <see cref="Module"/> to the Bus collection at the address specified by the connecting port. 
+        /// Adds the provided <see cref="IModule"/> to the Bus collection at the address specified by the connecting port. 
         /// </summary>
-        /// <param name="module">The <see cref="Module"/> instance to add to the Bus.</param>
-        /// <exception cref="ArgumentNullException"><c>module</c> is null.</exception>
-        /// <exception cref="ComponentNameCollisionException"><c>module</c> name already exists on the bus.</exception>
+        /// <param name="module">The <see cref="IModule"/> instance to add to the Bus.</param>
+        /// <exception cref="ArgumentNullException">module is null.</exception>
+        /// <exception cref="ComponentNameCollisionException">module name already exists on the bus.</exception>
         /// <exception cref="ArgumentException">
-        /// <c>module</c> parent parameters do not match the bus' parent port -or-
-        /// there is no non-null connecting port with a type that matches the bus type -or-
+        /// module parent parameters do not match the Bus parent module values -or-
+        /// there is no connecting port with a type that matches the bus type -or-
         /// the connecting port address is not available or valid for the current bus.
-        /// .</exception>
+        /// </exception>
         public void Add(IModule module)
         {
             ValidateModule(module);
@@ -90,7 +90,43 @@ namespace L5Sharp.Core
         }
 
         /// <summary>
-        /// Creates a new <see cref="Module"/> with the provided name and catalog number, and assigns it to the address
+        /// Gets the address of the <see cref="IModule"/> with the specified name.
+        /// </summary>
+        /// <param name="name">The name of the module for which to get the address of.</param>
+        /// <returns>The string value representing the address (slot/IP) at which the module belongs to the current Bus.
+        /// Null if the specified module does not exist.
+        /// </returns>
+        public string AddressOf(ComponentName name) => 
+            _modules.SingleOrDefault(m => m.Value.Name == name).Key;
+
+        /// <summary>
+        /// Clears all <see cref="IModule"/> objects from the Bus, excluding the parent module.
+        /// </summary>
+        public void Clear()
+        {
+            var keys = _modules.Keys.Where(k => k != _port.Address).ToList();
+
+            foreach (var key in keys)
+                _modules.Remove(key);
+        }
+
+        /// <summary>
+        /// Indicates whether a <see cref="IModule"/> with the specified address exists on the current <see cref="Bus"/>.
+        /// </summary>
+        /// <param name="address">The address of the module to search.</param>
+        /// <returns>true if the bus contains a module with the specified address; otherwise, false.</returns>
+        /// <exception cref="ArgumentNullException">address is null.</exception>
+        public bool ContainsAddress(string address) => _modules.ContainsKey(address);
+
+        /// <summary>
+        /// Indicates whether a <see cref="IModule"/> with the specified name exists on the current <see cref="Bus"/>.
+        /// </summary>
+        /// <param name="name">The name of the module to search.</param>
+        /// <returns>true if the bus contains a module with the specified name; otherwise, false.</returns>
+        public bool ContainsName(ComponentName name) => _modules.Values.Any(m => m.Name == name);
+
+        /// <summary>
+        /// Creates a new <see cref="IModule"/> with the provided name and catalog number, and assigns it to the address
         /// determined using the provided IP address and/or slot number.
         /// </summary>
         /// <param name="name">The name of the module to create.</param>
@@ -101,13 +137,12 @@ namespace L5Sharp.Core
         /// <param name="catalogService">The optional service provider that is responsible for retrieving
         /// the <see cref="ModuleDefinition"/> for the specified catalog number. By default this will use the
         /// <see cref="ModuleCatalog"/> built in service provider.</param>
-        /// <returns>The <see cref="Module"/> instance that was created using the provided parameters.</returns>
-        /// <exception cref="ModuleNotFoundException"><c>catalogNumber</c> could not be found by the catalog service provider.</exception>
+        /// <returns>The <see cref="IModule"/> instance that was created using the provided parameters.</returns>
+        /// <exception cref="ModuleNotFoundException">catalogNumber could not be found by the catalog service provider.</exception>
         /// <exception cref="InvalidOperationException">The Bus instance is full and can not add new modules.</exception>
         /// <exception cref="ArgumentException">The module definition obtained for the specified catalog number
         /// does not have a valid upstream connection port for the current Bus type.</exception>
-        /// <exception cref="ComponentNameCollisionException"><c>name</c> already exists on the current Bus instance.</exception>
-        /// <seealso cref="New(L5Sharp.Core.ComponentName,L5Sharp.Core.CatalogNumber,System.Net.IPAddress,byte,string?,L5Sharp.ICatalogService?)"/>
+        /// <exception cref="ComponentNameCollisionException">name already exists on the current Bus instance.</exception>
         /// <seealso cref="New(L5Sharp.Core.ComponentName,L5Sharp.Core.ModuleDefinition,string?)"/>
         public IModule New(ComponentName name, CatalogNumber catalogNumber,
             byte slot = default, IPAddress? ipAddress = null,
@@ -115,54 +150,55 @@ namespace L5Sharp.Core
             NewModule(name, catalogNumber, slot, ipAddress, description, catalogService);
 
         /// <summary>
-        /// Creates a new <see cref="Module"/> with the provided name and catalog number, and assigns it to the address
-        /// determined using the provided IP address and/or slot number.
-        /// </summary>
-        /// <param name="name">The name of the module to create.</param>
-        /// <param name="catalogNumber">The catalog number of the module to create.</param>
-        /// <param name="ipAddress">The IP Address of the module.</param>
-        /// <param name="slot">The slot number of the module. If not provided will default to 0.</param>
-        /// <param name="description">The optional description for the module.</param>
-        /// <param name="catalogService">The optional service provider that is responsible for retrieving
-        /// the <see cref="ModuleDefinition"/> for the specified catalog number. By default this will use the
-        /// <see cref="ModuleCatalog"/> built in service provider.</param>
-        /// <returns>The <see cref="Module"/> instance that was created using the provided parameters.</returns>
-        /// <exception cref="ModuleNotFoundException"><c>catalogNumber</c> could not be found by the catalog service provider.</exception>
-        /// <exception cref="InvalidOperationException">The Bus instance is full and can not add new modules.</exception>
-        /// <exception cref="ArgumentException">The module definition obtained for the specified catalog number
-        /// does not have a valid upstream connection port for the current Bus type.</exception>
-        /// <exception cref="ComponentNameCollisionException"><c>name</c> already exists on the current Bus instance.</exception>
-        /// <seealso cref="New(L5Sharp.Core.ComponentName,L5Sharp.Core.CatalogNumber,byte,System.Net.IPAddress?,string?,L5Sharp.ICatalogService?)"/>
-        /// <seealso cref="New(L5Sharp.Core.ComponentName,L5Sharp.Core.ModuleDefinition,string?)"/>
-        public IModule New(ComponentName name, CatalogNumber catalogNumber, IPAddress ipAddress, byte slot = default,
-            string? description = null, ICatalogService? catalogService = null) =>
-            NewModule(name, catalogNumber, slot, ipAddress, description, catalogService);
-
-        /// <summary>
-        /// Creates a new <see cref="Module"/> with the provided name and module definition,
+        /// Creates a new <see cref="IModule"/> with the provided name and module definition,
         /// and assigns it to the <see cref="Bus"/> collection at the address configured on the connecting port definition.
         /// </summary>
         /// <param name="name">The name of the module to create.</param>
         /// <param name="definition">The definition of the module to create.</param>
         /// <param name="description">The optional description for the module.</param>
-        /// <returns>The <see cref="Module"/> instance that was created using the provided parameters.</returns>
-        /// <exception cref="ArgumentNullException"><c>definition</c> is null.</exception>
-        /// <exception cref="ArgumentException"><c>definition</c> does not have a configured upstream port that
-        /// matches the bus <see cref="Type"/>.</exception>
+        /// <returns>The <see cref="IModule"/> instance that was created using the provided parameters.</returns>
+        /// <exception cref="ArgumentNullException">definition is null.</exception>
+        /// <exception cref="ComponentNameCollisionException">name already exists on the Bus instance.</exception>
+        /// <exception cref="ArgumentException">
+        /// definition does not have a configured upstream port that matches the Bus <see cref="Type"/> -or-
+        /// definition does not a connecting port address that is available on the Bus.
+        /// </exception>
         public IModule New(ComponentName name, ModuleDefinition definition, string? description = null)
         {
             if (definition is null)
                 throw new ArgumentNullException(nameof(definition));
 
-            var connecting = definition.Ports.FirstOrDefault(p => p.Upstream && p.Type == Type && !p.DownstreamOnly);
-
-            if (connecting is null)
-                throw new ArgumentException(
-                    $"The provided definition does not have an upstream connection port of type '{Type}'.");
-
-            return NewModule(name, definition, connecting.Address, description);
+            return NewModule(name, definition, description);
         }
 
+        /// <summary>
+        /// Removes the <see cref="IModule"/> at the specified address of the <see cref="Bus"/> object.
+        /// </summary>
+        /// <param name="address">The address (slot/IP) at which to remove the bus.</param>
+        /// <returns>true if the module was found and removed from the Bus.
+        /// If the module was not found or the provided address is that of the parent module, then false.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">address is null.</exception>
+        public bool RemoveAt(string address) => address != _port.Address && _modules.Remove(address);
+
+        /// <summary>
+        /// Removes the <see cref="IModule"/> with the specified name from the <see cref="Bus"/> is it exists.
+        /// </summary>
+        /// <param name="name">The name of the module to remove.</param>
+        /// <returns>true if the module was found and removed from the Bus.
+        /// If the module was not found or the provided name is that of the parent module, then false.
+        /// </returns>
+        public bool Remove(ComponentName name)
+        {
+            if (name == _port.Module.Name)
+                return false;
+            
+            var module = _modules.Values.SingleOrDefault(m => m.Name == name);
+
+            var address = module?.Ports.Connecting()?.Address;
+            
+            return address is not null && _modules.Remove(address);
+        }
 
         /// <inheritdoc />
         public IEnumerator<IModule> GetEnumerator() => _modules.Values.GetEnumerator();
@@ -235,15 +271,16 @@ namespace L5Sharp.Core
             var downstreamAddress = DetermineDownstreamAddress(slot, ipAddress);
             ConfigureDownstreamPort(definition, downstreamAddress);
 
-            return NewModule(name, definition, upstreamAddress, description);
+            return NewModule(name, definition, description);
         }
 
-        private Module NewModule(ComponentName name, ModuleDefinition definition, string address,
-            string? description = null)
+        private Module NewModule(ComponentName name, ModuleDefinition definition, string? description = null)
         {
             var module = new Module(name, definition, _port.Module.Name, _port.Id, description);
 
             ValidateModule(module);
+
+            var address = module.Ports.Connecting()?.Address!;
 
             _modules.Add(address, module);
 
@@ -255,24 +292,16 @@ namespace L5Sharp.Core
             if (IsFull)
                 throw new InvalidOperationException("The current Bus is full and can not assign additional modules.");
 
-            if (IsChassis)
-            {
-                var range = IsFixed ? Size : byte.MaxValue;
-
-                return Enumerable.Range(byte.MinValue, range)
-                    .Except(_modules.Keys.Select(int.Parse))
-                    .First()
-                    .ToString();
-            }
-
-            if (IsEthernet)
-            {
-                //todo need to create way to generate next available IP on default 192.168.1.1 network
+            //todo need to create way to generate next available IP on default 192.168.1.1 network
+            if (IsEthernet) 
                 return IPAddress.Any.ToString();
-            }
+            
+            var range = IsFixed ? Size : byte.MaxValue;
 
-            throw new InvalidOperationException(
-                "The current Bus is neither an Ethernet nor Chassis Bus and can not determine a next available address");
+            return Enumerable.Range(byte.MinValue, range)
+                .Except(_modules.Keys.Select(int.Parse))
+                .First()
+                .ToString();
         }
 
         private void ValidateModule(IModule module)

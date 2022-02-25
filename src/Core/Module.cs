@@ -7,9 +7,7 @@ using L5Sharp.Exceptions;
 
 namespace L5Sharp.Core
 {
-    /// <summary>
-    /// Represents a Module component of the L5X file.
-    /// </summary>
+    /// <inheritdoc />
     public class Module : IModule
     {
         /// <summary>
@@ -37,6 +35,7 @@ namespace L5Sharp.Core
             Ports = new PortCollection(this, ports);
             Connections = new List<Connection>(connections).AsReadOnly();
             Tags = new ModuleTags(config, Connections);
+            Modules = new ModuleCollection(Ports.Local()?.Bus);
         }
 
         /// <summary>
@@ -78,6 +77,7 @@ namespace L5Sharp.Core
             Ports = new PortCollection(this, definition.Ports);
             Connections = new List<Connection>().AsReadOnly();
             Tags = new ModuleTags();
+            Modules = new ModuleCollection(Ports.Local()?.Bus);
         }
 
         /// <summary>
@@ -130,11 +130,12 @@ namespace L5Sharp.Core
             Ports = new PortCollection(this, definition.Ports);
             Connections = new List<Connection>().AsReadOnly();
             Tags = new ModuleTags();
+            Modules = new ModuleCollection(Ports.Local()?.Bus);
         }
 
         /// <summary>
         /// Creates a new <see cref="Module"/> object with the provided name and catalog number. This constructor is meant
-        /// to be used for creating module's with an upstream 'Ethernet' port, or modules that are connected over a netwrok
+        /// to be used for creating module's with an upstream 'Ethernet' port, or modules that are connected over a network
         /// as opposed to a chassis.
         /// </summary>
         /// <param name="name">The name of the module.</param>
@@ -181,6 +182,7 @@ namespace L5Sharp.Core
             Ports = new PortCollection(this, definition.Ports);
             Connections = new List<Connection>().AsReadOnly();
             Tags = new ModuleTags();
+            Modules = new ModuleCollection(Ports.Local()?.Bus);
         }
 
         /// <inheritdoc />
@@ -217,10 +219,12 @@ namespace L5Sharp.Core
         public KeyingState State { get; }
 
         /// <inheritdoc />
-        public int? Slot => Ports.GetSlotAddress();
+        public int Slot => 
+            byte.TryParse(Ports.Chassis?.Address, out var slot) ? slot : default;
 
         /// <inheritdoc />
-        public IPAddress? IP => Ports.GetIPAddress();
+        public IPAddress IP =>
+            IPAddress.TryParse(Ports.Ethernet?.Address ?? string.Empty, out var ip) ? ip : IPAddress.Any;
 
         /// <inheritdoc />
         public string ParentModule { get; }
@@ -233,8 +237,10 @@ namespace L5Sharp.Core
 
         /// <inheritdoc />
         public IReadOnlyCollection<Connection> Connections { get; }
-        
+
         /// <inheritdoc />
         public ModuleTags Tags { get; }
+
+        public IModuleCollection Modules { get; }
     }
 }

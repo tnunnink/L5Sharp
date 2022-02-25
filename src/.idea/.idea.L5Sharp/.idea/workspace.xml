@@ -7,20 +7,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="Random updates and removal of builders and instructions for now. Will implement at later time.">
+    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="Fixed tests and code associated with Type updates">
+      <change afterPath="$PROJECT_DIR$/Core/ModuleCollection.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/IModuleCollection.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/Routine.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/Routine.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/StringDefined.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/StringDefined.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Enums/Radix.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Enums/Radix.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Enums/RoutineType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Enums/RoutineType.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Extensions/GenericExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Extensions/ValueTypeExtensions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Formatters/BinaryFormatter.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Types/Predefined/String.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Types/Predefined/String.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/ControllerTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/ControllerTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Enums.Tests/RadixDecimalTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Enums.Tests/RadixDecimalTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Enums.Tests/RoutineTypeTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Enums.Tests/RoutineTypeTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Types.Tests/SintTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Types.Tests/SintTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/Samples/Test.ACD.Recovery" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/Samples/Test.ACD.Recovery" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/Bus.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/Bus.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/Module.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/Module.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/PortCollection.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/PortCollection.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/IModule.cs" beforeDir="false" afterPath="$PROJECT_DIR$/IModule.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/BusTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/BusTests.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -285,14 +280,7 @@
       <workItem from="1645043352307" duration="41185000" />
       <workItem from="1645213929372" duration="16214000" />
       <workItem from="1645285653758" duration="29897000" />
-      <workItem from="1645651624470" duration="34657000" />
-    </task>
-    <task id="LOCAL-00104" summary="Tag member re-working">
-      <created>1641526008309</created>
-      <option name="number" value="00104" />
-      <option name="presentableId" value="LOCAL-00104" />
-      <option name="project" value="LOCAL" />
-      <updated>1641526008309</updated>
+      <workItem from="1645651624470" duration="49562000" />
     </task>
     <task id="LOCAL-00105" summary="tag component development and testing">
       <created>1641585066011</created>
@@ -630,48 +618,55 @@
       <option name="project" value="LOCAL" />
       <updated>1645732997675</updated>
     </task>
-    <option name="localTasksCounter" value="153" />
+    <task id="LOCAL-00153" summary="Fixed tests and code associated with Type updates">
+      <created>1645739050770</created>
+      <option name="number" value="00153" />
+      <option name="presentableId" value="LOCAL-00153" />
+      <option name="project" value="LOCAL" />
+      <updated>1645739050770</updated>
+    </task>
+    <option name="localTasksCounter" value="154" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="UnitTestsCoverage.Settings">
-    <option name="coveragePercentColumnWidth" value="73" />
+    <option name="coveragePercentColumnWidth" value="72" />
     <option name="sortOrder" value="DESCENDING" />
     <option name="sortedColumn" value="1" />
-    <option name="symbolColumnWidth" value="269" />
+    <option name="symbolColumnWidth" value="263" />
     <coverage-tree-state>
       <expand>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 95% 266/5420" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 62% 2096/5448" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 95% 266/5420" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 95% 266/5420" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 62% 2096/5448" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 62% 2096/5448" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 95% 266/5420" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 95% 266/5420" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="(1.0.0.0, .NETStandard,Version=v2.1) 95% 266/5420" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 62% 2096/5448" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 62% 2096/5448" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="(1.0.0.0, .NETStandard,Version=v2.1) 62% 2096/5448" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 95% 266/5420" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 95% 266/5420" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="(1.0.0.0, .NETStandard,Version=v2.1) 95% 266/5420" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 95% 266/5420" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 62% 2096/5448" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 62% 2096/5448" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="(1.0.0.0, .NETStandard,Version=v2.1) 62% 2096/5448" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 62% 2096/5448" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 95% 266/5420" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 95% 266/5420" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="(1.0.0.0, .NETStandard,Version=v2.1) 95% 266/5420" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 95% 266/5420" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="Abstractions 99% 1/112" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 62% 2096/5448" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 62% 2096/5448" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="(1.0.0.0, .NETStandard,Version=v2.1) 62% 2096/5448" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 62% 2096/5448" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Core 89% 170/1609" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
       </expand>
       <select />
@@ -697,7 +692,6 @@
       <path value="$PROJECT_DIR$/../.." />
     </ignored-roots>
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="Module component development and testing" />
     <MESSAGE value="Module development and testing." />
     <MESSAGE value="catalog service development" />
     <MESSAGE value="Lots of module development and updates" />
@@ -722,7 +716,8 @@
     <MESSAGE value="Added unsigned atomic types and fixed Sint to be sbyte" />
     <MESSAGE value="Updated and tested exceptions" />
     <MESSAGE value="Random updates and removal of builders and instructions for now. Will implement at later time." />
-    <option name="LAST_COMMIT_MESSAGE" value="Random updates and removal of builders and instructions for now. Will implement at later time." />
+    <MESSAGE value="Fixed tests and code associated with Type updates" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed tests and code associated with Type updates" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Net;
 using System.Xml.Linq;
 using ApprovalTests;
@@ -15,7 +14,6 @@ namespace L5Sharp.Serialization.Tests
     [TestFixture]
     public class ModuleSerializerTests
     {
-        private static readonly string L5X = Path.Combine(Environment.CurrentDirectory, @"TestFiles\Test.xml");
         private ModuleSerializer _serializer;
 
         [SetUp]
@@ -92,7 +90,7 @@ namespace L5Sharp.Serialization.Tests
             component.SafetyEnabled.Should().BeFalse();
             component.State.Should().Be(KeyingState.CompatibleModule);
             component.Slot.Should().Be(4);
-            component.IP.Should().BeNull();
+            component.IP.Should().Be(IPAddress.Parse("0.0.0.0"));
             component.Ports.Should().HaveCount(1);
             component.Connections.Should().HaveCount(1);
             component.Tags.Config.Should().NotBeNull();
