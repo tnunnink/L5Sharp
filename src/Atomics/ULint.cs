@@ -3,28 +3,28 @@ using System.ComponentModel;
 using L5Sharp.Converters;
 using L5Sharp.Enums;
 
-namespace L5Sharp.Types.Atomics
+namespace L5Sharp.Atomics
 {
     /// <summary>
-    /// Represents a <b>INT</b> Logix atomic data type, or a type analogous to a <see cref="short"/>.
+    /// Represents a <b>ULINT</b> Logix atomic data type, or a type analogous to a <see cref="ulong"/>.
     /// </summary>
-    [TypeConverter(typeof(IntConverter))]
-    public sealed class Int : IAtomicType<short>, IEquatable<Int>, IComparable<Int>
+    [TypeConverter(typeof(ULintConverter))]
+    public class ULint : IAtomicType<ulong>, IEquatable<ULint>, IComparable<ULint>
     {
         /// <summary>
-        /// Creates a new default <see cref="Int"/> type.
+        /// Creates a new default <see cref="ULint"/> type.
         /// </summary>
-        public Int()
+        public ULint()
         {
-            Name = nameof(Int).ToUpper();
+            Name = nameof(ULint).ToUpper();
             Value = default;
         }
 
         /// <summary>
-        /// Creates a new <see cref="Int"/> with the provided value.
+        /// Creates a new <see cref="ULint"/> with the provided value.
         /// </summary>
         /// <param name="value">The value to initialize the type with.</param>
-        public Int(short value) : this()
+        public ULint(ulong value) : this()
         {
             Value = value;
         }
@@ -33,7 +33,7 @@ namespace L5Sharp.Types.Atomics
         public string Name { get; }
 
         /// <inheritdoc />
-        public string Description => $"Logix representation of a {typeof(short)}";
+        public string Description => $"Logix representation of a {typeof(ulong)}";
 
         /// <inheritdoc />
         public DataTypeFamily Family => DataTypeFamily.None;
@@ -42,25 +42,25 @@ namespace L5Sharp.Types.Atomics
         public DataTypeClass Class => DataTypeClass.Atomic;
 
         /// <inheritdoc />
-        public short Value { get; private set; }
+        public ulong Value { get; private set; }
 
         object IAtomicType.Value => Value;
 
         /// <inheritdoc />
-        public void SetValue(short value) => Value = value;
+        public void SetValue(ulong value) => Value = value;
 
         /// <inheritdoc />
         public void SetValue(object value)
         {
             if (value is null)
                 throw new ArgumentNullException(nameof(value));
-            
+
             var converter = TypeDescriptor.GetConverter(GetType());
 
             if (!converter.CanConvertFrom(value.GetType()))
-                throw new ArgumentException($"Value of type '{value.GetType()}' can not be set for type {GetType()}");
+                throw new ArgumentException($"Value of type '{value.GetType()}' is not a valid for {GetType()}");
 
-            Value = (Int)converter.ConvertFrom(value)!;
+            Value = (ULint)converter.ConvertFrom(value)!;
         }
 
         /// <inheritdoc />
@@ -68,34 +68,35 @@ namespace L5Sharp.Types.Atomics
             radix is not null ? radix.Format(this) : Radix.Default(this).Format(this);
 
         /// <inheritdoc />
-        public IDataType Instantiate() => new Int();
+        public IDataType Instantiate() => new ULint();
 
         /// <summary>
-        /// Converts the provided <see cref="short"/> to a <see cref="Int"/> value.
+        /// Converts the provided <see cref="ulong"/> to a <see cref="ULint"/> value.
         /// </summary>
         /// <param name="value">The value to convert.</param>
-        /// <returns>A <see cref="Int"/> value.</returns>
-        public static implicit operator Int(short value) => new(value);
+        /// <returns>A <see cref="ULint"/> value.</returns>
+        public static implicit operator ULint(ulong value) => new(value);
 
         /// <summary>
-        /// Converts the provided <see cref="Int"/> to a <see cref="short"/> value.
+        /// Converts the provided <see cref="ULint"/> to a <see cref="ulong"/> value.
         /// </summary>
         /// <param name="atomic">The value to convert.</param>
-        /// <returns>A <see cref="short"/> type value.</returns>
-        public static implicit operator short(Int atomic) => atomic.Value;
+        /// <returns>A <see cref="ulong"/> type value.</returns>
+        public static implicit operator ulong(ULint atomic) => atomic.Value;
 
         /// <summary>
-        /// Converts the provided <see cref="string"/> to a <see cref="Int"/> value. 
+        /// Converts the provided <see cref="string"/> to a <see cref="ULint"/> value. 
         /// </summary>
         /// <param name="input">The string value to convert.</param>
         /// <returns>
-        /// If the string value is able to be parsed, a new instance of a <see cref="Int"/> with the value
+        /// If the string value is able to be parsed, a new instance of a <see cref="ULint"/> with the value
         /// provided. If not, then a default instance value.
         /// </returns>
-        public static implicit operator Int(string input) => Radix.ParseValue<Int>(input);
+        public static implicit operator ULint(string input) =>
+            ulong.TryParse(input, out var result) ? new ULint(result) : Radix.ParseValue<ULint>(input);
 
         /// <inheritdoc />
-        public bool Equals(Int? other)
+        public bool Equals(ULint? other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
@@ -107,7 +108,7 @@ namespace L5Sharp.Types.Atomics
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((Int)obj);
+            return obj.GetType() == GetType() && Equals((ULint)obj);
         }
 
         /// <inheritdoc />
@@ -122,7 +123,7 @@ namespace L5Sharp.Types.Atomics
         /// <param name="left">An object to compare.</param>
         /// <param name="right">An object to compare.</param>
         /// <returns>true if the objects are equal, otherwise, false.</returns>
-        public static bool operator ==(Int left, Int right) => Equals(left, right);
+        public static bool operator ==(ULint left, ULint right) => Equals(left, right);
 
         /// <summary>
         /// Determines whether the objects are not equal.
@@ -130,10 +131,10 @@ namespace L5Sharp.Types.Atomics
         /// <param name="left">An object to compare.</param>
         /// <param name="right">An object to compare.</param>
         /// <returns>true if the objects are not equal, otherwise, false.</returns>
-        public static bool operator !=(Int left, Int right) => !Equals(left, right);
+        public static bool operator !=(ULint left, ULint right) => !Equals(left, right);
 
         /// <inheritdoc />
-        public int CompareTo(Int? other)
+        public int CompareTo(ULint? other)
         {
             if (ReferenceEquals(this, other)) return 0;
             return ReferenceEquals(null, other) ? 1 : Value.CompareTo(other.Value);

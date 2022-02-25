@@ -1,11 +1,10 @@
 ﻿using System;
 using AutoFixture;
 using FluentAssertions;
+using L5Sharp.Atomics;
 using L5Sharp.Core;
-using L5Sharp.Types;
-using L5Sharp.Types.Atomics;
 using NUnit.Framework;
-using String = L5Sharp.Types.Predefined.String;
+using String = L5Sharp.Predefined.String;
 
 namespace L5Sharp.Enums.Tests
 {

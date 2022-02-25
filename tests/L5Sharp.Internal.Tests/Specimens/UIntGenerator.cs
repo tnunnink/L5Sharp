@@ -1,6 +1,6 @@
 ﻿using System;
 using AutoFixture.Kernel;
-using L5Sharp.Types.Atomics;
+using L5Sharp.Atomics;
 
 namespace L5Sharp.Internal.Tests.Specimens
 {

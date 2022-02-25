@@ -3,28 +3,28 @@ using System.ComponentModel;
 using L5Sharp.Converters;
 using L5Sharp.Enums;
 
-namespace L5Sharp.Types.Atomics
+namespace L5Sharp.Atomics
 {
     /// <summary>
-    /// Represents a <b>UDint</b> Logix atomic data type, or a type analogous to a <see cref="uint"/>.
+    /// Represents a <b>LINT</b> Logix atomic data type, or a type analogous to a <see cref="long"/>.
     /// </summary>
-    [TypeConverter(typeof(UDintConverter))]
-    public class UDint : IAtomicType<uint>, IEquatable<UDint>, IComparable<UDint>
+    [TypeConverter(typeof(LintConverter))]
+    public sealed class Lint : IAtomicType<long>, IEquatable<Lint>, IComparable<Lint>
     {
         /// <summary>
-        /// Creates a new default <see cref="UDint"/> type.
+        /// Creates a new default <see cref="Lint"/> type.
         /// </summary>
-        public UDint()
+        public Lint()
         {
-            Name = nameof(UDint).ToUpper();
+            Name = nameof(Lint).ToUpper();
             Value = default;
         }
 
         /// <summary>
-        /// Creates a new <see cref="UDint"/> with the provided value.
+        /// Creates a new <see cref="Lint"/> with the provided value.
         /// </summary>
         /// <param name="value">The value to initialize the type with.</param>
-        public UDint(uint value) : this()
+        public Lint(long value) : this()
         {
             Value = value;
         }
@@ -33,7 +33,7 @@ namespace L5Sharp.Types.Atomics
         public string Name { get; }
 
         /// <inheritdoc />
-        public string Description => $"Logix representation of a {typeof(uint)}";
+        public string Description => $"Logix representation of a {typeof(long)}";
 
         /// <inheritdoc />
         public DataTypeFamily Family => DataTypeFamily.None;
@@ -42,25 +42,25 @@ namespace L5Sharp.Types.Atomics
         public DataTypeClass Class => DataTypeClass.Atomic;
 
         /// <inheritdoc />
-        public uint Value { get; private set; }
+        public long Value { get; private set; }
 
         object IAtomicType.Value => Value;
 
         /// <inheritdoc />
-        public void SetValue(uint value) => Value = value;
+        public void SetValue(long value) => Value = value;
 
         /// <inheritdoc />
         public void SetValue(object value)
         {
             if (value is null)
                 throw new ArgumentNullException(nameof(value));
-
+            
             var converter = TypeDescriptor.GetConverter(GetType());
 
             if (!converter.CanConvertFrom(value.GetType()))
                 throw new ArgumentException($"Value of type '{value.GetType()}' is not a valid for {GetType()}");
 
-            Value = (UDint)converter.ConvertFrom(value)!;
+            Value = (Lint)converter.ConvertFrom(value)!;
         }
 
         /// <inheritdoc />
@@ -68,35 +68,34 @@ namespace L5Sharp.Types.Atomics
             radix is not null ? radix.Format(this) : Radix.Default(this).Format(this);
 
         /// <inheritdoc />
-        public IDataType Instantiate() => new UDint();
+        public IDataType Instantiate() => new Lint();
 
         /// <summary>
-        /// Converts the provided <see cref="uint"/> to a <see cref="UDint"/> value.
+        /// Converts the provided <see cref="long"/> to a <see cref="Lint"/> value.
         /// </summary>
         /// <param name="value">The value to convert.</param>
-        /// <returns>A <see cref="UDint"/> value.</returns>
-        public static implicit operator UDint(uint value) => new(value);
+        /// <returns>A <see cref="Lint"/> value.</returns>
+        public static implicit operator Lint(long value) => new(value);
 
         /// <summary>
-        /// Converts the provided <see cref="UDint"/> to a <see cref="uint"/> value.
+        /// Converts the provided <see cref="Lint"/> to a <see cref="long"/> value.
         /// </summary>
         /// <param name="atomic">The value to convert.</param>
-        /// <returns>A <see cref="uint"/> type value.</returns>
-        public static implicit operator uint(UDint atomic) => atomic.Value;
+        /// <returns>A <see cref="long"/> type value.</returns>
+        public static implicit operator long(Lint atomic) => atomic.Value;
 
         /// <summary>
-        /// Converts the provided <see cref="string"/> to a <see cref="UDint"/> value. 
+        /// Converts the provided <see cref="string"/> to a <see cref="Lint"/> value. 
         /// </summary>
         /// <param name="input">The string value to convert.</param>
         /// <returns>
-        /// If the string value is able to be parsed, a new instance of a <see cref="UDint"/> with the value
+        /// If the string value is able to be parsed, a new instance of a <see cref="Lint"/> with the value
         /// provided. If not, then a default instance value.
         /// </returns>
-        public static implicit operator UDint(string input) =>
-            uint.TryParse(input, out var result) ? new UDint(result) : Radix.ParseValue<UDint>(input);
+        public static implicit operator Lint(string input) => Radix.ParseValue<Lint>(input);
 
         /// <inheritdoc />
-        public bool Equals(UDint? other)
+        public bool Equals(Lint? other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
@@ -108,12 +107,12 @@ namespace L5Sharp.Types.Atomics
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((UDint)obj);
+            return obj.GetType() == GetType() && Equals((Lint)obj);
         }
 
         /// <inheritdoc />
         public override int GetHashCode() => Name.GetHashCode();
-
+        
         /// <inheritdoc />
         public override string ToString() => Name;
 
@@ -123,7 +122,7 @@ namespace L5Sharp.Types.Atomics
         /// <param name="left">An object to compare.</param>
         /// <param name="right">An object to compare.</param>
         /// <returns>true if the objects are equal, otherwise, false.</returns>
-        public static bool operator ==(UDint left, UDint right) => Equals(left, right);
+        public static bool operator ==(Lint left, Lint right) => Equals(left, right);
 
         /// <summary>
         /// Determines whether the objects are not equal.
@@ -131,10 +130,10 @@ namespace L5Sharp.Types.Atomics
         /// <param name="left">An object to compare.</param>
         /// <param name="right">An object to compare.</param>
         /// <returns>true if the objects are not equal, otherwise, false.</returns>
-        public static bool operator !=(UDint left, UDint right) => !Equals(left, right);
+        public static bool operator !=(Lint left, Lint right) => !Equals(left, right);
 
         /// <inheritdoc />
-        public int CompareTo(UDint? other)
+        public int CompareTo(Lint? other)
         {
             if (ReferenceEquals(this, other)) return 0;
             return ReferenceEquals(null, other) ? 1 : Value.CompareTo(other.Value);

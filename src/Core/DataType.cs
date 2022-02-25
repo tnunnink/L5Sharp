@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using L5Sharp.Atomics;
 using L5Sharp.Enums;
-using L5Sharp.Types.Atomics;
-using L5Sharp.Types.Predefined;
-using String = L5Sharp.Types.Predefined.String;
+using L5Sharp.Predefined;
+using String = L5Sharp.Predefined.String;
 
 namespace L5Sharp.Core
 {

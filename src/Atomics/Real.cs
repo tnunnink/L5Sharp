@@ -3,46 +3,37 @@ using System.ComponentModel;
 using L5Sharp.Converters;
 using L5Sharp.Enums;
 
-namespace L5Sharp.Types.Atomics
+namespace L5Sharp.Atomics
 {
     /// <summary>
-    /// Represents a BOOL Logix atomic data type.
+    /// Represents a <b>REAL</b> Logix atomic data type, or a type analogous to a <see cref="float"/>.
     /// </summary>
-    [TypeConverter(typeof(BoolConverter))]
-    public sealed class Bool : IAtomicType<bool>, IEquatable<Bool>, IComparable<Bool>
+    [TypeConverter(typeof(RealConverter))]
+    public sealed class Real : IAtomicType<float>, IEquatable<Real>, IComparable<Real>
     {
         /// <summary>
-        /// Creates a new default <see cref="Bool"/> type.
+        /// Creates a new default <see cref="Real"/> type.
         /// </summary>
-        public Bool()
+        public Real()
         {
-            Name = nameof(Bool).ToUpper();
+            Name = nameof(Real).ToUpper();
             Value = default;
         }
 
         /// <summary>
-        /// Creates a new <see cref="Bool"/> with the provided value.
+        /// Creates a new <see cref="Real"/> with the provided value.
         /// </summary>
         /// <param name="value">The value to initialize the type with.</param>
-        public Bool(bool value) : this()
+        public Real(float value) : this()
         {
             Value = value;
-        }
-
-        /// <summary>
-        /// Creates a new instance of a Bool with the provided number.
-        /// </summary>
-        /// <param name="number">A number that will be evaluated to true if greater that zero, otherwise false</param>
-        public Bool(int number) : this()
-        {
-            Value = number > 0;
         }
 
         /// <inheritdoc />
         public string Name { get; }
 
         /// <inheritdoc />
-        public string Description => $"Logix representation of a {typeof(bool)}";
+        public string Description => $"Logix representation of a {typeof(float)}";
 
         /// <inheritdoc />
         public DataTypeFamily Family => DataTypeFamily.None;
@@ -51,72 +42,77 @@ namespace L5Sharp.Types.Atomics
         public DataTypeClass Class => DataTypeClass.Atomic;
 
         /// <inheritdoc />
-        public bool Value { get; private set; }
+        public float Value { get; private set; }
 
         object IAtomicType.Value => Value;
 
         /// <inheritdoc />
-        public void SetValue(bool value) => Value = value;
+        public void SetValue(float value) => Value = value;
 
         /// <inheritdoc />
         public void SetValue(object value)
         {
             if (value is null)
                 throw new ArgumentNullException(nameof(value));
-
+            
             var converter = TypeDescriptor.GetConverter(GetType());
 
             if (!converter.CanConvertFrom(value.GetType()))
                 throw new ArgumentException($"Value of type '{value.GetType()}' is not a valid for {GetType()}");
 
-            Value = (Bool)converter.ConvertFrom(value)!;
+            Value = (Real)converter.ConvertFrom(value)!;
         }
-
+        
         /// <inheritdoc />
         public string Format(Radix? radix = null) =>
             radix is not null ? radix.Format(this) : Radix.Default(this).Format(this);
 
         /// <inheritdoc />
-        public IDataType Instantiate() => new Bool();
+        public IDataType Instantiate() => new Real();
 
         /// <summary>
-        /// Converts the provided <see cref="bool"/> to a <see cref="Bool"/> value.
+        /// Converts the provided <see cref="float"/> to a <see cref="Real"/> value.
         /// </summary>
         /// <param name="value">The value to convert.</param>
-        /// <returns>A <see cref="Bool"/> value.</returns>
-        public static implicit operator Bool(bool value) => new(value);
+        /// <returns>A <see cref="Real"/> value.</returns>
+        public static implicit operator Real(float value) => new(value);
 
         /// <summary>
-        /// Converts the provided <see cref="Bool"/> to a <see cref="bool"/> value.
+        /// Converts the provided <see cref="Real"/> to a <see cref="float"/> value.
         /// </summary>
         /// <param name="atomic">The value to convert.</param>
-        /// <returns>A <see cref="bool"/> type value.</returns>
-        public static implicit operator bool(Bool atomic) => atomic.Value;
+        /// <returns>A <see cref="float"/> type value.</returns>
+        public static implicit operator float(Real atomic) => atomic.Value;
 
         /// <summary>
-        /// Converts the provided <see cref="string"/> to a <see cref="Bool"/> value. 
+        /// Converts the provided <see cref="string"/> to a <see cref="Real"/> value. 
         /// </summary>
         /// <param name="input">The string value to convert.</param>
         /// <returns>
-        /// If the string value is able to be parsed, a new instance of a <see cref="Bool"/> with the value
+        /// If the string value is able to be parsed, a new instance of a <see cref="Real"/> with the value
         /// provided. If not, then a default instance value.
         /// </returns>
-        public static implicit operator Bool(string input) => Radix.ParseValue<Bool>(input);
+        public static implicit operator Real(string input) => Radix.ParseValue<Real>(input);
 
         /// <inheritdoc />
-        public bool Equals(Bool? other)
+        public bool Equals(Real? other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return Value == other.Value;
+            return Math.Abs(Value - other.Value) < float.Epsilon;
         }
 
         /// <inheritdoc />
-        public override bool Equals(object? obj) => ReferenceEquals(this, obj) || obj is Bool other && Equals(other);
+        public override bool Equals(object? obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            return obj.GetType() == GetType() && Equals((Real)obj);
+        }
 
         /// <inheritdoc />
         public override int GetHashCode() => Name.GetHashCode();
-
+        
         /// <inheritdoc />
         public override string ToString() => Name;
 
@@ -126,7 +122,7 @@ namespace L5Sharp.Types.Atomics
         /// <param name="left">An object to compare.</param>
         /// <param name="right">An object to compare.</param>
         /// <returns>true if the objects are equal, otherwise, false.</returns>
-        public static bool operator ==(Bool? left, Bool? right) => Equals(left, right);
+        public static bool operator ==(Real left, Real right) => Equals(left, right);
 
         /// <summary>
         /// Determines whether the objects are not equal.
@@ -134,10 +130,10 @@ namespace L5Sharp.Types.Atomics
         /// <param name="left">An object to compare.</param>
         /// <param name="right">An object to compare.</param>
         /// <returns>true if the objects are not equal, otherwise, false.</returns>
-        public static bool operator !=(Bool? left, Bool? right) => !Equals(left, right);
+        public static bool operator !=(Real left, Real right) => !Equals(left, right);
 
         /// <inheritdoc />
-        public int CompareTo(Bool? other)
+        public int CompareTo(Real? other)
         {
             if (ReferenceEquals(this, other)) return 0;
             return ReferenceEquals(null, other) ? 1 : Value.CompareTo(other.Value);

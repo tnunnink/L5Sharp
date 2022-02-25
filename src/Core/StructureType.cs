@@ -11,7 +11,7 @@ namespace L5Sharp.Core
     /// A generic implementation of a <see cref="IComplexType"/> that generated from reading
     /// L5X <see cref="ITag{TDataType}"/> data structures.
     /// </summary>
-    public class StructureType : ComplexType
+    public class StructureType : ComplexTypeBase
     {
         /// <summary>
         /// Creates a new <see cref="StructureType"/> with the provided name, class, and member collection.

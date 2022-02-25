@@ -1,9 +1,8 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Globalization;
+using L5Sharp.Atomics;
 using L5Sharp.Enums;
-using L5Sharp.Types;
-using L5Sharp.Types.Atomics;
 
 
 namespace L5Sharp.Converters

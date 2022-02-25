@@ -1,8 +1,7 @@
 ﻿using System;
 using FluentAssertions;
+using L5Sharp.Atomics;
 using L5Sharp.Enums;
-using L5Sharp.Types;
-using L5Sharp.Types.Atomics;
 using NUnit.Framework;
 
 namespace L5Sharp.Core.Tests
@@ -13,41 +12,41 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Create_ValidNameAndLength_ShouldNotBeNull()
         {
-            var type = StringDefined.Create("Test", 100, "This is a test");
+            var type = new StringDefined("Test", 100, "This is a test");
 
-            type.Should().NotBeNull();
+            type.Should<StringDefined>().NotBeNull();
         }
 
         [Test]
         public void Create_InvalidLength_ShouldThrowArgumentException()
         {
-            FluentActions.Invoking(() => StringDefined.Create("Test", 0)).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(() => new StringDefined("Test", 0)).Should().Throw<ArgumentException>();
         }
         
         [Test]
         public void Create_NullName_ShouldThrowArgumentNullException()
         {
-            FluentActions.Invoking(() => StringDefined.Create(null!, 0)).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(() => new StringDefined(null!, 0)).Should().Throw<ArgumentException>();
         }
 
         [Test]
         public void Name_GetValue_ShouldBeExpected()
         {
-            var type = StringDefined.Create("Test", 100);
+            var type = new StringDefined("Test", 100);
             type.Name.Should().Be("Test");
         }
         
         [Test]
         public void Class_GetValue_ShouldBeExpected()
         {
-            var type = StringDefined.Create("Test", 100);
+            var type = new StringDefined("Test", 100);
             type.Class.Should().Be(DataTypeClass.User);
         }
         
         [Test]
         public void Family_GetValue_ShouldBeExpected()
         {
-            var type = StringDefined.Create("Test", 100);
+            var type = new StringDefined("Test", 100);
             
             type.Family.Should().Be(DataTypeFamily.String);
         }
@@ -55,7 +54,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Description_GetValue_ShouldBeExpected()
         {
-            var type = StringDefined.Create("Test", 100);
+            var type = new StringDefined("Test", 100);
             
             type.Description.Should().BeEmpty();
         }
@@ -63,7 +62,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Value_GetValue_ShouldBeExpected()
         {
-            var type = StringDefined.Create("Test", 100);
+            var type = new StringDefined("Test", 100);
             
             type.Value.Should().BeEmpty();
         }
@@ -71,7 +70,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Instantiate_WhenCalled_ShouldBeNotBeNull()
         {
-            var type = StringDefined.Create("Test", 10);
+            var type = new StringDefined("Test", 10);
 
             var instance = type.Instantiate();
 
@@ -81,7 +80,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Len_GetValue_ShouldHaveExpectedProperties()
         {
-            var type = StringDefined.Create("Test", 10);
+            var type = new StringDefined("Test", 10);
 
             type.LEN.Should().NotBeNull();
             type.LEN.Name.Should().Be("LEN");
@@ -96,7 +95,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Data_GetValue_ShouldHaveExpectedProperties()
         {
-            var type = StringDefined.Create("Test", 100);
+            var type = new StringDefined("Test", 100);
             
             type.DATA.Should().NotBeNull();
             type.DATA.Name.Should().Be("DATA");
@@ -110,7 +109,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void SetValue_Null_ShouldThrowArgumentNullException()
         {
-            var type = StringDefined.Create("Test", 100);
+            var type = new StringDefined("Test", 100);
             
             FluentActions.Invoking(() => type.SetValue(null!)).Should().Throw<ArgumentNullException>();
         }
@@ -118,7 +117,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void SetValue_InvalidLength_ShouldThrowArgumentException()
         {
-            var type = StringDefined.Create("Test", 10);
+            var type = new StringDefined("Test", 10);
             
             FluentActions.Invoking(() => type.SetValue("This is a string more than 10 characters."))
                 .Should().Throw<ArgumentException>();
@@ -127,7 +126,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void SetValue_ValidString_ShouldBeExpected()
         {
-            var type = StringDefined.Create("Test", 100);
+            var type = new StringDefined("Test", 100);
             
             type.SetValue("This is a test string to set the value with.");
 
@@ -137,7 +136,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void SetValue_MultipleTimes_ShouldBeExpectedEachTime()
         {
-            var type = StringDefined.Create("Test", 100);
+            var type = new StringDefined("Test", 100);
             
             type.SetValue("This is a test string to set the value with.");
             type.Value.Should().Be("This is a test string to set the value with.");
@@ -152,7 +151,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void ToString_WhenCalled_ShouldBeName()
         {
-            var type = (StringDefined)StringDefined.Create("Test", 10);
+            var type = new StringDefined("Test", 10);
 
             type.ToString().Should().Be("Test");
         }
@@ -160,8 +159,8 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void TypedEquals_AreEqual_ShouldBeTrue()
         {
-            var first = (StringDefined)StringDefined.Create("Test", 10);
-            var second = (StringDefined)StringDefined.Create("Test", 10);
+            var first = new StringDefined("Test", 10);
+            var second = new StringDefined("Test", 10);
 
             var result = first.Equals(second);
 
@@ -171,7 +170,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void TypedEquals_AreSame_ShouldBeTrue()
         {
-            var first = (StringDefined)StringDefined.Create("Test", 10);
+            var first = new StringDefined("Test", 10);
 
             var result = first.Equals(first);
 
@@ -182,7 +181,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void TypedEquals_Null_ShouldBeFalse()
         {
-            var first = (StringDefined)StringDefined.Create("Test", 10);
+            var first = new StringDefined("Test", 10);
 
             var result = first.Equals(null);
 
@@ -192,8 +191,8 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void ObjectEquals_AreEqual_ShouldBeTrue()
         {
-            var first = (StringDefined)StringDefined.Create("Test", 10);
-            var second = (StringDefined)StringDefined.Create("Test", 10);
+            var first = new StringDefined("Test", 10);
+            var second = new StringDefined("Test", 10);
 
             var result = first.Equals((object)second);
 
@@ -203,7 +202,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void ObjectEquals_AreSame_ShouldBeTrue()
         {
-            var first = (StringDefined)StringDefined.Create("Test", 10);
+            var first = new StringDefined("Test", 10);
             var second = first;
 
             var result = first.Equals((object)second);
@@ -215,7 +214,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void ObjectEquals_Null_ShouldBeFalse()
         {
-            var first = (StringDefined)StringDefined.Create("Test", 10);
+            var first = new StringDefined("Test", 10);
 
             var result = first.Equals((object)null);
 
@@ -225,8 +224,8 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void OperatorEquals_AreEqual_ShouldBeTrue()
         {
-            var first = (StringDefined)StringDefined.Create("Test", 10);
-            var second = (StringDefined)StringDefined.Create("Test", 10);
+            var first = new StringDefined("Test", 10);
+            var second = new StringDefined("Test", 10);
 
             var result = first == second;
 
@@ -236,8 +235,8 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void OperatorNotEquals_AreEqual_ShouldBeFalse()
         {
-            var first = (StringDefined)StringDefined.Create("Test", 10);
-            var second = (StringDefined)StringDefined.Create("Test", 10);
+            var first = new StringDefined("Test", 10);
+            var second = new StringDefined("Test", 10);
 
             var result = first != second;
 
@@ -247,7 +246,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void GetHashCode_WhenCalled_ShouldNotBeZero()
         {
-            var first = StringDefined.Create("Test", 10);
+            var first = new StringDefined("Test", 10);
 
             var hash = first.GetHashCode();
 

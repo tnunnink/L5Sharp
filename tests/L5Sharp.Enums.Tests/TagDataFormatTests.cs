@@ -1,6 +1,5 @@
 ﻿using FluentAssertions;
-using L5Sharp.Types;
-using L5Sharp.Types.Predefined;
+using L5Sharp.Predefined;
 using NUnit.Framework;
 
 namespace L5Sharp.Enums.Tests

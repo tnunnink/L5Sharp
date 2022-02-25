@@ -1,16 +1,16 @@
 ﻿using L5Sharp.Abstractions;
+using L5Sharp.Atomics;
 using L5Sharp.Enums;
 using L5Sharp.Factories;
-using L5Sharp.Types.Atomics;
 
 // ReSharper disable InconsistentNaming Logix naming
 
-namespace L5Sharp.Types.Predefined
+namespace L5Sharp.Predefined
 {
     /// <summary>
     /// A predefined or built in data type in Logix that is a part of the alarm instruction set.
     /// </summary>
-    public sealed class AlarmAnalog : ComplexType
+    public sealed class AlarmAnalog : ComplexTypeBase
     {
         /// <summary>
         /// Creates a new <see cref="AlarmAnalog"/> data type instance.

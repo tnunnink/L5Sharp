@@ -1,16 +1,16 @@
 ﻿using L5Sharp.Abstractions;
+using L5Sharp.Atomics;
 using L5Sharp.Enums;
 using L5Sharp.Factories;
-using L5Sharp.Types.Atomics;
 
 // ReSharper disable InconsistentNaming RSLogix naming
 
-namespace L5Sharp.Types.Predefined
+namespace L5Sharp.Predefined
 {
     /// <summary>
     /// A predefined or built in data type used with message instructions. 
     /// </summary>
-    public sealed class Message : ComplexType
+    public sealed class Message : ComplexTypeBase
     {
         /// <summary>
         /// Creates a new <see cref="Message"/> data type instance.

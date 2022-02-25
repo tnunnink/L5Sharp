@@ -3,37 +3,46 @@ using System.ComponentModel;
 using L5Sharp.Converters;
 using L5Sharp.Enums;
 
-namespace L5Sharp.Types.Atomics
+namespace L5Sharp.Atomics
 {
     /// <summary>
-    /// Represents a <b>LINT</b> Logix atomic data type, or a type analogous to a <see cref="long"/>.
+    /// Represents a BOOL Logix atomic data type.
     /// </summary>
-    [TypeConverter(typeof(LintConverter))]
-    public sealed class Lint : IAtomicType<long>, IEquatable<Lint>, IComparable<Lint>
+    [TypeConverter(typeof(BoolConverter))]
+    public sealed class Bool : IAtomicType<bool>, IEquatable<Bool>, IComparable<Bool>
     {
         /// <summary>
-        /// Creates a new default <see cref="Lint"/> type.
+        /// Creates a new default <see cref="Bool"/> type.
         /// </summary>
-        public Lint()
+        public Bool()
         {
-            Name = nameof(Lint).ToUpper();
+            Name = nameof(Bool).ToUpper();
             Value = default;
         }
 
         /// <summary>
-        /// Creates a new <see cref="Lint"/> with the provided value.
+        /// Creates a new <see cref="Bool"/> with the provided value.
         /// </summary>
         /// <param name="value">The value to initialize the type with.</param>
-        public Lint(long value) : this()
+        public Bool(bool value) : this()
         {
             Value = value;
+        }
+
+        /// <summary>
+        /// Creates a new instance of a Bool with the provided number.
+        /// </summary>
+        /// <param name="number">A number that will be evaluated to true if greater that zero, otherwise false</param>
+        public Bool(int number) : this()
+        {
+            Value = number > 0;
         }
 
         /// <inheritdoc />
         public string Name { get; }
 
         /// <inheritdoc />
-        public string Description => $"Logix representation of a {typeof(long)}";
+        public string Description => $"Logix representation of a {typeof(bool)}";
 
         /// <inheritdoc />
         public DataTypeFamily Family => DataTypeFamily.None;
@@ -42,25 +51,25 @@ namespace L5Sharp.Types.Atomics
         public DataTypeClass Class => DataTypeClass.Atomic;
 
         /// <inheritdoc />
-        public long Value { get; private set; }
+        public bool Value { get; private set; }
 
         object IAtomicType.Value => Value;
 
         /// <inheritdoc />
-        public void SetValue(long value) => Value = value;
+        public void SetValue(bool value) => Value = value;
 
         /// <inheritdoc />
         public void SetValue(object value)
         {
             if (value is null)
                 throw new ArgumentNullException(nameof(value));
-            
+
             var converter = TypeDescriptor.GetConverter(GetType());
 
             if (!converter.CanConvertFrom(value.GetType()))
                 throw new ArgumentException($"Value of type '{value.GetType()}' is not a valid for {GetType()}");
 
-            Value = (Lint)converter.ConvertFrom(value)!;
+            Value = (Bool)converter.ConvertFrom(value)!;
         }
 
         /// <inheritdoc />
@@ -68,34 +77,34 @@ namespace L5Sharp.Types.Atomics
             radix is not null ? radix.Format(this) : Radix.Default(this).Format(this);
 
         /// <inheritdoc />
-        public IDataType Instantiate() => new Lint();
+        public IDataType Instantiate() => new Bool();
 
         /// <summary>
-        /// Converts the provided <see cref="long"/> to a <see cref="Lint"/> value.
+        /// Converts the provided <see cref="bool"/> to a <see cref="Bool"/> value.
         /// </summary>
         /// <param name="value">The value to convert.</param>
-        /// <returns>A <see cref="Lint"/> value.</returns>
-        public static implicit operator Lint(long value) => new(value);
+        /// <returns>A <see cref="Bool"/> value.</returns>
+        public static implicit operator Bool(bool value) => new(value);
 
         /// <summary>
-        /// Converts the provided <see cref="Lint"/> to a <see cref="long"/> value.
+        /// Converts the provided <see cref="Bool"/> to a <see cref="bool"/> value.
         /// </summary>
         /// <param name="atomic">The value to convert.</param>
-        /// <returns>A <see cref="long"/> type value.</returns>
-        public static implicit operator long(Lint atomic) => atomic.Value;
+        /// <returns>A <see cref="bool"/> type value.</returns>
+        public static implicit operator bool(Bool atomic) => atomic.Value;
 
         /// <summary>
-        /// Converts the provided <see cref="string"/> to a <see cref="Lint"/> value. 
+        /// Converts the provided <see cref="string"/> to a <see cref="Bool"/> value. 
         /// </summary>
         /// <param name="input">The string value to convert.</param>
         /// <returns>
-        /// If the string value is able to be parsed, a new instance of a <see cref="Lint"/> with the value
+        /// If the string value is able to be parsed, a new instance of a <see cref="Bool"/> with the value
         /// provided. If not, then a default instance value.
         /// </returns>
-        public static implicit operator Lint(string input) => Radix.ParseValue<Lint>(input);
+        public static implicit operator Bool(string input) => Radix.ParseValue<Bool>(input);
 
         /// <inheritdoc />
-        public bool Equals(Lint? other)
+        public bool Equals(Bool? other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
@@ -103,16 +112,11 @@ namespace L5Sharp.Types.Atomics
         }
 
         /// <inheritdoc />
-        public override bool Equals(object? obj)
-        {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((Lint)obj);
-        }
+        public override bool Equals(object? obj) => ReferenceEquals(this, obj) || obj is Bool other && Equals(other);
 
         /// <inheritdoc />
         public override int GetHashCode() => Name.GetHashCode();
-        
+
         /// <inheritdoc />
         public override string ToString() => Name;
 
@@ -122,7 +126,7 @@ namespace L5Sharp.Types.Atomics
         /// <param name="left">An object to compare.</param>
         /// <param name="right">An object to compare.</param>
         /// <returns>true if the objects are equal, otherwise, false.</returns>
-        public static bool operator ==(Lint left, Lint right) => Equals(left, right);
+        public static bool operator ==(Bool? left, Bool? right) => Equals(left, right);
 
         /// <summary>
         /// Determines whether the objects are not equal.
@@ -130,10 +134,10 @@ namespace L5Sharp.Types.Atomics
         /// <param name="left">An object to compare.</param>
         /// <param name="right">An object to compare.</param>
         /// <returns>true if the objects are not equal, otherwise, false.</returns>
-        public static bool operator !=(Lint left, Lint right) => !Equals(left, right);
+        public static bool operator !=(Bool? left, Bool? right) => !Equals(left, right);
 
         /// <inheritdoc />
-        public int CompareTo(Lint? other)
+        public int CompareTo(Bool? other)
         {
             if (ReferenceEquals(this, other)) return 0;
             return ReferenceEquals(null, other) ? 1 : Value.CompareTo(other.Value);

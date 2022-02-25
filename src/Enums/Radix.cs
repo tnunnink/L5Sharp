@@ -6,8 +6,8 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using Ardalis.SmartEnum;
+using L5Sharp.Atomics;
 using L5Sharp.Extensions;
-using L5Sharp.Types.Atomics;
 
 // ReSharper disable StringLiteralTypo
 

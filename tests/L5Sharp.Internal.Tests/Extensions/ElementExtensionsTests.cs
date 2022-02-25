@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Xml.Linq;
 using FluentAssertions;
+using L5Sharp.Atomics;
 using L5Sharp.Enums;
 using L5Sharp.Extensions;
 using L5Sharp.Factories;
-using L5Sharp.Types;
-using L5Sharp.Types.Atomics;
 using NUnit.Framework;
 
 namespace L5Sharp.Internal.Tests.Extensions

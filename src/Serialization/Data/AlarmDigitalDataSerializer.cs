@@ -2,8 +2,7 @@
 using System.Xml.Linq;
 using L5Sharp.Extensions;
 using L5Sharp.L5X;
-using L5Sharp.Types;
-using L5Sharp.Types.Predefined;
+using L5Sharp.Predefined;
 
 namespace L5Sharp.Serialization.Data
 {

@@ -1,7 +1,7 @@
 ﻿using System;
 using L5Sharp.Enums;
 
-namespace L5Sharp.Types.Predefined
+namespace L5Sharp.Predefined
 {
     /// <summary>
     /// Represents a data type that is undefined.

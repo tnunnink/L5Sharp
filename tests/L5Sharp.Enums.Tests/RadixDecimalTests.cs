@@ -1,6 +1,6 @@
 ﻿using System;
 using FluentAssertions;
-using L5Sharp.Types.Atomics;
+using L5Sharp.Atomics;
 using NUnit.Framework;
 
 namespace L5Sharp.Enums.Tests

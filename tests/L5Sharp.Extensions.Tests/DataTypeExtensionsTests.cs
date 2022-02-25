@@ -3,14 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
 using L5Sharp.Abstractions;
+using L5Sharp.Atomics;
 using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Factories;
-using L5Sharp.Types;
-using L5Sharp.Types.Atomics;
-using L5Sharp.Types.Predefined;
+using L5Sharp.Predefined;
 using NUnit.Framework;
-using String = L5Sharp.Types.Predefined.String;
+using String = L5Sharp.Predefined.String;
 
 namespace L5Sharp.Extensions.Tests
 {
@@ -566,7 +565,7 @@ namespace L5Sharp.Extensions.Tests
         }
     }
     
-    public class MyNestedType : ComplexType
+    public class MyNestedType : ComplexTypeBase
     {
         public MyNestedType() : base(nameof(MyNestedType))
         {
@@ -581,7 +580,7 @@ namespace L5Sharp.Extensions.Tests
         protected override IDataType New() => new MyNestedType();
     }
     
-    public class MyOtherNestedType : ComplexType
+    public class MyOtherNestedType : ComplexTypeBase
     {
         public MyOtherNestedType() : base(nameof(MyOtherNestedType))
         {

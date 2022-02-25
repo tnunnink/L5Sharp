@@ -3,28 +3,28 @@ using System.ComponentModel;
 using L5Sharp.Converters;
 using L5Sharp.Enums;
 
-namespace L5Sharp.Types.Atomics
+namespace L5Sharp.Atomics
 {
     /// <summary>
-    /// Represents a <b>UInt</b> Logix atomic data type, or a type analogous to a <see cref="ushort"/>.
+    /// Represents a <b>SINT</b> Logix atomic data type, or a type analogous to a <see cref="sbyte"/>.
     /// </summary>
-    [TypeConverter(typeof(UIntConverter))]
-    public class UInt : IAtomicType<ushort>, IEquatable<UInt>, IComparable<UInt>
+    [TypeConverter(typeof(SintConverter))]
+    public sealed class Sint : IAtomicType<sbyte>, IEquatable<Sint>, IComparable<Sint>
     {
         /// <summary>
-        /// Creates a new default <see cref="UInt"/> type.
+        /// Creates a new default <see cref="Sint"/> type.
         /// </summary>
-        public UInt()
+        public Sint()
         {
-            Name = nameof(UInt).ToUpper();
+            Name = nameof(Sint).ToUpper();
             Value = default;
         }
 
         /// <summary>
-        /// Creates a new <see cref="UInt"/> with the provided value.
+        /// Creates a new <see cref="Sint"/> with the provided value.
         /// </summary>
         /// <param name="value">The value to initialize the type with.</param>
-        public UInt(ushort value) : this()
+        public Sint(sbyte value) : this()
         {
             Value = value;
         }
@@ -33,7 +33,7 @@ namespace L5Sharp.Types.Atomics
         public string Name { get; }
 
         /// <inheritdoc />
-        public string Description => $"Logix representation of a {typeof(ushort)}";
+        public string Description => $"Logix representation of a {typeof(sbyte)}";
 
         /// <inheritdoc />
         public DataTypeFamily Family => DataTypeFamily.None;
@@ -42,25 +42,25 @@ namespace L5Sharp.Types.Atomics
         public DataTypeClass Class => DataTypeClass.Atomic;
 
         /// <inheritdoc />
-        public ushort Value { get; private set; }
+        public sbyte Value { get; private set; }
 
         object IAtomicType.Value => Value;
 
         /// <inheritdoc />
-        public void SetValue(ushort value) => Value = value;
+        public void SetValue(sbyte value) => Value = value;
 
         /// <inheritdoc />
         public void SetValue(object value)
         {
             if (value is null)
                 throw new ArgumentNullException(nameof(value));
-
+            
             var converter = TypeDescriptor.GetConverter(GetType());
 
             if (!converter.CanConvertFrom(value.GetType()))
-                throw new ArgumentException($"Value of type '{value.GetType()}' can not be set for type {GetType()}");
+                throw new ArgumentException($"Value of type '{value.GetType()}' is not a valid for {GetType()}");
 
-            Value = (UInt)converter.ConvertFrom(value)!;
+            Value = (Sint)converter.ConvertFrom(value)!;
         }
 
         /// <inheritdoc />
@@ -68,35 +68,34 @@ namespace L5Sharp.Types.Atomics
             radix is not null ? radix.Format(this) : Radix.Default(this).Format(this);
 
         /// <inheritdoc />
-        public IDataType Instantiate() => new UInt();
+        public IDataType Instantiate() => new Sint();
 
         /// <summary>
-        /// Converts the provided <see cref="ushort"/> to a <see cref="UInt"/> value.
+        /// Converts the provided <see cref="byte"/> to a <see cref="Sint"/> value.
         /// </summary>
         /// <param name="value">The value to convert.</param>
-        /// <returns>A <see cref="UInt"/> value.</returns>
-        public static implicit operator UInt(ushort value) => new(value);
+        /// <returns>A <see cref="Sint"/> value.</returns>
+        public static implicit operator Sint(sbyte value) => new(value);
 
         /// <summary>
-        /// Converts the provided <see cref="UInt"/> to a <see cref="ushort"/> value.
+        /// Converts the provided <see cref="Sint"/> to a <see cref="byte"/> value.
         /// </summary>
         /// <param name="atomic">The value to convert.</param>
-        /// <returns>A <see cref="ushort"/> type value.</returns>
-        public static implicit operator ushort(UInt atomic) => atomic.Value;
+        /// <returns>A <see cref="byte"/> type value.</returns>
+        public static implicit operator sbyte(Sint atomic) => atomic.Value;
 
         /// <summary>
-        /// Converts the provided <see cref="string"/> to a <see cref="UInt"/> value. 
+        /// Converts the provided <see cref="string"/> to a <see cref="Sint"/> value. 
         /// </summary>
         /// <param name="input">The string value to convert.</param>
         /// <returns>
-        /// If the string value is able to be parsed, a new instance of a <see cref="UInt"/> with the value
+        /// If the string value is able to be parsed, a new instance of a <see cref="Sint"/> with the value
         /// provided. If not, then a default instance value.
         /// </returns>
-        public static implicit operator UInt(string input) =>
-            ushort.TryParse(input, out var result) ? new UInt(result) : Radix.ParseValue<UInt>(input);
+        public static implicit operator Sint(string input) => Radix.ParseValue<Sint>(input);
 
         /// <inheritdoc />
-        public bool Equals(UInt? other)
+        public bool Equals(Sint? other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
@@ -108,12 +107,12 @@ namespace L5Sharp.Types.Atomics
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((UInt)obj);
+            return obj.GetType() == GetType() && Equals((Sint)obj);
         }
-
+        
         /// <inheritdoc />
         public override int GetHashCode() => Name.GetHashCode();
-
+        
         /// <inheritdoc />
         public override string ToString() => Name;
 
@@ -123,7 +122,7 @@ namespace L5Sharp.Types.Atomics
         /// <param name="left">An object to compare.</param>
         /// <param name="right">An object to compare.</param>
         /// <returns>true if the objects are equal, otherwise, false.</returns>
-        public static bool operator ==(UInt left, UInt right) => Equals(left, right);
+        public static bool operator ==(Sint left, Sint right) => Equals(left, right);
 
         /// <summary>
         /// Determines whether the objects are not equal.
@@ -131,10 +130,10 @@ namespace L5Sharp.Types.Atomics
         /// <param name="left">An object to compare.</param>
         /// <param name="right">An object to compare.</param>
         /// <returns>true if the objects are not equal, otherwise, false.</returns>
-        public static bool operator !=(UInt left, UInt right) => !Equals(left, right);
+        public static bool operator !=(Sint left, Sint right) => !Equals(left, right);
 
         /// <inheritdoc />
-        public int CompareTo(UInt? other)
+        public int CompareTo(Sint? other)
         {
             if (ReferenceEquals(this, other)) return 0;
             return ReferenceEquals(null, other) ? 1 : Value.CompareTo(other.Value);

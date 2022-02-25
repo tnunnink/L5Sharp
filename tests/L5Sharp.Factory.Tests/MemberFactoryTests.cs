@@ -1,9 +1,8 @@
 ﻿using System;
 using FluentAssertions;
+using L5Sharp.Atomics;
 using L5Sharp.Core;
 using L5Sharp.Factories;
-using L5Sharp.Types;
-using L5Sharp.Types.Atomics;
 using NUnit.Framework;
 
 namespace L5Sharp.Factory.Tests

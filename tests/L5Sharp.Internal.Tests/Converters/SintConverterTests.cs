@@ -2,9 +2,9 @@
 using System.ComponentModel;
 using AutoFixture;
 using FluentAssertions;
+using L5Sharp.Atomics;
 using L5Sharp.Converters;
 using L5Sharp.Internal.Tests.Specimens;
-using L5Sharp.Types.Atomics;
 using NUnit.Framework;
 
 namespace L5Sharp.Internal.Tests.Converters

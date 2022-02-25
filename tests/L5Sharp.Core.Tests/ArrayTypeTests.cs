@@ -4,11 +4,10 @@ using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
 using L5Sharp.Abstractions;
+using L5Sharp.Atomics;
 using L5Sharp.Enums;
-using L5Sharp.Types;
-using L5Sharp.Types.Atomics;
 using NUnit.Framework;
-using String = L5Sharp.Types.Predefined.String;
+using String = L5Sharp.Predefined.String;
 
 namespace L5Sharp.Core.Tests
 {
@@ -32,9 +31,9 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void New_AbstractType_ShouldThrowArgumentException()
         {
-            FluentActions.Invoking(() => new ArrayType<ComplexType>(10))
+            FluentActions.Invoking(() => new ArrayType<ComplexTypeBase>(10))
                 .Should().Throw<ArgumentException>().WithMessage(
-                    $"The specified type '{typeof(ComplexType)} is abstract. Abstract types can not be instantiated.");
+                    $"The specified type '{typeof(ComplexTypeBase)} is abstract. Abstract types can not be instantiated.");
         }
 
         [Test]

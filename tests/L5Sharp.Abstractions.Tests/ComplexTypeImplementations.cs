@@ -1,14 +1,12 @@
 ﻿using System.Collections.Generic;
-using L5Sharp.Core;
+using L5Sharp.Atomics;
 using L5Sharp.Enums;
 using L5Sharp.Factories;
-using L5Sharp.Types;
-using L5Sharp.Types.Atomics;
-using L5Sharp.Types.Predefined;
+using L5Sharp.Predefined;
 
 namespace L5Sharp.Abstractions.Tests
 {
-    public class TestComplex : ComplexType
+    public class TestComplex : ComplexTypeBase
     {
         public TestComplex() : base(nameof(TestComplex))
         {
@@ -22,7 +20,7 @@ namespace L5Sharp.Abstractions.Tests
         public IMember<NestedComplex> Nested = Member.Create<NestedComplex>(nameof(Nested));
     }
 
-    public class NestedComplex : ComplexType
+    public class NestedComplex : ComplexTypeBase
     {
         public NestedComplex() : base(nameof(NestedComplex))
         {
@@ -36,7 +34,7 @@ namespace L5Sharp.Abstractions.Tests
         public IMember<Dint> M3 { get; } = Member.Create<Dint>(nameof(M3));
     }
 
-    public class MemberConstructorComplex : ComplexType
+    public class MemberConstructorComplex : ComplexTypeBase
     {
         public MemberConstructorComplex() : base(nameof(MemberLessComplex), new List<IMember<IDataType>>
         {
@@ -51,7 +49,7 @@ namespace L5Sharp.Abstractions.Tests
         protected override IDataType New() => new MemberConstructorComplex();
     }
 
-    public class MemberLessComplex : ComplexType
+    public class MemberLessComplex : ComplexTypeBase
     {
         public MemberLessComplex() : base(nameof(MemberLessComplex))
         {
@@ -62,7 +60,7 @@ namespace L5Sharp.Abstractions.Tests
         protected override IDataType New() => new MemberLessComplex();
     }
 
-    public class NullNameComplex : ComplexType
+    public class NullNameComplex : ComplexTypeBase
     {
         public NullNameComplex() : base(null!)
         {
@@ -73,7 +71,7 @@ namespace L5Sharp.Abstractions.Tests
         protected override IDataType New() => new NullNameComplex();
     }
 
-    public class DuplicateMemberNameComplex : ComplexType
+    public class DuplicateMemberNameComplex : ComplexTypeBase
     {
         public DuplicateMemberNameComplex() :
             base(nameof(DuplicateMemberNameComplex))
@@ -88,7 +86,7 @@ namespace L5Sharp.Abstractions.Tests
         protected override IDataType New() => new DuplicateMemberNameComplex();
     }
 
-    public class NullMemberComplex : ComplexType
+    public class NullMemberComplex : ComplexTypeBase
     {
         public NullMemberComplex() : base(nameof(NullMemberComplex))
         {

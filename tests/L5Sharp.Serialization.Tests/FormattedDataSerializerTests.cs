@@ -3,11 +3,10 @@ using System.Xml.Linq;
 using ApprovalTests;
 using ApprovalTests.Reporters;
 using FluentAssertions;
+using L5Sharp.Predefined;
 using L5Sharp.Serialization.Data;
-using L5Sharp.Types;
-using L5Sharp.Types.Predefined;
 using NUnit.Framework;
-using String = L5Sharp.Types.Predefined.String;
+using String = L5Sharp.Predefined.String;
 
 namespace L5Sharp.Serialization.Tests
 {

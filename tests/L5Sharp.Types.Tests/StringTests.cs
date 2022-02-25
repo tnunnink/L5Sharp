@@ -1,11 +1,11 @@
 ﻿using System;
 using AutoFixture;
 using FluentAssertions;
+using L5Sharp.Atomics;
 using L5Sharp.Core;
 using L5Sharp.Enums;
-using L5Sharp.Types.Atomics;
 using NUnit.Framework;
-using String = L5Sharp.Types.Predefined.String;
+using String = L5Sharp.Predefined.String;
 
 namespace L5Sharp.Types.Tests
 {
@@ -17,7 +17,7 @@ namespace L5Sharp.Types.Tests
         {
             var type = new String();
 
-            type.Should().NotBeNull();
+            type.Should<String>().NotBeNull();
         }
         
         [Test]
@@ -97,7 +97,7 @@ namespace L5Sharp.Types.Tests
         {
             String type = "This is a test";
 
-            type.Should().Be("This is a test");
+            type.Should<String>().Be("This is a test");
         }
         
         [Test]

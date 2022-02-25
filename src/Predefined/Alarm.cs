@@ -1,16 +1,16 @@
 ﻿using L5Sharp.Abstractions;
+using L5Sharp.Atomics;
 using L5Sharp.Enums;
 using L5Sharp.Factories;
-using L5Sharp.Types.Atomics;
 
 // ReSharper disable InconsistentNaming I want to keep the naming consistent with Logix (for now).
 
-namespace L5Sharp.Types.Predefined
+namespace L5Sharp.Predefined
 {
     /// <summary>
     /// A predefined or built in data type in Logix that is a part of the alarm instruction set.
     /// </summary>
-    public sealed class Alarm : ComplexType
+    public sealed class Alarm : ComplexTypeBase
     {
         /// <summary>
         /// Creates a new <see cref="Alarm"/> data type instance.

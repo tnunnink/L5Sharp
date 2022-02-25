@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using AutoFixture;
 using FluentAssertions;
-using L5Sharp.Enums;
-using L5Sharp.Types;
 using NUnit.Framework;
 
 namespace L5Sharp.Core.Tests

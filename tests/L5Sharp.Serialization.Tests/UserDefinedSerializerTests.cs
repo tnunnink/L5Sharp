@@ -4,12 +4,11 @@ using System.Xml.Linq;
 using ApprovalTests;
 using ApprovalTests.Reporters;
 using FluentAssertions;
+using L5Sharp.Atomics;
 using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Factories;
 using L5Sharp.Serialization.Components;
-using L5Sharp.Types;
-using L5Sharp.Types.Atomics;
 using NUnit.Framework;
 
 namespace L5Sharp.Serialization.Tests
