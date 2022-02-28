@@ -56,6 +56,33 @@ namespace L5Sharp
         IModule? New(ComponentName name, CatalogNumber catalogNumber, byte slot = default, string? description = null,
             ICatalogService? catalogService = null);
 
+        /// <summary>
+        /// Creates a new <see cref="IModule"/> object and adds it as a child to the current module local port.
+        /// </summary>
+        /// <param name="name">The name of the module to create.</param>
+        /// <param name="catalogNumber">The catalog number of the module to create.</param>
+        /// <param name="ipAddress">The optional ip address at which to assign the new module.
+        /// If the provided address is not available (i.e. taken by another module), and the bus type is a ethernet
+        /// based port, the next available slot address will be determined. If not provided will default to '0.0.0.0'.
+        /// </param>
+        /// <param name="description">The optional description of the module. Will default to an empty string.</param>
+        /// <param name="catalogService">The optional service provider implementation that retrieves the
+        /// correct <see cref="ModuleDefinition"/> using the provided catalog number. If not provided, the default will
+        /// use the built in <see cref="ModuleCatalog"/> implementation, which relies on Logix software installation
+        /// on the current environment.</param>
+        /// <returns>The new <see cref="IModule"/> instance that was created if the current local port bus is not null
+        /// (i.e. this module can actually hold child modules); otherwise null.</returns>
+        /// <exception cref="ArgumentNullException">name or catalog number are null.</exception>
+        /// <exception cref="ComponentNameCollisionException">name already exists as a child of the module.</exception>
+        /// <exception cref="ModuleNotFoundException">catalogNumber could not be found by the catalogService.</exception>
+        /// <exception cref="ArgumentException">The module definition obtained for catalogNumber
+        /// does not have a valid upstream port needed to form a connection to the current module local port bus.
+        /// </exception>
+        /// <remarks>
+        /// This overload is intended for adding rack or chassis based modules to the current parent module. This is
+        /// just due to the order of the arguments to make the api as succinct as possible. This will not technically
+        /// fail if the current module local port is an ethernet type port.
+        /// </remarks>
         IModule? New(ComponentName name, CatalogNumber catalogNumber, IPAddress? ipAddress = null,
             string? description = null, ICatalogService? catalogService = null);
 

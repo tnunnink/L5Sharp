@@ -8,13 +8,16 @@ using L5Sharp.Extensions;
 namespace L5Sharp.Core
 {
     /// <summary>
-    /// Represents a string value of a tag member name...
+    /// Represents a string tag name value used to identify members of a <see cref="ITag{TDataType}"/> component.
     /// </summary>
     public class TagName : IEquatable<TagName>, IComparable<TagName>
     {
         private const string ArrayBracket = "[";
         private const string MemberSeparator = ".";
-        private const string MembersPattern = @"\w+|\[[\d,]+\]";
+        private const string TagNamePattern = @"^[\w\.[\],:]+$";
+        private const string MemberPattern = @"^[\w:]+$|^\[[\d,]+\]$";
+        private const string MembersPattern = @"[\w:]+|\[[\d,]+\]";
+        private const string PartsPattern = @"\w+|\[[\d,]+\]";
         private readonly string _tagName;
 
         /// <summary>
@@ -29,8 +32,8 @@ namespace L5Sharp.Core
             if (string.IsNullOrEmpty(tagName))
                 throw new ArgumentException("TagName can not be null or empty.");
 
-            if (!Regex.IsMatch(tagName, @"^[\w\.[\],]+$", RegexOptions.Compiled))
-                throw new FormatException();
+            if (!Regex.IsMatch(tagName, TagNamePattern, RegexOptions.Compiled))
+                throw new FormatException($"The provided tag name '{tagName}' does not have a valid format.");
 
             _tagName = tagName;
         }
@@ -41,8 +44,7 @@ namespace L5Sharp.Core
         /// <remarks>
         /// The base name of the the tag represents the root or first member of the members collection.
         /// </remarks>
-        public string Base =>
-            Regex.Matches(_tagName, MembersPattern, RegexOptions.Compiled).Select(m => m.Value).First();
+        public string Root => _tagName[.._tagName.IndexOf(MemberSeparator, StringComparison.Ordinal)];
 
         /// <summary>
         /// Gets the operand portion of the <see cref="TagName"/> value.
@@ -52,7 +54,7 @@ namespace L5Sharp.Core
         /// the full tag name value without the leading base name. The operand will include any leading '.' character.
         /// </remarks>
         /// <seealso cref="Path"/>
-        public string Operand => _tagName.Remove(0, Base.Length);
+        public string Operand => _tagName.Remove(0, Root.Length);
 
         /// <summary>
         /// Gets the member path of the <see cref="TagName"/> value.
@@ -70,10 +72,21 @@ namespace L5Sharp.Core
         /// </summary>
         /// <remarks>
         /// The members of a tag name represent all the individual constituent parts of the full name. This includes
-        /// the index array names if any exist. 
+        /// the index arrays if any exist. For Modules, the root is considered a single member.
+        /// The root will include all character up to the first '.' member separator character.
         /// </remarks>
         public IEnumerable<string> Members =>
             Regex.Matches(_tagName, MembersPattern, RegexOptions.Compiled).Select(m => m.Value);
+
+        /// <summary>
+        /// Gets the each part of the tag name string separated by ':' or '.' characters.
+        /// </summary>
+        /// <remarks>
+        /// This is similar to <see cref="Members"/>, except it splits the string by colons as well. If the tag name
+        /// value is not a module tag, then <see cref="Parts"/> should be equivalent to <see cref="Members"/> 
+        /// </remarks>
+        public IEnumerable<string> Parts =>
+            Regex.Matches(_tagName, PartsPattern, RegexOptions.Compiled).Select(m => m.Value);
 
         /// <summary>
         /// Combines two strings into a single <see cref="TagName"/> value.
@@ -83,7 +96,7 @@ namespace L5Sharp.Core
         /// <returns>A new <see cref="TagName"/> value that is the combination of the provided names.</returns>
         /// <remarks>
         /// This method effectively concatenates the strings but inserts a '.' if right is not a index
-        /// bracket (i.e. array member name.
+        /// bracket (i.e. array member name).
         /// </remarks>
         public static TagName Combine(string left, string right) =>
             new(right.StartsWith(ArrayBracket) || right.StartsWith(MemberSeparator)
@@ -102,12 +115,12 @@ namespace L5Sharp.Core
 
             foreach (var name in members)
             {
-                if (!Regex.IsMatch(name, MembersPattern))
-                    throw new ArgumentException($"The provided name '{name}' is not a valid member name format.");
+                if (!Regex.IsMatch(name, MemberPattern))
+                    throw new FormatException($"The provided name '{name}' is not a valid member name format.");
 
                 if (!name.StartsWith(ArrayBracket) && builder.Length > 1)
                     builder.Append(MemberSeparator);
-                
+
                 builder.Append(name);
             }
 
@@ -119,7 +132,9 @@ namespace L5Sharp.Core
         /// </summary>
         /// <param name="tagName">The <see cref="TagName"/> value to convert.</param>
         /// <returns>A new <see cref="string"/> value representing the value of the tag name.</returns>
-        public static implicit operator string(TagName tagName) => tagName._tagName;
+        public static implicit operator string(TagName tagName) => tagName is not null
+            ? tagName._tagName
+            : throw new ArgumentNullException(nameof(tagName));
 
         /// <summary>
         /// Converts a <see cref="string"/> to a <see cref="TagName"/> value.
@@ -140,7 +155,7 @@ namespace L5Sharp.Core
         }
 
         /// <inheritdoc />
-        public override bool Equals(object? obj) => obj is TagName tagName && Equals(tagName);
+        public override bool Equals(object? obj) => Equals(obj as TagName);
 
         /// <inheritdoc />
         public override int GetHashCode() => _tagName.GetHashCode();
@@ -167,7 +182,7 @@ namespace L5Sharp.Core
             if (ReferenceEquals(this, other)) return 0;
             return ReferenceEquals(null, other)
                 ? 1
-                : string.Compare(_tagName, other._tagName, StringComparison.Ordinal);
+                : string.Compare(_tagName, other._tagName, StringComparison.OrdinalIgnoreCase);
         }
     }
 }

@@ -36,10 +36,5 @@ namespace L5Sharp
         /// Get the <see cref="ITask"/> repository instance for the current <see cref="ILogixContext"/>.
         /// </summary>
         IReadOnlyRepository<ITask> Tasks { get; }
-        
-        /// <summary>
-        /// Saves the content of the <see cref="ILogixContext"/>.
-        /// </summary>
-        void Save();
     }
 }

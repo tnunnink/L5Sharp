@@ -11,7 +11,7 @@
         <AssemblyVersion>1.0.0.0</AssemblyVersion>
         <FileVersion>1.0.0.0</FileVersion>
         <TargetFramework>netstandard2.1</TargetFramework>
-        <Description>Adds change notification, change tracking, and validation logic for simple entity objects using wrappers.</Description>
+        <Description>C# API for querying and manipulating RSLogix 5000 L5X import/export files.</Description>
         <RepositoryUrl>https://github.com/tnunnink/L5Sharp</RepositoryUrl>
         <PackageTags>csharp allen-bradely l5x logix plc-programming rockwell-automation logix5000</PackageTags>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
@@ -19,10 +19,11 @@
         <!--<PackageIcon>icon.png</PackageIcon>-->
         <RepositoryType>git</RepositoryType>
         <PackageReleaseNotes>Initial release.</PackageReleaseNotes>
+        <Copyright>Copyright (c) Timothy Nunnink 2022</Copyright>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Ardalis.SmartEnum" Version="2.0.1"/>
+        <PackageReference Include="Ardalis.SmartEnum" Version="2.0.1" />
     </ItemGroup>
 
     <ItemGroup>
@@ -35,11 +36,11 @@
     </ItemGroup>
 
     <ItemGroup>
-        <None Remove="L5Sharp.sln.DotSettings"/>
+        <None Remove="L5Sharp.sln.DotSettings" />
     </ItemGroup>
 
     <ItemGroup>
-        <None Remove="Resources\L5X.xsd"/>
+        <None Remove="Resources\L5X.xsd" />
         <!--<None Include="Resources\icon.png" Pack="true" PackagePath="\"/>-->
         <EmbeddedResource Include="Resources\L5X.xsd">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

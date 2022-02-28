@@ -241,6 +241,7 @@ namespace L5Sharp.Core
         /// <inheritdoc />
         public ModuleTags Tags { get; }
 
+        /// <inheritdoc />
         public IModuleCollection Modules { get; }
     }
 }

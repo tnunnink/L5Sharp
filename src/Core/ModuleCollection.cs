@@ -27,7 +27,7 @@ namespace L5Sharp.Core
             _bus?.New(name, catalogNumber, slot, null, description, catalogService);
 
         /// <inheritdoc />
-        public IModule? New(ComponentName name, CatalogNumber catalogNumber, IPAddress ipAddress,
+        public IModule? New(ComponentName name, CatalogNumber catalogNumber, IPAddress? ipAddress,
             string? description = null, ICatalogService? catalogService = null) =>
             _bus?.New(name, catalogNumber, 0, ipAddress, description, catalogService);
 

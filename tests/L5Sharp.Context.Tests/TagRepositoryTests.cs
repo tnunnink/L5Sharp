@@ -10,7 +10,7 @@ namespace L5Sharp.Context.Tests
         [Test]
         public void Contains_ValidComponent_ShouldBeTrue()
         {
-            var context = new L5XContext(Known.L5X);
+            var context = L5XContext.Load(Known.L5X);
 
             var result = context.Tags.Contains("SimpleDint");
 
@@ -20,7 +20,7 @@ namespace L5Sharp.Context.Tests
         [Test]
         public void Contains_InvalidComponent_ShouldBeFalse()
         {
-            var context = new L5XContext(Known.L5X);
+            var context = L5XContext.Load(Known.L5X);
 
             var result = context.Tags.Contains("FakeTag");
 
@@ -30,7 +30,7 @@ namespace L5Sharp.Context.Tests
         [Test]
         public void Contains_Null_ShouldBeFalse()
         {
-            var context = new L5XContext(Known.L5X);
+            var context = L5XContext.Load(Known.L5X);
 
             var result = context.Tags.Contains(null!);
 
@@ -40,7 +40,7 @@ namespace L5Sharp.Context.Tests
         [Test]
         public void Find_ComponentName_ExistingName_ShouldNotBeNull()
         {
-            var context = new L5XContext(Known.L5X);
+            var context = L5XContext.Load(Known.L5X);
 
             var component = context.Tags.Find("SimpleDint");
 
@@ -50,7 +50,7 @@ namespace L5Sharp.Context.Tests
         [Test]
         public void Find_ComponentName_NonExistingName_ShouldBeNull()
         {
-            var context = new L5XContext(Known.L5X);
+            var context = L5XContext.Load(Known.L5X);
 
             var component = context.Tags.Find("FakeType");
 
@@ -60,7 +60,7 @@ namespace L5Sharp.Context.Tests
         [Test]
         public void Find_Predicate_HasComponents_ShouldNotBeNull()
         {
-            var context = new L5XContext(Known.L5X);
+            var context = L5XContext.Load(Known.L5X);
 
             var component = context.Tags.GetAll().Where(t => t.Dimensions.AreEmpty);
 
@@ -70,7 +70,7 @@ namespace L5Sharp.Context.Tests
         [Test]
         public void FindAll_Predicate_HasComponents_ShouldNotBeEmpty()
         {
-            var context = new L5XContext(Known.L5X);
+            var context = L5XContext.Load(Known.L5X);
 
             var components = context.DataTypes.FindAll(t => t.Name.Contains("Simple")).ToList();
 
@@ -81,7 +81,7 @@ namespace L5Sharp.Context.Tests
         [Test]
         public void GetAll_WhenCalled_shouldNotBeEmpty()
         {
-            var context = new L5XContext(Known.L5X);
+            var context = L5XContext.Load(Known.L5X);
 
             var tags = context.Tags.GetAll();
 

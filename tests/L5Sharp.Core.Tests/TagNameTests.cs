@@ -55,10 +55,31 @@ namespace L5Sharp.Core.Tests
         {
             var tagName = new TagName(TestTagName);
 
-            tagName.Base.Should().Be(Base);
+            tagName.Root.Should().Be(Base);
             tagName.Operand.Should().Be(Operand);
             tagName.Path.Should().Be(Path);
             tagName.Members.Should().HaveCount(4);
+            tagName.Parts.Should().HaveCount(4);
+        }
+
+        [Test]
+        public void New_ModuleTagName_ShouldNotBeNull()
+        {
+            var tagName = new TagName("RackIO:1:I.Slot[2].Data.4");
+
+            tagName.Should().NotBeNull();
+        }
+        
+        [Test]
+        public void New_ModuleTagName_ShouldHaveExpectedRoot()
+        {
+            var tagName = new TagName("RackIO:1:I.Slot[2].Data.4");
+
+            tagName.Root.Should().Be("RackIO:1:I");
+            tagName.Operand.Should().Be(".Slot[2].Data.4");
+            tagName.Path.Should().Be("Slot[2].Data.4");
+            tagName.Members.Should().HaveCount(5);
+            tagName.Parts.Should().HaveCount(7);
         }
 
         [Test]

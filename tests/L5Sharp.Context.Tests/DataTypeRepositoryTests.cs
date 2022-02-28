@@ -18,7 +18,7 @@ namespace L5Sharp.Context.Tests
         [Test]
         public void Contains_ValidComponent_ShouldBeTrue()
         {
-            var context = new L5XContext(Known.L5X);
+            var context = L5XContext.Load(Known.L5X);
 
             var result = context.DataTypes.Contains("SimpleType");
 
@@ -28,7 +28,7 @@ namespace L5Sharp.Context.Tests
         [Test]
         public void Contains_InvalidComponent_ShouldBeFalse()
         {
-            var context = new L5XContext(Known.L5X);
+            var context = L5XContext.Load(Known.L5X);
 
             var result = context.DataTypes.Contains("FakeType");
 
@@ -38,7 +38,7 @@ namespace L5Sharp.Context.Tests
         [Test]
         public void Contains_Null_ShouldBeFalse()
         {
-            var context = new L5XContext(Known.L5X);
+            var context = L5XContext.Load(Known.L5X);
 
             var result = context.DataTypes.Contains(null!);
 
@@ -48,7 +48,7 @@ namespace L5Sharp.Context.Tests
         [Test]
         public void Find_ComponentName_ExistingName_ShouldNotBeNull()
         {
-            var context = new L5XContext(Known.L5X);
+            var context = L5XContext.Load(Known.L5X);
 
             var component = context.DataTypes.Find("SimpleType");
 
@@ -58,7 +58,7 @@ namespace L5Sharp.Context.Tests
         [Test]
         public void Find_ComponentName_NonExistingName_ShouldBeNull()
         {
-            var context = new L5XContext(Known.L5X);
+            var context = L5XContext.Load(Known.L5X);
 
             var component = context.DataTypes.Find("FakeType");
 
@@ -68,7 +68,7 @@ namespace L5Sharp.Context.Tests
         [Test]
         public void Find_Predicate_HasComponents_ShouldNotBeNull()
         {
-            var context = new L5XContext(Known.L5X);
+            var context = L5XContext.Load(Known.L5X);
 
             var component = context.DataTypes.Find(t => t.Family == DataTypeFamily.String);
 
@@ -78,7 +78,7 @@ namespace L5Sharp.Context.Tests
         [Test]
         public void FindAll_Predicate_HasComponents_ShouldNotBeEmpty()
         {
-            var context = new L5XContext(Known.L5X);
+            var context = L5XContext.Load(Known.L5X);
 
             var components = context.DataTypes.FindAll(t => !string.IsNullOrEmpty(t.Description)).ToList();
 
@@ -89,7 +89,7 @@ namespace L5Sharp.Context.Tests
         [Test]
         public void Get_ExistingType_ShouldBeExpected()
         {
-            var context = new L5XContext(Known.L5X);
+            var context = L5XContext.Load(Known.L5X);
 
             var component = context.DataTypes.Get("SimpleType");
 
@@ -104,7 +104,7 @@ namespace L5Sharp.Context.Tests
         [Test]
         public void Get_NonExistingType_ShouldThrowComponentNotFoundException()
         {
-            var context = new L5XContext(Known.L5X);
+            var context = L5XContext.Load(Known.L5X);
 
             FluentActions.Invoking(() => context.DataTypes.Get("FakeType")).Should()
                 .Throw<ComponentNotFoundException>();
@@ -113,7 +113,7 @@ namespace L5Sharp.Context.Tests
         [Test]
         public void Get_ComplexType_ShouldBeExpected()
         {
-            var context = new L5XContext(Known.L5X);
+            var context = L5XContext.Load(Known.L5X);
 
             var component = context.DataTypes.Get("ComplexType");
 
@@ -132,7 +132,7 @@ namespace L5Sharp.Context.Tests
         [Test]
         public void GetAll_WhenCalled_ShouldNotBeEmpty()
         {
-            var context = new L5XContext(Known.L5X);
+            var context = L5XContext.Load(Known.L5X);
 
             var components = context.DataTypes.GetAll();
 
@@ -142,7 +142,7 @@ namespace L5Sharp.Context.Tests
         [Test]
         public void Add_NullComponent_ShouldThrowArgumentNullException()
         {
-            var context = new L5XContext(Known.L5X);
+            var context = L5XContext.Load(Known.L5X);
 
             FluentActions.Invoking(() => context.DataTypes.Add(null!)).Should().Throw<ArgumentNullException>();
         }
@@ -150,7 +150,7 @@ namespace L5Sharp.Context.Tests
         [Test]
         public void Add_ExistingName_ShouldThrowComponentNameCollisionException()
         {
-            var context = new L5XContext(Known.L5X);
+            var context = L5XContext.Load(Known.L5X);
 
             var component = new UserDefined("SimpleType", "This is a test type");
 
@@ -161,7 +161,7 @@ namespace L5Sharp.Context.Tests
         [Test]
         public void Add_ValidComponent_ShouldContainNewComponent()
         {
-            var context = new L5XContext(Known.L5X);
+            var context = L5XContext.Load(Known.L5X);
 
             var component = new UserDefined("TestType", "This is a test type");
 
@@ -173,7 +173,7 @@ namespace L5Sharp.Context.Tests
         [Test]
         public void Add_NestedUserDefined_ShouldContainBothTypes()
         {
-            var context = new L5XContext(Known.L5X);
+            var context = L5XContext.Load(Known.L5X);
 
             var child = new UserDefined("ChildType", "This is a child type", new List<IMember<IDataType>>
             {
@@ -196,7 +196,7 @@ namespace L5Sharp.Context.Tests
         [Test]
         public void Remove_NullName_ShouldThrowArgumentNullException()
         {
-            var context = new L5XContext(Known.L5X);
+            var context = L5XContext.Load(Known.L5X);
 
             FluentActions.Invoking(() => context.DataTypes.Remove(null!)).Should().Throw<ArgumentNullException>();
         }
@@ -204,7 +204,7 @@ namespace L5Sharp.Context.Tests
         [Test]
         public void Remove_ValidElement_ShouldNoLongExist()
         {
-            var context = new L5XContext(Known.L5X);
+            var context = L5XContext.Load(Known.L5X);
 
             context.DataTypes.Remove("SimpleType");
 
@@ -214,7 +214,7 @@ namespace L5Sharp.Context.Tests
         [Test]
         public void Update_Null_ShouldThrowArgumentNullException()
         {
-            var context = new L5XContext(Known.L5X);
+            var context = L5XContext.Load(Known.L5X);
 
             FluentActions.Invoking(() => context.DataTypes.Update(null!)).Should().Throw<ArgumentNullException>();
         }
@@ -222,7 +222,7 @@ namespace L5Sharp.Context.Tests
         [Test]
         public void Update_ExistingComponent_ShouldUpdateComponent()
         {
-            var context = new L5XContext(Known.L5X);
+            var context = L5XContext.Load(Known.L5X);
 
             var component = new UserDefined("SimpleType", "This is a test type", new List<IMember<IDataType>>
             {
@@ -253,7 +253,7 @@ namespace L5Sharp.Context.Tests
         [Test]
         public void Update_NonExistingComponent_ShouldContainNewComponent()
         {
-            var context = new L5XContext(Known.L5X);
+            var context = L5XContext.Load(Known.L5X);
 
             var component = new UserDefined("TestType", "This is a test type", new List<IMember<IDataType>>
             {
@@ -278,7 +278,7 @@ namespace L5Sharp.Context.Tests
         [Test]
         public void Update_NestedUserDefined_ShouldContainBothTypes()
         {
-            var context = new L5XContext(Known.L5X);
+            var context = L5XContext.Load(Known.L5X);
 
             var child = new UserDefined("ChildType", "This is a child type", new List<IMember<IDataType>>
             {
