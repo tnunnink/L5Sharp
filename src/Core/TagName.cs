@@ -39,12 +39,13 @@ namespace L5Sharp.Core
         }
 
         /// <summary>
-        /// Gets the base tag portion of the <see cref="TagName"/> value.
+        /// Gets the root string  portion of the <see cref="TagName"/> value.
         /// </summary>
         /// <remarks>
-        /// The base name of the the tag represents the root or first member of the members collection.
+        /// The root portion of a given tag name is simply the beginning part of the tag name up to the first '.'
+        /// member separator character. For Module defined tags, this includes the colon separator.
         /// </remarks>
-        public string Root => _tagName[.._tagName.IndexOf(MemberSeparator, StringComparison.Ordinal)];
+        public string Root => _tagName[..GetRootLength()];
 
         /// <summary>
         /// Gets the operand portion of the <see cref="TagName"/> value.
@@ -66,6 +67,17 @@ namespace L5Sharp.Core
         /// </remarks>
         /// <seealso cref="Operand"/>
         public string Path => !Operand.IsEmpty() ? Operand.Remove(0, 1) : string.Empty;
+
+        /// <summary>
+        /// Gets a number representing the distance or depth of the current member from the root tag name.
+        /// </summary>
+        /// <remarks>
+        /// This value represents the number of members between the root member and current member (i.e. on less than
+        /// <see cref="Members"/> to exclude the root). This is helpful fo filtering tag descendents. Note that array
+        /// indices are also considered a member. For example, 'MyTag[1].Value' has a depth of 2 since '[1]' and 'Value'
+        /// are descendent members name of the root 'MyTag' member.
+        /// </remarks>
+        public int Depth => Members.Count() - 1;
 
         /// <summary>
         /// Gets the set of member names for the current <see cref="TagName"/>.
@@ -183,6 +195,12 @@ namespace L5Sharp.Core
             return ReferenceEquals(null, other)
                 ? 1
                 : string.Compare(_tagName, other._tagName, StringComparison.OrdinalIgnoreCase);
+        }
+
+        private int GetRootLength()
+        {
+            var index = _tagName.IndexOf(MemberSeparator, StringComparison.Ordinal);
+            return index >= 0 ? index : _tagName.Length;
         }
     }
 }

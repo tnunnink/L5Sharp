@@ -377,7 +377,7 @@ namespace L5Sharp.Extensions.Tests
         {
             var type = new Bool();
 
-            FluentActions.Invoking(() => type.GetMembersTo(null!)).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(() => type.GetMembers(null!)).Should().Throw<ArgumentException>();
         }
 
         [Test]
@@ -385,7 +385,7 @@ namespace L5Sharp.Extensions.Tests
         {
             var type = new Bool();
 
-            var members = type.GetMembersTo("MemberName");
+            var members = type.GetMembers("MemberName");
 
             members.Should().BeEmpty();
         }
@@ -395,7 +395,7 @@ namespace L5Sharp.Extensions.Tests
         {
             var type = new Timer();
 
-            var members = type.GetMembersTo("PRESET");
+            var members = type.GetMembers("PRESET");
 
             members.Should().BeEmpty();
         }
@@ -405,7 +405,7 @@ namespace L5Sharp.Extensions.Tests
         {
             var type = new Timer();
 
-            var members = type.GetMembersTo("PRE").ToList();
+            var members = type.GetMembers("PRE").ToList();
 
             members.Should().HaveCount(1);
             members.Should().Contain(m => m.Name == "PRE");
@@ -416,7 +416,7 @@ namespace L5Sharp.Extensions.Tests
         {
             var type = new MyNestedType();
 
-            var members = type.GetMembersTo("Tmr.PRE").ToList();
+            var members = type.GetMembers("Tmr.PRE").ToList();
 
             members.Should().HaveCount(2);
             members.Should().Contain(m => m.Name == "Tmr");
@@ -428,7 +428,7 @@ namespace L5Sharp.Extensions.Tests
         {
             var type = new MyNestedType();
 
-            var members = type.GetMembersTo("Counters[1].ACC").ToList();
+            var members = type.GetMembers("Counters[1].ACC").ToList();
 
             members.Should().HaveCount(3);
             members.Should().Contain(m => m.Name == "Counters");

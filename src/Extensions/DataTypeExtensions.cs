@@ -31,9 +31,9 @@ namespace L5Sharp.Extensions
         {
             return dataType switch
             {
-                IComplexType complexType => complexType.Members,
-                IArrayType<IDataType> arrayType => arrayType.AsEnumerable(),
-                _ => Enumerable.Empty<IMember<IDataType>>()
+                IComplexType complexType => complexType.Members.ToList(),
+                IArrayType<IDataType> arrayType => arrayType.ToList(),
+                _ => Enumerable.Empty<IMember<IDataType>>().ToList()
             };
         }
 
@@ -49,7 +49,7 @@ namespace L5Sharp.Extensions
         /// <see cref="IMember{TDataType}"/>.
         /// </returns>
         /// <exception cref="ArgumentException">tagName is null or empty.</exception>
-        public static IEnumerable<IMember<IDataType>> GetMembersTo(this IDataType dataType, TagName tagName)
+        public static IEnumerable<IMember<IDataType>> GetMembers(this IDataType dataType, TagName tagName)
         {
             if (tagName is null)
                 throw new ArgumentNullException(nameof(tagName));
@@ -69,6 +69,25 @@ namespace L5Sharp.Extensions
             }
 
             return results.Count == tagName.Members.Count() ? results : Enumerable.Empty<IMember<IDataType>>();
+        }
+
+        /// <summary>
+        /// Gets the collection of immediate child members for the current <see cref="IDataType"/> if any exist.
+        /// </summary>
+        /// <param name="dataType">The current <see cref="IDataType"/> instance.</param>
+        /// <returns>A collection of <see cref="IMember{TDataType}"/> objects that represent the immediate child
+        /// members of the type.</returns>
+        public static IEnumerable<IMember<IDataType>> GetAllMembers(this IDataType dataType)
+        {
+            var members = new List<IMember<IDataType>>();
+
+            foreach (var member in dataType.GetMembers())
+            {
+                members.Add(member);
+                members.AddRange(member.DataType.GetAllMembers());
+            }
+
+            return members;
         }
 
         /// <summary>
@@ -160,7 +179,7 @@ namespace L5Sharp.Extensions
         /// <para>
         /// This method will traverse the data type member hierarchy and set the value of all atomic members of the target
         /// type with the data of the provided source type. This traversal will be in order of the members retrieved by the
-        /// <see cref="GetMembers"/> method, which is to say in the order that the members exists for each data type instance.
+        /// <see cref="GetMembers(L5Sharp.IDataType)"/> method, which is to say in the order that the members exists for each data type instance.
         /// This means that setting the data for different data types may not necessarily fail, but simply write values
         /// to "non-matching" members of the data type structure.
         /// </para>

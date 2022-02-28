@@ -43,6 +43,27 @@ namespace L5Sharp.Core.Tests
         }
 
         [Test]
+        public void New_SimpleTagName_ShouldNotBeNull()
+        {
+            var tagName = new TagName("Test");
+
+            tagName.Should().NotBeNull();
+        }
+        
+        [Test]
+        public void New_SimpleTagName_ShouldBeExpected()
+        {
+            var tagName = new TagName("Test");
+
+            tagName.Root.Should().Be("Test");
+            tagName.Operand.Should().BeEmpty();
+            tagName.Path.Should().BeEmpty();
+            tagName.Depth.Should().Be(0);
+            tagName.Members.Should().HaveCount(1);
+            tagName.Members.Should().HaveCount(1);
+        }
+
+        [Test]
         public void New_Valid_ShouldNotBeNull()
         {
             var tagName = new TagName(TestTagName);
@@ -58,6 +79,7 @@ namespace L5Sharp.Core.Tests
             tagName.Root.Should().Be(Base);
             tagName.Operand.Should().Be(Operand);
             tagName.Path.Should().Be(Path);
+            tagName.Depth.Should().Be(3);
             tagName.Members.Should().HaveCount(4);
             tagName.Parts.Should().HaveCount(4);
         }
@@ -78,6 +100,7 @@ namespace L5Sharp.Core.Tests
             tagName.Root.Should().Be("RackIO:1:I");
             tagName.Operand.Should().Be(".Slot[2].Data.4");
             tagName.Path.Should().Be("Slot[2].Data.4");
+            tagName.Depth.Should().Be(4);
             tagName.Members.Should().HaveCount(5);
             tagName.Parts.Should().HaveCount(7);
         }

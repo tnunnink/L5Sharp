@@ -136,16 +136,31 @@ namespace L5Sharp
         /// of the tag member. This is made possible via the generic arguments. Though more verbose, this returns
         /// a strongly type child member so that the user can avoid potential need for casting. Note that this relies
         /// on the underlying data type of the tag member being specified so that the member properties are available
-        /// for selection.</remarks>
+        /// for selection.
+        /// </remarks>
         /// <seealso cref="Member"/>
         ITagMember<TMemberType> Member<TMemberType>(Func<TDataType, IMember<TMemberType>> selector)
             where TMemberType : IDataType;
 
         /// <summary>
-        /// Gets all <see cref="ITagMember{TDataType}"/> instances that are immediate descendents of the current <see cref="ITag{TDataType}"/>.
+        /// Gets all <see cref="ITagMember{TDataType}"/> objects that are descendents of the current <see cref="ITag{TDataType}"/>.
         /// </summary>
-        /// <returns>A collection of <see cref="ITagMember{TDataType}"/> objects if any are found; otherwise, an empty collection.</returns>
+        /// <returns>A collection of <see cref="ITagMember{TDataType}"/> objects if any are found; otherwise,
+        /// an empty collection.</returns>
+        /// <seealso cref="Members(Func{ITagMember{IDataType},bool})"/>
+        /// <remarks>
+        /// This method returns all descendant members of the current tag member. 
+        /// 
+        /// </remarks>
         IEnumerable<ITagMember<IDataType>> Members();
+
+        /// <summary>
+        /// Gets all descendant <see cref="ITagMember{TDataType}"/> objects that satisfy the member predicate filter.  
+        /// </summary>
+        /// <param name="predicate">The func delegate to filter the members that are returned.</param>
+        /// <returns>A collection of <see cref="ITagMember{TDataType}"/> objects that satisfy the provided member
+        /// predicate if any exists; otherwise an empty collection.</returns>
+        IEnumerable<ITagMember<IDataType>> Members(Func<ITagMember<IDataType>, bool> predicate);
 
         /// <summary>
         /// Gets all descendent member <see cref="TagName"/> values of the current <see cref="ITagMember{TDataType}"/>.

@@ -147,6 +147,10 @@ namespace L5Sharp.Core
         public IEnumerable<ITagMember<IDataType>> Members() => _tagMember.Members();
 
         /// <inheritdoc />
+        public IEnumerable<ITagMember<IDataType>> Members(Func<ITagMember<IDataType>, bool> predicate) =>
+            _tagMember.Members(predicate);
+
+        /// <inheritdoc />
         public IEnumerable<TagName> TagNames() => _tagMember.TagNames();
 
         /// <inheritdoc />

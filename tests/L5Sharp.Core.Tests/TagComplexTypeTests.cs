@@ -158,7 +158,7 @@ namespace L5Sharp.Core.Tests
         }
 
         [Test]
-        public void GetMember_ChainedCalls_ShouldNotBeNull()
+        public void Member_ChainedCalls_ShouldNotBeNull()
         {
             var tag = Tag.Create<MyNestedType>("Test");
 
@@ -170,6 +170,46 @@ namespace L5Sharp.Core.Tests
             member.Should().NotBeNull();
             member.Name.Should().Be("[0]");
             member.DataType.Should().BeOfType<Sint>();
+        }
+        
+        [Test]
+        public void Members_WhenCalled_ShouldHaveExpectedCount()
+        {
+            var tag = Tag.Create<MyNestedType>("Test");
+
+            var members = tag.Members();
+            
+            members.Should().HaveCount(99);
+        }
+
+        [Test]
+        public void Members_IsValueMember_ShouldHaveExpectedCount()
+        {
+            var tag = Tag.Create<MyNestedType>("Test");
+
+            var members = tag.Members(m => m.IsValueMember);
+
+            members.Should().HaveCount(95);
+        }
+        
+        [Test]
+        public void Members_IsValueMemberOfLargerArray_shouldNotBeEmpty()
+        {
+            var tag = Tag.Create<MyNestedType>("Test", new Dimensions(100));
+
+            var members = tag.Members(m => m.IsValueMember);
+
+            members.Should().HaveCount(9500);
+        }
+
+        [Test]
+        public void Members_TagName_ShouldBeExpected()
+        {
+            var tag = new Tag<MyNestedType>("Test", new MyNestedType());
+
+            var members = tag.Members(t => t.TagName.Depth == 1);
+
+            members.Should().HaveCount(4);
         }
 
         [Test]

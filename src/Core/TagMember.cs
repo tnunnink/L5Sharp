@@ -96,7 +96,7 @@ namespace L5Sharp.Core
 
             var path = tagName.Root.Equals(Root.Name) ? tagName.Path : tagName.ToString();
 
-            var members = _member.DataType.GetMembersTo(path).ToList();
+            var members = _member.DataType.GetMembers(path).ToList();
 
             if (!members.Any())
                 throw new InvalidMemberPathException(tagName, _member.DataType.Name);
@@ -121,8 +121,38 @@ namespace L5Sharp.Core
         }
 
         /// <inheritdoc />
-        public IEnumerable<ITagMember<IDataType>> Members() =>
-            _member.DataType.GetMembers().Select(m => new TagMember<IDataType>(m, Root, (ITagMember<IDataType>)this));
+        public IEnumerable<ITagMember<IDataType>> Members()
+        {
+            var members = new List<ITagMember<IDataType>>();
+
+            foreach (var member in _member.DataType.GetMembers())
+            {
+                var tagMember = new TagMember<IDataType>(member, Root, (ITagMember<IDataType>)this);
+                members.Add(tagMember);
+                members.AddRange(tagMember.Members());
+            }
+
+            return members;
+        }
+
+        /// <inheritdoc />
+        public IEnumerable<ITagMember<IDataType>> Members(Func<ITagMember<IDataType>, bool> predicate)
+        {
+            var members = new List<ITagMember<IDataType>>();
+
+            foreach (var member in _member.DataType.GetMembers())
+            {
+                var tagMember = new TagMember<IDataType>(member, Root, (ITagMember<IDataType>)this);
+                
+                if (predicate(tagMember))
+                    members.Add(tagMember);
+                
+                members.AddRange(tagMember.Members(predicate));
+            }
+            
+            return members;
+        }
+            
 
         /// <inheritdoc />
         public IEnumerable<TagName> TagNames() =>
