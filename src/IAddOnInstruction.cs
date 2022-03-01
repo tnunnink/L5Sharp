@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Xml.Serialization;
 using L5Sharp.Core;
 using L5Sharp.Enums;
 
@@ -16,42 +17,43 @@ namespace L5Sharp
         RoutineType Type { get; }
 
         /// <summary>
-        /// Gets the <c>Revision</c> value for the current <c>IAddOnInstruction</c>.
+        /// Gets the <see cref="Revision"/> value for the current <see cref="IAddOnInstruction"/>.
         /// </summary>
         Revision Revision { get; }
 
         /// <summary>
-        /// Gets the value of the string that represent the 
+        /// Gets the string text that represent an extension of the revision value for the <see cref="IAddOnInstruction"/>. 
         /// </summary>
         string RevisionExtension { get; }
 
         /// <summary>
-        /// Gets the value of the revision note for the current <c>IAddOnInstruction</c>.
+        /// Gets the value of the revision note for the instruction.
         /// </summary>
+        [XmlElement]
         string RevisionNote { get; }
 
         /// <summary>
-        /// Gets the value of the vendor for the current <c>IAddOnInstruction</c>. 
+        /// Gets the string vendor name of the instruction. 
         /// </summary>
         string Vendor { get; }
 
         /// <summary>
-        /// Gets the value indicating whether the <c>IAddOnInstruction</c> will execute a pre-scan routine. 
+        /// Gets the value indicating whether the <see cref="IAddOnInstruction"/> will execute a pre-scan routine. 
         /// </summary>
-        bool ExecutePreScan { get; set; }
+        bool ExecutePreScan { get; }
 
         /// <summary>
-        /// Gets the value indicating whether the <c>IAddOnInstruction</c> will execute a post-scan routine. 
+        /// Gets the value indicating whether the <see cref="IAddOnInstruction"/> will execute a post-scan routine. 
         /// </summary>
-        bool ExecutePostScan { get; set; }
+        bool ExecutePostScan { get; }
 
         /// <summary>
-        /// Gets the value indicating whether the <c>IAddOnInstruction</c> will execute a Enable-In routine.
+        /// Gets the value indicating whether the <see cref="IAddOnInstruction"/> will execute a Enable-In routine.
         /// </summary>
-        bool ExecuteEnableInFalse { get; set; }
+        bool ExecuteEnableInFalse { get; }
 
         /// <summary>
-        /// Gets the DateTime that the <c>IAddOnInstruction</c> was created.
+        /// Gets the DateTime that the <see cref="IAddOnInstruction"/> was created.
         /// </summary>
         DateTime CreatedDate { get; }
 
@@ -71,19 +73,25 @@ namespace L5Sharp
         string EditedBy { get; }
 
         /// <summary>
-        /// Gets the <see cref="Revision"/> of the <see cref="IAddOnInstruction"/>.
+        /// Gets the Logix Controller revision at which the <see cref="IAddOnInstruction"/> was developed.
         /// </summary>
         Revision SoftwareRevision { get; }
 
         /// <summary>
         /// Gets the value for the additional help text of the <see cref="IAddOnInstruction"/>.
         /// </summary>
+        [XmlElement]
         string AdditionalHelpText { get; }
 
         /// <summary>
         /// Gets a value indicating whether the <see cref="IAddOnInstruction"/> is encrypted.
         /// </summary>
         bool IsEncrypted { get; }
+
+        /// <summary>
+        /// Gets the routine that contains the logic for the <see cref="IAddOnInstruction"/>.
+        /// </summary>
+        IRoutine<ILogixContent> Logic { get; }
 
         /// <summary>
         /// Gets the collection of <see cref="IParameter{TDataType}"/> that define the <see cref="IAddOnInstruction"/>.

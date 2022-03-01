@@ -9,30 +9,30 @@ namespace L5Sharp.Core
     /// <summary>
     /// 
     /// </summary>
-    public class MemberCollection : IMemberCollection<IMember<IDataType>>
+    public class MemberCollection<TMember> : IMemberCollection<TMember> where TMember : IMember<IDataType>
     {
-        private readonly List<IMember<IDataType>> _members;
+        private readonly List<TMember> _members;
         private readonly IComplexType _parent;
 
         /// <summary>
-        /// Creates a new <see cref="MemberCollection"/> with the provided parent <see cref="IComplexType"/> and optional members.
+        /// Creates a new <see cref="MemberCollection{TMember}"/> with the provided parent <see cref="IComplexType"/>
+        /// and optional members.
         /// </summary>
         /// <param name="parent">
         /// The root parent type of the member collection. Nested members can not reference this type.
         /// </param>
         /// <param name="members">A collection of members to initialize the collection with.</param>
-        public MemberCollection(IComplexType parent, IEnumerable<IMember<IDataType>>? members = null)
+        public MemberCollection(IComplexType parent, IEnumerable<TMember>? members = null)
         {
             _parent = parent;
-            _members = members is not null ? new List<IMember<IDataType>>(members) : new List<IMember<IDataType>>();
+            _members = members is not null ? new List<TMember>(members) : new List<TMember>();
         }
-
 
         /// <inheritdoc />
         public int Count => _members.Count;
 
         /// <inheritdoc />
-        public void Add(IMember<IDataType> member)
+        public void Add(TMember member)
         {
             if (member is null)
                 throw new ArgumentNullException(nameof(member));
@@ -53,16 +53,16 @@ namespace L5Sharp.Core
         public bool Contains(ComponentName name) => _members.Any(m => m.Name == name);
 
         /// <inheritdoc />
-        public IMember<IDataType>? Find(Predicate<IMember<IDataType>> match) => _members.Find(match);
+        public TMember? Find(Predicate<TMember> match) => _members.Find(match);
 
         /// <inheritdoc />
-        public IEnumerable<IMember<IDataType>> FindAll(Predicate<IMember<IDataType>> match) => _members.FindAll(match);
+        public IEnumerable<TMember> FindAll(Predicate<TMember> match) => _members.FindAll(match);
 
         /// <inheritdoc />
-        public IMember<IDataType>? Get(ComponentName name) => _members.Find(m => m.Name == name);
+        public TMember Get(ComponentName name) => _members.Find(m => m.Name == name);
 
         /// <inheritdoc />
-        public void Insert(int index, IMember<IDataType> member)
+        public void Insert(int index, TMember member)
         {
             if (member is null)
                 throw new ArgumentNullException(nameof(member));
@@ -88,7 +88,7 @@ namespace L5Sharp.Core
         }
 
         /// <inheritdoc />
-        public void Update(IMember<IDataType> member)
+        public void Update(TMember member)
         {
             if (member is null)
                 throw new ArgumentNullException(nameof(member));
@@ -108,7 +108,7 @@ namespace L5Sharp.Core
         }
 
         /// <inheritdoc />
-        public void UpdateMany(IEnumerable<IMember<IDataType>> components)
+        public void UpdateMany(IEnumerable<TMember> components)
         {
             if (components is null)
                 throw new ArgumentNullException(nameof(components));
@@ -118,7 +118,7 @@ namespace L5Sharp.Core
         }
 
         /// <inheritdoc />
-        public IEnumerator<IMember<IDataType>> GetEnumerator() => _members.GetEnumerator();
+        public IEnumerator<TMember> GetEnumerator() => _members.GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }

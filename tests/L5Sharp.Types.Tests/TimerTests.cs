@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using FluentAssertions;
 using L5Sharp.Atomics;
 using L5Sharp.Core;
@@ -17,20 +18,20 @@ namespace L5Sharp.Types.Tests
             var type = new Timer();
             type.Should().NotBeNull();
         }
-        
+
         [Test]
         public void Constructor_ValidDint_ShouldHaveExpectedPREValue()
         {
             var type = new Timer(new Dint(5000));
-            
+
             type.PRE.DataType.Value.Should().Be(5000);
         }
-        
+
         [Test]
         public void Class_GetValue_ShouldBeExpected()
         {
             var type = new Timer();
-            
+
             type.Class.Should().Be(DataTypeClass.Predefined);
         }
 
@@ -58,19 +59,19 @@ namespace L5Sharp.Types.Tests
         public void InstanceMembers_Get_ShouldNotBeNull()
         {
             var type = new Timer();
-            
+
             type.DN.Should().NotBeNull();
             type.EN.Should().NotBeNull();
             type.TT.Should().NotBeNull();
             type.ACC.Should().NotBeNull();
             type.PRE.Should().NotBeNull();
         }
-        
+
         [Test]
         public void Member_Get_ShouldContinueToReturnSameReference()
         {
             var type = new Timer();
-            
+
             type.DN.Should().BeSameAs(type.DN);
             type.TT.Should().BeSameAs(type.TT);
             type.EN.Should().BeSameAs(type.EN);
@@ -82,8 +83,8 @@ namespace L5Sharp.Types.Tests
         public void CastingMembers_ToMutableCollection_ShouldNotBeProhibited()
         {
             var type = new Timer();
-            
-            FluentActions.Invoking(() => (MemberCollection)type.Members).Should().Throw<InvalidCastException>();
+
+            FluentActions.Invoking(() => (List<IMember<IDataType>>)type.Members).Should().Throw<InvalidCastException>();
         }
     }
 }

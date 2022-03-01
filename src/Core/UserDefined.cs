@@ -20,7 +20,7 @@ namespace L5Sharp.Core
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
             Description = description ?? string.Empty;
-            Members = new MemberCollection(this, members);
+            Members = new MemberCollection<IMember<IDataType>>(this, members);
         }
 
         /// <inheritdoc />

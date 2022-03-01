@@ -1,4 +1,5 @@
-﻿using Ardalis.SmartEnum;
+﻿using System.Linq;
+using Ardalis.SmartEnum;
 
 namespace L5Sharp.Enums
 {
@@ -10,6 +11,17 @@ namespace L5Sharp.Enums
         private TagUsage(string name, string value) : base(name, value)
         {
         }
+        
+        /// <summary>
+        /// Gets the default <see cref="Radix"/> type for the provided data type instance.
+        /// </summary>
+        /// <param name="dataType">The data type instance to evaluate.</param>
+        /// <returns>
+        /// <see cref="Input"/> for atomic types.
+        /// <see cref="InOut"/> for complex types.
+        /// </returns>
+        public static TagUsage Default(IDataType dataType) => dataType is IAtomicType ? Input : InOut;
+
 
         /// <summary>
         /// Represents a Null <see cref="TagType"/> value.

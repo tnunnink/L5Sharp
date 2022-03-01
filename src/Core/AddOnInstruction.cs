@@ -1,34 +1,32 @@
-﻿/*using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using L5Sharp.Enums;
 
 namespace L5Sharp.Core
 {
+    /// <inheritdoc />
     public class AddOnInstruction : IAddOnInstruction
     {
         private const string LogicRoutineName = "Logic";
-        private const string PreScanRoutineName = "Prescan";
-        private const string PostScanRoutineName = "Postscan";
-        private const string EnableInRoutineName = "EnableInFalse";
-        private readonly List<IRoutine> _routines = new List<IRoutine>();
+        private readonly List<IRoutine<ILogixContent>> _routines = new();
 
-        public AddOnInstruction(string name,
-            string description = null, RoutineType type = null, Revision revision = null,
-            string revisionExtension = null, string revisionNote = null, string vendor = null,
-            bool executePreScan = false, bool executePostScan = false, bool executeEnableInFalse = false,
-            DateTime createdDate = default, string createdBy = null,
-            DateTime editedDate = default, string editedBy = null,
-            Revision softwareRevision = null, string additionalHelpText = null, bool isEncrypted = false,
-            IEnumerable<IParameter<IDataType>> parameters = null, 
-            IEnumerable<ITag<IDataType>> localTags = null)
+        internal AddOnInstruction(string name, string? description = null, Revision? revision = null,
+            string? revisionExtension = null, string? revisionNote = null, string? vendor = null,
+            bool executePreScan = default, bool executePostScan = default, bool executeEnableInFalse = default,
+            DateTime createdDate = default, string? createdBy = null,
+            DateTime editedDate = default, string? editedBy = null,
+            Revision? softwareRevision = null, string? additionalHelpText = null, bool isEncrypted = default,
+            IEnumerable<IParameter<IDataType>>? parameters = null,
+            IEnumerable<ITag<IDataType>>? localTags = null,
+            IEnumerable<IRoutine<ILogixContent>>? routines = null)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
-            Description = description;
+            Description = description ?? string.Empty;
             Revision = revision ?? new Revision();
-            RevisionExtension = revisionExtension;
-            RevisionNote = revisionNote;
-            Vendor = vendor;
+            RevisionExtension = revisionExtension ?? string.Empty;
+            RevisionNote = revisionNote ?? string.Empty;
+            Vendor = vendor ?? string.Empty;
             ExecutePreScan = executePreScan;
             ExecutePostScan = executePostScan;
             ExecuteEnableInFalse = executeEnableInFalse;
@@ -36,137 +34,93 @@ namespace L5Sharp.Core
             CreatedBy = createdBy ?? Environment.UserName;
             EditedDate = editedDate;
             EditedBy = editedBy ?? Environment.UserName;
-            SoftwareRevision = softwareRevision;
-            AdditionalHelpText = additionalHelpText;
+            SoftwareRevision = softwareRevision ?? new Revision();
+            AdditionalHelpText = additionalHelpText ?? string.Empty;
             IsEncrypted = isEncrypted;
-
-            Parameters = new Parameters(this, parameters);
-            /*LocalTags = new Tags(this, localTags);#1#
-
-            type ??= RoutineType.Ladder;
-            InitializeRoutine(type);
+            Parameters = new MemberCollection<IParameter<IDataType>>(this, parameters);
+            LocalTags = new ComponentCollection<ITag<IDataType>>(localTags ?? Enumerable.Empty<ITag<IDataType>>());
+            _routines.AddRange(routines ?? Enumerable.Empty<IRoutine<ILogixContent>>());
         }
 
 
+        /// <inheritdoc />
         public string Name { get; }
+
+        /// <inheritdoc />
         public string Description { get; }
-        public Radix Radix => Radix.Null;
+
+        /// <inheritdoc />
         public DataTypeFamily Family => DataTypeFamily.None;
+
+        /// <inheritdoc />
         public DataTypeClass Class => DataTypeClass.AddOnDefined;
-        public DataFormat Format => DataFormat.Decorated;
+
+        /// <inheritdoc />
         public RoutineType Type => Routines.Single(r => r.Name == LogicRoutineName).Type;
-        public Revision Revision { get; private set; }
-        public string RevisionExtension { get; private set; }
-        public string RevisionNote { get; private set; }
-        public string Vendor { get; private set; }
-        public bool ExecutePreScan { get; set; }
-        public bool ExecutePostScan { get; set; }
-        public bool ExecuteEnableInFalse { get; set; }
-        public DateTime CreatedDate { get; private set; }
-        public string CreatedBy { get; private set; }
-        public DateTime EditedDate { get; private set; }
-        public string EditedBy { get; private set; }
-        public Revision SoftwareRevision { get; private set; }
-        public string AdditionalHelpText { get; private set; }
+
+        /// <inheritdoc />
+        public Revision Revision { get; }
+
+        /// <inheritdoc />
+        public string RevisionExtension { get; }
+
+        /// <inheritdoc />
+        public string RevisionNote { get; }
+
+        /// <inheritdoc />
+        public string Vendor { get; }
+
+        /// <inheritdoc />
+        public bool ExecutePreScan { get; }
+
+        /// <inheritdoc />
+        public bool ExecutePostScan { get; }
+
+        /// <inheritdoc />
+        public bool ExecuteEnableInFalse { get; }
+
+        /// <inheritdoc />
+        public DateTime CreatedDate { get; }
+
+        /// <inheritdoc />
+        public string CreatedBy { get; }
+
+        /// <inheritdoc />
+        public DateTime EditedDate { get; }
+
+        /// <inheritdoc />
+        public string EditedBy { get; }
+
+        /// <inheritdoc />
+        public Revision SoftwareRevision { get; }
+
+        /// <inheritdoc />
+        public string AdditionalHelpText { get; }
+
+        /// <inheritdoc />
         public bool IsEncrypted { get; }
-        public IRoutine Logic => _routines.Single(r => r.Name == LogicRoutineName);
-        public IRoutine PreScan => _routines.Single(r => r.Name == PreScanRoutineName);
-        public IRoutine PostScan => _routines.Single(r => r.Name == PostScanRoutineName);
-        public IRoutine EnableInFalse => _routines.Single(r => r.Name == EnableInRoutineName);
+
+        /// <inheritdoc />
+        public IRoutine<ILogixContent> Logic => _routines.Single(r => r.Name == LogicRoutineName);
+
+        /// <inheritdoc />
         public IEnumerable<IMember<IDataType>> Members => Parameters.Where(p => p.Usage != TagUsage.InOut);
-        public IMember<IDataType>? GetMember(string name)
-        {
-            throw new NotImplementedException();
-        }
 
-        public IEnumerable<IMember<IDataType>> GetMembers()
-        {
-            throw new NotImplementedException();
-        }
-
-        public IEnumerable<string> GetMemberNames()
-        {
-            throw new NotImplementedException();
-        }
-
-        public IEnumerable<IDataType> GetDependentTypes()
-        {
-            throw new NotImplementedException();
-        }
-
-        public NeutralText Signature { get; }
+        /// <inheritdoc />
         public IMemberCollection<IParameter<IDataType>> Parameters { get; }
-        public IComponentCollection<ITag<IDataType>> LocalTags { get; }
 
-        public IEnumerable<IRoutine> Routines => _routines.AsReadOnly();
+        /// <inheritdoc />
+        public IEnumerable<ITag<IDataType>> LocalTags { get; }
 
-        IEnumerable<IMember<IDataType>> IInstruction.Parameters => Parameters;
+        /// <inheritdoc />
+        public IEnumerable<IRoutine<ILogixContent>> Routines => _routines;
 
-
-        public IMember<IDataType> GetParameter(string name)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IMember<TType> GetParameter<TType>(string name) where TType : IDataType
-        {
-            throw new NotImplementedException();
-        }
-
-        public NeutralText Of(params ITagMember<IDataType>[] tags)
-        {
-            throw new NotImplementedException();
-        }
-
-        public NeutralText Of(params object[] values)
-        {
-            throw new NotImplementedException();
-        }
-        
-        public void SetRevision(Revision revision)
-        {
-            if (revision == null)
-                throw new ArgumentNullException(nameof(revision), "Value can not be null");
-
-            Revision = revision;
-        }
-
-        public void SetRevisionExtension(string revisionExtension)
-        {
-            RevisionExtension = revisionExtension;
-        }
-
-        public void SetRevisionNote(string note)
-        {
-            RevisionExtension = note;
-        }
-
-        public void SetVendor(string vendor)
-        {
-            Vendor = vendor;
-        }
-
-        public void AddPreScanRoutine(RoutineType type)
-        {
-            var routine = type.Create(PreScanRoutineName);
-            _routines.Add(routine);
-        }
-
-        public void AddPostScanRoutine(RoutineType type)
-        {
-            var routine = type.Create(PostScanRoutineName);
-            _routines.Add(routine);
-        }
-
-        private void InitializeRoutine(RoutineType type)
-        {
-            var routine = type.Create(LogicRoutineName);
-            _routines.Add(routine);
-        }
-
+        /// <inheritdoc />
         public IDataType Instantiate()
         {
+            //return new AddOnInstruction(Name, Description, Type, Revision, RevisionExtension, )
+
             throw new NotImplementedException();
         }
     }
-}*/
+}
