@@ -40,8 +40,8 @@ namespace L5Sharp.Serialization.Components
             if (element.Name != ElementName)
                 throw new ArgumentException($"Element name '{element.Name}' invalid. Expecting '{ElementName}'");
 
-            var name = element.GetComponentName();
-            var description = element.GetComponentDescription();
+            var name = element.ComponentName();
+            var description = element.ComponentDescription();
             var type = element.GetAttribute<IRoutine<ILogixContent>, RoutineType>(r => r.Type)!;
 
             var content = type.CreateContent();

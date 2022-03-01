@@ -42,7 +42,7 @@ namespace L5Sharp.Serialization.Data
             if (element.Name != ElementName)
                 throw new ArgumentException($"Element '{element.Name}' not valid for the serializer {GetType()}.");
 
-            var name = element.GetComponentName();
+            var name = element.ComponentName();
             var dimensions = element.GetAttribute<IMember<IDataType>, Dimensions>(m => m.Dimensions);
             var radix = element.GetAttribute<IMember<IDataType>, Radix>(m => m.Radix);
 

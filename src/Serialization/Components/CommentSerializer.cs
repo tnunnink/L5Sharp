@@ -40,7 +40,7 @@ namespace L5Sharp.Serialization.Components
             if (element.Name != ElementName)
                 throw new ArgumentException($"Element '{element.Name}' not valid for the serializer {GetType()}.");
 
-            var baseName = element.Ancestors(L5XElement.Tag.ToXName()).FirstOrDefault()?.GetComponentName();
+            var baseName = element.Ancestors(L5XElement.Tag.ToXName()).FirstOrDefault()?.ComponentName();
 
             if (baseName is null)
                 throw new ArgumentException("The provided comments do not have a base tag name");

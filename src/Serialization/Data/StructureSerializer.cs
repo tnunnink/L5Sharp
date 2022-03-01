@@ -52,7 +52,7 @@ namespace L5Sharp.Serialization.Data
             if (element.Name != ElementName)
                 throw new ArgumentException($"Element '{element.Name}' not valid for the serializer {GetType()}.");
 
-            var name = element.GetDataTypeName();
+            var name = element.DataTypeName();
             var members = element.Elements().Select(e =>
             {
                 var l5XElement = Enum.Parse<L5XElement>(e.Name.ToString());

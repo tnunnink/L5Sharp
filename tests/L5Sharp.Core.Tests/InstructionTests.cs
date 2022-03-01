@@ -10,13 +10,13 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void FromText_NullName_ShouldThrowArgumentNullException()
         {
-            FluentActions.Invoking(() => Instruction.FromText(null!)).Should().Throw<ArgumentNullException>();
+            FluentActions.Invoking(() => Instruction.Parse(null!)).Should().Throw<ArgumentNullException>();
         }
 
         [Test]
         public void FromText_ValidArguments_ShouldNotBeNull()
         {
-            var instruction = Instruction.FromText("XIC(SomeBit)");
+            var instruction = Instruction.Parse("XIC(SomeBit)");
 
             instruction.Should().NotBeNull();
         }
@@ -24,7 +24,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void FromText_ValidArguments_ShouldHaveExpectedProperties()
         {
-            var instruction = Instruction.FromText("XIC(SomeBit)");
+            var instruction = Instruction.Parse("XIC(SomeBit)");
 
             instruction.Name.Should().Be("XIC");
             instruction.Arguments.Should().HaveCount(1);

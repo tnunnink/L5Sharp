@@ -43,8 +43,8 @@ namespace L5Sharp.Serialization.Data
             if (element.Name != ElementName)
                 throw new ArgumentException($"Element '{element.Name}' not valid for the serializer {GetType()}.");
 
-            var name = element.GetComponentName();
-            var atomic = (IAtomicType)DataType.Create(element.GetDataTypeName());
+            var name = element.ComponentName();
+            var atomic = (IAtomicType)DataType.Create(element.DataTypeName());
             var radix = element.GetAttribute<IMember<IDataType>, Radix>(m => m.Radix) ?? Radix.Default(atomic);
             var value = element.Attribute(L5XAttribute.Value.ToXName())?.Value!;
             atomic.SetValue(value);

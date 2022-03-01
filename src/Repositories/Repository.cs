@@ -44,7 +44,7 @@ namespace L5Sharp.Repositories
 
         /// <inheritdoc />
         public virtual bool Contains(ComponentName name) =>
-            Context.L5X.GetComponents<TComponent>().Any(x => x.GetComponentName() == name);
+            Context.L5X.GetComponents<TComponent>().Any(x => x.ComponentName() == name);
 
         /// <inheritdoc />
         public virtual TComponent? Find(Expression<Func<TComponent, bool>> predicate)
@@ -59,7 +59,7 @@ namespace L5Sharp.Repositories
         /// <inheritdoc />
         public TComponent? Find(ComponentName name)
         {
-            var element = Context.L5X.GetComponents<TComponent>().FirstOrDefault(x => x.GetComponentName() == name);
+            var element = Context.L5X.GetComponents<TComponent>().FirstOrDefault(x => x.ComponentName() == name);
             return element is not null ? element.Deserialize<TComponent>() : default;
         }
 
@@ -76,7 +76,7 @@ namespace L5Sharp.Repositories
         /// <inheritdoc />
         public virtual TComponent Get(ComponentName name)
         {
-            var count = Context.L5X.GetComponents<TComponent>().Count(x => x.GetComponentName() == name);
+            var count = Context.L5X.GetComponents<TComponent>().Count(x => x.ComponentName() == name);
 
             return count switch
             {
@@ -84,7 +84,7 @@ namespace L5Sharp.Repositories
                 > 1 => throw new InvalidOperationException(
                     $"The provided component name '{name}' has more than one instance in the current context."),
                 _ => Context.L5X.GetComponents<TComponent>()
-                    .Single(x => x.GetComponentName() == name)
+                    .Single(x => x.ComponentName() == name)
                     .Deserialize<TComponent>()
             };
         }
@@ -95,7 +95,7 @@ namespace L5Sharp.Repositories
 
         /// <inheritdoc />
         public IEnumerable<string> Names()
-            => Context.L5X.GetComponents<TComponent>().Select(x => x.GetComponentName());
+            => Context.L5X.GetComponents<TComponent>().Select(x => x.ComponentName());
 
         /// <inheritdoc />
         public virtual void Remove(ComponentName name)
@@ -103,7 +103,7 @@ namespace L5Sharp.Repositories
             if (name is null)
                 throw new ArgumentNullException(nameof(name));
             
-            Context.L5X.GetComponents<TComponent>().FirstOrDefault(x => x.GetComponentName() == name)?.Remove();
+            Context.L5X.GetComponents<TComponent>().FirstOrDefault(x => x.ComponentName() == name)?.Remove();
         }
 
         /// <inheritdoc />
@@ -115,7 +115,7 @@ namespace L5Sharp.Repositories
             var element = component.Serialize();
 
             var current = Context.L5X.GetComponents<TComponent>()
-                .FirstOrDefault(x => x.GetComponentName() == component.Name);
+                .FirstOrDefault(x => x.ComponentName() == component.Name);
 
             if (current is not null)
             {

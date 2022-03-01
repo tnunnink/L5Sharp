@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <!--Test AOI-->
-<RSLogix5000Content SchemaRevision="1.0" SoftwareRevision="32.02" TargetName="aoi_Test" TargetType="AddOnInstructionDefinition" TargetRevision="1.0 " TargetLastEdited="2021-11-13T14:27:09.665Z" ContainsContext="true" Owner="tnunnink, EN Engineering" ExportDate="Sat Nov 13 08:29:15 2021" ExportOptions="References NoRawData L5KData DecoratedData Context Dependencies ForceProtectedEncoding AllProjDocTrans">
+<RSLogix5000Content SchemaRevision="1.0" SoftwareRevision="32.02" TargetName="aoi_Test" TargetType="AddOnInstructionDefinition" TargetRevision="1.0 Rev1" TargetLastEdited="2022-03-01T03:17:54.746Z" ContainsContext="true" Owner="tnunnink, EN Engineering" ExportDate="Mon Feb 28 21:18:22 2022" ExportOptions="References NoRawData L5KData DecoratedData Context Dependencies ForceProtectedEncoding AllProjDocTrans">
 <Controller Use="Context" Name="TestController">
 <DataTypes Use="Context">
 <DataType Name="SimpleType" Family="NoFamily" Class="User">
@@ -14,18 +14,17 @@
 <![CDATA[Test Boolean update]]>
 </Description>
 </Member>
-<Member Name="SintMember" DataType="SINT" Dimension="0" Radix="Decimal" Hidden="false" ExternalAccess="Read/Write">
+<Member Name="SintMember" DataType="SINT" Dimension="0" Radix="Hex" Hidden="false" ExternalAccess="Read/Write">
 <Description>
 <![CDATA[Test Sint]]>
 </Description>
 </Member>
-<Member Name="IntMember" DataType="INT" Dimension="0" Radix="Decimal" Hidden="false" ExternalAccess="Read/Write">
+<Member Name="IntMember" DataType="INT" Dimension="0" Radix="Octal" Hidden="false" ExternalAccess="Read/Write">
 <Description>
 <![CDATA[Test Int]]>
 </Description>
 </Member>
-<Member Name="ZZZZZZZZZZSimpleType4" DataType="SINT" Dimension="0" Radix="Decimal" Hidden="true" ExternalAccess="None"/>
-<Member Name="DintMember" DataType="BIT" Dimension="0" Radix="Octal" Hidden="false" Target="ZZZZZZZZZZSimpleType4" BitNumber="0" ExternalAccess="None">
+<Member Name="DintMember" DataType="DINT" Dimension="0" Radix="ASCII" Hidden="false" ExternalAccess="None">
 <Description>
 <![CDATA[Test Dint comment]]>
 </Description>
@@ -39,11 +38,25 @@
 </DataType>
 </DataTypes>
 <AddOnInstructionDefinitions Use="Context">
-<AddOnInstructionDefinition Use="Target" Name="aoi_Test" Revision="1.0" ExecutePrescan="false" ExecutePostscan="false" ExecuteEnableInFalse="false" CreatedDate="2021-10-22T15:27:48.120Z" CreatedBy="ENE\tnunnink" EditedDate="2021-11-13T14:27:09.665Z" EditedBy="ENE\tnunnink" SoftwareRevision="v32.02"
->
+<AddOnInstructionDefinition Use="Target" Name="aoi_Test" Revision="1.0" RevisionExtension="Rev1" Vendor="ENE" ExecutePrescan="false" ExecutePostscan="false" ExecuteEnableInFalse="false" CreatedDate="2021-10-22T15:27:48.120Z" CreatedBy="ENE\tnunnink" EditedDate="2022-03-01T03:17:54.746Z"
+ EditedBy="ENE\tnunnink" SoftwareRevision="v32.02">
 <Description>
 <![CDATA[Test AOI]]>
 </Description>
+<RevisionNote>
+<![CDATA[This revision not is a test note]]>
+</RevisionNote>
+<SignatureHistory>
+<HistoryEntry User="ENE\tnunnink" Timestamp="2022-03-01T03:10:25.642Z" SignatureID="16#cae1_ac8c">
+<Description>
+<![CDATA[This is a signature history description
+]]>
+</Description>
+</HistoryEntry>
+</SignatureHistory>
+<AdditionalHelpText>
+<![CDATA[This is a test aoi definitio that was built for purposes of exporting data to examine the structure of the L5X]]>
+</AdditionalHelpText>
 <Parameters>
 <Parameter Name="EnableIn" TagType="Base" DataType="BOOL" Usage="Input" Radix="Decimal" Required="false" Visible="false" ExternalAccess="Read Only">
 <Description>
@@ -63,7 +76,7 @@
 <DataValue DataType="BOOL" Radix="Decimal" Value="0"/>
 </DefaultData>
 </Parameter>
-<Parameter Name="OutputTest" TagType="Base" DataType="DINT" Usage="Output" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read Only">
+<Parameter Name="OutputTest" TagType="Base" DataType="DINT" Usage="Input" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read Only">
 <DefaultData Format="L5K">
 <![CDATA[0]]>
 </DefaultData>
@@ -71,7 +84,7 @@
 <DataValue DataType="DINT" Radix="Decimal" Value="0"/>
 </DefaultData>
 </Parameter>
-<Parameter Name="InOutTest" TagType="Base" DataType="SimpleType" Usage="InOut" Radix="NullType" Required="true" Visible="true" Constant="true"/>
+<Parameter Name="InOutTest" TagType="Base" DataType="SimpleType" Usage="InOut" Required="true" Visible="true" Constant="false"/>
 <Parameter Name="Config" TagType="Base" DataType="INT" Usage="Input" Radix="Decimal" Required="true" Visible="true" ExternalAccess="None">
 <DefaultData Format="L5K">
 <![CDATA[0]]>
@@ -88,6 +101,7 @@
 <DataValue DataType="BOOL" Radix="Decimal" Value="0"/>
 </DefaultData>
 </Parameter>
+<Parameter Name="Timers" TagType="Base" DataType="REAL" Dimensions="5" Usage="InOut" Radix="Float" Required="true" Visible="true" Constant="false"/>
 </Parameters>
 <LocalTags>
 <LocalTag Name="LocalBool" DataType="BOOL" Radix="Decimal" ExternalAccess="None">
@@ -109,6 +123,7 @@
 </Rung>
 </RLLContent>
 </Routine>
+<Routine Name="Prescan" Type="RLL"/>
 </Routines>
 <Dependencies>
 <Dependency Type="DataType" Name="SimpleType"/>

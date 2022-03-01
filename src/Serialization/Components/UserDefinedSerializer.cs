@@ -42,8 +42,8 @@ namespace L5Sharp.Serialization.Components
             if (element.Name != ElementName)
                 throw new ArgumentException($"Element '{element.Name}' not valid for the serializer {GetType()}.");
 
-            var name = element.GetComponentName();
-            var description = element.GetComponentDescription();
+            var name = element.ComponentName();
+            var description = element.ComponentDescription();
             var members = element.Descendants(L5XElement.Member.ToXName())
                 .Where(e => !bool.Parse(e.Attribute("Hidden")?.Value!))
                 .Select(e =>

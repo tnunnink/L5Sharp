@@ -26,7 +26,7 @@ namespace L5Sharp.Repositories
 
             var childNames = Context.L5X.GetComponents<IModule>()
                 .Where(x => x.Attribute(nameof(module.ParentModule))?.Value == module.Name)
-                .Select(x => x.GetComponentName());
+                .Select(x => x.ComponentName());
 
             foreach (var childName in childNames)
             {
@@ -44,7 +44,7 @@ namespace L5Sharp.Repositories
             
             var childNames = Context.L5X.GetComponents<IModule>()
                 .Where(x => x.Attribute(nameof(module.ParentModule))?.Value == module.Name)
-                .Select(x => x.GetComponentName());
+                .Select(x => x.ComponentName());
             
             foreach (var childName in childNames)
             {
@@ -74,7 +74,7 @@ namespace L5Sharp.Repositories
             
             var children = Context.L5X.GetComponents<IModule>()
                 .Where(x => x.Attribute("ParentModule")?.Value == name.ToString())
-                .Select(x => x.GetComponentName()).ToList();
+                .Select(x => x.ComponentName()).ToList();
 
             foreach (var child in children)
                 Remove(child);

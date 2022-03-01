@@ -158,8 +158,7 @@ namespace L5Sharp.Core
                 yield return new Member<TDataType>(indices[i], (TDataType) instance, radix, access, description);
             }
         }
-
-
+        
         private static void ValidateDimensions(Dimensions dimensions)
         {
             if (dimensions is null)

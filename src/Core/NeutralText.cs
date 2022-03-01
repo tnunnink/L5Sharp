@@ -13,7 +13,7 @@ namespace L5Sharp.Core
     {
         private const string InstructionPattern = @"[a-zA-Z0-9_]+\(.*?\)";
         private readonly string _text;
-        private readonly List<IInstruction> _instructions;
+        private readonly List<Instruction> _instructions;
 
         /// <summary>
         /// Creates a new default instance of <c>NeutralText</c>.
@@ -21,7 +21,7 @@ namespace L5Sharp.Core
         public NeutralText()
         {
             _text = ";";
-            _instructions = new List<IInstruction>();
+            _instructions = new List<Instruction>();
         }
 
         /// <summary>
@@ -42,7 +42,7 @@ namespace L5Sharp.Core
             _text = text;
 
             var instructions = Regex.Matches(text, InstructionPattern, RegexOptions.Compiled)
-                .Select(m => Instruction.FromText(m.Value));
+                .Select(m => Instruction.Parse(m.Value));
 
             _instructions.AddRange(instructions);
         }
@@ -50,7 +50,7 @@ namespace L5Sharp.Core
         /// <summary>
         /// 
         /// </summary>
-        public IEnumerable<IInstruction> Instructions => _instructions;
+        public IEnumerable<Instruction> Instructions => _instructions;
 
         /// <summary>
         /// Represents a new default instance of the 

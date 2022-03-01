@@ -44,7 +44,7 @@ namespace L5Sharp.Serialization.Components
             if (element.Name != ElementName)
                 throw new ArgumentException($"Element '{element.Name}' not valid for the serializer {GetType()}.");
 
-            var name = element.GetComponentName();
+            var name = element.ComponentName();
             var rpi = element.GetAttribute<Connection, int>(c => c.Rpi);
             var type = element.GetAttribute<Connection, ConnectionType>(c => c.Type) ?? ConnectionType.Unknown;
             var priority = element.GetAttribute<Connection, ConnectionPriority>(c => c.Priority);
@@ -75,7 +75,7 @@ namespace L5Sharp.Serialization.Components
 
             var tagElement = element.Descendants(tagName).FirstOrDefault();
             var formattedData = tagElement?.Descendants(L5XElement.Data.ToXName())
-                .FirstOrDefault(e => e.Attribute("Format")?.Value == TagDataFormat.Decorated.Name);
+                .FirstOrDefault(e => e.Attribute(L5XAttribute.Format.ToXName())?.Value == TagDataFormat.Decorated.Name);
 
             return formattedData is not null
                 ? serializer.Deserialize(formattedData)
@@ -85,7 +85,7 @@ namespace L5Sharp.Serialization.Components
         private static string DetermineTagName(XNode element, string suffix)
         {
             var moduleName = element.Ancestors(L5XElement.Module.ToXName())
-                .FirstOrDefault()?.Attribute("Name")?.Value;
+                .FirstOrDefault()?.Attribute(L5XAttribute.Name.ToXName())?.Value;
             var parentName = element.Ancestors(L5XElement.Module.ToXName())
                 .FirstOrDefault()?.Attribute("ParentModule")?.Value;
 

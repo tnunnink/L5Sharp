@@ -49,15 +49,15 @@ namespace L5Sharp.Serialization.Components
             if (element.Name != ElementName)
                 throw new ArgumentException($"Element '{element.Name}' not valid for the serializer {GetType()}.");
 
-            var name = element.GetComponentName();
-            var description = element.GetComponentDescription();
+            var name = element.ComponentName();
+            var description = element.ComponentDescription();
             var type = element.GetAttribute<ITask, TaskType>(t => t.Type);
             var rate = element.GetAttribute<ITask, ScanRate>(t => t.Rate);
             var priority = element.GetAttribute<ITask, TaskPriority>(t => t.Priority);
             var watchdog = element.GetAttribute<ITask, Watchdog>(t => t.Watchdog);
             var disableUpdateOutputs = element.GetAttribute<ITask, bool>(t => t.DisableUpdateOutputs);
             var inhibitTask = element.GetAttribute<ITask, bool>(t => t.InhibitTask);
-            var programs = element.Descendants(L5XElement.ScheduledProgram.ToXName()).Select(e => e.GetComponentName());
+            var programs = element.Descendants(L5XElement.ScheduledProgram.ToXName()).Select(e => e.ComponentName());
 
             if (type is null)
                 throw new ArgumentException("Provided element must have a task type attribute");

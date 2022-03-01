@@ -5,36 +5,40 @@ using System.Text.RegularExpressions;
 
 namespace L5Sharp.Core
 {
-    /// <inheritdoc />
-    public class Instruction : IInstruction
+    /// <summary>
+    /// 
+    /// </summary>
+    public class Instruction
     {
         /// <summary>
-        /// Creates a new instance of a <c>Instruction</c> with the provided arguments.
+        /// Creates a new <see cref="Instruction"/> with the provided name and arguments.
         /// </summary>
-        /// <param name="element">The element name of the <c>Instruction</c>.</param>
-        /// <param name="arguments">The collection of string arguments.</param>
-        /// <exception cref="ArgumentNullException">When element is null.</exception>
-        private Instruction(string element, IEnumerable<string>? arguments = null)
+        /// <param name="name">The name name of the Instruction.</param>
+        /// <param name="arguments">The collection of <see cref="Arguments"/> of the Instruction instance.</param>
+        /// <exception cref="ArgumentNullException">name is null.</exception>
+        private Instruction(string name, IEnumerable<Argument>? arguments = null)
         {
-            Name = element ?? throw new ArgumentNullException(nameof(element));
-            Arguments = arguments is not null 
-                ? arguments.Select(a => new Argument(a)) 
-                : Enumerable.Empty<Argument>();
+            Name = name ?? throw new ArgumentNullException(nameof(name));
+            Arguments = arguments ?? Enumerable.Empty<Argument>();
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Gets the element name of the <see cref="Instruction"/> instance.
+        /// </summary>
         public string Name { get; }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Gets the <see cref="Argument"/> collection for the <see cref="Instruction"/> instance.
+        /// </summary>
         public IEnumerable<Argument> Arguments { get; }
 
         /// <summary>
-        /// Creates a new <c>IInstruction</c> with the provided text.
+        /// Creates a new <see cref="Instruction"/> by parsing the provided string text.
         /// </summary>
-        /// <param name="text"></param>
-        /// <returns></returns>
-        /// <exception cref="FormatException"></exception>
-        public static IInstruction FromText(string text)
+        /// <param name="text">The instruction text to parse.</param>
+        /// <returns>A new <see cref="Instruction"/> instance that represents the provided string text.</returns>
+        /// <exception cref="FormatException">The provided text is not a valid instruction text format.</exception>
+        public static Instruction Parse(string text)
         {
             if (text is null)
                 throw new ArgumentNullException(nameof(text));
@@ -43,15 +47,23 @@ namespace L5Sharp.Core
                 throw new FormatException($"Text input '{text}' does not have expected format.");
 
             var name = Regex.Match(text, @"^[a-zA-Z0-9_]+").Value;
-            var arguments = new List<string>(Regex.Match(text, @"(?<=\().+?(?=\))").Value.Split(','));
+            var arguments = new List<string>(Regex.Match(text, @"(?<=\().+?(?=\))").Value.Split(','))
+                .Select(v => new Argument(v));
 
             return new Instruction(name, arguments);
         }
 
-        /// <inheritdoc />
-        public NeutralText ToText() => new($"{Name}({string.Join(",", Arguments.Select(a => a.Reference))})");
+        /// <summary>
+        /// Generates a new <see cref="Instruction"/> instance with the provided arguments parameters.
+        /// </summary>
+        /// <param name="arguments">Set of string arguments to instantiate the <see cref="Instruction"/> with.</param>
+        /// <returns>A new <see cref="Instruction"/> with the provided arguments.</returns>
+        public Instruction Build(params Argument[] arguments) => new(Name, arguments);
 
-        /// <inheritdoc />
-        public IInstruction Of(params string[] arguments) => new Instruction(Name, arguments);
+        /// <summary>
+        /// Generates the <see cref="NeutralText"/> value for the current <see cref="Instruction"/>.
+        /// </summary>
+        /// <returns>A new <see cref="NeutralText"/> object that represents the instruction text.</returns>
+        public NeutralText ToText() => new($"{Name}({string.Join(",", Arguments.Select(a => a.Reference))})");
     }
 }

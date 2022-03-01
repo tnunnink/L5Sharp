@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Schema;
+using L5Sharp.Core;
+using L5Sharp.Enums;
+using L5Sharp.Extensions;
 
 namespace L5Sharp.L5X
 {
@@ -14,6 +18,9 @@ namespace L5Sharp.L5X
     /// </summary>
     public class L5XDocument
     {
+        private static readonly XDeclaration DefaultDeclaration = new("1.0", "UTF-8", "yes");
+        private const string DefaultRevision = "1.0";
+        private const string DateFormat = "ddd MMM d HH:mm:ss yyyy";
         private const string L5XSchema = "L5Sharp.Resources.L5X.xsd";
         private readonly XDocument _document;
 
@@ -21,7 +28,7 @@ namespace L5Sharp.L5X
         /// Creates a new <see cref="L5XDocument"/> that wraps the provided <see cref="XDocument"/>.
         /// </summary>
         /// <param name="document">The <see cref="XDocument"/> that represents the L5X content.</param>
-        public L5XDocument(XDocument document)
+        internal L5XDocument(XDocument document)
         {
             //todo need to decide how to get valid schema file.
             //We should probably create our own using exports and xsd generation tools, but that would take a long time.
@@ -31,9 +38,83 @@ namespace L5Sharp.L5X
         }
 
         /// <summary>
+        /// Creates a new <see cref="L5XDocument"/> with the provided logic component.
+        /// </summary>
+        /// <param name="component">The logix component instance for which to create the target context.</param>
+        /// <typeparam name="TComponent">The logix component type.</typeparam>
+        /// <returns>A new <see cref="L5XDocument"/> that represents a target context for the provided component.</returns>
+        internal static L5XDocument Create<TComponent>(TComponent component) where TComponent : ILogixComponent
+        {
+            var document = new XDocument(DefaultDeclaration);
+
+            var content = new XElement(L5XElement.RsLogix5000Content.ToXName());
+            content.Add(new XAttribute(nameof(SchemaRevision), DefaultRevision));
+            content.Add(new XAttribute(nameof(SoftwareRevision), DefaultRevision));
+            content.Add(new XAttribute(nameof(TargetName), component.Name));
+            content.Add(new XAttribute(nameof(TargetType), L5XNames.GetComponentName<TComponent>()));
+            content.Add(new XAttribute(nameof(ContainsContext), component is not IController));
+            content.Add(new XAttribute(nameof(Owner), Environment.UserName));
+            content.Add(new XAttribute(nameof(ExportDate), DateTime.Now.ToString(DateFormat)));
+
+            var element = component.Serialize();
+            element.Add(new XAttribute(nameof(Use), Use.Target));
+
+            if (component is IController)
+            {
+                content.Add(element);
+                return new L5XDocument(document);
+            }
+
+            var controller = new XElement(L5XNames.GetComponentName<IController>());
+            var container = new XElement(L5XNames.GetContainerName<TComponent>());
+
+            container.Add(element);
+            controller.Add(container);
+            content.Add(controller);
+
+            return new L5XDocument(document);
+        }
+
+        /// <summary>
         /// Gets the root <see cref="XElement"/> for the current L5X file.
         /// </summary>
-        public XElement Content => _document.Root!;
+        public XElement Content => _document.Root ?? throw new ArgumentNullException(nameof(_document.Root));
+
+        /// <summary>
+        /// Gets the value of the schema revision for the current L5X context.
+        /// </summary>
+        public Revision SchemaRevision => Revision.Parse(Content.Attribute(nameof(SchemaRevision))?.Value!);
+
+        /// <summary>
+        /// Gets the value of the software revision for the current L5X context.
+        /// </summary>
+        public Revision SoftwareRevision => Revision.Parse(Content.Attribute(nameof(SoftwareRevision))?.Value!);
+
+        /// <summary>
+        /// Gets the name of the Logix component that is the target of the current L5X context.
+        /// </summary>
+        public ComponentName TargetName => new(Content.Attribute(nameof(TargetName))?.Value!);
+
+        /// <summary>
+        /// Gets the type of Logix component that is the target of the current L5X context.
+        /// </summary>
+        public string TargetType => Content.Attribute(nameof(TargetType))?.Value!;
+
+        /// <summary>
+        /// Gets the value indicating whether the current L5X is contextual..
+        /// </summary>
+        public bool ContainsContext => bool.Parse(Content.Attribute(nameof(ContainsContext))?.Value!);
+
+        /// <summary>
+        /// Gets the owner that exported the current L5X file.
+        /// </summary>
+        public string Owner => Content.Attribute(nameof(Owner))?.Value!;
+
+        /// <summary>
+        /// Gets the date time that the L5X file was exported.
+        /// </summary>
+        public DateTime ExportDate => DateTime.ParseExact(Content.Attribute(nameof(ExportDate))?.Value, DateFormat,
+            CultureInfo.CurrentCulture);
 
         /// <summary>
         /// Gets all <see cref="XElement"/> objects that represent the component element for specified component type.

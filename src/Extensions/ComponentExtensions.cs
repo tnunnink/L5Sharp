@@ -10,7 +10,7 @@ namespace L5Sharp.Extensions
     /// <summary>
     /// A class of extension for <see cref="ILogixComponent"/> implementations
     /// </summary>
-    internal static class ComponentExtensions
+    public static class ComponentExtensions
     {
         private static readonly Dictionary<Type, IL5XSerializer> Serializers = new()
         {
@@ -24,6 +24,17 @@ namespace L5Sharp.Extensions
             { typeof(ITask), new TaskSerializer() }
         };
 
+        /// <summary>
+        /// Creates a new <see cref="L5XContext"/> with the current <see cref="ILogixComponent"/> as the target component.
+        /// </summary>
+        /// <param name="component">The current logix component for which to create the new <see cref="L5XContext"/>.</param>
+        /// <typeparam name="TComponent">The logix component type of the current instance.</typeparam>
+        /// <returns>A new <see cref="L5XContext"/> instance with the current component as the target of the context.</returns>
+        /// <remarks>
+        /// This 
+        /// </remarks>
+        public static L5XContext Export<TComponent>(this TComponent component)
+            where TComponent : ILogixComponent => L5XContext.Create(component);
 
         /// <summary>
         /// Serializes an <see cref="ILogixComponent"/> instance to a <see cref="XElement"/> using the serializer
@@ -32,20 +43,7 @@ namespace L5Sharp.Extensions
         /// <param name="component">The <see cref="ILogixComponent"/> instance to serialize.</param>
         /// <typeparam name="TComponent">The type of logix component to serialize.</typeparam>
         /// <returns>A new <see cref="XElement"/> instance that represents the serialized L5X of the component.</returns>
-        public static XElement Serialize<TComponent>(this TComponent component)
-            where TComponent : ILogixComponent => GetSerializer<TComponent>().Serialize(component);
-
-        /// <summary>
-        /// Deserialized an <see cref="XElement"/> instance to a <see cref="ILogixComponent"/> using the serializer
-        /// defined for the component type.
-        /// </summary>
-        /// <param name="element">The <see cref="XElement"/> instance to deserialize.</param>
-        /// <typeparam name="TComponent">The type of logix component to deserialize.</typeparam>
-        /// <returns>A new <see cref="ILogixComponent"/> type that represents the deserialized component of the current element.</returns>
-        public static TComponent Deserialize<TComponent>(this XElement element)
-            where TComponent : ILogixComponent => GetSerializer<TComponent>().Deserialize(element);
-
-        private static IL5XSerializer<TComponent> GetSerializer<TComponent>()
+        internal static XElement Serialize<TComponent>(this TComponent component)
             where TComponent : ILogixComponent
         {
             var serializer = Serializers.FirstOrDefault(t => t.Key == typeof(TComponent)).Value;
@@ -53,7 +51,7 @@ namespace L5Sharp.Extensions
             if (serializer is null)
                 throw new InvalidOperationException($"No serializer defined for'{typeof(TComponent)}'");
 
-            return (IL5XSerializer<TComponent>)serializer;
+            return ((IL5XSerializer<TComponent>)serializer).Serialize(component);
         }
     }
 }

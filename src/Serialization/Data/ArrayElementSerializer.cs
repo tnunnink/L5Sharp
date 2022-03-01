@@ -60,7 +60,7 @@ namespace L5Sharp.Serialization.Data
                 return serializer.Deserialize(structure);
             }
 
-            var name = element.Parent?.GetDataTypeName()!;
+            var name = element.Parent?.DataTypeName()!;
             var value = element.Attribute(L5XAttribute.Value.ToXName())?.Value!;
             return DataType.Atomic(name, value);
         }

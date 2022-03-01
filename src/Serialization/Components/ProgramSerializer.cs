@@ -54,8 +54,8 @@ namespace L5Sharp.Serialization.Components
             if (element.Name != ElementName)
                 throw new ArgumentException($"Element '{element.Name}' not valid for the serializer {GetType()}.");
 
-            var name = element.GetComponentName();
-            var description = element.GetComponentDescription();
+            var name = element.ComponentName();
+            var description = element.ComponentDescription();
             var testEdits = element.GetAttribute<IProgram, bool>(p => p.TestEdits);
             var mainRoutineName = element.GetAttribute<IProgram, string>(p => p.MainRoutineName);
             var faultRoutineName = element.GetAttribute<IProgram, string>(p => p.FaultRoutineName);

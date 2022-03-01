@@ -18,20 +18,20 @@ namespace L5Sharp.Repositories
         }
 
         public bool Contains(ComponentName name) =>
-            _context.L5X.GetComponents<ITask>().Any(t => t.GetComponentName() == name);
+            _context.L5X.GetComponents<ITask>().Any(t => t.ComponentName() == name);
 
         public ITask? Find(Expression<Func<ITask, bool>> predicate) =>
             _context.L5X.GetComponents<ITask>().FirstOrDefault(predicate.ToXExpression())?.Deserialize<ITask>();
 
         public ITask? Find(ComponentName name) =>
-            _context.L5X.GetComponents<ITask>().FirstOrDefault(x => x.GetComponentName() == name)?.Deserialize<ITask>();
+            _context.L5X.GetComponents<ITask>().FirstOrDefault(x => x.ComponentName() == name)?.Deserialize<ITask>();
 
         public IEnumerable<ITask> FindAll(Expression<Func<ITask, bool>> predicate) =>
             _context.L5X.GetComponents<ITask>().Where(predicate.ToXExpression()).Select(e => e.Deserialize<ITask>());
 
         public ITask Get(ComponentName name)
         {
-            var count = _context.L5X.GetComponents<ITask>().Count(x => x.GetComponentName() == name);
+            var count = _context.L5X.GetComponents<ITask>().Count(x => x.ComponentName() == name);
 
             return count switch
             {
@@ -39,13 +39,13 @@ namespace L5Sharp.Repositories
                 > 1 => throw new InvalidOperationException(
                     $"The provided component name '{name}' has more than one instance in the current context."),
                 _ => _context.L5X.GetComponents<ITask>()
-                    .Single(x => x.GetComponentName() == name)
+                    .Single(x => x.ComponentName() == name)
                     .Deserialize<ITask>()
             };
         }
 
         public IEnumerable<ITask> GetAll() => _context.L5X.GetComponents<ITask>().Select(t => t.Deserialize<ITask>());
 
-        public IEnumerable<string> Names() => _context.L5X.GetComponents<ITask>().Select(x => x.GetComponentName());
+        public IEnumerable<string> Names() => _context.L5X.GetComponents<ITask>().Select(x => x.ComponentName());
     }
 }

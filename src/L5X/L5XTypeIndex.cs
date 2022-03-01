@@ -69,7 +69,7 @@ namespace L5Sharp.L5X
 
             foreach (var type in types)
             {
-                var name = type.GetComponentName();
+                var name = type.ComponentName();
                 _index.TryAdd(name, type);
             }
         }
@@ -91,7 +91,7 @@ namespace L5Sharp.L5X
 
             foreach (var type in types)
             {
-                var name = type.GetComponentName();
+                var name = type.ComponentName();
                 _index.TryAdd(name, type);
             }
         }

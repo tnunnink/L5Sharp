@@ -17,7 +17,7 @@ namespace L5Sharp.Internal.Tests.Extensions
         {
             var element = new XElement("Test", new XAttribute("Property", "TestName"));
 
-            FluentActions.Invoking(() => element.GetComponentName()).Should().Throw<InvalidOperationException>();
+            FluentActions.Invoking(() => element.ComponentName()).Should().Throw<InvalidOperationException>();
         }
 
         [Test]
@@ -25,7 +25,7 @@ namespace L5Sharp.Internal.Tests.Extensions
         {
             var element = new XElement("Test", new XAttribute("Name", "TestName"));
 
-            var name = element.GetComponentName();
+            var name = element.ComponentName();
 
             name.Should().Be("TestName");
         }
@@ -35,7 +35,7 @@ namespace L5Sharp.Internal.Tests.Extensions
         {
             var element = new XElement("Test", new XAttribute("DataType", "Invalid"));
 
-            var type = element.GetDataTypeName();
+            var type = element.DataTypeName();
 
             type.Should().Be("Invalid");
         }
@@ -45,7 +45,7 @@ namespace L5Sharp.Internal.Tests.Extensions
         {
             var element = new XElement("Test", new XAttribute("DataType", "BOOL"));
 
-            var type = element.GetDataTypeName();
+            var type = element.DataTypeName();
 
             type.Should().Be("BOOL");
         }
