@@ -101,7 +101,7 @@ namespace L5Sharp
         /// <summary>
         /// Gets the collection of <see cref="ITag{TDataType}"/> local to the <see cref="IAddOnInstruction"/>.
         /// </summary>
-        IEnumerable<ITag<IDataType>> LocalTags { get; }
+        IComponentCollection<ITag<IDataType>> LocalTags { get; }
 
         /// <summary>
         /// Gets the collection of <see cref="IRoutine{TContent}"/> objects that contain the content of the <see cref="IAddOnInstruction"/>.

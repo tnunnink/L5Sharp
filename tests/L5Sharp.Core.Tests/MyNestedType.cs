@@ -1,7 +1,7 @@
 ﻿using L5Sharp.Abstractions;
 using L5Sharp.Atomics;
+using L5Sharp.Creators;
 using L5Sharp.Enums;
-using L5Sharp.Factories;
 using L5Sharp.Predefined;
 
 namespace L5Sharp.Core.Tests

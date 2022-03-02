@@ -2,7 +2,7 @@
 using L5Sharp.Core;
 using L5Sharp.Enums;
 
-namespace L5Sharp.Factories
+namespace L5Sharp.Creators
 {
     /// <summary>
     /// A static component factory class for creating new instances of <see cref="IRoutine{TContent}"/>.

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using L5Sharp.Creators;
 using L5Sharp.Enums;
 using L5Sharp.Exceptions;
 
@@ -11,13 +12,15 @@ namespace L5Sharp.Core
         private readonly ITagMember<TDataType> _tagMember;
 
         internal Tag(string name, TDataType dataType, Radix? radix = null, ExternalAccess? externalAccess = null,
-            string? description = null, TagUsage? usage = null, bool constant = false, Comments? comments = null)
+            string? description = null, TagUsage? usage = null, TagName? alias = null, bool constant = false,
+            Comments? comments = null)
         {
             var root = (ITag<IDataType>)(ITag<TDataType>)this;
             var member = new Member<TDataType>(name, dataType, radix, externalAccess, description);
             _tagMember = new TagMember<TDataType>(member, root, null);
 
             Usage = usage ?? TagUsage.Null;
+            Alias = alias ?? TagName.Empty;
             Constant = constant;
             Comments = new Comments(comments);
 
@@ -38,6 +41,10 @@ namespace L5Sharp.Core
         /// If not provided will use <see cref="String.Empty"/>.</param>
         /// <param name="usage">The optional usage of the tag.
         /// If not provided will use <see cref="Enums.TagUsage.Null"/>.</param>
+        /// <param name="alias">The optional tag name value of the alias tag.
+        /// If not provided will default to <see cref="Core.TagName.Empty"/></param>
+        /// <param name="constant">The optional value indicating whether the tag value is constant.
+        /// If not provided will default to false.</param>
         /// <exception cref="ArgumentNullException"><c>name</c> or <c>dataType</c> are null.</exception>
         /// <exception cref="ComponentNameInvalidException">
         /// <c>name</c> does not satisfy the <see cref="ComponentName"/> constraints.
@@ -45,19 +52,18 @@ namespace L5Sharp.Core
         /// <remarks>
         /// This is the primary public constructor for creating <see cref="Tag{TDataType}"/> components.
         /// For a more succinct way of creating instances of <see cref="ITag{TDataType}"/>, use the factory class
-        /// <see cref="Factories.Tag"/>.
+        /// <see cref="Tag"/>.
         /// </remarks>
         public Tag(ComponentName name, TDataType dataType, Radix? radix = null, ExternalAccess? externalAccess = null,
-            string? description = null, TagUsage? usage = null)
+            string? description = null, TagUsage? usage = null, TagName? alias = null, bool constant = default)
         {
-            if (name is null)
-                throw new ArgumentNullException(nameof(name));
-
             var root = (ITag<IDataType>)(ITag<TDataType>)this;
             var member = new Member<TDataType>(name, dataType, radix, externalAccess, description);
             _tagMember = new TagMember<TDataType>(member, root, null);
 
             Usage = usage ?? TagUsage.Null;
+            Alias = alias ?? TagName.Empty;
+            Constant = constant;
             Comments = new Comments();
 
             if (!string.IsNullOrEmpty(description))
@@ -110,6 +116,9 @@ namespace L5Sharp.Core
         public TagUsage Usage { get; }
 
         /// <inheritdoc />
+        public TagName Alias { get; }
+
+        /// <inheritdoc />
         public bool Constant { get; }
 
         /// <inheritdoc />
@@ -134,7 +143,7 @@ namespace L5Sharp.Core
         public void Comment(string comment) => _tagMember.Comment(comment);
 
         /// <inheritdoc />
-        public bool HasMember(TagName tagName) => _tagMember.HasMember(tagName);
+        public bool Contains(TagName tagName) => _tagMember.Contains(tagName);
 
         /// <inheritdoc />
         public ITagMember<IDataType> Member(TagName tagName) => _tagMember.Member(tagName);

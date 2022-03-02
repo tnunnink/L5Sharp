@@ -94,7 +94,7 @@ namespace L5Sharp
         /// <remarks>You can provide either the fully qualified member name path (including the current base member
         /// name) or just the path relative to the current base member (not including the base name).</remarks>
         /// <exception cref="ArgumentNullException">tagName is null.</exception>
-        bool HasMember(TagName tagName);
+        bool Contains(TagName tagName);
 
         /// <summary>
         /// Gets a descendent <see cref="ITagMember{TDataType}"/> instance with the specified tag name value. 

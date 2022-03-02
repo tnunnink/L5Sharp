@@ -43,6 +43,21 @@
         /// <summary>
         /// Represents the <see cref="Length"/> L5X attribute name.
         /// </summary>
-        Length
+        Length,
+        
+        /// <summary>
+        /// Represents the <see cref="Dimension"/> L5X attribute name.
+        /// </summary>
+        Dimension,
+        
+        /// <summary>
+        /// Represents the <see cref="Radix"/> L5X attribute name.
+        /// </summary>
+        Radix,
+        
+        /// <summary>
+        /// Represents the <see cref="ExternalAccess"/> L5X attribute name.
+        /// </summary>
+        ExternalAccess
     }
 }

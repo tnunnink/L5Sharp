@@ -2,13 +2,13 @@
 using FluentAssertions;
 using L5Sharp.Atomics;
 using L5Sharp.Core;
-using L5Sharp.Factories;
+using L5Sharp.Creators;
 using NUnit.Framework;
 
-namespace L5Sharp.Factory.Tests
+namespace L5Sharp.Creators.Tests
 {
     [TestFixture]
-    public class MemberFactoryTests
+    public class MemberCreatorTests
     {
         [Test]
         public void Create_NullName_ShouldThrowArgumentNullException()

@@ -2,9 +2,9 @@
 using System.Linq;
 using FluentAssertions;
 using L5Sharp.Atomics;
+using L5Sharp.Creators;
 using L5Sharp.Enums;
 using L5Sharp.Exceptions;
-using L5Sharp.Factories;
 using L5Sharp.Predefined;
 using NUnit.Framework;
 
@@ -64,7 +64,7 @@ namespace L5Sharp.Core.Tests
         {
             var tag = Tag.Create<Timer>("Test");
 
-            FluentActions.Invoking(() => tag.HasMember(null!)).Should().Throw<ArgumentNullException>();
+            FluentActions.Invoking(() => tag.Contains(null!)).Should().Throw<ArgumentNullException>();
         }
 
         [Test]
@@ -72,7 +72,7 @@ namespace L5Sharp.Core.Tests
         {
             var tag = Tag.Create<Timer>("Test");
 
-            var result = tag.HasMember("Test.PRE");
+            var result = tag.Contains("Test.PRE");
 
             result.Should().BeTrue();
         }

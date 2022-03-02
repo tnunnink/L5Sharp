@@ -13,7 +13,7 @@ namespace L5Sharp.Predefined
     public sealed class Undefined : IDataType
     {
         /// <summary>
-        /// Creates a new default instance of an Undefined type.
+        /// Creates a new <see cref="Undefined"/> type.
         /// </summary>
         public Undefined()
         {
@@ -21,7 +21,7 @@ namespace L5Sharp.Predefined
         }
         
         /// <summary>
-        /// Creates a new instance of an undefined type with the provided type name.
+        /// Creates a new <see cref="Undefined"/> type with the provided type name.
         /// </summary>
         /// <param name="name">Name of the type for which no definition has been found.</param>
         public Undefined(string name)
@@ -36,7 +36,7 @@ namespace L5Sharp.Predefined
         public string Name { get; }
 
         /// <inheritdoc />
-        public string Description => "Undefined DataType";
+        public string Description => string.Empty;
 
         /// <inheritdoc />
         public DataTypeFamily Family => DataTypeFamily.None;
@@ -45,9 +45,6 @@ namespace L5Sharp.Predefined
         public DataTypeClass Class => DataTypeClass.Unknown;
 
         /// <inheritdoc />
-        public IDataType Instantiate()
-        {
-            return new Undefined(Name);
-        }
+        public IDataType Instantiate() => new Undefined(Name);
     }
 }

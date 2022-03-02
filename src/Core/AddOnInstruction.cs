@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using L5Sharp.Atomics;
 using L5Sharp.Enums;
 
 namespace L5Sharp.Core
@@ -78,7 +79,7 @@ namespace L5Sharp.Core
         /// Will default to false.</param>
         /// <param name="description">The description of the instruction. Will default to an empty string.</param>
         /// <exception cref="ArgumentNullException">name is null.</exception>
-        public AddOnInstruction(ComponentName name, RoutineType? type = null, 
+        public AddOnInstruction(ComponentName name, RoutineType? type = null,
             Revision? revision = null, string? revisionExtension = null, string? revisionNote = null,
             string? vendor = null,
             bool executePreScan = default, bool executePostScan = default, bool executeEnableInFalse = default,
@@ -103,9 +104,8 @@ namespace L5Sharp.Core
             SoftwareRevision = softwareRevision ?? new Revision();
             AdditionalHelpText = additionalHelpText ?? string.Empty;
             IsEncrypted = isEncrypted;
-            Parameters = new MemberCollection<IParameter<IDataType>>(this);
+            Parameters = new MemberCollection<IParameter<IDataType>>(this, GenerateDefaultParameters());
             LocalTags = new ComponentCollection<ITag<IDataType>>();
-            
             var routine = new Routine<ILogixContent>(LogicRoutineName, type);
             _routines.Add(routine);
         }
@@ -178,7 +178,7 @@ namespace L5Sharp.Core
         public IMemberCollection<IParameter<IDataType>> Parameters { get; }
 
         /// <inheritdoc />
-        public IEnumerable<ITag<IDataType>> LocalTags { get; }
+        public IComponentCollection<ITag<IDataType>> LocalTags { get; }
 
         /// <inheritdoc />
         public IEnumerable<IRoutine<ILogixContent>> Routines => _routines;
@@ -186,9 +186,21 @@ namespace L5Sharp.Core
         /// <inheritdoc />
         public IDataType Instantiate()
         {
-            //return new AddOnInstruction(Name, Description, Type, Revision, RevisionExtension, )
-
+            /*return new AddOnInstruction(string.Copy(Name), string.Copy(Description), Type,
+                Revision, RevisionExtension, RevisionNote,
+                ExecutePreScan, ExecutePostScan, ExecuteEnableInFalse, CreatedDate, CreatedBy, EditedDate, EditedBy,
+                SoftwareRevision, AdditionalHelpText, IsEncrypted,
+                Parameters.Select(p => new Parameter<IDataType>(string.Copy(p.Name, ))));*/
             throw new NotImplementedException();
+        }
+
+        private static IEnumerable<IParameter<IDataType>> GenerateDefaultParameters()
+        {
+            yield return new Parameter<Bool>("EnableIn", new Bool(true), Radix.Decimal, ExternalAccess.ReadOnly,
+                TagUsage.Input, description: "Enable Input - System Defined Parameter");
+
+            yield return new Parameter<Bool>("EnableOut", new Bool(), Radix.Decimal, ExternalAccess.ReadOnly,
+                TagUsage.Output, description: "Enable Output - System Defined Parameter");
         }
     }
 }

@@ -2,9 +2,9 @@
 using System.Linq;
 using FluentAssertions;
 using L5Sharp.Atomics;
+using L5Sharp.Creators;
 using L5Sharp.Enums;
 using L5Sharp.Exceptions;
-using L5Sharp.Factories;
 using L5Sharp.Predefined;
 using NUnit.Framework;
 using String = L5Sharp.Predefined.String;
@@ -42,7 +42,7 @@ namespace L5Sharp.Core.Tests
             var tag = Tag.Create<MyNestedType>("Test");
             var timer = tag.Member(m => m.Tmr);
 
-            FluentActions.Invoking(() => timer.HasMember(null!)).Should().Throw<ArgumentNullException>();
+            FluentActions.Invoking(() => timer.Contains(null!)).Should().Throw<ArgumentNullException>();
         }
 
         [Test]
@@ -51,7 +51,7 @@ namespace L5Sharp.Core.Tests
             var tag = Tag.Create<MyNestedType>("Test");
             var timer = tag.Member(m => m.Tmr);
 
-            var result = timer.HasMember("PRE");
+            var result = timer.Contains("PRE");
 
             result.Should().BeTrue();
         }
@@ -62,7 +62,7 @@ namespace L5Sharp.Core.Tests
             var tag = Tag.Create<MyNestedType>("Test");
             var timer = tag.Member(m => m.Tmr);
 
-            var result = timer.HasMember("PRESET");
+            var result = timer.Contains("PRESET");
 
             result.Should().BeFalse();
         }

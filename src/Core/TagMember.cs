@@ -78,7 +78,7 @@ namespace L5Sharp.Core
         public void Comment(string comment) => Root.Comments.Apply(TagName, comment);
 
         /// <inheritdoc />
-        public bool HasMember(TagName tagName)
+        public bool Contains(TagName tagName)
         {
             if (tagName is null)
                 throw new ArgumentNullException(nameof(tagName));

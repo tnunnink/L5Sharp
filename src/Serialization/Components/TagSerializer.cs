@@ -23,6 +23,7 @@ namespace L5Sharp.Serialization.Components
             element.AddAttribute(component, c => c.Name);
             element.AddElement(component, c => c.Description);
             element.AddAttribute(component, c => c.TagType);
+            element.AddAttribute(component, c => c.Alias, t => !t.Alias.IsEmpty && t.Alias.IsValid);
             element.AddAttribute(component, c => c.DataType.Name, nameOverride: nameof(component.DataType));
             element.AddAttribute(component, c => c.Dimensions, t => !t.Dimensions.AreEmpty);
             element.AddAttribute(component, c => c.Radix, t => t.IsValueMember);
@@ -60,6 +61,7 @@ namespace L5Sharp.Serialization.Components
             var radix = element.GetAttribute<Tag<IDataType>, Radix>(t => t.Radix);
             var access = element.GetAttribute<Tag<IDataType>, ExternalAccess>(t => t.ExternalAccess);
             var usage = element.GetAttribute<Tag<IDataType>, TagUsage>(m => m.Usage);
+            var alias = element.GetAttribute<Tag<IDataType>, TagName>(m => m.Alias);
             var constant = element.GetAttribute<Tag<IDataType>, bool>(m => m.Constant);
 
             var commentSerializer = new CommentSerializer();
@@ -70,7 +72,7 @@ namespace L5Sharp.Serialization.Components
                 ? new ArrayType<IDataType>(dimensions, dataType, radix, access, description)
                 : dataType;
 
-            var tag = new Tag<IDataType>(name, type, radix, access, description, usage, constant, comments);
+            var tag = new Tag<IDataType>(name, type, radix, access, description, usage, alias, constant, comments);
 
             var formattedData = element.Descendants(L5XElement.Data.ToXName())
                 .FirstOrDefault(e => e.Attribute(L5XAttribute.Format.ToXName())?.Value != TagDataFormat.L5K);

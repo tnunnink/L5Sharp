@@ -25,17 +25,9 @@ namespace L5Sharp.Core
         /// </summary>
         /// <param name="tagName">The string that represents the tag name value.</param>
         /// <exception cref="ArgumentNullException">tagName is null.</exception>
-        /// <exception cref="ArgumentException">tagName is empty.</exception>
-        /// <exception cref="FormatException">tagName does not have a valid format.</exception>
         public TagName(string tagName)
         {
-            if (string.IsNullOrEmpty(tagName))
-                throw new ArgumentException("TagName can not be null or empty.");
-
-            if (!Regex.IsMatch(tagName, TagNamePattern, RegexOptions.Compiled))
-                throw new FormatException($"The provided tag name '{tagName}' does not have a valid format.");
-
-            _tagName = tagName;
+            _tagName = tagName ?? throw new ArgumentNullException(nameof(tagName));
         }
 
         /// <summary>
@@ -55,7 +47,7 @@ namespace L5Sharp.Core
         /// the full tag name value without the leading base name. The operand will include any leading '.' character.
         /// </remarks>
         /// <seealso cref="Path"/>
-        public string Operand => _tagName.Remove(0, Root.Length);
+        public string Operand => !Root.IsEmpty() ? _tagName.Remove(0, Root.Length) : string.Empty;
 
         /// <summary>
         /// Gets the member path of the <see cref="TagName"/> value.
@@ -99,6 +91,21 @@ namespace L5Sharp.Core
         /// </remarks>
         public IEnumerable<string> Parts =>
             Regex.Matches(_tagName, PartsPattern, RegexOptions.Compiled).Select(m => m.Value);
+
+        /// <summary>
+        /// Gets a value indicating whether the current <see cref="TagName"/> value is empty.
+        /// </summary>
+        public bool IsEmpty => _tagName.IsEmpty();
+
+        /// <summary>
+        /// Gets a value indicating whether the current <see cref="TagName"/> test is a valid representation of a tag name.
+        /// </summary>
+        public bool IsValid => Regex.IsMatch(_tagName, TagNamePattern, RegexOptions.Compiled); 
+
+        /// <summary>
+        /// Gets the static empty <see cref="TagName"/> value.
+        /// </summary>
+        public static TagName Empty => new(string.Empty);
 
         /// <summary>
         /// Combines two strings into a single <see cref="TagName"/> value.

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using AutoFixture;
 using FluentAssertions;
 using L5Sharp.Atomics;
+using L5Sharp.Creators;
 using L5Sharp.Enums;
 using L5Sharp.Exceptions;
-using L5Sharp.Factories;
 using L5Sharp.Predefined;
 using NUnit.Framework;
 using String = L5Sharp.Predefined.String;
@@ -351,7 +351,7 @@ namespace L5Sharp.Core.Tests
         {
             var tag = Tag.Create<Bool>("Test");
 
-            var result = tag.HasMember("Member");
+            var result = tag.Contains("Member");
 
             result.Should().BeFalse();
         }

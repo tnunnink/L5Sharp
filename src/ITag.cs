@@ -21,6 +21,12 @@ namespace L5Sharp
         TagUsage Usage { get; }
         
         /// <summary>
+        /// Gets the <see cref="TagName"/> value that represents the alias of the current <see cref="ITag{TDataType}"/>
+        /// component.
+        /// </summary>
+        TagName Alias { get; }
+        
+        /// <summary>
         /// Gets the value indicating whether the current <see cref="ITag{TDataType}"/> is a constant.
         /// </summary>
         bool Constant { get; }

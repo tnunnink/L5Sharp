@@ -26,20 +26,26 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void New_Null_ShouldThrowArgumentNullException()
         {
-            FluentActions.Invoking(() => new TagName(null!)).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(() => new TagName(null!)).Should().Throw<ArgumentNullException>();
         }
 
         [Test]
-        public void New_Empty_ShouldThrowArgumentException()
+        public void New_Empty_ShouldNotBeNullAndIsEmptyTrue()
         {
-            FluentActions.Invoking(() => new TagName(string.Empty)).Should().Throw<ArgumentException>();
+            var tagName = new TagName(string.Empty);
+
+            tagName.Should().NotBeNull();
+            tagName.IsEmpty.Should().BeTrue();
         }
 
         [Test]
-        public void New_Invalid_ShouldThrowFormatException()
+        public void New_Invalid_ShouldNotBeNullAndIsValidFalse()
         {
             var fixture = new Fixture();
-            FluentActions.Invoking(() => new TagName(fixture.Create<string>())).Should().Throw<FormatException>();
+            var tagName = new TagName(fixture.Create<string>());
+
+            tagName.Should().NotBeNull();
+            tagName.IsValid.Should().BeFalse();
         }
 
         [Test]
@@ -61,6 +67,8 @@ namespace L5Sharp.Core.Tests
             tagName.Depth.Should().Be(0);
             tagName.Members.Should().HaveCount(1);
             tagName.Members.Should().HaveCount(1);
+            tagName.IsEmpty.Should().BeFalse();
+            tagName.IsValid.Should().BeTrue();
         }
 
         [Test]
@@ -82,6 +90,8 @@ namespace L5Sharp.Core.Tests
             tagName.Depth.Should().Be(3);
             tagName.Members.Should().HaveCount(4);
             tagName.Parts.Should().HaveCount(4);
+            tagName.IsEmpty.Should().BeFalse();
+            tagName.IsValid.Should().BeTrue();
         }
 
         [Test]
@@ -103,6 +113,32 @@ namespace L5Sharp.Core.Tests
             tagName.Depth.Should().Be(4);
             tagName.Members.Should().HaveCount(5);
             tagName.Parts.Should().HaveCount(7);
+            tagName.IsEmpty.Should().BeFalse();
+            tagName.IsValid.Should().BeTrue();
+        }
+
+        [Test]
+        public void Empty_WhenCalled_ShouldBeEmptyValue()
+        {
+            var tagName = TagName.Empty;
+
+            tagName.Should().BeEquivalentTo(new TagName(""));
+        }
+        
+        [Test]
+        public void Empty_WhenCalled_IsEmptyShouldBeTrue()
+        {
+            var tagName = TagName.Empty;
+
+            tagName.IsEmpty.Should().BeTrue();
+        }
+        
+        [Test]
+        public void Empty_WhenCalled_IsValidShouldBeFalse()
+        {
+            var tagName = TagName.Empty;
+
+            tagName.IsValid.Should().BeFalse();
         }
 
         [Test]

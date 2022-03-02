@@ -4,9 +4,9 @@ using System.Linq;
 using FluentAssertions;
 using L5Sharp.Atomics;
 using L5Sharp.Core;
+using L5Sharp.Creators;
 using L5Sharp.Enums;
 using L5Sharp.Exceptions;
-using L5Sharp.Factories;
 using NUnit.Framework;
 using String = L5Sharp.Predefined.String;
 

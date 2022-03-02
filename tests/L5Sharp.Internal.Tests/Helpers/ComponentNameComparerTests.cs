@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
 using L5Sharp.Atomics;
 using L5Sharp.Comparers;
-using L5Sharp.Factories;
+using L5Sharp.Creators;
 using NUnit.Framework;
 
 namespace L5Sharp.Internal.Tests.Helpers

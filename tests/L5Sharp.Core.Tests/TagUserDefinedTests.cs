@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
 using L5Sharp.Atomics;
-using L5Sharp.Factories;
+using L5Sharp.Creators;
 using NUnit.Framework;
 
 namespace L5Sharp.Core.Tests
