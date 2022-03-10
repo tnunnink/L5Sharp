@@ -10,7 +10,7 @@ namespace L5Sharp.Serialization.Data
 {
     internal class ArraySerializer : IL5XSerializer<IArrayType<IDataType>>
     {
-        private static readonly XName ElementName = L5XElement.Array.ToXName();
+        private static readonly XName ElementName = L5XElement.Array.ToString();
 
         public XElement Serialize(IArrayType<IDataType> component)
         {

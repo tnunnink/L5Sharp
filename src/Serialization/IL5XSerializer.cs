@@ -5,15 +5,18 @@ namespace L5Sharp.Serialization
     /// <summary>
     /// A base interface used for collections of serializers. 
     /// </summary>
-    internal interface IL5XSerializer
+    public interface IL5XSerializer
     {
+        /*XElement Serialize(object component);
+        
+        object Deserialize(XElement element);*/
     }
     
     /// <summary>
     /// A typed serializer that defines the methods for serializing and deserializing objects to <see cref="XElement"/>.
     /// </summary>
     /// <typeparam name="T">The type of object used in serialization.</typeparam>
-    internal interface IL5XSerializer<T> : IL5XSerializer
+    public interface IL5XSerializer<T> : IL5XSerializer
     {
         /// <summary>
         /// Serializes the provided objet to an <see cref="XElement"/> object.

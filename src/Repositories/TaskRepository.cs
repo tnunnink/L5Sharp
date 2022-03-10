@@ -5,46 +5,44 @@ using System.Linq.Expressions;
 using L5Sharp.Core;
 using L5Sharp.Exceptions;
 using L5Sharp.Extensions;
+using L5Sharp.Serialization;
 
 namespace L5Sharp.Repositories
 {
     internal class TaskRepository : IReadOnlyRepository<ITask>
     {
         private readonly L5XContext _context;
+        private readonly IL5XSerializer<ITask> _serializer;
 
         public TaskRepository(L5XContext context)
         {
             _context = context;
+            _serializer = context.Serializers.GetSerializer<ITask>();
         }
 
         public bool Contains(ComponentName name) =>
             _context.L5X.GetComponents<ITask>().Any(t => t.ComponentName() == name);
 
         public ITask? Find(Expression<Func<ITask, bool>> predicate) =>
-            _context.L5X.GetComponents<ITask>().FirstOrDefault(predicate.ToXExpression())?.Deserialize<ITask>();
+            _serializer.Deserialize(_context.L5X.GetComponents<ITask>().FirstOrDefault(predicate.ToXExpression()));
 
         public ITask? Find(ComponentName name) =>
-            _context.L5X.GetComponents<ITask>().FirstOrDefault(x => x.ComponentName() == name)?.Deserialize<ITask>();
+            _serializer.Deserialize(_context.L5X.GetComponents<ITask>().FirstOrDefault(x => x.ComponentName() == name));
 
         public IEnumerable<ITask> FindAll(Expression<Func<ITask, bool>> predicate) =>
-            _context.L5X.GetComponents<ITask>().Where(predicate.ToXExpression()).Select(e => e.Deserialize<ITask>());
+            _context.L5X.GetComponents<ITask>().Where(predicate.ToXExpression()).Select(e => _serializer.Deserialize(e));
 
         public ITask Get(ComponentName name)
         {
-            var count = _context.L5X.GetComponents<ITask>().Count(x => x.ComponentName() == name);
+            var element = _context.L5X.GetComponents<ITask>().SingleOrDefault(x => x.ComponentName() == name);
 
-            return count switch
-            {
-                0 => throw new ComponentNotFoundException(name, typeof(ITask)),
-                > 1 => throw new InvalidOperationException(
-                    $"The provided component name '{name}' has more than one instance in the current context."),
-                _ => _context.L5X.GetComponents<ITask>()
-                    .Single(x => x.ComponentName() == name)
-                    .Deserialize<ITask>()
-            };
+            if (element is null)
+                throw new ComponentNotFoundException(name, typeof(ITask));
+
+            return _serializer.Deserialize(element);
         }
 
-        public IEnumerable<ITask> GetAll() => _context.L5X.GetComponents<ITask>().Select(t => t.Deserialize<ITask>());
+        public IEnumerable<ITask> GetAll() => _context.L5X.GetComponents<ITask>().Select(e => _serializer.Deserialize(e));
 
         public IEnumerable<string> Names() => _context.L5X.GetComponents<ITask>().Select(x => x.ComponentName());
     }

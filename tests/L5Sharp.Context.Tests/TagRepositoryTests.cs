@@ -83,7 +83,27 @@ namespace L5Sharp.Context.Tests
         {
             var context = L5XContext.Load(Known.L5X);
 
-            var tags = context.Tags.GetAll();
+            var tags = context.Tags.GetAll().ToList();
+
+            tags.Should().NotBeEmpty();
+        }
+
+        [Test]
+        public void GetAutoSamplerTypeTest()
+        {
+            var context = L5XContext.Load(Known.Template);
+
+            var tag = context.Tags.Get("Auto_Sampler_01");
+
+            tag.Should().NotBeNull();
+        }
+        
+        [Test]
+        public void GetAll_Template_ShouldNotBeEmpty()
+        {
+            var context = L5XContext.Load(Known.Template);
+
+            var tags = context.Tags.GetAll().ToList();
 
             tags.Should().NotBeEmpty();
         }

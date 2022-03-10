@@ -9,7 +9,7 @@ namespace L5Sharp.Serialization.Components
 {
     internal class ProgramSerializer : IL5XSerializer<Program>
     {
-        private static readonly XName ElementName = L5XElement.Program.ToXName();
+        private static readonly XName ElementName = L5XElement.Program.ToString();
 
         public XElement Serialize(Program component)
         {
@@ -18,7 +18,7 @@ namespace L5Sharp.Serialization.Components
 
             var element = new XElement(ElementName);
 
-            element.AddAttribute(component, c => c.Name);
+            element.Add(new XAttribute(L5XAttribute.Name.ToString(), component.Name));
             element.AddElement(component, c => c.Description);
             element.AddAttribute(component, c => c.Type);
             element.AddAttribute(component, c => c.TestEdits);
@@ -62,21 +62,21 @@ namespace L5Sharp.Serialization.Components
             var disabled = element.GetAttribute<IProgram, bool>(p => p.Disabled);
             var useAsFolder = element.GetAttribute<IProgram, bool>(p => p.UseAsFolder);
 
-            var tags = element.Descendants(L5XElement.Tag.ToXName())
+            var tags = element.Descendants(L5XElement.Tag.ToString())
                 .Select(e =>
                 {
                     var serializer = new TagSerializer();
                     return serializer.Deserialize(e);
                 });
 
-            var routines = element.Descendants(L5XElement.Routine.ToXName())
+            var routines = element.Descendants(L5XElement.Routine.ToString())
                 .Select(e =>
                 {
                     var serializer = new RoutineSerializer();
                     return serializer.Deserialize(e);
                 });
 
-            return new Program(name, description, mainRoutineName, faultRoutineName, 
+            return new Program(name, description, mainRoutineName, faultRoutineName,
                 useAsFolder, testEdits, disabled,
                 tags, routines);
         }

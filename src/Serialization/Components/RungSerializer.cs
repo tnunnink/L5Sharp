@@ -12,7 +12,7 @@ namespace L5Sharp.Serialization.Components
     /// </summary>
     internal class RungSerializer : IL5XSerializer<Rung>
     {
-        private static readonly XName ElementName = L5XElement.Rung.ToXName();
+        private static readonly XName ElementName = L5XElement.Rung.ToString();
 
         /// <inheritdoc />
         public XElement Serialize(Rung component)

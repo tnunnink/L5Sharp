@@ -1,45 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Xml.Linq;
 using L5Sharp.L5X;
-using L5Sharp.Predefined;
-using L5Sharp.Serialization;
-using L5Sharp.Serialization.Components;
-using L5Sharp.Serialization.Data;
 
 namespace L5Sharp.Extensions
 {
     internal static class ElementExtensions
     {
-        private static readonly Dictionary<L5XElement, IL5XSerializer> Serializers = new()
-        {
-            { L5XElement.Controller, new ControllerSerializer() },
-            { L5XElement.DataType, new UserDefinedSerializer() },
-            { L5XElement.DataType, new MemberSerializer() },
-            { L5XElement.Module, new ModuleSerializer() },
-            { L5XElement.Tag, new TagSerializer() },
-            { L5XElement.Program, new ProgramSerializer() },
-            { L5XElement.Routine, new RoutineSerializer() },
-            { L5XElement.Task, new TaskSerializer() },
-            { L5XElement.Structure, new StructureSerializer() },
-            { L5XElement.DataValueMember, new DataValueMemberSerializer() },
-        };
-
-        public static TComponent Deserialize<TComponent>(this XElement element)
-        {
-            if (!Enum.TryParse<L5XElement>(element.Name.ToString(), out var l5XElement))
-                throw new ArgumentException();
-
-            var serializer = Serializers.FirstOrDefault(t => t.Key == l5XElement).Value;
-
-            if (serializer is not IL5XSerializer<TComponent> typed)
-                throw new InvalidOperationException($"No serializer defined for element '{element.Name}'");
-
-            return typed.Deserialize(element);
-        }
-
         /// <summary>
         /// Gets the component name value from the current <see cref="XElement"/> instance.
         /// </summary>
@@ -47,7 +15,7 @@ namespace L5Sharp.Extensions
         /// <returns>The string value of the 'Name' attribute.</returns>
         /// <exception cref="InvalidOperationException">When the current element does not have a name value.</exception>
         public static string ComponentName(this XElement element) =>
-            element.Attribute(L5XAttribute.Name.ToXName())?.Value
+            element.Attribute(L5XAttribute.Name.ToString())?.Value
             ?? throw new InvalidOperationException("The current element does not have an attribute with name 'Name'");
 
         /// <summary>
@@ -56,7 +24,7 @@ namespace L5Sharp.Extensions
         /// <param name="element">The current <see cref="XElement"/> instance.</param>
         /// <returns>The string value of the 'Description' element if it exists; otherwise, empty string.</returns>
         public static string ComponentDescription(this XElement element) =>
-            element.Element(L5XAttribute.Description.ToXName())?.Value
+            element.Element(L5XAttribute.Description.ToString())?.Value
             ?? string.Empty;
 
         /// <summary>
@@ -66,30 +34,9 @@ namespace L5Sharp.Extensions
         /// <returns>
         /// </returns>
         public static string DataTypeName(this XElement element) =>
-            element.Attribute(L5XAttribute.DataType.ToXName())?.Value ??
+            element.Attribute(L5XAttribute.DataType.ToString())?.Value ??
             throw new InvalidOperationException(
                 "The current element does not have an attribute with name 'DataType'");
-
-        /// <summary>
-        /// Gets a new <see cref="IDataType"/> instance based ont the current element's data type name.
-        /// </summary>
-        /// <param name="element">The current element.</param>
-        /// <returns>If the data type name exists in the static <see cref="Core.DataType"/> class, a new instance created
-        /// from the static class. If not, but the element is part of an <see cref="XDocument"/>, and the data type
-        /// name exists as a type that can be deserialized, then a new deserialized instance of the type. Otherwise,
-        /// a new <see cref="Undefined"/> type wrapping the data type name.</returns>
-        public static IDataType DataType(this XElement element)
-        {
-            var name = element.DataTypeName();
-
-            if (Core.DataType.Exists(name))
-                return Core.DataType.Create(name);
-
-            if (element.Document is null) return new Undefined(name);
-
-            var index = new L5XTypeIndex(element.Document);
-            return index.GetDataType(name);
-        }
 
         /// <summary>
         /// Gets the value of a specified <see cref="XAttribute"/> from the current <see cref="XElement"/> instance.

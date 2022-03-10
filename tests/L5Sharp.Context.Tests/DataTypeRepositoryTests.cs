@@ -296,7 +296,6 @@ namespace L5Sharp.Context.Tests
 
             var result = context.DataTypes.Get("ComplexType").Members.Get("Child");
             result.Should().NotBeNull();
-            
         }
     }
 }

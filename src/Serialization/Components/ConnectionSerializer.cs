@@ -14,7 +14,7 @@ namespace L5Sharp.Serialization.Components
     /// </summary>
     public class ConnectionSerializer : IL5XSerializer<Connection>
     {
-        private static readonly XName ElementName = L5XElement.Connection.ToXName();
+        private static readonly XName ElementName = L5XElement.Connection.ToString();
 
         /// <inheritdoc />
         public XElement Serialize(Connection component)
@@ -74,8 +74,8 @@ namespace L5Sharp.Serialization.Components
             var serializer = new FormattedDataSerializer();
 
             var tagElement = element.Descendants(tagName).FirstOrDefault();
-            var formattedData = tagElement?.Descendants(L5XElement.Data.ToXName())
-                .FirstOrDefault(e => e.Attribute(L5XAttribute.Format.ToXName())?.Value == TagDataFormat.Decorated.Name);
+            var formattedData = tagElement?.Descendants(L5XElement.Data.ToString())
+                .FirstOrDefault(e => e.Attribute(L5XAttribute.Format.ToString())?.Value == TagDataFormat.Decorated.Name);
 
             return formattedData is not null
                 ? serializer.Deserialize(formattedData)
@@ -84,12 +84,12 @@ namespace L5Sharp.Serialization.Components
 
         private static string DetermineTagName(XNode element, string suffix)
         {
-            var moduleName = element.Ancestors(L5XElement.Module.ToXName())
-                .FirstOrDefault()?.Attribute(L5XAttribute.Name.ToXName())?.Value;
-            var parentName = element.Ancestors(L5XElement.Module.ToXName())
+            var moduleName = element.Ancestors(L5XElement.Module.ToString())
+                .FirstOrDefault()?.Attribute(L5XAttribute.Name.ToString())?.Value;
+            var parentName = element.Ancestors(L5XElement.Module.ToString())
                 .FirstOrDefault()?.Attribute("ParentModule")?.Value;
 
-            var slot = element.Ancestors(L5XElement.Port.ToXName())
+            var slot = element.Ancestors(L5XElement.Port.ToString())
                 .Where(p => !bool.Parse(p.Attribute("Upstream")?.Value!)
                             && p.Attribute("Type")?.Value != "Ethernet"
                             && int.TryParse(p.Attribute("Address")?.Value, out _))

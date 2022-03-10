@@ -1,71 +1,59 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Xml.Linq;
+using L5Sharp.Core;
 using L5Sharp.Extensions;
 using L5Sharp.Predefined;
-using L5Sharp.Serialization.Components;
-using L5Sharp.Serialization.Data;
 
 namespace L5Sharp.L5X
 {
-    /// <summary>
-    /// A helper for finding and deserializing data types across an L5X document.
-    /// </summary>
     internal class L5XTypeIndex
     {
+        private readonly L5XContext _context;
         private readonly Dictionary<string, XElement> _index;
 
-        internal L5XTypeIndex(XDocument document)
+        internal L5XTypeIndex(L5XContext context)
         {
-            if (document is null)
-                throw new ArgumentNullException(nameof(document));
-            
+            _context = context;
             _index = new Dictionary<string, XElement>(StringComparer.OrdinalIgnoreCase);
 
-            var l5X = document.Root ?? throw new ArgumentException("The provided XDocument must have a content root.");
-
-            RegisterUserDefinedTypes(l5X);
-            RegisterModuleDefinedTypes(l5X);
-            RegisterAddOnDefinedTypes(l5X);
+            RegisterUserDefinedTypes(context.L5X.Content);
+            RegisterModuleDefinedTypes(context.L5X.Content);
+            RegisterAddOnDefinedTypes(context.L5X.Content);
         }
 
-        /// <summary>
-        /// Gets an instance of the specified 
-        /// </summary>
-        /// <param name="name">The name of the data type to get.</param>
-        /// <returns>A new <see cref="IDataType"/> instance that was deserialized from the L5X document if found.
-        /// If not found, a new <see cref="Undefined"/> instance wrapping the provided name.</returns>
+
         public IDataType GetDataType(string name)
         {
-            return _index.TryGetValue(name, out var type) ? DeserializeType(type) : new Undefined(name);
+            if (DataType.Exists(name))
+                return DataType.Create(name);
+
+            return _index.TryGetValue(name, out var element) ? DeserializeType(element) : new Undefined(name);
         }
 
-        private static IDataType DeserializeType(XElement element)
+        private IDataType DeserializeType(XElement element)
         {
-            if (element.Name == L5XElement.DataType.ToXName())
+            if (element.Name == L5XElement.DataType.ToString())
             {
-                var serialize = new UserDefinedSerializer();
+                var serialize = _context.Serializers.GetSerializer<IUserDefined>();
                 return serialize.Deserialize(element);
             }
 
-            if (element.Name == L5XElement.Structure.ToXName())
+            if (element.Name == L5XElement.Structure.ToString())
             {
-                var serialize = new StructureSerializer();
+                var serialize = _context.Serializers.GetSerializer<IComplexType>(element);
                 return serialize.Deserialize(element);
             }
 
-            if (element.Name == L5XElement.AddOnInstructionDefinition.ToXName())
-            {
-                return new Undefined();
-            }
-            
-            throw new InvalidOperationException(
-                $"The element name {element.Name} is not supported by {typeof(L5XTypeIndex)}.");
+            //var serialize = _context.GetSerializer<IAddOnInstruction>(element);
+            return new Undefined();
         }
 
-        private void RegisterUserDefinedTypes(XContainer document)
+        private void RegisterUserDefinedTypes(XContainer? container)
         {
-            var types = document.Descendants(L5XElement.DataType.ToXName());
+            if (container is null) return;
+
+            var types = container.Descendants(L5XElement.DataType.ToString());
 
             foreach (var type in types)
             {
@@ -74,20 +62,26 @@ namespace L5Sharp.L5X
             }
         }
 
-        private void RegisterModuleDefinedTypes(XContainer document)
+        private void RegisterModuleDefinedTypes(XContainer? container)
         {
-            var types = document.Descendants(L5XElement.Module.ToXName()).Descendants(L5XElement.Structure.ToXName());
+            if (container is null) return;
+
+            var types = container
+                .Descendants(L5XElement.Module.ToString())
+                .Descendants(L5XElement.Structure.ToString());
 
             foreach (var type in types)
             {
-                var name = type.Attribute(L5XElement.DataType.ToXName())?.Value!;
+                var name = type.Attribute(L5XElement.DataType.ToString())?.Value!;
                 _index.TryAdd(name, type);
             }
         }
 
-        private void RegisterAddOnDefinedTypes(XContainer document)
+        private void RegisterAddOnDefinedTypes(XContainer? container)
         {
-            var types = document.Descendants(L5XElement.AddOnInstructionDefinition.ToXName());
+            if (container is null) return;
+
+            var types = container.Descendants(L5XElement.AddOnInstructionDefinition.ToString());
 
             foreach (var type in types)
             {

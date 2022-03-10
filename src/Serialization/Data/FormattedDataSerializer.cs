@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Xml.Linq;
 using L5Sharp.Enums;
-using L5Sharp.Extensions;
 using L5Sharp.L5X;
 using L5Sharp.Predefined;
 using String = L5Sharp.Predefined.String;
@@ -11,7 +10,7 @@ namespace L5Sharp.Serialization.Data
 {
     internal class FormattedDataSerializer : IL5XSerializer<IDataType>
     {
-        private static readonly XName ElementName = L5XElement.Data.ToXName();
+        private static readonly XName ElementName = L5XElement.Data.ToString();
 
         public XElement Serialize(IDataType component)
         {
@@ -21,7 +20,7 @@ namespace L5Sharp.Serialization.Data
             var element = new XElement(ElementName);
 
             var format = TagDataFormat.FromDataType(component);
-            element.Add(new XAttribute(L5XAttribute.Format.ToXName(), format));
+            element.Add(new XAttribute(L5XAttribute.Format.ToString(), format));
 
             format
                 .When(TagDataFormat.Decorated).Then(() =>
@@ -37,7 +36,7 @@ namespace L5Sharp.Serialization.Data
                 .When(TagDataFormat.String).Then(() =>
                 {
                     var str = (String)component;
-                    element.Add(new XAttribute(L5XAttribute.Length.ToXName(), str.LEN.DataType.Value));
+                    element.Add(new XAttribute(L5XAttribute.Length.ToString(), str.LEN.DataType.Value));
                     element.Add(new XCData($"'{str.Value}'"));
                 });
 
@@ -52,11 +51,9 @@ namespace L5Sharp.Serialization.Data
             if (element.Name != ElementName)
                 throw new ArgumentException($"Element '{element.Name}' not valid for the serializer {GetType()}.");
 
-            TagDataFormat.TryFromName(element.Attribute(L5XAttribute.Format.ToXName())?.Value, out var format);
+            TagDataFormat.TryFromName(element.Attribute(L5XAttribute.Format.ToString())?.Value, out var format);
 
-            if (format is null)
-                throw new ArgumentException(
-                    "The provided element does not contains a supported format attribute value");
+            if (format is null) return new Undefined();
             
             IDataType dataType = new Undefined();
             

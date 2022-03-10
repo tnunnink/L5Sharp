@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Net;
+using System.Text.RegularExpressions;
 
 namespace L5Sharp.Extensions
 {
@@ -253,6 +253,25 @@ namespace L5Sharp.Extensions
                 return value.Substring(1, value.Length - 1);
             
             return value.EndsWith(character) ? value[..^2] : value;
+        }
+
+        public static IEnumerable<string> GetWords(this string input)
+        {
+            var matches = Regex.Matches(input, @"\b[\w']*\b");
+
+            var words = matches.Where(m => !string.IsNullOrEmpty(m.Value)).Select(m => TrimSuffix(m.Value));
+
+            return words;
+        }
+        
+        private static string TrimSuffix(this string word)
+        {
+            var apostropheLocation = word.IndexOf('\'');
+            
+            if (apostropheLocation != -1)
+                word = word[..apostropheLocation];
+
+            return word;
         }
     }
 }

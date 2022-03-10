@@ -10,7 +10,7 @@ namespace L5Sharp.Serialization.Components
 {
     internal class RoutineSerializer : IL5XSerializer<IRoutine<ILogixContent>>
     {
-        private static readonly XName ElementName = L5XElement.Routine.ToXName();
+        private static readonly XName ElementName = L5XElement.Routine.ToString();
         
         public XElement Serialize(IRoutine<ILogixContent> component)
         {

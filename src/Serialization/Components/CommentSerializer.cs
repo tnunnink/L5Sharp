@@ -10,7 +10,7 @@ namespace L5Sharp.Serialization.Components
 {
     internal class CommentSerializer : IL5XSerializer<Comments>
     {
-        private static readonly XName ElementName = L5XElement.Comments.ToXName();
+        private static readonly XName ElementName = L5XElement.Comments.ToString();
 
         public XElement Serialize(Comments component)
         {
@@ -21,8 +21,8 @@ namespace L5Sharp.Serialization.Components
 
             var comments = component.Select(c =>
             {
-                var comment = new XElement(L5XElement.Comment.ToXName());
-                comment.Add(new XAttribute(L5XAttribute.Operand.ToXName(), c.Key.Operand));
+                var comment = new XElement(L5XElement.Comment.ToString());
+                comment.Add(new XAttribute(L5XAttribute.Operand.ToString(), c.Key.Operand));
                 comment.Add(new XCData(c.Value));
                 return comment;
             });
@@ -40,14 +40,14 @@ namespace L5Sharp.Serialization.Components
             if (element.Name != ElementName)
                 throw new ArgumentException($"Element '{element.Name}' not valid for the serializer {GetType()}.");
 
-            var baseName = element.Ancestors(L5XElement.Tag.ToXName()).FirstOrDefault()?.ComponentName();
+            var baseName = element.Ancestors(L5XElement.Tag.ToString()).FirstOrDefault()?.ComponentName();
 
             if (baseName is null)
                 throw new ArgumentException("The provided comments do not have a base tag name");
 
             var comments = element.Elements().Select(e =>
             {
-                var tagName = TagName.Combine(baseName, e.Attribute(L5XAttribute.Operand.ToXName())?.Value!);
+                var tagName = TagName.Combine(baseName, e.Attribute(L5XAttribute.Operand.ToString())?.Value!);
                 var comment = e.Value;
                 return new KeyValuePair<TagName, string>(tagName, comment);
             });

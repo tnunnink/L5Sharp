@@ -6,7 +6,7 @@ namespace L5Sharp
     /// <summary>
     /// Provided the ability to rename a component.
     /// </summary>
-    public interface IRenamable
+    public interface IRenamableComponent
     {
         /// <summary>
         /// Renames the current <see cref="ILogixComponent"/> to the provided component name.

@@ -20,7 +20,7 @@ namespace L5Sharp.Abstractions
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
 
-            LEN = new Member<Dint>(nameof(LEN), new Dint(length));
+            LEN = new Member<Dint>(nameof(LEN), new Dint());
 
             var array = new ArrayType<Sint>(new Dimensions(length), radix: Radix.Ascii);
             DATA = new Member<IArrayType<Sint>>(nameof(DATA), array, Radix.Ascii);
@@ -48,12 +48,12 @@ namespace L5Sharp.Abstractions
         public IEnumerable<IMember<IDataType>> Members => _members.AsEnumerable();
 
         /// <inheritdoc />
+        public int Length => Value.Length;
+
+        /// <inheritdoc />
         public string Value => Encoding.ASCII.GetString(DATA.DataType.Where(d => d.DataType.Value > 0)
                 .Select(d => (byte)d.DataType.Value)
                 .ToArray());
-
-        /// <inheritdoc />
-        public int Length => Value.Length;
 
         /// <inheritdoc />
         public IMember<Dint> LEN { get; }
@@ -74,6 +74,15 @@ namespace L5Sharp.Abstractions
         /// </remarks>
         protected abstract IDataType New();
 
+        /// <summary>
+        /// Clears the current value to an empty string.
+        /// </summary>
+        public void ClearValue()
+        {
+            for (var i = 0; i < DATA.Dimensions.Length; i++)
+                DATA.DataType[i].DataType.SetValue(0);
+        }
+
         /// <inheritdoc />
         public void SetValue(string value)
         {
@@ -82,15 +91,16 @@ namespace L5Sharp.Abstractions
 
             var bytes = Encoding.ASCII.GetBytes(value).Select(b => (sbyte)b).ToArray();
 
-            if (bytes.Length > LEN.DataType.Value)
+            if (bytes.Length > DATA.Dimensions.Length)
                 throw new ArgumentOutOfRangeException(nameof(value),
                     $"Value length '{bytes.Length}' must be less than the predefined length '{LEN.DataType.Value}'");
-
-            foreach (var element in DATA.DataType)
-                element.DataType.SetValue(0);
-
+            
+            ClearValue();
+            
             for (var i = 0; i < bytes.Length; i++)
                 DATA.DataType[i].DataType.SetValue(bytes[i]);
+            
+            LEN.DataType.SetValue(bytes.Length);
         }
 
         /// <inheritdoc />

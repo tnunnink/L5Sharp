@@ -5,6 +5,7 @@ using System.Linq.Expressions;
 using L5Sharp.Core;
 using L5Sharp.Exceptions;
 using L5Sharp.Extensions;
+using L5Sharp.Serialization;
 
 namespace L5Sharp.Repositories
 {
@@ -15,9 +16,14 @@ namespace L5Sharp.Repositories
     public abstract class Repository<TComponent> : IRepository<TComponent> where TComponent : ILogixComponent
     {
         /// <summary>
-        /// The current logix context for the repository.
+        /// The current L5X context for the repository.
         /// </summary>
         protected readonly L5XContext Context;
+
+        /// <summary>
+        /// The current L5X serializer for the typed component. 
+        /// </summary>
+        protected readonly IL5XSerializer<TComponent> Serializer;
 
         /// <summary>
         /// Creates a new instance of the <see cref="Repository{TComponent}"/> with the provided context.
@@ -26,6 +32,7 @@ namespace L5Sharp.Repositories
         protected Repository(L5XContext context)
         {
             Context = context;
+            Serializer = context.Serializers.GetSerializer<TComponent>();
         }
 
         /// <inheritdoc />
@@ -53,14 +60,14 @@ namespace L5Sharp.Repositories
 
             var element = Context.L5X.GetComponents<TComponent>().FirstOrDefault(filter);
 
-            return element is not null ? element.Deserialize<TComponent>() : default;
+            return element is not null ? Serializer.Deserialize(element) : default;
         }
 
         /// <inheritdoc />
         public TComponent? Find(ComponentName name)
         {
             var element = Context.L5X.GetComponents<TComponent>().FirstOrDefault(x => x.ComponentName() == name);
-            return element is not null ? element.Deserialize<TComponent>() : default;
+            return element is not null ? Serializer.Deserialize(element) : default;
         }
 
         /// <inheritdoc />
@@ -70,28 +77,23 @@ namespace L5Sharp.Repositories
 
             var elements = Context.L5X.GetComponents<TComponent>().Where(filter);
 
-            return elements.Select(e => e.Deserialize<TComponent>());
+            return elements.Select(e => Serializer.Deserialize(e));
         }
 
         /// <inheritdoc />
         public virtual TComponent Get(ComponentName name)
         {
-            var count = Context.L5X.GetComponents<TComponent>().Count(x => x.ComponentName() == name);
+            var element = Context.L5X.GetComponents<TComponent>().SingleOrDefault(x => x.ComponentName() == name);
 
-            return count switch
-            {
-                0 => throw new ComponentNotFoundException(name, typeof(TComponent)),
-                > 1 => throw new InvalidOperationException(
-                    $"The provided component name '{name}' has more than one instance in the current context."),
-                _ => Context.L5X.GetComponents<TComponent>()
-                    .Single(x => x.ComponentName() == name)
-                    .Deserialize<TComponent>()
-            };
+            if (element is null)
+                throw new ComponentNotFoundException(name, typeof(TComponent));
+
+            return Serializer.Deserialize(element);
         }
 
         /// <inheritdoc />
         public virtual IEnumerable<TComponent> GetAll() =>
-            Context.L5X.GetComponents<TComponent>().Select(e => e.Deserialize<TComponent>());
+            Context.L5X.GetComponents<TComponent>().Select(e => Serializer.Deserialize(e));
 
         /// <inheritdoc />
         public IEnumerable<string> Names()

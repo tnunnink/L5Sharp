@@ -10,7 +10,15 @@ namespace L5Sharp.Serialization.Data
 {
     internal class ArrayMemberSerializer : IL5XSerializer<IMember<IDataType>>
     {
-        private static readonly XName ElementName = L5XElement.ArrayMember.ToXName();
+        private static readonly XName ElementName = L5XElement.ArrayMember.ToString();
+        private readonly IL5XSerializer<IMember<IDataType>> _arrayMemberSerializer;
+
+        public ArrayMemberSerializer(L5XContext? context = null)
+        {
+            _arrayMemberSerializer = context is not null
+                ? context.Serializers.GetSerializer<IMember<IDataType>>(typeof(ArrayElementSerializer))
+                : new ArrayElementSerializer(context);
+        }
 
         public XElement Serialize(IMember<IDataType> component)
         {
@@ -26,9 +34,8 @@ namespace L5Sharp.Serialization.Data
             element.AddAttribute(component, m => m.DataType.Name, nameOverride: nameof(component.DataType));
             element.AddAttribute(component, m => m.Dimensions);
             element.AddAttribute(component, m => m.Radix, m => m.Radix != Radix.Null);
-
-            var serializer = new ArrayElementSerializer();
-            var elements = arrayType.Select(m => serializer.Serialize(m));
+            
+            var elements = arrayType.Select(m => _arrayMemberSerializer.Serialize(m));
             element.Add(elements);
 
             return element;
@@ -45,10 +52,7 @@ namespace L5Sharp.Serialization.Data
             var name = element.ComponentName();
             var dimensions = element.GetAttribute<IMember<IDataType>, Dimensions>(m => m.Dimensions);
             var radix = element.GetAttribute<IMember<IDataType>, Radix>(m => m.Radix);
-
-            var serializer = new ArrayElementSerializer();
-            var members = element.Elements().Select(e => serializer.Deserialize(e));
-
+            var members = element.Elements().Select(e => _arrayMemberSerializer.Deserialize(e));
             var arrayType = new ArrayType<IDataType>(dimensions!, members.Select(m => m.DataType).ToList(), radix);
             
             return new Member<IArrayType<IDataType>>(name, arrayType, radix);

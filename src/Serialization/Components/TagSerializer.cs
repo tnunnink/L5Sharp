@@ -5,13 +5,20 @@ using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Extensions;
 using L5Sharp.L5X;
+using L5Sharp.Predefined;
 using L5Sharp.Serialization.Data;
 
 namespace L5Sharp.Serialization.Components
 {
     internal class TagSerializer : IL5XSerializer<ITag<IDataType>>
     {
-        private static readonly XName ElementName = L5XElement.Tag.ToXName();
+        private static readonly XName ElementName = L5XElement.Tag.ToString();
+        private readonly L5XTypeIndex? _index;
+
+        public TagSerializer(L5XTypeIndex? index = null)
+        {
+            _index = index;
+        }
 
         public XElement Serialize(ITag<IDataType> component)
         {
@@ -56,7 +63,9 @@ namespace L5Sharp.Serialization.Components
 
             var name = element.ComponentName();
             var description = element.ComponentDescription();
-            var dataType = element.DataType();
+            var typeName = element.DataTypeName();
+            var dataType = DataType.Exists(typeName) ? DataType.Create(typeName) :
+                _index is not null ? _index.GetDataType(typeName) : new Undefined(typeName);
             var dimensions = element.GetAttribute<Tag<IDataType>, Dimensions>(t => t.Dimensions);
             var radix = element.GetAttribute<Tag<IDataType>, Radix>(t => t.Radix);
             var access = element.GetAttribute<Tag<IDataType>, ExternalAccess>(t => t.ExternalAccess);
@@ -65,7 +74,7 @@ namespace L5Sharp.Serialization.Components
             var constant = element.GetAttribute<Tag<IDataType>, bool>(m => m.Constant);
 
             var commentSerializer = new CommentSerializer();
-            var commentsElement = element.Elements(L5XElement.Comments.ToXName()).FirstOrDefault();
+            var commentsElement = element.Elements(L5XElement.Comments.ToString()).FirstOrDefault();
             var comments = commentsElement is not null ? commentSerializer.Deserialize(commentsElement) : null; 
                 
             var type = dimensions is not null && dimensions.AreEmpty
@@ -74,14 +83,15 @@ namespace L5Sharp.Serialization.Components
 
             var tag = new Tag<IDataType>(name, type, radix, access, description, usage, alias, constant, comments);
 
-            var formattedData = element.Descendants(L5XElement.Data.ToXName())
-                .FirstOrDefault(e => e.Attribute(L5XAttribute.Format.ToXName())?.Value != TagDataFormat.L5K);
+            var formattedData = element.Descendants(L5XElement.Data.ToString())
+                .FirstOrDefault(e => e.Attribute(L5XAttribute.Format.ToString())?.Value != TagDataFormat.L5K);
 
             if (formattedData is null) return tag;
 
             var dataSerializer = new FormattedDataSerializer();
             var data = dataSerializer.Deserialize(formattedData);
-            tag.SetData(data);
+            //tag.SetData(data);
+            
             return tag;
         }
     }

@@ -9,7 +9,7 @@ namespace L5Sharp.Serialization.Components
 {
     internal class LadderLogicSerializer : IL5XSerializer<ILadderLogic>
     {
-        private static readonly XName ElementName = L5XElement.RLLContent.ToXName();
+        private static readonly XName ElementName = L5XElement.RLLContent.ToString();
         
         public XElement Serialize(ILadderLogic component)
         {
@@ -35,7 +35,7 @@ namespace L5Sharp.Serialization.Components
             if (element.Name != ElementName)
                 throw new ArgumentException($"Element '{element.Name}' not valid for the serializer {GetType()}.");
 
-            var rungs = element.Descendants(L5XElement.Rung.ToXName())
+            var rungs = element.Descendants(L5XElement.Rung.ToString())
                 .Select(e =>
                 {
                     var serializer = new RungSerializer();

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Xml.Linq;
-using L5Sharp.Extensions;
 using L5Sharp.L5X;
 using L5Sharp.Repositories;
 
@@ -17,6 +16,9 @@ namespace L5Sharp
         private L5XContext(L5XDocument l5X)
         {
             L5X = l5X ?? throw new ArgumentNullException(nameof(l5X));
+            Serializers = new L5XSerializers(this);
+            TypeIndex = new L5XTypeIndex(this);
+
             DataTypes = new DataTypeRepository(this);
             Modules = new ModuleRepository(this);
             Tags = new TagRepository(this);
@@ -82,8 +84,19 @@ namespace L5Sharp
         /// </summary>
         public L5XDocument L5X { get; }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        internal readonly L5XSerializers Serializers;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        internal readonly L5XTypeIndex TypeIndex;
+
         /// <inheritdoc />
-        public IController Controller => L5X.GetComponents<IController>().First().Deserialize<IController>();
+        public IController Controller => Serializers.GetSerializer<IController>()
+            .Deserialize(L5X.GetComponents<IController>().First());
 
         /// <inheritdoc />
         public IRepository<IUserDefined> DataTypes { get; }

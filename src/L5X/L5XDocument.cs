@@ -43,11 +43,12 @@ namespace L5Sharp.L5X
         /// <param name="component">The logix component instance for which to create the target context.</param>
         /// <typeparam name="TComponent">The logix component type.</typeparam>
         /// <returns>A new <see cref="L5XDocument"/> that represents a target context for the provided component.</returns>
-        internal static L5XDocument Create<TComponent>(TComponent component) where TComponent : ILogixComponent
+        internal static L5XDocument Create<TComponent>(TComponent component)
+            where TComponent : ILogixComponent
         {
             var document = new XDocument(DefaultDeclaration);
 
-            var content = new XElement(L5XElement.RsLogix5000Content.ToXName());
+            var content = new XElement(L5XElement.RSLogix5000Content.ToString());
             content.Add(new XAttribute(nameof(SchemaRevision), DefaultRevision));
             content.Add(new XAttribute(nameof(SoftwareRevision), DefaultRevision));
             content.Add(new XAttribute(nameof(TargetName), component.Name));
@@ -55,8 +56,9 @@ namespace L5Sharp.L5X
             content.Add(new XAttribute(nameof(ContainsContext), component is not IController));
             content.Add(new XAttribute(nameof(Owner), Environment.UserName));
             content.Add(new XAttribute(nameof(ExportDate), DateTime.Now.ToString(DateFormat)));
-
+            
             var element = component.Serialize();
+            
             element.Add(new XAttribute(nameof(Use), Use.Target));
 
             if (component is IController)
@@ -145,6 +147,7 @@ namespace L5Sharp.L5X
         public XElement GetContainer<TComponent>()
             where TComponent : ILogixComponent =>
             _document.Descendants(L5XNames.GetContainerName<TComponent>()).First();
+
 
         /// <summary>
         /// Saves the current L5X file to the specified file path.

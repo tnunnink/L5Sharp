@@ -4,14 +4,21 @@ using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Extensions;
 using L5Sharp.L5X;
+using L5Sharp.Predefined;
 
 namespace L5Sharp.Serialization.Components
 {
     internal class ParameterSerializer : IL5XSerializer<IParameter<IDataType>>
     {
-        private static readonly XName ElementName = L5XElement.Parameter.ToXName();
+        private static readonly XName ElementName = L5XElement.Parameter.ToString();
         private static readonly string Dimension = L5XAttribute.Dimension.ToString();
+        private readonly L5XTypeIndex? _index;
 
+        public ParameterSerializer(L5XTypeIndex? index = null)
+        {
+            _index = index;
+        }
+        
         public XElement Serialize(IParameter<IDataType> component)
         {
             if (component is null)
@@ -44,7 +51,9 @@ namespace L5Sharp.Serialization.Components
 
             var name = element.ComponentName();
             var description = element.ComponentDescription();
-            var dataType = element.DataType();
+            var typeName = element.DataTypeName();
+            var dataType = DataType.Exists(typeName) ? DataType.Create(typeName) :
+                _index is not null ? _index.GetDataType(typeName) : new Undefined(typeName);
             var dimensions = element.GetAttribute<Parameter<IDataType>, Dimensions>(m => m.Dimensions, Dimension);
             var radix = element.GetAttribute<Parameter<IDataType>, Radix>(m => m.Radix);
             var access = element.GetAttribute<Parameter<IDataType>, ExternalAccess>(m => m.ExternalAccess);

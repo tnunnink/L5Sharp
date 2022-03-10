@@ -8,7 +8,7 @@ namespace L5Sharp.Serialization.Data
 {
     internal class AlarmDigitalDataSerializer : IL5XSerializer<AlarmDigital>
     {
-        private static readonly XName ElementName = L5XElement.AlarmDigitalParameters.ToXName();
+        private static readonly XName ElementName = L5XElement.AlarmDigitalParameters.ToString();
         
         public XElement Serialize(AlarmDigital component)
         {

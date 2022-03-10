@@ -9,7 +9,7 @@ namespace L5Sharp.Serialization.Components
 {
     internal class ControllerSerializer : IL5XSerializer<IController>
     {
-        private static readonly XName ElementName = L5XElement.Controller.ToXName();
+        private static readonly XName ElementName = L5XElement.Controller.ToString();
 
         public XElement Serialize(IController component)
         {

@@ -9,9 +9,13 @@ namespace L5Sharp.Serialization.Components
 {
     internal class MemberSerializer : IL5XSerializer<IMember<IDataType>>
     {
-        //Override the default property name.
-        private const string Dimension = "Dimension";
-        private static readonly XName ElementName = L5XElement.Member.ToXName();
+        private static readonly XName ElementName = L5XElement.Member.ToString();
+        private readonly Func<string, IDataType> _dataTypeCreator;
+
+        public MemberSerializer(L5XContext? context = null)
+        {
+            _dataTypeCreator = context is not null ? context.TypeIndex.GetDataType : DataType.Create;
+        }
 
         public XElement Serialize(IMember<IDataType> component)
         {
@@ -20,13 +24,13 @@ namespace L5Sharp.Serialization.Components
 
             var element = new XElement(ElementName);
 
-            element.AddAttribute(component, c => c.Name);
-            element.AddElement(component, c => c.Description);
-            element.AddAttribute(component, c => c.DataType.Name, nameOverride: nameof(component.DataType));
-            element.AddAttribute(component, c => c.Dimensions, nameOverride: Dimension);
-            element.AddAttribute(component, c => c.Radix);
-            element.Add(new XAttribute("Hidden", false));
-            element.AddAttribute(component, c => c.ExternalAccess);
+            element.Add(new XAttribute(L5XAttribute.Name.ToString(), component.Name));
+            element.Add(new XAttribute(L5XAttribute.DataType.ToString(), component.DataType.Name));
+            element.Add(new XAttribute(L5XAttribute.Dimension.ToString(), component.Dimensions));
+            element.Add(new XAttribute(L5XAttribute.Radix.ToString(), component.Radix));
+            element.Add(new XAttribute(L5XAttribute.Hidden.ToString(), false));
+            element.Add(new XAttribute(L5XAttribute.ExternalAccess.ToString(), component.ExternalAccess));
+            element.Add(new XElement(L5XAttribute.Description.ToString(), new XCData(component.Description)));
 
             return element;
         }
@@ -41,12 +45,12 @@ namespace L5Sharp.Serialization.Components
 
             var name = element.ComponentName();
             var description = element.ComponentDescription();
-            var dataType = element.DataType();
-            var dimensions = element.GetAttribute<Member<IDataType>, Dimensions>(m => m.Dimensions, Dimension);
-            var radix = element.GetAttribute<Member<IDataType>, Radix>(m => m.Radix);
-            var access = element.GetAttribute<Member<IDataType>, ExternalAccess>(m => m.ExternalAccess);
+            var dataType = _dataTypeCreator.Invoke(element.DataTypeName());
+            var dimensions = Dimensions.Parse(element.Attribute(L5XAttribute.Dimension.ToString())?.Value!);
+            Radix.TryFromValue(element.Attribute("Radix")?.Value!, out var radix);
+            ExternalAccess.TryFromName(element.Attribute("ExternalAccess")?.Value, out var access);
 
-            if (dimensions is null || dimensions.AreEmpty)
+            if (dimensions.AreEmpty)
                 return new Member<IDataType>(name, dataType, radix, access, description);
 
             var arrayType = new ArrayType<IDataType>(dimensions, dataType, radix, access, description);

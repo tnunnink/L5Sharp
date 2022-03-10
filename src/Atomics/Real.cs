@@ -54,7 +54,7 @@ namespace L5Sharp.Atomics
         {
             if (value is null)
                 throw new ArgumentNullException(nameof(value));
-            
+
             var converter = TypeDescriptor.GetConverter(GetType());
 
             if (!converter.CanConvertFrom(value.GetType()))
@@ -62,7 +62,19 @@ namespace L5Sharp.Atomics
 
             Value = (Real)converter.ConvertFrom(value)!;
         }
-        
+
+        /// <inheritdoc />
+        public bool TrySetValue(object? value)
+        {
+            var converter = TypeDescriptor.GetConverter(GetType());
+
+            if (value is null || !converter.CanConvertFrom(value.GetType()))
+                return false;
+
+            Value = (converter.ConvertFrom(value) as Real)!;
+            return true;
+        }
+
         /// <inheritdoc />
         public string Format(Radix? radix = null) =>
             radix is not null ? radix.Format(this) : Radix.Default(this).Format(this);
@@ -112,7 +124,7 @@ namespace L5Sharp.Atomics
 
         /// <inheritdoc />
         public override int GetHashCode() => Name.GetHashCode();
-        
+
         /// <inheritdoc />
         public override string ToString() => Name;
 
