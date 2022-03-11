@@ -117,7 +117,7 @@ namespace L5Sharp.Core.Tests
         {
             var dimension = Dimensions.Empty;
 
-            dimension.AreEmpty.Should().BeTrue();
+            dimension.IsEmpty.Should().BeTrue();
         }
 
         [Test]
@@ -125,7 +125,7 @@ namespace L5Sharp.Core.Tests
         {
             var dimension = new Dimensions(12);
 
-            dimension.AreEmpty.Should().BeFalse();
+            dimension.IsEmpty.Should().BeFalse();
         }
 
         [Test]
@@ -133,7 +133,7 @@ namespace L5Sharp.Core.Tests
         {
             var dimension = new Dimensions(1, 2);
 
-            dimension.AreMultiDimensional.Should().BeTrue();
+            dimension.IsMultiDimensional.Should().BeTrue();
         }
 
         [Test]
@@ -141,7 +141,7 @@ namespace L5Sharp.Core.Tests
         {
             var dimension = new Dimensions(1);
 
-            dimension.AreMultiDimensional.Should().BeFalse();
+            dimension.IsMultiDimensional.Should().BeFalse();
         }
         
         [Test]

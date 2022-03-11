@@ -11,6 +11,12 @@ namespace L5Sharp.Serialization.Components
     internal class RoutineSerializer : IL5XSerializer<IRoutine<ILogixContent>>
     {
         private static readonly XName ElementName = L5XElement.Routine.ToString();
+        private readonly LadderLogicSerializer _ladderLogicSerializer;
+
+        public RoutineSerializer()
+        {
+            _ladderLogicSerializer = new LadderLogicSerializer();
+        }
         
         public XElement Serialize(IRoutine<ILogixContent> component)
         {
@@ -19,14 +25,13 @@ namespace L5Sharp.Serialization.Components
 
             var element = new XElement(ElementName);
             
-            element.AddAttribute(component, c => c.Name);
-            element.AddElement(component, c => c.Description);
-            element.AddAttribute(component, c => c.Type);
+            element.Add(new XAttribute(L5XAttribute.Name.ToString(), component.Name));
+            element.Add(new XElement(L5XElement.Description.ToString(), new XCData(component.Description)));
+            element.Add(new XAttribute(L5XAttribute.Type.ToString(), component.Type));
 
             if (component.Content is ILadderLogic ladderLogic)
             {
-                var serializer = new LadderLogicSerializer();
-                element.Add(serializer.Serialize(ladderLogic));
+                element.Add(_ladderLogicSerializer.Serialize(ladderLogic));
             }
 
             return element;
@@ -42,7 +47,7 @@ namespace L5Sharp.Serialization.Components
 
             var name = element.ComponentName();
             var description = element.ComponentDescription();
-            var type = element.GetAttribute<IRoutine<ILogixContent>, RoutineType>(r => r.Type)!;
+            var type = element.Attribute(L5XAttribute.Type.ToString())?.Value.Parse<RoutineType>()!;
 
             var content = type.CreateContent();
 
@@ -51,8 +56,7 @@ namespace L5Sharp.Serialization.Components
                 {
                     var rll = element.Elements().FirstOrDefault();
                     if (rll is null) return;
-                    var serializer = new LadderLogicSerializer();
-                    content = serializer.Deserialize(rll);
+                    content = _ladderLogicSerializer.Deserialize(rll);
 
                 });
 

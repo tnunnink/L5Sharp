@@ -6,26 +6,30 @@ namespace L5Sharp.Serialization.Data
 {
     internal class DecoratedDataSerializer : IL5XSerializer<IDataType>
     {
+        private readonly DataValueSerializer _dataValueSerializer;
+        private readonly StructureSerializer _structureSerializer;
+        private readonly ArraySerializer _arraySerializer;
+
+        public DecoratedDataSerializer()
+        {
+            _dataValueSerializer = new DataValueSerializer();
+            _structureSerializer = new StructureSerializer();
+            _arraySerializer = new ArraySerializer(_structureSerializer);
+        }
+        
         public XElement Serialize(IDataType component)
         {
             if (component == null)
                 throw new ArgumentNullException(nameof(component));
 
-            switch (component)
+            return component switch
             {
-                case IAtomicType atomicType:
-                    var dataValueSerializer = new DataValueSerializer();
-                    return dataValueSerializer.Serialize(atomicType);
-                case IArrayType<IDataType> arrayType:
-                    var arraySerializer = new ArraySerializer();
-                    return arraySerializer.Serialize(arrayType);
-                case IComplexType complexType:
-                    var structureSerializer = new StructureSerializer();
-                    return structureSerializer.Serialize(complexType);
-                default:
-                    throw new ArgumentException(
-                        $"Data type {component.GetType()} is valid for the serializer {GetType()}");
-            }
+                IAtomicType atomicType => _dataValueSerializer.Serialize(atomicType),
+                IArrayType<IDataType> arrayType => _arraySerializer.Serialize(arrayType),
+                IComplexType complexType => _structureSerializer.Serialize(complexType),
+                _ => throw new ArgumentException(
+                    $"Data type {component.GetType()} is valid for the serializer {GetType()}")
+            };
         }
 
         public IDataType Deserialize(XElement element)
@@ -34,24 +38,16 @@ namespace L5Sharp.Serialization.Data
                 throw new ArgumentNullException(nameof(element));
 
             var name = Enum.Parse<L5XElement>(element.Name.ToString());
-
-            // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
-            // Only following element names are valid for 
-            switch (name)
+            
+            // Only following root element names are valid for decorated data serializer 
+            // ReSharper disable once SwitchExpressionHandlesSomeKnownEnumValuesWithExceptionInDefault
+            return name switch
             {
-                case L5XElement.DataValue:
-                    var dataValueSerializer = new DataValueSerializer();
-                    return dataValueSerializer.Deserialize(element);
-                case L5XElement.Array:
-                    var arraySerializer = new ArraySerializer();
-                    return arraySerializer.Deserialize(element);
-                case L5XElement.Structure:
-                    var structureSerializer = new StructureSerializer();
-                    return structureSerializer.Deserialize(element);
-                default:
-                    throw new ArgumentException(
-                        $"Element '{name}' not valid for the serializer {GetType()}.");
-            }
+                L5XElement.DataValue => _dataValueSerializer.Deserialize(element),
+                L5XElement.Array => _arraySerializer.Deserialize(element),
+                L5XElement.Structure => _structureSerializer.Deserialize(element),
+                _ => throw new ArgumentException($"Element '{name}' not valid for the serializer {GetType()}.")
+            };
         }
     }
 }

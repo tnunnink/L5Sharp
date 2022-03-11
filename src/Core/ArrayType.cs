@@ -164,7 +164,7 @@ namespace L5Sharp.Core
             if (dimensions is null)
                 throw new ArgumentNullException(nameof(dimensions));
 
-            if (dimensions.AreEmpty)
+            if (dimensions.IsEmpty)
                 throw new ArgumentException("The provided dimensions can not be empty.");
         }
     }

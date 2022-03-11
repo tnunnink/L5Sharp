@@ -4,15 +4,19 @@ using System.Xml.Linq;
 using L5Sharp.Core;
 using L5Sharp.Extensions;
 using L5Sharp.Predefined;
+using L5Sharp.Serialization;
+using L5Sharp.Serialization.Data;
 
 namespace L5Sharp.L5X
 {
-    internal class L5XTypeIndex
+    internal class L5XIndex
     {
         private readonly L5XContext _context;
         private readonly Dictionary<string, XElement> _index;
+        private readonly StructureSerializer _structureSerializer;
+        private readonly IL5XSerializer<IUserDefined> _dataTypeSerializer;
 
-        internal L5XTypeIndex(L5XContext context)
+        internal L5XIndex(L5XContext context)
         {
             _context = context;
             _index = new Dictionary<string, XElement>(StringComparer.OrdinalIgnoreCase);
@@ -20,8 +24,10 @@ namespace L5Sharp.L5X
             RegisterUserDefinedTypes(context.L5X.Content);
             RegisterModuleDefinedTypes(context.L5X.Content);
             RegisterAddOnDefinedTypes(context.L5X.Content);
-        }
 
+            _dataTypeSerializer = context.Serializer.For<IUserDefined>();
+            _structureSerializer = new StructureSerializer();
+        }
 
         public IDataType GetDataType(string name)
         {
@@ -35,17 +41,15 @@ namespace L5Sharp.L5X
         {
             if (element.Name == L5XElement.DataType.ToString())
             {
-                var serialize = _context.Serializers.GetSerializer<IUserDefined>();
-                return serialize.Deserialize(element);
+                return _dataTypeSerializer.Deserialize(element);
             }
 
             if (element.Name == L5XElement.Structure.ToString())
             {
-                var serialize = _context.Serializers.GetSerializer<IComplexType>(element);
-                return serialize.Deserialize(element);
+                return _structureSerializer.Deserialize(element);
             }
 
-            //var serialize = _context.GetSerializer<IAddOnInstruction>(element);
+            //var serialize = _context.ForElement<IAddOnInstruction>(element);
             return new Undefined();
         }
 

@@ -23,7 +23,7 @@ namespace L5Sharp.Serialization.Tests
         [SetUp]
         public void Setup()
         {
-            _serializer = new StructureMemberSerializer();
+            _serializer = new StructureMemberSerializer(new StructureSerializer());
         }
         
         [Test]

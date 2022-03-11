@@ -1,78 +1,52 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Xml.Linq;
 using L5Sharp.Serialization;
 using L5Sharp.Serialization.Components;
-using L5Sharp.Serialization.Data;
 
 namespace L5Sharp.L5X
 {
-    public class L5XSerializers : IEnumerable<IL5XSerializer>
+    /// <summary>
+    /// A class that contains instances of <see cref="IL5XSerializer{T}"/>, which make available the
+    /// current <see cref="L5XContext"/> object, so that the serializers may use the information to necessary
+    /// to instantiate objects efficiently. 
+    /// </summary>
+    internal class L5XSerializers
     {
-        private readonly Dictionary<L5XElement, IL5XSerializer> _serializers;
+        private readonly Dictionary<Type, IL5XSerializer> _serializers;
 
+        /// <summary>
+        /// Creates a new <see cref="L5XSerializers"/> instance with the provided context.
+        /// </summary>
+        /// <param name="context">The <see cref="L5XContext"/> to pass down to the serializer instances.</param>
         public L5XSerializers(L5XContext context)
         {
-            _serializers = new Dictionary<L5XElement, IL5XSerializer>
+            _serializers = new Dictionary<Type, IL5XSerializer>
             {
-                { L5XElement.Controller, new ControllerSerializer() },
-                { L5XElement.DataType, new UserDefinedSerializer(context) },
-                { L5XElement.Member, new MemberSerializer(context) },
-                { L5XElement.Module, new ModuleSerializer() },
-                { L5XElement.Tag, new TagSerializer() },
-                { L5XElement.Program, new ProgramSerializer() },
-                { L5XElement.Routine, new RoutineSerializer() },
-                { L5XElement.Task, new TaskSerializer() },
-                { L5XElement.Structure, new StructureSerializer() },
-                { L5XElement.DataValue, new DataValueSerializer() },
-                { L5XElement.Array, new ArraySerializer() },
-                { L5XElement.DataValueMember, new DataValueMemberSerializer() },
-                { L5XElement.ArrayMember, new ArrayMemberSerializer() },
-                { L5XElement.StructureMember, new StructureMemberSerializer() }
+                { typeof(IController), new ControllerSerializer() },
+                { typeof(IUserDefined), new DataTypeSerializer(context) },
+                { typeof(IModule), new ModuleSerializer() },
+                { typeof(ITag<IDataType>), new TagSerializer() },
+                { typeof(IProgram), new ProgramSerializer() },
+                { typeof(IRoutine<ILogixContent>), new RoutineSerializer() },
+                { typeof(ITask), new TaskSerializer() }
             };
         }
-
-        public IL5XSerializer<TComponent> GetSerializer<TComponent>()
-            where TComponent : ILogixComponent => GetSerializer<TComponent>(L5XNames.GetComponentName<TComponent>());
-
-        public IL5XSerializer<TComponent> GetSerializer<TComponent>(Type serializerType)
+        
+        
+        /// <summary>
+        /// Gets a serializer based on the specified <see cref="ILogixComponent"/> type.
+        /// </summary>
+        /// <typeparam name="TComponent">The logix component for which to retrieve a serializer.</typeparam>
+        /// <returns>The serializer instance that maps to the specified component type.</returns>
+        public IL5XSerializer<TComponent> For<TComponent>() where TComponent : ILogixComponent
         {
-            var serializer = _serializers.Values.FirstOrDefault(s => s.GetType() == serializerType);
+            var target = _serializers.FirstOrDefault(t => t.Key == typeof(TComponent)).Value;
+            
+            if (target is not IL5XSerializer<TComponent> serializer)
+                throw new InvalidOperationException($"No serializer defined for'{typeof(TComponent)}'");
 
-            if (serializer is not IL5XSerializer<TComponent> typed)
-                throw new InvalidOperationException(
-                    $"Could not obtain serializer for type {serializerType} as type {typeof(TComponent)}");
-
-            return typed;
-        }
-
-        public IL5XSerializer<TComponent> GetSerializer<TComponent>(XElement element) =>
-            GetSerializer<TComponent>(element.Name.ToString());
-
-        private IL5XSerializer<TComponent> GetSerializer<TComponent>(string name)
-        {
-            if (!Enum.TryParse<L5XElement>(name, out var l5XElement))
-                throw new ArgumentException($"No {typeof(L5XElement)} defined for {name}.");
-
-            var serializer = _serializers.FirstOrDefault(t => t.Key == l5XElement).Value;
-
-            if (serializer is not IL5XSerializer<TComponent> typed)
-                throw new InvalidOperationException(
-                    $"Could not obtain typed serializer for element '{name}' as type {typeof(TComponent)}");
-
-            return typed;
-        }
-
-        public IEnumerator<IL5XSerializer> GetEnumerator()
-        {
-            throw new NotImplementedException();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
+            return serializer;
         }
     }
 }

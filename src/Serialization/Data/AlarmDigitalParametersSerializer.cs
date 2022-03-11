@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Xml.Linq;
-using L5Sharp.Extensions;
 using L5Sharp.L5X;
 using L5Sharp.Predefined;
 
 namespace L5Sharp.Serialization.Data
 {
-    internal class AlarmDigitalDataSerializer : IL5XSerializer<AlarmDigital>
+    internal class AlarmDigitalParametersSerializer : IL5XSerializer<AlarmDigital>
     {
         private static readonly XName ElementName = L5XElement.AlarmDigitalParameters.ToString();
         

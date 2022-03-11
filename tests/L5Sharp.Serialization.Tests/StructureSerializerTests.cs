@@ -26,13 +26,13 @@ namespace L5Sharp.Serialization.Tests
         {
             _serializer = new StructureSerializer();
         }
-        
+
         [Test]
         public void Serialize_Null_ShouldThrowArgumentNullException()
         {
             FluentActions.Invoking(() => _serializer.Serialize(null!)).Should().Throw<ArgumentException>();
         }
-        
+
         [Test]
         public void Serialize_WhenCalled_ShouldNotBeNull()
         {

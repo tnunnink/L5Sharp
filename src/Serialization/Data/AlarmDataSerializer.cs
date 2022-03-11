@@ -7,23 +7,27 @@ namespace L5Sharp.Serialization.Data
 {
     internal class AlarmDataSerializer : IL5XSerializer<IDataType>
     {
+        private readonly AlarmDigitalParametersSerializer _digitalParametersSerializer;
+        private readonly AlarmAnalogParametersSerializer _analogParametersSerializer;
+
+        public AlarmDataSerializer()
+        {
+            _digitalParametersSerializer = new AlarmDigitalParametersSerializer();
+            _analogParametersSerializer = new AlarmAnalogParametersSerializer();
+        }
+
         public XElement Serialize(IDataType component)
         {
             if (component is null)
                 throw new ArgumentNullException(nameof(component));
-            
-            switch (component)
+
+            return component switch
             {
-                case AlarmDigital digital:
-                    var digitalDataSerializer = new AlarmDigitalDataSerializer();
-                    return digitalDataSerializer.Serialize(digital);
-                case AlarmAnalog analog:
-                    var analogDataSerializer = new AlarmAnalogDataSerializer();
-                    return analogDataSerializer.Serialize(analog);
-                default:
-                    throw new ArgumentException(
-                        $"Data type {component.GetType()} is not valid for the serializer {GetType()}");
-            }
+                AlarmDigital digital => _digitalParametersSerializer.Serialize(digital),
+                AlarmAnalog analog => _analogParametersSerializer.Serialize(analog),
+                _ => throw new ArgumentException(
+                    $"Data type {component.GetType()} is not valid for the serializer {GetType()}")
+            };
         }
 
         public IDataType Deserialize(XElement element)
@@ -32,21 +36,15 @@ namespace L5Sharp.Serialization.Data
                 throw new ArgumentNullException(nameof(element));
 
             var name = Enum.Parse<L5XElement>(element.Name.ToString());
-            
-            // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
-            // Only following element names are valid for 
-            switch (name)
+
+            // ReSharper disable once SwitchExpressionHandlesSomeKnownEnumValuesWithExceptionInDefault
+            // Only following element names are valid for the alarm format.
+            return name switch
             {
-                case L5XElement.AlarmDigitalParameters:
-                    var digitalDataSerializer = new AlarmDigitalDataSerializer();
-                    return digitalDataSerializer.Deserialize(element);
-                case L5XElement.AlarmAnalogParameters:
-                    var analogDataSerializer = new AlarmAnalogDataSerializer();
-                    return analogDataSerializer.Deserialize(element);
-                default:
-                    throw new ArgumentException(
-                        $"Element '{name}' not valid for the serializer {GetType()}.");
-            }
+                L5XElement.AlarmDigitalParameters => _digitalParametersSerializer.Deserialize(element),
+                L5XElement.AlarmAnalogParameters => _analogParametersSerializer.Deserialize(element),
+                _ => throw new ArgumentException($"Element '{name}' not valid for the serializer {GetType()}.")
+            };
         }
     }
 }

@@ -97,7 +97,7 @@ namespace L5Sharp.Core
         /// <summary>
         /// Indicates whether <see cref="Dimensions"/> are empty or <see cref="Length"/> equals zero.
         /// </summary>
-        public bool AreEmpty => Length == 0;
+        public bool IsEmpty => Length == 0;
 
         /// <summary>
         /// Gets the set of indices for the <see cref="Dimensions"/> object.
@@ -117,7 +117,7 @@ namespace L5Sharp.Core
         /// <remarks>
         /// Multi-dimensional simply means that the dimensions have a value for Y or Z.
         /// </remarks>
-        public bool AreMultiDimensional => Y > 0;
+        public bool IsMultiDimensional => Y > 0;
 
         /// <summary>
         /// Gets the value for the number or parameters or coordinates in the <see cref="Dimensions"/> object.

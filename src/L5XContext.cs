@@ -16,8 +16,8 @@ namespace L5Sharp
         private L5XContext(L5XDocument l5X)
         {
             L5X = l5X ?? throw new ArgumentNullException(nameof(l5X));
-            Serializers = new L5XSerializers(this);
-            TypeIndex = new L5XTypeIndex(this);
+            Serializer = new L5XSerializers(this);
+            Index = new L5XIndex(this);
 
             DataTypes = new DataTypeRepository(this);
             Modules = new ModuleRepository(this);
@@ -85,17 +85,18 @@ namespace L5Sharp
         public L5XDocument L5X { get; }
 
         /// <summary>
-        /// 
+        /// Gets the <see cref="L5XSerializers"/> instance for the current context containing root component serializer
+        /// instances. 
         /// </summary>
-        internal readonly L5XSerializers Serializers;
+        internal readonly L5XSerializers Serializer;
 
         /// <summary>
         /// 
         /// </summary>
-        internal readonly L5XTypeIndex TypeIndex;
+        internal readonly L5XIndex Index;
 
         /// <inheritdoc />
-        public IController Controller => Serializers.GetSerializer<IController>()
+        public IController Controller => Serializer.For<IController>()
             .Deserialize(L5X.GetComponents<IController>().First());
 
         /// <inheritdoc />

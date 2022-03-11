@@ -12,12 +12,12 @@ namespace L5Sharp.Serialization.Tests
     [TestFixture]
     public class AlarmAnalogDataSerializerTests
     {
-        private AlarmAnalogDataSerializer _serializer;
+        private AlarmAnalogParametersSerializer _serializer;
 
         [SetUp]
         public void Setup()
         {
-            _serializer = new AlarmAnalogDataSerializer();
+            _serializer = new AlarmAnalogParametersSerializer();
         }
         
         [Test]

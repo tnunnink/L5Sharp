@@ -2,7 +2,6 @@
 using System.Xml.Linq;
 using L5Sharp.Core;
 using L5Sharp.Enums;
-using L5Sharp.Extensions;
 using L5Sharp.L5X;
 
 namespace L5Sharp.Serialization.Components
@@ -21,15 +20,14 @@ namespace L5Sharp.Serialization.Components
                 throw new ArgumentNullException(nameof(component));
 
             var element = new XElement(ElementName);
-            
-            element.AddAttribute(component, c => c.Number);
-            element.AddAttribute(component, c => c.Type.Value, nameOverride: nameof(component.Type));
-            element.AddElement(component,c => c.Comment);
-            element.AddElement(component, c => c.Text);
-            
+            element.Add(new XAttribute(L5XAttribute.Number.ToString(), component.Number));
+            element.Add(new XAttribute(L5XAttribute.Type.ToString(), component.Type.Value));
+            element.Add(new XElement(L5XElement.Comment.ToString(), new XCData(component.Comment)));
+            element.Add(new XElement(L5XElement.Text.ToString(), new XCData(component.Text)));
+
             return element;
         }
-        
+
         /// <inheritdoc />
         public Rung Deserialize(XElement element)
         {
@@ -39,10 +37,10 @@ namespace L5Sharp.Serialization.Components
             if (element.Name != ElementName)
                 throw new ArgumentException($"Element '{element.Name}' not valid for the serializer {GetType()}.");
 
-            var number = element.GetAttribute<Rung, int>(r => r.Number);
-            var type = element.GetAttribute<Rung, RungType>(r => r.Type);
-            var comment = element.GetElement<Rung, string>(r => r.Comment);
-            var text = element.GetElement<Rung, NeutralText>(r => r.Text);
+            var number = element.Attribute(L5XAttribute.Number.ToString())?.Value.Parse<int>() ?? default;
+            var type = element.Attribute(L5XAttribute.Type.ToString())?.Value.Parse<RungType>();
+            var comment = element.Element(L5XElement.Comment.ToString())?.Value;
+            var text = element.Element(L5XElement.Text.ToString())?.Value;
 
             return new Rung(number, type, comment, text);
         }

@@ -32,7 +32,7 @@ namespace L5Sharp.Repositories
         protected Repository(L5XContext context)
         {
             Context = context;
-            Serializer = context.Serializers.GetSerializer<TComponent>();
+            Serializer = context.Serializer.For<TComponent>();
         }
 
         /// <inheritdoc />

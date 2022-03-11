@@ -16,8 +16,7 @@ namespace L5Sharp.Serialization.Data
                 throw new ArgumentNullException(nameof(component));
 
             var element = new XElement(ElementName);
-
-            element.AddAttribute(component, m => m.Name, nameOverride: L5XElement.DataType.ToString());
+            element.Add(new XAttribute(L5XElement.DataType.ToString(), component.Name));
             element.Add(new XAttribute(L5XAttribute.Value.ToString(), component.Format()));
 
             return element;

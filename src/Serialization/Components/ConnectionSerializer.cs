@@ -9,29 +9,39 @@ using L5Sharp.Serialization.Data;
 
 namespace L5Sharp.Serialization.Components
 {
-    /// <summary>
-    /// A serializer for a logix <see cref="Connection"/> component.
-    /// </summary>
-    public class ConnectionSerializer : IL5XSerializer<Connection>
+    internal class ConnectionSerializer : IL5XSerializer<Connection>
     {
         private static readonly XName ElementName = L5XElement.Connection.ToString();
+        private readonly FormattedDataSerializer _formattedDataSerializer;
 
-        /// <inheritdoc />
+        public ConnectionSerializer()
+        {
+            _formattedDataSerializer = new FormattedDataSerializer();
+        }
+        
         public XElement Serialize(Connection component)
         {
             if (component == null)
                 throw new ArgumentNullException(nameof(component));
 
             var element = new XElement(ElementName);
-            element.AddAttribute(component, c => c.Name);
-            element.AddAttribute(component, c => c.Rpi);
-            element.AddAttribute(component, c => c.Type);
-            element.AddAttribute(component, c => c.Priority);
-            element.AddAttribute(component, c => c.InputConnectionType);
-            element.AddAttribute(component, c => c.InputProductionTrigger);
-            element.AddAttribute(component, c => c.OutputRedundantOwner);
-            element.AddAttribute(component, c => c.EventId);
+            element.Add(new XAttribute(L5XAttribute.Name.ToString(), component.Name));
+            element.Add(new XAttribute(L5XAttribute.RPI.ToString(), component.Rpi));
+            element.Add(new XAttribute(L5XAttribute.InputCxnPoint.ToString(), component.InputCxnPoint));
+            element.Add(new XAttribute(L5XAttribute.InputSize.ToString(), component.InputSize));
+            element.Add(new XAttribute(L5XAttribute.OutputCxnPoint.ToString(), component.OutputCxnPoint));
+            element.Add(new XAttribute(L5XAttribute.OutputSize.ToString(), component.OutputSize));
+            element.Add(new XAttribute(L5XAttribute.Type.ToString(), component.Type));
+            element.Add(new XAttribute(L5XAttribute.Priority.ToString(), component.Priority));
+            element.Add(new XAttribute(L5XAttribute.InputConnectionType.ToString(), component.InputConnectionType));
+            element.Add(new XAttribute(L5XAttribute.InputProductionTrigger.ToString(), component.InputProductionTrigger));
+            element.Add(new XAttribute(L5XAttribute.OutputRedundantOwner.ToString(), component.OutputRedundantOwner));
+            element.Add(new XAttribute(L5XAttribute.EventID.ToString(), component.EventId));
+            element.Add(new XAttribute(L5XAttribute.InputTagSuffix.ToString(), component.InputTagSuffix));
+            element.Add(new XAttribute(L5XAttribute.OutputTagSuffix.ToString(), component.OutputTagSuffix));
 
+            //todo input and output tags...
+            
             return element;
         }
 
@@ -45,41 +55,48 @@ namespace L5Sharp.Serialization.Components
                 throw new ArgumentException($"Element '{element.Name}' not valid for the serializer {GetType()}.");
 
             var name = element.ComponentName();
-            var rpi = element.GetAttribute<Connection, int>(c => c.Rpi);
-            var type = element.GetAttribute<Connection, ConnectionType>(c => c.Type) ?? ConnectionType.Unknown;
-            var priority = element.GetAttribute<Connection, ConnectionPriority>(c => c.Priority);
-            var inputConnectionType = element.GetAttribute<Connection, TransmissionType>(c => c.InputConnectionType);
-            var inputProductionTrigger =
-                element.GetAttribute<Connection, ProductionTrigger>(c => c.InputProductionTrigger);
-            var outputRedundantOwner = element.GetAttribute<Connection, bool>(c => c.OutputRedundantOwner);
-            var eventId = element.GetAttribute<Connection, int>(c => c.EventId);
-            var unicast = element.GetAttribute<Connection, bool>(c => c.Unicast);
-
-            var inputSuffix = element.Attribute("InputTagSuffix")?.Value ?? "I";
+            var rpi = element.Attribute(L5XAttribute.RPI.ToString())?.Value.Parse<int>() ?? default;
+            var type = element.Attribute(L5XAttribute.Type.ToString())?.Value.Parse<ConnectionType>();
+            var inputCxnPoint = element.Attribute(L5XAttribute.InputCxnPoint.ToString())
+                ?.Value.Parse<byte>() ?? default;
+            var inputSize = element.Attribute(L5XAttribute.InputSize.ToString())
+                ?.Value.Parse<byte>() ?? default;
+            var outputCxnPoint = element.Attribute(L5XAttribute.OutputCxnPoint.ToString())
+                ?.Value.Parse<byte>() ?? default;
+            var outputSize = element.Attribute(L5XAttribute.OutputSize.ToString())
+                ?.Value.Parse<byte>() ?? default;
+            var priority = element.Attribute(L5XAttribute.Priority.ToString())?.Value.Parse<ConnectionPriority>();
+            var inputConnectionType = element.Attribute(L5XAttribute.InputConnectionType.ToString())
+                ?.Value.Parse<TransmissionType>();
+            var inputProductionTrigger = element.Attribute(L5XAttribute.InputProductionTrigger.ToString())
+                ?.Value.Parse<ProductionTrigger>();
+            var outputRedundantOwner = element.Attribute(L5XAttribute.OutputRedundantOwner.ToString())
+                ?.Value.Parse<bool>() ?? default;
+            var unicast = element.Attribute(L5XAttribute.Unicast.ToString())?.Value.Parse<bool>() ?? default;
+            var eventId = element.Attribute(L5XAttribute.EventID.ToString())?.Value.Parse<int>() ?? default;
+            var inputSuffix = element.Attribute(L5XAttribute.InputTagSuffix.ToString())?.Value ?? "I";
+            var outputSuffix = element.Attribute(L5XAttribute.OutputTagSuffix.ToString())?.Value ?? "O";
+            
             var inputTagName = DetermineTagName(element, inputSuffix);
             var inputType = GenerateDataType(element, L5XElement.InputTag.ToString());
             var inputTag = inputType is not null ? new Tag<IDataType>(inputTagName, inputType) : null;
-
-            var outputSuffix = element.Attribute("OutputTagSuffix")?.Value ?? "O";
+            
             var outputTagName = DetermineTagName(element, outputSuffix);
             var outputType = GenerateDataType(element, L5XElement.OutputTag.ToString());
             var outputTag = outputType is not null ? new Tag<IDataType>(outputTagName, outputType) : null;
 
-            return new Connection(name, rpi, type, priority, inputConnectionType, inputProductionTrigger,
-                outputRedundantOwner, unicast, eventId, inputTag, outputTag);
+            return new Connection(name, rpi, type, inputCxnPoint, inputSize, outputCxnPoint, outputSize, 
+                priority, inputConnectionType, inputProductionTrigger, outputRedundantOwner, unicast, eventId,
+                inputSuffix, outputSuffix, inputTag, outputTag);
         }
 
-        private static IDataType? GenerateDataType(XContainer element, string tagName)
+        private IDataType? GenerateDataType(XContainer element, string tagName)
         {
-            var serializer = new FormattedDataSerializer();
-
             var tagElement = element.Descendants(tagName).FirstOrDefault();
             var formattedData = tagElement?.Descendants(L5XElement.Data.ToString())
                 .FirstOrDefault(e => e.Attribute(L5XAttribute.Format.ToString())?.Value == TagDataFormat.Decorated.Name);
 
-            return formattedData is not null
-                ? serializer.Deserialize(formattedData)
-                : null;
+            return formattedData is not null ? _formattedDataSerializer.Deserialize(formattedData) : null;
         }
 
         private static string DetermineTagName(XNode element, string suffix)
@@ -87,13 +104,13 @@ namespace L5Sharp.Serialization.Components
             var moduleName = element.Ancestors(L5XElement.Module.ToString())
                 .FirstOrDefault()?.Attribute(L5XAttribute.Name.ToString())?.Value;
             var parentName = element.Ancestors(L5XElement.Module.ToString())
-                .FirstOrDefault()?.Attribute("ParentModule")?.Value;
+                .FirstOrDefault()?.Attribute(L5XAttribute.ParentModule.ToString())?.Value;
 
             var slot = element.Ancestors(L5XElement.Port.ToString())
-                .Where(p => !bool.Parse(p.Attribute("Upstream")?.Value!)
-                            && p.Attribute("Type")?.Value != "Ethernet"
-                            && int.TryParse(p.Attribute("Address")?.Value, out _))
-                .Select(p => p.Attribute("Address")?.Value)
+                .Where(p => !bool.Parse(p.Attribute(L5XAttribute.Upstream.ToString())?.Value!)
+                            && p.Attribute(L5XAttribute.Type.ToString())?.Value != "Ethernet"
+                            && int.TryParse(p.Attribute(L5XAttribute.Address.ToString())?.Value, out _))
+                .Select(p => p.Attribute(L5XAttribute.Address.ToString())?.Value)
                 .FirstOrDefault();
 
             return slot is not null ? $"{parentName}:{slot}:{suffix}" : $"{moduleName}:{suffix}";

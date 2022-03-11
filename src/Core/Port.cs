@@ -77,5 +77,11 @@ namespace L5Sharp.Core
         /// Only downstream modules will have a valid Bus. 
         /// </remarks>
         public Bus? Bus { get; }
+
+        /// <summary>
+        /// Generates a <see cref="PortDefinition"/> object containing the current port data.
+        /// </summary>
+        /// <returns>A new <see cref="PortDefinition"/> instance with the current port data.</returns>
+        public PortDefinition ToDefinition() => new(Id, Type, Upstream, Address, Bus?.Size ?? default);
     }
 }

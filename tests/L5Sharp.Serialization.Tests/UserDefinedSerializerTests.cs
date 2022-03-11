@@ -16,12 +16,12 @@ namespace L5Sharp.Serialization.Tests
     [TestFixture]
     public class UserDefinedSerializerTests
     {
-        private UserDefinedSerializer _serializer;
+        private DataTypeSerializer _serializer;
         
         [SetUp]
         public void Setup()
         {
-            _serializer = new UserDefinedSerializer();
+            _serializer = new DataTypeSerializer();
         }
 
         [Test]

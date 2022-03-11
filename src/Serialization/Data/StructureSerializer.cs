@@ -15,19 +15,11 @@ namespace L5Sharp.Serialization.Data
         private readonly IL5XSerializer<IMember<IDataType>> _arrayMemberSerializer;
         private readonly IL5XSerializer<IMember<IDataType>> _structureMemberSerializer;
 
-        public StructureSerializer(L5XContext? context = null)
+        public StructureSerializer()
         {
-            _dataValueMemberSerializer = context is not null
-                ? context.Serializers.GetSerializer<IMember<IDataType>>(typeof(DataValueMemberSerializer))
-                : new DataValueMemberSerializer();
-
-            _arrayMemberSerializer = context is not null
-                ? context.Serializers.GetSerializer<IMember<IDataType>>(typeof(ArrayMemberSerializer))
-                : new ArrayMemberSerializer(context);
-
-            _structureMemberSerializer = context is not null
-                ? context.Serializers.GetSerializer<IMember<IDataType>>(typeof(StructureMemberSerializer))
-                : new StructureMemberSerializer(context);
+            _dataValueMemberSerializer = new DataValueMemberSerializer();
+            _arrayMemberSerializer = new ArrayMemberSerializer(this);
+            _structureMemberSerializer = new StructureMemberSerializer(this);
         }
 
         public XElement Serialize(IComplexType component)
@@ -37,11 +29,12 @@ namespace L5Sharp.Serialization.Data
 
             var element = new XElement(ElementName);
 
-            element.AddAttribute(component, c => c.Name, nameOverride: L5XElement.DataType.ToString());
+            element.Add(new XAttribute(L5XElement.DataType.ToString(), component.Name));
 
             var members = component.Members.Select(m => m.IsValueMember ? _dataValueMemberSerializer.Serialize(m) 
                 : m.IsArrayMember ? _arrayMemberSerializer.Serialize(m) 
-                : _structureMemberSerializer.Serialize(m));
+                : m.IsStructureMember ? _structureMemberSerializer.Serialize(m)
+                : throw new InvalidOperationException("Could not determine member type."));
 
             element.Add(members);
 

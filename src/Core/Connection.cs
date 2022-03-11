@@ -14,25 +14,38 @@ namespace L5Sharp.Core
         /// <param name="name">The name of the connection.</param>
         /// <param name="rpi">the request packet interval of the connection (ms).</param>
         /// <param name="type">The <see cref="ConnectionType"/></param>
+        /// <param name="inputCxnPoint"></param>
+        /// <param name="inputSize"></param>
+        /// <param name="outputCxnPoint"></param>
+        /// <param name="outputSize"></param>
         /// <param name="priority"></param>
         /// <param name="inputConnectionType"></param>
         /// <param name="inputProductionTrigger"></param>
         /// <param name="outputRedundantOwner"></param>
         /// <param name="unicast"></param>
         /// <param name="eventId"></param>
+        /// /// <param name="inputTagSuffix"></param>
+        /// <param name="outputTagSuffix"></param>
         /// <param name="input"></param>
         /// <param name="output"></param>
-        /// <exception cref="ArgumentNullException"></exception>
-        public Connection(string name, int rpi, ConnectionType? type, 
+        /// <exception cref="ArgumentNullException">name is null.</exception>
+        public Connection(string name, int rpi, ConnectionType? type,
+            byte inputCxnPoint = default, byte inputSize = default,
+            byte outputCxnPoint = default, byte outputSize = default,
             ConnectionPriority? priority = null,
             TransmissionType? inputConnectionType = null,
             ProductionTrigger? inputProductionTrigger = null, 
             bool outputRedundantOwner = false,
             bool unicast = false, int eventId = 0,
+            string? inputTagSuffix = null, string? outputTagSuffix = null,
             ITag<IDataType>? input = null, ITag<IDataType>? output = null)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
             Rpi = rpi;
+            InputCxnPoint = inputCxnPoint;
+            InputSize = inputSize;
+            OutputCxnPoint = outputCxnPoint;
+            OutputSize = outputSize;
             Type = type ?? ConnectionType.Unknown;
             Priority = priority ?? ConnectionPriority.Scheduled;
             InputConnectionType = inputConnectionType ?? TransmissionType.Multicast;
@@ -40,6 +53,8 @@ namespace L5Sharp.Core
             OutputRedundantOwner = outputRedundantOwner;
             Unicast = unicast;
             EventId = eventId;
+            InputTagSuffix = inputTagSuffix ?? "I";
+            OutputTagSuffix = outputTagSuffix ?? "O";
             Input = input;
             Output = output;
         }
@@ -53,6 +68,26 @@ namespace L5Sharp.Core
         /// Gets the value of the Request Packet Interval for the <see cref="Connection"/>. 
         /// </summary>
         public int Rpi { get; }
+
+        /// <summary>
+        /// Gets the input connection point for the primary <see cref="Connection"/>.
+        /// </summary>
+        public byte InputCxnPoint { get; }
+        
+        /// <summary>
+        /// Gets the input size for the <see cref="Connection"/>.
+        /// </summary>
+        public byte InputSize { get; }
+        
+        /// <summary>
+        /// Gets the output connection point for the primary <see cref="Connection"/>.
+        /// </summary>
+        public byte OutputCxnPoint { get; }
+        
+        /// <summary>
+        /// Gets the output size for the <see cref="Connection"/>.
+        /// </summary>
+        public byte OutputSize { get; }
 
         /// <summary>
         /// Gets the <see cref="Enums.ConnectionType"/> value for the <see cref="Connection"/>.
@@ -88,6 +123,16 @@ namespace L5Sharp.Core
         /// Gets the value of the Event ID used in conjunction with an event task for the <see cref="Connection"/>.
         /// </summary>
         public int EventId { get; }
+
+        /// <summary>
+        /// Gets the suffix for <see cref="Input"/> tag. 
+        /// </summary>
+        public string InputTagSuffix { get; }
+        
+        /// <summary>
+        /// Gets the suffix for <see cref="Output"/> tag.
+        /// </summary>
+        public string OutputTagSuffix { get; }
 
         /// <summary>
         /// Gets the Tag that represents the input channel data for the <see cref="Connection"/>.

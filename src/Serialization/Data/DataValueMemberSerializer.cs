@@ -22,11 +22,10 @@ namespace L5Sharp.Serialization.Data
                 throw new ArgumentException($"{ElementName} must have an atomic data type.");
 
             var element = new XElement(ElementName);
-
-            element.AddAttribute(component, m => m.Name);
-            element.AddAttribute(component, m => m.DataType);
-            element.AddAttribute(component, m => m.Radix,
-                m => !string.Equals(m.DataType.Name, nameof(Bool), StringComparison.OrdinalIgnoreCase));
+            element.Add(new XAttribute(L5XAttribute.Name.ToString(), component.Name));
+            element.Add(new XAttribute(L5XAttribute.DataType.ToString(), component.DataType));
+            if (!string.Equals(component.DataType.Name, nameof(Bool), StringComparison.OrdinalIgnoreCase))
+                element.Add(new XAttribute(L5XAttribute.Radix.ToString(), component.Radix));
 
             var value = component.DataType is Bool ? atomic.Format() : atomic.Format(component.Radix);
             element.Add(new XAttribute(L5XAttribute.Value.ToString(), value));
@@ -44,8 +43,8 @@ namespace L5Sharp.Serialization.Data
 
             var name = element.ComponentName();
             var dataType = DataType.Create(element.DataTypeName());
-            var radix = element.Attribute("Radix")?.Value is not null
-                ? Radix.FromValue(element.Attribute("Radix")?.Value!)
+            var radix = element.Attribute(L5XAttribute.Radix.ToString())?.Value is not null
+                ? Radix.FromValue(element.Attribute(L5XAttribute.Radix.ToString())?.Value!)
                 : Radix.Default(dataType);
             var value = element.Attribute(L5XAttribute.Value.ToString())?.Value ?? element.Value;
 

@@ -35,6 +35,7 @@ namespace L5Sharp.L5X
 
             //Value Types
             { typeof(Dimensions), Dimensions.Parse },
+            { typeof(TagName), s => new TagName(s) },
             { typeof(NeutralText), s => new NeutralText(s) },
             { typeof(TaskPriority), s => TaskPriority.Parse(s) },
             { typeof(ScanRate), s => ScanRate.Parse(s) },
@@ -43,8 +44,8 @@ namespace L5Sharp.L5X
             { typeof(Vendor), Vendor.Parse },
             { typeof(ProductType), ProductType.Parse },
         };
-
-
+        
+        
         /// <summary>
         /// Parses the provided string input to the specified generic type base ont predefined Logix parsing functions or type converters.
         /// </summary>
@@ -52,12 +53,30 @@ namespace L5Sharp.L5X
         /// <typeparam name="T">The type of property to return.</typeparam>
         /// <returns>The resulting parsed value.</returns>
         /// <exception cref="InvalidOperationException">When a parser was not found to the specified type.</exception>
-        public static T? Parse<T>(string input)
+        public static T Parse<T>(this string input)
         {
             var parser = Get(typeof(T));
 
-            if (parser is null)
-                throw new InvalidOperationException($"No parse function has been defined for type '{typeof(T)}'");
+            var value = parser(input);
+
+            if (value is not T typed)
+                throw new InvalidOperationException();
+
+            return typed;
+        }
+        
+        /// <summary>
+        /// Parses the provided string input to the specified generic type base ont predefined Logix parsing functions or type converters.
+        /// </summary>
+        /// <param name="input">The string input to parse.</param>
+        /// <typeparam name="T">The type of property to return.</typeparam>
+        /// <returns>The resulting parsed value.</returns>
+        /// <exception cref="InvalidOperationException">When a parser was not found to the specified type.</exception>
+        public static T? TryParse<T>(this string? input)
+        {
+            if (input is null) return default;
+            
+            var parser = Get(typeof(T));
 
             return (T?)parser(input);
         }
@@ -74,7 +93,7 @@ namespace L5Sharp.L5X
         /// <returns>
         /// A func that can convert from a string to an object for the provided type is the func is defined; otherwise, null.
         /// </returns>
-        public static Func<string, object?>? Get(Type type)
+        public static Func<string, object?> Get(Type type)
         {
             if (Parsers.ContainsKey(type))
                 return Parsers[type];
@@ -83,8 +102,8 @@ namespace L5Sharp.L5X
 
             if (converter.CanConvertFrom(typeof(string)))
                 return s => converter.ConvertFrom(s);
-
-            return null;
+            
+            throw new InvalidOperationException($"No parse function has been defined for type '{type.Name}'");
         }
     }
 }

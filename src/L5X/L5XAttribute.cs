@@ -20,6 +20,11 @@ namespace L5Sharp.L5X
         /// Represents the <see cref="AlarmCountReset"/> L5X attribute.
         ///</summary>
         AlarmCountReset,
+        
+        ///<summary>
+        /// Represents the <see cref="AliasFor"/> L5X attribute.
+        ///</summary>
+        AliasFor,
 
         ///<summary>
         /// Represents the <see cref="AttributeNumber"/> L5X attribute.
@@ -185,6 +190,11 @@ namespace L5Sharp.L5X
         /// Represents the <see cref="EnableIn"/> L5X attribute.
         ///</summary>
         EnableIn,
+        
+        ///<summary>
+        /// Represents the <see cref="EnableTimeout"/> L5X attribute.
+        ///</summary>
+        EnableTimeout,
 
         ///<summary>
         /// Represents the <see cref="EncodedType"/> L5X attribute.
@@ -200,6 +210,16 @@ namespace L5Sharp.L5X
         /// Represents the <see cref="EventID"/> L5X attribute.
         ///</summary>
         EventID,
+        
+        ///<summary>
+        /// Represents the <see cref="EventTag"/> L5X attribute.
+        ///</summary>
+        EventTag,
+        
+        ///<summary>
+        /// Represents the <see cref="EventTrigger"/> L5X attribute.
+        ///</summary>
+        EventTrigger,
 
         ///<summary>
         /// Represents the <see cref="ExecuteEnableInFalse"/> L5X attribute.
@@ -235,6 +255,11 @@ namespace L5Sharp.L5X
         /// Represents the <see cref="Family"/> L5X attribute.
         ///</summary>
         Family,
+        
+        ///<summary>
+        /// Represents the <see cref="FaultRoutineName"/> L5X attribute.
+        ///</summary>
+        FaultRoutineName,
 
         ///<summary>
         /// Represents the <see cref="Format"/> L5X attribute.
@@ -640,6 +665,11 @@ namespace L5Sharp.L5X
         /// Represents the <see cref="OutputCxnPoint"/> L5X attribute.
         ///</summary>
         OutputCxnPoint,
+        
+        ///<summary>
+        /// Represents the <see cref="OutputRedundantOwner"/> L5X attribute.
+        ///</summary>
+        OutputRedundantOwner,
 
         ///<summary>
         /// Represents the <see cref="OutputSize"/> L5X attribute.

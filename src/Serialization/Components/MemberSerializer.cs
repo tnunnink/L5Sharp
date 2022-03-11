@@ -12,9 +12,14 @@ namespace L5Sharp.Serialization.Components
         private static readonly XName ElementName = L5XElement.Member.ToString();
         private readonly Func<string, IDataType> _dataTypeCreator;
 
-        public MemberSerializer(L5XContext? context = null)
+        public MemberSerializer()
         {
-            _dataTypeCreator = context is not null ? context.TypeIndex.GetDataType : DataType.Create;
+            _dataTypeCreator = DataType.Create;
+        }
+        
+        public MemberSerializer(L5XContext context)
+        {
+            _dataTypeCreator = context.Index.GetDataType;
         }
 
         public XElement Serialize(IMember<IDataType> component)
@@ -25,13 +30,13 @@ namespace L5Sharp.Serialization.Components
             var element = new XElement(ElementName);
 
             element.Add(new XAttribute(L5XAttribute.Name.ToString(), component.Name));
+            element.Add(new XElement(L5XElement.Description.ToString(), new XCData(component.Description)));
             element.Add(new XAttribute(L5XAttribute.DataType.ToString(), component.DataType.Name));
             element.Add(new XAttribute(L5XAttribute.Dimension.ToString(), component.Dimensions));
             element.Add(new XAttribute(L5XAttribute.Radix.ToString(), component.Radix));
             element.Add(new XAttribute(L5XAttribute.Hidden.ToString(), false));
             element.Add(new XAttribute(L5XAttribute.ExternalAccess.ToString(), component.ExternalAccess));
-            element.Add(new XElement(L5XAttribute.Description.ToString(), new XCData(component.Description)));
-
+            
             return element;
         }
 
@@ -46,11 +51,11 @@ namespace L5Sharp.Serialization.Components
             var name = element.ComponentName();
             var description = element.ComponentDescription();
             var dataType = _dataTypeCreator.Invoke(element.DataTypeName());
-            var dimensions = Dimensions.Parse(element.Attribute(L5XAttribute.Dimension.ToString())?.Value!);
-            Radix.TryFromValue(element.Attribute("Radix")?.Value!, out var radix);
-            ExternalAccess.TryFromName(element.Attribute("ExternalAccess")?.Value, out var access);
+            var dimensions = element.Attribute(L5XAttribute.Dimension.ToString())?.Value.Parse<Dimensions>();
+            var radix = element.Attribute(L5XAttribute.Radix.ToString())?.Value.Parse<Radix>();
+            var access = element.Attribute(L5XAttribute.ExternalAccess.ToString())?.Value.Parse<ExternalAccess>();
 
-            if (dimensions.AreEmpty)
+            if (dimensions is null || dimensions.IsEmpty)
                 return new Member<IDataType>(name, dataType, radix, access, description);
 
             var arrayType = new ArrayType<IDataType>(dimensions, dataType, radix, access, description);

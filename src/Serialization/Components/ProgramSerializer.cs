@@ -10,6 +10,14 @@ namespace L5Sharp.Serialization.Components
     internal class ProgramSerializer : IL5XSerializer<Program>
     {
         private static readonly XName ElementName = L5XElement.Program.ToString();
+        private readonly TagSerializer _tagSerializer;
+        private readonly RoutineSerializer _routineSerializer;
+
+        public ProgramSerializer()
+        {
+            _tagSerializer = new TagSerializer();
+            _routineSerializer = new RoutineSerializer();
+        }
 
         public XElement Serialize(Program component)
         {
@@ -19,28 +27,22 @@ namespace L5Sharp.Serialization.Components
             var element = new XElement(ElementName);
 
             element.Add(new XAttribute(L5XAttribute.Name.ToString(), component.Name));
-            element.AddElement(component, c => c.Description);
-            element.AddAttribute(component, c => c.Type);
-            element.AddAttribute(component, c => c.TestEdits);
-            element.AddAttribute(component, c => c.MainRoutineName, p => !p.MainRoutineName.IsEmpty());
-            element.AddAttribute(component, c => c.FaultRoutineName, p => !p.FaultRoutineName.IsEmpty());
-            element.AddAttribute(component, c => c.Disabled);
-            element.AddAttribute(component, c => c.UseAsFolder);
+            element.Add(new XElement(L5XElement.Description.ToString(), new XCData(component.Description)));
+            element.Add(new XAttribute(L5XAttribute.Type.ToString(), component.Type));
+            element.Add(new XAttribute(L5XAttribute.TestEdits.ToString(), component.TestEdits));
+            if (!component.MainRoutineName.IsEmpty())
+                element.Add(new XAttribute(L5XAttribute.MainRoutineName.ToString(), component.MainRoutineName));
+            if (!component.FaultRoutineName.IsEmpty())
+                element.Add(new XAttribute(L5XAttribute.FaultRoutineName.ToString(), component.FaultRoutineName));
+            element.Add(new XAttribute(L5XAttribute.Disabled.ToString(), component.Disabled));
+            element.Add(new XAttribute(L5XAttribute.UseAsFolder.ToString(), component.UseAsFolder));
 
             var tags = new XElement(nameof(component.Tags));
-            tags.Add(component.Tags.Select(t =>
-            {
-                var serializer = new TagSerializer();
-                return serializer.Serialize(t);
-            }));
+            tags.Add(component.Tags.Select(t => _tagSerializer.Serialize(t)));
             element.Add(tags);
 
             var routines = new XElement(nameof(component.Routines));
-            routines.Add(component.Routines.Select(r =>
-            {
-                var serializer = new RoutineSerializer();
-                return serializer.Serialize(r);
-            }));
+            routines.Add(component.Routines.Select(r => _routineSerializer.Serialize(r)));
             element.Add(routines);
 
             return element;
@@ -56,29 +58,20 @@ namespace L5Sharp.Serialization.Components
 
             var name = element.ComponentName();
             var description = element.ComponentDescription();
-            var testEdits = element.GetAttribute<IProgram, bool>(p => p.TestEdits);
-            var mainRoutineName = element.GetAttribute<IProgram, string>(p => p.MainRoutineName);
-            var faultRoutineName = element.GetAttribute<IProgram, string>(p => p.FaultRoutineName);
-            var disabled = element.GetAttribute<IProgram, bool>(p => p.Disabled);
-            var useAsFolder = element.GetAttribute<IProgram, bool>(p => p.UseAsFolder);
+            var testEdits = element.Attribute(L5XAttribute.TestEdits.ToString())?.Value.Parse<bool>() ?? default;
+            var mainRoutineName = element.Attribute(L5XAttribute.MainRoutineName.ToString())?.Value;
+            var faultRoutineName = element.Attribute(L5XAttribute.FaultRoutineName.ToString())?.Value;
+            var disabled = element.Attribute(L5XAttribute.Disabled.ToString())?.Value.Parse<bool>() ?? default;
+            var useAsFolder = element.Attribute(L5XAttribute.UseAsFolder.ToString())?.Value.Parse<bool>() ?? default;
 
             var tags = element.Descendants(L5XElement.Tag.ToString())
-                .Select(e =>
-                {
-                    var serializer = new TagSerializer();
-                    return serializer.Deserialize(e);
-                });
+                .Select(e => _tagSerializer.Deserialize(e));
 
             var routines = element.Descendants(L5XElement.Routine.ToString())
-                .Select(e =>
-                {
-                    var serializer = new RoutineSerializer();
-                    return serializer.Deserialize(e);
-                });
+                .Select(e => _routineSerializer.Deserialize(e));
 
             return new Program(name, description, mainRoutineName, faultRoutineName,
-                useAsFolder, testEdits, disabled,
-                tags, routines);
+                useAsFolder, testEdits, disabled, tags, routines);
         }
     }
 }

@@ -20,7 +20,7 @@ namespace L5Sharp.Serialization.Components
             var element = new XElement(ElementName);
 
             element.Add(new XAttribute(L5XAttribute.Name.ToString(), component.Name));
-            element.Add(new XElement(L5XAttribute.Description.ToString(), new XCData(component.Description)));
+            element.Add(new XElement(L5XElement.Description.ToString(), new XCData(component.Description)));
             element.Add(new XAttribute(L5XAttribute.Type.ToString(), component.Type.Value));
             if (component.Type != TaskType.Continuous)
                 element.Add(new XAttribute(L5XAttribute.Rate.ToString(), component.Rate));
@@ -28,7 +28,7 @@ namespace L5Sharp.Serialization.Components
             element.Add(new XAttribute(L5XAttribute.Watchdog.ToString(), component.Watchdog));
             element.Add(new XAttribute(L5XAttribute.DisableUpdateOutputs.ToString(), component.DisableUpdateOutputs));
             element.Add(new XAttribute(L5XAttribute.InhibitTask.ToString(), component.InhibitTask));
-            
+
             if (!component.ScheduledPrograms.Any()) return element;
 
             var scheduled = new XElement(nameof(component.ScheduledPrograms));
@@ -52,16 +52,15 @@ namespace L5Sharp.Serialization.Components
 
             var name = element.ComponentName();
             var description = element.ComponentDescription();
-            var type = element.GetAttribute<ITask, TaskType>(t => t.Type);
-            var rate = element.GetAttribute<ITask, ScanRate>(t => t.Rate);
-            var priority = element.GetAttribute<ITask, TaskPriority>(t => t.Priority);
-            var watchdog = element.GetAttribute<ITask, Watchdog>(t => t.Watchdog);
-            var disableUpdateOutputs = element.GetAttribute<ITask, bool>(t => t.DisableUpdateOutputs);
-            var inhibitTask = element.GetAttribute<ITask, bool>(t => t.InhibitTask);
-            var programs = element.Descendants(L5XElement.ScheduledProgram.ToString()).Select(e => e.ComponentName());
+            var type = element.Attribute(L5XAttribute.Type.ToString())?.Value.Parse<TaskType>();
+            var rate = element.Attribute(L5XAttribute.Rate.ToString())?.Value?.Parse<ScanRate>() ?? default;
+            var priority = element.Attribute(L5XAttribute.Priority.ToString())?.Value?.Parse<TaskPriority>() ?? default;
+            var watchdog = element.Attribute(L5XAttribute.Watchdog.ToString())?.Value?.Parse<Watchdog>() ?? default;
+            var disableUpdateOutputs =
+                element.Attribute(L5XAttribute.DisableUpdateOutputs.ToString())?.Value?.Parse<bool>() ?? default;
+            var inhibitTask = element.Attribute(L5XAttribute.InhibitTask.ToString())?.Value?.Parse<bool>() ?? default;
 
-            if (type is null)
-                throw new ArgumentException("Provided element must have a task type attribute");
+            var programs = element.Descendants(L5XElement.ScheduledProgram.ToString()).Select(e => e.ComponentName());
 
             if (type == TaskType.Continuous)
                 return new ContinuousTask(name, rate, priority, watchdog, disableUpdateOutputs,
@@ -72,9 +71,12 @@ namespace L5Sharp.Serialization.Components
                     inhibitTask, programs, description);
 
             var eventInfo = element.Element(L5XElement.EventInfo.ToString());
-            var eventTrigger = eventInfo?.GetAttribute<EventTask, TaskEventTrigger>(t => t.EventTrigger);
-            var enableTimeout = eventInfo?.GetAttribute<EventTask, bool>(t => t.EnableTimeout) ?? false;
-            var eventTag = eventInfo?.GetAttribute<EventTask, string?>(t => t.EventTag);
+            var eventTrigger = eventInfo?.Attribute(L5XAttribute.EventTrigger.ToString())
+                ?.Value.Parse<TaskEventTrigger>();
+            var enableTimeout = eventInfo?.Attribute(L5XAttribute.EnableTimeout.ToString())
+                ?.Value?.Parse<bool>() ?? default;
+            var eventTag = eventInfo?.Attribute(L5XAttribute.EventTag.ToString())
+                ?.Value;
 
             return new EventTask(name, rate, priority, watchdog, disableUpdateOutputs,
                 inhibitTask, programs, eventTrigger, enableTimeout, eventTag, description);

@@ -17,7 +17,7 @@ namespace L5Sharp.Repositories
         public TaskRepository(L5XContext context)
         {
             _context = context;
-            _serializer = context.Serializers.GetSerializer<ITask>();
+            _serializer = context.Serializer.For<ITask>();
         }
 
         public bool Contains(ComponentName name) =>

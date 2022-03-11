@@ -1,0 +1,908 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="RSLogix5000Content" type="RSLogix5000ContentType"/>
+  <xs:complexType name="RedundancyInfoType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute type="xs:string" name="Enabled"/>
+        <xs:attribute type="xs:string" name="KeepTestEditsOnSwitchOver"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="SecurityType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute type="xs:string" name="Code"/>
+        <xs:attribute type="xs:string" name="ChangesToDetect"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="MemberType" mixed="true">
+    <xs:sequence>
+      <xs:element type="xs:string" name="Description" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="Name" use="required"/>
+    <xs:attribute type="xs:string" name="DataType" use="required"/>
+    <xs:attribute type="xs:string" name="Dimension" use="optional"/>
+    <xs:attribute type="xs:string" name="Radix" use="optional"/>
+    <xs:attribute type="xs:string" name="Hidden" use="optional"/>
+    <xs:attribute type="xs:string" name="ExternalAccess" use="optional"/>
+    <xs:attribute type="xs:string" name="Target" use="optional"/>
+    <xs:attribute type="xs:string" name="BitNumber" use="optional"/>
+  </xs:complexType>
+  <xs:complexType name="MembersType">
+    <xs:sequence>
+      <xs:element type="MemberType" name="Member" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="DataTypeType">
+    <xs:sequence>
+      <xs:element type="xs:string" name="Description" minOccurs="0"/>
+      <xs:element type="MembersType" name="Members"/>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="Name" use="optional"/>
+    <xs:attribute type="xs:string" name="Family" use="optional"/>
+    <xs:attribute type="xs:string" name="Class" use="optional"/>
+  </xs:complexType>
+  <xs:complexType name="DataTypesType">
+    <xs:sequence>
+      <xs:element type="DataTypeType" name="DataType" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="EKeyType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute type="xs:string" name="State" use="optional"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="BusType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute type="xs:string" name="Size" use="optional"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="PortType" mixed="true">
+    <xs:sequence>
+      <xs:element type="BusType" name="Bus" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="Id" use="optional"/>
+    <xs:attribute type="xs:string" name="Address" use="optional"/>
+    <xs:attribute type="xs:string" name="Type" use="optional"/>
+    <xs:attribute type="xs:string" name="Upstream" use="optional"/>
+  </xs:complexType>
+  <xs:complexType name="PortsType">
+    <xs:sequence>
+      <xs:element type="PortType" name="Port" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ModuleType">
+    <xs:sequence>
+      <xs:element type="xs:string" name="Description" minOccurs="0"/>
+      <xs:element type="EKeyType" name="EKey"/>
+      <xs:element type="PortsType" name="Ports"/>
+      <xs:element type="CommunicationsType" name="Communications" minOccurs="0"/>
+      <xs:element type="ExtendedPropertiesType" name="ExtendedProperties" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="Name" use="optional"/>
+    <xs:attribute type="xs:string" name="CatalogNumber" use="optional"/>
+    <xs:attribute type="xs:string" name="Vendor" use="optional"/>
+    <xs:attribute type="xs:string" name="ProductType" use="optional"/>
+    <xs:attribute type="xs:string" name="ProductCode" use="optional"/>
+    <xs:attribute type="xs:string" name="Major" use="optional"/>
+    <xs:attribute type="xs:string" name="Minor" use="optional"/>
+    <xs:attribute type="xs:string" name="ParentModule" use="optional"/>
+    <xs:attribute type="xs:string" name="ParentModPortId" use="optional"/>
+    <xs:attribute type="xs:string" name="Inhibited" use="optional"/>
+    <xs:attribute type="xs:string" name="MajorFault" use="optional"/>
+    <xs:attribute type="xs:string" name="SafetyEnabled" use="optional"/>
+    <xs:attribute type="xs:string" name="DrivesADCMode" use="optional"/>
+    <xs:attribute type="xs:string" name="DrivesADCEnabled" use="optional"/>
+    <xs:attribute type="xs:string" name="UserDefinedVendor" use="optional"/>
+    <xs:attribute type="xs:string" name="UserDefinedProductType" use="optional"/>
+    <xs:attribute type="xs:string" name="UserDefinedProductCode" use="optional"/>
+    <xs:attribute type="xs:string" name="UserDefinedMajor" use="optional"/>
+    <xs:attribute type="xs:string" name="UserDefinedMinor" use="optional"/>
+    <xs:attribute type="xs:string" name="ShutdownParentOnFault" use="optional"/>
+    <xs:attribute type="xs:string" name="UserDefinedCatalogNumber" use="optional"/>
+  </xs:complexType>
+  <xs:complexType name="DataType" mixed="true">
+    <xs:sequence>
+      <xs:element type="StructureType" name="Structure" minOccurs="0"/>
+      <xs:element type="DataValueType" name="DataValue" minOccurs="0"/>
+      <xs:element type="ArrayType" name="Array" minOccurs="0"/>
+      <xs:element type="MessageParametersType" name="MessageParameters" minOccurs="0"/>
+      <xs:element type="AlarmAnalogParametersType" name="AlarmAnalogParameters" minOccurs="0"/>
+      <xs:element type="AlarmDigitalParametersType" name="AlarmDigitalParameters" minOccurs="0"/>
+      <xs:element type="xs:string" name="AlarmConfig" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="Format" use="optional"/>
+    <xs:attribute type="xs:string" name="Length" use="optional"/>
+  </xs:complexType>
+  <xs:complexType name="ConfigDataType">
+    <xs:sequence>
+      <xs:element type="DataType" name="Data"/>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="ConfigSize" use="optional"/>
+  </xs:complexType>
+  <xs:complexType name="ConnectionType" mixed="true">
+    <xs:sequence>
+      <xs:element type="InputTagType" name="InputTag" minOccurs="0"/>
+      <xs:element type="OutputTagType" name="OutputTag" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="Name" use="optional"/>
+    <xs:attribute type="xs:string" name="RPI" use="optional"/>
+    <xs:attribute type="xs:string" name="Type" use="optional"/>
+    <xs:attribute type="xs:string" name="EventID" use="optional"/>
+    <xs:attribute type="xs:string" name="ProgrammaticallySendEventTrigger" use="optional"/>
+    <xs:attribute type="xs:string" name="Unicast" use="optional"/>
+    <xs:attribute type="xs:string" name="InputCxnPoint" use="optional"/>
+    <xs:attribute type="xs:string" name="OutputCxnPoint" use="optional"/>
+    <xs:attribute type="xs:string" name="OutputSize" use="optional"/>
+    <xs:attribute type="xs:string" name="InputSize" use="optional"/>
+    <xs:attribute type="xs:string" name="Priority" use="optional"/>
+    <xs:attribute type="xs:string" name="InputConnectionType" use="optional"/>
+    <xs:attribute type="xs:string" name="InputProductionTrigger" use="optional"/>
+    <xs:attribute type="xs:string" name="ConnectionPath" use="optional"/>
+    <xs:attribute type="xs:string" name="InputTagSuffix" use="optional"/>
+    <xs:attribute type="xs:string" name="OutputTagSuffix" use="optional"/>
+    <xs:attribute type="xs:string" name="Format" use="optional"/>
+  </xs:complexType>
+  <xs:complexType name="ConnectionsType" mixed="true">
+    <xs:sequence>
+      <xs:element type="ConnectionType" name="Connection" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="CommunicationsType">
+    <xs:sequence>
+      <xs:element type="ConfigDataType" name="ConfigData" minOccurs="0"/>
+      <xs:element type="ConfigTagType" name="ConfigTag" minOccurs="0"/>
+      <xs:element type="ConfigScriptType" name="ConfigScript" minOccurs="0"/>
+      <xs:element type="ConnectionsType" name="Connections"/>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="CommMethod" use="optional"/>
+    <xs:attribute type="xs:string" name="PrimCxnInputSize" use="optional"/>
+    <xs:attribute type="xs:string" name="PrimCxnOutputSize" use="optional"/>
+  </xs:complexType>
+  <xs:complexType name="publicType">
+    <xs:choice maxOccurs="unbounded" minOccurs="0">
+      <xs:element type="xs:string" name="ConfigID"/>
+      <xs:element name="Vendor">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="Rockwell Automation/Allen-Bradley"/>
+            <xs:enumeration value="Micro Motion, Inc."/>
+            <xs:enumeration value="Prosoft Technology"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element type="xs:string" name="CatNum"/>
+      <xs:element type="xs:string" name="TimeSyncEnabled"/>
+      <xs:element type="PLType" name="PL"/>
+      <xs:element type="xs:string" name="Port5HLP_Size"/>
+      <xs:element type="xs:string" name="Port5Type"/>
+      <xs:element type="xs:string" name="Port5DeviceDefinition"/>
+      <xs:element type="xs:string" name="Port5CCV"/>
+      <xs:element type="xs:string" name="Port5CCVInfo"/>
+    </xs:choice>
+  </xs:complexType>
+  <xs:complexType name="ExtendedPropertiesType" mixed="true">
+    <xs:sequence>
+      <xs:element type="publicType" name="public" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ElementType" mixed="true">
+    <xs:sequence>
+      <xs:element type="StructureType" name="Structure" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="Index" use="optional"/>
+    <xs:attribute type="xs:string" name="Value" use="optional"/>
+  </xs:complexType>
+  <xs:complexType name="ArrayMemberType" mixed="true">
+    <xs:choice maxOccurs="unbounded" minOccurs="0">
+      <xs:element type="ElementType" name="Element"/>
+      <xs:element type="StructureMemberType" name="StructureMember"/>
+      <xs:element type="DataValueMemberType" name="DataValueMember"/>
+      <xs:element type="ArrayMemberType" name="ArrayMember"/>
+    </xs:choice>
+    <xs:attribute type="xs:string" name="Name" use="optional"/>
+    <xs:attribute type="xs:string" name="DataType" use="optional"/>
+    <xs:attribute type="xs:string" name="Dimensions" use="optional"/>
+    <xs:attribute type="xs:string" name="Radix" use="optional"/>
+    <xs:attribute type="xs:string" name="Value" use="optional"/>
+  </xs:complexType>
+  <xs:complexType name="StructureType">
+    <xs:choice maxOccurs="unbounded" minOccurs="0">
+      <xs:element type="ArrayMemberType" name="ArrayMember"/>
+      <xs:element type="DataValueMemberType" name="DataValueMember"/>
+      <xs:element type="StructureMemberType" name="StructureMember"/>
+    </xs:choice>
+    <xs:attribute type="xs:string" name="DataType" use="optional"/>
+  </xs:complexType>
+  <xs:complexType name="ConfigTagType">
+    <xs:sequence>
+      <xs:element type="DataType" name="Data" maxOccurs="unbounded" minOccurs="0"/>
+      <xs:element type="CommentsType" name="Comments" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="ConfigSize" use="optional"/>
+    <xs:attribute type="xs:string" name="ExternalAccess" use="optional"/>
+  </xs:complexType>
+  <xs:complexType name="CommentType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute type="xs:string" name="Operand" use="optional"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="CommentsType">
+    <xs:sequence>
+      <xs:element type="CommentType" name="Comment" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="InputTagType">
+    <xs:sequence>
+      <xs:element type="CommentsType" name="Comments" minOccurs="0"/>
+      <xs:element type="EngineeringUnitsType" name="EngineeringUnits" minOccurs="0"/>
+      <xs:element type="DataType" name="Data"/>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="ExternalAccess" use="optional"/>
+  </xs:complexType>
+  <xs:complexType name="OutputTagType">
+    <xs:sequence>
+      <xs:element type="CommentsType" name="Comments" minOccurs="0"/>
+      <xs:element type="EngineeringUnitsType" name="EngineeringUnits" minOccurs="0"/>
+      <xs:element type="DataType" name="Data" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="ExternalAccess" use="optional"/>
+  </xs:complexType>
+  <xs:complexType name="DataValueMemberType" mixed="true">
+    <xs:choice maxOccurs="unbounded" minOccurs="0">
+      <xs:element type="StructureMemberType" name="StructureMember"/>
+      <xs:element type="DataValueMemberType" name="DataValueMember"/>
+      <xs:element type="ArrayMemberType" name="ArrayMember"/>
+    </xs:choice>
+    <xs:attribute type="xs:string" name="Name" use="optional"/>
+    <xs:attribute type="xs:string" name="DataType" use="optional"/>
+    <xs:attribute type="xs:string" name="Radix" use="optional"/>
+    <xs:attribute type="xs:string" name="Value" use="optional"/>
+  </xs:complexType>
+  <xs:complexType name="StructureMemberType" mixed="true">
+    <xs:choice maxOccurs="unbounded" minOccurs="0">
+      <xs:element type="StructureMemberType" name="StructureMember"/>
+      <xs:element type="DataValueMemberType" name="DataValueMember"/>
+      <xs:element type="ArrayMemberType" name="ArrayMember"/>
+    </xs:choice>
+    <xs:attribute type="xs:string" name="Name" use="optional"/>
+    <xs:attribute type="xs:string" name="DataType" use="optional"/>
+    <xs:attribute type="xs:string" name="Radix" use="optional"/>
+    <xs:attribute type="xs:string" name="Value" use="optional"/>
+  </xs:complexType>
+  <xs:complexType name="ConfigScriptType">
+    <xs:sequence>
+      <xs:element type="DataType" name="Data"/>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="Size" use="optional"/>
+  </xs:complexType>
+  <xs:complexType name="EngineeringUnitType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute type="xs:string" name="Operand" use="optional"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="EngineeringUnitsType">
+    <xs:sequence>
+      <xs:element type="EngineeringUnitType" name="EngineeringUnit" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="VersionType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute type="xs:string" name="Name" use="optional"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="PLType" mixed="true">
+    <xs:sequence>
+      <xs:element type="VersionType" name="Version"/>
+      <xs:element type="ConnectionType" name="Connection" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ModulesType">
+    <xs:sequence>
+      <xs:element type="ModuleType" name="Module" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ParameterType" mixed="true">
+    <xs:sequence>
+      <xs:element type="xs:string" name="Description" minOccurs="0"/>
+      <xs:element type="DefaultDataType" name="DefaultData" maxOccurs="unbounded" minOccurs="0"/>
+      <xs:element type="CommentsType" name="Comments" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="Name" use="optional"/>
+    <xs:attribute type="xs:string" name="TagType" use="optional"/>
+    <xs:attribute type="xs:string" name="DataType" use="optional"/>
+    <xs:attribute type="xs:string" name="Usage" use="optional"/>
+    <xs:attribute type="xs:string" name="Radix" use="optional"/>
+    <xs:attribute type="xs:string" name="Required" use="optional"/>
+    <xs:attribute type="xs:string" name="Visible" use="optional"/>
+    <xs:attribute type="xs:string" name="ExternalAccess" use="optional"/>
+    <xs:attribute type="xs:string" name="Constant" use="optional"/>
+    <xs:attribute type="xs:string" name="Dimensions" use="optional"/>
+  </xs:complexType>
+  <xs:complexType name="DefaultDataType" mixed="true">
+    <xs:sequence>
+      <xs:element type="DataValueType" name="DataValue" minOccurs="0"/>
+      <xs:element type="StructureType" name="Structure" minOccurs="0"/>
+      <xs:element type="ArrayType" name="Array" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="Format" use="optional"/>
+  </xs:complexType>
+  <xs:complexType name="DataValueType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute type="xs:string" name="DataType" use="optional"/>
+        <xs:attribute type="xs:string" name="Radix" use="optional"/>
+        <xs:attribute type="xs:string" name="Value" use="optional"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="ParametersType">
+    <xs:sequence>
+      <xs:element type="ParameterType" name="Parameter" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="RungType">
+    <xs:sequence>
+      <xs:element type="xs:string" name="Comment" minOccurs="0"/>
+      <xs:element type="xs:string" name="Text"/>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="Number" use="optional"/>
+    <xs:attribute type="xs:string" name="Type" use="optional"/>
+  </xs:complexType>
+  <xs:complexType name="RLLContentType">
+    <xs:sequence>
+      <xs:element type="RungType" name="Rung" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="RoutineType">
+    <xs:sequence>
+      <xs:element type="xs:string" name="Description" minOccurs="0"/>
+      <xs:element type="RLLContentType" name="RLLContent"/>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="Name" use="optional"/>
+    <xs:attribute type="xs:string" name="Type" use="optional"/>
+  </xs:complexType>
+  <xs:complexType name="RoutinesType">
+    <xs:sequence>
+      <xs:element type="RoutineType" name="Routine" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="AddOnInstructionDefinitionType">
+    <xs:sequence>
+      <xs:element type="xs:string" name="Description"/>
+      <xs:element name="RevisionNote">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="
+v1.0 - Initial Verison
+"/>
+            <xs:enumeration value="
+v1.0 - Initial Verision
+"/>
+            <xs:enumeration value="
+v1.0 - Intial Verison
+"/>
+            <xs:enumeration value="
+v1.0 - Initial Version
+"/>
+            <xs:enumeration value="
+v1.0 - Initial version.
+"/>
+            <xs:enumeration value="
+v1.1 - Updated DINT variables to be REAL.
+v1.0 - Initial version.
+"/>
+            <xs:enumeration value="
+v1.7 - Updated Test Active to bypass Delay Timer
+v1.6 - Added TMR for viewing ACC in Ladder Logic
+v1.5 - Added NEQ for all SPs.
+v1.4 - Added ALMD condition verification as true.
+v1.3 - Added ALMD latching.
+v1.2 - Updated Acknowledgment functionality.
+v1.1 - Added Test functionality.
+v1.0 - Initial version.
+"/>
+            <xs:enumeration value="
+v1.0 - Initial Version
+v2.0 - Updated to use UDT for MicroMotion type
+"/>
+            <xs:enumeration value="
+v1.0 - Initial version.
+
+"/>
+            <xs:enumeration value="
+v1.1 - Updated Reset Command unlatch.
+v1.0 - Initial version.
+"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="AdditionalHelpText" minOccurs="0">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="
+The Rate of Change (ROC) is enabled for a Value set point > 0.0 and a period SP > 0.0
+"/>
+            <xs:enumeration value="
+A Solenoid Operated Valve will only have a single output.  This instruction allows for this Activate Output to energize the solenoid to either open or close the valve.  This instruction also allows for feedback limit switches.  If the SOV does not have feedback limit switches, set the EnableFdbk input to 0.  This will feed the Activate output back into the Activated limit switch input and feed the NOT of the Activate output back into the Deactivated limit switch input.  This will also disable the alarms.
+"/>
+            <xs:enumeration value="
+Add Description Here.
+"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element type="ParametersType" name="Parameters"/>
+      <xs:element name="LocalTags" minOccurs="0">
+        <xs:complexType mixed="true">
+          <xs:sequence>
+            <xs:element type="LocalTagType" name="LocalTag" maxOccurs="unbounded" minOccurs="0"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element type="RoutinesType" name="Routines" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="Name" use="optional"/>
+    <xs:attribute type="xs:string" name="Revision" use="optional"/>
+    <xs:attribute type="xs:string" name="Vendor" use="optional"/>
+    <xs:attribute type="xs:string" name="ExecutePrescan" use="optional"/>
+    <xs:attribute type="xs:string" name="ExecutePostscan" use="optional"/>
+    <xs:attribute type="xs:string" name="ExecuteEnableInFalse" use="optional"/>
+    <xs:attribute type="xs:string" name="CreatedDate" use="optional"/>
+    <xs:attribute type="xs:string" name="CreatedBy" use="optional"/>
+    <xs:attribute type="xs:string" name="EditedDate" use="optional"/>
+    <xs:attribute type="xs:string" name="EditedBy" use="optional"/>
+    <xs:attribute type="xs:string" name="SoftwareRevision" use="optional"/>
+  </xs:complexType>
+  <xs:complexType name="EncodedDataType" mixed="true">
+    <xs:sequence>
+      <xs:element type="xs:string" name="Description"/>
+      <xs:element type="xs:string" name="RevisionNote"/>
+      <xs:element name="AdditionalHelpText" minOccurs="0">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="
+The Rate of Change (ROC) is enabled for a Value set point > 0.0 and a period SP > 0.0
+"/>
+            <xs:enumeration value="
+A Solenoid Operated Valve will only have a single output.  This instruction allows for this Activate Output to energize the solenoid to either open or close the valve.  This instruction also allows for feedback limit switches.  If the SOV does not have feedback limit switches, set the EnableFdbk input to 0.  This will feed the Activate output back into the Activated limit switch input and feed the NOT of the Activate output back into the Deactivated limit switch input.  This will also disable the alarms.
+"/>
+            <xs:enumeration value="
+Add Description Here.
+"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element type="ParametersType" name="Parameters"/>
+      <xs:element name="LocalTags" minOccurs="0">
+        <xs:complexType mixed="true">
+          <xs:sequence>
+            <xs:element type="LocalTagType" name="LocalTag" maxOccurs="unbounded" minOccurs="0"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element type="RoutinesType" name="Routines" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="EncodedType" use="optional"/>
+    <xs:attribute type="xs:string" name="Name" use="optional"/>
+    <xs:attribute type="xs:string" name="Revision" use="optional"/>
+    <xs:attribute type="xs:string" name="Vendor" use="optional"/>
+    <xs:attribute type="xs:string" name="EditedDate" use="optional"/>
+    <xs:attribute type="xs:string" name="SoftwareRevision" use="optional"/>
+    <xs:attribute type="xs:string" name="EncryptionConfig" use="optional"/>
+    <xs:attribute type="xs:string" name="ExecutePrescan" use="optional"/>
+    <xs:attribute type="xs:string" name="ExecutePostscan" use="optional"/>
+    <xs:attribute type="xs:string" name="ExecuteEnableInFalse" use="optional"/>
+    <xs:attribute type="xs:string" name="CreatedDate" use="optional"/>
+    <xs:attribute type="xs:string" name="CreatedBy" use="optional"/>
+    <xs:attribute type="xs:string" name="EditedBy" use="optional"/>
+  </xs:complexType>
+  <xs:complexType name="LocalTagType">
+    <xs:sequence>
+      <xs:element name="Description" minOccurs="0">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="
+Program Disable based on the UDT ALMA Program Enable bit
+"/>
+            <xs:enumeration value="
+Snapshot of EU from Last Scan
+"/>
+            <xs:enumeration value="
+Module Entry Status
+"/>
+            <xs:enumeration value="
+Mask for Module Entry Status
+"/>
+            <xs:enumeration value="
+Inhibit Value Status
+"/>
+            <xs:enumeration value="
+Activate Solenoid Output
+"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element type="DefaultDataType" name="DefaultData" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="Name" use="optional"/>
+    <xs:attribute type="xs:string" name="DataType" use="optional"/>
+    <xs:attribute type="xs:string" name="Radix" use="optional"/>
+    <xs:attribute type="xs:string" name="ExternalAccess" use="optional"/>
+    <xs:attribute type="xs:string" name="Dimensions" use="optional"/>
+  </xs:complexType>
+  <xs:complexType name="LocalTagsType">
+    <xs:sequence>
+      <xs:element type="LocalTagType" name="LocalTag" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ArrayType">
+    <xs:sequence>
+      <xs:element type="ElementType" name="Element" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="DataType" use="optional"/>
+    <xs:attribute type="xs:string" name="Dimensions" use="optional"/>
+    <xs:attribute type="xs:string" name="Radix" use="optional"/>
+  </xs:complexType>
+  <xs:complexType name="AddOnInstructionDefinitionsType">
+    <xs:choice maxOccurs="unbounded" minOccurs="0">
+      <xs:element type="AddOnInstructionDefinitionType" name="AddOnInstructionDefinition" maxOccurs="unbounded" minOccurs="0"/>
+      <xs:element type="EncodedDataType" name="EncodedData" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:choice>
+  </xs:complexType>
+  <xs:complexType name="TagType">
+    <xs:sequence>
+      <xs:element type="xs:string" name="Description" minOccurs="0"/>
+      <xs:element type="CommentsType" name="Comments" minOccurs="0"/>
+      <xs:element type="DataType" name="Data" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="Name" use="optional"/>
+    <xs:attribute type="xs:string" name="TagType" use="optional"/>
+    <xs:attribute type="xs:string" name="DataType" use="optional"/>
+    <xs:attribute type="xs:string" name="Constant" use="optional"/>
+    <xs:attribute type="xs:string" name="ExternalAccess" use="optional"/>
+    <xs:attribute type="xs:string" name="Radix" use="optional"/>
+    <xs:attribute type="xs:string" name="Dimensions" use="optional"/>
+  </xs:complexType>
+  <xs:complexType name="MessageParametersType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute type="xs:string" name="MessageType" use="optional"/>
+        <xs:attribute type="xs:string" name="RequestedLength" use="optional"/>
+        <xs:attribute type="xs:string" name="ConnectedFlag" use="optional"/>
+        <xs:attribute type="xs:string" name="ConnectionPath" use="optional"/>
+        <xs:attribute type="xs:string" name="CommTypeCode" use="optional"/>
+        <xs:attribute type="xs:string" name="ServiceCode" use="optional"/>
+        <xs:attribute type="xs:string" name="ObjectType" use="optional"/>
+        <xs:attribute type="xs:string" name="TargetObject" use="optional"/>
+        <xs:attribute type="xs:string" name="AttributeNumber" use="optional"/>
+        <xs:attribute type="xs:string" name="LocalIndex" use="optional"/>
+        <xs:attribute type="xs:string" name="DestinationTag" use="optional"/>
+        <xs:attribute type="xs:string" name="CacheConnections" use="optional"/>
+        <xs:attribute type="xs:string" name="LargePacketUsage" use="optional"/>
+        <xs:attribute type="xs:string" name="LocalElement" use="optional"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="TagsType">
+    <xs:sequence>
+      <xs:element type="TagType" name="Tag" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ChildProgramType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute type="xs:string" name="Name" use="optional"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="ChildProgramsType">
+    <xs:sequence>
+      <xs:element type="ChildProgramType" name="ChildProgram" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ProgramType">
+    <xs:sequence>
+      <xs:element type="xs:string" name="Description"/>
+      <xs:element name="Tags">
+        <xs:complexType mixed="true">
+          <xs:sequence>
+            <xs:element type="TagType" name="Tag" maxOccurs="unbounded" minOccurs="0"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="Routines">
+        <xs:complexType mixed="true">
+          <xs:sequence>
+            <xs:element type="RoutineType" name="Routine" maxOccurs="unbounded" minOccurs="0"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element type="ChildProgramsType" name="ChildPrograms" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="Name" use="optional"/>
+    <xs:attribute type="xs:string" name="TestEdits" use="optional"/>
+    <xs:attribute type="xs:string" name="Disabled" use="optional"/>
+    <xs:attribute type="xs:string" name="UseAsFolder" use="optional"/>
+    <xs:attribute type="xs:string" name="MainRoutineName" use="optional"/>
+  </xs:complexType>
+  <xs:complexType name="AlarmAnalogParametersType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute type="xs:string" name="EnableIn" use="optional"/>
+        <xs:attribute type="xs:string" name="InFault" use="optional"/>
+        <xs:attribute type="xs:string" name="HHEnabled" use="optional"/>
+        <xs:attribute type="xs:string" name="HEnabled" use="optional"/>
+        <xs:attribute type="xs:string" name="LEnabled" use="optional"/>
+        <xs:attribute type="xs:string" name="LLEnabled" use="optional"/>
+        <xs:attribute type="xs:string" name="AckRequired" use="optional"/>
+        <xs:attribute type="xs:string" name="ProgAckAll" use="optional"/>
+        <xs:attribute type="xs:string" name="OperAckAll" use="optional"/>
+        <xs:attribute type="xs:string" name="HHProgAck" use="optional"/>
+        <xs:attribute type="xs:string" name="HHOperAck" use="optional"/>
+        <xs:attribute type="xs:string" name="HProgAck" use="optional"/>
+        <xs:attribute type="xs:string" name="HOperAck" use="optional"/>
+        <xs:attribute type="xs:string" name="LProgAck" use="optional"/>
+        <xs:attribute type="xs:string" name="LOperAck" use="optional"/>
+        <xs:attribute type="xs:string" name="LLProgAck" use="optional"/>
+        <xs:attribute type="xs:string" name="LLOperAck" use="optional"/>
+        <xs:attribute type="xs:string" name="ROCPosProgAck" use="optional"/>
+        <xs:attribute type="xs:string" name="ROCPosOperAck" use="optional"/>
+        <xs:attribute type="xs:string" name="ROCNegProgAck" use="optional"/>
+        <xs:attribute type="xs:string" name="ROCNegOperAck" use="optional"/>
+        <xs:attribute type="xs:string" name="ProgSuppress" use="optional"/>
+        <xs:attribute type="xs:string" name="OperSuppress" use="optional"/>
+        <xs:attribute type="xs:string" name="ProgUnsuppress" use="optional"/>
+        <xs:attribute type="xs:string" name="OperUnsuppress" use="optional"/>
+        <xs:attribute type="xs:string" name="HHOperShelve" use="optional"/>
+        <xs:attribute type="xs:string" name="HOperShelve" use="optional"/>
+        <xs:attribute type="xs:string" name="LOperShelve" use="optional"/>
+        <xs:attribute type="xs:string" name="LLOperShelve" use="optional"/>
+        <xs:attribute type="xs:string" name="ROCPosOperShelve" use="optional"/>
+        <xs:attribute type="xs:string" name="ROCNegOperShelve" use="optional"/>
+        <xs:attribute type="xs:string" name="ProgUnshelveAll" use="optional"/>
+        <xs:attribute type="xs:string" name="HHOperUnshelve" use="optional"/>
+        <xs:attribute type="xs:string" name="HOperUnshelve" use="optional"/>
+        <xs:attribute type="xs:string" name="LOperUnshelve" use="optional"/>
+        <xs:attribute type="xs:string" name="LLOperUnshelve" use="optional"/>
+        <xs:attribute type="xs:string" name="ROCPosOperUnshelve" use="optional"/>
+        <xs:attribute type="xs:string" name="ROCNegOperUnshelve" use="optional"/>
+        <xs:attribute type="xs:string" name="ProgDisable" use="optional"/>
+        <xs:attribute type="xs:string" name="OperDisable" use="optional"/>
+        <xs:attribute type="xs:string" name="ProgEnable" use="optional"/>
+        <xs:attribute type="xs:string" name="OperEnable" use="optional"/>
+        <xs:attribute type="xs:string" name="AlarmCountReset" use="optional"/>
+        <xs:attribute type="xs:string" name="HHMinDurationEnable" use="optional"/>
+        <xs:attribute type="xs:string" name="HMinDurationEnable" use="optional"/>
+        <xs:attribute type="xs:string" name="LMinDurationEnable" use="optional"/>
+        <xs:attribute type="xs:string" name="LLMinDurationEnable" use="optional"/>
+        <xs:attribute type="xs:string" name="In" use="optional"/>
+        <xs:attribute type="xs:string" name="HHLimit" use="optional"/>
+        <xs:attribute type="xs:string" name="HHSeverity" use="optional"/>
+        <xs:attribute type="xs:string" name="HLimit" use="optional"/>
+        <xs:attribute type="xs:string" name="HSeverity" use="optional"/>
+        <xs:attribute type="xs:string" name="LLimit" use="optional"/>
+        <xs:attribute type="xs:string" name="LSeverity" use="optional"/>
+        <xs:attribute type="xs:string" name="LLLimit" use="optional"/>
+        <xs:attribute type="xs:string" name="LLSeverity" use="optional"/>
+        <xs:attribute type="xs:string" name="MinDurationPRE" use="optional"/>
+        <xs:attribute type="xs:string" name="ShelveDuration" use="optional"/>
+        <xs:attribute type="xs:string" name="MaxShelveDuration" use="optional"/>
+        <xs:attribute type="xs:string" name="Deadband" use="optional"/>
+        <xs:attribute type="xs:string" name="ROCPosLimit" use="optional"/>
+        <xs:attribute type="xs:string" name="ROCPosSeverity" use="optional"/>
+        <xs:attribute type="xs:string" name="ROCNegLimit" use="optional"/>
+        <xs:attribute type="xs:string" name="ROCNegSeverity" use="optional"/>
+        <xs:attribute type="xs:string" name="ROCPeriod" use="optional"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="AlarmDigitalParametersType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute type="xs:string" name="Severity" use="optional"/>
+        <xs:attribute type="xs:string" name="MinDurationPRE" use="optional"/>
+        <xs:attribute type="xs:string" name="ShelveDuration" use="optional"/>
+        <xs:attribute type="xs:string" name="MaxShelveDuration" use="optional"/>
+        <xs:attribute type="xs:string" name="ProgTime" use="optional"/>
+        <xs:attribute type="xs:string" name="EnableIn" use="optional"/>
+        <xs:attribute type="xs:string" name="In" use="optional"/>
+        <xs:attribute type="xs:string" name="InFault" use="optional"/>
+        <xs:attribute type="xs:string" name="Condition" use="optional"/>
+        <xs:attribute type="xs:string" name="AckRequired" use="optional"/>
+        <xs:attribute type="xs:string" name="Latched" use="optional"/>
+        <xs:attribute type="xs:string" name="ProgAck" use="optional"/>
+        <xs:attribute type="xs:string" name="OperAck" use="optional"/>
+        <xs:attribute type="xs:string" name="ProgReset" use="optional"/>
+        <xs:attribute type="xs:string" name="OperReset" use="optional"/>
+        <xs:attribute type="xs:string" name="ProgSuppress" use="optional"/>
+        <xs:attribute type="xs:string" name="OperSuppress" use="optional"/>
+        <xs:attribute type="xs:string" name="ProgUnsuppress" use="optional"/>
+        <xs:attribute type="xs:string" name="OperUnsuppress" use="optional"/>
+        <xs:attribute type="xs:string" name="OperShelve" use="optional"/>
+        <xs:attribute type="xs:string" name="ProgUnshelve" use="optional"/>
+        <xs:attribute type="xs:string" name="OperUnshelve" use="optional"/>
+        <xs:attribute type="xs:string" name="ProgDisable" use="optional"/>
+        <xs:attribute type="xs:string" name="OperDisable" use="optional"/>
+        <xs:attribute type="xs:string" name="ProgEnable" use="optional"/>
+        <xs:attribute type="xs:string" name="OperEnable" use="optional"/>
+        <xs:attribute type="xs:string" name="AlarmCountReset" use="optional"/>
+        <xs:attribute type="xs:string" name="UseProgTime" use="optional"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="ProgramsType">
+    <xs:sequence>
+      <xs:element type="ProgramType" name="Program" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ScheduledProgramType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute type="xs:string" name="Name" use="optional"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="ScheduledProgramsType">
+    <xs:sequence>
+      <xs:element type="ScheduledProgramType" name="ScheduledProgram" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TaskType">
+    <xs:sequence>
+      <xs:element name="Description">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="
+Task defines the instantiation of Analog IO
+"/>
+            <xs:enumeration value="
+Task defines the instantiation of Standard IO
+"/>
+            <xs:enumeration value="
+Task defines the processes for controlling PID systems
+"/>
+            <xs:enumeration value="
+Task defines the processes associated with metering products in the system
+"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element type="ScheduledProgramsType" name="ScheduledPrograms"/>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="Name" use="optional"/>
+    <xs:attribute type="xs:string" name="Type" use="optional"/>
+    <xs:attribute type="xs:string" name="Rate" use="optional"/>
+    <xs:attribute type="xs:string" name="Priority" use="optional"/>
+    <xs:attribute type="xs:string" name="Watchdog" use="optional"/>
+    <xs:attribute type="xs:string" name="DisableUpdateOutputs" use="optional"/>
+    <xs:attribute type="xs:string" name="InhibitTask" use="optional"/>
+  </xs:complexType>
+  <xs:complexType name="TasksType">
+    <xs:sequence>
+      <xs:element type="TaskType" name="Task" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="CSTType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute type="xs:string" name="MasterID"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="WallClockTimeType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute type="xs:string" name="LocalTimeAdjustment"/>
+        <xs:attribute type="xs:string" name="TimeZone"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="WatchTagType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute type="xs:string" name="Specifier" use="optional"/>
+        <xs:attribute type="xs:string" name="Scope" use="optional"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="QuickWatchListType">
+    <xs:sequence>
+      <xs:element type="WatchTagType" name="WatchTag" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="Name" use="optional"/>
+  </xs:complexType>
+  <xs:complexType name="QuickWatchListsType">
+    <xs:sequence>
+      <xs:element type="QuickWatchListType" name="QuickWatchList" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TimeSynchronizeType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute type="xs:string" name="Priority1"/>
+        <xs:attribute type="xs:string" name="Priority2"/>
+        <xs:attribute type="xs:string" name="PTPEnable"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="EthernetPortType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute type="xs:string" name="Port"/>
+        <xs:attribute type="xs:string" name="Label"/>
+        <xs:attribute type="xs:string" name="PortEnabled"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="EthernetPortsType">
+    <xs:sequence>
+      <xs:element type="EthernetPortType" name="EthernetPort"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ControllerType">
+    <xs:sequence>
+      <xs:element type="xs:string" name="Description"/>
+      <xs:element type="RedundancyInfoType" name="RedundancyInfo"/>
+      <xs:element type="SecurityType" name="Security"/>
+      <xs:element type="xs:string" name="SafetyInfo"/>
+      <xs:element type="DataTypesType" name="DataTypes"/>
+      <xs:element type="ModulesType" name="Modules"/>
+      <xs:element type="AddOnInstructionDefinitionsType" name="AddOnInstructionDefinitions"/>
+      <xs:element type="TagsType" name="Tags"/>
+      <xs:element type="ProgramsType" name="Programs"/>
+      <xs:element type="TasksType" name="Tasks"/>
+      <xs:element type="CSTType" name="CST"/>
+      <xs:element type="WallClockTimeType" name="WallClockTime"/>
+      <xs:element type="xs:string" name="Trends"/>
+      <xs:element type="xs:string" name="DataLogs"/>
+      <xs:element type="QuickWatchListsType" name="QuickWatchLists"/>
+      <xs:element type="TimeSynchronizeType" name="TimeSynchronize"/>
+      <xs:element type="EthernetPortsType" name="EthernetPorts"/>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="Use"/>
+    <xs:attribute type="xs:string" name="Name"/>
+    <xs:attribute type="xs:string" name="ProcessorType"/>
+    <xs:attribute type="xs:string" name="MajorRev"/>
+    <xs:attribute type="xs:string" name="MinorRev"/>
+    <xs:attribute type="xs:string" name="MajorFaultProgram"/>
+    <xs:attribute type="xs:string" name="ProjectCreationDate"/>
+    <xs:attribute type="xs:string" name="LastModifiedDate"/>
+    <xs:attribute type="xs:string" name="SFCExecutionControl"/>
+    <xs:attribute type="xs:string" name="SFCRestartPosition"/>
+    <xs:attribute type="xs:string" name="SFCLastScan"/>
+    <xs:attribute type="xs:string" name="ProjectSN"/>
+    <xs:attribute type="xs:string" name="MatchProjectToController"/>
+    <xs:attribute type="xs:string" name="CanUseRPIFromProducer"/>
+    <xs:attribute type="xs:string" name="InhibitAutomaticFirmwareUpdate"/>
+    <xs:attribute type="xs:string" name="PassThroughConfiguration"/>
+    <xs:attribute type="xs:string" name="DownloadProjectDocumentationAndExtendedProperties"/>
+    <xs:attribute type="xs:string" name="DownloadProjectCustomProperties"/>
+    <xs:attribute type="xs:string" name="ReportMinorOverflow"/>
+  </xs:complexType>
+  <xs:complexType name="RSLogix5000ContentType">
+    <xs:sequence>
+      <xs:element type="ControllerType" name="Controller"/>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="SchemaRevision"/>
+    <xs:attribute type="xs:string" name="SoftwareRevision"/>
+    <xs:attribute type="xs:string" name="TargetName"/>
+    <xs:attribute type="xs:string" name="TargetType"/>
+    <xs:attribute type="xs:string" name="ContainsContext"/>
+    <xs:attribute type="xs:string" name="Owner"/>
+    <xs:attribute type="xs:string" name="ExportDate"/>
+    <xs:attribute type="xs:string" name="ExportOptions"/>
+  </xs:complexType>
+</xs:schema>

@@ -11,6 +11,14 @@ namespace L5Sharp.Serialization.Data
     internal class FormattedDataSerializer : IL5XSerializer<IDataType>
     {
         private static readonly XName ElementName = L5XElement.Data.ToString();
+        private readonly DecoratedDataSerializer _decoratedDataSerializer;
+        private readonly AlarmDataSerializer _alarmDataSerializer;
+
+        public FormattedDataSerializer()
+        {
+            _decoratedDataSerializer = new DecoratedDataSerializer();
+            _alarmDataSerializer = new AlarmDataSerializer();
+        }
 
         public XElement Serialize(IDataType component)
         {
@@ -23,16 +31,8 @@ namespace L5Sharp.Serialization.Data
             element.Add(new XAttribute(L5XAttribute.Format.ToString(), format));
 
             format
-                .When(TagDataFormat.Decorated).Then(() =>
-                {
-                    var serializer = new DecoratedDataSerializer();
-                    element.Add(serializer.Serialize(component));
-                })
-                .When(TagDataFormat.Alarm).Then(() =>
-                {
-                    var serializer = new AlarmDataSerializer();
-                    element.Add(serializer.Serialize(component));
-                })
+                .When(TagDataFormat.Decorated).Then(() => element.Add(_decoratedDataSerializer.Serialize(component)))
+                .When(TagDataFormat.Alarm).Then(() => element.Add(_alarmDataSerializer.Serialize(component)))
                 .When(TagDataFormat.String).Then(() =>
                 {
                     var str = (String)component;
@@ -60,13 +60,11 @@ namespace L5Sharp.Serialization.Data
             format
                 .When(TagDataFormat.Decorated).Then(() =>
                 {
-                    var serializer = new DecoratedDataSerializer();
-                    dataType = serializer.Deserialize(element.Elements().First());
+                    dataType = _decoratedDataSerializer.Deserialize(element.Elements().First());
                 })
                 .When(TagDataFormat.Alarm).Then(() =>
                 {
-                    var serializer = new AlarmDataSerializer();
-                    dataType = serializer.Deserialize(element.Elements().First());
+                    dataType = _alarmDataSerializer.Deserialize(element.Elements().First());
                 })
                 .When(TagDataFormat.String).Then(() =>
                 {

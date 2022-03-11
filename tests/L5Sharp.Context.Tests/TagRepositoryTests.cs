@@ -62,7 +62,7 @@ namespace L5Sharp.Context.Tests
         {
             var context = L5XContext.Load(Known.L5X);
 
-            var component = context.Tags.GetAll().Where(t => t.Dimensions.AreEmpty);
+            var component = context.Tags.GetAll().Where(t => t.Dimensions.IsEmpty);
 
             component.Should().NotBeEmpty();
         }

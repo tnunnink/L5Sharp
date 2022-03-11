@@ -13,11 +13,22 @@ namespace L5Sharp.Serialization.Components
     internal class TagSerializer : IL5XSerializer<ITag<IDataType>>
     {
         private static readonly XName ElementName = L5XElement.Tag.ToString();
-        private readonly L5XTypeIndex? _index;
+        private readonly Func<string, IDataType> _dataTypeCreator;
+        private readonly CommentSerializer _commentSerializer;
+        private readonly FormattedDataSerializer _formattedDataSerializer;
 
-        public TagSerializer(L5XTypeIndex? index = null)
+        public TagSerializer()
         {
-            _index = index;
+            _dataTypeCreator = DataType.Create;
+            _commentSerializer = new CommentSerializer();
+            _formattedDataSerializer = new FormattedDataSerializer();
+        }
+
+        public TagSerializer(L5XContext context)
+        {
+            _dataTypeCreator = context.Index.GetDataType;
+            _commentSerializer = new CommentSerializer();
+            _formattedDataSerializer = new FormattedDataSerializer();
         }
 
         public XElement Serialize(ITag<IDataType> component)
@@ -27,27 +38,28 @@ namespace L5Sharp.Serialization.Components
 
             var element = new XElement(ElementName);
 
-            element.AddAttribute(component, c => c.Name);
-            element.AddElement(component, c => c.Description);
-            element.AddAttribute(component, c => c.TagType);
-            element.AddAttribute(component, c => c.Alias, t => !t.Alias.IsEmpty && t.Alias.IsValid);
-            element.AddAttribute(component, c => c.DataType.Name, nameOverride: nameof(component.DataType));
-            element.AddAttribute(component, c => c.Dimensions, t => !t.Dimensions.AreEmpty);
-            element.AddAttribute(component, c => c.Radix, t => t.IsValueMember);
-            element.AddAttribute(component, c => c.Constant);
-            element.AddAttribute(component, c => c.ExternalAccess);
+            element.Add(new XAttribute(L5XAttribute.Name.ToString(), component.Name));
+            element.Add(new XElement(L5XElement.Description.ToString(), new XCData(component.Description)));
+            element.Add(new XAttribute(L5XAttribute.TagType.ToString(), component.TagType));
+            if (!component.Alias.IsEmpty)
+                element.Add(new XAttribute(L5XAttribute.AliasFor.ToString(), component.Alias));
+            element.Add(new XAttribute(L5XAttribute.DataType.ToString(), component.DataType));
+            if (!component.Dimensions.IsEmpty)
+                element.Add(new XAttribute(L5XAttribute.Dimensions.ToString(), component.Dimensions));
+            if (!component.IsValueMember)
+                element.Add(new XAttribute(L5XAttribute.Radix.ToString(), component.Radix));
+            element.Add(new XAttribute(L5XAttribute.Constant.ToString(), component.Constant));
+            element.Add(new XAttribute(L5XAttribute.ExternalAccess.ToString(), component.ExternalAccess));
 
             if (component.Comments.Any())
             {
-                var commentSerializer = new CommentSerializer();
-                element.Add(commentSerializer.Serialize(component.Comments));    
+                element.Add(_commentSerializer.Serialize(component.Comments));    
             }
             
-
             //todo same with engineering units and perhaps ranges min/max
-
-            var formattedDataSerializer = new FormattedDataSerializer();
-            var data = formattedDataSerializer.Serialize(component.DataType);
+            
+            
+            var data = _formattedDataSerializer.Serialize(component.DataType);
             element.Add(data);
 
             return element;
@@ -63,21 +75,19 @@ namespace L5Sharp.Serialization.Components
 
             var name = element.ComponentName();
             var description = element.ComponentDescription();
-            var typeName = element.DataTypeName();
-            var dataType = DataType.Exists(typeName) ? DataType.Create(typeName) :
-                _index is not null ? _index.GetDataType(typeName) : new Undefined(typeName);
-            var dimensions = element.GetAttribute<Tag<IDataType>, Dimensions>(t => t.Dimensions);
-            var radix = element.GetAttribute<Tag<IDataType>, Radix>(t => t.Radix);
-            var access = element.GetAttribute<Tag<IDataType>, ExternalAccess>(t => t.ExternalAccess);
-            var usage = element.GetAttribute<Tag<IDataType>, TagUsage>(m => m.Usage);
-            var alias = element.GetAttribute<Tag<IDataType>, TagName>(m => m.Alias);
-            var constant = element.GetAttribute<Tag<IDataType>, bool>(m => m.Constant);
-
-            var commentSerializer = new CommentSerializer();
+            var dataType = _dataTypeCreator.Invoke(element.DataTypeName());
+            
+            var dimensions = element.Attribute(L5XAttribute.Dimensions.ToString())?.Value.Parse<Dimensions>();
+            var radix = element.Attribute(L5XAttribute.Radix.ToString())?.Value.Parse<Radix>();
+            var access = element.Attribute(L5XAttribute.ExternalAccess.ToString())?.Value.Parse<ExternalAccess>();
+            var usage = element.Attribute(L5XAttribute.Usage.ToString())?.Value.Parse<TagUsage>();
+            var alias = element.Attribute(L5XAttribute.AliasFor.ToString())?.Value.Parse<TagName>();
+            var constant = element.Attribute(L5XAttribute.Constant.ToString())?.Value.Parse<bool>() ?? default;
+            
             var commentsElement = element.Elements(L5XElement.Comments.ToString()).FirstOrDefault();
-            var comments = commentsElement is not null ? commentSerializer.Deserialize(commentsElement) : null; 
+            var comments = commentsElement is not null ? _commentSerializer.Deserialize(commentsElement) : null; 
                 
-            var type = dimensions is not null && dimensions.AreEmpty
+            var type = dimensions is not null && dimensions.IsEmpty
                 ? new ArrayType<IDataType>(dimensions, dataType, radix, access, description)
                 : dataType;
 
@@ -87,11 +97,9 @@ namespace L5Sharp.Serialization.Components
                 .FirstOrDefault(e => e.Attribute(L5XAttribute.Format.ToString())?.Value != TagDataFormat.L5K);
 
             if (formattedData is null) return tag;
-
-            var dataSerializer = new FormattedDataSerializer();
-            var data = dataSerializer.Deserialize(formattedData);
-            //tag.SetData(data);
             
+            var data = _formattedDataSerializer.Deserialize(formattedData);
+            tag.SetData(data);
             return tag;
         }
     }

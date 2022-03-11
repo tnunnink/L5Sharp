@@ -7,16 +7,19 @@ using L5Sharp.L5X;
 
 namespace L5Sharp.Serialization.Components
 {
-    internal class UserDefinedSerializer : IL5XSerializer<IUserDefined>
+    internal class DataTypeSerializer : IL5XSerializer<IUserDefined>
     {
         private static readonly XName ElementName = L5XElement.DataType.ToString();
         private readonly IL5XSerializer<IMember<IDataType>> _memberSerializer;
 
-        public UserDefinedSerializer(L5XContext? context = null)
+        public DataTypeSerializer()
         {
-            _memberSerializer = context is not null
-                ? context.Serializers.GetSerializer<IMember<IDataType>>()
-                : new MemberSerializer(context);
+            _memberSerializer = new MemberSerializer();
+        }
+
+        public DataTypeSerializer(L5XContext context)
+        {
+            _memberSerializer = new MemberSerializer(context);
         }
         
         public XElement Serialize(IUserDefined component)
@@ -27,9 +30,9 @@ namespace L5Sharp.Serialization.Components
             var element = new XElement(ElementName);
 
             element.Add(new XAttribute(L5XAttribute.Name.ToString(), component.Name));
-            element.AddElement(component, c => c.Description);
-            element.AddAttribute(component, c => c.Family);
-            element.AddAttribute(component, c => c.Class);
+            element.Add(new XElement(L5XElement.Description.ToString(), new XCData(component.Description)));
+            element.Add(new XAttribute(L5XAttribute.Family.ToString(), component.Family));
+            element.Add(new XAttribute(L5XAttribute.Class.ToString(), component.Class));
 
             var members = new XElement(nameof(component.Members));
             members.Add(component.Members.Select(m => _memberSerializer.Serialize(m)));
