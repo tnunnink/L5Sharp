@@ -17,9 +17,8 @@ namespace L5Sharp.Serialization.Components
                 throw new ArgumentNullException(nameof(component));
 
             var element = new XElement(ElementName);
-
-            element.Add(new XAttribute(L5XAttribute.Name.ToString(), component.Name));
-            element.Add(new XElement(L5XElement.Description.ToString(), new XCData(component.Description)));
+            element.AddComponentName(component.Name);
+            element.AddComponentDescription(component.Description);
             element.Add(new XAttribute(L5XAttribute.ProcessorType.ToString(), component.ProcessorType));
             element.Add(new XAttribute(L5XAttribute.MajorRev.ToString(), component.Revision.Major));
             element.Add(new XAttribute(L5XAttribute.MinorRev.ToString(), component.Revision.Minor));

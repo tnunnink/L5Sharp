@@ -11,7 +11,6 @@ namespace L5Sharp.Serialization.Components
     internal class ParameterSerializer : IL5XSerializer<IParameter<IDataType>>
     {
         private static readonly XName ElementName = L5XElement.Parameter.ToString();
-        private static readonly string Dimension = L5XAttribute.Dimension.ToString();
         private readonly Func<string, IDataType> _dataTypeCreator;
 
         public ParameterSerializer()
@@ -30,18 +29,23 @@ namespace L5Sharp.Serialization.Components
                 throw new ArgumentNullException(nameof(component));
 
             var element = new XElement(ElementName);
-
-            element.Add(new XAttribute(L5XAttribute.Name.ToString(), component.Name));
-            element.Add(new XElement(L5XElement.Description.ToString(), new XCData(component.Description)));
+            element.AddComponentName(component.Name);
+            element.AddComponentDescription(component.Description);
             element.Add(new XAttribute(L5XAttribute.TagType.ToString(), component.TagType));
             element.Add(new XAttribute(L5XAttribute.DataType.ToString(), component.DataType.Name));
-            element.Add(new XAttribute(L5XAttribute.Dimensions.ToString(), component.Dimensions));
+            if (!component.Dimensions.IsEmpty)
+                element.Add(new XAttribute(L5XAttribute.Dimensions.ToString(), component.Dimensions));
             element.Add(new XAttribute(L5XAttribute.Usage.ToString(), component.Usage));
-            element.Add(new XAttribute(L5XAttribute.Radix.ToString(), component.Radix));
+            if (component.Radix != Radix.Null)
+                element.Add(new XAttribute(L5XAttribute.Radix.ToString(), component.Radix));
+            if (!component.Alias.IsEmpty)
+                element.Add(new XAttribute(L5XAttribute.AliasFor.ToString(), component.Alias));
             element.Add(new XAttribute(L5XAttribute.Required.ToString(), component.Required));
             element.Add(new XAttribute(L5XAttribute.Visible.ToString(), component.Visible));
-            element.Add(new XAttribute(L5XAttribute.Constant.ToString(), component.Constant));
-            element.Add(new XAttribute(L5XAttribute.ExternalAccess.ToString(), component.ExternalAccess));
+            if (component.Usage == TagUsage.InOut)
+                element.Add(new XAttribute(L5XAttribute.Constant.ToString(), component.Constant));
+            if (component.Usage != TagUsage.InOut)
+                element.Add(new XAttribute(L5XAttribute.ExternalAccess.ToString(), component.ExternalAccess));
 
             return element;
         }

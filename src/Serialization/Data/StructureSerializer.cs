@@ -14,25 +14,30 @@ namespace L5Sharp.Serialization.Data
         private readonly IL5XSerializer<IMember<IDataType>> _dataValueMemberSerializer;
         private readonly IL5XSerializer<IMember<IDataType>> _arrayMemberSerializer;
         private readonly IL5XSerializer<IMember<IDataType>> _structureMemberSerializer;
+        private readonly StringMembersSerializer _stringStructureSerializer;
 
         public StructureSerializer()
         {
             _dataValueMemberSerializer = new DataValueMemberSerializer();
             _arrayMemberSerializer = new ArrayMemberSerializer(this);
             _structureMemberSerializer = new StructureMemberSerializer(this);
+            _stringStructureSerializer = new StringMembersSerializer();
         }
 
         public XElement Serialize(IComplexType component)
         {
-            if (component == null)
+            if (component is null)
                 throw new ArgumentNullException(nameof(component));
 
-            var element = new XElement(ElementName);
+            //String types are treated differently than all other members.
+            if (component is IStringType stringType)
+                return _stringStructureSerializer.Serialize(stringType);
 
+            var element = new XElement(ElementName);
             element.Add(new XAttribute(L5XElement.DataType.ToString(), component.Name));
 
-            var members = component.Members.Select(m => m.IsValueMember ? _dataValueMemberSerializer.Serialize(m) 
-                : m.IsArrayMember ? _arrayMemberSerializer.Serialize(m) 
+            var members = component.Members.Select(m => m.IsValueMember ? _dataValueMemberSerializer.Serialize(m)
+                : m.IsArrayMember ? _arrayMemberSerializer.Serialize(m)
                 : m.IsStructureMember ? _structureMemberSerializer.Serialize(m)
                 : throw new InvalidOperationException("Could not determine member type."));
 
@@ -48,13 +53,22 @@ namespace L5Sharp.Serialization.Data
 
             if (element.Name != ElementName)
                 throw new ArgumentException($"Element '{element.Name}' not valid for the serializer {GetType()}.");
-
+            
             var name = element.DataTypeName();
+
+            //The only way to know if this is a string type that needs special treatment is if there is a member with
+            //the same data type name (which normally should be impossible)
+            if (element.Elements().Any(e => string.Equals(e.Attribute(L5XAttribute.DataType.ToString())?.Value, name,
+                    StringComparison.OrdinalIgnoreCase)))
+            {
+                return _stringStructureSerializer.Deserialize(element);
+            }
+
             var members = element.Elements().Select(e => GetSerializer(e).Deserialize(e)).ToList();
 
             return new StructureType(name, DataTypeClass.Unknown, members);
         }
-        
+
         private IL5XSerializer<IMember<IDataType>> GetSerializer(XElement element)
         {
             return element.Name == L5XElement.DataValueMember.ToString() ? _dataValueMemberSerializer

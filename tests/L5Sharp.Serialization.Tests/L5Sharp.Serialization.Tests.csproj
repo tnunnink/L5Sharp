@@ -208,7 +208,7 @@
       <None Update="TestFiles\Test.xml">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
-      <None Update="CommentSerializerTests.Serialize_Bool_ShouldBeApproved.approved.xml">
+      <None Update="TagPropertySerializerTests.Serialize_Bool_ShouldBeApproved.approved.xml">
         <DependentUpon>CommentSerializerTests.cs</DependentUpon>
       </None>
       <None Update="ConnectionSerializerTests.Serialize_ValidComponent_ShouldBeApproved.approved.xml">
@@ -264,6 +264,9 @@
       </None>
       <None Update="ProgramSerializerTests.Serialize_ProgramWithTagsAndRoutines_ShouldBeApproved.approved.xml">
         <DependentUpon>ProgramSerializerTests.cs</DependentUpon>
+      </None>
+      <None Update="ParameterSerializerTests.Serialize_AtomicArray_ShouldBeApproved.approved.xml">
+        <DependentUpon>ParameterSerializerTests.cs</DependentUpon>
       </None>
     </ItemGroup>
 

@@ -11,7 +11,7 @@ namespace L5Sharp.Core
             string? description = null) : base(name, dataType, radix, externalAccess, description)
         {
             Usage = usage ?? TagUsage.Default(dataType);
-            Alias = alias;
+            Alias = alias ?? TagName.Empty;
             Default = DataType is IAtomicType atomicType ? atomicType : default;
             Required = Usage == TagUsage.InOut || required;
             Visible = Required || visible;
@@ -53,7 +53,7 @@ namespace L5Sharp.Core
         }
 
         /// <inheritdoc />
-        public TagType TagType => Alias is null ? TagType.Base : TagType.Alias;
+        public TagType TagType => Alias.IsEmpty ? TagType.Base : TagType.Alias;
 
         /// <inheritdoc />
         public TagUsage Usage { get; }
@@ -65,7 +65,7 @@ namespace L5Sharp.Core
         public bool Visible { get; }
 
         /// <inheritdoc />
-        public TagName? Alias { get; }
+        public TagName Alias { get; }
 
         /// <inheritdoc />
         public IAtomicType? Default { get; }

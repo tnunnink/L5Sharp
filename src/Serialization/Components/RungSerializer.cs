@@ -2,6 +2,7 @@
 using System.Xml.Linq;
 using L5Sharp.Core;
 using L5Sharp.Enums;
+using L5Sharp.Extensions;
 using L5Sharp.L5X;
 
 namespace L5Sharp.Serialization.Components
@@ -22,7 +23,8 @@ namespace L5Sharp.Serialization.Components
             var element = new XElement(ElementName);
             element.Add(new XAttribute(L5XAttribute.Number.ToString(), component.Number));
             element.Add(new XAttribute(L5XAttribute.Type.ToString(), component.Type.Value));
-            element.Add(new XElement(L5XElement.Comment.ToString(), new XCData(component.Comment)));
+            if (!component.Comment.IsEmpty())
+                element.Add(new XElement(L5XElement.Comment.ToString(), new XCData(component.Comment)));
             element.Add(new XElement(L5XElement.Text.ToString(), new XCData(component.Text)));
 
             return element;

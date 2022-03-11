@@ -21,6 +21,7 @@ namespace L5Sharp
 
             DataTypes = new DataTypeRepository(this);
             Modules = new ModuleRepository(this);
+            AddOnInstructions = new AddOnInstructionRepository(this);
             Tags = new TagRepository(this);
             Programs = new ProgramRepository(this);
             Tasks = new TaskRepository(this);
@@ -96,7 +97,7 @@ namespace L5Sharp
         internal readonly L5XIndex Index;
 
         /// <inheritdoc />
-        public IController Controller => Serializer.For<IController>()
+        public IController Controller => Serializer.GetFor<IController>()
             .Deserialize(L5X.GetComponents<IController>().First());
 
         /// <inheritdoc />
@@ -104,6 +105,9 @@ namespace L5Sharp
 
         /// <inheritdoc />
         public IModuleRepository Modules { get; }
+
+        /// <inheritdoc />
+        public IRepository<IAddOnInstruction> AddOnInstructions { get; }
 
         /// <inheritdoc />
         public IRepository<ITag<IDataType>> Tags { get; }

@@ -43,7 +43,7 @@ namespace L5Sharp
         /// <summary>
         /// Gets the <c>ITag</c> that represents the alias of the current <c>IParameter</c>.
         /// </summary>
-        TagName? Alias { get; }
+        TagName Alias { get; }
         
         /// <summary>
         /// Gets the <c>IAtomicType</c> value that represents the default value of the <c>IParameter</c>.

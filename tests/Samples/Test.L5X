@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<RSLogix5000Content SchemaRevision="1.0" SoftwareRevision="32.02" TargetName="TestController" TargetType="Controller" ContainsContext="false" Owner="tnunnink, EN Engineering" ExportDate="Mon Mar 07 14:48:26 2022" ExportOptions="NoRawData L5KData DecoratedData ForceProtectedEncoding AllProjDocTrans">
-<Controller Use="Target" Name="TestController" ProcessorType="1756-L83E" MajorRev="32" MinorRev="11" ProjectCreationDate="Mon Sep 27 15:23:27 2021" LastModifiedDate="Mon Mar 07 14:47:43 2022" SFCExecutionControl="CurrentActive" SFCRestartPosition="MostRecent" SFCLastScan="DontScan" ProjectSN="16#0000_0000"
+<RSLogix5000Content SchemaRevision="1.0" SoftwareRevision="32.02" TargetName="TestController" TargetType="Controller" ContainsContext="false" Owner="tnunnink, EN Engineering" ExportDate="Fri Mar 11 15:41:28 2022" ExportOptions="NoRawData L5KData DecoratedData ForceProtectedEncoding AllProjDocTrans">
+<Controller Use="Target" Name="TestController" ProcessorType="1756-L83E" MajorRev="32" MinorRev="11" ProjectCreationDate="Mon Sep 27 15:23:27 2021" LastModifiedDate="Fri Mar 11 15:41:16 2022" SFCExecutionControl="CurrentActive" SFCRestartPosition="MostRecent" SFCLastScan="DontScan" ProjectSN="16#0000_0000"
  MatchProjectToController="false" CanUseRPIFromProducer="false" InhibitAutomaticFirmwareUpdate="0" PassThroughConfiguration="EnabledWithAppend" DownloadProjectDocumentationAndExtendedProperties="true" DownloadProjectCustomProperties="true" ReportMinorOverflow="false">
 <Description>
 <![CDATA[This is a test project]]>
@@ -57,6 +57,11 @@ Dint Array]]>
 <![CDATA[Test Bool Array]]>
 </Description>
 </Member>
+<Member Name="StringArray" DataType="STRING" Dimension="5" Radix="NullType" Hidden="false" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[Test String Array]]>
+</Description>
+</Member>
 </Members>
 </DataType>
 <DataType Name="BoolTest" Family="NoFamily" Class="User">
@@ -109,6 +114,16 @@ Dint Array]]>
 <Member Name="NewMember" DataType="BIT" Dimension="0" Radix="Decimal" Hidden="false" Target="ZZZZZZZZZZComplexTyp6" BitNumber="0" ExternalAccess="Read/Write">
 <Description>
 <![CDATA[This is a new member]]>
+</Description>
+</Member>
+<Member Name="StringMember" DataType="STRING" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[This is a test string member]]>
+</Description>
+</Member>
+<Member Name="MyStringMember" DataType="MyStringType" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[This is a test custom string type]]>
 </Description>
 </Member>
 </Members>
@@ -6467,14 +6482,7 @@ Dint Array]]>
 </Module>
 </Modules>
 <AddOnInstructionDefinitions>
-<AddOnInstructionDefinition Name="aoi_Test" Revision="1.0" RevisionExtension="Rev1" Vendor="ENE" ExecutePrescan="false" ExecutePostscan="false" ExecuteEnableInFalse="false" CreatedDate="2021-10-22T15:27:48.120Z" CreatedBy="ENE\tnunnink" EditedDate="2022-03-01T23:16:59.778Z" EditedBy="ENE\tnunnink"
- SoftwareRevision="v32.02">
-<Description>
-<![CDATA[Test AOI]]>
-</Description>
-<RevisionNote>
-<![CDATA[This revision not is a test note]]>
-</RevisionNote>
+<AddOnInstructionDefinition Name="aoi_Test" Revision="1.2" ExecutePrescan="false" ExecutePostscan="false" ExecuteEnableInFalse="false" CreatedDate="2021-10-22T15:27:48.120Z" CreatedBy="ENE\tnunnink" EditedDate="2022-03-11T21:41:11.172Z" EditedBy="ENE\tnunnink" SoftwareRevision="v32.02">
 <SignatureHistory>
 <HistoryEntry User="ENE\tnunnink" Timestamp="2022-03-01T03:10:25.642Z" SignatureID="16#cae1_ac8c">
 <Description>
@@ -6539,6 +6547,11 @@ Dint Array]]>
 <DataValue DataType="DINT" Radix="Decimal" Value="0"/>
 </DefaultData>
 </Parameter>
+<Parameter Name="Alias" TagType="Alias" Usage="Input" Radix="Decimal" AliasFor="LocalBool" Required="false" Visible="false" ExternalAccess="None">
+<Description>
+<![CDATA[This is an alias]]>
+</Description>
+</Parameter>
 </Parameters>
 <LocalTags>
 <LocalTag Name="LocalBool" DataType="BOOL" Radix="Decimal" ExternalAccess="None">
@@ -6586,6 +6599,7 @@ Dint Array]]>
 <DataValueMember Name="Config" DataType="INT" Radix="Decimal" Value="0"/>
 <DataValueMember Name="Test" DataType="BOOL" Value="0"/>
 <DataValueMember Name="New" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="Alias" DataType="BOOL" Value="0"/>
 </Structure>
 </Data>
 </Tag>
@@ -6691,7 +6705,9 @@ Dint Array]]>
 		,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000,0,0.00000000e+000,0,5.60519386e-045
 		,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000
 		,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000],[1,0,0,0],[[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0
-		,0],[0,0,0,0,0,0],[0,0,0,0,0,0]],0]]]>
+		,0],[0,0,0,0,0,0],[0,0,0,0,0,0]],0,[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
+		],[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
+		]]]]>
 </Data>
 <Data Format="Decorated">
 <Structure DataType="ComplexType">
@@ -6753,6 +6769,7 @@ Dint Array]]>
 <DataValueMember Name="Config" DataType="INT" Radix="Decimal" Value="0"/>
 <DataValueMember Name="Test" DataType="BOOL" Value="0"/>
 <DataValueMember Name="New" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="Alias" DataType="BOOL" Value="0"/>
 </StructureMember>
 <ArrayMember Name="SimplArray" DataType="SimpleType" Dimensions="5">
 <Element Index="[0]">
@@ -6807,6 +6824,18 @@ Dint Array]]>
 </Element>
 </ArrayMember>
 <DataValueMember Name="NewMember" DataType="BOOL" Value="0"/>
+<StructureMember Name="StringMember" DataType="STRING">
+<DataValueMember Name="LEN" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="DATA" DataType="STRING" Radix="ASCII">
+<![CDATA[]]>
+</DataValueMember>
+</StructureMember>
+<StructureMember Name="MyStringMember" DataType="MyStringType">
+<DataValueMember Name="LEN" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="DATA" DataType="MyStringType" Radix="ASCII">
+<![CDATA[]]>
+</DataValueMember>
+</StructureMember>
 </Structure>
 </Data>
 </Tag>
@@ -7053,6 +7082,63 @@ Dint Array]]>
 </Array>
 </Data>
 </Tag>
+<Tag Name="StringArray" TagType="Base" DataType="STRING" Dimensions="5" Constant="false" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[String Array]]>
+</Description>
+<Data Format="L5K">
+<![CDATA[[[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
+		],[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
+		],[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
+		],[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
+		],[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
+		]]]]>
+</Data>
+<Data Format="Decorated">
+<Array DataType="STRING" Dimensions="5">
+<Element Index="[0]">
+<Structure DataType="STRING">
+<DataValueMember Name="LEN" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="DATA" DataType="STRING" Radix="ASCII">
+<![CDATA[]]>
+</DataValueMember>
+</Structure>
+</Element>
+<Element Index="[1]">
+<Structure DataType="STRING">
+<DataValueMember Name="LEN" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="DATA" DataType="STRING" Radix="ASCII">
+<![CDATA[]]>
+</DataValueMember>
+</Structure>
+</Element>
+<Element Index="[2]">
+<Structure DataType="STRING">
+<DataValueMember Name="LEN" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="DATA" DataType="STRING" Radix="ASCII">
+<![CDATA[]]>
+</DataValueMember>
+</Structure>
+</Element>
+<Element Index="[3]">
+<Structure DataType="STRING">
+<DataValueMember Name="LEN" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="DATA" DataType="STRING" Radix="ASCII">
+<![CDATA[]]>
+</DataValueMember>
+</Structure>
+</Element>
+<Element Index="[4]">
+<Structure DataType="STRING">
+<DataValueMember Name="LEN" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="DATA" DataType="STRING" Radix="ASCII">
+<![CDATA[]]>
+</DataValueMember>
+</Structure>
+</Element>
+</Array>
+</Data>
+</Tag>
 <Tag Name="TagParameter" TagType="Base" DataType="SimpleType" Constant="false" ExternalAccess="None">
 <Data Format="L5K">
 <![CDATA[[0,0,0,0,0,0]]]>
@@ -7125,7 +7211,12 @@ Dint Array]]>
 <Data Format="L5K">
 <![CDATA[[[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[1645509600000000,0,0,0,0],[0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000
 		,0.00000000e+000],[2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0
-		,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0]]]]>
+		,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0],[[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
+		],[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
+		],[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
+		],[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
+		],[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
+		]]]]]>
 </Data>
 <Data Format="Decorated">
 <Structure DataType="ArrayType">
@@ -7198,6 +7289,48 @@ Dint Array]]>
 <Element Index="[30]" Value="0"/>
 <Element Index="[31]" Value="0"/>
 </ArrayMember>
+<ArrayMember Name="StringArray" DataType="STRING" Dimensions="5">
+<Element Index="[0]">
+<Structure DataType="STRING">
+<DataValueMember Name="LEN" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="DATA" DataType="STRING" Radix="ASCII">
+<![CDATA[]]>
+</DataValueMember>
+</Structure>
+</Element>
+<Element Index="[1]">
+<Structure DataType="STRING">
+<DataValueMember Name="LEN" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="DATA" DataType="STRING" Radix="ASCII">
+<![CDATA[]]>
+</DataValueMember>
+</Structure>
+</Element>
+<Element Index="[2]">
+<Structure DataType="STRING">
+<DataValueMember Name="LEN" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="DATA" DataType="STRING" Radix="ASCII">
+<![CDATA[]]>
+</DataValueMember>
+</Structure>
+</Element>
+<Element Index="[3]">
+<Structure DataType="STRING">
+<DataValueMember Name="LEN" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="DATA" DataType="STRING" Radix="ASCII">
+<![CDATA[]]>
+</DataValueMember>
+</Structure>
+</Element>
+<Element Index="[4]">
+<Structure DataType="STRING">
+<DataValueMember Name="LEN" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="DATA" DataType="STRING" Radix="ASCII">
+<![CDATA[]]>
+</DataValueMember>
+</Structure>
+</Element>
+</ArrayMember>
 </Structure>
 </Data>
 </Tag>
@@ -7210,7 +7343,9 @@ Dint Array]]>
 		,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000,0,0.00000000e+000,0,5.60519386e-045
 		,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000
 		,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000],[1,0,0,0],[[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0
-		,0],[0,0,0,0,0,0],[0,0,0,0,0,0]],0]]]>
+		,0],[0,0,0,0,0,0],[0,0,0,0,0,0]],0,[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
+		],[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
+		]]]]>
 </Data>
 <Data Format="Decorated">
 <Structure DataType="ComplexType">
@@ -7272,6 +7407,7 @@ Dint Array]]>
 <DataValueMember Name="Config" DataType="INT" Radix="Decimal" Value="0"/>
 <DataValueMember Name="Test" DataType="BOOL" Value="0"/>
 <DataValueMember Name="New" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="Alias" DataType="BOOL" Value="0"/>
 </StructureMember>
 <ArrayMember Name="SimplArray" DataType="SimpleType" Dimensions="5">
 <Element Index="[0]">
@@ -7326,6 +7462,18 @@ Dint Array]]>
 </Element>
 </ArrayMember>
 <DataValueMember Name="NewMember" DataType="BOOL" Value="0"/>
+<StructureMember Name="StringMember" DataType="STRING">
+<DataValueMember Name="LEN" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="DATA" DataType="STRING" Radix="ASCII">
+<![CDATA[]]>
+</DataValueMember>
+</StructureMember>
+<StructureMember Name="MyStringMember" DataType="MyStringType">
+<DataValueMember Name="LEN" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="DATA" DataType="MyStringType" Radix="ASCII">
+<![CDATA[]]>
+</DataValueMember>
+</StructureMember>
 </Structure>
 </Data>
 </Tag>
@@ -7590,7 +7738,9 @@ Dint Array]]>
 		,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000,0,0.00000000e+000,0,5.60519386e-045
 		,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000
 		,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000],[1,0,0,0],[[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0
-		,0],[0,0,0,0,0,0],[0,0,0,0,0,0]],0]]]>
+		,0],[0,0,0,0,0,0],[0,0,0,0,0,0]],0,[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
+		],[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
+		]]]]>
 </Data>
 <Data Format="Decorated">
 <Structure DataType="ComplexType">
@@ -7652,6 +7802,7 @@ Dint Array]]>
 <DataValueMember Name="Config" DataType="INT" Radix="Decimal" Value="0"/>
 <DataValueMember Name="Test" DataType="BOOL" Value="0"/>
 <DataValueMember Name="New" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="Alias" DataType="BOOL" Value="0"/>
 </StructureMember>
 <ArrayMember Name="SimplArray" DataType="SimpleType" Dimensions="5">
 <Element Index="[0]">
@@ -7706,6 +7857,18 @@ Dint Array]]>
 </Element>
 </ArrayMember>
 <DataValueMember Name="NewMember" DataType="BOOL" Value="0"/>
+<StructureMember Name="StringMember" DataType="STRING">
+<DataValueMember Name="LEN" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="DATA" DataType="STRING" Radix="ASCII">
+<![CDATA[]]>
+</DataValueMember>
+</StructureMember>
+<StructureMember Name="MyStringMember" DataType="MyStringType">
+<DataValueMember Name="LEN" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="DATA" DataType="MyStringType" Radix="ASCII">
+<![CDATA[]]>
+</DataValueMember>
+</StructureMember>
 </Structure>
 </Data>
 </Tag>

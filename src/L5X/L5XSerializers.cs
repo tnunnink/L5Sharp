@@ -26,6 +26,7 @@ namespace L5Sharp.L5X
                 { typeof(IController), new ControllerSerializer() },
                 { typeof(IUserDefined), new DataTypeSerializer(context) },
                 { typeof(IModule), new ModuleSerializer() },
+                { typeof(IAddOnInstruction), new AddOnInstructionSerializer() },
                 { typeof(ITag<IDataType>), new TagSerializer() },
                 { typeof(IProgram), new ProgramSerializer() },
                 { typeof(IRoutine<ILogixContent>), new RoutineSerializer() },
@@ -39,7 +40,7 @@ namespace L5Sharp.L5X
         /// </summary>
         /// <typeparam name="TComponent">The logix component for which to retrieve a serializer.</typeparam>
         /// <returns>The serializer instance that maps to the specified component type.</returns>
-        public IL5XSerializer<TComponent> For<TComponent>() where TComponent : ILogixComponent
+        public IL5XSerializer<TComponent> GetFor<TComponent>() where TComponent : ILogixComponent
         {
             var target = _serializers.FirstOrDefault(t => t.Key == typeof(TComponent)).Value;
             

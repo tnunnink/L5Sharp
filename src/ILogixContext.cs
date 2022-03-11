@@ -23,6 +23,11 @@ namespace L5Sharp
         IModuleRepository Modules { get; }
         
         /// <summary>
+        /// Get the <see cref="IAddOnInstruction"/> repository instance for the current <see cref="ILogixContext"/>.
+        /// </summary>
+        IRepository<IAddOnInstruction> AddOnInstructions { get; }
+        
+        /// <summary>
         /// Get the <see cref="ITag{TDataType}"/> repository instance for the current <see cref="ILogixContext"/>. 
         /// </summary>
         IRepository<ITag<IDataType>> Tags { get; }

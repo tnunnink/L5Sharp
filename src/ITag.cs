@@ -34,7 +34,12 @@ namespace L5Sharp
         /// <summary>
         /// Gets the collection of member comments for the current <see cref="ITag{TDataType}"/>.
         /// </summary>
-        Comments Comments {get;}
+        TagPropertyCollection<string> Comments {get;}
+        
+        /// <summary>
+        /// Gets the collection of member units for the current <see cref="ITag{TDataType}"/>.
+        /// </summary>
+        TagPropertyCollection<string> EngineeringUnits {get;}
         
         /// <summary>
         /// Gets a <see cref="ITagMember{TDataType}"/> at the specified two-dimensional index from the

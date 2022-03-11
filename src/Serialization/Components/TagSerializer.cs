@@ -5,7 +5,6 @@ using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Extensions;
 using L5Sharp.L5X;
-using L5Sharp.Predefined;
 using L5Sharp.Serialization.Data;
 
 namespace L5Sharp.Serialization.Components
@@ -14,20 +13,23 @@ namespace L5Sharp.Serialization.Components
     {
         private static readonly XName ElementName = L5XElement.Tag.ToString();
         private readonly Func<string, IDataType> _dataTypeCreator;
-        private readonly CommentSerializer _commentSerializer;
+        private readonly TagPropertySerializer _commentSerializer;
+        private readonly TagPropertySerializer _unitsSerializer;
         private readonly FormattedDataSerializer _formattedDataSerializer;
 
         public TagSerializer()
         {
             _dataTypeCreator = DataType.Create;
-            _commentSerializer = new CommentSerializer();
+            _commentSerializer = new TagPropertySerializer(L5XElement.Comment.ToString());
+            _unitsSerializer = new TagPropertySerializer(L5XElement.EngineeringUnit.ToString());
             _formattedDataSerializer = new FormattedDataSerializer();
         }
 
         public TagSerializer(L5XContext context)
         {
             _dataTypeCreator = context.Index.GetDataType;
-            _commentSerializer = new CommentSerializer();
+            _commentSerializer = new TagPropertySerializer(L5XElement.Comment.ToString());
+            _unitsSerializer = new TagPropertySerializer(L5XElement.EngineeringUnit.ToString());
             _formattedDataSerializer = new FormattedDataSerializer();
         }
 
@@ -37,9 +39,8 @@ namespace L5Sharp.Serialization.Components
                 throw new ArgumentNullException(nameof(component));
 
             var element = new XElement(ElementName);
-
-            element.Add(new XAttribute(L5XAttribute.Name.ToString(), component.Name));
-            element.Add(new XElement(L5XElement.Description.ToString(), new XCData(component.Description)));
+            element.AddComponentName(component.Name);
+            element.AddComponentDescription(component.Description);
             element.Add(new XAttribute(L5XAttribute.TagType.ToString(), component.TagType));
             if (!component.Alias.IsEmpty)
                 element.Add(new XAttribute(L5XAttribute.AliasFor.ToString(), component.Alias));
@@ -52,13 +53,11 @@ namespace L5Sharp.Serialization.Components
             element.Add(new XAttribute(L5XAttribute.ExternalAccess.ToString(), component.ExternalAccess));
 
             if (component.Comments.Any())
-            {
-                element.Add(_commentSerializer.Serialize(component.Comments));    
-            }
-            
-            //todo same with engineering units and perhaps ranges min/max
-            
-            
+                element.Add(component.Comments.Select(c => _commentSerializer.Serialize(c)));
+
+            if (component.EngineeringUnits.Any())
+                element.Add(component.EngineeringUnits.Select(u => _unitsSerializer.Serialize(u)));
+
             var data = _formattedDataSerializer.Serialize(component.DataType);
             element.Add(data);
 
@@ -76,28 +75,32 @@ namespace L5Sharp.Serialization.Components
             var name = element.ComponentName();
             var description = element.ComponentDescription();
             var dataType = _dataTypeCreator.Invoke(element.DataTypeName());
-            
+
             var dimensions = element.Attribute(L5XAttribute.Dimensions.ToString())?.Value.Parse<Dimensions>();
             var radix = element.Attribute(L5XAttribute.Radix.ToString())?.Value.Parse<Radix>();
             var access = element.Attribute(L5XAttribute.ExternalAccess.ToString())?.Value.Parse<ExternalAccess>();
             var usage = element.Attribute(L5XAttribute.Usage.ToString())?.Value.Parse<TagUsage>();
             var alias = element.Attribute(L5XAttribute.AliasFor.ToString())?.Value.Parse<TagName>();
             var constant = element.Attribute(L5XAttribute.Constant.ToString())?.Value.Parse<bool>() ?? default;
+
+            var comments = new TagPropertyCollection<string>(element.Descendants(L5XElement.Comment.ToString())
+                .Select(e => _commentSerializer.Deserialize(e)));
             
-            var commentsElement = element.Elements(L5XElement.Comments.ToString()).FirstOrDefault();
-            var comments = commentsElement is not null ? _commentSerializer.Deserialize(commentsElement) : null; 
-                
+            var units = new TagPropertyCollection<string>(element.Descendants(L5XElement.EngineeringUnit.ToString())
+                .Select(e => _unitsSerializer.Deserialize(e)));
+
             var type = dimensions is not null && dimensions.IsEmpty
                 ? new ArrayType<IDataType>(dimensions, dataType, radix, access, description)
                 : dataType;
 
-            var tag = new Tag<IDataType>(name, type, radix, access, description, usage, alias, constant, comments);
+            var tag = new Tag<IDataType>(name, type, radix, access, description, 
+                usage, alias, constant, comments, units);
 
             var formattedData = element.Descendants(L5XElement.Data.ToString())
                 .FirstOrDefault(e => e.Attribute(L5XAttribute.Format.ToString())?.Value != TagDataFormat.L5K);
 
             if (formattedData is null) return tag;
-            
+
             var data = _formattedDataSerializer.Deserialize(formattedData);
             tag.SetData(data);
             return tag;

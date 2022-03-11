@@ -149,12 +149,12 @@ namespace L5Sharp.Serialization.Tests
                 "<DataValueMember Name=\"Test\" DataType=\"BOOL\" Value=\"1\"/>";
             var element = XElement.Parse(xml);
 
-            var component = (Member<IAtomicType>)_serializer.Deserialize(element);
+            var component = _serializer.Deserialize(element);
 
             component.Name.Should().Be("Test");
             component.DataType.Should().BeOfType<Bool>();
             component.Radix.Should().Be(Radix.Decimal);
-            component.DataType.Value.Should().Be(true);
+            component.DataType.As<IAtomicType>().Value.Should().Be(true);
         }
 
         [Test]
@@ -164,12 +164,12 @@ namespace L5Sharp.Serialization.Tests
                 "<DataValueMember Name=\"Test\" DataType=\"SINT\" Radix=\"Decimal\" Value=\"0\"/>";
             var element = XElement.Parse(xml);
 
-            var component = (Member<IAtomicType>)_serializer.Deserialize(element);
+            var component = _serializer.Deserialize(element);
 
             component.Name.Should().Be("Test");
             component.DataType.Should().BeOfType<Sint>();
             component.Radix.Should().Be(Radix.Decimal);
-            component.DataType.Value.Should().Be(0);
+            component.DataType.As<IAtomicType>().Value.Should().Be(0);
         }
 
         [Test]
@@ -179,14 +179,13 @@ namespace L5Sharp.Serialization.Tests
                 "<DataValueMember Name=\"Test\" DataType=\"INT\" Radix=\"Decimal\" Value=\"0\"/>";
             var element = XElement.Parse(xml);
 
-            var component = (Member<IAtomicType>)_serializer.Deserialize(element);
+            var component = _serializer.Deserialize(element);
 
             component.Name.Should().Be("Test");
             component.DataType.Should().BeOfType<Int>();
             component.Radix.Should().Be(Radix.Decimal);
-            component.DataType.Value.Should().Be(0);
+            component.DataType.As<IAtomicType>().Value.Should().Be(0);
         }
-
 
         [Test]
         public void Deserialize_ValidDint_ShouldHaveExpectedProperties()
@@ -195,15 +194,14 @@ namespace L5Sharp.Serialization.Tests
                 "<DataValueMember Name=\"Test\" DataType=\"DINT\" Radix=\"Decimal\" Value=\"0\"/>";
             var element = XElement.Parse(xml);
 
-            var component = (Member<IAtomicType>)_serializer.Deserialize(element);
+            var component = _serializer.Deserialize(element);
 
             component.Name.Should().Be("Test");
             component.DataType.Should().BeOfType<Dint>();
             component.Radix.Should().Be(Radix.Decimal);
-            component.DataType.Value.Should().Be(0);
+            component.DataType.As<IAtomicType>().Value.Should().Be(0);
         }
-
-
+        
         [Test]
         public void Deserialize_ValidLint_ShouldHaveExpectedProperties()
         {
@@ -211,12 +209,12 @@ namespace L5Sharp.Serialization.Tests
                 "<DataValueMember Name=\"Test\" DataType=\"LINT\" Radix=\"Decimal\" Value=\"0\"/>";
             var element = XElement.Parse(xml);
 
-            var component = (Member<IAtomicType>)_serializer.Deserialize(element);
+            var component = _serializer.Deserialize(element);
 
             component.Name.Should().Be("Test");
             component.DataType.Should().BeOfType<Lint>();
             component.Radix.Should().Be(Radix.Decimal);
-            component.DataType.Value.Should().Be(0);
+            component.DataType.As<IAtomicType>().Value.Should().Be(0);
         }
 
         [Test]
@@ -226,12 +224,12 @@ namespace L5Sharp.Serialization.Tests
                 "<DataValueMember Name=\"Test\" DataType=\"REAL\" Radix=\"Float\" Value=\"0.0\"/>";
             var element = XElement.Parse(xml);
 
-            var component = (Member<IAtomicType>)_serializer.Deserialize(element);
+            var component = _serializer.Deserialize(element);
 
             component.Name.Should().Be("Test");
             component.DataType.Should().BeOfType<Real>();
             component.Radix.Should().Be(Radix.Float);
-            component.DataType.Value.Should().Be(0);
+            component.DataType.As<IAtomicType>().Value.Should().Be(0);
         }
     }
 }

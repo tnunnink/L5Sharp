@@ -15,6 +15,7 @@ namespace L5Sharp.L5X
         private readonly Dictionary<string, XElement> _index;
         private readonly StructureSerializer _structureSerializer;
         private readonly IL5XSerializer<IUserDefined> _dataTypeSerializer;
+        private readonly IL5XSerializer<IAddOnInstruction> _addOnInstructionSerializer;
 
         internal L5XIndex(L5XContext context)
         {
@@ -25,8 +26,9 @@ namespace L5Sharp.L5X
             RegisterModuleDefinedTypes(context.L5X.Content);
             RegisterAddOnDefinedTypes(context.L5X.Content);
 
-            _dataTypeSerializer = context.Serializer.For<IUserDefined>();
+            _dataTypeSerializer = context.Serializer.GetFor<IUserDefined>();
             _structureSerializer = new StructureSerializer();
+            _addOnInstructionSerializer = context.Serializer.GetFor<IAddOnInstruction>();
         }
 
         public IDataType GetDataType(string name)
@@ -39,18 +41,9 @@ namespace L5Sharp.L5X
 
         private IDataType DeserializeType(XElement element)
         {
-            if (element.Name == L5XElement.DataType.ToString())
-            {
-                return _dataTypeSerializer.Deserialize(element);
-            }
-
-            if (element.Name == L5XElement.Structure.ToString())
-            {
-                return _structureSerializer.Deserialize(element);
-            }
-
-            //var serialize = _context.ForElement<IAddOnInstruction>(element);
-            return new Undefined();
+            return element.Name == L5XElement.DataType.ToString() ? _dataTypeSerializer.Deserialize(element) :
+                element.Name == L5XElement.Structure.ToString() ? _structureSerializer.Deserialize(element)
+                : _addOnInstructionSerializer.Deserialize(element);
         }
 
         private void RegisterUserDefinedTypes(XContainer? container)

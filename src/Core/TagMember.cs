@@ -24,7 +24,7 @@ namespace L5Sharp.Core
 
         /// <inheritdoc />
         public string Description =>
-            Root.Comments.ContainsTag(TagName) ? Root.Comments.Get(TagName) : CalculateDescription();
+            Root.Comments.ContainsTag(TagName) ? Root.Comments[TagName] : CalculateDescription();
 
         /// <inheritdoc />
         public TagName TagName => Parent is null
@@ -49,10 +49,13 @@ namespace L5Sharp.Core
         public bool IsValueMember => _member.IsValueMember;
 
         /// <inheritdoc />
+        public bool IsArrayMember => _member.IsArrayMember;
+
+        /// <inheritdoc />
         public bool IsStructureMember => _member.IsStructureMember;
 
         /// <inheritdoc />
-        public bool IsArrayMember => _member.IsArrayMember;
+        public bool IsStringMember => _member.IsStringMember;
 
         /// <inheritdoc />
         public object? Value => _member.DataType switch
@@ -75,7 +78,13 @@ namespace L5Sharp.Core
                 $"Tag of type '{GetType()}' is not an '{typeof(IArrayType<IDataType>)}'");
 
         /// <inheritdoc />
-        public void Comment(string comment) => Root.Comments.Apply(TagName, comment);
+        public void Comment(string comment)
+        {
+            if (comment.IsEmpty())
+                Root.Comments.Reset(TagName);
+            
+            Root.Comments.Configure(TagName, comment);
+        }
 
         /// <inheritdoc />
         public bool Contains(TagName tagName)

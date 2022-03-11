@@ -18,6 +18,7 @@ namespace L5Sharp.Extensions
             { typeof(IUserDefined), new DataTypeSerializer() },
             { typeof(IMember<IDataType>), new MemberSerializer() },
             { typeof(IModule), new ModuleSerializer() },
+            { typeof(IAddOnInstruction), new AddOnInstructionSerializer() },
             { typeof(ITag<IDataType>), new TagSerializer() },
             { typeof(IProgram), new ProgramSerializer() },
             { typeof(IRoutine<ILogixContent>), new RoutineSerializer() },

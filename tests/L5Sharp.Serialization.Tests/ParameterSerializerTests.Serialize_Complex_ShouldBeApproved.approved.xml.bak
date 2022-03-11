@@ -1,0 +1,1 @@
+﻿<Parameter Name="Test" TagType="Base" DataType="TIMER" Dimensions="0" Usage="InOut" Radix="NullType" Required="true" Visible="true" Constant="false" ExternalAccess="Read/Write" />

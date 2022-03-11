@@ -36,5 +36,16 @@ namespace L5Sharp.Extensions
             element.Attribute(L5XAttribute.DataType.ToString())?.Value ??
             throw new InvalidOperationException(
                 "The current element does not have an attribute with name 'DataType'");
+
+        public static void AddComponentName(this XElement element, string name) => 
+            element.Add(new XAttribute(L5XAttribute.Name.ToString(), name));
+
+        public static void AddComponentDescription(this XElement element, string description)
+        {
+            if (string.IsNullOrEmpty(description))
+                return;
+            
+            element.Add(new XElement(L5XElement.Description.ToString(), new XCData(description)));
+        }
     }
 }

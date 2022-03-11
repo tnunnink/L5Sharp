@@ -13,7 +13,8 @@ namespace L5Sharp.Core
 
         internal Tag(string name, TDataType dataType, Radix? radix = null, ExternalAccess? externalAccess = null,
             string? description = null, TagUsage? usage = null, TagName? alias = null, bool constant = false,
-            Comments? comments = null)
+            TagPropertyCollection<string>? comments = null, TagPropertyCollection<string>? units = null,
+            TagPropertyCollection<string>? maximums = null, TagPropertyCollection<string>? minimums = null)
         {
             var root = (ITag<IDataType>)(ITag<TDataType>)this;
             var member = new Member<TDataType>(name, dataType, radix, externalAccess, description);
@@ -22,10 +23,13 @@ namespace L5Sharp.Core
             Usage = usage ?? TagUsage.Null;
             Alias = alias ?? TagName.Empty;
             Constant = constant;
-            Comments = new Comments(comments);
+            Comments = new TagPropertyCollection<string>(comments);
+            EngineeringUnits = new TagPropertyCollection<string>(units);
+            //Max = new TagPropertyCollection<string>(maximumns);
+            //Mins = new TagPropertyCollection<string>(minimums);
 
             if (!string.IsNullOrEmpty(description))
-                Comments.Apply(TagName, description);
+                Comments.Configure(TagName, description);
         }
 
         /// <summary>
@@ -64,10 +68,11 @@ namespace L5Sharp.Core
             Usage = usage ?? TagUsage.Null;
             Alias = alias ?? TagName.Empty;
             Constant = constant;
-            Comments = new Comments();
+            Comments = new TagPropertyCollection<string>();
+            EngineeringUnits = new TagPropertyCollection<string>();
 
             if (!string.IsNullOrEmpty(description))
-                Comments.Apply(TagName, description);
+                Comments.Configure(TagName, description);
         }
 
         /// <inheritdoc />
@@ -95,10 +100,13 @@ namespace L5Sharp.Core
         public bool IsValueMember => _tagMember.IsValueMember;
 
         /// <inheritdoc />
+        public bool IsArrayMember => _tagMember.IsArrayMember;
+
+        /// <inheritdoc />
         public bool IsStructureMember => _tagMember.IsStructureMember;
 
         /// <inheritdoc />
-        public bool IsArrayMember => _tagMember.IsArrayMember;
+        public bool IsStringMember => _tagMember.IsStringMember;
 
         /// <inheritdoc />
         public object? Value => _tagMember.Value;
@@ -122,7 +130,10 @@ namespace L5Sharp.Core
         public bool Constant { get; }
 
         /// <inheritdoc />
-        public Comments Comments { get; }
+        public TagPropertyCollection<string> Comments { get; }
+
+        /// <inheritdoc />
+        public TagPropertyCollection<string> EngineeringUnits { get; }
 
         /// <inheritdoc />
         public ITagMember<IDataType> this[int x] => _tagMember[x];

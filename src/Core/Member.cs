@@ -39,9 +39,12 @@ namespace L5Sharp.Core
         public bool IsValueMember => DataType is IAtomicType;
 
         /// <inheritdoc />
+        public bool IsArrayMember => DataType is IArrayType<IDataType>;
+
+        /// <inheritdoc />
         public bool IsStructureMember => DataType is IComplexType;
 
         /// <inheritdoc />
-        public bool IsArrayMember => DataType is IArrayType<IDataType>;
+        public bool IsStringMember => DataType is IStringType;
     }
 }

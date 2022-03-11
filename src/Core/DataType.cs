@@ -88,7 +88,7 @@ namespace L5Sharp.Core
             if (!Atomics.Any(n => string.Equals(n, name, StringComparison.OrdinalIgnoreCase)))
                 throw new ArgumentException($"The data type name '{name}' is not an atomic type");
             
-            var type = (IAtomicType)Registry[name];
+            var type = (IAtomicType)Registry[name].Instantiate();
             type.SetValue(value);
 
             return type;
@@ -108,7 +108,7 @@ namespace L5Sharp.Core
             if (!Predefined.Any(n => string.Equals(n, name, StringComparison.OrdinalIgnoreCase)))
                 throw new ArgumentException($"The data type name '{name}' is not a predefined type");
 
-            return (IComplexType)Registry[name];
+            return (IComplexType)Registry[name].Instantiate();
         }
     }
 }

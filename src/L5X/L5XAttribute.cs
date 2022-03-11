@@ -410,6 +410,11 @@ namespace L5Sharp.L5X
         /// Represents the <see cref="InputTagSuffix"/> L5X attribute.
         ///</summary>
         InputTagSuffix,
+        
+        ///<summary>
+        /// Represents the <see cref="IsEncrypted"/> L5X attribute.
+        ///</summary>
+        IsEncrypted,
 
         ///<summary>
         /// Represents the <see cref="KeepTestEditsOnSwitchOver"/> L5X attribute.
@@ -850,6 +855,11 @@ namespace L5Sharp.L5X
         /// Represents the <see cref="Revision"/> L5X attribute.
         ///</summary>
         Revision,
+        
+        ///<summary>
+        /// Represents the <see cref="RevisionExtension"/> L5X attribute.
+        ///</summary>
+        RevisionExtension,
 
         ///<summary>
         /// Represents the <see cref="ROCNegLimit"/> L5X attribute.

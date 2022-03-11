@@ -15,9 +15,9 @@ namespace L5Sharp.Serialization.Data
 
         public XElement Serialize(IMember<IDataType> component)
         {
-            if (component == null)
+            if (component is null)
                 throw new ArgumentNullException(nameof(component));
-
+            
             if (component.DataType is not IAtomicType atomic)
                 throw new ArgumentException($"{ElementName} must have an atomic data type.");
 
@@ -26,9 +26,7 @@ namespace L5Sharp.Serialization.Data
             element.Add(new XAttribute(L5XAttribute.DataType.ToString(), component.DataType));
             if (!string.Equals(component.DataType.Name, nameof(Bool), StringComparison.OrdinalIgnoreCase))
                 element.Add(new XAttribute(L5XAttribute.Radix.ToString(), component.Radix));
-
-            var value = component.DataType is Bool ? atomic.Format() : atomic.Format(component.Radix);
-            element.Add(new XAttribute(L5XAttribute.Value.ToString(), value));
+            element.Add(new XAttribute(L5XAttribute.Value.ToString(), atomic.Format(component.Radix)));
 
             return element;
         }
@@ -42,23 +40,12 @@ namespace L5Sharp.Serialization.Data
                 throw new ArgumentException($"Element '{element.Name}' not valid for the serializer {GetType()}.");
 
             var name = element.ComponentName();
-            var dataType = DataType.Create(element.DataTypeName());
-            var radix = element.Attribute(L5XAttribute.Radix.ToString())?.Value is not null
-                ? Radix.FromValue(element.Attribute(L5XAttribute.Radix.ToString())?.Value!)
-                : Radix.Default(dataType);
-            var value = element.Attribute(L5XAttribute.Value.ToString())?.Value ?? element.Value;
+            var radix = element.Attribute(L5XAttribute.Radix.ToString())?.Value?.Parse<Radix>() ?? Radix.Decimal;
+            var value = element.Attribute(L5XAttribute.Value.ToString())?.Value!;
 
-            switch (dataType)
-            {
-                case IAtomicType atomicType:
-                    atomicType.TrySetValue(value);
-                    return new Member<IDataType>(name, atomicType, radix);
-                case IStringType stringType:
-                    stringType.SetValue(value);
-                    return new Member<IDataType>(name, stringType.DATA.DataType, radix);
-                default:
-                    return Member.Create(name, dataType, radix);
-            }
+            var dataType = DataType.Atomic(element.DataTypeName(), value);
+            
+            return Member.Create(name, dataType, radix);
         }
     }
 }

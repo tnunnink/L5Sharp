@@ -7,12 +7,12 @@ using NUnit.Framework;
 namespace L5Sharp.Core.Tests
 {
     [TestFixture]
-    public class CommentsTests
+    public class TagPropertyCollectionTests
     {
         [Test]
         public void New_Default_ShouldNotBeNull()
         {
-            var comments = new Comments();
+            var comments = new TagPropertyCollection<string>();
 
             comments.Should().NotBeNull();
         }
@@ -27,7 +27,7 @@ namespace L5Sharp.Core.Tests
                 new("SomeTag.Member3", "This is a test comment #3"),
             };
 
-            var comments = new Comments(collection);
+            var comments = new TagPropertyCollection<string>(collection);
 
             comments.Should().HaveCount(3);
         }
@@ -35,7 +35,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Enumerate_WhenPerformed_ShouldNotBeNull()
         {
-            var comments = new Comments(GetComments());
+            var comments = new TagPropertyCollection<string>(GetComments());
 
             foreach (var comment in comments)
             {
@@ -46,7 +46,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void GetEnumerator_AsEnumerable_ShouldNotBeNull()
         {
-            var comments = (IEnumerable)new Comments(GetComments());
+            var comments = (IEnumerable)new TagPropertyCollection<string>(GetComments());
 
             var enumerator = comments.GetEnumerator();
 
@@ -54,38 +54,36 @@ namespace L5Sharp.Core.Tests
         }
 
         [Test]
-        public void Get_Null_ShouldThrowArgumentNullException()
+        public void Index_Null_ShouldThrowArgumentNullException()
         {
-            var comments = new Comments(GetComments());
+            var comments = new TagPropertyCollection<string>(GetComments());
 
-            FluentActions.Invoking(() => comments.Get(null!)).Should().Throw<ArgumentNullException>();
+            FluentActions.Invoking(() => comments[null!]).Should().Throw<ArgumentNullException>();
         }
-        
+
         [Test]
-        public void Get_NonExisting_ShouldBeEmpty()
+        public void Index_NonExisting_ShouldThrowKeyNotFoundException()
         {
-            var comments = new Comments(GetComments());
+            var comments = new TagPropertyCollection<string>(GetComments());
 
-            var comment = comments.Get("TagName.Member");
-
-            comment.Should().BeEmpty();
+            FluentActions.Invoking(() => comments["TagName.Member"]).Should().Throw<KeyNotFoundException>();
         }
-        
-        [Test]
-        public void Get_ExistingMember_ShouldBeExpected()
-        {
-            var comments = new Comments(GetComments());
 
-            var comment = comments.Get("SomeTag.Member1");
+        [Test]
+        public void Index_ExistingMember_ShouldBeExpected()
+        {
+            var comments = new TagPropertyCollection<string>(GetComments());
+
+            var comment = comments["SomeTag.Member1"];
 
             comment.Should().NotBeNull();
             comment.Should().Be("This is a test comment #1");
         }
-        
+
         [Test]
         public void ContainsComment_Null_ShouldBeFalse()
         {
-            var comments = new Comments(GetComments());
+            var comments = new TagPropertyCollection<string>(GetComments());
 
             var result = comments.ContainsValue(null!);
 
@@ -95,17 +93,17 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void ContainsComment_Empty_ShouldBeFalse()
         {
-            var comments = new Comments(GetComments());
+            var comments = new TagPropertyCollection<string>(GetComments());
 
             var result = comments.ContainsValue(string.Empty);
 
             result.Should().BeFalse();
         }
-        
+
         [Test]
         public void ContainsComment_DoesNotExist_ShouldBeFalse()
         {
-            var comments = new Comments(GetComments());
+            var comments = new TagPropertyCollection<string>(GetComments());
 
             var result = comments.ContainsValue("This is a test comment");
 
@@ -115,7 +113,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void ContainsComment_Exists_ShouldBeTrue()
         {
-            var comments = new Comments(GetComments());
+            var comments = new TagPropertyCollection<string>(GetComments());
 
             var result = comments.ContainsValue("This is a test comment #1");
 
@@ -123,19 +121,17 @@ namespace L5Sharp.Core.Tests
         }
 
         [Test]
-        public void ContainsTag_Null_ShouldBeFalse()
+        public void ContainsTag_Null_ShouldThrowArgumentNullException()
         {
-            var comments = new Comments(GetComments());
+            var comments = new TagPropertyCollection<string>(GetComments());
 
-            var result = comments.ContainsTag(null!);
-
-            result.Should().BeFalse();
+            FluentActions.Invoking(() => comments.ContainsTag(null!)).Should().Throw<ArgumentNullException>();
         }
 
         [Test]
         public void ContainsTag_DoesNotExist_ShouldBeFalse()
         {
-            var comments = new Comments(GetComments());
+            var comments = new TagPropertyCollection<string>(GetComments());
 
             var result = comments.ContainsTag("TagName.Member");
 
@@ -145,7 +141,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void ContainsTag_Exists_ShouldBeTrue()
         {
-            var comments = new Comments(GetComments());
+            var comments = new TagPropertyCollection<string>(GetComments());
 
             var result = comments.ContainsTag("SomeTag.Member1");
 
@@ -155,39 +151,27 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Apply_NullTagName_ShouldThrowArgumentNullException()
         {
-            var comments = new Comments(GetComments());
-            
-            FluentActions.Invoking(() => comments.Apply(null!, "This is a test")).Should().Throw<ArgumentNullException>();
+            var comments = new TagPropertyCollection<string>(GetComments());
+
+            FluentActions.Invoking(() => comments.Configure(null!, "This is a test")).Should()
+                .Throw<ArgumentNullException>();
         }
 
         [Test]
-        public void Apply_NullComment_ShouldNoLongerContainTagName()
+        public void Apply_NullProperty_ShouldThrowArgumentNullException()
         {
-            var comments = new Comments(GetComments());
+            var comments = new TagPropertyCollection<string>(GetComments());
 
-            comments.Apply("SomeTag.Member2", null);
-
-            comments.Should().HaveCount(2);
-            comments.Should().NotContain(c => c.Key == "SomeTag.Member2");
-        }
-
-        [Test]
-        public void Apply_EmptyComment_ShouldNotLongerContainTagName()
-        {
-            var comments = new Comments(GetComments());
-            
-            comments.Apply("SomeTag.Member3", string.Empty);
-
-            comments.Should().HaveCount(2);
-            comments.Should().NotContain(c => c.Key == "SomeTag.Member3");
+            FluentActions.Invoking(() => comments.Configure("SomeTag.Member2", null)).Should()
+                .Throw<ArgumentNullException>();
         }
 
         [Test]
         public void Apply_NewTagName_ShouldHaveExpectedCount()
         {
-            var comments = new Comments(GetComments());
-            
-            comments.Apply("SomeTag.Member", "This is a test");
+            var comments = new TagPropertyCollection<string>(GetComments());
+
+            comments.Configure("SomeTag.Member", "This is a test");
 
             comments.Should().HaveCount(4);
         }
@@ -195,18 +179,18 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Apply_ExistingTagName_ShouldUpdateExistingValue()
         {
-            var comments = new Comments(GetComments());
-            
-            comments.Apply("SomeTag.Member1", "This is an updated comment");
+            var comments = new TagPropertyCollection<string>(GetComments());
+
+            comments.Configure("SomeTag.Member1", "This is an updated comment");
 
             comments.Should().HaveCount(3);
-            comments.Get("SomeTag.Member1").Should().Be("This is an updated comment");
+            comments["SomeTag.Member1"].Should().Be("This is an updated comment");
         }
 
         [Test]
         public void Reset_NullTagNAme_ShouldThrowArgumentNullException()
         {
-            var comments = new Comments(GetComments());
+            var comments = new TagPropertyCollection<string>(GetComments());
 
             FluentActions.Invoking(() => comments.Reset(null!)).Should().Throw<ArgumentNullException>();
         }
@@ -214,7 +198,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Reset_NonExistingName_ShouldBeFalse()
         {
-            var comments = new Comments(GetComments());
+            var comments = new TagPropertyCollection<string>(GetComments());
 
             var removed = comments.Reset("TagName.Member");
 
@@ -224,7 +208,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Reset_ValidName_ShouldBeTrueAndNoLongerExist()
         {
-            var comments = new Comments(GetComments());
+            var comments = new TagPropertyCollection<string>(GetComments());
 
             var removed = comments.Reset("SomeTag.Member1");
 
