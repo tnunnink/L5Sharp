@@ -1,4 +1,4 @@
-﻿<Tag Name="Test" TagType="Base" DataType="DINT" Dimensions="5" Constant="False" ExternalAccess="Read/Write">
+﻿<Tag Name="Test" TagType="Base" DataType="DINT" Dimensions="5" Constant="false" ExternalAccess="Read/Write">
   <Data Format="Decorated">
     <Array DataType="DINT" Dimensions="5" Radix="Decimal">
       <Element Index="[0]" Value="0" />

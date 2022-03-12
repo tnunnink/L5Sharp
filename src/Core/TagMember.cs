@@ -80,8 +80,14 @@ namespace L5Sharp.Core
         /// <inheritdoc />
         public void Comment(string comment)
         {
+            if (comment is null)
+                throw new ArgumentNullException(nameof(comment));
+
             if (comment.IsEmpty())
+            {
                 Root.Comments.Reset(TagName);
+                return;
+            }
             
             Root.Comments.Configure(TagName, comment);
         }

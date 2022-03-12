@@ -14,23 +14,21 @@ namespace L5Sharp.L5X
         private static readonly Dictionary<Type, string> ComponentNameMap = new()
         {
             { typeof(IController), L5XElement.Controller.ToString() },
-            { typeof(IUserDefined), L5XElement.DataType.ToString() },
-            { typeof(IMember<IDataType>), L5XElement.Member.ToString() },
+            { typeof(IComplexType), L5XElement.DataType.ToString() },
             { typeof(IModule), L5XElement.Module.ToString() },
+            { typeof(IAddOnInstruction), L5XElement.AddOnInstructionDefinition.ToString() },
             { typeof(ITag<IDataType>), L5XElement.Tag.ToString() },
             { typeof(IProgram), L5XElement.Program.ToString() },
-            { typeof(IRoutine<ILogixContent>), L5XElement.Routine.ToString() },
             { typeof(ITask), L5XElement.Task.ToString() }
         };
         
         private static readonly Dictionary<Type, string> ContainerNameMap = new()
         {
-            { typeof(IUserDefined), L5XElement.DataTypes.ToString() },
-            { typeof(IMember<IDataType>), L5XElement.Members.ToString() },
+            { typeof(IComplexType), L5XElement.DataTypes.ToString() },
             { typeof(IModule), L5XElement.Modules.ToString() },
+            { typeof(IAddOnInstruction), L5XElement.AddOnInstructionDefinitions.ToString() },
             { typeof(ITag<IDataType>), L5XElement.Tags.ToString() },
             { typeof(IProgram), L5XElement.Programs.ToString() },
-            { typeof(IRoutine<ILogixContent>), L5XElement.Routines.ToString() },
             { typeof(ITask), L5XElement.Tasks.ToString() }
         };
 
@@ -44,12 +42,12 @@ namespace L5Sharp.L5X
         public static string GetComponentName<TComponent>() 
             where TComponent : ILogixComponent
         {
-            var mapping = ComponentNameMap.FirstOrDefault(t => t.Key == typeof(TComponent)).Value;
+            var name = ComponentNameMap.FirstOrDefault(t => t.Key == typeof(TComponent)).Value;
 
-            if (mapping is null)
+            if (name is null)
                 throw new InvalidOperationException($"No component name mapping defined for '{typeof(TComponent)}'");
 
-            return mapping;
+            return name;
         }
 
         /// <summary>
@@ -61,12 +59,12 @@ namespace L5Sharp.L5X
         public static string GetContainerName<TComponent>()    
             where TComponent : ILogixComponent
         {
-            var mapping = ContainerNameMap.FirstOrDefault(t => t.Key == typeof(TComponent)).Value;
+            var name = ContainerNameMap.FirstOrDefault(t => t.Key == typeof(TComponent)).Value;
 
-            if (mapping is null)
+            if (name is null)
                 throw new InvalidOperationException($"No container name mapping defined for '{typeof(TComponent)}'");
 
-            return mapping;
+            return name;
         }
     }
 }

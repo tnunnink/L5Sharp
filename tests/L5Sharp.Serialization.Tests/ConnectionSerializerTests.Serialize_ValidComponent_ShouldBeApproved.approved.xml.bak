@@ -1,1 +1,1 @@
-﻿
+﻿<Connection Name="Connection" Rpi="10000" Type="Input" Priority="Scheduled" InputConnectionType="Multicast" InputProductionTrigger="Cyclic" OutputRedundantOwner="False" EventId="0" />

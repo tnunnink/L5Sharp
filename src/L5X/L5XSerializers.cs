@@ -24,6 +24,7 @@ namespace L5Sharp.L5X
             _serializers = new Dictionary<Type, IL5XSerializer>
             {
                 { typeof(IController), new ControllerSerializer() },
+                { typeof(IComplexType), new DataTypeSerializer(context) },
                 { typeof(IUserDefined), new DataTypeSerializer(context) },
                 { typeof(IModule), new ModuleSerializer() },
                 { typeof(IAddOnInstruction), new AddOnInstructionSerializer() },

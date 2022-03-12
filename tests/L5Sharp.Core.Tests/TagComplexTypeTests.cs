@@ -90,8 +90,8 @@ namespace L5Sharp.Core.Tests
         {
             var tag = Tag.Create<Timer>("Test");
 
-            FluentActions.Invoking(() => tag.Member(string.Empty)).Should().Throw<ArgumentException>()
-                .WithMessage("TagName can not be null or empty.");
+            FluentActions.Invoking(() => tag.Member(string.Empty)).Should().Throw<InvalidMemberPathException>()
+                .WithMessage("The tag name '' is not a valid member path for type 'TIMER'.");
         }
 
         [Test]

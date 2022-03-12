@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Linq;
 using System.Xml.Linq;
+using L5Sharp.Core;
+using L5Sharp.Enums;
 using L5Sharp.L5X;
 using L5Sharp.Repositories;
 
@@ -16,15 +18,8 @@ namespace L5Sharp
         private L5XContext(L5XDocument l5X)
         {
             L5X = l5X ?? throw new ArgumentNullException(nameof(l5X));
-            Serializer = new L5XSerializers(this);
             Index = new L5XIndex(this);
-
-            DataTypes = new DataTypeRepository(this);
-            Modules = new ModuleRepository(this);
-            AddOnInstructions = new AddOnInstructionRepository(this);
-            Tags = new TagRepository(this);
-            Programs = new ProgramRepository(this);
-            Tasks = new TaskRepository(this);
+            Serializer = new L5XSerializers(this);
         }
 
         /// <summary>
@@ -83,7 +78,7 @@ namespace L5Sharp
         /// <summary>
         /// Gets the underlying <see cref="L5XDocument"/> that the current context represents. 
         /// </summary>
-        public L5XDocument L5X { get; }
+        internal readonly L5XDocument L5X;
 
         /// <summary>
         /// Gets the <see cref="L5XSerializers"/> instance for the current context containing root component serializer
@@ -92,31 +87,77 @@ namespace L5Sharp
         internal readonly L5XSerializers Serializer;
 
         /// <summary>
-        /// 
+        /// An index of all current <see cref="IDataType"/> elements available in the L5X file.
         /// </summary>
         internal readonly L5XIndex Index;
 
-        /// <inheritdoc />
-        public IController Controller => Serializer.GetFor<IController>()
-            .Deserialize(L5X.GetComponents<IController>().First());
+        /// <summary>
+        /// Gets the value of the schema revision for the current L5X context.
+        /// </summary>
+        public Revision SchemaRevision => L5X.SchemaRevision;
+
+        /// <summary>
+        /// Gets the value of the software revision for the current L5X context.
+        /// </summary>
+        public Revision SoftwareRevision => L5X.SoftwareRevision;
+
+        /// <summary>
+        /// Gets the name of the Logix component that is the target of the current L5X context.
+        /// </summary>
+        public ComponentName TargetName => L5X.TargetName;
+
+        /// <summary>
+        /// Gets the type of Logix component that is the target of the current L5X context.
+        /// </summary>
+        public string TargetType => L5X.TargetType;
+
+        /// <summary>
+        /// Gets the value indicating whether the current L5X is contextual..
+        /// </summary>
+        public bool ContainsContext => L5X.ContainsContext;
+
+        /// <summary>
+        /// Gets the owner that exported the current L5X file.
+        /// </summary>
+        public string Owner => L5X.Owner;
+
+        /// <summary>
+        /// Gets the date time that the L5X file was exported.
+        /// </summary>
+        public DateTime ExportDate => L5X.ExportDate;
 
         /// <inheritdoc />
-        public IRepository<IUserDefined> DataTypes { get; }
+        public IController? Controller() => L5X.TargetType == nameof(Controller)
+            ? Serializer.GetFor<IController>().Deserialize(L5X.GetComponents<IController>().First())
+            : null;
 
         /// <inheritdoc />
-        public IModuleRepository Modules { get; }
+        public IRepository<IComplexType> DataTypes() => new DataTypeRepository(this);
 
         /// <inheritdoc />
-        public IRepository<IAddOnInstruction> AddOnInstructions { get; }
+        public IModuleRepository Modules() => new ModuleRepository(this);
 
         /// <inheritdoc />
-        public IRepository<ITag<IDataType>> Tags { get; }
+        public IRepository<IAddOnInstruction> Instructions() => new AddOnInstructionRepository(this);
 
         /// <inheritdoc />
-        public IRepository<IProgram> Programs { get; }
+        public ITagRepository Tags() => new TagRepository(this);
+
+        public ITagRepository Tags(Scope scope)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ITagRepository Tags(ComponentName program)
+        {
+            throw new NotImplementedException();
+        }
 
         /// <inheritdoc />
-        public IReadOnlyRepository<ITask> Tasks { get; }
+        public IRepository<IProgram> Programs() => new ProgramRepository(this);
+
+        /// <inheritdoc />
+        public IReadOnlyRepository<ITask> Tasks() => new TaskRepository(this);
 
         /// <inheritdoc />
         public override string ToString() => L5X.Content.ToString();

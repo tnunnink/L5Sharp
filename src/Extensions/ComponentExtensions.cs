@@ -15,13 +15,11 @@ namespace L5Sharp.Extensions
         private static readonly Dictionary<Type, IL5XSerializer> Serializers = new()
         {
             { typeof(IController), new ControllerSerializer() },
-            { typeof(IUserDefined), new DataTypeSerializer() },
-            { typeof(IMember<IDataType>), new MemberSerializer() },
+            { typeof(IComplexType), new DataTypeSerializer() },
             { typeof(IModule), new ModuleSerializer() },
             { typeof(IAddOnInstruction), new AddOnInstructionSerializer() },
             { typeof(ITag<IDataType>), new TagSerializer() },
             { typeof(IProgram), new ProgramSerializer() },
-            { typeof(IRoutine<ILogixContent>), new RoutineSerializer() },
             { typeof(ITask), new TaskSerializer() }
         };
         

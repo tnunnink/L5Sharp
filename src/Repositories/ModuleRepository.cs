@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using L5Sharp.Core;
 using L5Sharp.Extensions;
 
@@ -24,7 +23,7 @@ namespace L5Sharp.Repositories
 
             if (module is null) return null;
 
-            var childNames = Context.L5X.GetComponents<IModule>()
+            var childNames = Components
                 .Where(x => x.Attribute(nameof(module.ParentModule))?.Value == module.Name)
                 .Select(x => x.ComponentName());
 
@@ -42,7 +41,7 @@ namespace L5Sharp.Repositories
         {
             var module = Get(name);
             
-            var childNames = Context.L5X.GetComponents<IModule>()
+            var childNames = Components
                 .Where(x => x.Attribute(nameof(module.ParentModule))?.Value == module.Name)
                 .Select(x => x.ComponentName());
             
@@ -72,7 +71,7 @@ namespace L5Sharp.Repositories
         {
             base.Remove(name);
             
-            var children = Context.L5X.GetComponents<IModule>()
+            var children = Components
                 .Where(x => x.Attribute("ParentModule")?.Value == name.ToString())
                 .Select(x => x.ComponentName()).ToList();
 

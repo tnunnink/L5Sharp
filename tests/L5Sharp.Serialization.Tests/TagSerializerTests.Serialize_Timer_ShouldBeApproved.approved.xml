@@ -1,4 +1,4 @@
-﻿<Tag Name="Test" TagType="Base" DataType="TIMER" Constant="False" ExternalAccess="Read/Write">
+﻿<Tag Name="Test" TagType="Base" DataType="TIMER" Constant="false" ExternalAccess="Read/Write">
   <Data Format="Decorated">
     <Structure DataType="TIMER">
       <DataValueMember Name="PRE" DataType="DINT" Radix="Decimal" Value="0" />

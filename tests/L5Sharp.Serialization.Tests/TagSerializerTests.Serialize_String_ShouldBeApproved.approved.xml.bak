@@ -1,1 +1,3 @@
-﻿
+﻿<Tag Name="Test" TagType="Base" DataType="STRING" Constant="False" ExternalAccess="Read/Write">
+  <Data Format="String" Length="82"><![CDATA['']]></Data>
+</Tag>

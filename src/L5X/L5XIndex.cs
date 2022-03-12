@@ -5,6 +5,7 @@ using L5Sharp.Core;
 using L5Sharp.Extensions;
 using L5Sharp.Predefined;
 using L5Sharp.Serialization;
+using L5Sharp.Serialization.Components;
 using L5Sharp.Serialization.Data;
 
 namespace L5Sharp.L5X
@@ -14,8 +15,8 @@ namespace L5Sharp.L5X
         private readonly L5XContext _context;
         private readonly Dictionary<string, XElement> _index;
         private readonly StructureSerializer _structureSerializer;
-        private readonly IL5XSerializer<IUserDefined> _dataTypeSerializer;
-        private readonly IL5XSerializer<IAddOnInstruction> _addOnInstructionSerializer;
+        private readonly DataTypeSerializer _dataTypeSerializer;
+        private readonly AddOnInstructionSerializer _addOnInstructionSerializer;
 
         internal L5XIndex(L5XContext context)
         {
@@ -26,9 +27,9 @@ namespace L5Sharp.L5X
             RegisterModuleDefinedTypes(context.L5X.Content);
             RegisterAddOnDefinedTypes(context.L5X.Content);
 
-            _dataTypeSerializer = context.Serializer.GetFor<IUserDefined>();
+            _dataTypeSerializer = new DataTypeSerializer(_context);
             _structureSerializer = new StructureSerializer();
-            _addOnInstructionSerializer = context.Serializer.GetFor<IAddOnInstruction>();
+            _addOnInstructionSerializer = new AddOnInstructionSerializer(_context);
         }
 
         public IDataType GetDataType(string name)

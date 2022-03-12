@@ -7,5 +7,7 @@
       <Bus />
     </Port>
   </Ports>
-  <Communications />
+  <Communications>
+    <Connections />
+  </Communications>
 </Module>

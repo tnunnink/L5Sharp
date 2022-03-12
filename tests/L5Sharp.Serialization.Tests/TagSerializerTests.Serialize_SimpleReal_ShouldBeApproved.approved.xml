@@ -1,4 +1,4 @@
-﻿<Tag Name="Test" TagType="Base" DataType="REAL" Radix="Float" Constant="False" ExternalAccess="Read/Write">
+﻿<Tag Name="Test" TagType="Base" DataType="REAL" Radix="Float" Constant="false" ExternalAccess="Read/Write">
   <Data Format="Decorated">
     <DataValue DataType="REAL" Value="0.0" />
   </Data>

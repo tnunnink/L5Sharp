@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using FluentAssertions;
 using L5Sharp.Atomics;
 using L5Sharp.Creators;
@@ -13,15 +14,13 @@ namespace L5Sharp.Core.Tests
         private const string InitialDescription = "This is the initial description";
         
         [Test]
-        public void Atomic_Null_ShouldBeExpected()
+        public void Comment_Null_ShouldShouldThrowArgumentNullException()
         {
             var tag = Tag.Create<Dint>("Test", description: InitialDescription);
             
             tag.Description.Should().Be(InitialDescription);
 
-            tag.Comment(null!);
-
-            tag.Description.Should().BeEmpty();
+            FluentActions.Invoking(() => tag.Comment(null!)).Should().Throw<ArgumentNullException>();
         }
         
         [Test]
@@ -49,15 +48,13 @@ namespace L5Sharp.Core.Tests
         }
 
         [Test]
-        public void Predefined_Null_ShouldBeExpected()
+        public void Predefined_Null_ShouldThrowArgumentNullException()
         {
             var tag = Tag.Create<Timer>("Test", description: InitialDescription);
             
             tag.Description.Should().Be(InitialDescription);
 
-            tag.Comment(null!);
-
-            tag.Description.Should().BeEmpty();
+            FluentActions.Invoking(() => tag.Comment(null!)).Should().Throw<ArgumentNullException>();
         }
         
         [Test]

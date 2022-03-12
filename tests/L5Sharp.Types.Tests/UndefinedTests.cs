@@ -23,7 +23,7 @@ namespace L5Sharp.Types.Tests
             var type = new Undefined();
 
             type.Name.Should().Be(nameof(Undefined));
-            type.Description.Should().Be("Undefined DataType");
+            type.Description.Should().BeEmpty();
             type.Family.Should().Be(DataTypeFamily.None);
             type.Class.Should().Be(DataTypeClass.Unknown);
         }

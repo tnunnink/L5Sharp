@@ -1,4 +1,4 @@
-﻿<Task Name="Test" Type="PERIODIC" Rate="100" Priority="10" Watchdog="5000" DisableUpdateOutputs="True" InhibitTask="False">
+﻿<Task Name="Test" Type="PERIODIC" Rate="100" Priority="10" Watchdog="5000" DisableUpdateOutputs="true" InhibitTask="false">
   <Description><![CDATA[This is a test periodic task]]></Description>
   <ScheduledPrograms>
     <ScheduledProgram Name="Test_Program_01" />

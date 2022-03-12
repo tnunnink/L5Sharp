@@ -107,14 +107,6 @@ namespace L5Sharp.Serialization.Tests
         }
 
         [Test]
-        public void Deserialize_NotFormat_ShouldThrowArgumentException()
-        {
-            var xml = XElement.Parse(GetNoFormatData());
-
-            FluentActions.Invoking(() => _serializer.Deserialize(xml)).Should().Throw<ArgumentException>();
-        }
-
-        [Test]
         public void Deserialize_DecoratedData_ShouldNotBeNull()
         {
             var xml = XElement.Parse(GetDecoratedData());

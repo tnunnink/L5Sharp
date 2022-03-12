@@ -12,14 +12,13 @@ namespace L5Sharp.Serialization.Components
     internal class TagSerializer : IL5XSerializer<ITag<IDataType>>
     {
         private static readonly XName ElementName = L5XElement.Tag.ToString();
-        private readonly Func<string, IDataType> _dataTypeCreator;
+        private readonly L5XContext? _context;
         private readonly TagPropertySerializer _commentSerializer;
         private readonly TagPropertySerializer _unitsSerializer;
         private readonly FormattedDataSerializer _formattedDataSerializer;
 
         public TagSerializer()
         {
-            _dataTypeCreator = DataType.Create;
             _commentSerializer = new TagPropertySerializer(L5XElement.Comment.ToString());
             _unitsSerializer = new TagPropertySerializer(L5XElement.EngineeringUnit.ToString());
             _formattedDataSerializer = new FormattedDataSerializer();
@@ -27,7 +26,7 @@ namespace L5Sharp.Serialization.Components
 
         public TagSerializer(L5XContext context)
         {
-            _dataTypeCreator = context.Index.GetDataType;
+            _context = context;
             _commentSerializer = new TagPropertySerializer(L5XElement.Comment.ToString());
             _unitsSerializer = new TagPropertySerializer(L5XElement.EngineeringUnit.ToString());
             _formattedDataSerializer = new FormattedDataSerializer();
@@ -44,10 +43,10 @@ namespace L5Sharp.Serialization.Components
             element.Add(new XAttribute(L5XAttribute.TagType.ToString(), component.TagType));
             if (!component.Alias.IsEmpty)
                 element.Add(new XAttribute(L5XAttribute.AliasFor.ToString(), component.Alias));
-            element.Add(new XAttribute(L5XAttribute.DataType.ToString(), component.DataType));
+            element.Add(new XAttribute(L5XAttribute.DataType.ToString(), component.DataType.Name));
             if (!component.Dimensions.IsEmpty)
                 element.Add(new XAttribute(L5XAttribute.Dimensions.ToString(), component.Dimensions));
-            if (!component.IsValueMember)
+            if (component.IsValueMember)
                 element.Add(new XAttribute(L5XAttribute.Radix.ToString(), component.Radix));
             element.Add(new XAttribute(L5XAttribute.Constant.ToString(), component.Constant));
             element.Add(new XAttribute(L5XAttribute.ExternalAccess.ToString(), component.ExternalAccess));
@@ -74,8 +73,9 @@ namespace L5Sharp.Serialization.Components
 
             var name = element.ComponentName();
             var description = element.ComponentDescription();
-            var dataType = _dataTypeCreator.Invoke(element.DataTypeName());
-
+            var dataType = _context is not null
+                ? _context.Index.GetDataType(element.DataTypeName())
+                : DataType.Create(element.DataTypeName());
             var dimensions = element.Attribute(L5XAttribute.Dimensions.ToString())?.Value.Parse<Dimensions>();
             var radix = element.Attribute(L5XAttribute.Radix.ToString())?.Value.Parse<Radix>();
             var access = element.Attribute(L5XAttribute.ExternalAccess.ToString())?.Value.Parse<ExternalAccess>();

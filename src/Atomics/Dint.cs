@@ -62,19 +62,7 @@ namespace L5Sharp.Atomics
 
             Value = (Dint)converter.ConvertFrom(value)!;
         }
-
-        /// <inheritdoc />
-        public bool TrySetValue(object? value)
-        {
-            var converter = TypeDescriptor.GetConverter(GetType());
-
-            if (value is null || !converter.CanConvertFrom(value.GetType()))
-                return false;
-
-            Value = (converter.ConvertFrom(value) as Dint)!;
-            return true;
-        }
-
+        
         /// <inheritdoc />
         public string Format(Radix? radix = null) =>
             radix is not null ? radix.Format(this) : Radix.Default(this).Format(this);

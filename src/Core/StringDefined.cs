@@ -58,7 +58,7 @@ namespace L5Sharp.Core
 
         /// <inheritdoc />
         protected override IDataType New() =>
-            new StringDefined(string.Copy(Name), (ushort)LEN.DataType.Value, string.Copy(Description));
+            new StringDefined(string.Copy(Name), DATA.Dimensions.X, string.Copy(Description));
 
         /// <inheritdoc />
         public bool Equals(StringDefined? other)

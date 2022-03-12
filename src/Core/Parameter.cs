@@ -10,7 +10,7 @@ namespace L5Sharp.Core
             bool required = false, bool visible = false, bool constant = false,
             string? description = null) : base(name, dataType, radix, externalAccess, description)
         {
-            Usage = usage ?? TagUsage.Default(dataType);
+            Usage = usage ?? TagUsage.AoiDefault(dataType);
             Alias = alias ?? TagName.Empty;
             Default = DataType is IAtomicType atomicType ? atomicType : default;
             Required = Usage == TagUsage.InOut || required;

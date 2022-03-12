@@ -4,7 +4,7 @@ using L5Sharp.Enums;
 namespace L5Sharp.Core
 {
     /// <summary>
-    /// Represents an argument for an <see cref="IInstruction"/> object.
+    /// Represents an argument for an <see cref="Instruction"/> object.
     /// </summary>
     public class Argument
     {

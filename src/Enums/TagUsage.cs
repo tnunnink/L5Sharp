@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using Ardalis.SmartEnum;
+﻿using Ardalis.SmartEnum;
 
 namespace L5Sharp.Enums
 {
@@ -20,41 +19,46 @@ namespace L5Sharp.Enums
         /// <see cref="Input"/> for atomic types.
         /// <see cref="InOut"/> for complex types.
         /// </returns>
-        public static TagUsage Default(IDataType dataType) => dataType is IAtomicType ? Input : InOut;
+        public static TagUsage AoiDefault(IDataType dataType) => dataType is IAtomicType ? Input : InOut;
 
 
         /// <summary>
-        /// Represents a Null <see cref="TagType"/> value.
+        /// Represents a Null <see cref="TagUsage"/> value.
         /// </summary>
         public static readonly TagUsage Null = new(nameof(Null), nameof(Null));
         
         /// <summary>
-        /// Represents a Normal <see cref="TagType"/> value.
+        /// Represents a Normal <see cref="TagUsage"/> value.
         /// </summary>
         public static readonly TagUsage Normal = new(nameof(Normal), nameof(Normal));
         
         /// <summary>
-        /// Represents a Local <see cref="TagType"/> value.
+        /// Represents a Local <see cref="TagUsage"/> value.
         /// </summary>
         public static readonly TagUsage Local = new(nameof(Local), nameof(Local));
         
         /// <summary>
-        /// Represents a Input <see cref="TagType"/> value.
+        /// Represents a Public <see cref="TagUsage"/> value.
+        /// </summary>
+        public static readonly TagUsage Public = new(nameof(Public), nameof(Public));
+        
+        /// <summary>
+        /// Represents a Input <see cref="TagUsage"/> value.
         /// </summary>
         public static readonly TagUsage Input = new(nameof(Input), nameof(Input));
         
         /// <summary>
-        /// Represents a Output <see cref="TagType"/> value.
+        /// Represents a Output <see cref="TagUsage"/> value.
         /// </summary>
         public static readonly TagUsage Output = new(nameof(Output), nameof(Output));
         
         /// <summary>
-        /// Represents a InOut <see cref="TagType"/> value.
+        /// Represents a InOut <see cref="TagUsage"/> value.
         /// </summary>
         public static readonly TagUsage InOut = new(nameof(InOut), nameof(InOut));
         
         /// <summary>
-        /// Represents a Static <see cref="TagType"/> value.
+        /// Represents a Static <see cref="TagUsage"/> value.
         /// </summary>
         public static readonly TagUsage Static = new(nameof(Static), nameof(Static));
     }

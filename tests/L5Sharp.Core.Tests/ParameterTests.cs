@@ -74,7 +74,7 @@ namespace L5Sharp.Core.Tests
             parameter.TagType.Should().Be(TagType.Base);
             parameter.Required.Should().BeFalse();
             parameter.Visible.Should().BeFalse();
-            parameter.Alias.Should().BeNull();
+            parameter.Alias.Should().Be(TagName.Empty);
             parameter.Constant.Should().BeFalse();
             parameter.Default.Should().BeEquivalentTo(new Dint());
         }

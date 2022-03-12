@@ -1,4 +1,6 @@
-﻿using L5Sharp.Repositories;
+﻿using L5Sharp.Core;
+using L5Sharp.Enums;
+using L5Sharp.Repositories;
 
 namespace L5Sharp
 {
@@ -10,36 +12,50 @@ namespace L5Sharp
         /// <summary>
         /// Gets the <see cref="IController"/> instance of the current <see cref="ILogixContext"/>.
         /// </summary>
-        IController Controller { get; }
+        IController? Controller();
 
         /// <summary>
         /// Get the <see cref="IUserDefined"/> repository instance for the current <see cref="ILogixContext"/>.
         /// </summary>
-        IRepository<IUserDefined> DataTypes { get; }
-        
+        IRepository<IComplexType> DataTypes();
+
         /// <summary>
         /// Get the <see cref="IModule"/> repository instance for the current <see cref="ILogixContext"/>.
         /// </summary>
-        IModuleRepository Modules { get; }
+        IModuleRepository Modules();
         
         /// <summary>
         /// Get the <see cref="IAddOnInstruction"/> repository instance for the current <see cref="ILogixContext"/>.
         /// </summary>
-        IRepository<IAddOnInstruction> AddOnInstructions { get; }
-        
+        IRepository<IAddOnInstruction> Instructions();
+
         /// <summary>
         /// Get the <see cref="ITag{TDataType}"/> repository instance for the current <see cref="ILogixContext"/>. 
         /// </summary>
-        IRepository<ITag<IDataType>> Tags { get; }
+        ITagRepository Tags();
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="scope"></param>
+        /// <returns></returns>
+        ITagRepository Tags(Scope scope);
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="program"></param>
+        /// <returns></returns>
+        ITagRepository Tags(ComponentName program);
+
         /// <summary>
         /// Get the <see cref="IProgram"/> repository instance for the current <see cref="ILogixContext"/>. 
         /// </summary>
-        IRepository<IProgram> Programs { get; }
-        
+        IRepository<IProgram> Programs();
+
         /// <summary>
         /// Get the <see cref="ITask"/> repository instance for the current <see cref="ILogixContext"/>.
         /// </summary>
-        IReadOnlyRepository<ITask> Tasks { get; }
+        IReadOnlyRepository<ITask> Tasks();
     }
 }

@@ -1,4 +1,4 @@
-﻿<Tag Name="Test" TagType="Base" DataType="LINT" Radix="Decimal" Constant="False" ExternalAccess="Read/Write">
+﻿<Tag Name="Test" TagType="Base" DataType="LINT" Radix="Decimal" Constant="false" ExternalAccess="Read/Write">
   <Data Format="Decorated">
     <DataValue DataType="LINT" Value="0" />
   </Data>

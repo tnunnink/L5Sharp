@@ -13,7 +13,7 @@ namespace L5Sharp.Context.Tests
         {
             var context = L5XContext.Load(Known.L5X);
 
-            var task = context.Tasks.Contains("Continuous");
+            var task = context.Tasks().Contains("Continuous");
 
             task.Should().BeTrue(); 
         }
@@ -23,7 +23,7 @@ namespace L5Sharp.Context.Tests
         {
             var context = L5XContext.Load(Known.L5X);
 
-            var task = context.Tasks.Get("Continuous");
+            var task = context.Tasks().Get("Continuous");
 
             task.Should().NotBeNull();
         }
@@ -33,7 +33,7 @@ namespace L5Sharp.Context.Tests
         {
             var context = L5XContext.Load(Known.L5X);
 
-            var tasks = context.Tasks.GetAll();
+            var tasks = context.Tasks().GetAll();
 
             tasks.Should().HaveCount(3);
         }
@@ -43,7 +43,7 @@ namespace L5Sharp.Context.Tests
         {
             var context = L5XContext.Load(Known.L5X);
 
-            var results = context.Tasks.FindAll(t => t.Priority == 10);
+            var results = context.Tasks().FindAll(t => t.Priority == 10);
             
             results.Should().NotBeEmpty();
         }
@@ -53,7 +53,7 @@ namespace L5Sharp.Context.Tests
         {
             var context = L5XContext.Load(Known.L5X);
 
-            var results = context.Tasks.FindAll(t => t.Rate >= 1000);
+            var results = context.Tasks().FindAll(t => t.Rate >= 1000);
             
             results.Should().HaveCount(0);
         }
@@ -63,7 +63,7 @@ namespace L5Sharp.Context.Tests
         {
             var context = L5XContext.Load(Known.L5X);
 
-            var results = context.Tasks.FindAll(t => t.Description == "Test continuous task");
+            var results = context.Tasks().FindAll(t => t.Description == "Test continuous task");
             
             results.Should().HaveCount(1);
         }
@@ -73,7 +73,7 @@ namespace L5Sharp.Context.Tests
         {
             var context = L5XContext.Load(Known.L5X);
 
-            var results = context.Tasks.FindAll(t => t.Description.Contains("Test", StringComparison.OrdinalIgnoreCase));
+            var results = context.Tasks().FindAll(t => t.Description.Contains("Test", StringComparison.OrdinalIgnoreCase));
             
             results.Should().HaveCount(2);
         }
@@ -88,7 +88,7 @@ namespace L5Sharp.Context.Tests
                 "TestEvent Task"
             };
 
-            var results = context.Tasks.FindAll(t => list.Contains(t.Description));
+            var results = context.Tasks().FindAll(t => list.Contains(t.Description));
             
             results.Should().HaveCount(1);
         }

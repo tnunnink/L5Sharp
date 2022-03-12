@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Xml.Linq;
 using L5Sharp.Core;
 using L5Sharp.Exceptions;
 using L5Sharp.Extensions;
+using L5Sharp.L5X;
 using L5Sharp.Serialization;
 
 namespace L5Sharp.Repositories
@@ -15,10 +17,10 @@ namespace L5Sharp.Repositories
     /// <typeparam name="TComponent">The type of logix component the repository represents.</typeparam>
     public abstract class Repository<TComponent> : IRepository<TComponent> where TComponent : ILogixComponent
     {
-        /// <summary>
+        /*/// <summary>
         /// The current L5X context for the repository.
         /// </summary>
-        protected readonly L5XContext Context;
+        protected readonly L5XContext Context;*/
 
         /// <summary>
         /// The current L5X serializer for the typed component. 
@@ -26,13 +28,24 @@ namespace L5Sharp.Repositories
         protected readonly IL5XSerializer<TComponent> Serializer;
 
         /// <summary>
+        /// The current L5X containing element for the component repository. 
+        /// </summary>
+        protected XElement Container;
+        
+        /// <summary>
+        /// The current L5X containing element for the component repository. 
+        /// </summary>
+        protected IEnumerable<XElement> Components;
+
+        /// <summary>
         /// Creates a new instance of the <see cref="Repository{TComponent}"/> with the provided context.
         /// </summary>
         /// <param name="context"></param>
         protected Repository(L5XContext context)
         {
-            Context = context;
             Serializer = context.Serializer.GetFor<TComponent>();
+            Container = context.L5X.GetContainer<TComponent>();
+            Components = Container.Descendants(L5XNames.GetComponentName<TComponent>());
         }
 
         /// <inheritdoc />
@@ -44,21 +57,21 @@ namespace L5Sharp.Repositories
             if (Contains(component.Name))
                 throw new ComponentNameCollisionException(component.Name, component.GetType());
 
-            var element = component.Serialize();
+            var element = Serializer.Serialize(component);
 
-            Context.L5X.GetContainer<TComponent>().Add(element);
+            Container.Add(element);
         }
 
         /// <inheritdoc />
         public virtual bool Contains(ComponentName name) =>
-            Context.L5X.GetComponents<TComponent>().Any(x => x.ComponentName() == name);
+            Components.Any(x => x.ComponentName() == name);
 
         /// <inheritdoc />
         public virtual TComponent? Find(Expression<Func<TComponent, bool>> predicate)
         {
             var filter = predicate.ToXExpression();
 
-            var element = Context.L5X.GetComponents<TComponent>().FirstOrDefault(filter);
+            var element = Components.FirstOrDefault(filter);
 
             return element is not null ? Serializer.Deserialize(element) : default;
         }
@@ -66,7 +79,7 @@ namespace L5Sharp.Repositories
         /// <inheritdoc />
         public TComponent? Find(ComponentName name)
         {
-            var element = Context.L5X.GetComponents<TComponent>().FirstOrDefault(x => x.ComponentName() == name);
+            var element = Components.FirstOrDefault(x => x.ComponentName() == name);
             return element is not null ? Serializer.Deserialize(element) : default;
         }
 
@@ -75,7 +88,7 @@ namespace L5Sharp.Repositories
         {
             var filter = predicate.ToXExpression();
 
-            var elements = Context.L5X.GetComponents<TComponent>().Where(filter);
+            var elements = Components.Where(filter);
 
             return elements.Select(e => Serializer.Deserialize(e));
         }
@@ -83,7 +96,7 @@ namespace L5Sharp.Repositories
         /// <inheritdoc />
         public virtual TComponent Get(ComponentName name)
         {
-            var element = Context.L5X.GetComponents<TComponent>().SingleOrDefault(x => x.ComponentName() == name);
+            var element = Components.SingleOrDefault(x => x.ComponentName() == name);
 
             if (element is null)
                 throw new ComponentNotFoundException(name, typeof(TComponent));
@@ -92,12 +105,10 @@ namespace L5Sharp.Repositories
         }
 
         /// <inheritdoc />
-        public virtual IEnumerable<TComponent> GetAll() =>
-            Context.L5X.GetComponents<TComponent>().Select(e => Serializer.Deserialize(e));
+        public virtual IEnumerable<TComponent> GetAll() => Components.Select(e => Serializer.Deserialize(e));
 
         /// <inheritdoc />
-        public IEnumerable<string> Names()
-            => Context.L5X.GetComponents<TComponent>().Select(x => x.ComponentName());
+        public IEnumerable<string> Names() => Components.Select(x => x.ComponentName());
 
         /// <inheritdoc />
         public virtual void Remove(ComponentName name)
@@ -105,7 +116,7 @@ namespace L5Sharp.Repositories
             if (name is null)
                 throw new ArgumentNullException(nameof(name));
             
-            Context.L5X.GetComponents<TComponent>().FirstOrDefault(x => x.ComponentName() == name)?.Remove();
+            Components.FirstOrDefault(x => x.ComponentName() == name)?.Remove();
         }
 
         /// <inheritdoc />
@@ -114,10 +125,9 @@ namespace L5Sharp.Repositories
             if (component == null)
                 throw new ArgumentNullException(nameof(component));
             
-            var element = component.Serialize();
+            var element = Serializer.Serialize(component);
 
-            var current = Context.L5X.GetComponents<TComponent>()
-                .FirstOrDefault(x => x.ComponentName() == component.Name);
+            var current = Components.FirstOrDefault(x => x.ComponentName() == component.Name);
 
             if (current is not null)
             {
@@ -125,7 +135,7 @@ namespace L5Sharp.Repositories
                 return;
             }
             
-            Context.L5X.GetContainer<TComponent>().Add(element);
+            Container.Add(element);
         }
     }
 }

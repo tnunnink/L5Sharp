@@ -85,7 +85,7 @@ namespace L5Sharp.Core.Tests
             type.LEN.Should().NotBeNull();
             type.LEN.Name.Should().Be("LEN");
             type.LEN.DataType.Should().BeOfType<Dint>();
-            type.LEN.DataType.Value.Should().Be(10);
+            type.LEN.DataType.Value.Should().Be(0);
             type.LEN.Dimensions.Length.Should().Be(0);
             type.LEN.Radix.Should().Be(Radix.Decimal);
             type.LEN.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);

@@ -10,16 +10,15 @@ namespace L5Sharp.Serialization.Components
     internal class MemberSerializer : IL5XSerializer<IMember<IDataType>>
     {
         private static readonly XName ElementName = L5XElement.Member.ToString();
-        private readonly Func<string, IDataType> _dataTypeCreator;
+        private readonly L5XContext? _context;
 
         public MemberSerializer()
         {
-            _dataTypeCreator = DataType.Create;
         }
-        
+
         public MemberSerializer(L5XContext context)
         {
-            _dataTypeCreator = context.Index.GetDataType;
+            _context = context;
         }
 
         public XElement Serialize(IMember<IDataType> component)
@@ -36,7 +35,7 @@ namespace L5Sharp.Serialization.Components
             element.Add(new XAttribute(L5XAttribute.Radix.ToString(), component.Radix));
             element.Add(new XAttribute(L5XAttribute.Hidden.ToString(), false));
             element.Add(new XAttribute(L5XAttribute.ExternalAccess.ToString(), component.ExternalAccess));
-            
+
             return element;
         }
 
@@ -50,7 +49,9 @@ namespace L5Sharp.Serialization.Components
 
             var name = element.ComponentName();
             var description = element.ComponentDescription();
-            var dataType = _dataTypeCreator.Invoke(element.DataTypeName());
+            var dataType = _context is not null
+                ? _context.Index.GetDataType(element.DataTypeName())
+                : DataType.Create(element.DataTypeName());
             var dimensions = element.Attribute(L5XAttribute.Dimension.ToString())?.Value.Parse<Dimensions>();
             var radix = element.Attribute(L5XAttribute.Radix.ToString())?.Value.Parse<Radix>();
             var access = element.Attribute(L5XAttribute.ExternalAccess.ToString())?.Value.Parse<ExternalAccess>();

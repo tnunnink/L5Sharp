@@ -109,14 +109,6 @@ namespace L5Sharp.Serialization.Tests
         }
 
         [Test]
-        public void Deserialize_NoTaskType_ShouldThrowArgumentException()
-        {
-            var element = XElement.Parse(GetNoTypeTaskData());
-
-            FluentActions.Invoking(() => _serializer.Deserialize(element)).Should().Throw<ArgumentException>();
-        }
-
-        [Test]
         public void Deserialize_ContinuousTask_ShouldNotBeNull()
         {
             var element = XElement.Parse(GetContinuousTaskData());
@@ -208,19 +200,6 @@ namespace L5Sharp.Serialization.Tests
             task.ScheduledPrograms.Should().HaveCount(2);
             task.ScheduledPrograms.Should().Contain(p => p == "NProgram");
             task.ScheduledPrograms.Should().Contain(p => p == "EPProgram");
-        }
-
-        private static string GetNoTypeTaskData()
-        {
-            return
-                @"<Task Name=""Continuous"" Priority=""10"" Watchdog=""500"" DisableUpdateOutputs=""false"" InhibitTask=""false"">
-                <Description>
-                <![CDATA[Test continuous task]]>
-                </Description>
-                <ScheduledPrograms>
-                <ScheduledProgram Name=""MainProgram""/>
-                </ScheduledPrograms>
-                </Task>";
         }
 
         private static string GetContinuousTaskData()

@@ -1,4 +1,4 @@
-﻿<Task Name="Test" Type="CONTINUOUS" Priority="10" Watchdog="5000" DisableUpdateOutputs="True" InhibitTask="False">
+﻿<Task Name="Test" Type="CONTINUOUS" Priority="10" Watchdog="5000" DisableUpdateOutputs="true" InhibitTask="false">
   <Description><![CDATA[This is a test continuous task]]></Description>
   <ScheduledPrograms>
     <ScheduledProgram Name="Test_Program_01" />

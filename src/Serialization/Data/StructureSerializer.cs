@@ -72,7 +72,7 @@ namespace L5Sharp.Serialization.Data
         private IL5XSerializer<IMember<IDataType>> GetSerializer(XElement element)
         {
             return element.Name == L5XElement.DataValueMember.ToString() ? _dataValueMemberSerializer
-                : element.Name == L5XElement.ArrayMember.ToString() ? _dataValueMemberSerializer
+                : element.Name == L5XElement.ArrayMember.ToString() ? _arrayMemberSerializer
                 : element.Name == L5XElement.StructureMember.ToString() ? _structureMemberSerializer
                 : throw new ArgumentException();
         }

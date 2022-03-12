@@ -1,4 +1,4 @@
-﻿<Tag Name="Test" TagType="Base" DataType="SINT" Radix="Decimal" Constant="False" ExternalAccess="Read/Write">
+﻿<Tag Name="Test" TagType="Base" DataType="SINT" Radix="Decimal" Constant="false" ExternalAccess="Read/Write">
   <Data Format="Decorated">
     <DataValue DataType="SINT" Value="0" />
   </Data>

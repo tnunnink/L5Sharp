@@ -41,9 +41,6 @@ namespace L5Sharp
         /// </exception>
         void SetValue(object value);
 
-        
-        bool TrySetValue(object? value);
-
         /// <summary>
         /// Formats the <see cref="Value"/> of the <see cref="IAtomicType"/> using the provided <see cref="Enums.Radix"/>.  
         /// </summary>

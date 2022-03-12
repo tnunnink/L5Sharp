@@ -35,6 +35,7 @@ namespace L5Sharp.L5X
 
             //Value Types
             { typeof(Dimensions), Dimensions.Parse },
+            { typeof(Revision), Revision.Parse },
             { typeof(TagName), s => new TagName(s) },
             { typeof(NeutralText), s => new NeutralText(s) },
             { typeof(TaskPriority), s => TaskPriority.Parse(s) },
@@ -42,7 +43,7 @@ namespace L5Sharp.L5X
             { typeof(Watchdog), s => Watchdog.Parse(s) },
             { typeof(CatalogNumber), s => new CatalogNumber(s) },
             { typeof(Vendor), Vendor.Parse },
-            { typeof(ProductType), ProductType.Parse },
+            { typeof(ProductType), ProductType.Parse }
         };
         
         
@@ -60,7 +61,7 @@ namespace L5Sharp.L5X
             var value = parser(input);
 
             if (value is not T typed)
-                throw new InvalidOperationException();
+                throw new ArgumentException($"The input '{input}' could not be parsed to type '{typeof(T)}");
 
             return typed;
         }
