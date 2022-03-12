@@ -46,5 +46,10 @@ namespace L5Sharp
         /// value length is larger than the predefined length (LEN Member value).
         /// </exception>
         void SetValue(string value);
+
+        /// <summary>
+        /// Clears the text of the <see cref="Value"/> property to an empty string.
+        /// </summary>
+        void ClearValue();
     }
 }

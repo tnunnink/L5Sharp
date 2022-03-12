@@ -156,6 +156,12 @@ namespace L5Sharp.Core
             : throw new ArgumentNullException(nameof(tagName));
 
         /// <summary>
+        /// Creates a copy of the current <see cref="TagName"/> object with the same value.
+        /// </summary>
+        /// <returns>A new <see cref="TagName"/> instance with the value of the current tag name.</returns>
+        public TagName Copy() => new TagName(string.Copy(_tagName));
+
+        /// <summary>
         /// Converts a <see cref="string"/> to a <see cref="TagName"/> value.
         /// </summary>
         /// <param name="tagName">The <see cref="string"/> value to convert.</param>

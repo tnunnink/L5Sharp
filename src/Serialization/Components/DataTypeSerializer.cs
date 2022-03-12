@@ -2,12 +2,13 @@
 using System.Linq;
 using System.Xml.Linq;
 using L5Sharp.Core;
+using L5Sharp.Enums;
 using L5Sharp.Extensions;
 using L5Sharp.L5X;
 
 namespace L5Sharp.Serialization.Components
 {
-    internal class DataTypeSerializer : IL5XSerializer<IUserDefined>
+    internal class DataTypeSerializer : IL5XSerializer<IComplexType>
     {
         private static readonly XName ElementName = L5XElement.DataType.ToString();
         private readonly IL5XSerializer<IMember<IDataType>> _memberSerializer;
@@ -22,7 +23,7 @@ namespace L5Sharp.Serialization.Components
             _memberSerializer = new MemberSerializer(context);
         }
         
-        public XElement Serialize(IUserDefined component)
+        public XElement Serialize(IComplexType component)
         {
             if (component == null)
                 throw new ArgumentNullException(nameof(component));
@@ -40,7 +41,7 @@ namespace L5Sharp.Serialization.Components
             return element;
         }
 
-        public IUserDefined Deserialize(XElement element)
+        public IComplexType Deserialize(XElement element)
         {
             if (element == null)
                 throw new ArgumentNullException(nameof(element));
@@ -50,11 +51,15 @@ namespace L5Sharp.Serialization.Components
 
             var name = element.ComponentName();
             var description = element.ComponentDescription();
+            var family = element.Attribute(L5XAttribute.Family.ToString())?.Value.Parse<DataTypeFamily>();
             var members = element.Descendants(L5XElement.Member.ToString())
                 .Where(e => !bool.Parse(e.Attribute(L5XAttribute.Hidden.ToString())?.Value!))
-                .Select(e => _memberSerializer.Deserialize(e));
+                .Select(e => _memberSerializer.Deserialize(e))
+                .ToList();
 
-            return new UserDefined(name, description, members);
+            return family == DataTypeFamily.String 
+                ? new StringDefined(name, members.First(m => m.Name == "DATA").Dimensions.X, description) 
+                : new UserDefined(name, description, members);
         }
     }
 }

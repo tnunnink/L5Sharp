@@ -16,13 +16,13 @@ namespace L5Sharp.Abstractions
     {
         private readonly List<IMember<IDataType>> _members;
 
-        internal StringType(string name, ushort length)
+        internal StringType(string name, ushort dimensions)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
 
             LEN = new Member<Dint>(nameof(LEN), new Dint());
 
-            var array = new ArrayType<Sint>(new Dimensions(length), radix: Radix.Ascii);
+            var array = new ArrayType<Sint>(new Dimensions(dimensions), radix: Radix.Ascii);
             DATA = new Member<IArrayType<Sint>>(nameof(DATA), array, Radix.Ascii);
 
             _members = new List<IMember<IDataType>>

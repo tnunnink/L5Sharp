@@ -14,23 +14,20 @@ namespace L5Sharp.Core
     public class StructureType : ComplexType
     {
         /// <summary>
-        /// Creates a new <see cref="StructureType"/> with the provided name, class, and member collection.
+        /// Creates a new <see cref="StructureType"/> with the provided name and member collection.
         /// </summary>
         /// <param name="name">The name of the type.</param>
-        /// <param name="class">The type's <see cref="Enums.DataTypeClass"/>.</param>
         /// <param name="members">The collection of members to initialize.</param>
-        /// <exception cref="ArgumentNullException">name or class is null.</exception>
-        internal StructureType(string name, DataTypeClass @class,
-            IEnumerable<IMember<IDataType>>? members = null) : base(name, members)
+        /// <exception cref="ArgumentNullException">name is null.</exception>
+        internal StructureType(string name, IEnumerable<IMember<IDataType>>? members = null) : base(name, members)
         {
-            Class = @class ?? throw new ArgumentNullException(nameof(@class));
         }
 
         /// <inheritdoc />
-        public override DataTypeClass Class { get; }
+        public override DataTypeClass Class => DataTypeClass.Unknown;
 
         /// <inheritdoc />
-        protected override IDataType New() => new StructureType(string.Copy(Name), Class, 
+        protected override IDataType New() => new StructureType(string.Copy(Name), 
             Members.Select(m => new Member<IDataType>(string.Copy(m.Name), m.DataType.Instantiate(),
                 m.Radix, m.ExternalAccess, string.Copy(m.Description))));
     }

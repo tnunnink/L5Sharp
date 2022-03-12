@@ -33,7 +33,7 @@ namespace L5Sharp.Serialization.Tests
         [Test]
         public void Serialize_WhenCalled_ShouldNotBeNull()
         {
-            var component = new StructureType("Test", DataTypeClass.Unknown);
+            var component = new StructureType("Test");
 
             var xml = _serializer.Serialize(component);
 
@@ -44,7 +44,7 @@ namespace L5Sharp.Serialization.Tests
         [UseReporter(typeof(DiffReporter))]
         public void Serialize_EmptyStructure_ShouldBeApproved()
         {
-            var component = new StructureType("Test", DataTypeClass.Unknown);
+            var component = new StructureType("Test");
 
             var xml = _serializer.Serialize(component);
 

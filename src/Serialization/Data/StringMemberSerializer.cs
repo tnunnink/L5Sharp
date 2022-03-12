@@ -1,26 +1,30 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Xml.Linq;
-using L5Sharp.Atomics;
 using L5Sharp.Core;
 using L5Sharp.Extensions;
 using L5Sharp.L5X;
-using String = L5Sharp.Predefined.String;
 
 namespace L5Sharp.Serialization.Data
 {
-    internal class StringMembersSerializer : IL5XSerializer<IStringType>
+    internal class StringStructureSerializer : IL5XSerializer<IStringType>
     {
-        private static readonly XName ElementName = L5XElement.Structure.ToString();
+        private readonly XName _elementName;
+
+        public StringStructureSerializer(XName elementName)
+        {
+            _elementName = elementName;
+        }
 
         public XElement Serialize(IStringType component)
         {
             if (component is null)
                 throw new ArgumentNullException(nameof(component));
 
-            var element = new XElement(ElementName);
+            var element = new XElement(_elementName);
+            
+            if (_elementName == L5XElement.StructureMember.ToString())
+                element.AddComponentName(component.Name);
             element.Add(new XAttribute(L5XAttribute.DataType.ToString(), component.Name));
 
             var lengthElement = new XElement(L5XElement.DataValueMember.ToString());
@@ -46,21 +50,15 @@ namespace L5Sharp.Serialization.Data
             if (element == null)
                 throw new ArgumentNullException(nameof(element));
 
-            if (element.Name != ElementName)
+            if (element.Name != _elementName)
                 throw new ArgumentException($"Element '{element.Name}' not valid for the serializer {GetType()}.");
 
             var name = element.DataTypeName();
-
-            var members = new List<IMember<IDataType>>();
-
-            var length = element.Elements().First(e => e.Attribute(L5XAttribute.Name.ToString())?.Value == "LEN")
-                .Attribute(L5XAttribute.Value.ToString())?.Value.Parse<int>() ?? default;
-
-            var value = element.Elements().First(e => e.Attribute(L5XAttribute.Name.ToString())?.Value == "DATA").Value;
-
-            members.Add(new Member<Dint>("LEN", new Dint(length)));
-
-            throw new NotImplementedException();
+            var value = element.Elements()
+                .First(e => e.Attribute(L5XAttribute.Name.ToString())?.Value == "DATA")
+                .Value;
+            
+            return new StringDefined(name, value);
         }
     }
 }

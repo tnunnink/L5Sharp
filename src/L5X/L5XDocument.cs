@@ -31,7 +31,7 @@ namespace L5Sharp.L5X
         internal L5XDocument(XDocument document)
         {
             //todo need to decide how to get valid schema file.
-            //We should probably create our own using exports and xsd generation tools, but that would take a long time.
+            //We should probably create our own using exports and xsd generation tools...
             //ValidateFile(document);
 
             _document = document;

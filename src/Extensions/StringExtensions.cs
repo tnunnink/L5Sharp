@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Text;
 using System.Text.RegularExpressions;
 using L5Sharp.Atomics;
+using L5Sharp.Core;
 
 namespace L5Sharp.Extensions
 {
@@ -15,6 +17,27 @@ namespace L5Sharp.Extensions
         /// <param name="value">The string input to analyze.</param>
         /// <returns>true if the string is empty. Otherwise false.</returns>
         public static bool IsEmpty(this string value) => value.Equals(string.Empty);
+
+        /// <summary>
+        /// Converts the string to an array type of <see cref="Sint"/> values.
+        /// </summary>
+        /// <param name="value">The string to convert.</param>
+        /// <returns>An <see cref="IArrayType{TDataType}"/> that contains the characters of the string.</returns>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// The provided string length is greater than the maximum ushort size.
+        /// </exception>
+        public static IArrayType<Sint> ToArrayType(this string value)
+        {
+            var bytes = Encoding.ASCII.GetBytes(value).Select(b => new Sint((sbyte)b)).ToList();
+
+            if (bytes.Count > ushort.MaxValue)
+                throw new ArgumentOutOfRangeException(nameof(value),
+                    "The current string length must be less than the ");
+
+            var length = (ushort)bytes.Count;
+
+            return new ArrayType<Sint>(new Dimensions(length), bytes);
+        }
 
         /// <summary>
         /// Determines if the current string has a <see cref="Enums.Radix.Binary"/> format.
@@ -208,7 +231,7 @@ namespace L5Sharp.Extensions
         {
             return items.Aggregate(value, (str, cItem) => str.Replace(cItem, replacement));
         }
-        
+
         public static IEnumerable<string> Segment(this string input, int length)
         {
             if (input is null)
@@ -252,7 +275,7 @@ namespace L5Sharp.Extensions
 
             if (value.StartsWith(character))
                 return value.Substring(1, value.Length - 1);
-            
+
             return value.EndsWith(character) ? value[..^2] : value;
         }
 
@@ -264,11 +287,11 @@ namespace L5Sharp.Extensions
 
             return words;
         }
-        
+
         private static string TrimSuffix(this string word)
         {
             var apostropheLocation = word.IndexOf('\'');
-            
+
             if (apostropheLocation != -1)
                 word = word[..apostropheLocation];
 

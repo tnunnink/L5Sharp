@@ -35,7 +35,7 @@ namespace L5Sharp.Serialization.Tests
         [Test]
         public void Serialize_WhenCalled_ShouldNotBeNull()
         {
-            var component = new Member<IDataType>("Test", new StructureType("Test", DataTypeClass.Unknown));
+            var component = new Member<IDataType>("Test", new StructureType("Test"));
 
             var xml = _serializer.Serialize(component);
 
@@ -46,7 +46,7 @@ namespace L5Sharp.Serialization.Tests
         [UseReporter(typeof(DiffReporter))]
         public void Serialize_DataValueValueMembers_ShouldBeApproved()
         {
-            var type = new StructureType("Test", DataTypeClass.Unknown, new List<IMember<IDataType>>
+            var type = new StructureType("Test", new List<IMember<IDataType>>
             {
                 Member.Create<Bool>("BoolMember"),
                 Member.Create<Sint>("SintMember"),
@@ -67,7 +67,7 @@ namespace L5Sharp.Serialization.Tests
         [UseReporter(typeof(DiffReporter))]
         public void SerializeArrayMembers_ShouldBeApproved()
         {
-            var type = new StructureType("Test", DataTypeClass.Unknown, new List<IMember<IDataType>>
+            var type = new StructureType("Test", new List<IMember<IDataType>>
             {
                 Member.Create<Dint>("SimpleMember", new Dimensions(10)),
                 Member.Create<Timer>("ComplexMember", 5),
@@ -85,7 +85,7 @@ namespace L5Sharp.Serialization.Tests
         [UseReporter(typeof(DiffReporter))]
         public void Serialize_StructureMembers_ShouldBeApproved()
         {
-            var type = new StructureType("Test", DataTypeClass.Unknown, new List<IMember<IDataType>>
+            var type = new StructureType("Test", new List<IMember<IDataType>>
             {
                 Member.Create<String>("StringMember"),
                 Member.Create<Timer>("SintMember"),

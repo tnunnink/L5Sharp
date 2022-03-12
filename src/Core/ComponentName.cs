@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Text.RegularExpressions;
 using L5Sharp.Exceptions;
 
@@ -30,9 +31,8 @@ namespace L5Sharp.Core
         public ComponentName(string name)
         {
             if (string.IsNullOrEmpty(name)) throw new ArgumentException("Name can not be null or empty");
-
-            //todo replace with something more performant
-            if (!Regex.IsMatch(name, @"^[a-zA-Z_][a-zA-Z0-9_]{0,39}$"))
+            
+            if (!Regex.IsMatch(name, @"^[a-zA-Z_][a-zA-Z0-9_]{0,39}$", RegexOptions.Compiled))
                 throw new ComponentNameInvalidException(name);
 
             _name = name;

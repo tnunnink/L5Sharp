@@ -8,7 +8,6 @@ using FluentAssertions;
 using L5Sharp.Atomics;
 using L5Sharp.Core;
 using L5Sharp.Creators;
-using L5Sharp.Enums;
 using L5Sharp.Predefined;
 using L5Sharp.Serialization.Data;
 using NUnit.Framework;
@@ -36,7 +35,7 @@ namespace L5Sharp.Serialization.Tests
         [Test]
         public void Serialize_WhenCalled_ShouldNotBeNull()
         {
-            var component = new StructureType("Test", DataTypeClass.Unknown);
+            var component = new StructureType("Test");
 
             var xml = _serializer.Serialize(component);
 
@@ -47,7 +46,7 @@ namespace L5Sharp.Serialization.Tests
         [UseReporter(typeof(DiffReporter))]
         public void Serialize_EmptyStructure_ShouldBeApproved()
         {
-            var component = new StructureType("Test", DataTypeClass.Unknown);
+            var component = new StructureType("Test");
 
             var xml = _serializer.Serialize(component);
 
@@ -58,7 +57,7 @@ namespace L5Sharp.Serialization.Tests
         [UseReporter(typeof(DiffReporter))]
         public void Serialize_DataValueValueMembers_ShouldBeApproved()
         {
-            var component = new StructureType("Test", DataTypeClass.Unknown, new List<IMember<IDataType>>
+            var component = new StructureType("Test", new List<IMember<IDataType>>
             {
                 Member.Create<Bool>("BoolMember"),
                 Member.Create<Sint>("SintMember"),
@@ -77,7 +76,7 @@ namespace L5Sharp.Serialization.Tests
         [UseReporter(typeof(DiffReporter))]
         public void SerializeArrayMembers_ShouldBeApproved()
         {
-            var component = new StructureType("Test", DataTypeClass.Unknown, new List<IMember<IDataType>>
+            var component = new StructureType("Test", new List<IMember<IDataType>>
             {
                 Member.Create<Dint>("SimpleMember", new Dimensions(10)),
                 Member.Create<Timer>("ComplexMember", 5),
@@ -93,7 +92,7 @@ namespace L5Sharp.Serialization.Tests
         [UseReporter(typeof(DiffReporter))]
         public void Serialize_StructureMembers_ShouldBeApproved()
         {
-            var component = new StructureType("Test", DataTypeClass.Unknown, new List<IMember<IDataType>>
+            var component = new StructureType("Test", new List<IMember<IDataType>>
             {
                 Member.Create<String>("StringMember"),
                 Member.Create<Timer>("SintMember"),
@@ -238,7 +237,7 @@ namespace L5Sharp.Serialization.Tests
                     <DataValueMember Name=""Config"" DataType=""INT"" Radix=""Decimal"" Value=""0""/>
                     <DataValueMember Name=""Test"" DataType=""BOOL"" Value=""0""/>
                 </StructureMember>
-                <ArrayMember Name=""SimplArray"" DataType=""SimpleType"" Dimensions=""5"">
+                <ArrayMember Name=""SimpleArray"" DataType=""SimpleType"" Dimensions=""5"">
                     <Element Index=""[0]"">
                         <Structure DataType=""SimpleType"">
                             <DataValueMember Name=""BoolMember"" DataType=""BOOL"" Value=""0""/>

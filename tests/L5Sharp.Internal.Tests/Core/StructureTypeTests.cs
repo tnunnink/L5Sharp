@@ -16,14 +16,14 @@ namespace L5Sharp.Internal.Tests.Core
         [Test]
         public void New_NullName_ShouldThrowArgumentNullException()
         {
-            FluentActions.Invoking(() => new StructureType(null!, DataTypeClass.Io)).Should()
+            FluentActions.Invoking(() => new StructureType(null!)).Should()
                 .Throw<ArgumentNullException>();
         }
 
         [Test]
         public void New_Default_ShouldNotBeNull()
         {
-            var type = new StructureType("Test", DataTypeClass.Io);
+            var type = new StructureType("Test");
 
             type.Should().NotBeNull();
         }
@@ -31,11 +31,11 @@ namespace L5Sharp.Internal.Tests.Core
         [Test]
         public void New_Valid_shouldHaveExpectedValues()
         {
-            var type = new StructureType("AB:5000_AI8:O:0", DataTypeClass.Io);
+            var type = new StructureType("AB:5000_AI8:O:0");
 
             type.Name.Should().Be("AB:5000_AI8:O:0");
             type.Description.Should().BeEmpty();
-            type.Class.Should().Be(DataTypeClass.Io);
+            type.Class.Should().Be(DataTypeClass.Unknown);
             type.Family.Should().Be(DataTypeFamily.None);
             type.Members.Should().BeEmpty();
         }
@@ -43,7 +43,7 @@ namespace L5Sharp.Internal.Tests.Core
         [Test]
         public void Instantiate_WhenCalled_ShouldNotBeNull()
         {
-            var type = new StructureType("AB:5000_AI8:O:0", DataTypeClass.Io);
+            var type = new StructureType("AB:5000_AI8:O:0");
 
             var instance = type.Instantiate();
 
@@ -54,7 +54,7 @@ namespace L5Sharp.Internal.Tests.Core
         [Test]
         public void Instantiate_HasMembers_ShouldHaveDifferentInstances()
         {
-            var type = new StructureType("AB:5000_AI8:O:0", DataTypeClass.Io, new List<IMember<IDataType>>
+            var type = new StructureType("AB:5000_AI8:O:0", new List<IMember<IDataType>>
             {
                 Member.Create<Bool>("DATA"),
                 Member.Create<Bool>("FAULTS")

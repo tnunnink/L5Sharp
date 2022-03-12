@@ -18,7 +18,7 @@ namespace L5Sharp.Serialization.Components
         {
             _formattedDataSerializer = new FormattedDataSerializer();
         }
-        
+
         public XElement Serialize(Connection component)
         {
             if (component == null)
@@ -34,14 +34,27 @@ namespace L5Sharp.Serialization.Components
             element.Add(new XAttribute(L5XAttribute.Type.ToString(), component.Type));
             element.Add(new XAttribute(L5XAttribute.Priority.ToString(), component.Priority));
             element.Add(new XAttribute(L5XAttribute.InputConnectionType.ToString(), component.InputConnectionType));
-            element.Add(new XAttribute(L5XAttribute.InputProductionTrigger.ToString(), component.InputProductionTrigger));
+            element.Add(
+                new XAttribute(L5XAttribute.InputProductionTrigger.ToString(), component.InputProductionTrigger));
             element.Add(new XAttribute(L5XAttribute.OutputRedundantOwner.ToString(), component.OutputRedundantOwner));
             element.Add(new XAttribute(L5XAttribute.EventID.ToString(), component.EventId));
             element.Add(new XAttribute(L5XAttribute.InputTagSuffix.ToString(), component.InputTagSuffix));
             element.Add(new XAttribute(L5XAttribute.OutputTagSuffix.ToString(), component.OutputTagSuffix));
 
-            //todo input and output tags...
-            
+            if (component.Input is not null)
+            {
+                var inputTag = new XElement(L5XElement.InputTag.ToString());
+                inputTag.Add(new XAttribute(L5XAttribute.ExternalAccess.ToString(), component.Input.ExternalAccess));
+                inputTag.Add(_formattedDataSerializer.Serialize(component.Input.DataType));
+            }
+
+            if (component.Output is not null)
+            {
+                var outputTag = new XElement(L5XElement.OutputTag.ToString());
+                outputTag.Add(new XAttribute(L5XAttribute.ExternalAccess.ToString(), component.Output.ExternalAccess));
+                outputTag.Add(_formattedDataSerializer.Serialize(component.Output.DataType));
+            }
+
             return element;
         }
 
@@ -76,16 +89,16 @@ namespace L5Sharp.Serialization.Components
             var eventId = element.Attribute(L5XAttribute.EventID.ToString())?.Value.Parse<int>() ?? default;
             var inputSuffix = element.Attribute(L5XAttribute.InputTagSuffix.ToString())?.Value ?? "I";
             var outputSuffix = element.Attribute(L5XAttribute.OutputTagSuffix.ToString())?.Value ?? "O";
-            
+
             var inputTagName = DetermineTagName(element, inputSuffix);
             var inputType = GenerateDataType(element, L5XElement.InputTag.ToString());
             var inputTag = inputType is not null ? new Tag<IDataType>(inputTagName, inputType) : null;
-            
+
             var outputTagName = DetermineTagName(element, outputSuffix);
             var outputType = GenerateDataType(element, L5XElement.OutputTag.ToString());
             var outputTag = outputType is not null ? new Tag<IDataType>(outputTagName, outputType) : null;
 
-            return new Connection(name, rpi, type, inputCxnPoint, inputSize, outputCxnPoint, outputSize, 
+            return new Connection(name, rpi, type, inputCxnPoint, inputSize, outputCxnPoint, outputSize,
                 priority, inputConnectionType, inputProductionTrigger, outputRedundantOwner, unicast, eventId,
                 inputSuffix, outputSuffix, inputTag, outputTag);
         }
@@ -94,7 +107,8 @@ namespace L5Sharp.Serialization.Components
         {
             var tagElement = element.Descendants(tagName).FirstOrDefault();
             var formattedData = tagElement?.Descendants(L5XElement.Data.ToString())
-                .FirstOrDefault(e => e.Attribute(L5XAttribute.Format.ToString())?.Value == TagDataFormat.Decorated.Name);
+                .FirstOrDefault(e =>
+                    e.Attribute(L5XAttribute.Format.ToString())?.Value == TagDataFormat.Decorated.Name);
 
             return formattedData is not null ? _formattedDataSerializer.Deserialize(formattedData) : null;
         }

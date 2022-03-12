@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Linq;
 using ApprovalTests;
 using ApprovalTests.Reporters;
@@ -118,7 +119,7 @@ namespace L5Sharp.Serialization.Tests
 
             var component = _serializer.Deserialize(element);
 
-            var boolMember = component.Members.Get("BoolMember");
+            var boolMember = component.Members.FirstOrDefault(m => m.Name == "BoolMember");
             boolMember.Should().NotBeNull();
             boolMember?.Name.Should().Be("BoolMember");
             boolMember?.DataType.Should().BeOfType<Bool>();
@@ -134,8 +135,8 @@ namespace L5Sharp.Serialization.Tests
             var element = XElement.Parse(GetSimpleTypeXml());
 
             var component = _serializer.Deserialize(element);
-
-            var member = component.Members.Get("SintMember");
+            
+            var member = component.Members.FirstOrDefault(m => m.Name == "SintMember");
             member.Should().NotBeNull();
             member?.Name.Should().Be("SintMember");
             member?.DataType.Should().BeOfType<Sint>();
@@ -151,8 +152,8 @@ namespace L5Sharp.Serialization.Tests
             var element = XElement.Parse(GetSimpleTypeXml());
 
             var component = _serializer.Deserialize(element);
-
-            var member = component.Members.Get("IntMember");
+            
+            var member = component.Members.FirstOrDefault(m => m.Name == "IntMember");
             member.Should().NotBeNull();
             member?.Name.Should().Be("IntMember");
             member?.DataType.Should().BeOfType<Int>();
@@ -169,7 +170,7 @@ namespace L5Sharp.Serialization.Tests
 
             var component = _serializer.Deserialize(element);
 
-            var member = component.Members.Get("DintMember");
+            var member = component.Members.FirstOrDefault(m => m.Name == "DintMember");
             member.Should().NotBeNull();
             member?.Name.Should().Be("DintMember");
             member?.DataType.Should().BeOfType<Dint>();
@@ -186,7 +187,7 @@ namespace L5Sharp.Serialization.Tests
 
             var component = _serializer.Deserialize(element);
 
-            var member = component.Members.Get("LintMember");
+            var member = component.Members.FirstOrDefault(m => m.Name == "LintMember");
             member.Should().NotBeNull();
             member?.Name.Should().Be("LintMember");
             member?.DataType.Should().BeOfType<Lint>();

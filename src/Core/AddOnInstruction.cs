@@ -6,8 +6,8 @@ using L5Sharp.Enums;
 
 namespace L5Sharp.Core
 {
-    /// <inheritdoc />
-    public class AddOnInstruction : IAddOnInstruction
+    /// <inheritdoc cref="L5Sharp.IAddOnInstruction" />
+    public class AddOnInstruction : AddOnDefined, IAddOnInstruction
     {
         private const string LogicRoutineName = "Logic";
         private readonly List<IRoutine<ILogixContent>> _routines = new();
@@ -20,9 +20,8 @@ namespace L5Sharp.Core
             Revision? softwareRevision = null, string? additionalHelpText = null, bool isEncrypted = default,
             IEnumerable<IParameter<IDataType>>? parameters = null,
             IEnumerable<ITag<IDataType>>? localTags = null,
-            IEnumerable<IRoutine<ILogixContent>>? routines = null)
+            IEnumerable<IRoutine<ILogixContent>>? routines = null) : base(name)
         {
-            Name = name ?? throw new ArgumentNullException(nameof(name));
             Description = description ?? string.Empty;
             Revision = revision ?? new Revision();
             RevisionExtension = revisionExtension ?? string.Empty;
@@ -86,9 +85,8 @@ namespace L5Sharp.Core
             DateTime createdDate = default, string? createdBy = null,
             DateTime editedDate = default, string? editedBy = null,
             Revision? softwareRevision = null, string? additionalHelpText = null, bool isEncrypted = default,
-            string? description = null)
+            string? description = null) : base(name)
         {
-            Name = name ?? throw new ArgumentNullException(nameof(name));
             Description = description ?? string.Empty;
             Revision = revision ?? new Revision();
             RevisionExtension = revisionExtension ?? string.Empty;
@@ -110,18 +108,9 @@ namespace L5Sharp.Core
             _routines.Add(routine);
         }
 
-
+        
         /// <inheritdoc />
-        public string Name { get; }
-
-        /// <inheritdoc />
-        public string Description { get; }
-
-        /// <inheritdoc />
-        public DataTypeFamily Family => DataTypeFamily.None;
-
-        /// <inheritdoc />
-        public DataTypeClass Class => DataTypeClass.AddOnDefined;
+        public override string Description { get; }
 
         /// <inheritdoc />
         public RoutineType Type => Routines.Single(r => r.Name == LogicRoutineName).Type;
@@ -172,7 +161,7 @@ namespace L5Sharp.Core
         public IRoutine<ILogixContent> Logic => _routines.Single(r => r.Name == LogicRoutineName);
 
         /// <inheritdoc />
-        public IEnumerable<IMember<IDataType>> Members => Parameters.Where(p => p.Usage != TagUsage.InOut);
+        public override IEnumerable<IMember<IDataType>> Members => Parameters.Where(p => p.Usage != TagUsage.InOut);
 
         /// <inheritdoc />
         public IMemberCollection<IParameter<IDataType>> Parameters { get; }
@@ -182,17 +171,6 @@ namespace L5Sharp.Core
 
         /// <inheritdoc />
         public IEnumerable<IRoutine<ILogixContent>> Routines => _routines;
-
-        /// <inheritdoc />
-        public IDataType Instantiate()
-        {
-            /*return new AddOnInstruction(string.Copy(Name), string.Copy(Description), Type,
-                Revision, RevisionExtension, RevisionNote,
-                ExecutePreScan, ExecutePostScan, ExecuteEnableInFalse, CreatedDate, CreatedBy, EditedDate, EditedBy,
-                SoftwareRevision, AdditionalHelpText, IsEncrypted,
-                Parameters.Select(p => new Parameter<IDataType>(string.Copy(p.Name, ))));*/
-            throw new NotImplementedException();
-        }
 
         private static IEnumerable<IParameter<IDataType>> GenerateDefaultParameters()
         {

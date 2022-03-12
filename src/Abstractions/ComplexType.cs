@@ -25,6 +25,13 @@ namespace L5Sharp.Abstractions
     /// </remarks>
     public abstract class ComplexType : IComplexType
     {
+        
+        /*protected ComplexType(string name)
+        {
+            Name = name ?? throw new ArgumentNullException(nameof(name));
+            Members = new List<IMember<IDataType>>();
+        }*/
+        
         /// <summary>
         /// Creates a new <see cref="ComplexType"/> instance with the provided name and optional members.
         /// </summary>
@@ -56,7 +63,7 @@ namespace L5Sharp.Abstractions
         public abstract DataTypeClass Class { get; }
 
         /// <inheritdoc />
-        public IEnumerable<IMember<IDataType>> Members { get; }
+        public virtual IEnumerable<IMember<IDataType>> Members { get; }
 
         /// <inheritdoc />
         public IDataType Instantiate() => New();

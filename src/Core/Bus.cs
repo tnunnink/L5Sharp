@@ -13,6 +13,7 @@ namespace L5Sharp.Core
     /// </summary>
     public sealed class Bus : IEnumerable<IModule>
     {
+        private const string DefaultNetworkAddress = "192.168.1";
         private readonly Port _port;
         private readonly Dictionary<string, IModule> _modules;
 
@@ -291,10 +292,19 @@ namespace L5Sharp.Core
         {
             if (IsFull)
                 throw new InvalidOperationException("The current Bus is full and can not assign additional modules.");
-
-            //todo need to create way to generate next available IP on default 192.168.1.1 network
-            if (IsEthernet) 
-                return IPAddress.Any.ToString();
+            
+            if (IsEthernet)
+            {
+                var taken = _modules.Keys.Where(k => k.StartsWith(DefaultNetworkAddress))
+                    .Select(k => (int)IPAddress.Parse(k).GetAddressBytes()[3]);
+                
+                var next = Enumerable.Range(byte.MinValue, byte.MaxValue)
+                    .Except(taken)
+                    .First()
+                    .ToString();
+                
+                return IPAddress.Parse($"{DefaultNetworkAddress}.{next}").ToString();
+            }
             
             var range = IsFixed ? Size : byte.MaxValue;
 

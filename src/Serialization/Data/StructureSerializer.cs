@@ -14,14 +14,14 @@ namespace L5Sharp.Serialization.Data
         private readonly IL5XSerializer<IMember<IDataType>> _dataValueMemberSerializer;
         private readonly IL5XSerializer<IMember<IDataType>> _arrayMemberSerializer;
         private readonly IL5XSerializer<IMember<IDataType>> _structureMemberSerializer;
-        private readonly StringMembersSerializer _stringStructureSerializer;
+        private readonly StringStructureSerializer _stringStructureSerializer;
 
         public StructureSerializer()
         {
             _dataValueMemberSerializer = new DataValueMemberSerializer();
             _arrayMemberSerializer = new ArrayMemberSerializer(this);
             _structureMemberSerializer = new StructureMemberSerializer(this);
-            _stringStructureSerializer = new StringMembersSerializer();
+            _stringStructureSerializer = new StringStructureSerializer(ElementName);
         }
 
         public XElement Serialize(IComplexType component)
@@ -29,7 +29,7 @@ namespace L5Sharp.Serialization.Data
             if (component is null)
                 throw new ArgumentNullException(nameof(component));
 
-            //String types are treated differently than all other members.
+            //String types are treated differently than other types.
             if (component is IStringType stringType)
                 return _stringStructureSerializer.Serialize(stringType);
 
@@ -57,7 +57,7 @@ namespace L5Sharp.Serialization.Data
             var name = element.DataTypeName();
 
             //The only way to know if this is a string type that needs special treatment is if there is a member with
-            //the same data type name (which normally should be impossible)
+            //the same data type name (which otherwise should be impossible).
             if (element.Elements().Any(e => string.Equals(e.Attribute(L5XAttribute.DataType.ToString())?.Value, name,
                     StringComparison.OrdinalIgnoreCase)))
             {
@@ -66,7 +66,7 @@ namespace L5Sharp.Serialization.Data
 
             var members = element.Elements().Select(e => GetSerializer(e).Deserialize(e)).ToList();
 
-            return new StructureType(name, DataTypeClass.Unknown, members);
+            return new StructureType(name, members);
         }
 
         private IL5XSerializer<IMember<IDataType>> GetSerializer(XElement element)
