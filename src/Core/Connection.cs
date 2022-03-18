@@ -30,8 +30,8 @@ namespace L5Sharp.Core
         /// <param name="output"></param>
         /// <exception cref="ArgumentNullException">name is null.</exception>
         public Connection(string name, int rpi, ConnectionType? type,
-            byte inputCxnPoint = default, byte inputSize = default,
-            byte outputCxnPoint = default, byte outputSize = default,
+            ushort inputCxnPoint = default, ushort inputSize = default,
+            ushort outputCxnPoint = default, ushort outputSize = default,
             ConnectionPriority? priority = null,
             TransmissionType? inputConnectionType = null,
             ProductionTrigger? inputProductionTrigger = null, 
@@ -72,22 +72,22 @@ namespace L5Sharp.Core
         /// <summary>
         /// Gets the input connection point for the primary <see cref="Connection"/>.
         /// </summary>
-        public byte InputCxnPoint { get; }
+        public ushort InputCxnPoint { get; }
         
         /// <summary>
         /// Gets the input size for the <see cref="Connection"/>.
         /// </summary>
-        public byte InputSize { get; }
+        public ushort InputSize { get; }
         
         /// <summary>
         /// Gets the output connection point for the primary <see cref="Connection"/>.
         /// </summary>
-        public byte OutputCxnPoint { get; }
+        public ushort OutputCxnPoint { get; }
         
         /// <summary>
         /// Gets the output size for the <see cref="Connection"/>.
         /// </summary>
-        public byte OutputSize { get; }
+        public ushort OutputSize { get; }
 
         /// <summary>
         /// Gets the <see cref="Enums.ConnectionType"/> value for the <see cref="Connection"/>.

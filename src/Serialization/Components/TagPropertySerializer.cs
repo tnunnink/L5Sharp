@@ -11,10 +11,17 @@ namespace L5Sharp.Serialization.Components
     internal class TagPropertySerializer : IL5XSerializer<KeyValuePair<TagName, string>>
     {
         private readonly XName _elementName;
+        private string _baseTagName;
 
         public TagPropertySerializer(XName elementName)
         {
             _elementName = elementName;
+            _baseTagName = string.Empty;
+        }
+
+        public void SetBaseName(string baseTagName)
+        {
+            _baseTagName = baseTagName;
         }
 
         public XElement Serialize(KeyValuePair<TagName, string> component)
@@ -35,10 +42,8 @@ namespace L5Sharp.Serialization.Components
 
             if (element.Name != _elementName)
                 throw new ArgumentException($"Element '{element.Name}' not valid for the serializer {GetType()}.");
-            
-            var baseName = element.Ancestors(L5XElement.Tag.ToString()).FirstOrDefault()?.ComponentName();
 
-            var tagName = TagName.Combine(baseName!, element.Attribute(L5XAttribute.Operand.ToString())?.Value!);
+            var tagName = TagName.Combine(_baseTagName, element.Attribute(L5XAttribute.Operand.ToString())?.Value!);
             var value = element.Value;
             
             return new KeyValuePair<TagName, string>(tagName, value);

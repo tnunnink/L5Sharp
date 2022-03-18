@@ -31,7 +31,7 @@ namespace L5Sharp.Repositories
         /// The current L5X containing element for the component repository. 
         /// </summary>
         protected XElement Container;
-        
+
         /// <summary>
         /// The current L5X containing element for the component repository. 
         /// </summary>
@@ -45,7 +45,8 @@ namespace L5Sharp.Repositories
         {
             Serializer = context.Serializer.GetFor<TComponent>();
             Container = context.L5X.GetContainer<TComponent>();
-            Components = Container.Descendants(L5XNames.GetComponentName<TComponent>());
+            Components = Container.Descendants(L5XNames.GetComponentName<TComponent>())
+                .Where(e => e.Attribute(L5XAttribute.Name.ToString()) is not null);
         }
 
         /// <inheritdoc />
@@ -115,7 +116,7 @@ namespace L5Sharp.Repositories
         {
             if (name is null)
                 throw new ArgumentNullException(nameof(name));
-            
+
             Components.FirstOrDefault(x => x.ComponentName() == name)?.Remove();
         }
 
@@ -124,7 +125,7 @@ namespace L5Sharp.Repositories
         {
             if (component == null)
                 throw new ArgumentNullException(nameof(component));
-            
+
             var element = Serializer.Serialize(component);
 
             var current = Components.FirstOrDefault(x => x.ComponentName() == component.Name);
@@ -134,7 +135,7 @@ namespace L5Sharp.Repositories
                 current.ReplaceWith(element);
                 return;
             }
-            
+
             Container.Add(element);
         }
     }

@@ -40,10 +40,11 @@ namespace L5Sharp.Serialization.Data
                 throw new ArgumentException($"Element '{element.Name}' not valid for the serializer {GetType()}.");
 
             var name = element.ComponentName();
+            var type = element.DataTypeName();
             var radix = element.Attribute(L5XAttribute.Radix.ToString())?.Value?.Parse<Radix>() ?? Radix.Decimal;
-            var value = element.Attribute(L5XAttribute.Value.ToString())?.Value!;
-
-            var dataType = DataType.Atomic(element.DataTypeName(), value);
+            var value = element.Attribute(L5XAttribute.Value.ToString())?.Value?.TryParse<IAtomicType>();
+            
+            var dataType = DataType.Atomic(type, value);
             
             return Member.Create(name, dataType, radix);
         }

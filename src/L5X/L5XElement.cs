@@ -4,7 +4,7 @@ namespace L5Sharp.L5X
     /// <summary>
     /// An enumeration of L5X element names for ease of referencing these value without using magic strings.
     /// </summary>
-    public enum L5XElement
+    internal enum L5XElement
     {
         
         /// <summary>
@@ -286,12 +286,7 @@ namespace L5Sharp.L5X
         /// Represents the <see cref="Programs"/> L5X element.
         ///</summary>
         Programs,
-        
-        /*/// <summary>
-        /// Represents the <see cref="public"/> L5X element.
-        ///</summary>
-        public,*/
-        
+
         /// <summary>
         /// Represents the <see cref="QuickWatchList"/> L5X element.
         ///</summary>

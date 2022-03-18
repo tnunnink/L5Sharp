@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Xml.Linq;
 using L5Sharp.Core;
+using L5Sharp.Enums;
 using L5Sharp.Extensions;
 using L5Sharp.L5X;
 
@@ -31,7 +32,7 @@ namespace L5Sharp.Serialization.Data
                 throw new ArgumentException($"Element '{element.Name}' not valid for the serializer {GetType()}.");
             
             var name = element.DataTypeName();
-            var value = element.Attribute(L5XAttribute.Value.ToString())?.Value!;
+            var value = element.Attribute(L5XAttribute.Value.ToString())?.Value?.TryParse<IAtomicType>();
 
             return DataType.Atomic(name, value);
         }

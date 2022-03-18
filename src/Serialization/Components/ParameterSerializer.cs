@@ -59,7 +59,7 @@ namespace L5Sharp.Serialization.Components
             var name = element.ComponentName();
             var description = element.ComponentDescription();
             var dataType = _context is not null
-                ? _context.Index.GetDataType(element.DataTypeName())
+                ? _context.Indexer.GetFor<IDataType>().Lookup(element.DataTypeName())
                 : DataType.Create(element.DataTypeName());
             var dimensions = element.Attribute(L5XAttribute.Dimensions.ToString())?.Value.Parse<Dimensions>();    
             var radix = element.Attribute(L5XAttribute.Radix.ToString())?.Value.Parse<Radix>();    

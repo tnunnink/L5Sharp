@@ -14,8 +14,8 @@ namespace L5Sharp.Core
     {
         private const string ArrayBracket = "[";
         private const string MemberSeparator = ".";
-        private const string TagNamePattern = @"^[\w\.[\],:]+$";
-        private const string MemberPattern = @"^[\w:]+$|^\[[\d,]+\]$";
+        private const string TagNamePattern = @"^[A-Za-z_][\w\.[\],:]+$";
+        private const string MemberPattern = @"^[A-Za-z_][\w:]+$|^\[\d+,\]$|^\[\d+,\d+\]$|^\[\d+,\d+,\d+\]$";
         private const string MembersPattern = @"[\w:]+|\[[\d,]+\]";
         private const string PartsPattern = @"\w+|\[[\d,]+\]";
         private readonly string _tagName;
@@ -100,7 +100,7 @@ namespace L5Sharp.Core
         /// <summary>
         /// Gets a value indicating whether the current <see cref="TagName"/> test is a valid representation of a tag name.
         /// </summary>
-        public bool IsValid => Regex.IsMatch(_tagName, TagNamePattern, RegexOptions.Compiled); 
+        public bool IsValid => Regex.IsMatch(_tagName, TagNamePattern, RegexOptions.Compiled);
 
         /// <summary>
         /// Gets the static empty <see cref="TagName"/> value.
@@ -159,7 +159,7 @@ namespace L5Sharp.Core
         /// Creates a copy of the current <see cref="TagName"/> object with the same value.
         /// </summary>
         /// <returns>A new <see cref="TagName"/> instance with the value of the current tag name.</returns>
-        public TagName Copy() => new TagName(string.Copy(_tagName));
+        public TagName Copy() => new(string.Copy(_tagName));
 
         /// <summary>
         /// Converts a <see cref="string"/> to a <see cref="TagName"/> value.
@@ -175,15 +175,15 @@ namespace L5Sharp.Core
         public bool Equals(TagName? other)
         {
             if (ReferenceEquals(null, other)) return false;
-            if (ReferenceEquals(this, other)) return true;
-            return _tagName == other._tagName;
+            return ReferenceEquals(this, other) ||
+                   StringComparer.OrdinalIgnoreCase.Equals(_tagName, other._tagName);
         }
 
         /// <inheritdoc />
         public override bool Equals(object? obj) => Equals(obj as TagName);
 
         /// <inheritdoc />
-        public override int GetHashCode() => _tagName.GetHashCode();
+        public override int GetHashCode() => StringComparer.OrdinalIgnoreCase.GetHashCode(_tagName);
 
         /// <summary>
         /// Determines if the provided objects are equal.

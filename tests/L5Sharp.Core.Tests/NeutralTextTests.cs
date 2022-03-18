@@ -30,10 +30,11 @@ namespace L5Sharp.Core.Tests
         }
 
         [Test]
-        public void New_UnbalancedBrackets_ShouldThrowFormatException()
+        public void IsBalanced_UnbalancedBrackets_ShouldFalse()
         {
-            FluentActions.Invoking(() => new NeutralText("[XIC(SomeBit),XIO(AnotherBit)OTE(Output);"))
-                .Should().Throw<FormatException>();
+            var text = new NeutralText("[XIC(SomeBit),XIO(AnotherBit)OTE(Output);");
+
+            text.IsBalanced.Should().BeFalse();
         }
 
         [Test]
@@ -49,7 +50,7 @@ namespace L5Sharp.Core.Tests
         {
             var text = new NeutralText("[XIC(SomeBit),XIO(AnotherBit)]OTE(OutputBit);");
 
-            text.Instructions.Should().HaveCount(3);
+            text.Instructions().Should().HaveCount(3);
         }
     }
 }

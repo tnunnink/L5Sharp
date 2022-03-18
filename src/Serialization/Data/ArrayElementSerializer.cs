@@ -49,7 +49,7 @@ namespace L5Sharp.Serialization.Data
                 throw new ArgumentException($"Element '{element.Name}' not valid for the serializer {GetType()}.");
 
             var index = element.Attribute(L5XAttribute.Index.ToString())?.Value!;
-            var value = element.Attribute(L5XAttribute.Value.ToString())?.Value;
+            var value = element.Attribute(L5XAttribute.Value.ToString())?.Value?.TryParse<IAtomicType>();
 
             IDataType dataType = value is not null
                 ? DataType.Atomic(element.Parent?.DataTypeName()!, value)

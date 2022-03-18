@@ -63,7 +63,7 @@ namespace L5Sharp.Core
         }
 
         /// <summary>
-        /// Gets the value of the X or first dimensional unit of the <see cref="Dimensions"/> object.
+        /// Gets the value of the X (or first) dimensional unit of the <see cref="Dimensions"/> object.
         /// </summary>
         /// <value>
         /// An unsigned short that represents the length the first dimensional parameter.
@@ -143,15 +143,17 @@ namespace L5Sharp.Core
         /// <param name="value">The <see cref="string"/> value to parse.</param>
         /// <returns>
         /// If the string has a valid format and value, returns an instance of <see cref="Dimensions"/> that represents
-        /// the value parsed using the provided sting. If value is null, empty, or 0, returns <see cref="Empty"/>.
+        /// the value parsed using the provided sting. If value empty or 0; returns <see cref="Empty"/>.
         /// </returns>
+        /// <exception cref="ArgumentNullException">value is null</exception>
         /// <exception cref="ArgumentException">
-        /// Thrown if the argument does not match to expected pattern or if the pattern does not contain between 1 and 3 arguments.
+        /// value does not match to expected pattern or value does not contain between 1 and 3 arguments.
         /// </exception>
         /// <remarks>
         /// L5X valid string pattern is a set of numbers separated by a single space. The string should only contain up
         /// to three numbers. Each number should represent a <see cref="ushort"/>, or a value between 0 and 65535.
         /// </remarks>
+        
         public static Dimensions Parse(string value)
         {
             if (value is null)
@@ -172,6 +174,37 @@ namespace L5Sharp.Core
                 _ => throw new ArgumentOutOfRangeException(nameof(numbers.Count),
                     $"Value '{value}' has a invalid number of arguments. Expecting between 1 and 3 arguments.")
             };
+        }
+        
+        /// <summary>
+        /// Attempts to parse
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="dimensions"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        public static bool TryParse(string value, out Dimensions? dimensions)
+        {
+            if (value is null)
+                throw new ArgumentNullException(nameof(value));
+
+            if (value.IsEmpty() || !Regex.IsMatch(value, @"(?=\d+)^[\d\s]+$"))
+            {
+                dimensions = null;
+                return false;
+            }
+            
+            var numbers = value.Split(' ').Select(v => Convert.ToUInt16(v)).ToList();
+
+            dimensions = numbers.Count switch
+            {
+                3 => new Dimensions(numbers[0], numbers[1], numbers[2]),
+                2 => new Dimensions(numbers[0], numbers[1]),
+                1 => new Dimensions(numbers[0]),
+                _ => null
+            };
+
+            return dimensions is not null;
         }
 
         /// <summary>

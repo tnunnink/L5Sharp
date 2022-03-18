@@ -10,16 +10,32 @@ namespace L5Sharp.Core
     /// </summary>
     public class Instruction
     {
+        private const string InstructionPattern = @"^([A-Za-z_][\w]+)\((.*)\)$";
+        private const string NamePattern = @"^[a-zA-Z0-9_]+";
+        private const string OperandsPattern = @"^[a-zA-Z0-9_]+";
+
         /// <summary>
-        /// Creates a new <see cref="Instruction"/> with the provided name and arguments.
+        /// Creates a new <see cref="Instruction"/> with the provided name and operands.
         /// </summary>
-        /// <param name="name">The name name of the Instruction.</param>
-        /// <param name="arguments">The collection of <see cref="Arguments"/> of the Instruction instance.</param>
-        /// <exception cref="ArgumentNullException">name is null.</exception>
-        private Instruction(string name, IEnumerable<Argument>? arguments = null)
+        /// <param name="name">The name name of the instruction.</param>
+        /// <param name="operands">The operands or arguments of the instruction.</param>
+        /// <exception cref="ArgumentNullException">name or operands is null.</exception>
+        public Instruction(string name, params Operand[] operands)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
-            Arguments = arguments ?? Enumerable.Empty<Argument>();
+            Operands = operands ?? throw new ArgumentNullException(nameof(operands));
+        }
+        
+        /// <summary>
+        /// Creates a new <see cref="Instruction"/> with the provided name and operands.
+        /// </summary>
+        /// <param name="name">The name name of the instruction.</param>
+        /// <param name="operands">The operands or arguments of the instruction.</param>
+        /// <exception cref="ArgumentNullException">name or operands is null.</exception>
+        public Instruction(string name, IEnumerable<Operand> operands)
+        {
+            Name = name ?? throw new ArgumentNullException(nameof(name));
+            Operands = operands ?? throw new ArgumentNullException(nameof(operands));
         }
 
         /// <summary>
@@ -28,9 +44,9 @@ namespace L5Sharp.Core
         public string Name { get; }
 
         /// <summary>
-        /// Gets the <see cref="Argument"/> collection for the <see cref="Instruction"/> instance.
+        /// Gets the <see cref="Operand"/> collection for the <see cref="Instruction"/> instance.
         /// </summary>
-        public IEnumerable<Argument> Arguments { get; }
+        public IEnumerable<Operand> Operands { get; }
 
         /// <summary>
         /// Creates a new <see cref="Instruction"/> by parsing the provided string text.
@@ -42,28 +58,39 @@ namespace L5Sharp.Core
         {
             if (text is null)
                 throw new ArgumentNullException(nameof(text));
+
+            var match = Regex.Match(text, InstructionPattern, RegexOptions.Compiled);
+
+            if (!match.Success)
+                throw new FormatException($"Text input '{text}' does not have expected instruction format.");
+
+            var name = match.Groups[0].Value;
+            var operands = match.Groups[1].Value.Split(",").Select(v => (Operand)v);
             
-            if (!Regex.IsMatch(text, @"^[a-zA-Z0-9_]+\(.*?\)$", RegexOptions.Compiled))
-                throw new FormatException($"Text input '{text}' does not have expected format.");
-
-            var name = Regex.Match(text, @"^[a-zA-Z0-9_]+").Value;
-            var arguments = new List<string>(Regex.Match(text, @"(?<=\().+?(?=\))").Value.Split(','))
-                .Select(v => new Argument(v));
-
-            return new Instruction(name, arguments);
+            return new Instruction(name, operands);
         }
-
-        /// <summary>
-        /// Generates a new <see cref="Instruction"/> instance with the provided arguments parameters.
-        /// </summary>
-        /// <param name="arguments">Set of string arguments to instantiate the <see cref="Instruction"/> with.</param>
-        /// <returns>A new <see cref="Instruction"/> with the provided arguments.</returns>
-        public Instruction Build(params Argument[] arguments) => new(Name, arguments);
 
         /// <summary>
         /// Generates the <see cref="NeutralText"/> value for the current <see cref="Instruction"/>.
         /// </summary>
         /// <returns>A new <see cref="NeutralText"/> object that represents the instruction text.</returns>
-        public NeutralText ToText() => new($"{Name}({string.Join(",", Arguments.Select(a => a.Reference))})");
+        public NeutralText ToText() => new(ToString());
+
+        /// <inheritdoc />
+        public override string ToString() => $"{Name}({string.Join(",", Operands)})";
+
+        /// <summary>
+        /// Creates a XIC instruction with the provided tag name value.
+        /// </summary>
+        /// <param name="tagName">The tag name operand of the instruction.</param>
+        /// <returns>A new <see cref="Instruction"/> with the provided value.</returns>
+        public static Instruction XIC(TagName tagName) => new(nameof(XIC), tagName);
+
+        /// <summary>
+        /// Creates a OTE instruction with the provided tag name value.
+        /// </summary>
+        /// <param name="tagName">The tag name operand of the instruction.</param>
+        /// <returns>A new <see cref="Instruction"/> with the provided value.</returns>
+        public static Instruction OTE(TagName tagName) => new(nameof(OTE), tagName);
     }
 }

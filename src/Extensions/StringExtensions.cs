@@ -18,6 +18,8 @@ namespace L5Sharp.Extensions
         /// <returns>true if the string is empty. Otherwise false.</returns>
         public static bool IsEmpty(this string value) => value.Equals(string.Empty);
 
+        public static bool IsTagName(this string input) => new TagName(input).IsValid;
+
         /// <summary>
         /// Converts the string to an array type of <see cref="Sint"/> values.
         /// </summary>
@@ -32,7 +34,7 @@ namespace L5Sharp.Extensions
 
             if (bytes.Count > ushort.MaxValue)
                 throw new ArgumentOutOfRangeException(nameof(value),
-                    "The current string length must be less than the ");
+                    $"The current string length must be less than {ushort.MaxValue}.");
 
             var length = (ushort)bytes.Count;
 
@@ -260,6 +262,29 @@ namespace L5Sharp.Extensions
             }
 
             return characters.Count == 0;
+        }
+        
+        public static string FirstInstruction(this string value)
+        {
+            var characters = new List<char>();
+            var opened = 0;
+            var closed = 0;
+
+            foreach (var c in value)
+            {
+                characters.Add(c);
+                
+                if (c == '(')
+                    opened++;
+
+                if (c == ')')
+                    closed++;
+
+                if (opened > 0 && opened == closed)
+                    break;
+            }
+
+            return characters.ToString();
         }
 
         /// <summary>

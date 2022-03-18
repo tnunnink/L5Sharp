@@ -30,7 +30,6 @@ namespace L5Sharp.L5X
                 { typeof(IAddOnInstruction), new AddOnInstructionSerializer() },
                 { typeof(ITag<IDataType>), new TagSerializer() },
                 { typeof(IProgram), new ProgramSerializer() },
-                { typeof(IRoutine<ILogixContent>), new RoutineSerializer() },
                 { typeof(ITask), new TaskSerializer() }
             };
         }

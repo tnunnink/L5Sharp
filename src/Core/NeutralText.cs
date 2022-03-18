@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text.RegularExpressions;
 using L5Sharp.Extensions;
 
 namespace L5Sharp.Core
@@ -11,9 +9,7 @@ namespace L5Sharp.Core
     /// </summary>
     public sealed class NeutralText : IEquatable<NeutralText>
     {
-        private const string InstructionPattern = @"[a-zA-Z0-9_]+\(.*?\)";
         private readonly string _text;
-        private readonly List<Instruction> _instructions;
 
         /// <summary>
         /// Creates a new default instance of <c>NeutralText</c>.
@@ -21,36 +17,50 @@ namespace L5Sharp.Core
         public NeutralText()
         {
             _text = ";";
-            _instructions = new List<Instruction>();
         }
 
         /// <summary>
-        /// Creates a new instance of <c>NeutralText</c> with the provided string text input.
+        /// Creates a new <see cref="NeutralText"/> object with the provided text input.
         /// </summary>
         /// <param name="text">A string input that represents a neutral text format. The text may contain </param>
         /// <exception cref="ArgumentNullException">When text is null.</exception>
         /// <exception cref="FormatException">When text is null.</exception>
         public NeutralText(string text) : this()
         {
-            if (text is null)
-                throw new ArgumentNullException(nameof(text));
-
-            if (text.IsEmpty()) return;
-
-            ValidateText(text);
-
-            _text = text;
-
-            var instructions = Regex.Matches(text, InstructionPattern, RegexOptions.Compiled)
-                .Select(m => Instruction.Parse(m.Value));
-
-            _instructions.AddRange(instructions);
+            _text = text ?? throw new ArgumentNullException(nameof(text));
         }
 
         /// <summary>
-        /// 
+        /// Gets a value indicating whether the <see cref="NeutralText"/> value has balanced brackets and parenthesis.
         /// </summary>
-        public IEnumerable<Instruction> Instructions => _instructions;
+        public bool IsBalanced => _text.IsBalanced('[', ']') && _text.IsBalanced('(', ')');
+        
+        /// <summary>
+        /// Gets all instruction object that are present in the <see cref="NeutralText"/> instance.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<Instruction> Instructions() => GetInstructions(_text);
+
+        public IEnumerable<TagName> TagNames()
+        {
+            throw new NotImplementedException();
+        }
+
+
+        private static IEnumerable<Instruction> GetInstructions(string input)
+        {
+            var instructions = new List<Instruction>();
+            
+            var instruction = input.FirstInstruction();
+            
+            instructions.Add(Instruction.Parse(instruction));
+            
+            var remaining = input.Remove(0, instruction.Length);
+            if (remaining.Length > 0)
+                instructions.AddRange(GetInstructions(remaining));
+            
+            return instructions;
+        }
 
         /// <summary>
         /// Represents a new default instance of the 
@@ -79,13 +89,12 @@ namespace L5Sharp.Core
         public bool Equals(NeutralText? other)
         {
             if (ReferenceEquals(null, other)) return false;
-            if (ReferenceEquals(this, other)) return true;
-            return _text == other._text;
+            return ReferenceEquals(this, other) ||
+                   string.Equals(_text, other._text, StringComparison.OrdinalIgnoreCase);
         }
 
         /// <inheritdoc />
-        public override bool Equals(object? obj) =>
-            ReferenceEquals(this, obj) || obj is NeutralText other && Equals(other);
+        public override bool Equals(object? obj) => Equals(obj as NeutralText);
 
         /// <inheritdoc />
         public override int GetHashCode() => _text.GetHashCode();
@@ -105,14 +114,5 @@ namespace L5Sharp.Core
         /// <param name="right">An object to compare.</param>
         /// <returns>true if the provided objects are not equal; otherwise, false.</returns>
         public static bool operator !=(NeutralText? left, NeutralText? right) => !Equals(left, right);
-
-        private static void ValidateText(string text)
-        {
-            if (text.Contains('[') && !text.IsBalanced('[', ']'))
-                throw new FormatException("Text input must have balanced '[]' characters.");
-
-            if (text.Contains('(') && !text.IsBalanced('(', ')'))
-                throw new FormatException("Text input must have balanced '()' characters.");
-        }
     }
 }

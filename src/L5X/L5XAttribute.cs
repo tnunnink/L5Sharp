@@ -4,7 +4,7 @@ namespace L5Sharp.L5X
     /// <summary>
     /// An enumeration of L5X attributes for ease of referencing these value without using magic strings.
     /// </summary>
-    public enum L5XAttribute
+    internal enum L5XAttribute
     {
         ///<summary>
         /// Represents the <see cref="AckRequired"/> L5X attribute.

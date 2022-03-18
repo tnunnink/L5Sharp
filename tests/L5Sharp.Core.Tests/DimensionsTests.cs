@@ -289,6 +289,40 @@ namespace L5Sharp.Core.Tests
             dimensions.Z.Should().Be(6);
             dimensions.Length.Should().Be(180);
         }
+
+        [Test]
+        public void TryParse_Null_ShouldThrowArgumentNullException()
+        {
+            FluentActions.Invoking(() => Dimensions.TryParse(null!, out _)).Should().Throw<ArgumentNullException>();
+        }
+
+        [Test]
+        public void TryParse_Empty_ShouldBeNullAndFalse()
+        {
+            var result = Dimensions.TryParse(string.Empty, out var dimensions);
+            
+            result.Should().BeFalse();
+            dimensions.Should().BeNull();
+        }
+        
+        [Test]
+        public void TryParse_InvalidPattern_ShouldBeNullAndFalse()
+        {
+            var fixture = new Fixture();
+            var result = Dimensions.TryParse(fixture.Create<string>(), out var dimensions);
+            
+            result.Should().BeFalse();
+            dimensions.Should().BeNull();
+        }
+        
+        [Test]
+        public void TryParse_ValidPattern_ShouldNotBeNullAndTrue()
+        {
+            var result = Dimensions.TryParse("1 2 4", out var dimensions);
+            
+            result.Should().BeTrue();
+            dimensions.Should().NotBeNull();
+        }
         
         [Test]
         public void ToBracketNotation_EmptyDimension_ShouldBeExpected()

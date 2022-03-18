@@ -14,13 +14,13 @@ namespace L5Sharp.Serialization.Components
         private static readonly XName ElementName = L5XElement.Module.ToString();
         private readonly IL5XSerializer<PortDefinition> _portSerializer;
         private readonly IL5XSerializer<Connection> _connectionSerializer;
-        private readonly IL5XSerializer<IComplexType> _structureSerializer;
+        private readonly ModuleTagSerializer _configTagSerializer;
 
         public ModuleSerializer()
         {
             _portSerializer = new PortSerializer();
             _connectionSerializer = new ConnectionSerializer();
-            _structureSerializer = new StructureSerializer();
+            _configTagSerializer = new ModuleTagSerializer(L5XElement.ConfigTag.ToString(), "C");
         }
 
         public XElement Serialize(IModule component)
@@ -55,7 +55,7 @@ namespace L5Sharp.Serialization.Components
 
             if (component.Tags.Config is not null)
             {
-                var config = _structureSerializer.Serialize((IComplexType)component.Tags.Config.DataType);
+                var config = _configTagSerializer.Serialize(component.Tags.Config);
                 communications.Add(config);
             }
 
@@ -98,15 +98,8 @@ namespace L5Sharp.Serialization.Components
                 .Select(e => _portSerializer.Deserialize(e))
                 .ToList();
 
-            var configType = element.Descendants(L5XElement.ConfigTag.ToString())
-                .Select(e => _structureSerializer.Deserialize(e.Descendants(L5XElement.Structure.ToString()).First()))
-                .FirstOrDefault();
-
-            var slot = ports.Where(p => !p.Upstream && p.Type != "Ethernet" && int.TryParse(p.Address, out _))
-                .Select(p => p.Address)
-                .FirstOrDefault();
-            var configTagName = slot is not null ? $"{parentModule}:{slot}:C" : $"{name}:C";
-            var config = configType is not null ? new Tag<IDataType>(configTagName, configType) : null;
+            var configElement = element.Descendants(L5XElement.ConfigTag.ToString()).FirstOrDefault();
+            var config = configElement is not null ? _configTagSerializer.Deserialize(configElement) : null;
 
             var connections = element.Descendants(L5XElement.Connection.ToString())
                 .Select(e => _connectionSerializer.Deserialize(e))

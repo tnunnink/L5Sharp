@@ -147,6 +147,16 @@ namespace L5Sharp.Core.Tests
 
             result.Should().BeTrue();
         }
+        
+        [Test]
+        public void ContainsTag_ExistsDifferentCase_ShouldBeTrue()
+        {
+            var comments = new TagPropertyCollection<string>(GetComments());
+
+            var result = comments.ContainsTag("sometag.member1");
+
+            result.Should().BeTrue();
+        }
 
         [Test]
         public void Apply_NullTagName_ShouldThrowArgumentNullException()

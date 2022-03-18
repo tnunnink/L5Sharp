@@ -16,7 +16,7 @@ namespace L5Sharp.L5X
     /// A wrapper class around an <see cref="XDocument"/> that provided generic methods for getting various
     /// component elements based on component type. Also performs validation on the provided XDocument content.
     /// </summary>
-    public class L5XDocument
+    internal class L5XDocument
     {
         private static readonly XDeclaration DefaultDeclaration = new("1.0", "UTF-8", "yes");
         private const string DefaultRevision = "1.0";

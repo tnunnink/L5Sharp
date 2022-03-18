@@ -80,7 +80,7 @@ namespace L5Sharp.Core
         /// <param name="value">The value to initialize the type with.</param>
         /// <returns>A new <see cref="IAtomicType"/> value instance with the provided arguments.</returns>
         /// <exception cref="ArgumentException">name is null or empty -or- name is not a valid atomic type name.</exception>
-        public static IAtomicType Atomic(string name, object value)
+        public static IAtomicType Atomic(string name, object? value = null)
         {
             if (string.IsNullOrEmpty(name))
                 throw new ArgumentException("Name can not be null or empty");
@@ -89,7 +89,9 @@ namespace L5Sharp.Core
                 throw new ArgumentException($"The data type name '{name}' is not an atomic type");
             
             var type = (IAtomicType)Registry[name].Instantiate();
-            type.SetValue(value);
+
+            if (value is not null)
+                type.SetValue(value);
 
             return type;
         }

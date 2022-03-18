@@ -19,6 +19,12 @@ namespace L5Sharp.Enums.Tests
         }
         
         [Test]
+        public void DiagnosticInput_WhenCalled_ShouldNotBeNull()
+        {
+            ConnectionType.DiagnosticInput.Should().NotBeNull();
+        }
+        
+        [Test]
         public void MotionAsync_WhenCalled_ShouldNotBeNull()
         {
             ConnectionType.MotionAsync.Should().NotBeNull();
@@ -46,6 +52,24 @@ namespace L5Sharp.Enums.Tests
         public void Unknown_WhenCalled_ShouldNotBeNull()
         {
             ConnectionType.Unknown.Should().NotBeNull();
+        }
+        
+        [Test]
+        public void StandardDataDriven_WhenCalled_ShouldNotBeNull()
+        {
+            ConnectionType.StandardDataDriven.Should().NotBeNull();
+        }
+        
+        [Test]
+        public void SafetyInputDataDriven_WhenCalled_ShouldNotBeNull()
+        {
+            ConnectionType.SafetyInputDataDriven.Should().NotBeNull();
+        }
+        
+        [Test]
+        public void SafetyOutputDataDriven_WhenCalled_ShouldNotBeNull()
+        {
+            ConnectionType.SafetyOutputDataDriven.Should().NotBeNull();
         }
     }
 }

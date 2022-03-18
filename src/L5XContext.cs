@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Xml.Linq;
 using L5Sharp.Core;
-using L5Sharp.Enums;
 using L5Sharp.L5X;
 using L5Sharp.Repositories;
 
@@ -18,8 +17,8 @@ namespace L5Sharp
         private L5XContext(L5XDocument l5X)
         {
             L5X = l5X ?? throw new ArgumentNullException(nameof(l5X));
-            Index = new L5XIndex(this);
             Serializer = new L5XSerializers(this);
+            Indexer = new L5XIndexers(this);
         }
 
         /// <summary>
@@ -89,7 +88,7 @@ namespace L5Sharp
         /// <summary>
         /// An index of all current <see cref="IDataType"/> elements available in the L5X file.
         /// </summary>
-        internal readonly L5XIndex Index;
+        internal readonly L5XIndexers Indexer;
 
         /// <summary>
         /// Gets the value of the schema revision for the current L5X context.
@@ -143,21 +142,26 @@ namespace L5Sharp
         /// <inheritdoc />
         public ITagRepository Tags() => new TagRepository(this);
 
-        public ITagRepository Tags(Scope scope)
-        {
-            throw new NotImplementedException();
-        }
-
-        public ITagRepository Tags(ComponentName program)
-        {
-            throw new NotImplementedException();
-        }
+        /// <inheritdoc />
+        public ITagRepository Tags(ComponentName program) => new TagRepository(this, program);
 
         /// <inheritdoc />
         public IRepository<IProgram> Programs() => new ProgramRepository(this);
 
         /// <inheritdoc />
         public IReadOnlyRepository<ITask> Tasks() => new TaskRepository(this);
+
+        /// <inheritdoc />
+        public IRungRepository Rungs()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc />
+        public IRungRepository Rungs(ComponentName program)
+        {
+            throw new NotImplementedException();
+        }
 
         /// <inheritdoc />
         public override string ToString() => L5X.Content.ToString();

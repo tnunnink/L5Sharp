@@ -1,5 +1,4 @@
 ﻿using L5Sharp.Core;
-using L5Sharp.Enums;
 using L5Sharp.Repositories;
 
 namespace L5Sharp
@@ -33,14 +32,7 @@ namespace L5Sharp
         /// Get the <see cref="ITag{TDataType}"/> repository instance for the current <see cref="ILogixContext"/>. 
         /// </summary>
         ITagRepository Tags();
-        
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="scope"></param>
-        /// <returns></returns>
-        ITagRepository Tags(Scope scope);
-        
+
         /// <summary>
         /// 
         /// </summary>
@@ -57,5 +49,18 @@ namespace L5Sharp
         /// Get the <see cref="ITask"/> repository instance for the current <see cref="ILogixContext"/>.
         /// </summary>
         IReadOnlyRepository<ITask> Tasks();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        IRungRepository Rungs();
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="program"></param>
+        /// <returns></returns>
+        IRungRepository Rungs(ComponentName program);
     }
 }
