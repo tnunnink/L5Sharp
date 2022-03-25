@@ -4,7 +4,7 @@ using L5Sharp.L5X;
 
 namespace L5Sharp.Serialization.Data
 {
-    internal class DecoratedDataSerializer : IL5XSerializer<IDataType>
+    internal class DecoratedDataSerializer : L5XSerializer<IDataType>
     {
         private readonly DataValueSerializer _dataValueSerializer;
         private readonly StructureSerializer _structureSerializer;
@@ -17,7 +17,7 @@ namespace L5Sharp.Serialization.Data
             _arraySerializer = new ArraySerializer(_structureSerializer);
         }
         
-        public XElement Serialize(IDataType component)
+        public override XElement Serialize(IDataType component)
         {
             if (component == null)
                 throw new ArgumentNullException(nameof(component));
@@ -32,7 +32,7 @@ namespace L5Sharp.Serialization.Data
             };
         }
 
-        public IDataType Deserialize(XElement element)
+        public override IDataType Deserialize(XElement element)
         {
             if (element == null)
                 throw new ArgumentNullException(nameof(element));

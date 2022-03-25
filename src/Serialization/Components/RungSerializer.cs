@@ -10,12 +10,12 @@ namespace L5Sharp.Serialization.Components
     /// <summary>
     /// Provides serialization of a <see cref="Rung"/> as represented in the L5X format. 
     /// </summary>
-    internal class RungSerializer : IL5XSerializer<Rung>
+    internal class RungSerializer : L5XSerializer<Rung>
     {
         private static readonly XName ElementName = L5XElement.Rung.ToString();
 
         /// <inheritdoc />
-        public XElement Serialize(Rung component)
+        public override XElement Serialize(Rung component)
         {
             if (component is null)
                 throw new ArgumentNullException(nameof(component));
@@ -31,7 +31,7 @@ namespace L5Sharp.Serialization.Components
         }
 
         /// <inheritdoc />
-        public Rung Deserialize(XElement element)
+        public override Rung Deserialize(XElement element)
         {
             if (element == null)
                 throw new ArgumentNullException(nameof(element));

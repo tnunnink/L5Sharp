@@ -7,21 +7,21 @@ using L5Sharp.L5X;
 
 namespace L5Sharp.Serialization.Components
 {
-    internal class ParameterSerializer : IL5XSerializer<IParameter<IDataType>>
+    internal class ParameterSerializer : L5XSerializer<IParameter<IDataType>>
     {
-        private readonly L5XContext? _context;
+        private readonly L5XDocument? _document;
         private static readonly XName ElementName = L5XElement.Parameter.ToString();
 
         public ParameterSerializer()
         {
         }
-        
-        public ParameterSerializer(L5XContext context)
+
+        public ParameterSerializer(L5XDocument document)
         {
-            _context = context;
+            _document = document;
         }
-        
-        public XElement Serialize(IParameter<IDataType> component)
+
+        public override XElement Serialize(IParameter<IDataType> component)
         {
             if (component is null)
                 throw new ArgumentNullException(nameof(component));
@@ -48,7 +48,7 @@ namespace L5Sharp.Serialization.Components
             return element;
         }
 
-        public IParameter<IDataType> Deserialize(XElement element)
+        public override IParameter<IDataType> Deserialize(XElement element)
         {
             if (element == null)
                 throw new ArgumentNullException(nameof(element));
@@ -58,18 +58,18 @@ namespace L5Sharp.Serialization.Components
 
             var name = element.ComponentName();
             var description = element.ComponentDescription();
-            var dataType = _context is not null
-                ? _context.Indexer.GetFor<IDataType>().Lookup(element.DataTypeName())
+            var dataType = _document is not null
+                ? _document.Index().LookupDataType(element.DataTypeName())
                 : DataType.Create(element.DataTypeName());
-            var dimensions = element.Attribute(L5XAttribute.Dimensions.ToString())?.Value.Parse<Dimensions>();    
-            var radix = element.Attribute(L5XAttribute.Radix.ToString())?.Value.Parse<Radix>();    
-            var access = element.Attribute(L5XAttribute.ExternalAccess.ToString())?.Value.Parse<ExternalAccess>();    
-            var usage = element.Attribute(L5XAttribute.Usage.ToString())?.Value.Parse<TagUsage>();    
-            var alias = element.Attribute(L5XAttribute.AliasFor.ToString())?.Value.Parse<TagName>();    
-            var required = element.Attribute(L5XAttribute.Required.ToString())?.Value.Parse<bool>() ?? default;    
-            var visible = element.Attribute(L5XAttribute.Visible.ToString())?.Value.Parse<bool>() ?? default;    
-            var constant = element.Attribute(L5XAttribute.Constant.ToString())?.Value.Parse<bool>() ?? default;    
-            
+            var dimensions = element.Attribute(L5XAttribute.Dimensions.ToString())?.Value.Parse<Dimensions>();
+            var radix = element.Attribute(L5XAttribute.Radix.ToString())?.Value.Parse<Radix>();
+            var access = element.Attribute(L5XAttribute.ExternalAccess.ToString())?.Value.Parse<ExternalAccess>();
+            var usage = element.Attribute(L5XAttribute.Usage.ToString())?.Value.Parse<TagUsage>();
+            var alias = element.Attribute(L5XAttribute.AliasFor.ToString())?.Value.Parse<TagName>();
+            var required = element.Attribute(L5XAttribute.Required.ToString())?.Value.Parse<bool>() ?? default;
+            var visible = element.Attribute(L5XAttribute.Visible.ToString())?.Value.Parse<bool>() ?? default;
+            var constant = element.Attribute(L5XAttribute.Constant.ToString())?.Value.Parse<bool>() ?? default;
+
             if (dimensions is null || dimensions.IsEmpty)
                 return new Parameter<IDataType>(name, dataType, radix, access, usage, alias, required, visible,
                     constant, description);

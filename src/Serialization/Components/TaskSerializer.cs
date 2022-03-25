@@ -8,11 +8,11 @@ using L5Sharp.L5X;
 
 namespace L5Sharp.Serialization.Components
 {
-    internal class TaskSerializer : IL5XSerializer<ITask>
+    internal class TaskSerializer : L5XSerializer<ITask>
     {
         private static readonly XName ElementName = L5XElement.Task.ToString();
 
-        public XElement Serialize(ITask component)
+        public override XElement Serialize(ITask component)
         {
             if (component is null)
                 throw new ArgumentNullException(nameof(component));
@@ -42,7 +42,7 @@ namespace L5Sharp.Serialization.Components
             return element;
         }
 
-        public ITask Deserialize(XElement element)
+        public override ITask Deserialize(XElement element)
         {
             if (element == null)
                 throw new ArgumentNullException(nameof(element));

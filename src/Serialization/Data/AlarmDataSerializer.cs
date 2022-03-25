@@ -5,7 +5,7 @@ using L5Sharp.Types;
 
 namespace L5Sharp.Serialization.Data
 {
-    internal class AlarmDataSerializer : IL5XSerializer<IDataType>
+    internal class AlarmDataSerializer : L5XSerializer<IDataType>
     {
         private readonly AlarmDigitalParametersSerializer _digitalParametersSerializer;
         private readonly AlarmAnalogParametersSerializer _analogParametersSerializer;
@@ -16,7 +16,7 @@ namespace L5Sharp.Serialization.Data
             _analogParametersSerializer = new AlarmAnalogParametersSerializer();
         }
 
-        public XElement Serialize(IDataType component)
+        public override XElement Serialize(IDataType component)
         {
             if (component is null)
                 throw new ArgumentNullException(nameof(component));
@@ -30,7 +30,7 @@ namespace L5Sharp.Serialization.Data
             };
         }
 
-        public IDataType Deserialize(XElement element)
+        public override IDataType Deserialize(XElement element)
         {
             if (element is null)
                 throw new ArgumentNullException(nameof(element));

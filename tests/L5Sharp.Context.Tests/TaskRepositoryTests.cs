@@ -9,27 +9,7 @@ namespace L5Sharp.Context.Tests
     public class TaskRepositoryTests
     {
         [Test]
-        public void Contains_ValidTask_ShouldBeTrue()
-        {
-            var context = L5XContext.Load(Known.L5X);
-
-            var task = context.Tasks().Any("Continuous");
-
-            task.Should().BeTrue(); 
-        }
-        
-        [Test]
-        public void Get_ValidTask_ShouldNotBeNull()
-        {
-            var context = L5XContext.Load(Known.L5X);
-
-            var task = context.Tasks().Single("Continuous");
-
-            task.Should().NotBeNull();
-        }
-
-        [Test]
-        public void GetAll_WhenCalled_ShouldHaveExpectedCount()
+        public void All_WhenCalled_ShouldHaveExpectedCount()
         {
             var context = L5XContext.Load(Known.L5X);
 
@@ -39,7 +19,27 @@ namespace L5Sharp.Context.Tests
         }
 
         [Test]
-        public void FindAll_PriorityValue_ShouldHaveExpectedCount()
+        public void Any_ValidTask_ShouldBeTrue()
+        {
+            var context = L5XContext.Load(Known.L5X);
+
+            var task = context.Tasks().Any("Continuous");
+
+            task.Should().BeTrue(); 
+        }
+
+        [Test]
+        public void Named_ValidTask_ShouldNotBeNull()
+        {
+            var context = L5XContext.Load(Known.L5X);
+
+            var task = context.Tasks().Named("Continuous");
+
+            task.Should().NotBeNull();
+        }
+
+        [Test]
+        public void Where_PriorityValue_ShouldHaveExpectedCount()
         {
             var context = L5XContext.Load(Known.L5X);
 
@@ -49,7 +49,7 @@ namespace L5Sharp.Context.Tests
         }
         
         [Test]
-        public void FindAll_RateValue_ShouldHaveExpectedCount()
+        public void Where_RateValue_ShouldHaveExpectedCount()
         {
             var context = L5XContext.Load(Known.L5X);
 
@@ -59,7 +59,7 @@ namespace L5Sharp.Context.Tests
         }
         
         [Test]
-        public void FindAll_DescriptionEquals_ShouldHaveExpectedCount()
+        public void Where_DescriptionEquals_ShouldHaveExpectedCount()
         {
             var context = L5XContext.Load(Known.L5X);
 
@@ -69,7 +69,7 @@ namespace L5Sharp.Context.Tests
         }
         
         [Test]
-        public void FindAll_DescriptionContains_ShouldHaveExpectedCount()
+        public void Where_DescriptionContains_ShouldHaveExpectedCount()
         {
             var context = L5XContext.Load(Known.L5X);
 
@@ -79,7 +79,7 @@ namespace L5Sharp.Context.Tests
         }
 
         [Test]
-        public void Find_ListContainsDescription_ShouldWork()
+        public void Where_ListContainsDescription_ShouldWork()
         {
             var context = L5XContext.Load(Known.L5X);
 

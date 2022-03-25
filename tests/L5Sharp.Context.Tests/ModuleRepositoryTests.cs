@@ -60,7 +60,7 @@ namespace L5Sharp.Context.Tests
             var stopwatch = new Stopwatch();
             stopwatch.Start();
 
-            var component = context.Modules().Single("Local");
+            var component = context.Modules().Named("Local");
             
             stopwatch.Stop();
 
@@ -68,17 +68,37 @@ namespace L5Sharp.Context.Tests
         }
 
         [Test]
-        public void Find_ComponentName_NonExistingName_ShouldBeNull()
+        public void Named_Existing_ShouldBeExpected()
         {
             var context = L5XContext.Load(Known.L5X);
 
-            var component = context.Modules().First("Fake");
+            var component = context.Modules().Named("Local");
+
+            component?.Name.Should().Be("Local");
+            component?.CatalogNumber.Should().Be(new CatalogNumber("1756-L83E"));
+            component?.Vendor.Should().Be(Vendor.Rockwell);
+            component?.ProductType.Should().Be(ProductType.Controller);
+            component?.ProductCode.Should().Be(166);
+            component?.Revision.Should().Be(new Revision(32, 11));
+            component?.ParentModule.Should().Be("Local");
+            component?.ParentPortId.Should().Be(1);
+            component?.Inhibited.Should().BeFalse();
+            component?.MajorFault.Should().BeTrue();
+            component?.Ports.Should().HaveCount(2);
+        }
+
+        [Test]
+        public void Named_NonExistingName_ShouldBeNull()
+        {
+            var context = L5XContext.Load(Known.L5X);
+
+            var component = context.Modules().Named("Fake");
 
             component.Should().BeNull();
         }
 
         [Test]
-        public void Find_Predicate_HasComponents_ShouldNotBeNull()
+        public void First_OnCatalogNumber_ShouldNotBeNull()
         {
             var context = L5XContext.Load(Known.L5X);
 
@@ -88,7 +108,7 @@ namespace L5Sharp.Context.Tests
         }
 
         [Test]
-        public void FindAll_Predicate_HasComponents_ShouldNotBeEmpty()
+        public void Where_VendorEqualsOne_ShouldNotBeEmpty()
         {
             var context = L5XContext.Load(Known.L5X);
 
@@ -96,26 +116,6 @@ namespace L5Sharp.Context.Tests
 
             components.Should().NotBeEmpty();
             components.All(c => c.Vendor == Vendor.Rockwell).Should().BeTrue();
-        }
-
-        [Test]
-        public void Get_Existing_ShouldBeExpected()
-        {
-            var context = L5XContext.Load(Known.L5X);
-
-            var component = context.Modules().Single("Local");
-
-            component.Name.Should().Be("Local");
-            component.CatalogNumber.Should().Be(new CatalogNumber("1756-L83E"));
-            component.Vendor.Should().Be(Vendor.Rockwell);
-            component.ProductType.Should().Be(ProductType.Controller);
-            component.ProductCode.Should().Be(166);
-            component.Revision.Should().Be(new Revision(32, 11));
-            component.ParentModule.Should().Be("Local");
-            component.ParentPortId.Should().Be(1);
-            component.Inhibited.Should().BeFalse();
-            component.MajorFault.Should().BeTrue();
-            component.Ports.Should().HaveCount(2);
         }
 
         [Test]
@@ -127,18 +127,9 @@ namespace L5Sharp.Context.Tests
 
             foreach (var name in names)
             {
-                var module = context.Modules().Single(name);
+                var module = context.Modules().Named(name);
                 module.Should().NotBeNull();
             }
-        }
-
-        [Test]
-        public void Get_NonExistingType_ShouldThrowComponentNotFoundException()
-        {
-            var context = L5XContext.Load(Known.L5X);
-
-            FluentActions.Invoking(() => context.Modules().Single("Fake")).Should()
-                .Throw<ComponentNotFoundException>();
         }
 
         [Test]
@@ -244,10 +235,10 @@ namespace L5Sharp.Context.Tests
 
             context.Modules().Update(component);
 
-            var result = context.Modules().Single("Local");
+            var result = context.Modules().Named("Local");
 
             result.Should().NotBeNull();
-            result.Name.Should().Be("Local");
+            result?.Name.Should().Be("Local");
         }
 
         [Test]
@@ -259,10 +250,10 @@ namespace L5Sharp.Context.Tests
 
             context.Modules().Update(component);
 
-            var result = context.Modules().Single("Test");
+            var result = context.Modules().Named("Test");
             
             result.Should().NotBeNull();
-            result.Name.Should().Be("Test");
+            result?.Name.Should().Be("Test");
         }
         
         [Test]

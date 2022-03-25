@@ -50,7 +50,7 @@ namespace L5Sharp.Context.Tests
             var stopwatch = new Stopwatch();
             stopwatch.Start();
             
-            var tags = context.Tags().All().ToList();
+            var tags = context.Tags().All();
 
             stopwatch.Stop();
 
@@ -80,11 +80,11 @@ namespace L5Sharp.Context.Tests
             var stopwatch = new Stopwatch();
             stopwatch.Start();
 
-            var module = context.Modules().Single("INJ_Module_3"); 
+            var module = context.Modules().Named("INJ_Module_3"); 
             
-            var tags = module.Tags;
+            var tags = module?.Tags;
 
-            var members = tags.SelectMany(t => t.Members());
+            var members = tags?.SelectMany(t => t.Members());
 
             stopwatch.Stop();
 
@@ -99,15 +99,15 @@ namespace L5Sharp.Context.Tests
             var stopwatch = new Stopwatch();
             stopwatch.Start();
 
-            var inputTag = context.Modules().Single("INJ_Module_3").Tags.Input!;
+            var inputTag = context.Modules().Named("INJ_Module_3")?.Tags.Input!;
 
-            var ch01 = inputTag.Member("Ch01");
+            var ch01 = inputTag?.Member("Ch01");
 
             stopwatch.Stop();
 
             ch01.Should().NotBeNull();
 
-            ch01.Description.Should().NotBeEmpty();
+            ch01?.Description.Should().NotBeEmpty();
         }
     }
 }

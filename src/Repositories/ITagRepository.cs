@@ -1,17 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using L5Sharp.Querying;
 
 namespace L5Sharp.Repositories
 {
     /// <summary>
     /// A repository that provides additional APIs for querying and manipulating tag components.
     /// </summary>
-    public interface ITagRepository : IComponentRepository<ITag<IDataType>>
+    public interface ITagRepository : IComponentRepository<ITag<IDataType>>, ITagQuery
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="TDataType"></typeparam>
-        /// <returns></returns>
-        public IEnumerable<ITag<TDataType>> WithType<TDataType>() where TDataType : IDataType;
     }
 }

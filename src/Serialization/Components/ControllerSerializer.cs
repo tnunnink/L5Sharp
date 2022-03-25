@@ -7,11 +7,11 @@ using L5Sharp.L5X;
 
 namespace L5Sharp.Serialization.Components
 {
-    internal class ControllerSerializer : IL5XSerializer<IController>
+    internal class ControllerSerializer : L5XSerializer<IController>
     {
         private static readonly XName ElementName = L5XElement.Controller.ToString();
 
-        public XElement Serialize(IController component)
+        public override XElement Serialize(IController component)
         {
             if (component == null)
                 throw new ArgumentNullException(nameof(component));
@@ -30,7 +30,7 @@ namespace L5Sharp.Serialization.Components
             return element;
         }
 
-        public IController Deserialize(XElement element)
+        public override IController Deserialize(XElement element)
         {
             if (element == null)
                 throw new ArgumentNullException(nameof(element));
@@ -45,7 +45,7 @@ namespace L5Sharp.Serialization.Components
             var minor = element.Attribute(L5XAttribute.MinorRev.ToString())?.Value;
             var revision = Revision.Parse($"{major}.{minor}");
             var creationDate = DateTime.ParseExact(
-                element.Attribute(L5XAttribute.ProjectCreationDate.ToString())?.Value, 
+                element.Attribute(L5XAttribute.ProjectCreationDate.ToString())?.Value,
                 "ddd MMM d HH:mm:ss yyyy",
                 CultureInfo.CurrentCulture);
             var modifiedDate = DateTime.ParseExact(

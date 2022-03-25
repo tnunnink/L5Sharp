@@ -8,7 +8,7 @@ using L5Sharp.Serialization.Data;
 
 namespace L5Sharp.Serialization.Components
 {
-    internal class ModuleTagSerializer : IL5XSerializer<ITag<IDataType>>
+    internal class ModuleTagSerializer : L5XSerializer<ITag<IDataType>>
     {
         private readonly XName _elementName;
         private readonly string _defaultSuffix;
@@ -29,7 +29,7 @@ namespace L5Sharp.Serialization.Components
             _unitsSerializer = new TagPropertySerializer(L5XElement.EngineeringUnit.ToString());
         }
 
-        public XElement Serialize(ITag<IDataType> component)
+        public override XElement Serialize(ITag<IDataType> component)
         {
             if (component == null)
                 throw new ArgumentNullException(nameof(component));
@@ -41,7 +41,7 @@ namespace L5Sharp.Serialization.Components
             return element;
         }
 
-        public ITag<IDataType> Deserialize(XElement element)
+        public override ITag<IDataType> Deserialize(XElement element)
         {
             if (element == null)
                 throw new ArgumentNullException(nameof(element));
@@ -55,11 +55,11 @@ namespace L5Sharp.Serialization.Components
                 .Descendants(L5XElement.Data.ToString())
                 .First(e => e.Attribute(L5XAttribute.Format.ToString())?.Value == TagDataFormat.Decorated.Name);
             var dataType = _formattedDataSerializer.Deserialize(data);
-            
+
             _commentSerializer.SetBaseName(tagName);
             var comments = new TagPropertyCollection<string>(element.Descendants(L5XElement.Comment.ToString())
                 .Select(e => _commentSerializer.Deserialize(e)));
-            
+
             _unitsSerializer.SetBaseName(tagName);
             var units = new TagPropertyCollection<string>(element.Descendants(L5XElement.EngineeringUnit.ToString())
                 .Select(e => _unitsSerializer.Deserialize(e)));

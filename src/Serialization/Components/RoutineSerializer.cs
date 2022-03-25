@@ -8,7 +8,7 @@ using L5Sharp.L5X;
 
 namespace L5Sharp.Serialization.Components
 {
-    internal class RoutineSerializer : IL5XSerializer<IRoutine<ILogixContent>>
+    internal class RoutineSerializer : L5XSerializer<IRoutine<ILogixContent>>
     {
         private static readonly XName ElementName = L5XElement.Routine.ToString();
         private readonly LadderLogicSerializer _ladderLogicSerializer;
@@ -17,8 +17,8 @@ namespace L5Sharp.Serialization.Components
         {
             _ladderLogicSerializer = new LadderLogicSerializer();
         }
-        
-        public XElement Serialize(IRoutine<ILogixContent> component)
+
+        public override XElement Serialize(IRoutine<ILogixContent> component)
         {
             if (component is null)
                 throw new ArgumentNullException(nameof(component));
@@ -35,8 +35,8 @@ namespace L5Sharp.Serialization.Components
 
             return element;
         }
-        
-        public IRoutine<ILogixContent> Deserialize(XElement element)
+
+        public override IRoutine<ILogixContent> Deserialize(XElement element)
         {
             if (element == null)
                 throw new ArgumentNullException(nameof(element));
@@ -56,7 +56,6 @@ namespace L5Sharp.Serialization.Components
                     var rll = element.Elements().FirstOrDefault();
                     if (rll is null) return;
                     content = _ladderLogicSerializer.Deserialize(rll);
-
                 });
 
             return new Routine<ILogixContent>(name, type, description, content);

@@ -1,10 +1,10 @@
 ﻿using System;
-using System.Linq;
 using System.Xml.Linq;
 using L5Sharp.Core;
 using L5Sharp.L5X;
 using L5Sharp.Querying;
 using L5Sharp.Repositories;
+using L5Sharp.Serialization.Components;
 
 namespace L5Sharp
 {
@@ -18,8 +18,6 @@ namespace L5Sharp
         private L5XContext(L5XDocument l5X)
         {
             L5X = l5X ?? throw new ArgumentNullException(nameof(l5X));
-            Serializer = new L5XSerializers(this);
-            Indexer = new L5XIndexers(this);
         }
 
         /// <summary>
@@ -80,7 +78,7 @@ namespace L5Sharp
         /// </summary>
         internal readonly L5XDocument L5X;
 
-        /// <summary>
+        /*/// <summary>
         /// Gets the <see cref="L5XSerializers"/> instance for the current context containing root component serializer
         /// instances. 
         /// </summary>
@@ -89,7 +87,7 @@ namespace L5Sharp
         /// <summary>
         /// An index of all current <see cref="IDataType"/> elements available in the L5X file.
         /// </summary>
-        internal readonly L5XIndexers Indexer;
+        internal readonly L5XIndexers Indexer;*/
 
         /// <summary>
         /// Gets the value of the schema revision for the current L5X context.
@@ -127,22 +125,24 @@ namespace L5Sharp
         public DateTime ExportDate => L5X.ExportDate;
 
         /// <inheritdoc />
-        public IController? Controller() => L5X.TargetType == nameof(Controller)
-            ? Serializer.GetFor<IController>().Deserialize(L5X.GetComponents<IController>().First())
-            : null;
+        public IController? Controller() => throw new NotImplementedException();
 
         /// <inheritdoc />
         public IComponentRepository<IComplexType> DataTypes()  
         {
-            var elements = L5X.Content.Descendants(L5XElement.DataType.ToString());
-            return new DataTypeRepository(elements, Serializer.GetFor<IComplexType>());
+            var components = L5X.GetComponents<IComplexType>();
+            var serializer = L5X.Serializers().Get<DataTypeSerializer>();
+            
+            return new DataTypeRepository(components, serializer);
         }
 
         /// <inheritdoc />
         public IModuleRepository Modules()
         {
-            var elements = L5X.Content.Descendants(L5XElement.Module.ToString());
-            return new ModuleRepository(elements, Serializer.GetFor<IModule>());
+            var components = L5X.GetComponents<IModule>();
+            var serializer = L5X.Serializers().Get<ModuleSerializer>();
+            
+            return new ModuleRepository(components, serializer);
         }
 
         /// <inheritdoc />
@@ -154,7 +154,10 @@ namespace L5Sharp
         /// <inheritdoc />
         public ITagRepository Tags()
         {
-            throw new NotImplementedException();
+            var components = L5X.GetComponents<ITag<IDataType>>();
+            var serializer = L5X.Serializers().Get<TagSerializer>();
+            
+            return new TagRepository(components, serializer);
         }
 
         /// <inheritdoc />
@@ -172,8 +175,7 @@ namespace L5Sharp
         /// <inheritdoc />
         public ITaskQuery Tasks()
         {
-            var elements = L5X.Content.Descendants(L5XElement.Task.ToString());
-            return new TaskQuery(elements, Serializer.GetFor<ITask>());
+            throw new NotImplementedException();
         }
 
         /// <inheritdoc />

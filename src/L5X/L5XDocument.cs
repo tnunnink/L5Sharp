@@ -23,6 +23,8 @@ namespace L5Sharp.L5X
         private const string DateFormat = "ddd MMM d HH:mm:ss yyyy";
         private const string L5XSchema = "L5Sharp.Resources.L5X.xsd";
         private readonly XDocument _document;
+        private readonly L5XIndex _index;
+        private readonly L5XSerializers _serializers;
 
         /// <summary>
         /// Creates a new <see cref="L5XDocument"/> that wraps the provided <see cref="XDocument"/>.
@@ -35,10 +37,12 @@ namespace L5Sharp.L5X
             //ValidateFile(document);
 
             _document = document;
+            _index = new L5XIndex(this);
+            _serializers = new L5XSerializers(this);
         }
 
         /// <summary>
-        /// Creates a new <see cref="L5XDocument"/> with the provided logic component.
+        /// Creates a new <see cref="L5XDocument"/> with the provided logic component as the target.
         /// </summary>
         /// <param name="component">The logix component instance for which to create the target context.</param>
         /// <typeparam name="TComponent">The logix component type.</typeparam>
@@ -56,9 +60,9 @@ namespace L5Sharp.L5X
             content.Add(new XAttribute(nameof(ContainsContext), component is not IController));
             content.Add(new XAttribute(nameof(Owner), Environment.UserName));
             content.Add(new XAttribute(nameof(ExportDate), DateTime.Now.ToString(DateFormat)));
-            
+
             var element = component.Serialize();
-            
+
             element.Add(new XAttribute(nameof(Use), Use.Target));
 
             if (component is IController)
@@ -131,7 +135,8 @@ namespace L5Sharp.L5X
         /// </remarks>
         public IEnumerable<XElement> GetComponents<TComponent>()
             where TComponent : ILogixComponent =>
-            _document.Descendants(L5XNames.GetComponentName<TComponent>());
+            _document.Descendants(L5XNames.GetComponentName<TComponent>())
+                .Where(e => e.Attribute(L5XAttribute.Name.ToString()) is not null);
 
         /// <summary>
         /// Gets an <see cref="XElement"/> that represents the containing element for the specified component type.
@@ -148,6 +153,9 @@ namespace L5Sharp.L5X
             where TComponent : ILogixComponent =>
             _document.Descendants(L5XNames.GetContainerName<TComponent>()).First();
 
+        public L5XIndex Index() => _index;
+        
+        public L5XSerializers Serializers() => _serializers;
 
         /// <summary>
         /// Saves the current L5X file to the specified file path.

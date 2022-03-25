@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using L5Sharp.Serialization;
 using L5Sharp.Serialization.Components;
+using L5Sharp.Serialization.Data;
 
 namespace L5Sharp.L5X
 {
@@ -13,39 +14,59 @@ namespace L5Sharp.L5X
     /// </summary>
     internal class L5XSerializers
     {
-        private readonly Dictionary<Type, IL5XSerializer> _serializers;
+        private readonly List<IL5XSerializer> _serializers;
 
-        /// <summary>
-        /// Creates a new <see cref="L5XSerializers"/> instance with the provided context.
-        /// </summary>
-        /// <param name="context">The <see cref="L5XContext"/> to pass down to the serializer instances.</param>
-        public L5XSerializers(L5XContext context)
+        private readonly Dictionary<string, Type> _lookup = new()
         {
-            _serializers = new Dictionary<Type, IL5XSerializer>
+            { L5XElement.DataType.ToString(), typeof(DataTypeSerializer) },
+            { L5XElement.Structure.ToString(), typeof(StructureSerializer) },
+            { L5XElement.AddOnInstructionDefinition.ToString(), typeof(AddOnInstructionSerializer) }
+        };
+
+        public L5XSerializers(L5XDocument document)
+        {
+            _serializers = new List<IL5XSerializer>
             {
-                { typeof(IController), new ControllerSerializer() },
-                { typeof(IComplexType), new DataTypeSerializer(context) },
-                { typeof(IUserDefined), new DataTypeSerializer(context) },
-                { typeof(IModule), new ModuleSerializer() },
-                { typeof(IAddOnInstruction), new AddOnInstructionSerializer() },
-                { typeof(ITag<IDataType>), new TagSerializer() },
-                { typeof(IProgram), new ProgramSerializer() },
-                { typeof(ITask), new TaskSerializer() }
+                new ControllerSerializer(),
+                new DataTypeSerializer(document),
+                new ModuleSerializer(),
+                new AddOnInstructionSerializer(document),
+                new TagSerializer(document),
+                new ProgramSerializer(),
+                new TaskSerializer(),
+                new StructureSerializer(),
+                new FormattedDataSerializer(),
+                /*{ L5XElement.Array, new ArraySerializer(document) },
+                { L5XElement.Element, new ArrayElementSerializer(document) },
+                { L5XElement.DataValueMember, new DataValueMemberSerializer() },
+                { L5XElement.ArrayMember, new ArrayMemberSerializer(document) },
+                { L5XElement.StructureMember, new StructureMemberSerializer(document) },
+                { L5XElement.StructureMember, new StringStructureSerializer(document) },*/
+                
             };
         }
-        
-        
-        /// <summary>
-        /// Gets a serializer based on the specified <see cref="ILogixComponent"/> type.
-        /// </summary>
-        /// <typeparam name="TComponent">The logix component for which to retrieve a serializer.</typeparam>
-        /// <returns>The serializer instance that maps to the specified component type.</returns>
-        public IL5XSerializer<TComponent> GetFor<TComponent>() where TComponent : ILogixComponent
+
+        public TSerializer Get<TSerializer>() where TSerializer : IL5XSerializer
         {
-            var target = _serializers.FirstOrDefault(t => t.Key == typeof(TComponent)).Value;
+            var target = _serializers.FirstOrDefault(t => t.GetType() == typeof(TSerializer));
             
-            if (target is not IL5XSerializer<TComponent> serializer)
-                throw new InvalidOperationException($"No serializer defined for'{typeof(TComponent)}'");
+            if (target is not TSerializer serializer)
+                throw new InvalidOperationException($"No serializer defined for type '{typeof(TSerializer)}'");
+
+            return serializer;
+        }
+        
+        public IL5XSerializer<T> Get<T>(string name)
+        {
+            _lookup.TryGetValue(name, out var type);
+
+            if (type is null)
+                throw new InvalidOperationException($"No serializer defined for element '{name}'");
+            
+            var target = _serializers.FirstOrDefault(t => t.GetType() == type);
+            
+            if (target is not IL5XSerializer<T> serializer)
+                throw new InvalidOperationException($"No serializer defined for type '{type}'");
 
             return serializer;
         }

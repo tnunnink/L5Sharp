@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using L5Sharp.Core;
@@ -25,24 +26,13 @@ namespace L5Sharp.Querying
         public bool Any(ComponentName name) => Elements.Any(c => c.ComponentName() == name);
 
         /// <inheritdoc />
-        public TComponent First(ComponentName name) => 
-            Serializer.Deserialize(Elements.First(e => e.ComponentName() == name));
-
-        /// <inheritdoc />
-        public TComponent? FirstOrDefault(ComponentName name)
+        public TComponent? Named(ComponentName name)
         {
+            if (name is null)
+                throw new ArgumentNullException(nameof(name));
+            
             var component = Elements.FirstOrDefault(e => e.ComponentName() == name);
-            return  component is not null ? Serializer.Deserialize(component) : default;
-        }
-
-        /// <inheritdoc />
-        public TComponent Single(ComponentName name) => 
-            Serializer.Deserialize(Elements.Single(x => x.ComponentName() == name));
-
-        /// <inheritdoc />
-        public TComponent? SingleOrDefault(ComponentName name)
-        {
-            var component = Elements.SingleOrDefault(e => e.ComponentName() == name);
+            
             return  component is not null ? Serializer.Deserialize(component) : default;
         }
 

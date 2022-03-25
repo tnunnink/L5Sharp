@@ -14,12 +14,15 @@ namespace L5Sharp.Core
         private static readonly Dictionary<string, IDataType> Registry = new(StringComparer.OrdinalIgnoreCase)
         {
             { nameof(BOOL), new BOOL() },
-            //Bit is a valid type that appears in the L5X and is the same as a BOOL
             { "Bit", new BOOL() },
             { nameof(SINT), new SINT() },
+            { nameof(USINT), new USINT() },
             { nameof(INT), new INT() },
+            { nameof(UINT), new UINT() },
             { nameof(DINT), new DINT() },
+            { nameof(UDINT), new UDINT() },
             { nameof(LINT), new LINT() },
+            { nameof(ULINT), new ULINT() },
             { nameof(REAL), new REAL() },
             { nameof(STRING), new STRING() },
             { nameof(COUNTER), new COUNTER() },
@@ -51,7 +54,7 @@ namespace L5Sharp.Core
         /// </summary>
         /// <param name="name">The name of the data type to find.</param>
         /// <returns>true if the <see cref="IDataType"/> is defined in the registered collection.</returns>
-        public static bool Exists(string name) => Registry.ContainsKey(name);
+        public static bool IsDefined(string name) => Registry.ContainsKey(name);
 
         /// <summary>
         /// Creates a new <see cref="IDataType"/> instance using the provided name.

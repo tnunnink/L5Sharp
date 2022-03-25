@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using L5Sharp.Core;
+using L5Sharp.Exceptions;
 using L5Sharp.Extensions;
 using L5Sharp.L5X;
 using L5Sharp.Querying;
@@ -12,26 +14,24 @@ namespace L5Sharp.Repositories
     /// <summary>
     /// A repository for Logix <see cref="IModule"/> components.
     /// </summary>
-    internal class ModuleRepository : ComponentRepository<IModule>, IModuleRepository
+    internal class ModuleRepository : ModuleQuery, IModuleRepository
     {
         public ModuleRepository(IEnumerable<XElement> elements, IL5XSerializer<IModule> serializer)
             : base(elements, serializer)
         {
         }
 
-        public IModule? Local() => SingleOrDefault("Local");
-
-        public IModuleQuery WithParent(ComponentName parentName)
+        public void Add(IModule component)
         {
-            var results = Elements.Where(e =>
-                e.Attribute(L5XAttribute.ParentModule.ToString())?.Value == parentName.ToString());
+            if (component == null)
+                throw new ArgumentNullException(nameof(component));
 
-            return new ModuleRepository(results, Serializer);
-        }
+            if (Elements.Any(e => e.ComponentName() == component.Name))
+                throw new ComponentNameCollisionException(component.Name, component.GetType());
 
-        public override void Add(IModule component)
-        {
-            base.Add(component);
+            var element = Serializer.Serialize(component);
+
+            Elements.Last().AddAfterSelf(element);
 
             var modules = component.Bus.Modules();
 
@@ -39,21 +39,37 @@ namespace L5Sharp.Repositories
                 Add(module);
         }
 
-        public override void Remove(ComponentName name)
+        public void Remove(ComponentName name)
         {
-            base.Remove(name);
+            if (name is null)
+                throw new ArgumentNullException(nameof(name));
+
+            Elements.FirstOrDefault(x => x.ComponentName() == name)?.Remove();
 
             var children = Elements
-                .Where(x => x.Attribute("ParentModule")?.Value == name.ToString())
+                .Where(x => x.Attribute(L5XAttribute.ParentModule.ToString())?.Value == name.ToString())
                 .Select(x => x.ComponentName()).ToList();
 
             foreach (var child in children)
                 Remove(child);
         }
 
-        public override void Update(IModule component)
+        public void Update(IModule component)
         {
-            base.Update(component);
+            if (component == null)
+                throw new ArgumentNullException(nameof(component));
+
+            var element = Serializer.Serialize(component);
+
+            var current = Elements.FirstOrDefault(x => x.ComponentName() == component.Name);
+
+            if (current is not null)
+            {
+                current.ReplaceWith(element);
+                return;
+            }
+
+            Elements.Last().AddAfterSelf(element);
 
             var modules = component.Bus.Modules();
 

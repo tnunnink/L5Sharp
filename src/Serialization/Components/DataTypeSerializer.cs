@@ -8,7 +8,7 @@ using L5Sharp.L5X;
 
 namespace L5Sharp.Serialization.Components
 {
-    internal class DataTypeSerializer : IL5XSerializer<IComplexType>
+    internal class DataTypeSerializer : L5XSerializer<IComplexType>
     {
         private static readonly XName ElementName = L5XElement.DataType.ToString();
         private readonly IL5XSerializer<IMember<IDataType>> _memberSerializer;
@@ -18,12 +18,12 @@ namespace L5Sharp.Serialization.Components
             _memberSerializer = new MemberSerializer();
         }
 
-        public DataTypeSerializer(L5XContext context)
+        public DataTypeSerializer(L5XDocument document)
         {
-            _memberSerializer = new MemberSerializer(context);
+            _memberSerializer = new MemberSerializer(document);
         }
-        
-        public XElement Serialize(IComplexType component)
+
+        public override XElement Serialize(IComplexType component)
         {
             if (component == null)
                 throw new ArgumentNullException(nameof(component));
@@ -41,7 +41,7 @@ namespace L5Sharp.Serialization.Components
             return element;
         }
 
-        public IComplexType Deserialize(XElement element)
+        public override IComplexType Deserialize(XElement element)
         {
             if (element == null)
                 throw new ArgumentNullException(nameof(element));
@@ -57,8 +57,8 @@ namespace L5Sharp.Serialization.Components
                 .Select(e => _memberSerializer.Deserialize(e))
                 .ToList();
 
-            return family == DataTypeFamily.String 
-                ? new StringDefined(name, members.First(m => m.Name == "DATA").Dimensions.X, description) 
+            return family == DataTypeFamily.String
+                ? new StringDefined(name, members.First(m => m.Name == "DATA").Dimensions.X, description)
                 : new UserDefined(name, description, members);
         }
     }

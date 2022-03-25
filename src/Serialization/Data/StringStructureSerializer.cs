@@ -8,7 +8,7 @@ using L5Sharp.Types;
 
 namespace L5Sharp.Serialization.Data
 {
-    internal class StringStructureSerializer : IL5XSerializer<IStringType>
+    internal class StringStructureSerializer : L5XSerializer<IStringType>
     {
         private readonly XName _elementName;
 
@@ -17,7 +17,7 @@ namespace L5Sharp.Serialization.Data
             _elementName = elementName;
         }
 
-        public XElement Serialize(IStringType component)
+        public override XElement Serialize(IStringType component)
         {
             if (component is null)
                 throw new ArgumentNullException(nameof(component));
@@ -46,7 +46,7 @@ namespace L5Sharp.Serialization.Data
             return element;
         }
 
-        public IStringType Deserialize(XElement element)
+        public override IStringType Deserialize(XElement element)
         {
             if (element == null)
                 throw new ArgumentNullException(nameof(element));

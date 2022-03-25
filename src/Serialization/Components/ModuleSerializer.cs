@@ -8,7 +8,7 @@ using L5Sharp.L5X;
 
 namespace L5Sharp.Serialization.Components
 {
-    internal class ModuleSerializer : IL5XSerializer<IModule>
+    internal class ModuleSerializer : L5XSerializer<IModule>
     {
         private static readonly XName ElementName = L5XElement.Module.ToString();
         private readonly PortSerializer _portSerializer;
@@ -22,7 +22,7 @@ namespace L5Sharp.Serialization.Components
             _configTagSerializer = new ModuleTagSerializer(L5XElement.ConfigTag.ToString(), "C");
         }
 
-        public XElement Serialize(IModule component)
+        public override XElement Serialize(IModule component)
         {
             if (component == null)
                 throw new ArgumentNullException(nameof(component));
@@ -41,7 +41,7 @@ namespace L5Sharp.Serialization.Components
             element.Add(new XAttribute(L5XAttribute.Inhibited.ToString(), component.Inhibited));
             element.Add(new XAttribute(L5XAttribute.MajorFault.ToString(), component.MajorFault));
             element.Add(new XAttribute(L5XAttribute.SafetyEnabled.ToString(), component.SafetyEnabled));
-            
+
             var keyingState = new XElement(L5XElement.EKey.ToString());
             keyingState.Add(new XAttribute(L5XAttribute.State.ToString(), component.State));
             element.Add(keyingState);
@@ -67,7 +67,7 @@ namespace L5Sharp.Serialization.Components
             return element;
         }
 
-        public IModule Deserialize(XElement element)
+        public override IModule Deserialize(XElement element)
         {
             if (element == null)
                 throw new ArgumentNullException(nameof(element));
@@ -89,10 +89,11 @@ namespace L5Sharp.Serialization.Components
                 ?.Value.Parse<int>() ?? default;
             var inhibited = element.Attribute(L5XAttribute.Inhibited.ToString())?.Value.Parse<bool>() ?? default;
             var majorFault = element.Attribute(L5XAttribute.MajorFault.ToString())?.Value.Parse<bool>() ?? default;
-            var safetyEnabled = element.Attribute(L5XAttribute.SafetyEnabled.ToString())?.Value.Parse<bool>() ?? default;
+            var safetyEnabled = element.Attribute(L5XAttribute.SafetyEnabled.ToString())?.Value.Parse<bool>() ??
+                                default;
             var state = element.Element(L5XElement.EKey.ToString())?.Attribute(L5XAttribute.State.ToString())
                 ?.Value.Parse<KeyingState>();
-            
+
             var ports = element.Descendants(L5XElement.Port.ToString())
                 .Select(e => _portSerializer.Deserialize(e))
                 .ToList();
@@ -103,10 +104,10 @@ namespace L5Sharp.Serialization.Components
             var connections = element.Descendants(L5XElement.Connection.ToString())
                 .Select(e => _connectionSerializer.Deserialize(e))
                 .ToList();
-            
+
             var modules = element.Ancestors(L5XElement.Modules.ToString()).First()
                 .Descendants(L5XElement.Module.ToString())
-                .Where(e => e.Attribute(L5XAttribute.ParentModule.ToString())?.Value == name 
+                .Where(e => e.Attribute(L5XAttribute.ParentModule.ToString())?.Value == name
                             && e.ComponentName() != name)
                 .Select(Deserialize)
                 .ToList();

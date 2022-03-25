@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Xml.Linq;
 using L5Sharp.Core;
-using L5Sharp.Extensions;
-using L5Sharp.L5X;
+using L5Sharp.Querying;
 using L5Sharp.Serialization;
 
 namespace L5Sharp.Repositories
 {
-    internal class TagRepository : ComponentRepository<ITag<IDataType>>, ITagRepository
+    internal class TagRepository : TagQuery, ITagRepository
     {
         public TagRepository(IEnumerable<XElement> elements, IL5XSerializer<ITag<IDataType>> serializer) 
             : base(elements, serializer)
@@ -30,15 +28,20 @@ namespace L5Sharp.Repositories
             Container = scope.Element(L5XElement.Tags.ToString()) ?? throw new ArgumentException();
             Components = Container.Descendants(L5XElement.Tag.ToString());
         }*/
-
-        public IEnumerable<ITag<TDataType>> WithType<TDataType>() where TDataType : IDataType
+        
+        public void Add(ITag<IDataType> component)
         {
-            var typeName = typeof(TDataType).Name;
+            throw new NotImplementedException();
+        }
 
-            var tags = Elements.Where(t => string.Equals(t.Attribute(L5XAttribute.DataType.ToString())?.Value,
-                typeName, StringComparison.OrdinalIgnoreCase));
+        public void Remove(ComponentName name)
+        {
+            throw new NotImplementedException();
+        }
 
-            return tags.Select(e => Serializer.Deserialize(e)).Cast<ITag<TDataType>>();
+        public void Update(ITag<IDataType> component)
+        {
+            throw new NotImplementedException();
         }
     }
 }

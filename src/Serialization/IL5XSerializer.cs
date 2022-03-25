@@ -3,20 +3,31 @@
 namespace L5Sharp.Serialization
 {
     /// <summary>
-    /// A base interface used for collections of serializers. 
+    /// Defines to mapping to and from <see cref="XElement"/> objects so that a component of a given object can be
+    /// properly serialized or deserialized. 
     /// </summary>
     public interface IL5XSerializer
     {
-        //potentially could just make these objects here and on implementation forward to typed methods. 
-        /*XElement Serialize(object component);
+        /// <summary>
+        /// Converts the provided object into a <see cref="XElement"/> instance. 
+        /// </summary>
+        /// <param name="component">The object to serialize.</param>
+        /// <returns>An <see cref="XElement"/> that represents the serialized component.</returns>
+        XElement Serialize(object component);
         
-        object Deserialize(XElement element);*/
+        /// <summary>
+        /// Converts the provided <see cref="XElement"/> to an object instance.
+        /// </summary>
+        /// <param name="element">The xml element to deserialize.</param>
+        /// <returns>A new <see cref="object"/> that represents the deserialized element.</returns>
+        object Deserialize(XElement element);
     }
     
     /// <summary>
-    /// A typed serializer that defines the methods for serializing and deserializing objects to <see cref="XElement"/>.
+    /// A typed <see cref="IL5XSerializer"/> that defines the methods for serializing and deserializing objects to/from
+    /// <see cref="XElement"/> for the specified type.
     /// </summary>
-    /// <typeparam name="T">The type of object used in serialization.</typeparam>
+    /// <typeparam name="T">The type of object being serialized and deserialized.</typeparam>
     public interface IL5XSerializer<T> : IL5XSerializer
     {
         /// <summary>
@@ -29,7 +40,7 @@ namespace L5Sharp.Serialization
         /// <summary>
         /// Deserialized the provided <see cref="XElement"/> to an object of the specified type.
         /// </summary>
-        /// <param name="element">The <see cref="XElement"/> object to deserialize.</param>
+        /// <param name="element">The xml element to deserialize.</param>
         /// <returns>A new object instance of the specified type.</returns>
         T Deserialize(XElement element);
     }

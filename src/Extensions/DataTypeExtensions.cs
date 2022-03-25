@@ -191,7 +191,17 @@ namespace L5Sharp.Extensions
         public static void SetData(this IDataType target, IDataType source)
         {
             if (target is IAtomicType targetValue && source is IAtomicType sourceValue)
-                targetValue.SetValue(sourceValue.Value);
+            {
+                if (target.GetType() == source.GetType())
+                {
+                    targetValue.SetValue(sourceValue.Value);   
+                }
+                else
+                {
+                    //todo throw exception?
+                }
+            }
+                
 
             var memberPairs = target.GetMembers()
                 .Zip(source.GetMembers(), (x, y) => new { First = x.DataType, Second = y.DataType });

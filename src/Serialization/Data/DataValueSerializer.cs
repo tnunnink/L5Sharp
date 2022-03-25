@@ -7,11 +7,11 @@ using L5Sharp.L5X;
 
 namespace L5Sharp.Serialization.Data
 {
-    internal class DataValueSerializer : IL5XSerializer<IAtomicType>
+    internal class DataValueSerializer : L5XSerializer<IAtomicType>
     {
         private static readonly XName ElementName = L5XElement.DataValue.ToString();
         
-        public XElement Serialize(IAtomicType component)
+        public override XElement Serialize(IAtomicType component)
         {
             if (component == null)
                 throw new ArgumentNullException(nameof(component));
@@ -23,7 +23,7 @@ namespace L5Sharp.Serialization.Data
             return element;
         }
 
-        public IAtomicType Deserialize(XElement element)
+        public override IAtomicType Deserialize(XElement element)
         {
             if (element == null)
                 throw new ArgumentNullException(nameof(element));

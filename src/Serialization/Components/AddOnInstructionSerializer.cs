@@ -8,7 +8,7 @@ using L5Sharp.L5X;
 
 namespace L5Sharp.Serialization.Components
 {
-    internal class AddOnInstructionSerializer : IL5XSerializer<IAddOnInstruction>
+    internal class AddOnInstructionSerializer : L5XSerializer<IAddOnInstruction>
     {
         private const string DateTimeFormat = "yyyy-MM-dd'T'HH:mm:ss.fff'Z'";
         private static readonly XName ElementName = L5XElement.AddOnInstructionDefinition.ToString();
@@ -23,10 +23,10 @@ namespace L5Sharp.Serialization.Components
             _routineSerializer = new RoutineSerializer();
         }
 
-        public AddOnInstructionSerializer(L5XContext context)
+        public AddOnInstructionSerializer(L5XDocument document)
         {
-            _parameterSerializer = new ParameterSerializer(context);
-            _tagSerializer = new TagSerializer(context, L5XElement.LocalTag.ToString());
+            _parameterSerializer = new ParameterSerializer(document);
+            _tagSerializer = new TagSerializer(document, L5XElement.LocalTag.ToString());
             _routineSerializer = new RoutineSerializer();
         }
 

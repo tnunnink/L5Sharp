@@ -8,7 +8,7 @@ using L5Sharp.L5X;
 
 namespace L5Sharp.Serialization.Components
 {
-    internal class ConnectionSerializer : IL5XSerializer<Connection>
+    internal class ConnectionSerializer : L5XSerializer<Connection>
     {
         private static readonly XName ElementName = L5XElement.Connection.ToString();
         private readonly ModuleTagSerializer _inputTagSerializer;
@@ -20,7 +20,7 @@ namespace L5Sharp.Serialization.Components
             _outputTagSerializer = new ModuleTagSerializer(L5XElement.OutputTag.ToString(), "O");
         }
 
-        public XElement Serialize(Connection component)
+        public override XElement Serialize(Connection component)
         {
             if (component == null)
                 throw new ArgumentNullException(nameof(component));
@@ -58,7 +58,7 @@ namespace L5Sharp.Serialization.Components
         }
 
         /// <inheritdoc />
-        public Connection Deserialize(XElement element)
+        public override  Connection Deserialize(XElement element)
         {
             if (element == null)
                 throw new ArgumentNullException(nameof(element));

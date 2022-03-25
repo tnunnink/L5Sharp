@@ -7,7 +7,7 @@ using L5Sharp.L5X;
 
 namespace L5Sharp.Serialization.Components
 {
-    internal class ProgramSerializer : IL5XSerializer<IProgram>
+    internal class ProgramSerializer : L5XSerializer<IProgram>
     {
         private static readonly XName ElementName = L5XElement.Program.ToString();
         private readonly TagSerializer _tagSerializer;
@@ -19,7 +19,7 @@ namespace L5Sharp.Serialization.Components
             _routineSerializer = new RoutineSerializer();
         }
 
-        public XElement Serialize(IProgram component)
+        public override XElement Serialize(IProgram component)
         {
             if (component is null)
                 throw new ArgumentNullException(nameof(component));
@@ -47,7 +47,7 @@ namespace L5Sharp.Serialization.Components
             return element;
         }
 
-        public IProgram Deserialize(XElement element)
+        public override IProgram Deserialize(XElement element)
         {
             if (element == null)
                 throw new ArgumentNullException(nameof(element));

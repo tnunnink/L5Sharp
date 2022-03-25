@@ -7,7 +7,7 @@ using L5Sharp.Types;
 
 namespace L5Sharp.Serialization.Data
 {
-    internal class FormattedDataSerializer : IL5XSerializer<IDataType>
+    internal class FormattedDataSerializer : L5XSerializer<IDataType>
     {
         private static readonly XName ElementName = L5XElement.Data.ToString();
         private readonly DecoratedDataSerializer _decoratedDataSerializer;
@@ -19,7 +19,7 @@ namespace L5Sharp.Serialization.Data
             _alarmDataSerializer = new AlarmDataSerializer();
         }
 
-        public XElement Serialize(IDataType component)
+        public override XElement Serialize(IDataType component)
         {
             if (component == null)
                 throw new ArgumentNullException(nameof(component));
@@ -42,7 +42,7 @@ namespace L5Sharp.Serialization.Data
             return element;
         }
 
-        public IDataType Deserialize(XElement element)
+        public override IDataType Deserialize(XElement element)
         {
             if (element == null)
                 throw new ArgumentNullException(nameof(element));

@@ -6,7 +6,7 @@ using L5Sharp.L5X;
 
 namespace L5Sharp.Serialization.Components
 {
-    internal class LadderLogicSerializer : IL5XSerializer<ILadderLogic>
+    internal class LadderLogicSerializer : L5XSerializer<ILadderLogic>
     {
         private static readonly XName ElementName = L5XElement.RLLContent.ToString();
         private readonly RungSerializer _rungSerializer;
@@ -15,8 +15,8 @@ namespace L5Sharp.Serialization.Components
         {
             _rungSerializer = new RungSerializer();
         }
-        
-        public XElement Serialize(ILadderLogic component)
+
+        public override XElement Serialize(ILadderLogic component)
         {
             if (component is null)
                 throw new ArgumentNullException(nameof(component));
@@ -26,8 +26,8 @@ namespace L5Sharp.Serialization.Components
 
             return element;
         }
-        
-        public ILadderLogic Deserialize(XElement element)
+
+        public override ILadderLogic Deserialize(XElement element)
         {
             if (element == null)
                 throw new ArgumentNullException(nameof(element));

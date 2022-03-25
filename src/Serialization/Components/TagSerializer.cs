@@ -9,10 +9,10 @@ using L5Sharp.Serialization.Data;
 
 namespace L5Sharp.Serialization.Components
 {
-    internal class TagSerializer : IL5XSerializer<ITag<IDataType>>
+    internal class TagSerializer : L5XSerializer<ITag<IDataType>>
     {
+        private readonly L5XDocument? _document;
         private readonly XName _elementName;
-        private readonly L5XContext? _context;
         private readonly TagPropertySerializer _commentSerializer;
         private readonly TagPropertySerializer _unitsSerializer;
         private readonly FormattedDataSerializer _formattedDataSerializer;
@@ -25,16 +25,16 @@ namespace L5Sharp.Serialization.Components
             _formattedDataSerializer = new FormattedDataSerializer();
         }
 
-        public TagSerializer(L5XContext context, XName? elementName = null)
+        public TagSerializer(L5XDocument document, XName? elementName = null)
         {
-            _context = context;
+            _document = document;
             _elementName = elementName ?? L5XElement.Tag.ToString();
             _commentSerializer = new TagPropertySerializer(L5XElement.Comment.ToString());
             _unitsSerializer = new TagPropertySerializer(L5XElement.EngineeringUnit.ToString());
             _formattedDataSerializer = new FormattedDataSerializer();
         }
 
-        public XElement Serialize(ITag<IDataType> component)
+        public override XElement Serialize(ITag<IDataType> component)
         {
             if (component == null)
                 throw new ArgumentNullException(nameof(component));
@@ -52,7 +52,7 @@ namespace L5Sharp.Serialization.Components
                 element.Add(new XAttribute(L5XAttribute.Radix.ToString(), component.Radix));
             element.Add(new XAttribute(L5XAttribute.Constant.ToString(), component.Constant));
             element.Add(new XAttribute(L5XAttribute.ExternalAccess.ToString(), component.ExternalAccess));
-            
+
             if (component.Comments.Any())
                 element.Add(component.Comments.Select(c => _commentSerializer.Serialize(c)));
 
@@ -65,7 +65,7 @@ namespace L5Sharp.Serialization.Components
             return element;
         }
 
-        public ITag<IDataType> Deserialize(XElement element)
+        public override ITag<IDataType> Deserialize(XElement element)
         {
             if (element == null)
                 throw new ArgumentNullException(nameof(element));
@@ -75,8 +75,8 @@ namespace L5Sharp.Serialization.Components
 
             var name = element.ComponentName();
             var description = element.ComponentDescription();
-            var dataType = _context is not null
-                ? _context.Indexer.GetFor<IDataType>().Lookup(element.DataTypeName())
+            var dataType = _document is not null
+                ? _document.Index().LookupDataType(element.DataTypeName())
                 : DataType.Create(element.DataTypeName());
             var dimensions = element.Attribute(L5XAttribute.Dimensions.ToString())?.Value.Parse<Dimensions>();
             var radix = element.Attribute(L5XAttribute.Radix.ToString())?.Value.Parse<Radix>();
@@ -88,16 +88,16 @@ namespace L5Sharp.Serialization.Components
             _commentSerializer.SetBaseName(name);
             var comments = new TagPropertyCollection<string>(element.Descendants(L5XElement.Comment.ToString())
                 .Select(e => _commentSerializer.Deserialize(e)));
-            
+
             _unitsSerializer.SetBaseName(name);
             var units = new TagPropertyCollection<string>(element.Descendants(L5XElement.EngineeringUnit.ToString())
                 .Select(e => _unitsSerializer.Deserialize(e)));
 
-            var type = dimensions is not null && dimensions.IsEmpty
+            var type = dimensions is not null && !dimensions.IsEmpty
                 ? new ArrayType<IDataType>(dimensions, dataType, radix, access, description)
                 : dataType;
 
-            var tag = new Tag<IDataType>(name, type, radix, access, description, 
+            var tag = new Tag<IDataType>(name, type, radix, access, description,
                 usage, alias, constant, comments, units);
 
             var formattedData = element.Descendants(L5XElement.Data.ToString())

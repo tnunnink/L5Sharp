@@ -8,7 +8,7 @@ using L5Sharp.L5X;
 
 namespace L5Sharp.Serialization.Components
 {
-    internal class TagPropertySerializer : IL5XSerializer<KeyValuePair<TagName, string>>
+    internal class TagPropertySerializer : L5XSerializer<KeyValuePair<TagName, string>>
     {
         private readonly XName _elementName;
         private string _baseTagName;
@@ -24,7 +24,7 @@ namespace L5Sharp.Serialization.Components
             _baseTagName = baseTagName;
         }
 
-        public XElement Serialize(KeyValuePair<TagName, string> component)
+        public override XElement Serialize(KeyValuePair<TagName, string> component)
         {
             var element = new XElement(_elementName);
             
@@ -35,7 +35,7 @@ namespace L5Sharp.Serialization.Components
             return element;
         }
 
-        public KeyValuePair<TagName, string> Deserialize(XElement element)
+        public override KeyValuePair<TagName, string> Deserialize(XElement element)
         {
             if (element == null)
                 throw new ArgumentNullException(nameof(element));

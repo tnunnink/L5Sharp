@@ -5,11 +5,11 @@ using L5Sharp.Types;
 
 namespace L5Sharp.Serialization.Data
 {
-    internal class AlarmAnalogParametersSerializer : IL5XSerializer<ALARM_ANALOG>
+    internal class AlarmAnalogParametersSerializer : L5XSerializer<ALARM_ANALOG>
     {
         private static readonly XName ElementName = L5XElement.AlarmAnalogParameters.ToString();
         
-        public XElement Serialize(ALARM_ANALOG component)
+        public override XElement Serialize(ALARM_ANALOG component)
         {
             if (component == null)
                 throw new ArgumentNullException(nameof(component));
@@ -85,7 +85,7 @@ namespace L5Sharp.Serialization.Data
             return element;
         }
 
-        public ALARM_ANALOG Deserialize(XElement element)
+        public override ALARM_ANALOG Deserialize(XElement element)
         {
             if (element == null)
                 throw new ArgumentNullException(nameof(element));

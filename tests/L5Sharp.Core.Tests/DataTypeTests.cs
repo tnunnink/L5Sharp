@@ -35,7 +35,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Exists_ExistingName_ShouldBeTrue()
         {
-            var exists = DataType.Exists("bool");
+            var exists = DataType.IsDefined("bool");
 
             exists.Should().BeTrue();
         }
@@ -43,7 +43,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Exists_NonExistingName_ShouldBeFalse()
         {
-            var exists = DataType.Exists("SomeType");
+            var exists = DataType.IsDefined("SomeType");
 
             exists.Should().BeFalse();
         }

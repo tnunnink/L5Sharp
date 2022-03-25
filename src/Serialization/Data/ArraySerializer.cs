@@ -8,7 +8,7 @@ using L5Sharp.L5X;
 
 namespace L5Sharp.Serialization.Data
 {
-    internal class ArraySerializer : IL5XSerializer<IArrayType<IDataType>>
+    internal class ArraySerializer : L5XSerializer<IArrayType<IDataType>>
     {
         private static readonly XName ElementName = L5XElement.Array.ToString();
         private readonly ArrayElementSerializer _elementSerializer;
@@ -18,7 +18,12 @@ namespace L5Sharp.Serialization.Data
             _elementSerializer = new ArrayElementSerializer(structureSerializer);
         }
 
-        public XElement Serialize(IArrayType<IDataType> component)
+        public ArraySerializer(L5XDocument document)
+        {
+            _elementSerializer = document.Serializers().Get<ArrayElementSerializer>();
+        }
+
+        public override XElement Serialize(IArrayType<IDataType> component)
         {
             if (component == null)
                 throw new ArgumentNullException(nameof(component));
@@ -36,7 +41,7 @@ namespace L5Sharp.Serialization.Data
             return element;
         }
 
-        public IArrayType<IDataType> Deserialize(XElement element)
+        public override IArrayType<IDataType> Deserialize(XElement element)
         {
             if (element == null)
                 throw new ArgumentNullException(nameof(element));

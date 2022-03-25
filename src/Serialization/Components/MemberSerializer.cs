@@ -7,21 +7,21 @@ using L5Sharp.L5X;
 
 namespace L5Sharp.Serialization.Components
 {
-    internal class MemberSerializer : IL5XSerializer<IMember<IDataType>>
+    internal class MemberSerializer : L5XSerializer<IMember<IDataType>>
     {
         private static readonly XName ElementName = L5XElement.Member.ToString();
-        private readonly L5XContext? _context;
+        private readonly L5XDocument? _document;
 
         public MemberSerializer()
         {
         }
 
-        public MemberSerializer(L5XContext context)
+        public MemberSerializer(L5XDocument document)
         {
-            _context = context;
+            _document = document;
         }
 
-        public XElement Serialize(IMember<IDataType> component)
+        public override XElement Serialize(IMember<IDataType> component)
         {
             if (component is null)
                 throw new ArgumentNullException(nameof(component));
@@ -39,7 +39,7 @@ namespace L5Sharp.Serialization.Components
             return element;
         }
 
-        public IMember<IDataType> Deserialize(XElement element)
+        public override IMember<IDataType> Deserialize(XElement element)
         {
             if (element == null)
                 throw new ArgumentNullException(nameof(element));
@@ -49,8 +49,8 @@ namespace L5Sharp.Serialization.Components
 
             var name = element.ComponentName();
             var description = element.ComponentDescription();
-            var dataType = _context is not null
-                ? _context.Indexer.GetFor<IDataType>().Lookup(element.DataTypeName())
+            var dataType = _document is not null
+                ? _document.Index().LookupDataType(element.DataTypeName())
                 : DataType.Create(element.DataTypeName());
             var dimensions = element.Attribute(L5XAttribute.Dimension.ToString())?.Value.Parse<Dimensions>();
             var radix = element.Attribute(L5XAttribute.Radix.ToString())?.Value.Parse<Radix>();

@@ -9,11 +9,11 @@ using L5Sharp.Types;
 
 namespace L5Sharp.Serialization.Data
 {
-    internal class DataValueMemberSerializer : IL5XSerializer<IMember<IDataType>>
+    internal class DataValueMemberSerializer : L5XSerializer<IMember<IDataType>>
     {
         private static readonly XName ElementName = L5XElement.DataValueMember.ToString();
 
-        public XElement Serialize(IMember<IDataType> component)
+        public override XElement Serialize(IMember<IDataType> component)
         {
             if (component is null)
                 throw new ArgumentNullException(nameof(component));
@@ -31,7 +31,7 @@ namespace L5Sharp.Serialization.Data
             return element;
         }
 
-        public IMember<IDataType> Deserialize(XElement element)
+        public override IMember<IDataType> Deserialize(XElement element)
         {
             if (element == null)
                 throw new ArgumentNullException(nameof(element));
