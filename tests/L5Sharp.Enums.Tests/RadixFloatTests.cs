@@ -2,7 +2,7 @@
 using System.Globalization;
 using AutoFixture;
 using FluentAssertions;
-using L5Sharp.Atomics;
+using L5Sharp.Types;
 using NUnit.Framework;
 
 namespace L5Sharp.Enums.Tests
@@ -28,13 +28,13 @@ namespace L5Sharp.Enums.Tests
         [Test]
         public void Format_NonSupportedAtomic_ShouldThrowRadixNotSupportedException()
         {
-            FluentActions.Invoking(() => Radix.Float.Format(new Dint())).Should().Throw<NotSupportedException>();
+            FluentActions.Invoking(() => Radix.Float.Format(new DINT())).Should().Throw<NotSupportedException>();
         }
 
         [Test]
         public void Format_Zero_ShouldBeExpectedFormat()
         {
-            var result = Radix.Float.Format(new Real());
+            var result = Radix.Float.Format(new REAL());
 
             result.Should().Be("0.0");
         }
@@ -44,7 +44,7 @@ namespace L5Sharp.Enums.Tests
         {
             var fixture = new Fixture();
             var value = fixture.Create<float>();
-            var result = Radix.Float.Format(new Real(value));
+            var result = Radix.Float.Format(new REAL(value));
 
             result.Should().Be(value.ToString("0.0###", CultureInfo.InvariantCulture));
         }
@@ -52,7 +52,7 @@ namespace L5Sharp.Enums.Tests
         [Test]
         public void Format_CustomRealSevenDecimal_ShouldBeExpectedFormat()
         {
-            var result = Radix.Float.Format(new Real(0.1234567f));
+            var result = Radix.Float.Format(new REAL(0.1234567f));
 
             result.Should().Be("0.1234567");
         }
@@ -60,7 +60,7 @@ namespace L5Sharp.Enums.Tests
         [Test]
         public void Format_CustomRealMoreThanFourDecimal_ShouldBeExpectedFormat()
         {
-            var result = Radix.Float.Format(new Real(0.12345678f));
+            var result = Radix.Float.Format(new REAL(0.12345678f));
 
             result.Should().Be("0.1234568");
         }
@@ -68,7 +68,7 @@ namespace L5Sharp.Enums.Tests
         [Test]
         public void Format_CustomRealOneDecimal_ShouldBeExpectedFormat()
         {
-            var result = Radix.Float.Format(new Real(1234.5f));
+            var result = Radix.Float.Format(new REAL(1234.5f));
 
             result.Should().Be("1234.5");
         }

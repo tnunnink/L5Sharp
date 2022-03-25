@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using FluentAssertions;
@@ -12,41 +13,56 @@ namespace L5Sharp.Context.Tests
     public class ModuleRepositoryTests
     {
         [Test]
-        public void Contains_ValidComponent_ShouldBeTrue()
+        public void All_WhenCalled_ShouldNotBeEmpty()
         {
             var context = L5XContext.Load(Known.L5X);
 
-            var result = context.Modules().Contains("Local");
+            var components = context.Modules().All().ToList();
+
+            components.Should().NotBeEmpty();
+        }
+
+        [Test]
+        public void Any_ValidComponent_ShouldBeTrue()
+        {
+            var context = L5XContext.Load(Known.L5X);
+
+            var result = context.Modules().Any("Local");
 
             result.Should().BeTrue();
         }
 
         [Test]
-        public void Contains_InvalidComponent_ShouldBeFalse()
+        public void Any_InvalidComponent_ShouldBeFalse()
         {
             var context = L5XContext.Load(Known.L5X);
 
-            var result = context.Modules().Contains("Fake");
+            var result = context.Modules().Any("Fake");
 
             result.Should().BeFalse();
         }
 
         [Test]
-        public void Contains_Null_ShouldBeFalse()
+        public void Any_Null_ShouldBeFalse()
         {
             var context = L5XContext.Load(Known.L5X);
 
-            var result = context.Modules().Contains(null!);
+            var result = context.Modules().Any(null!);
 
             result.Should().BeFalse();
         }
 
         [Test]
-        public void Find_ComponentName_ExistingName_ShouldNotBeNull()
+        public void Named_ExistingName_ShouldNotBeNull()
         {
             var context = L5XContext.Load(Known.L5X);
 
-            var component = context.Modules().Find("Local");
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
+
+            var component = context.Modules().Single("Local");
+            
+            stopwatch.Stop();
 
             component.Should().NotBeNull();
         }
@@ -56,7 +72,7 @@ namespace L5Sharp.Context.Tests
         {
             var context = L5XContext.Load(Known.L5X);
 
-            var component = context.Modules().Find("Fake");
+            var component = context.Modules().First("Fake");
 
             component.Should().BeNull();
         }
@@ -66,29 +82,9 @@ namespace L5Sharp.Context.Tests
         {
             var context = L5XContext.Load(Known.L5X);
 
-            var component = context.Modules().Find(t => t.CatalogNumber == "1756-L83E");
+            var component = context.Modules().First(t => t.CatalogNumber == "1756-L83E");
 
             component.Should().NotBeNull();
-        }
-
-        [Test]
-        public void DeepFind_ExistingModule_ShouldNotBeNull()
-        {
-            var context = L5XContext.Load(Known.L5X);
-
-            var module = context.Modules().DeepFind("Local_Mod_1");
-
-            module.Should().NotBeNull();
-        }
-        
-        [Test]
-        public void DeepFind_ExistingModule_ShouldHaveExpectedChildren()
-        {
-            var context = L5XContext.Load(Known.L5X);
-
-            var module = context.Modules().DeepFind("Local_Mod_1");
-
-            module?.Ports.Local()?.Bus?.Count.Should().Be(4);
         }
 
         [Test]
@@ -96,7 +92,7 @@ namespace L5Sharp.Context.Tests
         {
             var context = L5XContext.Load(Known.L5X);
 
-            var components = context.Modules().FindAll(t => t.Vendor == 1).ToList();
+            var components = context.Modules().Where(t => t.Vendor == 1).ToList();
 
             components.Should().NotBeEmpty();
             components.All(c => c.Vendor == Vendor.Rockwell).Should().BeTrue();
@@ -107,7 +103,7 @@ namespace L5Sharp.Context.Tests
         {
             var context = L5XContext.Load(Known.L5X);
 
-            var component = context.Modules().Get("Local");
+            var component = context.Modules().Single("Local");
 
             component.Name.Should().Be("Local");
             component.CatalogNumber.Should().Be(new CatalogNumber("1756-L83E"));
@@ -131,7 +127,7 @@ namespace L5Sharp.Context.Tests
 
             foreach (var name in names)
             {
-                var module = context.Modules().Get(name);
+                var module = context.Modules().Single(name);
                 module.Should().NotBeNull();
             }
         }
@@ -141,18 +137,8 @@ namespace L5Sharp.Context.Tests
         {
             var context = L5XContext.Load(Known.L5X);
 
-            FluentActions.Invoking(() => context.Modules().Get("Fake")).Should()
+            FluentActions.Invoking(() => context.Modules().Single("Fake")).Should()
                 .Throw<ComponentNotFoundException>();
-        }
-
-        [Test]
-        public void GetAll_WhenCalled_ShouldNotBeEmpty()
-        {
-            var context = L5XContext.Load(Known.L5X);
-
-            var components = context.Modules().GetAll().ToList();
-
-            components.Should().NotBeEmpty();
         }
 
         [Test]
@@ -193,7 +179,7 @@ namespace L5Sharp.Context.Tests
 
             context.Modules().Add(component);
 
-            context.Modules().Contains("Test").Should().BeTrue();
+            context.Modules().Any("Test").Should().BeTrue();
         }
         
         [Test]
@@ -202,12 +188,12 @@ namespace L5Sharp.Context.Tests
             var context = L5XContext.Load(Known.L5X);
 
             var parent = new Module("Parent", "1756-EN2T", IPAddress.Parse("192.168.1.1"));
-            parent.Ports.Local()?.Bus?.New("Child", "1756-IF8", 1);
+            parent.Bus.Backplane()?.Create("Child", "1756-IF8", 1);
 
             context.Modules().Add(parent);
 
-            context.Modules().Contains("Parent").Should().BeTrue();
-            context.Modules().Contains("Child").Should().BeTrue();
+            context.Modules().Any("Parent").Should().BeTrue();
+            context.Modules().Any("Child").Should().BeTrue();
         }
         
         [Test]
@@ -225,7 +211,7 @@ namespace L5Sharp.Context.Tests
 
             context.Modules().Remove("Local");
 
-            context.Modules().Contains("Local").Should().BeFalse();
+            context.Modules().Any("Local").Should().BeFalse();
         }
         
         [Test]
@@ -233,12 +219,12 @@ namespace L5Sharp.Context.Tests
         {
             var context = L5XContext.Load(Known.L5X);
             var parent = new Module("Test", "1756-EN2T", IPAddress.Parse("192.168.1.1"));
-            parent.Ports.Local()?.Bus?.New("Child", "1756-IF8", 1);
+            parent.Bus.Backplane()?.Create("Child", "1756-IF8", 1);
 
             context.Modules().Update(parent);
 
-            context.Modules().Contains("Test").Should().BeTrue();
-            context.Modules().Contains("Child").Should().BeTrue();
+            context.Modules().Any("Test").Should().BeTrue();
+            context.Modules().Any("Child").Should().BeTrue();
         }
 
         [Test]
@@ -258,7 +244,7 @@ namespace L5Sharp.Context.Tests
 
             context.Modules().Update(component);
 
-            var result = context.Modules().Get("Local");
+            var result = context.Modules().Single("Local");
 
             result.Should().NotBeNull();
             result.Name.Should().Be("Local");
@@ -273,7 +259,7 @@ namespace L5Sharp.Context.Tests
 
             context.Modules().Update(component);
 
-            var result = context.Modules().Get("Test");
+            var result = context.Modules().Single("Test");
             
             result.Should().NotBeNull();
             result.Name.Should().Be("Test");
@@ -285,12 +271,12 @@ namespace L5Sharp.Context.Tests
             var context = L5XContext.Load(Known.L5X);
 
             var parent = new Module("Test", "1756-EN2T", IPAddress.Parse("192.168.1.1"));
-            parent.Ports.Local()?.Bus?.New("Child", "1756-IF8", 1);
+            parent.Bus.Backplane()?.Create("Child", "1756-IF8", 1);
 
             context.Modules().Update(parent);
 
-            context.Modules().Contains("Test").Should().BeTrue();
-            context.Modules().Contains("Child").Should().BeTrue();
+            context.Modules().Any("Test").Should().BeTrue();
+            context.Modules().Any("Child").Should().BeTrue();
         }
     }
 }

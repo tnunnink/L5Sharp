@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
-using L5Sharp.Atomics;
 using L5Sharp.L5X;
+using L5Sharp.Types;
 using NUnit.Framework;
 
 namespace L5Sharp.Internal.Tests.L5X
@@ -14,7 +14,7 @@ namespace L5Sharp.Internal.Tests.L5X
             var atomic = "0".TryParse<IAtomicType>();
 
             atomic.Should().NotBeNull();
-            atomic.Should().BeOfType<Sint>();
+            atomic.Should().BeOfType<SINT>();
         }
     }
 }

@@ -4,12 +4,11 @@ using System.Xml.Linq;
 using ApprovalTests;
 using ApprovalTests.Reporters;
 using FluentAssertions;
-using L5Sharp.Atomics;
 using L5Sharp.Core;
 using L5Sharp.Creators;
 using L5Sharp.Enums;
-using L5Sharp.Predefined;
 using L5Sharp.Serialization.Components;
+using L5Sharp.Types;
 using NUnit.Framework;
 
 namespace L5Sharp.Serialization.Tests
@@ -34,7 +33,7 @@ namespace L5Sharp.Serialization.Tests
         [Test]
         public void Serialize_WhenCalled_ShouldNotBeNull()
         {
-            var member = Member.Create<Bool>("Test");
+            var member = Member.Create<BOOL>("Test");
 
             var xml = _serializer.Serialize(member);
 
@@ -45,7 +44,7 @@ namespace L5Sharp.Serialization.Tests
         [UseReporter(typeof(DiffReporter))]
         public void Serialize_Basic_ShouldBeApproved()
         {
-            var member = Member.Create<Bool>("Test");
+            var member = Member.Create<BOOL>("Test");
 
             var xml = _serializer.Serialize(member);
 
@@ -56,7 +55,7 @@ namespace L5Sharp.Serialization.Tests
         [UseReporter(typeof(DiffReporter))]
         public void Serialize_OverLoaded_ShouldBeApproved()
         {
-            var member = Member.Create<Bool>("Test", Radix.Binary, ExternalAccess.ReadOnly,
+            var member = Member.Create<BOOL>("Test", Radix.Binary, ExternalAccess.ReadOnly,
                 "This is a test member");
 
             var xml = _serializer.Serialize(member);
@@ -68,7 +67,7 @@ namespace L5Sharp.Serialization.Tests
         [UseReporter(typeof(DiffReporter))]
         public void Serialize_Complex_ShouldBeApproved()
         {
-            var member = Member.Create<Timer>("Test");
+            var member = Member.Create<TIMER>("Test");
 
             var xml = _serializer.Serialize(member);
 
@@ -79,7 +78,7 @@ namespace L5Sharp.Serialization.Tests
         [UseReporter(typeof(DiffReporter))]
         public void Serialize_AtomicArray_ShouldBeApproved()
         {
-            var member = Member.Create<Dint>("Test", new Dimensions(10));
+            var member = Member.Create<DINT>("Test", new Dimensions(10));
 
             var xml = _serializer.Serialize(member);
 
@@ -120,7 +119,7 @@ namespace L5Sharp.Serialization.Tests
             var component = _serializer.Deserialize(element);
 
             component.Name.Should().Be("Test");
-            component.DataType.Should().BeOfType<Bool>();
+            component.DataType.Should().BeOfType<BOOL>();
             component.Dimensions.Should().Be(Dimensions.Empty);
             component.Radix.Should().Be(Radix.Decimal);
             component.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);
@@ -141,7 +140,7 @@ namespace L5Sharp.Serialization.Tests
             component.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);
             component.Description.Should().Be("Test Int Array");
             component.DataType.As<ArrayType<IDataType>>().Dimensions.Length.Should().Be(5);
-            component.DataType.As<ArrayType<IDataType>>().Select(m => m.DataType).Should().AllBeOfType<Int>();
+            component.DataType.As<ArrayType<IDataType>>().Select(m => m.DataType).Should().AllBeOfType<INT>();
         }
 
         [Test]
@@ -152,7 +151,7 @@ namespace L5Sharp.Serialization.Tests
             var component = _serializer.Deserialize(element);
 
             component.Name.Should().Be("SimpleMember");
-            component.DataType.Should().BeOfType<Undefined>();
+            component.DataType.Should().BeOfType<UNDEFINED>();
             component.Dimensions.Should().Be(Dimensions.Empty);
             component.Radix.Should().Be(Radix.Null);
             component.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);

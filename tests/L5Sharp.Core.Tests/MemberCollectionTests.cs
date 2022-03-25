@@ -3,13 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
-using L5Sharp.Atomics;
 using L5Sharp.Creators;
 using L5Sharp.Enums;
 using L5Sharp.Exceptions;
-using L5Sharp.Predefined;
+using L5Sharp.Types;
 using NUnit.Framework;
-using String = L5Sharp.Predefined.String;
 
 namespace L5Sharp.Core.Tests
 {
@@ -25,11 +23,11 @@ namespace L5Sharp.Core.Tests
             _dataType = new UserDefined("Test", "This is a test");
             _members = new List<IMember<IDataType>>
             {
-                Member.Create<Bool>("M1"),
-                Member.Create<Int>("M2"),
-                Member.Create<Dint>("M3"),
-                Member.Create<String>("M4"),
-                Member.Create<Timer>("M5")
+                Member.Create<BOOL>("M1"),
+                Member.Create<INT>("M2"),
+                Member.Create<DINT>("M3"),
+                Member.Create<STRING>("M4"),
+                Member.Create<TIMER>("M5")
             };
         }
 
@@ -132,7 +130,7 @@ namespace L5Sharp.Core.Tests
         {
             var members = new MemberCollection<IMember<IDataType>>(_dataType, _members);
 
-            FluentActions.Invoking(() => members.Add(Member.Create<Bool>("M1"))).Should()
+            FluentActions.Invoking(() => members.Add(Member.Create<BOOL>("M1"))).Should()
                 .Throw<ComponentNameCollisionException>();
         }
 
@@ -150,7 +148,7 @@ namespace L5Sharp.Core.Tests
         public void Add_ValidMember_ShouldBeContainedInMembers()
         {
             var members = new MemberCollection<IMember<IDataType>>(_dataType, _members);
-            var member = Member.Create<Dint>("TestMember");
+            var member = Member.Create<DINT>("TestMember");
 
             members.Add(member);
 
@@ -180,7 +178,7 @@ namespace L5Sharp.Core.Tests
         {
             var members = new MemberCollection<IMember<IDataType>>(_dataType, _members);
 
-            var member = Member.Create<Int>("Test");
+            var member = Member.Create<INT>("Test");
 
             members.Update(member);
 
@@ -193,13 +191,13 @@ namespace L5Sharp.Core.Tests
         {
             var members = new MemberCollection<IMember<IDataType>>(_dataType, _members);
 
-            var member = Member.Create<Int>("M3");
+            var member = Member.Create<INT>("M3");
 
             members.Update(member);
 
             members.Should().HaveCount(5);
             members.Should().Contain(member);
-            members.Get("M3")?.DataType.Should().BeOfType<Int>();
+            members.Get("M3")?.DataType.Should().BeOfType<INT>();
         }
 
         [Test]
@@ -215,7 +213,7 @@ namespace L5Sharp.Core.Tests
         {
             var members = new MemberCollection<IMember<IDataType>>(_dataType, _members);
 
-            FluentActions.Invoking(() => members.Insert(0, Member.Create<Bool>("M1"))).Should()
+            FluentActions.Invoking(() => members.Insert(0, Member.Create<BOOL>("M1"))).Should()
                 .Throw<ComponentNameCollisionException>();
         }
 
@@ -233,7 +231,7 @@ namespace L5Sharp.Core.Tests
         public void Insert_InvalidIndex_ShouldBeThrowArgumentOutOfRangeException()
         {
             var members = new MemberCollection<IMember<IDataType>>(_dataType, _members);
-            var member = Member.Create<Dint>("TestMember");
+            var member = Member.Create<DINT>("TestMember");
 
             FluentActions.Invoking(() => members.Insert(-1, member)).Should().Throw<ArgumentOutOfRangeException>();
         }
@@ -242,7 +240,7 @@ namespace L5Sharp.Core.Tests
         public void Insert_ValidMemberAndIndex_ShouldBeContainedInMembers()
         {
             var members = new MemberCollection<IMember<IDataType>>(_dataType, _members);
-            var member = Member.Create<Dint>("TestMember");
+            var member = Member.Create<DINT>("TestMember");
 
             members.Insert(0, member);
 
@@ -308,13 +306,13 @@ namespace L5Sharp.Core.Tests
         public void Update_ExistingMember_ShouldUpdateMember()
         {
             var members = new MemberCollection<IMember<IDataType>>(_dataType, _members);
-            var member = Member.Create<Timer>("M2");
+            var member = Member.Create<TIMER>("M2");
 
             members.Update(member);
 
             var updated = members.Get("M2");
             updated.Should().NotBeNull();
-            updated?.DataType.Should().BeOfType<Timer>();
+            updated?.DataType.Should().BeOfType<TIMER>();
         }
 
         [Test]
@@ -332,9 +330,9 @@ namespace L5Sharp.Core.Tests
             var members = new MemberCollection<IMember<IDataType>>(_dataType, _members);
             var collection = new List<IMember<IDataType>>()
             {
-                Member.Create<Timer>("M2"),
-                Member.Create<String>("M4"),
-                Member.Create<Dint>("M7")
+                Member.Create<TIMER>("M2"),
+                Member.Create<STRING>("M4"),
+                Member.Create<DINT>("M7")
             };
             
 

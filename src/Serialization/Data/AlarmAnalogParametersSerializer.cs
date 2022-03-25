@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Xml.Linq;
 using L5Sharp.L5X;
-using L5Sharp.Predefined;
+using L5Sharp.Types;
 
 namespace L5Sharp.Serialization.Data
 {
-    internal class AlarmAnalogParametersSerializer : IL5XSerializer<AlarmAnalog>
+    internal class AlarmAnalogParametersSerializer : IL5XSerializer<ALARM_ANALOG>
     {
         private static readonly XName ElementName = L5XElement.AlarmAnalogParameters.ToString();
         
-        public XElement Serialize(AlarmAnalog component)
+        public XElement Serialize(ALARM_ANALOG component)
         {
             if (component == null)
                 throw new ArgumentNullException(nameof(component));
@@ -85,7 +85,7 @@ namespace L5Sharp.Serialization.Data
             return element;
         }
 
-        public AlarmAnalog Deserialize(XElement element)
+        public ALARM_ANALOG Deserialize(XElement element)
         {
             if (element == null)
                 throw new ArgumentNullException(nameof(element));
@@ -93,7 +93,7 @@ namespace L5Sharp.Serialization.Data
             if (element.Name != ElementName)
                 throw new ArgumentException($"Element '{element.Name}' not valid for the serializer {GetType()}.");
 
-            var type = new AlarmAnalog();
+            var type = new ALARM_ANALOG();
 
             type.EnableIn.DataType.SetValue(element.Attribute(nameof(type.EnableIn))?.Value!);
             type.InFault.DataType.SetValue(element.Attribute(nameof(type.InFault))?.Value!);

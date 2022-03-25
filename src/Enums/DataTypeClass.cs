@@ -20,7 +20,7 @@ namespace L5Sharp.Enums
         /// Represents an <b>Atomic</b> <see cref="DataTypeClass"/>.
         /// </summary>
         /// <example>
-        /// Bool, Sint, Int, Dint, Lint, Real.
+        /// BOOL, Sint, Int, Dint, Lint, Real.
         /// </example>
         public static readonly DataTypeClass Atomic = new(nameof(Atomic), nameof(Atomic));
 

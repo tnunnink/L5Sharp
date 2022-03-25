@@ -32,6 +32,10 @@ namespace L5Sharp.Core
             : TagName.Combine(Parent.TagName, Name);
 
         /// <inheritdoc />
+        public string Units =>
+            Root.EngineeringUnits.ContainsTag(TagName) ? Root.EngineeringUnits[TagName] : string.Empty;
+
+        /// <inheritdoc />
         public TDataType DataType => _member.DataType;
 
         /// <inheritdoc />

@@ -3,6 +3,7 @@ using System.Linq;
 using System.Xml.Linq;
 using L5Sharp.Core;
 using L5Sharp.L5X;
+using L5Sharp.Querying;
 using L5Sharp.Repositories;
 
 namespace L5Sharp
@@ -131,34 +132,58 @@ namespace L5Sharp
             : null;
 
         /// <inheritdoc />
-        public IRepository<IComplexType> DataTypes() => new DataTypeRepository(this);
+        public IComponentRepository<IComplexType> DataTypes()  
+        {
+            var elements = L5X.Content.Descendants(L5XElement.DataType.ToString());
+            return new DataTypeRepository(elements, Serializer.GetFor<IComplexType>());
+        }
 
         /// <inheritdoc />
-        public IModuleRepository Modules() => new ModuleRepository(this);
+        public IModuleRepository Modules()
+        {
+            var elements = L5X.Content.Descendants(L5XElement.Module.ToString());
+            return new ModuleRepository(elements, Serializer.GetFor<IModule>());
+        }
 
         /// <inheritdoc />
-        public IRepository<IAddOnInstruction> Instructions() => new AddOnInstructionRepository(this);
-
-        /// <inheritdoc />
-        public ITagRepository Tags() => new TagRepository(this);
-
-        /// <inheritdoc />
-        public ITagRepository Tags(ComponentName program) => new TagRepository(this, program);
-
-        /// <inheritdoc />
-        public IRepository<IProgram> Programs() => new ProgramRepository(this);
-
-        /// <inheritdoc />
-        public IReadOnlyRepository<ITask> Tasks() => new TaskRepository(this);
-
-        /// <inheritdoc />
-        public IRungRepository Rungs()
+        public IComponentRepository<IAddOnInstruction> Instructions()
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc />
-        public IRungRepository Rungs(ComponentName program)
+        public ITagRepository Tags()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc />
+        public ITagRepository Tags(ComponentName program)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc />
+        public IComponentRepository<IProgram> Programs()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc />
+        public ITaskQuery Tasks()
+        {
+            var elements = L5X.Content.Descendants(L5XElement.Task.ToString());
+            return new TaskQuery(elements, Serializer.GetFor<ITask>());
+        }
+
+        /// <inheritdoc />
+        public IRungQuery Rungs()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc />
+        public IRungQuery Rungs(ComponentName program)
         {
             throw new NotImplementedException();
         }

@@ -1,6 +1,5 @@
-﻿using System.Net;
+﻿using System;
 using FluentAssertions;
-using L5Sharp.Enums;
 using NUnit.Framework;
 
 namespace L5Sharp.Core.Tests
@@ -9,72 +8,157 @@ namespace L5Sharp.Core.Tests
     public class PortTests
     {
         [Test]
-        public void New_KnownModule_ShouldHaveExpectedPortCount()
+        public void New_Default_ShouldNotBeNull()
         {
-            var module = new Module("Test", "1756-EN2T");
-
-            module.Ports.Should().HaveCount(2);
-        }
-
-        [Test]
-        public void Primary_KnownModule_ShouldNotBeNull()
-        {
-            var module = new Module("Test", "1756-EN2T");
-
-            var port = module.Ports.Primary();
+            var port = new Port(1, "ICP");
 
             port.Should().NotBeNull();
         }
-        
+
         [Test]
-        public void Secondary_KnownModuleWithTwoPorts_ShouldNotBeNull()
+        public void New_Default_ShouldHaveExpected()
         {
-            var module = new Module("Test", "1756-EN2T");
-
-            var port = module.Ports.Secondary();
-
-            port.Should().NotBeNull();
-        }
-        
-        [Test]
-        public void Secondary_KnownModuleWithSinglePort_ShouldNotNull()
-        {
-            var module = new Module("Test", "1756-L74");
-
-            var port = module.Ports.Secondary();
-
-            port.Should().BeNull();
-        }
-        
-        [Test]
-        public void Primary_WhenCalled_PortShouldHaveExpectedProperties()
-        {
-            var module = new Module("Test", "1756-EN2T");
-            
-            var port = module.Ports.Primary();
+            var port = new Port(1, "ICP");
 
             port.Id.Should().Be(1);
             port.Type.Should().Be("ICP");
-            port.Upstream.Should().BeTrue();
-            port.Address.Should().Be("0");
-            port.Bus.Should().BeNull();
-            port.Module.Should().BeSameAs(module);
+            port.Upstream.Should().BeFalse();
+            port.DownstreamOnly.Should().BeFalse();
+            port.Address.Should().BeEmpty();
+            port.BusSize.Should().Be(0);
         }
 
         [Test]
-        public void New_SecondPort_ShouldHaveExpectedProperties()
+        public void New_Overrides_ShouldHaveExpectedProperties()
         {
-            var module = new Module("Test", "1756-EN2T", 1, IPAddress.Any);
-            
-            var port = module.Ports.Secondary();
+            var port = new Port(2, "ICP", "0", true, 17, true);
 
-            port.Should().NotBeNull();
-            port?.Id.Should().Be(2);
-            port?.Type.Should().Be("Ethernet");
-            port?.Upstream.Should().BeFalse();
-            port?.Address.Should().Be("0.0.0.0");
-            port?.Bus.Should().NotBeNull();
-            port?.Module.Should().BeSameAs(module);
+            port.Id.Should().Be(2);
+            port.Type.Should().Be("ICP");
+            port.Upstream.Should().BeTrue();
+            port.DownstreamOnly.Should().BeTrue();
+            port.Address.Should().Be("0");
+            port.BusSize.Should().Be(17);
+        }
+
+        [Test]
+        public void Configure_UpstreamOnDownstreamPort_ShouldThrowInvalidOperationException()
+        {
+            var port = new Port(1, "ICP", downstreamOnly: true);
+
+            FluentActions.Invoking(() => port.Configure("1", true, 10)).Should().Throw<InvalidOperationException>();
+        }
+
+        [Test]
+        public void Configure_Valid_ShouldBeExpected()
+        {
+            var port = new Port(1, "ICP");
+
+            var result = port.Configure("1", true, 10);
+
+            result.Should().NotBeNull();
+            result.Id.Should().Be(1);
+            result.Type.Should().Be("ICP");
+            result.Address.Should().Be("1");
+            result.Upstream.Should().BeTrue();
+            result.DownstreamOnly.Should().BeFalse();
+            result.BusSize.Should().Be(10);
+        }
+
+        [Test]
+        public void TypedEquals_AreEqual_ShouldBeTrue()
+        {
+            var first = new Port(1, "ICP");
+            var second = new Port(1, "ICP");
+
+            var result = first.Equals(second);
+
+            result.Should().BeTrue();
+        }
+
+        [Test]
+        public void TypedEquals_AreSame_ShouldBeTrue()
+        {
+            var first = new Port(1, "ICP");
+            
+            var result = first.Equals(first);
+
+            result.Should().BeTrue();
+        }
+
+
+        [Test]
+        public void TypedEquals_Null_ShouldBeFalse()
+        {
+            var first = new Port(1, "ICP");
+            
+            var result = first.Equals(null);
+
+            result.Should().BeFalse();
+        }
+
+        [Test]
+        public void ObjectEquals_AreEqual_ShouldBeTrue()
+        {
+            var first = new Port(1, "ICP");
+            var second = new Port(1, "ICP");
+
+            var result = first.Equals((object)second);
+
+            result.Should().BeTrue();
+        }
+
+        [Test]
+        public void ObjectEquals_AreSame_ShouldBeTrue()
+        {
+            var first = new Port(1, "ICP");
+
+            var result = first.Equals((object)first);
+
+            result.Should().BeTrue();
+        }
+
+
+        [Test]
+        public void ObjectEquals_Null_ShouldBeFalse()
+        {
+            var first = new Port(1, "ICP");
+
+            var result = first.Equals((object)null);
+
+            result.Should().BeFalse();
+        }
+
+        [Test]
+        public void OperatorEquals_AreEqual_ShouldBeTrue()
+        {
+            var first = new Port(1, "ICP");
+            var second = new Port(1, "ICP");
+
+            var result = first == second;
+
+            result.Should().BeTrue();
+        }
+
+        [Test]
+        public void OperatorNotEquals_AreEqual_ShouldBeFalse()
+        {
+            var first = new Port(1, "ICP");
+            var second = new Port(1, "ICP");
+
+            var result = first != second;
+
+            result.Should().BeFalse();
+        }
+
+        [Test]
+        public void GetHashCode_WhenCalled_ShouldNotBeId()
+        {
+            var first = new Port(1, "ICP");
+
+            var hash = first.GetHashCode();
+
+            hash.Should().Be(1);
         }
     }
 }

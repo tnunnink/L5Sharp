@@ -4,11 +4,10 @@ using System.Xml.Linq;
 using ApprovalTests;
 using ApprovalTests.Reporters;
 using FluentAssertions;
-using L5Sharp.Atomics;
 using L5Sharp.Core;
 using L5Sharp.Enums;
-using L5Sharp.Predefined;
 using L5Sharp.Serialization.Data;
+using L5Sharp.Types;
 using NUnit.Framework;
 
 namespace L5Sharp.Serialization.Tests
@@ -33,7 +32,7 @@ namespace L5Sharp.Serialization.Tests
         [Test]
         public void Serialize_WhenCalled_ShouldNotBeNull()
         {
-            var element = new Member<Bool>("[1]", new Bool());
+            var element = new Member<BOOL>("[1]", new BOOL());
             
             var xml = _serializer.Serialize(element);
 
@@ -44,7 +43,7 @@ namespace L5Sharp.Serialization.Tests
         [UseReporter(typeof(DiffReporter))]
         public void Serialize_ValueValueTypeMember_ShouldBeApproved()
         {
-            var element = new Member<Bool>("[1]", new Bool());
+            var element = new Member<BOOL>("[1]", new BOOL());
 
             var xml = _serializer.Serialize(element);
 
@@ -55,7 +54,7 @@ namespace L5Sharp.Serialization.Tests
         [UseReporter(typeof(DiffReporter))]
         public void Serialize_ValueStructureTypeMember_ShouldBeApproved()
         {
-            var element = new Member<Timer>("[1]", new Timer());
+            var element = new Member<TIMER>("[1]", new TIMER());
 
             var xml = _serializer.Serialize(element);
 
@@ -96,8 +95,8 @@ namespace L5Sharp.Serialization.Tests
             var component = _serializer.Deserialize(element);
 
             component.Name.Should().Be("[0]");
-            component.DataType.Should().BeOfType<Real>();
-            ((Real)component.DataType).Value.Should().Be(0.0f);
+            component.DataType.Should().BeOfType<REAL>();
+            ((REAL)component.DataType).Value.Should().Be(0.0f);
             component.Dimensions.Should().Be(Dimensions.Empty);
             component.Radix.Should().Be(Radix.Float);
             component.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);

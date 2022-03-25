@@ -1,13 +1,13 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Globalization;
-using L5Sharp.Atomics;
 using L5Sharp.Enums;
+using L5Sharp.Types;
 
 namespace L5Sharp.Converters
 {
     /// <summary>
-    /// A <see cref="TypeConverter"/> for the <see cref="Lint"/> object.
+    /// A <see cref="TypeConverter"/> for the <see cref="LINT"/> object.
     /// </summary>
     internal class LintConverter : TypeConverter
     {
@@ -20,13 +20,13 @@ namespace L5Sharp.Converters
                    sourceType == typeof(int) ||
                    sourceType == typeof(uint) ||
                    sourceType == typeof(long) ||
-                   sourceType == typeof(Sint) ||
-                   sourceType == typeof(USint) ||
-                   sourceType == typeof(Int) ||
-                   sourceType == typeof(UInt) ||
-                   sourceType == typeof(Dint) ||
-                   sourceType == typeof(UDint) ||
-                   sourceType == typeof(Lint) ||
+                   sourceType == typeof(SINT) ||
+                   sourceType == typeof(USINT) ||
+                   sourceType == typeof(INT) ||
+                   sourceType == typeof(UINT) ||
+                   sourceType == typeof(DINT) ||
+                   sourceType == typeof(UDINT) ||
+                   sourceType == typeof(LINT) ||
                    sourceType == typeof(string) ||
                    base.CanConvertFrom(context, sourceType);
         }
@@ -35,21 +35,21 @@ namespace L5Sharp.Converters
         {
             return value switch
             {
-                sbyte v => new Lint(v),
-                byte v => new Lint(v),
-                short v => new Lint(v),
-                ushort v => new Lint(v),
-                int v => new Lint(v),
-                uint v => new Lint(v),
-                long v => new Lint(v),
-                Sint v => new Lint(v.Value),
-                USint v => new Lint(v.Value),
-                Int v => new Lint(v.Value),
-                UInt v => new Lint(v.Value),
-                Dint v => new Lint(v.Value),
-                UDint v => new Lint(v.Value),
-                Lint v => v,
-                string v => long.TryParse(v, out var result) ? new Lint(result) : Radix.ParseValue<Lint>(v),
+                sbyte v => new LINT(v),
+                byte v => new LINT(v),
+                short v => new LINT(v),
+                ushort v => new LINT(v),
+                int v => new LINT(v),
+                uint v => new LINT(v),
+                long v => new LINT(v),
+                SINT v => new LINT(v.Value),
+                USINT v => new LINT(v.Value),
+                INT v => new LINT(v.Value),
+                UINT v => new LINT(v.Value),
+                DINT v => new LINT(v.Value),
+                UDINT v => new LINT(v.Value),
+                LINT v => v,
+                string v => long.TryParse(v, out var result) ? new LINT(result) : Radix.ParseValue<LINT>(v),
                 _ => base.ConvertFrom(context, culture, value)
                      ?? throw new NotSupportedException(
                          $"The provided value of type {value.GetType()} is not supported for conversion.")
@@ -60,8 +60,8 @@ namespace L5Sharp.Converters
         {
             return destinationType == typeof(long) ||
                    destinationType == typeof(float) ||
-                   destinationType == typeof(Lint) ||
-                   destinationType == typeof(Real) ||
+                   destinationType == typeof(LINT) ||
+                   destinationType == typeof(REAL) ||
                    destinationType == typeof(string) ||
                    base.CanConvertFrom(context, destinationType);
         }
@@ -69,15 +69,15 @@ namespace L5Sharp.Converters
         public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value,
             Type destinationType)
         {
-            if (value is not Lint typed)
-                throw new InvalidOperationException($"Value must be of type {typeof(Lint)}.");
+            if (value is not LINT typed)
+                throw new InvalidOperationException($"Value must be of type {typeof(LINT)}.");
 
             return destinationType switch
             {
                 not null when destinationType == typeof(long) => typed.Value,
                 not null when destinationType == typeof(float) => (float)typed.Value,
-                not null when destinationType == typeof(Lint) => new Lint(typed.Value),
-                not null when destinationType == typeof(Real) => new Real(typed.Value),
+                not null when destinationType == typeof(LINT) => new LINT(typed.Value),
+                not null when destinationType == typeof(REAL) => new REAL(typed.Value),
                 not null when destinationType == typeof(string) => typed.Format(Radix.Default(typed)),
                 _ => base.ConvertTo(context, culture, value, destinationType!) ??
                      throw new NotSupportedException(

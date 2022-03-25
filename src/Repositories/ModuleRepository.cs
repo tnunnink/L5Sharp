@@ -1,77 +1,49 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Xml.Linq;
 using L5Sharp.Core;
 using L5Sharp.Extensions;
+using L5Sharp.L5X;
+using L5Sharp.Querying;
+using L5Sharp.Serialization;
 
 namespace L5Sharp.Repositories
 {
     /// <summary>
     /// A repository for Logix <see cref="IModule"/> components.
     /// </summary>
-    internal class ModuleRepository : Repository<IModule>, IModuleRepository
+    internal class ModuleRepository : ComponentRepository<IModule>, IModuleRepository
     {
-        /// <summary>
-        /// Creates a new instance of the <see cref="ModuleRepository"/> object.
-        /// </summary>
-        /// <param name="context">The logix context for which to read/write data to.</param>
-        public ModuleRepository(L5XContext context) : base(context)
+        public ModuleRepository(IEnumerable<XElement> elements, IL5XSerializer<IModule> serializer)
+            : base(elements, serializer)
         {
         }
 
-        public IModule? DeepFind(ComponentName name)
+        public IModule? Local() => SingleOrDefault("Local");
+
+        public IModuleQuery WithParent(ComponentName parentName)
         {
-            var module = Find(name);
+            var results = Elements.Where(e =>
+                e.Attribute(L5XAttribute.ParentModule.ToString())?.Value == parentName.ToString());
 
-            if (module is null) return null;
-
-            var childNames = Components
-                .Where(x => x.Attribute(nameof(module.ParentModule))?.Value == module.Name)
-                .Select(x => x.ComponentName());
-
-            foreach (var childName in childNames)
-            {
-                var child = DeepFind(childName);
-                if (child is null) continue;
-                module.Ports.Local()?.Bus?.Add(child);
-            }
-
-            return module;
+            return new ModuleRepository(results, Serializer);
         }
-
-        public IModule DeepGet(ComponentName name)
-        {
-            var module = Get(name);
-            
-            var childNames = Components
-                .Where(x => x.Attribute(nameof(module.ParentModule))?.Value == module.Name)
-                .Select(x => x.ComponentName());
-            
-            foreach (var childName in childNames)
-            {
-                var child = DeepGet(childName);
-                module.Ports.Local()?.Bus?.Add(child);
-            }
-
-            return module;
-        }
-
-        public IModule Local() => DeepGet("Local");
 
         public override void Add(IModule component)
         {
             base.Add(component);
 
-            var bus = component.Ports.Local()?.Bus;
-            if (bus is null) return;
+            var modules = component.Bus.Modules();
 
-            foreach (var module in bus.Where(m => m.Name != component.Name))
+            foreach (var module in modules.Where(m => m.Name != component.Name))
                 Add(module);
         }
 
         public override void Remove(ComponentName name)
         {
             base.Remove(name);
-            
-            var children = Components
+
+            var children = Elements
                 .Where(x => x.Attribute("ParentModule")?.Value == name.ToString())
                 .Select(x => x.ComponentName()).ToList();
 
@@ -82,11 +54,10 @@ namespace L5Sharp.Repositories
         public override void Update(IModule component)
         {
             base.Update(component);
-            
-            var bus = component.Ports.Local()?.Bus;
-            if (bus is null) return;
 
-            foreach (var module in bus.Where(m => m.Name != component.Name))
+            var modules = component.Bus.Modules();
+
+            foreach (var module in modules.Where(m => m.Name != component.Name))
                 Update(module);
         }
     }

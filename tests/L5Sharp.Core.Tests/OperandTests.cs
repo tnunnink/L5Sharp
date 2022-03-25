@@ -1,6 +1,6 @@
 ﻿using AutoFixture;
 using FluentAssertions;
-using L5Sharp.Atomics;
+using L5Sharp.Types;
 using NUnit.Framework;
 
 namespace L5Sharp.Core.Tests
@@ -48,7 +48,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void IsValue_Sint_ShouldBeTrue()
         {
-            Operand operand = new Sint();
+            Operand operand = new SINT();
 
             operand.IsValue.Should().BeTrue();
         }
@@ -56,7 +56,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void IsValue_Int_ShouldBeTrue()
         {
-            Operand operand = new Int();
+            Operand operand = new INT();
 
             operand.IsValue.Should().BeTrue();
         }
@@ -64,7 +64,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void IsValue_Dint_ShouldBeTrue()
         {
-            Operand operand = new Dint();
+            Operand operand = new DINT();
 
             operand.IsValue.Should().BeTrue();
         }
@@ -72,7 +72,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void IsValue_Lint_ShouldBeTrue()
         {
-            Operand operand = new Lint();
+            Operand operand = new LINT();
 
             operand.IsValue.Should().BeTrue();
         }
@@ -80,7 +80,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void IsValue_USint_ShouldBeTrue()
         {
-            Operand operand = new USint();
+            Operand operand = new USINT();
 
             operand.IsValue.Should().BeTrue();
         }
@@ -88,7 +88,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void IsValue_UInt_ShouldBeTrue()
         {
-            Operand operand = new UInt();
+            Operand operand = new UINT();
 
             operand.IsValue.Should().BeTrue();
         }
@@ -96,7 +96,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void IsValue_UDint_ShouldBeTrue()
         {
-            Operand operand = new UDint();
+            Operand operand = new UDINT();
 
             operand.IsValue.Should().BeTrue();
         }
@@ -104,7 +104,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void IsValue_ULint_ShouldBeTrue()
         {
-            Operand operand = new ULint();
+            Operand operand = new ULINT();
 
             operand.IsValue.Should().BeTrue();
         }
@@ -112,7 +112,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void IsValue_Real_ShouldBeTrue()
         {
-            Operand operand = new Real();
+            Operand operand = new REAL();
 
             operand.IsValue.Should().BeTrue();
         }

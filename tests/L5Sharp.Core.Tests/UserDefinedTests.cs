@@ -2,13 +2,11 @@
 using System.Collections.Generic;
 using AutoFixture;
 using FluentAssertions;
-using L5Sharp.Atomics;
 using L5Sharp.Creators;
 using L5Sharp.Enums;
 using L5Sharp.Exceptions;
-using L5Sharp.Predefined;
+using L5Sharp.Types;
 using NUnit.Framework;
-using String = L5Sharp.Predefined.String;
 
 namespace L5Sharp.Core.Tests
 {
@@ -68,8 +66,8 @@ namespace L5Sharp.Core.Tests
             var description = fixture.Create<string>();
             var members = new List<IMember<IDataType>>
             {
-                Member.Create("Member01", new Bool()),
-                Member.Create("Member02", new Bool())
+                Member.Create("Member01", new BOOL()),
+                Member.Create("Member02", new BOOL())
             };
 
             var type = new UserDefined("Test", description, members);
@@ -90,16 +88,16 @@ namespace L5Sharp.Core.Tests
             var description = fixture.Create<string>();
             var members = new List<IMember<IDataType>>
             {
-                Member.Create("Member01", new Bool()),
-                Member.Create("Member02", new Bool()),
-                Member.Create("Member03", new Bool()),
-                Member.Create("Member04", new Bool()),
-                Member.Create("Member05", new Int()),
-                Member.Create("Member06", new Bool()),
-                Member.Create("Member07", new Bool()),
-                Member.Create("Member08", new Real()),
-                Member.Create("Member09", new Bool()),
-                Member.Create("Member10", new Bool())
+                Member.Create("Member01", new BOOL()),
+                Member.Create("Member02", new BOOL()),
+                Member.Create("Member03", new BOOL()),
+                Member.Create("Member04", new BOOL()),
+                Member.Create("Member05", new INT()),
+                Member.Create("Member06", new BOOL()),
+                Member.Create("Member07", new BOOL()),
+                Member.Create("Member08", new REAL()),
+                Member.Create("Member09", new BOOL()),
+                Member.Create("Member10", new BOOL())
             };
 
             var type = new UserDefined("Test", description, members);
@@ -114,12 +112,12 @@ namespace L5Sharp.Core.Tests
         {
             var type = new UserDefined("Test", "This is a test", new List<IMember<IDataType>>
             {
-                Member.Create("Member01", new Real())
+                Member.Create("Member01", new REAL())
             });
 
             type.Members.Should().HaveCount(1);
 
-            type.Members.Add(Member.Create<Dint>("Member02"));
+            type.Members.Add(Member.Create<DINT>("Member02"));
             type.Members.Should().HaveCount(2);
 
             var complex = (IComplexType)type;
@@ -131,10 +129,10 @@ namespace L5Sharp.Core.Tests
         {
             var type = new UserDefined("Type01", "This is a test", new List<IMember<IDataType>>
             {
-                Member.Create("Member01", new Bool()),
-                Member.Create("Member02", new Counter()),
-                Member.Create("Member03", new Dint()),
-                Member.Create("Member04", new String())
+                Member.Create("Member01", new BOOL()),
+                Member.Create("Member02", new COUNTER()),
+                Member.Create("Member03", new DINT()),
+                Member.Create("Member04", new STRING())
             });
 
             var instance = type.Instantiate();

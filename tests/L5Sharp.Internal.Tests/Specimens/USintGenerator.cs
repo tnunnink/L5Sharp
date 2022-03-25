@@ -1,6 +1,6 @@
 ﻿using System;
 using AutoFixture.Kernel;
-using L5Sharp.Atomics;
+using L5Sharp.Types;
 
 namespace L5Sharp.Internal.Tests.Specimens
 {
@@ -11,10 +11,10 @@ namespace L5Sharp.Internal.Tests.Specimens
             if (request is not Type type)
                 return new NoSpecimen();
 
-            if (type != typeof(USint))
+            if (type != typeof(USINT))
                 return new NoSpecimen();
             
-            return new USint();
+            return new USINT();
         }
     }
 }

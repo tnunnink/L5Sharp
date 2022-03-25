@@ -13,7 +13,7 @@ namespace L5Sharp.Enums
         }
 
         /// <summary>
-        /// Represents the <c>ExactMatch</c> <see cref="KeyingState"/> value.
+        /// Represents the ExactMatch <see cref="KeyingState"/> value.
         /// </summary>
         public static readonly KeyingState ExactMatch = new(nameof(ExactMatch), nameof(ExactMatch));
         

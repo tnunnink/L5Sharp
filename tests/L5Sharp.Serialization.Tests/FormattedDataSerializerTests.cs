@@ -3,10 +3,9 @@ using System.Xml.Linq;
 using ApprovalTests;
 using ApprovalTests.Reporters;
 using FluentAssertions;
-using L5Sharp.Predefined;
 using L5Sharp.Serialization.Data;
+using L5Sharp.Types;
 using NUnit.Framework;
-using String = L5Sharp.Predefined.String;
 
 namespace L5Sharp.Serialization.Tests
 {
@@ -30,7 +29,7 @@ namespace L5Sharp.Serialization.Tests
         [Test]
         public void Serialize_ComplexType_ShouldNotBeNull()
         {
-            var component = new Timer();
+            var component = new TIMER();
 
             var xml = _serializer.Serialize(component);
 
@@ -40,7 +39,7 @@ namespace L5Sharp.Serialization.Tests
         [Test]
         public void Serialize_StringType_ShouldNotBeNull()
         {
-            var component = new String();
+            var component = new STRING();
 
             var xml = _serializer.Serialize(component);
 
@@ -50,7 +49,7 @@ namespace L5Sharp.Serialization.Tests
         [Test]
         public void Serialize_AlarmType_ShouldNotBeNull()
         {
-            var component = new AlarmAnalog();
+            var component = new ALARM_ANALOG();
 
             var xml = _serializer.Serialize(component);
 
@@ -61,7 +60,7 @@ namespace L5Sharp.Serialization.Tests
         [UseReporter(typeof(DiffReporter))]
         public void Serialize_ComplexType_ShouldBeApproved()
         {
-            var component = new Timer();
+            var component = new TIMER();
 
             var xml = _serializer.Serialize(component);
 
@@ -72,7 +71,7 @@ namespace L5Sharp.Serialization.Tests
         [UseReporter(typeof(DiffReporter))]
         public void Serialize_StringType_ShouldBeApproved()
         {
-            var component = new String("This is test string");
+            var component = new STRING("This is test string");
 
             var xml = _serializer.Serialize(component);
 
@@ -83,7 +82,7 @@ namespace L5Sharp.Serialization.Tests
         [UseReporter(typeof(DiffReporter))]
         public void Serialize_AlarmType_ShouldBeApproved()
         {
-            var component = new AlarmAnalog();
+            var component = new ALARM_ANALOG();
 
             var xml = _serializer.Serialize(component);
 

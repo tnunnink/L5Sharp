@@ -4,9 +4,9 @@ using System.Xml.Linq;
 using L5Sharp.Core;
 using L5Sharp.Extensions;
 using L5Sharp.L5X;
-using L5Sharp.Predefined;
 using L5Sharp.Serialization.Components;
 using L5Sharp.Serialization.Data;
+using L5Sharp.Types;
 
 namespace L5Sharp.Indexing
 {
@@ -35,7 +35,7 @@ namespace L5Sharp.Indexing
             if (DataType.Exists(name))
                 return DataType.Create(name);
 
-            return _index.TryGetValue(name, out var element) ? DeserializeType(element) : new Undefined(name);
+            return _index.TryGetValue(name, out var element) ? DeserializeType(element) : new UNDEFINED(name);
         }
 
         private IDataType DeserializeType(XElement element)

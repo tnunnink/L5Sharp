@@ -4,11 +4,10 @@ using System.Xml.Linq;
 using ApprovalTests;
 using ApprovalTests.Reporters;
 using FluentAssertions;
-using L5Sharp.Atomics;
 using L5Sharp.Core;
 using L5Sharp.Enums;
-using L5Sharp.Predefined;
 using L5Sharp.Serialization.Data;
+using L5Sharp.Types;
 using NUnit.Framework;
 
 namespace L5Sharp.Serialization.Tests
@@ -33,14 +32,14 @@ namespace L5Sharp.Serialization.Tests
         [Test]
         public void Serialize_NonArrayType_ShouldThrowArgumentException()
         {
-            FluentActions.Invoking(() => _serializer.Serialize(new Member<IDataType>("Test", new Bool()))).Should()
+            FluentActions.Invoking(() => _serializer.Serialize(new Member<IDataType>("Test", new BOOL()))).Should()
                 .Throw<ArgumentException>();
         }
 
         [Test]
         public void Serialize_WhenCalled_ShouldNotBeNull()
         {
-            var element = new Member<ArrayType<Bool>>("Test", new ArrayType<Bool>(new Dimensions(5)));
+            var element = new Member<ArrayType<BOOL>>("Test", new ArrayType<BOOL>(new Dimensions(5)));
 
             var xml = _serializer.Serialize(element);
 
@@ -51,7 +50,7 @@ namespace L5Sharp.Serialization.Tests
         [UseReporter(typeof(DiffReporter))]
         public void Serialize_ValueTypeArray_ShouldBeApproved()
         {
-            var element = new Member<ArrayType<Bool>>("Test", new ArrayType<Bool>(new Dimensions(5)));
+            var element = new Member<ArrayType<BOOL>>("Test", new ArrayType<BOOL>(new Dimensions(5)));
 
             var xml = _serializer.Serialize(element);
 
@@ -62,7 +61,7 @@ namespace L5Sharp.Serialization.Tests
         [UseReporter(typeof(DiffReporter))]
         public void Serialize_StructureTypeArray_ShouldBeApproved()
         {
-            var element = new Member<ArrayType<Timer>>("Test", new ArrayType<Timer>(new Dimensions(5)));
+            var element = new Member<ArrayType<TIMER>>("Test", new ArrayType<TIMER>(new Dimensions(5)));
 
             var xml = _serializer.Serialize(element);
 
@@ -135,7 +134,7 @@ namespace L5Sharp.Serialization.Tests
             component.Dimensions.Should().Be(new Dimensions(5));
             component.Radix.Should().Be(Radix.Octal);
             component.Description.Should().BeEmpty();
-            component.DataType.As<ArrayType<IDataType>>().Select(e => e.DataType).Should().AllBeOfType<Int>();
+            component.DataType.As<ArrayType<IDataType>>().Select(e => e.DataType).Should().AllBeOfType<INT>();
         }
         
         [Test]
@@ -150,7 +149,7 @@ namespace L5Sharp.Serialization.Tests
             component.Dimensions.Should().Be(new Dimensions(5));
             component.Radix.Should().Be(Radix.Hex);
             component.Description.Should().BeEmpty();
-            component.DataType.As<ArrayType<IDataType>>().Select(e => e.DataType).Should().AllBeOfType<Dint>();
+            component.DataType.As<ArrayType<IDataType>>().Select(e => e.DataType).Should().AllBeOfType<DINT>();
         }
         
         [Test]
@@ -165,7 +164,7 @@ namespace L5Sharp.Serialization.Tests
             component.Dimensions.Should().Be(new Dimensions(5));
             component.Radix.Should().Be(Radix.DateTime);
             component.Description.Should().BeEmpty();
-            component.DataType.As<ArrayType<IDataType>>().Select(e => e.DataType).Should().AllBeOfType<Lint>();
+            component.DataType.As<ArrayType<IDataType>>().Select(e => e.DataType).Should().AllBeOfType<LINT>();
         }
         
         [Test]
@@ -180,7 +179,7 @@ namespace L5Sharp.Serialization.Tests
             component.Dimensions.Should().Be(new Dimensions(5));
             component.Radix.Should().Be(Radix.Exponential);
             component.Description.Should().BeEmpty();
-            component.DataType.As<ArrayType<IDataType>>().Select(e => e.DataType).Should().AllBeOfType<Real>();
+            component.DataType.As<ArrayType<IDataType>>().Select(e => e.DataType).Should().AllBeOfType<REAL>();
         }
 
         [Test]

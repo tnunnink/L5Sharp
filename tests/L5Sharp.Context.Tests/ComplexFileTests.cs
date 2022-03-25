@@ -35,7 +35,7 @@ namespace L5Sharp.Context.Tests
             var stopwatch = new Stopwatch();
             stopwatch.Start();
             
-            var dataTypes = context.DataTypes().GetAll().ToList();
+            var dataTypes = context.DataTypes().All().ToList();
 
             stopwatch.Stop();
 
@@ -50,7 +50,7 @@ namespace L5Sharp.Context.Tests
             var stopwatch = new Stopwatch();
             stopwatch.Start();
             
-            var tags = context.Tags().GetAll().ToList();
+            var tags = context.Tags().All().ToList();
 
             stopwatch.Stop();
 
@@ -65,7 +65,7 @@ namespace L5Sharp.Context.Tests
             var stopwatch = new Stopwatch();
             stopwatch.Start();
             
-            var modules = context.Modules().GetAll().ToList();
+            var modules = context.Modules().All().ToList();
 
             stopwatch.Stop();
 
@@ -80,7 +80,7 @@ namespace L5Sharp.Context.Tests
             var stopwatch = new Stopwatch();
             stopwatch.Start();
 
-            var module = context.Modules().Get("INJ_Module_3"); 
+            var module = context.Modules().Single("INJ_Module_3"); 
             
             var tags = module.Tags;
 
@@ -99,7 +99,7 @@ namespace L5Sharp.Context.Tests
             var stopwatch = new Stopwatch();
             stopwatch.Start();
 
-            var inputTag = context.Modules().Get("INJ_Module_3").Tags.Input!;
+            var inputTag = context.Modules().Single("INJ_Module_3").Tags.Input!;
 
             var ch01 = inputTag.Member("Ch01");
 

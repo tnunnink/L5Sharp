@@ -4,14 +4,12 @@ using System.Xml.Linq;
 using ApprovalTests;
 using ApprovalTests.Reporters;
 using FluentAssertions;
-using L5Sharp.Atomics;
 using L5Sharp.Core;
 using L5Sharp.Creators;
 using L5Sharp.Enums;
-using L5Sharp.Predefined;
 using L5Sharp.Serialization.Data;
+using L5Sharp.Types;
 using NUnit.Framework;
-using String = L5Sharp.Predefined.String;
 
 namespace L5Sharp.Serialization.Tests
 {
@@ -48,12 +46,12 @@ namespace L5Sharp.Serialization.Tests
         {
             var type = new StructureType("Test", new List<IMember<IDataType>>
             {
-                Member.Create<Bool>("BoolMember"),
-                Member.Create<Sint>("SintMember"),
-                Member.Create<Int>("IntMember"),
-                Member.Create<Dint>("DintMember"),
-                Member.Create<Lint>("LintMember"),
-                Member.Create<Real>("RealMember")
+                Member.Create<BOOL>("BoolMember"),
+                Member.Create<SINT>("SintMember"),
+                Member.Create<INT>("IntMember"),
+                Member.Create<DINT>("DintMember"),
+                Member.Create<LINT>("LintMember"),
+                Member.Create<REAL>("RealMember")
             });
 
             var component = new Member<IDataType>("Test", type);
@@ -69,9 +67,9 @@ namespace L5Sharp.Serialization.Tests
         {
             var type = new StructureType("Test", new List<IMember<IDataType>>
             {
-                Member.Create<Dint>("SimpleMember", new Dimensions(10)),
-                Member.Create<Timer>("ComplexMember", 5),
-                Member.Create<String>("StringMember", 2)
+                Member.Create<DINT>("SimpleMember", new Dimensions(10)),
+                Member.Create<TIMER>("ComplexMember", 5),
+                Member.Create<STRING>("StringMember", 2)
             });
             
             var component = new Member<IDataType>("Test", type);
@@ -87,9 +85,9 @@ namespace L5Sharp.Serialization.Tests
         {
             var type = new StructureType("Test", new List<IMember<IDataType>>
             {
-                Member.Create<String>("StringMember"),
-                Member.Create<Timer>("SintMember"),
-                Member.Create<Counter>("IntMember"),
+                Member.Create<STRING>("StringMember"),
+                Member.Create<TIMER>("SintMember"),
+                Member.Create<COUNTER>("IntMember"),
             });
             
             var component = new Member<IDataType>("Test", type);

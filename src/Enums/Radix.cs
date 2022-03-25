@@ -6,8 +6,8 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using Ardalis.SmartEnum;
-using L5Sharp.Atomics;
 using L5Sharp.Extensions;
+using L5Sharp.Types;
 
 // ReSharper disable StringLiteralTypo
 
@@ -53,7 +53,7 @@ namespace L5Sharp.Enums
         /// The string value is padded based on the size of the data type.
         /// </para>
         /// <para>
-        /// Valid Types: <see cref="Bool"/>, <see cref="Sint"/>, <see cref="Int"/>, <see cref="Dint"/>, <see cref="Lint"/>.
+        /// Valid Types: <see cref="BOOL"/>, <see cref="SINT"/>, <see cref="INT"/>, <see cref="DINT"/>, <see cref="LINT"/>.
         /// </para> 
         /// </remarks>
         /// <example>
@@ -107,7 +107,7 @@ namespace L5Sharp.Enums
         /// <param name="dataType">The data type instance to evaluate.</param>
         /// <returns>
         /// <see cref="Null"/> for all non atomic types.
-        /// <see cref="Float"/> for <see cref="Real"/> types.
+        /// <see cref="Float"/> for <see cref="REAL"/> types.
         /// <see cref="Decimal"/> for all other atomic types.
         /// </returns>
         public static Radix Default(IDataType dataType)
@@ -118,7 +118,7 @@ namespace L5Sharp.Enums
             if (dataType is not IAtomicType atomicType)
                 return Null;
 
-            return atomicType is Real ? Float : Decimal;
+            return atomicType is REAL ? Float : Decimal;
         }
 
         /// <summary>
@@ -136,10 +136,10 @@ namespace L5Sharp.Enums
 
             return atomicType switch
             {
-                Bool => Equals(Binary) || Equals(Octal) || Equals(Decimal) || Equals(Hex),
-                Lint => Equals(Binary) || Equals(Octal) || Equals(Decimal) || Equals(Hex) || Equals(Ascii) ||
+                BOOL => Equals(Binary) || Equals(Octal) || Equals(Decimal) || Equals(Hex),
+                LINT => Equals(Binary) || Equals(Octal) || Equals(Decimal) || Equals(Hex) || Equals(Ascii) ||
                         Equals(DateTime) || Equals(DateTimeNs),
-                Real => Equals(Float) || Equals(Exponential),
+                REAL => Equals(Float) || Equals(Exponential),
                 _ => Equals(Binary) || Equals(Octal) || Equals(Decimal) || Equals(Hex) || Equals(Ascii)
             };
         }
@@ -252,11 +252,11 @@ namespace L5Sharp.Enums
 
             return byteLength switch
             {
-                0 => new Bool(value == "1"),
-                > 0 and <= 1 => new Sint(Convert.ToSByte(value, baseNumber)),
-                > 1 and <= 2 => new Int(Convert.ToInt16(value, baseNumber)),
-                > 2 and <= 4 => new Dint(Convert.ToInt32(value, baseNumber)),
-                > 4 and <= 8 => new Lint(Convert.ToInt64(value, baseNumber)),
+                0 => new BOOL(value == "1"),
+                > 0 and <= 1 => new SINT(Convert.ToSByte(value, baseNumber)),
+                > 1 and <= 2 => new INT(Convert.ToInt16(value, baseNumber)),
+                > 2 and <= 4 => new DINT(Convert.ToInt32(value, baseNumber)),
+                > 4 and <= 8 => new LINT(Convert.ToInt64(value, baseNumber)),
                 _ => throw new ArgumentOutOfRangeException(nameof(byteLength),
                     $"The provided value byte length '{byteLength}' is out of range for atomic conversion. " +
                     "Must be between 0 and 8 bytes.")
@@ -388,7 +388,7 @@ namespace L5Sharp.Enums
             {
                 ValidateType(atomic);
 
-                if (atomic is Bool b)
+                if (atomic is BOOL b)
                     return b ? "1" : "0";
 
                 return atomic.Value.ToString();
@@ -399,28 +399,28 @@ namespace L5Sharp.Enums
                 ValidateFormat(input);
 
                 if (sbyte.TryParse(input, out var sbyteValue))
-                    return new Sint(sbyteValue);
+                    return new SINT(sbyteValue);
 
                 if (byte.TryParse(input, out var byteValue))
-                    return new USint(byteValue);
+                    return new USINT(byteValue);
 
                 if (short.TryParse(input, out var shortValue))
-                    return new Int(shortValue);
+                    return new INT(shortValue);
 
                 if (ushort.TryParse(input, out var ushortValue))
-                    return new UInt(ushortValue);
+                    return new UINT(ushortValue);
 
                 if (int.TryParse(input, out var intValue))
-                    return new Dint(intValue);
+                    return new DINT(intValue);
 
                 if (uint.TryParse(input, out var uintValue))
-                    return new UDint(uintValue);
+                    return new UDINT(uintValue);
 
                 if (long.TryParse(input, out var longValue))
-                    return new Lint(longValue);
+                    return new LINT(longValue);
 
                 if (ulong.TryParse(input, out var ulongValue))
-                    return new ULint(ulongValue);
+                    return new ULINT(ulongValue);
 
                 throw new ArgumentOutOfRangeException(nameof(input),
                     $"Input '{input}' is out of range for the {Name} Radix.");
@@ -481,7 +481,7 @@ namespace L5Sharp.Enums
             {
                 ValidateFormat(input);
 
-                return new Real(float.Parse(input));
+                return new REAL(float.Parse(input));
             }
         }
 
@@ -504,7 +504,7 @@ namespace L5Sharp.Enums
             {
                 ValidateFormat(input);
 
-                return new Real(float.Parse(input));
+                return new REAL(float.Parse(input));
             }
         }
 
@@ -643,7 +643,7 @@ namespace L5Sharp.Enums
 
                 var timestamp = (time.Ticks - System.DateTime.UnixEpoch.Ticks) / TicksPerMicrosecond;
 
-                return new Lint(timestamp);
+                return new LINT(timestamp);
             }
         }
 
@@ -687,7 +687,7 @@ namespace L5Sharp.Enums
 
                 var timestamp = (time.Ticks - System.DateTime.UnixEpoch.Ticks) * 100;
 
-                return new Lint(timestamp);
+                return new LINT(timestamp);
             }
         }
     }

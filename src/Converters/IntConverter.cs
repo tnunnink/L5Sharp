@@ -1,13 +1,13 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Globalization;
-using L5Sharp.Atomics;
 using L5Sharp.Enums;
+using L5Sharp.Types;
 
 namespace L5Sharp.Converters
 {
     /// <summary>
-    /// A <see cref="TypeConverter"/> for the <see cref="Int"/> object.
+    /// A <see cref="TypeConverter"/> for the <see cref="INT"/> object.
     /// </summary>
     internal class IntConverter : TypeConverter
     {
@@ -16,9 +16,9 @@ namespace L5Sharp.Converters
             return sourceType == typeof(sbyte) ||
                    sourceType == typeof(byte) ||
                    sourceType == typeof(short) ||
-                   sourceType == typeof(Sint) ||
-                   sourceType == typeof(USint) ||
-                   sourceType == typeof(Int) ||
+                   sourceType == typeof(SINT) ||
+                   sourceType == typeof(USINT) ||
+                   sourceType == typeof(INT) ||
                    sourceType == typeof(string) ||
                    base.CanConvertFrom(context, sourceType);
         }
@@ -27,13 +27,13 @@ namespace L5Sharp.Converters
         {
             return value switch
             {
-                sbyte v => new Int(v),
-                byte v => new Int(v),
-                short v => new Int(v),
-                Sint v => new Int(v.Value),
-                USint v => new Int(v.Value),
-                Int v => v,
-                string v => short.TryParse(v, out var result) ? new Int(result) : Radix.ParseValue<Int>(v),
+                sbyte v => new INT(v),
+                byte v => new INT(v),
+                short v => new INT(v),
+                SINT v => new INT(v.Value),
+                USINT v => new INT(v.Value),
+                INT v => v,
+                string v => short.TryParse(v, out var result) ? new INT(result) : Radix.ParseValue<INT>(v),
                 _ => base.ConvertFrom(context, culture, value)
                      ?? throw new NotSupportedException(
                          $"The provided value of type {value.GetType()} is not supported for conversion.")
@@ -46,10 +46,10 @@ namespace L5Sharp.Converters
                    destinationType == typeof(int) ||
                    destinationType == typeof(long) ||
                    destinationType == typeof(float) ||
-                   destinationType == typeof(Int) ||
-                   destinationType == typeof(Dint) ||
-                   destinationType == typeof(Lint) ||
-                   destinationType == typeof(Real) ||
+                   destinationType == typeof(INT) ||
+                   destinationType == typeof(DINT) ||
+                   destinationType == typeof(LINT) ||
+                   destinationType == typeof(REAL) ||
                    destinationType == typeof(string) ||
                    base.CanConvertFrom(context, destinationType);
         }
@@ -57,8 +57,8 @@ namespace L5Sharp.Converters
         public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value,
             Type destinationType)
         {
-            if (value is not Int typed)
-                throw new InvalidOperationException($"Value must be of type {typeof(Int)}.");
+            if (value is not INT typed)
+                throw new InvalidOperationException($"Value must be of type {typeof(INT)}.");
 
             return destinationType switch
             {
@@ -66,10 +66,10 @@ namespace L5Sharp.Converters
                 not null when destinationType == typeof(int) => (int)typed.Value,
                 not null when destinationType == typeof(long) => (long)typed.Value,
                 not null when destinationType == typeof(float) => (float)typed.Value,
-                not null when destinationType == typeof(Int) => typed,
-                not null when destinationType == typeof(Dint) => new Dint(typed.Value),
-                not null when destinationType == typeof(Lint) => new Lint(typed.Value),
-                not null when destinationType == typeof(Real) => new Real(typed.Value),
+                not null when destinationType == typeof(INT) => typed,
+                not null when destinationType == typeof(DINT) => new DINT(typed.Value),
+                not null when destinationType == typeof(LINT) => new LINT(typed.Value),
+                not null when destinationType == typeof(REAL) => new REAL(typed.Value),
                 not null when destinationType == typeof(string) => typed.Format(Radix.Default(typed)),
                 _ => base.ConvertTo(context, culture, value, destinationType!) ??
                      throw new NotSupportedException(

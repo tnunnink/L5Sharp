@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Xml.Linq;
 using L5Sharp.L5X;
-using L5Sharp.Predefined;
+using L5Sharp.Types;
 
 namespace L5Sharp.Serialization.Data
 {
-    internal class AlarmDigitalParametersSerializer : IL5XSerializer<AlarmDigital>
+    internal class AlarmDigitalParametersSerializer : IL5XSerializer<ALARM_DIGITAL>
     {
         private static readonly XName ElementName = L5XElement.AlarmDigitalParameters.ToString();
         
-        public XElement Serialize(AlarmDigital component)
+        public XElement Serialize(ALARM_DIGITAL component)
         {
             if (component == null)
                 throw new ArgumentNullException(nameof(component));
@@ -48,7 +48,7 @@ namespace L5Sharp.Serialization.Data
             return element;
         }
 
-        public AlarmDigital Deserialize(XElement element)
+        public ALARM_DIGITAL Deserialize(XElement element)
         {
             if (element == null)
                 throw new ArgumentNullException(nameof(element));
@@ -56,7 +56,7 @@ namespace L5Sharp.Serialization.Data
             if (element.Name != ElementName)
                 throw new ArgumentException($"Element '{element.Name}' not valid for the serializer {GetType()}.");
 
-            var type = new AlarmDigital();
+            var type = new ALARM_DIGITAL();
             
             type.Severity.DataType.SetValue(element.Attribute(nameof(type.Severity))?.Value!);
             type.MinDurationPRE.DataType.SetValue(element.Attribute(nameof(type.MinDurationPRE))?.Value!);

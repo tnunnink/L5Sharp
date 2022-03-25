@@ -1,8 +1,8 @@
 ﻿using System;
 using FluentAssertions;
-using L5Sharp.Atomics;
 using L5Sharp.Core;
 using L5Sharp.Creators;
+using L5Sharp.Types;
 using NUnit.Framework;
 
 namespace L5Sharp.Creators.Tests
@@ -13,7 +13,7 @@ namespace L5Sharp.Creators.Tests
         [Test]
         public void Create_NullName_ShouldThrowArgumentNullException()
         {
-            FluentActions.Invoking(() => Member.Create(null!, new Bool())).Should().Throw<ArgumentNullException>();
+            FluentActions.Invoking(() => Member.Create(null!, new BOOL())).Should().Throw<ArgumentNullException>();
         }
         
         [Test]
@@ -25,7 +25,7 @@ namespace L5Sharp.Creators.Tests
         [Test]
         public void Create_NameAndType_ShouldNotBeNull()
         {
-            var member = Member.Create("Test", new Bool());
+            var member = Member.Create("Test", new BOOL());
 
             member.Should().NotBeNull();
         }
@@ -33,7 +33,7 @@ namespace L5Sharp.Creators.Tests
         [Test]
         public void Create_Name_ShouldNotBeNull()
         {
-            var member = Member.Create<Bool>("Test");
+            var member = Member.Create<BOOL>("Test");
 
             member.Should().NotBeNull();
         }
@@ -41,7 +41,7 @@ namespace L5Sharp.Creators.Tests
         [Test]
         public void Create_NameAndGenericType_ShouldNotBeNull()
         {
-            IDataType type = new Bool();
+            IDataType type = new BOOL();
             
             var member = Member.Create("Test", type);
 
@@ -51,7 +51,7 @@ namespace L5Sharp.Creators.Tests
         [Test]
         public void Create_NullNameWithDimensions_ShouldThrowArgumentNullException()
         {
-            FluentActions.Invoking(() => Member.Create(null!, new Bool(), new Dimensions(1)))
+            FluentActions.Invoking(() => Member.Create(null!, new BOOL(), new Dimensions(1)))
                 .Should().Throw<ArgumentNullException>();
         }
         
@@ -65,7 +65,7 @@ namespace L5Sharp.Creators.Tests
         [Test]
         public void Create_NameAndTypeAndDimensions_ShouldNotBeNull()
         {
-            var member = Member.Create("Test", new Bool(), new Dimensions(5));
+            var member = Member.Create("Test", new BOOL(), new Dimensions(5));
 
             member.Should().NotBeNull();
         }
@@ -73,7 +73,7 @@ namespace L5Sharp.Creators.Tests
         [Test]
         public void Create_NameAndDimensions_ShouldNotBeNull()
         {
-            var member = Member.Create<Bool>("Test", new Dimensions(5));
+            var member = Member.Create<BOOL>("Test", new Dimensions(5));
 
             member.Should().NotBeNull();
         }
@@ -81,7 +81,7 @@ namespace L5Sharp.Creators.Tests
         [Test]
         public void Create_NameAndGenericTypeAndDimensions_ShouldNotBeNull()
         {
-            IDataType type = new Bool();
+            IDataType type = new BOOL();
             
             var member = Member.Create("Test", type, new Dimensions(5));
 

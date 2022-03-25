@@ -85,6 +85,9 @@ namespace L5Sharp.Core
         public TagName TagName => _tagMember.TagName;
 
         /// <inheritdoc />
+        public string Units => _tagMember.Units;
+
+        /// <inheritdoc />
         public TDataType DataType => _tagMember.DataType;
 
         /// <inheritdoc />

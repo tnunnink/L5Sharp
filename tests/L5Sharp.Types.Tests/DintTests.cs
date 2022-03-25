@@ -1,7 +1,6 @@
 ﻿using System;
 using AutoFixture;
 using FluentAssertions;
-using L5Sharp.Atomics;
 using L5Sharp.Enums;
 using NUnit.Framework;
 
@@ -22,7 +21,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void New_Default_ShouldNotBeNull()
         {
-            var type = new Dint();
+            var type = new DINT();
 
             type.Should().NotBeNull();
         }
@@ -30,10 +29,10 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void New_Default_ShouldHaveExpectedDefaults()
         {
-            var type = new Dint();
+            var type = new DINT();
 
             type.Should().NotBeNull();
-            type.Name.Should().Be(nameof(Dint).ToUpper());
+            type.Name.Should().Be(nameof(DINT).ToUpper());
             type.Class.Should().Be(DataTypeClass.Atomic);
             type.Family.Should().Be(DataTypeFamily.None);
             type.Description.Should().Be("Logix representation of a System.Int32");
@@ -43,7 +42,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void New_ValueOverload_ShouldHaveExpectedValue()
         {
-            var type = new Dint(_random);
+            var type = new DINT(_random);
             
             type.Value.Should().Be(_random);
         }
@@ -51,7 +50,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void GetValue_AsAtomic_ShouldBeExpected()
         {
-            var type = (IAtomicType) new Dint();
+            var type = (IAtomicType) new DINT();
 
             type.Value.Should().Be(0);
         }
@@ -59,7 +58,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void SetValue_Null_ShouldReturnExpected()
         {
-            var type = new Dint();
+            var type = new DINT();
 
             FluentActions.Invoking(() => type.SetValue(null!)).Should().Throw<ArgumentNullException>();
         }
@@ -67,7 +66,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void SetValue_ValidInt_ShouldReturnExpected()
         {
-            var type = new Dint();
+            var type = new DINT();
 
             type.SetValue(_random);
 
@@ -77,9 +76,9 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void SetValue_SameType_ShouldReturnExpected()
         {
-            var type = new Dint();
+            var type = new DINT();
 
-            type.SetValue(new Dint(_random));
+            type.SetValue(new DINT(_random));
 
             type.Value.Should().Be(_random);
         }
@@ -87,9 +86,9 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void SetValue_SameTypeAsObject_ShouldBeExpected()
         {
-            var type = new Dint();
+            var type = new DINT();
 
-            type.SetValue((object)new Dint(_random));
+            type.SetValue((object)new DINT(_random));
 
             type.Value.Should().Be(_random);
         }
@@ -97,7 +96,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void SetValue_ValidObjectValue_ShouldReturnExpected()
         {
-            var type = new Dint();
+            var type = new DINT();
 
             type.SetValue((object) _random);
 
@@ -109,7 +108,7 @@ namespace L5Sharp.Types.Tests
         {
             var fixture = new Fixture();
             var value = fixture.Create<short>();
-            var type = new Dint();
+            var type = new DINT();
 
             type.SetValue((object)value);
 
@@ -119,7 +118,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void SetValue_ValidStringValue_ShouldReturnExpected()
         {
-            var type = new Dint();
+            var type = new DINT();
 
             type.SetValue(_random.ToString());
 
@@ -131,7 +130,7 @@ namespace L5Sharp.Types.Tests
         {
             var fixture = new Fixture();
             var value = fixture.Create<string>();
-            var type = new Dint(_random);
+            var type = new DINT(_random);
 
             FluentActions.Invoking(() => type.SetValue(value)).Should().Throw<ArgumentException>();
         }
@@ -141,7 +140,7 @@ namespace L5Sharp.Types.Tests
         {
             var fixture = new Fixture();
             var value = fixture.Create<float>();
-            var type = new Dint();
+            var type = new DINT();
 
             FluentActions.Invoking(() => type.SetValue(value)).Should().Throw<ArgumentException>();
         }
@@ -149,7 +148,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void Format_DefaultRadix_ShouldBeExpected()
         {
-            var type = new Dint();
+            var type = new DINT();
 
             var format = type.Format();
 
@@ -159,7 +158,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void Format_OverloadedRadix_ShouldBeExpected()
         {
-            var type = new Dint();
+            var type = new DINT();
 
             var format = type.Format(Radix.Binary);
 
@@ -169,17 +168,17 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void Instantiate_WhenCalled_ShouldEqualDefaultInstance()
         {
-            var type = new Dint(_random);
+            var type = new DINT(_random);
 
             var instance = type.Instantiate();
 
-            instance.Should().BeEquivalentTo(new Dint());
+            instance.Should().BeEquivalentTo(new DINT());
         }
 
         [Test]
         public void ImplicitOperator_Dint_ShouldBeTrue()
         {
-            Dint value = _random;
+            DINT value = _random;
 
             value.Value.Should().Be(_random);
         }
@@ -187,7 +186,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void ImplicitOperator_int_ShouldBeTrue()
         {
-            int value = new Dint(_random);
+            int value = new DINT(_random);
 
             value.Should().Be(_random);
         }
@@ -195,7 +194,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void ImplicitOperator_ValidString_ShouldBeExpected()
         {
-            Dint type = _random.ToString();
+            DINT type = _random.ToString();
 
             type.Value.Should().Be(_random);
         }
@@ -203,8 +202,8 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void TypeEquals_AreEqual_ShouldBeTrue()
         {
-            var first = new Dint();
-            var second = new Dint();
+            var first = new DINT();
+            var second = new DINT();
 
             var result = first.Equals(second);
 
@@ -214,7 +213,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void TypeEquals_AreSame_ShouldBeTrue()
         {
-            var first = new Dint();
+            var first = new DINT();
 
             var result = first.Equals(first);
 
@@ -225,7 +224,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void TypeEquals_Null_ShouldBeFalse()
         {
-            var first = new Dint();
+            var first = new DINT();
 
             var result = first.Equals(null);
 
@@ -235,8 +234,8 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void ObjectEquals_AreEqual_ShouldBeTrue()
         {
-            var first = new Dint();
-            var second = new Dint();
+            var first = new DINT();
+            var second = new DINT();
 
             var result = first.Equals((object)second);
 
@@ -246,7 +245,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void ObjectEquals_AreSame_ShouldBeTrue()
         {
-            var first = new Dint();
+            var first = new DINT();
 
             var result = first.Equals((object)first);
 
@@ -256,7 +255,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void ObjectEquals_Null_ShouldBeFalse()
         {
-            var first = new Dint();
+            var first = new DINT();
 
             var result = first.Equals((object)null);
 
@@ -266,8 +265,8 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void OperatorEquals_AreEqual_ShouldBeTrue()
         {
-            var first = new Dint();
-            var second = new Dint();
+            var first = new DINT();
+            var second = new DINT();
 
             var result = first == second;
 
@@ -277,8 +276,8 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void OperatorNotEquals_AreEqual_ShouldBeFalse()
         {
-            var first = new Dint();
-            var second = new Dint();
+            var first = new DINT();
+            var second = new DINT();
 
             var result = first != second;
 
@@ -288,7 +287,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void GetHashCode_DefaultValue_ShouldBeHashOfName()
         {
-            var type = new Dint();
+            var type = new DINT();
 
             var hash = type.GetHashCode();
 
@@ -298,7 +297,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void ToString_WhenCalled_ShouldBeName()
         {
-            var type = new Dint();
+            var type = new DINT();
 
             type.ToString().Should().Be(type.Name);
         }
@@ -306,7 +305,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void CompareTo_Same_ShouldBeZero()
         {
-            var type = new Dint();
+            var type = new DINT();
 
             var compare = type.CompareTo(type);
 
@@ -316,7 +315,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void CompareTo_Null_ShouldBeOne()
         {
-            var type = new Dint();
+            var type = new DINT();
 
             var compare = type.CompareTo(null);
 
@@ -326,8 +325,8 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void CompareTo_ValidOther_ShouldBeZero()
         {
-            var first = new Dint();
-            var second = new Dint();
+            var first = new DINT();
+            var second = new DINT();
 
             var compare = first.CompareTo(second);
 

@@ -1,4 +1,5 @@
 ﻿using L5Sharp.Core;
+using L5Sharp.Querying;
 using L5Sharp.Repositories;
 
 namespace L5Sharp
@@ -16,7 +17,7 @@ namespace L5Sharp
         /// <summary>
         /// Get the <see cref="IUserDefined"/> repository instance for the current <see cref="ILogixContext"/>.
         /// </summary>
-        IRepository<IComplexType> DataTypes();
+        IComponentRepository<IComplexType> DataTypes();
 
         /// <summary>
         /// Get the <see cref="IModule"/> repository instance for the current <see cref="ILogixContext"/>.
@@ -26,7 +27,7 @@ namespace L5Sharp
         /// <summary>
         /// Get the <see cref="IAddOnInstruction"/> repository instance for the current <see cref="ILogixContext"/>.
         /// </summary>
-        IRepository<IAddOnInstruction> Instructions();
+        IComponentRepository<IAddOnInstruction> Instructions();
 
         /// <summary>
         /// Get the <see cref="ITag{TDataType}"/> repository instance for the current <see cref="ILogixContext"/>. 
@@ -43,24 +44,24 @@ namespace L5Sharp
         /// <summary>
         /// Get the <see cref="IProgram"/> repository instance for the current <see cref="ILogixContext"/>. 
         /// </summary>
-        IRepository<IProgram> Programs();
+        IComponentRepository<IProgram> Programs();
 
         /// <summary>
         /// Get the <see cref="ITask"/> repository instance for the current <see cref="ILogixContext"/>.
         /// </summary>
-        IReadOnlyRepository<ITask> Tasks();
+        ITaskQuery Tasks();
 
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        IRungRepository Rungs();
+        IRungQuery Rungs();
         
         /// <summary>
         /// 
         /// </summary>
         /// <param name="program"></param>
         /// <returns></returns>
-        IRungRepository Rungs(ComponentName program);
+        IRungQuery Rungs(ComponentName program);
     }
 }

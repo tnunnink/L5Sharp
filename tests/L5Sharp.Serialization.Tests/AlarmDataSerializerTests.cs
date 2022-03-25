@@ -3,8 +3,8 @@ using System.Xml.Linq;
 using ApprovalTests;
 using ApprovalTests.Reporters;
 using FluentAssertions;
-using L5Sharp.Predefined;
 using L5Sharp.Serialization.Data;
+using L5Sharp.Types;
 using NUnit.Framework;
 
 namespace L5Sharp.Serialization.Tests
@@ -29,7 +29,7 @@ namespace L5Sharp.Serialization.Tests
         [Test]
         public void Serialize_InvalidType_ShouldThrowArgumentException()
         {
-            var component = new Timer();
+            var component = new TIMER();
 
             FluentActions.Invoking(() => _serializer.Serialize(component)).Should().Throw<ArgumentException>();
         }
@@ -37,7 +37,7 @@ namespace L5Sharp.Serialization.Tests
         [Test]
         public void Serialize_AlarmDigital_ShouldNotBeNull()
         {
-            var component = new AlarmDigital();
+            var component = new ALARM_DIGITAL();
 
             var xml = _serializer.Serialize(component);
 
@@ -47,7 +47,7 @@ namespace L5Sharp.Serialization.Tests
         [Test]
         public void Serialize_AlarmAnalog_ShouldNotBeNull()
         {
-            var component = new AlarmAnalog();
+            var component = new ALARM_ANALOG();
 
             var xml = _serializer.Serialize(component);
 
@@ -58,7 +58,7 @@ namespace L5Sharp.Serialization.Tests
         [UseReporter(typeof(DiffReporter))]
         public void Serialize_AlarmDigital_ShouldBeApproved()
         {
-            var component = new AlarmDigital();
+            var component = new ALARM_DIGITAL();
 
             var xml = _serializer.Serialize(component);
 
@@ -69,7 +69,7 @@ namespace L5Sharp.Serialization.Tests
         [UseReporter(typeof(DiffReporter))]
         public void Serialize_AlarmAnalog_ShouldBeApproved()
         {
-            var component = new AlarmAnalog();
+            var component = new ALARM_ANALOG();
 
             var xml = _serializer.Serialize(component);
 

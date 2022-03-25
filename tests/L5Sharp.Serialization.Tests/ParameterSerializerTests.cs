@@ -3,11 +3,10 @@ using System.Xml.Linq;
 using ApprovalTests;
 using ApprovalTests.Reporters;
 using FluentAssertions;
-using L5Sharp.Atomics;
 using L5Sharp.Core;
 using L5Sharp.Enums;
-using L5Sharp.Predefined;
 using L5Sharp.Serialization.Components;
+using L5Sharp.Types;
 using NUnit.Framework;
 
 namespace L5Sharp.Serialization.Tests
@@ -32,7 +31,7 @@ namespace L5Sharp.Serialization.Tests
         [Test]
         public void Serialize_WhenCalled_ShouldNotBeNull()
         {
-            var parameter = new Parameter<IDataType>("Test", new Bool());
+            var parameter = new Parameter<IDataType>("Test", new BOOL());
 
             var xml = _serializer.Serialize(parameter);
 
@@ -43,7 +42,7 @@ namespace L5Sharp.Serialization.Tests
         [UseReporter(typeof(DiffReporter))]
         public void Serialize_Basic_ShouldBeApproved()
         {
-            var parameter = new Parameter<IDataType>("Test", new Bool());
+            var parameter = new Parameter<IDataType>("Test", new BOOL());
 
             var xml = _serializer.Serialize(parameter);
 
@@ -54,7 +53,7 @@ namespace L5Sharp.Serialization.Tests
         [UseReporter(typeof(DiffReporter))]
         public void Serialize_OverLoaded_ShouldBeApproved()
         {
-            var parameter = new Parameter<IDataType>("Test", new Bool(), Radix.Binary, ExternalAccess.ReadOnly,
+            var parameter = new Parameter<IDataType>("Test", new BOOL(), Radix.Binary, ExternalAccess.ReadOnly,
                 TagUsage.Output, "AliasTag", true, true, true, "This is a test");
 
             var xml = _serializer.Serialize(parameter);
@@ -66,7 +65,7 @@ namespace L5Sharp.Serialization.Tests
         [UseReporter(typeof(DiffReporter))]
         public void Serialize_Complex_ShouldBeApproved()
         {
-            var parameter = new Parameter<Timer>("Test", new Timer());
+            var parameter = new Parameter<TIMER>("Test", new TIMER());
 
             var xml = _serializer.Serialize(parameter);
 
@@ -77,7 +76,7 @@ namespace L5Sharp.Serialization.Tests
         [UseReporter(typeof(DiffReporter))]
         public void Serialize_AtomicArray_ShouldBeApproved()
         {
-            var member = new Parameter<IArrayType<Dint>>("Test", new ArrayType<Dint>(new Dimensions(10)));
+            var member = new Parameter<IArrayType<DINT>>("Test", new ArrayType<DINT>(new Dimensions(10)));
 
             var xml = _serializer.Serialize(member);
 
@@ -118,7 +117,7 @@ namespace L5Sharp.Serialization.Tests
             var component = _serializer.Deserialize(element);
 
             component.Name.Should().Be("InputTest");
-            component.DataType.Should().BeOfType<Bool>();
+            component.DataType.Should().BeOfType<BOOL>();
             component.Dimensions.Should().Be(Dimensions.Empty);
             component.Radix.Should().Be(Radix.Decimal);
             component.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);
@@ -156,7 +155,7 @@ namespace L5Sharp.Serialization.Tests
             var component = _serializer.Deserialize(element);
 
             component.Name.Should().Be("InOutTest");
-            component.DataType.Should().BeOfType<Undefined>();
+            component.DataType.Should().BeOfType<UNDEFINED>();
             component.DataType.Name.Should().Be("SimpleType");
             component.Dimensions.Should().Be(Dimensions.Empty);
             component.Radix.Should().Be(Radix.Null);

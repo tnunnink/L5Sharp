@@ -4,8 +4,8 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
-using L5Sharp.Atomics;
 using L5Sharp.Core;
+using L5Sharp.Types;
 
 namespace L5Sharp.Extensions
 {
@@ -21,16 +21,16 @@ namespace L5Sharp.Extensions
         public static bool IsTagName(this string input) => new TagName(input).IsValid;
 
         /// <summary>
-        /// Converts the string to an array type of <see cref="Sint"/> values.
+        /// Converts the string to an array type of <see cref="SINT"/> values.
         /// </summary>
         /// <param name="value">The string to convert.</param>
         /// <returns>An <see cref="IArrayType{TDataType}"/> that contains the characters of the string.</returns>
         /// <exception cref="ArgumentOutOfRangeException">
         /// The provided string length is greater than the maximum ushort size.
         /// </exception>
-        public static IArrayType<Sint> ToArrayType(this string value)
+        public static IArrayType<SINT> ToArrayType(this string value)
         {
-            var bytes = Encoding.ASCII.GetBytes(value).Select(b => new Sint((sbyte)b)).ToList();
+            var bytes = Encoding.ASCII.GetBytes(value).Select(b => new SINT((sbyte)b)).ToList();
 
             if (bytes.Count > ushort.MaxValue)
                 throw new ArgumentOutOfRangeException(nameof(value),
@@ -38,7 +38,7 @@ namespace L5Sharp.Extensions
 
             var length = (ushort)bytes.Count;
 
-            return new ArrayType<Sint>(new Dimensions(length), bytes);
+            return new ArrayType<SINT>(new Dimensions(length), bytes);
         }
 
         /// <summary>
@@ -262,29 +262,6 @@ namespace L5Sharp.Extensions
             }
 
             return characters.Count == 0;
-        }
-        
-        public static string FirstInstruction(this string value)
-        {
-            var characters = new List<char>();
-            var opened = 0;
-            var closed = 0;
-
-            foreach (var c in value)
-            {
-                characters.Add(c);
-                
-                if (c == '(')
-                    opened++;
-
-                if (c == ')')
-                    closed++;
-
-                if (opened > 0 && opened == closed)
-                    break;
-            }
-
-            return characters.ToString();
         }
 
         /// <summary>

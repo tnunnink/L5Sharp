@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using L5Sharp.Atomics;
+using L5Sharp.Types;
 
 // ReSharper disable InconsistentNaming RSLogix naming
 
@@ -27,7 +27,7 @@ namespace L5Sharp
         /// <value>
         /// Member that holds the decimal format value representing the maximum length of the string value. 
         /// </value>
-        IMember<Dint> LEN { get; }
+        IMember<DINT> LEN { get; }
 
         /// <summary>
         /// Gets the DATA member of the <see cref="IStringType"/>.
@@ -35,7 +35,7 @@ namespace L5Sharp
         /// <value>
         /// Member that holds the ASCII format sequence of characters that comprise the string value.
         /// </value>
-        IMember<IArrayType<Sint>> DATA { get; }
+        IMember<IArrayType<SINT>> DATA { get; }
         
         /// <summary>
         /// Sets <see cref="Value"/> to the provided string value. 

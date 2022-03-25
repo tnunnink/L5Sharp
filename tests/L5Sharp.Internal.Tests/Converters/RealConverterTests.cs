@@ -2,9 +2,9 @@
 using System.ComponentModel;
 using AutoFixture;
 using FluentAssertions;
-using L5Sharp.Atomics;
 using L5Sharp.Converters;
 using L5Sharp.Internal.Tests.Specimens;
+using L5Sharp.Types;
 using NUnit.Framework;
 
 namespace L5Sharp.Internal.Tests.Converters
@@ -25,7 +25,7 @@ namespace L5Sharp.Internal.Tests.Converters
             _fixture.Customizations.Add(new DintGenerator());
             _fixture.Customizations.Add(new LintGenerator());
 
-            _converter = TypeDescriptor.GetConverter(typeof(Real));
+            _converter = TypeDescriptor.GetConverter(typeof(REAL));
         }
         
         [Test]
@@ -91,7 +91,7 @@ namespace L5Sharp.Internal.Tests.Converters
         [Test]
         public void CanConvertFrom_Sint_ShouldBeTrue()
         {
-            var value = _fixture.Create<Sint>();
+            var value = _fixture.Create<SINT>();
 
             var result = _converter.CanConvertFrom(value.GetType());
 
@@ -101,7 +101,7 @@ namespace L5Sharp.Internal.Tests.Converters
         [Test]
         public void CanConvertFrom_Int_ShouldBeTrue()
         {
-            var value = _fixture.Create<Int>();
+            var value = _fixture.Create<INT>();
 
             var result = _converter.CanConvertFrom(value.GetType());
 
@@ -111,7 +111,7 @@ namespace L5Sharp.Internal.Tests.Converters
         [Test]
         public void CanConvertFrom_Dint_ShouldBeTrue()
         {
-            var value = _fixture.Create<Dint>();
+            var value = _fixture.Create<DINT>();
 
             var result = _converter.CanConvertFrom(value.GetType());
 
@@ -121,7 +121,7 @@ namespace L5Sharp.Internal.Tests.Converters
         [Test]
         public void CanConvertFrom_Lint_ShouldBeTrue()
         {
-            var value = _fixture.Create<Lint>();
+            var value = _fixture.Create<LINT>();
 
             var result = _converter.CanConvertFrom(value.GetType());
 
@@ -131,7 +131,7 @@ namespace L5Sharp.Internal.Tests.Converters
         [Test]
         public void CanConvertFrom_Real_ShouldBeTrue()
         {
-            var value = _fixture.Create<Lint>();
+            var value = _fixture.Create<LINT>();
 
             var result = _converter.CanConvertFrom(value.GetType());
 
@@ -161,7 +161,7 @@ namespace L5Sharp.Internal.Tests.Converters
         {
             var value = _fixture.Create<byte>();
 
-            var result = (Real)_converter.ConvertFrom(value);
+            var result = (REAL)_converter.ConvertFrom(value);
 
             result.Should().Be(result);
         }
@@ -171,7 +171,7 @@ namespace L5Sharp.Internal.Tests.Converters
         {
             var value = _fixture.Create<short>();
 
-            var result = (Real)_converter.ConvertFrom(value);
+            var result = (REAL)_converter.ConvertFrom(value);
 
             result.Should().Be(result);
         }
@@ -181,7 +181,7 @@ namespace L5Sharp.Internal.Tests.Converters
         {
             var value = _fixture.Create<int>();
 
-            var result = (Real)_converter.ConvertFrom(value);
+            var result = (REAL)_converter.ConvertFrom(value);
 
             result.Should().Be(result);
         }
@@ -191,7 +191,7 @@ namespace L5Sharp.Internal.Tests.Converters
         {
             var value = _fixture.Create<long>();
 
-            var result = (Real)_converter.ConvertFrom(value);
+            var result = (REAL)_converter.ConvertFrom(value);
 
             result.Should().Be(result);
         }
@@ -201,7 +201,7 @@ namespace L5Sharp.Internal.Tests.Converters
         {
             var value = _fixture.Create<float>();
 
-            var result = (Real)_converter.ConvertFrom(value);
+            var result = (REAL)_converter.ConvertFrom(value);
 
             result.Should().Be(result);
         }
@@ -209,9 +209,9 @@ namespace L5Sharp.Internal.Tests.Converters
         [Test]
         public void ConvertFrom_Sint_ShouldBeExpected()
         {
-            var value = _fixture.Create<Sint>();
+            var value = _fixture.Create<SINT>();
 
-            var result = (Real)_converter.ConvertFrom(value);
+            var result = (REAL)_converter.ConvertFrom(value);
 
             result.Should().Be(result);
         }
@@ -219,9 +219,9 @@ namespace L5Sharp.Internal.Tests.Converters
         [Test]
         public void ConvertFrom_Int_ShouldBeExpected()
         {
-            var value = _fixture.Create<Int>();
+            var value = _fixture.Create<INT>();
 
-            var result = (Real)_converter.ConvertFrom(value);
+            var result = (REAL)_converter.ConvertFrom(value);
 
             result.Should().Be(result);
         }
@@ -229,9 +229,9 @@ namespace L5Sharp.Internal.Tests.Converters
         [Test]
         public void ConvertFrom_Dint_ShouldBeExpected()
         {
-            var value = _fixture.Create<Dint>();
+            var value = _fixture.Create<DINT>();
 
-            var result = (Real)_converter.ConvertFrom(value);
+            var result = (REAL)_converter.ConvertFrom(value);
 
             result.Should().Be(result);
         }
@@ -239,9 +239,9 @@ namespace L5Sharp.Internal.Tests.Converters
         [Test]
         public void ConvertFrom_Lint_ShouldBeExpected()
         {
-            var value = _fixture.Create<Lint>();
+            var value = _fixture.Create<LINT>();
 
-            var result = (Real)_converter.ConvertFrom(value);
+            var result = (REAL)_converter.ConvertFrom(value);
 
             result.Should().Be(result);
         }
@@ -249,9 +249,9 @@ namespace L5Sharp.Internal.Tests.Converters
         [Test]
         public void ConvertFrom_Real_ShouldBeExpected()
         {
-            var value = _fixture.Create<Real>();
+            var value = _fixture.Create<REAL>();
 
-            var result = (Real)_converter.ConvertFrom(value);
+            var result = (REAL)_converter.ConvertFrom(value);
 
             result.Should().Be(result);
         }
@@ -261,7 +261,7 @@ namespace L5Sharp.Internal.Tests.Converters
         {
             var value = _fixture.Create<long>().ToString();
 
-            var result = (Real)_converter.ConvertFrom(value);
+            var result = (REAL)_converter.ConvertFrom(value);
 
             result.Should().Be(result);
         }
@@ -279,7 +279,7 @@ namespace L5Sharp.Internal.Tests.Converters
         [Test]
         public void CanConvertTo_Real_ShouldBeTrue()
         {
-            var value = _fixture.Create<Real>();
+            var value = _fixture.Create<REAL>();
 
             var result = _converter.CanConvertTo(value.GetType());
 
@@ -310,14 +310,14 @@ namespace L5Sharp.Internal.Tests.Converters
         {
             var converter = new RealConverter();
 
-            FluentActions.Invoking(() => converter.ConvertTo(new Real(), typeof(bool))!).Should()
+            FluentActions.Invoking(() => converter.ConvertTo(new REAL(), typeof(bool))!).Should()
                 .Throw<NotSupportedException>();
         }
 
         [Test]
         public void ConvertTo_long_ShouldBeExpected()
         {
-            var value = _fixture.Create<Real>();
+            var value = _fixture.Create<REAL>();
 
             var result = (float)_converter.ConvertTo(value, typeof(float))!;
 
@@ -327,9 +327,9 @@ namespace L5Sharp.Internal.Tests.Converters
         [Test]
         public void ConvertTo_Lint_ShouldBeExpected()
         {
-            var value = _fixture.Create<Real>();
+            var value = _fixture.Create<REAL>();
 
-            var result = (Real)_converter.ConvertTo(value, typeof(Real));
+            var result = (REAL)_converter.ConvertTo(value, typeof(REAL));
 
             result?.Value.Should().Be(value);
         }
@@ -337,7 +337,7 @@ namespace L5Sharp.Internal.Tests.Converters
         [Test]
         public void ConvertTo_string_ShouldBeExpected()
         {
-            var value = _fixture.Create<Real>();
+            var value = _fixture.Create<REAL>();
 
             var result = (string)_converter.ConvertTo(value, typeof(string));
 

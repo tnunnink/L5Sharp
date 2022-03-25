@@ -1,5 +1,5 @@
 ﻿using FluentAssertions;
-using L5Sharp.Predefined;
+using L5Sharp.Types;
 using NUnit.Framework;
 
 namespace L5Sharp.Enums.Tests
@@ -46,7 +46,7 @@ namespace L5Sharp.Enums.Tests
         [Test]
         public void FromDataType_String_ShouldBeString()
         {
-            var format = TagDataFormat.FromDataType(new String());
+            var format = TagDataFormat.FromDataType(new STRING());
 
             format.Should().Be(TagDataFormat.String);
         }
@@ -54,7 +54,7 @@ namespace L5Sharp.Enums.Tests
         [Test]
         public void FromDataType_AlarmDigital_ShouldBeAlarm()
         {
-            var format = TagDataFormat.FromDataType(new AlarmDigital());
+            var format = TagDataFormat.FromDataType(new ALARM_DIGITAL());
 
             format.Should().Be(TagDataFormat.Alarm);
         }
@@ -62,7 +62,7 @@ namespace L5Sharp.Enums.Tests
         [Test]
         public void FromDataType_AlarmAnalog_ShouldBeAlarm()
         {
-            var format = TagDataFormat.FromDataType(new AlarmAnalog());
+            var format = TagDataFormat.FromDataType(new ALARM_ANALOG());
 
             format.Should().Be(TagDataFormat.Alarm);
         }
@@ -70,7 +70,7 @@ namespace L5Sharp.Enums.Tests
         [Test]
         public void FromDataType_Complex_ShouldBeDecorated()
         {
-            var format = TagDataFormat.FromDataType(new Timer());
+            var format = TagDataFormat.FromDataType(new TIMER());
 
             format.Should().Be(TagDataFormat.Decorated);
         }

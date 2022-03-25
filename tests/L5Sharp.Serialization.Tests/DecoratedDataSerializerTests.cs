@@ -4,11 +4,10 @@ using System.Xml.Linq;
 using ApprovalTests;
 using ApprovalTests.Reporters;
 using FluentAssertions;
-using L5Sharp.Atomics;
 using L5Sharp.Core;
 using L5Sharp.Enums;
-using L5Sharp.Predefined;
 using L5Sharp.Serialization.Data;
+using L5Sharp.Types;
 using NUnit.Framework;
 
 namespace L5Sharp.Serialization.Tests
@@ -55,7 +54,7 @@ namespace L5Sharp.Serialization.Tests
         [UseReporter(typeof(DiffReporter))]
         public void Serialize_Dint_ShouldBeApproved()
         {
-            var component = new Dint();
+            var component = new DINT();
 
             var xml = _serializer.Serialize(component);
             
@@ -66,7 +65,7 @@ namespace L5Sharp.Serialization.Tests
         [UseReporter(typeof(DiffReporter))]
         public void Serialize_Timer_ShouldBeApproved()
         {
-            var component = new Timer();
+            var component = new TIMER();
 
             var xml = _serializer.Serialize(component);
             
@@ -77,7 +76,7 @@ namespace L5Sharp.Serialization.Tests
         [UseReporter(typeof(DiffReporter))]
         public void Serialize_RealArray_ShouldBeApproved()
         {
-            var component = new ArrayType<Real>(10);
+            var component = new ArrayType<REAL>(10);
 
             var xml = _serializer.Serialize(component);
             
@@ -88,7 +87,7 @@ namespace L5Sharp.Serialization.Tests
         [UseReporter(typeof(DiffReporter))]
         public void Serialize_CounterArray_ShouldBeApproved()
         {
-            var component = new ArrayType<Counter>(5);
+            var component = new ArrayType<COUNTER>(5);
 
             var xml = _serializer.Serialize(component);
             

@@ -26,9 +26,17 @@ namespace L5Sharp
     public interface ITagMember<out TDataType> : IMember<TDataType> where TDataType : IDataType
     {
         /// <summary>
-        /// Gets the <see cref="TagName"/> value of the current <see cref="ITagMember{TDataType}"/> instance.
+        /// Gets the <see cref="TagName"/> value of the <see cref="ITagMember{TDataType}"/>.
         /// </summary>
+        /// <remarks>
+        /// The tag name represents the fully qualified name of the member.
+        /// </remarks>
         TagName TagName { get; }
+        
+        /// <summary>
+        /// Gets the string units of the <see cref="ITagMember{TDataType}"/>.
+        /// </summary>
+        string Units { get; }
         
         /// <summary>
         /// Gets value of the current <see cref="ITagMember{TDataType}"/>.

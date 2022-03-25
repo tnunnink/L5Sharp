@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Linq;
 using FluentAssertions;
-using L5Sharp.Atomics;
 using L5Sharp.Creators;
-using L5Sharp.Predefined;
+using L5Sharp.Types;
 using NUnit.Framework;
 
 namespace L5Sharp.Core.Tests
@@ -16,7 +15,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Comment_Null_ShouldShouldThrowArgumentNullException()
         {
-            var tag = Tag.Create<Dint>("Test", description: InitialDescription);
+            var tag = Tag.Create<DINT>("Test", description: InitialDescription);
             
             tag.Description.Should().Be(InitialDescription);
 
@@ -26,7 +25,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Atomic_Empty_ShouldBeExpected()
         {
-            var tag = Tag.Create<Dint>("Test", description: InitialDescription);
+            var tag = Tag.Create<DINT>("Test", description: InitialDescription);
             
             tag.Description.Should().Be(InitialDescription);
 
@@ -38,7 +37,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Atomic_ValidComment_ShouldBeExpected()
         {
-            var tag = Tag.Create<Dint>("Test", description: InitialDescription);
+            var tag = Tag.Create<DINT>("Test", description: InitialDescription);
             
             tag.Description.Should().Be(InitialDescription);
 
@@ -50,7 +49,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Predefined_Null_ShouldThrowArgumentNullException()
         {
-            var tag = Tag.Create<Timer>("Test", description: InitialDescription);
+            var tag = Tag.Create<TIMER>("Test", description: InitialDescription);
             
             tag.Description.Should().Be(InitialDescription);
 
@@ -60,7 +59,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Predefined_Empty_ShouldBeExpected()
         {
-            var tag = Tag.Create<Timer>("Test", description: InitialDescription);
+            var tag = Tag.Create<TIMER>("Test", description: InitialDescription);
             
             tag.Description.Should().Be(InitialDescription);
 
@@ -72,7 +71,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Predefined_ValidComment_ShouldBeExpected()
         {
-            var tag = Tag.Create<Timer>("Test", description: InitialDescription);
+            var tag = Tag.Create<TIMER>("Test", description: InitialDescription);
             
             tag.Description.Should().Be(InitialDescription);
 
@@ -84,7 +83,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void ArrayOfAtomic_ValidComment_ShouldPropagate()
         {
-            var tag = Tag.Create<Bool>("Test", new Dimensions(5));
+            var tag = Tag.Create<BOOL>("Test", new Dimensions(5));
 
             tag.Comment("This is a test");
             tag.Description.Should().Be("This is a test");
@@ -94,7 +93,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void ArrayOfPredefined_ValidComment_ShouldPropagate()
         {
-            var tag = Tag.Create<Timer>("Test", new Dimensions(5));
+            var tag = Tag.Create<TIMER>("Test", new Dimensions(5));
 
             tag.Comment("This is a test");
             tag.Description.Should().Be("This is a test");
@@ -104,7 +103,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void ArrayOfAtomic_SetSingleElement_ShouldBeExpected()
         {
-            var tag = Tag.Create<Bool>("Test", new Dimensions(5));
+            var tag = Tag.Create<BOOL>("Test", new Dimensions(5));
 
             tag[0].Comment("This is a test");
 
@@ -118,7 +117,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void ArrayOfAtomic_SetElementThenTagComment_TagMemberShouldStillHaveOverridenDescription()
         {
-            var tag = Tag.Create<Bool>("Test", new Dimensions(5));
+            var tag = Tag.Create<BOOL>("Test", new Dimensions(5));
 
             var element = tag[0];
             element.Comment("Element Description");
@@ -133,7 +132,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void ArrayOfAtomic_SetElementDescription_ElementShouldRetainCommentAfterGettingNewInstance()
         {
-            var tag = Tag.Create<Bool>("Test", new Dimensions(5));
+            var tag = Tag.Create<BOOL>("Test", new Dimensions(5));
 
             var e1 = tag[0];
             e1.Comment("Element Description");
@@ -146,7 +145,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void ArrayOfAtomic_ResettingElementDescription_ShouldRevertToParentTagDescription()
         {
-            var tag = Tag.Create<Bool>("Test", new Dimensions(5));
+            var tag = Tag.Create<BOOL>("Test", new Dimensions(5));
 
             var element = tag[0];
             element.Comment("Element Description");

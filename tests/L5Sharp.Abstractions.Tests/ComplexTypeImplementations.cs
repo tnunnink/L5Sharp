@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
-using L5Sharp.Atomics;
 using L5Sharp.Creators;
 using L5Sharp.Enums;
-using L5Sharp.Predefined;
+using L5Sharp.Types;
 
 namespace L5Sharp.Abstractions.Tests
 {
@@ -15,7 +14,7 @@ namespace L5Sharp.Abstractions.Tests
         public override DataTypeClass Class => DataTypeClass.Predefined;
         protected override IDataType New() => new TestComplex();
 
-        public IMember<Bool> TestMember = Member.Create<Bool>(nameof(TestMember));
+        public IMember<BOOL> TestMember = Member.Create<BOOL>(nameof(TestMember));
 
         public IMember<NestedComplex> Nested = Member.Create<NestedComplex>(nameof(Nested));
     }
@@ -29,18 +28,18 @@ namespace L5Sharp.Abstractions.Tests
         public override DataTypeClass Class => DataTypeClass.Predefined;
         protected override IDataType New() => new NestedComplex();
 
-        public IMember<Dint> M1 = Member.Create<Dint>(nameof(M1));
-        public IMember<Dint> M2 = Member.Create<Dint>(nameof(M2));
-        public IMember<Dint> M3 { get; } = Member.Create<Dint>(nameof(M3));
+        public IMember<DINT> M1 = Member.Create<DINT>(nameof(M1));
+        public IMember<DINT> M2 = Member.Create<DINT>(nameof(M2));
+        public IMember<DINT> M3 { get; } = Member.Create<DINT>(nameof(M3));
     }
 
     public class MemberConstructorComplex : ComplexType
     {
         public MemberConstructorComplex() : base(nameof(MemberLessComplex), new List<IMember<IDataType>>
         {
-            Member.Create<Bool>("Indy"),
-            Member.Create<Sint>("Value"),
-            Member.Create<Timer>("TON"),
+            Member.Create<BOOL>("Indy"),
+            Member.Create<SINT>("Value"),
+            Member.Create<TIMER>("TON"),
         })
         {
         }
@@ -78,8 +77,8 @@ namespace L5Sharp.Abstractions.Tests
         {
         }
 
-        public IMember<Bool> Member01 = Member.Create<Bool>("Member01");
-        public IMember<Bool> Member02 = Member.Create<Bool>("Member01");
+        public IMember<BOOL> Member01 = Member.Create<BOOL>("Member01");
+        public IMember<BOOL> Member02 = Member.Create<BOOL>("Member01");
 
         public override DataTypeClass Class => DataTypeClass.Predefined;
         
@@ -95,6 +94,6 @@ namespace L5Sharp.Abstractions.Tests
         public override DataTypeClass Class => DataTypeClass.Predefined;
         protected override IDataType New() => new NullMemberComplex();
 
-        public IMember<Dint> Member { get; set; }
+        public IMember<DINT> Member { get; set; }
     }
 }

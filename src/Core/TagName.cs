@@ -15,7 +15,7 @@ namespace L5Sharp.Core
         private const string ArrayBracket = "[";
         private const string MemberSeparator = ".";
         private const string TagNamePattern = @"^[A-Za-z_][\w\.[\],:]+$";
-        private const string MemberPattern = @"^[A-Za-z_][\w:]+$|^\[\d+,\]$|^\[\d+,\d+\]$|^\[\d+,\d+,\d+\]$";
+        private const string MemberPattern = @"^[A-Za-z_][\w:]+$|^\[\d+\]$|^\[\d+,\d+\]$|^\[\d+,\d+,\d+\]$";
         private const string MembersPattern = @"[\w:]+|\[[\d,]+\]";
         private const string PartsPattern = @"\w+|\[[\d,]+\]";
         private readonly string _tagName;

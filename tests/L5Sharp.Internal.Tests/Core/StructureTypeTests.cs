@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
-using L5Sharp.Atomics;
 using L5Sharp.Core;
 using L5Sharp.Creators;
 using L5Sharp.Enums;
+using L5Sharp.Types;
 using NUnit.Framework;
 
 namespace L5Sharp.Internal.Tests.Core
@@ -56,8 +56,8 @@ namespace L5Sharp.Internal.Tests.Core
         {
             var type = new StructureType("AB:5000_AI8:O:0", new List<IMember<IDataType>>
             {
-                Member.Create<Bool>("DATA"),
-                Member.Create<Bool>("FAULTS")
+                Member.Create<BOOL>("DATA"),
+                Member.Create<BOOL>("FAULTS")
             });
 
             var instance = (IComplexType) type.Instantiate();

@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Linq;
 using FluentAssertions;
-using L5Sharp.Atomics;
 using L5Sharp.Creators;
 using L5Sharp.Enums;
 using L5Sharp.Exceptions;
-using L5Sharp.Predefined;
+using L5Sharp.Types;
 using NUnit.Framework;
 
 namespace L5Sharp.Core.Tests
@@ -49,7 +48,7 @@ namespace L5Sharp.Core.Tests
         public void AddTag_ValidTag_ShouldHaveExpectedTag()
         {
             var program = new Program("Test");
-            var tag = Tag.Create<Bool>("TestTag");
+            var tag = Tag.Create<BOOL>("TestTag");
             
             program.Tags.Add(tag);
 
@@ -61,9 +60,9 @@ namespace L5Sharp.Core.Tests
         public void AddTag_Duplicate_ShouldThrowException()
         {
             var program = new Program("Test");
-            program.Tags.Add(Tag.Create<Counter>("Test"));
+            program.Tags.Add(Tag.Create<COUNTER>("Test"));
 
-            FluentActions.Invoking(() => program.Tags.Add(Tag.Create<Bool>("Test")))
+            FluentActions.Invoking(() => program.Tags.Add(Tag.Create<BOOL>("Test")))
                 .Should().Throw<ComponentNameCollisionException>();
         }
 

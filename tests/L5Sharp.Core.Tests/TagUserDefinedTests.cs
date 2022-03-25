@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
-using L5Sharp.Atomics;
 using L5Sharp.Creators;
+using L5Sharp.Types;
 using NUnit.Framework;
 
 namespace L5Sharp.Core.Tests
@@ -11,7 +11,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void New_ValidTypeAndName_TagShouldNotBeNull()
         {
-            var type = new UserDefined("Test", members: new[] { Member.Create("Member01", new Dint()) });
+            var type = new UserDefined("Test", members: new[] { Member.Create("Member01", new DINT()) });
             var tag = Tag.Create("TestTag", type);
 
             tag.Should().NotBeNull();

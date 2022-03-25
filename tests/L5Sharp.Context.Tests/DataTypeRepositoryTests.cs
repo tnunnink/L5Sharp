@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
-using L5Sharp.Atomics;
 using L5Sharp.Core;
 using L5Sharp.Creators;
 using L5Sharp.Enums;
 using L5Sharp.Exceptions;
+using L5Sharp.Types;
 using NUnit.Framework;
-using String = L5Sharp.Predefined.String;
 
 namespace L5Sharp.Context.Tests
 {
@@ -16,31 +15,42 @@ namespace L5Sharp.Context.Tests
     public class DataTypeRepositoryTests
     {
         [Test]
-        public void Contains_ValidComponent_ShouldBeTrue()
+        public void All_WhenCalled_ShouldNotBeEmpty()
         {
             var context = L5XContext.Load(Known.L5X);
 
-            var result = context.DataTypes().Contains("SimpleType");
+            var components = context.DataTypes().All().ToList();
+            
+            components.Should().NotBeNull();
+            components.Should().NotBeEmpty();
+        }
+
+        [Test]
+        public void Any_ValidComponent_ShouldBeTrue()
+        {
+            var context = L5XContext.Load(Known.L5X);
+
+            var result = context.DataTypes().Any("SimpleType");
 
             result.Should().BeTrue();
         }
 
         [Test]
-        public void Contains_InvalidComponent_ShouldBeFalse()
+        public void Any_InvalidComponent_ShouldBeFalse()
         {
             var context = L5XContext.Load(Known.L5X);
 
-            var result = context.DataTypes().Contains("FakeType");
+            var result = context.DataTypes().Any("FakeType");
 
             result.Should().BeFalse();
         }
 
         [Test]
-        public void Contains_Null_ShouldBeFalse()
+        public void Any_Null_ShouldBeFalse()
         {
             var context = L5XContext.Load(Known.L5X);
 
-            var result = context.DataTypes().Contains(null!);
+            var result = context.DataTypes().Any(null!);
 
             result.Should().BeFalse();
         }
@@ -50,7 +60,7 @@ namespace L5Sharp.Context.Tests
         {
             var context = L5XContext.Load(Known.L5X);
 
-            var component = context.DataTypes().Find("SimpleType");
+            var component = context.DataTypes().First("SimpleType");
 
             component.Should().NotBeNull();
         }
@@ -60,7 +70,7 @@ namespace L5Sharp.Context.Tests
         {
             var context = L5XContext.Load(Known.L5X);
 
-            var component = context.DataTypes().Find("FakeType");
+            var component = context.DataTypes().First("FakeType");
 
             component.Should().BeNull();
         }
@@ -70,7 +80,7 @@ namespace L5Sharp.Context.Tests
         {
             var context = L5XContext.Load(Known.L5X);
 
-            var component = context.DataTypes().Find(t => t.Family == DataTypeFamily.String);
+            var component = context.DataTypes().First(t => t.Family == DataTypeFamily.String);
 
             component.Should().NotBeNull();
         }
@@ -80,7 +90,7 @@ namespace L5Sharp.Context.Tests
         {
             var context = L5XContext.Load(Known.L5X);
 
-            var components = context.DataTypes().FindAll(t => !string.IsNullOrEmpty(t.Description)).ToList();
+            var components = context.DataTypes().Where(t => !string.IsNullOrEmpty(t.Description)).ToList();
 
             components.Should().NotBeEmpty();
             components.All(c => !string.IsNullOrEmpty(c.Description)).Should().BeTrue();
@@ -91,11 +101,11 @@ namespace L5Sharp.Context.Tests
         {
             var context = L5XContext.Load(Known.L5X);
 
-            var component = context.DataTypes().Get("SimpleType");
+            var component = context.DataTypes().Single("SimpleType");
 
             component.Name.Should().Be("SimpleType");
             component.Description.Should()
-                .Be("This is a test data type that contains simple atomic types with an updated description");
+                .Be("This is a test data type that Any simple atomic types with an updated description");
             component.Class.Should().Be(DataTypeClass.User);
             component.Family.Should().Be(DataTypeFamily.None);
             component.Members.Should().NotBeEmpty();
@@ -106,7 +116,7 @@ namespace L5Sharp.Context.Tests
         {
             var context = L5XContext.Load(Known.L5X);
 
-            FluentActions.Invoking(() => context.DataTypes().Get("FakeType")).Should()
+            FluentActions.Invoking(() => context.DataTypes().Single("FakeType")).Should()
                 .Throw<ComponentNotFoundException>();
         }
 
@@ -115,7 +125,7 @@ namespace L5Sharp.Context.Tests
         {
             var context = L5XContext.Load(Known.L5X);
 
-            var component = context.DataTypes().Get("ComplexType");
+            var component = context.DataTypes().Single("ComplexType");
 
             component.Name.Should().Be("ComplexType");
             component.Description.Should().Be("Test data type with more complex members");
@@ -127,16 +137,6 @@ namespace L5Sharp.Context.Tests
             simple?.Name.Should().Be("SimpleMember");
             simple?.DataType.Should().BeOfType<UserDefined>();
             simple?.DataType.As<IUserDefined>().Members.Should().NotBeEmpty();
-        }
-
-        [Test]
-        public void GetAll_WhenCalled_ShouldNotBeEmpty()
-        {
-            var context = L5XContext.Load(Known.L5X);
-
-            var components = context.DataTypes().GetAll();
-
-            components.Should().NotBeEmpty();
         }
 
         [Test]
@@ -167,7 +167,7 @@ namespace L5Sharp.Context.Tests
 
             context.DataTypes().Add(component);
 
-            context.DataTypes().Contains("TestType").Should().BeTrue();
+            context.DataTypes().Any("TestType").Should().BeTrue();
         }
         
         [Test]
@@ -177,9 +177,9 @@ namespace L5Sharp.Context.Tests
 
             var child = new UserDefined("ChildType", "This is a child type", new List<IMember<IDataType>>
             {
-                Member.Create<Bool>("M1"),
-                Member.Create<Dint>("M2"),
-                Member.Create<Real>("M3")
+                Member.Create<BOOL>("M1"),
+                Member.Create<DINT>("M2"),
+                Member.Create<REAL>("M3")
             });
             
             var parent = new UserDefined("ParentType", "This is a parent type", new List<IMember<IDataType>>
@@ -189,8 +189,8 @@ namespace L5Sharp.Context.Tests
 
             context.DataTypes().Add(parent);
 
-            context.DataTypes().Contains("ParentType").Should().BeTrue();
-            context.DataTypes().Contains("ChildType").Should().BeTrue();
+            context.DataTypes().Any("ParentType").Should().BeTrue();
+            context.DataTypes().Any("ChildType").Should().BeTrue();
         }
         
         [Test]
@@ -208,7 +208,7 @@ namespace L5Sharp.Context.Tests
 
             context.DataTypes().Remove("SimpleType");
 
-            context.DataTypes().Contains("SimpleType").Should().BeFalse();
+            context.DataTypes().Any("SimpleType").Should().BeFalse();
         }
 
         [Test]
@@ -226,17 +226,17 @@ namespace L5Sharp.Context.Tests
 
             var component = new UserDefined("SimpleType", "This is a test type", new List<IMember<IDataType>>
             {
-                Member.Create<Bool>("M1"),
-                Member.Create<Sint>("M2"),
-                Member.Create<Int>("M3"),
-                Member.Create<Dint>("M4"),
-                Member.Create<Lint>("M5"),
-                Member.Create<Real>("M6")
+                Member.Create<BOOL>("M1"),
+                Member.Create<SINT>("M2"),
+                Member.Create<INT>("M3"),
+                Member.Create<DINT>("M4"),
+                Member.Create<LINT>("M5"),
+                Member.Create<REAL>("M6")
             });
 
             context.DataTypes().Update(component);
 
-            var result = context.DataTypes().Get("SimpleType");
+            var result = context.DataTypes().Single("SimpleType");
 
             result.Should().NotBeNull();
             result.Name.Should().Be("SimpleType");
@@ -257,14 +257,14 @@ namespace L5Sharp.Context.Tests
 
             var component = new UserDefined("TestType", "This is a test type", new List<IMember<IDataType>>
             {
-                Member.Create<Dint>("Member01"),
-                Member.Create<String>("Member02"),
-                Member.Create<String>("Member03")
+                Member.Create<DINT>("Member01"),
+                Member.Create<STRING>("Member02"),
+                Member.Create<STRING>("Member03")
             });
 
             context.DataTypes().Update(component);
 
-            var result = context.DataTypes().Get("TestType");
+            var result = context.DataTypes().Single("TestType");
             
             result.Should().NotBeNull();
             result.Name.Should().Be("TestType");
@@ -282,19 +282,19 @@ namespace L5Sharp.Context.Tests
 
             var child = new UserDefined("ChildType", "This is a child type", new List<IMember<IDataType>>
             {
-                Member.Create<Bool>("M1"),
-                Member.Create<Dint>("M2"),
-                Member.Create<Real>("M3")
+                Member.Create<BOOL>("M1"),
+                Member.Create<DINT>("M2"),
+                Member.Create<REAL>("M3")
             });
 
-            var parent = (IUserDefined)context.DataTypes().Get("ComplexType");
+            var parent = (IUserDefined)context.DataTypes().Single("ComplexType");
             parent.Members.Add(Member.Create("Child", child));
 
             context.DataTypes().Update(parent);
             
-            context.DataTypes().Contains("ChildType").Should().BeTrue();
+            context.DataTypes().Any("ChildType").Should().BeTrue();
 
-            var result = context.DataTypes().Get("ComplexType").Members.FirstOrDefault(m => m.Name == "Child");
+            var result = context.DataTypes().Single("ComplexType").Members.FirstOrDefault(m => m.Name == "Child");
             result.Should().NotBeNull();
         }
     }

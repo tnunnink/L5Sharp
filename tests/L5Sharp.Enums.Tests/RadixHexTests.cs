@@ -1,6 +1,6 @@
 ﻿using System;
 using FluentAssertions;
-using L5Sharp.Atomics;
+using L5Sharp.Types;
 using NUnit.Framework;
 
 namespace L5Sharp.Enums.Tests
@@ -26,13 +26,13 @@ namespace L5Sharp.Enums.Tests
         [Test]
         public void Format_NonSupportedAtomic_ShouldThrowNotSupportedException()
         {
-            FluentActions.Invoking(() => Radix.Hex.Format(new Real())).Should().Throw<NotSupportedException>();
+            FluentActions.Invoking(() => Radix.Hex.Format(new REAL())).Should().Throw<NotSupportedException>();
         }
 
         [Test]
         public void Format_ValidBoolFalse_ShouldBeExpected()
         {
-            var result = Radix.Hex.Format(new Bool());
+            var result = Radix.Hex.Format(new BOOL());
 
             result.Should().Be("16#0");
         }
@@ -40,7 +40,7 @@ namespace L5Sharp.Enums.Tests
         [Test]
         public void Format_ValidBoolTrue_ShouldBeExpected()
         {
-            var result = Radix.Hex.Format(new Bool(true));
+            var result = Radix.Hex.Format(new BOOL(true));
 
             result.Should().Be("16#1");
         }
@@ -48,7 +48,7 @@ namespace L5Sharp.Enums.Tests
         [Test]
         public void Format_ValidSint_ShouldBeExpectedFormat()
         {
-            var result = Radix.Hex.Format(new Sint(20));
+            var result = Radix.Hex.Format(new SINT(20));
 
             result.Should().Be("16#14");
         }
@@ -56,7 +56,7 @@ namespace L5Sharp.Enums.Tests
         [Test]
         public void Format_ValidInt_ShouldBeExpectedFormat()
         {
-            var result = Radix.Hex.Format(new Int(20));
+            var result = Radix.Hex.Format(new INT(20));
 
             result.Should().Be("16#0014");
         }
@@ -64,7 +64,7 @@ namespace L5Sharp.Enums.Tests
         [Test]
         public void Format_ValidDint_ShouldBeExpectedFormat()
         {
-            var result = Radix.Hex.Format(new Dint(20));
+            var result = Radix.Hex.Format(new DINT(20));
 
             result.Should().Be("16#0000_0014");
         }
@@ -72,7 +72,7 @@ namespace L5Sharp.Enums.Tests
         [Test]
         public void Format_Dint1234567_ShouldBeExpectedFormat()
         {
-            var result = Radix.Hex.Format(new Dint(1234567));
+            var result = Radix.Hex.Format(new DINT(1234567));
 
             result.Should().Be("16#0012_d687");
         }
@@ -80,7 +80,7 @@ namespace L5Sharp.Enums.Tests
         [Test]
         public void Format_ValidLint_ShouldBeExpectedFormat()
         {
-            var result = Radix.Hex.Format(new Lint(20));
+            var result = Radix.Hex.Format(new LINT(20));
 
             result.Should().Be("16#0000_0000_0000_0014");
         }

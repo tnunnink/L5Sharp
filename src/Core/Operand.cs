@@ -1,7 +1,7 @@
 ﻿using System;
-using L5Sharp.Atomics;
 using L5Sharp.Enums;
 using L5Sharp.Extensions;
+using L5Sharp.Types;
 
 namespace L5Sharp.Core
 {
@@ -110,67 +110,67 @@ namespace L5Sharp.Core
         public static implicit operator Operand(float value) => new(value);
 
         /// <summary>
-        /// Performs implicit conversions from <see cref="Sint"/> to <see cref="Operand"/>
+        /// Performs implicit conversions from <see cref="SINT"/> to <see cref="Operand"/>
         /// </summary>
         /// <param name="value">The value to convert.</param>
         /// <returns>A new <see cref="Operand"/> object representing the provided value.</returns>
-        public static implicit operator Operand(Sint value) => new(value.Value);
+        public static implicit operator Operand(SINT value) => new(value.Value);
         
         /// <summary>
-        /// Performs implicit conversions from <see cref="Int"/> to <see cref="Operand"/>
+        /// Performs implicit conversions from <see cref="INT"/> to <see cref="Operand"/>
         /// </summary>
         /// <param name="value">The value to convert.</param>
         /// <returns>A new <see cref="Operand"/> object representing the provided value.</returns>
-        public static implicit operator Operand(Int value) => new(value.Value);
+        public static implicit operator Operand(INT value) => new(value.Value);
         
         /// <summary>
-        /// Performs implicit conversions from <see cref="Dint"/> to <see cref="Operand"/>
+        /// Performs implicit conversions from <see cref="DINT"/> to <see cref="Operand"/>
         /// </summary>
         /// <param name="value">The value to convert.</param>
         /// <returns>A new <see cref="Operand"/> object representing the provided value.</returns>
-        public static implicit operator Operand(Dint value) => new(value.Value);
+        public static implicit operator Operand(DINT value) => new(value.Value);
         
         /// <summary>
-        /// Performs implicit conversions from <see cref="Lint"/> to <see cref="Operand"/>
+        /// Performs implicit conversions from <see cref="LINT"/> to <see cref="Operand"/>
         /// </summary>
         /// <param name="value">The value to convert.</param>
         /// <returns>A new <see cref="Operand"/> object representing the provided value.</returns>
-        public static implicit operator Operand(Lint value) => new(value.Value);
+        public static implicit operator Operand(LINT value) => new(value.Value);
         
         /// <summary>
-        /// Performs implicit conversions from <see cref="Real"/> to <see cref="Operand"/>
+        /// Performs implicit conversions from <see cref="REAL"/> to <see cref="Operand"/>
         /// </summary>
         /// <param name="value">The value to convert.</param>
         /// <returns>A new <see cref="Operand"/> object representing the provided value.</returns>
-        public static implicit operator Operand(Real value) => new(value.Value);
+        public static implicit operator Operand(REAL value) => new(value.Value);
         
         /// <summary>
-        /// Performs implicit conversions from <see cref="USint"/> to <see cref="Operand"/>
+        /// Performs implicit conversions from <see cref="USINT"/> to <see cref="Operand"/>
         /// </summary>
         /// <param name="value">The value to convert.</param>
         /// <returns>A new <see cref="Operand"/> object representing the provided value.</returns>
-        public static implicit operator Operand(USint value) => new(value.Value);
+        public static implicit operator Operand(USINT value) => new(value.Value);
         
         /// <summary>
-        /// Performs implicit conversions from <see cref="UInt"/> to <see cref="Operand"/>
+        /// Performs implicit conversions from <see cref="UINT"/> to <see cref="Operand"/>
         /// </summary>
         /// <param name="value">The value to convert.</param>
         /// <returns>A new <see cref="Operand"/> object representing the provided value.</returns>
-        public static implicit operator Operand(UInt value) => new(value.Value);
+        public static implicit operator Operand(UINT value) => new(value.Value);
         
         /// <summary>
-        /// Performs implicit conversions from <see cref="UDint"/> to <see cref="Operand"/>
+        /// Performs implicit conversions from <see cref="UDINT"/> to <see cref="Operand"/>
         /// </summary>
         /// <param name="value">The value to convert.</param>
         /// <returns>A new <see cref="Operand"/> object representing the provided value.</returns>
-        public static implicit operator Operand(UDint value) => new(value.Value);
+        public static implicit operator Operand(UDINT value) => new(value.Value);
         
         /// <summary>
-        /// Performs implicit conversions from <see cref="ULint"/> to <see cref="Operand"/>
+        /// Performs implicit conversions from <see cref="ULINT"/> to <see cref="Operand"/>
         /// </summary>
         /// <param name="value">The value to convert.</param>
         /// <returns>A new <see cref="Operand"/> object representing the provided value.</returns>
-        public static implicit operator Operand(ULint value) => new(value.Value);
+        public static implicit operator Operand(ULINT value) => new(value.Value);
 
         /// <inheritdoc />
         public override string ToString() => _operand.ToString();

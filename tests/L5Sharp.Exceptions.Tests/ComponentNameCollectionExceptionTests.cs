@@ -1,5 +1,5 @@
 ﻿using FluentAssertions;
-using L5Sharp.Atomics;
+using L5Sharp.Types;
 using NUnit.Framework;
 
 namespace L5Sharp.Exceptions.Tests
@@ -10,7 +10,7 @@ namespace L5Sharp.Exceptions.Tests
         [Test]
         public void New_Valid_ShouldNotBeNull()
         {
-            var exception = new ComponentNameCollisionException("Name", typeof(Bool));
+            var exception = new ComponentNameCollisionException("Name", typeof(BOOL));
 
             exception.Should().NotBeNull();
         }

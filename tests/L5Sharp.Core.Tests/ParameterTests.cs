@@ -1,10 +1,9 @@
 ﻿using System;
 using AutoFixture;
 using FluentAssertions;
-using L5Sharp.Atomics;
 using L5Sharp.Enums;
 using L5Sharp.Exceptions;
-using L5Sharp.Predefined;
+using L5Sharp.Types;
 using NUnit.Framework;
 
 namespace L5Sharp.Core.Tests
@@ -16,28 +15,28 @@ namespace L5Sharp.Core.Tests
         public void New_InvalidName_ShouldThrowComponentNameInvalidException()
         {
             var fixture = new Fixture();
-            FluentActions.Invoking(() => new Parameter<Bool>(fixture.Create<string>(), new Bool())).Should()
+            FluentActions.Invoking(() => new Parameter<BOOL>(fixture.Create<string>(), new BOOL())).Should()
                 .Throw<ComponentNameInvalidException>();
         }
 
         [Test]
         public void New_NullName_ShouldThrowArgumentNullException()
         {
-            FluentActions.Invoking(() => new Parameter<Bool>(null!, new Bool())).Should()
+            FluentActions.Invoking(() => new Parameter<BOOL>(null!, new BOOL())).Should()
                 .Throw<ArgumentException>();
         }
 
         [Test]
         public void New_EmptyName_ShouldThrowArgumentNullException()
         {
-            FluentActions.Invoking(() => new Parameter<Bool>(string.Empty, new Bool())).Should()
+            FluentActions.Invoking(() => new Parameter<BOOL>(string.Empty, new BOOL())).Should()
                 .Throw<ArgumentException>();
         }
 
         [Test]
         public void New_AtomicType_ShouldNotBeNull()
         {
-            var parameter = new Parameter<Bool>("Test", new Bool());
+            var parameter = new Parameter<BOOL>("Test", new BOOL());
 
             parameter.Should().NotBeNull();
         }
@@ -45,7 +44,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void New_PredefinedType_ShouldNoteBeNull()
         {
-            var parameter = new Parameter<Timer>("Test", new Timer());
+            var parameter = new Parameter<TIMER>("Test", new TIMER());
 
             parameter.Should().NotBeNull();
         }
@@ -62,11 +61,11 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void New_Default_ShouldBeExpectedProperties()
         {
-            var parameter = new Parameter<Dint>("Test", new Dint());
+            var parameter = new Parameter<DINT>("Test", new DINT());
 
             parameter.Name.Should().Be("Test");
             parameter.Description.Should().BeEmpty();
-            parameter.DataType.Should().Be(new Dint());
+            parameter.DataType.Should().Be(new DINT());
             parameter.Dimensions.Should().Be(Dimensions.Empty);
             parameter.Radix.Should().Be(Radix.Decimal);
             parameter.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);
@@ -76,18 +75,18 @@ namespace L5Sharp.Core.Tests
             parameter.Visible.Should().BeFalse();
             parameter.Alias.Should().Be(TagName.Empty);
             parameter.Constant.Should().BeFalse();
-            parameter.Default.Should().BeEquivalentTo(new Dint());
+            parameter.Default.Should().BeEquivalentTo(new DINT());
         }
 
         [Test]
         public void New_Overloaded_ShouldBeExpected()
         {
-            var parameter = new Parameter<Dint>("Test", new Dint(34), TagUsage.Output, Radix.Hex,
+            var parameter = new Parameter<DINT>("Test", new DINT(34), TagUsage.Output, Radix.Hex,
                 ExternalAccess.ReadOnly, true, true, "LocalTag", true, "This is a test");
 
             parameter.Name.Should().Be("Test");
             parameter.Description.Should().Be("This is a test");
-            parameter.DataType.Should().BeOfType<Dint>();
+            parameter.DataType.Should().BeOfType<DINT>();
             parameter.Dimensions.Should().Be(Dimensions.Empty);
             parameter.Radix.Should().Be(Radix.Hex);
             parameter.ExternalAccess.Should().Be(ExternalAccess.ReadOnly);
@@ -97,16 +96,16 @@ namespace L5Sharp.Core.Tests
             parameter.Visible.Should().BeTrue();
             parameter.Alias.Should().Be(new TagName("LocalTag"));
             parameter.Constant.Should().BeTrue();
-            parameter.Default.Should().BeEquivalentTo(new Dint(34));
+            parameter.Default.Should().BeEquivalentTo(new DINT(34));
         }
 
         [Test]
         public void New_SimpleArray_ShouldBeExpectedProperties()
         {
-            var parameter = new Parameter<IArrayType<Dint>>("Test", new ArrayType<Dint>(10));
+            var parameter = new Parameter<IArrayType<DINT>>("Test", new ArrayType<DINT>(10));
 
             parameter.Name.Should().Be("Test");
-            parameter.DataType.Should().BeOfType<ArrayType<Dint>>();
+            parameter.DataType.Should().BeOfType<ArrayType<DINT>>();
             parameter.Dimensions.Should().BeEquivalentTo(new Dimensions(10));
             parameter.Usage.Should().Be(TagUsage.InOut);
             parameter.Default.Should().BeNull();
@@ -115,7 +114,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void New_Predefined_ShouldHaveInOutUsage()
         {
-            var parameter = new Parameter<Timer>("Test", new Timer());
+            var parameter = new Parameter<TIMER>("Test", new TIMER());
 
             parameter.Usage.Should().Be(TagUsage.InOut);
         }
@@ -123,7 +122,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void New_Array_ShouldHaveInOutUsage()
         {
-            var parameter = new Parameter<IArrayType<Dint>>("Test", new ArrayType<Dint>(10));
+            var parameter = new Parameter<IArrayType<DINT>>("Test", new ArrayType<DINT>(10));
 
             parameter.Usage.Should().Be(TagUsage.InOut);
         }
@@ -131,7 +130,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void New_Predefined_RequiredShouldBeTrue()
         {
-            var parameter = new Parameter<Timer>("Test", new Timer());
+            var parameter = new Parameter<TIMER>("Test", new TIMER());
 
             parameter.Required.Should().BeTrue();
         }
@@ -139,7 +138,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void New_Array_RequiredShouldBeTrue()
         {
-            var parameter = new Parameter<IArrayType<Dint>>("Test", new ArrayType<Dint>(10));
+            var parameter = new Parameter<IArrayType<DINT>>("Test", new ArrayType<DINT>(10));
 
             parameter.Required.Should().BeTrue();
         }
@@ -147,7 +146,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void New_Predefined_VisibleShouldBeTrue()
         {
-            var parameter = new Parameter<Timer>("Test", new Timer());
+            var parameter = new Parameter<TIMER>("Test", new TIMER());
 
             parameter.Required.Should().BeTrue();
         }
@@ -155,7 +154,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void New_Array_VisibleShouldBeTrue()
         {
-            var parameter = new Parameter<IArrayType<Dint>>("Test", new ArrayType<Dint>(10));
+            var parameter = new Parameter<IArrayType<DINT>>("Test", new ArrayType<DINT>(10));
 
             parameter.Required.Should().BeTrue();
         }

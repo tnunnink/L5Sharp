@@ -1,7 +1,6 @@
 ﻿using System;
 using AutoFixture;
 using FluentAssertions;
-using L5Sharp.Atomics;
 using L5Sharp.Enums;
 using NUnit.Framework;
 
@@ -22,7 +21,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void New_Default_ShouldNotBeNull()
         {
-            var type = new Int();
+            var type = new INT();
 
             type.Should().NotBeNull();
         }
@@ -30,10 +29,10 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void New_Default_ShouldHaveExpectedDefaults()
         {
-            var type = new Int();
+            var type = new INT();
 
             type.Should().NotBeNull();
-            type.Name.Should().Be(nameof(Int).ToUpper());
+            type.Name.Should().Be(nameof(INT).ToUpper());
             type.Class.Should().Be(DataTypeClass.Atomic);
             type.Family.Should().Be(DataTypeFamily.None);
             type.Description.Should().Be("Logix representation of a System.Int16");
@@ -43,7 +42,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void New_ValueOverload_ShouldHaveExpectedValue()
         {
-            var type = new Int(_random);
+            var type = new INT(_random);
             
             type.Value.Should().Be(_random);
         }
@@ -51,7 +50,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void GetValue_AsAtomic_ShouldBeExpected()
         {
-            var type = (IAtomicType) new Int();
+            var type = (IAtomicType) new INT();
 
             type.Value.Should().Be(0);
         }
@@ -59,7 +58,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void SetValue_Null_ShouldBeExpected()
         {
-            var type = new Int();
+            var type = new INT();
 
             FluentActions.Invoking(() => type.SetValue(null!)).Should().Throw<ArgumentNullException>();
         }
@@ -67,7 +66,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void SetValue_ValidShort_ShouldBeExpected()
         {
-            var type = new Int();
+            var type = new INT();
 
             type.SetValue(_random);
 
@@ -79,7 +78,7 @@ namespace L5Sharp.Types.Tests
         {
             var fixture = new Fixture();
             var value = fixture.Create<byte>();
-            var type = new Int();
+            var type = new INT();
 
             type.SetValue(value);
 
@@ -89,9 +88,9 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void SetValue_SameType_ShouldBeExpected()
         {
-            var type = new Int();
+            var type = new INT();
 
-            type.SetValue(new Int(_random));
+            type.SetValue(new INT(_random));
 
             type.Value.Should().Be(_random);
         }
@@ -99,9 +98,9 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void SetValue_SameTypeAsObject_ShouldBeExpected()
         {
-            var type = new Int();
+            var type = new INT();
 
-            type.SetValue((object)new Int(_random));
+            type.SetValue((object)new INT(_random));
 
             type.Value.Should().Be(_random);
         }
@@ -111,9 +110,9 @@ namespace L5Sharp.Types.Tests
         {
             var fixture = new Fixture();
             var value = fixture.Create<sbyte>();
-            var type = new Int();
+            var type = new INT();
 
-            type.SetValue(new Sint(value));
+            type.SetValue(new SINT(value));
 
             type.Value.Should().Be(value);
         }
@@ -121,7 +120,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void SetValue_ValidObjectValue_ShouldBeExpected()
         {
-            var type = new Int();
+            var type = new INT();
 
             type.SetValue((object) _random);
 
@@ -131,7 +130,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void SetValue_ValidStringValue_ShouldBeExpected()
         {
-            var type = new Int();
+            var type = new INT();
 
             type.SetValue(_random.ToString());
 
@@ -143,7 +142,7 @@ namespace L5Sharp.Types.Tests
         {
             var fixture = new Fixture();
             var value = fixture.Create<string>();
-            var type = new Int(_random);
+            var type = new INT(_random);
 
             FluentActions.Invoking(() => type.SetValue(value)).Should().Throw<ArgumentException>();
         }
@@ -153,7 +152,7 @@ namespace L5Sharp.Types.Tests
         {
             var fixture = new Fixture();
             var value = fixture.Create<int>();
-            var type = new Int();
+            var type = new INT();
 
             FluentActions.Invoking(() => type.SetValue(value)).Should().Throw<ArgumentException>();
         }
@@ -161,7 +160,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void Format_DefaultRadix_ShouldBeExpected()
         {
-            var type = new Int();
+            var type = new INT();
 
             var format = type.Format();
 
@@ -171,7 +170,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void Format_OverloadedRadix_ShouldBeExpected()
         {
-            var type = new Int();
+            var type = new INT();
 
             var format = type.Format(Radix.Binary);
 
@@ -181,17 +180,17 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void Instantiate_WhenCalled_ShouldEqualDefaultInstance()
         {
-            var type = new Int(_random);
+            var type = new INT(_random);
 
             var instance = type.Instantiate();
 
-            instance.Should().BeEquivalentTo(new Int());
+            instance.Should().BeEquivalentTo(new INT());
         }
 
         [Test]
         public void ImplicitOperator_Bool_ShouldBeTrue()
         {
-            Int type = _random;
+            INT type = _random;
 
             type.Value.Should().Be(_random);
         }
@@ -199,7 +198,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void ImplicitOperator_bool_ShouldBeTrue()
         {
-            short value = new Int(_random);
+            short value = new INT(_random);
 
             value.Should().Be(_random);
         }
@@ -207,7 +206,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void ImplicitOperator_ValidString_ShouldBeExpected()
         {
-            Int type = _random.ToString();
+            INT type = _random.ToString();
 
             type.Value.Should().Be(_random);
         }
@@ -215,8 +214,8 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void TypeEquals_AreEqual_ShouldBeTrue()
         {
-            var first = new Int();
-            var second = new Int();
+            var first = new INT();
+            var second = new INT();
 
             var result = first.Equals(second);
 
@@ -226,7 +225,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void TypeEquals_AreSame_ShouldBeTrue()
         {
-            var first = new Int();
+            var first = new INT();
 
             var result = first.Equals(first);
 
@@ -237,7 +236,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void TypeEquals_Null_ShouldBeFalse()
         {
-            var first = new Int();
+            var first = new INT();
 
             var result = first.Equals(null);
 
@@ -247,8 +246,8 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void ObjectEquals_AreEqual_ShouldBeTrue()
         {
-            var first = new Int();
-            var second = new Int();
+            var first = new INT();
+            var second = new INT();
 
             var result = first.Equals((object)second);
 
@@ -258,7 +257,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void ObjectEquals_AreSame_ShouldBeTrue()
         {
-            var first = new Int();
+            var first = new INT();
 
             var result = first.Equals((object)first);
 
@@ -268,7 +267,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void ObjectEquals_Null_ShouldBeFalse()
         {
-            var first = new Int();
+            var first = new INT();
 
             var result = first.Equals((object)null);
 
@@ -278,8 +277,8 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void OperatorEquals_AreEqual_ShouldBeTrue()
         {
-            var first = new Int();
-            var second = new Int();
+            var first = new INT();
+            var second = new INT();
 
             var result = first == second;
 
@@ -289,8 +288,8 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void OperatorNotEquals_AreEqual_ShouldBeFalse()
         {
-            var first = new Int();
-            var second = new Int();
+            var first = new INT();
+            var second = new INT();
 
             var result = first != second;
 
@@ -300,7 +299,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void GetHashCode_DefaultValue_ShouldBeHashOfName()
         {
-            var type = new Int();
+            var type = new INT();
 
             var hash = type.GetHashCode();
 
@@ -310,7 +309,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void ToString_WhenCalled_ShouldBeName()
         {
-            var type = new Int();
+            var type = new INT();
 
             type.ToString().Should().Be(type.Name);
         }
@@ -318,7 +317,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void CompareTo_Same_ShouldBeZero()
         {
-            var type = new Int();
+            var type = new INT();
 
             var compare = type.CompareTo(type);
 
@@ -328,7 +327,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void CompareTo_Null_ShouldBeOne()
         {
-            var type = new Int();
+            var type = new INT();
 
             var compare = type.CompareTo(null);
 
@@ -338,8 +337,8 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void CompareTo_ValidOther_ShouldBeZero()
         {
-            var first = new Int();
-            var second = new Int();
+            var first = new INT();
+            var second = new INT();
 
             var compare = first.CompareTo(second);
 

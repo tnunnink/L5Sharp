@@ -8,6 +8,9 @@ namespace L5Sharp
     /// Represents a Logix <b>Tag</b> component. 
     /// </summary>
     /// <typeparam name="TDataType">The <see cref="IDataType"/> of the tag.</typeparam>
+    /// <remarks>
+    /// 
+    /// </remarks>
     public interface ITag<out TDataType> : ITagMember<TDataType> where TDataType : IDataType
     {
         /// <summary>

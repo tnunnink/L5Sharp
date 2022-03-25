@@ -1,4 +1,5 @@
 ﻿using System;
+using AutoFixture;
 using FluentAssertions;
 using NUnit.Framework;
 
@@ -7,14 +8,6 @@ namespace L5Sharp.Core.Tests
     [TestFixture]
     public class NeutralTextTests
     {
-        [Test]
-        public void New_DefaultConstructor_ShouldNotBeNull()
-        {
-            var text = new NeutralText();
-
-            text.Should().NotBeNull();
-        }
-
         [Test]
         public void New_NullText_ShouldThrowArgumentNullException()
         {
@@ -27,6 +20,24 @@ namespace L5Sharp.Core.Tests
             var text = new NeutralText(string.Empty);
 
             text.Should().BeEquivalentTo(NeutralText.Empty);
+        }
+        
+        [Test]
+        public void New_SomeString_ShouldNotBeNull()
+        {
+            var fixture = new Fixture();
+            
+            var text = new NeutralText(fixture.Create<string>());
+
+            text.Should().NotBeNull();
+        }
+
+        [Test]
+        public void Empty_WhenCalled_ShouldBeEmptyString()
+        {
+            var text = NeutralText.Empty;
+
+            text.Should().BeEquivalentTo(new NeutralText(string.Empty));
         }
 
         [Test]
@@ -46,11 +57,23 @@ namespace L5Sharp.Core.Tests
         }
 
         [Test]
-        public void New_ValidText_ShouldHaveExpectedInstructions()
+        public void Instructions_SimpleTextWithMultipleInstruction_ShouldHaveExpectedCount()
         {
             var text = new NeutralText("[XIC(SomeBit),XIO(AnotherBit)]OTE(OutputBit);");
 
-            text.Instructions().Should().HaveCount(3);
+            var instructions = text.Instructions();
+
+            instructions.Should().HaveCount(3);
+        }
+
+        [Test]
+        public void TagNames_SimpleTextWithMultipleTags_ShouldHaveExpectedCount()
+        {
+            var text = new NeutralText("[XIC(SomeBit),XIO(AnotherBit)]OTE(OutputBit);");
+
+            var tagNames = text.TagNames();
+
+            tagNames.Should().HaveCount(3);
         }
     }
 }

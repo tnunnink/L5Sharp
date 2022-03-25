@@ -1,8 +1,7 @@
 ﻿using L5Sharp.Abstractions;
-using L5Sharp.Atomics;
 using L5Sharp.Creators;
 using L5Sharp.Enums;
-using L5Sharp.Predefined;
+using L5Sharp.Types;
 
 namespace L5Sharp.Core.Tests
 {
@@ -17,9 +16,9 @@ namespace L5Sharp.Core.Tests
 
         public override string Description => "This is the user defined description";
 
-        public IMember<Bool> Indy = Member.Create<Bool>(nameof(Indy), description:"Test Bool Member");
-        public IMember<String> Str = Member.Create<String>(nameof(Str), description:"Test String Member");
-        public IMember<Timer> Tmr = Member.Create<Timer>(nameof(Tmr), description:"Test Timer Member");
+        public IMember<BOOL> Indy = Member.Create<BOOL>(nameof(Indy), description:"Test BOOL Member");
+        public IMember<STRING> Str = Member.Create<STRING>(nameof(Str), description:"Test String Member");
+        public IMember<TIMER> Tmr = Member.Create<TIMER>(nameof(Tmr), description:"Test Timer Member");
         public IMember<MySimpleType> Simple = Member.Create<MySimpleType>(nameof(Simple));
 
         public override DataTypeClass Class => DataTypeClass.User;
@@ -34,12 +33,12 @@ namespace L5Sharp.Core.Tests
 
         public override string Description => "Simple Type";
 
-        public IMember<Bool> M1 = Member.Create<Bool>(nameof(M1));
-        public IMember<Sint> M2 = Member.Create<Sint>(nameof(M2));
-        public IMember<Int> M3 = Member.Create<Int>(nameof(M3));
-        public IMember<Dint> M4 = Member.Create<Dint>(nameof(M4));
-        public IMember<Lint> M5 = Member.Create<Lint>(nameof(M5));
-        public IMember<Real> M6 = Member.Create<Real>(nameof(M6));
+        public IMember<BOOL> M1 = Member.Create<BOOL>(nameof(M1));
+        public IMember<SINT> M2 = Member.Create<SINT>(nameof(M2));
+        public IMember<INT> M3 = Member.Create<INT>(nameof(M3));
+        public IMember<DINT> M4 = Member.Create<DINT>(nameof(M4));
+        public IMember<LINT> M5 = Member.Create<LINT>(nameof(M5));
+        public IMember<REAL> M6 = Member.Create<REAL>(nameof(M6));
 
         public override DataTypeClass Class => DataTypeClass.User;
         protected override IDataType New() => new MySimpleType();

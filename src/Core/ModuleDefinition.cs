@@ -16,6 +16,8 @@ namespace L5Sharp.Core
     /// </remarks>
     public class ModuleDefinition
     {
+        private const string Ethernet = "Ethernet";
+        
         /// <summary>
         /// Creates a new <see cref="ModuleDefinition"/> object with the provided data.
         /// </summary>
@@ -25,13 +27,12 @@ namespace L5Sharp.Core
         /// <param name="productCode">The unique product code for the module.</param>
         /// <param name="revisions">A set of <see cref="Revision"/> objects that are valid for the module.</param>
         /// <param name="categories">A set of <see cref="ModuleCategory"/> options that are applicable to the module.</param>
-        /// <param name="ports">The set of <see cref="PortDefinition"/> objects that define the port connections for the module.</param>
+        /// <param name="ports">The set of <see cref="Port"/> objects that define the port connections for the module.</param>
         /// <param name="description">The description of the module.</param>
-        public ModuleDefinition(CatalogNumber catalogNumber, Vendor vendor, ProductType productType,
-            ushort productCode,
+        public ModuleDefinition(CatalogNumber catalogNumber, Vendor vendor, ProductType productType, ushort productCode,
             IEnumerable<Revision> revisions,
             IEnumerable<ModuleCategory> categories,
-            IEnumerable<PortDefinition> ports,
+            IEnumerable<Port> ports,
             string description)
         {
             CatalogNumber = catalogNumber;
@@ -40,7 +41,7 @@ namespace L5Sharp.Core
             ProductCode = productCode;
             Revisions = new ReadOnlyCollection<Revision>(revisions.ToList());
             Categories = new ReadOnlyCollection<ModuleCategory>(categories.ToList());
-            Ports = new ReadOnlyCollection<PortDefinition>(ports.ToList());
+            Ports = new ReadOnlyCollection<Port>(ports.ToList());
             Description = description;
         }
 
@@ -82,63 +83,89 @@ namespace L5Sharp.Core
         /// <summary>
         /// Gets the set of <see cref="Ports"/> that should be defined on the Module.
         /// </summary>
-        public IReadOnlyCollection<PortDefinition> Ports { get; }
+        public IReadOnlyCollection<Port> Ports { get; }
 
         /// <summary>
         /// Configures the <see cref="Ports"/> of the definition in such that the first <b>Non-Ethernet</b> type port is the
         /// upstream port with the provided slot number, and the first <b>Ethernet</b> type port (if exists) is
         /// the downstream port with the provided ipAddress (if not null).
         /// </summary>
-        /// <param name="slot">The slot number of connecting port to configure.</param>
-        /// <param name="ipAddress">The IP address of the local port to configure.
-        /// If not provided will default to empty string.</param>
+        /// <param name="upstreamType">The port type of the upstream parent that determines which port is the primary
+        /// upstream port.</param>
+        /// <param name="upstreamAddress">The address of the upstream port.</param>
+        /// <param name="downstreamAddress">The address of the downstream port.</param>
         /// <remarks>
         /// Provides a simple way to configure the port connections by supplying a slot number and optional IP.
         /// This method assumes the port with the slot number will be the upstream connecting port.
         /// </remarks>
-        /// <seealso cref="ConfigurePorts(System.Net.IPAddress,byte)"/>
-        public void ConfigurePorts(byte slot, IPAddress? ipAddress = null)
+        public ModuleDefinition ConfigurePorts(string upstreamType, string upstreamAddress, string downstreamAddress)
         {
-            var primary = Ports.FirstOrDefault(p => p.Type != "Ethernet");
+            var ports = new List<Port>();
 
-            if (primary is not null)
-            {
-                primary.Upstream = true;
-                primary.Address = slot.ToString();
-            }
+            var upstream = Ports.FirstOrDefault(p => p.Type == upstreamType)?.Configure(upstreamAddress, true);
+            if (upstream is not null)
+                ports.Add(upstream);
 
-            var secondary = Ports.FirstOrDefault(p => p.Type == "Ethernet");
+            var downstream = Ports.FirstOrDefault(p => p.Type != upstreamType)?.Configure(downstreamAddress);
+            if (downstream is not null)
+                ports.Add(downstream);
 
-            if (secondary is not null)
-                secondary.Address = ipAddress?.ToString() ?? IPAddress.Any.ToString();
+            return new ModuleDefinition(CatalogNumber, Vendor, ProductType, ProductCode, Revisions, Categories,
+                ports, Description);
         }
         
         /// <summary>
-        /// Configures the <see cref="Ports"/> of the definition in such that the first <b>Ethernet</b> type port is the
-        /// upstream connecting port with the provided IP address, and the first <b>Non-Ethernet</b> type port (if exists) is
-        /// the downstream local port with the provided slot number.
+        /// Configures the <see cref="Ports"/> of the definition such that the first found non 'Ethernet' type port is
+        /// the upstream port with the specified slot address, and any 'Ethernet' type ports are downstream ports with
+        /// the provided IP address, therefore making a backplane ready port configuration.
         /// </summary>
-        /// <param name="ipAddress">The IP address of the connecting port to configure.</param>
-        /// <param name="slot">The slot number of local port to configure. If not provided will default to 0.</param>
-        /// <remarks>
-        /// Provides a simple way to configure the port connections by supplying a IP and optional slot number.
-        /// This method assumes the port with the IP address will be the upstream connecting port.
-        /// </remarks>
-        /// <seealso cref="ConfigurePorts(byte,System.Net.IPAddress?)"/>
-        public void ConfigurePorts(IPAddress ipAddress, byte slot)
+        /// <param name="slot">The slot number address of the upstream port to configure.</param>
+        /// <param name="ipAddress">The optional <see cref="IPAddress"/> of the downstream port to configure.
+        /// If not provided, will default to the <see cref="IPAddress.Any"/> value (i.e. 0.0.0.0).</param>
+        /// <returns>A new <see cref="ModuleDefinition"/> with the same properties but configured ports using the
+        /// provided slot and IP address.</returns>
+        public ModuleDefinition ConfigureBackplane(byte slot, IPAddress? ipAddress = null)
         {
-            var primary = Ports.FirstOrDefault(p => p.Type == "Ethernet");
+            var ports = new List<Port>();
+            
+            var upstream = Ports.FirstOrDefault(p => p.Type != Ethernet)?.Configure(slot.ToString(), true);
+            
+            //should we fail?
+            if (upstream is not null)
+                ports.Add(upstream);
 
-            if (primary is not null)
-            {
-                primary.Upstream = true;
-                primary.Address = ipAddress.ToString();
-            }
+            var downstream = Ports.Where(p => p.Type == Ethernet)
+                .Select(p => p.Configure(ipAddress?.ToString() ?? IPAddress.Any.ToString()));
+            ports.AddRange(downstream);
+            
+            return new ModuleDefinition(CatalogNumber, Vendor, ProductType, ProductCode, Revisions, Categories, ports,
+                Description);
+        }
 
-            var secondary = Ports.FirstOrDefault(p => p.Type != "Ethernet");
+        /// <summary>
+        /// Configures the <see cref="Ports"/> of the definition such that the first found 'Ethernet' type port is
+        /// the upstream port with the specified IP address, and the first non 'Ethernet' type port is the downstream
+        /// ports with the provided slot number, therefore making a backplane ready port configuration.
+        /// </summary>
+        /// <param name="ipAddress">The <see cref="IPAddress"/> of the upstream port to configure.</param>
+        /// <param name="slot">The optional slot number of the downstream port to configure. If not provided,
+        /// will default to 0.</param>
+        /// <returns>A new <see cref="ModuleDefinition"/> with the same properties but configured ports using the
+        /// provided slot and IP address.</returns>
+        public ModuleDefinition ConfigureEthernet(IPAddress ipAddress, byte slot = default)
+        {
+            var ports = new List<Port>();
+            
+            //should we fail?
+            var upstream = Ports.FirstOrDefault(p => p.Type == Ethernet)?.Configure(ipAddress.ToString(), true);
+            if (upstream is not null)
+                ports.Add(upstream);
 
-            if (secondary is not null)
-                secondary.Address = slot.ToString();
+            var downstream = Ports.Where(p => p.Type != Ethernet).Select(p => p.Configure(slot.ToString()));
+            ports.AddRange(downstream);
+            
+            return new ModuleDefinition(CatalogNumber, Vendor, ProductType, ProductCode, Revisions, Categories, ports,
+                Description);
         }
     }
 }

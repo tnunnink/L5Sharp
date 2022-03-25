@@ -1,7 +1,6 @@
 ﻿using FluentAssertions;
-using L5Sharp.Atomics;
 using L5Sharp.Core;
-using L5Sharp.Predefined;
+using L5Sharp.Types;
 using NUnit.Framework;
 
 namespace L5Sharp.Enums.Tests
@@ -60,7 +59,7 @@ namespace L5Sharp.Enums.Tests
         [Test]
         public void AoiDefault_AtomicType_ShouldBeInput()
         {
-            var usage = TagUsage.AoiDefault(new Bool());
+            var usage = TagUsage.AoiDefault(new BOOL());
 
             usage.Should().Be(TagUsage.Input);
         }
@@ -68,7 +67,7 @@ namespace L5Sharp.Enums.Tests
         [Test]
         public void AoiDefault_ComplexType_ShouldBeInOut()
         {
-            var usage = TagUsage.AoiDefault(new Timer());
+            var usage = TagUsage.AoiDefault(new TIMER());
 
             usage.Should().Be(TagUsage.InOut);
         }
@@ -76,7 +75,7 @@ namespace L5Sharp.Enums.Tests
         [Test]
         public void AoiDefault_ArrayType_ShouldBeInOut()
         {
-            var usage = TagUsage.AoiDefault(new ArrayType<Dint>(10, new Dint()));
+            var usage = TagUsage.AoiDefault(new ArrayType<DINT>(10, new DINT()));
 
             usage.Should().Be(TagUsage.InOut);
         }

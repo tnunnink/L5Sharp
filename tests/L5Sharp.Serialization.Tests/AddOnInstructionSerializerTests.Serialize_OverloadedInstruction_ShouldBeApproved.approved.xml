@@ -1,0 +1,58 @@
+﻿<AddOnInstructionDefinition Name="Test" Revision="1.1" RevisionExtension="Rev1" Vendor="ME" ExecutePrescan="true" ExecutePostscan="true" ExecuteEnableInFalse="true" CreatedDate="2022-01-01T12:00:00.000Z" CreatedBy="CreatedBy" EditedDate="2022-01-01T12:00:00.000Z" EditedBy="EditedBy" SoftwareRevision="v2.1" IsEncrypted="true">
+  <Description><![CDATA[RLL]]></Description>
+  <RevisionNote><![CDATA[This is the revision note]]></RevisionNote>
+  <AdditionalHelpText><![CDATA[this is additional help text]]></AdditionalHelpText>
+  <Parameters>
+    <Parameter Name="TestParameter1" TagType="Base" DataType="BOOL" Usage="Input" Radix="Decimal" Required="false" Visible="false" ExternalAccess="Read/Write" />
+    <Parameter Name="TestParameter2" TagType="Base" DataType="REAL" Usage="Input" Radix="Float" Required="false" Visible="false" ExternalAccess="Read/Write" />
+    <Parameter Name="TestParameter3" TagType="Base" DataType="TIMER" Usage="InOut" Required="true" Visible="true" Constant="false" />
+  </Parameters>
+  <LocalTags>
+    <LocalTag Name="TestTag1" TagType="Base" DataType="ALARM" Constant="false" ExternalAccess="Read/Write">
+      <Data Format="Decorated">
+        <Structure DataType="ALARM">
+          <DataValueMember Name="EnableIn" DataType="BOOL" Value="0" />
+          <DataValueMember Name="In" DataType="REAL" Radix="Float" Value="0.0" />
+          <DataValueMember Name="HHLimit" DataType="REAL" Radix="Float" Value="0.0" />
+          <DataValueMember Name="HLimit" DataType="REAL" Radix="Float" Value="0.0" />
+          <DataValueMember Name="LLimit" DataType="REAL" Radix="Float" Value="0.0" />
+          <DataValueMember Name="LLLimit" DataType="REAL" Radix="Float" Value="0.0" />
+          <DataValueMember Name="Deadband" DataType="REAL" Radix="Float" Value="0.0" />
+          <DataValueMember Name="ROCPosLimit" DataType="REAL" Radix="Float" Value="0.0" />
+          <DataValueMember Name="ROCNegLimit" DataType="REAL" Radix="Float" Value="0.0" />
+          <DataValueMember Name="ROCPeriod" DataType="REAL" Radix="Float" Value="0.0" />
+          <DataValueMember Name="EnableOut" DataType="BOOL" Value="0" />
+          <DataValueMember Name="HHAlarm" DataType="BOOL" Value="0" />
+          <DataValueMember Name="HAlarm" DataType="BOOL" Value="0" />
+          <DataValueMember Name="LAlarm" DataType="BOOL" Value="0" />
+          <DataValueMember Name="LLAlarm" DataType="BOOL" Value="0" />
+          <DataValueMember Name="ROCPosAlarm" DataType="BOOL" Value="0" />
+          <DataValueMember Name="ROCNegAlarm" DataType="BOOL" Value="0" />
+          <DataValueMember Name="ROC" DataType="REAL" Radix="Float" Value="0.0" />
+          <DataValueMember Name="Status" DataType="DINT" Radix="Decimal" Value="0" />
+          <DataValueMember Name="InstructFault" DataType="BOOL" Value="0" />
+          <DataValueMember Name="DeadbandInv" DataType="BOOL" Value="0" />
+          <DataValueMember Name="ROCPosLimitInv" DataType="BOOL" Value="0" />
+          <DataValueMember Name="ROCNegLimitInv" DataType="BOOL" Value="0" />
+          <DataValueMember Name="ROCPeriodInv" DataType="BOOL" Value="0" />
+        </Structure>
+      </Data>
+    </LocalTag>
+    <LocalTag Name="TestTag2" TagType="Base" DataType="DINT" Radix="Decimal" Constant="false" ExternalAccess="Read/Write">
+      <Data Format="Decorated">
+        <DataValue DataType="DINT" Value="0" />
+      </Data>
+    </LocalTag>
+    <LocalTag Name="TestTag3" TagType="Base" DataType="STRING" Constant="false" ExternalAccess="Read/Write">
+      <Data Format="String" Length="0"><![CDATA['']]></Data>
+    </LocalTag>
+  </LocalTags>
+  <Routines>
+    <Routine Name="Main" Type="Rll">
+      <RLLContent />
+    </Routine>
+    <Routine Name="Test" Type="Rll">
+      <RLLContent />
+    </Routine>
+  </Routines>
+</AddOnInstructionDefinition>

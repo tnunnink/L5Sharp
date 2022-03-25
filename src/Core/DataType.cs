@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using L5Sharp.Atomics;
 using L5Sharp.Enums;
-using L5Sharp.Predefined;
-using String = L5Sharp.Predefined.String;
+using L5Sharp.Types;
 
 namespace L5Sharp.Core
 {
@@ -15,20 +13,20 @@ namespace L5Sharp.Core
     {
         private static readonly Dictionary<string, IDataType> Registry = new(StringComparer.OrdinalIgnoreCase)
         {
-            { nameof(Bool), new Bool() },
-            //Bit is a valid type that appears in the L5X and is the same as a Bool
-            { "Bit", new Bool() },
-            { nameof(Sint), new Sint() },
-            { nameof(Int), new Int() },
-            { nameof(Dint), new Dint() },
-            { nameof(Lint), new Lint() },
-            { nameof(Real), new Real() },
-            { nameof(String), new String() },
-            { nameof(Counter), new Counter() },
-            { nameof(Timer), new Timer() },
-            { nameof(Alarm), new Alarm() },
-            { nameof(Message), new Message() },
-            { nameof(Control), new Control() }
+            { nameof(BOOL), new BOOL() },
+            //Bit is a valid type that appears in the L5X and is the same as a BOOL
+            { "Bit", new BOOL() },
+            { nameof(SINT), new SINT() },
+            { nameof(INT), new INT() },
+            { nameof(DINT), new DINT() },
+            { nameof(LINT), new LINT() },
+            { nameof(REAL), new REAL() },
+            { nameof(STRING), new STRING() },
+            { nameof(COUNTER), new COUNTER() },
+            { nameof(TIMER), new TIMER() },
+            { nameof(ALARM), new ALARM() },
+            { nameof(MESSAGE), new MESSAGE() },
+            { nameof(CONTROL), new CONTROL() }
         };
 
         /// <summary>
@@ -62,7 +60,7 @@ namespace L5Sharp.Core
         /// <returns>
         /// If the provided name is a type that is part of the predefined registry,
         /// a new new <see cref="IDataType"/> instance representing the specified name;
-        /// otherwise a <see cref="Undefined"/> instance wrapping the provided name.
+        /// otherwise a <see cref="UNDEFINED"/> instance wrapping the provided name.
         /// </returns>
         /// <exception cref="ArgumentException">name is null or empty.</exception>
         public static IDataType Create(string name)
@@ -70,7 +68,7 @@ namespace L5Sharp.Core
             if (string.IsNullOrEmpty(name))
                 throw new ArgumentException("Name can not be null or empty");
 
-            return Registry.ContainsKey(name) ? Registry[name].Instantiate() : new Undefined(name);
+            return Registry.ContainsKey(name) ? Registry[name].Instantiate() : new UNDEFINED(name);
         }
 
         /// <summary>

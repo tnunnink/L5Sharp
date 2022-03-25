@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Linq;
 using FluentAssertions;
-using L5Sharp.Atomics;
 using L5Sharp.Creators;
 using L5Sharp.Enums;
 using L5Sharp.Exceptions;
-using L5Sharp.Predefined;
+using L5Sharp.Types;
 using NUnit.Framework;
 
 namespace L5Sharp.Core.Tests
@@ -16,12 +15,12 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Create_Timer_ShouldHaveExpectedValues()
         {
-            var tag = Tag.Create<Timer>("Test");
+            var tag = Tag.Create<TIMER>("Test");
 
             tag.Name.Should().Be("Test");
             tag.Description.Should().BeEmpty();
             tag.TagName.Should().Be("Test");
-            tag.DataType.Should().BeOfType<Timer>();
+            tag.DataType.Should().BeOfType<TIMER>();
             tag.Dimensions.Should().Be(Dimensions.Empty);
             tag.Radix.Should().Be(Radix.Null);
             tag.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);
@@ -38,7 +37,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void GetTagNames_Timer_ShouldHaveExpectedCount()
         {
-            var tag = Tag.Create("Test", new Timer());
+            var tag = Tag.Create("Test", new TIMER());
 
             var tagNames = tag.TagNames();
 
@@ -48,7 +47,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void GetTagNames_Timer_ShouldHaveExpectedNames()
         {
-            var tag = Tag.Create("Test", new Timer());
+            var tag = Tag.Create("Test", new TIMER());
 
             var tagNames = tag.TagNames().ToList();
 
@@ -62,7 +61,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void HasMember_Null_ShouldBeFalse()
         {
-            var tag = Tag.Create<Timer>("Test");
+            var tag = Tag.Create<TIMER>("Test");
 
             FluentActions.Invoking(() => tag.Contains(null!)).Should().Throw<ArgumentNullException>();
         }
@@ -70,7 +69,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void HasMember_ValidExistingTagName_ShouldBeTrue()
         {
-            var tag = Tag.Create<Timer>("Test");
+            var tag = Tag.Create<TIMER>("Test");
 
             var result = tag.Contains("Test.PRE");
 
@@ -80,7 +79,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void NameIndex_Null_ShouldThrowArgumentNullException()
         {
-            var tag = Tag.Create<Timer>("Test");
+            var tag = Tag.Create<TIMER>("Test");
 
             FluentActions.Invoking(() => tag.Member(null!)).Should().Throw<ArgumentNullException>();
         }
@@ -88,7 +87,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void NameIndex_EmptyString_ShouldThrowArgumentException()
         {
-            var tag = Tag.Create<Timer>("Test");
+            var tag = Tag.Create<TIMER>("Test");
 
             FluentActions.Invoking(() => tag.Member(string.Empty)).Should().Throw<InvalidMemberPathException>()
                 .WithMessage("The tag name '' is not a valid member path for type 'TIMER'.");
@@ -97,7 +96,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void NameIndex_NonExistingMember_ShouldThrowArgumentException()
         {
-            var tag = Tag.Create<Timer>("Test");
+            var tag = Tag.Create<TIMER>("Test");
 
             FluentActions.Invoking(() => tag.Member("Invalid")).Should().Throw<InvalidMemberPathException>()
                 .WithMessage("The tag name 'Invalid' is not a valid member path for type 'TIMER'.");
@@ -106,7 +105,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void NameIndex_ValidRelativeHasMember_ShouldNotBeNull()
         {
-            var tag = Tag.Create<Timer>("Test");
+            var tag = Tag.Create<TIMER>("Test");
 
             var member = tag.Member("PRE");
 
@@ -116,7 +115,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void NameIndex_ValidAbsoluteHasMember_ShouldNotBeNull()
         {
-            var tag = Tag.Create<Timer>("Test");
+            var tag = Tag.Create<TIMER>("Test");
 
             var member = tag.Member("Test.PRE");
 
@@ -132,7 +131,7 @@ namespace L5Sharp.Core.Tests
 
             member.Should().NotBeNull();
             member.Name.Should().Be("PRE");
-            member.DataType.Should().BeOfType<Dint>();
+            member.DataType.Should().BeOfType<DINT>();
         }
 
         [Test]
@@ -144,13 +143,13 @@ namespace L5Sharp.Core.Tests
 
             member.Should().NotBeNull();
             member.Name.Should().Be("PRE");
-            member.DataType.Should().BeOfType<Dint>();
+            member.DataType.Should().BeOfType<DINT>();
         }
 
         [Test]
         public void GetMember_ValidMember_ShouldNotBeNull()
         {
-            var tag = Tag.Create<Timer>("Test");
+            var tag = Tag.Create<TIMER>("Test");
 
             var member = tag.Member(t => t.PRE);
 
@@ -169,7 +168,7 @@ namespace L5Sharp.Core.Tests
 
             member.Should().NotBeNull();
             member.Name.Should().Be("[0]");
-            member.DataType.Should().BeOfType<Sint>();
+            member.DataType.Should().BeOfType<SINT>();
         }
         
         [Test]
@@ -215,7 +214,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void GetMembers_WhenCalled_ShouldNotBeEmpty()
         {
-            var tag = Tag.Create<Timer>("Test");
+            var tag = Tag.Create<TIMER>("Test");
 
             var members = tag.Members();
 

@@ -4,7 +4,7 @@ using System.Xml.Linq;
 using L5Sharp.Core;
 using L5Sharp.Extensions;
 using L5Sharp.L5X;
-using String = L5Sharp.Predefined.String;
+using L5Sharp.Types;
 
 namespace L5Sharp.Serialization.Data
 {
@@ -59,8 +59,8 @@ namespace L5Sharp.Serialization.Data
                 .First(e => e.Attribute(L5XAttribute.Name.ToString())?.Value == "DATA")
                 .Value;
             
-            return string.Equals(nameof(String), name, StringComparison.OrdinalIgnoreCase) 
-                ? new String(value) : value.IsEmpty() ? new String() : new StringDefined(name, value);
+            return string.Equals(nameof(STRING), name, StringComparison.OrdinalIgnoreCase) 
+                ? new STRING(value) : value.IsEmpty() ? new STRING() : new StringDefined(name, value);
         }
     }
 }

@@ -30,10 +30,10 @@ namespace L5Sharp.Core.Tests
                 new List<ModuleCategory>
                 {
                     ModuleCategory.Communication
-                }, new List<PortDefinition>
+                }, new List<Port>
                 {
-                    new(1, "ICP", false),
-                    new(2, "Ethernet", false)
+                    new(1, "ICP"),
+                    new(2, "Ethernet")
                 }, "1756 10/100 Mbps Ethernet Bridge, Twisted-Pair Media");
 
             definition.Should().NotBeNull();
@@ -59,10 +59,10 @@ namespace L5Sharp.Core.Tests
                 new List<ModuleCategory>
                 {
                     ModuleCategory.Communication
-                }, new List<PortDefinition>
+                }, new List<Port>
                 {
-                    new(1, "ICP", false),
-                    new(2, "Ethernet", false)
+                    new(1, "ICP"),
+                    new(2, "Ethernet")
                 }, "1756 10/100 Mbps Ethernet Bridge, Twisted-Pair Media");
 
             definition.CatalogNumber.Should().Be(new CatalogNumber("1756-EN2T"));
@@ -83,7 +83,7 @@ namespace L5Sharp.Core.Tests
         }
 
         [Test]
-        public void ConfigurePorts_SlotAndIP_ShouldUpdateNonEthernetPort()
+        public void ConfigurePorts_Valid_ShouldNotBeNull()
         {
             var definition = new ModuleDefinition("1756-EN2T",
                 Vendor.Rockwell,
@@ -91,21 +91,71 @@ namespace L5Sharp.Core.Tests
                 166,
                 new List<Revision> { new(1, 1) },
                 new List<ModuleCategory> { ModuleCategory.Communication },
-                new List<PortDefinition>
+                new List<Port>
                 {
-                    new(1, "ICP", false),
-                    new(2, "Ethernet", false)
+                    new(1, "ICP"),
+                    new(2, "Ethernet")
                 }, "1756 10/100 Mbps Ethernet Bridge, Twisted-Pair Media");
             
-            definition.ConfigurePorts(3, IPAddress.Parse("192.168.1.1"));
+            var result = definition.ConfigurePorts("ICP", "3", "192.168.1.1");
 
-            var port = definition.Ports.FirstOrDefault(p => p.Type != "Ethernet");
-            port?.Upstream.Should().BeTrue();
-            port?.Address.Should().Be("3");
+            result.Should().NotBeNull();
+        }
+
+        [Test]
+        public void ConfigurePorts_ICPAndSlotAndIp_ShouldHaveExpectedPortConfiguration()
+        {
+            var definition = new ModuleDefinition("1756-EN2T",
+                Vendor.Rockwell,
+                ProductType.Communications,
+                166,
+                new List<Revision> { new(1, 1) },
+                new List<ModuleCategory> { ModuleCategory.Communication },
+                new List<Port>
+                {
+                    new(1, "ICP"),
+                    new(2, "Ethernet")
+                }, "1756 10/100 Mbps Ethernet Bridge, Twisted-Pair Media");
+            
+            var result = definition.ConfigurePorts("ICP", "3", "192.168.1.1");
+
+            var icpPort = result.Ports.First(p => p.Type == "ICP");
+            icpPort.Upstream.Should().BeTrue();
+            icpPort.Address.Should().Be("3");
+            
+            var ethernetPort = result.Ports.First(p => p.Type == "Ethernet");
+            ethernetPort.Upstream.Should().BeFalse();
+            ethernetPort.Address.Should().Be("192.168.1.1");
+        }
+
+        [Test]
+        public void ConfigurePorts_EthernetAndIPAndSlot_ShouldHaveExpectedPortProperties()
+        {
+            var definition = new ModuleDefinition("1756-EN2T",
+                Vendor.Rockwell,
+                ProductType.Communications,
+                166,
+                new List<Revision> { new(1, 1) },
+                new List<ModuleCategory> { ModuleCategory.Communication },
+                new List<Port>
+                {
+                    new(1, "ICP"),
+                    new(2, "Ethernet")
+                }, "1756 10/100 Mbps Ethernet Bridge, Twisted-Pair Media");
+            
+            var result = definition.ConfigurePorts("Ethernet", "192.168.1.1", "3");
+
+            var icpPort = result.Ports.First(p => p.Type == "ICP");
+            icpPort.Upstream.Should().BeFalse();
+            icpPort.Address.Should().Be("3");
+            
+            var ethernetPort = result.Ports.First(p => p.Type == "Ethernet");
+            ethernetPort.Upstream.Should().BeTrue();
+            ethernetPort.Address.Should().Be("192.168.1.1");
         }
         
         [Test]
-        public void ConfigurePorts_SlotAndIP_ShouldUpdateEthernetPort()
+        public void ConfigureBackplane_ValidParameters_ShouldHaveExpectedPorts()
         {
             var definition = new ModuleDefinition("1756-EN2T",
                 Vendor.Rockwell,
@@ -113,21 +163,25 @@ namespace L5Sharp.Core.Tests
                 166,
                 new List<Revision> { new(1, 1) },
                 new List<ModuleCategory> { ModuleCategory.Communication },
-                new List<PortDefinition>
+                new List<Port>
                 {
-                    new(1, "ICP", false),
-                    new(2, "Ethernet", false)
+                    new(1, "ICP"),
+                    new(2, "Ethernet")
                 }, "1756 10/100 Mbps Ethernet Bridge, Twisted-Pair Media");
             
-            definition.ConfigurePorts(3, IPAddress.Parse("192.168.1.1"));
-
-            var port = definition.Ports.FirstOrDefault(p => p.Type == "Ethernet");
-            port?.Upstream.Should().BeFalse();
-            port?.Address.Should().Be("192.168.1.1");
+            var result = definition.ConfigureBackplane(3, IPAddress.Parse("192.168.1.1"));
+            
+            var icpPort = result.Ports.First(p => p.Type == "ICP");
+            icpPort.Upstream.Should().BeTrue();
+            icpPort.Address.Should().Be("3");
+            
+            var ethernetPort = result.Ports.First(p => p.Type == "Ethernet");
+            ethernetPort.Upstream.Should().BeFalse();
+            ethernetPort.Address.Should().Be("192.168.1.1");
         }
         
         [Test]
-        public void ConfigurePorts_IPAndSlot_ShouldUpdateNonEthernetPort()
+        public void ConfigureEthernet_ValidParameters_ShouldHaveExpectedPorts()
         {
             var definition = new ModuleDefinition("1756-EN2T",
                 Vendor.Rockwell,
@@ -135,41 +189,21 @@ namespace L5Sharp.Core.Tests
                 166,
                 new List<Revision> { new(1, 1) },
                 new List<ModuleCategory> { ModuleCategory.Communication },
-                new List<PortDefinition>
+                new List<Port>
                 {
-                    new(1, "ICP", false),
-                    new(2, "Ethernet", false)
+                    new(1, "ICP"),
+                    new(2, "Ethernet")
                 }, "1756 10/100 Mbps Ethernet Bridge, Twisted-Pair Media");
             
-            definition.ConfigurePorts(IPAddress.Parse("192.168.1.1"), 3);
-
-            var port = definition.Ports.FirstOrDefault(p => p.Type != "Ethernet");
+            var result = definition.ConfigureEthernet(IPAddress.Parse("192.168.1.1"), 3);
             
-            port?.Upstream.Should().BeFalse();
-            port?.Address.Should().Be("3");
-        }
-        
-        [Test]
-        public void ConfigurePorts_IPAndSlot_ShouldUpdateEthernetPort()
-        {
-            var definition = new ModuleDefinition("1756-EN2T",
-                Vendor.Rockwell,
-                ProductType.Communications,
-                166,
-                new List<Revision> { new(1, 1) },
-                new List<ModuleCategory> { ModuleCategory.Communication },
-                new List<PortDefinition>
-                {
-                    new(1, "ICP", false),
-                    new(2, "Ethernet", false)
-                }, "1756 10/100 Mbps Ethernet Bridge, Twisted-Pair Media");
+            var icpPort = result.Ports.First(p => p.Type == "ICP");
+            icpPort.Upstream.Should().BeFalse();
+            icpPort.Address.Should().Be("3");
             
-            definition.ConfigurePorts(IPAddress.Parse("192.168.1.1"), 3);
-
-            var port = definition.Ports.FirstOrDefault(p => p.Type == "Ethernet");
-            
-            port?.Upstream.Should().BeTrue();
-            port?.Address.Should().Be("192.168.1.1");
+            var ethernetPort = result.Ports.First(p => p.Type == "Ethernet");
+            ethernetPort.Upstream.Should().BeTrue();
+            ethernetPort.Address.Should().Be("192.168.1.1");
         }
         
         

@@ -7,6 +7,7 @@ namespace L5Sharp.Serialization
     /// </summary>
     public interface IL5XSerializer
     {
+        //potentially could just make these objects here and on implementation forward to typed methods. 
         /*XElement Serialize(object component);
         
         object Deserialize(XElement element);*/

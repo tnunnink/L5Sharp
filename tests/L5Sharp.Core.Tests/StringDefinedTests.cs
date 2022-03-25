@@ -1,7 +1,7 @@
 ﻿using System;
 using FluentAssertions;
-using L5Sharp.Atomics;
 using L5Sharp.Enums;
+using L5Sharp.Types;
 using NUnit.Framework;
 
 namespace L5Sharp.Core.Tests
@@ -84,7 +84,7 @@ namespace L5Sharp.Core.Tests
 
             type.LEN.Should().NotBeNull();
             type.LEN.Name.Should().Be("LEN");
-            type.LEN.DataType.Should().BeOfType<Dint>();
+            type.LEN.DataType.Should().BeOfType<DINT>();
             type.LEN.DataType.Value.Should().Be(0);
             type.LEN.Dimensions.Length.Should().Be(0);
             type.LEN.Radix.Should().Be(Radix.Decimal);
@@ -99,7 +99,7 @@ namespace L5Sharp.Core.Tests
             
             type.DATA.Should().NotBeNull();
             type.DATA.Name.Should().Be("DATA");
-            type.DATA.DataType.Should().BeOfType<ArrayType<Sint>>();
+            type.DATA.DataType.Should().BeOfType<ArrayType<SINT>>();
             type.DATA.Dimensions.Length.Should().Be(100);
             type.DATA.Radix.Should().Be(Radix.Ascii);
             type.DATA.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);

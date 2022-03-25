@@ -3,9 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using L5Sharp.Atomics;
 using L5Sharp.Core;
 using L5Sharp.Enums;
+using L5Sharp.Types;
 
 namespace L5Sharp.Abstractions
 {
@@ -20,10 +20,10 @@ namespace L5Sharp.Abstractions
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
 
-            LEN = new Member<Dint>(nameof(LEN), new Dint());
+            LEN = new Member<DINT>(nameof(LEN), new DINT());
 
-            var array = new ArrayType<Sint>(new Dimensions(dimensions), radix: Radix.Ascii);
-            DATA = new Member<IArrayType<Sint>>(nameof(DATA), array, Radix.Ascii);
+            var array = new ArrayType<SINT>(new Dimensions(dimensions), radix: Radix.Ascii);
+            DATA = new Member<IArrayType<SINT>>(nameof(DATA), array, Radix.Ascii);
 
             _members = new List<IMember<IDataType>>
             {
@@ -56,10 +56,10 @@ namespace L5Sharp.Abstractions
                 .ToArray());
 
         /// <inheritdoc />
-        public IMember<Dint> LEN { get; }
+        public IMember<DINT> LEN { get; }
 
         /// <inheritdoc />
-        public IMember<IArrayType<Sint>> DATA { get; }
+        public IMember<IArrayType<SINT>> DATA { get; }
 
         /// <inheritdoc />
         public IDataType Instantiate() => New();

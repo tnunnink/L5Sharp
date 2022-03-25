@@ -11,22 +11,24 @@ namespace L5Sharp.Serialization.Components
 {
     internal class TagSerializer : IL5XSerializer<ITag<IDataType>>
     {
-        private static readonly XName ElementName = L5XElement.Tag.ToString();
+        private readonly XName _elementName;
         private readonly L5XContext? _context;
         private readonly TagPropertySerializer _commentSerializer;
         private readonly TagPropertySerializer _unitsSerializer;
         private readonly FormattedDataSerializer _formattedDataSerializer;
 
-        public TagSerializer()
+        public TagSerializer(XName? elementName = null)
         {
+            _elementName = elementName ?? L5XElement.Tag.ToString();
             _commentSerializer = new TagPropertySerializer(L5XElement.Comment.ToString());
             _unitsSerializer = new TagPropertySerializer(L5XElement.EngineeringUnit.ToString());
             _formattedDataSerializer = new FormattedDataSerializer();
         }
 
-        public TagSerializer(L5XContext context)
+        public TagSerializer(L5XContext context, XName? elementName = null)
         {
             _context = context;
+            _elementName = elementName ?? L5XElement.Tag.ToString();
             _commentSerializer = new TagPropertySerializer(L5XElement.Comment.ToString());
             _unitsSerializer = new TagPropertySerializer(L5XElement.EngineeringUnit.ToString());
             _formattedDataSerializer = new FormattedDataSerializer();
@@ -37,7 +39,7 @@ namespace L5Sharp.Serialization.Components
             if (component == null)
                 throw new ArgumentNullException(nameof(component));
 
-            var element = new XElement(ElementName);
+            var element = new XElement(_elementName);
             element.AddComponentName(component.Name);
             element.AddComponentDescription(component.Description);
             element.Add(new XAttribute(L5XAttribute.TagType.ToString(), component.TagType));
@@ -68,7 +70,7 @@ namespace L5Sharp.Serialization.Components
             if (element == null)
                 throw new ArgumentNullException(nameof(element));
 
-            if (element.Name != ElementName)
+            if (element.Name != _elementName)
                 throw new ArgumentException($"Element '{element.Name}' not valid for the serializer {GetType()}.");
 
             var name = element.ComponentName();

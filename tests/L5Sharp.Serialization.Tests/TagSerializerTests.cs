@@ -4,15 +4,12 @@ using System.Xml.Linq;
 using ApprovalTests;
 using ApprovalTests.Reporters;
 using FluentAssertions;
-using L5Sharp.Atomics;
 using L5Sharp.Core;
 using L5Sharp.Creators;
 using L5Sharp.Enums;
-using L5Sharp.Predefined;
 using L5Sharp.Serialization.Components;
-
+using L5Sharp.Types;
 using NUnit.Framework;
-using String = L5Sharp.Predefined.String;
 
 namespace L5Sharp.Serialization.Tests
 {
@@ -36,7 +33,7 @@ namespace L5Sharp.Serialization.Tests
         [Test]
         public void SerializeSimpleBool_ShouldNotBeNull()
         {
-            var tag = Tag.Create<Bool>("Test");
+            var tag = Tag.Create<BOOL>("Test");
 
             var xml = _serializer.Serialize(tag);
 
@@ -47,7 +44,7 @@ namespace L5Sharp.Serialization.Tests
         [UseReporter(typeof(DiffReporter))]
         public void Serialize_SimpleBool_ShouldBeApproved()
         {
-            var tag = Tag.Create<Bool>("Test");
+            var tag = Tag.Create<BOOL>("Test");
 
             var xml = _serializer.Serialize(tag);
 
@@ -58,7 +55,7 @@ namespace L5Sharp.Serialization.Tests
         [UseReporter(typeof(DiffReporter))]
         public void Serialize_SimpleSint_ShouldBeApproved()
         {
-            var tag = Tag.Create<Sint>("Test");
+            var tag = Tag.Create<SINT>("Test");
 
             var xml = _serializer.Serialize(tag);
 
@@ -69,7 +66,7 @@ namespace L5Sharp.Serialization.Tests
         [UseReporter(typeof(DiffReporter))]
         public void Serialize_SimpleInt_ShouldBeApproved()
         {
-            var tag = Tag.Create<Int>("Test");
+            var tag = Tag.Create<INT>("Test");
 
             var xml = _serializer.Serialize(tag);
 
@@ -80,7 +77,7 @@ namespace L5Sharp.Serialization.Tests
         [UseReporter(typeof(DiffReporter))]
         public void Serialize_SimpleDint_ShouldBeApproved()
         {
-            var tag = Tag.Create<Dint>("Test");
+            var tag = Tag.Create<DINT>("Test");
 
             var xml = _serializer.Serialize(tag);
 
@@ -91,7 +88,7 @@ namespace L5Sharp.Serialization.Tests
         [UseReporter(typeof(DiffReporter))]
         public void Serialize_SimpleLint_ShouldBeApproved()
         {
-            var tag = Tag.Create<Lint>("Test");
+            var tag = Tag.Create<LINT>("Test");
 
             var xml = _serializer.Serialize(tag);
 
@@ -102,7 +99,7 @@ namespace L5Sharp.Serialization.Tests
         [UseReporter(typeof(DiffReporter))]
         public void Serialize_SimpleReal_ShouldBeApproved()
         {
-            var tag = Tag.Create<Real>("Test");
+            var tag = Tag.Create<REAL>("Test");
 
             var xml = _serializer.Serialize(tag);
 
@@ -113,7 +110,7 @@ namespace L5Sharp.Serialization.Tests
         [UseReporter(typeof(DiffReporter))]
         public void Serialize_SimpleBoolArray_ShouldBeApproved()
         {
-            var tag = Tag.Create<Bool>("Test", new Dimensions(5));
+            var tag = Tag.Create<BOOL>("Test", new Dimensions(5));
 
             var xml = _serializer.Serialize(tag);
 
@@ -124,7 +121,7 @@ namespace L5Sharp.Serialization.Tests
         [UseReporter(typeof(DiffReporter))]
         public void Serialize_SimpleSintArray_ShouldBeApproved()
         {
-            var tag = Tag.Create<Sint>("Test", new Dimensions(5));
+            var tag = Tag.Create<SINT>("Test", new Dimensions(5));
 
             var xml = _serializer.Serialize(tag);
 
@@ -135,7 +132,7 @@ namespace L5Sharp.Serialization.Tests
         [UseReporter(typeof(DiffReporter))]
         public void Serialize_SimpleIntArray_ShouldBeApproved()
         {
-            var tag = Tag.Create<Int>("Test", new Dimensions(5));
+            var tag = Tag.Create<INT>("Test", new Dimensions(5));
 
             var xml = _serializer.Serialize(tag);
 
@@ -146,7 +143,7 @@ namespace L5Sharp.Serialization.Tests
         [UseReporter(typeof(DiffReporter))]
         public void Serialize_SimpleDintArray_ShouldBeApproved()
         {
-            var tag = Tag.Create<Dint>("Test", new Dimensions(5));
+            var tag = Tag.Create<DINT>("Test", new Dimensions(5));
 
             var xml = _serializer.Serialize(tag);
 
@@ -157,7 +154,7 @@ namespace L5Sharp.Serialization.Tests
         [UseReporter(typeof(DiffReporter))]
         public void Serialize_SimpleLintArray_ShouldBeApproved()
         {
-            var tag = Tag.Create<Lint>("Test", new Dimensions(5));
+            var tag = Tag.Create<LINT>("Test", new Dimensions(5));
 
             var xml = _serializer.Serialize(tag);
 
@@ -168,7 +165,7 @@ namespace L5Sharp.Serialization.Tests
         [UseReporter(typeof(DiffReporter))]
         public void Serialize_SimpleRealArray_ShouldBeApproved()
         {
-            var tag = Tag.Create<Real>("Test", new Dimensions(5));
+            var tag = Tag.Create<REAL>("Test", new Dimensions(5));
 
             var xml = _serializer.Serialize(tag);
 
@@ -179,7 +176,7 @@ namespace L5Sharp.Serialization.Tests
         [UseReporter(typeof(DiffReporter))]
         public void Serialize_String_ShouldBeApproved()
         {
-            var tag = Tag.Create<String>("Test");
+            var tag = Tag.Create<STRING>("Test");
 
             var xml = _serializer.Serialize(tag);
 
@@ -190,7 +187,7 @@ namespace L5Sharp.Serialization.Tests
         [UseReporter(typeof(DiffReporter))]
         public void Serialize_Timer_ShouldBeApproved()
         {
-            var tag = Tag.Create<Timer>("Test");
+            var tag = Tag.Create<TIMER>("Test");
 
             var xml = _serializer.Serialize(tag);
 
@@ -201,7 +198,7 @@ namespace L5Sharp.Serialization.Tests
         [UseReporter(typeof(DiffReporter))]
         public void Serialize_AlarmDigital_ShouldBeApproved()
         {
-            var tag = Tag.Create<AlarmDigital>("Test");
+            var tag = Tag.Create<ALARM_DIGITAL>("Test");
 
             var xml = _serializer.Serialize(tag);
 
@@ -214,11 +211,11 @@ namespace L5Sharp.Serialization.Tests
         {
             var userType = new UserDefined("Test", "This is a test type", new List<IMember<IDataType>>
             {
-                Member.Create<Bool>("BoolMember"),
-                Member.Create<Dint>("DintMember"),
-                Member.Create<Real>("RealMember"),
-                Member.Create<Timer>("TimerMember"),
-                Member.Create<String>("StringMember")
+                Member.Create<BOOL>("BoolMember"),
+                Member.Create<DINT>("DintMember"),
+                Member.Create<REAL>("RealMember"),
+                Member.Create<TIMER>("TimerMember"),
+                Member.Create<STRING>("StringMember")
             });
 
             var tag = Tag.Create("Test", userType);
@@ -262,7 +259,7 @@ namespace L5Sharp.Serialization.Tests
             var component = _serializer.Deserialize(element);
 
             component.Name.Should().Be("SimpleDint");
-            component.DataType.Should().BeOfType<Dint>();
+            component.DataType.Should().BeOfType<DINT>();
             component.Description.Should().BeEmpty();
             component.TagType.Should().Be(TagType.Base);
             component.Constant.Should().BeFalse();
@@ -281,7 +278,7 @@ namespace L5Sharp.Serialization.Tests
             var component = _serializer.Deserialize(element);
 
             component.Name.Should().Be("TestTimer");
-            component.DataType.Should().BeOfType<Timer>();
+            component.DataType.Should().BeOfType<TIMER>();
             component.Description.Should().Be("Test Timer");
             component.TagType.Should().Be(TagType.Base);
             component.Constant.Should().BeFalse();

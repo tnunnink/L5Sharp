@@ -1,13 +1,13 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Globalization;
-using L5Sharp.Atomics;
 using L5Sharp.Enums;
+using L5Sharp.Types;
 
 namespace L5Sharp.Converters
 {
     /// <summary>
-    /// A <see cref="TypeConverter"/> for the <see cref="UDint"/> object.
+    /// A <see cref="TypeConverter"/> for the <see cref="UDINT"/> object.
     /// </summary>
     internal class UDintConverter : TypeConverter
     {
@@ -16,9 +16,9 @@ namespace L5Sharp.Converters
             return sourceType == typeof(byte) ||
                    sourceType == typeof(ushort) ||
                    sourceType == typeof(uint) ||
-                   sourceType == typeof(USint) ||
-                   sourceType == typeof(UInt) ||
-                   sourceType == typeof(UDint) ||
+                   sourceType == typeof(USINT) ||
+                   sourceType == typeof(UINT) ||
+                   sourceType == typeof(UDINT) ||
                    sourceType == typeof(string) ||
                    base.CanConvertFrom(context, sourceType);
         }
@@ -27,13 +27,13 @@ namespace L5Sharp.Converters
         {
             return value switch
             {
-                byte v => new UDint(v),
-                ushort v => new UDint(v),
-                uint v => new UDint(v),
-                USint v => new UDint(v.Value),
-                UInt v => new UDint(v.Value),
-                UDint v => v,
-                string v => uint.TryParse(v, out var result) ? new UDint(result) : Radix.ParseValue<UDint>(v),
+                byte v => new UDINT(v),
+                ushort v => new UDINT(v),
+                uint v => new UDINT(v),
+                USINT v => new UDINT(v.Value),
+                UINT v => new UDINT(v.Value),
+                UDINT v => v,
+                string v => uint.TryParse(v, out var result) ? new UDINT(result) : Radix.ParseValue<UDINT>(v),
                 _ => base.ConvertFrom(context, culture, value)
                      ?? throw new NotSupportedException(
                          $"The provided value of type {value.GetType()} is not supported for conversion.")
@@ -46,10 +46,10 @@ namespace L5Sharp.Converters
                    destinationType == typeof(long) ||
                    destinationType == typeof(ulong) ||
                    destinationType == typeof(float) ||
-                   destinationType == typeof(UDint) ||
-                   destinationType == typeof(Lint) ||
-                   destinationType == typeof(ULint) ||
-                   destinationType == typeof(Real) ||
+                   destinationType == typeof(UDINT) ||
+                   destinationType == typeof(LINT) ||
+                   destinationType == typeof(ULINT) ||
+                   destinationType == typeof(REAL) ||
                    destinationType == typeof(string) ||
                    base.CanConvertFrom(context, destinationType);
         }
@@ -57,8 +57,8 @@ namespace L5Sharp.Converters
         public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value,
             Type destinationType)
         {
-            if (value is not UDint typed)
-                throw new InvalidOperationException($"Value must be of type {typeof(UDint)}.");
+            if (value is not UDINT typed)
+                throw new InvalidOperationException($"Value must be of type {typeof(UDINT)}.");
 
             return destinationType switch
             {
@@ -66,10 +66,10 @@ namespace L5Sharp.Converters
                 not null when destinationType == typeof(long) => (long)typed.Value,
                 not null when destinationType == typeof(ulong) => (ulong)typed.Value,
                 not null when destinationType == typeof(float) => (float)typed.Value,
-                not null when destinationType == typeof(UDint) => new UDint(typed.Value),
-                not null when destinationType == typeof(Lint) => new Lint(typed.Value),
-                not null when destinationType == typeof(ULint) => new ULint(typed.Value),
-                not null when destinationType == typeof(Real) => new Real(typed.Value),
+                not null when destinationType == typeof(UDINT) => new UDINT(typed.Value),
+                not null when destinationType == typeof(LINT) => new LINT(typed.Value),
+                not null when destinationType == typeof(ULINT) => new ULINT(typed.Value),
+                not null when destinationType == typeof(REAL) => new REAL(typed.Value),
                 not null when destinationType == typeof(string) => typed.Format(Radix.Default(typed)),
                 _ => base.ConvertTo(context, culture, value, destinationType!) ??
                      throw new NotSupportedException(

@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
 using L5Sharp.Creators;
-using L5Sharp.Predefined;
+using L5Sharp.Types;
 using NUnit.Framework;
 
 namespace L5Sharp.Core.Tests
@@ -11,7 +11,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void String_ValidParameters_ShouldHaveValidMembers()
         {
-            var tag = Tag.Create<String>("Test");
+            var tag = Tag.Create<STRING>("Test");
 
             tag.Should().NotBeNull();
             tag.Member(m => m.LEN).Should().NotBeNull();
@@ -21,7 +21,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Timer_ValidParameters_ShouldHaveValidMembers()
         {
-            var tag = Tag.Create<Timer>("Test");
+            var tag = Tag.Create<TIMER>("Test");
 
             tag.Should().NotBeNull();
             tag.Member(m => m.PRE).Should().NotBeNull();
@@ -34,7 +34,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Counter_ValidParameters_ShouldHaveValidMembers()
         {
-            var tag = Tag.Create<Counter>("Test");
+            var tag = Tag.Create<COUNTER>("Test");
 
             tag.Should().NotBeNull();
             tag.Member(m => m.PRE).Should().NotBeNull();
@@ -49,7 +49,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void New_Alarm_ShouldHaveValidMembers()
         {
-            var tag = Tag.Create("Test", new Alarm());
+            var tag = Tag.Create("Test", new ALARM());
 
             tag.Should().NotBeNull();
             tag.Member(m => m.EnableIn).Should().NotBeNull();

@@ -1,10 +1,10 @@
 ﻿using FluentAssertions;
-using L5Sharp.Atomics;
 using L5Sharp.Comparers;
 using L5Sharp.Creators;
+using L5Sharp.Types;
 using NUnit.Framework;
 
-namespace L5Sharp.Internal.Tests.L5X
+namespace L5Sharp.Internal.Tests.Comparers
 {
     [TestFixture]
     public class ComponentNameComparerTests
@@ -12,8 +12,8 @@ namespace L5Sharp.Internal.Tests.L5X
         [Test]
         public void Equals_EqualNameDifferentTypes()
         {
-            var t1 = new Bool();
-            var t2 = Member.Create<Bool>("BOOL");
+            var t1 = new BOOL();
+            var t2 = Member.Create<BOOL>("BOOL");
 
             var comparer = ComponentNameComparer.Instance;
 

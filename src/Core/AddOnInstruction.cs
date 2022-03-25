@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using L5Sharp.Atomics;
 using L5Sharp.Enums;
+using L5Sharp.Types;
 
 namespace L5Sharp.Core
 {
@@ -31,9 +31,9 @@ namespace L5Sharp.Core
             ExecutePostScan = executePostScan;
             ExecuteEnableInFalse = executeEnableInFalse;
             CreatedDate = createdDate;
-            CreatedBy = createdBy ?? Environment.UserName;
+            CreatedBy = createdBy ?? @$"{Environment.UserDomainName}\{Environment.UserName}";
             EditedDate = editedDate;
-            EditedBy = editedBy ?? Environment.UserName;
+            EditedBy = editedBy ?? @$"{Environment.UserDomainName}\{Environment.UserName}";
             SoftwareRevision = softwareRevision ?? new Revision();
             AdditionalHelpText = additionalHelpText ?? string.Empty;
             IsEncrypted = isEncrypted;
@@ -82,8 +82,8 @@ namespace L5Sharp.Core
             Revision? revision = null, string? revisionExtension = null, string? revisionNote = null,
             string? vendor = null,
             bool executePreScan = default, bool executePostScan = default, bool executeEnableInFalse = default,
-            DateTime createdDate = default, string? createdBy = null,
-            DateTime editedDate = default, string? editedBy = null,
+            DateTime? createdDate = default, string? createdBy = null,
+            DateTime? editedDate = default, string? editedBy = null,
             Revision? softwareRevision = null, string? additionalHelpText = null, bool isEncrypted = default,
             string? description = null) : base(name)
         {
@@ -95,10 +95,10 @@ namespace L5Sharp.Core
             ExecutePreScan = executePreScan;
             ExecutePostScan = executePostScan;
             ExecuteEnableInFalse = executeEnableInFalse;
-            CreatedDate = createdDate;
-            CreatedBy = createdBy ?? Environment.UserName;
-            EditedDate = editedDate;
-            EditedBy = editedBy ?? Environment.UserName;
+            CreatedDate = createdDate ?? DateTime.Now;
+            CreatedBy = createdBy ??  @$"{Environment.UserDomainName}\{Environment.UserName}";
+            EditedDate = editedDate ?? DateTime.Now;
+            EditedBy = editedBy ??  @$"{Environment.UserDomainName}\{Environment.UserName}";
             SoftwareRevision = softwareRevision ?? new Revision();
             AdditionalHelpText = additionalHelpText ?? string.Empty;
             IsEncrypted = isEncrypted;
@@ -174,10 +174,10 @@ namespace L5Sharp.Core
 
         private static IEnumerable<IParameter<IDataType>> GenerateDefaultParameters()
         {
-            yield return new Parameter<Bool>("EnableIn", new Bool(true), Radix.Decimal, ExternalAccess.ReadOnly,
+            yield return new Parameter<BOOL>("EnableIn", new BOOL(true), Radix.Decimal, ExternalAccess.ReadOnly,
                 TagUsage.Input, description: "Enable Input - System Defined Parameter");
 
-            yield return new Parameter<Bool>("EnableOut", new Bool(), Radix.Decimal, ExternalAccess.ReadOnly,
+            yield return new Parameter<BOOL>("EnableOut", new BOOL(), Radix.Decimal, ExternalAccess.ReadOnly,
                 TagUsage.Output, description: "Enable Output - System Defined Parameter");
         }
     }

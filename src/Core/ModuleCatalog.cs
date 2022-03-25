@@ -186,7 +186,7 @@ namespace L5Sharp.Core
             }
         }
 
-        private static IEnumerable<PortDefinition> GetPorts(XContainer element)
+        private static IEnumerable<Port> GetPorts(XContainer element)
         {
             var ports = element.Descendants(Port);
 
@@ -196,7 +196,7 @@ namespace L5Sharp.Core
                 var type = port.Attribute(Type)?.Value!;
                 var downstreamOnly = port.Elements().Any(e => e.Value == DownstreamOnly);
 
-                yield return new PortDefinition(number, type, false, downstreamOnly: downstreamOnly);
+                yield return new Port(number, type, downstreamOnly: downstreamOnly);
             }
         }
 

@@ -1,13 +1,13 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Globalization;
-using L5Sharp.Atomics;
 using L5Sharp.Enums;
+using L5Sharp.Types;
 
 namespace L5Sharp.Converters
 {
     /// <summary>
-    /// A <see cref="TypeConverter"/> for the <see cref="UDint"/> object.
+    /// A <see cref="TypeConverter"/> for the <see cref="UDINT"/> object.
     /// </summary>
     internal class ULintConverter : TypeConverter
     {
@@ -17,10 +17,10 @@ namespace L5Sharp.Converters
                    sourceType == typeof(ushort) ||
                    sourceType == typeof(uint) ||
                    sourceType == typeof(ulong) ||
-                   sourceType == typeof(USint) ||
-                   sourceType == typeof(UInt) ||
-                   sourceType == typeof(UDint) ||
-                   sourceType == typeof(ULint) ||
+                   sourceType == typeof(USINT) ||
+                   sourceType == typeof(UINT) ||
+                   sourceType == typeof(UDINT) ||
+                   sourceType == typeof(ULINT) ||
                    sourceType == typeof(string) ||
                    base.CanConvertFrom(context, sourceType);
         }
@@ -29,15 +29,15 @@ namespace L5Sharp.Converters
         {
             return value switch
             {
-                byte v => new ULint(v),
-                ushort v => new ULint(v),
-                uint v => new ULint(v),
-                ulong v => new ULint(v),
-                USint v => new ULint(v.Value),
-                UInt v => new ULint(v.Value),
-                UDint v => new ULint(v.Value),
-                ULint v => v,
-                string v => ulong.TryParse(v, out var result) ? new ULint(result) : Radix.ParseValue<ULint>(v),
+                byte v => new ULINT(v),
+                ushort v => new ULINT(v),
+                uint v => new ULINT(v),
+                ulong v => new ULINT(v),
+                USINT v => new ULINT(v.Value),
+                UINT v => new ULINT(v.Value),
+                UDINT v => new ULINT(v.Value),
+                ULINT v => v,
+                string v => ulong.TryParse(v, out var result) ? new ULINT(result) : Radix.ParseValue<ULINT>(v),
                 _ => base.ConvertFrom(context, culture, value)
                      ?? throw new NotSupportedException(
                          $"The provided value of type {value.GetType()} is not supported for conversion.")
@@ -48,8 +48,8 @@ namespace L5Sharp.Converters
         {
             return destinationType == typeof(ulong) ||
                    destinationType == typeof(float) ||
-                   destinationType == typeof(ULint) ||
-                   destinationType == typeof(Real) ||
+                   destinationType == typeof(ULINT) ||
+                   destinationType == typeof(REAL) ||
                    destinationType == typeof(string) ||
                    base.CanConvertFrom(context, destinationType);
         }
@@ -57,15 +57,15 @@ namespace L5Sharp.Converters
         public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value,
             Type destinationType)
         {
-            if (value is not ULint typed)
-                throw new InvalidOperationException($"Value must be of type {typeof(ULint)}.");
+            if (value is not ULINT typed)
+                throw new InvalidOperationException($"Value must be of type {typeof(ULINT)}.");
 
             return destinationType switch
             {
                 not null when destinationType == typeof(ulong) => typed.Value,
                 not null when destinationType == typeof(float) => (float)typed.Value,
-                not null when destinationType == typeof(ULint) => new ULint(typed.Value),
-                not null when destinationType == typeof(Real) => new Real(typed.Value),
+                not null when destinationType == typeof(ULINT) => new ULINT(typed.Value),
+                not null when destinationType == typeof(REAL) => new REAL(typed.Value),
                 not null when destinationType == typeof(string) => typed.Format(Radix.Default(typed)),
                 _ => base.ConvertTo(context, culture, value, destinationType!) ??
                      throw new NotSupportedException(

@@ -1,6 +1,6 @@
 ﻿using System;
 using FluentAssertions;
-using L5Sharp.Atomics;
+using L5Sharp.Types;
 using NUnit.Framework;
 
 namespace L5Sharp.Enums.Tests
@@ -26,7 +26,7 @@ namespace L5Sharp.Enums.Tests
         [Test]
         public void Format_NonSupportedAtomic_ShouldThrowNotSupportedException()
         {
-            FluentActions.Invoking(() => Radix.DateTimeNs.Format(new Real())).Should().Throw<NotSupportedException>();
+            FluentActions.Invoking(() => Radix.DateTimeNs.Format(new REAL())).Should().Throw<NotSupportedException>();
         }
 
         [Test]
@@ -34,7 +34,7 @@ namespace L5Sharp.Enums.Tests
         {
             var radix = Radix.DateTimeNs;
 
-            var result = radix.Format(new Lint(1638277952000000));
+            var result = radix.Format(new LINT(1638277952000000));
 
             result.Should().Be("LDT#1970-01-19-17:04:37.952_000_000(UTC-06:00)");
         }
@@ -44,7 +44,7 @@ namespace L5Sharp.Enums.Tests
         {
             var radix = Radix.DateTimeNs;
 
-            var result = radix.Format(new Lint(1641016800000000000));
+            var result = radix.Format(new LINT(1641016800000000000));
 
             result.Should().Be("LDT#2022-01-01-00:00:00.000_000_000(UTC-06:00)");
         }
@@ -54,7 +54,7 @@ namespace L5Sharp.Enums.Tests
         {
             var radix = Radix.DateTimeNs;
 
-            var result = radix.Format(new Lint(1641016800000001001));
+            var result = radix.Format(new LINT(1641016800000001001));
 
             //loss of accuracy causes the 1 nano second to be lost
             result.Should().Be("LDT#2022-01-01-00:00:00.000_001_000(UTC-06:00)");
@@ -65,7 +65,7 @@ namespace L5Sharp.Enums.Tests
         {
             var radix = Radix.DateTimeNs;
 
-            var result = radix.Format(new Lint(1641016800000001500));
+            var result = radix.Format(new LINT(1641016800000001500));
 
             result.Should().Be("LDT#2022-01-01-00:00:00.000_001_500(UTC-06:00)");
         }

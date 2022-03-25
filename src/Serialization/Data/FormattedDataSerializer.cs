@@ -3,8 +3,7 @@ using System.Linq;
 using System.Xml.Linq;
 using L5Sharp.Enums;
 using L5Sharp.L5X;
-using L5Sharp.Predefined;
-using String = L5Sharp.Predefined.String;
+using L5Sharp.Types;
 
 namespace L5Sharp.Serialization.Data
 {
@@ -35,7 +34,7 @@ namespace L5Sharp.Serialization.Data
                 .When(TagDataFormat.Alarm).Then(() => element.Add(_alarmDataSerializer.Serialize(component)))
                 .When(TagDataFormat.String).Then(() =>
                 {
-                    var str = (String)component;
+                    var str = (STRING)component;
                     element.Add(new XAttribute(L5XAttribute.Length.ToString(), str.LEN.DataType.Value));
                     element.Add(new XCData($"'{str.Value}'"));
                 });
@@ -53,9 +52,9 @@ namespace L5Sharp.Serialization.Data
 
             TagDataFormat.TryFromName(element.Attribute(L5XAttribute.Format.ToString())?.Value, out var format);
 
-            if (format is null) return new Undefined();
+            if (format is null) return new UNDEFINED();
             
-            IDataType dataType = new Undefined();
+            IDataType dataType = new UNDEFINED();
             
             format
                 .When(TagDataFormat.Decorated).Then(() =>
@@ -68,7 +67,7 @@ namespace L5Sharp.Serialization.Data
                 })
                 .When(TagDataFormat.String).Then(() =>
                 {
-                    dataType = new String(element.Value);
+                    dataType = new STRING(element.Value);
                 });
 
             return dataType;

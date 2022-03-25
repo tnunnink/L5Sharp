@@ -2,7 +2,7 @@
 using System.Globalization;
 using AutoFixture;
 using FluentAssertions;
-using L5Sharp.Atomics;
+using L5Sharp.Types;
 using NUnit.Framework;
 
 namespace L5Sharp.Enums.Tests
@@ -28,13 +28,13 @@ namespace L5Sharp.Enums.Tests
         [Test]
         public void Format_NonSupportedAtomic_ShouldThrowNotSupportedException()
         {
-            FluentActions.Invoking(() => Radix.Exponential.Format(new Dint())).Should().Throw<NotSupportedException>();
+            FluentActions.Invoking(() => Radix.Exponential.Format(new DINT())).Should().Throw<NotSupportedException>();
         }
 
         [Test]
         public void Format_Zero_ShouldBeExpectedFormat()
         {
-            var result = Radix.Exponential.Format(new Real());
+            var result = Radix.Exponential.Format(new REAL());
 
             result.Should().Be("0.00000000e+000");
         }
@@ -44,7 +44,7 @@ namespace L5Sharp.Enums.Tests
         {
             var fixture = new Fixture();
             var value = fixture.Create<float>();
-            var result = Radix.Exponential.Format(new Real(value));
+            var result = Radix.Exponential.Format(new REAL(value));
 
             result.Should().Be(value.ToString("e8", CultureInfo.InvariantCulture));
         }
@@ -52,7 +52,7 @@ namespace L5Sharp.Enums.Tests
         [Test]
         public void Format_CustomRealSevenDecimal_ShouldBeExpectedFormat()
         {
-            var result = Radix.Exponential.Format(new Real(1.123e3f));
+            var result = Radix.Exponential.Format(new REAL(1.123e3f));
 
             result.Should().Be("1.12300000e+003");
         }

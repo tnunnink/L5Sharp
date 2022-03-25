@@ -1,6 +1,6 @@
 ﻿using System;
 using FluentAssertions;
-using L5Sharp.Atomics;
+using L5Sharp.Types;
 using NUnit.Framework;
 
 namespace L5Sharp.Enums.Tests
@@ -20,7 +20,7 @@ namespace L5Sharp.Enums.Tests
         [Test]
         public void Format_WhenCalled_ReturnsNull()
         {
-            FluentActions.Invoking(() => Radix.Null.Format(new Dint())).Should().Throw<NotSupportedException>();
+            FluentActions.Invoking(() => Radix.Null.Format(new DINT())).Should().Throw<NotSupportedException>();
         }
 
         [Test]

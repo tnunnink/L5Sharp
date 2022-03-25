@@ -1,8 +1,13 @@
-﻿namespace L5Sharp.Repositories
+﻿using System.Collections.Generic;
+using System.Xml.Linq;
+using L5Sharp.Serialization;
+
+namespace L5Sharp.Repositories
 {
-    internal class ProgramRepository : Repository<IProgram>
+    internal class ProgramRepository : ComponentRepository<IProgram>
     {
-        public ProgramRepository(L5XContext context) : base(context)
+        public ProgramRepository(IEnumerable<XElement> elements, IL5XSerializer<IProgram> serializer) 
+            : base(elements, serializer)
         {
         }
     }

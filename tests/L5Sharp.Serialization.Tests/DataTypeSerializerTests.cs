@@ -5,11 +5,11 @@ using System.Xml.Linq;
 using ApprovalTests;
 using ApprovalTests.Reporters;
 using FluentAssertions;
-using L5Sharp.Atomics;
 using L5Sharp.Core;
 using L5Sharp.Creators;
 using L5Sharp.Enums;
 using L5Sharp.Serialization.Components;
+using L5Sharp.Types;
 using NUnit.Framework;
 
 namespace L5Sharp.Serialization.Tests
@@ -58,12 +58,12 @@ namespace L5Sharp.Serialization.Tests
         {
             var type = new UserDefined("Test", "This is a test user defined type", new List<IMember<IDataType>>
             {
-                Member.Create<Bool>("Member01", Radix.Binary, ExternalAccess.ReadOnly, "This is a test member"),
-                Member.Create<Int>("Member02", Radix.Octal, ExternalAccess.None, "This is a test member"),
-                Member.Create<Dint>("Member03", Radix.Decimal, ExternalAccess.ReadOnly, "This is a test member"),
-                Member.Create<Lint>("Member04", Radix.Hex, description: "This is a test member"),
-                Member.Create<Sint>("Member04", Radix.Ascii),
-                Member.Create<Real>("Member05")
+                Member.Create<BOOL>("Member01", Radix.Binary, ExternalAccess.ReadOnly, "This is a test member"),
+                Member.Create<INT>("Member02", Radix.Octal, ExternalAccess.None, "This is a test member"),
+                Member.Create<DINT>("Member03", Radix.Decimal, ExternalAccess.ReadOnly, "This is a test member"),
+                Member.Create<LINT>("Member04", Radix.Hex, description: "This is a test member"),
+                Member.Create<SINT>("Member04", Radix.Ascii),
+                Member.Create<REAL>("Member05")
             });
 
             var xml = _serializer.Serialize(type);
@@ -122,7 +122,7 @@ namespace L5Sharp.Serialization.Tests
             var boolMember = component.Members.FirstOrDefault(m => m.Name == "BoolMember");
             boolMember.Should().NotBeNull();
             boolMember?.Name.Should().Be("BoolMember");
-            boolMember?.DataType.Should().BeOfType<Bool>();
+            boolMember?.DataType.Should().BeOfType<BOOL>();
             boolMember?.Dimensions.Should().Be(Dimensions.Empty);
             boolMember?.Radix.Should().Be(Radix.Hex);
             boolMember?.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);
@@ -139,7 +139,7 @@ namespace L5Sharp.Serialization.Tests
             var member = component.Members.FirstOrDefault(m => m.Name == "SintMember");
             member.Should().NotBeNull();
             member?.Name.Should().Be("SintMember");
-            member?.DataType.Should().BeOfType<Sint>();
+            member?.DataType.Should().BeOfType<SINT>();
             member?.Dimensions.Should().Be(Dimensions.Empty);
             member?.Radix.Should().Be(Radix.Decimal);
             member?.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);
@@ -156,7 +156,7 @@ namespace L5Sharp.Serialization.Tests
             var member = component.Members.FirstOrDefault(m => m.Name == "IntMember");
             member.Should().NotBeNull();
             member?.Name.Should().Be("IntMember");
-            member?.DataType.Should().BeOfType<Int>();
+            member?.DataType.Should().BeOfType<INT>();
             member?.Dimensions.Should().Be(Dimensions.Empty);
             member?.Radix.Should().Be(Radix.Decimal);
             member?.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);
@@ -173,7 +173,7 @@ namespace L5Sharp.Serialization.Tests
             var member = component.Members.FirstOrDefault(m => m.Name == "DintMember");
             member.Should().NotBeNull();
             member?.Name.Should().Be("DintMember");
-            member?.DataType.Should().BeOfType<Dint>();
+            member?.DataType.Should().BeOfType<DINT>();
             member?.Dimensions.Should().Be(Dimensions.Empty);
             member?.Radix.Should().Be(Radix.Octal);
             member?.ExternalAccess.Should().Be(ExternalAccess.None);
@@ -190,7 +190,7 @@ namespace L5Sharp.Serialization.Tests
             var member = component.Members.FirstOrDefault(m => m.Name == "LintMember");
             member.Should().NotBeNull();
             member?.Name.Should().Be("LintMember");
-            member?.DataType.Should().BeOfType<Lint>();
+            member?.DataType.Should().BeOfType<LINT>();
             member?.Dimensions.Should().Be(Dimensions.Empty);
             member?.Radix.Should().Be(Radix.Decimal);
             member?.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);
@@ -278,7 +278,7 @@ namespace L5Sharp.Serialization.Tests
                 </Member>
                 <Member Name=""BoolArray"" DataType=""BOOL"" Dimension=""32"" Radix=""Binary"" Hidden=""false"" ExternalAccess=""Read/Write"">
                 <Description>
-                <![CDATA[Test Bool Array]]>
+                <![CDATA[Test BOOL Array]]>
                 </Description>
                 </Member>
                 </Members>

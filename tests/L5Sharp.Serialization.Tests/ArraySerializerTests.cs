@@ -3,11 +3,10 @@ using System.Xml.Linq;
 using ApprovalTests;
 using ApprovalTests.Reporters;
 using FluentAssertions;
-using L5Sharp.Atomics;
 using L5Sharp.Core;
 using L5Sharp.Enums;
-using L5Sharp.Predefined;
 using L5Sharp.Serialization.Data;
+using L5Sharp.Types;
 using NUnit.Framework;
 
 namespace L5Sharp.Serialization.Tests
@@ -32,7 +31,7 @@ namespace L5Sharp.Serialization.Tests
         [Test]
         public void Serialize_WhenCalled_ShouldNotBeNull()
         {
-            var element = new ArrayType<Bool>(new Dimensions(10));
+            var element = new ArrayType<BOOL>(new Dimensions(10));
             
             var xml = _serializer.Serialize(element);
 
@@ -43,7 +42,7 @@ namespace L5Sharp.Serialization.Tests
         [UseReporter(typeof(DiffReporter))]
         public void Serialize_ValueTypeArray_ShouldBeApproved()
         {
-            var element = new ArrayType<Bool>(new Dimensions(10));
+            var element = new ArrayType<BOOL>(new Dimensions(10));
             
             var xml = _serializer.Serialize(element);
 
@@ -54,7 +53,7 @@ namespace L5Sharp.Serialization.Tests
         [UseReporter(typeof(DiffReporter))]
         public void Serialize_StructureTypeArray_ShouldBeApproved()
         {
-            var element = new ArrayType<Timer>(new Dimensions(10));
+            var element = new ArrayType<TIMER>(new Dimensions(10));
             
             var xml = _serializer.Serialize(element);
 

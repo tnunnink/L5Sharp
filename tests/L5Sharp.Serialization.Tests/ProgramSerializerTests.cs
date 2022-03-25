@@ -3,11 +3,10 @@ using System.Xml.Linq;
 using ApprovalTests;
 using ApprovalTests.Reporters;
 using FluentAssertions;
-using L5Sharp.Atomics;
 using L5Sharp.Core;
 using L5Sharp.Creators;
-using L5Sharp.Predefined;
 using L5Sharp.Serialization.Components;
+using L5Sharp.Types;
 using NUnit.Framework;
 
 namespace L5Sharp.Serialization.Tests
@@ -56,10 +55,10 @@ namespace L5Sharp.Serialization.Tests
         {
             var component = new Program("Test", "This is a test program");
             
-            component.Tags.Add(Tag.Create<Bool>("TestBool"));
-            component.Tags.Add(Tag.Create<Dint>("TestDint"));
-            component.Tags.Add(Tag.Create<Timer>("TestTimer"));
-            component.Tags.Add(Tag.Create<Int>("TestInt"));
+            component.Tags.Add(Tag.Create<BOOL>("TestBool"));
+            component.Tags.Add(Tag.Create<DINT>("TestDint"));
+            component.Tags.Add(Tag.Create<TIMER>("TestTimer"));
+            component.Tags.Add(Tag.Create<INT>("TestInt"));
             
             var main = Routine.Create<LadderLogic>("Test");
             main.Content.Add("XIC(LocalBool)MOV(1234,LocalDint);");

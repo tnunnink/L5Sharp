@@ -10,7 +10,7 @@ namespace L5Sharp.Serialization.Components
 {
     internal class AddOnInstructionSerializer : IL5XSerializer<IAddOnInstruction>
     {
-        private const string DateTimeFormat = "yyyy-MM-ddTHH:mm:ss:fffZ";
+        private const string DateTimeFormat = "yyyy-MM-dd'T'HH:mm:ss.fff'Z'";
         private static readonly XName ElementName = L5XElement.AddOnInstructionDefinition.ToString();
         private readonly ParameterSerializer _parameterSerializer;
         private readonly TagSerializer _tagSerializer;
@@ -19,14 +19,14 @@ namespace L5Sharp.Serialization.Components
         public AddOnInstructionSerializer()
         {
             _parameterSerializer = new ParameterSerializer();
-            _tagSerializer = new TagSerializer();
+            _tagSerializer = new TagSerializer(L5XElement.LocalTag.ToString());
             _routineSerializer = new RoutineSerializer();
         }
 
         public AddOnInstructionSerializer(L5XContext context)
         {
             _parameterSerializer = new ParameterSerializer(context);
-            _tagSerializer = new TagSerializer(context);
+            _tagSerializer = new TagSerializer(context, L5XElement.LocalTag.ToString());
             _routineSerializer = new RoutineSerializer();
         }
 
@@ -54,7 +54,7 @@ namespace L5Sharp.Serialization.Components
             element.Add(new XAttribute(L5XAttribute.EditedDate.ToString(), 
                 component.EditedDate.ToString(DateTimeFormat)));
             element.Add(new XAttribute(L5XAttribute.EditedBy.ToString(), component.EditedBy));
-            element.Add(new XAttribute(L5XAttribute.SoftwareRevision.ToString(), component.SoftwareRevision));
+            element.Add(new XAttribute(L5XAttribute.SoftwareRevision.ToString(), $"v{component.SoftwareRevision}"));
             if (!component.AdditionalHelpText.IsEmpty())
                 element.Add(new XElement(L5XElement.AdditionalHelpText.ToString(), new XCData(component.AdditionalHelpText)));
             element.Add(new XAttribute(L5XAttribute.IsEncrypted.ToString(), component.IsEncrypted));
@@ -100,7 +100,8 @@ namespace L5Sharp.Serialization.Components
             var editedDate = DateTime.ParseExact(element.Attribute(L5XAttribute.EditedDate.ToString())?.Value,
                 DateTimeFormat, CultureInfo.CurrentCulture);
             var editedBy = element.Attribute(L5XAttribute.EditedBy.ToString())?.Value;
-            var softwareRevision = element.Attribute(L5XAttribute.SoftwareRevision.ToString())?.Value.Parse<Revision>();
+            var softwareRevision = element.Attribute(L5XAttribute.SoftwareRevision.ToString())?.Value
+                .TrimStart('v').Parse<Revision>();
             var additionalHelpText = element.Element(L5XElement.AdditionalHelpText.ToString())?.Value;
             var isEncrypted = element.Attribute(L5XAttribute.IsEncrypted.ToString())?.Value.Parse<bool>() ?? default;
 

@@ -1,6 +1,6 @@
 ﻿using System;
 using FluentAssertions;
-using L5Sharp.Atomics;
+using L5Sharp.Types;
 using NUnit.Framework;
 
 namespace L5Sharp.Enums.Tests
@@ -26,7 +26,7 @@ namespace L5Sharp.Enums.Tests
         [Test]
         public void Format_NonSupportedAtomic_ShouldThrowNotSupportedException()
         {
-            FluentActions.Invoking(() => Radix.DateTime.Format(new Real())).Should().Throw<NotSupportedException>();
+            FluentActions.Invoking(() => Radix.DateTime.Format(new REAL())).Should().Throw<NotSupportedException>();
         }
 
         [Test]
@@ -34,7 +34,7 @@ namespace L5Sharp.Enums.Tests
         {
             var radix = Radix.DateTime;
 
-            var result = radix.Format(new Lint(1638277952000000));
+            var result = radix.Format(new LINT(1638277952000000));
 
             result.Should().Be("DT#2021-11-30-13:12:32.000_000Z");
         }
@@ -44,7 +44,7 @@ namespace L5Sharp.Enums.Tests
         {
             var radix = Radix.DateTime;
 
-            var result = radix.Format(new Lint(1641016800100100));
+            var result = radix.Format(new LINT(1641016800100100));
 
             result.Should().Be("DT#2022-01-01-06:00:00.100_100Z");
         }

@@ -1,13 +1,13 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Globalization;
-using L5Sharp.Atomics;
 using L5Sharp.Enums;
+using L5Sharp.Types;
 
 namespace L5Sharp.Converters
 {
     /// <summary>
-    /// A <see cref="TypeConverter"/> for the <see cref="Dint"/> object.
+    /// A <see cref="TypeConverter"/> for the <see cref="DINT"/> object.
     /// </summary>
     internal class DintConverter : TypeConverter
     {
@@ -18,11 +18,11 @@ namespace L5Sharp.Converters
                    sourceType == typeof(short) ||
                    sourceType == typeof(ushort) ||
                    sourceType == typeof(int) ||
-                   sourceType == typeof(Sint) ||
-                   sourceType == typeof(USint) ||
-                   sourceType == typeof(Int) ||
-                   sourceType == typeof(UInt) ||
-                   sourceType == typeof(Dint) ||
+                   sourceType == typeof(SINT) ||
+                   sourceType == typeof(USINT) ||
+                   sourceType == typeof(INT) ||
+                   sourceType == typeof(UINT) ||
+                   sourceType == typeof(DINT) ||
                    sourceType == typeof(string) ||
                    base.CanConvertFrom(context, sourceType);
         }
@@ -31,17 +31,17 @@ namespace L5Sharp.Converters
         {
             return value switch
             {
-                sbyte v => new Dint(v),
-                byte v => new Dint(v),
-                short v => new Dint(v),
-                ushort v => new Dint(v),
-                int v => new Dint(v),
-                Sint v => new Dint(v.Value),
-                USint v => new Dint(v.Value),
-                Int v => new Dint(v.Value),
-                UInt v => new Dint(v.Value),
-                Dint v => v,
-                string v => int.TryParse(v, out var result) ? new Dint(result) : Radix.ParseValue<Dint>(v),
+                sbyte v => new DINT(v),
+                byte v => new DINT(v),
+                short v => new DINT(v),
+                ushort v => new DINT(v),
+                int v => new DINT(v),
+                SINT v => new DINT(v.Value),
+                USINT v => new DINT(v.Value),
+                INT v => new DINT(v.Value),
+                UINT v => new DINT(v.Value),
+                DINT v => v,
+                string v => int.TryParse(v, out var result) ? new DINT(result) : Radix.ParseValue<DINT>(v),
                 _ => base.ConvertFrom(context, culture, value)
                      ?? throw new NotSupportedException(
                          $"The provided value of type {value.GetType()} is not supported for conversion.")
@@ -53,9 +53,9 @@ namespace L5Sharp.Converters
             return destinationType == typeof(int) ||
                    destinationType == typeof(long) ||
                    destinationType == typeof(float) ||
-                   destinationType == typeof(Dint) ||
-                   destinationType == typeof(Lint) ||
-                   destinationType == typeof(Real) ||
+                   destinationType == typeof(DINT) ||
+                   destinationType == typeof(LINT) ||
+                   destinationType == typeof(REAL) ||
                    destinationType == typeof(string) ||
                    base.CanConvertFrom(context, destinationType);
         }
@@ -63,17 +63,17 @@ namespace L5Sharp.Converters
         public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value,
             Type destinationType)
         {
-            if (value is not Dint typed)
-                throw new InvalidOperationException($"Value must be of type {typeof(Dint)}.");
+            if (value is not DINT typed)
+                throw new InvalidOperationException($"Value must be of type {typeof(DINT)}.");
 
             return destinationType switch
             {
                 not null when destinationType == typeof(int) => typed.Value,
                 not null when destinationType == typeof(long) => (long)typed.Value,
                 not null when destinationType == typeof(float) => (float)typed.Value,
-                not null when destinationType == typeof(Dint) => new Dint(typed.Value),
-                not null when destinationType == typeof(Lint) => new Lint(typed.Value),
-                not null when destinationType == typeof(Real) => new Real(typed.Value),
+                not null when destinationType == typeof(DINT) => new DINT(typed.Value),
+                not null when destinationType == typeof(LINT) => new LINT(typed.Value),
+                not null when destinationType == typeof(REAL) => new REAL(typed.Value),
                 not null when destinationType == typeof(string) => typed.Format(Radix.Default(typed)),
                 _ => base.ConvertTo(context, culture, value, destinationType!) ??
                      throw new NotSupportedException(

@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Linq;
 using FluentAssertions;
-using L5Sharp.Atomics;
 using L5Sharp.Creators;
 using L5Sharp.Enums;
 using L5Sharp.Exceptions;
-using L5Sharp.Predefined;
+using L5Sharp.Types;
 using NUnit.Framework;
-using String = L5Sharp.Predefined.String;
 
 namespace L5Sharp.Core.Tests
 {
@@ -17,14 +15,14 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void ComplexMember_ShouldHaveExpectedValues()
         {
-            var tag = Tag.Create<Timer>("Test");
+            var tag = Tag.Create<TIMER>("Test");
 
             var member = tag.Member(m => m.DN);
 
             member.Name.Should().Be("DN");
             member.Description.Should().BeEmpty();
             member.TagName.Should().Be("Test.DN");
-            member.DataType.Should().BeOfType<Bool>();
+            member.DataType.Should().BeOfType<BOOL>();
             member.Dimensions.Should().Be(Dimensions.Empty);
             member.Radix.Should().Be(Radix.Decimal);
             member.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);
@@ -117,7 +115,7 @@ namespace L5Sharp.Core.Tests
 
             member.Name.Should().Be("PRE");
             member.TagName.Should().Be("Test.Tmr.PRE");
-            member.DataType.Should().BeOfType<Dint>();
+            member.DataType.Should().BeOfType<DINT>();
             member.Dimensions.Should().Be(Dimensions.Empty);
             member.Radix.Should().Be(Radix.Decimal);
             member.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);
@@ -175,7 +173,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void SingleIndex_ValidIndex_ShouldNotBeNull()
         {
-            var tag = Tag.Create<String>("Test");
+            var tag = Tag.Create<STRING>("Test");
             var data = tag.Member("DATA");
 
             var element = data[10];
@@ -186,7 +184,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void SingleIndex_InvalidIndex_ShouldThrowArgumentException()
         {
-            var tag = Tag.Create<String>("Test");
+            var tag = Tag.Create<STRING>("Test");
             var data = tag.Member("DATA");
 
             FluentActions.Invoking(() => data[-1]).Should().Throw<ArgumentOutOfRangeException>();
@@ -195,7 +193,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void SetValue_Null_ShouldThrowArgumentNullException()
         {
-            var tag = Tag.Create<Timer>("Test");
+            var tag = Tag.Create<TIMER>("Test");
             var member = tag.Member("PRE");
             
             FluentActions.Invoking(() => member.SetValue(null!)).Should().Throw<ArgumentNullException>();
@@ -204,10 +202,10 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void SetValue_InvalidType_ShouldThrowArgumentException()
         {
-            var tag = Tag.Create<Timer>("Test");
+            var tag = Tag.Create<TIMER>("Test");
             var member = tag.Member("PRE");
             
-            FluentActions.Invoking(() => member.SetValue(new Bool(true))).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(() => member.SetValue(new BOOL(true))).Should().Throw<ArgumentException>();
         }
         
         [Test]
@@ -216,16 +214,16 @@ namespace L5Sharp.Core.Tests
             var tag = Tag.Create<MyNestedType>("Test");
             var member = tag.Member("Tmr");
             
-            FluentActions.Invoking(() => member.SetValue(new Bool(true))).Should().Throw<InvalidOperationException>();
+            FluentActions.Invoking(() => member.SetValue(new BOOL(true))).Should().Throw<InvalidOperationException>();
         }
 
         [Test]
         public void SetValue_ValidValue_ValueShouldBeExpected()
         {
-            var tag = Tag.Create<Timer>("Test");
+            var tag = Tag.Create<TIMER>("Test");
             var member = tag.Member("PRE");
             
-            member.SetValue(new Dint(500));
+            member.SetValue(new DINT(500));
 
             member.Value.Should().Be(500);
         }
@@ -245,7 +243,7 @@ namespace L5Sharp.Core.Tests
             var tag = Tag.Create<MyNestedType>("Test");
             var member = tag.Member(m => m.Tmr);
             
-            member.SetData(new Timer(5000));
+            member.SetData(new TIMER(5000));
 
             member.Member(m => m.PRE).Value.Should().Be(5000);
         }

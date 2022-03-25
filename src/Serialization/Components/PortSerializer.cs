@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Xml.Linq;
 using L5Sharp.Core;
-using L5Sharp.Extensions;
 using L5Sharp.L5X;
 
 namespace L5Sharp.Serialization.Components
@@ -9,12 +8,12 @@ namespace L5Sharp.Serialization.Components
     /// <summary>
     /// A <see cref="IL5XSerializer{T}"/> for the <see cref="Port"/> component.
     /// </summary>
-    internal class PortSerializer : IL5XSerializer<PortDefinition>
+    internal class PortSerializer : IL5XSerializer<Port>
     {
         private static readonly XName ElementName = L5XElement.Port.ToString();
 
         /// <inheritdoc />
-        public XElement Serialize(PortDefinition component)
+        public XElement Serialize(Port component)
         {
             if (component == null)
                 throw new ArgumentNullException(nameof(component));
@@ -36,7 +35,7 @@ namespace L5Sharp.Serialization.Components
         }
 
         /// <inheritdoc />
-        public PortDefinition Deserialize(XElement element)
+        public Port Deserialize(XElement element)
         {
             if (element == null)
                 throw new ArgumentNullException(nameof(element));
@@ -53,7 +52,7 @@ namespace L5Sharp.Serialization.Components
                 ?.Attribute(L5XAttribute.Size.ToString())
                 ?.Value.Parse<byte>() ?? default;
             
-            return new PortDefinition(id, type, upstream, address, busSize);
+            return new Port(id, type, address, upstream, busSize: busSize);
         }
     }
 }

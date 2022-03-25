@@ -2,10 +2,10 @@
 using System.ComponentModel;
 using AutoFixture;
 using FluentAssertions;
-using L5Sharp.Atomics;
 using L5Sharp.Converters;
 using L5Sharp.Enums;
 using L5Sharp.Internal.Tests.Specimens;
+using L5Sharp.Types;
 using NUnit.Framework;
 
 namespace L5Sharp.Internal.Tests.Converters
@@ -29,7 +29,7 @@ namespace L5Sharp.Internal.Tests.Converters
         [Test]
         public void CanConvertFrom_bool_ShouldBeTrue()
         {
-            var converter = TypeDescriptor.GetConverter(typeof(Bool));
+            var converter = TypeDescriptor.GetConverter(typeof(BOOL));
             var value = _fixture.Create<bool>();
 
             var result = converter.CanConvertFrom(value.GetType());
@@ -40,7 +40,7 @@ namespace L5Sharp.Internal.Tests.Converters
         [Test]
         public void CanConvertFrom_byte_ShouldBeTrue()
         {
-            var converter = TypeDescriptor.GetConverter(typeof(Bool));
+            var converter = TypeDescriptor.GetConverter(typeof(BOOL));
             var value = _fixture.Create<byte>();
 
             var result = converter.CanConvertFrom(value.GetType());
@@ -51,7 +51,7 @@ namespace L5Sharp.Internal.Tests.Converters
         [Test]
         public void CanConvertFrom_short_ShouldBeTrue()
         {
-            var converter = TypeDescriptor.GetConverter(typeof(Bool));
+            var converter = TypeDescriptor.GetConverter(typeof(BOOL));
             var value = _fixture.Create<short>();
 
             var result = converter.CanConvertFrom(value.GetType());
@@ -62,7 +62,7 @@ namespace L5Sharp.Internal.Tests.Converters
         [Test]
         public void CanConvertFrom_int_ShouldBeTrue()
         {
-            var converter = TypeDescriptor.GetConverter(typeof(Bool));
+            var converter = TypeDescriptor.GetConverter(typeof(BOOL));
             var value = _fixture.Create<int>();
 
             var result = converter.CanConvertFrom(value.GetType());
@@ -73,7 +73,7 @@ namespace L5Sharp.Internal.Tests.Converters
         [Test]
         public void CanConvertFrom_long_ShouldBeTrue()
         {
-            var converter = TypeDescriptor.GetConverter(typeof(Bool));
+            var converter = TypeDescriptor.GetConverter(typeof(BOOL));
             var value = _fixture.Create<long>();
 
             var result = converter.CanConvertFrom(value.GetType());
@@ -84,8 +84,8 @@ namespace L5Sharp.Internal.Tests.Converters
         [Test]
         public void CanConvertFrom_Bool_ShouldBeTrue()
         {
-            var converter = TypeDescriptor.GetConverter(typeof(Bool));
-            var value = _fixture.Create<Bool>();
+            var converter = TypeDescriptor.GetConverter(typeof(BOOL));
+            var value = _fixture.Create<BOOL>();
 
             var result = converter.CanConvertFrom(value.GetType());
 
@@ -95,8 +95,8 @@ namespace L5Sharp.Internal.Tests.Converters
         [Test]
         public void CanConvertFrom_Sint_ShouldBeTrue()
         {
-            var converter = TypeDescriptor.GetConverter(typeof(Bool));
-            var value = _fixture.Create<Sint>();
+            var converter = TypeDescriptor.GetConverter(typeof(BOOL));
+            var value = _fixture.Create<SINT>();
 
             var result = converter.CanConvertFrom(value.GetType());
 
@@ -106,8 +106,8 @@ namespace L5Sharp.Internal.Tests.Converters
         [Test]
         public void CanConvertFrom_Int_ShouldBeTrue()
         {
-            var converter = TypeDescriptor.GetConverter(typeof(Bool));
-            var value = _fixture.Create<Int>();
+            var converter = TypeDescriptor.GetConverter(typeof(BOOL));
+            var value = _fixture.Create<INT>();
 
             var result = converter.CanConvertFrom(value.GetType());
 
@@ -117,8 +117,8 @@ namespace L5Sharp.Internal.Tests.Converters
         [Test]
         public void CanConvertFrom_Dint_ShouldBeTrue()
         {
-            var converter = TypeDescriptor.GetConverter(typeof(Bool));
-            var value = _fixture.Create<Dint>();
+            var converter = TypeDescriptor.GetConverter(typeof(BOOL));
+            var value = _fixture.Create<DINT>();
 
             var result = converter.CanConvertFrom(value.GetType());
 
@@ -128,8 +128,8 @@ namespace L5Sharp.Internal.Tests.Converters
         [Test]
         public void CanConvertFrom_Lint_ShouldBeTrue()
         {
-            var converter = TypeDescriptor.GetConverter(typeof(Bool));
-            var value = _fixture.Create<Lint>();
+            var converter = TypeDescriptor.GetConverter(typeof(BOOL));
+            var value = _fixture.Create<LINT>();
 
             var result = converter.CanConvertFrom(value.GetType());
 
@@ -139,7 +139,7 @@ namespace L5Sharp.Internal.Tests.Converters
         [Test]
         public void CanConvertFrom_string_ShouldBeTrue()
         {
-            var converter = TypeDescriptor.GetConverter(typeof(Bool));
+            var converter = TypeDescriptor.GetConverter(typeof(BOOL));
             var value = _fixture.Create<string>();
 
             var result = converter.CanConvertFrom(value.GetType());
@@ -150,19 +150,19 @@ namespace L5Sharp.Internal.Tests.Converters
         [Test]
         public void ConvertFrom_NotSupported_ShouldThrowNotSupportedException()
         {
-            var converter = TypeDescriptor.GetConverter(typeof(Bool));
+            var converter = TypeDescriptor.GetConverter(typeof(BOOL));
             var value = _fixture.Create<float>();
 
-            FluentActions.Invoking(() => (Bool)converter.ConvertFrom(value)).Should().Throw<NotSupportedException>();
+            FluentActions.Invoking(() => (BOOL)converter.ConvertFrom(value)).Should().Throw<NotSupportedException>();
         }
 
         [Test]
         public void ConvertFrom_bool_ShouldBeExpected()
         {
-            var converter = TypeDescriptor.GetConverter(typeof(Bool));
+            var converter = TypeDescriptor.GetConverter(typeof(BOOL));
             var value = _fixture.Create<bool>();
 
-            var result = (Bool)converter.ConvertFrom(value);
+            var result = (BOOL)converter.ConvertFrom(value);
 
             result.Should().Be(result);
         }
@@ -170,10 +170,10 @@ namespace L5Sharp.Internal.Tests.Converters
         [Test]
         public void ConvertFrom_byte_ShouldBeTrue()
         {
-            var converter = TypeDescriptor.GetConverter(typeof(Bool));
+            var converter = TypeDescriptor.GetConverter(typeof(BOOL));
             var value = _fixture.Create<byte>();
 
-            var result = (Bool)converter.ConvertFrom(value);
+            var result = (BOOL)converter.ConvertFrom(value);
 
             result.Should().Be(result);
         }
@@ -181,10 +181,10 @@ namespace L5Sharp.Internal.Tests.Converters
         [Test]
         public void ConvertFrom_short_ShouldBeTrue()
         {
-            var converter = TypeDescriptor.GetConverter(typeof(Bool));
+            var converter = TypeDescriptor.GetConverter(typeof(BOOL));
             var value = _fixture.Create<short>();
 
-            var result = (Bool)converter.ConvertFrom(value);
+            var result = (BOOL)converter.ConvertFrom(value);
 
             result.Should().Be(result);
         }
@@ -192,10 +192,10 @@ namespace L5Sharp.Internal.Tests.Converters
         [Test]
         public void ConvertFrom_int_ShouldBeTrue()
         {
-            var converter = TypeDescriptor.GetConverter(typeof(Bool));
+            var converter = TypeDescriptor.GetConverter(typeof(BOOL));
             var value = _fixture.Create<int>();
 
-            var result = (Bool)converter.ConvertFrom(value);
+            var result = (BOOL)converter.ConvertFrom(value);
 
             result.Should().Be(result);
         }
@@ -203,10 +203,10 @@ namespace L5Sharp.Internal.Tests.Converters
         [Test]
         public void ConvertFrom_long_ShouldBeTrue()
         {
-            var converter = TypeDescriptor.GetConverter(typeof(Bool));
+            var converter = TypeDescriptor.GetConverter(typeof(BOOL));
             var value = _fixture.Create<long>();
 
-            var result = (Bool)converter.ConvertFrom(value);
+            var result = (BOOL)converter.ConvertFrom(value);
 
             result.Should().Be(result);
         }
@@ -214,10 +214,10 @@ namespace L5Sharp.Internal.Tests.Converters
         [Test]
         public void ConvertFrom_Bool_ShouldBeTrue()
         {
-            var converter = TypeDescriptor.GetConverter(typeof(Bool));
-            var value = _fixture.Create<Bool>();
+            var converter = TypeDescriptor.GetConverter(typeof(BOOL));
+            var value = _fixture.Create<BOOL>();
 
-            var result = (Bool)converter.ConvertFrom(value);
+            var result = (BOOL)converter.ConvertFrom(value);
 
             result.Should().Be(result);
         }
@@ -225,10 +225,10 @@ namespace L5Sharp.Internal.Tests.Converters
         [Test]
         public void ConvertFrom_Sint_ShouldBeTrue()
         {
-            var converter = TypeDescriptor.GetConverter(typeof(Bool));
-            var value = _fixture.Create<Sint>();
+            var converter = TypeDescriptor.GetConverter(typeof(BOOL));
+            var value = _fixture.Create<SINT>();
 
-            var result = (Bool)converter.ConvertFrom(value);
+            var result = (BOOL)converter.ConvertFrom(value);
 
             result.Should().Be(result);
         }
@@ -236,10 +236,10 @@ namespace L5Sharp.Internal.Tests.Converters
         [Test]
         public void ConvertFrom_Int_ShouldBeTrue()
         {
-            var converter = TypeDescriptor.GetConverter(typeof(Bool));
-            var value = _fixture.Create<Int>();
+            var converter = TypeDescriptor.GetConverter(typeof(BOOL));
+            var value = _fixture.Create<INT>();
 
-            var result = (Bool)converter.ConvertFrom(value);
+            var result = (BOOL)converter.ConvertFrom(value);
 
             result.Should().Be(result);
         }
@@ -247,10 +247,10 @@ namespace L5Sharp.Internal.Tests.Converters
         [Test]
         public void ConvertFrom_Dint_ShouldBeTrue()
         {
-            var converter = TypeDescriptor.GetConverter(typeof(Bool));
-            var value = _fixture.Create<Dint>();
+            var converter = TypeDescriptor.GetConverter(typeof(BOOL));
+            var value = _fixture.Create<DINT>();
 
-            var result = (Bool)converter.ConvertFrom(value);
+            var result = (BOOL)converter.ConvertFrom(value);
 
             result.Should().Be(result);
         }
@@ -258,10 +258,10 @@ namespace L5Sharp.Internal.Tests.Converters
         [Test]
         public void ConvertFrom_Lint_ShouldBeTrue()
         {
-            var converter = TypeDescriptor.GetConverter(typeof(Bool));
-            var value = _fixture.Create<Lint>();
+            var converter = TypeDescriptor.GetConverter(typeof(BOOL));
+            var value = _fixture.Create<LINT>();
 
-            var result = (Bool)converter.ConvertFrom(value);
+            var result = (BOOL)converter.ConvertFrom(value);
 
             result.Should().Be(result);
         }
@@ -269,10 +269,10 @@ namespace L5Sharp.Internal.Tests.Converters
         [Test]
         public void ConvertFrom_string_ShouldBeTrue()
         {
-            var converter = TypeDescriptor.GetConverter(typeof(Bool));
+            var converter = TypeDescriptor.GetConverter(typeof(BOOL));
             const string value = "1";
 
-            var result = (Bool)converter.ConvertFrom(value);
+            var result = (BOOL)converter.ConvertFrom(value);
 
             result.Should().Be(result);
         }
@@ -280,7 +280,7 @@ namespace L5Sharp.Internal.Tests.Converters
         [Test]
         public void CanConvertTo_bool_ShouldBeTrue()
         {
-            var converter = TypeDescriptor.GetConverter(typeof(Bool));
+            var converter = TypeDescriptor.GetConverter(typeof(BOOL));
             var value = _fixture.Create<bool>();
 
             var result = converter.CanConvertTo(value.GetType());
@@ -291,8 +291,8 @@ namespace L5Sharp.Internal.Tests.Converters
         [Test]
         public void CanConvertTo_Bool_ShouldBeTrue()
         {
-            var converter = TypeDescriptor.GetConverter(typeof(Bool));
-            var value = _fixture.Create<Bool>();
+            var converter = TypeDescriptor.GetConverter(typeof(BOOL));
+            var value = _fixture.Create<BOOL>();
 
             var result = converter.CanConvertTo(value.GetType());
 
@@ -302,7 +302,7 @@ namespace L5Sharp.Internal.Tests.Converters
         [Test]
         public void CanConvertTo_string_ShouldBeTrue()
         {
-            var converter = TypeDescriptor.GetConverter(typeof(Bool));
+            var converter = TypeDescriptor.GetConverter(typeof(BOOL));
             var value = _fixture.Create<string>();
 
             var result = converter.CanConvertTo(value.GetType());
@@ -324,15 +324,15 @@ namespace L5Sharp.Internal.Tests.Converters
         {
             var converter = new BoolConverter();
 
-            FluentActions.Invoking(() => converter.ConvertTo(new Bool(), typeof(short))!).Should()
+            FluentActions.Invoking(() => converter.ConvertTo(new BOOL(), typeof(short))!).Should()
                 .Throw<NotSupportedException>();
         }
 
         [Test]
         public void ConvertTo_bool_ShouldBeExpected()
         {
-            var converter = TypeDescriptor.GetConverter(typeof(Bool));
-            var value = _fixture.Create<Bool>();
+            var converter = TypeDescriptor.GetConverter(typeof(BOOL));
+            var value = _fixture.Create<BOOL>();
 
             var result = (bool)converter.ConvertTo(value, typeof(bool))!;
 
@@ -342,10 +342,10 @@ namespace L5Sharp.Internal.Tests.Converters
         [Test]
         public void ConvertTo_Bool_ShouldBeExpected()
         {
-            var converter = TypeDescriptor.GetConverter(typeof(Bool));
-            var value = _fixture.Create<Bool>();
+            var converter = TypeDescriptor.GetConverter(typeof(BOOL));
+            var value = _fixture.Create<BOOL>();
 
-            var result = (Bool)converter.ConvertTo(value, typeof(Bool))!;
+            var result = (BOOL)converter.ConvertTo(value, typeof(BOOL))!;
 
             result.Should().Be(value);
         }
@@ -353,8 +353,8 @@ namespace L5Sharp.Internal.Tests.Converters
         [Test]
         public void ConvertTo_string_ShouldBeExpected()
         {
-            var converter = TypeDescriptor.GetConverter(typeof(Bool));
-            var value = _fixture.Create<Bool>();
+            var converter = TypeDescriptor.GetConverter(typeof(BOOL));
+            var value = _fixture.Create<BOOL>();
 
             var result = (string)converter.ConvertTo(value, typeof(string))!;
 

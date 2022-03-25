@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net;
 using L5Sharp.Enums;
@@ -15,9 +16,9 @@ namespace L5Sharp.Core
         /// </summary>
         internal Module(string name, string? description, CatalogNumber catalogNumber,
             Vendor vendor, ProductType productType, ushort productCode, Revision revision,
-            IEnumerable<PortDefinition> ports, string? parentModule, int parentPortId,
-            KeyingState? state, bool inhibited, bool majorFault, bool safetyEnabled,
-            ITag<IDataType>? config, IEnumerable<Connection> connections)
+            string? parentModule, int parentPortId, KeyingState? state,
+            bool inhibited, bool majorFault, bool safetyEnabled, ITag<IDataType>? config,
+            IList<Port> ports, IList<Connection> connections, ICollection<IModule> modules)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
             Description = description ?? string.Empty;
@@ -32,21 +33,21 @@ namespace L5Sharp.Core
             Inhibited = inhibited;
             MajorFault = majorFault;
             SafetyEnabled = safetyEnabled;
-            Ports = new PortCollection(this, ports);
-            Connections = new List<Connection>(connections).AsReadOnly();
-            Tags = new ModuleTags(config, Connections);
-            Modules = new ModuleCollection(Ports.Local()?.Bus);
+            Ports = new PortCollection(ports);
+            Connections = new ReadOnlyCollection<Connection>(connections);
+            Tags = new ModuleTagCollection(config, Connections);
+            Bus = new BusCollection(Ports, this, modules);
         }
 
         /// <summary>
-        /// Creates a new <see cref="Module"/> object with the provided name, module definition and parent parameters.
+        /// Creates a new <see cref="Module"/> object with the provided name, module definition, and parent parameters.
         /// </summary>
-        /// <param name="name">The name of the Module.</param>
+        /// <param name="name">The name of the module.</param>
         /// <param name="definition">The <see cref="ModuleDefinition"/> containing the information on the
-        /// Module to create. Users may provide a custom definition to create the Module instance,
+        /// module to create. Users may provide a custom definition to create the module instance,
         /// or use the <see cref="ModuleCatalog"/> to obtain one from the service provider. Note that if the definition has
         /// invalid parameters, importing the module may fail as Logix will validate the parameters.</param>
-        /// <param name="parentModule">The name of the module that is the parent of the Module to create.</param>
+        /// <param name="parentModule">The name of the module that is the parent of the module to create.</param>
         /// <param name="parentPortId">The port id of the module that is the parent of the current module.</param>
         /// <param name="description">The description of the module.</param>
         /// <exception cref="ArgumentNullException">definition is null.</exception>
@@ -54,18 +55,17 @@ namespace L5Sharp.Core
         /// This constructor provides a flexible way to create modules in circumstances where the module definition is not
         /// known by the default <see cref="ModuleCatalog"/>, or the user wants more control over what is being instantiated.
         /// Note that this constructor will not add the module to parent bus, since there is no strong reference to it,
-        /// and therefore this constructor will create an orphaned module. To create modules in a hierarchical fashion,
-        /// use the <see cref="Ports"/> local port to add new child modules.
+        /// and therefore this constructor will create an "orphaned" module. To create modules in a hierarchical fashion,
+        /// use the <see cref="Bus"/> property containing the API for adding new child modules.
         /// </remarks>
         public Module(ComponentName name, ModuleDefinition definition,
             string? parentModule = null, int parentPortId = default, string? description = null)
         {
-            Name = name ?? throw new ArgumentNullException(nameof(name));
-            Description = description ?? string.Empty;
-
             if (definition is null)
                 throw new ArgumentNullException(nameof(definition));
 
+            Name = name ?? throw new ArgumentNullException(nameof(name));
+            Description = description ?? string.Empty;
             CatalogNumber = definition.CatalogNumber;
             Vendor = definition.Vendor;
             ProductType = definition.ProductType;
@@ -74,10 +74,10 @@ namespace L5Sharp.Core
             ParentModule = parentModule ?? string.Empty;
             ParentPortId = parentPortId;
             State = KeyingState.CompatibleModule;
-            Ports = new PortCollection(this, definition.Ports);
+            Ports = new PortCollection(definition.Ports.ToList());
             Connections = new List<Connection>().AsReadOnly();
-            Tags = new ModuleTags();
-            Modules = new ModuleCollection(Ports.Local()?.Bus);
+            Tags = new ModuleTagCollection();
+            Bus = new BusCollection(Ports, this);
         }
 
         /// <summary>
@@ -111,15 +111,11 @@ namespace L5Sharp.Core
         public Module(ComponentName name, CatalogNumber catalogNumber, byte slot = default, IPAddress? ipAddress = null,
             string? description = null, ICatalogService? catalogService = null)
         {
+            catalogService ??= new ModuleCatalog();
+            var definition = catalogService.Lookup(catalogNumber).ConfigureBackplane(slot, ipAddress);
+
             Name = name ?? throw new ArgumentNullException(nameof(name));
             Description = description ?? string.Empty;
-
-            catalogService ??= new ModuleCatalog();
-
-            var definition = catalogService.Lookup(catalogNumber);
-
-            definition.ConfigurePorts(slot, ipAddress);
-
             CatalogNumber = definition.CatalogNumber;
             Vendor = definition.Vendor;
             ProductType = definition.ProductType;
@@ -127,10 +123,10 @@ namespace L5Sharp.Core
             Revision = definition.Revisions.Max();
             ParentModule = string.Empty;
             State = KeyingState.CompatibleModule;
-            Ports = new PortCollection(this, definition.Ports);
+            Ports = new PortCollection(definition.Ports.ToList());
             Connections = new List<Connection>().AsReadOnly();
-            Tags = new ModuleTags();
-            Modules = new ModuleCollection(Ports.Local()?.Bus);
+            Tags = new ModuleTagCollection();
+            Bus = new BusCollection(Ports, this);
         }
 
         /// <summary>
@@ -161,17 +157,13 @@ namespace L5Sharp.Core
         /// fashion in memory, use the <see cref="Ports"/> local downstream port of the parent module.
         /// </remarks>
         public Module(ComponentName name, CatalogNumber catalogNumber, IPAddress ipAddress, byte slot = default,
-            string? description = null,
-            ICatalogService? catalogService = null)
+            string? description = null, ICatalogService? catalogService = null)
         {
+            catalogService ??= new ModuleCatalog();
+            var definition = catalogService.Lookup(catalogNumber).ConfigureEthernet(ipAddress, slot);
+
             Name = name ?? throw new ArgumentNullException(nameof(name));
             Description = description ?? string.Empty;
-
-            catalogService ??= new ModuleCatalog();
-
-            var definition = catalogService.Lookup(catalogNumber);
-            definition.ConfigurePorts(ipAddress, slot);
-
             CatalogNumber = definition.CatalogNumber;
             Vendor = definition.Vendor;
             ProductType = definition.ProductType;
@@ -179,10 +171,10 @@ namespace L5Sharp.Core
             Revision = definition.Revisions.Max();
             ParentModule = string.Empty;
             State = KeyingState.CompatibleModule;
-            Ports = new PortCollection(this, definition.Ports);
+            Ports = new PortCollection(definition.Ports.ToList());
             Connections = new List<Connection>().AsReadOnly();
-            Tags = new ModuleTags();
-            Modules = new ModuleCollection(Ports.Local()?.Bus);
+            Tags = new ModuleTagCollection();
+            Bus = new BusCollection(Ports, this);
         }
 
         /// <inheritdoc />
@@ -219,12 +211,11 @@ namespace L5Sharp.Core
         public KeyingState State { get; }
 
         /// <inheritdoc />
-        public int Slot => 
-            byte.TryParse(Ports.Chassis?.Address, out var slot) ? slot : default;
+        public int Slot => byte.TryParse(Ports.Backplane()?.Address, out var slot) ? slot : default;
 
         /// <inheritdoc />
         public IPAddress IP =>
-            IPAddress.TryParse(Ports.Ethernet?.Address ?? string.Empty, out var ip) ? ip : IPAddress.Any;
+            IPAddress.TryParse(Ports.Ethernet()?.Address ?? string.Empty, out var ip) ? ip : IPAddress.Any;
 
         /// <inheritdoc />
         public string ParentModule { get; }
@@ -239,9 +230,31 @@ namespace L5Sharp.Core
         public IReadOnlyCollection<Connection> Connections { get; }
 
         /// <inheritdoc />
-        public ModuleTags Tags { get; }
+        public ModuleTagCollection Tags { get; }
 
         /// <inheritdoc />
-        public IModuleCollection Modules { get; }
+        public BusCollection Bus { get; }
+
+        //todo?
+        /*public IModule ConnectTo(IModule module)
+        {
+            var port = module.Ports.Downstream().FirstOrDefault() 
+                       ?? throw new ArgumentException();
+            
+            var ports = new List<Port>();
+
+            //configure ports...
+            //set upstream correctly
+            //set address? not sure...
+            //set others to downstream
+            //add ports
+            
+            //create module with new ports and parent parameters
+            var child = new Module(Name, Description, CatalogNumber, Vendor, ProductType, ProductCode, Revision,
+                module.Name, port.Id, State, Inhibited, MajorFault, SafetyEnabled, Tags.Config,
+                ports, Connections.ToList(), Bus.Modules().ToList());
+            
+            module.Bus[port].Ad
+        }*/
     }
 }

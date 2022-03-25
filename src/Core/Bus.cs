@@ -14,14 +14,47 @@ namespace L5Sharp.Core
     public sealed class Bus : IEnumerable<IModule>
     {
         private const string DefaultNetworkAddress = "192.168.1";
-        private readonly Port _port;
         private readonly Dictionary<string, IModule> _modules;
+        private readonly Port _port;
+        private readonly string _parentName;
 
-        internal Bus(Port port, byte size)
+        /// <summary>
+        /// Creates a new <see cref="Bus"/> with the provided port.
+        /// </summary>
+        /// <param name="port">The <see cref="Port"/> that identifies where modules are are connected. This port is the
+        /// downstream port of the parent module, but becomes the upstream parent port of modules created on the bus
+        /// (i.e. the id value used for ParentPortId).</param>
+        /// <param name="parentName">The optional name of the parent module for which modules on the bus belong.
+        /// If not provided, will default to empty string, and all creates modules will in turn have an empty parent name.</param>
+        /// <exception cref="ArgumentNullException">port is null.</exception>
+        public Bus(Port port, string? parentName = null)
+        {
+            _port = port ?? throw new ArgumentNullException();
+            _modules = new Dictionary<string, IModule>();
+            _parentName = parentName ?? string.Empty;
+        }
+
+        /// <summary>
+        /// Creates a new <see cref="Bus"/> with the provided port and parent module
+        /// </summary>
+        /// <param name="port">The <see cref="Port"/> that identifies where modules are are connected. This port is the
+        /// downstream port of the parent module, but becomes the upstream parent port of modules created on the bus
+        /// (i.e. the id value used for ParentPortId).</param>
+        /// <param name="parent">The parent <see cref="IModule"/> for which modules on the bus belong. This module will
+        /// be added to the collection when the address of the provided port is not null or empty.</param>
+        /// <exception cref="ArgumentNullException">port or parent is null.</exception>
+        public Bus(Port port, IModule parent) : this(port)
         {
             _port = port ?? throw new ArgumentNullException(nameof(port));
-            _modules = new Dictionary<string, IModule> { { _port.Address, _port.Module } };
-            Size = size;
+            _modules = new Dictionary<string, IModule>();
+
+            if (parent is null)
+                throw new ArgumentNullException(nameof(parent));
+
+            _parentName = parent.Name;
+
+            if (!string.IsNullOrEmpty(_port.Address))
+                _modules.Add(_port.Address, parent);
         }
 
         /// <summary>
@@ -37,7 +70,7 @@ namespace L5Sharp.Core
         /// <summary>
         /// Gets the value of the current <see cref="Bus"/> size.
         /// </summary>
-        public byte Size { get; }
+        public byte Size => _port.BusSize;
 
         /// <summary>
         /// Gets a value indicating whether the <see cref="Bus"/> is empty or has not Modules.
@@ -57,7 +90,7 @@ namespace L5Sharp.Core
         /// <summary>
         /// Gets a value indicating whether the <see cref="Bus"/> contains Modules with slot based addresses.
         /// </summary>
-        public bool IsChassis => Type != "Ethernet" && _modules.Keys.All(k => k.IsByte());
+        public bool IsBackplane => Type != "Ethernet" && _modules.Keys.All(k => k.IsByte());
 
         /// <summary>
         /// Gets a value indicating whether the <see cref="Bus"/> contains Modules with IP based addresses.
@@ -83,11 +116,39 @@ namespace L5Sharp.Core
         /// </exception>
         public void Add(IModule module)
         {
-            ValidateModule(module);
+            if (module is null)
+                throw new ArgumentNullException(nameof(module));
 
-            var address = module.Ports.Connecting()?.Address!;
+            if (_modules.Values.Any(m => m.Name == module.Name))
+                throw new ComponentNameCollisionException(module.Name, module.GetType());
+
+            //todo should we do this?
+            /*module.ParentModule = _parentName;
+            module.ParentPortId = _port.Id;*/
+
+            var port = module.Ports.FirstOrDefault(p => p.Upstream && p.Type == _port.Type)
+                       ?? throw new ArgumentException("Error");
+
+            var address = IsAvailable(port.Address) ? port.Address : NextAvailable();
 
             _modules[address] = module;
+        }
+
+        /// <summary>
+        /// Adds the provided collection of <see cref="IModule"/> objects to the <see cref="Bus"/>.
+        /// </summary>
+        /// <param name="modules">The collection of modules with configured ports and parent properties.</param>
+        /// <exception cref="ArgumentNullException">module is null.</exception>
+        /// <exception cref="ComponentNameCollisionException">module name already exists on the bus.</exception>
+        /// <exception cref="ArgumentException">
+        /// module parent parameters do not match the Bus parent module values -or-
+        /// there is no connecting port with a type that matches the bus type -or-
+        /// the connecting port address is not available or valid for the current bus.
+        /// </exception>
+        public void AddMany(IEnumerable<IModule> modules)
+        {
+            foreach (var module in modules)
+                Add(module);
         }
 
         /// <summary>
@@ -97,7 +158,7 @@ namespace L5Sharp.Core
         /// <returns>The string value representing the address (slot/IP) at which the module belongs to the current Bus.
         /// Null if the specified module does not exist.
         /// </returns>
-        public string AddressOf(ComponentName name) => 
+        public string AddressOf(ComponentName name) =>
             _modules.SingleOrDefault(m => m.Value.Name == name).Key;
 
         /// <summary>
@@ -137,15 +198,15 @@ namespace L5Sharp.Core
         /// <param name="description">The optional description for the module.</param>
         /// <param name="catalogService">The optional service provider that is responsible for retrieving
         /// the <see cref="ModuleDefinition"/> for the specified catalog number. By default this will use the
-        /// <see cref="ModuleCatalog"/> built in service provider.</param>
+        /// <see cref="ModuleCatalog"/> built-in service provider.</param>
         /// <returns>The <see cref="IModule"/> instance that was created using the provided parameters.</returns>
         /// <exception cref="ModuleNotFoundException">catalogNumber could not be found by the catalog service provider.</exception>
         /// <exception cref="InvalidOperationException">The Bus instance is full and can not add new modules.</exception>
         /// <exception cref="ArgumentException">The module definition obtained for the specified catalog number
         /// does not have a valid upstream connection port for the current Bus type.</exception>
         /// <exception cref="ComponentNameCollisionException">name already exists on the current Bus instance.</exception>
-        /// <seealso cref="New(L5Sharp.Core.ComponentName,L5Sharp.Core.ModuleDefinition,string?)"/>
-        public IModule New(ComponentName name, CatalogNumber catalogNumber,
+        /// <seealso cref="Create(L5Sharp.Core.ComponentName,L5Sharp.Core.ModuleDefinition,string?)"/>
+        public IModule Create(ComponentName name, CatalogNumber catalogNumber,
             byte slot = default, IPAddress? ipAddress = null,
             string? description = null, ICatalogService? catalogService = null) =>
             NewModule(name, catalogNumber, slot, ipAddress, description, catalogService);
@@ -164,7 +225,7 @@ namespace L5Sharp.Core
         /// definition does not have a configured upstream port that matches the Bus <see cref="Type"/> -or-
         /// definition does not a connecting port address that is available on the Bus.
         /// </exception>
-        public IModule New(ComponentName name, ModuleDefinition definition, string? description = null)
+        public IModule Create(ComponentName name, ModuleDefinition definition, string? description = null)
         {
             if (definition is null)
                 throw new ArgumentNullException(nameof(definition));
@@ -191,14 +252,12 @@ namespace L5Sharp.Core
         /// </returns>
         public bool Remove(ComponentName name)
         {
-            if (name == _port.Module.Name)
-                return false;
-            
-            var module = _modules.Values.SingleOrDefault(m => m.Name == name);
+            var address = _modules.Values.SingleOrDefault(m => m.Name == name)?.Ports.Upstream()?.Address;
 
-            var address = module?.Ports.Connecting()?.Address;
-            
-            return address is not null && _modules.Remove(address);
+            if (address is null || address == _port.Address)
+                return false;
+
+            return _modules.Remove(address);
         }
 
         /// <inheritdoc />
@@ -206,40 +265,38 @@ namespace L5Sharp.Core
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-        private void ConfigureDownstreamPort(ModuleDefinition definition, string address)
+        private IModule NewModule(ComponentName name, CatalogNumber catalogNumber,
+            byte slot = default, IPAddress? ipAddress = null,
+            string? description = null, ICatalogService? catalogService = null)
         {
-            var local = definition.Ports.FirstOrDefault(p => p.Type != _port.Type);
+            var catalog = catalogService ?? new ModuleCatalog();
 
-            if (local is null) return;
+            var definition = catalog.Lookup(catalogNumber);
 
-            local.Upstream = false;
-            local.Address = address;
+            var upstreamAddress = DetermineUpstreamAddress(slot, ipAddress);
+            var downstreamAddress = DetermineDownstreamAddress(slot, ipAddress);
+
+            definition = definition.ConfigurePorts(_port.Type, upstreamAddress, downstreamAddress);
+
+            return NewModule(name, definition, description);
         }
 
-        private void ConfigureUpstreamPort(ModuleDefinition definition, string address)
+        private IModule NewModule(ComponentName name, ModuleDefinition definition, string? description = null)
         {
-            var connecting = definition.Ports.FirstOrDefault(p => p.Type == _port.Type && !p.DownstreamOnly);
+            var module = new Module(name, definition, _parentName, _port.Id, description);
 
-            if (connecting is null)
-                throw new ArgumentException(
-                    $"The module definition for '{definition.CatalogNumber}' does not contain a valid connecting " +
-                    $"port of type '{_port.Type}' for the current Bus.");
+            ValidateModule(module);
 
-            connecting.Upstream = true;
-            connecting.Address = address;
-        }
+            var address = module.Ports.Upstream()?.Address!;
 
-        private string DetermineDownstreamAddress(byte slot, IPAddress? ipAddress)
-        {
-            if (IsChassis && ipAddress is not null)
-                return ipAddress.ToString();
+            _modules.Add(address, module);
 
-            return IsEthernet ? slot.ToString() : string.Empty;
+            return module;
         }
 
         private string DetermineUpstreamAddress(byte slot, IPAddress? ipAddress)
         {
-            if (IsChassis && IsAvailable(slot.ToString()))
+            if (IsBackplane && IsAvailable(slot.ToString()))
                 return slot.ToString();
 
             if (IsEthernet && ipAddress is not null && IsAvailable(ipAddress.ToString()))
@@ -248,67 +305,46 @@ namespace L5Sharp.Core
             return NextAvailable();
         }
 
+        private string DetermineDownstreamAddress(byte slot, IPAddress? ipAddress)
+        {
+            if (IsBackplane && ipAddress is not null)
+                return ipAddress.ToString();
+
+            return IsEthernet ? slot.ToString() : string.Empty;
+        }
+
         private bool IsAvailable(string? address)
         {
             if (string.IsNullOrEmpty(address) || _modules.ContainsKey(address))
                 return false;
 
-            if (IsChassis && byte.TryParse(address, out var slot) && (!IsFixed || slot < Size))
+            if (IsBackplane && byte.TryParse(address, out var slot) && (!IsFixed || slot < Size))
                 return true;
 
             return IsEthernet && address.IsIPv4();
         }
 
-        private Module NewModule(ComponentName name, CatalogNumber catalogNumber,
-            byte slot = default, IPAddress? ipAddress = null,
-            string? description = null, ICatalogService? catalogService = null)
-        {
-            var catalog = catalogService ?? new ModuleCatalog();
-            var definition = catalog.Lookup(catalogNumber);
-
-            var upstreamAddress = DetermineUpstreamAddress(slot, ipAddress);
-            ConfigureUpstreamPort(definition, upstreamAddress);
-
-            var downstreamAddress = DetermineDownstreamAddress(slot, ipAddress);
-            ConfigureDownstreamPort(definition, downstreamAddress);
-
-            return NewModule(name, definition, description);
-        }
-
-        private Module NewModule(ComponentName name, ModuleDefinition definition, string? description = null)
-        {
-            var module = new Module(name, definition, _port.Module.Name, _port.Id, description);
-
-            ValidateModule(module);
-
-            var address = module.Ports.Connecting()?.Address!;
-
-            _modules.Add(address, module);
-
-            return module;
-        }
-
         private string NextAvailable()
         {
             if (IsFull)
-                throw new InvalidOperationException("The current Bus is full and can not assign additional modules.");
-            
+                throw new InvalidOperationException("The current Bus is full and can not be assigned new modules.");
+
             if (IsEthernet)
             {
                 var taken = _modules.Keys.Where(k => k.StartsWith(DefaultNetworkAddress))
                     .Select(k => (int)IPAddress.Parse(k).GetAddressBytes()[3]);
-                
-                var next = Enumerable.Range(byte.MinValue, byte.MaxValue)
+
+                var next = Enumerable.Range(1, byte.MaxValue)
                     .Except(taken)
                     .First()
                     .ToString();
-                
+
                 return IPAddress.Parse($"{DefaultNetworkAddress}.{next}").ToString();
             }
-            
-            var range = IsFixed ? Size : byte.MaxValue;
 
-            return Enumerable.Range(byte.MinValue, range)
+            var maxValue = IsFixed ? Size : byte.MaxValue;
+
+            return Enumerable.Range(byte.MinValue, maxValue)
                 .Except(_modules.Keys.Select(int.Parse))
                 .First()
                 .ToString();
@@ -322,25 +358,25 @@ namespace L5Sharp.Core
             if (_modules.Any(p => p.Value.Name == module.Name))
                 throw new ComponentNameCollisionException(module.Name, typeof(Module));
 
-            if (module.ParentModule != _port.Module.Name)
+            if (module.ParentModule != _parentName)
                 throw new ArgumentException(
-                    $"The provide module parent '{module.ParentModule}' does not match the Bus parent '{_port.Module.Name}'.");
+                    $"The provide module parent '{module.ParentModule}' does not match the Bus parent '{_parentName}' for module '{module.Name}'.");
 
             if (module.ParentPortId != _port.Id)
                 throw new ArgumentException(
-                    $"The provide module port '{module.ParentPortId}' does not match the Bus port '{_port.Id}'.");
+                    $"The provide module port '{module.ParentPortId}' does not match the Bus port '{_port.Id}' for module '{module.Name}'.");
 
-            if (module.Ports.Connecting() is null)
+            if (module.Ports.Upstream() is null)
                 throw new ArgumentException(
-                    "No upstream port defined for the provided module. Module must have an upstream port to be added to bus.");
+                    $"No upstream port defined for module '{module.Name}'. Module must have an upstream port to be added to bus.");
 
-            if (module.Ports.Connecting()?.Type != Type)
+            if (module.Ports.Upstream()?.Type != Type)
                 throw new ArgumentException(
-                    $"The provide module's upstream port of type '{module.Ports.Connecting()?.Type}'does not match bus type '{Type}'.");
+                    $"The provide port type '{module.Ports.Upstream()?.Type}' does not match bus type '{Type}' for module '{module.Name}'.");
 
-            if (!IsAvailable(module.Ports.Connecting()?.Address))
+            if (!IsAvailable(module.Ports.Upstream()?.Address))
                 throw new ArgumentException(
-                    $"The provided module upstream port address '{module.Ports.Connecting()?.Address}' is not a valid available address for the Bus.");
+                    $"The provided port address '{module.Ports.Upstream()?.Address}' is not a valid available address for the Bus.");
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Xml.Linq;
 using L5Sharp.L5X;
-using L5Sharp.Predefined;
+using L5Sharp.Types;
 
 namespace L5Sharp.Serialization.Data
 {
@@ -23,8 +23,8 @@ namespace L5Sharp.Serialization.Data
 
             return component switch
             {
-                AlarmDigital digital => _digitalParametersSerializer.Serialize(digital),
-                AlarmAnalog analog => _analogParametersSerializer.Serialize(analog),
+                ALARM_DIGITAL digital => _digitalParametersSerializer.Serialize(digital),
+                ALARM_ANALOG analog => _analogParametersSerializer.Serialize(analog),
                 _ => throw new ArgumentException(
                     $"Data type {component.GetType()} is not valid for the serializer {GetType()}")
             };

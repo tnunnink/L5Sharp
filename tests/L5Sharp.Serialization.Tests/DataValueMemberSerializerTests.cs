@@ -3,12 +3,11 @@ using System.Xml.Linq;
 using ApprovalTests;
 using ApprovalTests.Reporters;
 using FluentAssertions;
-using L5Sharp.Atomics;
 using L5Sharp.Core;
 using L5Sharp.Creators;
 using L5Sharp.Enums;
-using L5Sharp.Predefined;
 using L5Sharp.Serialization.Data;
+using L5Sharp.Types;
 using NUnit.Framework;
 
 namespace L5Sharp.Serialization.Tests
@@ -33,7 +32,7 @@ namespace L5Sharp.Serialization.Tests
         [Test]
         public void Serialize_NonAtomic_ShouldThrowArgumentException()
         {
-            FluentActions.Invoking(() => _serializer.Serialize(new Member<IDataType>("InvalidType", new Timer())))
+            FluentActions.Invoking(() => _serializer.Serialize(new Member<IDataType>("InvalidType", new TIMER())))
                 .Should().Throw<ArgumentException>()
                 .WithMessage("DataValueMember must have an atomic data type.");
         }
@@ -41,7 +40,7 @@ namespace L5Sharp.Serialization.Tests
         [Test]
         public void Serialize_WhenCalled_ShouldNotBeNull()
         {
-            var component = Member.Create<Dint>("Test");
+            var component = Member.Create<DINT>("Test");
 
             var xml = _serializer.Serialize(component);
 
@@ -52,7 +51,7 @@ namespace L5Sharp.Serialization.Tests
         [UseReporter(typeof(DiffReporter))]
         public void Serialize_Bool_ShouldBeApproved()
         {
-            var component = Member.Create<Bool>("Test");
+            var component = Member.Create<BOOL>("Test");
 
             var xml = _serializer.Serialize(component);
 
@@ -63,7 +62,7 @@ namespace L5Sharp.Serialization.Tests
         [UseReporter(typeof(DiffReporter))]
         public void Serialize_Sint_ShouldBeApproved()
         {
-            var component = Member.Create<Sint>("Test");
+            var component = Member.Create<SINT>("Test");
 
             var xml = _serializer.Serialize(component);
 
@@ -74,7 +73,7 @@ namespace L5Sharp.Serialization.Tests
         [UseReporter(typeof(DiffReporter))]
         public void Serialize_Int_ShouldBeApproved()
         {
-            var component = Member.Create<Int>("Test");
+            var component = Member.Create<INT>("Test");
 
             var xml = _serializer.Serialize(component);
 
@@ -85,7 +84,7 @@ namespace L5Sharp.Serialization.Tests
         [UseReporter(typeof(DiffReporter))]
         public void Serialize_Dint_ShouldBeApproved()
         {
-            var component = Member.Create<Dint>("Test");
+            var component = Member.Create<DINT>("Test");
 
             var xml = _serializer.Serialize(component);
 
@@ -96,7 +95,7 @@ namespace L5Sharp.Serialization.Tests
         [UseReporter(typeof(DiffReporter))]
         public void Serialize_Lint_ShouldBeApproved()
         {
-            var component = Member.Create<Lint>("Test");
+            var component = Member.Create<LINT>("Test");
 
             var xml = _serializer.Serialize(component);
 
@@ -107,7 +106,7 @@ namespace L5Sharp.Serialization.Tests
         [UseReporter(typeof(DiffReporter))]
         public void Serialize_Real_ShouldBeApproved()
         {
-            var component = Member.Create<Real>("Test");
+            var component = Member.Create<REAL>("Test");
 
             var xml = _serializer.Serialize(component);
 
@@ -152,7 +151,7 @@ namespace L5Sharp.Serialization.Tests
             var component = _serializer.Deserialize(element);
 
             component.Name.Should().Be("Test");
-            component.DataType.Should().BeOfType<Bool>();
+            component.DataType.Should().BeOfType<BOOL>();
             component.Radix.Should().Be(Radix.Decimal);
             component.DataType.As<IAtomicType>().Value.Should().Be(true);
         }
@@ -167,7 +166,7 @@ namespace L5Sharp.Serialization.Tests
             var component = _serializer.Deserialize(element);
 
             component.Name.Should().Be("Test");
-            component.DataType.Should().BeOfType<Sint>();
+            component.DataType.Should().BeOfType<SINT>();
             component.Radix.Should().Be(Radix.Decimal);
             component.DataType.As<IAtomicType>().Value.Should().Be(0);
         }
@@ -182,7 +181,7 @@ namespace L5Sharp.Serialization.Tests
             var component = _serializer.Deserialize(element);
 
             component.Name.Should().Be("Test");
-            component.DataType.Should().BeOfType<Int>();
+            component.DataType.Should().BeOfType<INT>();
             component.Radix.Should().Be(Radix.Decimal);
             component.DataType.As<IAtomicType>().Value.Should().Be(0);
         }
@@ -197,7 +196,7 @@ namespace L5Sharp.Serialization.Tests
             var component = _serializer.Deserialize(element);
 
             component.Name.Should().Be("Test");
-            component.DataType.Should().BeOfType<Dint>();
+            component.DataType.Should().BeOfType<DINT>();
             component.Radix.Should().Be(Radix.Decimal);
             component.DataType.As<IAtomicType>().Value.Should().Be(0);
         }
@@ -212,7 +211,7 @@ namespace L5Sharp.Serialization.Tests
             var component = _serializer.Deserialize(element);
 
             component.Name.Should().Be("Test");
-            component.DataType.Should().BeOfType<Lint>();
+            component.DataType.Should().BeOfType<LINT>();
             component.Radix.Should().Be(Radix.Decimal);
             component.DataType.As<IAtomicType>().Value.Should().Be(0);
         }
@@ -227,7 +226,7 @@ namespace L5Sharp.Serialization.Tests
             var component = _serializer.Deserialize(element);
 
             component.Name.Should().Be("Test");
-            component.DataType.Should().BeOfType<Real>();
+            component.DataType.Should().BeOfType<REAL>();
             component.Radix.Should().Be(Radix.Float);
             component.DataType.As<IAtomicType>().Value.Should().Be(0);
         }

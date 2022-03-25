@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using FluentAssertions;
 using L5Sharp.Enums;
@@ -22,10 +23,10 @@ namespace L5Sharp.Core.Tests
                 {
                     ModuleCategory.Communication,
                     ModuleCategory.Digital
-                }, new List<PortDefinition>
+                }, new List<Port>
                 {
-                    new(1, "ICP", true),
-                    new(2, "Ethernet", false)
+                    new(1, "ICP", upstream: true),
+                    new(2, "Ethernet")
                 }, "This is a fake module definition");
         }
 
@@ -140,13 +141,13 @@ namespace L5Sharp.Core.Tests
         {
             var module = new Module("Parent", "1756-EN2T", 1);
 
-            var port = module.Ports.Connecting();
+            var port = module.Ports.Upstream();
 
             port?.Id.Should().Be(1);
             port?.Type.Should().Be("ICP");
             port?.Upstream.Should().BeTrue();
             port?.Address.Should().Be("1");
-            port?.Bus.Should().BeNull();
+            port?.BusSize.Should().Be(0);
         }
 
         [Test]
@@ -154,13 +155,12 @@ namespace L5Sharp.Core.Tests
         {
             var module = new Module("Parent", "1756-EN2T", 1);
 
-            var port = module.Ports.Local();
+            var port = module.Ports.Downstream().FirstOrDefault();
 
             port?.Id.Should().Be(2);
             port?.Type.Should().Be("Ethernet");
             port?.Upstream.Should().BeFalse();
             port?.Address.Should().Be("0.0.0.0");
-            port?.Bus.Should().NotBeNull();
         }
         
         [Test]
@@ -168,13 +168,12 @@ namespace L5Sharp.Core.Tests
         {
             var module = new Module("Parent", "1756-EN2T", IPAddress.Parse("1.2.3.4"));
 
-            var port = module.Ports.Connecting();
+            var port = module.Ports.Upstream();
 
             port?.Id.Should().Be(2);
             port?.Type.Should().Be("Ethernet");
             port?.Upstream.Should().BeTrue();
             port?.Address.Should().Be("1.2.3.4");
-            port?.Bus.Should().BeNull();
         }
 
         [Test]
@@ -182,13 +181,13 @@ namespace L5Sharp.Core.Tests
         {
             var module = new Module("Parent", "1756-EN2T", IPAddress.Parse("1.2.3.4"));
 
-            var port = module.Ports.Local();
+            var port = module.Ports.Downstream().FirstOrDefault();
 
+            port.Should().NotBeNull();
             port?.Id.Should().Be(1);
             port?.Type.Should().Be("ICP");
             port?.Upstream.Should().BeFalse();
             port?.Address.Should().Be("0");
-            port?.Bus.Should().NotBeNull();
         }
     }
 }

@@ -139,17 +139,17 @@ namespace L5Sharp
         /// <remarks>
         /// This collection aggregates the config, input, and output tags for a given module. Each module may or may not
         /// have a given tag (config, input, output) based on the type of module it is.
-        /// These tags represent the controller tags created for the module in Logix when adding a module to the IO tree.
+        /// These tags represent the controller tags created for the module when adding a module to the IO tree.
         /// This collection is only populated when deserializing L5X content,
         /// and will be empty when creating a module in memory.
         /// This is because there is no known way (yet) to obtain the data types necessary for creating the tags each
         /// module would require.
         /// </remarks>
-        ModuleTags Tags { get; }
+        ModuleTagCollection Tags { get; }
 
         /// <summary>
-        /// Gets the <see cref="IModuleCollection"/>, containing child instances that are connected locally to the <see cref="IModule"/>. 
+        /// Gets the collection of <see cref="Bus"/> that contain the child or downstream modules of the <see cref="IModule"/>. 
         /// </summary>
-        IModuleCollection Modules { get; }
+        BusCollection Bus { get; }
     }
 }

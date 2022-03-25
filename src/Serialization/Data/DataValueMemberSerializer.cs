@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Xml.Linq;
-using L5Sharp.Atomics;
 using L5Sharp.Core;
 using L5Sharp.Creators;
 using L5Sharp.Enums;
 using L5Sharp.Extensions;
 using L5Sharp.L5X;
+using L5Sharp.Types;
 
 namespace L5Sharp.Serialization.Data
 {
@@ -24,7 +24,7 @@ namespace L5Sharp.Serialization.Data
             var element = new XElement(ElementName);
             element.Add(new XAttribute(L5XAttribute.Name.ToString(), component.Name));
             element.Add(new XAttribute(L5XAttribute.DataType.ToString(), component.DataType));
-            if (!string.Equals(component.DataType.Name, nameof(Bool), StringComparison.OrdinalIgnoreCase))
+            if (!string.Equals(component.DataType.Name, nameof(BOOL), StringComparison.OrdinalIgnoreCase))
                 element.Add(new XAttribute(L5XAttribute.Radix.ToString(), component.Radix));
             element.Add(new XAttribute(L5XAttribute.Value.ToString(), atomic.Format(component.Radix)));
 

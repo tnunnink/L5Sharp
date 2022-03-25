@@ -12,7 +12,7 @@ namespace L5Sharp.Context.Tests
         {
             var context = L5XContext.Load(Known.L5X);
 
-            var result = context.Tags().Contains("SimpleDint");
+            var result = context.Tags().Any("SimpleDint");
 
             result.Should().BeTrue();
         }
@@ -22,7 +22,7 @@ namespace L5Sharp.Context.Tests
         {
             var context = L5XContext.Load(Known.L5X);
 
-            var result = context.Tags().Contains("FakeTag");
+            var result = context.Tags().Any("FakeTag");
 
             result.Should().BeFalse();
         }
@@ -32,7 +32,7 @@ namespace L5Sharp.Context.Tests
         {
             var context = L5XContext.Load(Known.L5X);
 
-            var result = context.Tags().Contains(null!);
+            var result = context.Tags().Any(null!);
 
             result.Should().BeFalse();
         }
@@ -42,7 +42,7 @@ namespace L5Sharp.Context.Tests
         {
             var context = L5XContext.Load(Known.L5X);
 
-            var component = context.Tags().Find("SimpleDint");
+            var component = context.Tags().First("SimpleDint");
 
             component.Should().NotBeNull();
         }
@@ -52,7 +52,7 @@ namespace L5Sharp.Context.Tests
         {
             var context = L5XContext.Load(Known.L5X);
 
-            var component = context.Tags().Find("FakeType");
+            var component = context.Tags().First("FakeType");
 
             component.Should().BeNull();
         }
@@ -62,7 +62,7 @@ namespace L5Sharp.Context.Tests
         {
             var context = L5XContext.Load(Known.L5X);
 
-            var component = context.Tags().GetAll().Where(t => t.Dimensions.IsEmpty);
+            var component = context.Tags().All().Where(t => t.Dimensions.IsEmpty);
 
             component.Should().NotBeEmpty();
         }
@@ -72,7 +72,7 @@ namespace L5Sharp.Context.Tests
         {
             var context = L5XContext.Load(Known.L5X);
 
-            var components = context.DataTypes().FindAll(t => t.Name.Contains("Simple")).ToList();
+            var components = context.DataTypes().Where(t => t.Name.Contains("Simple")).ToList();
 
             components.Should().NotBeEmpty();
             components.All(c => c.Name.Contains("Simple")).Should().BeTrue();
@@ -83,7 +83,7 @@ namespace L5Sharp.Context.Tests
         {
             var context = L5XContext.Load(Known.L5X);
 
-            var tags = context.Tags().GetAll().ToList();
+            var tags = context.Tags().All().ToList();
 
             tags.Should().NotBeEmpty();
         }
@@ -93,7 +93,7 @@ namespace L5Sharp.Context.Tests
         {
             var context = L5XContext.Load(Known.Template);
 
-            var tag = context.Tags().Get("Auto_Sampler_01");
+            var tag = context.Tags().Single("Auto_Sampler_01");
 
             tag.Should().NotBeNull();
         }

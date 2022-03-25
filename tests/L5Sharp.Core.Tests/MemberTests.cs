@@ -1,11 +1,9 @@
 ﻿using System;
 using FluentAssertions;
-using L5Sharp.Atomics;
 using L5Sharp.Creators;
 using L5Sharp.Enums;
-using L5Sharp.Predefined;
+using L5Sharp.Types;
 using NUnit.Framework;
-using String = L5Sharp.Predefined.String; 
 
 namespace L5Sharp.Core.Tests
 {
@@ -24,7 +22,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Create_TypedValidNameAndType_ShouldNotBeNull()
         {
-            var member = Member.Create("Test", new Bool());
+            var member = Member.Create("Test", new BOOL());
 
             member.Should().NotBeNull();
         }
@@ -32,7 +30,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Create_TypedValidName_ShouldNotBeNull()
         {
-            var member = Member.Create<Bool>("Test");
+            var member = Member.Create<BOOL>("Test");
 
             member.Should().NotBeNull();
         }
@@ -40,7 +38,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void New_NullName_ShouldThrowArgumentNullException()
         {
-            FluentActions.Invoking(() => Member.Create<Dint>(null!)).Should().Throw<ArgumentNullException>();
+            FluentActions.Invoking(() => Member.Create<DINT>(null!)).Should().Throw<ArgumentNullException>();
         }
 
         [Test]
@@ -52,11 +50,11 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void New_Overloaded_ShouldHaveExpectedValues()
         {
-            var member = Member.Create("Member", (IDataType)new Real(), Radix.Exponential, ExternalAccess.ReadOnly, "Test");
+            var member = Member.Create("Member", (IDataType)new REAL(), Radix.Exponential, ExternalAccess.ReadOnly, "Test");
 
             member.Should().NotBeNull();
             member.Name.Should().Be("Member");
-            member.DataType.Should().BeOfType<Real>();
+            member.DataType.Should().BeOfType<REAL>();
             member.Dimensions.Should().Be(Dimensions.Empty);
             member.Radix.Should().Be(Radix.Exponential);
             member.ExternalAccess.Should().Be(ExternalAccess.ReadOnly);
@@ -66,10 +64,10 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void New_ArrayMember_ShouldHaveExpectedProperties()
         {
-            var member = Member.Create<Bool>("Test", new Dimensions(5));
+            var member = Member.Create<BOOL>("Test", new Dimensions(5));
 
             member.Should().NotBeNull();
-            member.DataType.Should().BeOfType<ArrayType<Bool>>();
+            member.DataType.Should().BeOfType<ArrayType<BOOL>>();
             member.Dimensions.Should().BeEquivalentTo(new Dimensions(5));
             member.Radix.Should().Be(Radix.Decimal);
             member.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);
@@ -79,7 +77,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Name_GetValue_ShouldBeExpected()
         {
-            var member = Member.Create<Real>("Member");
+            var member = Member.Create<REAL>("Member");
 
             var name = member.Name;
 
@@ -89,7 +87,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Description_GetValue_ShouldBeExpected()
         {
-            var member = Member.Create<Real>("Member");
+            var member = Member.Create<REAL>("Member");
 
             var description = member.Description;
 
@@ -99,17 +97,17 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void DataType_GetValue_ShouldBeExpected()
         {
-            var member = Member.Create<Real>("Member");
+            var member = Member.Create<REAL>("Member");
 
             var dataType = member.DataType;
 
-            dataType.Should().Be(new Real());
+            dataType.Should().Be(new REAL());
         }
 
         [Test]
         public void Dimension_GetValue_ShouldBeExpected()
         {
-            var member = Member.Create<Real>("Member");
+            var member = Member.Create<REAL>("Member");
 
             var dimension = member.Dimensions;
 
@@ -119,7 +117,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Radix_GetValue_ShouldBeExpected()
         {
-            var member = Member.Create<Real>("Member");
+            var member = Member.Create<REAL>("Member");
 
             var radix = member.Radix;
 
@@ -129,7 +127,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void ExternalAccess_GetValue_ShouldBeExpected()
         {
-            var member = Member.Create<Real>("Member");
+            var member = Member.Create<REAL>("Member");
 
             var access = member.ExternalAccess;
 
@@ -139,7 +137,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void IsValueMember_IsAtomicMember_ShouldBeTrue()
         {
-            var member = Member.Create<Bool>("Test");
+            var member = Member.Create<BOOL>("Test");
 
             member.IsValueMember.Should().BeTrue();
         }
@@ -147,7 +145,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void IsValueMember_IsComplexMember_ShouldBeFalse()
         {
-            var member = Member.Create<String>("Test");
+            var member = Member.Create<STRING>("Test");
 
             member.IsValueMember.Should().BeFalse();
         }
@@ -155,7 +153,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void IsStructureMember_IsAtomicMember_ShouldBeFalse()
         {
-            var member = Member.Create<Bool>("Test");
+            var member = Member.Create<BOOL>("Test");
 
             member.IsStructureMember.Should().BeFalse();
         }
@@ -163,7 +161,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void IsStructureMember_IsComplexMember_ShouldBeTrue()
         {
-            var member = Member.Create<String>("Test");
+            var member = Member.Create<STRING>("Test");
 
             member.IsStructureMember.Should().BeTrue();
         }
@@ -171,7 +169,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void IsArrayMember_DimensionsEmpty_ShouldBeFalse()
         {
-            var member = Member.Create<Bool>("Test");
+            var member = Member.Create<BOOL>("Test");
 
             member.IsArrayMember.Should().BeFalse();
         }
@@ -179,7 +177,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void IsArrayMember_DimensionsNotEmpty_ShouldBeTrue()
         {
-            var member = Member.Create<Bool>("Test", new Dimensions(5));
+            var member = Member.Create<BOOL>("Test", new Dimensions(5));
 
             member.IsArrayMember.Should().BeTrue();
         }
@@ -187,7 +185,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void IsArrayMember_ComplexTypeArray_ShouldBeTrue()
         {
-            var member = Member.Create<Timer>("Test", new Dimensions(5));
+            var member = Member.Create<TIMER>("Test", new Dimensions(5));
 
             member.IsArrayMember.Should().BeTrue();
         }

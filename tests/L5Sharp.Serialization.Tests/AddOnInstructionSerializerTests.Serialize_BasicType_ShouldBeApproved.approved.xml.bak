@@ -1,0 +1,5 @@
+﻿<AddOnInstructionDefinition Name="Test" Revision="1.0" ExecutePrescan="false" ExecutePostscan="false" ExecuteEnableInFalse="false" CreatedDate="0001-01-01T00:00:00.000Z" CreatedBy="ENE\tnunnink" EditedDate="0001-01-01T00:00:00.000Z" EditedBy="ENE\tnunnink" SoftwareRevision="1.0" IsEncrypted="false">
+  <Parameters />
+  <LocalTags />
+  <Routines />
+</AddOnInstructionDefinition>

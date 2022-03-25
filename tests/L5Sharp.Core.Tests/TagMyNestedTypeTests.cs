@@ -1,8 +1,8 @@
 ﻿using System.Linq;
 using FluentAssertions;
-using L5Sharp.Atomics;
 using L5Sharp.Creators;
 using L5Sharp.Enums;
+using L5Sharp.Types;
 using NUnit.Framework;
 
 namespace L5Sharp.Core.Tests
@@ -59,7 +59,7 @@ namespace L5Sharp.Core.Tests
             var tag = Tag.Create<MyNestedType>("Test");
 
             var indy = tag.Member(m => m.Indy);
-            indy.Description.Should().Be("This is the user defined description Test Bool Member");
+            indy.Description.Should().Be("This is the user defined description Test BOOL Member");
             
             var str = tag.Member(m => m.Str);
             str.Description.Should().Be("This is the user defined description Test String Member");
@@ -75,7 +75,7 @@ namespace L5Sharp.Core.Tests
 
             tag.Comment("Override Description");
             
-            tag.Member(m => m.Indy).Description.Should().Be("Override Description Test Bool Member");
+            tag.Member(m => m.Indy).Description.Should().Be("Override Description Test BOOL Member");
             tag.Member(m => m.Str).Description.Should().Be("Override Description Test String Member");
             tag.Member(m => m.Tmr).Description.Should().Be("Override Description Test Timer Member");
         }
@@ -87,13 +87,13 @@ namespace L5Sharp.Core.Tests
 
             tag.Comment("Override Description");
             
-            tag.Member(m => m.Indy).Description.Should().Be("Override Description Test Bool Member");
+            tag.Member(m => m.Indy).Description.Should().Be("Override Description Test BOOL Member");
             tag.Member(m => m.Str).Description.Should().Be("Override Description Test String Member");
             tag.Member(m => m.Tmr).Description.Should().Be("Override Description Test Timer Member");
             
             tag.Comment(string.Empty);
             
-            tag.Member(m => m.Indy).Description.Should().Be("This is the user defined description Test Bool Member");
+            tag.Member(m => m.Indy).Description.Should().Be("This is the user defined description Test BOOL Member");
             tag.Member(m => m.Str).Description.Should().Be("This is the user defined description Test String Member");
             tag.Member(m => m.Tmr).Description.Should().Be("This is the user defined description Test Timer Member");
         }
@@ -133,7 +133,7 @@ namespace L5Sharp.Core.Tests
             member.Should().NotBeNull();
             member.Name.Should().Be("M3");
             member.TagName.Should().Be("Test.Simple.M3");
-            member.DataType.Should().BeOfType<Int>();
+            member.DataType.Should().BeOfType<INT>();
         }
         
         [Test]
@@ -146,7 +146,7 @@ namespace L5Sharp.Core.Tests
             member.Should().NotBeNull();
             member.Name.Should().Be("M3");
             member.TagName.Should().Be("Test.Simple.M3");
-            member.DataType.Should().BeOfType<Int>();
+            member.DataType.Should().BeOfType<INT>();
         }
     }
 }

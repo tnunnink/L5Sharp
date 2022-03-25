@@ -1,7 +1,6 @@
 ﻿using System;
 using FluentAssertions;
-using L5Sharp.Atomics;
-using L5Sharp.Predefined;
+using L5Sharp.Types;
 using NUnit.Framework;
 
 namespace L5Sharp.Core.Tests
@@ -64,7 +63,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Create_ExistingType_ShouldNotBeNull()
         {
-            var dataType = DataType.Create("Bool");
+            var dataType = DataType.Create("BOOL");
 
             dataType.Should().NotBeNull();
         }
@@ -72,9 +71,9 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Create_ExistingType_ShouldBeExpected()
         {
-            var dataType = DataType.Create("Bool");
+            var dataType = DataType.Create("BOOL");
 
-            dataType.Should().BeEquivalentTo(new Bool());
+            dataType.Should().BeEquivalentTo(new BOOL());
         }
 
         [Test]
@@ -82,7 +81,7 @@ namespace L5Sharp.Core.Tests
         {
             var dataType = DataType.Create("SomeType");
 
-            dataType.Should().BeEquivalentTo(new Undefined("SomeType"));
+            dataType.Should().BeEquivalentTo(new UNDEFINED("SomeType"));
         }
 
         [Test]
@@ -108,7 +107,7 @@ namespace L5Sharp.Core.Tests
         {
             var type = DataType.Atomic("bool", true);
 
-            type.Should().BeOfType<Bool>();
+            type.Should().BeOfType<BOOL>();
             type.Name.Should().Be("BOOL");
             type.Value.Should().Be(true);
         }
@@ -118,7 +117,7 @@ namespace L5Sharp.Core.Tests
         {
             var type = DataType.Atomic("sint", "1");
 
-            type.Should().BeOfType<Sint>();
+            type.Should().BeOfType<SINT>();
             type.Name.Should().Be("SINT");
             type.Value.Should().Be(1);
         }
@@ -138,7 +137,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Complex_InvalidName_ShouldThrowArgumentException()
         {
-            FluentActions.Invoking(() => DataType.Complex("Bool")).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(() => DataType.Complex("BOOL")).Should().Throw<ArgumentException>();
         }
         
         [Test]
@@ -146,7 +145,7 @@ namespace L5Sharp.Core.Tests
         {
             var type = DataType.Complex("timer");
 
-            type.Should().BeOfType<Timer>();
+            type.Should().BeOfType<TIMER>();
             type.Name.Should().Be("TIMER");
         }
 
@@ -155,7 +154,7 @@ namespace L5Sharp.Core.Tests
         {
             var type = DataType.Complex("counter");
 
-            type.Should().BeOfType<Counter>();
+            type.Should().BeOfType<COUNTER>();
             type.Name.Should().Be("COUNTER");
         }
     }

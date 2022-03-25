@@ -1,6 +1,6 @@
 ﻿using System;
 using FluentAssertions;
-using L5Sharp.Atomics;
+using L5Sharp.Types;
 using NUnit.Framework;
 
 namespace L5Sharp.Enums.Tests
@@ -26,13 +26,13 @@ namespace L5Sharp.Enums.Tests
         [Test]
         public void Format_NonSupportedAtomic_ShouldThrowNotSupportedException()
         {
-            FluentActions.Invoking(() => Radix.Octal.Format(new Real())).Should().Throw<NotSupportedException>();
+            FluentActions.Invoking(() => Radix.Octal.Format(new REAL())).Should().Throw<NotSupportedException>();
         }
 
         [Test]
         public void Format_BoolFalse_ShouldBeExpected()
         {
-            var result = Radix.Octal.Format(new Bool());
+            var result = Radix.Octal.Format(new BOOL());
 
             result.Should().Be("8#0");
         }
@@ -40,7 +40,7 @@ namespace L5Sharp.Enums.Tests
         [Test]
         public void Format_BoolTrue_ShouldBeExpected()
         {
-            var result = Radix.Octal.Format(new Bool(true));
+            var result = Radix.Octal.Format(new BOOL(true));
 
             result.Should().Be("8#1");
         }
@@ -48,7 +48,7 @@ namespace L5Sharp.Enums.Tests
         [Test]
         public void Format_ValidSint_ShouldBeExpectedFormat()
         {
-            var result = Radix.Octal.Format(new Sint(20));
+            var result = Radix.Octal.Format(new SINT(20));
 
             result.Should().Be("8#024");
         }
@@ -56,7 +56,7 @@ namespace L5Sharp.Enums.Tests
         [Test]
         public void Format_ValidInt_ShouldBeExpectedFormat()
         {
-            var result = Radix.Octal.Format(new Int(20));
+            var result = Radix.Octal.Format(new INT(20));
 
             result.Should().Be("8#000_024");
         }
@@ -64,7 +64,7 @@ namespace L5Sharp.Enums.Tests
         [Test]
         public void Format_ValidDint_ShouldBeExpectedFormat()
         {
-            var result = Radix.Octal.Format(new Dint(20));
+            var result = Radix.Octal.Format(new DINT(20));
 
             result.Should().Be("8#000_000_000_024");
         }
@@ -72,7 +72,7 @@ namespace L5Sharp.Enums.Tests
         [Test]
         public void Format_ValidLint_ShouldBeExpectedFormat()
         {
-            var result = Radix.Octal.Format(new Lint(20));
+            var result = Radix.Octal.Format(new LINT(20));
 
             result.Should().Be("8#000_000_000_000_000_000_000_024");
         }

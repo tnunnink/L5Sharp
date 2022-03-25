@@ -3,13 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
 using L5Sharp.Abstractions;
-using L5Sharp.Atomics;
 using L5Sharp.Core;
 using L5Sharp.Creators;
 using L5Sharp.Enums;
-using L5Sharp.Predefined;
+using L5Sharp.Types;
 using NUnit.Framework;
-using String = L5Sharp.Predefined.String;
 
 namespace L5Sharp.Extensions.Tests
 {
@@ -19,8 +17,8 @@ namespace L5Sharp.Extensions.Tests
         [Test]
         public void StructureEquals_SameAtomic_ShouldBeTrue()
         {
-            var t1 = new Bool();
-            var t2 = new Bool();
+            var t1 = new BOOL();
+            var t2 = new BOOL();
 
             var result = t1.StructureEquals(t2);
 
@@ -30,8 +28,8 @@ namespace L5Sharp.Extensions.Tests
         [Test]
         public void StructureEquals_SameAtomicDifferentValues_ShouldBeTrue()
         {
-            var t1 = new Int();
-            var t2 = new Int(32);
+            var t1 = new INT();
+            var t2 = new INT(32);
 
             var result = t1.StructureEquals(t2);
 
@@ -41,8 +39,8 @@ namespace L5Sharp.Extensions.Tests
         [Test]
         public void StructureEquals_DifferentAtomics_ShouldBeFalse()
         {
-            var t1 = new Int();
-            var t2 = new Dint();
+            var t1 = new INT();
+            var t2 = new DINT();
             
             var result = t1.StructureEquals(t2);
 
@@ -52,8 +50,8 @@ namespace L5Sharp.Extensions.Tests
         [Test]
         public void StructureEquals_SameComplex_ShouldBeTure()
         {
-            var t1 = new Timer();
-            var t2 = new Timer();
+            var t1 = new TIMER();
+            var t2 = new TIMER();
             
             var result = t1.StructureEquals(t2);
 
@@ -63,8 +61,8 @@ namespace L5Sharp.Extensions.Tests
         [Test]
         public void StructureEquals_DifferentComplex_ShouldBeFalse()
         {
-            var t1 = new Timer();
-            var t2 = new Counter();
+            var t1 = new TIMER();
+            var t2 = new COUNTER();
             
             var result = t1.StructureEquals(t2);
 
@@ -74,8 +72,8 @@ namespace L5Sharp.Extensions.Tests
         [Test]
         public void StructureEquals_SameArray_ShouldBeTure()
         {
-            var t1 = new ArrayType<Dint>(10);
-            var t2 = new ArrayType<Dint>(10);
+            var t1 = new ArrayType<DINT>(10);
+            var t2 = new ArrayType<DINT>(10);
             
             var result = t1.StructureEquals(t2);
 
@@ -85,8 +83,8 @@ namespace L5Sharp.Extensions.Tests
         [Test]
         public void StructureEquals_DifferentArrayLength_ShouldBeFalse()
         {
-            var t1 = new ArrayType<Dint>(10);
-            var t2 = new ArrayType<Dint>(11);
+            var t1 = new ArrayType<DINT>(10);
+            var t2 = new ArrayType<DINT>(11);
             
             var result = t1.StructureEquals(t2);
 
@@ -96,8 +94,8 @@ namespace L5Sharp.Extensions.Tests
         [Test]
         public void StructureEquals_DifferentArrayType_ShouldBeFalse()
         {
-            var t1 = new ArrayType<Dint>(5);
-            var t2 = new ArrayType<Int>(5);
+            var t1 = new ArrayType<DINT>(5);
+            var t2 = new ArrayType<INT>(5);
             
             var result = t1.StructureEquals(t2);
 
@@ -131,16 +129,16 @@ namespace L5Sharp.Extensions.Tests
         {
             var t1 = new UserDefined("Test", "This is a test", new List<IMember<IDataType>>
             {
-                Member.Create<Bool>("Member01"),
-                Member.Create<Int>("Member02"),
-                Member.Create<Real>("Member03"),
+                Member.Create<BOOL>("Member01"),
+                Member.Create<INT>("Member02"),
+                Member.Create<REAL>("Member03"),
             });
             
             var t2 = new UserDefined("Test", "This is a test", new List<IMember<IDataType>>
             {
-                Member.Create<Bool>("Member01"),
-                Member.Create<Int>("Member02"),
-                Member.Create<Real>("Member03"),
+                Member.Create<BOOL>("Member01"),
+                Member.Create<INT>("Member02"),
+                Member.Create<REAL>("Member03"),
             });
 
             t1.StructureEquals(t2).Should().BeTrue();
@@ -149,7 +147,7 @@ namespace L5Sharp.Extensions.Tests
         [Test]
         public void GetMembers_Atomic_ShouldBeEmpty()
         {
-            var type = new Int();
+            var type = new INT();
 
             var members = type.GetMembers();
 
@@ -159,7 +157,7 @@ namespace L5Sharp.Extensions.Tests
         [Test]
         public void GetMembers_Complex_ShouldNotBeEmpty()
         {
-            var type = new Timer();
+            var type = new TIMER();
 
             var members = type.GetMembers();
 
@@ -169,7 +167,7 @@ namespace L5Sharp.Extensions.Tests
         [Test]
         public void GetMembers_ArrayOfAtomic_ShouldNotBeEmpty()
         {
-            var type = new ArrayType<Bool>(5);
+            var type = new ArrayType<BOOL>(5);
 
             var members = type.GetMembers();
 
@@ -179,7 +177,7 @@ namespace L5Sharp.Extensions.Tests
         [Test]
         public void GetMembers_ArrayOfComplex_ShouldNotBeEmpty()
         {
-            var type = new ArrayType<String>(5);
+            var type = new ArrayType<STRING>(5);
 
             var members = type.GetMembers();
 
@@ -189,7 +187,7 @@ namespace L5Sharp.Extensions.Tests
         [Test]
         public void GetMember_Atomic_ShouldBeNull()
         {
-            var type = new Bool();
+            var type = new BOOL();
 
             var member = type.GetMember("Child");
 
@@ -199,7 +197,7 @@ namespace L5Sharp.Extensions.Tests
         [Test]
         public void GetMember_Complex_ShouldNotBeNull()
         {
-            var type = new Timer();
+            var type = new TIMER();
 
             var member = type.GetMember("PRE");
 
@@ -209,7 +207,7 @@ namespace L5Sharp.Extensions.Tests
         [Test]
         public void GetMember_ArrayOfAtomic_ShouldNotBeNull()
         {
-            var type = new ArrayType<Bool>(5);
+            var type = new ArrayType<BOOL>(5);
 
             var member = type.GetMember("[2]");
 
@@ -219,7 +217,7 @@ namespace L5Sharp.Extensions.Tests
         [Test]
         public void GetTagNames_Atomic_ShouldBeEmpty()
         {
-            var type = new Int();
+            var type = new INT();
 
             var members = type.GetTagNames();
 
@@ -229,7 +227,7 @@ namespace L5Sharp.Extensions.Tests
         [Test]
         public void GetTagNames_Complex_ShouldContainExpectedTagNames()
         {
-            var type = new Timer();
+            var type = new TIMER();
 
             var members = type.GetTagNames().ToList();
 
@@ -243,7 +241,7 @@ namespace L5Sharp.Extensions.Tests
         [Test]
         public void GetTagNames_ArrayOfAtomic_ShouldContainExpectedTagNames()
         {
-            var type = new ArrayType<Bool>(5);
+            var type = new ArrayType<BOOL>(5);
 
             var members = type.GetTagNames().ToList();
 
@@ -257,7 +255,7 @@ namespace L5Sharp.Extensions.Tests
         [Test]
         public void GetTagNames_ArrayOfComplex_ShouldContainExpectedTagNames()
         {
-            var type = new ArrayType<String>(5);
+            var type = new ArrayType<STRING>(5);
 
             var members = type.GetTagNames().ToList();
 
@@ -281,7 +279,7 @@ namespace L5Sharp.Extensions.Tests
         [Test]
         public void GetDependentTypes_Atomic_ShouldBeEmpty()
         {
-            var type = new Int();
+            var type = new INT();
 
             var types = type.GetDependentTypes();
 
@@ -291,7 +289,7 @@ namespace L5Sharp.Extensions.Tests
         [Test]
         public void GetDependentTypes_Complex_ShouldHaveExpectedTypes()
         {
-            var type = new Timer();
+            var type = new TIMER();
 
             var types = type.GetDependentTypes().ToList();
 
@@ -303,7 +301,7 @@ namespace L5Sharp.Extensions.Tests
         [Test]
         public void GetDependentTypes_Array_ShouldHaveExpectedTypes()
         {
-            var type = new ArrayType<Timer>(3);
+            var type = new ArrayType<TIMER>(3);
 
             var types = type.GetDependentTypes().ToList();
 
@@ -316,7 +314,7 @@ namespace L5Sharp.Extensions.Tests
         [Test]
         public void ContainsMember_Null_ShouldThrowArgumentNullException()
         {
-            var type = new Timer();
+            var type = new TIMER();
 
             FluentActions.Invoking(() => type.HasMember(null!)).Should().Throw<ArgumentNullException>();
         }
@@ -324,7 +322,7 @@ namespace L5Sharp.Extensions.Tests
         [Test]
         public void ContainsMember_Atomic_ShouldBeFalse()
         {
-            var type = new Bool();
+            var type = new BOOL();
 
             var result = type.HasMember("MemberName");
 
@@ -334,7 +332,7 @@ namespace L5Sharp.Extensions.Tests
         [Test]
         public void ContainsMember_ComplexAndExists_ShouldBeTrue()
         {
-            var type = new Timer();
+            var type = new TIMER();
 
             var result = type.HasMember("PRE");
 
@@ -344,7 +342,7 @@ namespace L5Sharp.Extensions.Tests
         [Test]
         public void ContainsMember_ComplexAndDoesNotExist_ShouldBeFalse()
         {
-            var type = new Timer();
+            var type = new TIMER();
 
             var result = type.HasMember("PRESET");
 
@@ -354,7 +352,7 @@ namespace L5Sharp.Extensions.Tests
         [Test]
         public void ContainsMember_ArrayAndExists_ShouldBeTrue()
         {
-            var type = new ArrayType<Bool>(5);
+            var type = new ArrayType<BOOL>(5);
 
             var result = type.HasMember("[3]");
 
@@ -364,7 +362,7 @@ namespace L5Sharp.Extensions.Tests
         [Test]
         public void ContainsMember_ArrayAndDoesNotExist_ShouldBeFalse()
         {
-            var type = new ArrayType<Bool>(5);
+            var type = new ArrayType<BOOL>(5);
 
             var result = type.HasMember("[5]");
 
@@ -375,7 +373,7 @@ namespace L5Sharp.Extensions.Tests
         [Test]
         public void GetMembersTo_Null_ShouldThrowArgumentException()
         {
-            var type = new Bool();
+            var type = new BOOL();
 
             FluentActions.Invoking(() => type.GetMembers(null!)).Should().Throw<ArgumentException>();
         }
@@ -383,7 +381,7 @@ namespace L5Sharp.Extensions.Tests
         [Test]
         public void GetMembersTo_Atomic_ShouldBeEmpty()
         {
-            var type = new Bool();
+            var type = new BOOL();
 
             var members = type.GetMembers("MemberName");
 
@@ -393,7 +391,7 @@ namespace L5Sharp.Extensions.Tests
         [Test]
         public void GetMembersTo_ComplexAndInvalidPath_ShouldBeEmpty()
         {
-            var type = new Timer();
+            var type = new TIMER();
 
             var members = type.GetMembers("PRESET");
 
@@ -403,7 +401,7 @@ namespace L5Sharp.Extensions.Tests
         [Test]
         public void GetMembersTo_ComplexAndValidPath_ShouldHaveExpectedCount()
         {
-            var type = new Timer();
+            var type = new TIMER();
 
             var members = type.GetMembers("PRE").ToList();
 
@@ -439,8 +437,8 @@ namespace L5Sharp.Extensions.Tests
         [Test]
         public void SetData_IncompatibleAtomics_WillThrowArgumentException()
         {
-            var target = new Int(20);
-            var source = new Dint(100);
+            var target = new INT(20);
+            var source = new DINT(100);
 
             FluentActions.Invoking(() => target.SetData(source)).Should().Throw<ArgumentException>();
         }
@@ -448,8 +446,8 @@ namespace L5Sharp.Extensions.Tests
         [Test]
         public void SetData_DifferentButConvertableAtomics_WillSetData()
         {
-            var target = new Dint(100);
-            var source = new Int(30);
+            var target = new DINT(100);
+            var source = new INT(30);
 
             target.SetData(source);
             
@@ -459,8 +457,8 @@ namespace L5Sharp.Extensions.Tests
         [Test]
         public void SetData_SourceSmallerThanTarget_TargetShouldHaveExpectedData()
         {
-            var target = new ArrayType<Int>(5);
-            var types = new List<Int> { 10, 20, 30 };
+            var target = new ArrayType<INT>(5);
+            var types = new List<INT> { 10, 20, 30 };
             
             var source = types.ToArrayType();
 
@@ -476,8 +474,8 @@ namespace L5Sharp.Extensions.Tests
         [Test]
         public void SetData_TargetSmallerThanSource_TargetShouldHaveExpectedData()
         {
-            var target = new ArrayType<Int>(3);
-            var types = new List<Int> { 10, 20, 30, 40, 50 };
+            var target = new ArrayType<INT>(3);
+            var types = new List<INT> { 10, 20, 30, 40, 50 };
             
             var source = types.ToArrayType();
 
@@ -491,8 +489,8 @@ namespace L5Sharp.Extensions.Tests
         [Test]
         public void SetData_SameSizedArrays_TargetShouldHaveExpectedData()
         {
-            var target = new ArrayType<Int>(5);
-            var types = new List<Int> { 10, 20, 30, 40, 50 };
+            var target = new ArrayType<INT>(5);
+            var types = new List<INT> { 10, 20, 30, 40, 50 };
             
             var source = types.ToArrayType();
 
@@ -571,10 +569,10 @@ namespace L5Sharp.Extensions.Tests
         {
         }
 
-        public IMember<Bool> Indy = Member.Create<Bool>(nameof(Indy));
-        public IMember<String> Str = Member.Create<String>(nameof(Str));
-        public IMember<Timer> Tmr = Member.Create<Timer>(nameof(Tmr));
-        public IMember<IArrayType<Counter>> Counters = Member.Create<Counter>(nameof(Counters), 5);
+        public IMember<BOOL> Indy = Member.Create<BOOL>(nameof(Indy));
+        public IMember<STRING> Str = Member.Create<STRING>(nameof(Str));
+        public IMember<TIMER> Tmr = Member.Create<TIMER>(nameof(Tmr));
+        public IMember<IArrayType<COUNTER>> Counters = Member.Create<COUNTER>(nameof(Counters), 5);
         
         public override DataTypeClass Class => DataTypeClass.User;
         protected override IDataType New() => new MyNestedType();
@@ -586,8 +584,8 @@ namespace L5Sharp.Extensions.Tests
         {
         }
 
-        public IMember<Bool> Indy = Member.Create<Bool>(nameof(Indy));
-        public IMember<String> Str = Member.Create<String>(nameof(Str));
+        public IMember<BOOL> Indy = Member.Create<BOOL>(nameof(Indy));
+        public IMember<STRING> Str = Member.Create<STRING>(nameof(Str));
 
         public override DataTypeClass Class => DataTypeClass.User;
         protected override IDataType New() => new MyNestedType();

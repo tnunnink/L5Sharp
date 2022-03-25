@@ -5,15 +5,14 @@ using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Extensions;
 using L5Sharp.L5X;
-using L5Sharp.Serialization.Data;
 
 namespace L5Sharp.Serialization.Components
 {
     internal class ModuleSerializer : IL5XSerializer<IModule>
     {
         private static readonly XName ElementName = L5XElement.Module.ToString();
-        private readonly IL5XSerializer<PortDefinition> _portSerializer;
-        private readonly IL5XSerializer<Connection> _connectionSerializer;
+        private readonly PortSerializer _portSerializer;
+        private readonly ConnectionSerializer _connectionSerializer;
         private readonly ModuleTagSerializer _configTagSerializer;
 
         public ModuleSerializer()
@@ -48,7 +47,7 @@ namespace L5Sharp.Serialization.Components
             element.Add(keyingState);
 
             var ports = new XElement(L5XElement.Ports.ToString());
-            ports.Add(component.Ports.Select(p => _portSerializer.Serialize(p.ToDefinition())));
+            ports.Add(component.Ports.Select(p => _portSerializer.Serialize(p)));
             element.Add(ports);
 
             var communications = new XElement(L5XElement.Communications.ToString());
@@ -104,10 +103,17 @@ namespace L5Sharp.Serialization.Components
             var connections = element.Descendants(L5XElement.Connection.ToString())
                 .Select(e => _connectionSerializer.Deserialize(e))
                 .ToList();
+            
+            var modules = element.Ancestors(L5XElement.Modules.ToString()).First()
+                .Descendants(L5XElement.Module.ToString())
+                .Where(e => e.Attribute(L5XAttribute.ParentModule.ToString())?.Value == name 
+                            && e.ComponentName() != name)
+                .Select(Deserialize)
+                .ToList();
 
             return new Module(name, description, catalogNumber!, vendor!, productType!, productCode, revision,
-                ports, parentModule, parentModPortId, state, inhibited, majorFault,
-                safetyEnabled, config, connections);
+                parentModule, parentModPortId, state, inhibited, majorFault, safetyEnabled, config,
+                ports, connections, modules);
         }
     }
 }

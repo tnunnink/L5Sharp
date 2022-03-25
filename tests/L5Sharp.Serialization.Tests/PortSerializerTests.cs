@@ -29,7 +29,7 @@ namespace L5Sharp.Serialization.Tests
         [Test]
         public void Serialize_WhenCalled_ShouldNotBeNull()
         {
-            var component = new PortDefinition(1, "ICP", false, "0");
+            var component = new Port(1, "ICP", "0");
 
             var xml = _serializer.Serialize(component);
 
@@ -40,7 +40,7 @@ namespace L5Sharp.Serialization.Tests
         [UseReporter(typeof(DiffReporter))]
         public void Serialize_ValidComponent_ShouldBeApproved()
         {
-            var component = new PortDefinition(1, "ICP", false, "0", 10);
+            var component = new Port(1, "ICP", "0", false, 10);
 
             var xml = _serializer.Serialize(component);
 
@@ -51,7 +51,7 @@ namespace L5Sharp.Serialization.Tests
         [UseReporter(typeof(DiffReporter))]
         public void Serialize_ValidComponentNoBus_ShouldBeApproved()
         {
-            var component = new PortDefinition(1, "Ethernet", true, "10.11.12.13");
+            var component = new Port(1, "Ethernet", "10.11.12.13", true);
 
             var xml = _serializer.Serialize(component);
 

@@ -1,7 +1,6 @@
 ﻿using System;
 using AutoFixture;
 using FluentAssertions;
-using L5Sharp.Atomics;
 using L5Sharp.Enums;
 using NUnit.Framework;
 
@@ -13,7 +12,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void New_Default_ShouldNotBeNull()
         {
-            var type = new Bool();
+            var type = new BOOL();
 
             type.Should().NotBeNull();
         }
@@ -21,10 +20,10 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void New_Default_ShouldHaveExpectedDefaults()
         {
-            var type = new Bool();
+            var type = new BOOL();
 
             type.Should().NotBeNull();
-            type.Name.Should().Be(nameof(Bool).ToUpper());
+            type.Name.Should().Be(nameof(BOOL).ToUpper());
             type.Class.Should().Be(DataTypeClass.Atomic);
             type.Family.Should().Be(DataTypeFamily.None);
             type.Description.Should().Be("Logix representation of a System.Boolean");
@@ -34,7 +33,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void New_ValueOverload_ShouldHaveExpectedValue()
         {
-            var type = new Bool(true);
+            var type = new BOOL(true);
 
             type.Value.Should().BeTrue();
         }
@@ -42,7 +41,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void New_IntZeroOverload_ShouldBeFalse()
         {
-            var type = new Bool(0);
+            var type = new BOOL(0);
 
             type.Value.Should().BeFalse();
         }
@@ -50,7 +49,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void New_IntPositiveOverload_ShouldBeTrue()
         {
-            var type = new Bool(1);
+            var type = new BOOL(1);
 
             type.Value.Should().BeTrue();
         }
@@ -58,7 +57,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void New_IntNegativeOverload_ShouldBeFalse()
         {
-            var type = new Bool(-1);
+            var type = new BOOL(-1);
 
             type.Value.Should().BeFalse();
         }
@@ -66,7 +65,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void GetValue_AsAtomic_ShouldBeExpected()
         {
-            var type = (IAtomicType) new Bool();
+            var type = (IAtomicType) new BOOL();
 
             type.Value.Should().Be(false);
         }
@@ -74,7 +73,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void SetValue_Null_ShouldThrowArgumentNullException()
         {
-            var type = new Bool();
+            var type = new BOOL();
 
             FluentActions.Invoking(() => type.SetValue(null!)).Should().Throw<ArgumentNullException>();
         }
@@ -82,7 +81,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void SetValue_Zero_ShouldThrowArgumentException()
         {
-            var type = new Bool();
+            var type = new BOOL();
 
             type.SetValue(0);
 
@@ -94,7 +93,7 @@ namespace L5Sharp.Types.Tests
         {
             var fixture = new Fixture();
             var value = fixture.Create<bool>();
-            var type = new Bool();
+            var type = new BOOL();
 
             type.SetValue(value);
 
@@ -106,7 +105,7 @@ namespace L5Sharp.Types.Tests
         {
             var fixture = new Fixture();
             var value = fixture.Create<bool>();
-            var type = new Bool();
+            var type = new BOOL();
 
             type.SetValue((object)value);
 
@@ -118,7 +117,7 @@ namespace L5Sharp.Types.Tests
         {
             var fixture = new Fixture();
             var value = fixture.Create<bool>();
-            var type = new Bool();
+            var type = new BOOL();
 
             type.SetValue((object)value);
 
@@ -130,9 +129,9 @@ namespace L5Sharp.Types.Tests
         {
             var fixture = new Fixture();
             var value = fixture.Create<bool>();
-            var type = new Bool();
+            var type = new BOOL();
 
-            type.SetValue((object)new Bool(value));
+            type.SetValue((object)new BOOL(value));
 
             type.Value.Should().Be(value);
         }
@@ -142,7 +141,7 @@ namespace L5Sharp.Types.Tests
         {
             var fixture = new Fixture();
             var value = fixture.Create<bool>();
-            var type = new Bool();
+            var type = new BOOL();
             
             type.SetValue(value ? "1" : "0");
 
@@ -152,7 +151,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void SetValue_ValidStringOne_ShouldBeTrue()
         {
-            var type = new Bool();
+            var type = new BOOL();
 
             type.SetValue("1");
             
@@ -162,7 +161,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void SetValue_ValidStringZero_ShouldBeFalse()
         {
-            var type = new Bool();
+            var type = new BOOL();
 
             type.SetValue("0");
 
@@ -172,7 +171,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void SetValue_ValidStringTrue_ShouldBeTrue()
         {
-            var type = new Bool();
+            var type = new BOOL();
 
             type.SetValue("true");
             
@@ -182,7 +181,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void SetValue_ValidStringFalse_ShouldBeFalse()
         {
-            var type = new Bool();
+            var type = new BOOL();
 
             type.SetValue("false");
 
@@ -194,7 +193,7 @@ namespace L5Sharp.Types.Tests
         {
             var fixture = new Fixture();
             var value = fixture.Create<string>();
-            var type = new Bool();
+            var type = new BOOL();
 
             FluentActions.Invoking(() => type.SetValue(value)).Should().Throw<ArgumentException>();
         }
@@ -204,7 +203,7 @@ namespace L5Sharp.Types.Tests
         {
             var fixture = new Fixture();
             var value = fixture.Create<float>();
-            var type = new Bool();
+            var type = new BOOL();
 
             FluentActions.Invoking(() => type.SetValue(value)).Should().Throw<ArgumentException>();
         }
@@ -212,7 +211,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void Format_DefaultRadix_ShouldBeExpected()
         {
-            var type = new Bool();
+            var type = new BOOL();
 
             var format = type.Format();
 
@@ -222,7 +221,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void Format_OverloadedRadix_ShouldBeExpected()
         {
-            var type = new Bool();
+            var type = new BOOL();
 
             var format = type.Format(Radix.Binary);
 
@@ -232,17 +231,17 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void Instantiate_WhenCalled_ShouldEqualDefaultInstance()
         {
-            var type = new Bool(true);
+            var type = new BOOL(true);
 
             var instance = type.Instantiate();
 
-            instance.Should().BeEquivalentTo(new Bool());
+            instance.Should().BeEquivalentTo(new BOOL());
         }
 
         [Test]
         public void ImplicitOperator_Bool_ShouldBeTrue()
         {
-            Bool type = true;
+            BOOL type = true;
 
             type.Value.Should().BeTrue();
         }
@@ -250,7 +249,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void ImplicitOperator_bool_ShouldBeTrue()
         {
-            bool value = new Bool();
+            bool value = new BOOL();
 
             value.Should().BeFalse();
         }
@@ -258,7 +257,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void ImplicitOperator_ValidString_ShouldBeTrue()
         {
-            Bool type = "1";
+            BOOL type = "1";
 
             type.Value.Should().BeTrue();
         }
@@ -266,7 +265,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void ImplicitOperator_InvalidString_ShouldThrowArgumentException()
         {
-            Bool type = false;
+            BOOL type = false;
             
             FluentActions.Invoking(() => type = "test").Should().Throw<ArgumentException>();
         }
@@ -274,8 +273,8 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void TypeEquals_AreEqual_ShouldBeTrue()
         {
-            var first = new Bool();
-            var second = new Bool();
+            var first = new BOOL();
+            var second = new BOOL();
 
             var result = first.Equals(second);
 
@@ -285,7 +284,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void TypeEquals_AreSame_ShouldBeTrue()
         {
-            var first = new Bool();
+            var first = new BOOL();
 
             var result = first.Equals(first);
 
@@ -296,7 +295,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void TypeEquals_Null_ShouldBeFalse()
         {
-            var first = new Bool();
+            var first = new BOOL();
 
             var result = first.Equals(null);
 
@@ -306,8 +305,8 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void ObjectEquals_AreEqual_ShouldBeTrue()
         {
-            var first = new Bool();
-            var second = new Bool();
+            var first = new BOOL();
+            var second = new BOOL();
 
             var result = first.Equals((object)second);
 
@@ -317,7 +316,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void ObjectEquals_AreSame_ShouldBeTrue()
         {
-            var first = new Bool();
+            var first = new BOOL();
 
             var result = first.Equals((object)first);
 
@@ -327,7 +326,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void ObjectEquals_Null_ShouldBeFalse()
         {
-            var first = new Bool();
+            var first = new BOOL();
 
             var result = first.Equals((object)null);
 
@@ -337,8 +336,8 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void OperatorEquals_AreEqual_ShouldBeTrue()
         {
-            var first = new Bool();
-            var second = new Bool();
+            var first = new BOOL();
+            var second = new BOOL();
 
             var result = first == second;
 
@@ -348,8 +347,8 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void OperatorNotEquals_AreEqual_ShouldBeFalse()
         {
-            var first = new Bool();
-            var second = new Bool();
+            var first = new BOOL();
+            var second = new BOOL();
 
             var result = first != second;
 
@@ -359,7 +358,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void GetHashCode_DefaultValue_ShouldBeHashOfName()
         {
-            var type = new Bool();
+            var type = new BOOL();
 
             var hash = type.GetHashCode();
 
@@ -369,7 +368,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void ToString_WhenCalled_ShouldBeName()
         {
-            var type = new Bool();
+            var type = new BOOL();
 
             type.ToString().Should().Be(type.Name);
         }
@@ -377,7 +376,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void CompareTo_Same_ShouldBeZero()
         {
-            var type = new Bool();
+            var type = new BOOL();
 
             var compare = type.CompareTo(type);
 
@@ -387,7 +386,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void CompareTo_Null_ShouldBeOne()
         {
-            var type = new Bool();
+            var type = new BOOL();
 
             var compare = type.CompareTo(null);
 
@@ -397,8 +396,8 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void CompareTo_ValidOther_ShouldBeZero()
         {
-            var first = new Bool();
-            var second = new Bool();
+            var first = new BOOL();
+            var second = new BOOL();
 
             var compare = first.CompareTo(second);
 

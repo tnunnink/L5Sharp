@@ -16,8 +16,7 @@ namespace L5Sharp.L5X
                 { typeof(IDataType), new DataTypeIndex(context) },
                 { typeof(IModule), new ComponentIndex<IModule>(context) },
                 { typeof(IAddOnInstruction), new ComponentIndex<IAddOnInstruction>(context) },
-                //todo we either don't need/want a tag index or need to scope this somehow
-                //{ typeof(ITag<IDataType>),new ComponentIndex<ITag<IDataType>>(context) },
+                { typeof(ITag<IDataType>), new ComponentIndex<ITag<IDataType>>(context)},
                 { typeof(IProgram), new ComponentIndex<IProgram>(context) },
                 { typeof(ITask), new ComponentIndex<ITask>(context) }
             };

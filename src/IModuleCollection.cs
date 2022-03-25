@@ -12,20 +12,20 @@ namespace L5Sharp
     public interface IModuleCollection : IEnumerable<IModule>
     {
         /// <summary>
-        /// Gets a child <see cref="IModule"/> object with the specified name.
-        /// </summary>
-        /// <param name="name">The name of the module to get.</param>
-        /// <returns>The <see cref="IModule"/> instance of the child that has the provided name if one exists and the
-        /// current parent module has a local bus; otherwise, null.</returns>
-        IModule? Get(ComponentName name);
-
-        /// <summary>
         /// Gets a child <see cref="IModule"/> object at the specified address.
         /// </summary>
         /// <param name="address">The address (slot/IP) of the module to get.</param>
         /// <returns>The <see cref="IModule"/> instance of the child at the provided address if one exists and the
         /// current parent module has a local bus; otherwise, null.</returns>
-        IModule? Get(string address);
+        IModule? AtAddress(string address);
+
+        /// <summary>
+        /// Gets a child <see cref="IModule"/> object with the specified name.
+        /// </summary>
+        /// <param name="name">The name of the module to get.</param>
+        /// <returns>The <see cref="IModule"/> instance of the child that has the provided name, if one exists, and the
+        /// current parent module has a local bus; otherwise, null.</returns>
+        IModule? Named(ComponentName name);
 
         /// <summary>
         /// Creates a new <see cref="IModule"/> object and adds it as a child to the current module local port.

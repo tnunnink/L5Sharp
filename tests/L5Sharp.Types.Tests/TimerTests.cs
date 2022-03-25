@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using FluentAssertions;
-using L5Sharp.Atomics;
 using L5Sharp.Core;
 using L5Sharp.Enums;
-using L5Sharp.Predefined;
 using NUnit.Framework;
 
 namespace L5Sharp.Types.Tests
@@ -15,14 +13,14 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void Constructor_WhenCalled_ShouldNotBeNull()
         {
-            var type = new Timer();
+            var type = new TIMER();
             type.Should().NotBeNull();
         }
 
         [Test]
         public void Constructor_ValidDint_ShouldHaveExpectedPREValue()
         {
-            var type = new Timer(new Dint(5000));
+            var type = new TIMER(new DINT(5000));
 
             type.PRE.DataType.Value.Should().Be(5000);
         }
@@ -30,7 +28,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void Class_GetValue_ShouldBeExpected()
         {
-            var type = new Timer();
+            var type = new TIMER();
 
             type.Class.Should().Be(DataTypeClass.Predefined);
         }
@@ -38,18 +36,18 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void Instantiate_WhenCalled_ShouldBeEqualToDefault()
         {
-            var type = new Timer();
+            var type = new TIMER();
 
             var instance = type.Instantiate();
 
             instance.Should().NotBeNull();
-            instance.Should().BeEquivalentTo(new Timer());
+            instance.Should().BeEquivalentTo(new TIMER());
         }
 
         [Test]
         public void Members_ShouldNotBeEmpty()
         {
-            var type = new Timer();
+            var type = new TIMER();
 
             type.Members.Should().NotBeEmpty();
             type.Members.Should().HaveCount(5);
@@ -58,7 +56,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void InstanceMembers_Get_ShouldNotBeNull()
         {
-            var type = new Timer();
+            var type = new TIMER();
 
             type.DN.Should().NotBeNull();
             type.EN.Should().NotBeNull();
@@ -70,7 +68,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void Member_Get_ShouldContinueToReturnSameReference()
         {
-            var type = new Timer();
+            var type = new TIMER();
 
             type.DN.Should().BeSameAs(type.DN);
             type.TT.Should().BeSameAs(type.TT);
@@ -82,7 +80,7 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void CastingMembers_ToMutableCollection_ShouldNotBeProhibited()
         {
-            var type = new Timer();
+            var type = new TIMER();
 
             FluentActions.Invoking(() => (List<IMember<IDataType>>)type.Members).Should().Throw<InvalidCastException>();
         }

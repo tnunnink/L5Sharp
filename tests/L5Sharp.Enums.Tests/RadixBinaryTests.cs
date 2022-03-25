@@ -1,6 +1,6 @@
 ﻿using System;
 using FluentAssertions;
-using L5Sharp.Atomics;
+using L5Sharp.Types;
 using NUnit.Framework;
 
 namespace L5Sharp.Enums.Tests
@@ -26,13 +26,13 @@ namespace L5Sharp.Enums.Tests
         [Test]
         public void Format_NonSupportedAtomic_ShouldThrowNotSupportedException()
         {
-            FluentActions.Invoking(() => Radix.Binary.Format(new Real())).Should().Throw<NotSupportedException>();
+            FluentActions.Invoking(() => Radix.Binary.Format(new REAL())).Should().Throw<NotSupportedException>();
         }
 
         [Test]
         public void Format_BoolFalse_ShouldBeExpected()
         {
-            var result = Radix.Binary.Format(new Bool());
+            var result = Radix.Binary.Format(new BOOL());
 
             result.Should().Be("2#0");
         }
@@ -40,7 +40,7 @@ namespace L5Sharp.Enums.Tests
         [Test]
         public void Format_BoolTrue_ShouldBeExpected()
         {
-            var result = Radix.Binary.Format(new Bool(true));
+            var result = Radix.Binary.Format(new BOOL(true));
 
             result.Should().Be("2#1");
         }
@@ -48,7 +48,7 @@ namespace L5Sharp.Enums.Tests
         [Test]
         public void Format_ValidSint_ShouldBeExpectedFormat()
         {
-            var result = Radix.Binary.Format(new Sint(20));
+            var result = Radix.Binary.Format(new SINT(20));
 
             result.Should().Be("2#0001_0100");
         }
@@ -56,7 +56,7 @@ namespace L5Sharp.Enums.Tests
         [Test]
         public void Format_ValidInt_ShouldBeExpectedFormat()
         {
-            var result = Radix.Binary.Format(new Int(20));
+            var result = Radix.Binary.Format(new INT(20));
 
             result.Should().Be("2#0000_0000_0001_0100");
         }
@@ -64,7 +64,7 @@ namespace L5Sharp.Enums.Tests
         [Test]
         public void Format_ValidDint_ShouldBeExpectedFormat()
         {
-            var result = Radix.Binary.Format(new Dint(20));
+            var result = Radix.Binary.Format(new DINT(20));
 
             result.Should().Be("2#0000_0000_0000_0000_0000_0000_0001_0100");
         }
@@ -72,7 +72,7 @@ namespace L5Sharp.Enums.Tests
         [Test]
         public void Format_ValidLint_ShouldBeExpectedFormat()
         {
-            var result = Radix.Binary.Format(new Lint(20));
+            var result = Radix.Binary.Format(new LINT(20));
 
             result.Should().Be("2#0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0001_0100");
         }
@@ -128,7 +128,7 @@ namespace L5Sharp.Enums.Tests
         {
             var value = Radix.Binary.Parse("2#0001_0100");
 
-            value.Should().Be(new Sint(20));
+            value.Should().Be(new SINT(20));
         }
 
         [Test]
@@ -136,7 +136,7 @@ namespace L5Sharp.Enums.Tests
         {
             var value = Radix.Binary.Parse("2#0000_0000_0001_0100");
 
-            value.Should().Be(new Int(20));
+            value.Should().Be(new INT(20));
         }
 
         [Test]
@@ -144,7 +144,7 @@ namespace L5Sharp.Enums.Tests
         {
             var value = Radix.Binary.Parse("2#0000_0000_0000_0000_0000_0000_0001_0100");
 
-            value.Should().Be(new Dint(20));
+            value.Should().Be(new DINT(20));
         }
 
 
@@ -154,7 +154,7 @@ namespace L5Sharp.Enums.Tests
             var value = Radix.Binary.Parse(
                 "2#0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0001_0100");
 
-            value.Should().Be(new Lint(20));
+            value.Should().Be(new LINT(20));
         }
     }
 }

@@ -22,7 +22,7 @@ namespace L5Sharp.L5X
         private readonly ParameterExpression _elementParameter = Expression.Parameter(typeof(XElement), "e");
         private readonly List<Expression> _nullChecks = new();
 
-        public override Expression Visit(Expression node)
+        public override Expression? Visit(Expression node)
         {
             if (_typeParameter is not null) return base.Visit(node);
 
