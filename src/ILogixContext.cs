@@ -17,7 +17,7 @@ namespace L5Sharp
         /// <summary>
         /// Get the <see cref="IUserDefined"/> repository instance for the current <see cref="ILogixContext"/>.
         /// </summary>
-        IComponentRepository<IComplexType> DataTypes();
+        IDataTypeRepository DataTypes();
 
         /// <summary>
         /// Get the <see cref="IModule"/> repository instance for the current <see cref="ILogixContext"/>.
@@ -27,7 +27,7 @@ namespace L5Sharp
         /// <summary>
         /// Get the <see cref="IAddOnInstruction"/> repository instance for the current <see cref="ILogixContext"/>.
         /// </summary>
-        IComponentRepository<IAddOnInstruction> Instructions();
+        IInstructionRepository Instructions();
 
         /// <summary>
         /// Get the <see cref="ITag{TDataType}"/> repository instance for the current <see cref="ILogixContext"/>. 
@@ -44,7 +44,7 @@ namespace L5Sharp
         /// <summary>
         /// Get the <see cref="IProgram"/> repository instance for the current <see cref="ILogixContext"/>. 
         /// </summary>
-        IComponentRepository<IProgram> Programs();
+        IProgramRepository Programs();
 
         /// <summary>
         /// Get the <see cref="ITask"/> repository instance for the current <see cref="ILogixContext"/>.

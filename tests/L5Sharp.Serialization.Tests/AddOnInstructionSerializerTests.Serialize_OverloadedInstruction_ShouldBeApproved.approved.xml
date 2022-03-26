@@ -8,8 +8,8 @@
     <Parameter Name="TestParameter3" TagType="Base" DataType="TIMER" Usage="InOut" Required="true" Visible="true" Constant="false" />
   </Parameters>
   <LocalTags>
-    <LocalTag Name="TestTag1" TagType="Base" DataType="ALARM" Constant="false" ExternalAccess="Read/Write">
-      <Data Format="Decorated">
+    <LocalTag Name="TestTag1" DataType="ALARM" ExternalAccess="Read/Write">
+      <DefaultData Format="Decorated">
         <Structure DataType="ALARM">
           <DataValueMember Name="EnableIn" DataType="BOOL" Value="0" />
           <DataValueMember Name="In" DataType="REAL" Radix="Float" Value="0.0" />
@@ -36,15 +36,15 @@
           <DataValueMember Name="ROCNegLimitInv" DataType="BOOL" Value="0" />
           <DataValueMember Name="ROCPeriodInv" DataType="BOOL" Value="0" />
         </Structure>
-      </Data>
+      </DefaultData>
     </LocalTag>
-    <LocalTag Name="TestTag2" TagType="Base" DataType="DINT" Radix="Decimal" Constant="false" ExternalAccess="Read/Write">
-      <Data Format="Decorated">
+    <LocalTag Name="TestTag2" DataType="DINT" Radix="Decimal" ExternalAccess="Read/Write">
+      <DefaultData Format="Decorated">
         <DataValue DataType="DINT" Value="0" />
-      </Data>
+      </DefaultData>
     </LocalTag>
-    <LocalTag Name="TestTag3" TagType="Base" DataType="STRING" Constant="false" ExternalAccess="Read/Write">
-      <Data Format="String" Length="0"><![CDATA['']]></Data>
+    <LocalTag Name="TestTag3" DataType="STRING" ExternalAccess="Read/Write">
+      <DefaultData Format="String" Length="0"><![CDATA['']]></DefaultData>
     </LocalTag>
   </LocalTags>
   <Routines>

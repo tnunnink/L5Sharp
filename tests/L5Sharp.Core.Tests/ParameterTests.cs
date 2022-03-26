@@ -82,7 +82,7 @@ namespace L5Sharp.Core.Tests
         public void New_Overloaded_ShouldBeExpected()
         {
             var parameter = new Parameter<DINT>("Test", new DINT(34), TagUsage.Output, Radix.Hex,
-                ExternalAccess.ReadOnly, true, true, "LocalTag", true, "This is a test");
+                ExternalAccess.ReadOnly, true, true, true, "This is a test");
 
             parameter.Name.Should().Be("Test");
             parameter.Description.Should().Be("This is a test");

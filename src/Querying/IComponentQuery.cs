@@ -13,8 +13,9 @@ namespace L5Sharp.Querying
         /// <summary>
         /// Determines if the specified component name exists in the current queried collection.
         /// </summary>
-        /// <param name="name">THe name of the component to search for.</param>
+        /// <param name="name">The name of the component to search for.</param>
         /// <returns>true if the queried collection contains the specified name; otherwise, false.</returns>
+        /// <exception cref="ArgumentNullException">name is null.</exception>
         bool Any(ComponentName name);
 
         /// <summary>
@@ -29,10 +30,10 @@ namespace L5Sharp.Querying
         TComponent? Named(ComponentName name);
 
         /// <summary>
-        /// Returns all components in the queried collection that are named one of the provided component names.
+        /// Returns all components in the queried collection that have one of the provided component names.
         /// </summary>
-        /// <param name="names">A collection of names to match each component to.</param>
-        /// <returns>Am <see cref="IEnumerable{T}"/> of components that satisfy the list of provided names.</returns>
+        /// <param name="names">A collection of names for which to filter the source components.</param>
+        /// <returns>An <see cref="IEnumerable{T}"/> of components that have a name equal to one of the provided names.</returns>
         /// <exception cref="ArgumentNullException">names is null.</exception>
         IEnumerable<TComponent> Named(ICollection<ComponentName> names);
 

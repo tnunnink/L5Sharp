@@ -10,16 +10,24 @@ namespace L5Sharp.Serialization.Components
 {
     internal class ModuleSerializer : L5XSerializer<IModule>
     {
+        private readonly L5XDocument? _document;
         private static readonly XName ElementName = L5XElement.Module.ToString();
-        private readonly PortSerializer _portSerializer;
-        private readonly ConnectionSerializer _connectionSerializer;
-        private readonly ModuleTagSerializer _configTagSerializer;
 
-        public ModuleSerializer()
+        private PortSerializer PortSerializer => _document is not null
+            ? _document.Serializers.Get<PortSerializer>()
+            : new PortSerializer();
+        
+        private ConnectionSerializer ConnectionSerializer => _document is not null
+            ? _document.Serializers.Get<ConnectionSerializer>()
+            : new ConnectionSerializer(_document);
+        
+        private ConfigTagSerializer ConfigTagSerializer => _document is not null
+            ? _document.Serializers.Get<ConfigTagSerializer>()
+            : new ConfigTagSerializer(_document);
+
+        public ModuleSerializer(L5XDocument? document = null)
         {
-            _portSerializer = new PortSerializer();
-            _connectionSerializer = new ConnectionSerializer();
-            _configTagSerializer = new ModuleTagSerializer(L5XElement.ConfigTag.ToString(), "C");
+            _document = document;
         }
 
         public override XElement Serialize(IModule component)
@@ -47,19 +55,19 @@ namespace L5Sharp.Serialization.Components
             element.Add(keyingState);
 
             var ports = new XElement(L5XElement.Ports.ToString());
-            ports.Add(component.Ports.Select(p => _portSerializer.Serialize(p)));
+            ports.Add(component.Ports.Select(p => PortSerializer.Serialize(p)));
             element.Add(ports);
 
             var communications = new XElement(L5XElement.Communications.ToString());
 
             if (component.Tags.Config is not null)
             {
-                var config = _configTagSerializer.Serialize(component.Tags.Config);
+                var config = ConfigTagSerializer.Serialize(component.Tags.Config);
                 communications.Add(config);
             }
 
             var connections = new XElement(L5XElement.Connections.ToString());
-            connections.Add(component.Connections.Select(c => _connectionSerializer.Serialize(c)));
+            connections.Add(component.Connections.Select(c => ConnectionSerializer.Serialize(c)));
             communications.Add(connections);
 
             element.Add(communications);
@@ -95,18 +103,19 @@ namespace L5Sharp.Serialization.Components
                 ?.Value.Parse<KeyingState>();
 
             var ports = element.Descendants(L5XElement.Port.ToString())
-                .Select(e => _portSerializer.Deserialize(e))
+                .Select(e => PortSerializer.Deserialize(e))
                 .ToList();
 
             var configElement = element.Descendants(L5XElement.ConfigTag.ToString()).FirstOrDefault();
-            var config = configElement is not null ? _configTagSerializer.Deserialize(configElement) : null;
+            var config = configElement is not null ? ConfigTagSerializer.Deserialize(configElement) : null;
 
             var connections = element.Descendants(L5XElement.Connection.ToString())
-                .Select(e => _connectionSerializer.Deserialize(e))
+                .Select(e => ConnectionSerializer.Deserialize(e))
                 .ToList();
 
-            var modules = element.Ancestors(L5XElement.Modules.ToString()).First()
-                .Descendants(L5XElement.Module.ToString())
+            var modules = element.Ancestors(L5XElement.Modules.ToString())
+                .FirstOrDefault()
+                ?.Descendants(L5XElement.Module.ToString())
                 .Where(e => e.Attribute(L5XAttribute.ParentModule.ToString())?.Value == name
                             && e.ComponentName() != name)
                 .Select(Deserialize)

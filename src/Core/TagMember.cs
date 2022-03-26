@@ -50,6 +50,9 @@ namespace L5Sharp.Core
             : ExternalAccess.MostRestrictive(_member.ExternalAccess, Parent.ExternalAccess);
 
         /// <inheritdoc />
+        public MemberType MemberType => _member.MemberType;
+
+        /// <inheritdoc />
         public bool IsValueMember => _member.IsValueMember;
 
         /// <inheritdoc />

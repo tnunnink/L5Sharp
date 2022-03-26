@@ -29,12 +29,14 @@ namespace L5Sharp.Querying
         /// Determines if the current queried collection contains and elements.
         /// </summary>
         /// <returns>true if the queried collection contains at least on element.</returns>
+        /// <exception cref="ArgumentNullException">predicate is null.</exception>
         bool Any(Expression<Func<TResult, bool>> predicate);
 
         /// <summary>
         /// Returns the first element from the queried collection.
         /// </summary>
         /// <returns>The first element of the queried collection.</returns>
+        /// <exception cref="InvalidOperationException">The queried collection is empty.</exception>
         TResult First();
 
         /// <summary>
@@ -42,6 +44,9 @@ namespace L5Sharp.Querying
         /// </summary>
         /// <param name="predicate">An expression that defines the criteria for which to filter items.</param>
         /// <returns>The first element of the queried collection that matches the filter predicate.</returns>
+        /// <exception cref="ArgumentNullException">predicate is null.</exception>
+        /// <exception cref="InvalidOperationException">No element satisfies the condition in predicate.
+        /// -or- The queried collection is empty.</exception>
         TResult First(Expression<Func<TResult, bool>> predicate);
 
         /// <summary>
@@ -58,6 +63,7 @@ namespace L5Sharp.Querying
         /// <returns>
         /// The first element of the queried collection that matches the filter predicate if one exists; otherwise, null.
         /// </returns>
+        /// <exception cref="ArgumentNullException">predicate is null.</exception>
         TResult? FirstOrDefault(Expression<Func<TResult, bool>> predicate);
 
         /// <summary>
@@ -73,10 +79,11 @@ namespace L5Sharp.Querying
         /// <summary>
         /// Returns a collection of elements from the queried collection that satisfy the provided filter predicate.
         /// </summary>
-        /// <param name="predicate">The expression predicate that defines the criteria for which to match elements.</param>
+        /// <param name="predicate">The predicate that defines the criteria for which to match elements.</param>
         /// <returns>
         /// An <see cref="IEnumerable{T}"/> containing the elements that match the specified filter predicate.
         /// </returns>
+        /// <exception cref="ArgumentNullException">predicate is null.</exception>
         IEnumerable<TResult> Where(Expression<Func<TResult, bool>> predicate);
     }
 }

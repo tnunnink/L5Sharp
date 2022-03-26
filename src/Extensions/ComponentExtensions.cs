@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
+using L5Sharp.Core;
 using L5Sharp.Serialization;
 using L5Sharp.Serialization.Components;
 

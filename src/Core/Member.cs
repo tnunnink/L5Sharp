@@ -15,6 +15,7 @@ namespace L5Sharp.Core
             Radix = radix is not null && radix.SupportsType(DataType) ? radix : Radix.Default(DataType);
             ExternalAccess = externalAccess ?? ExternalAccess.ReadWrite;
             Description = description ?? string.Empty;
+            MemberType = MemberType.FromType(DataType);
         }
 
         /// <inheritdoc />
@@ -34,6 +35,9 @@ namespace L5Sharp.Core
 
         /// <inheritdoc />
         public ExternalAccess ExternalAccess { get; }
+        
+        /// <inheritdoc />
+        public MemberType MemberType { get; }
 
         /// <inheritdoc />
         public bool IsValueMember => DataType is IAtomicType;

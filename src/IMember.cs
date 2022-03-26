@@ -56,6 +56,12 @@ namespace L5Sharp
         /// Gets the <see cref="Enums.ExternalAccess"/> value of the current member.
         /// </summary>
         ExternalAccess ExternalAccess { get; }
+        
+        /// <summary>
+        /// Gets the <see cref="Enums.MemberType"/> of the member, indicating whether the member is a value, array, structure,
+        /// or string member.
+        /// </summary>
+        MemberType MemberType { get; }
 
         /// <summary>
         /// Indicates whether the current member instance is a value type member.

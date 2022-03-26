@@ -54,7 +54,7 @@ namespace L5Sharp.Serialization.Tests
         public void Serialize_OverLoaded_ShouldBeApproved()
         {
             var parameter = new Parameter<IDataType>("Test", new BOOL(), Radix.Binary, ExternalAccess.ReadOnly,
-                TagUsage.Output, "AliasTag", true, true, true, "This is a test");
+                TagUsage.Output, true, true, true, "This is a test");
 
             var xml = _serializer.Serialize(parameter);
 

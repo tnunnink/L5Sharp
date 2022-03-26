@@ -19,7 +19,7 @@ namespace L5Sharp.Serialization.Tests
         [SetUp]
         public void Setup()
         {
-            _serializer = new ArraySerializer(new StructureSerializer());
+            _serializer = new ArraySerializer();
         }
         
         [Test]

@@ -10,7 +10,7 @@ namespace L5Sharp.Core
     /// </summary>
     public class AddOnDefined : ComplexType
     {
-        internal AddOnDefined(ComponentName name, IEnumerable<IMember<IDataType>>? members = null) 
+        internal AddOnDefined(string name, IEnumerable<IMember<IDataType>>? members = null) 
             : base(name, members)
         {
         }

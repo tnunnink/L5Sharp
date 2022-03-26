@@ -41,9 +41,12 @@ namespace L5Sharp
         bool Visible { get; }
         
         /// <summary>
-        /// Gets the <c>ITag</c> that represents the alias of the current <c>IParameter</c>.
+        /// Gets the <c>ITag</c> instance that represents the alias for the parameter.
         /// </summary>
-        TagName Alias { get; }
+        /// <value>
+        /// An <see cref="ITag{TDataType}"/> component that represents the alias for the parameter.
+        /// </value>
+        ITag<TDataType>? Alias { get; }
         
         /// <summary>
         /// Gets the <c>IAtomicType</c> value that represents the default value of the <c>IParameter</c>.

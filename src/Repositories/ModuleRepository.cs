@@ -1,24 +1,22 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Xml.Linq;
 using L5Sharp.Core;
 using L5Sharp.Exceptions;
 using L5Sharp.Extensions;
 using L5Sharp.L5X;
 using L5Sharp.Querying;
-using L5Sharp.Serialization;
+using L5Sharp.Serialization.Components;
 
 namespace L5Sharp.Repositories
 {
-    /// <summary>
-    /// A repository for Logix <see cref="IModule"/> components.
-    /// </summary>
     internal class ModuleRepository : ModuleQuery, IModuleRepository
     {
-        public ModuleRepository(IEnumerable<XElement> elements, IL5XSerializer<IModule> serializer)
-            : base(elements, serializer)
+        private readonly L5XDocument _document;
+
+        public ModuleRepository(L5XDocument document)
+            : base(document.Components.Get<IModule>(), document.Serializers.Get<ModuleSerializer>())
         {
+            _document = document;
         }
 
         public void Add(IModule component)
@@ -33,10 +31,11 @@ namespace L5Sharp.Repositories
 
             Elements.Last().AddAfterSelf(element);
 
-            var modules = component.Bus.Modules();
+            _document.Index.Run();
+            /*var modules = component.Bus.Modules();
 
             foreach (var module in modules.Where(m => m.Name != component.Name))
-                Add(module);
+                Add(module);*/
         }
 
         public void Remove(ComponentName name)
@@ -70,11 +69,12 @@ namespace L5Sharp.Repositories
             }
 
             Elements.Last().AddAfterSelf(element);
-
-            var modules = component.Bus.Modules();
+            
+            _document.Index.Run();
+            /*var modules = component.Bus.Modules();
 
             foreach (var module in modules.Where(m => m.Name != component.Name))
-                Update(module);
+                Update(module);*/
         }
     }
 }

@@ -9,9 +9,10 @@ using L5Sharp.Serialization;
 namespace L5Sharp.Querying
 {
     /// <summary>
-    /// 
+    /// An abstract implementation of the <see cref="ILogixQuery{TResult}"/> interface, provided the essential default
+    /// api for querying a set of L5X elements. 
     /// </summary>
-    /// <typeparam name="TResult"></typeparam>
+    /// <typeparam name="TResult">The result type of the queries.</typeparam>
     public abstract class LogixQuery<TResult> : ILogixQuery<TResult>
     {
         /// <summary>
@@ -45,7 +46,11 @@ namespace L5Sharp.Querying
         /// <inheritdoc />
         public bool Any(Expression<Func<TResult, bool>> predicate)
         {
+            if (predicate is null)
+                throw new ArgumentNullException(nameof(predicate));
+            
             var filter = predicate.ToXExpression();
+            
             return Elements.Any(filter);
         }
 
@@ -55,7 +60,11 @@ namespace L5Sharp.Querying
         /// <inheritdoc />
         public TResult First(Expression<Func<TResult, bool>> predicate)
         {
+            if (predicate is null)
+                throw new ArgumentNullException(nameof(predicate));
+            
             var filter = predicate.ToXExpression();
+            
             return Serializer.Deserialize(Elements.First(filter));
         }
 
@@ -69,8 +78,13 @@ namespace L5Sharp.Querying
         /// <inheritdoc />
         public TResult? FirstOrDefault(Expression<Func<TResult, bool>> predicate)
         {
+            if (predicate is null)
+                throw new ArgumentNullException(nameof(predicate));
+            
             var filter = predicate.ToXExpression();
+            
             var result = Elements.FirstOrDefault(filter);
+            
             return result is not null ? Serializer.Deserialize(result) : default;
         }
 
@@ -81,7 +95,11 @@ namespace L5Sharp.Querying
         /// <inheritdoc />
         public IEnumerable<TResult> Where(Expression<Func<TResult, bool>> predicate)
         {
+            if (predicate is null)
+                throw new ArgumentNullException(nameof(predicate));
+            
             var filter = predicate.ToXExpression();
+            
             return Elements.Where(filter).Select(e => Serializer.Deserialize(e));
         }
     }

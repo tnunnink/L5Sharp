@@ -9,14 +9,21 @@ namespace L5Sharp.Serialization.Data
 {
     internal class FormattedDataSerializer : L5XSerializer<IDataType>
     {
-        private static readonly XName ElementName = L5XElement.Data.ToString();
-        private readonly DecoratedDataSerializer _decoratedDataSerializer;
-        private readonly AlarmDataSerializer _alarmDataSerializer;
+        private readonly L5XDocument? _document;
+        private readonly L5XElement _element;
 
-        public FormattedDataSerializer()
+        private DecoratedDataSerializer DecoratedDataSerializer => _document is not null
+            ? _document.Serializers.Get<DecoratedDataSerializer>()
+            : new DecoratedDataSerializer(_document);
+        
+        private AlarmDataSerializer AlarmDataSerializer => _document is not null
+            ? _document.Serializers.Get<AlarmDataSerializer>()
+            : new AlarmDataSerializer(_document);
+
+        public FormattedDataSerializer(L5XDocument? document = null, L5XElement? element = null)
         {
-            _decoratedDataSerializer = new DecoratedDataSerializer();
-            _alarmDataSerializer = new AlarmDataSerializer();
+            _element = element ?? L5XElement.Data;
+            _document = document;
         }
 
         public override XElement Serialize(IDataType component)
@@ -24,14 +31,15 @@ namespace L5Sharp.Serialization.Data
             if (component == null)
                 throw new ArgumentNullException(nameof(component));
 
-            var element = new XElement(ElementName);
+            var element = new XElement(_element.ToString());
 
             var format = TagDataFormat.FromDataType(component);
+            
             element.Add(new XAttribute(L5XAttribute.Format.ToString(), format));
 
             format
-                .When(TagDataFormat.Decorated).Then(() => element.Add(_decoratedDataSerializer.Serialize(component)))
-                .When(TagDataFormat.Alarm).Then(() => element.Add(_alarmDataSerializer.Serialize(component)))
+                .When(TagDataFormat.Decorated).Then(() => element.Add(DecoratedDataSerializer.Serialize(component)))
+                .When(TagDataFormat.Alarm).Then(() => element.Add(AlarmDataSerializer.Serialize(component)))
                 .When(TagDataFormat.String).Then(() =>
                 {
                     var str = (STRING)component;
@@ -47,7 +55,7 @@ namespace L5Sharp.Serialization.Data
             if (element == null)
                 throw new ArgumentNullException(nameof(element));
 
-            if (element.Name != ElementName)
+            if (element.Name != _element.ToString())
                 throw new ArgumentException($"Element '{element.Name}' not valid for the serializer {GetType()}.");
 
             TagDataFormat.TryFromName(element.Attribute(L5XAttribute.Format.ToString())?.Value, out var format);
@@ -59,11 +67,11 @@ namespace L5Sharp.Serialization.Data
             format
                 .When(TagDataFormat.Decorated).Then(() =>
                 {
-                    dataType = _decoratedDataSerializer.Deserialize(element.Elements().First());
+                    dataType = DecoratedDataSerializer.Deserialize(element.Elements().First());
                 })
                 .When(TagDataFormat.Alarm).Then(() =>
                 {
-                    dataType = _alarmDataSerializer.Deserialize(element.Elements().First());
+                    dataType = AlarmDataSerializer.Deserialize(element.Elements().First());
                 })
                 .When(TagDataFormat.String).Then(() =>
                 {

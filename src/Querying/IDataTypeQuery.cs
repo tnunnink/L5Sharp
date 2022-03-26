@@ -1,8 +1,8 @@
 ﻿namespace L5Sharp.Querying
 {
     /// <summary>
-    /// A <see cref="IComponentQuery{TResult}"/> that adds <see cref="IComplexType"/> specific queries over the source collection,
-    /// enabling more advanced fluent query configuration. 
+    /// A fluent <see cref="IComponentQuery{TResult}"/> that adds advanced querying for <see cref="IComplexType"/> elements
+    /// within the L5X context.  
     /// </summary>
     public interface IDataTypeQuery : IComponentQuery<IComplexType>
     {

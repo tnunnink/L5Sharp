@@ -1,4 +1,5 @@
-﻿using L5Sharp.Enums;
+﻿using System;
+using L5Sharp.Enums;
 
 namespace L5Sharp.Core
 {
@@ -6,12 +7,24 @@ namespace L5Sharp.Core
     public sealed class Parameter<TDataType> : Member<TDataType>, IParameter<TDataType> where TDataType : IDataType
     {
         internal Parameter(string name, TDataType dataType, Radix? radix = null,
-            ExternalAccess? externalAccess = null, TagUsage? usage = null, TagName? alias = null,
+            ExternalAccess? externalAccess = null, TagUsage? usage = null,
             bool required = false, bool visible = false, bool constant = false,
             string? description = null) : base(name, dataType, radix, externalAccess, description)
         {
             Usage = usage ?? TagUsage.AoiDefault(dataType);
-            Alias = alias ?? TagName.Empty;
+            Default = DataType is IAtomicType atomicType ? atomicType : default;
+            Required = Usage == TagUsage.InOut || required;
+            Visible = Required || visible;
+            Constant = constant;
+        }
+        
+        internal Parameter(string name, ITag<TDataType> alias, Radix? radix = null,
+            ExternalAccess? externalAccess = null, TagUsage? usage = null,
+            bool required = false, bool visible = false, bool constant = false,
+            string? description = null) : base(name, alias.DataType, radix, externalAccess, description)
+        {
+            Alias = alias ?? throw new ArgumentNullException(nameof(alias));
+            Usage = usage ?? TagUsage.AoiDefault(alias.DataType);
             Default = DataType is IAtomicType atomicType ? atomicType : default;
             Required = Usage == TagUsage.InOut || required;
             Visible = Required || visible;
@@ -39,21 +52,20 @@ namespace L5Sharp.Core
         /// Visible parameters are those that will be displayed on the instruction interface. All non-atomic parameters
         /// are visible by default. If not provided, will default to false. 
         /// </param>
-        /// <param name="alias"></param>
         /// <param name="constant">A value indicating whether the parameter is a constant value.
         /// If not provided, will default to false.</param>
         /// <param name="description">A string description of the parameter.
         /// If not provided, will default to an empty string.</param>
         public Parameter(ComponentName name, TDataType dataType, TagUsage? usage = null,
             Radix? radix = null, ExternalAccess? externalAccess = null,
-            bool required = default, bool visible = default, TagName? alias = null, bool constant = default,
+            bool required = default, bool visible = default, bool constant = default,
             string? description = null) 
-            : this(name, dataType, radix, externalAccess, usage, alias, required, visible, constant, description)
+            : this(name, dataType, radix, externalAccess, usage, required, visible, constant, description)
         {
         }
 
         /// <inheritdoc />
-        public TagType TagType => Alias.IsEmpty ? TagType.Base : TagType.Alias;
+        public TagType TagType => Alias is null ? TagType.Base : TagType.Alias;
 
         /// <inheritdoc />
         public TagUsage Usage { get; }
@@ -65,7 +77,7 @@ namespace L5Sharp.Core
         public bool Visible { get; }
 
         /// <inheritdoc />
-        public TagName Alias { get; }
+        public ITag<TDataType>? Alias { get; }
 
         /// <inheritdoc />
         public IAtomicType? Default { get; }

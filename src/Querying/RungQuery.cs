@@ -11,7 +11,8 @@ namespace L5Sharp.Querying
 {
     internal class RungQuery : LogixQuery<Rung>, IRungQuery
     {
-        public RungQuery(IEnumerable<XElement> elements) : base(elements, new RungSerializer())
+        public RungQuery(IEnumerable<XElement> elements) 
+            : base(elements, new RungSerializer())
         {
         }
 

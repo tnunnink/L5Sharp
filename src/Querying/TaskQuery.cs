@@ -8,13 +8,16 @@ using L5Sharp.Serialization;
 
 namespace L5Sharp.Querying
 {
-    internal class TaskQuery : ComponentQuery<ITask>, ITaskQuery
+    /// <inheritdoc cref="L5Sharp.Querying.ITaskQuery" />
+    public class TaskQuery : ComponentQuery<ITask>, ITaskQuery
     {
+        /// <inheritdoc />
         public TaskQuery(IEnumerable<XElement> elements, IL5XSerializer<ITask> serializer) 
             : base(elements, serializer)
         {
         }
 
+        /// <inheritdoc />
         public ITaskQuery WithProgram(ComponentName program)
         {
             var results = Elements.Where(e =>

@@ -8,17 +8,16 @@ namespace L5Sharp.Serialization.Data
 {
     internal class ArrayElementSerializer : L5XSerializer<IMember<IDataType>>
     {
+        private readonly L5XDocument? _document;
         private static readonly XName ElementName = L5XElement.Element.ToString();
-        private readonly IL5XSerializer<IComplexType> _structureSerializer;
 
-        public ArrayElementSerializer(StructureSerializer structureSerializer)
-        {
-            _structureSerializer = structureSerializer;
-        }
+        private StructureSerializer StructureSerializer => _document is not null
+            ? _document.Serializers.Get<StructureSerializer>()
+            : new StructureSerializer(_document);
 
-        public ArrayElementSerializer(L5XDocument document)
+        public ArrayElementSerializer(L5XDocument? document = null)
         {
-            _structureSerializer = document.Serializers().Get<StructureSerializer>();
+            _document = document;
         }
 
         public override XElement Serialize(IMember<IDataType> component)
@@ -37,7 +36,7 @@ namespace L5Sharp.Serialization.Data
                     break;
                 case IComplexType complexType:
                 {
-                    element.Add(_structureSerializer.Serialize(complexType));
+                    element.Add(StructureSerializer.Serialize(complexType));
                     break;
                 }
             }
@@ -58,7 +57,7 @@ namespace L5Sharp.Serialization.Data
 
             IDataType dataType = value is not null
                 ? DataType.Atomic(element.Parent?.DataTypeName()!, value)
-                : _structureSerializer.Deserialize(element.Element(L5XElement.Structure.ToString())!);
+                : StructureSerializer.Deserialize(element.Element(L5XElement.Structure.ToString())!);
 
             return new Member<IDataType>(index, dataType);
         }

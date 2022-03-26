@@ -10,41 +10,46 @@ namespace L5Sharp.Serialization.Data
 {
     internal class StructureSerializer : L5XSerializer<IComplexType>
     {
+        private readonly L5XDocument? _document;
         private static readonly XName ElementName = L5XElement.Structure.ToString();
-        private readonly IL5XSerializer<IMember<IDataType>> _dataValueMemberSerializer;
-        private readonly IL5XSerializer<IMember<IDataType>> _arrayMemberSerializer;
-        private readonly IL5XSerializer<IMember<IDataType>> _structureMemberSerializer;
-        private readonly StringStructureSerializer _stringStructureSerializer;
 
-        public StructureSerializer()
-        {
-            _dataValueMemberSerializer = new DataValueMemberSerializer();
-            _arrayMemberSerializer = new ArrayMemberSerializer(this);
-            _structureMemberSerializer = new StructureMemberSerializer(this);
-            _stringStructureSerializer = new StringStructureSerializer(ElementName);
-        }
+        private DataValueMemberSerializer DataValueMemberSerializer => _document is not null
+            ? _document.Serializers.Get<DataValueMemberSerializer>()
+            : new DataValueMemberSerializer();
+        
+        private ArrayMemberSerializer ArrayMemberSerializer => _document is not null
+            ? _document.Serializers.Get<ArrayMemberSerializer>()
+            : new ArrayMemberSerializer(_document);
+        
+        private StructureMemberSerializer StructureMemberSerializer => _document is not null
+            ? _document.Serializers.Get<StructureMemberSerializer>()
+            : new StructureMemberSerializer(_document);
+        
+        //todo non standard..do we care?
+        private StringStructureSerializer StringStructureSerializer => new(ElementName);
 
-        public StructureSerializer(L5XDocument document)
+        public StructureSerializer(L5XDocument? document = null)
         {
-            _dataValueMemberSerializer = document.Serializers().Get<DataValueMemberSerializer>();
-            _arrayMemberSerializer = document.Serializers().Get<ArrayMemberSerializer>();
+            _document = document;
         }
 
         public override XElement Serialize(IComplexType component)
         {
-            if (component is null)
-                throw new ArgumentNullException(nameof(component));
-
-            //String types are treated differently than other types.
-            if (component is IStringType stringType)
-                return _stringStructureSerializer.Serialize(stringType);
+            switch (component)
+            {
+                case null:
+                    throw new ArgumentNullException(nameof(component));
+                //String types are treated differently than other types.
+                case IStringType stringType:
+                    return StringStructureSerializer.Serialize(stringType);
+            }
 
             var element = new XElement(ElementName);
             element.Add(new XAttribute(L5XElement.DataType.ToString(), component.Name));
 
-            var members = component.Members.Select(m => m.IsValueMember ? _dataValueMemberSerializer.Serialize(m)
-                : m.IsArrayMember ? _arrayMemberSerializer.Serialize(m)
-                : m.IsStructureMember ? _structureMemberSerializer.Serialize(m)
+            var members = component.Members.Select(m => m.IsValueMember ? DataValueMemberSerializer.Serialize(m)
+                : m.IsArrayMember ? ArrayMemberSerializer.Serialize(m)
+                : m.IsStructureMember ? StructureMemberSerializer.Serialize(m)
                 : throw new InvalidOperationException("Could not determine member type."));
 
             element.Add(members);
@@ -67,7 +72,7 @@ namespace L5Sharp.Serialization.Data
             if (element.Elements().Any(e => string.Equals(e.Attribute(L5XAttribute.DataType.ToString())?.Value, name,
                     StringComparison.OrdinalIgnoreCase)))
             {
-                return _stringStructureSerializer.Deserialize(element);
+                return StringStructureSerializer.Deserialize(element);
             }
 
             var members = element.Elements().Select(e => GetSerializer(e).Deserialize(e)).ToList();
@@ -77,9 +82,9 @@ namespace L5Sharp.Serialization.Data
 
         private IL5XSerializer<IMember<IDataType>> GetSerializer(XElement element)
         {
-            return element.Name == L5XElement.DataValueMember.ToString() ? _dataValueMemberSerializer
-                : element.Name == L5XElement.ArrayMember.ToString() ? _arrayMemberSerializer
-                : element.Name == L5XElement.StructureMember.ToString() ? _structureMemberSerializer
+            return element.Name == L5XElement.DataValueMember.ToString() ? DataValueMemberSerializer
+                : element.Name == L5XElement.ArrayMember.ToString() ? ArrayMemberSerializer
+                : element.Name == L5XElement.StructureMember.ToString() ? StructureMemberSerializer
                 : throw new ArgumentException();
         }
     }

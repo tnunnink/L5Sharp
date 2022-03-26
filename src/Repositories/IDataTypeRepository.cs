@@ -7,6 +7,5 @@ namespace L5Sharp.Repositories
     /// </summary>
     public interface IDataTypeRepository : IComponentRepository<IComplexType>, IDataTypeQuery
     {
-        
     }
 }

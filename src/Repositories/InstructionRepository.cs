@@ -1,16 +1,18 @@
-﻿using System.Collections.Generic;
-using System.Xml.Linq;
-using L5Sharp.Core;
+﻿using L5Sharp.Core;
+using L5Sharp.L5X;
 using L5Sharp.Querying;
-using L5Sharp.Serialization;
+using L5Sharp.Serialization.Components;
 
 namespace L5Sharp.Repositories
 {
-    internal class AddOnInstructionRepository : AddOnInstructionQuery, IComponentRepository<IAddOnInstruction>
+    internal class InstructionRepository : InstructionQuery, IInstructionRepository
     {
-        public AddOnInstructionRepository(IEnumerable<XElement> elements, IL5XSerializer<IAddOnInstruction> serializer) 
-            : base(elements, serializer)
+        private readonly L5XDocument _document;
+
+        public InstructionRepository(L5XDocument document)
+            : base(document.Components.Get<IAddOnInstruction>(), document.Serializers.Get<AddOnInstructionSerializer>())
         {
+            _document = document;
         }
 
         public void Add(IAddOnInstruction component)

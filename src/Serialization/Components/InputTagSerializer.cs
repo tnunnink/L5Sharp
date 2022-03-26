@@ -8,71 +8,68 @@ using L5Sharp.Serialization.Data;
 
 namespace L5Sharp.Serialization.Components
 {
-    internal class ModuleTagSerializer : L5XSerializer<ITag<IDataType>>
+    internal class InputTagSerializer : L5XSerializer<ITag<IDataType>>
     {
-        private readonly XName _elementName;
-        private readonly string _defaultSuffix;
-        private readonly L5XAttribute? _suffixAttributeName;
-        private readonly FormattedDataSerializer _formattedDataSerializer;
-        private readonly TagPropertySerializer _commentSerializer;
-        private readonly TagPropertySerializer _unitsSerializer;
+        private readonly L5XDocument? _document;
+        private const string DefaultSuffix = "I";
+        private static readonly XName ElementName = L5XElement.InputTag.ToString();
+        
+        private FormattedDataSerializer FormattedDataSerializer => _document is not null
+            ? _document.Serializers.Get<FormattedDataSerializer>()
+            : new FormattedDataSerializer(_document);
 
-        public ModuleTagSerializer(XName elementName, string defaultSuffix)
+        public InputTagSerializer(L5XDocument? document = null)
         {
-            _elementName = elementName;
-            _defaultSuffix = defaultSuffix;
-            _suffixAttributeName = _elementName == L5XElement.InputTag.ToString() ? L5XAttribute.InputTagSuffix
-                : _elementName == L5XElement.OutputTag.ToString() ? L5XAttribute.OutputTagSuffix
-                : null;
-            _formattedDataSerializer = new FormattedDataSerializer();
-            _commentSerializer = new TagPropertySerializer(L5XElement.Comment.ToString());
-            _unitsSerializer = new TagPropertySerializer(L5XElement.EngineeringUnit.ToString());
+            _document = document;
         }
-
+        
         public override XElement Serialize(ITag<IDataType> component)
         {
             if (component == null)
                 throw new ArgumentNullException(nameof(component));
 
-            var element = new XElement(_elementName);
+            var element = new XElement(ElementName);
+            
             element.Add(new XAttribute(L5XAttribute.ExternalAccess.ToString(), component.ExternalAccess));
-            element.Add(_formattedDataSerializer.Serialize(component.DataType));
+            
+            element.Add(FormattedDataSerializer.Serialize(component.DataType));
 
             return element;
         }
-
+        
         public override ITag<IDataType> Deserialize(XElement element)
         {
             if (element == null)
                 throw new ArgumentNullException(nameof(element));
 
-            if (element.Name != _elementName)
+            if (element.Name != ElementName)
                 throw new ArgumentException($"Element '{element.Name}' not valid for the serializer {GetType()}.");
 
             var tagName = DetermineTagName(element);
+            
             var access = element.Attribute(L5XAttribute.ExternalAccess.ToString())?.Value?.Parse<ExternalAccess>();
+            
             var data = element
                 .Descendants(L5XElement.Data.ToString())
                 .First(e => e.Attribute(L5XAttribute.Format.ToString())?.Value == TagDataFormat.Decorated.Name);
-            var dataType = _formattedDataSerializer.Deserialize(data);
+            
+            var dataType = FormattedDataSerializer.Deserialize(data);
 
-            _commentSerializer.SetBaseName(tagName);
+            var commentSerializer = new TagPropertySerializer(L5XElement.Comment, tagName);
             var comments = new TagPropertyCollection<string>(element.Descendants(L5XElement.Comment.ToString())
-                .Select(e => _commentSerializer.Deserialize(e)));
+                .Select(e => commentSerializer.Deserialize(e)));
 
-            _unitsSerializer.SetBaseName(tagName);
+            var unitsSerializer = new TagPropertySerializer(L5XElement.EngineeringUnit, tagName);
             var units = new TagPropertyCollection<string>(element.Descendants(L5XElement.EngineeringUnit.ToString())
-                .Select(e => _unitsSerializer.Deserialize(e)));
+                .Select(e => unitsSerializer.Deserialize(e)));
 
             return new Tag<IDataType>(tagName, dataType, externalAccess: access, comments: comments, units: units);
         }
-
+        
         private string DetermineTagName(XNode element)
         {
-            var suffix = _suffixAttributeName is not null
-                ? element.Ancestors(L5XElement.Connection.ToString()).First().Attribute(_suffixAttributeName.ToString())
-                    ?.Value ?? _defaultSuffix
-                : _defaultSuffix;
+            var suffix = element.Ancestors(L5XElement.Connection.ToString())
+                .First().Attribute(L5XAttribute.InputTagSuffix.ToString())?.Value ?? DefaultSuffix;
 
             var moduleName = element.Ancestors(L5XElement.Module.ToString())
                 .FirstOrDefault()?.Attribute(L5XAttribute.Name.ToString())?.Value;

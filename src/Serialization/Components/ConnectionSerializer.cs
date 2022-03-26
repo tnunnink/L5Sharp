@@ -10,14 +10,20 @@ namespace L5Sharp.Serialization.Components
 {
     internal class ConnectionSerializer : L5XSerializer<Connection>
     {
+        private readonly L5XDocument? _document;
         private static readonly XName ElementName = L5XElement.Connection.ToString();
-        private readonly ModuleTagSerializer _inputTagSerializer;
-        private readonly ModuleTagSerializer _outputTagSerializer;
 
-        public ConnectionSerializer()
+        private InputTagSerializer InputTagSerializer => _document is not null
+            ? _document.Serializers.Get<InputTagSerializer>()
+            : new InputTagSerializer(_document);
+        
+        private OutputTagSerializer OutputTagSerializer => _document is not null
+            ? _document.Serializers.Get<OutputTagSerializer>()
+            : new OutputTagSerializer(_document);
+
+        public ConnectionSerializer(L5XDocument? document = null)
         {
-            _inputTagSerializer = new ModuleTagSerializer(L5XElement.InputTag.ToString(), "I");
-            _outputTagSerializer = new ModuleTagSerializer(L5XElement.OutputTag.ToString(), "O");
+            _document = document;
         }
 
         public override XElement Serialize(Connection component)
@@ -44,13 +50,13 @@ namespace L5Sharp.Serialization.Components
 
             if (component.Input is not null)
             {
-                var inputTag = _inputTagSerializer.Serialize(component.Input);
+                var inputTag = InputTagSerializer.Serialize(component.Input);
                 element.Add(inputTag);
             }
 
             if (component.Output is not null)
             {
-                var outputTag = _outputTagSerializer.Serialize(component.Output);
+                var outputTag = OutputTagSerializer.Serialize(component.Output);
                 element.Add(outputTag);
             }
 
@@ -90,10 +96,10 @@ namespace L5Sharp.Serialization.Components
             var outputSuffix = element.Attribute(L5XAttribute.OutputTagSuffix.ToString())?.Value ?? "O";
             
             var inputTagElement = element.Descendants(L5XElement.InputTag.ToString()).FirstOrDefault();
-            var inputTag = inputTagElement is not null ? _inputTagSerializer.Deserialize(inputTagElement) : null;
+            var inputTag = inputTagElement is not null ? InputTagSerializer.Deserialize(inputTagElement) : null;
 
             var outputTagElement = element.Descendants(L5XElement.OutputTag.ToString()).FirstOrDefault();
-            var outputTag = outputTagElement is not null ? _outputTagSerializer.Deserialize(outputTagElement) : null;
+            var outputTag = outputTagElement is not null ? OutputTagSerializer.Deserialize(outputTagElement) : null;
 
             return new Connection(name, rpi, type, inputCxnPoint, inputSize, outputCxnPoint, outputSize,
                 priority, inputConnectionType, inputProductionTrigger, outputRedundantOwner, unicast, eventId,

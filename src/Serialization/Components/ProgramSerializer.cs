@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Xml.Linq;
 using L5Sharp.Core;
+using L5Sharp.Enums;
 using L5Sharp.Extensions;
 using L5Sharp.L5X;
 
@@ -9,14 +10,21 @@ namespace L5Sharp.Serialization.Components
 {
     internal class ProgramSerializer : L5XSerializer<IProgram>
     {
+        private readonly L5XDocument? _document;
         private static readonly XName ElementName = L5XElement.Program.ToString();
-        private readonly TagSerializer _tagSerializer;
-        private readonly RoutineSerializer _routineSerializer;
+        
+        private TagSerializer TagSerializer => _document is not null
+            ? _document.Serializers.Get<TagSerializer>()
+            : new TagSerializer(_document);
+        
+        private RoutineSerializer RoutineSerializer => _document is not null
+            ? _document.Serializers.Get<RoutineSerializer>()
+            : new RoutineSerializer(_document);
+        
 
-        public ProgramSerializer()
+        public ProgramSerializer(L5XDocument? document = null)
         {
-            _tagSerializer = new TagSerializer();
-            _routineSerializer = new RoutineSerializer();
+            _document = document;
         }
 
         public override XElement Serialize(IProgram component)
@@ -36,12 +44,12 @@ namespace L5Sharp.Serialization.Components
             element.Add(new XAttribute(L5XAttribute.Disabled.ToString(), component.Disabled));
             element.Add(new XAttribute(L5XAttribute.UseAsFolder.ToString(), component.UseAsFolder));
 
-            var tags = new XElement(nameof(component.Tags));
-            tags.Add(component.Tags.Select(t => _tagSerializer.Serialize(t)));
+            var tags = new XElement(L5XElement.Tags.ToString());
+            tags.Add(component.Tags.Select(t => TagSerializer.Serialize(t)));
             element.Add(tags);
 
-            var routines = new XElement(nameof(component.Routines));
-            routines.Add(component.Routines.Select(r => _routineSerializer.Serialize(r)));
+            var routines = new XElement(L5XElement.Routines.ToString());
+            routines.Add(component.Routines.Select(r => RoutineSerializer.Serialize(r)));
             element.Add(routines);
 
             return element;
@@ -64,10 +72,11 @@ namespace L5Sharp.Serialization.Components
             var useAsFolder = element.Attribute(L5XAttribute.UseAsFolder.ToString())?.Value.Parse<bool>() ?? default;
 
             var tags = element.Descendants(L5XElement.Tag.ToString())
-                .Select(e => _tagSerializer.Deserialize(e));
+                .Select(e => TagSerializer.Deserialize(e));
 
             var routines = element.Descendants(L5XElement.Routine.ToString())
-                .Select(e => _routineSerializer.Deserialize(e));
+                .Where(e => e.Attribute(L5XAttribute.Type.ToString())?.Value == RoutineType.Rll.Value)
+                .Select(e => RoutineSerializer.Deserialize(e));
 
             return new Program(name, description, mainRoutineName, faultRoutineName,
                 useAsFolder, testEdits, disabled, tags, routines);

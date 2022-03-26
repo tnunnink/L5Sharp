@@ -7,13 +7,19 @@ namespace L5Sharp.Serialization.Data
 {
     internal class AlarmDataSerializer : L5XSerializer<IDataType>
     {
-        private readonly AlarmDigitalParametersSerializer _digitalParametersSerializer;
-        private readonly AlarmAnalogParametersSerializer _analogParametersSerializer;
+        private readonly L5XDocument? _document;
 
-        public AlarmDataSerializer()
+        private AlarmDigitalParametersSerializer AlarmDigitalParametersSerializer => _document is not null
+            ? _document.Serializers.Get<AlarmDigitalParametersSerializer>()
+            : new AlarmDigitalParametersSerializer();
+        
+        private AlarmAnalogParametersSerializer AlarmAnalogParametersSerializer => _document is not null
+            ? _document.Serializers.Get<AlarmAnalogParametersSerializer>()
+            : new AlarmAnalogParametersSerializer();
+        
+        public AlarmDataSerializer(L5XDocument? document = null)
         {
-            _digitalParametersSerializer = new AlarmDigitalParametersSerializer();
-            _analogParametersSerializer = new AlarmAnalogParametersSerializer();
+            _document = document;
         }
 
         public override XElement Serialize(IDataType component)
@@ -23,8 +29,8 @@ namespace L5Sharp.Serialization.Data
 
             return component switch
             {
-                ALARM_DIGITAL digital => _digitalParametersSerializer.Serialize(digital),
-                ALARM_ANALOG analog => _analogParametersSerializer.Serialize(analog),
+                ALARM_DIGITAL digital => AlarmDigitalParametersSerializer.Serialize(digital),
+                ALARM_ANALOG analog => AlarmAnalogParametersSerializer.Serialize(analog),
                 _ => throw new ArgumentException(
                     $"Data type {component.GetType()} is not valid for the serializer {GetType()}")
             };
@@ -41,8 +47,8 @@ namespace L5Sharp.Serialization.Data
             // Only following element names are valid for the alarm format.
             return name switch
             {
-                L5XElement.AlarmDigitalParameters => _digitalParametersSerializer.Deserialize(element),
-                L5XElement.AlarmAnalogParameters => _analogParametersSerializer.Deserialize(element),
+                L5XElement.AlarmDigitalParameters => AlarmDigitalParametersSerializer.Deserialize(element),
+                L5XElement.AlarmAnalogParameters => AlarmAnalogParametersSerializer.Deserialize(element),
                 _ => throw new ArgumentException($"Element '{name}' not valid for the serializer {GetType()}.")
             };
         }

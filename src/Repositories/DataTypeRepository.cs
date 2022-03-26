@@ -1,48 +1,86 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using System.Linq;
-using System.Xml.Linq;
 using L5Sharp.Core;
-using L5Sharp.Enums;
+using L5Sharp.Exceptions;
 using L5Sharp.Extensions;
+using L5Sharp.L5X;
 using L5Sharp.Querying;
-using L5Sharp.Serialization;
+using L5Sharp.Serialization.Components;
 
 namespace L5Sharp.Repositories
 {
     internal class DataTypeRepository : DataTypeQuery, IDataTypeRepository
     {
-        public DataTypeRepository(IEnumerable<XElement> elements, IL5XSerializer<IComplexType> serializer) 
-            : base(elements, serializer)
+        private readonly L5XDocument _document;
+
+        public DataTypeRepository(L5XDocument document)
+            : base(document.Components.Get<IComplexType>(), document.Serializers.Get<DataTypeSerializer>())
         {
+            _document = document;
         }
 
         public void Add(IComplexType component)
         {
-            /*base.Add(component);
+            if (component == null)
+                throw new ArgumentNullException(nameof(component));
+
+            if (!Elements.Any())
+                _document.Containers.Create<IComplexType>();
+
+            if (Elements.Any(e => e.ComponentName() == component.Name))
+                throw new ComponentNameCollisionException(component.Name, component.GetType());
+
+            var element = Serializer.Serialize(component);
+
+            Elements.Last().AddAfterSelf(element);
             
-            var dependents = component.GetDependentTypes()
+            _document.Index.Run();
+
+            /*var dependents = component.GetDependentTypes()
                 .Where(t => t.Class == DataTypeClass.User)
                 .Cast<IUserDefined>();
 
             foreach (var dependent in dependents)
-                base.Add(dependent);*/
+                Add(dependent);*/
         }
-
+        
         public void Remove(ComponentName name)
         {
-            throw new System.NotImplementedException();
+            if (name is null)
+                throw new ArgumentNullException(nameof(name));
+
+            var memberTypes = Elements.SelectMany(e =>
+                e.Descendants(L5XElement.Member.ToString()).Select(m => m.DataTypeName()));
+
+            if (memberTypes.Any(s => s == name))
+                throw new ComponentReferencedException(name, typeof(IComplexType));
+
+            Elements.FirstOrDefault(e => e.ComponentName() == name)?.Remove();
+            
+            _document.Index.Run();
         }
 
         public void Update(IComplexType component)
         {
-            /*base.Update(component);
+            if (component == null)
+                throw new ArgumentNullException(nameof(component));
             
-            var dependents = component.GetDependentTypes()
-                .Where(t => t.Class == DataTypeClass.User)
-                .Cast<IUserDefined>();
+            if (!Elements.Any())
+                _document.Containers.Create<IComplexType>();
 
-            foreach (var dependent in dependents)
-                base.Update(dependent);*/
+            var element = Serializer.Serialize(component);
+
+            var current = Elements.FirstOrDefault(x => x.ComponentName() == component.Name);
+
+            if (current is not null)
+            {
+                current.ReplaceWith(element);
+                return;
+            }
+
+            Elements.Last().AddAfterSelf(element);
+            
+            _document.Index.Run();
         }
     }
 }

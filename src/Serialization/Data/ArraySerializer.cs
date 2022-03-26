@@ -10,17 +10,16 @@ namespace L5Sharp.Serialization.Data
 {
     internal class ArraySerializer : L5XSerializer<IArrayType<IDataType>>
     {
+        private readonly L5XDocument? _document;
         private static readonly XName ElementName = L5XElement.Array.ToString();
-        private readonly ArrayElementSerializer _elementSerializer;
 
-        public ArraySerializer(StructureSerializer structureSerializer)
-        {
-            _elementSerializer = new ArrayElementSerializer(structureSerializer);
-        }
+        private ArrayElementSerializer ArrayElementSerializer => _document is not null
+            ? _document.Serializers.Get<ArrayElementSerializer>()
+            : new ArrayElementSerializer(_document);
 
-        public ArraySerializer(L5XDocument document)
+        public ArraySerializer(L5XDocument? document = null)
         {
-            _elementSerializer = document.Serializers().Get<ArrayElementSerializer>();
+            _document = document;
         }
 
         public override XElement Serialize(IArrayType<IDataType> component)
@@ -35,7 +34,7 @@ namespace L5Sharp.Serialization.Data
             if (component.First().Radix != Radix.Null)
                 element.Add(new XAttribute(L5XAttribute.Radix.ToString(), component.First().Radix));
             
-            var elements = component.Select(e => _elementSerializer.Serialize(e));
+            var elements = component.Select(e => ArrayElementSerializer.Serialize(e));
             element.Add(elements);
 
             return element;
@@ -52,7 +51,7 @@ namespace L5Sharp.Serialization.Data
             var dimensions = Dimensions.Parse(element.Attribute(L5XAttribute.Dimensions.ToString())?.Value!);
             Radix.TryFromValue(element.Attribute(L5XAttribute.Radix.ToString())?.Value!, out var radix);
             
-            var members = element.Elements().Select(e => _elementSerializer.Deserialize(e));
+            var members = element.Elements().Select(e => ArrayElementSerializer.Deserialize(e));
             
             return new ArrayType<IDataType>(dimensions!, members.Select(m => m.DataType).ToList(), radix);
         }

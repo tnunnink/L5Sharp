@@ -12,26 +12,15 @@ namespace L5Sharp.Serialization.Components
     internal class TagSerializer : L5XSerializer<ITag<IDataType>>
     {
         private readonly L5XDocument? _document;
-        private readonly XName _elementName;
-        private readonly TagPropertySerializer _commentSerializer;
-        private readonly TagPropertySerializer _unitsSerializer;
-        private readonly FormattedDataSerializer _formattedDataSerializer;
+        private static readonly XName ElementName = L5XElement.Tag.ToString();
 
-        public TagSerializer(XName? elementName = null)
-        {
-            _elementName = elementName ?? L5XElement.Tag.ToString();
-            _commentSerializer = new TagPropertySerializer(L5XElement.Comment.ToString());
-            _unitsSerializer = new TagPropertySerializer(L5XElement.EngineeringUnit.ToString());
-            _formattedDataSerializer = new FormattedDataSerializer();
-        }
+        private FormattedDataSerializer FormattedDataSerializer => _document is not null
+            ? _document.Serializers.Get<FormattedDataSerializer>()
+            : new FormattedDataSerializer(_document);
 
-        public TagSerializer(L5XDocument document, XName? elementName = null)
+        public TagSerializer(L5XDocument? document = null)
         {
             _document = document;
-            _elementName = elementName ?? L5XElement.Tag.ToString();
-            _commentSerializer = new TagPropertySerializer(L5XElement.Comment.ToString());
-            _unitsSerializer = new TagPropertySerializer(L5XElement.EngineeringUnit.ToString());
-            _formattedDataSerializer = new FormattedDataSerializer();
         }
 
         public override XElement Serialize(ITag<IDataType> component)
@@ -39,7 +28,7 @@ namespace L5Sharp.Serialization.Components
             if (component == null)
                 throw new ArgumentNullException(nameof(component));
 
-            var element = new XElement(_elementName);
+            var element = new XElement(ElementName);
             element.AddComponentName(component.Name);
             element.AddComponentDescription(component.Description);
             element.Add(new XAttribute(L5XAttribute.TagType.ToString(), component.TagType));
@@ -54,12 +43,19 @@ namespace L5Sharp.Serialization.Components
             element.Add(new XAttribute(L5XAttribute.ExternalAccess.ToString(), component.ExternalAccess));
 
             if (component.Comments.Any())
-                element.Add(component.Comments.Select(c => _commentSerializer.Serialize(c)));
-
+            {
+                var commentSerializer = new TagPropertySerializer(L5XElement.Comment, component.TagName);
+                element.Add(component.Comments.Select(c => commentSerializer.Serialize(c)));
+            }
+            
             if (component.EngineeringUnits.Any())
-                element.Add(component.EngineeringUnits.Select(u => _unitsSerializer.Serialize(u)));
+            {
+                var unitsSerializer = new TagPropertySerializer(L5XElement.EngineeringUnit, component.TagName);
+                element.Add(component.EngineeringUnits.Select(u => unitsSerializer.Serialize(u)));
+            }
+                
 
-            var data = _formattedDataSerializer.Serialize(component.DataType);
+            var data = FormattedDataSerializer.Serialize(component.DataType);
             element.Add(data);
 
             return element;
@@ -70,13 +66,13 @@ namespace L5Sharp.Serialization.Components
             if (element == null)
                 throw new ArgumentNullException(nameof(element));
 
-            if (element.Name != _elementName)
+            if (element.Name != ElementName)
                 throw new ArgumentException($"Element '{element.Name}' not valid for the serializer {GetType()}.");
 
             var name = element.ComponentName();
             var description = element.ComponentDescription();
             var dataType = _document is not null
-                ? _document.Index().LookupDataType(element.DataTypeName())
+                ? _document.Index.LookupDataType(element.DataTypeName())
                 : DataType.Create(element.DataTypeName());
             var dimensions = element.Attribute(L5XAttribute.Dimensions.ToString())?.Value.Parse<Dimensions>();
             var radix = element.Attribute(L5XAttribute.Radix.ToString())?.Value.Parse<Radix>();
@@ -85,13 +81,13 @@ namespace L5Sharp.Serialization.Components
             var alias = element.Attribute(L5XAttribute.AliasFor.ToString())?.Value.Parse<TagName>();
             var constant = element.Attribute(L5XAttribute.Constant.ToString())?.Value.Parse<bool>() ?? default;
 
-            _commentSerializer.SetBaseName(name);
+            var commentSerializer = new TagPropertySerializer(L5XElement.Comment, name);
             var comments = new TagPropertyCollection<string>(element.Descendants(L5XElement.Comment.ToString())
-                .Select(e => _commentSerializer.Deserialize(e)));
+                .Select(e => commentSerializer.Deserialize(e)));
 
-            _unitsSerializer.SetBaseName(name);
+            var unitsSerializer = new TagPropertySerializer(L5XElement.EngineeringUnit, name);
             var units = new TagPropertyCollection<string>(element.Descendants(L5XElement.EngineeringUnit.ToString())
-                .Select(e => _unitsSerializer.Deserialize(e)));
+                .Select(e => unitsSerializer.Deserialize(e)));
 
             var type = dimensions is not null && !dimensions.IsEmpty
                 ? new ArrayType<IDataType>(dimensions, dataType, radix, access, description)
@@ -105,7 +101,7 @@ namespace L5Sharp.Serialization.Components
 
             if (formattedData is null) return tag;
 
-            var data = _formattedDataSerializer.Deserialize(formattedData);
+            var data = FormattedDataSerializer.Deserialize(formattedData);
             tag.SetData(data);
             return tag;
         }

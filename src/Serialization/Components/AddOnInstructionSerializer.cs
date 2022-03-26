@@ -10,27 +10,28 @@ namespace L5Sharp.Serialization.Components
 {
     internal class AddOnInstructionSerializer : L5XSerializer<IAddOnInstruction>
     {
+        private readonly L5XDocument? _document;
         private const string DateTimeFormat = "yyyy-MM-dd'T'HH:mm:ss.fff'Z'";
         private static readonly XName ElementName = L5XElement.AddOnInstructionDefinition.ToString();
-        private readonly ParameterSerializer _parameterSerializer;
-        private readonly TagSerializer _tagSerializer;
-        private readonly RoutineSerializer _routineSerializer;
 
-        public AddOnInstructionSerializer()
+        private ParameterSerializer ParameterSerializer => _document is not null
+            ? _document.Serializers.Get<ParameterSerializer>()
+            : new ParameterSerializer(_document);
+        
+        private LocalTagSerializer LocalTagSerializer => _document is not null
+            ? _document.Serializers.Get<LocalTagSerializer>()
+            : new LocalTagSerializer(_document);
+        
+        private RoutineSerializer RoutineSerializer => _document is not null
+            ? _document.Serializers.Get<RoutineSerializer>()
+            : new RoutineSerializer(_document);
+
+        public AddOnInstructionSerializer(L5XDocument? document = null)
         {
-            _parameterSerializer = new ParameterSerializer();
-            _tagSerializer = new TagSerializer(L5XElement.LocalTag.ToString());
-            _routineSerializer = new RoutineSerializer();
+            _document = document;
         }
 
-        public AddOnInstructionSerializer(L5XDocument document)
-        {
-            _parameterSerializer = new ParameterSerializer(document);
-            _tagSerializer = new TagSerializer(document, L5XElement.LocalTag.ToString());
-            _routineSerializer = new RoutineSerializer();
-        }
-
-        public XElement Serialize(IAddOnInstruction component)
+        public override XElement Serialize(IAddOnInstruction component)
         {
             if (component == null)
                 throw new ArgumentNullException(nameof(component));
@@ -51,30 +52,31 @@ namespace L5Sharp.Serialization.Components
             element.Add(new XAttribute(L5XAttribute.CreatedDate.ToString(),
                 component.CreatedDate.ToString(DateTimeFormat)));
             element.Add(new XAttribute(L5XAttribute.CreatedBy.ToString(), component.CreatedBy));
-            element.Add(new XAttribute(L5XAttribute.EditedDate.ToString(), 
+            element.Add(new XAttribute(L5XAttribute.EditedDate.ToString(),
                 component.EditedDate.ToString(DateTimeFormat)));
             element.Add(new XAttribute(L5XAttribute.EditedBy.ToString(), component.EditedBy));
             element.Add(new XAttribute(L5XAttribute.SoftwareRevision.ToString(), $"v{component.SoftwareRevision}"));
             if (!component.AdditionalHelpText.IsEmpty())
-                element.Add(new XElement(L5XElement.AdditionalHelpText.ToString(), new XCData(component.AdditionalHelpText)));
+                element.Add(new XElement(L5XElement.AdditionalHelpText.ToString(),
+                    new XCData(component.AdditionalHelpText)));
             element.Add(new XAttribute(L5XAttribute.IsEncrypted.ToString(), component.IsEncrypted));
 
             var parameters = new XElement(L5XElement.Parameters.ToString());
-            parameters.Add(component.Parameters.Select(p => _parameterSerializer.Serialize(p)));
+            parameters.Add(component.Parameters.Select(p => ParameterSerializer.Serialize(p)));
             element.Add(parameters);
-            
+
             var tags = new XElement(L5XElement.LocalTags.ToString());
-            tags.Add(component.LocalTags.Select(t => _tagSerializer.Serialize(t)));
+            tags.Add(component.LocalTags.Select(t => LocalTagSerializer.Serialize(t)));
             element.Add(tags);
 
             var routines = new XElement(L5XElement.Routines.ToString());
-            routines.Add(component.Routines.Select(r => _routineSerializer.Serialize(r)));
+            routines.Add(component.Routines.Select(r => RoutineSerializer.Serialize(r)));
             element.Add(routines);
-            
+
             return element;
         }
 
-        public IAddOnInstruction Deserialize(XElement element)
+        public override IAddOnInstruction Deserialize(XElement element)
         {
             if (element == null)
                 throw new ArgumentNullException(nameof(element));
@@ -106,13 +108,13 @@ namespace L5Sharp.Serialization.Components
             var isEncrypted = element.Attribute(L5XAttribute.IsEncrypted.ToString())?.Value.Parse<bool>() ?? default;
 
             var parameters = element.Descendants(L5XElement.Parameter.ToString())
-                .Select(e => _parameterSerializer.Deserialize(e));
-            
+                .Select(e => ParameterSerializer.Deserialize(e));
+
             var tags = element.Descendants(L5XElement.LocalTag.ToString())
-                .Select(e => _tagSerializer.Deserialize(e));
-            
+                .Select(e => LocalTagSerializer.Deserialize(e));
+
             var routines = element.Descendants(L5XElement.Routine.ToString())
-                .Select(e => _routineSerializer.Deserialize(e));
+                .Select(e => RoutineSerializer.Deserialize(e));
 
             return new AddOnInstruction(name, description, revision, revisionExtension, revisionNote, vendor,
                 executePrescan, executePostscan, executeEnableInFalse, createdDate, createdBy, editedDate, editedBy,

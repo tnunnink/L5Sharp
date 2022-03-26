@@ -8,12 +8,16 @@ namespace L5Sharp.Serialization.Components
 {
     internal class LadderLogicSerializer : L5XSerializer<ILadderLogic>
     {
+        private readonly L5XDocument? _document;
         private static readonly XName ElementName = L5XElement.RLLContent.ToString();
-        private readonly RungSerializer _rungSerializer;
 
-        public LadderLogicSerializer()
+        private RungSerializer RungSerializer => _document is not null
+            ? _document.Serializers.Get<RungSerializer>()
+            : new RungSerializer();
+
+        public LadderLogicSerializer(L5XDocument? document = null)
         {
-            _rungSerializer = new RungSerializer();
+            _document = document;
         }
 
         public override XElement Serialize(ILadderLogic component)
@@ -22,7 +26,7 @@ namespace L5Sharp.Serialization.Components
                 throw new ArgumentNullException(nameof(component));
 
             var element = new XElement(ElementName);
-            element.Add(component.Select(r => _rungSerializer.Serialize(r)));
+            element.Add(component.Select(r => RungSerializer.Serialize(r)));
 
             return element;
         }
@@ -35,7 +39,7 @@ namespace L5Sharp.Serialization.Components
             if (element.Name != ElementName)
                 throw new ArgumentException($"Element '{element.Name}' not valid for the serializer {GetType()}.");
 
-            var rungs = element.Descendants(L5XElement.Rung.ToString()).Select(e => _rungSerializer.Deserialize(e));
+            var rungs = element.Descendants(L5XElement.Rung.ToString()).Select(e => RungSerializer.Deserialize(e));
 
             return new LadderLogic(rungs);
         }

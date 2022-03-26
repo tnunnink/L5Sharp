@@ -20,7 +20,7 @@ namespace L5Sharp.Serialization.Tests
         [SetUp]
         public void Setup()
         {
-            _serializer = new TagPropertySerializer(L5XElement.Comment.ToString());
+            _serializer = new TagPropertySerializer(L5XElement.Comment, "Test");
         }
 
         [Test]

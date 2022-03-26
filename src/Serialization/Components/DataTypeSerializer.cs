@@ -10,17 +10,16 @@ namespace L5Sharp.Serialization.Components
 {
     internal class DataTypeSerializer : L5XSerializer<IComplexType>
     {
+        private readonly L5XDocument? _document;
         private static readonly XName ElementName = L5XElement.DataType.ToString();
-        private readonly IL5XSerializer<IMember<IDataType>> _memberSerializer;
 
-        public DataTypeSerializer()
+        private MemberSerializer MemberSerializer => _document is not null
+            ? _document.Serializers.Get<MemberSerializer>()
+            : new MemberSerializer(_document);
+        
+        public DataTypeSerializer(L5XDocument? document = null)
         {
-            _memberSerializer = new MemberSerializer();
-        }
-
-        public DataTypeSerializer(L5XDocument document)
-        {
-            _memberSerializer = new MemberSerializer(document);
+            _document = document;
         }
 
         public override XElement Serialize(IComplexType component)
@@ -35,7 +34,7 @@ namespace L5Sharp.Serialization.Components
             element.Add(new XAttribute(L5XAttribute.Class.ToString(), component.Class));
 
             var members = new XElement(nameof(component.Members));
-            members.Add(component.Members.Select(m => _memberSerializer.Serialize(m)));
+            members.Add(component.Members.Select(m => MemberSerializer.Serialize(m)));
             element.Add(members);
 
             return element;
@@ -54,7 +53,7 @@ namespace L5Sharp.Serialization.Components
             var family = element.Attribute(L5XAttribute.Family.ToString())?.Value.Parse<DataTypeFamily>();
             var members = element.Descendants(L5XElement.Member.ToString())
                 .Where(e => !bool.Parse(e.Attribute(L5XAttribute.Hidden.ToString())?.Value!))
-                .Select(e => _memberSerializer.Deserialize(e))
+                .Select(e => MemberSerializer.Deserialize(e))
                 .ToList();
 
             return family == DataTypeFamily.String

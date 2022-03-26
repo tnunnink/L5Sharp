@@ -92,7 +92,7 @@ namespace L5Sharp.L5X
         
         
         /// <summary>
-        /// Parses the provided string input to the specified generic type base ont predefined Logix parsing functions or type converters.
+        /// Parses the provided string input to the specified type using the predefined L5X parser functions.
         /// </summary>
         /// <param name="input">The string input to parse.</param>
         /// <typeparam name="T">The type of property to return.</typeparam>

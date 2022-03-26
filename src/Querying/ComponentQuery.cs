@@ -23,23 +23,33 @@ namespace L5Sharp.Querying
         }
 
         /// <inheritdoc />
-        public bool Any(ComponentName name) => Elements.Any(c => c.ComponentName() == name);
+        public bool Any(ComponentName name)
+        {
+            if (name is null)
+                throw new ArgumentNullException(nameof(name));
+
+            return Elements.Any(c => c.ComponentName() == name);
+        }
 
         /// <inheritdoc />
         public TComponent? Named(ComponentName name)
         {
             if (name is null)
                 throw new ArgumentNullException(nameof(name));
-            
+
             var component = Elements.FirstOrDefault(e => e.ComponentName() == name);
-            
-            return  component is not null ? Serializer.Deserialize(component) : default;
+
+            return component is not null ? Serializer.Deserialize(component) : default;
         }
 
         /// <inheritdoc />
         public IEnumerable<TComponent> Named(ICollection<ComponentName> names)
         {
+            if (names is null)
+                throw new ArgumentNullException(nameof(names));
+            
             var components = Elements.Where(e => names.Contains(e.ComponentName()));
+            
             return components.Select(e => Serializer.Deserialize(e));
         }
 

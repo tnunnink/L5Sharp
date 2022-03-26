@@ -13,6 +13,7 @@ namespace L5Sharp.L5X
     internal class L5XIndex
     {
         private readonly L5XDocument _document;
+        private readonly Dictionary<Type, Dictionary<string, XElement>> _indexMap;
         private readonly Dictionary<string, XElement> _dataTypeIndex;
         private readonly Dictionary<string, XElement> _moduleIndex;
         private readonly Dictionary<string, XElement> _moduleTypeIndex;
@@ -22,14 +23,37 @@ namespace L5Sharp.L5X
         public L5XIndex(L5XDocument document)
         {
             _document = document ?? throw new ArgumentNullException(nameof(document));
+            _indexMap = new Dictionary<Type, Dictionary<string, XElement>>();
+            
             _dataTypeIndex = new Dictionary<string, XElement>();
             _moduleIndex = new Dictionary<string, XElement>();
             _moduleTypeIndex = new Dictionary<string, XElement>();
             _instructionIndex = new Dictionary<string, XElement>();
             _tagIndex = new Dictionary<string, XElement>();
+            
+            _indexMap.Add(typeof(IComplexType), _dataTypeIndex);
+            _indexMap.Add(typeof(StructureType), _moduleTypeIndex);
+            _indexMap.Add(typeof(IModule), _moduleIndex);
+            _indexMap.Add(typeof(IAddOnInstruction), _instructionIndex);
+            _indexMap.Add(typeof(ITag<IDataType>), _tagIndex);
 
             IndexDocument();
         }
+
+        /*public void Add<T>(string name, XElement element)
+        {
+            var index = _indexMap.ContainsKey(typeof(T)) ? _indexMap[typeof(T)] : throw new ArgumentException("");
+            index.Add(name, element);
+        }
+        
+        
+        public void Remove<T>(string name)
+        {
+            var index = _indexMap.ContainsKey(typeof(T)) ? _indexMap[typeof(T)] : throw new ArgumentException("");
+            index.Add(name, element);
+        }*/
+
+        public void Run() => IndexDocument();
 
         public IDataType LookupDataType(string name)
         {
@@ -37,13 +61,13 @@ namespace L5Sharp.L5X
                 return DataType.Create(name);
 
             if (_dataTypeIndex.TryGetValue(name, out var userDefined))
-                return _document.Serializers().Get<DataTypeSerializer>().Deserialize(userDefined);
+                return _document.Serializers.Get<DataTypeSerializer>().Deserialize(userDefined);
 
             if (_moduleTypeIndex.TryGetValue(name, out var moduleDefined))
-                return _document.Serializers().Get<StructureSerializer>().Deserialize(moduleDefined);
+                return _document.Serializers.Get<StructureSerializer>().Deserialize(moduleDefined);
             
             if (_instructionIndex.TryGetValue(name, out var addOnDefined))
-                return _document.Serializers().Get<AddOnInstructionSerializer>().Deserialize(addOnDefined);
+                return _document.Serializers.Get<AddOnInstructionSerializer>().Deserialize(addOnDefined);
 
             return new UNDEFINED(name);
         }

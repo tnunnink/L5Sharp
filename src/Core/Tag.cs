@@ -100,6 +100,9 @@ namespace L5Sharp.Core
         public ExternalAccess ExternalAccess => _tagMember.ExternalAccess;
 
         /// <inheritdoc />
+        public MemberType MemberType => _tagMember.MemberType;
+
+        /// <inheritdoc />
         public bool IsValueMember => _tagMember.IsValueMember;
 
         /// <inheritdoc />

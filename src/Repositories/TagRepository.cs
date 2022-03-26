@@ -1,17 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Xml.Linq;
 using L5Sharp.Core;
+using L5Sharp.L5X;
 using L5Sharp.Querying;
-using L5Sharp.Serialization;
+using L5Sharp.Serialization.Components;
 
 namespace L5Sharp.Repositories
 {
     internal class TagRepository : TagQuery, ITagRepository
     {
-        public TagRepository(IEnumerable<XElement> elements, IL5XSerializer<ITag<IDataType>> serializer) 
-            : base(elements, serializer)
+        private readonly L5XDocument _document;
+
+        public TagRepository(L5XDocument document) 
+            : base(document.Components.Get<ITag<IDataType>>(), document.Serializers.Get<TagSerializer>())
         {
+            _document = document;
         }
 
         /*public TagRepository(L5XContext context, ComponentName program) : base(context)

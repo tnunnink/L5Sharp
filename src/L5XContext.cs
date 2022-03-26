@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Linq;
 using System.Xml.Linq;
 using L5Sharp.Core;
+using L5Sharp.Extensions;
 using L5Sharp.L5X;
 using L5Sharp.Querying;
 using L5Sharp.Repositories;
@@ -11,13 +13,15 @@ namespace L5Sharp
     /// <inheritdoc />
     public class L5XContext : ILogixContext
     {
+        private readonly L5XDocument _l5X;
+
         /// <summary>
         /// Creates a new <see cref="L5XContext"/> instance with the provided <see cref="L5XDocument"/>.
         /// </summary>
         /// <param name="l5X">The <see cref="L5XDocument"/> instance that represents the loaded L5X.</param>
         private L5XContext(L5XDocument l5X)
         {
-            L5X = l5X ?? throw new ArgumentNullException(nameof(l5X));
+            _l5X = l5X ?? throw new ArgumentNullException(nameof(l5X));
         }
 
         /// <summary>
@@ -73,92 +77,58 @@ namespace L5Sharp
         public static L5XContext Create<TComponent>(TComponent component)
             where TComponent : ILogixComponent => new(L5XDocument.Create(component));
 
-        /// <summary>
-        /// Gets the underlying <see cref="L5XDocument"/> that the current context represents. 
-        /// </summary>
-        internal readonly L5XDocument L5X;
-
-        /*/// <summary>
-        /// Gets the <see cref="L5XSerializers"/> instance for the current context containing root component serializer
-        /// instances. 
-        /// </summary>
-        internal readonly L5XSerializers Serializer;
-
-        /// <summary>
-        /// An index of all current <see cref="IDataType"/> elements available in the L5X file.
-        /// </summary>
-        internal readonly L5XIndexers Indexer;*/
 
         /// <summary>
         /// Gets the value of the schema revision for the current L5X context.
         /// </summary>
-        public Revision SchemaRevision => L5X.SchemaRevision;
+        public Revision SchemaRevision => _l5X.SchemaRevision;
 
         /// <summary>
         /// Gets the value of the software revision for the current L5X context.
         /// </summary>
-        public Revision SoftwareRevision => L5X.SoftwareRevision;
+        public Revision SoftwareRevision => _l5X.SoftwareRevision;
 
         /// <summary>
         /// Gets the name of the Logix component that is the target of the current L5X context.
         /// </summary>
-        public ComponentName TargetName => L5X.TargetName;
+        public ComponentName TargetName => _l5X.TargetName;
 
         /// <summary>
         /// Gets the type of Logix component that is the target of the current L5X context.
         /// </summary>
-        public string TargetType => L5X.TargetType;
+        public string TargetType => _l5X.TargetType;
 
         /// <summary>
         /// Gets the value indicating whether the current L5X is contextual..
         /// </summary>
-        public bool ContainsContext => L5X.ContainsContext;
+        public bool ContainsContext => _l5X.ContainsContext;
 
         /// <summary>
         /// Gets the owner that exported the current L5X file.
         /// </summary>
-        public string Owner => L5X.Owner;
+        public string Owner => _l5X.Owner;
 
         /// <summary>
         /// Gets the date time that the L5X file was exported.
         /// </summary>
-        public DateTime ExportDate => L5X.ExportDate;
+        public DateTime ExportDate => _l5X.ExportDate;
 
         /// <inheritdoc />
-        public IController? Controller() => throw new NotImplementedException();
+        public IController? Controller() => _l5X.Controller is not null
+            ? _l5X.Serializers.Get<ControllerSerializer>().Deserialize(_l5X.Controller)
+            : null;
 
         /// <inheritdoc />
-        public IComponentRepository<IComplexType> DataTypes()  
-        {
-            var components = L5X.GetComponents<IComplexType>();
-            var serializer = L5X.Serializers().Get<DataTypeSerializer>();
-            
-            return new DataTypeRepository(components, serializer);
-        }
+        public IDataTypeRepository DataTypes() => new DataTypeRepository(_l5X);
 
         /// <inheritdoc />
-        public IModuleRepository Modules()
-        {
-            var components = L5X.GetComponents<IModule>();
-            var serializer = L5X.Serializers().Get<ModuleSerializer>();
-            
-            return new ModuleRepository(components, serializer);
-        }
+        public IModuleRepository Modules() => new ModuleRepository(_l5X);
 
         /// <inheritdoc />
-        public IComponentRepository<IAddOnInstruction> Instructions()
-        {
-            throw new NotImplementedException();
-        }
+        public IInstructionRepository Instructions() => new InstructionRepository(_l5X);
 
         /// <inheritdoc />
-        public ITagRepository Tags()
-        {
-            var components = L5X.GetComponents<ITag<IDataType>>();
-            var serializer = L5X.Serializers().Get<TagSerializer>();
-            
-            return new TagRepository(components, serializer);
-        }
+        public ITagRepository Tags() => new TagRepository(_l5X);
 
         /// <inheritdoc />
         public ITagRepository Tags(ComponentName program)
@@ -167,31 +137,32 @@ namespace L5Sharp
         }
 
         /// <inheritdoc />
-        public IComponentRepository<IProgram> Programs()
-        {
-            throw new NotImplementedException();
-        }
+        public IProgramRepository Programs() => new ProgramRepository(_l5X);
 
         /// <inheritdoc />
-        public ITaskQuery Tasks()
-        {
-            throw new NotImplementedException();
-        }
+        public ITaskQuery Tasks() =>
+            new TaskQuery(_l5X.Components.Get<ITask>(), _l5X.Serializers.Get<TaskSerializer>());
 
         /// <inheritdoc />
         public IRungQuery Rungs()
         {
-            throw new NotImplementedException();
+            var elements = _l5X.Content.Descendants(L5XElement.Rung.ToString());
+            return new RungQuery(elements);
         }
 
         /// <inheritdoc />
         public IRungQuery Rungs(ComponentName program)
         {
-            throw new NotImplementedException();
+            var elements = _l5X.Content
+                .Descendants(L5XElement.Program.ToString())
+                .FirstOrDefault(e => e.ComponentName() == program)
+                ?.Descendants(L5XElement.Rung.ToString()) ?? Enumerable.Empty<XElement>();
+
+            return new RungQuery(elements);
         }
 
         /// <inheritdoc />
-        public override string ToString() => L5X.Content.ToString();
+        public override string ToString() => _l5X.Content.ToString();
 
         /// <summary>
         /// Saves the current content of the <see cref="L5XContext"/> to the specified file,
@@ -200,7 +171,7 @@ namespace L5Sharp
         /// <param name="fileName">The name of the file to save.</param>
         public void Save(string fileName)
         {
-            L5X.Save(fileName);
+            _l5X.Save(fileName);
         }
     }
 }
