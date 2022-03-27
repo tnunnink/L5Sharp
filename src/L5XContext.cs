@@ -77,42 +77,12 @@ namespace L5Sharp
         public static L5XContext Create<TComponent>(TComponent component)
             where TComponent : ILogixComponent => new(L5XDocument.Create(component));
 
+        
+        public L5XInfo Info => _l5X.Info;
 
-        /// <summary>
-        /// Gets the value of the schema revision for the current L5X context.
-        /// </summary>
-        public Revision SchemaRevision => _l5X.SchemaRevision;
-
-        /// <summary>
-        /// Gets the value of the software revision for the current L5X context.
-        /// </summary>
-        public Revision SoftwareRevision => _l5X.SoftwareRevision;
-
-        /// <summary>
-        /// Gets the name of the Logix component that is the target of the current L5X context.
-        /// </summary>
-        public ComponentName TargetName => _l5X.TargetName;
-
-        /// <summary>
-        /// Gets the type of Logix component that is the target of the current L5X context.
-        /// </summary>
-        public string TargetType => _l5X.TargetType;
-
-        /// <summary>
-        /// Gets the value indicating whether the current L5X is contextual..
-        /// </summary>
-        public bool ContainsContext => _l5X.ContainsContext;
-
-        /// <summary>
-        /// Gets the owner that exported the current L5X file.
-        /// </summary>
-        public string Owner => _l5X.Owner;
-
-        /// <summary>
-        /// Gets the date time that the L5X file was exported.
-        /// </summary>
-        public DateTime ExportDate => _l5X.ExportDate;
-
+        /// <inheritdoc />
+        public bool IsChanged => _l5X.IsChanged;
+        
         /// <inheritdoc />
         public IController? Controller() => _l5X.Controller is not null
             ? _l5X.Serializers.Get<ControllerSerializer>().Deserialize(_l5X.Controller)
@@ -133,7 +103,11 @@ namespace L5Sharp
         /// <inheritdoc />
         public ITagRepository Tags(ComponentName program)
         {
-            throw new NotImplementedException();
+            if (program is null)
+                throw new ArgumentNullException(nameof(program));
+
+            //todo what should we do here?
+            return new TagRepository(_l5X);
         }
 
         /// <inheritdoc />
@@ -160,18 +134,14 @@ namespace L5Sharp
 
             return new RungQuery(elements);
         }
+        
+        /// <inheritdoc />
+        public void Save(string fileName) => _l5X.Save(fileName);
 
         /// <inheritdoc />
-        public override string ToString() => _l5X.Content.ToString();
+        public void AcceptChanges() => _l5X.AcceptChanges();
 
-        /// <summary>
-        /// Saves the current content of the <see cref="L5XContext"/> to the specified file,
-        /// overwriting an existing file, if it exists.
-        /// </summary>
-        /// <param name="fileName">The name of the file to save.</param>
-        public void Save(string fileName)
-        {
-            _l5X.Save(fileName);
-        }
+        /// <inheritdoc />
+        public void RejectChanges() => _l5X.RejectChanges();
     }
 }

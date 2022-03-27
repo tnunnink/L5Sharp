@@ -31,7 +31,7 @@ namespace L5Sharp.Serialization.Components
 
             if (!component.ScheduledPrograms.Any()) return element;
 
-            var scheduled = new XElement(nameof(component.ScheduledPrograms));
+            var scheduled = new XElement(L5XElement.ScheduledPrograms.ToString());
 
             scheduled.Add(component.ScheduledPrograms
                 .Select(p => new XElement(L5XElement.ScheduledProgram.ToString(),

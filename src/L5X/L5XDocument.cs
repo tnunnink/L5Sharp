@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Globalization;
 using System.Reflection;
 using System.Xml;
@@ -13,13 +14,11 @@ namespace L5Sharp.L5X
     /// A wrapper class around an <see cref="XDocument"/> that provided generic methods for getting various
     /// component elements based on component type. Also performs validation on the provided L5X XDocument.
     /// </summary>
-    internal class L5XDocument
+    internal class L5XDocument : IRevertibleChangeTracking
     {
         private static readonly XDeclaration DefaultDeclaration = new("1.0", "UTF-8", "yes");
         private const string DefaultRevision = "1.0";
-        private const string DateFormat = "ddd MMM d HH:mm:ss yyyy";
         private const string L5XSchema = "L5Sharp.Resources.L5X.xsd";
-        private readonly XDocument _document;
 
         /// <summary>
         /// Creates a new <see cref="L5XDocument"/> that wraps the provided <see cref="XDocument"/>.
@@ -30,11 +29,13 @@ namespace L5Sharp.L5X
             //todo need to decide how to get valid schema file.
             //We should probably create our own using exports and xsd generation tools...
             //ValidateFile(document);
-
-            _document = document ?? throw new ArgumentNullException(nameof(document));
+            
+            Source = document.Root ?? throw new ArgumentNullException(nameof(document));
+            Content = new XElement(Source);
             Components = new L5XComponents(this);
             Containers = new L5XContainers(this);
             Index = new L5XIndex(this);
+            Info = new L5XInfo(this);
             Serializers = new L5XSerializers(this);
         }
 
@@ -47,7 +48,7 @@ namespace L5Sharp.L5X
         internal static L5XDocument Create<TComponent>(TComponent component)
             where TComponent : ILogixComponent
         {
-            var document = new XDocument(DefaultDeclaration);
+            /*var document = new XDocument(DefaultDeclaration);
 
             var content = new XElement(L5XElement.RSLogix5000Content.ToString());
             content.Add(new XAttribute(nameof(SchemaRevision), DefaultRevision));
@@ -76,54 +77,22 @@ namespace L5Sharp.L5X
             
             content.Add(controller);
 
-            return new L5XDocument(document);
+            return new L5XDocument(document);*/
+            throw new NotImplementedException();
         }
-
-        /// <summary>
-        /// Gets the root <see cref="XElement"/> for the current L5X file.
-        /// </summary>
-        public XElement Content => _document.Root ?? throw new ArgumentNullException(nameof(_document.Root));
 
         /// <summary>
         /// Gets the controller <see cref="XElement"/> for the current L5X file.
         /// </summary>
-        public XElement? Controller => _document.Root?.Element(L5XElement.Controller.ToString());
+        public XElement? Controller => Content.Element(L5XElement.Controller.ToString());
 
+        
+        public XElement Source { get; }
+        
         /// <summary>
-        /// Gets the value of the schema revision for the current L5X context.
+        /// Gets the root content <see cref="XElement"/> of the L5X file.
         /// </summary>
-        public Revision SchemaRevision => Revision.Parse(Content.Attribute(nameof(SchemaRevision))?.Value!);
-
-        /// <summary>
-        /// Gets the value of the software revision for the current L5X context.
-        /// </summary>
-        public Revision SoftwareRevision => Revision.Parse(Content.Attribute(nameof(SoftwareRevision))?.Value!);
-
-        /// <summary>
-        /// Gets the name of the Logix component that is the target of the current L5X context.
-        /// </summary>
-        public ComponentName TargetName => new(Content.Attribute(nameof(TargetName))?.Value!);
-
-        /// <summary>
-        /// Gets the type of Logix component that is the target of the current L5X context.
-        /// </summary>
-        public string TargetType => Content.Attribute(nameof(TargetType))?.Value!;
-
-        /// <summary>
-        /// Gets the value indicating whether the current L5X is contextual..
-        /// </summary>
-        public bool ContainsContext => bool.Parse(Content.Attribute(nameof(ContainsContext))?.Value!);
-
-        /// <summary>
-        /// Gets the owner that exported the current L5X file.
-        /// </summary>
-        public string Owner => Content.Attribute(nameof(Owner))?.Value!;
-
-        /// <summary>
-        /// Gets the date time that the L5X file was exported.
-        /// </summary>
-        public DateTime ExportDate => DateTime.ParseExact(Content.Attribute(nameof(ExportDate))?.Value, DateFormat,
-            CultureInfo.CurrentCulture);
+        public XElement Content { get; private set; }
 
         /// <summary>
         /// Gets the <see cref="L5XComponents"/> for the current <see cref="L5XDocument"/>
@@ -139,6 +108,9 @@ namespace L5Sharp.L5X
         /// Gets the <see cref="L5XIndex"/> for the current <see cref="L5XDocument"/>
         /// </summary>
         public L5XIndex Index { get; }
+        
+        
+        public L5XInfo Info { get; }
 
         /// <summary>
         /// Gets the <see cref="L5XSerializers"/> for the current <see cref="L5XDocument"/>
@@ -151,8 +123,22 @@ namespace L5Sharp.L5X
         /// <param name="fileName">The full path for which to save the current L5X content.</param>
         public void Save(string fileName)
         {
-            _document.Save(fileName);
+            AcceptChanges();
+
+            var document = new XDocument(DefaultDeclaration, Source);
+            
+            document.Save(fileName);
         }
+
+        public void AcceptChanges()
+        {
+            Source.ReplaceWith(Content);
+            Index.Run();
+        }
+        
+        public bool IsChanged => Content.ToString() != Source.ToString();
+        
+        public void RejectChanges() => Content = new XElement(Source);
 
         private void ValidateFile(XDocument document)
         {

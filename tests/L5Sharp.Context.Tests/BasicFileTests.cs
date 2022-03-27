@@ -26,13 +26,13 @@ namespace L5Sharp.Context.Tests
         {
             var context = L5XContext.Load(Known.L5X);
 
-            context.SchemaRevision.Should().Be(new Revision());
-            context.SoftwareRevision.Should().Be(new Revision(32, 2));
-            context.TargetName.Should().Be(new ComponentName("TestController"));
-            context.TargetType.Should().Be("Controller");
-            context.ContainsContext.Should().BeFalse();
-            context.Owner.Should().Be("tnunnink, EN Engineering");
-            context.ExportDate.Year.Should().BeGreaterOrEqualTo(2021);
+            context.Info.SchemaRevision.Should().Be(new Revision());
+            context.Info.SoftwareRevision.Should().Be(new Revision(32, 2));
+            context.Info.TargetName.Should().Be(new ComponentName("TestController"));
+            context.Info.TargetType.Should().Be("Controller");
+            context.Info.ContainsContext.Should().BeFalse();
+            context.Info.Owner.Should().Be("tnunnink, EN Engineering");
+            context.Info.ExportDate.Year.Should().BeGreaterOrEqualTo(2021);
         }
 
         [Test]

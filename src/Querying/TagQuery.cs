@@ -2,21 +2,24 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
+using L5Sharp.Core;
 using L5Sharp.L5X;
 using L5Sharp.Serialization;
 
 namespace L5Sharp.Querying
 {
-    /// <inheritdoc cref="L5Sharp.Querying.ITagQuery" />
-    public class TagQuery : ComponentQuery<ITag<IDataType>>, ITagQuery
+    internal class TagQuery : ComponentQuery<ITag<IDataType>>, ITagQuery
     {
-        /// <inheritdoc />
-        protected TagQuery(IEnumerable<XElement> elements, IL5XSerializer<ITag<IDataType>> serializer) 
+        public TagQuery(IEnumerable<XElement> elements, IL5XSerializer<ITag<IDataType>> serializer) 
             : base(elements, serializer)
         {
         }
 
-        /// <inheritdoc />
+        public ITagQuery InProgram(ComponentName programName)
+        {
+            throw new NotImplementedException();
+        }
+
         public ITagQuery WithType<TDataType>() where TDataType : IDataType
         {
             var typeName = typeof(TDataType).Name;

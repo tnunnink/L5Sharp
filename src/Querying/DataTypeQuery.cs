@@ -8,16 +8,13 @@ using L5Sharp.Serialization;
 
 namespace L5Sharp.Querying
 {
-    /// <inheritdoc cref="L5Sharp.Querying.IDataTypeQuery" />
-    public class DataTypeQuery : ComponentQuery<IComplexType>, IDataTypeQuery
+    internal class DataTypeQuery : ComponentQuery<IComplexType>, IDataTypeQuery
     {
-        /// <inheritdoc />
-        protected DataTypeQuery(IEnumerable<XElement> elements, IL5XSerializer<IComplexType> serializer) 
+        public DataTypeQuery(IEnumerable<XElement> elements, IL5XSerializer<IComplexType> serializer) 
             : base(elements, serializer)
         {
         }
-
-        /// <inheritdoc />
+        
         public IDataTypeQuery DependingOn(string typeName)
         {
             if (typeName is null)

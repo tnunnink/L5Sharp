@@ -1,5 +1,4 @@
-﻿using L5Sharp.Core;
-using L5Sharp.Querying;
+﻿using L5Sharp.Querying;
 
 namespace L5Sharp.Repositories
 {
@@ -10,19 +9,19 @@ namespace L5Sharp.Repositories
     public interface IComponentRepository<TComponent> : IComponentQuery<TComponent> where TComponent : ILogixComponent
     {
         /// <summary>
-        /// Adds the provided component to the current context.
+        /// Adds the provided component to the current logix context.
         /// </summary>
         /// <param name="component">The component to add to the context.</param>
         void Add(TComponent component);
 
         /// <summary>
-        /// Removes the specified component from the current context.
+        /// Removes the provided component from the current logix context.
         /// </summary>
-        /// <param name="name">The name of the component to remove from the context.</param>
-        void Remove(ComponentName name);
+        /// <param name="component">The component to remove from the context.</param>
+        void Remove(TComponent component);
 
         /// <summary>
-        /// Updates a component with the provided component on the context.
+        /// Updates an existing component with the provided component in the current logix context.
         /// </summary>
         /// <param name="component">The component to update on the context.</param>
         void Update(TComponent component);

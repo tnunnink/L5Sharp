@@ -1,4 +1,5 @@
-﻿using L5Sharp.Core;
+﻿using System.ComponentModel;
+using L5Sharp.Core;
 using L5Sharp.Querying;
 using L5Sharp.Repositories;
 
@@ -7,7 +8,7 @@ namespace L5Sharp
     /// <summary>
     /// The entry point for querying and manipulating an L5X file. Context is the 
     /// </summary>
-    public interface ILogixContext
+    public interface ILogixContext : IRevertibleChangeTracking
     {
         /// <summary>
         /// Gets the <see cref="IController"/> instance of the current <see cref="ILogixContext"/>.
@@ -33,12 +34,7 @@ namespace L5Sharp
         /// Get the <see cref="ITag{TDataType}"/> repository instance for the current <see cref="ILogixContext"/>. 
         /// </summary>
         ITagRepository Tags();
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="program"></param>
-        /// <returns></returns>
+        
         ITagRepository Tags(ComponentName program);
 
         /// <summary>
@@ -50,18 +46,11 @@ namespace L5Sharp
         /// Get the <see cref="ITask"/> repository instance for the current <see cref="ILogixContext"/>.
         /// </summary>
         ITaskQuery Tasks();
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
+        
         IRungQuery Rungs();
         
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="program"></param>
-        /// <returns></returns>
         IRungQuery Rungs(ComponentName program);
+        
+        void Save(string fileName);
     }
 }

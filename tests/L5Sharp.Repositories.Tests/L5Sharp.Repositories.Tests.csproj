@@ -7,26 +7,20 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="FluentAssertions" Version="6.1.0" />
+        <PackageReference Include="FluentAssertions" Version="6.5.1" />
         <PackageReference Include="NUnit" Version="3.12.0" />
         <PackageReference Include="NUnit3TestAdapter" Version="3.16.1" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0" />
     </ItemGroup>
 
     <ItemGroup>
-      <Content Include="TestFiles\Test.xml">
+      <None Update="Content\Test.xml">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </Content>
+      </None>
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\..\src\L5Sharp.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Reference Include="L5Sharp, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-        <HintPath>..\L5Sharp.Extensions.Tests\bin\Debug\net5.0\L5Sharp.dll</HintPath>
-      </Reference>
     </ItemGroup>
 
 </Project>

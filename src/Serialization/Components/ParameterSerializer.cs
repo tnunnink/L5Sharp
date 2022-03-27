@@ -91,7 +91,7 @@ namespace L5Sharp.Serialization.Components
             }
             
             var dataType = _document is not null
-                ? _document.Index.LookupDataType(element.DataTypeName())
+                ? _document.Index.LookupType(element.DataTypeName())
                 : DataType.Create(element.DataTypeName());
             
             if (dimensions is null || dimensions.IsEmpty)

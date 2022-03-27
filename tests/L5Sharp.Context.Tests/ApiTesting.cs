@@ -7,6 +7,14 @@ namespace L5Sharp.Context.Tests
     public class ApiTesting
     {
         [Test]
+        public void ContextApiTesting()
+        {
+            var context = L5XContext.Load(Known.Template);
+
+            var changed = context.IsChanged;
+        }
+        
+        [Test]
         public void RungQuerier()
         {
             var context = L5XContext.Load(Known.Template);

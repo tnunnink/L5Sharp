@@ -13,13 +13,12 @@ namespace L5Sharp.Serialization.Components
     {
         private readonly L5XDocument? _document;
         private static readonly XName ElementName = L5XElement.LocalTag.ToString();
-
-        //todo this always creates a new one right now..
-        private FormattedDataSerializer FormattedDataSerializer => new(_document, L5XElement.DefaultData);
+        private readonly FormattedDataSerializer _formattedDataSerializer;
 
         public LocalTagSerializer(L5XDocument? document = null)
         {
             _document = document;
+            _formattedDataSerializer = new FormattedDataSerializer(_document, L5XElement.DefaultData);
         }
 
         public override XElement Serialize(ITag<IDataType> component)
@@ -38,7 +37,7 @@ namespace L5Sharp.Serialization.Components
                 element.Add(new XAttribute(L5XAttribute.Radix.ToString(), component.Radix));
             element.Add(new XAttribute(L5XAttribute.ExternalAccess.ToString(), component.ExternalAccess));
 
-            var data = FormattedDataSerializer.Serialize(component.DataType);
+            var data = _formattedDataSerializer.Serialize(component.DataType);
             element.Add(data);
 
             return element;
@@ -55,7 +54,7 @@ namespace L5Sharp.Serialization.Components
             var name = element.ComponentName();
             var description = element.ComponentDescription();
             var dataType = _document is not null
-                ? _document.Index.LookupDataType(element.DataTypeName())
+                ? _document.Index.LookupType(element.DataTypeName())
                 : DataType.Create(element.DataTypeName());
             var dimensions = element.Attribute(L5XAttribute.Dimensions.ToString())?.Value.Parse<Dimensions>();
             var radix = element.Attribute(L5XAttribute.Radix.ToString())?.Value.Parse<Radix>();
@@ -72,7 +71,7 @@ namespace L5Sharp.Serialization.Components
 
             if (formattedData is null) return tag;
 
-            var data = FormattedDataSerializer.Deserialize(formattedData);
+            var data = _formattedDataSerializer.Deserialize(formattedData);
             tag.SetData(data);
             return tag;
         }

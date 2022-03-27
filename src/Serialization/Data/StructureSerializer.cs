@@ -12,25 +12,24 @@ namespace L5Sharp.Serialization.Data
     {
         private readonly L5XDocument? _document;
         private static readonly XName ElementName = L5XElement.Structure.ToString();
+        private readonly StringStructureSerializer _stringStructureSerializer;
 
         private DataValueMemberSerializer DataValueMemberSerializer => _document is not null
             ? _document.Serializers.Get<DataValueMemberSerializer>()
             : new DataValueMemberSerializer();
-        
+
         private ArrayMemberSerializer ArrayMemberSerializer => _document is not null
             ? _document.Serializers.Get<ArrayMemberSerializer>()
             : new ArrayMemberSerializer(_document);
-        
+
         private StructureMemberSerializer StructureMemberSerializer => _document is not null
             ? _document.Serializers.Get<StructureMemberSerializer>()
             : new StructureMemberSerializer(_document);
-        
-        //todo non standard..do we care?
-        private StringStructureSerializer StringStructureSerializer => new(ElementName);
 
         public StructureSerializer(L5XDocument? document = null)
         {
             _document = document;
+            _stringStructureSerializer = new StringStructureSerializer(ElementName);
         }
 
         public override XElement Serialize(IComplexType component)
@@ -41,7 +40,7 @@ namespace L5Sharp.Serialization.Data
                     throw new ArgumentNullException(nameof(component));
                 //String types are treated differently than other types.
                 case IStringType stringType:
-                    return StringStructureSerializer.Serialize(stringType);
+                    return _stringStructureSerializer.Serialize(stringType);
             }
 
             var element = new XElement(ElementName);
@@ -72,7 +71,7 @@ namespace L5Sharp.Serialization.Data
             if (element.Elements().Any(e => string.Equals(e.Attribute(L5XAttribute.DataType.ToString())?.Value, name,
                     StringComparison.OrdinalIgnoreCase)))
             {
-                return StringStructureSerializer.Deserialize(element);
+                return _stringStructureSerializer.Deserialize(element);
             }
 
             var members = element.Elements().Select(e => GetSerializer(e).Deserialize(e)).ToList();

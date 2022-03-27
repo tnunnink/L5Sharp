@@ -53,8 +53,7 @@ namespace L5Sharp.Serialization.Components
                 var unitsSerializer = new TagPropertySerializer(L5XElement.EngineeringUnit, component.TagName);
                 element.Add(component.EngineeringUnits.Select(u => unitsSerializer.Serialize(u)));
             }
-                
-
+            
             var data = FormattedDataSerializer.Serialize(component.DataType);
             element.Add(data);
 
@@ -72,7 +71,7 @@ namespace L5Sharp.Serialization.Components
             var name = element.ComponentName();
             var description = element.ComponentDescription();
             var dataType = _document is not null
-                ? _document.Index.LookupDataType(element.DataTypeName())
+                ? _document.Index.LookupType(element.DataTypeName())
                 : DataType.Create(element.DataTypeName());
             var dimensions = element.Attribute(L5XAttribute.Dimensions.ToString())?.Value.Parse<Dimensions>();
             var radix = element.Attribute(L5XAttribute.Radix.ToString())?.Value.Parse<Radix>();

@@ -15,6 +15,7 @@ namespace L5Sharp.L5X
         {
             { typeof(IController), L5XElement.Controller.ToString() },
             { typeof(IComplexType), L5XElement.DataType.ToString() },
+            { typeof(IUserDefined), L5XElement.DataType.ToString() },
             { typeof(IModule), L5XElement.Module.ToString() },
             { typeof(IAddOnInstruction), L5XElement.AddOnInstructionDefinition.ToString() },
             { typeof(ITag<IDataType>), L5XElement.Tag.ToString() },
