@@ -3,6 +3,7 @@ using System.Net;
 using FluentAssertions;
 using L5Sharp.Core;
 using L5Sharp.Exceptions;
+using L5Sharp.L5X;
 using L5Sharp.Repositories.Tests.Content;
 using NUnit.Framework;
 

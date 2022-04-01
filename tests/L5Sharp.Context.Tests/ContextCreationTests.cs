@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using L5Sharp.Core;
+using L5Sharp.L5X;
 using NUnit.Framework;
 
 namespace L5Sharp.Context.Tests
@@ -10,9 +11,9 @@ namespace L5Sharp.Context.Tests
         [Test]
         public void Create_ValidComponent_ShouldNotBeNull()
         {
-            var component = new UserDefined("Test", "This is a test");
+            var controller = new Controller("Test", "1756-L83E");
 
-            var context = L5XContext.Create(component);
+            var context = L5XContext.Create(controller);
 
             context.Should().NotBeNull();
         }

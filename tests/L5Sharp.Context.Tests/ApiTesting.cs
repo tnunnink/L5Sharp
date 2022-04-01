@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using L5Sharp.L5X;
 using NUnit.Framework;
 
 namespace L5Sharp.Context.Tests
@@ -23,7 +24,7 @@ namespace L5Sharp.Context.Tests
                 .InRoutine("Test")
                 .WithTag("TagToSearch")
                 .InRange(1, 3)
-                .IncludeAddOns()
+                .Flatten()
                 .All();
 
             rungs.Should().NotBeEmpty();

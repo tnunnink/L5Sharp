@@ -28,5 +28,19 @@ namespace L5Sharp.Internal.Tests.L5X
 
             document.Should().NotBeNull();
         }
+
+        [Test]
+        public void Empty_WhenCalled_ShouldNotBeNull()
+        {
+            var document = L5XDocument.Empty();
+
+            document.Should().NotBeNull();
+        }
+
+        [Test]
+        public void METHOD()
+        {
+            
+        }
     }
 }

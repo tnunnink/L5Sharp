@@ -5,6 +5,7 @@ using FluentAssertions;
 using L5Sharp.Core;
 using L5Sharp.Creators;
 using L5Sharp.Exceptions;
+using L5Sharp.L5X;
 using L5Sharp.Repositories.Tests.Content;
 using L5Sharp.Types;
 using NUnit.Framework;
@@ -46,7 +47,7 @@ namespace L5Sharp.Repositories.Tests
         }
         
         [Test]
-        public void Add_NestedUserDefined_ShouldContainBothTypes()
+        public void Add_NestedUserDefined_ShouldOnlyContainParent()
         {
             var context = L5XContext.Load(Known.Test);
 
@@ -65,7 +66,7 @@ namespace L5Sharp.Repositories.Tests
             context.DataTypes().Add(parent);
 
             context.DataTypes().Any("ParentType").Should().BeTrue();
-            context.DataTypes().Any("ChildType").Should().BeTrue();
+            context.DataTypes().Any("ChildType").Should().BeFalse();
         }
         
         [Test]

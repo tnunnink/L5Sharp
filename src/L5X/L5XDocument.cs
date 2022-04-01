@@ -1,12 +1,10 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Globalization;
 using System.Reflection;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Schema;
-using L5Sharp.Core;
-using L5Sharp.Extensions;
+using L5Sharp.Serialization.Components;
 
 namespace L5Sharp.L5X
 {
@@ -17,8 +15,8 @@ namespace L5Sharp.L5X
     internal class L5XDocument : IRevertibleChangeTracking
     {
         private static readonly XDeclaration DefaultDeclaration = new("1.0", "UTF-8", "yes");
-        private const string DefaultRevision = "1.0";
         private const string L5XSchema = "L5Sharp.Resources.L5X.xsd";
+        private readonly XElement _source;
 
         /// <summary>
         /// Creates a new <see cref="L5XDocument"/> that wraps the provided <see cref="XDocument"/>.
@@ -30,55 +28,46 @@ namespace L5Sharp.L5X
             //We should probably create our own using exports and xsd generation tools...
             //ValidateFile(document);
             
-            Source = document.Root ?? throw new ArgumentNullException(nameof(document));
-            Content = new XElement(Source);
+            _source = document.Root ?? throw new ArgumentNullException(nameof(document));
+            Content = new XElement(_source);
+            Info = new L5XInfo(Content);
             Components = new L5XComponents(this);
             Containers = new L5XContainers(this);
             Index = new L5XIndex(this);
-            Info = new L5XInfo(this);
             Serializers = new L5XSerializers(this);
         }
 
-        /// <summary>
-        /// Creates a new <see cref="L5XDocument"/> with the provided logic component as the target.
-        /// </summary>
-        /// <param name="component">The logix component instance for which to create the target context.</param>
-        /// <typeparam name="TComponent">The logix component type.</typeparam>
-        /// <returns>A new <see cref="L5XDocument"/> that represents a target context for the provided component.</returns>
-        internal static L5XDocument Create<TComponent>(TComponent component)
-            where TComponent : ILogixComponent
+       /// <summary>
+       /// 
+       /// </summary>
+       /// <param name="controller"></param>
+       /// <returns></returns>
+        internal static L5XDocument Create(IController controller)
         {
-            /*var document = new XDocument(DefaultDeclaration);
+            var document = new XDocument(DefaultDeclaration);
 
-            var content = new XElement(L5XElement.RSLogix5000Content.ToString());
-            content.Add(new XAttribute(nameof(SchemaRevision), DefaultRevision));
-            content.Add(new XAttribute(nameof(SoftwareRevision), DefaultRevision));
-            content.Add(new XAttribute(nameof(TargetName), component.Name));
-            content.Add(new XAttribute(nameof(TargetType), L5XNames.GetComponentName<TComponent>()));
-            content.Add(new XAttribute(nameof(ContainsContext), component is not IController));
-            content.Add(new XAttribute(nameof(Owner), Environment.UserName));
-            content.Add(new XAttribute(nameof(ExportDate), DateTime.Now.ToString(DateFormat)));
+            var content = L5XInfo.New(controller.Name, nameof(Controller));
 
-            var controller = component is IController
-                ? component.Serialize()
-                : new XElement(L5XElement.Controller.ToString());
-
-            if (component is not IController)
-            {
-                var container = new XElement(L5XNames.GetContainerName<TComponent>());
-                
-                //how to add component and dependencies...?
-                //var element = component.Serialize();
-                //element.Add(new XAttribute(nameof(Use), Use.Target));
-                //container.Add(element);
-                
-                controller.Add(container);
-            }
+            var serializer = new ControllerSerializer();
+            var element = serializer.Serialize(controller);
+            content.Add(element);
             
-            content.Add(controller);
+            document.Add(content);
 
-            return new L5XDocument(document);*/
-            throw new NotImplementedException();
+            return new L5XDocument(document);
+        }
+
+        /// <summary>
+        /// Creates a <see cref="L5XDocument"/> with just a root RSLogix5000Content element and default values.
+        /// </summary>
+        /// <returns>A <see cref="L5XDocument"/></returns>
+        public static L5XDocument Empty()
+        {
+            var document = new XDocument(DefaultDeclaration);
+            
+            document.Add(L5XInfo.Default());
+
+            return new L5XDocument(document);
         }
 
         /// <summary>
@@ -86,9 +75,6 @@ namespace L5Sharp.L5X
         /// </summary>
         public XElement? Controller => Content.Element(L5XElement.Controller.ToString());
 
-        
-        public XElement Source { get; }
-        
         /// <summary>
         /// Gets the root content <see cref="XElement"/> of the L5X file.
         /// </summary>
@@ -100,20 +86,27 @@ namespace L5Sharp.L5X
         public L5XComponents Components { get; }
 
         /// <summary>
-        /// Gets the <see cref="L5XContainers"/> for the current <see cref="L5XDocument"/>
+        /// Gets the <see cref="L5XContainers"/> for the current <see cref="L5XDocument"/>.
         /// </summary>
         public L5XContainers Containers { get; }
 
         /// <summary>
-        /// Gets the <see cref="L5XIndex"/> for the current <see cref="L5XDocument"/>
+        /// Gets the <see cref="L5XIndex"/> for the current <see cref="L5XDocument"/>.
         /// </summary>
         public L5XIndex Index { get; }
-        
-        
+
+        /// <summary>
+        /// Gets the <see cref="L5XInfo"/> for the current <see cref="L5XDocument"/>.
+        /// </summary>
         public L5XInfo Info { get; }
 
         /// <summary>
-        /// Gets the <see cref="L5XSerializers"/> for the current <see cref="L5XDocument"/>
+        /// Indicates whether the current document has changes.
+        /// </summary>
+        public bool IsChanged => Content.ToString() != _source.ToString();
+
+        /// <summary>
+        /// Gets the <see cref="L5XSerializers"/> for the current <see cref="L5XDocument"/>.
         /// </summary>
         public L5XSerializers Serializers { get; }
 
@@ -125,20 +118,18 @@ namespace L5Sharp.L5X
         {
             AcceptChanges();
 
-            var document = new XDocument(DefaultDeclaration, Source);
+            var document = new XDocument(DefaultDeclaration, _source);
             
             document.Save(fileName);
         }
 
         public void AcceptChanges()
         {
-            Source.ReplaceWith(Content);
+            _source.ReplaceWith(Content);
             Index.Run();
         }
-        
-        public bool IsChanged => Content.ToString() != Source.ToString();
-        
-        public void RejectChanges() => Content = new XElement(Source);
+
+        public void RejectChanges() => Content = new XElement(_source);
 
         private void ValidateFile(XDocument document)
         {

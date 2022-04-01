@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using L5Sharp.Core;
+using L5Sharp.L5X;
 using NUnit.Framework;
 
 namespace L5Sharp.Context.Tests
@@ -21,7 +22,7 @@ namespace L5Sharp.Context.Tests
             context.Should().NotBeNull();
         }
 
-        [Test]
+        /*[Test]
         public void Content_ValidFile_ShouldHaveExpectedProperties()
         {
             var context = L5XContext.Load(Known.L5X);
@@ -33,7 +34,7 @@ namespace L5Sharp.Context.Tests
             context.Info.ContainsContext.Should().BeFalse();
             context.Info.Owner.Should().Be("tnunnink, EN Engineering");
             context.Info.ExportDate.Year.Should().BeGreaterOrEqualTo(2021);
-        }
+        }*/
 
         [Test]
         public void Controller_WhenCalled_ShouldNotBeNull()

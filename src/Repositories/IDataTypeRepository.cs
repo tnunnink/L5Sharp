@@ -1,4 +1,5 @@
 ﻿using System;
+using L5Sharp.L5X;
 using L5Sharp.Querying;
 
 namespace L5Sharp.Repositories

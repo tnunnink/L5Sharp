@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<RSLogix5000Content SchemaRevision="1.0" SoftwareRevision="32.02" TargetName="TestController" TargetType="Controller" ContainsContext="false" Owner="tnunnink, EN Engineering" ExportDate="Fri Mar 11 15:41:28 2022" ExportOptions="NoRawData L5KData DecoratedData ForceProtectedEncoding AllProjDocTrans">
-<Controller Use="Target" Name="TestController" ProcessorType="1756-L83E" MajorRev="32" MinorRev="11" ProjectCreationDate="Mon Sep 27 15:23:27 2021" LastModifiedDate="Fri Mar 11 15:41:16 2022" SFCExecutionControl="CurrentActive" SFCRestartPosition="MostRecent" SFCLastScan="DontScan" ProjectSN="16#0000_0000"
+<RSLogix5000Content SchemaRevision="1.0" SoftwareRevision="32.02" TargetName="TestController" TargetType="Controller" ContainsContext="false" Owner="tnunnink, EN Engineering" ExportDate="Fri Apr 01 09:49:45 2022" ExportOptions="NoRawData L5KData DecoratedData ForceProtectedEncoding AllProjDocTrans">
+<Controller Use="Target" Name="TestController" ProcessorType="1756-L83E" MajorRev="32" MinorRev="11" ProjectCreationDate="Mon Sep 27 16:23:27 2021" LastModifiedDate="Fri Apr 01 09:49:02 2022" SFCExecutionControl="CurrentActive" SFCRestartPosition="MostRecent" SFCLastScan="DontScan" ProjectSN="16#0000_0000"
  MatchProjectToController="false" CanUseRPIFromProducer="false" InhibitAutomaticFirmwareUpdate="0" PassThroughConfiguration="EnabledWithAppend" DownloadProjectDocumentationAndExtendedProperties="true" DownloadProjectCustomProperties="true" ReportMinorOverflow="false">
 <Description>
 <![CDATA[This is a test project]]>
@@ -6480,9 +6480,44 @@ Dint Array]]>
 <public><ConfigID>262157</ConfigID><CatNum>1794-IB16</CatNum></public>
 </ExtendedProperties>
 </Module>
+<Module Name="FB2" CatalogNumber="1794-IB16/A" Vendor="1" ProductType="7" ProductCode="34" Major="1" Minor="1" ParentModule="FlexBus" ParentModPortId="1" Inhibited="false" MajorFault="false"
+>
+<EKey State="CompatibleModule"/>
+<Ports>
+<Port Id="1" Address="1" Type="Flex" Upstream="true"/>
+</Ports>
+<Communications CommMethod="1073741824">
+<ConfigTag ConfigSize="34" ExternalAccess="Read/Write">
+<Data Format="L5K">
+<![CDATA[[38,3,1,2,0,125,12,4,16,125,10,16,125,11,7,641,0,1,1,0,1,0]]]>
+</Data>
+<Data Format="Decorated">
+<Structure DataType="AB:1794_IB16:C:0">
+<DataValueMember Name="Config" DataType="INT" Radix="Binary" Value="2#0000_0000_0000_0000"/>
+<DataValueMember Name="Filter0_00_11" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Filter1_00_11" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Filter2_00_11" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Filter3_12_15" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Filter4_12_15" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Filter5_12_15" DataType="BOOL" Value="0"/>
+<DataValueMember Name="ResetCounter" DataType="BOOL" Value="0"/>
+<DataValueMember Name="DisableFilter" DataType="BOOL" Value="0"/>
+</Structure>
+</Data>
+</ConfigTag>
+<Connections>
+<RackConnection>
+<InAliasTag/>
+</RackConnection>
+</Connections>
+</Communications>
+<ExtendedProperties>
+<public><ConfigID>262157</ConfigID><CatNum>1794-IB16</CatNum></public>
+</ExtendedProperties>
+</Module>
 </Modules>
 <AddOnInstructionDefinitions>
-<AddOnInstructionDefinition Name="aoi_Test" Revision="1.2" ExecutePrescan="false" ExecutePostscan="false" ExecuteEnableInFalse="false" CreatedDate="2021-10-22T15:27:48.120Z" CreatedBy="ENE\tnunnink" EditedDate="2022-03-11T21:41:11.172Z" EditedBy="ENE\tnunnink" SoftwareRevision="v32.02">
+<AddOnInstructionDefinition Name="aoi_Test" Revision="1.2" ExecutePrescan="false" ExecutePostscan="false" ExecuteEnableInFalse="false" CreatedDate="2021-10-22T15:27:48.120Z" CreatedBy="ENE\tnunnink" EditedDate="2022-04-01T13:28:07.447Z" EditedBy="ENE\tnunnink" SoftwareRevision="v32.02">
 <SignatureHistory>
 <HistoryEntry User="ENE\tnunnink" Timestamp="2022-03-01T03:10:25.642Z" SignatureID="16#cae1_ac8c">
 <Description>
@@ -6538,8 +6573,8 @@ Dint Array]]>
 <DataValue DataType="BOOL" Radix="Decimal" Value="0"/>
 </DefaultData>
 </Parameter>
-<Parameter Name="Timers" TagType="Base" DataType="REAL" Dimensions="5" Usage="InOut" Radix="Float" Required="true" Visible="true" Constant="false"/>
-<Parameter Name="New" TagType="Base" DataType="DINT" Usage="Input" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write">
+<Parameter Name="InOutArray" TagType="Base" DataType="REAL" Dimensions="5" Usage="InOut" Radix="Float" Required="true" Visible="true" Constant="false"/>
+<Parameter Name="New" TagType="Base" DataType="DINT" Usage="Input" Radix="Decimal" Required="true" Visible="true" ExternalAccess="Read/Write">
 <DefaultData Format="L5K">
 <![CDATA[0]]>
 </DefaultData>
@@ -6562,6 +6597,38 @@ Dint Array]]>
 <DataValue DataType="BOOL" Radix="Decimal" Value="0"/>
 </DefaultData>
 </LocalTag>
+<LocalTag Name="LocalComplex" DataType="SimpleType" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[Description Test]]>
+</Description>
+<DefaultData Format="L5K">
+<![CDATA[[0,0,0,0,0,0]]]>
+</DefaultData>
+<DefaultData Format="Decorated">
+<Structure DataType="SimpleType">
+<DataValueMember Name="BoolMember" DataType="BOOL" Value="0"/>
+<DataValueMember Name="SintMember" DataType="SINT" Radix="Hex" Value="16#00"/>
+<DataValueMember Name="IntMember" DataType="INT" Radix="Octal" Value="8#000_000"/>
+<DataValueMember Name="DintMember" DataType="DINT" Radix="ASCII" Value="'$00$00$00$00'"/>
+<DataValueMember Name="LintMember" DataType="LINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="NewMember" DataType="DINT" Radix="Decimal" Value="0"/>
+</Structure>
+</DefaultData>
+</LocalTag>
+<LocalTag Name="LocalArray" DataType="DINT" Dimensions="5" Radix="Decimal" ExternalAccess="None">
+<DefaultData Format="L5K">
+<![CDATA[[0,0,0,0,0]]]>
+</DefaultData>
+<DefaultData Format="Decorated">
+<Array DataType="DINT" Dimensions="5" Radix="Decimal">
+<Element Index="[0]" Value="0"/>
+<Element Index="[1]" Value="0"/>
+<Element Index="[2]" Value="0"/>
+<Element Index="[3]" Value="0"/>
+<Element Index="[4]" Value="0"/>
+</Array>
+</DefaultData>
+</LocalTag>
 </LocalTags>
 <Routines>
 <Routine Name="Logic" Type="RLL">
@@ -6569,6 +6636,21 @@ Dint Array]]>
 <Rung Number="0" Type="N">
 <Text>
 <![CDATA[OTE(InputTest);]]>
+</Text>
+</Rung>
+<Rung Number="1" Type="N">
+<Text>
+<![CDATA[XIC(InOutTest.BoolMember)OTL(LocalBool);]]>
+</Text>
+</Rung>
+<Rung Number="2" Type="N">
+<Text>
+<![CDATA[EQU(Config,LocalArray[0])MOV(Config,InOutArray[0]);]]>
+</Text>
+</Rung>
+<Rung Number="3" Type="N">
+<Text>
+<![CDATA[MOV(100,LocalArray[2]);]]>
 </Text>
 </Rung>
 </RLLContent>
@@ -6588,7 +6670,7 @@ Dint Array]]>
 </Tag>
 <Tag Name="aoiTestInstance" TagType="Base" DataType="aoi_Test" Constant="false" ExternalAccess="Read/Write">
 <Data Format="L5K">
-<![CDATA[[1,0,0,0]]]>
+<![CDATA[[1,0,0,0,[0,0,0,0,0,0],[0,0,0,0,0]]]]>
 </Data>
 <Data Format="Decorated">
 <Structure DataType="aoi_Test">
@@ -6675,7 +6757,7 @@ Dint Array]]>
 </Structure>
 </Data>
 </Tag>
-<Tag Name="MtulitDimensionalArray" TagType="Base" DataType="DINT" Dimensions="3 5" Radix="Decimal" Constant="false" ExternalAccess="Read/Write">
+<Tag Name="MultiDimensionalArray" TagType="Base" DataType="DINT" Dimensions="3 5" Radix="Decimal" Constant="false" ExternalAccess="Read/Write">
 <Data Format="L5K">
 <![CDATA[[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]]]>
 </Data>
@@ -6704,8 +6786,8 @@ Dint Array]]>
 <![CDATA[[[0,0,0,0,0,0],[0,0,0],[0,0,0],[1,0.00000000e+000,3.40282347e+038,3.40282347e+038,-3.40282347e+038,-3.40282347e+038
 		,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000,0,0.00000000e+000,0,5.60519386e-045
 		,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000
-		,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000],[1,0,0,0],[[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0
-		,0],[0,0,0,0,0,0],[0,0,0,0,0,0]],0,[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
+		,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000],[1,0,0,0,[0,0,0,0,0,0],[0,0,0,0,0]],[[0,0,0,0,0,0
+		],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0]],0,[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
 		],[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
 		]]]]>
 </Data>
@@ -6892,6 +6974,9 @@ Dint Array]]>
 </Data>
 </Tag>
 <Tag Name="SimpleInt" TagType="Base" DataType="INT" Radix="Decimal" Constant="false" ExternalAccess="None">
+<Description>
+<![CDATA[This is a simple integer tag]]>
+</Description>
 <Data Format="L5K">
 <![CDATA[4321]]>
 </Data>
@@ -7342,8 +7427,8 @@ Dint Array]]>
 <![CDATA[[[0,0,0,0,0,0],[0,0,0],[0,0,0],[1,0.00000000e+000,3.40282347e+038,3.40282347e+038,-3.40282347e+038,-3.40282347e+038
 		,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000,0,0.00000000e+000,0,5.60519386e-045
 		,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000
-		,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000],[1,0,0,0],[[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0
-		,0],[0,0,0,0,0,0],[0,0,0,0,0,0]],0,[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
+		,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000],[1,0,0,0,[0,0,0,0,0,0],[0,0,0,0,0]],[[0,0,0,0,0,0
+		],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0]],0,[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
 		],[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
 		]]]]>
 </Data>
@@ -7601,6 +7686,14 @@ Dint Array]]>
 </Array>
 </Data>
 </Tag>
+<Tag Name="XIC" TagType="Base" DataType="BOOL" Radix="Decimal" Constant="false" ExternalAccess="Read/Write">
+<Data Format="L5K">
+<![CDATA[0]]>
+</Data>
+<Data Format="Decorated">
+<DataValue DataType="BOOL" Radix="Decimal" Value="0"/>
+</Data>
+</Tag>
 <Tag Name="_Test" TagType="Base" DataType="DINT" Radix="Decimal" Constant="false" ExternalAccess="Read/Write">
 <Data Format="L5K">
 <![CDATA[0]]>
@@ -7625,7 +7718,85 @@ Dint Array]]>
 </Program>
 <Program Name="MainProgram" TestEdits="false" MainRoutineName="Main" Disabled="false" UseAsFolder="false">
 <Tags>
+<Tag Name="BufferTag" TagType="Base" DataType="BOOL" Radix="Decimal" Constant="false" ExternalAccess="Read/Write">
+<Data Format="L5K">
+<![CDATA[0]]>
+</Data>
+<Data Format="Decorated">
+<DataValue DataType="BOOL" Radix="Decimal" Value="0"/>
+</Data>
+</Tag>
+<Tag Name="InputParameter" TagType="Base" DataType="DINT" Radix="Decimal" Constant="false" ExternalAccess="Read/Write">
+<Data Format="L5K">
+<![CDATA[0]]>
+</Data>
+<Data Format="Decorated">
+<DataValue DataType="DINT" Radix="Decimal" Value="0"/>
+</Data>
+</Tag>
+<Tag Name="OutputParameter" TagType="Base" DataType="DINT" Radix="Decimal" Constant="false" ExternalAccess="Read/Write">
+<Data Format="L5K">
+<![CDATA[0]]>
+</Data>
+<Data Format="Decorated">
+<DataValue DataType="DINT" Radix="Decimal" Value="0"/>
+</Data>
+</Tag>
 <Tag Name="Step_000" TagType="Base" DataType="SFC_STEP" Constant="false" ExternalAccess="Read/Write">
+<Data Format="L5K">
+<![CDATA[[2097152,0,0,0,0,0,0]]]>
+</Data>
+<Data Format="Decorated">
+<Structure DataType="SFC_STEP">
+<DataValueMember Name="Status" DataType="DINT" Radix="Hex" Value="16#0020_0000"/>
+<DataValueMember Name="X" DataType="BOOL" Value="0"/>
+<DataValueMember Name="FS" DataType="BOOL" Value="0"/>
+<DataValueMember Name="SA" DataType="BOOL" Value="0"/>
+<DataValueMember Name="LS" DataType="BOOL" Value="0"/>
+<DataValueMember Name="DN" DataType="BOOL" Value="0"/>
+<DataValueMember Name="OV" DataType="BOOL" Value="0"/>
+<DataValueMember Name="AlarmEn" DataType="BOOL" Value="0"/>
+<DataValueMember Name="AlarmLow" DataType="BOOL" Value="0"/>
+<DataValueMember Name="AlarmHigh" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Reset" DataType="BOOL" Value="0"/>
+<DataValueMember Name="PauseTimer" DataType="BOOL" Value="1"/>
+<DataValueMember Name="PRE" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="T" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="TMax" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="Count" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="LimitLow" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="LimitHigh" DataType="DINT" Radix="Decimal" Value="0"/>
+</Structure>
+</Data>
+</Tag>
+<Tag Name="Step_001" TagType="Base" DataType="SFC_STEP" Constant="false" ExternalAccess="Read/Write">
+<Data Format="L5K">
+<![CDATA[[2097152,0,0,0,0,0,0]]]>
+</Data>
+<Data Format="Decorated">
+<Structure DataType="SFC_STEP">
+<DataValueMember Name="Status" DataType="DINT" Radix="Hex" Value="16#0020_0000"/>
+<DataValueMember Name="X" DataType="BOOL" Value="0"/>
+<DataValueMember Name="FS" DataType="BOOL" Value="0"/>
+<DataValueMember Name="SA" DataType="BOOL" Value="0"/>
+<DataValueMember Name="LS" DataType="BOOL" Value="0"/>
+<DataValueMember Name="DN" DataType="BOOL" Value="0"/>
+<DataValueMember Name="OV" DataType="BOOL" Value="0"/>
+<DataValueMember Name="AlarmEn" DataType="BOOL" Value="0"/>
+<DataValueMember Name="AlarmLow" DataType="BOOL" Value="0"/>
+<DataValueMember Name="AlarmHigh" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Reset" DataType="BOOL" Value="0"/>
+<DataValueMember Name="PauseTimer" DataType="BOOL" Value="1"/>
+<DataValueMember Name="PRE" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="T" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="TMax" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="Count" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="LimitLow" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="LimitHigh" DataType="DINT" Radix="Decimal" Value="0"/>
+</Structure>
+</Data>
+</Tag>
+<Tag Name="Step_002" TagType="Base" DataType="SFC_STEP" Constant="false" ExternalAccess="Read/Write">
 <Data Format="L5K">
 <![CDATA[[2097152,0,0,0,0,0,0]]]>
 </Data>
@@ -7660,11 +7831,41 @@ Dint Array]]>
 <DataValue DataType="BOOL" Radix="Decimal" Value="0"/>
 </Data>
 </Tag>
+<Tag Name="Tran_001" TagType="Base" DataType="BOOL" Radix="Decimal" Constant="false" ExternalAccess="Read/Write">
+<Data Format="L5K">
+<![CDATA[0]]>
+</Data>
+<Data Format="Decorated">
+<DataValue DataType="BOOL" Radix="Decimal" Value="0"/>
+</Data>
+</Tag>
+<Tag Name="Tran_002" TagType="Base" DataType="BOOL" Radix="Decimal" Constant="false" ExternalAccess="Read/Write">
+<Data Format="L5K">
+<![CDATA[0]]>
+</Data>
+<Data Format="Decorated">
+<DataValue DataType="BOOL" Radix="Decimal" Value="0"/>
+</Data>
+</Tag>
 </Tags>
 <Routines>
 <Routine Name="FBD" Type="FBD">
 <FBDContent SheetSize="B - 11 x 17 in" SheetOrientation="Landscape">
-<Sheet Number="1"/>
+<Sheet Number="1">
+<IRef ID="0" X="140" Y="180" Operand="SimpleBool" HideDesc="false"/>
+<ORef ID="1" X="500" Y="200" Operand="TestComplexTag.SimpleMember.BoolMember" HideDesc="false"/>
+<Function Type="BNOT__F" ID="2" X="140" Y="260"/>
+<Function Type="BAND__F" ID="3" X="260" Y="200"/>
+<Wire FromID="0" ToID="2" ToParam="In"/>
+<Wire FromID="0" ToID="3" ToParam="In1"/>
+<Wire FromID="2" FromParam="Out" ToID="3" ToParam="In2"/>
+<Wire FromID="3" FromParam="Out" ToID="1"/>
+<TextBox ID="4" X="60" Y="100" Width="0">
+<Text>
+<![CDATA[Test]]>
+</Text>
+</TextBox>
+</Sheet>
 </FBDContent>
 </Routine>
 <Routine Name="Main" Type="RLL">
@@ -7681,7 +7882,7 @@ Dint Array]]>
 </Rung>
 <Rung Number="2" Type="N">
 <Text>
-<![CDATA[aoi_Test(aoiTestInstance,TestSimpleTag,SimpleInt,RealArray);]]>
+<![CDATA[aoi_Test(aoiTestInstance,TestSimpleTag,SimpleInt,RealArray,0);]]>
 </Text>
 </Rung>
 <Rung Number="3" Type="N">
@@ -7699,11 +7900,71 @@ Dint Array]]>
 <![CDATA[MOV(SimpleSint,AsciiTag);]]>
 </Text>
 </Rung>
+<Rung Number="6" Type="N">
+<Text>
+<![CDATA[XIC(FlexIO:3:I.Pt01.Data)OTE(BufferTag);]]>
+</Text>
+</Rung>
+<Rung Number="7" Type="N">
+<Text>
+<![CDATA[JSR(FBD,1,InputParameter,OutputParameter);]]>
+</Text>
+</Rung>
+<Rung Number="8" Type="N">
+<Text>
+<![CDATA[GRT(SimpleInt,100)OTE(SimpleArray[4].0);]]>
+</Text>
+</Rung>
+<Rung Number="9" Type="N">
+<Text>
+<![CDATA[GRT(SimpleInt,400)XIO(MultiDimensionalArray[1,3].3)[OTE(SimpleBool) ,OTU(TestComplexTag.SimpleMember.BoolMember) ];]]>
+</Text>
+</Rung>
 </RLLContent>
+</Routine>
+<Routine Name="SFC" Type="SFC">
+<SFCContent SheetSize="Letter - 8.5 x 11 in" SheetOrientation="Landscape" StepName="Step" TransitionName="Tran" ActionName="Action" StopName="Stop">
+<Step ID="0" X="200" Y="100" Operand="Step_001" HideDesc="false" DescX="240" DescY="80" DescWidth="0" InitialStep="true" PresetUsesExpr="false" LimitHighUsesExpr="false"
+ LimitLowUsesExpr="false" ShowActions="true"/>
+<Step ID="1" X="700" Y="120" Operand="Step_002" HideDesc="false" DescX="740" DescY="100" DescWidth="0" InitialStep="false" PresetUsesExpr="false" LimitHighUsesExpr="false"
+ LimitLowUsesExpr="false" ShowActions="true"/>
+<Transition ID="2" X="200" Y="180" Operand="Tran_001" HideDesc="false" DescX="260" DescY="160" DescWidth="0">
+<Condition>
+<STContent>
+<Line Number="0">
+<![CDATA[SimpleBool := TestComplexTag.SimpleMember.BoolMember;]]>
+</Line>
+</STContent>
+</Condition>
+</Transition>
+<Transition ID="3" X="700" Y="200" Operand="Tran_002" HideDesc="false" DescX="760" DescY="180" DescWidth="0">
+<Condition>
+<STContent>
+<Line Number="0">
+<![CDATA[]]>
+</Line>
+</STContent>
+</Condition>
+</Transition>
+<Branch ID="4" Y="278" BranchType="Selection" BranchFlow="Converge">
+<Leg ID="5"/>
+<Leg ID="6"/>
+</Branch>
+<DirectedLink FromID="0" ToID="2" Show="true"/>
+<DirectedLink FromID="1" ToID="3" Show="true"/>
+<DirectedLink FromID="2" ToID="5" Show="true"/>
+<DirectedLink FromID="3" ToID="6" Show="true"/>
+</SFCContent>
 </Routine>
 <Routine Name="ST" Type="ST">
 <STContent>
 <Line Number="0">
+<![CDATA[SimpleBool := TestComplexTag.SimpleMember.BoolMember;]]>
+</Line>
+<Line Number="1">
+<![CDATA[]]>
+</Line>
+<Line Number="2">
 <![CDATA[]]>
 </Line>
 </STContent>
@@ -7737,8 +7998,8 @@ Dint Array]]>
 <![CDATA[[[0,0,0,0,0,0],[0,0,0],[0,0,0],[1,0.00000000e+000,3.40282347e+038,3.40282347e+038,-3.40282347e+038,-3.40282347e+038
 		,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000,0,0.00000000e+000,0,5.60519386e-045
 		,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000
-		,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000],[1,0,0,0],[[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0
-		,0],[0,0,0,0,0,0],[0,0,0,0,0,0]],0,[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
+		,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000],[1,0,0,0,[0,0,0,0,0,0],[0,0,0,0,0]],[[0,0,0,0,0,0
+		],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0]],0,[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
 		],[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
 		]]]]>
 </Data>

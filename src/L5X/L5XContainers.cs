@@ -1,10 +1,22 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Linq;
 
 namespace L5Sharp.L5X
 {
     internal class L5XContainers
     {
+        private static readonly Dictionary<Type, string> Containers = new()
+        {
+            { typeof(IComplexType), L5XElement.DataTypes.ToString() },
+            { typeof(IModule), L5XElement.Modules.ToString() },
+            { typeof(IAddOnInstruction), L5XElement.AddOnInstructionDefinitions.ToString() },
+            { typeof(ITag<IDataType>), L5XElement.Tags.ToString() },
+            { typeof(IProgram), L5XElement.Programs.ToString() },
+            { typeof(ITask), L5XElement.Tasks.ToString() }
+        };
+
         private readonly L5XDocument _document;
 
         public L5XContainers(L5XDocument document)
@@ -23,10 +35,19 @@ namespace L5Sharp.L5X
         /// will return the element <see cref="L5XElement.DataTypes"/>, which corresponds to the containing element
         /// for all user defined data type.
         /// </remarks>
-        public XElement Get<TComponent>() where TComponent : ILogixComponent => 
-            _document.Content.Descendants(L5XNames.GetContainerName<TComponent>()).First();
+        public XElement Get<TComponent>() where TComponent : ILogixComponent
+        {
+            var name = Containers.FirstOrDefault(t => typeof(TComponent).IsAssignableFrom(t.Key)).Value;
+                
+            return _document.Content.Descendants(name).First();
+        }
 
-        public void Create<TComponent>() where TComponent : ILogixComponent =>
-            _document.Controller?.Add(new XElement(L5XNames.GetContainerName<TComponent>()));
+        public void Create<TComponent>() where TComponent : ILogixComponent
+        {
+            var name = Containers.FirstOrDefault(t => typeof(TComponent).IsAssignableFrom(t.Key)).Value;
+            
+            _document.Controller?.Add(new XElement(name));
+        }
+            
     }
 }

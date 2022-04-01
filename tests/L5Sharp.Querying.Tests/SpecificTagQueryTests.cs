@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using FluentAssertions;
+using L5Sharp.L5X;
 using L5Sharp.Querying.Tests.Content;
 using NUnit.Framework;
 

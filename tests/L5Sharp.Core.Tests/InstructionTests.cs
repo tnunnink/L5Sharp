@@ -36,18 +36,7 @@ namespace L5Sharp.Core.Tests
             instruction.Name.Should().Be("OTE");
             instruction.Operands.Should().HaveCount(1);
         }
-
-        [Test]
-        public void XIC_ValidTagName_ShouldBeExpected()
-        {
-            var instruction = Instruction.XIC("Test");
-
-            instruction.Name.Should().Be("XIC");
-            instruction.Operands.Should().HaveCount(1);
-            //instruction.Operands.Should().Contain("Test");
-            instruction.Operands.First().Should().BeEquivalentTo("Test");
-        }
-
+        
         [Test]
         public void Parse_ValidArguments_ShouldHaveExpectedProperties()
         {

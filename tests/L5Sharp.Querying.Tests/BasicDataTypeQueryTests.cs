@@ -5,6 +5,7 @@ using System.Linq.Expressions;
 using FluentAssertions;
 using L5Sharp.Core;
 using L5Sharp.Enums;
+using L5Sharp.L5X;
 using L5Sharp.Querying.Tests.Content;
 using NUnit.Framework;
 

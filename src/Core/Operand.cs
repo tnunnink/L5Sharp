@@ -8,7 +8,7 @@ namespace L5Sharp.Core
     /// <summary>
     /// Represents an argument for an <see cref="Instruction"/> object.
     /// </summary>
-    public class Operand : IEquatable<Operand>
+    public readonly struct Operand : IEquatable<Operand>
     {
         private readonly object _operand;
 
@@ -176,14 +176,10 @@ namespace L5Sharp.Core
         public override string ToString() => _operand.ToString();
 
         /// <inheritdoc />
-        public bool Equals(Operand? other)
-        {
-            if (ReferenceEquals(null, other)) return false;
-            return ReferenceEquals(this, other) || _operand.Equals(other._operand);
-        }
+        public bool Equals(Operand other) => _operand.Equals(other._operand);
 
         /// <inheritdoc />
-        public override bool Equals(object? obj) => Equals(obj as Operand);
+        public override bool Equals(object? obj) => obj is Operand other && Equals(other);
 
         /// <inheritdoc />
         public override int GetHashCode() => _operand.GetHashCode();

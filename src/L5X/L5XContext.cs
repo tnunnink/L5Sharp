@@ -3,12 +3,11 @@ using System.Linq;
 using System.Xml.Linq;
 using L5Sharp.Core;
 using L5Sharp.Extensions;
-using L5Sharp.L5X;
 using L5Sharp.Querying;
 using L5Sharp.Repositories;
 using L5Sharp.Serialization.Components;
 
-namespace L5Sharp
+namespace L5Sharp.L5X
 {
     /// <inheritdoc />
     public class L5XContext : ILogixContext
@@ -67,18 +66,12 @@ namespace L5Sharp
         }
 
         /// <summary>
-        /// Creates a new <see cref="L5XContext"/> target for the provided component.
+        /// Creates a new <see cref="L5XContext"/> container with the provided root <see cref="IController"/>.
         /// </summary>
-        /// <param name="component">The <see cref="ILogixComponent"/> instance for which to create the new context.</param>
-        /// <typeparam name="TComponent">The logix component type.</typeparam>
         /// <returns>
         /// A new <see cref="L5XContext"/> instance for the provided logix component as the target of the new context.
         /// </returns>
-        public static L5XContext Create<TComponent>(TComponent component)
-            where TComponent : ILogixComponent => new(L5XDocument.Create(component));
-
-        
-        public L5XInfo Info => _l5X.Info;
+        public static L5XContext Create(IController controller) => new(L5XDocument.Create(controller));
 
         /// <inheritdoc />
         public bool IsChanged => _l5X.IsChanged;

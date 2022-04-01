@@ -108,19 +108,5 @@ namespace L5Sharp.Core
 
         /// <inheritdoc />
         public override string ToString() => $"{Name}({string.Join(",", Operands)})";
-
-        /// <summary>
-        /// Creates a XIC instruction with the provided tag name value.
-        /// </summary>
-        /// <param name="tagName">The tag name operand of the instruction.</param>
-        /// <returns>A new <see cref="Instruction"/> with the provided value.</returns>
-        public static Instruction XIC(TagName tagName) => new(nameof(XIC), tagName);
-
-        /// <summary>
-        /// Creates a OTE instruction with the provided tag name value.
-        /// </summary>
-        /// <param name="tagName">The tag name operand of the instruction.</param>
-        /// <returns>A new <see cref="Instruction"/> with the provided value.</returns>
-        public static Instruction OTE(TagName tagName) => new(nameof(OTE), tagName);
     }
 }

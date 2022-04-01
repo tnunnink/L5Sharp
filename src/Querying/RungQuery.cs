@@ -11,9 +11,74 @@ namespace L5Sharp.Querying
 {
     internal class RungQuery : LogixQuery<Rung>, IRungQuery
     {
-        public RungQuery(IEnumerable<XElement> elements) 
+        public RungQuery(IEnumerable<XElement> elements)
             : base(elements, new RungSerializer())
         {
+        }
+
+        public IRungQuery Flatten()
+        {
+            var results = new List<XElement>();
+
+            foreach (var element in Elements)
+            {
+                var text = element.Element(L5XElement.Text.ToString())?.Value.Parse<NeutralText>();
+
+                if (text is null) continue;
+
+                var instructions = text.Instructions();
+
+                foreach (var instruction in instructions)
+                {
+                    var definition = element.Ancestors(L5XElement.Controller.ToString()).FirstOrDefault()
+                        ?.Descendants(L5XElement.AddOnInstructionDefinition.ToString())
+                        .FirstOrDefault(e => instruction.Name == e.ComponentName());
+
+                    if (definition is null)
+                    {
+                        //only add original if not an AOI. AOI is replaced by contained logic
+                        results.Add(element);
+                        continue;
+                    }
+                    
+                    //Skip first as it is always the aoi tag, which does not have corresponding parameter
+                    var arguments = instruction.Operands.Select(o => o.ToString()).Skip(1).ToList();
+
+                    //Only required parameters are part of the instruction signature
+                    var parameters = definition.Descendants(L5XElement.Parameter.ToString())
+                        .Where(e => bool.Parse(e.Attribute(L5XAttribute.Required.ToString())?.Value!))
+                        .Select(p => p.ComponentName());
+
+                    var mapping = arguments.Zip(parameters, (a, p) => new { Argument = a, Parameter = p }).ToList();
+
+                    var rungs = definition.Descendants(L5XElement.Rung.ToString()).ToList();
+
+                    foreach (var rung in rungs)
+                    {
+                        var value = rung.Element(L5XElement.Text.ToString())?.Value;
+
+                        if (string.IsNullOrEmpty(value))
+                            continue;
+
+                        value = mapping.Aggregate(value,
+                            (current, pair) => current.Replace(pair.Parameter, pair.Argument));
+
+                        rung.Element(L5XElement.Text.ToString())!.Value = value;
+
+                        results.Add(rung);
+                    }
+                }
+            }
+
+            return new RungQuery(results);
+        }
+
+        public IRungQuery InProgram(string programName)
+        {
+            var results = Elements.Where(e =>
+                e.Ancestors(L5XElement.Program.ToString()).FirstOrDefault()?.ComponentName() == programName);
+
+            return new RungQuery(results);
         }
 
         public IRungQuery InRange(int first, int last)
@@ -27,38 +92,10 @@ namespace L5Sharp.Querying
             return new RungQuery(results);
         }
 
-        public IRungQuery IncludeAddOns()
-        {
-            throw new NotImplementedException();
-        }
-
         public IRungQuery InRoutine(ComponentName routineName)
         {
             var results = Elements.Where(e =>
                 e.Ancestors(L5XElement.Routine.ToString()).FirstOrDefault()?.ComponentName() == (string)routineName);
-
-            return new RungQuery(results);
-        }
-
-        public IRungQuery WithTag(TagName tagName)
-        {
-            var results = Elements.Where(e =>
-            {
-                var text = e.Attribute(L5XElement.Text.ToString())?.Value;
-                return text is not null && text.Contains(tagName);
-            });
-
-            return new RungQuery(results);
-        }
-
-        public IRungQuery WithTag(TagName tagName, TagQueryOptions options)
-        {
-            //todo tag query options
-            var results = Elements.Where(e =>
-            {
-                var text = e.Attribute(L5XElement.Text.ToString())?.Value;
-                return text is not null && text.Contains(tagName);
-            });
 
             return new RungQuery(results);
         }
@@ -73,17 +110,6 @@ namespace L5Sharp.Querying
             throw new NotImplementedException();
         }
 
-        public IRungQuery WithComment(string comment)
-        {
-            var results = Elements.Where(e =>
-            {
-                var value = e.Element(L5XElement.Comment.ToString())?.Value;
-                return value is not null && string.Equals(value, comment);
-            });
-
-            return new RungQuery(results);
-        }
-
         public IRungQuery WithInstruction(string name)
         {
             var results = Elements.Where(e =>
@@ -95,9 +121,15 @@ namespace L5Sharp.Querying
             return new RungQuery(results);
         }
 
-        public IRungQuery WithInstruction(Instruction instruction)
+        public IRungQuery WithTag(TagName tagName)
         {
-            throw new NotImplementedException();
+            var results = Elements.Where(e =>
+            {
+                var text = e.Attribute(L5XElement.Text.ToString())?.Value;
+                return text is not null && text.Contains(tagName);
+            });
+
+            return new RungQuery(results);
         }
     }
 }
