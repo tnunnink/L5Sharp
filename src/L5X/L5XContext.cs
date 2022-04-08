@@ -5,7 +5,7 @@ using L5Sharp.Core;
 using L5Sharp.Extensions;
 using L5Sharp.Querying;
 using L5Sharp.Repositories;
-using L5Sharp.Serialization.Components;
+using L5Sharp.Serialization;
 
 namespace L5Sharp.L5X
 {
@@ -136,5 +136,8 @@ namespace L5Sharp.L5X
 
         /// <inheritdoc />
         public void RejectChanges() => _l5X.RejectChanges();
+
+        /// <inheritdoc />
+        public override string ToString() => _l5X.Content.ToString();
     }
 }

@@ -6,7 +6,7 @@ using L5Sharp.Exceptions;
 namespace L5Sharp.Core
 {
     /// <summary>
-    /// Represents the string name of a Logix component.
+    /// Represents the name of a Logix component.
     /// </summary>
     /// <remarks>
     /// Valid name must contain only alphanumeric or '_', start with a letter, and be between 1 and 40 characters.

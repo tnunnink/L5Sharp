@@ -4,7 +4,7 @@ using System.Reflection;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Schema;
-using L5Sharp.Serialization.Components;
+using L5Sharp.Serialization;
 
 namespace L5Sharp.L5X
 {

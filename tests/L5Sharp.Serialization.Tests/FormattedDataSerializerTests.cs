@@ -3,7 +3,6 @@ using System.Xml.Linq;
 using ApprovalTests;
 using ApprovalTests.Reporters;
 using FluentAssertions;
-using L5Sharp.Serialization.Data;
 using L5Sharp.Types;
 using NUnit.Framework;
 

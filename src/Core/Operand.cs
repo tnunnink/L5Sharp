@@ -8,7 +8,7 @@ namespace L5Sharp.Core
     /// <summary>
     /// Represents an argument for an <see cref="Instruction"/> object.
     /// </summary>
-    public readonly struct Operand : IEquatable<Operand>
+    public sealed class Operand : IEquatable<Operand>
     {
         private readonly object _operand;
 

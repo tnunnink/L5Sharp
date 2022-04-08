@@ -4,8 +4,7 @@ using System.Linq;
 using System.Xml.Linq;
 using L5Sharp.Core;
 using L5Sharp.Extensions;
-using L5Sharp.Serialization.Components;
-using L5Sharp.Serialization.Data;
+using L5Sharp.Serialization;
 using L5Sharp.Types;
 
 namespace L5Sharp.L5X

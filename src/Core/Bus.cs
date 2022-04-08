@@ -116,20 +116,9 @@ namespace L5Sharp.Core
         /// </exception>
         public void Add(IModule module)
         {
-            if (module is null)
-                throw new ArgumentNullException(nameof(module));
+            ValidateModule(module);
 
-            if (_modules.Values.Any(m => m.Name == module.Name))
-                throw new ComponentNameCollisionException(module.Name, module.GetType());
-
-            //todo should we do this?
-            /*module.ParentModule = _parentName;
-            module.ParentPortId = _port.Id;*/
-
-            var port = module.Ports.FirstOrDefault(p => p.Upstream && p.Type == _port.Type)
-                       ?? throw new ArgumentException("Error");
-
-            var address = IsAvailable(port.Address) ? port.Address : NextAvailable();
+            var address = module.Ports.Upstream()!.Address;
 
             _modules[address] = module;
         }

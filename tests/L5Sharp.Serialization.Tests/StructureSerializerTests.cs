@@ -7,7 +7,6 @@ using ApprovalTests.Reporters;
 using FluentAssertions;
 using L5Sharp.Core;
 using L5Sharp.Creators;
-using L5Sharp.Serialization.Data;
 using L5Sharp.Types;
 using NUnit.Framework;
 

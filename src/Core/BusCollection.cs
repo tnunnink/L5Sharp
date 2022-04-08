@@ -14,22 +14,13 @@ namespace L5Sharp.Core
         private readonly Dictionary<Port, Bus> _buses;
 
         /// <summary>
-        /// Creates a new <see cref="BusCollection"/> and initializes the collection with the provided ports.
+        /// Creates a new <see cref="BusCollection"/> with the provided ports and parent module.
         /// </summary>
-        /// <param name="ports">The <see cref="PortCollection"/> containing the ports to initialize the collection with.</param>
-        public BusCollection(PortCollection ports)
-        {
-            _ports = ports ?? throw new ArgumentNullException(nameof(ports));
-            _buses = new Dictionary<Port, Bus>();
-
-            foreach (var port in ports.Downstream())
-            {
-                var bus = new Bus(port);
-                _buses.Add(port, bus);
-            }
-        }
-        
-        internal BusCollection(PortCollection ports, IModule module)
+        /// <param name="ports">The set of port for which to create a bus for. A new bus is created for each downstream
+        /// port in the collection.</param>
+        /// <param name="module">The parent module of all child modules in the bus collection.</param>
+        /// <exception cref="ArgumentNullException">ports is null.</exception>
+        public BusCollection(PortCollection ports, IModule module)
         {
             _ports = ports ?? throw new ArgumentNullException(nameof(ports));
             _buses = new Dictionary<Port, Bus>();
@@ -41,7 +32,15 @@ namespace L5Sharp.Core
             }
         }
 
-        internal BusCollection(PortCollection ports, IModule module, ICollection<IModule> children)
+        /// <summary>
+        /// Creates a new <see cref="BusCollection"/> with the provided parameters.
+        /// </summary>
+        /// <param name="ports">The set of port for which to create a bus for. A new bus is created for each downstream
+        /// port in the collection.</param>
+        /// <param name="module">The parent module of all child modules in the bus collection.</param>
+        /// <param name="children">The collection of child module to initialize the bus collection with.</param>
+        /// <exception cref="ArgumentNullException">ports is null.</exception>
+        public BusCollection(PortCollection ports, IModule module, ICollection<IModule> children)
         {
             _ports = ports ?? throw new ArgumentNullException(nameof(ports));
             _buses = new Dictionary<Port, Bus>();

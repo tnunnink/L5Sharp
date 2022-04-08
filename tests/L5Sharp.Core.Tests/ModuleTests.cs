@@ -31,6 +31,15 @@ namespace L5Sharp.Core.Tests
         }
 
         [Test]
+        public void New_DefaultConstructor_ShouldNotBeNull()
+        {
+            var module = new Module("Test", "1756-EN2T", Vendor.Rockwell, ProductType.Communications, 1,
+                new List<Port> {new(1, "ICP", "0")}, new Revision(1, 1), "Local", 1);
+
+            module.Should().NotBeNull();
+        }
+
+        [Test]
         public void DefinitionConstructor_NullName_ShouldThrowArgumentNullException()
         {
             var definition = CreateFakeDefinition();

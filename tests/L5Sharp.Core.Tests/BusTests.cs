@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Net;
 using FluentAssertions;
 using L5Sharp.Enums;
@@ -73,7 +74,7 @@ namespace L5Sharp.Core.Tests
 
             bus.Size.Should().Be(0);
         }
-        
+
         [Test]
         public void Size_SizeSpecifiedPort_ShouldBeExpectedValue()
         {
@@ -98,7 +99,7 @@ namespace L5Sharp.Core.Tests
 
             bus.IsEmpty.Should().BeFalse();
         }
-        
+
         [Test]
         public void IsFull_SizeIsOneAndModuleAdded_ShouldBeTrue()
         {
@@ -107,7 +108,7 @@ namespace L5Sharp.Core.Tests
 
             bus.IsFull.Should().BeTrue();
         }
-        
+
         [Test]
         public void IsFull_NoSizePort_ShouldBeFalse()
         {
@@ -199,7 +200,7 @@ namespace L5Sharp.Core.Tests
         }
 
         [Test]
-        public void Add_DuplicateName_ShouldThrowArgumentNullException()
+        public void Add_DuplicateName_ShouldThrowComponentNameCollisionException()
         {
             var bus = CreateBackplane();
             var module = new Module("Test", "1756-EN2T");
@@ -212,8 +213,19 @@ namespace L5Sharp.Core.Tests
         public void Add_NoUpstreamPort_ShouldThrowArgumentException()
         {
             var bus = CreateBackplane();
-            
-            var module = new Module("Child", "1756-EN2T");
+
+            var module = new Module("Child", "1756-EN2T", parentModule: "Test", parentPortId: 1);
+
+            FluentActions.Invoking(() => bus.Add(module)).Should().Throw<ArgumentException>()
+                .WithMessage($"No upstream port defined for module '{module.Name}'. Module must have an upstream port to be added to bus.");
+        }
+
+        [Test]
+        public void Add_InvalidParentPortId_ShouldThrowArgumentException()
+        {
+            var bus = CreateBackplane();
+
+            var module = new Module("Child", "1756-IF8", 1, parentModule: "Test");
 
             FluentActions.Invoking(() => bus.Add(module)).Should().Throw<ArgumentException>();
         }
@@ -222,7 +234,7 @@ namespace L5Sharp.Core.Tests
         public void Add_ValidModule_ShouldHaveExpectedCount()
         {
             var bus = CreateBackplane();
-            var module = new Module("Child", "1756-IF8", 1);
+            var module = new Module("Child", "1756-IF8", 1, parentModule: "Test", parentPortId: 1);
 
             bus.Add(module);
 
@@ -232,7 +244,17 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void AddMany_ValidModules_ShouldHaveExpectedCount()
         {
-            
+            var bus = CreateBackplane();
+            var modules = new List<IModule>
+            {
+                new Module("Child1", "1756-IF8", 1, parentModule: "Test", parentPortId: 1),
+                new Module("Child2", "1756-IF8", 2, parentModule: "Test", parentPortId: 1),
+                new Module("Child3", "1756-IF8", 3, parentModule: "Test", parentPortId: 1),
+            };
+
+            bus.AddMany(modules);
+
+            bus.Should().HaveCount(4);
         }
 
         [Test]
@@ -351,7 +373,7 @@ namespace L5Sharp.Core.Tests
 
             FluentActions.Invoking(() => bus.Create("Test", "1756-IF8", 1)).Should().Throw<InvalidOperationException>();
         }
-        
+
         [Test]
         public void Create_ValidModule_ShouldNotBeNull()
         {
@@ -408,22 +430,22 @@ namespace L5Sharp.Core.Tests
 
             child.Should().BeSameAs(module);
         }
-        
+
         [Test]
         public void Create_EthernetBus_ShouldNotBeNull()
         {
             var parent = new Module("Test", "1756-EN2T", 1, IPAddress.Parse("1.2.3.4"));
-            
+
             var module = parent.Bus.Ethernet()?.Create("Child", "1783-ETAP", 0, IPAddress.Parse("2.2.2.2"));
 
             module.Should().NotBeNull();
         }
-        
+
         [Test]
         public void Create_EthernetBus_ShouldHaveExpectedProperties()
-        { 
+        {
             var parent = new Module("Test", "1756-EN2T", 1, IPAddress.Parse("1.2.3.4"));
-            
+
             var module = parent.Bus.Ethernet()?.Create("Child", "1783-ETAP", 0, IPAddress.Parse("2.2.2.2"));
 
             module?.Name.Should().Be("Child");
@@ -442,22 +464,22 @@ namespace L5Sharp.Core.Tests
             module?.ParentPortId.Should().Be(2);
             module?.Ports.Should().HaveCount(1);
         }
-        
+
         [Test]
         public void Create_DuplicateIPAddress_ShouldAssignNextAvailable()
         {
             var parent = new Module("Test", "1756-EN2T", 1, IPAddress.Parse("1.2.3.4"));
-            
+
             var module = parent.Bus.Ethernet()?.Create("Child", "1783-ETAP", 0, IPAddress.Parse("1.2.3.4"));
 
             module?.IP.Should().Be(IPAddress.Parse("192.168.1.1"));
         }
-        
+
         [Test]
         public void Create_DuplicateIPAddressOnDefaultNetwork_ShouldAssignNextAvailable()
         {
             var parent = new Module("Test", "1756-EN2T", 1, IPAddress.Parse("192.168.1.1"));
-            
+
             var module = parent.Bus.Ethernet()?.Create("Child", "1783-ETAP", 0, IPAddress.Parse("192.168.1.1"));
 
             module?.IP.Should().Be(IPAddress.Parse("192.168.1.2"));
@@ -479,7 +501,8 @@ namespace L5Sharp.Core.Tests
             var definition = catalog.Lookup("1756-IF8");
             var bus = CreateBackplane();
 
-            FluentActions.Invoking(() => bus.Create("Test", definition)).Should().Throw<ComponentNameCollisionException>();
+            FluentActions.Invoking(() => bus.Create("Test", definition)).Should()
+                .Throw<ComponentNameCollisionException>();
         }
 
         [Test]
@@ -523,7 +546,7 @@ namespace L5Sharp.Core.Tests
 
             module.Should().NotBeNull();
         }
-        
+
         [Test]
         public void Create_ModuleDefinitionOverloadWithValidDefinition_ShouldHaveExpectedProperties()
         {

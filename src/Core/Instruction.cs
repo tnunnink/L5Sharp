@@ -64,8 +64,8 @@ namespace L5Sharp.Core
             if (!match.Success)
                 throw new FormatException($"Text input '{text}' does not have expected instruction format.");
 
-            var name = match.Groups[0].Value;
-            var operands = Regex.Split(match.Groups[1].Value, OperandSplitPattern, RegexOptions.Compiled)
+            var name = match.Groups[1].Value;
+            var operands = Regex.Split(match.Groups[2].Value, OperandSplitPattern, RegexOptions.Compiled)
                 .Select(s => (Operand)s);
 
             return new Instruction(name, operands);

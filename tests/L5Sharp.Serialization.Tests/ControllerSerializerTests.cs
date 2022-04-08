@@ -2,7 +2,6 @@
 using System.Xml.Linq;
 using FluentAssertions;
 using L5Sharp.Core;
-using L5Sharp.Serialization.Components;
 using NUnit.Framework;
 
 namespace L5Sharp.Serialization.Tests

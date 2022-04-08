@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net;
@@ -17,7 +18,7 @@ namespace L5Sharp.Core
     public class ModuleDefinition
     {
         private const string Ethernet = "Ethernet";
-        
+
         /// <summary>
         /// Creates a new <see cref="ModuleDefinition"/> object with the provided data.
         /// </summary>
@@ -94,10 +95,6 @@ namespace L5Sharp.Core
         /// upstream port.</param>
         /// <param name="upstreamAddress">The address of the upstream port.</param>
         /// <param name="downstreamAddress">The address of the downstream port.</param>
-        /// <remarks>
-        /// Provides a simple way to configure the port connections by supplying a slot number and optional IP.
-        /// This method assumes the port with the slot number will be the upstream connecting port.
-        /// </remarks>
         public ModuleDefinition ConfigurePorts(string upstreamType, string upstreamAddress, string downstreamAddress)
         {
             var ports = new List<Port>();
@@ -110,10 +107,10 @@ namespace L5Sharp.Core
             if (downstream is not null)
                 ports.Add(downstream);
 
-            return new ModuleDefinition(CatalogNumber, Vendor, ProductType, ProductCode, Revisions, Categories,
-                ports, Description);
+            return new ModuleDefinition(CatalogNumber, Vendor, ProductType, ProductCode, Revisions,
+                Categories, ports, Description);
         }
-        
+
         /// <summary>
         /// Configures the <see cref="Ports"/> of the definition such that the first found non 'Ethernet' type port is
         /// the upstream port with the specified slot address, and any 'Ethernet' type ports are downstream ports with
@@ -127,19 +124,21 @@ namespace L5Sharp.Core
         public ModuleDefinition ConfigureBackplane(byte slot, IPAddress? ipAddress = null)
         {
             var ports = new List<Port>();
-            
+
             var upstream = Ports.FirstOrDefault(p => p.Type != Ethernet)?.Configure(slot.ToString(), true);
-            
-            //should we fail?
-            if (upstream is not null)
-                ports.Add(upstream);
+
+            if (upstream is null)
+                throw new InvalidOperationException(
+                    $"No port of type '{Ethernet}' is available on the current definition. Can not configure slot on non Ethernet type port.");
 
             var downstream = Ports.Where(p => p.Type == Ethernet)
                 .Select(p => p.Configure(ipAddress?.ToString() ?? IPAddress.Any.ToString()));
-            ports.AddRange(downstream);
             
-            return new ModuleDefinition(CatalogNumber, Vendor, ProductType, ProductCode, Revisions, Categories, ports,
-                Description);
+            ports.Add(upstream);
+            ports.AddRange(downstream);
+
+            return new ModuleDefinition(CatalogNumber, Vendor, ProductType, ProductCode, Revisions,
+                Categories, ports, Description);
         }
 
         /// <summary>
@@ -155,17 +154,20 @@ namespace L5Sharp.Core
         public ModuleDefinition ConfigureEthernet(IPAddress ipAddress, byte slot = default)
         {
             var ports = new List<Port>();
-            
-            //should we fail?
+
             var upstream = Ports.FirstOrDefault(p => p.Type == Ethernet)?.Configure(ipAddress.ToString(), true);
-            if (upstream is not null)
-                ports.Add(upstream);
+
+            if (upstream is null)
+                throw new InvalidOperationException(
+                    $"No port of type '{Ethernet}' is available on the current definition. Can not configure IP on non Ethernet type port.");
 
             var downstream = Ports.Where(p => p.Type != Ethernet).Select(p => p.Configure(slot.ToString()));
+
+            ports.Add(upstream);
             ports.AddRange(downstream);
-            
-            return new ModuleDefinition(CatalogNumber, Vendor, ProductType, ProductCode, Revisions, Categories, ports,
-                Description);
+
+            return new ModuleDefinition(CatalogNumber, Vendor, ProductType, ProductCode, Revisions,
+                Categories, ports, Description);
         }
     }
 }

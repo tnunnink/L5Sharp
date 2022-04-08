@@ -34,6 +34,8 @@ namespace L5Sharp.Core
             DownstreamOnly = downstreamOnly;
         }
 
+        public IModule Module { get; }
+
         /// <summary>
         /// Gets the Id of the <see cref="Port"/>.
         /// </summary>

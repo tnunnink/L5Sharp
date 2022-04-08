@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using L5Sharp.Serialization;
-using L5Sharp.Serialization.Components;
-using L5Sharp.Serialization.Data;
 
 namespace L5Sharp.L5X
 {
