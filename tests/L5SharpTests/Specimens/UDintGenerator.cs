@@ -2,19 +2,19 @@
 using AutoFixture.Kernel;
 using L5Sharp.Types;
 
-namespace L5Sharp.Internal.Tests.Specimens
+namespace L5SharpTests.Specimens
 {
-    public class SintGenerator : ISpecimenBuilder
+    public class UDintGenerator : ISpecimenBuilder
     {
         public object Create(object request, ISpecimenContext context)
         {
             if (request is not Type type)
                 return new NoSpecimen();
 
-            if (type != typeof(SINT))
+            if (type != typeof(UDINT))
                 return new NoSpecimen();
             
-            return new SINT();
+            return new UDINT();
         }
     }
 }

@@ -2,7 +2,7 @@
 using FluentAssertions;
 using L5Sharp.Core;
 using L5Sharp.L5X;
-using L5Sharp.Querying.Tests.Content;
+using L5SharpTests;
 using NUnit.Framework;
 
 namespace L5Sharp.Querying.Tests
@@ -10,6 +10,16 @@ namespace L5Sharp.Querying.Tests
     [TestFixture]
     public class SpecificModuleQueryTests
     {
+        [Test]
+        public void Local_WhenCalled_ShouldNotBeNull()
+        {
+            var context = L5XContext.Load(Known.Test);
+
+            var component = context.Modules().Local();
+
+            component.Should().NotBeNull();
+        }
+        
         [Test]
         public void Named_Existing_ShouldBeExpected()
         {

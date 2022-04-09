@@ -15,13 +15,11 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\src\L5Sharp.csproj" />
+      <ProjectReference Include="..\L5SharpTests\L5SharpTests.csproj" />
     </ItemGroup>
 
     <ItemGroup>
       <None Update="TestFiles\Test.xml">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="Content\Test.xml">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
       <None Update="RungExamples\RungExample1.xml">

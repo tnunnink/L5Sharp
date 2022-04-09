@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
+using L5Sharp.Abstractions;
 using L5Sharp.Enums;
 using NUnit.Framework;
 
@@ -101,11 +102,11 @@ namespace L5Sharp.Core.Tests
 
             var icpPort = definition.Ports.First(p => p.Type == "ICP");
             icpPort.Upstream.Should().BeTrue();
-            icpPort.Address.Should().Be("3");
+            icpPort.Address.Should().Be(new PortAddress("3"));
             
             var ethernetPort = definition.Ports.First(p => p.Type == "Ethernet");
             ethernetPort.Upstream.Should().BeFalse();
-            ethernetPort.Address.Should().Be("192.168.1.1");
+            ethernetPort.Address.Should().Be(new PortAddress("192.168.1.1"));
         }
 
         [Test]
@@ -127,11 +128,11 @@ namespace L5Sharp.Core.Tests
 
             var icpPort = definition.Ports.First(p => p.Type == "ICP");
             icpPort.Upstream.Should().BeFalse();
-            icpPort.Address.Should().Be("3");
+            icpPort.Address.Should().Be(new PortAddress("3"));
             
             var ethernetPort = definition.Ports.First(p => p.Type == "Ethernet");
             ethernetPort.Upstream.Should().BeTrue();
-            ethernetPort.Address.Should().Be("192.168.1.1");
+            ethernetPort.Address.Should().Be(new PortAddress("192.168.1.1"));
         }
 
         [Test]
@@ -170,7 +171,7 @@ namespace L5Sharp.Core.Tests
                 }, "1756 10/100 Mbps Ethernet Bridge, Twisted-Pair Media");
             
             FluentActions.Invoking(() => definition.ConfigureRevision(new Revision(10, 1)))
-                .Should().Throw<ArgumentException>()
+                .Should().Throw<InvalidOperationException>()
                 .WithMessage($"The provided revision 10.1 is not a valid available revision for the definition.");
         }
     }

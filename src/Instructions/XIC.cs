@@ -2,6 +2,7 @@
 using L5Sharp.Core;
 using L5Sharp.Types;
 
+//This is just an idea. Not sure it would add any value. Perhaps you could use this for creating rungs...
 namespace L5Sharp.Instructions
 {
     /// <summary>

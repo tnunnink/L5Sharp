@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<RSLogix5000Content SchemaRevision="1.0" SoftwareRevision="32.02" TargetName="TestController" TargetType="Controller" ContainsContext="false" Owner="tnunnink, EN Engineering" ExportDate="Fri Apr 01 09:49:45 2022" ExportOptions="NoRawData L5KData DecoratedData ForceProtectedEncoding AllProjDocTrans">
-<Controller Use="Target" Name="TestController" ProcessorType="1756-L83E" MajorRev="32" MinorRev="11" ProjectCreationDate="Mon Sep 27 16:23:27 2021" LastModifiedDate="Fri Apr 01 09:49:02 2022" SFCExecutionControl="CurrentActive" SFCRestartPosition="MostRecent" SFCLastScan="DontScan" ProjectSN="16#0000_0000"
+<RSLogix5000Content SchemaRevision="1.0" SoftwareRevision="32.02" TargetName="TestController" TargetType="Controller" ContainsContext="false" Owner="tnunnink, EN Engineering" ExportDate="Sat Apr 09 08:40:01 2022" ExportOptions="NoRawData L5KData DecoratedData ForceProtectedEncoding AllProjDocTrans">
+<Controller Use="Target" Name="TestController" ProcessorType="1756-L83E" MajorRev="32" MinorRev="11" ProjectCreationDate="Mon Sep 27 16:23:27 2021" LastModifiedDate="Sat Apr 09 08:39:53 2022" SFCExecutionControl="CurrentActive" SFCRestartPosition="MostRecent" SFCLastScan="DontScan" ProjectSN="16#0000_0000"
  MatchProjectToController="false" CanUseRPIFromProducer="false" InhibitAutomaticFirmwareUpdate="0" PassThroughConfiguration="EnabledWithAppend" DownloadProjectDocumentationAndExtendedProperties="true" DownloadProjectCustomProperties="true" ReportMinorOverflow="false">
 <Description>
 <![CDATA[This is a test project]]>
@@ -2729,7 +2729,7 @@ Dint Array]]>
 <Port Id="1" Type="RIOChassis" Upstream="false">
 <Bus Size="4"/>
 </Port>
-<Port Id="2" Address="0" Type="RIO" Upstream="true"/>
+<Port Id="2" Address="1" Type="RIO" Upstream="true"/>
 </Ports>
 <Communications CommMethod="536870913">
 <Connections>
@@ -2762,25 +2762,6 @@ Dint Array]]>
 </Connection>
 </Connections>
 </Communications>
-</Module>
-<Module Name="TestCard" CatalogNumber="1756-EN2T" Vendor="1" ProductType="12" ProductCode="166" Major="11" Minor="1" ParentModule="Local" ParentModPortId="2" Inhibited="false" MajorFault="false"
->
-<Description>
-<![CDATA[This is a test EN2T module]]>
-</Description>
-<EKey State="CompatibleModule"/>
-<Ports>
-<Port Id="1" Address="0" Type="ICP" Upstream="false">
-<Bus Size="17"/>
-</Port>
-<Port Id="2" Address="" Type="Ethernet" Upstream="true"/>
-</Ports>
-<Communications CommMethod="536870914">
-<Connections/>
-</Communications>
-<ExtendedProperties>
-<public><Vendor>Rockwell Automation/Allen-Bradley</Vendor><CatNum>1756-EN2T</CatNum><ConfigID>4325481</ConfigID></public>
-</ExtendedProperties>
 </Module>
 <Module Name="RackIO" CatalogNumber="1756-EN2T" Vendor="1" ProductType="12" ProductCode="166" Major="11" Minor="1" ParentModule="Local" ParentModPortId="2" Inhibited="false" MajorFault="false"
 >
@@ -6513,6 +6494,25 @@ Dint Array]]>
 </Communications>
 <ExtendedProperties>
 <public><ConfigID>262157</ConfigID><CatNum>1794-IB16</CatNum></public>
+</ExtendedProperties>
+</Module>
+<Module Name="TestCard" CatalogNumber="1756-EN2T" Vendor="1" ProductType="12" ProductCode="166" Major="11" Minor="1" ParentModule="Local" ParentModPortId="2" Inhibited="false" MajorFault="false"
+>
+<Description>
+<![CDATA[This is a test EN2T module]]>
+</Description>
+<EKey State="CompatibleModule"/>
+<Ports>
+<Port Id="1" Address="0" Type="ICP" Upstream="false">
+<Bus Size="17"/>
+</Port>
+<Port Id="2" Address="Host-Name.Com1234d5asdvdlkjadvasdfasdfasddfasdfasdfasdasdfasdfda" Type="Ethernet" Upstream="true"/>
+</Ports>
+<Communications CommMethod="536870914">
+<Connections/>
+</Communications>
+<ExtendedProperties>
+<public><Vendor>Rockwell Automation/Allen-Bradley</Vendor><CatNum>1756-EN2T</CatNum><ConfigID>4325481</ConfigID></public>
 </ExtendedProperties>
 </Module>
 </Modules>

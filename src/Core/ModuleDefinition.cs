@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using L5Sharp.Abstractions;
 using L5Sharp.Enums;
 
 namespace L5Sharp.Core
@@ -97,43 +98,60 @@ namespace L5Sharp.Core
         public IEnumerable<Port> Ports => _ports;
 
         /// <summary>
-        /// Configures the <see cref="Revision"/> property of the module. This property is used by various components
-        /// to set the revision property of newly created modules.
+        /// Determines if the <see cref="ModuleDefinition"/> has a port capable of connecting to a module with
+        /// the specified type.
+        /// </summary>
+        /// <param name="portType">The port type of the module to test the connection of a port in the current
+        /// definition.</param>
+        /// <returns>true if the definition object contains a port with the specified type that is not set to
+        /// downstream only; otherwise, false.</returns>
+        public bool CanConnectTo(string portType) => _ports.Any(p => p.Type == portType && !p.DownstreamOnly);
+
+        /// <summary>
+        /// Configures the <see cref="Revision"/> property of the <see cref="ModuleDefinition"/>.
+        /// This property is used by various components to set the revision property of newly created modules.
         /// </summary>
         /// <param name="revision">The revision number to configure.</param>
+        /// <exception cref="InvalidOperationException">The current definition object does not contain a revision that
+        /// matches the one specified by <c>revision</c>.</exception>
         public void ConfigureRevision(Revision revision)
         {
             if (!_revisions.Contains(revision))
-                throw new ArgumentException(
+                throw new InvalidOperationException(
                     $"The provided revision {revision} is not a valid available revision for the definition.");
 
             Revision = revision;
         }
 
         /// <summary>
-        /// Configures the <see cref="Ports"/> property of the definition in such that the first port specified by
-        /// upstreamType is the upstream port with the provided upstreamAddress, and the only other port
-        /// (assuming 2 ports) is the downstream port with the provided downstream address and bus size.
+        /// Configures the <see cref="Ports"/> collection of the <see cref="ModuleDefinition"/> in such that the
+        /// first port specified by upstreamType is the upstream port with the provided upstreamAddress,
+        /// and all other ports are set as downstream ports with the provided downstream address and bus size, if provided.
         /// </summary>
         /// <param name="upstreamType">The port type of the upstream port.</param>
         /// <param name="upstreamAddress">The address of the upstream port.</param>
         /// <param name="downstreamAddress">The optional address of the downstream port. If not provided, the address
         /// will default to an empty string for all downstream ports.</param>
         /// <param name="busSize">The optional size of the downstream bus. If not provided will default to zero.</param>
-        public void ConfigurePorts(string upstreamType, string upstreamAddress, string? downstreamAddress = null,
-            byte busSize = default)
+        /// <exception cref="InvalidOperationException">No port exists with type upstreamType -or- the port with type
+        /// upstreamType is configured as a downstream only port.</exception>
+        public void ConfigurePorts(string upstreamType, PortAddress upstreamAddress,
+            PortAddress? downstreamAddress = null, byte busSize = default)
         {
             var ports = new List<Port>();
 
             var upstream = _ports.FirstOrDefault(p => p.Type == upstreamType);
 
             if (upstream is null)
-                throw new InvalidOperationException("");
+                throw new InvalidOperationException(
+                    $"No port of type {upstreamType} available on the current definition.");
 
             if (upstream.DownstreamOnly)
-                throw new InvalidOperationException();
+                throw new InvalidOperationException(
+                    $"The port type {upstream.Type} is a downstream only port and can not be configured for upstream connections.");
 
             ports.Add(new Port(upstream.Id, upstream.Type, upstreamAddress, true));
+
             ports.AddRange(_ports.Where(p => p.Type != upstreamType).Select(ds =>
                 new Port(ds.Id, ds.Type, downstreamAddress, false, busSize, ds.DownstreamOnly)));
 

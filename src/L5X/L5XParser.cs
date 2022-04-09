@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using L5Sharp.Abstractions;
 using L5Sharp.Core;
 using L5Sharp.Enums;
 
@@ -42,7 +43,8 @@ namespace L5Sharp.L5X
             { typeof(Watchdog), s => Watchdog.Parse(s) },
             { typeof(CatalogNumber), s => new CatalogNumber(s) },
             { typeof(Vendor), Vendor.Parse },
-            { typeof(ProductType), ProductType.Parse }
+            { typeof(ProductType), ProductType.Parse },
+            { typeof(PortAddress), s => new PortAddress(s) }
         };
         
         private static readonly Dictionary<Type, Func<string, object?>> TryParsers = new()

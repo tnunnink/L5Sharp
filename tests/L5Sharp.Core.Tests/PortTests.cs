@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using L5Sharp.Abstractions;
 using NUnit.Framework;
 
 namespace L5Sharp.Core.Tests
@@ -23,7 +24,7 @@ namespace L5Sharp.Core.Tests
             port.Type.Should().Be("ICP");
             port.Upstream.Should().BeFalse();
             port.DownstreamOnly.Should().BeFalse();
-            port.Address.Should().BeEmpty();
+            port.Address.Should().Be(PortAddress.None);
             port.BusSize.Should().Be(0);
         }
 
@@ -36,7 +37,7 @@ namespace L5Sharp.Core.Tests
             port.Type.Should().Be("ICP");
             port.Upstream.Should().BeTrue();
             port.DownstreamOnly.Should().BeTrue();
-            port.Address.Should().Be("0");
+            port.Address.Should().Be(new PortAddress("0"));
             port.BusSize.Should().Be(17);
         }
 

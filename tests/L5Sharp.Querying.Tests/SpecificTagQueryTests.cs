@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using FluentAssertions;
 using L5Sharp.L5X;
-using L5Sharp.Querying.Tests.Content;
+using L5SharpTests;
 using NUnit.Framework;
 
 namespace L5Sharp.Querying.Tests
@@ -13,8 +13,8 @@ namespace L5Sharp.Querying.Tests
         public void Where_DimensionsIsEmpty_ShouldNotBeNull()
         {
             var context = L5XContext.Load(Known.Test);
-
-            var component = context.Tags().Where(t => t.Dimensions.IsEmpty);
+            
+            var component = context.Tags().Where(t => t.Dimensions.Length > 10);
 
             component.Should().NotBeEmpty();
         }

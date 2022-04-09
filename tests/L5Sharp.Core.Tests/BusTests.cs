@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using FluentAssertions;
+using L5Sharp.Abstractions;
 using L5Sharp.Enums;
 using L5Sharp.Exceptions;
 using NUnit.Framework;
@@ -282,7 +283,7 @@ namespace L5Sharp.Core.Tests
 
             var address = bus.AddressOf("Test");
 
-            address.Should().Be("0");
+            address.Should().Be(new PortAddress("0"));
         }
 
         [Test]
@@ -420,7 +421,7 @@ namespace L5Sharp.Core.Tests
             module.MajorFault.Should().BeFalse();
             module.SafetyEnabled.Should().BeFalse();
             module.Slot.Should().Be(1);
-            module.IP.Should().Be(IPAddress.Any);
+            module.IP.Should().Be(IPAddress.None);
             module.Keying.Should().Be(ElectronicKeying.CompatibleModule);
             module.ParentModule.Should().Be("Test");
             module.ParentPortId.Should().Be(1);

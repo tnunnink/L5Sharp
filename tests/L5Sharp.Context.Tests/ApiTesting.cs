@@ -1,5 +1,4 @@
-﻿using FluentAssertions;
-using L5Sharp.L5X;
+﻿using L5Sharp.L5X;
 using NUnit.Framework;
 
 namespace L5Sharp.Context.Tests
@@ -13,21 +12,8 @@ namespace L5Sharp.Context.Tests
             var context = L5XContext.Load(Known.Template);
 
             var changed = context.IsChanged;
-        }
-        
-        [Test]
-        public void RungQuerier()
-        {
-            var context = L5XContext.Load(Known.Template);
-
-            var rungs = context.Rungs()
-                .InRoutine("Test")
-                .WithTag("TagToSearch")
-                .InRange(1, 3)
-                .Flatten()
-                .All();
-
-            rungs.Should().NotBeEmpty();
+            
+            Assert.Pass();
         }
     }
 }

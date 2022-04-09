@@ -435,23 +435,21 @@ namespace L5Sharp.Extensions.Tests
         }
 
         [Test]
-        public void SetData_IncompatibleAtomics_WillThrowArgumentException()
+        public void SetData_IncompatibleAtomics_WillThrowInvalidOperationException()
         {
             var target = new INT(20);
             var source = new DINT(100);
 
-            FluentActions.Invoking(() => target.SetData(source)).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(() => target.SetData(source)).Should().Throw<InvalidOperationException>();
         }
         
         [Test]
-        public void SetData_DifferentButConvertableAtomics_WillSetData()
+        public void SetData_DifferentButConvertableAtomics_WillThrowInvalidOperationException()
         {
             var target = new DINT(100);
             var source = new INT(30);
 
-            target.SetData(source);
-            
-            target.Value.Should().Be(30);
+            FluentActions.Invoking(() => target.SetData(source)).Should().Throw<InvalidOperationException>();
         }
         
         [Test]

@@ -16,7 +16,7 @@ namespace L5Sharp.Core
             Description = string.Empty;
             Keying = ElectronicKeying.CompatibleModule;
             Slot = 0;
-            IP = IPAddress.Any;
+            IP = IPAddress.None;
             ChassisSize = 0;
             Inhibited = false;
             MajorFault = false;

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
+using L5Sharp.Abstractions;
 using NUnit.Framework;
 
 namespace L5Sharp.Core.Tests
@@ -109,7 +110,7 @@ namespace L5Sharp.Core.Tests
             port.Should().NotBeNull();
             port?.Id.Should().Be(1);
             port?.Type.Should().Be("ICP");
-            port?.Address.Should().Be("0");
+            port?.Address.Should().Be(new PortAddress("0"));
             port?.Upstream.Should().BeTrue();
         }
         
@@ -140,7 +141,7 @@ namespace L5Sharp.Core.Tests
             ports.Should().HaveCount(1);
             ports.First().Id.Should().Be(2);
             ports.First().Type.Should().Be("Ethernet");
-            ports.First().Address.Should().Be("1.2.3.4");
+            ports.First().Address.Should().Be(new PortAddress("1.2.3.4"));
             ports.First().Upstream.Should().BeFalse();
         }
         
@@ -171,7 +172,7 @@ namespace L5Sharp.Core.Tests
             port.Should().NotBeNull();
             port?.Id.Should().Be(1);
             port?.Type.Should().Be("ICP");
-            port?.Address.Should().Be("0");
+            port?.Address.Should().Be(new PortAddress("0"));
             port?.Upstream.Should().BeFalse();
         }
         
@@ -202,7 +203,7 @@ namespace L5Sharp.Core.Tests
             port.Should().NotBeNull();
             port?.Id.Should().Be(2);
             port?.Type.Should().Be("Ethernet");
-            port?.Address.Should().Be("1.2.3.4");
+            port?.Address.Should().Be(new PortAddress("1.2.3.4"));
             port?.Upstream.Should().BeFalse();
         }
 

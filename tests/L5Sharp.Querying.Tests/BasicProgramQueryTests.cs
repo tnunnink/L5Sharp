@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 using FluentAssertions;
 using L5Sharp.Core;
 using L5Sharp.L5X;
-using L5Sharp.Querying.Tests.Content;
+using L5SharpTests;
 using NUnit.Framework;
 
 namespace L5Sharp.Querying.Tests

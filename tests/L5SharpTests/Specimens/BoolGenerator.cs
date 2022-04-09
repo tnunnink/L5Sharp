@@ -2,19 +2,19 @@
 using AutoFixture.Kernel;
 using L5Sharp.Types;
 
-namespace L5Sharp.Internal.Tests.Specimens
+namespace L5SharpTests.Specimens
 {
-    public class LintGenerator : ISpecimenBuilder
+    public class BoolGenerator : ISpecimenBuilder
     {
         public object Create(object request, ISpecimenContext context)
         {
             if (request is not Type type)
                 return new NoSpecimen();
 
-            if (type != typeof(LINT))
+            if (type != typeof(BOOL))
                 return new NoSpecimen();
             
-            return new LINT();
+            return new BOOL();
         }
     }
 }

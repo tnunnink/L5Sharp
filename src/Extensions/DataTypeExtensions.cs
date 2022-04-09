@@ -175,6 +175,9 @@ namespace L5Sharp.Extensions
         /// </summary>
         /// <param name="target">The target data type for which data will be written.</param>
         /// <param name="source">The source data type for which the data will be read.</param>
+        /// <exception cref="InvalidOperationException">
+        /// Any atomic data tpe member that is found do not have the same CLR type.
+        /// </exception>
         /// <remarks>
         /// <para>
         /// This method will traverse the data type member hierarchy and set the value of all atomic members of the target
@@ -185,23 +188,23 @@ namespace L5Sharp.Extensions
         /// </para>
         /// <para>
         /// If the data types are not both <see cref="IAtomicType"/>, no state/value will be affected (as none exists).
-        /// If the both data types are <see cref="IAtomicType"/>, then the method will call <see cref="IAtomicType.SetValue"/>.
+        /// If the both data types are <see cref="IAtomicType"/> of the same CLR type,
+        /// then the method will call <see cref="IAtomicType.SetValue"/>. If the atomic object's CLR type does not match
+        /// then that indicates some sort of mismatch in the data structures of the source and target, and will throw
+        /// an exception, since it may not be possible to implicitly convert the value types. 
         /// </para>
         /// </remarks>
         public static void SetData(this IDataType target, IDataType source)
         {
             if (target is IAtomicType targetValue && source is IAtomicType sourceValue)
             {
-                if (target.GetType() == source.GetType())
-                {
-                    targetValue.SetValue(sourceValue.Value);   
-                }
-                else
-                {
-                    //todo throw exception?
-                }
+                if (target.GetType() != source.GetType())
+                    throw new InvalidOperationException(
+                        $"The target type {target.GetType()} does not match source type {source.GetType()}");
+
+                targetValue.SetValue(sourceValue.Value);
             }
-                
+
 
             var memberPairs = target.GetMembers()
                 .Zip(source.GetMembers(), (x, y) => new { First = x.DataType, Second = y.DataType });

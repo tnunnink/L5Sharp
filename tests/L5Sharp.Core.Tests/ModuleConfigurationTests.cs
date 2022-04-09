@@ -28,7 +28,7 @@ namespace L5Sharp.Core.Tests
             configuration.Keying.Should().Be(ElectronicKeying.CompatibleModule);
             configuration.Revision.Should().BeNull();
             configuration.Slot.Should().Be(0);
-            configuration.IP.Should().Be(IPAddress.Any);
+            configuration.IP.Should().Be(IPAddress.None);
             configuration.ChassisSize.Should().Be(0);
         }
 

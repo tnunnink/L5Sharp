@@ -158,11 +158,14 @@ namespace L5Sharp.Core
         public ElectronicKeying Keying { get; }
 
         /// <inheritdoc />
-        public int Slot => byte.TryParse(Ports.Backplane?.Address, out var slot) ? slot : default;
+        public int Slot => Ports.Backplane is not null && Ports.Backplane.Address.IsSlot
+            ? Ports.Backplane.Address.ToSlot()
+            : default;
 
         /// <inheritdoc />
-        public IPAddress IP =>
-            IPAddress.TryParse(Ports.Ethernet?.Address ?? string.Empty, out var ip) ? ip : IPAddress.Any;
+        public IPAddress IP => Ports.Ethernet is not null && Ports.Ethernet.Address.IsIPv4
+            ? Ports.Ethernet.Address.ToIPAddress()
+            : IPAddress.None;
 
         /// <inheritdoc />
         public string ParentModule { get; }
@@ -180,13 +183,13 @@ namespace L5Sharp.Core
         public IReadOnlyCollection<Connection> Connections { get; }
 
         /// <inheritdoc />
-        public Bus? Backplane => Ports.Backplane is not null && !Ports.Backplane.Upstream 
-            ? _buses[Ports.Backplane] 
+        public Bus? Backplane => Ports.Backplane is not null && !Ports.Backplane.Upstream
+            ? _buses[Ports.Backplane]
             : default;
 
         /// <inheritdoc />
-        public Bus? Ethernet => Ports.Ethernet is not null && !Ports.Ethernet.Upstream 
-            ? _buses[Ports.Ethernet] 
+        public Bus? Ethernet => Ports.Ethernet is not null && !Ports.Ethernet.Upstream
+            ? _buses[Ports.Ethernet]
             : default;
 
         /// <inheritdoc />

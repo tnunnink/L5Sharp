@@ -16,6 +16,9 @@
 
     <ItemGroup>
       <None Remove="TestFiles\Test.xml" />
+      <None Update="L5XFiles\Test.xml">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
     </ItemGroup>
 
     <ItemGroup>

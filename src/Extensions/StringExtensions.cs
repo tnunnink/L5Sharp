@@ -198,30 +198,7 @@ namespace L5Sharp.Extensions
         {
             return !value.IsEmpty() && value.StartsWith("LDT#");
         }
-
-        /// <summary>
-        /// Determines if the provided input string is a valid slot number.
-        /// </summary>
-        /// <param name="slotString">The slot number string to analyze.</param>
-        /// <returns>true if the provided string is a valid slot number, meaning that it is parseable to a byte;
-        /// otherwise, false.</returns>
-        public static bool IsByte(this string slotString)
-        {
-            return byte.TryParse(slotString, out _);
-        }
-
-        /// <summary>
-        /// Determines if the provided input string is a IPv4 address.
-        /// </summary>
-        /// <param name="ipString">The string IP address to analyze.</param>
-        /// <returns>true if the provided string is a valid IPv4 address, meaning that it has 4 '.' characters and is
-        /// is parseable to a <see cref="IsIPv4"/>;
-        /// otherwise, false.</returns>
-        public static bool IsIPv4(this string ipString)
-        {
-            return ipString.Count(c => c == '.') == 3 && IPAddress.TryParse(ipString, out _);
-        }
-
+        
         /// <summary>
         /// Replaces all specified string values with a single replacement string value in the current string.
         /// </summary>

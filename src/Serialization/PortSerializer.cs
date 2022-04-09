@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Xml.Linq;
+using L5Sharp.Abstractions;
 using L5Sharp.Core;
 using L5Sharp.L5X;
 
@@ -44,7 +45,7 @@ namespace L5Sharp.Serialization
                 throw new ArgumentException($"Element '{element.Name}' not valid for the serializer {GetType()}.");
 
             var id = element.Attribute(L5XAttribute.Id.ToString())?.Value.Parse<int>() ?? default;
-            var address = element.Attribute(L5XAttribute.Address.ToString())?.Value;
+            var address = element.Attribute(L5XAttribute.Address.ToString())?.Value.Parse<PortAddress>();
             var type = element.Attribute(L5XAttribute.Type.ToString())?.Value!;
             var upstream = element.Attribute(L5XAttribute.Upstream.ToString())?.Value.Parse<bool>() ?? default;
 
@@ -52,7 +53,7 @@ namespace L5Sharp.Serialization
                 ?.Attribute(L5XAttribute.Size.ToString())
                 ?.Value.Parse<byte>() ?? default;
 
-            return new Port(id, type, address, upstream, busSize: busSize);
+            return new Port(id, type, address, upstream, busSize);
         }
     }
 }

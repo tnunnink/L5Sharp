@@ -1,7 +1,9 @@
-﻿using System.Linq;
+﻿using System;
+using System.IO;
+using System.Linq;
 using FluentAssertions;
 using L5Sharp.L5X;
-using L5Sharp.Querying.Tests.Content;
+using L5SharpTests;
 using NUnit.Framework;
 
 namespace L5Sharp.Querying.Tests
@@ -9,6 +11,9 @@ namespace L5Sharp.Querying.Tests
     [TestFixture]
     public class RungQueryTests
     {
+        private static readonly string RungExample1 = 
+            Path.Combine(Environment.CurrentDirectory, @"RungExamples\RungExample1.xml");
+        
         [Test]
         public void InProgram_WhenCalled_ShouldNotBeEmpty()
         {
@@ -32,7 +37,7 @@ namespace L5Sharp.Querying.Tests
         [Test]
         public void Flatten_RungExample1_PleaseGod()
         {
-            var context = L5XContext.Load(Known.RungExample1);
+            var context = L5XContext.Load(RungExample1);
 
             var rungs = context.Rungs().Flatten().All().ToList();
 
