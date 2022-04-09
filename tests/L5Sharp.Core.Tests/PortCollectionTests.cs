@@ -91,7 +91,7 @@ namespace L5Sharp.Core.Tests
                 new(1, "ICP", "0")
             });
 
-            var port = collection.Upstream();
+            var port = collection.Upstream;
 
             port.Should().BeNull();
         }
@@ -104,7 +104,7 @@ namespace L5Sharp.Core.Tests
                 new(1, "ICP", "0", true)
             });
 
-            var port = collection.Upstream();
+            var port = collection.Upstream;
 
             port.Should().NotBeNull();
             port?.Id.Should().Be(1);
@@ -121,7 +121,7 @@ namespace L5Sharp.Core.Tests
                 new(1, "ICP", "0", true)
             });
 
-            var ports = collection.Downstream();
+            var ports = collection.Downstream;
 
             ports.Should().BeEmpty();
         }
@@ -135,7 +135,7 @@ namespace L5Sharp.Core.Tests
                 new(2, "Ethernet", "1.2.3.4")
             });
 
-            var ports = collection.Downstream().ToList();
+            var ports = collection.Downstream.ToList();
 
             ports.Should().HaveCount(1);
             ports.First().Id.Should().Be(2);
@@ -152,7 +152,7 @@ namespace L5Sharp.Core.Tests
                 new(1, "Ethernet", "1.2.3.4", true)
             });
 
-            var port = collection.Backplane();
+            var port = collection.Backplane;
 
             port.Should().BeNull();
         }
@@ -166,7 +166,7 @@ namespace L5Sharp.Core.Tests
                 new(2, "Ethernet", "1.2.3.4", true)
             });
 
-            var port = collection.Backplane();
+            var port = collection.Backplane;
 
             port.Should().NotBeNull();
             port?.Id.Should().Be(1);
@@ -183,7 +183,7 @@ namespace L5Sharp.Core.Tests
                 new(1, "ICP", "1")
             });
 
-            var port = collection.Ethernet();
+            var port = collection.Ethernet;
 
             port.Should().BeNull();
         }
@@ -197,7 +197,7 @@ namespace L5Sharp.Core.Tests
                 new(2, "Ethernet", "1.2.3.4")
             });
 
-            var port = collection.Ethernet();
+            var port = collection.Ethernet;
 
             port.Should().NotBeNull();
             port?.Id.Should().Be(2);

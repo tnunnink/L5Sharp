@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Net;
 using FluentAssertions;
 using L5Sharp.Core;
 using L5Sharp.Exceptions;
@@ -25,7 +24,7 @@ namespace L5Sharp.Repositories.Tests
         {
             var context = L5XContext.Load(Known.Test);
 
-            var component = new Module("Local", "1756-EN2T", 1, IPAddress.Parse("192.168.1.1"));
+            var component = new Module("Local", "1756-EN2T");
 
             FluentActions.Invoking(() => context.Modules().Add(component)).Should()
                 .Throw<ComponentNameCollisionException>();
@@ -36,7 +35,7 @@ namespace L5Sharp.Repositories.Tests
         {
             var context = L5XContext.Load(Known.Test);
 
-            var component = new Module("Test", "1756-EN2T", 1, IPAddress.Parse("192.168.1.1"));
+            var component = new Module("Test", "1756-EN2T");
 
             context.Modules().Add(component);
 
@@ -48,8 +47,8 @@ namespace L5Sharp.Repositories.Tests
         {
             var context = L5XContext.Load(Known.Test);
 
-            var parent = new Module("Parent", "1756-EN2T", IPAddress.Parse("192.168.1.1"));
-            parent.Bus.Backplane()?.Create("Child", "1756-IF8", 1);
+            var parent = new Module("Parent", "1756-EN2T");
+            parent.Backplane?.Create("Child", "1756-IF8", 1);
 
             context.Modules().Add(parent);
 
@@ -81,8 +80,8 @@ namespace L5Sharp.Repositories.Tests
         public void Remove_HasChildModules_ShouldRemoveAllChildren()
         {
             var context = L5XContext.Load(Known.Test);
-            var parent = new Module("Test", "1756-EN2T", IPAddress.Parse("192.168.1.1"));
-            parent.Bus.Backplane()?.Create("Child", "1756-IF8", 1);
+            var parent = new Module("Test", "1756-EN2T");
+            parent.Backplane?.Create("Child", "1756-IF8", 1);
 
             context.Modules().Update(parent);
 
@@ -103,7 +102,7 @@ namespace L5Sharp.Repositories.Tests
         {
             var context = L5XContext.Load(Known.Test);
 
-            var component = new Module("Local", "1756-EN2T", 1, IPAddress.Parse("192.168.1.1"));
+            var component = new Module("Local", "1756-EN2T");
 
             context.Modules().Update(component);
 
@@ -118,7 +117,7 @@ namespace L5Sharp.Repositories.Tests
         {
             var context = L5XContext.Load(Known.Test);
 
-            var component = new Module("Test", "1756-EN2T", 1, IPAddress.Parse("192.168.1.1"));
+            var component = new Module("Test", "1756-EN2T");
 
             context.Modules().Update(component);
 
@@ -133,8 +132,8 @@ namespace L5Sharp.Repositories.Tests
         {
             var context = L5XContext.Load(Known.Test);
 
-            var parent = new Module("Test", "1756-EN2T", IPAddress.Parse("192.168.1.1"));
-            parent.Bus.Backplane()?.Create("Child", "1756-IF8", 1);
+            var parent = new Module("Test", "1756-EN2T");
+            parent.Backplane?.Create("Child", "1756-IF8", 1);
 
             context.Modules().Update(parent);
 

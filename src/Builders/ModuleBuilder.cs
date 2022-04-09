@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using L5Sharp.Core;
@@ -21,7 +20,7 @@ namespace L5Sharp.Builders
         private bool _inhibited;
         private bool _majorFault;
         private bool _safetyEnabled;
-        private KeyingState _keyingState;
+        private ElectronicKeying _keying;
         private string _description;
         
         public ModuleBuilder(ComponentName name)
@@ -34,13 +33,14 @@ namespace L5Sharp.Builders
             _revision = new Revision();
             _ports = new List<Port>();
             _parentModule = string.Empty;
-            _keyingState = KeyingState.CompatibleModule;
+            _keying = ElectronicKeying.CompatibleModule;
             _description = string.Empty;
         }
 
         public IModule Create() =>
-            new Module(_name, _catalogNumber, _vendor, _productType, _productCode, _ports, _revision,
-                _parentModule, _parentPortId, _keyingState, _inhibited, _majorFault, _safetyEnabled, _description);
+            new Module(_name, _catalogNumber, _vendor, _productType, _productCode, _revision, _ports,
+                _parentModule, _parentPortId, _keying, _inhibited, _majorFault, _safetyEnabled, 
+                description: _description);
 
         public IModuleBuilder WithCatalog(CatalogNumber catalogNumber)
         {
@@ -60,9 +60,14 @@ namespace L5Sharp.Builders
         public IModuleBuilder WithConnectionTo(IModule parent)
         {
             _parentModule = parent.Name;
-            _parentPortId = parent.Ports.Downstream().FirstOrDefault()?.Id ?? default;
-            
-            
+            _parentPortId = parent.Ports.Downstream.FirstOrDefault()?.Id ?? default;
+            return this;
+        }
+        
+        public IModuleBuilder WithParent(string parentName, int parentPortId)
+        {
+            _parentModule = parentName;
+            _parentPortId = parentPortId;
             return this;
         }
 
@@ -108,9 +113,9 @@ namespace L5Sharp.Builders
             return this;
         }
 
-        public IModuleBuilder WithState(KeyingState keyingState)
+        public IModuleBuilder WithState(ElectronicKeying keying)
         {
-            _keyingState = keyingState;
+            _keying = keying;
             return this;
         }
     }

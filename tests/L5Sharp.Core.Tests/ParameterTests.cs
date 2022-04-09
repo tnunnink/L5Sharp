@@ -73,7 +73,7 @@ namespace L5Sharp.Core.Tests
             parameter.TagType.Should().Be(TagType.Base);
             parameter.Required.Should().BeFalse();
             parameter.Visible.Should().BeFalse();
-            parameter.Alias.Should().Be(TagName.Empty);
+            parameter.Alias.Should().BeNull();
             parameter.Constant.Should().BeFalse();
             parameter.Default.Should().BeEquivalentTo(new DINT());
         }
@@ -91,10 +91,10 @@ namespace L5Sharp.Core.Tests
             parameter.Radix.Should().Be(Radix.Hex);
             parameter.ExternalAccess.Should().Be(ExternalAccess.ReadOnly);
             parameter.Usage.Should().Be(TagUsage.Output);
-            parameter.TagType.Should().Be(TagType.Alias);
+            parameter.TagType.Should().Be(TagType.Base);
             parameter.Required.Should().BeTrue();
             parameter.Visible.Should().BeTrue();
-            parameter.Alias.Should().Be(new TagName("LocalTag"));
+            parameter.Alias.Should().BeNull();
             parameter.Constant.Should().BeTrue();
             parameter.Default.Should().BeEquivalentTo(new DINT(34));
         }

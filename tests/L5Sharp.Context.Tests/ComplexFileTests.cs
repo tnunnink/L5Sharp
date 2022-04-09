@@ -100,7 +100,7 @@ namespace L5Sharp.Context.Tests
             var stopwatch = new Stopwatch();
             stopwatch.Start();
 
-            var inputTag = context.Modules().Named("INJ_Module_3")?.Tags.Input!;
+            var inputTag = context.Modules().Named("INJ_Module_3")?.Tags.First();
 
             var ch01 = inputTag?.Member("Ch01");
 

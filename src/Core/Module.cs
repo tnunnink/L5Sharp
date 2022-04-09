@@ -5,82 +5,67 @@ using System.Linq;
 using System.Net;
 using L5Sharp.Builders;
 using L5Sharp.Enums;
-using L5Sharp.Exceptions;
 
 namespace L5Sharp.Core
 {
     /// <inheritdoc />
     public class Module : IModule
     {
-        /// <summary>
-        /// Serialization constructor
-        /// </summary>
-        internal Module(string name, string? description, CatalogNumber catalogNumber,
-            Vendor vendor, ProductType productType, ushort productCode, Revision revision,
-            string? parentModule, int parentPortId, KeyingState? state,
-            bool inhibited, bool majorFault, bool safetyEnabled, ITag<IDataType> config,
-            IList<Port> ports, IList<Connection> connections, ICollection<IModule> modules)
-        {
-            Name = name ?? throw new ArgumentNullException(nameof(name));
-            Description = description ?? string.Empty;
-            CatalogNumber = catalogNumber;
-            Vendor = vendor;
-            ProductType = productType;
-            ProductCode = productCode;
-            Revision = revision;
-            ParentModule = parentModule ?? string.Empty;
-            ParentPortId = parentPortId;
-            State = state ?? KeyingState.CompatibleModule;
-            Inhibited = inhibited;
-            MajorFault = majorFault;
-            SafetyEnabled = safetyEnabled;
-            Ports = new PortCollection(ports);
-            Connections = new ReadOnlyCollection<Connection>(connections);
-            Tags = new ModuleTagCollection(config, Connections);
-            Bus = new BusCollection(Ports, this, modules);
-        }
-        
+        private readonly Dictionary<Port, Bus> _buses;
+
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="name">The name of the module. Must adhere to logix naming constraints.</param>
-        /// <param name="catalogNumber">The catalog number of the module.</param>
-        /// <param name="vendor">The <see cref="Vendor"/> of the module.</param>
-        /// <param name="productType">The <see cref="Core.ProductType"/></param>
+        /// <param name="name"></param>
+        /// <param name="catalogNumber"></param>
+        /// <param name="vendor"></param>
+        /// <param name="productType"></param>
         /// <param name="productCode"></param>
-        /// <param name="ports"></param>
         /// <param name="revision"></param>
+        /// <param name="ports"></param>
         /// <param name="parentModule"></param>
         /// <param name="parentPortId"></param>
-        /// <param name="state"></param>
+        /// <param name="keying"></param>
         /// <param name="inhibited"></param>
         /// <param name="majorFault"></param>
         /// <param name="safetyEnabled"></param>
+        /// <param name="config"></param>
+        /// <param name="connections"></param>
+        /// <param name="modules"></param>
         /// <param name="description"></param>
         /// <exception cref="ArgumentNullException"></exception>
-        public Module(ComponentName name, CatalogNumber catalogNumber, Vendor vendor,
-            ProductType productType, ushort productCode, IList<Port> ports, Revision revision,
-            string? parentModule = null, int parentPortId = default, KeyingState? state = null,
+        public Module(ComponentName name, CatalogNumber catalogNumber,
+            Vendor? vendor = null, ProductType? productType = null, ushort productCode = default,
+            Revision? revision = null, IList<Port>? ports = null,
+            string? parentModule = null, int parentPortId = default,
+            ElectronicKeying? keying = null,
             bool inhibited = default, bool majorFault = default, bool safetyEnabled = default,
+            ITag<IDataType>? config = null, IList<Connection>? connections = null,
+            ICollection<IModule>? modules = null,
             string? description = null)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
-            Description = description ?? string.Empty;
             CatalogNumber = catalogNumber ?? throw new ArgumentNullException(nameof(catalogNumber));
-            Vendor = vendor;
-            ProductType = productType;
+            Vendor = vendor ?? Vendor.Unknown;
+            ProductType = productType ?? ProductType.Unknown;
             ProductCode = productCode;
-            Revision = revision;
+            Revision = revision ?? new Revision();
             ParentModule = parentModule ?? string.Empty;
             ParentPortId = parentPortId;
-            State = state ?? KeyingState.CompatibleModule;
+            Keying = keying ?? ElectronicKeying.CompatibleModule;
             Inhibited = inhibited;
             MajorFault = majorFault;
             SafetyEnabled = safetyEnabled;
-            Ports = new PortCollection(ports);
-            Connections = new List<Connection>().AsReadOnly();
-            Tags = new ModuleTagCollection();
-            Bus = new BusCollection(Ports, this);
+            Ports = ports is not null
+                ? new PortCollection(ports)
+                : new PortCollection(new List<Port> { new(1, "ICP") });
+            Config = config;
+            Connections = connections is not null
+                ? new ReadOnlyCollection<Connection>(connections)
+                : new List<Connection>().AsReadOnly();
+            Description = description ?? string.Empty;
+
+            _buses = InitializeBuses(modules);
         }
 
         /// <summary>
@@ -94,6 +79,10 @@ namespace L5Sharp.Core
         /// <param name="parentModule">The name of the module that is the parent of the module to create.</param>
         /// <param name="parentPortId">The port id of the module that is the parent of the current module.</param>
         /// <param name="description">The description of the module.</param>
+        /// <param name="keying"></param>
+        /// <param name="inhibited"></param>
+        /// <param name="majorFault"></param>
+        /// <param name="safetyEnabled"></param>
         /// <exception cref="ArgumentNullException">definition is null.</exception>
         /// <remarks>
         /// This constructor provides a flexible way to create modules in circumstances where the module definition is not
@@ -103,128 +92,29 @@ namespace L5Sharp.Core
         /// use the <see cref="Bus"/> property containing the API for adding new child modules.
         /// </remarks>
         public Module(ComponentName name, ModuleDefinition definition,
-            string? parentModule = null, int parentPortId = default, string? description = null)
+            string? parentModule = null, int parentPortId = default, ElectronicKeying? keying = null,
+            bool inhibited = default, bool majorFault = default, bool safetyEnabled = default,
+            string? description = null)
         {
             if (definition is null)
                 throw new ArgumentNullException(nameof(definition));
 
             Name = name ?? throw new ArgumentNullException(nameof(name));
-            Description = description ?? string.Empty;
             CatalogNumber = definition.CatalogNumber;
             Vendor = definition.Vendor;
             ProductType = definition.ProductType;
             ProductCode = definition.ProductCode;
-            Revision = definition.Revisions.Max();
+            Revision = definition.Revision;
             ParentModule = parentModule ?? string.Empty;
             ParentPortId = parentPortId;
-            State = KeyingState.CompatibleModule;
+            Inhibited = inhibited;
+            MajorFault = majorFault;
+            SafetyEnabled = safetyEnabled;
+            Keying = keying ?? ElectronicKeying.CompatibleModule;
             Ports = new PortCollection(definition.Ports.ToList());
             Connections = new List<Connection>().AsReadOnly();
-            Tags = new ModuleTagCollection();
-            Bus = new BusCollection(Ports, this);
-        }
-
-        /// <summary>
-        /// Creates a new <see cref="Module"/> object with the provided name and catalog number.
-        /// </summary>
-        /// <param name="name">The name of the Module.</param>
-        /// <param name="catalogNumber">The catalog number of the Module to create.</param>
-        /// <param name="slot">The slot number for which the Module should be assigned.
-        /// Will default to '0' and attempt to apply this address to the non-Ethernet type port,
-        /// if one exists for the specified catalog number.</param>
-        /// <param name="ipAddress">The IP address of the module if applicable. Will only be set on modules that have
-        /// a Ethernet type port available. If not provided will default to <see cref="IPAddress.Any"/>.</param>
-        /// <param name="description">The description of the Module. If not provided, will default to empty string.</param>
-        /// <param name="catalogService">
-        /// The service provider that will be used to lookup the definition for the specified catalog number.
-        /// By default, this constructor will use the <see cref="ModuleCatalog"/> implementation, which relies on the local
-        /// Rockwell installed catalog service file. Therefore, this code may fail when called from a machine without the
-        /// necessary software installed. You may optionally provide a custom implementation of the <see cref="ICatalogService"/>
-        /// to allow this constructor to build a valid Module instance.
-        /// </param>
-        /// <param name="parentModule">The name of the parent module. If not provided, will default to empty.</param>
-        /// <param name="parentPortId">The id of the parent module port to which the new module is connected.
-        /// If not provided, will default to 0.</param>
-        /// <exception cref="ArgumentNullException"><c>name</c> or <c>catalogNumber</c> is null.</exception>
-        /// <exception cref="ModuleNotFoundException">A module with <c></c> could not be found.</exception>
-        /// <remarks>
-        /// This constructor provides a simple way to create modules by specifying, at minimum, a name and catalog number.
-        /// If the <c>catalogService</c> parameter is not overriden with a custom implementation, then the default <see cref="ModuleCatalog"/>
-        /// will be used to lookup the the module definition for the provided catalog number. You can also optionally provide
-        /// a slot and IP address to let the constructor configure ports as necessary. You may also specify the parent module
-        /// and port id in order to set this module's place in the module tree hierarchy. Note that this constructor does not
-        /// add the module to the parent bus since there is not way to reference it. To add child modules in a hierarchical
-        /// fashion, use the <see cref="Ports"/> local downstream port of the parent module.
-        /// </remarks>
-        public Module(ComponentName name, CatalogNumber catalogNumber, byte slot = default, IPAddress? ipAddress = null,
-            string? description = null, string? parentModule = null, int parentPortId = default,
-            ICatalogService? catalogService = null)
-        {
-            catalogService ??= new ModuleCatalog();
-            var definition = catalogService.Lookup(catalogNumber).ConfigureBackplane(slot, ipAddress);
-
-            Name = name ?? throw new ArgumentNullException(nameof(name));
-            Description = description ?? string.Empty;
-            CatalogNumber = definition.CatalogNumber;
-            Vendor = definition.Vendor;
-            ProductType = definition.ProductType;
-            ProductCode = definition.ProductCode;
-            Revision = definition.Revisions.Max();
-            ParentModule = parentModule ?? string.Empty;
-            ParentPortId = parentPortId;
-            State = KeyingState.CompatibleModule;
-            Ports = new PortCollection(definition.Ports.ToList());
-            Connections = new List<Connection>().AsReadOnly();
-            Tags = new ModuleTagCollection();
-            Bus = new BusCollection(Ports, this);
-        }
-
-        /// <summary>
-        /// Creates a new <see cref="Module"/> object with the provided name and catalog number. This constructor is meant
-        /// to be used for creating module's with an upstream 'Ethernet' port, or modules that are connected over a network
-        /// as opposed to a chassis.
-        /// </summary>
-        /// <param name="name">The name of the module.</param>
-        /// <param name="catalogNumber">The catalog number of the module to create.</param>
-        /// <param name="ipAddress">The IP of the module's "Ethernet' port. If not provided</param>
-        /// <param name="slot"></param>
-        /// <param name="description">The description of the module. If not provided, will default to empty string.</param>
-        /// <param name="catalogService">
-        /// The service provider that will be used to lookup the definition for the specified catalog number.
-        /// By default, this constructor will use the <see cref="ModuleCatalog"/> implementation, which relies on the local
-        /// Rockwell installed catalog service file. Therefore, this code may fail when called from a machine without the
-        /// necessary software installed. You may optionally provide a custom implementation of the <see cref="ICatalogService"/>
-        /// to allow this constructor to build a valid Module instance.
-        /// </param>
-        /// <exception cref="ArgumentNullException"><c>name</c> or <c>catalogNumber</c> is null.</exception>
-        /// <exception cref="ModuleNotFoundException">A module with <c></c> could not be found.</exception>
-        /// <remarks>
-        /// This constructor provides a simple way to create modules by specifying, at minimum, a name and catalog number,
-        /// and IP address.
-        /// If the <c>catalogService</c> parameter is not overriden with a custom implementation, then the default <see cref="ModuleCatalog"/>
-        /// will be used to lookup the the module definition for the provided catalog number. Note that this constructor does not
-        /// add the module to the parent bus since there is not reference to it. To add child modules in a hierarchical
-        /// fashion in memory, use the <see cref="Ports"/> local downstream port of the parent module.
-        /// </remarks>
-        public Module(ComponentName name, CatalogNumber catalogNumber, IPAddress ipAddress, byte slot = default,
-            string? description = null, ICatalogService? catalogService = null)
-        {
-            catalogService ??= new ModuleCatalog();
-            var definition = catalogService.Lookup(catalogNumber).ConfigureEthernet(ipAddress, slot);
-
-            Name = name ?? throw new ArgumentNullException(nameof(name));
-            Description = description ?? string.Empty;
-            CatalogNumber = definition.CatalogNumber;
-            Vendor = definition.Vendor;
-            ProductType = definition.ProductType;
-            ProductCode = definition.ProductCode;
-            Revision = definition.Revisions.Max();
-            ParentModule = string.Empty;
-            State = KeyingState.CompatibleModule;
-            Ports = new PortCollection(definition.Ports.ToList());
-            Connections = new List<Connection>().AsReadOnly();
-            Tags = new ModuleTagCollection();
-            Bus = new BusCollection(Ports, this);
+            Description = description ?? definition.Description;
+            _buses = InitializeBuses();
         }
 
         /// <summary>
@@ -265,14 +155,14 @@ namespace L5Sharp.Core
         public bool SafetyEnabled { get; }
 
         /// <inheritdoc />
-        public KeyingState State { get; }
+        public ElectronicKeying Keying { get; }
 
         /// <inheritdoc />
-        public int Slot => byte.TryParse(Ports.Backplane()?.Address, out var slot) ? slot : default;
+        public int Slot => byte.TryParse(Ports.Backplane?.Address, out var slot) ? slot : default;
 
         /// <inheritdoc />
         public IPAddress IP =>
-            IPAddress.TryParse(Ports.Ethernet()?.Address ?? string.Empty, out var ip) ? ip : IPAddress.Any;
+            IPAddress.TryParse(Ports.Ethernet?.Address ?? string.Empty, out var ip) ? ip : IPAddress.Any;
 
         /// <inheritdoc />
         public string ParentModule { get; }
@@ -284,12 +174,62 @@ namespace L5Sharp.Core
         public PortCollection Ports { get; }
 
         /// <inheritdoc />
+        public ITag<IDataType>? Config { get; }
+
+        /// <inheritdoc />
         public IReadOnlyCollection<Connection> Connections { get; }
 
         /// <inheritdoc />
-        public ModuleTagCollection Tags { get; }
+        public Bus? Backplane => Ports.Backplane is not null && !Ports.Backplane.Upstream 
+            ? _buses[Ports.Backplane] 
+            : default;
 
         /// <inheritdoc />
-        public BusCollection Bus { get; }
+        public Bus? Ethernet => Ports.Ethernet is not null && !Ports.Ethernet.Upstream 
+            ? _buses[Ports.Ethernet] 
+            : default;
+
+        /// <inheritdoc />
+        public IEnumerable<IModule> Modules => _buses.SelectMany(b => b.Value);
+
+        /// <inheritdoc />
+        public IEnumerable<ITag<IDataType>> Tags
+        {
+            get
+            {
+                var tags = new List<ITag<IDataType>>();
+
+                if (Config is not null)
+                    tags.Add(Config);
+
+                foreach (var connection in Connections)
+                {
+                    if (connection.Input is not null)
+                        tags.Add(connection.Input);
+
+                    if (connection.Output is not null)
+                        tags.Add(connection.Output);
+                }
+
+                return tags;
+            }
+        }
+
+        private Dictionary<Port, Bus> InitializeBuses(ICollection<IModule>? children = null)
+        {
+            var buses = new Dictionary<Port, Bus>();
+
+            foreach (var port in Ports.Downstream)
+            {
+                var bus = new Bus(this, port);
+
+                if (children is not null)
+                    bus.AddMany(children.Where(c => c.ParentPortId == port.Id));
+
+                buses.Add(port, bus);
+            }
+
+            return buses;
+        }
     }
 }

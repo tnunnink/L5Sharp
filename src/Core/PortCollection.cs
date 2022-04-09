@@ -50,7 +50,7 @@ namespace L5Sharp.Core
         /// as the connection to a parent module upstream of the current module. The upstream port is used to
         /// define the hierarchical structure of the module tree.
         /// </remarks>
-        public Port? Upstream() => _ports.Values.SingleOrDefault(p => p.Upstream);
+        public Port? Upstream => _ports.Values.SingleOrDefault(p => p.Upstream);
 
         /// <summary>
         /// Returns the all downstream <see cref="Port"/> in the collection.
@@ -62,7 +62,7 @@ namespace L5Sharp.Core
         /// that has a corresponding <see cref="Bus"/>, on which other modules can be connected to.
         /// Note that many modules may not have a local downstream port, but very few will have more than one. 
         /// </remarks>
-        public IEnumerable<Port> Downstream() => _ports.Values.Where(p => !p.Upstream);
+        public IEnumerable<Port> Downstream => _ports.Values.Where(p => !p.Upstream);
 
         /// <summary>
         /// Returns the "Backplane" type <see cref="Port"/> in the collection, if one exists.
@@ -76,7 +76,7 @@ namespace L5Sharp.Core
         /// <c>Backplane</c> refers to the latter, since it will typically refer to a port in which devices are
         /// connected in a rack. Therefore, this port is simply the first non-Ethernet type port.
         /// </remarks>
-        public Port? Backplane() => _ports.Values.FirstOrDefault(p => p.Type != "Ethernet");
+        public Port? Backplane => _ports.Values.FirstOrDefault(p => p.Type != "Ethernet");
 
         /// <summary>
         /// Returns the Ethernet type <see cref="Port"/> in the collection, if one exists.
@@ -89,7 +89,7 @@ namespace L5Sharp.Core
         /// rack or chassis based, having <c>byte</c> number for the address property (which applies to many different types).
         /// <see cref="Ethernet"/> refers to the former. Therefore, this port is simply the first Ethernet type port.
         /// </remarks>
-        public Port? Ethernet() => _ports.Values.FirstOrDefault(p => p.Type == "Ethernet");
+        public Port? Ethernet => _ports.Values.FirstOrDefault(p => p.Type == "Ethernet");
 
         /// <inheritdoc />
         public IEnumerator<Port> GetEnumerator() => _ports.Values.GetEnumerator();

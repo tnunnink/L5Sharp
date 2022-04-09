@@ -1,5 +1,4 @@
-﻿using System;
-using FluentAssertions;
+﻿using FluentAssertions;
 using NUnit.Framework;
 
 namespace L5Sharp.Core.Tests
@@ -39,30 +38,6 @@ namespace L5Sharp.Core.Tests
             port.DownstreamOnly.Should().BeTrue();
             port.Address.Should().Be("0");
             port.BusSize.Should().Be(17);
-        }
-
-        [Test]
-        public void Configure_UpstreamOnDownstreamPort_ShouldThrowInvalidOperationException()
-        {
-            var port = new Port(1, "ICP", downstreamOnly: true);
-
-            FluentActions.Invoking(() => port.Configure("1", true, 10)).Should().Throw<InvalidOperationException>();
-        }
-
-        [Test]
-        public void Configure_Valid_ShouldBeExpected()
-        {
-            var port = new Port(1, "ICP");
-
-            var result = port.Configure("1", true, 10);
-
-            result.Should().NotBeNull();
-            result.Id.Should().Be(1);
-            result.Type.Should().Be("ICP");
-            result.Address.Should().Be("1");
-            result.Upstream.Should().BeTrue();
-            result.DownstreamOnly.Should().BeFalse();
-            result.BusSize.Should().Be(10);
         }
 
         [Test]

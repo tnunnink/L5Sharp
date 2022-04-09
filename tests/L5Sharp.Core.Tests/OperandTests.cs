@@ -29,7 +29,7 @@ namespace L5Sharp.Core.Tests
         {
             Operand operand = 0;
 
-            operand.Should().Be(0);
+            operand.Should().Be((Operand)0);
         }
 
         [Test]

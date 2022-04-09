@@ -34,8 +34,6 @@ namespace L5Sharp.Core
             DownstreamOnly = downstreamOnly;
         }
 
-        public IModule Module { get; }
-
         /// <summary>
         /// Gets the Id of the <see cref="Port"/>.
         /// </summary>
@@ -87,28 +85,7 @@ namespace L5Sharp.Core
         /// Gets a value indicating whether the port allows upstream connection, or if it is a downstream only port.
         /// </summary>
         public bool DownstreamOnly { get; }
-
-        /// <summary>
-        /// Returns a new <see cref="Port"/> with the same properties and the current instance and updated
-        /// slot, upstream, and bus size parameters.
-        /// </summary>
-        /// <param name="address">The address (slot/IP/node) of the new port.</param>
-        /// <param name="upstream">Value indicating whether the port is upstream - meaning connected to a device
-        /// upstream.</param>
-        /// <param name="busSize">The max capacity of the port's bus.</param>
-        /// <remarks>
-        /// Provides a simple way to generate a new <c>Port</c> object with updated properties, while maintaining the same
-        /// id and type. This is mostly used for creation of new modules after obtaining a <see cref="ModuleDefinition"/>.
-        /// </remarks>
-        public Port Configure(string address, bool upstream = default, byte busSize = default)
-        {
-            if (DownstreamOnly && upstream)
-                throw new InvalidOperationException(
-                    "Not able to configure as upstream port. The current port is configured as a downstream only port.");
-
-            return new Port(Id, Type, address, upstream, busSize);
-        }
-
+        
         /// <inheritdoc />
         public bool Equals(Port? other)
         {

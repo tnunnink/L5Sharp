@@ -9,25 +9,25 @@ namespace L5Sharp.Enums.Tests
         [Test]
         public void ExactMatch_WhenCalled_ShouldNotBeNull()
         {
-            KeyingState.ExactMatch.Should().NotBeNull();
+            ElectronicKeying.ExactMatch.Should().NotBeNull();
         }
         
         [Test]
         public void CompatibleModule_WhenCalled_ShouldNotBeNull()
         {
-            KeyingState.CompatibleModule.Should().NotBeNull();
+            ElectronicKeying.CompatibleModule.Should().NotBeNull();
         }
         
         [Test]
         public void Custom_WhenCalled_ShouldNotBeNull()
         {
-            KeyingState.Custom.Should().NotBeNull();
+            ElectronicKeying.Custom.Should().NotBeNull();
         }
         
         [Test]
         public void Disabled_WhenCalled_ShouldNotBeNull()
         {
-            KeyingState.Disabled.Should().NotBeNull();
+            ElectronicKeying.Disabled.Should().NotBeNull();
         }
     }
 }

@@ -74,8 +74,8 @@ namespace L5Sharp.Builders
         /// <summary>
         /// Configures the keying state of the new <see cref="IModule"/> to the provided value.
         /// </summary>
-        /// <param name="keyingState">The <see cref="KeyingState"/> value.</param>
+        /// <param name="keying">The <see cref="ElectronicKeying"/> value.</param>
         /// <returns>A <see cref="IModuleBuilder"/> instance with the configured keying state.</returns>
-        IModuleBuilder WithState(KeyingState keyingState);
+        IModuleBuilder WithState(ElectronicKeying keying);
     }
 }

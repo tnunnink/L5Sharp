@@ -51,7 +51,7 @@ namespace L5Sharp.Serialization
             element.Add(new XAttribute(L5XAttribute.SafetyEnabled.ToString(), component.SafetyEnabled));
 
             var keyingState = new XElement(L5XElement.EKey.ToString());
-            keyingState.Add(new XAttribute(L5XAttribute.State.ToString(), component.State));
+            keyingState.Add(new XAttribute(L5XAttribute.State.ToString(), component.Keying));
             element.Add(keyingState);
 
             var ports = new XElement(L5XElement.Ports.ToString());
@@ -60,9 +60,9 @@ namespace L5Sharp.Serialization
 
             var communications = new XElement(L5XElement.Communications.ToString());
 
-            if (component.Tags.Config is not null)
+            if (component.Config is not null)
             {
-                var config = ConfigTagSerializer.Serialize(component.Tags.Config);
+                var config = ConfigTagSerializer.Serialize(component.Config);
                 communications.Add(config);
             }
 
@@ -100,7 +100,7 @@ namespace L5Sharp.Serialization
             var safetyEnabled = element.Attribute(L5XAttribute.SafetyEnabled.ToString())?.Value.Parse<bool>() ??
                                 default;
             var state = element.Element(L5XElement.EKey.ToString())?.Attribute(L5XAttribute.State.ToString())
-                ?.Value.Parse<KeyingState>();
+                ?.Value.Parse<ElectronicKeying>();
 
             var ports = element.Descendants(L5XElement.Port.ToString())
                 .Select(e => PortSerializer.Deserialize(e))
@@ -121,9 +121,9 @@ namespace L5Sharp.Serialization
                 .Select(Deserialize)
                 .ToList();
 
-            return new Module(name, description, catalogNumber!, vendor!, productType!, productCode, revision,
+            return new Module(name, catalogNumber!, vendor!, productType!, productCode, revision, ports,
                 parentModule, parentModPortId, state, inhibited, majorFault, safetyEnabled, config,
-                ports, connections, modules);
+                connections, modules, description);
         }
     }
 }

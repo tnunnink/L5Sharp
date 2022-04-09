@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
-using System.Net;
 using L5Sharp.Enums;
 
 namespace L5Sharp.Core
@@ -17,7 +15,9 @@ namespace L5Sharp.Core
     /// </remarks>
     public class ModuleDefinition
     {
-        private const string Ethernet = "Ethernet";
+        private readonly List<Revision> _revisions;
+        private readonly List<ModuleCategory> _categories;
+        private List<Port> _ports;
 
         /// <summary>
         /// Creates a new <see cref="ModuleDefinition"/> object with the provided data.
@@ -40,9 +40,10 @@ namespace L5Sharp.Core
             Vendor = vendor;
             ProductType = productType;
             ProductCode = productCode;
-            Revisions = new ReadOnlyCollection<Revision>(revisions.ToList());
-            Categories = new ReadOnlyCollection<ModuleCategory>(categories.ToList());
-            Ports = new ReadOnlyCollection<Port>(ports.ToList());
+            _revisions = revisions.ToList();
+            _categories = categories.ToList();
+            _ports = ports.ToList();
+            Revision = _revisions.Max();
             Description = description;
         }
 
@@ -74,100 +75,69 @@ namespace L5Sharp.Core
         /// <summary>
         /// Gets a collection of valid <see cref="Revisions"/> for the <see cref="ModuleDefinition"/>.
         /// </summary>
-        public IReadOnlyCollection<Revision> Revisions { get; }
+        public IEnumerable<Revision> Revisions => _revisions;
 
         /// <summary>
-        /// Gets a collection of <see cref="ModuleCategory"/> that the Module.
+        /// Gets the configured revision of the module definition. 
         /// </summary>
-        public IReadOnlyCollection<ModuleCategory> Categories { get; }
+        /// <remarks>
+        /// This will default to the highest revision of the module definition until configured by the user using the
+        /// <see cref="ConfigureRevision"/> method.
+        /// </remarks>
+        public Revision Revision { get; private set; }
 
         /// <summary>
-        /// Gets the set of <see cref="Ports"/> that should be defined on the Module.
+        /// Gets a collection of <see cref="ModuleCategory"/> that apply to the module.
         /// </summary>
-        public IReadOnlyCollection<Port> Ports { get; }
+        public IEnumerable<ModuleCategory> Categories => _categories;
 
         /// <summary>
-        /// Configures the <see cref="Ports"/> of the definition in such that the first <b>Non-Ethernet</b> type port is the
-        /// upstream port with the provided slot number, and the first <b>Ethernet</b> type port (if exists) is
-        /// the downstream port with the provided ipAddress (if not null).
+        /// Gets the set of <see cref="Ports"/> that define the connections of the module.
         /// </summary>
-        /// <param name="upstreamType">The port type of the upstream parent that determines which port is the primary
-        /// upstream port.</param>
+        public IEnumerable<Port> Ports => _ports;
+
+        /// <summary>
+        /// Configures the <see cref="Revision"/> property of the module. This property is used by various components
+        /// to set the revision property of newly created modules.
+        /// </summary>
+        /// <param name="revision">The revision number to configure.</param>
+        public void ConfigureRevision(Revision revision)
+        {
+            if (!_revisions.Contains(revision))
+                throw new ArgumentException(
+                    $"The provided revision {revision} is not a valid available revision for the definition.");
+
+            Revision = revision;
+        }
+
+        /// <summary>
+        /// Configures the <see cref="Ports"/> property of the definition in such that the first port specified by
+        /// upstreamType is the upstream port with the provided upstreamAddress, and the only other port
+        /// (assuming 2 ports) is the downstream port with the provided downstream address and bus size.
+        /// </summary>
+        /// <param name="upstreamType">The port type of the upstream port.</param>
         /// <param name="upstreamAddress">The address of the upstream port.</param>
-        /// <param name="downstreamAddress">The address of the downstream port.</param>
-        public ModuleDefinition ConfigurePorts(string upstreamType, string upstreamAddress, string downstreamAddress)
+        /// <param name="downstreamAddress">The optional address of the downstream port. If not provided, the address
+        /// will default to an empty string for all downstream ports.</param>
+        /// <param name="busSize">The optional size of the downstream bus. If not provided will default to zero.</param>
+        public void ConfigurePorts(string upstreamType, string upstreamAddress, string? downstreamAddress = null,
+            byte busSize = default)
         {
             var ports = new List<Port>();
 
-            var upstream = Ports.FirstOrDefault(p => p.Type == upstreamType)?.Configure(upstreamAddress, true);
-            if (upstream is not null)
-                ports.Add(upstream);
-
-            var downstream = Ports.FirstOrDefault(p => p.Type != upstreamType)?.Configure(downstreamAddress);
-            if (downstream is not null)
-                ports.Add(downstream);
-
-            return new ModuleDefinition(CatalogNumber, Vendor, ProductType, ProductCode, Revisions,
-                Categories, ports, Description);
-        }
-
-        /// <summary>
-        /// Configures the <see cref="Ports"/> of the definition such that the first found non 'Ethernet' type port is
-        /// the upstream port with the specified slot address, and any 'Ethernet' type ports are downstream ports with
-        /// the provided IP address, therefore making a backplane ready port configuration.
-        /// </summary>
-        /// <param name="slot">The slot number address of the upstream port to configure.</param>
-        /// <param name="ipAddress">The optional <see cref="IPAddress"/> of the downstream port to configure.
-        /// If not provided, will default to the <see cref="IPAddress.Any"/> value (i.e. 0.0.0.0).</param>
-        /// <returns>A new <see cref="ModuleDefinition"/> with the same properties but configured ports using the
-        /// provided slot and IP address.</returns>
-        public ModuleDefinition ConfigureBackplane(byte slot, IPAddress? ipAddress = null)
-        {
-            var ports = new List<Port>();
-
-            var upstream = Ports.FirstOrDefault(p => p.Type != Ethernet)?.Configure(slot.ToString(), true);
+            var upstream = _ports.FirstOrDefault(p => p.Type == upstreamType);
 
             if (upstream is null)
-                throw new InvalidOperationException(
-                    $"No port of type '{Ethernet}' is available on the current definition. Can not configure slot on non Ethernet type port.");
+                throw new InvalidOperationException("");
 
-            var downstream = Ports.Where(p => p.Type == Ethernet)
-                .Select(p => p.Configure(ipAddress?.ToString() ?? IPAddress.Any.ToString()));
-            
-            ports.Add(upstream);
-            ports.AddRange(downstream);
+            if (upstream.DownstreamOnly)
+                throw new InvalidOperationException();
 
-            return new ModuleDefinition(CatalogNumber, Vendor, ProductType, ProductCode, Revisions,
-                Categories, ports, Description);
-        }
+            ports.Add(new Port(upstream.Id, upstream.Type, upstreamAddress, true));
+            ports.AddRange(_ports.Where(p => p.Type != upstreamType).Select(ds =>
+                new Port(ds.Id, ds.Type, downstreamAddress, false, busSize, ds.DownstreamOnly)));
 
-        /// <summary>
-        /// Configures the <see cref="Ports"/> of the definition such that the first found 'Ethernet' type port is
-        /// the upstream port with the specified IP address, and the first non 'Ethernet' type port is the downstream
-        /// ports with the provided slot number, therefore making a backplane ready port configuration.
-        /// </summary>
-        /// <param name="ipAddress">The <see cref="IPAddress"/> of the upstream port to configure.</param>
-        /// <param name="slot">The optional slot number of the downstream port to configure. If not provided,
-        /// will default to 0.</param>
-        /// <returns>A new <see cref="ModuleDefinition"/> with the same properties but configured ports using the
-        /// provided slot and IP address.</returns>
-        public ModuleDefinition ConfigureEthernet(IPAddress ipAddress, byte slot = default)
-        {
-            var ports = new List<Port>();
-
-            var upstream = Ports.FirstOrDefault(p => p.Type == Ethernet)?.Configure(ipAddress.ToString(), true);
-
-            if (upstream is null)
-                throw new InvalidOperationException(
-                    $"No port of type '{Ethernet}' is available on the current definition. Can not configure IP on non Ethernet type port.");
-
-            var downstream = Ports.Where(p => p.Type != Ethernet).Select(p => p.Configure(slot.ToString()));
-
-            ports.Add(upstream);
-            ports.AddRange(downstream);
-
-            return new ModuleDefinition(CatalogNumber, Vendor, ProductType, ProductCode, Revisions,
-                Categories, ports, Description);
+            _ports = ports;
         }
     }
 }

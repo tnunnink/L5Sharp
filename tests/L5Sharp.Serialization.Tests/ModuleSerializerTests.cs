@@ -30,7 +30,7 @@ namespace L5Sharp.Serialization.Tests
         [Test]
         public void Serialize_WhenCalled_ShouldNotBeNull()
         {
-            var module = new Module("Test", "1756-EN2T", 0, IPAddress.Parse("1.2.3.4"), "This is a test module");
+            var module = new Module("Test", "1756-EN2T");
 
             var xml = _serializer.Serialize(module);
 
@@ -41,7 +41,7 @@ namespace L5Sharp.Serialization.Tests
         [UseReporter(typeof(DiffReporter))]
         public void Serialize_ValueTypeArray_ShouldBeApproved()
         {
-            var module = new Module("Test", "1756-EN2T", 0, IPAddress.Parse("1.2.3.4"), "This is a test module");
+            var module = new Module("Test", "1756-EN2T");
 
             var xml = _serializer.Serialize(module);
 
@@ -87,14 +87,12 @@ namespace L5Sharp.Serialization.Tests
             component.Inhibited.Should().BeFalse();
             component.MajorFault.Should().BeFalse();
             component.SafetyEnabled.Should().BeFalse();
-            component.State.Should().Be(KeyingState.CompatibleModule);
+            component.Keying.Should().Be(ElectronicKeying.CompatibleModule);
             component.Slot.Should().Be(4);
             component.IP.Should().Be(IPAddress.Parse("0.0.0.0"));
             component.Ports.Should().HaveCount(1);
             component.Connections.Should().HaveCount(1);
-            component.Tags.Config.Should().NotBeNull();
-            component.Tags.Input.Should().NotBeNull();
-            component.Tags.Output.Should().NotBeNull();
+            component.Tags.Should().NotBeEmpty();
         }
 
         private static string GetTestModule()

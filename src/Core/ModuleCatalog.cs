@@ -71,42 +71,6 @@ namespace L5Sharp.Core
             return MaterializeDefinition(device);
         }
 
-        /// <summary>
-        /// Finds all <see cref="ModuleDefinition"/> instances having the specified <see cref="Vendor"/>.
-        /// </summary>
-        /// <param name="vendor">The vendor for which to get module definitions for.</param>
-        /// <returns>A collection of <see cref="ModuleDefinition"/> with the specified Vendor if any exist in the current
-        /// catalog; otherwise, an empty collection.</returns>
-        /// <exception cref="ArgumentNullException">When vendor is null.</exception>
-        public IEnumerable<ModuleDefinition> FindByVendor(Vendor vendor)
-        {
-            if (vendor is null)
-                throw new ArgumentNullException(nameof(vendor));
-
-            var devices = _catalog.Descendants(RaDevice)
-                .Where(e => e.Descendants(VendorId).First().Value == vendor.Id.ToString());
-
-            return devices.Select(MaterializeDefinition);
-        }
-
-        /// <summary>
-        /// Fins all <see cref="ModuleDefinition"/> instances have the specified <see cref="ModuleCategory"/>.
-        /// </summary>
-        /// <param name="category">The category for which to get module definitions for.</param>
-        /// <returns>>A collection of <see cref="ModuleDefinition"/> with the specified Category if any exist in the
-        /// catalog; otherwise, an empty collection.</returns>
-        /// <exception cref="ArgumentNullException">When category is null.</exception>
-        public IEnumerable<ModuleDefinition> FindWithCategory(ModuleCategory category)
-        {
-            if (category is null)
-                throw new ArgumentNullException(nameof(category));
-
-            var devices = _catalog.Descendants(RaDevice)
-                .Where(e => e.Descendants(Category).Any(c => c.Attribute(Name)?.Value == category.ToString()));
-
-            return devices.Select(MaterializeDefinition);
-        }
-
         private static ModuleDefinition MaterializeDefinition(XElement element)
         {
             if (element is null)
