@@ -31,7 +31,7 @@ namespace L5Sharp.Serialization
                 throw new ArgumentException($"Element '{element.Name}' not valid for the serializer {GetType()}.");
             
             var name = element.DataTypeName();
-            var value = element.Attribute(L5XAttribute.Value.ToString())?.Value?.TryParse<IAtomicType>();
+            var value = element.Attribute(L5XAttribute.Value.ToString())?.Value;
 
             return DataType.Atomic(name, value);
         }

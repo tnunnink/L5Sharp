@@ -7,11 +7,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="Finishing up module todo items and testing. Added PortAddress.cs to strongly type the port address value for module ports. reorg and documentation.">
+    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/ArrayType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/ArrayType.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/Dimensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/Dimensions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/DimensionsTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/DimensionsTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Converters/SintConverter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Converters/SintConverter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Enums/Radix.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Enums/Radix.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.sln.DotSettings" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.sln.DotSettings" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Serialization/DataValueMemberSerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Serialization/DataValueMemberSerializer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Serialization/DataValueSerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Serialization/DataValueSerializer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Types/SINT.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Types/SINT.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Types.Tests/SintTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Types.Tests/SintTests.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -310,14 +314,8 @@
       <workItem from="1649278044100" duration="2074000" />
       <workItem from="1649280774978" duration="11806000" />
       <workItem from="1649378051048" duration="6952000" />
-      <workItem from="1649429750144" duration="49442000" />
-    </task>
-    <task id="LOCAL-00126" summary="serialization testing">
-      <created>1643165378165</created>
-      <option name="number" value="00126" />
-      <option name="presentableId" value="LOCAL-00126" />
-      <option name="project" value="LOCAL" />
-      <updated>1643165378166</updated>
+      <workItem from="1649429750144" duration="49625000" />
+      <workItem from="1649523018945" duration="8440000" />
     </task>
     <task id="LOCAL-00127" summary="module development and testing">
       <created>1643425245542</created>
@@ -655,7 +653,14 @@
       <option name="project" value="LOCAL" />
       <updated>1649514925706</updated>
     </task>
-    <option name="localTasksCounter" value="175" />
+    <task id="LOCAL-00175" summary="Fixed Dimensions.cs parsing issues and testing.">
+      <created>1649517705636</created>
+      <option name="number" value="00175" />
+      <option name="presentableId" value="LOCAL-00175" />
+      <option name="project" value="LOCAL" />
+      <updated>1649517705636</updated>
+    </task>
+    <option name="localTasksCounter" value="176" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -670,52 +675,33 @@
       <expand>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 88% 2640/21484" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 88% 2662/21514" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 88% 2640/21484" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 65% 2226/6445" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 88% 2662/21514" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 65% 2262/6471" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 88% 2640/21484" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 65% 2226/6445" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="(1.0.0.0, .NETStandard,Version=v2.1) 65% 2226/6445" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 88% 2662/21514" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 65% 2262/6471" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="(1.0.0.0, .NETStandard,Version=v2.1) 65% 2262/6471" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 88% 2640/21484" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 65% 2226/6445" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="(1.0.0.0, .NETStandard,Version=v2.1) 65% 2226/6445" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 65% 2226/6445" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 88% 2662/21514" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 65% 2262/6471" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="(1.0.0.0, .NETStandard,Version=v2.1) 65% 2262/6471" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 65% 2262/6471" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 88% 2640/21484" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 65% 2226/6445" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="(1.0.0.0, .NETStandard,Version=v2.1) 65% 2226/6445" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 65% 2226/6445" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="Core 90% 180/1778" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-        </path>
-        <path>
-          <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 88% 2640/21484" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 65% 2226/6445" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="(1.0.0.0, .NETStandard,Version=v2.1) 65% 2226/6445" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 65% 2226/6445" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="Core 90% 180/1778" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="Dimensions 98% 2/99" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-        </path>
-        <path>
-          <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 88% 2640/21484" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 65% 2226/6445" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="(1.0.0.0, .NETStandard,Version=v2.1) 65% 2226/6445" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 65% 2226/6445" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="Core 90% 180/1778" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="Dimensions 98% 2/99" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="TryParse(string,out Dimensions) 88% 2/16" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 88% 2662/21514" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 65% 2262/6471" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="(1.0.0.0, .NETStandard,Version=v2.1) 65% 2262/6471" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 65% 2262/6471" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Core 90% 178/1778" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
       </expand>
       <select />
@@ -741,7 +727,6 @@
       <path value="$PROJECT_DIR$/../.." />
     </ignored-roots>
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="Added unsigned atomic types and fixed Sint to be sbyte" />
     <MESSAGE value="Updated and tested exceptions" />
     <MESSAGE value="Random updates and removal of builders and instructions for now. Will implement at later time." />
     <MESSAGE value="Fixed tests and code associated with Type updates" />
@@ -766,7 +751,8 @@
     <MESSAGE value="Bunch of random updates and fixing stuff. Attempting to get to stopping point" />
     <MESSAGE value="Module updates. Module builder/configuration updates and fixed testing" />
     <MESSAGE value="Finishing up module todo items and testing. Added PortAddress.cs to strongly type the port address value for module ports. reorg and documentation." />
-    <option name="LAST_COMMIT_MESSAGE" value="Finishing up module todo items and testing. Added PortAddress.cs to strongly type the port address value for module ports. reorg and documentation." />
+    <MESSAGE value="Fixed Dimensions.cs parsing issues and testing." />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed Dimensions.cs parsing issues and testing." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -809,19 +795,6 @@
             </endOffsets>
           </properties>
           <option name="timeStamp" value="14" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/Extensions/ExpressionExtensions.cs</url>
-          <line>14</line>
-          <properties documentPath="C:\Users\tnunnink\Local\Projects\L5Sharp\src\Extensions\ExpressionExtensions.cs" initialLine="14" containingFunctionPresentation="method 'ToXExpression'">
-            <startOffsets>
-              <option value="405" />
-            </startOffsets>
-            <endOffsets>
-              <option value="492" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="16" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

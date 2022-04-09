@@ -6,7 +6,7 @@ using L5Sharp.Enums;
 namespace L5Sharp.Types
 {
     /// <summary>
-    /// Represents a <b>SINT</b> Logix atomic data type, or a type analogous to a <see cref="sbyte"/>.
+    /// Represents a <b>SINT</b> Logix atomic data type, or a type analogous to <see cref="sbyte"/>.
     /// </summary>
     [TypeConverter(typeof(SintConverter))]
     public sealed class SINT : IAtomicType<sbyte>, IEquatable<SINT>, IComparable<SINT>
@@ -54,7 +54,7 @@ namespace L5Sharp.Types
         {
             if (value is null)
                 throw new ArgumentNullException(nameof(value));
-            
+
             var converter = TypeDescriptor.GetConverter(GetType());
 
             if (!converter.CanConvertFrom(value.GetType()))
@@ -62,13 +62,23 @@ namespace L5Sharp.Types
 
             Value = (SINT)converter.ConvertFrom(value)!;
         }
-        
+
         /// <inheritdoc />
         public string Format(Radix? radix = null) =>
             radix is not null ? radix.Format(this) : Radix.Default(this).Format(this);
 
         /// <inheritdoc />
         public IDataType Instantiate() => new SINT();
+
+        //todo should we implement parse method that forward to value type?
+        /// <summary>
+        /// Parses the provided input string value into a <see cref="SINT"/> atomic value.
+        /// </summary>
+        /// <param name="value">The string value to parse.</param>
+        /// <returns>A new <see cref="SINT"/> that represents the parsed value.</returns>
+        public static SINT Parse(string value) => sbyte.TryParse(value, out var typedValue)
+            ? new SINT(typedValue)
+            : Radix.ParseValue<SINT>(value);
 
         /// <summary>
         /// Converts the provided <see cref="byte"/> to a <see cref="SINT"/> value.
@@ -83,16 +93,6 @@ namespace L5Sharp.Types
         /// <param name="atomic">The value to convert.</param>
         /// <returns>A <see cref="byte"/> type value.</returns>
         public static implicit operator sbyte(SINT atomic) => atomic.Value;
-
-        /// <summary>
-        /// Converts the provided <see cref="string"/> to a <see cref="SINT"/> value. 
-        /// </summary>
-        /// <param name="input">The string value to convert.</param>
-        /// <returns>
-        /// If the string value is able to be parsed, a new instance of a <see cref="SINT"/> with the value
-        /// provided. If not, then a default instance value.
-        /// </returns>
-        public static implicit operator SINT(string input) => Radix.ParseValue<SINT>(input);
 
         /// <inheritdoc />
         public bool Equals(SINT? other)
@@ -109,10 +109,10 @@ namespace L5Sharp.Types
             if (ReferenceEquals(this, obj)) return true;
             return obj.GetType() == GetType() && Equals((SINT)obj);
         }
-        
+
         /// <inheritdoc />
         public override int GetHashCode() => Name.GetHashCode();
-        
+
         /// <inheritdoc />
         public override string ToString() => Name;
 

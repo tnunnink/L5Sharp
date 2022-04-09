@@ -42,7 +42,7 @@ namespace L5Sharp.Serialization
             var name = element.ComponentName();
             var type = element.DataTypeName();
             var radix = element.Attribute(L5XAttribute.Radix.ToString())?.Value?.Parse<Radix>() ?? Radix.Decimal;
-            var value = element.Attribute(L5XAttribute.Value.ToString())?.Value?.TryParse<IAtomicType>();
+            var value = element.Attribute(L5XAttribute.Value.ToString())?.Value;
             
             var dataType = DataType.Atomic(type, value);
             

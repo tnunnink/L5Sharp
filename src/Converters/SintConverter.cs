@@ -19,12 +19,29 @@ namespace L5Sharp.Converters
                    base.CanConvertFrom(context, sourceType);
         }
 
+        //todo implement all types and let fail with overflow exceptions.
+        //This should allow full conversion and fix issues with radix parsing decimals
         public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
         {
             return value switch
             {
                 sbyte v => new SINT(v),
+                byte v => new SINT((sbyte)v),
+                short v => new SINT((sbyte)v),
+                ushort v => new SINT((sbyte)v),
+                int v => new SINT((sbyte)v),
+                uint v => new SINT((sbyte)v),
+                long v => new SINT((sbyte)v),
+                ulong v => new SINT((sbyte)v),
+                float v => new SINT((sbyte)v),
                 SINT v => v,
+                USINT v => new SINT((sbyte)v.Value),
+                INT v => new SINT((sbyte)v.Value),
+                UINT v => new SINT((sbyte)v.Value),
+                DINT v => new SINT((sbyte)v.Value),
+                UDINT v => new SINT((sbyte)v.Value),
+                LINT v => new SINT((sbyte)v.Value),
+                ULINT v => new SINT((sbyte)v.Value),
                 string v => sbyte.TryParse(v, out var result) ? new SINT(result) : Radix.ParseValue<SINT>(v),
                 _ => base.ConvertFrom(context, culture, value)
                      ?? throw new NotSupportedException(
@@ -35,6 +52,7 @@ namespace L5Sharp.Converters
         public override bool CanConvertTo(ITypeDescriptorContext context, Type destinationType)
         {
             return destinationType == typeof(sbyte) ||
+                   destinationType == typeof(byte) ||
                    destinationType == typeof(short) ||
                    destinationType == typeof(int) ||
                    destinationType == typeof(long) ||
@@ -57,6 +75,7 @@ namespace L5Sharp.Converters
             return destinationType switch
             {
                 not null when destinationType == typeof(sbyte) => typed.Value,
+                not null when destinationType == typeof(byte) => (byte)typed.Value,
                 not null when destinationType == typeof(short) => (short)typed.Value,
                 not null when destinationType == typeof(int) => (int)typed.Value,
                 not null when destinationType == typeof(long) => (long)typed.Value,

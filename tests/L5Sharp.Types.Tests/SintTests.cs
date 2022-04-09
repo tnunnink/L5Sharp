@@ -176,9 +176,9 @@ namespace L5Sharp.Types.Tests
         }
         
         [Test]
-        public void ImplicitOperator_ValidString_ShouldBeExpected()
+        public void Parse_ValidString_ShouldBeExpected()
         {
-            SINT type = _random.ToString();
+            var type = SINT.Parse(_random.ToString());
 
             type.Value.Should().Be(_random);
         }

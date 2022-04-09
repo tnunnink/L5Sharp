@@ -16,7 +16,7 @@ namespace L5Sharp.Enums
     /// <summary>
     /// Represents a number base for a given value type or atomic type.
     /// </summary>
-    public abstract class Radix : SmartEnum<Radix, string>
+    public abstract class Radix : SmartEnum<Radix, string>//, ICustomFormatter todo implement .net format interfaces instead?
     {
         private static readonly Dictionary<string, Func<string, bool>> Identifiers = new()
         {
@@ -147,17 +147,17 @@ namespace L5Sharp.Enums
         /// <summary>
         /// Parses a string input to an object value based on the format of the input value.
         /// </summary>
-        /// <remarks>
-        /// This method determines the radix based on patterns in the input string. For example, if the string input
-        /// starts with the specifier '2#', this method will forward the call to <see cref="Parse"/> for the Binary Radix
-        /// and return the result. If no radix can be determined from the input string, the call is forwarded to the
-        /// <see cref="Null"/> radix, which simply returns the input string.
-        /// </remarks>
         /// <param name="input">The string value to parse.</param>
         /// <returns>
         /// An object representing the value of the parsed string input.
         /// If no radix format can be determined from the input, returns the input string.
         /// </returns>
+        /// <remarks>
+        /// This method determines the radix based on patterns in the input string. For example, if the string input
+        /// starts with the specifier '2#', this method will forward the call to <see cref="Parse"/> for the Binary Radix
+        /// and return the result. If no radix can be determined from the input string, the call is forwarded to the
+        /// <see cref="Null"/> radix, which which will throw a <see cref="NotSupportedException"/>.
+        /// </remarks>
         public static IAtomicType ParseValue(string input)
         {
             var parser = DetermineParser(input);
@@ -235,6 +235,12 @@ namespace L5Sharp.Enums
         /// A string that represents the value of the atomic type in the current radix base number style.
         /// </returns>
         public abstract string Format(IAtomicType atomic);
+        
+        
+        /*public virtual string Format(string format, object arg, IFormatProvider formatProvider)
+        {
+            throw new NotImplementedException();
+        }*/
 
         /// <summary>
         /// Parses a string input of a given Radix formatted value into an object value. 
@@ -288,7 +294,7 @@ namespace L5Sharp.Enums
 
         private void ValidateType(IAtomicType atomic)
         {
-            if (atomic == null)
+            if (atomic is null)
                 throw new ArgumentNullException(nameof(atomic));
 
             if (!SupportsType(atomic))
