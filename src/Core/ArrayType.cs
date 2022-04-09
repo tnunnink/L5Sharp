@@ -144,13 +144,13 @@ namespace L5Sharp.Core
 
         private IEnumerable<IMember<TDataType>> CreateMembers(TDataType dataType,
             Radix? radix = null, ExternalAccess? access = null, string? description = null) =>
-            Dimensions.Indices.Select(i => new Member<TDataType>(i, (TDataType) dataType.Instantiate(),
+            Dimensions.Indices().Select(i => new Member<TDataType>(i, (TDataType) dataType.Instantiate(),
                 radix, access, description));
 
         private IEnumerable<IMember<TDataType>> CreateMembers(IList<TDataType> dataTypes,
             Radix? radix = null, ExternalAccess? access = null, string? description = null)
         {
-            var indices = Dimensions.Indices.ToArray();
+            var indices = Dimensions.Indices().ToArray();
 
             for (var i = 0; i < indices.Length; i++)
             {

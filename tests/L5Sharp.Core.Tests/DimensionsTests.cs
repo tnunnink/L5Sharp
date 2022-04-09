@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using AutoFixture;
 using FluentAssertions;
 using NUnit.Framework;
@@ -206,6 +207,57 @@ namespace L5Sharp.Core.Tests
         }
 
         [Test]
+        public void Indices_EmptyDimensions_ShouldBeEmpty()
+        {
+            var dimension = Dimensions.Empty;
+
+            var indices = dimension.Indices();
+
+            indices.Should().BeEmpty();
+        }
+        
+        [Test]
+        public void Indices_OneDimensions_ShouldBeExpected()
+        {
+            var dimension = new Dimensions(5);
+
+            var indices = dimension.Indices().ToList();
+
+            indices.Should().HaveCount(5);
+            indices.Should().Contain("[0]");
+            indices.Should().Contain("[1]");
+            indices.Should().Contain("[2]");
+            indices.Should().Contain("[3]");
+            indices.Should().Contain("[4]");
+        }
+        
+        [Test]
+        public void Indices_TwoDimensions_ShouldBeExpected()
+        {
+            var dimension = new Dimensions(2, 2);
+
+            var indices = dimension.Indices().ToList();
+
+            indices.Should().HaveCount(4);
+            indices.Should().Contain("[0,0]");
+            indices.Should().Contain("[0,1]");
+            indices.Should().Contain("[1,0]");
+            indices.Should().Contain("[1,1]");
+        }
+        
+        [Test]
+        public void Indices_ThreeDimensions_ShouldBeExpected()
+        {
+            var dimension = new Dimensions(1, 1, 2);
+
+            var indices = dimension.Indices().ToList();
+
+            indices.Should().HaveCount(2);
+            indices.Should().Contain("[0,0,0]");
+            indices.Should().Contain("[0,0,1]");
+        }
+
+        [Test]
         public void Parse_Null_ShouldThrowArgumentNullException()
         {
             FluentActions.Invoking(() => Dimensions.Parse(null!)).Should().Throw<ArgumentNullException>();
@@ -316,44 +368,83 @@ namespace L5Sharp.Core.Tests
         }
         
         [Test]
+        public void TryParse_MoreThanThreeDimensions_ShouldBeNullAndFalse()
+        {
+            var result = Dimensions.TryParse("1 4 3 8", out var dimensions);
+
+            result.Should().BeFalse();
+            dimensions.Should().BeNull();
+        }
+        
+        [Test]
         public void TryParse_ValidPattern_ShouldNotBeNullAndTrue()
         {
-            var result = Dimensions.TryParse("1 2 4", out var dimensions);
+            var result = Dimensions.TryParse("1", out var dimensions);
             
             result.Should().BeTrue();
             dimensions.Should().NotBeNull();
+            dimensions?.X.Should().Be(1);
+            dimensions?.Y.Should().Be(0);
+            dimensions?.Z.Should().Be(0);
+            dimensions?.Length.Should().Be(1);
         }
         
         [Test]
-        public void ToBracketNotation_EmptyDimension_ShouldBeExpected()
+        public void TryParse_TwoDimension_ShouldHaveExpectedValues()
+        {
+            var result = Dimensions.TryParse("3 10", out var dimensions);
+
+            result.Should().BeTrue();
+            dimensions.Should().NotBeNull();
+            dimensions?.X.Should().Be(3);
+            dimensions?.Y.Should().Be(10);
+            dimensions?.Z.Should().Be(0);
+            dimensions?.Length.Should().Be(30);
+        }
+
+        [Test]
+        public void TryParse_ThreeDimension_ShouldHaveExpectedValues()
+        {
+            var result = Dimensions.TryParse("3 10, 6", out var dimensions);
+
+            result.Should().BeTrue();
+            dimensions.Should().NotBeNull();
+            dimensions?.X.Should().Be(3);
+            dimensions?.Y.Should().Be(10);
+            dimensions?.Z.Should().Be(6);
+            dimensions?.Length.Should().Be(180);
+        }
+        
+        [Test]
+        public void ToIndex_EmptyDimension_ShouldBeExpected()
         {
             var dimension = Dimensions.Empty;
 
-            dimension.ToBracketNotation().Should().Be("[]");
+            dimension.ToIndex().Should().Be("[]");
         }
 
         [Test]
-        public void ToBracketNotation_OneDimension_ShouldBeExpected()
+        public void ToIndex_OneDimension_ShouldBeExpected()
         {
             var dimension = new Dimensions(1);
 
-            dimension.ToBracketNotation().Should().Be("[1]");
+            dimension.ToIndex().Should().Be("[1]");
         }
         
         [Test]
-        public void ToBracketNotation_TwoDimension_ShouldBeExpected()
+        public void ToIndex_TwoDimension_ShouldBeExpected()
         {
             var dimension = new Dimensions(1, 1);
 
-            dimension.ToBracketNotation().Should().Be("[1,1]");
+            dimension.ToIndex().Should().Be("[1,1]");
         }
         
         [Test]
-        public void ToBracketNotation_ThreeDimension_ShouldBeExpected()
+        public void ToIndex_ThreeDimension_ShouldBeExpected()
         {
             var dimension = new Dimensions(1, 1, 1);
 
-            dimension.ToBracketNotation().Should().Be("[1,1,1]");
+            dimension.ToIndex().Should().Be("[1,1,1]");
         }
 
         [Test]

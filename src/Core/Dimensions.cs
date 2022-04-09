@@ -100,18 +100,6 @@ namespace L5Sharp.Core
         public bool IsEmpty => Length == 0;
 
         /// <summary>
-        /// Gets the set of indices for the <see cref="Dimensions"/> object.
-        /// </summary>
-        /// <value>
-        /// An enumerable collection of bracket notation index strings that represent the indices of a
-        /// dimension array. If <see cref="Dimensions"/> are empty, then an empty collection.
-        /// </value>
-        /// <remarks>
-        /// The indices are determined be the dimensions (x, y, z) of the object.
-        /// </remarks>
-        public IEnumerable<string> Indices => GenerateIndices();
-
-        /// <summary>
         /// Indicates whether <see cref="Dimensions"/> are multi-dimensional.
         /// </summary>
         /// <remarks>
@@ -138,33 +126,68 @@ namespace L5Sharp.Core
         public static Dimensions Empty => new();
 
         /// <summary>
-        /// Parses a string into a <see cref="Dimensions"/> object value.
+        /// Gets the set of indices for the <see cref="Dimensions"/> object.
         /// </summary>
-        /// <param name="value">The <see cref="string"/> value to parse.</param>
+        /// <value>
+        /// An <see cref="IEnumerable{T}"/> containing all index strings that represent the indices of a
+        /// dimension array. If <see cref="Dimensions"/> are empty, then an empty collection.
+        /// </value>
+        /// <remarks>
+        /// The indices are determined be the dimensions (x, y, z) of the object.
+        /// </remarks>
+        public IEnumerable<string> Indices()
+        {
+            var indices = new List<string>();
+
+            for (ushort i = 0; i < X; i++)
+            {
+                if (Y == 0)
+                    indices.Add(GenerateIndex(i));
+
+                for (ushort j = 0; j < Y; j++)
+                {
+                    if (Z == 0)
+                        indices.Add(GenerateIndex(i, j));
+
+                    for (ushort k = 0; k < Z; k++)
+                        indices.Add(GenerateIndex(i, j, k));
+                }
+            }
+
+            return indices;
+        }
+
+        /// <summary>
+        /// Parses the provided string to a <see cref="Dimensions"/> object.
+        /// </summary>
+        /// <param name="value">The value to parse.</param>
         /// <returns>
-        /// If the string has a valid format and value, returns an instance of <see cref="Dimensions"/> that represents
-        /// the value parsed using the provided sting. If value empty or 0; returns <see cref="Empty"/>.
+        /// A new <see cref="Dimensions"/> object that represents parsed dimensional value.
+        /// If value empty or 0; returns <see cref="Empty"/>.
         /// </returns>
         /// <exception cref="ArgumentNullException">value is null</exception>
-        /// <exception cref="ArgumentException">
-        /// value does not match to expected pattern or value does not contain between 1 and 3 arguments.
-        /// </exception>
+        /// <exception cref="ArgumentException"> value contains invalid characters.</exception>
         /// <remarks>
-        /// L5X valid string pattern is a set of numbers separated by a single space. The string should only contain up
-        /// to three numbers. Each number should represent a <see cref="ushort"/>, or a value between 0 and 65535.
+        /// Valid dimensions must have only numbers and special characters "[ ,]". If more than 3 numbers are
+        /// found in the provided value, or the numbers are not parsable to a <see cref="ushort"/>,
+        /// then exception will be thrown.
         /// </remarks>
-        
+        /// <example>1 2 3 -or- [1,2]</example>
+        /// <seealso cref="TryParse"/>
         public static Dimensions Parse(string value)
         {
             if (value is null)
                 throw new ArgumentNullException(nameof(value));
-            
+
             if (value.IsEmpty()) return Empty;
 
-            if (!Regex.IsMatch(value, @"(?=\d+)^[\d\s]+$"))
-                throw new ArgumentException($"Value '{value}' does not match expected pattern");
-
-            var numbers = value.Split(' ').Select(v => Convert.ToUInt16(v)).ToList();
+            if (Regex.IsMatch(value, @"[^\d,[\] ]"))
+                throw new ArgumentException(
+                    $"Value '{value}' contains invalid characters. Only numbers and [ ,] are allowed.");
+            
+            var numbers = Regex.Matches(value, @"\d+", RegexOptions.Compiled)
+                .Select(m => ushort.Parse(m.Value))
+                .ToList();
 
             return numbers.Count switch
             {
@@ -175,26 +198,36 @@ namespace L5Sharp.Core
                     $"Value '{value}' has a invalid number of arguments. Expecting between 1 and 3 arguments.")
             };
         }
-        
+
         /// <summary>
-        /// Attempts to parse
+        /// Attempts to parse the provided string to a <see cref="Dimensions"/> object.
         /// </summary>
-        /// <param name="value"></param>
-        /// <param name="dimensions"></param>
-        /// <returns></returns>
-        /// <exception cref="ArgumentNullException"></exception>
+        /// <param name="value">The value to parse.</param>
+        /// <param name="dimensions">When the method returns, the value of the parsed dimensions if successful;
+        /// otherwise, null</param>
+        /// <returns>true if the parse was successful; otherwise, false.</returns>
+        /// <exception cref="ArgumentNullException">value is null</exception>
+        /// <remarks>
+        /// Valid dimensions must have only numbers and special characters "[ ,]". If more than 3 numbers are
+        /// found in the provided value, or the numbers are not parsable to a <see cref="ushort"/>,
+        /// then exception will be thrown.
+        /// </remarks>
+        /// <example>1 2 3 -or- [1,2]</example>
+        /// <seealso cref="Parse"/>
         public static bool TryParse(string value, out Dimensions? dimensions)
         {
             if (value is null)
                 throw new ArgumentNullException(nameof(value));
 
-            if (value.IsEmpty() || !Regex.IsMatch(value, @"(?=\d+)^[\d\s]+$"))
+            if (value.IsEmpty() || Regex.IsMatch(value, @"[^\d,[\] ]"))
             {
                 dimensions = null;
                 return false;
             }
-            
-            var numbers = value.Split(' ').Select(v => Convert.ToUInt16(v)).ToList();
+
+            var numbers = Regex.Matches(value, @"\d+", RegexOptions.Compiled)
+                .Select(m => ushort.Parse(m.Value))
+                .ToList();
 
             dimensions = numbers.Count switch
             {
@@ -226,7 +259,7 @@ namespace L5Sharp.Core
         /// <example>
         /// 
         /// </example>
-        public string ToBracketNotation() => Z > 0 ? $"[{X},{Y},{Z}]" : Y > 0 ? $"[{X},{Y}]" : X > 0 ? $"[{X}]" : "[]";
+        public string ToIndex() => Z > 0 ? $"[{X},{Y},{Z}]" : Y > 0 ? $"[{X},{Y}]" : X > 0 ? $"[{X}]" : "[]";
 
         /// <summary>
         /// Converts the provided <see cref="ushort"/> to a <see cref="Dimensions"/> value. 
@@ -276,32 +309,7 @@ namespace L5Sharp.Core
         /// <returns>true if the objects are not equal, otherwise, false.</returns>
         public static bool operator !=(Dimensions left, Dimensions right) => !Equals(left, right);
 
-        /// <summary>
-        /// Generates a collection of index names for the current dimensions instance.
-        /// </summary>
-        /// <returns>A collection of string index names</returns>
-        private IEnumerable<string> GenerateIndices()
-        {
-            var indices = new List<string>();
-
-            for (ushort i = 0; i < X; i++)
-            {
-                if (Y == 0)
-                    indices.Add(GenerateIndex(i));
-
-                for (ushort j = 0; j < Y; j++)
-                {
-                    if (Z == 0)
-                        indices.Add(GenerateIndex(i, j));
-
-                    for (ushort k = 0; k < Z; k++)
-                        indices.Add(GenerateIndex(i, j, k));
-                }
-            }
-
-            return indices;
-        }
-
+        
         private static string GenerateIndex(ushort x) => $"[{x}]";
 
         private static string GenerateIndex(ushort x, ushort y) => $"[{x},{y}]";
