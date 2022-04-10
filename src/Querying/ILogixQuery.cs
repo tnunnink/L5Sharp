@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using System.Xml.Linq;
 
 namespace L5Sharp.Querying
 {
@@ -18,8 +17,8 @@ namespace L5Sharp.Querying
         /// <returns>
         /// An <see cref="IEnumerable{T}"/> containing the entire queried collection.
         /// </returns>
-        IEnumerable<TResult> All();
-
+        IEnumerable<TResult> Select();
+        
         /// <summary>
         /// Determines if the current queried collection contains and elements.
         /// </summary>

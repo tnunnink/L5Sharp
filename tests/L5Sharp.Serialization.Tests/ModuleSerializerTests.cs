@@ -89,7 +89,7 @@ namespace L5Sharp.Serialization.Tests
             component.SafetyEnabled.Should().BeFalse();
             component.Keying.Should().Be(ElectronicKeying.CompatibleModule);
             component.Slot.Should().Be(4);
-            component.IP.Should().Be(IPAddress.Parse("0.0.0.0"));
+            component.IP.Should().Be(IPAddress.Parse("255.255.255.255"));
             component.Ports.Should().HaveCount(1);
             component.Connections.Should().HaveCount(1);
             component.Tags.Should().NotBeEmpty();

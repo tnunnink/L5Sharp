@@ -1,6 +1,4 @@
-﻿using L5Sharp.Core;
-
-namespace L5Sharp.Querying
+﻿namespace L5Sharp.Querying
 {
     /// <summary>
     /// A fluent <see cref="IComponentQuery{TResult}"/> that adds advanced querying for <see cref="ITag{TDataType}"/>
@@ -8,8 +6,13 @@ namespace L5Sharp.Querying
     /// </summary>
     public interface ITagQuery : IComponentQuery<ITag<IDataType>>
     {
-        ITagQuery InProgram(ComponentName programName);
-        
-        ITagQuery WithType<TDataType>() where TDataType : IDataType;
+        /// <summary>
+        /// Filters the collection to include only tags with the specified data type name. 
+        /// </summary>
+        /// <param name="typeName">The name of the data type to search.</param>
+        /// <returns>
+        /// A mew <see cref="ITagQuery"/> containing only tags of the specified type.
+        /// </returns>
+        ITagQuery WithDataType(string typeName);
     }
 }

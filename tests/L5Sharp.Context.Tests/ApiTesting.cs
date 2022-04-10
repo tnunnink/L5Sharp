@@ -1,4 +1,5 @@
-﻿using L5Sharp.L5X;
+﻿
+using L5Sharp.L5X;
 using NUnit.Framework;
 
 namespace L5Sharp.Context.Tests
@@ -11,7 +12,7 @@ namespace L5Sharp.Context.Tests
         {
             var context = L5XContext.Load(Known.Template);
 
-            var changed = context.IsChanged;
+            var modules = context.Modules().Select();
             
             Assert.Pass();
         }

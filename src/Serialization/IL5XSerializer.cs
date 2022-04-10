@@ -42,6 +42,6 @@ namespace L5Sharp.Serialization
         /// </summary>
         /// <param name="element">The xml element to deserialize.</param>
         /// <returns>A new object instance of the specified type.</returns>
-        T Deserialize(XElement element);
+        new T Deserialize(XElement element);
     }
 }

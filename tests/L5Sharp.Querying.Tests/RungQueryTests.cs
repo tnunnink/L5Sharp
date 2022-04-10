@@ -19,7 +19,7 @@ namespace L5Sharp.Querying.Tests
         {
             var context = L5XContext.Load(Known.Test);
 
-            var rungs = context.Rungs().InProgram("MainProgram").All().ToList();
+            var rungs = context.Rungs().InProgram("MainProgram").Select().ToList();
 
             rungs.Should().NotBeEmpty();
         }
@@ -29,7 +29,7 @@ namespace L5Sharp.Querying.Tests
         {
             var context = L5XContext.Load(Known.Test);
 
-            var rungs = context.Rungs().InProgram("MainProgram").Flatten().All().ToList();
+            var rungs = context.Rungs().InProgram("MainProgram").Flatten().Select().ToList();
 
             rungs.Should().NotBeEmpty();
         }
@@ -39,7 +39,7 @@ namespace L5Sharp.Querying.Tests
         {
             var context = L5XContext.Load(RungExample1);
 
-            var rungs = context.Rungs().Flatten().All().ToList();
+            var rungs = context.Rungs().Flatten().Select().ToList();
 
             rungs.Should().NotBeEmpty();
         }

@@ -21,7 +21,7 @@ namespace L5Sharp.Querying.Tests
         {
             var context = L5XContext.Load(Known.Test);
 
-            var results = context.Tasks().All().ToList();
+            var results = context.Tasks().Select().ToList();
 
             results.Should().NotBeNull();
             results.Should().NotBeEmpty();

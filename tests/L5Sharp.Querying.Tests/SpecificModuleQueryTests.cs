@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using FluentAssertions;
 using L5Sharp.Core;
 using L5Sharp.L5X;
@@ -19,7 +20,37 @@ namespace L5Sharp.Querying.Tests
 
             component.Should().NotBeNull();
         }
-        
+
+        [Test]
+        public void WithParent_Null_ShouldThrowArgumentNullException()
+        {
+            var context = L5XContext.Load(Known.Test);
+
+            FluentActions.Invoking(() => context.Modules().WithParent(null!).Select()).Should()
+                .Throw<ArgumentNullException>();
+        }
+
+        [Test]
+        public void WithParent_NonExistingParent_ShouldBeEmpty()
+        {
+            var context = L5XContext.Load(Known.Test);
+
+            var modules = context.Modules().WithParent("fake").Select().ToList();
+
+            modules.Should().BeEmpty();
+        }
+
+        [Test]
+        public void WithParent_ValidParent_ShouldAllHaveSpecifiedParent()
+        {
+            var context = L5XContext.Load(Known.Test);
+
+            var modules = context.Modules().WithParent("Local_Mod_1").Select().ToList();
+
+            modules.Should().NotBeEmpty();
+            modules.Should().AllSatisfy(m => m.ParentModule.Should().Be("Local_Mod_1"));
+        }
+
         [Test]
         public void Named_Existing_ShouldBeExpected()
         {
@@ -56,7 +87,7 @@ namespace L5Sharp.Querying.Tests
             var context = L5XContext.Load(Known.Test);
 
             var components = context.Modules().Where(t => t.Vendor == 1).ToList();
-            
+
             components.All(c => c.Vendor == Vendor.Rockwell).Should().BeTrue();
         }
     }

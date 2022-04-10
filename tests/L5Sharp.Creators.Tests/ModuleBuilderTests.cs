@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Net;
 using FluentAssertions;
 using L5Sharp.Core;
+using L5Sharp.Enums;
 using NUnit.Framework;
 
 namespace L5Sharp.Creators.Tests
@@ -16,6 +18,33 @@ namespace L5Sharp.Creators.Tests
                 .Create();
 
             module.Should().NotBeNull();
+        }
+
+        [Test]
+        public void Build_ValidNameAndCatalog_ShouldHaveExpectedProperties()
+        {
+            var module = Module.Build("Test").WithCatalog("1756-EN2T").Create();
+
+            module.Name.Should().Be("Test");
+            module.CatalogNumber.Should().Be(new CatalogNumber("1756-EN2T"));
+            module.Vendor.Should().Be(Vendor.Rockwell);
+            module.ProductType.Should().Be(ProductType.Communications);
+            module.ProductCode.Should().Be(166);
+            module.Revision.Should().Be(new Revision(11, 1));
+            module.Ports.Should().HaveCount(2);
+            module.Keying.Should().Be(ElectronicKeying.CompatibleModule);
+            module.ParentModule.Should().BeEmpty();
+            module.ParentPortId.Should().Be(0);
+            module.Inhibited.Should().BeFalse();
+            module.MajorFault.Should().BeFalse();
+            module.SafetyEnabled.Should().BeFalse();
+            module.Slot.Should().Be(0);
+            module.IP.Should().Be(IPAddress.None);
+            module.Config.Should().BeNull();
+            module.Connections.Should().BeEmpty();
+            module.Backplane.Should().NotBeNull();
+            module.Ethernet.Should().NotBeNull();
+            module.Description.Should().BeEmpty();
         }
 
         [Test]

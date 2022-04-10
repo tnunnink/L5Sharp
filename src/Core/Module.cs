@@ -218,6 +218,20 @@ namespace L5Sharp.Core
             }
         }
 
+        /// <inheritdoc />
+        public IEnumerable<Bus> Buses() => _buses.Values;
+
+        /// <inheritdoc />
+        public Bus Bus(int portId)
+        {
+            var port = Ports[portId];
+
+            if (port is null)
+                throw new ArgumentNullException();
+
+            return _buses[port];
+        }
+
         private Dictionary<Port, Bus> InitializeBuses(ICollection<IModule>? children = null)
         {
             var buses = new Dictionary<Port, Bus>();

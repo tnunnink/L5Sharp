@@ -227,6 +227,7 @@ namespace L5Sharp.Enums
             }
         }
         
+        //todo how should we do paring here...
         public static TAtomic? TryParse<TAtomic>(string input) where TAtomic : IAtomicType
         {
             var parser = DetermineParser(input);

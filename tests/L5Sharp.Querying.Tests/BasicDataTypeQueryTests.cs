@@ -19,7 +19,7 @@ namespace L5Sharp.Querying.Tests
         {
             var context = L5XContext.Load(Known.Test);
 
-            var results = context.DataTypes().All().ToList();
+            var results = context.DataTypes().Select().ToList();
 
             results.Should().NotBeNull();
             results.Should().NotBeEmpty();
@@ -343,7 +343,7 @@ namespace L5Sharp.Querying.Tests
         {
             var context = L5XContext.Load(Known.Test);
 
-            FluentActions.Invoking(() => context.DataTypes().DependingOn(null!).All()).Should()
+            FluentActions.Invoking(() => context.DataTypes().DependingOn(null!).Select()).Should()
                 .Throw<ArgumentNullException>();
         }
 
@@ -352,7 +352,7 @@ namespace L5Sharp.Querying.Tests
         {
             var context = L5XContext.Load(Known.Test);
 
-            var results = context.DataTypes().DependingOn("SimpleType").All().ToList();
+            var results = context.DataTypes().DependingOn("SimpleType").Select().ToList();
 
             results.Should().NotBeEmpty();
             results.All(d => d.Members.Any(m => m.DataType.Name == "SimpleType")).Should().BeTrue();

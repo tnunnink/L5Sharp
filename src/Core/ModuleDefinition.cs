@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using L5Sharp.Abstractions;
 using L5Sharp.Enums;
 
@@ -156,6 +157,67 @@ namespace L5Sharp.Core
                 new Port(ds.Id, ds.Type, downstreamAddress, false, busSize, ds.DownstreamOnly)));
 
             _ports = ports;
+        }
+
+        /// <summary>
+        /// Configures the slot number of the first found non-Ethernet type port with the provided value.
+        /// </summary>
+        /// <param name="slot">The the slot number value to configure.</param>
+        /// <exception cref="InvalidOperationException">No non-Ethernet type port exists for the current definition.</exception>
+        public void ConfigureSlot(byte slot)
+        {
+            var target = _ports.FirstOrDefault(p => p.Type != "Ethernet");
+
+            if (target is null)
+                throw new InvalidOperationException(
+                    $"No non-Ethernet port found on the current definition for {CatalogNumber}.");
+
+            var port = new Port(target.Id, target.Type, PortAddress.FromSlot(slot), target.Upstream, target.BusSize,
+                target.DownstreamOnly);
+
+            _ports.Remove(target);
+            _ports.Add(port);
+        }
+
+        /// <summary>
+        /// Configures the IP address of the first found Ethernet type port with the provided value.
+        /// </summary>
+        /// <param name="ipAddress">The IP address value to configure.</param>
+        /// <exception cref="InvalidOperationException">No port of type Ethernet exists for the current definition.</exception>
+        public void ConfigureIP(IPAddress ipAddress)
+        {
+            var target = _ports.FirstOrDefault(p => p.Type == "Ethernet");
+
+            if (target is null)
+                throw new InvalidOperationException(
+                    $"No Ethernet port found on the current definition for {CatalogNumber}.");
+
+            var port = new Port(target.Id, target.Type, PortAddress.FromIP(ipAddress), target.Upstream, target.BusSize,
+                target.DownstreamOnly);
+
+            _ports.Remove(target);
+            _ports.Add(port);
+        }
+
+        /// <summary>
+        /// Configures the upstream property of the port with the specified portType value.
+        /// </summary>
+        /// <param name="portType">The string value of the port to configure upstream property for.</param>
+        /// <param name="upstream">The upstream property value to configure. Defaults to true.</param>
+        /// <exception cref="InvalidOperationException">portType value does not exits for the current definition.</exception>
+        public void ConfigureUpstream(string portType, bool upstream = true)
+        {
+            var target = _ports.FirstOrDefault(p => p.Type == portType);
+
+            if (target is null)
+                throw new InvalidOperationException(
+                    $"No port of type '{portType}' exists on the current definition for {CatalogNumber}.");
+
+            var port = new Port(target.Id, target.Type, target.Address, upstream, target.BusSize,
+                target.DownstreamOnly);
+
+            _ports.Remove(target);
+            _ports.Add(port);
         }
     }
 }

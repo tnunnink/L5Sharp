@@ -1,5 +1,4 @@
-﻿using L5Sharp.Core;
-using L5Sharp.L5X;
+﻿using L5Sharp.L5X;
 using L5Sharp.Querying;
 
 namespace L5Sharp.Repositories
@@ -13,14 +12,6 @@ namespace L5Sharp.Repositories
             _document = document;
         }
 
-        public ITagQuery InProgram(ComponentName programName)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public ITagQuery WithType<TDataType>() where TDataType : IDataType
-        {
-            return new TagQuery(Elements, Serializer).WithType<TDataType>();
-        }
+        public ITagQuery WithDataType(string typeName) => new TagQuery(Elements, Serializer).WithDataType(typeName);
     }
 }

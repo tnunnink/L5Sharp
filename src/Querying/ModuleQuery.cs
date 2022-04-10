@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using L5Sharp.Core;
@@ -18,6 +19,9 @@ namespace L5Sharp.Querying
         
         public IModuleQuery WithParent(ComponentName parentName)
         {
+            if (parentName is null)
+                throw new ArgumentNullException(nameof(parentName));
+            
             var results = Elements.Where(e =>
                 e.Attribute(L5XAttribute.ParentModule.ToString())?.Value == parentName.ToString());
 

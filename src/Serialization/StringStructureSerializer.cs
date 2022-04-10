@@ -30,7 +30,7 @@ namespace L5Sharp.Serialization
 
             var lengthElement = new XElement(L5XElement.DataValueMember.ToString());
             lengthElement.Add(new XAttribute(L5XAttribute.Name.ToString(), component.LEN.Name));
-            lengthElement.Add(new XAttribute(L5XAttribute.DataType.ToString(), component.LEN.DataType));
+            lengthElement.Add(new XAttribute(L5XAttribute.DataType.ToString(), component.LEN.DataType.Name));
             lengthElement.Add(new XAttribute(L5XAttribute.Radix.ToString(), component.LEN.Radix));
             lengthElement.Add(new XAttribute(L5XAttribute.Value.ToString(), component.LEN.DataType.Value));
 

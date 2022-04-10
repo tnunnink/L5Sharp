@@ -161,7 +161,7 @@ namespace L5Sharp
         IReadOnlyCollection<Connection> Connections { get; }
         
         /// <summary>
-        /// Gets the <see cref="Bus"/> that represents the module backplane, on which new modules can be
+        /// Gets the <see cref="Core.Bus"/> that represents the module backplane, on which new modules can be
         /// added or created.
         /// </summary>
         /// <remarks>
@@ -171,7 +171,7 @@ namespace L5Sharp
         Bus? Backplane { get; }
         
         /// <summary>
-        /// Gets the <see cref="Bus"/> that represents the module Ethernet network, on which new modules can be
+        /// Gets the <see cref="Core.Bus"/> that represents the module Ethernet network, on which new modules can be
         /// added or created.
         /// </summary>
         /// <remarks>
@@ -193,5 +193,19 @@ namespace L5Sharp
         /// This property simply aggregates the config, input, and output tags for the module for easy of access.
         /// </remarks>
         IEnumerable<ITag<IDataType>> Tags { get; }
+
+        /// <summary>
+        /// Gets all <see cref="Core.Bus"/> objects for the module.
+        /// </summary>
+        /// <returns>An <see cref="IEnumerable{T}"/> containing all <see cref="Core.Bus"/> objects from the current
+        /// module.</returns>
+        IEnumerable<Bus> Buses();
+
+        /// <summary>
+        /// Gets a <see cref="Core.Bus"/> from the module with the specified port id.
+        /// </summary>
+        /// <param name="portId"></param>
+        /// <returns></returns>
+        Bus Bus(int portId);
     }
 }

@@ -1,79 +1,79 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using System.Linq;
 using System.Net;
 using L5Sharp.Core;
 using L5Sharp.Enums;
+using L5Sharp.Extensions;
 
 namespace L5Sharp.Builders
 {
     internal class ModuleBuilder : IModuleBuilder, IModuleCatalogNumberStep
     {
         private readonly ComponentName _name;
-        private CatalogNumber _catalogNumber;
-        private Vendor _vendor;
-        private ProductType _productType;
-        private ushort _productCode;
-        private Revision _revision;
-        private List<Port> _ports;
-        private string _parentModule;
-        private int _parentPortId;
         private bool _inhibited;
         private bool _majorFault;
         private bool _safetyEnabled;
-        private ElectronicKeying _keying;
-        private string _description;
-        
-        public ModuleBuilder(ComponentName name)
+        private ElectronicKeying? _keying;
+        private string? _description;
+        private IPAddress? _ip;
+        private Revision? _revision;
+        private byte _slot;
+        private IModule? _parent;
+        private CatalogNumber? _catalogNumber;
+
+        internal ModuleBuilder(ComponentName name)
         {
             _name = name;
-            _catalogNumber = new CatalogNumber("UNKNOWN");
-            _vendor = Vendor.Unknown;
-            _productType = ProductType.Unknown;
-            _productCode = 0;
-            _revision = new Revision();
-            _ports = new List<Port>();
-            _parentModule = string.Empty;
-            _keying = ElectronicKeying.CompatibleModule;
-            _description = string.Empty;
         }
 
-        public IModule Create() =>
-            new Module(_name, _catalogNumber, _vendor, _productType, _productCode, _revision, _ports,
-                _parentModule, _parentPortId, _keying, _inhibited, _majorFault, _safetyEnabled, 
-                description: _description);
+        public IModule Create()
+        {
+            if (_catalogNumber is null)
+                throw new ArgumentNullException(nameof(_catalogNumber));
+
+            var catalogService = new ModuleCatalog();
+
+            var definition = catalogService.Lookup(_catalogNumber);
+            
+            
+            definition.ConfigureSlot(_slot);
+            
+            if (_ip is not null)
+                definition.ConfigureIP(_ip);
+
+            var parentModule = _parent?.Name ?? string.Empty;
+            var parentPortId = _parent?.Ports.Downstream.FirstOrDefault()?.Id ?? default;
+            var portType = _parent?.Ports.Downstream.FirstOrDefault()?.Type ?? string.Empty;
+            
+            if (!portType.IsEmpty())
+                definition.ConfigureUpstream(portType);
+            
+
+            var module = new Module(_name, _catalogNumber,
+                definition.Vendor, definition.ProductType, definition.ProductCode,
+                _revision ?? definition.Revisions.Max(), definition.Ports.ToList(), parentModule, parentPortId,
+                _keying, _inhibited, _majorFault, _safetyEnabled, description: _description);
+
+            _parent?.Bus(parentPortId).Add(module);
+
+            return module;
+        }
 
         public IModuleBuilder WithCatalog(CatalogNumber catalogNumber)
         {
-            var catalogService = new ModuleCatalog();
-            var definition = catalogService.Lookup(catalogNumber);
-
-            _catalogNumber = definition.CatalogNumber;
-            _vendor = definition.Vendor;
-            _productType = definition.ProductType;
-            _productCode = definition.ProductCode;
-            _ports = definition.Ports.ToList();
-            _revision = definition.Revisions.Max();
-            
+            _catalogNumber = catalogNumber;
             return this;
         }
 
-        public IModuleBuilder WithConnectionTo(IModule parent)
+        public IModuleBuilder WithParent(IModule parent)
         {
-            _parentModule = parent.Name;
-            _parentPortId = parent.Ports.Downstream.FirstOrDefault()?.Id ?? default;
-            return this;
-        }
-        
-        public IModuleBuilder WithParent(string parentName, int parentPortId)
-        {
-            _parentModule = parentName;
-            _parentPortId = parentPortId;
+            _parent = parent;
             return this;
         }
 
         public IModuleBuilder WithIP(IPAddress ip)
         {
-            var port = _ports.FirstOrDefault(p => p.Type == "Ethernet");
+            _ip = ip;
             return this;
         }
 
@@ -91,7 +91,7 @@ namespace L5Sharp.Builders
 
         public IModuleBuilder WithSlot(byte slot)
         {
-            //todo configure ports
+            _slot = slot;
             return this;
         }
 

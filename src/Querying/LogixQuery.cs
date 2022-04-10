@@ -37,7 +37,7 @@ namespace L5Sharp.Querying
         }
 
         /// <inheritdoc />
-        public IEnumerable<TResult> All() => 
+        public IEnumerable<TResult> Select() => 
             Elements.Select(e => Serializer.Deserialize(e));
 
         /// <inheritdoc />

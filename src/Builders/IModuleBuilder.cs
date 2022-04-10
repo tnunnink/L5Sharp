@@ -11,11 +11,23 @@ namespace L5Sharp.Builders
     public interface IModuleBuilder : IComponentBuilder<IModule>
     {
         /// <summary>
-        /// Configures the connection to the parent module for the new <see cref="IModule"/>.
+        /// Configures the parent module parameters for the new <see cref="IModule"/>.
         /// </summary>
         /// <param name="parent">The <see cref="IModule"/> instance that is the parent of the new module.</param>
         /// <returns>A <see cref="IModuleBuilder"/> instance with the configured parent module.</returns>
-        IModuleBuilder WithConnectionTo(IModule parent);
+        /// <remarks>
+        /// This method will use the parent name and the first found downstream port as the parent module port id.
+        /// </remarks>
+        IModuleBuilder WithParent(IModule parent);
+
+        /*
+        /// <summary>
+        /// Configures the connection to the parent module for the new <see cref="IModule"/>.
+        /// </summary>
+        /// <param name="parentName">The name of the parent of the new module.</param>
+        /// <param name="parentPortId">The port id upstream for which the new module is connected.</param>
+        /// <returns>A <see cref="IModuleBuilder"/> instance with the configured parent properties.</returns>
+        IModuleBuilder WithParent(string parentName, int parentPortId);*/
         
         /// <summary>
         /// Configures the IP address of the new <see cref="IModule"/> to the provided value.

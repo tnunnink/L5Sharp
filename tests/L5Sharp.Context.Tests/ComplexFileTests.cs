@@ -36,7 +36,7 @@ namespace L5Sharp.Context.Tests
             var stopwatch = new Stopwatch();
             stopwatch.Start();
             
-            var dataTypes = context.DataTypes().All().ToList();
+            var dataTypes = context.DataTypes().Select().ToList();
 
             stopwatch.Stop();
 
@@ -51,7 +51,7 @@ namespace L5Sharp.Context.Tests
             var stopwatch = new Stopwatch();
             stopwatch.Start();
             
-            var tags = context.Tags().All();
+            var tags = context.Tags().Select();
 
             stopwatch.Stop();
 
@@ -66,7 +66,7 @@ namespace L5Sharp.Context.Tests
             var stopwatch = new Stopwatch();
             stopwatch.Start();
             
-            var modules = context.Modules().All().ToList();
+            var modules = context.Modules().Select().ToList();
 
             stopwatch.Stop();
 
