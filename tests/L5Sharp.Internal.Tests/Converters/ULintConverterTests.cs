@@ -32,772 +32,365 @@ namespace L5Sharp.Internal.Tests.Converters
         }
         
         [Test]
-        public void CanConvertFrom_bool_ShouldBeFalse()
+        public void ConvertFrom_NotSupportedType_ShouldThrowNotSupportedException()
         {
-            var value = _fixture.Create<bool>();
-
-            var result = _converter.CanConvertFrom(value.GetType());
-
-            result.Should().BeFalse();
-        }
-        
-        [Test]
-        public void CanConvertFrom_sbyte_ShouldBeFalse()
-        {
-            var value = _fixture.Create<sbyte>();
-
-            var result = _converter.CanConvertFrom(value.GetType());
-
-            result.Should().BeFalse();
-        }
-
-        [Test]
-        public void CanConvertFrom_byte_ShouldBeTrue()
-        {
-            var value = _fixture.Create<byte>();
-
-            var result = _converter.CanConvertFrom(value.GetType());
-
-            result.Should().BeTrue();
-        }
-        
-        [Test]
-        public void CanConvertFrom_short_ShouldBeFalse()
-        {
-            var value = _fixture.Create<short>();
-
-            var result = _converter.CanConvertFrom(value.GetType());
-
-            result.Should().BeFalse();
-        }
-        
-        [Test]
-        public void CanConvertFrom_ushort_ShouldBeTrue()
-        {
-            var value = _fixture.Create<ushort>();
-
-            var result = _converter.CanConvertFrom(value.GetType());
-
-            result.Should().BeTrue();
-        }
-        
-        [Test]
-        public void CanConvertFrom_int_ShouldBeFalse()
-        {
-            var value = _fixture.Create<int>();
-
-            var result = _converter.CanConvertFrom(value.GetType());
-
-            result.Should().BeFalse();
-        }
-        
-        [Test]
-        public void CanConvertFrom_uint_ShouldBeTrue()
-        {
-            var value = _fixture.Create<uint>();
-
-            var result = _converter.CanConvertFrom(value.GetType());
-
-            result.Should().BeTrue();
-        }
-        
-        [Test]
-        public void CanConvertFrom_long_ShouldBeFalse()
-        {
-            var value = _fixture.Create<long>();
-
-            var result = _converter.CanConvertFrom(value.GetType());
-
-            result.Should().BeFalse();
-        }
-        
-        [Test]
-        public void CanConvertFrom_ulong_ShouldBeTrue()
-        {
-            var value = _fixture.Create<ulong>();
-
-            var result = _converter.CanConvertFrom(value.GetType());
-
-            result.Should().BeTrue();
-        }
-        
-        [Test]
-        public void CanConvertFrom_Bool_ShouldBeFalse()
-        {
-            var value = _fixture.Create<BOOL>();
-
-            var result = _converter.CanConvertFrom(value.GetType());
-
-            result.Should().BeFalse();
-        }
-
-        [Test]
-        public void CanConvertFrom_Sint_ShouldBeFalse()
-        {
-            var value = _fixture.Create<SINT>();
-
-            var result = _converter.CanConvertFrom(value.GetType());
-
-            result.Should().BeFalse();
-        }
-        
-        [Test]
-        public void CanConvertFrom_USint_ShouldBeTure()
-        {
-            var value = _fixture.Create<USINT>();
-
-            var result = _converter.CanConvertFrom(value.GetType());
-
-            result.Should().BeTrue();
-        }
-        
-        [Test]
-        public void CanConvertFrom_Int_ShouldBeFalse()
-        {
-            var value = _fixture.Create<INT>();
-
-            var result = _converter.CanConvertFrom(value.GetType());
-
-            result.Should().BeFalse();
-        }
-        
-        [Test]
-        public void CanConvertFrom_UInt_ShouldBeTrue()
-        {
-            var value = _fixture.Create<UINT>();
-
-            var result = _converter.CanConvertFrom(value.GetType());
-
-            result.Should().BeTrue();
-        }
-        
-        [Test]
-        public void CanConvertFrom_Dint_ShouldBeFalse()
-        {
-            var value = _fixture.Create<DINT>();
-
-            var result = _converter.CanConvertFrom(value.GetType());
-
-            result.Should().BeFalse();
-        }
-        
-        [Test]
-        public void CanConvertFrom_UDint_ShouldBeTrue()
-        {
-            var value = _fixture.Create<UDINT>();
-
-            var result = _converter.CanConvertFrom(value.GetType());
-
-            result.Should().BeTrue();
-        }
-        
-        [Test]
-        public void CanConvertFrom_Lint_ShouldBeFalse()
-        {
-            var value = _fixture.Create<LINT>();
-
-            var result = _converter.CanConvertFrom(value.GetType());
-
-            result.Should().BeFalse();
-        }
-        
-        [Test]
-        public void CanConvertFrom_ULint_ShouldBeTrue()
-        {
-            var value = _fixture.Create<ULINT>();
-
-            var result = _converter.CanConvertFrom(value.GetType());
-
-            result.Should().BeTrue();
-        }
-        
-        [Test]
-        public void CanConvertFrom_Real_ShouldBeFalse()
-        {
-            var value = _fixture.Create<REAL>();
-
-            var result = _converter.CanConvertFrom(value.GetType());
-
-            result.Should().BeFalse();
-        }
-
-        [Test]
-        public void CanConvertFrom_string_ShouldBeTrue()
-        {
-            var value = _fixture.Create<string>();
-
-            var result = _converter.CanConvertFrom(value.GetType());
-
-            result.Should().BeTrue();
-        }
-
-        [Test]
-        public void ConvertFrom_bool_ShouldThrowNotSupportedException()
-        {
-            var value = _fixture.Create<bool>();
+            var value = _fixture.Create<DateTime>();
 
             FluentActions.Invoking(() => _converter.ConvertFrom(value)).Should().Throw<NotSupportedException>();
         }
         
         [Test]
-        public void ConvertFrom_sbyte_ShouldThrowNotSupportedException()
+        public void ConvertFrom_ValidSbyte_ShouldBeExpected()
         {
-            var value = _fixture.Create<sbyte>();
-
-            FluentActions.Invoking(() => _converter.ConvertFrom(value)).Should().Throw<NotSupportedException>();
-        }
-
-        [Test]
-        public void ConvertFrom_byte_ShouldBeExpected()
-        {
-            var value = _fixture.Create<byte>();
+            const sbyte value = 0;
 
             var result = (ULINT)_converter.ConvertFrom(value);
 
-            result.Should().Be(result);
+            result?.Value.Should().Be((ulong)value);
         }
         
         [Test]
-        public void ConvertFrom_short_ShouldThrowNotSupportedException()
+        public void ConvertFrom_MinValue_ShouldThrowOverflowException()
         {
-            var value = _fixture.Create<short>();
+            const sbyte value = sbyte.MinValue;
 
-            FluentActions.Invoking(() => _converter.ConvertFrom(value)).Should().Throw<NotSupportedException>();
+            FluentActions.Invoking(() => _converter.ConvertFrom(value)).Should().Throw<OverflowException>();
         }
-        
+
         [Test]
-        public void ConvertFrom_ushort_ShouldBeExpected()
+        public void ConvertFrom_ValidByte_ShouldBeExpected()
         {
-            var value = _fixture.Create<ushort>();
+            const byte value = 0;
 
             var result = (ULINT)_converter.ConvertFrom(value);
 
-            result.Should().Be(result);
+            result?.Value.Should().Be(value);
         }
         
         [Test]
-        public void ConvertFrom_int_ShouldThrowNotSupportedException()
+        public void ConvertFrom_ByteMaxValue_ShouldBeExpected()
         {
-            var value = _fixture.Create<int>();
+            const byte value = byte.MaxValue;
 
-            FluentActions.Invoking(() => _converter.ConvertFrom(value)).Should().Throw<NotSupportedException>();
+            var result = (ULINT)_converter.ConvertFrom(value);
+
+            result?.Value.Should().Be(value);
         }
         
         [Test]
-        public void ConvertFrom_uint_ShouldBeExpected()
+        public void ConvertFrom_ValidShort_ShouldBeExpected()
         {
-            var value = _fixture.Create<uint>();
+            const short value = 0;
 
             var result = (ULINT)_converter.ConvertFrom(value);
 
-            result.Should().Be(result);
+            result?.Value.Should().Be((ulong)value);
         }
         
         [Test]
-        public void ConvertFrom_long_ShouldThrowNotSupportedException()
+        public void ConvertFrom_ShortMaxValue_ShouldBeExpected()
         {
-            var value = _fixture.Create<long>();
+            const short value = short.MaxValue;
 
-            FluentActions.Invoking(() => _converter.ConvertFrom(value)).Should().Throw<NotSupportedException>();
+            var result = (ULINT)_converter.ConvertFrom(value);
+
+            result?.Value.Should().Be((ulong)value);
         }
         
         [Test]
-        public void ConvertFrom_ulong_ShouldBeExpected()
+        public void ConvertFrom_ValidUShort_ShouldBeExpected()
         {
-            var value = _fixture.Create<ulong>();
+            const ushort value = 0;
 
             var result = (ULINT)_converter.ConvertFrom(value);
 
-            result.Should().Be(result);
-        }
-
-        [Test]
-        public void ConvertFrom_float_ShouldThrowNotSupportedException()
-        {
-            var value = _fixture.Create<float>();
-
-            FluentActions.Invoking(() => _converter.ConvertFrom(value)).Should().Throw<NotSupportedException>();
-        }
-
-        [Test]
-        public void ConvertFrom_Sint_ShouldThrowNotSupportedException()
-        {
-            var value = _fixture.Create<SINT>();
-
-            FluentActions.Invoking(() => _converter.ConvertFrom(value)).Should().Throw<NotSupportedException>();
-        }
-
-        [Test]
-        public void ConvertFrom_USint_ShouldBeExpected()
-        {
-            var value = _fixture.Create<USINT>();
-
-            var result = (ULINT)_converter.ConvertFrom(value);
-
-            result.Should().Be(result);
-        }
-
-        [Test]
-        public void ConvertFrom_Int_ShouldThrowNotSupportedException()
-        {
-            var value = _fixture.Create<INT>();
-
-            FluentActions.Invoking(() => _converter.ConvertFrom(value)).Should().Throw<NotSupportedException>();
-        }
-
-        [Test]
-        public void ConvertFrom_UInt_ShouldBeExpected()
-        {
-            var value = _fixture.Create<UINT>();
-
-            var result = (ULINT)_converter.ConvertFrom(value);
-
-            result.Should().Be(result);
-        }
-
-        [Test]
-        public void ConvertFrom_Dint_ShouldThrowNotSupportedException()
-        {
-            var value = _fixture.Create<DINT>();
-
-            FluentActions.Invoking(() => _converter.ConvertFrom(value)).Should().Throw<NotSupportedException>();
-        }
-
-        [Test]
-        public void ConvertFrom_UDint_ShouldBeExpected()
-        {
-            var value = _fixture.Create<UDINT>();
-
-            var result = (ULINT)_converter.ConvertFrom(value);
-
-            result.Should().Be(result);
-        }
-
-        [Test]
-        public void ConvertFrom_Lint_ShouldThrowNotSupportedException()
-        {
-            var value = _fixture.Create<LINT>();
-
-            FluentActions.Invoking(() => _converter.ConvertFrom(value)).Should().Throw<NotSupportedException>();
-        }
-
-        [Test]
-        public void ConvertFrom_ULint_ShouldBeExpected()
-        {
-            var value = _fixture.Create<ULINT>();
-
-            var result = (ULINT)_converter.ConvertFrom(value);
-
-            result.Should().Be(result);
+            result?.Value.Should().Be(value);
         }
         
         [Test]
-        public void ConvertFrom_Real_ShouldThrowNotSupportedException()
+        public void ConvertFrom_UShortMaxValue_ShouldBeExpected()
         {
-            var value = _fixture.Create<REAL>();
+            const ushort value = ushort.MaxValue;
 
-            FluentActions.Invoking(() => _converter.ConvertFrom(value)).Should().Throw<NotSupportedException>();
+            var result = (ULINT)_converter.ConvertFrom(value);
+
+            result?.Value.Should().Be(value);
         }
         
+        [Test]
+        public void ConvertFrom_ValidInt_ShouldBeExpected()
+        {
+            const int value = 0;
+
+            var result = (ULINT)_converter.ConvertFrom(value);
+
+            result?.Value.Should().Be(value);
+        }
+        
+        [Test]
+        public void ConvertFrom_IntMaxValue_ShouldBeExpected()
+        {
+            const int value = int.MaxValue;
+
+            var result = (ULINT)_converter.ConvertFrom(value);
+
+            result?.Value.Should().Be(value);
+        }
+        
+        [Test]
+        public void ConvertFrom_ValidUInt_ShouldBeExpected()
+        {
+            const uint value = 0;
+
+            var result = (ULINT)_converter.ConvertFrom(value);
+
+            result?.Value.Should().Be(value);
+        }
+
+        [Test]
+        public void ConvertFrom_UintMaxValue_ShouldBeExpected()
+        {
+            const uint value = uint.MaxValue;
+
+            var result = (ULINT)_converter.ConvertFrom(value);
+
+            result?.Value.Should().Be(value);
+        }
+
+        [Test]
+        public void ConvertFrom_ValidLong_ShouldBeExpected()
+        {
+            const long value = 0;
+
+            var result = (ULINT)_converter.ConvertFrom(value);
+
+            result?.Value.Should().Be(value);
+        }
+
+        [Test]
+        public void ConvertFrom_LongMaxValue_ShouldBeExpected()
+        {
+            const long value = long.MaxValue;
+
+            var result = (ULINT)_converter.ConvertFrom(value);
+
+            result?.Value.Should().Be(value);
+        }
+
+        [Test]
+        public void ConvertFrom_ValidUlong_ShouldBeExpected()
+        {
+            const ulong value = 0;
+
+            var result = (ULINT)_converter.ConvertFrom(value);
+
+            result?.Value.Should().Be(value);
+        }
+
+        [Test]
+        public void ConvertFrom_ULongMaxValue_ShouldBeExpected()
+        {
+            const ulong value = ulong.MaxValue;
+
+            var result = (ULINT)_converter.ConvertFrom(value);
+
+            result?.Value.Should().Be(value);
+        }
+
+        [Test]
+        public void ConvertFrom_ValidFloat_ShouldBeExpected()
+        {
+            const float value = 0;
+
+            var result = (ULINT)_converter.ConvertFrom(value);
+
+            result?.Value.Should().Be((ulong)value);
+        }
+
+        [Test]
+        public void ConvertFrom_InvalidFloat_ShouldThrowOverflowException()
+        {
+            const float value = float.MaxValue;
+
+            FluentActions.Invoking(() => _converter.ConvertFrom(value)).Should().Throw<OverflowException>();
+        }
+
+        [Test]
+        public void ConvertFrom_ValidSINT_ShouldBeExpected()
+        {
+            SINT atomic = 0;
+
+            var result = (ULINT)_converter.ConvertFrom(atomic);
+
+            result?.Value.Should().Be((ulong)atomic.Value);
+        }
+
+        [Test]
+        public void ConvertFrom_ValidUSINT_ShouldBeExpected()
+        {
+            USINT atomic = 0;
+
+            var result = (ULINT)_converter.ConvertFrom(atomic);
+
+            result?.Value.Should().Be(atomic.Value);
+        }
+
+        [Test]
+        public void ConvertFrom_USINTMaxValue_ShouldBeExpected()
+        {
+            USINT value = USINT.MaxValue;
+
+            var result = (ULINT)_converter.ConvertFrom(value);
+
+            result?.Value.Should().Be(value);
+        }
+        
+        [Test]
+        public void ConvertFrom_ValidINT_ShouldBeExpected()
+        {
+            INT atomic = 0;
+
+            var result = (ULINT)_converter.ConvertFrom(atomic);
+
+            result?.Value.Should().Be((ulong)atomic.Value);
+        }
+
+        [Test]
+        public void ConvertFrom_INTMaxValue_ShouldBeExpected()
+        {
+            INT atomic = INT.MaxValue;
+
+            var result = (ULINT)_converter.ConvertFrom(atomic);
+
+            result?.Value.Should().Be((ulong)atomic.Value);
+        }
+        
+        [Test]
+        public void ConvertFrom_ValidUINT_ShouldBeExpected()
+        {
+            UINT atomic = 0;
+
+            var result = (ULINT)_converter.ConvertFrom(atomic);
+
+            result?.Value.Should().Be(atomic.Value);
+        }
+
+        [Test]
+        public void ConvertFrom_UINTMaxValue_ShouldBeExpected()
+        {
+            UINT value = UINT.MaxValue;
+
+            var result = (ULINT)_converter.ConvertFrom(value);
+
+            result?.Value.Should().Be(value);
+        }
+        
+        [Test]
+        public void ConvertFrom_ValidDINT_ShouldBeExpected()
+        {
+            DINT atomic = 0;
+
+            var result = (ULINT)_converter.ConvertFrom(atomic);
+
+            result?.Value.Should().Be((ulong)atomic.Value);
+        }
+
+        [Test]
+        public void ConvertFrom_DINTMaxValue_ShouldBeExpected()
+        {
+            DINT atomic = DINT.MaxValue;
+
+            var result = (ULINT)_converter.ConvertFrom(atomic);
+
+            result?.Value.Should().Be((ulong)atomic.Value);
+        }
+        
+        [Test]
+        public void ConvertFrom_ValidUDINT_ShouldBeExpected()
+        {
+            UDINT atomic = 0;
+
+            var result = (ULINT)_converter.ConvertFrom(atomic);
+
+            result?.Value.Should().Be(atomic.Value);
+        }
+
+        [Test]
+        public void ConvertFrom_UDINTMaxValue_ShouldBeExpected()
+        {
+            UDINT value = UDINT.MaxValue;
+
+            var result = (ULINT)_converter.ConvertFrom(value);
+
+            result?.Value.Should().Be(value);
+        }
+        
+        [Test]
+        public void ConvertFrom_ValidLINT_ShouldBeExpected()
+        {
+            LINT atomic = 0;
+
+            var result = (ULINT)_converter.ConvertFrom(atomic);
+
+            result?.Value.Should().Be((ulong)atomic.Value);
+        }
+
+        [Test]
+        public void ConvertFrom_LINTMaxValue_ShouldBeExpected()
+        {
+            LINT atomic = LINT.MaxValue;
+
+            var result = (ULINT)_converter.ConvertFrom(atomic);
+
+            result?.Value.Should().Be((ulong)atomic.Value);
+        }
+        
+        [Test]
+        public void ConvertFrom_ValidULINT_ShouldBeExpected()
+        {
+            ULINT atomic = 0;
+
+            var result = (ULINT)_converter.ConvertFrom(atomic);
+
+            result?.Value.Should().Be(atomic.Value);
+        }
+
+        [Test]
+        public void ConvertFrom_ULINTMaxValue_ShouldBeExpected()
+        {
+            ULINT atomic = ULINT.MaxValue;
+
+            var result = (ULINT)_converter.ConvertFrom(atomic);
+
+            result?.Value.Should().Be(atomic.Value);
+        }
+        
+        [Test]
+        public void ConvertFrom_ValidREAL_ShouldBeExpected()
+        {
+            REAL atomic = 0;
+
+            var result = (ULINT)_converter.ConvertFrom(atomic);
+
+            result?.Value.Should().Be((ulong)atomic.Value);
+        }
+
+        [Test]
+        public void ConvertFrom_InvalidREAL_ShouldThrowOverflowException()
+        {
+            REAL atomic = REAL.MaxValue;
+
+            FluentActions.Invoking(() => _converter.ConvertFrom(atomic)).Should().Throw<OverflowException>();
+        }
+
         [Test]
         public void ConvertFrom_string_ShouldBeExpected()
         {
-            var value = _fixture.Create<ushort>().ToString();
+            var value = _fixture.Create<ulong>().ToString();
 
             var result = (ULINT)_converter.ConvertFrom(value);
 
             result.Should().Be(result);
-        }
-        
-        [Test]
-        public void CanConvertTo_sbyte_ShouldBeFalse()
-        {
-            var value = _fixture.Create<sbyte>();
-
-            var result = _converter.CanConvertTo(value.GetType());
-
-            result.Should().BeFalse();
-        }
-
-        [Test]
-        public void CanConvertTo_byte_ShouldBeFalse()
-        {
-            var value = _fixture.Create<byte>();
-
-            var result = _converter.CanConvertTo(value.GetType());
-
-            result.Should().BeFalse();
-        }
-        
-        [Test]
-        public void CanConvertTo_short_ShouldBeFalse()
-        {
-            var value = _fixture.Create<short>();
-
-            var result = _converter.CanConvertTo(value.GetType());
-
-            result.Should().BeFalse();
-        }
-        
-        [Test]
-        public void CanConvertTo_ushort_ShouldBeFalse()
-        {
-            var value = _fixture.Create<ushort>();
-
-            var result = _converter.CanConvertTo(value.GetType());
-
-            result.Should().BeFalse();
-        }
-        
-        [Test]
-        public void CanConvertTo_int_ShouldBeFalse()
-        {
-            var value = _fixture.Create<int>();
-
-            var result = _converter.CanConvertTo(value.GetType());
-
-            result.Should().BeFalse();
-        }
-        
-        [Test]
-        public void CanConvertTo_uint_ShouldBeFalse()
-        {
-            var value = _fixture.Create<uint>();
-
-            var result = _converter.CanConvertTo(value.GetType());
-
-            result.Should().BeFalse();
-        }
-        
-        [Test]
-        public void CanConvertTo_long_ShouldBeFalse()
-        {
-            var value = _fixture.Create<long>();
-
-            var result = _converter.CanConvertTo(value.GetType());
-
-            result.Should().BeFalse();
-        }
-        
-        [Test]
-        public void CanConvertTo_ulong_ShouldBeTrue()
-        {
-            var value = _fixture.Create<ulong>();
-
-            var result = _converter.CanConvertTo(value.GetType());
-
-            result.Should().BeTrue();
-        }
-        
-        [Test]
-        public void CanConvertTo_float_ShouldBeTrue()
-        {
-            var value = _fixture.Create<float>();
-
-            var result = _converter.CanConvertTo(value.GetType());
-
-            result.Should().BeTrue();
-        }
-        
-        [Test]
-        public void CanConvertTo_Sint_ShouldBeFalse()
-        {
-            var value = _fixture.Create<SINT>();
-
-            var result = _converter.CanConvertTo(value.GetType());
-
-            result.Should().BeFalse();
-        }
-
-        [Test]
-        public void CanConvertTo_USint_ShouldBeFalse()
-        {
-            var value = _fixture.Create<USINT>();
-
-            var result = _converter.CanConvertTo(value.GetType());
-
-            result.Should().BeFalse();
-        }
-        
-        [Test]
-        public void CanConvertTo_Int_ShouldBeFalse()
-        {
-            var value = _fixture.Create<INT>();
-
-            var result = _converter.CanConvertTo(value.GetType());
-
-            result.Should().BeFalse();
-        }
-
-        [Test]
-        public void CanConvertTo_UInt_ShouldBeFalse()
-        {
-            var value = _fixture.Create<UINT>();
-
-            var result = _converter.CanConvertTo(value.GetType());
-
-            result.Should().BeFalse();
-        }
-
-        [Test]
-        public void CanConvertTo_Dint_ShouldBeFalse()
-        {
-            var value = _fixture.Create<DINT>();
-
-            var result = _converter.CanConvertTo(value.GetType());
-
-            result.Should().BeFalse();
-        }
-        
-        [Test]
-        public void CanConvertTo_UDint_ShouldBeFalse()
-        {
-            var value = _fixture.Create<UDINT>();
-
-            var result = _converter.CanConvertTo(value.GetType());
-
-            result.Should().BeFalse();
-        }
-        
-        [Test]
-        public void CanConvertTo_Lint_ShouldBeFalse()
-        {
-            var value = _fixture.Create<LINT>();
-
-            var result = _converter.CanConvertTo(value.GetType());
-
-            result.Should().BeFalse();
-        }
-        
-        [Test]
-        public void CanConvertTo_ULint_ShouldBeTrue()
-        {
-            var value = _fixture.Create<ULINT>();
-
-            var result = _converter.CanConvertTo(value.GetType());
-
-            result.Should().BeTrue();
-        }
-        
-        [Test]
-        public void CanConvertTo_Real_ShouldBeTrue()
-        {
-            var value = _fixture.Create<REAL>();
-
-            var result = _converter.CanConvertTo(value.GetType());
-
-            result.Should().BeTrue();
-        }
-
-        [Test]
-        public void CanConvertTo_string_ShouldBeTrue()
-        {
-            var value = _fixture.Create<string>();
-
-            var result = _converter.CanConvertTo(value.GetType());
-
-            result.Should().BeTrue();
-        }
-
-        [Test]
-        public void ConvertTo_Null_ShouldThrowInvalidOperationException()
-        {
-            FluentActions.Invoking(() => _converter.ConvertTo(null!, typeof(bool))!).Should()
-                .Throw<InvalidOperationException>();
-        }
-
-        [Test]
-        public void ConvertTo_bool_ShouldThrowNotSupportedException()
-        {
-            var value = _fixture.Create<ULINT>();
-            
-            FluentActions.Invoking(() => _converter.ConvertTo(value, typeof(bool))!)
-                .Should().Throw<NotSupportedException>();
-        }
-        
-        [Test]
-        public void ConvertTo_sbyte_ShouldThrowNotSupportedException()
-        {
-            var value = _fixture.Create<ULINT>();
-            
-            FluentActions.Invoking(() => _converter.ConvertTo(value, typeof(sbyte))!)
-                .Should().Throw<NotSupportedException>();
-        }
-
-        [Test]
-        public void ConvertTo_byte_ShouldThrowNotSupportedException()
-        {
-            var value = _fixture.Create<ULINT>();
-
-            FluentActions.Invoking(() => _converter.ConvertTo(value, typeof(byte))!)
-                .Should().Throw<NotSupportedException>();
-        }
-        
-        [Test]
-        public void ConvertTo_short_ShouldThrowNotSupportedException()
-        {
-            var value = _fixture.Create<ULINT>();
-
-            FluentActions.Invoking(() => _converter.ConvertTo(value, typeof(short))!)
-                .Should().Throw<NotSupportedException>();
-        }
-        
-        [Test]
-        public void ConvertTo_ushort_ShouldThrowNotSupportedException()
-        {
-            var value = _fixture.Create<ULINT>();
-
-            FluentActions.Invoking(() => _converter.ConvertTo(value, typeof(ushort))!)
-                .Should().Throw<NotSupportedException>();
-        }
-        
-        [Test]
-        public void ConvertTo_int_ShouldThrowNotSupportedException()
-        {
-            var value = _fixture.Create<ULINT>();
-
-            FluentActions.Invoking(() => _converter.ConvertTo(value, typeof(int))!)
-                .Should().Throw<NotSupportedException>();
-        }
-        
-        [Test]
-        public void ConvertTo_uint_ShouldThrowNotSupportedException()
-        {
-            var value = _fixture.Create<ULINT>();
-
-            FluentActions.Invoking(() => _converter.ConvertTo(value, typeof(uint))!)
-                .Should().Throw<NotSupportedException>();
-        }
-        
-        [Test]
-        public void ConvertTo_long_ShouldThrowNotSupportedException()
-        {
-            var value = _fixture.Create<ULINT>();
-
-            FluentActions.Invoking(() => _converter.ConvertTo(value, typeof(long))!)
-                .Should().Throw<NotSupportedException>();
-        }
-        
-        [Test]
-        public void ConvertTo_ulong_ShouldBeExpected()
-        {
-            var value = _fixture.Create<ULINT>();
-
-            var result = (ulong)_converter.ConvertTo(value, typeof(ulong))!;
-
-            result.Should().Be(value);
-        }
-        
-        [Test]
-        public void ConvertTo_float_ShouldBeExpected()
-        {
-            var value = _fixture.Create<ULINT>();
-
-            var result = (float)_converter.ConvertTo(value, typeof(float))!;
-
-            result.Should().Be(value);
-        }
-        
-        [Test]
-        public void ConvertTo_Bool_ShouldThrowNotSupportedException()
-        {
-            var value = _fixture.Create<ULINT>();
-            
-            FluentActions.Invoking(() => _converter.ConvertTo(value, typeof(BOOL))!)
-                .Should().Throw<NotSupportedException>();
-        }
-        
-        [Test]
-        public void ConvertTo_Sint_ShouldThrowNotSupportedException()
-        {
-            var value = _fixture.Create<ULINT>();
-            
-            FluentActions.Invoking(() => _converter.ConvertTo(value, typeof(SINT))!)
-                .Should().Throw<NotSupportedException>();
-        }
-
-        [Test]
-        public void ConvertTo_USint_ShouldThrowNotSupportedException()
-        {
-            var value = _fixture.Create<ULINT>();
-
-            FluentActions.Invoking(() => _converter.ConvertTo(value, typeof(USINT))!)
-                .Should().Throw<NotSupportedException>();
-        }
-        
-        [Test]
-        public void ConvertTo_Int_ShouldThrowNotSupportedException()
-        {
-            var value = _fixture.Create<ULINT>();
-
-            FluentActions.Invoking(() => _converter.ConvertTo(value, typeof(INT))!)
-                .Should().Throw<NotSupportedException>();
-        }
-        
-        [Test]
-        public void ConvertTo_UInt_ShouldThrowNotSupportedException()
-        {
-            var value = _fixture.Create<ULINT>();
-
-            FluentActions.Invoking(() => _converter.ConvertTo(value, typeof(UINT))!)
-                .Should().Throw<NotSupportedException>();
-        }
-        
-        [Test]
-        public void ConvertTo_Dint_ShouldThrowNotSupportedException()
-        {
-            var value = _fixture.Create<ULINT>();
-
-            FluentActions.Invoking(() => _converter.ConvertTo(value, typeof(DINT))!)
-                .Should().Throw<NotSupportedException>();
-        }
-        
-        [Test]
-        public void ConvertTo_UDint_ShouldThrowNotSupportedException()
-        {
-            var value = _fixture.Create<ULINT>();
-
-            FluentActions.Invoking(() => _converter.ConvertTo(value, typeof(UDINT))!)
-                .Should().Throw<NotSupportedException>();
-        }
-        
-        [Test]
-        public void ConvertTo_Lint_ShouldThrowNotSupportedException()
-        {
-            var value = _fixture.Create<ULINT>();
-
-            FluentActions.Invoking(() => _converter.ConvertTo(value, typeof(LINT))!)
-                .Should().Throw<NotSupportedException>();
-        }
-        
-        [Test]
-        public void ConvertTo_ULint_ShouldBeExpected()
-        {
-            var value = _fixture.Create<ULINT>();
-
-            var result = (ULINT)_converter.ConvertTo(value, typeof(ULINT));
-
-            result?.Value.Should().Be(value);
-        }
-        
-        [Test]
-        public void ConvertTo_Real_ShouldBeExpected()
-        {
-            var value = _fixture.Create<ULINT>();
-
-            var result = (REAL)_converter.ConvertTo(value, typeof(REAL));
-
-            result?.Value.Should().Be(value);
-        }
-
-        [Test]
-        public void ConvertTo_string_ShouldBeExpected()
-        {
-            var value = _fixture.Create<ULINT>();
-
-            var result = (string)_converter.ConvertTo(value, typeof(string));
-
-            result.Should().Be(value.Format());
         }
     }
 }

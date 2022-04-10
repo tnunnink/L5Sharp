@@ -78,15 +78,14 @@ namespace L5Sharp.Repositories.Tests
         }
 
         [Test]
-        public void Remove_ValidElement_ShouldNoLongExist()
+        public void Remove_ReferencedComponent_ShouldThrowComponentReferencedException()
         {
             var context = L5XContext.Load(Known.Test);
 
             var component = context.DataTypes().Named("SimpleType");
 
-            context.DataTypes().Remove(component);
-
-            context.DataTypes().Any("SimpleType").Should().BeFalse();
+            FluentActions.Invoking(() => context.DataTypes().Remove(component))
+                .Should().Throw<ComponentReferencedException>();
         }
 
         [Test]
@@ -151,29 +150,6 @@ namespace L5Sharp.Repositories.Tests
             result?.Members.Should().Contain(m => m.Name == "Member01");
             result?.Members.Should().Contain(m => m.Name == "Member02");
             result?.Members.Should().Contain(m => m.Name == "Member03");
-        }
-        
-        [Test]
-        public void Update_NestedUserDefined_ShouldContainBothTypes()
-        {
-            var context = L5XContext.Load(Known.Test);
-
-            var child = new UserDefined("ChildType", "This is a child type", new List<IMember<IDataType>>
-            {
-                Member.Create<BOOL>("M1"),
-                Member.Create<DINT>("M2"),
-                Member.Create<REAL>("M3")
-            });
-
-            var parent = (IUserDefined)context.DataTypes().Named("ComplexType");
-            parent?.Members.Add(Member.Create("Child", child));
-
-            context.DataTypes().Update(parent);
-            
-            context.DataTypes().Any("ChildType").Should().BeTrue();
-
-            var result = context.DataTypes().Named("ComplexType")?.Members.FirstOrDefault(m => m.Name == "Child");
-            result.Should().NotBeNull();
         }
     }
 }

@@ -48,6 +48,18 @@ namespace L5Sharp.Types.Tests
         }
         
         [Test]
+        public void MaxValue_WhenCalled_ShouldBeExpected()
+        {
+            UDINT.MaxValue.Should().Be(uint.MaxValue);
+        }
+        
+        [Test]
+        public void MinValue_WhenCalled_ShouldBeExpected()
+        {
+            UDINT.MinValue.Should().Be(uint.MinValue);
+        }
+        
+        [Test]
         public void GetValue_AsAtomic_ShouldBeExpected()
         {
             var type = (IAtomicType) new UDINT();

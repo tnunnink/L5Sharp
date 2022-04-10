@@ -39,13 +39,25 @@ namespace L5Sharp.Types.Tests
             type.Description.Should().Be("Logix representation of a System.Single");
             type.Value.Should().Be(0);
         }
-        
+
         [Test]
         public void New_ValueOverload_ShouldHaveExpectedValue()
         {
             var type = new REAL(_random);
             
             type.Value.Should().Be(_random);
+        }
+        
+        [Test]
+        public void MaxValue_WhenCalled_ShouldBeExpected()
+        {
+            REAL.MaxValue.Should().Be(float.MaxValue);
+        }
+        
+        [Test]
+        public void MinValue_WhenCalled_ShouldBeExpected()
+        {
+            REAL.MinValue.Should().Be(float.MinValue);
         }
         
         [Test]

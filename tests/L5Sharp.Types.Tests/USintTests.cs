@@ -48,6 +48,18 @@ namespace L5Sharp.Types.Tests
         }
         
         [Test]
+        public void MaxValue_WhenCalled_ShouldBeExpected()
+        {
+            USINT.MaxValue.Should().Be(byte.MaxValue);
+        }
+        
+        [Test]
+        public void MinValue_WhenCalled_ShouldBeExpected()
+        {
+            USINT.MinValue.Should().Be(byte.MinValue);
+        }
+        
+        [Test]
         public void GetValue_AsAtomic_ShouldBeExpected()
         {
             var type = (IAtomicType) new USINT();

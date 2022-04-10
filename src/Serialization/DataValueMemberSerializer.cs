@@ -23,7 +23,7 @@ namespace L5Sharp.Serialization
 
             var element = new XElement(ElementName);
             element.Add(new XAttribute(L5XAttribute.Name.ToString(), component.Name));
-            element.Add(new XAttribute(L5XAttribute.DataType.ToString(), component.DataType));
+            element.Add(new XAttribute(L5XAttribute.DataType.ToString(), component.DataType.Name));
             if (!string.Equals(component.DataType.Name, nameof(BOOL), StringComparison.OrdinalIgnoreCase))
                 element.Add(new XAttribute(L5XAttribute.Radix.ToString(), component.Radix));
             element.Add(new XAttribute(L5XAttribute.Value.ToString(), atomic.Format(component.Radix)));

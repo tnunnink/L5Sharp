@@ -226,6 +226,29 @@ namespace L5Sharp.Enums
                 return false;
             }
         }
+        
+        public static TAtomic? TryParse<TAtomic>(string input) where TAtomic : IAtomicType
+        {
+            var parser = DetermineParser(input);
+
+            if (parser is null)
+                return default;
+            
+            try
+            {
+                var value = parser(input);
+                
+                var converter = TypeDescriptor.GetConverter(typeof(TAtomic));
+                if (!converter.CanConvertFrom(value.GetType()))
+                    return default;
+                
+                return (TAtomic)converter.ConvertFrom(value)!;
+            }
+            catch (Exception)
+            {
+                return default;
+            }
+        }
 
         /// <summary>
         /// Converts an atomic value to the current radix base value. 

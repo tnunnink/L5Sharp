@@ -46,6 +46,16 @@ namespace L5Sharp.Types
 
         object IAtomicType.Value => Value;
 
+        /// <summary>
+        /// Represents the largest possible value of <see cref="DINT"/>.
+        /// </summary>
+        public const int MaxValue = int.MaxValue;
+
+        /// <summary>
+        /// Represents the smallest possible value of <see cref="DINT"/>.
+        /// </summary>
+        public const int MinValue = int.MinValue;
+
         /// <inheritdoc />
         public void SetValue(int value) => Value = value;
 
@@ -62,7 +72,7 @@ namespace L5Sharp.Types
 
             Value = (DINT)converter.ConvertFrom(value)!;
         }
-        
+
         /// <inheritdoc />
         public string Format(Radix? radix = null) =>
             radix is not null ? radix.Format(this) : Radix.Default(this).Format(this);
@@ -103,18 +113,17 @@ namespace L5Sharp.Types
         }
 
         /// <inheritdoc />
-        public override bool Equals(object? obj)
-        {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((DINT)obj);
-        }
+        public override bool Equals(object? obj) => Equals(obj as DINT);
 
         /// <inheritdoc />
-        public override int GetHashCode() => Name.GetHashCode();
+        // ReSharper disable once NonReadonlyMemberInGetHashCode
+        // Not sure how else to handle since it needs to be settable and used for equality.
+        // This would only be a problem if you created a hash table of atomic types.
+        // Not sure anyone would need to do that.
+        public override int GetHashCode() => Value.GetHashCode();
 
         /// <inheritdoc />
-        public override string ToString() => Name;
+        public override string ToString() => Value.ToString();
 
         /// <summary>
         /// Determines whether the objects are equal.

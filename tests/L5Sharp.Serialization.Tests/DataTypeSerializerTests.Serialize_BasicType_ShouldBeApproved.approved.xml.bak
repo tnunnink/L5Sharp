@@ -1,1 +1,4 @@
-﻿
+﻿<DataType Name="Test" Family="None" Class="User">
+  <Description><![CDATA[This is a test user defined type]]></Description>
+  <Members />
+</DataType>

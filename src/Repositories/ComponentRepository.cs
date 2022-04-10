@@ -44,9 +44,6 @@ namespace L5Sharp.Repositories
             if (component is null)
                 throw new ArgumentNullException(nameof(component));
 
-            if (_document.Index.IsReferenced(component.Name))
-                throw new ComponentReferencedException(nameof(component.Name), component.GetType());
-
             Elements.FirstOrDefault(x => x.ComponentName() == component.Name)?.Remove();
         }
 

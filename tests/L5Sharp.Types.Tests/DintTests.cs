@@ -46,6 +46,18 @@ namespace L5Sharp.Types.Tests
             
             type.Value.Should().Be(_random);
         }
+
+        [Test]
+        public void MaxValue_WhenCalled_ShouldBeExpected()
+        {
+            DINT.MaxValue.Should().Be(int.MaxValue);
+        }
+        
+        [Test]
+        public void MinValue_WhenCalled_ShouldBeExpected()
+        {
+            DINT.MinValue.Should().Be(int.MinValue);
+        }
         
         [Test]
         public void GetValue_AsAtomic_ShouldBeExpected()

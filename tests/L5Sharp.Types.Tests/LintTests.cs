@@ -40,6 +40,18 @@ namespace L5Sharp.Types.Tests
         }
         
         [Test]
+        public void MaxValue_WhenCalled_ShouldBeExpected()
+        {
+            LINT.MaxValue.Should().Be(long.MaxValue);
+        }
+        
+        [Test]
+        public void MinValue_WhenCalled_ShouldBeExpected()
+        {
+            LINT.MinValue.Should().Be(long.MinValue);
+        }
+        
+        [Test]
         public void New_ValueOverload_ShouldHaveExpectedValue()
         {
             var type = new LINT(_random);

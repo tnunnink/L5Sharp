@@ -30,7 +30,7 @@ namespace L5Sharp.Serialization
             var element = new XElement(ElementName);
             element.AddComponentName(component.Name);
             element.AddComponentDescription(component.Description);
-            element.Add(new XAttribute(L5XAttribute.Family.ToString(), component.Family));
+            element.Add(new XAttribute(L5XAttribute.Family.ToString(), component.Family.Value));
             element.Add(new XAttribute(L5XAttribute.Class.ToString(), component.Class));
 
             var members = new XElement(nameof(component.Members));

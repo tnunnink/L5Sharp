@@ -1,4 +1,4 @@
-﻿<DataType Name="Test" Family="None" Class="User">
+﻿<DataType Name="Test" Family="NoFamily" Class="User">
   <Description><![CDATA[This is a test user defined type]]></Description>
   <Members>
     <Member Name="Member01" DataType="BOOL" Dimension="0" Radix="Binary" Hidden="false" ExternalAccess="Read Only">

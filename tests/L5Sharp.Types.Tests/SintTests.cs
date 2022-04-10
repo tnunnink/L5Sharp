@@ -38,7 +38,7 @@ namespace L5Sharp.Types.Tests
             type.Description.Should().Be("Logix representation of a System.SByte");
             type.Value.Should().Be(0);
         }
-        
+
         [Test]
         public void New_ValueOverload_ShouldHaveExpectedValue()
         {
@@ -46,7 +46,19 @@ namespace L5Sharp.Types.Tests
             
             type.Value.Should().Be(_random);
         }
+
+        [Test]
+        public void MaxValue_WhenCalled_ShouldBeExpected()
+        {
+            SINT.MaxValue.Should().Be(sbyte.MaxValue);
+        }
         
+        [Test]
+        public void MinValue_WhenCalled_ShouldBeExpected()
+        {
+            SINT.MinValue.Should().Be(sbyte.MinValue);
+        }
+
         [Test]
         public void GetValue_AsAtomic_ShouldBeExpected()
         {
@@ -275,7 +287,7 @@ namespace L5Sharp.Types.Tests
 
             var hash = type.GetHashCode();
 
-            hash.Should().Be(type.Name.GetHashCode());
+            hash.Should().Be(type.Value.GetHashCode());
         }
         
         [Test]
@@ -283,7 +295,7 @@ namespace L5Sharp.Types.Tests
         {
             var type = new SINT();
 
-            type.ToString().Should().Be(type.Name);
+            type.ToString().Should().Be(type.Value.ToString());
         }
         
         [Test]

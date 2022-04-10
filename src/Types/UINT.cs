@@ -45,6 +45,16 @@ namespace L5Sharp.Types
         public ushort Value { get; private set; }
 
         object IAtomicType.Value => Value;
+        
+        /// <summary>
+        /// Represents the largest possible value of <see cref="UINT"/>.
+        /// </summary>
+        public const ushort MaxValue = ushort.MaxValue;
+        
+        /// <summary>
+        /// Represents the smallest possible value of <see cref="UINT"/>.
+        /// </summary>
+        public const ushort MinValue = ushort.MinValue;
 
         /// <inheritdoc />
         public void SetValue(ushort value) => Value = value;
@@ -104,18 +114,17 @@ namespace L5Sharp.Types
         }
 
         /// <inheritdoc />
-        public override bool Equals(object? obj)
-        {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((UINT)obj);
-        }
+        public override bool Equals(object? obj) => Equals(obj as UINT);
 
         /// <inheritdoc />
-        public override int GetHashCode() => Name.GetHashCode();
+        // ReSharper disable once NonReadonlyMemberInGetHashCode
+        // Not sure how else to handle since it needs to be settable and used for equality.
+        // This would only be a problem if you created a hash table of atomic types.
+        // Not sure anyone would need to do that.
+        public override int GetHashCode() => Value.GetHashCode();
 
         /// <inheritdoc />
-        public override string ToString() => Name;
+        public override string ToString() => Value.ToString();
 
         /// <summary>
         /// Determines whether the objects are equal.

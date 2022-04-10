@@ -46,6 +46,16 @@ namespace L5Sharp.Types
 
         object IAtomicType.Value => Value;
 
+        /// <summary>
+        /// Represents the largest possible value of <see cref="SINT"/>.
+        /// </summary>
+        public const sbyte MaxValue = sbyte.MaxValue;
+
+        /// <summary>
+        /// Represents the smallest possible value of <see cref="SINT"/>.
+        /// </summary>
+        public const sbyte MinValue = sbyte.MinValue;
+
         /// <inheritdoc />
         public void SetValue(sbyte value) => Value = value;
 
@@ -58,7 +68,7 @@ namespace L5Sharp.Types
             var converter = TypeDescriptor.GetConverter(GetType());
 
             if (!converter.CanConvertFrom(value.GetType()))
-                throw new ArgumentException($"Value of type '{value.GetType()}' is not a valid for {GetType()}");
+                throw new ArgumentException($"Can not convert type {value.GetType()} to value type {GetType()}");
 
             Value = (SINT)converter.ConvertFrom(value)!;
         }
@@ -70,15 +80,52 @@ namespace L5Sharp.Types
         /// <inheritdoc />
         public IDataType Instantiate() => new SINT();
 
-        //todo should we implement parse method that forward to value type?
         /// <summary>
         /// Parses the provided input string value into a <see cref="SINT"/> atomic value.
         /// </summary>
         /// <param name="value">The string value to parse.</param>
         /// <returns>A new <see cref="SINT"/> that represents the parsed value.</returns>
-        public static SINT Parse(string value) => sbyte.TryParse(value, out var typedValue)
-            ? new SINT(typedValue)
-            : Radix.ParseValue<SINT>(value);
+        public static SINT Parse(string value) => sbyte.Parse(value);
+
+        /// <summary>
+        /// Parses the provided input string value into a <see cref="SINT"/> atomic value.
+        /// </summary>
+        /// <param name="value">The string value to parse.</param>
+        /// <param name="radix"></param>
+        /// <returns>A new <see cref="SINT"/> that represents the parsed value.</returns>
+        public static SINT Parse(string value, Radix radix) => radix is not null
+            ? (SINT)radix.Parse(value)
+            : throw new ArgumentNullException(nameof(radix));
+
+        /// <summary>
+        /// Tries to convert the string representation of a number to its <see cref="SINT"/> equivalent,
+        /// and returns a value that indicates whether the conversion succeeded.
+        /// </summary>
+        /// <param name="value">The string value to parse.</param>
+        /// <param name="result">When this method returns, contains the 8-bit signed integer value that is equivalent
+        /// to the number contained in s if the conversion succeeded, or zero if the conversion failed.
+        /// The conversion fails if the value parameter is null or <see cref="string.Empty"/>, is not in the correct format,
+        /// or represents a number that is less than <see cref="MinValue"/> or greater than <see cref="MaxValue"/>.
+        /// This parameter is passed uninitialized; any value originally supplied in result will be overwritten.</param>
+        /// <returns>true if value was converted successfully; otherwise, false.</returns>
+        public static bool TryParse(string value, out SINT result)
+        {
+            if (sbyte.TryParse(value, out var parsed))
+            {
+                result = new SINT(parsed);
+                return true;
+            }
+
+            var atomic = Radix.TryParse<SINT>(value);
+            if (atomic is not null)
+            {
+                result = atomic;
+                return true;
+            }
+
+            result = new SINT();
+            return false;
+        }
 
         /// <summary>
         /// Converts the provided <see cref="byte"/> to a <see cref="SINT"/> value.
@@ -103,18 +150,17 @@ namespace L5Sharp.Types
         }
 
         /// <inheritdoc />
-        public override bool Equals(object? obj)
-        {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((SINT)obj);
-        }
+        public override bool Equals(object? obj) => Equals(obj as SINT);
 
         /// <inheritdoc />
-        public override int GetHashCode() => Name.GetHashCode();
+        // ReSharper disable once NonReadonlyMemberInGetHashCode
+        // Not sure how else to handle since it needs to be settable and used for equality.
+        // This would only be a problem if you created a hash table of atomic types.
+        // Not sure anyone would need to do that.
+        public override int GetHashCode() => Value.GetHashCode();
 
         /// <inheritdoc />
-        public override string ToString() => Name;
+        public override string ToString() => Value.ToString();
 
         /// <summary>
         /// Determines whether the objects are equal.
