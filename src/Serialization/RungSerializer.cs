@@ -42,7 +42,7 @@ namespace L5Sharp.Serialization
             var number = element.Attribute(L5XAttribute.Number.ToString())?.Value.Parse<int>() ?? default;
             var type = element.Attribute(L5XAttribute.Type.ToString())?.Value.Parse<RungType>();
             var comment = element.Element(L5XElement.Comment.ToString())?.Value;
-            var text = element.Element(L5XElement.Text.ToString())?.Value;
+            var text = element.Element(L5XElement.Text.ToString())?.Value.Parse<NeutralText>();
 
             return new Rung(number, type, comment, text);
         }

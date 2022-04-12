@@ -16,8 +16,8 @@ namespace L5Sharp
         IController? Controller();
 
         /// <summary>
-        /// Returns an <see cref="IComponentQuery{TComponent}"/> for querying and manipulating <see cref="IComplexType"/>
-        /// components in the current <see cref="ILogixContext"/>. 
+        /// Returns a <see cref="IComponentQuery{TComponent}"/> that provides basic querying for
+        /// <see cref="IComplexType"/> components in the current <see cref="ILogixContext"/>. 
         /// </summary>
         IComponentQuery<IComplexType> DataTypes();
 
@@ -25,137 +25,136 @@ namespace L5Sharp
         /// Executes the provided <see cref="DataTypeQuery"/> over the current <see cref="ILogixContext"/>, returning
         /// a collection of filtered <see cref="IComplexType"/> objects.  
         /// </summary>
-        /// <param name="query">The function delegate that defines the query to execute.</param>
+        /// <param name="query">The function delegate that defines a query (or queries) to execute.</param>
         /// <returns>An <see cref="IEnumerable{T}"/> containing the queried collection of <see cref="IComplexType"/>
         /// components.</returns>
         /// <remarks>
         /// This overload allows the user to chain multiple calls in a fluent fashion in order to build up a more
         /// complex or advanced query than is otherwise not available on the standard
-        /// <see cref="IComponentQuerier{TComponent}"/> API.
+        /// <see cref="IComponentQuery{TComponent}"/> API.
         /// These query objects can also be extended with custom queries using extensions methods.
         /// </remarks>
-        IEnumerable<IComplexType> DataTypes(Func<IDataTypeQuery, IDataTypeQuery> query); 
+        IEnumerable<IComplexType> DataTypes(Func<DataTypeQuery, DataTypeQuery> query);
 
         /// <summary>
-        /// Returns an <see cref="IModuleRepository"/> instance for querying and manipulating <see cref="IModule"/>
-        /// components in the current <see cref="ILogixContext"/>. 
+        /// Returns a <see cref="IComponentQuery{TComponent}"/> that provides basic querying for
+        /// <see cref="IModule"/> components in the current <see cref="ILogixContext"/>. 
         /// </summary>
         IComponentQuery<IModule> Modules();
 
         /// <summary>
-        /// Executes the provided <see cref="IModuleQuery"/> over the current <see cref="ILogixContext"/>, returning
-        /// a collection of filtered <see cref="IModule"/> objects.  
+        /// Executes the provided <see cref="ModuleQuery"/> over the current <see cref="ILogixContext"/>, returning
+        /// a collection of filtered <see cref="IComplexType"/> objects.  
         /// </summary>
-        /// <param name="query">The function delegate that defines the query to execute.</param>
-        /// <returns>An <see cref="IEnumerable{T}"/> containing the queried collection of <see cref="IModule"/>
+        /// <param name="query">The function delegate that defines a query (or queries) to execute.</param>
+        /// <returns>An <see cref="IEnumerable{T}"/> containing the queried collection of <see cref="IComplexType"/>
         /// components.</returns>
         /// <remarks>
         /// This overload allows the user to chain multiple calls in a fluent fashion in order to build up a more
         /// complex or advanced query than is otherwise not available on the standard
-        /// <see cref="IComponentQuerier{TComponent}"/> API.
+        /// <see cref="IComponentQuery{TComponent}"/> API.
         /// These query objects can also be extended with custom queries using extensions methods.
         /// </remarks>
-        IEnumerable<IModule> Modules(Func<IModuleQuery, IModuleQuery> query);
+        IEnumerable<IModule> Modules(Func<ModuleQuery, ModuleQuery> query);
 
         /// <summary>
-        /// Returns an <see cref="IInstructionRepository"/> instance for querying and manipulating
+        /// Returns a <see cref="IComponentQuery{TComponent}"/> that provides basic querying for
         /// <see cref="IAddOnInstruction"/> components in the current <see cref="ILogixContext"/>. 
         /// </summary>
         IComponentQuery<IAddOnInstruction> Instructions();
         
         /// <summary>
-        /// Executes the provided <see cref="IInstructionQuery"/> over the current <see cref="ILogixContext"/>, returning
-        /// a collection of filtered <see cref="IAddOnInstruction"/> objects.  
+        /// Executes the provided <see cref="InstructionQuery"/> over the current <see cref="ILogixContext"/>, returning
+        /// a collection of filtered <see cref="IComplexType"/> objects.  
         /// </summary>
-        /// <param name="query">The function delegate that defines the query to execute.</param>
-        /// <returns>An <see cref="IEnumerable{T}"/> containing the queried collection of <see cref="IAddOnInstruction"/>
+        /// <param name="query">The function delegate that defines a query (or queries) to execute.</param>
+        /// <returns>An <see cref="IEnumerable{T}"/> containing the queried collection of <see cref="IComplexType"/>
         /// components.</returns>
         /// <remarks>
         /// This overload allows the user to chain multiple calls in a fluent fashion in order to build up a more
         /// complex or advanced query than is otherwise not available on the standard
-        /// <see cref="IComponentQuerier{TComponent}"/> API.
+        /// <see cref="IComponentQuery{TComponent}"/> API.
         /// These query objects can also be extended with custom queries using extensions methods.
         /// </remarks>
-        IEnumerable<IAddOnInstruction> Instructions(Func<IInstructionQuery, IInstructionQuery> query);
+        IEnumerable<IAddOnInstruction> Instructions(Func<InstructionQuery, InstructionQuery> query);
 
         /// <summary>
-        /// Returns an <see cref="ITagRepository"/> instance for querying and manipulating <see cref="ITag{TDataType}"/>
-        /// components in the current <see cref="ILogixContext"/>. 
+        /// Returns a <see cref="IComponentQuery{TComponent}"/> that provides basic querying for
+        /// <see cref="ITag{TDataType}"/> components in the current <see cref="ILogixContext"/>. 
         /// </summary>
-        /// <remarks>
-        /// This repository operators over controller scoped tags only.
-        /// To get a scoped repository, use the <see cref="Tags(ComponentName)"/> overload to specify the program scope.
-        /// </remarks>
         IComponentQuery<ITag<IDataType>> Tags();
 
         /// <summary>
-        /// Executes the provided <see cref="ITagQuery"/> over the current <see cref="ILogixContext"/>, returning
-        /// a collection of filtered <see cref="ITag{TDataType}"/> objects.  
+        /// Executes the provided <see cref="TagQuery"/> over the current <see cref="ILogixContext"/>, returning
+        /// a collection of filtered <see cref="IComplexType"/> objects.  
         /// </summary>
-        /// <param name="query">The function delegate that defines the query to execute.</param>
-        /// <returns>An <see cref="IEnumerable{T}"/> containing the queried collection of <see cref="ITag{TDataType}"/>
+        /// <param name="query">The function delegate that defines a query (or queries) to execute.</param>
+        /// <returns>An <see cref="IEnumerable{T}"/> containing the queried collection of <see cref="IComplexType"/>
         /// components.</returns>
         /// <remarks>
         /// This overload allows the user to chain multiple calls in a fluent fashion in order to build up a more
         /// complex or advanced query than is otherwise not available on the standard
-        /// <see cref="IComponentQuerier{TComponent}"/> API.
+        /// <see cref="IComponentQuery{TComponent}"/> API.
         /// These query objects can also be extended with custom queries using extensions methods.
         /// </remarks>
-        IEnumerable<ITag<IDataType>> Tags(Func<ITagQuery, ITagQuery> query);
+        IEnumerable<ITag<IDataType>> Tags(Func<TagQuery, TagQuery> query);
 
         /// <summary>
-        /// Returns an <see cref="IProgramRepository"/> instance for querying and manipulating <see cref="IProgram"/>
-        /// components in the current <see cref="ILogixContext"/>. 
+        /// Returns a <see cref="IComponentQuery{TComponent}"/> that provides basic querying for
+        /// <see cref="IProgram"/> components in the current <see cref="ILogixContext"/>. 
         /// </summary>
         IComponentQuery<IProgram> Programs();
 
         /// <summary>
-        /// Executes the provided <see cref="IProgramQuery"/> over the current <see cref="ILogixContext"/>, returning
-        /// a collection of filtered <see cref="IProgram"/> objects.  
+        /// Executes the provided <see cref="ProgramQuery"/> over the current <see cref="ILogixContext"/>, returning
+        /// a collection of filtered <see cref="IComplexType"/> objects.  
         /// </summary>
-        /// <param name="query">The function delegate that defines the query to execute.</param>
-        /// <returns>An <see cref="IEnumerable{T}"/> containing the queried collection of <see cref="IProgram"/>
+        /// <param name="query">The function delegate that defines a query (or queries) to execute.</param>
+        /// <returns>An <see cref="IEnumerable{T}"/> containing the queried collection of <see cref="IComplexType"/>
         /// components.</returns>
         /// <remarks>
         /// This overload allows the user to chain multiple calls in a fluent fashion in order to build up a more
         /// complex or advanced query than is otherwise not available on the standard
-        /// <see cref="IComponentQuerier{TComponent}"/> API.
+        /// <see cref="IComponentQuery{TComponent}"/> API.
         /// These query objects can also be extended with custom queries using extensions methods.
         /// </remarks>
-        IEnumerable<IProgram> Programs(Func<IProgramQuery, IProgramQuery> query);
+        IEnumerable<IProgram> Programs(Func<ProgramQuery, ProgramQuery> query);
 
         /// <summary>
-        /// Returns an <see cref="IComponentQuerier{TComponent}"/> of  <see cref="ITask"/> components to perform basic
-        /// queries oer the current <see cref="ILogixContext"/>.
+        /// Returns a <see cref="IComponentQuery{TComponent}"/> that provides basic querying for
+        /// <see cref="ITask"/> components in the current <see cref="ILogixContext"/>. 
         /// </summary>
-        /// <remarks>
-        /// Note that tasks do not have a repository, as they are not a mutable component. The reason is that tasks
-        /// can not be imported into a Logix project.
-        /// </remarks>
         IComponentQuery<ITask> Tasks();
 
         /// <summary>
-        /// Executes the provided <see cref="ITaskQuery"/> over the current <see cref="ILogixContext"/>, returning
+        /// Executes the provided <see cref="TaskQuery"/> over the current <see cref="ILogixContext"/>, returning
         /// a collection of filtered <see cref="ITask"/> objects.  
         /// </summary>
-        /// <param name="query">The function delegate that defines the query to execute.</param>
+        /// <param name="query">The function delegate that defines a query (or queries) to execute.</param>
         /// <returns>An <see cref="IEnumerable{T}"/> containing the queried collection of <see cref="ITask"/>
         /// components.</returns>
         /// <remarks>
         /// This overload allows the user to chain multiple calls in a fluent fashion in order to build up a more
         /// complex or advanced query than is otherwise not available on the standard
-        /// <see cref="IComponentQuerier{TComponent}"/> API.
+        /// <see cref="IComponentQuery{TComponent}"/> API.
         /// These query objects can also be extended with custom queries using extensions methods.
         /// </remarks>
-        IEnumerable<ITask> Tasks(Func<ITaskQuery, ITaskQuery> query);
+        IEnumerable<ITask> Tasks(Func<TaskQuery, TaskQuery> query);
 
         /// <summary>
-        /// Executes the provided <see cref="IRungQuery"/> over the current <see cref="ILogixContext"/> returning
-        /// a collection of filtered <see cref="Rung"/> objects.
+        /// Executes the provided <see cref="TaskQuery"/> over the current <see cref="ILogixContext"/>, returning
+        /// a collection of filtered <see cref="ITask"/> objects.  
         /// </summary>
-        /// <param name="query"></param>
-        /// <returns></returns>
-        IEnumerable<Rung> Rungs(Func<IRungQuery, IRungQuery> query);
+        /// <param name="query">The function delegate that defines a query (or queries) to execute.</param>
+        /// <returns>An <see cref="IEnumerable{T}"/> containing the queried collection of <see cref="ITask"/>
+        /// components.</returns>
+        /// <remarks>
+        /// This overload allows the user to chain multiple calls in a fluent fashion in order to build
+        /// complex or advanced queries. This query also cuts across component boundaries, meaning it will query
+        /// against all <see cref="Rung"/> objects in the entire <see cref="ILogixContext"/>.
+        /// These query objects can also be extended with custom queries using extensions methods.
+        /// </remarks>
+        IEnumerable<Rung> Rungs(Func<RungQuery, RungQuery> query);
 
         /// <summary>
         /// Saves the content of the <see cref="ILogixContext"/> to the specified file name.

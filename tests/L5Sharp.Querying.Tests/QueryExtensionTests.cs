@@ -28,10 +28,9 @@ namespace L5Sharp.Querying.Tests
 
     public static class QueryExtensions
     {
-        // This is an example of how you would extend the IDataTypeQuery with a custom query.
-        // Imagine you want to query data types for the following:
-        //  Get all data types where they only have atomic data type members
-        public static IDataTypeQuery OnlyAtomicMembers(this IDataTypeQuery query)
+        // This is an example of how you would extend the DataTypeQuery with a custom query.
+        // Imagine you want to query data types to get all types where they only have atomic data type members
+        public static DataTypeQuery OnlyAtomicMembers(this DataTypeQuery query)
         {
             // 1. Perform any validation on input parameters. We have none here...
             
@@ -43,6 +42,7 @@ namespace L5Sharp.Querying.Tests
 
             // 4. Return a new object instance with the filtered results.
             // This makes the query a fluent api that can be added into other DataTypeQuery calls.
+            // Do not return the same query instance as it will just be returning the original un-filtered elements.
             return new DataTypeQuery(results);
         }
     }

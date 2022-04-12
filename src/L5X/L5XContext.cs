@@ -64,14 +64,6 @@ namespace L5Sharp.L5X
             return new L5XContext(l5X);
         }
 
-        /// <summary>
-        /// Creates a new <see cref="L5XContext"/> container with the provided root <see cref="IController"/>.
-        /// </summary>
-        /// <returns>
-        /// A new <see cref="L5XContext"/> instance for the provided logix component as the target of the new context.
-        /// </returns>
-        public static L5XContext Create(IController controller) => new(L5XContent.Create(controller));
-
         /// <inheritdoc />
         public IController? Controller() => _l5X.Controller is not null
             ? _l5X.Serializers.Get<ControllerSerializer>().Deserialize(_l5X.Controller)
@@ -86,7 +78,7 @@ namespace L5Sharp.L5X
         }
 
         /// <inheritdoc />
-        public IEnumerable<IComplexType> DataTypes(Func<IDataTypeQuery, IDataTypeQuery> query)
+        public IEnumerable<IComplexType> DataTypes(Func<DataTypeQuery, DataTypeQuery> query)
         {
             var source = new DataTypeQuery(_l5X.DataTypes);
             var result = query.Invoke(source);
@@ -103,7 +95,7 @@ namespace L5Sharp.L5X
 
 
         /// <inheritdoc />
-        public IEnumerable<IModule> Modules(Func<IModuleQuery, IModuleQuery> query)
+        public IEnumerable<IModule> Modules(Func<ModuleQuery, ModuleQuery> query)
         {
             var source = new ModuleQuery(_l5X.Modules);
             var result = query.Invoke(source);
@@ -119,7 +111,7 @@ namespace L5Sharp.L5X
         }
 
         /// <inheritdoc />
-        public IEnumerable<IAddOnInstruction> Instructions(Func<IInstructionQuery, IInstructionQuery> query)
+        public IEnumerable<IAddOnInstruction> Instructions(Func<InstructionQuery, InstructionQuery> query)
         {
             var source =
                 new InstructionQuery(_l5X.Instructions);
@@ -136,7 +128,7 @@ namespace L5Sharp.L5X
         }
 
         /// <inheritdoc />
-        public IEnumerable<ITag<IDataType>> Tags(Func<ITagQuery, ITagQuery> query)
+        public IEnumerable<ITag<IDataType>> Tags(Func<TagQuery, TagQuery> query)
         {
             var source = new TagQuery(_l5X.Tags);
             var result = query.Invoke(source);
@@ -152,7 +144,7 @@ namespace L5Sharp.L5X
         }
 
         /// <inheritdoc />
-        public IEnumerable<IProgram> Programs(Func<IProgramQuery, IProgramQuery> query)
+        public IEnumerable<IProgram> Programs(Func<ProgramQuery, ProgramQuery> query)
         {
             var source = new ProgramQuery(_l5X.Programs);
             var result = query.Invoke(source);
@@ -168,7 +160,7 @@ namespace L5Sharp.L5X
         }
 
         /// <inheritdoc />
-        public IEnumerable<ITask> Tasks(Func<ITaskQuery, ITaskQuery> query)
+        public IEnumerable<ITask> Tasks(Func<TaskQuery, TaskQuery> query)
         {
             var source = new TaskQuery(_l5X.Tasks);
             var result = query.Invoke(source);
@@ -176,9 +168,9 @@ namespace L5Sharp.L5X
         }
 
         /// <inheritdoc />
-        public IEnumerable<Rung> Rungs(Func<IRungQuery, IRungQuery> query)
+        public IEnumerable<Rung> Rungs(Func<RungQuery, RungQuery> query)
         {
-            var source = new RungQuery(_l5X.Rungs);
+            var source = new RungQuery(_l5X.Content.Descendants(L5XElement.Rung.ToString()));
             var result = query.Invoke(source);
             return result.Execute(_l5X.Serializers.Get<RungSerializer>());
         }

@@ -7,21 +7,30 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="Complete revamp on the querying interface. Removed the repository namespace and classes after determination that the simple mutation of L5X was useless. Will transition to an &quot;Export&quot; type interface to export individual components for import into Logix. Cleaned up L5X classes and remove unnecessary classes. Removed all code not trying to support before next release. Other random clean up and updates.">
-      <change afterPath="$PROJECT_DIR$/../tests/L5SharpTests/L5XFiles/Empty.xml" afterDir="false" />
+    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="Updated testing for all ComponentQuery.cs implementations.">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/IComponentQuery.cs" beforeDir="false" afterPath="$PROJECT_DIR$/IComponentQuery.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ILogixContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ILogixContext.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5X/L5XContent.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5X/L5XContent.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/L5X/L5XContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5X/L5XContext.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Querying/ComponentQuery.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Querying/ComponentQuery.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Querying.Tests/ComponentQueryDataTypeTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Querying.Tests/ComponentQueryDataTypeTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Querying.Tests/ComponentQueryInstructionTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Querying.Tests/ComponentQueryInstructionTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Querying.Tests/ComponentQueryModuleTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Querying.Tests/ComponentQueryModuleTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Querying.Tests/ComponentQueryProgramTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Querying.Tests/ComponentQueryProgramTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Querying.Tests/ComponentQueryTagTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Querying.Tests/ComponentQueryTagTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Querying.Tests/ComponentQueryTaskTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Querying.Tests/ComponentQueryTaskTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Repositories.Tests/L5Sharp.Repositories.Tests.csproj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5SharpTests/Known.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5SharpTests/Known.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5SharpTests/L5SharpTests.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5SharpTests/L5SharpTests.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Querying/DataTypeQuery.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Querying/DataTypeQuery.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Querying/IDataTypeQuery.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Querying/IInstructionQuery.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Querying/ILogixQuery.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ILogixQuery.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Querying/IModuleQuery.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Querying/IProgramQuery.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Querying/IRungQuery.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Querying/ITagQuery.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Querying/ITaskQuery.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Querying/InstructionQuery.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Querying/InstructionQuery.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Querying/ModuleQuery.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Querying/ModuleQuery.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Querying/ProgramQuery.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Querying/ProgramQuery.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Querying/RungQuery.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Querying/RungQuery.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Querying/TagQuery.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Querying/TagQuery.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Querying/TagQueryOptions.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Querying/TaskQuery.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Querying/TaskQuery.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Serialization/RungSerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Serialization/RungSerializer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Context.Tests/ContextCreationTests.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Querying.Tests/QueryExtensionTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Querying.Tests/QueryExtensionTests.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -326,14 +335,7 @@
       <workItem from="1649591616782" duration="21597000" />
       <workItem from="1649684431621" duration="7063000" />
       <workItem from="1649693567362" duration="15456000" />
-      <workItem from="1649726018024" duration="22285000" />
-    </task>
-    <task id="LOCAL-00130" summary="catalog service development">
-      <created>1643681505791</created>
-      <option name="number" value="00130" />
-      <option name="presentableId" value="LOCAL-00130" />
-      <option name="project" value="LOCAL" />
-      <updated>1643681505791</updated>
+      <workItem from="1649726018024" duration="24175000" />
     </task>
     <task id="LOCAL-00131" summary="Lots of module development and updates">
       <created>1643923282926</created>
@@ -671,7 +673,14 @@
       <option name="project" value="LOCAL" />
       <updated>1649797739811</updated>
     </task>
-    <option name="localTasksCounter" value="179" />
+    <task id="LOCAL-00179" summary="Updated testing for all ComponentQuery.cs implementations.">
+      <created>1649800884395</created>
+      <option name="number" value="00179" />
+      <option name="presentableId" value="LOCAL-00179" />
+      <option name="project" value="LOCAL" />
+      <updated>1649800884395</updated>
+    </task>
+    <option name="localTasksCounter" value="180" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -686,32 +695,32 @@
       <expand>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 8% 18613/20173" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 8% 18609/20166" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 8% 18613/20173" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 24% 4711/6173" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 8% 18609/20166" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 24% 4712/6171" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 8% 18613/20173" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 24% 4711/6173" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="(1.0.0.0, .NETStandard,Version=v2.1) 24% 4711/6173" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 8% 18609/20166" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 24% 4712/6171" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="(1.0.0.0, .NETStandard,Version=v2.1) 24% 4712/6171" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 8% 18613/20173" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 24% 4711/6173" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="(1.0.0.0, .NETStandard,Version=v2.1) 24% 4711/6173" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 24% 4711/6173" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 8% 18609/20166" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 24% 4712/6171" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="(1.0.0.0, .NETStandard,Version=v2.1) 24% 4712/6171" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 24% 4712/6171" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 8% 18613/20173" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 24% 4711/6173" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="(1.0.0.0, .NETStandard,Version=v2.1) 24% 4711/6173" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 24% 4711/6173" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 8% 18609/20166" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 24% 4712/6171" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="(1.0.0.0, .NETStandard,Version=v2.1) 24% 4712/6171" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 24% 4712/6171" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
           <item name="Querying 14% 179/208" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
       </expand>
@@ -738,7 +747,6 @@
       <path value="$PROJECT_DIR$/../.." />
     </ignored-roots>
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="Adding module collection to make api easier to work with. Update Bus and added tests." />
     <MESSAGE value="Reorg data types into atomics and predefined namespace. Update StringType.cs as new base for predefined and user defined string type." />
     <MESSAGE value="Reorg and random updates" />
     <MESSAGE value="Updates L5XContext.cs API slightly making the L5XDocument.cs public and removing the save. Fixed issues with TagName.cs. Updated Module.cs with module collection." />
@@ -763,7 +771,8 @@
     <MESSAGE value="Fixed data type casting issue on serialization. Adding todos for Radix format provider and custom formatter and atomic converters for type narrowing" />
     <MESSAGE value="Updated converters to support conversion to all primitive types with checked context fo overflow exception. Fixed atomic type GetHashCode and ToString methods and added Max and Min field constants to all atomics." />
     <MESSAGE value="Complete revamp on the querying interface. Removed the repository namespace and classes after determination that the simple mutation of L5X was useless. Will transition to an &quot;Export&quot; type interface to export individual components for import into Logix. Cleaned up L5X classes and remove unnecessary classes. Removed all code not trying to support before next release. Other random clean up and updates." />
-    <option name="LAST_COMMIT_MESSAGE" value="Complete revamp on the querying interface. Removed the repository namespace and classes after determination that the simple mutation of L5X was useless. Will transition to an &quot;Export&quot; type interface to export individual components for import into Logix. Cleaned up L5X classes and remove unnecessary classes. Removed all code not trying to support before next release. Other random clean up and updates." />
+    <MESSAGE value="Updated testing for all ComponentQuery.cs implementations." />
+    <option name="LAST_COMMIT_MESSAGE" value="Updated testing for all ComponentQuery.cs implementations." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

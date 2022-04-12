@@ -2,7 +2,7 @@
 using System.Xml.Linq;
 using L5Sharp.Serialization;
 
-namespace L5Sharp.Querying
+namespace L5Sharp
 {
     /// <summary>
     /// Provides the ability to specify and execute a query over a set of <see cref="XElement"/> objects in order to

@@ -9,11 +9,14 @@ using L5Sharp.L5X;
 
 namespace L5Sharp.Querying
 {
-    /// <inheritdoc cref="L5Sharp.Querying.ITaskQuery" />
-    public class TaskQuery : LogixQuery<ITask>, ITaskQuery
+    /// <summary>
+    /// A fluent <see cref="ILogixQuery{TResult}"/> that adds advanced querying for <see cref="ITask"/> elements
+    /// within the L5X context.  
+    /// </summary>
+    public class TaskQuery : LogixQuery<ITask>
     {
         /// <summary>
-        /// Creates a new <see cref="TaskQuery"/> with the provided source element to operate over.
+        /// Creates a new <see cref="TaskQuery"/> with the provided source element to query.
         /// </summary>
         /// <param name="source">An <see cref="IEnumerable{T}"/> containing the source <see cref="XElement"/> objects
         /// to query.</param>
@@ -21,8 +24,12 @@ namespace L5Sharp.Querying
         {
         }
 
-        /// <inheritdoc />
-        public ITaskQuery OfType(TaskType type)
+        /// <summary>
+        /// Filters the source collection to include only tasks with the specified program scheduled to it.
+        /// </summary>
+        /// <param name="type">The program name for which to filter the task collection.</param>
+        /// <returns>A new <see cref="TaskQuery"/> with the filtered element collection.</returns>
+        public TaskQuery OfType(TaskType type)
         {
             if (type is null)
                 throw new ArgumentNullException(nameof(type));
@@ -31,9 +38,14 @@ namespace L5Sharp.Querying
 
             return new TaskQuery(results);
         }
-
-        /// <inheritdoc />
-        public ITaskQuery WithRate(Predicate<ScanRate> predicate)
+        
+        /// <summary>
+        /// Filters the collection to include only tasks that satisfy the <see cref="ScanRate"/> predicate condition.
+        /// </summary>
+        /// <param name="predicate">A predicate condition for which to filter task components.</param>
+        /// <returns>A new <see cref="TaskQuery"/> with the filtered element collection.</returns>
+        /// <exception cref="ArgumentNullException">predicate is null.</exception>
+        public TaskQuery WithRate(Predicate<ScanRate> predicate)
         {
             if (predicate is null)
                 throw new ArgumentNullException(nameof(predicate));
@@ -47,8 +59,12 @@ namespace L5Sharp.Querying
             return new TaskQuery(results);
         }
 
-        /// <inheritdoc />
-        public ITaskQuery ForProgram(ComponentName program)
+        /// <summary>
+        /// Filters the source collection to include only tasks with the specified program scheduled to it.
+        /// </summary>
+        /// <param name="program">The program name for which to filter the task collection.</param>
+        /// <returns>A new <see cref="TaskQuery"/> with the filtered element collection.</returns>
+        public TaskQuery ForProgram(ComponentName program)
         {
             if (program is null)
                 throw new ArgumentNullException(nameof(program));

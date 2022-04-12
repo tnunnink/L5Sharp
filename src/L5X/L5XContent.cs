@@ -129,7 +129,6 @@ namespace L5Sharp.L5X
         public IEnumerable<XElement> Tags => Content.Descendants(L5XElement.Tag.ToString());
         public IEnumerable<XElement> Programs => Content.Descendants(L5XElement.Program.ToString());
         public IEnumerable<XElement> Tasks => Content.Descendants(L5XElement.Task.ToString());
-        public IEnumerable<XElement> Rungs => Content.Descendants(L5XElement.Rung.ToString());
 
         private void ValidateL5X(XDocument document)
         {

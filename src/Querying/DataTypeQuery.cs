@@ -12,7 +12,7 @@ namespace L5Sharp.Querying
     /// A fluent <see cref="ILogixQuery{TResult}"/> that adds advanced querying for <see cref="IComplexType"/> elements
     /// within the L5X context. 
     /// </summary>
-    public class DataTypeQuery : LogixQuery<IComplexType>, IDataTypeQuery
+    public class DataTypeQuery : LogixQuery<IComplexType>
     {
         /// <summary>
         /// Creates a new <see cref="DataTypeQuery"/> with the provided source elements to query.
@@ -27,7 +27,7 @@ namespace L5Sharp.Querying
         /// Filters the collection to only data types that depend on the specified type name.
         /// </summary>
         /// <param name="typeName">The name of the child data type to match.</param>
-        /// <returns>A new <see cref="IDataTypeQuery"/> containing the filtered collection.</returns>
+        /// <returns>A new <see cref="DataTypeQuery"/> containing the filtered collection.</returns>
         /// <remarks>
         /// This query is similar to <see cref="UsedBy"/>, but instead of getting the data types used by the specified
         /// type, this query gets other types that reference the specified type as a member of it's data type structure,
@@ -48,7 +48,7 @@ namespace L5Sharp.Querying
         /// Filters the collection to only data types with the specified <see cref="DataTypeFamily"/> value. 
         /// </summary>
         /// <param name="family">The <see cref="DataTypeFamily"/> value to filter on.</param>
-        /// <returns>A new <see cref="IDataTypeQuery"/> containing only data types with the specified family.</returns>
+        /// <returns>A new <see cref="DataTypeQuery"/> containing only data types with the specified family.</returns>
         public DataTypeQuery OfFamily(DataTypeFamily family)
         {
             if (family is null)
@@ -63,7 +63,7 @@ namespace L5Sharp.Querying
         /// Filters the collection to only data types that are used by the members of the specified type name. 
         /// </summary>
         /// <param name="typeName">The name of the data type for which to filter member type of.</param>
-        /// <returns>A new <see cref="IDataTypeQuery"/> containing the data types that are used by the speicifed
+        /// <returns>A new <see cref="DataTypeQuery"/> containing the data types that are used by the speicifed
         /// type name.</returns>
         /// <remarks>
         /// This query is similar to <see cref="DependingOn"/>, but instead of getting other data types that reference
