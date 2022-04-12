@@ -7,117 +7,21 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/IComponentQuery.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Querying.Tests/ComponentQueryDataTypeTests.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Querying.Tests/ComponentQueryTaskTests.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Querying.Tests/DataTypeQueryTests.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Querying.Tests/QueryExtensionTests.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Querying.Tests/TaskQueryTests.cs" afterDir="false" />
+    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="Complete revamp on the querying interface. Removed the repository namespace and classes after determination that the simple mutation of L5X was useless. Will transition to an &quot;Export&quot; type interface to export individual components for import into Logix. Cleaned up L5X classes and remove unnecessary classes. Removed all code not trying to support before next release. Other random clean up and updates.">
+      <change afterPath="$PROJECT_DIR$/../tests/L5SharpTests/L5XFiles/Empty.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Comparers/ComponentNameComparer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Comparers/ComponentNameComparer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/Tag.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/Tag.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/TagMember.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/TagMember.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Extensions/ExpressionExtensions.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Extensions/MemberInfoExtensions.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/IAddOnInstruction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/IAddOnInstruction.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/IExportableComponent.cs" beforeDir="false" afterPath="$PROJECT_DIR$/IExportable.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ILadderLogic.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ILadderLogic.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ILogixComponent.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ILogixComponent.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ILogixContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ILogixContext.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/IMember.cs" beforeDir="false" afterPath="$PROJECT_DIR$/IMember.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Instructions/XIC.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.sln" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.sln" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5X/L5XComponents.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5X/L5XContainers.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/IComponentQuery.cs" beforeDir="false" afterPath="$PROJECT_DIR$/IComponentQuery.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/L5X/L5XContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5X/L5XContext.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5X/L5XDocument.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5X/L5XContent.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5X/L5XElementVisitor.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5X/L5XIndex.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5X/L5XIndex.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5X/L5XInfo.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5X/L5XSerializers.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5X/L5XSerializers.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Querying/ComponentQuery.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Querying/ComponentQuery.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Querying/DataTypeQuery.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Querying/DataTypeQuery.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Querying/IComponentQuery.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Querying/IDataTypeQuery.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Querying/IDataTypeQuery.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Querying/IInstructionQuery.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Querying/IInstructionQuery.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Querying/ILogixQuery.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Querying/ILogixQuery.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Querying/IModuleQuery.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Querying/IModuleQuery.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Querying/IProgramQuery.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Querying/IProgramQuery.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Querying/IRungQuery.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Querying/IRungQuery.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Querying/ITagQuery.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Querying/ITagQuery.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Querying/ITaskQuery.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Querying/ITaskQuery.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Querying/InstructionQuery.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Querying/InstructionQuery.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Querying/LogixQuery.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Querying/LogixQuery.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Querying/LogixQueryTest.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Querying/ModuleQuery.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Querying/ModuleQuery.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Querying/ProgramQuery.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Querying/ProgramQuery.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Querying/RungQuery.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Querying/RungQuery.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Querying/TagQuery.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Querying/TagQuery.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Querying/TaskQuery.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Querying/TaskQuery.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Repositories/ComponentRepository.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Repositories/DataTypeRepository.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Repositories/IComponentRepository.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Repositories/IDataTypeRepository.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Repositories/IInstructionRepository.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Repositories/IModuleRepository.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Repositories/IProgramRepository.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Repositories/ITagRepository.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Repositories/InstructionRepository.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Repositories/ModuleRepository.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Repositories/ProgramRepository.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Repositories/TagRepository.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Resources/L5X.xsd" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Serialization/AddOnInstructionSerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Serialization/AddOnInstructionSerializer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Serialization/AlarmDataSerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Serialization/AlarmDataSerializer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Serialization/ArrayElementSerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Serialization/ArrayElementSerializer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Serialization/ArrayMemberSerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Serialization/ArrayMemberSerializer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Serialization/ArraySerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Serialization/ArraySerializer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Serialization/ConfigTagSerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Serialization/ConfigTagSerializer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Serialization/ConnectionSerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Serialization/ConnectionSerializer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Serialization/DataTypeSerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Serialization/DataTypeSerializer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Serialization/DecoratedDataSerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Serialization/DecoratedDataSerializer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Serialization/FormattedDataSerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Serialization/FormattedDataSerializer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Serialization/InputTagSerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Serialization/InputTagSerializer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Serialization/LadderLogicSerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Serialization/LadderLogicSerializer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Serialization/LocalTagSerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Serialization/LocalTagSerializer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Serialization/MemberSerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Serialization/MemberSerializer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Serialization/ModuleSerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Serialization/ModuleSerializer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Serialization/OutputTagSerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Serialization/OutputTagSerializer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Serialization/ParameterSerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Serialization/ParameterSerializer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Serialization/ProgramSerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Serialization/ProgramSerializer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Serialization/RoutineSerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Serialization/RoutineSerializer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Serialization/StructureMemberSerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Serialization/StructureMemberSerializer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Serialization/StructureSerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Serialization/StructureSerializer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Serialization/TagSerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Serialization/TagSerializer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Context.Tests/ApiTesting.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Context.Tests/ApiTesting.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Context.Tests/ComplexFileTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Context.Tests/ComplexFileTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Context.Tests/SearchTesting.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Context.Tests/SearchTesting.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/MemberTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/MemberTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/TagComplexTypeTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/TagComplexTypeTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/TagMemberTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/TagMemberTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/TagSimpleTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/TagSimpleTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Internal.Tests/Extensions/ExpressionExtensionsTests.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Internal.Tests/L5X/L5XContainersTests.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Internal.Tests/L5X/L5XDocumentTests.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Querying.Tests/BasicDataTypeQueryTests.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Querying.Tests/BasicInstructionQueryTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Querying.Tests/ComponentQueryInstructionTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Querying.Tests/BasicModuleQueryTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Querying.Tests/ComponentQueryModuleTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Querying.Tests/BasicProgramQueryTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Querying.Tests/ComponentQueryProgramTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Querying.Tests/BasicTagQueryTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Querying.Tests/ComponentQueryTagTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Querying.Tests/BasicTaskQueryTests.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Querying.Tests/RungQueryTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Querying.Tests/RungQueryTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Querying.Tests/SpecificModuleQueryTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Querying.Tests/ModuleQueryTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Querying.Tests/SpecificTagQueryTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Querying.Tests/TagQueryTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Repositories.Tests/Content/Known.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Repositories.Tests/Content/Test.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Repositories.Tests/DataTypeRepositoryTests.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Repositories.Tests/L5Sharp.Repositories.Tests.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Repositories.Tests/L5Sharp.Repositories.Tests.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Repositories.Tests/ModuleRepositoryTests.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Repositories.Tests/TagRepositoryTests.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Serialization.Tests/DecoratedDataSerializerTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Serialization.Tests/DecoratedDataSerializerTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Serialization.Tests/StructureMemberSerializerTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Serialization.Tests/StructureMemberSerializerTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Querying.Tests/ComponentQueryDataTypeTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Querying.Tests/ComponentQueryDataTypeTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Querying.Tests/ComponentQueryInstructionTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Querying.Tests/ComponentQueryInstructionTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Querying.Tests/ComponentQueryModuleTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Querying.Tests/ComponentQueryModuleTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Querying.Tests/ComponentQueryProgramTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Querying.Tests/ComponentQueryProgramTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Querying.Tests/ComponentQueryTagTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Querying.Tests/ComponentQueryTagTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Querying.Tests/ComponentQueryTaskTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Querying.Tests/ComponentQueryTaskTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Repositories.Tests/L5Sharp.Repositories.Tests.csproj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5SharpTests/Known.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5SharpTests/Known.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5SharpTests/L5SharpTests.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5SharpTests/L5SharpTests.csproj" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -422,14 +326,7 @@
       <workItem from="1649591616782" duration="21597000" />
       <workItem from="1649684431621" duration="7063000" />
       <workItem from="1649693567362" duration="15456000" />
-      <workItem from="1649726018024" duration="19020000" />
-    </task>
-    <task id="LOCAL-00129" summary="Module development and testing.">
-      <created>1643644699692</created>
-      <option name="number" value="00129" />
-      <option name="presentableId" value="LOCAL-00129" />
-      <option name="project" value="LOCAL" />
-      <updated>1643644699692</updated>
+      <workItem from="1649726018024" duration="22285000" />
     </task>
     <task id="LOCAL-00130" summary="catalog service development">
       <created>1643681505791</created>
@@ -767,7 +664,14 @@
       <option name="project" value="LOCAL" />
       <updated>1649615513684</updated>
     </task>
-    <option name="localTasksCounter" value="178" />
+    <task id="LOCAL-00178" summary="Complete revamp on the querying interface. Removed the repository namespace and classes after determination that the simple mutation of L5X was useless. Will transition to an &quot;Export&quot; type interface to export individual components for import into Logix. Cleaned up L5X classes and remove unnecessary classes. Removed all code not trying to support before next release. Other random clean up and updates.">
+      <created>1649797739811</created>
+      <option name="number" value="00178" />
+      <option name="presentableId" value="LOCAL-00178" />
+      <option name="project" value="LOCAL" />
+      <updated>1649797739811</updated>
+    </task>
+    <option name="localTasksCounter" value="179" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -777,55 +681,38 @@
     <option name="coveragePercentColumnWidth" value="97" />
     <option name="sortOrder" value="DESCENDING" />
     <option name="sortedColumn" value="1" />
-    <option name="symbolColumnWidth" value="241" />
+    <option name="symbolColumnWidth" value="246" />
     <coverage-tree-state>
       <expand>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 95% 1059/20361" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 8% 18613/20173" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 95% 1059/20361" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 88% 747/6312" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 8% 18613/20173" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 24% 4711/6173" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 95% 1059/20361" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 88% 747/6312" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="(1.0.0.0, .NETStandard,Version=v2.1) 88% 747/6312" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 8% 18613/20173" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 24% 4711/6173" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="(1.0.0.0, .NETStandard,Version=v2.1) 24% 4711/6173" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 95% 1059/20361" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 88% 747/6312" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="(1.0.0.0, .NETStandard,Version=v2.1) 88% 747/6312" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 88% 747/6312" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 8% 18613/20173" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 24% 4711/6173" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="(1.0.0.0, .NETStandard,Version=v2.1) 24% 4711/6173" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 24% 4711/6173" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 95% 1059/20361" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 88% 747/6312" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="(1.0.0.0, .NETStandard,Version=v2.1) 88% 747/6312" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 88% 747/6312" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="Builders 66% 47/138" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-        </path>
-        <path>
-          <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 95% 1059/20361" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 88% 747/6312" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="(1.0.0.0, .NETStandard,Version=v2.1) 88% 747/6312" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 88% 747/6312" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="Builders 66% 47/138" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="ModuleBuilder 23% 47/61" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-        </path>
-        <path>
-          <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 95% 1059/20361" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 88% 747/6312" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="(1.0.0.0, .NETStandard,Version=v2.1) 88% 747/6312" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 88% 747/6312" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="Querying 0% 168/168" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 8% 18613/20173" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 24% 4711/6173" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="(1.0.0.0, .NETStandard,Version=v2.1) 24% 4711/6173" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 24% 4711/6173" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Querying 14% 179/208" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
       </expand>
       <select />
@@ -851,7 +738,6 @@
       <path value="$PROJECT_DIR$/../.." />
     </ignored-roots>
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="Fixed tests and code associated with Type updates" />
     <MESSAGE value="Adding module collection to make api easier to work with. Update Bus and added tests." />
     <MESSAGE value="Reorg data types into atomics and predefined namespace. Update StringType.cs as new base for predefined and user defined string type." />
     <MESSAGE value="Reorg and random updates" />
@@ -876,7 +762,8 @@
     <MESSAGE value="Fixed Dimensions.cs parsing issues and testing." />
     <MESSAGE value="Fixed data type casting issue on serialization. Adding todos for Radix format provider and custom formatter and atomic converters for type narrowing" />
     <MESSAGE value="Updated converters to support conversion to all primitive types with checked context fo overflow exception. Fixed atomic type GetHashCode and ToString methods and added Max and Min field constants to all atomics." />
-    <option name="LAST_COMMIT_MESSAGE" value="Updated converters to support conversion to all primitive types with checked context fo overflow exception. Fixed atomic type GetHashCode and ToString methods and added Max and Min field constants to all atomics." />
+    <MESSAGE value="Complete revamp on the querying interface. Removed the repository namespace and classes after determination that the simple mutation of L5X was useless. Will transition to an &quot;Export&quot; type interface to export individual components for import into Logix. Cleaned up L5X classes and remove unnecessary classes. Removed all code not trying to support before next release. Other random clean up and updates." />
+    <option name="LAST_COMMIT_MESSAGE" value="Complete revamp on the querying interface. Removed the repository namespace and classes after determination that the simple mutation of L5X was useless. Will transition to an &quot;Export&quot; type interface to export individual components for import into Logix. Cleaned up L5X classes and remove unnecessary classes. Removed all code not trying to support before next release. Other random clean up and updates." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using L5Sharp.Core;
-using L5Sharp.Exceptions;
 using L5Sharp.Extensions;
 using L5Sharp.Serialization;
 
@@ -31,7 +30,7 @@ namespace L5Sharp.Querying
         public bool Any() => _components.Any();
 
         /// <inheritdoc />
-        public bool Any(string name) =>
+        public bool Contains(string name) =>
             _components.Any(e => _comparer.Equals(e.ComponentName(), name));
 
         /// <inheritdoc />
@@ -49,16 +48,6 @@ namespace L5Sharp.Querying
         {
             var components = _components.Where(e => names.Contains(e.ComponentName(), _comparer));
             return components.Select(e => _serializer.Deserialize(e));
-        }
-
-        /// <inheritdoc />
-        public TComponent First() => _serializer.Deserialize(_components.First());
-
-        /// <inheritdoc />
-        public TComponent? FirstOrDefault()
-        {
-            var component = _components.FirstOrDefault();
-            return component is not null ? _serializer.Deserialize(component) : default;
         }
 
         /// <inheritdoc />

@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
-using L5Sharp.Core;
-using L5Sharp.Enums;
 using L5Sharp.L5X;
 using L5SharpTests;
 using NUnit.Framework;
@@ -35,60 +33,53 @@ namespace L5Sharp.Querying.Tests
         }
 
         [Test]
-        public void Any_NullName_ShouldThrowArgumentNullException()
+        public void Any_NoComponents_ShouldBeFalse()
         {
-            var context = L5XContext.Load(Known.Test);
+            var context = L5XContext.Load(Known.Empty);
 
-            FluentActions.Invoking(() => context.DataTypes().Any(null!)).Should().Throw<ArgumentNullException>();
-        }
-
-        [Test]
-        public void Any_InvalidName_ShouldBeFalse()
-        {
-            var context = L5XContext.Load(Known.Test);
-
-            var result = context.DataTypes().Any("FakeType");
+            var result = context.DataTypes().Any();
 
             result.Should().BeFalse();
         }
 
         [Test]
-        public void Any_ValidName_ShouldBeTrue()
+        public void Contains_InvalidName_ShouldBeFalse()
         {
             var context = L5XContext.Load(Known.Test);
 
-            var result = context.DataTypes().Any("SimpleType");
+            var result = context.DataTypes().Contains("FakeType");
+
+            result.Should().BeFalse();
+        }
+
+        [Test]
+        public void Contains_ValidName_ShouldBeTrue()
+        {
+            var context = L5XContext.Load(Known.Test);
+
+            var result = context.DataTypes().Contains("SimpleType");
 
             result.Should().BeTrue();
         }
 
         [Test]
-        public void First_WhenCalled_ShouldNotBeNull()
+        public void Count_HasComponents_ShouldBeGreaterThanZero()
         {
             var context = L5XContext.Load(Known.Test);
 
-            var result = context.DataTypes().First();
+            var result = context.DataTypes().Count();
 
-            result.Should().NotBeNull();
+            result.Should().BeGreaterThan(0);
         }
-
+        
         [Test]
-        public void FirstOrDefault_NonEmpty_ShouldNotBeNull()
+        public void Count_NoComponents_ShouldBeZero()
         {
-            var context = L5XContext.Load(Known.Test);
+            var context = L5XContext.Load(Known.Empty);
 
-            var result = context.DataTypes().FirstOrDefault();
+            var result = context.DataTypes().Count();
 
-            result.Should().NotBeNull();
-        }
-
-        [Test]
-        public void Find_NullName_ShouldThrowArgumentNullException()
-        {
-            var context = L5XContext.Load(Known.Test);
-
-            FluentActions.Invoking(() => context.DataTypes().Find(((ComponentName)null)!))
-                .Should().Throw<ArgumentNullException>();
+            result.Should().Be(0);
         }
 
         [Test]
@@ -112,44 +103,6 @@ namespace L5Sharp.Querying.Tests
         }
 
         [Test]
-        public void Find_SimpleType_ShouldBeExpected()
-        {
-            var context = L5XContext.Load(Known.Test);
-
-            var component = context.DataTypes().Find("SimpleType");
-
-            component?.Name.Should().Be("SimpleType");
-            component?.Description.Should()
-                .Be("This is a test data type that contains simple atomic types with an updated description");
-            component?.Class.Should().Be(DataTypeClass.User);
-            component?.Family.Should().Be(DataTypeFamily.None);
-            component?.Members.Should().NotBeEmpty();
-        }
-
-        [Test]
-        public void Find_ComplexType_ShouldBeExpected()
-        {
-            var context = L5XContext.Load(Known.Test);
-
-            var component = context.DataTypes().Find("ComplexType");
-
-            component?.Name.Should().Be("ComplexType");
-            component?.Description.Should().Be("Test data type with more complex members");
-            component?.Class.Should().Be(DataTypeClass.User);
-            component?.Family.Should().Be(DataTypeFamily.None);
-            component?.Members.Should().NotBeEmpty();
-        }
-
-        [Test]
-        public void Find_NullNameCollection_ShouldThrowArgumentNullException()
-        {
-            var context = L5XContext.Load(Known.Test);
-
-            FluentActions.Invoking(() => context.DataTypes().Find(((IEnumerable<string>)null)!))
-                .Should().Throw<ArgumentNullException>();
-        }
-
-        [Test]
         public void Find_ExistingNameCollection_ShouldHaveExpectedCount()
         {
             var context = L5XContext.Load(Known.Test);
@@ -170,15 +123,61 @@ namespace L5Sharp.Querying.Tests
 
             results.Should().BeEmpty();
         }
+        
+        [Test]
+        public void Get_NullName_ShouldThrowInvalidOperationException()
+        {
+            var context = L5XContext.Load(Known.Test);
+
+            FluentActions.Invoking(() => context.DataTypes().Get(null!)).Should().Throw<InvalidOperationException>();
+        }
+        
+        [Test]
+        public void Get_InvalidName_ShouldThrowInvalidOperationException()
+        {
+            var context = L5XContext.Load(Known.Test);
+
+            FluentActions.Invoking(() => context.DataTypes().Get("Fake")).Should().Throw<InvalidOperationException>();
+        }
 
         [Test]
-        public void Names_WhenCalled_ShouldNotBeEmpty()
+        public void Get_ValidName_ShouldNotBeNull()
+        {
+            var context = L5XContext.Load(Known.Test);
+
+            var result = context.DataTypes().Get("ComplexType");
+
+            result.Should().NotBeNull();
+        }
+
+        [Test]
+        public void Names_HasNames_ShouldNotBeEmpty()
         {
             var context = L5XContext.Load(Known.Test);
 
             var results = context.DataTypes().Names().ToList();
 
             results.Should().NotBeEmpty();
+        }
+        
+        [Test]
+        public void Names_NoNames_ShouldBeEmpty()
+        {
+            var context = L5XContext.Load(Known.Empty);
+
+            var results = context.DataTypes().Names().ToList();
+
+            results.Should().BeEmpty();
+        }
+        
+        [Test]
+        public void Take_Negative_ShouldBeEmpty()
+        {
+            var context = L5XContext.Load(Known.Test);
+
+            var results = context.DataTypes().Take(-1);
+
+            results.Should().BeEmpty();
         }
 
         [Test]

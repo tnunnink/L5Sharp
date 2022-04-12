@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Linq;
 using L5Sharp.Core;
 using L5Sharp.Querying;
@@ -129,7 +130,7 @@ namespace L5Sharp.L5X
         /// <inheritdoc />
         public IComponentQuery<ITag<IDataType>> Tags()
         {
-            var components = _l5X.Tags;
+            var components = _l5X.Tags.Where(t => t.Parent?.Parent?.Name == L5XElement.Controller.ToString());
             var serializer = _l5X.Serializers.ForComponent<ITag<IDataType>>();
             return new ComponentQuery<ITag<IDataType>>(components, serializer);
         }

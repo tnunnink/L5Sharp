@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
-using L5Sharp.Core;
 using L5Sharp.L5X;
 using L5SharpTests;
 using NUnit.Framework;
@@ -27,7 +26,7 @@ namespace L5Sharp.Querying.Tests
         }
 
         [Test]
-        public void Any_WhenCalled_ShouldBeTrue()
+        public void Any_HasComponents_ShouldBeTrue()
         {
             var context = L5XContext.Load(Known.Test);
 
@@ -37,70 +36,53 @@ namespace L5Sharp.Querying.Tests
         }
 
         [Test]
-        public void Any_ValidName_ShouldBeTrue()
+        public void Any_NoComponents_ShouldBeFalse()
         {
-            var context = L5XContext.Load(Known.Test);
+            var context = L5XContext.Load(Known.Empty);
 
-            var result = context.Tasks().Any(ValidName);
-
-            result.Should().BeTrue();
-        }
-
-        [Test]
-        public void Any_InvalidName_ShouldBeFalse()
-        {
-            var context = L5XContext.Load(Known.Test);
-
-            var result = context.Tasks().Any(FakeName);
+            var result = context.Tasks().Any();
 
             result.Should().BeFalse();
         }
 
         [Test]
-        public void Any_NullName_ShouldThrowArgumentNullException()
+        public void Contains_InvalidName_ShouldBeFalse()
         {
             var context = L5XContext.Load(Known.Test);
 
-            FluentActions.Invoking(() => context.Tasks().Any(null!)).Should().Throw<ArgumentNullException>();
+            var result = context.Tasks().Contains(FakeName);
+
+            result.Should().BeFalse();
         }
 
         [Test]
-        public void First_WhenCalled_ShouldNotBeNull()
+        public void Contains_ValidName_ShouldBeTrue()
         {
             var context = L5XContext.Load(Known.Test);
 
-            var result = context.Tasks().First();
+            var result = context.Tasks().Contains(ValidName);
 
-            result.Should().NotBeNull();
+            result.Should().BeTrue();
         }
 
         [Test]
-        public void FirstOrDefault_NonEmpty_ShouldNotBeNull()
+        public void Count_HasComponents_ShouldBeGreaterThanZero()
         {
             var context = L5XContext.Load(Known.Test);
 
-            var result = context.Tasks().FirstOrDefault();
+            var result = context.Tasks().Count();
 
-            result.Should().NotBeNull();
-        }
-        
-        [Test]
-        public void Find_NullName_ShouldThrowArgumentNullException()
-        {
-            var context = L5XContext.Load(Known.Test);
-
-            FluentActions.Invoking(() => context.Tasks().Find(((ComponentName)null)!))
-                .Should().Throw<ArgumentNullException>();
+            result.Should().BeGreaterThan(0);
         }
 
         [Test]
-        public void Find_ExistingName_ShouldNotBeNull()
+        public void Count_NoComponents_ShouldBeZero()
         {
-            var context = L5XContext.Load(Known.Test);
+            var context = L5XContext.Load(Known.Empty);
 
-            var result = context.Tasks().Find(ValidName);
+            var result = context.Tasks().Count();
 
-            result.Should().NotBeNull();
+            result.Should().Be(0);
         }
 
         [Test]
@@ -114,43 +96,91 @@ namespace L5Sharp.Querying.Tests
         }
 
         [Test]
-        public void Find_SimpleType_ShouldBeExpected()
+        public void Find_ExistingName_ShouldNotBeNull()
         {
             var context = L5XContext.Load(Known.Test);
 
             var result = context.Tasks().Find(ValidName);
 
-            result?.Name.Should().Be(ValidName);
+            result.Should().NotBeNull();
         }
 
         [Test]
-        public void Find_NullNameCollection_ShouldThrowArgumentNullException()
+        public void Find_HasAtLeastOnValidName_ShouldNotBeEmpty()
+        {
+            var context = L5XContext.Load(Known.Test);
+            var names = new List<string> { ValidName, FakeName };
+
+            var results = context.Tasks().Find(names);
+
+            results.Should().NotBeEmpty();
+        }
+
+        [Test]
+        public void Find_NonExistingNameCollection_ShouldBeEmpty()
+        {
+            var context = L5XContext.Load(Known.Test);
+            var names = new List<string> { FakeName, "DoesNotExist", "NotReal" };
+
+            var results = context.Tasks().Find(names);
+
+            results.Should().BeEmpty();
+        }
+
+        [Test]
+        public void Get_NullName_ShouldThrowInvalidOperationException()
         {
             var context = L5XContext.Load(Known.Test);
 
-            FluentActions.Invoking(() => context.Tasks().Find((ICollection<string>)((List<ComponentName>)null)!))
-                .Should().Throw<ArgumentNullException>();
+            FluentActions.Invoking(() => context.Tasks().Get(null!)).Should().Throw<InvalidOperationException>();
         }
 
         [Test]
-        public void Find_ExistingNameCollection_ShouldHaveExpectedCount()
+        public void Get_InvalidName_ShouldThrowInvalidOperationException()
         {
             var context = L5XContext.Load(Known.Test);
-            var names = new List<ComponentName> { ValidName, FakeName };
 
-            var results = context.Tasks().Find((ICollection<string>)names);
-
-            results.Should().HaveCount(1);
+            FluentActions.Invoking(() => context.Tasks().Get(FakeName)).Should().Throw<InvalidOperationException>();
         }
 
         [Test]
-        public void Names_WhenCalled_ShouldNotBeEmpty()
+        public void Get_ValidName_ShouldNotBeNull()
+        {
+            var context = L5XContext.Load(Known.Test);
+
+            var result = context.Tasks().Get(ValidName);
+
+            result.Should().NotBeNull();
+        }
+
+        [Test]
+        public void Names_HasNames_ShouldNotBeEmpty()
         {
             var context = L5XContext.Load(Known.Test);
 
             var results = context.Tasks().Names().ToList();
 
             results.Should().NotBeEmpty();
+        }
+
+        [Test]
+        public void Names_NoNames_ShouldBeEmpty()
+        {
+            var context = L5XContext.Load(Known.Empty);
+
+            var results = context.Tasks().Names().ToList();
+
+            results.Should().BeEmpty();
+        }
+
+        [Test]
+        public void Take_Negative_ShouldBeEmpty()
+        {
+            var context = L5XContext.Load(Known.Test);
+
+            var results = context.Tasks().Take(-1);
+
+            results.Should().BeEmpty();
         }
 
         [Test]
@@ -164,7 +194,7 @@ namespace L5Sharp.Querying.Tests
         }
 
         [Test]
-        public void Take_One_ShouldHaveCountOne()
+        public void Take_One_ShouldHaveCountTen()
         {
             var context = L5XContext.Load(Known.Test);
 
