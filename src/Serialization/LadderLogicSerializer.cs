@@ -8,14 +8,14 @@ namespace L5Sharp.Serialization
 {
     internal class LadderLogicSerializer : L5XSerializer<ILadderLogic>
     {
-        private readonly L5XDocument? _document;
+        private readonly L5XContent? _document;
         private static readonly XName ElementName = L5XElement.RLLContent.ToString();
 
         private RungSerializer RungSerializer => _document is not null
             ? _document.Serializers.Get<RungSerializer>()
             : new RungSerializer();
 
-        public LadderLogicSerializer(L5XDocument? document = null)
+        public LadderLogicSerializer(L5XContent? document = null)
         {
             _document = document;
         }

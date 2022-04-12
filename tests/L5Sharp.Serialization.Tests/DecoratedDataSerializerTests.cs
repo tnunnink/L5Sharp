@@ -142,7 +142,7 @@ namespace L5Sharp.Serialization.Tests
             component.Name.Should().Be("REAL");
             component.As<IArrayType<IDataType>>().Should().HaveCount(5);
             component.As<IArrayType<IDataType>>().Dimensions.Should().BeEquivalentTo(new Dimensions(5));
-            component.As<IArrayType<IDataType>>().All(m => m.IsValueMember).Should().BeTrue();
+            component.As<IArrayType<IDataType>>().All(m => m.MemberType == MemberType.ValueMember).Should().BeTrue();
         }
 
         [Test]

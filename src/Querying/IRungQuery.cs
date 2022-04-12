@@ -8,7 +8,6 @@ namespace L5Sharp.Querying
     /// </summary>
     public interface IRungQuery : ILogixQuery<Rung>
     {
-        
         /// <summary>
         /// Expands the collection by adding embedded AOI rungs into the source collection for each AOI found. This call
         /// will also replace the AOI parameter names with operand references.

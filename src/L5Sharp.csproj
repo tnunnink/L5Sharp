@@ -42,9 +42,6 @@
     <ItemGroup>
         <None Remove="Resources\L5X.xsd" />
         <!--<None Include="Resources\icon.png" Pack="true" PackagePath="\"/>-->
-        <EmbeddedResource Include="Resources\L5X.xsd">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </EmbeddedResource>
     </ItemGroup>
 
 </Project>

@@ -10,14 +10,14 @@ namespace L5Sharp.Serialization
 {
     internal class ParameterSerializer : L5XSerializer<IParameter<IDataType>>
     {
-        private readonly L5XDocument? _document;
+        private readonly L5XContent? _document;
         private static readonly XName ElementName = L5XElement.Parameter.ToString();
         
         private LocalTagSerializer LocalTagSerializer => _document is not null
             ? _document.Serializers.Get<LocalTagSerializer>()
             : new LocalTagSerializer(_document);
 
-        public ParameterSerializer(L5XDocument? document = null)
+        public ParameterSerializer(L5XContent? document = null)
         {
             _document = document;
         }

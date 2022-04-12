@@ -29,7 +29,6 @@ namespace L5Sharp
         /// <summary>
         /// Gets the value of the revision note for the instruction.
         /// </summary>
-        [XmlElement]
         string RevisionNote { get; }
 
         /// <summary>
@@ -80,7 +79,6 @@ namespace L5Sharp
         /// <summary>
         /// Gets the value for the additional help text of the <see cref="IAddOnInstruction"/>.
         /// </summary>
-        [XmlElement]
         string AdditionalHelpText { get; }
 
         /// <summary>

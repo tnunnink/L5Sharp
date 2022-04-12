@@ -29,9 +29,7 @@ namespace L5Sharp.Core.Tests
             member.Root.Should().BeSameAs(tag);
             member.Parent.Should().NotBeNull();
             member.Value.Should().Be(false);
-            member.IsArrayMember.Should().BeFalse();
-            member.IsValueMember.Should().BeTrue();
-            member.IsStructureMember.Should().BeFalse();
+            member.MemberType.Should().Be(MemberType.ValueMember);
         }
         
         [Test]

@@ -30,40 +30,40 @@ namespace L5Sharp.L5X
             { L5XElement.AddOnInstructionDefinition.ToString(), typeof(AddOnInstructionSerializer) }
         };
 
-        public L5XSerializers(L5XDocument document)
+        public L5XSerializers(L5XContent content)
         {
             _serializers = new Dictionary<Type, IL5XSerializer>
             {
-                { typeof(AddOnInstructionSerializer), new AddOnInstructionSerializer(document) },
-                { typeof(ConfigTagSerializer), new ConfigTagSerializer(document) },
-                { typeof(ConnectionSerializer), new ConnectionSerializer(document) },
+                { typeof(AddOnInstructionSerializer), new AddOnInstructionSerializer(content) },
+                { typeof(ConfigTagSerializer), new ConfigTagSerializer(content) },
+                { typeof(ConnectionSerializer), new ConnectionSerializer(content) },
                 { typeof(ControllerSerializer), new ControllerSerializer() },
-                { typeof(DataTypeSerializer), new DataTypeSerializer(document) },
-                { typeof(InputTagSerializer), new InputTagSerializer(document) },
-                { typeof(LadderLogicSerializer), new LadderLogicSerializer(document) },
-                { typeof(LocalTagSerializer), new LocalTagSerializer(document) },
-                { typeof(MemberSerializer), new MemberSerializer(document) },
-                { typeof(ModuleSerializer), new ModuleSerializer(document) },
-                { typeof(OutputTagSerializer), new OutputTagSerializer(document) },
-                { typeof(ParameterSerializer), new ParameterSerializer(document) },
+                { typeof(DataTypeSerializer), new DataTypeSerializer(content) },
+                { typeof(InputTagSerializer), new InputTagSerializer(content) },
+                { typeof(LadderLogicSerializer), new LadderLogicSerializer(content) },
+                { typeof(LocalTagSerializer), new LocalTagSerializer(content) },
+                { typeof(MemberSerializer), new MemberSerializer(content) },
+                { typeof(ModuleSerializer), new ModuleSerializer(content) },
+                { typeof(OutputTagSerializer), new OutputTagSerializer(content) },
+                { typeof(ParameterSerializer), new ParameterSerializer(content) },
                 { typeof(PortSerializer), new PortSerializer() },
-                { typeof(ProgramSerializer), new ProgramSerializer(document) },
-                { typeof(RoutineSerializer), new RoutineSerializer(document) },
+                { typeof(ProgramSerializer), new ProgramSerializer(content) },
+                { typeof(RoutineSerializer), new RoutineSerializer(content) },
                 { typeof(RungSerializer), new RungSerializer() },
-                { typeof(TagSerializer), new TagSerializer(document) },
+                { typeof(TagSerializer), new TagSerializer(content) },
                 { typeof(TaskSerializer), new TaskSerializer() },
                 { typeof(AlarmAnalogParametersSerializer), new AlarmAnalogParametersSerializer() },
-                { typeof(AlarmDataSerializer), new AlarmDataSerializer(document) },
+                { typeof(AlarmDataSerializer), new AlarmDataSerializer(content) },
                 { typeof(AlarmDigitalParametersSerializer), new AlarmDigitalParametersSerializer() },
-                { typeof(ArrayElementSerializer), new ArrayElementSerializer(document) },
-                { typeof(ArrayMemberSerializer), new ArrayMemberSerializer(document) },
-                { typeof(ArraySerializer), new ArraySerializer(document) },
+                { typeof(ArrayElementSerializer), new ArrayElementSerializer(content) },
+                { typeof(ArrayMemberSerializer), new ArrayMemberSerializer(content) },
+                { typeof(ArraySerializer), new ArraySerializer(content) },
                 { typeof(DataValueMemberSerializer), new DataValueMemberSerializer() },
                 { typeof(DataValueSerializer), new DataValueSerializer() },
-                { typeof(DecoratedDataSerializer), new DecoratedDataSerializer(document) },
-                { typeof(FormattedDataSerializer), new FormattedDataSerializer(document) },
-                { typeof(StructureMemberSerializer), new StructureMemberSerializer(document) },
-                { typeof(StructureSerializer), new StructureSerializer(document) }
+                { typeof(DecoratedDataSerializer), new DecoratedDataSerializer(content) },
+                { typeof(FormattedDataSerializer), new FormattedDataSerializer(content) },
+                { typeof(StructureMemberSerializer), new StructureMemberSerializer(content) },
+                { typeof(StructureSerializer), new StructureSerializer(content) }
             };
         }
 

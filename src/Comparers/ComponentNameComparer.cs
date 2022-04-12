@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace L5Sharp.Comparers
 {
@@ -22,8 +23,7 @@ namespace L5Sharp.Comparers
         {
             if (ReferenceEquals(x, y)) return true;
             if (ReferenceEquals(x, null)) return false;
-            if (ReferenceEquals(y, null)) return false;
-            return x.Name == y.Name;
+            return !ReferenceEquals(y, null) && string.Equals(x.Name, y.Name, StringComparison.OrdinalIgnoreCase);
         }
 
         /// <inheritdoc />

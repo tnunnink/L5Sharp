@@ -7,7 +7,7 @@ namespace L5Sharp.Serialization
 {
     internal class AlarmDataSerializer : L5XSerializer<IDataType>
     {
-        private readonly L5XDocument? _document;
+        private readonly L5XContent? _document;
 
         private AlarmDigitalParametersSerializer AlarmDigitalParametersSerializer => _document is not null
             ? _document.Serializers.Get<AlarmDigitalParametersSerializer>()
@@ -17,7 +17,7 @@ namespace L5Sharp.Serialization
             ? _document.Serializers.Get<AlarmAnalogParametersSerializer>()
             : new AlarmAnalogParametersSerializer();
         
-        public AlarmDataSerializer(L5XDocument? document = null)
+        public AlarmDataSerializer(L5XContent? document = null)
         {
             _document = document;
         }

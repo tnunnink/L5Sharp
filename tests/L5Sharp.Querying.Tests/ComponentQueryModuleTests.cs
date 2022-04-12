@@ -21,7 +21,7 @@ namespace L5Sharp.Querying.Tests
         {
             var context = L5XContext.Load(Known.Test);
 
-            var results = context.Modules().Select().ToList();
+            var results = context.Modules().All().ToList();
 
             results.Should().NotBeNull();
             results.Should().NotBeEmpty();
@@ -35,35 +35,6 @@ namespace L5Sharp.Querying.Tests
             var result = context.Modules().Any();
 
             result.Should().BeTrue();
-        }
-
-        [Test]
-        public void Any_NullPredicate_ShouldThrowArgumentNullException()
-        {
-            var context = L5XContext.Load(Known.Test);
-
-            FluentActions.Invoking(() => context.Modules().Any(((Expression<Func<IModule, bool>>)null)!))
-                .Should().Throw<ArgumentNullException>();
-        }
-
-        [Test]
-        public void Any_UserClass_ShouldBeTrue()
-        {
-            var context = L5XContext.Load(Known.Test);
-
-            var results = context.Modules().Any(d => d.Name == ValidName);
-
-            results.Should().BeTrue();
-        }
-
-        [Test]
-        public void Any_AtomicClass_ShouldBeFalse()
-        {
-            var context = L5XContext.Load(Known.Test);
-
-            var results = context.Modules().Any(d => d.Name == FakeName);
-
-            results.Should().BeFalse();
         }
 
         [Test]
@@ -105,43 +76,6 @@ namespace L5Sharp.Querying.Tests
         }
 
         [Test]
-        public void First_NullPredicate_ShouldThrowArgumentNullException()
-        {
-            var context = L5XContext.Load(Known.Test);
-
-            FluentActions.Invoking(() => context.Modules().First(null!))
-                .Should().Throw<ArgumentNullException>();
-        }
-
-        [Test]
-        public void First_KnownExisting_ShouldNotBeNull()
-        {
-            var context = L5XContext.Load(Known.Test);
-
-            var result = context.Modules().First(d => d.Name == ValidName);
-
-            result.Should().NotBeNull();
-        }
-
-        [Test]
-        public void First_KnownNonExisting_ShouldThrowInvalidOperationException()
-        {
-            var context = L5XContext.Load(Known.Test);
-
-            FluentActions.Invoking(() => context.Modules().First(d => d.Name == FakeName))
-                .Should().Throw<InvalidOperationException>();
-        }
-
-        [Test]
-        public void FirstOrDefault_NullPredicate_ShouldThrowArgumentNullException()
-        {
-            var context = L5XContext.Load(Known.Test);
-
-            FluentActions.Invoking(() => context.Modules().FirstOrDefault(null!))
-                .Should().Throw<ArgumentNullException>();
-        }
-
-        [Test]
         public void FirstOrDefault_NonEmpty_ShouldNotBeNull()
         {
             var context = L5XContext.Load(Known.Test);
@@ -152,31 +86,11 @@ namespace L5Sharp.Querying.Tests
         }
 
         [Test]
-        public void FirstOrDefault_KnownExisting_ShouldNotBeNull()
-        {
-            var context = L5XContext.Load(Known.Test);
-
-            var result = context.Modules().FirstOrDefault(d => d.Name == ValidName);
-
-            result.Should().NotBeNull();
-        }
-
-        [Test]
-        public void FirstOrDefault_KnownNonExisting_ShouldBeNull()
-        {
-            var context = L5XContext.Load(Known.Test);
-
-            var result = context.Modules().FirstOrDefault(d => d.Name == FakeName);
-
-            result.Should().BeNull();
-        }
-
-        [Test]
         public void Named_NullName_ShouldThrowArgumentNullException()
         {
             var context = L5XContext.Load(Known.Test);
 
-            FluentActions.Invoking(() => context.Modules().Named(((ComponentName)null)!))
+            FluentActions.Invoking(() => context.Modules().Find(((ComponentName)null)!))
                 .Should().Throw<ArgumentNullException>();
         }
 
@@ -185,7 +99,7 @@ namespace L5Sharp.Querying.Tests
         {
             var context = L5XContext.Load(Known.Test);
 
-            var result = context.Modules().Named(ValidName);
+            var result = context.Modules().Find(ValidName);
 
             result.Should().NotBeNull();
         }
@@ -195,7 +109,7 @@ namespace L5Sharp.Querying.Tests
         {
             var context = L5XContext.Load(Known.Test);
 
-            var result = context.Modules().Named(FakeName);
+            var result = context.Modules().Find(FakeName);
 
             result.Should().BeNull();
         }
@@ -205,7 +119,7 @@ namespace L5Sharp.Querying.Tests
         {
             var context = L5XContext.Load(Known.Test);
 
-            var result = context.Modules().Named(ValidName);
+            var result = context.Modules().Find(ValidName);
 
             result?.Name.Should().Be(ValidName);
         }
@@ -215,7 +129,7 @@ namespace L5Sharp.Querying.Tests
         {
             var context = L5XContext.Load(Known.Test);
 
-            FluentActions.Invoking(() => context.Modules().Named(((List<ComponentName>)null)!))
+            FluentActions.Invoking(() => context.Modules().Find((ICollection<string>)((List<ComponentName>)null)!))
                 .Should().Throw<ArgumentNullException>();
         }
 
@@ -225,7 +139,7 @@ namespace L5Sharp.Querying.Tests
             var context = L5XContext.Load(Known.Test);
             var names = new List<ComponentName> { ValidName, FakeName };
 
-            var results = context.Modules().Named(names);
+            var results = context.Modules().Find((ICollection<string>)names);
 
             results.Should().HaveCount(1);
         }
@@ -258,34 +172,6 @@ namespace L5Sharp.Querying.Tests
             var results = context.Modules().Take(1);
 
             results.Should().HaveCount(1);
-        }
-
-        [Test]
-        public void Where_NullPredicate_ShouldThrowArgumentNullException()
-        {
-            var context = L5XContext.Load(Known.Test);
-
-            FluentActions.Invoking(() => context.Modules().Where(null!)).Should().Throw<ArgumentNullException>();
-        }
-
-        [Test]
-        public void Where_ExistingElementThatSatisfyPredicate_ShouldNotBeEmpty()
-        {
-            var context = L5XContext.Load(Known.Test);
-
-            var results = context.Modules().Where(d => d.Name.Contains(ValidName, StringComparison.OrdinalIgnoreCase));
-
-            results.Should().NotBeEmpty();
-        }
-
-        [Test]
-        public void Where_ExistingElementThatSatisfyPredicate_ShouldAllHaveExpectedFilterValue()
-        {
-            var context = L5XContext.Load(Known.Test);
-
-            var results = context.Modules().Where(d => d.Name.Contains(ValidName, StringComparison.OrdinalIgnoreCase));
-
-            results.All(s => s.Name.Contains(ValidName)).Should().BeTrue();
         }
     }
 }

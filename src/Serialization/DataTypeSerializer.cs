@@ -10,14 +10,14 @@ namespace L5Sharp.Serialization
 {
     internal class DataTypeSerializer : L5XSerializer<IComplexType>
     {
-        private readonly L5XDocument? _document;
+        private readonly L5XContent? _document;
         private static readonly XName ElementName = L5XElement.DataType.ToString();
 
         private MemberSerializer MemberSerializer => _document is not null
             ? _document.Serializers.Get<MemberSerializer>()
             : new MemberSerializer(_document);
         
-        public DataTypeSerializer(L5XDocument? document = null)
+        public DataTypeSerializer(L5XContent? document = null)
         {
             _document = document;
         }

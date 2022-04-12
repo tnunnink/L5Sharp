@@ -3,20 +3,11 @@
 namespace L5Sharp.Querying
 {
     /// <summary>
-    /// A fluent <see cref="IComponentQuery{TResult}"/> that adds advanced querying for <see cref="IModule"/> elements
-    /// within the L5X context. 
-    /// </summary>
-    public interface IModuleQuery : IComponentQuery<IModule>
+    /// A fluent <see cref="ILogixQuery{TResult}"/> that adds advanced querying for <see cref="IModule"/>
+    /// elements within the L5X context.  
+    /// </summary>  
+    public interface IModuleQuery : ILogixQuery<IModule>
     {
-        /// <summary>
-        /// Returns the root <see cref="IModule"/> with all descendant module children, forming the entire module
-        /// tree hierarchy.
-        /// </summary>
-        /// <returns>
-        /// The 'Local' or root <see cref="IModule"/> of the module tree hierarchy, including all descendant modules.
-        /// </returns>
-        IModule? Local();
-
         /// <summary>
         /// Filters the collection to include only <see cref="IModule"/> objects with the specified parent name.
         /// </summary>

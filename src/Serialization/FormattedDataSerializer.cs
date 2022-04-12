@@ -9,7 +9,7 @@ namespace L5Sharp.Serialization
 {
     internal class FormattedDataSerializer : L5XSerializer<IDataType>
     {
-        private readonly L5XDocument? _document;
+        private readonly L5XContent? _document;
         private readonly L5XElement _element;
 
         private DecoratedDataSerializer DecoratedDataSerializer => _document is not null
@@ -20,7 +20,7 @@ namespace L5Sharp.Serialization
             ? _document.Serializers.Get<AlarmDataSerializer>()
             : new AlarmDataSerializer(_document);
 
-        public FormattedDataSerializer(L5XDocument? document = null, L5XElement? element = null)
+        public FormattedDataSerializer(L5XContent? document = null, L5XElement? element = null)
         {
             _element = element ?? L5XElement.Data;
             _document = document;

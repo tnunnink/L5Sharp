@@ -9,7 +9,7 @@ namespace L5Sharp.Serialization
 {
     internal class ConfigTagSerializer : L5XSerializer<ITag<IDataType>>
     {
-        private readonly L5XDocument? _document;
+        private readonly L5XContent? _document;
         private const string DefaultSuffix = "C";
         private static readonly XName ElementName = L5XElement.ConfigTag.ToString();
         
@@ -17,7 +17,7 @@ namespace L5Sharp.Serialization
             ? _document.Serializers.Get<FormattedDataSerializer>()
             : new FormattedDataSerializer(_document);
 
-        public ConfigTagSerializer(L5XDocument? document = null)
+        public ConfigTagSerializer(L5XContent? document = null)
         {
             _document = document;
         }

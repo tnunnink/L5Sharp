@@ -4,10 +4,9 @@ using L5Sharp.Serialization;
 
 namespace L5Sharp.Querying
 {
-    internal class InstructionQuery : ComponentQuery<IAddOnInstruction>, IInstructionQuery
+    internal class InstructionQuery : LogixQuery<IAddOnInstruction>, IInstructionQuery
     {
-        public InstructionQuery(IEnumerable<XElement> elements, IL5XSerializer<IAddOnInstruction> serializer) 
-            : base(elements, serializer)
+        public InstructionQuery(IEnumerable<XElement> source) : base(source)
         {
         }
     }

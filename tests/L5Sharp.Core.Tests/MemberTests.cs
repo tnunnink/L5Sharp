@@ -135,59 +135,35 @@ namespace L5Sharp.Core.Tests
         }
 
         [Test]
-        public void IsValueMember_IsAtomicMember_ShouldBeTrue()
+        public void MemberType_IsAtomicMember_ShouldBeValueMember()
         {
             var member = Member.Create<BOOL>("Test");
 
-            member.IsValueMember.Should().BeTrue();
+            member.MemberType.Should().Be(MemberType.ValueMember);
         }
 
         [Test]
-        public void IsValueMember_IsComplexMember_ShouldBeFalse()
-        {
-            var member = Member.Create<STRING>("Test");
-
-            member.IsValueMember.Should().BeFalse();
-        }
-
-        [Test]
-        public void IsStructureMember_IsAtomicMember_ShouldBeFalse()
+        public void MemberType_IsComplexMember_ShouldBeStructureMember()
         {
             var member = Member.Create<BOOL>("Test");
 
-            member.IsStructureMember.Should().BeFalse();
+            member.MemberType.Should().Be(MemberType.StructureMember);
         }
 
         [Test]
-        public void IsStructureMember_IsComplexMember_ShouldBeTrue()
-        {
-            var member = Member.Create<STRING>("Test");
-
-            member.IsStructureMember.Should().BeTrue();
-        }
-
-        [Test]
-        public void IsArrayMember_DimensionsEmpty_ShouldBeFalse()
-        {
-            var member = Member.Create<BOOL>("Test");
-
-            member.IsArrayMember.Should().BeFalse();
-        }
-
-        [Test]
-        public void IsArrayMember_DimensionsNotEmpty_ShouldBeTrue()
+        public void MemberType_AtomicArray_ShouldBeArrayMember()
         {
             var member = Member.Create<BOOL>("Test", new Dimensions(5));
 
-            member.IsArrayMember.Should().BeTrue();
+            member.MemberType.Should().Be(MemberType.ArrayMember);
         }
 
         [Test]
-        public void IsArrayMember_ComplexTypeArray_ShouldBeTrue()
+        public void MemberType_ComplexArray_ShouldBeArrayMember()
         {
             var member = Member.Create<TIMER>("Test", new Dimensions(5));
 
-            member.IsArrayMember.Should().BeTrue();
+            member.MemberType.Should().Be(MemberType.ArrayMember);
         }
     }
 }

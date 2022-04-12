@@ -1,15 +1,11 @@
-﻿using System.Linq;
-using FluentAssertions;
-using L5Sharp.L5X;
-using L5SharpTests;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 
 namespace L5Sharp.Querying.Tests
 {
     [TestFixture]
-    public class SpecificTagQueryTests
+    public class TagQueryTests
     {
-        [Test]
+        /*[Test]
         public void Where_DimensionsIsEmpty_ShouldNotBeNull()
         {
             var context = L5XContext.Load(Known.Test);
@@ -28,6 +24,6 @@ namespace L5Sharp.Querying.Tests
 
             components.Should().NotBeEmpty();
             components.All(c => c.Name.Contains("Simple")).Should().BeTrue();
-        }
+        }*/
     }
 }

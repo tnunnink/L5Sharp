@@ -10,14 +10,14 @@ namespace L5Sharp.Serialization
 {
     internal class RoutineSerializer : L5XSerializer<IRoutine<ILogixContent>>
     {
-        private readonly L5XDocument? _document;
+        private readonly L5XContent? _document;
         private static readonly XName ElementName = L5XElement.Routine.ToString();
 
         private LadderLogicSerializer LadderLogicSerializer => _document is not null
             ? _document.Serializers.Get<LadderLogicSerializer>()
             : new LadderLogicSerializer(_document);
 
-        public RoutineSerializer(L5XDocument? document = null)
+        public RoutineSerializer(L5XContent? document = null)
         {
             _document = document;
         }

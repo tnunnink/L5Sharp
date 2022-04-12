@@ -10,7 +10,7 @@ namespace L5Sharp.Serialization
 {
     internal class AddOnInstructionSerializer : L5XSerializer<IAddOnInstruction>
     {
-        private readonly L5XDocument? _document;
+        private readonly L5XContent? _document;
         private const string DateTimeFormat = "yyyy-MM-dd'T'HH:mm:ss.fff'Z'";
         private static readonly XName ElementName = L5XElement.AddOnInstructionDefinition.ToString();
 
@@ -26,7 +26,7 @@ namespace L5Sharp.Serialization
             ? _document.Serializers.Get<RoutineSerializer>()
             : new RoutineSerializer(_document);
 
-        public AddOnInstructionSerializer(L5XDocument? document = null)
+        public AddOnInstructionSerializer(L5XContent? document = null)
         {
             _document = document;
         }

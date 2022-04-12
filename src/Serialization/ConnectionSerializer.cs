@@ -10,7 +10,7 @@ namespace L5Sharp.Serialization
 {
     internal class ConnectionSerializer : L5XSerializer<Connection>
     {
-        private readonly L5XDocument? _document;
+        private readonly L5XContent? _document;
         private static readonly XName ElementName = L5XElement.Connection.ToString();
 
         private InputTagSerializer InputTagSerializer => _document is not null
@@ -21,7 +21,7 @@ namespace L5Sharp.Serialization
             ? _document.Serializers.Get<OutputTagSerializer>()
             : new OutputTagSerializer(_document);
 
-        public ConnectionSerializer(L5XDocument? document = null)
+        public ConnectionSerializer(L5XContent? document = null)
         {
             _document = document;
         }

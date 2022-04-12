@@ -22,7 +22,7 @@ namespace L5Sharp
         /// When setting a <see cref="Rung"/> to the current number, a new object will be created to assign the correct
         /// Rung number property.
         /// </remarks>
-        Rung this[int number] { get; set; }
+        Rung this[int number] { get; }
 
         /// <summary>
         /// Adds the provided <see cref="Rung"/> to the current <see cref="ILadderLogic"/>.

@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Xml.Linq;
 using L5Sharp.Core;
+using L5Sharp.Enums;
 using L5Sharp.Extensions;
 using L5Sharp.L5X;
 
@@ -9,7 +10,7 @@ namespace L5Sharp.Serialization
 {
     internal class StructureSerializer : L5XSerializer<IComplexType>
     {
-        private readonly L5XDocument? _document;
+        private readonly L5XContent? _document;
         private static readonly XName ElementName = L5XElement.Structure.ToString();
         private readonly StringStructureSerializer _stringStructureSerializer;
 
@@ -25,7 +26,7 @@ namespace L5Sharp.Serialization
             ? _document.Serializers.Get<StructureMemberSerializer>()
             : new StructureMemberSerializer(_document);
 
-        public StructureSerializer(L5XDocument? document = null)
+        public StructureSerializer(L5XContent? document = null)
         {
             _document = document;
             _stringStructureSerializer = new StringStructureSerializer(ElementName);
@@ -45,9 +46,10 @@ namespace L5Sharp.Serialization
             var element = new XElement(ElementName);
             element.Add(new XAttribute(L5XElement.DataType.ToString(), component.Name));
 
-            var members = component.Members.Select(m => m.IsValueMember ? DataValueMemberSerializer.Serialize(m)
-                : m.IsArrayMember ? ArrayMemberSerializer.Serialize(m)
-                : m.IsStructureMember ? StructureMemberSerializer.Serialize(m)
+            var members = component.Members.Select(m =>
+                m.MemberType == MemberType.ValueMember ? DataValueMemberSerializer.Serialize(m)
+                : m.MemberType == MemberType.ArrayMember ? ArrayMemberSerializer.Serialize(m)
+                : m.MemberType == MemberType.StructureMember ? StructureMemberSerializer.Serialize(m)
                 : throw new InvalidOperationException("Could not determine member type."));
 
             element.Add(members);
@@ -62,7 +64,7 @@ namespace L5Sharp.Serialization
 
             if (element.Name != ElementName)
                 throw new ArgumentException($"Element '{element.Name}' not valid for the serializer {GetType()}.");
-            
+
             var name = element.DataTypeName();
 
             //The only way to know if this is a string type that needs special treatment is if there is a member with

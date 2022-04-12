@@ -10,7 +10,7 @@ namespace L5Sharp.Serialization
 {
     internal class ModuleSerializer : L5XSerializer<IModule>
     {
-        private readonly L5XDocument? _document;
+        private readonly L5XContent? _document;
         private static readonly XName ElementName = L5XElement.Module.ToString();
 
         private PortSerializer PortSerializer => _document is not null
@@ -25,7 +25,7 @@ namespace L5Sharp.Serialization
             ? _document.Serializers.Get<ConfigTagSerializer>()
             : new ConfigTagSerializer(_document);
 
-        public ModuleSerializer(L5XDocument? document = null)
+        public ModuleSerializer(L5XContent? document = null)
         {
             _document = document;
         }

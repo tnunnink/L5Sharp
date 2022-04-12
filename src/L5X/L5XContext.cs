@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Linq;
+using System.Collections.Generic;
 using System.Xml.Linq;
 using L5Sharp.Core;
-using L5Sharp.Extensions;
 using L5Sharp.Querying;
-using L5Sharp.Repositories;
 using L5Sharp.Serialization;
 
 namespace L5Sharp.L5X
@@ -12,13 +10,13 @@ namespace L5Sharp.L5X
     /// <inheritdoc />
     public class L5XContext : ILogixContext
     {
-        private readonly L5XDocument _l5X;
+        private readonly L5XContent _l5X;
 
         /// <summary>
-        /// Creates a new <see cref="L5XContext"/> instance with the provided <see cref="L5XDocument"/>.
+        /// Creates a new <see cref="L5XContext"/> instance with the provided <see cref="L5XContent"/>.
         /// </summary>
-        /// <param name="l5X">The <see cref="L5XDocument"/> instance that represents the loaded L5X.</param>
-        private L5XContext(L5XDocument l5X)
+        /// <param name="l5X">The <see cref="L5XContent"/> instance that represents the loaded L5X.</param>
+        private L5XContext(L5XContent l5X)
         {
             _l5X = l5X ?? throw new ArgumentNullException(nameof(l5X));
         }
@@ -39,7 +37,7 @@ namespace L5Sharp.L5X
             if (string.IsNullOrEmpty(fileName))
                 throw new ArgumentException("Filename can not be null or empty");
 
-            var document = new L5XDocument(XDocument.Load(fileName));
+            var document = new L5XContent(XElement.Load(fileName));
 
             return new L5XContext(document);
         }
@@ -58,11 +56,11 @@ namespace L5Sharp.L5X
         public static L5XContext Parse(string content)
         {
             if (string.IsNullOrEmpty(content))
-                throw new ArgumentException("Filename can not be null or empty");
+                throw new ArgumentException("Content can not be null or empty");
 
-            var document = new L5XDocument(XDocument.Parse(content));
+            var l5X = new L5XContent(XElement.Parse(content));
 
-            return new L5XContext(document);
+            return new L5XContext(l5X);
         }
 
         /// <summary>
@@ -71,71 +69,126 @@ namespace L5Sharp.L5X
         /// <returns>
         /// A new <see cref="L5XContext"/> instance for the provided logix component as the target of the new context.
         /// </returns>
-        public static L5XContext Create(IController controller) => new(L5XDocument.Create(controller));
+        public static L5XContext Create(IController controller) => new(L5XContent.Create(controller));
 
-        /// <inheritdoc />
-        public bool IsChanged => _l5X.IsChanged;
-        
         /// <inheritdoc />
         public IController? Controller() => _l5X.Controller is not null
             ? _l5X.Serializers.Get<ControllerSerializer>().Deserialize(_l5X.Controller)
             : null;
 
         /// <inheritdoc />
-        public IDataTypeRepository DataTypes() => new DataTypeRepository(_l5X);
-
-        /// <inheritdoc />
-        public IModuleRepository Modules() => new ModuleRepository(_l5X);
-
-        /// <inheritdoc />
-        public IInstructionRepository Instructions() => new InstructionRepository(_l5X);
-
-        /// <inheritdoc />
-        public ITagRepository Tags() => new TagRepository(_l5X);
-
-        /// <inheritdoc />
-        public ITagRepository Tags(ComponentName program)
+        public IComponentQuery<IComplexType> DataTypes()
         {
-            if (program is null)
-                throw new ArgumentNullException(nameof(program));
-
-            //todo what should we do here?
-            return new TagRepository(_l5X);
+            var components = _l5X.DataTypes;
+            var serializer = _l5X.Serializers.ForComponent<IComplexType>();
+            return new ComponentQuery<IComplexType>(components, serializer);
         }
 
         /// <inheritdoc />
-        public IProgramRepository Programs() => new ProgramRepository(_l5X);
-
-        /// <inheritdoc />
-        public ITaskQuery Tasks() =>
-            new TaskQuery(_l5X.Components.Get<ITask>(), _l5X.Serializers.Get<TaskSerializer>());
-
-        /// <inheritdoc />
-        public IRungQuery Rungs()
+        public IEnumerable<IComplexType> DataTypes(Func<IDataTypeQuery, IDataTypeQuery> query)
         {
-            var elements = _l5X.Content.Descendants(L5XElement.Rung.ToString());
-            return new RungQuery(elements);
+            var source = new DataTypeQuery(_l5X.DataTypes);
+            var result = query.Invoke(source);
+            return result.Execute(_l5X.Serializers.Get<DataTypeSerializer>());
         }
 
         /// <inheritdoc />
-        public IRungQuery Rungs(ComponentName program)
+        public IComponentQuery<IModule> Modules()
         {
-            var elements = _l5X.Content
-                .Descendants(L5XElement.Program.ToString())
-                .FirstOrDefault(e => e.ComponentName() == program)
-                ?.Descendants(L5XElement.Rung.ToString()) ?? Enumerable.Empty<XElement>();
-
-            return new RungQuery(elements);
+            var components = _l5X.Modules;
+            var serializer = _l5X.Serializers.ForComponent<IModule>();
+            return new ComponentQuery<IModule>(components, serializer);
         }
-        
-        /// <inheritdoc />
-        public void Save(string fileName) => _l5X.Save(fileName);
+
 
         /// <inheritdoc />
-        public void AcceptChanges() => _l5X.AcceptChanges();
+        public IEnumerable<IModule> Modules(Func<IModuleQuery, IModuleQuery> query)
+        {
+            var source = new ModuleQuery(_l5X.Modules);
+            var result = query.Invoke(source);
+            return result.Execute(_l5X.Serializers.Get<ModuleSerializer>());
+        }
 
         /// <inheritdoc />
-        public void RejectChanges() => _l5X.RejectChanges();
+        public IComponentQuery<IAddOnInstruction> Instructions()
+        {
+            var components = _l5X.Instructions;
+            var serializer = _l5X.Serializers.ForComponent<IAddOnInstruction>();
+            return new ComponentQuery<IAddOnInstruction>(components, serializer);
+        }
+
+        /// <inheritdoc />
+        public IEnumerable<IAddOnInstruction> Instructions(Func<IInstructionQuery, IInstructionQuery> query)
+        {
+            var source =
+                new InstructionQuery(_l5X.Instructions);
+            var result = query.Invoke(source);
+            return result.Execute(_l5X.Serializers.Get<AddOnInstructionSerializer>());
+        }
+
+        /// <inheritdoc />
+        public IComponentQuery<ITag<IDataType>> Tags()
+        {
+            var components = _l5X.Tags;
+            var serializer = _l5X.Serializers.ForComponent<ITag<IDataType>>();
+            return new ComponentQuery<ITag<IDataType>>(components, serializer);
+        }
+
+        /// <inheritdoc />
+        public IEnumerable<ITag<IDataType>> Tags(Func<ITagQuery, ITagQuery> query)
+        {
+            var source = new TagQuery(_l5X.Tags);
+            var result = query.Invoke(source);
+            return result.Execute(_l5X.Serializers.Get<TagSerializer>());
+        }
+
+        /// <inheritdoc />
+        public IComponentQuery<IProgram> Programs()
+        {
+            var components = _l5X.Programs;
+            var serializer = _l5X.Serializers.ForComponent<IProgram>();
+            return new ComponentQuery<IProgram>(components, serializer);
+        }
+
+        /// <inheritdoc />
+        public IEnumerable<IProgram> Programs(Func<IProgramQuery, IProgramQuery> query)
+        {
+            var source = new ProgramQuery(_l5X.Programs);
+            var result = query.Invoke(source);
+            return result.Execute(_l5X.Serializers.Get<ProgramSerializer>());
+        }
+
+        /// <inheritdoc />
+        public IComponentQuery<ITask> Tasks()
+        {
+            var components = _l5X.Tasks;
+            var serializer = _l5X.Serializers.ForComponent<ITask>();
+            return new ComponentQuery<ITask>(components, serializer);
+        }
+
+        /// <inheritdoc />
+        public IEnumerable<ITask> Tasks(Func<ITaskQuery, ITaskQuery> query)
+        {
+            var source = new TaskQuery(_l5X.Tasks);
+            var result = query.Invoke(source);
+            return result.Execute(_l5X.Serializers.Get<TaskSerializer>());
+        }
+
+        /// <inheritdoc />
+        public IEnumerable<Rung> Rungs(Func<IRungQuery, IRungQuery> query)
+        {
+            var source = new RungQuery(_l5X.Rungs);
+            var result = query.Invoke(source);
+            return result.Execute(_l5X.Serializers.Get<RungSerializer>());
+        }
+
+        /// <inheritdoc />
+        public void Save(string fileName)
+        {
+            var declaration = new XDeclaration("1.0", "UTF-8", "yes");
+            var document = new XDocument(declaration, _l5X.Content);
+            document.Save(fileName);
+        }
 
         /// <inheritdoc />
         public override string ToString() => _l5X.Content.ToString();

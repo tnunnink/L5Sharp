@@ -1,5 +1,4 @@
-﻿
-using L5Sharp.L5X;
+﻿using L5Sharp.L5X;
 using NUnit.Framework;
 
 namespace L5Sharp.Context.Tests
@@ -11,9 +10,14 @@ namespace L5Sharp.Context.Tests
         public void ContextApiTesting()
         {
             var context = L5XContext.Load(Known.Template);
-
-            var modules = context.Modules().Select();
             
+
+            var target = context.Modules().Get("Local");
+
+            var modules = context.Modules(q => q.WithParent("SomeParent"));
+
+            var dataTypes = context.DataTypes(q => q.DependingOn("This  "));
+
             Assert.Pass();
         }
     }

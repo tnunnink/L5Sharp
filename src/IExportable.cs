@@ -3,7 +3,7 @@
     /// <summary>
     /// 
     /// </summary>
-    public interface IExportableComponent
+    public interface IExportable
     {
         /// <summary>
         /// Exports the current component into a new <see cref="ILogixContext"/> as the target component of the document. 

@@ -33,7 +33,6 @@ namespace L5Sharp
         /// <summary>
         /// A <see cref="string"/> that describes the Logix component.
         /// </summary>
-        [XmlElement]
         string Description { get; }
     }
 }

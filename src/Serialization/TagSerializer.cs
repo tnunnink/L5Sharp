@@ -10,14 +10,14 @@ namespace L5Sharp.Serialization
 {
     internal class TagSerializer : L5XSerializer<ITag<IDataType>>
     {
-        private readonly L5XDocument? _document;
+        private readonly L5XContent? _document;
         private static readonly XName ElementName = L5XElement.Tag.ToString();
 
         private FormattedDataSerializer FormattedDataSerializer => _document is not null
             ? _document.Serializers.Get<FormattedDataSerializer>()
             : new FormattedDataSerializer(_document);
 
-        public TagSerializer(L5XDocument? document = null)
+        public TagSerializer(L5XContent? document = null)
         {
             _document = document;
         }
@@ -36,7 +36,7 @@ namespace L5Sharp.Serialization
             element.Add(new XAttribute(L5XAttribute.DataType.ToString(), component.DataType.Name));
             if (!component.Dimensions.IsEmpty)
                 element.Add(new XAttribute(L5XAttribute.Dimensions.ToString(), component.Dimensions));
-            if (component.IsValueMember)
+            if (component.MemberType == MemberType.ValueMember)
                 element.Add(new XAttribute(L5XAttribute.Radix.ToString(), component.Radix));
             element.Add(new XAttribute(L5XAttribute.Constant.ToString(), component.Constant));
             element.Add(new XAttribute(L5XAttribute.ExternalAccess.ToString(), component.ExternalAccess));

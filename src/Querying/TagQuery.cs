@@ -3,23 +3,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using L5Sharp.L5X;
-using L5Sharp.Serialization;
 
 namespace L5Sharp.Querying
 {
-    internal class TagQuery : ComponentQuery<ITag<IDataType>>, ITagQuery
+    public class TagQuery : LogixQuery<ITag<IDataType>>, ITagQuery
     {
-        public TagQuery(IEnumerable<XElement> elements, IL5XSerializer<ITag<IDataType>> serializer) 
-            : base(elements, serializer)
+        public TagQuery(IEnumerable<XElement> source) : base(source)
         {
         }
 
+        /// <inheritdoc />
         public ITagQuery WithDataType(string typeName)
         {
-            var tags = Elements.Where(t => string.Equals(t.Attribute(L5XAttribute.DataType.ToString())?.Value,
+            var tags = this.Where(t => string.Equals(t.Attribute(L5XAttribute.DataType.ToString())?.Value,
                 typeName, StringComparison.OrdinalIgnoreCase));
 
-            return new TagQuery(tags, Serializer);
+            return new TagQuery(tags);
         }
     }
 }

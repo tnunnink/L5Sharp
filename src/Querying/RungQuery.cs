@@ -5,22 +5,26 @@ using System.Xml.Linq;
 using L5Sharp.Core;
 using L5Sharp.Extensions;
 using L5Sharp.L5X;
-using L5Sharp.Serialization;
 
 namespace L5Sharp.Querying
 {
-    internal class RungQuery : LogixQuery<Rung>, IRungQuery
+    /// <inheritdoc cref="L5Sharp.Querying.IRungQuery" />
+    public class RungQuery : LogixQuery<Rung>, IRungQuery
     {
-        public RungQuery(IEnumerable<XElement> elements)
-            : base(elements, new RungSerializer())
+        /// <summary>
+        /// Creates a new <see cref="RungQuery"/> with the provided source elements.
+        /// </summary>
+        /// <param name="source">The collection of source element to query.</param>
+        public RungQuery(IEnumerable<XElement> source) : base(source)
         {
         }
 
+        /// <inheritdoc />
         public IRungQuery Flatten()
         {
             var results = new List<XElement>();
 
-            foreach (var element in Elements)
+            foreach (var element in this)
             {
                 var text = element.Element(L5XElement.Text.ToString())?.Value.Parse<NeutralText>();
 
@@ -40,7 +44,7 @@ namespace L5Sharp.Querying
                         results.Add(element);
                         continue;
                     }
-                    
+
                     //Skip first as it is always the aoi tag, which does not have corresponding parameter
                     var arguments = instruction.Operands.Select(o => o.ToString()).Skip(1).ToList();
 
@@ -73,17 +77,19 @@ namespace L5Sharp.Querying
             return new RungQuery(results);
         }
 
+        /// <inheritdoc />
         public IRungQuery InProgram(string programName)
         {
-            var results = Elements.Where(e =>
+            var results = this.Where(e =>
                 e.Ancestors(L5XElement.Program.ToString()).FirstOrDefault()?.ComponentName() == programName);
 
             return new RungQuery(results);
         }
 
+        /// <inheritdoc />
         public IRungQuery InRange(int first, int last)
         {
-            var results = Elements.Where(e =>
+            var results = this.Where(e =>
             {
                 var number = int.Parse(e.Attribute(L5XAttribute.Number.ToString())?.Value!);
                 return number >= first && number <= last;
@@ -92,14 +98,16 @@ namespace L5Sharp.Querying
             return new RungQuery(results);
         }
 
+        /// <inheritdoc />
         public IRungQuery InRoutine(ComponentName routineName)
         {
-            var results = Elements.Where(e =>
+            var results = this.Where(e =>
                 e.Ancestors(L5XElement.Routine.ToString()).FirstOrDefault()?.ComponentName() == (string)routineName);
 
             return new RungQuery(results);
         }
 
+        /// <inheritdoc />
         public IRungQuery WithDataType(string typeName)
         {
             // we need to find data types of the current tags...
@@ -110,9 +118,10 @@ namespace L5Sharp.Querying
             throw new NotImplementedException();
         }
 
+        /// <inheritdoc />
         public IRungQuery WithInstruction(string name)
         {
-            var results = Elements.Where(e =>
+            var results = this.Where(e =>
             {
                 var text = e.Element(L5XElement.Text.ToString())?.Value;
                 return text is not null && string.Equals(text, name);
@@ -121,9 +130,10 @@ namespace L5Sharp.Querying
             return new RungQuery(results);
         }
 
+        /// <inheritdoc />
         public IRungQuery WithTag(TagName tagName)
         {
-            var results = Elements.Where(e =>
+            var results = this.Where(e =>
             {
                 var text = e.Attribute(L5XElement.Text.ToString())?.Value;
                 return text is not null && text.Contains(tagName);

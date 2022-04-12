@@ -52,7 +52,7 @@ namespace L5Sharp.Core
         /// <inheritdoc />
         public MemberType MemberType => _member.MemberType;
 
-        /// <inheritdoc />
+        /*/// <inheritdoc />
         public bool IsValueMember => _member.IsValueMember;
 
         /// <inheritdoc />
@@ -62,7 +62,7 @@ namespace L5Sharp.Core
         public bool IsStructureMember => _member.IsStructureMember;
 
         /// <inheritdoc />
-        public bool IsStringMember => _member.IsStringMember;
+        public bool IsStringMember => _member.IsStringMember;*/
 
         /// <inheritdoc />
         public object? Value => _member.DataType switch
@@ -224,7 +224,7 @@ namespace L5Sharp.Core
             if (Parent is null)
                 return DataType.Description;
 
-            return IsArrayMember
+            return MemberType == MemberType.ArrayMember
                 ? $"{Root.Description} {Parent.Description}".Trim()
                 : $"{Root.Description} {_member.Description}".Trim();
         }

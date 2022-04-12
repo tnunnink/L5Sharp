@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Xml.Linq;
 using L5Sharp.Core;
+using L5Sharp.Enums;
 using L5Sharp.Extensions;
 using L5Sharp.L5X;
 
@@ -9,7 +10,7 @@ namespace L5Sharp.Serialization
 {
     internal class StructureMemberSerializer : L5XSerializer<IMember<IDataType>>
     {
-        private readonly L5XDocument? _document;
+        private readonly L5XContent? _document;
         private static readonly XName ElementName = L5XElement.StructureMember.ToString();
         private readonly StringStructureSerializer _stringStructureSerializer;
 
@@ -22,7 +23,7 @@ namespace L5Sharp.Serialization
             : new ArrayMemberSerializer(_document);
 
 
-        public StructureMemberSerializer(L5XDocument? document = null)
+        public StructureMemberSerializer(L5XContent? document = null)
         {
             _document = document;
             _stringStructureSerializer = new StringStructureSerializer(ElementName);
@@ -43,8 +44,8 @@ namespace L5Sharp.Serialization
             element.Add(new XAttribute(L5XAttribute.DataType.ToString(), component.DataType));
 
             var members = component.DataType.GetMembers()
-                .Select(m => m.IsValueMember ? DataValueMemberSerializer.Serialize(m)
-                    : m.IsArrayMember ? ArrayMemberSerializer.Serialize(m)
+                .Select(m => m.MemberType == MemberType.ValueMember ? DataValueMemberSerializer.Serialize(m)
+                    : m.MemberType == MemberType.ArrayMember ? ArrayMemberSerializer.Serialize(m)
                     : Serialize(m));
 
             element.Add(members);

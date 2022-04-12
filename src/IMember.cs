@@ -62,37 +62,5 @@ namespace L5Sharp
         /// or string member.
         /// </summary>
         MemberType MemberType { get; }
-
-        /// <summary>
-        /// Indicates whether the current member instance is a value type member.
-        /// </summary>
-        /// <returns>
-        /// true if the member data type is an <see cref="IAtomicType"/>; otherwise, false.
-        /// </returns>
-        bool IsValueMember { get; }
-
-        /// <summary>
-        /// Indicates whether the current member instance is an array type member.
-        /// </summary>
-        /// <returns>
-        /// true if the member data type is an <see cref="IArrayType{TDataType}"/>; otherwise, false.
-        /// </returns>
-        bool IsArrayMember { get; }
-
-        /// <summary>
-        /// Indicates whether the current member instance is a structure or complex type member.
-        /// </summary>
-        /// <returns>
-        /// true if the member data type is an <see cref="IComplexType"/>; otherwise, false.
-        /// </returns>
-        bool IsStructureMember { get; }
-        
-        /// <summary>
-        /// Indicates whether the current member instance is a <see cref="IStringType"/>.
-        /// </summary>
-        /// <returns>
-        /// true if the member data type is an <see cref="IStringType"/>; otherwise, false.
-        /// </returns>
-        bool IsStringMember { get; }
     }
 }

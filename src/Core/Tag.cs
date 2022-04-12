@@ -102,7 +102,7 @@ namespace L5Sharp.Core
         /// <inheritdoc />
         public MemberType MemberType => _tagMember.MemberType;
 
-        /// <inheritdoc />
+        /*/// <inheritdoc />
         public bool IsValueMember => _tagMember.IsValueMember;
 
         /// <inheritdoc />
@@ -112,7 +112,7 @@ namespace L5Sharp.Core
         public bool IsStructureMember => _tagMember.IsStructureMember;
 
         /// <inheritdoc />
-        public bool IsStringMember => _tagMember.IsStringMember;
+        public bool IsStringMember => _tagMember.IsStringMember;*/
 
         /// <inheritdoc />
         public object? Value => _tagMember.Value;

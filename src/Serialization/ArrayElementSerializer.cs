@@ -8,14 +8,14 @@ namespace L5Sharp.Serialization
 {
     internal class ArrayElementSerializer : L5XSerializer<IMember<IDataType>>
     {
-        private readonly L5XDocument? _document;
+        private readonly L5XContent? _document;
         private static readonly XName ElementName = L5XElement.Element.ToString();
 
         private StructureSerializer StructureSerializer => _document is not null
             ? _document.Serializers.Get<StructureSerializer>()
             : new StructureSerializer(_document);
 
-        public ArrayElementSerializer(L5XDocument? document = null)
+        public ArrayElementSerializer(L5XContent? document = null)
         {
             _document = document;
         }

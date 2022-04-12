@@ -11,7 +11,7 @@ namespace L5Sharp.L5X
 {
     internal class L5XIndex
     {
-        private readonly L5XDocument _document;
+        private readonly L5XContent _content;
         private readonly Dictionary<Type, Dictionary<string, XElement>> _index;
         
         private readonly Dictionary<string, XElement> _dataTypeIndex;
@@ -20,9 +20,9 @@ namespace L5Sharp.L5X
         private readonly Dictionary<string, XElement> _instructionIndex;
         private readonly Dictionary<string, XElement> _tagIndex;
 
-        public L5XIndex(L5XDocument document)
+        public L5XIndex(L5XContent content)
         {
-            _document = document ?? throw new ArgumentNullException(nameof(document));
+            _content = content ?? throw new ArgumentNullException(nameof(content));
             _index = new Dictionary<Type, Dictionary<string, XElement>>();
             
             _dataTypeIndex = new Dictionary<string, XElement>();
@@ -48,13 +48,13 @@ namespace L5Sharp.L5X
                 return DataType.Create(name);
 
             if (_dataTypeIndex.TryGetValue(name, out var userDefined))
-                return _document.Serializers.Get<DataTypeSerializer>().Deserialize(userDefined);
+                return _content.Serializers.Get<DataTypeSerializer>().Deserialize(userDefined);
 
             if (_moduleTypeIndex.TryGetValue(name, out var moduleDefined))
-                return _document.Serializers.Get<StructureSerializer>().Deserialize(moduleDefined);
+                return _content.Serializers.Get<StructureSerializer>().Deserialize(moduleDefined);
             
             if (_instructionIndex.TryGetValue(name, out var addOnDefined))
-                return _document.Serializers.Get<AddOnInstructionSerializer>().Deserialize(addOnDefined);
+                return _content.Serializers.Get<AddOnInstructionSerializer>().Deserialize(addOnDefined);
 
             return new UNDEFINED(name);
         }
@@ -87,7 +87,7 @@ namespace L5Sharp.L5X
         {
            _dataTypeIndex.Clear();
 
-            var elements = _document.Content
+            var elements = _content.Content
                 .Descendants(L5XElement.DataType.ToString())
                 .Where(e => e.Attribute(L5XAttribute.Name.ToString()) is not null);
 
@@ -99,7 +99,7 @@ namespace L5Sharp.L5X
         {
             _moduleTypeIndex.Clear();
             
-            var elements = _document.Content
+            var elements = _content.Content
                 .Descendants(L5XElement.Module.ToString())
                 .Descendants(L5XElement.Structure.ToString())
                 .Where(e => e.Attribute(L5XAttribute.DataType.ToString()) is not null);
@@ -112,7 +112,7 @@ namespace L5Sharp.L5X
         {
             _moduleIndex.Clear();
 
-            var elements = _document.Content
+            var elements = _content.Content
                 .Descendants(L5XElement.Module.ToString())
                 .Where(e => e.Attribute(L5XAttribute.Name.ToString()) is not null);
 
@@ -124,7 +124,7 @@ namespace L5Sharp.L5X
         {
             _instructionIndex.Clear();
 
-            var elements = _document.Content
+            var elements = _content.Content
                 .Descendants(L5XElement.AddOnInstructionDefinition.ToString())
                 .Where(e => e.Attribute(L5XAttribute.Name.ToString()) is not null);
 
@@ -136,7 +136,7 @@ namespace L5Sharp.L5X
         {
             _tagIndex.Clear();
 
-            var elements = _document.Content
+            var elements = _content.Content
                 .Descendants(L5XElement.Tag.ToString())
                 .Where(e => e.Attribute(L5XAttribute.Name.ToString()) is not null);
 

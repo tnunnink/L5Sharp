@@ -10,9 +10,9 @@ namespace L5Sharp.Serialization
     internal class MemberSerializer : L5XSerializer<IMember<IDataType>>
     {
         private static readonly XName ElementName = L5XElement.Member.ToString();
-        private readonly L5XDocument? _document;
+        private readonly L5XContent? _document;
         
-        public MemberSerializer(L5XDocument? document = null)
+        public MemberSerializer(L5XContent? document = null)
         {
             _document = document;
         }

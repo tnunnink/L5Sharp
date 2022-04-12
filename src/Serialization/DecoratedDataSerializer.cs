@@ -6,7 +6,7 @@ namespace L5Sharp.Serialization
 {
     internal class DecoratedDataSerializer : L5XSerializer<IDataType>
     {
-        private readonly L5XDocument? _document;
+        private readonly L5XContent? _document;
 
         private DataValueSerializer DataValueSerializer => _document is not null
             ? _document.Serializers.Get<DataValueSerializer>()
@@ -20,7 +20,7 @@ namespace L5Sharp.Serialization
             ? _document.Serializers.Get<StructureSerializer>()
             : new StructureSerializer(_document);
 
-        public DecoratedDataSerializer(L5XDocument? document = null)
+        public DecoratedDataSerializer(L5XContent? document = null)
         {
             _document = document;
         }

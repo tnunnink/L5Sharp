@@ -27,9 +27,7 @@ namespace L5Sharp.Core.Tests
             tag.TagType.Should().Be(TagType.Base);
             tag.Usage.Should().Be(TagUsage.Null);
             tag.Constant.Should().BeFalse();
-            tag.IsValueMember.Should().BeFalse();
-            tag.IsStructureMember.Should().BeTrue();
-            tag.IsArrayMember.Should().BeFalse();
+            tag.MemberType.Should().Be(MemberType.StructureMember);
             tag.Parent.Should().BeNull();
             tag.Root.Should().BeSameAs(tag);
         }
@@ -186,17 +184,17 @@ namespace L5Sharp.Core.Tests
         {
             var tag = Tag.Create<MyNestedType>("Test");
 
-            var members = tag.Members(m => m.IsValueMember);
+            var members = tag.Members(m => m.MemberType == MemberType.ValueMember);
 
             members.Should().HaveCount(95);
         }
         
         [Test]
-        public void Members_IsValueMemberOfLargerArray_shouldNotBeEmpty()
+        public void Members_IsValueMemberOfLargerArray_ShouldNotBeEmpty()
         {
             var tag = Tag.Create<MyNestedType>("Test", new Dimensions(100));
 
-            var members = tag.Members(m => m.IsValueMember);
+            var members = tag.Members(m => m.MemberType == MemberType.ValueMember);
 
             members.Should().HaveCount(9500);
         }

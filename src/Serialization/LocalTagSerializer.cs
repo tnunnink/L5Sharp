@@ -10,11 +10,11 @@ namespace L5Sharp.Serialization
 {
     internal class LocalTagSerializer : L5XSerializer<ITag<IDataType>>
     {
-        private readonly L5XDocument? _document;
+        private readonly L5XContent? _document;
         private static readonly XName ElementName = L5XElement.LocalTag.ToString();
         private readonly FormattedDataSerializer _formattedDataSerializer;
 
-        public LocalTagSerializer(L5XDocument? document = null)
+        public LocalTagSerializer(L5XContent? document = null)
         {
             _document = document;
             _formattedDataSerializer = new FormattedDataSerializer(_document, L5XElement.DefaultData);

@@ -10,7 +10,7 @@ namespace L5Sharp.Serialization
 {
     internal class ProgramSerializer : L5XSerializer<IProgram>
     {
-        private readonly L5XDocument? _document;
+        private readonly L5XContent? _document;
         private static readonly XName ElementName = L5XElement.Program.ToString();
         
         private TagSerializer TagSerializer => _document is not null
@@ -22,7 +22,7 @@ namespace L5Sharp.Serialization
             : new RoutineSerializer(_document);
         
 
-        public ProgramSerializer(L5XDocument? document = null)
+        public ProgramSerializer(L5XContent? document = null)
         {
             _document = document;
         }

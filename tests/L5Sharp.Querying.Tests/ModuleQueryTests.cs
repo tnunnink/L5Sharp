@@ -1,27 +1,11 @@
-﻿using System;
-using System.Linq;
-using FluentAssertions;
-using L5Sharp.Core;
-using L5Sharp.L5X;
-using L5SharpTests;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 
 namespace L5Sharp.Querying.Tests
 {
     [TestFixture]
     public class SpecificModuleQueryTests
     {
-        [Test]
-        public void Local_WhenCalled_ShouldNotBeNull()
-        {
-            var context = L5XContext.Load(Known.Test);
-
-            var component = context.Modules().Local();
-
-            component.Should().NotBeNull();
-        }
-
-        [Test]
+        /*[Test]
         public void WithParent_Null_ShouldThrowArgumentNullException()
         {
             var context = L5XContext.Load(Known.Test);
@@ -56,7 +40,7 @@ namespace L5Sharp.Querying.Tests
         {
             var context = L5XContext.Load(Known.Test);
 
-            var component = context.Modules().Named("Local");
+            var component = context.Modules().Find("Local");
 
             component?.Name.Should().Be("Local");
             component?.CatalogNumber.Should().Be(new CatalogNumber("1756-L83E"));
@@ -89,6 +73,6 @@ namespace L5Sharp.Querying.Tests
             var components = context.Modules().Where(t => t.Vendor == 1).ToList();
 
             components.All(c => c.Vendor == Vendor.Rockwell).Should().BeTrue();
-        }
+        }*/
     }
 }

@@ -1,10 +1,10 @@
 ﻿namespace L5Sharp.Querying
 {
     /// <summary>
-    /// A fluent <see cref="IComponentQuery{TResult}"/> that adds advanced querying for <see cref="ITag{TDataType}"/>
+    /// A fluent <see cref="ILogixQuery{TResult}"/> that adds advanced querying for <see cref="ITag{TDataType}"/>
     /// elements within the L5X context.  
     /// </summary>
-    public interface ITagQuery : IComponentQuery<ITag<IDataType>>
+    public interface ITagQuery : ILogixQuery<ITag<IDataType>>
     {
         /// <summary>
         /// Filters the collection to include only tags with the specified data type name. 

@@ -15,7 +15,7 @@ namespace L5Sharp.Context.Tests
         {
             var context = L5XContext.Load(Known.L5X);
             
-            var allTagComments = context.Tags().Select().SelectMany(t => t.Comments.Select(c => c.Value)).ToList();
+            var allTagComments = context.Tags().All().SelectMany(t => t.Comments.Select(c => c.Value)).ToList();
 
             var words = allTagComments.SelectMany(GetWords).GroupBy(v => v);
 

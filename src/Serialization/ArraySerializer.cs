@@ -9,14 +9,14 @@ namespace L5Sharp.Serialization
 {
     internal class ArraySerializer : L5XSerializer<IArrayType<IDataType>>
     {
-        private readonly L5XDocument? _document;
+        private readonly L5XContent? _document;
         private static readonly XName ElementName = L5XElement.Array.ToString();
 
         private ArrayElementSerializer ArrayElementSerializer => _document is not null
             ? _document.Serializers.Get<ArrayElementSerializer>()
             : new ArrayElementSerializer(_document);
 
-        public ArraySerializer(L5XDocument? document = null)
+        public ArraySerializer(L5XContent? document = null)
         {
             _document = document;
         }

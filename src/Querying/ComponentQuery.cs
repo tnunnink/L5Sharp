@@ -3,57 +3,74 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using L5Sharp.Core;
+using L5Sharp.Exceptions;
 using L5Sharp.Extensions;
 using L5Sharp.Serialization;
 
 namespace L5Sharp.Querying
 {
-    /// <inheritdoc cref="L5Sharp.Querying.IComponentQuery{TComponent}" />
-    public class ComponentQuery<TComponent> : LogixQuery<TComponent>, IComponentQuery<TComponent>
+    /// <inheritdoc />
+    internal sealed class ComponentQuery<TComponent> : IComponentQuery<TComponent>
         where TComponent : ILogixComponent
     {
-        /// <summary>
-        /// Creates a new <see cref="ComponentQuery{TComponent}"/> instance with the provided elements and serializer.
-        /// </summary>
-        /// <param name="elements">The source collection of elements for which to execute queries over.</param>
-        /// <param name="serializer">The serializer instance that can deserialize elements to the specified result type.</param>
-        protected ComponentQuery(IEnumerable<XElement> elements, IL5XSerializer<TComponent> serializer)
-            : base(elements, serializer)
+        private readonly IEnumerable<XElement> _components;
+        private readonly IL5XSerializer<TComponent> _serializer;
+        private readonly StringComparer _comparer;
+        
+        public ComponentQuery(IEnumerable<XElement> components, IL5XSerializer<TComponent> serializer)
         {
+            _components = components ?? throw new ArgumentNullException(nameof(components));
+            _serializer = serializer ?? throw new ArgumentNullException(nameof(serializer));
+            _comparer = StringComparer.OrdinalIgnoreCase;
         }
 
         /// <inheritdoc />
-        public bool Any(ComponentName name)
-        {
-            if (name is null)
-                throw new ArgumentNullException(nameof(name));
+        public IEnumerable<TComponent> All() => _components.Select(e => _serializer.Deserialize(e));
 
-            return Elements.Any(c => c.ComponentName() == name);
+        /// <inheritdoc />
+        public bool Any() => _components.Any();
+
+        /// <inheritdoc />
+        public bool Any(string name) =>
+            _components.Any(e => _comparer.Equals(e.ComponentName(), name));
+
+        /// <inheritdoc />
+        public int Count() => _components.Count();
+
+        /// <inheritdoc />
+        public TComponent? Find(string name)
+        {
+            var component = _components.FirstOrDefault(e => _comparer.Equals(e.ComponentName(), name));
+            return component is not null ? _serializer.Deserialize(component) : default;
         }
 
         /// <inheritdoc />
-        public TComponent? Named(ComponentName name)
+        public IEnumerable<TComponent> Find(IEnumerable<string> names)
         {
-            if (name is null)
-                throw new ArgumentNullException(nameof(name));
-
-            var component = Elements.FirstOrDefault(e => e.ComponentName() == name);
-
-            return component is not null ? Serializer.Deserialize(component) : default;
+            var components = _components.Where(e => names.Contains(e.ComponentName(), _comparer));
+            return components.Select(e => _serializer.Deserialize(e));
         }
 
         /// <inheritdoc />
-        public IEnumerable<TComponent> Named(ICollection<ComponentName> names)
+        public TComponent First() => _serializer.Deserialize(_components.First());
+
+        /// <inheritdoc />
+        public TComponent? FirstOrDefault()
         {
-            if (names is null)
-                throw new ArgumentNullException(nameof(names));
-            
-            var components = Elements.Where(e => names.Contains(e.ComponentName()));
-            
-            return components.Select(e => Serializer.Deserialize(e));
+            var component = _components.FirstOrDefault();
+            return component is not null ? _serializer.Deserialize(component) : default;
         }
 
         /// <inheritdoc />
-        public IEnumerable<ComponentName> Names() => Elements.Select(x => new ComponentName(x.ComponentName()));
+        public TComponent Get(string name) =>
+            _serializer.Deserialize(_components.Single(e => _comparer.Equals(e.ComponentName(), name)));
+
+        /// <inheritdoc />
+        public IEnumerable<ComponentName> Names() =>
+            _components.Select(e => new ComponentName(e.ComponentName()));
+
+        /// <inheritdoc />
+        public IEnumerable<TComponent> Take(int count) =>
+            _components.Take(count).Select(e => _serializer.Deserialize(e));
     }
 }

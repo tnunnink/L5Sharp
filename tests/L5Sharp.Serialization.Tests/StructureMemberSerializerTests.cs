@@ -135,9 +135,7 @@ namespace L5Sharp.Serialization.Tests
             component.Dimensions.Should().Be(Dimensions.Empty);
             component.Radix.Should().Be(Radix.Null);
             component.Description.Should().BeEmpty();
-            component.IsArrayMember.Should().BeFalse();
-            component.IsValueMember.Should().BeFalse();
-            component.IsStructureMember.Should().BeTrue();
+            component.MemberType.Should().Be(MemberType.StructureMember);
             component.DataType.As<IComplexType>().Members.Should().HaveCount(5);
         }
 
