@@ -145,7 +145,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void MemberType_IsComplexMember_ShouldBeStructureMember()
         {
-            var member = Member.Create<BOOL>("Test");
+            var member = Member.Create<TIMER>("Test");
 
             member.MemberType.Should().Be(MemberType.StructureMember);
         }

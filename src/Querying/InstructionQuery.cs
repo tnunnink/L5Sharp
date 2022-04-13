@@ -18,5 +18,7 @@ namespace L5Sharp.Querying
         public InstructionQuery(IEnumerable<XElement> source) : base(source)
         {
         }
+        
+        
     }
 }

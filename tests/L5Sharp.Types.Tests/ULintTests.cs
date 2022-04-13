@@ -163,7 +163,7 @@ namespace L5Sharp.Types.Tests
         public void SetValue_InvalidType_ShouldBeZero()
         {
             var fixture = new Fixture();
-            var value = fixture.Create<int>();
+            var value = fixture.Create<DateTime>();
             var type = new ULINT();
 
             FluentActions.Invoking(() => type.SetValue(value)).Should().Throw<ArgumentException>();
@@ -315,7 +315,7 @@ namespace L5Sharp.Types.Tests
 
             var hash = type.GetHashCode();
 
-            hash.Should().Be(type.Name.GetHashCode());
+            hash.Should().Be(type.Value.GetHashCode());
         }
         
         [Test]
@@ -323,7 +323,7 @@ namespace L5Sharp.Types.Tests
         {
             var type = new ULINT();
 
-            type.ToString().Should().Be(type.Name);
+            type.ToString().Should().Be(type.Value.ToString());
         }
         
         [Test]

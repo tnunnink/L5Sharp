@@ -63,7 +63,7 @@ namespace L5Sharp.Querying
         /// Filters the collection to only data types that are used by the members of the specified type name. 
         /// </summary>
         /// <param name="typeName">The name of the data type for which to filter member type of.</param>
-        /// <returns>A new <see cref="DataTypeQuery"/> containing the data types that are used by the speicifed
+        /// <returns>A new <see cref="DataTypeQuery"/> containing the data types that are used by the specified
         /// type name.</returns>
         /// <remarks>
         /// This query is similar to <see cref="DependingOn"/>, but instead of getting other data types that reference

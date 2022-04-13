@@ -38,7 +38,6 @@ namespace L5Sharp.Serialization
             {
                 case null:
                     throw new ArgumentNullException(nameof(component));
-                //String types are treated differently than other types.
                 case IStringType stringType:
                     return _stringStructureSerializer.Serialize(stringType);
             }
@@ -50,7 +49,8 @@ namespace L5Sharp.Serialization
                 m.MemberType == MemberType.ValueMember ? DataValueMemberSerializer.Serialize(m)
                 : m.MemberType == MemberType.ArrayMember ? ArrayMemberSerializer.Serialize(m)
                 : m.MemberType == MemberType.StructureMember ? StructureMemberSerializer.Serialize(m)
-                : throw new InvalidOperationException("Could not determine member type."));
+                : m.MemberType == MemberType.StringMember ? _stringStructureSerializer.Serialize(m)
+                : throw new InvalidOperationException($"Could not determine member type for member '{m.Name}'."));
 
             element.Add(members);
 

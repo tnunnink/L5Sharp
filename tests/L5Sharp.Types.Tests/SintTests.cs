@@ -135,7 +135,7 @@ namespace L5Sharp.Types.Tests
         public void SetValue_InvalidType_ShouldBeZero()
         {
             var fixture = new Fixture();
-            var value = fixture.Create<int>();
+            var value = fixture.Create<DateTime>();
             var type = new SINT();
 
             FluentActions.Invoking(() => type.SetValue(value)).Should().Throw<ArgumentException>();

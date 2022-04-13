@@ -1,16 +1,22 @@
-﻿using NUnit.Framework;
+﻿using System;
+using System.Linq;
+using FluentAssertions;
+using L5Sharp.Core;
+using L5Sharp.L5X;
+using L5SharpTests;
+using NUnit.Framework;
 
 namespace L5Sharp.Querying.Tests
 {
     [TestFixture]
-    public class SpecificModuleQueryTests
+    public class ModuleQueryTests
     {
-        /*[Test]
+        [Test]
         public void WithParent_Null_ShouldThrowArgumentNullException()
         {
             var context = L5XContext.Load(Known.Test);
 
-            FluentActions.Invoking(() => context.Modules().WithParent(null!).Select()).Should()
+            FluentActions.Invoking(() => context.Modules(q => q.WithParent(null!))).Should()
                 .Throw<ArgumentNullException>();
         }
 
@@ -19,9 +25,9 @@ namespace L5Sharp.Querying.Tests
         {
             var context = L5XContext.Load(Known.Test);
 
-            var modules = context.Modules().WithParent("fake").Select().ToList();
+            var results = context.Modules(q => q.WithParent("Fake")).ToList();
 
-            modules.Should().BeEmpty();
+            results.Should().BeEmpty();
         }
 
         [Test]
@@ -29,50 +35,41 @@ namespace L5Sharp.Querying.Tests
         {
             var context = L5XContext.Load(Known.Test);
 
-            var modules = context.Modules().WithParent("Local_Mod_1").Select().ToList();
+            var results = context.Modules(q => q.WithParent("Local_Mod_1")).ToList();
 
-            modules.Should().NotBeEmpty();
-            modules.Should().AllSatisfy(m => m.ParentModule.Should().Be("Local_Mod_1"));
+            results.Should().NotBeEmpty();
+            results.Should().AllSatisfy(m => m.ParentModule.Should().Be("Local_Mod_1"));
         }
 
         [Test]
-        public void Named_Existing_ShouldBeExpected()
+        public void WithCatalog_NullPredicate_ShouldNotBeEmpty()
         {
             var context = L5XContext.Load(Known.Test);
 
-            var component = context.Modules().Find("Local");
-
-            component?.Name.Should().Be("Local");
-            component?.CatalogNumber.Should().Be(new CatalogNumber("1756-L83E"));
-            component?.Vendor.Should().Be(Vendor.Rockwell);
-            component?.ProductType.Should().Be(ProductType.Controller);
-            component?.ProductCode.Should().Be(166);
-            component?.Revision.Should().Be(new Revision(32, 11));
-            component?.ParentModule.Should().Be("Local");
-            component?.ParentPortId.Should().Be(1);
-            component?.Inhibited.Should().BeFalse();
-            component?.MajorFault.Should().BeTrue();
-            component?.Ports.Should().HaveCount(2);
+            FluentActions.Invoking(() => context.Modules(q => q.WithCatalog(null!))).Should()
+                .Throw<ArgumentNullException>();
         }
 
         [Test]
-        public void First_OnCatalogNumber_ShouldHaveExpected()
+        public void WithCatalog_ExistingCatalog_ShouldAllSatisfyQuery()
         {
             var context = L5XContext.Load(Known.Test);
 
-            var component = context.Modules().First(t => t.CatalogNumber == "1756-L83E");
+            var results = context.Modules(q => q.WithCatalog(c => c.Equals("1756-EN2T"))).ToList();
 
-            component.CatalogNumber.Should().Be(new CatalogNumber("1756-L83E"));
+            results.Should().NotBeEmpty();
+            results.Should().AllSatisfy(m => m.CatalogNumber.Should().Be(new CatalogNumber("1756-EN2T")));
         }
-
+        
         [Test]
-        public void Where_VendorEqualsOne_ShouldHaveExpectedVendor()
+        public void WithCatalog_CatalogContains_ShouldNotBeEmpty()
         {
             var context = L5XContext.Load(Known.Test);
 
-            var components = context.Modules().Where(t => t.Vendor == 1).ToList();
+            var results = context.Modules(q => q.WithCatalog(c => c.ToString().Contains("5094"))).ToList();
 
-            components.All(c => c.Vendor == Vendor.Rockwell).Should().BeTrue();
-        }*/
+            results.Should().NotBeEmpty();
+            results.Should().AllSatisfy(m => m.CatalogNumber.ToString().Should().StartWith("5094"));
+        }
     }
 }

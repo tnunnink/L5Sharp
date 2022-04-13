@@ -26,8 +26,11 @@ namespace L5Sharp.Querying
         /// </summary>
         /// <param name="typeName">The name of the tag component data type.</param>
         /// <returns>A new <see cref="TaskQuery"/> with the filtered element collection.</returns>
-        public TagQuery WithDataType(string typeName)
+        public TagQuery OfType(string typeName)
         {
+            if (string.IsNullOrEmpty(typeName))
+                throw new ArgumentException("Type name can not be null or empty.");
+            
             var tags = this.Where(t => string.Equals(t.Attribute(L5XAttribute.DataType.ToString())?.Value,
                 typeName, StringComparison.OrdinalIgnoreCase));
 

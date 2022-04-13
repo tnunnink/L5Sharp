@@ -37,5 +37,25 @@ namespace L5Sharp.Querying
 
             return new ModuleQuery(results);
         }
+
+        /// <summary>
+        /// Filters the collection of modules to include only those that satisfy the provided catalog number predicate.
+        /// </summary>
+        /// <param name="predicate">The condition of the catalog number to filter on.</param>
+        /// <returns>A new <see cref="ModuleQuery"/> containing module that satisfy the provided catalog number
+        /// condition.</returns>
+        public ModuleQuery WithCatalog(Predicate<CatalogNumber> predicate)
+        {
+            if (predicate is null)
+                throw new ArgumentNullException(nameof(predicate));
+
+            var results = this.Where(e =>
+            {
+                var catalogNumber = e.Attribute(L5XAttribute.CatalogNumber.ToString());
+                return catalogNumber is not null && predicate.Invoke(catalogNumber.Value.Parse<CatalogNumber>());
+            });
+
+            return new ModuleQuery(results);
+        }
     }
 }

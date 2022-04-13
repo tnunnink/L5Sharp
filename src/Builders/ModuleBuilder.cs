@@ -35,7 +35,6 @@ namespace L5Sharp.Builders
 
             var definition = catalogService.Lookup(_catalogNumber);
             
-            
             definition.ConfigureSlot(_slot);
             
             if (_ip is not null)
@@ -47,7 +46,6 @@ namespace L5Sharp.Builders
             
             if (!portType.IsEmpty())
                 definition.ConfigureUpstream(portType);
-            
 
             var module = new Module(_name, _catalogNumber,
                 definition.Vendor, definition.ProductType, definition.ProductCode,

@@ -292,7 +292,7 @@ namespace L5Sharp.Types.Tests
 
             var hash = type.GetHashCode();
 
-            hash.Should().Be(type.Name.GetHashCode());
+            hash.Should().Be(type.Value.GetHashCode());
         }
         
         [Test]
@@ -300,7 +300,7 @@ namespace L5Sharp.Types.Tests
         {
             var type = new REAL();
 
-            type.ToString().Should().Be(type.Name);
+            type.ToString().Should().Be(type.Value.ToString(CultureInfo.InvariantCulture));
         }
         
         [Test]
