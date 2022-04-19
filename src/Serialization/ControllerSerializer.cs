@@ -9,7 +9,7 @@ namespace L5Sharp.Serialization
 {
     internal class ControllerSerializer : L5XSerializer<IController>
     {
-        private static readonly XName ElementName = L5XElement.Controller.ToString();
+        private static readonly XName ElementName = L5XName.Controller;
 
         public override XElement Serialize(IController component)
         {
@@ -19,12 +19,12 @@ namespace L5Sharp.Serialization
             var element = new XElement(ElementName);
             element.AddComponentName(component.Name);
             element.AddComponentDescription(component.Description);
-            element.Add(new XAttribute(L5XAttribute.ProcessorType.ToString(), component.ProcessorType));
-            element.Add(new XAttribute(L5XAttribute.MajorRev.ToString(), component.Revision.Major));
-            element.Add(new XAttribute(L5XAttribute.MinorRev.ToString(), component.Revision.Minor));
-            element.Add(new XAttribute(L5XAttribute.ProjectCreationDate.ToString(),
+            element.Add(new XAttribute(L5XName.ProcessorType, component.ProcessorType));
+            element.Add(new XAttribute(L5XName.MajorRev, component.Revision.Major));
+            element.Add(new XAttribute(L5XName.MinorRev, component.Revision.Minor));
+            element.Add(new XAttribute(L5XName.ProjectCreationDate,
                 component.ProjectCreationDate.ToString("ddd MMM d HH:mm:ss yyyy")));
-            element.Add(new XAttribute(L5XAttribute.LastModifiedDate.ToString(),
+            element.Add(new XAttribute(L5XName.LastModifiedDate,
                 component.ProjectCreationDate.ToString("ddd MMM d HH:mm:ss yyyy")));
 
             return element;
@@ -40,16 +40,16 @@ namespace L5Sharp.Serialization
 
             var name = element.ComponentName();
             var description = element.ComponentDescription();
-            var processorType = element.Attribute(L5XAttribute.ProcessorType.ToString())?.Value.Parse<CatalogNumber>();
-            var major = element.Attribute(L5XAttribute.MajorRev.ToString())?.Value;
-            var minor = element.Attribute(L5XAttribute.MinorRev.ToString())?.Value;
+            var processorType = element.Attribute(L5XName.ProcessorType)?.Value.Parse<CatalogNumber>();
+            var major = element.Attribute(L5XName.MajorRev)?.Value;
+            var minor = element.Attribute(L5XName.MinorRev)?.Value;
             var revision = Revision.Parse($"{major}.{minor}");
             var creationDate = DateTime.ParseExact(
-                element.Attribute(L5XAttribute.ProjectCreationDate.ToString())?.Value,
+                element.Attribute(L5XName.ProjectCreationDate)?.Value,
                 "ddd MMM d HH:mm:ss yyyy",
                 CultureInfo.CurrentCulture);
             var modifiedDate = DateTime.ParseExact(
-                element.Attribute(L5XAttribute.LastModifiedDate.ToString())?.Value,
+                element.Attribute(L5XName.LastModifiedDate)?.Value,
                 "ddd MMM d HH:mm:ss yyyy",
                 CultureInfo.CurrentCulture);
 

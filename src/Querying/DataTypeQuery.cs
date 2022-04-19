@@ -38,8 +38,8 @@ namespace L5Sharp.Querying
             if (typeName is null)
                 throw new ArgumentNullException(nameof(typeName));
             
-            var results = this.Where(e => e.Descendants(L5XElement.Member.ToString())
-                    .Any(c => c.Attribute(L5XAttribute.DataType.ToString())?.Value == typeName));
+            var results = this.Where(e => e.Descendants(L5XName.Member)
+                    .Any(c => c.Attribute(L5XName.DataType)?.Value == typeName));
 
             return new DataTypeQuery(results);
         }
@@ -54,7 +54,7 @@ namespace L5Sharp.Querying
             if (family is null)
                 throw new ArgumentNullException(nameof(family));
 
-            var results = this.Where(e => e.Attribute(L5XAttribute.Family.ToString())?.Value == family.Value);
+            var results = this.Where(e => e.Attribute(L5XName.Family)?.Value == family.Value);
 
             return new DataTypeQuery(results);
         }
@@ -76,8 +76,8 @@ namespace L5Sharp.Querying
                 throw new ArgumentNullException(nameof(typeName));
 
             var typeNames = this.FirstOrDefault(e => e.ComponentName() == typeName)
-                ?.Descendants(L5XElement.Member.ToString())
-                .Select(e => e.Attribute(L5XAttribute.DataType.ToString())?.Value)
+                ?.Descendants(L5XName.Member)
+                .Select(e => e.Attribute(L5XName.DataType)?.Value)
                 .ToList();
 
             if (typeNames is null || typeNames.Count == 0)

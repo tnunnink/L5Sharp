@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using AutoFixture;
 using FluentAssertions;
 using NUnit.Framework;
+using NUnit.Framework.Internal;
 
 namespace L5Sharp.Core.Tests
 {
@@ -61,7 +62,7 @@ namespace L5Sharp.Core.Tests
         {
             var tagName = new TagName("Test");
 
-            tagName.Root.Should().Be("Test");
+            tagName.Base.Should().Be("Test");
             tagName.Operand.Should().BeEmpty();
             tagName.Path.Should().BeEmpty();
             tagName.Depth.Should().Be(0);
@@ -84,7 +85,7 @@ namespace L5Sharp.Core.Tests
         {
             var tagName = new TagName(TestTagName);
 
-            tagName.Root.Should().Be(Base);
+            tagName.Base.Should().Be(Base);
             tagName.Operand.Should().Be(Operand);
             tagName.Path.Should().Be(Path);
             tagName.Depth.Should().Be(3);
@@ -107,7 +108,7 @@ namespace L5Sharp.Core.Tests
         {
             var tagName = new TagName("RackIO:1:I.Slot[2].Data.4");
 
-            tagName.Root.Should().Be("RackIO:1:I");
+            tagName.Base.Should().Be("RackIO:1:I");
             tagName.Operand.Should().Be(".Slot[2].Data.4");
             tagName.Path.Should().Be("Slot[2].Data.4");
             tagName.Depth.Should().Be(4);
@@ -174,6 +175,34 @@ namespace L5Sharp.Core.Tests
             var members = fixture.CreateMany<string>();
 
             FluentActions.Invoking(() => TagName.Combine(members)).Should().Throw<FormatException>();
+        }
+
+        [Test]
+        public void Contains_NullName_ShouldThrowArgumentNullException()
+        {
+            var tagName = new TagName(TestTagName);
+
+            FluentActions.Invoking(() => tagName.Contains(null!)).Should().Throw<ArgumentNullException>();
+        }
+        
+        [Test]
+        public void Contains_NameNotInTagName_ShouldBeFalse()
+        {
+            var tagName = new TagName(TestTagName);
+
+            var result = tagName.Contains("SomeName");
+
+            result.Should().BeFalse();
+        }
+        
+        [Test]
+        public void Contains_NameContainsTagName_ShouldBeTrue()
+        {
+            var tagName = new TagName(TestTagName);
+
+            var result = tagName.Contains(Base);
+
+            result.Should().BeTrue();
         }
 
         [Test]

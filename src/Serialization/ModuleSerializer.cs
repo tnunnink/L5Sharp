@@ -11,7 +11,7 @@ namespace L5Sharp.Serialization
     internal class ModuleSerializer : L5XSerializer<IModule>
     {
         private readonly L5XContent? _document;
-        private static readonly XName ElementName = L5XElement.Module.ToString();
+        private static readonly XName ElementName = L5XName.Module;
 
         private PortSerializer PortSerializer => _document is not null
             ? _document.Serializers.Get<PortSerializer>()
@@ -38,27 +38,27 @@ namespace L5Sharp.Serialization
             var element = new XElement(ElementName);
             element.AddComponentName(component.Name);
             element.AddComponentDescription(component.Description);
-            element.Add(new XAttribute(L5XAttribute.CatalogNumber.ToString(), component.CatalogNumber));
-            element.Add(new XAttribute(L5XAttribute.Vendor.ToString(), component.Vendor.Id));
-            element.Add(new XAttribute(L5XAttribute.ProductType.ToString(), component.ProductType.Id));
-            element.Add(new XAttribute(L5XAttribute.ProductCode.ToString(), component.ProductCode));
-            element.Add(new XAttribute(L5XAttribute.Major.ToString(), component.Revision.Major));
-            element.Add(new XAttribute(L5XAttribute.Minor.ToString(), component.Revision.Minor));
-            element.Add(new XAttribute(L5XAttribute.ParentModule.ToString(), component.ParentModule));
-            element.Add(new XAttribute(L5XAttribute.ParentModPortId.ToString(), component.ParentPortId));
-            element.Add(new XAttribute(L5XAttribute.Inhibited.ToString(), component.Inhibited));
-            element.Add(new XAttribute(L5XAttribute.MajorFault.ToString(), component.MajorFault));
-            element.Add(new XAttribute(L5XAttribute.SafetyEnabled.ToString(), component.SafetyEnabled));
+            element.Add(new XAttribute(L5XName.CatalogNumber, component.CatalogNumber));
+            element.Add(new XAttribute(L5XName.Vendor, component.Vendor.Id));
+            element.Add(new XAttribute(L5XName.ProductType, component.ProductType.Id));
+            element.Add(new XAttribute(L5XName.ProductCode, component.ProductCode));
+            element.Add(new XAttribute(L5XName.Major, component.Revision.Major));
+            element.Add(new XAttribute(L5XName.Minor, component.Revision.Minor));
+            element.Add(new XAttribute(L5XName.ParentModule, component.ParentModule));
+            element.Add(new XAttribute(L5XName.ParentModPortId, component.ParentPortId));
+            element.Add(new XAttribute(L5XName.Inhibited, component.Inhibited));
+            element.Add(new XAttribute(L5XName.MajorFault, component.MajorFault));
+            element.Add(new XAttribute(L5XName.SafetyEnabled, component.SafetyEnabled));
 
-            var keyingState = new XElement(L5XElement.EKey.ToString());
-            keyingState.Add(new XAttribute(L5XAttribute.State.ToString(), component.Keying));
+            var keyingState = new XElement(L5XName.EKey);
+            keyingState.Add(new XAttribute(L5XName.State, component.Keying));
             element.Add(keyingState);
 
-            var ports = new XElement(L5XElement.Ports.ToString());
+            var ports = new XElement(L5XName.Ports);
             ports.Add(component.Ports.Select(p => PortSerializer.Serialize(p)));
             element.Add(ports);
 
-            var communications = new XElement(L5XElement.Communications.ToString());
+            var communications = new XElement(L5XName.Communications);
 
             if (component.Config is not null)
             {
@@ -66,7 +66,7 @@ namespace L5Sharp.Serialization
                 communications.Add(config);
             }
 
-            var connections = new XElement(L5XElement.Connections.ToString());
+            var connections = new XElement(L5XName.Connections);
             connections.Add(component.Connections.Select(c => ConnectionSerializer.Serialize(c)));
             communications.Add(connections);
 
@@ -85,38 +85,38 @@ namespace L5Sharp.Serialization
 
             var name = element.ComponentName();
             var description = element.ComponentDescription();
-            var catalogNumber = element.Attribute(L5XAttribute.CatalogNumber.ToString())?.Value.Parse<CatalogNumber>();
-            var vendor = element.Attribute(L5XAttribute.Vendor.ToString())?.Value.Parse<Vendor>();
-            var productType = element.Attribute(L5XAttribute.ProductType.ToString())?.Value.Parse<ProductType>();
-            var productCode = element.Attribute(L5XAttribute.ProductCode.ToString())?.Value.Parse<ushort>() ?? default;
-            var major = element.Attribute(L5XAttribute.Major.ToString())?.Value;
-            var minor = element.Attribute(L5XAttribute.Minor.ToString())?.Value;
+            var catalogNumber = element.Attribute(L5XName.CatalogNumber)?.Value.Parse<CatalogNumber>();
+            var vendor = element.Attribute(L5XName.Vendor)?.Value.Parse<Vendor>();
+            var productType = element.Attribute(L5XName.ProductType)?.Value.Parse<ProductType>();
+            var productCode = element.Attribute(L5XName.ProductCode)?.Value.Parse<ushort>() ?? default;
+            var major = element.Attribute(L5XName.Major)?.Value;
+            var minor = element.Attribute(L5XName.Minor)?.Value;
             var revision = Revision.Parse($"{major}.{minor}");
-            var parentModule = element.Attribute(L5XAttribute.ParentModule.ToString())?.Value;
-            var parentModPortId = element.Attribute(L5XAttribute.ParentModPortId.ToString())
+            var parentModule = element.Attribute(L5XName.ParentModule)?.Value;
+            var parentModPortId = element.Attribute(L5XName.ParentModPortId)
                 ?.Value.Parse<int>() ?? default;
-            var inhibited = element.Attribute(L5XAttribute.Inhibited.ToString())?.Value.Parse<bool>() ?? default;
-            var majorFault = element.Attribute(L5XAttribute.MajorFault.ToString())?.Value.Parse<bool>() ?? default;
-            var safetyEnabled = element.Attribute(L5XAttribute.SafetyEnabled.ToString())?.Value.Parse<bool>() ??
+            var inhibited = element.Attribute(L5XName.Inhibited)?.Value.Parse<bool>() ?? default;
+            var majorFault = element.Attribute(L5XName.MajorFault)?.Value.Parse<bool>() ?? default;
+            var safetyEnabled = element.Attribute(L5XName.SafetyEnabled)?.Value.Parse<bool>() ??
                                 default;
-            var state = element.Element(L5XElement.EKey.ToString())?.Attribute(L5XAttribute.State.ToString())
+            var state = element.Element(L5XName.EKey)?.Attribute(L5XName.State)
                 ?.Value.Parse<ElectronicKeying>();
 
-            var ports = element.Descendants(L5XElement.Port.ToString())
+            var ports = element.Descendants(L5XName.Port)
                 .Select(e => PortSerializer.Deserialize(e))
                 .ToList();
 
-            var configElement = element.Descendants(L5XElement.ConfigTag.ToString()).FirstOrDefault();
+            var configElement = element.Descendants(L5XName.ConfigTag).FirstOrDefault();
             var config = configElement is not null ? ConfigTagSerializer.Deserialize(configElement) : null;
 
-            var connections = element.Descendants(L5XElement.Connection.ToString())
+            var connections = element.Descendants(L5XName.Connection)
                 .Select(e => ConnectionSerializer.Deserialize(e))
                 .ToList();
 
-            var modules = element.Ancestors(L5XElement.Modules.ToString())
+            var modules = element.Ancestors(L5XName.Modules)
                 .FirstOrDefault()
-                ?.Descendants(L5XElement.Module.ToString())
-                .Where(e => e.Attribute(L5XAttribute.ParentModule.ToString())?.Value == name
+                ?.Descendants(L5XName.Module)
+                .Where(e => e.Attribute(L5XName.ParentModule)?.Value == name
                             && e.ComponentName() != name)
                 .Select(Deserialize)
                 .ToList();

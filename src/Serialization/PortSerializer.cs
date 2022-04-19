@@ -11,7 +11,7 @@ namespace L5Sharp.Serialization
     /// </summary>
     internal class PortSerializer : L5XSerializer<Port>
     {
-        private static readonly XName ElementName = L5XElement.Port.ToString();
+        private static readonly XName ElementName = L5XName.Port;
 
         /// <inheritdoc />
         public override XElement Serialize(Port component)
@@ -20,16 +20,16 @@ namespace L5Sharp.Serialization
                 throw new ArgumentNullException(nameof(component));
 
             var element = new XElement(ElementName);
-            element.Add(new XAttribute(L5XAttribute.Id.ToString(), component.Id));
-            element.Add(new XAttribute(L5XAttribute.Address.ToString(), component.Address));
-            element.Add(new XAttribute(L5XAttribute.Type.ToString(), component.Type));
-            element.Add(new XAttribute(L5XAttribute.Upstream.ToString(), component.Upstream));
+            element.Add(new XAttribute(L5XName.Id, component.Id));
+            element.Add(new XAttribute(L5XName.Address, component.Address));
+            element.Add(new XAttribute(L5XName.Type, component.Type));
+            element.Add(new XAttribute(L5XName.Upstream, component.Upstream));
 
             if (component.Upstream) return element;
 
-            var bus = new XElement(L5XElement.Bus.ToString());
+            var bus = new XElement(L5XName.Bus);
             if (component.BusSize > 0)
-                bus.Add(new XAttribute(L5XAttribute.Size.ToString(), component.BusSize));
+                bus.Add(new XAttribute(L5XName.Size, component.BusSize));
             element.Add(bus);
 
             return element;
@@ -44,13 +44,13 @@ namespace L5Sharp.Serialization
             if (element.Name != ElementName)
                 throw new ArgumentException($"Element '{element.Name}' not valid for the serializer {GetType()}.");
 
-            var id = element.Attribute(L5XAttribute.Id.ToString())?.Value.Parse<int>() ?? default;
-            var address = element.Attribute(L5XAttribute.Address.ToString())?.Value.Parse<PortAddress>();
-            var type = element.Attribute(L5XAttribute.Type.ToString())?.Value!;
-            var upstream = element.Attribute(L5XAttribute.Upstream.ToString())?.Value.Parse<bool>() ?? default;
+            var id = element.Attribute(L5XName.Id)?.Value.Parse<int>() ?? default;
+            var address = element.Attribute(L5XName.Address)?.Value.Parse<PortAddress>();
+            var type = element.Attribute(L5XName.Type)?.Value!;
+            var upstream = element.Attribute(L5XName.Upstream)?.Value.Parse<bool>() ?? default;
 
-            var busSize = element.Element(L5XElement.Bus.ToString())
-                ?.Attribute(L5XAttribute.Size.ToString())
+            var busSize = element.Element(L5XName.Bus)
+                ?.Attribute(L5XName.Size)
                 ?.Value.Parse<byte>() ?? default;
 
             return new Port(id, type, address, upstream, busSize);

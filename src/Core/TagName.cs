@@ -31,13 +31,13 @@ namespace L5Sharp.Core
         }
 
         /// <summary>
-        /// Gets the root string  portion of the <see cref="TagName"/> value.
+        /// Gets the base portion of the <see cref="TagName"/> value.
         /// </summary>
         /// <remarks>
-        /// The root portion of a given tag name is simply the beginning part of the tag name up to the first '.'
+        /// The base portion of a given tag name is simply the beginning part of the tag name up to the first '.'
         /// member separator character. For Module defined tags, this includes the colon separator.
         /// </remarks>
-        public string Root => _tagName[..GetRootLength()];
+        public string Base => _tagName[..GetRootLength()];
 
         /// <summary>
         /// Gets the operand portion of the <see cref="TagName"/> value.
@@ -47,7 +47,7 @@ namespace L5Sharp.Core
         /// the full tag name value without the leading base name. The operand will include any leading '.' character.
         /// </remarks>
         /// <seealso cref="Path"/>
-        public string Operand => !Root.IsEmpty() ? _tagName.Remove(0, Root.Length) : string.Empty;
+        public string Operand => !Base.IsEmpty() ? _tagName.Remove(0, Base.Length) : string.Empty;
 
         /// <summary>
         /// Gets the member path of the <see cref="TagName"/> value.
@@ -64,8 +64,8 @@ namespace L5Sharp.Core
         /// Gets a number representing the distance or depth of the current member from the root tag name.
         /// </summary>
         /// <remarks>
-        /// This value represents the number of members between the root member and current member (i.e. on less than
-        /// <see cref="Members"/> to exclude the root). This is helpful fo filtering tag descendents. Note that array
+        /// This value represents the number of members between the root member and current member (i.e. one less than
+        /// <see cref="Members"/> to exclude the base name). This is helpful fo filtering tag descendents. Note that array
         /// indices are also considered a member. For example, 'MyTag[1].Value' has a depth of 2 since '[1]' and 'Value'
         /// are descendent members name of the root 'MyTag' member.
         /// </remarks>
@@ -156,17 +156,31 @@ namespace L5Sharp.Core
             : throw new ArgumentNullException(nameof(tagName));
 
         /// <summary>
-        /// Creates a copy of the current <see cref="TagName"/> object with the same value.
-        /// </summary>
-        /// <returns>A new <see cref="TagName"/> instance with the value of the current tag name.</returns>
-        public TagName Copy() => new(string.Copy(_tagName));
-
-        /// <summary>
         /// Converts a <see cref="string"/> to a <see cref="TagName"/> value.
         /// </summary>
         /// <param name="tagName">The <see cref="string"/> value to convert.</param>
         /// <returns>A new <see cref="TagName"/> value representing the value of the tag name.</returns>
         public static implicit operator TagName(string tagName) => new(tagName);
+
+        /// <summary>
+        /// Determines if the provided tagName is contained within the current value.
+        /// </summary>
+        /// <param name="tagName">The tag name to evaluate as a sub path or contained tag name path.</param>
+        /// <returns>true if tagName is contained within the current value; otherwise, false.</returns>
+        /// <exception cref="ArgumentNullException">tagName is null.</exception>
+        public bool Contains(TagName tagName)
+        {
+            if (tagName is null)
+                throw new ArgumentNullException(nameof(tagName));
+
+            return _tagName.Contains(tagName);
+        }
+
+        /// <summary>
+        /// Creates a copy of the current <see cref="TagName"/> object with the same value.
+        /// </summary>
+        /// <returns>A new <see cref="TagName"/> instance with the value of the current tag name.</returns>
+        public TagName Copy() => new(string.Copy(_tagName));
 
         /// <inheritdoc />
         public override string ToString() => _tagName;

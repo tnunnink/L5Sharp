@@ -8,7 +8,7 @@ namespace L5Sharp.Serialization
 {
     internal class DataValueSerializer : L5XSerializer<IAtomicType>
     {
-        private static readonly XName ElementName = L5XElement.DataValue.ToString();
+        private static readonly XName ElementName = L5XName.DataValue;
         
         public override XElement Serialize(IAtomicType component)
         {
@@ -16,8 +16,8 @@ namespace L5Sharp.Serialization
                 throw new ArgumentNullException(nameof(component));
 
             var element = new XElement(ElementName);
-            element.Add(new XAttribute(L5XElement.DataType.ToString(), component.Name));
-            element.Add(new XAttribute(L5XAttribute.Value.ToString(), component.Format()));
+            element.Add(new XAttribute(L5XName.DataType, component.Name));
+            element.Add(new XAttribute(L5XName.Value, component.Format()));
 
             return element;
         }
@@ -31,7 +31,7 @@ namespace L5Sharp.Serialization
                 throw new ArgumentException($"Element '{element.Name}' not valid for the serializer {GetType()}.");
             
             var name = element.DataTypeName();
-            var value = element.Attribute(L5XAttribute.Value.ToString())?.Value;
+            var value = element.Attribute(L5XName.Value)?.Value;
 
             return DataType.Atomic(name, value);
         }

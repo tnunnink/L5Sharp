@@ -31,7 +31,7 @@ namespace L5Sharp.Querying
             if (string.IsNullOrEmpty(typeName))
                 throw new ArgumentException("Type name can not be null or empty.");
             
-            var tags = this.Where(t => string.Equals(t.Attribute(L5XAttribute.DataType.ToString())?.Value,
+            var tags = this.Where(t => string.Equals(t.Attribute(L5XName.DataType)?.Value,
                 typeName, StringComparison.OrdinalIgnoreCase));
 
             return new TagQuery(tags);

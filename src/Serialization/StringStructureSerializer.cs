@@ -24,20 +24,20 @@ namespace L5Sharp.Serialization
 
             var element = new XElement(_elementName);
             
-            if (_elementName == L5XElement.StructureMember.ToString())
+            if (_elementName == L5XName.StructureMember)
                 element.AddComponentName(component.Name);
-            element.Add(new XAttribute(L5XAttribute.DataType.ToString(), component.Name));
+            element.Add(new XAttribute(L5XName.DataType, component.Name));
 
-            var lengthElement = new XElement(L5XElement.DataValueMember.ToString());
-            lengthElement.Add(new XAttribute(L5XAttribute.Name.ToString(), component.LEN.Name));
-            lengthElement.Add(new XAttribute(L5XAttribute.DataType.ToString(), component.LEN.DataType.Name));
-            lengthElement.Add(new XAttribute(L5XAttribute.Radix.ToString(), component.LEN.Radix));
-            lengthElement.Add(new XAttribute(L5XAttribute.Value.ToString(), component.LEN.DataType.Value));
+            var lengthElement = new XElement(L5XName.DataValueMember);
+            lengthElement.Add(new XAttribute(L5XName.Name, component.LEN.Name));
+            lengthElement.Add(new XAttribute(L5XName.DataType, component.LEN.DataType.Name));
+            lengthElement.Add(new XAttribute(L5XName.Radix, component.LEN.Radix));
+            lengthElement.Add(new XAttribute(L5XName.Value, component.LEN.DataType.Value));
 
-            var dataElement = new XElement(L5XElement.DataValueMember.ToString());
-            dataElement.Add(new XAttribute(L5XAttribute.Name.ToString(), component.DATA.Name));
-            dataElement.Add(new XAttribute(L5XAttribute.DataType.ToString(), component.Name));
-            dataElement.Add(new XAttribute(L5XAttribute.Radix.ToString(), component.DATA.Radix));
+            var dataElement = new XElement(L5XName.DataValueMember);
+            dataElement.Add(new XAttribute(L5XName.Name, component.DATA.Name));
+            dataElement.Add(new XAttribute(L5XName.DataType, component.Name));
+            dataElement.Add(new XAttribute(L5XName.Radix, component.DATA.Radix));
             dataElement.Add(new XCData(component.Value));
 
             element.Add(lengthElement);
@@ -56,7 +56,7 @@ namespace L5Sharp.Serialization
 
             var name = element.DataTypeName();
             var value = element.Elements()
-                .First(e => e.Attribute(L5XAttribute.Name.ToString())?.Value == "DATA")
+                .First(e => e.Attribute(L5XName.Name)?.Value == "DATA")
                 .Value;
             
             return string.Equals(nameof(STRING), name, StringComparison.OrdinalIgnoreCase) 

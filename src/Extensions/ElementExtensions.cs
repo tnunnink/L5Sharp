@@ -16,7 +16,7 @@ namespace L5Sharp.Extensions
         /// <returns>The string value of the 'Name' attribute.</returns>
         /// <exception cref="InvalidOperationException">element does not have a Name attribute.</exception>
         public static string ComponentName(this XElement element) =>
-            element.Attribute(L5XAttribute.Name.ToString())?.Value
+            element.Attribute(L5XName.Name)?.Value
             ?? throw new InvalidOperationException("The current element does not have an attribute 'Name'");
 
         /// <summary>
@@ -25,7 +25,7 @@ namespace L5Sharp.Extensions
         /// <param name="element">The current <see cref="XElement"/> instance.</param>
         /// <returns>The string value of the 'Description' element if it exists; otherwise, empty string.</returns>
         public static string ComponentDescription(this XElement element) =>
-            element.Element(L5XElement.Description.ToString())?.Value
+            element.Element(L5XName.Description)?.Value
             ?? string.Empty;
 
         /// <summary>
@@ -34,7 +34,7 @@ namespace L5Sharp.Extensions
         /// <param name="element">The current element.</param>
         /// <exception cref="InvalidOperationException">element does not have a DataType attribute.</exception>
         public static string DataTypeName(this XElement element) =>
-            element.Attribute(L5XAttribute.DataType.ToString())?.Value ??
+            element.Attribute(L5XName.DataType)?.Value ??
             throw new InvalidOperationException("The current element does not have an attribute 'DataType'");
 
         /// <summary>
@@ -43,7 +43,7 @@ namespace L5Sharp.Extensions
         /// <param name="element">The current <see cref="XElement"/> instance.</param>
         /// <param name="name">The value of the component name.</param>
         public static void AddComponentName(this XElement element, string name) =>
-            element.Add(new XAttribute(L5XAttribute.Name.ToString(), name));
+            element.Add(new XAttribute(L5XName.Name, name));
 
         /// <summary>
         /// Adds the provided string description as a child element to the current element if the value is not null or empty.
@@ -55,7 +55,7 @@ namespace L5Sharp.Extensions
             if (string.IsNullOrEmpty(description))
                 return;
 
-            element.Add(new XElement(L5XElement.Description.ToString(), new XCData(description)));
+            element.Add(new XElement(L5XName.Description, new XCData(description)));
         }
     }
 }

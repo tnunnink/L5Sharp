@@ -117,13 +117,6 @@ namespace L5Sharp.Core
             _buses = InitializeBuses();
         }
 
-        /// <summary>
-        /// Creates a new <see cref="IModule"/> using the fluent <see cref="IModuleBuilder"/> API.
-        /// </summary>
-        /// <param name="name">The name of the module to create.</param>
-        /// <returns>A <see cref="IModuleCatalogNumberStep"/> requiring the catalog number of the module to create.</returns>
-        public static IModuleCatalogNumberStep Build(ComponentName name) => new ModuleBuilder(name);
-
         /// <inheritdoc />
         public string Name { get; }
 

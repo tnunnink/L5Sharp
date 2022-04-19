@@ -38,5 +38,17 @@ namespace L5Sharp.Context.Tests
 
             File.WriteAllLines(@"C:\Users\tnunnink\desktop\L5XAttribute.txt", set.OrderBy(x => x));
         }
+        
+        [Test]
+        public void GetAllNames()
+        {
+            var document = XDocument.Load(Known.Template);
+
+            var elements = document.Descendants().Select(e => e.Name.ToString());
+            var attributes = document.Descendants().SelectMany(e => e.Attributes().Select(a => a.Name.ToString()));
+            var names = elements.Union(attributes).Distinct().ToList();
+
+            File.WriteAllLines(@"C:\Users\tnunnink\desktop\L5XNames.txt", names.OrderBy(x => x));
+        }
     }
 }

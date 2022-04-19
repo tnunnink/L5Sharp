@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Xml.Linq;
+using L5Sharp.Comparers;
 using L5Sharp.Core;
 using L5Sharp.Extensions;
 using L5Sharp.L5X;
@@ -40,7 +42,7 @@ namespace L5Sharp.Querying
 
             foreach (var element in this)
             {
-                var text = element.Element(L5XElement.Text.ToString())?.Value.Parse<NeutralText>();
+                var text = element.Element(L5XName.Text)?.Value.Parse<NeutralText>();
 
                 if (text is null) continue;
 
@@ -48,8 +50,8 @@ namespace L5Sharp.Querying
 
                 foreach (var instruction in instructions)
                 {
-                    var definition = element.Ancestors(L5XElement.Controller.ToString()).FirstOrDefault()
-                        ?.Descendants(L5XElement.AddOnInstructionDefinition.ToString())
+                    var definition = element.Ancestors(L5XName.Controller).FirstOrDefault()
+                        ?.Descendants(L5XName.AddOnInstructionDefinition)
                         .FirstOrDefault(e => instruction.Name == e.ComponentName());
 
                     if (definition is null)
@@ -60,28 +62,32 @@ namespace L5Sharp.Querying
                     }
 
                     //Skip first as it is always the aoi tag, which does not have corresponding parameter
-                    var arguments = instruction.Operands.Select(o => o.ToString()).Skip(1).ToList();
+                    var arguments = instruction.Operands.Select(o => o).Skip(1).ToList();
 
                     //Only required parameters are part of the instruction signature
-                    var parameters = definition.Descendants(L5XElement.Parameter.ToString())
-                        .Where(e => bool.Parse(e.Attribute(L5XAttribute.Required.ToString())?.Value!))
+                    var parameters = definition.Descendants(L5XName.Parameter)
+                        .Where(e => bool.Parse(e.Attribute(L5XName.Required)?.Value!))
                         .Select(p => p.ComponentName());
 
                     var mapping = arguments.Zip(parameters, (a, p) => new { Argument = a, Parameter = p }).ToList();
 
-                    var rungs = definition.Descendants(L5XElement.Rung.ToString()).ToList();
+                    var rungs = definition.Descendants(L5XName.Rung).ToList();
 
                     foreach (var rung in rungs)
                     {
-                        var value = rung.Element(L5XElement.Text.ToString())?.Value;
+                        var value = rung.Element(L5XName.Text)?.Value;
 
                         if (string.IsNullOrEmpty(value))
                             continue;
 
                         value = mapping.Aggregate(value,
-                            (current, pair) => current.Replace(pair.Parameter, pair.Argument));
+                            (current, pair) =>
+                            {
+                                var replace = $@"(?<=[^.\]]){pair.Parameter}";
+                                return Regex.Replace(current, replace, pair.Argument.ToString());
+                            });
 
-                        rung.Element(L5XElement.Text.ToString())!.Value = value;
+                        rung.Element(L5XName.Text)!.Value = value;
 
                         results.Add(rung);
                     }
@@ -99,7 +105,10 @@ namespace L5Sharp.Querying
         public RungQuery InProgram(string programName)
         {
             var results = this.Where(e =>
-                e.Ancestors(L5XElement.Program.ToString()).FirstOrDefault()?.ComponentName() == programName);
+            {
+                var program = e.Ancestors(L5XName.Program).FirstOrDefault()?.ComponentName();
+                return program is not null && string.Equals(program, programName, StringComparison.OrdinalIgnoreCase);
+            });
 
             return new RungQuery(results);
         }
@@ -114,7 +123,7 @@ namespace L5Sharp.Querying
         {
             var results = this.Where(e =>
             {
-                var number = int.Parse(e.Attribute(L5XAttribute.Number.ToString())?.Value!);
+                var number = int.Parse(e.Attribute(L5XName.Number)?.Value!);
                 return number >= first && number <= last;
             });
 
@@ -131,29 +140,15 @@ namespace L5Sharp.Querying
         /// will still return rungs from routines across programs, assuming the source collection contains any. You can
         /// call <see cref="InProgram"/> before or after this call to filter rungs by program as necessary.
         /// </remarks>
-        public RungQuery InRoutine(ComponentName routineName)
+        public RungQuery InRoutine(string routineName)
         {
             var results = this.Where(e =>
-                e.Ancestors(L5XElement.Routine.ToString()).FirstOrDefault()?.ComponentName() == (string)routineName);
-
+            {
+                var routine = e.Ancestors(L5XName.Routine).FirstOrDefault()?.ComponentName();
+                return routine is not null && string.Equals(routine, routineName, StringComparison.OrdinalIgnoreCase);
+            });
+            
             return new RungQuery(results);
-        }
-
-        /// <summary>
-        /// Filters the collection to include only rungs with having tags with the specified data type name. 
-        /// </summary>
-        /// <param name="typeName">The name of the data type to search.</param>
-        /// <returns>
-        /// A mew <see cref="RungQuery"/> containing only rungs having reference to a tag of the specified type.
-        /// </returns>
-        public RungQuery WithDataType(string typeName)
-        {
-            // we need to find data types of the current tags...
-            //1. Get tag names from current collection
-            //2. Find tags in document with specified root name
-            //3. Need some way to get member names
-            //4. Join results on tag name
-            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -167,8 +162,8 @@ namespace L5Sharp.Querying
         {
             var results = this.Where(e =>
             {
-                var text = e.Element(L5XElement.Text.ToString())?.Value;
-                return text is not null && string.Equals(text, instructionName);
+                var text = e.Element(L5XName.Text)?.Value.Parse<NeutralText>();
+                return text is not null && text.Instructions().Any(i => i.Name == instructionName);
             });
 
             return new RungQuery(results);
@@ -183,8 +178,49 @@ namespace L5Sharp.Querying
         {
             var results = this.Where(e =>
             {
-                var text = e.Attribute(L5XElement.Text.ToString())?.Value;
-                return text is not null && text.Contains(tagName);
+                var text = e.Element(L5XName.Text)?.Value.Parse<NeutralText>();
+                return text is not null &&
+                       text.TagNames().Contains(tagName, TagNameComparer.FullName);
+            });
+
+            return new RungQuery(results);
+        }
+
+        /// <summary>
+        /// Filters the collection to include only rungs containing the specified tag name reference using the provided
+        /// <see cref="TagNameComparer"/> to check equality.
+        /// </summary>
+        /// <param name="tagName">The <see cref="TagName"/> value to search.</param>
+        /// <param name="comparer">The <see cref="TagNameComparer"/> instance to use to evaluate the equality of the
+        /// rung's tag name references.</param>
+        /// <returns>A new <see cref="RungQuery"/> containing only rungs with the specified tag name reference.</returns>
+        public RungQuery WithTag(TagName tagName, TagNameComparer comparer)
+        {
+            var results = this.Where(e =>
+            {
+                var text = e.Element(L5XName.Text)?.Value.Parse<NeutralText>();
+                return text is not null &&
+                       text.TagNames().Contains(tagName, comparer);
+            });
+
+            return new RungQuery(results);
+        }
+        
+        /// <summary>
+        /// Filters the collection to include only rungs containing the specified collection of tag name references.
+        /// </summary>
+        /// <param name="tagNames">The collection of <see cref="TagName"/> values to filter.</param>
+        /// <returns>A new <see cref="RungQuery"/> containing only rungs with the specified tag name references.</returns>
+        public RungQuery WithTags(IEnumerable<TagName> tagNames)
+        {
+            if (tagNames is null)
+                throw new ArgumentNullException(nameof(tagNames));
+            
+            var results = this.Where(e =>
+            {
+                var text = e.Element(L5XName.Text)?.Value.Parse<NeutralText>();
+                return text is not null && 
+                       text.TagNames().Any(t => tagNames.Contains(t, TagNameComparer.FullName));
             });
 
             return new RungQuery(results);

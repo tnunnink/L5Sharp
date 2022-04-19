@@ -41,14 +41,14 @@ namespace L5Sharp.Serialization
             if (element is null)
                 throw new ArgumentNullException(nameof(element));
 
-            var name = Enum.Parse<L5XElement>(element.Name.ToString());
+            var name = element.Name.ToString();
 
             // ReSharper disable once SwitchExpressionHandlesSomeKnownEnumValuesWithExceptionInDefault
             // Only following element names are valid for the alarm format.
             return name switch
             {
-                L5XElement.AlarmDigitalParameters => AlarmDigitalParametersSerializer.Deserialize(element),
-                L5XElement.AlarmAnalogParameters => AlarmAnalogParametersSerializer.Deserialize(element),
+                L5XName.AlarmDigitalParameters => AlarmDigitalParametersSerializer.Deserialize(element),
+                L5XName.AlarmAnalogParameters => AlarmAnalogParametersSerializer.Deserialize(element),
                 _ => throw new ArgumentException($"Element '{name}' not valid for the serializer {GetType()}.")
             };
         }

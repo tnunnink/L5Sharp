@@ -34,11 +34,11 @@ namespace L5Sharp.Querying
             if (taskName is null)
                 throw new ArgumentNullException(nameof(taskName));
 
-            var programNames = this.Ancestors(L5XElement.Controller.ToString())
+            var programNames = this.Ancestors(L5XName.Controller)
                 .FirstOrDefault()
-                ?.Descendants(L5XElement.Task.ToString())
+                ?.Descendants(L5XName.Task)
                 .FirstOrDefault(t => t.ComponentName() == taskName)
-                ?.Descendants(L5XElement.ScheduledProgram.ToString())
+                ?.Descendants(L5XName.ScheduledProgram)
                 .Select(e => e.ComponentName())
                 .ToList();
 

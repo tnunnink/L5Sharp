@@ -45,15 +45,15 @@ namespace L5Sharp.Serialization
             if (element == null)
                 throw new ArgumentNullException(nameof(element));
 
-            var name = Enum.Parse<L5XElement>(element.Name.ToString());
+            var name = element.Name.ToString();
 
             // Only following root element names are valid for decorated data serializer 
             // ReSharper disable once SwitchExpressionHandlesSomeKnownEnumValuesWithExceptionInDefault
             return name switch
             {
-                L5XElement.DataValue => DataValueSerializer.Deserialize(element),
-                L5XElement.Array => ArraySerializer.Deserialize(element),
-                L5XElement.Structure => StructureSerializer.Deserialize(element),
+                L5XName.DataValue => DataValueSerializer.Deserialize(element),
+                L5XName.Array => ArraySerializer.Deserialize(element),
+                L5XName.Structure => StructureSerializer.Deserialize(element),
                 _ => throw new ArgumentException($"Element '{name}' not valid for the serializer {GetType()}.")
             };
         }

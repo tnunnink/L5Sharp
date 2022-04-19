@@ -7,7 +7,7 @@ namespace L5Sharp.Serialization
 {
     internal class AlarmAnalogParametersSerializer : L5XSerializer<ALARM_ANALOG>
     {
-        private static readonly XName ElementName = L5XElement.AlarmAnalogParameters.ToString();
+        private static readonly XName ElementName = L5XName.AlarmAnalogParameters;
         
         public override XElement Serialize(ALARM_ANALOG component)
         {

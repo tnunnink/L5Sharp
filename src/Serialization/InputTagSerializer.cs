@@ -11,7 +11,7 @@ namespace L5Sharp.Serialization
     {
         private readonly L5XContent? _document;
         private const string DefaultSuffix = "I";
-        private static readonly XName ElementName = L5XElement.InputTag.ToString();
+        private static readonly XName ElementName = L5XName.InputTag;
         
         private FormattedDataSerializer FormattedDataSerializer => _document is not null
             ? _document.Serializers.Get<FormattedDataSerializer>()
@@ -29,7 +29,7 @@ namespace L5Sharp.Serialization
 
             var element = new XElement(ElementName);
             
-            element.Add(new XAttribute(L5XAttribute.ExternalAccess.ToString(), component.ExternalAccess));
+            element.Add(new XAttribute(L5XName.ExternalAccess, component.ExternalAccess));
             
             element.Add(FormattedDataSerializer.Serialize(component.DataType));
 
@@ -46,20 +46,20 @@ namespace L5Sharp.Serialization
 
             var tagName = DetermineTagName(element);
             
-            var access = element.Attribute(L5XAttribute.ExternalAccess.ToString())?.Value?.Parse<ExternalAccess>();
+            var access = element.Attribute(L5XName.ExternalAccess)?.Value?.Parse<ExternalAccess>();
             
             var data = element
-                .Descendants(L5XElement.Data.ToString())
-                .First(e => e.Attribute(L5XAttribute.Format.ToString())?.Value == TagDataFormat.Decorated.Name);
+                .Descendants(L5XName.Data)
+                .First(e => e.Attribute(L5XName.Format)?.Value == TagDataFormat.Decorated.Name);
             
             var dataType = FormattedDataSerializer.Deserialize(data);
 
-            var commentSerializer = new TagPropertySerializer(L5XElement.Comment, tagName);
-            var comments = new TagPropertyCollection<string>(element.Descendants(L5XElement.Comment.ToString())
+            var commentSerializer = new TagPropertySerializer(L5XName.Comment, tagName);
+            var comments = new TagPropertyCollection<string>(element.Descendants(L5XName.Comment)
                 .Select(e => commentSerializer.Deserialize(e)));
 
-            var unitsSerializer = new TagPropertySerializer(L5XElement.EngineeringUnit, tagName);
-            var units = new TagPropertyCollection<string>(element.Descendants(L5XElement.EngineeringUnit.ToString())
+            var unitsSerializer = new TagPropertySerializer(L5XName.EngineeringUnit, tagName);
+            var units = new TagPropertyCollection<string>(element.Descendants(L5XName.EngineeringUnit)
                 .Select(e => unitsSerializer.Deserialize(e)));
 
             return new Tag<IDataType>(tagName, dataType, externalAccess: access, comments: comments, units: units);
@@ -67,22 +67,22 @@ namespace L5Sharp.Serialization
         
         private string DetermineTagName(XNode element)
         {
-            var suffix = element.Ancestors(L5XElement.Connection.ToString())
-                .First().Attribute(L5XAttribute.InputTagSuffix.ToString())?.Value ?? DefaultSuffix;
+            var suffix = element.Ancestors(L5XName.Connection)
+                .First().Attribute(L5XName.InputTagSuffix)?.Value ?? DefaultSuffix;
 
-            var moduleName = element.Ancestors(L5XElement.Module.ToString())
-                .FirstOrDefault()?.Attribute(L5XAttribute.Name.ToString())?.Value;
+            var moduleName = element.Ancestors(L5XName.Module)
+                .FirstOrDefault()?.Attribute(L5XName.Name)?.Value;
 
-            var parentName = element.Ancestors(L5XElement.Module.ToString())
-                .FirstOrDefault()?.Attribute(L5XAttribute.ParentModule.ToString())?.Value;
+            var parentName = element.Ancestors(L5XName.Module)
+                .FirstOrDefault()?.Attribute(L5XName.ParentModule)?.Value;
 
             var slot = element
-                .Ancestors(L5XElement.Module.ToString())
-                .Descendants(L5XElement.Port.ToString())
-                .Where(p => bool.Parse(p.Attribute(L5XAttribute.Upstream.ToString())?.Value!)
-                            && p.Attribute(L5XAttribute.Type.ToString())?.Value != "Ethernet"
-                            && int.TryParse(p.Attribute(L5XAttribute.Address.ToString())?.Value, out _))
-                .Select(p => p.Attribute(L5XAttribute.Address.ToString())?.Value)
+                .Ancestors(L5XName.Module)
+                .Descendants(L5XName.Port)
+                .Where(p => bool.Parse(p.Attribute(L5XName.Upstream)?.Value!)
+                            && p.Attribute(L5XName.Type)?.Value != "Ethernet"
+                            && int.TryParse(p.Attribute(L5XName.Address)?.Value, out _))
+                .Select(p => p.Attribute(L5XName.Address)?.Value)
                 .FirstOrDefault();
 
             return slot is not null ? $"{parentName}:{slot}:{suffix}" : $"{moduleName}:{suffix}";

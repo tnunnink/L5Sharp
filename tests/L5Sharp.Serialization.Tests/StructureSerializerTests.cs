@@ -93,7 +93,7 @@ namespace L5Sharp.Serialization.Tests
             {
                 Member.Create<STRING>("StringMember"),
                 Member.Create<TIMER>("SintMember"),
-                Member.Create<COUNTER>("IntMember"),
+                Member.Create<COUNTER>("IntMember")
             });
 
             var xml = _serializer.Serialize(component);

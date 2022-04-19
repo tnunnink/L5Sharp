@@ -11,7 +11,7 @@ namespace L5Sharp.Serialization
     internal class ParameterSerializer : L5XSerializer<IParameter<IDataType>>
     {
         private readonly L5XContent? _document;
-        private static readonly XName ElementName = L5XElement.Parameter.ToString();
+        private static readonly XName ElementName = L5XName.Parameter;
         
         private LocalTagSerializer LocalTagSerializer => _document is not null
             ? _document.Serializers.Get<LocalTagSerializer>()
@@ -30,30 +30,30 @@ namespace L5Sharp.Serialization
             var element = new XElement(ElementName);
             element.AddComponentName(component.Name);
             element.AddComponentDescription(component.Description);
-            element.Add(new XAttribute(L5XAttribute.TagType.ToString(), component.TagType));
+            element.Add(new XAttribute(L5XName.TagType, component.TagType));
             
             if (component.TagType == TagType.Base)
-                element.Add(new XAttribute(L5XAttribute.DataType.ToString(), component.DataType.Name));
+                element.Add(new XAttribute(L5XName.DataType, component.DataType.Name));
             
             if (!component.Dimensions.IsEmpty)
-                element.Add(new XAttribute(L5XAttribute.Dimensions.ToString(), component.Dimensions));
+                element.Add(new XAttribute(L5XName.Dimensions, component.Dimensions));
             
-            element.Add(new XAttribute(L5XAttribute.Usage.ToString(), component.Usage));
+            element.Add(new XAttribute(L5XName.Usage, component.Usage));
             
             if (component.Radix != Radix.Null)
-                element.Add(new XAttribute(L5XAttribute.Radix.ToString(), component.Radix));
+                element.Add(new XAttribute(L5XName.Radix, component.Radix));
             
             if (component.TagType == TagType.Alias && component.Alias is not null)
-                element.Add(new XAttribute(L5XAttribute.AliasFor.ToString(), component.Alias.Name));
+                element.Add(new XAttribute(L5XName.AliasFor, component.Alias.Name));
             
-            element.Add(new XAttribute(L5XAttribute.Required.ToString(), component.Required));
-            element.Add(new XAttribute(L5XAttribute.Visible.ToString(), component.Visible));
+            element.Add(new XAttribute(L5XName.Required, component.Required));
+            element.Add(new XAttribute(L5XName.Visible, component.Visible));
             
             if (component.Usage == TagUsage.InOut)
-                element.Add(new XAttribute(L5XAttribute.Constant.ToString(), component.Constant));
+                element.Add(new XAttribute(L5XName.Constant, component.Constant));
             
             if (component.Usage != TagUsage.InOut)
-                element.Add(new XAttribute(L5XAttribute.ExternalAccess.ToString(), component.ExternalAccess));
+                element.Add(new XAttribute(L5XName.ExternalAccess, component.ExternalAccess));
 
             return element;
         }
@@ -68,21 +68,21 @@ namespace L5Sharp.Serialization
 
             var name = element.ComponentName();
             var description = element.ComponentDescription();
-            var dimensions = element.Attribute(L5XAttribute.Dimensions.ToString())?.Value.Parse<Dimensions>();
-            var radix = element.Attribute(L5XAttribute.Radix.ToString())?.Value.Parse<Radix>();
-            var access = element.Attribute(L5XAttribute.ExternalAccess.ToString())?.Value.Parse<ExternalAccess>();
-            var usage = element.Attribute(L5XAttribute.Usage.ToString())?.Value.Parse<TagUsage>();
-            var required = element.Attribute(L5XAttribute.Required.ToString())?.Value.Parse<bool>() ?? default;
-            var visible = element.Attribute(L5XAttribute.Visible.ToString())?.Value.Parse<bool>() ?? default;
-            var constant = element.Attribute(L5XAttribute.Constant.ToString())?.Value.Parse<bool>() ?? default;
+            var dimensions = element.Attribute(L5XName.Dimensions)?.Value.Parse<Dimensions>();
+            var radix = element.Attribute(L5XName.Radix)?.Value.Parse<Radix>();
+            var access = element.Attribute(L5XName.ExternalAccess)?.Value.Parse<ExternalAccess>();
+            var usage = element.Attribute(L5XName.Usage)?.Value.Parse<TagUsage>();
+            var required = element.Attribute(L5XName.Required)?.Value.Parse<bool>() ?? default;
+            var visible = element.Attribute(L5XName.Visible)?.Value.Parse<bool>() ?? default;
+            var constant = element.Attribute(L5XName.Constant)?.Value.Parse<bool>() ?? default;
 
-            var type = element.Attribute(L5XAttribute.TagType.ToString())?.Value.Parse<TagType>();
+            var type = element.Attribute(L5XName.TagType)?.Value.Parse<TagType>();
 
             if (type == TagType.Alias)
             {
-                var aliasFor = element.Attribute(L5XAttribute.AliasFor.ToString())?.Value.Parse<TagName>();
-                var localTag = element.Ancestors(L5XElement.AddOnInstructionDefinition.ToString())
-                    .Descendants(L5XElement.LocalTag.ToString())
+                var aliasFor = element.Attribute(L5XName.AliasFor)?.Value.Parse<TagName>();
+                var localTag = element.Ancestors(L5XName.AddOnInstructionDefinition)
+                    .Descendants(L5XName.LocalTag)
                     .First(e => e.ComponentName() == aliasFor);
                 var alias = LocalTagSerializer.Deserialize(localTag);
                 

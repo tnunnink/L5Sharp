@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Linq;
 using FluentAssertions;
+using L5Sharp.Core;
 using L5Sharp.L5X;
 using NUnit.Framework;
 
@@ -14,20 +15,20 @@ namespace L5Sharp.Context.Tests
         {
             FileAssert.Exists(Known.Template);
         }
-        
+
         [Test]
         public void Load_ValidFile_ShouldNotBeNull()
         {
             var stopwatch = new Stopwatch();
             stopwatch.Start();
-            
+
             var context = L5XContext.Load(Known.Template);
-            
+
             stopwatch.Stop();
 
             context.Should().NotBeNull();
         }
-        
+
         [Test]
         public void DataTypes_GetAll_ShouldNotBeEmpty()
         {
@@ -35,7 +36,7 @@ namespace L5Sharp.Context.Tests
 
             var stopwatch = new Stopwatch();
             stopwatch.Start();
-            
+
             var dataTypes = context.DataTypes().All().ToList();
 
             stopwatch.Stop();
@@ -47,42 +48,42 @@ namespace L5Sharp.Context.Tests
         public void Tags_GetAll_ShouldNotBeEmpty()
         {
             var context = L5XContext.Load(Known.Template);
-            
+
             var stopwatch = new Stopwatch();
             stopwatch.Start();
-            
-            var tags = context.Tags().All();
+
+            var tags = context.Tags().All().ToList();
 
             stopwatch.Stop();
 
             tags.Should().NotBeEmpty();
         }
-        
+
         [Test]
         public void Modules_GetAll_ShouldNotBeEmpty()
         {
             var context = L5XContext.Load(Known.Template);
-            
+
             var stopwatch = new Stopwatch();
             stopwatch.Start();
-            
+
             var modules = context.Modules().All().ToList();
 
             stopwatch.Stop();
 
             modules.Should().NotBeEmpty();
         }
-        
+
         [Test]
         public void Modules_GetAllTagMembers_ShouldNotBeNull()
         {
             var context = L5XContext.Load(Known.Template);
-            
+
             var stopwatch = new Stopwatch();
             stopwatch.Start();
 
-            var module = context.Modules().Find("INJ_Module_3"); 
-            
+            var module = context.Modules().Find("INJ_Module_3");
+
             var tags = module?.Tags;
 
             var members = tags?.SelectMany(t => t.Members());
@@ -91,12 +92,12 @@ namespace L5Sharp.Context.Tests
 
             members.Should().NotBeNull();
         }
-        
+
         [Test]
         public void Modules_GetSpecificTagMember_ShouldNotBeNull()
         {
             var context = L5XContext.Load(Known.Template);
-            
+
             var stopwatch = new Stopwatch();
             stopwatch.Start();
 
@@ -109,6 +110,56 @@ namespace L5Sharp.Context.Tests
             ch01.Should().NotBeNull();
 
             ch01?.Description.Should().NotBeEmpty();
+        }
+
+        [Test]
+        public void Rungs_WithInstruction_ShouldBeSomewhatFastHopefully()
+        {
+            var context = L5XContext.Load(Known.Template);
+
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
+
+            var rungs = context.Rungs(q => q.WithInstruction("XIC")).ToList();
+
+            stopwatch.Stop();
+
+            rungs.Should().NotBeEmpty();
+        }
+
+        [Test]
+        public void Rungs_WithTag_ShouldBeSomewhatFastHopefully()
+        {
+            var context = L5XContext.Load(Known.Template);
+
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
+
+            var rungs = context.Rungs(q => q.WithTag("FIO_MPLC:4:I")).ToList();
+
+            stopwatch.Stop();
+
+            rungs.Should().NotBeEmpty();
+        }
+
+        [Test]
+        public void BufferTagTesting()
+        {
+            var context = L5XContext.Load(Known.Template);
+
+            var bufferPairs = context.Rungs(q => q
+                    .WithTag("FIO_MPLC:4:I")
+                    .Flatten()
+                    .WithInstruction("MOV"))
+                .ToList()
+                .SelectMany(r => r.Text.Instructions().Where(i => i.Name == "MOV"))
+                .Select(i => new
+                {
+                    IOTag = new TagName(i.Operands.ToList()[0].ToString()),
+                    BufferTag = new TagName(i.Operands.ToList()[1].ToString()),
+                }).ToList();
+
+            bufferPairs.Should().NotBeEmpty();
         }
     }
 }

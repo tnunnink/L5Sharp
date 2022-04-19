@@ -11,7 +11,7 @@ namespace L5Sharp.Serialization
     internal class StructureMemberSerializer : L5XSerializer<IMember<IDataType>>
     {
         private readonly L5XContent? _document;
-        private static readonly XName ElementName = L5XElement.StructureMember.ToString();
+        private static readonly XName ElementName = L5XName.StructureMember;
         private readonly StringStructureSerializer _stringStructureSerializer;
 
         private DataValueMemberSerializer DataValueMemberSerializer => _document is not null
@@ -40,8 +40,8 @@ namespace L5Sharp.Serialization
 
             var element = new XElement(ElementName);
 
-            element.Add(new XAttribute(L5XAttribute.Name.ToString(), component.Name));
-            element.Add(new XAttribute(L5XAttribute.DataType.ToString(), component.DataType));
+            element.Add(new XAttribute(L5XName.Name, component.Name));
+            element.Add(new XAttribute(L5XName.DataType, component.DataType));
 
             var members = component.DataType.GetMembers()
                 .Select(m => m.MemberType == MemberType.ValueMember ? DataValueMemberSerializer.Serialize(m)
@@ -66,7 +66,7 @@ namespace L5Sharp.Serialization
 
             //The only way to know if this is a string type that needs special treatment is if there is a member with
             //the same data type name (which otherwise should be impossible).
-            if (element.Elements().Any(e => string.Equals(e.Attribute(L5XAttribute.DataType.ToString())?.Value,
+            if (element.Elements().Any(e => string.Equals(e.Attribute(L5XName.DataType)?.Value,
                     typeName, StringComparison.OrdinalIgnoreCase)))
             {
                 return new Member<IDataType>(name, _stringStructureSerializer.Deserialize(element));
@@ -81,9 +81,9 @@ namespace L5Sharp.Serialization
 
         private IL5XSerializer<IMember<IDataType>> GetSerializer(XElement element)
         {
-            return element.Name == L5XElement.DataValueMember.ToString() ? DataValueMemberSerializer
-                : element.Name == L5XElement.ArrayMember.ToString() ? ArrayMemberSerializer
-                : element.Name == L5XElement.StructureMember.ToString() ? this
+            return element.Name == L5XName.DataValueMember ? DataValueMemberSerializer
+                : element.Name == L5XName.ArrayMember ? ArrayMemberSerializer
+                : element.Name == L5XName.StructureMember ? this
                 : throw new ArgumentException();
         }
     }

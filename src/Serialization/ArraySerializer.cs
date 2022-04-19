@@ -10,7 +10,7 @@ namespace L5Sharp.Serialization
     internal class ArraySerializer : L5XSerializer<IArrayType<IDataType>>
     {
         private readonly L5XContent? _document;
-        private static readonly XName ElementName = L5XElement.Array.ToString();
+        private static readonly XName ElementName = L5XName.Array;
 
         private ArrayElementSerializer ArrayElementSerializer => _document is not null
             ? _document.Serializers.Get<ArrayElementSerializer>()
@@ -28,10 +28,10 @@ namespace L5Sharp.Serialization
 
             var element = new XElement(ElementName);
 
-            element.Add(new XAttribute(L5XElement.DataType.ToString(), component.Name));
-            element.Add(new XAttribute(L5XAttribute.Dimensions.ToString(), component.Dimensions));
+            element.Add(new XAttribute(L5XName.DataType, component.Name));
+            element.Add(new XAttribute(L5XName.Dimensions, component.Dimensions));
             if (component.First().Radix != Radix.Null)
-                element.Add(new XAttribute(L5XAttribute.Radix.ToString(), component.First().Radix));
+                element.Add(new XAttribute(L5XName.Radix, component.First().Radix));
             
             var elements = component.Select(e => ArrayElementSerializer.Serialize(e));
             element.Add(elements);
@@ -47,12 +47,12 @@ namespace L5Sharp.Serialization
             if (element.Name != ElementName)
                 throw new ArgumentException($"Element '{element.Name}' not valid for the serializer {GetType()}.");
 
-            var dimensions = Dimensions.Parse(element.Attribute(L5XAttribute.Dimensions.ToString())?.Value!);
-            Radix.TryFromValue(element.Attribute(L5XAttribute.Radix.ToString())?.Value!, out var radix);
+            var dimensions = Dimensions.Parse(element.Attribute(L5XName.Dimensions)?.Value!);
+            Radix.TryFromValue(element.Attribute(L5XName.Radix)?.Value!, out var radix);
             
             var members = element.Elements().Select(e => ArrayElementSerializer.Deserialize(e));
             
-            return new ArrayType<IDataType>(dimensions!, members.Select(m => m.DataType).ToList(), radix);
+            return new ArrayType<IDataType>(dimensions, members.Select(m => m.DataType).ToList(), radix);
         }
     }
 }

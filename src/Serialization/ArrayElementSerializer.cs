@@ -9,7 +9,7 @@ namespace L5Sharp.Serialization
     internal class ArrayElementSerializer : L5XSerializer<IMember<IDataType>>
     {
         private readonly L5XContent? _document;
-        private static readonly XName ElementName = L5XElement.Element.ToString();
+        private static readonly XName ElementName = L5XName.Element;
 
         private StructureSerializer StructureSerializer => _document is not null
             ? _document.Serializers.Get<StructureSerializer>()
@@ -27,12 +27,12 @@ namespace L5Sharp.Serialization
 
             var element = new XElement(ElementName);
 
-            element.Add(new XAttribute(L5XAttribute.Index.ToString(), component.Name));
+            element.Add(new XAttribute(L5XName.Index, component.Name));
 
             switch (component.DataType)
             {
                 case IAtomicType atomic:
-                    element.Add(new XAttribute(L5XAttribute.Value.ToString(), atomic.Format(component.Radix)));
+                    element.Add(new XAttribute(L5XName.Value, atomic.Format(component.Radix)));
                     break;
                 case IComplexType complexType:
                 {
@@ -52,12 +52,12 @@ namespace L5Sharp.Serialization
             if (element.Name != ElementName)
                 throw new ArgumentException($"Element '{element.Name}' not valid for the serializer {GetType()}.");
 
-            var index = element.Attribute(L5XAttribute.Index.ToString())?.Value!;
-            var value = element.Attribute(L5XAttribute.Value.ToString())?.Value?.TryParse<IAtomicType>();
+            var index = element.Attribute(L5XName.Index)?.Value!;
+            var value = element.Attribute(L5XName.Value)?.Value?.TryParse<IAtomicType>();
 
             IDataType dataType = value is not null
                 ? DataType.Atomic(element.Parent?.DataTypeName()!, value)
-                : StructureSerializer.Deserialize(element.Element(L5XElement.Structure.ToString())!);
+                : StructureSerializer.Deserialize(element.Element(L5XName.Structure)!);
 
             return new Member<IDataType>(index, dataType);
         }

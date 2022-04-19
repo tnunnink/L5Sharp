@@ -172,9 +172,6 @@ namespace L5Sharp.Core
         /// <inheritdoc />
         public IEnumerable<IRoutine<ILogixContent>> Routines => _routines;
 
-        //For lack  of better name...
-        public Instruction Generate(params Operand[] operands) => new(Name, operands);
-
         private static IEnumerable<IParameter<IDataType>> GenerateDefaultParameters()
         {
             yield return new Parameter<BOOL>("EnableIn", new BOOL(true), Radix.Decimal, ExternalAccess.ReadOnly,

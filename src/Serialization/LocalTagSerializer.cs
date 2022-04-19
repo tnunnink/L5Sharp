@@ -11,13 +11,13 @@ namespace L5Sharp.Serialization
     internal class LocalTagSerializer : L5XSerializer<ITag<IDataType>>
     {
         private readonly L5XContent? _document;
-        private static readonly XName ElementName = L5XElement.LocalTag.ToString();
+        private static readonly XName ElementName = L5XName.LocalTag;
         private readonly FormattedDataSerializer _formattedDataSerializer;
 
         public LocalTagSerializer(L5XContent? document = null)
         {
             _document = document;
-            _formattedDataSerializer = new FormattedDataSerializer(_document, L5XElement.DefaultData);
+            _formattedDataSerializer = new FormattedDataSerializer(_document, L5XName.DefaultData);
         }
 
         public override XElement Serialize(ITag<IDataType> component)
@@ -29,12 +29,12 @@ namespace L5Sharp.Serialization
 
             element.AddComponentName(component.Name);
             element.AddComponentDescription(component.Description);
-            element.Add(new XAttribute(L5XAttribute.DataType.ToString(), component.DataType.Name));
+            element.Add(new XAttribute(L5XName.DataType, component.DataType.Name));
             if (!component.Dimensions.IsEmpty)
-                element.Add(new XAttribute(L5XAttribute.Dimensions.ToString(), component.Dimensions));
+                element.Add(new XAttribute(L5XName.Dimensions, component.Dimensions));
             if (component.MemberType == MemberType.ValueMember)
-                element.Add(new XAttribute(L5XAttribute.Radix.ToString(), component.Radix));
-            element.Add(new XAttribute(L5XAttribute.ExternalAccess.ToString(), component.ExternalAccess));
+                element.Add(new XAttribute(L5XName.Radix, component.Radix));
+            element.Add(new XAttribute(L5XName.ExternalAccess, component.ExternalAccess));
 
             var data = _formattedDataSerializer.Serialize(component.DataType);
             element.Add(data);
@@ -55,9 +55,9 @@ namespace L5Sharp.Serialization
             var dataType = _document is not null
                 ? _document.Index.LookupType(element.DataTypeName())
                 : DataType.Create(element.DataTypeName());
-            var dimensions = element.Attribute(L5XAttribute.Dimensions.ToString())?.Value.Parse<Dimensions>();
-            var radix = element.Attribute(L5XAttribute.Radix.ToString())?.Value.Parse<Radix>();
-            var access = element.Attribute(L5XAttribute.ExternalAccess.ToString())?.Value.Parse<ExternalAccess>();
+            var dimensions = element.Attribute(L5XName.Dimensions)?.Value.Parse<Dimensions>();
+            var radix = element.Attribute(L5XName.Radix)?.Value.Parse<Radix>();
+            var access = element.Attribute(L5XName.ExternalAccess)?.Value.Parse<ExternalAccess>();
 
             var type = dimensions is not null && !dimensions.IsEmpty
                 ? new ArrayType<IDataType>(dimensions, dataType, radix, access, description)
@@ -65,8 +65,8 @@ namespace L5Sharp.Serialization
 
             var tag = new Tag<IDataType>(name, type, radix, access, description, TagUsage.Local);
 
-            var formattedData = element.Descendants(L5XElement.DefaultData.ToString())
-                .FirstOrDefault(e => e.Attribute(L5XAttribute.Format.ToString())?.Value != TagDataFormat.L5K);
+            var formattedData = element.Descendants(L5XName.DefaultData)
+                .FirstOrDefault(e => e.Attribute(L5XName.Format)?.Value != TagDataFormat.L5K);
 
             if (formattedData is null) return tag;
 

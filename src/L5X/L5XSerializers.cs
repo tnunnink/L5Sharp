@@ -23,13 +23,6 @@ namespace L5Sharp.L5X
             { typeof(ITask), typeof(TaskSerializer) },
         };
 
-        private readonly Dictionary<string, Type> _elementLookup = new()
-        {
-            { L5XElement.DataType.ToString(), typeof(DataTypeSerializer) },
-            { L5XElement.Structure.ToString(), typeof(StructureSerializer) },
-            { L5XElement.AddOnInstructionDefinition.ToString(), typeof(AddOnInstructionSerializer) }
-        };
-
         public L5XSerializers(L5XContent content)
         {
             _serializers = new Dictionary<Type, IL5XSerializer>
@@ -89,22 +82,6 @@ namespace L5Sharp.L5X
 
             if (result is not IL5XSerializer<TComponent> serializer)
                 throw new InvalidOperationException($"The configured serializer is not a valid '{type}'");
-
-            return serializer;
-        }
-
-
-        public IL5XSerializer<T> ForElement<T>(string name)
-        {
-            _elementLookup.TryGetValue(name, out var type);
-
-            if (type is null)
-                throw new InvalidOperationException($"No serializer defined for element '{name}'");
-
-            _serializers.TryGetValue(type, out var result);
-
-            if (result is not IL5XSerializer<T> serializer)
-                throw new InvalidOperationException($"No serializer defined for type '{type}'");
 
             return serializer;
         }

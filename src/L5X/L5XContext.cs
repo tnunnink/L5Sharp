@@ -122,7 +122,7 @@ namespace L5Sharp.L5X
         /// <inheritdoc />
         public IComponentQuery<ITag<IDataType>> Tags()
         {
-            var components = _l5X.Tags.Where(t => t.Parent?.Parent?.Name == L5XElement.Controller.ToString());
+            var components = _l5X.Tags.Where(t => t.Parent?.Parent?.Name == L5XName.Controller);
             var serializer = _l5X.Serializers.ForComponent<ITag<IDataType>>();
             return new ComponentQuery<ITag<IDataType>>(components, serializer);
         }
@@ -170,7 +170,7 @@ namespace L5Sharp.L5X
         /// <inheritdoc />
         public IEnumerable<Rung> Rungs(Func<RungQuery, RungQuery> query)
         {
-            var source = new RungQuery(_l5X.Content.Descendants(L5XElement.Rung.ToString()));
+            var source = new RungQuery(_l5X.Content.Descendants(L5XName.Rung));
             var result = query.Invoke(source);
             return result.Execute(_l5X.Serializers.Get<RungSerializer>());
         }

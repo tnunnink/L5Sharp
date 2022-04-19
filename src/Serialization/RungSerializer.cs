@@ -12,7 +12,7 @@ namespace L5Sharp.Serialization
     /// </summary>
     internal class RungSerializer : L5XSerializer<Rung>
     {
-        private static readonly XName ElementName = L5XElement.Rung.ToString();
+        private static readonly XName ElementName = L5XName.Rung;
 
         /// <inheritdoc />
         public override XElement Serialize(Rung component)
@@ -21,11 +21,11 @@ namespace L5Sharp.Serialization
                 throw new ArgumentNullException(nameof(component));
 
             var element = new XElement(ElementName);
-            element.Add(new XAttribute(L5XAttribute.Number.ToString(), component.Number));
-            element.Add(new XAttribute(L5XAttribute.Type.ToString(), component.Type.Value));
+            element.Add(new XAttribute(L5XName.Number, component.Number));
+            element.Add(new XAttribute(L5XName.Type, component.Type.Value));
             if (!component.Comment.IsEmpty())
-                element.Add(new XElement(L5XElement.Comment.ToString(), new XCData(component.Comment)));
-            element.Add(new XElement(L5XElement.Text.ToString(), new XCData(component.Text)));
+                element.Add(new XElement(L5XName.Comment, new XCData(component.Comment)));
+            element.Add(new XElement(L5XName.Text, new XCData(component.Text)));
 
             return element;
         }
@@ -39,10 +39,10 @@ namespace L5Sharp.Serialization
             if (element.Name != ElementName)
                 throw new ArgumentException($"Element '{element.Name}' not valid for the serializer {GetType()}.");
 
-            var number = element.Attribute(L5XAttribute.Number.ToString())?.Value.Parse<int>() ?? default;
-            var type = element.Attribute(L5XAttribute.Type.ToString())?.Value.Parse<RungType>();
-            var comment = element.Element(L5XElement.Comment.ToString())?.Value;
-            var text = element.Element(L5XElement.Text.ToString())?.Value.Parse<NeutralText>();
+            var number = element.Attribute(L5XName.Number)?.Value.Parse<int>() ?? default;
+            var type = element.Attribute(L5XName.Type)?.Value.Parse<RungType>();
+            var comment = element.Element(L5XName.Comment)?.Value;
+            var text = element.Element(L5XName.Text)?.Value.Parse<NeutralText>();
 
             return new Rung(number, type, comment, text);
         }

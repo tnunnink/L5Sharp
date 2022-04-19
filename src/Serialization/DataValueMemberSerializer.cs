@@ -11,7 +11,7 @@ namespace L5Sharp.Serialization
 {
     internal class DataValueMemberSerializer : L5XSerializer<IMember<IDataType>>
     {
-        private static readonly XName ElementName = L5XElement.DataValueMember.ToString();
+        private static readonly XName ElementName = L5XName.DataValueMember;
 
         public override XElement Serialize(IMember<IDataType> component)
         {
@@ -22,11 +22,11 @@ namespace L5Sharp.Serialization
                 throw new ArgumentException($"{ElementName} must have an atomic data type.");
 
             var element = new XElement(ElementName);
-            element.Add(new XAttribute(L5XAttribute.Name.ToString(), component.Name));
-            element.Add(new XAttribute(L5XAttribute.DataType.ToString(), component.DataType.Name));
+            element.Add(new XAttribute(L5XName.Name, component.Name));
+            element.Add(new XAttribute(L5XName.DataType, component.DataType.Name));
             if (!string.Equals(component.DataType.Name, nameof(BOOL), StringComparison.OrdinalIgnoreCase))
-                element.Add(new XAttribute(L5XAttribute.Radix.ToString(), component.Radix));
-            element.Add(new XAttribute(L5XAttribute.Value.ToString(), atomic.Format(component.Radix)));
+                element.Add(new XAttribute(L5XName.Radix, component.Radix));
+            element.Add(new XAttribute(L5XName.Value, atomic.Format(component.Radix)));
 
             return element;
         }
@@ -41,8 +41,8 @@ namespace L5Sharp.Serialization
 
             var name = element.ComponentName();
             var type = element.DataTypeName();
-            var radix = element.Attribute(L5XAttribute.Radix.ToString())?.Value?.Parse<Radix>() ?? Radix.Decimal;
-            var value = element.Attribute(L5XAttribute.Value.ToString())?.Value;
+            var radix = element.Attribute(L5XName.Radix)?.Value?.Parse<Radix>() ?? Radix.Decimal;
+            var value = element.Attribute(L5XName.Value)?.Value;
             
             var dataType = DataType.Atomic(type, value);
             

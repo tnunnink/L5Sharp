@@ -34,7 +34,7 @@ namespace L5Sharp.Querying
             if (type is null)
                 throw new ArgumentNullException(nameof(type));
 
-            var results = this.Where(e => e.Attribute(L5XAttribute.Type.ToString())?.Value == type.Value);
+            var results = this.Where(e => e.Attribute(L5XName.Type)?.Value == type.Value);
 
             return new TaskQuery(results);
         }
@@ -71,7 +71,7 @@ namespace L5Sharp.Querying
 
             var results = this.Where(e =>
             {
-                var programs = e.Descendants(L5XElement.ScheduledProgram.ToString()).Select(c => c.ComponentName());
+                var programs = e.Descendants(L5XName.ScheduledProgram).Select(c => c.ComponentName());
                 return programs.Contains(program.ToString());
             });
             

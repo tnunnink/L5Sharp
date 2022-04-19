@@ -10,7 +10,7 @@ namespace L5Sharp.Serialization
     internal class FormattedDataSerializer : L5XSerializer<IDataType>
     {
         private readonly L5XContent? _document;
-        private readonly L5XElement _element;
+        private readonly string _element;
 
         private DecoratedDataSerializer DecoratedDataSerializer => _document is not null
             ? _document.Serializers.Get<DecoratedDataSerializer>()
@@ -20,9 +20,9 @@ namespace L5Sharp.Serialization
             ? _document.Serializers.Get<AlarmDataSerializer>()
             : new AlarmDataSerializer(_document);
 
-        public FormattedDataSerializer(L5XContent? document = null, L5XElement? element = null)
+        public FormattedDataSerializer(L5XContent? document = null, string? element = null)
         {
-            _element = element ?? L5XElement.Data;
+            _element = element ?? L5XName.Data;
             _document = document;
         }
 
@@ -31,11 +31,11 @@ namespace L5Sharp.Serialization
             if (component == null)
                 throw new ArgumentNullException(nameof(component));
 
-            var element = new XElement(_element.ToString());
+            var element = new XElement(_element);
 
             var format = TagDataFormat.FromDataType(component);
             
-            element.Add(new XAttribute(L5XAttribute.Format.ToString(), format));
+            element.Add(new XAttribute(L5XName.Format, format));
 
             format
                 .When(TagDataFormat.Decorated).Then(() => element.Add(DecoratedDataSerializer.Serialize(component)))
@@ -43,7 +43,7 @@ namespace L5Sharp.Serialization
                 .When(TagDataFormat.String).Then(() =>
                 {
                     var str = (STRING)component;
-                    element.Add(new XAttribute(L5XAttribute.Length.ToString(), str.LEN.DataType.Value));
+                    element.Add(new XAttribute(L5XName.Length, str.LEN.DataType.Value));
                     element.Add(new XCData($"'{str.Value}'"));
                 });
 
@@ -55,10 +55,10 @@ namespace L5Sharp.Serialization
             if (element == null)
                 throw new ArgumentNullException(nameof(element));
 
-            if (element.Name != _element.ToString())
+            if (element.Name != _element)
                 throw new ArgumentException($"Element '{element.Name}' not valid for the serializer {GetType()}.");
 
-            TagDataFormat.TryFromName(element.Attribute(L5XAttribute.Format.ToString())?.Value, out var format);
+            TagDataFormat.TryFromName(element.Attribute(L5XName.Format)?.Value, out var format);
 
             if (format is null) return new UNDEFINED();
             

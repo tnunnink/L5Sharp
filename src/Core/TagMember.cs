@@ -105,7 +105,7 @@ namespace L5Sharp.Core
             if (tagName is null)
                 throw new ArgumentNullException(nameof(tagName));
 
-            var childTag = tagName.Root == Name ? new TagName(tagName.Path) : tagName;
+            var childTag = tagName.Base == Name ? new TagName(tagName.Path) : tagName;
 
             return _member.DataType.GetTagNames().Any(t => t == childTag);
         }
@@ -116,7 +116,7 @@ namespace L5Sharp.Core
             if (tagName is null)
                 throw new ArgumentNullException(nameof(tagName));
 
-            var path = tagName.Root.Equals(Root.Name) ? tagName.Path : tagName.ToString();
+            var path = tagName.Base.Equals(Root.Name) ? tagName.Path : tagName.ToString();
 
             var members = _member.DataType.GetMembers(path).ToList();
 

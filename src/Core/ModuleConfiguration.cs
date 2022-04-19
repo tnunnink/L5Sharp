@@ -9,24 +9,9 @@ namespace L5Sharp.Core
     public class ModuleConfiguration
     {
         /// <summary>
-        /// Creates a new default <see cref="ModuleConfiguration"/> object with default property values.
-        /// </summary>
-        public ModuleConfiguration()
-        {
-            Description = string.Empty;
-            Keying = ElectronicKeying.CompatibleModule;
-            Slot = 0;
-            IP = IPAddress.None;
-            ChassisSize = 0;
-            Inhibited = false;
-            MajorFault = false;
-            SafetyEnabled = false;
-        }
-        
-        /// <summary>
         /// Gets or sets the description of the module configuration object.
         /// </summary>
-        public string Description { get; set; }
+        public string? Description { get; set; }
         
         /// <summary>
         /// Gets or sets the revision of the module configuration object.
@@ -42,7 +27,7 @@ namespace L5Sharp.Core
         /// <summary>
         /// Gets of sets the IP of the module configuration.
         /// </summary>
-        public IPAddress IP { get; set; }
+        public IPAddress? IP { get; set; }
         
         /// <summary>
         /// Gets of sets the ChassisSize of the module configuration.
@@ -52,7 +37,7 @@ namespace L5Sharp.Core
         /// <summary>
         /// Gets of sets the Keying of the module configuration.
         /// </summary>
-        public ElectronicKeying Keying { get; set; }
+        public ElectronicKeying? Keying { get; set; }
         
         /// <summary>
         /// Gets of sets the Inhibited of the module configuration.

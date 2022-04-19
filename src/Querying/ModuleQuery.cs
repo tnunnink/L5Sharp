@@ -33,7 +33,7 @@ namespace L5Sharp.Querying
                 throw new ArgumentNullException(nameof(parentName));
 
             var results = this.Where(e =>
-                e.Attribute(L5XAttribute.ParentModule.ToString())?.Value == parentName.ToString());
+                e.Attribute(L5XName.ParentModule)?.Value == parentName.ToString());
 
             return new ModuleQuery(results);
         }
@@ -51,7 +51,7 @@ namespace L5Sharp.Querying
 
             var results = this.Where(e =>
             {
-                var catalogNumber = e.Attribute(L5XAttribute.CatalogNumber.ToString());
+                var catalogNumber = e.Attribute(L5XName.CatalogNumber);
                 return catalogNumber is not null && predicate.Invoke(catalogNumber.Value.Parse<CatalogNumber>());
             });
 

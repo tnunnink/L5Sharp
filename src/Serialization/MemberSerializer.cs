@@ -9,7 +9,7 @@ namespace L5Sharp.Serialization
 {
     internal class MemberSerializer : L5XSerializer<IMember<IDataType>>
     {
-        private static readonly XName ElementName = L5XElement.Member.ToString();
+        private static readonly XName ElementName = L5XName.Member;
         private readonly L5XContent? _document;
         
         public MemberSerializer(L5XContent? document = null)
@@ -26,11 +26,11 @@ namespace L5Sharp.Serialization
 
             element.AddComponentName(component.Name);
             element.AddComponentDescription(component.Description);
-            element.Add(new XAttribute(L5XAttribute.DataType.ToString(), component.DataType.Name));
-            element.Add(new XAttribute(L5XAttribute.Dimension.ToString(), component.Dimensions));
-            element.Add(new XAttribute(L5XAttribute.Radix.ToString(), component.Radix));
-            element.Add(new XAttribute(L5XAttribute.Hidden.ToString(), false));
-            element.Add(new XAttribute(L5XAttribute.ExternalAccess.ToString(), component.ExternalAccess));
+            element.Add(new XAttribute(L5XName.DataType, component.DataType.Name));
+            element.Add(new XAttribute(L5XName.Dimension, component.Dimensions));
+            element.Add(new XAttribute(L5XName.Radix, component.Radix));
+            element.Add(new XAttribute(L5XName.Hidden, false));
+            element.Add(new XAttribute(L5XName.ExternalAccess, component.ExternalAccess));
 
             return element;
         }
@@ -48,9 +48,9 @@ namespace L5Sharp.Serialization
             var dataType = _document is not null
                 ? _document.Index.LookupType(element.DataTypeName())
                 : DataType.Create(element.DataTypeName());
-            var dimensions = element.Attribute(L5XAttribute.Dimension.ToString())?.Value.Parse<Dimensions>();
-            var radix = element.Attribute(L5XAttribute.Radix.ToString())?.Value.Parse<Radix>();
-            var access = element.Attribute(L5XAttribute.ExternalAccess.ToString())?.Value.Parse<ExternalAccess>();
+            var dimensions = element.Attribute(L5XName.Dimension)?.Value.Parse<Dimensions>();
+            var radix = element.Attribute(L5XName.Radix)?.Value.Parse<Radix>();
+            var access = element.Attribute(L5XName.ExternalAccess)?.Value.Parse<ExternalAccess>();
 
             if (dimensions is null || dimensions.IsEmpty)
                 return new Member<IDataType>(name, dataType, radix, access, description);

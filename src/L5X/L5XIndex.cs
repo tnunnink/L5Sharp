@@ -88,8 +88,8 @@ namespace L5Sharp.L5X
            _dataTypeIndex.Clear();
 
             var elements = _content.Content
-                .Descendants(L5XElement.DataType.ToString())
-                .Where(e => e.Attribute(L5XAttribute.Name.ToString()) is not null);
+                .Descendants(L5XName.DataType)
+                .Where(e => e.Attribute(L5XName.Name) is not null);
 
             foreach (var element in elements)
                 _dataTypeIndex.TryAdd(element.ComponentName(), element);
@@ -100,9 +100,9 @@ namespace L5Sharp.L5X
             _moduleTypeIndex.Clear();
             
             var elements = _content.Content
-                .Descendants(L5XElement.Module.ToString())
-                .Descendants(L5XElement.Structure.ToString())
-                .Where(e => e.Attribute(L5XAttribute.DataType.ToString()) is not null);
+                .Descendants(L5XName.Module)
+                .Descendants(L5XName.Structure)
+                .Where(e => e.Attribute(L5XName.DataType) is not null);
             
             foreach (var element in elements)
                 _moduleTypeIndex.TryAdd(element.DataTypeName(), element);
@@ -113,8 +113,8 @@ namespace L5Sharp.L5X
             _moduleIndex.Clear();
 
             var elements = _content.Content
-                .Descendants(L5XElement.Module.ToString())
-                .Where(e => e.Attribute(L5XAttribute.Name.ToString()) is not null);
+                .Descendants(L5XName.Module)
+                .Where(e => e.Attribute(L5XName.Name) is not null);
 
             foreach (var element in elements)
                 _moduleIndex.TryAdd(element.ComponentName(), element);
@@ -125,8 +125,8 @@ namespace L5Sharp.L5X
             _instructionIndex.Clear();
 
             var elements = _content.Content
-                .Descendants(L5XElement.AddOnInstructionDefinition.ToString())
-                .Where(e => e.Attribute(L5XAttribute.Name.ToString()) is not null);
+                .Descendants(L5XName.AddOnInstructionDefinition)
+                .Where(e => e.Attribute(L5XName.Name) is not null);
 
             foreach (var element in elements)
                 _instructionIndex.TryAdd(element.ComponentName(), element);
@@ -137,12 +137,12 @@ namespace L5Sharp.L5X
             _tagIndex.Clear();
 
             var elements = _content.Content
-                .Descendants(L5XElement.Tag.ToString())
-                .Where(e => e.Attribute(L5XAttribute.Name.ToString()) is not null);
+                .Descendants(L5XName.Tag)
+                .Where(e => e.Attribute(L5XName.Name) is not null);
 
             foreach (var element in elements)
             {
-                var program = element.Ancestors(L5XElement.Program.ToString()).FirstOrDefault()?.ComponentName();
+                var program = element.Ancestors(L5XName.Program).FirstOrDefault()?.ComponentName();
                 var name = program is not null ? $"Program:{program}.{element.ComponentName()}" : element.ComponentName();
                 _tagIndex.TryAdd(name, element);
             }

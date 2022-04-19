@@ -11,7 +11,7 @@ namespace L5Sharp.Serialization
     internal class ArrayMemberSerializer : L5XSerializer<IMember<IDataType>>
     {
         private readonly L5XContent? _document;
-        private static readonly XName ElementName = L5XElement.ArrayMember.ToString();
+        private static readonly XName ElementName = L5XName.ArrayMember;
 
         private ArrayElementSerializer ArrayElementSerializer => _document is not null
             ? _document.Serializers.Get<ArrayElementSerializer>()
@@ -32,11 +32,11 @@ namespace L5Sharp.Serialization
 
             var element = new XElement(ElementName);
 
-            element.Add(new XAttribute(L5XAttribute.Name.ToString(), component.Name));
-            element.Add(new XAttribute(L5XAttribute.DataType.ToString(), component.DataType.Name));
-            element.Add(new XAttribute(L5XAttribute.Dimensions.ToString(), component.Dimensions));
+            element.Add(new XAttribute(L5XName.Name, component.Name));
+            element.Add(new XAttribute(L5XName.DataType, component.DataType.Name));
+            element.Add(new XAttribute(L5XName.Dimensions, component.Dimensions));
             if (component.Radix != Radix.Null)
-                element.Add(new XAttribute(L5XAttribute.Radix.ToString(), component.Radix));
+                element.Add(new XAttribute(L5XName.Radix, component.Radix));
             
             var elements = arrayType.Select(m => ArrayElementSerializer.Serialize(m));
             element.Add(elements);
@@ -53,8 +53,8 @@ namespace L5Sharp.Serialization
                 throw new ArgumentException($"Element '{element.Name}' not valid for the serializer {GetType()}.");
 
             var name = element.ComponentName();
-            var dimensions = element.Attribute(L5XAttribute.Dimensions.ToString())?.Value.Parse<Dimensions>();
-            var radix = element.Attribute(L5XAttribute.Radix.ToString())?.Value.Parse<Radix>();
+            var dimensions = element.Attribute(L5XName.Dimensions)?.Value.Parse<Dimensions>();
+            var radix = element.Attribute(L5XName.Radix)?.Value.Parse<Radix>();
             var members = element.Elements().Select(e => ArrayElementSerializer.Deserialize(e));
             
             var arrayType = new ArrayType<IDataType>(dimensions!, members.Select(m => m.DataType).ToList(), radix);
