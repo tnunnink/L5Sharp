@@ -13,7 +13,7 @@ namespace L5Sharp.Querying.Tests
         [Test]
         public void OnlyAtomicMembers_WhenCalled_AllMembersShouldBeAtomics()
         {
-            var context = L5XContext.Load(Known.Test);
+            var context = LogixContext.Load(Known.Test);
             
             var results = context.DataTypes(q => q.OnlyAtomicMembers()).ToList();
 

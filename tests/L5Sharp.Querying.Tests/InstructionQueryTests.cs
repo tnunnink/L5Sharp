@@ -12,7 +12,7 @@ namespace L5Sharp.Querying.Tests
         [Test]
         public void IsReferences_WhenCalled_ShouldNotBeEmpty()
         {
-            var context = L5XContext.Load(Known.Test);
+            var context = LogixContext.Load(Known.Test);
 
             var results = context.Instructions(q => q.IsReferenced()).ToList();
 

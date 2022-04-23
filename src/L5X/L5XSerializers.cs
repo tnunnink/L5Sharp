@@ -6,7 +6,7 @@ namespace L5Sharp.L5X
 {
     /// <summary>
     /// A class that contains instances of <see cref="IL5XSerializer{T}"/>, which make available the
-    /// current <see cref="L5XContext"/> object, so that the serializers may use the information to necessary
+    /// current <see cref="LogixContext"/> object, so that the serializers may use the information to necessary
     /// to instantiate objects efficiently. 
     /// </summary>
     internal class L5XSerializers

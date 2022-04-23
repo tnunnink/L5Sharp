@@ -16,7 +16,7 @@ namespace L5Sharp.Enums
     /// <summary>
     /// Represents a number base for a given value type or atomic type.
     /// </summary>
-    public abstract class Radix : SmartEnum<Radix, string>//, ICustomFormatter todo implement .net format interfaces instead?
+    public abstract class Radix : SmartEnum<Radix, string>
     {
         private static readonly Dictionary<string, Func<string, bool>> Identifiers = new()
         {
@@ -224,30 +224,6 @@ namespace L5Sharp.Enums
             {
                 result = null;
                 return false;
-            }
-        }
-        
-        //todo how should we do paring here...
-        public static TAtomic? TryParse<TAtomic>(string input) where TAtomic : IAtomicType
-        {
-            var parser = DetermineParser(input);
-
-            if (parser is null)
-                return default;
-            
-            try
-            {
-                var value = parser(input);
-                
-                var converter = TypeDescriptor.GetConverter(typeof(TAtomic));
-                if (!converter.CanConvertFrom(value.GetType()))
-                    return default;
-                
-                return (TAtomic)converter.ConvertFrom(value)!;
-            }
-            catch (Exception)
-            {
-                return default;
             }
         }
 

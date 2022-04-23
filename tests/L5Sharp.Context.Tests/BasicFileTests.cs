@@ -17,7 +17,7 @@ namespace L5Sharp.Context.Tests
         [Test]
         public void Load_ValidFile_ShouldNotBeNull()
         {
-            var context = L5XContext.Load(Known.L5X);
+            var context = LogixContext.Load(Known.L5X);
 
             context.Should().NotBeNull();
         }
@@ -25,7 +25,7 @@ namespace L5Sharp.Context.Tests
         /*[Test]
         public void Content_ValidFile_ShouldHaveExpectedProperties()
         {
-            var context = L5XContext.Load(Known.L5X);
+            var context = LogixContext.Load(Known.L5X);
 
             context.Info.SchemaRevision.Should().Be(new Revision());
             context.Info.SoftwareRevision.Should().Be(new Revision(32, 2));
@@ -39,7 +39,7 @@ namespace L5Sharp.Context.Tests
         [Test]
         public void Controller_WhenCalled_ShouldNotBeNull()
         {
-            var context = L5XContext.Load(Known.L5X);
+            var context = LogixContext.Load(Known.L5X);
 
             var controller = context.Controller();
 
@@ -49,7 +49,7 @@ namespace L5Sharp.Context.Tests
         [Test]
         public void Controller_WhenCalled_ShouldBeExpected()
         {
-            var context = L5XContext.Load(Known.L5X);
+            var context = LogixContext.Load(Known.L5X);
 
             var controller = context.Controller()!;
 

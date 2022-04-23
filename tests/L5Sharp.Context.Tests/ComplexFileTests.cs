@@ -22,7 +22,7 @@ namespace L5Sharp.Context.Tests
             var stopwatch = new Stopwatch();
             stopwatch.Start();
 
-            var context = L5XContext.Load(Known.Template);
+            var context = LogixContext.Load(Known.Template);
 
             stopwatch.Stop();
 
@@ -32,7 +32,7 @@ namespace L5Sharp.Context.Tests
         [Test]
         public void DataTypes_GetAll_ShouldNotBeEmpty()
         {
-            var context = L5XContext.Load(Known.Template);
+            var context = LogixContext.Load(Known.Template);
 
             var stopwatch = new Stopwatch();
             stopwatch.Start();
@@ -47,7 +47,7 @@ namespace L5Sharp.Context.Tests
         [Test]
         public void Tags_GetAll_ShouldNotBeEmpty()
         {
-            var context = L5XContext.Load(Known.Template);
+            var context = LogixContext.Load(Known.Template);
 
             var stopwatch = new Stopwatch();
             stopwatch.Start();
@@ -62,7 +62,7 @@ namespace L5Sharp.Context.Tests
         [Test]
         public void Modules_GetAll_ShouldNotBeEmpty()
         {
-            var context = L5XContext.Load(Known.Template);
+            var context = LogixContext.Load(Known.Template);
 
             var stopwatch = new Stopwatch();
             stopwatch.Start();
@@ -77,7 +77,7 @@ namespace L5Sharp.Context.Tests
         [Test]
         public void Modules_GetAllTagMembers_ShouldNotBeNull()
         {
-            var context = L5XContext.Load(Known.Template);
+            var context = LogixContext.Load(Known.Template);
 
             var stopwatch = new Stopwatch();
             stopwatch.Start();
@@ -96,7 +96,7 @@ namespace L5Sharp.Context.Tests
         [Test]
         public void Modules_GetSpecificTagMember_ShouldNotBeNull()
         {
-            var context = L5XContext.Load(Known.Template);
+            var context = LogixContext.Load(Known.Template);
 
             var stopwatch = new Stopwatch();
             stopwatch.Start();
@@ -115,7 +115,7 @@ namespace L5Sharp.Context.Tests
         [Test]
         public void Rungs_WithInstruction_ShouldBeSomewhatFastHopefully()
         {
-            var context = L5XContext.Load(Known.Template);
+            var context = LogixContext.Load(Known.Template);
 
             var stopwatch = new Stopwatch();
             stopwatch.Start();
@@ -130,7 +130,7 @@ namespace L5Sharp.Context.Tests
         [Test]
         public void Rungs_WithTag_ShouldBeSomewhatFastHopefully()
         {
-            var context = L5XContext.Load(Known.Template);
+            var context = LogixContext.Load(Known.Template);
 
             var stopwatch = new Stopwatch();
             stopwatch.Start();
@@ -145,7 +145,7 @@ namespace L5Sharp.Context.Tests
         [Test]
         public void BufferTagTesting()
         {
-            var context = L5XContext.Load(Known.Template);
+            var context = LogixContext.Load(Known.Template);
 
             var bufferPairs = context.Rungs(q => q
                     .WithTag("FIO_MPLC:4:I")

@@ -7,30 +7,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Serialization/StringMemberSerializer.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Enums.Tests/FunctionTests.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Enums.Tests/OperationTests.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Serialization.Tests/StructureMemberSerializerTests.Serialize_StructureMembers_ShouldBeApproved.received.xml" afterDir="false" />
+    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="Fixed string member serialization issues. Remove Unused or untested code">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/Line.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Enums/Function.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Enums/Function.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Enums/RoutineType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Enums/RoutineType.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/IStructuredText.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5X/L5XSerializers.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5X/L5XSerializers.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Serialization/StringStructureSerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Serialization/StringStructureSerializer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Serialization/StructureMemberSerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Serialization/StructureMemberSerializer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Serialization/StructureSerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Serialization/StructureSerializer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Types/SINT.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Types/SINT.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/ModuleConfigurationTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/ModuleConfigurationTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Enums.Tests/RoutineTypeTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Enums.Tests/RoutineTypeTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Serialization.Tests/StructureMemberSerializerTests.Serialize_StructureMembers_ShouldBeApproved.approved.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Serialization.Tests/StructureMemberSerializerTests.Serialize_StructureMembers_ShouldBeApproved.approved.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Serialization.Tests/StructureMemberSerializerTests.Serialize_StructureMembers_ShouldBeApproved.approved.xml.bak" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Serialization.Tests/StructureMemberSerializerTests.Serialize_StructureMembers_ShouldBeApproved.approved.xml.bak" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Serialization.Tests/StructureSerializerTests.Serialize_StructureMembers_ShouldBeApproved.approved.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Serialization.Tests/StructureSerializerTests.Serialize_StructureMembers_ShouldBeApproved.approved.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Serialization.Tests/StructureSerializerTests.Serialize_StructureMembers_ShouldBeApproved.approved.xml.bak" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Serialization.Tests/StructureSerializerTests.Serialize_StructureMembers_ShouldBeApproved.approved.xml.bak" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Serialization.Tests/StructureSerializerTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Serialization.Tests/StructureSerializerTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Serialization.Tests/TagSerializerTests.Serialize_UserDefined_ShouldBeApproved.approved.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Serialization.Tests/TagSerializerTests.Serialize_UserDefined_ShouldBeApproved.approved.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Serialization.Tests/TagSerializerTests.Serialize_UserDefined_ShouldBeApproved.approved.xml.bak" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Serialization.Tests/TagSerializerTests.Serialize_UserDefined_ShouldBeApproved.approved.xml.bak" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Enums/Radix.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Enums/Radix.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ILogixContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ILogixContext.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5X/L5XContent.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5X/L5XContent.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5X/L5XContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5X/L5XContext.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Context.Tests/L5XContextTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Context.Tests/L5XContextTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Context.Tests/TestFiles/Template.xsd" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -342,14 +326,7 @@
       <workItem from="1650288218047" duration="2148000" />
       <workItem from="1650330235564" duration="11711000" />
       <workItem from="1650416888929" duration="1498000" />
-      <workItem from="1650718728525" duration="2605000" />
-    </task>
-    <task id="LOCAL-00134" summary="Radix testing">
-      <created>1644620305256</created>
-      <option name="number" value="00134" />
-      <option name="presentableId" value="LOCAL-00134" />
-      <option name="project" value="LOCAL" />
-      <updated>1644620305256</updated>
+      <workItem from="1650718728525" duration="3375000" />
     </task>
     <task id="LOCAL-00135" summary="random clean up and testing">
       <created>1644636452929</created>
@@ -687,7 +664,14 @@
       <option name="project" value="LOCAL" />
       <updated>1650399555516</updated>
     </task>
-    <option name="localTasksCounter" value="183" />
+    <task id="LOCAL-00183" summary="Fixed string member serialization issues. Remove Unused or untested code">
+      <created>1650721385977</created>
+      <option name="number" value="00183" />
+      <option name="presentableId" value="LOCAL-00183" />
+      <option name="project" value="LOCAL" />
+      <updated>1650721385978</updated>
+    </task>
+    <option name="localTasksCounter" value="184" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -754,7 +738,6 @@
       <path value="$PROJECT_DIR$/../.." />
     </ignored-roots>
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="Tag member api updates and data type extension updates" />
     <MESSAGE value="Updates to add on instruction component api and documentation" />
     <MESSAGE value="Updates to L5XContext.cs api. Various clean up. Movement of internal serialization extensions and process. Updates to AOI components." />
     <MESSAGE value="Brought back builders and update tag builder api. Added testing. Updated parameter adding testing. Random clean up and testing fixes. TagName api additions and complete testing." />
@@ -779,7 +762,8 @@
     <MESSAGE value="Cleaned up query objects by removing interface definitions. Update API and corrected documentation." />
     <MESSAGE value="Query testing and updates. Other random updates." />
     <MESSAGE value="Clean up of unused and unsupported code. Removed the L5XAttribute.cs and L5XElement.cs and combined into single static string class L5XName.cs to make code more readable. Fixed tests and added additional querying tests to complete test coverage." />
-    <option name="LAST_COMMIT_MESSAGE" value="Clean up of unused and unsupported code. Removed the L5XAttribute.cs and L5XElement.cs and combined into single static string class L5XName.cs to make code more readable. Fixed tests and added additional querying tests to complete test coverage." />
+    <MESSAGE value="Fixed string member serialization issues. Remove Unused or untested code" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed string member serialization issues. Remove Unused or untested code" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

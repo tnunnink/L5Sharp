@@ -14,7 +14,7 @@ namespace L5Sharp.Querying.Tests
         [Test]
         public void WithParent_Null_ShouldThrowArgumentNullException()
         {
-            var context = L5XContext.Load(Known.Test);
+            var context = LogixContext.Load(Known.Test);
 
             FluentActions.Invoking(() => context.Modules(q => q.WithParent(null!))).Should()
                 .Throw<ArgumentNullException>();
@@ -23,7 +23,7 @@ namespace L5Sharp.Querying.Tests
         [Test]
         public void WithParent_NonExistingParent_ShouldBeEmpty()
         {
-            var context = L5XContext.Load(Known.Test);
+            var context = LogixContext.Load(Known.Test);
 
             var results = context.Modules(q => q.WithParent("Fake")).ToList();
 
@@ -33,7 +33,7 @@ namespace L5Sharp.Querying.Tests
         [Test]
         public void WithParent_ValidParent_ShouldAllHaveSpecifiedParent()
         {
-            var context = L5XContext.Load(Known.Test);
+            var context = LogixContext.Load(Known.Test);
 
             var results = context.Modules(q => q.WithParent("Local_Mod_1")).ToList();
 
@@ -44,7 +44,7 @@ namespace L5Sharp.Querying.Tests
         [Test]
         public void WithCatalog_NullPredicate_ShouldNotBeEmpty()
         {
-            var context = L5XContext.Load(Known.Test);
+            var context = LogixContext.Load(Known.Test);
 
             FluentActions.Invoking(() => context.Modules(q => q.WithCatalog(null!))).Should()
                 .Throw<ArgumentNullException>();
@@ -53,7 +53,7 @@ namespace L5Sharp.Querying.Tests
         [Test]
         public void WithCatalog_ExistingCatalog_ShouldAllSatisfyQuery()
         {
-            var context = L5XContext.Load(Known.Test);
+            var context = LogixContext.Load(Known.Test);
 
             var results = context.Modules(q => q.WithCatalog(c => c.Equals("1756-EN2T"))).ToList();
 
@@ -64,7 +64,7 @@ namespace L5Sharp.Querying.Tests
         [Test]
         public void WithCatalog_CatalogContains_ShouldNotBeEmpty()
         {
-            var context = L5XContext.Load(Known.Test);
+            var context = LogixContext.Load(Known.Test);
 
             var results = context.Modules(q => q.WithCatalog(c => c.ToString().Contains("5094"))).ToList();
 

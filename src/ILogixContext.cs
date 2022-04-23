@@ -79,10 +79,16 @@ namespace L5Sharp
         IEnumerable<IAddOnInstruction> Instructions(Func<InstructionQuery, InstructionQuery> query);
 
         /// <summary>
-        /// Returns a <see cref="IComponentQuery{TComponent}"/> that provides basic querying for
+        /// Returns a <see cref="IComponentQuery{TComponent}"/> that provides basic querying for controller scoped
         /// <see cref="ITag{TDataType}"/> components in the current <see cref="ILogixContext"/>. 
         /// </summary>
         IComponentQuery<ITag<IDataType>> Tags();
+
+        /// <summary>
+        /// Returns a <see cref="IComponentQuery{TComponent}"/> that provides basic querying for program scoped
+        /// <see cref="ITag{TDataType}"/> components in the current <see cref="ILogixContext"/>. 
+        /// </summary>
+        IComponentQuery<ITag<IDataType>> Tags(ComponentName program);
 
         /// <summary>
         /// Executes the provided <see cref="TagQuery"/> over the current <see cref="ILogixContext"/>, returning

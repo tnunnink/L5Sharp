@@ -12,7 +12,7 @@ namespace L5Sharp.Querying.Tests
         [Test]
         public void OfType_NullName_ShouldThrowArgumentNullException()
         {
-            var context = L5XContext.Load(Known.Test);
+            var context = LogixContext.Load(Known.Test);
 
             FluentActions.Invoking(() => context.Tags(q => q.OfType(null!))).Should().Throw<ArgumentException>();
         }
@@ -20,7 +20,7 @@ namespace L5Sharp.Querying.Tests
         [Test]
         public void OfType_ValidType_ShouldNotBeEmpty()
         {
-            var context = L5XContext.Load(Known.Test);
+            var context = LogixContext.Load(Known.Test);
 
             var results = context.Tags(q => q.OfType("SimpleType"));
 
