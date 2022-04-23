@@ -55,6 +55,8 @@ namespace L5Sharp.L5X
                 { typeof(DataValueSerializer), new DataValueSerializer() },
                 { typeof(DecoratedDataSerializer), new DecoratedDataSerializer(content) },
                 { typeof(FormattedDataSerializer), new FormattedDataSerializer(content) },
+                { typeof(StringStructureSerializer), new StringStructureSerializer() },
+                { typeof(StringMemberSerializer), new StringMemberSerializer() },
                 { typeof(StructureMemberSerializer), new StructureMemberSerializer(content) },
                 { typeof(StructureSerializer), new StructureSerializer(content) }
             };

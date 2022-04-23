@@ -91,14 +91,5 @@ namespace L5Sharp.Enums.Tests
 
             type.Should().Be(RoutineType.Rll);
         }
-        
-        
-        [Test]
-        public void FromType_IStructuredText_ShouldBeRll()
-        {
-            var type = RoutineType.ForType<IStructuredText>();
-
-            type.Should().Be(RoutineType.St);
-        }
     }
 }

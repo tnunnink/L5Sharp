@@ -7,7 +7,7 @@ namespace L5Sharp.Enums
     /// </summary>
     public class Function : SmartEnum<Function, string>
     {
-        internal Function(string name, string value) : base(name, value)
+        private Function(string name, string value) : base(name, value)
         {
         }
 

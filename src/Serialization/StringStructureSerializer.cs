@@ -10,22 +10,15 @@ namespace L5Sharp.Serialization
 {
     internal class StringStructureSerializer : L5XSerializer<IStringType>
     {
-        private readonly XName _elementName;
-
-        public StringStructureSerializer(XName elementName)
-        {
-            _elementName = elementName;
-        }
+        private static readonly XName ElementName = L5XName.Structure;
 
         public override XElement Serialize(IStringType component)
         {
             if (component is null)
                 throw new ArgumentNullException(nameof(component));
 
-            var element = new XElement(_elementName);
-            
-            if (_elementName == L5XName.StructureMember)
-                element.AddComponentName(component.Name);
+            var element = new XElement(ElementName);
+           
             element.Add(new XAttribute(L5XName.DataType, component.Name));
 
             var lengthElement = new XElement(L5XName.DataValueMember);
@@ -51,7 +44,7 @@ namespace L5Sharp.Serialization
             if (element == null)
                 throw new ArgumentNullException(nameof(element));
 
-            if (element.Name != _elementName)
+            if (element.Name != ElementName)
                 throw new ArgumentException($"Element '{element.Name}' not valid for the serializer {GetType()}.");
 
             var name = element.DataTypeName();

@@ -12,7 +12,6 @@ namespace L5Sharp.Serialization
     {
         private readonly L5XContent? _document;
         private static readonly XName ElementName = L5XName.StructureMember;
-        private readonly StringStructureSerializer _stringStructureSerializer;
 
         private DataValueMemberSerializer DataValueMemberSerializer => _document is not null
             ? _document.Serializers.Get<DataValueMemberSerializer>()
@@ -21,22 +20,23 @@ namespace L5Sharp.Serialization
         private ArrayMemberSerializer ArrayMemberSerializer => _document is not null
             ? _document.Serializers.Get<ArrayMemberSerializer>()
             : new ArrayMemberSerializer(_document);
-
+        
+        private StringMemberSerializer StringMemberSerializer => _document is not null
+            ? _document.Serializers.Get<StringMemberSerializer>()
+            : new StringMemberSerializer();
 
         public StructureMemberSerializer(L5XContent? document = null)
         {
             _document = document;
-            _stringStructureSerializer = new StringStructureSerializer(ElementName);
         }
 
         public override XElement Serialize(IMember<IDataType> component)
         {
             if (component == null)
                 throw new ArgumentNullException(nameof(component));
-
-            //String types are treated differently than other types.
-            if (component.DataType is IStringType stringType)
-                return _stringStructureSerializer.Serialize(stringType);
+            
+            if (component.DataType is IStringType)
+                return StringMemberSerializer.Serialize(component);
 
             var element = new XElement(ElementName);
 
@@ -63,13 +63,11 @@ namespace L5Sharp.Serialization
 
             var name = element.ComponentName();
             var typeName = element.DataTypeName();
-
-            //The only way to know if this is a string type that needs special treatment is if there is a member with
-            //the same data type name (which otherwise should be impossible).
+            
             if (element.Elements().Any(e => string.Equals(e.Attribute(L5XName.DataType)?.Value,
                     typeName, StringComparison.OrdinalIgnoreCase)))
             {
-                return new Member<IDataType>(name, _stringStructureSerializer.Deserialize(element));
+                return StringMemberSerializer.Deserialize(element);
             }
 
             var members = element.Elements().Select(e => GetSerializer(e).Deserialize(e)).ToList();

@@ -12,7 +12,7 @@
         <DataValueMember Name="TT" DataType="BOOL" Value="0" />
         <DataValueMember Name="DN" DataType="BOOL" Value="0" />
       </StructureMember>
-      <StructureMember Name="STRING" DataType="STRING">
+      <StructureMember Name="StringMember" DataType="STRING">
         <DataValueMember Name="LEN" DataType="DINT" Radix="Decimal" Value="0" />
         <DataValueMember Name="DATA" DataType="STRING" Radix="Ascii"><![CDATA[]]></DataValueMember>
       </StructureMember>

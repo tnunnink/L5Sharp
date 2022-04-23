@@ -21,14 +21,14 @@ namespace L5Sharp.Core.Tests
         {
             var configuration = new ModuleConfiguration();
 
-            configuration.Description.Should().BeEmpty();
+            configuration.Description.Should().BeNull();
             configuration.Inhibited.Should().BeFalse();
             configuration.MajorFault.Should().BeFalse();
             configuration.SafetyEnabled.Should().BeFalse();
-            configuration.Keying.Should().Be(ElectronicKeying.CompatibleModule);
+            configuration.Keying.Should().BeNull();
             configuration.Revision.Should().BeNull();
             configuration.Slot.Should().Be(0);
-            configuration.IP.Should().Be(IPAddress.None);
+            configuration.IP.Should().BeNull();
             configuration.ChassisSize.Should().Be(0);
         }
 

@@ -92,8 +92,8 @@ namespace L5Sharp.Serialization.Tests
             var component = new StructureType("Test", new List<IMember<IDataType>>
             {
                 Member.Create<STRING>("StringMember"),
-                Member.Create<TIMER>("SintMember"),
-                Member.Create<COUNTER>("IntMember")
+                Member.Create<TIMER>("TimerMember"),
+                Member.Create<COUNTER>("CounterMember")
             });
 
             var xml = _serializer.Serialize(component);
