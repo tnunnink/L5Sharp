@@ -7,23 +7,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="Renamed L5XContext.cs back to LogixContext.cs and moved back into primary namespace.">
+    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="Fixed broken tests. Update documentation on module and add Input and Output properties for tags to make it easier to access them from primary api.">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/ComponentName.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/ComponentName.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/Dimensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/Dimensions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/Module.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/Module.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/Operand.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/Operand.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Enums/Radix.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Enums/Radix.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/IModule.cs" beforeDir="false" afterPath="$PROJECT_DIR$/IModule.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5X/L5XParser.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5X/L5XParser.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LogixContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LogixContext.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Serialization/DataValueMemberSerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Serialization/DataValueMemberSerializer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Serialization/DataValueSerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Serialization/DataValueSerializer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Serialization/ModuleSerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Serialization/ModuleSerializer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Context.Tests/ComplexFileTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Context.Tests/ComplexFileTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/DimensionsTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/DimensionsTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/ModuleTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/ModuleTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Enums.Tests/RadixTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Enums.Tests/RadixTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Abstractions/ControllerBase.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Abstractions/PortAddress.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/PortAddress.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/Controller.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/Controller.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/IController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/IController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Serialization/ControllerSerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Serialization/ControllerSerializer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/ControllerTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/ControllerTests.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -335,14 +327,7 @@
       <workItem from="1650288218047" duration="2148000" />
       <workItem from="1650330235564" duration="11711000" />
       <workItem from="1650416888929" duration="1498000" />
-      <workItem from="1650718728525" duration="9293000" />
-    </task>
-    <task id="LOCAL-00136" summary="Tag, data type, and dimensions updates and testing">
-      <created>1644701994606</created>
-      <option name="number" value="00136" />
-      <option name="presentableId" value="LOCAL-00136" />
-      <option name="project" value="LOCAL" />
-      <updated>1644701994607</updated>
+      <workItem from="1650718728525" duration="10602000" />
     </task>
     <task id="LOCAL-00137" summary="fixing broken tests">
       <created>1644714754092</created>
@@ -680,33 +665,55 @@
       <option name="project" value="LOCAL" />
       <updated>1650722310164</updated>
     </task>
-    <option name="localTasksCounter" value="185" />
+    <task id="LOCAL-00185" summary="Fixed broken tests. Update documentation on module and add Input and Output properties for tags to make it easier to access them from primary api.">
+      <created>1650738954934</created>
+      <option name="number" value="00185" />
+      <option name="presentableId" value="LOCAL-00185" />
+      <option name="project" value="LOCAL" />
+      <updated>1650738954934</updated>
+    </task>
+    <option name="localTasksCounter" value="186" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="UnitTestsCoverage.Settings">
-    <option name="coveragePercentColumnWidth" value="87" />
+    <option name="coveragePercentColumnWidth" value="85" />
     <option name="sortOrder" value="DESCENDING" />
     <option name="sortedColumn" value="1" />
-    <option name="symbolColumnWidth" value="221" />
+    <option name="symbolColumnWidth" value="215" />
     <coverage-tree-state>
       <expand>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 94% 364/6159" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 92% 468/6151" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 94% 364/6159" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 94% 364/6159" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 92% 468/6151" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 92% 468/6151" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 94% 364/6159" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 94% 364/6159" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="(1.0.0.0, .NETStandard,Version=v2.1) 94% 364/6159" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 92% 468/6151" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 92% 468/6151" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="(2.0.0.0, .NETStandard,Version=v2.1) 92% 468/6151" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+        </path>
+        <path>
+          <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
+          <item name="Total 92% 468/6151" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 92% 468/6151" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="(2.0.0.0, .NETStandard,Version=v2.1) 92% 468/6151" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 92% 468/6151" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+        </path>
+        <path>
+          <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
+          <item name="Total 92% 468/6151" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 92% 468/6151" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="(2.0.0.0, .NETStandard,Version=v2.1) 92% 468/6151" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 92% 468/6151" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Core 89% 200/1833" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
       </expand>
       <select />
@@ -732,7 +739,6 @@
       <path value="$PROJECT_DIR$/../.." />
     </ignored-roots>
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="Updates to L5XContext.cs api. Various clean up. Movement of internal serialization extensions and process. Updates to AOI components." />
     <MESSAGE value="Brought back builders and update tag builder api. Added testing. Updated parameter adding testing. Random clean up and testing fixes. TagName api additions and complete testing." />
     <MESSAGE value="reworking serialization with context in and type index in order to increase performance" />
     <MESSAGE value="Replaced serializers mapping extensions methods with manual mapping using new enum naming." />
@@ -757,7 +763,8 @@
     <MESSAGE value="Clean up of unused and unsupported code. Removed the L5XAttribute.cs and L5XElement.cs and combined into single static string class L5XName.cs to make code more readable. Fixed tests and added additional querying tests to complete test coverage." />
     <MESSAGE value="Fixed string member serialization issues. Remove Unused or untested code" />
     <MESSAGE value="Renamed L5XContext.cs back to LogixContext.cs and moved back into primary namespace." />
-    <option name="LAST_COMMIT_MESSAGE" value="Renamed L5XContext.cs back to LogixContext.cs and moved back into primary namespace." />
+    <MESSAGE value="Fixed broken tests. Update documentation on module and add Input and Output properties for tags to make it easier to access them from primary api." />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed broken tests. Update documentation on module and add Input and Output properties for tags to make it easier to access them from primary api." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

@@ -4,7 +4,7 @@ using System.Net;
 using System.Text.RegularExpressions;
 using L5Sharp.Extensions;
 
-namespace L5Sharp.Abstractions
+namespace L5Sharp.Core
 {
     /// <summary>
     /// Provides a wrapper around the string port address value to indicate what type of address the value is.

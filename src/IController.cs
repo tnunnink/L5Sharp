@@ -21,12 +21,12 @@ namespace L5Sharp
         /// <summary>
         /// Gets the <see cref="Core.CatalogNumber"/> of the <see cref="IController"/>.
         /// </summary>
-        CatalogNumber ProcessorType { get; }
+        CatalogNumber? ProcessorType { get; }
         
         /// <summary>
         /// Gets the <see cref="Core.Revision"/> of the <see cref="IController"/>.
         /// </summary>
-        Revision Revision { get; }
+        Revision? Revision { get; }
         
         /// <summary>
         /// Gets the project creation date time of the <see cref="IController"/>.

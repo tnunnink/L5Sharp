@@ -19,9 +19,14 @@ namespace L5Sharp.Serialization
             var element = new XElement(ElementName);
             element.AddComponentName(component.Name);
             element.AddComponentDescription(component.Description);
-            element.Add(new XAttribute(L5XName.ProcessorType, component.ProcessorType));
-            element.Add(new XAttribute(L5XName.MajorRev, component.Revision.Major));
-            element.Add(new XAttribute(L5XName.MinorRev, component.Revision.Minor));
+            if (component.ProcessorType is not null)
+                element.Add(new XAttribute(L5XName.ProcessorType, component.ProcessorType));
+            if (component.Revision is not null)
+            {
+                element.Add(new XAttribute(L5XName.MajorRev, component.Revision.Major));
+                element.Add(new XAttribute(L5XName.MinorRev, component.Revision.Minor));
+            }
+
             element.Add(new XAttribute(L5XName.ProjectCreationDate,
                 component.ProjectCreationDate.ToString("ddd MMM d HH:mm:ss yyyy")));
             element.Add(new XAttribute(L5XName.LastModifiedDate,

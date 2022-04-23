@@ -10,17 +10,24 @@ namespace L5Sharp.Core.Tests
     public class ControllerTests
     {
         [Test]
+        public void New_NullName_ShouldNoBeNull()
+        {
+            var controller = new Controller();
+
+            controller.Should().NotBeNull();
+        }
+
+        [Test]
         public void New_NullName_ShouldThrowArgumentNullException()
         {
-            FluentActions.Invoking(() => new Controller(null!, "1756-L74", new Revision()))
-                .Should().Throw<ArgumentNullException>();
+            FluentActions.Invoking(() => new Controller(null!)).Should().Throw<ArgumentNullException>();
         }
-        
+
         [Test]
         public void New_InvalidName_ShouldThrowInvalidNameException()
         {
             var fixture = new Fixture();
-            
+
             FluentActions.Invoking(() => new Controller(fixture.Create<string>(), "1756-L74", new Revision()))
                 .Should().Throw<ComponentNameInvalidException>();
         }
