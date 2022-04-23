@@ -198,33 +198,15 @@ namespace L5Sharp.Enums
         }
 
         /// <summary>
-        /// Attempts to parse the provided string input into an <see cref="IAtomicType"/> value.
+        /// Attempts to parse the provided input string into a <see cref="IAtomicType{T}"/> value representation.
         /// </summary>
         /// <param name="input">The string input to parse.</param>
-        /// <param name="result">When the method returns, contains the value of the parse string if the parse was
-        /// successful; otherwise, null.</param>
-        /// <returns>true if the string input was successfully parsed; otherwise, false.</returns>
-        public static bool TryParseValue(string input, out IAtomicType? result)
+        /// <returns>If the parse was successful, then a <see cref="IAtomicType{T}"/> with the value of the parsed input;
+        /// otherwise, null.</returns>
+        public static IAtomicType? TryParseValue(string input)
         {
             var parser = DetermineParser(input);
-
-            if (parser is null)
-            {
-                result = null;
-                return false;
-            }
-
-            try
-            {
-                var value = parser(input);
-                result = value;
-                return true;
-            }
-            catch (Exception)
-            {
-                result = null;
-                return false;
-            }
+            return parser?.Invoke(input);
         }
 
         /// <summary>

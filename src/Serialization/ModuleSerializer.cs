@@ -117,6 +117,7 @@ namespace L5Sharp.Serialization
                 .FirstOrDefault()
                 ?.Descendants(L5XName.Module)
                 .Where(e => e.Attribute(L5XName.ParentModule)?.Value == name
+                            && e.Attribute(L5XName.Name) is not null
                             && e.ComponentName() != name)
                 .Select(Deserialize)
                 .ToList();

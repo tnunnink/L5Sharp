@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net;
-using L5Sharp.Builders;
 using L5Sharp.Enums;
 
 namespace L5Sharp.Core
@@ -14,26 +13,28 @@ namespace L5Sharp.Core
         private readonly Dictionary<Port, Bus> _buses;
 
         /// <summary>
-        /// 
+        /// Creates a new <see cref="Module"/> object with the provided module properties.
         /// </summary>
-        /// <param name="name"></param>
-        /// <param name="catalogNumber"></param>
-        /// <param name="vendor"></param>
-        /// <param name="productType"></param>
-        /// <param name="productCode"></param>
-        /// <param name="revision"></param>
-        /// <param name="ports"></param>
-        /// <param name="parentModule"></param>
-        /// <param name="parentPortId"></param>
-        /// <param name="keying"></param>
-        /// <param name="inhibited"></param>
-        /// <param name="majorFault"></param>
-        /// <param name="safetyEnabled"></param>
-        /// <param name="config"></param>
-        /// <param name="connections"></param>
-        /// <param name="modules"></param>
-        /// <param name="description"></param>
-        /// <exception cref="ArgumentNullException"></exception>
+        /// <param name="name">The component name of the module.</param>
+        /// <param name="catalogNumber">The catalog number that identifies the module.</param>
+        /// <param name="vendor">The vendor who supplies/produces the module.
+        /// Will default to <see cref="Core.ProductType.Unknown"/>.</param>
+        /// <param name="productType">The product type of the module.</param>
+        /// <param name="productCode">The unique id that identifies the module product.</param>
+        /// <param name="revision">The revision number at which the module is configured.</param>
+        /// <param name="ports">The set of ports available for connections on the module.</param>
+        /// <param name="parentModule">The name of the module that is the parent to this module in the IO tree.</param>
+        /// <param name="parentPortId">The ID number of the parent port for which the module is connected.</param>
+        /// <param name="keying">The configured keying state of the module.</param>
+        /// <param name="inhibited">The value indicating whether the module is inhibited.</param>
+        /// <param name="majorFault">The value indicating whether the module will cause a major fault.</param>
+        /// <param name="safetyEnabled">The value indicating whether the module has safety features enabled.</param>
+        /// <param name="config">The configuration tag containing the configuration of the module.</param>
+        /// <param name="connections">The set of of field connection objects for the module.</param>
+        /// <param name="modules">The collection of child modules that are downstream of the module.
+        /// These modules will be added to the appropriate port bus of the module.</param>
+        /// <param name="description">The description of the module.</param>
+        /// <exception cref="ArgumentNullException">name is null.</exception>
         public Module(ComponentName name, CatalogNumber catalogNumber,
             Vendor? vendor = null, ProductType? productType = null, ushort productCode = default,
             Revision? revision = null, IList<Port>? ports = null,
@@ -45,7 +46,7 @@ namespace L5Sharp.Core
             string? description = null)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
-            CatalogNumber = catalogNumber ?? throw new ArgumentNullException(nameof(catalogNumber));
+            CatalogNumber = catalogNumber;
             Vendor = vendor ?? Vendor.Unknown;
             ProductType = productType ?? ProductType.Unknown;
             ProductCode = productCode;
@@ -64,7 +65,6 @@ namespace L5Sharp.Core
                 ? new ReadOnlyCollection<Connection>(connections)
                 : new List<Connection>().AsReadOnly();
             Description = description ?? string.Empty;
-
             _buses = InitializeBuses(modules);
         }
 
@@ -171,6 +171,12 @@ namespace L5Sharp.Core
 
         /// <inheritdoc />
         public ITag<IDataType>? Config { get; }
+
+        /// <inheritdoc />
+        public ITag<IDataType>? Input => Connections.FirstOrDefault()?.Input;
+        
+        /// <inheritdoc />
+        public ITag<IDataType>? Output => Connections.FirstOrDefault()?.Output;
 
         /// <inheritdoc />
         public IReadOnlyCollection<Connection> Connections { get; }

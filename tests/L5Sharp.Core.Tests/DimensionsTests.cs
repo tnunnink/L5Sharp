@@ -279,14 +279,6 @@ namespace L5Sharp.Core.Tests
         }
 
         [Test]
-        public void Parse_InvalidPattern_ShouldThrowInvalidOperationException()
-        {
-            var fixture = new Fixture();
-            FluentActions.Invoking(() => Dimensions.Parse(fixture.Create<string>())).Should()
-                .Throw<ArgumentException>();
-        }
-
-        [Test]
         public void Parse_MoreThanThreeDimensions_ShouldThrowInvalidOperationException()
         {
             FluentActions.Invoking(() => Dimensions.Parse("1 4 3 8")).Should()
@@ -343,9 +335,12 @@ namespace L5Sharp.Core.Tests
         }
 
         [Test]
-        public void TryParse_Null_ShouldThrowArgumentNullException()
+        public void TryParse_Null_ShouldBeNullAndFalse()
         {
-            FluentActions.Invoking(() => Dimensions.TryParse(null!, out _)).Should().Throw<ArgumentNullException>();
+            var result = Dimensions.TryParse(null!, out var dimensions);
+            
+            result.Should().BeFalse();
+            dimensions.Should().BeNull();
         }
 
         [Test]
@@ -356,17 +351,7 @@ namespace L5Sharp.Core.Tests
             result.Should().BeFalse();
             dimensions.Should().BeNull();
         }
-        
-        [Test]
-        public void TryParse_InvalidPattern_ShouldBeNullAndFalse()
-        {
-            var fixture = new Fixture();
-            var result = Dimensions.TryParse(fixture.Create<string>(), out var dimensions);
-            
-            result.Should().BeFalse();
-            dimensions.Should().BeNull();
-        }
-        
+
         [Test]
         public void TryParse_MoreThanThreeDimensions_ShouldBeNullAndFalse()
         {

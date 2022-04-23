@@ -181,9 +181,9 @@ namespace L5Sharp.Core
 
             if (value.IsEmpty()) return Empty;
 
-            if (Regex.IsMatch(value, @"[^\d,[\] ]"))
+            /*if (Regex.IsMatch(value, @"[^\d,[\] ]"))
                 throw new ArgumentException(
-                    $"Value '{value}' contains invalid characters. Only numbers and [ ,] are allowed.");
+                    $"Value '{value}' contains invalid characters. Only numbers and [ ,] are allowed.");*/
             
             var numbers = Regex.Matches(value, @"\d+", RegexOptions.Compiled)
                 .Select(m => ushort.Parse(m.Value))
@@ -216,10 +216,7 @@ namespace L5Sharp.Core
         /// <seealso cref="Parse"/>
         public static bool TryParse(string value, out Dimensions? dimensions)
         {
-            if (value is null)
-                throw new ArgumentNullException(nameof(value));
-
-            if (value.IsEmpty() || Regex.IsMatch(value, @"[^\d,[\] ]"))
+            if (string.IsNullOrEmpty(value))
             {
                 dimensions = null;
                 return false;

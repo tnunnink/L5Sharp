@@ -30,12 +30,27 @@ namespace L5Sharp.Core
         /// <exception cref="ComponentNameInvalidException">Thrown when the name is invalid.</exception>
         public ComponentName(string name)
         {
-            if (string.IsNullOrEmpty(name)) throw new ArgumentException("Name can not be null or empty");
+            Validate(name);
+            /*if (!Regex.IsMatch(name, @"^[a-zA-Z_][a-zA-Z0-9_]{0,39}$", RegexOptions.Compiled))
+                throw new ComponentNameInvalidException(name);*/
+            _name = name;
+        }
+
+        private static void Validate(string name)
+        {
+            if (string.IsNullOrEmpty(name)) 
+                throw new ArgumentException("Name can not be null or empty");
             
-            if (!Regex.IsMatch(name, @"^[a-zA-Z_][a-zA-Z0-9_]{0,39}$", RegexOptions.Compiled))
+            var characters = name.ToCharArray();
+
+            if (!(char.IsLetter(characters.First()) || characters.First() == '_'))
                 throw new ComponentNameInvalidException(name);
 
-            _name = name;
+            if (!characters.All(c => char.IsLetter(c) || char.IsDigit(c) || c == '_'))
+                throw new ComponentNameInvalidException(name);
+
+            if (name.Length > 40)
+                throw new ComponentNameInvalidException(name);
         }
 
         /// <summary>

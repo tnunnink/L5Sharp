@@ -74,7 +74,7 @@ namespace L5Sharp
         /// <inheritdoc />
         public IComponentQuery<IComplexType> DataTypes()
         {
-            var components = _l5X.DataTypes;
+            var components = _l5X.DataTypes.Where(e => e.Attribute(L5XName.Name) is not null);
             var serializer = _l5X.Serializers.ForComponent<IComplexType>();
             return new ComponentQuery<IComplexType>(components, serializer);
         }
@@ -90,7 +90,7 @@ namespace L5Sharp
         /// <inheritdoc />
         public IComponentQuery<IModule> Modules()
         {
-            var components = _l5X.Modules;
+            var components = _l5X.Modules.Where(e => e.Attribute(L5XName.Name) is not null);
             var serializer = _l5X.Serializers.ForComponent<IModule>();
             return new ComponentQuery<IModule>(components, serializer);
         }
@@ -107,7 +107,7 @@ namespace L5Sharp
         /// <inheritdoc />
         public IComponentQuery<IAddOnInstruction> Instructions()
         {
-            var components = _l5X.Instructions;
+            var components = _l5X.Instructions.Where(e => e.Attribute(L5XName.Name) is not null);
             var serializer = _l5X.Serializers.ForComponent<IAddOnInstruction>();
             return new ComponentQuery<IAddOnInstruction>(components, serializer);
         }
@@ -124,17 +124,23 @@ namespace L5Sharp
         /// <inheritdoc />
         public IComponentQuery<ITag<IDataType>> Tags()
         {
-            var components = _l5X.Tags.Where(t => t.Parent?.Parent?.Name == L5XName.Controller);
+            var components = _l5X.Tags.Where(t => t.Parent?.Parent?.Name == L5XName.Controller
+                                                  && t.Attribute(L5XName.Name) is not null);
+            
             var serializer = _l5X.Serializers.ForComponent<ITag<IDataType>>();
+            
             return new ComponentQuery<ITag<IDataType>>(components, serializer);
         }
-        
+
         /// <inheritdoc />
         public IComponentQuery<ITag<IDataType>> Tags(ComponentName program)
         {
             var components = _l5X.Tags
-                .Where(t => t.Ancestors(L5XName.Program).FirstOrDefault()?.ComponentName() == program.ToString());
+                .Where(t => t.Ancestors(L5XName.Program).FirstOrDefault()?.ComponentName() == program.ToString()
+                            && t.Attribute(L5XName.Name) is not null);
+            
             var serializer = _l5X.Serializers.ForComponent<ITag<IDataType>>();
+            
             return new ComponentQuery<ITag<IDataType>>(components, serializer);
         }
 
@@ -149,7 +155,7 @@ namespace L5Sharp
         /// <inheritdoc />
         public IComponentQuery<IProgram> Programs()
         {
-            var components = _l5X.Programs;
+            var components = _l5X.Programs.Where(e => e.Attribute(L5XName.Name) is not null);
             var serializer = _l5X.Serializers.ForComponent<IProgram>();
             return new ComponentQuery<IProgram>(components, serializer);
         }
@@ -165,7 +171,7 @@ namespace L5Sharp
         /// <inheritdoc />
         public IComponentQuery<ITask> Tasks()
         {
-            var components = _l5X.Tasks;
+            var components = _l5X.Tasks.Where(e => e.Attribute(L5XName.Name) is not null);
             var serializer = _l5X.Serializers.ForComponent<ITask>();
             return new ComponentQuery<ITask>(components, serializer);
         }

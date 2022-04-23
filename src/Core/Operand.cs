@@ -30,7 +30,7 @@ namespace L5Sharp.Core
         /// <summary>
         /// Indicates whether the operand represents a constant or immediate value. 
         /// </summary>
-        public bool IsValue => Radix.TryParseValue(_operand.ToString(), out _);
+        public bool IsValue => Radix.TryParseValue(_operand.ToString()) is not null;
         
         /// <summary>
         /// Performs implicit conversions from <see cref="TagName"/> to <see cref="Operand"/>

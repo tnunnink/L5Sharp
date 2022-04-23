@@ -14,7 +14,7 @@ namespace L5Sharp.L5X
     {
         private static readonly Dictionary<Type, Func<string, object>> Parsers = new()
         {
-            { typeof(DateTime), s => DateTime.Parse(s)},
+            { typeof(DateTime), s => DateTime.Parse(s) },
             { typeof(IAtomicType), Radix.ParseValue },
             { typeof(ConnectionPriority), ConnectionPriority.FromValue },
             { typeof(ConnectionType), ConnectionType.FromValue },
@@ -46,7 +46,7 @@ namespace L5Sharp.L5X
             { typeof(ProductType), ProductType.Parse },
             { typeof(PortAddress), s => new PortAddress(s) }
         };
-        
+
         private static readonly Dictionary<Type, Func<string, object?>> TryParsers = new()
         {
             { typeof(bool), s => bool.TryParse(s, out var value) ? value : default },
@@ -60,7 +60,7 @@ namespace L5Sharp.L5X
             { typeof(ulong), s => ulong.TryParse(s, out var value) ? value : default },
             { typeof(float), s => float.TryParse(s, out var value) ? value : default },
             { typeof(DateTime), s => DateTime.TryParse(s, out var value) ? value : default },
-            { typeof(IAtomicType), s => Radix.TryParseValue(s, out var value) ? value : default },
+            { typeof(IAtomicType), Radix.TryParseValue },
             { typeof(ConnectionPriority), s => ConnectionPriority.TryFromValue(s, out var value) ? value : default },
             { typeof(ConnectionType), s => ConnectionType.TryFromValue(s, out var value) ? value : default },
             { typeof(DataFormat), s => DataFormat.TryFromValue(s, out var value) ? value : default },
@@ -91,8 +91,8 @@ namespace L5Sharp.L5X
             { typeof(Vendor), Vendor.Parse },
             { typeof(ProductType), ProductType.Parse }
         };
-        
-        
+
+
         /// <summary>
         /// Parses the provided string input to the specified type using the predefined L5X parser functions.
         /// </summary>
@@ -111,7 +111,7 @@ namespace L5Sharp.L5X
 
             return typed;
         }
-        
+
         /// <summary>
         /// Parses the provided string input to the specified generic type base ont predefined Logix parsing functions or type converters.
         /// </summary>
@@ -122,7 +122,7 @@ namespace L5Sharp.L5X
         public static T? TryParse<T>(this string? input)
         {
             if (input is null) return default;
-            
+
             var parser = GetTryParser(typeof(T));
 
             return (T?)parser(input);
@@ -149,10 +149,10 @@ namespace L5Sharp.L5X
 
             if (converter.CanConvertFrom(typeof(string)))
                 return s => converter.ConvertFrom(s);
-            
+
             throw new InvalidOperationException($"No parse function has been defined for type '{type.Name}'");
         }
-        
+
         /// <summary>
         /// Gets a parser function for the specified type.
         /// </summary>

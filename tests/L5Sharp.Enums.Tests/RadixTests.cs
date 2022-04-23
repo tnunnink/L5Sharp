@@ -255,10 +255,9 @@ namespace L5Sharp.Enums.Tests
         {
             var fixture = new Fixture();
 
-            var parsed = Radix.TryParseValue(fixture.Create<string>(), out var atomicType);
-
-            parsed.Should().BeFalse();
-            atomicType.Should().BeNull();
+            var parsed = Radix.TryParseValue(fixture.Create<string>());
+            
+            parsed.Should().BeNull();
         }
 
         [Test]
@@ -266,21 +265,17 @@ namespace L5Sharp.Enums.Tests
         {
             const string value = "2#0000_0101";
 
-            var parsed = Radix.TryParseValue(value, out var atomicType);
-
-            parsed.Should().BeTrue();
-            atomicType?.Value.Should().Be(5);
+            var parsed = Radix.TryParseValue(value);
+            
+            parsed?.Value.Should().Be(5);
         }
         
         [Test]
-        public void TryParseValue_ValidHexInvalidLength_ShouldBeExpectedValue()
+        public void TryParseValue_ValidHexInvalidLength_ShouldThrowArgumentOutOfRangeException()
         {
             const string value = "16#0000_0101_0000_0000_0000_0000_0000";
 
-            var parsed = Radix.TryParseValue(value, out var atomicType);
-
-            parsed.Should().BeFalse();
-            atomicType.Should().BeNull();
+            FluentActions.Invoking(() => Radix.TryParseValue(value)).Should().Throw<ArgumentOutOfRangeException>();
         }
 
         [Test]

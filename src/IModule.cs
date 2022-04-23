@@ -147,6 +147,16 @@ namespace L5Sharp
         /// module specific configuration fot scaling, alarms, calibration, etc.
         /// </remarks>
         ITag<IDataType>? Config { get; }
+        
+        /// <summary>
+        /// Gets the <see cref="ITag{TDataType}"/> that represents the input data tag for the module.
+        /// </summary>
+        ITag<IDataType>? Input { get; }
+        
+        /// <summary>
+        /// Gets the <see cref="ITag{TDataType}"/> that represents the output data tag for the module.
+        /// </summary>
+        ITag<IDataType>? Output { get; }
 
         /// <summary>
         /// Gets the collection of <see cref="Core.Connection"/> objects containing configuration for the module's

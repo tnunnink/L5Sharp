@@ -19,13 +19,6 @@ namespace L5Sharp.Core.Tests
         }
 
         [Test]
-        public void New_NullCatalogNumber_ShouldThrowArgumentNullException()
-        {
-            FluentActions.Invoking(() => new Module("Test", ((CatalogNumber)null)!)).Should()
-                .Throw<ArgumentNullException>();
-        }
-
-        [Test]
         public void New_DefaultConstructor_ShouldNotBeNull()
         {
             var module = new Module("Test", "1756-EN2T");
