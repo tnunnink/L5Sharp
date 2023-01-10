@@ -2,7 +2,6 @@
 using System.Linq;
 using FluentAssertions;
 using L5Sharp.Enums;
-using L5Sharp.L5X;
 using L5SharpTests;
 using NUnit.Framework;
 
@@ -14,7 +13,7 @@ namespace L5Sharp.Querying.Tests
         [Test]
         public void OfType_NullType_ShouldThrowArgumentNullException()
         {
-            var context = LogixContext.Load(Known.Test);
+            var context = LogixContent.Load(Known.Test);
 
             FluentActions.Invoking(() => context.Tasks(q => q.OfType(null!)).ToList()).Should()
                 .Throw<ArgumentNullException>();
@@ -23,7 +22,7 @@ namespace L5Sharp.Querying.Tests
         [Test]
         public void OfType_ValidType_ShouldHaveTasksWithTypeOnly()
         {
-            var context = LogixContext.Load(Known.Test);
+            var context = LogixContent.Load(Known.Test);
 
             var tasks = context.Tasks(q => q.OfType(TaskType.Periodic)).ToList();
 
@@ -34,7 +33,7 @@ namespace L5Sharp.Querying.Tests
         [Test]
         public void WithRate_NullPredicate_ShouldThrowArgumentNullException()
         {
-            var context = LogixContext.Load(Known.Test);
+            var context = LogixContent.Load(Known.Test);
 
             FluentActions.Invoking(() => context.Tasks(q => q.WithRate(null!))).Should().Throw<ArgumentNullException>();
         }
@@ -42,7 +41,7 @@ namespace L5Sharp.Querying.Tests
         [Test]
         public void WithRate_RateLessThan100_ShouldNotBeEmptyAndSatisfyQuery()
         {
-            var context = LogixContext.Load(Known.Test);
+            var context = LogixContent.Load(Known.Test);
 
             var tasks = context.Tasks(q => q.WithRate(r => r < 100)).ToList();
 
@@ -53,7 +52,7 @@ namespace L5Sharp.Querying.Tests
         [Test]
         public void WithRate_RateGreaterThan100_ShouldBeEmpty()
         {
-            var context = LogixContext.Load(Known.Test);
+            var context = LogixContent.Load(Known.Test);
 
             var tasks = context.Tasks(q => q.WithRate(r => r > 100)).ToList();
 
@@ -63,7 +62,7 @@ namespace L5Sharp.Querying.Tests
         [Test]
         public void ForProgram_NullProgram_ShouldThrowArgumentNullException()
         {
-            var context = LogixContext.Load(Known.Test);
+            var context = LogixContent.Load(Known.Test);
 
             FluentActions.Invoking(() => context.Tasks(q => q.ForProgram(null!)).ToList()).Should()
                 .Throw<ArgumentNullException>();
@@ -72,7 +71,7 @@ namespace L5Sharp.Querying.Tests
         [Test]
         public void ForProgram_ValidProgram_ShouldReturnTaskWithProgram()
         {
-            var context = LogixContext.Load(Known.Test);
+            var context = LogixContent.Load(Known.Test);
 
             var tasks = context.Tasks(q => q.ForProgram("MainProgram")).ToList();
 

@@ -1,6 +1,8 @@
 ﻿using System;
 using FluentAssertions;
 using L5Sharp.Types;
+using L5Sharp.Types.Atomics;
+using L5Sharp.Types.Predefined;
 using NUnit.Framework;
 
 namespace L5Sharp.Core.Tests
@@ -11,7 +13,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void List_WhenCalled_ShouldNotBeEmpty()
         {
-            var list = DataType.All;
+            var list = LogixType.All;
 
             list.Should().NotBeEmpty();
         }
@@ -19,7 +21,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Atomics_WhenCalled_ShouldNotBeEmpty()
         {
-            var list = DataType.Atomics;
+            var list = LogixType.Atomics;
 
             list.Should().NotBeEmpty();
         }
@@ -27,7 +29,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Predefined_WhenCalled_ShouldNotBeEmpty()
         {
-            var list = DataType.Predefined;
+            var list = LogixType.Predefined;
 
             list.Should().NotBeEmpty();
         }
@@ -35,7 +37,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Exists_ExistingName_ShouldBeTrue()
         {
-            var exists = DataType.IsDefined("bool");
+            var exists = LogixType.IsDefined("bool");
 
             exists.Should().BeTrue();
         }
@@ -43,7 +45,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Exists_NonExistingName_ShouldBeFalse()
         {
-            var exists = DataType.IsDefined("SomeType");
+            var exists = LogixType.IsDefined("SomeType");
 
             exists.Should().BeFalse();
         }
@@ -51,19 +53,19 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Create_Null_ShouldThrowArgumentException()
         {
-            FluentActions.Invoking(() => DataType.Create(null!)).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(() => LogixType.Create(null!)).Should().Throw<ArgumentException>();
         }
 
         [Test]
         public void Create_Empty_ShouldThrowArgumentException()
         {
-            FluentActions.Invoking(() => DataType.Create(string.Empty)).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(() => LogixType.Create(string.Empty)).Should().Throw<ArgumentException>();
         }
 
         [Test]
         public void Create_ExistingType_ShouldNotBeNull()
         {
-            var dataType = DataType.Create("BOOL");
+            var dataType = LogixType.Create("BOOL");
 
             dataType.Should().NotBeNull();
         }
@@ -71,7 +73,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Create_ExistingType_ShouldBeExpected()
         {
-            var dataType = DataType.Create("BOOL");
+            var dataType = LogixType.Create("BOOL");
 
             dataType.Should().BeEquivalentTo(new BOOL());
         }
@@ -79,7 +81,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Create_NonExistingType_ShouldBeUndefined()
         {
-            var dataType = DataType.Create("SomeType");
+            var dataType = LogixType.Create("SomeType");
 
             dataType.Should().BeEquivalentTo(new UNDEFINED("SomeType"));
         }
@@ -87,25 +89,25 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Atomic_InvalidName_ShouldThrowArgumentException()
         {
-            FluentActions.Invoking(() => DataType.Atomic("Timer", 1234)).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(() => LogixType.Atomic("Timer", 1234)).Should().Throw<ArgumentException>();
         }
 
         [Test]
         public void Atomic_NullName_ShouldThrowArgumentException()
         {
-            FluentActions.Invoking(() => DataType.Atomic(null!, 1234)).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(() => LogixType.Atomic(null!, 1234)).Should().Throw<ArgumentException>();
         }
 
         [Test]
         public void Atomic_EmptyName_ShouldThrowArgumentException()
         {
-            FluentActions.Invoking(() => DataType.Atomic(string.Empty, 1234)).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(() => LogixType.Atomic(string.Empty, 1234)).Should().Throw<ArgumentException>();
         }
 
         [Test]
         public void Atomic_ValidBool_ShouldBeExpected()
         {
-            var type = DataType.Atomic("bool", true);
+            var type = LogixType.Atomic("bool", true);
 
             type.Should().BeOfType<BOOL>();
             type.Name.Should().Be("BOOL");
@@ -115,7 +117,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Atomic_ValidSint_ShouldBeExpected()
         {
-            var type = DataType.Atomic("sint", "1");
+            var type = LogixType.Atomic("sint", "1");
 
             type.Should().BeOfType<SINT>();
             type.Name.Should().Be("SINT");
@@ -125,25 +127,25 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Complex_NullName_ShouldThrowArgumentException()
         {
-            FluentActions.Invoking(() => DataType.Complex(null!)).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(() => LogixType.Complex(null!)).Should().Throw<ArgumentException>();
         }
 
         [Test]
         public void Complex_EmptyName_ShouldThrowArgumentException()
         {
-            FluentActions.Invoking(() => DataType.Complex(string.Empty)).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(() => LogixType.Complex(string.Empty)).Should().Throw<ArgumentException>();
         }
 
         [Test]
         public void Complex_InvalidName_ShouldThrowArgumentException()
         {
-            FluentActions.Invoking(() => DataType.Complex("BOOL")).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(() => LogixType.Complex("BOOL")).Should().Throw<ArgumentException>();
         }
         
         [Test]
         public void Complex_ValidTimer_ShouldBeExpected()
         {
-            var type = DataType.Complex("timer");
+            var type = LogixType.Complex("timer");
 
             type.Should().BeOfType<TIMER>();
             type.Name.Should().Be("TIMER");
@@ -152,7 +154,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Complex_ValidCounter_ShouldBeExpected()
         {
-            var type = DataType.Complex("counter");
+            var type = LogixType.Complex("counter");
 
             type.Should().BeOfType<COUNTER>();
             type.Name.Should().Be("COUNTER");

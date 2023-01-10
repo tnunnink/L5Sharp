@@ -1,12 +1,12 @@
 using System;
 using System.Xml.Linq;
-using L5Sharp.L5X;
+using L5Sharp.Utilities;
 
 namespace L5Sharp.Serialization
 {
     internal class DecoratedDataSerializer : L5XSerializer<IDataType>
     {
-        private readonly L5XContent? _document;
+        private readonly LogixInfo? _document;
 
         private DataValueSerializer DataValueSerializer => _document is not null
             ? _document.Serializers.Get<DataValueSerializer>()
@@ -20,7 +20,7 @@ namespace L5Sharp.Serialization
             ? _document.Serializers.Get<StructureSerializer>()
             : new StructureSerializer(_document);
 
-        public DecoratedDataSerializer(L5XContent? document = null)
+        public DecoratedDataSerializer(LogixInfo? document = null)
         {
             _document = document;
         }

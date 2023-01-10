@@ -7,6 +7,8 @@ using L5Sharp.Core;
 using L5Sharp.Creators;
 using L5Sharp.Enums;
 using L5Sharp.Types;
+using L5Sharp.Types.Atomics;
+using L5Sharp.Types.Predefined;
 using NUnit.Framework;
 
 namespace L5Sharp.Extensions.Tests
@@ -159,7 +161,7 @@ namespace L5Sharp.Extensions.Tests
         {
             var type = new TIMER();
 
-            var members = type.GetMembers();
+            var members = type.Members();
 
             members.Should().NotBeEmpty();
         }
@@ -393,7 +395,7 @@ namespace L5Sharp.Extensions.Tests
         {
             var type = new TIMER();
 
-            var members = type.GetMembers("PRESET");
+            var members = type.Members("PRESET");
 
             members.Should().BeEmpty();
         }
@@ -403,7 +405,7 @@ namespace L5Sharp.Extensions.Tests
         {
             var type = new TIMER();
 
-            var members = type.GetMembers("PRE").ToList();
+            var members = type.Members("PRE").ToList();
 
             members.Should().HaveCount(1);
             members.Should().Contain(m => m.Name == "PRE");

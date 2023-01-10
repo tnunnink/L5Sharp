@@ -10,7 +10,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void New_ValidDefault_ShouldNotBeNull()
         {
-            var task = new EventTask("Test");
+            var task = new TaskEventInfo("Test");
 
             task.Should().NotBeNull();
         }
@@ -18,7 +18,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void New_Overloaded_ShouldHaveExpectedProperties()
         {
-            var task = new EventTask("Test", "This is a test task");
+            var task = new TaskEventInfo("Test", "This is a test task");
 
             task.Name.Should().Be("Test");
             task.Description.Should().Be("This is a test task");
@@ -27,7 +27,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void New_Valid_ShouldHaveExpectedProperties()
         {
-            var task = new EventTask("Test");
+            var task = new TaskEventInfo("Test");
 
             task.Name.Should().Be("Test");
             task.Description.Should().BeEmpty();

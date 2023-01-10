@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Xml.Linq;
 using L5Sharp.Core;
-using L5Sharp.L5X;
+using L5Sharp.Utilities;
 
 namespace L5Sharp.Serialization
 {

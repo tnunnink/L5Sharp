@@ -4,7 +4,7 @@ using System.Xml.Linq;
 using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Extensions;
-using L5Sharp.L5X;
+using L5Sharp.Utilities;
 
 namespace L5Sharp.Serialization
 {
@@ -78,7 +78,7 @@ namespace L5Sharp.Serialization
             var eventTag = eventInfo?.Attribute(L5XName.EventTag)
                 ?.Value;
 
-            return new EventTask(name, rate, priority, watchdog, disableUpdateOutputs,
+            return new TaskEventInfo(name, rate, priority, watchdog, disableUpdateOutputs,
                 inhibitTask, programs, eventTrigger, enableTimeout, eventTag, description);
         }
     }

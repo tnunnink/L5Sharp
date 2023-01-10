@@ -18,22 +18,6 @@ namespace L5Sharp.Enums
         }
 
         /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public abstract ILogixContent CreateContent();
-
-        /// <summary>
-        /// Gets the <see cref="RoutineType"/> option based on the specified content type.
-        /// </summary>
-        /// <typeparam name="TContent">The <see cref="ILogixContent"/> type to get a <see cref="RoutineType"/> option for.</typeparam>
-        /// <returns>The <see cref="RoutineType"/> instance that represents the specified type.</returns>
-        public static RoutineType ForType<TContent>() where TContent : ILogixContent
-        {
-            return typeof(ILadderLogic).IsAssignableFrom(typeof(TContent)) ? Rll : Typeless;
-        }
-
-        /// <summary>
         /// Represents no <see cref="RoutineType"/> value.
         /// </summary>
         public static readonly RoutineType Typeless = new TypelessType();
@@ -63,12 +47,6 @@ namespace L5Sharp.Enums
         {
             public TypelessType() : base(nameof(Typeless), nameof(Typeless))
             {
-                
-            }
-
-            public override ILogixContent CreateContent()
-            {
-                throw new NotSupportedException($"Can not create content for RoutineType '{Name}'.");
             }
         }
         
@@ -78,20 +56,12 @@ namespace L5Sharp.Enums
             {
                 
             }
-
-            public override ILogixContent CreateContent() => new LadderLogic();
         }
         
         private class FunctionBlockType : RoutineType
         {
             public FunctionBlockType() : base(nameof(Fbd), nameof(Fbd).ToUpper())
             {
-                
-            }
-
-            public override ILogixContent CreateContent()
-            {
-                throw new NotSupportedException($"Can not create content for RoutineType '{Name}'.");
             }
         }
         
@@ -99,12 +69,6 @@ namespace L5Sharp.Enums
         {
             public SequentialFunctionType() : base(nameof(Sfc), nameof(Sfc).ToUpper())
             {
-                
-            }
-
-            public override ILogixContent CreateContent()
-            {
-                throw new NotSupportedException($"Can not create content for RoutineType '{Name}'.");
             }
         }
         
@@ -112,12 +76,6 @@ namespace L5Sharp.Enums
         {
             public StructuredTextType() : base(nameof(St), nameof(St).ToUpper())
             {
-                
-            }
-
-            public override ILogixContent CreateContent()
-            {
-                throw new NotSupportedException($"Can not create content for RoutineType '{Name}'.");
             }
         }
     }

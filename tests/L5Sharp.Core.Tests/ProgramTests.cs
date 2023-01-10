@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Linq;
 using FluentAssertions;
+using L5Sharp.Components;
 using L5Sharp.Creators;
 using L5Sharp.Enums;
 using L5Sharp.Exceptions;
 using L5Sharp.Types;
+using L5Sharp.Types.Atomics;
+using L5Sharp.Types.Predefined;
 using NUnit.Framework;
 
 namespace L5Sharp.Core.Tests
@@ -70,7 +73,7 @@ namespace L5Sharp.Core.Tests
         public void AddRoutine_ValidRoutine_ShouldHaveExpectedRoutine()
         {
             var program = new Program("Test");
-            var routine = Routine.Create<LadderLogic>("TestRoutine");
+            var routine = Routine.Create<RLL>("TestRoutine");
             
             program.Routines.Add(routine);
 
@@ -82,7 +85,7 @@ namespace L5Sharp.Core.Tests
         public void AddRoutineWithRung_ShouldHaveExpected()
         {
             var program = new Program("Test");
-            var routine = Routine.Create<LadderLogic>("TestRoutine");
+            var routine = Routine.Create<RLL>("TestRoutine");
             routine.Content.Add(new Rung("NOP();", "This is a test rung"));
             
             program.Routines.Add(routine);

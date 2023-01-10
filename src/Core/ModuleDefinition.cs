@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using L5Sharp.Abstractions;
+using L5Sharp.Components;
 using L5Sharp.Enums;
 
 namespace L5Sharp.Core
@@ -136,8 +136,8 @@ namespace L5Sharp.Core
         /// <param name="busSize">The optional size of the downstream bus. If not provided will default to zero.</param>
         /// <exception cref="InvalidOperationException">No port exists with type upstreamType -or- the port with type
         /// upstreamType is configured as a downstream only port.</exception>
-        public void ConfigurePorts(string upstreamType, PortAddress upstreamAddress,
-            PortAddress? downstreamAddress = null, byte busSize = default)
+        public void ConfigurePorts(string upstreamType, Address upstreamAddress,
+            Address? downstreamAddress = null, byte busSize = default)
         {
             var ports = new List<Port>();
 
@@ -172,7 +172,7 @@ namespace L5Sharp.Core
                 throw new InvalidOperationException(
                     $"No non-Ethernet port found on the current definition for {CatalogNumber}.");
 
-            var port = new Port(target.Id, target.Type, PortAddress.FromSlot(slot), target.Upstream, target.BusSize,
+            var port = new Port(target.Id, target.Type, Address.FromSlot(slot), target.Upstream, target.BusSize,
                 target.DownstreamOnly);
 
             _ports.Remove(target);
@@ -192,7 +192,7 @@ namespace L5Sharp.Core
                 throw new InvalidOperationException(
                     $"No Ethernet port found on the current definition for {CatalogNumber}.");
 
-            var port = new Port(target.Id, target.Type, PortAddress.FromIP(ipAddress), target.Upstream, target.BusSize,
+            var port = new Port(target.Id, target.Type, Address.FromIP(ipAddress), target.Upstream, target.BusSize,
                 target.DownstreamOnly);
 
             _ports.Remove(target);

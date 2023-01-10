@@ -4,6 +4,7 @@ using System.Xml.Linq;
 using ApprovalTests;
 using ApprovalTests.Reporters;
 using FluentAssertions;
+using L5Sharp.Components;
 using L5Sharp.Core;
 using NUnit.Framework;
 
@@ -37,7 +38,7 @@ namespace L5Sharp.Serialization.Tests
                 new(new NeutralText("OTL(Test);"), "This is a test comment")
             };
 
-            var component = new LadderLogic(rungs);
+            var component = new RLL(rungs);
 
             var xml = _serializer.Serialize(component);
 
@@ -56,7 +57,7 @@ namespace L5Sharp.Serialization.Tests
                 new(new NeutralText("OTL(Test);"), "This is a test comment")
             };
 
-            var component = new LadderLogic(rungs);
+            var component = new RLL(rungs);
 
             var xml = _serializer.Serialize(component);
 

@@ -1,23 +1,25 @@
 ﻿using System;
 using System.Linq;
 using System.Xml.Linq;
+using L5Sharp.Components;
 using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Extensions;
-using L5Sharp.L5X;
+using L5Sharp.Types;
+using L5Sharp.Utilities;
 
 namespace L5Sharp.Serialization
 {
     internal class ParameterSerializer : L5XSerializer<IParameter<IDataType>>
     {
-        private readonly L5XContent? _document;
+        private readonly LogixInfo? _document;
         private static readonly XName ElementName = L5XName.Parameter;
         
         private LocalTagSerializer LocalTagSerializer => _document is not null
             ? _document.Serializers.Get<LocalTagSerializer>()
             : new LocalTagSerializer(_document);
 
-        public ParameterSerializer(L5XContent? document = null)
+        public ParameterSerializer(LogixInfo? document = null)
         {
             _document = document;
         }
@@ -92,7 +94,7 @@ namespace L5Sharp.Serialization
             
             var dataType = _document is not null
                 ? _document.Index.LookupType(element.DataTypeName())
-                : DataType.Create(element.DataTypeName());
+                : LogixType.Create(element.DataTypeName());
             
             if (dimensions is null || dimensions.IsEmpty)
                 return new Parameter<IDataType>(name, dataType, radix, access, usage, required, visible,

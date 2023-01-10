@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Xml.Linq;
-using L5Sharp.L5X;
 using L5Sharp.Types;
+using L5Sharp.Types.Predefined;
+using L5Sharp.Utilities;
 
 namespace L5Sharp.Serialization
 {
     internal class AlarmDataSerializer : L5XSerializer<IDataType>
     {
-        private readonly L5XContent? _document;
+        private readonly LogixInfo? _document;
 
         private AlarmDigitalParametersSerializer AlarmDigitalParametersSerializer => _document is not null
             ? _document.Serializers.Get<AlarmDigitalParametersSerializer>()
@@ -17,7 +18,7 @@ namespace L5Sharp.Serialization
             ? _document.Serializers.Get<AlarmAnalogParametersSerializer>()
             : new AlarmAnalogParametersSerializer();
         
-        public AlarmDataSerializer(L5XContent? document = null)
+        public AlarmDataSerializer(LogixInfo? document = null)
         {
             _document = document;
         }

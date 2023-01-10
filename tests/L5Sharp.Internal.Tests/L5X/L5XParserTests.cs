@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
-using L5Sharp.L5X;
 using L5Sharp.Types;
+using L5Sharp.Types.Atomics;
+using L5Sharp.Utilities;
 using NUnit.Framework;
 
 namespace L5Sharp.Internal.Tests.L5X

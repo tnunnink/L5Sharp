@@ -4,8 +4,9 @@ using L5Sharp.Core;
 using L5Sharp.Creators;
 using L5Sharp.Enums;
 using L5Sharp.Extensions;
-using L5Sharp.L5X;
 using L5Sharp.Types;
+using L5Sharp.Types.Atomics;
+using L5Sharp.Utilities;
 
 namespace L5Sharp.Serialization
 {
@@ -44,7 +45,7 @@ namespace L5Sharp.Serialization
             var radix = element.Attribute(L5XName.Radix)?.Value?.Parse<Radix>() ?? Radix.Decimal;
             var value = element.Attribute(L5XName.Value)?.Value.TryParse<IAtomicType>();
             
-            var dataType = DataType.Atomic(type, value);
+            var dataType = LogixType.Atomic(type, value);
 
             return Member.Create(name, dataType, radix);
         }

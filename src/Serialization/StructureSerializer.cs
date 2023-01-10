@@ -4,13 +4,14 @@ using System.Xml.Linq;
 using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Extensions;
-using L5Sharp.L5X;
+using L5Sharp.Types;
+using L5Sharp.Utilities;
 
 namespace L5Sharp.Serialization
 {
     internal class StructureSerializer : L5XSerializer<IComplexType>
     {
-        private readonly L5XContent? _document;
+        private readonly LogixInfo? _document;
         private static readonly XName ElementName = L5XName.Structure;
 
         private DataValueMemberSerializer DataValueMemberSerializer => _document is not null
@@ -33,7 +34,7 @@ namespace L5Sharp.Serialization
             ? _document.Serializers.Get<StringMemberSerializer>()
             : new StringMemberSerializer();
 
-        public StructureSerializer(L5XContent? document = null)
+        public StructureSerializer(LogixInfo? document = null)
         {
             _document = document;
         }

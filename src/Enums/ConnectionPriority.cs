@@ -1,9 +1,10 @@
 ﻿using Ardalis.SmartEnum;
+using L5Sharp.Components;
 
 namespace L5Sharp.Enums
 {
     /// <summary>
-    /// An enumeration of all <see cref="ConnectionPriority"/> for a Logix <see cref="Core.Connection"/>. 
+    /// An enumeration of all <see cref="ConnectionPriority"/> for a Logix <see cref="Connection"/>. 
     /// </summary>
     public sealed class ConnectionPriority : SmartEnum<ConnectionPriority, string>
     {

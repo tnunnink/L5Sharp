@@ -1,5 +1,5 @@
 ﻿using System;
-using L5Sharp.Abstractions;
+using L5Sharp.Components;
 
 namespace L5Sharp.Core
 {
@@ -24,12 +24,12 @@ namespace L5Sharp.Core
         /// or is a port that hosts other modules downstream, or in the </param>
         /// <param name="busSize"></param>
         /// <param name="downstreamOnly"></param>
-        public Port(int id, string type, PortAddress? address = null, bool upstream = default, byte busSize = default,
+        public Port(int id, string type, Address? address = null, bool upstream = default, byte busSize = default,
             bool downstreamOnly = default)
         {
             Id = id;
             Type = type ?? throw new ArgumentNullException(nameof(type));
-            Address = address ?? PortAddress.None;
+            Address = address ?? Address.None;
             Upstream = upstream;
             BusSize = busSize;
             DownstreamOnly = downstreamOnly;
@@ -60,7 +60,7 @@ namespace L5Sharp.Core
         /// The Address of a port represents the slot or IP address for the port. This value is used in the
         /// <see cref="Module"/> to determine the slot and IP properties. All ports must have an Address.
         /// </remarks>
-        public PortAddress Address { get; }
+        public Address Address { get; }
 
         /// <summary>
         /// Gets the value indicating whether the there are devices upstream of the current <see cref="Port"/>.

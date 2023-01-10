@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using FluentAssertions;
 using L5Sharp.Core;
-using L5Sharp.L5X;
+using L5Sharp.Types;
 using L5SharpTests;
 using NUnit.Framework;
 
@@ -13,7 +13,7 @@ namespace L5Sharp.Querying.Tests
         [Test]
         public void OnlyAtomicMembers_WhenCalled_AllMembersShouldBeAtomics()
         {
-            var context = LogixContext.Load(Known.Test);
+            var context = LogixContent.Load(Known.Test);
             
             var results = context.DataTypes(q => q.OnlyAtomicMembers()).ToList();
 
@@ -21,7 +21,7 @@ namespace L5Sharp.Querying.Tests
 
             foreach (var result in results)
             {
-                result.Members.All(m => DataType.Atomics.Contains(m.DataType.Name)).Should().BeTrue();
+                result.Members.All(m => LogixType.Atomics.Contains(m.DataType.Name)).Should().BeTrue();
             }
         }
     }
@@ -38,7 +38,7 @@ namespace L5Sharp.Querying.Tests
             // so you can simply query them using LINQ to XML. This requires you know LINQ to XML and the XML structure
             // of the L5X.
             var results = query.Where(e =>
-                e.Descendants("Member").All(m => DataType.Atomics.Contains(m.Attribute("DataType")?.Value)));
+                e.Descendants("Member").All(m => LogixType.Atomics.Contains(m.Attribute("DataType")?.Value)));
 
             // 4. Return a new object instance with the filtered results.
             // This makes the query a fluent api that can be added into other DataTypeQuery calls.

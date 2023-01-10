@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using FluentAssertions;
 using L5Sharp.Abstractions;
+using L5Sharp.Components;
 using L5Sharp.Enums;
 using L5Sharp.Exceptions;
 using NUnit.Framework;
@@ -283,7 +284,7 @@ namespace L5Sharp.Core.Tests
 
             var address = bus.AddressOf("Test");
 
-            address.Should().Be(new PortAddress("0"));
+            address.Should().Be(new Address("0"));
         }
 
         [Test]

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
-using L5Sharp.L5X;
 using L5SharpTests;
 using NUnit.Framework;
 
@@ -17,7 +16,7 @@ namespace L5Sharp.Querying.Tests
         [Test]
         public void All_WhenCalled_ShouldNotBeEmpty()
         {
-            var context = LogixContext.Load(Known.Test);
+            var context = LogixContent.Load(Known.Test);
 
             var results = context.Tags().All().ToList();
 
@@ -28,7 +27,7 @@ namespace L5Sharp.Querying.Tests
         [Test]
         public void Any_HasComponents_ShouldBeTrue()
         {
-            var context = LogixContext.Load(Known.Test);
+            var context = LogixContent.Load(Known.Test);
 
             var result = context.Tags().Any();
 
@@ -38,7 +37,7 @@ namespace L5Sharp.Querying.Tests
         [Test]
         public void Any_NoComponents_ShouldBeFalse()
         {
-            var context = LogixContext.Load(Known.Empty);
+            var context = LogixContent.Load(Known.Empty);
 
             var result = context.Tags().Any();
 
@@ -48,7 +47,7 @@ namespace L5Sharp.Querying.Tests
         [Test]
         public void Contains_InvalidName_ShouldBeFalse()
         {
-            var context = LogixContext.Load(Known.Test);
+            var context = LogixContent.Load(Known.Test);
 
             var result = context.Tags().Contains(FakeName);
 
@@ -58,7 +57,7 @@ namespace L5Sharp.Querying.Tests
         [Test]
         public void Contains_ValidName_ShouldBeTrue()
         {
-            var context = LogixContext.Load(Known.Test);
+            var context = LogixContent.Load(Known.Test);
 
             var result = context.Tags().Contains(ValidName);
 
@@ -68,7 +67,7 @@ namespace L5Sharp.Querying.Tests
         [Test]
         public void Count_HasComponents_ShouldBeGreaterThanZero()
         {
-            var context = LogixContext.Load(Known.Test);
+            var context = LogixContent.Load(Known.Test);
 
             var result = context.Tags().Count();
 
@@ -78,7 +77,7 @@ namespace L5Sharp.Querying.Tests
         [Test]
         public void Count_NoComponents_ShouldBeZero()
         {
-            var context = LogixContext.Load(Known.Empty);
+            var context = LogixContent.Load(Known.Empty);
 
             var result = context.Tags().Count();
 
@@ -88,7 +87,7 @@ namespace L5Sharp.Querying.Tests
         [Test]
         public void Find_NonExistingName_ShouldBeNull()
         {
-            var context = LogixContext.Load(Known.Test);
+            var context = LogixContent.Load(Known.Test);
 
             var result = context.Tags().Find(FakeName);
 
@@ -98,7 +97,7 @@ namespace L5Sharp.Querying.Tests
         [Test]
         public void Find_ExistingName_ShouldNotBeNull()
         {
-            var context = LogixContext.Load(Known.Test);
+            var context = LogixContent.Load(Known.Test);
 
             var result = context.Tags().Find(ValidName);
 
@@ -108,7 +107,7 @@ namespace L5Sharp.Querying.Tests
         [Test]
         public void Find_HasAtLeastOnValidName_ShouldNotBeEmpty()
         {
-            var context = LogixContext.Load(Known.Test);
+            var context = LogixContent.Load(Known.Test);
             var names = new List<string> { ValidName, FakeName };
 
             var results = context.Tags().Find(names);
@@ -119,7 +118,7 @@ namespace L5Sharp.Querying.Tests
         [Test]
         public void Find_NonExistingNameCollection_ShouldBeEmpty()
         {
-            var context = LogixContext.Load(Known.Test);
+            var context = LogixContent.Load(Known.Test);
             var names = new List<string> { FakeName, "DoesNotExist", "NotReal" };
 
             var results = context.Tags().Find(names);
@@ -130,7 +129,7 @@ namespace L5Sharp.Querying.Tests
         [Test]
         public void Get_NullName_ShouldThrowInvalidOperationException()
         {
-            var context = LogixContext.Load(Known.Test);
+            var context = LogixContent.Load(Known.Test);
 
             FluentActions.Invoking(() => context.Tags().Get(null!)).Should().Throw<InvalidOperationException>();
         }
@@ -138,7 +137,7 @@ namespace L5Sharp.Querying.Tests
         [Test]
         public void Get_InvalidName_ShouldThrowInvalidOperationException()
         {
-            var context = LogixContext.Load(Known.Test);
+            var context = LogixContent.Load(Known.Test);
 
             FluentActions.Invoking(() => context.Tags().Get(FakeName)).Should().Throw<InvalidOperationException>();
         }
@@ -146,7 +145,7 @@ namespace L5Sharp.Querying.Tests
         [Test]
         public void Get_ValidName_ShouldNotBeNull()
         {
-            var context = LogixContext.Load(Known.Test);
+            var context = LogixContent.Load(Known.Test);
 
             var result = context.Tags().Get(ValidName);
 
@@ -156,7 +155,7 @@ namespace L5Sharp.Querying.Tests
         [Test]
         public void Names_HasNames_ShouldNotBeEmpty()
         {
-            var context = LogixContext.Load(Known.Test);
+            var context = LogixContent.Load(Known.Test);
 
             var results = context.Tags().Names().ToList();
 
@@ -166,7 +165,7 @@ namespace L5Sharp.Querying.Tests
         [Test]
         public void Names_NoNames_ShouldBeEmpty()
         {
-            var context = LogixContext.Load(Known.Empty);
+            var context = LogixContent.Load(Known.Empty);
 
             var results = context.Tags().Names().ToList();
 
@@ -176,7 +175,7 @@ namespace L5Sharp.Querying.Tests
         [Test]
         public void Take_Negative_ShouldBeEmpty()
         {
-            var context = LogixContext.Load(Known.Test);
+            var context = LogixContent.Load(Known.Test);
 
             var results = context.Tags().Take(-1);
 
@@ -186,7 +185,7 @@ namespace L5Sharp.Querying.Tests
         [Test]
         public void Take_Zero_ShouldBeEmpty()
         {
-            var context = LogixContext.Load(Known.Test);
+            var context = LogixContent.Load(Known.Test);
 
             var results = context.Tags().Take(0);
 
@@ -196,7 +195,7 @@ namespace L5Sharp.Querying.Tests
         [Test]
         public void Take_One_ShouldHaveCountTen()
         {
-            var context = LogixContext.Load(Known.Test);
+            var context = LogixContent.Load(Known.Test);
 
             var results = context.Tags().Take(1);
 

@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using FluentAssertions;
-using L5Sharp.Core;
+﻿using FluentAssertions;
 using L5Sharp.Enums;
+using L5Sharp.Types.Atomics;
+using L5Sharp.Types.Predefined;
 using NUnit.Framework;
 
 namespace L5Sharp.Types.Tests
@@ -22,7 +21,7 @@ namespace L5Sharp.Types.Tests
         {
             var type = new TIMER(new DINT(5000));
 
-            type.PRE.DataType.Value.Should().Be(5000);
+            type.PRE.Should().Be(5000);
         }
 
         [Test]
@@ -34,23 +33,12 @@ namespace L5Sharp.Types.Tests
         }
 
         [Test]
-        public void Instantiate_WhenCalled_ShouldBeEqualToDefault()
-        {
-            var type = new TIMER();
-
-            var instance = type.Instantiate();
-
-            instance.Should().NotBeNull();
-            instance.Should().BeEquivalentTo(new TIMER());
-        }
-
-        [Test]
         public void Members_ShouldNotBeEmpty()
         {
             var type = new TIMER();
 
-            type.Members.Should().NotBeEmpty();
-            type.Members.Should().HaveCount(5);
+            type.Members().Should().NotBeEmpty();
+            type.Members().Should().HaveCount(5);
         }
 
         [Test]
@@ -66,6 +54,14 @@ namespace L5Sharp.Types.Tests
         }
 
         [Test]
+        public void SetMember()
+        {
+            var timer = new TIMER();
+
+            timer.PRE = 6000;
+        }
+
+        [Test]
         public void Member_Get_ShouldContinueToReturnSameReference()
         {
             var type = new TIMER();
@@ -75,14 +71,6 @@ namespace L5Sharp.Types.Tests
             type.EN.Should().BeSameAs(type.EN);
             type.PRE.Should().BeSameAs(type.PRE);
             type.ACC.Should().BeSameAs(type.ACC);
-        }
-
-        [Test]
-        public void CastingMembers_ToMutableCollection_ShouldNotBeProhibited()
-        {
-            var type = new TIMER();
-
-            FluentActions.Invoking(() => (List<IMember<IDataType>>)type.Members).Should().Throw<InvalidCastException>();
         }
     }
 }

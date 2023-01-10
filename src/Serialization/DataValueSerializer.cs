@@ -2,7 +2,8 @@
 using System.Xml.Linq;
 using L5Sharp.Core;
 using L5Sharp.Extensions;
-using L5Sharp.L5X;
+using L5Sharp.Types;
+using L5Sharp.Utilities;
 
 namespace L5Sharp.Serialization
 {
@@ -33,7 +34,7 @@ namespace L5Sharp.Serialization
             var name = element.DataTypeName();
             var value = element.Attribute(L5XName.Value)?.Value.Parse<IAtomicType>();
 
-            return DataType.Atomic(name, value);
+            return LogixType.Atomic(name, value);
         }
     }
 }

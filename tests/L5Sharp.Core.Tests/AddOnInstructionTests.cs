@@ -1,5 +1,6 @@
 ﻿using System;
 using FluentAssertions;
+using L5Sharp.Components;
 using L5Sharp.Enums;
 using NUnit.Framework;
 

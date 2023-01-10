@@ -102,11 +102,11 @@ namespace L5Sharp.Core.Tests
 
             var icpPort = definition.Ports.First(p => p.Type == "ICP");
             icpPort.Upstream.Should().BeTrue();
-            icpPort.Address.Should().Be(new PortAddress("3"));
+            icpPort.Address.Should().Be(new Address("3"));
             
             var ethernetPort = definition.Ports.First(p => p.Type == "Ethernet");
             ethernetPort.Upstream.Should().BeFalse();
-            ethernetPort.Address.Should().Be(new PortAddress("192.168.1.1"));
+            ethernetPort.Address.Should().Be(new Address("192.168.1.1"));
         }
 
         [Test]
@@ -128,11 +128,11 @@ namespace L5Sharp.Core.Tests
 
             var icpPort = definition.Ports.First(p => p.Type == "ICP");
             icpPort.Upstream.Should().BeFalse();
-            icpPort.Address.Should().Be(new PortAddress("3"));
+            icpPort.Address.Should().Be(new Address("3"));
             
             var ethernetPort = definition.Ports.First(p => p.Type == "Ethernet");
             ethernetPort.Upstream.Should().BeTrue();
-            ethernetPort.Address.Should().Be(new PortAddress("192.168.1.1"));
+            ethernetPort.Address.Should().Be(new Address("192.168.1.1"));
         }
 
         [Test]

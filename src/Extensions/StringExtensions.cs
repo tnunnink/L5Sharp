@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using L5Sharp.Core;
-using L5Sharp.Types;
+using L5Sharp.Types.Atomics;
 
 namespace L5Sharp.Extensions
 {
@@ -20,26 +19,11 @@ namespace L5Sharp.Extensions
 
         public static bool IsTagName(this string input) => new TagName(input).IsValid;
 
-        /// <summary>
-        /// Converts the string to an array type of <see cref="SINT"/> values.
-        /// </summary>
-        /// <param name="value">The string to convert.</param>
-        /// <returns>An <see cref="IArrayType{TDataType}"/> that contains the characters of the string.</returns>
-        /// <exception cref="ArgumentOutOfRangeException">
-        /// The provided string length is greater than the maximum ushort size.
-        /// </exception>
-        public static IArrayType<SINT> ToArrayType(this string value)
-        {
-            var bytes = Encoding.ASCII.GetBytes(value).Select(b => new SINT((sbyte)b)).ToList();
+        public static SINT[] ToSintArray(this string value) => 
+            Encoding.ASCII.GetBytes(value).Select(b => new SINT((sbyte)b)).ToArray();
 
-            if (bytes.Count > ushort.MaxValue)
-                throw new ArgumentOutOfRangeException(nameof(value),
-                    $"The current string length must be less than {ushort.MaxValue}.");
-
-            var length = (ushort)bytes.Count;
-
-            return new ArrayType<SINT>(new Dimensions(length), bytes);
-        }
+        public static string ToString(this IEnumerable<SINT> array) => 
+            Encoding.ASCII.GetString(array.Where(s => s > 0).Select(b => (byte)(sbyte)b).ToArray());
 
         /// <summary>
         /// Determines if the current string has a <see cref="Enums.Radix.Binary"/> format.

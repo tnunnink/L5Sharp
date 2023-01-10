@@ -6,7 +6,7 @@ using ApprovalTests;
 using ApprovalTests.Reporters;
 using FluentAssertions;
 using L5Sharp.Core;
-using L5Sharp.L5X;
+using L5Sharp.Utilities;
 using NUnit.Framework;
 
 namespace L5Sharp.Serialization.Tests

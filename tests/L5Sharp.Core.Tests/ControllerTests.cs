@@ -1,6 +1,7 @@
 ﻿using System;
 using AutoFixture;
 using FluentAssertions;
+using L5Sharp.Components;
 using L5Sharp.Exceptions;
 using NUnit.Framework;
 

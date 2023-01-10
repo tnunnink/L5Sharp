@@ -4,6 +4,7 @@ using System.Globalization;
 using AutoFixture;
 using FluentAssertions;
 using L5Sharp.Types;
+using L5Sharp.Types.Atomics;
 using L5SharpTests.Specimens;
 using NUnit.Framework;
 

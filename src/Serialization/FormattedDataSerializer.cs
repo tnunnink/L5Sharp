@@ -2,14 +2,15 @@
 using System.Linq;
 using System.Xml.Linq;
 using L5Sharp.Enums;
-using L5Sharp.L5X;
 using L5Sharp.Types;
+using L5Sharp.Types.Predefined;
+using L5Sharp.Utilities;
 
 namespace L5Sharp.Serialization
 {
     internal class FormattedDataSerializer : L5XSerializer<IDataType>
     {
-        private readonly L5XContent? _document;
+        private readonly LogixInfo? _document;
         private readonly string _element;
 
         private DecoratedDataSerializer DecoratedDataSerializer => _document is not null
@@ -20,7 +21,7 @@ namespace L5Sharp.Serialization
             ? _document.Serializers.Get<AlarmDataSerializer>()
             : new AlarmDataSerializer(_document);
 
-        public FormattedDataSerializer(L5XContent? document = null, string? element = null)
+        public FormattedDataSerializer(LogixInfo? document = null, string? element = null)
         {
             _element = element ?? L5XName.Data;
             _document = document;

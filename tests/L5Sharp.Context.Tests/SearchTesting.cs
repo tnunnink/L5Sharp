@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Text.RegularExpressions;
 using FluentAssertions;
-using L5Sharp.L5X;
 using NUnit.Framework;
 
 namespace L5Sharp.Context.Tests
@@ -13,7 +12,7 @@ namespace L5Sharp.Context.Tests
         [Test]
         public void GetUniqueTagDescriptionWordsAndCounts()
         {
-            var context = LogixContext.Load(Known.L5X);
+            var context = LogixContent.Load(Known.L5X);
             
             var allTagComments = context.Tags().All().SelectMany(t => t.Comments.Select(c => c.Value)).ToList();
 

@@ -1,4 +1,5 @@
 ﻿using Ardalis.SmartEnum;
+using L5Sharp.Types;
 
 namespace L5Sharp.Enums
 {
@@ -14,12 +15,12 @@ namespace L5Sharp.Enums
         /// <summary>
         /// Gets the default <see cref="Radix"/> type for the provided data type instance.
         /// </summary>
-        /// <param name="dataType">The data type instance to evaluate.</param>
+        /// <param name="logixType">The data type instance to evaluate.</param>
         /// <returns>
         /// <see cref="Input"/> for atomic types.
         /// <see cref="InOut"/> for complex types.
         /// </returns>
-        public static TagUsage AoiDefault(IDataType dataType) => dataType is IAtomicType ? Input : InOut;
+        public static TagUsage Default(ILogixType logixType) => logixType is AtomicType ? Input : InOut;
 
 
         /// <summary>

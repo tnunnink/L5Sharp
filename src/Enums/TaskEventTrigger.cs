@@ -1,9 +1,10 @@
 ﻿using Ardalis.SmartEnum;
+using L5Sharp.Core;
 
 namespace L5Sharp.Enums
 {
     /// <summary>
-    /// An enumeration of all <see cref="TaskEventTrigger"/> options for a given <see cref="Core.EventTask"/>.
+    /// An enumeration of all <see cref="TaskEventTrigger"/> options for a given <see cref="TaskEventInfo"/>.
     /// </summary>
     public class TaskEventTrigger : SmartEnum<TaskEventTrigger, string>
     {

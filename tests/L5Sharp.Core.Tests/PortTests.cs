@@ -24,7 +24,7 @@ namespace L5Sharp.Core.Tests
             port.Type.Should().Be("ICP");
             port.Upstream.Should().BeFalse();
             port.DownstreamOnly.Should().BeFalse();
-            port.Address.Should().Be(PortAddress.None);
+            port.Address.Should().Be(Address.None);
             port.BusSize.Should().Be(0);
         }
 
@@ -37,7 +37,7 @@ namespace L5Sharp.Core.Tests
             port.Type.Should().Be("ICP");
             port.Upstream.Should().BeTrue();
             port.DownstreamOnly.Should().BeTrue();
-            port.Address.Should().Be(new PortAddress("0"));
+            port.Address.Should().Be(new Address("0"));
             port.BusSize.Should().Be(17);
         }
 

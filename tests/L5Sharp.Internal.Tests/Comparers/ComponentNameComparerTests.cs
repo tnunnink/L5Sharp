@@ -2,6 +2,7 @@
 using L5Sharp.Comparers;
 using L5Sharp.Creators;
 using L5Sharp.Types;
+using L5Sharp.Types.Atomics;
 using NUnit.Framework;
 
 namespace L5Sharp.Internal.Tests.Comparers

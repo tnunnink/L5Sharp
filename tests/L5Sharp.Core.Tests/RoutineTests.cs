@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using L5Sharp.Components;
 using L5Sharp.Creators;
 using L5Sharp.Enums;
 using NUnit.Framework;
@@ -19,7 +20,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Create_Default_ShouldNotBeNull()
         {
-            var routine = Routine.Create<LadderLogic>("Test");
+            var routine = Routine.Create<RLL>("Test");
 
             routine.Should().NotBeNull();
         }
@@ -27,7 +28,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Create_Overloaded_ShouldHaveExpectedValues()
         {
-            var routine = Routine.Create<LadderLogic>("Test", "This is a test routine");
+            var routine = Routine.Create<RLL>("Test", "This is a test routine");
 
             routine.Name.Should().Be("Test");
             routine.Description.Should().Be("This is a test routine");

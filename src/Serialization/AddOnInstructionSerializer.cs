@@ -2,15 +2,16 @@
 using System.Globalization;
 using System.Linq;
 using System.Xml.Linq;
+using L5Sharp.Components;
 using L5Sharp.Core;
 using L5Sharp.Extensions;
-using L5Sharp.L5X;
+using L5Sharp.Utilities;
 
 namespace L5Sharp.Serialization
 {
     internal class AddOnInstructionSerializer : L5XSerializer<IAddOnInstruction>
     {
-        private readonly L5XContent? _document;
+        private readonly LogixInfo? _document;
         private const string DateTimeFormat = "yyyy-MM-dd'T'HH:mm:ss.fff'Z'";
         private static readonly XName ElementName = L5XName.AddOnInstructionDefinition;
 
@@ -26,7 +27,7 @@ namespace L5Sharp.Serialization
             ? _document.Serializers.Get<RoutineSerializer>()
             : new RoutineSerializer(_document);
 
-        public AddOnInstructionSerializer(L5XContent? document = null)
+        public AddOnInstructionSerializer(LogixInfo? document = null)
         {
             _document = document;
         }

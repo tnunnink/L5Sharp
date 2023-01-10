@@ -1,16 +1,17 @@
 ﻿using System;
 using System.Linq;
 using System.Xml.Linq;
+using L5Sharp.Components;
 using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Extensions;
-using L5Sharp.L5X;
+using L5Sharp.Utilities;
 
 namespace L5Sharp.Serialization
 {
     internal class ProgramSerializer : L5XSerializer<IProgram>
     {
-        private readonly L5XContent? _document;
+        private readonly LogixInfo? _document;
         private static readonly XName ElementName = L5XName.Program;
         
         private TagSerializer TagSerializer => _document is not null
@@ -22,7 +23,7 @@ namespace L5Sharp.Serialization
             : new RoutineSerializer(_document);
         
 
-        public ProgramSerializer(L5XContent? document = null)
+        public ProgramSerializer(LogixInfo? document = null)
         {
             _document = document;
         }

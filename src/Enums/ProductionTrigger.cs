@@ -1,9 +1,10 @@
 ﻿using Ardalis.SmartEnum;
+using L5Sharp.Components;
 
 namespace L5Sharp.Enums
 {
     /// <summary>
-    /// An enumeration of all Logix <see cref="ProductionTrigger"/> options for a given <see cref="Core.Connection"/>.
+    /// An enumeration of all Logix <see cref="ProductionTrigger"/> options for a given <see cref="Connection"/>.
     /// </summary>
     public class ProductionTrigger : SmartEnum<ProductionTrigger, string>
     {

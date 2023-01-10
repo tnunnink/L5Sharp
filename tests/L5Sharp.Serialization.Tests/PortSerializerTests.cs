@@ -100,7 +100,7 @@ namespace L5Sharp.Serialization.Tests
             var component = _serializer.Deserialize(element);
 
             component.Id.Should().Be(1);
-            component.Address.Should().Be(new PortAddress("0"));
+            component.Address.Should().Be(new Address("0"));
             component.Type.Should().Be("5094");
             component.Upstream.Should().Be(false);
             component.BusSize.Should().Be(17);
@@ -116,7 +116,7 @@ namespace L5Sharp.Serialization.Tests
             var component = _serializer.Deserialize(element);
 
             component.Id.Should().Be(1);
-            component.Address.Should().Be(new PortAddress("10.11.12.13"));
+            component.Address.Should().Be(new Address("10.11.12.13"));
             component.Type.Should().Be("Ethernet");
             component.Upstream.Should().Be(true);
             component.BusSize.Should().Be(0);

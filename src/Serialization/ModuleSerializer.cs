@@ -1,16 +1,17 @@
 ﻿using System;
 using System.Linq;
 using System.Xml.Linq;
+using L5Sharp.Components;
 using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Extensions;
-using L5Sharp.L5X;
+using L5Sharp.Utilities;
 
 namespace L5Sharp.Serialization
 {
     internal class ModuleSerializer : L5XSerializer<IModule>
     {
-        private readonly L5XContent? _document;
+        private readonly LogixInfo? _document;
         private static readonly XName ElementName = L5XName.Module;
 
         private PortSerializer PortSerializer => _document is not null
@@ -25,7 +26,7 @@ namespace L5Sharp.Serialization
             ? _document.Serializers.Get<ConfigTagSerializer>()
             : new ConfigTagSerializer(_document);
 
-        public ModuleSerializer(L5XContent? document = null)
+        public ModuleSerializer(LogixInfo? document = null)
         {
             _document = document;
         }

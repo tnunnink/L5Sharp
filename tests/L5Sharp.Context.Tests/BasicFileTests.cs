@@ -1,6 +1,5 @@
 ﻿using FluentAssertions;
 using L5Sharp.Core;
-using L5Sharp.L5X;
 using NUnit.Framework;
 
 namespace L5Sharp.Context.Tests
@@ -17,7 +16,7 @@ namespace L5Sharp.Context.Tests
         [Test]
         public void Load_ValidFile_ShouldNotBeNull()
         {
-            var context = LogixContext.Load(Known.L5X);
+            var context = LogixContent.Load(Known.L5X);
 
             context.Should().NotBeNull();
         }
@@ -39,7 +38,7 @@ namespace L5Sharp.Context.Tests
         [Test]
         public void Controller_WhenCalled_ShouldNotBeNull()
         {
-            var context = LogixContext.Load(Known.L5X);
+            var context = LogixContent.Load(Known.L5X);
 
             var controller = context.Controller();
 
@@ -49,7 +48,7 @@ namespace L5Sharp.Context.Tests
         [Test]
         public void Controller_WhenCalled_ShouldBeExpected()
         {
-            var context = LogixContext.Load(Known.L5X);
+            var context = LogixContent.Load(Known.L5X);
 
             var controller = context.Controller()!;
 

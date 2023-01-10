@@ -1,10 +1,9 @@
 ﻿using Ardalis.SmartEnum;
-using L5Sharp.L5X;
 
 namespace L5Sharp.Enums
 {
     /// <summary>
-    /// An enumeration of options that specify the purpose of use of a L5X or <see cref="LogixContext"/>.
+    /// An enumeration of options that specify the purpose of use of a L5X or <see cref="LogixContent"/>.
     /// </summary>
     public class Use : SmartEnum<Use, string>
     {

@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Linq;
 using System.Xml.Linq;
+using L5Sharp.Components;
 using L5Sharp.Core;
 using L5Sharp.Enums;
-using L5Sharp.L5X;
+using L5Sharp.Utilities;
 
 namespace L5Sharp.Serialization
 {
     internal class InputTagSerializer : L5XSerializer<ITag<IDataType>>
     {
-        private readonly L5XContent? _document;
+        private readonly LogixInfo? _document;
         private const string DefaultSuffix = "I";
         private static readonly XName ElementName = L5XName.InputTag;
         
@@ -17,7 +18,7 @@ namespace L5Sharp.Serialization
             ? _document.Serializers.Get<FormattedDataSerializer>()
             : new FormattedDataSerializer(_document);
 
-        public InputTagSerializer(L5XContent? document = null)
+        public InputTagSerializer(LogixInfo? document = null)
         {
             _document = document;
         }

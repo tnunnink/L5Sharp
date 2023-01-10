@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using L5Sharp.Components;
 using L5Sharp.Enums;
 
 namespace L5Sharp.Core

@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using L5Sharp.Enums;
+using L5Sharp.Types.Predefined;
 using NUnit.Framework;
 
 namespace L5Sharp.Types.Tests
@@ -24,14 +25,15 @@ namespace L5Sharp.Types.Tests
         }
 
         [Test]
-        public void Instantiate_WhenCalled_ShouldBeEqualToDefault()
+        public void UpdateMemberValue_ShouldBeExpected()
         {
-            var type = new ALARM();
+            var alarm = new ALARM();
 
-            var instance = type.Instantiate();
+            alarm.EnableIn = false;
 
-            instance.Should().NotBeNull();
-            instance.Should().BeEquivalentTo(new ALARM());
+            alarm.EnableIn = true;
+
+            alarm.EnableIn.Should().Be(true);
         }
     }
 }

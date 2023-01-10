@@ -5,7 +5,6 @@ using System.Linq;
 using FluentAssertions;
 using L5Sharp.Comparers;
 using L5Sharp.Core;
-using L5Sharp.L5X;
 using L5SharpTests;
 using NUnit.Framework;
 
@@ -20,7 +19,7 @@ namespace L5Sharp.Querying.Tests
         [Test]
         public void Flatten_WhenCalled_ShouldNotBeACompleteDisaster()
         {
-            var context = LogixContext.Load(Known.Test);
+            var context = LogixContent.Load(Known.Test);
 
             var rungs = context.Rungs(q => q.InProgram("MainProgram").Flatten()).ToList();
 
@@ -30,7 +29,7 @@ namespace L5Sharp.Querying.Tests
         [Test]
         public void Flatten_RungExample1_PleaseGod()
         {
-            var context = LogixContext.Load(RungExample1);
+            var context = LogixContent.Load(RungExample1);
 
             var rungs = context.Rungs(q => q.Flatten()).ToList();
 
@@ -40,7 +39,7 @@ namespace L5Sharp.Querying.Tests
         [Test]
         public void InProgram_WhenCalled_ShouldNotBeEmpty()
         {
-            var context = LogixContext.Load(Known.Test);
+            var context = LogixContent.Load(Known.Test);
 
             var rungs = context.Rungs(q => q.InProgram("MainProgram")).ToList();
 
@@ -50,7 +49,7 @@ namespace L5Sharp.Querying.Tests
         [Test]
         public void InProgram_NullName_ShouldBeEmpty()
         {
-            var context = LogixContext.Load(Known.Test);
+            var context = LogixContent.Load(Known.Test);
 
             var rungs = context.Rungs(q => q.InProgram(null!)).ToList();
 
@@ -60,7 +59,7 @@ namespace L5Sharp.Querying.Tests
         [Test]
         public void InRange_RangeEqual_ShouldOnlyHaveRungsWithThatNumber()
         {
-            var context = LogixContext.Load(Known.Test);
+            var context = LogixContent.Load(Known.Test);
 
             var rungs = context.Rungs(q => q.InRange(1, 1)).ToList();
 
@@ -71,7 +70,7 @@ namespace L5Sharp.Querying.Tests
         [Test]
         public void InRange_NegativeNumber_ShouldStillWorkAndReturnRungsInRange()
         {
-            var context = LogixContext.Load(Known.Test);
+            var context = LogixContent.Load(Known.Test);
 
             var rungs = context.Rungs(q => q.InRange(-1, 2)).ToList();
 
@@ -82,7 +81,7 @@ namespace L5Sharp.Querying.Tests
         [Test]
         public void InRange_LastLessThanFirst_ShouldBeEmptyBecauseThatMakesNoSense()
         {
-            var context = LogixContext.Load(Known.Test);
+            var context = LogixContent.Load(Known.Test);
 
             var rungs = context.Rungs(q => q.InRange(2, 1)).ToList();
 
@@ -92,7 +91,7 @@ namespace L5Sharp.Querying.Tests
         [Test]
         public void InRange_ValidRange_NumbersShouldBeInRange()
         {
-            var context = LogixContext.Load(Known.Test);
+            var context = LogixContent.Load(Known.Test);
 
             var rungs = context.Rungs(q => q.InRange(1, 2)).ToList();
 
@@ -103,7 +102,7 @@ namespace L5Sharp.Querying.Tests
         [Test]
         public void InRoutine_ValidRoutine_ShouldNotBeEmpty()
         {
-            var context = LogixContext.Load(Known.Test);
+            var context = LogixContent.Load(Known.Test);
 
             var rungs = context.Rungs(q => q.InRoutine("Main")).ToList();
 
@@ -113,7 +112,7 @@ namespace L5Sharp.Querying.Tests
         [Test]
         public void InRoutine_NullName_ShouldBeEmpty()
         {
-            var context = LogixContext.Load(Known.Test);
+            var context = LogixContent.Load(Known.Test);
 
             var rungs = context.Rungs(q => q.InRoutine(null!)).ToList();
 
@@ -123,7 +122,7 @@ namespace L5Sharp.Querying.Tests
         [Test]
         public void WithInstruction_NullName_ShouldBeEmpty()
         {
-            var context = LogixContext.Load(Known.Test);
+            var context = LogixContent.Load(Known.Test);
 
             var rungs = context.Rungs(q => q.WithInstruction(null!)).ToList();
 
@@ -133,7 +132,7 @@ namespace L5Sharp.Querying.Tests
         [Test]
         public void WithInstruction_InvalidName_ShouldBeEmpty()
         {
-            var context = LogixContext.Load(Known.Test);
+            var context = LogixContent.Load(Known.Test);
 
             var rungs = context.Rungs(q => q.WithInstruction("Fake")).ToList();
 
@@ -143,7 +142,7 @@ namespace L5Sharp.Querying.Tests
         [Test]
         public void WithInstruction_ValidName_ShouldBeEmpty()
         {
-            var context = LogixContext.Load(Known.Test);
+            var context = LogixContent.Load(Known.Test);
 
             var rungs = context.Rungs(q => q.WithInstruction("XIC")).ToList();
 
@@ -153,7 +152,7 @@ namespace L5Sharp.Querying.Tests
         [Test]
         public void WithTag_BaseNameComparerValidName_ShouldNotBeEmpty()
         {
-            var context = LogixContext.Load(Known.Test);
+            var context = LogixContent.Load(Known.Test);
 
             var rungs = context.Rungs(q => q.WithTag("TestComplexTag", TagNameComparer.BaseName)).ToList();
 
@@ -164,7 +163,7 @@ namespace L5Sharp.Querying.Tests
         [Test]
         public void WithTag_NullName_ShouldBeEmpty()
         {
-            var context = LogixContext.Load(Known.Test);
+            var context = LogixContent.Load(Known.Test);
 
             var rungs = context.Rungs(q => q.WithTag(null!));
 
@@ -174,7 +173,7 @@ namespace L5Sharp.Querying.Tests
         [Test]
         public void WithTag_ValidName_ShouldNotBeEmpty()
         {
-            var context = LogixContext.Load(Known.Test);
+            var context = LogixContent.Load(Known.Test);
 
             var rungs = context.Rungs(q => q.WithTag("SimpleSint")).ToList();
 
@@ -185,7 +184,7 @@ namespace L5Sharp.Querying.Tests
         [Test]
         public void WithTag_ValidBaseNameWithOnRungsNoReferenceToJustBase_ShouldBeEmpty()
         {
-            var context = LogixContext.Load(Known.Test);
+            var context = LogixContent.Load(Known.Test);
 
             var rungs = context.Rungs(q => q.WithTag("TestComplexTag"));
 
@@ -195,7 +194,7 @@ namespace L5Sharp.Querying.Tests
         [Test]
         public void WithTags_NullCollection_ShouldThrowArgumentNullException()
         {
-            var context = LogixContext.Load(Known.Test);
+            var context = LogixContent.Load(Known.Test);
 
             FluentActions.Invoking(() => context.Rungs(q => q.WithTags(null!))).Should().Throw<ArgumentNullException>();
         }
@@ -203,7 +202,7 @@ namespace L5Sharp.Querying.Tests
         [Test]
         public void WithTags_ValidTags_ShouldNotBeEmpty()
         {
-            var context = LogixContext.Load(Known.Test);
+            var context = LogixContent.Load(Known.Test);
             var tags = new List<TagName>
             {
                 "SimpleSint",

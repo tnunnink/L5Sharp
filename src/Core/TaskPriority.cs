@@ -1,9 +1,10 @@
 ﻿using System;
+using L5Sharp.Components;
 
 namespace L5Sharp.Core
 {
     /// <summary>
-    /// A configurable property of a <see cref="ITask"/> that controls the order in which the Logix Controller
+    /// A configurable property of a <see cref="Task"/> that controls the order in which the Logix Controller
     /// will scan the given Task.
     /// </summary>
     /// <remarks>

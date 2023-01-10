@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net;
 using FluentAssertions;
 using L5Sharp.Abstractions;
+using L5Sharp.Components;
 using L5Sharp.Enums;
 using NUnit.Framework;
 
@@ -49,7 +50,7 @@ namespace L5Sharp.Core.Tests
             module.IP.Should().Be(IPAddress.None);
             module.Ports.Should().HaveCount(1);
             module.Ports[1].Type.Should().Be("ICP");
-            module.Ports[1].Address.Should().Be(PortAddress.None);
+            module.Ports[1].Address.Should().Be(Address.None);
             module.Connections.Should().BeEmpty();
             module.Backplane.Should().BeEmpty();
             module.Ethernet.Should().BeNull();
@@ -128,10 +129,10 @@ namespace L5Sharp.Core.Tests
             module.IP.Should().Be(IPAddress.Parse("192.168.1.1"));
             module.Ports.Should().HaveCount(2);
             module.Ports[1].Type.Should().Be("ICP");
-            module.Ports[1].Address.Should().Be(new PortAddress("0"));
+            module.Ports[1].Address.Should().Be(new Address("0"));
             module.Ports[1].Upstream.Should().BeFalse();
             module.Ports[2].Type.Should().Be("Ethernet");
-            module.Ports[2].Address.Should().Be(new PortAddress("192.168.1.1"));
+            module.Ports[2].Address.Should().Be(new Address("192.168.1.1"));
             module.Ports[1].Upstream.Should().BeFalse();
             module.Connections.Should().BeEmpty();
             module.Backplane.Should().HaveCount(1);

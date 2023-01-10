@@ -1,5 +1,6 @@
 ﻿using Ardalis.SmartEnum;
 using L5Sharp.Types;
+using L5Sharp.Types.Predefined;
 
 namespace L5Sharp.Enums
 {
@@ -16,23 +17,7 @@ namespace L5Sharp.Enums
         {
         }
 
-        /// <summary>
-        /// Gets the data format for the specified <see cref="IDataType"/>.
-        /// </summary>
-        /// <param name="dataType">The data type instance to determine the type for.</param>
-        /// <returns>The <see cref="TagDataFormat"/> value for the specified type.
-        /// Note that L5K is not going to be returned by this method because we are not currently supporting it.
-        /// </returns>
-        public static TagDataFormat FromDataType(IDataType dataType)
-        {
-            return dataType switch
-            {
-                ALARM_DIGITAL => Alarm,
-                ALARM_ANALOG => Alarm,
-                STRING => String,
-                _ => Decorated
-            };
-        }
+        
 
         /// <summary>
         /// Represents the standard decorated or verbose data format for the tags.

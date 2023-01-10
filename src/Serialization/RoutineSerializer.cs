@@ -4,20 +4,20 @@ using System.Xml.Linq;
 using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Extensions;
-using L5Sharp.L5X;
+using L5Sharp.Utilities;
 
 namespace L5Sharp.Serialization
 {
     internal class RoutineSerializer : L5XSerializer<IRoutine<ILogixContent>>
     {
-        private readonly L5XContent? _document;
+        private readonly LogixInfo? _document;
         private static readonly XName ElementName = L5XName.Routine;
 
         private LadderLogicSerializer LadderLogicSerializer => _document is not null
             ? _document.Serializers.Get<LadderLogicSerializer>()
             : new LadderLogicSerializer(_document);
 
-        public RoutineSerializer(L5XContent? document = null)
+        public RoutineSerializer(LogixInfo? document = null)
         {
             _document = document;
         }

@@ -4,20 +4,20 @@ using System.Xml.Linq;
 using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Extensions;
-using L5Sharp.L5X;
+using L5Sharp.Utilities;
 
 namespace L5Sharp.Serialization
 {
     internal class ArrayMemberSerializer : L5XSerializer<IMember<IDataType>>
     {
-        private readonly L5XContent? _document;
+        private readonly LogixInfo? _document;
         private static readonly XName ElementName = L5XName.ArrayMember;
 
         private ArrayElementSerializer ArrayElementSerializer => _document is not null
             ? _document.Serializers.Get<ArrayElementSerializer>()
             : new ArrayElementSerializer(_document);
 
-        public ArrayMemberSerializer(L5XContent? document = null)
+        public ArrayMemberSerializer(LogixInfo? document = null)
         {
             _document = document;
         }

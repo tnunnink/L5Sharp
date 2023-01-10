@@ -1,20 +1,22 @@
 ﻿using System;
 using System.Linq;
 using System.Xml.Linq;
+using L5Sharp.Components;
 using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Extensions;
-using L5Sharp.L5X;
+using L5Sharp.Types;
+using L5Sharp.Utilities;
 
 namespace L5Sharp.Serialization
 {
     internal class LocalTagSerializer : L5XSerializer<ITag<IDataType>>
     {
-        private readonly L5XContent? _document;
+        private readonly LogixInfo? _document;
         private static readonly XName ElementName = L5XName.LocalTag;
         private readonly FormattedDataSerializer _formattedDataSerializer;
 
-        public LocalTagSerializer(L5XContent? document = null)
+        public LocalTagSerializer(LogixInfo? document = null)
         {
             _document = document;
             _formattedDataSerializer = new FormattedDataSerializer(_document, L5XName.DefaultData);
@@ -54,7 +56,7 @@ namespace L5Sharp.Serialization
             var description = element.ComponentDescription();
             var dataType = _document is not null
                 ? _document.Index.LookupType(element.DataTypeName())
-                : DataType.Create(element.DataTypeName());
+                : LogixType.Create(element.DataTypeName());
             var dimensions = element.Attribute(L5XName.Dimensions)?.Value.Parse<Dimensions>();
             var radix = element.Attribute(L5XName.Radix)?.Value.Parse<Radix>();
             var access = element.Attribute(L5XName.ExternalAccess)?.Value.Parse<ExternalAccess>();

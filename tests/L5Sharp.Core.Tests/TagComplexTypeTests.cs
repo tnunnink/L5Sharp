@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Linq;
 using FluentAssertions;
+using L5Sharp.Components;
 using L5Sharp.Creators;
 using L5Sharp.Enums;
 using L5Sharp.Exceptions;
 using L5Sharp.Types;
+using L5Sharp.Types.Atomics;
+using L5Sharp.Types.Predefined;
 using NUnit.Framework;
 
 namespace L5Sharp.Core.Tests

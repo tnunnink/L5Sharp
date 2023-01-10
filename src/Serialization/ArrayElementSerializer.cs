@@ -2,20 +2,21 @@
 using System.Xml.Linq;
 using L5Sharp.Core;
 using L5Sharp.Extensions;
-using L5Sharp.L5X;
+using L5Sharp.Types;
+using L5Sharp.Utilities;
 
 namespace L5Sharp.Serialization
 {
     internal class ArrayElementSerializer : L5XSerializer<IMember<IDataType>>
     {
-        private readonly L5XContent? _document;
+        private readonly LogixInfo? _document;
         private static readonly XName ElementName = L5XName.Element;
 
         private StructureSerializer StructureSerializer => _document is not null
             ? _document.Serializers.Get<StructureSerializer>()
             : new StructureSerializer(_document);
 
-        public ArrayElementSerializer(L5XContent? document = null)
+        public ArrayElementSerializer(LogixInfo? document = null)
         {
             _document = document;
         }
@@ -56,7 +57,7 @@ namespace L5Sharp.Serialization
             var value = element.Attribute(L5XName.Value)?.Value?.TryParse<IAtomicType>();
 
             IDataType dataType = value is not null
-                ? DataType.Atomic(element.Parent?.DataTypeName()!, value)
+                ? LogixType.Atomic(element.Parent?.DataTypeName()!, value)
                 : StructureSerializer.Deserialize(element.Element(L5XName.Structure)!);
 
             return new Member<IDataType>(index, dataType);
