@@ -4,7 +4,7 @@ using L5Sharp.Components;
 namespace L5Sharp.Enums
 {
     /// <summary>
-    /// Represents an enumeration of all <see cref="TransmissionType"/> options for a given <see cref="Connection"/>.
+    /// Represents an enumeration of all <see cref="TransmissionType"/> options for a given <see cref="ModuleConnection"/>.
     /// </summary>
     public sealed class TransmissionType : SmartEnum<TransmissionType, string>
     {

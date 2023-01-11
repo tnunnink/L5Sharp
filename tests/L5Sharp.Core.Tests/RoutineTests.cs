@@ -20,7 +20,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Create_Default_ShouldNotBeNull()
         {
-            var routine = Routine.Create<RLL>("Test");
+            var routine = Routine.Create<RllRoutine>("Test");
 
             routine.Should().NotBeNull();
         }
@@ -28,7 +28,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Create_Overloaded_ShouldHaveExpectedValues()
         {
-            var routine = Routine.Create<RLL>("Test", "This is a test routine");
+            var routine = Routine.Create<RllRoutine>("Test", "This is a test routine");
 
             routine.Name.Should().Be("Test");
             routine.Description.Should().Be("This is a test routine");

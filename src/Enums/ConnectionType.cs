@@ -4,7 +4,7 @@ using L5Sharp.Components;
 namespace L5Sharp.Enums
 {
     /// <summary>
-    /// An enumeration of all <see cref="ConnectionType"/> values for a given Logix <see cref="Connection"/>
+    /// An enumeration of all <see cref="ConnectionType"/> values for a given Logix <see cref="ModuleConnection"/>
     /// </summary>
     public sealed class ConnectionType : SmartEnum<ConnectionType, string>
     {

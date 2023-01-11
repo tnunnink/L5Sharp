@@ -38,7 +38,7 @@ namespace L5Sharp.Serialization.Tests
                 new(new NeutralText("OTL(Test);"), "This is a test comment")
             };
 
-            var component = new RLL(rungs);
+            var component = new RllRoutine(rungs);
 
             var xml = _serializer.Serialize(component);
 
@@ -57,7 +57,7 @@ namespace L5Sharp.Serialization.Tests
                 new(new NeutralText("OTL(Test);"), "This is a test comment")
             };
 
-            var component = new RLL(rungs);
+            var component = new RllRoutine(rungs);
 
             var xml = _serializer.Serialize(component);
 

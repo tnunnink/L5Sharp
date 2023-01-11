@@ -62,7 +62,7 @@ namespace L5Sharp.Serialization.Tests
             component.Tags.Add(Tag.Create<TIMER>("TestTimer"));
             component.Tags.Add(Tag.Create<INT>("TestInt"));
             
-            var main = Routine.Create<RLL>("Test");
+            var main = Routine.Create<RllRoutine>("Test");
             main.Content.Add("XIC(LocalBool)MOV(1234,LocalDint);");
             component.Routines.Add(main);
 

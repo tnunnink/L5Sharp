@@ -1,6 +1,8 @@
-﻿using Ardalis.SmartEnum;
+﻿using System.Linq;
+using Ardalis.SmartEnum;
 using L5Sharp.Core;
 using L5Sharp.Types;
+using L5Sharp.Types.Predefined;
 
 namespace L5Sharp.Enums
 {
@@ -36,7 +38,7 @@ namespace L5Sharp.Enums
                 _ => Unknown
             };
         }
-        
+
         /// <summary>
         /// Represents a value <see cref="MemberType"/>, meaning the member data type is an <see cref="AtomicType"/>.
         /// </summary>

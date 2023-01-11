@@ -29,7 +29,7 @@ namespace L5Sharp.Serialization.Tests
         [Test]
         public void Serialize_WhenCalled_ShouldNotBeNull()
         {
-            var component = new Connection("Connection", 10000, ConnectionType.Input);
+            var component = new ModuleConnection("Connection", 10000, ConnectionType.Input);
 
             var xml = _serializer.Serialize(component);
 
@@ -40,7 +40,7 @@ namespace L5Sharp.Serialization.Tests
         [UseReporter(typeof(DiffReporter))]
         public void Serialize_ValidComponent_ShouldBeApproved()
         {
-            var component = new Connection("Connection", 10000, ConnectionType.Input);
+            var component = new ModuleConnection("Connection", 10000, ConnectionType.Input);
 
             var xml = _serializer.Serialize(component);
 

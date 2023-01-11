@@ -73,7 +73,7 @@ namespace L5Sharp.Core.Tests
         public void AddRoutine_ValidRoutine_ShouldHaveExpectedRoutine()
         {
             var program = new Program("Test");
-            var routine = Routine.Create<RLL>("TestRoutine");
+            var routine = Routine.Create<RllRoutine>("TestRoutine");
             
             program.Routines.Add(routine);
 
@@ -85,7 +85,7 @@ namespace L5Sharp.Core.Tests
         public void AddRoutineWithRung_ShouldHaveExpected()
         {
             var program = new Program("Test");
-            var routine = Routine.Create<RLL>("TestRoutine");
+            var routine = Routine.Create<RllRoutine>("TestRoutine");
             routine.Content.Add(new Rung("NOP();", "This is a test rung"));
             
             program.Routines.Add(routine);

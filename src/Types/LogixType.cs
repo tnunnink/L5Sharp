@@ -34,7 +34,7 @@ namespace L5Sharp.Types
         };
 
         /// <summary>
-        /// List of all registered <see cref="IDataType"/> names.
+        /// List of all predefined <see cref="ILogixType"/> names.
         /// </summary>
         public static IEnumerable<string> All => Registry.Keys.AsEnumerable();
 
@@ -54,7 +54,7 @@ namespace L5Sharp.Types
         /// Determines if the provided data type name is registered in the current Logix context.
         /// </summary>
         /// <param name="name">The name of the data type to find.</param>
-        /// <returns>true if the <see cref="IDataType"/> is defined in the registered collection.</returns>
+        /// <returns>true if the <see cref="ILogixType"/> is defined in the registered collection.</returns>
         public static bool IsDefined(string name) => Registry.ContainsKey(name);
     }
 }

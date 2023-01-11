@@ -12,14 +12,14 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void New_NullName_ShouldThrowArgumentNullException()
         {
-            FluentActions.Invoking(() => new Connection(null!, 10, ConnectionType.Input)).Should()
+            FluentActions.Invoking(() => new ModuleConnection(null!, 10, ConnectionType.Input)).Should()
                 .Throw<ArgumentNullException>();
         }
 
         [Test]
         public void New_ValidParameters_ShouldNotBeNull()
         {
-            var connection = new Connection("Input", 1000, ConnectionType.Input);
+            var connection = new ModuleConnection("Input", 1000, ConnectionType.Input);
 
             connection.Should().NotBeNull();
         }
@@ -27,7 +27,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void New_ValidParameters_ShouldHaveExpectedValues()
         {
-            var connection = new Connection("Input", 1000, ConnectionType.Input);
+            var connection = new ModuleConnection("Input", 1000, ConnectionType.Input);
 
             connection.Name.Should().Be("Input");
             connection.Rpi.Should().Be(1000);

@@ -42,7 +42,7 @@ namespace L5Sharp.Serialization
 
             var rungs = element.Descendants(L5XName.Rung).Select(e => RungSerializer.Deserialize(e));
 
-            return new RLL(rungs);
+            return new RllRoutine(rungs);
         }
     }
 }

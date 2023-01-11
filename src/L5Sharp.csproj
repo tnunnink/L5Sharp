@@ -44,4 +44,8 @@
         <!--<None Include="Resources\icon.png" Pack="true" PackagePath="\"/>-->
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Types\ModuleDefined" />
+    </ItemGroup>
+
 </Project>

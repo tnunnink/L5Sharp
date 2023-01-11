@@ -9,7 +9,7 @@ using L5Sharp.Utilities;
 
 namespace L5Sharp.Serialization
 {
-    internal class ConnectionSerializer : L5XSerializer<Connection>
+    internal class ConnectionSerializer : L5XSerializer<ModuleConnection>
     {
         private readonly LogixInfo? _document;
         private static readonly XName ElementName = L5XName.Connection;
@@ -27,7 +27,7 @@ namespace L5Sharp.Serialization
             _document = document;
         }
 
-        public override XElement Serialize(Connection component)
+        public override XElement Serialize(ModuleConnection component)
         {
             if (component == null)
                 throw new ArgumentNullException(nameof(component));
@@ -65,7 +65,7 @@ namespace L5Sharp.Serialization
         }
 
         /// <inheritdoc />
-        public override  Connection Deserialize(XElement element)
+        public override  ModuleConnection Deserialize(XElement element)
         {
             if (element == null)
                 throw new ArgumentNullException(nameof(element));
@@ -102,7 +102,7 @@ namespace L5Sharp.Serialization
             var outputTagElement = element.Descendants(L5XName.OutputTag).FirstOrDefault();
             var outputTag = outputTagElement is not null ? OutputTagSerializer.Deserialize(outputTagElement) : null;
 
-            return new Connection(name, rpi, type, inputCxnPoint, inputSize, outputCxnPoint, outputSize,
+            return new ModuleConnection(name, rpi, type, inputCxnPoint, inputSize, outputCxnPoint, outputSize,
                 priority, inputConnectionType, inputProductionTrigger, outputRedundantOwner, unicast, eventId,
                 inputSuffix, outputSuffix, inputTag, outputTag);
         }

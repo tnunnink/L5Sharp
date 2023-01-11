@@ -28,7 +28,7 @@ namespace L5Sharp.Core.Tests
         public void New_Default_ShouldNotBeNull()
         {
             // ReSharper disable once CollectionNeverUpdated.Local
-            var content = new RLL();
+            var content = new RllRoutine();
 
             content.Should().NotBeNull();
         }
@@ -36,7 +36,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void New_CollectionOverload_ShouldHaveExpectedCount()
         {
-            var content = new RLL(_rungs);
+            var content = new RllRoutine(_rungs);
 
             content.Should().HaveCount(3);
         }
@@ -44,7 +44,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void New_CollectionOverload_NumbersShouldMatchIndex()
         {
-            var content = new RLL(_rungs);
+            var content = new RllRoutine(_rungs);
 
             content[0].Number.Should().Be(0);
             content[1].Number.Should().Be(1);
@@ -54,7 +54,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void HasContent_WithRungs_ShouldBeTrue()
         {
-            var content = new RLL(_rungs);
+            var content = new RllRoutine(_rungs);
 
             content.HasContent.Should().BeTrue();
         }
@@ -62,7 +62,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void HasContent_Empty_ShouldBeFalse()
         {
-            var content = new RLL();
+            var content = new RllRoutine();
 
             content.HasContent.Should().BeFalse();
         }
@@ -70,7 +70,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Count_WithRungs_ShouldBeExpected()
         {
-            var content = new RLL(_rungs);
+            var content = new RllRoutine(_rungs);
 
             content.Count.Should().Be(3);
         }
@@ -79,7 +79,7 @@ namespace L5Sharp.Core.Tests
         public void Count_Empty_ShouldBeZero()
         {
             // ReSharper disable once CollectionNeverUpdated.Local
-            var content = new RLL();
+            var content = new RllRoutine();
 
             content.Count.Should().Be(0);
         }
@@ -87,7 +87,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Clear_WhenCalled_ShouldHaveNotCount()
         {
-            var content = new RLL(_rungs);
+            var content = new RllRoutine(_rungs);
 
             content.Clear();
 
@@ -97,7 +97,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void ContainsText_Null_ShouldBeFalse()
         {
-            var content = new RLL(_rungs);
+            var content = new RllRoutine(_rungs);
 
             var result = content.ContainsText(null!);
 
@@ -107,7 +107,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void ContainsText_NonExisting_ShouldBeFalse()
         {
-            var content = new RLL(_rungs);
+            var content = new RllRoutine(_rungs);
 
             var result = content.ContainsText("TON(Timer, 1000);");
 
@@ -117,7 +117,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void ContainsText_Existing_ShouldBeTrue()
         {
-            var content = new RLL(_rungs);
+            var content = new RllRoutine(_rungs);
 
             var result = content.ContainsText("NOP();");
 
@@ -127,7 +127,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void IndexerGet_InValidIndex_ShouldNotBeNull()
         {
-            var content = new RLL(_rungs);
+            var content = new RllRoutine(_rungs);
 
             FluentActions.Invoking(() => content[4]).Should().Throw<ArgumentOutOfRangeException>();
         }
@@ -135,7 +135,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void IndexerGet_ValidIndex_ShouldNotBeNull()
         {
-            var content = new RLL(_rungs);
+            var content = new RllRoutine(_rungs);
 
             var rung = content[1];
 
@@ -145,7 +145,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void IndexerSet_ValidIndex_ShouldUpdateExpected()
         {
-            var content = new RLL(_rungs);
+            var content = new RllRoutine(_rungs);
 
             content[1] = new Rung("TON(Timer, 1000);", "This is an updated rung");
 
@@ -157,7 +157,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Find_Null_ShouldThrowArgumentNullException()
         {
-            var content = new RLL(_rungs);
+            var content = new RllRoutine(_rungs);
 
             FluentActions.Invoking(() => content.Find(null!)).Should().Throw<ArgumentNullException>();
         }
@@ -165,7 +165,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Find_IsMatch_ShouldReturnExpectedInstance()
         {
-            var content = new RLL(_rungs);
+            var content = new RllRoutine(_rungs);
 
             var rung = content.Find(r => r.Comment == "Test Rung #2");
 
@@ -177,7 +177,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Find_NoMatch_ShouldReturnNull()
         {
-            var content = new RLL(_rungs);
+            var content = new RllRoutine(_rungs);
 
             var rung = content.Find(r => r.Text == "TON(Timer, 1000);");
 
@@ -187,7 +187,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void FindAll_Null_ShouldThrowArgumentNullException()
         {
-            var content = new RLL(_rungs);
+            var content = new RllRoutine(_rungs);
 
             FluentActions.Invoking(() => content.FindAll(null!)).Should().Throw<ArgumentNullException>();
         }
@@ -195,7 +195,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void FindAll_IsMatch_ShouldHaveExpectedCount()
         {
-            var content = new RLL(_rungs);
+            var content = new RllRoutine(_rungs);
 
             var rungs = content.FindAll(r => r.Type == RungType.Normal);
 
@@ -205,7 +205,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void FindAll_NoMatch_ShouldReturnNull()
         {
-            var content = new RLL(_rungs);
+            var content = new RllRoutine(_rungs);
 
             var rungs = content.FindAll(r => r.Text == "TON(Timer, 1000);");
 
@@ -216,7 +216,7 @@ namespace L5Sharp.Core.Tests
         public void Add_NullRung_ShouldThrowArgumentNullException()
         {
             // ReSharper disable once CollectionNeverQueried.Local
-            var content = new RLL(_rungs);
+            var content = new RllRoutine(_rungs);
 
             FluentActions.Invoking(() => content.Add(((Rung)null)!)).Should().Throw<ArgumentNullException>();
         }
@@ -224,7 +224,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Add_ValidRung_ShouldHaveExpectedCount()
         {
-            var content = new RLL(_rungs);
+            var content = new RllRoutine(_rungs);
 
             content.Add(new Rung("NOP();"));
 
@@ -234,7 +234,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Add_ValidRung_ShouldHaveExpectedNumber()
         {
-            var content = new RLL(_rungs);
+            var content = new RllRoutine(_rungs);
 
             content.Add(new Rung("NOP();"));
 
@@ -250,7 +250,7 @@ namespace L5Sharp.Core.Tests
         public void Add_NullText_ShouldThrowArgumentNullException()
         {
             // ReSharper disable once CollectionNeverQueried.Local
-            var content = new RLL(_rungs);
+            var content = new RllRoutine(_rungs);
 
             FluentActions.Invoking(() => content.Add(((NeutralText)null)!)).Should().Throw<ArgumentNullException>();
         }
@@ -259,7 +259,7 @@ namespace L5Sharp.Core.Tests
         public void Add_EmptyText_ShouldHaveExpectedCount()
         {
             // ReSharper disable once CollectionNeverQueried.Local
-            var content = new RLL(_rungs);
+            var content = new RllRoutine(_rungs);
 
             content.Add(string.Empty);
 
@@ -269,7 +269,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Add_ValidText_ShouldHaveExpectedCount()
         {
-            var content = new RLL(_rungs);
+            var content = new RllRoutine(_rungs);
 
             content.Add("NOP();");
 
@@ -279,7 +279,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Add_ValidText_ShouldHaveExpectedNumber()
         {
-            var content = new RLL(_rungs);
+            var content = new RllRoutine(_rungs);
 
             content.Add("NOP();");
 
@@ -294,7 +294,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void AddRange_ValidCollection_ShouldHaveSpecifiedCount()
         {
-            var content = new RLL(_rungs);
+            var content = new RllRoutine(_rungs);
 
             content.AddRange(new List<Rung>()
             {
@@ -309,7 +309,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void AddRange_Null_ShouldThrowArgumentNullException()
         {
-            var content = new RLL(_rungs);
+            var content = new RllRoutine(_rungs);
 
             FluentActions.Invoking(() => content.AddRange(null!)).Should().Throw<ArgumentNullException>();
         }
@@ -317,7 +317,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Remove_InvalidNumber_ShouldThrowArgumentOutOfRangeException()
         {
-            var content = new RLL(_rungs);
+            var content = new RllRoutine(_rungs);
 
             FluentActions.Invoking(() => content.Remove(10)).Should().Throw<ArgumentOutOfRangeException>();
         }
@@ -325,7 +325,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Remove_ValidNumber_ShouldHaveExpectedCount()
         {
-            var content = new RLL(_rungs);
+            var content = new RllRoutine(_rungs);
 
             content.Remove(1);
 
@@ -335,7 +335,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Insert_RungOverloadInvalidNumber_ShouldThrowArgumentOutOfRangeException()
         {
-            var content = new RLL(_rungs);
+            var content = new RllRoutine(_rungs);
 
             FluentActions.Invoking(() => content.Insert(4, new Rung("NOP();"))).Should()
                 .Throw<ArgumentOutOfRangeException>();
@@ -344,7 +344,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Insert_RungOverloadNullRung_ShouldThrowArgumentNullException()
         {
-            var content = new RLL(_rungs);
+            var content = new RllRoutine(_rungs);
 
             FluentActions.Invoking(() => content.Insert(1, ((Rung)null)!))
                 .Should().Throw<ArgumentNullException>();
@@ -353,7 +353,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Insert_RungOverloadValid_IndexShouldHaveExpectedValue()
         {
-            var content = new RLL(_rungs);
+            var content = new RllRoutine(_rungs);
 
             content.Insert(1, new Rung("NOP();"));
 
@@ -366,7 +366,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Insert_TextOverloadInvalidNumber_ShouldThrowArgumentOutOfRangeException()
         {
-            var content = new RLL(_rungs);
+            var content = new RllRoutine(_rungs);
 
             FluentActions.Invoking(() => content.Insert(4, "NOP();")).Should()
                 .Throw<ArgumentOutOfRangeException>();
@@ -375,7 +375,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Insert_TextOverloadNullRung_ShouldThrowArgumentNullException()
         {
-            var content = new RLL(_rungs);
+            var content = new RllRoutine(_rungs);
 
             FluentActions.Invoking(() => content.Insert(1, ((NeutralText)null)!))
                 .Should().Throw<ArgumentNullException>();
@@ -384,7 +384,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Insert_TextOverloadValid_IndexShouldHaveExpectedValue()
         {
-            var content = new RLL(_rungs);
+            var content = new RllRoutine(_rungs);
 
             content.Insert(1, "NOP();");
 
@@ -397,7 +397,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Update_InvalidNumber_ShouldThrownArgumentOutOfRangeException()
         {
-            var content = new RLL(_rungs);
+            var content = new RllRoutine(_rungs);
 
             FluentActions.Invoking(() => content.Update(4, "NOP();")).Should().Throw<ArgumentOutOfRangeException>();
         }
@@ -405,7 +405,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Update_Null_ShouldThrowArgumentOutOfRangeException()
         {
-            var content = new RLL(_rungs);
+            var content = new RllRoutine(_rungs);
 
             FluentActions.Invoking(() => content.Update(4, null!)).Should().Throw<ArgumentOutOfRangeException>();
         }
@@ -413,7 +413,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Update_ValidNumberAndTest_IndexShouldBeExpected()
         {
-            var content = new RLL(_rungs);
+            var content = new RllRoutine(_rungs);
 
             content.Update(1, "NOP();");
 
@@ -426,7 +426,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Comment_Null_IndexShouldBeEmpty()
         {
-            var content = new RLL(_rungs);
+            var content = new RllRoutine(_rungs);
 
             content.Comment(1, null!);
 
@@ -437,7 +437,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Comment_InvalidIndex_ShouldThrowArgumentOutOfRangeException()
         {
-            var content = new RLL(_rungs);
+            var content = new RllRoutine(_rungs);
 
             FluentActions.Invoking(() => content.Comment(4, "This is a test")).Should()
                 .Throw<ArgumentOutOfRangeException>();
@@ -446,7 +446,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void Comment_ValidNumber_IndexShouldHaveExpectedComment()
         {
-            var content = new RLL(_rungs);
+            var content = new RllRoutine(_rungs);
 
             content.Comment(1, "This is a test");
 
@@ -457,7 +457,7 @@ namespace L5Sharp.Core.Tests
         [Test]
         public void GetEnumerator_AsEnumerable_ShouldNotBeNull()
         {
-            var content = (IEnumerable)new RLL(_rungs);
+            var content = (IEnumerable)new RllRoutine(_rungs);
 
             var enumerator = content.GetEnumerator();
 

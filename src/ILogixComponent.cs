@@ -20,19 +20,21 @@ namespace L5Sharp
     public interface ILogixComponent
     {
         /// <summary>
-        /// The name of the <see cref="ILogixComponent"/>.
+        /// The name of the component.
+        /// </summary>
+        /// <value>A <see cref="string"/> representing the component name.</value>
         /// <remarks>
         /// The name servers as a unique identifier for various types of components.
         /// The component name should satisfy Logix naming constraints of alphanumeric and '_' characters,
         /// start with a letter, and be between 1 and 40 characters. See <see cref="ComponentName"/> for more
         /// information.
         /// </remarks>
-        /// </summary>
         string Name { get; }
         
         /// <summary>
-        /// A <see cref="string"/> that describes the Logix component.
+        /// The description of the component.
         /// </summary>
+        /// <value>A <see cref="string"/> representing the component description.</value>
         string Description { get; }
     }
 }
