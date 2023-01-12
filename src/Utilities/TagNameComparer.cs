@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using L5Sharp.Core;
 
-namespace L5Sharp.Comparers
+namespace L5Sharp.Utilities
 {
     /// <summary>
     /// A <see cref="IEqualityComparer{T}"/> for the <see cref="TagName"/> object.

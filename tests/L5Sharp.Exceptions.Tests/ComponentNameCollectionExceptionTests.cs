@@ -19,7 +19,7 @@ namespace L5Sharp.Exceptions.Tests
         [Test]
         public void New_Valid_ShouldHaveExpectedMessage()
         {
-            var exception = new ComponentNameCollisionException("Name", typeof(IDataType));
+            var exception = new ComponentNameCollisionException("Name", typeof(ILogixType));
 
             exception.Message.Should()
                 .Be(
@@ -29,7 +29,7 @@ namespace L5Sharp.Exceptions.Tests
         [Test]
         public void New_Valid_ShouldHaveExpectedName()
         {
-            var exception = new ComponentNameCollisionException("Name", typeof(IDataType));
+            var exception = new ComponentNameCollisionException("Name", typeof(ILogixType));
 
             exception.Name.Should().Be("Name");
         }

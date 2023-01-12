@@ -64,7 +64,7 @@ namespace L5Sharp.Enums.Tests
 
             var result = radix.Parse("DT#2021-11-30-13:12:32.000_000Z");
 
-            result.Value.Should().Be(1638277952000000);
+            result.Should().Be(1638277952000000);
         }
 
         [Test]
@@ -74,7 +74,7 @@ namespace L5Sharp.Enums.Tests
 
             var result = radix.Parse("DT#2022-01-01-06:00:00.100_100Z");
 
-            result.Value.Should().Be(1641016800100100);
+            result.Should().Be(1641016800100100);
         }
     }
 }

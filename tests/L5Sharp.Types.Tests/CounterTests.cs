@@ -22,7 +22,7 @@ namespace L5Sharp.Types.Tests
         {
             var type = new COUNTER(new DINT(5000));
             
-            type.PRE.DataType.Value.Should().Be(5000);
+            type.PRE.Should().Be(5000);
         }
         
         [Test]
@@ -31,17 +31,6 @@ namespace L5Sharp.Types.Tests
             var type = new COUNTER();
             
             type.Class.Should().Be(DataTypeClass.Predefined);
-        }
-
-        [Test]
-        public void Instantiate_WhenCalled_ShouldBeEqualToDefault()
-        {
-            var type = new COUNTER();
-
-            var instance = type.Instantiate();
-
-            instance.Should().NotBeNull();
-            instance.Should().BeEquivalentTo(new COUNTER());
         }
 
         [Test]

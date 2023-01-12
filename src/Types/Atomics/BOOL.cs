@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using L5Sharp.Enums;
 using L5Sharp.Types.Atomics.Converters;
 
 namespace L5Sharp.Types.Atomics
@@ -11,7 +12,7 @@ namespace L5Sharp.Types.Atomics
     public sealed class BOOL : AtomicType, IEquatable<BOOL>, IComparable<BOOL>
     {
         private readonly bool _value;
-        
+
         /// <summary>
         /// Creates a new default <see cref="BOOL"/> type.
         /// </summary>
@@ -51,6 +52,20 @@ namespace L5Sharp.Types.Atomics
         /// <returns>A <see cref="bool"/> type value.</returns>
         public static implicit operator bool(BOOL atomic) => atomic._value;
 
+        public static BOOL Parse(string value, Radix? radix = null)
+        {
+            radix ??= Radix.Decimal;
+
+            var atomic = radix.Parse(value);
+
+            var converter = TypeDescriptor.GetConverter(typeof(BOOL));
+
+            return (BOOL)converter.ConvertFrom(atomic)!;
+        }
+
+        /// <inheritdoc />
+        public override string ToString() => _value ? "1" : "0";
+
         /// <inheritdoc />
         public bool Equals(BOOL? other)
         {
@@ -60,7 +75,7 @@ namespace L5Sharp.Types.Atomics
         }
 
         /// <inheritdoc />
-        public override bool Equals(object? obj) => ReferenceEquals(this, obj) || obj is BOOL other && Equals(other);
+        public override bool Equals(object? obj) => Equals(obj as BOOL);
 
         /// <inheritdoc />
         public override int GetHashCode() => _value.GetHashCode();

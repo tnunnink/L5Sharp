@@ -23,16 +23,5 @@ namespace L5Sharp.Types.Tests
             
             type.Class.Should().Be(DataTypeClass.Predefined);
         }
-
-        [Test]
-        public void Instantiate_WhenCalled_ShouldBeEqualToDefault()
-        {
-            var type = new ALARM_ANALOG();
-
-            var instance = type.Instantiate();
-
-            instance.Should().NotBeNull();
-            instance.Should().BeEquivalentTo(new ALARM_ANALOG());
-        }
     }
 }

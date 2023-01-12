@@ -8,6 +8,7 @@ using L5Sharp.Abstractions;
 using L5Sharp.Components;
 using L5Sharp.Enums;
 using L5Sharp.Exceptions;
+using L5Sharp.Rockwell;
 using NUnit.Framework;
 
 namespace L5Sharp.Core.Tests

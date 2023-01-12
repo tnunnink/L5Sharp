@@ -16,6 +16,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\src\L5Sharp.csproj" />
+      <ProjectReference Include="..\L5SharpTests\L5SharpTests.csproj" />
     </ItemGroup>
 
 </Project>

@@ -30,6 +30,9 @@ namespace L5Sharp.Types
         public string Name { get; }
 
         /// <inheritdoc />
+        public string Description { get; } = string.Empty;
+
+        /// <inheritdoc />
         public DataTypeFamily Family => DataTypeFamily.None;
         
         /// <inheritdoc />
@@ -39,13 +42,13 @@ namespace L5Sharp.Types
         /// 
         /// </summary>
         /// <returns></returns>
-        public override string ToString() => Radix.Default(this).Format(this);
+        public string Format() => Radix.Default(this).Format(this);
         
         /// <summary>
         /// 
         /// </summary>
         /// <param name="radix"></param>
         /// <returns></returns>
-        public string ToString(Radix radix) => radix.Format(this);
+        public string Format(Radix radix) => radix.Format(this);
     }
 }

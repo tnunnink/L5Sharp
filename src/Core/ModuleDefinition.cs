@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using L5Sharp.Components;
 using L5Sharp.Enums;
+using L5Sharp.Rockwell;
 
 namespace L5Sharp.Core
 {

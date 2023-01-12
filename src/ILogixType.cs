@@ -2,21 +2,18 @@
 
 namespace L5Sharp
 {
-    public interface ILogixType
+    public interface ILogixType : ILogixComponent
     {
-        /// <summary>
-        /// Gets the name of the <see cref="ILogixType"/>.
-        /// </summary>
-        string Name { get; }
-
         /// <summary>
         /// Gets the <see cref="DataTypeFamily"/> of the <see cref="ILogixType"/>
         /// </summary>
+        /// <value>A <see cref="DataTypeClass"/> enum indicating the family of the logix type.</value>
         DataTypeFamily Family { get; }
-        
+
         /// <summary>
         /// Gets the <see cref="DataTypeClass"/> of the <see cref="ILogixType"/>
         /// </summary>
+        /// <value>A <see cref="DataTypeClass"/> enum indicating the class of the logix type.</value>
         DataTypeClass Class { get; }
     }
 }

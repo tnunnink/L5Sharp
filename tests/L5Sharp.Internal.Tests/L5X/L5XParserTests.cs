@@ -12,7 +12,7 @@ namespace L5Sharp.Internal.Tests.L5X
         [Test]
         public void TryParse_Atomic_ShouldNotBeNull()
         {
-            var atomic = "0".TryParse<IAtomicType>();
+            var atomic = "0".TryParse<AtomicType>();
 
             atomic.Should().NotBeNull();
             atomic.Should().BeOfType<SINT>();

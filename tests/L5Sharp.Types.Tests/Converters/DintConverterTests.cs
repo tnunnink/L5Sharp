@@ -2,12 +2,11 @@
 using System.ComponentModel;
 using AutoFixture;
 using FluentAssertions;
-using L5Sharp.Types;
 using L5Sharp.Types.Atomics;
 using L5SharpTests.Specimens;
 using NUnit.Framework;
 
-namespace L5Sharp.Internal.Tests.Converters
+namespace L5Sharp.Types.Tests.Converters
 {
     [TestFixture]
     public class DintConverterTests
@@ -53,7 +52,7 @@ namespace L5Sharp.Internal.Tests.Converters
 
             var result = (DINT)_converter.ConvertFrom(value);
 
-            result?.Value.Should().Be(value);
+            result?.Should().Be(value);
         }
         
         [Test]
@@ -63,7 +62,7 @@ namespace L5Sharp.Internal.Tests.Converters
 
             var result = (DINT)_converter.ConvertFrom(value);
 
-            result?.Value.Should().Be(value);
+            result?.Should().Be(value);
         }
         
         [Test]
@@ -73,7 +72,7 @@ namespace L5Sharp.Internal.Tests.Converters
 
             var result = (DINT)_converter.ConvertFrom(value);
 
-            result?.Value.Should().Be(value);
+            result?.Should().Be(value);
         }
         
         [Test]
@@ -83,7 +82,7 @@ namespace L5Sharp.Internal.Tests.Converters
 
             var result = (DINT)_converter.ConvertFrom(value);
 
-            result?.Value.Should().Be(value);
+            result?.Should().Be(value);
         }
         
         [Test]
@@ -93,7 +92,7 @@ namespace L5Sharp.Internal.Tests.Converters
 
             var result = (DINT)_converter.ConvertFrom(value);
 
-            result?.Value.Should().Be(value);
+            result?.Should().Be(value);
         }
         
         [Test]
@@ -103,7 +102,7 @@ namespace L5Sharp.Internal.Tests.Converters
 
             var result = (DINT)_converter.ConvertFrom(value);
 
-            result?.Value.Should().Be(value);
+            result?.Should().Be(value);
         }
         
         [Test]
@@ -113,7 +112,7 @@ namespace L5Sharp.Internal.Tests.Converters
 
             var result = (DINT)_converter.ConvertFrom(value);
 
-            result?.Value.Should().Be(value);
+            result?.Should().Be(value);
         }
         
         [Test]
@@ -123,7 +122,7 @@ namespace L5Sharp.Internal.Tests.Converters
 
             var result = (DINT)_converter.ConvertFrom(value);
 
-            result?.Value.Should().Be(value);
+            result?.Should().Be(value);
         }
         
         [Test]
@@ -133,7 +132,7 @@ namespace L5Sharp.Internal.Tests.Converters
 
             var result = (DINT)_converter.ConvertFrom(value);
 
-            result?.Value.Should().Be((int)value);
+            result?.Should().Be((int)value);
         }
 
         [Test]
@@ -151,7 +150,7 @@ namespace L5Sharp.Internal.Tests.Converters
 
             var result = (DINT)_converter.ConvertFrom(value);
 
-            result?.Value.Should().Be((int)value);
+            result?.Should().Be((int)value);
         }
 
         [Test]
@@ -169,7 +168,7 @@ namespace L5Sharp.Internal.Tests.Converters
 
             var result = (DINT)_converter.ConvertFrom(value);
 
-            result?.Value.Should().Be((int)value);
+            result?.Should().Be((int)value);
         }
 
         [Test]
@@ -187,7 +186,7 @@ namespace L5Sharp.Internal.Tests.Converters
 
             var result = (DINT)_converter.ConvertFrom(value);
 
-            result?.Value.Should().Be((int)value);
+            result?.Should().Be((int)value);
         }
 
         [Test]
@@ -205,7 +204,7 @@ namespace L5Sharp.Internal.Tests.Converters
 
             var result = (DINT)_converter.ConvertFrom(atomic);
 
-            result?.Value.Should().Be(atomic.Value);
+            result?.Should().Be(atomic);
         }
 
         [Test]
@@ -215,7 +214,7 @@ namespace L5Sharp.Internal.Tests.Converters
 
             var result = (DINT)_converter.ConvertFrom(atomic);
 
-            result?.Value.Should().Be(atomic.Value);
+            result?.Should().Be(atomic);
         }
 
         [Test]
@@ -225,7 +224,7 @@ namespace L5Sharp.Internal.Tests.Converters
 
             var result = (DINT)_converter.ConvertFrom(value);
 
-            result?.Value.Should().Be(value);
+            result?.Should().Be(value);
         }
         
         [Test]
@@ -235,7 +234,7 @@ namespace L5Sharp.Internal.Tests.Converters
 
             var result = (DINT)_converter.ConvertFrom(atomic);
 
-            result?.Value.Should().Be(atomic.Value);
+            result?.Should().Be(atomic);
         }
 
         [Test]
@@ -245,7 +244,7 @@ namespace L5Sharp.Internal.Tests.Converters
 
             var result = (DINT)_converter.ConvertFrom(value);
 
-            result?.Value.Should().Be(value);
+            result?.Should().Be(value);
         }
         
         [Test]
@@ -255,7 +254,7 @@ namespace L5Sharp.Internal.Tests.Converters
 
             var result = (DINT)_converter.ConvertFrom(atomic);
 
-            result?.Value.Should().Be(atomic.Value);
+            result?.Should().Be(atomic);
         }
 
         [Test]
@@ -265,7 +264,7 @@ namespace L5Sharp.Internal.Tests.Converters
 
             var result = (DINT)_converter.ConvertFrom(value);
 
-            result?.Value.Should().Be(value);
+            result?.Should().Be(value);
         }
         
         [Test]
@@ -275,7 +274,7 @@ namespace L5Sharp.Internal.Tests.Converters
 
             var result = (DINT)_converter.ConvertFrom(atomic);
 
-            result?.Value.Should().Be(atomic.Value);
+            result?.Should().Be(atomic);
         }
 
         [Test]
@@ -285,7 +284,7 @@ namespace L5Sharp.Internal.Tests.Converters
 
             var result = (DINT)_converter.ConvertFrom(value);
 
-            result?.Value.Should().Be(value);
+            result?.Should().Be(value);
         }
         
         [Test]
@@ -295,7 +294,7 @@ namespace L5Sharp.Internal.Tests.Converters
 
             var result = (DINT)_converter.ConvertFrom(atomic);
 
-            result?.Value.Should().Be((int)atomic.Value);
+            result?.Should().Be((int)atomic);
         }
 
         [Test]
@@ -313,7 +312,7 @@ namespace L5Sharp.Internal.Tests.Converters
 
             var result = (DINT)_converter.ConvertFrom(atomic);
 
-            result?.Value.Should().Be((int)atomic.Value);
+            result?.Should().Be((int)atomic);
         }
 
         [Test]
@@ -331,7 +330,7 @@ namespace L5Sharp.Internal.Tests.Converters
 
             var result = (DINT)_converter.ConvertFrom(atomic);
 
-            result?.Value.Should().Be((int)atomic.Value);
+            result?.Should().Be((int)atomic);
         }
 
         [Test]
@@ -349,7 +348,7 @@ namespace L5Sharp.Internal.Tests.Converters
 
             var result = (DINT)_converter.ConvertFrom(atomic);
 
-            result?.Value.Should().Be((int)atomic.Value);
+            result?.Should().Be((int)atomic);
         }
 
         [Test]

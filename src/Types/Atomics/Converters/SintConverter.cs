@@ -8,8 +8,9 @@ namespace L5Sharp.Types.Atomics.Converters
     /// <summary>
     /// A <see cref="TypeConverter"/> for the <see cref="SINT"/> object.
     /// </summary>
-    internal class SintConverter : AtomicConverter<SINT>
+    public class SintConverter : AtomicConverter<SINT>
     {
+        /// <inheritdoc />
         public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
         {
             checked

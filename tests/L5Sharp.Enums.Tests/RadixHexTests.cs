@@ -117,7 +117,7 @@ namespace L5Sharp.Enums.Tests
         {
             var value = Radix.Hex.Parse("16#0");
 
-            value.Value.Should().Be(false);
+            value.Should().Be(false);
         }
 
         [Test]
@@ -125,7 +125,7 @@ namespace L5Sharp.Enums.Tests
         {
             var value = Radix.Hex.Parse("16#14");
 
-            value.Value.Should().Be(20);
+            value.Should().Be(20);
         }
 
         [Test]
@@ -133,7 +133,7 @@ namespace L5Sharp.Enums.Tests
         {
             var value = Radix.Hex.Parse("16#0014");
 
-            value.Value.Should().Be(20);
+            value.Should().Be(20);
         }
 
         [Test]
@@ -141,7 +141,7 @@ namespace L5Sharp.Enums.Tests
         {
             var value = Radix.Hex.Parse("16#0000_0014");
 
-            value.Value.Should().Be(20);
+            value.Should().Be(20);
         }
 
         [Test]
@@ -149,7 +149,7 @@ namespace L5Sharp.Enums.Tests
         {
             var value = Radix.Hex.Parse("16#0000_0000_0000_0014");
 
-            value.Value.Should().Be(20);
+            value.Should().Be(20);
         }
     }
 }

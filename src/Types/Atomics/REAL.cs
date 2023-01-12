@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Globalization;
 using L5Sharp.Types.Atomics.Converters;
 
 namespace L5Sharp.Types.Atomics
@@ -51,6 +52,9 @@ namespace L5Sharp.Types.Atomics
         /// <param name="atomic">The value to convert.</param>
         /// <returns>A <see cref="float"/> type value.</returns>
         public static implicit operator float(REAL atomic) => atomic._value;
+        
+        /// <inheritdoc />
+        public override string ToString() => _value.ToString(CultureInfo.InvariantCulture);
 
         /// <inheritdoc />
         public bool Equals(REAL? other)

@@ -1,6 +1,5 @@
 ﻿using System;
 using FluentAssertions;
-using L5Sharp.Types;
 using L5Sharp.Types.Atomics;
 using NUnit.Framework;
 
@@ -118,7 +117,7 @@ namespace L5Sharp.Enums.Tests
         {
             var atomic = Radix.Ascii.Parse("'$t'");
 
-            atomic.Value.Should().Be(9);
+            atomic.Should().Be(9);
         }
         
         [Test]
@@ -126,7 +125,7 @@ namespace L5Sharp.Enums.Tests
         {
             var atomic = Radix.Ascii.Parse("'$l'");
 
-            atomic.Value.Should().Be(10);
+            atomic.Should().Be(10);
         }
         
         [Test]
@@ -134,7 +133,7 @@ namespace L5Sharp.Enums.Tests
         {
             var atomic = Radix.Ascii.Parse("'$p'");
 
-            atomic.Value.Should().Be(12);
+            atomic.Should().Be(12);
         }
         
         [Test]
@@ -142,7 +141,7 @@ namespace L5Sharp.Enums.Tests
         {
             var atomic = Radix.Ascii.Parse("'$r'");
 
-            atomic.Value.Should().Be(13);
+            atomic.Should().Be(13);
         }
         
         [Test]
@@ -150,7 +149,7 @@ namespace L5Sharp.Enums.Tests
         {
             var atomic = Radix.Ascii.Parse("'$$'");
 
-            atomic.Value.Should().Be(36);
+            atomic.Should().Be(36);
         }
         
         [Test]
@@ -158,7 +157,7 @@ namespace L5Sharp.Enums.Tests
         {
             var atomic = Radix.Ascii.Parse("'$''");
 
-            atomic.Value.Should().Be(39);
+            atomic.Should().Be(39);
         }
 
         [Test]

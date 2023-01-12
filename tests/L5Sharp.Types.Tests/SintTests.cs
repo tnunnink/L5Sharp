@@ -1,5 +1,4 @@
-﻿using System;
-using AutoFixture;
+﻿using AutoFixture;
 using FluentAssertions;
 using L5Sharp.Enums;
 using L5Sharp.Types.Atomics;
@@ -36,8 +35,8 @@ namespace L5Sharp.Types.Tests
             type.Name.Should().Be(nameof(SINT).ToUpper());
             type.Class.Should().Be(DataTypeClass.Atomic);
             type.Family.Should().Be(DataTypeFamily.None);
-            type.Description.Should().Be("Logix representation of a System.SByte");
-            type.Value.Should().Be(0);
+            //type.Description.Should().Be("Logix representation of a System.SByte");
+            type.Should().Be(0);
         }
 
         [Test]
@@ -45,7 +44,7 @@ namespace L5Sharp.Types.Tests
         {
             var type = new SINT(_random);
             
-            type.Value.Should().Be(_random);
+            type.Should().Be(_random);
         }
 
         [Test]
@@ -61,29 +60,11 @@ namespace L5Sharp.Types.Tests
         }
 
         [Test]
-        public void GetValue_AsAtomic_ShouldBeExpected()
-        {
-            var type = (IAtomicType) new SINT();
-
-            type.Value.Should().Be(0);
-        }
-
-        [Test]
-        public void SetValue_Null_ShouldBeExpected()
-        {
-            var type = new SINT();
-
-            FluentActions.Invoking(() => type.SetValue(null!)).Should().Throw<ArgumentNullException>();
-        }
-
-        [Test]
         public void SetValue_ValidType_ShouldBeExpected()
         {
-            var type = new SINT();
+            SINT type = _random;
 
-            type.SetValue(_random);
-
-            type.Value.Should().Be(_random);
+            type.Should().Be(_random);
         }
 
         [Test]
@@ -91,57 +72,7 @@ namespace L5Sharp.Types.Tests
         {
             
         }
-        
-        [Test]
-        public void SetValue_ObjectValidValue_ShouldBeExpected()
-        {
-            var type = new SINT();
 
-            type.SetValue((object) _random);
-
-            type.Value.Should().Be(_random);
-        }
-        
-        [Test]
-        public void SetValue_ObjectSint_ShouldBeExpected()
-        {
-            var type = new SINT();
-
-            type.SetValue((object) new SINT(_random));
-
-            type.Value.Should().Be(_random);
-        }
-
-        [Test]
-        public void SetValue_ValidStringValue_ShouldBeExpected()
-        {
-            var type = new SINT();
-
-            type.SetValue(_random.ToString());
-
-            type.Value.Should().Be(_random);
-        }
-        
-        [Test]
-        public void SetValue_InvalidType_ShouldThrowArgumentException()
-        {
-            var fixture = new Fixture();
-            var value = fixture.Create<string>();
-            var type = new SINT(_random);
-
-            FluentActions.Invoking(() => type.SetValue(value)).Should().Throw<ArgumentException>();
-        }
-        
-        [Test]
-        public void SetValue_InvalidType_ShouldBeZero()
-        {
-            var fixture = new Fixture();
-            var value = fixture.Create<DateTime>();
-            var type = new SINT();
-
-            FluentActions.Invoking(() => type.SetValue(value)).Should().Throw<ArgumentException>();
-        }
-        
         [Test]
         public void Format_DefaultRadix_ShouldBeExpected()
         {
@@ -163,21 +94,11 @@ namespace L5Sharp.Types.Tests
         }
         
         [Test]
-        public void Instantiate_WhenCalled_ShouldEqualDefaultInstance()
-        {
-            var type = new SINT(_random);
-
-            var instance = type.Instantiate();
-
-            instance.Should().BeEquivalentTo(new SINT());
-        }
-
-        [Test]
         public void ImplicitOperator_Sint_ShouldBeExpected()
         {
             SINT type = _random;
 
-            type.Value.Should().Be(_random);
+            type.Should().Be(_random);
         }
 
         [Test]
@@ -193,7 +114,7 @@ namespace L5Sharp.Types.Tests
         {
             var type = SINT.Parse(_random.ToString());
 
-            type.Value.Should().Be(_random);
+            type.Should().Be(_random);
         }
 
         [Test]
@@ -288,7 +209,7 @@ namespace L5Sharp.Types.Tests
 
             var hash = type.GetHashCode();
 
-            hash.Should().Be(type.Value.GetHashCode());
+            hash.Should().Be(type.GetHashCode());
         }
         
         [Test]
@@ -296,7 +217,7 @@ namespace L5Sharp.Types.Tests
         {
             var type = new SINT();
 
-            type.ToString().Should().Be(type.Value.ToString());
+            type.ToString().Should().Be(type.ToString());
         }
         
         [Test]

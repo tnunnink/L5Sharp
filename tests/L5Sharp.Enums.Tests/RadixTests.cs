@@ -1,6 +1,7 @@
 ﻿using System;
 using AutoFixture;
 using FluentAssertions;
+using L5Sharp.Components;
 using L5Sharp.Core;
 using L5Sharp.Types;
 using L5Sharp.Types.Atomics;
@@ -15,13 +16,13 @@ namespace L5Sharp.Enums.Tests
         [Test]
         public void Default_UserDefined_ShouldBeNullRadix()
         {
-            var userDefined = new UserDefined("Test", "This is a test");
+            var dataType = new DataType { Name = "Test", Description = "This is a test" };
 
-            var radix = Radix.Default(userDefined);
+            var radix = Radix.Default(dataType);
 
             radix.Should().Be(Radix.Null);
         }
-        
+
         [Test]
         public void Default_Predefined_ShouldBeNullRadix()
         {
@@ -95,76 +96,6 @@ namespace L5Sharp.Enums.Tests
         }
 
         [Test]
-        public void Default_BoolArray_ShouldBeDecimal()
-        {
-            var type = new ArrayType<IDataType>(new Dimensions(5), new BOOL());
-
-            var radix = Radix.Default(type);
-
-            radix.Should().Be(Radix.Decimal);
-        }
-        
-        [Test]
-        public void Default_SintArray_ShouldBeDecimal()
-        {
-            var type = new ArrayType<IDataType>(new Dimensions(5), new SINT());
-
-            var radix = Radix.Default(type);
-
-            radix.Should().Be(Radix.Decimal);
-        }
-        
-        [Test]
-        public void Default_IntArray_ShouldBeDecimal()
-        {
-            var type = new ArrayType<IDataType>(new Dimensions(5), new INT());
-
-            var radix = Radix.Default(type);
-
-            radix.Should().Be(Radix.Decimal);
-        }
-        
-        [Test]
-        public void Default_DintArray_ShouldBeDecimal()
-        {
-            var type = new ArrayType<IDataType>(new Dimensions(5), new DINT());
-
-            var radix = Radix.Default(type);
-
-            radix.Should().Be(Radix.Decimal);
-        }
-        
-        [Test]
-        public void Default_LintArray_ShouldBeDecimal()
-        {
-            var type = new ArrayType<IDataType>(new Dimensions(5), new LINT());
-
-            var radix = Radix.Default(type);
-
-            radix.Should().Be(Radix.Decimal);
-        }
-        
-        [Test]
-        public void Default_RealArray_ShouldBeFloat()
-        {
-            var type = new ArrayType<IDataType>(new Dimensions(5), new REAL());
-
-            var radix = Radix.Default(type);
-
-            radix.Should().Be(Radix.Float);
-        }
-        
-        [Test]
-        public void Default_StringArray_ShouldBeNull()
-        {
-            var type = new ArrayType<IDataType>(new Dimensions(5), new STRING());
-
-            var radix = Radix.Default(type);
-
-            radix.Should().Be(Radix.Null);
-        }
-
-        [Test]
         public void ParseValue_InvalidString_ShouldThrowFormatException()
         {
             var fixture = new Fixture();
@@ -179,7 +110,7 @@ namespace L5Sharp.Enums.Tests
 
             var parsed = Radix.ParseValue(value);
 
-            parsed.Value.Should().Be(5);
+            parsed.Should().Be(5);
         }
 
         [Test]
@@ -189,7 +120,7 @@ namespace L5Sharp.Enums.Tests
 
             var parsed = Radix.ParseValue(value);
 
-            parsed.Value.Should().Be(5);
+            parsed.Should().Be(5);
         }
 
         [Test]
@@ -199,9 +130,9 @@ namespace L5Sharp.Enums.Tests
 
             var parsed = Radix.ParseValue(value);
 
-            parsed.Value.Should().Be(5);
+            parsed.Should().Be(5);
         }
-        
+
         [Test]
         public void ParseValue_ValidHex_ShouldBeExpectedValue()
         {
@@ -209,9 +140,9 @@ namespace L5Sharp.Enums.Tests
 
             var parsed = Radix.ParseValue(value);
 
-            parsed.Value.Should().Be(5);
+            parsed.Should().Be(5);
         }
-        
+
         [Test]
         public void ParseValue_ValidAscii_ShouldBeExpectedValue()
         {
@@ -219,7 +150,7 @@ namespace L5Sharp.Enums.Tests
 
             var parsed = Radix.ParseValue(value);
 
-            parsed.Value.Should().Be(5);
+            parsed.Should().Be(5);
         }
 
         [Test]
@@ -229,9 +160,9 @@ namespace L5Sharp.Enums.Tests
 
             var parsed = Radix.ParseValue(value);
 
-            parsed.Value.Should().Be(5.0f);
+            parsed.Should().Be(5.0f);
         }
-        
+
         [Test]
         public void ParseValue_ValidExponential_ShouldBeExpected()
         {
@@ -239,7 +170,7 @@ namespace L5Sharp.Enums.Tests
 
             var parsed = Radix.ParseValue(value);
 
-            parsed.Value.Should().Be(5.0f);
+            parsed.Should().Be(5.0f);
         }
 
         [Test]
@@ -249,35 +180,7 @@ namespace L5Sharp.Enums.Tests
 
             var parsed = Radix.ParseValue(value);
 
-            parsed.Value.Should().Be(1641016800000000);
-        }
-        
-        [Test]
-        public void TryParseValue_InvalidString_ShouldBeFalseAndNull()
-        {
-            var fixture = new Fixture();
-
-            var parsed = Radix.TryParseValue(fixture.Create<string>());
-            
-            parsed.Should().BeNull();
-        }
-
-        [Test]
-        public void TryParseValue_ValidBinary_ShouldBeExpectedValue()
-        {
-            const string value = "2#0000_0101";
-
-            var parsed = Radix.TryParseValue(value);
-            
-            parsed?.Value.Should().Be(5);
-        }
-        
-        [Test]
-        public void TryParseValue_ValidHexInvalidLength_ShouldThrowArgumentOutOfRangeException()
-        {
-            const string value = "16#0000_0101_0000_0000_0000_0000_0000";
-
-            FluentActions.Invoking(() => Radix.TryParseValue(value)).Should().Throw<ArgumentOutOfRangeException>();
+            parsed.Should().Be(1641016800000000);
         }
 
         [Test]
@@ -292,17 +195,17 @@ namespace L5Sharp.Enums.Tests
         public void SupportsType_NonAtomic_ShouldBeFalse()
         {
             var type = new STRING();
-            
+
             var result = Radix.Decimal.SupportsType(type);
 
             result.Should().BeFalse();
         }
-        
+
         [Test]
         public void SupportsType_AtomicAsIDataType_ShouldBeTrue()
         {
-            var type = (IDataType)new BOOL();
-            
+            var type = (ILogixType)new BOOL();
+
             var result = Radix.Decimal.SupportsType(type);
 
             result.Should().BeTrue();
@@ -311,31 +214,11 @@ namespace L5Sharp.Enums.Tests
         [Test]
         public void SupportsType_ComplexAsIDataType_ShouldBeFalse()
         {
-            var type = (IDataType)new STRING();
+            var type = (ILogixType)new STRING();
 
             var result = Radix.Decimal.SupportsType(type);
 
             result.Should().BeFalse();
-        }
-
-        [Test]
-        public void SupportsType_BoolArrayAsIDataType_ShouldBeTrue()
-        {
-            var type = new ArrayType<IDataType>(new Dimensions(5), new BOOL());
-
-            var supported = Radix.Decimal.SupportsType(type);
-
-            supported.Should().BeTrue();
-        }
-        
-        [Test]
-        public void SupportsType_StringArrayAsIDataType_ShouldBeFalse()
-        {
-            var type = new ArrayType<IDataType>(new Dimensions(5), new STRING());
-
-            var supported = Radix.Decimal.SupportsType(type);
-
-            supported.Should().BeFalse();
         }
     }
 }

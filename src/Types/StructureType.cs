@@ -15,16 +15,21 @@ namespace L5Sharp.Types
         /// Creates a new <see cref="StructureType"/> with the provided name and member collection.
         /// </summary>
         /// <param name="name">The name of the type.</param>
+        /// <param name="description">The description of the type</param>
         /// <exception cref="ArgumentNullException">name is null.</exception>
-        protected StructureType(string name)
+        protected StructureType(string name, string? description = null)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
+            Description = description ?? string.Empty;
         }
 
         /// <summary>
         /// Gets the name of the <see cref="StructureType"/>.
         /// </summary>
         public string Name { get; }
+
+        /// <inheritdoc />
+        public string Description { get; }
 
         /// <inheritdoc />
         public virtual DataTypeFamily Family => DataTypeFamily.None;

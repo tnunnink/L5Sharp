@@ -58,6 +58,9 @@ namespace L5Sharp.Types.Atomics
         /// <param name="atomic">The value to convert.</param>
         /// <returns>A <see cref="byte"/> type value.</returns>
         public static implicit operator sbyte(SINT atomic) => atomic._value;
+        
+        /// <inheritdoc />
+        public override string ToString() => _value.ToString();
 
         /// <inheritdoc />
         public bool Equals(SINT? other)

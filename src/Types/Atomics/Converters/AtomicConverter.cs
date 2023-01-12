@@ -12,8 +12,9 @@ namespace L5Sharp.Types.Atomics.Converters
     /// all primitive CLR types and the corresponding Logix types. These are checked conversions, meaning they will
     /// throw an <see cref="OverflowException"/> when the values are out of range for the destination type. 
     /// </summary>
-    internal abstract class AtomicConverter<TAtomic> : TypeConverter where TAtomic : AtomicType
+    public abstract class AtomicConverter<TAtomic> : TypeConverter where TAtomic : AtomicType
     {
+        /// <inheritdoc />
         public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
         {
             return sourceType == typeof(sbyte) ||
@@ -38,6 +39,7 @@ namespace L5Sharp.Types.Atomics.Converters
                    base.CanConvertFrom(context, sourceType);
         }
 
+        /// <inheritdoc />
         public override bool CanConvertTo(ITypeDescriptorContext context, Type destinationType)
         {
             return destinationType == typeof(sbyte) ||
@@ -62,6 +64,7 @@ namespace L5Sharp.Types.Atomics.Converters
                    base.CanConvertFrom(context, destinationType);
         }
 
+        /// <inheritdoc />
         public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value,
             Type destinationType)
         {

@@ -1,6 +1,5 @@
 ﻿using System;
 using FluentAssertions;
-using L5Sharp.Types;
 using L5Sharp.Types.Atomics;
 using NUnit.Framework;
 
@@ -113,7 +112,7 @@ namespace L5Sharp.Enums.Tests
         {
             var atomic = Radix.Binary.Parse("2#0");
 
-            atomic.Value.Should().Be(false);
+            atomic.Should().Be(false);
         }
         
         [Test]
@@ -121,7 +120,7 @@ namespace L5Sharp.Enums.Tests
         {
             var atomic = Radix.Binary.Parse("2#1");
 
-            atomic.Value.Should().Be(true);
+            atomic.Should().Be(true);
         }
 
         [Test]

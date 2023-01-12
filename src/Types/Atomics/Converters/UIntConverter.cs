@@ -8,8 +8,9 @@ namespace L5Sharp.Types.Atomics.Converters
     /// <summary>
     /// A <see cref="TypeConverter"/> for the <see cref="UINT"/> object.
     /// </summary>
-    internal class UIntConverter : AtomicConverter<UINT>
+    public class UIntConverter : AtomicConverter<UINT>
     {
+        /// <inheritdoc />
         public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
         {
             checked

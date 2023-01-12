@@ -7,11 +7,11 @@ using L5Sharp.Utilities;
 
 namespace L5Sharp.Serialization
 {
-    internal class DataValueSerializer : L5XSerializer<IAtomicType>
+    internal class DataValueSerializer : L5XSerializer<AtomicType>
     {
         private static readonly XName ElementName = L5XName.DataValue;
         
-        public override XElement Serialize(IAtomicType component)
+        public override XElement Serialize(AtomicType component)
         {
             if (component == null)
                 throw new ArgumentNullException(nameof(component));
@@ -23,7 +23,7 @@ namespace L5Sharp.Serialization
             return element;
         }
 
-        public override IAtomicType Deserialize(XElement element)
+        public override AtomicType Deserialize(XElement element)
         {
             if (element == null)
                 throw new ArgumentNullException(nameof(element));
@@ -32,9 +32,9 @@ namespace L5Sharp.Serialization
                 throw new ArgumentException($"Element '{element.Name}' not valid for the serializer {GetType()}.");
             
             var name = element.DataTypeName();
-            var value = element.Attribute(L5XName.Value)?.Value.Parse<IAtomicType>();
+            var value = element.Attribute(L5XName.Value)?.Value.Parse<AtomicType>();
 
-            return LogixType.Atomic(name, value);
+            return value;
         }
     }
 }

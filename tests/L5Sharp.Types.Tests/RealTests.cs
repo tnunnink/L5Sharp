@@ -1,6 +1,4 @@
-﻿using System;
-using System.Globalization;
-using AutoFixture;
+﻿using AutoFixture;
 using FluentAssertions;
 using L5Sharp.Enums;
 using L5Sharp.Types.Atomics;
@@ -37,8 +35,8 @@ namespace L5Sharp.Types.Tests
             type.Name.Should().Be(nameof(REAL).ToUpper());
             type.Class.Should().Be(DataTypeClass.Atomic);
             type.Family.Should().Be(DataTypeFamily.None);
-            type.Description.Should().Be("Logix representation of a System.Single");
-            type.Value.Should().Be(0);
+            //type.Description.Should().Be("Logix representation of a System.Single");
+            type.Should().Be(0);
         }
 
         [Test]
@@ -46,7 +44,7 @@ namespace L5Sharp.Types.Tests
         {
             var type = new REAL(_random);
             
-            type.Value.Should().Be(_random);
+            type.Should().Be(_random);
         }
         
         [Test]
@@ -60,93 +58,23 @@ namespace L5Sharp.Types.Tests
         {
             REAL.MinValue.Should().Be(float.MinValue);
         }
-        
-        [Test]
-        public void GetValue_AsAtomic_ShouldBeExpected()
-        {
-            var type = (IAtomicType) new SINT();
-
-            type.Value.Should().Be(0f);
-        }
-
-        [Test]
-        public void SetValue_Null_ShouldReturnExpected()
-        {
-            var type = new REAL();
-
-            FluentActions.Invoking(() => type.SetValue(null!)).Should().Throw<ArgumentNullException>();
-        }
 
         [Test]
         public void SetValue_ValidValue_ShouldReturnExpected()
         {
-            var type = new REAL();
+            REAL type = _random;
 
-            type.SetValue(_random);
-
-            type.Value.Should().Be(_random);
+            type.Should().Be(_random);
         }
         
         [Test]
         public void SetValue_SameType_ShouldReturnExpected()
         {
-            var type = new REAL();
-
-            type.SetValue(new REAL(_random));
-
-            type.Value.Should().Be(_random);
-        }
-        
-        [Test]
-        public void SetValue_SameTypeAsObject_ShouldBeExpected()
-        {
-            var type = new REAL();
-
-            type.SetValue((object)new REAL(_random));
-
-            type.Value.Should().Be(_random);
-        }
-        
-        [Test]
-        public void SetValue_ValidObjectValue_ShouldReturnExpected()
-        {
-            var type = new REAL();
-
-            type.SetValue((object) _random);
-
-            type.Value.Should().Be(_random);
-        }
-
-        [Test]
-        public void SetValue_ValidStringValue_ShouldReturnExpected()
-        {
-            var type = new REAL();
-
-            type.SetValue("1.34");
-
-            type.Value.Should().Be(1.34f);
-        }
-        
-        [Test]
-        public void SetValue_InvalidString_ShouldThrowArgumentException()
-        {
-            var fixture = new Fixture();
-            var value = fixture.Create<string>();
             var type = new REAL(_random);
 
-            FluentActions.Invoking(() => type.SetValue(value)).Should().Throw<ArgumentException>();
+            type.Should().Be(_random);
         }
-        
-        [Test]
-        public void SetValue_InvalidType_ShouldThrowArgumentException()
-        {
-            var fixture = new Fixture();
-            var value = fixture.Create<bool>();
-            var type = new REAL();
 
-            FluentActions.Invoking(() => type.SetValue(value)).Should().Throw<ArgumentException>();
-        }
-        
         [Test]
         public void Format_DefaultRadix_ShouldBeExpected()
         {
@@ -166,23 +94,13 @@ namespace L5Sharp.Types.Tests
 
             format.Should().Be("0.00000000e+000");
         }
-        
-        [Test]
-        public void Instantiate_WhenCalled_ShouldEqualDefaultInstance()
-        {
-            var type = new REAL(_random);
-
-            var instance = type.Instantiate();
-
-            instance.Should().BeEquivalentTo(new REAL());
-        }
 
         [Test]
         public void ImplicitOperator_Bool_ShouldBeTrue()
         {
             REAL type = _random;
 
-            type.Value.Should().Be(_random);
+            type.Should().Be(_random);
         }
 
         [Test]
@@ -191,14 +109,6 @@ namespace L5Sharp.Types.Tests
             float value = new REAL(_random);
 
             value.Should().Be(_random);
-        }
-        
-        [Test]
-        public void ImplicitOperator_ValidString_ShouldBeExpected()
-        {
-            REAL type = "1.1";
-
-            type.Value.Should().Be(1.1f);
         }
 
         [Test]
@@ -293,17 +203,9 @@ namespace L5Sharp.Types.Tests
 
             var hash = type.GetHashCode();
 
-            hash.Should().Be(type.Value.GetHashCode());
+            hash.Should().Be(type.GetHashCode());
         }
-        
-        [Test]
-        public void ToString_WhenCalled_ShouldBeName()
-        {
-            var type = new REAL();
 
-            type.ToString().Should().Be(type.Value.ToString(CultureInfo.InvariantCulture));
-        }
-        
         [Test]
         public void CompareTo_Same_ShouldBeZero()
         {

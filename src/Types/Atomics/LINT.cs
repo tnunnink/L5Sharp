@@ -54,6 +54,9 @@ namespace L5Sharp.Types.Atomics
         public static implicit operator long(LINT atomic) => atomic._value;
         
         /// <inheritdoc />
+        public override string ToString() => _value.ToString();
+        
+        /// <inheritdoc />
         public bool Equals(LINT? other)
         {
             if (ReferenceEquals(null, other)) return false;

@@ -8,7 +8,7 @@ using L5Sharp.Types.Predefined;
 namespace L5Sharp.Types
 {
     /// <summary>
-    /// A static class containing known <see cref="IDataType"/> objects that can be instantiated upon request.
+    /// A static class containing known <see cref="ILogixType"/> objects that can be instantiated upon request.
     /// </summary>
     public static class LogixType
     {
@@ -33,6 +33,13 @@ namespace L5Sharp.Types
             { nameof(CONTROL), new CONTROL() }
         };
 
+        public static readonly Dictionary<string, Func<string, AtomicType>> AtomicParsers =
+            new(StringComparer.OrdinalIgnoreCase)
+            {
+                { nameof(BOOL), BOOL.Parse },
+
+            };
+
         /// <summary>
         /// List of all predefined <see cref="ILogixType"/> names.
         /// </summary>
@@ -56,5 +63,30 @@ namespace L5Sharp.Types
         /// <param name="name">The name of the data type to find.</param>
         /// <returns>true if the <see cref="ILogixType"/> is defined in the registered collection.</returns>
         public static bool IsDefined(string name) => Registry.ContainsKey(name);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentException"></exception>
+        public static AtomicType Parse(string name, string value)
+        {
+            
+            if (string.IsNullOrEmpty(name))
+                throw new ArgumentNullException(name);
+            
+            if (string.IsNullOrEmpty(value))
+                throw new ArgumentNullException(value);
+
+            if (!AtomicParsers.ContainsKey(name))
+                throw new ArgumentException();
+
+            var parser = AtomicParsers[name];
+
+            return parser.Invoke(value);
+        }
     }
 }

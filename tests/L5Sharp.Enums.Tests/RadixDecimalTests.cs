@@ -104,7 +104,7 @@ namespace L5Sharp.Enums.Tests
         {
             var atomic = (SINT)Radix.Decimal.Parse(sbyte.MaxValue.ToString());
 
-            atomic.Value.Should().Be(new SINT(sbyte.MaxValue));
+            atomic.Should().Be(new SINT(sbyte.MaxValue));
         }
         
         [Test]
@@ -112,7 +112,7 @@ namespace L5Sharp.Enums.Tests
         {
             var atomic = (USINT)Radix.Decimal.Parse(byte.MaxValue.ToString());
 
-            atomic.Value.Should().Be(new USINT(byte.MaxValue));
+            atomic.Should().Be(new USINT(byte.MaxValue));
         }
 
         [Test]
@@ -120,7 +120,7 @@ namespace L5Sharp.Enums.Tests
         {
             var atomic = (INT)Radix.Decimal.Parse(short.MaxValue.ToString());
 
-            atomic.Value.Should().Be(new INT(short.MaxValue));
+            atomic.Should().Be(new INT(short.MaxValue));
         }
         
         [Test]
@@ -128,7 +128,7 @@ namespace L5Sharp.Enums.Tests
         {
             var atomic = (UINT)Radix.Decimal.Parse(ushort.MaxValue.ToString());
 
-            atomic.Value.Should().Be(new UINT(ushort.MaxValue));
+            atomic.Should().Be(new UINT(ushort.MaxValue));
         }
 
         [Test]
@@ -136,7 +136,7 @@ namespace L5Sharp.Enums.Tests
         {
             var atomic = (DINT)Radix.Decimal.Parse(int.MaxValue.ToString());
 
-            atomic.Value.Should().Be(int.MaxValue);
+            atomic.Should().Be(int.MaxValue);
         }
         
         [Test]
@@ -144,7 +144,7 @@ namespace L5Sharp.Enums.Tests
         {
             var atomic = (UDINT)Radix.Decimal.Parse(uint.MaxValue.ToString());
 
-            atomic.Value.Should().Be(uint.MaxValue);
+            atomic.Should().Be(uint.MaxValue);
         }
 
         [Test]
@@ -152,7 +152,7 @@ namespace L5Sharp.Enums.Tests
         {
             var atomic = (LINT)Radix.Decimal.Parse(long.MaxValue.ToString());
 
-            atomic.Value.Should().Be(long.MaxValue);
+            atomic.Should().Be(long.MaxValue);
         }
         
         [Test]
@@ -160,7 +160,7 @@ namespace L5Sharp.Enums.Tests
         {
             var atomic = (ULINT)Radix.Decimal.Parse(ulong.MaxValue.ToString());
 
-            atomic.Value.Should().Be(ulong.MaxValue);
+            atomic.Should().Be(ulong.MaxValue);
         }
 
         [Test]

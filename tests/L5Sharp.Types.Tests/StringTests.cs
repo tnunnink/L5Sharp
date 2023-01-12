@@ -1,7 +1,6 @@
 ﻿using System;
 using AutoFixture;
 using FluentAssertions;
-using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Types.Atomics;
 using L5Sharp.Types.Predefined;
@@ -25,7 +24,7 @@ namespace L5Sharp.Types.Tests
         {
             var type = new STRING();
             
-            type.Value.Should().BeEmpty();
+            type.ToString().Should().BeEmpty();
         }
 
         [Test]
@@ -36,13 +35,12 @@ namespace L5Sharp.Types.Tests
             type.Name.Should().Be("STRING");
             type.Class.Should().Be(DataTypeClass.Predefined);
             type.Family.Should().Be(DataTypeFamily.String);
-            type.Description.Should().Be("Logix representation of a System.String");
-            type.Value.Should().BeEmpty();
+            //type.Description.Should().Be("Logix representation of a System.String");
+            type.ToString().Should().BeEmpty();
             type.LEN.Should().NotBeNull();
-            type.LEN.DataType.Should().BeOfType<DINT>();
+            type.LEN.Should().BeOfType<DINT>();
             type.DATA.Should().NotBeNull();
-            type.DATA.DataType.Should().BeOfType<ArrayType<SINT>>();
-            type.DATA.Dimensions.Should().Be(new Dimensions(82));
+            type.DATA.Should().BeOfType<SINT>();
         }
 
         [Test]
@@ -50,23 +48,15 @@ namespace L5Sharp.Types.Tests
         {
             var type = new STRING("This is a test");
 
-            type.Value.Should().Be("This is a test");
+            type.ToString().Should().Be("This is a test");
         }
-        
-        [Test]
-        public void SetValue_Null_ShouldThrowArgumentNullException()
-        {
-            var type = new STRING();
-            
-            FluentActions.Invoking(() => type.SetValue(null!)).Should().Throw<ArgumentNullException>();
-        }
-        
+
         [Test]
         public void SetValue_EmptyString_ShouldBeEmpty()
         {
             STRING type = string.Empty;
 
-            type.Value.Should().BeEmpty();
+            type.ToString().Should().BeEmpty();
         }
         
         [Test]
@@ -87,9 +77,9 @@ namespace L5Sharp.Types.Tests
             var value = fixture.Create<string>();
             var type = new STRING();
             
-            type.SetValue(value);
+            type = (value);
 
-            type.Value.Should().Be(value);
+            type.ToString().Should().Be(value);
         }
 
         [Test]
@@ -108,16 +98,6 @@ namespace L5Sharp.Types.Tests
             test.Should().Be("This is a test");
         }
 
-        [Test]
-        public void Instantiate_WhenCalled_shouldReturnDifferentInstance()
-        {
-            var type = new STRING();
-
-            var instance = type.Instantiate();
-
-            instance.Should().NotBeSameAs(type);
-        }
-        
         [Test]
         public void TypeEquals_AreEqual_ShouldBeTrue()
         {

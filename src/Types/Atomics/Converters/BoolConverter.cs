@@ -8,8 +8,9 @@ namespace L5Sharp.Types.Atomics.Converters
     /// <summary>
     /// A <see cref="TypeConverter"/> for the <see cref="BOOL"/> object.
     /// </summary>
-    internal class BoolConverter : TypeConverter
+    public class BoolConverter : TypeConverter
     {
+        /// <inheritdoc />
         public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
         {
             return sourceType == typeof(bool) ||
@@ -26,6 +27,7 @@ namespace L5Sharp.Types.Atomics.Converters
                    base.CanConvertFrom(context, sourceType);
         }
 
+        /// <inheritdoc />
         public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
         {
             return value switch
@@ -47,6 +49,7 @@ namespace L5Sharp.Types.Atomics.Converters
             };
         }
 
+        /// <inheritdoc />
         public override bool CanConvertTo(ITypeDescriptorContext context, Type destinationType)
         {
             return destinationType == typeof(bool) ||
@@ -55,6 +58,7 @@ namespace L5Sharp.Types.Atomics.Converters
                    base.CanConvertFrom(context, destinationType);
         }
 
+        /// <inheritdoc />
         public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value,
             Type destinationType)
         {

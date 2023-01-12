@@ -8,8 +8,9 @@ namespace L5Sharp.Types.Atomics.Converters
     /// <summary>
     /// A <see cref="TypeConverter"/> for the <see cref="DINT"/> object.
     /// </summary>
-    internal class DintConverter : AtomicConverter<DINT>
+    public class DintConverter : AtomicConverter<DINT>
     {
+        /// <inheritdoc />
         public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
         {
             checked

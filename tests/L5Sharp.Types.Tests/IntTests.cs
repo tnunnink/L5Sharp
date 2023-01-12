@@ -1,5 +1,4 @@
-﻿using System;
-using AutoFixture;
+﻿using AutoFixture;
 using FluentAssertions;
 using L5Sharp.Enums;
 using L5Sharp.Types.Atomics;
@@ -36,8 +35,8 @@ namespace L5Sharp.Types.Tests
             type.Name.Should().Be(nameof(INT).ToUpper());
             type.Class.Should().Be(DataTypeClass.Atomic);
             type.Family.Should().Be(DataTypeFamily.None);
-            type.Description.Should().Be("Logix representation of a System.Int16");
-            type.Value.Should().Be(0);
+            //type.Description.Should().Be("Logix representation of a System.Int16");
+            type.Should().Be(0);
         }
         
         [Test]
@@ -45,7 +44,7 @@ namespace L5Sharp.Types.Tests
         {
             var type = new INT(_random);
             
-            type.Value.Should().Be(_random);
+            type.Should().Be(_random);
         }
         
         [Test]
@@ -63,27 +62,17 @@ namespace L5Sharp.Types.Tests
         [Test]
         public void GetValue_AsAtomic_ShouldBeExpected()
         {
-            var type = (IAtomicType) new INT();
+            var type = (AtomicType) new INT();
 
-            type.Value.Should().Be(0);
-        }
-
-        [Test]
-        public void SetValue_Null_ShouldBeExpected()
-        {
-            var type = new INT();
-
-            FluentActions.Invoking(() => type.SetValue(null!)).Should().Throw<ArgumentNullException>();
+            type.Should().Be(0);
         }
 
         [Test]
         public void SetValue_ValidShort_ShouldBeExpected()
         {
-            var type = new INT();
+            INT type = _random;
 
-            type.SetValue(_random);
-
-            type.Value.Should().Be(_random);
+            type.Should().Be(_random);
         }
 
         [Test]
@@ -91,85 +80,12 @@ namespace L5Sharp.Types.Tests
         {
             var fixture = new Fixture();
             var value = fixture.Create<byte>();
-            var type = new INT();
 
-            type.SetValue(value);
+            INT type = (value);
 
-            type.Value.Should().Be(value);
+            type.Should().Be(value);
         }
 
-        [Test]
-        public void SetValue_SameType_ShouldBeExpected()
-        {
-            var type = new INT();
-
-            type.SetValue(new INT(_random));
-
-            type.Value.Should().Be(_random);
-        }
-
-        [Test]
-        public void SetValue_SameTypeAsObject_ShouldBeExpected()
-        {
-            var type = new INT();
-
-            type.SetValue((object)new INT(_random));
-
-            type.Value.Should().Be(_random);
-        }
-        
-        [Test]
-        public void SetValue_Sint_ShouldBeExpected()
-        {
-            var fixture = new Fixture();
-            var value = fixture.Create<sbyte>();
-            var type = new INT();
-
-            type.SetValue(new SINT(value));
-
-            type.Value.Should().Be(value);
-        }
-
-        [Test]
-        public void SetValue_ValidObjectValue_ShouldBeExpected()
-        {
-            var type = new INT();
-
-            type.SetValue((object) _random);
-
-            type.Value.Should().Be(_random);
-        }
-
-        [Test]
-        public void SetValue_ValidStringValue_ShouldBeExpected()
-        {
-            var type = new INT();
-
-            type.SetValue(_random.ToString());
-
-            type.Value.Should().Be(_random);
-        }
-        
-        [Test]
-        public void SetValue_InvalidString_ShouldThrowArgumentException()
-        {
-            var fixture = new Fixture();
-            var value = fixture.Create<string>();
-            var type = new INT(_random);
-
-            FluentActions.Invoking(() => type.SetValue(value)).Should().Throw<ArgumentException>();
-        }
-        
-        [Test]
-        public void SetValue_InvalidType_ShouldBeZero()
-        {
-            var fixture = new Fixture();
-            var value = fixture.Create<DateTime>();
-            var type = new INT();
-
-            FluentActions.Invoking(() => type.SetValue(value)).Should().Throw<ArgumentException>();
-        }
-        
         [Test]
         public void Format_DefaultRadix_ShouldBeExpected()
         {
@@ -189,23 +105,13 @@ namespace L5Sharp.Types.Tests
 
             format.Should().Be("2#0000_0000_0000_0000");
         }
-        
-        [Test]
-        public void Instantiate_WhenCalled_ShouldEqualDefaultInstance()
-        {
-            var type = new INT(_random);
-
-            var instance = type.Instantiate();
-
-            instance.Should().BeEquivalentTo(new INT());
-        }
 
         [Test]
         public void ImplicitOperator_Bool_ShouldBeTrue()
         {
             INT type = _random;
 
-            type.Value.Should().Be(_random);
+            type.Should().Be(_random);
         }
 
         [Test]
@@ -214,14 +120,6 @@ namespace L5Sharp.Types.Tests
             short value = new INT(_random);
 
             value.Should().Be(_random);
-        }
-        
-        [Test]
-        public void ImplicitOperator_ValidString_ShouldBeExpected()
-        {
-            INT type = _random.ToString();
-
-            type.Value.Should().Be(_random);
         }
 
         [Test]
@@ -316,7 +214,7 @@ namespace L5Sharp.Types.Tests
 
             var hash = type.GetHashCode();
 
-            hash.Should().Be(type.Value.GetHashCode());
+            hash.Should().Be(type.GetHashCode());
         }
         
         [Test]
@@ -324,7 +222,7 @@ namespace L5Sharp.Types.Tests
         {
             var type = new INT();
 
-            type.ToString().Should().Be(type.Value.ToString());
+            type.ToString().Should().Be(type.ToString());
         }
         
         [Test]

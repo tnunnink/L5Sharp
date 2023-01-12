@@ -1,17 +1,15 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Globalization;
 using AutoFixture;
 using FluentAssertions;
-using L5Sharp.Types;
 using L5Sharp.Types.Atomics;
 using L5SharpTests.Specimens;
 using NUnit.Framework;
 
-namespace L5Sharp.Internal.Tests.Converters
+namespace L5Sharp.Types.Tests.Converters
 {
     [TestFixture]
-    public class RealConverterTests
+    public class IntConverterTests
     {
         private Fixture _fixture;
         private TypeConverter _converter;
@@ -26,7 +24,7 @@ namespace L5Sharp.Internal.Tests.Converters
             _fixture.Customizations.Add(new DintGenerator());
             _fixture.Customizations.Add(new LintGenerator());
 
-            _converter = TypeDescriptor.GetConverter(typeof(REAL));
+            _converter = TypeDescriptor.GetConverter(typeof(INT));
         }
         
         [Test]
@@ -38,23 +36,13 @@ namespace L5Sharp.Internal.Tests.Converters
         }
         
         [Test]
-        public void ConvertFrom_ValidSbyte_ShouldBeExpected()
+        public void ConvertFrom_sbyte_ShouldBeExpected()
         {
-            const sbyte value = 0;
+            var value = _fixture.Create<sbyte>();
 
-            var result = (REAL)_converter.ConvertFrom(value);
+            var result = (INT)_converter.ConvertFrom(value);
 
-            result?.Value.Should().Be(value);
-        }
-        
-        [Test]
-        public void ConvertFrom_MinValue_ShouldBeExpected()
-        {
-            const sbyte value = sbyte.MinValue;
-
-            var result = (REAL)_converter.ConvertFrom(value);
-
-            result?.Value.Should().Be(value);
+            result.Should().Be(new INT(value));
         }
 
         [Test]
@@ -62,7 +50,7 @@ namespace L5Sharp.Internal.Tests.Converters
         {
             const byte value = 0;
 
-            var result = (REAL)_converter.ConvertFrom(value);
+            var result = (INT)_converter.ConvertFrom(value);
 
             result?.Value.Should().Be(value);
         }
@@ -72,7 +60,7 @@ namespace L5Sharp.Internal.Tests.Converters
         {
             const byte value = byte.MaxValue;
 
-            var result = (REAL)_converter.ConvertFrom(value);
+            var result = (INT)_converter.ConvertFrom(value);
 
             result?.Value.Should().Be(value);
         }
@@ -82,7 +70,7 @@ namespace L5Sharp.Internal.Tests.Converters
         {
             const short value = 0;
 
-            var result = (REAL)_converter.ConvertFrom(value);
+            var result = (INT)_converter.ConvertFrom(value);
 
             result?.Value.Should().Be(value);
         }
@@ -92,7 +80,7 @@ namespace L5Sharp.Internal.Tests.Converters
         {
             const short value = short.MaxValue;
 
-            var result = (REAL)_converter.ConvertFrom(value);
+            var result = (INT)_converter.ConvertFrom(value);
 
             result?.Value.Should().Be(value);
         }
@@ -102,19 +90,17 @@ namespace L5Sharp.Internal.Tests.Converters
         {
             const ushort value = 0;
 
-            var result = (REAL)_converter.ConvertFrom(value);
+            var result = (INT)_converter.ConvertFrom(value);
 
-            result?.Value.Should().Be(value);
+            result?.Value.Should().Be((short)value);
         }
         
         [Test]
-        public void ConvertFrom_UShortMaxValue_ShouldBeExpected()
+        public void ConvertFrom_InvalidUShort_ShouldThrowOverflowException()
         {
             const ushort value = ushort.MaxValue;
 
-            var result = (REAL)_converter.ConvertFrom(value);
-
-            result?.Value.Should().Be(value);
+            FluentActions.Invoking(() => _converter.ConvertFrom(value)).Should().Throw<OverflowException>();
         }
         
         [Test]
@@ -122,19 +108,17 @@ namespace L5Sharp.Internal.Tests.Converters
         {
             const int value = 0;
 
-            var result = (REAL)_converter.ConvertFrom(value);
+            var result = (INT)_converter.ConvertFrom(value);
 
             result?.Value.Should().Be(value);
         }
         
         [Test]
-        public void ConvertFrom_IntMaxValue_ShouldBeExpected()
+        public void ConvertFrom_InvalidInt_ShouldThrowOverflowException()
         {
             const int value = int.MaxValue;
 
-            var result = (REAL)_converter.ConvertFrom(value);
-
-            result?.Value.Should().Be(value);
+            FluentActions.Invoking(() => _converter.ConvertFrom(value)).Should().Throw<OverflowException>();
         }
         
         [Test]
@@ -142,19 +126,17 @@ namespace L5Sharp.Internal.Tests.Converters
         {
             const uint value = 0;
 
-            var result = (REAL)_converter.ConvertFrom(value);
+            var result = (INT)_converter.ConvertFrom(value);
 
-            result?.Value.Should().Be(value);
+            result?.Value.Should().Be((short)value);
         }
 
         [Test]
-        public void ConvertFrom_UintMaxValue_ShouldBeExpected()
+        public void ConvertFrom_InvalidUInt_ShouldThrowOverflowException()
         {
             const uint value = uint.MaxValue;
 
-            var result = (REAL)_converter.ConvertFrom(value);
-
-            result?.Value.Should().Be(value);
+            FluentActions.Invoking(() => _converter.ConvertFrom(value)).Should().Throw<OverflowException>();
         }
 
         [Test]
@@ -162,19 +144,17 @@ namespace L5Sharp.Internal.Tests.Converters
         {
             const long value = 0;
 
-            var result = (REAL)_converter.ConvertFrom(value);
+            var result = (INT)_converter.ConvertFrom(value);
 
-            result?.Value.Should().Be(value);
+            result?.Value.Should().Be((short)value);
         }
 
         [Test]
-        public void ConvertFrom_LongMaxValue_ShouldBeExpected()
+        public void ConvertFrom_InvalidLong_ShouldThrowOverflowException()
         {
             const long value = long.MaxValue;
 
-            var result = (REAL)_converter.ConvertFrom(value);
-
-            result?.Value.Should().Be(value);
+            FluentActions.Invoking(() => _converter.ConvertFrom(value)).Should().Throw<OverflowException>();
         }
 
         [Test]
@@ -182,19 +162,17 @@ namespace L5Sharp.Internal.Tests.Converters
         {
             const ulong value = 0;
 
-            var result = (REAL)_converter.ConvertFrom(value);
+            var result = (INT)_converter.ConvertFrom(value);
 
-            result?.Value.Should().Be(value);
+            result?.Value.Should().Be((short)value);
         }
 
         [Test]
-        public void ConvertFrom_ULongMaxValue_ShouldBeExpected()
+        public void ConvertFrom_InvalidULong_ShouldThrowOverflowException()
         {
             const ulong value = ulong.MaxValue;
 
-            var result = (REAL)_converter.ConvertFrom(value);
-
-            result?.Value.Should().Be(value);
+            FluentActions.Invoking(() => _converter.ConvertFrom(value)).Should().Throw<OverflowException>();
         }
 
         [Test]
@@ -202,19 +180,17 @@ namespace L5Sharp.Internal.Tests.Converters
         {
             const float value = 0;
 
-            var result = (REAL)_converter.ConvertFrom(value);
+            var result = (INT)_converter.ConvertFrom(value);
 
-            result?.Value.Should().Be(value);
+            result?.Value.Should().Be((short)value);
         }
 
         [Test]
-        public void ConvertFrom_FloatMaxValue_ShouldBeExpected()
+        public void ConvertFrom_InvalidFloat_ShouldThrowOverflowException()
         {
             const float value = float.MaxValue;
 
-            var result = (REAL)_converter.ConvertFrom(value);
-
-            result?.Value.Should().Be(value);
+            FluentActions.Invoking(() => _converter.ConvertFrom(value)).Should().Throw<OverflowException>();
         }
 
         [Test]
@@ -222,7 +198,7 @@ namespace L5Sharp.Internal.Tests.Converters
         {
             SINT atomic = 0;
 
-            var result = (REAL)_converter.ConvertFrom(atomic);
+            var result = (INT)_converter.ConvertFrom(atomic);
 
             result?.Value.Should().Be(atomic.Value);
         }
@@ -232,7 +208,7 @@ namespace L5Sharp.Internal.Tests.Converters
         {
             USINT atomic = 0;
 
-            var result = (REAL)_converter.ConvertFrom(atomic);
+            var result = (INT)_converter.ConvertFrom(atomic);
 
             result?.Value.Should().Be(atomic.Value);
         }
@@ -242,7 +218,7 @@ namespace L5Sharp.Internal.Tests.Converters
         {
             USINT value = USINT.MaxValue;
 
-            var result = (REAL)_converter.ConvertFrom(value);
+            var result = (INT)_converter.ConvertFrom(value);
 
             result?.Value.Should().Be(value);
         }
@@ -252,7 +228,7 @@ namespace L5Sharp.Internal.Tests.Converters
         {
             INT atomic = 0;
 
-            var result = (REAL)_converter.ConvertFrom(atomic);
+            var result = (INT)_converter.ConvertFrom(atomic);
 
             result?.Value.Should().Be(atomic.Value);
         }
@@ -260,11 +236,11 @@ namespace L5Sharp.Internal.Tests.Converters
         [Test]
         public void ConvertFrom_INTMaxValue_ShouldBeExpected()
         {
-            INT atomic = INT.MaxValue;
+            INT value = INT.MaxValue;
 
-            var result = (REAL)_converter.ConvertFrom(atomic);
+            var result = (INT)_converter.ConvertFrom(value);
 
-            result?.Value.Should().Be(atomic.Value);
+            result?.Value.Should().Be(value);
         }
         
         [Test]
@@ -272,19 +248,17 @@ namespace L5Sharp.Internal.Tests.Converters
         {
             UINT atomic = 0;
 
-            var result = (REAL)_converter.ConvertFrom(atomic);
+            var result = (INT)_converter.ConvertFrom(atomic);
 
-            result?.Value.Should().Be(atomic.Value);
+            result?.Value.Should().Be((short)atomic.Value);
         }
 
         [Test]
-        public void ConvertFrom_UINTMaxValue_ShouldBeExpected()
+        public void ConvertFrom_InvalidUINT_ShouldThrowOverflowException()
         {
-            UINT value = UINT.MaxValue;
+            UINT atomic = UINT.MaxValue;
 
-            var result = (REAL)_converter.ConvertFrom(value);
-
-            result?.Value.Should().Be(value);
+            FluentActions.Invoking(() => _converter.ConvertFrom(atomic)).Should().Throw<OverflowException>();
         }
         
         [Test]
@@ -292,19 +266,17 @@ namespace L5Sharp.Internal.Tests.Converters
         {
             DINT atomic = 0;
 
-            var result = (REAL)_converter.ConvertFrom(atomic);
+            var result = (INT)_converter.ConvertFrom(atomic);
 
-            result?.Value.Should().Be(atomic.Value);
+            result?.Value.Should().Be((short)atomic.Value);
         }
 
         [Test]
-        public void ConvertFrom_DINTMaxValue_ShouldBeExpected()
+        public void ConvertFrom_InvalidDINT_ShouldThrowOverflowException()
         {
             DINT atomic = DINT.MaxValue;
 
-            var result = (REAL)_converter.ConvertFrom(atomic);
-
-            result?.Value.Should().Be(atomic.Value);
+            FluentActions.Invoking(() => _converter.ConvertFrom(atomic)).Should().Throw<OverflowException>();
         }
         
         [Test]
@@ -312,19 +284,17 @@ namespace L5Sharp.Internal.Tests.Converters
         {
             UDINT atomic = 0;
 
-            var result = (REAL)_converter.ConvertFrom(atomic);
+            var result = (INT)_converter.ConvertFrom(atomic);
 
-            result?.Value.Should().Be(atomic.Value);
+            result?.Value.Should().Be((short)atomic.Value);
         }
 
         [Test]
-        public void ConvertFrom_UDINTMaxValue_ShouldBeExpected()
+        public void ConvertFrom_InvalidUDINT_ShouldThrowOverflowException()
         {
-            UDINT value = UDINT.MaxValue;
+            UDINT atomic = UDINT.MaxValue;
 
-            var result = (REAL)_converter.ConvertFrom(value);
-
-            result?.Value.Should().Be(value);
+            FluentActions.Invoking(() => _converter.ConvertFrom(atomic)).Should().Throw<OverflowException>();
         }
         
         [Test]
@@ -332,19 +302,17 @@ namespace L5Sharp.Internal.Tests.Converters
         {
             LINT atomic = 0;
 
-            var result = (REAL)_converter.ConvertFrom(atomic);
+            var result = (INT)_converter.ConvertFrom(atomic);
 
-            result?.Value.Should().Be(atomic.Value);
+            result?.Value.Should().Be((short)atomic.Value);
         }
 
         [Test]
-        public void ConvertFrom_LINTMaxValue_ShouldBeExpected()
+        public void ConvertFrom_InvalidLINT_ShouldThrowOverflowException()
         {
             LINT atomic = LINT.MaxValue;
 
-            var result = (REAL)_converter.ConvertFrom(atomic);
-
-            result?.Value.Should().Be(atomic.Value);
+            FluentActions.Invoking(() => _converter.ConvertFrom(atomic)).Should().Throw<OverflowException>();
         }
         
         [Test]
@@ -352,19 +320,17 @@ namespace L5Sharp.Internal.Tests.Converters
         {
             ULINT atomic = 0;
 
-            var result = (REAL)_converter.ConvertFrom(atomic);
+            var result = (INT)_converter.ConvertFrom(atomic);
 
-            result?.Value.Should().Be(atomic.Value);
+            result?.Value.Should().Be((short)atomic.Value);
         }
 
         [Test]
-        public void ConvertFrom_ULINTMaxValue_ShouldBeExpected()
+        public void ConvertFrom_InvalidULINT_ShouldThrowOverflowException()
         {
             ULINT atomic = ULINT.MaxValue;
 
-            var result = (REAL)_converter.ConvertFrom(atomic);
-
-            result?.Value.Should().Be(atomic.Value);
+            FluentActions.Invoking(() => _converter.ConvertFrom(atomic)).Should().Throw<OverflowException>();
         }
         
         [Test]
@@ -372,27 +338,25 @@ namespace L5Sharp.Internal.Tests.Converters
         {
             REAL atomic = 0;
 
-            var result = (REAL)_converter.ConvertFrom(atomic);
+            var result = (INT)_converter.ConvertFrom(atomic);
 
-            result?.Value.Should().Be(atomic.Value);
+            result?.Value.Should().Be((short)atomic.Value);
         }
 
         [Test]
-        public void ConvertFrom_REALMaxValue_shouldBeExpected()
+        public void ConvertFrom_InvalidREAL_ShouldThrowOverflowException()
         {
             REAL atomic = REAL.MaxValue;
 
-            var result = (REAL)_converter.ConvertFrom(atomic);
-
-            result?.Value.Should().Be(atomic.Value);
+            FluentActions.Invoking(() => _converter.ConvertFrom(atomic)).Should().Throw<OverflowException>();
         }
 
         [Test]
         public void ConvertFrom_string_ShouldBeExpected()
         {
-            var value = _fixture.Create<float>().ToString(CultureInfo.InvariantCulture);
+            var value = _fixture.Create<short>().ToString();
 
-            var result = (REAL)_converter.ConvertFrom(value);
+            var result = (INT)_converter.ConvertFrom(value);
 
             result.Should().Be(result);
         }

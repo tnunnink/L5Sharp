@@ -1,5 +1,6 @@
 using FluentAssertions;
 using L5Sharp.Core;
+using L5Sharp.Rockwell;
 using NUnit.Framework;
 
 namespace L5Sharp.Internal.Tests.Catalog
