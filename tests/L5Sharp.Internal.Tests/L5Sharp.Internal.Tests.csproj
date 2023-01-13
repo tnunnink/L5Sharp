@@ -17,7 +17,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\src\L5Sharp.csproj" />
-      <ProjectReference Include="..\L5SharpTests\L5SharpTests.csproj" />
+      <ProjectReference Include="..\L5Sharp.Tests\L5Sharp.Tests.csproj" />
     </ItemGroup>
 
     <ItemGroup>

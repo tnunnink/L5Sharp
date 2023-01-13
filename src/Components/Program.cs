@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Xml.Linq;
 using L5Sharp.Enums;
 
 namespace L5Sharp.Components
@@ -66,5 +67,17 @@ namespace L5Sharp.Components
         /// </summary>
         /// <value>A <see cref="Dictionary{TKey,TValue}"/> containing the collection of <see cref="Routine"/> objects.</value>
         public Dictionary<string, Routine> Routines { get; set; } = new();
+
+        /// <inheritdoc />
+        public XElement Serialize()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        /// <inheritdoc />
+        public void Deserialize(XElement element)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

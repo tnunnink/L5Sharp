@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Xml.Linq;
 using L5Sharp.Core;
 using L5Sharp.Enums;
 
@@ -38,5 +39,14 @@ namespace L5Sharp.Components
         public Tag? Config { get; set; }
 
         public List<ModuleConnection> Connections { get; }
+        public XElement Serialize()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void Deserialize(XElement element)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

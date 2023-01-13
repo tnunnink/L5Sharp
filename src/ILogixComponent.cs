@@ -17,7 +17,7 @@ namespace L5Sharp
     /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
     /// `Logix 5000 Controllers Import/Export`</a> for more information.
     /// </footer> 
-    public interface ILogixComponent
+    public interface ILogixComponent : ILogixSerializable, ILogixDeserializable
     {
         /// <summary>
         /// The name of the component.

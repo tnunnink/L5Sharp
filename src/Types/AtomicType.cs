@@ -30,9 +30,6 @@ namespace L5Sharp.Types
         public string Name { get; }
 
         /// <inheritdoc />
-        public string Description { get; } = string.Empty;
-
-        /// <inheritdoc />
         public DataTypeFamily Family => DataTypeFamily.None;
         
         /// <inheritdoc />

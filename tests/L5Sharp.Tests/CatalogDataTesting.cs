@@ -5,7 +5,7 @@ using System.Xml.Linq;
 using FluentAssertions;
 using NUnit.Framework;
 
-namespace L5SharpTests
+namespace L5Sharp.Tests
 {
     [TestFixture]
     public class CatalogDataTesting

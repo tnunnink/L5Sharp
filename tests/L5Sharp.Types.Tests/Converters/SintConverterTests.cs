@@ -4,7 +4,7 @@ using AutoFixture;
 using FluentAssertions;
 using L5Sharp.Types.Atomics;
 using L5Sharp.Types.Atomics.Converters;
-using L5SharpTests.Specimens;
+using L5Sharp.Tests.Specimens;
 using NUnit.Framework;
 
 namespace L5Sharp.Types.Tests.Converters

@@ -1,9 +1,6 @@
 ﻿using System;
 using AutoFixture;
 using FluentAssertions;
-using L5Sharp.Components;
-using L5Sharp.Core;
-using L5Sharp.Types;
 using L5Sharp.Types.Atomics;
 using L5Sharp.Types.Predefined;
 using NUnit.Framework;
@@ -13,16 +10,6 @@ namespace L5Sharp.Enums.Tests
     [TestFixture]
     public class RadixTests
     {
-        [Test]
-        public void Default_UserDefined_ShouldBeNullRadix()
-        {
-            var dataType = new DataType { Name = "Test", Description = "This is a test" };
-
-            var radix = Radix.Default(dataType);
-
-            radix.Should().Be(Radix.Null);
-        }
-
         [Test]
         public void Default_Predefined_ShouldBeNullRadix()
         {

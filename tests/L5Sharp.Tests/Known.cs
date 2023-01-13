@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace L5SharpTests
+namespace L5Sharp.Tests
 {
     public static class Known
     {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Xml.Linq;
 using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Types.Atomics;
@@ -65,6 +66,18 @@ namespace L5Sharp.Components
                 Description = "Enable Output - System Defined Parameter",
                 Usage = TagUsage.Output
             };
+        }
+
+        /// <inheritdoc />
+        public XElement Serialize()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc />
+        public void Deserialize(XElement element)
+        {
+            throw new NotImplementedException();
         }
     }
 }

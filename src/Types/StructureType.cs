@@ -23,12 +23,12 @@ namespace L5Sharp.Types
             Description = description ?? string.Empty;
         }
 
-        /// <summary>
-        /// Gets the name of the <see cref="StructureType"/>.
-        /// </summary>
+        /// <inheritdoc />
         public string Name { get; }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// 
+        /// </summary>
         public string Description { get; }
 
         /// <inheritdoc />

@@ -1,6 +1,6 @@
 ﻿using L5Sharp.Enums;
 
-namespace L5Sharp.Core
+namespace L5Sharp.Components
 {
     /// <summary>
     /// Represents a Logix Event Task component.
