@@ -27,7 +27,7 @@ namespace L5Sharp.Components
         /// <param name="projectCreationDate">The optional date time that the logix project was created.</param>
         /// <param name="lastModifiedDate">The optional date time that the project was last modified.</param>
         /// <param name="description">The optional description of the controller. Will default to empty string.</param>
-        public Controller(ComponentName name, CatalogNumber? processorType = null, Revision? revision = null,
+        public Controller(ComponentName name, string? processorType = null, Revision? revision = null,
             DateTime? projectCreationDate = null, DateTime? lastModifiedDate = null, string? description = null)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
@@ -45,7 +45,7 @@ namespace L5Sharp.Components
         public string Description { get; }
 
         
-        public CatalogNumber? ProcessorType { get; }
+        public string? ProcessorType { get; }
 
         
         public Revision? Revision { get; }

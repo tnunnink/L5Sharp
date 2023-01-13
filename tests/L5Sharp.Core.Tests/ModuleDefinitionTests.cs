@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
-using L5Sharp.Abstractions;
 using L5Sharp.Enums;
 using NUnit.Framework;
 
@@ -66,7 +65,7 @@ namespace L5Sharp.Core.Tests
                     new(2, "Ethernet")
                 }, "1756 10/100 Mbps Ethernet Bridge, Twisted-Pair Media");
 
-            definition.CatalogNumber.Should().Be(new CatalogNumber("1756-EN2T"));
+            definition.CatalogNumber.Should().Be("1756-EN2T");
             definition.Vendor.Should().Be(Vendor.Rockwell);
             definition.ProductType.Should().Be(ProductType.Communications);
             definition.ProductCode.Should().Be(166);

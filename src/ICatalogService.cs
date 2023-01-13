@@ -15,6 +15,6 @@ namespace L5Sharp
         /// <param name="catalogNumber">The catalog number of the module to lookup.</param>
         /// <returns>A new <see cref="ModuleDefinition"/> object containing the data can be used to instantiate or
         /// create new <see cref="Module"/> components.</returns>
-        ModuleDefinition Lookup(CatalogNumber catalogNumber);
+        ModuleDefinition Lookup(string catalogNumber);
     }
 }

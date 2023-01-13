@@ -204,7 +204,7 @@ namespace L5Sharp.Types.Tests.Converters
 
             var result = (DINT)_converter.ConvertFrom(atomic);
 
-            result?.Should().Be(atomic);
+            result?.Should().Be((int)atomic);
         }
 
         [Test]
@@ -214,7 +214,7 @@ namespace L5Sharp.Types.Tests.Converters
 
             var result = (DINT)_converter.ConvertFrom(atomic);
 
-            result?.Should().Be(atomic);
+            result?.Should().Be((int)atomic);
         }
 
         [Test]
@@ -224,7 +224,7 @@ namespace L5Sharp.Types.Tests.Converters
 
             var result = (DINT)_converter.ConvertFrom(value);
 
-            result?.Should().Be(value);
+            result?.Should().Be((int)value);
         }
         
         [Test]
@@ -234,7 +234,7 @@ namespace L5Sharp.Types.Tests.Converters
 
             var result = (DINT)_converter.ConvertFrom(atomic);
 
-            result?.Should().Be(atomic);
+            result?.Should().Be((int)atomic);
         }
 
         [Test]
@@ -244,7 +244,7 @@ namespace L5Sharp.Types.Tests.Converters
 
             var result = (DINT)_converter.ConvertFrom(value);
 
-            result?.Should().Be(value);
+            result?.Should().Be((int)value);
         }
         
         [Test]
@@ -254,7 +254,7 @@ namespace L5Sharp.Types.Tests.Converters
 
             var result = (DINT)_converter.ConvertFrom(atomic);
 
-            result?.Should().Be(atomic);
+            result?.Should().Be((int)atomic);
         }
 
         [Test]
@@ -264,7 +264,7 @@ namespace L5Sharp.Types.Tests.Converters
 
             var result = (DINT)_converter.ConvertFrom(value);
 
-            result?.Should().Be(value);
+            result?.Should().Be((int)value);
         }
         
         [Test]
@@ -294,7 +294,7 @@ namespace L5Sharp.Types.Tests.Converters
 
             var result = (DINT)_converter.ConvertFrom(atomic);
 
-            result?.Should().Be((int)atomic);
+            result?.Should().Be((int)(uint)atomic);
         }
 
         [Test]
@@ -330,7 +330,7 @@ namespace L5Sharp.Types.Tests.Converters
 
             var result = (DINT)_converter.ConvertFrom(atomic);
 
-            result?.Should().Be((int)atomic);
+            result?.Should().Be((int)(ulong)atomic);
         }
 
         [Test]

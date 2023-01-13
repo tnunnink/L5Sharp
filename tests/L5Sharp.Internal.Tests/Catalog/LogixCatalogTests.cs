@@ -32,7 +32,7 @@ namespace L5Sharp.Internal.Tests.Catalog
 
             var definition = catalog.Lookup("1756-L83E");
 
-            definition.CatalogNumber.Should().BeEquivalentTo(new CatalogNumber("1756-L83E"));
+            definition.CatalogNumber.Should().BeEquivalentTo("1756-L83E");
             definition.Vendor.Id.Should().Be(1);
             definition.Vendor.Name.Should().Be("Rockwell Automation/Allen-Bradley");
             definition.ProductType.Id.Should().Be(14);

@@ -7,21 +7,11 @@ using L5Sharp.Utilities;
 
 namespace L5Sharp.Serialization
 {
-    internal class LadderLogicSerializer : L5XSerializer<ILadderLogic>
+    internal class LadderLogicSerializer : L5XSerializer<RllRoutine>
     {
-        private readonly LogixInfo? _document;
         private static readonly XName ElementName = L5XName.RLLContent;
 
-        private RungSerializer RungSerializer => _document is not null
-            ? _document.Serializers.Get<RungSerializer>()
-            : new RungSerializer();
-
-        public LadderLogicSerializer(LogixInfo? document = null)
-        {
-            _document = document;
-        }
-
-        public override XElement Serialize(ILadderLogic component)
+        public override XElement Serialize(RllRoutine component)
         {
             if (component is null)
                 throw new ArgumentNullException(nameof(component));
@@ -32,7 +22,7 @@ namespace L5Sharp.Serialization
             return element;
         }
 
-        public override ILadderLogic Deserialize(XElement element)
+        public override RllRoutine Deserialize(XElement element)
         {
             if (element == null)
                 throw new ArgumentNullException(nameof(element));

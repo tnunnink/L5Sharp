@@ -41,7 +41,6 @@ namespace L5Sharp.Utilities
             { typeof(TaskPriority), s => TaskPriority.Parse(s) },
             { typeof(ScanRate), s => ScanRate.Parse(s) },
             { typeof(Watchdog), s => Watchdog.Parse(s) },
-            { typeof(CatalogNumber), s => new CatalogNumber(s) },
             { typeof(Vendor), Vendor.Parse },
             { typeof(ProductType), ProductType.Parse },
             { typeof(Address), s => new Address(s) }
@@ -87,7 +86,6 @@ namespace L5Sharp.Utilities
             { typeof(TaskPriority), s => TaskPriority.Parse(s) },
             { typeof(ScanRate), s => ScanRate.Parse(s) },
             { typeof(Watchdog), s => Watchdog.Parse(s) },
-            { typeof(CatalogNumber), s => new CatalogNumber(s) },
             { typeof(Vendor), Vendor.Parse },
             { typeof(ProductType), ProductType.Parse }
         };

@@ -43,7 +43,7 @@ namespace L5Sharp.Types.Tests.Converters
 
             var result = (REAL)_converter.ConvertFrom(value);
 
-            result?.Value.Should().Be(value);
+            result?.Should().Be(value);
         }
         
         [Test]
@@ -53,7 +53,7 @@ namespace L5Sharp.Types.Tests.Converters
 
             var result = (REAL)_converter.ConvertFrom(value);
 
-            result?.Value.Should().Be(value);
+            result?.Should().Be(value);
         }
 
         [Test]
@@ -63,7 +63,7 @@ namespace L5Sharp.Types.Tests.Converters
 
             var result = (REAL)_converter.ConvertFrom(value);
 
-            result?.Value.Should().Be(value);
+            result?.Should().Be(value);
         }
         
         [Test]
@@ -73,7 +73,7 @@ namespace L5Sharp.Types.Tests.Converters
 
             var result = (REAL)_converter.ConvertFrom(value);
 
-            result?.Value.Should().Be(value);
+            result?.Should().Be(value);
         }
         
         [Test]
@@ -83,7 +83,7 @@ namespace L5Sharp.Types.Tests.Converters
 
             var result = (REAL)_converter.ConvertFrom(value);
 
-            result?.Value.Should().Be(value);
+            result?.Should().Be(value);
         }
         
         [Test]
@@ -93,7 +93,7 @@ namespace L5Sharp.Types.Tests.Converters
 
             var result = (REAL)_converter.ConvertFrom(value);
 
-            result?.Value.Should().Be(value);
+            result?.Should().Be(value);
         }
         
         [Test]
@@ -103,7 +103,7 @@ namespace L5Sharp.Types.Tests.Converters
 
             var result = (REAL)_converter.ConvertFrom(value);
 
-            result?.Value.Should().Be(value);
+            result?.Should().Be(value);
         }
         
         [Test]
@@ -113,7 +113,7 @@ namespace L5Sharp.Types.Tests.Converters
 
             var result = (REAL)_converter.ConvertFrom(value);
 
-            result?.Value.Should().Be(value);
+            result?.Should().Be(value);
         }
         
         [Test]
@@ -123,7 +123,7 @@ namespace L5Sharp.Types.Tests.Converters
 
             var result = (REAL)_converter.ConvertFrom(value);
 
-            result?.Value.Should().Be(value);
+            result?.Should().Be(value);
         }
         
         [Test]
@@ -133,7 +133,7 @@ namespace L5Sharp.Types.Tests.Converters
 
             var result = (REAL)_converter.ConvertFrom(value);
 
-            result?.Value.Should().Be(value);
+            result?.Should().Be(value);
         }
         
         [Test]
@@ -143,7 +143,7 @@ namespace L5Sharp.Types.Tests.Converters
 
             var result = (REAL)_converter.ConvertFrom(value);
 
-            result?.Value.Should().Be(value);
+            result?.Should().Be(value);
         }
 
         [Test]
@@ -153,7 +153,7 @@ namespace L5Sharp.Types.Tests.Converters
 
             var result = (REAL)_converter.ConvertFrom(value);
 
-            result?.Value.Should().Be(value);
+            result?.Should().Be(value);
         }
 
         [Test]
@@ -163,7 +163,7 @@ namespace L5Sharp.Types.Tests.Converters
 
             var result = (REAL)_converter.ConvertFrom(value);
 
-            result?.Value.Should().Be(value);
+            result?.Should().Be(value);
         }
 
         [Test]
@@ -173,7 +173,7 @@ namespace L5Sharp.Types.Tests.Converters
 
             var result = (REAL)_converter.ConvertFrom(value);
 
-            result?.Value.Should().Be(value);
+            result?.Should().Be(value);
         }
 
         [Test]
@@ -183,7 +183,7 @@ namespace L5Sharp.Types.Tests.Converters
 
             var result = (REAL)_converter.ConvertFrom(value);
 
-            result?.Value.Should().Be(value);
+            result?.Should().Be(value);
         }
 
         [Test]
@@ -193,7 +193,7 @@ namespace L5Sharp.Types.Tests.Converters
 
             var result = (REAL)_converter.ConvertFrom(value);
 
-            result?.Value.Should().Be(value);
+            result?.Should().Be(value);
         }
 
         [Test]
@@ -203,7 +203,7 @@ namespace L5Sharp.Types.Tests.Converters
 
             var result = (REAL)_converter.ConvertFrom(value);
 
-            result?.Value.Should().Be(value);
+            result?.Should().Be(value);
         }
 
         [Test]
@@ -213,7 +213,7 @@ namespace L5Sharp.Types.Tests.Converters
 
             var result = (REAL)_converter.ConvertFrom(value);
 
-            result?.Value.Should().Be(value);
+            result?.Should().Be(value);
         }
 
         [Test]
@@ -223,7 +223,7 @@ namespace L5Sharp.Types.Tests.Converters
 
             var result = (REAL)_converter.ConvertFrom(atomic);
 
-            result?.Value.Should().Be(atomic.Value);
+            result?.Should().Be((float)atomic);
         }
 
         [Test]
@@ -233,7 +233,7 @@ namespace L5Sharp.Types.Tests.Converters
 
             var result = (REAL)_converter.ConvertFrom(atomic);
 
-            result?.Value.Should().Be(atomic.Value);
+            result?.Should().Be((float)atomic);
         }
 
         [Test]
@@ -243,7 +243,7 @@ namespace L5Sharp.Types.Tests.Converters
 
             var result = (REAL)_converter.ConvertFrom(value);
 
-            result?.Value.Should().Be(value);
+            result?.Should().Be((float)value);
         }
         
         [Test]
@@ -253,7 +253,7 @@ namespace L5Sharp.Types.Tests.Converters
 
             var result = (REAL)_converter.ConvertFrom(atomic);
 
-            result?.Value.Should().Be(atomic.Value);
+            result?.Should().Be((float)atomic);
         }
 
         [Test]
@@ -263,7 +263,7 @@ namespace L5Sharp.Types.Tests.Converters
 
             var result = (REAL)_converter.ConvertFrom(atomic);
 
-            result?.Value.Should().Be(atomic.Value);
+            result?.Should().Be((float)atomic);
         }
         
         [Test]
@@ -273,7 +273,7 @@ namespace L5Sharp.Types.Tests.Converters
 
             var result = (REAL)_converter.ConvertFrom(atomic);
 
-            result?.Value.Should().Be(atomic.Value);
+            result?.Should().Be((float)atomic);
         }
 
         [Test]
@@ -283,7 +283,7 @@ namespace L5Sharp.Types.Tests.Converters
 
             var result = (REAL)_converter.ConvertFrom(value);
 
-            result?.Value.Should().Be(value);
+            result?.Should().Be((float)value);
         }
         
         [Test]
@@ -293,7 +293,7 @@ namespace L5Sharp.Types.Tests.Converters
 
             var result = (REAL)_converter.ConvertFrom(atomic);
 
-            result?.Value.Should().Be(atomic.Value);
+            result?.Should().Be((float)atomic);
         }
 
         [Test]
@@ -303,7 +303,7 @@ namespace L5Sharp.Types.Tests.Converters
 
             var result = (REAL)_converter.ConvertFrom(atomic);
 
-            result?.Value.Should().Be(atomic.Value);
+            result?.Should().Be((float)atomic);
         }
         
         [Test]
@@ -313,7 +313,7 @@ namespace L5Sharp.Types.Tests.Converters
 
             var result = (REAL)_converter.ConvertFrom(atomic);
 
-            result?.Value.Should().Be(atomic.Value);
+            result?.Should().Be((float)atomic);
         }
 
         [Test]
@@ -323,7 +323,7 @@ namespace L5Sharp.Types.Tests.Converters
 
             var result = (REAL)_converter.ConvertFrom(value);
 
-            result?.Value.Should().Be(value);
+            result?.Should().Be((float)value);
         }
         
         [Test]
@@ -333,7 +333,7 @@ namespace L5Sharp.Types.Tests.Converters
 
             var result = (REAL)_converter.ConvertFrom(atomic);
 
-            result?.Value.Should().Be(atomic.Value);
+            result?.Should().Be((float)atomic);
         }
 
         [Test]
@@ -343,7 +343,7 @@ namespace L5Sharp.Types.Tests.Converters
 
             var result = (REAL)_converter.ConvertFrom(atomic);
 
-            result?.Value.Should().Be(atomic.Value);
+            result?.Should().Be((float)atomic);
         }
         
         [Test]
@@ -353,7 +353,7 @@ namespace L5Sharp.Types.Tests.Converters
 
             var result = (REAL)_converter.ConvertFrom(atomic);
 
-            result?.Value.Should().Be(atomic.Value);
+            result?.Should().Be((float)atomic);
         }
 
         [Test]
@@ -363,7 +363,7 @@ namespace L5Sharp.Types.Tests.Converters
 
             var result = (REAL)_converter.ConvertFrom(atomic);
 
-            result?.Value.Should().Be(atomic.Value);
+            result?.Should().Be((float)atomic);
         }
         
         [Test]
@@ -373,7 +373,7 @@ namespace L5Sharp.Types.Tests.Converters
 
             var result = (REAL)_converter.ConvertFrom(atomic);
 
-            result?.Value.Should().Be(atomic.Value);
+            result?.Should().Be(atomic);
         }
 
         [Test]
@@ -383,7 +383,7 @@ namespace L5Sharp.Types.Tests.Converters
 
             var result = (REAL)_converter.ConvertFrom(atomic);
 
-            result?.Value.Should().Be(atomic.Value);
+            result?.Should().Be(atomic);
         }
 
         [Test]

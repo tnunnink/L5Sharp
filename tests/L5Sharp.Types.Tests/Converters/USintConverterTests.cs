@@ -46,7 +46,7 @@ namespace L5Sharp.Types.Tests.Converters
 
             var result = (USINT)_converter.ConvertFrom(value);
 
-            result?.Value.Should().Be((byte)value);
+            result?.Should().Be((byte)value);
         }
 
         [Test]
@@ -64,7 +64,7 @@ namespace L5Sharp.Types.Tests.Converters
 
             var result = (USINT)_converter.ConvertFrom(value);
 
-            result?.Value.Should().Be(value);
+            result?.Should().Be(value);
         }
 
         [Test]
@@ -74,7 +74,7 @@ namespace L5Sharp.Types.Tests.Converters
 
             var result = (USINT)_converter.ConvertFrom(value);
 
-            result?.Value.Should().Be(value);
+            result?.Should().Be(value);
         }
 
         [Test]
@@ -84,7 +84,7 @@ namespace L5Sharp.Types.Tests.Converters
 
             var result = (USINT)_converter.ConvertFrom(value);
 
-            result?.Value.Should().Be((byte)value);
+            result?.Should().Be((byte)value);
         }
 
         [Test]
@@ -102,7 +102,7 @@ namespace L5Sharp.Types.Tests.Converters
 
             var result = (USINT)_converter.ConvertFrom(value);
 
-            result?.Value.Should().Be((byte)value);
+            result?.Should().Be((byte)value);
         }
 
         [Test]
@@ -120,7 +120,7 @@ namespace L5Sharp.Types.Tests.Converters
 
             var result = (USINT)_converter.ConvertFrom(value);
 
-            result?.Value.Should().Be(value);
+            result?.Should().Be(value);
         }
 
         [Test]
@@ -138,7 +138,7 @@ namespace L5Sharp.Types.Tests.Converters
 
             var result = (USINT)_converter.ConvertFrom(value);
 
-            result?.Value.Should().Be((byte)value);
+            result?.Should().Be((byte)value);
         }
 
         [Test]
@@ -156,7 +156,7 @@ namespace L5Sharp.Types.Tests.Converters
 
             var result = (USINT)_converter.ConvertFrom(value);
 
-            result?.Value.Should().Be((byte)value);
+            result?.Should().Be((byte)value);
         }
 
         [Test]
@@ -174,7 +174,7 @@ namespace L5Sharp.Types.Tests.Converters
 
             var result = (USINT)_converter.ConvertFrom(value);
 
-            result?.Value.Should().Be((byte)value);
+            result?.Should().Be((byte)value);
         }
 
         [Test]
@@ -192,7 +192,7 @@ namespace L5Sharp.Types.Tests.Converters
 
             var result = (USINT)_converter.ConvertFrom(value);
 
-            result?.Value.Should().Be((byte)value);
+            result?.Should().Be((byte)value);
         }
 
         [Test]
@@ -210,7 +210,7 @@ namespace L5Sharp.Types.Tests.Converters
 
             var result = (USINT)_converter.ConvertFrom(atomic);
 
-            result?.Value.Should().Be((byte)atomic.Value);
+            result?.Should().Be((byte)(sbyte)atomic);
         }
 
         [Test]
@@ -220,7 +220,7 @@ namespace L5Sharp.Types.Tests.Converters
 
             var result = (USINT)_converter.ConvertFrom(atomic);
 
-            result?.Value.Should().Be(atomic.Value);
+            result?.Should().Be(atomic);
         }
 
         [Test]
@@ -230,7 +230,7 @@ namespace L5Sharp.Types.Tests.Converters
 
             var result = (USINT)_converter.ConvertFrom(value);
 
-            result?.Value.Should().Be(value);
+            result?.Should().Be(value);
         }
 
         [Test]
@@ -240,7 +240,7 @@ namespace L5Sharp.Types.Tests.Converters
 
             var result = (USINT)_converter.ConvertFrom(atomic);
 
-            result?.Value.Should().Be((byte)atomic.Value);
+            result?.Should().Be((byte)atomic);
         }
 
         [Test]
@@ -258,7 +258,7 @@ namespace L5Sharp.Types.Tests.Converters
 
             var result = (USINT)_converter.ConvertFrom(atomic);
 
-            result?.Value.Should().Be((byte)atomic.Value);
+            result?.Should().Be((byte)atomic);
         }
 
         [Test]
@@ -276,7 +276,7 @@ namespace L5Sharp.Types.Tests.Converters
 
             var result = (USINT)_converter.ConvertFrom(atomic);
 
-            result?.Value.Should().Be((byte)atomic.Value);
+            result?.Should().Be((byte)atomic);
         }
 
         [Test]
@@ -294,7 +294,7 @@ namespace L5Sharp.Types.Tests.Converters
 
             var result = (USINT)_converter.ConvertFrom(atomic);
 
-            result?.Value.Should().Be((byte)atomic.Value);
+            result?.Should().Be((byte)atomic);
         }
 
         [Test]
@@ -312,7 +312,7 @@ namespace L5Sharp.Types.Tests.Converters
 
             var result = (USINT)_converter.ConvertFrom(atomic);
 
-            result?.Value.Should().Be((byte)atomic.Value);
+            result?.Should().Be((byte)atomic);
         }
 
         [Test]
@@ -330,7 +330,7 @@ namespace L5Sharp.Types.Tests.Converters
 
             var result = (USINT)_converter.ConvertFrom(atomic);
 
-            result?.Value.Should().Be((byte)atomic.Value);
+            result?.Should().Be((byte)atomic);
         }
 
         [Test]
@@ -348,7 +348,7 @@ namespace L5Sharp.Types.Tests.Converters
 
             var result = (USINT)_converter.ConvertFrom(atomic);
 
-            result?.Value.Should().Be((byte)atomic.Value);
+            result?.Should().Be((byte)atomic);
         }
 
         [Test]

@@ -33,11 +33,10 @@ namespace L5Sharp.Types
             { nameof(CONTROL), new CONTROL() }
         };
 
-        public static readonly Dictionary<string, Func<string, AtomicType>> AtomicParsers =
+        private static readonly Dictionary<string, Func<string, AtomicType>> AtomicParsers =
             new(StringComparer.OrdinalIgnoreCase)
             {
-                { nameof(BOOL), BOOL.Parse },
-
+                { nameof(BOOL), s => BOOL.Parse(s) },
             };
 
         /// <summary>

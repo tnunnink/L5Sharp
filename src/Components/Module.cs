@@ -12,7 +12,7 @@ namespace L5Sharp.Components
         /// <inheritdoc />
         public string Description { get; set; } = string.Empty;
 
-        public CatalogNumber CatalogNumber { get; set; } = new CatalogNumber();
+        public string CatalogNumber { get; set; } = string.Empty;
 
         public Vendor Vendor { get; set; } = Vendor.Unknown;
         

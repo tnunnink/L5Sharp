@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Xml.Linq;
+using L5Sharp.Components;
 using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Extensions;
@@ -8,17 +9,11 @@ using L5Sharp.Utilities;
 
 namespace L5Sharp.Serialization
 {
-    internal class MemberSerializer : L5XSerializer<IMember<IDataType>>
+    internal class MemberSerializer : L5XSerializer<DataTypeMember>
     {
         private static readonly XName ElementName = L5XName.Member;
-        private readonly LogixInfo? _document;
-        
-        public MemberSerializer(LogixInfo? document = null)
-        {
-            _document = document;
-        }
 
-        public override XElement Serialize(IMember<IDataType> component)
+        public override XElement Serialize(DataTypeMember component)
         {
             if (component is null)
                 throw new ArgumentNullException(nameof(component));
@@ -27,7 +22,7 @@ namespace L5Sharp.Serialization
 
             element.AddComponentName(component.Name);
             element.AddComponentDescription(component.Description);
-            element.Add(new XAttribute(L5XName.DataType, component.DataType.Name));
+            element.Add(new XAttribute(L5XName.DataType, component.DataType));
             element.Add(new XAttribute(L5XName.Dimension, component.Dimensions));
             element.Add(new XAttribute(L5XName.Radix, component.Radix));
             element.Add(new XAttribute(L5XName.Hidden, false));
@@ -36,7 +31,7 @@ namespace L5Sharp.Serialization
             return element;
         }
 
-        public override IMember<IDataType> Deserialize(XElement element)
+        public override DataTypeMember Deserialize(XElement element)
         {
             if (element == null)
                 throw new ArgumentNullException(nameof(element));
@@ -46,18 +41,20 @@ namespace L5Sharp.Serialization
 
             var name = element.ComponentName();
             var description = element.ComponentDescription();
-            var dataType = _document is not null
-                ? _document.Index.LookupType(element.DataTypeName())
-                : LogixType.Create(element.DataTypeName());
+            var dataType = element.DataTypeName();
             var dimensions = element.Attribute(L5XName.Dimension)?.Value.Parse<Dimensions>();
             var radix = element.Attribute(L5XName.Radix)?.Value.Parse<Radix>();
             var access = element.Attribute(L5XName.ExternalAccess)?.Value.Parse<ExternalAccess>();
-
-            if (dimensions is null || dimensions.IsEmpty)
-                return new Member<IDataType>(name, dataType, radix, access, description);
-
-            var arrayType = new ArrayType<IDataType>(dimensions, dataType, radix, access, description);
-            return new Member<IDataType>(name, arrayType, radix, access, description);
+            
+            return new DataTypeMember
+            {
+                Name = name,
+                Description = description,
+                DataType = dataType,
+                Dimensions = dimensions ?? Dimensions.Empty,
+                Radix = radix ?? Radix.Null,
+                ExternalAccess = access ?? ExternalAccess.ReadWrite
+            };
         }
     }
 }

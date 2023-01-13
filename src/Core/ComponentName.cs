@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Text.RegularExpressions;
-using L5Sharp.Exceptions;
 
 namespace L5Sharp.Core
 {
@@ -44,13 +42,13 @@ namespace L5Sharp.Core
             var characters = name.ToCharArray();
 
             if (!(char.IsLetter(characters.First()) || characters.First() == '_'))
-                throw new ComponentNameInvalidException(name);
+                throw new ArgumentException(name);
 
             if (!characters.All(c => char.IsLetter(c) || char.IsDigit(c) || c == '_'))
-                throw new ComponentNameInvalidException(name);
+                throw new ArgumentException(name);
 
             if (name.Length > 40)
-                throw new ComponentNameInvalidException(name);
+                throw new ArgumentException(name);
         }
 
         /// <summary>

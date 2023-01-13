@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Xml.Linq;
+using L5Sharp.Components;
 using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Extensions;
@@ -8,11 +9,11 @@ using L5Sharp.Utilities;
 
 namespace L5Sharp.Serialization
 {
-    internal class TaskSerializer : L5XSerializer<ITask>
+    internal class TaskSerializer : L5XSerializer<Task>
     {
         private static readonly XName ElementName = L5XName.Task;
 
-        public override XElement Serialize(ITask component)
+        public override XElement Serialize(Task component)
         {
             if (component is null)
                 throw new ArgumentNullException(nameof(component));
@@ -42,7 +43,7 @@ namespace L5Sharp.Serialization
             return element;
         }
 
-        public override ITask Deserialize(XElement element)
+        public override Task Deserialize(XElement element)
         {
             if (element == null)
                 throw new ArgumentNullException(nameof(element));
@@ -59,27 +60,43 @@ namespace L5Sharp.Serialization
             var disableUpdateOutputs =
                 element.Attribute(L5XName.DisableUpdateOutputs)?.Value?.Parse<bool>() ?? default;
             var inhibitTask = element.Attribute(L5XName.InhibitTask)?.Value?.Parse<bool>() ?? default;
+            var programs = element.Descendants(L5XName.ScheduledProgram).Select(e => e.ComponentName()).ToList();
+            var eventInfo = GetEventInfo(element.Element(L5XName.EventInfo));
+            
 
-            var programs = element.Descendants(L5XName.ScheduledProgram).Select(e => e.ComponentName());
+            return new Task
+            {
+                Name = name,
+                Description = description,
+                Type = type ?? TaskType.Periodic,
+                Rate = rate,
+                Priority = priority,
+                Watchdog = watchdog,
+                DisableUpdateOutputs = disableUpdateOutputs,
+                InhibitTask = inhibitTask,
+                ScheduledPrograms = programs,
+                EventInfo = eventInfo
+            };
+        }
 
-            if (type == TaskType.Continuous)
-                return new ContinuousTask(name, rate, priority, watchdog, disableUpdateOutputs,
-                    inhibitTask, programs, description);
-
-            if (type == TaskType.Periodic)
-                return new PeriodicTask(name, rate, priority, watchdog, disableUpdateOutputs,
-                    inhibitTask, programs, description);
-
-            var eventInfo = element.Element(L5XName.EventInfo);
-            var eventTrigger = eventInfo?.Attribute(L5XName.EventTrigger)
+        private static TaskEventInfo? GetEventInfo(XElement? eventInfoElement)
+        {
+            if (eventInfoElement is null)
+                return null;
+            
+            var eventTrigger = eventInfoElement.Attribute(L5XName.EventTrigger)
                 ?.Value.Parse<TaskEventTrigger>();
-            var enableTimeout = eventInfo?.Attribute(L5XName.EnableTimeout)
+            var enableTimeout = eventInfoElement.Attribute(L5XName.EnableTimeout)
                 ?.Value?.Parse<bool>() ?? default;
-            var eventTag = eventInfo?.Attribute(L5XName.EventTag)
+            var eventTag = eventInfoElement.Attribute(L5XName.EventTag)
                 ?.Value;
 
-            return new TaskEventInfo(name, rate, priority, watchdog, disableUpdateOutputs,
-                inhibitTask, programs, eventTrigger, enableTimeout, eventTag, description);
+            return new TaskEventInfo
+            {
+                EventTrigger = eventTrigger ?? TaskEventTrigger.EventInstructionOnly,
+                EnableTimeout = enableTimeout,
+                EventTag = eventTag
+            };
         }
     }
 }

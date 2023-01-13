@@ -46,7 +46,7 @@ namespace L5Sharp.Types.Tests.Converters
 
             var result = (UINT)_converter.ConvertFrom(value);
 
-            result?.Value.Should().Be((ushort)value);
+            result?.Should().Be((ushort)value);
         }
 
         [Test]
@@ -64,7 +64,7 @@ namespace L5Sharp.Types.Tests.Converters
 
             var result = (UINT)_converter.ConvertFrom(value);
 
-            result?.Value.Should().Be(value);
+            result?.Should().Be(value);
         }
 
         [Test]
@@ -74,7 +74,7 @@ namespace L5Sharp.Types.Tests.Converters
 
             var result = (UINT)_converter.ConvertFrom(value);
 
-            result?.Value.Should().Be(value);
+            result?.Should().Be(value);
         }
 
         [Test]
@@ -84,7 +84,7 @@ namespace L5Sharp.Types.Tests.Converters
 
             var result = (UINT)_converter.ConvertFrom(value);
 
-            result?.Value.Should().Be((ushort)value);
+            result?.Should().Be((ushort)value);
         }
 
         [Test]
@@ -94,7 +94,7 @@ namespace L5Sharp.Types.Tests.Converters
 
             var result = (UINT)_converter.ConvertFrom(value);
 
-            result?.Value.Should().Be((ushort)value);
+            result?.Should().Be((ushort)value);
         }
 
         [Test]
@@ -104,7 +104,7 @@ namespace L5Sharp.Types.Tests.Converters
 
             var result = (UINT)_converter.ConvertFrom(value);
 
-            result?.Value.Should().Be(value);
+            result?.Should().Be(value);
         }
 
         [Test]
@@ -114,7 +114,7 @@ namespace L5Sharp.Types.Tests.Converters
 
             var result = (UINT)_converter.ConvertFrom(value);
 
-            result?.Value.Should().Be(value);
+            result?.Should().Be(value);
         }
 
         [Test]
@@ -124,7 +124,7 @@ namespace L5Sharp.Types.Tests.Converters
 
             var result = (UINT)_converter.ConvertFrom(value);
 
-            result?.Value.Should().Be(value);
+            result?.Should().Be(value);
         }
 
         [Test]
@@ -142,7 +142,7 @@ namespace L5Sharp.Types.Tests.Converters
 
             var result = (UINT)_converter.ConvertFrom(value);
 
-            result?.Value.Should().Be((ushort)value);
+            result?.Should().Be((ushort)value);
         }
 
         [Test]
@@ -160,7 +160,7 @@ namespace L5Sharp.Types.Tests.Converters
 
             var result = (UINT)_converter.ConvertFrom(value);
 
-            result?.Value.Should().Be((ushort)value);
+            result?.Should().Be((ushort)value);
         }
 
         [Test]
@@ -178,7 +178,7 @@ namespace L5Sharp.Types.Tests.Converters
 
             var result = (UINT)_converter.ConvertFrom(value);
 
-            result?.Value.Should().Be((ushort)value);
+            result?.Should().Be((ushort)value);
         }
 
         [Test]
@@ -196,7 +196,7 @@ namespace L5Sharp.Types.Tests.Converters
 
             var result = (UINT)_converter.ConvertFrom(value);
 
-            result?.Value.Should().Be((ushort)value);
+            result?.Should().Be((ushort)value);
         }
 
         [Test]
@@ -214,7 +214,7 @@ namespace L5Sharp.Types.Tests.Converters
 
             var result = (UINT)_converter.ConvertFrom(atomic);
 
-            result?.Value.Should().Be((ushort)atomic.Value);
+            result?.Should().Be((ushort)(sbyte)atomic);
         }
 
         [Test]
@@ -224,7 +224,7 @@ namespace L5Sharp.Types.Tests.Converters
 
             var result = (UINT)_converter.ConvertFrom(atomic);
 
-            result?.Value.Should().Be(atomic.Value);
+            result?.Should().Be((ushort)atomic);
         }
 
         [Test]
@@ -234,7 +234,7 @@ namespace L5Sharp.Types.Tests.Converters
 
             var result = (UINT)_converter.ConvertFrom(value);
 
-            result?.Value.Should().Be(value);
+            result?.Should().Be((ushort)value);
         }
 
         [Test]
@@ -244,7 +244,7 @@ namespace L5Sharp.Types.Tests.Converters
 
             var result = (UINT)_converter.ConvertFrom(atomic);
 
-            result?.Value.Should().Be((ushort)atomic.Value);
+            result?.Should().Be((ushort)(short)atomic);
         }
 
         [Test]
@@ -254,7 +254,7 @@ namespace L5Sharp.Types.Tests.Converters
 
             var result = (UINT)_converter.ConvertFrom(atomic);
 
-            result?.Value.Should().Be((ushort)atomic.Value);
+            result?.Should().Be((ushort)(short)atomic);
         }
 
         [Test]
@@ -264,7 +264,7 @@ namespace L5Sharp.Types.Tests.Converters
 
             var result = (UINT)_converter.ConvertFrom(atomic);
 
-            result?.Value.Should().Be(atomic.Value);
+            result?.Should().Be(atomic);
         }
 
         [Test]
@@ -274,7 +274,7 @@ namespace L5Sharp.Types.Tests.Converters
 
             var result = (UINT)_converter.ConvertFrom(value);
 
-            result?.Value.Should().Be(value);
+            result?.Should().Be(value);
         }
 
         [Test]
@@ -284,7 +284,7 @@ namespace L5Sharp.Types.Tests.Converters
 
             var result = (UINT)_converter.ConvertFrom(atomic);
 
-            result?.Value.Should().Be((ushort)atomic.Value);
+            result?.Should().Be((ushort)atomic);
         }
 
         [Test]
@@ -302,7 +302,7 @@ namespace L5Sharp.Types.Tests.Converters
 
             var result = (UINT)_converter.ConvertFrom(atomic);
 
-            result?.Value.Should().Be((ushort)atomic.Value);
+            result?.Should().Be((ushort)atomic);
         }
 
         [Test]
@@ -320,7 +320,7 @@ namespace L5Sharp.Types.Tests.Converters
 
             var result = (UINT)_converter.ConvertFrom(atomic);
 
-            result?.Value.Should().Be((ushort)atomic.Value);
+            result?.Should().Be((ushort)atomic);
         }
 
         [Test]
@@ -338,7 +338,7 @@ namespace L5Sharp.Types.Tests.Converters
 
             var result = (UINT)_converter.ConvertFrom(atomic);
 
-            result?.Value.Should().Be((ushort)atomic.Value);
+            result?.Should().Be((ushort)atomic);
         }
 
         [Test]
@@ -356,7 +356,7 @@ namespace L5Sharp.Types.Tests.Converters
 
             var result = (UINT)_converter.ConvertFrom(atomic);
 
-            result?.Value.Should().Be((ushort)atomic.Value);
+            result?.Should().Be((ushort)atomic);
         }
 
         [Test]

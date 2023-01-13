@@ -1,7 +1,6 @@
 ﻿using System;
 using AutoFixture;
 using FluentAssertions;
-using L5Sharp.Exceptions;
 using NUnit.Framework;
 
 namespace L5Sharp.Core.Tests
@@ -30,7 +29,7 @@ namespace L5Sharp.Core.Tests
         {
             var fixture = new Fixture();
             FluentActions.Invoking(() => new ComponentName(fixture.Create<string>())).Should()
-                .Throw<ComponentNameInvalidException>();
+                .Throw<ArgumentException>();
         }
 
         [Test]
@@ -72,7 +71,7 @@ namespace L5Sharp.Core.Tests
             var name = new ComponentName("Test");
 
             FluentActions.Invoking(() => name = fixture.Create<string>()).Should()
-                .Throw<ComponentNameInvalidException>();
+                .Throw<ArgumentException>();
         }
 
         [Test]
@@ -80,7 +79,7 @@ namespace L5Sharp.Core.Tests
         {
             var name = new ComponentName("Test");
 
-            FluentActions.Invoking(() => name = "1Test").Should().Throw<ComponentNameInvalidException>();
+            FluentActions.Invoking(() => name = "1Test").Should().Throw<ArgumentException>();
         }
         
         [Test]
@@ -88,7 +87,7 @@ namespace L5Sharp.Core.Tests
         {
             var name = new ComponentName("Test");
 
-            FluentActions.Invoking(() => name = "$Test").Should().Throw<ComponentNameInvalidException>();
+            FluentActions.Invoking(() => name = "$Test").Should().Throw<ArgumentException>();
         }
 
         [Test]

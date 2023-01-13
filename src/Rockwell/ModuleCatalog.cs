@@ -6,7 +6,6 @@ using System.Xml.Linq;
 using L5Sharp.Components;
 using L5Sharp.Core;
 using L5Sharp.Enums;
-using L5Sharp.Exceptions;
 
 namespace L5Sharp.Rockwell
 {
@@ -59,7 +58,7 @@ namespace L5Sharp.Rockwell
         /// catalog service file; otherwise, null.</returns>
         /// <exception cref="ArgumentNullException">When catalogNumber is null.</exception>
         /// <exception cref="ModuleNotFoundException">The provided catalog number was not found.</exception>
-        public ModuleDefinition Lookup(CatalogNumber catalogNumber)
+        public ModuleDefinition Lookup(string catalogNumber)
         {
             if (catalogNumber is null)
                 throw new ArgumentNullException(nameof(catalogNumber));
@@ -68,7 +67,7 @@ namespace L5Sharp.Rockwell
                 .FirstOrDefault(e => e.Descendants(CatalogNumber).First().Value == catalogNumber);
 
             if (device is null)
-                throw new ModuleNotFoundException(catalogNumber);
+                throw new InvalidOperationException(catalogNumber);
 
             return MaterializeDefinition(device);
         }
@@ -95,7 +94,7 @@ namespace L5Sharp.Rockwell
                 description);
         }
 
-        private static CatalogNumber GetCatalogNumber(XContainer element)
+        private static string GetCatalogNumber(XContainer element)
         {
             return element.Descendants(CatalogNumber).FirstOrDefault()?.Value ??
                    throw new ArgumentException("The provided element does not have a CatalogNumber value");

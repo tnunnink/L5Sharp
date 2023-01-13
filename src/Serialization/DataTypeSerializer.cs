@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
+using L5Sharp.Components;
 using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Extensions;
@@ -8,21 +10,17 @@ using L5Sharp.Utilities;
 
 namespace L5Sharp.Serialization
 {
-    internal class DataTypeSerializer : L5XSerializer<IComplexType>
+    internal class DataTypeSerializer : L5XSerializer<DataType>
     {
-        private readonly LogixInfo? _document;
         private static readonly XName ElementName = L5XName.DataType;
+        private readonly MemberSerializer _memberSerializer;
 
-        private MemberSerializer MemberSerializer => _document is not null
-            ? _document.Serializers.Get<MemberSerializer>()
-            : new MemberSerializer(_document);
-        
-        public DataTypeSerializer(LogixInfo? document = null)
+        public DataTypeSerializer()
         {
-            _document = document;
+            _memberSerializer = new MemberSerializer();
         }
 
-        public override XElement Serialize(IComplexType component)
+        public override XElement Serialize(DataType component)
         {
             if (component == null)
                 throw new ArgumentNullException(nameof(component));
@@ -33,14 +31,15 @@ namespace L5Sharp.Serialization
             element.Add(new XAttribute(L5XName.Family, component.Family.Value));
             element.Add(new XAttribute(L5XName.Class, component.Class));
 
+            
             var members = new XElement(nameof(component.Members));
-            members.Add(component.Members.Select(m => MemberSerializer.Serialize(m)));
+            members.Add(component.Members.Select(m => _memberSerializer.Serialize(m)));
             element.Add(members);
 
             return element;
         }
 
-        public override IComplexType Deserialize(XElement element)
+        public override DataType Deserialize(XElement element)
         {
             if (element == null)
                 throw new ArgumentNullException(nameof(element));
@@ -53,12 +52,16 @@ namespace L5Sharp.Serialization
             var family = element.Attribute(L5XName.Family)?.Value.Parse<DataTypeFamily>();
             var members = element.Descendants(L5XName.Member)
                 .Where(e => !bool.Parse(e.Attribute(L5XName.Hidden)?.Value!))
-                .Select(e => MemberSerializer.Deserialize(e))
+                .Select(e => _memberSerializer.Deserialize(e))
                 .ToList();
 
-            return family == DataTypeFamily.String
-                ? new StringDefined(name, members.First(m => m.Name == "DATA").Dimensions.X, description)
-                : new UserDefined(name, description, members);
+            return new DataType
+            {
+                Name = name,
+                Description = description,
+                Family = family ?? DataTypeFamily.None,
+                Members = members
+            };
         }
     }
 }

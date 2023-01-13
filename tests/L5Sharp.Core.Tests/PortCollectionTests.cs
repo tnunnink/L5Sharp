@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
-using L5Sharp.Abstractions;
-using L5Sharp.Components;
 using NUnit.Framework;
 
 namespace L5Sharp.Core.Tests
@@ -206,30 +203,6 @@ namespace L5Sharp.Core.Tests
             port?.Type.Should().Be("Ethernet");
             port?.Address.Should().Be(new Address("1.2.3.4"));
             port?.Upstream.Should().BeFalse();
-        }
-
-        [Test]
-        public void Enumerate_WhenPerformed_ShouldWork()
-        {
-            var module = new Module("Test", "1756-IF8");
-
-            foreach (var port in module.Ports)
-            {
-                port.Should().NotBeNull();
-            }
-        }
-
-        [Test]
-        public void Enumerate_AsEnumerable_ShouldWork()
-        {
-            var module = new Module("Test", "1756-IF8");
-
-            var enumerable = (IEnumerable)module.Ports;
-
-            foreach (var port in enumerable)
-            {
-                port.Should().NotBeNull();
-            }
         }
     }
 }

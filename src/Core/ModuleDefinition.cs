@@ -33,7 +33,7 @@ namespace L5Sharp.Core
         /// <param name="categories">A set of <see cref="ModuleCategory"/> options that are applicable to the module.</param>
         /// <param name="ports">The set of <see cref="Port"/> objects that define the port connections for the module.</param>
         /// <param name="description">The description of the module.</param>
-        public ModuleDefinition(CatalogNumber catalogNumber, Vendor vendor, ProductType productType, ushort productCode,
+        public ModuleDefinition(string catalogNumber, Vendor vendor, ProductType productType, ushort productCode,
             IEnumerable<Revision> revisions,
             IEnumerable<ModuleCategory> categories,
             IEnumerable<Port> ports,
@@ -53,7 +53,7 @@ namespace L5Sharp.Core
         /// <summary>
         /// Gets the <see cref="CatalogNumber"/> of the current <see cref="ModuleDefinition"/>.
         /// </summary>
-        public CatalogNumber CatalogNumber { get; }
+        public string CatalogNumber { get; }
 
         /// <summary>
         /// Gets the description of the <see cref="ModuleDefinition"/>.

@@ -5,7 +5,6 @@ using System.Linq;
 using System.Net;
 using L5Sharp.Components;
 using L5Sharp.Enums;
-using L5Sharp.Exceptions;
 using L5Sharp.Rockwell;
 
 namespace L5Sharp.Core
@@ -197,7 +196,7 @@ namespace L5Sharp.Core
         /// <exception cref="ArgumentException">The module definition obtained for the specified catalog number
         /// does not have a valid upstream connection port for the current Bus type.</exception>
         /// <exception cref="ComponentNameCollisionException">name already exists on the current Bus instance.</exception>
-        public Module Create(ComponentName name, CatalogNumber catalogNumber, byte slot,
+        public Module Create(ComponentName name, string catalogNumber, byte slot,
             string? description = null, ICatalogService? catalogService = null) =>
             NewModule(name, catalogNumber, Address.FromSlot(slot), description, catalogService);
 
@@ -220,7 +219,7 @@ namespace L5Sharp.Core
         /// <exception cref="ArgumentException">The module definition obtained for the specified catalog number
         /// does not have a valid upstream connection port for the current Bus type.</exception>
         /// <exception cref="ComponentNameCollisionException">name already exists on the current Bus instance.</exception>
-        public Module Create(ComponentName name, CatalogNumber catalogNumber, IPAddress ip,
+        public Module Create(ComponentName name, string catalogNumber, IPAddress ip,
             string? description = null, ICatalogService? catalogService = null) =>
             NewModule(name, catalogNumber, Address.FromIP(ip), description, catalogService);
 
@@ -248,7 +247,7 @@ namespace L5Sharp.Core
         /// number. If the address is not available, then the next available will be chosen. Additionally, you may provide
         /// a custom <see cref="ICatalogService"/> in order to lookup the module definition for the specified catalog number. 
         /// </remarks>
-        public Module Create(ComponentName name, CatalogNumber catalogNumber,
+        public Module Create(ComponentName name, string catalogNumber,
             Action<ModuleConfiguration>? configure = null, ICatalogService? catalogService = null)
         {
             var configuration = new ModuleConfiguration();
@@ -326,7 +325,7 @@ namespace L5Sharp.Core
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-        private Module NewModule(ComponentName name, CatalogNumber catalogNumber, Address address,
+        private Module NewModule(ComponentName name, string catalogNumber, Address address,
             string? description = null, ICatalogService? catalogService = null)
         {
             var catalog = catalogService ?? new ModuleCatalog();
@@ -345,8 +344,7 @@ namespace L5Sharp.Core
             bool inhibited = default, bool majorFault = default, bool safetyEnabled = default,
             string? description = null)
         {
-            var module = new Module(name, definition, _parent.Name, _port.Id, keying, inhibited, majorFault,
-                safetyEnabled, description);
+            var module = new Module();
 
             ValidateModule(module);
 
@@ -422,7 +420,7 @@ namespace L5Sharp.Core
                 throw new ArgumentNullException(nameof(module));
 
             if (_modules.Any(p => p.Value.Name == module.Name))
-                throw new ComponentNameCollisionException(module.Name, typeof(Module));
+                throw new ArgumentException(module.Name);
 
             if (module.ParentModule != _parent.Name)
                 throw new ArgumentException(

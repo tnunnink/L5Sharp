@@ -23,7 +23,7 @@ namespace L5Sharp.Components
         /// Gets the type of the task component (Continuous, Periodic, Event).
         /// </summary>
         /// <value>A <see cref="Enums.TaskType"/> enum representing the type of the task.</value>
-        public TaskType Type { get; } = TaskType.Periodic;
+        public TaskType Type { get; set; } = TaskType.Periodic;
 
         /// <summary>
         /// The scan priority of the task component. Default of 10.
