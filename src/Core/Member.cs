@@ -82,6 +82,6 @@ namespace L5Sharp.Core
         /// The member type of the <see cref="Member"/> instance.
         /// </summary>
         /// <returns>An <see cref="Enums.MemberType"/> enum representing the type of the member.</returns>
-        public MemberType MemberType => MemberType.FromMember(this);
+        public MemberType MemberType => MemberType.FromType(DataType);
     }
 }

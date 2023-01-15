@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Linq;
 using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Types;
+using L5Sharp.Utilities;
 
 namespace L5Sharp.Components
 {
@@ -14,9 +16,9 @@ namespace L5Sharp.Components
     /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
     /// `Logix 5000 Controllers Import/Export`</a> for more information.
     /// </footer>
-    public class Tag : ILogixScopedComponent
+    public class Tag : ILogixScopedComponent, ILogixTagMember
     {
-        private readonly ILogixType? _data;
+        private readonly ILogixType? _dataType;
 
         /// <summary>
         /// Creates a new <see cref="Tag"/> instance.
@@ -29,22 +31,22 @@ namespace L5Sharp.Components
         /// Creates a new <see cref="Tag"/> instance with the provided name and <see cref="ILogixType"/> data.
         /// </summary>
         /// <param name="name">The name of the tag.</param>
-        /// <param name="data">The logix type data of the data.</param>
+        /// <param name="dataType">The logix type data of the data.</param>
         /// <exception cref="ArgumentNullException"><c>data</c> is null.</exception>
-        public Tag(string name, ILogixType data)
+        public Tag(string name, ILogixType dataType)
         {
-            _data = data ?? throw new ArgumentNullException(nameof(data));
-            
+            _dataType = dataType ?? throw new ArgumentNullException(nameof(dataType));
+
             Name = name;
-            DataType = data.Name;
-            Dimensions = data is ArrayType arrayType ? arrayType.Dimensions : Dimensions.Empty;
-            Radix = data is AtomicType atomicType ? Radix.Default(atomicType) : Radix.Null;
+            DataType = dataType.Name;
+            Dimensions = dataType is ArrayType arrayType ? arrayType.Dimensions : Dimensions.Empty;
+            Radix = dataType is AtomicType atomicType ? Radix.Default(atomicType) : Radix.Null;
         }
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="ILogixScopedComponent.Name" />
         public string Name { get; set; } = string.Empty;
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="ILogixScopedComponent.Description" />
         public string Description { get; set; } = string.Empty;
 
         /// <inheritdoc />
@@ -54,30 +56,26 @@ namespace L5Sharp.Components
         /// the name of the data type that the <see cref="Tag"/> instantiates.
         /// </summary>
         public string DataType { get; set; } = string.Empty;
-        
-        /// <summary>
-        /// The array dimensions of the <see cref="Tag"/>. 
-        /// </summary>
-        public Dimensions Dimensions { get; set; } = Dimensions.Empty;
-        
-        /// <summary>
-        /// 
-        /// </summary>
-        public Radix Radix { get; set; } = Radix.Null;
-        
-        /// <summary>
-        /// 
-        /// </summary>
-        public ExternalAccess ExternalAccess { get; set; } = ExternalAccess.ReadWrite;
-        
-        /// <summary>
-        /// 
-        /// </summary>
-        public TagType TagType { get; set; } =  TagType.Base;
 
-        /// <summary>
-        /// 
-        /// </summary>
+        /// <inheritdoc />
+        public Dimensions Dimensions { get; set; } = Dimensions.Empty;
+
+        /// <inheritdoc />
+        public Radix Radix { get; set; } = Radix.Null;
+
+        /// <inheritdoc />
+        public ExternalAccess ExternalAccess { get; set; } = ExternalAccess.ReadWrite;
+
+        /// <inheritdoc />
+        public TagName TagName => new(Name);
+
+        /// <inheritdoc />
+        public MemberType MemberType => MemberType.FromType(_dataType);
+
+
+        public TagType TagType { get; set; } = TagType.Base;
+
+        
         public TagUsage Usage { get; set; } = TagUsage.Normal;
 
         /// <summary>
@@ -92,47 +90,64 @@ namespace L5Sharp.Components
         /// <value>A <see cref="bool"/>; <c>true</c> if the tag is constant; otherwise, <c>false</c>.</value>
         /// <remarks>Only value type tags have the ability to be set as a constant. Default is <c>false</c>.</remarks>
         public bool Constant { get; set; } = false;
-        
-        /// <summary>
-        /// 
-        /// </summary>
-        public Dictionary<TagName, string> Comments = new();
-        
-        /// <summary>
-        /// 
-        /// </summary>
-        public Dictionary<TagName, string> Units = new();
 
-        public TagMember Member(TagName tagName)
+        
+        public Dictionary<TagName, string> Comments { get; } = new();
+
+        
+        public Dictionary<TagName, string> Units { get; } = new();
+
+        /// <inheritdoc />
+        public TagMember? Member(TagName tagName)
         {
-            throw new System.NotImplementedException();
+            if (_dataType is null)
+                throw new InvalidOperationException("Tag has not internal data type structure.");
+
+            Check.TagNameNotNullOrEmpty(tagName);
+
+            var childName = tagName.Members.First();
+            var childMember = GetMembers(_dataType).SingleOrDefault(m => m.Name == childName);
+
+            if (childMember is null) return null;
+
+            var tagMember = new TagMember(childMember, this, this);
+
+            var next = TagName.Combine(tagName.Members.Skip(1));
+
+            return next.IsEmpty ? tagMember : tagMember.Member(next);
         }
 
+        /// <inheritdoc />
         public IEnumerable<TagMember> Members()
         {
             throw new System.NotImplementedException();
         }
-        
+
+        /// <inheritdoc />
         public IEnumerable<TagMember> Members(TagName tagName)
         {
             throw new System.NotImplementedException();
         }
 
+        /// <inheritdoc />
         public AtomicType GetValue()
         {
             throw new System.NotImplementedException();
         }
-        
+
+        /// <inheritdoc />
         public TAtomic GetValue<TAtomic>() where TAtomic : AtomicType
         {
             throw new System.NotImplementedException();
         }
 
+        /// <inheritdoc />
         public void SetValue(AtomicType atomicType)
         {
             throw new System.NotImplementedException();
         }
 
+        /// <inheritdoc />
         public bool TrySetValue(AtomicType atomicType)
         {
             throw new System.NotImplementedException();
@@ -148,6 +163,20 @@ namespace L5Sharp.Components
         public void Deserialize(XElement element)
         {
             throw new System.NotImplementedException();
+        }
+
+        private static IEnumerable<Member> GetMembers(ILogixType dataType)
+        {
+            switch (dataType)
+            {
+                case StructureType structureType:
+                    structureType.Members();
+                    break;
+                case ArrayType arrayType:
+                    return arrayType.Members();
+            }
+
+            return Enumerable.Empty<Member>();
         }
     }
 }

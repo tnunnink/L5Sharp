@@ -4,31 +4,26 @@ using System.Linq;
 using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Types;
+using L5Sharp.Utilities;
 
 namespace L5Sharp.Components
 {
     /// <summary>
     /// 
     /// </summary>
-    public class TagMember : ILogixMember
+    public class TagMember : ILogixTagMember
     {
         private readonly Member _member;
-        private readonly TagMember _parent;
+        private readonly ILogixTagMember _parent;
         private readonly Tag _tag;
 
-        internal TagMember(Member member, TagMember parent, Tag tag)
+        internal TagMember(Member member, ILogixTagMember parent, Tag tag)
         {
             _member = member;
             _parent = parent;
             _tag = tag;
         }
-
-        /// <summary>
-        /// The full (dot-down) tag name of the <see cref="TagMember"/>.
-        /// </summary>
-        /// <value>A <see cref="TagName"/> value type representing the tag name of the member.</value>
-        public TagName TagName => TagName.Combine(_parent.TagName, Name);
-
+        
         /// <inheritdoc />
         public string Name => _member.Name;
 
@@ -48,52 +43,81 @@ namespace L5Sharp.Components
         public ExternalAccess ExternalAccess =>
             ExternalAccess.MostRestrictive(_member.ExternalAccess, _parent.ExternalAccess);
 
-        /// <summary>
-        /// 
-        /// </summary>
+        /// <inheritdoc />
+        public TagName TagName => TagName.Combine(_parent.TagName, Name);
+
+        /// <inheritdoc />
         public MemberType MemberType => MemberType.FromType(_member.DataType);
 
         /// <summary>
         /// The overriden string comment of the tag member, if one exists. Empty string if not.
         /// </summary>
         /// <value>A <see cref="string"/> containing the tag member comment.</value>
-        public string Comment { get; set; } = string.Empty;
+        public string Comment
+        {
+            get => _tag.Comments.TryGetValue(TagName.Operand, out var comment) ? comment: string.Empty;
+            set => _tag.Comments[TagName.Operand] = value;
+        }
 
         /// <summary>
         /// The units of the tag member. This appears to only apply to module defined tags...
         /// </summary>
         /// <value>A <see cref="string"/> representing the scaled units of the tag member.</value>
-        public string Units { get; set; } = string.Empty;
-
-        public TagMember Member(TagName tagName)
+        public string Units
         {
-            /*if (tagName is null)
-                throw new ArgumentNullException(nameof(tagName));
-
-            var path = tagName.Base.Equals(_tag.Name) ? tagName.Path : tagName.ToString();
-
-            var members = GetMembers(_member.DataType).ToList();
-
-            if (!members.Any())
-                throw new InvalidOperationException(tagName, _member.DataType.Name);
-
-            var current = this;
-
-            foreach (var member in members.Select(m => new TagMember(m, current, _tag)))
-                current = member;
-
-            return current;*/
-            throw new NotImplementedException();
+            get => _tag.Units.TryGetValue(TagName.Operand, out var units) ? units: string.Empty;
+            set => _tag.Units[TagName.Operand] = value;
         }
 
+        /// <summary>
+        /// Gets a descendent tag member relative to the current tag member.
+        /// </summary>
+        /// <param name="tagName">The full <see cref="Core.TagName"/> path of the member to get.</param>
+        /// <returns>A <see cref="TagMember"/> representing the child member instance.</returns>
+        /// <exception cref="KeyNotFoundException"></exception>
+        public TagMember? Member(TagName tagName)
+        {
+            Check.TagNameNotNullOrEmpty(tagName);
+
+            var childName = tagName.Members.First();
+            var childMember = GetMembers(_member.DataType).SingleOrDefault(m => m.Name == childName);
+
+            if (childMember is null) return null;
+
+            var tagMember = new TagMember(childMember, this, _tag);
+
+            var next = TagName.Combine(tagName.Members.Skip(1));
+
+            return next.IsEmpty ? tagMember : tagMember.Member(next);
+        }
+
+        /// <summary>
+        /// Gets all descendent tag members relative to the current tag member.
+        /// </summary>
+        /// <returns>A <see cref="IEnumerable{T}"/> containing <see cref="TagMember"/> objects.</returns>
         public IEnumerable<TagMember> Members()
         {
-            throw new System.NotImplementedException();
+            var members = new List<TagMember>();
+
+            foreach (var member in GetMembers(_member.DataType))
+            {
+                var tagMember = new TagMember(member, this, _tag);
+                members.Add(tagMember);
+                members.AddRange(tagMember.Members());
+            }
+
+            return members;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="tagName">The full <see cref="Core.TagName"/> path of the member to get.</param>
+        /// <returns>A <see cref="IEnumerable{T}"/> containing <see cref="TagMember"/> objects.</returns>
         public IEnumerable<TagMember> Members(TagName tagName)
         {
-            throw new System.NotImplementedException();
+            var tagMember = Descendent(tagName);
+            return tagMember is not null ? tagMember.Members() : Enumerable.Empty<TagMember>();
         }
 
         /// <summary>
@@ -113,8 +137,8 @@ namespace L5Sharp.Components
         /// is a value member; Otherwise, null.</returns>
         /// <seealso cref="GetValue"/>
         public TAtomic? GetValue<TAtomic>() where TAtomic : AtomicType => _member.DataType as TAtomic;
-
-
+        
+        /// <inheritdoc />
         public void SetValue(AtomicType atomicType)
         {
             if (_member.DataType is not AtomicType)
@@ -124,6 +148,7 @@ namespace L5Sharp.Components
             _member.DataType = atomicType;
         }
 
+        /// <inheritdoc />
         public bool TrySetValue(AtomicType atomicType)
         {
             if (_member.DataType is not AtomicType)
@@ -131,6 +156,22 @@ namespace L5Sharp.Components
 
             _member.DataType = atomicType;
             return true;
+        }
+
+        private TagMember? Descendent(TagName tagName)
+        {
+            Check.TagNameNotNullOrEmpty(tagName);
+            
+            var childName = tagName.Members.First();
+            var childMember = GetMembers(_member.DataType).SingleOrDefault(m => m.Name == childName);
+
+            if (childMember is null) return null;
+
+            var tagMember = new TagMember(childMember, this, _tag);
+
+            var next = TagName.Combine(tagName.Members.Skip(1));
+
+            return next.IsEmpty ? tagMember : tagMember.Member(next);
         }
 
         private static IEnumerable<Member> GetMembers(ILogixType dataType)

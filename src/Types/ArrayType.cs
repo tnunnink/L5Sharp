@@ -44,8 +44,8 @@ namespace L5Sharp.Types
         {
             ValidateArray(elements);
 
-            var x = (ushort)elements.GetLength(1);
-            var y = (ushort)elements.GetLength(2);
+            var x = (ushort)elements.GetLength(0);
+            var y = (ushort)elements.GetLength(1);
 
             Dimensions = new Dimensions(x, y);
 
@@ -65,9 +65,9 @@ namespace L5Sharp.Types
         {
             ValidateArray(elements);
 
-            var x = (ushort)elements.GetLength(1);
-            var y = (ushort)elements.GetLength(2);
-            var z = (ushort)elements.GetLength(3);
+            var x = (ushort)elements.GetLength(0);
+            var y = (ushort)elements.GetLength(1);
+            var z = (ushort)elements.GetLength(2);
 
             Dimensions = new Dimensions(x, y, z);
 

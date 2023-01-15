@@ -15,29 +15,11 @@ namespace L5Sharp.Enums
         }
 
         /// <summary>
-        /// Returns the <see cref="MemberType"/> of the provided <see cref="Member"/> instance.
-        /// </summary>
-        /// <param name="member"></param>
-        /// <returns>A <see cref="MemberType"/> value based on the derived type of dataType.</returns>
-        /// <remarks>
-        /// </remarks>
-        public static MemberType FromMember(Member member)
-        {
-            return member.DataType switch
-            {
-                AtomicType => ValueMember,
-                ArrayType => ArrayMember,
-                StructureType => StructureMember,
-                _ => Unknown
-            };
-        }
-
-        /// <summary>
         /// Gets the <see cref="MemberType"/> from a given <see cref="ILogixType"/> object.
         /// </summary>
         /// <param name="type">The <see cref="ILogixType"/> instance use to determine the member type.</param>
         /// <returns>A <see cref="MemberType"/> enum based on the provided logix type.</returns>
-        public static MemberType FromType(ILogixType type)
+        public static MemberType FromType(ILogixType? type)
         {
             return type switch
             {
@@ -46,19 +28,6 @@ namespace L5Sharp.Enums
                 StructureType => StructureMember,
                 _ => Unknown
             };
-        }
-        
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="member"></param>
-        /// <returns></returns>
-        public static MemberType FromMember(ILogixMember member)
-        {
-            if (member.Dimensions.IsMultiDimensional)
-                return ArrayMember;
-
-            return LogixType.IsAtomic(member.DataType) ? ValueMember : StructureMember;
         }
 
         /// <summary>
