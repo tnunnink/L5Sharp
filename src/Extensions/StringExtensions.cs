@@ -8,7 +8,7 @@ using L5Sharp.Types.Atomics;
 
 namespace L5Sharp.Extensions
 {
-    internal static class StringExtensions
+    public static class StringExtensions
     {
         /// <summary>
         /// Determines if the current string is equal to string.Empty.

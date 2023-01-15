@@ -7,7 +7,7 @@ namespace L5Sharp.Extensions
     /// <summary>
     /// Some common helpers for getting logix element/attribute values from and <see cref="XElement"/>
     /// </summary>
-    internal static class ElementExtensions
+    public static class ElementExtensions
     {
         /// <summary>
         /// Gets the component name value from the current <see cref="XElement"/> instance.

@@ -26,14 +26,14 @@
         <PackageReference Include="Ardalis.SmartEnum" Version="2.0.1" />
     </ItemGroup>
 
-    <ItemGroup>
+   <!-- <ItemGroup>
         <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
             <_Parameter1>L5Sharp.Internal.Tests</_Parameter1>
         </AssemblyAttribute>
         <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
             <_Parameter1>L5Sharp.Serialization.Tests</_Parameter1>
         </AssemblyAttribute>
-    </ItemGroup>
+    </ItemGroup>-->
 
     <ItemGroup>
         <None Remove="L5Sharp.sln.DotSettings" />

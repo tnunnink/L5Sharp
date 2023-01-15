@@ -23,25 +23,6 @@ namespace L5Sharp.Types.Predefined
         /// <inheritdoc />
         public override DataTypeClass Class => DataTypeClass.Predefined;
 
-        /// <inheritdoc />
-        public override IEnumerable<Member> Members()
-        {
-            var members =  base.Members().ToList();
-            
-            members.Single(m => m.Name == nameof(HHInAlarmTime)).Radix = Radix.DateTime;
-            members.Single(m => m.Name == nameof(HInAlarmTime)).Radix = Radix.DateTime;
-            members.Single(m => m.Name == nameof(LInAlarmTime)).Radix = Radix.DateTime;
-            members.Single(m => m.Name == nameof(LLInAlarmTime)).Radix = Radix.DateTime;
-            members.Single(m => m.Name == nameof(ROCPosInAlarmTime)).Radix = Radix.DateTime;
-            members.Single(m => m.Name == nameof(ROCNegInAlarmTime)).Radix = Radix.DateTime;
-            members.Single(m => m.Name == nameof(RetToNormalTime)).Radix = Radix.DateTime;
-            members.Single(m => m.Name == nameof(AlarmCountResetTime)).Radix = Radix.DateTime;
-            members.Single(m => m.Name == nameof(ShelveTime)).Radix = Radix.DateTime;
-            members.Single(m => m.Name == nameof(UnshelveTime)).Radix = Radix.DateTime;
-
-            return members;
-        }
-
         /// <summary>
         /// Gets the <see cref="EnableIn"/> member of the <see cref="ALARM_ANALOG"/> data type.
         /// </summary>

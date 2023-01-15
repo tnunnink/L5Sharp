@@ -9,7 +9,7 @@ namespace L5Sharp.Extensions
     /// <summary>
     /// A class of generic extension methods
     /// </summary>
-    internal static class AtomicTypeExtensions
+    public static class AtomicTypeExtensions
     {
         /// <summary>
         /// Converts the current <see cref="ValueType"/> to the specified base number.

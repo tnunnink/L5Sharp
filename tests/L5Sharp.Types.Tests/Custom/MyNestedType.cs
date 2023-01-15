@@ -13,26 +13,12 @@ namespace L5Sharp.Types.Tests.Custom
         {
         }
 
-        public BOOL Indy = new();
-        public STRING Str = new();
-        public TIMER Tmr = new();
-        public MySimpleType Simple = new();
-
-        public override DataTypeClass Class => DataTypeClass.User;
-    }
-
-    public class MySimpleType : StructureType
-    {
-        public MySimpleType() : base(nameof(MySimpleType), "Simple Type")
-        {
-        }
-
-        public BOOL M1 = new();
-        public SINT M2 = new();
-        public INT M3 = new();
-        public DINT M4 = new();
-        public LINT M5 = new();
-        public REAL M6 = new();
+        public BOOL Indy { get; set; } = new();
+        public STRING Str { get; set; } = new();
+        public TIMER Tmr { get; } = new();
+        public MySimpleType Simple { get; } = new();
+        public BOOL[] Flags { get; } = new BOOL[10];
+        public MESSAGE[] Messages { get; } = new MESSAGE[5];
 
         public override DataTypeClass Class => DataTypeClass.User;
     }

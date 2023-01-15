@@ -54,11 +54,13 @@ namespace L5Sharp.Types.Tests
         }
 
         [Test]
-        public void SetMember()
+        public void SetMember_ValidValue_ShouldBeExpectedValue()
         {
             var timer = new TIMER();
 
             timer.PRE = 6000;
+
+            timer.PRE.Should().Be(new DINT(6000));
         }
 
         [Test]

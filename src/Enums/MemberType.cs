@@ -1,8 +1,6 @@
-﻿using System.Linq;
-using Ardalis.SmartEnum;
+﻿using Ardalis.SmartEnum;
 using L5Sharp.Core;
 using L5Sharp.Types;
-using L5Sharp.Types.Predefined;
 
 namespace L5Sharp.Enums
 {
@@ -25,18 +23,42 @@ namespace L5Sharp.Enums
         /// </remarks>
         public static MemberType FromMember(Member member)
         {
-            if (member.Dimensions.IsMultiDimensional)
-                return ArrayMember;
-
-            if (member.DataType.Family == DataTypeFamily.String)
-                return StringMember;
-            
             return member.DataType switch
             {
                 AtomicType => ValueMember,
+                ArrayType => ArrayMember,
                 StructureType => StructureMember,
                 _ => Unknown
             };
+        }
+
+        /// <summary>
+        /// Gets the <see cref="MemberType"/> from a given <see cref="ILogixType"/> object.
+        /// </summary>
+        /// <param name="type">The <see cref="ILogixType"/> instance use to determine the member type.</param>
+        /// <returns>A <see cref="MemberType"/> enum based on the provided logix type.</returns>
+        public static MemberType FromType(ILogixType type)
+        {
+            return type switch
+            {
+                AtomicType => ValueMember,
+                ArrayType => ArrayMember,
+                StructureType => StructureMember,
+                _ => Unknown
+            };
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="member"></param>
+        /// <returns></returns>
+        public static MemberType FromMember(ILogixMember member)
+        {
+            if (member.Dimensions.IsMultiDimensional)
+                return ArrayMember;
+
+            return LogixType.IsAtomic(member.DataType) ? ValueMember : StructureMember;
         }
 
         /// <summary>

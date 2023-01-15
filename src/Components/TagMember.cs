@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using L5Sharp.Core;
@@ -8,93 +7,51 @@ using L5Sharp.Types;
 
 namespace L5Sharp.Components
 {
-    public class TagMember : ILogixMember, IEnumerable<TagMember>
+    /// <summary>
+    /// 
+    /// </summary>
+    public class TagMember : ILogixMember
     {
-        private readonly Dictionary<string, TagMember> _members = new();
+        private readonly Member _member;
+        private readonly TagMember _parent;
+        private readonly Tag _tag;
 
-        /// <summary>
-        /// Creates a new default <see cref="TagMember"/> instance.
-        /// </summary>
-        public TagMember()
+        internal TagMember(Member member, TagMember parent, Tag tag)
         {
+            _member = member;
+            _parent = parent;
+            _tag = tag;
         }
 
         /// <summary>
-        /// A constructor for data value tag members.
+        /// The full (dot-down) tag name of the <see cref="TagMember"/>.
         /// </summary>
-        /// <param name="name">The name of the tag member.</param>
-        /// <param name="value">The atomic value of the tag member.</param>
-        /// <param name="radix">The optional radix format of the tag member.
-        /// Will use <see cref="Enums.Radix.Default"/> if not provided</param>
-        public TagMember(string name, AtomicType value, Radix? radix = null)
-        {
-            Name = name;
-            DataType = value.Name;
-            Value = value;
-            Radix = radix ?? Radix.Default(value);
-        }
+        /// <value>A <see cref="TagName"/> value type representing the tag name of the member.</value>
+        public TagName TagName => TagName.Combine(_parent.TagName, Name);
+
+        /// <inheritdoc />
+        public string Name => _member.Name;
+
+        /// <inheritdoc />
+        public string Description => _member.Description;
+
+        /// <inheritdoc />
+        public string DataType => _member.DataType.Name;
+
+        /// <inheritdoc />
+        public Dimensions Dimensions => _member.Dimensions;
+
+        /// <inheritdoc />
+        public Radix Radix => _member.Radix;
+
+        /// <inheritdoc />
+        public ExternalAccess ExternalAccess =>
+            ExternalAccess.MostRestrictive(_member.ExternalAccess, _parent.ExternalAccess);
 
         /// <summary>
-        /// A constructor for structure type tag members.
+        /// 
         /// </summary>
-        /// <param name="name">The name of the tag member.</param>
-        /// <param name="dataType">The type name of the tag member.</param>
-        /// <param name="members">The collection of structure members that compose the tag member.</param>
-        public TagMember(string name, string dataType, IEnumerable<TagMember> members)
-        {
-            Name = name;
-            DataType = dataType;
-            _members = members.ToDictionary(t => t.Name);
-        }
-
-        public TagMember(Member member, string? parentName = null)
-        {
-            if (member is null)
-                throw new ArgumentNullException(nameof(member));
-
-            Name = member.Name;
-            Description = member.Description;
-            DataType = member.DataType.Name;
-            Dimensions = member.Dimensions;
-            Radix = member.Radix;
-            ExternalAccess = member.ExternalAccess;
-            TagName = parentName is not null ? TagName.Combine(parentName, Name) : Name;
-
-            //todo handle arrays?...
-            
-            switch (member.DataType)
-            {
-                case AtomicType atomicType:
-                    //todo set value.
-                    break;
-                case StructureType structureType:
-                    _members = structureType.Members().Select(m => new TagMember(m, Name)).ToDictionary(t => t.Name);
-                    break;
-            }
-        }
-
-        /// <inheritdoc />
-        public string Name { get; set; } = string.Empty;
-
-        /// <inheritdoc />
-        public string Description { get; set; } = string.Empty;
-
-        /// <inheritdoc />
-        public string DataType { get; set; } = string.Empty;
-
-        /// <inheritdoc />
-        public Dimensions Dimensions { get; set; } = Dimensions.Empty;
-
-        /// <inheritdoc />
-        public Radix Radix { get; set; } = Radix.Null;
-
-        /// <inheritdoc />
-        public ExternalAccess ExternalAccess { get; set; } = ExternalAccess.ReadWrite;
-
-        /// <summary>
-        /// The atomic value of the <see cref="TagMember"/>. Should only apply to value members.
-        /// </summary>
-        public AtomicType? Value { get; set; } = default;
+        public MemberType MemberType => MemberType.FromType(_member.DataType);
 
         /// <summary>
         /// The overriden string comment of the tag member, if one exists. Empty string if not.
@@ -107,19 +64,87 @@ namespace L5Sharp.Components
         /// </summary>
         /// <value>A <see cref="string"/> representing the scaled units of the tag member.</value>
         public string Units { get; set; } = string.Empty;
-        
+
+        public TagMember Member(TagName tagName)
+        {
+            /*if (tagName is null)
+                throw new ArgumentNullException(nameof(tagName));
+
+            var path = tagName.Base.Equals(_tag.Name) ? tagName.Path : tagName.ToString();
+
+            var members = GetMembers(_member.DataType).ToList();
+
+            if (!members.Any())
+                throw new InvalidOperationException(tagName, _member.DataType.Name);
+
+            var current = this;
+
+            foreach (var member in members.Select(m => new TagMember(m, current, _tag)))
+                current = member;
+
+            return current;*/
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<TagMember> Members()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public IEnumerable<TagMember> Members(TagName tagName)
+        {
+            throw new System.NotImplementedException();
+        }
+
         /// <summary>
-        /// The full (dot-down) tag name of the <see cref="TagMember"/>.
+        /// Gets the underlying atomic value of the <see cref="TagMember"/>,
+        /// if it is an <see cref="AtomicType"/> member.
         /// </summary>
-        /// <value>A <see cref="TagName"/> value type representing the tag name of the member.</value>
-        public TagName TagName { get; set; } = TagName.Empty;
+        /// <returns>A <see cref="AtomicType"/> representing the value of the member if the <see cref="MemberType"/>
+        /// is a value member; Otherwise, null.</returns>
+        /// <seealso cref="GetValue{TAtomic}"/>
+        public AtomicType? GetValue() => _member.DataType as AtomicType;
 
-        public TagMember this[int x] => _members["[{x}]"];
-        public TagMember this[TagName tagName] => throw new NotImplementedException();
+        /// <summary>
+        /// Gets the underlying atomic value of the <see cref="TagMember"/> as the a strongly typed <see cref="AtomicType"/>.
+        /// If the member's data is not the specified type, returns null.
+        /// </summary>
+        /// <returns>A <see cref="AtomicType"/> representing the value of the member if the <see cref="MemberType"/>
+        /// is a value member; Otherwise, null.</returns>
+        /// <seealso cref="GetValue"/>
+        public TAtomic? GetValue<TAtomic>() where TAtomic : AtomicType => _member.DataType as TAtomic;
 
-        /// <inheritdoc />
-        public IEnumerator<TagMember> GetEnumerator() => _members.Values.GetEnumerator();
 
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+        public void SetValue(AtomicType atomicType)
+        {
+            if (_member.DataType is not AtomicType)
+                throw new InvalidOperationException(
+                    $"The underlying member type {_member.DataType.Name} is not a {typeof(AtomicType)}. The member must be a value member to set the value.");
+
+            _member.DataType = atomicType;
+        }
+
+        public bool TrySetValue(AtomicType atomicType)
+        {
+            if (_member.DataType is not AtomicType)
+                return false;
+
+            _member.DataType = atomicType;
+            return true;
+        }
+
+        private static IEnumerable<Member> GetMembers(ILogixType dataType)
+        {
+            switch (dataType)
+            {
+                case StructureType structureType:
+                    structureType.Members();
+                    break;
+                case ArrayType arrayType:
+                    return arrayType.Members();
+            }
+
+            return Enumerable.Empty<Member>();
+        }
     }
 }

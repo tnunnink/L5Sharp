@@ -36,9 +36,9 @@ namespace L5Sharp.Core
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
             DataType = dataType ?? throw new ArgumentNullException(nameof(dataType));
-            Dimensions = dimensions ?? Dimensions.Empty;
+            Dimensions = dimensions ?? Dimensions.OfType(DataType);
             Radix = radix ?? Radix.Default(DataType);
-            ExternalAccess = externalAccess ?? ExternalAccess.ReadOnly;
+            ExternalAccess = externalAccess ?? ExternalAccess.ReadWrite;
             Description = description ?? string.Empty;
         }
 
@@ -55,7 +55,7 @@ namespace L5Sharp.Core
         public string Description { get; set; }
 
         /// <summary>
-        /// The datatype of the <see cref="Member"/> instance.
+        /// The logix type of the <see cref="Member"/> instance.
         /// </summary>
         /// <returns>A <see cref="ILogixType"/> representing the member data type.</returns>
         public ILogixType DataType { get; set; }
@@ -83,37 +83,5 @@ namespace L5Sharp.Core
         /// </summary>
         /// <returns>An <see cref="Enums.MemberType"/> enum representing the type of the member.</returns>
         public MemberType MemberType => MemberType.FromMember(this);
-
-        /// <summary>
-        /// A generic static factory method to simplify member construction.
-        /// </summary>
-        /// <param name="name">The name of the member.</param>
-        /// <typeparam name="TLogixType">The <see cref="ILogixType"/> of the member.
-        /// Must have default parameterless constructor.</typeparam>
-        /// <returns>A new <see cref="Member"/> instance.</returns>
-        public static Member Create<TLogixType>(string name) where TLogixType : ILogixType, new() =>
-            new(name, new TLogixType());
-
-        /// <summary>
-        /// A generic static factory method to simplify member construction.
-        /// </summary>
-        /// <param name="name">The name of the member.</param>
-        /// <param name="radix">The radix format of the member.</param>
-        /// <typeparam name="TLogixType">The <see cref="ILogixType"/> of the member.
-        /// Must have default parameterless constructor.</typeparam>
-        /// <returns>A new <see cref="Member"/> instance.</returns>
-        public static Member Create<TLogixType>(string name, Radix radix) where TLogixType : ILogixType, new() =>
-            new(name, new TLogixType(), radix: radix);
-
-        /// <summary>
-        /// A static generic factory method to simplify member construction.
-        /// </summary>
-        /// <param name="name">The name of the member.</param>
-        /// <param name="dimensions">The dimensions of the member.</param>
-        /// <typeparam name="TLogixType">The <see cref="ILogixType"/> of the member.
-        /// Must have default parameterless constructor.</typeparam>
-        /// <returns>A new <see cref="Member"/> instance.</returns>
-        public static Member Create<TLogixType>(string name, Dimensions dimensions)
-            where TLogixType : ILogixType, new() => new(name, new TLogixType(), dimensions);
     }
 }

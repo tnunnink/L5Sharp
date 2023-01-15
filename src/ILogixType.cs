@@ -2,11 +2,16 @@
 
 namespace L5Sharp
 {
+    /// <summary>
+    /// A base interface for all logix data type classes. <see cref="ILogixType"/> is a construct that contains the actual
+    /// data value that make up a give logix data type and/or tag structure.
+    /// </summary>
     public interface ILogixType
     {
         /// <summary>
-        /// 
+        /// The name of the <see cref="ILogixType"/> object.
         /// </summary>
+        /// <value>A <see cref="string"/> name identifying the logix type.</value>
         public string Name { get; }
         
         /// <summary>

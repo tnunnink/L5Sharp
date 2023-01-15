@@ -87,5 +87,15 @@ namespace L5Sharp.Types
 
             return parser.Invoke(value);
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="typeName"></param>
+        /// <returns></returns>
+        public static bool IsAtomic(string typeName)
+        {
+            return Atomics.Any(a => a == typeName);
+        }
     }
 }

@@ -4,7 +4,7 @@ using L5Sharp.Enums;
 namespace L5Sharp.Components
 {
     /// <summary>
-    /// Represents a Rung of Ladder Logic, or the logix content that is contained by the <see cref="RllRoutine"/> component.
+    /// Represents a Rung of Ladder Logic, or the logix content that is contained by the <see cref="Rll"/> component.
     /// </summary>
     /// <remarks>
     /// </remarks>

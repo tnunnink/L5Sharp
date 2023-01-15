@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using L5Sharp.Extensions;
+using L5Sharp.Types;
 
 namespace L5Sharp.Core
 {
@@ -117,7 +118,7 @@ namespace L5Sharp.Core
         /// More plainly, this property indicates whether the current <see cref="Dimensions"/> are one, two, or three
         /// dimensional based on the values of X, Y, and Z. 
         /// </remarks>
-        public int DegreesOfFreedom => Z > 0 ? 3 : Y > 0 ? 2 : X > 0 ? 1 : 0;
+        public int Rank => Z > 0 ? 3 : Y > 0 ? 2 : X > 0 ? 1 : 0;
 
         /// <summary>
         /// Represents an empty <see cref="Dimensions"/> object, or object with all three dimensional parameters equal
@@ -312,5 +313,20 @@ namespace L5Sharp.Core
         private static string GenerateIndex(ushort x, ushort y) => $"[{x},{y}]";
 
         private static string GenerateIndex(ushort x, ushort y, ushort z) => $"[{x},{y},{z}]";
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dataType"></param>
+        /// <returns></returns>
+        public static Dimensions OfType(ILogixType dataType)
+        {
+            if (dataType is ArrayType arrayType)
+            {
+                return arrayType.Dimensions;
+            }
+
+            return Empty;
+        }
     }
 }
