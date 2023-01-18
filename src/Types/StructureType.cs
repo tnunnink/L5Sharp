@@ -2,14 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using L5Sharp.Attributes;
 using L5Sharp.Core;
 using L5Sharp.Enums;
+using L5Sharp.Serialization;
 
 namespace L5Sharp.Types
 {
     /// <summary>
     /// 
     /// </summary>
+    [LogixSerializer(typeof(StructureSerializer))]
     public class StructureType : ILogixType
     {
         private readonly List<Member>? _members;
@@ -20,7 +23,7 @@ namespace L5Sharp.Types
         /// <param name="name">The name of the type.</param>
         /// <param name="description">The description of the type</param>
         /// <exception cref="ArgumentNullException">name is null.</exception>
-        public StructureType(string name, string? description = null)
+        protected StructureType(string name, string? description = null)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
             Description = description ?? string.Empty;
@@ -31,12 +34,11 @@ namespace L5Sharp.Types
         /// </summary>
         /// <param name="name">The name of the type.</param>
         /// <param name="members">The collection of <see cref="Member"/> that make up the type.</param>
-        /// <param name="description">The description of the type.</param>
         /// <exception cref="ArgumentNullException"><c>name</c> or <see cref="members"/> is null.</exception>
-        public StructureType(string name, IEnumerable<Member> members, string? description = null)
+        public StructureType(string name, IEnumerable<Member> members)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
-            Description = description ?? string.Empty;
+            Description = string.Empty;
             _members = members is not null ? members.ToList() : throw new ArgumentNullException(nameof(members));
         }
 
@@ -44,8 +46,9 @@ namespace L5Sharp.Types
         public string Name { get; }
 
         /// <summary>
-        /// 
+        /// The description of the structure type.
         /// </summary>
+        /// <value>A <see cref="string"/> representing the description value.</value>
         public string Description { get; }
 
         /// <inheritdoc />
@@ -84,9 +87,9 @@ namespace L5Sharp.Types
             var name = info.Name;
 
             ILogixType type;
-            
+
             if (info.PropertyType.IsArray)
-                type = new ArrayType((ILogixType[])info.GetValue(this));
+                type = new ArrayType<ILogixType>((ILogixType[])info.GetValue(this));
             else
                 type = (ILogixType)info.GetValue(this);
 

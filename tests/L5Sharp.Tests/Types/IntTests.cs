@@ -36,7 +36,6 @@ namespace L5Sharp.Tests.Types
             type.Name.Should().Be(nameof(INT).ToUpper());
             type.Class.Should().Be(DataTypeClass.Atomic);
             type.Family.Should().Be(DataTypeFamily.None);
-            //type.Description.Should().Be("Logix representation of a System.Int16");
             type.Should().Be(0);
         }
         
@@ -59,22 +58,6 @@ namespace L5Sharp.Tests.Types
         {
             INT.MinValue.Should().Be(short.MinValue);
         }
-        
-        [Test]
-        public void GetValue_AsAtomic_ShouldBeExpected()
-        {
-            var type = (AtomicType) new INT();
-
-            type.Should().Be(0);
-        }
-
-        [Test]
-        public void SetValue_ValidShort_ShouldBeExpected()
-        {
-            INT type = _random;
-
-            type.Should().Be(_random);
-        }
 
         [Test]
         public void SetValue_ValidByte_ShouldBeExpected()
@@ -82,33 +65,33 @@ namespace L5Sharp.Tests.Types
             var fixture = new Fixture();
             var value = fixture.Create<byte>();
 
-            INT type = (value);
+            INT type = value;
 
             type.Should().Be(value);
         }
 
         [Test]
-        public void Format_DefaultRadix_ShouldBeExpected()
+        public void ToString_DefaultRadix_ShouldBeExpected()
         {
             var type = new INT();
 
-            var format = type.Format();
+            var format = type.ToString();
 
             format.Should().Be("0");
         }
         
         [Test]
-        public void Format_OverloadedRadix_ShouldBeExpected()
+        public void ToString_OverloadedRadix_ShouldBeExpected()
         {
             var type = new INT();
 
-            var format = type.Format(Radix.Binary);
+            var format = type.ToString(Radix.Binary);
 
             format.Should().Be("2#0000_0000_0000_0000");
         }
 
         [Test]
-        public void ImplicitOperator_Bool_ShouldBeTrue()
+        public void ImplicitOperator_short_ShouldBeRandom()
         {
             INT type = _random;
 
@@ -116,7 +99,7 @@ namespace L5Sharp.Tests.Types
         }
 
         [Test]
-        public void ImplicitOperator_bool_ShouldBeTrue()
+        public void ImplicitOperator_Atomic_ShouldBeRandom()
         {
             short value = new INT(_random);
 

@@ -15,7 +15,7 @@ namespace L5Sharp.Utilities
         private static readonly Dictionary<Type, Func<string, object>> Parsers = new()
         {
             { typeof(DateTime), s => DateTime.Parse(s) },
-            { typeof(AtomicType), Radix.ParseValue },
+            { typeof(AtomicType), s => Atomic.Parse(s) },
             { typeof(ConnectionPriority), ConnectionPriority.FromValue },
             { typeof(ConnectionType), ConnectionType.FromValue },
             { typeof(DataTypeClass), DataTypeClass.FromValue },
@@ -59,7 +59,7 @@ namespace L5Sharp.Utilities
             { typeof(ulong), s => ulong.TryParse(s, out var value) ? value : default },
             { typeof(float), s => float.TryParse(s, out var value) ? value : default },
             { typeof(DateTime), s => DateTime.TryParse(s, out var value) ? value : default },
-            { typeof(AtomicType), Radix.ParseValue },
+            { typeof(AtomicType), s => Atomic.Parse(s) },
             { typeof(ConnectionPriority), s => ConnectionPriority.TryFromValue(s, out var value) ? value : default },
             { typeof(ConnectionType), s => ConnectionType.TryFromValue(s, out var value) ? value : default },
             { typeof(DataFormat), s => DataFormat.TryFromValue(s, out var value) ? value : default },

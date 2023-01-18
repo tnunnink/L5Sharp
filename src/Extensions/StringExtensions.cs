@@ -8,6 +8,9 @@ using L5Sharp.Types.Atomics;
 
 namespace L5Sharp.Extensions
 {
+    /// <summary>
+    /// A class of string extensions methods.
+    /// </summary>
     public static class StringExtensions
     {
         /// <summary>
@@ -19,10 +22,20 @@ namespace L5Sharp.Extensions
 
         public static bool IsTagName(this string input) => new TagName(input).IsValid;
 
+        /// <summary>
+        /// Returns the current string value as an array of <see cref="SINT"/> atomic type that represent the bytes of the string.
+        /// </summary>
+        /// <param name="value">The string value.</param>
+        /// <returns>An array of <see cref="SINT"/> atomic value types.</returns>
         public static SINT[] ToSintArray(this string value) => 
             Encoding.ASCII.GetBytes(value).Select(b => new SINT((sbyte)b)).ToArray();
 
-        public static string ToString(this IEnumerable<SINT> array) => 
+        /// <summary>
+        /// Returns the collection of <see cref="SINT"/> atomic type values as a <see cref="string"/> value.
+        /// </summary>
+        /// <param name="array">The array or <see cref="IEnumerable{T}"/> of SINT to convert to string.</param>
+        /// <returns>A <see cref="string"/> representing the ASCII character sequence of the SINT array.</returns>
+        public static string AsString(this IEnumerable<SINT> array) => 
             Encoding.ASCII.GetString(array.Where(s => s > 0).Select(b => (byte)(sbyte)b).ToArray());
 
         /// <summary>

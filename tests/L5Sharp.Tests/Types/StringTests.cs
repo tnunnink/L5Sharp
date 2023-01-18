@@ -35,7 +35,7 @@ namespace L5Sharp.Tests.Types
             type.Name.Should().Be("STRING");
             type.Class.Should().Be(DataTypeClass.Predefined);
             type.Family.Should().Be(DataTypeFamily.String);
-            //type.Description.Should().Be("Logix representation of a System.String");
+            type.Description.Should().Be("Logix representation of a System.String");
             type.ToString().Should().BeEmpty();
             type.LEN.Should().NotBeNull();
             type.LEN.Should().BeOfType<DINT>();

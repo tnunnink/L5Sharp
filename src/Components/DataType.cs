@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Xml.Linq;
+﻿using System.Collections.Generic;
+using L5Sharp.Attributes;
 using L5Sharp.Enums;
-using L5Sharp.Extensions;
-using L5Sharp.Utilities;
+using L5Sharp.Serialization;
 
 namespace L5Sharp.Components
 {
@@ -14,6 +11,7 @@ namespace L5Sharp.Components
     /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
     /// `Logix 5000 Controllers Import/Export`</a> for more information.
     /// </footer>
+    [LogixSerializer(typeof(DataTypeSerializer))]
     public class DataType : ILogixComponent
     {
         /// <inheritdoc />
@@ -45,45 +43,5 @@ namespace L5Sharp.Components
         /// <see cref="DataType"/> component.
         /// </summary>
         public List<DataTypeMember> Members { get; set; } = new();
-        
-
-        /// <inheritdoc />
-        public XElement Serialize()
-        {
-            var element = new XElement(L5XName.DataType);
-            element.AddComponentName(Name);
-            element.AddComponentDescription(Description);
-            element.Add(new XAttribute(L5XName.Family, Family.Value));
-            element.Add(new XAttribute(L5XName.Class, Class));
-
-
-            var members = new XElement(nameof(L5XName.Members));
-            members.Add(Members.Select(m => m.Serialize()));
-            element.Add(members);
-
-            return element;
-        }
-
-        /// <inheritdoc />
-        public void Deserialize(XElement element)
-        {
-            if (element == null)
-                throw new ArgumentNullException(nameof(element));
-
-            if (element.Name != L5XName.DataType)
-                throw new ArgumentException($"Element '{element.Name}' not valid for the serializer {GetType()}.");
-
-            Name = element.ComponentName();
-            Description = element.ComponentDescription();
-            Family = element.Attribute(L5XName.Family)?.Value.Parse<DataTypeFamily>() ?? DataTypeFamily.None;
-            Members = element.Descendants(L5XName.Member)
-                .Where(e => bool.Parse(e.Attribute(L5XName.Hidden)?.Value!) == false)
-                .Select(e =>
-                {
-                    var member = new DataTypeMember();
-                    member.Deserialize(e);
-                    return member;
-                }).ToList();
-        }
     }
 }

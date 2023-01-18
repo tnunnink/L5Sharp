@@ -2,16 +2,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using L5Sharp.Enums;
-using L5Sharp.Extensions;
-using L5Sharp.Types.Atomics;
-// ReSharper disable InconsistentNaming
 
 namespace L5Sharp.Types.Predefined
 {
     /// <summary>
     /// Represents a predefined String Logix data type.
     /// </summary>
-    public sealed class STRING : StructureType, IEquatable<STRING>, IComparable<STRING>, IEnumerable<char>
+    public sealed class STRING : StringType, IEquatable<STRING>, IComparable<STRING>, IEnumerable<char>
     {
         //This is the built in length of string types in Logix
         private const int PredefinedLength = 82;
@@ -21,12 +18,9 @@ namespace L5Sharp.Types.Predefined
         /// <summary>
         /// Creates a new empty <see cref="STRING"/> type.
         /// </summary>
-        public STRING() : base(nameof(STRING))
+        public STRING() : base(nameof(STRING), string.Empty)
         {
             _value = string.Empty;
-
-            LEN = new DINT();
-            DATA = new SINT[]{};
         }
 
         /// <summary>
@@ -37,37 +31,20 @@ namespace L5Sharp.Types.Predefined
         /// <exception cref="ArgumentOutOfRangeException">
         /// <c>value</c> length is greater than the predefined Logix string length of 82 characters.
         /// </exception>
-        public STRING(string value) : base(nameof(STRING))
+        public STRING(string value) : base(nameof(STRING), value)
         {
             if (value is null)
                 throw new ArgumentNullException(nameof(value));
-            
-            if (value.Length > PredefinedLength)
-                throw new ArgumentOutOfRangeException("");
-            
-            _value = value;
 
-            LEN = new DINT(_value.Length);
-            DATA = _value.ToSintArray();
+            if (value.Length > PredefinedLength)
+                throw new ArgumentOutOfRangeException(
+                    $"The length {value.Length} of value can not be greater than {PredefinedLength} characters.");
+
+            _value = value;
         }
-        
-        /// <inheritdoc />
-        public override DataTypeFamily Family => DataTypeFamily.String;
 
         /// <inheritdoc />
         public override DataTypeClass Class => DataTypeClass.Predefined;
-        
-        /// <summary>
-        /// Gets the character length value of the string. 
-        /// </summary>
-        /// <returns>A <see cref="DINT"/> logix atomic value representing the integer length of the string.</returns>
-        public DINT LEN { get; }
-        
-        /// <summary>
-        /// Gets the array of bytes that represent the ASCII encoded string value.
-        /// </summary>
-        /// <returns>An array of <see cref="SINT"/> logix atomic values representing the bytes of the string.</returns>
-        public SINT[] DATA { get; }
 
         /// <summary>
         /// Converts the provided <see cref="string"/> to a <see cref="STRING"/> value.

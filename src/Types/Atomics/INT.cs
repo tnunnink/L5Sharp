@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel;
-using L5Sharp.Enums;
 using L5Sharp.Types.Atomics.Converters;
 
 namespace L5Sharp.Types.Atomics
@@ -52,9 +51,6 @@ namespace L5Sharp.Types.Atomics
         /// <param name="atomic">The value to convert.</param>
         /// <returns>A <see cref="short"/> type value.</returns>
         public static implicit operator short(INT atomic) => atomic._value;
-
-        /// <inheritdoc />
-        public override string ToString() => _value.ToString();
 
         /// <inheritdoc />
         public bool Equals(INT? other)

@@ -76,4 +76,6 @@ namespace L5Sharp
         /// <returns><c>true</c> if the value was set; otherwise, <c>false</c>.</returns>
         bool TrySetValue(AtomicType atomicType);
     }
+    
+    
 }

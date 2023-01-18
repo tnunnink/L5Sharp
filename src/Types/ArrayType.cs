@@ -2,29 +2,54 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Xml.Linq;
+using L5Sharp.Attributes;
 using L5Sharp.Core;
 using L5Sharp.Enums;
+using L5Sharp.Serialization;
 using L5Sharp.Utilities;
 
 namespace L5Sharp.Types
 {
-    public sealed class ArrayType : ILogixType, IEnumerable<ILogixType>, ILogixSerializable
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="TLogixType"></typeparam>
+    [LogixSerializer(typeof(ArraySerializer))]
+    public sealed class ArrayType<TLogixType> : ILogixType, IEnumerable<TLogixType> where TLogixType : ILogixType
     {
-        private readonly Dictionary<string, ILogixType> _elements;
+        private readonly Dictionary<string, TLogixType> _elements;
 
         /// <summary>
-        /// Creates a new <see cref="ArrayType"/> collection using the provided array of <see cref="ILogixType"/> objects.
+        /// 
+        /// </summary>
+        /// <param name="dimensions"></param>
+        /// <param name="types"></param>
+        /// <exception cref="ArgumentNullException"><c>dimensions</c> or <c>types</c> is null.</exception>
+        /// <exception cref="ArgumentException"><c>dimensions</c> is empty.</exception>
+        /// <exception cref="ArgumentOutOfRangeException"><c>types</c> is empty or greater than the specified dimensional length.</exception>
+        public ArrayType(Dimensions dimensions, ICollection<TLogixType> types)
+        {
+            ValidateArguments(dimensions, types);
+
+            Dimensions = dimensions;
+
+            _elements = Dimensions.Indices()
+                .Zip(types, (index, type) => new { index, type })
+                .ToDictionary(i => i.index, i => i.type);
+        }
+
+        /// <summary>
+        /// Creates a new <see cref="ArrayType{TLogixType}"/> collection using the provided array of <see cref="ILogixType"/> objects.
         /// </summary>
         /// <param name="elements">The array of element to initialize the array type with.</param>
         /// <exception cref="ArgumentNullException"><c>elements</c> is null.</exception>
         /// <exception cref="ArgumentException"><c>elements</c> is empty.</exception>
         /// <exception cref="ArgumentOutOfRangeException">Any <c>elements</c> dimensional length is greater than <see cref="ushort.MaxValue"/>.</exception>
-        public ArrayType(ILogixType[] elements)
+        public ArrayType(TLogixType[] elements)
         {
-           ValidateArray(elements);
+            ValidateArray(elements);
 
-           var x = (ushort)elements.Length;
+            var x = (ushort)elements.Length;
 
             Dimensions = new Dimensions(x);
 
@@ -34,13 +59,13 @@ namespace L5Sharp.Types
         }
 
         /// <summary>
-        /// Creates a new <see cref="ArrayType"/> collection using the provided array of <see cref="ILogixType"/> objects.
+        /// Creates a new <see cref="ArrayType{TLogixType}"/> collection using the provided array of <see cref="ILogixType"/> objects.
         /// </summary>
         /// <param name="elements">The array of element to initialize the array type with.</param>
         /// <exception cref="ArgumentNullException"><c>elements</c> is null.</exception>
         /// <exception cref="ArgumentException"><c>elements</c> is empty.</exception>
         /// <exception cref="ArgumentOutOfRangeException">Any <c>elements</c> dimensional length is greater than <see cref="ushort.MaxValue"/>.</exception>
-        public ArrayType(ILogixType[,] elements)
+        public ArrayType(TLogixType[,] elements)
         {
             ValidateArray(elements);
 
@@ -50,18 +75,18 @@ namespace L5Sharp.Types
             Dimensions = new Dimensions(x, y);
 
             _elements = Dimensions.Indices()
-                .Zip(elements.Cast<ILogixType>(), (index, type) => new { index, type })
+                .Zip(elements.Cast<TLogixType>(), (index, type) => new { index, type })
                 .ToDictionary(i => i.index, i => i.type);
         }
 
         /// <summary>
-        /// Creates a new <see cref="ArrayType"/> collection using the provided array of <see cref="ILogixType"/> objects.
+        /// Creates a new <see cref="ArrayType{TLogixType}"/> collection using the provided array of <see cref="ILogixType"/> objects.
         /// </summary>
         /// <param name="elements">The array of element to initialize the array type with.</param>
         /// <exception cref="ArgumentNullException"><c>elements</c> is null.</exception>
         /// <exception cref="ArgumentException"><c>elements</c> is empty.</exception>
         /// <exception cref="ArgumentOutOfRangeException">Any <c>elements</c> dimensional length is greater than <see cref="ushort.MaxValue"/>.</exception>
-        public ArrayType(ILogixType[,,] elements)
+        public ArrayType(TLogixType[,,] elements)
         {
             ValidateArray(elements);
 
@@ -72,7 +97,7 @@ namespace L5Sharp.Types
             Dimensions = new Dimensions(x, y, z);
 
             _elements = Dimensions.Indices()
-                .Zip(elements.Cast<ILogixType>(), (index, type) => new { index, type })
+                .Zip(elements.Cast<TLogixType>(), (index, type) => new { index, type })
                 .ToDictionary(i => i.index, i => i.type);
         }
 
@@ -86,15 +111,25 @@ namespace L5Sharp.Types
         public DataTypeClass Class => _elements.First().Value.Class;
 
         /// <summary>
-        /// The dimensions value of the <see cref="ArrayType"/>, indicating the length of the array.
+        /// The dimensions value of the <see cref="ArrayType{TLogixType}"/>, indicating the length of the array.
         /// </summary>
         public Dimensions Dimensions { get; }
+
+        /// <summary>
+        /// Indicates whether the array collection is completely comprised of <see cref="AtomicType"/> elements.
+        /// </summary>
+        public bool IsAtomic => _elements.All(e => e.Value is AtomicType);
+
+        /// <summary>
+        /// Indicates whether the array collection is completely comprised of <see cref="StructureType"/> elements.
+        /// </summary>
+        public bool IsStructure => _elements.All(e => e.Value is StructureType);
 
         /// <summary>
         /// Gets the <see cref="ILogixType"/> instance at the specified index.
         /// </summary>
         /// <param name="x">The index of the array element</param>
-        public ILogixType this[ushort x] => _elements[$"[{x}]"];
+        public TLogixType this[ushort x] => _elements[$"[{x}]"];
 
 
         /// <summary>
@@ -102,7 +137,7 @@ namespace L5Sharp.Types
         /// </summary>
         /// <param name="x">The x index of the array element</param>
         /// <param name="y">The y index of the array element</param>
-        public ILogixType this[ushort x, ushort y] => _elements[$"[{x},{y}]"];
+        public TLogixType this[ushort x, ushort y] => _elements[$"[{x},{y}]"];
 
         /// <summary>
         /// Gets the <see cref="ILogixType"/> instance at the specified index.
@@ -110,7 +145,7 @@ namespace L5Sharp.Types
         /// <param name="x">The x index of the array element</param>
         /// <param name="y">The y index of the array element</param>
         /// <param name="z">The z index of the array element</param>
-        public ILogixType this[ushort x, ushort y, ushort z] => _elements[$"[{x},{y},{z}]"];
+        public TLogixType this[ushort x, ushort y, ushort z] => _elements[$"[{x},{y},{z}]"];
 
         /// <summary>
         /// Gets a collection of <see cref="Member"/> 
@@ -120,20 +155,10 @@ namespace L5Sharp.Types
         public IEnumerable<Member> Members() => _elements.Select(e => new Member(e.Key, e.Value));
 
         /// <inheritdoc />
-        public XElement Serialize()
-        {
-            var element = new XElement(L5XName.Array);
-            element.Add(new XAttribute(L5XName.DataType, Name));
-            element.Add(new XAttribute(L5XName.Dimensions, Dimensions));
-
-            return element;
-        }
-        
-        /// <inheritdoc />
         public override string ToString() => Name;
 
         /// <inheritdoc />
-        public IEnumerator<ILogixType> GetEnumerator() => _elements.Values.GetEnumerator();
+        public IEnumerator<TLogixType> GetEnumerator() => _elements.Values.GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
@@ -149,9 +174,22 @@ namespace L5Sharp.Types
             {
                 var length = elements.GetLength(i);
                 if (length > ushort.MaxValue)
-                    throw new ArgumentOutOfRangeException(
+                    throw new ArgumentOutOfRangeException(nameof(elements),
                         $"Array length of {elements.Length} is out of range. Length must not be greater than  {ushort.MaxValue}");
             }
+        }
+
+        private static void ValidateArguments(Dimensions dimensions, ICollection<TLogixType> types)
+        {
+            Check.NotNull(dimensions);
+            Check.NotNull(types);
+
+            if (dimensions.IsEmpty)
+                throw new ArgumentException("Dimensions can not be empty to generate array type.");
+
+            if (dimensions.Length > types.Count || types.Count == 0)
+                throw new ArgumentOutOfRangeException(nameof(types),
+                    "Types collection must be non empty and less than or equal to the specified dimensional length.");
         }
     }
 }

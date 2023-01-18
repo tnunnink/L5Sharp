@@ -42,7 +42,7 @@ namespace L5Sharp.Types.Atomics.Converters
                 INT v => new BOOL(v != 0),
                 DINT v => new BOOL(v != 0),
                 LINT v => new BOOL(v != 0),
-                string v => bool.TryParse(v, out var result) ? new BOOL(result) : Radix.ParseValue<BOOL>(v),
+                string v => bool.TryParse(v, out var result) ? new BOOL(result) : Atomic.Parse<BOOL>(v),
                 _ => base.ConvertFrom(context, culture, value)
                      ?? throw new NotSupportedException(
                          $"The provided value of type {value.GetType()} is not supported for conversion.")

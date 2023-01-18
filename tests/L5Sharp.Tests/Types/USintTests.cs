@@ -92,7 +92,7 @@ namespace L5Sharp.Tests.Types
         {
             var type = new USINT();
 
-            var format = type.Format();
+            var format = type.ToString();
 
             format.Should().Be("0");
         }
@@ -102,7 +102,7 @@ namespace L5Sharp.Tests.Types
         {
             var type = new USINT();
 
-            var format = type.Format(Radix.Binary);
+            var format = type.ToString(Radix.Binary);
 
             format.Should().Be("2#0000_0000");
         }

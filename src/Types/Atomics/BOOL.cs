@@ -64,9 +64,6 @@ namespace L5Sharp.Types.Atomics
         }
 
         /// <inheritdoc />
-        public override string ToString() => _value ? "1" : "0";
-
-        /// <inheritdoc />
         public bool Equals(BOOL? other)
         {
             if (ReferenceEquals(null, other)) return false;

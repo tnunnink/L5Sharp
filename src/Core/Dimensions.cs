@@ -185,7 +185,7 @@ namespace L5Sharp.Core
             /*if (Regex.IsMatch(value, @"[^\d,[\] ]"))
                 throw new ArgumentException(
                     $"Value '{value}' contains invalid characters. Only numbers and [ ,] are allowed.");*/
-            
+
             var numbers = Regex.Matches(value, @"\d+", RegexOptions.Compiled)
                 .Select(m => ushort.Parse(m.Value))
                 .ToList();
@@ -237,6 +237,16 @@ namespace L5Sharp.Core
 
             return dimensions is not null;
         }
+
+        /// <summary>
+        /// Gets a <see cref="Dimensions"/> value based on the provided logix data type.
+        /// If the type is an <see cref="ArrayType{TLogixType}"/>, then returns the dimensions of the type;
+        /// Otherwise, returns empty dimensions.
+        /// </summary>
+        /// <param name="dataType">The <see cref="ILogixType"/> to get dimensions for.</param>
+        /// <returns>A <see cref="Core.Dimensions"/> value.</returns>
+        public static Dimensions OfType(ILogixType dataType) =>
+            dataType is ArrayType<ILogixType> arrayType ? arrayType.Dimensions : Empty;
 
         /// <summary>
         /// Creates a new instance of the current <see cref="Dimensions"/> with the same value.
@@ -307,26 +317,11 @@ namespace L5Sharp.Core
         /// <returns>true if the objects are not equal, otherwise, false.</returns>
         public static bool operator !=(Dimensions left, Dimensions right) => !Equals(left, right);
 
-        
+
         private static string GenerateIndex(ushort x) => $"[{x}]";
 
         private static string GenerateIndex(ushort x, ushort y) => $"[{x},{y}]";
 
         private static string GenerateIndex(ushort x, ushort y, ushort z) => $"[{x},{y},{z}]";
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="dataType"></param>
-        /// <returns></returns>
-        public static Dimensions OfType(ILogixType dataType)
-        {
-            if (dataType is ArrayType arrayType)
-            {
-                return arrayType.Dimensions;
-            }
-
-            return Empty;
-        }
     }
 }

@@ -77,7 +77,7 @@ namespace L5Sharp.Components
         /// <exception cref="KeyNotFoundException"></exception>
         public TagMember? Member(TagName tagName)
         {
-            Check.TagNameNotNullOrEmpty(tagName);
+            Check.NotNullOrEmpty(tagName);
 
             var childName = tagName.Members.First();
             var childMember = GetMembers(_member.DataType).SingleOrDefault(m => m.Name == childName);
@@ -160,7 +160,7 @@ namespace L5Sharp.Components
 
         private TagMember? Descendent(TagName tagName)
         {
-            Check.TagNameNotNullOrEmpty(tagName);
+            Check.NotNullOrEmpty(tagName);
             
             var childName = tagName.Members.First();
             var childMember = GetMembers(_member.DataType).SingleOrDefault(m => m.Name == childName);
@@ -181,7 +181,7 @@ namespace L5Sharp.Components
                 case StructureType structureType:
                     structureType.Members();
                     break;
-                case ArrayType arrayType:
+                case ArrayType<ILogixType> arrayType:
                     return arrayType.Members();
             }
 

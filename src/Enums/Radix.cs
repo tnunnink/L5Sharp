@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -40,7 +39,7 @@ namespace L5Sharp.Enums
         /// Represents a Null radix, or absence of a Radix value.
         /// </summary>
         /// <remarks>
-        /// Only <see cref="IAtomicType"/> types have non-null Radix. <see cref="IComplexType"/> types all have null Radix.
+        /// Only <see cref="AtomicType"/> types have non-null Radix. <see cref="StructureType"/> types all have null Radix.
         /// </remarks>
         public static readonly Radix Null = new NullRadix();
 
@@ -113,6 +112,9 @@ namespace L5Sharp.Enums
         /// </returns>
         public static Radix Default(ILogixType type)
         {
+            if (type is ArrayType<AtomicType> arrayType)
+                type = arrayType[0];
+
             if (type is not AtomicType atomicType)
                 return Null;
 
@@ -140,56 +142,21 @@ namespace L5Sharp.Enums
         }
 
         /// <summary>
-        /// Parses a string input to an object value based on the format of the input value.
+        /// Determines the radix format from a string representing a formatted atomic value.
         /// </summary>
-        /// <param name="input">The string value to parse.</param>
-        /// <returns>
-        /// An object representing the value of the parsed string input.
-        /// If no radix format can be determined from the input, returns the input string.
-        /// </returns>
-        /// <remarks>
-        /// This method determines the radix based on patterns in the input string. For example, if the string input
-        /// starts with the specifier '2#', this method will forward the call to <see cref="Parse"/> for the Binary Radix
-        /// and return the result. If no radix can be determined from the input string, the call is forwarded to the
-        /// <see cref="Null"/> radix, which which will throw a <see cref="NotSupportedException"/>.
-        /// </remarks>
-        public static AtomicType ParseValue(string input)
+        /// <param name="input">The string for which to infer the format.</param>
+        /// <returns>A <see cref="Radix"/> format enum value.</returns>
+        /// <exception cref="FormatException">A radix can not be determined from the format of <c>value</c>.</exception>
+        public static Radix Infer(string input)
         {
-            var parser = DetermineParser(input);
+            var name = Identifiers.FirstOrDefault(i => i.Value.Invoke(input)).Key;
 
-            if (parser is null)
+            if (name is null)
                 throw new FormatException(
-                    $"Could not determine Radix from input '{input}'. " +
-                    "Verify that the input string is an accepted Radix format");
+                    @$"Could not determine Radix from input '{input}'. 
+                        Verify that the input string is an accepted Radix format.");
 
-            return parser(input);
-        }
-
-        /// <summary>
-        /// Parsed a string input and returns the value as an <see cref="IAtomicType"/> value type.
-        /// </summary>
-        /// <remarks>
-        /// This method is similar to <see cref="ParseValue"/>, except it will return the parsed input as the
-        /// atomic value type that is specified by the generic parameter.
-        /// </remarks>
-        /// <param name="input">The string value to parse.</param>
-        /// <typeparam name="TAtomic">The <see cref="IAtomicType"/> type to return.</typeparam>
-        /// <returns>
-        /// An IAtomic value type instance representing the value of the parsed string input.
-        /// </returns>
-        public static TAtomic ParseValue<TAtomic>(string input) where TAtomic : AtomicType
-        {
-            var parser = DetermineParser(input);
-
-            if (parser is null)
-                throw new ArgumentException(
-                    $"Could not determine Radix from input '{input}'. Verify that the input string is an accepted Radix format");
-
-            var value = parser(input);
-
-            var converter = TypeDescriptor.GetConverter(typeof(TAtomic));
-
-            return (TAtomic)converter.ConvertFrom(value)!;
+            return FromName(name);
         }
 
         /// <summary>
@@ -200,12 +167,6 @@ namespace L5Sharp.Enums
         /// A string that represents the value of the atomic type in the current radix base number style.
         /// </returns>
         public abstract string Format(AtomicType atomic);
-        
-        
-        /*public virtual string Format(string format, object arg, IFormatProvider formatProvider)
-        {
-            throw new NotImplementedException();
-        }*/
 
         /// <summary>
         /// Parses a string input of a given Radix formatted value into an object value. 
@@ -232,20 +193,6 @@ namespace L5Sharp.Enums
                     $"The provided value byte length '{byteLength}' is out of range for atomic conversion. " +
                     "Must be between 0 and 8 bytes.")
             };
-        }
-
-        /// <summary>
-        /// Gets a parse function based on the provided string input.
-        /// </summary>
-        /// <param name="value">The string input value to determine a parse function for.</param>
-        /// <returns>
-        /// A func delegate that represents the parse function for the given string input.
-        /// </returns>
-        private static Func<string, AtomicType>? DetermineParser(string value)
-        {
-            var name = Identifiers.FirstOrDefault(i => i.Value.Invoke(value)).Key;
-
-            return name is not null ? input => FromName(name).Parse(input) : null;
         }
 
         private void ValidateFormat(string input)
@@ -355,11 +302,19 @@ namespace L5Sharp.Enums
             {
                 ValidateType(atomic);
 
-                if (atomic is BOOL b)
-                    return b ? "1" : "0";
-
-                //todo is this not a circular reference?
-                return atomic.ToString();
+                return atomic switch
+                {
+                    BOOL v => v ? "1" : "0",
+                    SINT v => ((sbyte)v).ToString(),
+                    INT v => ((short)v).ToString(),
+                    DINT v => ((int)v).ToString(),
+                    LINT v => ((int)v).ToString(),
+                    USINT v => ((byte)v).ToString(),
+                    UINT v => ((ushort)v).ToString(),
+                    UDINT v => ((uint)v).ToString(),
+                    ULINT v => ((ulong)v).ToString(),
+                    _ => throw new ArgumentOutOfRangeException(nameof(atomic), atomic, null)
+                };
             }
 
             public override AtomicType Parse(string input)

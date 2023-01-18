@@ -1,6 +1,7 @@
 ﻿using System;
 using L5Sharp.Enums;
 using L5Sharp.Extensions;
+using L5Sharp.Types;
 using L5Sharp.Types.Atomics;
 
 namespace L5Sharp.Core
@@ -30,7 +31,7 @@ namespace L5Sharp.Core
         /// <summary>
         /// Indicates whether the operand represents a constant or immediate value. 
         /// </summary>
-        public bool IsValue => Radix.ParseValue(_operand.ToString()) is not null;
+        public bool IsValue => Atomic.Parse(_operand.ToString()) is not null;
         
         /// <summary>
         /// Performs implicit conversions from <see cref="TagName"/> to <see cref="Operand"/>

@@ -358,7 +358,7 @@ namespace L5Sharp.Tests.Types.Converters
 
             var result = (string)converter.ConvertTo(value, typeof(string))!;
 
-            result.Should().Be(value.Format(Radix.Decimal));
+            result.Should().Be(value.ToString(Radix.Decimal));
         }
     }
 }

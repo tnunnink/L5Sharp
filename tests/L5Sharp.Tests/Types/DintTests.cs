@@ -35,7 +35,6 @@ namespace L5Sharp.Tests.Types
             type.Name.Should().Be(nameof(DINT).ToUpper());
             type.Class.Should().Be(DataTypeClass.Atomic);
             type.Family.Should().Be(DataTypeFamily.None);
-            //type.Description.Should().Be("Logix representation of a System.Int32");
             type.Should().Be(0);
         }
 
@@ -60,43 +59,27 @@ namespace L5Sharp.Tests.Types
         }
 
         [Test]
-        public void SetValue_ValidInt_ShouldReturnExpected()
-        {
-            DINT type = _random;
-
-            type.Should().Be(_random);
-        }
-
-        [Test]
-        public void SetValue_SameType_ShouldReturnExpected()
-        {
-            var type = new DINT(_random);
-
-            type.Should().Be(_random);
-        }
-
-        [Test]
-        public void Format_DefaultRadix_ShouldBeExpected()
+        public void ToString_DefaultRadix_ShouldBeExpected()
         {
             var type = new DINT();
 
-            var format = type.Format();
+            var format = type.ToString();
 
             format.Should().Be("0");
         }
 
         [Test]
-        public void Format_OverloadedRadix_ShouldBeExpected()
+        public void ToString_OverloadedRadix_ShouldBeExpected()
         {
             var type = new DINT();
 
-            var format = type.Format(Radix.Binary);
+            var format = type.ToString(Radix.Binary);
 
             format.Should().Be("2#0000_0000_0000_0000_0000_0000_0000_0000");
         }
 
         [Test]
-        public void ImplicitOperator_Dint_ShouldBeTrue()
+        public void Set_Random_ShouldBeExpected()
         {
             DINT value = _random;
 
@@ -104,7 +87,7 @@ namespace L5Sharp.Tests.Types
         }
 
         [Test]
-        public void ImplicitOperator_int_ShouldBeTrue()
+        public void Set_Atomic_ShouldBeExpected()
         {
             int value = new DINT(_random);
 

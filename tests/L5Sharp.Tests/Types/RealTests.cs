@@ -80,7 +80,7 @@ namespace L5Sharp.Tests.Types
         {
             var type = new REAL();
 
-            var format = type.Format();
+            var format = type.ToString();
 
             format.Should().Be("0.0");
         }
@@ -90,7 +90,7 @@ namespace L5Sharp.Tests.Types
         {
             var type = new REAL();
 
-            var format = type.Format(Radix.Exponential);
+            var format = type.ToString(Radix.Exponential);
 
             format.Should().Be("0.00000000e+000");
         }

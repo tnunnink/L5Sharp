@@ -35,7 +35,7 @@ namespace L5Sharp.Types.Atomics.Converters
                     LINT v => v,
                     ULINT v => new LINT((long)(ulong)v),
                     REAL v => new LINT((long)v),
-                    string v => long.TryParse(v, out var result) ? new LINT(result) : Radix.ParseValue<LINT>(v),
+                    string v => long.TryParse(v, out var result) ? new LINT(result) : Atomic.Parse<LINT>(v),
                     _ => base.ConvertFrom(context, culture, value)
                          ?? throw new NotSupportedException(
                              $"The provided value of type {value.GetType()} is not supported for conversion.")

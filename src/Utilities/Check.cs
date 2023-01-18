@@ -1,17 +1,32 @@
 ﻿using System;
+using System.Xml.Linq;
 using L5Sharp.Core;
 
 namespace L5Sharp.Utilities
 {
     internal static class Check
     {
-        public static void TagNameNotNullOrEmpty(TagName tagName)
+        public static void NotNull(object obj)
         {
-            if (tagName is null)
-                throw new ArgumentNullException(nameof(tagName));
-            
-            if (tagName.IsEmpty)
-                throw new ArgumentException(nameof(tagName));
+            if (obj is null)
+                throw new ArgumentNullException(nameof(obj));
+        }
+
+        public static void NotNullOrEmpty(string str)
+        {
+            switch (str)
+            {
+                case null:
+                    throw new ArgumentNullException(nameof(str));
+                case "":
+                    throw new ArgumentException("Value can not be empty", nameof(str));
+            }
+        }
+
+        public static void ElementNotNull(XElement element)
+        {
+            if (element is null)
+                throw new ArgumentNullException(nameof(element));
         }
     }
 }

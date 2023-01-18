@@ -953,7 +953,7 @@ namespace L5Sharp.Tests.Types.Converters
 
             var result = (string)_converter.ConvertTo(value, typeof(string));
 
-            result.Should().Be(value.Format());
+            result.Should().Be(value.ToString());
         }
     }
 }

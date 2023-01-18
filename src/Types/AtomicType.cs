@@ -1,5 +1,9 @@
 ﻿using System;
+using System.Xml.Linq;
+using L5Sharp.Attributes;
 using L5Sharp.Enums;
+using L5Sharp.Serialization;
+using L5Sharp.Utilities;
 
 namespace L5Sharp.Types
 {
@@ -13,7 +17,8 @@ namespace L5Sharp.Types
     /// <footer>
     /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
     /// `Logix 5000 Controllers Import/Export`</a> for more information.
-    /// </footer> 
+    /// </footer>
+    [LogixSerializer(typeof(DataValueSerializer))]
     public abstract class AtomicType : ILogixType
     {
         /// <summary>
@@ -24,6 +29,7 @@ namespace L5Sharp.Types
         protected internal AtomicType(string name)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
+            Radix = Radix.Default(this);
         }
 
         /// <inheritdoc />
@@ -31,21 +37,27 @@ namespace L5Sharp.Types
 
         /// <inheritdoc />
         public DataTypeFamily Family => DataTypeFamily.None;
-        
+
         /// <inheritdoc />
         public DataTypeClass Class => DataTypeClass.Atomic;
+
+        /// <summary>
+        /// The radix format for the <see cref="AtomicType"/>.
+        /// </summary>
+        /// <value>A <see cref="Enums.Radix"/> enum representing the format of the atomic type value.</value>
+        public Radix Radix { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        public string Format() => Radix.Default(this).Format(this);
-        
+        public override string ToString() => Radix.Format(this);
+
         /// <summary>
         /// 
         /// </summary>
         /// <param name="radix"></param>
         /// <returns></returns>
-        public string Format(Radix radix) => radix.Format(this);
+        public string ToString(Radix radix) => radix.Format(this);
     }
 }
