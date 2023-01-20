@@ -29,7 +29,7 @@ namespace L5Sharp.Serialization
             element.Add(new XAttribute(L5XName.ExternalAccess, obj.ExternalAccess));
 
             if (!obj.Description.IsEmpty())
-                element.Add(new XElement(L5XName.Description, obj.Description));
+                element.Add(new XElement(L5XName.Description, new XCData(obj.Description)));
 
             return element;
         }

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Xml.Linq;
-using L5Sharp.Enums;
-using L5Sharp.Extensions;
-using L5Sharp.Utilities;
+﻿using L5Sharp.Enums;
 
 namespace L5Sharp.Components
 {
@@ -30,28 +26,5 @@ namespace L5Sharp.Components
         /// </summary>
         /// <value>A <see cref="Enums.RoutineType"/> enum specifying the type content the routine contains.</value>
         public abstract RoutineType Type { get; }
-
-        /// <inheritdoc />
-        public virtual XElement Serialize()
-        {
-            var element = new XElement(L5XName.Routine);
-            element.Add(new XAttribute(L5XName.Name, Name));
-            element.Add(new XAttribute(L5XName.Type, Type.Value));
-
-            return element;
-        }
-
-        /// <inheritdoc />
-        public virtual void Deserialize(XElement element)
-        {
-            if (element == null)
-                throw new ArgumentNullException(nameof(element));
-
-            if (element.Name != L5XName.Routine)
-                throw new ArgumentException($"Element '{element.Name}' not valid element for {GetType()}.");
-
-            Name = element.ComponentName();
-            Description = element.ComponentDescription();
-        }
     }
 }
