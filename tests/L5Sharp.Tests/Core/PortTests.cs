@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using L5Sharp.Components;
 using L5Sharp.Core;
 using NUnit.Framework;
 
@@ -10,7 +11,7 @@ namespace L5Sharp.Tests.Core
         [Test]
         public void New_Default_ShouldNotBeNull()
         {
-            var port = new Port(1, "ICP");
+            var port = new Port { Id = 1, Type = "ICP" };
 
             port.Should().NotBeNull();
         }
@@ -18,7 +19,7 @@ namespace L5Sharp.Tests.Core
         [Test]
         public void New_Default_ShouldHaveExpected()
         {
-            var port = new Port(1, "ICP");
+            var port = new Port { Id = 1, Type = "ICP" };
 
             port.Id.Should().Be(1);
             port.Type.Should().Be("ICP");
@@ -31,7 +32,15 @@ namespace L5Sharp.Tests.Core
         [Test]
         public void New_Overrides_ShouldHaveExpectedProperties()
         {
-            var port = new Port(2, "ICP", "0", true, 17, true);
+            var port = new Port
+            {
+                Id = 1,
+                Type = "ICP",
+                Address = "0",
+                Upstream = true,
+                BusSize = 17,
+                DownstreamOnly = true
+            };
 
             port.Id.Should().Be(2);
             port.Type.Should().Be("ICP");
@@ -44,8 +53,8 @@ namespace L5Sharp.Tests.Core
         [Test]
         public void TypedEquals_AreEqual_ShouldBeTrue()
         {
-            var first = new Port(1, "ICP");
-            var second = new Port(1, "ICP");
+            var first = new Port { Id = 1, Type = "ICP" };
+            var second = new Port { Id = 1, Type = "ICP" };
 
             var result = first.Equals(second);
 
@@ -55,19 +64,18 @@ namespace L5Sharp.Tests.Core
         [Test]
         public void TypedEquals_AreSame_ShouldBeTrue()
         {
-            var first = new Port(1, "ICP");
-            
+            var first = new Port { Id = 1, Type = "ICP" };
+
             var result = first.Equals(first);
 
             result.Should().BeTrue();
         }
 
-
         [Test]
         public void TypedEquals_Null_ShouldBeFalse()
         {
-            var first = new Port(1, "ICP");
-            
+            var first = new Port { Id = 1, Type = "ICP" };
+
             var result = first.Equals(null);
 
             result.Should().BeFalse();
@@ -76,8 +84,8 @@ namespace L5Sharp.Tests.Core
         [Test]
         public void ObjectEquals_AreEqual_ShouldBeTrue()
         {
-            var first = new Port(1, "ICP");
-            var second = new Port(1, "ICP");
+            var first = new Port { Id = 1, Type = "ICP" };
+            var second = new Port { Id = 1, Type = "ICP" };
 
             var result = first.Equals((object)second);
 
@@ -87,7 +95,7 @@ namespace L5Sharp.Tests.Core
         [Test]
         public void ObjectEquals_AreSame_ShouldBeTrue()
         {
-            var first = new Port(1, "ICP");
+            var first = new Port { Id = 1, Type = "ICP" };
 
             var result = first.Equals((object)first);
 
@@ -98,7 +106,7 @@ namespace L5Sharp.Tests.Core
         [Test]
         public void ObjectEquals_Null_ShouldBeFalse()
         {
-            var first = new Port(1, "ICP");
+            var first = new Port { Id = 1, Type = "ICP" };
 
             var result = first.Equals((object)null);
 
@@ -108,8 +116,8 @@ namespace L5Sharp.Tests.Core
         [Test]
         public void OperatorEquals_AreEqual_ShouldBeTrue()
         {
-            var first = new Port(1, "ICP");
-            var second = new Port(1, "ICP");
+            var first = new Port { Id = 1, Type = "ICP" };
+            var second = new Port { Id = 1, Type = "ICP" };
 
             var result = first == second;
 
@@ -119,8 +127,8 @@ namespace L5Sharp.Tests.Core
         [Test]
         public void OperatorNotEquals_AreEqual_ShouldBeFalse()
         {
-            var first = new Port(1, "ICP");
-            var second = new Port(1, "ICP");
+            var first = new Port { Id = 1, Type = "ICP" };
+            var second = new Port { Id = 1, Type = "ICP" };
 
             var result = first != second;
 
@@ -130,7 +138,7 @@ namespace L5Sharp.Tests.Core
         [Test]
         public void GetHashCode_WhenCalled_ShouldNotBeId()
         {
-            var first = new Port(1, "ICP");
+            var first = new Port { Id = 1, Type = "ICP" };
 
             var hash = first.GetHashCode();
 

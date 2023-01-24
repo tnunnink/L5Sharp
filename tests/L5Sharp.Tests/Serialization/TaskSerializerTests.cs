@@ -4,11 +4,13 @@ using System.Xml.Linq;
 using ApprovalTests;
 using ApprovalTests.Reporters;
 using FluentAssertions;
+using L5Sharp.Components;
 using L5Sharp.Core;
 using L5Sharp.Enums;
+using L5Sharp.Serialization;
 using NUnit.Framework;
 
-namespace L5Sharp.Serialization.Tests
+namespace L5Sharp.Tests.Serialization
 {
     [TestFixture]
     public class TaskSerializerTests
@@ -30,7 +32,7 @@ namespace L5Sharp.Serialization.Tests
         [Test]
         public void Serialize_Task_ShouldNotBeNull()
         {
-            var task = new ContinuousTask("Test");
+            var task = new Task();
 
             var xml = _serializer.Serialize(task);
 
@@ -41,14 +43,23 @@ namespace L5Sharp.Serialization.Tests
         [UseReporter(typeof(DiffReporter))]
         public void Serialize_ContinuousTask_ShouldBeApproved()
         {
-            var task = new ContinuousTask("Test", new ScanRate(100), new TaskPriority(10), new Watchdog(5000), true,
-                false, new List<string>
+            var task = new Task
+            {
+                Name ="Test", 
+                Type = TaskType.Continuous,
+                Rate = new ScanRate(100),
+                Priority = new TaskPriority(10),
+                Watchdog = new Watchdog(5000), 
+                DisableUpdateOutputs = true,
+                InhibitTask = false,
+                ScheduledPrograms = new List<string>
                 {
                     "Test_Program_01",
                     "Test_Program_02",
                     "Test_Program_03"
                 },
-                "This is a test continuous task");
+                Description = "This is a test continuous task"
+            };
 
             var xml = _serializer.Serialize(task);
 
@@ -59,14 +70,23 @@ namespace L5Sharp.Serialization.Tests
         [UseReporter(typeof(DiffReporter))]
         public void Serialize_PeriodicTask_ShouldBeApproved()
         {
-            var task = new PeriodicTask("Test", new ScanRate(100), new TaskPriority(10), new Watchdog(5000), true,
-                false, new List<string>
+            var task = new Task
+            {
+                Name ="Test", 
+                Type = TaskType.Periodic,
+                Rate = new ScanRate(100),
+                Priority = new TaskPriority(10),
+                Watchdog = new Watchdog(5000), 
+                DisableUpdateOutputs = true,
+                InhibitTask = false,
+                ScheduledPrograms = new List<string>
                 {
                     "Test_Program_01",
                     "Test_Program_02",
                     "Test_Program_03"
                 },
-                "This is a test periodic task");
+                Description = "This is a test periodic task"
+            };
 
             var xml = _serializer.Serialize(task);
 
@@ -77,14 +97,29 @@ namespace L5Sharp.Serialization.Tests
         [UseReporter(typeof(DiffReporter))]
         public void Serialize_EventTask_ShouldBeApproved()
         {
-            var task = new PeriodicTask("Test", new ScanRate(100), new TaskPriority(10), new Watchdog(5000), true,
-                false, new List<string>
+            var task = new Task
+            {
+                Name ="Test", 
+                Type = TaskType.Event,
+                Rate = new ScanRate(100),
+                Priority = new TaskPriority(10),
+                Watchdog = new Watchdog(5000), 
+                DisableUpdateOutputs = true,
+                InhibitTask = false,
+                ScheduledPrograms = new List<string>
                 {
                     "Test_Program_01",
                     "Test_Program_02",
                     "Test_Program_03"
                 },
-                "This is a test event task");
+                Description = "This is a test periodic task",
+                EventInfo = new TaskEventInfo
+                {
+                    EventTrigger = TaskEventTrigger.EventInstructionOnly,
+                    EventTag = "TagName",
+                    EnableTimeout = true
+                }
+            };
 
             var xml = _serializer.Serialize(task);
 

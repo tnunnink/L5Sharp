@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq.Expressions;
 using L5Sharp.Types;
 
 namespace L5Sharp
@@ -7,7 +8,7 @@ namespace L5Sharp
     /// 
     /// </summary>
     /// <typeparam name="TLogixType"></typeparam>
-    public interface ILogixTagMember<out TLogixType> : ILogixTagMember
+    public interface ILogixTagMember<TLogixType> : ILogixTagMember
         where TLogixType : ILogixType
     {
         /// <summary>
@@ -16,7 +17,7 @@ namespace L5Sharp
         /// <param name="memberSelector"></param>
         /// <typeparam name="TMemberType"></typeparam>
         /// <returns></returns>
-        ILogixTagMember<TMemberType> Member<TMemberType>(Func<TLogixType, TMemberType> memberSelector)
+        ILogixTagMember<TMemberType> Member<TMemberType>(Expression<Func<TLogixType, TMemberType>> memberSelector)
             where TMemberType : ILogixType;
         
         /// <summary>

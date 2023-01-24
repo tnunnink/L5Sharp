@@ -1,7 +1,7 @@
-﻿using L5Sharp.Attributes;
+﻿using System.Xml.Serialization;
 using L5Sharp.Core;
 using L5Sharp.Enums;
-using L5Sharp.Serialization;
+using L5Sharp.Utilities;
 
 namespace L5Sharp.Components
 {
@@ -12,8 +12,8 @@ namespace L5Sharp.Components
     /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
     /// `Logix 5000 Controllers Import/Export`</a> for more information.
     /// </footer>
-    [LogixSerializer(typeof(DataTypeMemberSerializer))]
-    public class DataTypeMember
+    [XmlType(L5XName.Member)]
+    public class DataTypeMember : ILogixMember
     {
         /// <summary>
         /// The name of the <see cref="DataTypeMember"/>.

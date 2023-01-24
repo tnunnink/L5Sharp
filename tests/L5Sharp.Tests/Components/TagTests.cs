@@ -49,15 +49,16 @@ namespace L5Sharp.Tests.Components
             var isSet = tag.TrySetValue(new INT(6000));
             
             var member = tag.Member("ChildMember.SubMember[0].Bit1");
+        }
 
+        [Test]
+        public void Generic_Member_ShouldWork()
+        {
+            var tag = new Tag<MyNestedType>("MyTag", new MyNestedType());
 
-            var nested = new Tag<MyNestedType>();
+            var member = tag.Member(n => n.Simple.M2);
 
-            var m1 = nested.Member(m => m.Simple.M1);
-            
-            m1.SetValue(b => b, new BOOL(true));
-            
-            nested.SetValue(m => m.Flags[5], new BOOL(false));
+            member.TagName.Should().Be(new TagName("MyTag.Simple.M2"));
         }
     }
 }

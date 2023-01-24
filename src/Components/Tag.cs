@@ -165,7 +165,7 @@ namespace L5Sharp.Components
         private TagMember? Descendent(TagName tagName)
         {
             if (_dataType is null)
-                throw new InvalidOperationException("Tag has not internal data type structure.");
+                throw new InvalidOperationException("Tag has no internal data type structure.");
             
             Check.NotNullOrEmpty(tagName);
             

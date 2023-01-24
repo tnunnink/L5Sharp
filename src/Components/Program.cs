@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Xml.Linq;
-using L5Sharp.Enums;
+﻿using L5Sharp.Enums;
 
 namespace L5Sharp.Components
 {
@@ -55,29 +53,5 @@ namespace L5Sharp.Components
         /// </summary>
         /// <value>A <see cref="bool"/>; <c>true</c> if the program is a folder; otherwise, <c>false</c>.</value>
         public bool UseAsFolder { get; set; } = false;
-
-        /// <summary>
-        /// A collection of locally scoped <see cref="Tag"/> components contained by the program. 
-        /// </summary>
-        /// <value>A <see cref="Dictionary{TKey,TValue}"/> containing the collection of <see cref="Tag"/> objects.</value>
-        public Dictionary<string, Tag> Tags { get; set; } = new();
-
-        /// <summary>
-        /// A collection of locally scoped <see cref="Routine"/> components contained by the program. 
-        /// </summary>
-        /// <value>A <see cref="Dictionary{TKey,TValue}"/> containing the collection of <see cref="Routine"/> objects.</value>
-        public Dictionary<string, Routine> Routines { get; set; } = new();
-
-        /// <inheritdoc />
-        public XElement Serialize()
-        {
-            throw new System.NotImplementedException();
-        }
-
-        /// <inheritdoc />
-        public void Deserialize(XElement element)
-        {
-            throw new System.NotImplementedException();
-        }
     }
 }

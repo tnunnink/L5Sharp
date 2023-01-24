@@ -23,10 +23,13 @@ namespace L5Sharp.Utilities
             }
         }
 
-        public static void ElementNotNull(XElement element)
+        public static void SerializerAttribute(Attribute attribute, Type type)
         {
-            if (element is null)
-                throw new ArgumentNullException(nameof(element));
+            const string suggestion = "Class must specify a LogixSerializerAttribute in order to be deserialized.";
+            
+            if (attribute is null)
+                throw new InvalidOperationException(
+                    $"No serializer defined for type {type}. {suggestion}");
         }
     }
 }

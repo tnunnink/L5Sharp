@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Serialization;
 using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Types;
@@ -13,7 +14,7 @@ namespace L5Sharp.Components
     /// </summary>
     public class TagMember : ILogixTagMember
     {
-        private readonly Member _member;
+        protected readonly Member _member;
         private readonly ILogixTagMember _parent;
         private readonly Tag _tag;
 
@@ -38,21 +39,25 @@ namespace L5Sharp.Components
 
         /// <inheritdoc />
         public Radix Radix => _member.Radix;
-
+        
         /// <inheritdoc />
+        [XmlIgnore]
         public ExternalAccess ExternalAccess =>
             ExternalAccess.MostRestrictive(_member.ExternalAccess, _parent.ExternalAccess);
 
         /// <inheritdoc />
+        [XmlIgnore]
         public TagName TagName => TagName.Combine(_parent.TagName, Name);
 
         /// <inheritdoc />
+        [XmlIgnore]
         public MemberType MemberType => MemberType.FromType(_member.DataType);
-
+        
         /// <summary>
         /// The overriden string comment of the tag member, if one exists. Empty string if not.
         /// </summary>
         /// <value>A <see cref="string"/> containing the tag member comment.</value>
+        [XmlIgnore]
         public string Comment
         {
             get => _tag.Comments.TryGetValue(TagName.Operand, out var comment) ? comment: string.Empty;
@@ -63,6 +68,7 @@ namespace L5Sharp.Components
         /// The units of the tag member. This appears to only apply to module defined tags...
         /// </summary>
         /// <value>A <see cref="string"/> representing the scaled units of the tag member.</value>
+        [XmlIgnore]
         public string Units
         {
             get => _tag.Units.TryGetValue(TagName.Operand, out var units) ? units: string.Empty;

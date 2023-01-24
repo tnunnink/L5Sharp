@@ -12,15 +12,28 @@ namespace L5Sharp.Components
     /// </footer>
     public abstract class Routine : ILogixScopedComponent
     {
-        /// <inheritdoc />
-        public string Name { get; set; } = string.Empty;
-
-        /// <inheritdoc />
-        public string Description { get; set; } = string.Empty;
-
-        /// <inheritdoc />
-        public Scope Scope => Scope.Program;
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="scope"></param>
+        /// <param name="description"></param>
+        protected Routine(string name, Scope? scope = null, string? description = null)
+        {
+            Name = name;
+            Description = description ?? string.Empty;
+            Scope = scope ?? Scope.Null;
+        }
         
+        /// <inheritdoc />
+        public string Name { get; set; }
+
+        /// <inheritdoc />
+        public string Description { get; set; }
+
+        /// <inheritdoc />
+        public Scope Scope { get; set; }
+
         /// <summary>
         /// The type of the <see cref="Routine"/> component.
         /// </summary>

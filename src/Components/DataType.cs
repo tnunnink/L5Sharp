@@ -17,7 +17,6 @@ namespace L5Sharp.Components
         /// <inheritdoc />
         public string Name { get; set; } = string.Empty;
 
-
         /// <inheritdoc />
         public string Description { get; set; } = string.Empty;
 

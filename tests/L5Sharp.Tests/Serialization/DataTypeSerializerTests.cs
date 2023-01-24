@@ -5,20 +5,20 @@ using System.Xml.Linq;
 using ApprovalTests;
 using ApprovalTests.Reporters;
 using FluentAssertions;
+using L5Sharp.Components;
 using L5Sharp.Core;
-using L5Sharp.Creators;
 using L5Sharp.Enums;
-using L5Sharp.Types;
+using L5Sharp.Serialization;
 using L5Sharp.Types.Atomics;
 using NUnit.Framework;
 
-namespace L5Sharp.Serialization.Tests
+namespace L5Sharp.Tests.Serialization
 {
     [TestFixture]
     public class DataTypeSerializerTests
     {
         private DataTypeSerializer _serializer;
-        
+
         [SetUp]
         public void Setup()
         {
@@ -34,7 +34,7 @@ namespace L5Sharp.Serialization.Tests
         [Test]
         public void Serialize_WhenCalled_ShouldNotBeNull()
         {
-            var type = new UserDefined("Test");
+            var type = new DataType();
 
             var xml = _serializer.Serialize(type);
 
@@ -45,7 +45,10 @@ namespace L5Sharp.Serialization.Tests
         [UseReporter(typeof(DiffReporter))]
         public void Serialize_BasicType_ShouldBeApproved()
         {
-            var type = new UserDefined("Test", "This is a test user defined type");
+            var type = new DataType
+            {
+                Name = "Test", Description = "This is a test user defined type"
+            };
 
             var xml = _serializer.Serialize(type);
 
@@ -56,25 +59,47 @@ namespace L5Sharp.Serialization.Tests
         [UseReporter(typeof(DiffReporter))]
         public void Serialize_AtomicType_ShouldBeApproved()
         {
-            var type = new UserDefined("Test", "This is a test user defined type", new List<IMember<IDataType>>
+            var type = new DataType
             {
-                Member.Create<BOOL>("Member01", Radix.Binary, ExternalAccess.ReadOnly, "This is a test member"),
-                Member.Create<INT>("Member02", Radix.Octal, ExternalAccess.None, "This is a test member"),
-                Member.Create<DINT>("Member03", Radix.Decimal, ExternalAccess.ReadOnly, "This is a test member"),
-                Member.Create<LINT>("Member04", Radix.Hex, description: "This is a test member"),
-                Member.Create<SINT>("Member04", Radix.Ascii),
-                Member.Create<REAL>("Member05")
-            });
+                Name = "Test",
+                Description = "This is a test user defined type",
+                Members = new List<DataTypeMember>
+                {
+                    new()
+                    {
+                        Name = "Member01", DataType = "BOOL", Radix = Radix.Binary,
+                        ExternalAccess = ExternalAccess.ReadOnly, Description = "This is a test member"
+                    },
+                    new()
+                    {
+                        Name = "Member02", DataType = "INT", Radix = Radix.Octal,
+                        ExternalAccess = ExternalAccess.None, Description = "This is a test member"
+                    },
+                    new()
+                    {
+                        Name = "Member03", DataType = "DINT", Radix = Radix.Decimal,
+                        ExternalAccess = ExternalAccess.ReadOnly, Description = "This is a test member",
+                    },
+                    new()
+                    {
+                        Name = "Member04", DataType = "LINT", Radix = Radix.Hex,
+                        Description = "This is a test member"
+                    },
+                    new() { Name = "Member04", DataType = "SINT", Radix = Radix.Ascii },
+                    new() { Name = "Member05", DataType = "REAL" }
+                }
+            };
 
             var xml = _serializer.Serialize(type);
-
+            
             Approvals.VerifyXml(xml.ToString());
         }
 
         [Test]
         public void Deserialize_Null_ShouldThrowArgumentNullException()
         {
-            FluentActions.Invoking(() => _serializer.Deserialize(null!)).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(() => _serializer.Deserialize(null!)).Should().Throw<
+                ArgumentException>();
         }
 
         [Test]
@@ -82,8 +107,8 @@ namespace L5Sharp.Serialization.Tests
         {
             const string xml = @"<Invalid></Invalid>";
             var element = XElement.Parse(xml);
-
-            FluentActions.Invoking(() => _serializer.Deserialize(element)).Should().Throw<ArgumentException>()
+            FluentActions.Invoking(() => _serializer.Deserialize(element)).Should().Throw<
+                    ArgumentException>()
                 .WithMessage($"Element 'Invalid' not valid for the serializer {_serializer.GetType()}.");
         }
 
@@ -91,9 +116,7 @@ namespace L5Sharp.Serialization.Tests
         public void Deserialize_SimpleType_ShouldNotBeNull()
         {
             var element = XElement.Parse(GetSimpleTypeXml());
-
             var component = _serializer.Deserialize(element);
-
             component.Should().NotBeNull();
         }
 
@@ -135,7 +158,7 @@ namespace L5Sharp.Serialization.Tests
             var element = XElement.Parse(GetSimpleTypeXml());
 
             var component = _serializer.Deserialize(element);
-            
+
             var member = component.Members.FirstOrDefault(m => m.Name == "SintMember");
             member.Should().NotBeNull();
             member?.Name.Should().Be("SintMember");
@@ -152,7 +175,7 @@ namespace L5Sharp.Serialization.Tests
             var element = XElement.Parse(GetSimpleTypeXml());
 
             var component = _serializer.Deserialize(element);
-            
+
             var member = component.Members.FirstOrDefault(m => m.Name == "IntMember");
             member.Should().NotBeNull();
             member?.Name.Should().Be("IntMember");

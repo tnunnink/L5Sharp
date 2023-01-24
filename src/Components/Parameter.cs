@@ -27,7 +27,6 @@ namespace L5Sharp.Components
         /// <inheritdoc />
         public ExternalAccess ExternalAccess { get; set; } = ExternalAccess.ReadWrite;
         
-        public MemberType MemberType { get; }
         public TagType TagType { get; set; } = TagType.Base;
         public TagUsage Usage { get; set; } = TagUsage.Input;
         public bool Required { get; set; } = false;

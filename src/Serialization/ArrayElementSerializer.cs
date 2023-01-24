@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Xml.Linq;
 using L5Sharp.Core;
 using L5Sharp.Enums;
@@ -39,7 +38,7 @@ namespace L5Sharp.Serialization
             Check.NotNull(element);
             
             var index = element.Attribute(L5XName.Index)?.Value
-                        ?? throw new ArgumentException($"Element must have {L5XName.Index} attribute.");;
+                        ?? throw new ArgumentException($"Element must have {L5XName.Index} attribute.");
             
             if (element.Attribute(L5XName.Value) is not null)
             {

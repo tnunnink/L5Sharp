@@ -10,8 +10,7 @@ using L5Sharp.Enums;
 namespace L5Sharp.Rockwell
 {
     /// <summary>
-    /// A service that allows lookups for <see cref="Core.ModuleDefinition"/> objects based on
-    /// <see cref="Core.CatalogNumber"/> values.
+    /// A service that allows lookups for <see cref="Core.ModuleDefinition"/> objects based on catalog numbers.
     /// </summary>
     /// <remarks>
     /// This service will attempt to load the Rockwell Catalog service file into memory in order to query for data.
@@ -56,8 +55,8 @@ namespace L5Sharp.Rockwell
         /// <param name="catalogNumber">The catalog number of the <see cref="Module"/> to lookup.</param>
         /// <returns>A <see cref="ModuleDefinition"/> instance for the specified catalogNumber if found in the current
         /// catalog service file; otherwise, null.</returns>
-        /// <exception cref="ArgumentNullException">When catalogNumber is null.</exception>
-        /// <exception cref="ModuleNotFoundException">The provided catalog number was not found.</exception>
+        /// <exception cref="ArgumentNullException"><c>catalogNumber</c> is null.</exception>
+        /// <exception cref="InvalidOperationException">The provided catalog number was not found.</exception>
         public ModuleDefinition Lookup(string catalogNumber)
         {
             if (catalogNumber is null)
@@ -67,20 +66,14 @@ namespace L5Sharp.Rockwell
                 .FirstOrDefault(e => e.Descendants(CatalogNumber).First().Value == catalogNumber);
 
             if (device is null)
-                throw new InvalidOperationException(catalogNumber);
+                throw new InvalidOperationException(
+                    $"Device with catalog number {catalogNumber} does not exists in local catalog database.");
 
             return MaterializeDefinition(device);
         }
 
-        private static ModuleDefinition MaterializeDefinition(XElement element)
+        private static ModuleDefinition MaterializeDefinition(XContainer element)
         {
-            if (element is null)
-                throw new ArgumentNullException(nameof(element));
-
-            if (element.Name != RaDevice)
-                throw new ArgumentException(
-                    $"The provided element name {element.Name} did not match the expected name {RaDevice}");
-
             var catalogNumber = GetCatalogNumber(element);
             var vendor = GetVendor(element);
             var productType = GetProductType(element);
@@ -94,11 +87,8 @@ namespace L5Sharp.Rockwell
                 description);
         }
 
-        private static string GetCatalogNumber(XContainer element)
-        {
-            return element.Descendants(CatalogNumber).FirstOrDefault()?.Value ??
-                   throw new ArgumentException("The provided element does not have a CatalogNumber value");
-        }
+        private static string GetCatalogNumber(XContainer element) =>
+            element.Descendants(CatalogNumber).FirstOrDefault()!.Value;
 
         private static Vendor GetVendor(XContainer element)
         {
@@ -120,10 +110,8 @@ namespace L5Sharp.Rockwell
             return new ProductType(id, name);
         }
 
-        private static ushort GetProductCode(XContainer element)
-        {
-            return ushort.Parse(element.Descendants(ProductCode).First().Value);
-        }
+        private static ushort GetProductCode(XContainer element) =>
+            ushort.Parse(element.Descendants(ProductCode).First().Value);
 
         private static IEnumerable<Revision> GetRevisions(XContainer element)
         {
@@ -161,14 +149,17 @@ namespace L5Sharp.Rockwell
                 var type = port.Attribute(Type)?.Value!;
                 var downstreamOnly = port.Elements().Any(e => e.Value == DownstreamOnly);
 
-                yield return new Port(number, type, downstreamOnly: downstreamOnly);
+                yield return new Port
+                {
+                    Id = number,
+                    Type = type,
+                    DownstreamOnly = downstreamOnly
+                };
             }
         }
 
-        private static string GetDescription(XContainer element)
-        {
-            return element.Descendants(Description).First().Value;
-        }
+        private static string GetDescription(XContainer element) =>
+            element.Descendants(Description).First().Value;
 
         private static XDocument GetLocalCatalog()
         {
@@ -177,9 +168,9 @@ namespace L5Sharp.Rockwell
 
             var info = new FileInfo(serviceFile);
 
-            if (!info.Exists || info.Extension != ".xml")
+            if (!info.Exists)
                 throw new ArgumentException(
-                    $"The catalog service file {serviceFile} does not exist on the current environment.");
+                    $"The catalog service file {serviceFile} does not exist in the current environment.");
 
             var document = XDocument.Load(info.FullName);
 

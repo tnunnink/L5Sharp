@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Xml.Linq;
 using L5Sharp.Components;
 using L5Sharp.Core;
@@ -8,10 +9,13 @@ using L5Sharp.Utilities;
 
 namespace L5Sharp.Serialization
 {
-    public class TaskSerializer : LogixSerializer<Task>
+    /// <summary>
+    /// 
+    /// </summary>
+    public class TaskSerializer : ILogixSerializer<Task>
     {
         /// <inheritdoc />
-        public override XElement Serialize(Task obj)
+        public XElement Serialize(Task obj)
         {
             Check.NotNull(obj);
 
@@ -28,9 +32,20 @@ namespace L5Sharp.Serialization
             if (!obj.Description.IsEmpty())
                 element.Add(new XElement(L5XName.Description, new XCData(obj.Description)));
 
-            if (!obj.ScheduledPrograms.Any())
-                return element;
+            if (obj.EventInfo is not null)
+            {
+                var eventInfo = new XElement(L5XName.EventInfo);
+                eventInfo.Add(new XAttribute(L5XName.EventTrigger, obj.EventInfo.EventTrigger.Value));
+                eventInfo.Add(new XAttribute(L5XName.EnableTimeout, obj.EventInfo.EnableTimeout));
 
+                if (obj.EventInfo.EventTag is not null)
+                    eventInfo.Add(new XAttribute(L5XName.EventTag, obj.EventInfo.EventTag));
+                
+                element.Add(eventInfo);
+            }
+
+            if (!obj.ScheduledPrograms.Any()) return element;
+            
             var scheduled = new XElement(L5XName.ScheduledPrograms);
             scheduled.Add(obj.ScheduledPrograms.Select(p =>
                 new XElement(L5XName.ScheduledProgram, new XAttribute(L5XName.Name, p))));
@@ -40,50 +55,38 @@ namespace L5Sharp.Serialization
         }
 
         /// <inheritdoc />
-        public override Task Deserialize(XElement element)
+        public Task Deserialize(XElement element)
         {
             Check.NotNull(element);
 
             return new Task
             {
-                Name = element.Attribute(L5XName.Name)!.Value,
-                Type = GetRequiredAttribute(element, t => t.Type).Parse<TaskType>(),
-                Rate = GetOptionalAttribute(element, t => t.Rate)?.Parse<ScanRate>() ?? default,
-                Priority = GetOptionalAttribute(element, t => t.Rate)?.Parse<TaskPriority>() ?? default,
-                Watchdog = GetOptionalAttribute(element, t => t.Rate)?.Parse<Watchdog>() ?? default,
-                DisableUpdateOutputs = GetRequiredAttribute(element, t => t.DisableUpdateOutputs).Parse<bool>(),
-                InhibitTask = GetRequiredAttribute(element, t => t.DisableUpdateOutputs).Parse<bool>(),
-                ScheduledPrograms = element.Descendants(L5XName.ScheduledProgram)
-                    .Select(p => GetRequiredAttribute(p, L5XName.Name)).ToList(),
+                Name = element.ComponentName(),
+                Type = element.Property<TaskType>(L5XName.Type),
+                Rate = element.PropertyOrDefault<ScanRate?>(L5XName.Rate) ?? default,
+                Priority = element.PropertyOrDefault<TaskPriority?>(L5XName.Priority) ?? default,
+                Watchdog = element.PropertyOrDefault<Watchdog?>(L5XName.Watchdog) ?? default,
+                DisableUpdateOutputs = element.Property<bool>(L5XName.DisableUpdateOutputs),
+                InhibitTask = element.Property<bool>(L5XName.InhibitTask),
+                ScheduledPrograms = element.Descendants(L5XName.ScheduledProgram).Select(p => p.ComponentName())
+                    .ToList(),
+                EventInfo = GetEventInfo(element)
             };
-
-            /*
-            var infoElement = element.Element(L5XName.EventInfo);
-
-            if (infoElement is not null)
-            {
-                var eventInfo = new TaskEventInfo
-                {
-                    EventTrigger = infoElement.Attribute(L5XName.EventTrigger)?.Value.Parse<TaskEventTrigger>(),
-                    EnableTimeout = infoElement.Attribute(L5XName.EnableTimeout)?.Value?.Parse<bool>() ?? default,
-                    EventTag = infoElement.Attribute(L5XName.EventTag)?.Value
-                };
-            }*/
         }
 
-        /// <inheritdoc />
-        protected override void Configure(ISerializationConfiguration<Task> configuration)
+        private static TaskEventInfo? GetEventInfo(XElement element)
         {
-            configuration.Register(t => t.Name).AsAttribute();
-            
-            configuration.Register(t => t.Watchdog)
-                .As(e => e.Descendants(L5XName.EventInfo).First())
-                .HasConvertion(Watchdog.Parse, w => w.ToString());
+            var eventInfo = element.Element(L5XName.EventInfo);
 
-            configuration
-                .Register(t => t.Type, e => e.Attribute(L5XName.Type), TaskType.FromValue, t => t.ToString())
-                .Register(t => t.Description, e => e.Element(L5XName.Description));
-            //Register(t => t.Rate, e => e.Attribute(L5XName.Rate), ScanRate.Parse, r => r.ToString());
+            if (eventInfo is null)
+                return null;
+            
+            return new TaskEventInfo
+            {
+                EventTrigger = element.Property<TaskEventTrigger>(L5XName.EventTrigger),
+                EnableTimeout = element.Property<bool>(L5XName.EnableTimeout),
+                EventTag = element.Property<string?>(L5XName.EventTag)
+            };
         }
     }
 }

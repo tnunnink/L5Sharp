@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
+using L5Sharp.Attributes;
 using L5Sharp.Core;
 using L5Sharp.Enums;
+using L5Sharp.Serialization;
 
 namespace L5Sharp.Components
 {
@@ -11,6 +13,7 @@ namespace L5Sharp.Components
     /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
     /// `Logix 5000 Controllers Import/Export`</a> for more information.
     /// </footer>
+    [LogixSerializer(typeof(TaskSerializer))]
     public class Task : ILogixComponent
     {
         /// <inheritdoc />
@@ -47,13 +50,13 @@ namespace L5Sharp.Components
         /// The value indicating whether the task is inhibited.
         /// </summary>
         /// <value>A <see cref="bool"/>; <c>true</c> if the task is inhibited; otherwise <c>false</c>.</value>
-        public bool InhibitTask { get; set; }
+        public bool InhibitTask { get; set; } = default;
 
         /// <summary>
         /// The value indicating whether the task is set to disable updating output values.
         /// </summary>
         /// <value>A <see cref="bool"/>; <c>true</c> if the task has disabled update outputs; otherwise <c>false</c>.</value>
-        public bool DisableUpdateOutputs { get; set; }
+        public bool DisableUpdateOutputs { get; set; } = default;
 
         /// <summary>
         /// The collection of program names that are scheduled to the task.

@@ -7,6 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="ApprovalTests" Version="5.8.0" />
         <PackageReference Include="AutoFixture" Version="4.17.0" />
         <PackageReference Include="FluentAssertions" Version="6.1.0" />
         <PackageReference Include="NUnit" Version="3.12.0" />
@@ -22,6 +23,213 @@
       <None Update="L5XFiles\Empty.xml">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
+      <None Update="TestFiles\Empty.xml">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="Serialization\DataTypeSerializerTests.Serialize_AtomicType_ShouldBeApproved.approved.xml">
+        <ParentExtension>.cs</ParentExtension>
+        <ParentFile>DataTypeSerializerTests</ParentFile>
+        <DependentUpon>DataTypeSerializerTests.cs</DependentUpon>
+      </None>
+      <None Update="Serialization\DataTypeSerializerTests.Serialize_AtomicType_ShouldBeApproved.approved.xml.bak">
+        <ParentExtension>.cs</ParentExtension>
+        <ParentFile>DataTypeSerializerTests</ParentFile>
+        <DependentUpon>DataTypeSerializerTests.cs</DependentUpon>
+      </None>
+      <None Update="Serialization\DataTypeSerializerTests.Serialize_BasicType_ShouldBeApproved.approved.xml">
+        <ParentExtension>.cs</ParentExtension>
+        <ParentFile>DataTypeSerializerTests</ParentFile>
+        <DependentUpon>DataTypeSerializerTests.cs</DependentUpon>
+      </None>
+      <None Update="Serialization\DataTypeSerializerTests.Serialize_BasicType_ShouldBeApproved.approved.xml.bak">
+        <ParentExtension>.cs</ParentExtension>
+        <ParentFile>DataTypeSerializerTests</ParentFile>
+        <DependentUpon>DataTypeSerializerTests.cs</DependentUpon>
+      </None>
+      <None Update="Serialization\TaskSerializerTests.Serialize_ContinuousTask_ShouldBeApproved.approved.xml">
+        <DependentUpon>TaskSerializerTests.cs</DependentUpon>
+        <ParentExtension>.cs</ParentExtension>
+        <ParentFile>TaskSerializerTests</ParentFile>
+      </None>
+      <None Update="Serialization\TaskSerializerTests.Serialize_ContinuousTask_ShouldBeApproved.approved.xml.bak">
+        <ParentExtension>.cs</ParentExtension>
+        <ParentFile>TaskSerializerTests</ParentFile>
+        <DependentUpon>TaskSerializerTests.cs</DependentUpon>
+      </None>
+      <None Update="Serialization\TaskSerializerTests.Serialize_EventTask_ShouldBeApproved.approved.xml">
+        <DependentUpon>TaskSerializerTests.cs</DependentUpon>
+        <ParentExtension>.cs</ParentExtension>
+        <ParentFile>TaskSerializerTests</ParentFile>
+      </None>
+      <None Update="Serialization\TaskSerializerTests.Serialize_EventTask_ShouldBeApproved.approved.xml.bak">
+        <ParentExtension>.cs</ParentExtension>
+        <ParentFile>TaskSerializerTests</ParentFile>
+        <DependentUpon>TaskSerializerTests.cs</DependentUpon>
+      </None>
+      <None Update="Serialization\TaskSerializerTests.Serialize_PeriodicTask_ShouldBeApproved.approved.xml">
+        <ParentExtension>.cs</ParentExtension>
+        <ParentFile>TaskSerializerTests</ParentFile>
+        <DependentUpon>TaskSerializerTests.cs</DependentUpon>
+      </None>
+      <None Update="Serialization\TaskSerializerTests.Serialize_PeriodicTask_ShouldBeApproved.approved.xml.bak">
+        <ParentExtension>.cs</ParentExtension>
+        <ParentFile>TaskSerializerTests</ParentFile>
+        <DependentUpon>TaskSerializerTests.cs</DependentUpon>
+      </None>
+      <None Update="Serialization\ControllerSerializerTests.Serialize_WhenCalled_ShouldNotBeApproved.approved.xml">
+        <ParentExtension>.cs</ParentExtension>
+        <ParentFile>ControllerSerializerTests</ParentFile>
+        <DependentUpon>ControllerSerializerTests.cs</DependentUpon>
+      </None>
+      <None Update="Serialization\ControllerSerializerTests.Serialize_WhenCalled_ShouldNotBeApproved.approved.xml.bak">
+        <ParentExtension>.cs</ParentExtension>
+        <ParentFile>ControllerSerializerTests</ParentFile>
+        <DependentUpon>ControllerSerializerTests.cs</DependentUpon>
+      </None>
+      <None Remove="Serialization\TagPropertySerializerTests.Serialize_Bool_ShouldBeApproved.approved.xml" />
+      <None Remove="Serialization\TagPropertySerializerTests.Serialize_Bool_ShouldBeApproved.approved.xml.bak" />
+      <None Remove="Serialization\DataValueSerializerTests.Serialize_Bool_ShouldBeApproved.approved.xml" />
+      <None Remove="Serialization\DataValueSerializerTests.Serialize_Bool_ShouldBeApproved.approved.xml.bak" />
+      <None Remove="Serialization\DataValueSerializerTests.Serialize_Dint_ShouldBeApproved.approved.xml" />
+      <None Remove="Serialization\DataValueSerializerTests.Serialize_Dint_ShouldBeApproved.approved.xml.bak" />
+      <None Remove="Serialization\DataValueSerializerTests.Serialize_Int_ShouldBeApproved.approved.xml" />
+      <None Remove="Serialization\DataValueSerializerTests.Serialize_Int_ShouldBeApproved.approved.xml.bak" />
+      <None Remove="Serialization\DataValueSerializerTests.Serialize_Lint_ShouldBeApproved.approved.xml" />
+      <None Remove="Serialization\DataValueSerializerTests.Serialize_Lint_ShouldBeApproved.approved.xml.bak" />
+      <None Remove="Serialization\DataValueSerializerTests.Serialize_Real_ShouldBeApproved.approved.xml" />
+      <None Remove="Serialization\DataValueSerializerTests.Serialize_Real_ShouldBeApproved.approved.xml.bak" />
+      <None Remove="Serialization\DataValueSerializerTests.Serialize_Sint_ShouldBeApproved.approved.xml" />
+      <None Remove="Serialization\DataValueSerializerTests.Serialize_Sint_ShouldBeApproved.approved.xml.bak" />
+      <None Remove="Serialization\ModuleSerializerTests.Serialize_ValueTypeArray_ShouldBeApproved.approved.xml" />
+      <None Remove="Serialization\ModuleSerializerTests.Serialize_ValueTypeArray_ShouldBeApproved.approved.xml.bak" />
+      <None Remove="Serialization\RungSerializerTests.Serialize_Bool_ShouldBeApproved.approved.xml" />
+      <None Remove="Serialization\RungSerializerTests.Serialize_Bool_ShouldBeApproved.approved.xml.bak" />
+      <None Remove="Serialization\StructureSerializerTests.SerializeArrayMembers_ShouldBeApproved.approved.xml" />
+      <None Remove="Serialization\StructureSerializerTests.SerializeArrayMembers_ShouldBeApproved.approved.xml.bak" />
+      <None Remove="Serialization\StructureSerializerTests.Serialize_DataValueValueMembers_ShouldBeApproved.approved.xml" />
+      <None Remove="Serialization\StructureSerializerTests.Serialize_DataValueValueMembers_ShouldBeApproved.approved.xml.bak" />
+      <None Remove="Serialization\StructureSerializerTests.Serialize_EmptyStructure_ShouldBeApproved.approved.xml" />
+      <None Remove="Serialization\StructureSerializerTests.Serialize_EmptyStructure_ShouldBeApproved.approved.xml.bak" />
+      <None Remove="Serialization\StructureSerializerTests.Serialize_StructureMembers_ShouldBeApproved.approved.xml" />
+      <None Remove="Serialization\StructureSerializerTests.Serialize_StructureMembers_ShouldBeApproved.approved.xml.bak" />
+      <None Remove="Serialization\StructureMemberSerializerTests.SerializeArrayMembers_ShouldBeApproved.approved.xml" />
+      <None Remove="Serialization\StructureMemberSerializerTests.SerializeArrayMembers_ShouldBeApproved.approved.xml.bak" />
+      <None Remove="Serialization\StructureMemberSerializerTests.Serialize_DataValueValueMembers_ShouldBeApproved.approved.xml" />
+      <None Remove="Serialization\StructureMemberSerializerTests.Serialize_DataValueValueMembers_ShouldBeApproved.approved.xml.bak" />
+      <None Remove="Serialization\StructureMemberSerializerTests.Serialize_StructureMembers_ShouldBeApproved.approved.xml" />
+      <None Remove="Serialization\StructureMemberSerializerTests.Serialize_StructureMembers_ShouldBeApproved.approved.xml.bak" />
+      <None Remove="Serialization\DecoratedDataSerializerTests.Serialize_CounterArray_ShouldBeApproved.approved.xml" />
+      <None Remove="Serialization\DecoratedDataSerializerTests.Serialize_CounterArray_ShouldBeApproved.approved.xml.bak" />
+      <None Remove="Serialization\DecoratedDataSerializerTests.Serialize_Dint_ShouldBeApproved.approved.xml" />
+      <None Remove="Serialization\DecoratedDataSerializerTests.Serialize_Dint_ShouldBeApproved.approved.xml.bak" />
+      <None Remove="Serialization\DecoratedDataSerializerTests.Serialize_EmptyStructure_ShouldBeApproved.approved.xml" />
+      <None Remove="Serialization\DecoratedDataSerializerTests.Serialize_EmptyStructure_ShouldBeApproved.approved.xml.bak" />
+      <None Remove="Serialization\DecoratedDataSerializerTests.Serialize_RealArray_ShouldBeApproved.approved.xml" />
+      <None Remove="Serialization\DecoratedDataSerializerTests.Serialize_RealArray_ShouldBeApproved.approved.xml.bak" />
+      <None Remove="Serialization\DecoratedDataSerializerTests.Serialize_Timer_ShouldBeApproved.approved.xml" />
+      <None Remove="Serialization\DecoratedDataSerializerTests.Serialize_Timer_ShouldBeApproved.approved.xml.bak" />
+      <None Remove="Serialization\TagSerializerTests.Serialize_AlarmDigital_ShouldBeApproved.approved.xml" />
+      <None Remove="Serialization\TagSerializerTests.Serialize_AlarmDigital_ShouldBeApproved.approved.xml.bak" />
+      <None Remove="Serialization\TagSerializerTests.Serialize_SimpleBoolArray_ShouldBeApproved.approved.xml" />
+      <None Remove="Serialization\TagSerializerTests.Serialize_SimpleBoolArray_ShouldBeApproved.approved.xml.bak" />
+      <None Remove="Serialization\TagSerializerTests.Serialize_SimpleBool_ShouldBeApproved.approved.xml" />
+      <None Remove="Serialization\TagSerializerTests.Serialize_SimpleBool_ShouldBeApproved.approved.xml.bak" />
+      <None Remove="Serialization\TagSerializerTests.Serialize_SimpleDintArray_ShouldBeApproved.approved.xml" />
+      <None Remove="Serialization\TagSerializerTests.Serialize_SimpleDintArray_ShouldBeApproved.approved.xml.bak" />
+      <None Remove="Serialization\TagSerializerTests.Serialize_SimpleDint_ShouldBeApproved.approved.xml" />
+      <None Remove="Serialization\TagSerializerTests.Serialize_SimpleDint_ShouldBeApproved.approved.xml.bak" />
+      <None Remove="Serialization\TagSerializerTests.Serialize_SimpleIntArray_ShouldBeApproved.approved.xml" />
+      <None Remove="Serialization\TagSerializerTests.Serialize_SimpleIntArray_ShouldBeApproved.approved.xml.bak" />
+      <None Remove="Serialization\TagSerializerTests.Serialize_SimpleInt_ShouldBeApproved.approved.xml" />
+      <None Remove="Serialization\TagSerializerTests.Serialize_SimpleInt_ShouldBeApproved.approved.xml.bak" />
+      <None Remove="Serialization\TagSerializerTests.Serialize_SimpleLintArray_ShouldBeApproved.approved.xml" />
+      <None Remove="Serialization\TagSerializerTests.Serialize_SimpleLintArray_ShouldBeApproved.approved.xml.bak" />
+      <None Remove="Serialization\TagSerializerTests.Serialize_SimpleLint_ShouldBeApproved.approved.xml" />
+      <None Remove="Serialization\TagSerializerTests.Serialize_SimpleLint_ShouldBeApproved.approved.xml.bak" />
+      <None Remove="Serialization\TagSerializerTests.Serialize_SimpleRealArray_ShouldBeApproved.approved.xml" />
+      <None Remove="Serialization\TagSerializerTests.Serialize_SimpleRealArray_ShouldBeApproved.approved.xml.bak" />
+      <None Remove="Serialization\TagSerializerTests.Serialize_SimpleReal_ShouldBeApproved.approved.xml" />
+      <None Remove="Serialization\TagSerializerTests.Serialize_SimpleReal_ShouldBeApproved.approved.xml.bak" />
+      <None Remove="Serialization\TagSerializerTests.Serialize_SimpleSintArray_ShouldBeApproved.approved.xml" />
+      <None Remove="Serialization\TagSerializerTests.Serialize_SimpleSintArray_ShouldBeApproved.approved.xml.bak" />
+      <None Remove="Serialization\TagSerializerTests.Serialize_SimpleSint_ShouldBeApproved.approved.xml" />
+      <None Remove="Serialization\TagSerializerTests.Serialize_SimpleSint_ShouldBeApproved.approved.xml.bak" />
+      <None Remove="Serialization\TagSerializerTests.Serialize_String_ShouldBeApproved.approved.xml" />
+      <None Remove="Serialization\TagSerializerTests.Serialize_String_ShouldBeApproved.approved.xml.bak" />
+      <None Remove="Serialization\TagSerializerTests.Serialize_Timer_ShouldBeApproved.approved.xml" />
+      <None Remove="Serialization\TagSerializerTests.Serialize_Timer_ShouldBeApproved.approved.xml.bak" />
+      <None Remove="Serialization\TagSerializerTests.Serialize_UserDefined_ShouldBeApproved.approved.xml" />
+      <None Remove="Serialization\TagSerializerTests.Serialize_UserDefined_ShouldBeApproved.approved.xml.bak" />
+      <None Remove="Serialization\ParameterSerializerTests.Serialize_AtomicArray_ShouldBeApproved.approved.xml" />
+      <None Remove="Serialization\ParameterSerializerTests.Serialize_AtomicArray_ShouldBeApproved.approved.xml.bak" />
+      <None Remove="Serialization\ParameterSerializerTests.Serialize_Basic_ShouldBeApproved.approved.xml" />
+      <None Remove="Serialization\ParameterSerializerTests.Serialize_Basic_ShouldBeApproved.approved.xml.bak" />
+      <None Remove="Serialization\ParameterSerializerTests.Serialize_Complex_ShouldBeApproved.approved.xml" />
+      <None Remove="Serialization\ParameterSerializerTests.Serialize_Complex_ShouldBeApproved.approved.xml.bak" />
+      <None Remove="Serialization\ParameterSerializerTests.Serialize_OverLoaded_ShouldBeApproved.approved.xml" />
+      <None Remove="Serialization\ParameterSerializerTests.Serialize_OverLoaded_ShouldBeApproved.approved.xml.bak" />
+      <None Remove="Serialization\DataValueMemberSerializerTests.Serialize_Bool_ShouldBeApproved.approved.xml" />
+      <None Remove="Serialization\DataValueMemberSerializerTests.Serialize_Bool_ShouldBeApproved.approved.xml.bak" />
+      <None Remove="Serialization\DataValueMemberSerializerTests.Serialize_Dint_ShouldBeApproved.approved.xml" />
+      <None Remove="Serialization\DataValueMemberSerializerTests.Serialize_Dint_ShouldBeApproved.approved.xml.bak" />
+      <None Remove="Serialization\DataValueMemberSerializerTests.Serialize_Int_ShouldBeApproved.approved.xml" />
+      <None Remove="Serialization\DataValueMemberSerializerTests.Serialize_Int_ShouldBeApproved.approved.xml.bak" />
+      <None Remove="Serialization\DataValueMemberSerializerTests.Serialize_Lint_ShouldBeApproved.approved.xml" />
+      <None Remove="Serialization\DataValueMemberSerializerTests.Serialize_Lint_ShouldBeApproved.approved.xml.bak" />
+      <None Remove="Serialization\DataValueMemberSerializerTests.Serialize_Real_ShouldBeApproved.approved.xml" />
+      <None Remove="Serialization\DataValueMemberSerializerTests.Serialize_Real_ShouldBeApproved.approved.xml.bak" />
+      <None Remove="Serialization\DataValueMemberSerializerTests.Serialize_Sint_ShouldBeApproved.approved.xml" />
+      <None Remove="Serialization\DataValueMemberSerializerTests.Serialize_Sint_ShouldBeApproved.approved.xml.bak" />
+      <None Remove="Serialization\ProgramSerializerTests.Serialize_BasicProgram_ShouldBeApproved.approved.xml" />
+      <None Remove="Serialization\ProgramSerializerTests.Serialize_BasicProgram_ShouldBeApproved.approved.xml.bak" />
+      <None Remove="Serialization\ProgramSerializerTests.Serialize_ProgramWithTagsAndRoutines_ShouldBeApproved.approved.xml" />
+      <None Remove="Serialization\ProgramSerializerTests.Serialize_ProgramWithTagsAndRoutines_ShouldBeApproved.approved.xml.bak" />
+      <None Remove="Serialization\FormattedDataSerializerTests.Serialize_AlarmType_ShouldBeApproved.approved.xml" />
+      <None Remove="Serialization\FormattedDataSerializerTests.Serialize_AlarmType_ShouldBeApproved.approved.xml.bak" />
+      <None Remove="Serialization\FormattedDataSerializerTests.Serialize_ComplexType_ShouldBeApproved.approved.xml" />
+      <None Remove="Serialization\FormattedDataSerializerTests.Serialize_ComplexType_ShouldBeApproved.approved.xml.bak" />
+      <None Remove="Serialization\FormattedDataSerializerTests.Serialize_StringType_ShouldBeApproved.approved.xml" />
+      <None Remove="Serialization\FormattedDataSerializerTests.Serialize_StringType_ShouldBeApproved.approved.xml.bak" />
+      <None Remove="Serialization\LadderLogicSerializerTests.Serialize_ValidType_ShouldBeApproved.approved.xml" />
+      <None Remove="Serialization\LadderLogicSerializerTests.Serialize_ValidType_ShouldBeApproved.approved.xml.bak" />
+      <None Remove="Serialization\PortSerializerTests.Serialize_ValidComponentNoBus_ShouldBeApproved.approved.xml" />
+      <None Remove="Serialization\PortSerializerTests.Serialize_ValidComponentNoBus_ShouldBeApproved.approved.xml.bak" />
+      <None Remove="Serialization\PortSerializerTests.Serialize_ValidComponent_ShouldBeApproved.approved.xml" />
+      <None Remove="Serialization\PortSerializerTests.Serialize_ValidComponent_ShouldBeApproved.approved.xml.bak" />
+      <None Remove="Serialization\ConnectionSerializerTests.Serialize_ValidComponent_ShouldBeApproved.approved.xml" />
+      <None Remove="Serialization\ConnectionSerializerTests.Serialize_ValidComponent_ShouldBeApproved.approved.xml.bak" />
+      <None Remove="Serialization\ArraySerializerTests.Serialize_StructureTypeArray_ShouldBeApproved.approved.xml" />
+      <None Remove="Serialization\ArraySerializerTests.Serialize_StructureTypeArray_ShouldBeApproved.approved.xml.bak" />
+      <None Remove="Serialization\ArraySerializerTests.Serialize_ValueTypeArray_ShouldBeApproved.approved.xml" />
+      <None Remove="Serialization\ArraySerializerTests.Serialize_ValueTypeArray_ShouldBeApproved.approved.xml.bak" />
+      <None Remove="Serialization\ArrayMemberSerializerTests.Serialize_StructureTypeArray_ShouldBeApproved.approved.xml" />
+      <None Remove="Serialization\ArrayMemberSerializerTests.Serialize_StructureTypeArray_ShouldBeApproved.approved.xml.bak" />
+      <None Remove="Serialization\ArrayMemberSerializerTests.Serialize_ValueTypeArray_ShouldBeApproved.approved.xml" />
+      <None Remove="Serialization\ArrayMemberSerializerTests.Serialize_ValueTypeArray_ShouldBeApproved.approved.xml.bak" />
+      <None Remove="Serialization\ArrayElementSerializerTests.Serialize_ValueStructureTypeMember_ShouldBeApproved.approved.xml" />
+      <None Remove="Serialization\ArrayElementSerializerTests.Serialize_ValueStructureTypeMember_ShouldBeApproved.approved.xml.bak" />
+      <None Remove="Serialization\ArrayElementSerializerTests.Serialize_ValueValueTypeMember_ShouldBeApproved.approved.xml" />
+      <None Remove="Serialization\ArrayElementSerializerTests.Serialize_ValueValueTypeMember_ShouldBeApproved.approved.xml.bak" />
+      <None Remove="Serialization\AlarmDigitalDataSerializerTests.Serialize_ValidType_ShouldBeApproved.approved.xml" />
+      <None Remove="Serialization\AlarmDigitalDataSerializerTests.Serialize_ValidType_ShouldBeApproved.approved.xml.bak" />
+      <None Remove="Serialization\AlarmDataSerializerTests.Serialize_AlarmAnalog_ShouldBeApproved.approved.xml" />
+      <None Remove="Serialization\AlarmDataSerializerTests.Serialize_AlarmAnalog_ShouldBeApproved.approved.xml.bak" />
+      <None Remove="Serialization\AlarmDataSerializerTests.Serialize_AlarmDigital_ShouldBeApproved.approved.xml" />
+      <None Remove="Serialization\AlarmDataSerializerTests.Serialize_AlarmDigital_ShouldBeApproved.approved.xml.bak" />
+      <None Remove="Serialization\AlarmAnalogDataSerializerTests.Serialize_ValidType_ShouldBeApproved.approved.xml" />
+      <None Remove="Serialization\AlarmAnalogDataSerializerTests.Serialize_ValidType_ShouldBeApproved.approved.xml.bak" />
+      <None Remove="Serialization\AddOnInstructionSerializerTests.Serialize_BasicType_ShouldBeApproved.approved.xml" />
+      <None Remove="Serialization\AddOnInstructionSerializerTests.Serialize_BasicType_ShouldBeApproved.approved.xml.bak" />
+      <None Remove="Serialization\AddOnInstructionSerializerTests.Serialize_OverloadedInstruction_ShouldBeApproved.approved.xml" />
+      <None Remove="Serialization\AddOnInstructionSerializerTests.Serialize_OverloadedInstruction_ShouldBeApproved.approved.xml.bak" />
+      <None Remove="Serialization\MemberSerializerTests.Serialize_AtomicArray_ShouldBeApproved.approved.xml" />
+      <None Remove="Serialization\MemberSerializerTests.Serialize_AtomicArray_ShouldBeApproved.approved.xml.bak" />
+      <None Remove="Serialization\MemberSerializerTests.Serialize_Basic_ShouldBeApproved.approved.xml" />
+      <None Remove="Serialization\MemberSerializerTests.Serialize_Basic_ShouldBeApproved.approved.xml.bak" />
+      <None Remove="Serialization\MemberSerializerTests.Serialize_Complex_ShouldBeApproved.approved.xml" />
+      <None Remove="Serialization\MemberSerializerTests.Serialize_Complex_ShouldBeApproved.approved.xml.bak" />
+      <None Remove="Serialization\MemberSerializerTests.Serialize_OverLoaded_ShouldBeApproved.approved.xml" />
+      <None Remove="Serialization\MemberSerializerTests.Serialize_OverLoaded_ShouldBeApproved.approved.xml.bak" />
     </ItemGroup>
 
     <ItemGroup>
@@ -29,7 +237,35 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Content Include="TestFiles\Test.xml" />
+      <Content Include="TestFiles\Test.xml">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Remove="Serialization\TagPropertySerializerTests.cs" />
+      <Compile Remove="Serialization\DataValueSerializerTests.cs" />
+      <Compile Remove="Serialization\ModuleSerializerTests.cs" />
+      <Compile Remove="Serialization\RungSerializerTests.cs" />
+      <Compile Remove="Serialization\StructureSerializerTests.cs" />
+      <Compile Remove="Serialization\StructureMemberSerializerTests.cs" />
+      <Compile Remove="Serialization\DecoratedDataSerializerTests.cs" />
+      <Compile Remove="Serialization\TagSerializerTests.cs" />
+      <Compile Remove="Serialization\ParameterSerializerTests.cs" />
+      <Compile Remove="Serialization\DataValueMemberSerializerTests.cs" />
+      <Compile Remove="Serialization\ProgramSerializerTests.cs" />
+      <Compile Remove="Serialization\FormattedDataSerializerTests.cs" />
+      <Compile Remove="Serialization\LadderLogicSerializerTests.cs" />
+      <Compile Remove="Serialization\PortSerializerTests.cs" />
+      <Compile Remove="Serialization\ConnectionSerializerTests.cs" />
+      <Compile Remove="Serialization\ArraySerializerTests.cs" />
+      <Compile Remove="Serialization\ArrayMemberSerializerTests.cs" />
+      <Compile Remove="Serialization\ArrayElementSerializerTests.cs" />
+      <Compile Remove="Serialization\AlarmDigitalDataSerializerTests.cs" />
+      <Compile Remove="Serialization\AlarmDataSerializerTests.cs" />
+      <Compile Remove="Serialization\AlarmAnalogDataSerializerTests.cs" />
+      <Compile Remove="Serialization\AddOnInstructionSerializerTests.cs" />
+      <Compile Remove="Serialization\MemberSerializerTests.cs" />
     </ItemGroup>
 
 </Project>

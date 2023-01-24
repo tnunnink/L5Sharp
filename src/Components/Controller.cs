@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Xml.Linq;
 using L5Sharp.Core;
 
 namespace L5Sharp.Components
@@ -12,29 +11,29 @@ namespace L5Sharp.Components
 
         /// <inheritdoc />
         public string Description { get; set; } = string.Empty;
+        
+        /// <summary>
+        /// The catalog number representing the processor of the controller component.
+        /// </summary>
+        /// <value>A <see cref="string"/> alpha numeric code.</value>
+        public string ProcessorType { get; set; } = string.Empty;
 
-
-        public string? ProcessorType { get; set; } = string.Empty;
-
-
+        /// <summary>
+        /// The revision or hardware version of the controller.
+        /// </summary>
+        /// <value>A <see cref="Core.Revision"/> value representing the major/minor version of the controller</value>
         public Revision? Revision { get; set; } = new();
+        
+        /// <summary>
+        /// The date/time the current project was created. 
+        /// </summary>
+        /// <value>A <see cref="DateTime"/> representing the date and time of creation.</value>
+        public DateTime ProjectCreationDate { get; set; }
 
-
-        public DateTime ProjectCreationDate { get; set; } = DateTime.Now;
-
-
-        public DateTime LastModifiedDate { get; set; } = DateTime.Now;
-
-        /// <inheritdoc />
-        public XElement Serialize()
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc />
-        public void Deserialize(XElement element)
-        {
-            throw new NotImplementedException();
-        }
+        /// <summary>
+        /// The date/time the current project was last modified. 
+        /// </summary>
+        /// <value>A <see cref="DateTime"/> representing the date and time of modification.</value>
+        public DateTime LastModifiedDate { get; set; }
     }
 }

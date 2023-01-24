@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Xml.Linq;
 using L5Sharp.Components;
 using L5Sharp.Core;
@@ -39,22 +39,14 @@ namespace L5Sharp.Serialization
         {
             Check.NotNull(element);
 
-            var name = element.Attribute(L5XName.Name)?.Value ?? string.Empty;
-            var dataType = element.Attribute(L5XName.Dimension)?.Value ?? string.Empty;
-            var dimensions = element.Attribute(L5XName.Dimension)?.Value.Parse<Dimensions>() ?? Dimensions.Empty;
-            var radix = element.Attribute(L5XName.Radix)?.Value.Parse<Radix>() ?? Radix.Null;
-            var access = element.Attribute(L5XName.ExternalAccess)?.Value.Parse<ExternalAccess>() ??
-                         ExternalAccess.ReadWrite;
-            var description = element.Element(L5XName.Description)?.Value ?? string.Empty;
-
             return new DataTypeMember
             {
-                Name = name,
-                DataType = dataType,
-                Dimensions = dimensions,
-                Radix = radix,
-                ExternalAccess = access,
-                Description = description
+                Name = element.ComponentName(),
+                DataType = element.PropertyOrDefault<string>(L5XName.DataType) ?? string.Empty,
+                Dimensions = element.PropertyOrDefault<Dimensions>(L5XName.Dimension) ?? Dimensions.Empty,
+                Radix = element.PropertyOrDefault<Radix>(L5XName.Radix) ?? Radix.Null,
+                ExternalAccess = element.PropertyOrDefault<ExternalAccess>(L5XName.ExternalAccess) ?? ExternalAccess.ReadWrite,
+                Description = element.Element(L5XName.Description)?.Value ?? string.Empty
             };
         }
     }
