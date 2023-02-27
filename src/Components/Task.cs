@@ -50,24 +50,18 @@ namespace L5Sharp.Components
         /// The value indicating whether the task is inhibited.
         /// </summary>
         /// <value>A <see cref="bool"/>; <c>true</c> if the task is inhibited; otherwise <c>false</c>.</value>
-        public bool InhibitTask { get; set; } = default;
+        public bool InhibitTask { get; set; }
 
         /// <summary>
         /// The value indicating whether the task is set to disable updating output values.
         /// </summary>
         /// <value>A <see cref="bool"/>; <c>true</c> if the task has disabled update outputs; otherwise <c>false</c>.</value>
-        public bool DisableUpdateOutputs { get; set; } = default;
+        public bool DisableUpdateOutputs { get; set; }
 
         /// <summary>
         /// The collection of program names that are scheduled to the task.
         /// </summary>
         /// <value>A <see cref="List{T}"/> containing the string program names.</value>
         public List<string> ScheduledPrograms { get; set; } = new();
-
-        /// <summary>
-        /// The <see cref="TaskEventInfo"/> properties that specify the configuration for a event type task.
-        /// </summary>
-        /// <value>A <see cref="TaskEventInfo"/>object instance.</value>
-        public TaskEventInfo? EventInfo { get; set; } = null;
     }
 }

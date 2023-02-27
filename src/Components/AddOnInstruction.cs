@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Xml.Linq;
+using System.Xml.Serialization;
+using L5Sharp.Common;
 using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Types.Atomics;
+using L5Sharp.Utilities;
 
 namespace L5Sharp.Components
 {
@@ -14,70 +17,107 @@ namespace L5Sharp.Components
     /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
     /// `Logix 5000 Controllers Import/Export`</a> for more information.
     /// </footer>
+    [XmlType(L5XName.AddOnInstructionDefinition)]
     public class AddOnInstruction : ILogixComponent
     {
-        private const string LogicRoutineName = "Logic";
-
         /// <inheritdoc />
         public string Name { get; set; } = string.Empty;
 
         /// <inheritdoc />
         public string Description { get; set; } = string.Empty;
 
+        /// <summary>
+        /// The routine type of the instruction logic.
+        /// </summary>
+        /// <value>A <see cref="Enums.RoutineType"/> indicating the instruction logic type. Default is Rll (Ladder).</value>
         public RoutineType Type { get; set; } = RoutineType.Rll;
+
+        /// <summary>
+        /// The revision or version of the instruction.
+        /// </summary>
+        /// <value>A <see cref="Core.Revision"/> representing the version of the instruction.</value>
         public Revision Revision { get; set; } = new();
+        
+        /// <summary>
+        /// Additional text indicating or identifying the revision of the instruction.
+        /// </summary>
+        /// <value>A <see cref="string"/> containing text of the revision extension.</value>
         public string RevisionExtension { get; set; } = string.Empty;
+        
+        /// <summary>
+        /// Additional text describing release information or changes with the current revision(s).
+        /// </summary>
+        /// <value>A <see cref="string"/> containing the text of the revision note.</value>
         public string RevisionNote { get; set; } = string.Empty;
+
+        /// <summary>
+        /// The vendor or creator of the instruction.
+        /// </summary>
+        /// <value>A <see cref="string"/> value representing the name of the vendor.</value>
         public string Vendor { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Indicates that the instruction has and executes a pre scan routine.
+        /// </summary>
+        /// <value><c>true</c> if the instruction executes a pre scan routine; otherwise, <c>false</c>.</value>
         public bool ExecutePreScan { get; set; } = false;
+
+        /// <summary>
+        /// Indicates that the instruction has and executes a post scan routine.
+        /// </summary>
+        /// <value><c>true</c> if the instruction executes a post scan routine; otherwise, <c>false</c>.</value>
         public bool ExecutePostScan { get; set; } = false;
+
+        /// <summary>
+        /// Indicates that the instruction has and executes a enable in false routine.
+        /// </summary>
+        /// <value>A <see cref="bool"/> - <c>true</c> if the instruction executes a enable in false routine; otherwise, <c>false</c>.</value>
         public bool ExecuteEnableInFalse { get; set; } = false;
-        public DateTime CreatedDate { get; set; } = DateTime.Now;
+
+        /// <summary>
+        /// The date and time that the instruction was created.
+        /// </summary>
+        /// <value>A <see cref="DateTime"/> representing the creation date and time.</value>
+        public DateTime CreatedDate { get; set; } = default;
+        
+        /// <summary>
+        /// The name of the user that created the instruction.
+        /// </summary>
+        /// <value>A <see cref="string"/> representing the name of the user.</value>
         public string CreatedBy { get; set; } = string.Empty;
-        public DateTime EditedDate { get; set; } = DateTime.Now;
+        
+        /// <summary>
+        /// The date and time that the instruction was last edited.
+        /// </summary>
+        /// <value>A <see cref="DateTime"/> representing the edit date and time.</value>
+        public DateTime EditedDate { get; set; } = default;
+        
+        /// <summary>
+        /// The name of the user that last edited the instruction.
+        /// </summary>
+        /// <value>A <see cref="string"/> representing the name of the user.</value>
         public string EditedBy { get; set; } = string.Empty;
+        
+        /// <summary>
+        /// The software version of the instruction.
+        /// </summary>
+        /// <value>A <see cref="Core.Revision"/> representing the version of the instruction.</value>
         public Revision SoftwareRevision { get; set; } = new();
+        
+        /// <summary>
+        /// The software version of the instruction.
+        /// </summary>
+        /// <value>A <see cref="string"/> .</value>
         public string AdditionalHelpText { get; set; } = string.Empty;
-        public bool IsEncrypted { get; set; } = false;
-        public List<Parameter> Parameters { get; set; } = new(SystemParameters());
+        
+        /// <summary>
+        /// The software version of the instruction.
+        /// </summary>
+        /// <value>A <see cref="string"/> .</value>
+        public bool IsEncrypted { get; set; }
+        
+        public List<Parameter> Parameters { get; set; } = new();
         public List<Tag> LocalTags { get; set; } = new();
         public List<Routine> Routines { get; set; } = new();
-
-        private static IEnumerable<Parameter> SystemParameters()
-        {
-            yield return new Parameter
-            {
-                Name = "EnableIn",
-                DataType = "BOOL",
-                Radix = Radix.Decimal,
-                ExternalAccess = ExternalAccess.ReadOnly,
-                Default = new BOOL(true),
-                Description = "Enable Input - System Defined Parameter",
-                Usage = TagUsage.Input
-            };
-            
-            yield return new Parameter
-            {
-                Name = "EnableOut",
-                DataType = "BOOL",
-                Radix = Radix.Decimal,
-                ExternalAccess = ExternalAccess.ReadOnly,
-                Default = new BOOL(),
-                Description = "Enable Output - System Defined Parameter",
-                Usage = TagUsage.Output
-            };
-        }
-
-        /// <inheritdoc />
-        public XElement Serialize()
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc />
-        public void Deserialize(XElement element)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

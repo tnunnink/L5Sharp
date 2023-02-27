@@ -1,4 +1,5 @@
 ﻿using Ardalis.SmartEnum;
+using L5Sharp.Common;
 using L5Sharp.Components;
 
 namespace L5Sharp.Enums

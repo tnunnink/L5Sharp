@@ -1,6 +1,7 @@
-﻿using L5Sharp.Core;
+﻿using L5Sharp.Components;
+using L5Sharp.Core;
 
-namespace L5Sharp.Components
+namespace L5Sharp.Common
 {
     /// <summary>
     /// A component of a <see cref="Module"/> that represents the means for connecting devices on a network or in a chassis.
@@ -20,7 +21,7 @@ namespace L5Sharp.Components
         /// All Modules have at least one port. Each is identified by the Id property. Typically Modules will have one
         /// or two ports with Ids '1' and '2', respectively.
         /// </remarks>
-        public int Id { get; set; } = 0;
+        public int Id { get; set; }
 
         /// <summary>
         /// Gets the value that represents the <see cref="Port"/> type.
@@ -49,7 +50,7 @@ namespace L5Sharp.Components
         /// child modules, or connect to devices living 'downstream' of the current Module. This property must be set
         /// correctly to be able to import L5X.
         /// </remarks>
-        public bool Upstream { get; set; } = false;
+        public bool Upstream { get; set; }
 
         /// <summary>
         /// Gets the <see cref="Bus"/> for the <see cref="Port"/> object.
@@ -58,11 +59,11 @@ namespace L5Sharp.Components
         /// A port's bus represents the chassis or network on which Modules are accessible to the port.
         /// Only downstream modules will have a valid Bus. 
         /// </remarks>
-        public byte BusSize { get; set; } = 0;
+        public byte BusSize { get; set; }
 
         /// <summary>
         /// Gets a value indicating whether the port allows upstream connection, or if it is a downstream only port.
         /// </summary>
-        public bool DownstreamOnly { get; set; } = false;
+        public bool DownstreamOnly { get; set; }
     }
 }

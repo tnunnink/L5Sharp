@@ -1,5 +1,5 @@
 ﻿using System.Xml.Linq;
-using L5Sharp.Core;
+using L5Sharp.Common;
 using L5Sharp.Enums;
 using L5Sharp.Extensions;
 using L5Sharp.Types;
@@ -21,7 +21,7 @@ namespace L5Sharp.Serialization
             var len = new XElement(L5XName.DataValueMember);
             len.Add(new XAttribute(L5XName.Name, nameof(stringType.LEN)));
             len.Add(new XAttribute(L5XName.DataType, stringType.LEN.Name));
-            len.Add(new XAttribute(L5XName.Radix, stringType.LEN.Radix));
+            len.Add(new XAttribute(L5XName.Radix, Radix.Decimal.Value));
             len.Add(new XAttribute(L5XName.Value, stringType.LEN.ToString()));
             structureMember.Add(len);
 

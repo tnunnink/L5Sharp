@@ -2,23 +2,24 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Serialization;
+using L5Sharp.Components;
 using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Types;
 using L5Sharp.Utilities;
 
-namespace L5Sharp.Components
+namespace L5Sharp.Common
 {
     /// <summary>
     /// 
     /// </summary>
-    public class TagMember : ILogixTagMember
+    public class TagMember
     {
-        protected readonly Member _member;
-        private readonly ILogixTagMember _parent;
+        private readonly Member _member;
+        private readonly TagMember _parent;
         private readonly Tag _tag;
 
-        internal TagMember(Member member, ILogixTagMember parent, Tag tag)
+        internal TagMember(Member member, TagMember parent, Tag tag)
         {
             _member = member;
             _parent = parent;
@@ -29,9 +30,6 @@ namespace L5Sharp.Components
         public string Name => _member.Name;
 
         /// <inheritdoc />
-        public string Description => _member.Description;
-
-        /// <inheritdoc />
         public string DataType => _member.DataType.Name;
 
         /// <inheritdoc />
@@ -39,17 +37,18 @@ namespace L5Sharp.Components
 
         /// <inheritdoc />
         public Radix Radix => _member.Radix;
-        
-        /// <inheritdoc />
-        [XmlIgnore]
-        public ExternalAccess ExternalAccess =>
-            ExternalAccess.MostRestrictive(_member.ExternalAccess, _parent.ExternalAccess);
 
-        /// <inheritdoc />
+        /// <summary>
+        /// The full tag name path of the <see cref="TagMember"/>.
+        /// </summary>
+        /// <value>A <see cref="Core.TagName"/> type representing the tag name of the member.</value>
         [XmlIgnore]
         public TagName TagName => TagName.Combine(_parent.TagName, Name);
 
-        /// <inheritdoc />
+        /// <summary>
+        /// The type of member the tag member represents (value, structure, array).
+        /// </summary>
+        /// <value>A <see cref="Enums.MemberType"/> enum representing the type of member.</value>
         [XmlIgnore]
         public MemberType MemberType => MemberType.FromType(_member.DataType);
         
@@ -144,7 +143,10 @@ namespace L5Sharp.Components
         /// <seealso cref="GetValue"/>
         public TAtomic? GetValue<TAtomic>() where TAtomic : AtomicType => _member.DataType as TAtomic;
         
-        /// <inheritdoc />
+        /// <summary>
+        /// Sets the underlying value type data of the current tag member.
+        /// </summary>
+        /// <param name="atomicType">A <see cref="AtomicType"/> value representing the value to set.</param>
         public void SetValue(AtomicType atomicType)
         {
             if (_member.DataType is not AtomicType)
@@ -154,7 +156,11 @@ namespace L5Sharp.Components
             _member.DataType = atomicType;
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Attempts to set the underlying value type data of the current tag member.
+        /// </summary>
+        /// <param name="atomicType">A <see cref="AtomicType"/> value representing the value to set.</param>
+        /// <returns><c>true</c> if the value was set; otherwise, <c>false</c>.</returns>
         public bool TrySetValue(AtomicType atomicType)
         {
             if (_member.DataType is not AtomicType)

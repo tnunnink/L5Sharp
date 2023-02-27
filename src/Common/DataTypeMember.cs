@@ -3,7 +3,7 @@ using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Utilities;
 
-namespace L5Sharp.Components
+namespace L5Sharp.Common
 {
     /// <summary>
     /// A component of the <see cref="DataType"/> that makes up the structure of the user defined type.
@@ -13,7 +13,7 @@ namespace L5Sharp.Components
     /// `Logix 5000 Controllers Import/Export`</a> for more information.
     /// </footer>
     [XmlType(L5XName.Member)]
-    public class DataTypeMember : ILogixMember
+    public class DataTypeMember
     {
         /// <summary>
         /// The name of the <see cref="DataTypeMember"/>.
@@ -33,7 +33,7 @@ namespace L5Sharp.Components
         /// <summary>
         /// The radix format of the <see cref="DataTypeMember"/>.
         /// </summary>
-        public Radix Radix { get; set; } = Radix.Decimal;
+        public Radix Radix { get; set; } = Radix.Null;
         
         /// <summary>
         /// The external access of the <see cref="DataTypeMember"/>.

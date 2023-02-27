@@ -50,15 +50,5 @@ namespace L5Sharp.Tests.Components
             
             var member = tag.Member("ChildMember.SubMember[0].Bit1");
         }
-
-        [Test]
-        public void Generic_Member_ShouldWork()
-        {
-            var tag = new Tag<MyNestedType>("MyTag", new MyNestedType());
-
-            var member = tag.Member(n => n.Simple.M2);
-
-            member.TagName.Should().Be(new TagName("MyTag.Simple.M2"));
-        }
     }
 }

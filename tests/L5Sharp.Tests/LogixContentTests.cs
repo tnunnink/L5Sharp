@@ -21,11 +21,11 @@ namespace L5Sharp.Tests
         }
 
         [Test]
-        public void All_DataType_ShouldNotBeEmpty()
+        public void DataTypes_WhenCalled_ShouldNotBeEmpty()
         {
             var content = LogixContent.Load(Known.Test);
 
-            var dataTypes = content.GetAll<DataType>().ToList();
+            var dataTypes = content.DataTypes().ToList();
 
             dataTypes.Should().NotBeEmpty();
         }
@@ -35,7 +35,7 @@ namespace L5Sharp.Tests
         {
             var content = LogixContent.Load(Known.Test);
 
-            var type = content.Find<DataType>("BoolType");
+            var type = content.DataTypes().Find("BoolType");
 
             type.Should().NotBeNull();
         }
@@ -45,7 +45,7 @@ namespace L5Sharp.Tests
         {
             var content = LogixContent.Load(Known.Test);
 
-            var results = content.GetAll<DataType>().Where(d => d.Members.Any(m => m.DataType == "BOOL")).ToList();
+            var results = content.DataTypes().Where(d => d.Members.Any(m => m.DataType == "BOOL")).ToList();
 
             results.Should().NotBeEmpty();
         }
@@ -55,11 +55,9 @@ namespace L5Sharp.Tests
         {
             var content = LogixContent.Load(Known.Test);
 
-            var tag = content.IsScope(Scope.Program, "MyProgramName").Find<Tag>("MyNestedType");
+            var tag = content.Tags("MyProgramName").Find("MyNestedType");
 
-            var nested = tag.As<Tag<MyNestedType>>();
-
-            nested.SetValue(t => t.Simple.M4, new DINT(5000));
+            tag.Should().NotBeNull();
         }
 
         [Test]
@@ -67,12 +65,9 @@ namespace L5Sharp.Tests
         {
             var content = LogixContent.Load(Known.Test);
 
-            var controllerTag = content.IsScope(Scope.Controller).GetAll<Tag>().Where(t => t.DataType == "TIMER");
+            var timers = content.Tags().Where(t => t.DataType == "TIMER");
 
-            foreach (var tag in controllerTag)
-            {
-                content.IsScope(Scope.Program).Add(tag);
-            }
+            timers.Should().NotBeEmpty();
         }
 
         [Test]
@@ -80,15 +75,29 @@ namespace L5Sharp.Tests
         {
             var content = LogixContent.Load(Known.Test);
 
-            var controllerTag = content
-                .IsScope(Scope.Program, "TestProgram")
-                .GetAll<Tag>()
-                .Where(t => t.DataType == "TIMER");
+            var timers = content.Tags("TestProject").Where(t => t.DataType == "TIMER");
 
-            foreach (var tag in controllerTag)
-            {
-                content.IsScope(Scope.Program).Add(tag);
-            }
+            timers.Should().NotBeEmpty();
+        }
+
+        [Test]
+        public void Routine_Testing_ShouldNotBeEmpty()
+        {
+            var content = LogixContent.Load(Known.Test);
+            
+            var routines = content.Routines<Rll>("TestProgram");
+
+            routines.Should().NotBeEmpty();
+        }
+
+        [Test]
+        public void Query_Testing_ShouldLookNice()
+        {
+            var content = LogixContent.Load(Known.Test);
+
+            var results = content.Query<Routine>().Where(r => r.Name == "Test");
+
+            results.Should().BeEmpty();
         }
     }
 }

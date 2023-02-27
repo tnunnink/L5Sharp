@@ -1,15 +1,13 @@
-﻿using System.Linq;
-using System.Xml.Linq;
-using L5Sharp.Core;
+﻿using System.Xml.Linq;
+using L5Sharp.Common;
 using L5Sharp.Types;
+using L5Sharp.Types.Atomics;
 using L5Sharp.Utilities;
 
 namespace L5Sharp.Serialization
 {
     public class ArrayMemberSerializer : ILogixSerializer<Member>
     {
-        
-
         /// <inheritdoc />
         public XElement Serialize(Member obj)
         {
@@ -20,8 +18,8 @@ namespace L5Sharp.Serialization
             arrayMember.Add(new XAttribute(L5XName.DataType, arrayType[0].Name));
             arrayMember.Add(new XAttribute(L5XName.Dimensions, arrayType.Dimensions));
 
-            if (arrayType[0] is AtomicType atomicType)
-                arrayMember.Add(new XAttribute(L5XName.Radix, atomicType.Radix));
+            if (arrayType[0] is BOOL)
+                arrayMember.Add(new XAttribute(L5XName.Radix, obj.Radix));
             
             /*var elements = arrayType.Members().Select(m => _elementSerializer.Serialize(m));
             arrayMember.Add(elements);*/

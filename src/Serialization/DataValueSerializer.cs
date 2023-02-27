@@ -1,6 +1,6 @@
-﻿using System;
-using System.Xml.Linq;
+﻿using System.Xml.Linq;
 using L5Sharp.Enums;
+using L5Sharp.Extensions;
 using L5Sharp.Types;
 using L5Sharp.Utilities;
 
@@ -17,10 +17,9 @@ namespace L5Sharp.Serialization
             Check.NotNull(obj);
 
             var dataValue = new XElement(L5XName.DataValue);
-            dataValue.Add(new XAttribute(L5XName.DataType, obj.Name));
-            dataValue.Add(new XAttribute(L5XName.Radix, obj.Radix.Value));
-            dataValue.Add(new XAttribute(L5XName.Value, obj.ToString()));
-            
+            dataValue.AddValue(obj.Name, L5XName.DataType);
+            dataValue.AddValue(obj.ToString(), L5XName.Value);
+
             return dataValue;
         }
 
@@ -29,11 +28,9 @@ namespace L5Sharp.Serialization
         {
             Check.NotNull(element);
             
-            var name = element.Attribute(L5XName.DataType)?.Value
-                       ?? throw new ArgumentException($"Element must have {L5XName.DataType} attribute.");
-            var radix = element.Attribute(L5XName.Radix)?.Value.Parse<Radix>() ?? Radix.Decimal;
-            var value = element.Attribute(L5XName.Value)?.Value
-                        ?? throw new ArgumentException($"Element must have {L5XName.Value} attribute.");
+            var name = element.Value<string>(L5XName.DataType);
+            var radix = element.ValueOrDefault<Radix>(L5XName.Radix);
+            var value = element.Value<string>(L5XName.Value);
 
             return Atomic.Parse(name, value, radix);
         }

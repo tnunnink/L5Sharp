@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Xml.Linq;
+using L5Sharp.Common;
 using L5Sharp.Core;
 using L5Sharp.Enums;
+using L5Sharp.Extensions;
 using L5Sharp.Types;
 using L5Sharp.Types.Atomics;
 using L5Sharp.Utilities;
@@ -17,17 +19,15 @@ namespace L5Sharp.Serialization
         public XElement Serialize(Member obj)
         {
             Check.NotNull(obj);
-            
-            var atomicType = (AtomicType)obj.DataType;
-            
-            var element = new XElement(L5XName.DataValueMember);
-            element.Add(new XAttribute(L5XName.Name, obj.Name));
-            element.Add(new XAttribute(L5XName.DataType, obj.DataType.Name));
 
+            var element = new XElement(L5XName.DataValueMember);
+            element.AddValue(obj.Name, L5XName.Name);
+            element.AddValue(obj.DataType.Name, L5XName.DataType);
+
+            var atomicType = (AtomicType)obj.DataType;
             if (atomicType is not BOOL)
-                element.Add(new XAttribute(L5XName.Radix, atomicType.Radix));
-            
-            element.Add(new XAttribute(L5XName.Value, atomicType.ToString()));
+                element.AddValue(obj.Radix, L5XName.Radix);
+            element.AddValue(atomicType.ToString(), L5XName.Value);
 
             return element;
         }
@@ -37,14 +37,11 @@ namespace L5Sharp.Serialization
         {
             Check.NotNull(element);
 
-            var name = element.Attribute(L5XName.Name)?.Value ?? throw new ArgumentException();
-            var dataType = element.Attribute(L5XName.DataType)?.Value
-                           ?? throw new ArgumentException($"Element must have {L5XName.DataType} attribute.");
-            var radix = element.Attribute(L5XName.Radix)?.Value.Parse<Radix>() ?? Radix.Decimal;
-            var value = element.Attribute(L5XName.Value)?.Value
-                        ?? throw new ArgumentException($"Element must have {L5XName.Value} attribute.");
-            
-            
+            var name = element.LogixName();
+            var dataType = element.Value<string>(L5XName.DataType);
+            var radix = element.ValueOrDefault<Radix>(L5XName.Radix);
+            var value = element.Value<string>(L5XName.Value);
+
             var atomic = Atomic.Parse(dataType, value, radix);
 
             return new Member(name, atomic);

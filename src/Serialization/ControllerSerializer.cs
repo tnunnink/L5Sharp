@@ -17,18 +17,15 @@ namespace L5Sharp.Serialization
             Check.NotNull(obj);
             
             var element = new XElement(L5XName.Controller);
-            element.AddProperty(obj.Name, L5XName.Name);
-
-            if (!obj.Description.IsEmpty())
-                element.Add(new XElement(L5XName.Description, obj.Description));
-
-            if (!obj.ProcessorType.IsEmpty())
-                element.Add(new XAttribute(L5XName.ProcessorType, obj.ProcessorType));
             
+            element.AddValue(obj, c => c.Name);
+            element.AddText(obj, c => c.Description);
+            element.AddValue(obj, c => c.ProcessorType);
+
             if (obj.Revision is not null)
             {
-                element.Add(new XAttribute(L5XName.MajorRev, obj.Revision.Major));
-                element.Add(new XAttribute(L5XName.MinorRev, obj.Revision.Minor));
+                element.AddValue(obj.Revision.Major, L5XName.MajorRev);
+                element.AddValue(obj.Revision.Minor, L5XName.MinorRev);
             }
 
             element.Add(new XAttribute(L5XName.ProjectCreationDate,
@@ -46,9 +43,9 @@ namespace L5Sharp.Serialization
 
             return new Controller
             {
-                Name = element.ComponentName(),
-                Description = element.Element(L5XName.Description)?.Value ?? string.Empty,
-                ProcessorType = element.PropertyOrDefault<string>(L5XName.ProcessorType) ?? string.Empty,
+                Name = element.LogixName(),
+                Description = element.LogixDescription(),
+                ProcessorType = element.ValueOrDefault<string>(L5XName.ProcessorType) ?? string.Empty,
                 Revision = GetRevision(element),
                 ProjectCreationDate = element.LogixDateTimeOrDefault(L5XName.ProjectCreationDate),
                 LastModifiedDate = element.LogixDateTimeOrDefault(L5XName.LastModifiedDate)
@@ -57,8 +54,8 @@ namespace L5Sharp.Serialization
 
         private static Revision? GetRevision(XElement element)
         {
-            var major = element.PropertyOrDefault<string>(L5XName.MajorRev);
-            var minor = element.PropertyOrDefault<string>(L5XName.MinorRev);
+            var major = element.ValueOrDefault<string>(L5XName.MajorRev);
+            var minor = element.ValueOrDefault<string>(L5XName.MinorRev);
 
             return major is not null && minor is not null ? Revision.Parse($"{major}.{minor}") : default;
         }

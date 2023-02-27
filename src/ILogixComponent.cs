@@ -1,10 +1,9 @@
-﻿using System.Xml.Serialization;
-using L5Sharp.Core;
+﻿using L5Sharp.Core;
 
 namespace L5Sharp
 {
     /// <summary>
-    /// Represents a Logix component or element of the L5X or Logix context that is able to be identified by name.
+    /// Represents a Logix component or element of the L5X that is able to be identified by name.
     /// </summary>
     /// <remarks>
     /// This interface is the base for all L5X components. All components can be identified by a string name that is
@@ -20,7 +19,7 @@ namespace L5Sharp
     public interface ILogixComponent
     {
         /// <summary>
-        /// The name of the component.
+        /// The name of the logix component.
         /// </summary>
         /// <value>A <see cref="string"/> representing the component name.</value>
         /// <remarks>
@@ -32,7 +31,7 @@ namespace L5Sharp
         string Name { get; }
         
         /// <summary>
-        /// The description of the component.
+        /// The description of the logix component.
         /// </summary>
         /// <value>A <see cref="string"/> representing the component description.</value>
         string Description { get; }

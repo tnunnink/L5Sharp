@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
+using L5Sharp.Common;
 using L5Sharp.Components;
 using L5Sharp.Core;
 using L5Sharp.Enums;
@@ -10,7 +11,7 @@ using L5Sharp.Enums;
 namespace L5Sharp.Rockwell
 {
     /// <summary>
-    /// A service that allows lookups for <see cref="Core.ModuleDefinition"/> objects based on catalog numbers.
+    /// A service that allows lookups for <see cref="CatalogEntry"/> objects based on catalog numbers.
     /// </summary>
     /// <remarks>
     /// This service will attempt to load the Rockwell Catalog service file into memory in order to query for data.
@@ -50,14 +51,14 @@ namespace L5Sharp.Rockwell
         }
 
         /// <summary>
-        /// Gets a <see cref="ModuleDefinition"/> instance for the provided <see cref="CatalogNumber"/>.
+        /// Gets a <see cref="CatalogEntry"/> instance for the provided <see cref="CatalogNumber"/>.
         /// </summary>
         /// <param name="catalogNumber">The catalog number of the <see cref="Module"/> to lookup.</param>
-        /// <returns>A <see cref="ModuleDefinition"/> instance for the specified catalogNumber if found in the current
+        /// <returns>A <see cref="CatalogEntry"/> instance for the specified catalogNumber if found in the current
         /// catalog service file; otherwise, null.</returns>
         /// <exception cref="ArgumentNullException"><c>catalogNumber</c> is null.</exception>
         /// <exception cref="InvalidOperationException">The provided catalog number was not found.</exception>
-        public ModuleDefinition Lookup(string catalogNumber)
+        public CatalogEntry Lookup(string catalogNumber)
         {
             if (catalogNumber is null)
                 throw new ArgumentNullException(nameof(catalogNumber));
@@ -72,7 +73,7 @@ namespace L5Sharp.Rockwell
             return MaterializeDefinition(device);
         }
 
-        private static ModuleDefinition MaterializeDefinition(XContainer element)
+        private static CatalogEntry MaterializeDefinition(XContainer element)
         {
             var catalogNumber = GetCatalogNumber(element);
             var vendor = GetVendor(element);
@@ -83,8 +84,17 @@ namespace L5Sharp.Rockwell
             var ports = GetPorts(element);
             var description = GetDescription(element);
 
-            return new ModuleDefinition(catalogNumber, vendor, productType, productCode, revisions, categories, ports,
-                description);
+            return new CatalogEntry
+            {
+                CatalogNumber = catalogNumber,
+                Vendor = vendor,
+                ProductType = productType,
+                ProductCode = productCode,
+                Revisions = revisions,
+                Categories = categories,
+                Ports = ports,
+                Description = description
+            };
         }
 
         private static string GetCatalogNumber(XContainer element) =>

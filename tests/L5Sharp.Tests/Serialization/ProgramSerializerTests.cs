@@ -4,14 +4,10 @@ using ApprovalTests;
 using ApprovalTests.Reporters;
 using FluentAssertions;
 using L5Sharp.Components;
-using L5Sharp.Core;
-using L5Sharp.Creators;
-using L5Sharp.Types;
-using L5Sharp.Types.Atomics;
-using L5Sharp.Types.Predefined;
+using L5Sharp.Serialization;
 using NUnit.Framework;
 
-namespace L5Sharp.Serialization.Tests
+namespace L5Sharp.Tests.Serialization
 {
     [TestFixture]
     public class ProgramSerializerTests
@@ -33,7 +29,11 @@ namespace L5Sharp.Serialization.Tests
         [Test]
         public void Serialize_BasicProgram_ShouldNotBeNull()
         {
-            var component = new Program("Test", "This is a test program");
+            var component = new Program
+            {
+                Name = "Test",
+                Description = "This is a test program"
+            };
 
             var xml = _serializer.Serialize(component);
 
@@ -44,27 +44,11 @@ namespace L5Sharp.Serialization.Tests
         [UseReporter(typeof(DiffReporter))]
         public void Serialize_BasicProgram_ShouldBeApproved()
         {
-            var component = new Program("Test", "This is a test program");
-
-            var xml = _serializer.Serialize(component);
-
-            Approvals.VerifyXml(xml.ToString());
-        }
-        
-        [Test]
-        [UseReporter(typeof(DiffReporter))]
-        public void Serialize_ProgramWithTagsAndRoutines_ShouldBeApproved()
-        {
-            var component = new Program("Test", "This is a test program");
-            
-            component.Tags.Add(Tag.Create<BOOL>("TestBool"));
-            component.Tags.Add(Tag.Create<DINT>("TestDint"));
-            component.Tags.Add(Tag.Create<TIMER>("TestTimer"));
-            component.Tags.Add(Tag.Create<INT>("TestInt"));
-            
-            var main = Routine.Create<RllRoutine>("Test");
-            main.Content.Add("XIC(LocalBool)MOV(1234,LocalDint);");
-            component.Routines.Add(main);
+            var component = new Program
+            {
+                Name = "Test",
+                Description = "This is a test program"
+            };
 
             var xml = _serializer.Serialize(component);
 
@@ -96,7 +80,7 @@ namespace L5Sharp.Serialization.Tests
 
             component.Should().NotBeNull();
         }
-        
+
         [Test]
         public void Deserialize_ValidElement_ShouldHaveExpectedProperties()
         {
@@ -110,8 +94,6 @@ namespace L5Sharp.Serialization.Tests
             component.FaultRoutineName.Should().Be("Fault");
             component.Disabled.Should().BeFalse();
             component.UseAsFolder.Should().BeFalse();
-            component.Tags.Should().NotBeEmpty();
-            component.Routines.Should().NotBeEmpty();
         }
 
 

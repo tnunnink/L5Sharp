@@ -1,4 +1,6 @@
-﻿using L5Sharp.Enums;
+﻿using L5Sharp.Attributes;
+using L5Sharp.Enums;
+using L5Sharp.Serialization;
 
 namespace L5Sharp.Components
 {
@@ -9,6 +11,7 @@ namespace L5Sharp.Components
     /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
     /// `Logix 5000 Controllers Import/Export`</a> for more information.
     /// </footer>
+    [LogixSerializer(typeof(ProgramSerializer))]
     public class Program : ILogixComponent
     {
         /// <inheritdoc />
@@ -27,13 +30,13 @@ namespace L5Sharp.Components
         /// The value indicating whether the program has current test edits pending.
         /// </summary>
         /// <value>>A <see cref="bool"/>; <c>true</c>if the program has test edits; otherwise <c>false</c>.</value>
-        public bool TestEdits { get; set; } = false;
+        public bool TestEdits { get; set; }
 
         /// <summary>
         /// The value indicating whether the program is disabled (or inhibited).
         /// </summary>
         /// <value>A <see cref="bool"/>; <c>true</c> if the program is disabled; otherwise <c>false</c>.</value>
-        public bool Disabled { get; set; } = false;
+        public bool Disabled { get; set; }
 
         /// <summary>
         /// The name of the routine that serves as the entry point for the program (i.e. main routine).
@@ -52,6 +55,6 @@ namespace L5Sharp.Components
         /// as opposed to a container of tags and logix.
         /// </summary>
         /// <value>A <see cref="bool"/>; <c>true</c> if the program is a folder; otherwise, <c>false</c>.</value>
-        public bool UseAsFolder { get; set; } = false;
+        public bool UseAsFolder { get; set; }
     }
 }

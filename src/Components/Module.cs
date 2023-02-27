@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using L5Sharp.Common;
 using L5Sharp.Core;
 using L5Sharp.Enums;
 
@@ -28,10 +29,10 @@ namespace L5Sharp.Components
         /// <summary>
         /// The vendor or manufacturer of the module.
         /// </summary>
-        /// <value>A <see cref="Core.Vendor"/> entity that contains the id and name of the vendor.</value>
+        /// <value>A <see cref="Common.Vendor"/> entity that contains the id and name of the vendor.</value>
         /// <remarks>
         /// All modules have a vendor representing the manufacturer of the module.
-        /// This value can be retrieved as part of the <see cref="ModuleDefinition"/> object obtained using a
+        /// This value can be retrieved as part of the <see cref="CatalogEntry"/> object obtained using a
         /// <see cref="ICatalogService"/> for catalog lookup. When deserializing from L5X file, typically only the vendor
         /// id is available on the module element.
         /// </remarks>
@@ -42,7 +43,7 @@ namespace L5Sharp.Components
         /// </summary>
         /// <remarks>
         /// All modules have a product type representing the product category of the module.
-        /// This value can be retrieved as part of the <see cref="ModuleDefinition"/> object obtained using a
+        /// This value can be retrieved as part of the <see cref="CatalogEntry"/> object obtained using a
         /// <see cref="ICatalogService"/> for catalog lookup.
         /// This value will be validated by Logix upon import of the L5X. 
         /// </remarks>
@@ -53,7 +54,7 @@ namespace L5Sharp.Components
         /// </summary>
         /// <remarks>
         /// This is a unique value that identifies the module and is assigned by Logix.
-        /// This value can be retrieved as part of the <see cref="ModuleDefinition"/> object obtained using a
+        /// This value can be retrieved as part of the <see cref="CatalogEntry"/> object obtained using a
         /// <see cref="ICatalogService"/> for catalog lookup, or when deserializing from an L5X file.
         /// </remarks>
         public ushort ProductCode { get; set; } = 0;
@@ -61,16 +62,15 @@ namespace L5Sharp.Components
         /// <summary>
         /// The revision number or hardware version of the module.
         /// </summary>
+        /// <value>A <see cref="Core.Revision"/> object representing the major and minor version.</value>
         /// <remarks>
         /// All modules must have a specified revision number.
-        /// This value can be retrieved as part of the <see cref="ModuleDefinition"/> object obtained using a
-        /// <see cref="ICatalogService"/> for catalog lookup.
         /// </remarks>
         public Revision Revision { get; set; } = new();
 
         /// <summary>
-        /// The name of the module that is the parent of the current module. This specified how the module is connected
-        /// within the module tree.
+        /// The name of the parent module, or module that the current module is connected to upstream.
+        /// This specifies how the module is connected within the module tree.
         /// </summary>
         /// <value>A <see cref="string"/> representing the parent module name. Default is an empty string.</value>
         public string ParentModule { get; set; } = string.Empty;
@@ -80,22 +80,22 @@ namespace L5Sharp.Components
         /// This specified how the module is connected within the module tree.
         /// </summary>
         /// <value>A <see cref="int"/> representing the id of the parent port. Default is zero.</value>
-        public int ParentPortId { get; set; } = 0;
+        public int ParentPortId { get; set; } = default;
 
         /// <summary>
         /// An indication of whether the module is inhibited or disabled.
         /// </summary>
-        public bool Inhibited { get; set; } = false;
+        public bool Inhibited { get; set; } = default;
 
         /// <summary>
         /// An indication of whether the module the module will cause a major fault when faulted.
         /// </summary>
-        public bool MajorFault { get; set; } = false;
+        public bool MajorFault { get; set; } = default;
 
         /// <summary>
         /// An indication of whether whether the module has safety features enabled.
         /// </summary>
-        public bool SafetyEnabled { get; set; } = false;
+        public bool SafetyEnabled { get; set; } = default;
 
         /// <summary>
         /// The electronic keying mode of the module.

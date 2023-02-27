@@ -5,11 +5,11 @@ using System.Xml.Linq;
 using ApprovalTests;
 using ApprovalTests.Reporters;
 using FluentAssertions;
+using L5Sharp.Common;
 using L5Sharp.Components;
 using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Serialization;
-using L5Sharp.Types.Atomics;
 using NUnit.Framework;
 
 namespace L5Sharp.Tests.Serialization
@@ -101,17 +101,7 @@ namespace L5Sharp.Tests.Serialization
             FluentActions.Invoking(() => _serializer.Deserialize(null!)).Should().Throw<
                 ArgumentException>();
         }
-
-        [Test]
-        public void Deserialize_InvalidElementName_ShouldThrowArgumentException()
-        {
-            const string xml = @"<Invalid></Invalid>";
-            var element = XElement.Parse(xml);
-            FluentActions.Invoking(() => _serializer.Deserialize(element)).Should().Throw<
-                    ArgumentException>()
-                .WithMessage($"Element 'Invalid' not valid for the serializer {_serializer.GetType()}.");
-        }
-
+        
         [Test]
         public void Deserialize_SimpleType_ShouldNotBeNull()
         {
@@ -145,7 +135,7 @@ namespace L5Sharp.Tests.Serialization
             var boolMember = component.Members.FirstOrDefault(m => m.Name == "BoolMember");
             boolMember.Should().NotBeNull();
             boolMember?.Name.Should().Be("BoolMember");
-            boolMember?.DataType.Should().BeOfType<BOOL>();
+            boolMember?.DataType.Should().Be("BIT");
             boolMember?.Dimensions.Should().Be(Dimensions.Empty);
             boolMember?.Radix.Should().Be(Radix.Hex);
             boolMember?.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);
@@ -162,7 +152,7 @@ namespace L5Sharp.Tests.Serialization
             var member = component.Members.FirstOrDefault(m => m.Name == "SintMember");
             member.Should().NotBeNull();
             member?.Name.Should().Be("SintMember");
-            member?.DataType.Should().BeOfType<SINT>();
+            member?.DataType.Should().Be("SINT");
             member?.Dimensions.Should().Be(Dimensions.Empty);
             member?.Radix.Should().Be(Radix.Decimal);
             member?.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);
@@ -179,7 +169,7 @@ namespace L5Sharp.Tests.Serialization
             var member = component.Members.FirstOrDefault(m => m.Name == "IntMember");
             member.Should().NotBeNull();
             member?.Name.Should().Be("IntMember");
-            member?.DataType.Should().BeOfType<INT>();
+            member?.DataType.Should().Be("INT");
             member?.Dimensions.Should().Be(Dimensions.Empty);
             member?.Radix.Should().Be(Radix.Decimal);
             member?.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);
@@ -196,7 +186,7 @@ namespace L5Sharp.Tests.Serialization
             var member = component.Members.FirstOrDefault(m => m.Name == "DintMember");
             member.Should().NotBeNull();
             member?.Name.Should().Be("DintMember");
-            member?.DataType.Should().BeOfType<DINT>();
+            member?.DataType.Should().Be("DINT");
             member?.Dimensions.Should().Be(Dimensions.Empty);
             member?.Radix.Should().Be(Radix.Octal);
             member?.ExternalAccess.Should().Be(ExternalAccess.None);
@@ -213,7 +203,7 @@ namespace L5Sharp.Tests.Serialization
             var member = component.Members.FirstOrDefault(m => m.Name == "LintMember");
             member.Should().NotBeNull();
             member?.Name.Should().Be("LintMember");
-            member?.DataType.Should().BeOfType<LINT>();
+            member?.DataType.Should().Be("LINT");
             member?.Dimensions.Should().Be(Dimensions.Empty);
             member?.Radix.Should().Be(Radix.Decimal);
             member?.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);

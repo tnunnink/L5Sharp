@@ -1,11 +1,15 @@
-﻿using L5Sharp.Components;
+﻿using L5Sharp.Common;
+using L5Sharp.Components;
 using L5Sharp.Core;
 
 namespace L5Sharp
 {
     /// <summary>
-    /// 
+    /// A service for providing <see cref="CatalogEntry"/> data for a specified catalog number.
     /// </summary>
+    /// <remarks>
+    /// 
+    /// </remarks>
     public interface ICatalogService
     {
         /// <summary>
@@ -13,6 +17,6 @@ namespace L5Sharp
         /// </summary>
         /// <param name="catalogNumber"></param>
         /// <returns></returns>
-        ModuleDefinition Lookup(string catalogNumber);
+        CatalogEntry Lookup(string catalogNumber);
     }
 }

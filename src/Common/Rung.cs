@@ -1,7 +1,8 @@
-﻿using L5Sharp.Core;
+﻿using L5Sharp.Components;
+using L5Sharp.Core;
 using L5Sharp.Enums;
 
-namespace L5Sharp.Components
+namespace L5Sharp.Common
 {
     /// <summary>
     /// Represents a Rung of Ladder Logic, or the logix content that is contained by the <see cref="Rll"/> component.

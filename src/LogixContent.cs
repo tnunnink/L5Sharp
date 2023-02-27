@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
+using System.Linq.Expressions;
 using System.Xml.Linq;
-using System.Xml.Serialization;
-using L5Sharp.Attributes;
+using L5Sharp.Components;
 using L5Sharp.Core;
-using L5Sharp.Enums;
 using L5Sharp.Extensions;
 using L5Sharp.Serialization;
 using L5Sharp.Utilities;
@@ -19,8 +17,6 @@ namespace L5Sharp
     /// </summary>
     public class LogixContent : ILogixContent
     {
-        private readonly XElement _content;
-
         /// <summary>
         /// 
         /// </summary>
@@ -34,7 +30,7 @@ namespace L5Sharp
             if (element.Name != L5XName.RSLogix5000Content)
                 throw new ArgumentException($"Expecting root element name of {L5XName.RSLogix5000Content}.");
 
-            _content = element;
+            L5X = new L5X(element);
         }
 
         /// <summary>
@@ -64,123 +60,108 @@ namespace L5Sharp
         public static LogixContent Parse(string text) => new(XElement.Parse(text));
 
         /// <summary>
-        /// Gets the value of the schema revision for the current L5X content.
+        /// 
         /// </summary>
-        /// <value>A <see cref="Revision"/> type that represent the major/minor revision of the L5X schema.</value>
-        /// <remarks>This is always 1.0. If the R</remarks>
-        public Revision? SchemaRevision => _content.PropertyOrDefault<Revision>(L5XName.SchemaRevision);
-
-        /// <summary>
-        /// Gets the value of the software revision for the current L5X content.
-        /// </summary>
-        /// <value>A <see cref="Revision"/> type that represent the major/minor revision of the software.</value>
-        public Revision? SoftwareRevision => _content.PropertyOrDefault<Revision>(L5XName.SoftwareRevision);
-
-        /// <summary>
-        /// Gets the name of the Logix component that is the target of the current L5X context.
-        /// </summary>
-        public string? TargetName => _content.PropertyOrDefault<string>(L5XName.TargetName);
-
-        /// <summary>
-        /// Gets the type of Logix component that is the target of the current L5X context.
-        /// </summary>
-        public string? TargetType => _content.PropertyOrDefault<string>(L5XName.TargetType);
-
-        /// <summary>
-        /// Gets the value indicating whether the current L5X is contextual..
-        /// </summary>
-        public bool? ContainsContext => _content.PropertyOrDefault<bool>(L5XName.ContainsContext);
-
-        /// <summary>
-        /// Gets the owner that exported the current L5X file.
-        /// </summary>
-        public string? Owner => _content.PropertyOrDefault<string>(L5XName.Owner);
-
-        /// <summary>
-        /// Gets the date time that the L5X file was exported.
-        /// </summary>
-        public DateTime? ExportDate => _content.LogixDateTimeOrDefault(L5XName.ExportDate);
-
+        public L5X L5X { get; }
 
         /// <inheritdoc />
-        public void Add<TComponent>(TComponent component) where TComponent : ILogixComponent
+        public Controller? Controller()
         {
-            var serializer = GetSerializer<TComponent>();
-            var elementName = GetElementName<TComponent>();
-            _content.Descendants(elementName).Last().AddAfterSelf(serializer.Serialize(component));
+            var element = L5X.Element(L5XName.Controller);
+            return element is not null ? LogixSerializer.Deserialize<Controller>(element) : null;
         }
 
         /// <inheritdoc />
-        public bool Any<TEntity>()
+        public ILogixComponentCollection<DataType> DataTypes()
         {
-            var elementName = GetElementName<TEntity>();
-            return _content.Descendants(elementName).Any();
+            var container = L5X.Descendants(L5XName.DataTypes).FirstOrDefault() ?? new XElement(L5XName.DataTypes);
+            return new ComponentCollection<DataType>(container);
         }
 
         /// <inheritdoc />
-        public int Count<TEntity>()
+        public ILogixComponentCollection<AddOnInstruction> Instructions()
         {
-            var elementName = GetElementName<TEntity>();
-            return _content.Descendants(elementName).Count();
+            var container = L5X.Descendants(L5XName.AddOnInstructionDefinitions).FirstOrDefault() ??
+                            new XElement(L5XName.AddOnInstructionDefinitions);
+            return new ComponentCollection<AddOnInstruction>(container);
         }
 
         /// <inheritdoc />
-        public bool Contains<TComponent>(string name) where TComponent : class, ILogixComponent
+        public ILogixComponentCollection<Module> Modules()
         {
-            var elementName = GetElementName<TComponent>();
-            return _content.Descendants(elementName).Any(e => e.Attribute(L5XName.Name)?.Value == name);
+            var container = L5X.Descendants(L5XName.Modules).FirstOrDefault() ?? new XElement(L5XName.Modules);
+            return new ComponentCollection<Module>(container);
         }
 
         /// <inheritdoc />
-        public TComponent? Find<TComponent>(string name) where TComponent : class, ILogixComponent
+        public ILogixComponentCollection<Program> Programs()
         {
-            var serializer = GetSerializer<TComponent>();
-            var elementName = GetElementName<TComponent>();
-            var result = _content.Descendants(elementName)
-                .SingleOrDefault(e => e.Attribute(L5XName.Name)?.Value == name);
-            return result is not null ? serializer.Deserialize(result) : null;
+            var container = L5X.Descendants(L5XName.Programs).FirstOrDefault() ?? new XElement(L5XName.Programs);
+            return new ComponentCollection<Program>(container);
         }
 
         /// <inheritdoc />
-        public IEnumerable<TEntity> GetAll<TEntity>()
+        public ILogixComponentCollection<Tag> Tags()
         {
-            var serializer = GetSerializer<TEntity>();
-            var elementName = GetElementName<TEntity>();
-            return _content.Descendants(elementName).Select(e => serializer.Deserialize(e));
+            var container = L5X.Descendants(L5XName.Tags).FirstOrDefault() ?? new XElement(L5XName.Tags);
+            return new ComponentCollection<Tag>(container);
         }
 
         /// <inheritdoc />
-        public TComponent Get<TComponent>(string name) where TComponent : class, ILogixComponent
+        public ILogixComponentCollection<Tag> Tags(string scope)
         {
-            var serializer = GetSerializer<TComponent>();
-            var elementName = GetElementName<TComponent>();
-            var result = _content.Descendants(elementName).Single(e => e.Attribute(L5XName.Name)?.Value == name);
-            return serializer.Deserialize(result);
+            var scopedContainer = L5X.Descendants().FirstOrDefault(e => e.LogixName() == scope);
+
+            if (scopedContainer is null)
+                throw new InvalidOperationException();
+
+            var container = scopedContainer.Descendants(L5XName.Tags).FirstOrDefault() ?? new XElement(L5XName.Tags);
+            return new ComponentCollection<Tag>(container);
         }
 
         /// <inheritdoc />
-        public void Remove<TComponent>(string name) where TComponent : class, ILogixComponent
+        public ILogixComponentCollection<Routine> Routines(string scope)
         {
-            var elementName = GetElementName<TComponent>();
-            var component = _content.Descendants(elementName)
-                .FirstOrDefault(c => c.Attribute(L5XName.Name)?.Value == name);
-            component?.Remove();
+            var scopedContainer =
+                L5X.Descendants(L5XName.Program).FirstOrDefault(e => e.LogixName() == scope) ??
+                L5X.Descendants(L5XName.AddOnInstructionDefinition).FirstOrDefault(e => e.LogixName() == scope);
+            
+            if (scopedContainer is null)
+                throw new InvalidOperationException();
+            
+            var container = scopedContainer.Descendants(L5XName.Routines).FirstOrDefault();
+            return new ComponentCollection<Routine>(container);
         }
 
         /// <inheritdoc />
-        public ILogixScopedContent IsScope(Scope scope, string? scopeName = null)
+        public ILogixComponentCollection<TRoutine> Routines<TRoutine>(string scope) where TRoutine : Routine
+        {
+            var scopedContainer =
+                L5X.Descendants(L5XName.Program).FirstOrDefault(e => e.LogixName() == scope) ??
+                L5X.Descendants(L5XName.AddOnInstructionDefinition).FirstOrDefault(e => e.LogixName() == scope);
+            
+            if (scopedContainer is null)
+                throw new InvalidOperationException();
+            
+            var container = scopedContainer.Descendants(L5XName.Routines).FirstOrDefault();
+            return new ComponentCollection<TRoutine>(container);
+        }
+
+        /// <inheritdoc />
+        public ILogixComponentCollection<Task> Tasks()
+        {
+            var container = L5X.Descendants(L5XName.Tasks).FirstOrDefault() ?? new XElement(L5XName.Tasks);
+            return new ComponentCollection<Task>(container);
+        }
+
+        /// <inheritdoc />
+        public IEnumerable<TEntity> Query<TEntity>()
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc />
-        public ILogixScopedContent InProgram(string programName)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc />
-        public ILogixScopedContent InRoutine(string routineName, string? programName)
+        public IEnumerable<TEntity> Query<TEntity>(Expression<Func<TEntity, bool>> predicate)
         {
             throw new NotImplementedException();
         }
@@ -193,47 +174,12 @@ namespace L5Sharp
         {
             var declaration = new XDeclaration("1.0", "UTF-8", "yes");
             var document = new XDocument(declaration);
-            document.Add(_content);
+            document.Add(L5X);
             document.Save(fileName);
         }
 
         /// <inheritdoc />
-        public override string ToString() => _content.ToString();
-
-        /// <summary>
-        /// Returns a new <see cref="XElement"/> instance containing the XML of the current <see cref="LogixContent"/> file. 
-        /// </summary>
-        /// <returns>A <see cref="XElement"/> representing the Logix content.</returns>
-        /// <remarks>This allows easy access to the underlying raw L5X data. This can be used to further extend
-        /// the <see cref="LogixContent"/> by creating static query methods that perform custom filtering and
-        /// deserialization of the L5X.</remarks>
-        public XElement ToElement() => new(_content);
-
-        private static string GetElementName<TEntity>()
-        {
-            var attribute = typeof(TEntity).GetCustomAttribute<XmlTypeAttribute>();
-
-            return attribute is not null ? attribute.TypeName : typeof(TEntity).Name;
-        }
-
-        private static ILogixSerializer<TEntity> GetSerializer<TEntity>()
-        {
-            var attribute = typeof(TEntity).GetCustomAttribute<LogixSerializerAttribute>();
-
-            if (attribute is null)
-                throw new InvalidOperationException(
-                    @$"No serializer defined for type {typeof(TEntity)}.
-                     Class must specify LogixSerializerAttribute to be deserialized.");
-
-            var serializer = Activator.CreateInstance(attribute.Type);
-
-            if (serializer is not ILogixSerializer<TEntity> logixSerializer)
-                throw new InvalidOperationException(
-                    @$"The serializer {attribute.Type} is does not serialize objects of type {typeof(TEntity)}.
-                    Either specify correct LogixSerializerAttribute for type ");
-
-            return logixSerializer;
-        }
+        public override string ToString() => L5X.ToString();
 
         private static XElement CreateContent<TComponent>(TComponent target) where TComponent : ILogixComponent
         {
@@ -247,7 +193,7 @@ namespace L5Sharp
             //content.Add(new XAttribute(L5XName.ExportDate, DateTime.Now.ToString(DateFormat)));
 
             //todo this would depend on the component. data type, instruction, module, program, etc...
-            var serializer = GetSerializer<TComponent>();
+            var serializer = LogixSerializer.GetSerializer<TComponent>();
             var component = serializer.Serialize(target);
             content.Add(component);
 

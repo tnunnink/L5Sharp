@@ -14,6 +14,7 @@ namespace L5Sharp.Types
         private static readonly Dictionary<string, Type> AtomicTypes = new()
         {
             { nameof(BOOL), typeof(BOOL) },
+            { "BIT", typeof(BOOL) },
             { nameof(SINT), typeof(SINT) },
             { nameof(INT), typeof(INT) },
             { nameof(DINT), typeof(DINT) },
@@ -42,8 +43,7 @@ namespace L5Sharp.Types
             radix ??= Radix.Infer(input);
 
             var atomic = radix.Parse(input);
-            atomic.Radix = radix;
-            
+
             return atomic;
         }
 
@@ -58,8 +58,7 @@ namespace L5Sharp.Types
 
             if (converter.ConvertFrom(radix.Parse(input)) is not AtomicType atomic)
                 throw new InvalidOperationException($"Could not convert input {input} to atomic type {type}");
-
-            atomic.Radix = radix;
+            
             return atomic;
         }
 
@@ -72,8 +71,7 @@ namespace L5Sharp.Types
             if (converter.ConvertFrom(radix.Parse(input)) is not AtomicType atomic)
                 throw new InvalidOperationException(
                     $"Could not convert input {input} to atomic type {typeof(TAtomic)}");
-
-            atomic.Radix = radix;
+            
             return atomic;
         }
 

@@ -1,5 +1,6 @@
 ﻿using AutoFixture;
 using FluentAssertions;
+using L5Sharp.Common;
 using L5Sharp.Core;
 using NUnit.Framework;
 

@@ -1,6 +1,7 @@
-﻿using L5Sharp.Enums;
+﻿using L5Sharp.Components;
+using L5Sharp.Enums;
 
-namespace L5Sharp.Components
+namespace L5Sharp.Common
 {
     /// <summary>
     /// A component of a <see cref="Module"/> that represents the properties and data of the connection to the field device.

@@ -113,12 +113,6 @@ namespace L5Sharp.Tests.Serialization
                     "Test_Program_03"
                 },
                 Description = "This is a test periodic task",
-                EventInfo = new TaskEventInfo
-                {
-                    EventTrigger = TaskEventTrigger.EventInstructionOnly,
-                    EventTag = "TagName",
-                    EnableTimeout = true
-                }
             };
 
             var xml = _serializer.Serialize(task);
@@ -159,7 +153,7 @@ namespace L5Sharp.Tests.Serialization
 
             var task = _serializer.Deserialize(element);
 
-            task.Name.Should().Be(new ComponentName("Continuous"));
+            task.Name.Should().Be("Continuous");
             task.Description.Should().Be("Test Continuous task");
             task.Type.Should().Be(TaskType.Continuous);
             task.Priority.Should().Be(new TaskPriority(10));
@@ -186,7 +180,7 @@ namespace L5Sharp.Tests.Serialization
 
             var task = _serializer.Deserialize(element);
 
-            task.Name.Should().Be(new ComponentName("Periodic"));
+            task.Name.Should().Be("Periodic");
             task.Description.Should().Be("Test Periodic task");
             task.Type.Should().Be(TaskType.Periodic);
             task.Priority.Should().Be(new TaskPriority(5));
@@ -213,7 +207,7 @@ namespace L5Sharp.Tests.Serialization
 
             var task = _serializer.Deserialize(element);
 
-            task.Name.Should().Be(new ComponentName("Event"));
+            task.Name.Should().Be("Event");
             task.Description.Should().Be("Test Event task");
             task.Type.Should().Be(TaskType.Event);
             task.Priority.Should().Be(new TaskPriority(10));

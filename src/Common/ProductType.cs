@@ -2,7 +2,7 @@
 using L5Sharp.Components;
 using L5Sharp.Rockwell;
 
-namespace L5Sharp.Core
+namespace L5Sharp.Common
 {
     /// <summary>
     /// An entity that represents the type of product of a given <see cref="Module"/>.

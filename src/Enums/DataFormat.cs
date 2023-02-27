@@ -13,10 +13,10 @@ namespace L5Sharp.Enums
         }
         
         /// <summary>
-        /// Gets the data format for the specified <see cref="IDataType"/>.
+        /// Gets the data format for the specified <see cref="ILogixType"/>.
         /// </summary>
         /// <param name="type">The data type instance to determine the type for.</param>
-        /// <returns>The <see cref="TagDataFormat"/> value for the specified type.
+        /// <returns>The <see cref="DataFormat"/> value for the specified type.
         /// Note that L5K is not going to be returned by this method because we are not currently supporting it.
         /// </returns>
         public static DataFormat FromDataType(ILogixType type)

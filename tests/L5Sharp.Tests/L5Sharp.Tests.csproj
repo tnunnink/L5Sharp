@@ -26,16 +26,6 @@
       <None Update="TestFiles\Empty.xml">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
-      <None Update="Serialization\DataTypeSerializerTests.Serialize_AtomicType_ShouldBeApproved.approved.xml">
-        <ParentExtension>.cs</ParentExtension>
-        <ParentFile>DataTypeSerializerTests</ParentFile>
-        <DependentUpon>DataTypeSerializerTests.cs</DependentUpon>
-      </None>
-      <None Update="Serialization\DataTypeSerializerTests.Serialize_AtomicType_ShouldBeApproved.approved.xml.bak">
-        <ParentExtension>.cs</ParentExtension>
-        <ParentFile>DataTypeSerializerTests</ParentFile>
-        <DependentUpon>DataTypeSerializerTests.cs</DependentUpon>
-      </None>
       <None Update="Serialization\DataTypeSerializerTests.Serialize_BasicType_ShouldBeApproved.approved.xml">
         <ParentExtension>.cs</ParentExtension>
         <ParentFile>DataTypeSerializerTests</ParentFile>
@@ -253,7 +243,6 @@
       <Compile Remove="Serialization\TagSerializerTests.cs" />
       <Compile Remove="Serialization\ParameterSerializerTests.cs" />
       <Compile Remove="Serialization\DataValueMemberSerializerTests.cs" />
-      <Compile Remove="Serialization\ProgramSerializerTests.cs" />
       <Compile Remove="Serialization\FormattedDataSerializerTests.cs" />
       <Compile Remove="Serialization\LadderLogicSerializerTests.cs" />
       <Compile Remove="Serialization\PortSerializerTests.cs" />
@@ -266,6 +255,10 @@
       <Compile Remove="Serialization\AlarmAnalogDataSerializerTests.cs" />
       <Compile Remove="Serialization\AddOnInstructionSerializerTests.cs" />
       <Compile Remove="Serialization\MemberSerializerTests.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Utilities" />
     </ItemGroup>
 
 </Project>

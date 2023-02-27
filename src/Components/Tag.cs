@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
+using L5Sharp.Common;
 using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Types;
@@ -16,7 +17,7 @@ namespace L5Sharp.Components
     /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
     /// `Logix 5000 Controllers Import/Export`</a> for more information.
     /// </footer>
-    public class Tag : ILogixScopedComponent, ILogixTagMember
+    public class Tag : ILogixComponent, ILogixMember
     {
         private ILogixType? _dataType;
 
@@ -43,14 +44,12 @@ namespace L5Sharp.Components
             Radix = Radix.Default(dataType);
         }
 
-        /// <inheritdoc cref="ILogixScopedComponent.Name" />
+
+        /// <inheritdoc cref="ILogixComponent.Name" />
         public string Name { get; set; } = string.Empty;
-
-        /// <inheritdoc cref="ILogixScopedComponent.Description" />
+        
+        /// <inheritdoc cref="ILogixComponent.Name" />
         public string Description { get; set; } = string.Empty;
-
-        /// <inheritdoc />
-        public Scope Scope { get; set; } = Scope.Null;
 
         /// <summary>
         /// the name of the data type that the <see cref="Tag"/> instantiates.
@@ -121,7 +120,7 @@ namespace L5Sharp.Components
 
             foreach (var member in GetMembers(_dataType))
             {
-                var tagMember = new TagMember(member, this, this);
+                var tagMember = new TagMember(member, null, this);
                 members.Add(tagMember);
                 members.AddRange(tagMember.Members());
             }
@@ -174,7 +173,7 @@ namespace L5Sharp.Components
 
             if (childMember is null) return null;
 
-            var tagMember = new TagMember(childMember, this, this);
+            var tagMember = new TagMember(childMember, null, this);
 
             var next = TagName.Combine(tagName.Members.Skip(1));
 

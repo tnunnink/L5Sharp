@@ -4,11 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using L5Sharp.Extensions;
+using L5Sharp.Utilities;
 
 namespace L5Sharp.Core
 {
     /// <summary>
-    /// Represents a string tag name value used to identify members of a <see cref="ITag{TDataType}"/> component.
+    /// A value representing a tag name string. This value type class make working with string tag name easier..
     /// </summary>
     public class TagName : IEquatable<TagName>, IComparable<TagName>
     {
@@ -31,13 +32,20 @@ namespace L5Sharp.Core
         }
 
         /// <summary>
-        /// Gets the base portion of the <see cref="TagName"/> value.
+        /// Gets the tag or root portion of the <see cref="TagName"/> string.
         /// </summary>
         /// <remarks>
-        /// The base portion of a given tag name is simply the beginning part of the tag name up to the first '.'
-        /// member separator character. For Module defined tags, this includes the colon separator.
+        /// <para>
+        /// The root portion of a given tag name is simply the beginning part of the tag name up to the first
+        /// member separator character ('.'). For Module defined tags, this includes the colon separator. This represent
+        /// the actual user configured tag name. The remaining tag name string (if any) should the data type structure member.
+        /// </para>
+        /// <para>
+        /// This value can be swapped out easily using <see cref="Rename"/> to return a new <see cref="TagName"/> with the
+        /// newly specified root tag name value.
+        /// </para>
         /// </remarks>
-        public string Base => _tagName[..GetRootLength()];
+        public string Tag => _tagName[..GetRootLength()];
 
         /// <summary>
         /// Gets the operand portion of the <see cref="TagName"/> value.
@@ -47,32 +55,37 @@ namespace L5Sharp.Core
         /// the full tag name value without the leading base name. The operand will include any leading '.' character.
         /// </remarks>
         /// <seealso cref="Path"/>
-        public string Operand => !Base.IsEmpty() ? _tagName.Remove(0, Base.Length) : string.Empty;
+        public string Operand => !Tag.IsEmpty() ? _tagName.Remove(0, Tag.Length) : string.Empty;
 
         /// <summary>
-        /// Gets the member path of the <see cref="TagName"/> value.
+        /// Gets the member path of the tag name value.
         /// </summary>
         /// <remarks>
-        /// The path of a tag name represents a name relative to the base name. The value will always be the full tag name
-        /// without the leading base name. This is similar to <see cref="Operand"/> except that is also removes any
-        /// leading '.' character. 
+        /// The path of a tag name represents a name relative to <see cref="Tag"/>. The value will always be the full tag name
+        /// without the leading root name. This is similar to <see cref="Operand"/>, except that is also removes any
+        /// leading member separator character ('.'). 
         /// </remarks>
         /// <seealso cref="Operand"/>
         public string Path => !Operand.IsEmpty() ? Operand.Remove(0, 1) : string.Empty;
 
         /// <summary>
-        /// Gets a number representing the distance or depth of the current member from the root tag name.
+        /// Gets the ending member name string of the tag name value.
+        /// </summary>
+        public string Member => Members.Last();
+
+        /// <summary>
+        /// A number representing the depth, or number of members from the root tag name, of the current tag name value.
         /// </summary>
         /// <remarks>
         /// This value represents the number of members between the root member and current member (i.e. one less than
-        /// <see cref="Members"/> to exclude the base name). This is helpful fo filtering tag descendents. Note that array
+        /// <see cref="Members"/> to exclude the base name). This is helpful for filtering tag descendents. Note that array
         /// indices are also considered a member. For example, 'MyTag[1].Value' has a depth of 2 since '[1]' and 'Value'
-        /// are descendent members name of the root 'MyTag' member.
+        /// are descendent member names of the root tag 'MyTag' member.
         /// </remarks>
         public int Depth => Members.Count() - 1;
 
         /// <summary>
-        /// Gets the set of member names for the current <see cref="TagName"/>.
+        /// Gets the collection of member name strings that comprise the entire tag name value.
         /// </summary>
         /// <remarks>
         /// The members of a tag name represent all the individual constituent parts of the full name. This includes
@@ -95,10 +108,10 @@ namespace L5Sharp.Core
         /// <summary>
         /// Gets a value indicating whether the current <see cref="TagName"/> value is empty.
         /// </summary>
-        public bool IsEmpty => _tagName.IsEmpty();
+        public bool IsEmpty => string.IsNullOrWhiteSpace(_tagName);
 
         /// <summary>
-        /// Gets a value indicating whether the current <see cref="TagName"/> test is a valid representation of a tag name.
+        /// Gets a value indicating whether the current <see cref="TagName"/> is a valid representation of a tag name.
         /// </summary>
         public bool IsValid => Regex.IsMatch(_tagName, TagNamePattern, RegexOptions.Compiled);
 
@@ -108,19 +121,30 @@ namespace L5Sharp.Core
         public static TagName Empty => new(string.Empty);
 
         /// <summary>
-        /// Combines two strings into a single <see cref="TagName"/> value.
+        /// Combines a series of strings into a single <see cref="TagName"/> value, inserting member separator
+        /// characters as needed.
         /// </summary>
-        /// <param name="left">The string that represents the left part of the tag name value.</param>
-        /// <param name="right">The string that represents the right part of the tag name value.</param>
-        /// <returns>A new <see cref="TagName"/> value that is the combination of the provided names.</returns>
-        /// <remarks>
-        /// This method effectively concatenates the strings but inserts a '.' if right is not a index
-        /// bracket (i.e. array member name).
-        /// </remarks>
-        public static TagName Combine(string left, string right) =>
-            new(right.StartsWith(ArrayBracket) || right.StartsWith(MemberSeparator)
-                ? $"{left}{right}"
-                : $"{left}{MemberSeparator}{right}");
+        /// <param name="members">The series of strings that, in order, comprise the full tag name value.</param>
+        /// <returns>A new <see cref="TagName"/>value that represents the combination of all provided member names.</returns>
+        /// <exception cref="ArgumentException">If any provided member does not match the member pattern format.</exception>
+        public static TagName Combine(params string[] members)
+        {
+            var builder = new StringBuilder();
+
+            foreach (var name in members)
+            {
+                if (!Regex.IsMatch(name, MemberPattern))
+                    throw new FormatException($"The provided name '{name}' is not a valid member name format.");
+
+                //If the current member is not an array element or doesn't already have a member separator, add one.
+                if (!(name.StartsWith(ArrayBracket) || !name.StartsWith(MemberSeparator)) && builder.Length > 1)
+                    builder.Append(MemberSeparator);
+
+                builder.Append(name);
+            }
+
+            return new TagName(builder.ToString());
+        }
 
         /// <summary>
         /// Combines a collection of member names into a single <see cref="TagName"/> value.
@@ -137,7 +161,8 @@ namespace L5Sharp.Core
                 if (!Regex.IsMatch(name, MemberPattern))
                     throw new FormatException($"The provided name '{name}' is not a valid member name format.");
 
-                if (!name.StartsWith(ArrayBracket) && builder.Length > 1)
+                //If the current member is not an array element or doesn't already have a member separator, add one.
+                if (!(name.StartsWith(ArrayBracket) || !name.StartsWith(MemberSeparator)) && builder.Length > 1)
                     builder.Append(MemberSeparator);
 
                 builder.Append(name);
@@ -182,8 +207,27 @@ namespace L5Sharp.Core
         /// <returns>A new <see cref="TagName"/> instance with the value of the current tag name.</returns>
         public TagName Copy() => new(string.Copy(_tagName));
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="root"></param>
+        /// <returns></returns>
+        public TagName Rename(string root) => Combine(root, Operand);
+
         /// <inheritdoc />
         public override string ToString() => _tagName;
+
+        /// <summary>
+        /// Determines whether the specified <see cref="TagName"/> objects are equal.
+        /// </summary>
+        /// <param name="first"></param>
+        /// <param name="second"></param>
+        /// <param name="comparer"></param>
+        /// <returns></returns>
+        public static bool Equals(TagName first, TagName second, IEqualityComparer<TagName> comparer)
+        {
+            return comparer.Equals(first, second);
+        }
 
         /// <inheritdoc /> 
         public bool Equals(TagName? other)

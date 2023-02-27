@@ -10,34 +10,18 @@ namespace L5Sharp.Components
     /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
     /// `Logix 5000 Controllers Import/Export`</a> for more information.
     /// </footer>
-    public abstract class Routine : ILogixScopedComponent
+    public class Routine : ILogixComponent
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="name"></param>
-        /// <param name="scope"></param>
-        /// <param name="description"></param>
-        protected Routine(string name, Scope? scope = null, string? description = null)
-        {
-            Name = name;
-            Description = description ?? string.Empty;
-            Scope = scope ?? Scope.Null;
-        }
-        
         /// <inheritdoc />
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
         /// <inheritdoc />
-        public string Description { get; set; }
-
-        /// <inheritdoc />
-        public Scope Scope { get; set; }
+        public string Description { get; set; } = string.Empty;
 
         /// <summary>
         /// The type of the <see cref="Routine"/> component.
         /// </summary>
         /// <value>A <see cref="Enums.RoutineType"/> enum specifying the type content the routine contains.</value>
-        public abstract RoutineType Type { get; }
+        public virtual RoutineType Type { get; set; } = RoutineType.Typeless;
     }
 }

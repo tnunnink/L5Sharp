@@ -20,7 +20,7 @@ namespace L5Sharp.Utilities
         public static TagNameComparer FullName { get; } = new();
 
         /// <summary>
-        /// An <see cref="IEqualityComparer{T}"/> that compares the <see cref="TagName.Base"/> property of the
+        /// An <see cref="IEqualityComparer{T}"/> that compares the <see cref="TagName.Tag"/> property of the
         /// <see cref="TagName"/> value.
         /// </summary>
         public static TagNameComparer BaseName { get; } = new BaseTagNameComparer();
@@ -55,10 +55,10 @@ namespace L5Sharp.Utilities
             {
                 if (ReferenceEquals(x, y)) return true;
                 if (ReferenceEquals(x, null) || ReferenceEquals(y, null)) return false;
-                return string.Equals(x.Base, y.Base, StringComparison.OrdinalIgnoreCase);
+                return string.Equals(x.Tag, y.Tag, StringComparison.OrdinalIgnoreCase);
             }
 
-            public override int GetHashCode(TagName obj) => StringComparer.OrdinalIgnoreCase.GetHashCode(obj.Base);
+            public override int GetHashCode(TagName obj) => StringComparer.OrdinalIgnoreCase.GetHashCode(obj.Tag);
         }
         
         private class PathTagNameComparer : TagNameComparer

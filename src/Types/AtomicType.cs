@@ -29,7 +29,7 @@ namespace L5Sharp.Types
         protected internal AtomicType(string name)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
-            Radix = Radix.Default(this);
+            /*Radix = Radix.Default(this);*/
         }
 
         /// <inheritdoc />
@@ -41,17 +41,17 @@ namespace L5Sharp.Types
         /// <inheritdoc />
         public DataTypeClass Class => DataTypeClass.Atomic;
 
-        /// <summary>
+        /*/// <summary>
         /// The radix format for the <see cref="AtomicType"/>.
         /// </summary>
         /// <value>A <see cref="Enums.Radix"/> enum representing the format of the atomic type value.</value>
-        public Radix Radix { get; set; }
+        public Radix Radix { get; set; }*/
 
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        public override string ToString() => Radix.Format(this);
+        public override string ToString() => Radix.Default(this).Format(this);
 
         /// <summary>
         /// 

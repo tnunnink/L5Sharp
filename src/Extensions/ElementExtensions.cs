@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Globalization;
+using System.Linq.Expressions;
+using System.Runtime.CompilerServices;
 using System.Xml.Linq;
-using L5Sharp.Enums;
 using L5Sharp.Utilities;
 
 namespace L5Sharp.Extensions
@@ -12,20 +13,22 @@ namespace L5Sharp.Extensions
     public static class ElementExtensions
     {
         /// <summary>
-        /// Gets the current <see cref="Use"/> option of the L5X element.
+        /// Gets the name attribute for the current L5X element.
         /// </summary>
-        /// <value>A <see cref="Enums.Use"/> enum value.</value>
-        public static Use? Use(this XElement element) => element.Attribute(L5XName.Use)?.Value.Parse<Use>();
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="element"></param>
-        /// <returns></returns>
-        /// <exception cref="InvalidOperationException"></exception>
-        public static string ComponentName(this XElement element) =>
+        /// <param name="element">The <see cref="XElement"/> for which to get the value.</param>
+        /// <returns>A <see cref="string"/> representing the name value.</returns>
+        /// <exception cref="InvalidOperationException">The element does not have a name attribute.</exception>
+        public static string LogixName(this XElement element) =>
             element.Attribute(L5XName.Name)?.Value
             ?? throw new InvalidOperationException($"Element {element.Name} does not have attribute 'Name'.");
+
+        /// <summary>
+        /// Gets the description element value for the current L5X element.
+        /// </summary>
+        /// <param name="element">The <see cref="XElement"/> for which to get the value.</param>
+        /// <returns>A <see cref="string"/> representing the description value.</returns>
+        public static string LogixDescription(this XElement element) =>
+            element.Element(L5XName.Description)?.Value ?? string.Empty;
 
         /// <summary>
         /// Gets the value of the specified attribute name from the current element parsed as the specified
@@ -33,18 +36,19 @@ namespace L5Sharp.Extensions
         /// </summary>
         /// <param name="element">The current element.</param>
         /// <param name="name">The XName of the XAttribute to get the value of.</param>
+        /// <param name="isElement">A flag indicating that the property is located on a child element and not an attribute.</param>
         /// <typeparam name="TValue">The type of the value to be parsed.</typeparam>
         /// <returns>A <see cref="TValue"/> of the specified attribute.</returns>
         /// <exception cref="InvalidOperationException">Attribute with <c>name</c> does not exists on element.</exception>
-        public static TValue Property<TValue>(this XElement element, XName name)
+        public static TValue Value<TValue>(this XElement element, XName name, bool isElement = false)
         {
-            var attribute = element.Attribute(name);
+            var property = element.Attribute(name);
 
-            if (attribute is null)
+            if (property is null)
                 throw new InvalidOperationException(
                     $"The attribute {name} does not exist on the element {element.Name}");
 
-            return attribute.Value.Parse<TValue>();
+            return property.Value.Parse<TValue>();
         }
 
         /// <summary>
@@ -56,7 +60,7 @@ namespace L5Sharp.Extensions
         /// <param name="name">The XName of the XAttribute to get the value of.</param>
         /// <typeparam name="TValue">The type of the value to be parsed.</typeparam>
         /// <returns>A <see cref="TValue"/> of the specified attribute if exists; otherwise, default.</returns>
-        public static TValue? PropertyOrDefault<TValue>(this XElement element, XName name)
+        public static TValue? ValueOrDefault<TValue>(this XElement element, XName name)
         {
             var value = element.Attribute(name)?.Value;
 
@@ -81,36 +85,81 @@ namespace L5Sharp.Extensions
         }
 
         /// <summary>
-        /// 
+        /// Adds the provided object value to the current <see cref="XElement"/> as a attribute or element.
         /// </summary>
-        /// <param name="element"></param>
-        /// <param name="value"></param>
-        /// <param name="name"></param>
-        /// <typeparam name="TValue"></typeparam>
-        /// <exception cref="ArgumentNullException"></exception>
-        public static void AddProperty<TValue>(this XElement element, TValue value, XName? name = null)
+        /// <param name="element">The current <see cref="XElement"/> object.</param>
+        /// <param name="value">The object value to add to the element. Only added if not null or empty.</param>
+        /// <param name="name">The name of the attribute or element to add.</param>
+        public static void AddValue(this XElement element, object? value, string name)
         {
-            if (value is null)
-                throw new ArgumentNullException(nameof(value));
-
-            var t = value.GetType().Name;
+            if (value is null || value.ToString().IsEmpty()) 
+                return;
 
             element.Add(new XAttribute(name, value.ToString()));
         }
 
-        /*public static void AddProperty<TType, TValue>(this XElement element,
-            Expression<Func<TType, TValue>> propertySelector)
+        /// <summary>
+        /// Adds the provided object value to the current <see cref="XElement"/> as a attribute or element.
+        /// </summary>
+        /// <param name="element">The current <see cref="XElement"/> object.</param>
+        /// <param name="obj">The object for which add the specified property value.</param>
+        /// <param name="selector">The expression selecting the property value to add.</param>
+        /// <exception cref="ArgumentNullException"><c>obj</c> or <c>selector</c> is null.</exception>
+        /// <exception cref="ArgumentException"><c>selector</c> is not a <see cref="MemberExpression"/>.</exception>
+        public static void AddValue<T>(this XElement element, T obj, Expression<Func<T, object>> selector)
         {
-            if (propertySelector is null)
-                throw new ArgumentNullException(nameof(propertySelector));
+            if (obj is null)
+                throw new ArgumentNullException(nameof(obj));
 
-            if (propertySelector.Body is not MemberExpression memberExpression)
-                throw new ArgumentException();
+            if (selector is null)
+                throw new ArgumentNullException(nameof(selector));
+
+            if (selector.Body is not MemberExpression memberExpression)
+                throw new ArgumentException($"The provided selector expression must be a {typeof(MemberExpression)}");
 
             var name = memberExpression.Member.Name;
-            var value = 
+            var value = selector.Compile().Invoke(obj);
 
-            element.Add(new XAttribute(name, value.ToString()));
-        }*/
+            element.AddValue(value, name);
+        }
+
+        /// <summary>
+        /// Adds the provided text to the current <see cref="XElement"/> as a child element with text wrapped in CData.
+        /// </summary>
+        /// <param name="element">The current <see cref="XElement"/> object.</param>
+        /// <param name="value">The object value to add to the element. Only added if not null or empty.</param>
+        /// <param name="name">The name of the attribute or element to add.</param>
+        public static void AddText(this XElement element, string? value, string name)
+        {
+            if (string.IsNullOrEmpty(value)) 
+                return;
+
+            element.Add(new XElement(name, new XCData(value)));
+        }
+        
+        /// <summary>
+        /// Adds the specified text property to the current <see cref="XElement"/> as a child element with text wrapped in CData.
+        /// </summary>
+        /// <param name="element">The current <see cref="XElement"/> object.</param>
+        /// <param name="obj">The object for which add the specified property value.</param>
+        /// <param name="selector">The expression selecting the property value to add.</param>
+        /// <exception cref="ArgumentNullException"><c>obj</c> or <c>selector</c> is null.</exception>
+        /// <exception cref="ArgumentException"><c>selector</c> is not a <see cref="MemberExpression"/>.</exception>
+        public static void AddText<T>(this XElement element, T obj, Expression<Func<T, string>> selector)
+        {
+            if (obj is null)
+                throw new ArgumentNullException(nameof(obj));
+
+            if (selector is null)
+                throw new ArgumentNullException(nameof(selector));
+
+            if (selector.Body is not MemberExpression memberExpression)
+                throw new ArgumentException($"The provided selector expression must be a {typeof(MemberExpression)}");
+
+            var name = memberExpression.Member.Name;
+            var value = selector.Compile().Invoke(obj);
+
+            element.AddText(value, name);
+        }
     }
 }

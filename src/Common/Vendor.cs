@@ -2,7 +2,7 @@
 using L5Sharp.Components;
 using L5Sharp.Rockwell;
 
-namespace L5Sharp.Core
+namespace L5Sharp.Common
 {
     /// <summary>
     /// An entity that represents the vendor of a given <see cref="Module"/>.
@@ -16,7 +16,7 @@ namespace L5Sharp.Core
     public class Vendor : IEquatable<Vendor>
     {
         /// <summary>
-        /// Creates a new <see cref="Vendor"/> entity with the provided id and name.
+        /// Creates a new <see cref="Vendor"/> value with the provided id and name.
         /// </summary>
         /// <param name="id">The unique Id of the Vendor.</param>
         /// <param name="name">The name of the Vendor. Will default to empty if not provided.</param>

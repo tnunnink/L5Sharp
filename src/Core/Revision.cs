@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Globalization;
-using System.Xml.Serialization;
 
 namespace L5Sharp.Core
 {
@@ -24,15 +23,14 @@ namespace L5Sharp.Core
         }
 
         /// <summary>
-        /// Gets the value of the Major revision number.
+        /// The major revision number.
         /// </summary>
         public ushort Major { get; }
 
         /// <summary>
-        /// Gets the value of the Minor revision number.
+        /// The minor revision number.
         /// </summary>
         public ushort Minor { get; }
-
 
         /// <summary>
         /// Parses the string input into a new <see cref="Revision"/> value.
@@ -52,13 +50,14 @@ namespace L5Sharp.Core
             var revisions = value.Split('.');
 
             if (revisions.Length != 2)
-                throw new ArgumentException("Value must only have a major and minor revision number.");
+                throw new ArgumentException(
+                    $"Value {value} does not have Major.Minor pattern. Must only have a major and minor revision number to correctly parse.");
 
             if (!ushort.TryParse(revisions[0], out var major))
-                throw new ArgumentException("Major revision could not be parsed. Make sure the value is a ushort.");
+                throw new ArgumentException($"Major revision could not be parsed to a {typeof(ushort)}.");
 
             if (!ushort.TryParse(revisions[1], out var minor))
-                throw new ArgumentException("Minor revision could not be parsed. Make sure the value is a ushort.");
+                throw new ArgumentException($"Minor revision could not be parsed to a {typeof(ushort)}.");
 
             return new Revision(major, minor);
         }
