@@ -1,5 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Runtime.InteropServices.ComTypes;
+using L5Sharp.Enums;
 using L5Sharp.Types.Atomics.Converters;
 
 namespace L5Sharp.Types.Atomics
@@ -11,11 +13,12 @@ namespace L5Sharp.Types.Atomics
     public sealed class INT : AtomicType, IEquatable<INT>, IComparable<INT>
     {
         private readonly short _value;
-        
+
         /// <summary>
         /// Creates a new default <see cref="INT"/> type.
         /// </summary>
-        public INT() : base(nameof(INT))
+        /// <param name="radix">The optional radix format of the value.</param>
+        public INT(Radix? radix = null) : base(nameof(INT), radix)
         {
         }
 
@@ -23,16 +26,29 @@ namespace L5Sharp.Types.Atomics
         /// Creates a new <see cref="INT"/> with the provided value.
         /// </summary>
         /// <param name="value">The value to initialize the type with.</param>
-        public INT(short value) : this()
+        /// <param name="radix">The optional radix format of the value.</param>
+        public INT(short value, Radix? radix = null) : this(radix)
         {
             _value = value;
+        }
+
+        /// <summary>
+        /// Creates a new <see cref="INT"/> with the provided string value.
+        /// </summary>
+        /// <param name="value">The string value to parse and convert to the value type.</param>
+        /// <param name="radix">The optional radix format of the value. If not provided, will be inferred
+        /// using <see cref="Enums.Radix.Infer"/>.</param>
+        public INT(string value, Radix? radix = null) : this(radix ?? Radix.Infer(value))
+        {
+            var converter = TypeDescriptor.GetConverter(GetType());
+            _value = (short)converter.ConvertFrom(Radix.Parse(value));
         }
 
         /// <summary>
         /// Represents the largest possible value of <see cref="INT"/>.
         /// </summary>
         public const short MaxValue = short.MaxValue;
-        
+
         /// <summary>
         /// Represents the smallest possible value of <see cref="INT"/>.
         /// </summary>

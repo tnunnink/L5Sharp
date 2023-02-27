@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using L5Sharp.Attributes;
 using L5Sharp.Core;
 using L5Sharp.Enums;
+using L5Sharp.Serialization;
 using L5Sharp.Types.Atomics;
 
 // ReSharper disable InconsistentNaming Logix naming
@@ -11,6 +13,7 @@ namespace L5Sharp.Types.Predefined
     /// <summary>
     /// A predefined or built in data type in Logix that is a part of the alarm instruction set.
     /// </summary>
+    [LogixSerializer(typeof(AlarmAnalogSerializer))]
     public sealed class ALARM_ANALOG : StructureType
     {
         /// <summary>

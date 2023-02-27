@@ -35,7 +35,7 @@ namespace L5Sharp.Types.Atomics.Converters
                     LINT v => new DINT((int)v),
                     ULINT v => new DINT((int)(ulong)v),
                     REAL v => new DINT((int)v),
-                    string v => int.TryParse(v, out var result) ? new DINT(result) : Atomic.Parse<DINT>(v),
+                    string v => new DINT(v),
                     _ => base.ConvertFrom(context, culture, value)
                          ?? throw new NotSupportedException(
                              $"The provided value of type {value.GetType()} is not supported for conversion.")

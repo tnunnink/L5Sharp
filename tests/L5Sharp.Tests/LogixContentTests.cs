@@ -34,7 +34,7 @@ namespace L5Sharp.Tests
         public void Find_KnownDataType_ShouldNotBeNull()
         {
             var content = LogixContent.Load(Known.Test);
-
+ 
             var type = content.DataTypes().Find("BoolType");
 
             type.Should().NotBeNull();
@@ -85,7 +85,7 @@ namespace L5Sharp.Tests
         {
             var content = LogixContent.Load(Known.Test);
             
-            var routines = content.Routines<Rll>("TestProgram");
+            var routines = content.Routines<RllRoutine>("TestProgram");
 
             routines.Should().NotBeEmpty();
         }

@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Xml.Linq;
 using L5Sharp.Attributes;
 using L5Sharp.Enums;
 using L5Sharp.Serialization;
-using L5Sharp.Utilities;
 
 namespace L5Sharp.Types
 {
@@ -25,11 +23,16 @@ namespace L5Sharp.Types
         /// Creates a new <see cref="AtomicType"/> instance with the provided name.
         /// </summary>
         /// <param name="name">The name of the atomic type.</param>
+        /// <param name="radix"></param>
         /// <exception cref="ArgumentNullException">name is null.</exception>
-        protected internal AtomicType(string name)
+        protected internal AtomicType(string name, Radix? radix = null)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
-            /*Radix = Radix.Default(this);*/
+
+            if (radix is not null && !radix.SupportsType(this))
+                throw new ArgumentException();
+            
+            Radix = radix ?? Radix.Default(this);
         }
 
         /// <inheritdoc />
@@ -41,23 +44,23 @@ namespace L5Sharp.Types
         /// <inheritdoc />
         public DataTypeClass Class => DataTypeClass.Atomic;
 
-        /*/// <summary>
+        /// <summary>
         /// The radix format for the <see cref="AtomicType"/>.
         /// </summary>
-        /// <value>A <see cref="Enums.Radix"/> enum representing the format of the atomic type value.</value>
-        public Radix Radix { get; set; }*/
+        /// <value>A <see cref="Enums.Radix"/> representing the format of the atomic type value.</value>
+        public Radix Radix { get; }
 
         /// <summary>
-        /// 
+        /// Return the atomic value formatted using the current <see cref="Radix"/> format.
         /// </summary>
-        /// <returns></returns>
-        public override string ToString() => Radix.Default(this).Format(this);
+        /// <returns>A <see cref="string"/> representing the formatted atomic value.</returns>
+        public override string ToString() => Radix.Format(this);
 
         /// <summary>
-        /// 
+        /// Returns the atomic value formatted using the provided <see cref="Enums.Radix"/> option.
         /// </summary>
-        /// <param name="radix"></param>
-        /// <returns></returns>
+        /// <param name="radix">The radix format.</param>
+        /// <returns>A <see cref="string"/> representing the formatted atomic value.</returns>
         public string ToString(Radix radix) => radix.Format(this);
     }
 }

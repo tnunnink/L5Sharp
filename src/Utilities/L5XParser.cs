@@ -4,7 +4,6 @@ using System.ComponentModel;
 using L5Sharp.Common;
 using L5Sharp.Core;
 using L5Sharp.Enums;
-using L5Sharp.Types;
 
 namespace L5Sharp.Utilities
 {
@@ -16,7 +15,6 @@ namespace L5Sharp.Utilities
         private static readonly Dictionary<Type, Func<string, object>> Parsers = new()
         {
             { typeof(DateTime), s => DateTime.Parse(s) },
-            { typeof(AtomicType), s => Atomic.Parse(s) },
             { typeof(ConnectionPriority), ConnectionPriority.FromValue },
             { typeof(ConnectionType), ConnectionType.FromValue },
             { typeof(DataTypeClass), DataTypeClass.FromValue },

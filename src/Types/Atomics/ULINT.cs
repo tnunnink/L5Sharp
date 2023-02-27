@@ -16,7 +16,8 @@ namespace L5Sharp.Types.Atomics
         /// <summary>
         /// Creates a new default <see cref="ULINT"/> type.
         /// </summary>
-        public ULINT() : base(nameof(ULINT))
+        /// <param name="radix">The optional radix format of the value.</param>
+        public ULINT(Radix? radix = null) : base(nameof(ULINT), radix)
         {
         }
 
@@ -24,9 +25,22 @@ namespace L5Sharp.Types.Atomics
         /// Creates a new <see cref="ULINT"/> with the provided value.
         /// </summary>
         /// <param name="value">The value to initialize the type with.</param>
-        public ULINT(ulong value) : this()
+        /// <param name="radix">The optional radix format of the value.</param>
+        public ULINT(ulong value, Radix? radix = null) : this(radix)
         {
             _value = value;
+        }
+
+        /// <summary>
+        /// Creates a new <see cref="ULINT"/> with the provided string value.
+        /// </summary>
+        /// <param name="value">The string value to parse and convert to the value type.</param>
+        /// <param name="radix">The optional radix format of the value. If not provided, will be inferred
+        /// using <see cref="Enums.Radix.Infer"/>.</param>
+        public ULINT(string value, Radix? radix = null) : this(radix ?? Radix.Infer(value))
+        {
+            var converter = TypeDescriptor.GetConverter(GetType());
+            _value = (ulong)converter.ConvertFrom(Radix.Parse(value));
         }
 
         /// <summary>

@@ -10,7 +10,7 @@ namespace L5Sharp.Tests.Types.Custom
     /// </summary>
     public class MyNestedType : StructureType
     {
-        public MyNestedType() : base(nameof(MyNestedType), "This is the user defined description")
+        public MyNestedType() : base(nameof(MyNestedType))
         {
         }
 

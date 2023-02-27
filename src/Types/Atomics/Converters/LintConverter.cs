@@ -30,7 +30,7 @@ namespace L5Sharp.Types.Atomics.Converters
                     USINT v => new LINT(v),
                     INT v => new LINT(v),
                     UINT v => new LINT(v),
-                    DINT v => new LINT(v),
+                    DINT v => new LINT((int)v),
                     UDINT v => new LINT(v),
                     LINT v => v,
                     ULINT v => new LINT((long)(ulong)v),

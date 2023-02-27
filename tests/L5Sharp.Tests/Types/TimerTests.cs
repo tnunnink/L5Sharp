@@ -37,8 +37,8 @@ namespace L5Sharp.Tests.Types
         {
             var type = new TIMER();
 
-            type.Members().Should().NotBeEmpty();
-            type.Members().Should().HaveCount(5);
+            type.Members.Should().NotBeEmpty();
+            type.Members.Should().HaveCount(5);
         }
 
         [Test]

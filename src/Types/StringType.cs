@@ -13,7 +13,7 @@ namespace L5Sharp.Types
     /// <summary>
     /// A logix type that represents a string structure type.
     /// </summary>
-    [LogixSerializer(typeof(StringSerializer))]
+    [LogixSerializer(typeof(StringDataSerializer))]
     public class StringType : StructureType
     {
         /// <summary>
@@ -21,8 +21,7 @@ namespace L5Sharp.Types
         /// </summary>
         /// <param name="name">The name of the string type.</param>
         /// <param name="value">The predefined string length of the type.</param>
-        /// <param name="description">The optional description of the string type.</param>
-        public StringType(string name, string value, string? description = null) : base(name, description)
+        public StringType(string name, string value) : base(name)
         {
             LEN = new DINT(value.Length);
             DATA = value.ToSintArray();
@@ -30,16 +29,6 @@ namespace L5Sharp.Types
 
         /// <inheritdoc />
         public sealed override DataTypeFamily Family => DataTypeFamily.String;
-
-        /// <inheritdoc />
-        public override IEnumerable<Member> Members()
-        {
-            return new List<Member>
-            {
-                new(nameof(LEN), LEN),
-                new(nameof(DATA), new ArrayType<SINT>(DATA), radix: Radix.Ascii)
-            };
-        }
 
         /// <summary>
         /// Gets the character length value of the string. 

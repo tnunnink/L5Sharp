@@ -40,11 +40,11 @@ namespace L5Sharp.Serialization
             
             return new Port
             {
-                Id = element.Value<int>(L5XName.Id),
-                Address = element.Value<Address>(L5XName.Address),
-                Type = element.Value<string>(L5XName.Type),
-                Upstream = element.Value<bool>(L5XName.Upstream),
-                BusSize = element.Element(L5XName.Bus)?.Value<byte>(L5XName.Size) ?? default
+                Id = element.GetValue<int>(L5XName.Id),
+                Address = element.GetValue<Address>(L5XName.Address),
+                Type = element.GetValue<string>(L5XName.Type),
+                Upstream = element.GetValue<bool>(L5XName.Upstream),
+                BusSize = element.Element(L5XName.Bus)?.GetValue<byte>(L5XName.Size) ?? default
             };
         }
     }

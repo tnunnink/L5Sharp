@@ -16,7 +16,8 @@ namespace L5Sharp.Types.Atomics
         /// <summary>
         /// Creates a new default <see cref="DINT"/> type.
         /// </summary>
-        public DINT() : base(nameof(DINT))
+        /// <param name="radix">The optional radix format of the value.</param>
+        public DINT(Radix? radix = null) : base(nameof(DINT), radix)
         {
         }
 
@@ -24,9 +25,22 @@ namespace L5Sharp.Types.Atomics
         /// Creates a new <see cref="DINT"/> with the provided value.
         /// </summary>
         /// <param name="value">The value to initialize the type with.</param>
-        public DINT(int value) : this()
+        /// <param name="radix">The optional radix format of the value.</param>
+        public DINT(int value, Radix? radix = null) : this(radix)
         {
             _value = value;
+        }
+
+        /// <summary>
+        /// Creates a new <see cref="DINT"/> with the provided string value.
+        /// </summary>
+        /// <param name="value">The string value to parse and convert to the value type.</param>
+        /// <param name="radix">The optional radix format of the value. If not provided, will be inferred
+        /// using <see cref="Enums.Radix.Infer"/>.</param>
+        public DINT(string value, Radix? radix = null) : this(radix ?? Radix.Infer(value))
+        {
+            var converter = TypeDescriptor.GetConverter(GetType());
+            _value = (int)converter.ConvertFrom(Radix.Parse(value));
         }
 
         /// <summary>
@@ -52,6 +66,20 @@ namespace L5Sharp.Types.Atomics
         /// <param name="atomic">The value to convert.</param>
         /// <returns>A <see cref="int"/> type value.</returns>
         public static implicit operator int(DINT atomic) => atomic._value;
+        
+        /// <summary>
+        /// Converts the provided <see cref="bool"/> to a <see cref="BOOL"/> value.
+        /// </summary>
+        /// <param name="value">The value to convert.</param>
+        /// <returns>A <see cref="BOOL"/> value.</returns>
+        public static implicit operator DINT(string value) => new(value);
+        
+        /// <summary>
+        /// Converts the provided <see cref="bool"/> to a <see cref="BOOL"/> value.
+        /// </summary>
+        /// <param name="value">The value to convert.</param>
+        /// <returns>A <see cref="BOOL"/> value.</returns>
+        public static implicit operator string(DINT value) => value.ToString();
 
         /// <inheritdoc />
         public bool Equals(DINT? other)

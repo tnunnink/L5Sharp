@@ -38,7 +38,7 @@ namespace L5Sharp.Serialization
             {
                 Name = element.LogixName(),
                 Description = element.LogixDescription(),
-                Type = element.Value<ProgramType>(L5XName.Type),
+                Type = element.GetValue<ProgramType>(L5XName.Type),
                 TestEdits = element.ValueOrDefault<bool>(L5XName.TestEdits),
                 MainRoutineName = element.ValueOrDefault<string>(L5XName.MainRoutineName) ?? string.Empty,
                 FaultRoutineName = element.ValueOrDefault<string>(L5XName.FaultRoutineName) ?? string.Empty,

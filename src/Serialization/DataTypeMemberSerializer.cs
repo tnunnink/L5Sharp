@@ -37,10 +37,10 @@ namespace L5Sharp.Serialization
             {
                 Name = element.LogixName(),
                 Description = element.LogixDescription(),
-                DataType = element.Value<string>(L5XName.DataType),
-                Dimensions = element.Value<Dimensions>(L5XName.Dimensions),
-                Radix = element.Value<Radix>(L5XName.Radix),
-                ExternalAccess = element.Value<ExternalAccess>(L5XName.ExternalAccess)
+                DataType = element.GetValue<string>(L5XName.DataType),
+                Dimensions = element.GetValue<Dimensions>(L5XName.Dimensions),
+                Radix = element.GetValue<Radix>(L5XName.Radix),
+                ExternalAccess = element.GetValue<ExternalAccess>(L5XName.ExternalAccess)
             };
         }
     }

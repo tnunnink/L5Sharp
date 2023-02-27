@@ -8,7 +8,6 @@ using Ardalis.SmartEnum;
 using L5Sharp.Extensions;
 using L5Sharp.Types;
 using L5Sharp.Types.Atomics;
-using L5Sharp.Utilities;
 
 // ReSharper disable StringLiteralTypo
 
@@ -105,7 +104,7 @@ namespace L5Sharp.Enums
         /// <summary>
         /// Gets the default <see cref="Radix"/> value for the provided logix type.
         /// </summary>
-        /// <param name="type">The logix type instance to evaluate.</param>
+        /// <param name="type">The logix type to evaluate.</param>
         /// <returns>
         /// <see cref="Null"/> for all non atomic types.
         /// <see cref="Float"/> for <see cref="REAL"/> types.
@@ -114,7 +113,7 @@ namespace L5Sharp.Enums
         public static Radix Default(ILogixType type)
         {
             if (type is ArrayType<AtomicType> arrayType)
-                type = arrayType[0];
+                type = arrayType.First();
 
             if (type is not AtomicType atomicType)
                 return Null;
@@ -161,7 +160,7 @@ namespace L5Sharp.Enums
         }
 
         /// <summary>
-        /// Converts an atomic value to the current radix base value. 
+        /// Converts an atomic value to the current radix base format. 
         /// </summary>
         /// <param name="atomic">The current atomic type to convert.</param>
         /// <returns>
@@ -170,17 +169,14 @@ namespace L5Sharp.Enums
         public abstract string Format(AtomicType atomic);
 
         /// <summary>
-        /// Parses a string input of a given Radix formatted value into an object value. 
+        /// Parses a string input of a given Radix formatted value into an atomic value type. 
         /// </summary>
         /// <param name="input">The string value to parse.</param>
-        /// <returns>An object representing the value of the formatted string.</returns>
+        /// <returns>An <see cref="AtomicType"/> representing the value of the formatted string.</returns>
         public abstract AtomicType Parse(string input);
 
         private static AtomicType ConvertToAtomic(string value, int bitsPerByte, int baseNumber)
         {
-            if (string.IsNullOrEmpty(value))
-                throw new ArgumentException("The proided value can not be null or empty");
-
             var byteLength = value.Length / bitsPerByte;
 
             return byteLength switch
@@ -199,7 +195,7 @@ namespace L5Sharp.Enums
         private void ValidateFormat(string input)
         {
             if (string.IsNullOrEmpty(input))
-                throw new ArgumentNullException(nameof(input));
+                throw new ArgumentException("Input can not be null or empty.", nameof(input));
 
             if (!Identifiers[Name].Invoke(input))
                 throw new FormatException($"Input '{input}' does not have expected {Name} format.");
@@ -323,28 +319,28 @@ namespace L5Sharp.Enums
                 ValidateFormat(input);
 
                 if (sbyte.TryParse(input, out var sbyteValue))
-                    return new SINT(sbyteValue);
+                    return new SINT(sbyteValue, this);
 
                 if (byte.TryParse(input, out var byteValue))
-                    return new USINT(byteValue);
+                    return new USINT(byteValue, this);
 
                 if (short.TryParse(input, out var shortValue))
-                    return new INT(shortValue);
+                    return new INT(shortValue, this);
 
                 if (ushort.TryParse(input, out var ushortValue))
-                    return new UINT(ushortValue);
+                    return new UINT(ushortValue, this);
 
                 if (int.TryParse(input, out var intValue))
-                    return new DINT(intValue);
+                    return new DINT(intValue, this);
 
                 if (uint.TryParse(input, out var uintValue))
-                    return new UDINT(uintValue);
+                    return new UDINT(uintValue, this);
 
                 if (long.TryParse(input, out var longValue))
-                    return new LINT(longValue);
+                    return new LINT(longValue, this);
 
                 if (ulong.TryParse(input, out var ulongValue))
-                    return new ULINT(ulongValue);
+                    return new ULINT(ulongValue, this);
 
                 throw new ArgumentOutOfRangeException(nameof(input),
                     $"Input '{input}' is out of range for the {Name} Radix.");

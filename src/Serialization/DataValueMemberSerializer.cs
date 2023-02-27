@@ -11,7 +11,7 @@ using L5Sharp.Utilities;
 namespace L5Sharp.Serialization
 {
     /// <summary>
-    /// A <see cref="ILogixSerializer{T}"/> that serializes <see cref="Member"/> whose data type is a <see cref="AtomicType"/> object.
+    /// A logix serializer that performs serialization of <see cref="Member"/> value types.
     /// </summary>
     public class DataValueMemberSerializer : ILogixSerializer<Member>
     {
@@ -26,8 +26,8 @@ namespace L5Sharp.Serialization
 
             var atomicType = (AtomicType)obj.DataType;
             if (atomicType is not BOOL)
-                element.AddValue(obj.Radix, L5XName.Radix);
-            element.AddValue(atomicType.ToString(), L5XName.Value);
+                element.AddValue(atomicType, a => a.Radix);
+            element.AddValue(atomicType, L5XName.Value);
 
             return element;
         }
@@ -38,9 +38,9 @@ namespace L5Sharp.Serialization
             Check.NotNull(element);
 
             var name = element.LogixName();
-            var dataType = element.Value<string>(L5XName.DataType);
+            var dataType = element.GetValue<string>(L5XName.DataType);
             var radix = element.ValueOrDefault<Radix>(L5XName.Radix);
-            var value = element.Value<string>(L5XName.Value);
+            var value = element.GetValue<string>(L5XName.Value);
 
             var atomic = Atomic.Parse(dataType, value, radix);
 

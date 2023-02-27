@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Xml.Linq;
+using L5Sharp.Extensions;
 using L5Sharp.Types;
 using L5Sharp.Utilities;
 
@@ -19,8 +20,8 @@ namespace L5Sharp.Serialization
             Check.NotNull(obj);
 
             var element = new XElement(L5XName.Structure);
-            element.Add(new XAttribute(L5XName.DataType, obj.Name));
-            element.Add(obj.Members().Select(m => _memberSerializer.Serialize(m)));
+            element.AddValue(obj.Name, L5XName.DataType);
+            element.Add(obj.Members.Select(m => _memberSerializer.Serialize(m)));
 
             return element;
         }
@@ -29,9 +30,8 @@ namespace L5Sharp.Serialization
         public StructureType Deserialize(XElement element)
         {
             Check.NotNull(element);
-            
-            var dataType = element.Attribute(L5XName.DataType)?.Value
-                           ?? throw new ArgumentException($"Element must have {L5XName.DataType} attribute.");
+
+            var dataType = element.GetValue<string>(L5XName.DataType);
             var members = element.Elements().Select(e => _memberSerializer.Deserialize(e));
 
             return new StructureType(dataType, members);

@@ -6,7 +6,7 @@ namespace L5Sharp.Tests.Types.Custom
 {
     public class MySimpleType : StructureType
     {
-        public MySimpleType() : base(nameof(MySimpleType), "Simple Type")
+        public MySimpleType() : base(nameof(MySimpleType))
         {
         }
 

@@ -4,7 +4,6 @@ using System.Linq;
 using System.Reflection;
 using L5Sharp.Attributes;
 using L5Sharp.Common;
-using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Serialization;
 
@@ -16,41 +15,33 @@ namespace L5Sharp.Types
     [LogixSerializer(typeof(StructureSerializer))]
     public class StructureType : ILogixType
     {
-        private readonly List<Member>? _members;
-        
+        private readonly List<Member> _members;
+
         /// <summary>
         /// Creates a new <see cref="StructureType"/> instance.
         /// </summary>
         /// <param name="name">The name of the type.</param>
-        /// <param name="description">The description of the type</param>
         /// <exception cref="ArgumentNullException">name is null.</exception>
-        protected StructureType(string name, string? description = null)
+        protected StructureType(string name)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
-            Description = description ?? string.Empty;
+            _members = FindMembers().ToList();
         }
 
         /// <summary>
         /// Creates a new <see cref="StructureType"/> instance.
         /// </summary>
         /// <param name="name">The name of the type.</param>
-        /// <param name="members">The collection of <see cref="Member"/> that make up the type.</param>
-        /// <exception cref="ArgumentNullException"><c>name</c> or <see cref="members"/> is null.</exception>
+        /// <param name="members">The collection of <see cref="Common.Member"/> that make up the type.</param>
+        /// <exception cref="ArgumentNullException"><c>name</c> or <c>members</c> is null.</exception>
         public StructureType(string name, IEnumerable<Member> members)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
-            Description = string.Empty;
             _members = members is not null ? members.ToList() : throw new ArgumentNullException(nameof(members));
         }
 
         /// <inheritdoc />
         public string Name { get; }
-
-        /// <summary>
-        /// The description of the structure type.
-        /// </summary>
-        /// <value>A <see cref="string"/> representing the description value.</value>
-        public string Description { get; }
 
         /// <inheritdoc />
         public virtual DataTypeFamily Family => DataTypeFamily.None;
@@ -62,7 +53,7 @@ namespace L5Sharp.Types
         /// The collection of <see cref="Member"/> objects that compose the structure of the logix type.
         /// </summary>
         /// <returns>A <see cref="IEnumerable{T}"/> containing <see cref="Member"/> objects.</returns>
-        public virtual IEnumerable<Member> Members() => _members ?? FindMembers();
+        public IEnumerable<Member> Members => _members;
 
         /// <inheritdoc />
         public override string ToString() => Name;
@@ -70,7 +61,7 @@ namespace L5Sharp.Types
         private IEnumerable<Member> FindMembers()
         {
             var members = new List<Member>();
-            
+
             members.AddRange(GetLogixTypeProperties());
 
             return members;
@@ -79,7 +70,6 @@ namespace L5Sharp.Types
         private IEnumerable<Member> GetLogixTypeProperties()
         {
             var properties = GetType().GetProperties().Where(p => p.PropertyType.IsAssignableFrom(typeof(ILogixType)));
-
             return properties.Select(GenerateMember);
         }
 

@@ -24,22 +24,6 @@ namespace L5Sharp.Types.Predefined
         /// <inheritdoc />
         public override DataTypeClass Class => DataTypeClass.Predefined;
 
-        /// <inheritdoc />
-        public override IEnumerable<Member> Members()
-        {
-            var members = base.Members().ToList();
-            
-            members.Single(m => m.Name == nameof(ProgTime)).Radix = Radix.DateTime;
-            members.Single(m => m.Name == nameof(InAlarmTime)).Radix = Radix.DateTime;
-            members.Single(m => m.Name == nameof(AckTime)).Radix = Radix.DateTime;
-            members.Single(m => m.Name == nameof(RetToNormalTime)).Radix = Radix.DateTime;
-            members.Single(m => m.Name == nameof(AlarmCountResetTime)).Radix = Radix.DateTime;
-            members.Single(m => m.Name == nameof(ShelveTime)).Radix = Radix.DateTime;
-            members.Single(m => m.Name == nameof(UnshelveTime)).Radix = Radix.DateTime;
-
-            return members;
-        }
-
         /// <summary>
         /// Gets the <see cref="EnableIn"/> member of the <see cref="ALARM_DIGITAL"/> data type.
         /// </summary>
@@ -158,7 +142,7 @@ namespace L5Sharp.Types.Predefined
         /// <summary>
         /// Gets the <see cref="ProgTime"/> member of the <see cref="ALARM_DIGITAL"/> data type.
         /// </summary>
-        public LINT ProgTime { get; set; } = new();
+        public LINT ProgTime { get; set; } = new(Radix.DateTime);
 
         /// <summary>
         /// Gets the <see cref="Severity"/> member of the <see cref="ALARM_DIGITAL"/> data type.
@@ -233,32 +217,32 @@ namespace L5Sharp.Types.Predefined
         /// <summary>
         /// Gets the <see cref="InAlarmTime"/> member of the <see cref="ALARM_DIGITAL"/> data type.
         /// </summary>
-        public LINT InAlarmTime { get; set; } = new();
+        public LINT InAlarmTime { get; set; } = new(Radix.DateTime);
 
         /// <summary>
         /// Gets the <see cref="AckTime"/> member of the <see cref="ALARM_DIGITAL"/> data type.
         /// </summary>
-        public LINT AckTime { get; set; } = new();
+        public LINT AckTime { get; set; } = new(Radix.DateTime);
 
         /// <summary>
         /// Gets the <see cref="RetToNormalTime"/> member of the <see cref="ALARM_DIGITAL"/> data type.
         /// </summary>
-        public LINT RetToNormalTime { get; set; } = new();
+        public LINT RetToNormalTime { get; set; } = new(Radix.DateTime);
 
         /// <summary>
         /// Gets the <see cref="AlarmCountResetTime"/> member of the <see cref="ALARM_DIGITAL"/> data type.
         /// </summary>
-        public LINT AlarmCountResetTime { get; set; } = new();
+        public LINT AlarmCountResetTime { get; set; } = new(Radix.DateTime);
 
         /// <summary>
         /// Gets the <see cref="ShelveTime"/> member of the <see cref="ALARM_DIGITAL"/> data type.
         /// </summary>
-        public LINT ShelveTime { get; set; } = new();
+        public LINT ShelveTime { get; set; } = new(Radix.DateTime);
 
         /// <summary>
         /// Gets the <see cref="UnshelveTime"/> member of the <see cref="ALARM_DIGITAL"/> data type.
         /// </summary>
-        public LINT UnshelveTime { get; set; } = new();
+        public LINT UnshelveTime { get; set; } = new(Radix.DateTime);
 
         /// <summary>
         /// Gets the <see cref="Status"/> member of the <see cref="ALARM_DIGITAL"/> data type.

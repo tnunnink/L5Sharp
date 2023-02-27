@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Xml.Linq;
 using L5Sharp.Common;
 using L5Sharp.Core;
 using L5Sharp.Enums;
+using L5Sharp.Extensions;
 using L5Sharp.Types;
-using L5Sharp.Utilities;
 
 namespace L5Sharp.Components
 {
@@ -17,110 +16,91 @@ namespace L5Sharp.Components
     /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
     /// `Logix 5000 Controllers Import/Export`</a> for more information.
     /// </footer>
-    public class Tag : ILogixComponent, ILogixMember
+    public class Tag : ILogixComponent, ILogixTag
     {
-        private ILogixType? _dataType;
-
-        /// <summary>
-        /// Creates a new <see cref="Tag"/> instance.
-        /// </summary>
-        public Tag()
-        {
-        }
-
-        /// <summary>
-        /// Creates a new <see cref="Tag"/> instance with the provided name and <see cref="ILogixType"/> data.
-        /// </summary>
-        /// <param name="name">The name of the tag.</param>
-        /// <param name="dataType">The logix type data of the data.</param>
-        /// <exception cref="ArgumentNullException"><c>data</c> is null.</exception>
-        public Tag(string name, ILogixType dataType)
-        {
-            _dataType = dataType ?? throw new ArgumentNullException(nameof(dataType));
-
-            Name = name;
-            DataType = dataType.Name;
-            Dimensions = Dimensions.OfType(dataType);
-            Radix = Radix.Default(dataType);
-        }
-
-
-        /// <inheritdoc cref="ILogixComponent.Name" />
+        /// <inheritdoc />
         public string Name { get; set; } = string.Empty;
-        
-        /// <inheritdoc cref="ILogixComponent.Name" />
+
+        /// <inheritdoc />
         public string Description { get; set; } = string.Empty;
-
-        /// <summary>
-        /// the name of the data type that the <see cref="Tag"/> instantiates.
-        /// </summary>
-        public string DataType { get; set; } = string.Empty;
-
-        /// <inheritdoc />
-        public Dimensions Dimensions { get; set; } = Dimensions.Empty;
-
-        /// <inheritdoc />
-        public Radix Radix { get; set; } = Radix.Null;
-
-        /// <inheritdoc />
-        public ExternalAccess ExternalAccess { get; set; } = ExternalAccess.ReadWrite;
 
         /// <inheritdoc />
         public TagName TagName => new(Name);
 
         /// <inheritdoc />
-        public MemberType MemberType => MemberType.FromType(_dataType);
+        public ILogixType Data { get; set; } = LogixType.Null;
+
+        /// <inheritdoc />
+        public string DataType => Data.Name;
+
+        /// <inheritdoc />
+        public Dimensions Dimensions => Data is ArrayType<ILogixType> array ? array.Dimensions : Dimensions.Empty;
+
+        /// <inheritdoc />
+        public Radix Radix => Data is AtomicType atomic ? atomic.Radix : Radix.Null;
         
+        /// <inheritdoc />
+        public MemberType MemberType => MemberType.FromType(Data);
+
+        /// <summary>
+        /// The external access option indicating the read/write access of the tag.
+        /// </summary>
+        /// <value>A <see cref="Enums.ExternalAccess"/> option representing read/write access of the tag.</value>
+        public ExternalAccess ExternalAccess { get; set; } = ExternalAccess.ReadWrite;
+
         /// <summary>
         /// A type indicating whether the current tag component is a base tag, or alias for another tag instance.
         /// </summary>
-        /// <value>A <see cref="TagType"/> enum representing the typ of tag component.</value>
+        /// <value>A <see cref="Enums.TagType"/> option representing the type of tag component.</value>
         public TagType TagType { get; set; } = TagType.Base;
 
         /// <summary>
-        /// A enum indicating the scope of where the tag is visible of usable from.
+        /// The usage option indicating the scope in which the tag is visible or usable from.
         /// </summary>
+        /// <value>A <see cref="Enums.TagUsage"/> option representing the tag scope.</value>
         public TagUsage Usage { get; set; } = TagUsage.Normal;
 
         /// <summary>
-        /// The name of the alias tag that the current <see cref="Tag"/> refers to.
+        /// The tag name of the tag that is the alias of the current tag object.
         /// </summary>
         /// <value>A <see cref="Core.TagName"/> string representing the full tag name of the alias tag.</value>
-        public TagName Alias { get; set; } = TagName.Empty;
+        public TagName AliasFor { get; set; } = TagName.Empty;
 
         /// <summary>
-        /// The flag indicating whether the <see cref="Tag"/> is a constant.
+        /// The flag indicating whether the tag is a constant.
         /// </summary>
-        /// <value>A <see cref="bool"/>; <c>true</c> if the tag is constant; otherwise, <c>false</c>.</value>
+        /// <value><c>true</c> if the tag is constant; otherwise, <c>false</c>.</value>
         /// <remarks>Only value type tags have the ability to be set as a constant. Default is <c>false</c>.</remarks>
-        public bool Constant { get; set; } = false;
+        public bool Constant { get; set; }
 
         /// <summary>
         /// The collection of member comments for the tag component.
         /// </summary>
         /// <value>A <see cref="Dictionary{TKey,TValue}"/> of <see cref="Core.TagName"/>, <see cref="string"/> pairs.</value>
-        public Dictionary<TagName, string> Comments { get; } = new();
+        public Dictionary<TagName, string> Comments { get; set; } = new();
 
         /// <summary>
         /// The collection of member units for the tag component.
         /// </summary>
         /// <value>A <see cref="Dictionary{TKey,TValue}"/> of <see cref="Core.TagName"/>, <see cref="string"/> pairs.</value>
-        public Dictionary<TagName, string> Units { get; } = new();
-
+        public Dictionary<TagName, string> Units { get; set; } = new();
+        
         /// <inheritdoc />
-        public TagMember? Member(TagName tagName) => Descendent(tagName);
+        public TagMember? Member(TagName tagName)
+        {
+            var member = Data.FindMember(tagName);
+            return member is not null ? new TagMember(tagName, member.DataType, this) : null;
+        }
 
         /// <inheritdoc />
         public IEnumerable<TagMember> Members()
-        { 
-            if (_dataType is null)
-                throw new InvalidOperationException("Tag has not internal data type structure.");
-
+        {
             var members = new List<TagMember>();
 
-            foreach (var member in GetMembers(_dataType))
+            foreach (var member in Data.FindMembers())
             {
-                var tagMember = new TagMember(member, null, this);
+                var tagName = TagName.Combine(TagName, member.Name);
+                var tagMember = new TagMember(tagName, member.DataType, this);
                 members.Add(tagMember);
                 members.AddRange(tagMember.Members());
             }
@@ -129,69 +109,57 @@ namespace L5Sharp.Components
         }
 
         /// <inheritdoc />
-        public IEnumerable<TagMember> Members(TagName tagName)
+        public IEnumerable<TagMember> Members(Predicate<TagName> predicate)
         {
-            var tagMember = Descendent(tagName);
+            var members = new List<TagMember>();
+
+            foreach (var member in Data.FindMembers())
+            {
+                var tagName = TagName.Combine(TagName, member.Name);
+                var tagMember = new TagMember(tagName, member.DataType, this);
+                
+                if (predicate.Invoke(tagMember.TagName))
+                    members.Add(tagMember);
+
+                members.AddRange(tagMember.Members(predicate));
+            }
+
+            return members;
+        }
+
+        /// <inheritdoc />
+        public IEnumerable<TagMember> Members(Predicate<TagMember> predicate)
+        {
+            var members = new List<TagMember>();
+
+            foreach (var member in Data.FindMembers())
+            {
+                var tagName = TagName.Combine(TagName, member.Name);
+                var tagMember = new TagMember(tagName, member.DataType, this);
+                
+                if (predicate.Invoke(tagMember))
+                    members.Add(tagMember);
+
+                members.AddRange(tagMember.Members(predicate));
+            }
+
+            return members;
+        }
+
+        /// <inheritdoc />
+        public IEnumerable<TagMember> MembersOf(TagName tagName)
+        {
+            var member = Data.FindMember(tagName);
+            var tagMember = member is not null ? new TagMember(tagName, member.DataType, this) : null;
             return tagMember is not null ? tagMember.Members() : Enumerable.Empty<TagMember>();
         }
 
         /// <inheritdoc />
-        public AtomicType? GetValue() => _dataType as AtomicType;
-
-        /// <inheritdoc />
-        public TAtomic? GetValue<TAtomic>() where TAtomic : AtomicType => _dataType as TAtomic;
-
-        /// <inheritdoc />
-        public void SetValue(AtomicType atomicType)
+        public bool SetValue(AtomicType atomicType)
         {
-            if (_dataType is not AtomicType)
-                throw new InvalidOperationException(
-                    $"The underlying member type {DataType} is not a {typeof(AtomicType)}. The member must be a value member to set the value.");
-
-            _dataType = atomicType;
-        }
-
-        /// <inheritdoc />
-        public bool TrySetValue(AtomicType atomicType)
-        {
-            if (_dataType is not AtomicType)
-                return false;
-
-            _dataType = atomicType;
+            if (Data is not AtomicType) return false;
+            Data = atomicType;
             return true;
-        }
-        
-        private TagMember? Descendent(TagName tagName)
-        {
-            if (_dataType is null)
-                throw new InvalidOperationException("Tag has no internal data type structure.");
-            
-            Check.NotNullOrEmpty(tagName);
-            
-            var childName = tagName.Members.First();
-            var childMember = GetMembers(_dataType).SingleOrDefault(m => m.Name == childName);
-
-            if (childMember is null) return null;
-
-            var tagMember = new TagMember(childMember, null, this);
-
-            var next = TagName.Combine(tagName.Members.Skip(1));
-
-            return next.IsEmpty ? tagMember : tagMember.Member(next);
-        }
-
-        private static IEnumerable<Member> GetMembers(ILogixType dataType)
-        {
-            switch (dataType)
-            {
-                case StructureType structureType:
-                    structureType.Members();
-                    break;
-                case ArrayType<ILogixType> arrayType:
-                    return arrayType.Members();
-            }
-
-            return Enumerable.Empty<Member>();
         }
     }
 }

@@ -47,12 +47,12 @@ namespace L5Sharp.Serialization
             return new Task
             {
                 Name = element.LogixName(),
-                Type = element.Value<TaskType>(L5XName.Type),
+                Type = element.GetValue<TaskType>(L5XName.Type),
                 Rate = element.ValueOrDefault<ScanRate?>(L5XName.Rate) ?? default,
                 Priority = element.ValueOrDefault<TaskPriority?>(L5XName.Priority) ?? default,
                 Watchdog = element.ValueOrDefault<Watchdog?>(L5XName.Watchdog) ?? default,
-                DisableUpdateOutputs = element.Value<bool>(L5XName.DisableUpdateOutputs),
-                InhibitTask = element.Value<bool>(L5XName.InhibitTask),
+                DisableUpdateOutputs = element.GetValue<bool>(L5XName.DisableUpdateOutputs),
+                InhibitTask = element.GetValue<bool>(L5XName.InhibitTask),
                 ScheduledPrograms = element.Descendants(L5XName.ScheduledProgram).Select(p => p.LogixName()).ToList()
             };
         }

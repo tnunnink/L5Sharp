@@ -57,21 +57,21 @@ namespace L5Sharp.Serialization
             return new AddOnInstruction
             {
                 Name = element.LogixName(),
-                Type = element.Value<RoutineType>(L5XName.Type),
-                Revision = element.Value<Revision>(L5XName.Revision),
-                RevisionExtension = element.Value<string>(L5XName.RevisionExtension),
-                RevisionNote = element.Value<string>(L5XName.RevisionNote),
-                Vendor = element.Value<string>(L5XName.Vendor),
-                ExecutePreScan = element.Value<bool>(L5XName.ExecutePrescan),
-                ExecutePostScan = element.Value<bool>(L5XName.ExecutePostscan),
-                ExecuteEnableInFalse = element.Value<bool>(L5XName.ExecuteEnableInFalse),
-                CreatedDate = element.Value<DateTime>(L5XName.CreatedDate),
-                CreatedBy = element.Value<string>(L5XName.CreatedBy),
-                EditedDate = element.Value<DateTime>(L5XName.EditedDate),
-                EditedBy = element.Value<string>(L5XName.EditedBy),
-                SoftwareRevision = element.Value<Revision>(L5XName.SoftwareRevision),
-                AdditionalHelpText = element.Value<string>(L5XName.AdditionalHelpText),
-                IsEncrypted = element.Value<bool>(L5XName.IsEncrypted)
+                Type = element.GetValue<RoutineType>(L5XName.Type),
+                Revision = element.GetValue<Revision>(L5XName.Revision),
+                RevisionExtension = element.GetValue<string>(L5XName.RevisionExtension),
+                RevisionNote = element.GetValue<string>(L5XName.RevisionNote),
+                Vendor = element.GetValue<string>(L5XName.Vendor),
+                ExecutePreScan = element.GetValue<bool>(L5XName.ExecutePrescan),
+                ExecutePostScan = element.GetValue<bool>(L5XName.ExecutePostscan),
+                ExecuteEnableInFalse = element.GetValue<bool>(L5XName.ExecuteEnableInFalse),
+                CreatedDate = element.GetValue<DateTime>(L5XName.CreatedDate),
+                CreatedBy = element.GetValue<string>(L5XName.CreatedBy),
+                EditedDate = element.GetValue<DateTime>(L5XName.EditedDate),
+                EditedBy = element.GetValue<string>(L5XName.EditedBy),
+                SoftwareRevision = element.GetValue<Revision>(L5XName.SoftwareRevision),
+                AdditionalHelpText = element.GetValue<string>(L5XName.AdditionalHelpText),
+                IsEncrypted = element.GetValue<bool>(L5XName.IsEncrypted)
             };
         }
     }

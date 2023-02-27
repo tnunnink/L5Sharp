@@ -16,7 +16,8 @@ namespace L5Sharp.Types.Atomics
         /// <summary>
         /// Creates a new default <see cref="LINT"/> type.
         /// </summary>
-        public LINT() : base(nameof(LINT))
+        /// <param name="radix">The optional radix format of the value.</param>
+        public LINT(Radix? radix = null) : base(nameof(LINT), radix)
         {
         }
 
@@ -24,9 +25,22 @@ namespace L5Sharp.Types.Atomics
         /// Creates a new <see cref="LINT"/> with the provided value.
         /// </summary>
         /// <param name="value">The value to initialize the type with.</param>
-        public LINT(long value) : this()
+        /// <param name="radix">The optional radix format of the value.</param>
+        public LINT(long value, Radix? radix = null) : this(radix)
         {
             _value = value;
+        }
+
+        /// <summary>
+        /// Creates a new <see cref="LINT"/> with the provided string value.
+        /// </summary>
+        /// <param name="value">The string value to parse and convert to the value type.</param>
+        /// <param name="radix">The optional radix format of the value. If not provided, will be inferred
+        /// using <see cref="Enums.Radix.Infer"/>.</param>
+        public LINT(string value, Radix? radix = null) : this(radix ?? Radix.Infer(value))
+        {
+            var converter = TypeDescriptor.GetConverter(GetType());
+            _value = (long)converter.ConvertFrom(Radix.Parse(value));
         }
 
         /// <summary>
@@ -52,6 +66,20 @@ namespace L5Sharp.Types.Atomics
         /// <param name="atomic">The value to convert.</param>
         /// <returns>A <see cref="long"/> type value.</returns>
         public static implicit operator long(LINT atomic) => atomic._value;
+        
+        /// <summary>
+        /// Converts the provided <see cref="bool"/> to a <see cref="LINT"/> value.
+        /// </summary>
+        /// <param name="value">The value to convert.</param>
+        /// <returns>A <see cref="LINT"/> value.</returns>
+        public static implicit operator LINT(string value) => new(value);
+        
+        /// <summary>
+        /// Converts the provided <see cref="bool"/> to a <see cref="LINT"/> value.
+        /// </summary>
+        /// <param name="value">The value to convert.</param>
+        /// <returns>A <see cref="LINT"/> value.</returns>
+        public static implicit operator string(LINT value) => value.ToString();
 
         /// <inheritdoc />
         public bool Equals(LINT? other)

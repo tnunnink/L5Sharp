@@ -26,59 +26,34 @@ namespace L5Sharp.Common
     public class Member
     {
         /// <summary>
-        /// Creates a new <see cref="Member"/> instance with the provided parameters.
+        /// Creates a new default <see cref="Member"/> object.
+        /// </summary>
+        public Member()
+        {
+        }
+        
+        /// <summary>
+        /// Creates a new <see cref="Member"/> object with the provided parameters.
         /// </summary>
         /// <param name="name">The name of the member.</param>
         /// <param name="dataType">The member <see cref="ILogixType"/>.</param>
-        /// <param name="radix">the radix format of the member value.</param>
-        /// <param name="externalAccess">The external access value of the member.</param>
-        /// <param name="description">The description of the member.</param>
         /// <exception cref="ArgumentNullException">name or datatype are null.</exception>
-        public Member(string name, ILogixType dataType, Radix? radix = null,
-            ExternalAccess? externalAccess = null, string? description = null)
+        public Member(string? name, ILogixType? dataType)
         {
-            Name = name ?? throw new ArgumentNullException(nameof(name));
-            DataType = dataType ?? throw new ArgumentNullException(nameof(dataType));
-            Dimensions = Dimensions.OfType(DataType);
-            Radix = radix ?? Radix.Default(DataType);
-            ExternalAccess = externalAccess ?? ExternalAccess.ReadWrite;
-            Description = description ?? string.Empty;
+            Name = name ?? string.Empty;
+            DataType = dataType ?? LogixType.Null;
         }
 
         /// <summary>
         /// The name of the <see cref="Member"/> instance.
         /// </summary>
         /// <returns>A <see cref="string"/> representing the member name.</returns>
-        public string Name { get; set; }
-
-        /// <summary>
-        /// The description of the <see cref="Member"/> instance.
-        /// </summary>
-        /// <returns>A <see cref="string"/> representing the member description.</returns>
-        public string Description { get; set; }
+        public string Name { get; set; } = string.Empty;
 
         /// <summary>
         /// The logix type of the <see cref="Member"/> instance.
         /// </summary>
         /// <returns>A <see cref="ILogixType"/> representing the member data type.</returns>
-        public ILogixType DataType { get; set; }
-
-        /// <summary>
-        /// The dimensions of the <see cref="Member"/> instance.
-        /// </summary>
-        /// <returns>A <see cref="Core.Dimensions"/> value representing the member array dimensions.</returns>
-        public Dimensions Dimensions { get; set; }
-
-        /// <summary>
-        /// The radix format of the <see cref="Member"/> instance.
-        /// </summary>
-        /// <returns>A <see cref="Enums.Radix"/> enum representing the member data format.</returns>
-        public Radix Radix { get; set; }
-
-        /// <summary>
-        /// The external access of the <see cref="Member"/> instance.
-        /// </summary>
-        /// <returns>An <see cref="Enums.ExternalAccess"/> enum representing the read/write access of the member.</returns>
-        public ExternalAccess ExternalAccess { get; set; }
+        public ILogixType DataType { get; set; } = LogixType.Null;
     }
 }

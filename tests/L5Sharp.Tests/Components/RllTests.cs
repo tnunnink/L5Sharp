@@ -10,7 +10,7 @@ namespace L5Sharp.Tests.Components
         [Test]
         public void New_Default_ShouldNotBeNull()
         {
-            var routine = new Rll();
+            var routine = new RllRoutine();
 
             routine.Should().NotBeNull();
         }

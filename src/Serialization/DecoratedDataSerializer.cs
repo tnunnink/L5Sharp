@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Linq;
 using System.Xml.Linq;
+using L5Sharp.Enums;
+using L5Sharp.Extensions;
 using L5Sharp.Types;
 using L5Sharp.Utilities;
 
@@ -18,8 +21,11 @@ namespace L5Sharp.Serialization
         public XElement Serialize(ILogixType obj)
         {
             Check.NotNull(obj);
+
+            var element = new XElement(L5XName.Data);
+            element.AddValue(DataFormat.Decorated, L5XName.Format);
             
-            return obj switch
+            var data = obj switch
             {
                 AtomicType atomicType => _dataValueSerializer.Serialize(atomicType),
                 ArrayType<ILogixType> arrayType => _arraySerializer.Serialize(arrayType),
@@ -27,6 +33,9 @@ namespace L5Sharp.Serialization
                 _ => throw new ArgumentException(
                     $"Logix dat type {obj.GetType()} is not valid for the serializer {GetType()}")
             };
+            
+            element.Add(data);
+            return element;
         }
 
         /// <inheritdoc />
@@ -34,7 +43,7 @@ namespace L5Sharp.Serialization
         {
             Check.NotNull(element);
 
-            var name = element.Name.ToString();
+            var name = element.Elements().First().Name.ToString();
             
             return name switch
             {

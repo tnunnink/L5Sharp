@@ -23,48 +23,10 @@ namespace L5Sharp.Types.Predefined
         /// <inheritdoc />
         public override DataTypeClass Class => DataTypeClass.Predefined;
 
-        /// <inheritdoc />
-        public override IEnumerable<Member> Members()
-        {
-            return new List<Member>
-            {
-                new(nameof(Flags), Flags, radix: Radix.Hex),
-                new(nameof(EW), EW),
-                new(nameof(DN), DN),
-                new(nameof(ER), ER),
-                new(nameof(ST), ST),
-                new(nameof(EN), EN),
-                new(nameof(TO), TO),
-                new(nameof(EN_CC), EN_CC),
-                new(nameof(ERR), ERR, radix: Radix.Hex),
-                new(nameof(EXERR), EXERR, radix: Radix.Hex),
-                new(nameof(ERR_SRC), ERR_SRC),
-                new(nameof(DN_LEN), DN_LEN),
-                new(nameof(REQ_LEN), REQ_LEN),
-                new(nameof(DestinationLink), DestinationLink),
-                new(nameof(DestinationNode), DestinationNode, radix: Radix.Octal),
-                new(nameof(SourceLink), SourceLink),
-                new(nameof(MessageClass), MessageClass, radix: Radix.Hex),
-                new(nameof(Attribute), Attribute, radix: Radix.Hex),
-                new(nameof(Instance), Instance),
-                new(nameof(LocalIndex), LocalIndex),
-                new(nameof(Channel), Channel, radix: Radix.Ascii),
-                new(nameof(Rack), Rack, radix: Radix.Octal),
-                new(nameof(Group), Group),
-                new(nameof(Slot), Slot),
-                new(nameof(Path), Path),
-                new(nameof(RemoteIndex), RemoteIndex),
-                new(nameof(RemoteElement), RemoteElement),
-                new(nameof(UnconnectedTimeout), UnconnectedTimeout),
-                new(nameof(ConnectionRate), ConnectionRate),
-                new(nameof(TimeoutMultiplier), TimeoutMultiplier)
-            };
-        }
-
         /// <summary>
         /// Gets the <see cref="Flags"/> member of the <see cref="MESSAGE"/> data type.
         /// </summary>
-        public INT Flags { get; set; } = new();
+        public INT Flags { get; set; } = new(Radix.Hex);
 
         /// <summary>
         /// Gets the <see cref="EW"/> member of the <see cref="MESSAGE"/> data type.
@@ -104,12 +66,12 @@ namespace L5Sharp.Types.Predefined
         /// <summary>
         /// Gets the <see cref="ERR"/> member of the <see cref="MESSAGE"/> data type.
         /// </summary>
-        public INT ERR { get; set; } = new();
+        public INT ERR { get; set; } = new(Radix.Hex);
 
         /// <summary>
         /// Gets the <see cref="EXERR"/> member of the <see cref="MESSAGE"/> data type.
         /// </summary>
-        public DINT EXERR { get; set; } = new();
+        public DINT EXERR { get; set; } = new(Radix.Hex);
 
         /// <summary>
         /// Gets the <see cref="ERR_SRC"/> member of the <see cref="MESSAGE"/> data type.
@@ -134,7 +96,7 @@ namespace L5Sharp.Types.Predefined
         /// <summary>
         /// Gets the <see cref="DestinationNode"/> member of the <see cref="MESSAGE"/> data type.
         /// </summary>
-        public INT DestinationNode { get; set; } = new();
+        public INT DestinationNode { get; set; } = new(Radix.Octal);
 
         /// <summary>
         /// Gets the <see cref="SourceLink"/> member of the <see cref="MESSAGE"/> data type.
@@ -144,12 +106,12 @@ namespace L5Sharp.Types.Predefined
         /// <summary>
         /// Gets the <see cref="MessageClass"/> member of the <see cref="MESSAGE"/> data type.
         /// </summary>
-        public INT MessageClass { get; set; } = new();
+        public INT MessageClass { get; set; } = new(Radix.Hex);
 
         /// <summary>
         /// Gets the <see cref="Attribute"/> member of the <see cref="MESSAGE"/> data type.
         /// </summary>
-        public INT Attribute { get; set; } = new();
+        public INT Attribute { get; set; } = new(Radix.Hex);
 
         /// <summary>
         /// Gets the <see cref="Instance"/> member of the <see cref="MESSAGE"/> data type.
@@ -164,12 +126,12 @@ namespace L5Sharp.Types.Predefined
         /// <summary>
         /// Gets the <see cref="Channel"/> member of the <see cref="MESSAGE"/> data type.
         /// </summary>
-        public SINT Channel { get; set; } = new();
+        public SINT Channel { get; set; } = new(Radix.Ascii);
 
         /// <summary>
         /// Gets the <see cref="Rack"/> member of the <see cref="MESSAGE"/> data type.
         /// </summary>
-        public SINT Rack { get; set; } = new();
+        public SINT Rack { get; set; } = new(Radix.Octal);
 
         /// <summary>
         /// Gets the <see cref="Group"/> member of the <see cref="MESSAGE"/> data type.

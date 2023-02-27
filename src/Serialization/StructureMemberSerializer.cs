@@ -24,7 +24,7 @@ namespace L5Sharp.Serialization
             member.Add(new XAttribute(L5XName.Name, obj.Name));
             member.Add(new XAttribute(L5XName.DataType, structureType.Name));
 
-            var members = structureType.Members().Select(m => _memberSerializer.Serialize(m));
+            var members = structureType.Members.Select(m => _memberSerializer.Serialize(m));
             member.Add(members);
 
             return member;

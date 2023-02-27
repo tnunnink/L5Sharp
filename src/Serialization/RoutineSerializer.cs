@@ -34,7 +34,7 @@ namespace L5Sharp.Serialization
             {
                 Name = element.LogixName(),
                 Description = element.LogixDescription(),
-                Type = element.Value<RoutineType>(L5XName.Type)
+                Type = element.GetValue<RoutineType>(L5XName.Type)
             };
         }
     }

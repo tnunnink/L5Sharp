@@ -149,11 +149,10 @@ namespace L5Sharp.Types
         public TLogixType this[ushort x, ushort y, ushort z] => _elements[$"[{x},{y},{z}]"];
 
         /// <summary>
-        /// Gets a collection of <see cref="Member"/> 
+        /// Gets a collection of <see cref="Member"/> that represent the elements of the array.
         /// </summary>
-        /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
-        public IEnumerable<Member> Members() => _elements.Select(e => new Member(e.Key, e.Value));
+        /// <returns>A <see cref="IEnumerable{T}"/> containing <see cref="Member"/> object.</returns>
+        public IEnumerable<Member> Elements => _elements.Select(e => new Member(e.Key, e.Value));
 
         /// <inheritdoc />
         public override string ToString() => Name;

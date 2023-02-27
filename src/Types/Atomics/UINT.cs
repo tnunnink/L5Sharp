@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using L5Sharp.Enums;
 using L5Sharp.Types.Atomics.Converters;
 
 namespace L5Sharp.Types.Atomics
@@ -15,7 +16,8 @@ namespace L5Sharp.Types.Atomics
         /// <summary>
         /// Creates a new default <see cref="UINT"/> type.
         /// </summary>
-        public UINT() : base(nameof(UINT))
+        /// <param name="radix">The optional radix format of the value.</param>
+        public UINT(Radix? radix = null) : base(nameof(UINT), radix)
         {
         }
 
@@ -23,9 +25,22 @@ namespace L5Sharp.Types.Atomics
         /// Creates a new <see cref="UINT"/> with the provided value.
         /// </summary>
         /// <param name="value">The value to initialize the type with.</param>
-        public UINT(ushort value) : this()
+        /// <param name="radix">The optional radix format of the value.</param>
+        public UINT(ushort value, Radix? radix = null) : this(radix)
         {
             _value = value;
+        }
+
+        /// <summary>
+        /// Creates a new <see cref="UINT"/> with the provided string value.
+        /// </summary>
+        /// <param name="value">The string value to parse and convert to the value type.</param>
+        /// <param name="radix">The optional radix format of the value. If not provided, will be inferred
+        /// using <see cref="Enums.Radix.Infer"/>.</param>
+        public UINT(string value, Radix? radix = null) : this(radix ?? Radix.Infer(value))
+        {
+            var converter = TypeDescriptor.GetConverter(GetType());
+            _value = (ushort)converter.ConvertFrom(Radix.Parse(value));
         }
 
         /// <summary>

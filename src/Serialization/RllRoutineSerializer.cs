@@ -7,13 +7,13 @@ using L5Sharp.Utilities;
 namespace L5Sharp.Serialization
 {
     /// <summary>
-    /// A logix serializer that performs serialization of <see cref="Rll"/> components.
+    /// A logix serializer that performs serialization of <see cref="RllRoutine"/> components.
     /// </summary>
-    public class RllSerializer : ILogixSerializer<Rll>
+    public class RllRoutineSerializer : ILogixSerializer<RllRoutine>
     {
         private readonly RungSerializer _rungSerializer = new();
         /// <inheritdoc />
-        public XElement Serialize(Rll obj)
+        public XElement Serialize(RllRoutine obj)
         {
             Check.NotNull(obj);
 
@@ -31,11 +31,11 @@ namespace L5Sharp.Serialization
         }
 
         /// <inheritdoc />
-        public Rll Deserialize(XElement element)
+        public RllRoutine Deserialize(XElement element)
         {
             Check.NotNull(element);
 
-            return new Rll
+            return new RllRoutine
             {
                 Name = element.LogixName(),
                 Description = element.LogixDescription(),

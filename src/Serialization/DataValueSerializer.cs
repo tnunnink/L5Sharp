@@ -28,9 +28,9 @@ namespace L5Sharp.Serialization
         {
             Check.NotNull(element);
             
-            var name = element.Value<string>(L5XName.DataType);
+            var name = element.GetValue<string>(L5XName.DataType);
             var radix = element.ValueOrDefault<Radix>(L5XName.Radix);
-            var value = element.Value<string>(L5XName.Value);
+            var value = element.GetValue<string>(L5XName.Value);
 
             return Atomic.Parse(name, value, radix);
         }

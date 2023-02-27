@@ -36,11 +36,10 @@ namespace L5Sharp.Extensions
         /// </summary>
         /// <param name="element">The current element.</param>
         /// <param name="name">The XName of the XAttribute to get the value of.</param>
-        /// <param name="isElement">A flag indicating that the property is located on a child element and not an attribute.</param>
         /// <typeparam name="TValue">The type of the value to be parsed.</typeparam>
         /// <returns>A <see cref="TValue"/> of the specified attribute.</returns>
         /// <exception cref="InvalidOperationException">Attribute with <c>name</c> does not exists on element.</exception>
-        public static TValue Value<TValue>(this XElement element, XName name, bool isElement = false)
+        public static TValue GetValue<TValue>(this XElement element, XName name)
         {
             var property = element.Attribute(name);
 
@@ -63,7 +62,6 @@ namespace L5Sharp.Extensions
         public static TValue? ValueOrDefault<TValue>(this XElement element, XName name)
         {
             var value = element.Attribute(name)?.Value;
-
             return value is not null ? value.Parse<TValue>() : default;
         }
 
