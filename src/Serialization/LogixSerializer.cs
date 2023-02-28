@@ -27,7 +27,7 @@ namespace L5Sharp.Serialization
         /// </summary>
         /// <param name="element">The XML element to deserialize.</param>
         /// <typeparam name="T">The type to deserialize to.</typeparam>
-        /// <returns>A new <see cref="T"/> object representing the deserialized object.</returns>
+        /// <returns>A new object of the specified type representing the deserialized object.</returns>
         public static T Deserialize<T>(XElement element) => GetSerializer<T>().Deserialize(element);
 
         /// <summary>

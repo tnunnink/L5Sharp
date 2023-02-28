@@ -7,6 +7,9 @@ using L5Sharp.Utilities;
 
 namespace L5Sharp.Serialization.Data
 {
+    /// <summary>
+    /// A logix serializer that performs serialization of various <see cref="Member"/> types.
+    /// </summary>
     public class MemberSerializer : ILogixSerializer<Member>
     {
         /// <inheritdoc />

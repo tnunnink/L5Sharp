@@ -243,7 +243,8 @@ namespace L5Sharp.Extensions
             return items.Aggregate(value, (str, cItem) => str.Replace(cItem, replacement));
         }
 
-        public static IEnumerable<string> Segment(this string input, int length)
+        
+        internal static IEnumerable<string> Segment(this string input, int length)
         {
             if (input is null)
                 throw new ArgumentNullException(nameof(input));
@@ -255,6 +256,13 @@ namespace L5Sharp.Extensions
                 yield return input.Substring(i, i + length < input.Length ? length : input.Length - i);
         }
 
+        /// <summary>
+        /// Determines if the string text has balanced characters.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="opening"></param>
+        /// <param name="closing"></param>
+        /// <returns></returns>
         public static bool IsBalanced(this string value, char opening, char closing)
         {
             var characters = new Stack<char>();
@@ -290,6 +298,11 @@ namespace L5Sharp.Extensions
             return value.EndsWith(character) ? value[..^2] : value;
         }
 
+        /// <summary>
+        /// Gets words from the specified string input text.
+        /// </summary>
+        /// <param name="input">A string input to analyze.</param>
+        /// <returns>A <see cref="IEnumerable{T}"/> of words.</returns>
         public static IEnumerable<string> GetWords(this string input)
         {
             var matches = Regex.Matches(input, @"\b[\w']*\b");

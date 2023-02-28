@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace L5Sharp
 {
@@ -12,7 +13,6 @@ namespace L5Sharp
         /// Adds the provided component to the current collection.
         /// </summary>
         /// <param name="component">The <see cref="ILogixComponent"/> to add to the collection.</param>
-        /// <typeparam name="TComponent">The type of logix component to add.</typeparam>
         /// <remarks>
         /// <para>
         /// This method will validate the name and uniqueness of the component within the scope of the collection.
@@ -52,7 +52,7 @@ namespace L5Sharp
         /// </summary>
         /// <param name="name">The name of the component to get.</param>
         /// <returns>A <see cref="ILogixComponent"/> of the specified type.</returns>
-        /// <exception cref=""></exception>
+        /// <exception cref="InvalidOperationException">When not component is found.</exception>
         /// <remarks>
         /// This method will throw an exception if the component with the specified name is not found.
         /// To find a single element that you are not sure exists, use <see cref="Find"/> and check that the result is not null.

@@ -8,8 +8,8 @@ namespace L5Sharp.Core
     /// <remarks>
     /// A Port is a component that helps define the structure of the IO tree.
     /// Each port may contain the slot on the chassis or backplane where the <see cref="Module"/> resides,
-    /// or the the network address (IP) of the device. Each port may (or may not) have a <see cref="Bus"/> that
-    /// contains child modules. Each port is identifiable by the <see cref="Id"/> property. 
+    /// or the the network address (IP) of the device. Each port may (or may not) have a <see cref="BusSize"/>.
+    /// Each port is identifiable by the <see cref="Id"/> property. 
     /// </remarks>
     public sealed class Port
     {
@@ -52,7 +52,7 @@ namespace L5Sharp.Core
         public bool Upstream { get; set; }
 
         /// <summary>
-        /// Gets the <see cref="Bus"/> for the <see cref="Port"/> object.
+        /// Gets the bus size or rack size of the port.
         /// </summary>
         /// <remarks>
         /// A port's bus represents the chassis or network on which Modules are accessible to the port.

@@ -52,7 +52,7 @@ namespace L5Sharp.Enums
         public static readonly MemberType StructureMember = new(nameof(StructureMember), 2);
         
         /// <summary>
-        /// Represents a structure <see cref="MemberType"/>, meaning the member data type is an <see cref=""/>.
+        /// Represents a structure <see cref="MemberType"/>, meaning the member data type is an <see cref="StringType"/>.
         /// </summary>
         public static readonly MemberType StringMember = new(nameof(StringMember), 3);
     }

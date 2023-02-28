@@ -118,8 +118,19 @@ namespace L5Sharp.Components
         /// <value>A <see cref="string"/> .</value>
         public bool IsEncrypted { get; set; }
         
+        /// <summary>
+        /// Gets the collection of <see cref="Core.Parameter"/> objects that define the AOI structure type.
+        /// </summary>
         public List<Parameter> Parameters { get; set; } = new();
+        
+        /// <summary>
+        /// Gets the collection of local <see cref="Tag"/> objects used within the AOI logic.
+        /// </summary>
         public List<Tag> LocalTags { get; set; } = new();
+        
+        /// <summary>
+        /// Gets the collection of <see cref="Routine"/> objects that contain the logic for the instruction.
+        /// </summary>
         public List<Routine> Routines { get; set; } = new();
     }
 }

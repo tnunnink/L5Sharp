@@ -32,8 +32,7 @@ namespace L5Sharp.Utilities
         public static TagNameComparer PathName { get; } = new PathTagNameComparer();
         
         /// <summary>
-        /// An <see cref="IEqualityComparer{T}"/> that compares the last element of the <see cref="TagName.Members"/>
-        /// property of the <see cref="TagName"/> value.
+        /// An <see cref="IEqualityComparer{T}"/> that compares the last member of the <see cref="TagName"/> value.
         /// </summary>
         public static TagNameComparer MemberName { get; } = new MemberTagNameComparer();
 

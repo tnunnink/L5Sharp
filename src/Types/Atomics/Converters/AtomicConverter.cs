@@ -6,7 +6,7 @@ namespace L5Sharp.Types.Atomics.Converters
 {
     /// <summary>
     /// A generic atomic <see cref="TypeConverter"/> implementation that specifies the conversion
-    /// of <see cref="IAtomicType{T}"/> objects. Since the implementation of <see cref="CanConvertFrom"/>,
+    /// of <see cref="AtomicType"/> objects. Since the implementation of <see cref="CanConvertFrom"/>,
     /// <see cref="CanConvertTo"/>, and <see cref="ConvertTo"/> are the same for all atomics, we can create
     /// a base abstract class to contain the implementations. Note that we are allowing conversions to and from
     /// all primitive CLR types and the corresponding Logix types. These are checked conversions, meaning they will

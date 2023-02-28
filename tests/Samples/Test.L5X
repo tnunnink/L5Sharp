@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<RSLogix5000Content SchemaRevision="1.0" SoftwareRevision="32.02" TargetName="TestController" TargetType="Controller" ContainsContext="false" Owner="tnunnink, EN Engineering" ExportDate="Sat Apr 09 08:40:01 2022" ExportOptions="NoRawData L5KData DecoratedData ForceProtectedEncoding AllProjDocTrans">
-<Controller Use="Target" Name="TestController" ProcessorType="1756-L83E" MajorRev="32" MinorRev="11" ProjectCreationDate="Mon Sep 27 16:23:27 2021" LastModifiedDate="Sat Apr 09 08:39:53 2022" SFCExecutionControl="CurrentActive" SFCRestartPosition="MostRecent" SFCLastScan="DontScan" ProjectSN="16#0000_0000"
+<RSLogix5000Content SchemaRevision="1.0" SoftwareRevision="32.02" TargetName="TestController" TargetType="Controller" ContainsContext="false" Owner="tnunnink, EN Engineering" ExportDate="Tue Feb 28 15:48:24 2023" ExportOptions="NoRawData L5KData DecoratedData ForceProtectedEncoding AllProjDocTrans">
+<Controller Use="Target" Name="TestController" ProcessorType="1756-L83E" MajorRev="32" MinorRev="11" ProjectCreationDate="Mon Sep 27 15:23:27 2021" LastModifiedDate="Tue Feb 28 14:38:34 2023" SFCExecutionControl="CurrentActive" SFCRestartPosition="MostRecent" SFCLastScan="DontScan" ProjectSN="16#0000_0000"
  MatchProjectToController="false" CanUseRPIFromProducer="false" InhibitAutomaticFirmwareUpdate="0" PassThroughConfiguration="EnabledWithAppend" DownloadProjectDocumentationAndExtendedProperties="true" DownloadProjectCustomProperties="true" ReportMinorOverflow="false">
 <Description>
 <![CDATA[This is a test project]]>
@@ -126,6 +126,15 @@ Dint Array]]>
 <![CDATA[This is a test custom string type]]>
 </Description>
 </Member>
+</Members>
+</DataType>
+<DataType Name="FakeString" Family="NoFamily" Class="User">
+<Description>
+<![CDATA[This is a type]]>
+</Description>
+<Members>
+<Member Name="LEN" DataType="DINT" Dimension="0" Radix="Decimal" Hidden="false" ExternalAccess="Read/Write"/>
+<Member Name="DATA" DataType="SINT" Dimension="23" Radix="Decimal" Hidden="false" ExternalAccess="Read/Write"/>
 </Members>
 </DataType>
 <DataType Name="InvalidType" Family="NoFamily" Class="User">
@@ -2722,7 +2731,7 @@ Dint Array]]>
 </Connections>
 </Communications>
 </Module>
-<Module Name="RIOTests" CatalogNumber="1747-ASB" Vendor="1" ProductType="12" ProductCode="56" Major="1" Minor="1" ParentModule="Local_Mod_9" ParentModPortId="2" Inhibited="false" MajorFault="false"
+<Module Name="RIOChA1" CatalogNumber="1747-ASB" Vendor="1" ProductType="12" ProductCode="56" Major="1" Minor="1" ParentModule="Local_Mod_9" ParentModPortId="2" Inhibited="false" MajorFault="false"
 >
 <EKey State="Disabled"/>
 <Ports>
@@ -2733,7 +2742,89 @@ Dint Array]]>
 </Ports>
 <Communications CommMethod="536870913">
 <Connections>
-<Connection Name="Rack" RPI="48000" Type="Output" EventID="0" ProgrammaticallySendEventTrigger="false" Unicast="true">
+<Connection Name="Rack" RPI="48000" Type="Output" EventID="0" ProgrammaticallySendEventTrigger="false">
+<InputTag ExternalAccess="Read/Write">
+<Data Format="Decorated">
+<Structure DataType="AB:RIO_2IOGROUP:I:0">
+<DataValueMember Name="RackStatus" DataType="DINT" Radix="Binary" Value="2#0000_0000_0000_0000_0000_0000_0000_0000"/>
+<DataValueMember Name="InputGroupsValid" DataType="DINT" Radix="Binary" Value="2#0000_0000_0000_0000_0000_0000_0000_0000"/>
+<ArrayMember Name="Data" DataType="INT" Dimensions="2" Radix="Binary">
+<Element Index="[0]" Value="2#0000_0000_0000_0000"/>
+<Element Index="[1]" Value="2#0000_0000_0000_0000"/>
+</ArrayMember>
+</Structure>
+</Data>
+</InputTag>
+<OutputTag ExternalAccess="Read/Write">
+<Data Format="L5K">
+<![CDATA[[[0,0]]]]>
+</Data>
+<Data Format="Decorated">
+<Structure DataType="AB:RIO_2IOGROUP:O:0">
+<ArrayMember Name="Data" DataType="INT" Dimensions="2" Radix="Binary">
+<Element Index="[0]" Value="2#0000_0000_0000_0000"/>
+<Element Index="[1]" Value="2#0000_0000_0000_0000"/>
+</ArrayMember>
+</Structure>
+</Data>
+</OutputTag>
+</Connection>
+</Connections>
+</Communications>
+</Module>
+<Module Name="RIOChA2" CatalogNumber="1794-ASB" Vendor="1" ProductType="12" ProductCode="49" Major="1" Minor="1" ParentModule="Local_Mod_9" ParentModPortId="2" Inhibited="false" MajorFault="false"
+>
+<EKey State="Disabled"/>
+<Ports>
+<Port Id="1" Type="RIOChassis" Upstream="false">
+<Bus Size="4"/>
+</Port>
+<Port Id="2" Address="2" Type="RIO" Upstream="true"/>
+</Ports>
+<Communications CommMethod="536870913">
+<Connections>
+<Connection Name="Rack" RPI="48000" Type="Output" EventID="0" ProgrammaticallySendEventTrigger="false">
+<InputTag ExternalAccess="Read/Write">
+<Data Format="Decorated">
+<Structure DataType="AB:RIO_2IOGROUP:I:0">
+<DataValueMember Name="RackStatus" DataType="DINT" Radix="Binary" Value="2#0000_0000_0000_0000_0000_0000_0000_0000"/>
+<DataValueMember Name="InputGroupsValid" DataType="DINT" Radix="Binary" Value="2#0000_0000_0000_0000_0000_0000_0000_0000"/>
+<ArrayMember Name="Data" DataType="INT" Dimensions="2" Radix="Binary">
+<Element Index="[0]" Value="2#0000_0000_0000_0000"/>
+<Element Index="[1]" Value="2#0000_0000_0000_0000"/>
+</ArrayMember>
+</Structure>
+</Data>
+</InputTag>
+<OutputTag ExternalAccess="Read/Write">
+<Data Format="L5K">
+<![CDATA[[[0,0]]]]>
+</Data>
+<Data Format="Decorated">
+<Structure DataType="AB:RIO_2IOGROUP:O:0">
+<ArrayMember Name="Data" DataType="INT" Dimensions="2" Radix="Binary">
+<Element Index="[0]" Value="2#0000_0000_0000_0000"/>
+<Element Index="[1]" Value="2#0000_0000_0000_0000"/>
+</ArrayMember>
+</Structure>
+</Data>
+</OutputTag>
+</Connection>
+</Connections>
+</Communications>
+</Module>
+<Module Name="RIOChB1" CatalogNumber="1771-ASB" Vendor="1" ProductType="12" ProductCode="57" Major="1" Minor="1" ParentModule="Local_Mod_9" ParentModPortId="3" Inhibited="false" MajorFault="false"
+>
+<EKey State="Disabled"/>
+<Ports>
+<Port Id="1" Type="RIOChassis" Upstream="false">
+<Bus Size="4"/>
+</Port>
+<Port Id="2" Address="0" Type="RIO" Upstream="true"/>
+</Ports>
+<Communications CommMethod="536870913">
+<Connections>
+<Connection Name="Rack" RPI="48000" Type="Output" EventID="0" ProgrammaticallySendEventTrigger="false">
 <InputTag ExternalAccess="Read/Write">
 <Data Format="Decorated">
 <Structure DataType="AB:RIO_2IOGROUP:I:0">
@@ -6658,6 +6749,27 @@ Dint Array]]>
 <Routine Name="Prescan" Type="RLL"/>
 </Routines>
 </AddOnInstructionDefinition>
+<AddOnInstructionDefinition Name="MainProgram" Revision="1.0" ExecutePrescan="false" ExecutePostscan="false" ExecuteEnableInFalse="false" CreatedDate="2023-02-28T21:48:05.740Z" CreatedBy="ENE\tnunnink" EditedDate="2023-02-28T21:48:05.802Z" EditedBy="ENE\tnunnink" SoftwareRevision="v32.02">
+<Description>
+<![CDATA[test]]>
+</Description>
+<Parameters>
+<Parameter Name="EnableIn" TagType="Base" DataType="BOOL" Usage="Input" Radix="Decimal" Required="false" Visible="false" ExternalAccess="Read Only">
+<Description>
+<![CDATA[Enable Input - System Defined Parameter]]>
+</Description>
+</Parameter>
+<Parameter Name="EnableOut" TagType="Base" DataType="BOOL" Usage="Output" Radix="Decimal" Required="false" Visible="false" ExternalAccess="Read Only">
+<Description>
+<![CDATA[Enable Output - System Defined Parameter]]>
+</Description>
+</Parameter>
+</Parameters>
+<LocalTags/>
+<Routines>
+<Routine Name="Logic" Type="RLL"/>
+</Routines>
+</AddOnInstructionDefinition>
 </AddOnInstructionDefinitions>
 <Tags>
 <Tag Name="Another" TagType="Base" DataType="DINT" Radix="Decimal" Constant="false" ExternalAccess="Read/Write">
@@ -6754,6 +6866,41 @@ Dint Array]]>
 <DataValueMember Name="NewInputParameters" DataType="BOOL" Value="0"/>
 <DataValueMember Name="Producing" DataType="BOOL" Value="0"/>
 <DataValueMember Name="Standby" DataType="BOOL" Value="0"/>
+</Structure>
+</Data>
+</Tag>
+<Tag Name="FakeStringTag" TagType="Base" DataType="FakeString" Constant="false" ExternalAccess="Read/Write">
+<Data Format="L5K">
+<![CDATA[[0,[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]]]]>
+</Data>
+<Data Format="Decorated">
+<Structure DataType="FakeString">
+<DataValueMember Name="LEN" DataType="DINT" Radix="Decimal" Value="0"/>
+<ArrayMember Name="DATA" DataType="SINT" Dimensions="23" Radix="Decimal">
+<Element Index="[0]" Value="0"/>
+<Element Index="[1]" Value="0"/>
+<Element Index="[2]" Value="0"/>
+<Element Index="[3]" Value="0"/>
+<Element Index="[4]" Value="0"/>
+<Element Index="[5]" Value="0"/>
+<Element Index="[6]" Value="0"/>
+<Element Index="[7]" Value="0"/>
+<Element Index="[8]" Value="0"/>
+<Element Index="[9]" Value="0"/>
+<Element Index="[10]" Value="0"/>
+<Element Index="[11]" Value="0"/>
+<Element Index="[12]" Value="0"/>
+<Element Index="[13]" Value="0"/>
+<Element Index="[14]" Value="0"/>
+<Element Index="[15]" Value="0"/>
+<Element Index="[16]" Value="0"/>
+<Element Index="[17]" Value="0"/>
+<Element Index="[18]" Value="0"/>
+<Element Index="[19]" Value="0"/>
+<Element Index="[20]" Value="0"/>
+<Element Index="[21]" Value="0"/>
+<Element Index="[22]" Value="0"/>
+</ArrayMember>
 </Structure>
 </Data>
 </Tag>
@@ -6957,7 +7104,7 @@ Dint Array]]>
 </Array>
 </Data>
 </Tag>
-<Tag Name="SimpleBool" TagType="Base" DataType="BOOL" Radix="Decimal" Constant="false" ExternalAccess="None">
+<Tag Name="SimpleBool" TagType="Base" DataType="BOOL" Radix="Decimal" Constant="false" ExternalAccess="Read/Write">
 <Data Format="L5K">
 <![CDATA[0]]>
 </Data>
@@ -7278,6 +7425,20 @@ Dint Array]]>
 </Structure>
 </Data>
 </Tag>
+<Tag Name="TestAlarmType" TagType="Base" DataType="AlarmType" Constant="false" ExternalAccess="Read/Write">
+<Data Format="L5K">
+<![CDATA[[[0.00000000e+000,0.00000000e+000,0]]]]>
+</Data>
+<Data Format="Decorated">
+<Structure DataType="AlarmType">
+<StructureMember Name="DigitalMember" DataType="CAM">
+<DataValueMember Name="Master" DataType="REAL" Radix="Float" Value="0.0"/>
+<DataValueMember Name="Slave" DataType="REAL" Radix="Float" Value="0.0"/>
+<DataValueMember Name="SegmentType" DataType="DINT" Radix="Decimal" Value="0"/>
+</StructureMember>
+</Structure>
+</Data>
+</Tag>
 <Tag Name="TestAnalogAlarm" TagType="Base" DataType="ALARM_ANALOG" ExternalAccess="Read/Write">
 <Data Format="Alarm">
 <AlarmAnalogParameters EnableIn="false" InFault="false" HHEnabled="false" HEnabled="false" LEnabled="false" LLEnabled="false" AckRequired="true" ProgAckAll="false" OperAckAll="false" HHProgAck="false" HHOperAck="false"
@@ -7287,6 +7448,17 @@ Dint Array]]>
  HMinDurationEnable="true" LMinDurationEnable="true" LLMinDurationEnable="true" In="0.0" HHLimit="0.0" HHSeverity="500" HLimit="0.0" HSeverity="500" LLimit="0.0" LSeverity="500" LLLimit="0.0"
  LLSeverity="500" MinDurationPRE="0" ShelveDuration="0" MaxShelveDuration="0" Deadband="0.0" ROCPosLimit="0.0" ROCPosSeverity="500" ROCNegLimit="0.0" ROCNegSeverity="500" ROCPeriod="0.0"/>
 <AlarmConfig/>
+</Data>
+</Tag>
+<Tag Name="TestArray" TagType="Base" DataType="DINT" Dimensions="1 1 2" Radix="Decimal" Constant="false" ExternalAccess="Read/Write">
+<Data Format="L5K">
+<![CDATA[[0,0]]]>
+</Data>
+<Data Format="Decorated">
+<Array DataType="DINT" Dimensions="1,1,2" Radix="Decimal">
+<Element Index="[0,0,0]" Value="0"/>
+<Element Index="[0,0,1]" Value="0"/>
+</Array>
 </Data>
 </Tag>
 <Tag Name="TestArrayTag" TagType="Base" DataType="ArrayType" Constant="false" ExternalAccess="Read Only">

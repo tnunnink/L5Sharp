@@ -66,10 +66,10 @@ namespace L5Sharp
         ILogixComponentCollection<Routine> Routines(string programName);
 
         /// <summary>
-        /// Returns a scoped component collection for querying and manipulating <see cref="TRoutine"/> components
+        /// Returns a scoped component collection for querying and manipulating <see cref="Routine"/> components
         /// in the L5X file.
         /// </summary>
-        /// <returns>A <see cref="ILogixComponentCollection{TComponent}"/> for <see cref="TRoutine"/> components</returns>
+        /// <returns>A <see cref="ILogixComponentCollection{TComponent}"/> for <see cref="Routine"/> components</returns>
         ILogixComponentCollection<TRoutine> Routines<TRoutine>(string programName) where TRoutine : Routine;
 
         /// <summary>
