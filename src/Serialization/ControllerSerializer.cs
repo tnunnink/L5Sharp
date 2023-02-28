@@ -1,64 +1,63 @@
-﻿using System;
-using System.Globalization;
-using System.Xml.Linq;
+﻿using System.Xml.Linq;
+using L5Sharp.Components;
 using L5Sharp.Core;
 using L5Sharp.Extensions;
-using L5Sharp.L5X;
+using L5Sharp.Utilities;
 
 namespace L5Sharp.Serialization
 {
-    internal class ControllerSerializer : L5XSerializer<IController>
+    /// <summary>
+    /// 
+    /// </summary>
+    public class ControllerSerializer : ILogixSerializer<Controller>
     {
-        private static readonly XName ElementName = L5XName.Controller;
-
-        public override XElement Serialize(IController component)
+        /// <inheritdoc />
+        public XElement Serialize(Controller obj)
         {
-            if (component == null)
-                throw new ArgumentNullException(nameof(component));
+            Check.NotNull(obj);
+            
+            var element = new XElement(L5XName.Controller);
+            
+            element.AddValue(obj, c => c.Name);
+            element.AddText(obj, c => c.Description);
+            element.AddValue(obj, c => c.ProcessorType);
 
-            var element = new XElement(ElementName);
-            element.AddComponentName(component.Name);
-            element.AddComponentDescription(component.Description);
-            if (component.ProcessorType is not null)
-                element.Add(new XAttribute(L5XName.ProcessorType, component.ProcessorType));
-            if (component.Revision is not null)
+            if (obj.Revision is not null)
             {
-                element.Add(new XAttribute(L5XName.MajorRev, component.Revision.Major));
-                element.Add(new XAttribute(L5XName.MinorRev, component.Revision.Minor));
+                element.AddValue(obj.Revision.Major, L5XName.MajorRev);
+                element.AddValue(obj.Revision.Minor, L5XName.MinorRev);
             }
 
             element.Add(new XAttribute(L5XName.ProjectCreationDate,
-                component.ProjectCreationDate.ToString("ddd MMM d HH:mm:ss yyyy")));
+                obj.ProjectCreationDate.ToString("ddd MMM d HH:mm:ss yyyy")));
             element.Add(new XAttribute(L5XName.LastModifiedDate,
-                component.ProjectCreationDate.ToString("ddd MMM d HH:mm:ss yyyy")));
+                obj.LastModifiedDate.ToString("ddd MMM d HH:mm:ss yyyy")));
 
             return element;
         }
 
-        public override IController Deserialize(XElement element)
+        /// <inheritdoc />
+        public Controller Deserialize(XElement element)
         {
-            if (element == null)
-                throw new ArgumentNullException(nameof(element));
+            Check.NotNull(element);
 
-            if (element.Name != ElementName)
-                throw new ArgumentException($"Element '{element.Name}' not valid for the serializer {GetType()}.");
+            return new Controller
+            {
+                Name = element.LogixName(),
+                Description = element.LogixDescription(),
+                ProcessorType = element.TryGetValue<string>(L5XName.ProcessorType) ?? string.Empty,
+                Revision = GetRevision(element),
+                ProjectCreationDate = element.LogixDateTimeOrDefault(L5XName.ProjectCreationDate),
+                LastModifiedDate = element.LogixDateTimeOrDefault(L5XName.LastModifiedDate)
+            };
+        }
 
-            var name = element.ComponentName();
-            var description = element.ComponentDescription();
-            var processorType = element.Attribute(L5XName.ProcessorType)?.Value.Parse<CatalogNumber>();
-            var major = element.Attribute(L5XName.MajorRev)?.Value;
-            var minor = element.Attribute(L5XName.MinorRev)?.Value;
-            var revision = Revision.Parse($"{major}.{minor}");
-            var creationDate = DateTime.ParseExact(
-                element.Attribute(L5XName.ProjectCreationDate)?.Value,
-                "ddd MMM d HH:mm:ss yyyy",
-                CultureInfo.CurrentCulture);
-            var modifiedDate = DateTime.ParseExact(
-                element.Attribute(L5XName.LastModifiedDate)?.Value,
-                "ddd MMM d HH:mm:ss yyyy",
-                CultureInfo.CurrentCulture);
+        private static Revision? GetRevision(XElement element)
+        {
+            var major = element.TryGetValue<string>(L5XName.MajorRev);
+            var minor = element.TryGetValue<string>(L5XName.MinorRev);
 
-            return new Controller(name, processorType, revision, creationDate, modifiedDate, description);
+            return major is not null && minor is not null ? Revision.Parse($"{major}.{minor}") : default;
         }
     }
 }

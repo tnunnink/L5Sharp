@@ -1,4 +1,6 @@
 ﻿using System;
+using L5Sharp.Components;
+using L5Sharp.Rockwell;
 
 namespace L5Sharp.Core
 {
@@ -9,12 +11,12 @@ namespace L5Sharp.Core
     /// This object is a simple entity type wrapper that groups the vendor id and name.
     /// Vendor's are defined by Rockwell and assigned unique Id and name.
     /// This information is obtained from the L5X or from the <see cref="ModuleCatalog"/> service by lookup of a given
-    /// <see cref="CatalogNumber"/>. Use <see cref="Rockwell"/> as it is the most common vendor for compatible devices.
+    /// catalog number. Use <see cref="Rockwell"/> as it is the most common vendor for compatible devices.
     /// </remarks>
     public class Vendor : IEquatable<Vendor>
     {
         /// <summary>
-        /// Creates a new <see cref="Vendor"/> entity with the provided id and name.
+        /// Creates a new <see cref="Vendor"/> value with the provided id and name.
         /// </summary>
         /// <param name="id">The unique Id of the Vendor.</param>
         /// <param name="name">The name of the Vendor. Will default to empty if not provided.</param>

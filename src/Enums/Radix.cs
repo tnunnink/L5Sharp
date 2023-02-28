@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -8,6 +7,7 @@ using System.Text.RegularExpressions;
 using Ardalis.SmartEnum;
 using L5Sharp.Extensions;
 using L5Sharp.Types;
+using L5Sharp.Types.Atomics;
 
 // ReSharper disable StringLiteralTypo
 
@@ -39,7 +39,7 @@ namespace L5Sharp.Enums
         /// Represents a Null radix, or absence of a Radix value.
         /// </summary>
         /// <remarks>
-        /// Only <see cref="IAtomicType"/> types have non-null Radix. <see cref="IComplexType"/> types all have null Radix.
+        /// Only <see cref="AtomicType"/> types have non-null Radix. <see cref="StructureType"/> types all have null Radix.
         /// </remarks>
         public static readonly Radix Null = new NullRadix();
 
@@ -102,20 +102,20 @@ namespace L5Sharp.Enums
         public static readonly Radix DateTimeNs = new DateTimeNsRadix();
 
         /// <summary>
-        /// Gets the default <see cref="Radix"/> type for the provided data type instance.
+        /// Gets the default <see cref="Radix"/> value for the provided logix type.
         /// </summary>
-        /// <param name="dataType">The data type instance to evaluate.</param>
+        /// <param name="type">The logix type to evaluate.</param>
         /// <returns>
         /// <see cref="Null"/> for all non atomic types.
         /// <see cref="Float"/> for <see cref="REAL"/> types.
         /// <see cref="Decimal"/> for all other atomic types.
         /// </returns>
-        public static Radix Default(IDataType dataType)
+        public static Radix Default(ILogixType type)
         {
-            if (dataType is IArrayType<IDataType> arrayType)
-                dataType = arrayType.First().DataType;
+            if (type is ArrayType<AtomicType> arrayType)
+                type = arrayType.First();
 
-            if (dataType is not IAtomicType atomicType)
+            if (type is not AtomicType atomicType)
                 return Null;
 
             return atomicType is REAL ? Float : Decimal;
@@ -124,14 +124,11 @@ namespace L5Sharp.Enums
         /// <summary>
         /// Determines if the current <see cref="Radix"/> supports the provided data type instance.
         /// </summary>
-        /// <param name="dataType">The data type instance to evaluate.</param>
+        /// <param name="type">The logix type instance to evaluate.</param>
         /// <returns>true if the current radix value is valid for the given data type instance; otherwise, false.</returns>
-        public bool SupportsType(IDataType dataType)
+        public bool SupportsType(ILogixType type)
         {
-            if (dataType is IArrayType<IDataType> arrayType)
-                dataType = arrayType.First().DataType;
-
-            if (dataType is not IAtomicType atomicType)
+            if (type is not AtomicType atomicType)
                 return Equals(Null);
 
             return atomicType switch
@@ -145,97 +142,41 @@ namespace L5Sharp.Enums
         }
 
         /// <summary>
-        /// Parses a string input to an object value based on the format of the input value.
+        /// Determines the radix format from a string representing a formatted atomic value.
         /// </summary>
-        /// <param name="input">The string value to parse.</param>
-        /// <returns>
-        /// An object representing the value of the parsed string input.
-        /// If no radix format can be determined from the input, returns the input string.
-        /// </returns>
-        /// <remarks>
-        /// This method determines the radix based on patterns in the input string. For example, if the string input
-        /// starts with the specifier '2#', this method will forward the call to <see cref="Parse"/> for the Binary Radix
-        /// and return the result. If no radix can be determined from the input string, the call is forwarded to the
-        /// <see cref="Null"/> radix, which which will throw a <see cref="NotSupportedException"/>.
-        /// </remarks>
-        public static IAtomicType ParseValue(string input)
+        /// <param name="input">The string for which to infer the format.</param>
+        /// <returns>A <see cref="Radix"/> format enum value.</returns>
+        /// <exception cref="FormatException">A radix can not be determined from the format of <c>value</c>.</exception>
+        public static Radix Infer(string input)
         {
-            var parser = DetermineParser(input);
+            var name = Identifiers.FirstOrDefault(i => i.Value.Invoke(input)).Key;
 
-            if (parser is null)
+            if (name is null)
                 throw new FormatException(
-                    $"Could not determine Radix from input '{input}'. " +
-                    "Verify that the input string is an accepted Radix format");
+                    @$"Could not determine Radix from input '{input}'. 
+                        Verify that the input string is an accepted Radix format.");
 
-            return parser(input);
+            return FromName(name);
         }
 
         /// <summary>
-        /// Parsed a string input and returns the value as an <see cref="IAtomicType"/> value type.
-        /// </summary>
-        /// <remarks>
-        /// This method is similar to <see cref="ParseValue"/>, except it will return the parsed input as the
-        /// atomic value type that is specified by the generic parameter.
-        /// </remarks>
-        /// <param name="input">The string value to parse.</param>
-        /// <typeparam name="TAtomic">The <see cref="IAtomicType"/> type to return.</typeparam>
-        /// <returns>
-        /// An IAtomic value type instance representing the value of the parsed string input.
-        /// </returns>
-        public static TAtomic ParseValue<TAtomic>(string input) where TAtomic : IAtomicType
-        {
-            var parser = DetermineParser(input);
-
-            if (parser is null)
-                throw new ArgumentException(
-                    $"Could not determine Radix from input '{input}'. Verify that the input string is an accepted Radix format");
-
-            var value = parser(input);
-
-            var converter = TypeDescriptor.GetConverter(typeof(TAtomic));
-
-            return (TAtomic)converter.ConvertFrom(value)!;
-        }
-
-        /// <summary>
-        /// Attempts to parse the provided input string into a <see cref="IAtomicType{T}"/> value representation.
-        /// </summary>
-        /// <param name="input">The string input to parse.</param>
-        /// <returns>If the parse was successful, then a <see cref="IAtomicType{T}"/> with the value of the parsed input;
-        /// otherwise, null.</returns>
-        public static IAtomicType? TryParseValue(string input)
-        {
-            var parser = DetermineParser(input);
-            return parser?.Invoke(input);
-        }
-
-        /// <summary>
-        /// Converts an atomic value to the current radix base value. 
+        /// Converts an atomic value to the current radix base format. 
         /// </summary>
         /// <param name="atomic">The current atomic type to convert.</param>
         /// <returns>
         /// A string that represents the value of the atomic type in the current radix base number style.
         /// </returns>
-        public abstract string Format(IAtomicType atomic);
-        
-        
-        /*public virtual string Format(string format, object arg, IFormatProvider formatProvider)
-        {
-            throw new NotImplementedException();
-        }*/
+        public abstract string Format(AtomicType atomic);
 
         /// <summary>
-        /// Parses a string input of a given Radix formatted value into an object value. 
+        /// Parses a string input of a given Radix formatted value into an atomic value type. 
         /// </summary>
         /// <param name="input">The string value to parse.</param>
-        /// <returns>An object representing the value of the formatted string.</returns>
-        public abstract IAtomicType Parse(string input);
+        /// <returns>An <see cref="AtomicType"/> representing the value of the formatted string.</returns>
+        public abstract AtomicType Parse(string input);
 
-        private static IAtomicType ConvertToAtomic(string value, int bitsPerByte, int baseNumber)
+        private static AtomicType ConvertToAtomic(string value, int bitsPerByte, int baseNumber)
         {
-            if (string.IsNullOrEmpty(value))
-                throw new ArgumentException("The proided value can not be null or empty");
-
             var byteLength = value.Length / bitsPerByte;
 
             return byteLength switch
@@ -251,30 +192,16 @@ namespace L5Sharp.Enums
             };
         }
 
-        /// <summary>
-        /// Gets a parse function based on the provided string input.
-        /// </summary>
-        /// <param name="value">The string input value to determine a parse function for.</param>
-        /// <returns>
-        /// A func delegate that represents the parse function for the given string input.
-        /// </returns>
-        private static Func<string, IAtomicType>? DetermineParser(string value)
-        {
-            var name = Identifiers.FirstOrDefault(i => i.Value.Invoke(value)).Key;
-
-            return name is not null ? input => FromName(name).Parse(input) : null;
-        }
-
         private void ValidateFormat(string input)
         {
             if (string.IsNullOrEmpty(input))
-                throw new ArgumentNullException(nameof(input));
+                throw new ArgumentException("Input can not be null or empty.", nameof(input));
 
             if (!Identifiers[Name].Invoke(input))
                 throw new FormatException($"Input '{input}' does not have expected {Name} format.");
         }
 
-        private void ValidateType(IAtomicType atomic)
+        private void ValidateType(AtomicType atomic)
         {
             if (atomic is null)
                 throw new ArgumentNullException(nameof(atomic));
@@ -289,10 +216,10 @@ namespace L5Sharp.Enums
             {
             }
 
-            public override string Format(IAtomicType atomic) =>
+            public override string Format(AtomicType atomic) =>
                 throw new NotSupportedException($"{Name} Radix does not support formatting atomic values");
 
-            public override IAtomicType Parse(string input) =>
+            public override AtomicType Parse(string input) =>
                 throw new NotSupportedException($"{Name} Radix does not support parsing atomic values");
         }
 
@@ -308,20 +235,18 @@ namespace L5Sharp.Enums
             {
             }
 
-            public override string Format(IAtomicType atomic)
+            public override string Format(AtomicType atomic)
             {
                 ValidateType(atomic);
 
-                var value = (ValueType)atomic.Value;
-
-                var converted = value is not bool b ? value.ToBase(BaseNumber) : b ? "1" : "0";
+                var converted = atomic is not BOOL b ? atomic.ToBase(BaseNumber) : b ? "1" : "0";
 
                 var formatted = Regex.Replace(converted, Pattern, ByteSeparator, RegexOptions.Compiled);
 
                 return $"{Specifier}{formatted}";
             }
 
-            public override IAtomicType Parse(string input)
+            public override AtomicType Parse(string input)
             {
                 ValidateFormat(input);
 
@@ -343,20 +268,18 @@ namespace L5Sharp.Enums
             {
             }
 
-            public override string Format(IAtomicType atomic)
+            public override string Format(AtomicType atomic)
             {
                 ValidateType(atomic);
 
-                var value = (ValueType)atomic.Value;
-
-                var converted = value is not bool b ? value.ToBase(BaseNumber) : b ? "1" : "0";
+                var converted = atomic is not BOOL b ? atomic.ToBase(BaseNumber) : b ? "1" : "0";
 
                 var formatted = Regex.Replace(converted, Pattern, ByteSeparator, RegexOptions.Compiled);
 
                 return $"{Specifier}{formatted}";
             }
 
-            public override IAtomicType Parse(string input)
+            public override AtomicType Parse(string input)
             {
                 ValidateFormat(input);
 
@@ -372,43 +295,52 @@ namespace L5Sharp.Enums
             {
             }
 
-            public override string Format(IAtomicType atomic)
+            public override string Format(AtomicType atomic)
             {
                 ValidateType(atomic);
 
-                if (atomic is BOOL b)
-                    return b ? "1" : "0";
-
-                return atomic.Value.ToString();
+                return atomic switch
+                {
+                    BOOL v => v ? "1" : "0",
+                    SINT v => ((sbyte)v).ToString(),
+                    INT v => ((short)v).ToString(),
+                    DINT v => ((int)v).ToString(),
+                    LINT v => ((int)v).ToString(),
+                    USINT v => ((byte)v).ToString(),
+                    UINT v => ((ushort)v).ToString(),
+                    UDINT v => ((uint)v).ToString(),
+                    ULINT v => ((ulong)v).ToString(),
+                    _ => throw new ArgumentOutOfRangeException(nameof(atomic), atomic, null)
+                };
             }
 
-            public override IAtomicType Parse(string input)
+            public override AtomicType Parse(string input)
             {
                 ValidateFormat(input);
 
                 if (sbyte.TryParse(input, out var sbyteValue))
-                    return new SINT(sbyteValue);
+                    return new SINT(sbyteValue, this);
 
                 if (byte.TryParse(input, out var byteValue))
-                    return new USINT(byteValue);
+                    return new USINT(byteValue, this);
 
                 if (short.TryParse(input, out var shortValue))
-                    return new INT(shortValue);
+                    return new INT(shortValue, this);
 
                 if (ushort.TryParse(input, out var ushortValue))
-                    return new UINT(ushortValue);
+                    return new UINT(ushortValue, this);
 
                 if (int.TryParse(input, out var intValue))
-                    return new DINT(intValue);
+                    return new DINT(intValue, this);
 
                 if (uint.TryParse(input, out var uintValue))
-                    return new UDINT(uintValue);
+                    return new UDINT(uintValue, this);
 
                 if (long.TryParse(input, out var longValue))
-                    return new LINT(longValue);
+                    return new LINT(longValue, this);
 
                 if (ulong.TryParse(input, out var ulongValue))
-                    return new ULINT(ulongValue);
+                    return new ULINT(ulongValue, this);
 
                 throw new ArgumentOutOfRangeException(nameof(input),
                     $"Input '{input}' is out of range for the {Name} Radix.");
@@ -427,20 +359,18 @@ namespace L5Sharp.Enums
             {
             }
 
-            public override string Format(IAtomicType atomic)
+            public override string Format(AtomicType atomic)
             {
                 ValidateType(atomic);
 
-                var value = (ValueType)atomic.Value;
-
-                var converted = value is not bool b ? value.ToBase(BaseNumber) : b ? "1" : "0";
+                var converted = atomic is not BOOL b ? atomic.ToBase(BaseNumber) : b ? "1" : "0";
 
                 var formatted = Regex.Replace(converted, Pattern, ByteSeparator, RegexOptions.Compiled);
 
                 return $"{Specifier}{formatted}";
             }
 
-            public override IAtomicType Parse(string input)
+            public override AtomicType Parse(string input)
             {
                 ValidateFormat(input);
 
@@ -456,16 +386,16 @@ namespace L5Sharp.Enums
             {
             }
 
-            public override string Format(IAtomicType atomic)
+            public override string Format(AtomicType atomic)
             {
                 ValidateType(atomic);
 
-                var value = (float)atomic.Value;
+                var value = (float)(REAL)atomic;
 
                 return value.ToString("0.0######", CultureInfo.InvariantCulture);
             }
 
-            public override IAtomicType Parse(string input)
+            public override AtomicType Parse(string input)
             {
                 ValidateFormat(input);
 
@@ -479,16 +409,16 @@ namespace L5Sharp.Enums
             {
             }
 
-            public override string Format(IAtomicType atomic)
+            public override string Format(AtomicType atomic)
             {
                 ValidateType(atomic);
 
-                var value = (float)atomic.Value;
+                var value = (float)(REAL)atomic;
 
                 return value.ToString("e8", CultureInfo.InvariantCulture);
             }
 
-            public override IAtomicType Parse(string input)
+            public override AtomicType Parse(string input)
             {
                 ValidateFormat(input);
 
@@ -518,20 +448,18 @@ namespace L5Sharp.Enums
             {
             }
 
-            public override string Format(IAtomicType atomic)
+            public override string Format(AtomicType atomic)
             {
                 ValidateType(atomic);
 
-                var value = (ValueType)atomic.Value;
-
-                var converted = value.ToBase(BaseNumber);
+                var converted = atomic.ToBase(BaseNumber);
 
                 var formatted = GenerateAscii(converted);
 
                 return $"{Specifier}{formatted}{Specifier}";
             }
 
-            public override IAtomicType Parse(string input)
+            public override AtomicType Parse(string input)
             {
                 ValidateFormat(input);
 
@@ -599,11 +527,11 @@ namespace L5Sharp.Enums
             {
             }
 
-            public override string Format(IAtomicType atomic)
+            public override string Format(AtomicType atomic)
             {
                 ValidateType(atomic);
 
-                var timestamp = (long)atomic.Value;
+                var timestamp = (long)(LINT)atomic;
 
                 var milliseconds = timestamp / 1000;
                 var microseconds = timestamp % 1000;
@@ -618,7 +546,7 @@ namespace L5Sharp.Enums
                 return $"{Specifier}{str}{Suffix}";
             }
 
-            public override IAtomicType Parse(string input)
+            public override AtomicType Parse(string input)
             {
                 ValidateFormat(input);
 
@@ -645,11 +573,11 @@ namespace L5Sharp.Enums
             {
             }
 
-            public override string Format(IAtomicType atomic)
+            public override string Format(AtomicType atomic)
             {
                 ValidateType(atomic);
 
-                var timestamp = (long)atomic.Value;
+                var timestamp = (long)(LINT)atomic;
 
                 var milliseconds = timestamp / 1000000;
                 var microseconds = timestamp % 1000000;
@@ -664,7 +592,7 @@ namespace L5Sharp.Enums
                 return $"{Specifier}{str}";
             }
 
-            public override IAtomicType Parse(string input)
+            public override AtomicType Parse(string input)
             {
                 ValidateFormat(input);
 

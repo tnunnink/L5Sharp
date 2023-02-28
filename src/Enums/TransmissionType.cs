@@ -1,9 +1,11 @@
 ﻿using Ardalis.SmartEnum;
+using L5Sharp.Components;
+using L5Sharp.Core;
 
 namespace L5Sharp.Enums
 {
     /// <summary>
-    /// Represents an enumeration of all <see cref="TransmissionType"/> options for a given <see cref="Core.Connection"/>.
+    /// Represents an enumeration of all <see cref="TransmissionType"/> options for a given <see cref="ModuleConnection"/>.
     /// </summary>
     public sealed class TransmissionType : SmartEnum<TransmissionType, string>
     {

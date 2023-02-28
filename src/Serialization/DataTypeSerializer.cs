@@ -1,64 +1,54 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Xml.Linq;
-using L5Sharp.Core;
+using L5Sharp.Components;
 using L5Sharp.Enums;
 using L5Sharp.Extensions;
-using L5Sharp.L5X;
+using L5Sharp.Utilities;
 
 namespace L5Sharp.Serialization
 {
-    internal class DataTypeSerializer : L5XSerializer<IComplexType>
+    /// <summary>
+    /// A logix serializer that performs serialization of <see cref="DataType"/> components.
+    /// </summary>
+    public class DataTypeSerializer : ILogixSerializer<DataType>
     {
-        private readonly L5XContent? _document;
-        private static readonly XName ElementName = L5XName.DataType;
-
-        private MemberSerializer MemberSerializer => _document is not null
-            ? _document.Serializers.Get<MemberSerializer>()
-            : new MemberSerializer(_document);
+        private readonly DataTypeMemberSerializer _memberSerializer = new();
         
-        public DataTypeSerializer(L5XContent? document = null)
+        /// <inheritdoc />
+        public XElement Serialize(DataType obj)
         {
-            _document = document;
-        }
+            Check.NotNull(obj);
 
-        public override XElement Serialize(IComplexType component)
-        {
-            if (component == null)
-                throw new ArgumentNullException(nameof(component));
-
-            var element = new XElement(ElementName);
-            element.AddComponentName(component.Name);
-            element.AddComponentDescription(component.Description);
-            element.Add(new XAttribute(L5XName.Family, component.Family.Value));
-            element.Add(new XAttribute(L5XName.Class, component.Class));
-
-            var members = new XElement(nameof(component.Members));
-            members.Add(component.Members.Select(m => MemberSerializer.Serialize(m)));
+            var element = new XElement(L5XName.DataType);
+            
+            element.AddValue(obj, d => d.Name);
+            element.AddText(obj, d => d.Description);
+            element.AddValue(obj.Family.Value, L5XName.Family);
+            element.AddValue(obj.Class.Value, L5XName.Class);
+            
+            var members = new XElement(nameof(L5XName.Members));
+            members.Add(obj.Members.Select(m => _memberSerializer.Serialize(m)));
             element.Add(members);
 
             return element;
         }
 
-        public override IComplexType Deserialize(XElement element)
+        /// <inheritdoc />
+        public DataType Deserialize(XElement element)
         {
-            if (element == null)
-                throw new ArgumentNullException(nameof(element));
+            Check.NotNull(element);
 
-            if (element.Name != ElementName)
-                throw new ArgumentException($"Element '{element.Name}' not valid for the serializer {GetType()}.");
-
-            var name = element.ComponentName();
-            var description = element.ComponentDescription();
-            var family = element.Attribute(L5XName.Family)?.Value.Parse<DataTypeFamily>();
             var members = element.Descendants(L5XName.Member)
-                .Where(e => !bool.Parse(e.Attribute(L5XName.Hidden)?.Value!))
-                .Select(e => MemberSerializer.Deserialize(e))
-                .ToList();
-
-            return family == DataTypeFamily.String
-                ? new StringDefined(name, members.First(m => m.Name == "DATA").Dimensions.X, description)
-                : new UserDefined(name, description, members);
+                .Where(e => bool.Parse(e.Attribute(L5XName.Hidden)!.Value) == false)
+                .Select(m => _memberSerializer.Deserialize(m));
+            
+            return new DataType
+            {
+                Name = element.LogixName(),
+                Description = element.LogixDescription(),
+                Family = element.GetValue<DataTypeFamily>(L5XName.Family),
+                Members = members.ToList()
+            };
         }
     }
 }

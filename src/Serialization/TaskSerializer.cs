@@ -1,85 +1,60 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Xml.Linq;
+using L5Sharp.Components;
 using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Extensions;
-using L5Sharp.L5X;
+using L5Sharp.Utilities;
 
 namespace L5Sharp.Serialization
 {
-    internal class TaskSerializer : L5XSerializer<ITask>
+    /// <summary>
+    /// A logix serializer that performs serialization of <see cref="Task"/> components.
+    /// </summary>
+    public class TaskSerializer : ILogixSerializer<Task>
     {
-        private static readonly XName ElementName = L5XName.Task;
-
-        public override XElement Serialize(ITask component)
+        /// <inheritdoc />
+        public XElement Serialize(Task obj)
         {
-            if (component is null)
-                throw new ArgumentNullException(nameof(component));
+            Check.NotNull(obj);
 
-            var element = new XElement(ElementName);
+            var element = new XElement(L5XName.Task);
 
-            element.AddComponentName(component.Name);
-            element.AddComponentDescription(component.Description);
-            element.Add(new XAttribute(L5XName.Type, component.Type.Value));
-            if (component.Type != TaskType.Continuous)
-                element.Add(new XAttribute(L5XName.Rate, component.Rate));
-            element.Add(new XAttribute(L5XName.Priority, component.Priority));
-            element.Add(new XAttribute(L5XName.Watchdog, component.Watchdog));
-            element.Add(new XAttribute(L5XName.DisableUpdateOutputs, component.DisableUpdateOutputs));
-            element.Add(new XAttribute(L5XName.InhibitTask, component.InhibitTask));
+            element.AddValue(obj, t => t.Name);
+            element.AddValue(obj.Type.Value, L5XName.Type);
+            if (obj.Type != TaskType.Continuous)
+                element.AddValue(obj, t => t.Rate);
+            element.AddValue(obj, t => t.Priority);
+            element.AddValue(obj, t => t.Watchdog);
+            element.AddValue(obj, t => t.DisableUpdateOutputs);
+            element.AddValue(obj, t => t.InhibitTask);
+            element.AddText(obj, t => t.Description);
 
-            if (!component.ScheduledPrograms.Any()) return element;
-
-            var scheduled = new XElement(L5XName.ScheduledPrograms);
-
-            scheduled.Add(component.ScheduledPrograms
-                .Select(p => new XElement(L5XName.ScheduledProgram,
-                    new XAttribute(L5XName.Name, p))));
-
-            element.Add(scheduled);
+            if (!obj.ScheduledPrograms.Any()) return element;
+            var programs = new XElement(L5XName.ScheduledPrograms);
+            programs.Add(obj.ScheduledPrograms.Select(p =>
+                new XElement(L5XName.ScheduledProgram, new XAttribute(L5XName.Name, p))));
+            element.Add(programs);
 
             return element;
         }
 
-        public override ITask Deserialize(XElement element)
+        /// <inheritdoc />
+        public Task Deserialize(XElement element)
         {
-            if (element == null)
-                throw new ArgumentNullException(nameof(element));
+            Check.NotNull(element);
 
-            if (element.Name != ElementName)
-                throw new ArgumentException($"Element '{element.Name}' not valid for the serializer {GetType()}.");
-
-            var name = element.ComponentName();
-            var description = element.ComponentDescription();
-            var type = element.Attribute(L5XName.Type)?.Value.Parse<TaskType>();
-            var rate = element.Attribute(L5XName.Rate)?.Value?.Parse<ScanRate>() ?? default;
-            var priority = element.Attribute(L5XName.Priority)?.Value?.Parse<TaskPriority>() ?? default;
-            var watchdog = element.Attribute(L5XName.Watchdog)?.Value?.Parse<Watchdog>() ?? default;
-            var disableUpdateOutputs =
-                element.Attribute(L5XName.DisableUpdateOutputs)?.Value?.Parse<bool>() ?? default;
-            var inhibitTask = element.Attribute(L5XName.InhibitTask)?.Value?.Parse<bool>() ?? default;
-
-            var programs = element.Descendants(L5XName.ScheduledProgram).Select(e => e.ComponentName());
-
-            if (type == TaskType.Continuous)
-                return new ContinuousTask(name, rate, priority, watchdog, disableUpdateOutputs,
-                    inhibitTask, programs, description);
-
-            if (type == TaskType.Periodic)
-                return new PeriodicTask(name, rate, priority, watchdog, disableUpdateOutputs,
-                    inhibitTask, programs, description);
-
-            var eventInfo = element.Element(L5XName.EventInfo);
-            var eventTrigger = eventInfo?.Attribute(L5XName.EventTrigger)
-                ?.Value.Parse<TaskEventTrigger>();
-            var enableTimeout = eventInfo?.Attribute(L5XName.EnableTimeout)
-                ?.Value?.Parse<bool>() ?? default;
-            var eventTag = eventInfo?.Attribute(L5XName.EventTag)
-                ?.Value;
-
-            return new EventTask(name, rate, priority, watchdog, disableUpdateOutputs,
-                inhibitTask, programs, eventTrigger, enableTimeout, eventTag, description);
+            return new Task
+            {
+                Name = element.LogixName(),
+                Type = element.GetValue<TaskType>(L5XName.Type),
+                Rate = element.TryGetValue<ScanRate?>(L5XName.Rate) ?? new ScanRate(),
+                Priority = element.GetValue<TaskPriority>(L5XName.Priority),
+                Watchdog = element.GetValue<Watchdog>(L5XName.Watchdog),
+                DisableUpdateOutputs = element.GetValue<bool>(L5XName.DisableUpdateOutputs),
+                InhibitTask = element.GetValue<bool>(L5XName.InhibitTask),
+                ScheduledPrograms = element.Descendants(L5XName.ScheduledProgram).Select(p => p.LogixName()).ToList()
+            };
         }
     }
 }

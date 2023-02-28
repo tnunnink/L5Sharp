@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using L5Sharp.Extensions;
+using L5Sharp.Types;
+using L5Sharp.Utilities;
 
 namespace L5Sharp.Core
 {
@@ -117,7 +119,7 @@ namespace L5Sharp.Core
         /// More plainly, this property indicates whether the current <see cref="Dimensions"/> are one, two, or three
         /// dimensional based on the values of X, Y, and Z. 
         /// </remarks>
-        public int DegreesOfFreedom => Z > 0 ? 3 : Y > 0 ? 2 : X > 0 ? 1 : 0;
+        public int Rank => Z > 0 ? 3 : Y > 0 ? 2 : X > 0 ? 1 : 0;
 
         /// <summary>
         /// Represents an empty <see cref="Dimensions"/> object, or object with all three dimensional parameters equal
@@ -184,7 +186,7 @@ namespace L5Sharp.Core
             /*if (Regex.IsMatch(value, @"[^\d,[\] ]"))
                 throw new ArgumentException(
                     $"Value '{value}' contains invalid characters. Only numbers and [ ,] are allowed.");*/
-            
+
             var numbers = Regex.Matches(value, @"\d+", RegexOptions.Compiled)
                 .Select(m => ushort.Parse(m.Value))
                 .ToList();
@@ -236,6 +238,16 @@ namespace L5Sharp.Core
 
             return dimensions is not null;
         }
+
+        /// <summary>
+        /// Gets a <see cref="Dimensions"/> value based on the provided logix data type.
+        /// If the type is an <see cref="ArrayType{TLogixType}"/>, then returns the dimensions of the type;
+        /// Otherwise, returns empty dimensions.
+        /// </summary>
+        /// <param name="dataType">The <see cref="ILogixType"/> to get dimensions for.</param>
+        /// <returns>A <see cref="Core.Dimensions"/> value.</returns>
+        public static Dimensions OfType(ILogixType dataType) =>
+            dataType is ArrayType<ILogixType> arrayType ? arrayType.Dimensions : Empty;
 
         /// <summary>
         /// Creates a new instance of the current <see cref="Dimensions"/> with the same value.
@@ -306,7 +318,7 @@ namespace L5Sharp.Core
         /// <returns>true if the objects are not equal, otherwise, false.</returns>
         public static bool operator !=(Dimensions left, Dimensions right) => !Equals(left, right);
 
-        
+
         private static string GenerateIndex(ushort x) => $"[{x}]";
 
         private static string GenerateIndex(ushort x, ushort y) => $"[{x},{y}]";

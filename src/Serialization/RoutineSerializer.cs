@@ -1,68 +1,41 @@
-﻿using System;
-using System.Linq;
-using System.Xml.Linq;
-using L5Sharp.Core;
+﻿using System.Xml.Linq;
+using L5Sharp.Components;
 using L5Sharp.Enums;
 using L5Sharp.Extensions;
-using L5Sharp.L5X;
+using L5Sharp.Utilities;
 
 namespace L5Sharp.Serialization
 {
-    internal class RoutineSerializer : L5XSerializer<IRoutine<ILogixContent>>
+    /// <summary>
+    /// A logix serializer that performs serialization of <see cref="Routine"/> components.
+    /// </summary>
+    public class RoutineSerializer : ILogixSerializer<Routine>
     {
-        private readonly L5XContent? _document;
-        private static readonly XName ElementName = L5XName.Routine;
-
-        private LadderLogicSerializer LadderLogicSerializer => _document is not null
-            ? _document.Serializers.Get<LadderLogicSerializer>()
-            : new LadderLogicSerializer(_document);
-
-        public RoutineSerializer(L5XContent? document = null)
+        /// <inheritdoc />
+        public XElement Serialize(Routine obj)
         {
-            _document = document;
-        }
+            Check.NotNull(obj);
 
-        public override XElement Serialize(IRoutine<ILogixContent> component)
-        {
-            if (component is null)
-                throw new ArgumentNullException(nameof(component));
+            var element = new XElement(L5XName.Routine);
 
-            var element = new XElement(ElementName);
-            element.AddComponentName(component.Name);
-            element.AddComponentDescription(component.Description);
-            element.Add(new XAttribute(L5XName.Type, component.Type));
-
-            if (component.Content is ILadderLogic ladderLogic)
-            {
-                element.Add(LadderLogicSerializer.Serialize(ladderLogic));
-            }
+            element.AddValue(obj, r => r.Name);
+            element.AddText(obj, r => r.Description);
+            element.AddValue(obj, r => r.Type);
 
             return element;
         }
 
-        public override IRoutine<ILogixContent> Deserialize(XElement element)
+        /// <inheritdoc />
+        public Routine Deserialize(XElement element)
         {
-            if (element == null)
-                throw new ArgumentNullException(nameof(element));
+            Check.NotNull(element);
 
-            if (element.Name != ElementName)
-                throw new ArgumentException($"Element name '{element.Name}' invalid. Expecting '{ElementName}'");
-
-            var name = element.ComponentName();
-            var description = element.ComponentDescription();
-            var type = element.Attribute(L5XName.Type)?.Value.Parse<RoutineType>()!;
-
-            var content = type.CreateContent();
-
-            type
-                .When(RoutineType.Rll).Then(() =>
-                {
-                    var rll = element.Elements().FirstOrDefault();
-                    if (rll is null) return;
-                    content = LadderLogicSerializer.Deserialize(rll);
-                });
-
-            return new Routine<ILogixContent>(name, type, description, content);
+            return new Routine
+            {
+                Name = element.LogixName(),
+                Description = element.LogixDescription(),
+                Type = element.GetValue<RoutineType>(L5XName.Type)
+            };
         }
     }
 }

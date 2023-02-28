@@ -1,9 +1,11 @@
 ﻿using Ardalis.SmartEnum;
+using L5Sharp.Components;
+using L5Sharp.Core;
 
 namespace L5Sharp.Enums
 {
     /// <summary>
-    /// An enumeration of all <see cref="ConnectionType"/> values for a given Logix <see cref="Core.Connection"/>
+    /// An enumeration of all <see cref="ConnectionType"/> values for a given Logix <see cref="ModuleConnection"/>
     /// </summary>
     public sealed class ConnectionType : SmartEnum<ConnectionType, string>
     {

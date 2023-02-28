@@ -1,107 +1,107 @@
 ﻿using System;
 using System.Linq;
 using System.Xml.Linq;
+using L5Sharp.Components;
 using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Extensions;
-using L5Sharp.L5X;
+using L5Sharp.Serialization.Data;
+using L5Sharp.Types;
+using L5Sharp.Utilities;
 
 namespace L5Sharp.Serialization
 {
-    internal class TagSerializer : L5XSerializer<ITag<IDataType>>
+    /// <summary>
+    /// A logix serializer that performs serialization of <see cref="Tag"/> components.
+    /// </summary>
+    public class TagSerializer : ILogixSerializer<Tag>
     {
-        private readonly L5XContent? _document;
-        private static readonly XName ElementName = L5XName.Tag;
+        private readonly FormattedDataSerializer _formattedDataSerializer = new();
 
-        private FormattedDataSerializer FormattedDataSerializer => _document is not null
-            ? _document.Serializers.Get<FormattedDataSerializer>()
-            : new FormattedDataSerializer(_document);
-
-        public TagSerializer(L5XContent? document = null)
+        /// <inheritdoc />
+        public XElement Serialize(Tag obj)
         {
-            _document = document;
-        }
+            Check.NotNull(obj);
 
-        public override XElement Serialize(ITag<IDataType> component)
-        {
-            if (component == null)
-                throw new ArgumentNullException(nameof(component));
+            var element = new XElement(typeof(Tag).GetLogixName());
 
-            var element = new XElement(ElementName);
-            element.AddComponentName(component.Name);
-            element.AddComponentDescription(component.Description);
-            element.Add(new XAttribute(L5XName.TagType, component.TagType));
-            if (!component.Alias.IsEmpty)
-                element.Add(new XAttribute(L5XName.AliasFor, component.Alias));
-            element.Add(new XAttribute(L5XName.DataType, component.DataType.Name));
-            if (!component.Dimensions.IsEmpty)
-                element.Add(new XAttribute(L5XName.Dimensions, component.Dimensions));
-            if (component.MemberType == MemberType.ValueMember)
-                element.Add(new XAttribute(L5XName.Radix, component.Radix));
-            element.Add(new XAttribute(L5XName.Constant, component.Constant));
-            element.Add(new XAttribute(L5XName.ExternalAccess, component.ExternalAccess));
+            element.AddValue(obj.Name, L5XName.Name);
+            element.AddText(obj.Description, L5XName.Description);
+            element.AddValue(obj, t => t.TagType);
+            element.AddValue(obj, t => t.AliasFor);
+            element.AddValue(obj, t => t.DataType);
 
-            if (component.Comments.Any())
+            if (!obj.Dimensions.IsEmpty)
+                element.AddValue(obj, t => t.Dimensions);
+
+            if (obj.MemberType == MemberType.ValueMember)
+                element.AddValue(obj, t => t.Radix);
+
+            element.AddValue(obj, t => t.Constant);
+            element.AddValue(obj, t => t.ExternalAccess);
+
+            if (obj.Comments.Any())
             {
-                var commentSerializer = new TagPropertySerializer(L5XName.Comment, component.TagName);
-                element.Add(component.Comments.Select(c => commentSerializer.Serialize(c)));
+                var comments = new XElement(L5XName.Comments);
+                comments.Add(obj.Comments.Select(c =>
+                {
+                    var comment = new XElement(L5XName.Comment);
+                    comment.AddValue(c.Key.Operand, L5XName.Operand);
+                    comment.Add(new XCData(c.Value));
+                    return comment;
+                }));
+
+                element.Add(comments);
             }
-            
-            if (component.EngineeringUnits.Any())
+
+            if (obj.Units.Any())
             {
-                var unitsSerializer = new TagPropertySerializer(L5XName.EngineeringUnit, component.TagName);
-                element.Add(component.EngineeringUnits.Select(u => unitsSerializer.Serialize(u)));
+                var units = new XElement(L5XName.EngineeringUnits);
+                units.Add(obj.Comments.Select(u =>
+                {
+                    var unit = new XElement(L5XName.EngineeringUnit);
+                    unit.AddValue(u.Key.Operand, L5XName.Operand);
+                    unit.Add(new XCData(u.Value));
+                    return unit;
+                }));
+
+                element.Add(units);
             }
-            
-            var data = FormattedDataSerializer.Serialize(component.DataType);
+
+            var data = _formattedDataSerializer.Serialize(obj.Data);
             element.Add(data);
 
             return element;
         }
 
-        public override ITag<IDataType> Deserialize(XElement element)
+        /// <inheritdoc />
+        public Tag Deserialize(XElement element)
         {
-            if (element == null)
-                throw new ArgumentNullException(nameof(element));
+            Check.NotNull(element);
 
-            if (element.Name != ElementName)
-                throw new ArgumentException($"Element '{element.Name}' not valid for the serializer {GetType()}.");
+            var data = element.Descendants(L5XName.Data)
+                .FirstOrDefault(e => e.Attribute(L5XName.Format)?.Value != DataFormat.L5K);
 
-            var name = element.ComponentName();
-            var description = element.ComponentDescription();
-            var dataType = _document is not null
-                ? _document.Index.LookupType(element.DataTypeName())
-                : DataType.Create(element.DataTypeName());
-            var dimensions = element.Attribute(L5XName.Dimensions)?.Value.Parse<Dimensions>();
-            var radix = element.Attribute(L5XName.Radix)?.Value.Parse<Radix>();
-            var access = element.Attribute(L5XName.ExternalAccess)?.Value.Parse<ExternalAccess>();
-            var usage = element.Attribute(L5XName.Usage)?.Value.Parse<TagUsage>();
-            var alias = element.Attribute(L5XName.AliasFor)?.Value.Parse<TagName>();
-            var constant = element.Attribute(L5XName.Constant)?.Value.Parse<bool>() ?? default;
-
-            var commentSerializer = new TagPropertySerializer(L5XName.Comment, name);
-            var comments = new TagPropertyCollection<string>(element.Descendants(L5XName.Comment)
-                .Select(e => commentSerializer.Deserialize(e)));
-
-            var unitsSerializer = new TagPropertySerializer(L5XName.EngineeringUnit, name);
-            var units = new TagPropertyCollection<string>(element.Descendants(L5XName.EngineeringUnit)
-                .Select(e => unitsSerializer.Deserialize(e)));
-
-            var type = dimensions is not null && !dimensions.IsEmpty
-                ? new ArrayType<IDataType>(dimensions, dataType, radix, access, description)
-                : dataType;
-
-            var tag = new Tag<IDataType>(name, type, radix, access, description,
-                usage, alias, constant, comments, units);
-
-            var formattedData = element.Descendants(L5XName.Data)
-                .FirstOrDefault(e => e.Attribute(L5XName.Format)?.Value != TagDataFormat.L5K);
-
-            if (formattedData is null) return tag;
-
-            var data = FormattedDataSerializer.Deserialize(formattedData);
-            tag.SetData(data);
-            return tag;
+            return new Tag
+            {
+                Name = element.LogixName(),
+                Description = element.LogixDescription(),
+                Data = data is not null ? _formattedDataSerializer.Deserialize(data) : LogixType.Null,
+                ExternalAccess = element.TryGetValue<ExternalAccess>(L5XName.ExternalAccess) ??
+                                 ExternalAccess.ReadWrite,
+                TagType = element.TryGetValue<TagType>(L5XName.TagType) ?? TagType.Base,
+                Usage = element.TryGetValue<TagUsage>(L5XName.Usage) ?? TagUsage.Normal,
+                AliasFor = element.TryGetValue<TagName>(L5XName.AliasFor) ?? TagName.Empty,
+                Constant = element.TryGetValue<bool?>(L5XName.Constant) ?? false,
+                Comments = element.Descendants(L5XName.Comment)
+                    .ToDictionary(
+                        k => TagName.Combine(element.LogixName(), k.GetValue<string>(L5XName.Operand)),
+                        e => e.Value),
+                Units = element.Descendants(L5XName.EngineeringUnit)
+                    .ToDictionary(
+                        k => TagName.Combine(element.LogixName(), k.GetValue<string>(L5XName.Operand)),
+                        e => e.Value)
+            };
         }
     }
 }

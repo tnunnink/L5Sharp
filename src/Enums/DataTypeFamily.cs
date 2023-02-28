@@ -1,9 +1,10 @@
 ﻿using Ardalis.SmartEnum;
+using L5Sharp.Types;
 
 namespace L5Sharp.Enums
 {
     /// <summary>
-    /// An enumeration of all Logix <see cref="DataTypeFamily"/> options for a given <see cref="IDataType"/>.
+    /// An enumeration of all Logix <see cref="DataTypeFamily"/> options for a given <see cref="ILogixType"/>.
     /// Valid options are None and String.
     /// </summary>
     public sealed class DataTypeFamily : SmartEnum<DataTypeFamily, string>
@@ -14,13 +15,13 @@ namespace L5Sharp.Enums
 
         /// <summary>
         /// Represents no specific data type family.
-        /// All <see cref="IDataType"/> objects except <see cref="IStringType"/> will have this option.
+        /// All <see cref="ILogixType"/> objects except <see cref="StringType"/> should have this option.
         /// </summary>
         public static readonly DataTypeFamily None = new(nameof(None), "NoFamily");
         
         
         /// <summary>
-        /// Represents a string family. Only <see cref="IStringType"/> objects will have this option.
+        /// Represents a string family. Only <see cref="StringType"/> objects should have this option.
         /// </summary>
         public static readonly DataTypeFamily String = new(nameof(String), "StringFamily");
     }

@@ -1,59 +1,50 @@
-﻿using System;
-using System.Xml.Linq;
-using L5Sharp.Abstractions;
+﻿using System.Xml.Linq;
 using L5Sharp.Core;
-using L5Sharp.L5X;
+using L5Sharp.Extensions;
+using L5Sharp.Utilities;
 
 namespace L5Sharp.Serialization
 {
     /// <summary>
-    /// A <see cref="IL5XSerializer{T}"/> for the <see cref="Port"/> component.
+    /// A logix serializer that performs serialization of <see cref="Port"/> components.
     /// </summary>
-    internal class PortSerializer : L5XSerializer<Port>
+    public class PortSerializer : ILogixSerializer<Port>
     {
-        private static readonly XName ElementName = L5XName.Port;
-
         /// <inheritdoc />
-        public override XElement Serialize(Port component)
+        public XElement Serialize(Port obj)
         {
-            if (component == null)
-                throw new ArgumentNullException(nameof(component));
+            Check.NotNull(obj);
 
-            var element = new XElement(ElementName);
-            element.Add(new XAttribute(L5XName.Id, component.Id));
-            element.Add(new XAttribute(L5XName.Address, component.Address));
-            element.Add(new XAttribute(L5XName.Type, component.Type));
-            element.Add(new XAttribute(L5XName.Upstream, component.Upstream));
+            var element = new XElement(typeof(Port).GetLogixName());
+            
+            element.AddValue(obj, p => p.Id);
+            element.AddValue(obj, p => p.Address);
+            element.AddValue(obj, p => p.Type);
+            element.AddValue(obj, p => p.Upstream);
 
-            if (component.Upstream) return element;
+            if (obj.Upstream) return element;
 
             var bus = new XElement(L5XName.Bus);
-            if (component.BusSize > 0)
-                bus.Add(new XAttribute(L5XName.Size, component.BusSize));
+            if (obj.BusSize > 0)
+                bus.Add(new XAttribute(L5XName.Size, obj.BusSize));
             element.Add(bus);
 
             return element;
         }
 
         /// <inheritdoc />
-        public override Port Deserialize(XElement element)
+        public Port Deserialize(XElement element)
         {
-            if (element == null)
-                throw new ArgumentNullException(nameof(element));
-
-            if (element.Name != ElementName)
-                throw new ArgumentException($"Element '{element.Name}' not valid for the serializer {GetType()}.");
-
-            var id = element.Attribute(L5XName.Id)?.Value.Parse<int>() ?? default;
-            var address = element.Attribute(L5XName.Address)?.Value.Parse<PortAddress>();
-            var type = element.Attribute(L5XName.Type)?.Value!;
-            var upstream = element.Attribute(L5XName.Upstream)?.Value.Parse<bool>() ?? default;
-
-            var busSize = element.Element(L5XName.Bus)
-                ?.Attribute(L5XName.Size)
-                ?.Value.Parse<byte>() ?? default;
-
-            return new Port(id, type, address, upstream, busSize);
+            Check.NotNull(element);
+            
+            return new Port
+            {
+                Id = element.GetValue<int>(L5XName.Id),
+                Address = element.TryGetValue<Address>(L5XName.Address) ?? Address.None,
+                Type = element.TryGetValue<string>(L5XName.Type) ?? string.Empty,
+                Upstream = element.TryGetValue<bool?>(L5XName.Upstream) ?? false,
+                BusSize = element.Element(L5XName.Bus)?.TryGetValue<byte?>(L5XName.Size) ?? default
+            };
         }
     }
 }

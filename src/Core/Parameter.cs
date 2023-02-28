@@ -1,88 +1,64 @@
-﻿using System;
+﻿using L5Sharp.Components;
 using L5Sharp.Enums;
+using L5Sharp.Types;
 
 namespace L5Sharp.Core
 {
-    /// <inheritdoc cref="L5Sharp.IParameter{TDataType}" />
-    public sealed class Parameter<TDataType> : Member<TDataType>, IParameter<TDataType> where TDataType : IDataType
+    /// <summary>
+    /// A component of the <see cref="AddOnInstruction"/> that makes up the structure of the instruction type.
+    /// </summary>
+    /// <remarks><see cref="Parameter"/> inherits from <see cref="DataTypeMember"/> as it is in effect a data type
+    /// member that defines the structure or an AOI.</remarks>
+    /// <footer>
+    /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
+    /// `Logix 5000 Controllers Import/Export`</a> for more information.
+    /// </footer>
+    public sealed class Parameter : DataTypeMember
     {
-        internal Parameter(string name, TDataType dataType, Radix? radix = null,
-            ExternalAccess? externalAccess = null, TagUsage? usage = null,
-            bool required = false, bool visible = false, bool constant = false,
-            string? description = null) : base(name, dataType, radix, externalAccess, description)
-        {
-            Usage = usage ?? TagUsage.AoiDefault(dataType);
-            Default = DataType is IAtomicType atomicType ? atomicType : default;
-            Required = Usage == TagUsage.InOut || required;
-            Visible = Required || visible;
-            Constant = constant;
-        }
-        
-        internal Parameter(string name, ITag<TDataType> alias, Radix? radix = null,
-            ExternalAccess? externalAccess = null, TagUsage? usage = null,
-            bool required = false, bool visible = false, bool constant = false,
-            string? description = null) : base(name, alias.DataType, radix, externalAccess, description)
-        {
-            Alias = alias ?? throw new ArgumentNullException(nameof(alias));
-            Usage = usage ?? TagUsage.AoiDefault(alias.DataType);
-            Default = DataType is IAtomicType atomicType ? atomicType : default;
-            Required = Usage == TagUsage.InOut || required;
-            Visible = Required || visible;
-            Constant = constant;
-        }
-
         /// <summary>
-        /// Creates a new <see cref="Parameter{TDataType}"/> object with the provided name, data type instance, and
-        /// optional parameters for configuring the parameter.
+        /// A type indicating whether the current parameter is a base tag, or alias for another tag instance.
         /// </summary>
-        /// <param name="name">The name of the parameter to create.</param>
-        /// <param name="dataType">The <see cref="IDataType"/> instance of the parameter.</param>
-        /// <param name="usage">The <see cref="TagUsage"/> of the parameter.
-        /// If not provided, will default based on the provided data type.</param>
-        /// <param name="radix">The <see cref="Enums.Radix"/> of the parameter.
-        /// If not provided, will default based on the provided data type.</param>
-        /// <param name="externalAccess">The <see cref="Enums.ExternalAccess"/> of the parameter.
-        /// If not provided, will default to Read/Write.</param>
-        /// <param name="required">The value indicating whether the parameter is required by the instruction.
-        /// Required parameters are those that show up in the instruction arguments. All non-atomic parameters
-        /// are required by default since the user must provide a tag reference.
-        /// All required parameters are also visible. If not provided, will default to false.
-        /// </param>
-        /// <param name="visible">The value indicating whether the parameter is visible on the instruction interface.
-        /// Visible parameters are those that will be displayed on the instruction interface. All non-atomic parameters
-        /// are visible by default. If not provided, will default to false. 
-        /// </param>
-        /// <param name="constant">A value indicating whether the parameter is a constant value.
-        /// If not provided, will default to false.</param>
-        /// <param name="description">A string description of the parameter.
-        /// If not provided, will default to an empty string.</param>
-        public Parameter(ComponentName name, TDataType dataType, TagUsage? usage = null,
-            Radix? radix = null, ExternalAccess? externalAccess = null,
-            bool required = default, bool visible = default, bool constant = default,
-            string? description = null) 
-            : this(name, dataType, radix, externalAccess, usage, required, visible, constant, description)
-        {
-        }
-
-        /// <inheritdoc />
-        public TagType TagType => Alias is null ? TagType.Base : TagType.Alias;
-
-        /// <inheritdoc />
-        public TagUsage Usage { get; }
-
-        /// <inheritdoc />
-        public bool Required { get; }
-
-        /// <inheritdoc />
-        public bool Visible { get; }
-
-        /// <inheritdoc />
-        public ITag<TDataType>? Alias { get; }
-
-        /// <inheritdoc />
-        public IAtomicType? Default { get; }
-
-        /// <inheritdoc />
-        public bool Constant { get; }
+        /// <value>A <see cref="Enums.TagType"/> option representing the type of parameter.
+        /// Default is <see cref="Enums.TagType.Base"/>.</value>
+        public TagType TagType { get; set; } = TagType.Base;
+        
+        /// <summary>
+        /// The usage option indicating the scope in which the parameter is visible or usable from.
+        /// </summary>
+        /// <value>A <see cref="Enums.TagUsage"/> option representing the parameter scope.
+        /// Default for AOI is <see cref="Enums.TagUsage.Input"/>. Only valid options for AOI are Input, Output,
+        /// and InOut.</value>
+        public TagUsage Usage { get; set; } = TagUsage.Input;
+        
+        /// <summary>
+        /// Indicates whether the parameter is required form the instruction code clock.
+        /// </summary>
+        /// <value><c>true</c> if the parameter is required; otherwise, false. Default is <c>false</c>.</value>
+        public bool Required { get; set; }
+        
+        /// <summary>
+        /// Indicates whether the parameter is visible from the instruction code block.
+        /// </summary>
+        /// <value><c>true</c> if the parameter is visible; otherwise, false. Default is <c>false</c>.</value>
+        public bool Visible { get; set; }
+        
+        /// <summary>
+        /// The tag name of the tag that is the alias of the current parameter.
+        /// </summary>
+        /// <value>A <see cref="Core.TagName"/> string representing the full tag name of the alias tag.</value>
+        public TagName AliasFor { get; set; } = TagName.Empty;
+        
+        /// <summary>
+        /// A default value of the parameter when instantiated.
+        /// </summary>
+        /// <value>An <see cref="ILogixType"/> representing the default value/data. Default is <c>null</c>.</value>
+        public AtomicType? Default { get; set; }
+        
+        /// <summary>
+        /// Indicates whether the parameter is a constant.
+        /// </summary>
+        /// <value><c>true</c> if the parameter is constant; otherwise, <c>false</c>.</value>
+        /// <remarks>Only value type tags have the ability to be set as a constant. Default is <c>false</c>.</remarks>
+        public bool Constant { get; set; }
     }
 }

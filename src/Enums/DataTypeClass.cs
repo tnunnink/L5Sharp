@@ -3,7 +3,7 @@
 namespace L5Sharp.Enums
 {
     /// <summary>
-    /// An enumeration of all Logix <see cref="DataTypeClass"/> for a given <see cref="IDataType"/>.
+    /// An enumeration of all Logix <see cref="DataTypeClass"/> for a given <see cref="ILogixType"/>.
     /// </summary>
     public sealed class DataTypeClass : SmartEnum<DataTypeClass, string>
     {
