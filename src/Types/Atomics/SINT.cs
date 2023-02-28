@@ -40,7 +40,7 @@ namespace L5Sharp.Types.Atomics
         public SINT(string value, Radix? radix = null) : this(radix ?? Radix.Infer(value))
         {
             var converter = TypeDescriptor.GetConverter(GetType());
-            _value = (sbyte)converter.ConvertFrom(Radix.Parse(value));
+            _value = (sbyte)(SINT)converter.ConvertFrom(value)!;
         }
 
         /// <summary>
@@ -54,25 +54,32 @@ namespace L5Sharp.Types.Atomics
         public const sbyte MinValue = sbyte.MinValue;
 
         /// <summary>
-        /// Parses the provided input string value into a <see cref="SINT"/> atomic value.
-        /// </summary>
-        /// <param name="value">The string value to parse.</param>
-        /// <returns>A new <see cref="SINT"/> that represents the parsed value.</returns>
-        public static SINT Parse(string value) => sbyte.Parse(value);
-
-        /// <summary>
-        /// Converts the provided <see cref="byte"/> to a <see cref="SINT"/> value.
+        /// Implicitly converts the provided <see cref="sbyte"/> to a <see cref="SINT"/> value.
         /// </summary>
         /// <param name="value">The value to convert.</param>
         /// <returns>A <see cref="SINT"/> value.</returns>
         public static implicit operator SINT(sbyte value) => new(value);
 
         /// <summary>
-        /// Converts the provided <see cref="SINT"/> to a <see cref="byte"/> value.
+        /// Implicitly converts the provided <see cref="SINT"/> to a <see cref="sbyte"/> value.
         /// </summary>
         /// <param name="atomic">The value to convert.</param>
-        /// <returns>A <see cref="byte"/> type value.</returns>
+        /// <returns>A <see cref="sbyte"/> type value.</returns>
         public static implicit operator sbyte(SINT atomic) => atomic._value;
+        
+        /// <summary>
+        /// Implicitly converts a <see cref="string"/> to a <see cref="SINT"/> value.
+        /// </summary>
+        /// <param name="value">The value to convert.</param>
+        /// <returns>A new <see cref="SINT"/> value.</returns>
+        public static implicit operator SINT(string value) => new(value);
+        
+        /// <summary>
+        /// Implicitly converts the provided <see cref="SINT"/> to a <see cref="string"/> value.
+        /// </summary>
+        /// <param name="value">The value to convert.</param>
+        /// <returns>A new <see cref="string"/> value.</returns>
+        public static implicit operator string(SINT value) => value.ToString();
 
         /// <inheritdoc />
         public bool Equals(SINT? other)

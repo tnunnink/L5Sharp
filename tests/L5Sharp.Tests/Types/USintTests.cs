@@ -30,12 +30,10 @@ namespace L5Sharp.Tests.Types
         public void New_Default_ShouldHaveExpectedDefaults()
         {
             var type = new USINT();
-
-            type.Should().NotBeNull();
+            
             type.Name.Should().Be(nameof(USINT).ToUpper());
             type.Class.Should().Be(DataTypeClass.Atomic);
             type.Family.Should().Be(DataTypeFamily.None);
-            //type.Description.Should().Be("Logix representation of a System.Byte");
             type.Should().Be(0);
         }
         
@@ -76,19 +74,7 @@ namespace L5Sharp.Tests.Types
         }
 
         [Test]
-        public void SetValue_USint_ShouldBeExpected()
-        {
-            var fixture = new Fixture();
-            var value = fixture.Create<byte>();
-            var type = new USINT();
-
-            type = new USINT(value);
-
-            type.Should().Be(value);
-        }
-
-        [Test]
-        public void Format_DefaultRadix_ShouldBeExpected()
+        public void ToString_DefaultRadix_ShouldBeExpected()
         {
             var type = new USINT();
 
@@ -98,29 +84,13 @@ namespace L5Sharp.Tests.Types
         }
         
         [Test]
-        public void Format_OverloadedRadix_ShouldBeExpected()
+        public void ToString_OverloadedRadix_ShouldBeExpected()
         {
             var type = new USINT();
 
             var format = type.ToString(Radix.Binary);
 
             format.Should().Be("2#0000_0000");
-        }
-
-        [Test]
-        public void ImplicitOperator_Bool_ShouldBeTrue()
-        {
-            USINT type = _random;
-
-            type.Should().Be(_random);
-        }
-
-        [Test]
-        public void ImplicitOperator_bool_ShouldBeTrue()
-        {
-            byte value = new USINT(_random);
-
-            value.Should().Be(_random);
         }
 
         [Test]

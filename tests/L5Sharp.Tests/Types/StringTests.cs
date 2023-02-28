@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using AutoFixture;
 using FluentAssertions;
 using L5Sharp.Enums;
@@ -20,7 +21,7 @@ namespace L5Sharp.Tests.Types
         }
         
         [Test]
-        public void New_DefaultShouldHaveEmptyValue()
+        public void New_Default_ShouldHaveEmptyValue()
         {
             var type = new STRING();
             
@@ -39,7 +40,17 @@ namespace L5Sharp.Tests.Types
             type.LEN.Should().NotBeNull();
             type.LEN.Should().BeOfType<DINT>();
             type.DATA.Should().NotBeNull();
-            type.DATA.Should().BeOfType<SINT>();
+            type.DATA.Should().BeOfType<SINT[]>();
+            type.Members.Should().HaveCount(2);
+
+            var data = type.Members.FirstOrDefault(m => m.Name == "DATA");
+            data.Should().NotBeNull();
+            data?.DataType.Should().NotBeNull();
+            data?.DataType.Name.Should().NotBeNull();
+            
+            var len = type.Members.FirstOrDefault(m => m.Name == "LEN");
+            len.Should().NotBeNull();
+            len?.DataType.Should().NotBeNull();
         }
 
         [Test]

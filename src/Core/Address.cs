@@ -47,9 +47,9 @@ namespace L5Sharp.Core
         public bool IsHostName => Regex.IsMatch(_address, @"^[A-Za-z][A-Za-z0-9\.-]{1,63}$", RegexOptions.Compiled);
 
         /// <summary>
-        /// 
+        /// Indicates that the address value is an empty string.
         /// </summary>
-        public bool HasAddress => !_address.IsEmpty();
+        public bool IsEmpty => _address.IsEmpty();
 
         /// <summary>
         /// Represents no address value, or an empty string.
@@ -90,6 +90,25 @@ namespace L5Sharp.Core
         /// <param name="slot">the byte number value that represents the port address.</param>
         /// <returns>A new <see cref="Address"/> value from the provided slot number.</returns>
         public static Address FromSlot(byte slot) => new(slot.ToString());
+
+        /// <summary>
+        /// Creates a new <see cref="Address"/> with the common default IP of 192.168.0.1.
+        /// </summary>
+        /// <returns>A <see cref="Address"/> with the default IP value.</returns>
+        public static Address DefaultIP() => new("192.168.0.1");
+        
+        /// <summary>
+        /// Creates a new <see cref="Address"/> with the default slot 0.
+        /// </summary>
+        /// <returns>A <see cref="Address"/> with the default slot value.</returns>
+        public static Address DefaultSlot() => new("0");
+
+        /// <summary>
+        /// Creates a new <see cref="Address"/> with the specified slot number.
+        /// </summary>
+        /// <param name="slot">The slot number to create.</param>
+        /// <returns></returns>
+        public static Address Slot(byte slot) => new($"{slot}");
         
         /// <summary>
         /// 

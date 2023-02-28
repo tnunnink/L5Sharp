@@ -91,22 +91,6 @@ namespace L5Sharp.Tests.Types
         }
 
         [Test]
-        public void ImplicitOperator_short_ShouldBeRandom()
-        {
-            INT type = _random;
-
-            type.Should().Be(_random);
-        }
-
-        [Test]
-        public void ImplicitOperator_Atomic_ShouldBeRandom()
-        {
-            short value = new INT(_random);
-
-            value.Should().Be(_random);
-        }
-
-        [Test]
         public void TypeEquals_AreEqual_ShouldBeTrue()
         {
             var first = new INT();

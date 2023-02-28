@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using L5Sharp.Common;
 using L5Sharp.Core;
 using L5Sharp.Enums;
 
@@ -39,6 +38,7 @@ namespace L5Sharp.Utilities
             { typeof(NeutralText), s => new NeutralText(s) },
             { typeof(TaskPriority), s => TaskPriority.Parse(s) },
             { typeof(ScanRate), s => ScanRate.Parse(s) },
+            { typeof(ScanRate?), s => ScanRate.Parse(s) },
             { typeof(Watchdog), s => Watchdog.Parse(s) },
             { typeof(Vendor), Vendor.Parse },
             { typeof(ProductType), ProductType.Parse },
@@ -86,7 +86,7 @@ namespace L5Sharp.Utilities
             if (converter.CanConvertFrom(typeof(string)))
                 return s => converter.ConvertFrom(s);
 
-            throw new InvalidOperationException($"No parse function has been defined for type '{type.Name}'");
+            throw new InvalidOperationException($"No parse function has been defined for type '{type}'");
         }
     }
 }

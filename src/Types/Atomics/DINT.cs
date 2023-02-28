@@ -40,7 +40,7 @@ namespace L5Sharp.Types.Atomics
         public DINT(string value, Radix? radix = null) : this(radix ?? Radix.Infer(value))
         {
             var converter = TypeDescriptor.GetConverter(GetType());
-            _value = (int)converter.ConvertFrom(Radix.Parse(value));
+            _value = (int)(DINT)converter.ConvertFrom(value)!;
         }
 
         /// <summary>
@@ -68,17 +68,17 @@ namespace L5Sharp.Types.Atomics
         public static implicit operator int(DINT atomic) => atomic._value;
         
         /// <summary>
-        /// Converts the provided <see cref="bool"/> to a <see cref="BOOL"/> value.
+        /// Implicitly converts a <see cref="string"/> to a <see cref="DINT"/> value.
         /// </summary>
         /// <param name="value">The value to convert.</param>
-        /// <returns>A <see cref="BOOL"/> value.</returns>
+        /// <returns>A new <see cref="DINT"/> value.</returns>
         public static implicit operator DINT(string value) => new(value);
         
         /// <summary>
-        /// Converts the provided <see cref="bool"/> to a <see cref="BOOL"/> value.
+        /// Implicitly converts the provided <see cref="DINT"/> to a <see cref="string"/> value.
         /// </summary>
         /// <param name="value">The value to convert.</param>
-        /// <returns>A <see cref="BOOL"/> value.</returns>
+        /// <returns>A new <see cref="string"/> value.</returns>
         public static implicit operator string(DINT value) => value.ToString();
 
         /// <inheritdoc />

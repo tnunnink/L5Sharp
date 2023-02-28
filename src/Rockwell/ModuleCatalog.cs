@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
-using L5Sharp.Common;
 using L5Sharp.Components;
 using L5Sharp.Core;
-using L5Sharp.Enums;
 
 namespace L5Sharp.Rockwell
 {
@@ -73,6 +71,25 @@ namespace L5Sharp.Rockwell
             return MaterializeDefinition(device);
         }
 
+        /// <summary>
+        /// Gets a <see cref="CatalogEntry"/> instance for the provided <see cref="CatalogNumber"/>.
+        /// </summary>
+        /// <param name="catalogNumber">The catalog number of the <see cref="Module"/> to lookup.</param>
+        /// <returns>A <see cref="CatalogEntry"/> instance for the specified catalogNumber if found in the current
+        /// catalog service file; otherwise, null.</returns>
+        /// <exception cref="ArgumentNullException"><c>catalogNumber</c> is null.</exception>
+        /// <exception cref="InvalidOperationException">The provided catalog number was not found.</exception>
+        public CatalogEntry? TryLookup(string catalogNumber)
+        {
+            if (catalogNumber is null)
+                throw new ArgumentNullException(nameof(catalogNumber));
+
+            var device = _catalog.Descendants(RaDevice)
+                .FirstOrDefault(e => e.Descendants(CatalogNumber).First().Value == catalogNumber);
+
+            return device is not null ? MaterializeDefinition(device) : null;
+        }
+
         private static CatalogEntry MaterializeDefinition(XContainer element)
         {
             var catalogNumber = GetCatalogNumber(element);
@@ -136,20 +153,10 @@ namespace L5Sharp.Rockwell
             }
         }
 
-        private static IEnumerable<ModuleCategory> GetCategories(XContainer element)
-        {
-            var categories = element.Descendants(Category);
+        private static IEnumerable<string> GetCategories(XContainer element) => 
+            element.Descendants(Category).Select(c => c.Attribute(Name)!.Value);
 
-            foreach (var category in categories)
-            {
-                var name = category.Attribute(Name)?.Value;
-
-                if (ModuleCategory.TryFromName(name, out var moduleCategory))
-                    yield return moduleCategory;
-            }
-        }
-
-        private static IEnumerable<Port> GetPorts(XContainer element)
+        private static IEnumerable<PortInfo> GetPorts(XContainer element)
         {
             var ports = element.Descendants(Port);
 
@@ -159,9 +166,9 @@ namespace L5Sharp.Rockwell
                 var type = port.Attribute(Type)?.Value!;
                 var downstreamOnly = port.Elements().Any(e => e.Value == DownstreamOnly);
 
-                yield return new Port
+                yield return new PortInfo
                 {
-                    Id = number,
+                    Number = number,
                     Type = type,
                     DownstreamOnly = downstreamOnly
                 };

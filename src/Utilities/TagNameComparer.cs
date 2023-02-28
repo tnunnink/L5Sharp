@@ -79,10 +79,10 @@ namespace L5Sharp.Utilities
             {
                 if (ReferenceEquals(x, y)) return true;
                 if (ReferenceEquals(x, null) || ReferenceEquals(y, null)) return false;
-                return string.Equals(x.Members.Last(), y.Members.Last(), StringComparison.OrdinalIgnoreCase);
+                return string.Equals(x.Last(), y.Last(), StringComparison.OrdinalIgnoreCase);
             }
 
-            public override int GetHashCode(TagName obj) => StringComparer.OrdinalIgnoreCase.GetHashCode(obj.Members.Last());
+            public override int GetHashCode(TagName obj) => StringComparer.OrdinalIgnoreCase.GetHashCode(obj.Last());
         }
     }
 }

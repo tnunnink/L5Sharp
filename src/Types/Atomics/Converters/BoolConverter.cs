@@ -42,7 +42,7 @@ namespace L5Sharp.Types.Atomics.Converters
                 INT v => new BOOL(v != 0),
                 DINT v => new BOOL(v != 0),
                 LINT v => new BOOL(v != 0),
-                string v => bool.TryParse(v, out var result) ? new BOOL(result) : Atomic.Parse<BOOL>(v),
+                string v => bool.TryParse(v, out var result) ? new BOOL(result) : Radix.Infer(v).Parse(v),
                 _ => base.ConvertFrom(context, culture, value)
                      ?? throw new NotSupportedException(
                          $"The provided value of type {value.GetType()} is not supported for conversion.")
@@ -67,7 +67,7 @@ namespace L5Sharp.Types.Atomics.Converters
 
             return destinationType switch
             {
-                not null when destinationType == typeof(bool) => typed,
+                not null when destinationType == typeof(bool) => (bool)typed,
                 not null when destinationType == typeof(BOOL) => typed,
                 not null when destinationType == typeof(string) => typed.ToString(),
                 _ => base.ConvertTo(context, culture, value, destinationType!) ??

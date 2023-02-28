@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using L5Sharp.Common;
 using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Types;
@@ -12,7 +11,7 @@ namespace L5Sharp
     /// tag data structures.
     /// </summary>
     /// <see cref="Components.Tag"/>
-    /// <see cref="Common.TagMember"/>
+    /// <see cref="TagMember"/>
     public interface ILogixTag
     {
         /// <summary>

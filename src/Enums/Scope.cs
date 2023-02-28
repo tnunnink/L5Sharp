@@ -25,7 +25,7 @@ namespace L5Sharp.Enums
         /// Represents a Program <see cref="Scope"/> value.
         /// </summary>
         public static readonly Scope Program = new(nameof(Program), "ProgramScope");
-        
+
         /// <summary>
         /// Represents a Routine <see cref="Scope"/> value.
         /// </summary>

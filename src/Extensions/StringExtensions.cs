@@ -50,6 +50,11 @@ namespace L5Sharp.Extensions
             return name.Length <= 40;
         }
 
+        /// <summary>
+        /// Determines if the current string is a value <see cref="TagName"/> string.
+        /// </summary>
+        /// <param name="input">The string input to analyze.</param>
+        /// <returns><c>true</c> if the string is a valid tag name string; otherwise, <c>false</c>.</returns>
         public static bool IsTagName(this string input) => new TagName(input).IsValid;
 
         /// <summary>

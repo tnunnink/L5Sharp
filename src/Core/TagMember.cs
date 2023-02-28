@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Serialization;
 using L5Sharp.Components;
-using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Extensions;
 using L5Sharp.Types;
 
-namespace L5Sharp.Common
+namespace L5Sharp.Core
 {
     /// <summary>
     /// 
@@ -68,7 +67,10 @@ namespace L5Sharp.Common
         public TagMember? Member(TagName tagName)
         {
             var member = Data.FindMember(tagName);
-            return member is not null ? new TagMember(tagName, member.DataType, _tag) : null;
+
+            return member is not null
+                ? new TagMember(TagName.Combine(TagName, tagName), member.DataType, _tag)
+                : null;
         }
 
         /// <inheritdoc />
@@ -96,7 +98,7 @@ namespace L5Sharp.Common
             {
                 var tagName = TagName.Combine(TagName, member.Name);
                 var tagMember = new TagMember(tagName, member.DataType, _tag);
-                
+
                 if (predicate.Invoke(tagMember.TagName))
                     members.Add(tagMember);
 
@@ -115,7 +117,7 @@ namespace L5Sharp.Common
             {
                 var tagName = TagName.Combine(TagName, member.Name);
                 var tagMember = new TagMember(tagName, member.DataType, _tag);
-                
+
                 if (predicate.Invoke(tagMember))
                     members.Add(tagMember);
 
@@ -129,7 +131,11 @@ namespace L5Sharp.Common
         public IEnumerable<TagMember> MembersOf(TagName tagName)
         {
             var member = Data.FindMember(tagName);
-            var tagMember = member is not null ? new TagMember(tagName, member.DataType, _tag) : null;
+            
+            var tagMember = member is not null
+                ? new TagMember(TagName.Combine(TagName, tagName), member.DataType, _tag)
+                : null;
+            
             return tagMember is not null ? tagMember.Members() : Enumerable.Empty<TagMember>();
         }
 

@@ -1,5 +1,4 @@
 ﻿using System.Xml.Linq;
-using L5Sharp.Common;
 using L5Sharp.Core;
 using L5Sharp.Extensions;
 using L5Sharp.Utilities;
@@ -41,10 +40,10 @@ namespace L5Sharp.Serialization
             return new Port
             {
                 Id = element.GetValue<int>(L5XName.Id),
-                Address = element.GetValue<Address>(L5XName.Address),
-                Type = element.GetValue<string>(L5XName.Type),
-                Upstream = element.GetValue<bool>(L5XName.Upstream),
-                BusSize = element.Element(L5XName.Bus)?.GetValue<byte>(L5XName.Size) ?? default
+                Address = element.TryGetValue<Address>(L5XName.Address) ?? Address.None,
+                Type = element.TryGetValue<string>(L5XName.Type) ?? string.Empty,
+                Upstream = element.TryGetValue<bool?>(L5XName.Upstream) ?? false,
+                BusSize = element.Element(L5XName.Bus)?.TryGetValue<byte?>(L5XName.Size) ?? default
             };
         }
     }

@@ -5,6 +5,7 @@ using L5Sharp.Components;
 using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Extensions;
+using L5Sharp.Serialization.Data;
 using L5Sharp.Types;
 using L5Sharp.Utilities;
 
@@ -24,8 +25,8 @@ namespace L5Sharp.Serialization
 
             var element = new XElement(typeof(Tag).GetLogixName());
 
-            element.AddValue(obj, t => t.Name);
-            element.AddText(obj, t => t.Description);
+            element.AddValue(obj.Name, L5XName.Name);
+            element.AddText(obj.Description, L5XName.Description);
             element.AddValue(obj, t => t.TagType);
             element.AddValue(obj, t => t.AliasFor);
             element.AddValue(obj, t => t.DataType);
@@ -86,12 +87,12 @@ namespace L5Sharp.Serialization
                 Name = element.LogixName(),
                 Description = element.LogixDescription(),
                 Data = data is not null ? _formattedDataSerializer.Deserialize(data) : LogixType.Null,
-                ExternalAccess = element.ValueOrDefault<ExternalAccess>(L5XName.ExternalAccess) ??
+                ExternalAccess = element.TryGetValue<ExternalAccess>(L5XName.ExternalAccess) ??
                                  ExternalAccess.ReadWrite,
-                TagType = element.ValueOrDefault<TagType>(L5XName.TagType) ?? TagType.Base,
-                Usage = element.ValueOrDefault<TagUsage>(L5XName.Usage) ?? TagUsage.Normal,
-                AliasFor = element.ValueOrDefault<TagName>(L5XName.AliasFor) ?? TagName.Empty,
-                Constant = element.ValueOrDefault<bool?>(L5XName.Constant) ?? false,
+                TagType = element.TryGetValue<TagType>(L5XName.TagType) ?? TagType.Base,
+                Usage = element.TryGetValue<TagUsage>(L5XName.Usage) ?? TagUsage.Normal,
+                AliasFor = element.TryGetValue<TagName>(L5XName.AliasFor) ?? TagName.Empty,
+                Constant = element.TryGetValue<bool?>(L5XName.Constant) ?? false,
                 Comments = element.Descendants(L5XName.Comment)
                     .ToDictionary(
                         k => TagName.Combine(element.LogixName(), k.GetValue<string>(L5XName.Operand)),

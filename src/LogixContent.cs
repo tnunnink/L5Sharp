@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Xml.Linq;
 using L5Sharp.Components;
 using L5Sharp.Core;
@@ -75,7 +74,7 @@ namespace L5Sharp
         public ILogixComponentCollection<DataType> DataTypes()
         {
             var container = L5X.Descendants(L5XName.DataTypes).FirstOrDefault() ?? new XElement(L5XName.DataTypes);
-            return new ComponentCollection<DataType>(container);
+            return new ComponentCollection<DataType>(container, L5X);
         }
 
         /// <inheritdoc />
@@ -83,87 +82,84 @@ namespace L5Sharp
         {
             var container = L5X.Descendants(L5XName.AddOnInstructionDefinitions).FirstOrDefault() ??
                             new XElement(L5XName.AddOnInstructionDefinitions);
-            return new ComponentCollection<AddOnInstruction>(container);
+
+            return new ComponentCollection<AddOnInstruction>(container, L5X);
         }
 
         /// <inheritdoc />
         public ILogixComponentCollection<Module> Modules()
         {
             var container = L5X.Descendants(L5XName.Modules).FirstOrDefault() ?? new XElement(L5XName.Modules);
-            return new ComponentCollection<Module>(container);
+            return new ComponentCollection<Module>(container, L5X);
         }
 
         /// <inheritdoc />
         public ILogixComponentCollection<Program> Programs()
         {
             var container = L5X.Descendants(L5XName.Programs).FirstOrDefault() ?? new XElement(L5XName.Programs);
-            return new ComponentCollection<Program>(container);
+            return new ComponentCollection<Program>(container, L5X);
         }
 
         /// <inheritdoc />
         public ILogixComponentCollection<Tag> Tags()
         {
             var container = L5X.Descendants(L5XName.Tags).FirstOrDefault() ?? new XElement(L5XName.Tags);
-            return new ComponentCollection<Tag>(container);
+            return new ComponentCollection<Tag>(container, L5X);
         }
 
         /// <inheritdoc />
-        public ILogixComponentCollection<Tag> Tags(string scope)
+        public ILogixComponentCollection<Tag> Tags(string programName)
         {
-            var scopedContainer = L5X.Descendants().FirstOrDefault(e => e.LogixName() == scope);
+            var program = L5X.Descendants(L5XName.Program).FirstOrDefault(e => e.LogixName() == programName);
 
-            if (scopedContainer is null)
-                throw new InvalidOperationException();
+            if (program is null)
+                throw new ArgumentException(
+                    $"No container with the scope name '{programName}' found in the current L5X");
 
-            var container = scopedContainer.Descendants(L5XName.Tags).FirstOrDefault() ?? new XElement(L5XName.Tags);
-            return new ComponentCollection<Tag>(container);
+            var container = program.Descendants(L5XName.Tags).FirstOrDefault() ?? new XElement(L5XName.Tags);
+            return new ComponentCollection<Tag>(container, L5X);
         }
 
         /// <inheritdoc />
-        public ILogixComponentCollection<Routine> Routines(string scope)
+        public ILogixComponentCollection<Routine> Routines(string programName)
         {
-            var scopedContainer =
-                L5X.Descendants(L5XName.Program).FirstOrDefault(e => e.LogixName() == scope) ??
-                L5X.Descendants(L5XName.AddOnInstructionDefinition).FirstOrDefault(e => e.LogixName() == scope);
-            
-            if (scopedContainer is null)
-                throw new InvalidOperationException();
-            
-            var container = scopedContainer.Descendants(L5XName.Routines).FirstOrDefault();
-            return new ComponentCollection<Routine>(container);
+            var program = L5X.Descendants(L5XName.Program).FirstOrDefault(e => e.LogixName() == programName);
+
+            if (program is null)
+                throw new ArgumentException(
+                    $"No container with the scope name '{programName}' found in the current L5X");
+
+            var container = program.Descendants(L5XName.Routines).FirstOrDefault() ?? new XElement(L5XName.Routine);
+            return new ComponentCollection<Routine>(container, L5X);
         }
 
         /// <inheritdoc />
-        public ILogixComponentCollection<TRoutine> Routines<TRoutine>(string scope) where TRoutine : Routine
+        public ILogixComponentCollection<TRoutine> Routines<TRoutine>(string programName) where TRoutine : Routine
         {
-            var scopedContainer =
-                L5X.Descendants(L5XName.Program).FirstOrDefault(e => e.LogixName() == scope) ??
-                L5X.Descendants(L5XName.AddOnInstructionDefinition).FirstOrDefault(e => e.LogixName() == scope);
-            
-            if (scopedContainer is null)
-                throw new InvalidOperationException();
-            
-            var container = scopedContainer.Descendants(L5XName.Routines).FirstOrDefault();
-            return new ComponentCollection<TRoutine>(container);
+            var program = L5X.Descendants(L5XName.Program).FirstOrDefault(e => e.LogixName() == programName);
+
+            if (program is null)
+                throw new ArgumentException(
+                    $"No container with the scope name '{programName}' found in the current L5X");
+
+            var container = program.Descendants(L5XName.Routines).FirstOrDefault() ?? new XElement(L5XName.Routine);
+
+            return new ComponentCollection<TRoutine>(container, L5X);
         }
 
         /// <inheritdoc />
         public ILogixComponentCollection<Task> Tasks()
         {
             var container = L5X.Descendants(L5XName.Tasks).FirstOrDefault() ?? new XElement(L5XName.Tasks);
-            return new ComponentCollection<Task>(container);
+            return new ComponentCollection<Task>(container, L5X);
         }
 
         /// <inheritdoc />
         public IEnumerable<TEntity> Query<TEntity>()
         {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc />
-        public IEnumerable<TEntity> Query<TEntity>(Expression<Func<TEntity, bool>> predicate)
-        {
-            throw new NotImplementedException();
+            var name = typeof(TEntity).GetLogixName();
+            var serializer = LogixSerializer.GetSerializer<TEntity>();
+            return L5X.Descendants(name).Select(e => serializer.Deserialize(e));
         }
 
         /// <summary>

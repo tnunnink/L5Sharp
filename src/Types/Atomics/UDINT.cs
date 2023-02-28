@@ -40,7 +40,7 @@ namespace L5Sharp.Types.Atomics
         public UDINT(string value, Radix? radix = null) : this(radix ?? Radix.Infer(value))
         {
             var converter = TypeDescriptor.GetConverter(GetType());
-            _value = (uint)converter.ConvertFrom(Radix.Parse(value));
+            _value = (uint)(UDINT)converter.ConvertFrom(value)!;
         }
 
         /// <summary>
@@ -59,6 +59,20 @@ namespace L5Sharp.Types.Atomics
         /// <param name="value">The value to convert.</param>
         /// <returns>A <see cref="UDINT"/> value.</returns>
         public static implicit operator UDINT(uint value) => new(value);
+        
+        /// <summary>
+        /// Implicitly converts a <see cref="string"/> to a <see cref="UINT"/> value.
+        /// </summary>
+        /// <param name="value">The value to convert.</param>
+        /// <returns>A new <see cref="UINT"/> value.</returns>
+        public static implicit operator UDINT(string value) => new(value);
+        
+        /// <summary>
+        /// Implicitly converts the provided <see cref="UINT"/> to a <see cref="string"/> value.
+        /// </summary>
+        /// <param name="value">The value to convert.</param>
+        /// <returns>A new <see cref="string"/> value.</returns>
+        public static implicit operator UDINT(LINT value) => value.ToString();
 
         /// <summary>
         /// Converts the provided <see cref="UDINT"/> to a <see cref="uint"/> value.

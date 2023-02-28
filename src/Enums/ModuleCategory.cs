@@ -7,9 +7,9 @@ namespace L5Sharp.Enums
     /// <summary>
     /// Represents an enumeration of <see cref="ModuleCategory"/> for a given <see cref="Module"/>.
     /// </summary>
-    public sealed class ModuleCategory : SmartEnum<ModuleCategory>
+    public sealed class ModuleCategory : SmartEnum<ModuleCategory, string>
     {
-        private ModuleCategory(string name, int value) : base(name, value)
+        private ModuleCategory(string name, string value) : base(name, value)
         {
         }
 
@@ -17,31 +17,36 @@ namespace L5Sharp.Enums
         /// <summary>
         /// Represents an Analog <see cref="ModuleCategory"/>.
         /// </summary>
-        public static readonly ModuleCategory Analog = new(nameof(Analog), 0);
+        public static readonly ModuleCategory Analog = new(nameof(Analog), "Analog");
         
         /// <summary>
         /// Represents a Digital <see cref="ModuleCategory"/>.
         /// </summary>
-        public static readonly ModuleCategory Digital = new(nameof(Digital), 1);
+        public static readonly ModuleCategory Digital = new(nameof(Digital), "Digital");
+        
+        /// <summary>
+        /// Represents an Analog <see cref="ModuleCategory"/>.
+        /// </summary>
+        public static readonly ModuleCategory Input = new(nameof(Input), "Input");
         
         /// <summary>
         /// Represents a Communication <see cref="ModuleCategory"/>.
         /// </summary>
-        public static readonly ModuleCategory Communication = new(nameof(Communication), 2);
+        public static readonly ModuleCategory Communication = new(nameof(Communication), "Communication");
         
         /// <summary>
         /// Represents a Controller <see cref="ModuleCategory"/>.
         /// </summary>
-        public static readonly ModuleCategory Controller = new(nameof(Controller), 3);
+        public static readonly ModuleCategory Controller = new(nameof(Controller), "Controller");
         
         /// <summary>
         /// Represents a Motion <see cref="ModuleCategory"/>.
         /// </summary>
-        public static readonly ModuleCategory Motion = new(nameof(Motion), 4);
+        public static readonly ModuleCategory Motion = new(nameof(Motion), "Motion");
         
         /// <summary>
         /// Represents a Specialty <see cref="ModuleCategory"/>.
         /// </summary>
-        public static readonly ModuleCategory Specialty = new(nameof(Specialty), 5);
+        public static readonly ModuleCategory Specialty = new(nameof(Specialty), "Specialty");
     }
 }

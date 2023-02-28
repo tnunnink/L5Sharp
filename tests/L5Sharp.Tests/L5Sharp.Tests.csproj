@@ -257,8 +257,4 @@
       <Compile Remove="Serialization\MemberSerializerTests.cs" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Utilities" />
-    </ItemGroup>
-
 </Project>

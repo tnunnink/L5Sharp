@@ -35,7 +35,7 @@ namespace L5Sharp.Tests.Core
         {
             var tagName = new TagName(string.Empty);
 
-            tagName.Should().NotBeNull();
+            tagName.Should<string>().NotBeNull();
             tagName.IsEmpty.Should().BeTrue();
         }
 
@@ -45,7 +45,7 @@ namespace L5Sharp.Tests.Core
             var fixture = new Fixture();
             var tagName = new TagName(fixture.Create<string>());
 
-            tagName.Should().NotBeNull();
+            tagName.Should<string>().NotBeNull();
             tagName.IsValid.Should().BeFalse();
         }
 
@@ -54,7 +54,7 @@ namespace L5Sharp.Tests.Core
         {
             var tagName = new TagName("Test");
 
-            tagName.Should().NotBeNull();
+            tagName.Should<string>().NotBeNull();
         }
         
         [Test]
@@ -66,8 +66,8 @@ namespace L5Sharp.Tests.Core
             tagName.Operand.Should().BeEmpty();
             tagName.Path.Should().BeEmpty();
             tagName.Depth.Should().Be(0);
-            tagName.Members.Should().HaveCount(1);
-            tagName.Members.Should().HaveCount(1);
+            tagName.Should<string>().HaveCount(1);
+            tagName.Should<string>().HaveCount(1);
             tagName.IsEmpty.Should().BeFalse();
             tagName.IsValid.Should().BeTrue();
         }
@@ -77,7 +77,7 @@ namespace L5Sharp.Tests.Core
         {
             var tagName = new TagName(TestTagName);
 
-            tagName.Should().NotBeNull();
+            tagName.Should<string>().NotBeNull();
         }
 
         [Test]
@@ -89,8 +89,7 @@ namespace L5Sharp.Tests.Core
             tagName.Operand.Should().Be(Operand);
             tagName.Path.Should().Be(Path);
             tagName.Depth.Should().Be(3);
-            tagName.Members.Should().HaveCount(4);
-            tagName.Parts.Should().HaveCount(4);
+            tagName.Should<string>().HaveCount(4);
             tagName.IsEmpty.Should().BeFalse();
             tagName.IsValid.Should().BeTrue();
         }
@@ -100,7 +99,7 @@ namespace L5Sharp.Tests.Core
         {
             var tagName = new TagName("RackIO:1:I.Slot[2].Data.4");
 
-            tagName.Should().NotBeNull();
+            tagName.Should<string>().NotBeNull();
         }
         
         [Test]
@@ -112,8 +111,7 @@ namespace L5Sharp.Tests.Core
             tagName.Operand.Should().Be(".Slot[2].Data.4");
             tagName.Path.Should().Be("Slot[2].Data.4");
             tagName.Depth.Should().Be(4);
-            tagName.Members.Should().HaveCount(5);
-            tagName.Parts.Should().HaveCount(7);
+            tagName.Should<string>().HaveCount(5);
             tagName.IsEmpty.Should().BeFalse();
             tagName.IsValid.Should().BeTrue();
         }
@@ -123,7 +121,7 @@ namespace L5Sharp.Tests.Core
         {
             var tagName = TagName.Empty;
 
-            tagName.Should().BeEquivalentTo(new TagName(""));
+            tagName.Should<string>().BeEquivalentTo(new TagName(""));
         }
         
         [Test]
@@ -147,9 +145,9 @@ namespace L5Sharp.Tests.Core
         {
             var tagName = new TagName(TestTagName);
 
-            var members = tagName.Members;
+            var members = tagName;
 
-            members.Should().BeEquivalentTo(Members);
+            members.Should<string>().BeEquivalentTo(Members);
         }
 
         [Test]
@@ -157,7 +155,15 @@ namespace L5Sharp.Tests.Core
         {
             var tagName = TagName.Combine(Base, Path);
 
-            tagName.Should().Be(TestTagName);
+            tagName.Should<TagName>().Be(TestTagName);
+        }
+        
+        [Test]
+        public void Combine_ManyNames_ShouldBeExpected()
+        {
+            var tagName = TagName.Combine("MyTag", "SomeArray", "[1]", "ArrayElement", "SomeMember", ".1");
+
+            tagName.Should<TagName>().Be("MyTag.SomeArray[1].ArrayElement.SomeMember.1");
         }
 
         [Test]
@@ -165,7 +171,7 @@ namespace L5Sharp.Tests.Core
         {
             var tagName = TagName.Combine(Members);
 
-            tagName.Should().Be(TestTagName);
+            tagName.Should<TagName>().Be(TestTagName);
         }
 
         [Test]

@@ -41,7 +41,7 @@ namespace L5Sharp.Types.Atomics
         public REAL(string value, Radix? radix = null) : this(radix ?? Radix.Infer(value))
         {
             var converter = TypeDescriptor.GetConverter(GetType());
-            _value = (float)converter.ConvertFrom(Radix.Parse(value));
+            _value = (float)(REAL)converter.ConvertFrom(value)!;
         }
 
         /// <summary>

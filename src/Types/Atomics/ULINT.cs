@@ -40,7 +40,7 @@ namespace L5Sharp.Types.Atomics
         public ULINT(string value, Radix? radix = null) : this(radix ?? Radix.Infer(value))
         {
             var converter = TypeDescriptor.GetConverter(GetType());
-            _value = (ulong)converter.ConvertFrom(Radix.Parse(value));
+            _value = (ulong)(ULINT)converter.ConvertFrom(value)!;
         }
 
         /// <summary>
@@ -66,6 +66,20 @@ namespace L5Sharp.Types.Atomics
         /// <param name="atomic">The value to convert.</param>
         /// <returns>A <see cref="ulong"/> type value.</returns>
         public static implicit operator ulong(ULINT atomic) => atomic._value;
+        
+        /// <summary>
+        /// Implicitly converts a <see cref="string"/> to a <see cref="ULINT"/> value.
+        /// </summary>
+        /// <param name="value">The value to convert.</param>
+        /// <returns>A new <see cref="ULINT"/> value.</returns>
+        public static implicit operator ULINT(string value) => new(value);
+        
+        /// <summary>
+        /// Implicitly converts the provided <see cref="ULINT"/> to a <see cref="string"/> value.
+        /// </summary>
+        /// <param name="value">The value to convert.</param>
+        /// <returns>A new <see cref="string"/> value.</returns>
+        public static implicit operator ULINT(LINT value) => value.ToString();
 
         /// <inheritdoc />
         public bool Equals(ULINT? other)

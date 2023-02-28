@@ -5,7 +5,7 @@ using L5Sharp.Core;
 namespace L5Sharp.Enums
 {
     /// <summary>
-    /// An enumeration of all <see cref="TaskEventTrigger"/> options for a given <see cref="TaskEventInfo"/>.
+    /// An enumeration of all <see cref="TaskEventTrigger"/> options for a given <see cref="Components.Task"/>.
     /// </summary>
     public class TaskEventTrigger : SmartEnum<TaskEventTrigger, string>
     {

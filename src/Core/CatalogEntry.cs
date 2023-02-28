@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using L5Sharp.Components;
-using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Rockwell;
 
-namespace L5Sharp.Common
+namespace L5Sharp.Core
 {
     /// <summary>
     /// A set of properties that defines a <see cref="Module"/> component.
@@ -50,11 +49,11 @@ namespace L5Sharp.Common
         /// <summary>
         /// Gets a collection of <see cref="ModuleCategory"/> that apply to the module.
         /// </summary>
-        public IEnumerable<ModuleCategory> Categories { get; set; } = Enumerable.Empty<ModuleCategory>();
+        public IEnumerable<string> Categories { get; set; } = Enumerable.Empty<string>();
 
         /// <summary>
         /// Gets the set of <see cref="Ports"/> that define the connections of the module.
         /// </summary>
-        public IEnumerable<Port> Ports { get; set; } = Enumerable.Empty<Port>();
+        public IEnumerable<PortInfo> Ports { get; set; } = Enumerable.Empty<PortInfo>();
     }
 }

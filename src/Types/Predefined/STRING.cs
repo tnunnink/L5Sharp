@@ -75,7 +75,7 @@ namespace L5Sharp.Types.Predefined
         public override int GetHashCode() => _value.GetHashCode();
 
         /// <inheritdoc />
-        public override string ToString() => Name;
+        public override string ToString() => _value;
 
         /// <summary>
         /// Determines if the provided objects are equal.

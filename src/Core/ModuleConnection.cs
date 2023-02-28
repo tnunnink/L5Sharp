@@ -1,11 +1,14 @@
-﻿using L5Sharp.Components;
+﻿using L5Sharp.Attributes;
+using L5Sharp.Components;
 using L5Sharp.Enums;
+using L5Sharp.Serialization;
 
-namespace L5Sharp.Common
+namespace L5Sharp.Core
 {
     /// <summary>
     /// A component of a <see cref="Module"/> that represents the properties and data of the connection to the field device.
     /// </summary>
+    [LogixSerializer(typeof(ModuleConnectionSerializer))]
     public sealed class ModuleConnection
     {
         /// <summary>

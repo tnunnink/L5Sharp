@@ -1,11 +1,10 @@
 ﻿using System;
 using L5Sharp.Attributes;
-using L5Sharp.Core;
 using L5Sharp.Enums;
-using L5Sharp.Serialization;
+using L5Sharp.Serialization.Data;
 using L5Sharp.Types;
 
-namespace L5Sharp.Common
+namespace L5Sharp.Core
 {
     /// <summary>
     /// ..

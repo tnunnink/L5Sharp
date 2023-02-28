@@ -40,7 +40,7 @@ namespace L5Sharp.Types.Atomics
         public USINT(string value, Radix? radix = null) : this(radix ?? Radix.Infer(value))
         {
             var converter = TypeDescriptor.GetConverter(GetType());
-            _value = (byte)converter.ConvertFrom(Radix.Parse(value));
+            _value = (byte)(USINT)converter.ConvertFrom(value)!;
         }
 
         /// <summary>

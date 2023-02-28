@@ -1,7 +1,6 @@
 ﻿using L5Sharp.Components;
-using L5Sharp.Core;
 
-namespace L5Sharp.Common
+namespace L5Sharp.Core
 {
     /// <summary>
     /// A component of a <see cref="Module"/> that represents the means for connecting devices on a network or in a chassis.
@@ -61,9 +60,6 @@ namespace L5Sharp.Common
         /// </remarks>
         public byte BusSize { get; set; }
 
-        /// <summary>
-        /// Gets a value indicating whether the port allows upstream connection, or if it is a downstream only port.
-        /// </summary>
-        public bool DownstreamOnly { get; set; }
+        
     }
 }

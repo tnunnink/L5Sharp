@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
-using L5Sharp.Common;
+using L5Sharp.Attributes;
 using L5Sharp.Core;
 using L5Sharp.Enums;
+using L5Sharp.Serialization;
 
 namespace L5Sharp.Components
 {
@@ -12,7 +13,8 @@ namespace L5Sharp.Components
     /// <footer>
     /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
     /// `Logix 5000 Controllers Import/Export`</a> for more information.
-    /// </footer> 
+    /// </footer>
+    [LogixSerializer(typeof(ModuleSerializer))]
     public class Module : ILogixComponent
     {
         /// <inheritdoc />
@@ -29,7 +31,7 @@ namespace L5Sharp.Components
         /// <summary>
         /// The vendor or manufacturer of the module.
         /// </summary>
-        /// <value>A <see cref="Common.Vendor"/> entity that contains the id and name of the vendor.</value>
+        /// <value>A <see cref="Core.Vendor"/> entity that contains the id and name of the vendor.</value>
         /// <remarks>
         /// All modules have a vendor representing the manufacturer of the module.
         /// This value can be retrieved as part of the <see cref="CatalogEntry"/> object obtained using a
@@ -47,7 +49,7 @@ namespace L5Sharp.Components
         /// <see cref="ICatalogService"/> for catalog lookup.
         /// This value will be validated by Logix upon import of the L5X. 
         /// </remarks>
-        public ProductType ProductType { get; } = ProductType.Unknown;
+        public ProductType ProductType { get; set; } = ProductType.Unknown;
 
         /// <summary>
         /// The unique product code value of the module.

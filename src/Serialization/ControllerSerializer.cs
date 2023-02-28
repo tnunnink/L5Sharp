@@ -45,7 +45,7 @@ namespace L5Sharp.Serialization
             {
                 Name = element.LogixName(),
                 Description = element.LogixDescription(),
-                ProcessorType = element.ValueOrDefault<string>(L5XName.ProcessorType) ?? string.Empty,
+                ProcessorType = element.TryGetValue<string>(L5XName.ProcessorType) ?? string.Empty,
                 Revision = GetRevision(element),
                 ProjectCreationDate = element.LogixDateTimeOrDefault(L5XName.ProjectCreationDate),
                 LastModifiedDate = element.LogixDateTimeOrDefault(L5XName.LastModifiedDate)
@@ -54,8 +54,8 @@ namespace L5Sharp.Serialization
 
         private static Revision? GetRevision(XElement element)
         {
-            var major = element.ValueOrDefault<string>(L5XName.MajorRev);
-            var minor = element.ValueOrDefault<string>(L5XName.MinorRev);
+            var major = element.TryGetValue<string>(L5XName.MajorRev);
+            var minor = element.TryGetValue<string>(L5XName.MinorRev);
 
             return major is not null && minor is not null ? Revision.Parse($"{major}.{minor}") : default;
         }

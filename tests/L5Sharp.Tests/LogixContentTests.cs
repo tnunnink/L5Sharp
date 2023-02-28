@@ -1,10 +1,8 @@
 ﻿using System.Linq;
 using FluentAssertions;
 using L5Sharp.Components;
-using L5Sharp.Enums;
-using L5Sharp.Extensions;
-using L5Sharp.Tests.Types.Custom;
-using L5Sharp.Types.Atomics;
+using L5Sharp.Core;
+using L5Sharp.Types;
 using NUnit.Framework;
 
 namespace L5Sharp.Tests
@@ -21,6 +19,34 @@ namespace L5Sharp.Tests
         }
 
         [Test]
+        public void New_ValidFile_ShouldHaveExpectedContent()
+        {
+            var content = LogixContent.Load(Known.Test);
+
+            content.L5X.Should().NotBeNull();
+            content.L5X.SchemaRevision.Should().Be(new Revision());
+            content.L5X.SoftwareRevision.Should().Be(new Revision(32, 02));
+            content.L5X.TargetName.Should().Be("TestController");
+            content.L5X.TargetType.Should().Be("Controller");
+            content.L5X.ContainsContext.Should().Be(false);
+            content.L5X.Owner.Should().Be("tnunnink, EN Engineering");
+            content.L5X.ExportDate.Should().NotBeNull();
+        }
+
+        [Test]
+        public void Controller_WhenCalled_ReturnsControllerInstance()
+        {
+            var content = LogixContent.Load(Known.Test);
+
+            var controller = content.Controller();
+
+            controller?.Name.Should().Be("TestController");
+            controller?.ProcessorType.Should().Be("1756-L83E");
+            controller?.Description.Should().Be("This is a test project");
+            controller?.Revision.Should().Be(new Revision(32, 11));
+        }
+
+        [Test]
         public void DataTypes_WhenCalled_ShouldNotBeEmpty()
         {
             var content = LogixContent.Load(Known.Test);
@@ -29,13 +55,81 @@ namespace L5Sharp.Tests
 
             dataTypes.Should().NotBeEmpty();
         }
+        
+        [Test]
+        public void Tags_WhenCalled_ShouldNotBeEmpty()
+        {
+            var content = LogixContent.Load(Known.Test);
+
+            var tags = content.Tags().ToList();
+
+            tags.Should().NotBeEmpty();
+        }
+        [Test]
+        public void Tags_InMainProgram_ShouldNotBeEmpty()
+        {
+            var content = LogixContent.Load(Known.Test);
+
+            var tags = content.Tags("MainProgram").ToList();
+
+            tags.Should().NotBeEmpty();
+        }
+        
+        
+        [Test]
+        public void Modules_WhenCalled_ShouldNotBeEmpty()
+        {
+            var content = LogixContent.Load(Known.Test);
+
+            var modules = content.Modules().ToList();
+
+            modules.Should().NotBeEmpty();
+        }
+        
+        [Test]
+        public void Tasks_WhenCalled_ShouldNotBeEmpty()
+        {
+            var content = LogixContent.Load(Known.Test);
+
+            var tags = content.Tasks().ToList();
+
+            tags.Should().NotBeEmpty();
+        }
+        
+        [Test]
+        public void Routines_WhenCalled_ShouldNotBeEmpty()
+        {
+            var content = LogixContent.Load(Known.Test);
+
+            var tags = content.Routines("MainProgram").ToList();
+
+            tags.Should().NotBeEmpty();
+        }
+        
+        
+        [Test]
+        public void Tag_WhenCalled_ShouldNotBeEmpty()
+        {
+            var content = LogixContent.Load(Known.Test);
+
+            var tags = content.Tags().Find("MultiDimensionalArray");
+
+            tags.Should().NotBeNull();
+
+            var array = tags.Data.As<ArrayType<ILogixType>>();
+
+            var elements = array.Elements.ToList();
+            elements.Should().NotBeEmpty();
+
+            array.Should().NotBeNull();
+        }
 
         [Test]
         public void Find_KnownDataType_ShouldNotBeNull()
         {
             var content = LogixContent.Load(Known.Test);
  
-            var type = content.DataTypes().Find("BoolType");
+            var type = content.DataTypes().Find("AlarmType");
 
             type.Should().NotBeNull();
         }
@@ -55,7 +149,7 @@ namespace L5Sharp.Tests
         {
             var content = LogixContent.Load(Known.Test);
 
-            var tag = content.Tags("MyProgramName").Find("MyNestedType");
+            var tag = content.Tags("MainProgram").Find("MyNestedType");
 
             tag.Should().NotBeNull();
         }
@@ -75,7 +169,7 @@ namespace L5Sharp.Tests
         {
             var content = LogixContent.Load(Known.Test);
 
-            var timers = content.Tags("TestProject").Where(t => t.DataType == "TIMER");
+            var timers = content.Tags("MainProgram").Where(t => t.DataType == "TIMER");
 
             timers.Should().NotBeEmpty();
         }
@@ -85,7 +179,7 @@ namespace L5Sharp.Tests
         {
             var content = LogixContent.Load(Known.Test);
             
-            var routines = content.Routines<RllRoutine>("TestProgram");
+            var routines = content.Routines<RllRoutine>("MainProgram");
 
             routines.Should().NotBeEmpty();
         }

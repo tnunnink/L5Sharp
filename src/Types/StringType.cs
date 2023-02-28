@@ -1,10 +1,7 @@
-﻿using System.Collections.Generic;
-using L5Sharp.Attributes;
-using L5Sharp.Common;
-using L5Sharp.Core;
+﻿using L5Sharp.Attributes;
 using L5Sharp.Enums;
 using L5Sharp.Extensions;
-using L5Sharp.Serialization;
+using L5Sharp.Serialization.Data;
 using L5Sharp.Types.Atomics;
 using L5Sharp.Utilities;
 
@@ -23,8 +20,10 @@ namespace L5Sharp.Types
         /// <param name="value">The predefined string length of the type.</param>
         public StringType(string name, string value) : base(name)
         {
+            Check.NotNull(value);
+
             LEN = new DINT(value.Length);
-            DATA = value.ToSintArray();
+            DATA = !value.IsEmpty() ? value.ToSintArray() : new[] { new SINT(0) };
         }
 
         /// <inheritdoc />
@@ -41,5 +40,8 @@ namespace L5Sharp.Types
         /// </summary>
         /// <returns>An array of <see cref="SINT"/> logix atomic values representing the bytes of the string.</returns>
         public SINT[] DATA { get; }
+
+        /// <inheritdoc />
+        public override string ToString() => DATA.AsString();
     }
 }

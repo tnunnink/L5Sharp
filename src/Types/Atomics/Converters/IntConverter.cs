@@ -26,7 +26,7 @@ namespace L5Sharp.Types.Atomics.Converters
                     long v => new INT((short)v),
                     ulong v => new INT((short)v),
                     float v => new INT((short)v),
-                    SINT v => new INT(v),
+                    SINT v => new INT((sbyte)v),
                     USINT v => new INT(v),
                     INT v => v,
                     UINT v => new INT((short)(ushort)v),
@@ -35,7 +35,7 @@ namespace L5Sharp.Types.Atomics.Converters
                     LINT v => new INT((short)v),
                     ULINT v => new INT((short)(ulong)v),
                     REAL v => new INT((short)v),
-                    string v => new INT(v),
+                    string v => short.TryParse(v, out var result) ? new INT(result) : Radix.Infer(v).Parse(v),
                     _ => base.ConvertFrom(context, culture, value)
                          ?? throw new NotSupportedException(
                              $"The provided value of type {value.GetType()} is not supported for conversion.")

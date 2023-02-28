@@ -68,32 +68,32 @@ namespace L5Sharp.Types.Atomics.Converters
         public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value,
             Type destinationType)
         {
-            if (value is not TAtomic typed)
-                throw new InvalidOperationException($"Value must be of type {typeof(TAtomic)}.");
+            /*if (value is not TAtomic typed)
+                throw new InvalidOperationException($"Value must be of type {typeof(TAtomic)}.");*/
 
             checked
             {
                 return destinationType switch
                 {
-                    not null when destinationType == typeof(sbyte) => Convert.ToSByte(typed),
-                    not null when destinationType == typeof(byte) => Convert.ToByte(typed),
-                    not null when destinationType == typeof(short) => Convert.ToInt16(typed),
-                    not null when destinationType == typeof(ushort) => Convert.ToUInt16(typed),
-                    not null when destinationType == typeof(int) => Convert.ToInt32(typed),
-                    not null when destinationType == typeof(uint) => Convert.ToUInt32(typed),
-                    not null when destinationType == typeof(long) => Convert.ToInt64(typed),
-                    not null when destinationType == typeof(ulong) => Convert.ToUInt64(typed),
-                    not null when destinationType == typeof(float) => Convert.ToSingle(typed),
-                    not null when destinationType == typeof(SINT) => new SINT(Convert.ToSByte(typed)),
-                    not null when destinationType == typeof(USINT) => new USINT(Convert.ToByte(typed)),
-                    not null when destinationType == typeof(INT) => new INT(Convert.ToInt16(typed)),
-                    not null when destinationType == typeof(UINT) => new UINT(Convert.ToUInt16(typed)),
-                    not null when destinationType == typeof(DINT) => new DINT(Convert.ToInt32(typed)),
-                    not null when destinationType == typeof(UDINT) => new UDINT(Convert.ToUInt32(typed)),
-                    not null when destinationType == typeof(LINT) => new LINT(Convert.ToInt64(typed)),
-                    not null when destinationType == typeof(ULINT) => new ULINT(Convert.ToUInt64(typed)),
-                    not null when destinationType == typeof(REAL) => new REAL(Convert.ToSingle(typed)),
-                    not null when destinationType == typeof(string) => typed.ToString(),
+                    not null when destinationType == typeof(sbyte) => Convert.ToSByte(value),
+                    not null when destinationType == typeof(byte) => Convert.ToByte(value),
+                    not null when destinationType == typeof(short) => Convert.ToInt16(value),
+                    not null when destinationType == typeof(ushort) => Convert.ToUInt16(value),
+                    not null when destinationType == typeof(int) => Convert.ToInt32(value),
+                    not null when destinationType == typeof(uint) => Convert.ToUInt32(value),
+                    not null when destinationType == typeof(long) => Convert.ToInt64(value),
+                    not null when destinationType == typeof(ulong) => Convert.ToUInt64(value),
+                    not null when destinationType == typeof(float) => Convert.ToSingle(value),
+                    not null when destinationType == typeof(SINT) => new SINT(Convert.ToSByte(value)),
+                    not null when destinationType == typeof(USINT) => new USINT(Convert.ToByte(value)),
+                    not null when destinationType == typeof(INT) => new INT(Convert.ToInt16(value)),
+                    not null when destinationType == typeof(UINT) => new UINT(Convert.ToUInt16(value)),
+                    not null when destinationType == typeof(DINT) => new DINT(Convert.ToInt32(value)),
+                    not null when destinationType == typeof(UDINT) => new UDINT(Convert.ToUInt32(value)),
+                    not null when destinationType == typeof(LINT) => new LINT(Convert.ToInt64(value)),
+                    not null when destinationType == typeof(ULINT) => new ULINT(Convert.ToUInt64(value)),
+                    not null when destinationType == typeof(REAL) => new REAL(Convert.ToSingle(value)),
+                    not null when destinationType == typeof(string) => value.ToString(),
                     _ => base.ConvertTo(context, culture, value, destinationType!) ??
                          throw new NotSupportedException(
                              $"The provided value of type {value.GetType()} is not supported for conversion.")

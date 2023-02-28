@@ -30,12 +30,10 @@ namespace L5Sharp.Tests.Types
         public void New_Default_ShouldHaveExpectedDefaults()
         {
             var type = new SINT();
-
-            type.Should().NotBeNull();
+            
             type.Name.Should().Be(nameof(SINT).ToUpper());
             type.Class.Should().Be(DataTypeClass.Atomic);
             type.Family.Should().Be(DataTypeFamily.None);
-            //type.Description.Should().Be("Logix representation of a System.SByte");
             type.Should().Be(0);
         }
 
@@ -60,21 +58,20 @@ namespace L5Sharp.Tests.Types
         }
 
         [Test]
-        public void SetValue_ValidType_ShouldBeExpected()
+        [TestCase(0)]
+        [TestCase(1)]
+        [TestCase(-1)]
+        [TestCase(127)]
+        [TestCase(-127)]
+        public void Set_ValidValues_ShouldBeExpectedValue(sbyte value)
         {
-            SINT type = _random;
+            SINT type = value;
 
-            type.Should().Be(_random);
+            type.Should().Be(value);
         }
 
         [Test]
-        public void SetValue_NegativeNumber_ShouldBeExpected()
-        {
-            
-        }
-
-        [Test]
-        public void Format_DefaultRadix_ShouldBeExpected()
+        public void ToString_DefaultRadix_ShouldBeExpected()
         {
             var type = new SINT();
 
@@ -84,37 +81,13 @@ namespace L5Sharp.Tests.Types
         }
         
         [Test]
-        public void Format_OverloadedRadix_ShouldBeExpected()
+        public void ToString_OverloadedRadix_ShouldBeExpected()
         {
             var type = new SINT();
 
             var format = type.ToString(Radix.Binary);
 
             format.Should().Be("2#0000_0000");
-        }
-        
-        [Test]
-        public void ImplicitOperator_Sint_ShouldBeExpected()
-        {
-            SINT type = _random;
-
-            type.Should().Be(_random);
-        }
-
-        [Test]
-        public void ImplicitOperator_byte_ShouldBeExpected()
-        {
-            sbyte value = new SINT(_random);
-
-            value.Should().Be(_random);
-        }
-        
-        [Test]
-        public void Parse_ValidString_ShouldBeExpected()
-        {
-            var type = SINT.Parse(_random.ToString());
-
-            type.Should().Be(_random);
         }
 
         [Test]
@@ -213,11 +186,11 @@ namespace L5Sharp.Tests.Types
         }
         
         [Test]
-        public void ToString_WhenCalled_ShouldBeName()
+        public void ToString_WhenCalled_ShouldBeValue()
         {
             var type = new SINT();
 
-            type.ToString().Should().Be(type.ToString());
+            type.ToString().Should().Be("0");
         }
         
         [Test]

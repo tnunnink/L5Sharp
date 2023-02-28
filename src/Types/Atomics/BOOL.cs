@@ -38,7 +38,14 @@ namespace L5Sharp.Types.Atomics
         public BOOL(string value, Radix? radix = null) : this(radix ?? Radix.Infer(value))
         {
             var converter = TypeDescriptor.GetConverter(GetType());
-            _value = (bool)converter.ConvertFrom(Radix.Parse(value));
+            var converted = converter.ConvertFrom(value);
+
+            _value = converted switch
+            {
+                BOOL b => b,
+                SINT s => s != 1,
+                _ => _value
+            };
         }
 
         /// <summary>
@@ -51,31 +58,31 @@ namespace L5Sharp.Types.Atomics
         }
 
         /// <summary>
-        /// Converts the provided <see cref="bool"/> to a <see cref="BOOL"/> value.
+        /// Implicitly converts the provided <see cref="bool"/> to a <see cref="BOOL"/> value.
         /// </summary>
         /// <param name="value">The value to convert.</param>
         /// <returns>A <see cref="BOOL"/> value.</returns>
         public static implicit operator BOOL(bool value) => new(value);
 
         /// <summary>
-        /// Converts the provided <see cref="BOOL"/> to a <see cref="bool"/> value.
+        /// Implicitly converts the provided <see cref="BOOL"/> to a <see cref="bool"/> value.
         /// </summary>
         /// <param name="atomic">The value to convert.</param>
         /// <returns>A <see cref="bool"/> type value.</returns>
         public static implicit operator bool(BOOL atomic) => atomic._value;
         
         /// <summary>
-        /// Converts the provided <see cref="bool"/> to a <see cref="BOOL"/> value.
+        /// Implicitly converts a <see cref="string"/> to a <see cref="BOOL"/> value.
         /// </summary>
         /// <param name="value">The value to convert.</param>
-        /// <returns>A <see cref="BOOL"/> value.</returns>
+        /// <returns>A new <see cref="BOOL"/> value.</returns>
         public static implicit operator BOOL(string value) => new(value);
         
         /// <summary>
-        /// Converts the provided <see cref="bool"/> to a <see cref="BOOL"/> value.
+        /// Implicitly converts the provided <see cref="BOOL"/> to a <see cref="string"/> value.
         /// </summary>
         /// <param name="value">The value to convert.</param>
-        /// <returns>A <see cref="BOOL"/> value.</returns>
+        /// <returns>A new <see cref="string"/> value.</returns>
         public static implicit operator string(BOOL value) => value.ToString();
 
         /// <inheritdoc />

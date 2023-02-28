@@ -39,11 +39,11 @@ namespace L5Sharp.Serialization
                 Name = element.LogixName(),
                 Description = element.LogixDescription(),
                 Type = element.GetValue<ProgramType>(L5XName.Type),
-                TestEdits = element.ValueOrDefault<bool>(L5XName.TestEdits),
-                MainRoutineName = element.ValueOrDefault<string>(L5XName.MainRoutineName) ?? string.Empty,
-                FaultRoutineName = element.ValueOrDefault<string>(L5XName.FaultRoutineName) ?? string.Empty,
-                Disabled = element.ValueOrDefault<bool>(L5XName.Disabled),
-                UseAsFolder = element.ValueOrDefault<bool>(L5XName.UseAsFolder)
+                TestEdits = element.TryGetValue<bool>(L5XName.TestEdits),
+                MainRoutineName = element.TryGetValue<string>(L5XName.MainRoutineName) ?? string.Empty,
+                FaultRoutineName = element.TryGetValue<string>(L5XName.FaultRoutineName) ?? string.Empty,
+                Disabled = element.TryGetValue<bool>(L5XName.Disabled),
+                UseAsFolder = element.TryGetValue<bool>(L5XName.UseAsFolder)
             };
         }
     }

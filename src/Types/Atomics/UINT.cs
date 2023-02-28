@@ -40,7 +40,7 @@ namespace L5Sharp.Types.Atomics
         public UINT(string value, Radix? radix = null) : this(radix ?? Radix.Infer(value))
         {
             var converter = TypeDescriptor.GetConverter(GetType());
-            _value = (ushort)converter.ConvertFrom(Radix.Parse(value));
+            _value = (ushort)(UINT)converter.ConvertFrom(value)!;
         }
 
         /// <summary>
@@ -66,6 +66,20 @@ namespace L5Sharp.Types.Atomics
         /// <param name="atomic">The value to convert.</param>
         /// <returns>A <see cref="ushort"/> type value.</returns>
         public static implicit operator ushort(UINT atomic) => atomic._value;
+        
+        /// <summary>
+        /// Implicitly converts a <see cref="string"/> to a <see cref="UINT"/> value.
+        /// </summary>
+        /// <param name="value">The value to convert.</param>
+        /// <returns>A new <see cref="UINT"/> value.</returns>
+        public static implicit operator UINT(string value) => new(value);
+        
+        /// <summary>
+        /// Implicitly converts the provided <see cref="UINT"/> to a <see cref="string"/> value.
+        /// </summary>
+        /// <param name="value">The value to convert.</param>
+        /// <returns>A new <see cref="string"/> value.</returns>
+        public static implicit operator UINT(LINT value) => value.ToString();
 
         /// <inheritdoc />
         public bool Equals(UINT? other)

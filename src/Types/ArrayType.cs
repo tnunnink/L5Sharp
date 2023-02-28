@@ -3,10 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using L5Sharp.Attributes;
-using L5Sharp.Common;
 using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Serialization;
+using L5Sharp.Serialization.Data;
 using L5Sharp.Utilities;
 
 namespace L5Sharp.Types
@@ -103,13 +103,13 @@ namespace L5Sharp.Types
         }
 
         /// <inheritdoc />
-        public string Name => _elements.First().Value.Name;
+        public string Name => $"{_elements.FirstOrDefault().Value?.Name}{Dimensions.ToIndex()}";
 
         /// <inheritdoc />
-        public DataTypeFamily Family => _elements.First().Value.Family;
+        public DataTypeFamily Family => _elements.FirstOrDefault().Value?.Family ?? DataTypeFamily.None;
 
         /// <inheritdoc />
-        public DataTypeClass Class => _elements.First().Value.Class;
+        public DataTypeClass Class => _elements.FirstOrDefault().Value?.Class ?? DataTypeClass.Unknown;
 
         /// <summary>
         /// The dimensions value of the <see cref="ArrayType{TLogixType}"/>, indicating the length of the array.
@@ -153,6 +153,25 @@ namespace L5Sharp.Types
         /// </summary>
         /// <returns>A <see cref="IEnumerable{T}"/> containing <see cref="Member"/> object.</returns>
         public IEnumerable<Member> Elements => _elements.Select(e => new Member(e.Key, e.Value));
+
+        /// <summary>
+        /// Created a new <see cref="ArrayType{TDataType}"/> of the specified type with the length of the provided dimensions.
+        /// </summary>
+        /// <param name="dimensions">The dimensions of the array to create.</param>
+        /// <typeparam name="TDataType">The logix type for which to create.
+        /// Must have a default parameterless constructor in order to generate instances.</typeparam>
+        /// <returns>A <see cref="ArrayType{TDataType}"/> of the specified dimensions containing new objects of the specified type.</returns>
+        public static ArrayType<TDataType> New<TDataType>(Dimensions dimensions) where TDataType : ILogixType, new()
+        {
+            return dimensions.Rank switch
+            {
+                1 => new ArrayType<TDataType>(new TDataType[dimensions.X]),
+                2 => new ArrayType<TDataType>(new TDataType[dimensions.X, dimensions.Y]),
+                3 => new ArrayType<TDataType>(new TDataType[dimensions.X, dimensions.Y, dimensions.Z]),
+                _ => throw new ArgumentOutOfRangeException()
+            };
+        }
+            
 
         /// <inheritdoc />
         public override string ToString() => Name;

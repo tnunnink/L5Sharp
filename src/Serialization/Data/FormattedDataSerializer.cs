@@ -4,17 +4,13 @@ using L5Sharp.Enums;
 using L5Sharp.Types;
 using L5Sharp.Utilities;
 
-namespace L5Sharp.Serialization
+namespace L5Sharp.Serialization.Data
 {
     /// <summary>
     /// 
     /// </summary>
     public class FormattedDataSerializer : ILogixSerializer<ILogixType>
     {
-        private readonly DecoratedDataSerializer _decoratedDataSerializer = new();
-        private readonly AlarmDataSerializer _alarmDataSerializer = new();
-        private readonly StringDataSerializer _stringDataSerializer = new();
-
         /// <inheritdoc />
         public XElement Serialize(ILogixType obj)
         {
@@ -23,13 +19,13 @@ namespace L5Sharp.Serialization
             var format = DataFormat.FromDataType(obj);
 
             if (format == DataFormat.Decorated)
-                return _decoratedDataSerializer.Serialize(obj);
+                return TagDataSerializer.DecoratedData.Serialize(obj);
             
             if (format == DataFormat.Alarm)
-                return _alarmDataSerializer.Serialize(obj);
+                return TagDataSerializer.AlarmData.Serialize(obj);
             
             if (format == DataFormat.String)
-                return _stringDataSerializer.Serialize(obj);
+                return TagDataSerializer.StringData.Serialize(obj);
 
             if (format == DataFormat.Message)
                 throw new NotImplementedException();
@@ -45,13 +41,13 @@ namespace L5Sharp.Serialization
             DataFormat.TryFromName(element.Attribute(L5XName.Format)?.Value, out var format);
 
             if (format == DataFormat.Decorated)
-                return _decoratedDataSerializer.Deserialize(element);
+                return TagDataSerializer.DecoratedData.Deserialize(element);
             
             if (format == DataFormat.Alarm)
-                return _alarmDataSerializer.Deserialize(element);
+                return TagDataSerializer.AlarmData.Deserialize(element);
             
             if (format == DataFormat.String)
-                return _stringDataSerializer.Deserialize(element);
+                return TagDataSerializer.StringData.Deserialize(element);
             
             if (format == DataFormat.Message)
                 throw new NotImplementedException();

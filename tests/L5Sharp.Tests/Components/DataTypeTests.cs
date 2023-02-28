@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using FluentAssertions;
-using L5Sharp.Common;
 using L5Sharp.Components;
 using L5Sharp.Core;
 using L5Sharp.Enums;
@@ -46,7 +45,7 @@ namespace L5Sharp.Tests.Components
                     },
                     new()
                     {
-                        Name = "Member02", DataType = "REAL", Dimensions = new Dimensions(10),
+                        Name = "Member02", DataType = "REAL", Dimension = new Dimensions(10),
                         Description = "A test member"
                     },
                     new()

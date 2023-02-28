@@ -38,7 +38,7 @@ namespace L5Sharp.Components
         /// The scan rate (ms) of the task component. Default of 10.
         /// </summary>
         /// <value>>A <see cref="ScanRate"/> value type representing the <see cref="float"/> rate of the task.</value>
-        public ScanRate Rate { get; set; } = new(10);
+        public ScanRate? Rate { get; set; } = new(10);
 
         /// <summary>
         /// The watchdog rate (ms) of the task component. Default of 500.

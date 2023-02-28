@@ -1,11 +1,10 @@
 ﻿using System.Xml.Serialization;
 using L5Sharp.Attributes;
-using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Serialization;
 using L5Sharp.Utilities;
 
-namespace L5Sharp.Common
+namespace L5Sharp.Core
 {
     /// <summary>
     /// A component of the <see cref="DataType"/> that makes up the structure of the user defined type.
@@ -31,7 +30,7 @@ namespace L5Sharp.Common
         /// <summary>
         /// The dimensions of the <see cref="DataTypeMember"/>.
         /// </summary>
-        public Dimensions Dimensions { get; set; } = Dimensions.Empty;
+        public Dimensions Dimension { get; set; } = Dimensions.Empty;
         
         /// <summary>
         /// The radix format of the <see cref="DataTypeMember"/>.

@@ -41,7 +41,7 @@ namespace L5Sharp.Types.Atomics
         public INT(string value, Radix? radix = null) : this(radix ?? Radix.Infer(value))
         {
             var converter = TypeDescriptor.GetConverter(GetType());
-            _value = (short)converter.ConvertFrom(Radix.Parse(value));
+            _value = (short)(INT)converter.ConvertFrom(value)!;
         }
 
         /// <summary>
@@ -67,6 +67,20 @@ namespace L5Sharp.Types.Atomics
         /// <param name="atomic">The value to convert.</param>
         /// <returns>A <see cref="short"/> type value.</returns>
         public static implicit operator short(INT atomic) => atomic._value;
+        
+        /// <summary>
+        /// Implicitly converts a <see cref="string"/> to a <see cref="INT"/> value.
+        /// </summary>
+        /// <param name="value">The value to convert.</param>
+        /// <returns>A new <see cref="INT"/> value.</returns>
+        public static implicit operator INT(string value) => new(value);
+        
+        /// <summary>
+        /// Implicitly converts the provided <see cref="INT"/> to a <see cref="string"/> value.
+        /// </summary>
+        /// <param name="value">The value to convert.</param>
+        /// <returns>A new <see cref="string"/> value.</returns>
+        public static implicit operator string(INT value) => value.ToString();
 
         /// <inheritdoc />
         public bool Equals(INT? other)

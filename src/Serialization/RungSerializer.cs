@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Xml.Linq;
-using L5Sharp.Common;
 using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Extensions;
@@ -37,7 +36,7 @@ namespace L5Sharp.Serialization
             {
                 Number = element.GetValue<int>(L5XName.Number),
                 Type = element.GetValue<RungType>(L5XName.Type),
-                Comment = element.ValueOrDefault<string>(L5XName.Comment) ?? string.Empty,
+                Comment = element.TryGetValue<string>(L5XName.Comment) ?? string.Empty,
                 Text = element.GetValue<NeutralText>(L5XName.Text)
             };
         }

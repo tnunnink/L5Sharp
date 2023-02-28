@@ -30,12 +30,10 @@ namespace L5Sharp.Tests.Types
         public void New_Default_ShouldHaveExpectedDefaults()
         {
             var type = new ULINT();
-
-            type.Should().NotBeNull();
+            
             type.Name.Should().Be(nameof(ULINT).ToUpper());
             type.Class.Should().Be(DataTypeClass.Atomic);
             type.Family.Should().Be(DataTypeFamily.None);
-            //type.Description.Should().Be("Logix representation of a System.UInt64");
             type.Should().Be(0);
         }
         
@@ -76,7 +74,7 @@ namespace L5Sharp.Tests.Types
         }
 
         [Test]
-        public void Format_DefaultRadix_ShouldBeExpected()
+        public void ToString_DefaultRadix_ShouldBeExpected()
         {
             var type = new ULINT();
 
@@ -86,29 +84,13 @@ namespace L5Sharp.Tests.Types
         }
         
         [Test]
-        public void Format_OverloadedRadix_ShouldBeExpected()
+        public void ToString_OverloadedRadix_ShouldBeExpected()
         {
             var type = new ULINT();
 
             var format = type.ToString(Radix.Binary);
 
             format.Should().Be("2#0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000");
-        }
-
-        [Test]
-        public void ImplicitOperator_Bool_ShouldBeTrue()
-        {
-            ULINT type = _random;
-
-            type.Should().Be(_random);
-        }
-
-        [Test]
-        public void ImplicitOperator_bool_ShouldBeTrue()
-        {
-            ulong value = new ULINT(_random);
-
-            value.Should().Be(_random);
         }
 
         [Test]

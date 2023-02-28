@@ -35,7 +35,7 @@ namespace L5Sharp.Types.Atomics.Converters
                     LINT v => new SINT((sbyte)v),
                     ULINT v => new SINT((sbyte)(ulong)v),
                     REAL v => new SINT((sbyte)v),
-                    string v => sbyte.TryParse(v, out var result) ? new SINT(result) : Atomic.Parse<SINT>(v),
+                    string v => sbyte.TryParse(v, out var result) ? new SINT(result) : Radix.Infer(v).Parse(v),
                     _ => base.ConvertFrom(context, culture, value)
                          ?? throw new NotSupportedException(
                              $"The provided value of type {value.GetType()} is not supported for conversion.")

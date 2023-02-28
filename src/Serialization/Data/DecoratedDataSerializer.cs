@@ -6,17 +6,13 @@ using L5Sharp.Extensions;
 using L5Sharp.Types;
 using L5Sharp.Utilities;
 
-namespace L5Sharp.Serialization
+namespace L5Sharp.Serialization.Data
 {
     /// <summary>
     /// A <see cref="ILogixSerializer{T}"/> that serializes <see cref="ILogixType"/> to/from decorated data elements.
     /// </summary>
     public class DecoratedDataSerializer : ILogixSerializer<ILogixType>
     {
-        private readonly DataValueSerializer _dataValueSerializer = new();
-        private readonly ArraySerializer _arraySerializer = new();
-        private readonly StructureSerializer _structureSerializer = new();
-
         /// <inheritdoc />
         public XElement Serialize(ILogixType obj)
         {
@@ -27,11 +23,11 @@ namespace L5Sharp.Serialization
             
             var data = obj switch
             {
-                AtomicType atomicType => _dataValueSerializer.Serialize(atomicType),
-                ArrayType<ILogixType> arrayType => _arraySerializer.Serialize(arrayType),
-                StructureType structureType => _structureSerializer.Serialize(structureType),
+                AtomicType atomicType => TagDataSerializer.DataValue.Serialize(atomicType),
+                ArrayType<ILogixType> arrayType => TagDataSerializer.Array.Serialize(arrayType),
+                StructureType structureType => TagDataSerializer.Structure.Serialize(structureType),
                 _ => throw new ArgumentException(
-                    $"Logix dat type {obj.GetType()} is not valid for the serializer {GetType()}")
+                    $"Logix data type {obj.GetType()} is not valid for the serializer {GetType()}")
             };
             
             element.Add(data);
@@ -43,13 +39,14 @@ namespace L5Sharp.Serialization
         {
             Check.NotNull(element);
 
-            var name = element.Elements().First().Name.ToString();
+            var data = element.Elements().First();
+            var name = data.Name.ToString();
             
             return name switch
             {
-                L5XName.DataValue => _dataValueSerializer.Deserialize(element),
-                L5XName.Array => _arraySerializer.Deserialize(element),
-                L5XName.Structure => _structureSerializer.Deserialize(element),
+                L5XName.DataValue => TagDataSerializer.DataValue.Deserialize(data),
+                L5XName.Array => TagDataSerializer.Array.Deserialize(data),
+                L5XName.Structure => TagDataSerializer.Structure.Deserialize(data),
                 _ => throw new ArgumentException($"Element '{name}' not valid for the serializer {GetType()}.")
             };
         }

@@ -56,21 +56,21 @@ namespace L5Sharp
         /// in the L5X file.
         /// </summary>
         /// <returns>A <see cref="ILogixComponentCollection{TComponent}"/> for <see cref="Tag"/> components</returns>
-        ILogixComponentCollection<Tag> Tags(string scope);
+        ILogixComponentCollection<Tag> Tags(string programName);
 
         /// <summary>
         /// Returns a scoped component collection for querying and manipulating <see cref="Routine"/> components
         /// in the L5X file.
         /// </summary>
         /// <returns>A <see cref="ILogixComponentCollection{TComponent}"/> for <see cref="Routine"/> components</returns>
-        ILogixComponentCollection<Routine> Routines(string scope);
+        ILogixComponentCollection<Routine> Routines(string programName);
 
         /// <summary>
         /// Returns a scoped component collection for querying and manipulating <see cref="TRoutine"/> components
         /// in the L5X file.
         /// </summary>
         /// <returns>A <see cref="ILogixComponentCollection{TComponent}"/> for <see cref="TRoutine"/> components</returns>
-        ILogixComponentCollection<TRoutine> Routines<TRoutine>(string scope) where TRoutine : Routine;
+        ILogixComponentCollection<TRoutine> Routines<TRoutine>(string programName) where TRoutine : Routine;
 
         /// <summary>
         /// Returns a component collection for querying and manipulating <see cref="Tag"/> components

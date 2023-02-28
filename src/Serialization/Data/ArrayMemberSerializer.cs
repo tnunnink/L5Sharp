@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using System.Xml.Linq;
-using L5Sharp.Common;
 using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Extensions;
@@ -8,15 +7,13 @@ using L5Sharp.Types;
 using L5Sharp.Types.Atomics;
 using L5Sharp.Utilities;
 
-namespace L5Sharp.Serialization
+namespace L5Sharp.Serialization.Data
 {
     /// <summary>
     /// A <see cref="ILogixSerializer{T}"/> that serializes <see cref="ArrayType{TLogixType}"/> or array member elements.
     /// </summary>
     public class ArrayMemberSerializer : ILogixSerializer<Member>
     {
-        private readonly StructureSerializer _structureSerializer = new();
-        
         /// <inheritdoc />
         public XElement Serialize(Member obj)
         {
@@ -43,7 +40,7 @@ namespace L5Sharp.Serialization
                         index.AddValue(atomicType, L5XName.Value);
                         break;
                     case StructureType structureType:
-                        index.Add(_structureSerializer.Serialize(structureType));
+                        index.Add(TagDataSerializer.Structure.Serialize(structureType));
                         break;
                 }
 
@@ -61,7 +58,7 @@ namespace L5Sharp.Serialization
             var name = element.GetValue<string>(L5XName.Name);
             var dataType = element.GetValue<string>(L5XName.DataType);
             var dimensions = element.GetValue<Dimensions>(L5XName.Dimensions);
-            var radix = element.ValueOrDefault<Radix>(L5XName.Radix);
+            var radix = element.TryGetValue<Radix>(L5XName.Radix);
 
             var elements = element.Elements().Select(e =>
             {
@@ -69,7 +66,7 @@ namespace L5Sharp.Serialization
                     return Atomic.Parse(dataType, e.GetValue<string>(L5XName.Value), radix);
 
                 return e.Element(L5XName.Structure) is not null
-                    ? _structureSerializer.Deserialize(e.Element(L5XName.Structure)!)
+                    ? TagDataSerializer.Structure.Deserialize(e.Element(L5XName.Structure)!)
                     : LogixType.Null;
             });
 

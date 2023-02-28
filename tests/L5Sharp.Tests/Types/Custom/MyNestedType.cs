@@ -12,14 +12,20 @@ namespace L5Sharp.Tests.Types.Custom
     {
         public MyNestedType() : base(nameof(MyNestedType))
         {
+            Messages = new[] { new MESSAGE(), new MESSAGE(), new MESSAGE(), new MESSAGE(), new MESSAGE() };
         }
 
         public BOOL Indy { get; set; } = new();
         public STRING Str { get; set; } = new();
         public TIMER Tmr { get; } = new();
         public MySimpleType Simple { get; } = new();
-        public BOOL[] Flags { get; } = new BOOL[10];
-        public MESSAGE[] Messages { get; } = new MESSAGE[5];
+
+        public BOOL[] Flags { get; } =
+        {
+            new(), new(), new(), new(), new(), new(), new(), new(), new(), new()
+        };
+
+        public MESSAGE[] Messages { get; }
 
         public override DataTypeClass Class => DataTypeClass.User;
     }

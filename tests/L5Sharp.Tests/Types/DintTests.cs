@@ -77,6 +77,17 @@ namespace L5Sharp.Tests.Types
 
             format.Should().Be("2#0000_0000_0000_0000_0000_0000_0000_0000");
         }
+        
+        [Test]
+        [TestCase(0)]
+        [TestCase(1)]
+        [TestCase(-1)]
+        public void Set_Values_ShouldBeValue(int value)
+        {
+            DINT type = value;
+
+            type.Should().Be(value);
+        }
 
         [Test]
         public void Set_Random_ShouldBeExpected()
@@ -85,6 +96,7 @@ namespace L5Sharp.Tests.Types
 
             value.Should().Be(_random);
         }
+
 
         [Test]
         public void Set_Atomic_ShouldBeExpected()

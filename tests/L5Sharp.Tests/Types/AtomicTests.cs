@@ -65,7 +65,7 @@ namespace L5Sharp.Tests.Types
 
             var parsed = Atomic.Parse(value);
 
-            parsed.Should().Be(5);
+            parsed.ToString().Should().Be("5");
         }
 
         [Test]

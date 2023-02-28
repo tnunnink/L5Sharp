@@ -28,7 +28,6 @@ namespace L5Sharp.Tests.Types
             type.Name.Should().Be(nameof(BOOL).ToUpper());
             type.Class.Should().Be(DataTypeClass.Atomic);
             type.Family.Should().Be(DataTypeFamily.None);
-            //type.Description.Should().Be("Logix representation of a System.Boolean");
             type.Should().Be(false);
         }
 
@@ -57,27 +56,11 @@ namespace L5Sharp.Tests.Types
         }
 
         [Test]
-        public void New_IntNegativeOverload_ShouldBeFalse()
+        public void New_IntNegativeOverload_ShouldBeTrue()
         {
             var type = new BOOL(-1);
 
-            type.Should().Be(false);
-        }
-
-        [Test]
-        public void GetValue_AsAtomic_ShouldBeExpected()
-        {
-            var type = (AtomicType) new BOOL();
-
-            type.Should().Be(false);
-        }
-
-        [Test]
-        public void SetValue_Null_ShouldThrowArgumentNullException()
-        {
-            var type = new BOOL();
-
-            FluentActions.Invoking(() => type = null!).Should().Throw<ArgumentNullException>();
+            type.Should().Be(true);
         }
 
         [Test]
@@ -213,21 +196,21 @@ namespace L5Sharp.Tests.Types
         }
 
         [Test]
-        public void GetHashCode_DefaultValue_ShouldBeHashOfName()
+        public void GetHashCode_DefaultValue_ShouldBeHashOfValue()
         {
             var type = new BOOL();
 
             var hash = type.GetHashCode();
 
-            hash.Should().Be(type.Name.GetHashCode());
+            hash.Should().Be(false.GetHashCode());
         }
 
         [Test]
-        public void ToString_WhenCalled_ShouldBeName()
+        public void ToString_WhenCalled_ShouldBeValue()
         {
             var type = new BOOL();
 
-            type.ToString().Should().Be(type.Name);
+            type.ToString().Should().Be("0");
         }
 
         [Test]

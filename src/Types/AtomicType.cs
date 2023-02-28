@@ -2,6 +2,7 @@
 using L5Sharp.Attributes;
 using L5Sharp.Enums;
 using L5Sharp.Serialization;
+using L5Sharp.Serialization.Data;
 
 namespace L5Sharp.Types
 {

@@ -5,7 +5,7 @@ using L5Sharp.Extensions;
 using L5Sharp.Types;
 using L5Sharp.Utilities;
 
-namespace L5Sharp.Serialization
+namespace L5Sharp.Serialization.Data
 {
     /// <summary>
     /// A <see cref="ILogixSerializer{T}"/> that serializes <see cref="StringType"/> structures. This serializer is for

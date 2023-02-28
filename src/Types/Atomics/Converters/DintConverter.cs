@@ -26,16 +26,16 @@ namespace L5Sharp.Types.Atomics.Converters
                     long v => new DINT((int)v),
                     ulong v => new DINT((int)v),
                     float v => new DINT((int)v),
-                    SINT v => new DINT(v),
+                    SINT v => new DINT((sbyte)v),
                     USINT v => new DINT(v),
-                    INT v => new DINT(v),
+                    INT v => new DINT((short)v),
                     UINT v => new DINT(v),
                     DINT v => v,
                     UDINT v => new DINT((int)(uint)v),
                     LINT v => new DINT((int)v),
                     ULINT v => new DINT((int)(ulong)v),
                     REAL v => new DINT((int)v),
-                    string v => new DINT(v),
+                    string v => int.TryParse(v, out var result) ? new DINT(result) : Radix.Infer(v).Parse(v),
                     _ => base.ConvertFrom(context, culture, value)
                          ?? throw new NotSupportedException(
                              $"The provided value of type {value.GetType()} is not supported for conversion.")

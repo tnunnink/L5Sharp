@@ -40,7 +40,7 @@ namespace L5Sharp.Types.Atomics
         public LINT(string value, Radix? radix = null) : this(radix ?? Radix.Infer(value))
         {
             var converter = TypeDescriptor.GetConverter(GetType());
-            _value = (long)converter.ConvertFrom(Radix.Parse(value));
+            _value = (long)(LINT)converter.ConvertFrom(value)!;
         }
 
         /// <summary>
@@ -68,17 +68,17 @@ namespace L5Sharp.Types.Atomics
         public static implicit operator long(LINT atomic) => atomic._value;
         
         /// <summary>
-        /// Converts the provided <see cref="bool"/> to a <see cref="LINT"/> value.
+        /// Implicitly converts a <see cref="string"/> to a <see cref="LINT"/> value.
         /// </summary>
         /// <param name="value">The value to convert.</param>
-        /// <returns>A <see cref="LINT"/> value.</returns>
+        /// <returns>A new <see cref="LINT"/> value.</returns>
         public static implicit operator LINT(string value) => new(value);
         
         /// <summary>
-        /// Converts the provided <see cref="bool"/> to a <see cref="LINT"/> value.
+        /// Implicitly converts the provided <see cref="LINT"/> to a <see cref="string"/> value.
         /// </summary>
         /// <param name="value">The value to convert.</param>
-        /// <returns>A <see cref="LINT"/> value.</returns>
+        /// <returns>A new <see cref="string"/> value.</returns>
         public static implicit operator string(LINT value) => value.ToString();
 
         /// <inheritdoc />

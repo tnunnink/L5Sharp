@@ -48,9 +48,9 @@ namespace L5Sharp.Serialization
             {
                 Name = element.LogixName(),
                 Type = element.GetValue<TaskType>(L5XName.Type),
-                Rate = element.ValueOrDefault<ScanRate?>(L5XName.Rate) ?? default,
-                Priority = element.ValueOrDefault<TaskPriority?>(L5XName.Priority) ?? default,
-                Watchdog = element.ValueOrDefault<Watchdog?>(L5XName.Watchdog) ?? default,
+                Rate = element.TryGetValue<ScanRate?>(L5XName.Rate) ?? new ScanRate(),
+                Priority = element.GetValue<TaskPriority>(L5XName.Priority),
+                Watchdog = element.GetValue<Watchdog>(L5XName.Watchdog),
                 DisableUpdateOutputs = element.GetValue<bool>(L5XName.DisableUpdateOutputs),
                 InhibitTask = element.GetValue<bool>(L5XName.InhibitTask),
                 ScheduledPrograms = element.Descendants(L5XName.ScheduledProgram).Select(p => p.LogixName()).ToList()

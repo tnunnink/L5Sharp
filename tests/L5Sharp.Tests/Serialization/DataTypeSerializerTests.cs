@@ -5,7 +5,6 @@ using System.Xml.Linq;
 using ApprovalTests;
 using ApprovalTests.Reporters;
 using FluentAssertions;
-using L5Sharp.Common;
 using L5Sharp.Components;
 using L5Sharp.Core;
 using L5Sharp.Enums;
@@ -136,7 +135,7 @@ namespace L5Sharp.Tests.Serialization
             boolMember.Should().NotBeNull();
             boolMember?.Name.Should().Be("BoolMember");
             boolMember?.DataType.Should().Be("BIT");
-            boolMember?.Dimensions.Should().Be(Dimensions.Empty);
+            boolMember?.Dimension.Should().Be(Dimensions.Empty);
             boolMember?.Radix.Should().Be(Radix.Hex);
             boolMember?.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);
             boolMember?.Description.Should().Be("Test Boolean update");
@@ -153,7 +152,7 @@ namespace L5Sharp.Tests.Serialization
             member.Should().NotBeNull();
             member?.Name.Should().Be("SintMember");
             member?.DataType.Should().Be("SINT");
-            member?.Dimensions.Should().Be(Dimensions.Empty);
+            member?.Dimension.Should().Be(Dimensions.Empty);
             member?.Radix.Should().Be(Radix.Decimal);
             member?.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);
             member?.Description.Should().Be("Test Sint");
@@ -170,7 +169,7 @@ namespace L5Sharp.Tests.Serialization
             member.Should().NotBeNull();
             member?.Name.Should().Be("IntMember");
             member?.DataType.Should().Be("INT");
-            member?.Dimensions.Should().Be(Dimensions.Empty);
+            member?.Dimension.Should().Be(Dimensions.Empty);
             member?.Radix.Should().Be(Radix.Decimal);
             member?.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);
             member?.Description.Should().Be("Test Int");
@@ -187,7 +186,7 @@ namespace L5Sharp.Tests.Serialization
             member.Should().NotBeNull();
             member?.Name.Should().Be("DintMember");
             member?.DataType.Should().Be("DINT");
-            member?.Dimensions.Should().Be(Dimensions.Empty);
+            member?.Dimension.Should().Be(Dimensions.Empty);
             member?.Radix.Should().Be(Radix.Octal);
             member?.ExternalAccess.Should().Be(ExternalAccess.None);
             member?.Description.Should().Be("Test Dint comment");
@@ -204,7 +203,7 @@ namespace L5Sharp.Tests.Serialization
             member.Should().NotBeNull();
             member?.Name.Should().Be("LintMember");
             member?.DataType.Should().Be("LINT");
-            member?.Dimensions.Should().Be(Dimensions.Empty);
+            member?.Dimension.Should().Be(Dimensions.Empty);
             member?.Radix.Should().Be(Radix.Decimal);
             member?.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);
             member?.Description.Should().Be("Test Lint");

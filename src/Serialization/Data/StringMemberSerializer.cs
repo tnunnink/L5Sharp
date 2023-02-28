@@ -1,12 +1,12 @@
 ﻿using System.Linq;
 using System.Xml.Linq;
-using L5Sharp.Common;
+using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Extensions;
 using L5Sharp.Types;
 using L5Sharp.Utilities;
 
-namespace L5Sharp.Serialization
+namespace L5Sharp.Serialization.Data
 {
     /// <summary>
     /// A <see cref="ILogixSerializer{T}"/> that serializes <see cref="Member"/> whose type is a <see cref="StringType"/>

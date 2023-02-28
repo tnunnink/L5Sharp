@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
 using L5Sharp.Core;
+using L5Sharp.Enums;
 using L5Sharp.Types;
 using L5Sharp.Types.Atomics;
 using L5Sharp.Types.Predefined;
@@ -22,8 +23,19 @@ namespace L5Sharp.Tests.Types
             var array = new ArrayType<DINT>(SingleDintArray);
 
             array.Should().NotBeNull();
+        }
 
-            var atomic = new ArrayType<AtomicType>(new Dimensions(10), new List<AtomicType>());
+        [Test]
+        public void New_SimpleArray_ShouldHaveExpectedProperties()
+        {
+            var array = new ArrayType<DINT>(SingleDintArray);
+
+            array.Dimensions.Length.Should().Be(3);
+            array.Name.Should().Be("DINT[3]");
+            array.Family.Should().Be(DataTypeFamily.None);
+            array.Class.Should().Be(DataTypeClass.Atomic);
+            array.IsAtomic.Should().BeTrue();
+            array.IsStructure.Should().BeFalse();
         }
 
         [Test]
@@ -52,6 +64,22 @@ namespace L5Sharp.Tests.Types
             var array = new ArrayType<ILogixType>(new ILogixType[10, 10]);
 
             array.Dimensions.Length.Should().Be(100);
+        }
+        
+        [Test]
+        public void New_ThreeDimensional_ShouldNotBeNull()
+        {
+            var array = new ArrayType<ILogixType>(new ILogixType[10, 10]);
+
+            array.Should().NotBeNull();
+        }
+        
+        [Test]
+        public void New_ThreeDimensional_ShouldHaveExpectedLength()
+        {
+            var array = new ArrayType<ILogixType>(new ILogixType[10, 10, 10]);
+
+            array.Dimensions.Length.Should().Be(1000);
         }
     }
 }

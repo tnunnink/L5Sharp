@@ -5,7 +5,6 @@ using System.Linq;
 using System.Xml.Linq;
 using L5Sharp.Extensions;
 using L5Sharp.Serialization;
-using L5Sharp.Utilities;
 
 namespace L5Sharp
 {
@@ -17,6 +16,7 @@ namespace L5Sharp
         where TComponent : ILogixComponent
     {
         private readonly XContainer _container;
+        private readonly L5X _l5X;
         private readonly XName _name;
         private readonly ILogixSerializer<TComponent> _serializer;
 
@@ -24,9 +24,11 @@ namespace L5Sharp
         /// Creates a new collection over the provided <see cref="XContainer"/>.
         /// </summary>
         /// <param name="container">The root container element containing the specified component type.</param>
-        public ComponentCollection(XContainer container)
+        /// <param name="l5X">The <see cref="L5X"/> content element.</param>
+        internal ComponentCollection(XContainer container, L5X l5X)
         {
-            _container = container;
+            _container = container ?? throw new ArgumentNullException(nameof(container));
+            _l5X = l5X ?? throw new ArgumentNullException(nameof(l5X));
             _name = typeof(TComponent).GetLogixName();
             _serializer = LogixSerializer.GetSerializer<TComponent>();
         }
@@ -34,16 +36,17 @@ namespace L5Sharp
         /// <inheritdoc />
         public void Add(TComponent component)
         {
+            if (component is null)
+                throw new ArgumentNullException(nameof(component));
+            
             if (!component.Name.IsValidComponentName())
                 throw new ArgumentException($"The provided component name '{component.Name}' is not valid.");
 
             if (_container.Elements().Any(e => e.LogixName() == component.Name))
                 throw new InvalidOperationException(
                     $"A component with the same name '{component.Name}' already exists in the collection.");
-
-            //todo validate xml?
-            //the easiest thing to do is define or have schema ready to validate against.
-            //we would also have to do this for Replace.
+            
+            //todo we need to figure out if container is null, and if so, we need to create/normalize the L5X
 
             _container.Add(component);
         }
@@ -61,7 +64,11 @@ namespace L5Sharp
         /// <inheritdoc />
         public TComponent Get(string name)
         {
-            var result = _container.Descendants(_name).Single(e => e.LogixName() == name);
+            var result = _container.Descendants(_name).SingleOrDefault(e => e.LogixName() == name);
+
+            if (result is null)
+                throw new InvalidOperationException($"No component with name '{name}' was found in the collection.");
+            
             return _serializer.Deserialize(result);
         }
 
@@ -77,6 +84,9 @@ namespace L5Sharp
         /// <inheritdoc />
         public bool Replace(TComponent component)
         {
+            if (component is null)
+                throw new ArgumentNullException(nameof(component));
+                    
             var target = _container.Descendants(_name).SingleOrDefault(c => c.LogixName() == component.Name);
             if (target is null) return false;
             target.ReplaceWith(component);

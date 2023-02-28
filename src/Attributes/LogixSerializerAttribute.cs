@@ -19,7 +19,8 @@ namespace L5Sharp.Attributes
             if (type is null)
                 throw new ArgumentNullException(nameof(type));
 
-            if (!typeof(ILogixSerializer<>).IsAssignableFrom(type))
+            if (!type.GetInterfaces()
+                    .Any(x => x.IsGenericType && x.GetGenericTypeDefinition() == typeof(ILogixSerializer<>)))
                 throw new ArgumentException(
                     $"The specified type {type} does not implement {typeof(ILogixSerializer<>)}");
 

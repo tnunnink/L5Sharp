@@ -1,17 +1,20 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Xml.Linq;
-using L5Sharp.Common;
+using L5Sharp.Components;
+using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Extensions;
+using L5Sharp.Serialization.Data;
 using L5Sharp.Utilities;
 
 namespace L5Sharp.Serialization
 {
-    internal class ModuleConnectionSerializer : ILogixSerializer<ModuleConnection>
+    /// <summary>
+    /// A logix serializer that performs serialization of <see cref="ModuleConnection"/> components.
+    /// </summary>
+    public class ModuleConnectionSerializer : ILogixSerializer<ModuleConnection>
     {
-        private readonly DecoratedDataSerializer _dataSerializer = new();
-
+        /// <inheritdoc />
         public XElement Serialize(ModuleConnection obj)
         {
             Check.NotNull(obj);
@@ -36,7 +39,7 @@ namespace L5Sharp.Serialization
             {
                 var input = new XElement(L5XName.InputTag);
                 input.AddValue(obj.Input.ExternalAccess, L5XName.ExternalAccess);
-                input.Add(_dataSerializer.Serialize(obj.Input.Data));
+                input.Add(TagDataSerializer.DecoratedData.Serialize(obj.Input.Data));
                 element.Add(input);
             }
 
@@ -44,7 +47,7 @@ namespace L5Sharp.Serialization
             {
                 var output = new XElement(L5XName.OutputTag);
                 output.AddValue(obj.Output.ExternalAccess, L5XName.ExternalAccess);
-                output.Add(_dataSerializer.Serialize(obj.Output.Data));
+                output.Add(TagDataSerializer.DecoratedData.Serialize(obj.Output.Data));
                 element.Add(output);
             }
 
@@ -56,34 +59,51 @@ namespace L5Sharp.Serialization
         {
             Check.NotNull(element);
 
-            var input = element.Descendants(L5XName.InputTag).FirstOrDefault()?.Elements(L5XName.Data)
-                .FirstOrDefault(e => e.Attribute(L5XName.Format)?.Value == DataFormat.Decorated);
+            //first we try to deserialize the connection input and output tags since it is more involved.
+            var inputSuffix = element.TryGetValue<string>(L5XName.InputTagSuffix) ?? "I";
+            var input = DeserializeTag(element, L5XName.InputTag, inputSuffix);
 
-            if (input is not null)
-            {
-                var inputData = _dataSerializer.Deserialize(input);
-            }
+            var outputSuffix = element.TryGetValue<string>(L5XName.OutputTagSuffix) ?? "O";
+            var output = DeserializeTag(element, L5XName.OutputTag, outputSuffix);
 
 
             return new ModuleConnection
             {
                 Name = element.LogixName(),
-                Rpi = element.ValueOrDefault<int?>(L5XName.RPI) ?? default,
-                InputCxnPoint = element.ValueOrDefault<ushort?>(L5XName.InputCxnPoint) ?? default,
-                InputSize = element.ValueOrDefault<ushort?>(L5XName.InputSize) ?? default,
-                OutputCxnPoint = element.ValueOrDefault<ushort?>(L5XName.OutputCxnPoint) ?? default,
-                OutputSize = element.ValueOrDefault<ushort?>(L5XName.OutputSize) ?? default,
-                Type = element.ValueOrDefault<ConnectionType>(L5XName.Type) ?? ConnectionType.Unknown,
-                Priority = element.ValueOrDefault<ConnectionPriority>(L5XName.Priority) ?? ConnectionPriority.Scheduled,
-                InputConnectionType = element.ValueOrDefault<TransmissionType>(L5XName.InputConnectionType) ??
+                Rpi = element.TryGetValue<int?>(L5XName.RPI) ?? default,
+                InputCxnPoint = element.TryGetValue<ushort?>(L5XName.InputCxnPoint) ?? default,
+                InputSize = element.TryGetValue<ushort?>(L5XName.InputSize) ?? default,
+                OutputCxnPoint = element.TryGetValue<ushort?>(L5XName.OutputCxnPoint) ?? default,
+                OutputSize = element.TryGetValue<ushort?>(L5XName.OutputSize) ?? default,
+                Type = element.TryGetValue<ConnectionType>(L5XName.Type) ?? ConnectionType.Unknown,
+                Priority = element.TryGetValue<ConnectionPriority>(L5XName.Priority) ?? ConnectionPriority.Scheduled,
+                InputConnectionType = element.TryGetValue<TransmissionType>(L5XName.InputConnectionType) ??
                                       TransmissionType.Multicast,
-                OutputRedundantOwner = element.ValueOrDefault<bool?>(L5XName.OutputRedundantOwner) ?? default,
-                InputProductionTrigger = element.ValueOrDefault<ProductionTrigger>(L5XName.InputConnectionType) ??
+                OutputRedundantOwner = element.TryGetValue<bool?>(L5XName.OutputRedundantOwner) ?? default,
+                InputProductionTrigger = element.TryGetValue<ProductionTrigger>(L5XName.InputProductionTrigger) ??
                                          ProductionTrigger.Cyclic,
-                Unicast = element.ValueOrDefault<bool?>(L5XName.Unicast) ?? default,
-                EventId = element.ValueOrDefault<int?>(L5XName.EventId) ?? default,
-                InputTagSuffix = element.ValueOrDefault<string>(L5XName.InputTagSuffix) ?? "I",
-                OutputTagSuffix = element.ValueOrDefault<string>(L5XName.OutputTagSuffix) ?? "O",
+                Unicast = element.TryGetValue<bool?>(L5XName.Unicast) ?? default,
+                EventId = element.TryGetValue<int?>(L5XName.EventId) ?? default,
+                InputTagSuffix = element.TryGetValue<string>(L5XName.InputTagSuffix) ?? "I",
+                OutputTagSuffix = element.TryGetValue<string>(L5XName.OutputTagSuffix) ?? "O",
+                Input = input,
+                Output = output
+            };
+        }
+
+        private static Tag? DeserializeTag(XElement element, XName tagName, string suffix)
+        {
+            var tag = element.Descendants(tagName).FirstOrDefault();
+            var data = tag?.Elements(L5XName.Data)
+                .FirstOrDefault(e => e.Attribute(L5XName.Format)?.Value == DataFormat.Decorated);
+
+            if (tag is null || data is null) return null;
+
+            return new Tag
+            {
+                Name = tag.ModuleTagName(suffix),
+                Data = TagDataSerializer.DecoratedData.Deserialize(data),
+                ExternalAccess = element.TryGetValue<ExternalAccess>(L5XName.ExternalAccess) ?? ExternalAccess.ReadWrite
             };
         }
     }

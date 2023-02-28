@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using L5Sharp.Common;
+using L5Sharp.Attributes;
 using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Extensions;
+using L5Sharp.Serialization;
 using L5Sharp.Types;
 
 namespace L5Sharp.Components
@@ -16,6 +17,7 @@ namespace L5Sharp.Components
     /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
     /// `Logix 5000 Controllers Import/Export`</a> for more information.
     /// </footer>
+    [LogixSerializer(typeof(TagSerializer))]
     public class Tag : ILogixComponent, ILogixTag
     {
         /// <inheritdoc />
@@ -38,7 +40,7 @@ namespace L5Sharp.Components
 
         /// <inheritdoc />
         public Radix Radix => Data is AtomicType atomic ? atomic.Radix : Radix.Null;
-        
+
         /// <inheritdoc />
         public MemberType MemberType => MemberType.FromType(Data);
 
@@ -67,7 +69,7 @@ namespace L5Sharp.Components
         public TagName AliasFor { get; set; } = TagName.Empty;
 
         /// <summary>
-        /// The flag indicating whether the tag is a constant.
+        /// Indicates whether the tag is a constant.
         /// </summary>
         /// <value><c>true</c> if the tag is constant; otherwise, <c>false</c>.</value>
         /// <remarks>Only value type tags have the ability to be set as a constant. Default is <c>false</c>.</remarks>
@@ -84,12 +86,15 @@ namespace L5Sharp.Components
         /// </summary>
         /// <value>A <see cref="Dictionary{TKey,TValue}"/> of <see cref="Core.TagName"/>, <see cref="string"/> pairs.</value>
         public Dictionary<TagName, string> Units { get; set; } = new();
-        
+
         /// <inheritdoc />
         public TagMember? Member(TagName tagName)
         {
             var member = Data.FindMember(tagName);
-            return member is not null ? new TagMember(tagName, member.DataType, this) : null;
+
+            return member is not null
+                ? new TagMember(TagName.Combine(TagName, tagName), member.DataType, this)
+                : null;
         }
 
         /// <inheritdoc />
@@ -117,7 +122,7 @@ namespace L5Sharp.Components
             {
                 var tagName = TagName.Combine(TagName, member.Name);
                 var tagMember = new TagMember(tagName, member.DataType, this);
-                
+
                 if (predicate.Invoke(tagMember.TagName))
                     members.Add(tagMember);
 
@@ -136,7 +141,7 @@ namespace L5Sharp.Components
             {
                 var tagName = TagName.Combine(TagName, member.Name);
                 var tagMember = new TagMember(tagName, member.DataType, this);
-                
+
                 if (predicate.Invoke(tagMember))
                     members.Add(tagMember);
 
@@ -150,7 +155,11 @@ namespace L5Sharp.Components
         public IEnumerable<TagMember> MembersOf(TagName tagName)
         {
             var member = Data.FindMember(tagName);
-            var tagMember = member is not null ? new TagMember(tagName, member.DataType, this) : null;
+            
+            var tagMember = member is not null
+                ? new TagMember(TagName.Combine(TagName, tagName), member.DataType, this)
+                : null;
+            
             return tagMember is not null ? tagMember.Members() : Enumerable.Empty<TagMember>();
         }
 

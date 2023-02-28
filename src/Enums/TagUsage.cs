@@ -1,10 +1,11 @@
 ﻿using Ardalis.SmartEnum;
+using L5Sharp.Components;
 using L5Sharp.Types;
 
 namespace L5Sharp.Enums
 {
     /// <summary>
-    /// Represents an enumeration of all Logix <see cref="TagUsage"/> options for a given <see cref="ITag{TDataType}"/>.
+    /// Represents an enumeration of all Logix <see cref="TagUsage"/> options for a given <see cref="Tag"/>.
     /// </summary>
     public class TagUsage : SmartEnum<TagUsage, string>
     {

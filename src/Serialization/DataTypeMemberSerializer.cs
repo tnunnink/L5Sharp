@@ -1,5 +1,4 @@
 ﻿using System.Xml.Linq;
-using L5Sharp.Common;
 using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Extensions;
@@ -21,7 +20,7 @@ namespace L5Sharp.Serialization
             element.AddValue(obj, m => m.Name);
             element.AddText(obj, m => m.Description);
             element.AddValue(obj, m => m.DataType);
-            element.AddValue(obj, m => m.Dimensions);
+            element.AddValue(obj, m => m.Dimension);
             element.AddValue(obj, m => m.Radix);
             element.AddValue(obj, m => m.ExternalAccess);
             
@@ -38,7 +37,7 @@ namespace L5Sharp.Serialization
                 Name = element.LogixName(),
                 Description = element.LogixDescription(),
                 DataType = element.GetValue<string>(L5XName.DataType),
-                Dimensions = element.GetValue<Dimensions>(L5XName.Dimensions),
+                Dimension = element.GetValue<Dimensions>(L5XName.Dimension),
                 Radix = element.GetValue<Radix>(L5XName.Radix),
                 ExternalAccess = element.GetValue<ExternalAccess>(L5XName.ExternalAccess)
             };

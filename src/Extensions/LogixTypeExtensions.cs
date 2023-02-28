@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using L5Sharp.Common;
 using L5Sharp.Core;
 using L5Sharp.Types;
 using L5Sharp.Utilities;
@@ -45,14 +44,14 @@ namespace L5Sharp.Extensions
             {
                 Check.NotNullOrEmpty(tagName);
 
-                var memberName = tagName.Members.First();
+                var memberName = tagName.First();
 
                 var member = logixType.FindMembers().SingleOrDefault(m =>
                     string.Equals(m.Name, memberName, StringComparison.OrdinalIgnoreCase));
 
                 if (member is null) return null;
 
-                var remaining = TagName.Combine(tagName.Members.Skip(1));
+                var remaining = TagName.Combine(tagName.Skip(1));
                 if (remaining.IsEmpty) return member;
                 
                 logixType = member.DataType;
