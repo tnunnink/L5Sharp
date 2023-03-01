@@ -36,7 +36,7 @@ namespace L5Sharp.Components
         /// An enum value indicating the class for which the current data type belongs.
         /// This could be atomic, user, predefined, etc.
         /// </value>
-        public DataTypeClass Class => DataTypeClass.User;
+        public DataTypeClass Class { get; set; } = DataTypeClass.User;
 
         /// <summary>
         /// A collection of <see cref="DataTypeMember"/> objects that together make up the structure of the

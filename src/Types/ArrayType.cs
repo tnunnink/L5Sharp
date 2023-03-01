@@ -5,7 +5,6 @@ using System.Linq;
 using L5Sharp.Attributes;
 using L5Sharp.Core;
 using L5Sharp.Enums;
-using L5Sharp.Serialization;
 using L5Sharp.Serialization.Data;
 using L5Sharp.Utilities;
 
@@ -50,6 +49,10 @@ namespace L5Sharp.Types
         {
             ValidateArray(elements);
 
+            if (elements.Any(e => e is null))
+                throw new ArgumentException(
+                    "The provided array has null objects. Can not instantiate a ArrayType with null values.");
+
             var x = (ushort)elements.Length;
 
             Dimensions = new Dimensions(x);
@@ -69,6 +72,7 @@ namespace L5Sharp.Types
         public ArrayType(TLogixType[,] elements)
         {
             ValidateArray(elements);
+            
 
             var x = (ushort)elements.GetLength(0);
             var y = (ushort)elements.GetLength(1);
@@ -153,25 +157,6 @@ namespace L5Sharp.Types
         /// </summary>
         /// <returns>A <see cref="IEnumerable{T}"/> containing <see cref="Member"/> object.</returns>
         public IEnumerable<Member> Elements => _elements.Select(e => new Member(e.Key, e.Value));
-
-        /// <summary>
-        /// Created a new <see cref="ArrayType{TDataType}"/> of the specified type with the length of the provided dimensions.
-        /// </summary>
-        /// <param name="dimensions">The dimensions of the array to create.</param>
-        /// <typeparam name="TDataType">The logix type for which to create.
-        /// Must have a default parameterless constructor in order to generate instances.</typeparam>
-        /// <returns>A <see cref="ArrayType{TDataType}"/> of the specified dimensions containing new objects of the specified type.</returns>
-        public static ArrayType<TDataType> New<TDataType>(Dimensions dimensions) where TDataType : ILogixType, new()
-        {
-            return dimensions.Rank switch
-            {
-                1 => new ArrayType<TDataType>(new TDataType[dimensions.X]),
-                2 => new ArrayType<TDataType>(new TDataType[dimensions.X, dimensions.Y]),
-                3 => new ArrayType<TDataType>(new TDataType[dimensions.X, dimensions.Y, dimensions.Z]),
-                _ => throw new ArgumentOutOfRangeException()
-            };
-        }
-            
 
         /// <inheritdoc />
         public override string ToString() => Name;

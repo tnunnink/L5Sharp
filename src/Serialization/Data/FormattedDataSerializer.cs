@@ -52,7 +52,7 @@ namespace L5Sharp.Serialization.Data
             if (format == DataFormat.Message)
                 throw new NotImplementedException();
 
-            return LogixType.Null;
+            return Logix.Null;
         }
     }
 }

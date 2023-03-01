@@ -1,17 +1,12 @@
-﻿using System;
-using System.Xml.Linq;
-using ApprovalTests;
-using ApprovalTests.Reporters;
+﻿using System.Xml.Linq;
 using FluentAssertions;
-using L5Sharp.Components;
 using L5Sharp.Core;
 using L5Sharp.Enums;
-using L5Sharp.Types;
+using L5Sharp.Serialization;
 using L5Sharp.Types.Atomics;
 using L5Sharp.Types.Predefined;
-using NUnit.Framework;
 
-namespace L5Sharp.Serialization.Tests
+namespace L5Sharp.Tests.Serialization
 {
     [TestFixture]
     public class ParameterSerializerTests
@@ -33,7 +28,7 @@ namespace L5Sharp.Serialization.Tests
         [Test]
         public void Serialize_WhenCalled_ShouldNotBeNull()
         {
-            var parameter = new Parameter<IDataType>("Test", new BOOL());
+            var parameter = new Parameter { Name = "Test", DataType = nameof(BOOL) };
 
             var xml = _serializer.Serialize(parameter);
 
@@ -41,48 +36,54 @@ namespace L5Sharp.Serialization.Tests
         }
 
         [Test]
-        [UseReporter(typeof(DiffReporter))]
-        public void Serialize_Basic_ShouldBeApproved()
+        public Task Serialize_Basic_ShouldBeApproved()
         {
-            var parameter = new Parameter<IDataType>("Test", new BOOL());
+            var parameter = new Parameter { Name = "Test", DataType = nameof(BOOL) };
 
             var xml = _serializer.Serialize(parameter);
 
-            Approvals.VerifyXml(xml.ToString());
+            return Verify(xml.ToString());
         }
 
         [Test]
-        [UseReporter(typeof(DiffReporter))]
-        public void Serialize_OverLoaded_ShouldBeApproved()
+        public Task Serialize_OverLoaded_ShouldBeApproved()
         {
-            var parameter = new Parameter<IDataType>("Test", new BOOL(), Radix.Binary, ExternalAccess.ReadOnly,
-                TagUsage.Output, true, true, true, "This is a test");
+            var parameter = new Parameter
+            {
+                Name = "Test",
+                DataType = nameof(BOOL),
+                Radix = Radix.Binary,
+                ExternalAccess = ExternalAccess.ReadOnly,
+                Usage = TagUsage.Output,
+                Required = true, Visible = true, Constant = true,
+                Description = "This is a test"
+            };
 
             var xml = _serializer.Serialize(parameter);
 
-            Approvals.VerifyXml(xml.ToString());
+            return Verify(xml.ToString());
         }
 
         [Test]
-        [UseReporter(typeof(DiffReporter))]
+        
         public void Serialize_Complex_ShouldBeApproved()
         {
-            var parameter = new Parameter<TIMER>("Test", new TIMER());
+            var parameter = new Parameter { Name = "Test", DataType = nameof(TIMER) };
 
             var xml = _serializer.Serialize(parameter);
 
-            Approvals.VerifyXml(xml.ToString());
+            Verifier.Verify(xml.ToString());
         }
 
         [Test]
-        [UseReporter(typeof(DiffReporter))]
+        
         public void Serialize_AtomicArray_ShouldBeApproved()
         {
-            var member = new Parameter<IArrayType<DINT>>("Test", new ArrayType<DINT>(new Dimensions(10)));
+            var parameter = new Parameter { Name = "Test", DataType = nameof(DINT), Dimension = 10};
 
-            var xml = _serializer.Serialize(member);
+            var xml = _serializer.Serialize(parameter);
 
-            Approvals.VerifyXml(xml.ToString());
+            Verifier.Verify(xml.ToString());
         }
 
         [Test]
@@ -120,7 +121,7 @@ namespace L5Sharp.Serialization.Tests
 
             component.Name.Should().Be("InputTest");
             component.DataType.Should().BeOfType<BOOL>();
-            component.Dimensions.Should().Be(Dimensions.Empty);
+            component.Dimension.Should().Be(Dimensions.Empty);
             component.Radix.Should().Be(Radix.Decimal);
             component.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);
             component.Usage.Should().Be(TagUsage.Input);
@@ -138,8 +139,7 @@ namespace L5Sharp.Serialization.Tests
             var component = _serializer.Deserialize(element);
 
             component.Name.Should().Be("Array");
-            component.DataType.Should().BeOfType<ArrayType<IDataType>>();
-            component.Dimensions.Should().Be(new Dimensions(5));
+            component.Dimension.Should().Be(new Dimensions(5));
             component.Radix.Should().Be(Radix.Float);
             component.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);
             component.Usage.Should().Be(TagUsage.InOut);
@@ -157,9 +157,8 @@ namespace L5Sharp.Serialization.Tests
             var component = _serializer.Deserialize(element);
 
             component.Name.Should().Be("InOutTest");
-            component.DataType.Should().BeOfType<UNDEFINED>();
-            component.DataType.Name.Should().Be("SimpleType");
-            component.Dimensions.Should().Be(Dimensions.Empty);
+            component.DataType.Should().Be("SimpleType");
+            component.Dimension.Should().Be(Dimensions.Empty);
             component.Radix.Should().Be(Radix.Null);
             component.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);
             component.Usage.Should().Be(TagUsage.InOut);

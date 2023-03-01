@@ -29,12 +29,6 @@ namespace L5Sharp.Components
         public string Description { get; set; } = string.Empty;
 
         /// <summary>
-        /// The routine type of the instruction logic.
-        /// </summary>
-        /// <value>A <see cref="Enums.RoutineType"/> indicating the instruction logic type. Default is Rll (Ladder).</value>
-        public RoutineType Type { get; set; } = RoutineType.Rll;
-
-        /// <summary>
         /// The revision or version of the instruction.
         /// </summary>
         /// <value>A <see cref="Core.Revision"/> representing the version of the instruction.</value>

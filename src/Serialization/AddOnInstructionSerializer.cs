@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Xml.Linq;
 using L5Sharp.Components;
 using L5Sharp.Core;
@@ -14,14 +15,15 @@ namespace L5Sharp.Serialization
     public class AddOnInstructionSerializer : ILogixSerializer<AddOnInstruction>
     {
         private const string DateTimeFormat = "yyyy-MM-dd'T'HH:mm:ss.fff'Z'";
-        
+        private readonly ParameterSerializer _parameterSerializer = new();
+
         /// <inheritdoc />
         public XElement Serialize(AddOnInstruction obj)
         {
             Check.NotNull(obj);
 
             var element = new XElement(typeof(AddOnInstruction).GetLogixName());
-            
+
             element.AddValue(obj, o => o.Name);
             element.AddText(obj, o => o.Description);
             element.AddValue(obj, o => o.Revision);
@@ -38,13 +40,13 @@ namespace L5Sharp.Serialization
             element.AddValue(obj, o => o.SoftwareRevision);
             element.AddText(obj, o => o.AdditionalHelpText);
             element.AddValue(obj, o => o.IsEncrypted);
-            
+
             /*element.Add(new XAttribute(L5XName.CreatedDate,
                 component.CreatedDate.ToString(DateTimeFormat)));*/
-            
+
             /*element.Add(new XAttribute(L5XName.EditedDate,
                 component.EditedDate.ToString(DateTimeFormat)));*/
-            
+
             /*element.Add(new XAttribute(L5XName.SoftwareRevision, $"v{component.SoftwareRevision}"));*/
             return element;
         }
@@ -57,21 +59,24 @@ namespace L5Sharp.Serialization
             return new AddOnInstruction
             {
                 Name = element.LogixName(),
-                Type = element.GetValue<RoutineType>(L5XName.Type),
-                Revision = element.GetValue<Revision>(L5XName.Revision),
-                RevisionExtension = element.GetValue<string>(L5XName.RevisionExtension),
-                RevisionNote = element.GetValue<string>(L5XName.RevisionNote),
-                Vendor = element.GetValue<string>(L5XName.Vendor),
-                ExecutePreScan = element.GetValue<bool>(L5XName.ExecutePrescan),
-                ExecutePostScan = element.GetValue<bool>(L5XName.ExecutePostscan),
-                ExecuteEnableInFalse = element.GetValue<bool>(L5XName.ExecuteEnableInFalse),
-                CreatedDate = element.GetValue<DateTime>(L5XName.CreatedDate),
-                CreatedBy = element.GetValue<string>(L5XName.CreatedBy),
-                EditedDate = element.GetValue<DateTime>(L5XName.EditedDate),
-                EditedBy = element.GetValue<string>(L5XName.EditedBy),
-                SoftwareRevision = element.GetValue<Revision>(L5XName.SoftwareRevision),
-                AdditionalHelpText = element.GetValue<string>(L5XName.AdditionalHelpText),
-                IsEncrypted = element.GetValue<bool>(L5XName.IsEncrypted)
+                Description = element.LogixDescription(),
+                Revision = element.TryGetValue<Revision>(L5XName.Revision) ?? new Revision(),
+                RevisionExtension = element.TryGetValue<string>(L5XName.RevisionExtension) ?? string.Empty,
+                RevisionNote = element.TryGetValue<string>(L5XName.RevisionNote) ?? string.Empty,
+                Vendor = element.TryGetValue<string>(L5XName.Vendor) ?? string.Empty,
+                ExecutePreScan = element.TryGetValue<bool>(L5XName.ExecutePrescan),
+                ExecutePostScan = element.TryGetValue<bool>(L5XName.ExecutePostscan),
+                ExecuteEnableInFalse = element.TryGetValue<bool>(L5XName.ExecuteEnableInFalse),
+                CreatedDate = element.TryGetValue<DateTime>(L5XName.CreatedDate),
+                CreatedBy = element.TryGetValue<string>(L5XName.CreatedBy) ?? string.Empty,
+                EditedDate = element.TryGetValue<DateTime>(L5XName.EditedDate),
+                EditedBy = element.TryGetValue<string>(L5XName.EditedBy) ?? string.Empty,
+                SoftwareRevision = element.TryGetValue<Revision>(L5XName.SoftwareRevision) ?? new Revision(),
+                AdditionalHelpText = element.TryGetValue<string>(L5XName.AdditionalHelpText) ?? string.Empty,
+                IsEncrypted = element.TryGetValue<bool>(L5XName.IsEncrypted),
+                Parameters = element.Descendants(L5XName.Parameter).Select(e => _parameterSerializer.Deserialize(e))
+                    .ToList(),
+                
             };
         }
     }

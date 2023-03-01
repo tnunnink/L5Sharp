@@ -34,8 +34,8 @@ namespace L5Sharp.Serialization.Data
             Check.NotNull(element);
 
             var name = element.Ancestors(L5XName.Tag).FirstOrDefault()?.Attribute(L5XName.DataType)?.Value
-                ?? throw new ArgumentException();
-            
+                ?? string.Empty;
+
             return new StringType(name, element.Value);
         }
     }

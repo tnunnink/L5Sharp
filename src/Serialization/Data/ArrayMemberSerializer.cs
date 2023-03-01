@@ -67,7 +67,7 @@ namespace L5Sharp.Serialization.Data
 
                 return e.Element(L5XName.Structure) is not null
                     ? TagDataSerializer.Structure.Deserialize(e.Element(L5XName.Structure)!)
-                    : LogixType.Null;
+                    : Logix.Null;
             });
 
             var array = new ArrayType<ILogixType>(dimensions, elements.ToList());

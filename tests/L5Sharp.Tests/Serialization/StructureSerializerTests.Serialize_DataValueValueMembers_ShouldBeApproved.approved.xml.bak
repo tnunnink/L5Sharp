@@ -1,8 +1,0 @@
-﻿<Structure DataType="Test">
-  <DataValueMember Name="BoolMember" DataType="BOOL" Radix="Decimal" Value="0" />
-  <DataValueMember Name="SintMember" DataType="SINT" Radix="Decimal" Value="0" />
-  <DataValueMember Name="IntMember" DataType="INT" Radix="Decimal" Value="0" />
-  <DataValueMember Name="DintMember" DataType="DINT" Radix="Decimal" Value="0" />
-  <DataValueMember Name="LintMember" DataType="LINT" Radix="Decimal" Value="0" />
-  <DataValueMember Name="RealMember" DataType="REAL" Radix="Float" Value="0.0" />
-</Structure>

@@ -1,0 +1,1 @@
+﻿<DataValueMember Name="Test" DataType="REAL" Radix="Decimal" Value="0" />

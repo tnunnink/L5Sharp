@@ -17,8 +17,15 @@ namespace L5Sharp.Types.Atomics
         /// <summary>
         /// Creates a new default <see cref="INT"/> type.
         /// </summary>
-        /// <param name="radix">The optional radix format of the value.</param>
-        public INT(Radix? radix = null) : base(nameof(INT), radix)
+        public INT() : base(nameof(INT))
+        {
+        }
+        
+        /// <summary>
+        /// Creates a new <see cref="INT"/> value with the provided radix format.
+        /// </summary>
+        /// <param name="radix">The <see cref="Enums.Radix"/> number format of the value.</param>
+        public INT(Radix? radix) : base(nameof(INT), radix)
         {
         }
 

@@ -1,35 +1,36 @@
-﻿using System;
-using System.Xml.Linq;
-using ApprovalTests;
-using ApprovalTests.Reporters;
+﻿using System.Xml.Linq;
 using FluentAssertions;
-using L5Sharp.Components;
 using L5Sharp.Core;
 using L5Sharp.Enums;
-using NUnit.Framework;
+using L5Sharp.Serialization;
 
-namespace L5Sharp.Serialization.Tests
+namespace L5Sharp.Tests.Serialization
 {
     public class ConnectionSerializerTests
     {
-        private ConnectionSerializer _serializer;
-        
+        private ModuleConnectionSerializer _serializer;
+
         [SetUp]
         public void Setup()
         {
-            _serializer = new ConnectionSerializer();
+            _serializer = new ModuleConnectionSerializer();
         }
-        
+
         [Test]
         public void Serialize_Null_ShouldThrowArgumentNullException()
         {
             FluentActions.Invoking(() => _serializer.Serialize(null!)).Should().Throw<ArgumentException>();
         }
-        
+
         [Test]
         public void Serialize_WhenCalled_ShouldNotBeNull()
         {
-            var component = new ModuleConnection("Connection", 10000, ConnectionType.Input);
+            var component = new ModuleConnection
+            {
+                Name = "Connection",
+                Rpi = 10000,
+                Type = ConnectionType.Input
+            };
 
             var xml = _serializer.Serialize(component);
 
@@ -37,16 +38,21 @@ namespace L5Sharp.Serialization.Tests
         }
 
         [Test]
-        [UseReporter(typeof(DiffReporter))]
-        public void Serialize_ValidComponent_ShouldBeApproved()
+        
+        public Task Serialize_ValidComponent_ShouldBeApproved()
         {
-            var component = new ModuleConnection("Connection", 10000, ConnectionType.Input);
+            var component = new ModuleConnection
+            {
+                Name = "Connection",
+                Rpi = 10000,
+                Type = ConnectionType.Input
+            };
 
             var xml = _serializer.Serialize(component);
 
-            Approvals.VerifyXml(xml.ToString());
+            return Verify(xml.ToString());
         }
-        
+
         [Test]
         public void Deserialize_Null_ShouldThrowArgumentNullException()
         {
@@ -59,14 +65,13 @@ namespace L5Sharp.Serialization.Tests
             const string xml = @"<Invalid></Invalid>";
             var element = XElement.Parse(xml);
 
-            FluentActions.Invoking(() => _serializer.Deserialize(element)).Should().Throw<ArgumentException>()
-                .WithMessage($"Element 'Invalid' not valid for the serializer {_serializer.GetType()}.");
+            FluentActions.Invoking(() => _serializer.Deserialize(element)).Should().Throw<InvalidOperationException>();
         }
 
         [Test]
         public void Deserialize_ValidElement_ShouldNotBeNull()
         {
-            const string xml =  @"<Connection Name=""Output"" RPI=""10000"" Type=""Output"" EventID=""0""
+            const string xml = @"<Connection Name=""Output"" RPI=""10000"" Type=""Output"" EventID=""0""
             ProgrammaticallySendEventTrigger=""false"" Unicast=""false""></Connection>";
 
             var element = XElement.Parse(xml);
@@ -75,11 +80,11 @@ namespace L5Sharp.Serialization.Tests
 
             component.Should().NotBeNull();
         }
-        
+
         [Test]
         public void Deserialize_ValidElement_ShouldBeExpectedValues()
         {
-            const string xml =  @"<Connection Name=""Output"" RPI=""10000"" Type=""Output"" EventID=""0""
+            const string xml = @"<Connection Name=""Output"" RPI=""10000"" Type=""Output"" EventID=""0""
             ProgrammaticallySendEventTrigger=""false"" Unicast=""false""></Connection>";
 
             var element = XElement.Parse(xml);
@@ -92,6 +97,5 @@ namespace L5Sharp.Serialization.Tests
             component.Priority.Should().Be(ConnectionPriority.Scheduled);
             component.Unicast.Should().BeFalse();
         }
-
     }
 }

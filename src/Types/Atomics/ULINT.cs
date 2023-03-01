@@ -16,8 +16,15 @@ namespace L5Sharp.Types.Atomics
         /// <summary>
         /// Creates a new default <see cref="ULINT"/> type.
         /// </summary>
-        /// <param name="radix">The optional radix format of the value.</param>
-        public ULINT(Radix? radix = null) : base(nameof(ULINT), radix)
+        public ULINT() : base(nameof(ULINT))
+        {
+        }
+        
+        /// <summary>
+        /// Creates a new <see cref="ULINT"/> value with the provided radix format.
+        /// </summary>
+        /// <param name="radix">The <see cref="Enums.Radix"/> number format of the value.</param>
+        public ULINT(Radix? radix) : base(nameof(ULINT), radix)
         {
         }
 

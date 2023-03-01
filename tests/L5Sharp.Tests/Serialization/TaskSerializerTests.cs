@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Xml.Linq;
-using ApprovalTests;
-using ApprovalTests.Reporters;
+﻿using System.Xml.Linq;
 using FluentAssertions;
-using L5Sharp.Components;
 using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Serialization;
-using NUnit.Framework;
 
 namespace L5Sharp.Tests.Serialization
 {
@@ -32,7 +26,7 @@ namespace L5Sharp.Tests.Serialization
         [Test]
         public void Serialize_Task_ShouldNotBeNull()
         {
-            var task = new Task();
+            var task = Logix.Task();
 
             var xml = _serializer.Serialize(task);
 
@@ -40,10 +34,9 @@ namespace L5Sharp.Tests.Serialization
         }
 
         [Test]
-        [UseReporter(typeof(DiffReporter))]
-        public void Serialize_ContinuousTask_ShouldBeApproved()
+        public Task Serialize_ContinuousTask_ShouldBeApproved()
         {
-            var task = new Task
+            var task = new L5Sharp.Components.Task
             {
                 Name ="Test", 
                 Type = TaskType.Continuous,
@@ -63,14 +56,14 @@ namespace L5Sharp.Tests.Serialization
 
             var xml = _serializer.Serialize(task);
 
-            Approvals.VerifyXml(xml.ToString());
+            return Verify(xml.ToString());
         }
 
         [Test]
-        [UseReporter(typeof(DiffReporter))]
+        
         public void Serialize_PeriodicTask_ShouldBeApproved()
         {
-            var task = new Task
+            var task = new L5Sharp.Components.Task
             {
                 Name ="Test", 
                 Type = TaskType.Periodic,
@@ -90,14 +83,14 @@ namespace L5Sharp.Tests.Serialization
 
             var xml = _serializer.Serialize(task);
 
-            Approvals.VerifyXml(xml.ToString());
+            Verifier.Verify(xml.ToString());
         }
 
         [Test]
-        [UseReporter(typeof(DiffReporter))]
+        
         public void Serialize_EventTask_ShouldBeApproved()
         {
-            var task = new Task
+            var task = new L5Sharp.Components.Task
             {
                 Name ="Test", 
                 Type = TaskType.Event,
@@ -117,7 +110,7 @@ namespace L5Sharp.Tests.Serialization
 
             var xml = _serializer.Serialize(task);
 
-            Approvals.VerifyXml(xml.ToString());
+            Verifier.Verify(xml.ToString());
         }
 
         [Test]

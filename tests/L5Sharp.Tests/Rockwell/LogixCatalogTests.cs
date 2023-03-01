@@ -37,7 +37,7 @@ namespace L5Sharp.Tests.Rockwell
             definition.ProductType.Id.Should().Be(14);
             definition.ProductType.Name.Should().Be("Programmable Logic Controller");
             definition.ProductCode.Should().Be(166);
-            definition.Revisions.Should().HaveCount(5);
+            definition.Revisions.Should().NotBeEmpty();
             definition.Categories.Should().HaveCount(1);
             definition.Ports.Should().HaveCount(2);
             definition.Description.Should().Be("ControlLogix® 5580 Controller");

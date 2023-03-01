@@ -1,0 +1,1 @@
+﻿<Connection Name="Connection" RPI="10000" InputCxnPoint="0" InputSize="0" OutputCxnPoint="0" OutputSize="0" Type="Input" Priority="Scheduled" InputConnectionType="Multicast" InputProductionTrigger="Cyclic" OutputRedundantOwner="False" EventID="0" InputTagSuffix="I" OutputTagSuffix="O" />

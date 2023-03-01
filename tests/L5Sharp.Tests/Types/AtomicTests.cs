@@ -1,9 +1,8 @@
-﻿using System;
-using AutoFixture;
+﻿using AutoFixture;
 using FluentAssertions;
 using L5Sharp.Enums;
-using L5Sharp.Types;
-using NUnit.Framework;
+using L5Sharp.Extensions;
+using L5Sharp.Types.Atomics;
 
 namespace L5Sharp.Tests.Types
 {
@@ -15,7 +14,7 @@ namespace L5Sharp.Tests.Types
         {
             var fixture = new Fixture();
 
-            FluentActions.Invoking(() => Atomic.Parse(fixture.Create<string>())).Should().Throw<FormatException>();
+            FluentActions.Invoking(() => Logix.Atomic(fixture.Create<string>())).Should().Throw<FormatException>();
         }
 
         [Test]
@@ -23,7 +22,7 @@ namespace L5Sharp.Tests.Types
         {
             const string value = "2#0000_0101";
 
-            var parsed = Atomic.Parse(value);
+            var parsed = Logix.Atomic(value);
 
             parsed.ToString(Radix.Decimal).Should().Be("5");
         }
@@ -33,9 +32,9 @@ namespace L5Sharp.Tests.Types
         {
             const string value = "8#005";
 
-            var parsed = Atomic.Parse(value);
+            var parsed = Logix.Atomic(value);
 
-            parsed.Should().Be(5);
+            parsed.ToType<SINT>().Should().Be(5);
         }
 
         [Test]
@@ -43,9 +42,9 @@ namespace L5Sharp.Tests.Types
         {
             const string value = "5";
 
-            var parsed = Atomic.Parse(value);
+            var parsed = Logix.Atomic(value);
 
-            parsed.Should().Be(5);
+            parsed.ToType<SINT>().Should().Be(5);
         }
 
         [Test]
@@ -53,9 +52,9 @@ namespace L5Sharp.Tests.Types
         {
             const string value = "16#05";
 
-            var parsed = Atomic.Parse(value);
+            var parsed = Logix.Atomic(value);
 
-            parsed.Should().Be(5);
+            parsed.ToType<SINT>().Should().Be(5);
         }
 
         [Test]
@@ -63,9 +62,9 @@ namespace L5Sharp.Tests.Types
         {
             const string value = "'$05'";
 
-            var parsed = Atomic.Parse(value);
+            var parsed = Logix.Atomic(value);
 
-            parsed.ToString().Should().Be("5");
+            parsed.ToType<SINT>().ToString().Should().Be("5");
         }
 
         [Test]
@@ -73,9 +72,9 @@ namespace L5Sharp.Tests.Types
         {
             const string value = "5.0";
 
-            var parsed = Atomic.Parse(value);
+            var parsed = Logix.Atomic(value);
 
-            parsed.Should().Be(5.0f);
+            parsed.ToType<REAL>().Should().Be(5.0f);
         }
 
         [Test]
@@ -83,9 +82,9 @@ namespace L5Sharp.Tests.Types
         {
             const string value = "5.00000000e+000";
 
-            var parsed = Atomic.Parse(value);
+            var parsed = Logix.Atomic(value);
 
-            parsed.Should().Be(5.0f);
+            parsed.ToType<REAL>().Should().Be(5.0f);
         }
 
         [Test]
@@ -93,9 +92,9 @@ namespace L5Sharp.Tests.Types
         {
             const string value = "DT#2022-01-01-06:00:00.000_000Z";
 
-            var parsed = Atomic.Parse(value);
+            var parsed = Logix.Atomic(value);
 
-            parsed.Should().Be(1641016800000000);
+            parsed.AsType<LINT>().Should().Be(1641016800000000);
         }
     }
 }

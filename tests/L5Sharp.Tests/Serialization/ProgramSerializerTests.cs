@@ -1,11 +1,8 @@
-﻿using System;
-using System.Xml.Linq;
-using ApprovalTests;
-using ApprovalTests.Reporters;
+﻿using System.Xml.Linq;
 using FluentAssertions;
 using L5Sharp.Components;
 using L5Sharp.Serialization;
-using NUnit.Framework;
+using Task = System.Threading.Tasks.Task;
 
 namespace L5Sharp.Tests.Serialization
 {
@@ -41,8 +38,7 @@ namespace L5Sharp.Tests.Serialization
         }
 
         [Test]
-        [UseReporter(typeof(DiffReporter))]
-        public void Serialize_BasicProgram_ShouldBeApproved()
+        public Task Serialize_BasicProgram_ShouldBeApproved()
         {
             var component = new Program
             {
@@ -52,7 +48,7 @@ namespace L5Sharp.Tests.Serialization
 
             var xml = _serializer.Serialize(component);
 
-            Approvals.VerifyXml(xml.ToString());
+            return Verify(xml.ToString());
         }
 
         [Test]

@@ -1,0 +1,7 @@
+﻿<Module Name="Test" CatalogNumber="1756-EN2T" Vendor="0" ProductType="0" ProductCode="0" Major="1" Minor="0" ParentModule="" ParentModPortId="0" Inhibited="False" MajorFault="False" SafetyEnabled="False">
+  <EKey State="CompatibleModule" />
+  <Ports />
+  <Communications>
+    <Connections />
+  </Communications>
+</Module>

@@ -1,13 +1,10 @@
-﻿using System;
-using System.Xml.Linq;
-using ApprovalTests;
-using ApprovalTests.Reporters;
+﻿using System.Xml.Linq;
 using FluentAssertions;
-using L5Sharp.Types;
+using L5Sharp.Extensions;
+using L5Sharp.Serialization.Data;
 using L5Sharp.Types.Atomics;
-using NUnit.Framework;
 
-namespace L5Sharp.Serialization.Tests
+namespace L5Sharp.Tests.Serialization
 {
     [TestFixture]
     public class DataValueSerializerTests
@@ -37,69 +34,69 @@ namespace L5Sharp.Serialization.Tests
         }
 
         [Test]
-        [UseReporter(typeof(DiffReporter))]
-        public void Serialize_Bool_ShouldBeApproved()
+        
+        public Task Serialize_Bool_ShouldBeApproved()
         {
             var component = new BOOL();
 
             var xml = _serializer.Serialize(component);
 
-            Approvals.VerifyXml(xml.ToString());
+            return Verify(xml.ToString());
         }
 
         [Test]
-        [UseReporter(typeof(DiffReporter))]
-        public void Serialize_Sint_ShouldBeApproved()
+        
+        public Task Serialize_Sint_ShouldBeApproved()
         {
             var component = new SINT();
 
             var xml = _serializer.Serialize(component);
 
-            Approvals.VerifyXml(xml.ToString());
+            return Verify(xml.ToString());
         }
 
         [Test]
-        [UseReporter(typeof(DiffReporter))]
-        public void Serialize_Int_ShouldBeApproved()
+        
+        public Task Serialize_Int_ShouldBeApproved()
         {
             var component = new INT();
 
             var xml = _serializer.Serialize(component);
 
-            Approvals.VerifyXml(xml.ToString());
+            return Verify(xml.ToString());
         }
 
         [Test]
-        [UseReporter(typeof(DiffReporter))]
-        public void Serialize_Dint_ShouldBeApproved()
+        
+        public Task Serialize_Dint_ShouldBeApproved()
         {
             var component = new DINT();
 
             var xml = _serializer.Serialize(component);
 
-            Approvals.VerifyXml(xml.ToString());
+            return Verify(xml.ToString());
         }
 
         [Test]
-        [UseReporter(typeof(DiffReporter))]
-        public void Serialize_Lint_ShouldBeApproved()
+        
+        public Task Serialize_Lint_ShouldBeApproved()
         {
             var component = new LINT();
 
             var xml = _serializer.Serialize(component);
 
-            Approvals.VerifyXml(xml.ToString());
+            return Verify(xml.ToString());
         }
 
         [Test]
-        [UseReporter(typeof(DiffReporter))]
-        public void Serialize_Real_ShouldBeApproved()
+        
+        public Task Serialize_Real_ShouldBeApproved()
         {
             var component = new REAL();
 
             var xml = _serializer.Serialize(component);
 
-            Approvals.VerifyXml(xml.ToString());
+            return Verify(xml.ToString());
         }
 
         [Test]
@@ -114,8 +111,7 @@ namespace L5Sharp.Serialization.Tests
             const string xml = @"<Invalid></Invalid>";
             var element = XElement.Parse(xml);
 
-            FluentActions.Invoking(() => _serializer.Deserialize(element)).Should().Throw<ArgumentException>()
-                .WithMessage($"Element 'Invalid' not valid for the serializer {_serializer.GetType()}.");
+            FluentActions.Invoking(() => _serializer.Deserialize(element)).Should().Throw<InvalidOperationException>();
         }
 
         [Test]
@@ -142,7 +138,7 @@ namespace L5Sharp.Serialization.Tests
 
             component.Should().BeOfType<BOOL>();
             component.Name.Should().Be("BOOL");
-            component.Value.Should().Be(true);  
+            component.AsType<BOOL>().Should().Be(true);  
         }
         
         [Test]
@@ -159,7 +155,7 @@ namespace L5Sharp.Serialization.Tests
 
             component.Should().BeOfType<SINT>();
             component.Name.Should().Be("SINT");
-            component.Value.Should().Be(12);  
+            component.AsType<SINT>().Should().Be(12);  
         }
 
         [Test]
@@ -176,7 +172,7 @@ namespace L5Sharp.Serialization.Tests
 
             component.Should().BeOfType<INT>();
             component.Name.Should().Be("INT");
-            component.Value.Should().Be(4321);  
+            component.AsType<INT>().Should().Be(4321);  
         }
         
         [Test]
@@ -193,7 +189,7 @@ namespace L5Sharp.Serialization.Tests
 
             component.Should().BeOfType<DINT>();
             component.Name.Should().Be("DINT");
-            component.Value.Should().Be(123456);  
+            component.AsType<DINT>().Should().Be(123456);  
         }
         
         [Test]
@@ -211,7 +207,7 @@ namespace L5Sharp.Serialization.Tests
 
             component.Should().BeOfType<LINT>();
             component.Name.Should().Be("LINT");
-            component.Value.Should().Be(112230123);  
+            component.AsType<LINT>().Should().Be(112230123);  
         }
         
         [Test]
@@ -225,7 +221,7 @@ namespace L5Sharp.Serialization.Tests
 
             component.Should().BeOfType<REAL>();
             component.Name.Should().Be("REAL");
-            component.Value.Should().Be(1.23f);  
+            component.AsType<REAL>().Should().Be(1.23f);  
         }
     }
 }

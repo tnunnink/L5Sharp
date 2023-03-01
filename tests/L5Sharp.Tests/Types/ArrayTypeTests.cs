@@ -4,6 +4,7 @@ using System.Linq;
 using FluentAssertions;
 using L5Sharp.Core;
 using L5Sharp.Enums;
+using L5Sharp.Extensions;
 using L5Sharp.Types;
 using L5Sharp.Types.Atomics;
 using L5Sharp.Types.Predefined;
@@ -36,6 +37,12 @@ namespace L5Sharp.Tests.Types
             array.Class.Should().Be(DataTypeClass.Atomic);
             array.IsAtomic.Should().BeTrue();
             array.IsStructure.Should().BeFalse();
+        }
+
+        [Test]
+        public void New_NullArray_ShouldNotWork()
+        {
+            FluentActions.Invoking(() => new ArrayType<ILogixType>(new ILogixType[10])).Should().Throw<ArgumentException>();
         }
 
         [Test]

@@ -1,1 +1,0 @@
-﻿<Parameter Name="Test" TagType="Base" DataType="BOOL" Dimensions="0" Usage="Input" Radix="Decimal" Required="false" Visible="false" Constant="false" ExternalAccess="Read/Write" />

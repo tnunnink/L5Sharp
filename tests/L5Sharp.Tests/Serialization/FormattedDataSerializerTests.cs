@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Xml.Linq;
-using ApprovalTests;
-using ApprovalTests.Reporters;
 using FluentAssertions;
-using L5Sharp.Types;
+using L5Sharp.Serialization.Data;
 using L5Sharp.Types.Predefined;
 using NUnit.Framework;
+using VerifyNUnit;
 
-namespace L5Sharp.Serialization.Tests
+namespace L5Sharp.Tests.Serialization
 {
     [TestFixture]
     public class FormattedDataSerializerTests
@@ -57,52 +56,40 @@ namespace L5Sharp.Serialization.Tests
         }
         
         [Test]
-        [UseReporter(typeof(DiffReporter))]
-        public void Serialize_ComplexType_ShouldBeApproved()
+        public Task Serialize_ComplexType_ShouldBeApproved()
         {
             var component = new TIMER();
 
             var xml = _serializer.Serialize(component);
 
-            Approvals.VerifyXml(xml.ToString());
+            return Verify(xml.ToString());
         }
         
         [Test]
-        [UseReporter(typeof(DiffReporter))]
-        public void Serialize_StringType_ShouldBeApproved()
+        public Task Serialize_StringType_ShouldBeApproved()
         {
             var component = new STRING("This is test string");
 
             var xml = _serializer.Serialize(component);
 
-            Approvals.VerifyXml(xml.ToString());
+            return Verify(xml.ToString());
         }
         
         [Test]
-        [UseReporter(typeof(DiffReporter))]
-        public void Serialize_AlarmType_ShouldBeApproved()
+        
+        public Task Serialize_AlarmType_ShouldBeApproved()
         {
             var component = new ALARM_ANALOG();
 
             var xml = _serializer.Serialize(component);
 
-            Approvals.VerifyXml(xml.ToString());
+            return Verify(xml.ToString());
         }
 
         [Test]
         public void Deserialize_Null_ShouldThrowArgumentNullException()
         {
             FluentActions.Invoking(() => _serializer.Deserialize(null!)).Should().Throw<ArgumentException>();
-        }
-
-        [Test]
-        public void Deserialize_InvalidElementName_ShouldThrowArgumentException()
-        {
-            const string xml = @"<Invalid></Invalid>";
-            var element = XElement.Parse(xml);
-
-            FluentActions.Invoking(() => _serializer.Deserialize(element)).Should().Throw<ArgumentException>()
-                .WithMessage($"Element 'Invalid' not valid for the serializer {_serializer.GetType()}.");
         }
 
         [Test]

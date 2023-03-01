@@ -1,17 +1,13 @@
-﻿using System;
-using System.Linq;
-using System.Xml.Linq;
-using ApprovalTests;
-using ApprovalTests.Reporters;
+﻿using System.Xml.Linq;
 using FluentAssertions;
 using L5Sharp.Core;
 using L5Sharp.Enums;
+using L5Sharp.Serialization.Data;
 using L5Sharp.Types;
 using L5Sharp.Types.Atomics;
 using L5Sharp.Types.Predefined;
-using NUnit.Framework;
 
-namespace L5Sharp.Serialization.Tests
+namespace L5Sharp.Tests.Serialization
 {
     [TestFixture]
     public class DecoratedDataSerializerTests
@@ -23,76 +19,76 @@ namespace L5Sharp.Serialization.Tests
         {
             _serializer = new DecoratedDataSerializer();
         }
-        
+
         [Test]
         public void Serialize_Null_ShouldThrowArgumentNullException()
         {
             FluentActions.Invoking(() => _serializer.Serialize(null!)).Should().Throw<ArgumentException>();
         }
-        
+
         [Test]
         public void Serialize_WhenCalled_ShouldNotBeNull()
         {
-            var component = new StructureType("Test");
+            var component = new StructureType("Test", new List<Member>());
 
             var xml = _serializer.Serialize(component);
 
             xml.Should().NotBeNull();
         }
-        
+
         [Test]
-        [UseReporter(typeof(DiffReporter))]
-        public void Serialize_EmptyStructure_ShouldBeApproved()
+        
+        public Task Serialize_EmptyStructure_ShouldBeApproved()
         {
-            var component = new StructureType("Test");
+            var component = new StructureType("Test", new List<Member>());
 
             var xml = _serializer.Serialize(component);
 
-            Approvals.VerifyXml(xml.ToString());
+            return Verify(xml.ToString());
         }
-        
+
         [Test]
-        [UseReporter(typeof(DiffReporter))]
-        public void Serialize_Dint_ShouldBeApproved()
+        
+        public Task Serialize_Dint_ShouldBeApproved()
         {
             var component = new DINT();
 
             var xml = _serializer.Serialize(component);
-            
-            Approvals.VerifyXml(xml.ToString());
+
+            return Verify(xml.ToString());
         }
 
         [Test]
-        [UseReporter(typeof(DiffReporter))]
-        public void Serialize_Timer_ShouldBeApproved()
+        
+        public Task Serialize_Timer_ShouldBeApproved()
         {
             var component = new TIMER();
 
             var xml = _serializer.Serialize(component);
-            
-            Approvals.VerifyXml(xml.ToString());
+
+            return Verify(xml.ToString());
         }
-        
+
         [Test]
-        [UseReporter(typeof(DiffReporter))]
-        public void Serialize_RealArray_ShouldBeApproved()
+        
+        public Task Serialize_RealArray_ShouldBeApproved()
         {
-            var component = new ArrayType<REAL>(10);
+            var component = Logix.Array<REAL>(10);
 
             var xml = _serializer.Serialize(component);
-            
-            Approvals.VerifyXml(xml.ToString());
+
+            return Verify(xml.ToString());
         }
-        
+
         [Test]
-        [UseReporter(typeof(DiffReporter))]
-        public void Serialize_CounterArray_ShouldBeApproved()
+        
+        public Task Serialize_CounterArray_ShouldBeApproved()
         {
-            var component = new ArrayType<COUNTER>(5);
+            var component = Logix.Array<COUNTER>(5);
 
             var xml = _serializer.Serialize(component);
-            
-            Approvals.VerifyXml(xml.ToString());
+
+            return Verify(xml.ToString());
         }
 
         [Test]
@@ -110,7 +106,7 @@ namespace L5Sharp.Serialization.Tests
 
             component.Should().NotBeNull();
         }
-        
+
         [Test]
         public void Deserialize_GetDataValueXml_ShouldBeExpected()
         {
@@ -121,9 +117,9 @@ namespace L5Sharp.Serialization.Tests
             component.Name.Should().Be("DINT");
             component.Class.Should().Be(DataTypeClass.Atomic);
             component.Family.Should().Be(DataTypeFamily.None);
-            component.As<IAtomicType>().Value.Should().Be(0);
+            component.As<AtomicType>().Should().Be(0);
         }
-        
+
         [Test]
         public void Deserialize_GetArrayElementXml_ShouldNotBeNull()
         {
@@ -133,7 +129,7 @@ namespace L5Sharp.Serialization.Tests
 
             component.Should().NotBeNull();
         }
-        
+
         [Test]
         public void Deserialize_GetArrayElementXml_ShouldBeExpected()
         {
@@ -142,9 +138,8 @@ namespace L5Sharp.Serialization.Tests
             var component = _serializer.Deserialize(element);
 
             component.Name.Should().Be("REAL");
-            component.As<IArrayType<IDataType>>().Should().HaveCount(5);
-            component.As<IArrayType<IDataType>>().Dimensions.Should().BeEquivalentTo(new Dimensions(5));
-            component.As<IArrayType<IDataType>>().All(m => m.MemberType == MemberType.ValueMember).Should().BeTrue();
+            component.As<ArrayType<ILogixType>>().Should().HaveCount(5);
+            component.As<ArrayType<ILogixType>>().Dimensions.Should().BeEquivalentTo(new Dimensions(5));
         }
 
         [Test]
@@ -157,7 +152,7 @@ namespace L5Sharp.Serialization.Tests
             component.Should().NotBeNull();
         }
 
-        
+
         private static string GetDataValueXml()
         {
             return "<DataValue DataType=\"DINT\" Radix=\"Decimal\" Value=\"0\"/>";
@@ -173,7 +168,7 @@ namespace L5Sharp.Serialization.Tests
                 <Element Index=""[4]"" Value=""0.0""/>
                 </Array>";
         }
-        
+
         private static string GetStructureElementXml()
         {
             return @"<Structure DataType=""SimpleType"">

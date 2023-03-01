@@ -86,7 +86,7 @@ namespace L5Sharp.Serialization
             {
                 Name = element.LogixName(),
                 Description = element.LogixDescription(),
-                Data = data is not null ? _formattedDataSerializer.Deserialize(data) : LogixType.Null,
+                Data = data is not null ? _formattedDataSerializer.Deserialize(data) : Logix.Null,
                 ExternalAccess = element.TryGetValue<ExternalAccess>(L5XName.ExternalAccess) ??
                                  ExternalAccess.ReadWrite,
                 TagType = element.TryGetValue<TagType>(L5XName.TagType) ?? TagType.Base,

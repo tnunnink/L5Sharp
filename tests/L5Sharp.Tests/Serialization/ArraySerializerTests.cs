@@ -1,16 +1,13 @@
-﻿using System;
-using System.Xml.Linq;
-using ApprovalTests;
-using ApprovalTests.Reporters;
+﻿using System.Xml.Linq;
 using FluentAssertions;
 using L5Sharp.Core;
 using L5Sharp.Enums;
-using L5Sharp.Types;
+using L5Sharp.Extensions;
+using L5Sharp.Serialization.Data;
 using L5Sharp.Types.Atomics;
 using L5Sharp.Types.Predefined;
-using NUnit.Framework;
 
-namespace L5Sharp.Serialization.Tests
+namespace L5Sharp.Tests.Serialization
 {
     [TestFixture]
     public class ArraySerializerTests
@@ -32,33 +29,33 @@ namespace L5Sharp.Serialization.Tests
         [Test]
         public void Serialize_WhenCalled_ShouldNotBeNull()
         {
-            var element = new ArrayType<BOOL>(new Dimensions(10));
+            var component = Logix.Array<BOOL>(10).ToArrayType();
             
-            var xml = _serializer.Serialize(element);
+            var xml = _serializer.Serialize(component);
 
             xml.Should().NotBeNull();
         }
 
         [Test]
-        [UseReporter(typeof(DiffReporter))]
-        public void Serialize_ValueTypeArray_ShouldBeApproved()
+        
+        public Task Serialize_ValueTypeArray_ShouldBeApproved()
         {
-            var element = new ArrayType<BOOL>(new Dimensions(10));
+            var element = Logix.Array<BOOL>(10).ToArrayType();
             
             var xml = _serializer.Serialize(element);
 
-            Approvals.VerifyXml(xml.ToString());
+            return Verify(xml.ToString());
         }
         
         [Test]
-        [UseReporter(typeof(DiffReporter))]
-        public void Serialize_StructureTypeArray_ShouldBeApproved()
+        
+        public Task Serialize_StructureTypeArray_ShouldBeApproved()
         {
-            var element = new ArrayType<TIMER>(new Dimensions(10));
+            var element = Logix.Array<TIMER>(10).ToArrayType();
             
             var xml = _serializer.Serialize(element);
 
-            Approvals.VerifyXml(xml.ToString());
+            return Verify(xml.ToString());
         }
 
         [Test]
@@ -98,7 +95,6 @@ namespace L5Sharp.Serialization.Tests
             component.Dimensions.Should().Be(new Dimensions(5));
             component.Class.Should().Be(DataTypeClass.Atomic);
             component.Family.Should().Be(DataTypeFamily.None);
-            component.Description.Should().BeEmpty();
         }
         
         [Test]
@@ -122,7 +118,6 @@ namespace L5Sharp.Serialization.Tests
             component.Dimensions.Should().Be(new Dimensions(5));
             component.Class.Should().Be(DataTypeClass.Unknown);
             component.Family.Should().Be(DataTypeFamily.None);
-            component.Description.Should().BeEmpty();
         }
 
         private static string GetValueArrayXml()

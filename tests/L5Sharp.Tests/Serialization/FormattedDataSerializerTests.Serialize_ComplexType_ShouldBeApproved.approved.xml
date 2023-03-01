@@ -1,9 +1,0 @@
-﻿<Data Format="Decorated">
-  <Structure DataType="TIMER">
-    <DataValueMember Name="PRE" DataType="DINT" Radix="Decimal" Value="0" />
-    <DataValueMember Name="ACC" DataType="DINT" Radix="Decimal" Value="0" />
-    <DataValueMember Name="EN" DataType="BOOL" Value="0" />
-    <DataValueMember Name="TT" DataType="BOOL" Value="0" />
-    <DataValueMember Name="DN" DataType="BOOL" Value="0" />
-  </Structure>
-</Data>

@@ -1,0 +1,1 @@
+﻿<Member Name="Test" DataType="BOOL" Dimension="0" Radix="NullType" ExternalAccess="Read/Write" />

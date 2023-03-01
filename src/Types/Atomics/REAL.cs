@@ -17,8 +17,15 @@ namespace L5Sharp.Types.Atomics
         /// <summary>
         /// Creates a new default <see cref="REAL"/> type.
         /// </summary>
-        /// <param name="radix">The optional radix format of the value.</param>
-        public REAL(Radix? radix = null) : base(nameof(REAL), radix)
+        public REAL() : base(nameof(REAL))
+        {
+        }
+        
+        /// <summary>
+        /// Creates a new <see cref="REAL"/> value with the provided radix format.
+        /// </summary>
+        /// <param name="radix">The <see cref="Enums.Radix"/> number format of the value.</param>
+        public REAL(Radix? radix) : base(nameof(REAL), radix)
         {
         }
 

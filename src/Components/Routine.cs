@@ -5,9 +5,10 @@ using L5Sharp.Serialization;
 namespace L5Sharp.Components
 {
     /// <summary>
-    /// Represents a Logix Routine component. <see cref="Routine"/> is an abstract base class for all routine types,
-    /// including RLL, ST, FBD, and SFC.
+    /// A logix <c>Routine</c> component. Contains the properties for a generic routine element. This type does not
+    /// include content property. More specific routine types are derived from this base class.
     /// </summary>
+    /// <seealso cref="RllRoutine"/>
     /// <footer>
     /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
     /// `Logix 5000 Controllers Import/Export`</a> for more information.

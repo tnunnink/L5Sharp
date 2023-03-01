@@ -35,12 +35,12 @@ namespace L5Sharp.Core
         /// Creates a new <see cref="Member"/> object with the provided parameters.
         /// </summary>
         /// <param name="name">The name of the member.</param>
-        /// <param name="dataType">The member <see cref="ILogixType"/>.</param>
+        /// <param name="logixType">The <see cref="ILogixType"/> object representing the member's data type data.</param>
         /// <exception cref="ArgumentNullException">name or datatype are null.</exception>
-        public Member(string? name, ILogixType? dataType)
+        public Member(string name, ILogixType logixType)
         {
-            Name = name ?? string.Empty;
-            DataType = dataType ?? LogixType.Null;
+            Name = name ?? throw new ArgumentNullException(nameof(name));
+            DataType = logixType ?? throw new ArgumentNullException(nameof(logixType));
         }
 
         /// <summary>
@@ -53,6 +53,6 @@ namespace L5Sharp.Core
         /// The logix type of the <see cref="Member"/> instance.
         /// </summary>
         /// <returns>A <see cref="ILogixType"/> representing the member data type.</returns>
-        public ILogixType DataType { get; set; } = LogixType.Null;
+        public ILogixType DataType { get; set; } = Logix.Null;
     }
 }

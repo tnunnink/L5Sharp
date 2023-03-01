@@ -11,7 +11,7 @@ using L5Sharp.Types;
 namespace L5Sharp.Components
 {
     /// <summary>
-    /// A Logix Tag component...
+    /// A logix <c>Tag</c> component. Contains the properties that comprise the L5X tag element.
     /// </summary>
     /// <footer>
     /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
@@ -30,7 +30,7 @@ namespace L5Sharp.Components
         public TagName TagName => new(Name);
 
         /// <inheritdoc />
-        public ILogixType Data { get; set; } = LogixType.Null;
+        public ILogixType Data { get; set; } = Logix.Null;
 
         /// <inheritdoc />
         public string DataType => Data.Name;

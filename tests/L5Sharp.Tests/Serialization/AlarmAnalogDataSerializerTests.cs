@@ -1,23 +1,19 @@
-﻿using System;
-using System.Xml.Linq;
-using ApprovalTests;
-using ApprovalTests.Reporters;
+﻿using System.Xml.Linq;
 using FluentAssertions;
-using L5Sharp.Types;
+using L5Sharp.Serialization.Data;
 using L5Sharp.Types.Predefined;
-using NUnit.Framework;
 
-namespace L5Sharp.Serialization.Tests
+namespace L5Sharp.Tests.Serialization
 {
     [TestFixture]
     public class AlarmAnalogDataSerializerTests
     {
-        private AlarmAnalogParametersSerializer _serializer;
+        private AlarmAnalogSerializer _serializer;
 
         [SetUp]
         public void Setup()
         {
-            _serializer = new AlarmAnalogParametersSerializer();
+            _serializer = new AlarmAnalogSerializer();
         }
         
         [Test]
@@ -37,14 +33,13 @@ namespace L5Sharp.Serialization.Tests
         }
         
         [Test]
-        [UseReporter(typeof(DiffReporter))]
-        public void Serialize_ValidType_ShouldBeApproved()
+        public Task Serialize_ValidType_ShouldBeApproved()
         {
             var component = new ALARM_ANALOG();
 
             var xml = _serializer.Serialize(component);
 
-            Approvals.VerifyXml(xml.ToString());
+            return Verify(xml.ToString());
         }
         
         [Test]

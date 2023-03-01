@@ -1,12 +1,9 @@
-﻿using System;
-using System.Xml.Linq;
-using ApprovalTests;
-using ApprovalTests.Reporters;
+﻿using System.Xml.Linq;
 using FluentAssertions;
 using L5Sharp.Components;
 using L5Sharp.Core;
 using L5Sharp.Serialization;
-using NUnit.Framework;
+using Task = System.Threading.Tasks.Task;
 
 namespace L5Sharp.Tests.Serialization
 {
@@ -37,13 +34,12 @@ namespace L5Sharp.Tests.Serialization
             const string xml = @"<Invalid></Invalid>";
             var element = XElement.Parse(xml);
 
-            FluentActions.Invoking(() => _serializer.Deserialize(element)).Should().Throw<ArgumentException>()
-                .WithMessage($"Element 'Invalid' not valid for the serializer {_serializer.GetType()}.");
+            FluentActions.Invoking(() => _serializer.Deserialize(element)).Should().Throw<InvalidOperationException>();
         }
 
         [Test]
-        [UseReporter(typeof(DiffReporter))]
-        public void Serialize_WhenCalled_ShouldNotBeApproved()
+        
+        public Task Serialize_WhenCalled_ShouldNotBeApproved()
         {
             var controller = new Controller
             {
@@ -56,7 +52,7 @@ namespace L5Sharp.Tests.Serialization
 
             var serialized = _serializer.Serialize(controller);
 
-            Approvals.VerifyXml(serialized.ToString());
+            return Verify(serialized.ToString());
         }
     }
 }

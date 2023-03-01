@@ -1,13 +1,9 @@
-﻿using System;
-using System.Xml.Linq;
-using ApprovalTests;
-using ApprovalTests.Reporters;
+﻿using System.Xml.Linq;
 using FluentAssertions;
-using L5Sharp.Abstractions;
 using L5Sharp.Core;
-using NUnit.Framework;
+using L5Sharp.Serialization;
 
-namespace L5Sharp.Serialization.Tests
+namespace L5Sharp.Tests.Serialization
 {
     [TestFixture]
     public class PortSerializerTests
@@ -19,17 +15,22 @@ namespace L5Sharp.Serialization.Tests
         {
             _serializer = new PortSerializer();
         }
-        
+
         [Test]
         public void Serialize_Null_ShouldThrowArgumentNullException()
         {
             FluentActions.Invoking(() => _serializer.Serialize(null!)).Should().Throw<ArgumentException>();
         }
-        
+
         [Test]
         public void Serialize_WhenCalled_ShouldNotBeNull()
         {
-            var component = new Port(1, "ICP", "0");
+            var component = new Port
+            {
+                Id = 1,
+                Type = "ICP",
+                Address = "0"
+            };
 
             var xml = _serializer.Serialize(component);
 
@@ -37,27 +38,40 @@ namespace L5Sharp.Serialization.Tests
         }
 
         [Test]
-        [UseReporter(typeof(DiffReporter))]
-        public void Serialize_ValidComponent_ShouldBeApproved()
+        
+        public Task Serialize_ValidComponent_ShouldBeApproved()
         {
-            var component = new Port(1, "ICP", "0", false, 10);
+            var component = new Port
+            {
+                Id = 1,
+                Type = "ICP",
+                Address = "0",
+                Upstream = false,
+                BusSize = 10
+            };
 
             var xml = _serializer.Serialize(component);
 
-            Approvals.VerifyXml(xml.ToString());
+            return Verify(xml.ToString());
         }
-        
+
         [Test]
-        [UseReporter(typeof(DiffReporter))]
-        public void Serialize_ValidComponentNoBus_ShouldBeApproved()
+        
+        public Task Serialize_ValidComponentNoBus_ShouldBeApproved()
         {
-            var component = new Port(1, "Ethernet", "10.11.12.13", true);
+            var component = new Port
+            {
+                Id = 1,
+                Type = "Ethernet",
+                Address = "10.11.12.13",
+                Upstream = true,
+            };
 
             var xml = _serializer.Serialize(component);
 
-            Approvals.VerifyXml(xml.ToString());
+            return Verify(xml.ToString());
         }
-        
+
         [Test]
         public void Deserialize_Null_ShouldThrowArgumentNullException()
         {
@@ -87,7 +101,7 @@ namespace L5Sharp.Serialization.Tests
 
             component.Should().NotBeNull();
         }
-        
+
         [Test]
         public void Deserialize_ValidElement_ShouldBeExpectedValues()
         {
@@ -105,7 +119,7 @@ namespace L5Sharp.Serialization.Tests
             component.Upstream.Should().Be(false);
             component.BusSize.Should().Be(17);
         }
-        
+
         [Test]
         public void Deserialize_ValidElementNoBus_ShouldBeExpectedValues()
         {

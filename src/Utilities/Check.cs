@@ -22,14 +22,5 @@ namespace L5Sharp.Utilities
                     throw new ArgumentException("Value can not be empty", nameof(str));
             }
         }
-
-        public static void SerializerAttribute(Attribute attribute, Type type)
-        {
-            const string suggestion = "Class must specify a LogixSerializerAttribute in order to be deserialized.";
-            
-            if (attribute is null)
-                throw new InvalidOperationException(
-                    $"No serializer defined for type {type}. {suggestion}");
-        }
     }
 }

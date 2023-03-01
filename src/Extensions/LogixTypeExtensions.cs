@@ -1,14 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using L5Sharp.Components;
 using L5Sharp.Core;
+using L5Sharp.Enums;
 using L5Sharp.Types;
 using L5Sharp.Utilities;
 
 namespace L5Sharp.Extensions
 {
     /// <summary>
-    /// Extensions for the <see cref="ILogixType"/> interface.
+    /// Extensions for various types implementing <see cref="ILogixType"/> interface.
     /// </summary>
     public static class LogixTypeExtensions
     {
@@ -53,10 +55,62 @@ namespace L5Sharp.Extensions
 
                 var remaining = TagName.Combine(tagName.Skip(1));
                 if (remaining.IsEmpty) return member;
-                
+
                 logixType = member.DataType;
                 tagName = remaining;
             }
+        }
+
+        /// <summary>
+        /// Explicitly casts the current <see cref="ILogixType"/> to the specified derived type.
+        /// </summary>
+        /// <param name="logixType">The </param>
+        /// <typeparam name="TLogixType"></typeparam>
+        /// <returns></returns>
+        public static TLogixType ToType<TLogixType>(this ILogixType logixType) where TLogixType : ILogixType =>
+            (TLogixType)logixType;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="logixType"></param>
+        /// <typeparam name="TLogixType"></typeparam>
+        /// <returns></returns>
+        public static TLogixType? AsType<TLogixType>(this ILogixType logixType) where TLogixType : class, ILogixType =>
+            logixType as TLogixType;
+
+        /// <summary>
+        /// Returns a new <see cref="ArrayType{TLogixType}"/> of generic <see cref="ILogixType"/> objects.
+        /// </summary>
+        /// <returns>A <see cref="ArrayType{TLogixType}"/> of generic logix type objects.</returns>
+        public static ArrayType<ILogixType> ToArrayType<TLogixType>(this IEnumerable<TLogixType> arrayType)
+            where TLogixType : ILogixType
+        {
+            var array = arrayType.Cast<ILogixType>().ToArray();
+            return new ArrayType<ILogixType>(array);
+        }
+
+        /// <summary>
+        /// Returns a new <see cref="ArrayType{TLogixType}"/> of generic <see cref="ILogixType"/> objects.
+        /// </summary>
+        /// <returns>A <see cref="ArrayType{TLogixType}"/> of generic logix type objects.</returns>
+        public static ArrayType<TCasted> ToArrayType<TCurrent, TCasted>(this IEnumerable<TCurrent> arrayType)
+            where TCasted : ILogixType
+            where TCurrent : ILogixType
+        {
+            var array = arrayType.Cast<TCasted>().ToArray();
+            return new ArrayType<TCasted>(array);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="structureType"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public static IEnumerable<DataType> ExtractUserTypes(this StructureType structureType)
+        {
+            throw new NotImplementedException();
         }
     }
 }

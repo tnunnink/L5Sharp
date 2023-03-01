@@ -186,7 +186,7 @@ namespace L5Sharp.Rockwell
             var info = new FileInfo(serviceFile);
 
             if (!info.Exists)
-                throw new ArgumentException(
+                throw new InvalidOperationException(
                     $"The catalog service file {serviceFile} does not exist in the current environment.");
 
             var document = XDocument.Load(info.FullName);
