@@ -1,0 +1,3 @@
+﻿<Data Format="Decorated">
+  <DataValue DataType="DINT" Radix="Decimal" Value="0" />
+</Data>

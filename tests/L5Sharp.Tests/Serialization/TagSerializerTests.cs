@@ -1,18 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Xml.Linq;
-using ApprovalTests;
-using ApprovalTests.Reporters;
+﻿using System.Xml.Linq;
 using FluentAssertions;
+using L5Sharp.Components;
 using L5Sharp.Core;
-using L5Sharp.Creators;
 using L5Sharp.Enums;
-using L5Sharp.Types;
+using L5Sharp.Serialization;
 using L5Sharp.Types.Atomics;
 using L5Sharp.Types.Predefined;
-using NUnit.Framework;
+using Task = System.Threading.Tasks.Task;
 
-namespace L5Sharp.Serialization.Tests
+namespace L5Sharp.Tests.Serialization
 {
     [TestFixture]
     public class TagSerializerTests
@@ -24,17 +20,17 @@ namespace L5Sharp.Serialization.Tests
         {
             _serializer = new TagSerializer();
         }
-        
+
         [Test]
         public void Serialize_Null_ShouldThrowArgumentNullException()
         {
             FluentActions.Invoking(() => _serializer.Serialize(null!)).Should().Throw<ArgumentNullException>();
         }
-        
+
         [Test]
         public void SerializeSimpleBool_ShouldNotBeNull()
         {
-            var tag = Tag.Create<BOOL>("Test");
+            var tag = new Tag { Name = "Test" };
 
             var xml = _serializer.Serialize(tag);
 
@@ -42,190 +38,167 @@ namespace L5Sharp.Serialization.Tests
         }
 
         [Test]
-        [UseReporter(typeof(DiffReporter))]
-        public void Serialize_SimpleBool_ShouldBeApproved()
+        public Task Serialize_SimpleBool_ShouldBeApproved()
         {
-            var tag = Tag.Create<BOOL>("Test");
+            var tag = new Tag { Name = "Test" };
 
             var xml = _serializer.Serialize(tag);
 
-            Approvals.VerifyXml(xml.ToString());
-        }
-        
-        [Test]
-        [UseReporter(typeof(DiffReporter))]
-        public void Serialize_SimpleSint_ShouldBeApproved()
-        {
-            var tag = Tag.Create<SINT>("Test");
-
-            var xml = _serializer.Serialize(tag);
-
-            Approvals.VerifyXml(xml.ToString());
-        }
-        
-        [Test]
-        [UseReporter(typeof(DiffReporter))]
-        public void Serialize_SimpleInt_ShouldBeApproved()
-        {
-            var tag = Tag.Create<INT>("Test");
-
-            var xml = _serializer.Serialize(tag);
-
-            Approvals.VerifyXml(xml.ToString());
-        }
-        
-        [Test]
-        [UseReporter(typeof(DiffReporter))]
-        public void Serialize_SimpleDint_ShouldBeApproved()
-        {
-            var tag = Tag.Create<DINT>("Test");
-
-            var xml = _serializer.Serialize(tag);
-
-            Approvals.VerifyXml(xml.ToString());
-        }
-        
-        [Test]
-        [UseReporter(typeof(DiffReporter))]
-        public void Serialize_SimpleLint_ShouldBeApproved()
-        {
-            var tag = Tag.Create<LINT>("Test");
-
-            var xml = _serializer.Serialize(tag);
-
-            Approvals.VerifyXml(xml.ToString());
-        }
-        
-        [Test]
-        [UseReporter(typeof(DiffReporter))]
-        public void Serialize_SimpleReal_ShouldBeApproved()
-        {
-            var tag = Tag.Create<REAL>("Test");
-
-            var xml = _serializer.Serialize(tag);
-
-            Approvals.VerifyXml(xml.ToString());
-        }
-        
-        [Test]
-        [UseReporter(typeof(DiffReporter))]
-        public void Serialize_SimpleBoolArray_ShouldBeApproved()
-        {
-            var tag = Tag.Create<BOOL>("Test", new Dimensions(5));
-
-            var xml = _serializer.Serialize(tag);
-
-            Approvals.VerifyXml(xml.ToString());
-        }
-        
-        [Test]
-        [UseReporter(typeof(DiffReporter))]
-        public void Serialize_SimpleSintArray_ShouldBeApproved()
-        {
-            var tag = Tag.Create<SINT>("Test", new Dimensions(5));
-
-            var xml = _serializer.Serialize(tag);
-
-            Approvals.VerifyXml(xml.ToString());
-        }
-        
-        [Test]
-        [UseReporter(typeof(DiffReporter))]
-        public void Serialize_SimpleIntArray_ShouldBeApproved()
-        {
-            var tag = Tag.Create<INT>("Test", new Dimensions(5));
-
-            var xml = _serializer.Serialize(tag);
-
-            Approvals.VerifyXml(xml.ToString());
-        }
-        
-        [Test]
-        [UseReporter(typeof(DiffReporter))]
-        public void Serialize_SimpleDintArray_ShouldBeApproved()
-        {
-            var tag = Tag.Create<DINT>("Test", new Dimensions(5));
-
-            var xml = _serializer.Serialize(tag);
-
-            Approvals.VerifyXml(xml.ToString());
-        }
-        
-        [Test]
-        [UseReporter(typeof(DiffReporter))]
-        public void Serialize_SimpleLintArray_ShouldBeApproved()
-        {
-            var tag = Tag.Create<LINT>("Test", new Dimensions(5));
-
-            var xml = _serializer.Serialize(tag);
-
-            Approvals.VerifyXml(xml.ToString());
-        }
-        
-        [Test]
-        [UseReporter(typeof(DiffReporter))]
-        public void Serialize_SimpleRealArray_ShouldBeApproved()
-        {
-            var tag = Tag.Create<REAL>("Test", new Dimensions(5));
-
-            var xml = _serializer.Serialize(tag);
-
-            Approvals.VerifyXml(xml.ToString());
-        }
-        
-        [Test]
-        [UseReporter(typeof(DiffReporter))]
-        public void Serialize_String_ShouldBeApproved()
-        {
-            var tag = Tag.Create<STRING>("Test");
-
-            var xml = _serializer.Serialize(tag);
-
-            Approvals.VerifyXml(xml.ToString());
-        }
-        
-        [Test]
-        [UseReporter(typeof(DiffReporter))]
-        public void Serialize_Timer_ShouldBeApproved()
-        {
-            var tag = Tag.Create<TIMER>("Test");
-
-            var xml = _serializer.Serialize(tag);
-
-            Approvals.VerifyXml(xml.ToString());
-        }
-        
-        [Test]
-        [UseReporter(typeof(DiffReporter))]
-        public void Serialize_AlarmDigital_ShouldBeApproved()
-        {
-            var tag = Tag.Create<ALARM_DIGITAL>("Test");
-
-            var xml = _serializer.Serialize(tag);
-
-            Approvals.VerifyXml(xml.ToString());
+            return Verify(xml.ToString());
         }
 
         [Test]
-        [UseReporter(typeof(DiffReporter))]
-        public void Serialize_UserDefined_ShouldBeApproved()
+        public Task Serialize_SimpleSint_ShouldBeApproved()
         {
-            var userType = new UserDefined("Test", "This is a test type", new List<IMember<IDataType>>
-            {
-                Member.Create<BOOL>("BoolMember"),
-                Member.Create<DINT>("DintMember"),
-                Member.Create<REAL>("RealMember"),
-                Member.Create<TIMER>("TimerMember"),
-                Member.Create<STRING>("StringMember")
-            });
-
-            var tag = Tag.Create("Test", userType);
+            var tag = Logix.Tag<SINT>("Test");
 
             var xml = _serializer.Serialize(tag);
 
-            Approvals.VerifyXml(xml.ToString());
+            return Verify(xml.ToString());
         }
+
+        [Test]
+        public Task Serialize_SimpleInt_ShouldBeApproved()
+        {
+            var tag = Logix.Tag<INT>("Test");
+
+            var xml = _serializer.Serialize(tag);
+
+            return Verify(xml.ToString());
+        }
+
+        [Test]
         
+        public Task Serialize_SimpleDint_ShouldBeApproved()
+        {
+            var tag = Logix.Tag<DINT>("Test");
+
+            var xml = _serializer.Serialize(tag);
+
+            return Verify(xml.ToString());
+        }
+
+        [Test]
+        
+        public Task Serialize_SimpleLint_ShouldBeApproved()
+        {
+            var tag = Logix.Tag<LINT>("Test");
+
+            var xml = _serializer.Serialize(tag);
+
+            return Verify(xml.ToString());
+        }
+
+        [Test]
+        
+        public Task Serialize_SimpleReal_ShouldBeApproved()
+        {
+            var tag = Logix.Tag<REAL>("Test");
+
+            var xml = _serializer.Serialize(tag);
+
+            return Verify(xml.ToString());
+        }
+
+        [Test]
+        
+        public Task Serialize_SimpleBoolArray_ShouldBeApproved()
+        {
+            var tag = Logix.TagArray<BOOL>("Test", 5);
+
+            var xml = _serializer.Serialize(tag);
+
+            return Verify(xml.ToString());
+        }
+
+        [Test]
+        
+        public Task Serialize_SimpleSintArray_ShouldBeApproved()
+        {
+            var tag = Logix.TagArray<SINT>("Test", 5);
+
+            var xml = _serializer.Serialize(tag);
+
+            return Verify(xml.ToString());
+        }
+
+        [Test]
+        
+        public Task Serialize_SimpleIntArray_ShouldBeApproved()
+        {
+            var tag = Logix.TagArray<INT>("Test", new Dimensions(5));
+
+            var xml = _serializer.Serialize(tag);
+
+            return Verify(xml.ToString());
+        }
+
+        [Test]
+        
+        public Task Serialize_SimpleDintArray_ShouldBeApproved()
+        {
+            var tag = Logix.TagArray<DINT>("Test", new Dimensions(5));
+
+            var xml = _serializer.Serialize(tag);
+
+            return Verify(xml.ToString());
+        }
+
+        [Test]
+        
+        public Task Serialize_SimpleLintArray_ShouldBeApproved()
+        {
+            var tag = Logix.TagArray<LINT>("Test", new Dimensions(5));
+
+            var xml = _serializer.Serialize(tag);
+
+            return Verify(xml.ToString());
+        }
+
+        [Test]
+        
+        public Task Serialize_SimpleRealArray_ShouldBeApproved()
+        {
+            var tag = Logix.TagArray<REAL>("Test", new Dimensions(5));
+
+            var xml = _serializer.Serialize(tag);
+
+            return Verify(xml.ToString());
+        }
+
+        [Test]
+        
+        public Task Serialize_String_ShouldBeApproved()
+        {
+            var tag = Logix.Tag<STRING>("Test");
+
+            var xml = _serializer.Serialize(tag);
+
+            return Verify(xml.ToString());
+        }
+
+        [Test]
+        
+        public Task Serialize_Timer_ShouldBeApproved()
+        {
+            var tag = Logix.Tag<TIMER>("Test");
+
+            var xml = _serializer.Serialize(tag);
+
+            return Verify(xml.ToString());
+        }
+
+        [Test]
+        
+        public Task Serialize_AlarmDigital_ShouldBeApproved()
+        {
+            var tag = Logix.Tag<ALARM_DIGITAL>("Test");
+
+            var xml = _serializer.Serialize(tag);
+
+            return Verify(xml.ToString());
+        }
+
         [Test]
         public void Deserialize_Null_ShouldThrowArgumentNullException()
         {
@@ -241,7 +214,7 @@ namespace L5Sharp.Serialization.Tests
             FluentActions.Invoking(() => _serializer.Deserialize(element)).Should().Throw<ArgumentException>()
                 .WithMessage($"Element 'Invalid' not valid for the serializer {_serializer.GetType()}.");
         }
-        
+
         [Test]
         public void Deserialize_SimpleTagData_ShouldNotBeNull()
         {
@@ -251,7 +224,7 @@ namespace L5Sharp.Serialization.Tests
 
             component.Should().NotBeNull();
         }
-        
+
         [Test]
         public void Deserialize_SimpleTagData_ShouldBeExpected()
         {
@@ -268,9 +241,9 @@ namespace L5Sharp.Serialization.Tests
             component.ExternalAccess.Should().Be(ExternalAccess.None);
             component.Dimensions.Should().Be(Dimensions.Empty);
             component.Usage.Should().Be(TagUsage.Null);
-            component.Value.Should().Be(123456);
+            component.Data.Should().Be(123456);
         }
-        
+
         [Test]
         public void Deserialize_ComplexPredefined_ShouldBeExpected()
         {
@@ -287,13 +260,13 @@ namespace L5Sharp.Serialization.Tests
             component.ExternalAccess.Should().Be(ExternalAccess.ReadOnly);
             component.Dimensions.Should().Be(Dimensions.Empty);
             component.Usage.Should().Be(TagUsage.Null);
-            component.Value.Should().BeNull();
+            component.Data.Should().BeNull();
             component.Members().Should().HaveCount(5);
-            component.Member("PRE").Value.Should().Be(1000);
-            component.Member("ACC").Value.Should().Be(0);
-            component.Member("EN").Value.Should().Be(false);
-            component.Member("TT").Value.Should().Be(false);
-            component.Member("DN").Value.Should().Be(false);
+            component.Member("PRE")?.Data.Should().Be(1000);
+            component.Member("ACC")?.Data.Should().Be(0);
+            component.Member("EN")?.Data.Should().Be(false);
+            component.Member("TT")?.Data.Should().Be(false);
+            component.Member("DN")?.Data.Should().Be(false);
         }
 
         private static string GetSimpleTagData()

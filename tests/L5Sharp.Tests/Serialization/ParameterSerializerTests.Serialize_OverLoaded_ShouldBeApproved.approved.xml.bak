@@ -1,3 +1,0 @@
-﻿<Parameter Name="Test" TagType="Alias" DataType="BOOL" Usage="Output" Radix="Binary" AliasFor="AliasTag" Required="true" Visible="true" ExternalAccess="Read Only">
-  <Description><![CDATA[This is a test]]></Description>
-</Parameter>

@@ -1,0 +1,19 @@
+﻿<DataType Name="Test" Family="NoFamily" Class="User">
+  <Description>This is a test user defined type</Description>
+  <Members>
+    <Member Name="Member01" DataType="BOOL" Dimension="0" Radix="Binary" ExternalAccess="Read Only">
+      <Description>This is a new test member</Description>
+    </Member>
+    <Member Name="Member02" DataType="INT" Dimension="0" Radix="Octal" ExternalAccess="None">
+      <Description>This is a test member</Description>
+    </Member>
+    <Member Name="Member03" DataType="DINT" Dimension="0" Radix="Decimal" ExternalAccess="Read Only">
+      <Description>This is a test member</Description>
+    </Member>
+    <Member Name="Member04" DataType="LINT" Dimension="0" Radix="Hex" ExternalAccess="Read/Write">
+      <Description>This is a test member</Description>
+    </Member>
+    <Member Name="Member04" DataType="SINT" Dimension="0" Radix="Ascii" ExternalAccess="Read/Write"></Member>
+    <Member Name="Member05" DataType="REAL" Dimension="0" Radix="NullType" ExternalAccess="Read/Write"></Member>
+  </Members>
+</DataType>

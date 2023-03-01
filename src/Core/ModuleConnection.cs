@@ -19,27 +19,27 @@ namespace L5Sharp.Core
         /// <summary>
         /// Gets the value of the Request Packet Interval for the <see cref="ModuleConnection"/>. 
         /// </summary>
-        public int Rpi { get; set; } = default;
+        public int Rpi { get; set; }
 
         /// <summary>
         /// Gets the input connection point for the primary <see cref="ModuleConnection"/>.
         /// </summary>
-        public ushort InputCxnPoint { get; set; } = default;
+        public ushort InputCxnPoint { get; set; }
 
         /// <summary>
         /// Gets the input size for the <see cref="ModuleConnection"/>.
         /// </summary>
-        public ushort InputSize { get; set; } = default;
+        public ushort InputSize { get; set; }
 
         /// <summary>
         /// Gets the output connection point for the primary <see cref="ModuleConnection"/>.
         /// </summary>
-        public ushort OutputCxnPoint { get; set; } = default;
+        public ushort OutputCxnPoint { get; set; }
 
         /// <summary>
         /// Gets the output size for the <see cref="ModuleConnection"/>.
         /// </summary>
-        public ushort OutputSize { get; set; } = default;
+        public ushort OutputSize { get; set; }
 
         /// <summary>
         /// Gets the <see cref="Enums.ConnectionType"/> value for the <see cref="ModuleConnection"/>.
@@ -59,7 +59,7 @@ namespace L5Sharp.Core
         /// <summary>
         /// Gets a value indicating whether the <see cref="ModuleConnection"/> output is a redundant owner.
         /// </summary>
-        public bool OutputRedundantOwner { get; set; } = default;
+        public bool OutputRedundantOwner { get; set; }
 
         /// <summary>
         /// Gets the <see cref="Enums.ProductionTrigger"/> value for the <see cref="ModuleConnection"/>.
@@ -69,12 +69,12 @@ namespace L5Sharp.Core
         /// <summary>
         /// Gets the value indicating whether the EtherNet/IP connection is unicast.
         /// </summary>
-        public bool Unicast { get; set; } = default;
+        public bool Unicast { get; set; }
 
         /// <summary>
         /// Gets the value of the Event ID used in conjunction with an event task for the <see cref="ModuleConnection"/>.
         /// </summary>
-        public int EventId { get; set; } = default;
+        public int EventId { get; set; }
 
         /// <summary>
         /// Gets the suffix for <see cref="Input"/> tag. 
@@ -89,11 +89,11 @@ namespace L5Sharp.Core
         /// <summary>
         /// Gets the Tag that represents the input channel data for the <see cref="ModuleConnection"/>.
         /// </summary>
-        public Tag? Input { get; set; } = default;
+        public Tag? Input { get; set; }
 
         /// <summary>
         /// Gets the Tag that represents the output channel data for the <see cref="ModuleConnection"/>.
         /// </summary>
-        public Tag? Output { get; set; } = default;
+        public Tag? Output { get; set; }
     }
 }

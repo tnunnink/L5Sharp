@@ -26,12 +26,12 @@ namespace L5Sharp.Serialization
             element.AddValue(obj.Name, L5XName.Name);
             element.AddText(obj.Description, L5XName.Description);
             element.AddValue(obj.CatalogNumber, L5XName.CatalogNumber);
-            element.AddValue(obj.Vendor, L5XName.Vendor);
-            element.AddValue(obj.ProductType, L5XName.ProductType);
+            element.AddValue(obj.Vendor.Id, L5XName.Vendor);
+            element.AddValue(obj.ProductType.Id, L5XName.ProductType);
             element.AddValue(obj.ProductCode, L5XName.ProductCode);
             element.AddValue(obj.Revision.Major, L5XName.Major);
             element.AddValue(obj.Revision.Minor, L5XName.Minor);
-            element.AddValue(obj.ParentModule, L5XName.ParentModule);
+            element.Add(new XAttribute(L5XName.ParentModule, obj.ParentModule)); // We want to add this even if empty.
             element.AddValue(obj.ParentPortId, L5XName.ParentModPortId);
             element.AddValue(obj.Inhibited, L5XName.Inhibited);
             element.AddValue(obj.MajorFault, L5XName.MajorFault);

@@ -16,8 +16,15 @@ namespace L5Sharp.Types.Atomics
         /// <summary>
         /// Creates a new default <see cref="SINT"/> type.
         /// </summary>
-        /// <param name="radix">The optional radix format of the value.</param>
-        public SINT(Radix? radix = null) : base(nameof(SINT), radix)
+        public SINT() : base(nameof(REAL))
+        {
+        }
+        
+        /// <summary>
+        /// Creates a new <see cref="SINT"/> value with the provided radix format.
+        /// </summary>
+        /// <param name="radix">The <see cref="Enums.Radix"/> number format of the value.</param>
+        public SINT(Radix? radix) : base(nameof(SINT), radix)
         {
         }
 

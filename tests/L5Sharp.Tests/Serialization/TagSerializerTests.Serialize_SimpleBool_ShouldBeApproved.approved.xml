@@ -1,5 +1,0 @@
-﻿<Tag Name="Test" TagType="Base" DataType="BOOL" Radix="Decimal" Constant="false" ExternalAccess="Read/Write">
-  <Data Format="Decorated">
-    <DataValue DataType="BOOL" Value="0" />
-  </Data>
-</Tag>

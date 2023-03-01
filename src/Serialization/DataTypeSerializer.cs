@@ -47,6 +47,7 @@ namespace L5Sharp.Serialization
                 Name = element.LogixName(),
                 Description = element.LogixDescription(),
                 Family = element.GetValue<DataTypeFamily>(L5XName.Family),
+                Class = element.GetValue<DataTypeClass>(L5XName.Class),
                 Members = members.ToList()
             };
         }

@@ -22,7 +22,7 @@ namespace L5Sharp.Tests.Components
             var tag = new Tag();
 
             tag.Name.Should().BeEmpty();
-            tag.Data.Should().Be(LogixType.Null);
+            tag.Data.Should().Be(Logix.Null);
             tag.DataType.Should().Be("NULL");
             tag.Dimensions.Should().Be(Dimensions.Empty);
             tag.Radix.Should().Be(Radix.Null);

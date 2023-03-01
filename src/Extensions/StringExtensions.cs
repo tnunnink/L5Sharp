@@ -30,7 +30,7 @@ namespace L5Sharp.Extensions
         /// Valid name must contain only alphanumeric or underscores, start with a letter or underscore,
         /// and be between 1 and 40 characters.
         /// </remarks>
-        public static bool IsValidComponentName(this string name)
+        public static bool IsComponentName(this string name)
         {
             //Can not be null or empty.
             if (string.IsNullOrEmpty(name))
@@ -58,7 +58,8 @@ namespace L5Sharp.Extensions
         public static bool IsTagName(this string input) => new TagName(input).IsValid;
 
         /// <summary>
-        /// Returns the current string value as an array of <see cref="SINT"/> atomic type that represent the bytes of the string.
+        /// Returns the current string value as an array of <see cref="SINT"/> atomic type with <see cref="Enums.Radix.Ascii"/>
+        /// format that represent the bytes of the string.
         /// </summary>
         /// <param name="value">The string value.</param>
         /// <returns>An array of <see cref="SINT"/> atomic value types.</returns>

@@ -17,14 +17,15 @@ namespace L5Sharp.Serialization
             Check.NotNull(obj);
 
             var element = new XElement(L5XName.Program);
+            
             element.AddValue(obj, p => p.Name);
+            element.AddText(obj, p => p.Description);
             element.AddValue(obj, p => p.Type);
             element.AddValue(obj, p => p.TestEdits);
             element.AddValue(obj, p => p.MainRoutineName);
             element.AddValue(obj, p => p.FaultRoutineName);
             element.AddValue(obj, p => p.Disabled);
             element.AddValue(obj, p => p.UseAsFolder);
-            element.AddText(obj, p => p.Description);
 
             return element;
         }

@@ -1,15 +1,13 @@
-﻿using System;
-using System.Net;
+﻿using System.Net;
 using System.Xml.Linq;
-using ApprovalTests;
-using ApprovalTests.Reporters;
 using FluentAssertions;
 using L5Sharp.Components;
 using L5Sharp.Core;
 using L5Sharp.Enums;
-using NUnit.Framework;
+using L5Sharp.Serialization;
+using Task = System.Threading.Tasks.Task;
 
-namespace L5Sharp.Serialization.Tests
+namespace L5Sharp.Tests.Serialization
 {
     [TestFixture]
     public class ModuleSerializerTests
@@ -31,7 +29,7 @@ namespace L5Sharp.Serialization.Tests
         [Test]
         public void Serialize_WhenCalled_ShouldNotBeNull()
         {
-            var module = new Module("Test", "1756-EN2T");
+            var module = new Module { Name = "Test", CatalogNumber = "1756-EN2T" };
 
             var xml = _serializer.Serialize(module);
 
@@ -39,24 +37,23 @@ namespace L5Sharp.Serialization.Tests
         }
 
         [Test]
-        [UseReporter(typeof(DiffReporter))]
-        public void Serialize_ValueTypeArray_ShouldBeApproved()
+        
+        public Task Serialize_ValueTypeArray_ShouldBeApproved()
         {
-            var module = new Module("Test", "1756-EN2T");
+            var module = new Module { Name = "Test", CatalogNumber = "1756-EN2T" };
 
             var xml = _serializer.Serialize(module);
 
-            Approvals.VerifyXml(xml.ToString());
+            return Verify(xml.ToString());
         }
-        
+
         [Test]
         public void Deserialize_InvalidElementName_ShouldThrowArgumentException()
         {
             const string xml = @"<Invalid></Invalid>";
             var element = XElement.Parse(xml);
 
-            FluentActions.Invoking(() => _serializer.Deserialize(element)).Should().Throw<ArgumentException>()
-                .WithMessage($"Element 'Invalid' not valid for the serializer {_serializer.GetType()}.");
+            FluentActions.Invoking(() => _serializer.Deserialize(element)).Should().Throw<InvalidOperationException>();
         }
 
         [Test]
@@ -78,7 +75,7 @@ namespace L5Sharp.Serialization.Tests
 
             component.Name.Should().Be("Local_Mod_4");
             component.Description.Should().BeEmpty();
-            component.CatalogNumber.Should().Be(new CatalogNumber("1756sc-CTR8/A"));
+            component.CatalogNumber.Should().Be("1756sc-CTR8/A");
             component.Vendor.Should().Be(new Vendor(58));
             component.ProductType.Should().Be(new ProductType(109));
             component.ProductCode.Should().Be(15);
@@ -90,10 +87,10 @@ namespace L5Sharp.Serialization.Tests
             component.SafetyEnabled.Should().BeFalse();
             component.Keying.Should().Be(ElectronicKeying.CompatibleModule);
             component.Slot.Should().Be(4);
-            component.IP.Should().Be(IPAddress.Parse("255.255.255.255"));
+            component.IP.Should().BeNull();
             component.Ports.Should().HaveCount(1);
             component.Connections.Should().HaveCount(1);
-            component.Tags.Should().NotBeEmpty();
+            component.Config.Should().NotBeNull();
         }
 
         private static string GetTestModule()

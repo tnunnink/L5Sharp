@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
-using ApprovalTests;
-using ApprovalTests.Reporters;
 using FluentAssertions;
 using L5Sharp.Components;
 using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Serialization;
 using NUnit.Framework;
+using VerifyNUnit;
+using Task = System.Threading.Tasks.Task;
 
 namespace L5Sharp.Tests.Serialization
 {
@@ -41,7 +41,7 @@ namespace L5Sharp.Tests.Serialization
         }
 
         [Test]
-        [UseReporter(typeof(DiffReporter))]
+        
         public void Serialize_BasicType_ShouldBeApproved()
         {
             var type = new DataType
@@ -51,12 +51,11 @@ namespace L5Sharp.Tests.Serialization
 
             var xml = _serializer.Serialize(type);
 
-            Approvals.VerifyXml(xml.ToString());
+            Verifier.Verify(xml.ToString());
         }
 
         [Test]
-        [UseReporter(typeof(DiffReporter))]
-        public void Serialize_AtomicType_ShouldBeApproved()
+        public Task Serialize_AtomicType_ShouldBeApproved()
         {
             var type = new DataType
             {
@@ -67,7 +66,7 @@ namespace L5Sharp.Tests.Serialization
                     new()
                     {
                         Name = "Member01", DataType = "BOOL", Radix = Radix.Binary,
-                        ExternalAccess = ExternalAccess.ReadOnly, Description = "This is a test member"
+                        ExternalAccess = ExternalAccess.ReadOnly, Description = "This is a new test member"
                     },
                     new()
                     {
@@ -91,7 +90,7 @@ namespace L5Sharp.Tests.Serialization
 
             var xml = _serializer.Serialize(type);
             
-            Approvals.VerifyXml(xml.ToString());
+            return Verifier.VerifyXml(xml.ToString());
         }
 
         [Test]

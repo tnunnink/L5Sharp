@@ -1,1 +1,0 @@
-﻿<Parameter Name="Test" TagType="Base" DataType="DINT" Dimensions="10" Usage="InOut" Radix="Decimal" Required="true" Visible="true" Constant="false" />

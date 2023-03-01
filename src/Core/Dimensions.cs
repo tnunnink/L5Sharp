@@ -240,16 +240,6 @@ namespace L5Sharp.Core
         }
 
         /// <summary>
-        /// Gets a <see cref="Dimensions"/> value based on the provided logix data type.
-        /// If the type is an <see cref="ArrayType{TLogixType}"/>, then returns the dimensions of the type;
-        /// Otherwise, returns empty dimensions.
-        /// </summary>
-        /// <param name="dataType">The <see cref="ILogixType"/> to get dimensions for.</param>
-        /// <returns>A <see cref="Core.Dimensions"/> value.</returns>
-        public static Dimensions OfType(ILogixType dataType) =>
-            dataType is ArrayType<ILogixType> arrayType ? arrayType.Dimensions : Empty;
-
-        /// <summary>
         /// Creates a new instance of the current <see cref="Dimensions"/> with the same value.
         /// </summary>
         /// <returns>A new <see cref="Dimensions"/> object with the same value.</returns>

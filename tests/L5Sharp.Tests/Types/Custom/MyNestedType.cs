@@ -1,4 +1,6 @@
-﻿using L5Sharp.Enums;
+﻿using System.Linq;
+using L5Sharp.Core;
+using L5Sharp.Enums;
 using L5Sharp.Types;
 using L5Sharp.Types.Atomics;
 using L5Sharp.Types.Predefined;
@@ -12,21 +14,38 @@ namespace L5Sharp.Tests.Types.Custom
     {
         public MyNestedType() : base(nameof(MyNestedType))
         {
-            Messages = new[] { new MESSAGE(), new MESSAGE(), new MESSAGE(), new MESSAGE(), new MESSAGE() };
         }
 
-        public BOOL Indy { get; set; } = new();
-        public STRING Str { get; set; } = new();
-        public TIMER Tmr { get; } = new();
-        public MySimpleType Simple { get; } = new();
-
-        public BOOL[] Flags { get; } =
-        {
-            new(), new(), new(), new(), new(), new(), new(), new(), new(), new()
-        };
-
-        public MESSAGE[] Messages { get; }
-
         public override DataTypeClass Class => DataTypeClass.User;
+
+        /// <summary>
+        /// A simple boolean member
+        /// </summary>
+        public BOOL Indy { get; set; } = new();
+
+        /// <summary>
+        /// A string member
+        /// </summary>
+        public STRING Str { get; set; } = new();
+
+        /// <summary>
+        /// A nested timer member
+        /// </summary>
+        public TIMER Tmr { get; set; } = new();
+
+        /// <summary>
+        /// A nested user defined type
+        /// </summary>
+        public MySimpleType Simple { get; set; } = new();
+
+        /// <summary>
+        /// A nested array of atomic values.
+        /// </summary>
+        public BOOL[] Flags { get; set; } = Logix.Array<BOOL>(10).ToArray();
+
+        /// <summary>
+        /// A nested array of structure types.
+        /// </summary>
+        public MESSAGE[] Messages { get; set; } = Logix.Array<MESSAGE>(10).ToArray();
     }
 }

@@ -16,7 +16,15 @@ namespace L5Sharp.Types.Atomics
         /// <summary>
         /// Creates a new default <see cref="BOOL"/> type.
         /// </summary>
-        public BOOL(Radix? radix = null) : base(nameof(BOOL), radix)
+        public BOOL() : base(nameof(BOOL))
+        {
+        }
+        
+        /// <summary>
+        /// Creates a new <see cref="BOOL"/> value with the provided radix format.
+        /// </summary>
+        /// <param name="radix">The <see cref="Enums.Radix"/> number format of the value.</param>
+        public BOOL(Radix? radix) : base(nameof(BOOL), radix)
         {
         }
 
@@ -43,7 +51,7 @@ namespace L5Sharp.Types.Atomics
             _value = converted switch
             {
                 BOOL b => b,
-                SINT s => s != 1,
+                SINT s => s != 0,
                 _ => _value
             };
         }

@@ -45,7 +45,6 @@ namespace L5Sharp.Core
         /// The overriden string comment of the tag member, if one exists. Empty string if not.
         /// </summary>
         /// <value>A <see cref="string"/> containing the tag member comment.</value>
-        [XmlIgnore]
         public string Comment
         {
             get => _tag.Comments.TryGetValue(TagName.Operand, out var comment) ? comment : string.Empty;
@@ -56,7 +55,6 @@ namespace L5Sharp.Core
         /// The units of the tag member. This appears to only apply to module defined tags...
         /// </summary>
         /// <value>A <see cref="string"/> representing the scaled units of the tag member.</value>
-        [XmlIgnore]
         public string Unit
         {
             get => _tag.Units.TryGetValue(TagName.Operand, out var units) ? units : string.Empty;

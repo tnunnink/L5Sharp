@@ -47,11 +47,11 @@ namespace L5Sharp.Serialization
                     @$"No type defined for type {typeof(T)}.
                      Class must specify LogixSerializerAttribute to be deserialized.");
 
-            var serializer = Activator.CreateInstance(serializerAttribute.Type);
+            var serializer = Activator.CreateInstance(serializerAttribute.SerializerType);
 
             if (serializer is not ILogixSerializer<T> logixSerializer)
                 throw new InvalidOperationException(
-                    @$"The serializer {serializerAttribute.Type} does not serialize objects of type {typeof(T)}.
+                    @$"The serializer {serializerAttribute.SerializerType} does not serialize objects of type {typeof(T)}.
                     Either specify correct LogixSerializerAttribute for type ");
 
             return logixSerializer;

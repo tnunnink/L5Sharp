@@ -1,5 +1,0 @@
-﻿<Tag Name="Test" TagType="Base" DataType="ALARM_DIGITAL" Constant="False" ExternalAccess="Read/Write">
-  <Data Format="Alarm">
-    <AlarmDigitalParameters Severity="0" MinDurationPRE="0" ShelveDuration="0" MaxShelveDuration="0" ProgTime="0" EnableIn="false" In="false" InFault="false" Condition="false" AckRequired="false" Latched="false" ProgAck="false" OperAck="false" ProgReset="false" OperReset="false" ProgSuppress="false" OperSuppress="false" ProgUnsuppress="false" OperUnsuppress="false" OperShelve="false" ProgUnshelve="false" OperUnshelve="false" ProgDisable="false" OperDisable="false" ProgEnable="false" OperEnable="false" AlarmCountReset="false" UseProgTime="false" />
-  </Data>
-</Tag>

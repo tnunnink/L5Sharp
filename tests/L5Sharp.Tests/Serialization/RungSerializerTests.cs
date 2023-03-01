@@ -1,14 +1,10 @@
-﻿using System;
-using System.Xml.Linq;
-using ApprovalTests;
-using ApprovalTests.Reporters;
+﻿using System.Xml.Linq;
 using FluentAssertions;
-using L5Sharp.Components;
 using L5Sharp.Core;
 using L5Sharp.Enums;
-using NUnit.Framework;
+using L5Sharp.Serialization;
 
-namespace L5Sharp.Serialization.Tests
+namespace L5Sharp.Tests.Serialization
 {
     [TestFixture]
     public class RungSerializerTests
@@ -20,17 +16,23 @@ namespace L5Sharp.Serialization.Tests
         {
             _serializer = new RungSerializer();
         }
-        
+
         [Test]
         public void Serialize_Null_ShouldThrowArgumentNullException()
         {
             FluentActions.Invoking(() => _serializer.Serialize(null!)).Should().Throw<ArgumentNullException>();
         }
-        
+
         [Test]
         public void Serialize_WhenCalled_ShouldNotBeNull()
         {
-            var component = new Rung(1, RungType.Normal, "This is a test comment", new NeutralText("XIC(Test);"));
+            var component = new Rung
+            {
+                Number = 1,
+                Type = RungType.Normal,
+                Comment = "This is a test comment",
+                Text = new NeutralText("XIC(Test);")
+            };
 
             var xml = _serializer.Serialize(component);
 
@@ -38,16 +40,22 @@ namespace L5Sharp.Serialization.Tests
         }
 
         [Test]
-        [UseReporter(typeof(DiffReporter))]
-        public void Serialize_Bool_ShouldBeApproved()
+        
+        public Task Serialize_Bool_ShouldBeApproved()
         {
-            var component = new Rung(1, RungType.Normal, "This is a test comment", new NeutralText("XIC(Test);"));
+            var component = new Rung
+            {
+                Number = 1,
+                Type = RungType.Normal,
+                Comment = "This is a test comment",
+                Text = new NeutralText("XIC(Test);")
+            };
 
             var xml = _serializer.Serialize(component);
 
-            Approvals.VerifyXml(xml.ToString());
+            return Verify(xml.ToString());
         }
-        
+
         [Test]
         public void Deserialize_Null_ShouldThrowArgumentNullException()
         {

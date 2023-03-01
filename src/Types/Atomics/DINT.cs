@@ -16,8 +16,15 @@ namespace L5Sharp.Types.Atomics
         /// <summary>
         /// Creates a new default <see cref="DINT"/> type.
         /// </summary>
-        /// <param name="radix">The optional radix format of the value.</param>
-        public DINT(Radix? radix = null) : base(nameof(DINT), radix)
+        public DINT() : base(nameof(DINT))
+        {
+        }
+        
+        /// <summary>
+        /// Creates a new <see cref="DINT"/> value with the provided radix format.
+        /// </summary>
+        /// <param name="radix">The <see cref="Enums.Radix"/> number format of the value.</param>
+        public DINT(Radix? radix) : base(nameof(DINT), radix)
         {
         }
 

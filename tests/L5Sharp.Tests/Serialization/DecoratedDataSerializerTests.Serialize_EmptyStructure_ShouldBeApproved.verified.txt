@@ -1,0 +1,3 @@
+﻿<Data Format="Decorated">
+  <Structure DataType="Test" />
+</Data>

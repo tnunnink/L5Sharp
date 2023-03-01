@@ -39,7 +39,7 @@ namespace L5Sharp
             if (component is null)
                 throw new ArgumentNullException(nameof(component));
             
-            if (!component.Name.IsValidComponentName())
+            if (!component.Name.IsComponentName())
                 throw new ArgumentException($"The provided component name '{component.Name}' is not valid.");
 
             if (_container.Elements().Any(e => e.LogixName() == component.Name))

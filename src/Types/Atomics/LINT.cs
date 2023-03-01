@@ -16,8 +16,15 @@ namespace L5Sharp.Types.Atomics
         /// <summary>
         /// Creates a new default <see cref="LINT"/> type.
         /// </summary>
-        /// <param name="radix">The optional radix format of the value.</param>
-        public LINT(Radix? radix = null) : base(nameof(LINT), radix)
+        public LINT() : base(nameof(LINT))
+        {
+        }
+        
+        /// <summary>
+        /// Creates a new <see cref="LINT"/> value with the provided radix format.
+        /// </summary>
+        /// <param name="radix">The <see cref="Enums.Radix"/> number format of the value.</param>
+        public LINT(Radix? radix) : base(nameof(LINT), radix)
         {
         }
 

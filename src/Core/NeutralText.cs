@@ -11,7 +11,7 @@ namespace L5Sharp.Core
     /// A wrapper class around the textual representation of the ladder logix notation called neutral text. 
     /// </summary>
     /// <remarks>
-    /// Neutral text cna represent a single instruction or a full rung (collection of instructions).
+    /// Neutral text can represent a single instruction or a full rung (collection of instructions).
     /// Each instruction likely contains sets of tag names.
     /// This class provides functions for extracting the textual information into strongly type classes that are easier
     /// to work with.
@@ -39,7 +39,7 @@ namespace L5Sharp.Core
         public bool IsBalanced => _text.IsBalanced('[', ']') && _text.IsBalanced('(', ')');
 
         /// <summary>
-        /// Gets a collection of <see cref="Instruction"/> objects that are present in the <see cref="NeutralText"/> instance.
+        /// Gets a collection of <see cref="Instruction"/> objects that are present in the <see cref="NeutralText"/> string.
         /// </summary>
         /// <returns>An collection of <see cref="Instruction"/> objects that were parsed.</returns>
         public IEnumerable<Instruction> Instructions() => GetInstructions(_text);
@@ -111,7 +111,7 @@ namespace L5Sharp.Core
         public static bool operator !=(NeutralText? left, NeutralText? right) => !Equals(left, right);
 
         /// <summary>
-        /// Iterates over the the provided input value and parses out instruction test into <see cref="Instruction"/> objects.
+        /// Iterates over the the provided input value and parses out instruction text into <see cref="Instruction"/> objects.
         /// </summary>
         /// <param name="input">The text to parse.</param>
         /// <returns>A collection of <see cref="Instruction"/> that were parsed from the provided text.</returns>

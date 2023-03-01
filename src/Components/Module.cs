@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using System.Net;
 using L5Sharp.Attributes;
 using L5Sharp.Core;
 using L5Sharp.Enums;
@@ -7,8 +9,7 @@ using L5Sharp.Serialization;
 namespace L5Sharp.Components
 {
     /// <summary>
-    /// Represents a Logix <b>Module</b> component. A module is the basis for defining IO connection to field devices
-    /// and other networking equipment.
+    /// A logix <c>Module</c> component. Contains the properties that comprise the L5X module element.
     /// </summary>
     /// <footer>
     /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
@@ -59,7 +60,7 @@ namespace L5Sharp.Components
         /// This value can be retrieved as part of the <see cref="CatalogEntry"/> object obtained using a
         /// <see cref="ICatalogService"/> for catalog lookup, or when deserializing from an L5X file.
         /// </remarks>
-        public ushort ProductCode { get; set; } = 0;
+        public ushort ProductCode { get; set; }
 
         /// <summary>
         /// The revision number or hardware version of the module.
@@ -82,22 +83,22 @@ namespace L5Sharp.Components
         /// This specified how the module is connected within the module tree.
         /// </summary>
         /// <value>A <see cref="int"/> representing the id of the parent port. Default is zero.</value>
-        public int ParentPortId { get; set; } = default;
+        public int ParentPortId { get; set; }
 
         /// <summary>
         /// An indication of whether the module is inhibited or disabled.
         /// </summary>
-        public bool Inhibited { get; set; } = default;
+        public bool Inhibited { get; set; }
 
         /// <summary>
         /// An indication of whether the module the module will cause a major fault when faulted.
         /// </summary>
-        public bool MajorFault { get; set; } = default;
+        public bool MajorFault { get; set; }
 
         /// <summary>
         /// An indication of whether whether the module has safety features enabled.
         /// </summary>
-        public bool SafetyEnabled { get; set; } = default;
+        public bool SafetyEnabled { get; set; }
 
         /// <summary>
         /// The electronic keying mode of the module.
@@ -119,5 +120,27 @@ namespace L5Sharp.Components
         /// A collection of <see cref="ModuleConnection"/> defining the input and output connection specific to the module.
         /// </summary>
         public List<ModuleConnection> Connections { get; set; } = new();
+
+        /// <summary>
+        /// Gets the slot number of the current module if one exists. If the module does not have an slot, returns null.
+        /// </summary>
+        /// <value>An <see cref="byte"/> representing the slot number of the module.</value>
+        /// <remarks>
+        /// This is a helper property that just looks for <see cref="Ports"/> for a upstream port with a valid slot byte
+        /// number.
+        /// </remarks>
+        public byte? Slot => Ports.FirstOrDefault(p => p.Upstream && p.Address.IsSlot)?.Address.ToSlot();
+
+        /// <summary>
+        /// Gets the IP address of the current module if one exists. If the module does not have an IP, returns null.
+        /// </summary>
+        /// <value>An <see cref="IPAddress"/> representing the IP of the module.</value>
+        /// <remarks>
+        /// This is a helper property that just looks for <see cref="Ports"/> for an Ethernet port with a
+        /// valid IP address.
+        /// </remarks>
+        public IPAddress? IP =>
+            Ports.FirstOrDefault(p => p is { Type: "Ethernet", Address.IsIPv4: true })?.Address
+                .ToIPAddress();
     }
 }

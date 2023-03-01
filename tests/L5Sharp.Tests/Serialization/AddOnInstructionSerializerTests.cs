@@ -1,17 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Xml.Linq;
-using ApprovalTests;
-using ApprovalTests.Reporters;
+﻿using System.Xml.Linq;
 using FluentAssertions;
 using L5Sharp.Components;
 using L5Sharp.Core;
 using L5Sharp.Enums;
+using L5Sharp.Serialization;
 using L5Sharp.Types.Atomics;
 using L5Sharp.Types.Predefined;
-using NUnit.Framework;
+using Task = System.Threading.Tasks.Task;
 
-namespace L5Sharp.Serialization.Tests
+namespace L5Sharp.Tests.Serialization
 {
     [TestFixture]
     public class AddOnInstructionSerializerTests
@@ -33,7 +30,7 @@ namespace L5Sharp.Serialization.Tests
         [Test]
         public void Serialize_WhenCalled_ShouldNotBeNull()
         {
-            var instruction = new AddOnInstruction("Test");
+            var instruction = new AddOnInstruction { Name = "Test" };
 
             var xml = _serializer.Serialize(instruction);
 
@@ -41,42 +38,53 @@ namespace L5Sharp.Serialization.Tests
         }
 
         [Test]
-        [UseReporter(typeof(DiffReporter))]
-        public void Serialize_BasicType_ShouldBeApproved()
+        public Task Serialize_BasicType_ShouldBeApproved()
         {
-            var instruction = new AddOnInstruction("Test");
+            var instruction = new AddOnInstruction { Name = "Test" };
 
             var xml = _serializer.Serialize(instruction);
 
-            Approvals.VerifyXml(xml.ToString());
+            return Verify(xml);
         }
 
         [Test]
-        [UseReporter(typeof(DiffReporter))]
-        public void Serialize_OverloadedInstruction_ShouldBeApproved()
+        public Task Serialize_OverloadedInstruction_ShouldBeApproved()
         {
-            var instruction = new AddOnInstruction("Test", RoutineType.Rll, new Revision(1, 1), "Rev1",
-                "This is the revision note", "ME", true, true, true, 
-                DateTime.Parse("1/1/2022 12:00:00"), "CreatedBy", DateTime.Parse("1/1/2022 12:00:00"), "EditedBy", new Revision(2, 1), 
-                "this is additional help text", true, new List<IParameter<IDataType>>
+            var instruction = new AddOnInstruction
+            {
+                Name = "Test",
+                Revision = new Revision(1, 1),
+                RevisionExtension = "Rev1",
+                RevisionNote = "This is the revision note",
+                Vendor = "ME",
+                ExecutePreScan = true, ExecutePostScan = true, ExecuteEnableInFalse = true,
+                CreatedDate = DateTime.Parse("1/1/2022 12:00:00"), CreatedBy = "CreatedBy",
+                EditedDate = DateTime.Parse("1/1/2022 12:00:00"), EditedBy = "EditedBy",
+                SoftwareRevision = new Revision(2, 1),
+                AdditionalHelpText = "this is additional help text",
+                IsEncrypted = true,
+                Parameters = new List<Parameter>
                 {
-                    new Parameter<IDataType>("TestParameter1", new BOOL()),
-                    new Parameter<IDataType>("TestParameter2", new REAL()),
-                    new Parameter<IDataType>("TestParameter3", new TIMER())
-                }, new List<ITag<IDataType>>
+                    new() { Name = "TestParameter1", DataType = "BOOL" },
+                    new() { Name = "TestParameter2", DataType = "REAL" },
+                    new() { Name = "TestParameter3", DataType = "TIMER" }
+                },
+                LocalTags = new List<Tag>
                 {
-                    new Tag<IDataType>("TestTag1", new ALARM()),
-                    new Tag<IDataType>("TestTag2", new DINT()),
-                    new Tag<IDataType>("TestTag3", new STRING())
-                }, new List<IRoutine<ILogixContent>>
+                    new() { Name = "TestTag1", Data = new ALARM() },
+                    new() { Name = "TestTag2", Data = new DINT() },
+                    new() { Name = "TestTag3", Data = new STRING() },
+                },
+                Routines = new List<Routine>
                 {
-                   new Routine<ILogixContent>("Main"),
-                   new Routine<ILogixContent>("Test")
-                });
+                    new() { Name = "Main" },
+                    new() { Name = "Test" }
+                }
+            };
 
             var xml = _serializer.Serialize(instruction);
 
-            Approvals.VerifyXml(xml.ToString());
+            return Verify(xml);
         }
 
         [Test]
@@ -113,8 +121,6 @@ namespace L5Sharp.Serialization.Tests
             var component = _serializer.Deserialize(element);
 
             component.Name.Should().Be("aoi_Test");
-            component.Family.Should().Be(DataTypeFamily.None);
-            component.Class.Should().Be(DataTypeClass.AddOnDefined);
             component.Description.Should().Be("Test AOI");
             component.Revision.Should().Be(new Revision());
             component.RevisionExtension.Should().Be("Rev1");
@@ -128,7 +134,9 @@ namespace L5Sharp.Serialization.Tests
             component.EditedDate.Should().Be(DateTime.Parse("2022-03-01 03:17:54.746"));
             component.EditedBy.Should().Be(@"ENE\tnunnink");
             component.SoftwareRevision.Should().Be(new Revision(32, 2));
-            component.AdditionalHelpText.Should().Be("This is a test aoi definitio that was built for purposes of exporting data to examine the structure of the L5X");
+            component.AdditionalHelpText.Should()
+                .Be(
+                    "This is a test aoi definitio that was built for purposes of exporting data to examine the structure of the L5X");
             component.IsEncrypted.Should().BeFalse();
             component.Parameters.Should().NotBeEmpty();
             component.LocalTags.Should().NotBeEmpty();

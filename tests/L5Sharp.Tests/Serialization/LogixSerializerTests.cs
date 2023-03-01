@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
 using L5Sharp.Components;
 using L5Sharp.Serialization;
-using NUnit.Framework;
+using Task = L5Sharp.Components.Task;
 
 namespace L5Sharp.Tests.Serialization
 {
