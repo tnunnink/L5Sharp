@@ -1,0 +1,6 @@
+﻿<AddOnInstructionDefinition Name="Test" Revision="1.1" ExecutePreScan="True" ExecutePostScan="True" ExecuteEnableInFalse="True" CreatedDate="1/1/2022 12:00:00 PM" CreatedBy="CreatedBy" EditedDate="1/1/2022 12:00:00 PM" EditedBy="EditedBy" SoftwareRevision="2.1" IsEncrypted="True">
+  <RevisionExtension>Rev1</RevisionExtension>
+  <RevisionNote>This is the revision note</RevisionNote>
+  <Vendor>ME</Vendor>
+  <AdditionalHelpText>this is additional help text</AdditionalHelpText>
+</AddOnInstructionDefinition>
