@@ -79,46 +79,6 @@ var allTagsInFile = content.Query<Tag>();
 ```
 NOTE: `Query<T>()` just returns an `IEnumerable<T>`, so it is essentially read only.
 
-### Create Your Own Entities
-I didn't want to lock use down to just types provided in the library. 
-If you want to create your own entity type to represent some data of the L5X content,
-all you need to do is create the class and implement am `ILogixSerializer<T>` for that type.
-
-Here is an example. First create some class.
-```csharp
-public class TagType
-{
-    public string TagName { get; set; }
-    public string TagType { get; set; }
-}
-```
-Then create a class that implements ILogixSerializer.
-```csharp
-public class TagTypeSerializer : ILogixSerializer<TagType>
-{
-    public XElement Serialize(TagType obj)
-    {
-        var element = new XElement("TagType");
-        element.AddValue(obj, t => t.TagName);
-        element.AddValue(obj, t => t.TagType);
-        return element
-    }
-    
-    
-    public TagType Deserialize(XElement element)
-    {
-        return new TagType
-        {
-            TagName = element.GetValue<string>("Name");
-        }
-    }
-}
-```
-
-
-
-Since you can specify any typ using Query(), you can create you 
-
 
 ## Documentation
 

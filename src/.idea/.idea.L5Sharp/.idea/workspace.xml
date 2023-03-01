@@ -7,8 +7,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="cleared warnings. preping to merge changes.">
+    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="including README.md with package.">
       <change beforePath="$PROJECT_DIR$/../README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/L5Sharp.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.csproj" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -345,14 +346,7 @@
       <workItem from="1677417414718" duration="10489000" />
       <workItem from="1677439419121" duration="44130000" />
       <workItem from="1677534504531" duration="9691000" />
-      <workItem from="1677555355643" duration="35458000" />
-    </task>
-    <task id="LOCAL-00151" summary="Updated and tested exceptions">
-      <created>1645730276543</created>
-      <option name="number" value="00151" />
-      <option name="presentableId" value="LOCAL-00151" />
-      <option name="project" value="LOCAL" />
-      <updated>1645730276543</updated>
+      <workItem from="1677555355643" duration="36138000" />
     </task>
     <task id="LOCAL-00152" summary="Random updates and removal of builders and instructions for now. Will implement at later time.">
       <created>1645732997675</created>
@@ -690,7 +684,14 @@
       <option name="project" value="LOCAL" />
       <updated>1677621948966</updated>
     </task>
-    <option name="localTasksCounter" value="200" />
+    <task id="LOCAL-00200" summary="including README.md with package.">
+      <created>1677641216013</created>
+      <option name="number" value="00200" />
+      <option name="presentableId" value="LOCAL-00200" />
+      <option name="project" value="LOCAL" />
+      <updated>1677641216013</updated>
+    </task>
+    <option name="localTasksCounter" value="201" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -757,7 +758,6 @@
       <path value="$PROJECT_DIR$/../.." />
     </ignored-roots>
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="Finishing up module todo items and testing. Added PortAddress.cs to strongly type the port address value for module ports. reorg and documentation." />
     <MESSAGE value="Fixed Dimensions.cs parsing issues and testing." />
     <MESSAGE value="Fixed data type casting issue on serialization. Adding todos for Radix format provider and custom formatter and atomic converters for type narrowing" />
     <MESSAGE value="Updated converters to support conversion to all primitive types with checked context fo overflow exception. Fixed atomic type GetHashCode and ToString methods and added Max and Min field constants to all atomics." />
@@ -782,7 +782,8 @@
     <MESSAGE value="serialization and other data type and tag updates." />
     <MESSAGE value="more serialization work and testings." />
     <MESSAGE value="cleared warnings. preping to merge changes." />
-    <option name="LAST_COMMIT_MESSAGE" value="cleared warnings. preping to merge changes." />
+    <MESSAGE value="including README.md with package." />
+    <option name="LAST_COMMIT_MESSAGE" value="including README.md with package." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
