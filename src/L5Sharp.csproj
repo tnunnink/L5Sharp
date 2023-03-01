@@ -20,8 +20,9 @@
         <RepositoryType>git</RepositoryType>
         <PackageReleaseNotes>Initial release.</PackageReleaseNotes>
         <Copyright>Copyright (c) Timothy Nunnink 2022</Copyright>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
-
+    
     <ItemGroup>
         <PackageReference Include="Ardalis.SmartEnum" Version="2.0.1" />
     </ItemGroup>
@@ -46,6 +47,12 @@
 
     <ItemGroup>
       <Compile Remove="Core\Bus.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="..\README.md">
+        <Link>README.md</Link>
+      </Content>
     </ItemGroup>
 
 </Project>

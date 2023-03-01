@@ -7,21 +7,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="more serialization work and testings.">
-      <change beforePath="$PROJECT_DIR$/Components/AddOnInstruction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Components/AddOnInstruction.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/Port.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/Port.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/ProductType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/ProductType.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/Vendor.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/Vendor.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Enums/MemberType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Enums/MemberType.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ILogixComponentCollection.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ILogixComponentCollection.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ILogixContent.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ILogixContent.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Serialization/Data/MemberSerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Serialization/Data/MemberSerializer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Serialization/LogixSerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Serialization/LogixSerializer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Types/Atomics/Converters/AtomicConverter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Types/Atomics/Converters/AtomicConverter.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Types/LogixType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Types/LogixType.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Utilities/TagNameComparer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Utilities/TagNameComparer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/Samples/Test.ACD" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/Samples/Test.ACD" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/Samples/Test.L5X" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/Samples/Test.L5X" afterDir="false" />
+    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="cleared warnings. preping to merge changes.">
+      <change beforePath="$PROJECT_DIR$/../README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.csproj" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -172,24 +160,25 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settings.ide.settings.new.ui&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "reference.settings.ide.settings.new.ui",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File&quot;: [
-      &quot;C#&quot;
+  "keyToStringList": {
+    "com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File": [
+      "C#"
     ],
-    &quot;rider.external.source.directories&quot;: [
-      &quot;C:\\Users\\tnunnink\\AppData\\Roaming\\JetBrains\\Rider2022.3\\resharper-host\\DecompilerCache&quot;,
-      &quot;C:\\Users\\tnunnink\\AppData\\Roaming\\JetBrains\\Rider2022.3\\resharper-host\\SourcesCache&quot;,
-      &quot;C:\\Users\\tnunnink\\AppData\\Local\\Symbols\\src&quot;
+    "rider.external.source.directories": [
+      "C:\\Users\\tnunnink\\AppData\\Roaming\\JetBrains\\Rider2022.3\\resharper-host\\DecompilerCache",
+      "C:\\Users\\tnunnink\\AppData\\Roaming\\JetBrains\\Rider2022.3\\resharper-host\\SourcesCache",
+      "C:\\Users\\tnunnink\\AppData\\Local\\Symbols\\src"
     ]
   }
-}</component>
+}]]></component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -356,14 +345,7 @@
       <workItem from="1677417414718" duration="10489000" />
       <workItem from="1677439419121" duration="44130000" />
       <workItem from="1677534504531" duration="9691000" />
-      <workItem from="1677555355643" duration="28404000" />
-    </task>
-    <task id="LOCAL-00150" summary="Added unsigned atomic types and fixed Sint to be sbyte">
-      <created>1645724943010</created>
-      <option name="number" value="00150" />
-      <option name="presentableId" value="LOCAL-00150" />
-      <option name="project" value="LOCAL" />
-      <updated>1645724943010</updated>
+      <workItem from="1677555355643" duration="35458000" />
     </task>
     <task id="LOCAL-00151" summary="Updated and tested exceptions">
       <created>1645730276543</created>
@@ -701,7 +683,14 @@
       <option name="project" value="LOCAL" />
       <updated>1677621292564</updated>
     </task>
-    <option name="localTasksCounter" value="199" />
+    <task id="LOCAL-00199" summary="cleared warnings. preping to merge changes.">
+      <created>1677621948966</created>
+      <option name="number" value="00199" />
+      <option name="presentableId" value="LOCAL-00199" />
+      <option name="project" value="LOCAL" />
+      <updated>1677621948966</updated>
+    </task>
+    <option name="localTasksCounter" value="200" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -716,50 +705,33 @@
       <expand>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 74% 2948/11327" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 62% 4003/10618" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 74% 2948/11327" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 50% 2252/4516" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 62% 4003/10618" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 13% 3307/3807" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 74% 2948/11327" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 50% 2252/4516" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="(0.2.0.0, .NETStandard,Version=v2.1) 50% 2252/4516" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 62% 4003/10618" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 13% 3307/3807" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="(0.2.0.0, .NETStandard,Version=v2.1) 13% 3307/3807" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 74% 2948/11327" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 50% 2252/4516" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="(0.2.0.0, .NETStandard,Version=v2.1) 50% 2252/4516" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 50% 2252/4516" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 62% 4003/10618" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 13% 3307/3807" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="(0.2.0.0, .NETStandard,Version=v2.1) 13% 3307/3807" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 13% 3307/3807" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 74% 2948/11327" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 50% 2252/4516" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="(0.2.0.0, .NETStandard,Version=v2.1) 50% 2252/4516" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 50% 2252/4516" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="Types 71% 470/1634" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-        </path>
-        <path>
-          <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 74% 2948/11327" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 50% 2252/4516" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="(0.2.0.0, .NETStandard,Version=v2.1) 50% 2252/4516" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 50% 2252/4516" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="Types 71% 470/1634" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="ArrayType&lt;TLogixType&gt; 40% 52/87" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-        </path>
-        <path>
-          <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 74% 2948/11327" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 50% 2252/4516" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="(0.2.0.0, .NETStandard,Version=v2.1) 50% 2252/4516" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 50% 2252/4516" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="Components 19% 232/287" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 62% 4003/10618" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 13% 3307/3807" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="(0.2.0.0, .NETStandard,Version=v2.1) 13% 3307/3807" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 13% 3307/3807" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Types 0% 1478/1478" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
       </expand>
       <select />
@@ -785,7 +757,6 @@
       <path value="$PROJECT_DIR$/../.." />
     </ignored-roots>
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="Module updates. Module builder/configuration updates and fixed testing" />
     <MESSAGE value="Finishing up module todo items and testing. Added PortAddress.cs to strongly type the port address value for module ports. reorg and documentation." />
     <MESSAGE value="Fixed Dimensions.cs parsing issues and testing." />
     <MESSAGE value="Fixed data type casting issue on serialization. Adding todos for Radix format provider and custom formatter and atomic converters for type narrowing" />
@@ -810,7 +781,8 @@
     <MESSAGE value="Lots of rework. Reintroducing serializers. Updated ILogixContent.cs API for the n-th time. Finally settling into final form. need to finish plumbing." />
     <MESSAGE value="serialization and other data type and tag updates." />
     <MESSAGE value="more serialization work and testings." />
-    <option name="LAST_COMMIT_MESSAGE" value="more serialization work and testings." />
+    <MESSAGE value="cleared warnings. preping to merge changes." />
+    <option name="LAST_COMMIT_MESSAGE" value="cleared warnings. preping to merge changes." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
