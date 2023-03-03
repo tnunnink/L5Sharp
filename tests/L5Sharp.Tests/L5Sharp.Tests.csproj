@@ -21,12 +21,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Content Include="TestFiles\Test.xml">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </Content>
-    </ItemGroup>
-
-    <ItemGroup>
       <None Update="Serialization\DataValueSerializerTests.Serialize_Bool_ShouldBeApproved.verified.txt">
         <DependentUpon>DataValueSerializerTests.cs</DependentUpon>
       </None>
@@ -39,6 +33,16 @@
       <None Update="Serialization\ConnectionSerializerTests.Serialize_ValidComponent_ShouldBeApproved.verified.txt">
         <DependentUpon>ConnectionSerializerTests.cs</DependentUpon>
       </None>
+      <None Update="TestFiles\Test.xml">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="TestFiles\Empty.xml">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Remove="Core\OperandTests.cs" />
     </ItemGroup>
 
 </Project>

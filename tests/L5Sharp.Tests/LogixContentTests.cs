@@ -65,6 +65,7 @@ namespace L5Sharp.Tests
 
             tags.Should().NotBeEmpty();
         }
+
         [Test]
         public void Tags_InMainProgram_ShouldNotBeEmpty()
         {
@@ -192,6 +193,32 @@ namespace L5Sharp.Tests
             var results = content.Query<Routine>().Where(r => r.Name == "Test");
 
             results.Should().BeEmpty();
+        }
+
+        [Test]
+        public void Query_Rungs_ShouldReturnsRungs()
+        {
+            var content = LogixContent.Load(Known.Test);
+
+            var results = content.Query<Rung>().SelectMany(t => t.Text.Tags()).Distinct().ToList();
+
+            results.Should().NotBeEmpty();
+        }
+        
+        [Test]
+        public void Query_DistinctReferencedTagNames_ShouldReturnsLotsOfTagNames()
+        {
+            var content = LogixContent.Load(Known.Template);
+
+            var results = content.Query<Rung>().SelectMany(t => t.Text.Tags()).Distinct().ToList();
+
+            results.Should().NotBeEmpty();
+        }
+        
+        [Test]
+        public void Query_TagsInMovInstructions_ShouldReturnsLotsOfTagNames()
+        {
+            var content = LogixContent.Load(Known.Template);
         }
     }
 }

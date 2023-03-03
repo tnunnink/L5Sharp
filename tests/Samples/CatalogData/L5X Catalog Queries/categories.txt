@@ -1,0 +1,33 @@
+Specialty
+Communication
+Input
+Digital
+Output
+Analog
+Other
+Communications
+Safety
+Motion
+Drive
+MotorStarter
+Miscellaneous
+Controller
+MotorOverload
+HMI
+EnergyManagementProducts
+General Purpose Discrete I/O
+Communications Adapter
+Programmable Logic Controller
+Human-Machine Interface
+CIP Motion Converter
+Rockwell Automation Miscellaneous
+DPI to EtherNet/IP
+DSI to EtherNet/IP
+SCANport to EtherNet/IP
+PowerFlex 750-Series via Embedded EtherNet/IP
+DPI to Dual Port EtherNet/IP
+MDI to EtherNet/IP
+Motor Overload
+1746 Discrete I/O
+1746 Analog I/O
+1746 Specialty I/O

@@ -1,0 +1,128 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<RSLogix5000Content SchemaRevision="1.0" SoftwareRevision="32.02" TargetName="FlexBus" TargetType="Module" ContainsContext="false" Owner="tnunnink, EN Engineering" ExportDate="Thu Mar 24 16:08:53 2022" ExportOptions="NoRawData L5KData DecoratedData Context Dependencies ForceProtectedEncoding AllProjDocTrans">
+<Module Use="Target" Name="FlexBus" CatalogNumber="1794-AENT" Vendor="1" ProductType="12" ProductCode="90" Major="4" Minor="1" ParentModule="Local" ParentModPortId="2" Inhibited="false"
+ MajorFault="false">
+<EKey State="CompatibleModule"/>
+<Ports>
+<Port Id="1" Type="Flex" Upstream="false">
+<Bus Size="8"/>
+</Port>
+<Port Id="2" Address="192.168.1.251" Type="Ethernet" Upstream="true"/>
+</Ports>
+<Communications CommMethod="805306369">
+<Connections>
+<Connection Name="Output" RPI="20000" Type="Output" EventID="0" ProgrammaticallySendEventTrigger="false" Unicast="true">
+<InputTag ExternalAccess="Read/Write">
+<Data Format="Decorated">
+<Structure DataType="AB:1794_AEN_8SLOT:I:0">
+<DataValueMember Name="SlotStatusBits" DataType="DINT" Radix="Binary" Value="2#0000_0000_0000_0000_0000_0000_0000_0000"/>
+<ArrayMember Name="Data" DataType="INT" Dimensions="8" Radix="Binary">
+<Element Index="[0]" Value="2#0000_0000_0000_0000"/>
+<Element Index="[1]" Value="2#0000_0000_0000_0000"/>
+<Element Index="[2]" Value="2#0000_0000_0000_0000"/>
+<Element Index="[3]" Value="2#0000_0000_0000_0000"/>
+<Element Index="[4]" Value="2#0000_0000_0000_0000"/>
+<Element Index="[5]" Value="2#0000_0000_0000_0000"/>
+<Element Index="[6]" Value="2#0000_0000_0000_0000"/>
+<Element Index="[7]" Value="2#0000_0000_0000_0000"/>
+</ArrayMember>
+</Structure>
+</Data>
+</InputTag>
+<OutputTag ExternalAccess="Read/Write">
+<Data Format="L5K">
+<![CDATA[[[0,0,0,0,0,0,0,0]]]]>
+</Data>
+<Data Format="Decorated">
+<Structure DataType="AB:1794_AEN_8SLOT:O:0">
+<ArrayMember Name="Data" DataType="INT" Dimensions="8" Radix="Binary">
+<Element Index="[0]" Value="2#0000_0000_0000_0000"/>
+<Element Index="[1]" Value="2#0000_0000_0000_0000"/>
+<Element Index="[2]" Value="2#0000_0000_0000_0000"/>
+<Element Index="[3]" Value="2#0000_0000_0000_0000"/>
+<Element Index="[4]" Value="2#0000_0000_0000_0000"/>
+<Element Index="[5]" Value="2#0000_0000_0000_0000"/>
+<Element Index="[6]" Value="2#0000_0000_0000_0000"/>
+<Element Index="[7]" Value="2#0000_0000_0000_0000"/>
+</ArrayMember>
+</Structure>
+</Data>
+</OutputTag>
+</Connection>
+</Connections>
+</Communications>
+<ExtendedProperties>
+<public><ConfigID>4456551</ConfigID><CatNum>1794-AENT</CatNum></public>
+</ExtendedProperties>
+</Module>
+<Module Name="FB1" CatalogNumber="1794-IB16/A" Vendor="1" ProductType="7" ProductCode="34" Major="1" Minor="1" ParentModule="FlexBus" ParentModPortId="1" Inhibited="false" MajorFault="false"
+>
+<EKey State="CompatibleModule"/>
+<Ports>
+<Port Id="1" Address="0" Type="Flex" Upstream="true"/>
+</Ports>
+<Communications CommMethod="1073741824">
+<ConfigTag ConfigSize="34" ExternalAccess="Read/Write">
+<Data Format="L5K">
+<![CDATA[[38,3,1,2,0,125,12,4,16,125,10,16,125,11,7,641,0,1,1,0,1,0]]]>
+</Data>
+<Data Format="Decorated">
+<Structure DataType="AB:1794_IB16:C:0">
+<DataValueMember Name="Config" DataType="INT" Radix="Binary" Value="2#0000_0000_0000_0000"/>
+<DataValueMember Name="Filter0_00_11" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Filter1_00_11" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Filter2_00_11" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Filter3_12_15" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Filter4_12_15" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Filter5_12_15" DataType="BOOL" Value="0"/>
+<DataValueMember Name="ResetCounter" DataType="BOOL" Value="0"/>
+<DataValueMember Name="DisableFilter" DataType="BOOL" Value="0"/>
+</Structure>
+</Data>
+</ConfigTag>
+<Connections>
+<RackConnection>
+<InAliasTag/>
+</RackConnection>
+</Connections>
+</Communications>
+<ExtendedProperties>
+<public><ConfigID>262157</ConfigID><CatNum>1794-IB16</CatNum></public>
+</ExtendedProperties>
+</Module>
+<Module Name="FB2" CatalogNumber="1794-IB16/A" Vendor="1" ProductType="7" ProductCode="34" Major="1" Minor="1" ParentModule="FlexBus" ParentModPortId="1" Inhibited="false" MajorFault="false"
+>
+<EKey State="CompatibleModule"/>
+<Ports>
+<Port Id="1" Address="1" Type="Flex" Upstream="true"/>
+</Ports>
+<Communications CommMethod="1073741824">
+<ConfigTag ConfigSize="34" ExternalAccess="Read/Write">
+<Data Format="L5K">
+<![CDATA[[38,3,1,2,0,125,12,4,16,125,10,16,125,11,7,641,0,1,1,0,1,0]]]>
+</Data>
+<Data Format="Decorated">
+<Structure DataType="AB:1794_IB16:C:0">
+<DataValueMember Name="Config" DataType="INT" Radix="Binary" Value="2#0000_0000_0000_0000"/>
+<DataValueMember Name="Filter0_00_11" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Filter1_00_11" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Filter2_00_11" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Filter3_12_15" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Filter4_12_15" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Filter5_12_15" DataType="BOOL" Value="0"/>
+<DataValueMember Name="ResetCounter" DataType="BOOL" Value="0"/>
+<DataValueMember Name="DisableFilter" DataType="BOOL" Value="0"/>
+</Structure>
+</Data>
+</ConfigTag>
+<Connections>
+<RackConnection>
+<InAliasTag/>
+</RackConnection>
+</Connections>
+</Communications>
+<ExtendedProperties>
+<public><ConfigID>262157</ConfigID><CatNum>1794-IB16</CatNum></public>
+</ExtendedProperties>
+</Module>
+</RSLogix5000Content>

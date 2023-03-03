@@ -13,14 +13,31 @@ namespace L5Sharp.Core
     /// </summary>
     public class TagName : IEquatable<TagName>, IComparable<TagName>, IEnumerable<string>
     {
-        private const string ArrayBracket = "[";
-        private const string MemberSeparator = ".";
-        private const string TagNamePattern = @"^[A-Za-z_][\w\.[\],:]+$";
-        private const string MemberPattern = @"^[A-Za-z_][\w:]+$|^\[\d+\]$|^\[\d+,\d+\]$|^\[\d+,\d+,\d+\]$";
-        private const string MembersPattern = @"[\w:]+|\[[\d,]+\]";
-        private const string PartsPattern = @"\w+|\[[\d,]+\]";
-        private readonly IEnumerable<string> _members;
         private readonly string _tagName;
+        private readonly IEnumerable<string> _members;
+
+        private const string ArrayBracketStart = "[";
+        private const string MemberSeparator = ".";
+
+        /// <summary>
+        /// A regex pattern for a Logix tag name with starting and ending anchors.
+        /// Use this pattern to match a string and ensure it is only a tag name an nothing else.
+        /// </summary>
+        private const string TagNamePattern =
+            @"^[A-Za-z_][\w+:]{1,39}(?:(?:\[\d+\]|\[\d+,\d+\]|\[\d+,\d+,\d+\])?(?:\.[A-Za-z_]\w{1,39})?)+(?:\.[0-9][0-9]?)?$";
+
+        /// <summary>
+        /// A regex pattern for validating an individual tag member segment. This includes multi dimensional array brackets. 
+        /// </summary>
+        private const string TagMemberPattern =
+            @"^[A-Za-z_][\w:]+$|^\[\d+\]$|^\[\d+,\d+\]$|^\[\d+,\d+,\d+\]$";
+
+        /// <summary>
+        /// A regex pattern for matching each individual possible member portion of a full tag name.
+        /// Used to split incoming string into member parts. 
+        /// </summary>
+        private const string TagMembersPattern =
+            @"^[A-Za-z_][\w:]{1,39}|(?<=\.)[A-Za-z_][\w]{0,39}|(?<=[A-Za-z_])\[\d+\]|(?<=[A-Za-z_])\[\d+,\d+\]|(?<=[A-Za-z_])\[\d+,\d+,\d+\]|(?<=\.)[0-9][0-9]?$";
 
         /// <summary>
         /// Creates a new <see cref="TagName"/> object with the provided string tag name.
@@ -29,8 +46,22 @@ namespace L5Sharp.Core
         /// <exception cref="ArgumentNullException">tagName is null.</exception>
         public TagName(string tagName)
         {
-            _tagName = tagName ?? throw new ArgumentNullException(nameof(tagName));
-            _members = Regex.Matches(_tagName, MembersPattern, RegexOptions.Compiled).Select(m => m.Value).ToList();
+            ValidateTagName(tagName);
+            
+            _tagName = tagName;
+            _members = Regex.Matches(_tagName, TagMembersPattern).Select(m => m.Value);
+        }
+
+        private static void ValidateTagName(string tagName)
+        {
+            if (tagName is null)
+                throw new ArgumentNullException(nameof(tagName));
+
+            if (tagName.IsEmpty()) return;
+
+            if (!Regex.IsMatch(tagName, TagNamePattern))
+                throw new FormatException(
+                    $"The provided tag name {tagName} does not represent a valid tag name string.");
         }
 
         /// <summary>
@@ -86,12 +117,12 @@ namespace L5Sharp.Core
         /// <summary>
         /// Gets a value indicating whether the current <see cref="TagName"/> value is empty.
         /// </summary>
-        public bool IsEmpty => string.IsNullOrWhiteSpace(_tagName);
+        public bool IsEmpty => _tagName.IsEmpty();
 
         /// <summary>
         /// Gets a value indicating whether the current <see cref="TagName"/> is a valid representation of a tag name.
         /// </summary>
-        public bool IsValid => Regex.IsMatch(_tagName, TagNamePattern, RegexOptions.Compiled);
+        public bool IsValid => Regex.IsMatch(_tagName, TagNamePattern);
 
         /// <summary>
         /// Gets the static empty <see cref="TagName"/> value.
@@ -105,24 +136,7 @@ namespace L5Sharp.Core
         /// <param name="members">The series of strings that, in order, comprise the full tag name value.</param>
         /// <returns>A new <see cref="TagName"/>value that represents the combination of all provided member names.</returns>
         /// <exception cref="ArgumentException">If any provided member does not match the member pattern format.</exception>
-        public static TagName Combine(params string[] members)
-        {
-            var builder = new StringBuilder();
-
-            foreach (var name in members)
-            {
-                /*if (!(Regex.IsMatch(name, TagNamePattern) || Regex.IsMatch(name, MemberPattern)))
-                    throw new FormatException($"The provided name '{name}' is not a valid tag name format.");*/
-
-                //If the current member is not an array element or doesn't already have a member separator, add one.
-                if (!(name.StartsWith(ArrayBracket) || name.StartsWith(MemberSeparator)) && builder.Length > 1)
-                    builder.Append(MemberSeparator);
-
-                builder.Append(name);
-            }
-
-            return new TagName(builder.ToString());
-        }
+        public static TagName Combine(params string[] members) => new(ConcatenateMembers(members.AsEnumerable()));
 
         /// <summary>
         /// Combines a collection of member names into a single <see cref="TagName"/> value.
@@ -130,24 +144,7 @@ namespace L5Sharp.Core
         /// <param name="members">The collection of strings that represent the member names of the tag name value.</param>
         /// <returns>A new <see cref="TagName"/>A new <see cref="TagName"/> value that is the combination of all provided member names.</returns>
         /// <exception cref="ArgumentException">If a provided name does not match the member pattern format.</exception>
-        public static TagName Combine(IEnumerable<string> members)
-        {
-            var builder = new StringBuilder();
-
-            foreach (var name in members)
-            {
-                if (!Regex.IsMatch(name, MemberPattern))
-                    throw new FormatException($"The provided name '{name}' is not a valid member name format.");
-
-                //If the current member is not an array element or doesn't already have a member separator, add one.
-                if (!(name.StartsWith(ArrayBracket) || name.StartsWith(MemberSeparator)) && builder.Length > 1)
-                    builder.Append(MemberSeparator);
-
-                builder.Append(name);
-            }
-
-            return new TagName(builder.ToString());
-        }
+        public static TagName Combine(IEnumerable<string> members) => new(ConcatenateMembers(members));
 
         /// <summary>
         /// Converts a <see cref="TagName"/> to a <see cref="string"/> value.
@@ -180,16 +177,12 @@ namespace L5Sharp.Core
         }
 
         /// <summary>
-        /// Creates a copy of the current <see cref="TagName"/> object with the same value.
-        /// </summary>
-        /// <returns>A new <see cref="TagName"/> instance with the value of the current tag name.</returns>
-        public TagName Copy() => new(string.Copy(_tagName));
-
-        /// <summary>
         /// Returns a new tag name with the root <see cref="Tag"/> value replaced with the provided string tag.
         /// </summary>
         /// <param name="tag">The new root tag name value to replace.</param>
-        /// <returns>A <see cref="TagName"/> with the new root tag value.</returns>
+        /// <returns>A new <see cref="TagName"/> with the new root tag value.</returns>
+        /// <remarks>Note that this doesn't change the current tag name value, rather, returns a new object with the changed
+        /// value. This ensures the immutability of <see cref="TagName"/>.</remarks>
         public TagName Rename(string tag) => Combine(tag, Operand);
 
         /// <inheritdoc />
@@ -253,9 +246,22 @@ namespace L5Sharp.Core
             return index >= 0 ? index : _tagName.Length;
         }
 
-        IEnumerator IEnumerable.GetEnumerator()
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+        private static string ConcatenateMembers(IEnumerable<string> members)
         {
-            return GetEnumerator();
+            var builder = new StringBuilder();
+
+            foreach (var member in members)
+            {
+                //If the current member is not an array element or doesn't already have a member separator, add one.
+                if (!(member.StartsWith(ArrayBracketStart) || member.StartsWith(MemberSeparator)) && builder.Length > 1)
+                    builder.Append(MemberSeparator);
+
+                builder.Append(member);
+            }
+
+            return builder.ToString();
         }
     }
 }

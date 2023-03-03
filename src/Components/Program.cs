@@ -1,5 +1,4 @@
-﻿using L5Sharp.Attributes;
-using L5Sharp.Enums;
+﻿using L5Sharp.Enums;
 using L5Sharp.Serialization;
 
 namespace L5Sharp.Components

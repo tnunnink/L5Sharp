@@ -355,3 +355,4 @@ MigrationBackup/
 .ionide/
 
 *.received.*
+src/.idea/.idea.L5Sharp/.idea/workspace.xml

@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Xml.Serialization;
-using L5Sharp.Attributes;
 using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Serialization;

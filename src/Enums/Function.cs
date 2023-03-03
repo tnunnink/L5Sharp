@@ -26,17 +26,17 @@ namespace L5Sharp.Enums
         /// <summary>
         /// Represents the Arc Cosine Arithmetic Logix <see cref="Function"/>.
         /// </summary>
-        public static readonly Function ACOS = new("Arc Cosine", nameof(ACOS));
+        public static readonly Function ACS = new("Arc Cosine", nameof(ACS));
         
         /// <summary>
         /// Represents the Arc Sine Arithmetic Logix <see cref="Function"/>.
         /// </summary>
-        public static readonly Function ASIN = new("Arc Sine", nameof(ASIN));
+        public static readonly Function ASN = new("Arc Sine", nameof(ASN));
         
         /// <summary>
         /// Represents the Arc Tangent Arithmetic Logix <see cref="Function"/>.
         /// </summary>
-        public static readonly Function ATAN = new("Arc Tangent", nameof(ATAN));
+        public static readonly Function ATN = new("Arc Tangent", nameof(ATN));
         
         /// <summary>
         /// Represents the Cosine Arithmetic Logix <see cref="Function"/>.

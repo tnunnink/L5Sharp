@@ -1,5 +1,6 @@
 ﻿using L5Sharp.Components;
 using L5Sharp.Enums;
+using L5Sharp.Serialization;
 
 namespace L5Sharp.Core
 {
@@ -8,12 +9,13 @@ namespace L5Sharp.Core
     /// </summary>
     /// <remarks>
     /// </remarks>
+    [LogixSerializer(typeof(RungSerializer))]
     public sealed class Rung
     {
         /// <summary>
         /// Gets the number of the <see cref="Rung"/> for which it is contained within a routine.
         /// </summary>
-        public int Number { get; set; } = 0;
+        public int Number { get; set; }
 
         /// <summary>
         /// Gets the <see cref="Enums.RungType"/> of the <see cref="Rung"/> instance.

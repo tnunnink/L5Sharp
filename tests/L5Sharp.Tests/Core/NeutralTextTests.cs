@@ -1,14 +1,16 @@
-﻿using System;
-using AutoFixture;
+﻿using AutoFixture;
 using FluentAssertions;
 using L5Sharp.Core;
-using NUnit.Framework;
+using L5Sharp.Enums;
 
 namespace L5Sharp.Tests.Core
 {
     [TestFixture]
     public class NeutralTextTests
     {
+        private const string TestText =
+            "[MOV(10,Flow_Comparison_PctError_Constant),MOV(0.3,Flow_Comparison_PctError_Exponent),GRT(Calculated_Avg_Flow,0)CPT(Flow_Comparison_PctError_SP,( Flow_Comparison_PctError_Constant * Calculated_Avg_Flow ** Flow_Comparison_PctError_Exponent) / Calculated_Avg_Flow * 100),LEQ(Calculated_Avg_Flow,0)MOV(0,Flow_Comparison_PctError_SP)];";
+        
         [Test]
         public void New_NullText_ShouldThrowArgumentNullException()
         {
@@ -22,7 +24,7 @@ namespace L5Sharp.Tests.Core
 
             text.Should().BeEquivalentTo(NeutralText.Empty);
         }
-        
+
         [Test]
         public void New_SomeString_ShouldNotBeNull()
         {
@@ -34,22 +36,6 @@ namespace L5Sharp.Tests.Core
         }
 
         [Test]
-        public void Empty_WhenCalled_ShouldBeEmptyString()
-        {
-            var text = NeutralText.Empty;
-
-            text.Should().BeEquivalentTo(new NeutralText(string.Empty));
-        }
-
-        [Test]
-        public void IsBalanced_UnbalancedBrackets_ShouldFalse()
-        {
-            var text = new NeutralText("[XIC(SomeBit),XIO(AnotherBit)OTE(Output);");
-
-            text.IsBalanced.Should().BeFalse();
-        }
-
-        [Test]
         public void New_ValidText_ShouldNotBeNull()
         {
             var text = new NeutralText("[XIC(SomeBit),XIO(AnotherBit)]OTE(OutputBit);");
@@ -58,23 +44,322 @@ namespace L5Sharp.Tests.Core
         }
 
         [Test]
-        public void Instructions_SimpleTextWithMultipleInstruction_ShouldHaveExpectedCount()
+        public void IsBalanced_Unbalanced_ShouldBeFalse()
+        {
+            var text = new NeutralText("XIC(SomeTag");
+
+            text.IsBalanced.Should().BeFalse();
+        }
+
+        [Test]
+        public void IsBalanced_TestText_ShouldBeTrue()
+        {
+            var text = new NeutralText(TestText);
+
+            text.IsBalanced.Should().BeTrue();
+        }
+
+        [Test]
+        public void IsInstruction_TestText_ShouldBeFalse()
+        {
+            var text = new NeutralText(TestText);
+
+            text.IsInstruction.Should().BeFalse();
+        }
+
+        [Test]
+        public void IsInstruction_SingleInstruction_ShouldBeTrue()
+        {
+            var text = new NeutralText("XIC(SomeTag)");
+
+            text.IsInstruction.Should().BeTrue();
+        }
+
+        [Test]
+        public void Empty_WhenCalled_ShouldBeEmptyString()
+        {
+            var text = NeutralText.Empty;
+
+            text.Should().BeEquivalentTo(new NeutralText(string.Empty));
+        }
+        
+        [Test]
+        public void ContainsKey_Empty_ShouldBeFalse()
+        {
+            var text = NeutralText.Empty;
+
+            var result = text.ContainsKey("XIC");
+
+            result.Should().BeFalse();
+        }
+
+        [Test]
+        public void ContainsKey_ValidInstruction_ShouldBeTrue()
+        {
+            var text = new NeutralText("[XIC(Tag.Status.Active),XIC(Tag.Status.Enabled)][MOV(15000,Timer.PRE),TON(Timer,?,?)];");
+
+            var result = text.ContainsKey("XIC");
+
+            result.Should().BeTrue();
+        }
+        
+        [Test]
+        public void ContainsKey_CustomInstruction_ShouldBeTrue()
+        {
+            var text = new NeutralText("[XIC(Tag.Status.Active),XIC(Tag.Status.Enabled)][MOV(15000,Timer.PRE),aoiTIMER(Timer,?,?)];");
+
+            var result = text.ContainsKey("aoiTIMER");
+
+            result.Should().BeTrue();
+        }
+        
+        [Test]
+        public void ContainsSignature_Empty_ShouldBeFalse()
+        {
+            var text = NeutralText.Empty;
+
+            var result = text.ContainsSignature(Instruction.XIC);
+
+            result.Should().BeFalse();
+        }
+
+        [Test]
+        public void ContainsSignature_ValidInstruction_ShouldBeTrue()
+        {
+            var text = new NeutralText("[XIC(Tag.Status.Active),XIC(Tag.Status.Enabled)][MOV(15000,Timer.PRE),TON(Timer,?,?)];");
+
+            var result = text.ContainsSignature(Instruction.XIC);
+
+            result.Should().BeTrue();
+        }
+        
+        [Test]
+        public void ContainsText_Empty_ShouldBeFalse()
+        {
+            var text = NeutralText.Empty;
+
+            var result = text.ContainsText("XIC(Tag.Status.Enabled)");
+
+            result.Should().BeFalse();
+        }
+        
+        [Test]
+        public void ContainsText_ValidTagName_ShouldBeTrue()
+        {
+            var text = new NeutralText("[XIC(Tag.Status.Active),XIC(Tag.Status.Enabled)][MOV(15000,Timer.PRE),TON(Timer,?,?)];");
+
+            var result = text.ContainsText("XIC(Tag.Status.Enabled)");
+
+            result.Should().BeTrue();
+        }
+        
+        [Test]
+        public void ContainsTag_Empty_ShouldBeFalse()
+        {
+            var text = NeutralText.Empty;
+
+            var result = text.ContainsTag("Tag.Status.Enabled");
+
+            result.Should().BeFalse();
+        }
+        
+        [Test]
+        public void ContainsTag_ValidTagName_ShouldBeTrue()
+        {
+            var text = new NeutralText("[XIC(Tag.Status.Active),XIC(Tag.Status.Enabled)][MOV(15000,Timer.PRE),TON(Timer,?,?)];");
+
+            var result = text.ContainsTag("Tag.Status.Enabled");
+
+            result.Should().BeTrue();
+        }
+
+        [Test]
+        public void Split_SimpleTextWithMultipleInstruction_ShouldHaveExpectedCount()
         {
             var text = new NeutralText("[XIC(SomeBit),XIO(AnotherBit)]OTE(OutputBit);");
 
-            var instructions = text.Instructions();
+            var instructions = text.Split();
 
             instructions.Should().HaveCount(3);
         }
 
         [Test]
-        public void TagNames_SimpleTextWithMultipleTags_ShouldHaveExpectedCount()
+        public void Split_SingleInstruction_ShouldHaveExpectedCount()
+        {
+            var text = new NeutralText("XIC(SomeBit)");
+
+            var instructions = text.Split();
+
+            instructions.Should().HaveCount(1);
+        }
+
+        [Test]
+        public void Split_SingleInstruction_ShouldEqualOriginal()
+        {
+            var text = new NeutralText("XIC(SomeBit)");
+
+            var result = text.Split();
+
+            result.First().Should().BeEquivalentTo(text);
+        }
+
+        [Test]
+        public void Tags_SimpleTextWithMultipleTags_ShouldHaveExpectedCount()
         {
             var text = new NeutralText("[XIC(SomeBit),XIO(AnotherBit)]OTE(OutputBit);");
 
-            var tagNames = text.TagNames();
+            var tagNames = text.Tags();
 
             tagNames.Should().HaveCount(3);
+        }
+
+        [Test]
+        public void TagsIn_OTE_ShouldHaveExpectedTagName()
+        {
+            var text = new NeutralText("[XIC(SomeBit),XIO(AnotherBit)]OTE(OutputBit);");
+
+            var tagNames = text.TagsIn(Instruction.OTE);
+
+            tagNames.Should().HaveCount(1);
+        }
+
+        [Test]
+        public void Split_WithExistingInstructionPresent_ShouldContainExpectedText()
+        {
+            var text = new NeutralText("[XIC(Tag.Status.Active),XIC(Tag.Status.Enabled)][MOV(15000,Timer.PRE),TON(Timer,?,?)];");
+
+            var result = text.Split(Instruction.XIC).ToList();
+
+            result.Should().Contain("XIC(Tag.Status.Active)");
+            result.Should().Contain("XIC(Tag.Status.Enabled)");
+        }
+        
+        [Test]
+        public void Split_WithExistingInstructionPresent_ShouldHaveExpectedCount()
+        {
+            var text = new NeutralText("[XIC(Tag.Status.Active),XIC(Tag.Status.Enabled)][MOV(15000,Timer.PRE),TON(Timer,?,?)];");
+
+            var result = text.Split(Instruction.XIC);
+
+            result.Should().HaveCount(2);
+        }
+        
+        [Test]
+        public void Operands_Empty_ShouldBeEmpty()
+        {
+            var text = NeutralText.Empty;
+
+            var result = text.Operands();
+
+            result.Should().BeEmpty();
+        }
+
+        [Test]
+        public void Operands_WhenCalled_ReturnsExpectedCount()
+        {
+            var text = new NeutralText(TestText);
+
+            var operands = text.Operands();
+
+            operands.Should().HaveCount(12);
+        }
+        
+        [Test]
+        public void OperandsByKey_Default_ReturnsExpectedCount()
+        {
+            var text = new NeutralText(TestText);
+
+            var results = text.OperandsByKey().ToList();
+
+            results.Should().HaveCount(6);
+
+            foreach (var pair in results)
+            {
+                pair.Key.Should().NotBeEmpty();
+                pair.Value.Should().NotBeEmpty();
+            }
+        }
+        
+        [Test]
+        public void OperandsByKey_MOV_ReturnsExpectedCount()
+        {
+            var text = new NeutralText(TestText);
+
+            var results = text.OperandsByKey(Instruction.MOV).ToList();
+
+            results.Should().HaveCount(3);
+
+            foreach (var pair in results)
+            {
+                pair.Key.Should().Be(Instruction.MOV);
+                pair.Value.Should().HaveCount(2);
+            }
+        }
+        
+        [Test]
+        public void OperandsByKey_stringMOV_ReturnsExpectedCount()
+        {
+            var text = new NeutralText(TestText);
+
+            var results = text.OperandsByKey("MOV").ToList();
+
+            results.Should().HaveCount(3);
+
+            foreach (var pair in results)
+            {
+                pair.Key.Should().Be(Instruction.MOV);
+                pair.Value.Should().HaveCount(2);
+            }
+        }
+
+        [Test]
+        public void Instructions_WhenCalled_ReturnsExpected()
+        {
+            var text = new NeutralText("[XIC(Tag.Status.Active),XIC(Tag.Status.Enabled)][MOV(15000,Timer.PRE),TON(Timer,?,?)];");
+
+            var instructions = text.Instructions();
+
+            instructions.Should().HaveCount(4);
+        }
+        
+        [Test]
+        public void Instructions_Empty_ShouldBeEmpty()
+        {
+            var text = NeutralText.Empty;
+
+            var result = text.Instructions();
+
+            result.Should().BeEmpty();
+        }
+        
+        [Test]
+        public void Instructions_CustomInstructions_ReturnsExpected()
+        {
+            var text = new NeutralText("[XIC(Tag.Status.Active),XIC(Tag.Status.Enabled)][MOV(15000,Timer.PRE),aoiTIMER(Timer,?,?)];");
+
+            var instructions = text.Instructions();
+
+            instructions.Should().HaveCount(4);
+        }
+        
+        [Test]
+        public void Keys_Empty_ShouldBeEmpty()
+        {
+            var text = NeutralText.Empty;
+
+            var result = text.Keys();
+
+            result.Should().BeEmpty();
+        }
+
+        [Test]
+        public void Keys_ValidInstructions_ShouldReturnExpectedCount()
+        {
+            var text = new NeutralText(TestText);
+
+            var result = text.Keys();
+
+            result.Should().HaveCount(6);
         }
     }
 }

@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections;
 using AutoFixture;
 using FluentAssertions;
 using L5Sharp.Core;
-using NUnit.Framework;
+using L5Sharp.Utilities;
 
 namespace L5Sharp.Tests.Core
 {
@@ -40,13 +39,11 @@ namespace L5Sharp.Tests.Core
         }
 
         [Test]
-        public void New_Invalid_ShouldNotBeNullAndIsValidFalse()
+        public void New_Invalid_ShouldThrowFormatException()
         {
             var fixture = new Fixture();
-            var tagName = new TagName(fixture.Create<string>());
 
-            tagName.Should<string>().NotBeNull();
-            tagName.IsValid.Should().BeFalse();
+            FluentActions.Invoking(() => new TagName(fixture.Create<string>())).Should().Throw<FormatException>();
         }
 
         [Test]
@@ -67,7 +64,6 @@ namespace L5Sharp.Tests.Core
             tagName.Path.Should().BeEmpty();
             tagName.Depth.Should().Be(0);
             tagName.Should<string>().HaveCount(1);
-            tagName.Should<string>().HaveCount(1);
             tagName.IsEmpty.Should().BeFalse();
             tagName.IsValid.Should().BeTrue();
         }
@@ -78,6 +74,30 @@ namespace L5Sharp.Tests.Core
             var tagName = new TagName(TestTagName);
 
             tagName.Should<string>().NotBeNull();
+        }
+
+        [Test]
+        public void IteratingTagName_Strings_ShouldReturnExpected()
+        {
+            var tagName = new TagName(TestTagName);
+
+            foreach (var member in tagName)
+            {
+                member.Should().BeOfType<string>();
+                member.Should().NotBeEmpty();
+            }
+        }
+        
+        [Test]
+        public void IteratingTagName_ToString_ShouldReturnExpected()
+        {
+            var tagName = new TagName(TestTagName);
+
+            foreach (var member in tagName.ToString())
+            {
+                member.Should().BeOfType<char>();
+                member.Should().NotBe(char.MinValue);
+            }
         }
 
         [Test]
@@ -145,7 +165,7 @@ namespace L5Sharp.Tests.Core
         {
             var tagName = new TagName(TestTagName);
 
-            var members = tagName;
+            var members = tagName.ToList();
 
             members.Should<string>().BeEquivalentTo(Members);
         }
@@ -209,6 +229,88 @@ namespace L5Sharp.Tests.Core
             var result = tagName.Contains(Base);
 
             result.Should().BeTrue();
+        }
+
+        [Test]
+        public void Rename_ValidTagName_ShouldReturnExpected()
+        {
+            var tag = new TagName(TestTagName);
+
+            var result = tag.Rename("MyNewTagName");
+
+            result.ToString().Should().StartWith("MyNewTagName");
+        }
+
+        [Test]
+        public void Rename_InvalidTagName_ShouldThrowFormatException()
+        {
+            var tag = new TagName(TestTagName);
+
+            FluentActions.Invoking(() => tag.Rename("!@#$")).Should().Throw<FormatException>();
+        }
+
+        [Test]
+        public void StaticEqualsFullTagName_EqualTagName_ShouldBeTrue()
+        {
+            var result = TagName.Equals("MyTag", "MyTag", TagNameComparer.FullName);
+
+            result.Should().BeTrue();
+        }
+        
+        [Test]
+        public void StaticEqualsFullTagName_NotEqualTagName_ShouldBeTrue()
+        {
+            var result = TagName.Equals("MyTag", "AnotherTag", TagNameComparer.FullName);
+
+            result.Should().BeFalse();
+        }
+        
+        [Test]
+        public void StaticEqualsBase_EqualTagName_ShouldBeTrue()
+        {
+            var result = TagName.Equals("MyTag.SomeMember", "MyTag.AnotherMember", TagNameComparer.BaseName);
+
+            result.Should().BeTrue();
+        }
+        
+        [Test]
+        public void StaticEqualsBase_NotEqualTagName_ShouldBeTrue()
+        {
+            var result = TagName.Equals("MyTag.SomeMember", "AnotherTag.SomeMember", TagNameComparer.BaseName);
+
+            result.Should().BeFalse();
+        }
+        
+        [Test]
+        public void StaticEqualsPath_EqualTagName_ShouldBeTrue()
+        {
+            var result = TagName.Equals("MyTag.SomeMember.SubPathMember", "DifferentTag.SomeMember.SubPathMember", TagNameComparer.PathName);
+
+            result.Should().BeTrue();
+        }
+        
+        [Test]
+        public void StaticEqualsPath_NotEqualTagName_ShouldBeTrue()
+        {
+            var result = TagName.Equals("MyTag.SomeMember.SubPathMember", "MyTag.SomeMember.SubPath", TagNameComparer.PathName);
+
+            result.Should().BeFalse();
+        }
+        
+        [Test]
+        public void StaticEqualsMember_EqualTagName_ShouldBeTrue()
+        {
+            var result = TagName.Equals("MyTag.SomeMember.SubPathMember", "DifferentTag.AnotherMember.SubPathMember", TagNameComparer.MemberName);
+
+            result.Should().BeTrue();
+        }
+        
+        [Test]
+        public void StaticEqualsMember_NotEqualTagName_ShouldBeTrue()
+        {
+            var result = TagName.Equals("MyTag.SomeMember.SubPathMember", "MyTag.SomeMember.SubPath", TagNameComparer.MemberName);
+
+            result.Should().BeFalse();
         }
 
         [Test]
@@ -372,6 +474,16 @@ namespace L5Sharp.Tests.Core
             var result = first.CompareTo(null!);
 
             result.Should().Be(1);
+        }
+
+        [Test]
+        public void GetEnumerator_AsEnumerable_ShouldNotBeNull()
+        {
+            var tag = new TagName(TestTagName);
+
+            var enumerator = ((IEnumerable)tag).GetEnumerator();
+
+            enumerator.Should().NotBeNull();
         }
     }
 }

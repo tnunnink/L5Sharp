@@ -96,7 +96,7 @@ namespace L5Sharp.Tests.Extensions
             number.HasFloatFormat().Should().BeFalse();
         }
 
-        [Test]
+        /*[Test]
         public void IsBalanced_EmptyString_ShouldBeTrue()
         {
             var input = string.Empty;
@@ -142,6 +142,6 @@ namespace L5Sharp.Tests.Extensions
             const string input = "This is a ) (test";
 
             input.IsBalanced('(', ')').Should().BeFalse();
-        }
+        }*/
     }
 }

@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Linq;
-using L5Sharp.Serialization;
 
-namespace L5Sharp.Attributes
+namespace L5Sharp.Serialization
 {
     /// <summary>
     /// An custom <see cref="Attribute"/> that allows the user to specify a type implementing

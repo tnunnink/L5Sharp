@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Reflection;
 using System.Xml.Linq;
-using L5Sharp.Attributes;
 
 namespace L5Sharp.Serialization
 {
@@ -52,6 +51,33 @@ namespace L5Sharp.Serialization
             if (serializer is not ILogixSerializer<T> logixSerializer)
                 throw new InvalidOperationException(
                     @$"The serializer {serializerAttribute.SerializerType} does not serialize objects of type {typeof(T)}.
+                    Either specify correct LogixSerializerAttribute for type ");
+
+            return logixSerializer;
+        }
+
+        /// <summary>
+        /// Gets a <see cref="ILogixSerializer{T}"/> instance for the specified type. 
+        /// </summary>
+        /// <typeparam name="TReturn"></typeparam>
+        /// <returns>A new <see cref="ILogixSerializer{T}"/> instance.</returns>
+        /// <exception cref="InvalidOperationException">The specified type does not have a
+        /// <see cref="LogixSerializerAttribute"/> configured on the type -or- the returned serializer is not a
+        /// serializer of the specified generic type.</exception>
+        public static ILogixSerializer<TReturn> GetSerializer<TReturn>(Type type)
+        {
+            var serializerAttribute = type.GetCustomAttribute<LogixSerializerAttribute>();
+
+            if (serializerAttribute is null)
+                throw new InvalidOperationException(
+                    @$"No type defined for type {type}.
+                     Class must specify LogixSerializerAttribute to be deserialized.");
+
+            var serializer = Activator.CreateInstance(serializerAttribute.SerializerType);
+
+            if (serializer is not ILogixSerializer<TReturn> logixSerializer)
+                throw new InvalidOperationException(
+                    @$"The serializer {serializerAttribute.SerializerType} does not serialize objects of type {typeof(TReturn)}.
                     Either specify correct LogixSerializerAttribute for type ");
 
             return logixSerializer;

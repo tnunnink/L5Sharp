@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--This is a test data type that contains simple atomic types with an updated description-->
+<RSLogix5000Content SchemaRevision="1.0" SoftwareRevision="32.02" TargetName="SimpleType" TargetType="DataType" ContainsContext="true" Owner="tnunnink, EN Engineering" ExportDate="Fri Mar 25 17:25:16 2022" ExportOptions="References NoRawData L5KData DecoratedData Context Dependencies ForceProtectedEncoding AllProjDocTrans">
+<Controller Use="Context" Name="TestController">
+<DataTypes Use="Context">
+<DataType Use="Target" Name="SimpleType" Family="NoFamily" Class="User">
+<Description>
+<![CDATA[This is a test data type that contains simple atomic types with an updated description]]>
+</Description>
+<Members>
+<Member Name="ZZZZZZZZZZSimpleType0" DataType="SINT" Dimension="0" Radix="Decimal" Hidden="true" ExternalAccess="Read/Write"/>
+<Member Name="BoolMember" DataType="BIT" Dimension="0" Radix="Hex" Hidden="false" Target="ZZZZZZZZZZSimpleType0" BitNumber="0" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[Test Boolean update]]>
+</Description>
+</Member>
+<Member Name="SintMember" DataType="SINT" Dimension="0" Radix="Hex" Hidden="false" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[Test Sint]]>
+</Description>
+</Member>
+<Member Name="IntMember" DataType="INT" Dimension="0" Radix="Octal" Hidden="false" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[Test Int]]>
+</Description>
+</Member>
+<Member Name="DintMember" DataType="DINT" Dimension="0" Radix="ASCII" Hidden="false" ExternalAccess="None">
+<Description>
+<![CDATA[Test Dint comment]]>
+</Description>
+</Member>
+<Member Name="LintMember" DataType="LINT" Dimension="0" Radix="Decimal" Hidden="false" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[Test Lint]]>
+</Description>
+</Member>
+<Member Name="NewMember" DataType="DINT" Dimension="0" Radix="Decimal" Hidden="false" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[This is a test member]]>
+</Description>
+</Member>
+</Members>
+</DataType>
+</DataTypes>
+</Controller>
+</RSLogix5000Content>

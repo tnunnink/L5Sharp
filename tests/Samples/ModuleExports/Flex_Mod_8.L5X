@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<RSLogix5000Content SchemaRevision="1.0" SoftwareRevision="32.02" TargetName="Flex_Mod_8" TargetType="Module" ContainsContext="false" Owner="tnunnink, EN Engineering" ExportDate="Tue Feb 01 17:55:17 2022" ExportOptions="NoRawData L5KData DecoratedData Context Dependencies ForceProtectedEncoding AllProjDocTrans">
+<Module Use="Target" Name="Flex_Mod_8" CatalogNumber="5094-IF8XT/A" Vendor="1" ProductType="115" ProductCode="325" Major="2" Minor="1" ParentModule="" ParentModPortId="0" Inhibited="false"
+ MajorFault="false" SafetyEnabled="false">
+<EKey State="CompatibleModule"/>
+<Ports>
+<Port Id="1" Address="" Type="5094" Upstream="false"/>
+</Ports>
+<Communications>
+</Communications>
+</Module>
+</RSLogix5000Content>

@@ -1,0 +1,1034 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<RSLogix5000Content SchemaRevision="1.0" SoftwareRevision="33.01" TargetType="Rung" TargetCount="1" ContainsContext="true" Owner="Administrator, EN Engineering" ExportDate="Fri Apr 01 10:14:50 2022" ExportOptions="References NoRawData L5KData DecoratedData Context RoutineLabels AliasExtras IOTags NoStringData ForceProtectedEncoding AllProjDocTrans">
+<Controller Use="Context" Name="KM_TUS_Skid">
+<DataTypes Use="Context">
+<DataType Name="DI_5094IB16" Family="NoFamily" Class="User">
+<Description>
+<![CDATA[Digital Input 5094-IB16 Structure]]>
+</Description>
+<Members>
+<Member Name="ZZZZZZZZZZDI_1756IB30" DataType="SINT" Dimension="0" Radix="Decimal" Hidden="true" ExternalAccess="Read/Write"/>
+<Member Name="ChData" DataType="BIT" Dimension="0" Radix="Decimal" Hidden="false" Target="ZZZZZZZZZZDI_1756IB30" BitNumber="0" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[Channel Data]]>
+</Description>
+</Member>
+<Member Name="ChFault" DataType="BIT" Dimension="0" Radix="Decimal" Hidden="false" Target="ZZZZZZZZZZDI_1756IB30" BitNumber="1" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[Channel Fault]]>
+</Description>
+</Member>
+</Members>
+</DataType>
+<DataType Name="DigitalInput_Alarm" Family="NoFamily" Class="User">
+<Description>
+<![CDATA[Data Type defines the Digital Alarm]]>
+</Description>
+<Members>
+<Member Name="CMD" DataType="DigitalInput_Alarm_Commands" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write"/>
+<Member Name="ZZZZZZZZZZDigitalInp1" DataType="SINT" Dimension="0" Radix="Decimal" Hidden="true" ExternalAccess="Read/Write"/>
+<Member Name="Active" DataType="BIT" Dimension="0" Radix="Decimal" Hidden="false" Target="ZZZZZZZZZZDigitalInp1" BitNumber="0" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[Alarm Active]]>
+</Description>
+</Member>
+<Member Name="Enabled" DataType="BIT" Dimension="0" Radix="Decimal" Hidden="false" Target="ZZZZZZZZZZDigitalInp1" BitNumber="1" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[Alarm Enabled]]>
+</Description>
+</Member>
+<Member Name="UnAck" DataType="BIT" Dimension="0" Radix="Decimal" Hidden="false" Target="ZZZZZZZZZZDigitalInp1" BitNumber="2" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[Alarm Unacknowledged]]>
+</Description>
+</Member>
+<Member Name="Delay" DataType="DINT" Dimension="0" Radix="Decimal" Hidden="false" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[Alarm Delay]]>
+</Description>
+</Member>
+<Member Name="DelayACC" DataType="DINT" Dimension="0" Radix="Decimal" Hidden="false" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[Alarm Delay Accumulator]]>
+</Description>
+</Member>
+<Member Name="Parameter1" DataType="REAL" Dimension="0" Radix="Float" Hidden="false" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[Alarm Configurable Parameter 1]]>
+</Description>
+</Member>
+<Member Name="Parameter2" DataType="REAL" Dimension="0" Radix="Float" Hidden="false" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[Alarm Configurable Parameter 2]]>
+</Description>
+</Member>
+</Members>
+</DataType>
+<DataType Name="DigitalInput_Alarm_Commands" Family="NoFamily" Class="User">
+<Description>
+<![CDATA[Commands]]>
+</Description>
+<Members>
+<Member Name="ZZZZZZZZZZDigitalInp0" DataType="SINT" Dimension="0" Radix="Decimal" Hidden="true" ExternalAccess="Read/Write"/>
+<Member Name="Enable" DataType="BIT" Dimension="0" Radix="Decimal" Hidden="false" Target="ZZZZZZZZZZDigitalInp0" BitNumber="0" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[Alarm Enable Command]]>
+</Description>
+</Member>
+<Member Name="Disable" DataType="BIT" Dimension="0" Radix="Decimal" Hidden="false" Target="ZZZZZZZZZZDigitalInp0" BitNumber="1" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[Alarm Disable Command]]>
+</Description>
+</Member>
+<Member Name="Reset" DataType="BIT" Dimension="0" Radix="Decimal" Hidden="false" Target="ZZZZZZZZZZDigitalInp0" BitNumber="2" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[Alarm Reset Command]]>
+</Description>
+</Member>
+<Member Name="TestEnable" DataType="BIT" Dimension="0" Radix="Decimal" Hidden="false" Target="ZZZZZZZZZZDigitalInp0" BitNumber="3" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[Alarm Test Enable Command]]>
+</Description>
+</Member>
+<Member Name="TestDisable" DataType="BIT" Dimension="0" Radix="Decimal" Hidden="false" Target="ZZZZZZZZZZDigitalInp0" BitNumber="4" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[Alarm Test Disable Command]]>
+</Description>
+</Member>
+</Members>
+</DataType>
+<DataType Name="IO_Faults" Family="NoFamily" Class="User">
+<Description>
+<![CDATA[Data Type defines the IO Faults for the System]]>
+</Description>
+<Members>
+<Member Name="Alarms" DataType="IO_Faults_Alarms" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write"/>
+<Member Name="TANK_S00" DataType="IO_Faults_Module" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[Tank Rack - Module 0]]>
+</Description>
+</Member>
+<Member Name="TANK_S01" DataType="IO_Faults_Module" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[Tank Rack - Module 1]]>
+</Description>
+</Member>
+<Member Name="TANK_S02" DataType="IO_Faults_Module" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[Tank Rack - Module 2]]>
+</Description>
+</Member>
+<Member Name="TANK_S03" DataType="IO_Faults_Module" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[Tank Rack - Module 3]]>
+</Description>
+</Member>
+<Member Name="TANK_S04" DataType="IO_Faults_Module" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[Tank Rack - Module 4]]>
+</Description>
+</Member>
+<Member Name="TANK_S05" DataType="IO_Faults_Module" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[Tank Rack - Module 5]]>
+</Description>
+</Member>
+<Member Name="OFL_S00" DataType="IO_Faults_Module" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[Offload Rack - Module 0]]>
+</Description>
+</Member>
+<Member Name="OFL_S01" DataType="IO_Faults_Module" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[Offload Rack - Module 1]]>
+</Description>
+</Member>
+<Member Name="OFL_S02" DataType="IO_Faults_Module" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[Offload Rack - Module 2]]>
+</Description>
+</Member>
+<Member Name="OFL_S03" DataType="IO_Faults_Module" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[Offload Rack - Module 3]]>
+</Description>
+</Member>
+<Member Name="EBS_S00" DataType="IO_Faults_Module" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[EBS Rack - Module 0]]>
+</Description>
+</Member>
+<Member Name="EBS_S01" DataType="IO_Faults_Module" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[EBS Rack - Module 1]]>
+</Description>
+</Member>
+<Member Name="EBS_S02" DataType="IO_Faults_Module" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[EBS Rack - Module 2]]>
+</Description>
+</Member>
+<Member Name="EBS_S03" DataType="IO_Faults_Module" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[EBS Rack - Module 3]]>
+</Description>
+</Member>
+<Member Name="EBS_S04" DataType="IO_Faults_Module" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[EBS Rack - Module 4]]>
+</Description>
+</Member>
+<Member Name="EBS_S05" DataType="IO_Faults_Module" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[EBS Rack - Module 5]]>
+</Description>
+</Member>
+<Member Name="EBS_S06" DataType="IO_Faults_Module" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[EBS Rack - Module 6]]>
+</Description>
+</Member>
+<Member Name="INJ_S00" DataType="IO_Faults_Module" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[INJ Rack - Module 0]]>
+</Description>
+</Member>
+<Member Name="INJ_S01" DataType="IO_Faults_Module" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[INJ Rack - Module 1]]>
+</Description>
+</Member>
+<Member Name="INJ_S02" DataType="IO_Faults_Module" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[INJ Rack - Module 2]]>
+</Description>
+</Member>
+<Member Name="INJ_S03" DataType="IO_Faults_Module" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[INJ Rack - Module 3]]>
+</Description>
+</Member>
+<Member Name="INJ_S04" DataType="IO_Faults_Module" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[INJ Rack - Module 4]]>
+</Description>
+</Member>
+<Member Name="INJ_S05" DataType="IO_Faults_Module" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[INJ Rack - Module 5]]>
+</Description>
+</Member>
+<Member Name="INJ_S06" DataType="IO_Faults_Module" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[INJ Rack - Module 6]]>
+</Description>
+</Member>
+<Member Name="INJ_S07" DataType="IO_Faults_Module" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[INJ Rack - Module 7]]>
+</Description>
+</Member>
+<Member Name="INJ_S08" DataType="IO_Faults_Module" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[INJ Rack - Module 8]]>
+</Description>
+</Member>
+<Member Name="PLC_S00" DataType="IO_Faults_Module" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[PLC Rack - Module 0]]>
+</Description>
+</Member>
+<Member Name="PLC_S01" DataType="IO_Faults_Module" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[PLC Rack - Module 1]]>
+</Description>
+</Member>
+<Member Name="PLC_S02" DataType="IO_Faults_Module" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[PLC Rack - Module 2]]>
+</Description>
+</Member>
+<Member Name="PLC_S03" DataType="IO_Faults_Module" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[PLC Rack - Module 3]]>
+</Description>
+</Member>
+<Member Name="PLC_S04" DataType="IO_Faults_Module" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[PLC Rack - Module 4]]>
+</Description>
+</Member>
+<Member Name="PLC_S05" DataType="IO_Faults_Module" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[PLC Rack - Module 5]]>
+</Description>
+</Member>
+<Member Name="PLC_S06" DataType="IO_Faults_Module" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[PLC Rack - Module 6]]>
+</Description>
+</Member>
+<Member Name="PLC_S07" DataType="IO_Faults_Module" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[PLC Rack - Module 7]]>
+</Description>
+</Member>
+<Member Name="PLC_S08" DataType="IO_Faults_Module" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[PLC Rack - Module 8]]>
+</Description>
+</Member>
+<Member Name="PLC_S09" DataType="IO_Faults_Module" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[PLC Rack - Module 9]]>
+</Description>
+</Member>
+<Member Name="R0S04" DataType="IO_Faults_Module" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[Local Rack - Module 4]]>
+</Description>
+</Member>
+</Members>
+</DataType>
+<DataType Name="IO_Faults_Alarms" Family="NoFamily" Class="User">
+<Members>
+<Member Name="PointIO_Fault" DataType="DigitalInput_Alarm" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[IO Fault Alarm]]>
+</Description>
+</Member>
+<Member Name="Module_Inhibited" DataType="DigitalInput_Alarm" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[IO Module Inhibited Alarm]]>
+</Description>
+</Member>
+</Members>
+</DataType>
+<DataType Name="IO_Faults_Module" Family="NoFamily" Class="User">
+<Description>
+<![CDATA[Defines the Data Type for IO Faults Module Status]]>
+</Description>
+<Members>
+<Member Name="ZZZZZZZZZZIO_Faults_0" DataType="SINT" Dimension="0" Radix="Decimal" Hidden="true" ExternalAccess="Read/Write"/>
+<Member Name="Inhibited" DataType="BIT" Dimension="0" Radix="Decimal" Hidden="false" Target="ZZZZZZZZZZIO_Faults_0" BitNumber="0" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[Module Inhibited Status]]>
+</Description>
+</Member>
+<Member Name="Faulted" DataType="BIT" Dimension="0" Radix="Decimal" Hidden="false" Target="ZZZZZZZZZZIO_Faults_0" BitNumber="1" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[Module Faulted Status]]>
+</Description>
+</Member>
+</Members>
+</DataType>
+</DataTypes>
+<Modules Use="Context">
+<Module Use="Reference" Name="IO_R4_INJ_FLEX">
+</Module>
+<Module Use="Reference" Name="R4_INJ05">
+</Module>
+</Modules>
+<AddOnInstructionDefinitions Use="Context">
+<AddOnInstructionDefinition Name="aoi5094IB16" Revision="1.0" Vendor="ENE" ExecutePrescan="false" ExecutePostscan="false" ExecuteEnableInFalse="false" CreatedDate="2017-06-17T00:58:18.592Z" CreatedBy="ENE\jshields" EditedDate="2021-02-04T21:36:22.168Z" EditedBy="ENE\josh.davis" SoftwareRevision="v32.01"
+>
+<Description>
+<![CDATA[Add-on-instruction for mapping 5094-IB16 I/O Card to P&ID Tags]]>
+</Description>
+<RevisionNote>
+<![CDATA[v1.0 - Initial Verision]]>
+</RevisionNote>
+<Parameters>
+<Parameter Name="EnableIn" TagType="Base" DataType="BOOL" Usage="Input" Radix="Decimal" Required="false" Visible="false" ExternalAccess="Read Only">
+<Description>
+<![CDATA[Enable Input - System Defined Parameter]]>
+</Description>
+</Parameter>
+<Parameter Name="EnableOut" TagType="Base" DataType="BOOL" Usage="Output" Radix="Decimal" Required="false" Visible="false" ExternalAccess="Read Only">
+<Description>
+<![CDATA[Enable Output - System Defined Parameter]]>
+</Description>
+</Parameter>
+<Parameter Name="Input_Data" TagType="Base" DataType="AB:5000_DI16:I:0" Usage="InOut" Required="true" Visible="true" Constant="false">
+<Description>
+<![CDATA[5094-IB16 Card Input Data]]>
+</Description>
+</Parameter>
+<Parameter Name="IO_Faults" TagType="Base" DataType="BOOL" Usage="Output" Radix="Decimal" Required="true" Visible="true" ExternalAccess="None">
+<Description>
+<![CDATA[I/O Faults Detected]]>
+</Description>
+<DefaultData Format="L5K">
+<![CDATA[0]]>
+</DefaultData>
+<DefaultData Format="Decorated">
+<DataValue DataType="BOOL" Radix="Decimal" Value="0"/>
+</DefaultData>
+</Parameter>
+<Parameter Name="Ch0" TagType="Base" DataType="DI_5094IB16" Usage="InOut" Required="true" Visible="true" Constant="false">
+<Description>
+<![CDATA[Channel 0 Data]]>
+</Description>
+</Parameter>
+<Parameter Name="Ch1" TagType="Base" DataType="DI_5094IB16" Usage="InOut" Required="true" Visible="true" Constant="false">
+<Description>
+<![CDATA[Channel 1 Data]]>
+</Description>
+</Parameter>
+<Parameter Name="Ch2" TagType="Base" DataType="DI_5094IB16" Usage="InOut" Required="true" Visible="true" Constant="false">
+<Description>
+<![CDATA[Channel 2 Data]]>
+</Description>
+</Parameter>
+<Parameter Name="Ch3" TagType="Base" DataType="DI_5094IB16" Usage="InOut" Required="true" Visible="true" Constant="false">
+<Description>
+<![CDATA[Channel 3 Data]]>
+</Description>
+</Parameter>
+<Parameter Name="Ch4" TagType="Base" DataType="DI_5094IB16" Usage="InOut" Required="true" Visible="true" Constant="false">
+<Description>
+<![CDATA[Channel 4 Data]]>
+</Description>
+</Parameter>
+<Parameter Name="Ch5" TagType="Base" DataType="DI_5094IB16" Usage="InOut" Required="true" Visible="true" Constant="false">
+<Description>
+<![CDATA[Channel 5 Data]]>
+</Description>
+</Parameter>
+<Parameter Name="Ch6" TagType="Base" DataType="DI_5094IB16" Usage="InOut" Required="true" Visible="true" Constant="false">
+<Description>
+<![CDATA[Channel 6 Data]]>
+</Description>
+</Parameter>
+<Parameter Name="Ch7" TagType="Base" DataType="DI_5094IB16" Usage="InOut" Required="true" Visible="true" Constant="false">
+<Description>
+<![CDATA[Channel 7 Data]]>
+</Description>
+</Parameter>
+<Parameter Name="Ch8" TagType="Base" DataType="DI_5094IB16" Usage="InOut" Required="true" Visible="true" Constant="false">
+<Description>
+<![CDATA[Channel 8 Data]]>
+</Description>
+</Parameter>
+<Parameter Name="Ch9" TagType="Base" DataType="DI_5094IB16" Usage="InOut" Required="true" Visible="true" Constant="false">
+<Description>
+<![CDATA[Channel 9 Data]]>
+</Description>
+</Parameter>
+<Parameter Name="Ch10" TagType="Base" DataType="DI_5094IB16" Usage="InOut" Required="true" Visible="true" Constant="false">
+<Description>
+<![CDATA[Channel 10 Data]]>
+</Description>
+</Parameter>
+<Parameter Name="Ch11" TagType="Base" DataType="DI_5094IB16" Usage="InOut" Required="true" Visible="true" Constant="false">
+<Description>
+<![CDATA[Channel 11 Data]]>
+</Description>
+</Parameter>
+<Parameter Name="Ch12" TagType="Base" DataType="DI_5094IB16" Usage="InOut" Required="true" Visible="true" Constant="false">
+<Description>
+<![CDATA[Channel 12 Data]]>
+</Description>
+</Parameter>
+<Parameter Name="Ch13" TagType="Base" DataType="DI_5094IB16" Usage="InOut" Required="true" Visible="true" Constant="false">
+<Description>
+<![CDATA[Channel 13 Data]]>
+</Description>
+</Parameter>
+<Parameter Name="Ch14" TagType="Base" DataType="DI_5094IB16" Usage="InOut" Required="true" Visible="true" Constant="false">
+<Description>
+<![CDATA[Channel 14 Data]]>
+</Description>
+</Parameter>
+<Parameter Name="Ch15" TagType="Base" DataType="DI_5094IB16" Usage="InOut" Required="true" Visible="true" Constant="false">
+<Description>
+<![CDATA[Channel 15 Data]]>
+</Description>
+</Parameter>
+</Parameters>
+<LocalTags/>
+<Routines>
+<Routine Name="Logic" Type="RLL">
+<RLLContent>
+<Labels/>
+<Rung Number="0" Type="N">
+<Comment>
+<![CDATA[-----------------------------------------------------
+ 5094-IB16 Add-on-instruction (AOI)
+----------------------------------------------------
+Map Channel 0 Data, and Fault Status to outputs]]>
+</Comment>
+<Text>
+<![CDATA[[XIC(Input_Data.Pt00.Data) OTE(Ch0.ChData) ,XIC(Input_Data.Pt00.Fault) OTE(Ch0.ChFault) ];]]>
+</Text>
+</Rung>
+<Rung Number="1" Type="N">
+<Comment>
+<![CDATA[Map Channel 1 Data, and Fault Status to outputs]]>
+</Comment>
+<Text>
+<![CDATA[[XIC(Input_Data.Pt01.Data) OTE(Ch1.ChData) ,XIC(Input_Data.Pt01.Fault) OTE(Ch1.ChFault) ];]]>
+</Text>
+</Rung>
+<Rung Number="2" Type="N">
+<Comment>
+<![CDATA[Map Channel 2 Data, and Fault Status to outputs]]>
+</Comment>
+<Text>
+<![CDATA[[XIC(Input_Data.Pt02.Data) OTE(Ch2.ChData) ,XIC(Input_Data.Pt02.Fault) OTE(Ch2.ChFault) ];]]>
+</Text>
+</Rung>
+<Rung Number="3" Type="N">
+<Comment>
+<![CDATA[Map Channel 3 Data, and Fault Status to outputs]]>
+</Comment>
+<Text>
+<![CDATA[[XIC(Input_Data.Pt03.Data) OTE(Ch3.ChData) ,XIC(Input_Data.Pt03.Fault) OTE(Ch3.ChFault) ];]]>
+</Text>
+</Rung>
+<Rung Number="4" Type="N">
+<Comment>
+<![CDATA[Map Channel 4 Data, and Fault Status to outputs]]>
+</Comment>
+<Text>
+<![CDATA[[XIC(Input_Data.Pt04.Data) OTE(Ch4.ChData) ,XIC(Input_Data.Pt04.Fault) OTE(Ch4.ChFault) ];]]>
+</Text>
+</Rung>
+<Rung Number="5" Type="N">
+<Comment>
+<![CDATA[Map Channel 5 Data, and Fault Status to outputs]]>
+</Comment>
+<Text>
+<![CDATA[[XIC(Input_Data.Pt05.Data) OTE(Ch5.ChData) ,XIC(Input_Data.Pt05.Fault) OTE(Ch5.ChFault) ];]]>
+</Text>
+</Rung>
+<Rung Number="6" Type="N">
+<Comment>
+<![CDATA[Map Channel 6 Data, and Fault Status to outputs]]>
+</Comment>
+<Text>
+<![CDATA[[XIC(Input_Data.Pt06.Data) OTE(Ch6.ChData) ,XIC(Input_Data.Pt06.Fault) OTE(Ch6.ChFault) ];]]>
+</Text>
+</Rung>
+<Rung Number="7" Type="N">
+<Comment>
+<![CDATA[Map Channel 7 Data, and Fault Status to outputs]]>
+</Comment>
+<Text>
+<![CDATA[[XIC(Input_Data.Pt07.Data) OTE(Ch7.ChData) ,XIC(Input_Data.Pt07.Fault) OTE(Ch7.ChFault) ];]]>
+</Text>
+</Rung>
+<Rung Number="8" Type="N">
+<Comment>
+<![CDATA[Map Channel 8 Data, and Fault Status to outputs]]>
+</Comment>
+<Text>
+<![CDATA[[XIC(Input_Data.Pt08.Data) OTE(Ch8.ChData) ,XIC(Input_Data.Pt08.Fault) OTE(Ch8.ChFault) ];]]>
+</Text>
+</Rung>
+<Rung Number="9" Type="N">
+<Comment>
+<![CDATA[Map Channel 9 Data, and Fault Status to outputs]]>
+</Comment>
+<Text>
+<![CDATA[[XIC(Input_Data.Pt09.Data) OTE(Ch9.ChData) ,XIC(Input_Data.Pt09.Fault) OTE(Ch9.ChFault) ];]]>
+</Text>
+</Rung>
+<Rung Number="10" Type="N">
+<Comment>
+<![CDATA[Map Channel 10 Data, and Fault Status to outputs]]>
+</Comment>
+<Text>
+<![CDATA[[XIC(Input_Data.Pt10.Data) OTE(Ch10.ChData) ,XIC(Input_Data.Pt10.Fault) OTE(Ch10.ChFault) ];]]>
+</Text>
+</Rung>
+<Rung Number="11" Type="N">
+<Comment>
+<![CDATA[Map Channel 11 Data, and Fault Status to outputs]]>
+</Comment>
+<Text>
+<![CDATA[[XIC(Input_Data.Pt11.Data) OTE(Ch11.ChData) ,XIC(Input_Data.Pt11.Fault) OTE(Ch11.ChFault) ];]]>
+</Text>
+</Rung>
+<Rung Number="12" Type="N">
+<Comment>
+<![CDATA[Map Channel 12 Data, and Fault Status to outputs]]>
+</Comment>
+<Text>
+<![CDATA[[XIC(Input_Data.Pt12.Data) OTE(Ch12.ChData) ,XIC(Input_Data.Pt12.Fault) OTE(Ch12.ChFault) ];]]>
+</Text>
+</Rung>
+<Rung Number="13" Type="N">
+<Comment>
+<![CDATA[Map Channel 13 Data, and Fault Status to outputs]]>
+</Comment>
+<Text>
+<![CDATA[[XIC(Input_Data.Pt13.Data) OTE(Ch13.ChData) ,XIC(Input_Data.Pt13.Fault) OTE(Ch13.ChFault) ];]]>
+</Text>
+</Rung>
+<Rung Number="14" Type="N">
+<Comment>
+<![CDATA[Map Channel 14 Data, and Fault Status to outputs]]>
+</Comment>
+<Text>
+<![CDATA[[XIC(Input_Data.Pt14.Data) OTE(Ch14.ChData) ,XIC(Input_Data.Pt14.Fault) OTE(Ch14.ChFault) ];]]>
+</Text>
+</Rung>
+<Rung Number="15" Type="N">
+<Comment>
+<![CDATA[Map Channel 15 Data, and Fault Status to outputs]]>
+</Comment>
+<Text>
+<![CDATA[[XIC(Input_Data.Pt15.Data) OTE(Ch15.ChData) ,XIC(Input_Data.Pt15.Fault) OTE(Ch15.ChFault) ];]]>
+</Text>
+</Rung>
+<Rung Number="16" Type="N">
+<Comment>
+<![CDATA[Map the overall status of the Channel Faults]]>
+</Comment>
+<Text>
+<![CDATA[[XIC(Input_Data.Pt00.Fault) ,XIC(Input_Data.Pt01.Fault) ,XIC(Input_Data.Pt02.Fault) ,XIC(Input_Data.Pt03.Fault) ,XIC(Input_Data.Pt04.Fault) ,XIC(Input_Data.Pt05.Fault) ,XIC(Input_Data.Pt06.Fault) ,XIC(Input_Data.Pt07.Fault) ,XIC(Input_Data.Pt08.Fault) ,XIC(Input_Data.Pt09.Fault) ,XIC(Input_Data.Pt10.Fault) ,XIC(Input_Data.Pt11.Fault) ,XIC(Input_Data.Pt12.Fault) ,XIC(Input_Data.Pt13.Fault) ,XIC(Input_Data.Pt14.Fault) ,XIC(Input_Data.Pt15.Fault) ]OTE(IO_Faults);]]>
+</Text>
+</Rung>
+</RLLContent>
+</Routine>
+</Routines>
+</AddOnInstructionDefinition>
+</AddOnInstructionDefinitions>
+<Tags Use="Context">
+<Tag Name="di_01SS_901D" TagType="Base" DataType="DI_5094IB16" Constant="false" ExternalAccess="None">
+<Description>
+<![CDATA[ESD Pushbutton at Injection Skid Rack 4]]>
+</Description>
+<Data Format="L5K">
+<![CDATA[[0]]]>
+</Data>
+<Data Format="Decorated">
+<Structure DataType="DI_5094IB16">
+<DataValueMember Name="ChData" DataType="BOOL" Value="0"/>
+<DataValueMember Name="ChFault" DataType="BOOL" Value="0"/>
+</Structure>
+</Data>
+</Tag>
+<Tag Name="di_13XS_101" TagType="Base" DataType="DI_5094IB16" Constant="false" ExternalAccess="None">
+<Description>
+<![CDATA[Butane Injector 1 Blocking Valve Position Switch]]>
+</Description>
+<Data Format="L5K">
+<![CDATA[[0]]]>
+</Data>
+<Data Format="Decorated">
+<Structure DataType="DI_5094IB16">
+<DataValueMember Name="ChData" DataType="BOOL" Value="0"/>
+<DataValueMember Name="ChFault" DataType="BOOL" Value="0"/>
+</Structure>
+</Data>
+</Tag>
+<Tag Name="di_13XS_201" TagType="Base" DataType="DI_5094IB16" Constant="false" ExternalAccess="None">
+<Description>
+<![CDATA[Butane Injector 2 Blocking Valve Position Switch]]>
+</Description>
+<Data Format="L5K">
+<![CDATA[[0]]]>
+</Data>
+<Data Format="Decorated">
+<Structure DataType="DI_5094IB16">
+<DataValueMember Name="ChData" DataType="BOOL" Value="0"/>
+<DataValueMember Name="ChFault" DataType="BOOL" Value="0"/>
+</Structure>
+</Data>
+</Tag>
+<Tag Name="IO_R4_Faults" TagType="Base" DataType="IO_Faults" Constant="false" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[Rack 4 I/O Faults]]>
+</Description>
+<Data Format="L5K">
+<![CDATA[[[[[0],3,0,50,0.00000000e+000,0.00000000e+000],[[0],2,0,0,0.00000000e+000,0.00000000e+000]],[0],[0],[0],[0],[0],[0],[0],[0],[0],[0],[0],[0
+		],[0],[0],[0],[0],[0],[0],[0],[0],[2],[0],[0],[0],[0],[0],[0],[0],[0],[0],[0],[0],[0],[0],[0],[0],[0]]]]>
+</Data>
+<Data Format="Decorated">
+<Structure DataType="IO_Faults">
+<StructureMember Name="Alarms" DataType="IO_Faults_Alarms">
+<StructureMember Name="PointIO_Fault" DataType="DigitalInput_Alarm">
+<StructureMember Name="CMD" DataType="DigitalInput_Alarm_Commands">
+<DataValueMember Name="Enable" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Disable" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Reset" DataType="BOOL" Value="0"/>
+<DataValueMember Name="TestEnable" DataType="BOOL" Value="0"/>
+<DataValueMember Name="TestDisable" DataType="BOOL" Value="0"/>
+</StructureMember>
+<DataValueMember Name="Active" DataType="BOOL" Value="1"/>
+<DataValueMember Name="Enabled" DataType="BOOL" Value="1"/>
+<DataValueMember Name="UnAck" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Delay" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="DelayACC" DataType="DINT" Radix="Decimal" Value="50"/>
+<DataValueMember Name="Parameter1" DataType="REAL" Radix="Float" Value="0.0"/>
+<DataValueMember Name="Parameter2" DataType="REAL" Radix="Float" Value="0.0"/>
+</StructureMember>
+<StructureMember Name="Module_Inhibited" DataType="DigitalInput_Alarm">
+<StructureMember Name="CMD" DataType="DigitalInput_Alarm_Commands">
+<DataValueMember Name="Enable" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Disable" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Reset" DataType="BOOL" Value="0"/>
+<DataValueMember Name="TestEnable" DataType="BOOL" Value="0"/>
+<DataValueMember Name="TestDisable" DataType="BOOL" Value="0"/>
+</StructureMember>
+<DataValueMember Name="Active" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Enabled" DataType="BOOL" Value="1"/>
+<DataValueMember Name="UnAck" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Delay" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="DelayACC" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="Parameter1" DataType="REAL" Radix="Float" Value="0.0"/>
+<DataValueMember Name="Parameter2" DataType="REAL" Radix="Float" Value="0.0"/>
+</StructureMember>
+</StructureMember>
+<StructureMember Name="TANK_S00" DataType="IO_Faults_Module">
+<DataValueMember Name="Inhibited" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Faulted" DataType="BOOL" Value="0"/>
+</StructureMember>
+<StructureMember Name="TANK_S01" DataType="IO_Faults_Module">
+<DataValueMember Name="Inhibited" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Faulted" DataType="BOOL" Value="0"/>
+</StructureMember>
+<StructureMember Name="TANK_S02" DataType="IO_Faults_Module">
+<DataValueMember Name="Inhibited" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Faulted" DataType="BOOL" Value="0"/>
+</StructureMember>
+<StructureMember Name="TANK_S03" DataType="IO_Faults_Module">
+<DataValueMember Name="Inhibited" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Faulted" DataType="BOOL" Value="0"/>
+</StructureMember>
+<StructureMember Name="TANK_S04" DataType="IO_Faults_Module">
+<DataValueMember Name="Inhibited" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Faulted" DataType="BOOL" Value="0"/>
+</StructureMember>
+<StructureMember Name="TANK_S05" DataType="IO_Faults_Module">
+<DataValueMember Name="Inhibited" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Faulted" DataType="BOOL" Value="0"/>
+</StructureMember>
+<StructureMember Name="OFL_S00" DataType="IO_Faults_Module">
+<DataValueMember Name="Inhibited" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Faulted" DataType="BOOL" Value="0"/>
+</StructureMember>
+<StructureMember Name="OFL_S01" DataType="IO_Faults_Module">
+<DataValueMember Name="Inhibited" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Faulted" DataType="BOOL" Value="0"/>
+</StructureMember>
+<StructureMember Name="OFL_S02" DataType="IO_Faults_Module">
+<DataValueMember Name="Inhibited" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Faulted" DataType="BOOL" Value="0"/>
+</StructureMember>
+<StructureMember Name="OFL_S03" DataType="IO_Faults_Module">
+<DataValueMember Name="Inhibited" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Faulted" DataType="BOOL" Value="0"/>
+</StructureMember>
+<StructureMember Name="EBS_S00" DataType="IO_Faults_Module">
+<DataValueMember Name="Inhibited" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Faulted" DataType="BOOL" Value="0"/>
+</StructureMember>
+<StructureMember Name="EBS_S01" DataType="IO_Faults_Module">
+<DataValueMember Name="Inhibited" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Faulted" DataType="BOOL" Value="0"/>
+</StructureMember>
+<StructureMember Name="EBS_S02" DataType="IO_Faults_Module">
+<DataValueMember Name="Inhibited" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Faulted" DataType="BOOL" Value="0"/>
+</StructureMember>
+<StructureMember Name="EBS_S03" DataType="IO_Faults_Module">
+<DataValueMember Name="Inhibited" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Faulted" DataType="BOOL" Value="0"/>
+</StructureMember>
+<StructureMember Name="EBS_S04" DataType="IO_Faults_Module">
+<DataValueMember Name="Inhibited" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Faulted" DataType="BOOL" Value="0"/>
+</StructureMember>
+<StructureMember Name="EBS_S05" DataType="IO_Faults_Module">
+<DataValueMember Name="Inhibited" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Faulted" DataType="BOOL" Value="0"/>
+</StructureMember>
+<StructureMember Name="EBS_S06" DataType="IO_Faults_Module">
+<DataValueMember Name="Inhibited" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Faulted" DataType="BOOL" Value="0"/>
+</StructureMember>
+<StructureMember Name="INJ_S00" DataType="IO_Faults_Module">
+<DataValueMember Name="Inhibited" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Faulted" DataType="BOOL" Value="0"/>
+</StructureMember>
+<StructureMember Name="INJ_S01" DataType="IO_Faults_Module">
+<DataValueMember Name="Inhibited" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Faulted" DataType="BOOL" Value="0"/>
+</StructureMember>
+<StructureMember Name="INJ_S02" DataType="IO_Faults_Module">
+<DataValueMember Name="Inhibited" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Faulted" DataType="BOOL" Value="0"/>
+</StructureMember>
+<StructureMember Name="INJ_S03" DataType="IO_Faults_Module">
+<DataValueMember Name="Inhibited" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Faulted" DataType="BOOL" Value="1"/>
+</StructureMember>
+<StructureMember Name="INJ_S04" DataType="IO_Faults_Module">
+<DataValueMember Name="Inhibited" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Faulted" DataType="BOOL" Value="0"/>
+</StructureMember>
+<StructureMember Name="INJ_S05" DataType="IO_Faults_Module">
+<DataValueMember Name="Inhibited" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Faulted" DataType="BOOL" Value="0"/>
+</StructureMember>
+<StructureMember Name="INJ_S06" DataType="IO_Faults_Module">
+<DataValueMember Name="Inhibited" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Faulted" DataType="BOOL" Value="0"/>
+</StructureMember>
+<StructureMember Name="INJ_S07" DataType="IO_Faults_Module">
+<DataValueMember Name="Inhibited" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Faulted" DataType="BOOL" Value="0"/>
+</StructureMember>
+<StructureMember Name="INJ_S08" DataType="IO_Faults_Module">
+<DataValueMember Name="Inhibited" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Faulted" DataType="BOOL" Value="0"/>
+</StructureMember>
+<StructureMember Name="PLC_S00" DataType="IO_Faults_Module">
+<DataValueMember Name="Inhibited" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Faulted" DataType="BOOL" Value="0"/>
+</StructureMember>
+<StructureMember Name="PLC_S01" DataType="IO_Faults_Module">
+<DataValueMember Name="Inhibited" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Faulted" DataType="BOOL" Value="0"/>
+</StructureMember>
+<StructureMember Name="PLC_S02" DataType="IO_Faults_Module">
+<DataValueMember Name="Inhibited" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Faulted" DataType="BOOL" Value="0"/>
+</StructureMember>
+<StructureMember Name="PLC_S03" DataType="IO_Faults_Module">
+<DataValueMember Name="Inhibited" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Faulted" DataType="BOOL" Value="0"/>
+</StructureMember>
+<StructureMember Name="PLC_S04" DataType="IO_Faults_Module">
+<DataValueMember Name="Inhibited" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Faulted" DataType="BOOL" Value="0"/>
+</StructureMember>
+<StructureMember Name="PLC_S05" DataType="IO_Faults_Module">
+<DataValueMember Name="Inhibited" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Faulted" DataType="BOOL" Value="0"/>
+</StructureMember>
+<StructureMember Name="PLC_S06" DataType="IO_Faults_Module">
+<DataValueMember Name="Inhibited" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Faulted" DataType="BOOL" Value="0"/>
+</StructureMember>
+<StructureMember Name="PLC_S07" DataType="IO_Faults_Module">
+<DataValueMember Name="Inhibited" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Faulted" DataType="BOOL" Value="0"/>
+</StructureMember>
+<StructureMember Name="PLC_S08" DataType="IO_Faults_Module">
+<DataValueMember Name="Inhibited" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Faulted" DataType="BOOL" Value="0"/>
+</StructureMember>
+<StructureMember Name="PLC_S09" DataType="IO_Faults_Module">
+<DataValueMember Name="Inhibited" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Faulted" DataType="BOOL" Value="0"/>
+</StructureMember>
+<StructureMember Name="R0S04" DataType="IO_Faults_Module">
+<DataValueMember Name="Inhibited" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Faulted" DataType="BOOL" Value="0"/>
+</StructureMember>
+</Structure>
+</Data>
+</Tag>
+<Tag Name="IO_R4_INJ_FLEX:5:I" TagType="Base" DataType="AB:5000_DI16:I:0" ExternalAccess="Read/Write" IO="true">
+<Comments>
+<Comment Operand=".PT00">
+<![CDATA[Butane Injector 1 Blocking Valve Position Switch]]>
+</Comment>
+<Comment Operand=".PT01">
+<![CDATA[Butane Injector 2 Blocking Valve Position Switch]]>
+</Comment>
+<Comment Operand=".PT02">
+<![CDATA[Spare]]>
+</Comment>
+<Comment Operand=".PT03">
+<![CDATA[Spare]]>
+</Comment>
+<Comment Operand=".PT04">
+<![CDATA[ESD PB at Injection Skid]]>
+</Comment>
+<Comment Operand=".PT05">
+<![CDATA[Spare]]>
+</Comment>
+<Comment Operand=".PT06">
+<![CDATA[Spare]]>
+</Comment>
+<Comment Operand=".PT07">
+<![CDATA[Spare]]>
+</Comment>
+<Comment Operand=".PT08">
+<![CDATA[Spare]]>
+</Comment>
+<Comment Operand=".PT09">
+<![CDATA[Spare]]>
+</Comment>
+<Comment Operand=".PT10">
+<![CDATA[Spare]]>
+</Comment>
+<Comment Operand=".PT11">
+<![CDATA[Spare]]>
+</Comment>
+<Comment Operand=".PT12">
+<![CDATA[Spare]]>
+</Comment>
+<Comment Operand=".PT13">
+<![CDATA[Spare]]>
+</Comment>
+<Comment Operand=".PT14">
+<![CDATA[Spare]]>
+</Comment>
+<Comment Operand=".PT15">
+<![CDATA[Spare]]>
+</Comment>
+</Comments>
+<Data Format="L5K">
+<![CDATA[[1,0,0,[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0]]]]>
+</Data>
+<Data Format="Decorated">
+<Structure DataType="AB:5000_DI16:I:0">
+<DataValueMember Name="RunMode" DataType="BOOL" Value="1"/>
+<DataValueMember Name="ConnectionFaulted" DataType="BOOL" Value="0"/>
+<DataValueMember Name="DiagnosticActive" DataType="BOOL" Value="0"/>
+<DataValueMember Name="DiagnosticSequenceCount" DataType="SINT" Radix="Decimal" Value="0"/>
+<StructureMember Name="Pt00" DataType="CHANNEL_DI:I:0">
+<DataValueMember Name="Data" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Fault" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Uncertain" DataType="BOOL" Value="0"/>
+</StructureMember>
+<StructureMember Name="Pt01" DataType="CHANNEL_DI:I:0">
+<DataValueMember Name="Data" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Fault" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Uncertain" DataType="BOOL" Value="0"/>
+</StructureMember>
+<StructureMember Name="Pt02" DataType="CHANNEL_DI:I:0">
+<DataValueMember Name="Data" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Fault" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Uncertain" DataType="BOOL" Value="0"/>
+</StructureMember>
+<StructureMember Name="Pt03" DataType="CHANNEL_DI:I:0">
+<DataValueMember Name="Data" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Fault" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Uncertain" DataType="BOOL" Value="0"/>
+</StructureMember>
+<StructureMember Name="Pt04" DataType="CHANNEL_DI:I:0">
+<DataValueMember Name="Data" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Fault" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Uncertain" DataType="BOOL" Value="0"/>
+</StructureMember>
+<StructureMember Name="Pt05" DataType="CHANNEL_DI:I:0">
+<DataValueMember Name="Data" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Fault" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Uncertain" DataType="BOOL" Value="0"/>
+</StructureMember>
+<StructureMember Name="Pt06" DataType="CHANNEL_DI:I:0">
+<DataValueMember Name="Data" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Fault" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Uncertain" DataType="BOOL" Value="0"/>
+</StructureMember>
+<StructureMember Name="Pt07" DataType="CHANNEL_DI:I:0">
+<DataValueMember Name="Data" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Fault" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Uncertain" DataType="BOOL" Value="0"/>
+</StructureMember>
+<StructureMember Name="Pt08" DataType="CHANNEL_DI:I:0">
+<DataValueMember Name="Data" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Fault" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Uncertain" DataType="BOOL" Value="0"/>
+</StructureMember>
+<StructureMember Name="Pt09" DataType="CHANNEL_DI:I:0">
+<DataValueMember Name="Data" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Fault" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Uncertain" DataType="BOOL" Value="0"/>
+</StructureMember>
+<StructureMember Name="Pt10" DataType="CHANNEL_DI:I:0">
+<DataValueMember Name="Data" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Fault" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Uncertain" DataType="BOOL" Value="0"/>
+</StructureMember>
+<StructureMember Name="Pt11" DataType="CHANNEL_DI:I:0">
+<DataValueMember Name="Data" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Fault" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Uncertain" DataType="BOOL" Value="0"/>
+</StructureMember>
+<StructureMember Name="Pt12" DataType="CHANNEL_DI:I:0">
+<DataValueMember Name="Data" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Fault" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Uncertain" DataType="BOOL" Value="0"/>
+</StructureMember>
+<StructureMember Name="Pt13" DataType="CHANNEL_DI:I:0">
+<DataValueMember Name="Data" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Fault" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Uncertain" DataType="BOOL" Value="0"/>
+</StructureMember>
+<StructureMember Name="Pt14" DataType="CHANNEL_DI:I:0">
+<DataValueMember Name="Data" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Fault" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Uncertain" DataType="BOOL" Value="0"/>
+</StructureMember>
+<StructureMember Name="Pt15" DataType="CHANNEL_DI:I:0">
+<DataValueMember Name="Data" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Fault" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Uncertain" DataType="BOOL" Value="0"/>
+</StructureMember>
+</Structure>
+</Data>
+</Tag>
+</Tags>
+<Programs Use="Context">
+<Program Use="Context" Name="Digital_Inputs">
+<Tags Use="Context">
+<Tag Name="INJ_R4Module5AOI" TagType="Base" DataType="aoi5094IB16" Constant="false" ExternalAccess="None">
+<Description>
+<![CDATA[INJ Rack 4 Module 5 AOI]]>
+</Description>
+<Data Format="L5K">
+<![CDATA[[3]]]>
+</Data>
+<Data Format="Decorated">
+<Structure DataType="aoi5094IB16">
+<DataValueMember Name="EnableIn" DataType="BOOL" Value="1"/>
+<DataValueMember Name="EnableOut" DataType="BOOL" Value="1"/>
+<DataValueMember Name="IO_Faults" DataType="BOOL" Value="0"/>
+</Structure>
+</Data>
+</Tag>
+<Tag Name="Spare_DI_Channel_5094" TagType="Base" DataType="DI_5094IB16" Constant="false" ExternalAccess="None">
+<Description>
+<![CDATA[Spare Digital Input Channel for 5094 Modules]]>
+</Description>
+<Data Format="L5K">
+<![CDATA[[0]]]>
+</Data>
+<Data Format="Decorated">
+<Structure DataType="DI_5094IB16">
+<DataValueMember Name="ChData" DataType="BOOL" Value="0"/>
+<DataValueMember Name="ChFault" DataType="BOOL" Value="0"/>
+</Structure>
+</Data>
+</Tag>
+</Tags>
+<Routines Use="Context">
+<Routine Use="Context" Name="Main">
+<RLLContent Use="Context">
+<Rung Use="Target" Number="1" Type="N">
+<Comment>
+<![CDATA[-------------------------------
+INJ Rack 4 Module 5
+--------------------------------
+
+Map Digital Input Data and Faults to Controller Tags]]>
+</Comment>
+<Text>
+<![CDATA[aoi5094IB16(INJ_R4Module5AOI,IO_R4_INJ_FLEX:5:I,IO_R4_Faults.INJ_S05.Faulted,di_13XS_101,di_13XS_201,Spare_DI_Channel_5094,Spare_DI_Channel_5094,di_01SS_901D,Spare_DI_Channel_5094,Spare_DI_Channel_5094,Spare_DI_Channel_5094,Spare_DI_Channel_5094,Spare_DI_Channel_5094,Spare_DI_Channel_5094,Spare_DI_Channel_5094,Spare_DI_Channel_5094,Spare_DI_Channel_5094,Spare_DI_Channel_5094,Spare_DI_Channel_5094);]]>
+</Text>
+</Rung>
+</RLLContent>
+</Routine>
+</Routines>
+</Program>
+</Programs>
+</Controller>
+</RSLogix5000Content>

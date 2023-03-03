@@ -38,14 +38,13 @@ namespace L5Sharp.Serialization.Data
         {
             if (element is null)
                 throw new ArgumentNullException(nameof(element));
-
-            var data = element.Elements().First();
-            var name = data.Name.ToString();
+            
+            var name = element.Name.ToString();
             
             return name switch
             {
-                L5XName.AlarmDigitalParameters => TagDataSerializer.AlarmDigital.Deserialize(data),
-                L5XName.AlarmAnalogParameters => TagDataSerializer.AlarmAnalog.Deserialize(data),
+                L5XName.AlarmDigitalParameters => TagDataSerializer.AlarmDigital.Deserialize(element),
+                L5XName.AlarmAnalogParameters => TagDataSerializer.AlarmAnalog.Deserialize(element),
                 _ => throw new ArgumentException($"Element '{name}' not valid for the serializer {GetType()}.")
             };
         }

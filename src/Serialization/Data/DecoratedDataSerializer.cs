@@ -38,15 +38,14 @@ namespace L5Sharp.Serialization.Data
         public ILogixType Deserialize(XElement element)
         {
             Check.NotNull(element);
-
-            var data = element.Elements().First();
-            var name = data.Name.ToString();
+            
+            var name = element.Name.ToString();
             
             return name switch
             {
-                L5XName.DataValue => TagDataSerializer.DataValue.Deserialize(data),
-                L5XName.Array => TagDataSerializer.Array.Deserialize(data),
-                L5XName.Structure => TagDataSerializer.Structure.Deserialize(data),
+                L5XName.DataValue => TagDataSerializer.DataValue.Deserialize(element),
+                L5XName.Array => TagDataSerializer.Array.Deserialize(element),
+                L5XName.Structure => TagDataSerializer.Structure.Deserialize(element),
                 _ => throw new ArgumentException($"Element '{name}' not valid for the serializer {GetType()}.")
             };
         }

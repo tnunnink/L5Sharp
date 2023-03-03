@@ -158,6 +158,19 @@ namespace L5Sharp.Enums
 
             return FromName(name);
         }
+        
+        /// <summary>
+        /// Determines the radix format from a string representing a formatted atomic value.
+        /// </summary>
+        /// <param name="input">The string for which to infer the format.</param>
+        /// <returns>A <see cref="Radix"/> format enum value.</returns>
+        /// <exception cref="FormatException">A radix can not be determined from the format of <c>value</c>.</exception>
+        public static Radix? TryInfer(string input)
+        {
+            var name = Identifiers.FirstOrDefault(i => i.Value.Invoke(input)).Key;
+
+            return name is not null ? FromName(name) : null;
+        }
 
         /// <summary>
         /// Converts an atomic value to the current radix base format. 

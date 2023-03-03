@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using System.Xml.Serialization;
-using L5Sharp.Attributes;
 using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Serialization;
@@ -56,25 +57,25 @@ namespace L5Sharp.Components
         /// Indicates that the instruction has and executes a pre scan routine.
         /// </summary>
         /// <value><c>true</c> if the instruction executes a pre scan routine; otherwise, <c>false</c>.</value>
-        public bool ExecutePreScan { get; set; } = false;
+        public bool ExecutePreScan { get; set; }
 
         /// <summary>
         /// Indicates that the instruction has and executes a post scan routine.
         /// </summary>
         /// <value><c>true</c> if the instruction executes a post scan routine; otherwise, <c>false</c>.</value>
-        public bool ExecutePostScan { get; set; } = false;
+        public bool ExecutePostScan { get; set; }
 
         /// <summary>
         /// Indicates that the instruction has and executes a enable in false routine.
         /// </summary>
         /// <value>A <see cref="bool"/> - <c>true</c> if the instruction executes a enable in false routine; otherwise, <c>false</c>.</value>
-        public bool ExecuteEnableInFalse { get; set; } = false;
+        public bool ExecuteEnableInFalse { get; set; }
 
         /// <summary>
         /// The date and time that the instruction was created.
         /// </summary>
         /// <value>A <see cref="DateTime"/> representing the creation date and time.</value>
-        public DateTime CreatedDate { get; set; } = default;
+        public DateTime CreatedDate { get; set; }
         
         /// <summary>
         /// The name of the user that created the instruction.
@@ -86,7 +87,7 @@ namespace L5Sharp.Components
         /// The date and time that the instruction was last edited.
         /// </summary>
         /// <value>A <see cref="DateTime"/> representing the edit date and time.</value>
-        public DateTime EditedDate { get; set; } = default;
+        public DateTime EditedDate { get; set; }
         
         /// <summary>
         /// The name of the user that last edited the instruction.
@@ -126,5 +127,40 @@ namespace L5Sharp.Components
         /// Gets the collection of <see cref="Routine"/> objects that contain the logic for the instruction.
         /// </summary>
         public List<Routine> Routines { get; set; } = new();
+
+        /// <summary>
+        /// Returns the AOI instruction logic with the parameters of the instruction replaced with the provided neutral
+        /// text signature arguments.
+        /// </summary>
+        /// <param name="text">The text signature of the instruction instance.</param>
+        /// <returns>A <see cref="IEnumerable{T}"/> containing <see cref="NeutralText"/> representing all the instruction's
+        /// logic, with each parameter tag name replaced with the arguments from the provided text.</returns>
+        public IEnumerable<NeutralText> GetLogic(NeutralText text)
+        {
+            //todo validate provided text signature first...
+            
+            var logic = Routines.First(r => r.Name == "Logic");
+
+            if (logic is not RllRoutine rll)
+                return Enumerable.Empty<NeutralText>();
+
+            //Skip first as it is always the aoi tag, which does not have corresponding parameter
+            var arguments = text.Operands().Select(o => o.ToString()).Skip(1).ToList(); 
+            
+            //Only required parameters are part of the instruction signature
+            var parameters = Parameters.Where(p => p.Required).Select(p => p.Name);
+            
+            //Create a one to one mapping of the provided text operand arguments to instruction parameter names.
+            var mapping = arguments.Zip(parameters, (a, p) => new { Argument = a, Parameter = p }).ToList();
+
+            //Replace all parameter names with argument names in the instruction logic text, and return the results.
+            return rll.Content.Select(r => r.Text)
+                .Select(t => mapping.Aggregate(t, (current, pair) =>
+                {
+                    var replace = $@"(?<=[^.\]]){pair.Parameter}";
+                    return Regex.Replace(current, replace, pair.Argument.ToString());
+                }))
+                .ToList();
+        }
     }
 }

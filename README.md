@@ -1,7 +1,7 @@
 
 
 # L5Sharp
-A C# library and API for interacting with Rockwell's L5X import/export files.
+A C# library for interacting with Rockwell's L5X import/export files.
 The goal of this project was to provide a simple and reusable library for
 querying and manipulating L5X files to aid in the creation of tools that
 automate tasks related RSLogix 5000 PLC development.
@@ -48,7 +48,7 @@ content.L5X.ExportDate.Should().NotBeNull();
 ```
 
 ### Querying Content 
-Once the LogixContent is created, you can you the component collection methods
+Once the LogixContent is created, you can use the component collection methods
 to get access to most of the primary L5X components, 
 such as `Tag`, `DataType`, `Module`, `Program`, and more. 
 The following shows some simple querying via the tags component collection interface.
@@ -90,7 +90,7 @@ var result = content.Tags().Replace(tag);
 content.Save("C:\PathToMyOutputFile\FileName.L5X");
 ```
 
-### More Querying
+### More On Querying
 Tags are unique components in that they have different scopes. 
 We have to specify a scope to know where to modify the existing collection.
 For example, if you call `Tags().Add(tag)`, where do we add the tag?
@@ -103,7 +103,9 @@ generic argument.
 ```csharp
 var allTagsInFile = content.Query<Tag>();
 ```
-NOTE: `Query<T>()` just returns an `IEnumerable<T>`, so it is essentially read only.
+NOTE: `Query<T>()` just returns an `IEnumerable<T>`, so it is essentially read only,
+but still allows you to form more complex queries using LINQ and the strongly typed
+components in the library.
 
 
 ### Tag Data

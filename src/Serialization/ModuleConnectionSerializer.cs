@@ -95,7 +95,8 @@ namespace L5Sharp.Serialization
         {
             var tag = element.Descendants(tagName).FirstOrDefault();
             var data = tag?.Elements(L5XName.Data)
-                .FirstOrDefault(e => e.Attribute(L5XName.Format)?.Value == DataFormat.Decorated);
+                .FirstOrDefault(e => e.Attribute(L5XName.Format)?.Value == DataFormat.Decorated)
+                ?.Elements().First();
 
             if (tag is null || data is null) return null;
 

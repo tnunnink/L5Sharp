@@ -36,8 +36,8 @@ namespace L5Sharp.Serialization
             {
                 Number = element.GetValue<int>(L5XName.Number),
                 Type = element.TryGetValue<RungType>(L5XName.Type) ?? RungType.Normal,
-                Comment = element.TryGetValue<string>(L5XName.Comment) ?? string.Empty,
-                Text = element.TryGetValue<NeutralText>(L5XName.Text) ?? NeutralText.Empty
+                Comment = element.Element(L5XName.Comment)?.Value ?? string.Empty,
+                Text = element.Element(L5XName.Text)?.Value ?? NeutralText.Empty
             };
         }
     }

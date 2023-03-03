@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--Test data type with more complex members-->
+<RSLogix5000Content SchemaRevision="1.0" SoftwareRevision="1.0" TargetName="ComplexType" TargetType="DataType" ContainsContext="true">
+<Controller>
+<DataTypes>
+<DataType Use="Target" Name="ComplexType" Family="NoFamily" Class="User">
+<Description>
+<![CDATA[Test data type with more complex members]]>
+</Description>
+<Members>
+<Member Name="SimpleMember" DataType="SimpleType" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[User defined complex type]]>
+</Description>
+</Member>
+<Member Name="CounterMember" DataType="COUNTER" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[Test counter member]]>
+</Description>
+</Member>
+<Member Name="TimeMember" DataType="TIMER" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[Test Timer member]]>
+</Description>
+</Member>
+<Member Name="AlarmMember" DataType="ALARM" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[Test Analog Alarm]]>
+</Description>
+</Member>
+<Member Name="AOIType" DataType="aoi_Test" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[Test aoi]]>
+</Description>
+</Member>
+<Member Name="SimplArray" DataType="SimpleType" Dimension="5" Radix="NullType" Hidden="false" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[Test simple array type]]>
+</Description>
+</Member>
+<Member Name="NewMember" DataType="BOOL" Dimension="0" Radix="Decimal" Hidden="false" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[This is a new member]]>
+</Description>
+</Member>
+<Member Name="Invalid" DataType="NULL" Dimension="0" Radix="Decimal" Hidden="false" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[This is not a valid member]]>
+</Description>
+</Member>
+</Members>
+</DataType>
+</DataTypes>
+</Controller>
+</RSLogix5000Content>

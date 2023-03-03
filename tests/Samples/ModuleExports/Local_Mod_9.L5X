@@ -1,0 +1,153 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<RSLogix5000Content SchemaRevision="1.0" SoftwareRevision="32.02" TargetName="Local_Mod_9" TargetType="Module" ContainsContext="false" Owner="tnunnink, EN Engineering" ExportDate="Sat Apr 09 09:19:06 2022" ExportOptions="NoRawData L5KData DecoratedData Context Dependencies ForceProtectedEncoding AllProjDocTrans">
+<Module Use="Target" Name="Local_Mod_9" CatalogNumber="1756-DHRIO/E" Vendor="1" ProductType="12" ProductCode="18" Major="7" Minor="1" ParentModule="Local" ParentModPortId="1" Inhibited="false"
+ MajorFault="false">
+<EKey State="CompatibleModule"/>
+<Ports>
+<Port Id="1" Address="9" Type="ICP" Upstream="true"/>
+<Port Id="2" Type="RIO" Upstream="false">
+<Bus Baud="57.6"/>
+</Port>
+<Port Id="3" Type="RIO" Upstream="false">
+<Bus Baud="57.6"/>
+</Port>
+</Ports>
+<Communications CommMethod="536870913">
+<Connections>
+<Connection Name="Standard" RPI="25000" Type="Input" EventID="0" ProgrammaticallySendEventTrigger="false">
+<InputTag ExternalAccess="Read/Write">
+<Data Format="Decorated">
+<Structure DataType="AB:1756_DHRIO:I:0">
+<DataValueMember Name="CHA_Status" DataType="SINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="CHB_Status" DataType="SINT" Radix="Decimal" Value="0"/>
+</Structure>
+</Data>
+</InputTag>
+</Connection>
+</Connections>
+</Communications>
+</Module>
+<Module Name="RIOChA1" CatalogNumber="1747-ASB" Vendor="1" ProductType="12" ProductCode="56" Major="1" Minor="1" ParentModule="Local_Mod_9" ParentModPortId="2" Inhibited="false" MajorFault="false"
+>
+<EKey State="Disabled"/>
+<Ports>
+<Port Id="1" Type="RIOChassis" Upstream="false">
+<Bus Size="4"/>
+</Port>
+<Port Id="2" Address="1" Type="RIO" Upstream="true"/>
+</Ports>
+<Communications CommMethod="536870913">
+<Connections>
+<Connection Name="Rack" RPI="48000" Type="Output" EventID="0" ProgrammaticallySendEventTrigger="false" Unicast="true">
+<InputTag ExternalAccess="Read/Write">
+<Data Format="Decorated">
+<Structure DataType="AB:RIO_2IOGROUP:I:0">
+<DataValueMember Name="RackStatus" DataType="DINT" Radix="Binary" Value="2#0000_0000_0000_0000_0000_0000_0000_0000"/>
+<DataValueMember Name="InputGroupsValid" DataType="DINT" Radix="Binary" Value="2#0000_0000_0000_0000_0000_0000_0000_0000"/>
+<ArrayMember Name="Data" DataType="INT" Dimensions="2" Radix="Binary">
+<Element Index="[0]" Value="2#0000_0000_0000_0000"/>
+<Element Index="[1]" Value="2#0000_0000_0000_0000"/>
+</ArrayMember>
+</Structure>
+</Data>
+</InputTag>
+<OutputTag ExternalAccess="Read/Write">
+<Data Format="L5K">
+<![CDATA[[[0,0]]]]>
+</Data>
+<Data Format="Decorated">
+<Structure DataType="AB:RIO_2IOGROUP:O:0">
+<ArrayMember Name="Data" DataType="INT" Dimensions="2" Radix="Binary">
+<Element Index="[0]" Value="2#0000_0000_0000_0000"/>
+<Element Index="[1]" Value="2#0000_0000_0000_0000"/>
+</ArrayMember>
+</Structure>
+</Data>
+</OutputTag>
+</Connection>
+</Connections>
+</Communications>
+</Module>
+<Module Name="RIOChA2" CatalogNumber="1794-ASB" Vendor="1" ProductType="12" ProductCode="49" Major="1" Minor="1" ParentModule="Local_Mod_9" ParentModPortId="2" Inhibited="false" MajorFault="false"
+>
+<EKey State="Disabled"/>
+<Ports>
+<Port Id="1" Type="RIOChassis" Upstream="false">
+<Bus Size="4"/>
+</Port>
+<Port Id="2" Address="2" Type="RIO" Upstream="true"/>
+</Ports>
+<Communications CommMethod="536870913">
+<Connections>
+<Connection Name="Rack" RPI="48000" Type="Output" EventID="0" ProgrammaticallySendEventTrigger="false" Unicast="true">
+<InputTag ExternalAccess="Read/Write">
+<Data Format="Decorated">
+<Structure DataType="AB:RIO_2IOGROUP:I:0">
+<DataValueMember Name="RackStatus" DataType="DINT" Radix="Binary" Value="2#0000_0000_0000_0000_0000_0000_0000_0000"/>
+<DataValueMember Name="InputGroupsValid" DataType="DINT" Radix="Binary" Value="2#0000_0000_0000_0000_0000_0000_0000_0000"/>
+<ArrayMember Name="Data" DataType="INT" Dimensions="2" Radix="Binary">
+<Element Index="[0]" Value="2#0000_0000_0000_0000"/>
+<Element Index="[1]" Value="2#0000_0000_0000_0000"/>
+</ArrayMember>
+</Structure>
+</Data>
+</InputTag>
+<OutputTag ExternalAccess="Read/Write">
+<Data Format="L5K">
+<![CDATA[[[0,0]]]]>
+</Data>
+<Data Format="Decorated">
+<Structure DataType="AB:RIO_2IOGROUP:O:0">
+<ArrayMember Name="Data" DataType="INT" Dimensions="2" Radix="Binary">
+<Element Index="[0]" Value="2#0000_0000_0000_0000"/>
+<Element Index="[1]" Value="2#0000_0000_0000_0000"/>
+</ArrayMember>
+</Structure>
+</Data>
+</OutputTag>
+</Connection>
+</Connections>
+</Communications>
+</Module>
+<Module Name="RIOChB1" CatalogNumber="1771-ASB" Vendor="1" ProductType="12" ProductCode="57" Major="1" Minor="1" ParentModule="Local_Mod_9" ParentModPortId="3" Inhibited="false" MajorFault="false"
+>
+<EKey State="Disabled"/>
+<Ports>
+<Port Id="1" Type="RIOChassis" Upstream="false">
+<Bus Size="4"/>
+</Port>
+<Port Id="2" Address="0" Type="RIO" Upstream="true"/>
+</Ports>
+<Communications CommMethod="536870913">
+<Connections>
+<Connection Name="Rack" RPI="48000" Type="Output" EventID="0" ProgrammaticallySendEventTrigger="false" Unicast="true">
+<InputTag ExternalAccess="Read/Write">
+<Data Format="Decorated">
+<Structure DataType="AB:RIO_2IOGROUP:I:0">
+<DataValueMember Name="RackStatus" DataType="DINT" Radix="Binary" Value="2#0000_0000_0000_0000_0000_0000_0000_0000"/>
+<DataValueMember Name="InputGroupsValid" DataType="DINT" Radix="Binary" Value="2#0000_0000_0000_0000_0000_0000_0000_0000"/>
+<ArrayMember Name="Data" DataType="INT" Dimensions="2" Radix="Binary">
+<Element Index="[0]" Value="2#0000_0000_0000_0000"/>
+<Element Index="[1]" Value="2#0000_0000_0000_0000"/>
+</ArrayMember>
+</Structure>
+</Data>
+</InputTag>
+<OutputTag ExternalAccess="Read/Write">
+<Data Format="L5K">
+<![CDATA[[[0,0]]]]>
+</Data>
+<Data Format="Decorated">
+<Structure DataType="AB:RIO_2IOGROUP:O:0">
+<ArrayMember Name="Data" DataType="INT" Dimensions="2" Radix="Binary">
+<Element Index="[0]" Value="2#0000_0000_0000_0000"/>
+<Element Index="[1]" Value="2#0000_0000_0000_0000"/>
+</ArrayMember>
+</Structure>
+</Data>
+</OutputTag>
+</Connection>
+</Connections>
+</Communications>
+</Module>
+</RSLogix5000Content>

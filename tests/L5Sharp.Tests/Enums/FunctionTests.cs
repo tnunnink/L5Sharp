@@ -40,19 +40,19 @@ namespace L5Sharp.Tests.Enums
         [Test]
         public void ACOS_WhenCalled_ShouldNotBeNull()
         {
-            Function.ACOS.Should().NotBeNull();
+            Function.ACS.Should().NotBeNull();
         }
         
         [Test]
         public void ASIN_WhenCalled_ShouldNotBeNull()
         {
-            Function.ASIN.Should().NotBeNull();
+            Function.ASN.Should().NotBeNull();
         }
         
         [Test]
         public void ATAN_WhenCalled_ShouldNotBeNull()
         {
-            Function.ATAN.Should().NotBeNull();
+            Function.ATN.Should().NotBeNull();
         }
         
         [Test]

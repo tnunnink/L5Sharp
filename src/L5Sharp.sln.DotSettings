@@ -27,6 +27,7 @@
 	<s:String x:Key="/Default/CodeStyle/Naming/CSharpNaming/Abbreviations/=UNDEFINED/@EntryIndexedValue">UNDEFINED</s:String>
 	<s:String x:Key="/Default/CodeStyle/Naming/CSharpNaming/Abbreviations/=USINT/@EntryIndexedValue">USINT</s:String>
 	<s:String x:Key="/Default/CodeStyle/Naming/CSharpNaming/Abbreviations/=XIC/@EntryIndexedValue">XIC</s:String>
+	<s:String x:Key="/Default/CodeStyle/Naming/CSharpNaming/Abbreviations/=XIO/@EntryIndexedValue">XIO</s:String>
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=Acked/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=Deadband/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=Materializer/@EntryIndexedValue">True</s:Boolean>

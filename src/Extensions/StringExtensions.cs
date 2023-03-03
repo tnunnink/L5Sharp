@@ -55,7 +55,7 @@ namespace L5Sharp.Extensions
         /// </summary>
         /// <param name="input">The string input to analyze.</param>
         /// <returns><c>true</c> if the string is a valid tag name string; otherwise, <c>false</c>.</returns>
-        public static bool IsTagName(this string input) => new TagName(input).IsValid;
+        public static bool IsTagName(this string input) => Regex.IsMatch(input, Pattern.AnchoredTagName);
 
         /// <summary>
         /// Returns the current string value as an array of <see cref="SINT"/> atomic type with <see cref="Enums.Radix.Ascii"/>
@@ -255,31 +255,6 @@ namespace L5Sharp.Extensions
 
             for (var i = 0; i < input.Length; i += length)
                 yield return input.Substring(i, i + length < input.Length ? length : input.Length - i);
-        }
-
-        /// <summary>
-        /// Determines if the string text has balanced characters.
-        /// </summary>
-        /// <param name="value"></param>
-        /// <param name="opening"></param>
-        /// <param name="closing"></param>
-        /// <returns></returns>
-        public static bool IsBalanced(this string value, char opening, char closing)
-        {
-            var characters = new Stack<char>();
-
-            foreach (var c in value)
-            {
-                if (Equals(c, opening))
-                    characters.Push(c);
-
-                if (!Equals(c, closing)) continue;
-
-                if (!characters.TryPop(out _))
-                    return false;
-            }
-
-            return characters.Count == 0;
         }
 
         /// <summary>

@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<RSLogix5000Content SchemaRevision="1.0" SoftwareRevision="32.02" TargetType="Rung" TargetCount="1" ContainsContext="true" Owner="tnunnink, EN Engineering" ExportDate="Mon Jan 23 10:30:36 2023" ExportOptions="References NoRawData L5KData DecoratedData Context RoutineLabels AliasExtras IOTags NoStringData ForceProtectedEncoding AllProjDocTrans">
+<Controller Use="Context" Name="TestController">
+<DataTypes Use="Context">
+</DataTypes>
+<Tags Use="Context">
+<Tag Name="SimpleSint" TagType="Base" DataType="SINT" Radix="Hex" Constant="false" ExternalAccess="None">
+<Comments>
+<Comment Operand=".0">
+<![CDATA[This is a test]]>
+</Comment>
+</Comments>
+<Data Format="L5K">
+<![CDATA[12]]>
+</Data>
+<Data Format="Decorated">
+<DataValue DataType="SINT" Radix="Hex" Value="16#0c"/>
+</Data>
+</Tag>
+</Tags>
+<Programs Use="Context">
+<Program Use="Context" Name="MainProgram">
+<Routines Use="Context">
+<Routine Use="Context" Name="Main">
+<RLLContent Use="Context">
+<Rung Use="Target" Number="1" Type="N">
+<Text>
+<![CDATA[MOV(16#20,SimpleSint);]]>
+</Text>
+</Rung>
+</RLLContent>
+</Routine>
+</Routines>
+</Program>
+</Programs>
+</Controller>
+</RSLogix5000Content>

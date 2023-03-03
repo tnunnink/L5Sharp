@@ -2,17 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using L5Sharp.Enums;
 using L5Sharp.Extensions;
 using L5Sharp.Utilities;
 
 namespace L5Sharp.Core
 {
     /// <summary>
-    /// A wrapper class around the textual representation of the ladder logix notation called neutral text. 
+    /// A wrapper class around the textual representation of the ladder logic notation called neutral text. 
     /// </summary>
     /// <remarks>
     /// Neutral text can represent a single instruction or a full rung (collection of instructions).
-    /// Each instruction likely contains sets of tag names.
+    /// Each instruction contains sets of tag names and values known as operands.
     /// This class provides functions for extracting the textual information into strongly type classes that are easier
     /// to work with.
     /// </remarks>
@@ -21,7 +22,41 @@ namespace L5Sharp.Core
     public sealed class NeutralText : IEquatable<NeutralText>
     {
         private readonly string _text;
-        
+
+        /// <summary>
+        /// The regex pattern for Logix tag names without starting and ending anchors.
+        /// This pattern also includes a negative lookahead for removing text prior to parenthesis (i.e. instruction keys)
+        /// Use this patter for tag names within text, such as longer
+        /// </summary>
+        private const string TagNamePattern =
+            @"(?!\w*\()[A-Za-z_][\w+:]{1,39}(?:(?:\[\d+\]|\[\d+,\d+\]|\[\d+,\d+,\d+\])?(?:\.[A-Za-z_]\w{1,39})?)+";
+
+        /// <summary>
+        /// Pattern for identifying any instruction and the contents of it's signature. This expression should
+        /// capture everything enclosed or between the instruction parentheses. This includes nested parenthesis.
+        /// This works on the assumption that the text has balances opening/closing parentheses.
+        /// </summary>
+        private const string InstructionPattern = @"[A-Za-z_]\w{1,39}\((?>\((?<c>)|[^()]+|\)(?<-c>))*(?(c)(?!))\)";
+
+        /// <summary>
+        /// Pattern finds all text prior to opening parentheses, which is the instruction name or key that identifies
+        /// the instruction. 
+        /// </summary>
+        private const string InstructionKeysPattern = @"[A-Za-z_]\w{1,39}(?=\()";
+
+        /// <summary>
+        /// Pattern finds all text prior to opening parentheses, which is the instruction name or key that identifies
+        /// the instruction. 
+        /// </summary>
+        private const string SignaturePattern = @"\((?>\((?<c>)|[^()]+|\)(?<-c>))*(?(c)(?!))\)";
+
+        private const string OperandsPattern =
+            @"(?<=[A-Za-z_]\w{1,39}\()(?>\((?<c>)|[^()]+|\)(?<-c>))*(?(c)(?!))(?=\))";
+
+        private const string KeyOperandGroupPattern =
+            @"([A-Za-z_]\w{1,39})\(((?>\((?<c>)|[^()]+|\)(?<-c>))*(?(c)(?!)))\)";
+
+
         /// <summary>
         /// Creates a new <see cref="NeutralText"/> object with the provided text input.
         /// </summary>
@@ -34,33 +69,196 @@ namespace L5Sharp.Core
         }
 
         /// <summary>
-        /// Gets a value indicating whether the <see cref="NeutralText"/> value has balanced brackets and parenthesis.
+        /// Indicates whether the current neutral text value has balanced brackets and parentheses.
         /// </summary>
-        public bool IsBalanced => _text.IsBalanced('[', ']') && _text.IsBalanced('(', ')');
+        /// <value><c>true</c> if the text has balanced brackets and parentheses; otherwise, <c>false</c>.</value>
+        public bool IsBalanced => TextIsBalanced(_text, '[', ']') && TextIsBalanced(_text, '(', ')');
 
         /// <summary>
-        /// Gets a collection of <see cref="Instruction"/> objects that are present in the <see cref="NeutralText"/> string.
+        /// Indicates whether the current neutral text value is a single instruction.
         /// </summary>
-        /// <returns>An collection of <see cref="Instruction"/> objects that were parsed.</returns>
-        public IEnumerable<Instruction> Instructions() => GetInstructions(_text);
+        /// <value><c>true</c> if the text represents a single instruction. <c>false</c> if not, meaning the text is a
+        /// collection of multiple instruction patterns.</value>
+        public bool IsInstruction => Regex.IsMatch(_text, $"^{InstructionPattern}$");
 
         /// <summary>
-        /// Gets a collection of <see cref="TagName"/> values that are present in the <see cref="NeutralText"/> instance.
+        /// Indicates whether the current neutral text value is an empty string.
         /// </summary>
-        /// <returns>A new collection of <see cref="TagName"/> values that were extracted from the current text.</returns>
-        public IEnumerable<TagName> TagNames()
+        /// <value><c>true</c> if the text empty; otherwise <c>false</c>.</value>
+        public bool IsEmpty => _text.IsEmpty();
+
+        /// <summary>
+        /// Returns a value indicating whether a specified instruction signature occurs within this neutral text.
+        /// </summary>
+        /// <param name="instruction">The instruction for which to seek.</param>
+        /// <returns><c>true</c> if this text contains the signature patter defined by <c>instruction</c>.</returns>
+        public bool ContainsSignature(Instruction instruction) => Regex.IsMatch(_text, instruction.Signature);
+
+        /// <summary>
+        /// Returns a value indicating whether a specified instruction key occurs within this neutral text.
+        /// </summary>
+        /// <param name="instructionKey">The instruction name to seek.</param>
+        /// <returns><c>true</c> if this text contains the instruction key; otherwise, false..</returns>
+        public bool ContainsKey(string instructionKey) => Regex.Matches(_text, InstructionKeysPattern).Any(m =>
+            string.Equals(m.Value, instructionKey, StringComparison.OrdinalIgnoreCase));
+
+        /// <summary>
+        /// Returns a value indication whether a specified tag name occurs within this neutral text.
+        /// </summary>
+        /// <param name="tagName">The tag name to seek.</param>
+        /// <param name="comparer">The optional equality comparer to user for evaluating tag equivalence.</param>
+        /// <returns><c>true</c> if <c>tagName</c> is contained withing the text and passes the equality check
+        /// specified by <c>comparer</c>.</returns>
+        public bool ContainsTag(TagName tagName, IEqualityComparer<TagName>? comparer = null)
         {
-            return Regex.Matches(_text, @"(?!\w*\()[A-Za-z_][\w:.,[\]]+", RegexOptions.Compiled)
-                .SelectMany(m => Regex.Split(m.Value, @"(?<!\[\d+)(?<!\[\d+,\d+),", RegexOptions.Compiled))
-                .Where(s => !string.IsNullOrEmpty(s) && Regex.IsMatch(s, @"[A-Za-z][\w:.,[\]]+", RegexOptions.Compiled))
-                .Select(t => new TagName(t))
-                .ToList();
+            comparer ??= TagNameComparer.FullName;
+            return Tags().Any(t => comparer.Equals(t, tagName));
         }
 
         /// <summary>
-        /// Represents a new default instance of the 
+        /// Returns a value indicating whether a specified subtext occurs within this neutral text.
         /// </summary>
-        /// <returns></returns>
+        /// <param name="text">The neutral text to seek.</param>
+        /// <returns><c>true</c> if <c>text</c> occurs within this text, or if text is an empty string ("");
+        /// otherwise, <c>false</c>.</returns>
+        public bool ContainsText(NeutralText text) => _text.Contains(text);
+
+        /// <summary>
+        /// Runs the provided regex pattern against the neutral text and indicates whether the patterns is matched.
+        /// </summary>
+        /// <param name="regex">The regex pattern to test against.</param>
+        /// <returns><c>true</c> if <c>regex</c> is a match against this neutral text value.</returns>
+        public bool HasPattern(string regex) => Regex.IsMatch(_text, regex);
+
+        /// <summary>
+        /// Returns a collection of <see cref="Instruction"/> objects that were found in the current neutral text value.
+        /// </summary>
+        /// <returns>An <see cref="IEnumerable{T}"/> containing <see cref="Instruction"/> objects found in the text.</returns>
+        public IEnumerable<Instruction> Instructions()
+        {
+            var results = new List<Instruction>();
+
+            var keys = Regex.Matches(_text, InstructionKeysPattern).Select(m => m.Value);
+
+            foreach (var key in keys)
+            {
+                if (Instruction.TryFromName(key, out var instruction))
+                {
+                    results.Add(instruction);
+                    continue;
+                }
+                
+                //Just assuming an unknown instruction is an AOI and is by default destructive.
+                results.Add(new Instruction(key, true));
+            }
+
+            return results;
+        }
+
+        /// <summary>
+        /// Gets a collection of instruction keys or names that occur in the current neutral text.
+        /// </summary>
+        /// <returns>A <see cref="IEnumerable{T}"/> containing the names/keys of al found instructions.</returns>
+        public IEnumerable<string> Keys() => Regex.Matches(_text, InstructionKeysPattern).Select(m => m.Value);
+
+        /// <summary>
+        /// Returns a collection of all found operands in the current neutral text value.
+        /// </summary>
+        /// <returns>An <see cref="IEnumerable{T}"/> containing the instruction(s) operand arguments found in the current text.</returns>
+        /// <remarks>This will return a flat list of operands for all instructions. If you want to get operands
+        /// and corresponding instruction key, use the <see cref="OperandsByKey()"/> methods, which will return found
+        /// operands along with the corresponding instruction.
+        /// </remarks>
+        /// <seealso cref="OperandsByKey()"/>
+        public IEnumerable<string> Operands() =>
+            Regex.Matches(_text, OperandsPattern).SelectMany(m => m.Value.Split(","));
+
+        /// <summary>
+        /// Returns a collection of <see cref="KeyValuePair"/> with the key being the instruction and corresponding
+        /// operand arguments as the value.
+        /// </summary>
+        /// <returns>A <see cref="IEnumerable{T}"/> of <see cref="KeyValuePair"/> objects containing instruction key
+        /// and corresponding operands values.</returns>
+        public IEnumerable<KeyValuePair<string, IEnumerable<string>>> OperandsByKey() =>
+            Regex.Matches(_text, KeyOperandGroupPattern).Select(m =>
+                new KeyValuePair<string, IEnumerable<string>>(m.Groups[1].Value, m.Groups[2].Value.Split(",")));
+
+        /// <summary>
+        /// Returns a collection of <see cref="KeyValuePair"/> with the key being the instruction and corresponding
+        /// operand arguments as the value.
+        /// </summary>
+        /// <returns>A <see cref="IEnumerable{T}"/> of <see cref="KeyValuePair"/> objects containing instruction key
+        /// and corresponding operands values.</returns>
+        public IEnumerable<KeyValuePair<string, IEnumerable<string>>> OperandsByKey(string key) =>
+            Regex.Matches(_text, @$"(?<={key}\()(?>\((?<c>)|[^()]+|\)(?<-c>))*(?(c)(?!))(?=\))")
+                .Select(m => new KeyValuePair<string, IEnumerable<string>>(key, m.Value.Split(',')));
+
+        /// <summary>
+        /// Returns a collection of <see cref="KeyValuePair"/> with the key being the instruction and corresponding
+        /// operand arguments as the value.
+        /// </summary>
+        /// <returns>A <see cref="IEnumerable{T}"/> of <see cref="KeyValuePair"/> objects containing instruction key
+        /// and corresponding operands values.</returns>
+        public IEnumerable<KeyValuePair<Instruction, IEnumerable<string>>> OperandsByKey(Instruction instruction) =>
+            Regex.Matches(_text, @$"(?<={instruction.Name}\()(?>\((?<c>)|[^()]+|\)(?<-c>))*(?(c)(?!))(?=\))")
+                .Select(m => new KeyValuePair<Instruction, IEnumerable<string>>(instruction, m.Value.Split(',')));
+
+        /// <summary>
+        /// Splits the current neutral text into a collection of sub-texts representing each individual instruction found
+        /// in the current text value.
+        /// </summary>
+        /// <returns>An collection of <see cref="NeutralText"/> objects that represent each individual instruction text.</returns>
+        public IEnumerable<NeutralText> Split() =>
+            Regex.Matches(_text, InstructionPattern).Select(m => new NeutralText(m.Value));
+
+        /// <summary>
+        /// Splits the current neutral text into a collection of sub-texts representing a specific individual instruction.
+        /// </summary>
+        /// <returns>An <see cref="IEnumerable{T}"/> of <see cref="NeutralText"/> objects that were split.</returns>
+        public IEnumerable<NeutralText> Split(Instruction instruction) =>
+            Regex.Matches(_text, instruction.Signature).Select(m => new NeutralText(m.Value));
+
+        /// <summary>
+        /// Splits the current neutral text into a collection of sub-texts representing a specific individual instruction key.
+        /// </summary>
+        /// <returns>An <see cref="IEnumerable{T}"/> of <see cref="NeutralText"/> objects that were split.</returns>
+        public IEnumerable<NeutralText> Split(string key) =>
+            Regex.Matches(_text, $"{key}{SignaturePattern}").Select(m => new NeutralText(m.Value));
+
+        /// <summary>
+        /// Gets a collection of tag names found in the current neutral text.
+        /// </summary>
+        /// <returns>A <see cref="IEnumerable{T}"/> of <see cref="TagName"/> values that were in from the current text.</returns>
+        /// <seealso cref="TagsIn(L5Sharp.Enums.Instruction)"/>
+        /// <seealso cref="TagsIn(System.String)"/>
+        public IEnumerable<TagName> Tags() => Regex.Matches(_text, TagNamePattern).Select(m => new TagName(m.Value));
+
+        /// <summary>
+        /// Gets a collection of tag names found in the current neutral text that are operands or arguments to a specific instruction.
+        /// </summary>
+        /// <param name="instruction">The instruction for which to find tags as arguments to.</param>
+        /// <returns>A <see cref="IEnumerable{T}"/> containing tag names found in the specified instruction.</returns>
+        /// <seealso cref="TagsIn(System.String)"/>
+        public IEnumerable<TagName> TagsIn(Instruction instruction) =>
+            Regex.Matches(_text, instruction.Signature)
+                .SelectMany(m => Regex.Matches(m.Value, TagNamePattern))
+                .Select(m => new TagName(m.Value));
+
+        /// <summary>
+        /// Gets all tags found in the current neutral text that are arguments to a specific instruction key value. 
+        /// </summary>
+        /// <param name="key">The name of the instruction for which to get tags.</param>
+        /// <returns>A <see cref="IEnumerable{T}"/> containing tag names found in the specified instruction.</returns>
+        /// <seealso cref="TagsIn(L5Sharp.Enums.Instruction)"/>
+        public IEnumerable<TagName> TagsIn(string key) =>
+            Regex.Matches(_text, $"{key}{SignaturePattern}")
+                .SelectMany(m => Regex.Matches(m.Value, TagNamePattern))
+                .Select(m => new TagName(m.Value));
+
+        /// <summary>
+        /// Represents a new empty instance of the <see cref="NeutralText"/>.
+        /// </summary>
+        /// <returns>An empty <see cref="NeutralText"/> object.</returns>
         public static NeutralText Empty => new(string.Empty);
 
         /// <summary>
@@ -110,77 +308,22 @@ namespace L5Sharp.Core
         /// <returns>true if the provided objects are not equal; otherwise, false.</returns>
         public static bool operator !=(NeutralText? left, NeutralText? right) => !Equals(left, right);
 
-        /// <summary>
-        /// Iterates over the the provided input value and parses out instruction text into <see cref="Instruction"/> objects.
-        /// </summary>
-        /// <param name="input">The text to parse.</param>
-        /// <returns>A collection of <see cref="Instruction"/> that were parsed from the provided text.</returns>
-        /// <remarks>
-        /// This method will only return instructions that were able to be parsed using the <see cref="Instruction.TryParse"/>
-        /// method. This means invalid neutral text will only 
-        /// </remarks>
-        private static IEnumerable<Instruction> GetInstructions(string input)
+        private bool TextIsBalanced(string value, char opening, char closing)
         {
-            var instructions = new List<Instruction>();
-
-            while (input.Length > 0)
-            {
-                input = ConsumeInstruction(input, out var value);
-
-                if (!string.IsNullOrEmpty(value) &&
-                    Instruction.TryParse(value, out var instruction) &&
-                    instruction is not null)
-                {
-                    instructions.Add(instruction);
-                }
-            }
-
-            return instructions;
-        }
-
-        /// <summary>
-        /// Iterates of the the provided string and captures the first found sequence of characters that represent an
-        /// instruction.
-        /// </summary>
-        /// <param name="value">The input string text to process.</param>
-        /// <param name="instruction">When the method returns, the value of the instruction text that was found.</param>
-        /// <returns>The remaining string without the consumed instruction text.</returns>
-        /// <remarks>
-        /// Opted to process instruction text by iteration instead of Regex since the lookahead and/or lookbehind patterns
-        /// needed to accommodate nested '(' and ')' characters was overly complex and perhaps non-performant.
-        /// </remarks>
-        private static string ConsumeInstruction(string value, out string instruction)
-        {
-            var characters = new List<char>();
-            var length = 0;
-            var opened = 0;
-            var closed = 0;
+            var characters = new Stack<char>();
 
             foreach (var c in value)
             {
-                length++;
+                if (Equals(c, opening))
+                    characters.Push(c);
 
-                //Before the opening parenthesis, add only if the character is a valid word pattern (\w) or '('.
-                //When inside opening parenthesis, add every character.
-                if (opened == 0 && Regex.IsMatch(c.ToString(), @"[\w(]$", RegexOptions.Compiled) || opened > 0)
-                    characters.Add(c);
+                if (!Equals(c, closing)) continue;
 
-                switch (c)
-                {
-                    case '(':
-                        opened++;
-                        break;
-                    case ')':
-                        closed++;
-                        break;
-                }
-
-                if (opened > 0 && opened == closed)
-                    break;
+                if (!characters.TryPop(out _))
+                    return false;
             }
 
-            instruction = new string(characters.ToArray());
-            return value.Remove(0, length);
+            return characters.Count == 0;
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using L5Sharp.Components;
+using L5Sharp.Serialization;
 
 namespace L5Sharp.Core
 {
@@ -11,6 +12,7 @@ namespace L5Sharp.Core
     /// or the the network address (IP) of the device. Each port may (or may not) have a <see cref="BusSize"/>.
     /// Each port is identifiable by the <see cref="Id"/> property. 
     /// </remarks>
+    [LogixSerializer(typeof(PortSerializer))]
     public sealed class Port
     {
         /// <summary>

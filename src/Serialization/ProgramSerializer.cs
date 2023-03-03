@@ -20,7 +20,7 @@ namespace L5Sharp.Serialization
             
             element.AddValue(obj, p => p.Name);
             element.AddText(obj, p => p.Description);
-            element.AddValue(obj, p => p.Type);
+            element.AddValue(obj, p => p.Type, t => t != ProgramType.Normal);
             element.AddValue(obj, p => p.TestEdits);
             element.AddValue(obj, p => p.MainRoutineName);
             element.AddValue(obj, p => p.FaultRoutineName);
@@ -39,7 +39,7 @@ namespace L5Sharp.Serialization
             {
                 Name = element.LogixName(),
                 Description = element.LogixDescription(),
-                Type = element.GetValue<ProgramType>(L5XName.Type),
+                Type = element.TryGetValue<ProgramType>(L5XName.Type) ?? ProgramType.Normal,
                 TestEdits = element.TryGetValue<bool>(L5XName.TestEdits),
                 MainRoutineName = element.TryGetValue<string>(L5XName.MainRoutineName) ?? string.Empty,
                 FaultRoutineName = element.TryGetValue<string>(L5XName.FaultRoutineName) ?? string.Empty,
