@@ -1,0 +1,11 @@
+﻿<Tag Name="Test" TagType="Base" DataType="DINT" Constant="False" ExternalAccess="Read/Write">
+  <Data Format="Decorated">
+    <Array DataType="DINT" Dimensions="5" Radix="Decimal">
+      <Element Index="[0]" Value="0" />
+      <Element Index="[1]" Value="0" />
+      <Element Index="[2]" Value="0" />
+      <Element Index="[3]" Value="0" />
+      <Element Index="[4]" Value="0" />
+    </Array>
+  </Data>
+</Tag>
