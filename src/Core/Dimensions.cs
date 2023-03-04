@@ -128,6 +128,41 @@ namespace L5Sharp.Core
         public static Dimensions Empty => new();
 
         /// <summary>
+        /// Returns the dimension of a specified array type.
+        /// </summary>
+        /// <param name="array">The array instance for which to determine the dimensions.</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"><c>array</c> is null.</exception>
+        /// <exception cref="ArgumentException"><c>array</c> has no elements or zero length (i.e. is empty).</exception>
+        /// <exception cref="ArgumentOutOfRangeException"><c>array</c> has a dimensional rank that is greater than
+        /// <see cref="ushort"/> max value -or- <c>array</c> has more than three dimensions.</exception>
+        public static Dimensions FromArray(Array array)
+        {
+            if (array is null)
+                throw new ArgumentNullException(nameof(array));
+
+            if (array.Length == 0)
+                throw new ArgumentException("Array must have at least one element to be constructed.");
+
+            for (var i = 0; i < array.Rank; i++)
+            {
+                var length = array.GetLength(i);
+                
+                if (length > ushort.MaxValue)
+                    throw new ArgumentOutOfRangeException(nameof(array),
+                        $"Array length of {array.Length} is out of range. Length must be less than or equal to {ushort.MaxValue}");
+            }
+
+            return array.Rank switch
+            {
+                1 => new Dimensions((ushort)array.GetLength(0)),
+                2 => new Dimensions((ushort)array.GetLength(0), (ushort)array.GetLength(1)),
+                3 => new Dimensions((ushort)array.GetLength(0), (ushort)array.GetLength(1), (ushort)array.GetLength(2)),
+                _ => throw new ArgumentOutOfRangeException($"An array with '{array.Rank} dimensional units is not supported.")
+            };
+        }
+        
+        /// <summary>
         /// Gets the set of indices for the <see cref="Dimensions"/> object.
         /// </summary>
         /// <value>

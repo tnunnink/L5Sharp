@@ -29,7 +29,15 @@ namespace L5Sharp.Types
         /// <exception cref="ArgumentOutOfRangeException"><c>types</c> is empty or greater than the specified dimensional length.</exception>
         public ArrayType(Dimensions dimensions, ICollection<TLogixType> types)
         {
-            ValidateArguments(dimensions, types);
+            Check.NotNull(dimensions);
+            Check.NotNull(types);
+
+            if (dimensions.IsEmpty)
+                throw new ArgumentException("Dimensions can not be empty to generate array type.");
+
+            if (dimensions.Length > types.Count || types.Count == 0)
+                throw new ArgumentOutOfRangeException(nameof(types),
+                    "Types collection must be non empty and less than or equal to the specified dimensional length.");
 
             Dimensions = dimensions;
 
@@ -47,11 +55,7 @@ namespace L5Sharp.Types
         /// <exception cref="ArgumentOutOfRangeException">Any <c>elements</c> dimensional length is greater than <see cref="ushort.MaxValue"/>.</exception>
         public ArrayType(TLogixType[] elements)
         {
-            ValidateArray(elements);
-
-            var x = (ushort)elements.Length;
-
-            Dimensions = new Dimensions(x);
+            Dimensions = Dimensions.FromArray(elements);
 
             _elements = Dimensions.Indices()
                 .Zip(elements, (index, type) => new { index, type })
@@ -67,14 +71,8 @@ namespace L5Sharp.Types
         /// <exception cref="ArgumentOutOfRangeException">Any <c>elements</c> dimensional length is greater than <see cref="ushort.MaxValue"/>.</exception>
         public ArrayType(TLogixType[,] elements)
         {
-            ValidateArray(elements);
+            Dimensions = Dimensions.FromArray(elements);
             
-
-            var x = (ushort)elements.GetLength(0);
-            var y = (ushort)elements.GetLength(1);
-
-            Dimensions = new Dimensions(x, y);
-
             _elements = Dimensions.Indices()
                 .Zip(elements.Cast<TLogixType>(), (index, type) => new { index, type })
                 .ToDictionary(i => i.index, i => i.type);
@@ -89,13 +87,7 @@ namespace L5Sharp.Types
         /// <exception cref="ArgumentOutOfRangeException">Any <c>elements</c> dimensional length is greater than <see cref="ushort.MaxValue"/>.</exception>
         public ArrayType(TLogixType[,,] elements)
         {
-            ValidateArray(elements);
-
-            var x = (ushort)elements.GetLength(0);
-            var y = (ushort)elements.GetLength(1);
-            var z = (ushort)elements.GetLength(2);
-
-            Dimensions = new Dimensions(x, y, z);
+            Dimensions = Dimensions.FromArray(elements);
 
             _elements = Dimensions.Indices()
                 .Zip(elements.Cast<TLogixType>(), (index, type) => new { index, type })
@@ -161,35 +153,5 @@ namespace L5Sharp.Types
         public IEnumerator<TLogixType> GetEnumerator() => _elements.Values.GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-
-        private static void ValidateArray(Array elements)
-        {
-            if (elements is null)
-                throw new ArgumentNullException(nameof(elements));
-
-            if (elements.Length == 0)
-                throw new ArgumentException("Array must have at least one element to be constructed.");
-
-            for (var i = 0; i < elements.Rank; i++)
-            {
-                var length = elements.GetLength(i);
-                if (length > ushort.MaxValue)
-                    throw new ArgumentOutOfRangeException(nameof(elements),
-                        $"Array length of {elements.Length} is out of range. Length must not be greater than  {ushort.MaxValue}");
-            }
-        }
-
-        private static void ValidateArguments(Dimensions dimensions, ICollection<TLogixType> types)
-        {
-            Check.NotNull(dimensions);
-            Check.NotNull(types);
-
-            if (dimensions.IsEmpty)
-                throw new ArgumentException("Dimensions can not be empty to generate array type.");
-
-            if (dimensions.Length > types.Count || types.Count == 0)
-                throw new ArgumentOutOfRangeException(nameof(types),
-                    "Types collection must be non empty and less than or equal to the specified dimensional length.");
-        }
     }
 }

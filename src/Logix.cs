@@ -98,13 +98,12 @@ namespace L5Sharp
         /// <returns>A <see cref="ArrayType{TDataType}"/> of the specified dimensions containing new objects of the specified type.</returns>
         public static ArrayType<TDataType> Array<TDataType>(Dimensions dimensions) where TDataType : ILogixType, new()
         {
-            return dimensions.Rank switch
-            {
-                1 => new ArrayType<TDataType>(new TDataType[dimensions.X]),
-                2 => new ArrayType<TDataType>(new TDataType[dimensions.X, dimensions.Y]),
-                3 => new ArrayType<TDataType>(new TDataType[dimensions.X, dimensions.Y, dimensions.Z]),
-                _ => throw new ArgumentOutOfRangeException()
-            };
+            if (dimensions is null)
+                throw new ArgumentNullException(nameof(dimensions));
+            
+            var elements = Enumerable.Range(0, dimensions.Length).Select(_ => new TDataType());
+
+            return new ArrayType<TDataType>(dimensions, elements.ToArray());
         }
 
         /// <summary>

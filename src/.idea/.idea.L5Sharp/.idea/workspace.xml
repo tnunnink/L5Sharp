@@ -7,10 +7,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Serialization/TagSerializerTests.Serialize_AlarmDigital_ShouldBeApproved.verified.txt.bak" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Serialization/TagSerializerTests.Serialize_SimpleBool_ShouldBeApproved.verified.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Serialization/TagSerializerTests.Serialize_SimpleSint_ShouldBeApproved.verified.txt.bak" afterDir="false" />
+    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="array testing">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/Dimensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/Dimensions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Logix.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Logix.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Types/ArrayType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Types/ArrayType.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/LogixTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/LogixTests.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/ArrayTypeTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/ArrayTypeTests.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -149,6 +151,7 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/fcb7c6c2bdd189d6d8f13a694cf733524fb73b87c4131674538619a9bc6acfac/RuntimeHelpers.CoreCLR.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Enums/Instruction.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/LogixContent.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Types/ArrayType.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/obj/Debug/netstandard2.1/.NETStandard,Version=v2.1.AssemblyAttributes.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../tests/L5Sharp.Tests/Serialization/AddOnInstructionSerializerTests.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../tests/L5Sharp.Tests/Serialization/DataTypeMemberSerializerTests.cs" root0="FORCE_HIGHLIGHTING" />
@@ -717,41 +720,41 @@
       <expand>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 0% 13293/13293" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 0% 13323/13323" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 0% 13293/13293" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 0% 4816/4816" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 0% 13323/13323" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 0% 4807/4807" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 0% 13293/13293" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 0% 4816/4816" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="(0.2.1.0, .NETStandard,Version=v2.1) 0% 4816/4816" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 0% 13323/13323" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 0% 4807/4807" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="(0.2.1.0, .NETStandard,Version=v2.1) 0% 4807/4807" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 0% 13293/13293" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 0% 4816/4816" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="(0.2.1.0, .NETStandard,Version=v2.1) 0% 4816/4816" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 0% 4816/4816" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 0% 13323/13323" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 0% 4807/4807" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="(0.2.1.0, .NETStandard,Version=v2.1) 0% 4807/4807" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 0% 4807/4807" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 0% 13293/13293" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 0% 4816/4816" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="(0.2.1.0, .NETStandard,Version=v2.1) 0% 4816/4816" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 0% 4816/4816" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="Core 0% 657/657" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 0% 13323/13323" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 0% 4807/4807" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="(0.2.1.0, .NETStandard,Version=v2.1) 0% 4807/4807" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 0% 4807/4807" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Core 0% 676/676" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 0% 13293/13293" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 0% 4816/4816" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="(0.2.1.0, .NETStandard,Version=v2.1) 0% 4816/4816" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 0% 4816/4816" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="Core 0% 657/657" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 0% 13323/13323" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 0% 4807/4807" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="(0.2.1.0, .NETStandard,Version=v2.1) 0% 4807/4807" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 0% 4807/4807" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Core 0% 676/676" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
           <item name="NeutralText 0% 96/96" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
       </expand>
@@ -832,6 +835,19 @@
             </endOffsets>
           </properties>
           <option name="timeStamp" value="66" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Serialization/Data/DecoratedDataSerializer.cs</url>
+          <line>26</line>
+          <properties documentPath="C:\Users\tnunnink\Documents\GitHub\L5Sharp\src\Serialization\Data\DecoratedDataSerializer.cs" initialLine="26" containingFunctionPresentation="">
+            <startOffsets>
+              <option value="868" />
+            </startOffsets>
+            <endOffsets>
+              <option value="912" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="83" />
         </line-breakpoint>
         <breakpoint enabled="true" type="DotNet Exception Breakpoints">
           <properties exception="System.PlatformNotSupportedException" isInternal="false" displayValue="PlatformNotSupportedException" namespaceName="System">
