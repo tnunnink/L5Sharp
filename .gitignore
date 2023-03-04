@@ -356,3 +356,5 @@ MigrationBackup/
 
 *.received.*
 src/.idea/.idea.L5Sharp/.idea/workspace.xml
+tests/Samples/Test.Sem
+tests/Samples/Test.Wrk
