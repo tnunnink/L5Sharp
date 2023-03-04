@@ -37,7 +37,7 @@ namespace L5Sharp.Extensions
                 return false;
 
             var characters = name.ToCharArray();
-            
+
             //First character has to be a letter or underscore.
             if (!(char.IsLetter(characters[0]) || characters[0] == '_'))
                 return false;
@@ -55,7 +55,8 @@ namespace L5Sharp.Extensions
         /// </summary>
         /// <param name="input">The string input to analyze.</param>
         /// <returns><c>true</c> if the string is a valid tag name string; otherwise, <c>false</c>.</returns>
-        public static bool IsTagName(this string input) => Regex.IsMatch(input, Pattern.AnchoredTagName);
+        public static bool IsTagName(this string input) => Regex.IsMatch(input,
+            @"^[A-Za-z_][\w+:]{1,39}(?:(?:\[\d+\]|\[\d+,\d+\]|\[\d+,\d+,\d+\])?(?:\.[A-Za-z_]\w{1,39})?)+(?:\.[0-9][0-9]?)?$");
 
         /// <summary>
         /// Returns the current string value as an array of <see cref="SINT"/> atomic type with <see cref="Enums.Radix.Ascii"/>
@@ -63,7 +64,7 @@ namespace L5Sharp.Extensions
         /// </summary>
         /// <param name="value">The string value.</param>
         /// <returns>An array of <see cref="SINT"/> atomic value types.</returns>
-        public static SINT[] ToSintArray(this string value) => 
+        public static SINT[] ToSintArray(this string value) =>
             Encoding.ASCII.GetBytes(value).Select(b => new SINT((sbyte)b, Radix.Ascii)).ToArray();
 
         /// <summary>
@@ -71,7 +72,7 @@ namespace L5Sharp.Extensions
         /// </summary>
         /// <param name="array">The array or <see cref="IEnumerable{T}"/> of SINT to convert to string.</param>
         /// <returns>A <see cref="string"/> representing the ASCII character sequence of the SINT array.</returns>
-        public static string AsString(this IEnumerable<SINT> array) => 
+        public static string AsString(this IEnumerable<SINT> array) =>
             Encoding.ASCII.GetString(array.Where(s => s > 0).Select(b => (byte)(sbyte)b).ToArray());
 
         /// <summary>
@@ -231,7 +232,7 @@ namespace L5Sharp.Extensions
         {
             return !value.IsEmpty() && value.StartsWith("LDT#");
         }
-        
+
         /// <summary>
         /// Replaces all specified string values with a single replacement string value in the current string.
         /// </summary>
@@ -244,7 +245,7 @@ namespace L5Sharp.Extensions
             return items.Aggregate(value, (str, cItem) => str.Replace(cItem, replacement));
         }
 
-        
+
         internal static IEnumerable<string> Segment(this string input, int length)
         {
             if (input is null)

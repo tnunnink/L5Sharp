@@ -49,10 +49,6 @@ namespace L5Sharp.Types
         {
             ValidateArray(elements);
 
-            if (elements.Any(e => e is null))
-                throw new ArgumentException(
-                    "The provided array has null objects. Can not instantiate a ArrayType with null values.");
-
             var x = (ushort)elements.Length;
 
             Dimensions = new Dimensions(x);

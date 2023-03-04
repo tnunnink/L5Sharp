@@ -1,8 +1,6 @@
 ﻿using AutoFixture;
 using FluentAssertions;
 using L5Sharp.Extensions;
-using L5Sharp.Utilities;
-using NUnit.Framework;
 
 namespace L5Sharp.Tests.Extensions
 {

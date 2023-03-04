@@ -29,7 +29,7 @@ namespace L5Sharp.Core
         /// Use this patter for tag names within text, such as longer
         /// </summary>
         private const string TagNamePattern =
-            @"(?!\w*\()[A-Za-z_][\w+:]{1,39}(?:(?:\[\d+\]|\[\d+,\d+\]|\[\d+,\d+,\d+\])?(?:\.[A-Za-z_]\w{1,39})?)+";
+            @"(?!\w*\()[A-Za-z_][\w+:]{1,39}(?:(?:\[\d+\]|\[\d+,\d+\]|\[\d+,\d+,\d+\])?(?:\.[A-Za-z_]\w{1,39})?)+(?:\.[0-9][0-9]?)?";
 
         /// <summary>
         /// Pattern for identifying any instruction and the contents of it's signature. This expression should
@@ -147,7 +147,7 @@ namespace L5Sharp.Core
                     results.Add(instruction);
                     continue;
                 }
-                
+
                 //Just assuming an unknown instruction is an AOI and is by default destructive.
                 results.Add(new Instruction(key, true));
             }
@@ -202,6 +202,20 @@ namespace L5Sharp.Core
         public IEnumerable<KeyValuePair<Instruction, IEnumerable<string>>> OperandsByKey(Instruction instruction) =>
             Regex.Matches(_text, @$"(?<={instruction.Name}\()(?>\((?<c>)|[^()]+|\)(?<-c>))*(?(c)(?!))(?=\))")
                 .Select(m => new KeyValuePair<Instruction, IEnumerable<string>>(instruction, m.Value.Split(',')));
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<KeyValuePair<TagName, NeutralText>> References()
+        {
+            return Regex.Matches(_text, KeyOperandGroupPattern).SelectMany(m =>
+            {
+                var tags = Regex.Matches(m.Value, TagNamePattern).Select(tn => new TagName(tn.Value));
+                return tags.Select(t => new KeyValuePair<TagName, NeutralText>(t, m.Value));
+            });
+        }
 
         /// <summary>
         /// Splits the current neutral text into a collection of sub-texts representing each individual instruction found

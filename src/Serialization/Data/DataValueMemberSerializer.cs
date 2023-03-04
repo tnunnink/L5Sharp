@@ -41,6 +41,10 @@ namespace L5Sharp.Serialization.Data
             var radix = element.TryGetValue<Radix>(L5XName.Radix);
             var value = element.GetValue<string>(L5XName.Value);
             
+            //Not really sure how to handle this not a number value other than set to default for now.
+            if (value == "1.#QNAN")
+                value = dataType == "REAL" ? "0.0" : "0";
+            
             //There is an issue where some data values format does not match the indicated radix attribute value (Date/Time (ns)).
             //To get around this, I will just infer the format from the value, and use that if it doesn't match what
             //Rockwell is saying it is.

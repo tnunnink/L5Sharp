@@ -2,6 +2,7 @@
 using FluentAssertions;
 using L5Sharp.Core;
 using L5Sharp.Enums;
+using NUnit.Framework.Internal;
 
 namespace L5Sharp.Tests.Core
 {
@@ -360,6 +361,26 @@ namespace L5Sharp.Tests.Core
             var result = text.Keys();
 
             result.Should().HaveCount(6);
+        }
+
+        [Test]
+        public void References()
+        {
+            var text = new NeutralText(TestText);
+
+            var references = text.References().ToList();
+
+            references.Should().NotBeEmpty();
+        }
+        
+        [Test]
+        public void ReferencesArrayTest()
+        {
+            var text = new NeutralText("MOV(Archive_Previous_Daily_Mtr09.CLOSE_TIME,Daily_CloseTime_LS[8])");
+
+            var references = text.References().ToList();
+
+            references.Should().NotBeEmpty();
         }
     }
 }

@@ -21,8 +21,7 @@ namespace L5Sharp.Extensions
         /// <returns>A <see cref="string"/> representing the name value.</returns>
         /// <exception cref="InvalidOperationException">The element does not have a name attribute.</exception>
         public static string LogixName(this XElement element) =>
-            element.Attribute(L5XName.Name)?.Value
-            ?? throw new InvalidOperationException($"Element {element.Name} does not have attribute 'Name'.");
+            element.Attribute(L5XName.Name)?.Value ?? string.Empty;
 
         /// <summary>
         /// Gets the description element value for the current L5X element.
@@ -108,7 +107,8 @@ namespace L5Sharp.Extensions
         /// <param name="addCondition"></param>
         /// <exception cref="ArgumentNullException"><c>obj</c> or <c>selector</c> is null.</exception>
         /// <exception cref="ArgumentException"><c>selector</c> is not a <see cref="MemberExpression"/>.</exception>
-        public static void AddValue<TObj, TValue>(this XElement element, TObj obj, Expression<Func<TObj, TValue>> selector,
+        public static void AddValue<TObj, TValue>(this XElement element, TObj obj,
+            Expression<Func<TObj, TValue>> selector,
             Predicate<TValue>? addCondition = null)
         {
             if (obj is null)
@@ -199,7 +199,7 @@ namespace L5Sharp.Extensions
         public static bool HasLogixStringStructure(this XElement element)
         {
             return element.Descendants(L5XName.DataValueMember).Any(e =>
-                e?.Value is not null 
+                e?.Value is not null
                 && e.Attribute(L5XName.Name)?.Value == "DATA"
                 && e.Attribute(L5XName.DataType)?.Value == element.Attribute(L5XName.DataType)?.Value
                 && e.Attribute(L5XName.Radix)?.Value == "ASCII");

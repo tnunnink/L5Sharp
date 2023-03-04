@@ -40,7 +40,7 @@ namespace L5Sharp.Tests.Serialization
         [Test]
         public Task Serialize_SimpleBool_ShouldBeApproved()
         {
-            var tag = new Tag { Name = "Test" };
+            var tag = new Tag { Name = "Test", Data = new BOOL() };
 
             var xml = _serializer.Serialize(tag);
 
@@ -68,7 +68,6 @@ namespace L5Sharp.Tests.Serialization
         }
 
         [Test]
-        
         public Task Serialize_SimpleDint_ShouldBeApproved()
         {
             var tag = Logix.Tag<DINT>("Test");
@@ -79,7 +78,6 @@ namespace L5Sharp.Tests.Serialization
         }
 
         [Test]
-        
         public Task Serialize_SimpleLint_ShouldBeApproved()
         {
             var tag = Logix.Tag<LINT>("Test");
@@ -90,7 +88,6 @@ namespace L5Sharp.Tests.Serialization
         }
 
         [Test]
-        
         public Task Serialize_SimpleReal_ShouldBeApproved()
         {
             var tag = Logix.Tag<REAL>("Test");
@@ -101,7 +98,6 @@ namespace L5Sharp.Tests.Serialization
         }
 
         [Test]
-        
         public Task Serialize_SimpleBoolArray_ShouldBeApproved()
         {
             var tag = Logix.TagArray<BOOL>("Test", 5);
@@ -112,7 +108,6 @@ namespace L5Sharp.Tests.Serialization
         }
 
         [Test]
-        
         public Task Serialize_SimpleSintArray_ShouldBeApproved()
         {
             var tag = Logix.TagArray<SINT>("Test", 5);
@@ -123,7 +118,6 @@ namespace L5Sharp.Tests.Serialization
         }
 
         [Test]
-        
         public Task Serialize_SimpleIntArray_ShouldBeApproved()
         {
             var tag = Logix.TagArray<INT>("Test", new Dimensions(5));
@@ -134,7 +128,6 @@ namespace L5Sharp.Tests.Serialization
         }
 
         [Test]
-        
         public Task Serialize_SimpleDintArray_ShouldBeApproved()
         {
             var tag = Logix.TagArray<DINT>("Test", new Dimensions(5));
@@ -145,7 +138,6 @@ namespace L5Sharp.Tests.Serialization
         }
 
         [Test]
-        
         public Task Serialize_SimpleLintArray_ShouldBeApproved()
         {
             var tag = Logix.TagArray<LINT>("Test", new Dimensions(5));
@@ -156,7 +148,6 @@ namespace L5Sharp.Tests.Serialization
         }
 
         [Test]
-        
         public Task Serialize_SimpleRealArray_ShouldBeApproved()
         {
             var tag = Logix.TagArray<REAL>("Test", new Dimensions(5));
@@ -167,7 +158,6 @@ namespace L5Sharp.Tests.Serialization
         }
 
         [Test]
-        
         public Task Serialize_String_ShouldBeApproved()
         {
             var tag = Logix.Tag<STRING>("Test");
@@ -178,7 +168,6 @@ namespace L5Sharp.Tests.Serialization
         }
 
         [Test]
-        
         public Task Serialize_Timer_ShouldBeApproved()
         {
             var tag = Logix.Tag<TIMER>("Test");
@@ -189,7 +178,6 @@ namespace L5Sharp.Tests.Serialization
         }
 
         [Test]
-        
         public Task Serialize_AlarmDigital_ShouldBeApproved()
         {
             var tag = Logix.Tag<ALARM_DIGITAL>("Test");

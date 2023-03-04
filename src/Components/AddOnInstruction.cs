@@ -148,7 +148,7 @@ namespace L5Sharp.Components
             var arguments = text.Operands().Select(o => o.ToString()).Skip(1).ToList(); 
             
             //Only required parameters are part of the instruction signature
-            var parameters = Parameters.Where(p => p.Required).Select(p => p.Name);
+            var parameters = Parameters.Where(p => p.Required).Select(p => p.Name).ToList();
             
             //Create a one to one mapping of the provided text operand arguments to instruction parameter names.
             var mapping = arguments.Zip(parameters, (a, p) => new { Argument = a, Parameter = p }).ToList();

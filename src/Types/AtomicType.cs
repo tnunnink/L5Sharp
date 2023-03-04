@@ -30,7 +30,7 @@ namespace L5Sharp.Types
             Name = name ?? throw new ArgumentNullException(nameof(name));
 
             if (radix is not null && !radix.SupportsType(this))
-                throw new ArgumentException();
+                throw new ArgumentException($"The provided radix {radix} is not supported by {GetType()}");
             
             Radix = radix ?? Radix.Default(this);
         }
