@@ -56,6 +56,22 @@ namespace L5Sharp.Tests.Types
         {
             FluentActions.Invoking(() => new ArrayType<ILogixType>(new ILogixType[1000000])).Should().Throw<ArgumentOutOfRangeException>();
         }
+        
+        [Test]
+        public void New_OneDimensional_ShouldNotBeNull()
+        {
+            var array = new ArrayType<ILogixType>(new ILogixType[10, 10]);
+
+            array.Should().NotBeNull();
+        }
+        
+        [Test]
+        public void New_OneDimensional_ShouldHaveExpectedLength()
+        {
+            var array = new ArrayType<ILogixType>(new ILogixType[10, 10]);
+
+            array.Dimensions.Length.Should().Be(100);
+        }
 
         [Test]
         public void New_TwoDimensional_ShouldNotBeNull()

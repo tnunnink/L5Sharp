@@ -8,29 +8,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Components/AddOnInstruction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Components/AddOnInstruction.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/NeutralText.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/NeutralText.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Extensions/ElementExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Extensions/ElementExtensions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Extensions/StringExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Extensions/StringExtensions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ILogixCrossReferencer.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SearchDepth.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Serialization/Data/DataValueMemberSerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Serialization/Data/DataValueMemberSerializer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Serialization/Data/DataValueSerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Serialization/Data/DataValueSerializer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TagReference.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Types/ArrayType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Types/ArrayType.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Types/AtomicType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Types/AtomicType.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Core/NeutralTextTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Core/NeutralTextTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Extensions/StringExtensionsTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Extensions/StringExtensionsTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/LogixContentAgainstTemplateTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/LogixContentAgainstTemplateTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Serialization/TagSerializerTests.Serialize_AlarmDigital_ShouldBeApproved.verified.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Serialization/TagSerializerTests.Serialize_AlarmDigital_ShouldBeApproved.verified.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Serialization/TagSerializerTests.Serialize_SimpleDint_ShouldBeApproved.verified.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Serialization/TagSerializerTests.Serialize_SimpleDint_ShouldBeApproved.verified.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Serialization/TagSerializerTests.Serialize_SimpleInt_ShouldBeApproved.verified.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Serialization/TagSerializerTests.Serialize_SimpleInt_ShouldBeApproved.verified.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Serialization/TagSerializerTests.Serialize_SimpleLint_ShouldBeApproved.verified.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Serialization/TagSerializerTests.Serialize_SimpleLint_ShouldBeApproved.verified.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Serialization/TagSerializerTests.Serialize_SimpleReal_ShouldBeApproved.verified.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Serialization/TagSerializerTests.Serialize_SimpleReal_ShouldBeApproved.verified.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Serialization/TagSerializerTests.Serialize_SimpleSint_ShouldBeApproved.verified.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Serialization/TagSerializerTests.Serialize_SimpleSint_ShouldBeApproved.verified.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Serialization/TagSerializerTests.Serialize_String_ShouldBeApproved.verified.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Serialization/TagSerializerTests.Serialize_String_ShouldBeApproved.verified.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Serialization/TagSerializerTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Serialization/TagSerializerTests.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Serialization/TagSerializerTests.Serialize_AlarmDigital_ShouldBeApproved.verified.txt.bak" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Serialization/TagSerializerTests.Serialize_SimpleBool_ShouldBeApproved.verified.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Serialization/TagSerializerTests.Serialize_SimpleSint_ShouldBeApproved.verified.txt.bak" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/ArrayTypeTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/ArrayTypeTests.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -376,14 +357,7 @@
       <workItem from="1677683521525" duration="11651000" />
       <workItem from="1677696348348" duration="944000" />
       <workItem from="1677697360814" duration="9679000" />
-      <workItem from="1677707554448" duration="71330000" />
-    </task>
-    <task id="LOCAL-00153" summary="Fixed tests and code associated with Type updates">
-      <created>1645739050770</created>
-      <option name="number" value="00153" />
-      <option name="presentableId" value="LOCAL-00153" />
-      <option name="project" value="LOCAL" />
-      <updated>1645739050770</updated>
+      <workItem from="1677707554448" duration="72432000" />
     </task>
     <task id="LOCAL-00154" summary="Adding module collection to make api easier to work with. Update Bus and added tests.">
       <created>1645802477525</created>
@@ -721,7 +695,14 @@
       <option name="project" value="LOCAL" />
       <updated>1677641632304</updated>
     </task>
-    <option name="localTasksCounter" value="202" />
+    <task id="LOCAL-00202" summary="continued NeutralText.cs dev and serialization bug fixes">
+      <created>1677898255770</created>
+      <option name="number" value="00202" />
+      <option name="presentableId" value="LOCAL-00202" />
+      <option name="project" value="LOCAL" />
+      <updated>1677898255771</updated>
+    </task>
+    <option name="localTasksCounter" value="203" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -736,41 +717,41 @@
       <expand>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 0% 13309/13309" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 0% 13293/13293" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 0% 13309/13309" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 0% 4832/4832" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 0% 13293/13293" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 0% 4816/4816" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 0% 13309/13309" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 0% 4832/4832" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="(0.2.1.0, .NETStandard,Version=v2.1) 0% 4832/4832" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 0% 13293/13293" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 0% 4816/4816" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="(0.2.1.0, .NETStandard,Version=v2.1) 0% 4816/4816" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 0% 13309/13309" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 0% 4832/4832" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="(0.2.1.0, .NETStandard,Version=v2.1) 0% 4832/4832" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 0% 4832/4832" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 0% 13293/13293" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 0% 4816/4816" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="(0.2.1.0, .NETStandard,Version=v2.1) 0% 4816/4816" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 0% 4816/4816" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 0% 13309/13309" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 0% 4832/4832" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="(0.2.1.0, .NETStandard,Version=v2.1) 0% 4832/4832" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 0% 4832/4832" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="Core 0% 673/673" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 0% 13293/13293" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 0% 4816/4816" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="(0.2.1.0, .NETStandard,Version=v2.1) 0% 4816/4816" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 0% 4816/4816" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Core 0% 657/657" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 0% 13309/13309" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 0% 4832/4832" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="(0.2.1.0, .NETStandard,Version=v2.1) 0% 4832/4832" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 0% 4832/4832" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="Core 0% 673/673" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 0% 13293/13293" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 0% 4816/4816" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="(0.2.1.0, .NETStandard,Version=v2.1) 0% 4816/4816" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 0% 4816/4816" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Core 0% 657/657" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
           <item name="NeutralText 0% 96/96" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
       </expand>
@@ -797,7 +778,6 @@
       <path value="$PROJECT_DIR$/../.." />
     </ignored-roots>
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="Fixed data type casting issue on serialization. Adding todos for Radix format provider and custom formatter and atomic converters for type narrowing" />
     <MESSAGE value="Updated converters to support conversion to all primitive types with checked context fo overflow exception. Fixed atomic type GetHashCode and ToString methods and added Max and Min field constants to all atomics." />
     <MESSAGE value="Complete revamp on the querying interface. Removed the repository namespace and classes after determination that the simple mutation of L5X was useless. Will transition to an &quot;Export&quot; type interface to export individual components for import into Logix. Cleaned up L5X classes and remove unnecessary classes. Removed all code not trying to support before next release. Other random clean up and updates." />
     <MESSAGE value="Updated testing for all ComponentQuery.cs implementations." />
@@ -822,7 +802,8 @@
     <MESSAGE value="cleared warnings. preping to merge changes." />
     <MESSAGE value="including README.md with package." />
     <MESSAGE value="updated README.md" />
-    <option name="LAST_COMMIT_MESSAGE" value="updated README.md" />
+    <MESSAGE value="continued NeutralText.cs dev and serialization bug fixes" />
+    <option name="LAST_COMMIT_MESSAGE" value="continued NeutralText.cs dev and serialization bug fixes" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
