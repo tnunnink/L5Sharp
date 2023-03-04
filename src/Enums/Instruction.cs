@@ -28,19 +28,11 @@ namespace L5Sharp.Enums
             Destructive = destructive;
         }
 
-        /*/// <summary>
-        /// The abbreviation text that identifies the instruction type.
-        /// </summary>
-        /// <value>A <see cref="string"/> representing the instruction key (e.g. XIC).</value>
-        public string Key { get; }*/
-
         /// <summary>
         /// The signature or valid regex pattern of the instruction neutral text.
         /// </summary>
         /// <remarks>
-        /// This format string represent what is considered a valid <see cref="NeutralText"/> for the instruction.
-        /// This is used when validating arguments in <see cref="Of"/>. The help generate valid signature expressions,
-        /// use <see cref="Pattern.TagName"/> predefined tag name regular expression.
+        /// This format string represent a regex capture pattern to help parse <see cref="NeutralText"/> for the instruction.
         /// </remarks>
         public string Signature { get; }
 

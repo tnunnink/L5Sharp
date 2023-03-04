@@ -11,10 +11,10 @@ namespace L5Sharp.Serialization.Data
     /// <summary>
     /// A <see cref="ILogixSerializer{T}"/> that serializes <see cref="ArrayType{TLogixType}"/> or array data elements.
     /// </summary>
-    public class ArraySerializer : ILogixSerializer<ArrayType<ILogixType>>
+    public class ArraySerializer : ILogixSerializer<ILogixArray<ILogixType>>
     {
         /// <inheritdoc />
-        public XElement Serialize(ArrayType<ILogixType> obj)
+        public XElement Serialize(ILogixArray<ILogixType> obj)
         {
             Check.NotNull(obj);
 
@@ -47,7 +47,7 @@ namespace L5Sharp.Serialization.Data
         }
 
         /// <inheritdoc />
-        public ArrayType<ILogixType> Deserialize(XElement element)
+        public ILogixArray<ILogixType> Deserialize(XElement element)
         {
             Check.NotNull(element);
 

@@ -5,17 +5,17 @@ using L5Sharp.Serialization;
 namespace L5Sharp.Components
 {
     /// <summary>
-    /// A class representing the L5X controller component.
+    /// A logix <c>Controller</c> component. Contains the properties that comprise the L5X Controller element.
     /// </summary>
     [LogixSerializer(typeof(ControllerSerializer))]
-    public class Controller : ILogixComponent
+    public class Controller : ILogixComponent, ICloneable<Controller>
     {
         /// <inheritdoc />
         public string Name { get; set; } = string.Empty;
 
         /// <inheritdoc />
         public string Description { get; set; } = string.Empty;
-        
+
         /// <summary>
         /// The catalog number representing the processor of the controller component.
         /// </summary>
@@ -27,7 +27,7 @@ namespace L5Sharp.Components
         /// </summary>
         /// <value>A <see cref="Core.Revision"/> value representing the major/minor version of the controller</value>
         public Revision? Revision { get; set; } = new();
-        
+
         /// <summary>
         /// The date/time the current project was created. 
         /// </summary>
@@ -39,5 +39,19 @@ namespace L5Sharp.Components
         /// </summary>
         /// <value>A <see cref="DateTime"/> representing the date and time of modification.</value>
         public DateTime LastModifiedDate { get; set; }
+
+        /// <inheritdoc />
+        public Controller Clone()
+        {
+            return new Controller
+            {
+                Name = string.Copy(Name),
+                Description = string.Copy(Description),
+                ProcessorType = string.Copy(ProcessorType),
+                Revision = Revision is not null ? new Revision(Revision.Major, Revision.Minor) : null,
+                ProjectCreationDate = ProjectCreationDate,
+                LastModifiedDate = LastModifiedDate
+            };
+        }
     }
 }

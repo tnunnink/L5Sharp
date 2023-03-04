@@ -16,7 +16,7 @@ namespace L5Sharp.Tests.Extensions
         {
             var type = (ILogixType)new BOOL();
 
-            var result = type.ToType<BOOL>();
+            var result = type.To<BOOL>();
 
             result.Should().BeOfType<BOOL>();
         }
@@ -26,7 +26,7 @@ namespace L5Sharp.Tests.Extensions
         {
             var type = (ILogixType)new BOOL();
 
-            FluentActions.Invoking(() => type.ToType<DINT>()).Should().Throw<InvalidCastException>();
+            FluentActions.Invoking(() => type.To<DINT>()).Should().Throw<InvalidCastException>();
         }
         
         [Test]
@@ -34,31 +34,9 @@ namespace L5Sharp.Tests.Extensions
         {
             var type = (ILogixType)new BOOL();
 
-            var result = type.AsType<DINT>();
+            var result = type.As<DINT>();
 
             result.Should().BeNull();
-        }
-
-        [Test]
-        public void ToArrayType_WhenCalled_ShouldBeOfType()
-        {
-            var array = new ArrayType<BOOL>(new[] { new BOOL(), new BOOL(), new BOOL() });
-
-            var generic = array.ToArrayType();
-
-            generic.Should().NotBeNull();
-            generic.Should().BeOfType<ArrayType<ILogixType>>();
-        }
-
-        [Test]
-        public void ToArrayType_OfSpecificType_ShouldBeOfExpectedType()
-        {
-            var array = new ArrayType<TIMER>(new[] { new TIMER(), new TIMER(), new TIMER() });
-
-            var generic = array.ToArrayType<TIMER, StructureType>();
-
-            generic.Should().NotBeNull();
-            generic.Should().BeOfType<ArrayType<StructureType>>();
         }
     }
 }

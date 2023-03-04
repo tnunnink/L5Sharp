@@ -24,7 +24,7 @@ namespace L5Sharp.Serialization.Data
             var data = obj switch
             {
                 AtomicType atomicType => TagDataSerializer.DataValue.Serialize(atomicType),
-                ArrayType<ILogixType> arrayType => TagDataSerializer.Array.Serialize(arrayType),
+                ILogixArray<ILogixType> arrayType => TagDataSerializer.Array.Serialize(arrayType),
                 StructureType structureType => TagDataSerializer.Structure.Serialize(structureType),
                 _ => throw new ArgumentException(
                     $"Logix data type {obj.GetType()} is not valid for the serializer {GetType()}")

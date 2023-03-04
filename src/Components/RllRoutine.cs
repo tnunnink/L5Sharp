@@ -8,7 +8,7 @@ using L5Sharp.Utilities;
 namespace L5Sharp.Components
 {
     /// <summary>
-    /// 
+    /// A logix <c>RllRoutine</c> component. Contains the properties that comprise the L5X Ladder Logic Routine element.
     /// </summary>
     [LogixSerializer(typeof(RllRoutineSerializer))]
     [XmlType(L5XName.Routine)]

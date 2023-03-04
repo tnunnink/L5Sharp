@@ -29,7 +29,7 @@ namespace L5Sharp.Tests.Serialization
         [Test]
         public void Serialize_WhenCalled_ShouldNotBeNull()
         {
-            var component = Logix.Array<BOOL>(10).ToArrayType();
+            var component = Logix.Array<BOOL>(10);
             
             var xml = _serializer.Serialize(component);
 
@@ -40,7 +40,7 @@ namespace L5Sharp.Tests.Serialization
         
         public Task Serialize_ValueTypeArray_ShouldBeApproved()
         {
-            var element = Logix.Array<BOOL>(10).ToArrayType();
+            var element = Logix.Array<BOOL>(10);
             
             var xml = _serializer.Serialize(element);
 
@@ -51,7 +51,7 @@ namespace L5Sharp.Tests.Serialization
         
         public Task Serialize_StructureTypeArray_ShouldBeApproved()
         {
-            var element = Logix.Array<TIMER>(10).ToArrayType();
+            var element = Logix.Array<TIMER>(10);
             
             var xml = _serializer.Serialize(element);
 

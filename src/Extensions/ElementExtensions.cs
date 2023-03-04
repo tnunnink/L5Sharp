@@ -19,9 +19,7 @@ namespace L5Sharp.Extensions
         /// </summary>
         /// <param name="element">The <see cref="XElement"/> for which to get the value.</param>
         /// <returns>A <see cref="string"/> representing the name value.</returns>
-        /// <exception cref="InvalidOperationException">The element does not have a name attribute.</exception>
-        public static string LogixName(this XElement element) =>
-            element.Attribute(L5XName.Name)?.Value ?? string.Empty;
+        public static string LogixName(this XElement element) => element.Attribute(L5XName.Name)?.Value ?? string.Empty;
 
         /// <summary>
         /// Gets the description element value for the current L5X element.

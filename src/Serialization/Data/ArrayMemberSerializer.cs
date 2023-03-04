@@ -23,7 +23,7 @@ namespace L5Sharp.Serialization.Data
             
             var element = new XElement(L5XName.ArrayMember);
             element.AddValue(obj.Name, L5XName.Name);
-            element.AddValue(arrayType.First().Name, L5XName.DataType);
+            element.AddValue(arrayType.Name, L5XName.DataType);
             element.AddValue(arrayType.Dimensions, L5XName.Dimensions);
 
             if (arrayType.First() is AtomicType atomic && arrayType.First() is not BOOL)

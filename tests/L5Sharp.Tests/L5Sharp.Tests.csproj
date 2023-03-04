@@ -39,6 +39,9 @@
       <None Update="TestFiles\Empty.xml">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
+      <None Update="Serialization\TagSerializerTests.Serialize_SimpleIntArray_ShouldBeApproved.verified.txt">
+        <DependentUpon>TagSerializerTests.cs</DependentUpon>
+      </None>
     </ItemGroup>
 
     <ItemGroup>

@@ -274,29 +274,5 @@ namespace L5Sharp.Extensions
 
             return value.EndsWith(character) ? value[..^2] : value;
         }
-
-        /// <summary>
-        /// Gets words from the specified string input text.
-        /// </summary>
-        /// <param name="input">A string input to analyze.</param>
-        /// <returns>A <see cref="IEnumerable{T}"/> of words.</returns>
-        public static IEnumerable<string> GetWords(this string input)
-        {
-            var matches = Regex.Matches(input, @"\b[\w']*\b");
-
-            var words = matches.Where(m => !string.IsNullOrEmpty(m.Value)).Select(m => TrimSuffix(m.Value));
-
-            return words;
-        }
-
-        private static string TrimSuffix(this string word)
-        {
-            var apostropheLocation = word.IndexOf('\'');
-
-            if (apostropheLocation != -1)
-                word = word[..apostropheLocation];
-
-            return word;
-        }
     }
 }

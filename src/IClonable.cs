@@ -5,7 +5,7 @@
 /// </summary>
 /// <typeparam name="T">The type to clone.</typeparam>
 /// <remarks>
-/// This is useful for us so we don't have to perform the complex object initialization if we already have a copy of
+/// This is useful so we don't have to perform the complex object initialization if we already have a copy of
 /// a component in memory. Some of the Logix lots of properties and the initialization can be painful.
 /// </remarks>
 public interface ICloneable<out T>

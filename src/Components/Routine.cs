@@ -4,7 +4,7 @@ using L5Sharp.Serialization;
 namespace L5Sharp.Components
 {
     /// <summary>
-    /// A logix <c>Routine</c> component. Contains the properties for a generic routine element. This type does not
+    /// A logix <c>Routine</c> component. Contains the properties for a generic Routine element. This type does not
     /// include content property. More specific routine types are derived from this base class.
     /// </summary>
     /// <seealso cref="RllRoutine"/>
@@ -13,7 +13,7 @@ namespace L5Sharp.Components
     /// `Logix 5000 Controllers Import/Export`</a> for more information.
     /// </footer>
     [LogixSerializer(typeof(RoutineSerializer))]
-    public class Routine : ILogixComponent
+    public class Routine : ILogixComponent, ICloneable<Routine>
     {
         /// <inheritdoc />
         public string Name { get; set; } = string.Empty;
@@ -26,5 +26,16 @@ namespace L5Sharp.Components
         /// </summary>
         /// <value>A <see cref="Enums.RoutineType"/> enum specifying the type content the routine contains.</value>
         public virtual RoutineType Type { get; set; } = RoutineType.Typeless;
+
+        /// <inheritdoc />
+        public Routine Clone()
+        {
+            return new Routine
+            {
+                Name = string.Copy(Name),
+                Description = string.Copy(Description),
+                Type = Type
+            };
+        }
     }
 }

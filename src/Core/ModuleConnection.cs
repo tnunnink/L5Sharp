@@ -8,7 +8,7 @@ namespace L5Sharp.Core
     /// A component of a <see cref="Module"/> that represents the properties and data of the connection to the field device.
     /// </summary>
     [LogixSerializer(typeof(ModuleConnectionSerializer))]
-    public sealed class ModuleConnection
+    public sealed class ModuleConnection : ICloneable<ModuleConnection>
     {
         /// <summary>
         /// Gets the name of the <see cref="ModuleConnection"/> component.
@@ -94,5 +94,29 @@ namespace L5Sharp.Core
         /// Gets the Tag that represents the output channel data for the <see cref="ModuleConnection"/>.
         /// </summary>
         public Tag? Output { get; set; }
+
+        /// <inheritdoc />
+        public ModuleConnection Clone()
+        {
+            return new ModuleConnection
+            {
+                Name = string.Copy(Name),
+                Rpi = Rpi,
+                InputCxnPoint = InputCxnPoint,
+                InputSize = InputSize,
+                OutputCxnPoint = OutputCxnPoint,
+                OutputSize = OutputSize,
+                Type = Type,
+                Priority = Priority,
+                InputConnectionType = InputConnectionType,
+                OutputRedundantOwner = OutputRedundantOwner,
+                InputProductionTrigger = InputProductionTrigger,
+                Unicast = Unicast,
+                EventId = EventId,
+                InputTagSuffix = string.Copy(InputTagSuffix),
+                OutputTagSuffix = string.Copy(OutputTagSuffix)
+            };
+
+        }
     }
 }

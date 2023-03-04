@@ -10,14 +10,14 @@ using L5Sharp.Types;
 namespace L5Sharp.Components
 {
     /// <summary>
-    /// A logix <c>Tag</c> component. Contains the properties that comprise the L5X tag element.
+    /// A logix <c>Tag</c> component. Contains the properties that comprise the L5X Tag element.
     /// </summary>
     /// <footer>
     /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
     /// `Logix 5000 Controllers Import/Export`</a> for more information.
     /// </footer>
     [LogixSerializer(typeof(TagSerializer))]
-    public class Tag : ILogixComponent, ILogixTag
+    public class Tag : ILogixComponent, ILogixTag, ICloneable<Tag>
     {
         /// <inheritdoc />
         public string Name { get; set; } = string.Empty;
@@ -154,11 +154,11 @@ namespace L5Sharp.Components
         public IEnumerable<TagMember> MembersOf(TagName tagName)
         {
             var member = Data.FindMember(tagName);
-            
+
             var tagMember = member is not null
                 ? new TagMember(TagName.Combine(TagName, tagName), member.DataType, this)
                 : null;
-            
+
             return tagMember is not null ? tagMember.Members() : Enumerable.Empty<TagMember>();
         }
 
@@ -168,6 +168,26 @@ namespace L5Sharp.Components
             if (Data is not AtomicType) return false;
             Data = atomicType;
             return true;
+        }
+
+        /// <inheritdoc />
+        public Tag Clone()
+        {
+            return new Tag
+            {
+                Name = string.Copy(Name),
+                Description = string.Copy(Description),
+                Data = Data, //todo implement Cloneable on Logix type?
+                ExternalAccess = ExternalAccess,
+                Usage = Usage,
+                TagType = TagType,
+                AliasFor = new TagName(AliasFor),
+                Constant = Constant,
+                Comments = new Dictionary<TagName, string>(Comments.Select(c =>
+                    new KeyValuePair<TagName, string>(c.Key, c.Value))),
+                Units = new Dictionary<TagName, string>(Units.Select(c =>
+                    new KeyValuePair<TagName, string>(c.Key, c.Value)))
+            };
         }
     }
 }

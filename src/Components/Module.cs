@@ -8,14 +8,14 @@ using L5Sharp.Serialization;
 namespace L5Sharp.Components
 {
     /// <summary>
-    /// A logix <c>Module</c> component. Contains the properties that comprise the L5X module element.
+    /// A logix <c>Module</c> component. Contains the properties that comprise the L5X Module element.
     /// </summary>
     /// <footer>
     /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
     /// `Logix 5000 Controllers Import/Export`</a> for more information.
     /// </footer>
     [LogixSerializer(typeof(ModuleSerializer))]
-    public class Module : ILogixComponent
+    public class Module : ILogixComponent, ICloneable<Module>
     {
         /// <inheritdoc />
         public string Name { get; set; } = string.Empty;
@@ -141,5 +141,27 @@ namespace L5Sharp.Components
         public IPAddress? IP =>
             Ports.FirstOrDefault(p => p is { Type: "Ethernet", Address.IsIPv4: true })?.Address
                 .ToIPAddress();
+
+        /// <inheritdoc />
+        public Module Clone()
+        {
+            return new Module
+            {
+                Name = string.Copy(Name),
+                Description = string.Copy(Description),
+                CatalogNumber = string.Copy(CatalogNumber),
+                Revision = new Revision(Revision.Major, Revision.Minor),
+                Vendor = new Vendor(Vendor.Id, Vendor.Name),
+                ProductType = new ProductType(ProductType.Id, ProductType.Name),
+                ProductCode = ProductCode,
+                ParentModule = string.Copy(ParentModule),
+                ParentPortId = ParentPortId,
+                Inhibited = Inhibited,
+                SafetyEnabled = SafetyEnabled,
+                MajorFault = MajorFault,
+                Ports = new List<Port>(Ports.Select(p => p.Clone())),
+                Connections = new List<ModuleConnection>(Connections.Select(c => c.Clone())),
+            };
+        }
     }
 }

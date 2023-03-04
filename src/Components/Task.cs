@@ -6,7 +6,7 @@ using L5Sharp.Serialization;
 namespace L5Sharp.Components
 {
     /// <summary>
-    /// A logix <c>Task</c> component. Contains the properties that comprise the L5X task element.
+    /// A logix <c>Task</c> component. Contains the properties that comprise the L5X Task element.
     /// </summary>
     /// <footer>
     /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">

@@ -4,7 +4,7 @@ using L5Sharp.Serialization;
 namespace L5Sharp.Components
 {
     /// <summary>
-    /// A logix <c>Program</c> component. Contains the properties that comprise the L5X program element. This type is a
+    /// A logix <c>Program</c> component. Contains the properties that comprise the L5X Program element. This type is a
     /// container type. It does not include tags and routines. To access these sub-components, use the corresponding
     /// component collection API on the <see cref="LogixContent"/> class.
     /// </summary>

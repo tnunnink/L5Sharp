@@ -14,8 +14,6 @@ namespace L5Sharp.Serialization
     /// </summary>
     public class TagSerializer : ILogixSerializer<Tag>
     {
-        private readonly FormattedDataSerializer _formattedDataSerializer = new();
-
         /// <inheritdoc />
         public XElement Serialize(Tag obj)
         {
@@ -66,7 +64,7 @@ namespace L5Sharp.Serialization
                 element.Add(units);
             }
 
-            var data = _formattedDataSerializer.Serialize(obj.Data);
+            var data = TagDataSerializer.FormattedData.Serialize(obj.Data);
             element.Add(data);
 
             return element;
@@ -84,7 +82,7 @@ namespace L5Sharp.Serialization
             {
                 Name = element.LogixName(),
                 Description = element.LogixDescription(),
-                Data = data is not null ? _formattedDataSerializer.Deserialize(data) : Logix.Null,
+                Data = data is not null ? TagDataSerializer.FormattedData.Deserialize(data) : Logix.Null,
                 ExternalAccess = element.TryGetValue<ExternalAccess>(L5XName.ExternalAccess) ??
                                  ExternalAccess.ReadWrite,
                 TagType = element.TryGetValue<TagType>(L5XName.TagType) ?? TagType.Base,

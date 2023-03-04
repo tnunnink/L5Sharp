@@ -13,7 +13,7 @@ namespace L5Sharp.Core
     /// Each port is identifiable by the <see cref="Id"/> property. 
     /// </remarks>
     [LogixSerializer(typeof(PortSerializer))]
-    public sealed class Port
+    public sealed class Port : ICloneable<Port>
     {
         /// <summary>
         /// Gets the Id of the <see cref="Port"/>.
@@ -62,6 +62,18 @@ namespace L5Sharp.Core
         /// </remarks>
         public byte BusSize { get; set; }
 
-        
+
+        /// <inheritdoc />
+        public Port Clone()
+        {
+            return new Port
+            {
+                Id = Id,
+                Address = new Address(Address.ToString()),
+                Type = string.Copy(Type),
+                Upstream = Upstream,
+                BusSize = BusSize
+            };
+        }
     }
 }

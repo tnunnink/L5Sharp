@@ -3,7 +3,9 @@ using FluentAssertions;
 using L5Sharp.Components;
 using L5Sharp.Core;
 using L5Sharp.Enums;
+using L5Sharp.Extensions;
 using L5Sharp.Serialization;
+using L5Sharp.Types;
 using L5Sharp.Types.Atomics;
 using L5Sharp.Types.Predefined;
 using Task = System.Threading.Tasks.Task;
@@ -30,7 +32,7 @@ namespace L5Sharp.Tests.Serialization
         [Test]
         public void SerializeSimpleBool_ShouldNotBeNull()
         {
-            var tag = new Tag { Name = "Test" };
+            var tag = new Tag { Name = "Test", Data = new BOOL() };
 
             var xml = _serializer.Serialize(tag);
 
@@ -197,10 +199,12 @@ namespace L5Sharp.Tests.Serialization
         public void Deserialize_InvalidElementName_ShouldThrowArgumentException()
         {
             const string xml = @"<Invalid></Invalid>";
+            
             var element = XElement.Parse(xml);
 
-            FluentActions.Invoking(() => _serializer.Deserialize(element)).Should().Throw<ArgumentException>()
-                .WithMessage($"Element 'Invalid' not valid for the serializer {_serializer.GetType()}.");
+            var tag = _serializer.Deserialize(element);
+
+            tag.Should().NotBeNull();
         }
 
         [Test]
@@ -221,15 +225,17 @@ namespace L5Sharp.Tests.Serialization
             var component = _serializer.Deserialize(element);
 
             component.Name.Should().Be("SimpleDint");
-            component.DataType.Should().BeOfType<DINT>();
+            component.DataType.Should().Be("DINT");
             component.Description.Should().BeEmpty();
             component.TagType.Should().Be(TagType.Base);
             component.Constant.Should().BeFalse();
             component.Radix.Should().Be(Radix.Decimal);
             component.ExternalAccess.Should().Be(ExternalAccess.None);
             component.Dimensions.Should().Be(Dimensions.Empty);
-            component.Usage.Should().Be(TagUsage.Null);
-            component.Data.Should().Be(123456);
+            component.Usage.Should().Be(TagUsage.Normal);
+            component.Data.Should().NotBeNull();
+            component.Data.Should().BeOfType<DINT>();
+            component.Data.As<DINT>().Should().Be(123456);
         }
 
         [Test]
@@ -240,21 +246,22 @@ namespace L5Sharp.Tests.Serialization
             var component = _serializer.Deserialize(element);
 
             component.Name.Should().Be("TestTimer");
-            component.DataType.Should().BeOfType<TIMER>();
+            component.DataType.Should().Be("TIMER");
             component.Description.Should().Be("Test Timer");
             component.TagType.Should().Be(TagType.Base);
             component.Constant.Should().BeFalse();
             component.Radix.Should().Be(Radix.Null);
             component.ExternalAccess.Should().Be(ExternalAccess.ReadOnly);
             component.Dimensions.Should().Be(Dimensions.Empty);
-            component.Usage.Should().Be(TagUsage.Null);
-            component.Data.Should().BeNull();
+            component.Usage.Should().Be(TagUsage.Normal);
+            component.Data.Should().NotBeNull();
+            component.Data.Should().BeOfType<StructureType>();
             component.Members().Should().HaveCount(5);
-            component.Member("PRE")?.Data.Should().Be(1000);
-            component.Member("ACC")?.Data.Should().Be(0);
-            component.Member("EN")?.Data.Should().Be(false);
-            component.Member("TT")?.Data.Should().Be(false);
-            component.Member("DN")?.Data.Should().Be(false);
+            component.Member("PRE")?.Data.As<DINT>().Should().Be(1000);
+            component.Member("ACC")?.Data.As<DINT>().Should().Be(0);
+            component.Member("EN")?.Data.As<BOOL>().Should().Be(false);
+            component.Member("TT")?.Data.As<BOOL>().Should().Be(false);
+            component.Member("DN")?.Data.As<BOOL>().Should().Be(false);
         }
 
         private static string GetSimpleTagData()

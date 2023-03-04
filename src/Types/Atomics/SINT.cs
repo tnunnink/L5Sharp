@@ -16,7 +16,7 @@ namespace L5Sharp.Types.Atomics
         /// <summary>
         /// Creates a new default <see cref="SINT"/> type.
         /// </summary>
-        public SINT() : base(nameof(REAL))
+        public SINT() : base(nameof(SINT))
         {
         }
         

@@ -2,18 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Xml.Linq;
 using System.Xml.Serialization;
 using L5Sharp.Core;
-using L5Sharp.Enums;
 using L5Sharp.Serialization;
-using L5Sharp.Types.Atomics;
 using L5Sharp.Utilities;
 
 namespace L5Sharp.Components
 {
     /// <summary>
-    /// 
+    /// A logix <c>AddOnInstruction</c> component. Contains the properties that comprise the L5X
+    /// AddOnInstructionDefinition element.
     /// </summary>
     /// <footer>
     /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
@@ -21,7 +19,7 @@ namespace L5Sharp.Components
     /// </footer>
     [XmlType(L5XName.AddOnInstructionDefinition)]
     [LogixSerializer(typeof(AddOnInstructionSerializer))]
-    public class AddOnInstruction : ILogixComponent
+    public class AddOnInstruction : ILogixComponent, ICloneable<AddOnInstruction>
     {
         /// <inheritdoc />
         public string Name { get; set; } = string.Empty;
@@ -161,6 +159,33 @@ namespace L5Sharp.Components
                     return Regex.Replace(current, replace, pair.Argument.ToString());
                 }))
                 .ToList();
+        }
+
+        /// <inheritdoc />
+        public AddOnInstruction Clone()
+        {
+            return new AddOnInstruction
+            {
+                Name = string.Copy(Name),
+                Description = string.Copy(Description),
+                Revision = new Revision(Revision.Major, Revision.Minor),
+                RevisionExtension = string.Copy(RevisionExtension),
+                RevisionNote = string.Copy(RevisionNote),
+                CreatedDate = CreatedDate,
+                CreatedBy = string.Copy(CreatedBy),
+                EditedDate = EditedDate,
+                EditedBy = string.Copy(EditedBy),
+                Vendor = string.Copy(Vendor),
+                ExecutePreScan = ExecutePreScan,
+                ExecutePostScan = ExecutePostScan,
+                ExecuteEnableInFalse = ExecuteEnableInFalse,
+                AdditionalHelpText = string.Copy(AdditionalHelpText),
+                SoftwareRevision = new Revision(SoftwareRevision.Major, SoftwareRevision.Major),
+                IsEncrypted = IsEncrypted,
+                Parameters = new List<Parameter>(Parameters),
+                LocalTags = new List<Tag>(LocalTags),
+                Routines = new List<Routine>(Routines)
+            };
         }
     }
 }

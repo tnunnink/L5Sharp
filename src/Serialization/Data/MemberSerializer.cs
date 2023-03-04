@@ -20,10 +20,11 @@ namespace L5Sharp.Serialization.Data
             return obj.DataType switch
             {
                 AtomicType => TagDataSerializer.DataValueMember.Serialize(obj),
-                ArrayType<ILogixType> => TagDataSerializer.ArrayMember.Serialize(obj),
+                ILogixArray<ILogixType> => TagDataSerializer.ArrayMember.Serialize(obj),
                 StringType => TagDataSerializer.StringMember.Serialize(obj),
                 StructureType => TagDataSerializer.StructureMember.Serialize(obj),
-                _ => throw new InvalidOperationException()
+                _ => throw new ArgumentException(
+                    $"Logix data type {obj.GetType()} is not valid for the serializer {GetType()}")
             };
         }
 
@@ -42,7 +43,8 @@ namespace L5Sharp.Serialization.Data
                 L5XName.DataValueMember => TagDataSerializer.DataValueMember.Deserialize(element),
                 L5XName.ArrayMember => TagDataSerializer.ArrayMember.Deserialize(element),
                 L5XName.StructureMember => TagDataSerializer.StructureMember.Deserialize(element),
-                _ => throw new InvalidOperationException()
+                _ => throw new ArgumentException(
+                    $"The provided member with name {name} is not valid for the serializer {GetType()}")
             };
         }
     }
