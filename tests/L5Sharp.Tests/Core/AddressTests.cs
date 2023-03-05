@@ -28,7 +28,7 @@ namespace L5Sharp.Tests.Core
         {
             var address = new Address("192.168.0.1");
 
-            address.IsSlot.Should().BeTrue();
+            address.IsIPv4.Should().BeTrue();
         }
 
         [Test]

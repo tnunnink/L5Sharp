@@ -5,7 +5,7 @@
         <Description>this is a test</Description>
         <Members>
           <Member Name="Timers" DataType="TIMER" Dimension="5" Radix="NullType" ExternalAccess="Read/Write"></Member>
-          <Member Name="Number" DataType="DINT" Dimension="0" Radix="Ascii" ExternalAccess="Read/Write"></Member>
+          <Member Name="Number" DataType="DINT" Dimension="0" Radix="ASCII" ExternalAccess="Read/Write"></Member>
           <Member Name="Flag" DataType="BOOL" Dimension="0" Radix="NullType" ExternalAccess="Read Only"></Member>
         </Members>
       </DataType>

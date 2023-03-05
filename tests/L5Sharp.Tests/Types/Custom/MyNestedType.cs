@@ -41,7 +41,7 @@ namespace L5Sharp.Tests.Types.Custom
         /// <summary>
         /// A nested array of atomic values.
         /// </summary>
-        public BOOL[] Flags { get; set; } = Logix.Array<BOOL>(10).ToArray();
+        public ArrayType<BOOL> Flags { get; set; } = Logix.Array<BOOL>(10);
 
         /// <summary>
         /// A nested array of structure types.

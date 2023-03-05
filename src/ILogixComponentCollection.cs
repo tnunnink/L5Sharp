@@ -53,7 +53,7 @@ namespace L5Sharp
         /// </summary>
         /// <param name="name">The name of the component to get.</param>
         /// <returns>A <see cref="ILogixComponent"/> of the specified type.</returns>
-        /// <exception cref="InvalidOperationException">When not component is found.</exception>
+        /// <exception cref="InvalidOperationException">When component is not found or doesn't exist in the collection.</exception>
         /// <remarks>
         /// This method will throw an exception if the component with the specified name is not found.
         /// To find a single element that you are not sure exists, use <see cref="Find"/> and check that the result is not null.

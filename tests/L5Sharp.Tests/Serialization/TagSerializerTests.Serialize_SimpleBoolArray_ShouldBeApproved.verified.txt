@@ -1,4 +1,4 @@
-﻿<Tag Name="Test" TagType="Base" DataType="BOOL" Constant="False" ExternalAccess="Read/Write">
+﻿<Tag Name="Test" TagType="Base" DataType="BOOL" Dimensions="5" Constant="False" ExternalAccess="Read/Write">
   <Data Format="Decorated">
     <Array DataType="BOOL" Dimensions="5" Radix="Decimal">
       <Element Index="[0]" Value="0" />

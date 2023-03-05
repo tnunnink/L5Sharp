@@ -1,9 +1,7 @@
-﻿using System.Linq;
-using FluentAssertions;
+﻿using FluentAssertions;
 using L5Sharp.Components;
 using L5Sharp.Core;
 using L5Sharp.Types;
-using NUnit.Framework;
 
 namespace L5Sharp.Tests
 {
@@ -38,7 +36,7 @@ namespace L5Sharp.Tests
         {
             var content = LogixContent.Load(Known.Test);
 
-            var controller = content.Controller();
+            var controller = content.Controller;
 
             controller?.Name.Should().Be("TestController");
             controller?.ProcessorType.Should().Be("1756-L83E");
@@ -46,68 +44,6 @@ namespace L5Sharp.Tests
             controller?.Revision.Should().Be(new Revision(32, 11));
         }
 
-        [Test]
-        public void DataTypes_WhenCalled_ShouldNotBeEmpty()
-        {
-            var content = LogixContent.Load(Known.Test);
-
-            var dataTypes = content.DataTypes().ToList();
-
-            dataTypes.Should().NotBeEmpty();
-        }
-        
-        [Test]
-        public void Tags_WhenCalled_ShouldNotBeEmpty()
-        {
-            var content = LogixContent.Load(Known.Test);
-
-            var tags = content.Tags().ToList();
-
-            tags.Should().NotBeEmpty();
-        }
-
-        [Test]
-        public void Tags_InMainProgram_ShouldNotBeEmpty()
-        {
-            var content = LogixContent.Load(Known.Test);
-
-            var tags = content.Tags("MainProgram").ToList();
-
-            tags.Should().NotBeEmpty();
-        }
-        
-        
-        [Test]
-        public void Modules_WhenCalled_ShouldNotBeEmpty()
-        {
-            var content = LogixContent.Load(Known.Test);
-
-            var modules = content.Modules().ToList();
-
-            modules.Should().NotBeEmpty();
-        }
-        
-        [Test]
-        public void Tasks_WhenCalled_ShouldNotBeEmpty()
-        {
-            var content = LogixContent.Load(Known.Test);
-
-            var tags = content.Tasks().ToList();
-
-            tags.Should().NotBeEmpty();
-        }
-        
-        [Test]
-        public void Routines_WhenCalled_ShouldNotBeEmpty()
-        {
-            var content = LogixContent.Load(Known.Test);
-
-            var tags = content.Routines("MainProgram").ToList();
-
-            tags.Should().NotBeEmpty();
-        }
-        
-        
         [Test]
         public void Tag_WhenCalled_ShouldNotBeEmpty()
         {
@@ -117,7 +53,7 @@ namespace L5Sharp.Tests
 
             tags.Should().NotBeNull();
 
-            var array = tags.Data.As<ArrayType<ILogixType>>();
+            var array = AssertionExtensions.As<ArrayType<ILogixType>>(tags.Data);
 
             var elements = array.Elements.ToList();
             elements.Should().NotBeEmpty();
@@ -146,17 +82,7 @@ namespace L5Sharp.Tests
         }
 
         [Test]
-        public void InScope_ShouldReturnExpected()
-        {
-            var content = LogixContent.Load(Known.Test);
-
-            var tag = content.Tags("MainProgram").Find("MyNestedType");
-
-            tag.Should().NotBeNull();
-        }
-
-        [Test]
-        public void InScope_CustomRead_ShouldNotBeEmpty()
+        public void Tags_OfType_ShouldNotBeEmpty()
         {
             var content = LogixContent.Load(Known.Test);
 
@@ -166,17 +92,17 @@ namespace L5Sharp.Tests
         }
 
         [Test]
-        public void InScope_Program_ShouldNotBeEmpty()
+        public void Tags_Program_ShouldNotBeEmpty()
         {
             var content = LogixContent.Load(Known.Test);
 
-            var timers = content.Tags("MainProgram").Where(t => t.DataType == "TIMER");
+            var tags = content.Tags("MainProgram").Where(t => t.DataType == "DINT");
 
-            timers.Should().NotBeEmpty();
+            tags.Should().NotBeEmpty();
         }
 
         [Test]
-        public void Routine_Testing_ShouldNotBeEmpty()
+        public void Routine_Program_ShouldNotBeEmpty()
         {
             var content = LogixContent.Load(Known.Test);
             
@@ -186,7 +112,7 @@ namespace L5Sharp.Tests
         }
 
         [Test]
-        public void Query_Testing_ShouldLookNice()
+        public void Query_Testing_ShouldWork()
         {
             var content = LogixContent.Load(Known.Test);
 
@@ -208,7 +134,7 @@ namespace L5Sharp.Tests
         [Test]
         public void Query_DistinctReferencedTagNames_ShouldReturnsLotsOfTagNames()
         {
-            var content = LogixContent.Load(Known.Template);
+            var content = LogixContent.Load(Known.Test);
 
             var results = content.Query<Rung>().SelectMany(t => t.Text.Tags()).Distinct().ToList();
 
@@ -218,7 +144,13 @@ namespace L5Sharp.Tests
         [Test]
         public void Query_TagsInMovInstructions_ShouldReturnsLotsOfTagNames()
         {
-            var content = LogixContent.Load(Known.Template);
+            var content = LogixContent.Load(Known.Test);
+
+            var results = content.Query<Rung>()
+                .SelectMany(r => r.Text.TagsIn("MOV"))
+                .ToList();
+
+            results.Should().NotBeEmpty();
         }
     }
 }

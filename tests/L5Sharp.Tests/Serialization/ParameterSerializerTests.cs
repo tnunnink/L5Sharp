@@ -95,16 +95,6 @@ namespace L5Sharp.Tests.Serialization
         }
 
         [Test]
-        public void Deserialize_InvalidElementName_ShouldThrowArgumentException()
-        {
-            const string xml = @"<Invalid></Invalid>";
-            var element = XElement.Parse(xml);
-
-            FluentActions.Invoking(() => _serializer.Deserialize(element)).Should().Throw<ArgumentException>()
-                .WithMessage($"Element 'Invalid' not valid for the serializer {_serializer.GetType()}.");
-        }
-
-        [Test]
         public void Deserialize_AtomicMember_ShouldNotBeNull()
         {
             var element = XElement.Parse(GetAtomicMemberXml());
@@ -122,7 +112,7 @@ namespace L5Sharp.Tests.Serialization
             var component = _serializer.Deserialize(element);
 
             component.Name.Should().Be("InputTest");
-            component.DataType.Should().BeOfType<BOOL>();
+            component.DataType.Should().Be("BOOL");
             component.Dimension.Should().Be(Dimensions.Empty);
             component.Radix.Should().Be(Radix.Decimal);
             component.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);

@@ -16,7 +16,7 @@ namespace L5Sharp.Components
     /// `Logix 5000 Controllers Import/Export`</a> for more information.
     /// </footer>
     [LogixSerializer(typeof(ModuleSerializer))]
-    public class Module : ILogixComponent, ICloneable<Module>
+    public class Module : ILogixComponent
     {
         /// <inheritdoc />
         public string Name { get; set; } = string.Empty;
@@ -27,6 +27,7 @@ namespace L5Sharp.Components
         /// <summary>
         /// The catalog number uniquely identifies the module. This is a rockwell defined convention.
         /// </summary>
+        /// <value>A <see cref="string"/> value containing the catalog number.</value>
         public string CatalogNumber { get; set; } = string.Empty;
 
         /// <summary>
@@ -142,27 +143,5 @@ namespace L5Sharp.Components
         public IPAddress? IP =>
             Ports.FirstOrDefault(p => p is { Type: "Ethernet", Address.IsIPv4: true })?.Address
                 .ToIPAddress();
-
-        /// <inheritdoc />
-        public Module Clone()
-        {
-            return new Module
-            {
-                Name = string.Copy(Name),
-                Description = string.Copy(Description),
-                CatalogNumber = string.Copy(CatalogNumber),
-                Revision = new Revision(Revision.Major, Revision.Minor),
-                Vendor = new Vendor(Vendor.Id, Vendor.Name),
-                ProductType = new ProductType(ProductType.Id, ProductType.Name),
-                ProductCode = ProductCode,
-                ParentModule = string.Copy(ParentModule),
-                ParentPortId = ParentPortId,
-                Inhibited = Inhibited,
-                SafetyEnabled = SafetyEnabled,
-                MajorFault = MajorFault,
-                Ports = new List<Port>(Ports.Select(p => p.Clone())),
-                Connections = new List<ModuleConnection>(Connections.Select(c => c.Clone())),
-            };
-        }
     }
 }

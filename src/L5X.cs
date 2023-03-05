@@ -23,11 +23,10 @@ namespace L5Sharp
             { L5XName.AddOnInstructionDefinition, L5XName.AddOnInstructionDefinitions },
             { L5XName.Tag, L5XName.Tags },
             { L5XName.Program, L5XName.Programs },
-            { L5XName.Routine, L5XName.Routines },
             { L5XName.Task, L5XName.Tasks },
-            /*{ L5XName.ParameterConnection, L5XName.ParameterConnections },
+            { L5XName.ParameterConnection, L5XName.ParameterConnections },
             { L5XName.Trend, L5XName.Trends },
-            { L5XName.QuickWatchList, L5XName.QuickWatchLists },*/
+            { L5XName.QuickWatchList, L5XName.QuickWatchLists },
         };
 
         /// <summary>

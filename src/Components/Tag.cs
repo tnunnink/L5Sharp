@@ -17,7 +17,7 @@ namespace L5Sharp.Components
     /// `Logix 5000 Controllers Import/Export`</a> for more information.
     /// </footer>
     [LogixSerializer(typeof(TagSerializer))]
-    public class Tag : ILogixComponent, ILogixTag, ICloneable<Tag>
+    public class Tag : ILogixComponent, ILogixTag
     {
         /// <inheritdoc />
         public string Name { get; set; } = string.Empty;
@@ -35,7 +35,7 @@ namespace L5Sharp.Components
         public string DataType => Data.Name;
 
         /// <inheritdoc />
-        public Dimensions Dimensions => Data is ArrayType<ILogixType> array ? array.Dimensions : Dimensions.Empty;
+        public Dimensions Dimensions => Data is ILogixArray<ILogixType> array ? array.Dimensions : Dimensions.Empty;
 
         /// <inheritdoc />
         public Radix Radix => Data is AtomicType atomic ? atomic.Radix : Radix.Null;
@@ -78,13 +78,13 @@ namespace L5Sharp.Components
         /// The collection of member comments for the tag component.
         /// </summary>
         /// <value>A <see cref="Dictionary{TKey,TValue}"/> of <see cref="Core.TagName"/>, <see cref="string"/> pairs.</value>
-        public Dictionary<TagName, string> Comments { get; set; } = new();
+        public Dictionary<string, string> Comments { get; set; } = new();
 
         /// <summary>
         /// The collection of member units for the tag component.
         /// </summary>
         /// <value>A <see cref="Dictionary{TKey,TValue}"/> of <see cref="Core.TagName"/>, <see cref="string"/> pairs.</value>
-        public Dictionary<TagName, string> Units { get; set; } = new();
+        public Dictionary<string, string> Units { get; set; } = new();
 
         /// <inheritdoc />
         public TagMember? Member(TagName tagName)
@@ -168,26 +168,6 @@ namespace L5Sharp.Components
             if (Data is not AtomicType) return false;
             Data = atomicType;
             return true;
-        }
-
-        /// <inheritdoc />
-        public Tag Clone()
-        {
-            return new Tag
-            {
-                Name = string.Copy(Name),
-                Description = string.Copy(Description),
-                Data = Data, //todo implement Cloneable on Logix type?
-                ExternalAccess = ExternalAccess,
-                Usage = Usage,
-                TagType = TagType,
-                AliasFor = new TagName(AliasFor),
-                Constant = Constant,
-                Comments = new Dictionary<TagName, string>(Comments.Select(c =>
-                    new KeyValuePair<TagName, string>(c.Key, c.Value))),
-                Units = new Dictionary<TagName, string>(Units.Select(c =>
-                    new KeyValuePair<TagName, string>(c.Key, c.Value)))
-            };
         }
     }
 }

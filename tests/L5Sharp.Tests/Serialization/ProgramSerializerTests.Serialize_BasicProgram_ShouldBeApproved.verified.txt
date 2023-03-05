@@ -1,1 +1,5 @@
-﻿
+﻿<Program Name="Test" TestEdits="False" Disabled="False" UseAsFolder="False">
+  <Description><![CDATA[This is a test program]]></Description>
+  <Tags />
+  <Routines />
+</Program>

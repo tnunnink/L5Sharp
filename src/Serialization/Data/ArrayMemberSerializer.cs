@@ -19,7 +19,7 @@ namespace L5Sharp.Serialization.Data
         {
             Check.NotNull(obj);
             
-            var arrayType = (ArrayType<ILogixType>)obj.DataType;
+            var arrayType = (ILogixArray<ILogixType>)obj.DataType;
             
             var element = new XElement(L5XName.ArrayMember);
             element.AddValue(obj.Name, L5XName.Name);

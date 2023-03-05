@@ -13,7 +13,7 @@ namespace L5Sharp.Components
     /// `Logix 5000 Controllers Import/Export`</a> for more information.
     /// </footer>
     [LogixSerializer(typeof(RoutineSerializer))]
-    public class Routine : ILogixComponent, ICloneable<Routine>
+    public class Routine : ILogixComponent
     {
         /// <inheritdoc />
         public string Name { get; set; } = string.Empty;
@@ -26,16 +26,5 @@ namespace L5Sharp.Components
         /// </summary>
         /// <value>A <see cref="Enums.RoutineType"/> enum specifying the type content the routine contains.</value>
         public virtual RoutineType Type { get; set; } = RoutineType.Typeless;
-
-        /// <inheritdoc />
-        public Routine Clone()
-        {
-            return new Routine
-            {
-                Name = string.Copy(Name),
-                Description = string.Copy(Description),
-                Type = Type
-            };
-        }
     }
 }

@@ -1,1 +1,1 @@
-﻿<DataValueMember Name="Test" DataType="REAL" Radix="Decimal" Value="0" />
+﻿<DataValueMember Name="Test" DataType="SINT" Radix="Decimal" Value="0" />

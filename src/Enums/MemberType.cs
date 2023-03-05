@@ -24,7 +24,7 @@ namespace L5Sharp.Enums
             return type switch
             {
                 AtomicType => ValueMember,
-                ArrayType<ILogixType> => ArrayMember,
+                ILogixArray<ILogixType> => ArrayMember,
                 StringType => StringMember,
                 StructureType => StructureMember,
                 _ => Unknown

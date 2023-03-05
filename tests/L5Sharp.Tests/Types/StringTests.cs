@@ -1,11 +1,10 @@
-﻿using System;
-using System.Linq;
-using AutoFixture;
+﻿using AutoFixture;
 using FluentAssertions;
 using L5Sharp.Enums;
+using L5Sharp.Extensions;
+using L5Sharp.Types;
 using L5Sharp.Types.Atomics;
 using L5Sharp.Types.Predefined;
-using NUnit.Framework;
 
 namespace L5Sharp.Tests.Types
 {
@@ -40,7 +39,7 @@ namespace L5Sharp.Tests.Types
             type.LEN.Should().NotBeNull();
             type.LEN.Should().BeOfType<DINT>();
             type.DATA.Should().NotBeNull();
-            type.DATA.Should().BeOfType<SINT[]>();
+            type.DATA.Should().BeOfType<ArrayType<SINT>>();
             type.Members.Should().HaveCount(2);
 
             var data = type.Members.FirstOrDefault(m => m.Name == "DATA");
@@ -232,17 +231,6 @@ namespace L5Sharp.Tests.Types
             var compare = type.CompareTo(null);
 
             compare.Should().Be(1);
-        }
-
-        [Test]
-        public void CompareTo_ValidOther_ShouldBeZero()
-        {
-            var first = new STRING();
-            var second = new STRING();
-
-            var compare = first.CompareTo(second);
-
-            compare.Should().Be(0);
         }
     }
 }

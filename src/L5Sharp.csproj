@@ -50,15 +50,15 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Compile Remove="Core\Bus.cs" />
-    </ItemGroup>
-
-    <ItemGroup>
       <None Remove="L5X.xsd" />
     </ItemGroup>
 
     <ItemGroup>
       <EmbeddedResource Include="Rockwell\L5X.xsd" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Remove="Core\Bus.cs" />
     </ItemGroup>
 
     <!--<ItemGroup>

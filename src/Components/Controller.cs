@@ -8,7 +8,7 @@ namespace L5Sharp.Components
     /// A logix <c>Controller</c> component. Contains the properties that comprise the L5X Controller element.
     /// </summary>
     [LogixSerializer(typeof(ControllerSerializer))]
-    public class Controller : ILogixComponent, ICloneable<Controller>
+    public class Controller : ILogixComponent
     {
         /// <inheritdoc />
         public string Name { get; set; } = string.Empty;
@@ -39,19 +39,5 @@ namespace L5Sharp.Components
         /// </summary>
         /// <value>A <see cref="DateTime"/> representing the date and time of modification.</value>
         public DateTime LastModifiedDate { get; set; }
-
-        /// <inheritdoc />
-        public Controller Clone()
-        {
-            return new Controller
-            {
-                Name = string.Copy(Name),
-                Description = string.Copy(Description),
-                ProcessorType = string.Copy(ProcessorType),
-                Revision = Revision is not null ? new Revision(Revision.Major, Revision.Minor) : null,
-                ProjectCreationDate = ProjectCreationDate,
-                LastModifiedDate = LastModifiedDate
-            };
-        }
     }
 }

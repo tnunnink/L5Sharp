@@ -112,7 +112,7 @@ namespace L5Sharp.Enums
         /// </returns>
         public static Radix Default(ILogixType type)
         {
-            if (type is ArrayType<AtomicType> arrayType)
+            if (type is ILogixArray<AtomicType> arrayType)
                 type = arrayType.First();
 
             if (type is not AtomicType atomicType)

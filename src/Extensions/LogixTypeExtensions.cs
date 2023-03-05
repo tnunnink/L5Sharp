@@ -29,7 +29,7 @@ namespace L5Sharp.Extensions
             return logixType switch
             {
                 StructureType structureType => structureType.Members,
-                ArrayType<ILogixType> arrayType => arrayType.Elements,
+                ILogixArray<ILogixType> arrayType => arrayType.Elements,
                 _ => Enumerable.Empty<Member>()
             };
         }

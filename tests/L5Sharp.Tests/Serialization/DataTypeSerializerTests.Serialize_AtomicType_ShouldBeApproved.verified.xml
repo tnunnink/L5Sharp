@@ -13,7 +13,7 @@
     <Member Name="Member04" DataType="LINT" Dimension="0" Radix="Hex" ExternalAccess="Read/Write">
       <Description>This is a test member</Description>
     </Member>
-    <Member Name="Member04" DataType="SINT" Dimension="0" Radix="Ascii" ExternalAccess="Read/Write"></Member>
+    <Member Name="Member04" DataType="SINT" Dimension="0" Radix="ASCII" ExternalAccess="Read/Write"></Member>
     <Member Name="Member05" DataType="REAL" Dimension="0" Radix="NullType" ExternalAccess="Read/Write"></Member>
   </Members>
 </DataType>

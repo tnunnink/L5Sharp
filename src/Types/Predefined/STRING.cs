@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using L5Sharp.Enums;
 
 namespace L5Sharp.Types.Predefined
@@ -8,7 +6,7 @@ namespace L5Sharp.Types.Predefined
     /// <summary>
     /// Represents a predefined String Logix data type.
     /// </summary>
-    public sealed class STRING : StringType, IEquatable<STRING>, IComparable<STRING>, IEnumerable<char>
+    public sealed class STRING : StringType, IEquatable<STRING>, IComparable<STRING>
     {
         //This is the built in length of string types in Logix
         private const int PredefinedLength = 82;
@@ -99,10 +97,5 @@ namespace L5Sharp.Types.Predefined
             if (ReferenceEquals(this, other)) return 0;
             return ReferenceEquals(other, null) ? 1 : string.Compare(_value, other._value, StringComparison.Ordinal);
         }
-
-        /// <inheritdoc />
-        public IEnumerator<char> GetEnumerator() => _value.GetEnumerator();
-
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 }

@@ -1,0 +1,8 @@
+﻿<Task Name="Test" Type="EVENT" Rate="100" Priority="10" Watchdog="5000" DisableUpdateOutputs="True" InhibitTask="False">
+  <Description><![CDATA[This is a test periodic task]]></Description>
+  <ScheduledPrograms>
+    <ScheduledProgram Name="Test_Program_01" />
+    <ScheduledProgram Name="Test_Program_02" />
+    <ScheduledProgram Name="Test_Program_03" />
+  </ScheduledPrograms>
+</Task>

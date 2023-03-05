@@ -14,7 +14,7 @@ namespace L5Sharp
         /// Gets the single <see cref="Components.Controller"/> component in the L5X if onw exists.
         /// </summary>
         /// <returns>A <see cref="Components.Controller"/> object if found; otherwise, null.</returns>
-        Controller? Controller();
+        Controller? Controller { get; }
 
         /// <summary>
         /// Returns a component collection for querying and manipulating <see cref="DataType"/> components

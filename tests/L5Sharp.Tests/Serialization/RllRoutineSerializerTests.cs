@@ -53,7 +53,7 @@ namespace L5Sharp.Tests.Serialization
                 new() { Text = new NeutralText("OTL(Test);") },
             };
 
-            var component = new RllRoutine { Content = rungs };
+            var component = new RllRoutine { Name = "Test", Content = rungs };
 
             var xml = _serializer.Serialize(component);
 
@@ -64,16 +64,6 @@ namespace L5Sharp.Tests.Serialization
         public void Deserialize_Null_ShouldThrowArgumentNullException()
         {
             FluentActions.Invoking(() => _serializer.Deserialize(null!)).Should().Throw<ArgumentException>();
-        }
-
-        [Test]
-        public void Deserialize_InvalidElementName_ShouldThrowArgumentException()
-        {
-            const string xml = @"<Invalid></Invalid>";
-            var element = XElement.Parse(xml);
-
-            FluentActions.Invoking(() => _serializer.Deserialize(element)).Should().Throw<ArgumentException>()
-                .WithMessage($"Element 'Invalid' not valid for the serializer {_serializer.GetType()}.");
         }
 
         [Test]

@@ -23,7 +23,7 @@ namespace L5Sharp.Serialization
             element.AddValue(obj, r => r.Number);
             element.AddValue(obj, r => r.Type);
             element.AddText(obj, r => r.Comment);
-            element.AddText(obj, r => r.Text);
+            element.AddText(obj.Text.ToString(), L5XName.Text);
             
             return element;
         }

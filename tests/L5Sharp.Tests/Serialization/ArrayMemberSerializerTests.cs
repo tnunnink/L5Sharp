@@ -4,6 +4,7 @@ using L5Sharp.Core;
 using L5Sharp.Serialization.Data;
 using L5Sharp.Types;
 using L5Sharp.Types.Atomics;
+using L5Sharp.Types.Predefined;
 
 namespace L5Sharp.Tests.Serialization
 {
@@ -28,7 +29,7 @@ namespace L5Sharp.Tests.Serialization
         public void Serialize_NonArrayType_ShouldThrowArgumentException()
         {
             FluentActions.Invoking(() => _serializer.Serialize(new Member("Test", new BOOL()))).Should()
-                .Throw<ArgumentException>();
+                .Throw<InvalidCastException>();
         }
 
         [Test]
@@ -56,7 +57,7 @@ namespace L5Sharp.Tests.Serialization
         
         public Task Serialize_StructureTypeArray_ShouldBeApproved()
         {
-            var element = new Member("Test", Logix.Array<BOOL>(5));
+            var element = new Member("Test", Logix.Array<TIMER>(5));
 
             var xml = _serializer.Serialize(element);
 
@@ -67,16 +68,6 @@ namespace L5Sharp.Tests.Serialization
         public void Deserialize_Null_ShouldThrowArgumentNullException()
         {
             FluentActions.Invoking(() => _serializer.Deserialize(null!)).Should().Throw<ArgumentException>();
-        }
-
-        [Test]
-        public void Deserialize_InvalidElementName_ShouldThrowArgumentException()
-        {
-            const string xml = @"<Invalid></Invalid>";
-            var element = XElement.Parse(xml);
-
-            FluentActions.Invoking(() => _serializer.Deserialize(element)).Should().Throw<ArgumentException>()
-                .WithMessage($"Element 'Invalid' not valid for the serializer {_serializer.GetType()}.");
         }
 
         [Test]

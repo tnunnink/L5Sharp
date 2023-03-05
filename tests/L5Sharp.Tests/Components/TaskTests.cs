@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using L5Sharp.Core;
 using L5Sharp.Enums;
+using L5Sharp.Extensions;
 using Task = L5Sharp.Components.Task;
 
 namespace L5Sharp.Tests.Components
@@ -67,13 +68,16 @@ namespace L5Sharp.Tests.Components
         [Test]
         public void Clone_WhenCalled_ShouldBeAllNewReferences()
         {
-            var task = Logix.Task("Name");
+            var task = Logix.Task("Test");
 
             var clone = task.Clone();
-            
+
+            clone.Should().NotBeSameAs(task);
+            clone.Name.Should().Be(task.Name);
+
             clone.Name = "NewName";
             clone.Name.Should().NotBeSameAs(task.Name);
-            task.Name.Should().Be("Name");
+            task.Name.Should().Be("Test");
             
             clone.Type = TaskType.Event;
             task.Type.Should().Be(TaskType.Periodic);

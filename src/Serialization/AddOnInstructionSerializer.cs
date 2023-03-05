@@ -77,7 +77,7 @@ namespace L5Sharp.Serialization
                 Description = element.LogixDescription(),
                 Revision = element.TryGetValue<Revision>(L5XName.Revision) ?? new Revision(),
                 RevisionExtension = element.TryGetValue<string>(L5XName.RevisionExtension) ?? string.Empty,
-                RevisionNote = element.TryGetValue<string>(L5XName.RevisionNote) ?? string.Empty,
+                RevisionNote = element.Element(L5XName.RevisionNote)?.Value ?? string.Empty,
                 Vendor = element.TryGetValue<string>(L5XName.Vendor) ?? string.Empty,
                 ExecutePreScan = element.TryGetValue<bool>(L5XName.ExecutePrescan),
                 ExecutePostScan = element.TryGetValue<bool>(L5XName.ExecutePostscan),
@@ -87,7 +87,7 @@ namespace L5Sharp.Serialization
                 EditedDate = element.TryGetValue<DateTime>(L5XName.EditedDate),
                 EditedBy = element.TryGetValue<string>(L5XName.EditedBy) ?? string.Empty,
                 SoftwareRevision = Revision.Parse(element.Attribute(L5XName.SoftwareRevision)?.Value.Trim('v')!),
-                AdditionalHelpText = element.TryGetValue<string>(L5XName.AdditionalHelpText) ?? string.Empty,
+                AdditionalHelpText = element.Element(L5XName.AdditionalHelpText)?.Value ?? string.Empty,
                 IsEncrypted = element.TryGetValue<bool>(L5XName.IsEncrypted),
                 Parameters = element.Descendants(L5XName.Parameter).Select(e => _parameterSerializer.Deserialize(e))
                     .ToList(),

@@ -1,1 +1,1 @@
-﻿
+﻿<Parameter Name="Test" TagType="Base" DataType="BOOL" Usage="Input" Required="False" Visible="False" ExternalAccess="Read/Write" />

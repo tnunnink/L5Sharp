@@ -51,7 +51,10 @@ namespace L5Sharp.Types.Atomics
             _value = converted switch
             {
                 BOOL b => b,
-                SINT s => s != 0,
+                SINT v => v != 0,
+                INT v => v != 0,
+                DINT v => v != 0,
+                LINT v => v != 0,
                 _ => _value
             };
         }
@@ -78,6 +81,20 @@ namespace L5Sharp.Types.Atomics
         /// <param name="atomic">The value to convert.</param>
         /// <returns>A <see cref="bool"/> type value.</returns>
         public static implicit operator bool(BOOL atomic) => atomic._value;
+        
+        /// <summary>
+        /// Implicitly converts the provided <see cref="bool"/> to a <see cref="BOOL"/> value.
+        /// </summary>
+        /// <param name="value">The value to convert.</param>
+        /// <returns>A <see cref="BOOL"/> value.</returns>
+        public static implicit operator BOOL(int value) => new(value);
+
+        /// <summary>
+        /// Implicitly converts the provided <see cref="BOOL"/> to a <see cref="bool"/> value.
+        /// </summary>
+        /// <param name="atomic">The value to convert.</param>
+        /// <returns>A <see cref="bool"/> type value.</returns>
+        public static implicit operator int(BOOL atomic) => atomic._value ? 1 : 0;
         
         /// <summary>
         /// Implicitly converts a <see cref="string"/> to a <see cref="BOOL"/> value.

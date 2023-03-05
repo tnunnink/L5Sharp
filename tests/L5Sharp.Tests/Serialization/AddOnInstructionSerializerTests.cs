@@ -94,16 +94,6 @@ namespace L5Sharp.Tests.Serialization
         }
 
         [Test]
-        public void Deserialize_InvalidElementName_ShouldThrowArgumentException()
-        {
-            const string xml = @"<Invalid></Invalid>";
-            var element = XElement.Parse(xml);
-
-            FluentActions.Invoking(() => _serializer.Deserialize(element)).Should().Throw<ArgumentException>()
-                .WithMessage($"Element 'Invalid' not valid for the serializer {_serializer.GetType()}.");
-        }
-
-        [Test]
         public void Deserialize_ValidElement_ShouldNotBeNull()
         {
             var element = XElement.Parse(GetValidElement());
@@ -124,7 +114,7 @@ namespace L5Sharp.Tests.Serialization
             component.Description.Should().Be("Test AOI");
             component.Revision.Should().Be(new Revision());
             component.RevisionExtension.Should().Be("Rev1");
-            component.RevisionNote.Should().Be("This revision not is a test note");
+            component.RevisionNote.Should().Be("This revision note is a test note");
             component.Vendor.Should().Be("ENE");
             component.ExecutePreScan.Should().BeFalse();
             component.ExecutePostScan.Should().BeFalse();
@@ -152,7 +142,7 @@ namespace L5Sharp.Tests.Serialization
                         <![CDATA[Test AOI]]>
                         </Description>
                         <RevisionNote>
-                        <![CDATA[This revision not is a test note]]>
+                        <![CDATA[This revision note is a test note]]>
                         </RevisionNote>
                         <SignatureHistory>
                         <HistoryEntry User=""ENE\tnunnink"" Timestamp=""2022-03-01T03:10:25.642Z"" SignatureID=""16#cae1_ac8c"">

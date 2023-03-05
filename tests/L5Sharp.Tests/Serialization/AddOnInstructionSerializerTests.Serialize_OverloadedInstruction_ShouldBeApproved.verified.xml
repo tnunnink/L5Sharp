@@ -1,6 +1,55 @@
-﻿<AddOnInstructionDefinition Name="Test" Revision="1.1" ExecutePreScan="True" ExecutePostScan="True" ExecuteEnableInFalse="True" CreatedDate="1/1/2022 12:00:00 PM" CreatedBy="CreatedBy" EditedDate="1/1/2022 12:00:00 PM" EditedBy="EditedBy" SoftwareRevision="2.1" IsEncrypted="True">
+﻿<AddOnInstructionDefinition Name="Test" Revision="1.1" ExecutePreScan="True" ExecutePostScan="True" ExecuteEnableInFalse="True" CreatedDate="2022-01-01T12:00:00.000Z" CreatedBy="CreatedBy" EditedDate="2022-01-01T12:00:00.000Z" EditedBy="EditedBy" SoftwareRevision="2.1" IsEncrypted="True">
   <RevisionExtension>Rev1</RevisionExtension>
   <RevisionNote>This is the revision note</RevisionNote>
   <Vendor>ME</Vendor>
   <AdditionalHelpText>this is additional help text</AdditionalHelpText>
+  <Parameters>
+    <Parameter Name="TestParameter1" TagType="Base" DataType="BOOL" Usage="Input" Required="False" Visible="False" ExternalAccess="Read/Write"></Parameter>
+    <Parameter Name="TestParameter2" TagType="Base" DataType="REAL" Usage="Input" Required="False" Visible="False" ExternalAccess="Read/Write"></Parameter>
+    <Parameter Name="TestParameter3" TagType="Base" DataType="TIMER" Usage="Input" Required="False" Visible="False" ExternalAccess="Read/Write"></Parameter>
+  </Parameters>
+  <LocalTags>
+    <LocalTag Name="TestTag1" DataType="ALARM" ExternalAccess="Read/Write">
+      <Data Format="Decorated">
+        <Structure DataType="ALARM">
+          <DataValueMember Name="EnableIn" DataType="BOOL" Value="0"></DataValueMember>
+          <DataValueMember Name="In" DataType="REAL" Radix="Float" Value="0.0"></DataValueMember>
+          <DataValueMember Name="HHLimit" DataType="REAL" Radix="Float" Value="0.0"></DataValueMember>
+          <DataValueMember Name="HLimit" DataType="REAL" Radix="Float" Value="0.0"></DataValueMember>
+          <DataValueMember Name="LLimit" DataType="REAL" Radix="Float" Value="0.0"></DataValueMember>
+          <DataValueMember Name="LLLimit" DataType="REAL" Radix="Float" Value="0.0"></DataValueMember>
+          <DataValueMember Name="Deadband" DataType="REAL" Radix="Float" Value="0.0"></DataValueMember>
+          <DataValueMember Name="ROCPosLimit" DataType="REAL" Radix="Float" Value="0.0"></DataValueMember>
+          <DataValueMember Name="ROCNegLimit" DataType="REAL" Radix="Float" Value="0.0"></DataValueMember>
+          <DataValueMember Name="ROCPeriod" DataType="REAL" Radix="Float" Value="0.0"></DataValueMember>
+          <DataValueMember Name="EnableOut" DataType="BOOL" Value="0"></DataValueMember>
+          <DataValueMember Name="HHAlarm" DataType="BOOL" Value="0"></DataValueMember>
+          <DataValueMember Name="HAlarm" DataType="BOOL" Value="0"></DataValueMember>
+          <DataValueMember Name="LAlarm" DataType="BOOL" Value="0"></DataValueMember>
+          <DataValueMember Name="LLAlarm" DataType="BOOL" Value="0"></DataValueMember>
+          <DataValueMember Name="ROCPosAlarm" DataType="BOOL" Value="0"></DataValueMember>
+          <DataValueMember Name="ROCNegAlarm" DataType="BOOL" Value="0"></DataValueMember>
+          <DataValueMember Name="ROC" DataType="REAL" Radix="Float" Value="0.0"></DataValueMember>
+          <DataValueMember Name="Status" DataType="DINT" Radix="Decimal" Value="0"></DataValueMember>
+          <DataValueMember Name="InstructFault" DataType="BOOL" Value="0"></DataValueMember>
+          <DataValueMember Name="DeadbandInv" DataType="BOOL" Value="0"></DataValueMember>
+          <DataValueMember Name="ROCPosLimitInv" DataType="BOOL" Value="0"></DataValueMember>
+          <DataValueMember Name="ROCNegLimitInv" DataType="BOOL" Value="0"></DataValueMember>
+          <DataValueMember Name="ROCPeriodInv" DataType="BOOL" Value="0"></DataValueMember>
+        </Structure>
+      </Data>
+    </LocalTag>
+    <LocalTag Name="TestTag2" DataType="DINT" Radix="Decimal" ExternalAccess="Read/Write">
+      <Data Format="Decorated">
+        <DataValue DataType="DINT" Radix="Decimal" Value="0"></DataValue>
+      </Data>
+    </LocalTag>
+    <LocalTag Name="TestTag3" DataType="STRING" ExternalAccess="Read/Write">
+      <Data Format="String" Length="0"></Data>
+    </LocalTag>
+  </LocalTags>
+  <Routines>
+    <Routine Name="Main" Type="Typeless"></Routine>
+    <Routine Name="Test" Type="Typeless"></Routine>
+  </Routines>
 </AddOnInstructionDefinition>

@@ -1,1 +1,22 @@
-﻿
+﻿<StructureMember Name="Test" DataType="Test">
+  <StructureMember Name="StringMember" DataType="STRING">
+    <DataValueMember Name="LEN" DataType="DINT" Radix="Decimal" Value="0" />
+    <DataValueMember Name="DATA" DataType="STRING" Radix="ASCII"><![CDATA[]]></DataValueMember>
+  </StructureMember>
+  <StructureMember Name="TimerMember" DataType="TIMER">
+    <DataValueMember Name="PRE" DataType="DINT" Radix="Decimal" Value="0" />
+    <DataValueMember Name="ACC" DataType="DINT" Radix="Decimal" Value="0" />
+    <DataValueMember Name="EN" DataType="BOOL" Value="0" />
+    <DataValueMember Name="TT" DataType="BOOL" Value="0" />
+    <DataValueMember Name="DN" DataType="BOOL" Value="0" />
+  </StructureMember>
+  <StructureMember Name="CounterMember" DataType="COUNTER">
+    <DataValueMember Name="PRE" DataType="DINT" Radix="Decimal" Value="0" />
+    <DataValueMember Name="ACC" DataType="DINT" Radix="Decimal" Value="0" />
+    <DataValueMember Name="CU" DataType="BOOL" Value="0" />
+    <DataValueMember Name="CD" DataType="BOOL" Value="0" />
+    <DataValueMember Name="DN" DataType="BOOL" Value="0" />
+    <DataValueMember Name="OV" DataType="BOOL" Value="0" />
+    <DataValueMember Name="UN" DataType="BOOL" Value="0" />
+  </StructureMember>
+</StructureMember>

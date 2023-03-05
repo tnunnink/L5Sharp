@@ -13,7 +13,7 @@ namespace L5Sharp.Components
     /// `Logix 5000 Controllers Import/Export`</a> for more information.
     /// </footer>
     [LogixSerializer(typeof(ProgramSerializer))]
-    public class Program : ILogixComponent, ICloneable<Program>
+    public class Program : ILogixComponent
     {
         /// <inheritdoc />
         public string Name { get; set; } = string.Empty;
@@ -57,21 +57,5 @@ namespace L5Sharp.Components
         /// </summary>
         /// <value>A <see cref="bool"/>; <c>true</c> if the program is a folder; otherwise, <c>false</c>.</value>
         public bool UseAsFolder { get; set; }
-
-        /// <inheritdoc />
-        public Program Clone()
-        {
-            return new Program
-            {
-                Name = Name,
-                Description = Description,
-                Type = Type,
-                TestEdits = TestEdits,
-                Disabled = Disabled,
-                MainRoutineName = MainRoutineName,
-                FaultRoutineName = FaultRoutineName,
-                UseAsFolder = UseAsFolder
-            };
-        }
     }
 }

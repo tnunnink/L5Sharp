@@ -42,7 +42,7 @@ namespace L5Sharp.Serialization
                 comments.Add(obj.Comments.Select(c =>
                 {
                     var comment = new XElement(L5XName.Comment);
-                    comment.AddValue(c.Key.Operand, L5XName.Operand);
+                    comment.AddValue(c.Key, L5XName.Operand);
                     comment.Add(new XCData(c.Value));
                     return comment;
                 }));
@@ -53,10 +53,10 @@ namespace L5Sharp.Serialization
             if (obj.Units.Any())
             {
                 var units = new XElement(L5XName.EngineeringUnits);
-                units.Add(obj.Comments.Select(u =>
+                units.Add(obj.Units.Select(u =>
                 {
                     var unit = new XElement(L5XName.EngineeringUnit);
-                    unit.AddValue(u.Key.Operand, L5XName.Operand);
+                    unit.AddValue(u.Key, L5XName.Operand);
                     unit.Add(new XCData(u.Value));
                     return unit;
                 }));
@@ -91,11 +91,11 @@ namespace L5Sharp.Serialization
                 Constant = element.TryGetValue<bool?>(L5XName.Constant) ?? false,
                 Comments = element.Descendants(L5XName.Comment)
                     .ToDictionary(
-                        k => TagName.Combine(element.LogixName(), k.GetValue<string>(L5XName.Operand)),
+                        k => k.GetValue<string>(L5XName.Operand),
                         e => e.Value),
                 Units = element.Descendants(L5XName.EngineeringUnit)
                     .ToDictionary(
-                        k => TagName.Combine(element.LogixName(), k.GetValue<string>(L5XName.Operand)),
+                        k => k.GetValue<string>(L5XName.Operand),
                         e => e.Value)
             };
         }

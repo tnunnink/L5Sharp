@@ -274,7 +274,7 @@ namespace L5Sharp.Tests.Types.Converters
 
             var result = (BOOL)converter.ConvertFrom(value);
 
-            result.Should().Be(result);
+            result.Should().Be(true);
         }
 
         [Test]

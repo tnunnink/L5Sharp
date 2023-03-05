@@ -42,6 +42,27 @@
       <None Update="Serialization\TagSerializerTests.Serialize_SimpleIntArray_ShouldBeApproved.verified.txt">
         <DependentUpon>TagSerializerTests.cs</DependentUpon>
       </None>
+      <None Update="Serialization\RungSerializerTests.Serialize_Bool_ShouldBeApproved.verified.txt">
+        <DependentUpon>RungSerializerTests.cs</DependentUpon>
+      </None>
+      <None Update="Serialization\RllRoutineSerializerTests.Serialize_ValidType_ShouldBeApproved.verified.txt">
+        <DependentUpon>RllRoutineSerializerTests.cs</DependentUpon>
+      </None>
+      <None Update="Serialization\DecoratedDataSerializerTests.Serialize_RealArray_ShouldBeApproved.verified.txt">
+        <DependentUpon>DecoratedDataSerializerTests.cs</DependentUpon>
+      </None>
+      <None Update="Serialization\ArraySerializerTests.Serialize_ValueTypeArray_ShouldBeApproved.verified.txt">
+        <DependentUpon>ArraySerializerTests.cs</DependentUpon>
+      </None>
+      <None Update="Serialization\ArrayMemberSerializerTests.Serialize_StructureTypeArray_ShouldBeApproved.verified.txt">
+        <DependentUpon>ArrayMemberSerializerTests.cs</DependentUpon>
+      </None>
+      <None Update="Serialization\TaskSerializerTests.Serialize_PeriodicTask_ShouldBeApproved.verified.txt">
+        <DependentUpon>TaskSerializerTests.cs</DependentUpon>
+      </None>
+      <None Update="Serialization\StructureMemberSerializerTests.SerializeArrayMembers_ShouldBeApproved.verified.txt">
+        <DependentUpon>StructureMemberSerializerTests.cs</DependentUpon>
+      </None>
     </ItemGroup>
 
     <ItemGroup>

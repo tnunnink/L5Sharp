@@ -1,0 +1,16 @@
+﻿<Routine Name="Test" Type="Rll">
+  <RLLContent>
+    <Rung Number="0" Type="Normal">
+      <Text><![CDATA[XIC(Test);]]></Text>
+    </Rung>
+    <Rung Number="0" Type="Normal">
+      <Text><![CDATA[TON(TestTimer,0,0);]]></Text>
+    </Rung>
+    <Rung Number="0" Type="Normal">
+      <Text><![CDATA[OTU(Test);]]></Text>
+    </Rung>
+    <Rung Number="0" Type="Normal">
+      <Text><![CDATA[OTL(Test);]]></Text>
+    </Rung>
+  </RLLContent>
+</Routine>

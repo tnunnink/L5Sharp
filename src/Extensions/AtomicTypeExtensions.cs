@@ -48,7 +48,7 @@ namespace L5Sharp.Extensions
         {
             return atomicType switch
             {
-                BOOL value => BitConverter.GetBytes(value),
+                BOOL value => BitConverter.GetBytes((bool)value),
                 SINT value => new[] { byte.Parse(((sbyte)value).ToString("X2"), NumberStyles.HexNumber) },
                 USINT value => new[] { (byte)value },
                 INT value => BitConverter.GetBytes(value),

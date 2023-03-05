@@ -117,7 +117,7 @@ namespace L5Sharp.Tests.Serialization
             component.Name.Should().Be("DINT");
             component.Class.Should().Be(DataTypeClass.Atomic);
             component.Family.Should().Be(DataTypeFamily.None);
-            component.As<AtomicType>().Should().Be(0);
+            component.As<DINT>().Should().Be(0);
         }
 
         [Test]

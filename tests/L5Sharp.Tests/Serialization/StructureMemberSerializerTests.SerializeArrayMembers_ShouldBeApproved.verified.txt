@@ -1,0 +1,75 @@
+﻿<StructureMember Name="Test" DataType="Test">
+  <ArrayMember Name="SimpleMember" DataType="DINT" Dimensions="10" Radix="Decimal">
+    <Element Index="[0]" Value="0" />
+    <Element Index="[1]" Value="0" />
+    <Element Index="[2]" Value="0" />
+    <Element Index="[3]" Value="0" />
+    <Element Index="[4]" Value="0" />
+    <Element Index="[5]" Value="0" />
+    <Element Index="[6]" Value="0" />
+    <Element Index="[7]" Value="0" />
+    <Element Index="[8]" Value="0" />
+    <Element Index="[9]" Value="0" />
+  </ArrayMember>
+  <ArrayMember Name="ComplexMember" DataType="TIMER" Dimensions="5">
+    <Element Index="[0]">
+      <Structure DataType="TIMER">
+        <DataValueMember Name="PRE" DataType="DINT" Radix="Decimal" Value="0" />
+        <DataValueMember Name="ACC" DataType="DINT" Radix="Decimal" Value="0" />
+        <DataValueMember Name="EN" DataType="BOOL" Value="0" />
+        <DataValueMember Name="TT" DataType="BOOL" Value="0" />
+        <DataValueMember Name="DN" DataType="BOOL" Value="0" />
+      </Structure>
+    </Element>
+    <Element Index="[1]">
+      <Structure DataType="TIMER">
+        <DataValueMember Name="PRE" DataType="DINT" Radix="Decimal" Value="0" />
+        <DataValueMember Name="ACC" DataType="DINT" Radix="Decimal" Value="0" />
+        <DataValueMember Name="EN" DataType="BOOL" Value="0" />
+        <DataValueMember Name="TT" DataType="BOOL" Value="0" />
+        <DataValueMember Name="DN" DataType="BOOL" Value="0" />
+      </Structure>
+    </Element>
+    <Element Index="[2]">
+      <Structure DataType="TIMER">
+        <DataValueMember Name="PRE" DataType="DINT" Radix="Decimal" Value="0" />
+        <DataValueMember Name="ACC" DataType="DINT" Radix="Decimal" Value="0" />
+        <DataValueMember Name="EN" DataType="BOOL" Value="0" />
+        <DataValueMember Name="TT" DataType="BOOL" Value="0" />
+        <DataValueMember Name="DN" DataType="BOOL" Value="0" />
+      </Structure>
+    </Element>
+    <Element Index="[3]">
+      <Structure DataType="TIMER">
+        <DataValueMember Name="PRE" DataType="DINT" Radix="Decimal" Value="0" />
+        <DataValueMember Name="ACC" DataType="DINT" Radix="Decimal" Value="0" />
+        <DataValueMember Name="EN" DataType="BOOL" Value="0" />
+        <DataValueMember Name="TT" DataType="BOOL" Value="0" />
+        <DataValueMember Name="DN" DataType="BOOL" Value="0" />
+      </Structure>
+    </Element>
+    <Element Index="[4]">
+      <Structure DataType="TIMER">
+        <DataValueMember Name="PRE" DataType="DINT" Radix="Decimal" Value="0" />
+        <DataValueMember Name="ACC" DataType="DINT" Radix="Decimal" Value="0" />
+        <DataValueMember Name="EN" DataType="BOOL" Value="0" />
+        <DataValueMember Name="TT" DataType="BOOL" Value="0" />
+        <DataValueMember Name="DN" DataType="BOOL" Value="0" />
+      </Structure>
+    </Element>
+  </ArrayMember>
+  <ArrayMember Name="ComplexMember" DataType="STRING" Dimensions="2">
+    <Element Index="[0]">
+      <Structure DataType="STRING">
+        <DataValueMember Name="LEN" DataType="DINT" Radix="Decimal" Value="0" />
+        <DataValueMember Name="DATA" DataType="STRING" Radix="ASCII"><![CDATA[]]></DataValueMember>
+      </Structure>
+    </Element>
+    <Element Index="[1]">
+      <Structure DataType="STRING">
+        <DataValueMember Name="LEN" DataType="DINT" Radix="Decimal" Value="0" />
+        <DataValueMember Name="DATA" DataType="STRING" Radix="ASCII"><![CDATA[]]></DataValueMember>
+      </Structure>
+    </Element>
+  </ArrayMember>
+</StructureMember>

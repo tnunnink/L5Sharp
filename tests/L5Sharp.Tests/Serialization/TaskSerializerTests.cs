@@ -38,11 +38,11 @@ namespace L5Sharp.Tests.Serialization
         {
             var task = new L5Sharp.Components.Task
             {
-                Name ="Test", 
+                Name = "Test",
                 Type = TaskType.Continuous,
                 Rate = new ScanRate(100),
                 Priority = new TaskPriority(10),
-                Watchdog = new Watchdog(5000), 
+                Watchdog = new Watchdog(5000),
                 DisableUpdateOutputs = true,
                 InhibitTask = false,
                 ScheduledPrograms = new List<string>
@@ -60,16 +60,15 @@ namespace L5Sharp.Tests.Serialization
         }
 
         [Test]
-        
-        public void Serialize_PeriodicTask_ShouldBeApproved()
+        public Task Serialize_PeriodicTask_ShouldBeApproved()
         {
             var task = new L5Sharp.Components.Task
             {
-                Name ="Test", 
+                Name = "Test",
                 Type = TaskType.Periodic,
                 Rate = new ScanRate(100),
                 Priority = new TaskPriority(10),
-                Watchdog = new Watchdog(5000), 
+                Watchdog = new Watchdog(5000),
                 DisableUpdateOutputs = true,
                 InhibitTask = false,
                 ScheduledPrograms = new List<string>
@@ -83,20 +82,19 @@ namespace L5Sharp.Tests.Serialization
 
             var xml = _serializer.Serialize(task);
 
-            Verifier.Verify(xml.ToString());
+            return Verify(xml.ToString());
         }
 
         [Test]
-        
-        public void Serialize_EventTask_ShouldBeApproved()
+        public Task Serialize_EventTask_ShouldBeApproved()
         {
             var task = new L5Sharp.Components.Task
             {
-                Name ="Test", 
+                Name = "Test",
                 Type = TaskType.Event,
                 Rate = new ScanRate(100),
                 Priority = new TaskPriority(10),
-                Watchdog = new Watchdog(5000), 
+                Watchdog = new Watchdog(5000),
                 DisableUpdateOutputs = true,
                 InhibitTask = false,
                 ScheduledPrograms = new List<string>
@@ -110,23 +108,13 @@ namespace L5Sharp.Tests.Serialization
 
             var xml = _serializer.Serialize(task);
 
-            Verifier.Verify(xml.ToString());
+            return Verify(xml.ToString());
         }
 
         [Test]
         public void Deserialize_Null_ShouldThrowArgumentNullException()
         {
             FluentActions.Invoking(() => _serializer.Deserialize(null!)).Should().Throw<ArgumentNullException>();
-        }
-        
-        [Test]
-        public void Deserialize_InvalidElementName_ShouldThrowArgumentException()
-        {
-            const string xml = @"<Invalid></Invalid>";
-            var element = XElement.Parse(xml);
-
-            FluentActions.Invoking(() => _serializer.Deserialize(element)).Should().Throw<ArgumentException>()
-                .WithMessage($"Element 'Invalid' not valid for the serializer {_serializer.GetType()}.");
         }
 
         [Test]

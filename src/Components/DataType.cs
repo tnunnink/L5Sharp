@@ -14,7 +14,7 @@ namespace L5Sharp.Components
     /// `Logix 5000 Controllers Import/Export`</a> for more information.
     /// </footer>
     [LogixSerializer(typeof(DataTypeSerializer))]
-    public class DataType : ILogixComponent, ICloneable<DataType>
+    public class DataType : ILogixComponent
     {
         /// <inheritdoc />
         public string Name { get; set; } = string.Empty;
@@ -44,26 +44,5 @@ namespace L5Sharp.Components
         /// <see cref="DataType"/> component.
         /// </summary>
         public List<DataTypeMember> Members { get; set; } = new();
-
-        /// <inheritdoc />
-        public DataType Clone()
-        {
-            return new DataType
-            {
-                Name = string.Copy(Name),
-                Description = string.Copy(Description),
-                Family = Family,
-                Class = Class,
-                Members = new List<DataTypeMember>(Members.Select(m => new DataTypeMember
-                {
-                    Name = string.Copy(m.Name),
-                    Description = string.Copy(m.Description),
-                    DataType = string.Copy(m.DataType),
-                    Dimension = m.Dimension.Copy(),
-                    Radix = m.Radix,
-                    ExternalAccess = m.ExternalAccess,
-                }))
-            };
-        }
     }
 }

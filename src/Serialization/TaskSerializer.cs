@@ -47,6 +47,7 @@ namespace L5Sharp.Serialization
             return new Task
             {
                 Name = element.LogixName(),
+                Description = element.LogixDescription(),
                 Type = element.GetValue<TaskType>(L5XName.Type),
                 Rate = element.TryGetValue<ScanRate?>(L5XName.Rate) ?? new ScanRate(),
                 Priority = element.GetValue<TaskPriority>(L5XName.Priority),

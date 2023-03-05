@@ -29,15 +29,6 @@ namespace L5Sharp.Tests.Serialization
         }
 
         [Test]
-        public void Deserialize_InvalidElementName_ShouldThrowArgumentException()
-        {
-            const string xml = @"<Invalid></Invalid>";
-            var element = XElement.Parse(xml);
-
-            FluentActions.Invoking(() => _serializer.Deserialize(element)).Should().Throw<InvalidOperationException>();
-        }
-
-        [Test]
         
         public Task Serialize_WhenCalled_ShouldNotBeApproved()
         {

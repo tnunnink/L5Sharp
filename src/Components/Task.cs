@@ -13,7 +13,7 @@ namespace L5Sharp.Components
     /// `Logix 5000 Controllers Import/Export`</a> for more information.
     /// </footer>
     [LogixSerializer(typeof(TaskSerializer))]
-    public class Task : ILogixComponent, ICloneable<Task>
+    public class Task : ILogixComponent //, ICloneable<Task>
     {
         /// <inheritdoc />
         public string Name { get; set; } = string.Empty;
@@ -62,22 +62,5 @@ namespace L5Sharp.Components
         /// </summary>
         /// <value>A <see cref="List{T}"/> containing the string program names.</value>
         public List<string> ScheduledPrograms { get; set; } = new();
-
-        /// <inheritdoc />
-        public Task Clone()
-        {
-            return new Task
-            {
-                Name = Name,
-                Description = Description,
-                Type = Type,
-                Priority = Priority,
-                Rate = Rate,
-                Watchdog = Watchdog,
-                InhibitTask = InhibitTask,
-                DisableUpdateOutputs = DisableUpdateOutputs,
-                ScheduledPrograms = new List<string>(ScheduledPrograms)
-            };
-        }
     }
 }

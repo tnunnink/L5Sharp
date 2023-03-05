@@ -71,10 +71,13 @@ namespace L5Sharp
         public L5X L5X { get; }
 
         /// <inheritdoc />
-        public Controller? Controller()
+        public Controller? Controller
         {
-            var element = L5X.Element(L5XName.Controller);
-            return element is not null ? LogixSerializer.Deserialize<Controller>(element) : null;
+            get
+            {
+                var element = L5X.Element(L5XName.Controller);
+                return element is not null ? LogixSerializer.Deserialize<Controller>(element) : null;
+            }
         }
 
         /// <inheritdoc />

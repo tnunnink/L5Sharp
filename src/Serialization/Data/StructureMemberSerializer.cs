@@ -15,6 +15,8 @@ namespace L5Sharp.Serialization.Data
         /// <inheritdoc />
         public XElement Serialize(Member obj)
         {
+            Check.NotNull(obj);
+            
             var structureType = (StructureType)obj.DataType;
             
             var member = new XElement(L5XName.StructureMember);

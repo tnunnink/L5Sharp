@@ -32,7 +32,7 @@ namespace L5Sharp.Components
         public string DataType => Data.Name;
 
         /// <inheritdoc />
-        public Dimensions Dimensions => Data is ArrayType<ILogixType> array ? array.Dimensions : Dimensions.Empty;
+        public Dimensions Dimensions => Data is ILogixArray<ILogixType> array ? array.Dimensions : Dimensions.Empty;
 
         /// <inheritdoc />
         public Radix Radix => Data is AtomicType atomic ? atomic.Radix : Radix.Null;
