@@ -3,6 +3,7 @@ using System.Linq;
 using System.Net;
 using L5Sharp.Core;
 using L5Sharp.Enums;
+using L5Sharp.Rockwell;
 using L5Sharp.Serialization;
 
 namespace L5Sharp.Components

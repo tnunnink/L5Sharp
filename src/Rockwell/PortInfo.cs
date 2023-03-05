@@ -1,4 +1,4 @@
-﻿namespace L5Sharp.Core;
+﻿namespace L5Sharp.Rockwell;
 
 /// <summary>
 /// A entity class representing the data returned from a module catalog entry.

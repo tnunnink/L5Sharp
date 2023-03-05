@@ -107,7 +107,7 @@ namespace L5Sharp
         }
 
         /// <summary>
-        /// Creates a new <see cref="Core.Member"/> with the provided name and specified type parameter.
+        /// Creates a new <see cref="Member"/> with the provided name and specified type parameter.
         /// </summary>
         /// <param name="name">The name of the tag.</param>
         /// <typeparam name="TLogixType">The logix data type of the tag. Type must have parameterless constructor to create.</typeparam>

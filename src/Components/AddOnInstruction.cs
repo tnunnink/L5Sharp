@@ -112,7 +112,7 @@ namespace L5Sharp.Components
         public bool IsEncrypted { get; set; }
         
         /// <summary>
-        /// Gets the collection of <see cref="Core.Parameter"/> objects that define the AOI structure type.
+        /// Gets the collection of <see cref="Parameter"/> objects that define the AOI structure type.
         /// </summary>
         public List<Parameter> Parameters { get; set; } = new();
         

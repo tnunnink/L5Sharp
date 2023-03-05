@@ -26,6 +26,11 @@ namespace L5Sharp.Serialization
             element.AddValue(obj, p => p.FaultRoutineName);
             element.AddValue(obj, p => p.Disabled);
             element.AddValue(obj, p => p.UseAsFolder);
+            
+            //We add these just so the containers can be access when adding new programs.
+            //Logix also serializes empty elements like this.
+            element.Add(new XElement(L5XName.Tags));
+            element.Add(new XElement(L5XName.Routines));
 
             return element;
         }

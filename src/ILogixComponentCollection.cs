@@ -17,13 +17,14 @@ namespace L5Sharp
         /// <para>
         /// This method will validate the name and uniqueness of the component within the scope of the collection.
         /// This will prevent and invalid components from being added to the L5X which could cause import errors. Outside
-        /// of name validation, nothing else is checked. It is the user's responsibility to ensure valid component property
-        /// values which will yield valid L5X markup.
+        /// of name validation, nothing else is checked upon adding a component.
         /// </para>
         /// <para>
         /// Further, not all exported L5X files may contains proper "containing" elements. It is dependent on what component
         /// type was exported. Therefore, when adding a component, if the containing element does not exists, this method
-        /// will normalize the L5X structure by injecting the necessary containing elements into the content structure.
+        /// will "normalize" the L5X structure by injecting a controller element and child component container elements
+        /// into the current structure. It will also preserve any current content by moving it under the controller context
+        /// element as well.
         /// </para>
         /// </remarks>
         void Add(TComponent component);
@@ -71,7 +72,13 @@ namespace L5Sharp
         /// Replaces a component in the collection with the provided component.
         /// </summary>
         /// <param name="component"></param>
-        /// <returns></returns>
+        /// <returns><c>true</c> if the component was found and replaced; otherwise, <c>false</c>.</returns>
         bool Replace(TComponent component);
+
+        /// <summary>
+        /// Adds, or replaces if found, the the provided component in the collection.
+        /// </summary>
+        /// <param name="component">The component to add or replace.</param>
+        void Upsert(TComponent component);
     }
 }

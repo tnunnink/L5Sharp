@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using L5Sharp.Components;
+using L5Sharp.Core;
 using L5Sharp.Enums;
-using L5Sharp.Rockwell;
 
-namespace L5Sharp.Core
+namespace L5Sharp.Rockwell
 {
     /// <summary>
     /// A set of properties that defines a <see cref="Module"/> component.

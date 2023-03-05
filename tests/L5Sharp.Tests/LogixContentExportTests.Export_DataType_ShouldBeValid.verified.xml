@@ -1,0 +1,22 @@
+﻿<RSLogix5000Content SchemaRevision="1.0" TargetName="TestType" TargetType="DataType" ContainsContext="true" Owner="tnunnink">
+  <Controller Use="Context">
+    <DataTypes>
+      <DataType Name="TestType" Family="NoFamily" Class="User" Use="Target">
+        <Description>this is a test</Description>
+        <Members>
+          <Member Name="Timers" DataType="TIMER" Dimension="5" Radix="NullType" ExternalAccess="Read/Write"></Member>
+          <Member Name="Number" DataType="DINT" Dimension="0" Radix="Ascii" ExternalAccess="Read/Write"></Member>
+          <Member Name="Flag" DataType="BOOL" Dimension="0" Radix="NullType" ExternalAccess="Read Only"></Member>
+        </Members>
+      </DataType>
+    </DataTypes>
+    <Modules></Modules>
+    <AddOnInstructionDefinitions></AddOnInstructionDefinitions>
+    <Tags></Tags>
+    <Programs></Programs>
+    <Tasks></Tasks>
+    <ParameterConnections></ParameterConnections>
+    <Trends></Trends>
+    <QuickWatchLists></QuickWatchLists>
+  </Controller>
+</RSLogix5000Content>

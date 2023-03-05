@@ -1,0 +1,13 @@
+﻿<RSLogix5000Content SchemaRevision="1.0" TargetName="TestController" TargetType="Controller" ContainsContext="false" Owner="tnunnink">
+  <Controller Name="TestController" MajorRev="1" MinorRev="0" ProjectCreationDate="Mon Jan 1 00:00:00 0001" LastModifiedDate="Mon Jan 1 00:00:00 0001" Use="Target">
+    <DataTypes></DataTypes>
+    <Modules></Modules>
+    <AddOnInstructionDefinitions></AddOnInstructionDefinitions>
+    <Tags></Tags>
+    <Programs></Programs>
+    <Tasks></Tasks>
+    <ParameterConnections></ParameterConnections>
+    <Trends></Trends>
+    <QuickWatchLists></QuickWatchLists>
+  </Controller>
+</RSLogix5000Content>

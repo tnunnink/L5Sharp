@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Xml.Serialization;
-using L5Sharp.Components;
+using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Extensions;
 using L5Sharp.Types;
 
-namespace L5Sharp.Core
+namespace L5Sharp.Components
 {
     /// <summary>
     /// 

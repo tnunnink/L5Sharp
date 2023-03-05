@@ -87,6 +87,6 @@ namespace L5Sharp
         /// <returns>An <see cref="IEnumerable{T}"/> containing object of the specified type.</returns>
         /// <remarks>This allows the user to query essentially and data structure. All that is needed is a corresponding
         /// <see cref="ILogixSerializer{T}"/> so we know how to materialize the specified type.</remarks>
-        IEnumerable<TEntity> Query<TEntity>();
+        IEnumerable<TEntity> Query<TEntity>() where TEntity : class;
     }
 }

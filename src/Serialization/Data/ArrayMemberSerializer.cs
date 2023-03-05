@@ -63,7 +63,7 @@ namespace L5Sharp.Serialization.Data
             var elements = element.Elements().Select(e =>
             {
                 if (e.Attribute(L5XName.Value) is not null)
-                    return Atomic.Parse(dataType, e.GetValue<string>(L5XName.Value), radix);
+                    return Logix.Atomic(dataType, e.GetValue<string>(L5XName.Value), radix);
 
                 return e.Element(L5XName.Structure) is not null
                     ? TagDataSerializer.Structure.Deserialize(e.Element(L5XName.Structure)!)

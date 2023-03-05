@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<RSLogix5000Content SchemaRevision="1.0" SoftwareRevision="32.02" TargetName="Main" TargetType="Routine" TargetSubType="RLL" ContainsContext="true" Owner="tnunnink, EN Engineering" ExportDate="Sat Mar 04 21:39:16 2023" ExportOptions="References NoRawData L5KData DecoratedData Context Dependencies ForceProtectedEncoding AllProjDocTrans">
+<Controller Use="Context" Name="TestController">
+<DataTypes Use="Context">
+</DataTypes>
+<Programs Use="Context">
+<Program Use="Context" Name="NProgram">
+<Tags Use="Context">
+<Tag Name="LocalBool" TagType="Base" DataType="BOOL" Radix="Decimal" Constant="false" ExternalAccess="Read/Write">
+<Data Format="L5K">
+<![CDATA[0]]>
+</Data>
+<Data Format="Decorated">
+<DataValue DataType="BOOL" Radix="Decimal" Value="0"/>
+</Data>
+</Tag>
+<Tag Name="LocalDint" TagType="Base" DataType="DINT" Radix="Octal" Constant="false" ExternalAccess="Read/Write">
+<Data Format="L5K">
+<![CDATA[1234]]>
+</Data>
+<Data Format="Decorated">
+<DataValue DataType="DINT" Radix="Octal" Value="8#00_000_002_322"/>
+</Data>
+</Tag>
+</Tags>
+<Routines Use="Context">
+<Routine Use="Target" Name="Main" Type="RLL">
+<RLLContent>
+<Rung Number="0" Type="N">
+<Text>
+<![CDATA[XIC(LocalBool)MOV(1234,LocalDint);]]>
+</Text>
+</Rung>
+</RLLContent>
+</Routine>
+</Routines>
+</Program>
+</Programs>
+</Controller>
+</RSLogix5000Content>

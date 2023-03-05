@@ -1,11 +1,12 @@
 ﻿using FluentAssertions;
+using L5Sharp.Components;
 using L5Sharp.Core;
 using L5Sharp.Utilities;
 
 namespace L5Sharp.Tests;
 
 [TestFixture]
-public class LogixContentAgainstTemplateTests
+public class LogixContentTemplateTests
 {
     [Test]
     public void DataTypes_WhenCalled_ShouldNotBeEmpty()

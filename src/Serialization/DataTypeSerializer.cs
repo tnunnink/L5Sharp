@@ -39,7 +39,8 @@ namespace L5Sharp.Serialization
             Check.NotNull(element);
 
             var members = element.Descendants(L5XName.Member)
-                .Where(e => bool.Parse(e.Attribute(L5XName.Hidden)!.Value) == false)
+                .Where(e => e.Attribute(L5XName.Hidden) is null 
+                            || bool.Parse(e.Attribute(L5XName.Hidden)!.Value) == false)
                 .Select(m => _memberSerializer.Deserialize(m));
             
             return new DataType

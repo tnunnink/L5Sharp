@@ -1,7 +1,9 @@
 ﻿using System.Xml.Linq;
 using FluentAssertions;
+using L5Sharp.Components;
 using L5Sharp.Core;
 using L5Sharp.Serialization;
+using Task = System.Threading.Tasks.Task;
 
 namespace L5Sharp.Tests.Serialization
 {

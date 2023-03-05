@@ -1,9 +1,9 @@
-﻿using L5Sharp.Components;
+﻿using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Serialization;
 using L5Sharp.Types;
 
-namespace L5Sharp.Core
+namespace L5Sharp.Components
 {
     /// <summary>
     /// A component of the <see cref="AddOnInstruction"/> that makes up the structure of the instruction type.

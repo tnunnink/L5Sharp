@@ -1,7 +1,7 @@
-﻿using L5Sharp.Components;
+﻿using L5Sharp.Core;
 using L5Sharp.Serialization;
 
-namespace L5Sharp.Core
+namespace L5Sharp.Components
 {
     /// <summary>
     /// A component of a <see cref="Module"/> that represents the means for connecting devices on a network or in a chassis.

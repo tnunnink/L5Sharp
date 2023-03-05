@@ -44,7 +44,8 @@ namespace L5Sharp.Extensions
         {
             while (true)
             {
-                Check.NotNullOrEmpty(tagName);
+                if (string.IsNullOrEmpty(tagName))
+                    return null;
 
                 var memberName = tagName.First();
 

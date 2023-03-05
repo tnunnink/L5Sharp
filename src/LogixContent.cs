@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using L5Sharp.Components;
-using L5Sharp.Core;
 using L5Sharp.Extensions;
 using L5Sharp.Serialization;
 using L5Sharp.Utilities;
@@ -61,6 +60,14 @@ namespace L5Sharp
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="component"></param>
+        /// <returns></returns>
+        public static LogixContent Export<TComponent>(TComponent component) where TComponent : ILogixComponent =>
+            new(L5X.Create(component));
+
+        /// <summary>
+        /// The root L5X content containing all raw XML data loaded, parsed, or created under the current <see cref="LogixContent"/>
+        /// </summary>
         public L5X L5X { get; }
 
         /// <inheritdoc />
@@ -73,38 +80,36 @@ namespace L5Sharp
         /// <inheritdoc />
         public ILogixComponentCollection<DataType> DataTypes()
         {
-            var container = L5X.Descendants(L5XName.DataTypes).FirstOrDefault() ?? new XElement(L5XName.DataTypes);
-            return new ComponentCollection<DataType>(container, L5X);
+            var container = L5X.Descendants(L5XName.DataTypes).FirstOrDefault();
+            return new ComponentCollection<DataType>(L5X, container);
         }
 
         /// <inheritdoc />
         public ILogixComponentCollection<AddOnInstruction> Instructions()
         {
-            var container = L5X.Descendants(L5XName.AddOnInstructionDefinitions).FirstOrDefault() ??
-                            new XElement(L5XName.AddOnInstructionDefinitions);
-
-            return new ComponentCollection<AddOnInstruction>(container, L5X);
+            var container = L5X.Descendants(L5XName.AddOnInstructionDefinitions).FirstOrDefault();
+            return new ComponentCollection<AddOnInstruction>(L5X, container);
         }
 
         /// <inheritdoc />
         public ILogixComponentCollection<Module> Modules()
         {
-            var container = L5X.Descendants(L5XName.Modules).FirstOrDefault() ?? new XElement(L5XName.Modules);
-            return new ComponentCollection<Module>(container, L5X);
+            var container = L5X.Descendants(L5XName.Modules).FirstOrDefault();
+            return new ComponentCollection<Module>(L5X, container);
         }
 
         /// <inheritdoc />
         public ILogixComponentCollection<Program> Programs()
         {
-            var container = L5X.Descendants(L5XName.Programs).FirstOrDefault() ?? new XElement(L5XName.Programs);
-            return new ComponentCollection<Program>(container, L5X);
+            var container = L5X.Descendants(L5XName.Programs).FirstOrDefault();
+            return new ComponentCollection<Program>(L5X, container);
         }
 
         /// <inheritdoc />
         public ILogixComponentCollection<Tag> Tags()
         {
-            var container = L5X.Descendants(L5XName.Tags).FirstOrDefault() ?? new XElement(L5XName.Tags);
-            return new ComponentCollection<Tag>(container, L5X);
+            var container = L5X.Element(L5XName.Controller)?.Element(L5XName.Tags);
+            return new ComponentCollection<Tag>(L5X, container);
         }
 
         /// <inheritdoc />
@@ -114,10 +119,12 @@ namespace L5Sharp
 
             if (program is null)
                 throw new ArgumentException(
-                    $"No container with the scope name '{programName}' found in the current L5X");
+                    $"No container with the scope name '{programName}' found in the current L5X. " +
+                    $"Please add the program before attempting to access it's Tags.");
 
-            var container = program.Descendants(L5XName.Tags).FirstOrDefault() ?? new XElement(L5XName.Tags);
-            return new ComponentCollection<Tag>(container, L5X);
+            var container = program.Descendants(L5XName.Tags).FirstOrDefault();
+
+            return new ComponentCollection<Tag>(L5X, container);
         }
 
         /// <inheritdoc />
@@ -127,10 +134,12 @@ namespace L5Sharp
 
             if (program is null)
                 throw new ArgumentException(
-                    $"No container with the scope name '{programName}' found in the current L5X");
+                    $"No container with the scope name '{programName}' found in the current L5X. " +
+                    $"Please add the program before attempting to access it's Routines.");
 
-            var container = program.Descendants(L5XName.Routines).FirstOrDefault() ?? new XElement(L5XName.Routine);
-            return new ComponentCollection<Routine>(container, L5X);
+            var container = program.Descendants(L5XName.Routines).FirstOrDefault();
+
+            return new ComponentCollection<Routine>(L5X, container);
         }
 
         /// <inheritdoc />
@@ -140,22 +149,23 @@ namespace L5Sharp
 
             if (program is null)
                 throw new ArgumentException(
-                    $"No container with the scope name '{programName}' found in the current L5X");
+                    $"No container with the scope name '{programName}' found in the current L5X. " +
+                    $"Please add the program before attempting to access it's Routines.");
 
-            var container = program.Descendants(L5XName.Routines).FirstOrDefault() ?? new XElement(L5XName.Routine);
+            var container = program.Descendants(L5XName.Routines).FirstOrDefault();
 
-            return new ComponentCollection<TRoutine>(container, L5X);
+            return new ComponentCollection<TRoutine>(L5X, container);
         }
 
         /// <inheritdoc />
         public ILogixComponentCollection<Task> Tasks()
         {
-            var container = L5X.Descendants(L5XName.Tasks).FirstOrDefault() ?? new XElement(L5XName.Tasks);
-            return new ComponentCollection<Task>(container, L5X);
+            var container = L5X.Descendants(L5XName.Tasks).FirstOrDefault();
+            return new ComponentCollection<Task>(L5X, container);
         }
 
         /// <inheritdoc />
-        public IEnumerable<TEntity> Query<TEntity>()
+        public IEnumerable<TEntity> Query<TEntity>() where TEntity : class
         {
             var name = typeof(TEntity).GetLogixName();
             var serializer = LogixSerializer.GetSerializer<TEntity>();
@@ -166,7 +176,9 @@ namespace L5Sharp
         /// Serialize this <see cref="LogixContent"/> to a file, overwriting an existing file, if it exists.
         /// </summary>
         /// <param name="fileName">A string that contains the name of the file.</param>
-        public void Save(string fileName)
+        /// <param name="validate">Indicates whether the L5X structure will be validated against the Rockwell XSD prior to
+        /// saving the file. Default is false.</param>
+        public void Save(string fileName, bool validate = false)
         {
             var declaration = new XDeclaration("1.0", "UTF-8", "yes");
             var document = new XDocument(declaration);
@@ -176,24 +188,5 @@ namespace L5Sharp
 
         /// <inheritdoc />
         public override string ToString() => L5X.ToString();
-
-        private static XElement CreateContent<TComponent>(TComponent target) where TComponent : ILogixComponent
-        {
-            var content = new XElement(L5XName.RSLogix5000Content);
-
-            content.Add(new XAttribute(L5XName.SchemaRevision, new Revision().ToString()));
-            content.Add(new XAttribute(L5XName.TargetName, target.Name));
-            content.Add(new XAttribute(L5XName.TargetType, target.GetType()));
-            content.Add(new XAttribute(L5XName.ContainsContext, target.Name != L5XName.Controller));
-            content.Add(new XAttribute(L5XName.Owner, Environment.UserName));
-            //content.Add(new XAttribute(L5XName.ExportDate, DateTime.Now.ToString(DateFormat)));
-
-            //todo this would depend on the component. data type, instruction, module, program, etc...
-            var serializer = LogixSerializer.GetSerializer<TComponent>();
-            var component = serializer.Serialize(target);
-            content.Add(component);
-
-            return content;
-        }
     }
 }

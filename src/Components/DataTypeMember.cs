@@ -1,9 +1,10 @@
 ﻿using System.Xml.Serialization;
+using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Serialization;
 using L5Sharp.Utilities;
 
-namespace L5Sharp.Core
+namespace L5Sharp.Components
 {
     /// <summary>
     /// A component of the <see cref="DataType"/> that makes up the structure of the user defined type.

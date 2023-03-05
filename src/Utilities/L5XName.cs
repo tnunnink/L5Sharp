@@ -803,6 +803,11 @@ namespace L5Sharp.Utilities
         public const string Members = "Members";
         
         ///<summary>
+        /// Gets the <c>MessageParameter</c> L5X name value.
+        ///</summary>
+        public const string MessageParameter = "MessageParameter";
+        
+        ///<summary>
         /// Gets the <c>MessageParameters</c> L5X name value.
         ///</summary>
         public const string MessageParameters = "MessageParameters";
@@ -941,6 +946,16 @@ namespace L5Sharp.Utilities
         /// Gets the <c>Parameters</c> L5X name value.
         ///</summary>
         public const string Parameters = "Parameters";
+        
+        ///<summary>
+        /// Gets the <c>ParameterConnection</c> L5X name value.
+        ///</summary>
+        public const string ParameterConnection = "ParameterConnection";
+        
+        ///<summary>
+        /// Gets the <c>ParameterConnections</c> L5X name value.
+        ///</summary>
+        public const string ParameterConnections = "ParameterConnections";
         
         ///<summary>
         /// Gets the <c>ParentModPortId</c> L5X name value.
@@ -1411,12 +1426,17 @@ namespace L5Sharp.Utilities
         /// Gets the <c>TimeZone</c> L5X name value.
         ///</summary>
         public const string TimeZone = "TimeZone";
-        
+
+        ///<summary>
+        /// Gets the <c>Trend</c> L5X name value.
+        ///</summary>
+        public const string Trend = "Trend";
+
         ///<summary>
         /// Gets the <c>Trends</c> L5X name value.
         ///</summary>
         public const string Trends = "Trends";
-        
+
         ///<summary>
         /// Gets the <c>Type</c> L5X name value.
         ///</summary>
