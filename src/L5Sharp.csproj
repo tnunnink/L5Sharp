@@ -7,11 +7,11 @@
         <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
         <Title>L5Sharp</Title>
         <Authors>Timothy Nunnink</Authors>
-        <Version>0.2.1</Version>
-        <AssemblyVersion>0.2.1</AssemblyVersion>
-        <FileVersion>0.2.1.0</FileVersion>
+        <Version>0.3.0</Version>
+        <AssemblyVersion>0.3.0</AssemblyVersion>
+        <FileVersion>0.3.0.0</FileVersion>
         <TargetFramework>netstandard2.1</TargetFramework>
-        <Description>C# API for querying and manipulating RSLogix 5000 L5X files.</Description>
+        <Description>C# library for querying and manipulating RSLogix 5000 L5X files.</Description>
         <RepositoryUrl>https://github.com/tnunnink/L5Sharp</RepositoryUrl>
         <PackageTags>csharp allen-bradely l5x logix plc-programming rockwell-automation logix5000</PackageTags>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
@@ -26,15 +26,6 @@
     <ItemGroup>
         <PackageReference Include="Ardalis.SmartEnum" Version="2.0.1" />
     </ItemGroup>
-
-   <!-- <ItemGroup>
-        <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
-            <_Parameter1>L5Sharp.Internal.Tests</_Parameter1>
-        </AssemblyAttribute>
-        <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
-            <_Parameter1>L5Sharp.Serialization.Tests</_Parameter1>
-        </AssemblyAttribute>
-    </ItemGroup>-->
 
     <ItemGroup>
         <None Include="..\README.md" Pack="true" PackagePath="\" />
@@ -60,11 +51,4 @@
     <ItemGroup>
       <Compile Remove="Core\Bus.cs" />
     </ItemGroup>
-
-    <!--<ItemGroup>
-      <Content Include="..\README.md">
-        <Link>README.md</Link>
-      </Content>
-    </ItemGroup>-->
-
 </Project>
