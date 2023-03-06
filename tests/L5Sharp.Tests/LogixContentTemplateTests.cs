@@ -88,30 +88,6 @@ public class LogixContentTemplateTests
         components.Should().BeEmpty();
     }
 
-
-    [Test]
-    public void FindReferencesToAnalogTag()
-    {
-        var content = LogixContent.Load(Known.Template);
-
-        var tags = content.Tags().ToList();
-
-        var lookup = new Dictionary<string, List<NeutralText>>();
-
-        foreach (var tag in tags)
-        {
-            var references = content.Query<Rung>().Select(r => r.Text)
-                .Where(t => t.ContainsTag(tag.TagName, TagNameComparer.BaseName)).ToList();
-
-            lookup.Add(tag.TagName, references);
-        }
-
-        lookup.Should().NotBeEmpty();
-
-        //flatten returns rungs somehow.
-        //filter further based on perhaps predefined instruction set. (like find all MOV instruction with this tag name to find buffer tag)
-    }
-
     [Test]
     public void FindReferencesDifferentApproach()
     {

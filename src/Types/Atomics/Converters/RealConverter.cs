@@ -42,5 +42,19 @@ namespace L5Sharp.Types.Atomics.Converters
                 };
             }
         }
+        
+        /// <inheritdoc />
+        public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value,
+            Type destinationType)
+        {
+            if (value is not REAL atomic)
+                throw new InvalidOperationException($"Value must be of type {typeof(REAL)}.");
+
+            var type = (float)atomic;
+
+            return base.ConvertTo(context, culture, type, destinationType) ??
+                   throw new NotSupportedException(
+                       $"The provided value of type {value.GetType()} is not supported for conversion.");
+        }
     }
 }

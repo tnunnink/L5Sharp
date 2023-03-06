@@ -46,17 +46,7 @@ namespace L5Sharp.Types.Atomics
         public BOOL(string value, Radix? radix = null) : this(radix ?? Radix.Infer(value))
         {
             var converter = TypeDescriptor.GetConverter(GetType());
-            var converted = converter.ConvertFrom(value);
-
-            _value = converted switch
-            {
-                BOOL b => b,
-                SINT v => v != 0,
-                INT v => v != 0,
-                DINT v => v != 0,
-                LINT v => v != 0,
-                _ => _value
-            };
+            _value = (bool)(BOOL)converter.ConvertFrom(value)!;
         }
 
         /// <summary>

@@ -63,14 +63,11 @@ namespace L5Sharp.Types.Atomics.Converters
                    destinationType == typeof(string) ||
                    base.CanConvertFrom(context, destinationType);
         }
-
+        
         /// <inheritdoc />
         public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value,
             Type destinationType)
         {
-            /*if (value is not TAtomic typed)
-                throw new InvalidOperationException($"Value must be of type {typeof(TAtomic)}.");*/
-
             checked
             {
                 return destinationType switch

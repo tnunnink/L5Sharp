@@ -53,7 +53,7 @@ namespace L5Sharp.Tests
 
             tags.Should().NotBeNull();
 
-            var array = AssertionExtensions.As<ArrayType<ILogixType>>(tags.Data);
+            var array = tags.Data.As<ArrayType<ILogixType>>();
 
             var elements = array.Elements.ToList();
             elements.Should().NotBeEmpty();
@@ -62,7 +62,7 @@ namespace L5Sharp.Tests
         }
 
         [Test]
-        public void Find_KnownDataType_ShouldNotBeNull()
+        public void DataTypes_FindKnownDataType_ShouldNotBeNull()
         {
             var content = LogixContent.Load(Known.Test);
  
@@ -72,7 +72,7 @@ namespace L5Sharp.Tests
         }
 
         [Test]
-        public void Get_WhereFiltered_ShouldNotBeEmpty()
+        public void DataTypes_WithMembersOfTypeBool_ShouldNotBeEmpty()
         {
             var content = LogixContent.Load(Known.Test);
 

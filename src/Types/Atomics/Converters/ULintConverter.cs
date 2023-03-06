@@ -35,12 +35,28 @@ namespace L5Sharp.Types.Atomics.Converters
                     LINT v => new ULINT((ulong)(long)v),
                     ULINT v => v,
                     REAL v => new ULINT((ulong)v),
-                    string v => ulong.TryParse(v, out var result) ? new ULINT(result) : Radix.Infer(v).Parse(v),
+                    string v => ulong.TryParse(v, out var result)
+                        ? new ULINT(result)
+                        : (ULINT)ConvertFrom(Radix.Infer(v).Parse(v))!,
                     _ => base.ConvertFrom(context, culture, value)
                          ?? throw new NotSupportedException(
                              $"The provided value of type {value.GetType()} is not supported for conversion.")
                 };
             }
+        }
+        
+        /// <inheritdoc />
+        public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value,
+            Type destinationType)
+        {
+            if (value is not ULINT atomic)
+                throw new InvalidOperationException($"Value must be of type {typeof(ULINT)}.");
+
+            var type = (ulong)atomic;
+
+            return base.ConvertTo(context, culture, type, destinationType) ??
+                   throw new NotSupportedException(
+                       $"The provided value of type {value.GetType()} is not supported for conversion.");
         }
     }
 }

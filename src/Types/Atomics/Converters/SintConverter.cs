@@ -35,12 +35,28 @@ namespace L5Sharp.Types.Atomics.Converters
                     LINT v => new SINT((sbyte)v),
                     ULINT v => new SINT((sbyte)(ulong)v),
                     REAL v => new SINT((sbyte)v),
-                    string v => sbyte.TryParse(v, out var result) ? new SINT(result) : Radix.Infer(v).Parse(v),
+                    string v => sbyte.TryParse(v, out var result)
+                        ? new SINT(result)
+                        : (SINT)ConvertFrom(Radix.Infer(v).Parse(v))!,
                     _ => base.ConvertFrom(context, culture, value)
                          ?? throw new NotSupportedException(
                              $"The provided value of type {value.GetType()} is not supported for conversion.")
-                }; 
+                };
             }
+        }
+
+        /// <inheritdoc />
+        public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value,
+            Type destinationType)
+        {
+            if (value is not SINT atomic)
+                throw new InvalidOperationException($"Value must be of type {typeof(SINT)}.");
+
+            var type = (sbyte)atomic;
+
+            return base.ConvertTo(context, culture, type, destinationType) ??
+                   throw new NotSupportedException(
+                       $"The provided value of type {value.GetType()} is not supported for conversion.");
         }
     }
 }

@@ -35,12 +35,28 @@ namespace L5Sharp.Types.Atomics.Converters
                     LINT v => new USINT((byte)v),
                     ULINT v => new USINT((byte)v),
                     REAL v => new USINT((byte)v),
-                    string v => byte.TryParse(v, out var result) ? new USINT(result) : Radix.Infer(v).Parse(v),
+                    string v => byte.TryParse(v, out var result)
+                        ? new USINT(result)
+                        : (USINT)ConvertFrom(Radix.Infer(v).Parse(v))!,
                     _ => base.ConvertFrom(context, culture, value)
                          ?? throw new NotSupportedException(
                              $"The provided value of type {value.GetType()} is not supported for conversion.")
                 };
             }
+        }
+        
+        /// <inheritdoc />
+        public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value,
+            Type destinationType)
+        {
+            if (value is not USINT atomic)
+                throw new InvalidOperationException($"Value must be of type {typeof(USINT)}.");
+
+            var type = (byte)atomic;
+
+            return base.ConvertTo(context, culture, type, destinationType) ??
+                   throw new NotSupportedException(
+                       $"The provided value of type {value.GetType()} is not supported for conversion.");
         }
     }
 }

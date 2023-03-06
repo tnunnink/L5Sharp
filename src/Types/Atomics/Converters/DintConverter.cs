@@ -35,12 +35,28 @@ namespace L5Sharp.Types.Atomics.Converters
                     LINT v => new DINT((int)v),
                     ULINT v => new DINT((int)(ulong)v),
                     REAL v => new DINT((int)v),
-                    string v => int.TryParse(v, out var result) ? new DINT(result) : Radix.Infer(v).Parse(v),
+                    string v => int.TryParse(v, out var result)
+                        ? new DINT(result)
+                        : (DINT)ConvertFrom(Radix.Infer(v).Parse(v))!,
                     _ => base.ConvertFrom(context, culture, value)
                          ?? throw new NotSupportedException(
                              $"The provided value of type {value.GetType()} is not supported for conversion.")
                 };
             }
+        }
+
+        /// <inheritdoc />
+        public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value,
+            Type destinationType)
+        {
+            if (value is not DINT atomic)
+                throw new InvalidOperationException($"Value must be of type {typeof(DINT)}.");
+
+            var type = (int)atomic;
+
+            return base.ConvertTo(context, culture, type, destinationType) ??
+                   throw new NotSupportedException(
+                       $"The provided value of type {value.GetType()} is not supported for conversion.");
         }
     }
 }

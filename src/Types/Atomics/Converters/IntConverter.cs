@@ -35,12 +35,28 @@ namespace L5Sharp.Types.Atomics.Converters
                     LINT v => new INT((short)v),
                     ULINT v => new INT((short)(ulong)v),
                     REAL v => new INT((short)v),
-                    string v => short.TryParse(v, out var result) ? new INT(result) : Radix.Infer(v).Parse(v),
+                    string v => short.TryParse(v, out var result)
+                        ? new INT(result)
+                        : (INT)ConvertFrom(Radix.Infer(v).Parse(v))!,
                     _ => base.ConvertFrom(context, culture, value)
                          ?? throw new NotSupportedException(
                              $"The provided value of type {value.GetType()} is not supported for conversion.")
                 };
             }
+        }
+
+        /// <inheritdoc />
+        public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value,
+            Type destinationType)
+        {
+            if (value is not INT atomic)
+                throw new InvalidOperationException($"Value must be of type {typeof(INT)}.");
+
+            var type = (short)atomic;
+
+            return base.ConvertTo(context, culture, type, destinationType) ??
+                   throw new NotSupportedException(
+                       $"The provided value of type {value.GetType()} is not supported for conversion.");
         }
     }
 }
