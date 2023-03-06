@@ -1,13 +1,11 @@
-﻿using Ardalis.SmartEnum;
-using L5Sharp.Components;
-using L5Sharp.Core;
+﻿using L5Sharp.Components;
 
 namespace L5Sharp.Enums
 {
     /// <summary>
     /// An enumeration of all <see cref="ElectronicKeying"/> values for a given Logix <see cref="Module"/>
     /// </summary>
-    public class ElectronicKeying : SmartEnum<ElectronicKeying, string>
+    public class ElectronicKeying : LogixEnum<ElectronicKeying, string>
     {
         private ElectronicKeying(string name, string value) : base(name, value)
         {

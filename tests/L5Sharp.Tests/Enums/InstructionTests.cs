@@ -9,7 +9,7 @@ namespace L5Sharp.Tests.Enums
         [Test]
         public void List_WhenCalled_ReturnsAllInstructions()
         {
-            var list = Instruction.List;
+            var list = Instruction.All();
 
             list.Should().NotBeEmpty();
         }

@@ -1,12 +1,11 @@
-﻿using Ardalis.SmartEnum;
-using L5Sharp.Components;
+﻿using L5Sharp.Components;
 
 namespace L5Sharp.Enums
 {
     /// <summary>
     /// Provides an enumeration of all Logix <see cref="ProgramType"/> options or a given <see cref="Program"/> component.
     /// </summary>
-    public abstract class ProgramType : SmartEnum<ProgramType, string>
+    public abstract class ProgramType : LogixEnum<ProgramType, string>
     {
         private ProgramType(string name, string value) : base(name, value)
         {

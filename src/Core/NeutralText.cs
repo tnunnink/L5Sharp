@@ -142,7 +142,7 @@ namespace L5Sharp.Core
 
             foreach (var key in keys)
             {
-                if (Instruction.TryFromName(key, out var instruction))
+                if (Instruction.TryFromName(key, out var instruction) && instruction is not null)
                 {
                     results.Add(instruction);
                     continue;

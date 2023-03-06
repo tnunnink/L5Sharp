@@ -1,13 +1,11 @@
-﻿using Ardalis.SmartEnum;
-using L5Sharp.Components;
-using L5Sharp.Core;
+﻿using L5Sharp.Components;
 
 namespace L5Sharp.Enums
 {
     /// <summary>
     /// An enumeration of all Logix <see cref="RungType"/> values for a given <see cref="Rung"/>.
     /// </summary>
-    public class RungType : SmartEnum<RungType, string>
+    public class RungType : LogixEnum<RungType, string>
     {
         private RungType(string name, string value) : base(name, value)
         {

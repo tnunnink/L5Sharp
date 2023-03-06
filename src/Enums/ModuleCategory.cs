@@ -1,13 +1,11 @@
-﻿using Ardalis.SmartEnum;
-using L5Sharp.Components;
-using L5Sharp.Core;
+﻿using L5Sharp.Components;
 
 namespace L5Sharp.Enums
 {
     /// <summary>
     /// Represents an enumeration of <see cref="ModuleCategory"/> for a given <see cref="Module"/>.
     /// </summary>
-    public sealed class ModuleCategory : SmartEnum<ModuleCategory, string>
+    public sealed class ModuleCategory : LogixEnum<ModuleCategory, string>
     {
         private ModuleCategory(string name, string value) : base(name, value)
         {

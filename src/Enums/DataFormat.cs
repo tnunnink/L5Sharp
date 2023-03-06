@@ -1,12 +1,11 @@
-﻿using Ardalis.SmartEnum;
-using L5Sharp.Types.Predefined;
+﻿using L5Sharp.Types.Predefined;
 
 namespace L5Sharp.Enums
 {
     /// <summary>
     /// Represents the types of data formats produced by a L5X file.
     /// </summary>
-    public class DataFormat : SmartEnum<DataFormat, string>
+    public class DataFormat : LogixEnum<DataFormat, string>
     {
         private DataFormat(string name, string value) : base(name, value)
         {

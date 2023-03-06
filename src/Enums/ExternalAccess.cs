@@ -1,5 +1,4 @@
 ﻿using System;
-using Ardalis.SmartEnum;
 
 namespace L5Sharp.Enums
 {
@@ -9,7 +8,7 @@ namespace L5Sharp.Enums
     /// <see cref="ExternalAccess"/> is a Logix setting that determines the ability to read from or write to a given component.
     /// </remarks>
     /// </summary>
-    public sealed class ExternalAccess : SmartEnum<ExternalAccess>
+    public sealed class ExternalAccess : LogixEnum<ExternalAccess, int>
     {
         private ExternalAccess(string name, int value) : base(name, value)
         {
@@ -33,7 +32,6 @@ namespace L5Sharp.Enums
 
             return first.Value < second.Value ? first : second;
         }
-        
 
         /// <summary>
         /// Represents no read or write <see cref="ExternalAccess"/>.

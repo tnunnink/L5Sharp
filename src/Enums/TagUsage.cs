@@ -1,5 +1,4 @@
-﻿using Ardalis.SmartEnum;
-using L5Sharp.Components;
+﻿using L5Sharp.Components;
 using L5Sharp.Types;
 
 namespace L5Sharp.Enums
@@ -7,7 +6,7 @@ namespace L5Sharp.Enums
     /// <summary>
     /// Represents an enumeration of all Logix <see cref="TagUsage"/> options for a given <see cref="Tag"/>.
     /// </summary>
-    public class TagUsage : SmartEnum<TagUsage, string>
+    public class TagUsage : LogixEnum<TagUsage, string>
     {
         private TagUsage(string name, string value) : base(name, value)
         {

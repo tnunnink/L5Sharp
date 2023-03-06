@@ -1,11 +1,9 @@
-﻿using Ardalis.SmartEnum;
-
-namespace L5Sharp.Enums
+﻿namespace L5Sharp.Enums
 {
     /// <summary>
     /// An enumeration of all Logix <see cref="DataTypeClass"/> for a given <see cref="ILogixType"/>.
     /// </summary>
-    public sealed class DataTypeClass : SmartEnum<DataTypeClass, string>
+    public sealed class DataTypeClass : LogixEnum<DataTypeClass, string>
     {
         private DataTypeClass(string name, string value) : base(name, value)
         {

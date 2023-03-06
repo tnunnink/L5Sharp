@@ -1,13 +1,11 @@
-﻿using Ardalis.SmartEnum;
-using L5Sharp.Components;
-using L5Sharp.Core;
+﻿using L5Sharp.Components;
 
 namespace L5Sharp.Enums
 {
     /// <summary>
     /// An enumeration of all Logix <see cref="ProductionTrigger"/> options for a given <see cref="ModuleConnection"/>.
     /// </summary>
-    public class ProductionTrigger : SmartEnum<ProductionTrigger, string>
+    public class ProductionTrigger : LogixEnum<ProductionTrigger, string>
     {
         private ProductionTrigger(string name, string value) : base(name, value)
         {

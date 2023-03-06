@@ -1,12 +1,10 @@
-﻿using Ardalis.SmartEnum;
-
-namespace L5Sharp.Enums
+﻿namespace L5Sharp.Enums
 {
     /// <summary>
     /// Provides an enumeration of all Logix Task types.
     /// Value must be <see cref="Continuous"/>, <see cref="Periodic"/>, or <see cref="Event"/>.
     /// </summary>
-    public sealed class TaskType : SmartEnum<TaskType, string>
+    public sealed class TaskType : LogixEnum<TaskType, string>
     {
         private TaskType(string name, string value) : base(name, value)
         {

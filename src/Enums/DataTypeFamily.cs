@@ -1,5 +1,4 @@
-﻿using Ardalis.SmartEnum;
-using L5Sharp.Types;
+﻿using L5Sharp.Types;
 
 namespace L5Sharp.Enums
 {
@@ -7,7 +6,7 @@ namespace L5Sharp.Enums
     /// An enumeration of all Logix <see cref="DataTypeFamily"/> options for a given <see cref="ILogixType"/>.
     /// Valid options are None and String.
     /// </summary>
-    public sealed class DataTypeFamily : SmartEnum<DataTypeFamily, string>
+    public sealed class DataTypeFamily : LogixEnum<DataTypeFamily, string>
     {
         private DataTypeFamily(string name, string value) : base(name, value)
         {

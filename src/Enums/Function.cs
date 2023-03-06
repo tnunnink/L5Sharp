@@ -1,11 +1,9 @@
-﻿using Ardalis.SmartEnum;
-
-namespace L5Sharp.Enums
+﻿namespace L5Sharp.Enums
 {
     /// <summary>
     /// An enumeration of known Logix arithmetic functions.
     /// </summary>
-    public class Function : SmartEnum<Function, string>
+    public class Function : LogixEnum<Function, string>
     {
         private Function(string name, string value) : base(name, value)
         {

@@ -1,6 +1,4 @@
-﻿using Ardalis.SmartEnum;
-using L5Sharp.Core;
-using L5Sharp.Types;
+﻿using L5Sharp.Types;
 
 namespace L5Sharp.Enums
 {
@@ -8,7 +6,7 @@ namespace L5Sharp.Enums
     /// An enumeration of members types, which indicate whether a given <see cref="Member"/> is a value,
     /// array, structure, or string data type member.
     /// </summary>
-    public class MemberType : SmartEnum<MemberType>
+    public class MemberType : LogixEnum<MemberType, int>
     {
         private MemberType(string name, int value) : base(name, value)
         {

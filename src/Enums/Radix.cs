@@ -4,7 +4,6 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using Ardalis.SmartEnum;
 using L5Sharp.Extensions;
 using L5Sharp.Types;
 using L5Sharp.Types.Atomics;
@@ -16,7 +15,7 @@ namespace L5Sharp.Enums
     /// <summary>
     /// Represents a number base for a given value type or atomic type.
     /// </summary>
-    public abstract class Radix : SmartEnum<Radix, string>
+    public abstract class Radix : LogixEnum<Radix, string>
     {
         private static readonly Dictionary<string, Func<string, bool>> Identifiers = new()
         {

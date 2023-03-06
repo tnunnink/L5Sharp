@@ -1,13 +1,9 @@
-﻿using Ardalis.SmartEnum;
-using L5Sharp.Components;
-using L5Sharp.Core;
-
-namespace L5Sharp.Enums
+﻿namespace L5Sharp.Enums
 {
     /// <summary>
     /// An enumeration of all <see cref="TaskEventTrigger"/> options for a given <see cref="Components.Task"/>.
     /// </summary>
-    public class TaskEventTrigger : SmartEnum<TaskEventTrigger, string>
+    public class TaskEventTrigger : LogixEnum<TaskEventTrigger, string>
     {
         private TaskEventTrigger(string name, string value) : base(name, value)
         {

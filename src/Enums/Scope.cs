@@ -1,11 +1,9 @@
-﻿using Ardalis.SmartEnum;
-
-namespace L5Sharp.Enums
+﻿namespace L5Sharp.Enums
 {
     /// <summary>
     /// Represents an enumeration of all Logix <see cref="Scope"/> options.
     /// </summary>
-    public class Scope : SmartEnum<Scope, string>
+    public class Scope : LogixEnum<Scope, string>
     {
         private Scope(string name, string value) : base(name, value)
         {

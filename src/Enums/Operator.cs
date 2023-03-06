@@ -1,11 +1,9 @@
-﻿using Ardalis.SmartEnum;
-
-namespace L5Sharp.Enums
+﻿namespace L5Sharp.Enums
 {
     /// <summary>
     /// An enumeration of known Logix operators.
     /// </summary>
-    public class Operator : SmartEnum<Operator, string>
+    public class Operator : LogixEnum<Operator, string>
     {
         private Operator(string name, string value) : base(name, value)
         {

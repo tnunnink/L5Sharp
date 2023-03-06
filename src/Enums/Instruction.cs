@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using Ardalis.SmartEnum;
 using L5Sharp.Core;
 
 // ReSharper disable InconsistentNaming
@@ -9,7 +8,7 @@ namespace L5Sharp.Enums
     /// <summary>
     /// A class representing a instruction definition and ...
     /// </summary>
-    public sealed class Instruction : SmartEnum<Instruction, string>
+    public sealed class Instruction : LogixEnum<Instruction, string>
     {
         /// <summary>
         /// Captures all content within parentheses, including outer parentheses and nested parentheses, assuming they
