@@ -68,7 +68,7 @@ namespace L5Sharp.Extensions
         /// <param name="logixType">The </param>
         /// <typeparam name="TLogixType"></typeparam>
         /// <returns></returns>
-        public static TLogixType To<TLogixType>(this ILogixType logixType) where TLogixType : ILogixType =>
+        public static TLogixType ToType<TLogixType>(this ILogixType logixType) where TLogixType : ILogixType =>
             (TLogixType)logixType;
 
         /// <summary>
@@ -77,7 +77,7 @@ namespace L5Sharp.Extensions
         /// <param name="logixType"></param>
         /// <typeparam name="TLogixType"></typeparam>
         /// <returns></returns>
-        public static TLogixType? As<TLogixType>(this ILogixType logixType) where TLogixType : class, ILogixType =>
+        public static TLogixType? AsType<TLogixType>(this ILogixType logixType) where TLogixType : class, ILogixType =>
             logixType as TLogixType;
         
         /// <summary>
@@ -85,9 +85,6 @@ namespace L5Sharp.Extensions
         /// </summary>
         /// <returns>A <see cref="ArrayType{TLogixType}"/> of generic logix type objects.</returns>
         public static ArrayType<TLogixType> ToArrayType<TLogixType>(this IEnumerable<TLogixType> enumerable)
-            where TLogixType : ILogixType
-        {
-            return new ArrayType<TLogixType>(enumerable.ToArray());
-        }
+            where TLogixType : ILogixType => new(enumerable.ToArray());
     }
 }

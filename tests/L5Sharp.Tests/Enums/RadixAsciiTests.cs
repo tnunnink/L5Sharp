@@ -112,53 +112,53 @@ namespace L5Sharp.Tests.Enums
             FluentActions.Invoking(() => Radix.Ascii.Parse("'$00$00$00$00$00$00$00$00$00'")).Should()
                 .Throw<ArgumentOutOfRangeException>();
         }
-        
+
         [Test]
         public void Parse_Tab_ShouldBeExpected()
         {
             var atomic = Radix.Ascii.Parse("'$t'");
 
-            atomic.Should().Be(9);
+            atomic.As<SINT>().Should().Be(9);
         }
-        
+
         [Test]
         public void Parse_LineFeed_ShouldBeExpected()
         {
             var atomic = Radix.Ascii.Parse("'$l'");
 
-            atomic.Should().Be(10);
+            atomic.As<SINT>().Should().Be(10);
         }
-        
+
         [Test]
         public void Parse_FormFeed_ShouldBeExpected()
         {
             var atomic = Radix.Ascii.Parse("'$p'");
 
-            atomic.Should().Be(12);
+            atomic.As<SINT>().Should().Be(12);
         }
-        
+
         [Test]
         public void Parse_Return_ShouldBeExpected()
         {
             var atomic = Radix.Ascii.Parse("'$r'");
 
-            atomic.Should().Be(13);
+            atomic.As<SINT>().Should().Be(13);
         }
-        
+
         [Test]
         public void Parse_DollarSign_ShouldBeExpected()
         {
             var atomic = Radix.Ascii.Parse("'$$'");
 
-            atomic.Should().Be(36);
+            atomic.As<SINT>().Should().Be(36);
         }
-        
+
         [Test]
         public void Parse_SingleQuote_ShouldBeExpected()
         {
             var atomic = Radix.Ascii.Parse("'$''");
 
-            atomic.Should().Be(39);
+            atomic.As<SINT>().Should().Be(39);
         }
 
         [Test]
@@ -166,7 +166,7 @@ namespace L5Sharp.Tests.Enums
         {
             var value = Radix.Ascii.Parse("'$14'");
 
-            value.Should().Be(new SINT(20));
+            value.As<SINT>().Should().Be(new SINT(20));
         }
 
         [Test]
@@ -174,15 +174,15 @@ namespace L5Sharp.Tests.Enums
         {
             var value = Radix.Ascii.Parse("'$00$01$E2@'");
 
-            value.Should().Be(new DINT(123456));
+            value.As<DINT>().Should().Be(new DINT(123456));
         }
-        
+
         [Test]
         public void Parse_Valid_ShouldBeExpected()
         {
             var value = Radix.Ascii.Parse("'$12D$F1A'");
 
-            value.Should().Be(new DINT(306508097));
+            value.As<DINT>().Should().Be(new DINT(306508097));
         }
     }
 }

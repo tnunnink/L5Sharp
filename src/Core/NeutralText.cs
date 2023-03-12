@@ -246,6 +246,16 @@ namespace L5Sharp.Core
         /// <seealso cref="TagsIn(L5Sharp.Enums.Instruction)"/>
         /// <seealso cref="TagsIn(System.String)"/>
         public IEnumerable<TagName> Tags() => Regex.Matches(_text, TagNamePattern).Select(m => new TagName(m.Value));
+        
+        /*/// <summary>
+        /// Returns a collection of <see cref="KeyValuePair"/> with the key being the instruction and corresponding
+        /// operand arguments as the value.
+        /// </summary>
+        /// <returns>A <see cref="IEnumerable{T}"/> of <see cref="KeyValuePair"/> objects containing instruction key
+        /// and corresponding operands values.</returns>
+        public IEnumerable<KeyValuePair<string, IEnumerable<TagName>>> TagsByKey() =>
+            Regex.Matches(_text, KeyOperandGroupPattern).Select(m =>
+                new KeyValuePair<string, IEnumerable<string>>(m.Groups[1].Value, m.Groups[2].Value.Split(",")));*/
 
         /// <summary>
         /// Gets a collection of tag names found in the current neutral text that are operands or arguments to a specific instruction.

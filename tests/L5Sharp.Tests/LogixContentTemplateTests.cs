@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using L5Sharp.Components;
 using L5Sharp.Core;
+using L5Sharp.Extensions;
 using L5Sharp.Utilities;
 
 namespace L5Sharp.Tests;
@@ -123,13 +124,5 @@ public class LogixContentTemplateTests
         }
 
         flattened.Should().NotBeEmpty();
-
-        /*var ioReferencesToTag = flattened.SelectMany(t => t.Split(Instruction.MOV))
-            .Where(t => t.ContainsTag("IO_PLC_FLEX:4:I", TagNameComparer.BaseName))
-            .ToList();*/
-
-        /*File.WriteAllLines(@"C:\Users\tnunnink\Documents\Temp\IoRefs.txt", ioReferencesToTag.Select(t => t.ToString()));
-
-        File.WriteAllLines(@"C:\Users\tnunnink\Documents\Temp\Flattened.txt", flattened.Select(f => f.ToString()));*/
     }
 }

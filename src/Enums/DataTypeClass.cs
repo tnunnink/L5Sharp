@@ -1,8 +1,9 @@
 ﻿namespace L5Sharp.Enums
 {
     /// <summary>
-    /// An enumeration of all Logix <see cref="DataTypeClass"/> for a given <see cref="ILogixType"/>.
+    /// An enumeration of all Logix <see cref="DataTypeClass"/> for a given data type component.
     /// </summary>
+    /// <remarks>Only user,</remarks>
     public sealed class DataTypeClass : LogixEnum<DataTypeClass, string>
     {
         private DataTypeClass(string name, string value) : base(name, value)
@@ -13,6 +14,11 @@
         /// Represents an <b>Unknown</b> <see cref="DataTypeClass"/>.
         /// </summary>
         public static readonly DataTypeClass Unknown = new(nameof(Unknown), nameof(Unknown));
+
+        /// <summary>
+        /// Represents an <b>UserDefined</b> <see cref="DataTypeClass"/>.
+        /// </summary>
+        public static readonly DataTypeClass User = new(nameof(User), nameof(User));
 
         /// <summary>
         /// Represents an <b>Atomic</b> <see cref="DataTypeClass"/>.
@@ -33,16 +39,6 @@
         /// <summary>
         /// Represents an <b>ModuleDefined</b> <see cref="DataTypeClass"/>.
         /// </summary>
-        public static readonly DataTypeClass Io = new(nameof(Io), nameof(Io));
-
-        /// <summary>
-        /// Represents an <b>UserDefined</b> <see cref="DataTypeClass"/>.
-        /// </summary>
-        public static readonly DataTypeClass User = new(nameof(User), nameof(User));
-        
-        /// <summary>
-        /// Represents an <b>AddOnDefined</b> <see cref="DataTypeClass"/>.
-        /// </summary>
-        public static readonly DataTypeClass AddOnDefined = new(nameof(AddOnDefined), nameof(AddOnDefined));
+        public static readonly DataTypeClass Module = new(nameof(Module), nameof(Module));
     }
 }

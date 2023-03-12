@@ -17,7 +17,7 @@ namespace L5Sharp.Types.ModuleDefined
         }
 
         /// <inheritdoc />
-        public override DataTypeClass Class => DataTypeClass.Io;
+        public override DataTypeClass Class => DataTypeClass.Module;
 
         /// <summary>
         /// Gets 

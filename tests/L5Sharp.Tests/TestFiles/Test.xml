@@ -9146,6 +9146,15 @@ Dint Array]]>
                             </Rung>
                         </RLLContent>
                     </Routine>
+                    <Routine Name="Setup" Type="RLL">
+                        <RLLContent>
+                            <Rung Number="0" Type="N">
+                                <Text>
+                                    <![CDATA[XIC(LocalBool)MOV(1234,LocalDint);]]>
+                                </Text>
+                            </Rung>
+                        </RLLContent>
+                    </Routine>
                 </Routines>
             </Program>
         </Programs>

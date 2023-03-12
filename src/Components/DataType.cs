@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Serialization;
 using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Serialization;
+using L5Sharp.Utilities;
 
 namespace L5Sharp.Components
 {
@@ -13,6 +15,7 @@ namespace L5Sharp.Components
     /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
     /// `Logix 5000 Controllers Import/Export`</a> for more information.
     /// </footer>
+    [XmlType(L5XName.DataType)]
     [LogixSerializer(typeof(DataTypeSerializer))]
     public class DataType : ILogixComponent
     {
@@ -23,19 +26,20 @@ namespace L5Sharp.Components
         public string Description { get; set; } = string.Empty;
 
         /// <summary>
-        /// Gets the value of the <see cref="DataTypeFamily"/> for the <see cref="DataType"/> instance.
+        /// The family of the <c>DataType</c> component.
         /// </summary>
         /// <value>
-        /// An enum value indicating whether the data type belongs to the string family or has no family.
+        /// A <see cref="DataTypeFamily"/> option indicating the family for which the current data type belongs.
+        /// This is just string for string types and none for all others.
         /// </value>
         public DataTypeFamily Family { get; set; } = DataTypeFamily.None;
 
         /// <summary>
-        /// Gets the value of the <see cref="DataTypeClass"/> for the <see cref="DataType"/> instance.
+        /// The class of the <c>DataType</c> component.
         /// </summary>
         /// <value>
-        /// An enum value indicating the class for which the current data type belongs.
-        /// This could be atomic, user, predefined, etc.
+        /// A <see cref="DataTypeClass"/> option indicating the class for which the current data type belongs.
+        /// L5X files will only ever contain <see cref="DataTypeClass.User"/> class types.
         /// </value>
         public DataTypeClass Class { get; set; } = DataTypeClass.User;
 

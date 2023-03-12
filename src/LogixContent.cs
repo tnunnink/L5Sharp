@@ -58,10 +58,10 @@ namespace L5Sharp
         public static LogixContent Parse(string text) => new(XElement.Parse(text));
 
         /// <summary>
-        /// 
+        /// Creates a new <see cref="LogixContent"/> with the provided logix component as the exported target type.
         /// </summary>
-        /// <param name="component"></param>
-        /// <returns></returns>
+        /// <param name="component">The logix component to export.</param>
+        /// <returns>A <see cref="LogixContent"/> containing the exported component as the target of the L5X.</returns>
         public static LogixContent Export<TComponent>(TComponent component) where TComponent : ILogixComponent =>
             new(L5X.Create(component));
 
@@ -122,8 +122,7 @@ namespace L5Sharp
 
             if (program is null)
                 throw new ArgumentException(
-                    $"No container with the scope name '{programName}' found in the current L5X. " +
-                    $"Please add the program before attempting to access it's Tags.");
+                    $"No program with '{programName}' found in the current L5X. Add the component via Programs() before accessing Tags.");
 
             var container = program.Descendants(L5XName.Tags).FirstOrDefault();
 
@@ -137,8 +136,7 @@ namespace L5Sharp
 
             if (program is null)
                 throw new ArgumentException(
-                    $"No container with the scope name '{programName}' found in the current L5X. " +
-                    $"Please add the program before attempting to access it's Routines.");
+                    $"No program with '{programName}' found in the current L5X. Add the component via Programs() before accessing Routines.");
 
             var container = program.Descendants(L5XName.Routines).FirstOrDefault();
 
@@ -152,8 +150,7 @@ namespace L5Sharp
 
             if (program is null)
                 throw new ArgumentException(
-                    $"No container with the scope name '{programName}' found in the current L5X. " +
-                    $"Please add the program before attempting to access it's Routines.");
+                    $"No program with '{programName}' found in the current L5X. Add the component via Programs() before accessing Routines.");
 
             var container = program.Descendants(L5XName.Routines).FirstOrDefault();
 

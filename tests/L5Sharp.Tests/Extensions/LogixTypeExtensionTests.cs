@@ -16,7 +16,7 @@ namespace L5Sharp.Tests.Extensions
         {
             var type = (ILogixType)new BOOL();
 
-            var result = type.To<BOOL>();
+            var result = type.ToType<BOOL>();
 
             result.Should().BeOfType<BOOL>();
         }
@@ -26,7 +26,7 @@ namespace L5Sharp.Tests.Extensions
         {
             var type = (ILogixType)new BOOL();
 
-            FluentActions.Invoking(() => type.To<DINT>()).Should().Throw<InvalidCastException>();
+            FluentActions.Invoking(() => type.ToType<DINT>()).Should().Throw<InvalidCastException>();
         }
         
         [Test]
@@ -34,7 +34,7 @@ namespace L5Sharp.Tests.Extensions
         {
             var type = (ILogixType)new BOOL();
 
-            var result = type.As<DINT>();
+            var result = type.AsType<DINT>();
 
             result.Should().BeNull();
         }

@@ -11,6 +11,8 @@ namespace L5Sharp.Serialization
     /// </summary>
     public class ControllerSerializer : ILogixSerializer<Controller>
     {
+        private const string DateTimeFormat = "ddd MMM d HH:mm:ss yyyy";
+        
         /// <inheritdoc />
         public XElement Serialize(Controller obj)
         {
@@ -29,9 +31,9 @@ namespace L5Sharp.Serialization
             }
 
             element.Add(new XAttribute(L5XName.ProjectCreationDate,
-                obj.ProjectCreationDate.ToString("ddd MMM d HH:mm:ss yyyy")));
+                obj.ProjectCreationDate.ToString(DateTimeFormat)));
             element.Add(new XAttribute(L5XName.LastModifiedDate,
-                obj.LastModifiedDate.ToString("ddd MMM d HH:mm:ss yyyy")));
+                obj.LastModifiedDate.ToString(DateTimeFormat)));
 
             return element;
         }
@@ -47,8 +49,8 @@ namespace L5Sharp.Serialization
                 Description = element.LogixDescription(),
                 ProcessorType = element.TryGetValue<string>(L5XName.ProcessorType) ?? string.Empty,
                 Revision = GetRevision(element),
-                ProjectCreationDate = element.LogixDateTimeOrDefault(L5XName.ProjectCreationDate),
-                LastModifiedDate = element.LogixDateTimeOrDefault(L5XName.LastModifiedDate)
+                ProjectCreationDate = element.TryGetDateTime(L5XName.ProjectCreationDate, DateTimeFormat),
+                LastModifiedDate = element.TryGetDateTime(L5XName.LastModifiedDate, DateTimeFormat)
             };
         }
 

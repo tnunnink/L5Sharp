@@ -18,7 +18,7 @@ namespace L5Sharp.Components
         public override RoutineType Type => RoutineType.Rll;
 
         /// <summary>
-        /// 
+        /// The collection of <see cref="Rung"/> or ladder logic the make up the logic or code of the Routine.
         /// </summary>
         public List<Rung> Content { get; set; } = new();
     }

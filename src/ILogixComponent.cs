@@ -1,7 +1,7 @@
 ﻿namespace L5Sharp
 {
     /// <summary>
-    /// Represents a Logix component or element of the L5X that is able to be identified by name.
+    /// Represents a <i>Logix</i> component or element of the L5X that is able to be identified by name.
     /// </summary>
     /// <remarks>
     /// This is the base interface for all L5X components. All components can be identified by a unique string name that
@@ -18,20 +18,21 @@
     public interface ILogixComponent
     {
         /// <summary>
-        /// The name of the logix component.
+        /// The name of the <i>Logix</i> component.
         /// </summary>
         /// <value>A <see cref="string"/> containing the component name.</value>
         /// <remarks>
         /// The name servers as a unique identifier for various types of components.
-        /// The component name should satisfy Logix naming constraints of alphanumeric and '_' characters,
-        /// start with a letter, and be between 1 and 40 characters. However, some internally generated components, such
-        /// as module defined types, do not have the same restrictions, which is why this is a simple <see cref="string"/>
-        /// type property.
+        /// In most cases, the component name should satisfy Logix naming constraints of alphanumeric and
+        /// underscore ('_') characters, start with a letter, and be between 1 and 40 characters.
+        /// However, some internally generated components, such as module defined types, do not have the same
+        /// restrictions, which is why this is a simple <see cref="string"/>. The name of a component will only
+        /// be validated when attempting to add it to a <see cref="ILogixComponentCollection{TComponent}"/>.
         /// </remarks>
         string Name { get; }
         
         /// <summary>
-        /// The description of the logix component.
+        /// The description of the <i>Logix</i> component.
         /// </summary>
         /// <value>A <see cref="string"/> containing the text description.</value>
         string Description { get; }

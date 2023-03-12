@@ -69,10 +69,11 @@ namespace L5Sharp.Extensions
         /// </summary>
         /// <param name="element"></param>
         /// <param name="name"></param>
+        /// <param name="format"></param>
         /// <returns></returns>
-        public static DateTime LogixDateTimeOrDefault(this XElement element, XName name)
+        public static DateTime TryGetDateTime(this XElement element, XName name, string format)
         {
-            const string format = "ddd MMM d HH:mm:ss yyyy";
+            //const string format = "ddd MMM d HH:mm:ss yyyy";
 
             var attribute = element.Attribute(name);
 

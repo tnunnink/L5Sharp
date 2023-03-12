@@ -18,7 +18,7 @@ namespace L5Sharp.Tests.Enums
         [Test]
         public void New_Io_ShouldNotBeNull()
         {
-            var sut = DataTypeClass.Io;
+            var sut = DataTypeClass.Module;
 
             sut.Should().NotBeNull();
         }

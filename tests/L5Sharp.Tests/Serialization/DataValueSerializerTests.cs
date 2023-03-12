@@ -138,7 +138,7 @@ namespace L5Sharp.Tests.Serialization
 
             component.Should().BeOfType<BOOL>();
             component.Name.Should().Be("BOOL");
-            component.As<BOOL>().Should().Be(true);  
+            component.AsType<BOOL>().Should().Be(true);  
         }
         
         [Test]
@@ -155,7 +155,7 @@ namespace L5Sharp.Tests.Serialization
 
             component.Should().BeOfType<SINT>();
             component.Name.Should().Be("SINT");
-            component.As<SINT>().Should().Be(12);  
+            component.AsType<SINT>().Should().Be(12);  
         }
 
         [Test]
@@ -172,7 +172,7 @@ namespace L5Sharp.Tests.Serialization
 
             component.Should().BeOfType<INT>();
             component.Name.Should().Be("INT");
-            component.As<INT>().Should().Be(4321);  
+            component.AsType<INT>().Should().Be(4321);  
         }
         
         [Test]
@@ -189,7 +189,7 @@ namespace L5Sharp.Tests.Serialization
 
             component.Should().BeOfType<DINT>();
             component.Name.Should().Be("DINT");
-            component.As<DINT>().Should().Be(123456);  
+            component.AsType<DINT>().Should().Be(123456);  
         }
         
         [Test]
@@ -207,7 +207,7 @@ namespace L5Sharp.Tests.Serialization
 
             component.Should().BeOfType<LINT>();
             component.Name.Should().Be("LINT");
-            component.As<LINT>().Should().Be(112230123);  
+            component.AsType<LINT>().Should().Be(112230123);  
         }
         
         [Test]
@@ -221,7 +221,7 @@ namespace L5Sharp.Tests.Serialization
 
             component.Should().BeOfType<REAL>();
             component.Name.Should().Be("REAL");
-            component.As<REAL>().Should().Be(1.23f);  
+            component.AsType<REAL>().Should().Be(1.23f);  
         }
     }
 }

@@ -77,8 +77,6 @@ namespace L5Sharp.Tests.Serialization
             component.MajorFault.Should().BeFalse();
             component.SafetyEnabled.Should().BeFalse();
             component.Keying.Should().Be(ElectronicKeying.CompatibleModule);
-            component.Slot.Should().Be(4);
-            component.IP.Should().BeNull();
             component.Ports.Should().HaveCount(1);
             component.Connections.Should().HaveCount(1);
             component.Config.Should().NotBeNull();

@@ -1,7 +1,9 @@
-﻿using L5Sharp.Core;
+﻿using System.Xml.Serialization;
+using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Serialization;
 using L5Sharp.Types;
+using L5Sharp.Utilities;
 
 namespace L5Sharp.Components
 {
@@ -12,6 +14,7 @@ namespace L5Sharp.Components
     /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
     /// `Logix 5000 Controllers Import/Export`</a> for more information.
     /// </footer>
+    [XmlType(L5XName.Parameter)]
     [LogixSerializer(typeof(ParameterSerializer))]
     public sealed class Parameter
     {

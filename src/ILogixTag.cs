@@ -26,7 +26,7 @@ namespace L5Sharp
         /// </summary>
         /// <value>A <see cref="ILogixType"/> containing the data value or structure of the tag component.</value>
         /// <remarks>
-        /// ...
+        /// This represents the value of the tags member. 
         /// </remarks>
         ILogixType Data { get; }
         

@@ -28,9 +28,14 @@ namespace L5Sharp.Components
         public string Description { get; set; } = string.Empty;
 
         /// <summary>
-        /// The revision or version of the instruction.
+        /// The revision of the instruction.
         /// </summary>
         /// <value>A <see cref="Core.Revision"/> representing the version of the instruction.</value>
+        /// <remarks>
+        /// Specify the revision of the Add-On Instruction, in the form of MajorRevision.MinorRevision.
+        /// Each revision number can be 1...65,535.
+        /// If there is no period, the number is treated as a major revision only
+        /// </remarks>
         public Revision Revision { get; set; } = new();
         
         /// <summary>
@@ -125,40 +130,5 @@ namespace L5Sharp.Components
         /// Gets the collection of <see cref="Routine"/> objects that contain the logic for the instruction.
         /// </summary>
         public List<Routine> Routines { get; set; } = new();
-
-        /// <summary>
-        /// Returns the AOI instruction logic with the parameters of the instruction replaced with the provided neutral
-        /// text signature arguments.
-        /// </summary>
-        /// <param name="text">The text signature of the instruction instance.</param>
-        /// <returns>A <see cref="IEnumerable{T}"/> containing <see cref="NeutralText"/> representing all the instruction's
-        /// logic, with each parameter tag name replaced with the arguments from the provided text.</returns>
-        public IEnumerable<NeutralText> GetLogic(NeutralText text)
-        {
-            //todo validate provided text signature first...
-            
-            var logic = Routines.First(r => r.Name == "Logic");
-
-            if (logic is not RllRoutine rll)
-                return Enumerable.Empty<NeutralText>();
-
-            //Skip first as it is always the aoi tag, which does not have corresponding parameter
-            var arguments = text.Operands().Select(o => o.ToString()).Skip(1).ToList(); 
-            
-            //Only required parameters are part of the instruction signature
-            var parameters = Parameters.Where(p => p.Required).Select(p => p.Name).ToList();
-            
-            //Create a one to one mapping of the provided text operand arguments to instruction parameter names.
-            var mapping = arguments.Zip(parameters, (a, p) => new { Argument = a, Parameter = p }).ToList();
-
-            //Replace all parameter names with argument names in the instruction logic text, and return the results.
-            return rll.Content.Select(r => r.Text)
-                .Select(t => mapping.Aggregate(t, (current, pair) =>
-                {
-                    var replace = $@"(?<=[^.\]]){pair.Parameter}";
-                    return Regex.Replace(current, replace, pair.Argument.ToString());
-                }))
-                .ToList();
-        }
     }
 }

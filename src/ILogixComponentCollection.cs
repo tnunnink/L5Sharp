@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace L5Sharp
 {
     /// <summary>
-    /// 
+    /// An interface defining the primary API for working with a collection of components within an L5X file.
     /// </summary>
     /// <typeparam name="TComponent"></typeparam>
     public interface ILogixComponentCollection<TComponent> : IEnumerable<TComponent> where TComponent : ILogixComponent

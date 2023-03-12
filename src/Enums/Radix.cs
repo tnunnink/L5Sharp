@@ -19,15 +19,15 @@ namespace L5Sharp.Enums
     {
         private static readonly Dictionary<string, Func<string, bool>> Identifiers = new()
         {
-            { nameof(Binary), s => s.HasBinaryFormat() },
-            { nameof(Octal), s => s.HasOctalFormat() },
-            { nameof(Decimal), s => s.HasDecimalFormat() },
-            { nameof(Hex), s => s.HasHexFormat() },
-            { nameof(Float), s => s.HasFloatFormat() },
-            { nameof(Exponential), s => s.HasExponentialFormat() },
-            { nameof(Ascii), s => s.HasAsciiFormat() },
-            { nameof(DateTime), s => s.HasDateTimeFormat() },
-            { nameof(DateTimeNs), s => s.HasDateTimeNsFormat() }
+            { nameof(Binary), s => Binary.HasFormat(s) },
+            { nameof(Octal), s => Octal.HasFormat(s) },
+            { nameof(Decimal), s => Decimal.HasFormat(s) },
+            { nameof(Hex), s => Hex.HasFormat(s) },
+            { nameof(Float), s => Float.HasFormat(s) },
+            { nameof(Exponential), s => Exponential.HasFormat(s) },
+            { nameof(Ascii), s => Ascii.HasFormat(s) },
+            { nameof(DateTime), s => DateTime.HasFormat(s) },
+            { nameof(DateTimeNs), s => DateTimeNs.HasFormat(s) }
         };
 
         private Radix(string name, string value) : base(name, value)
@@ -127,6 +127,9 @@ namespace L5Sharp.Enums
         /// <returns>true if the current radix value is valid for the given data type instance; otherwise, false.</returns>
         public bool SupportsType(ILogixType type)
         {
+            if (type is ILogixArray<AtomicType> arrayType)
+                type = arrayType.First();
+
             if (type is not AtomicType atomicType)
                 return Equals(Null);
 
@@ -157,19 +160,25 @@ namespace L5Sharp.Enums
 
             return FromName(name);
         }
-        
-        /// <summary>
-        /// Determines the radix format from a string representing a formatted atomic value.
-        /// </summary>
-        /// <param name="input">The string for which to infer the format.</param>
-        /// <returns>A <see cref="Radix"/> format enum value.</returns>
-        /// <exception cref="FormatException">A radix can not be determined from the format of <c>value</c>.</exception>
-        public static Radix? TryInfer(string input)
-        {
-            var name = Identifiers.FirstOrDefault(i => i.Value.Invoke(input)).Key;
 
-            return name is not null ? FromName(name) : null;
-        }
+        /// <summary>
+        /// The specifier prefix of the Radix string format.
+        /// </summary>
+        /// <value>A <see cref="string"/> representing the text that identifies the format of the Radix.</value>
+        /// <remarks>
+        /// Most <see cref="Radix"/> will have a specifier prefix, such as '#2' for Binary, '#16' for Hex, and so on.
+        /// By default this property is used by <see cref="HasFormat"/> to determine if an input string has the specified
+        /// Radix format, and further by <see cref="Infer"/> to determine a Radix from a string value.
+        /// However, some Radix options ore overriden as they do not have specifiers (e.g. Decimal, Float).
+        /// </remarks>
+        public abstract string Specifier { get; }
+
+        /// <summary>
+        /// Returns an indication as to whether the current string input value has the format of the current Radix type.
+        /// </summary>
+        /// <param name="input">The input text value to examine.</param>
+        /// <returns><c>true</c> if <c>input</c> qualifies as a valid format for the Radix type; otherwise, <c>false</c>.</returns>
+        public virtual bool HasFormat(string input) => !input.IsEmpty() && input.StartsWith(Specifier);
 
         /// <summary>
         /// Converts an atomic value to the current radix base format. 
@@ -228,6 +237,11 @@ namespace L5Sharp.Enums
             {
             }
 
+            public override string Specifier => string.Empty;
+
+            public override bool HasFormat(string input) =>
+                throw new NotSupportedException($"{Name} Radix does not support formatting atomic values");
+
             public override string Format(AtomicType atomic) =>
                 throw new NotSupportedException($"{Name} Radix does not support formatting atomic values");
 
@@ -239,13 +253,16 @@ namespace L5Sharp.Enums
         {
             private const int BaseNumber = 2;
             private const int CharsPerByte = 8;
-            private const string Specifier = "2#";
             private const string ByteSeparator = "_";
             private const string Pattern = @"(?<=\d)(?=(\d\d\d\d)+(?!\d))";
 
             public BinaryRadix() : base(nameof(Binary), nameof(Binary))
             {
             }
+
+            public override string Specifier => "2#";
+
+            public override bool HasFormat(string input) => !input.IsEmpty() && input.StartsWith(Specifier);
 
             public override string Format(AtomicType atomic)
             {
@@ -272,13 +289,14 @@ namespace L5Sharp.Enums
         {
             private const int BaseNumber = 8;
             private const int CharsPerByte = 3;
-            private const string Specifier = "8#";
             private const string ByteSeparator = "_";
             private const string Pattern = @"(?<=\d)(?=(\d\d\d)+(?!\d))";
 
             public OctalRadix() : base(nameof(Octal), nameof(Octal))
             {
             }
+
+            public override string Specifier => "8#";
 
             public override string Format(AtomicType atomic)
             {
@@ -305,6 +323,18 @@ namespace L5Sharp.Enums
         {
             public DecimalRadix() : base(nameof(Decimal), nameof(Decimal))
             {
+            }
+
+            public override string Specifier => string.Empty;
+
+            public override bool HasFormat(string input)
+            {
+                if (input.StartsWith("+") || input.StartsWith("-"))
+                {
+                    input = input.Remove(0, 1);
+                }
+
+                return !input.IsEmpty() && input.All(char.IsDigit);
             }
 
             public override string Format(AtomicType atomic)
@@ -363,13 +393,14 @@ namespace L5Sharp.Enums
         {
             private const int BaseNumber = 16;
             private const int BitsPerByte = 2;
-            private const string Specifier = "16#";
             private const string ByteSeparator = "_";
             private const string Pattern = @"(?<=\w)(?=(\w\w\w\w)+(?!\w))";
 
             public HexRadix() : base(nameof(Hex), nameof(Hex))
             {
             }
+
+            public override string Specifier => "16#";
 
             public override string Format(AtomicType atomic)
             {
@@ -398,6 +429,19 @@ namespace L5Sharp.Enums
             {
             }
 
+            public override string Specifier => string.Empty;
+
+            public override bool HasFormat(string input)
+            {
+                //we don't care if it is positive or negative
+                if (input.StartsWith("+") || input.StartsWith("-"))
+                {
+                    input = input.Remove(0, 1);
+                }
+
+                return !input.IsEmpty() && input.Contains('.') && input.Replace(".", string.Empty).All(char.IsDigit);
+            }
+
             public override string Format(AtomicType atomic)
             {
                 ValidateType(atomic);
@@ -421,6 +465,22 @@ namespace L5Sharp.Enums
             {
             }
 
+            public override string Specifier => "";
+
+            public override bool HasFormat(string input)
+            {
+                //we don't care if it is positive or negative, so remove it.
+                if (input.StartsWith("+") || input.StartsWith("-"))
+                {
+                    input = input.Remove(0, 1);
+                }
+
+                return !input.IsEmpty() && input.Contains(".")
+                                        && input.Contains("e", StringComparison.OrdinalIgnoreCase)
+                                        && input.ReplaceAll(new[] { ".", "e", "E", "+", "-" }, string.Empty)
+                                            .All(char.IsDigit);
+            }
+
             public override string Format(AtomicType atomic)
             {
                 ValidateType(atomic);
@@ -442,7 +502,7 @@ namespace L5Sharp.Enums
         {
             private const int BaseNumber = 16;
             private const int BitsPerByte = 2;
-            private const char Specifier = '\'';
+            private const char SpecifierChar = '\'';
             private const char ByteSeparator = '$';
             private const string Pattern = @"\$[A-Fa-f0-9]{2}|\$[tlpr'$]{1}|[\x00-\x7F]";
 
@@ -460,6 +520,13 @@ namespace L5Sharp.Enums
             {
             }
 
+            public override string Specifier => "'";
+
+            public override bool HasFormat(string input)
+            {
+                return !input.IsEmpty() && input.StartsWith("'") && input.EndsWith("'");
+            }
+
             public override string Format(AtomicType atomic)
             {
                 ValidateType(atomic);
@@ -475,7 +542,7 @@ namespace L5Sharp.Enums
             {
                 ValidateFormat(input);
 
-                var value = GenerateHex(input.TrimSingle(Specifier));
+                var value = GenerateHex(input.TrimSingle(SpecifierChar));
 
                 return ConvertToAtomic(value, BitsPerByte, BaseNumber);
             }
@@ -529,7 +596,6 @@ namespace L5Sharp.Enums
 
         private class DateTimeRadix : Radix
         {
-            private const string Specifier = "DT#";
             private const string Separator = "_";
             private const string Suffix = "Z";
             private const string InsertPattern = @"(?<=\d\d\d)(?=(\d\d\d)+(?!\d))";
@@ -538,6 +604,8 @@ namespace L5Sharp.Enums
             public DateTimeRadix() : base(nameof(DateTime), "Date/Time")
             {
             }
+
+            public override string Specifier => "DT#";
 
             public override string Format(AtomicType atomic)
             {
@@ -577,13 +645,14 @@ namespace L5Sharp.Enums
 
         private class DateTimeNsRadix : Radix
         {
-            private const string Specifier = "LDT#";
             private const string Separator = "_";
             private const string InsertPattern = @"(?<=\d\d\d)(?=(\d\d\d)+(?!\d))";
 
             public DateTimeNsRadix() : base(nameof(DateTimeNs), "Date/Time (ns)")
             {
             }
+
+            public override string Specifier => "LDT#";
 
             public override string Format(AtomicType atomic)
             {

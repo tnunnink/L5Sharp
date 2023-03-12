@@ -7,28 +7,27 @@ namespace L5Sharp.Components
     /// <summary>
     /// Represents a Rung of Ladder Logic, or the logix content that is contained by the <see cref="RllRoutine"/> component.
     /// </summary>
-    /// <remarks>
-    /// </remarks>
     [LogixSerializer(typeof(RungSerializer))]
     public sealed class Rung
     {
         /// <summary>
-        /// Gets the number of the <see cref="Rung"/> for which it is contained within a routine.
+        /// The <c>Rung</c> number or index of the rung's position within it's containing <c>Routine</c>.
         /// </summary>
         public int Number { get; set; }
 
         /// <summary>
-        /// Gets the <see cref="Enums.RungType"/> of the <see cref="Rung"/> instance.
+        /// The <c>Rung</c> type, indicating edit information of the rung.
         /// </summary>
         public RungType Type { get; set; } = RungType.Normal;
 
         /// <summary>
-        /// Gets the string comment value of the <see cref="Rung"/> instance.
+        /// The comment of the <c>Rung</c>.
         /// </summary>
+        /// <value>A <see cref="string"/> containing the text comment of the Rung.</value>
         public string Comment { get; set; } = string.Empty;
 
         /// <summary>
-        /// Gets the <see cref="Core.NeutralText"/> value of the <see cref="Rung"/> instance.
+        /// The <see cref="Core.NeutralText"/> representing the Rung logic.
         /// </summary>
         public NeutralText Text { get; set; } = NeutralText.Empty;
 

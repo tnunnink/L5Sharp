@@ -16,6 +16,8 @@ namespace L5Sharp
     /// </summary>
     public class L5X : XElement
     {
+        private const string DateTimeFormat = "ddd MMM d HH:mm:ss yyyy";
+        
         private static readonly Dictionary<string, string> Containers = new()
         {
             { L5XName.DataType, L5XName.DataTypes },
@@ -73,7 +75,7 @@ namespace L5Sharp
         /// <summary>
         /// Gets the date time that the L5X file was exported.
         /// </summary>
-        public DateTime? ExportDate => this.LogixDateTimeOrDefault(L5XName.ExportDate);
+        public DateTime? ExportDate => this.TryGetDateTime(L5XName.ExportDate, DateTimeFormat);
 
         /// <summary>
         /// Gets the known container element for the specified component name.
@@ -103,7 +105,7 @@ namespace L5Sharp
             content.Add(new XAttribute(L5XName.TargetType, target.GetType().GetLogixName()));
             content.Add(new XAttribute(L5XName.ContainsContext, target is not Controller));
             content.Add(new XAttribute(L5XName.Owner, Environment.UserName));
-            //content.Add(new XAttribute(L5XName.ExportDate, DateTime.Now.ToString(DateFormat)));
+            content.Add(new XAttribute(L5XName.ExportDate, DateTime.Now.ToString(DateTimeFormat)));
 
             var serializer = LogixSerializer.GetSerializer<TComponent>();
             var component = serializer.Serialize(target);
