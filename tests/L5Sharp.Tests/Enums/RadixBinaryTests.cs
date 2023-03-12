@@ -1,8 +1,7 @@
-﻿using System;
-using FluentAssertions;
+﻿using FluentAssertions;
 using L5Sharp.Enums;
+using L5Sharp.Extensions;
 using L5Sharp.Types.Atomics;
-using NUnit.Framework;
 
 namespace L5Sharp.Tests.Enums
 {
@@ -81,7 +80,7 @@ namespace L5Sharp.Tests.Enums
         [Test]
         public void Parse_Null_ShouldThrowArgumentNullException()
         {
-            FluentActions.Invoking(() => Radix.Binary.Parse(null!)).Should().Throw<ArgumentNullException>();
+            FluentActions.Invoking(() => Radix.Binary.Parse(null!)).Should().Throw<ArgumentException>();
         }
 
         [Test]
@@ -113,7 +112,7 @@ namespace L5Sharp.Tests.Enums
         {
             var atomic = Radix.Binary.Parse("2#0");
 
-            atomic.Should().Be(false);
+            atomic.AsType<BOOL>().Should().Be(false);
         }
         
         [Test]
@@ -121,7 +120,7 @@ namespace L5Sharp.Tests.Enums
         {
             var atomic = Radix.Binary.Parse("2#1");
 
-            atomic.Should().Be(true);
+            atomic.AsType<BOOL>().Should().Be(true);
         }
 
         [Test]
@@ -129,7 +128,7 @@ namespace L5Sharp.Tests.Enums
         {
             var value = Radix.Binary.Parse("2#0001_0100");
 
-            value.Should().Be(new SINT(20));
+            value.AsType<SINT>().Should().Be(new SINT(20));
         }
 
         [Test]
@@ -137,7 +136,7 @@ namespace L5Sharp.Tests.Enums
         {
             var value = Radix.Binary.Parse("2#0000_0000_0001_0100");
 
-            value.Should().Be(new INT(20));
+            value.AsType<INT>().Should().Be(new INT(20));
         }
 
         [Test]
@@ -145,7 +144,7 @@ namespace L5Sharp.Tests.Enums
         {
             var value = Radix.Binary.Parse("2#0000_0000_0000_0000_0000_0000_0001_0100");
 
-            value.Should().Be(new DINT(20));
+            value.AsType<DINT>().Should().Be(new DINT(20));
         }
 
 
@@ -155,7 +154,7 @@ namespace L5Sharp.Tests.Enums
             var value = Radix.Binary.Parse(
                 "2#0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0001_0100");
 
-            value.Should().Be(new LINT(20));
+            value.AsType<LINT>().Should().Be(new LINT(20));
         }
     }
 }

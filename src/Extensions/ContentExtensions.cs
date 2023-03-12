@@ -86,11 +86,11 @@ public static class ContentExtensions
             });
 
     /// <summary>
-    /// 
+    /// Gets all <see cref="NeutralText"/> instance with a reference to the provided <see cref="TagName"/> value.
     /// </summary>
-    /// <param name="content"></param>
-    /// <param name="tagName"></param>
-    /// <returns></returns>
+    /// <param name="content">The current <see cref="LogixContent"/> instance.</param>
+    /// <param name="tagName">The tag name to search for.</param>
+    /// <returns>A <see cref="IEnumerable{T}"/> containing all the <see cref="NeutralText"/> references found.</returns>
     public static IEnumerable<NeutralText> Logic(this LogixContent content, TagName tagName) =>
         content.L5X.Descendants(L5XName.Rung).Select(r => r.Element(L5XName.Text) is not null
                 ? new NeutralText(r.Element(L5XName.Text)!.Value)
@@ -98,10 +98,15 @@ public static class ContentExtensions
             .Where(t => t.ContainsKey(tagName));
 
     /// <summary>
-    /// 
+    /// Returns all referenced tag names and their corresponding list of <see cref="NeutralText"/> logic references in the
+    /// L5X file.
     /// </summary>
-    /// <param name="content"></param>
-    /// <returns></returns>
+    /// <param name="content">The current <see cref="LogixContent"/> instance.</param>
+    /// <returns>A <see cref="Dictionary{TKey,TValue}"/> where each tag name is a key and it's corresponding value is
+    /// a <see cref="List{T}"/> containing all the logic referencing the tag found in the file.</returns>
+    /// <remarks>
+    /// This is useful for performing quick lookup of references to tag names.
+    /// </remarks>
     public static Dictionary<TagName, List<NeutralText>> LookupTags(this LogixContent content)
     {
         var references = content.L5X.Descendants(L5XName.Rung)
@@ -124,10 +129,15 @@ public static class ContentExtensions
     }
     
     /// <summary>
-    /// 
+    /// Returns all referenced instructions and their corresponding list of <see cref="NeutralText"/> logic references
+    /// in the L5X file.
     /// </summary>
-    /// <param name="content"></param>
-    /// <returns></returns>
+    /// <param name="content">The current <see cref="LogixContent"/> instance.</param>
+    /// <returns>A <see cref="Dictionary{TKey,TValue}"/> where each instruction is a key and it's corresponding value is
+    /// a <see cref="List{T}"/> containing all the logic referencing the instruction found in the file.</returns>
+    /// <remarks>
+    /// This is useful for performing quick lookup of references to instructions.
+    /// </remarks>
     public static Dictionary<string, List<NeutralText>> LookupInstructions(this LogixContent content)
     {
         var references = content.L5X.Descendants(L5XName.Rung)
@@ -153,10 +163,15 @@ public static class ContentExtensions
     }
     
     /// <summary>
-    /// 
+    /// Returns all referenced data types and their corresponding list of <see cref="TagName"/> references
+    /// in the L5X file.
     /// </summary>
-    /// <param name="content"></param>
-    /// <returns></returns>
+    /// <param name="content">The current <see cref="LogixContent"/> instance.</param>
+    /// <returns>A <see cref="Dictionary{TKey,TValue}"/> where each data type is a key and it's corresponding value is
+    /// a <see cref="List{T}"/> containing all the tag names referencing the data type in the file.</returns>
+    /// <remarks>
+    /// This is useful for performing quick lookup of references to data types.
+    /// </remarks>
     public static Dictionary<string, List<TagName>> LookupDataTypes(this LogixContent content)
     {
         var tags = content.Query<Tag>().SelectMany(t => t.Members());
