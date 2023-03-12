@@ -4,6 +4,8 @@ using L5Sharp.Components;
 using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Types;
+using L5Sharp.Types.Atomics;
+using L5Sharp.Types.Predefined;
 
 namespace L5Sharp
 {
@@ -22,16 +24,29 @@ namespace L5Sharp
         TagName TagName { get; }
 
         /// <summary>
-        /// The data value or structure of the tag member.
+        /// The data value or structure of the <c>TagMember</c>.
         /// </summary>
-        /// <value>A <see cref="ILogixType"/> containing the data value or structure of the tag component.</value>
+        /// <value>A <see cref="ILogixType"/> containing the data value or structure of the <c>Tag</c> component.</value>
         /// <remarks>
-        /// This represents the value of the tags member. 
+        /// <para>
+        /// This represents the value or structure of a Tag.
+        /// For instance, if the data type is a simple <see cref="AtomicType"/> such as <see cref="BOOL"/>,
+        /// then <c>Data</c> will represent a single value. If the data type is a complex <see cref="StructureType"/>
+        /// such as <see cref="TIMER"/>, then <c>Data</c> contains the entire data hierarchy of the tag.
+        /// </para>
+        /// <para>
+        /// To access members of a complex structure type tag, use the built-in methods <see cref="Member"/>,
+        /// or <see cref="Members()"/>.
+        /// </para>
+        ///<para>
+        /// When deserializing, a tag's type is not known until runtime. To get specific access tag's type,
+        /// you can cast or convert it using extensions <c>AsType()</c> or <c>ToType()</c>.
+        /// </para>
         /// </remarks>
         ILogixType Data { get; }
         
         /// <summary>
-        /// The name of the data type that represents the tag's type. 
+        /// The name of the data type for the <c>TagMember</c>. 
         /// </summary>
         /// <value>A <see cref="string"/> representing the name of the tag data type.</value>
         /// <remarks>This simply points to the name property of <see cref="Data"/>. This keeps the values in sync.</remarks>

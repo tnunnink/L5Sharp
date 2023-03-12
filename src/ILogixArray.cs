@@ -6,7 +6,7 @@ namespace L5Sharp;
 
 /// <summary>
 /// A generic interface representing a logic array type. This is needed to provided the co-variance of the generic type
-/// argument so we can use patter matching for determine the <see cref="ILogixType"/> at runtime.
+/// argument so we can use pattern matching for determine the <see cref="ILogixType"/> at runtime.
 /// </summary>
 /// <typeparam name="TLogixType">The <see cref="ILogixType"/> the array contains.</typeparam>
 public interface ILogixArray<out TLogixType> : ILogixType, IEnumerable<TLogixType> where TLogixType : ILogixType
