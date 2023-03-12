@@ -88,7 +88,7 @@ namespace L5Sharp.Tests.Enums
         [Test]
         public void Parse_Null_ShouldThrowArgumentNullException()
         {
-            FluentActions.Invoking(() => Radix.Ascii.Parse(null!)).Should().Throw<ArgumentNullException>();
+            FluentActions.Invoking(() => Radix.Ascii.Parse(null!)).Should().Throw<ArgumentException>();
         }
 
         [Test]

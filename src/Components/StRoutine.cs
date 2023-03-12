@@ -9,7 +9,7 @@ namespace L5Sharp.Components;
 /// <summary>
 /// A logix <c>StRoutine</c> component. Contains the properties that comprise the L5X Structured Text Routine element.
 /// </summary>
-[LogixSerializer(typeof(RllRoutineSerializer))]
+[LogixSerializer(typeof(StRoutineSerializer))]
 [XmlType(L5XName.Routine)]
 public class StRoutine : Routine
 {

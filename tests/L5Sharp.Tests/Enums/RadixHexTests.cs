@@ -1,6 +1,7 @@
 ﻿using System;
 using FluentAssertions;
 using L5Sharp.Enums;
+using L5Sharp.Extensions;
 using L5Sharp.Types.Atomics;
 using NUnit.Framework;
 
@@ -89,7 +90,7 @@ namespace L5Sharp.Tests.Enums
         [Test]
         public void Parse_Null_ShouldThrowArgumentNullException()
         {
-            FluentActions.Invoking(() => Radix.Hex.Parse(null!)).Should().Throw<ArgumentNullException>();
+            FluentActions.Invoking(() => Radix.Hex.Parse(null!)).Should().Throw<ArgumentException>();
         }
 
         [Test]
@@ -117,7 +118,7 @@ namespace L5Sharp.Tests.Enums
         {
             var value = Radix.Hex.Parse("16#0");
 
-            value.Should().Be(false);
+            value.AsType<BOOL>().Should().Be(false);
         }
 
         [Test]
@@ -125,7 +126,7 @@ namespace L5Sharp.Tests.Enums
         {
             var value = Radix.Hex.Parse("16#14");
 
-            value.Should().Be(20);
+            value.AsType<SINT>().Should().Be(20);
         }
 
         [Test]
@@ -133,7 +134,7 @@ namespace L5Sharp.Tests.Enums
         {
             var value = Radix.Hex.Parse("16#0014");
 
-            value.Should().Be(20);
+            value.AsType<INT>().Should().Be(20);
         }
 
         [Test]
@@ -141,7 +142,7 @@ namespace L5Sharp.Tests.Enums
         {
             var value = Radix.Hex.Parse("16#0000_0014");
 
-            value.Should().Be(20);
+            value.AsType<DINT>().Should().Be(20);
         }
 
         [Test]
@@ -149,7 +150,7 @@ namespace L5Sharp.Tests.Enums
         {
             var value = Radix.Hex.Parse("16#0000_0000_0000_0014");
 
-            value.Should().Be(20);
+            value.AsType<LINT>().Should().Be(20);
         }
     }
 }

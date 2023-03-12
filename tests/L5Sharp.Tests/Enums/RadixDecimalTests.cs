@@ -1,8 +1,6 @@
-﻿using System;
-using FluentAssertions;
+﻿using FluentAssertions;
 using L5Sharp.Enums;
 using L5Sharp.Types.Atomics;
-using NUnit.Framework;
 
 namespace L5Sharp.Tests.Enums
 {
@@ -81,7 +79,7 @@ namespace L5Sharp.Tests.Enums
         [Test]
         public void Parse_Null_ShouldThrowArgumentNullException()
         {
-            FluentActions.Invoking(() => Radix.Decimal.Parse(null!)).Should().Throw<ArgumentNullException>();
+            FluentActions.Invoking(() => Radix.Decimal.Parse(null!)).Should().Throw<ArgumentException>();
         }
 
         [Test]

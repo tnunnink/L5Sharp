@@ -198,6 +198,9 @@ namespace L5Sharp.Enums
 
         private static AtomicType ConvertToAtomic(string value, int bitsPerByte, int baseNumber)
         {
+            if (value.IsEmpty())
+                throw new ArgumentException("Value can not be empty.");
+            
             var byteLength = value.Length / bitsPerByte;
 
             return byteLength switch

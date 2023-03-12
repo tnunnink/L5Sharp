@@ -44,15 +44,14 @@ public abstract class LogixEnum<TEnum, TValue> :
     /// <summary>
     /// The value of the enumeration type.
     /// </summary>
-    /// <value>A value of the specified enumeration <see cref="TValue"/> type.</value>
+    /// <value>A value of the specified enumeration type.</value>
     public TValue Value { get; }
 
     /// <summary>
     /// Returns all enumeration options for the specified enumeration type.
     /// </summary>
-    /// <typeparam name="TEnum">The enumeration type.</typeparam>
     /// <returns>An <see cref="IEnumerable{T}"/> containing all enumeration values of the specified type.</returns>
-    public static IEnumerable<TEnum> All() =>  FromNamOptions.Value.Values.ToList().AsReadOnly();
+    public static IEnumerable<TEnum> All() => FromNamOptions.Value.Values.ToList().AsReadOnly();
 
     /// <summary>
     /// Gets the item associated with the specified name.
@@ -71,7 +70,7 @@ public abstract class LogixEnum<TEnum, TValue> :
     {
         if (string.IsNullOrEmpty(name))
             throw new ArgumentException("Argument can not be null or empty.", name);
-        
+
         return GetFromName(ignoreCase ? FromNameIgnoreCaseOptions.Value : FromNamOptions.Value);
 
         TEnum GetFromName(IReadOnlyDictionary<string, TEnum> dictionary)
@@ -96,7 +95,7 @@ public abstract class LogixEnum<TEnum, TValue> :
     /// <exception cref="ArgumentException"><paramref name="name"/> is <c>null</c>.</exception> 
     /// <seealso cref="LogixEnum{TEnum, TValue}.FromName(string, bool)"/>
     /// <seealso cref="LogixEnum{TEnum, TValue}.TryFromName(string, bool, out TEnum)"/>
-    public static bool TryFromName(string name, out TEnum? result) => TryFromName(name, false, out result);
+    public static bool TryFromName(string? name, out TEnum? result) => TryFromName(name, false, out result);
 
     /// <summary>
     /// Gets the item associated with the specified name.
@@ -112,13 +111,13 @@ public abstract class LogixEnum<TEnum, TValue> :
     /// <exception cref="ArgumentException"><paramref name="name"/> is <c>null</c>.</exception> 
     /// <seealso cref="LogixEnum{TEnum, TValue}.FromName(string, bool)"/>
     /// <seealso cref="LogixEnum{TEnum, TValue}.TryFromName(string, out TEnum)"/>
-    public static bool TryFromName(string name, bool ignoreCase, out TEnum? result)
+    public static bool TryFromName(string? name, bool ignoreCase, out TEnum? result)
     {
         if (!string.IsNullOrEmpty(name))
             return ignoreCase
                 ? FromNameIgnoreCaseOptions.Value.TryGetValue(name, out result)
                 : FromNamOptions.Value.TryGetValue(name, out result);
-        
+
         result = default;
         return false;
     }
@@ -138,7 +137,7 @@ public abstract class LogixEnum<TEnum, TValue> :
     {
         if (value is null)
             throw new ArgumentNullException(nameof(value));
-        
+
         if (!FromValueOptions.Value.TryGetValue(value, out var result))
             throw new KeyNotFoundException($"No {typeof(TEnum).Name} with Value {value} found.");
 
@@ -180,7 +179,7 @@ public abstract class LogixEnum<TEnum, TValue> :
     {
         if (value is not null)
             return FromValueOptions.Value.TryGetValue(value, out result);
-        
+
         result = default;
         return false;
     }
@@ -209,7 +208,7 @@ public abstract class LogixEnum<TEnum, TValue> :
         if (ReferenceEquals(this, other)) return true;
         return other is not null && Value.Equals(other.Value);
     }
-    
+
     /// <summary>
     /// Performs equality check on the provided <see cref="LogixEnum{TEnum,TValue}"/> types.
     /// </summary>
@@ -283,12 +282,9 @@ public abstract class LogixEnum<TEnum, TValue> :
     /// <summary>
     /// Implicitly converts the provided <see cref="LogixEnum{TEnum,TValue}"/> to the underlying value. 
     /// </summary>
-    /// <param name="smartEnum">The enumeration type.</param>
+    /// <param name="logixEnum">The enumeration type.</param>
     /// <returns>A value representing the </returns>
-    public static implicit operator TValue(LogixEnum<TEnum, TValue> smartEnum) =>
-        smartEnum is not null
-            ? smartEnum.Value
-            : default;
+    public static implicit operator TValue(LogixEnum<TEnum, TValue> logixEnum) => logixEnum.Value;
 
 
     /// <summary>
@@ -297,7 +293,7 @@ public abstract class LogixEnum<TEnum, TValue> :
     /// <param name="value"></param>
     /// <returns></returns>
     public static explicit operator LogixEnum<TEnum, TValue>(TValue value) => FromValue(value);
-    
+
 
     private static readonly Lazy<TEnum[]> EnumOptions = new(GetOptions, LazyThreadSafetyMode.ExecutionAndPublication);
 

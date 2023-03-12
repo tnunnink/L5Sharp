@@ -61,7 +61,7 @@ namespace L5Sharp.Serialization.Data
                 {
                     var value = e.GetValue<string>(L5XName.Value);
                     var format = Radix.Infer(value);
-                    return Logix.Atomic(dataType, value, radix != format ? format : radix);
+                    return Logix.Atomic(dataType, value, !format.Equals(radix) ? format : radix);
                 }
                     
 

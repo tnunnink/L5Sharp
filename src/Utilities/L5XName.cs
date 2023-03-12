@@ -653,6 +653,11 @@ namespace L5Sharp.Utilities
         public const string Length = "Length";
         
         ///<summary>
+        /// Gets the <c>Line</c> L5X name value.
+        ///</summary>
+        public const string Line = "Line";
+
+        ///<summary>
         /// Gets the <c>LLEnabled</c> L5X name value.
         ///</summary>
         public const string LLEnabled = "LLEnabled";
@@ -1346,6 +1351,11 @@ namespace L5Sharp.Utilities
         /// Gets the <c>State</c> L5X name value.
         ///</summary>
         public const string State = "State";
+        
+        ///<summary>
+        /// Gets the <c>RLLContent</c> L5X name value.
+        ///</summary>
+        public const string STContent = "STContent";
         
         ///<summary>
         /// Gets the <c>Structure</c> L5X name value.

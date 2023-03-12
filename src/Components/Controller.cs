@@ -102,9 +102,7 @@ namespace L5Sharp.Components
         /// imported into the project regardless of the MatchProjectToController setting. Type a 32-bit, 
         /// hexadecimal number with the 16# prefix, such as 16#0012_E2BC.
         /// </summary>
-        public string ProjectSN { get; set; } = string.Empty;
-        
-        public string OnlineSN { get; set; } = string.Empty;
+        public string ProjectSn { get; set; } = string.Empty;
 
         /// <summary>
         /// Specify whether to be sure that the project matches the controller or not. Type Yes or No.
@@ -157,39 +155,12 @@ namespace L5Sharp.Components
         /// for the normal operating state of a system.
         /// </remarks>
         public bool DownloadProjectCustomProperties { get; set; } = true;
-        
-        public bool ReportMinorOverflow { get; set; }
-        public bool IOForcesEnabled { get; set; }
-        public bool SFCForcesEnabled { get; set; }
-        public string FilePath { get; set; } = string.Empty;
-        public string ProductCode { get; set; } = string.Empty;
-        public string Verified { get; set; } = string.Empty;
-        public bool ControllerEditsExist { get; set; }
-        public bool PendingEditsExist { get; set; }
-        public bool ForcesExist { get; set; }
-        public string EditResource { get; set; } = string.Empty;
-        public string Faulted { get; set; } = string.Empty;
-        public string GeneralStatus { get; set; } = string.Empty;
-        public string IOMapLEDStatus { get; set; } = string.Empty;
-        public string KeySwitchPosition { get; set; } = string.Empty;
-        public string Mode { get; set; } = string.Empty;
-        public string ConnectedState { get; set; } = string.Empty;
-        public bool IsProjectDirty { get; set; }
-        public bool IsProjectDirtyFromAnotherWorkstation { get; set; }
-        
+
         /// <summary>
         /// The EtherNet/IP™ Mode describes the relationship between the CIP™ EtherNet/IP™ ports
         /// and the physical Ethernet ports. The CIP™ EtherNet/IP™ port can be configured as one of two modes:
         /// Dual-IP, Linear/DLR
         /// </summary>
         public string EtherNetIPMode { get; set; } = string.Empty;
-        
-        
-        public string InstructionUsageConfiguredAOIs { get; set; } = string.Empty;
-        public string InstructionUsageConfiguredInstructions { get; set; } = string.Empty;
-        public string IsPlantPAxTaskingModelEnabled { get; set; } = string.Empty;
-        public string AutoDiagsEnabled { get; set; } = string.Empty;
-        public string WebServerEnabled { get; set; } = string.Empty;
-        public string Use { get; set; } = string.Empty;
     }
 }

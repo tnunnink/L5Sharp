@@ -1,7 +1,7 @@
 ﻿namespace L5Sharp.Enums
 {
     /// <summary>
-    /// An enumeration of all Logix <see cref="RungType"/> values for a given <see cref="Rung"/>.
+    /// An enumeration of all Logix <see cref="RungType"/> values for a given Rung.
     /// </summary>
     public class RungType : LogixEnum<RungType, string>
     {

@@ -1,6 +1,7 @@
 ﻿using System;
 using FluentAssertions;
 using L5Sharp.Enums;
+using L5Sharp.Extensions;
 using L5Sharp.Types.Atomics;
 using NUnit.Framework;
 
@@ -81,7 +82,7 @@ namespace L5Sharp.Tests.Enums
         [Test]
         public void Parse_Null_ShouldThrowArgumentNullException()
         {
-            FluentActions.Invoking(() => Radix.Octal.Parse(null!)).Should().Throw<ArgumentNullException>();
+            FluentActions.Invoking(() => Radix.Octal.Parse(null!)).Should().Throw<ArgumentException>();
         }
 
         [Test]
@@ -109,7 +110,7 @@ namespace L5Sharp.Tests.Enums
         {
             var value = Radix.Octal.Parse("8#0");
 
-            value.Should().Be(false);
+            value.AsType<BOOL>().Should().Be(false);
         }
 
         [Test]
@@ -117,7 +118,7 @@ namespace L5Sharp.Tests.Enums
         {
             var value = Radix.Octal.Parse("8#024");
 
-            value.Should().Be(20);
+            value.AsType<SINT>().Should().Be(20);
         }
 
         [Test]
@@ -125,7 +126,7 @@ namespace L5Sharp.Tests.Enums
         {
             var value = Radix.Octal.Parse("8#000_024");
 
-            value.Should().Be(20);
+            value.AsType<INT>().Should().Be(20);
         }
 
         [Test]
@@ -133,7 +134,7 @@ namespace L5Sharp.Tests.Enums
         {
             var value = Radix.Octal.Parse("8#00_000_000_024");
 
-            value.Should().Be(20);
+            value.AsType<DINT>().Should().Be(20);
         }
 
 
@@ -142,7 +143,7 @@ namespace L5Sharp.Tests.Enums
         {
             var value = Radix.Octal.Parse("8#0_000_000_000_000_000_000_024");
 
-            value.Should().Be(20);
+            value.AsType<LINT>().Should().Be(20);
         }
     }
 }

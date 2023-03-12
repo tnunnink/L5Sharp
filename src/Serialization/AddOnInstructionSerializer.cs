@@ -20,6 +20,7 @@ namespace L5Sharp.Serialization
         private readonly ParameterSerializer _parameterSerializer = new();
         private readonly FormattedDataSerializer _dataSerializer = new();
         private readonly RllRoutineSerializer _rllSerializer = new();
+        private readonly StRoutineSerializer _stSerializer = new();
 
         /// <inheritdoc />
         public XElement Serialize(AddOnInstruction obj)
@@ -103,6 +104,9 @@ namespace L5Sharp.Serialization
             if (routines.All(r => r.GetValue<RoutineType>(L5XName.Type) == RoutineType.Rll))
                 return routines.Select(r => (Routine)_rllSerializer.Deserialize(r));
 
+            if (routines.All(r => r.GetValue<RoutineType>(L5XName.Type) == RoutineType.St))
+                return routines.Select(r => (Routine)_stSerializer.Deserialize(r));
+            
             //todo would support other types here but for now not doing that.
 
             return Enumerable.Empty<Routine>();

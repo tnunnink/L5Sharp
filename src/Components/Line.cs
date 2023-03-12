@@ -9,12 +9,12 @@ public sealed class Line
     /// The <c>Line</c> number or index of the line's position within it's containing <c>Routine</c>.
     /// </summary>
     public int Number { get; set; }
-    
+
     /// <summary>
     /// The structured text of the Line.
     /// </summary>
     /// <value>A <see cref="string"/> representing the text of the line.</value>
-    public string Text { get; set; }
+    public string Text { get; set; } = string.Empty;
     
     /// <inheritdoc />
     public override string ToString() => Text;

@@ -3,6 +3,7 @@ using System.Globalization;
 using AutoFixture;
 using FluentAssertions;
 using L5Sharp.Enums;
+using L5Sharp.Extensions;
 using L5Sharp.Types.Atomics;
 using NUnit.Framework;
 
@@ -23,7 +24,7 @@ namespace L5Sharp.Tests.Enums
         [Test]
         public void Format_Null_ShouldThrowArgumentNullException()
         {
-            FluentActions.Invoking(() => Radix.Exponential.Format(null)).Should().Throw<ArgumentNullException>();
+            FluentActions.Invoking(() => Radix.Exponential.Format(null!)).Should().Throw<ArgumentNullException>();
         }
 
         [Test]
@@ -61,13 +62,13 @@ namespace L5Sharp.Tests.Enums
         [Test]
         public void Parse_Null_ShouldThrowArgumentNullException()
         {
-            FluentActions.Invoking(() => Radix.Exponential.Parse(null)).Should().Throw<ArgumentNullException>();
+            FluentActions.Invoking(() => Radix.Exponential.Parse(null!)).Should().Throw<ArgumentException>();
         }
         
         [Test]
         public void Parse_Empty_ShouldThrowArgumentNullException()
         {
-            FluentActions.Invoking(() => Radix.Exponential.Parse(string.Empty)).Should().Throw<ArgumentNullException>();
+            FluentActions.Invoking(() => Radix.Exponential.Parse(string.Empty)).Should().Throw<ArgumentException>();
         }
 
         [Test]
@@ -75,7 +76,7 @@ namespace L5Sharp.Tests.Enums
         {
             var result = Radix.Exponential.Parse("1.12300000e+002");
 
-            result.Should().Be(112.3f);
+            result.AsType<REAL>().Should().Be(112.3f);
         }
 
     }

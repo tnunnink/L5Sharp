@@ -40,6 +40,9 @@ namespace L5Sharp.Serialization.Data
 
             DataFormat.TryFromName(element.Attribute(L5XName.Format)?.Value, out var format);
 
+            if (format is null)
+                throw new InvalidOperationException($"Could not find format attribute on element '{element}'");
+
             if (format == DataFormat.Decorated)
                 return TagDataSerializer.DecoratedData.Deserialize(element.Elements().First());
             

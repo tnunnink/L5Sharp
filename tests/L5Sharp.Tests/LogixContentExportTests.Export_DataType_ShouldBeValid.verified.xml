@@ -1,4 +1,4 @@
-﻿<RSLogix5000Content SchemaRevision="1.0" TargetName="TestType" TargetType="DataType" ContainsContext="true" Owner="tnunnink">
+﻿<RSLogix5000Content SchemaRevision="1.0" TargetName="TestType" TargetType="DataType" ContainsContext="true" Owner="tnunnink" ExportDate="Sun Mar 12 15:59:57 2023">
   <Controller Use="Context">
     <DataTypes>
       <DataType Name="TestType" Family="NoFamily" Class="User" Use="Target">

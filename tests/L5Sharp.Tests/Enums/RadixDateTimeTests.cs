@@ -1,6 +1,7 @@
 ﻿using System;
 using FluentAssertions;
 using L5Sharp.Enums;
+using L5Sharp.Extensions;
 using L5Sharp.Types.Atomics;
 using NUnit.Framework;
 
@@ -64,7 +65,7 @@ namespace L5Sharp.Tests.Enums
 
             var result = radix.Parse("DT#2021-11-30-13:12:32.000_000Z");
 
-            result.Should().Be(1638277952000000);
+            result.AsType<LINT>().Should().Be(1638277952000000);
         }
 
         [Test]
@@ -74,7 +75,7 @@ namespace L5Sharp.Tests.Enums
 
             var result = radix.Parse("DT#2022-01-01-06:00:00.100_100Z");
 
-            result.Should().Be(1641016800100100);
+            result.AsType<LINT>().Should().Be(1641016800100100);
         }
     }
 }

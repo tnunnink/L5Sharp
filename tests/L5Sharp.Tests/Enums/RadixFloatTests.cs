@@ -1,10 +1,9 @@
-﻿using System;
-using System.Globalization;
+﻿using System.Globalization;
 using AutoFixture;
 using FluentAssertions;
 using L5Sharp.Enums;
+using L5Sharp.Extensions;
 using L5Sharp.Types.Atomics;
-using NUnit.Framework;
 
 namespace L5Sharp.Tests.Enums
 {
@@ -77,13 +76,13 @@ namespace L5Sharp.Tests.Enums
         [Test]
         public void Parse_Null_ShouldThrowArgumentNullException()
         {
-            FluentActions.Invoking(() => Radix.Float.Parse(null!)).Should().Throw<ArgumentNullException>();
+            FluentActions.Invoking(() => Radix.Float.Parse(null!)).Should().Throw<ArgumentException>();
         }
         
         [Test]
         public void Parse_Empty_ShouldThrowArgumentNullException()
         {
-            FluentActions.Invoking(() => Radix.Float.Parse(string.Empty)).Should().Throw<ArgumentNullException>();
+            FluentActions.Invoking(() => Radix.Float.Parse(string.Empty)).Should().Throw<ArgumentException>();
         }
 
         [Test]
@@ -91,7 +90,7 @@ namespace L5Sharp.Tests.Enums
         {
             var result = Radix.Float.Parse(1.23.ToString(CultureInfo.InvariantCulture));
 
-            result.Should().Be(1.23f);
+            result.AsType<REAL>().Should().Be(1.23f);
         }
     }
 }

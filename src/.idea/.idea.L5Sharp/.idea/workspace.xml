@@ -7,13 +7,33 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="documentation...">
+    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="documentation and testing">
+      <change afterPath="$PROJECT_DIR$/Serialization/StRoutineSerializer.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Extensions/ContentExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Extensions/ContentExtensions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Enums/RadixBinaryTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Enums/RadixBinaryTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Enums/RadixDateTimeNsTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Enums/RadixDateTimeNsTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Examples.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Examples.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/LogixContentExampleTests.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Components/Line.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Components/Line.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Components/StRoutine.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Components/StRoutine.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Enums/LogixEnum.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Enums/LogixEnum.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Enums/Radix.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Enums/Radix.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Enums/RungType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Enums/RungType.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Serialization/AddOnInstructionSerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Serialization/AddOnInstructionSerializer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Serialization/Data/ArraySerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Serialization/Data/ArraySerializer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Serialization/Data/DataValueMemberSerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Serialization/Data/DataValueMemberSerializer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Serialization/Data/DataValueSerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Serialization/Data/DataValueSerializer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Serialization/Data/FormattedDataSerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Serialization/Data/FormattedDataSerializer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Utilities/L5XName.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Utilities/L5XName.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Core/ModuleTagsTests.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Enums/RadixAsciiTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Enums/RadixAsciiTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Enums/RadixDateTimeTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Enums/RadixDateTimeTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Enums/RadixDecimalTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Enums/RadixDecimalTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Enums/RadixExponentialTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Enums/RadixExponentialTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Enums/RadixFloatTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Enums/RadixFloatTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Enums/RadixHexTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Enums/RadixHexTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Enums/RadixOctalTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Enums/RadixOctalTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Enums/RevisionTests.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/LogixContentExportTests.Export_DataType_ShouldBeValid.verified.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/LogixContentExportTests.Export_DataType_ShouldBeValid.verified.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/LogixContentExportTests.Export_ValidComponent_ShouldHaveVerifiedL5X.verified.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/LogixContentExportTests.Export_ValidComponent_ShouldHaveVerifiedL5X.verified.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/Samples/Generated/DataType.L5X" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/Samples/Generated/DataType.L5X" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -149,6 +169,7 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/f90429cc0220488dbef4a1bcd913cfad9d800/BF/LateBoundTestFramework.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/fa60121f8597edda05ba1e79c874b7b6527c3a7a58eed18a5e6266beec5bea/FileStream.Windows.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/fcb7c6c2bdd189d6d8f13a694cf733524fb73b87c4131674538619a9bc6acfac/RuntimeHelpers.CoreCLR.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Core/Bus.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Enums/Instruction.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/LogixContent.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Types/ArrayType.cs" root0="FORCE_HIGHLIGHTING" />
@@ -366,14 +387,7 @@
       <workItem from="1678111631966" duration="11451000" />
       <workItem from="1678136379729" duration="16179000" />
       <workItem from="1678399236829" duration="7974000" />
-      <workItem from="1678483897582" duration="17543000" />
-    </task>
-    <task id="LOCAL-00163" summary="Replaced serializers mapping extensions methods with manual mapping using new enum naming.">
-      <created>1647019215383</created>
-      <option name="number" value="00163" />
-      <option name="presentableId" value="LOCAL-00163" />
-      <option name="project" value="LOCAL" />
-      <updated>1647019215384</updated>
+      <workItem from="1678483897582" duration="19368000" />
     </task>
     <task id="LOCAL-00164" summary="Added in AOI serializer and adding testing for parameter serializers. Update tag comments to new TagPropertyCollection.cs to be generic and updated serializers and tag components. Other random updates...">
       <created>1647035423124</created>
@@ -711,7 +725,14 @@
       <option name="project" value="LOCAL" />
       <updated>1678649394160</updated>
     </task>
-    <option name="localTasksCounter" value="212" />
+    <task id="LOCAL-00212" summary="documentation and testing">
+      <created>1678653600077</created>
+      <option name="number" value="00212" />
+      <option name="presentableId" value="LOCAL-00212" />
+      <option name="project" value="LOCAL" />
+      <updated>1678653600077</updated>
+    </task>
+    <option name="localTasksCounter" value="213" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -721,30 +742,23 @@
     <option name="coveragePercentColumnWidth" value="51" />
     <option name="sortOrder" value="DESCENDING" />
     <option name="sortedColumn" value="1" />
-    <option name="symbolColumnWidth" value="457" />
+    <option name="symbolColumnWidth" value="470" />
     <coverage-tree-state>
       <expand>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 94% 627/11086" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 94% 815/14415" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 94% 627/11086" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 88% 519/4166" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 94% 815/14415" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 85% 775/5272" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 94% 627/11086" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 88% 519/4166" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="(0.3.0.0, .NETStandard,Version=v2.1) 88% 519/4166" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-        </path>
-        <path>
-          <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 94% 627/11086" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 88% 519/4166" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="(0.3.0.0, .NETStandard,Version=v2.1) 88% 519/4166" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 88% 519/4166" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 94% 815/14415" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 85% 775/5272" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="(0.4.0.0, .NETStandard,Version=v2.1) 85% 775/5272" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
       </expand>
       <select />
@@ -770,7 +784,6 @@
       <path value="$PROJECT_DIR$/../.." />
     </ignored-roots>
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="Separation of components from strongly typed classes like member and data type. reorganization of namespaces. elimination of component interfaces to reduce clutter and to make everything simpler. Removed underdeveloped code. focusing on simpler api and experience." />
     <MESSAGE value="Continued development of simpler component classes and removal of underdeveloped code. Fixing errors and updating documentation." />
     <MESSAGE value="continued error clean up..." />
     <MESSAGE value="finished fixing bugs. switch serialization methods to type interface." />
@@ -795,7 +808,8 @@
     <MESSAGE value="removed SmartEnum package and replaced with LogixEnum.cs" />
     <MESSAGE value="Some clean up, reorg, adding of new extension methods for analyzing logic and getting lookups. Documentation updates." />
     <MESSAGE value="documentation..." />
-    <option name="LAST_COMMIT_MESSAGE" value="documentation..." />
+    <MESSAGE value="documentation and testing" />
+    <option name="LAST_COMMIT_MESSAGE" value="documentation and testing" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -825,6 +839,32 @@
             </endOffsets>
           </properties>
           <option name="timeStamp" value="69" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Types/Atomics/Converters/BoolConverter.cs</url>
+          <line>46</line>
+          <properties documentPath="C:\Users\tnunnink\Documents\GitHub\L5Sharp\src\Types\Atomics\Converters\BoolConverter.cs" initialLine="46" containingFunctionPresentation="method 'ConvertFrom'">
+            <startOffsets>
+              <option value="1683" />
+            </startOffsets>
+            <endOffsets>
+              <option value="1820" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="78" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Types/Atomics/Converters/BoolConverter.cs</url>
+          <line>40</line>
+          <properties documentPath="C:\Users\tnunnink\Documents\GitHub\L5Sharp\src\Types\Atomics\Converters\BoolConverter.cs" initialLine="40" containingFunctionPresentation="method 'ConvertFrom'">
+            <startOffsets>
+              <option value="1506" />
+            </startOffsets>
+            <endOffsets>
+              <option value="1522" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="79" />
         </line-breakpoint>
         <breakpoint enabled="true" type="DotNet Exception Breakpoints">
           <properties exception="System.PlatformNotSupportedException" isInternal="false" displayValue="PlatformNotSupportedException" namespaceName="System">

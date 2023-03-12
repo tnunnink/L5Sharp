@@ -42,7 +42,7 @@ namespace L5Sharp.Serialization.Data
             //Rockwell is saying it is.
             var format = Radix.Infer(value);
 
-            return Logix.Atomic(name, value, radix != format ? format : radix);
+            return Logix.Atomic(name, value, !format.Equals(radix) ? format : radix);
         }
     }
 }
