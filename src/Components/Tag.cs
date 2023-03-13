@@ -95,13 +95,13 @@ namespace L5Sharp.Components
         /// The collection of member comments for the tag component.
         /// </summary>
         /// <value>A <see cref="Dictionary{TKey,TValue}"/> of <see cref="Core.TagName"/>, <see cref="string"/> pairs.</value>
-        public Dictionary<string, string> Comments { get; set; } = new();
+        public Dictionary<string, string> Comments { get; set; } = new(StringComparer.OrdinalIgnoreCase);
 
         /// <summary>
         /// The collection of member units for the tag component.
         /// </summary>
         /// <value>A <see cref="Dictionary{TKey,TValue}"/> of <see cref="Core.TagName"/>, <see cref="string"/> pairs.</value>
-        public Dictionary<string, string> Units { get; set; } = new();
+        public Dictionary<string, string> Units { get; set; } = new(StringComparer.OrdinalIgnoreCase);
 
         /// <inheritdoc />
         public TagMember? Member(TagName tagName)

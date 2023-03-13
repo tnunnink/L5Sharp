@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Xml.Linq;
 using L5Sharp.Components;
 using L5Sharp.Core;
@@ -50,7 +51,7 @@ namespace L5Sharp.Serialization
             if (obj.Config is not null)
             {
                 var config = new XElement(L5XName.ConfigTag);
-                
+
                 if (obj.Config.Comments.Any())
                 {
                     var comments = new XElement(L5XName.Comments);
@@ -64,7 +65,7 @@ namespace L5Sharp.Serialization
 
                     config.Add(comments);
                 }
-                
+
                 if (obj.Config.Units.Any())
                 {
                     var units = new XElement(L5XName.EngineeringUnits);
@@ -78,7 +79,7 @@ namespace L5Sharp.Serialization
 
                     config.Add(units);
                 }
-                
+
                 config.Add(TagDataSerializer.DecoratedData.Serialize(obj.Config.Data));
                 communications.Add(config);
             }
@@ -126,6 +127,7 @@ namespace L5Sharp.Serialization
         private static Tag? DeserializeConfig(XElement element)
         {
             var tag = element.Descendants(L5XName.ConfigTag).FirstOrDefault();
+
             var data = tag?.Elements(L5XName.Data)
                 .FirstOrDefault(e => e.Attribute(L5XName.Format)?.Value == DataFormat.Decorated)
                 ?.Elements().First();
@@ -136,16 +138,17 @@ namespace L5Sharp.Serialization
             {
                 Name = tag.ModuleTagName(),
                 Data = TagDataSerializer.DecoratedData.Deserialize(data),
-                ExternalAccess =
-                    element.TryGetValue<ExternalAccess>(L5XName.ExternalAccess) ?? ExternalAccess.ReadWrite,
-                Comments = element.Descendants(L5XName.Comment)
+                ExternalAccess = tag.TryGetValue<ExternalAccess>(L5XName.ExternalAccess) ?? ExternalAccess.ReadWrite,
+                Comments = tag.Descendants(L5XName.Comment)
                     .ToDictionary(
                         k => k.GetValue<string>(L5XName.Operand),
-                        e => e.Value),
-                Units = element.Descendants(L5XName.EngineeringUnit)
+                        e => e.Value,
+                        StringComparer.OrdinalIgnoreCase),
+                Units = tag.Descendants(L5XName.EngineeringUnit)
                     .ToDictionary(
                         k => k.GetValue<string>(L5XName.Operand),
-                        e => e.Value)
+                        e => e.Value,
+                        StringComparer.OrdinalIgnoreCase)
             };
         }
     }

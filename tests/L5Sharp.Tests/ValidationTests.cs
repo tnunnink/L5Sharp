@@ -41,10 +41,16 @@ public class ValidationTests
     {
         var content = LogixContent.Load(@"C:\Users\tnunnink\Local\Transfer\Site.L5X");
 
-        var tags = content.Modules().SelectMany(m => m.Tags()).SelectMany(t => t.Members());
+        var config = content.Modules().Find("R0S4").Config;
 
-        var commented = tags.Where(t => t.Comment != string.Empty).ToList();
+        var comment = string.Empty;
+        
+        config?.Comments.TryGetValue(".CH0CountLimit", out comment);
 
-        commented.Should().NotBeEmpty();
+        comment.Should().NotBeEmpty();
+
+        var member = config?.Member("Ch0CountLimit");
+
+        member?.Comment.Should().NotBeEmpty();
     }
 }

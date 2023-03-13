@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using AutoFixture;
+﻿using AutoFixture;
 using FluentAssertions;
 using L5Sharp.Core;
 using L5Sharp.Utilities;
@@ -225,7 +224,7 @@ namespace L5Sharp.Tests.Core
         {
             var tagName = TagName.Combine(Base, Path);
 
-            tagName.Should<TagName>().Be(TestTagName);
+            tagName.Should().Be(TestTagName);
         }
         
         [Test]
@@ -233,7 +232,7 @@ namespace L5Sharp.Tests.Core
         {
             var tagName = TagName.Combine("MyTag", "SomeArray", "[1]", "ArrayElement", "SomeMember", ".1");
 
-            tagName.Should<TagName>().Be("MyTag.SomeArray[1].ArrayElement.SomeMember.1");
+            tagName.Should().Be("MyTag.SomeArray[1].ArrayElement.SomeMember.1");
         }
 
         [Test]
@@ -241,7 +240,7 @@ namespace L5Sharp.Tests.Core
         {
             var tagName = TagName.Combine(Members);
 
-            tagName.Should<TagName>().Be(TestTagName);
+            tagName.Should().Be(TestTagName);
         }
 
         [Test]

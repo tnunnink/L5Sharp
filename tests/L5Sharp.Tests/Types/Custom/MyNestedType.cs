@@ -46,6 +46,6 @@ namespace L5Sharp.Tests.Types.Custom
         /// <summary>
         /// A nested array of structure types.
         /// </summary>
-        public MESSAGE[] Messages { get; set; } = Logix.Array<MESSAGE>(10).ToArray();
+        public ArrayType<MESSAGE> Messages { get; set; } = Logix.Array<MESSAGE>(10);
     }
 }

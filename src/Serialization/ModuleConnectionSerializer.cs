@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Xml.Linq;
 using L5Sharp.Components;
 using L5Sharp.Core;
@@ -149,9 +150,10 @@ namespace L5Sharp.Serialization
             };
         }
 
-        private static Tag? DeserializeTag(XElement element, XName tagName, string suffix)
+        private static Tag? DeserializeTag(XContainer element, XName tagName, string suffix)
         {
             var tag = element.Descendants(tagName).FirstOrDefault();
+            
             var data = tag?.Elements(L5XName.Data)
                 .FirstOrDefault(e => e.Attribute(L5XName.Format)?.Value == DataFormat.Decorated)
                 ?.Elements().First();
@@ -162,15 +164,17 @@ namespace L5Sharp.Serialization
             {
                 Name = tag.ModuleTagName(suffix),
                 Data = TagDataSerializer.DecoratedData.Deserialize(data),
-                ExternalAccess = element.TryGetValue<ExternalAccess>(L5XName.ExternalAccess) ?? ExternalAccess.ReadWrite,
-                Comments = element.Descendants(L5XName.Comment)
+                ExternalAccess = tag.TryGetValue<ExternalAccess>(L5XName.ExternalAccess) ?? ExternalAccess.ReadWrite,
+                Comments = tag.Descendants(L5XName.Comment)
                     .ToDictionary(
                         k => k.GetValue<string>(L5XName.Operand),
-                        e => e.Value),
-                Units = element.Descendants(L5XName.EngineeringUnit)
+                        e => e.Value,
+                        StringComparer.OrdinalIgnoreCase),
+                Units = tag.Descendants(L5XName.EngineeringUnit)
                     .ToDictionary(
                         k => k.GetValue<string>(L5XName.Operand),
-                        e => e.Value)
+                        e => e.Value,
+                        StringComparer.OrdinalIgnoreCase)
                 
             };
         }
