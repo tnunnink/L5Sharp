@@ -34,7 +34,7 @@ namespace L5Sharp.Tests.Core
         {
             var tagName = new TagName(string.Empty);
 
-            tagName.Should<string>().NotBeNull();
+            tagName.Should().NotBeNull();
             tagName.IsEmpty.Should().BeTrue();
         }
 
@@ -51,7 +51,7 @@ namespace L5Sharp.Tests.Core
         {
             var tagName = new TagName("Test");
 
-            tagName.Should<string>().NotBeNull();
+            tagName.Should().NotBeNull();
         }
         
         [Test]
@@ -63,9 +63,9 @@ namespace L5Sharp.Tests.Core
             tagName.Operand.Should().BeEmpty();
             tagName.Path.Should().BeEmpty();
             tagName.Depth.Should().Be(0);
-            tagName.Should<string>().HaveCount(1);
+            tagName.Members.Should().HaveCount(1);
             tagName.IsEmpty.Should().BeFalse();
-            tagName.IsValid.Should().BeTrue();
+            tagName.IsQualified.Should().BeTrue();
         }
 
         [Test]
@@ -73,7 +73,57 @@ namespace L5Sharp.Tests.Core
         {
             var tagName = new TagName(TestTagName);
 
-            tagName.Should<string>().NotBeNull();
+            tagName.Should().NotBeNull();
+        }
+
+        [Test]
+        public void Operand_Empty_ShouldBeEmpty()
+        {
+            var tagName = TagName.Empty;
+
+            var operand = tagName.Operand;
+
+            operand.Should().BeEmpty();
+        }
+
+        [Test]
+        public void Operand_MemberSeparator_ShouldBeExpected()
+        {
+            var tagName = new TagName("MyTag.SomeMember.1");
+
+            var operand = tagName.Operand;
+
+            operand.Should().Be(".SomeMember.1");
+        }
+        
+        [Test]
+        public void Operand_ArrayBracket_ShouldBeExpected()
+        {
+            var tagName = new TagName("MyTag[1].SomeMember.1");
+
+            var operand = tagName.Operand;
+
+            operand.Should().Be("[1].SomeMember.1");
+        }
+        
+        [Test]
+        public void Path_MemberSeparator_ShouldBeExpected()
+        {
+            var tagName = new TagName("MyTag.SomeMember.1");
+
+            var path = tagName.Path;
+
+            path.Should().Be("SomeMember.1");
+        }
+        
+        [Test]
+        public void Path_ArrayBracket_ShouldBeExpected()
+        {
+            var tagName = new TagName("MyTag[1].SomeMember.1");
+
+            var path = tagName.Path;
+
+            path.Should().Be("[1].SomeMember.1");
         }
 
         [Test]
@@ -81,7 +131,7 @@ namespace L5Sharp.Tests.Core
         {
             var tagName = new TagName(TestTagName);
 
-            foreach (var member in tagName)
+            foreach (var member in tagName.Members)
             {
                 member.Should().BeOfType<string>();
                 member.Should().NotBeEmpty();
@@ -109,9 +159,9 @@ namespace L5Sharp.Tests.Core
             tagName.Operand.Should().Be(Operand);
             tagName.Path.Should().Be(Path);
             tagName.Depth.Should().Be(3);
-            tagName.Should<string>().HaveCount(4);
+            tagName.Members.Should().HaveCount(4);
             tagName.IsEmpty.Should().BeFalse();
-            tagName.IsValid.Should().BeTrue();
+            tagName.IsQualified.Should().BeTrue();
         }
 
         [Test]
@@ -119,7 +169,7 @@ namespace L5Sharp.Tests.Core
         {
             var tagName = new TagName("RackIO:1:I.Slot[2].Data.4");
 
-            tagName.Should<string>().NotBeNull();
+            tagName.Should().NotBeNull();
         }
         
         [Test]
@@ -131,9 +181,9 @@ namespace L5Sharp.Tests.Core
             tagName.Operand.Should().Be(".Slot[2].Data.4");
             tagName.Path.Should().Be("Slot[2].Data.4");
             tagName.Depth.Should().Be(4);
-            tagName.Should<string>().HaveCount(5);
+            tagName.Members.Should().HaveCount(5);
             tagName.IsEmpty.Should().BeFalse();
-            tagName.IsValid.Should().BeTrue();
+            tagName.IsQualified.Should().BeTrue();
         }
 
         [Test]
@@ -141,7 +191,7 @@ namespace L5Sharp.Tests.Core
         {
             var tagName = TagName.Empty;
 
-            tagName.Should<string>().BeEquivalentTo(new TagName(""));
+            tagName.Should().BeEquivalentTo(new TagName(""));
         }
         
         [Test]
@@ -157,7 +207,7 @@ namespace L5Sharp.Tests.Core
         {
             var tagName = TagName.Empty;
 
-            tagName.IsValid.Should().BeFalse();
+            tagName.IsQualified.Should().BeFalse();
         }
 
         [Test]
@@ -165,7 +215,7 @@ namespace L5Sharp.Tests.Core
         {
             var tagName = new TagName(TestTagName);
 
-            var members = tagName.ToList();
+            var members = tagName.Members.ToList();
 
             members.Should<string>().BeEquivalentTo(Members);
         }
@@ -474,16 +524,6 @@ namespace L5Sharp.Tests.Core
             var result = first.CompareTo(null!);
 
             result.Should().Be(1);
-        }
-
-        [Test]
-        public void GetEnumerator_AsEnumerable_ShouldNotBeNull()
-        {
-            var tag = new TagName(TestTagName);
-
-            var enumerator = ((IEnumerable)tag).GetEnumerator();
-
-            enumerator.Should().NotBeNull();
         }
     }
 }

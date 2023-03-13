@@ -46,6 +46,20 @@ namespace L5Sharp.Components
         /// <inheritdoc />
         public MemberType MemberType => MemberType.FromType(Data);
 
+        /// <inheritdoc />
+        public AtomicType? Value
+        {
+            get => Data as AtomicType;
+            set
+            {
+                if (Data is not AtomicType)
+                    throw new InvalidOperationException(
+                        $"Tag type is {Data.GetType()}. Can not set value for a non atomic type.");
+
+                Data = value ?? throw new ArgumentNullException(nameof(value));
+            }
+        }
+
         /// <summary>
         /// The external access option indicating the read/write access of the tag.
         /// </summary>
@@ -163,14 +177,6 @@ namespace L5Sharp.Components
                 : null;
 
             return tagMember is not null ? tagMember.Members() : Enumerable.Empty<TagMember>();
-        }
-
-        /// <inheritdoc />
-        public bool SetValue(AtomicType atomicType)
-        {
-            if (Data is not AtomicType) return false;
-            Data = atomicType;
-            return true;
         }
     }
 }

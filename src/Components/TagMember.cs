@@ -40,6 +40,20 @@ namespace L5Sharp.Components
         /// <inheritdoc />
         public MemberType MemberType => MemberType.FromType(Data);
 
+        /// <inheritdoc />
+        public AtomicType? Value
+        {
+            get => Data as AtomicType;
+            set
+            {
+                if (Data is not AtomicType)
+                    throw new InvalidOperationException(
+                        $"Tag type is {Data.GetType()}. Can not set value for a non atomic type.");
+
+                Data = value ?? throw new ArgumentNullException(nameof(value));
+            }
+        }
+
         /// <summary>
         /// The overriden string comment of the tag member, if one exists. Empty string if not.
         /// </summary>
@@ -128,20 +142,12 @@ namespace L5Sharp.Components
         public IEnumerable<TagMember> MembersOf(TagName tagName)
         {
             var member = Data.FindMember(tagName);
-            
+
             var tagMember = member is not null
                 ? new TagMember(TagName.Combine(TagName, tagName), member.DataType, _tag)
                 : null;
-            
-            return tagMember is not null ? tagMember.Members() : Enumerable.Empty<TagMember>();
-        }
 
-        /// <inheritdoc />
-        public bool SetValue(AtomicType atomicType)
-        {
-            if (Data is not AtomicType) return false;
-            Data = atomicType;
-            return true;
+            return tagMember is not null ? tagMember.Members() : Enumerable.Empty<TagMember>();
         }
     }
 }

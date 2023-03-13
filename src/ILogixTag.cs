@@ -81,6 +81,11 @@ namespace L5Sharp
         MemberType MemberType { get; }
         
         /// <summary>
+        /// 
+        /// </summary>
+        AtomicType? Value { get; set; }
+        
+        /// <summary>
         /// Gets a descendent tag member relative to the current tag member.
         /// </summary>
         /// <param name="tagName">The full <see cref="Core.TagName"/> path of the member to get.</param>
@@ -115,13 +120,13 @@ namespace L5Sharp
         /// <returns>A <see cref="IEnumerable{T}"/> containing <see cref="TagMember"/> objects.</returns>
         IEnumerable<TagMember> MembersOf(TagName tagName);
 
-        /// <summary>
+        /*/// <summary>
         /// Sets the tag member <c>Data</c> property to the provided <see cref="AtomicType"/> if the
         /// tag's data property is already an atomic type. Otherwise, does not set the value.
         /// </summary>
         /// <param name="atomicType">A <see cref="AtomicType"/> value representing the value to set.</param>
         /// <returns><c>true</c> if the value was set; otherwise, <c>false</c>.</returns>
         /// <remarks>This is a helper to avoid having to check or cast <c>Data</c> before setting it's value.</remarks>
-        bool SetValue(AtomicType atomicType);
+        bool SetValue(AtomicType atomicType);*/
     }
 }

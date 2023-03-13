@@ -199,7 +199,7 @@ namespace L5Sharp.Tests.Serialization
         public void Deserialize_InvalidElementName_ShouldThrowArgumentException()
         {
             const string xml = @"<Invalid></Invalid>";
-            
+
             var element = XElement.Parse(xml);
 
             var tag = _serializer.Deserialize(element);
@@ -263,6 +263,34 @@ namespace L5Sharp.Tests.Serialization
             component.Member("TT")?.Data.AsType<BOOL>().Should().Be(false);
             component.Member("DN")?.Data.AsType<BOOL>().Should().Be(false);
         }
+        
+        [Test]
+        public void Deserialize_GetTimerArrayWithComments_ShouldBeExpected()
+        {
+            var element = XElement.Parse(GetTimerArrayWithComments());
+
+            var component = _serializer.Deserialize(element);
+
+            component.Name.Should().Be("TimerArray");
+            component.DataType.Should().Be("TIMER");
+            component.Description.Should().Be("Base Timer");
+            component.TagType.Should().Be(TagType.Base);
+            component.Constant.Should().BeFalse();
+            component.Radix.Should().Be(Radix.Null);
+            component.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);
+            component.Dimensions.Should().Be(new Dimensions(5));
+            component.Usage.Should().Be(TagUsage.Normal);
+            component.Data.Should().NotBeNull();
+            component.Data.Should().BeOfType<ArrayType<ILogixType>>();
+            component.Members().Should().HaveCount(30);
+            component.Comments.Should().HaveCount(2);
+
+            var first = component.Member("[1]");
+            first?.Comment.Should().Be("Index 1");
+            
+            var firstPre = component.Member("[1].PRE");
+            firstPre?.Comment.Should().Be("PRE 1");
+        }
 
         private static string GetSimpleTagData()
         {
@@ -297,6 +325,77 @@ namespace L5Sharp.Tests.Serialization
                 </Structure>
                 </Data>
                 </Tag>";
+        }
+
+        private static string GetTimerArrayWithComments()
+        {
+            return
+                @"<Tag Name=""TimerArray"" TagType=""Base"" DataType=""TIMER"" Dimensions=""5"" Constant=""false""
+                 ExternalAccess=""Read/Write"">
+                <Description>
+                    <![CDATA[Base Timer]]>
+                </Description>
+                <Comments>
+                    <Comment Operand=""[1]"">
+                        <![CDATA[Index 1]]>
+                    </Comment>
+                    <Comment Operand=""[1].PRE"">
+                        <![CDATA[PRE 1]]>
+                    </Comment>
+                </Comments>
+                <Data Format=""L5K"">
+                    <![CDATA[[[0,5000,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0]]]]>
+                </Data>
+                <Data Format=""Decorated"">
+                    <Array DataType=""TIMER"" Dimensions=""5"">
+                        <Element Index=""[0]"">
+                            <Structure DataType=""TIMER"">
+                                <DataValueMember Name=""PRE"" DataType=""DINT"" Radix=""Decimal"" Value=""5000""/>
+                                <DataValueMember Name=""ACC"" DataType=""DINT"" Radix=""Decimal"" Value=""0""/>
+                                <DataValueMember Name=""EN"" DataType=""BOOL"" Value=""0""/>
+                                <DataValueMember Name=""TT"" DataType=""BOOL"" Value=""0""/>
+                                <DataValueMember Name=""DN"" DataType=""BOOL"" Value=""0""/>
+                            </Structure>
+                        </Element>
+                        <Element Index=""[1]"">
+                            <Structure DataType=""TIMER"">
+                                <DataValueMember Name=""PRE"" DataType=""DINT"" Radix=""Decimal"" Value=""0""/>
+                                <DataValueMember Name=""ACC"" DataType=""DINT"" Radix=""Decimal"" Value=""0""/>
+                                <DataValueMember Name=""EN"" DataType=""BOOL"" Value=""0""/>
+                                <DataValueMember Name=""TT"" DataType=""BOOL"" Value=""0""/>
+                                <DataValueMember Name=""DN"" DataType=""BOOL"" Value=""0""/>
+                            </Structure>
+                        </Element>
+                        <Element Index=""[2]"">
+                            <Structure DataType=""TIMER"">
+                                <DataValueMember Name=""PRE"" DataType=""DINT"" Radix=""Decimal"" Value=""0""/>
+                                <DataValueMember Name=""ACC"" DataType=""DINT"" Radix=""Decimal"" Value=""0""/>
+                                <DataValueMember Name=""EN"" DataType=""BOOL"" Value=""0""/>
+                                <DataValueMember Name=""TT"" DataType=""BOOL"" Value=""0""/>
+                                <DataValueMember Name=""DN"" DataType=""BOOL"" Value=""0""/>
+                            </Structure>
+                        </Element>
+                        <Element Index=""[3]"">
+                            <Structure DataType=""TIMER"">
+                                <DataValueMember Name=""PRE"" DataType=""DINT"" Radix=""Decimal"" Value=""0""/>
+                                <DataValueMember Name=""ACC"" DataType=""DINT"" Radix=""Decimal"" Value=""0""/>
+                                <DataValueMember Name=""EN"" DataType=""BOOL"" Value=""0""/>
+                                <DataValueMember Name=""TT"" DataType=""BOOL"" Value=""0""/>
+                                <DataValueMember Name=""DN"" DataType=""BOOL"" Value=""0""/>
+                            </Structure>
+                        </Element>
+                        <Element Index=""[4]"">
+                            <Structure DataType=""TIMER"">
+                                <DataValueMember Name=""PRE"" DataType=""DINT"" Radix=""Decimal"" Value=""0""/>
+                                <DataValueMember Name=""ACC"" DataType=""DINT"" Radix=""Decimal"" Value=""0""/>
+                                <DataValueMember Name=""EN"" DataType=""BOOL"" Value=""0""/>
+                                <DataValueMember Name=""TT"" DataType=""BOOL"" Value=""0""/>
+                                <DataValueMember Name=""DN"" DataType=""BOOL"" Value=""0""/>
+                            </Structure>
+                        </Element>
+                    </Array>
+                </Data>
+            </Tag>";
         }
     }
 }

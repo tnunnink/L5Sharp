@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,13 +10,18 @@ namespace L5Sharp.Core
     /// <summary>
     /// A value representing a tag name string. This value type class make working with string tag name easier..
     /// </summary>
-    public class TagName : IEquatable<TagName>, IComparable<TagName>, IEnumerable<string>
+    public class TagName : IEquatable<TagName>, IComparable<TagName>
     {
         private readonly string _tagName;
-        private readonly IEnumerable<string> _members;
 
         private const string ArrayBracketStart = "[";
         private const string MemberSeparator = ".";
+        
+        /// <summary>
+        /// A regex pattern for getting the base tag of the tag name string.
+        /// Use this patter to capture the root or base of a tag name value.
+        /// </summary>
+        private const string TagPattern = @"^[A-Za-z_][\w+:]{1,39}";
 
         /// <summary>
         /// A regex pattern for a Logix tag name with starting and ending anchors.
@@ -37,7 +41,15 @@ namespace L5Sharp.Core
         /// Used to split incoming string into member parts. 
         /// </summary>
         private const string TagMembersPattern =
-            @"^[A-Za-z_][\w:]{1,39}|(?<=\.)[A-Za-z_][\w]{0,39}|(?<=[A-Za-z_])\[\d+\]|(?<=[A-Za-z_])\[\d+,\d+\]|(?<=[A-Za-z_])\[\d+,\d+,\d+\]|(?<=\.)[0-9][0-9]?$";
+            @"^[A-Za-z_][\w:]{1,39}|(?<=\.)[A-Za-z_][\w]{0,39}|(?<=[A-Za-z_])\[\d+\]|(?<=[A-Za-z_])\[\d+,\d+\]|(?<=[A-Za-z_])\[\d+,\d+,\d+\]|(?<=\.)[0-9][0-9]?$";/// <summary>
+        
+        /// A regex pattern for matching each individual possible member portion of a full tag name.
+        /// Used to split incoming string into member parts. 
+        /// </summary>
+        private const string MembersPattern =
+            @"[A-Za-z_][\w:]{1,39}|(?<=\.)[A-Za-z_][\w]{0,39}|\[\d+\]|\[\d+,\d+\]|\[\d+,\d+,\d+\]|[0-9][0-9]?$";
+        
+        
 
         /// <summary>
         /// Creates a new <see cref="TagName"/> object with the provided string tag name.
@@ -46,22 +58,7 @@ namespace L5Sharp.Core
         /// <exception cref="ArgumentNullException">tagName is null.</exception>
         public TagName(string tagName)
         {
-            ValidateTagName(tagName);
-            
-            _tagName = tagName;
-            _members = Regex.Matches(_tagName, TagMembersPattern).Select(m => m.Value);
-        }
-
-        private static void ValidateTagName(string tagName)
-        {
-            if (tagName is null)
-                throw new ArgumentNullException(nameof(tagName));
-
-            if (tagName.IsEmpty()) return;
-
-            if (!Regex.IsMatch(tagName, TagNamePattern))
-                throw new FormatException(
-                    $"The provided tag name {tagName} does not represent a valid tag name string.");
+            _tagName = tagName ?? throw new ArgumentNullException(nameof(tagName));
         }
 
         /// <summary>
@@ -80,7 +77,7 @@ namespace L5Sharp.Core
         /// </remarks>
         /// <seealso cref="Operand"/>
         /// <seealso cref="Path"/>
-        public string Tag => _tagName[..GetRootLength()];
+        public string Tag => Regex.Match(_tagName, TagPattern).Value;
 
         /// <summary>
         /// Gets the operand portion of the <see cref="TagName"/> value.
@@ -101,7 +98,12 @@ namespace L5Sharp.Core
         /// leading member separator character ('.'). 
         /// </remarks>
         /// <seealso cref="Operand"/>
-        public string Path => !Operand.IsEmpty() ? Operand.Remove(0, 1) : string.Empty;
+        public string Path => Operand.StartsWith(".") ? Operand.Remove(0, 1) : Operand;
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        public IEnumerable<string> Members => Regex.Matches(_tagName, MembersPattern).Select(m => m.Value);
 
         /// <summary>
         /// A number representing the depth, or number of members from the root tag name, of the current tag name value.
@@ -112,7 +114,7 @@ namespace L5Sharp.Core
         /// indices are also considered a member. For example, 'MyTag[1].Value' has a depth of 2 since '[1]' and 'Value'
         /// are descendent member names of the root tag 'MyTag' member.
         /// </remarks>
-        public int Depth => this.Count() - 1;
+        public int Depth => Members.Count() - 1;
 
         /// <summary>
         /// Gets a value indicating whether the current <see cref="TagName"/> value is empty.
@@ -122,7 +124,7 @@ namespace L5Sharp.Core
         /// <summary>
         /// Gets a value indicating whether the current <see cref="TagName"/> is a valid representation of a tag name.
         /// </summary>
-        public bool IsValid => Regex.IsMatch(_tagName, TagNamePattern);
+        public bool IsQualified => Regex.IsMatch(_tagName, TagNamePattern);
 
         /// <summary>
         /// Gets the static empty <see cref="TagName"/> value.
@@ -207,9 +209,6 @@ namespace L5Sharp.Core
         }
 
         /// <inheritdoc />
-        public IEnumerator<string> GetEnumerator() => _members.GetEnumerator();
-
-        /// <inheritdoc />
         public override bool Equals(object? obj) => Equals(obj as TagName);
 
         /// <inheritdoc />
@@ -239,14 +238,6 @@ namespace L5Sharp.Core
                 ? 1
                 : string.Compare(_tagName, other._tagName, StringComparison.OrdinalIgnoreCase);
         }
-
-        private int GetRootLength()
-        {
-            var index = _tagName.IndexOf(MemberSeparator, StringComparison.Ordinal);
-            return index >= 0 ? index : _tagName.Length;
-        }
-
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
         private static string ConcatenateMembers(IEnumerable<string> members)
         {

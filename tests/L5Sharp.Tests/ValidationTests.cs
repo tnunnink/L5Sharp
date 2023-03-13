@@ -28,7 +28,7 @@ public class ValidationTests
 
         var referencedTags = content.Logic().SelectMany(t => t.Tags());
 
-        var unused = content.Tags().SelectMany(t => t.TagName).Where(t => referencedTags.All(r => r != t)).ToList();
+        var unused = content.Tags().Select(t => t.TagName).Where(t => referencedTags.All(r => r != t)).ToList();
 
         foreach (var tagName in unused)
         {

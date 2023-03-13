@@ -2,6 +2,7 @@
 using L5Sharp.Components;
 using L5Sharp.Core;
 using L5Sharp.Enums;
+using L5Sharp.Extensions;
 using L5Sharp.Tests.Types.Custom;
 using L5Sharp.Types.Atomics;
 using L5Sharp.Types.Predefined;
@@ -47,8 +48,8 @@ namespace L5Sharp.Tests.Components
                 Usage = TagUsage.Local,
                 AliasFor = new TagName("SomeOtherTag"),
                 Constant = true,
-                Comments = new Dictionary<string, string>{{"SomeOperand", "A test commend"}},
-                Units = new Dictionary<string, string>{{"SomeOperand", "A test unit"}}
+                Comments = new Dictionary<string, string> { { "SomeOperand", "A test commend" } },
+                Units = new Dictionary<string, string> { { "SomeOperand", "A test unit" } }
             };
 
             tag.Name.Should().Be("Test");
@@ -103,7 +104,7 @@ namespace L5Sharp.Tests.Components
             m1.Should().NotBeNull();
             m1?.TagName.Should<TagName>().Be("Test.Simple.M1");
         }
-        
+
         [Test]
         public void Member_ChainedCalls_ShouldBeExpected()
         {
@@ -146,7 +147,7 @@ namespace L5Sharp.Tests.Components
 
             members.Should().HaveCount(5);
         }
-        
+
         [Test]
         public void Members_SimpleStructure_ShouldHaveContainExpectedTagNames()
         {
@@ -178,7 +179,7 @@ namespace L5Sharp.Tests.Components
 
             members.Should().NotBeEmpty();
         }
-        
+
         [Test]
         public void Members_NestedStructure_AllDataTypesShouldNotBeNull()
         {
@@ -243,11 +244,11 @@ namespace L5Sharp.Tests.Components
                 Data = new MyNestedType()
             };
 
-            var members = tag.Members(t => t.Count() > 4);
+            var members = tag.Members(t => t.Members.Count() > 4);
 
             members.Should().NotBeEmpty();
         }
-        
+
         [Test]
         public void Members_TagNameEqualToMemberWithMemberNameComparer_ShouldReturnExpectedCount()
         {
@@ -261,7 +262,7 @@ namespace L5Sharp.Tests.Components
 
             members.Should().HaveCount(1);
         }
-        
+
         [Test]
         public void Members_TagMemberWithBOOLDataTypeName_ShouldReturnExpectedCount()
         {
@@ -289,7 +290,7 @@ namespace L5Sharp.Tests.Components
 
             members.Should().HaveCount(5);
         }
-        
+
         [Test]
         public void MembersOf_NonExistingMember_ShouldBeEmpty()
         {
@@ -303,7 +304,43 @@ namespace L5Sharp.Tests.Components
 
             members.Should().BeEmpty();
         }
+        
+        [Test]
+        public void Value_GetAtomic_ShouldWork()
+        {
+            var tag = new Tag { Name = "Test", Data = new DINT(33) };
 
+            var value = tag.Value;
 
+            value?.AsType<DINT>().Should().Be(33);
+        }
+
+        [Test]
+        public void Value_SetAtomic_ShouldWork()
+        {
+            var tag = new Tag { Name = "Test", Data = new DINT() };
+
+            tag.Value = new DINT(43);
+
+            tag.Value.AsType<DINT>().Should().Be(43);
+        }
+
+        [Test]
+        public void Value_GetTimer_ShouldBeNull()
+        {
+            var tag = new Tag { Name = "Test", Data = new TIMER() };
+
+            var value = tag.Value;
+
+            value.Should().BeNull();
+        }
+
+        [Test]
+        public void Value_SetTimer_ShouldThrowException()
+        {
+            var tag = new Tag { Name = "Test", Data = new TIMER() };
+
+            FluentActions.Invoking(() => tag.Value = new REAL(43)).Should().Throw<InvalidOperationException>();
+        }
     }
 }
