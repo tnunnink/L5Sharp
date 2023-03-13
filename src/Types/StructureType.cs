@@ -59,33 +59,13 @@ namespace L5Sharp.Types
 
         private IEnumerable<Member> FindMembers()
         {
-            var members = new List<Member>();
-
-            members.AddRange(GetLogixTypeProperties());
-
-            return members;
-        }
-
-        private IEnumerable<Member> GetLogixTypeProperties()
-        {
-            var properties = GetType().GetProperties()
-                .Where(p => typeof(ILogixType).IsAssignableFrom(p.PropertyType) 
-                            || (p.PropertyType.IsArray && 
-                                typeof(ILogixType).IsAssignableFrom(p.PropertyType.GetElementType())))
-                .ToList();
-            
-            return properties.Select(GenerateMember);
-        }
-
-        private Member GenerateMember(PropertyInfo info)
-        {
-            var name = info.Name;
-
-            if (!info.PropertyType.IsArray)
-                return new Member(name, (ILogixType)info.GetValue(this));
-            
-            var array = new ArrayType<ILogixType>((ILogixType[])info.GetValue(this));
-            return new Member(name, array);
+            return GetType().GetProperties()
+                .Where(p => typeof(ILogixType).IsAssignableFrom(p.PropertyType))
+                .Select(p =>
+                {
+                    var name = p.Name;
+                    return new Member(name, (ILogixType)p.GetValue(this));
+                });
         }
     }
 }

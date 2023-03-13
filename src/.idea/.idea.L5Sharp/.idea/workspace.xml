@@ -7,19 +7,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Extensions/TagExtensions.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Extensions/TagExtensionTests.cs" afterDir="false" />
+    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="removed old builder test projects that no longer used">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Components/Tag.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Components/Tag.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Components/TagMember.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Components/TagMember.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Core/TagName.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/TagName.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Extensions/LogixTypeExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Extensions/LogixTypeExtensions.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ILogixTag.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ILogixTag.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Utilities/TagNameComparer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Utilities/TagNameComparer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/TagTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/TagTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Core/TagNameTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Core/TagNameTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Serialization/TagSerializerTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Serialization/TagSerializerTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Serialization/ModuleConnectionSerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Serialization/ModuleConnectionSerializer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Serialization/ModuleSerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Serialization/ModuleSerializer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Types/Member.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Types/Member.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Types/StructureType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Types/StructureType.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/ValidationTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/ValidationTests.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -376,21 +372,7 @@
       <workItem from="1678136379729" duration="16179000" />
       <workItem from="1678399236829" duration="7974000" />
       <workItem from="1678483897582" duration="20090000" />
-      <workItem from="1678711903788" duration="6510000" />
-    </task>
-    <task id="LOCAL-00165" summary="Finished todo items. Created StringStructureSerializer to account for how strings are handled by data serialization">
-      <created>1647086547895</created>
-      <option name="number" value="00165" />
-      <option name="presentableId" value="LOCAL-00165" />
-      <option name="project" value="LOCAL" />
-      <updated>1647086547895</updated>
-    </task>
-    <task id="LOCAL-00166" summary="Fixed broken tests. Updated ILogixContext.cs repository members to method signature and added scoped tag repo.">
-      <created>1647099545009</created>
-      <option name="number" value="00166" />
-      <option name="presentableId" value="LOCAL-00166" />
-      <option name="project" value="LOCAL" />
-      <updated>1647099545009</updated>
+      <workItem from="1678711903788" duration="10567000" />
     </task>
     <task id="LOCAL-00167" summary="Splitting out indexing into separate namespace with new interface and implementations. Serialization updates and testing. Other random updates with tags and parsing functions. Code org, docs, etc.">
       <created>1647629133641</created>
@@ -721,7 +703,21 @@
       <option name="project" value="LOCAL" />
       <updated>1678655573098</updated>
     </task>
-    <option name="localTasksCounter" value="214" />
+    <task id="LOCAL-00214" summary="Fixed bugs with TagName.cs and reverted it from being IEnumerable of string to having a property Members to avoid issues with type inference. Added Tag Value property in place of set value. Added tag extension.">
+      <created>1678725864268</created>
+      <option name="number" value="00214" />
+      <option name="presentableId" value="LOCAL-00214" />
+      <option name="project" value="LOCAL" />
+      <updated>1678725864268</updated>
+    </task>
+    <task id="LOCAL-00215" summary="removed old builder test projects that no longer used">
+      <created>1678725990224</created>
+      <option name="number" value="00215" />
+      <option name="presentableId" value="LOCAL-00215" />
+      <option name="project" value="LOCAL" />
+      <updated>1678725990225</updated>
+    </task>
+    <option name="localTasksCounter" value="216" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -780,8 +776,6 @@
       <path value="$PROJECT_DIR$/../.." />
     </ignored-roots>
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="continued error clean up..." />
-    <MESSAGE value="finished fixing bugs. switch serialization methods to type interface." />
     <MESSAGE value="Test reorganization. Continued development of types." />
     <MESSAGE value="Continued tag member and tag development and updating documentation." />
     <MESSAGE value="re-adding back in serialization" />
@@ -805,7 +799,9 @@
     <MESSAGE value="documentation..." />
     <MESSAGE value="documentation and testing" />
     <MESSAGE value="fixed tested, some build warnings, and fixed up some other things to push out new package version." />
-    <option name="LAST_COMMIT_MESSAGE" value="fixed tested, some build warnings, and fixed up some other things to push out new package version." />
+    <MESSAGE value="Fixed bugs with TagName.cs and reverted it from being IEnumerable of string to having a property Members to avoid issues with type inference. Added Tag Value property in place of set value. Added tag extension." />
+    <MESSAGE value="removed old builder test projects that no longer used" />
+    <option name="LAST_COMMIT_MESSAGE" value="removed old builder test projects that no longer used" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

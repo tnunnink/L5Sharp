@@ -39,6 +39,35 @@ namespace L5Sharp.Serialization
             {
                 var input = new XElement(L5XName.InputTag);
                 input.AddValue(obj.Input.ExternalAccess, L5XName.ExternalAccess);
+                
+                if (obj.Input.Comments.Any())
+                {
+                    var comments = new XElement(L5XName.Comments);
+                    comments.Add(obj.Input.Comments.Select(c =>
+                    {
+                        var comment = new XElement(L5XName.Comment);
+                        comment.AddValue(c.Key, L5XName.Operand);
+                        comment.Add(new XCData(c.Value));
+                        return comment;
+                    }));
+
+                    input.Add(comments);
+                }
+                
+                if (obj.Input.Units.Any())
+                {
+                    var units = new XElement(L5XName.EngineeringUnits);
+                    units.Add(obj.Input.Units.Select(u =>
+                    {
+                        var unit = new XElement(L5XName.EngineeringUnit);
+                        unit.AddValue(u.Key, L5XName.Operand);
+                        unit.Add(new XCData(u.Value));
+                        return unit;
+                    }));
+
+                    input.Add(units);
+                }
+                
                 input.Add(TagDataSerializer.DecoratedData.Serialize(obj.Input.Data));
                 element.Add(input);
             }
@@ -47,6 +76,35 @@ namespace L5Sharp.Serialization
             {
                 var output = new XElement(L5XName.OutputTag);
                 output.AddValue(obj.Output.ExternalAccess, L5XName.ExternalAccess);
+                
+                if (obj.Output.Comments.Any())
+                {
+                    var comments = new XElement(L5XName.Comments);
+                    comments.Add(obj.Output.Comments.Select(c =>
+                    {
+                        var comment = new XElement(L5XName.Comment);
+                        comment.AddValue(c.Key, L5XName.Operand);
+                        comment.Add(new XCData(c.Value));
+                        return comment;
+                    }));
+
+                    output.Add(comments);
+                }
+                
+                if (obj.Output.Units.Any())
+                {
+                    var units = new XElement(L5XName.EngineeringUnits);
+                    units.Add(obj.Output.Units.Select(u =>
+                    {
+                        var unit = new XElement(L5XName.EngineeringUnit);
+                        unit.AddValue(u.Key, L5XName.Operand);
+                        unit.Add(new XCData(u.Value));
+                        return unit;
+                    }));
+
+                    output.Add(units);
+                }
+                
                 output.Add(TagDataSerializer.DecoratedData.Serialize(obj.Output.Data));
                 element.Add(output);
             }
@@ -104,7 +162,16 @@ namespace L5Sharp.Serialization
             {
                 Name = tag.ModuleTagName(suffix),
                 Data = TagDataSerializer.DecoratedData.Deserialize(data),
-                ExternalAccess = element.TryGetValue<ExternalAccess>(L5XName.ExternalAccess) ?? ExternalAccess.ReadWrite
+                ExternalAccess = element.TryGetValue<ExternalAccess>(L5XName.ExternalAccess) ?? ExternalAccess.ReadWrite,
+                Comments = element.Descendants(L5XName.Comment)
+                    .ToDictionary(
+                        k => k.GetValue<string>(L5XName.Operand),
+                        e => e.Value),
+                Units = element.Descendants(L5XName.EngineeringUnit)
+                    .ToDictionary(
+                        k => k.GetValue<string>(L5XName.Operand),
+                        e => e.Value)
+                
             };
         }
     }

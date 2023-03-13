@@ -50,6 +50,35 @@ namespace L5Sharp.Serialization
             if (obj.Config is not null)
             {
                 var config = new XElement(L5XName.ConfigTag);
+                
+                if (obj.Config.Comments.Any())
+                {
+                    var comments = new XElement(L5XName.Comments);
+                    comments.Add(obj.Config.Comments.Select(c =>
+                    {
+                        var comment = new XElement(L5XName.Comment);
+                        comment.AddValue(c.Key, L5XName.Operand);
+                        comment.Add(new XCData(c.Value));
+                        return comment;
+                    }));
+
+                    config.Add(comments);
+                }
+                
+                if (obj.Config.Units.Any())
+                {
+                    var units = new XElement(L5XName.EngineeringUnits);
+                    units.Add(obj.Config.Units.Select(u =>
+                    {
+                        var unit = new XElement(L5XName.EngineeringUnit);
+                        unit.AddValue(u.Key, L5XName.Operand);
+                        unit.Add(new XCData(u.Value));
+                        return unit;
+                    }));
+
+                    config.Add(units);
+                }
+                
                 config.Add(TagDataSerializer.DecoratedData.Serialize(obj.Config.Data));
                 communications.Add(config);
             }
@@ -93,7 +122,7 @@ namespace L5Sharp.Serialization
                     .ToList(),
             };
         }
-        
+
         private static Tag? DeserializeConfig(XElement element)
         {
             var tag = element.Descendants(L5XName.ConfigTag).FirstOrDefault();
@@ -107,7 +136,16 @@ namespace L5Sharp.Serialization
             {
                 Name = tag.ModuleTagName(),
                 Data = TagDataSerializer.DecoratedData.Deserialize(data),
-                ExternalAccess = element.TryGetValue<ExternalAccess>(L5XName.ExternalAccess) ?? ExternalAccess.ReadWrite
+                ExternalAccess =
+                    element.TryGetValue<ExternalAccess>(L5XName.ExternalAccess) ?? ExternalAccess.ReadWrite,
+                Comments = element.Descendants(L5XName.Comment)
+                    .ToDictionary(
+                        k => k.GetValue<string>(L5XName.Operand),
+                        e => e.Value),
+                Units = element.Descendants(L5XName.EngineeringUnit)
+                    .ToDictionary(
+                        k => k.GetValue<string>(L5XName.Operand),
+                        e => e.Value)
             };
         }
     }

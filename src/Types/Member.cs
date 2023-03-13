@@ -25,13 +25,6 @@ namespace L5Sharp.Types
     public class Member
     {
         /// <summary>
-        /// Creates a new default <see cref="Member"/> object.
-        /// </summary>
-        public Member()
-        {
-        }
-        
-        /// <summary>
         /// Creates a new <see cref="Member"/> object with the provided parameters.
         /// </summary>
         /// <param name="name">The name of the member.</param>
@@ -47,12 +40,12 @@ namespace L5Sharp.Types
         /// The name of the <see cref="Member"/> instance.
         /// </summary>
         /// <returns>A <see cref="string"/> representing the member name.</returns>
-        public string Name { get; set; } = string.Empty;
+        public string Name { get; }
 
         /// <summary>
         /// The logix type of the <see cref="Member"/> instance.
         /// </summary>
         /// <returns>A <see cref="ILogixType"/> representing the member data type.</returns>
-        public ILogixType DataType { get; set; } = Logix.Null;
+        public ILogixType DataType { get; }
     }
 }

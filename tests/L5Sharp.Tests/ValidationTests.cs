@@ -35,4 +35,16 @@ public class ValidationTests
             Console.WriteLine(tagName);
         }
     }
+
+    [Test]
+    public void ModuleTagComments()
+    {
+        var content = LogixContent.Load(@"C:\Users\tnunnink\Local\Transfer\Site.L5X");
+
+        var tags = content.Modules().SelectMany(m => m.Tags()).SelectMany(t => t.Members());
+
+        var commented = tags.Where(t => t.Comment != string.Empty).ToList();
+
+        commented.Should().NotBeEmpty();
+    }
 }

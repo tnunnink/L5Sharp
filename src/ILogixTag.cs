@@ -81,8 +81,14 @@ namespace L5Sharp
         MemberType MemberType { get; }
         
         /// <summary>
-        /// 
+        /// The value of the <c>TagMember</c> data.
         /// </summary>
+        /// <value>An <see cref="AtomicType"/> representing the value of the tag member.</value>
+        /// <remarks>
+        /// This property will just return the value of <see cref="Data"/> as an <see cref="AtomicType"/>.
+        /// If the tag member's type is not an atomic type, then this property will be null.
+        /// Setting the value should only work for atomic type tags.
+        /// </remarks>
         AtomicType? Value { get; set; }
         
         /// <summary>

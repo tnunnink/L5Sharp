@@ -41,15 +41,15 @@ namespace L5Sharp.Core
         /// Used to split incoming string into member parts. 
         /// </summary>
         private const string TagMembersPattern =
-            @"^[A-Za-z_][\w:]{1,39}|(?<=\.)[A-Za-z_][\w]{0,39}|(?<=[A-Za-z_])\[\d+\]|(?<=[A-Za-z_])\[\d+,\d+\]|(?<=[A-Za-z_])\[\d+,\d+,\d+\]|(?<=\.)[0-9][0-9]?$";/// <summary>
+            @"^[A-Za-z_][\w:]{1,39}|(?<=\.)[A-Za-z_][\w]{0,39}|(?<=[A-Za-z_])\[\d+\]|(?<=[A-Za-z_])\[\d+,\d+\]|(?<=[A-Za-z_])\[\d+,\d+,\d+\]|(?<=\.)[0-9][0-9]?$";
         
+        /// <summary>
         /// A regex pattern for matching each individual possible member portion of a full tag name.
         /// Used to split incoming string into member parts. 
         /// </summary>
         private const string MembersPattern =
             @"[A-Za-z_][\w:]{1,39}|(?<=\.)[A-Za-z_][\w]{0,39}|\[\d+\]|\[\d+,\d+\]|\[\d+,\d+,\d+\]|[0-9][0-9]?$";
-        
-        
+
 
         /// <summary>
         /// Creates a new <see cref="TagName"/> object with the provided string tag name.
