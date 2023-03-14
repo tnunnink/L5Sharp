@@ -11,7 +11,7 @@ namespace L5Sharp.Tests.Core
     {
         private const string TestText =
             "[MOV(10,Flow_Comparison_PctError_Constant),MOV(0.3,Flow_Comparison_PctError_Exponent),GRT(Calculated_Avg_Flow,0)CPT(Flow_Comparison_PctError_SP,( Flow_Comparison_PctError_Constant * Calculated_Avg_Flow ** Flow_Comparison_PctError_Exponent) / Calculated_Avg_Flow * 100),LEQ(Calculated_Avg_Flow,0)MOV(0,Flow_Comparison_PctError_SP)];";
-        
+
         [Test]
         public void New_NullText_ShouldThrowArgumentNullException()
         {
@@ -30,7 +30,7 @@ namespace L5Sharp.Tests.Core
         public void New_SomeString_ShouldNotBeNull()
         {
             var fixture = new Fixture();
-            
+
             var text = new NeutralText(fixture.Create<string>());
 
             text.Should().NotBeNull();
@@ -83,7 +83,7 @@ namespace L5Sharp.Tests.Core
 
             text.Should().BeEquivalentTo(new NeutralText(string.Empty));
         }
-        
+
         [Test]
         public void ContainsKey_Empty_ShouldBeFalse()
         {
@@ -97,23 +97,25 @@ namespace L5Sharp.Tests.Core
         [Test]
         public void ContainsKey_ValidInstruction_ShouldBeTrue()
         {
-            var text = new NeutralText("[XIC(Tag.Status.Active),XIC(Tag.Status.Enabled)][MOV(15000,Timer.PRE),TON(Timer,?,?)];");
+            var text = new NeutralText(
+                "[XIC(Tag.Status.Active),XIC(Tag.Status.Enabled)][MOV(15000,Timer.PRE),TON(Timer,?,?)];");
 
             var result = text.ContainsKey("XIC");
 
             result.Should().BeTrue();
         }
-        
+
         [Test]
         public void ContainsKey_CustomInstruction_ShouldBeTrue()
         {
-            var text = new NeutralText("[XIC(Tag.Status.Active),XIC(Tag.Status.Enabled)][MOV(15000,Timer.PRE),aoiTIMER(Timer,?,?)];");
+            var text = new NeutralText(
+                "[XIC(Tag.Status.Active),XIC(Tag.Status.Enabled)][MOV(15000,Timer.PRE),aoiTIMER(Timer,?,?)];");
 
             var result = text.ContainsKey("aoiTIMER");
 
             result.Should().BeTrue();
         }
-        
+
         [Test]
         public void ContainsSignature_Empty_ShouldBeFalse()
         {
@@ -127,13 +129,14 @@ namespace L5Sharp.Tests.Core
         [Test]
         public void ContainsSignature_ValidInstruction_ShouldBeTrue()
         {
-            var text = new NeutralText("[XIC(Tag.Status.Active),XIC(Tag.Status.Enabled)][MOV(15000,Timer.PRE),TON(Timer,?,?)];");
+            var text = new NeutralText(
+                "[XIC(Tag.Status.Active),XIC(Tag.Status.Enabled)][MOV(15000,Timer.PRE),TON(Timer,?,?)];");
 
             var result = text.ContainsSignature(Instruction.XIC);
 
             result.Should().BeTrue();
         }
-        
+
         [Test]
         public void ContainsText_Empty_ShouldBeFalse()
         {
@@ -143,17 +146,18 @@ namespace L5Sharp.Tests.Core
 
             result.Should().BeFalse();
         }
-        
+
         [Test]
         public void ContainsText_ValidTagName_ShouldBeTrue()
         {
-            var text = new NeutralText("[XIC(Tag.Status.Active),XIC(Tag.Status.Enabled)][MOV(15000,Timer.PRE),TON(Timer,?,?)];");
+            var text = new NeutralText(
+                "[XIC(Tag.Status.Active),XIC(Tag.Status.Enabled)][MOV(15000,Timer.PRE),TON(Timer,?,?)];");
 
             var result = text.ContainsText("XIC(Tag.Status.Enabled)");
 
             result.Should().BeTrue();
         }
-        
+
         [Test]
         public void ContainsTag_Empty_ShouldBeFalse()
         {
@@ -163,11 +167,12 @@ namespace L5Sharp.Tests.Core
 
             result.Should().BeFalse();
         }
-        
+
         [Test]
         public void ContainsTag_ValidTagName_ShouldBeTrue()
         {
-            var text = new NeutralText("[XIC(Tag.Status.Active),XIC(Tag.Status.Enabled)][MOV(15000,Timer.PRE),TON(Timer,?,?)];");
+            var text = new NeutralText(
+                "[XIC(Tag.Status.Active),XIC(Tag.Status.Enabled)][MOV(15000,Timer.PRE),TON(Timer,?,?)];");
 
             var result = text.ContainsTag("Tag.Status.Enabled");
 
@@ -227,24 +232,26 @@ namespace L5Sharp.Tests.Core
         [Test]
         public void Split_WithExistingInstructionPresent_ShouldContainExpectedText()
         {
-            var text = new NeutralText("[XIC(Tag.Status.Active),XIC(Tag.Status.Enabled)][MOV(15000,Timer.PRE),TON(Timer,?,?)];");
+            var text = new NeutralText(
+                "[XIC(Tag.Status.Active),XIC(Tag.Status.Enabled)][MOV(15000,Timer.PRE),TON(Timer,?,?)];");
 
             var result = text.SplitBy(Instruction.XIC).ToList();
 
             result.Should().Contain("XIC(Tag.Status.Active)");
             result.Should().Contain("XIC(Tag.Status.Enabled)");
         }
-        
+
         [Test]
         public void Split_WithExistingInstructionPresent_ShouldHaveExpectedCount()
         {
-            var text = new NeutralText("[XIC(Tag.Status.Active),XIC(Tag.Status.Enabled)][MOV(15000,Timer.PRE),TON(Timer,?,?)];");
+            var text = new NeutralText(
+                "[XIC(Tag.Status.Active),XIC(Tag.Status.Enabled)][MOV(15000,Timer.PRE),TON(Timer,?,?)];");
 
             var result = text.SplitBy(Instruction.XIC);
 
             result.Should().HaveCount(2);
         }
-        
+
         [Test]
         public void Operands_Empty_ShouldBeEmpty()
         {
@@ -264,7 +271,7 @@ namespace L5Sharp.Tests.Core
 
             operands.Should().HaveCount(12);
         }
-        
+
         [Test]
         public void OperandsByKey_Default_ReturnsExpectedCount()
         {
@@ -280,7 +287,7 @@ namespace L5Sharp.Tests.Core
                 pair.Value.Should().NotBeEmpty();
             }
         }
-        
+
         [Test]
         public void OperandsByKey_MOV_ReturnsExpectedCount()
         {
@@ -296,7 +303,7 @@ namespace L5Sharp.Tests.Core
                 pair.Value.Should().HaveCount(2);
             }
         }
-        
+
         [Test]
         public void OperandsByKey_stringMOV_ReturnsExpectedCount()
         {
@@ -316,13 +323,14 @@ namespace L5Sharp.Tests.Core
         [Test]
         public void Instructions_WhenCalled_ReturnsExpected()
         {
-            var text = new NeutralText("[XIC(Tag.Status.Active),XIC(Tag.Status.Enabled)][MOV(15000,Timer.PRE),TON(Timer,?,?)];");
+            var text = new NeutralText(
+                "[XIC(Tag.Status.Active),XIC(Tag.Status.Enabled)][MOV(15000,Timer.PRE),TON(Timer,?,?)];");
 
             var instructions = text.Instructions();
 
             instructions.Should().HaveCount(4);
         }
-        
+
         [Test]
         public void Instructions_Empty_ShouldBeEmpty()
         {
@@ -332,17 +340,18 @@ namespace L5Sharp.Tests.Core
 
             result.Should().BeEmpty();
         }
-        
+
         [Test]
         public void Instructions_CustomInstructions_ReturnsExpected()
         {
-            var text = new NeutralText("[XIC(Tag.Status.Active),XIC(Tag.Status.Enabled)][MOV(15000,Timer.PRE),aoiTIMER(Timer,?,?)];");
+            var text = new NeutralText(
+                "[XIC(Tag.Status.Active),XIC(Tag.Status.Enabled)][MOV(15000,Timer.PRE),aoiTIMER(Timer,?,?)];");
 
             var instructions = text.Instructions();
 
             instructions.Should().HaveCount(4);
         }
-        
+
         [Test]
         public void Keys_Empty_ShouldBeEmpty()
         {
@@ -372,7 +381,7 @@ namespace L5Sharp.Tests.Core
 
             references.Should().NotBeEmpty();
         }
-        
+
         [Test]
         public void ReferencesArrayTest()
         {
@@ -389,10 +398,20 @@ namespace L5Sharp.Tests.Core
             var text = new NeutralText(
                 "[XIC(Input_Data.Pt00.Data)OTE(Ch0.ChData),XIC(Input_Data.Pt00.Fault)OTE(Ch0.ChFault)];");
 
-            var result =
-                text.HasPattern(string.Concat(Instruction.XIC.Signature, Instruction.OTE.Signature));
+            var result = text.HasPattern(string.Concat(Instruction.XIC.Signature, Instruction.OTE.Signature));
 
             result.Should().BeTrue();
+        }
+
+        [Test]
+        public void SplitBy_ValidPattern_ShouldWork()
+        {
+            var text = new NeutralText(
+                "[XIC(Input_Data.Pt00.Data)OTE(Ch0.ChData),XIC(Input_Data.Pt00.Fault)OTE(Ch0.ChFault)];");
+
+            var result = text.SplitBy(string.Concat(Instruction.XIC.Signature, Instruction.OTE.Signature)).ToList();
+
+            result.Should().HaveCount(2);
         }
     }
 }
