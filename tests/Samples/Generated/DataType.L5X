@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<RSLogix5000Content SchemaRevision="1.0" TargetName="TestType" TargetType="DataType" ContainsContext="true" Owner="tnunnink" ExportDate="Tue Mar 14 13:49:49 2023">
+<RSLogix5000Content SchemaRevision="1.0" TargetName="TestType" TargetType="DataType" ContainsContext="true" Owner="tnunnink" ExportDate="Tue Mar 14 14:09:39 2023">
   <Controller Use="Context">
     <DataTypes>
       <DataType Name="TestType" Family="NoFamily" Class="User" Use="Target">

@@ -358,3 +358,5 @@ MigrationBackup/
 src/.idea/.idea.L5Sharp/.idea/workspace.xml
 tests/Samples/Test.Sem
 tests/Samples/Test.Wrk
+*.acd
+*.Recovery
