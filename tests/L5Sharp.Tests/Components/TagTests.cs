@@ -32,7 +32,6 @@ namespace L5Sharp.Tests.Components
             tag.TagType.Should().Be(TagType.Base);
             tag.AliasFor.Should<TagName>().Be(TagName.Empty);
             tag.TagName.Should<TagName>().Be(TagName.Empty);
-            tag.MemberType.Should().Be(MemberType.Unknown);
         }
 
         [Test]
@@ -64,9 +63,8 @@ namespace L5Sharp.Tests.Components
             tag.Constant.Should().BeTrue();
             tag.Usage.Should().Be(TagUsage.Local);
             tag.TagType.Should().Be(TagType.Alias);
-            tag.AliasFor.Should<TagName>().Be("SomeOtherTag");
-            tag.TagName.Should<TagName>().Be("Test");
-            tag.MemberType.Should().Be(MemberType.ValueMember);
+            tag.AliasFor.Should().Be("SomeOtherTag");
+            tag.TagName.Should().Be("Test");
         }
 
         [Test]

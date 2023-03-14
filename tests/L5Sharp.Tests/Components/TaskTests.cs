@@ -1,8 +1,8 @@
 ﻿using FluentAssertions;
+using L5Sharp.Components;
 using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Extensions;
-using Task = L5Sharp.Components.Task;
 
 namespace L5Sharp.Tests.Components
 {
@@ -12,7 +12,7 @@ namespace L5Sharp.Tests.Components
         [Test]
         public void New_Default_ShouldNotBeNull()
         {
-            var task = new Task();
+            var task = new LogixTask();
 
             task.Should().NotBeNull();
         }
@@ -20,7 +20,7 @@ namespace L5Sharp.Tests.Components
         [Test]
         public void New_Default_ShouldHaveDefaults()
         {
-            var task = new Task();
+            var task = new LogixTask();
 
             task.Name.Should().BeEmpty();
             task.Type.Should().Be(TaskType.Periodic);
@@ -36,7 +36,7 @@ namespace L5Sharp.Tests.Components
         [Test]
         public void New_WithValues_ShouldHaveExpectedValues()
         {
-            var task = new Task
+            var task = new LogixTask
             {
                 Name = "Test",
                 Type = TaskType.Continuous,

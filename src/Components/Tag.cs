@@ -25,7 +25,7 @@ namespace L5Sharp.Components
         /// <inheritdoc />
         public string Name { get; set; } = string.Empty;
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="ILogixComponent.Description" />
         public string Description { get; set; } = string.Empty;
 
         /// <inheritdoc />
@@ -42,9 +42,6 @@ namespace L5Sharp.Components
 
         /// <inheritdoc />
         public Radix Radix => Data is AtomicType atomic ? atomic.Radix : Radix.Null;
-
-        /// <inheritdoc />
-        public MemberType MemberType => MemberType.FromType(Data);
 
         /// <inheritdoc />
         public AtomicType? Value

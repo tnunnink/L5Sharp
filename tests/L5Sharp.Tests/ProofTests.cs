@@ -6,7 +6,7 @@ using L5Sharp.Types.Atomics;
 namespace L5Sharp.Tests;
 
 [TestFixture]
-public class ValidationTests
+public class ProofTests
 {
     [Test]
     public void ValidateSomeTagValue()
@@ -53,4 +53,18 @@ public class ValidationTests
 
         member?.Comment.Should().NotBeEmpty();
     }
+
+    /*[Test]
+    public void FindReferencedModuleTags()
+    {
+        var content = LogixContent.Load(@"C:\Users\tnunnink\Local\Transfer\Site.L5X");
+
+        var tagMembers = content.Modules().SelectMany(m => m.Tags()).SelectMany(t => t.Members()).ToList();
+
+        var logic = content.LogicFlatten().ToTagLookup();
+
+        var references = logic.Where(k => tagMembers.Any(m => m.TagName == k.Key)).ToList();
+
+        references.Should().NotBeEmpty();
+    }*/
 }

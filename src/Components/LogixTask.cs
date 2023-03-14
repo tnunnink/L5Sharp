@@ -16,7 +16,7 @@ namespace L5Sharp.Components
     /// </footer>
     [XmlType(L5XName.Task)]
     [LogixSerializer(typeof(TaskSerializer))]
-    public class Task : ILogixComponent
+    public class LogixTask : ILogixComponent
     {
         /// <inheritdoc />
         public string Name { get; set; } = string.Empty;

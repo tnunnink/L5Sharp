@@ -20,7 +20,7 @@ public class LogixContentTasksTests
     {
         var content = LogixContent.Load(Known.Test);
         
-        var component = new L5Sharp.Components.Task
+        var component = new L5Sharp.Components.LogixTask
         {
             Name = "Test",
             Description = "This is a test",
@@ -38,7 +38,7 @@ public class LogixContentTasksTests
     {
         var content = LogixContent.Load(Known.Empty);
         
-        var component = new L5Sharp.Components.Task
+        var component = new L5Sharp.Components.LogixTask
         {
             Name = "Test",
             Description = "This is a test",
@@ -56,7 +56,7 @@ public class LogixContentTasksTests
     {
         var content = LogixContent.Load(Known.Test);
         
-        var component = new L5Sharp.Components.Task
+        var component = new L5Sharp.Components.LogixTask
         {
             Name = Known.Task,
             Description = "This is a test",
@@ -153,7 +153,7 @@ public class LogixContentTasksTests
     {
         var content = LogixContent.Load(Known.Test);
         
-        var replacement = new L5Sharp.Components.Task
+        var replacement = new L5Sharp.Components.LogixTask
         {
             Name = Known.Task,
             Description = "This is a test",
@@ -174,7 +174,7 @@ public class LogixContentTasksTests
     {
         var content = LogixContent.Load(Known.Test);
         
-        var replacement = new L5Sharp.Components.Task
+        var replacement = new L5Sharp.Components.LogixTask
         {
             Name = "Fake",
             Description = "This is a test",
@@ -190,7 +190,7 @@ public class LogixContentTasksTests
     {
         var content = LogixContent.Load(Known.Test);
         
-        var component = new L5Sharp.Components.Task
+        var component = new L5Sharp.Components.LogixTask
         {
             Name = "New",
             Description = "This is a test",
@@ -210,7 +210,7 @@ public class LogixContentTasksTests
     {
         var content = LogixContent.Load(Known.Test);
         
-        var component = new L5Sharp.Components.Task
+        var component = new L5Sharp.Components.LogixTask
         {
             Name = Known.Task,
             Description = "This is a test"

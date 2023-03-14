@@ -36,7 +36,7 @@ namespace L5Sharp.Tests.Serialization
         [Test]
         public Task Serialize_ContinuousTask_ShouldBeApproved()
         {
-            var task = new L5Sharp.Components.Task
+            var task = new L5Sharp.Components.LogixTask
             {
                 Name = "Test",
                 Type = TaskType.Continuous,
@@ -62,7 +62,7 @@ namespace L5Sharp.Tests.Serialization
         [Test]
         public Task Serialize_PeriodicTask_ShouldBeApproved()
         {
-            var task = new L5Sharp.Components.Task
+            var task = new L5Sharp.Components.LogixTask
             {
                 Name = "Test",
                 Type = TaskType.Periodic,
@@ -88,7 +88,7 @@ namespace L5Sharp.Tests.Serialization
         [Test]
         public Task Serialize_EventTask_ShouldBeApproved()
         {
-            var task = new L5Sharp.Components.Task
+            var task = new L5Sharp.Components.LogixTask
             {
                 Name = "Test",
                 Type = TaskType.Event,

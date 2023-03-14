@@ -38,11 +38,11 @@ namespace L5Sharp.Tests.Core
         }
 
         [Test]
-        public void New_Invalid_ShouldThrowFormatException()
+        public void New_Invalid_ShouldThrowArgumentException()
         {
             var fixture = new Fixture();
 
-            FluentActions.Invoking(() => new TagName(fixture.Create<string>())).Should().Throw<FormatException>();
+            FluentActions.Invoking(() => new TagName(fixture.Create<string>())).Should().Throw<ArgumentException>();
         }
 
         [Test]
@@ -249,7 +249,7 @@ namespace L5Sharp.Tests.Core
             var fixture = new Fixture();
             var members = fixture.CreateMany<string>();
 
-            FluentActions.Invoking(() => TagName.Combine(members)).Should().Throw<FormatException>();
+            FluentActions.Invoking(() => TagName.Combine(members)).Should().Throw<ArgumentException>();
         }
 
         [Test]
@@ -291,11 +291,11 @@ namespace L5Sharp.Tests.Core
         }
 
         [Test]
-        public void Rename_InvalidTagName_ShouldThrowFormatException()
+        public void Rename_InvalidTagName_ShouldThrowArgumentException()
         {
             var tag = new TagName(TestTagName);
 
-            FluentActions.Invoking(() => tag.Rename("!@#$")).Should().Throw<FormatException>();
+            FluentActions.Invoking(() => tag.Rename("!@#$")).Should().Throw<ArgumentException>();
         }
 
         [Test]

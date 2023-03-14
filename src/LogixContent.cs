@@ -158,10 +158,10 @@ namespace L5Sharp
         }
 
         /// <inheritdoc />
-        public ILogixComponentCollection<Task> Tasks()
+        public ILogixComponentCollection<LogixTask> Tasks()
         {
             var container = L5X.Descendants(L5XName.Tasks).FirstOrDefault();
-            return new ComponentCollection<Task>(L5X, container);
+            return new ComponentCollection<LogixTask>(L5X, container);
         }
 
         /// <inheritdoc />

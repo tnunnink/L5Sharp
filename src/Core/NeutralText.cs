@@ -79,7 +79,7 @@ namespace L5Sharp.Core
         /// </summary>
         /// <value><c>true</c> if the text represents a single instruction. <c>false</c> if not, meaning the text is a
         /// collection of multiple instruction patterns.</value>
-        public bool IsInstruction => Regex.IsMatch(_text, $"^{InstructionPattern}$");
+        public bool IsMany => !Regex.IsMatch(_text, $"^{InstructionPattern}$");
 
         /// <summary>
         /// Indicates whether the current neutral text value is an empty string.
@@ -202,12 +202,14 @@ namespace L5Sharp.Core
         public IEnumerable<KeyValuePair<Instruction, IEnumerable<string>>> OperandsByKey(Instruction instruction) =>
             Regex.Matches(_text, @$"(?<={instruction.Name}\()(?>\((?<c>)|[^()]+|\)(?<-c>))*(?(c)(?!))(?=\))")
                 .Select(m => new KeyValuePair<Instruction, IEnumerable<string>>(instruction, m.Value.Split(',')));
-
-
+        
         /// <summary>
-        /// 
+        /// Returns a collection of <see cref="KeyValuePair{TKey,TValue}"/> with the key being a tag found in the
+        /// neutral text instance, and the value being it's corresponding instruction sub text where it is referenced
+        /// within the neutral text instance. 
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A <see cref="IEnumerable{T}"/> of <see cref="KeyValuePair"/> objects containing
+        /// <see cref="TagName"/> and <see cref="NeutralText"/> pairs.</returns>
         public IEnumerable<KeyValuePair<TagName, NeutralText>> References()
         {
             return Regex.Matches(_text, KeyOperandGroupPattern).SelectMany(m =>
@@ -229,14 +231,14 @@ namespace L5Sharp.Core
         /// Splits the current neutral text into a collection of sub-texts representing a specific individual instruction.
         /// </summary>
         /// <returns>An <see cref="IEnumerable{T}"/> of <see cref="NeutralText"/> objects that were split.</returns>
-        public IEnumerable<NeutralText> Split(Instruction instruction) =>
+        public IEnumerable<NeutralText> SplitFor(Instruction instruction) =>
             Regex.Matches(_text, instruction.Signature).Select(m => new NeutralText(m.Value));
 
         /// <summary>
         /// Splits the current neutral text into a collection of sub-texts representing a specific individual instruction key.
         /// </summary>
         /// <returns>An <see cref="IEnumerable{T}"/> of <see cref="NeutralText"/> objects that were split.</returns>
-        public IEnumerable<NeutralText> Split(string key) =>
+        public IEnumerable<NeutralText> SplitFor(string key) =>
             Regex.Matches(_text, $"{key}{SignaturePattern}").Select(m => new NeutralText(m.Value));
 
         /// <summary>

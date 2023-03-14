@@ -26,6 +26,9 @@ namespace L5Sharp.Components
         public TagName TagName { get; }
 
         /// <inheritdoc />
+        public string Description => !Comment.IsEmpty() ? Comment : _tag.Description;
+
+        /// <inheritdoc />
         public ILogixType Data { get; private set; }
 
         /// <inheritdoc />
@@ -36,9 +39,6 @@ namespace L5Sharp.Components
 
         /// <inheritdoc />
         public Radix Radix => Data is AtomicType atomic ? atomic.Radix : Radix.Null;
-
-        /// <inheritdoc />
-        public MemberType MemberType => MemberType.FromType(Data);
 
         /// <inheritdoc />
         public AtomicType? Value

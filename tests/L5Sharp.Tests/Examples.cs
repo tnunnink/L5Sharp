@@ -162,7 +162,7 @@ namespace L5Sharp.Tests
         {
             var content = LogixContent.Load(Known.Test);
 
-            var logic = content.Logic(Scope.Program, "MainProgram").Where(t => t.ContainsTag("BoolTag"));
+            var logic = content.LogicIn(Scope.Program, "MainProgram").Where(t => t.ContainsTag("BoolTag"));
 
             logic.Should().BeEmpty();
         }

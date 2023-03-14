@@ -5,6 +5,7 @@ using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Extensions;
 using L5Sharp.Serialization.Data;
+using L5Sharp.Types;
 using L5Sharp.Utilities;
 
 namespace L5Sharp.Serialization
@@ -30,7 +31,7 @@ namespace L5Sharp.Serialization
             if (!obj.Dimensions.IsEmpty)
                 element.AddValue(obj, t => t.Dimensions);
 
-            if (obj.MemberType == MemberType.ValueMember)
+            if (obj.Data is AtomicType)
                 element.AddValue(obj, t => t.Radix);
 
             element.AddValue(obj, t => t.Constant);

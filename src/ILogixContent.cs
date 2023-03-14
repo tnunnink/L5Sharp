@@ -77,7 +77,7 @@ namespace L5Sharp
         /// in the L5X file.
         /// </summary>
         /// <returns>A <see cref="ILogixComponentCollection{TComponent}"/> for <see cref="Tag"/> components</returns>
-        ILogixComponentCollection<Task> Tasks();
+        ILogixComponentCollection<LogixTask> Tasks();
 
         /// <summary>
         /// Queries and returns all entities of the specified type found in the L5X file.

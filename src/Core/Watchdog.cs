@@ -5,7 +5,7 @@ using L5Sharp.Components;
 namespace L5Sharp.Core
 {
     /// <summary>
-    /// A configurable property of a <see cref="Task"/> that specified how long a task can rung before triggering a major fault.
+    /// A configurable property of a <see cref="LogixTask"/> that specified how long a task can rung before triggering a major fault.
     /// </summary>
     /// <remarks>
     /// <see cref="Watchdog"/> is a simple float value that must be between 0.1 and 2,000,000.0 ms.

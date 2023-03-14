@@ -9,12 +9,12 @@ using L5Sharp.Utilities;
 namespace L5Sharp.Serialization
 {
     /// <summary>
-    /// A logix serializer that performs serialization of <see cref="Task"/> components.
+    /// A logix serializer that performs serialization of <see cref="LogixTask"/> components.
     /// </summary>
-    public class TaskSerializer : ILogixSerializer<Task>
+    public class TaskSerializer : ILogixSerializer<LogixTask>
     {
         /// <inheritdoc />
-        public XElement Serialize(Task obj)
+        public XElement Serialize(LogixTask obj)
         {
             Check.NotNull(obj);
 
@@ -40,11 +40,11 @@ namespace L5Sharp.Serialization
         }
 
         /// <inheritdoc />
-        public Task Deserialize(XElement element)
+        public LogixTask Deserialize(XElement element)
         {
             Check.NotNull(element);
 
-            return new Task
+            return new LogixTask
             {
                 Name = element.LogixName(),
                 Description = element.LogixDescription(),

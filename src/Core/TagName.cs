@@ -16,7 +16,7 @@ namespace L5Sharp.Core
 
         private const string ArrayBracketStart = "[";
         private const string MemberSeparator = ".";
-        
+
         /// <summary>
         /// A regex pattern for getting the base tag of the tag name string.
         /// Use this patter to capture the root or base of a tag name value.
@@ -30,25 +30,34 @@ namespace L5Sharp.Core
         private const string TagNamePattern =
             @"^[A-Za-z_][\w+:]{1,39}(?:(?:\[\d+\]|\[\d+,\d+\]|\[\d+,\d+,\d+\])?(?:\.[A-Za-z_]\w{1,39})?)+(?:\.[0-9][0-9]?)?$";
 
+        //todo might remove this but keeping for now
         /// <summary>
         /// A regex pattern for validating an individual tag member segment. This includes multi dimensional array brackets. 
         /// </summary>
         private const string TagMemberPattern =
             @"^[A-Za-z_][\w:]+$|^\[\d+\]$|^\[\d+,\d+\]$|^\[\d+,\d+,\d+\]$";
 
+        //todo might remove this but keeping for now
         /// <summary>
         /// A regex pattern for matching each individual possible member portion of a full tag name.
         /// Used to split incoming string into member parts. 
         /// </summary>
         private const string TagMembersPattern =
             @"^[A-Za-z_][\w:]{1,39}|(?<=\.)[A-Za-z_][\w]{0,39}|(?<=[A-Za-z_])\[\d+\]|(?<=[A-Za-z_])\[\d+,\d+\]|(?<=[A-Za-z_])\[\d+,\d+,\d+\]|(?<=\.)[0-9][0-9]?$";
-        
+
         /// <summary>
         /// A regex pattern for matching each individual possible member portion of a full tag name.
         /// Used to split incoming string into member parts. 
         /// </summary>
         private const string MembersPattern =
             @"[A-Za-z_][\w:]{1,39}|(?<=\.)[A-Za-z_][\w]{0,39}|\[\d+\]|\[\d+,\d+\]|\[\d+,\d+,\d+\]|[0-9][0-9]?$";
+
+        /// <summary>
+        /// A regex pattern for matching each individual possible member portion of a full tag name.
+        /// Used to split incoming string into member parts. 
+        /// </summary>
+        private const string MemberPattern =
+            @"^(?:[A-Za-z_][\w+:]{1,39})?(?:(?:\[\d+\]|\[\d+,\d+\]|\[\d+,\d+,\d+\])?(?:\.[A-Za-z_]\w{1,39})?)+(?:\.[0-9][0-9]?)?$";
 
 
         /// <summary>
@@ -58,7 +67,13 @@ namespace L5Sharp.Core
         /// <exception cref="ArgumentNullException">tagName is null.</exception>
         public TagName(string tagName)
         {
-            _tagName = tagName ?? throw new ArgumentNullException(nameof(tagName));
+            if (tagName is null)
+                throw new ArgumentNullException(nameof(tagName));
+
+            if (!Regex.IsMatch(tagName, MemberPattern))
+                throw new ArgumentException($"The provided name {tagName} is not a valid tag name.");
+
+            _tagName = tagName;
         }
 
         /// <summary>
@@ -99,7 +114,7 @@ namespace L5Sharp.Core
         /// </remarks>
         /// <seealso cref="Operand"/>
         public string Path => Operand.StartsWith(".") ? Operand.Remove(0, 1) : Operand;
-        
+
         /// <summary>
         /// 
         /// </summary>
@@ -245,7 +260,9 @@ namespace L5Sharp.Core
 
             foreach (var member in members)
             {
-                //If the current member is not an array element or doesn't already have a member separator, add one.
+                if (!Regex.IsMatch(member, MemberPattern, RegexOptions.Compiled))
+                    throw new ArgumentException($"The provided member {member} is not a valid tag member.");
+                
                 if (!(member.StartsWith(ArrayBracketStart) || member.StartsWith(MemberSeparator)) && builder.Length > 1)
                     builder.Append(MemberSeparator);
 

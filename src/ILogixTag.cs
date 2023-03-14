@@ -10,11 +10,19 @@ using L5Sharp.Types.Predefined;
 namespace L5Sharp
 {
     /// <summary>
-    /// A root interface for logix tag components and objects. Defines the members and methods for interacting with
-    /// tag data structures.
+    /// A common interface for logix tag and tag member objects. Defines the members and methods for interacting with
+    /// hierarchical tag data structures.
     /// </summary>
-    /// <see cref="Components.Tag"/>
-    /// <see cref="TagMember"/>
+    /// <remarks>
+    /// <see cref="ILogixTag"/> defines a set of common properties and methods for interacting with hierarchical tag data
+    /// structure. The strongly typed property <see cref="Data"/> contains the actual structure, array, or value type data
+    /// of the current tag. Other properties, such as <see cref="DataType"/>, <see cref="Radix"/>, and <see cref="Dimensions"/>
+    /// are simple pointers to the <c>Data</c> property as they are all dependent on the type implementing <see cref="ILogixType"/>.
+    /// This interface also includes methods for getting or finding nested complex tag members of the current tag or
+    /// tag member.
+    /// </remarks>
+    /// <seealso cref="Components.Tag"/>
+    /// <seealso cref="TagMember"/>
     public interface ILogixTag
     {
         /// <summary>
@@ -24,32 +32,19 @@ namespace L5Sharp
         TagName TagName { get; }
 
         /// <summary>
-        /// The data value or structure of the <c>TagMember</c>.
+        /// The description of the tag which is either the root tag description or the inherited (pass through)
+        /// description of the descendent member.
         /// </summary>
-        /// <value>A <see cref="ILogixType"/> containing the data value or structure of the <c>Tag</c> component.</value>
-        /// <remarks>
-        /// <para>
-        /// This represents the value or structure of a Tag.
-        /// For instance, if the data type is a simple <see cref="AtomicType"/> such as <see cref="BOOL"/>,
-        /// then <c>Data</c> will represent a single value. If the data type is a complex <see cref="StructureType"/>
-        /// such as <see cref="TIMER"/>, then <c>Data</c> contains the entire data hierarchy of the tag.
-        /// </para>
-        /// <para>
-        /// To access members of a complex structure type tag, use the built-in methods <see cref="Member"/>,
-        /// or <see cref="Members()"/>.
-        /// </para>
-        ///<para>
-        /// When deserializing, a tag's type is not known until runtime. To get specific access tag's type,
-        /// you can cast or convert it using extensions <c>AsType()</c> or <c>ToType()</c>.
-        /// </para>
-        /// </remarks>
-        ILogixType Data { get; }
-        
+        /// <value>A <see cref="string"/> containing the text description for the tag.</value>
+        string Description { get; }
+
         /// <summary>
-        /// The name of the data type for the <c>TagMember</c>. 
+        /// The name of the data type that the tag data contains. 
         /// </summary>
         /// <value>A <see cref="string"/> representing the name of the tag data type.</value>
-        /// <remarks>This simply points to the name property of <see cref="Data"/>. This keeps the values in sync.</remarks>
+        /// <remarks>
+        /// This property simply points to the name property of <see cref="Data"/>.
+        /// This keeps the values in sync.</remarks>
         public string DataType { get; }
 
         /// <summary>
@@ -75,11 +70,27 @@ namespace L5Sharp
         Radix Radix { get; }
 
         /// <summary>
-        /// The type of member the tag represents (value, structure, array, string).
+        /// The data value or structure of the <c>TagMember</c>.
         /// </summary>
-        /// <value>A <see cref="Enums.MemberType"/> enum representing the type of member.</value>
-        MemberType MemberType { get; }
-        
+        /// <value>A <see cref="ILogixType"/> containing the data value or structure of the <c>Tag</c> component.</value>
+        /// <remarks>
+        /// <para>
+        /// This represents the value or structure of a Tag.
+        /// For instance, if the data type is a simple <see cref="AtomicType"/> such as <see cref="BOOL"/>,
+        /// then <c>Data</c> will represent a single value. If the data type is a complex <see cref="StructureType"/>
+        /// such as <see cref="TIMER"/>, then <c>Data</c> contains the entire data hierarchy of the tag.
+        /// </para>
+        /// <para>
+        /// To access members of a complex structure type tag, use the built-in methods <see cref="Member"/>,
+        /// or <see cref="Members()"/>.
+        /// </para>
+        ///<para>
+        /// When deserializing, a tag's type is not known until runtime. To get specific access tag's type,
+        /// you can cast or convert it using extensions <c>AsType()</c> or <c>ToType()</c>.
+        /// </para>
+        /// </remarks>
+        ILogixType Data { get; }
+
         /// <summary>
         /// The value of the <c>TagMember</c> data.
         /// </summary>
@@ -96,6 +107,14 @@ namespace L5Sharp
         /// </summary>
         /// <param name="tagName">The full <see cref="Core.TagName"/> path of the member to get.</param>
         /// <returns>A <see cref="TagMember"/> representing the child member instance.</returns>
+        /// <remarks>
+        /// Note that <c>tagName</c> can be a path to a member more than one layer down the hierarchical structure
+        /// of the tag or tag member. However, it must start with a member of the current tag or tag member, and not the
+        /// actual name of the current tag or tag member.
+        /// </remarks>
+        /// <example>
+        /// <c>var member = tag.Member("ArrayMember[1].SubProperty");</c>
+        /// </example>
         TagMember? Member(TagName tagName);
         
         /// <summary>
@@ -125,14 +144,5 @@ namespace L5Sharp
         /// <param name="tagName">A tag name path to the tag member for which to get members of.</param>
         /// <returns>A <see cref="IEnumerable{T}"/> containing <see cref="TagMember"/> objects.</returns>
         IEnumerable<TagMember> MembersOf(TagName tagName);
-
-        /*/// <summary>
-        /// Sets the tag member <c>Data</c> property to the provided <see cref="AtomicType"/> if the
-        /// tag's data property is already an atomic type. Otherwise, does not set the value.
-        /// </summary>
-        /// <param name="atomicType">A <see cref="AtomicType"/> value representing the value to set.</param>
-        /// <returns><c>true</c> if the value was set; otherwise, <c>false</c>.</returns>
-        /// <remarks>This is a helper to avoid having to check or cast <c>Data</c> before setting it's value.</remarks>
-        bool SetValue(AtomicType atomicType);*/
     }
 }

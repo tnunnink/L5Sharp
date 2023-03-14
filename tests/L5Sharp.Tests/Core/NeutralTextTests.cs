@@ -65,7 +65,7 @@ namespace L5Sharp.Tests.Core
         {
             var text = new NeutralText(TestText);
 
-            text.IsInstruction.Should().BeFalse();
+            text.IsMany.Should().BeFalse();
         }
 
         [Test]
@@ -73,7 +73,7 @@ namespace L5Sharp.Tests.Core
         {
             var text = new NeutralText("XIC(SomeTag)");
 
-            text.IsInstruction.Should().BeTrue();
+            text.IsMany.Should().BeTrue();
         }
 
         [Test]
@@ -229,7 +229,7 @@ namespace L5Sharp.Tests.Core
         {
             var text = new NeutralText("[XIC(Tag.Status.Active),XIC(Tag.Status.Enabled)][MOV(15000,Timer.PRE),TON(Timer,?,?)];");
 
-            var result = text.Split(Instruction.XIC).ToList();
+            var result = text.SplitFor(Instruction.XIC).ToList();
 
             result.Should().Contain("XIC(Tag.Status.Active)");
             result.Should().Contain("XIC(Tag.Status.Enabled)");
@@ -240,7 +240,7 @@ namespace L5Sharp.Tests.Core
         {
             var text = new NeutralText("[XIC(Tag.Status.Active),XIC(Tag.Status.Enabled)][MOV(15000,Timer.PRE),TON(Timer,?,?)];");
 
-            var result = text.Split(Instruction.XIC);
+            var result = text.SplitFor(Instruction.XIC);
 
             result.Should().HaveCount(2);
         }
