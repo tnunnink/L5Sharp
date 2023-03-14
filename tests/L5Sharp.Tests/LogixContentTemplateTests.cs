@@ -110,7 +110,7 @@ public class LogixContentTemplateTests
 
         var aoiReferences = content.Query<Rung>()
             .Select(r => r.Text)
-            .SelectMany(t => aoiLookup.SelectMany(l => t.SplitFor(l.Key)))
+            .SelectMany(t => aoiLookup.SelectMany(l => t.SplitByKey(l.Key)))
             .ToList();
 
         var flattened = new List<NeutralText>();

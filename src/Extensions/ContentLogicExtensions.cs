@@ -121,7 +121,7 @@ public static class ContentLogicExtensions
         {
             var index = i;
 
-            var references = aoiLookup.SelectMany(l => text[index].SplitFor(l.Key)).ToList();
+            var references = aoiLookup.SelectMany(l => text[index].SplitByKey(l.Key)).ToList();
 
             if (references.Count == 0)
                 continue;

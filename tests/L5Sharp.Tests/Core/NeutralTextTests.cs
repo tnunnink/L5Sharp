@@ -229,7 +229,7 @@ namespace L5Sharp.Tests.Core
         {
             var text = new NeutralText("[XIC(Tag.Status.Active),XIC(Tag.Status.Enabled)][MOV(15000,Timer.PRE),TON(Timer,?,?)];");
 
-            var result = text.SplitFor(Instruction.XIC).ToList();
+            var result = text.SplitBy(Instruction.XIC).ToList();
 
             result.Should().Contain("XIC(Tag.Status.Active)");
             result.Should().Contain("XIC(Tag.Status.Enabled)");
@@ -240,7 +240,7 @@ namespace L5Sharp.Tests.Core
         {
             var text = new NeutralText("[XIC(Tag.Status.Active),XIC(Tag.Status.Enabled)][MOV(15000,Timer.PRE),TON(Timer,?,?)];");
 
-            var result = text.SplitFor(Instruction.XIC);
+            var result = text.SplitBy(Instruction.XIC);
 
             result.Should().HaveCount(2);
         }
@@ -381,6 +381,18 @@ namespace L5Sharp.Tests.Core
             var references = text.References().ToList();
 
             references.Should().NotBeEmpty();
+        }
+
+        [Test]
+        public void HasPattern_ConcatenatedXICOTE_ShouldBeTrue()
+        {
+            var text = new NeutralText(
+                "[XIC(Input_Data.Pt00.Data)OTE(Ch0.ChData),XIC(Input_Data.Pt00.Fault)OTE(Ch0.ChFault)];");
+
+            var result =
+                text.HasPattern(string.Concat(Instruction.XIC.Signature, Instruction.OTE.Signature));
+
+            result.Should().BeTrue();
         }
     }
 }
