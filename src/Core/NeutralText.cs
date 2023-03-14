@@ -79,7 +79,7 @@ namespace L5Sharp.Core
         /// </summary>
         /// <value><c>true</c> if the text represents a single instruction. <c>false</c> if not, meaning the text is a
         /// collection of multiple instruction patterns.</value>
-        public bool IsMany => !Regex.IsMatch(_text, $"^{InstructionPattern}$");
+        public bool IsSingle => Regex.IsMatch(_text, $"^{InstructionPattern}$");
 
         /// <summary>
         /// Indicates whether the current neutral text value is an empty string.

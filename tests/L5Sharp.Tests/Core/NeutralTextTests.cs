@@ -65,7 +65,7 @@ namespace L5Sharp.Tests.Core
         {
             var text = new NeutralText(TestText);
 
-            text.IsMany.Should().BeFalse();
+            text.IsSingle.Should().BeFalse();
         }
 
         [Test]
@@ -73,7 +73,7 @@ namespace L5Sharp.Tests.Core
         {
             var text = new NeutralText("XIC(SomeTag)");
 
-            text.IsMany.Should().BeTrue();
+            text.IsSingle.Should().BeTrue();
         }
 
         [Test]
