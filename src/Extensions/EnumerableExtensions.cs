@@ -4,7 +4,7 @@ using L5Sharp.Core;
 namespace L5Sharp.Extensions;
 
 /// <summary>
-/// 
+/// Extensions for generic enumerable object.
 /// </summary>
 public static class EnumerableExtensions
 {
