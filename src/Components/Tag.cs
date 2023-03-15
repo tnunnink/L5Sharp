@@ -19,7 +19,7 @@ namespace L5Sharp.Components
     /// </footer>
     [XmlType(L5XName.Tag)]
     [LogixSerializer(typeof(TagSerializer))]
-    public class Tag : ILogixComponent, ILogixTag, ILogixScoped
+    public class Tag : ILogixComponent, ILogixTag
     {
         /// <inheritdoc />
         public string Name { get; set; } = string.Empty;
@@ -57,10 +57,16 @@ namespace L5Sharp.Components
         }
 
         /// <inheritdoc />
-        public Tag Root => this;
+        public ILogixTag Root => this;
 
         /// <inheritdoc />
         public ILogixTag Parent => this;
+
+        /// <inheritdoc />
+        public Scope Scope { get; set; } = Scope.Null;
+
+        /// <inheritdoc />
+        public string Container { get; set; } = string.Empty;
 
         /// <summary>
         /// The external access option indicating the read/write access of the tag.
@@ -93,12 +99,6 @@ namespace L5Sharp.Components
         /// <remarks>Only value type tags have the ability to be set as a constant. Default is <c>false</c>.</remarks>
         public bool Constant { get; set; }
 
-        /// <inheritdoc />
-        public Scope Scope { get; set; } = Scope.Null;
-
-        /// <inheritdoc />
-        public string Container { get; set; } = string.Empty;
-
         /// <summary>
         /// The collection of member comments for the tag component.
         /// </summary>
@@ -112,7 +112,7 @@ namespace L5Sharp.Components
         public Dictionary<string, string> Units { get; set; } = new(StringComparer.OrdinalIgnoreCase);
 
         /// <inheritdoc />
-        public TagMember? Member(TagName tagName)
+        public ILogixTag? Member(TagName tagName)
         {
             if (tagName is null)
                 throw new ArgumentNullException(nameof(tagName));
@@ -132,9 +132,9 @@ namespace L5Sharp.Components
         }
 
         /// <inheritdoc />
-        public IEnumerable<TagMember> Members()
+        public IEnumerable<ILogixTag> Members()
         {
-            var members = new List<TagMember>();
+            var members = new List<ILogixTag>();
 
             foreach (var member in GetMembers(Data))
             {
@@ -147,12 +147,27 @@ namespace L5Sharp.Components
         }
 
         /// <inheritdoc />
-        public IEnumerable<TagMember> Members(Predicate<TagName> predicate)
+        public IEnumerable<ILogixTag> MembersAndSelf()
+        {
+            var members = new List<ILogixTag> { this };
+
+            foreach (var member in GetMembers(Data))
+            {
+                var tagMember = new TagMember(member, Root, this);
+                members.Add(tagMember);
+                members.AddRange(tagMember.Members());
+            }
+
+            return members;
+        }
+
+        /// <inheritdoc />
+        public IEnumerable<ILogixTag> Members(Predicate<TagName> predicate)
         {
             if (predicate is null)
                 throw new ArgumentNullException(nameof(predicate));
 
-            var members = new List<TagMember>();
+            var members = new List<ILogixTag>();
 
             foreach (var member in GetMembers(Data))
             {
@@ -168,12 +183,12 @@ namespace L5Sharp.Components
         }
 
         /// <inheritdoc />
-        public IEnumerable<TagMember> Members(Predicate<TagMember> predicate)
+        public IEnumerable<ILogixTag> Members(Predicate<ILogixTag> predicate)
         {
             if (predicate is null)
                 throw new ArgumentNullException(nameof(predicate));
 
-            var members = new List<TagMember>();
+            var members = new List<ILogixTag>();
 
             foreach (var member in GetMembers(Data))
             {
@@ -189,7 +204,7 @@ namespace L5Sharp.Components
         }
 
         /// <inheritdoc />
-        public IEnumerable<TagMember> MembersOf(TagName tagName)
+        public IEnumerable<ILogixTag> MembersOf(TagName tagName)
         {
             if (tagName is null)
                 throw new ArgumentNullException(nameof(tagName));

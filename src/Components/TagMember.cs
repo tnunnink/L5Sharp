@@ -12,7 +12,7 @@ namespace L5Sharp.Components
     /// </summary>
     public class TagMember : ILogixTag
     {
-        internal TagMember(Member member, Tag tag, ILogixTag parent)
+        internal TagMember(Member member, ILogixTag tag, ILogixTag parent)
         {
             if (member is null)
                 throw new ArgumentNullException(nameof(member));
@@ -56,10 +56,16 @@ namespace L5Sharp.Components
         }
 
         /// <inheritdoc />
-        public Tag Root { get; }
+        public ILogixTag Root { get; }
 
         /// <inheritdoc />
         public ILogixTag Parent { get; }
+
+        /// <inheritdoc />
+        public Scope Scope => Root.Scope;
+
+        /// <inheritdoc />
+        public string Container => Root.Container;
 
         /// <summary>
         /// The overriden string comment of the tag member, if one exists. Empty string if not.
@@ -67,8 +73,8 @@ namespace L5Sharp.Components
         /// <value>A <see cref="string"/> containing the tag member comment.</value>
         public string Comment
         {
-            get => Root.Comments.TryGetValue(TagName.Operand, out var comment) ? comment : string.Empty;
-            set => Root.Comments[TagName.Operand] = value;
+            get => ((Tag)Root).Comments.TryGetValue(TagName.Operand, out var comment) ? comment : string.Empty;
+            set => ((Tag)Root).Comments[TagName.Operand] = value;
         }
 
         /// <summary>
@@ -77,12 +83,12 @@ namespace L5Sharp.Components
         /// <value>A <see cref="string"/> representing the scaled units of the tag member.</value>
         public string Unit
         {
-            get => Root.Units.TryGetValue(TagName.Operand, out var units) ? units : string.Empty;
-            set => Root.Units[TagName.Operand] = value;
+            get => ((Tag)Root).Units.TryGetValue(TagName.Operand, out var units) ? units : string.Empty;
+            set => ((Tag)Root).Units[TagName.Operand] = value;
         }
 
         /// <inheritdoc />
-        public TagMember? Member(TagName tagName)
+        public ILogixTag? Member(TagName tagName)
         {
             if (tagName is null)
                 throw new ArgumentNullException(nameof(tagName));
@@ -102,9 +108,9 @@ namespace L5Sharp.Components
         }
 
         /// <inheritdoc />
-        public IEnumerable<TagMember> Members()
+        public IEnumerable<ILogixTag> Members()
         {
-            var members = new List<TagMember>();
+            var members = new List<ILogixTag>();
 
             foreach (var member in GetMembers(Data))
             {
@@ -117,12 +123,27 @@ namespace L5Sharp.Components
         }
 
         /// <inheritdoc />
-        public IEnumerable<TagMember> Members(Predicate<TagName> predicate)
+        public IEnumerable<ILogixTag> MembersAndSelf()
+        {
+            var members = new List<ILogixTag> { this };
+
+            foreach (var member in GetMembers(Data))
+            {
+                var tagMember = new TagMember(member, Root, this);
+                members.Add(tagMember);
+                members.AddRange(tagMember.Members());
+            }
+
+            return members;
+        }
+
+        /// <inheritdoc />
+        public IEnumerable<ILogixTag> Members(Predicate<TagName> predicate)
         {
             if (predicate is null)
                 throw new ArgumentNullException(nameof(predicate));
 
-            var members = new List<TagMember>();
+            var members = new List<ILogixTag>();
 
             foreach (var member in GetMembers(Data))
             {
@@ -138,12 +159,12 @@ namespace L5Sharp.Components
         }
 
         /// <inheritdoc />
-        public IEnumerable<TagMember> Members(Predicate<TagMember> predicate)
+        public IEnumerable<ILogixTag> Members(Predicate<ILogixTag> predicate)
         {
             if (predicate is null)
                 throw new ArgumentNullException(nameof(predicate));
 
-            var members = new List<TagMember>();
+            var members = new List<ILogixTag>();
 
             foreach (var member in GetMembers(Data))
             {
@@ -159,7 +180,7 @@ namespace L5Sharp.Components
         }
 
         /// <inheritdoc />
-        public IEnumerable<TagMember> MembersOf(TagName tagName)
+        public IEnumerable<ILogixTag> MembersOf(TagName tagName)
         {
             if (tagName is null)
                 throw new ArgumentNullException(nameof(tagName));

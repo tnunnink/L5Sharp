@@ -286,10 +286,10 @@ namespace L5Sharp.Tests.Serialization
             component.Comments.Should().HaveCount(2);
 
             var first = component.Member("[1]");
-            first?.Comment.Should().Be("Index 1");
+            first?.As<TagMember>().Comment.Should().Be("Index 1");
             
             var firstPre = component.Member("[1].PRE");
-            firstPre?.Comment.Should().Be("PRE 1");
+            firstPre?.As<TagMember>().Comment.Should().Be("PRE 1");
         }
 
         private static string GetSimpleTagData()

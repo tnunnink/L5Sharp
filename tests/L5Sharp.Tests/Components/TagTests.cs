@@ -79,13 +79,13 @@ namespace L5Sharp.Tests.Components
             var member = tag.Member("DN");
 
             member.Should().NotBeNull();
-            member?.TagName.Should<TagName>().Be("Test.DN");
+            member?.TagName.Should().Be("Test.DN");
             member?.Data.Should().BeOfType<BOOL>();
             member?.DataType.Should().Be("BOOL");
             member?.Dimensions.Should().Be(Dimensions.Empty);
             member?.Radix.Should().Be(Radix.Decimal);
-            member?.Comment.Should().BeEmpty();
-            member?.Unit.Should().BeEmpty();
+            member?.As<TagMember>().Comment.Should().BeEmpty();
+            member?.As<TagMember>().Unit.Should().BeEmpty();
         }
 
         [Test]

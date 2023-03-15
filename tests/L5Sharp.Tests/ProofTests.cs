@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using L5Sharp.Components;
 using L5Sharp.Extensions;
 using L5Sharp.Types;
 using L5Sharp.Types.Atomics;
@@ -51,7 +52,7 @@ public class ProofTests
 
         var member = config?.Member("Ch0CountLimit");
 
-        member?.Comment.Should().NotBeEmpty();
+        member?.As<TagMember>().Comment.Should().NotBeEmpty();
     }
 
     /*[Test]
