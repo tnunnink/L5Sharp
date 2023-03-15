@@ -57,7 +57,7 @@ namespace L5Sharp.Core
         /// Used to split incoming string into member parts. 
         /// </summary>
         private const string MemberPattern =
-            @"^(?:[A-Za-z_][\w+:]{1,39})?(?:(?:\[\d+\]|\[\d+,\d+\]|\[\d+,\d+,\d+\])?(?:\.[A-Za-z_]\w{1,39})?)+(?:\.[0-9][0-9]?)?$";
+            @"^(?:[A-Za-z_][\w+:]{0,39})?(?:(?:\[\d+\]|\[\d+,\d+\]|\[\d+,\d+,\d+\])?(?:\.[A-Za-z_]\w{1,39})?)+(?:\.[0-9][0-9]?)?$";
 
 
         /// <summary>

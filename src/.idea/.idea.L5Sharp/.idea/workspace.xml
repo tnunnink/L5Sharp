@@ -7,12 +7,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="Made ILogixTag.cs not dependent on implementations of Tag and TagMember">
-      <change beforePath="$PROJECT_DIR$/Extensions/AtomicTypeExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Extensions/AtomicTypeExtensions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Extensions/EnumerableExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Extensions/EnumerableExtensions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Extensions/EnumerableExtensionTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Extensions/EnumerableExtensionTests.cs" afterDir="false" />
-    </list>
+    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="Verified ToTagLookup functionality." />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -381,14 +376,7 @@
       <workItem from="1678399236829" duration="7974000" />
       <workItem from="1678483897582" duration="20090000" />
       <workItem from="1678711903788" duration="11656000" />
-      <workItem from="1678738210056" duration="36746000" />
-    </task>
-    <task id="LOCAL-00179" summary="Updated testing for all ComponentQuery.cs implementations.">
-      <created>1649800884395</created>
-      <option name="number" value="00179" />
-      <option name="presentableId" value="LOCAL-00179" />
-      <option name="project" value="LOCAL" />
-      <updated>1649800884395</updated>
+      <workItem from="1678738210056" duration="37336000" />
     </task>
     <task id="LOCAL-00180" summary="Cleaned up query objects by removing interface definitions. Update API and corrected documentation.">
       <created>1649802791302</created>
@@ -726,7 +714,14 @@
       <option name="project" value="LOCAL" />
       <updated>1678898932244</updated>
     </task>
-    <option name="localTasksCounter" value="228" />
+    <task id="LOCAL-00228" summary="Verified ToTagLookup functionality.">
+      <created>1678899523911</created>
+      <option name="number" value="00228" />
+      <option name="presentableId" value="LOCAL-00228" />
+      <option name="project" value="LOCAL" />
+      <updated>1678899523911</updated>
+    </task>
+    <option name="localTasksCounter" value="229" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -785,7 +780,6 @@
       <path value="$PROJECT_DIR$/../.." />
     </ignored-roots>
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="continued NeutralText.cs dev and serialization bug fixes" />
     <MESSAGE value="Array Type updates. Serialization updates. Random testing, bug fixes and comments." />
     <MESSAGE value="Adding ILogixArray" />
     <MESSAGE value="verification files." />
@@ -810,7 +804,8 @@
     <MESSAGE value="Added ILogixScoped.cs to tag to see if this helps with filtering and identifying tags. Also added program and routine properties to rung for the same reason. Updated serializers." />
     <MESSAGE value="Updated version info" />
     <MESSAGE value="Made ILogixTag.cs not dependent on implementations of Tag and TagMember" />
-    <option name="LAST_COMMIT_MESSAGE" value="Made ILogixTag.cs not dependent on implementations of Tag and TagMember" />
+    <MESSAGE value="Verified ToTagLookup functionality." />
+    <option name="LAST_COMMIT_MESSAGE" value="Verified ToTagLookup functionality." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -840,19 +835,6 @@
             </endOffsets>
           </properties>
           <option name="timeStamp" value="85" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/../tests/L5Sharp.Tests/Extensions/EnumerableExtensionTests.cs</url>
-          <line>16</line>
-          <properties documentPath="C:\Users\tnunnink\Documents\GitHub\L5Sharp\tests\L5Sharp.Tests\Extensions\EnumerableExtensionTests.cs" initialLine="16" containingFunctionPresentation="method 'LookupTags_WhenCalled_ShouldNotBeEmpty'">
-            <startOffsets>
-              <option value="356" />
-            </startOffsets>
-            <endOffsets>
-              <option value="385" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="98" />
         </line-breakpoint>
         <breakpoint enabled="true" type="DotNet Exception Breakpoints">
           <properties exception="System.PlatformNotSupportedException" isInternal="false" displayValue="PlatformNotSupportedException" namespaceName="System">
