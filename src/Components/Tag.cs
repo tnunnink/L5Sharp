@@ -4,7 +4,6 @@ using System.Linq;
 using System.Xml.Serialization;
 using L5Sharp.Core;
 using L5Sharp.Enums;
-using L5Sharp.Extensions;
 using L5Sharp.Serialization;
 using L5Sharp.Types;
 using L5Sharp.Utilities;
@@ -57,6 +56,12 @@ namespace L5Sharp.Components
             }
         }
 
+        /// <inheritdoc />
+        public Tag Base => this;
+
+        /// <inheritdoc />
+        public ILogixTag Parent => this;
+
         /// <summary>
         /// The external access option indicating the read/write access of the tag.
         /// </summary>
@@ -103,11 +108,21 @@ namespace L5Sharp.Components
         /// <inheritdoc />
         public TagMember? Member(TagName tagName)
         {
-            var member = Data.FindMember(tagName);
+            if (tagName is null)
+                throw new ArgumentNullException(nameof(tagName));
 
-            return member is not null
-                ? new TagMember(TagName.Combine(TagName, tagName), member.DataType, this)
-                : null;
+            var memberName = tagName.Members.FirstOrDefault() ?? string.Empty;
+
+            var member = GetMembers(Data)
+                .FirstOrDefault(m => string.Equals(m.Name, memberName, StringComparison.OrdinalIgnoreCase));
+
+            if (member is null) return default;
+
+            var tagMember = new TagMember(member, Base, this);
+
+            var remaining = TagName.Combine(tagName.Members.Skip(1));
+
+            return remaining.IsEmpty ? tagMember : tagMember.Member(remaining);
         }
 
         /// <inheritdoc />
@@ -115,10 +130,9 @@ namespace L5Sharp.Components
         {
             var members = new List<TagMember>();
 
-            foreach (var member in Data.FindMembers())
+            foreach (var member in GetMembers(Data))
             {
-                var tagName = TagName.Combine(TagName, member.Name);
-                var tagMember = new TagMember(tagName, member.DataType, this);
+                var tagMember = new TagMember(member, Base, this);
                 members.Add(tagMember);
                 members.AddRange(tagMember.Members());
             }
@@ -129,12 +143,14 @@ namespace L5Sharp.Components
         /// <inheritdoc />
         public IEnumerable<TagMember> Members(Predicate<TagName> predicate)
         {
+            if (predicate is null)
+                throw new ArgumentNullException(nameof(predicate));
+
             var members = new List<TagMember>();
 
-            foreach (var member in Data.FindMembers())
+            foreach (var member in GetMembers(Data))
             {
-                var tagName = TagName.Combine(TagName, member.Name);
-                var tagMember = new TagMember(tagName, member.DataType, this);
+                var tagMember = new TagMember(member, Base, this);
 
                 if (predicate.Invoke(tagMember.TagName))
                     members.Add(tagMember);
@@ -148,12 +164,14 @@ namespace L5Sharp.Components
         /// <inheritdoc />
         public IEnumerable<TagMember> Members(Predicate<TagMember> predicate)
         {
+            if (predicate is null)
+                throw new ArgumentNullException(nameof(predicate));
+
             var members = new List<TagMember>();
 
-            foreach (var member in Data.FindMembers())
+            foreach (var member in GetMembers(Data))
             {
-                var tagName = TagName.Combine(TagName, member.Name);
-                var tagMember = new TagMember(tagName, member.DataType, this);
+                var tagMember = new TagMember(member, Base, this);
 
                 if (predicate.Invoke(tagMember))
                     members.Add(tagMember);
@@ -167,13 +185,41 @@ namespace L5Sharp.Components
         /// <inheritdoc />
         public IEnumerable<TagMember> MembersOf(TagName tagName)
         {
-            var member = Data.FindMember(tagName);
+            if (tagName is null)
+                throw new ArgumentNullException(nameof(tagName));
 
-            var tagMember = member is not null
-                ? new TagMember(TagName.Combine(TagName, tagName), member.DataType, this)
-                : null;
+            var memberName = tagName.Members.FirstOrDefault() ?? string.Empty;
 
-            return tagMember is not null ? tagMember.Members() : Enumerable.Empty<TagMember>();
+            var member = GetMembers(Data)
+                .FirstOrDefault(m => string.Equals(m.Name, memberName, StringComparison.OrdinalIgnoreCase));
+
+            if (member is null) return Enumerable.Empty<TagMember>();
+
+            var tagMember = new TagMember(member, Base, this);
+
+            var remaining = TagName.Combine(tagName.Members.Skip(1));
+
+            return remaining.IsEmpty ? tagMember.Members() : tagMember.MembersOf(remaining);
+        }
+        
+        /// <summary>
+        /// Returns all <see cref="Member"/> objects contained by the <see cref="ILogixType"/> object.
+        /// </summary>
+        /// <param name="type">The logix type object.</param>
+        /// <returns>A <see cref="IEnumerable{T}"/> containing <see cref="Member"/> objects.</returns>
+        /// <remarks>
+        /// This is a helper to easily get either a <see cref="StructureType"/> member collection or an
+        /// <see cref="ArrayType{TLogixType}"/> element collection, both which are collection of members and defined
+        /// the type structure. Calling this for <see cref="AtomicType"/> will return and empty collection.
+        /// </remarks>
+        private static IEnumerable<Member> GetMembers(ILogixType type)
+        {
+            return type switch
+            {
+                StructureType structureType => structureType.Members,
+                ILogixArray<ILogixType> arrayType => arrayType.Elements,
+                _ => Enumerable.Empty<Member>()
+            };
         }
     }
 }

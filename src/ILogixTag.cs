@@ -101,7 +101,17 @@ namespace L5Sharp
         /// Setting the value should only work for atomic type tags.
         /// </remarks>
         AtomicType? Value { get; set; }
+
+        /// <summary>
+        /// The base tag of the current <see cref="ILogixTag"/> member.
+        /// </summary>
+        Tag Base { get; }
         
+        /// <summary>
+        /// The parent tag or tag member of the current <see cref="ILogixTag"/> member.
+        /// </summary>
+        ILogixTag Parent { get; }
+
         /// <summary>
         /// Gets a descendent tag member relative to the current tag member.
         /// </summary>

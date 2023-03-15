@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using L5Sharp.Core;
 using L5Sharp.Enums;
-using L5Sharp.Extensions;
 using L5Sharp.Types;
 
 namespace L5Sharp.Components
@@ -13,23 +12,25 @@ namespace L5Sharp.Components
     /// </summary>
     public class TagMember : ILogixTag
     {
-        private readonly Tag _tag;
-
-        internal TagMember(TagName? tagName, ILogixType data, Tag tag)
+        internal TagMember(Member member, Tag tag, ILogixTag parent)
         {
-            TagName = tagName ?? throw new ArgumentNullException(nameof(tagName));
-            Data = data ?? throw new ArgumentNullException(nameof(data));
-            _tag = tag ?? throw new ArgumentNullException(nameof(tag));
+            if (member is null)
+                throw new ArgumentNullException(nameof(member));
+
+            TagName = TagName.Combine(parent.TagName, member.Name);
+            Data = member.DataType;
+            Base = tag ?? throw new ArgumentNullException(nameof(tag));
+            Parent = parent ?? throw new ArgumentNullException(nameof(parent));
         }
 
         /// <inheritdoc />
         public TagName TagName { get; }
 
         /// <inheritdoc />
-        public string Description => !Comment.IsEmpty() ? Comment : _tag.Description;
+        public string Description => !string.IsNullOrEmpty(Comment) ? Comment : Parent.Description;
 
         /// <inheritdoc />
-        public ILogixType Data { get; private set; }
+        public virtual ILogixType Data { get; private set; }
 
         /// <inheritdoc />
         public string DataType => Data.Name;
@@ -54,14 +55,20 @@ namespace L5Sharp.Components
             }
         }
 
+        /// <inheritdoc />
+        public Tag Base { get; }
+
+        /// <inheritdoc />
+        public ILogixTag Parent { get; }
+
         /// <summary>
         /// The overriden string comment of the tag member, if one exists. Empty string if not.
         /// </summary>
         /// <value>A <see cref="string"/> containing the tag member comment.</value>
         public string Comment
         {
-            get => _tag.Comments.TryGetValue(TagName.Operand, out var comment) ? comment : string.Empty;
-            set => _tag.Comments[TagName.Operand] = value;
+            get => Base.Comments.TryGetValue(TagName.Operand, out var comment) ? comment : string.Empty;
+            set => Base.Comments[TagName.Operand] = value;
         }
 
         /// <summary>
@@ -70,18 +77,28 @@ namespace L5Sharp.Components
         /// <value>A <see cref="string"/> representing the scaled units of the tag member.</value>
         public string Unit
         {
-            get => _tag.Units.TryGetValue(TagName.Operand, out var units) ? units : string.Empty;
-            set => _tag.Units[TagName.Operand] = value;
+            get => Base.Units.TryGetValue(TagName.Operand, out var units) ? units : string.Empty;
+            set => Base.Units[TagName.Operand] = value;
         }
 
         /// <inheritdoc />
         public TagMember? Member(TagName tagName)
         {
-            var member = Data.FindMember(tagName);
+            if (tagName is null)
+                throw new ArgumentNullException(nameof(tagName));
 
-            return member is not null
-                ? new TagMember(TagName.Combine(TagName, tagName), member.DataType, _tag)
-                : null;
+            var memberName = tagName.Members.FirstOrDefault() ?? string.Empty;
+
+            var member = GetMembers(Data)
+                .FirstOrDefault(m => string.Equals(m.Name, memberName, StringComparison.OrdinalIgnoreCase));
+
+            if (member is null) return default;
+
+            var tagMember = new TagMember(member, Base, this);
+
+            var remaining = TagName.Combine(tagName.Members.Skip(1));
+
+            return remaining.IsEmpty ? tagMember : tagMember.Member(remaining);
         }
 
         /// <inheritdoc />
@@ -89,10 +106,9 @@ namespace L5Sharp.Components
         {
             var members = new List<TagMember>();
 
-            foreach (var member in Data.FindMembers())
+            foreach (var member in GetMembers(Data))
             {
-                var tagName = TagName.Combine(TagName, member.Name);
-                var tagMember = new TagMember(tagName, member.DataType, _tag);
+                var tagMember = new TagMember(member, Base, this);
                 members.Add(tagMember);
                 members.AddRange(tagMember.Members());
             }
@@ -103,12 +119,14 @@ namespace L5Sharp.Components
         /// <inheritdoc />
         public IEnumerable<TagMember> Members(Predicate<TagName> predicate)
         {
+            if (predicate is null)
+                throw new ArgumentNullException(nameof(predicate));
+
             var members = new List<TagMember>();
 
-            foreach (var member in Data.FindMembers())
+            foreach (var member in GetMembers(Data))
             {
-                var tagName = TagName.Combine(TagName, member.Name);
-                var tagMember = new TagMember(tagName, member.DataType, _tag);
+                var tagMember = new TagMember(member, Base, this);
 
                 if (predicate.Invoke(tagMember.TagName))
                     members.Add(tagMember);
@@ -122,12 +140,14 @@ namespace L5Sharp.Components
         /// <inheritdoc />
         public IEnumerable<TagMember> Members(Predicate<TagMember> predicate)
         {
+            if (predicate is null)
+                throw new ArgumentNullException(nameof(predicate));
+
             var members = new List<TagMember>();
 
-            foreach (var member in Data.FindMembers())
+            foreach (var member in GetMembers(Data))
             {
-                var tagName = TagName.Combine(TagName, member.Name);
-                var tagMember = new TagMember(tagName, member.DataType, _tag);
+                var tagMember = new TagMember(member, Base, this);
 
                 if (predicate.Invoke(tagMember))
                     members.Add(tagMember);
@@ -141,13 +161,41 @@ namespace L5Sharp.Components
         /// <inheritdoc />
         public IEnumerable<TagMember> MembersOf(TagName tagName)
         {
-            var member = Data.FindMember(tagName);
+            if (tagName is null)
+                throw new ArgumentNullException(nameof(tagName));
 
-            var tagMember = member is not null
-                ? new TagMember(TagName.Combine(TagName, tagName), member.DataType, _tag)
-                : null;
+            var memberName = tagName.Members.FirstOrDefault() ?? string.Empty;
 
-            return tagMember is not null ? tagMember.Members() : Enumerable.Empty<TagMember>();
+            var member = GetMembers(Data)
+                .FirstOrDefault(m => string.Equals(m.Name, memberName, StringComparison.OrdinalIgnoreCase));
+
+            if (member is null) return Enumerable.Empty<TagMember>();
+
+            var tagMember = new TagMember(member, Base, this);
+
+            var remaining = TagName.Combine(tagName.Members.Skip(1));
+
+            return remaining.IsEmpty ? tagMember.Members() : tagMember.MembersOf(remaining);
+        }
+
+        /// <summary>
+        /// Returns all <see cref="Member"/> objects contained by the <see cref="ILogixType"/> object.
+        /// </summary>
+        /// <param name="type">The logix type object.</param>
+        /// <returns>A <see cref="IEnumerable{T}"/> containing <see cref="Member"/> objects.</returns>
+        /// <remarks>
+        /// This is a helper to easily get either a <see cref="StructureType"/> member collection or an
+        /// <see cref="ArrayType{TLogixType}"/> element collection, both which are collection of members and defined
+        /// the type structure. Calling this for <see cref="AtomicType"/> will return and empty collection.
+        /// </remarks>
+        private static IEnumerable<Member> GetMembers(ILogixType type)
+        {
+            return type switch
+            {
+                StructureType structureType => structureType.Members,
+                ILogixArray<ILogixType> arrayType => arrayType.Elements,
+                _ => Enumerable.Empty<Member>()
+            };
         }
     }
 }
