@@ -42,5 +42,14 @@ namespace L5Sharp.Tests.Enums
             sut.Should().NotBeNull();
             sut.Value.Should().Be("NullScope");
         }
+        
+        [Test]
+        public void New_Instruction_ShouldBeExpected()
+        {
+            var sut = Scope.Instruction;
+
+            sut.Should().NotBeNull();
+            sut.Value.Should().Be("InstructionScope");
+        }
     }
 }

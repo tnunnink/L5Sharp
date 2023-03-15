@@ -75,17 +75,9 @@ namespace L5Sharp.Extensions
         public static string AsString(this IEnumerable<SINT> array) =>
             Encoding.ASCII.GetString(array.Where(s => s > 0).Select(b => (byte)(sbyte)b).ToArray());
 
-        /// <summary>
-        /// Replaces all specified string values with a single replacement string value in the current string.
-        /// </summary>
-        /// <param name="value"></param>
-        /// <param name="items"></param>
-        /// <param name="replacement"></param>
-        /// <returns></returns>
-        public static string ReplaceAll(this string value, IEnumerable<string> items, string replacement)
-        {
-            return items.Aggregate(value, (str, cItem) => str.Replace(cItem, replacement));
-        }
+        
+        internal static string ReplaceAll(this string value, IEnumerable<string> items, string replacement) =>
+            items.Aggregate(value, (str, cItem) => str.Replace(cItem, replacement));
 
 
         internal static IEnumerable<string> Segment(this string input, int length)
@@ -99,14 +91,8 @@ namespace L5Sharp.Extensions
             for (var i = 0; i < input.Length; i += length)
                 yield return input.Substring(i, i + length < input.Length ? length : input.Length - i);
         }
-
-        /// <summary>
-        /// Removes the first and last occurrence of the specified string if they exist.
-        /// </summary>
-        /// <param name="value">The string value to trim.</param>
-        /// <param name="character">the character to remove.</param>
-        /// <returns>A new string value with the specified character removed from the beginning and end.</returns>
-        public static string TrimSingle(this string value, char character)
+        
+        internal static string TrimSingle(this string value, char character)
         {
             if (value.StartsWith(character) && value.EndsWith(character))
                 return value.Substring(1, value.Length - 2);

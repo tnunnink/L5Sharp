@@ -1,4 +1,5 @@
-﻿using System.Xml.Linq;
+﻿using System.Linq;
+using System.Xml.Linq;
 using L5Sharp.Components;
 using L5Sharp.Enums;
 using L5Sharp.Extensions;
@@ -34,7 +35,16 @@ namespace L5Sharp.Serialization
             {
                 Name = element.LogixName(),
                 Description = element.LogixDescription(),
-                Type = element.GetValue<RoutineType>(L5XName.Type)
+                Type = element.GetValue<RoutineType>(L5XName.Type),
+                Scope = element.Ancestors(L5XName.Program).Any() ? Scope.Program
+                    : element.Ancestors(L5XName.AddOnInstructionDefinition).Any() ? Scope.Instruction
+                    : Scope.Controller,
+                Container = element.Ancestors(L5XName.Program).Any()
+                    ? element.Ancestors(L5XName.Program).FirstOrDefault()?.LogixName() ?? string.Empty
+                    : element.Ancestors(L5XName.AddOnInstructionDefinition).Any()
+                        ? element.Ancestors(L5XName.AddOnInstructionDefinition).FirstOrDefault()?.LogixName() ??
+                          string.Empty
+                        : element.Ancestors(L5XName.Controller).FirstOrDefault()?.LogixName() ?? string.Empty
             };
         }
     }

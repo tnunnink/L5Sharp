@@ -28,7 +28,7 @@ namespace L5Sharp
             { L5XName.Task, L5XName.Tasks },
             { L5XName.ParameterConnection, L5XName.ParameterConnections },
             { L5XName.Trend, L5XName.Trends },
-            { L5XName.QuickWatchList, L5XName.QuickWatchLists },
+            { L5XName.QuickWatchList, L5XName.QuickWatchLists }
         };
 
         /// <summary>

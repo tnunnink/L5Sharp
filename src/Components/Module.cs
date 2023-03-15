@@ -121,5 +121,49 @@ namespace L5Sharp.Components
         /// A collection of <see cref="ModuleConnection"/> defining the input and output connection specific to the module.
         /// </summary>
         public List<ModuleConnection> Connections { get; set; } = new();
+
+        /// <summary>
+        /// Gets the slot number of the current module if one exists. If the module does not have an slot, returns null.
+        /// </summary>
+        /// <value>An <see cref="byte"/> representing the slot number of the module.</value>
+        /// <remarks>
+        /// This is a helper that just looks for an upstream <see cref="Port"/> with a valid slot byte number.
+        /// </remarks>
+        public byte? Slot => Ports.FirstOrDefault(p => p.Upstream && p.Address.IsSlot)?.Address.ToSlot();
+
+        /// <summary>
+        /// Gets the IP address of the current module if one exists. If the module does not have an IP, returns null.
+        /// </summary>
+        /// <value>An <see cref="IPAddress"/> representing the IP of the module.</value>
+        /// <remarks>
+        /// This is a helper property that just looks for <see cref="Port"/> for an Ethernet port with a
+        /// valid IP address.
+        /// </remarks>
+        public IPAddress? IP => Ports.FirstOrDefault(p => p is { Type: "Ethernet", Address.IsIPv4: true })?.Address
+            .ToIPAddress();
+
+        /// <summary>
+        /// Returns a collection of all non-null <see cref="Tag"/> objects for the current Module, including all
+        /// input, output, and config tags.
+        /// </summary>
+        /// <value>An <see cref="IEnumerable{T}"/> containing the base tags for the Module.</value>
+        public IEnumerable<Tag> Tags()
+        {
+            var tags = new List<Tag>();
+
+            if (Config is not null)
+                tags.Add(Config);
+
+            foreach (var connection in Connections)
+            {
+                if (connection.Input is not null)
+                    tags.Add(connection.Input);
+
+                if (connection.Output is not null)
+                    tags.Add(connection.Output);
+            }
+
+            return tags;
+        }
     }
 }

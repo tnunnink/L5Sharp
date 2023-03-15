@@ -28,5 +28,10 @@
         /// Represents a Routine <see cref="Scope"/> value.
         /// </summary>
         public static readonly Scope Routine = new(nameof(Routine), "RoutineScope");
+        
+        /// <summary>
+        /// Represents a Routine <see cref="Scope"/> value.
+        /// </summary>
+        public static readonly Scope Instruction = new(nameof(Instruction), "InstructionScope");
     }
 }

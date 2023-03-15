@@ -51,7 +51,7 @@ namespace L5Sharp.Serialization
             var parameters = new XElement(L5XName.Parameters);
             parameters.Add(obj.Parameters.Select(p => _parameterSerializer.Serialize(p)));
             element.Add(parameters);
-            
+
             var localTags = new XElement(L5XName.LocalTags);
             localTags.Add(obj.LocalTags.Select(SerializeLocalTag));
             element.Add(localTags);
@@ -62,6 +62,7 @@ namespace L5Sharp.Serialization
                 var routineSerializer = LogixSerializer.GetSerializer<Routine>(routine.GetType());
                 routines.Add(routineSerializer.Serialize(routine));
             }
+
             element.Add(routines);
 
             return element;
@@ -90,8 +91,7 @@ namespace L5Sharp.Serialization
                 SoftwareRevision = Revision.Parse(element.Attribute(L5XName.SoftwareRevision)?.Value.Trim('v')!),
                 AdditionalHelpText = element.Element(L5XName.AdditionalHelpText)?.Value ?? string.Empty,
                 IsEncrypted = element.TryGetValue<bool>(L5XName.IsEncrypted),
-                Parameters = element.Descendants(L5XName.Parameter).Select(e => _parameterSerializer.Deserialize(e))
-                    .ToList(),
+                Parameters = element.Descendants(L5XName.Parameter).Select(e => _parameterSerializer.Deserialize(e)).ToList(),
                 LocalTags = element.Descendants(L5XName.LocalTag).Select(DeserializeLocalTag).ToList(),
                 Routines = DeserializeRoutines(element).ToList()
             };
@@ -104,12 +104,9 @@ namespace L5Sharp.Serialization
             if (routines.All(r => r.GetValue<RoutineType>(L5XName.Type) == RoutineType.Rll))
                 return routines.Select(r => (Routine)_rllSerializer.Deserialize(r));
 
-            if (routines.All(r => r.GetValue<RoutineType>(L5XName.Type) == RoutineType.St))
-                return routines.Select(r => (Routine)_stSerializer.Deserialize(r));
-            
-            //todo would support other types here but for now not doing that.
-
-            return Enumerable.Empty<Routine>();
+            return routines.All(r => r.GetValue<RoutineType>(L5XName.Type) == RoutineType.St)
+                ? routines.Select(r => (Routine)_stSerializer.Deserialize(r))
+                : Enumerable.Empty<Routine>();
         }
 
         private Tag DeserializeLocalTag(XElement element)
@@ -125,14 +122,16 @@ namespace L5Sharp.Serialization
                 ExternalAccess = element.TryGetValue<ExternalAccess>(L5XName.ExternalAccess) ?? ExternalAccess.None,
                 TagType = TagType.Base,
                 Usage = TagUsage.Local,
-                AliasFor = TagName.Empty
+                AliasFor = TagName.Empty,
+                Scope = Scope.Instruction,
+                Container = element.LogixName()
             };
         }
-        
+
         private XElement SerializeLocalTag(Tag tag)
         {
             var element = new XElement(L5XName.LocalTag);
-            
+
             element.AddValue(tag, t => t.Name);
             element.AddText(tag, t => t.Description);
             element.AddValue(tag, t => t.DataType);

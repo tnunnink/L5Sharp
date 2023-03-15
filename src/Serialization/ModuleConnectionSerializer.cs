@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Xml.Linq;
 using L5Sharp.Components;
-using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Extensions;
 using L5Sharp.Serialization.Data;
@@ -174,8 +173,9 @@ namespace L5Sharp.Serialization
                     .ToDictionary(
                         k => k.GetValue<string>(L5XName.Operand),
                         e => e.Value,
-                        StringComparer.OrdinalIgnoreCase)
-                
+                        StringComparer.OrdinalIgnoreCase),
+                Scope = Scope.Controller,
+                Container = tag.Ancestors(L5XName.Controller).FirstOrDefault()?.LogixName() ?? string.Empty
             };
         }
     }

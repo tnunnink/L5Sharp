@@ -124,7 +124,7 @@ namespace L5Sharp.Serialization
             };
         }
 
-        private static Tag? DeserializeConfig(XElement element)
+        private static Tag? DeserializeConfig(XContainer element)
         {
             var tag = element.Descendants(L5XName.ConfigTag).FirstOrDefault();
 
@@ -148,7 +148,9 @@ namespace L5Sharp.Serialization
                     .ToDictionary(
                         k => k.GetValue<string>(L5XName.Operand),
                         e => e.Value,
-                        StringComparer.OrdinalIgnoreCase)
+                        StringComparer.OrdinalIgnoreCase),
+                Scope = Scope.Controller,
+                Container = tag.Ancestors(L5XName.Controller).FirstOrDefault()?.LogixName() ?? string.Empty
             };
         }
     }

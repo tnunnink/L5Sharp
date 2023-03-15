@@ -1,5 +1,5 @@
-﻿<RSLogix5000Content SchemaRevision="1.0" TargetName="TestController" TargetType="Controller" ContainsContext="false" Owner="tnunnink" ExportDate="Sun Mar 12 15:59:58 2023">
-  <Controller Name="TestController" MajorRev="1" MinorRev="0" ProjectCreationDate="Mon Jan 1 00:00:00 0001" LastModifiedDate="Mon Jan 1 00:00:00 0001" Use="Target">
+﻿<RSLogix5000Content SchemaRevision="1.0" TargetName="TestController" TargetType="Controller" ContainsContext="false" Owner="tnunnink" ExportDate="Wed Mar 15 08:19:41 2023">
+  <Controller Name="TestController" MajorRev="1" MinorRev="0" ProjectCreationDate="Date_MinValue" LastModifiedDate="Date_MinValue" Use="Target">
     <DataTypes></DataTypes>
     <Modules></Modules>
     <AddOnInstructionDefinitions></AddOnInstructionDefinitions>

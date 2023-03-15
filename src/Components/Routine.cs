@@ -13,7 +13,7 @@ namespace L5Sharp.Components
     /// `Logix 5000 Controllers Import/Export`</a> for more information.
     /// </footer>
     [LogixSerializer(typeof(RoutineSerializer))]
-    public class Routine : ILogixComponent
+    public class Routine : ILogixComponent, ILogixScoped
     {
         /// <inheritdoc />
         public string Name { get; set; } = string.Empty;
@@ -26,5 +26,11 @@ namespace L5Sharp.Components
         /// </summary>
         /// <value>A <see cref="Enums.RoutineType"/> enum specifying the type content the routine contains.</value>
         public virtual RoutineType Type { get; set; } = RoutineType.Typeless;
+
+        /// <inheritdoc />
+        public Scope Scope { get; set; } = Scope.Null;
+
+        /// <inheritdoc />
+        public string Container { get; set; } = string.Empty;
     }
 }

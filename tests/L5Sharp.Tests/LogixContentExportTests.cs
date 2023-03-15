@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using System.Runtime.CompilerServices;
+using FluentAssertions;
 using L5Sharp.Components;
 using L5Sharp.Core;
 using L5Sharp.Enums;
@@ -9,6 +10,12 @@ namespace L5Sharp.Tests;
 [TestFixture]
 public class LogixContentExportTests
 {
+    [ModuleInitializer]
+    public static void Setup()
+    {
+        VerifierSettings.AddExtraDatetimeFormat("ddd MMM d HH:mm:ss yyyy");
+    }
+    
     [Test]
     public void Export_ValidComponent_ShouldNotBeNull()
     {
