@@ -360,3 +360,4 @@ tests/Samples/Test.Sem
 tests/Samples/Test.Wrk
 *.acd
 *.Recovery
+src/.idea/.idea.L5Sharp/.idea/workspace.xml
