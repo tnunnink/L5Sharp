@@ -19,7 +19,7 @@ namespace L5Sharp.Components
 
             TagName = TagName.Combine(parent.TagName, member.Name);
             Data = member.DataType;
-            Base = tag ?? throw new ArgumentNullException(nameof(tag));
+            Root = tag ?? throw new ArgumentNullException(nameof(tag));
             Parent = parent ?? throw new ArgumentNullException(nameof(parent));
         }
 
@@ -56,7 +56,7 @@ namespace L5Sharp.Components
         }
 
         /// <inheritdoc />
-        public Tag Base { get; }
+        public Tag Root { get; }
 
         /// <inheritdoc />
         public ILogixTag Parent { get; }
@@ -67,8 +67,8 @@ namespace L5Sharp.Components
         /// <value>A <see cref="string"/> containing the tag member comment.</value>
         public string Comment
         {
-            get => Base.Comments.TryGetValue(TagName.Operand, out var comment) ? comment : string.Empty;
-            set => Base.Comments[TagName.Operand] = value;
+            get => Root.Comments.TryGetValue(TagName.Operand, out var comment) ? comment : string.Empty;
+            set => Root.Comments[TagName.Operand] = value;
         }
 
         /// <summary>
@@ -77,8 +77,8 @@ namespace L5Sharp.Components
         /// <value>A <see cref="string"/> representing the scaled units of the tag member.</value>
         public string Unit
         {
-            get => Base.Units.TryGetValue(TagName.Operand, out var units) ? units : string.Empty;
-            set => Base.Units[TagName.Operand] = value;
+            get => Root.Units.TryGetValue(TagName.Operand, out var units) ? units : string.Empty;
+            set => Root.Units[TagName.Operand] = value;
         }
 
         /// <inheritdoc />
@@ -94,7 +94,7 @@ namespace L5Sharp.Components
 
             if (member is null) return default;
 
-            var tagMember = new TagMember(member, Base, this);
+            var tagMember = new TagMember(member, Root, this);
 
             var remaining = TagName.Combine(tagName.Members.Skip(1));
 
@@ -108,7 +108,7 @@ namespace L5Sharp.Components
 
             foreach (var member in GetMembers(Data))
             {
-                var tagMember = new TagMember(member, Base, this);
+                var tagMember = new TagMember(member, Root, this);
                 members.Add(tagMember);
                 members.AddRange(tagMember.Members());
             }
@@ -126,7 +126,7 @@ namespace L5Sharp.Components
 
             foreach (var member in GetMembers(Data))
             {
-                var tagMember = new TagMember(member, Base, this);
+                var tagMember = new TagMember(member, Root, this);
 
                 if (predicate.Invoke(tagMember.TagName))
                     members.Add(tagMember);
@@ -147,7 +147,7 @@ namespace L5Sharp.Components
 
             foreach (var member in GetMembers(Data))
             {
-                var tagMember = new TagMember(member, Base, this);
+                var tagMember = new TagMember(member, Root, this);
 
                 if (predicate.Invoke(tagMember))
                     members.Add(tagMember);
@@ -171,7 +171,7 @@ namespace L5Sharp.Components
 
             if (member is null) return Enumerable.Empty<TagMember>();
 
-            var tagMember = new TagMember(member, Base, this);
+            var tagMember = new TagMember(member, Root, this);
 
             var remaining = TagName.Combine(tagName.Members.Skip(1));
 

@@ -340,5 +340,31 @@ namespace L5Sharp.Tests.Components
 
             FluentActions.Invoking(() => tag.Value = new REAL(43)).Should().Throw<InvalidOperationException>();
         }
+
+        [Test]
+        public void Root_FromDescendantMember_ShouldNotBeNullAndSameAsTag()
+        {
+            var tag = new Tag { Name = "Test", Data = new TIMER() };
+
+            var member = tag.Member("DN");
+
+            var root = member?.Root;
+
+            root.Should().NotBeNull();
+            root.Should().BeSameAs(tag);
+        }
+        
+        [Test]
+        public void Root_FromNestedDescendantMember_ShouldNotBeNullAndSameAsTag()
+        {
+            var tag = new Tag { Name = "Test", Data = new MyNestedType() };
+
+            var member = tag.Member("Simple.M1");
+
+            var root = member?.Root;
+
+            root.Should().NotBeNull();
+            root.Should().BeSameAs(tag);
+        }
     }
 }

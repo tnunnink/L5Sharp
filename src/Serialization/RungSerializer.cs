@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Xml.Linq;
 using L5Sharp.Components;
 using L5Sharp.Core;
@@ -35,6 +36,8 @@ namespace L5Sharp.Serialization
 
             return new Rung
             {
+                Program = element.Ancestors(L5XName.Program).FirstOrDefault()?.LogixName() ?? string.Empty,
+                Routine = element.Ancestors(L5XName.Routine).FirstOrDefault()?.LogixName() ?? string.Empty,
                 Number = element.GetValue<int>(L5XName.Number),
                 Type = element.TryGetValue<RungType>(L5XName.Type) ?? RungType.Normal,
                 Comment = element.Element(L5XName.Comment)?.Value ?? string.Empty,

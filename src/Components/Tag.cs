@@ -19,7 +19,7 @@ namespace L5Sharp.Components
     /// </footer>
     [XmlType(L5XName.Tag)]
     [LogixSerializer(typeof(TagSerializer))]
-    public class Tag : ILogixComponent, ILogixTag
+    public class Tag : ILogixComponent, ILogixTag, ILogixScoped
     {
         /// <inheritdoc />
         public string Name { get; set; } = string.Empty;
@@ -57,7 +57,7 @@ namespace L5Sharp.Components
         }
 
         /// <inheritdoc />
-        public Tag Base => this;
+        public Tag Root => this;
 
         /// <inheritdoc />
         public ILogixTag Parent => this;
@@ -93,6 +93,12 @@ namespace L5Sharp.Components
         /// <remarks>Only value type tags have the ability to be set as a constant. Default is <c>false</c>.</remarks>
         public bool Constant { get; set; }
 
+        /// <inheritdoc />
+        public Scope Scope { get; set; } = Scope.Null;
+
+        /// <inheritdoc />
+        public string Container { get; set; } = string.Empty;
+
         /// <summary>
         /// The collection of member comments for the tag component.
         /// </summary>
@@ -118,7 +124,7 @@ namespace L5Sharp.Components
 
             if (member is null) return default;
 
-            var tagMember = new TagMember(member, Base, this);
+            var tagMember = new TagMember(member, Root, this);
 
             var remaining = TagName.Combine(tagName.Members.Skip(1));
 
@@ -132,7 +138,7 @@ namespace L5Sharp.Components
 
             foreach (var member in GetMembers(Data))
             {
-                var tagMember = new TagMember(member, Base, this);
+                var tagMember = new TagMember(member, Root, this);
                 members.Add(tagMember);
                 members.AddRange(tagMember.Members());
             }
@@ -150,7 +156,7 @@ namespace L5Sharp.Components
 
             foreach (var member in GetMembers(Data))
             {
-                var tagMember = new TagMember(member, Base, this);
+                var tagMember = new TagMember(member, Root, this);
 
                 if (predicate.Invoke(tagMember.TagName))
                     members.Add(tagMember);
@@ -171,7 +177,7 @@ namespace L5Sharp.Components
 
             foreach (var member in GetMembers(Data))
             {
-                var tagMember = new TagMember(member, Base, this);
+                var tagMember = new TagMember(member, Root, this);
 
                 if (predicate.Invoke(tagMember))
                     members.Add(tagMember);
@@ -195,13 +201,13 @@ namespace L5Sharp.Components
 
             if (member is null) return Enumerable.Empty<TagMember>();
 
-            var tagMember = new TagMember(member, Base, this);
+            var tagMember = new TagMember(member, Root, this);
 
             var remaining = TagName.Combine(tagName.Members.Skip(1));
 
             return remaining.IsEmpty ? tagMember.Members() : tagMember.MembersOf(remaining);
         }
-        
+
         /// <summary>
         /// Returns all <see cref="Member"/> objects contained by the <see cref="ILogixType"/> object.
         /// </summary>

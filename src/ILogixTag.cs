@@ -103,9 +103,9 @@ namespace L5Sharp
         AtomicType? Value { get; set; }
 
         /// <summary>
-        /// The base tag of the current <see cref="ILogixTag"/> member.
+        /// The root tag of the current <see cref="ILogixTag"/> member.
         /// </summary>
-        Tag Base { get; }
+        Tag Root { get; }
         
         /// <summary>
         /// The parent tag or tag member of the current <see cref="ILogixTag"/> member.

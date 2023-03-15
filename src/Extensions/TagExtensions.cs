@@ -10,7 +10,8 @@ namespace L5Sharp.Extensions;
 /// </summary>
 public static class TagExtensions
 {
-    /// <summary>
+    //todo perhaps add later....
+    /*/// <summary>
     /// Returns the nested <c>TagMember</c> using a specified selector expression.
     /// </summary>
     /// <param name="tag">The current <see cref="ILogixTag"/> component.</param>
@@ -31,5 +32,5 @@ public static class TagExtensions
 
         return tag.Member(tagName) ??
                throw new InvalidOperationException($"No member found for the specified path {path}.");
-    }
+    }*/
 }

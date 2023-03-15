@@ -97,7 +97,11 @@ namespace L5Sharp.Serialization
                 Units = element.Descendants(L5XName.EngineeringUnit)
                     .ToDictionary(
                         k => k.GetValue<string>(L5XName.Operand),
-                        e => e.Value)
+                        e => e.Value),
+                Scope = element.Ancestors(L5XName.Program).Any() ? Scope.Program : Scope.Controller,
+                Container = element.Ancestors(L5XName.Program).Any()
+                    ? element.Ancestors(L5XName.Program).FirstOrDefault()?.LogixName() ?? string.Empty
+                    : element.Ancestors(L5XName.Controller).FirstOrDefault()?.LogixName() ?? string.Empty
             };
         }
     }

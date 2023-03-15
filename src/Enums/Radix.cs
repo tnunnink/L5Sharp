@@ -17,19 +17,6 @@ namespace L5Sharp.Enums
     /// </summary>
     public abstract class Radix : LogixEnum<Radix, string>
     {
-        private static readonly Dictionary<string, Func<string, bool>> Identifiers = new()
-        {
-            { nameof(Binary), s => Binary.HasFormat(s) },
-            { nameof(Octal), s => Octal.HasFormat(s) },
-            { nameof(Decimal), s => Decimal.HasFormat(s) },
-            { nameof(Hex), s => Hex.HasFormat(s) },
-            { nameof(Float), s => Float.HasFormat(s) },
-            { nameof(Exponential), s => Exponential.HasFormat(s) },
-            { nameof(Ascii), s => Ascii.HasFormat(s) },
-            { nameof(DateTime), s => DateTime.HasFormat(s) },
-            { nameof(DateTimeNs), s => DateTimeNs.HasFormat(s) }
-        };
-
         private Radix(string name, string value) : base(name, value)
         {
         }
@@ -233,6 +220,19 @@ namespace L5Sharp.Enums
             if (!SupportsType(atomic))
                 throw new NotSupportedException($"{atomic.GetType()} is not supported by {Name} Radix.");
         }
+        
+        private static readonly Dictionary<string, Func<string, bool>> Identifiers = new()
+        {
+            { nameof(Binary), s => Binary.HasFormat(s) },
+            { nameof(Octal), s => Octal.HasFormat(s) },
+            { nameof(Decimal), s => Decimal.HasFormat(s) },
+            { nameof(Hex), s => Hex.HasFormat(s) },
+            { nameof(Float), s => Float.HasFormat(s) },
+            { nameof(Exponential), s => Exponential.HasFormat(s) },
+            { nameof(Ascii), s => Ascii.HasFormat(s) },
+            { nameof(DateTime), s => DateTime.HasFormat(s) },
+            { nameof(DateTimeNs), s => DateTimeNs.HasFormat(s) }
+        };
 
         private class NullRadix : Radix
         {

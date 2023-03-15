@@ -7,12 +7,18 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="updated version">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="Updated ILogixTag.cs to include public Base and Parent properties to allow pass through description to work and to make it API easier or capable of navigating back up through the hierarchical tree.">
+      <change afterPath="$PROJECT_DIR$/ILogixScoped.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Components/Rung.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Components/Rung.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Components/Tag.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Components/Tag.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Components/TagMember.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Components/TagMember.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Extensions/LogixTypeExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Extensions/LogixTypeExtensions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Extensions/TagExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Extensions/TagExtensions.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ILogixTag.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ILogixTag.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Serialization/RungSerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Serialization/RungSerializer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Serialization/TagSerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Serialization/TagSerializer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/TagTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/TagTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Extensions/TagExtensionTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Extensions/TagExtensionTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/Samples/Generated/DataType.L5X" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/Samples/Generated/DataType.L5X" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -376,14 +382,7 @@
       <workItem from="1678399236829" duration="7974000" />
       <workItem from="1678483897582" duration="20090000" />
       <workItem from="1678711903788" duration="11656000" />
-      <workItem from="1678738210056" duration="26298000" />
-    </task>
-    <task id="LOCAL-00175" summary="Fixed Dimensions.cs parsing issues and testing.">
-      <created>1649517705636</created>
-      <option name="number" value="00175" />
-      <option name="presentableId" value="LOCAL-00175" />
-      <option name="project" value="LOCAL" />
-      <updated>1649517705636</updated>
+      <workItem from="1678738210056" duration="27840000" />
     </task>
     <task id="LOCAL-00176" summary="Fixed data type casting issue on serialization. Adding todos for Radix format provider and custom formatter and atomic converters for type narrowing">
       <created>1649533569272</created>
@@ -721,7 +720,14 @@
       <option name="project" value="LOCAL" />
       <updated>1678826254897</updated>
     </task>
-    <option name="localTasksCounter" value="224" />
+    <task id="LOCAL-00224" summary="Updated ILogixTag.cs to include public Base and Parent properties to allow pass through description to work and to make it API easier or capable of navigating back up through the hierarchical tree.">
+      <created>1678848760568</created>
+      <option name="number" value="00224" />
+      <option name="presentableId" value="LOCAL-00224" />
+      <option name="project" value="LOCAL" />
+      <updated>1678848760568</updated>
+    </task>
+    <option name="localTasksCounter" value="225" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -780,7 +786,6 @@
       <path value="$PROJECT_DIR$/../.." />
     </ignored-roots>
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="more serialization work and testings." />
     <MESSAGE value="cleared warnings. preping to merge changes." />
     <MESSAGE value="including README.md with package." />
     <MESSAGE value="updated README.md" />
@@ -805,7 +810,8 @@
     <MESSAGE value="added some new split patterns to NeutralText.cs" />
     <MESSAGE value="added test for new SplitBy" />
     <MESSAGE value="updated version" />
-    <option name="LAST_COMMIT_MESSAGE" value="updated version" />
+    <MESSAGE value="Updated ILogixTag.cs to include public Base and Parent properties to allow pass through description to work and to make it API easier or capable of navigating back up through the hierarchical tree." />
+    <option name="LAST_COMMIT_MESSAGE" value="Updated ILogixTag.cs to include public Base and Parent properties to allow pass through description to work and to make it API easier or capable of navigating back up through the hierarchical tree." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
