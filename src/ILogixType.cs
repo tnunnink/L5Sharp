@@ -1,4 +1,5 @@
-﻿using L5Sharp.Enums;
+﻿using System.Collections.Generic;
+using L5Sharp.Enums;
 using L5Sharp.Types;
 
 namespace L5Sharp
@@ -39,5 +40,10 @@ namespace L5Sharp
         /// A <see cref="DataTypeClass"/> option indicating the class for which the current data type belongs.
         /// </value>
         DataTypeClass Class { get; }
+        
+        /// <summary>
+        /// The collection of <see cref="Member"/> objects that make up the structure of the type.
+        /// </summary>
+        IEnumerable<Member> Members { get; }
     }
 }

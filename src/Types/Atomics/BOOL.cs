@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using L5Sharp.Enums;
 using L5Sharp.Types.Atomics.Converters;
 
@@ -57,6 +59,9 @@ namespace L5Sharp.Types.Atomics
         {
             _value = number != 0;
         }
+
+        /// <inheritdoc />
+        public override IEnumerable<Member> Members => Enumerable.Empty<Member>();
 
         /// <summary>
         /// Implicitly converts the provided <see cref="bool"/> to a <see cref="BOOL"/> value.

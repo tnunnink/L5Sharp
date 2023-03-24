@@ -29,7 +29,7 @@ namespace L5Sharp.Serialization.Data
             if (arrayType.First() is AtomicType atomic && arrayType.First() is not BOOL)
                 element.AddValue(atomic.Radix, L5XName.Radix);
 
-            element.Add(arrayType.Elements.Select(e =>
+            element.Add(arrayType.Members.Select(e =>
             {
                 var index = new XElement(L5XName.Element);
                 index.AddValue(e.Name, L5XName.Index);

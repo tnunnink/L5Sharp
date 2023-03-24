@@ -146,7 +146,7 @@ namespace L5Sharp.Types
         /// Gets a collection of <see cref="Member"/> that represent the elements of the array.
         /// </summary>
         /// <returns>A <see cref="IEnumerable{T}"/> containing <see cref="Member"/> object.</returns>
-        public IEnumerable<Member> Elements => _elements.Select(e => new Member(e.Key, e.Value));
+        public IEnumerable<Member> Members => _elements.Select(e => new Member(e.Key, e.Value));
 
         /// <inheritdoc />
         public override string ToString() => Name;

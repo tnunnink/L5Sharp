@@ -30,21 +30,6 @@ namespace L5Sharp.Core
         private const string TagNamePattern =
             @"^[A-Za-z_][\w+:]{1,39}(?:(?:\[\d+\]|\[\d+,\d+\]|\[\d+,\d+,\d+\])?(?:\.[A-Za-z_]\w{1,39})?)+(?:\.[0-9][0-9]?)?$";
 
-        //todo might remove this but keeping for now
-        /// <summary>
-        /// A regex pattern for validating an individual tag member segment. This includes multi dimensional array brackets. 
-        /// </summary>
-        private const string TagMemberPattern =
-            @"^[A-Za-z_][\w:]+$|^\[\d+\]$|^\[\d+,\d+\]$|^\[\d+,\d+,\d+\]$";
-
-        //todo might remove this but keeping for now
-        /// <summary>
-        /// A regex pattern for matching each individual possible member portion of a full tag name.
-        /// Used to split incoming string into member parts. 
-        /// </summary>
-        private const string TagMembersPattern =
-            @"^[A-Za-z_][\w:]{1,39}|(?<=\.)[A-Za-z_][\w]{0,39}|(?<=[A-Za-z_])\[\d+\]|(?<=[A-Za-z_])\[\d+,\d+\]|(?<=[A-Za-z_])\[\d+,\d+,\d+\]|(?<=\.)[0-9][0-9]?$";
-
         /// <summary>
         /// A regex pattern for matching each individual possible member portion of a full tag name.
         /// Used to split incoming string into member parts. 
@@ -57,8 +42,7 @@ namespace L5Sharp.Core
         /// Used to split incoming string into member parts. 
         /// </summary>
         private const string MemberPattern =
-            @"^(?:[A-Za-z_][\w+:]{0,39})?(?:(?:\[\d+\]|\[\d+,\d+\]|\[\d+,\d+,\d+\])?(?:\.[A-Za-z_]\w{1,39})?)+(?:\.[0-9][0-9]?)?$";
-
+            @"^(?:[A-Za-z_][\w+:]{0,39})?(?:(?:\[\d+\]|\[\d+,\d+\]|\[\d+,\d+,\d+\])?(?:\.[A-Za-z_]\w{1,39})?)+(?:[0-9][0-9]?)?$";
 
         /// <summary>
         /// Creates a new <see cref="TagName"/> object with the provided string tag name.
@@ -67,13 +51,7 @@ namespace L5Sharp.Core
         /// <exception cref="ArgumentNullException">tagName is null.</exception>
         public TagName(string tagName)
         {
-            if (tagName is null)
-                throw new ArgumentNullException(nameof(tagName));
-
-            if (!Regex.IsMatch(tagName, MemberPattern))
-                throw new ArgumentException($"The provided name {tagName} is not a valid tag name.");
-
-            _tagName = tagName;
+            _tagName = tagName ?? throw new ArgumentNullException(nameof(tagName));
         }
 
         /// <summary>
@@ -260,9 +238,6 @@ namespace L5Sharp.Core
 
             foreach (var member in members)
             {
-                if (!Regex.IsMatch(member, MemberPattern, RegexOptions.Compiled))
-                    throw new ArgumentException($"The provided member {member} is not a valid tag member.");
-                
                 if (!(member.StartsWith(ArrayBracketStart) || member.StartsWith(MemberSeparator)) && builder.Length > 1)
                     builder.Append(MemberSeparator);
 

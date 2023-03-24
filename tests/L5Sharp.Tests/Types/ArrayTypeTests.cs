@@ -1,10 +1,8 @@
 ﻿using FluentAssertions;
 using L5Sharp.Enums;
-using L5Sharp.Tests.Types.Custom;
 using L5Sharp.Types;
 using L5Sharp.Types.Atomics;
 using L5Sharp.Types.Predefined;
-using NUnit.Framework.Internal;
 
 namespace L5Sharp.Tests.Types
 {
@@ -199,7 +197,7 @@ namespace L5Sharp.Tests.Types
         {
             var array = new ArrayType<DINT>(DintArray);
 
-            var elements = array.Elements.ToArray();
+            var elements = array.Members.ToArray();
 
             elements.Should().NotBeEmpty();
             elements.Select(e => e.DataType).Should().AllBeOfType<DINT>();

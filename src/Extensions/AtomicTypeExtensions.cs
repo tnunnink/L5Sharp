@@ -12,7 +12,7 @@ namespace L5Sharp.Extensions;
 public static class AtomicTypeExtensions
 {
     /// <summary>
-    /// Converts the current <see cref="ValueType"/> to the specified base number.
+    /// Converts the current <see cref="AtomicType"/> to the specified base number.
     /// </summary>
     /// <param name="atomicType">The value type to convert.</param>
     /// <param name="baseNumber">The base number to convert to.</param>
@@ -52,12 +52,12 @@ public static class AtomicTypeExtensions
             SINT value => new[] { byte.Parse(((sbyte)value).ToString("X2"), NumberStyles.HexNumber) },
             USINT value => new[] { (byte)value },
             INT value => BitConverter.GetBytes(value),
-            DINT value => BitConverter.GetBytes(value),
-            LINT value => BitConverter.GetBytes(value),
             UINT value => BitConverter.GetBytes(value),
+            DINT value => BitConverter.GetBytes(value),
             UDINT value => BitConverter.GetBytes(value),
+            LINT value => BitConverter.GetBytes(value),
             ULINT value => BitConverter.GetBytes(value),
-            _ => throw new NotSupportedException()
+            _ => throw new NotSupportedException($"The provided atomic type {atomicType.GetType()} is not supported.")
         };
     }
 }

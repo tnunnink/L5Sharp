@@ -56,7 +56,7 @@ namespace L5Sharp.Tests
 
             var array = tags.Data.As<ILogixArray<ILogixType>>();
 
-            var elements = array.Elements.ToList();
+            var elements = array.Members.ToList();
             elements.Should().NotBeEmpty();
 
             array.Should().NotBeNull();

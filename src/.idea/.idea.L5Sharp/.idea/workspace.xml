@@ -7,8 +7,29 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="Fixed bug with TagName.cs regex">
-      <change beforePath="$PROJECT_DIR$/L5Sharp.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.csproj" afterDir="false" />
+    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Components/Tag.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Components/Tag.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Components/TagMember.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Components/TagMember.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/TagName.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/TagName.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Extensions/AtomicTypeExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Extensions/AtomicTypeExtensions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ILogixArray.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ILogixArray.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ILogixType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ILogixType.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Serialization/Data/ArrayMemberSerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Serialization/Data/ArrayMemberSerializer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Serialization/Data/ArraySerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Serialization/Data/ArraySerializer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Types/ArrayType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Types/ArrayType.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Types/AtomicType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Types/AtomicType.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Types/Atomics/BOOL.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Types/Atomics/BOOL.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Types/Atomics/INT.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Types/Atomics/INT.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Types/Atomics/REAL.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Types/Atomics/REAL.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Types/NullType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Types/NullType.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/TagTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/TagTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Core/TagNameTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Core/TagNameTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Examples.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Examples.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Known.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Known.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/LogixContentTagTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/LogixContentTagTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/ArrayTypeTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/ArrayTypeTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/IntTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/IntTests.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -148,23 +169,14 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/f90429cc0220488dbef4a1bcd913cfad9d800/BF/LateBoundTestFramework.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/fa60121f8597edda05ba1e79c874b7b6527c3a7a58eed18a5e6266beec5bea/FileStream.Windows.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/fcb7c6c2bdd189d6d8f13a694cf733524fb73b87c4131674538619a9bc6acfac/RuntimeHelpers.CoreCLR.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/Components/Tag.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/Components/TagMember.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Core/Bus.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/Core/NeutralText.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Enums/Instruction.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Extensions/ContentLogicExtensions.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/ILogixTag.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/LogixContent.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Types/ArrayType.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/obj/Debug/netstandard2.1/.NETStandard,Version=v2.1.AssemblyAttributes.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/tests/L5Sharp.Tests/Components/TagTests.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/tests/L5Sharp.Tests/Core/NeutralTextTests.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/tests/L5Sharp.Tests/Core/NeutralTextTests.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/tests/L5Sharp.Tests/ProofTests.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../tests/L5Sharp.Tests/Serialization/AddOnInstructionSerializerTests.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../tests/L5Sharp.Tests/Serialization/DataTypeMemberSerializerTests.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/tests/L5Sharp.Tests/Serialization/TagSerializerTests.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -378,14 +390,8 @@
       <workItem from="1678399236829" duration="7974000" />
       <workItem from="1678483897582" duration="20090000" />
       <workItem from="1678711903788" duration="11656000" />
-      <workItem from="1678738210056" duration="37671000" />
-    </task>
-    <task id="LOCAL-00181" summary="Query testing and updates. Other random updates.">
-      <created>1649893256278</created>
-      <option name="number" value="00181" />
-      <option name="presentableId" value="LOCAL-00181" />
-      <option name="project" value="LOCAL" />
-      <updated>1649893256279</updated>
+      <workItem from="1678738210056" duration="38961000" />
+      <workItem from="1679683692829" duration="7878000" />
     </task>
     <task id="LOCAL-00182" summary="Clean up of unused and unsupported code. Removed the L5XAttribute.cs and L5XElement.cs and combined into single static string class L5XName.cs to make code more readable. Fixed tests and added additional querying tests to complete test coverage.">
       <created>1650399555516</created>
@@ -723,7 +729,14 @@
       <option name="project" value="LOCAL" />
       <updated>1678900228190</updated>
     </task>
-    <option name="localTasksCounter" value="230" />
+    <task id="LOCAL-00230" summary="Update version">
+      <created>1678900349653</created>
+      <option name="number" value="00230" />
+      <option name="presentableId" value="LOCAL-00230" />
+      <option name="project" value="LOCAL" />
+      <updated>1678900349653</updated>
+    </task>
+    <option name="localTasksCounter" value="231" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -782,7 +795,6 @@
       <path value="$PROJECT_DIR$/../.." />
     </ignored-roots>
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="Adding ILogixArray" />
     <MESSAGE value="verification files." />
     <MESSAGE value="Finished serialization testing for time being. Fixed lots of other tests. Fixed random bugs and updated documentation." />
     <MESSAGE value="updated project version" />
@@ -807,7 +819,8 @@
     <MESSAGE value="Made ILogixTag.cs not dependent on implementations of Tag and TagMember" />
     <MESSAGE value="Verified ToTagLookup functionality." />
     <MESSAGE value="Fixed bug with TagName.cs regex" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fixed bug with TagName.cs regex" />
+    <MESSAGE value="Update version" />
+    <option name="LAST_COMMIT_MESSAGE" value="Update version" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -837,6 +850,32 @@
             </endOffsets>
           </properties>
           <option name="timeStamp" value="85" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/IntTests.cs</url>
+          <line>256</line>
+          <properties documentPath="C:\Users\tnunnink\Documents\GitHub\L5Sharp\tests\L5Sharp.Tests\Types\IntTests.cs" initialLine="256" containingFunctionPresentation="method 'Members_PositiveValue_ShouldHaveBitsEqualToOne'">
+            <startOffsets>
+              <option value="5842" />
+            </startOffsets>
+            <endOffsets>
+              <option value="5879" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="88" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/../tests/L5Sharp.Tests/LogixContentTagTests.cs</url>
+          <line>255</line>
+          <properties documentPath="C:\Users\tnunnink\Documents\GitHub\L5Sharp\tests\L5Sharp.Tests\LogixContentTagTests.cs" initialLine="255" containingFunctionPresentation="method 'GetSimpleAtomicTagBitMembers'">
+            <startOffsets>
+              <option value="6318" />
+            </startOffsets>
+            <endOffsets>
+              <option value="6392" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="93" />
         </line-breakpoint>
         <breakpoint enabled="true" type="DotNet Exception Breakpoints">
           <properties exception="System.PlatformNotSupportedException" isInternal="false" displayValue="PlatformNotSupportedException" namespaceName="System">

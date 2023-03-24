@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.InteropServices.ComTypes;
 using L5Sharp.Enums;
 using L5Sharp.Types.Atomics.Converters;
@@ -20,7 +22,7 @@ namespace L5Sharp.Types.Atomics
         public INT() : base(nameof(INT))
         {
         }
-        
+
         /// <summary>
         /// Creates a new <see cref="INT"/> value with the provided radix format.
         /// </summary>
@@ -74,14 +76,14 @@ namespace L5Sharp.Types.Atomics
         /// <param name="atomic">The value to convert.</param>
         /// <returns>A <see cref="short"/> type value.</returns>
         public static implicit operator short(INT atomic) => atomic._value;
-        
+
         /// <summary>
         /// Implicitly converts a <see cref="string"/> to a <see cref="INT"/> value.
         /// </summary>
         /// <param name="value">The value to convert.</param>
         /// <returns>A new <see cref="INT"/> value.</returns>
         public static implicit operator INT(string value) => new(value);
-        
+
         /// <summary>
         /// Implicitly converts the provided <see cref="INT"/> to a <see cref="string"/> value.
         /// </summary>

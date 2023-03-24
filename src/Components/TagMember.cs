@@ -10,7 +10,7 @@ namespace L5Sharp.Components
     /// <summary>
     /// 
     /// </summary>
-    public class TagMember : ILogixTag
+    public sealed class TagMember : ILogixTag
     {
         internal TagMember(Member member, ILogixTag tag, ILogixTag parent)
         {
@@ -30,7 +30,7 @@ namespace L5Sharp.Components
         public string Description => !string.IsNullOrEmpty(Comment) ? Comment : Parent.Description;
 
         /// <inheritdoc />
-        public virtual ILogixType Data { get; private set; }
+        public ILogixType Data { get; private set; }
 
         /// <inheritdoc />
         public string DataType => Data.Name;
@@ -95,7 +95,7 @@ namespace L5Sharp.Components
 
             var memberName = tagName.Members.FirstOrDefault() ?? string.Empty;
 
-            var member = GetMembers(Data)
+            var member = Data.Members
                 .FirstOrDefault(m => string.Equals(m.Name, memberName, StringComparison.OrdinalIgnoreCase));
 
             if (member is null) return default;
@@ -112,7 +112,7 @@ namespace L5Sharp.Components
         {
             var members = new List<ILogixTag>();
 
-            foreach (var member in GetMembers(Data))
+            foreach (var member in Data.Members)
             {
                 var tagMember = new TagMember(member, Root, this);
                 members.Add(tagMember);
@@ -127,7 +127,7 @@ namespace L5Sharp.Components
         {
             var members = new List<ILogixTag> { this };
 
-            foreach (var member in GetMembers(Data))
+            foreach (var member in Data.Members)
             {
                 var tagMember = new TagMember(member, Root, this);
                 members.Add(tagMember);
@@ -145,7 +145,7 @@ namespace L5Sharp.Components
 
             var members = new List<ILogixTag>();
 
-            foreach (var member in GetMembers(Data))
+            foreach (var member in Data.Members)
             {
                 var tagMember = new TagMember(member, Root, this);
 
@@ -166,7 +166,7 @@ namespace L5Sharp.Components
 
             var members = new List<ILogixTag>();
 
-            foreach (var member in GetMembers(Data))
+            foreach (var member in Data.Members)
             {
                 var tagMember = new TagMember(member, Root, this);
 
@@ -187,7 +187,7 @@ namespace L5Sharp.Components
 
             var memberName = tagName.Members.FirstOrDefault() ?? string.Empty;
 
-            var member = GetMembers(Data)
+            var member = Data.Members
                 .FirstOrDefault(m => string.Equals(m.Name, memberName, StringComparison.OrdinalIgnoreCase));
 
             if (member is null) return Enumerable.Empty<TagMember>();
@@ -197,26 +197,6 @@ namespace L5Sharp.Components
             var remaining = TagName.Combine(tagName.Members.Skip(1));
 
             return remaining.IsEmpty ? tagMember.Members() : tagMember.MembersOf(remaining);
-        }
-
-        /// <summary>
-        /// Returns all <see cref="Member"/> objects contained by the <see cref="ILogixType"/> object.
-        /// </summary>
-        /// <param name="type">The logix type object.</param>
-        /// <returns>A <see cref="IEnumerable{T}"/> containing <see cref="Member"/> objects.</returns>
-        /// <remarks>
-        /// This is a helper to easily get either a <see cref="StructureType"/> member collection or an
-        /// <see cref="ArrayType{TLogixType}"/> element collection, both which are collection of members and defined
-        /// the type structure. Calling this for <see cref="AtomicType"/> will return and empty collection.
-        /// </remarks>
-        private static IEnumerable<Member> GetMembers(ILogixType type)
-        {
-            return type switch
-            {
-                StructureType structureType => structureType.Members,
-                ILogixArray<ILogixType> arrayType => arrayType.Elements,
-                _ => Enumerable.Empty<Member>()
-            };
         }
     }
 }

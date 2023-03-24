@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
+using System.Linq;
 using L5Sharp.Enums;
 using L5Sharp.Types.Atomics.Converters;
 
@@ -60,6 +62,9 @@ namespace L5Sharp.Types.Atomics
         /// Represents the smallest possible value of <see cref="REAL"/>.
         /// </summary>
         public const float MinValue = float.MinValue;
+        
+        /// <inheritdoc />
+        public override IEnumerable<Member> Members => Enumerable.Empty<Member>();
         
         /// <summary>
         /// Converts the provided <see cref="float"/> to a <see cref="REAL"/> value.

@@ -38,14 +38,6 @@ namespace L5Sharp.Tests.Core
         }
 
         [Test]
-        public void New_Invalid_ShouldThrowArgumentException()
-        {
-            var fixture = new Fixture();
-
-            FluentActions.Invoking(() => new TagName(fixture.Create<string>())).Should().Throw<ArgumentException>();
-        }
-
-        [Test]
         public void New_SimpleTagName_ShouldNotBeNull()
         {
             var tagName = new TagName("Test");
@@ -242,16 +234,7 @@ namespace L5Sharp.Tests.Core
 
             tagName.Should().Be(TestTagName);
         }
-
-        [Test]
-        public void Combine_CollectionOfInvalidMembers_ShouldBeExpectedValue()
-        {
-            var fixture = new Fixture();
-            var members = fixture.CreateMany<string>();
-
-            FluentActions.Invoking(() => TagName.Combine(members)).Should().Throw<ArgumentException>();
-        }
-
+        
         [Test]
         public void Contains_NullName_ShouldThrowArgumentNullException()
         {
@@ -288,14 +271,6 @@ namespace L5Sharp.Tests.Core
             var result = tag.Rename("MyNewTagName");
 
             result.ToString().Should().StartWith("MyNewTagName");
-        }
-
-        [Test]
-        public void Rename_InvalidTagName_ShouldThrowArgumentException()
-        {
-            var tag = new TagName(TestTagName);
-
-            FluentActions.Invoking(() => tag.Rename("!@#$")).Should().Throw<ArgumentException>();
         }
 
         [Test]

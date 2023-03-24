@@ -1,4 +1,6 @@
-﻿using L5Sharp.Enums;
+﻿using System.Collections.Generic;
+using System.Linq;
+using L5Sharp.Enums;
 
 namespace L5Sharp.Types
 {
@@ -22,6 +24,9 @@ namespace L5Sharp.Types
 
         /// <inheritdoc />
         public DataTypeClass Class => DataTypeClass.Unknown;
+
+        /// <inheritdoc />
+        public IEnumerable<Member> Members => Enumerable.Empty<Member>();
 
         /// <summary>
         /// Gets the singleton instance of the <see cref="NullType"/> logix type.

@@ -25,7 +25,7 @@ namespace L5Sharp.Serialization.Data
             if (obj.FirstOrDefault() is AtomicType atomic)
                 element.AddValue(atomic.Radix, L5XName.Radix);
 
-            element.Add(obj.Elements.Select(e =>
+            element.Add(obj.Members.Select(e =>
             {
                 var index = new XElement(L5XName.Element);
                 index.AddValue(e.Name, L5XName.Index);

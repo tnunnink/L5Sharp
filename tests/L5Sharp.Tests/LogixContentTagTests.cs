@@ -243,4 +243,16 @@ public class LogixContentTagTests
         result.Data.Should().NotBeNull();
         result.Data.AsType<BOOL>().Should().NotBeNull();
     }
+
+    [Test]
+    public void GetSimpleAtomicTagBitMembers()
+    {
+        var content = LogixContent.Load(Known.Test);
+
+        var tag = content.Tags().Find(Known.Tag);
+
+        var members = tag.Members().ToList();
+
+        members.Should().Contain(t => t.TagName == "TestSimpleTag.IntMember.15");
+    }
 }

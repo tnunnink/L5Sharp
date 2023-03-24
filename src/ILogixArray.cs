@@ -17,11 +17,11 @@ public interface ILogixArray<out TLogixType> : ILogixType, IEnumerable<TLogixTyp
     /// <value>A <see cref="Core.Dimensions"/> value representing the array dimensions.</value>
     Dimensions Dimensions { get; }
 
-    /// <summary>
+    /*/// <summary>
     /// Gets a collection of <see cref="Member"/> that represent the elements of the array.
     /// </summary>
     /// <returns>A <see cref="IEnumerable{T}"/> containing <see cref="Member"/> object.</returns>
-    IEnumerable<Member> Elements { get; }
+    IEnumerable<Member> Elements { get; }*/
 
     /// <summary>
     /// Gets the <see cref="ILogixType"/> instance at the specified index.

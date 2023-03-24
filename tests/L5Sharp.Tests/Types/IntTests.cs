@@ -1,6 +1,7 @@
 ﻿using AutoFixture;
 using FluentAssertions;
 using L5Sharp.Enums;
+using L5Sharp.Extensions;
 using L5Sharp.Types;
 using L5Sharp.Types.Atomics;
 using NUnit.Framework;
@@ -18,7 +19,7 @@ namespace L5Sharp.Tests.Types
             var fixture = new Fixture();
             _random = fixture.Create<short>();
         }
-        
+
         [Test]
         public void New_Default_ShouldNotBeNull()
         {
@@ -26,7 +27,7 @@ namespace L5Sharp.Tests.Types
 
             type.Should().NotBeNull();
         }
-        
+
         [Test]
         public void New_Default_ShouldHaveExpectedDefaults()
         {
@@ -38,21 +39,21 @@ namespace L5Sharp.Tests.Types
             type.Family.Should().Be(DataTypeFamily.None);
             type.Should().Be(0);
         }
-        
+
         [Test]
         public void New_ValueOverload_ShouldHaveExpectedValue()
         {
             var type = new INT(_random);
-            
+
             type.Should().Be(_random);
         }
-        
+
         [Test]
         public void MaxValue_WhenCalled_ShouldBeExpected()
         {
             INT.MaxValue.Should().Be(short.MaxValue);
         }
-        
+
         [Test]
         public void MinValue_WhenCalled_ShouldBeExpected()
         {
@@ -79,7 +80,7 @@ namespace L5Sharp.Tests.Types
 
             format.Should().Be("0");
         }
-        
+
         [Test]
         public void ToString_OverloadedRadix_ShouldBeExpected()
         {
@@ -100,7 +101,7 @@ namespace L5Sharp.Tests.Types
 
             result.Should().BeTrue();
         }
-        
+
         [Test]
         public void TypeEquals_AreSame_ShouldBeTrue()
         {
@@ -110,8 +111,8 @@ namespace L5Sharp.Tests.Types
 
             result.Should().BeTrue();
         }
-        
-        
+
+
         [Test]
         public void TypeEquals_Null_ShouldBeFalse()
         {
@@ -121,7 +122,7 @@ namespace L5Sharp.Tests.Types
 
             result.Should().BeFalse();
         }
-        
+
         [Test]
         public void ObjectEquals_AreEqual_ShouldBeTrue()
         {
@@ -132,7 +133,7 @@ namespace L5Sharp.Tests.Types
 
             result.Should().BeTrue();
         }
-        
+
         [Test]
         public void ObjectEquals_AreSame_ShouldBeTrue()
         {
@@ -142,7 +143,7 @@ namespace L5Sharp.Tests.Types
 
             result.Should().BeTrue();
         }
-        
+
         [Test]
         public void ObjectEquals_Null_ShouldBeFalse()
         {
@@ -163,7 +164,7 @@ namespace L5Sharp.Tests.Types
 
             result.Should().BeTrue();
         }
-        
+
         [Test]
         public void OperatorNotEquals_AreEqual_ShouldBeFalse()
         {
@@ -184,7 +185,7 @@ namespace L5Sharp.Tests.Types
 
             hash.Should().Be(type.GetHashCode());
         }
-        
+
         [Test]
         public void ToString_WhenCalled_ShouldBeName()
         {
@@ -192,7 +193,7 @@ namespace L5Sharp.Tests.Types
 
             type.ToString().Should().Be(type.ToString());
         }
-        
+
         [Test]
         public void CompareTo_Same_ShouldBeZero()
         {
@@ -202,7 +203,7 @@ namespace L5Sharp.Tests.Types
 
             compare.Should().Be(0);
         }
-        
+
         [Test]
         public void CompareTo_Null_ShouldBeOne()
         {
@@ -222,6 +223,38 @@ namespace L5Sharp.Tests.Types
             var compare = first.CompareTo(second);
 
             compare.Should().Be(0);
+        }
+
+        [Test]
+        public void ToBase_WhenCalled_ShouldNotBeEmpty()
+        {
+            var type = new INT(33);
+
+            var result = type.ToBase(2);
+
+            result.Should().NotBeEmpty();
+        }
+
+        [Test]
+        public void Members_WhenCalled_ShouldHaveExpectedCount()
+        {
+            var type = new INT();
+
+            var members = type.Members.ToList();
+
+            members.Should().HaveCount(16);
+        }
+
+        [Test]
+        public void Members_PositiveValue_ShouldHaveBitsEqualToOne()
+        {
+            var type = new INT(33);
+
+            var members = type.Members.ToList();
+
+            var bitsEqualToOne = members.Where(m => m.DataType.AsType<BOOL>() == true).ToList();
+
+            bitsEqualToOne.Should().NotBeEmpty();
         }
     }
 }
