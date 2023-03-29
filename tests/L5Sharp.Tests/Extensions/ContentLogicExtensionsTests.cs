@@ -1,6 +1,8 @@
 ﻿using FluentAssertions;
+using L5Sharp.Components;
 using L5Sharp.Enums;
 using L5Sharp.Extensions;
+using NUnit.Framework.Internal;
 
 namespace L5Sharp.Tests.Extensions;
 
@@ -71,12 +73,22 @@ public class ContentLogicExtensionsTests
     }
     
     [Test]
-    public void LogicFlatten_AgainstLargerFile_ShouldWOrk()
+    public void LogicFlatten_AgainstLargerFile_ShouldWork()
     {
         var content = LogixContent.Load(Known.Template);
 
         var results = content.LogicFlatten().ToList();
 
         results.Should().NotBeEmpty();
+    }
+
+    [Test]
+    public void TagLookup_WhenCalled_ShouldNotBeEmpty()
+    {
+        var content = LogixContent.Load(Known.Template);
+
+        var lookup = content.TagLookup();
+
+        lookup.Should().NotBeEmpty();
     }
 }

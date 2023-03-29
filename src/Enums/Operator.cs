@@ -72,27 +72,27 @@
         /// <summary>
         /// Represents the Modulo Logix <see cref="Operator"/>.
         /// </summary>
-        public static readonly Operator Modulo = new(nameof(Modulo), "MOD");
+        public static readonly Operator MOD = new(nameof(MOD), "MOD");
         
         /// <summary>
-        /// Represents the And Logix <see cref="Operator"/>.
+        /// Represents the AND Logix <see cref="Operator"/>.
         /// </summary>
-        public static readonly Operator And = new(nameof(And), "AND");
+        public static readonly Operator AND = new(nameof(AND), "AND");
         
         /// <summary>
-        /// Represents the Or Logix <see cref="Operator"/>.
+        /// Represents the OR Logix <see cref="Operator"/>.
         /// </summary>
-        public static readonly Operator Or = new(nameof(Or), "OR");
+        public static readonly Operator OR = new(nameof(OR), "OR");
         
         /// <summary>
-        /// Represents the Xor Logix <see cref="Operator"/>.
+        /// Represents the XOR Logix <see cref="Operator"/>.
         /// </summary>
-        public static readonly Operator Xor = new(nameof(Xor), "XOR");
+        public static readonly Operator XOR = new(nameof(XOR), "XOR");
         
         /// <summary>
-        /// Represents the Not Logix <see cref="Operator"/>.
+        /// Represents the NOT Logix <see cref="Operator"/>.
         /// </summary>
-        public static readonly Operator Not = new(nameof(Not), "NOT");
+        public static readonly Operator NOT = new(nameof(NOT), "NOT");
         
     }
 }

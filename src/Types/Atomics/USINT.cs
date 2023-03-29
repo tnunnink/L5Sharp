@@ -87,9 +87,9 @@ namespace L5Sharp.Types.Atomics
         
         /// <inheritdoc />
         // ReSharper disable once NonReadonlyMemberInGetHashCode
-        // Not sure how else to handle since it needs to be settable and used for equality.
+        // NOT sure how else to handle since it needs to be settable and used for equality.
         // This would only be a problem if you created a hash table of atomic types.
-        // Not sure anyone would need to do that.
+        // NOT sure anyone would need to do that.
         public override int GetHashCode() => _value.GetHashCode();
 
         /// <summary>

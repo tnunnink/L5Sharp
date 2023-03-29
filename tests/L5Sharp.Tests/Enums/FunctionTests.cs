@@ -94,7 +94,7 @@ namespace L5Sharp.Tests.Enums
         [Test]
         public void SQRT_WhenCalled_ShouldNotBeNull()
         {
-            Function.SQRT.Should().NotBeNull();
+            Function.SQR.Should().NotBeNull();
         }
         
         [Test]
@@ -106,7 +106,7 @@ namespace L5Sharp.Tests.Enums
         [Test]
         public void TRUNC_WhenCalled_ShouldNotBeNull()
         {
-            Function.TRUNC.Should().NotBeNull();
+            Function.TRN.Should().NotBeNull();
         }
     }
 }

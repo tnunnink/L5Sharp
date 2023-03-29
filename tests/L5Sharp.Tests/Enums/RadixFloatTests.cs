@@ -90,7 +90,7 @@ namespace L5Sharp.Tests.Enums
         {
             var result = Radix.Float.Parse(1.23.ToString(CultureInfo.InvariantCulture));
 
-            result.AsType<REAL>().Should().Be(1.23f);
+            result.As<REAL>().Should().Be(1.23f);
         }
     }
 }

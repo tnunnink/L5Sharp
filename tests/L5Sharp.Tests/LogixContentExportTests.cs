@@ -59,6 +59,8 @@ public class LogixContentExportTests
     [Test]
     public void Export_DataType_WriteToFileForImport()
     {
+        const string output = @"C:\Users\tnunnink\Documents\GitHub\L5Sharp\tests\Samples\Generated\DataType.L5X";
+        
         var component = new DataType
         {
             Name = "TestType",
@@ -75,6 +77,10 @@ public class LogixContentExportTests
 
         content.Should().NotBeNull();
 
-        content.Save(@"C:\Users\tnunnink\Documents\GitHub\L5Sharp\tests\Samples\Generated\DataType.L5X");
+        content.Save(output);
+        
+        FileAssert.Exists(output);
+        
+        File.Delete(output);
     }
 }

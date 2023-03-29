@@ -241,7 +241,7 @@ public class LogixContentTagTests
         result.Name.Should().Be(Known.Tag);
         result.Description.Should().Be("This is a test");
         result.Data.Should().NotBeNull();
-        result.Data.AsType<BOOL>().Should().NotBeNull();
+        result.Data.As<BOOL>().Should().NotBeNull();
     }
 
     [Test]

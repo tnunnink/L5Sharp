@@ -69,7 +69,7 @@
         /// <summary>
         /// Represents the Square Root Arithmetic Logix <see cref="Function"/>.
         /// </summary>
-        public static readonly Function SQRT = new("Square Root", nameof(SQRT));
+        public static readonly Function SQR = new("Square Root", nameof(SQR));
         
         /// <summary>
         /// Represents the Tangent Arithmetic Logix <see cref="Function"/>.
@@ -79,6 +79,6 @@
         /// <summary>
         /// Represents the Truncate Arithmetic Logix <see cref="Function"/>.
         /// </summary>
-        public static readonly Function TRUNC = new("Truncate", nameof(TRUNC));
+        public static readonly Function TRN = new("Truncate", nameof(TRN));
     }
 }

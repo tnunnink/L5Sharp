@@ -176,9 +176,7 @@ namespace L5Sharp
         /// Serialize this <see cref="LogixContent"/> to a file, overwriting an existing file, if it exists.
         /// </summary>
         /// <param name="fileName">A string that contains the name of the file.</param>
-        /// <param name="validate">Indicates whether the L5X structure will be validated against the Rockwell XSD prior to
-        /// saving the file. Default is false.</param>
-        public void Save(string fileName, bool validate = false)
+        public void Save(string fileName)
         {
             var declaration = new XDeclaration("1.0", "UTF-8", "yes");
             var document = new XDocument(declaration);

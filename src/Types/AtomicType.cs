@@ -50,7 +50,7 @@ namespace L5Sharp.Types
         public DataTypeClass Class => DataTypeClass.Atomic;
 
         /// <inheritdoc />
-        public virtual IEnumerable<Member> Members => MembersFromBinary(ToBinary().ToCharArray());
+        public virtual IEnumerable<Member> Members => GetBitMembers();
 
         /// <summary>
         /// The radix format for the <see cref="AtomicType"/>.
@@ -79,13 +79,19 @@ namespace L5Sharp.Types
         /// <returns>A <see cref="string"/> representing the formatted atomic value.</returns>
         public string ToString(Radix radix) => radix.Format(this);
 
-        private static IEnumerable<Member> MembersFromBinary(IReadOnlyList<char> chars)
+        /// <summary>
+        /// Returns a collection of bit members based on the implementing type.
+        /// </summary>
+        /// <returns></returns>
+        private IEnumerable<Member> GetBitMembers()
         {
+            var chars = GetBinary().ToCharArray();
+            
             var members = new List<Member>();
 
-            for (var i = chars.Count - 1; i >= 0; i--)
+            for (var i = chars.Length - 1; i >= 0; i--)
             {
-                var name = (chars.Count - 1 - i).ToString();
+                var name = (chars.Length - 1 - i).ToString();
                 var value = new BOOL(chars[i] == '1');
                 members.Add(new Member(name, value));
             }
@@ -94,11 +100,12 @@ namespace L5Sharp.Types
         }
 
         /// <summary>
-        /// Converts the current <see cref="AtomicType"/> to the specified base number.
+        /// Converts the current <see cref="AtomicType"/> to a binary string.
         /// </summary>
         /// <returns>A <see cref="string"/> value representing the value in the specified base.</returns>
-        private string ToBinary()
+        private string GetBinary()
         {
+            const int baseNumber = 2;
             const int bitsPerByte = 8;
 
             var bytes = GetBytes(this);
@@ -107,7 +114,7 @@ namespace L5Sharp.Types
 
             for (var ctr = bytes.GetUpperBound(0); ctr >= bytes.GetLowerBound(0); ctr--)
             {
-                var byteString = Convert.ToString(bytes[ctr], 2).PadLeft(bitsPerByte, '0');
+                var byteString = Convert.ToString(bytes[ctr], baseNumber).PadLeft(bitsPerByte, '0');
                 builder.Append(byteString);
             }
 

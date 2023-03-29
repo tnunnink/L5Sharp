@@ -41,7 +41,7 @@ namespace L5Sharp.Serialization.Data
             var radix = element.TryGetValue<Radix>(L5XName.Radix);
             var value = element.GetValue<string>(L5XName.Value);
             
-            //Not really sure how to handle this not a number value other than set to default for now.
+            //NOT really sure how to handle this not a number value other than set to default for now.
             if (value == "1.#QNAN")
                 value = dataType == "REAL" ? "0.0" : "0";
             

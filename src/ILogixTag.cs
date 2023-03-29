@@ -66,7 +66,7 @@ namespace L5Sharp
         Radix Radix { get; }
 
         /// <summary>
-        /// The data value or structure of the <c>TagMember</c>.
+        /// The data value or structure of the <c>Tag</c>.
         /// </summary>
         /// <value>A <see cref="ILogixType"/> containing the data value or structure of the <c>Tag</c> component.</value>
         /// <remarks>
@@ -82,7 +82,7 @@ namespace L5Sharp
         /// </para>
         ///<para>
         /// When deserializing, a tag's type is not known until runtime. To get specific access tag's type,
-        /// you can cast or convert it using extensions <c>AsType()</c> or <c>ToType()</c>.
+        /// you can cast or convert it using extensions <c>As()</c> or <c>To()</c>.
         /// </para>
         /// </remarks>
         ILogixType Data { get; }
@@ -101,11 +101,15 @@ namespace L5Sharp
         /// <summary>
         /// The root tag of the current <see cref="ILogixTag"/> member.
         /// </summary>
+        /// <value>A <see cref="ILogixTag"/> representing the root tag of the current tag member.</value>
+        /// <remarks>This is here to assist in navigating back up the hierarchical data structure of the tag.</remarks>
         ILogixTag Root { get; }
         
         /// <summary>
         /// The parent tag or tag member of the current <see cref="ILogixTag"/> member.
         /// </summary>
+        /// <value>A <see cref="ILogixTag"/> representing the immediate parent tag of the current tag member.</value>
+        /// <remarks>This is here to assist in navigating back up the hierarchical data structure of the tag.</remarks>
         ILogixTag Parent { get; }
 
         /// <summary>
@@ -119,7 +123,7 @@ namespace L5Sharp
         /// actual name of the current tag or tag member.
         /// </remarks>
         /// <example>
-        /// <c>var member = tag.Member("ArrayMember[1].SubProperty");</c>
+        /// <c>var member = tag.Member("Array[1].SubType.Member.0");</c>
         /// </example>
         ILogixTag? Member(TagName tagName);
         
@@ -127,12 +131,16 @@ namespace L5Sharp
         /// Gets all descendent tag members relative to the current tag member.
         /// </summary>
         /// <returns>A <see cref="IEnumerable{T}"/> containing <see cref="ILogixTag"/> objects.</returns>
+        /// <remarks>This recursively traverses the hierarchical data structure of the tag and returns all
+        /// child/descendant members.</remarks>
         IEnumerable<ILogixTag> Members();
         
         /// <summary>
-        /// Gets all descendent tag members relative to the current tag member.
+        /// Gets all descendent tag members relative to the current tag member including the current tag member.
         /// </summary>
         /// <returns>A <see cref="IEnumerable{T}"/> containing <see cref="ILogixTag"/> objects.</returns>
+        /// <remarks>This recursively traverses the hierarchical data structure of the tag and returns all
+        /// child/descendant members.</remarks>
         IEnumerable<ILogixTag> MembersAndSelf();
         
         /// <summary>
@@ -140,6 +148,8 @@ namespace L5Sharp
         /// </summary>
         /// <param name="predicate">A predicate expression specifying the tag name filter.</param>
         /// <returns>A <see cref="IEnumerable{T}"/> containing <see cref="ILogixTag"/> objects that satisfy the predicate.</returns>
+        /// <remarks>This recursively traverses the hierarchical data structure of the tag and returns all
+        /// child/descendant members that satisfy the specified predicate.</remarks>
         IEnumerable<ILogixTag> Members(Predicate<TagName> predicate);
         
         /// <summary>
@@ -147,6 +157,8 @@ namespace L5Sharp
         /// </summary>
         /// <param name="predicate">A predicate expression specifying the tag member filter.</param>
         /// <returns>A <see cref="IEnumerable{T}"/> containing <see cref="ILogixTag"/> objects that satisfy the predicate.</returns>
+        /// <remarks>This recursively traverses the hierarchical data structure of the tag and returns all
+        /// child/descendant members that satisfy the specified predicate.</remarks>
         IEnumerable<ILogixTag> Members(Predicate<ILogixTag> predicate);
         
         
@@ -155,6 +167,8 @@ namespace L5Sharp
         /// </summary>
         /// <param name="tagName">A tag name path to the tag member for which to get members of.</param>
         /// <returns>A <see cref="IEnumerable{T}"/> containing <see cref="ILogixTag"/> objects.</returns>
+        /// <remarks>This recursively traverses the hierarchical data structure of the tag and returns all
+        /// child/descendant members.</remarks>
         IEnumerable<ILogixTag> MembersOf(TagName tagName);
     }
 }

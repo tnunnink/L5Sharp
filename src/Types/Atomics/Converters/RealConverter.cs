@@ -8,7 +8,7 @@ namespace L5Sharp.Types.Atomics.Converters
     /// <summary>
     /// A <see cref="TypeConverter"/> for the <see cref="REAL"/> object.
     /// </summary>
-    public class RealConverter : AtomicConverter<REAL>
+    public class RealConverter : AtomicConverter
     {
         /// <inheritdoc />
         public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)

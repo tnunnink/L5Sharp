@@ -82,31 +82,31 @@ namespace L5Sharp.Tests.Enums
         [Test]
         public void Modulo_WhenCalled_ShouldNotBeNull()
         {
-            Operator.Modulo.Should().NotBeNull();
+            Operator.MOD.Should().NotBeNull();
         }
         
         [Test]
         public void And_WhenCalled_ShouldNotBeNull()
         {
-            Operator.And.Should().NotBeNull();
+            Operator.AND.Should().NotBeNull();
         }
         
         [Test]
         public void Or_WhenCalled_ShouldNotBeNull()
         {
-            Operator.Or.Should().NotBeNull();
+            Operator.OR.Should().NotBeNull();
         }
         
         [Test]
         public void Xor_WhenCalled_ShouldNotBeNull()
         {
-            Operator.Xor.Should().NotBeNull();
+            Operator.XOR.Should().NotBeNull();
         }
         
         [Test]
         public void Not_WhenCalled_ShouldNotBeNull()
         {
-            Operator.Not.Should().NotBeNull();
+            Operator.NOT.Should().NotBeNull();
         }
     }
 }

@@ -8,7 +8,7 @@ namespace L5Sharp.Types.Atomics.Converters
     /// <summary>
     /// A <see cref="TypeConverter"/> for the <see cref="UDINT"/> object.
     /// </summary>
-    public class UDintConverter : AtomicConverter<UDINT>
+    public class UDintConverter : AtomicConverter
     {
         /// <inheritdoc />
         public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)

@@ -34,7 +34,7 @@ namespace L5Sharp.Tests.Types
 
             var parsed = Logix.Atomic(value);
 
-            parsed.ToType<SINT>().Should().Be(5);
+            parsed.To<SINT>().Should().Be(5);
         }
 
         [Test]
@@ -44,7 +44,7 @@ namespace L5Sharp.Tests.Types
 
             var parsed = Logix.Atomic(value);
 
-            parsed.ToType<SINT>().Should().Be(5);
+            parsed.To<SINT>().Should().Be(5);
         }
 
         [Test]
@@ -54,7 +54,7 @@ namespace L5Sharp.Tests.Types
 
             var parsed = Logix.Atomic(value);
 
-            parsed.ToType<SINT>().Should().Be(5);
+            parsed.To<SINT>().Should().Be(5);
         }
 
         [Test]
@@ -64,7 +64,7 @@ namespace L5Sharp.Tests.Types
 
             var parsed = Logix.Atomic(value);
 
-            parsed.ToType<SINT>().ToString().Should().Be("5");
+            parsed.To<SINT>().ToString().Should().Be("5");
         }
 
         [Test]
@@ -74,7 +74,7 @@ namespace L5Sharp.Tests.Types
 
             var parsed = Logix.Atomic(value);
 
-            parsed.ToType<REAL>().Should().Be(5.0f);
+            parsed.To<REAL>().Should().Be(5.0f);
         }
 
         [Test]
@@ -84,7 +84,7 @@ namespace L5Sharp.Tests.Types
 
             var parsed = Logix.Atomic(value);
 
-            parsed.ToType<REAL>().Should().Be(5.0f);
+            parsed.To<REAL>().Should().Be(5.0f);
         }
 
         [Test]
@@ -94,7 +94,7 @@ namespace L5Sharp.Tests.Types
 
             var parsed = Logix.Atomic(value);
 
-            parsed.AsType<LINT>().Should().Be(1641016800000000);
+            parsed.As<LINT>().Should().Be(1641016800000000);
         }
     }
 }

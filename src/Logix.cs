@@ -142,7 +142,7 @@ namespace L5Sharp
         /// <param name="name">The name of the task.</param>
         /// <param name="type">The <see cref="Enums.TaskType"/> specifying the type of task.</param>
         /// <param name="description">The description of the task.</param>
-        /// <returns></returns>
+        /// <returns>A <see cref="LogixTask"/> component with the provided property values.</returns>
         public static LogixTask Task(string? name = null, TaskType? type = null, string? description = null) => new()
         {
             Name = name ?? string.Empty, 

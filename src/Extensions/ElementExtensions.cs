@@ -3,9 +3,10 @@ using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Xml.Linq;
-using L5Sharp.Components;
+using System.Xml.Serialization;
 using L5Sharp.Types;
 using L5Sharp.Utilities;
+using System.Reflection;
 
 namespace L5Sharp.Extensions
 {
@@ -14,6 +15,21 @@ namespace L5Sharp.Extensions
     /// </summary>
     public static class ElementExtensions
     {
+        /// <summary>
+        /// Gets the L5X element name for the specified type. 
+        /// </summary>
+        /// <param name="type">The type to get the L5X element name for.</param>
+        /// <returns>A <see cref="XName"/> representing the name of the element that corresponds to the type.</returns>
+        /// <remarks>
+        /// All this does is first look for the class attribute <see cref="XmlTypeAttribute"/> to use as the explicitly
+        /// configured name, and if not found, returns the type name as the default element name.
+        /// </remarks>
+        public static XName GetLogixName(this Type type)
+        {
+            var attribute = type.GetCustomAttribute<XmlTypeAttribute>();
+            return attribute is not null ? attribute.TypeName : type.Name;
+        }
+        
         /// <summary>
         /// Gets the name attribute for the current L5X element.
         /// </summary>
@@ -65,15 +81,17 @@ namespace L5Sharp.Extensions
         }
 
         /// <summary>
-        /// 
+        /// Gets the date/time value of the specified attribute name from the current element if it exists.
+        /// If the attribute does not exist, returns default value
         /// </summary>
-        /// <param name="element"></param>
-        /// <param name="name"></param>
-        /// <param name="format"></param>
-        /// <returns></returns>
-        public static DateTime TryGetDateTime(this XElement element, XName name, string format)
+        /// <param name="element">The current element.</param>
+        /// <param name="name">The name of the date time attribute.</param>
+        /// <param name="format">The format of the date time.
+        /// If not provided will default to 'ddd MMM d HH:mm:ss yyyy' which is a typical L5X date time format.</param>
+        /// <returns>The parsed <see cref="DateTime"/> value of the attribute.</returns>
+        public static DateTime TryGetDateTime(this XElement element, XName name, string? format = null)
         {
-            //const string format = "ddd MMM d HH:mm:ss yyyy";
+            format ??= "ddd MMM d HH:mm:ss yyyy";
 
             var attribute = element.Attribute(name);
 

@@ -53,7 +53,7 @@ namespace L5Sharp.Serialization.Data
                 return TagDataSerializer.StringData.Deserialize(element);
 
             //For some reason Rockwell doesn't deserialize the actual data type but a set of parameters that appear configurable from the MSG instruction.
-            //Not sure how to handle this. Either I don't support it or I create a new "Message" type that has the properties that are deserialized.
+            //NOT sure how to handle this. Either I don't support it or I create a new "Message" type that has the properties that are deserialized.
             //Most properties are strings though...
             if (format == DataFormat.Message)
                 return Logix.Null;

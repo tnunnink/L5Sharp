@@ -252,7 +252,7 @@ namespace L5Sharp.Tests.Types
 
             var members = type.Members.ToList();
 
-            var bitsEqualToOne = members.Where(m => m.DataType.AsType<BOOL>() == true).ToList();
+            var bitsEqualToOne = members.Where(m => m.DataType.As<BOOL>() == true).ToList();
 
             bitsEqualToOne.Should().NotBeEmpty();
         }

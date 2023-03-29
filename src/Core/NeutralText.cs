@@ -88,10 +88,30 @@ namespace L5Sharp.Core
         public bool IsEmpty => _text.IsEmpty();
 
         /// <summary>
+        /// Represents a new empty instance of the <see cref="NeutralText"/>.
+        /// </summary>
+        /// <returns>An empty <see cref="NeutralText"/> object.</returns>
+        public static NeutralText Empty => new(string.Empty);
+
+        /// <summary>
+        /// Converts a <c>NeutralText</c> object to a <c>string</c> object.
+        /// </summary>
+        /// <param name="text">the <c>NeutralText</c> instance to convert.</param>
+        /// <returns>A <c>string</c> that represents the value of the <c>NeutralText</c>.</returns>
+        public static implicit operator string(NeutralText text) => text._text;
+
+        /// <summary>
+        /// Converts a <c>string</c> object to a <c>NeutralText</c> object.
+        /// </summary>
+        /// <param name="text">the <c>string</c> instance to convert.</param>
+        /// <returns>A <c>NeutralText</c> that represents the value of the <c>string</c>.</returns>
+        public static implicit operator NeutralText(string text) => new(text);
+
+        /// <summary>
         /// Returns a value indicating whether a specified instruction signature occurs within this neutral text.
         /// </summary>
         /// <param name="instruction">The instruction for which to seek.</param>
-        /// <returns><c>true</c> if this text contains the signature patter defined by <c>instruction</c>.</returns>
+        /// <returns><c>true</c> if this text contains the signature pattern defined by <c>instruction</c>.</returns>
         public bool ContainsSignature(Instruction instruction) => Regex.IsMatch(_text, instruction.Signature);
 
         /// <summary>
@@ -235,7 +255,7 @@ namespace L5Sharp.Core
         /// each individual instruction text.</returns>
         public IEnumerable<NeutralText> SplitBy(Instruction instruction) =>
             Regex.Matches(_text, instruction.Signature).Select(m => new NeutralText(m.Value));
-        
+
         /// <summary>
         /// Splits the current neutral text into a collection of sub-texts representing a set of specific instructions.
         /// </summary>
@@ -252,7 +272,7 @@ namespace L5Sharp.Core
         /// specified pattern.</returns>
         public IEnumerable<NeutralText> SplitBy(string pattern) =>
             Regex.Matches(_text, $"{pattern}").Select(m => new NeutralText(m.Value));
-        
+
         /// <summary>
         /// Splits the current neutral text into a collection of sub-texts matching a set of regex patterns.  
         /// </summary>
@@ -270,7 +290,7 @@ namespace L5Sharp.Core
         /// each individual instruction text.</returns>
         public IEnumerable<NeutralText> SplitByKey(string key) =>
             Regex.Matches(_text, $"{key}{SignaturePattern}").Select(m => new NeutralText(m.Value));
-        
+
         /// <summary>
         /// Splits the current neutral text into a collection of sub-texts having a set of instruction keys.
         /// </summary>
@@ -298,6 +318,7 @@ namespace L5Sharp.Core
             Regex.Matches(_text, KeyOperandGroupPattern).Select(m =>
                 new KeyValuePair<string, IEnumerable<string>>(m.Groups[1].Value, m.Groups[2].Value.Split(",")));*/
 
+
         /// <summary>
         /// Gets a collection of tag names found in the current neutral text that are operands or arguments to a specific instruction.
         /// </summary>
@@ -319,26 +340,6 @@ namespace L5Sharp.Core
             Regex.Matches(_text, $"{key}{SignaturePattern}")
                 .SelectMany(m => Regex.Matches(m.Value, TagNamePattern))
                 .Select(m => new TagName(m.Value));
-
-        /// <summary>
-        /// Represents a new empty instance of the <see cref="NeutralText"/>.
-        /// </summary>
-        /// <returns>An empty <see cref="NeutralText"/> object.</returns>
-        public static NeutralText Empty => new(string.Empty);
-
-        /// <summary>
-        /// Converts a <c>NeutralText</c> object to a <c>string</c> object.
-        /// </summary>
-        /// <param name="text">the <c>NeutralText</c> instance to convert.</param>
-        /// <returns>A <c>string</c> that represents the value of the <c>NeutralText</c>.</returns>
-        public static implicit operator string(NeutralText text) => text._text;
-
-        /// <summary>
-        /// Converts a <c>string</c> object to a <c>NeutralText</c> object.
-        /// </summary>
-        /// <param name="text">the <c>string</c> instance to convert.</param>
-        /// <returns>A <c>NeutralText</c> that represents the value of the <c>string</c>.</returns>
-        public static implicit operator NeutralText(string text) => new(text);
 
         /// <inheritdoc />
         public override string ToString() => _text;

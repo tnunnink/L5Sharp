@@ -413,5 +413,16 @@ namespace L5Sharp.Tests.Core
 
             result.Should().HaveCount(2);
         }
+
+        [Test]
+        public void Operands_CptInstruction_ShouldHaveCountTwo()
+        {
+            var text = new NeutralText(
+                "CPT(UDT.alg_Value,((ai_Signal - UDT.sp_RawMin) / (UDT.sp_RawMax - UDT.sp_RawMin)) * (UDT.sp_EUMax - UDT.sp_EUMin) + UDT.sp_EUMin);");
+
+            var operands = text.Operands().ToList();
+
+            operands.Should().HaveCount(2);
+        }
     }
 }

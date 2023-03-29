@@ -235,7 +235,7 @@ namespace L5Sharp.Tests.Serialization
             component.Usage.Should().Be(TagUsage.Normal);
             component.Data.Should().NotBeNull();
             component.Data.Should().BeOfType<DINT>();
-            component.Data.AsType<DINT>().Should().Be(123456);
+            component.Data.As<DINT>().Should().Be(123456);
         }
 
         [Test]
@@ -257,11 +257,11 @@ namespace L5Sharp.Tests.Serialization
             component.Data.Should().NotBeNull();
             component.Data.Should().BeOfType<StructureType>();
             component.Members().Should().HaveCount(5);
-            component.Member("PRE")?.Data.AsType<DINT>().Should().Be(1000);
-            component.Member("ACC")?.Data.AsType<DINT>().Should().Be(0);
-            component.Member("EN")?.Data.AsType<BOOL>().Should().Be(false);
-            component.Member("TT")?.Data.AsType<BOOL>().Should().Be(false);
-            component.Member("DN")?.Data.AsType<BOOL>().Should().Be(false);
+            component.Member("PRE")?.Data.As<DINT>().Should().Be(1000);
+            component.Member("ACC")?.Data.As<DINT>().Should().Be(0);
+            component.Member("EN")?.Data.As<BOOL>().Should().Be(false);
+            component.Member("TT")?.Data.As<BOOL>().Should().Be(false);
+            component.Member("DN")?.Data.As<BOOL>().Should().Be(false);
         }
         
         [Test]

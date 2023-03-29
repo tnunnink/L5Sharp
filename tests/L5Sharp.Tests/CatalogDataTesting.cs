@@ -13,7 +13,7 @@ namespace L5Sharp.Tests
         private const string FileName =
             @"C:\Users\tnunnink\Local\Projects\L5Sharp\tests\Samples\CatalogData\CatalogSvcsDatabaseV2.xml";
 
-        [Test]
+        /*[Test]
         public void FileExists()
         {
             FileAssert.Exists(FileName);
@@ -113,6 +113,6 @@ namespace L5Sharp.Tests
             var parents = ports.Select(p => p.Parent?.ToString());
 
             File.WriteAllLines(@"C:\Users\tnunnink\desktop\MultiplePorts.txt", parents);
-        }
+        }*/
     }
 }

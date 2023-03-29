@@ -18,7 +18,7 @@ public class ProofTests
 
         foreach (var tag in tags)
         {
-            tag.Data.ToType<DINT>().Should().BeGreaterOrEqualTo(0);
+            tag.Data.To<DINT>().Should().BeGreaterOrEqualTo(0);
         }
     }
 
@@ -45,7 +45,7 @@ public class ProofTests
         var config = content.Modules().Find("R0S4").Config;
 
         var comment = string.Empty;
-        
+
         config?.Comments.TryGetValue(".CH0CountLimit", out comment);
 
         comment.Should().NotBeEmpty();
@@ -53,6 +53,14 @@ public class ProofTests
         var member = config?.Member("Ch0CountLimit");
 
         member?.As<TagMember>().Comment.Should().NotBeEmpty();
+    }
+
+    [Test]
+    public void TagLookup()
+    {
+        var content = LogixContent.Load(Known.Test);
+
+        var lookup = content.Query<Rung>().Select(r => new { Tags = r.Text.Tags(), r }).SelectMany(x => x.Tags);
     }
 
     /*[Test]

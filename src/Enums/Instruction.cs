@@ -1,7 +1,8 @@
 ﻿using System.Linq;
 using L5Sharp.Core;
-
+// ReSharper disable IdentifierTypo
 // ReSharper disable InconsistentNaming
+// ReSharper disable CommentTypo
 
 namespace L5Sharp.Enums
 {
@@ -21,7 +22,7 @@ namespace L5Sharp.Enums
         /// </summary>
         /// <param name="key">The key identifier of the instruction.</param>
         /// <param name="destructive">Optional bit indicating that the instruction is destructive. Default is <c>false</c>.</param>
-        public Instruction(string key, bool destructive = default) : base(key, key)
+        public Instruction(string key, bool destructive = true) : base(key, key)
         {
             Signature = @$"{Name}{SignaturePattern}";
             Destructive = destructive;
@@ -70,12 +71,12 @@ namespace L5Sharp.Enums
         /// <summary>
         /// Gets the <c>ADD</c> instruction definition instance.
         /// </summary>
-        public static readonly Instruction ADD = new(nameof(ADD), true);
+        public static readonly Instruction ADD = new(nameof(ADD));
 
         /// <summary>
         /// Gets the <c>AFI</c> instruction definition instance.
         /// </summary>
-        public static readonly Instruction AFI = new(nameof(AFI), true);
+        public static readonly Instruction AFI = new(nameof(AFI));
 
         /// <summary>
         /// Gets the <c>AHL</c> instruction definition instance.
@@ -85,13 +86,13 @@ namespace L5Sharp.Enums
         /// <summary>
         /// Gets the <c>ALMA</c> instruction definition instance.
         /// </summary>
-        public static readonly Instruction ALMA = new(nameof(ALMA), true);
+        public static readonly Instruction ALMA = new(nameof(ALMA));
 
         /// <summary>
         /// Gets the <c>ALMD</c> instruction definition instance.
         /// </summary>
-        public static readonly Instruction ALMD = new(nameof(ALMD), true);
-
+        public static readonly Instruction ALMD = new(nameof(ALMD));
+        
         /// <summary>
         /// Gets the <c>AND</c> instruction definition instance.
         /// </summary>
@@ -180,7 +181,7 @@ namespace L5Sharp.Enums
         /// <summary>
         /// Gets the <c>CMP</c> instruction definition instance.
         /// </summary>
-        public static readonly Instruction CMP = new(nameof(CMP));
+        public static readonly Instruction CMP = new(nameof(CMP), false);
 
         /// <summary>
         /// Gets the <c>CONCAT</c> instruction definition instance.
@@ -315,7 +316,7 @@ namespace L5Sharp.Enums
         /// <summary>
         /// Gets the <c>EQU</c> instruction definition instance.
         /// </summary>
-        public static readonly Instruction EQU = new(nameof(EQU));
+        public static readonly Instruction EQU = new(nameof(EQU), false);
 
         /// <summary>
         /// Gets the <c>ESTOP</c> instruction definition instance.
@@ -385,12 +386,12 @@ namespace L5Sharp.Enums
         /// <summary>
         /// Gets the <c>GEQ</c> instruction definition instance.
         /// </summary>
-        public static readonly Instruction GEQ = new(nameof(GEQ));
+        public static readonly Instruction GEQ = new(nameof(GEQ), false);
 
         /// <summary>
         /// Gets the <c>GRT</c> instruction definition instance.
         /// </summary>
-        public static readonly Instruction GRT = new(nameof(GRT));
+        public static readonly Instruction GRT = new(nameof(GRT), false);
 
         /// <summary>
         /// Gets the <c>GSV</c> instruction definition instance.
@@ -435,12 +436,12 @@ namespace L5Sharp.Enums
         /// <summary>
         /// Gets the <c>LEQ</c> instruction definition instance.
         /// </summary>
-        public static readonly Instruction LEQ = new(nameof(LEQ));
+        public static readonly Instruction LEQ = new(nameof(LEQ), false);
 
         /// <summary>
         /// Gets the <c>LES</c> instruction definition instance.
         /// </summary>
-        public static readonly Instruction LES = new(nameof(LES));
+        public static readonly Instruction LES = new(nameof(LES), false);
 
         /// <summary>
         /// Gets the <c>LFL</c> instruction definition instance.
@@ -455,7 +456,7 @@ namespace L5Sharp.Enums
         /// <summary>
         /// Gets the <c>LIM</c> instruction definition instance.
         /// </summary>
-        public static readonly Instruction LIM = new(nameof(LIM));
+        public static readonly Instruction LIM = new(nameof(LIM), false);
 
         /// <summary>
         /// Gets the <c>LN</c> instruction definition instance.
@@ -635,7 +636,7 @@ namespace L5Sharp.Enums
         /// <summary>
         /// Gets the <c>MEQ</c> instruction definition instance.
         /// </summary>
-        public static readonly Instruction MEQ = new(nameof(MEQ));
+        public static readonly Instruction MEQ = new(nameof(MEQ), false);
 
         /// <summary>
         /// Gets the <c>MGS</c> instruction definition instance.
@@ -730,7 +731,7 @@ namespace L5Sharp.Enums
         /// <summary>
         /// Gets the <c>NEQ</c> instruction definition instance.
         /// </summary>
-        public static readonly Instruction NEQ = new(nameof(NEQ));
+        public static readonly Instruction NEQ = new(nameof(NEQ), false);
 
         /// <summary>
         /// Gets the <c>NOP</c> instruction definition instance.
@@ -1020,12 +1021,12 @@ namespace L5Sharp.Enums
         /// <summary>
         /// Gets the <c>XIC</c> instruction definition instance.
         /// </summary>
-        public static readonly Instruction XIC = new(nameof(XIC));
+        public static readonly Instruction XIC = new(nameof(XIC), false);
 
         /// <summary>
         /// Gets the <c>XIO</c> instruction definition instance.
         /// </summary>
-        public static readonly Instruction XIO = new(nameof(XIO));
+        public static readonly Instruction XIO = new(nameof(XIO), false);
 
         /// <summary>
         /// Gets the <c>XOR</c> instruction definition instance.

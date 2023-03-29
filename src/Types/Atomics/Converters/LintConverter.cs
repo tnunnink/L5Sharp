@@ -8,7 +8,7 @@ namespace L5Sharp.Types.Atomics.Converters
     /// <summary>
     /// A <see cref="TypeConverter"/> for the <see cref="LINT"/> object.
     /// </summary>
-    public class LintConverter : AtomicConverter<LINT>
+    public class LintConverter : AtomicConverter
     {
         /// <inheritdoc />
         public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)

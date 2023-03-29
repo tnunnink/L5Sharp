@@ -310,7 +310,7 @@ namespace L5Sharp.Tests.Components
 
             var value = tag.Value;
 
-            value?.AsType<DINT>().Should().Be(33);
+            value?.As<DINT>().Should().Be(33);
         }
 
         [Test]
@@ -320,7 +320,7 @@ namespace L5Sharp.Tests.Components
 
             tag.Value = new DINT(43);
 
-            tag.Value.AsType<DINT>().Should().Be(43);
+            tag.Value.As<DINT>().Should().Be(43);
         }
 
         [Test]
