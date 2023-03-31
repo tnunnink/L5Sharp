@@ -81,4 +81,17 @@ public class ProofTests
 
         logix.Should().NotBeEmpty();
     }
+    
+    [Test]
+    public void GetLogixMmInstruction()
+    {
+        var content = LogixContent.Load(@"C:\Users\tnunnink\Local\Tests\L5X\Template.L5X");
+
+        var instruction = content.Instructions().Find("aoiMicroMotion5700");
+
+        var logix = instruction.Logic(
+            "aoiMicroMotion5700(aoiMM_INJ01,MM_INJ01:I1,eai_13FT_101,0.0,21.5,eai_13DT_101,0.0,1.0,eai_13TT_102,-20.0,120.0,edi_13MM_101_ChFault);");
+
+        logix.Should().NotBeEmpty();
+    }
 }

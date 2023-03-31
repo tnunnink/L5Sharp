@@ -7,9 +7,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="">
+    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="Fix bug with instruction GetLogic and renamed method.">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Components/AddOnInstruction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Components/AddOnInstruction.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.csproj" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/ProofTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/ProofTests.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -375,14 +376,7 @@
       <workItem from="1678738210056" duration="38961000" />
       <workItem from="1679683692829" duration="17352000" />
       <workItem from="1679862270435" duration="15488000" />
-      <workItem from="1680213865614" duration="3160000" />
-    </task>
-    <task id="LOCAL-00184" summary="Renamed L5XContext.cs back to LogixContext.cs and moved back into primary namespace.">
-      <created>1650722310164</created>
-      <option name="number" value="00184" />
-      <option name="presentableId" value="LOCAL-00184" />
-      <option name="project" value="LOCAL" />
-      <updated>1650722310164</updated>
+      <workItem from="1680213865614" duration="6152000" />
     </task>
     <task id="LOCAL-00185" summary="Fixed broken tests. Update documentation on module and add Input and Output properties for tags to make it easier to access them from primary api.">
       <created>1650738954934</created>
@@ -720,7 +714,14 @@
       <option name="project" value="LOCAL" />
       <updated>1680054060014</updated>
     </task>
-    <option name="localTasksCounter" value="233" />
+    <task id="LOCAL-00233" summary="Fix bug with instruction GetLogic and renamed method.">
+      <created>1680228315516</created>
+      <option name="number" value="00233" />
+      <option name="presentableId" value="LOCAL-00233" />
+      <option name="project" value="LOCAL" />
+      <updated>1680228315516</updated>
+    </task>
+    <option name="localTasksCounter" value="234" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -779,7 +780,6 @@
       <path value="$PROJECT_DIR$/../.." />
     </ignored-roots>
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="updated project version" />
     <MESSAGE value="added remaining content tests and fixed up atomic converters" />
     <MESSAGE value="removed SmartEnum package and replaced with LogixEnum.cs" />
     <MESSAGE value="Some clean up, reorg, adding of new extension methods for analyzing logic and getting lookups. Documentation updates." />
@@ -804,7 +804,8 @@
     <MESSAGE value="Update version" />
     <MESSAGE value="Made updates to atomic types to include bit members so that these tags can be referenced or retrieved from the L5X. This included making Members a property of ILogixType.cs and implementing code in AtomicType.cs to return the appropriate collection of members. Removed TagName.cs member name validation as it was seeming unnecessary to throw exceptions on invalid names. Updated tests and documentation." />
     <MESSAGE value="Clean up and documentation updates" />
-    <option name="LAST_COMMIT_MESSAGE" value="Clean up and documentation updates" />
+    <MESSAGE value="Fix bug with instruction GetLogic and renamed method." />
+    <option name="LAST_COMMIT_MESSAGE" value="Fix bug with instruction GetLogic and renamed method." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -834,6 +835,19 @@
             </endOffsets>
           </properties>
           <option name="timeStamp" value="88" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/../tests/L5Sharp.Tests/ProofTests.cs</url>
+          <line>94</line>
+          <properties documentPath="C:\Users\tnunnink\Documents\GitHub\L5Sharp\tests\L5Sharp.Tests\ProofTests.cs" initialLine="94" containingFunctionPresentation="method 'GetLogixMmInstruction'">
+            <startOffsets>
+              <option value="2990" />
+            </startOffsets>
+            <endOffsets>
+              <option value="3018" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="94" />
         </line-breakpoint>
         <breakpoint enabled="true" type="DotNet Exception Breakpoints">
           <properties exception="System.PlatformNotSupportedException" isInternal="false" displayValue="PlatformNotSupportedException" namespaceName="System">

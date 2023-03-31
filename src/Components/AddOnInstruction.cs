@@ -171,7 +171,7 @@ namespace L5Sharp.Components
                 .Select(t => mapping.Aggregate(t, (current, pair) =>
                 {
                     if (!pair.Argument.IsTagName()) return current;
-                    var replace = $@"\b{pair.Parameter}\b";
+                    var replace = $@"(?<=[^.]){pair.Parameter}\b";
                     return Regex.Replace(current, replace, pair.Argument.ToString());
 
                 }))
