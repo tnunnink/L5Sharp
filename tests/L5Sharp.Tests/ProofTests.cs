@@ -58,22 +58,27 @@ public class ProofTests
     [Test]
     public void TagLookup()
     {
-        var content = LogixContent.Load(Known.Test);
+        var content = LogixContent.Load(@"C:\Users\tnunnink\Local\Tests\L5X\Template.L5X");
 
-        var lookup = content.Query<Rung>().Select(r => new { Tags = r.Text.Tags(), r }).SelectMany(x => x.Tags);
+         var tagLookup = content.Query<Tag>().SelectMany(t => t.MembersAndSelf()).ToLookup(k => k.TagName, t => t);
+
+         var target = tagLookup.FirstOrDefault(t => t.Key == "Spare_DI_Channel_5094.ChData");
+         target.Should().NotBeEmpty();
+
+         var result = tagLookup.Contains("Spare_DI_Channel_5094.ChData");
+         result.Should().BeTrue();
     }
-
-    /*[Test]
-    public void FindReferencedModuleTags()
+    
+    [Test]
+    public void GetLogixDigitalInputAoi()
     {
-        var content = LogixContent.Load(@"C:\Users\tnunnink\Local\Transfer\Site.L5X");
+        var content = LogixContent.Load(@"C:\Users\tnunnink\Local\Tests\L5X\Template.L5X");
 
-        var tagMembers = content.Modules().SelectMany(m => m.Tags()).SelectMany(t => t.Members()).ToList();
+        var instruction = content.Instructions().Find("aoi5094IB16");
 
-        var logic = content.LogicFlatten().ToTagLookup();
+        var logix = instruction.Logic(
+            "aoi5094IB16(PLCModule1AOI,IO_PLC_FLEX:1:I,IO_Faults.PLC_S01.Faulted,di_01SS_901B,Spare_DI_Channel_5094,di_KS44_1128,di_CR44_1125,di_CR01_1193,Spare_DI_Channel_5094,di_CR01_1925,di_CR44_1128,Spare_DI_Channel_5094,di_AC01_1211,Spare_DI_Channel_5094,di_AC24_1211,di_CR01_1210,di_CR44_1130_Inactive,di_CR44_1130_Active,Spare_DI_Channel_5094);");
 
-        var references = logic.Where(k => tagMembers.Any(m => m.TagName == k.Key)).ToList();
-
-        references.Should().NotBeEmpty();
-    }*/
+        logix.Should().NotBeEmpty();
+    }
 }

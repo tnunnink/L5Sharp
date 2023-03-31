@@ -119,7 +119,7 @@ public class LogixContentTemplateTests
         {
             var key = reference.Keys().First();
             var instruction = aoiLookup[key];
-            var logic = instruction.GetLogic(reference);
+            var logic = instruction.Logic(reference);
             flattened.AddRange(logic);
         }
 

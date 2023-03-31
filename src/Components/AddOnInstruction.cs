@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml.Serialization;
 using L5Sharp.Core;
+using L5Sharp.Extensions;
 using L5Sharp.Serialization;
 using L5Sharp.Utilities;
 
@@ -145,7 +146,7 @@ namespace L5Sharp.Components
         /// reason or evaluate it as if it was written in line. Currently only support <see cref="RllRoutine"/>
         /// types.
         /// </remarks>
-        public IEnumerable<NeutralText> GetLogic(NeutralText text)
+        public IEnumerable<NeutralText> Logic(NeutralText text)
         {
             if (text is null)
                 throw new ArgumentNullException(nameof(text));
@@ -156,7 +157,7 @@ namespace L5Sharp.Components
             if (logic is not RllRoutine rll)
                 return Enumerable.Empty<NeutralText>();
 
-            //Skip first operand as it is always the aoi tag, which does not have corresponding parameter within the logic.
+            //Skip first operand as it is always the AOI tag, which does not have corresponding parameter within the logic.
             var arguments = text.Operands().Select(o => o.ToString()).Skip(1).ToList();
 
             //Only required parameters are part of the instruction signature
@@ -169,8 +170,10 @@ namespace L5Sharp.Components
             return rll.Content.Select(r => r.Text)
                 .Select(t => mapping.Aggregate(t, (current, pair) =>
                 {
-                    var replace = $@"(?<=[^.\]]){pair.Parameter}";
+                    if (!pair.Argument.IsTagName()) return current;
+                    var replace = $@"\b{pair.Parameter}\b";
                     return Regex.Replace(current, replace, pair.Argument.ToString());
+
                 }))
                 .ToList();
         }

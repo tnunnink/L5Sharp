@@ -243,7 +243,7 @@ public static class LogixExtensions
             {
                 var key = reference.Keys().FirstOrDefault();
                 var instruction = aoiLookup[key];
-                var logic = instruction.GetLogic(reference);
+                var logic = instruction.Logic(reference);
                 text.InsertRange(i, logic);
             }
         }
