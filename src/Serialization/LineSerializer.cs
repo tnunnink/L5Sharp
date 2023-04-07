@@ -31,7 +31,7 @@ public class LineSerializer : ILogixSerializer<Line>
 
         return new Line
         {
-            Program = element.Ancestors(L5XName.Program).FirstOrDefault()?.LogixName() ?? string.Empty,
+            Container = element.Ancestors(L5XName.Program).FirstOrDefault()?.LogixName() ?? string.Empty,
             Routine = element.Ancestors(L5XName.Routine).FirstOrDefault()?.LogixName() ?? string.Empty,
             Number = element.GetValue<int>(L5XName.Number),
             Text = element.Value

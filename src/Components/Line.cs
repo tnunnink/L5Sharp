@@ -3,7 +3,7 @@
 /// <summary>
 /// Represents a Line of Structured Text, or the logic content that is contained by the <see cref="StRoutine"/> component.
 /// </summary>
-public sealed class Line
+public sealed class Line : ILogixCode
 {
     /// <summary>
     /// The name of the program in which the <c>Rung</c> is contained.
@@ -13,7 +13,7 @@ public sealed class Line
     /// This is only used in deserialization of a <see cref="Rung"/> component.
     /// This helper property makes it easier to filter rungs. This property is not serialized back to an L5X file.
     /// </remarks>
-    public string Program { get; set; } = string.Empty;
+    public string Container { get; set; } = string.Empty;
 
     /// <summary>
     /// The name of the routine in which the <c>Rung</c> is contained.

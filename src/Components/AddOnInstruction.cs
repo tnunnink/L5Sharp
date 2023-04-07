@@ -154,8 +154,8 @@ namespace L5Sharp.Components
             // All instructions primary logic is contained in the routine names 'Logic'
             var logic = Routines.FirstOrDefault(r => r.Name == "Logic");
 
-            if (logic?.Content is not Rll rll)
-                return Enumerable.Empty<NeutralText>();
+            var rll = logic?.As<Rung>();
+            if (rll is null) return Enumerable.Empty<NeutralText>();
 
             //Skip first operand as it is always the AOI tag, which does not have corresponding parameter within the logic.
             var arguments = text.Operands().Select(o => o.ToString()).Skip(1).ToList();

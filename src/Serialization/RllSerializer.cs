@@ -1,36 +1,34 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Linq;
 using L5Sharp.Components;
-using L5Sharp.Enums;
-using L5Sharp.Extensions;
 using L5Sharp.Utilities;
 
-namespace L5Sharp.Serialization
+namespace L5Sharp.Serialization;
+
+/// <summary>
+/// A logix serializer that performs serialization for the <c>Rll</c> content for a <see cref="Routine"/> component.
+/// </summary>
+public class RllSerializer : ILogixSerializer<IEnumerable<Rung>>
 {
-    /// <summary>
-    /// A logix serializer that performs serialization of <see cref="Rll"/> components.
-    /// </summary>
-    public class RllSerializer : ILogixSerializer<Rll>
-    {
-        private readonly RungSerializer _rungSerializer = new();
+    private readonly RungSerializer _rungSerializer = new();
         
-        /// <inheritdoc />
-        public XElement Serialize(Rll obj)
-        {
-            Check.NotNull(obj);
+    /// <inheritdoc />
+    public XElement Serialize(IEnumerable<Rung> obj)
+    {
+        Check.NotNull(obj);
 
-            var element = new XElement(L5XName.RLLContent);
-            element.Add(obj.Select(r => _rungSerializer.Serialize(r)));
-            return element;
-        }
+        var element = new XElement(L5XName.RLLContent);
+        element.Add(obj.Select(r => _rungSerializer.Serialize(r)));
+        return element;
+    }
 
-        /// <inheritdoc />
-        public Rll Deserialize(XElement element)
-        {
-            Check.NotNull(element);
+    /// <inheritdoc />
+    public IEnumerable<Rung> Deserialize(XElement element)
+    {
+        Check.NotNull(element);
             
-            var rungs = element.Descendants(L5XName.Rung).Select(e => _rungSerializer.Deserialize(e));
-            return new Rll(rungs);
-        }
+        var rungs = element.Descendants(L5XName.Rung).Select(e => _rungSerializer.Deserialize(e));
+        return new List<Rung>(rungs);
     }
 }

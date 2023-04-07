@@ -30,8 +30,8 @@ namespace L5Sharp.Tests.Components
             tag.Constant.Should().BeFalse();
             tag.Usage.Should().Be(TagUsage.Normal);
             tag.TagType.Should().Be(TagType.Base);
-            tag.AliasFor.Should<TagName>().Be(TagName.Empty);
-            tag.TagName.Should<TagName>().Be(TagName.Empty);
+            tag.AliasFor.Should().Be(TagName.Empty);
+            tag.TagName.Should().Be(TagName.Empty);
         }
 
         [Test]
@@ -100,7 +100,7 @@ namespace L5Sharp.Tests.Components
             var m1 = tag.Member("Simple.M1");
 
             m1.Should().NotBeNull();
-            m1?.TagName.Should<TagName>().Be("Test.Simple.M1");
+            m1?.TagName.Should().Be("Test.Simple.M1");
         }
 
         [Test]
@@ -115,7 +115,7 @@ namespace L5Sharp.Tests.Components
             var m1 = tag.Member("Simple")?.Member("M1");
 
             m1.Should().NotBeNull();
-            m1?.TagName.Should<TagName>().Be("Test.Simple.M1");
+            m1?.TagName.Should().Be("Test.Simple.M1");
         }
 
         [Test]

@@ -308,8 +308,7 @@ public abstract class LogixEnum<TEnum, TValue> :
         var dictionary = new Dictionary<TValue, TEnum>();
         foreach (var item in EnumOptions.Value)
         {
-            if (!dictionary.ContainsKey(item.Value))
-                dictionary.Add(item.Value, item);
+            dictionary.TryAdd(item.Value, item);
         }
 
         return dictionary;

@@ -8,7 +8,7 @@ namespace L5Sharp.Components
     /// Represents a Rung of Ladder Logic, or the logix content that is contained by the <see cref="Rll"/> component.
     /// </summary>
     [LogixSerializer(typeof(RungSerializer))]
-    public sealed class Rung
+    public sealed class Rung : ILogixCode
     {
         /// <summary>
         /// The name of the program in which the <c>Rung</c> is contained.
@@ -18,7 +18,7 @@ namespace L5Sharp.Components
         /// This is only used in deserialization of a <see cref="Rung"/> component.
         /// This helper property makes it easier to filter rungs. This property is not serialized back to an L5X file.
         /// </remarks>
-        public string Program { get; set; } = string.Empty;
+        public string Container { get; set; } = string.Empty;
 
         /// <summary>
         /// The name of the routine in which the <c>Rung</c> is contained.
