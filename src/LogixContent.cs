@@ -68,6 +68,10 @@ namespace L5Sharp
         /// <summary>
         /// The root L5X content containing all raw XML data loaded, parsed, or created under the current <see cref="LogixContent"/>
         /// </summary>
+        /// <remarks>
+        /// <see cref="L5X"/> inherits from <see cref="XElement"/> and adds some helper properties and methods
+        /// for interacting with the root content of the L5X file.
+        /// </remarks>
         public L5X L5X { get; }
 
         /// <inheritdoc />
@@ -144,20 +148,6 @@ namespace L5Sharp
         }
 
         /// <inheritdoc />
-        public ILogixComponentCollection<TRoutine> Routines<TRoutine>(string programName) where TRoutine : Routine
-        {
-            var program = L5X.Descendants(L5XName.Program).FirstOrDefault(e => e.LogixName() == programName);
-
-            if (program is null)
-                throw new ArgumentException(
-                    $"No program with '{programName}' found in the current L5X. Add the component via Programs() before accessing Routines.");
-
-            var container = program.Descendants(L5XName.Routines).FirstOrDefault();
-
-            return new ComponentCollection<TRoutine>(L5X, container);
-        }
-
-        /// <inheritdoc />
         public ILogixComponentCollection<LogixTask> Tasks()
         {
             var container = L5X.Descendants(L5XName.Tasks).FirstOrDefault();
@@ -170,6 +160,25 @@ namespace L5Sharp
             var name = typeof(TEntity).GetLogixName();
             var serializer = LogixSerializer.GetSerializer<TEntity>();
             return L5X.Descendants(name).Select(e => serializer.Deserialize(e));
+        }
+
+        /// <inheritdoc />
+        public void Import(LogixContent content, bool overwrite = false)
+        {
+            if (content is null)
+                throw new ArgumentNullException(nameof(content));
+
+            if (L5X.ContainsContext is true)
+                throw new InvalidOperationException(
+                    "The current L5X is contains context to a specific component type, which means it is not able to import other content." +
+                    " Only project level L5X content files support this import feature.");
+
+            DataTypes().Import(content.DataTypes().ToList(), overwrite);
+            Instructions().Import(content.Instructions().ToList(), overwrite);
+            Modules().Import(content.Modules().ToList(), overwrite);
+            //todo This is an issue because programs don't contain the routines and tags. We should just make program contain those components.
+            Programs().Import(content.Programs().ToList(), overwrite);
+            Tasks().Import(content.Tasks().ToList(), overwrite);
         }
 
         /// <summary>

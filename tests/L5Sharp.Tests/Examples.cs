@@ -110,7 +110,7 @@ namespace L5Sharp.Tests
         {
             var content = LogixContent.Load(Known.Test);
             
-            var routines = content.Routines<RllRoutine>("MainProgram");
+            var routines = content.Routines("MainProgram");
 
             routines.Should().NotBeEmpty();
         }
@@ -165,6 +165,14 @@ namespace L5Sharp.Tests
             var logic = content.LogicIn(Scope.Program, "MainProgram").Where(t => t.ContainsTag("BoolTag"));
 
             logic.Should().BeEmpty();
+        }
+
+        [Test]
+        public void Add_Collection_ShouldNotBeEmpty()
+        {
+            var content = LogixContent.Load(Known.Test);
+            
+            content.DataTypes();
         }
     }
 }

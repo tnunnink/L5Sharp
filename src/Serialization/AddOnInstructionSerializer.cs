@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using L5Sharp.Components;
@@ -18,9 +17,7 @@ namespace L5Sharp.Serialization
     {
         private const string DateTimeFormat = "yyyy-MM-dd'T'HH:mm:ss.fff'Z'";
         private readonly ParameterSerializer _parameterSerializer = new();
-        private readonly FormattedDataSerializer _dataSerializer = new();
-        private readonly RllRoutineSerializer _rllSerializer = new();
-        private readonly StRoutineSerializer _stSerializer = new();
+        private readonly RoutineSerializer _routineSerializer = new();
 
         /// <inheritdoc />
         public XElement Serialize(AddOnInstruction obj)
@@ -93,42 +90,11 @@ namespace L5Sharp.Serialization
                 IsEncrypted = element.TryGetValue<bool>(L5XName.IsEncrypted),
                 Parameters = element.Descendants(L5XName.Parameter).Select(e => _parameterSerializer.Deserialize(e)).ToList(),
                 LocalTags = element.Descendants(L5XName.LocalTag).Select(DeserializeLocalTag).ToList(),
-                Routines = DeserializeRoutines(element).ToList()
+                Routines = element.Descendants(L5XName.Routine).Select(r => _routineSerializer.Deserialize(r)).ToList()
             };
         }
 
-        private IEnumerable<Routine> DeserializeRoutines(XContainer element)
-        {
-            var routines = element.Descendants(L5XName.Routine).ToList();
-
-            if (routines.All(r => r.GetValue<RoutineType>(L5XName.Type) == RoutineType.Rll))
-                return routines.Select(r => (Routine)_rllSerializer.Deserialize(r));
-
-            return routines.All(r => r.GetValue<RoutineType>(L5XName.Type) == RoutineType.St)
-                ? routines.Select(r => (Routine)_stSerializer.Deserialize(r))
-                : Enumerable.Empty<Routine>();
-        }
-
-        private Tag DeserializeLocalTag(XElement element)
-        {
-            var data = element.Descendants(L5XName.DefaultData)
-                .FirstOrDefault(e => e.Attribute(L5XName.Format)?.Value != DataFormat.L5K);
-
-            return new Tag
-            {
-                Name = element.LogixName(),
-                Description = element.LogixDescription(),
-                Data = data is not null ? _dataSerializer.Deserialize(data) : Logix.Null,
-                ExternalAccess = element.TryGetValue<ExternalAccess>(L5XName.ExternalAccess) ?? ExternalAccess.None,
-                TagType = TagType.Base,
-                Usage = TagUsage.Local,
-                AliasFor = TagName.Empty,
-                Scope = Scope.Instruction,
-                Container = element.LogixName()
-            };
-        }
-
-        private XElement SerializeLocalTag(Tag tag)
+        private static XElement SerializeLocalTag(Tag tag)
         {
             var element = new XElement(L5XName.LocalTag);
 
@@ -137,9 +103,28 @@ namespace L5Sharp.Serialization
             element.AddValue(tag, t => t.DataType);
             element.AddValue(tag, t => t.Radix, r => r != Radix.Null);
             element.AddValue(tag, t => t.ExternalAccess);
-            element.Add(_dataSerializer.Serialize(tag.Data));
+            element.Add(TagDataSerializer.FormattedData.Serialize(tag.Data));
 
             return element;
+        }
+
+        private static Tag DeserializeLocalTag(XElement element)
+        {
+            var data = element.Descendants(L5XName.DefaultData)
+                .FirstOrDefault(e => e.Attribute(L5XName.Format)?.Value != DataFormat.L5K);
+
+            return new Tag
+            {
+                Name = element.LogixName(),
+                Description = element.LogixDescription(),
+                Data = data is not null ? TagDataSerializer.FormattedData.Deserialize(data) : Logix.Null,
+                ExternalAccess = element.TryGetValue<ExternalAccess>(L5XName.ExternalAccess) ?? ExternalAccess.None,
+                TagType = TagType.Base,
+                Usage = TagUsage.Local,
+                AliasFor = TagName.Empty,
+                Scope = Scope.Instruction,
+                Container = element.LogixName()
+            };
         }
     }
 }

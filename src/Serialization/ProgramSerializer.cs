@@ -1,4 +1,5 @@
-﻿using System.Xml.Linq;
+﻿using System.Linq;
+using System.Xml.Linq;
 using L5Sharp.Components;
 using L5Sharp.Enums;
 using L5Sharp.Extensions;
@@ -11,6 +12,10 @@ namespace L5Sharp.Serialization
     /// </summary>
     public class ProgramSerializer : ILogixSerializer<Program>
     {
+        private readonly TagSerializer _tagSerializer = new();
+        private readonly RllSerializer _rllSerializer = new();
+        private readonly StSerializer _stSerializer = new();
+        
         /// <inheritdoc />
         public XElement Serialize(Program obj)
         {
@@ -26,11 +31,14 @@ namespace L5Sharp.Serialization
             element.AddValue(obj, p => p.FaultRoutineName);
             element.AddValue(obj, p => p.Disabled);
             element.AddValue(obj, p => p.UseAsFolder);
+
+            var tags = new XElement(L5XName.Tags);
+            tags.Add(obj.Tags.Select(t => _tagSerializer.Serialize(t)));
+            element.Add(tags);
+
+            var routines = new XElement(L5XName.Routines);
             
-            //We add these just so the containers can be access when adding new programs.
-            //Logix also serializes empty elements like this.
-            element.Add(new XElement(L5XName.Tags));
-            element.Add(new XElement(L5XName.Routines));
+            element.Add(routines);
 
             return element;
         }
@@ -49,7 +57,8 @@ namespace L5Sharp.Serialization
                 MainRoutineName = element.TryGetValue<string>(L5XName.MainRoutineName) ?? string.Empty,
                 FaultRoutineName = element.TryGetValue<string>(L5XName.FaultRoutineName) ?? string.Empty,
                 Disabled = element.TryGetValue<bool>(L5XName.Disabled),
-                UseAsFolder = element.TryGetValue<bool>(L5XName.UseAsFolder)
+                UseAsFolder = element.TryGetValue<bool>(L5XName.UseAsFolder),
+                Tags = element.Descendants(L5XName.Tag).Select(t => _tagSerializer.Deserialize(t)).ToList()
             };
         }
     }

@@ -44,38 +44,50 @@ namespace L5Sharp
         ILogixComponentCollection<Program> Programs();
 
         /// <summary>
-        /// Returns a component collection for querying and manipulating <see cref="Tag"/> components
+        /// Returns a component collection for querying and manipulating controller <see cref="Tag"/> components
         /// in the L5X file.
         /// </summary>
         /// <returns>A <see cref="ILogixComponentCollection{TComponent}"/> for <see cref="Tag"/> components</returns>
+        /// <remarks>
+        /// This collection returns controller scoped tags only.
+        /// To access program specific tags, use <see cref="Tags(string)"/> and specify then program name.
+        /// To query all tags in the L5X, use the <see cref="Query{TEntity}"/> method and specify <see cref="Tag"/> as
+        /// the entity type.
+        /// </remarks>
         ILogixComponentCollection<Tag> Tags();
 
         /// <summary>
-        /// Returns a scoped component collection for querying and manipulating <see cref="Tag"/> components
+        /// Returns a scoped component collection for querying and manipulating program <see cref="Tag"/> components
         /// in the L5X file.
         /// </summary>
-        /// <returns>A <see cref="ILogixComponentCollection{TComponent}"/> for <see cref="Tag"/> components</returns>
+        /// <returns>A <see cref="ILogixComponentCollection{TComponent}"/> for <see cref="Tag"/> components.</returns>
+        /// <remarks>
+        /// This collection returns program scoped tags only.
+        /// To access controller scoped tags, use <see cref="Tags()"/> method.
+        /// To query all tags in the L5X, use the <see cref="Query{TEntity}"/> method and specify <see cref="Tag"/> as
+        /// the entity type.
+        /// </remarks>
         ILogixComponentCollection<Tag> Tags(string programName);
 
         /// <summary>
         /// Returns a scoped component collection for querying and manipulating <see cref="Routine"/> components
         /// in the L5X file.
         /// </summary>
-        /// <returns>A <see cref="ILogixComponentCollection{TComponent}"/> for <see cref="Routine"/> components</returns>
+        /// <returns>A <see cref="ILogixComponentCollection{TComponent}"/> for <see cref="Routine"/> components.</returns>
         ILogixComponentCollection<Routine> Routines(string programName);
 
-        /// <summary>
+        /*/// <summary>
         /// Returns a scoped component collection for querying and manipulating <see cref="Routine"/> components
         /// in the L5X file.
         /// </summary>
-        /// <returns>A <see cref="ILogixComponentCollection{TComponent}"/> for <see cref="Routine"/> components</returns>
-        ILogixComponentCollection<TRoutine> Routines<TRoutine>(string programName) where TRoutine : Routine;
+        /// <returns>A <see cref="ILogixComponentCollection{TComponent}"/> for <see cref="Routine"/> components.</returns>
+        ILogixComponentCollection<TRoutine> Routines<TRoutine>(string programName) where TRoutine : Routine;*/
 
         /// <summary>
         /// Returns a component collection for querying and manipulating <see cref="LogixTask"/> components
         /// in the L5X file.
         /// </summary>
-        /// <returns>A <see cref="ILogixComponentCollection{TComponent}"/> for <see cref="LogixTask"/> components</returns>
+        /// <returns>A <see cref="ILogixComponentCollection{TComponent}"/> for <see cref="LogixTask"/> components.</returns>
         ILogixComponentCollection<LogixTask> Tasks();
 
         /// <summary>
@@ -87,5 +99,12 @@ namespace L5Sharp
         /// <remarks>This allows the user to query essentially any data structure. All that is needed is a corresponding
         /// <see cref="ILogixSerializer{T}"/> so we know how to materialize the specified type.</remarks>
         IEnumerable<TEntity> Query<TEntity>() where TEntity : class;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="content"></param>
+        /// <param name="overwrite"></param>
+        void Import(LogixContent content, bool overwrite = false);
     }
 }

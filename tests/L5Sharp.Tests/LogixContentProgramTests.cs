@@ -197,7 +197,7 @@ public class LogixContentProgramTests
             Description = "This is a test",
         };
 
-        content.Programs().Upsert(component);
+        content.Programs().Update(component);
 
         var result = content.Programs().Find("New");
         
@@ -217,7 +217,7 @@ public class LogixContentProgramTests
             Description = "This is a test"
         };
 
-        content.Programs().Upsert(component);
+        content.Programs().Update(component);
 
         var result = content.Programs().Find(Known.Program);
         

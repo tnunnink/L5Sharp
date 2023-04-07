@@ -1,9 +1,7 @@
-﻿using System.Collections.Generic;
-using FluentAssertions;
+﻿using FluentAssertions;
 using L5Sharp.Components;
 using L5Sharp.Core;
 using L5Sharp.Enums;
-using NUnit.Framework;
 
 namespace L5Sharp.Tests.Components
 {
@@ -19,7 +17,7 @@ namespace L5Sharp.Tests.Components
         }
 
         [Test]
-        public void New_Default_shouldHaveDefaults()
+        public void DataType_ShouldHaveDefaultValues()
         {
             var dataType = new DataType();
 
@@ -27,6 +25,30 @@ namespace L5Sharp.Tests.Components
             dataType.Description.Should().BeEmpty();
             dataType.Family.Should().Be(DataTypeFamily.None);
             dataType.Class.Should().Be(DataTypeClass.User);
+            dataType.Members.Should().NotBeNull();
+            dataType.Members.Should().BeEmpty();
+        }
+
+        [Test]
+        public void DataType_ShouldSetPropertiesCorrectly()
+        {
+            var name = "MyDataType";
+            var description = "This is my data type";
+            var family = DataTypeFamily.String;
+            var dataType = new DataType
+            {
+                Name = name,
+                Description = description,
+                Family = family,
+                Class = DataTypeClass.User,
+                Members = new List<DataTypeMember>()
+            };
+
+            dataType.Name.Should().Be(name);
+            dataType.Description.Should().Be(description);
+            dataType.Family.Should().Be(family);
+            dataType.Class.Should().Be(DataTypeClass.User);
+            dataType.Members.Should().NotBeNull();
             dataType.Members.Should().BeEmpty();
         }
 
@@ -61,6 +83,15 @@ namespace L5Sharp.Tests.Components
             dataType.Members.Should().Contain(m => m.Name == "Member01");
             dataType.Members.Should().Contain(m => m.Name == "Member02");
             dataType.Members.Should().Contain(m => m.Name == "Member03");
+        }
+
+        [Test]
+        public void DataType_Members_ShouldBeInitialized()
+        {
+            var dataType = new DataType();
+
+            dataType.Members.Should().NotBeNull();
+            dataType.Members.Should().BeEmpty();
         }
     }
 }

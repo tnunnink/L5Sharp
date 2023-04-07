@@ -7,7 +7,6 @@ namespace L5Sharp.Components
     /// A logix <c>Routine</c> component. Contains the properties for a generic Routine element. This type does not
     /// include content property. More specific routine types are derived from this base class.
     /// </summary>
-    /// <seealso cref="RllRoutine"/>
     /// <footer>
     /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
     /// `Logix 5000 Controllers Import/Export`</a> for more information.
@@ -25,12 +24,17 @@ namespace L5Sharp.Components
         /// The type of the <see cref="Routine"/> component.
         /// </summary>
         /// <value>A <see cref="Enums.RoutineType"/> enum specifying the type content the routine contains.</value>
-        public virtual RoutineType Type { get; set; } = RoutineType.Typeless;
+        public RoutineType Type => Content is not null ? Content.Type : RoutineType.Typeless;
 
         /// <inheritdoc />
         public Scope Scope { get; set; } = Scope.Null;
 
         /// <inheritdoc />
         public string Container { get; set; } = string.Empty;
+
+        /// <summary>
+        /// The collection of <see cref="Rung"/> or ladder logic the make up the logic or code of the Routine.
+        /// </summary>
+        public ILogixCode? Content { get; set; }
     }
 }

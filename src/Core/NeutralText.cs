@@ -169,7 +169,7 @@ namespace L5Sharp.Core
                 }
 
                 //Just assuming an unknown instruction is an AOI and is by default destructive.
-                results.Add(new Instruction(key, true));
+                results.Add(new Instruction(key));
             }
 
             return results;

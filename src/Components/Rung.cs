@@ -5,7 +5,7 @@ using L5Sharp.Serialization;
 namespace L5Sharp.Components
 {
     /// <summary>
-    /// Represents a Rung of Ladder Logic, or the logix content that is contained by the <see cref="RllRoutine"/> component.
+    /// Represents a Rung of Ladder Logic, or the logix content that is contained by the <see cref="Rll"/> component.
     /// </summary>
     [LogixSerializer(typeof(RungSerializer))]
     public sealed class Rung

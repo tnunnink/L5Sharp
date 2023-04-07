@@ -197,7 +197,7 @@ public class LogixContentAddOnInstructionTests
             Description = "This is a test",
         };
 
-        content.Instructions().Upsert(component);
+        content.Instructions().Update(component);
 
         var result = content.Instructions().Find("New");
         
@@ -217,7 +217,7 @@ public class LogixContentAddOnInstructionTests
             Description = "This is a test"
         };
 
-        content.Instructions().Upsert(component);
+        content.Instructions().Update(component);
 
         var result = content.Instructions().Find(Known.AddOnInstruction);
         

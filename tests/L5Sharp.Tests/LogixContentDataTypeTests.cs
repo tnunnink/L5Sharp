@@ -87,6 +87,66 @@ public class LogixContentDataTypeTests
     }
 
     [Test]
+    public void AddCollection_ValidComponents_ShouldHaveExpectedCount()
+    {
+        var content = LogixContent.Load(Known.Test);
+
+        var number = content.DataTypes().Count();
+
+        var components = new List<DataType>
+        {
+            new() { Name = "testType1" },
+            new() { Name = "testType2" }
+        };
+        
+        content.DataTypes().Add(components);
+
+        content.DataTypes().Should().HaveCount(number + 2);
+    }
+
+    [Test]
+    public void AddCollection_HasDuplicateNames_ShouldThrowArgumentException()
+    {
+        var content = LogixContent.Load(Known.Test);
+        
+        var components = new List<DataType>
+        {
+            new() { Name = "testType1" },
+            new() { Name = "testType1" }
+        };
+
+        FluentActions.Invoking(() => content.DataTypes().Add(components)).Should().Throw<ArgumentException>();
+    }
+
+    [Test]
+    public void AddCollection_HasInvalidComponentName_ShouldThrowArgumentException()
+    {
+        var content = LogixContent.Load(Known.Test);
+        
+        var components = new List<DataType>
+        {
+            new() { Name = "testType1" },
+            new() { Name = "!@#$" }
+        };
+
+        FluentActions.Invoking(() => content.DataTypes().Add(components)).Should().Throw<ArgumentException>();
+    }
+    
+    [Test]
+    public void AddCollection_AddExistingName_ShouldThrowInvalidOperationException()
+    {
+        var content = LogixContent.Load(Known.Test);
+        
+        var components = new List<DataType>
+        {
+            new() { Name = "testType1" },
+            new() { Name = Known.DataType }
+        };
+
+        FluentActions.Invoking(() => content.DataTypes().Add(components)).Should().Throw<InvalidOperationException>();
+    }
+
+    [Test]
     public void Contains_Existing_ShouldBeTrue()
     {
         var content = LogixContent.Load(Known.Test);
@@ -222,7 +282,7 @@ public class LogixContentDataTypeTests
     }
     
     [Test]
-    public void Upsert_NonExisting_ShouldHaveExpected()
+    public void Update_NonExisting_ShouldHaveExpected()
     {
         var content = LogixContent.Load(Known.Test);
         
@@ -238,7 +298,7 @@ public class LogixContentDataTypeTests
             }
         };
 
-        content.DataTypes().Upsert(component);
+        content.DataTypes().Update(component);
 
         var result = content.DataTypes().Find("NewComponent");
         
@@ -249,7 +309,7 @@ public class LogixContentDataTypeTests
     }
 
     [Test]
-    public void Upsert_Existing_ShouldHaveExpected()
+    public void Update_Existing_ShouldHaveExpected()
     {
         var content = LogixContent.Load(Known.Test);
         
@@ -265,7 +325,7 @@ public class LogixContentDataTypeTests
             }
         };
 
-        content.DataTypes().Upsert(component);
+        content.DataTypes().Update(component);
 
         var result = content.DataTypes().Find(Known.DataType);
         

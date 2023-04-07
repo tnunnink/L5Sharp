@@ -143,8 +143,8 @@ namespace L5Sharp.Components
         /// </returns>
         /// <remarks>
         /// This is helpful when trying to perform deep analysis on logic. By "flattening" the logic we can
-        /// reason or evaluate it as if it was written in line. Currently only support <see cref="RllRoutine"/>
-        /// types.
+        /// reason or evaluate it as if it was written in line. Currently only supports <see cref="Rll"/>
+        /// content or code type.
         /// </remarks>
         public IEnumerable<NeutralText> Logic(NeutralText text)
         {
@@ -154,7 +154,7 @@ namespace L5Sharp.Components
             // All instructions primary logic is contained in the routine names 'Logic'
             var logic = Routines.FirstOrDefault(r => r.Name == "Logic");
 
-            if (logic is not RllRoutine rll)
+            if (logic?.Content is not Rll rll)
                 return Enumerable.Empty<NeutralText>();
 
             //Skip first operand as it is always the AOI tag, which does not have corresponding parameter within the logic.
@@ -167,7 +167,7 @@ namespace L5Sharp.Components
             var mapping = arguments.Zip(parameters, (a, p) => new { Argument = a, Parameter = p }).ToList();
 
             //Replace all parameter names with argument names in the instruction logic text, and return the results.
-            return rll.Content.Select(r => r.Text)
+            return rll.Select(r => r.Text)
                 .Select(t => mapping.Aggregate(t, (current, pair) =>
                 {
                     if (!pair.Argument.IsTagName()) return current;

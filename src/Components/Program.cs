@@ -1,4 +1,5 @@
-﻿using System.Xml.Serialization;
+﻿using System.Collections.Generic;
+using System.Xml.Serialization;
 using L5Sharp.Enums;
 using L5Sharp.Serialization;
 using L5Sharp.Utilities;
@@ -60,5 +61,15 @@ namespace L5Sharp.Components
         /// </summary>
         /// <value>A <see cref="bool"/>; <c>true</c> if the program is a folder; otherwise, <c>false</c>.</value>
         public bool UseAsFolder { get; set; }
+        
+        /// <summary>
+        /// The collection of <see cref="Tag"/> objects for the program component.
+        /// </summary>
+        public List<Tag> Tags { get; set; } = new();
+
+        /// <summary>
+        /// The collection of <see cref="Routine"/> objects for the program component.
+        /// </summary>
+        public List<Routine> Routines { get; set; } = new();
     }
 }

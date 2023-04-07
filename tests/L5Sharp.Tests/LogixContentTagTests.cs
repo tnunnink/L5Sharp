@@ -211,7 +211,7 @@ public class LogixContentTagTests
             Data = new TIMER()
         };
 
-        content.Tags().Upsert(component);
+        content.Tags().Update(component);
 
         var result = content.Tags().Find("New");
         
@@ -233,7 +233,7 @@ public class LogixContentTagTests
             Data = new BOOL()
         };
 
-        content.Tags().Upsert(component);
+        content.Tags().Update(component);
 
         var result = content.Tags().Find(Known.Tag);
         

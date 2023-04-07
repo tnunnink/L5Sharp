@@ -8,14 +8,14 @@ using Task = System.Threading.Tasks.Task;
 namespace L5Sharp.Tests.Serialization
 {
     [TestFixture]
-    public class RllRoutineSerializerTests
+    public class RllSerializerTests
     {
-        private RllRoutineSerializer _serializer;
+        private RllSerializer _serializer;
 
         [SetUp]
         public void Setup()
         {
-            _serializer = new RllRoutineSerializer();
+            _serializer = new RllSerializer();
         }
 
         [Test]
@@ -35,7 +35,7 @@ namespace L5Sharp.Tests.Serialization
                 new() { Text = new NeutralText("OTL(Test);") },
             };
 
-            var component = new RllRoutine { Content = rungs };
+            var component = new Rll(rungs);
 
             var xml = _serializer.Serialize(component);
 
@@ -53,7 +53,7 @@ namespace L5Sharp.Tests.Serialization
                 new() { Text = new NeutralText("OTL(Test);") },
             };
 
-            var component = new RllRoutine { Name = "Test", Content = rungs };
+            var component = new Rll(rungs);
 
             var xml = _serializer.Serialize(component);
 
@@ -83,16 +83,16 @@ namespace L5Sharp.Tests.Serialization
 
             var component = _serializer.Deserialize(xml);
 
-            component.Content.Should().HaveCount(6);
-            component.Content.Count.Should().Be(6);
+            component.Should().HaveCount(6);
+            component.Count.Should().Be(6);
 
-            component.Content[0].Text.ToString().Should().Be("TON(TestTimer,?,?);");
-            component.Content[1].Text.ToString().Should().Be("MOV(16#20,SimpleSint);");
-            component.Content[2].Text.ToString().Should().Be("aoi_Test(aoiTestInstance,TestSimpleTag,SimpleInt,RealArray);");
-            component.Content[3].Text.ToString().Should()
+            component[0].Text.ToString().Should().Be("TON(TestTimer,?,?);");
+            component[1].Text.ToString().Should().Be("MOV(16#20,SimpleSint);");
+            component[2].Text.ToString().Should().Be("aoi_Test(aoiTestInstance,TestSimpleTag,SimpleInt,RealArray);");
+            component[3].Text.ToString().Should()
                 .Be("[XIC(SimpleBool) ,XIC(SimpleBool) ][OTE(SimpleBool) ,OTU(SimpleBool) ];");
-            component.Content[4].Text.ToString().Should().Be("OTE(TestComplexTag.SimpleMember.BoolMember);");
-            component.Content[5].Text.ToString().Should().Be("MOV(SimpleSint,AsciiTag);");
+            component[4].Text.ToString().Should().Be("OTE(TestComplexTag.SimpleMember.BoolMember);");
+            component[5].Text.ToString().Should().Be("MOV(SimpleSint,AsciiTag);");
         }
 
         private static string GetRllData()

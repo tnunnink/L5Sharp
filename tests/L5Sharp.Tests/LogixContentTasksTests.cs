@@ -196,7 +196,7 @@ public class LogixContentTasksTests
             Description = "This is a test",
         };
 
-        content.Tasks().Upsert(component);
+        content.Tasks().Update(component);
 
         var result = content.Tasks().Find("New");
         
@@ -216,7 +216,7 @@ public class LogixContentTasksTests
             Description = "This is a test"
         };
 
-        content.Tasks().Upsert(component);
+        content.Tasks().Update(component);
 
         var result = content.Tasks().Find(Known.Task);
         

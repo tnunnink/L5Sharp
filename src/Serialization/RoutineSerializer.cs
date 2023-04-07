@@ -12,6 +12,9 @@ namespace L5Sharp.Serialization
     /// </summary>
     public class RoutineSerializer : ILogixSerializer<Routine>
     {
+        private readonly RllSerializer _rllSerializer = new();
+        private readonly StSerializer _stlSerializer = new();
+        
         /// <inheritdoc />
         public XElement Serialize(Routine obj)
         {
@@ -23,6 +26,16 @@ namespace L5Sharp.Serialization
             element.AddText(obj, r => r.Description);
             element.AddValue(obj, r => r.Type);
 
+            switch (obj.Content)
+            {
+                case Rll rll:
+                    element.Add(_rllSerializer.Serialize(rll));
+                    break;
+                case St st:
+                    element.Add(_stlSerializer.Serialize(st));
+                    break;
+            }
+
             return element;
         }
 
@@ -31,11 +44,20 @@ namespace L5Sharp.Serialization
         {
             Check.NotNull(element);
 
+            var type = element.GetValue<RoutineType>(L5XName.Type);
+            
+            ILogixCode? content = default;
+            
+            if (type == RoutineType.Rll && element.Element(L5XName.RLLContent) is not null)
+                content = _rllSerializer.Deserialize(element.Element(L5XName.RLLContent)!);
+            
+            if (type == RoutineType.St && element.Element(L5XName.STContent) is not null)
+                content = _stlSerializer.Deserialize(element.Element(L5XName.STContent)!);
+
             return new Routine
             {
                 Name = element.LogixName(),
                 Description = element.LogixDescription(),
-                Type = element.GetValue<RoutineType>(L5XName.Type),
                 Scope = element.Ancestors(L5XName.Program).Any() ? Scope.Program
                     : element.Ancestors(L5XName.AddOnInstructionDefinition).Any() ? Scope.Instruction
                     : Scope.Controller,
@@ -44,7 +66,8 @@ namespace L5Sharp.Serialization
                     : element.Ancestors(L5XName.AddOnInstructionDefinition).Any()
                         ? element.Ancestors(L5XName.AddOnInstructionDefinition).FirstOrDefault()?.LogixName() ??
                           string.Empty
-                        : element.Ancestors(L5XName.Controller).FirstOrDefault()?.LogixName() ?? string.Empty
+                        : element.Ancestors(L5XName.Controller).FirstOrDefault()?.LogixName() ?? string.Empty,
+                Content = content
             };
         }
     }

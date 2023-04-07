@@ -197,7 +197,7 @@ public class LogixContentModuleTests
             Description = "This is a test",
         };
 
-        content.Modules().Upsert(component);
+        content.Modules().Update(component);
 
         var result = content.Modules().Find("New");
         
@@ -217,7 +217,7 @@ public class LogixContentModuleTests
             Description = "This is a test"
         };
 
-        content.Modules().Upsert(component);
+        content.Modules().Update(component);
 
         var result = content.Modules().Find(Known.Module);
         
