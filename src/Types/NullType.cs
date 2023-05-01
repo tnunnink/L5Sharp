@@ -5,8 +5,10 @@ using L5Sharp.Enums;
 namespace L5Sharp.Types;
 
 /// <summary>
-/// Represents a null <see cref="ILogixType"/> implementation.
+/// Represents a null <see cref="ILogixType"/> implementation, or a type that is neither atomic, structure, array,
+/// or string.
 /// </summary>
+/// <remarks>This would be the default for any tag that has not data type defined.</remarks>
 // ReSharper disable once InconsistentNaming
 public sealed class NullType : ILogixType
 {

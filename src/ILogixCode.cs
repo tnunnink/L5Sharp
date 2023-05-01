@@ -31,5 +31,7 @@ public interface ILogixCode
     /// <summary>
     /// The number or index of the <see cref="ILogixCode"/> position within it's containing <c>Routine</c>.
     /// </summary>
+    /// <value>An <see cref="int"/> representing the index number of the code (rung, line, or sheet).</value>
+    /// <remarks></remarks>
     public int Number { get; set; }
 }

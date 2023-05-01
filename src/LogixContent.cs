@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using L5Sharp.Components;
+using L5Sharp.Enums;
 using L5Sharp.Extensions;
 using L5Sharp.Serialization;
 using L5Sharp.Utilities;
@@ -80,7 +81,8 @@ public class LogixContent : ILogixContent
         get
         {
             var element = L5X.Element(L5XName.Controller);
-            return element is not null ? LogixSerializer.Deserialize<Controller>(element) : null;
+            if (element is null || element.Attribute(L5XName.Use)?.Value != Use.Target) return default;
+            return LogixSerializer.Deserialize<Controller>(element);
         }
     }
 
@@ -176,7 +178,6 @@ public class LogixContent : ILogixContent
         DataTypes().Import(content.DataTypes().ToList(), overwrite);
         Instructions().Import(content.Instructions().ToList(), overwrite);
         Modules().Import(content.Modules().ToList(), overwrite);
-        //todo This is an issue because programs don't contain the routines and tags. We should just make program contain those components.
         Programs().Import(content.Programs().ToList(), overwrite);
         Tasks().Import(content.Tasks().ToList(), overwrite);
     }

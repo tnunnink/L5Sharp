@@ -124,6 +124,34 @@ internal class ComponentCollection<TComponent> : ILogixComponentCollection<TComp
         return _serializer.Deserialize(result);
     }
 
+    public void Import(TComponent component, bool overwrite)
+    {
+        if (component is null)
+            throw new ArgumentNullException(nameof(component));
+        
+        if (!component.Name.IsComponentName())
+            throw new ArgumentException($"The provided component name '{component.Name}' is not valid.");
+
+        if (_container is null)
+        {
+            _l5X.Normalize();
+            _container = _l5X.GetContainer(_name);
+        }
+
+        var element = _serializer.Serialize(component);
+
+        var target = _container?.Descendants(_name).SingleOrDefault(c => c.LogixName() == component.Name);
+
+        if (target is not null)
+        {
+            if (overwrite)
+                target.ReplaceWith(element);
+            return;
+        }
+
+        _container?.Add(element);
+    }
+
     /// <inheritdoc />
     public void Import(IEnumerable<TComponent> components, bool overwrite = false)
     {

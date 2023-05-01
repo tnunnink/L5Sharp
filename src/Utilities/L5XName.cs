@@ -1,4 +1,7 @@
 ﻿// ReSharper disable InconsistentNaming
+
+using System.Xml.Linq;
+
 namespace L5Sharp.Utilities;
 
 /// <summary>
@@ -991,6 +994,11 @@ public static class L5XName
     /// Gets the <c>Ports</c> L5X name value.
     ///</summary>
     public const string Ports = "Ports";
+    
+    ///<summary>
+    /// Gets the <c>PowerLossProgram</c> L5X name value.
+    ///</summary>
+    public const string PowerLossProgram = "PowerLossProgram";
         
     ///<summary>
     /// Gets the <c>PrimCxnInputSize</c> L5X name value.
@@ -1321,117 +1329,127 @@ public static class L5XName
     /// Gets the <c>SFCRestartPosition</c> L5X name value.
     ///</summary>
     public const string SFCRestartPosition = "SFCRestartPosition";
-        
+
+    ///<summary>
+    /// Gets the <c>TimeSlice</c> L5X name value.
+    ///</summary>
+    public const string ShareUnusedTimeSlice = "ShareUnusedTimeSlice";
+
     ///<summary>
     /// Gets the <c>ShelveDuration</c> L5X name value.
     ///</summary>
     public const string ShelveDuration = "ShelveDuration";
-        
+
     ///<summary>
     /// Gets the <c>ShutdownParentOnFault</c> L5X name value.
     ///</summary>
     public const string ShutdownParentOnFault = "ShutdownParentOnFault";
-        
+
     ///<summary>
     /// Gets the <c>Size</c> L5X name value.
     ///</summary>
     public const string Size = "Size";
-        
+
     ///<summary>
     /// Gets the <c>SoftwareRevision</c> L5X name value.
     ///</summary>
     public const string SoftwareRevision = "SoftwareRevision";
-        
+
     ///<summary>
     /// Gets the <c>Specifier</c> L5X name value.
     ///</summary>
     public const string Specifier = "Specifier";
-        
+
     ///<summary>
     /// Gets the <c>State</c> L5X name value.
     ///</summary>
     public const string State = "State";
-        
+
     ///<summary>
     /// Gets the <c>RLLContent</c> L5X name value.
     ///</summary>
     public const string STContent = "STContent";
-        
+
     ///<summary>
     /// Gets the <c>Structure</c> L5X name value.
     ///</summary>
     public const string Structure = "Structure";
-        
+
     ///<summary>
     /// Gets the <c>StructureMember</c> L5X name value.
     ///</summary>
     public const string StructureMember = "StructureMember";
-        
+
     ///<summary>
     /// Gets the <c>Tag</c> L5X name value.
     ///</summary>
     public const string Tag = "Tag";
-        
+
     ///<summary>
     /// Gets the <c>Tags</c> L5X name value.
     ///</summary>
     public const string Tags = "Tags";
-        
+
     ///<summary>
     /// Gets the <c>TagType</c> L5X name value.
     ///</summary>
     public const string TagType = "TagType";
-        
+
     ///<summary>
     /// Gets the <c>Target</c> L5X name value.
     ///</summary>
     public const string Target = "Target";
-        
+
     ///<summary>
     /// Gets the <c>TargetName</c> L5X name value.
     ///</summary>
     public const string TargetName = "TargetName";
-        
+
     ///<summary>
     /// Gets the <c>TargetObject</c> L5X name value.
     ///</summary>
     public const string TargetObject = "TargetObject";
-        
+
     ///<summary>
     /// Gets the <c>TargetType</c> L5X name value.
     ///</summary>
     public const string TargetType = "TargetType";
-        
+
     ///<summary>
     /// Gets the <c>Task</c> L5X name value.
     ///</summary>
     public const string Task = "Task";
-        
+
     ///<summary>
     /// Gets the <c>Tasks</c> L5X name value.
     ///</summary>
     public const string Tasks = "Tasks";
-        
+
     ///<summary>
     /// Gets the <c>TestEdits</c> L5X name value.
     ///</summary>
     public const string TestEdits = "TestEdits";
-        
+
     ///<summary>
     /// Gets the <c>Text</c> L5X name value.
     ///</summary>
     public const string Text = "Text";
-        
+
+    ///<summary>
+    /// Gets the <c>TimeSlice</c> L5X name value.
+    ///</summary>
+    public const string TimeSlice = "TimeSlice";
+
     ///<summary>
     /// Gets the <c>TimeSyncEnabled</c> L5X name value.
     ///</summary>
     public const string TimeSyncEnabled = "TimeSyncEnabled";
-        
+
     ///<summary>
     /// Gets the <c>TimeSynchronize</c> L5X name value.
     ///</summary>
     public const string TimeSynchronize = "TimeSynchronize";
-        
+
     ///<summary>
     /// Gets the <c>TimeZone</c> L5X name value.
     ///</summary>
@@ -1451,97 +1469,97 @@ public static class L5XName
     /// Gets the <c>Type</c> L5X name value.
     ///</summary>
     public const string Type = "Type";
-        
+
     ///<summary>
     /// Gets the <c>Unicast</c> L5X name value.
     ///</summary>
     public const string Unicast = "Unicast";
-        
+
     ///<summary>
     /// Gets the <c>Upstream</c> L5X name value.
     ///</summary>
     public const string Upstream = "Upstream";
-        
+
     ///<summary>
     /// Gets the <c>Usage</c> L5X name value.
     ///</summary>
     public const string Usage = "Usage";
-        
+
     ///<summary>
     /// Gets the <c>Use</c> L5X name value.
     ///</summary>
     public const string Use = "Use";
-        
+
     ///<summary>
     /// Gets the <c>UseAsFolder</c> L5X name value.
     ///</summary>
     public const string UseAsFolder = "UseAsFolder";
-        
+
     ///<summary>
     /// Gets the <c>UseProgTime</c> L5X name value.
     ///</summary>
     public const string UseProgTime = "UseProgTime";
-        
+
     ///<summary>
     /// Gets the <c>UserDefinedCatalogNumber</c> L5X name value.
     ///</summary>
     public const string UserDefinedCatalogNumber = "UserDefinedCatalogNumber";
-        
+
     ///<summary>
     /// Gets the <c>UserDefinedMajor</c> L5X name value.
     ///</summary>
     public const string UserDefinedMajor = "UserDefinedMajor";
-        
+
     ///<summary>
     /// Gets the <c>UserDefinedMinor</c> L5X name value.
     ///</summary>
     public const string UserDefinedMinor = "UserDefinedMinor";
-        
+
     ///<summary>
     /// Gets the <c>UserDefinedProductCode</c> L5X name value.
     ///</summary>
     public const string UserDefinedProductCode = "UserDefinedProductCode";
-        
+
     ///<summary>
     /// Gets the <c>UserDefinedProductType</c> L5X name value.
     ///</summary>
     public const string UserDefinedProductType = "UserDefinedProductType";
-        
+
     ///<summary>
     /// Gets the <c>UserDefinedVendor</c> L5X name value.
     ///</summary>
     public const string UserDefinedVendor = "UserDefinedVendor";
-        
+
     ///<summary>
     /// Gets the <c>Value</c> L5X name value.
     ///</summary>
     public const string Value = "Value";
-        
+
     ///<summary>
     /// Gets the <c>Vendor</c> L5X name value.
     ///</summary>
     public const string Vendor = "Vendor";
-        
+
     ///<summary>
     /// Gets the <c>Version</c> L5X name value.
     ///</summary>
     public const string Version = "Version";
-        
+
     ///<summary>
     /// Gets the <c>Visible</c> L5X name value.
     ///</summary>
     public const string Visible = "Visible";
-        
+
     ///<summary>
     /// Gets the <c>WallClockTime</c> L5X name value.
     ///</summary>
     public const string WallClockTime = "WallClockTime";
-        
+
     ///<summary>
     /// Gets the <c>Watchdog</c> L5X name value.
     ///</summary>
     public const string Watchdog = "Watchdog";
-        
+
     ///<summary>
     /// Gets the <c>WatchTag</c> L5X name value.
     ///</summary>

@@ -94,4 +94,16 @@ public class ProofTests
 
         logix.Should().NotBeEmpty();
     }
+
+    [Test]
+    public void RemoveAllRungComments()
+    {
+        var content = LogixContent.Load(Known.Template);
+
+        var programs = content.Programs().ToList();
+        foreach (var routine in programs.SelectMany(p => p.Routines))
+        {
+            
+        }
+    }
 }

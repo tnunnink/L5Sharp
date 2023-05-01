@@ -8,8 +8,12 @@ using L5Sharp.Extensions;
 namespace L5Sharp.Core;
 
 /// <summary>
-/// A value representing a tag name string. This value type class make working with string tag name easier..
+/// A string wrapper representing a Logix <c>TagName</c>.
 /// </summary>
+/// <remarks>
+/// This value type class make working with string tag name easier by providing
+/// methods fo analyzing and breaking the tag name into constituent parts (members).
+/// </remarks>
 public class TagName : IEquatable<TagName>, IComparable<TagName>
 {
     private readonly string _tagName;
@@ -70,23 +74,23 @@ public class TagName : IEquatable<TagName>, IComparable<TagName>
     /// </remarks>
     /// <seealso cref="Operand"/>
     /// <seealso cref="Path"/>
-    public string Tag => Regex.Match(_tagName, TagPattern).Value;
+    public string Root => Regex.Match(_tagName, TagPattern).Value;
 
     /// <summary>
     /// Gets the operand portion of the <see cref="TagName"/> value.
     /// </summary>
     /// <remarks>
-    /// The operand of a tag name represents the part of the name after <see cref="Tag"/>. This value will always be
+    /// The operand of a tag name represents the part of the name after <see cref="Root"/>. This value will always be
     /// the full tag name value without the leading root name. The operand will include the leading '.' character.
     /// </remarks>
     /// <seealso cref="Path"/>
-    public string Operand => !Tag.IsEmpty() ? _tagName.Remove(0, Tag.Length) : string.Empty;
+    public string Operand => !Root.IsEmpty() ? _tagName.Remove(0, Root.Length) : string.Empty;
 
     /// <summary>
     /// Gets the member path of the tag name value.
     /// </summary>
     /// <remarks>
-    /// The path of a tag name represents a name relative to <see cref="Tag"/>. The value will always be the full tag name
+    /// The path of a tag name represents a name relative to <see cref="Root"/>. The value will always be the full tag name
     /// without the leading root name. This is similar to <see cref="Operand"/>, except that is also removes any
     /// leading member separator character ('.'). 
     /// </remarks>
@@ -172,7 +176,7 @@ public class TagName : IEquatable<TagName>, IComparable<TagName>
     }
 
     /// <summary>
-    /// Returns a new tag name with the root <see cref="Tag"/> value replaced with the provided string tag.
+    /// Returns a new tag name with the root <see cref="Root"/> value replaced with the provided string tag.
     /// </summary>
     /// <param name="tag">The new root tag name value to replace.</param>
     /// <returns>A new <see cref="TagName"/> with the new root tag value.</returns>

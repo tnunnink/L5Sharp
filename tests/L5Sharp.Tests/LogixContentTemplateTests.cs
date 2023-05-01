@@ -84,7 +84,7 @@ public class LogixContentTemplateTests
     {
         var content = LogixContent.Load(Known.Template);
 
-        var components = content.Programs().Where(p => p.Type == null).ToList();
+        var components = content.Programs().Where(p => p.Type is null).ToList();
 
         components.Should().BeEmpty();
     }

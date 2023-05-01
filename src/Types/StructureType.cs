@@ -10,8 +10,16 @@ using L5Sharp.Serialization.Data;
 namespace L5Sharp.Types;
 
 /// <summary>
-/// 
+/// A <see cref="ILogixType"/> that represents a complex structure containing members of different types.
 /// </summary>
+/// <remarks>
+/// <para>
+/// This type is a building block for all <c>Predefined</c> data types. Inherit from this class to create custom
+/// user defined data types that can be used to create in memory representation of the tags for those types.
+/// </para>
+/// <para>You can either provided members vis the protected constructor, or define the members as properties of the
+/// sub class, in which case <see cref="StructureType"/> will generate <see cref="Members"/> using reflection.</para>
+/// </remarks>
 [LogixSerializer(typeof(StructureSerializer))]
 public class StructureType : ILogixType
 {
@@ -61,10 +69,6 @@ public class StructureType : ILogixType
     {
         return GetType().GetProperties()
             .Where(p => typeof(ILogixType).IsAssignableFrom(p.PropertyType))
-            .Select(p =>
-            {
-                var name = p.Name;
-                return new Member(name, (ILogixType)p.GetValue(this));
-            });
+            .Select(p => new Member(p.Name, (ILogixType)p.GetValue(this)));
     }
 }

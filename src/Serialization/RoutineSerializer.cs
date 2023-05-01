@@ -13,9 +13,9 @@ namespace L5Sharp.Serialization;
 /// </summary>
 public class RoutineSerializer : ILogixSerializer<Routine>
 {
-    private readonly RllSerializer _rllSerializer = new();
-    private readonly StSerializer _stlSerializer = new();
-        
+    private readonly RungSerializer _rungSerializer = new();
+    private readonly LineSerializer _lineSerializer = new();
+
     /// <inheritdoc />
     public XElement Serialize(Routine obj)
     {
@@ -26,12 +26,21 @@ public class RoutineSerializer : ILogixSerializer<Routine>
         element.AddValue(obj, r => r.Name);
         element.AddText(obj, r => r.Description);
         element.AddValue(obj, r => r.Type);
-            
+
         if (obj.Type == RoutineType.Rll)
-            element.Add(_rllSerializer.Serialize(obj.As<Rung>()));
-            
+        {
+            var rll = new XElement(L5XName.RLLContent);
+            rll.Add(obj.Content.Cast<Rung>().Select(r => _rungSerializer.Serialize(r)));
+            element.Add(rll);
+        }
+        
+        // ReSharper disable once InvertIf
         if (obj.Type == RoutineType.St)
-            element.Add(_stlSerializer.Serialize(obj.As<Line>()));
+        {
+            var st = new XElement(L5XName.STContent);
+            st.Add(obj.Content.Cast<Line>().Select(l => _lineSerializer.Serialize(l)));
+            element.Add(st);
+        }
 
         return element;
     }
@@ -40,12 +49,24 @@ public class RoutineSerializer : ILogixSerializer<Routine>
     public Routine Deserialize(XElement element)
     {
         Check.NotNull(element);
-            
-        var routine = new Routine
+        
+        var type = element.GetValue<RoutineType>(L5XName.Type);
+        
+        var content = new List<ILogixCode>();
+
+        if (type == RoutineType.Rll)
+            content = element.Descendants(L5XName.Rung).Select(e => _rungSerializer.Deserialize(e))
+                .Cast<ILogixCode>().ToList();
+        
+        if (type == RoutineType.St)
+            content = element.Descendants(L5XName.Line).Select(e => _lineSerializer.Deserialize(e))
+                .Cast<ILogixCode>().ToList();
+
+        return new Routine
         {
             Name = element.LogixName(),
             Description = element.LogixDescription(),
-            Type = element.GetValue<RoutineType>(L5XName.Type),
+            Type = type,
             Scope = element.Ancestors(L5XName.Program).Any() ? Scope.Program
                 : element.Ancestors(L5XName.AddOnInstructionDefinition).Any() ? Scope.Instruction
                 : Scope.Controller,
@@ -54,20 +75,8 @@ public class RoutineSerializer : ILogixSerializer<Routine>
                 : element.Ancestors(L5XName.AddOnInstructionDefinition).Any()
                     ? element.Ancestors(L5XName.AddOnInstructionDefinition).FirstOrDefault()?.LogixName() ??
                       string.Empty
-                    : element.Ancestors(L5XName.Controller).FirstOrDefault()?.LogixName() ?? string.Empty
+                    : element.Ancestors(L5XName.Controller).FirstOrDefault()?.LogixName() ?? string.Empty,
+            Content = content
         };
-            
-        IEnumerable<ILogixCode>? content = default;
-            
-        if (routine.Type == RoutineType.Rll && element.Element(L5XName.RLLContent) is not null)
-            content = _rllSerializer.Deserialize(element.Element(L5XName.RLLContent)!);
-            
-        if (routine.Type == RoutineType.St && element.Element(L5XName.STContent) is not null)
-            content = _stlSerializer.Deserialize(element.Element(L5XName.STContent)!);
-
-        if (content is not null)
-            routine.AddRange(content);
-            
-        return routine;
     }
 }

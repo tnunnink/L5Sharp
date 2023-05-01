@@ -8,12 +8,12 @@ using L5Sharp.Utilities;
 namespace L5Sharp.Serialization;
 
 /// <summary>
-/// A logix serializer that performs serialization of <see cref="QuickWatchList"/> components.
+/// A logix serializer that performs serialization of <see cref="WatchList"/> components.
 /// </summary>
-public class QuickWatchListSerializer : ILogixSerializer<QuickWatchList>
+public class QuickWatchListSerializer : ILogixSerializer<WatchList>
 {
     /// <inheritdoc />
-    public XElement Serialize(QuickWatchList obj)
+    public XElement Serialize(WatchList obj)
     {
         Check.NotNull(obj);
 
@@ -32,7 +32,7 @@ public class QuickWatchListSerializer : ILogixSerializer<QuickWatchList>
     }
 
     /// <inheritdoc />
-    public QuickWatchList Deserialize(XElement element)
+    public WatchList Deserialize(XElement element)
     {
         Check.NotNull(element);
 
@@ -43,6 +43,6 @@ public class QuickWatchListSerializer : ILogixSerializer<QuickWatchList>
                 Scope = t.TryGetValue<string>(L5XName.Specifier) ?? string.Empty
             }).ToList();
 
-        return new QuickWatchList(tags);
+        return new WatchList(tags);
     }
 }

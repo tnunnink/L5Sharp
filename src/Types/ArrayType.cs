@@ -11,9 +11,9 @@ using L5Sharp.Utilities;
 namespace L5Sharp.Types;
 
 /// <summary>
-/// 
+/// A <see cref="ILogixType"/> that represents an array of logix types. 
 /// </summary>
-/// <typeparam name="TLogixType"></typeparam>
+/// <typeparam name="TLogixType">The logic type the array contains.</typeparam>
 [LogixSerializer(typeof(ArraySerializer))]
 public sealed class ArrayType<TLogixType> : ILogixArray<TLogixType> where TLogixType : ILogixType
 {

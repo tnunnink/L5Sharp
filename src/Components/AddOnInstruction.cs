@@ -100,21 +100,22 @@ namespace L5Sharp.Components
         public string EditedBy { get; set; } = string.Empty;
 
         /// <summary>
-        /// The software version of the instruction.
+        /// Specify the revision of the application last used to edit the Add-On Instruction.
+        /// The default is the currently open version of the application.
         /// </summary>
         /// <value>A <see cref="Core.Revision"/> representing the version of the instruction.</value>
         public Revision SoftwareRevision { get; set; } = new();
 
         /// <summary>
-        /// The software version of the instruction.
+        /// The help text specific to the Add-On Instruction.
         /// </summary>
-        /// <value>A <see cref="string"/> .</value>
+        /// <value>A <see cref="string"/> containing the help text.</value>
         public string AdditionalHelpText { get; set; } = string.Empty;
 
         /// <summary>
-        /// The software version of the instruction.
+        /// Indicates whether the Add-On Instruction is protected with license-based Source Protection and locked
         /// </summary>
-        /// <value>A <see cref="string"/> .</value>
+        /// <value><c>true</c> if the instruction is encrypted; otherwise, <c>false</c>.</value>
         public bool IsEncrypted { get; set; }
 
         /// <summary>
@@ -143,7 +144,7 @@ namespace L5Sharp.Components
         /// </returns>
         /// <remarks>
         /// This is helpful when trying to perform deep analysis on logic. By "flattening" the logic we can
-        /// reason or evaluate it as if it was written in line. Currently only supports <see cref="Rll"/>
+        /// reason or evaluate it as if it was written in line. Currently only supports <see cref="Rung"/>
         /// content or code type.
         /// </remarks>
         public IEnumerable<NeutralText> Logic(NeutralText text)
@@ -154,7 +155,7 @@ namespace L5Sharp.Components
             // All instructions primary logic is contained in the routine names 'Logic'
             var logic = Routines.FirstOrDefault(r => r.Name == "Logic");
 
-            var rll = logic?.As<Rung>();
+            var rll = logic?.Content.Cast<Rung>();
             if (rll is null) return Enumerable.Empty<NeutralText>();
 
             //Skip first operand as it is always the AOI tag, which does not have corresponding parameter within the logic.

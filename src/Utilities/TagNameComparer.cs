@@ -20,7 +20,7 @@ public class TagNameComparer : IEqualityComparer<TagName>
     public static TagNameComparer FullName { get; } = new();
 
     /// <summary>
-    /// An <see cref="IEqualityComparer{T}"/> that compares the <see cref="TagName.Tag"/> property of the
+    /// An <see cref="IEqualityComparer{T}"/> that compares the <see cref="TagName.Root"/> property of the
     /// <see cref="TagName"/> value.
     /// </summary>
     public static TagNameComparer BaseName { get; } = new BaseTagNameComparer();
@@ -54,10 +54,10 @@ public class TagNameComparer : IEqualityComparer<TagName>
         {
             if (ReferenceEquals(x, y)) return true;
             if (ReferenceEquals(x, null) || ReferenceEquals(y, null)) return false;
-            return string.Equals(x.Tag, y.Tag, StringComparison.OrdinalIgnoreCase);
+            return string.Equals(x.Root, y.Root, StringComparison.OrdinalIgnoreCase);
         }
 
-        public override int GetHashCode(TagName obj) => StringComparer.OrdinalIgnoreCase.GetHashCode(obj.Tag);
+        public override int GetHashCode(TagName obj) => StringComparer.OrdinalIgnoreCase.GetHashCode(obj.Root);
     }
         
     private class PathTagNameComparer : TagNameComparer

@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using System.Collections.Specialized;
+using FluentAssertions;
 using L5Sharp.Components;
 using L5Sharp.Core;
 using L5Sharp.Enums;
@@ -22,7 +23,7 @@ public class LogixContentDataTypeTests
     public void Add_ValidComponent_ShouldAddComponent()
     {
         var content = LogixContent.Load(Known.Test);
-        
+
         var component = new DataType
         {
             Name = "TestType",
@@ -41,12 +42,12 @@ public class LogixContentDataTypeTests
 
         result.Should().NotBeNull();
     }
-    
+
     [Test]
     public void Add_ToEmptyFile_ShouldAddComponent()
     {
         var content = LogixContent.Load(Known.Empty);
-        
+
         var component = new DataType
         {
             Name = "TestType",
@@ -65,12 +66,12 @@ public class LogixContentDataTypeTests
 
         result.Should().NotBeNull();
     }
-    
+
     [Test]
     public void Add_AlreadyExists_ShouldThrowException()
     {
         var content = LogixContent.Load(Known.Test);
-        
+
         var component = new DataType
         {
             Name = Known.DataType,
@@ -98,7 +99,7 @@ public class LogixContentDataTypeTests
             new() { Name = "testType1" },
             new() { Name = "testType2" }
         };
-        
+
         content.DataTypes().Add(components);
 
         content.DataTypes().Should().HaveCount(number + 2);
@@ -108,7 +109,7 @@ public class LogixContentDataTypeTests
     public void AddCollection_HasDuplicateNames_ShouldThrowArgumentException()
     {
         var content = LogixContent.Load(Known.Test);
-        
+
         var components = new List<DataType>
         {
             new() { Name = "testType1" },
@@ -122,7 +123,7 @@ public class LogixContentDataTypeTests
     public void AddCollection_HasInvalidComponentName_ShouldThrowArgumentException()
     {
         var content = LogixContent.Load(Known.Test);
-        
+
         var components = new List<DataType>
         {
             new() { Name = "testType1" },
@@ -131,12 +132,12 @@ public class LogixContentDataTypeTests
 
         FluentActions.Invoking(() => content.DataTypes().Add(components)).Should().Throw<ArgumentException>();
     }
-    
+
     [Test]
     public void AddCollection_AddExistingName_ShouldThrowInvalidOperationException()
     {
         var content = LogixContent.Load(Known.Test);
-        
+
         var components = new List<DataType>
         {
             new() { Name = "testType1" },
@@ -144,6 +145,18 @@ public class LogixContentDataTypeTests
         };
 
         FluentActions.Invoking(() => content.DataTypes().Add(components)).Should().Throw<InvalidOperationException>();
+    }
+
+    [Test]
+    public void Clear_WhenCalled_ShouldResetCount()
+    {
+        var content = LogixContent.Load(Known.Test);
+
+        content.DataTypes().Clear();
+
+        var count = content.DataTypes().Count();
+
+        count.Should().Be(0);
     }
 
     [Test]
@@ -155,7 +168,7 @@ public class LogixContentDataTypeTests
 
         result.Should().BeTrue();
     }
-    
+
     [Test]
     public void Contains_NonExisting_ShouldBeFalse()
     {
@@ -177,7 +190,7 @@ public class LogixContentDataTypeTests
         result.Name.Should().Be(Known.DataType);
         result.Members.Should().NotBeEmpty();
     }
-    
+
     [Test]
     public void Find_NonExisting_ShouldBeNull()
     {
@@ -199,13 +212,61 @@ public class LogixContentDataTypeTests
         result.Name.Should().Be(Known.DataType);
         result.Members.Should().NotBeEmpty();
     }
-    
+
     [Test]
     public void Get_NonExisting_ShouldThrowException()
     {
         var content = LogixContent.Load(Known.Test);
 
-        FluentActions.Invoking(() => content.DataTypes().Get("Fake")) .Should().Throw<InvalidOperationException>();
+        FluentActions.Invoking(() => content.DataTypes().Get("Fake")).Should().Throw<InvalidOperationException>();
+    }
+
+    [Test]
+    public void Import_NonExistingComponent_ShouldIncrementCount()
+    {
+        var content = LogixContent.Load(Known.Test);
+
+        var component = new DataType
+        {
+            Name = "ImportType",
+            Description = "this is a new imported component",
+            Members = new List<DataTypeMember>
+            {
+                new() { Name = "Timers", DataType = "TIMER", Dimension = new Dimensions(5) },
+                new() { Name = "Number", DataType = "DINT", Radix = Radix.Ascii },
+                new() { Name = "Flag", DataType = "BOOL", ExternalAccess = ExternalAccess.ReadOnly }
+            }
+        };
+
+        content.DataTypes().Import(component, true);
+    }
+
+    [Test]
+    public void Import_AlreadyExists_ShouldHaveNewValues()
+    {
+        var content = LogixContent.Load(Known.Test);
+
+        var component = new DataType
+        {
+            Name = Known.DataType,
+            Description = "this is a test",
+            Members = new List<DataTypeMember>
+            {
+                new() { Name = "Timers", DataType = "TIMER", Dimension = new Dimensions(5) },
+                new() { Name = "Number", DataType = "DINT", Radix = Radix.Ascii },
+                new() { Name = "Flag", DataType = "BOOL", ExternalAccess = ExternalAccess.ReadOnly }
+            }
+        };
+
+        content.DataTypes().Import(component, true);
+
+        var result = content.DataTypes().Get(Known.DataType);
+
+        result.Name.Should().Be(Known.DataType);
+        result.Description.Should().Be("this is a test");
+        result.Members.Should().Contain(m => m.Name == "Timers");
+        result.Members.Should().Contain(m => m.Name == "Number");
+        result.Members.Should().Contain(m => m.Name == "Flag");
     }
 
     [Test]
@@ -220,7 +281,7 @@ public class LogixContentDataTypeTests
         var component = content.DataTypes().Find("SimpleTyp");
         component.Should().BeNull();
     }
-    
+
     [Test]
     public void Remove_NonExisting_ShouldBeFalse()
     {
@@ -230,12 +291,12 @@ public class LogixContentDataTypeTests
 
         result.Should().BeFalse();
     }
-    
+
     [Test]
     public void Replace_Existing_ShouldBeTrueAndExpected()
     {
         var content = LogixContent.Load(Known.Test);
-        
+
         var replacement = new DataType
         {
             Name = Known.DataType,
@@ -258,12 +319,12 @@ public class LogixContentDataTypeTests
         component.Description.Should().Be("This is an updated type");
         component.Members.Should().HaveCount(3);
     }
-    
+
     [Test]
     public void Replace_NonExisting_ShouldBeFalse()
     {
         var content = LogixContent.Load(Known.Test);
-        
+
         var replacement = new DataType
         {
             Name = "Fake",
@@ -280,12 +341,12 @@ public class LogixContentDataTypeTests
 
         result.Should().BeFalse();
     }
-    
+
     [Test]
     public void Update_NonExisting_ShouldHaveExpected()
     {
         var content = LogixContent.Load(Known.Test);
-        
+
         var component = new DataType
         {
             Name = "NewComponent",
@@ -301,7 +362,7 @@ public class LogixContentDataTypeTests
         content.DataTypes().Update(component);
 
         var result = content.DataTypes().Find("NewComponent");
-        
+
         result.Should().NotBeNull();
         result.Name.Should().Be("NewComponent");
         result.Description.Should().Be("This is a new component");
@@ -312,7 +373,7 @@ public class LogixContentDataTypeTests
     public void Update_Existing_ShouldHaveExpected()
     {
         var content = LogixContent.Load(Known.Test);
-        
+
         var component = new DataType
         {
             Name = Known.DataType,
@@ -328,7 +389,7 @@ public class LogixContentDataTypeTests
         content.DataTypes().Update(component);
 
         var result = content.DataTypes().Find(Known.DataType);
-        
+
         result.Should().NotBeNull();
         result.Name.Should().Be(Known.DataType);
         result.Description.Should().Be("This is a new component");

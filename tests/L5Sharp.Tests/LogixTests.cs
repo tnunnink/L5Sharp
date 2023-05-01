@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using L5Sharp.Types.Atomics;
+using L5Sharp.Types.Predefined;
 
 namespace L5Sharp.Tests;
 
@@ -24,5 +25,14 @@ public class LogixTests
         {
             element.Should().NotBeNull();
         }
+    }
+
+    [Test]
+    public void Tag_ValidParameters_ShouldBeExpected()
+    {
+        var tag = Logix.Tag<TIMER>("MyTimer");
+
+        tag.Name.Should().Be("MyTimer");
+        tag.Data.Should().BeOfType<TIMER>();
     }
 }

@@ -6,7 +6,7 @@ namespace L5Sharp;
 /// <summary>
 /// An interface defining the primary API for working with a collection of components within an L5X file.
 /// </summary>
-/// <typeparam name="TComponent"></typeparam>
+/// <typeparam name="TComponent">The <see cref="ILogixComponent"/> type the collection represents (e.g. DataType, Tag, etc.).</typeparam>
 public interface ILogixComponentCollection<TComponent> : IEnumerable<TComponent> where TComponent : ILogixComponent
 {
     /// <summary>
@@ -57,7 +57,7 @@ public interface ILogixComponentCollection<TComponent> : IEnumerable<TComponent>
     void Add(IEnumerable<TComponent> components);
 
     /// <summary>
-    /// Removes all components from the current collections.
+    /// Removes all components from the current collection.
     /// </summary>
     void Clear();
 
@@ -98,6 +98,18 @@ public interface ILogixComponentCollection<TComponent> : IEnumerable<TComponent>
     /// </remarks>
     /// <seealso cref="Find"/>
     TComponent Get(string name);
+    
+    /// <summary>
+    /// Imports a single component into the current collection by adding or overwriting existing components if
+    /// specified.
+    /// </summary>
+    /// <param name="component">The component to import.</param>
+    /// <param name="overwrite">Whether to overwrite an existing component if found.</param>
+    /// <remarks>The only difference between this and <see cref="Update(TComponent)"/> is that you can specify
+    /// whether or not to overwrite a component if already exists in the collection. <see cref="Update(TComponent)"/>
+    /// implies that you intend to overwrite. This method is used by <see cref="LogixContent"/> to merge incoming
+    /// components from another L5X file.</remarks>
+    void Import(TComponent component, bool overwrite);
 
     /// <summary>
     /// Imports a collection of component into the current collection by add or overwriting existing components if
@@ -133,6 +145,7 @@ public interface ILogixComponentCollection<TComponent> : IEnumerable<TComponent>
     /// </summary>
     /// <param name="current">The name of the component to rename.</param>
     /// <param name="name">The new name of the component.</param>
+    /// <exception cref="ArgumentException">The provided name is not a valid logix component name.</exception>
     void Rename(string current, string name);
 
     /// <summary>

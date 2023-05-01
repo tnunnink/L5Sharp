@@ -7,7 +7,7 @@ using L5Sharp.Extensions;
 namespace L5Sharp.Core;
 
 /// <summary>
-/// Represents the dimensions of an array for a Logix component.
+/// Represents the dimensions of an array for a Logix type.
 /// </summary>
 /// <remarks>
 /// Logix <c>Dimensions</c> can have one, two, or three dimensions.
@@ -215,10 +215,6 @@ public sealed class Dimensions : IEquatable<Dimensions>
             throw new ArgumentNullException(nameof(value));
 
         if (value.IsEmpty()) return Empty;
-
-        /*if (Regex.IsMatch(value, @"[^\d,[\] ]"))
-            throw new ArgumentException(
-                $"Value '{value}' contains invalid characters. Only numbers and [ ,] are allowed.");*/
 
         var numbers = Regex.Matches(value, @"\d+", RegexOptions.Compiled)
             .Select(m => ushort.Parse(m.Value))

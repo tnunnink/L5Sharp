@@ -25,7 +25,7 @@ public class RoutineTests
         routine.Type.Should().Be(RoutineType.Typeless);
         routine.Container.Should().BeEmpty();
         routine.Scope.Should().Be(Scope.Null);
-        routine.Should().BeEmpty();
+        routine.Content.Should().BeEmpty();
     }
 
     [Test]
@@ -37,24 +37,9 @@ public class RoutineTests
             new() { Text = "XIC(SomeTag)OTE(SomeOtherTag);" },
             new() { Text = "XIC(SomeTag)OTE(SomeOtherTag);" }
         };
-        
-        var routine = new Routine(rungs);
 
-        routine.Count.Should().Be(3);
-    }
-    
-    [Test]
-    public void New_RungCollection_ShouldHaveExpectedType()
-    {
-        var rungs = new List<Rung>
-        {
-            new() { Text = "XIC(SomeTag)OTE(SomeOtherTag);" },
-            new() { Text = "XIC(SomeTag)OTE(SomeOtherTag);" },
-            new() { Text = "XIC(SomeTag)OTE(SomeOtherTag);" }
-        };
-        
-        var routine = new Routine(rungs);
+        var routine = new Routine { Content = rungs.Cast<ILogixCode>().ToList() };
 
-        routine.Type.Should().Be(RoutineType.Rll);
+        routine.Content.Count.Should().Be(3);
     }
 }

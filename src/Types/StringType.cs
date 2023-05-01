@@ -11,8 +11,14 @@ using L5Sharp.Types.Atomics;
 namespace L5Sharp.Types;
 
 /// <summary>
-/// A logix type that represents a string structure type.
+/// A <see cref="ILogixType"/> that represents a string or collection of ASCII characters.
 /// </summary>
+/// <remarks>
+/// A logix string type has predefined members <see cref="LEN"/> and <see cref="DATA"/>, which contain the
+/// current string length and set of ASCII characters, respectively. This class is inherited by
+/// <see cref="Predefined.STRING"/>, which is Rockwell's built in base string type. You may also create instance of
+/// this class providing a string value.
+/// </remarks>
 [LogixSerializer(typeof(StringDataSerializer))]
 public class StringType : StructureType, IEnumerable<char>
 {

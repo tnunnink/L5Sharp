@@ -14,7 +14,15 @@ namespace L5Sharp.Tests.Components
     public class TagTests
     {
         [Test]
-        public void TagTesting()
+        public void New_Default_ShouldNotBeNull()
+        {
+            var tag = new Tag();
+
+            tag.Should().NotBeNull();
+        }
+        
+        [Test]
+        public void New_Default_ShouldHaveDefaultValues()
         {
             var tag = new Tag();
 
@@ -35,7 +43,7 @@ namespace L5Sharp.Tests.Components
         }
 
         [Test]
-        public void New_ValueTypeTag_ShouldHaveExpectedProperties()
+        public void New_Overloaded_ShouldHaveExpectedProperties()
         {
             var tag = new Tag
             {
@@ -97,10 +105,10 @@ namespace L5Sharp.Tests.Components
                 Data = new MyNestedType()
             };
 
-            var m1 = tag.Member("Simple.M1");
+            var member = tag.Member("Simple.M1");
 
-            m1.Should().NotBeNull();
-            m1?.TagName.Should().Be("Test.Simple.M1");
+            member.Should().NotBeNull();
+            member?.TagName.Should().Be("Test.Simple.M1");
         }
 
         [Test]
@@ -112,16 +120,16 @@ namespace L5Sharp.Tests.Components
                 Data = new MyNestedType()
             };
 
-            var m1 = tag.Member("Simple")?.Member("M1");
+            var nested = tag.Member("Simple")?.Member("M1");
 
-            m1.Should().NotBeNull();
-            m1?.TagName.Should().Be("Test.Simple.M1");
+            nested.Should().NotBeNull();
+            nested?.TagName.Should().Be("Test.Simple.M1");
         }
 
         [Test]
         public void Member_NonExisting_ShouldReturnNull()
         {
-            var tag = new Tag()
+            var tag = new Tag
             {
                 Name = "Test",
                 Data = new TIMER()

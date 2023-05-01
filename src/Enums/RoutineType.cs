@@ -16,21 +16,6 @@ public sealed class RoutineType : LogixEnum<RoutineType, string>
     }
 
     /// <summary>
-    /// Determines a <see cref="RoutineType"/> from the provided <see cref="ILogixCode"/> type. 
-    /// </summary>
-    /// <param name="code">An instance of <see cref="ILogixCode"/> representing the content of a <see cref="ILogixRoutine"/>.</param>
-    /// <returns>A <see cref="RoutineType"/> representing the type of content provided.</returns>
-    public static RoutineType FromCode(ILogixCode code)
-    {
-        return code switch
-        {
-            Rung => Rll,
-            Line => St,
-            _ => Typeless
-        };
-    }
-
-    /// <summary>
     /// Represents no <see cref="RoutineType"/> value.
     /// </summary>
     public static readonly RoutineType Typeless = new(nameof(Typeless), nameof(Typeless));

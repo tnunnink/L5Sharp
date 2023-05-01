@@ -11,7 +11,7 @@ using L5Sharp.Types.Atomics;
 namespace L5Sharp.Types;
 
 /// <summary>
-/// A fundamental <see cref="ILogixType"/> that represents value type object.
+/// A <see cref="ILogixType"/> that represents value type object.
 /// </summary>
 /// <remarks>
 /// Logix atomic types are types that have value (i.e. BOOL, SINT, INT, DINT, REAL, etc.).
@@ -80,12 +80,43 @@ public abstract class AtomicType : ILogixType
     public string ToString(Radix radix) => radix.Format(this);
 
     /// <summary>
+    /// Converts the current <see cref="AtomicType"/> to the specified base number.
+    /// </summary>
+    /// <param name="baseNumber">The base of the return value, which must be 2, 8, 10, or 16.</param>
+    /// <returns>A <see cref="string"/> value representing the value in the specified base.</returns>
+    /// <exception cref="ArgumentException">baseNumber is not 2, 8, 10, or 16.</exception>
+    /// <exception cref="NotSupportedException">The atomic type is not a supported integer type
+    /// (i.e. it is <see cref="REAL"/> type).</exception>
+    /// <remarks>This is used internally be <see cref="Enums.Radix"/> for formatting atomic type values.</remarks>
+    public string ToBase(int baseNumber)
+    {
+        var bitsPerByte = baseNumber switch
+        {
+            2 => 8,
+            8 => 3,
+            _ => 2
+        };
+            
+        var bytes = GetBytes(this);
+
+        var builder = new StringBuilder();
+            
+        for (var ctr = bytes.GetUpperBound(0); ctr >= bytes.GetLowerBound(0); ctr--)
+        {
+            var byteString = Convert.ToString(bytes[ctr], baseNumber).PadLeft(bitsPerByte, '0');
+            builder.Append(byteString);
+        }
+
+        return builder.ToString();
+    }
+
+    /// <summary>
     /// Returns a collection of bit members based on the implementing type.
     /// </summary>
     /// <returns></returns>
     private IEnumerable<Member> GetBitMembers()
     {
-        var chars = GetBinary().ToCharArray();
+        var chars = ToBase(2).ToCharArray();
             
         var members = new List<Member>();
 
@@ -97,28 +128,6 @@ public abstract class AtomicType : ILogixType
         }
 
         return members;
-    }
-
-    /// <summary>
-    /// Converts the current <see cref="AtomicType"/> to a binary string.
-    /// </summary>
-    /// <returns>A <see cref="string"/> value representing the value in the specified base.</returns>
-    private string GetBinary()
-    {
-        const int baseNumber = 2;
-        const int bitsPerByte = 8;
-
-        var bytes = GetBytes(this);
-
-        var builder = new StringBuilder();
-
-        for (var ctr = bytes.GetUpperBound(0); ctr >= bytes.GetLowerBound(0); ctr--)
-        {
-            var byteString = Convert.ToString(bytes[ctr], baseNumber).PadLeft(bitsPerByte, '0');
-            builder.Append(byteString);
-        }
-
-        return builder.ToString();
     }
 
     /// <summary>

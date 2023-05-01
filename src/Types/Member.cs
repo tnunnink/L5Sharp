@@ -7,14 +7,19 @@ using L5Sharp.Serialization.Data;
 namespace L5Sharp.Types;
 
 /// <summary>
-/// ..
+/// A component of a <see cref="ILogixType"/> that defines the structure or members of the type. 
 /// </summary>
 /// <remarks>
 /// <para>
-/// Members are used to define the structure of an <see cref="StructureType"/>.
+/// Members are used to define the structure of other <see cref="ILogixType"/> objects.
 /// Since each member holds a strongly typed reference to it's data type,
-/// the structure forms a hierarchical tree of nested members and types. The member's <see cref="Dimensions"/>,
-/// <see cref="Radix"/>, and <see cref="ExternalAccess"/> properties defined the configuration for a given member.
+/// the structure forms a hierarchical tree of nested members and types.
+/// </para>
+/// <para>
+/// This class effectively maps to the DataValueMember, StructureMember, ArrayMember elements of the L5X tag data
+/// structures. This class only defines, name and data type, since Dimension, Radix, and ExternalAccess are all either
+/// members or the specific <see cref="ILogixType"/> set, or not inherent in the data structure when serialized or
+/// deserialized.
 /// </para>
 /// </remarks>
 /// <footer>

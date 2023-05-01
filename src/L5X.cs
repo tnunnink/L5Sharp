@@ -12,8 +12,12 @@ using L5Sharp.Utilities;
 namespace L5Sharp;
 
 /// <summary>
-/// 
+/// A <see cref="XElement"/> decorator that adds members for interacting with the root L5X content.
 /// </summary>
+/// <remarks>
+/// Most of these methods and properties are meat to be internal and are referenced when mutating or querying the content
+/// of an L5X file.
+/// </remarks>
 public class L5X : XElement
 {
     private const string DateTimeFormat = "ddd MMM d HH:mm:ss yyyy";
@@ -93,10 +97,11 @@ public class L5X : XElement
     }
 
     /// <summary>
-    /// 
+    /// Creates a new <see cref="XElement"/> representing the root logix content containing the provided component.
     /// </summary>
-    /// <param name="target"></param>
-    /// <returns></returns>
+    /// <param name="target">The target component of the L5X.</param>
+    /// <returns>A <see cref="XElement"/> representing the new L5X content element with default properties and target
+    /// attributes set to specified component name and type.</returns>
     public static XElement Create<TComponent>(TComponent target) where TComponent : ILogixComponent
     {
         var content = new XElement(L5XName.RSLogix5000Content);
