@@ -148,44 +148,7 @@ public class LogixContentAddOnInstructionTests
 
         result.Should().BeFalse();
     }
-    
-    [Test]
-    public void Replace_Existing_ShouldBeTrueAndExpected()
-    {
-        var content = LogixContent.Load(Known.Test);
-        
-        var replacement = new AddOnInstruction
-        {
-            Name = Known.AddOnInstruction,
-            Description = "This is a test",
-        };
 
-        var result = content.Instructions().Replace(replacement);
-
-        result.Should().BeTrue();
-
-        var component = content.Instructions().Find(Known.AddOnInstruction);
-        component.Should().NotBeNull();
-        component.Name.Should().Be(Known.AddOnInstruction);
-        component.Description.Should().Be("This is a test");
-    }
-    
-    [Test]
-    public void Replace_NonExisting_ShouldBeFalse()
-    {
-        var content = LogixContent.Load(Known.Test);
-        
-        var replacement = new AddOnInstruction
-        {
-            Name = "Fake",
-            Description = "This is a test",
-        };
-
-        var result = content.Instructions().Replace(replacement);
-
-        result.Should().BeFalse();
-    }
-    
     [Test]
     public void Upsert_NonExisting_ShouldHaveExpected()
     {

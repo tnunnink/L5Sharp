@@ -9,7 +9,7 @@ namespace L5Sharp;
 public interface ILogixScoped
 {
     /// <summary>
-    /// The scope value of the component.
+    /// The scope type of the component.
     /// </summary>
     /// <value>A <see cref="Enums.Scope"/> option indicating the container type for the scoped component.</value>
     /// <remarks>
@@ -20,7 +20,7 @@ public interface ILogixScoped
     Scope Scope { get; }
 
     /// <summary>
-    /// The scoped container name of the component.
+    /// The scope name of the component.
     /// </summary>
     /// <value>A <see cref="string"/> representing the container (program, controller, routine) name of the component.</value>
     /// <remarks>

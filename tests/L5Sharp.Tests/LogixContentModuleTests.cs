@@ -148,44 +148,7 @@ public class LogixContentModuleTests
 
         result.Should().BeFalse();
     }
-    
-    [Test]
-    public void Replace_Existing_ShouldBeTrueAndExpected()
-    {
-        var content = LogixContent.Load(Known.Test);
-        
-        var replacement = new Module
-        {
-            Name = Known.Module,
-            Description = "This is a test",
-        };
 
-        var result = content.Modules().Replace(replacement);
-
-        result.Should().BeTrue();
-
-        var component = content.Modules().Find(Known.Module);
-        component.Should().NotBeNull();
-        component.Name.Should().Be(Known.Module);
-        component.Description.Should().Be("This is a test");
-    }
-    
-    [Test]
-    public void Replace_NonExisting_ShouldBeFalse()
-    {
-        var content = LogixContent.Load(Known.Test);
-        
-        var replacement = new Module
-        {
-            Name = "Fake",
-            Description = "This is a test",
-        };
-
-        var result = content.Modules().Replace(replacement);
-
-        result.Should().BeFalse();
-    }
-    
     [Test]
     public void Upsert_NonExisting_ShouldHaveExpected()
     {

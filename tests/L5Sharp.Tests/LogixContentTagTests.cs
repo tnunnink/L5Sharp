@@ -158,47 +158,7 @@ public class LogixContentTagTests
 
         result.Should().BeFalse();
     }
-    
-    [Test]
-    public void Replace_Existing_ShouldBeTrueAndExpected()
-    {
-        var content = LogixContent.Load(Known.Test);
-        
-        var replacement = new Tag
-        {
-            Name = Known.Tag,
-            Description = "This is a test",
-            Data = new BOOL()
-        };
 
-        var result = content.Tags().Replace(replacement);
-
-        result.Should().BeTrue();
-
-        var component = content.Tags().Find(Known.Tag);
-        component.Should().NotBeNull();
-        component.Name.Should().Be(Known.Tag);
-        component.DataType.Should().Be("BOOL");
-        component.Data.Should().NotBeNull();
-    }
-    
-    [Test]
-    public void Replace_NonExisting_ShouldBeFalse()
-    {
-        var content = LogixContent.Load(Known.Test);
-        
-        var replacement = new Tag
-        {
-            Name = "Fake",
-            Description = "This is a test",
-            Data = new BOOL()
-        };
-
-        var result = content.Tags().Replace(replacement);
-
-        result.Should().BeFalse();
-    }
-    
     [Test]
     public void Upsert_NonExisting_ShouldHaveExpected()
     {

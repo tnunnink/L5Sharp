@@ -21,7 +21,7 @@ public class LogixContentExportTests
     {
         var controller = new Controller();
 
-        var content = LogixContent.Export(controller);
+        var content = LogixContent.New(controller);
 
         content.Should().NotBeNull();
     }
@@ -31,7 +31,7 @@ public class LogixContentExportTests
     {
         var controller = new Controller { Name = "TestController" };
 
-        var content = LogixContent.Export(controller);
+        var content = LogixContent.New(controller);
 
         return Verify(content.L5X);
     }
@@ -51,7 +51,7 @@ public class LogixContentExportTests
             }
         };
 
-        var content = LogixContent.Export(component);
+        var content = LogixContent.New(component);
 
         return Verify(content.L5X);
     }
@@ -73,7 +73,7 @@ public class LogixContentExportTests
             }
         };
 
-        var content = LogixContent.Export(component);
+        var content = LogixContent.New(component);
 
         content.Should().NotBeNull();
 

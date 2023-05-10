@@ -148,44 +148,7 @@ public class LogixContentProgramTests
 
         result.Should().BeFalse();
     }
-    
-    [Test]
-    public void Replace_Existing_ShouldBeTrueAndExpected()
-    {
-        var content = LogixContent.Load(Known.Test);
-        
-        var replacement = new Program
-        {
-            Name = Known.Program,
-            Description = "This is a test",
-        };
 
-        var result = content.Programs().Replace(replacement);
-
-        result.Should().BeTrue();
-
-        var component = content.Programs().Find(Known.Program);
-        component.Should().NotBeNull();
-        component.Name.Should().Be(Known.Program);
-        component.Description.Should().Be("This is a test");
-    }
-    
-    [Test]
-    public void Replace_NonExisting_ShouldBeFalse()
-    {
-        var content = LogixContent.Load(Known.Test);
-        
-        var replacement = new Program
-        {
-            Name = "Fake",
-            Description = "This is a test",
-        };
-
-        var result = content.Programs().Replace(replacement);
-
-        result.Should().BeFalse();
-    }
-    
     [Test]
     public void Upsert_NonExisting_ShouldHaveExpected()
     {

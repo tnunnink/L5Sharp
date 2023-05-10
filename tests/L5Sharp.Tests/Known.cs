@@ -3,6 +3,7 @@
     public static class Known
     {
         public static readonly string Test = Path.Combine(Environment.CurrentDirectory, @"TestFiles\Test.xml");
+        public static readonly string DataTypeContent = Path.Combine(Environment.CurrentDirectory, @"TestFiles\BoolTest.xml");
         public const string Template = @"C:\Users\tnunnink\Local\Transfer\Template.L5X";
         public static readonly string Empty = Path.Combine(Environment.CurrentDirectory, @"TestFiles\Empty.xml");
 

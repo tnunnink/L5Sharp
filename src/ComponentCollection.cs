@@ -21,12 +21,7 @@ internal class ComponentCollection<TComponent> : ILogixComponentCollection<TComp
     private readonly XName _name;
     private readonly ILogixSerializer<TComponent> _serializer;
     private XContainer? _container;
-
-    /// <summary>
-    /// Creates a new collection over the provided <see cref="XContainer"/>.
-    /// </summary>
-    /// <param name="l5X">The <see cref="L5X"/> content element.</param>
-    /// <param name="container"></param>
+    
     internal ComponentCollection(L5X l5X, XContainer? container)
     {
         _l5X = l5X ?? throw new ArgumentNullException(nameof(l5X));
@@ -34,8 +29,7 @@ internal class ComponentCollection<TComponent> : ILogixComponentCollection<TComp
         _serializer = LogixSerializer.GetSerializer<TComponent>();
         _container = container;
     }
-
-    /// <inheritdoc />
+    
     public void Add(TComponent component)
     {
         if (component is null)
@@ -58,8 +52,7 @@ internal class ComponentCollection<TComponent> : ILogixComponentCollection<TComp
 
         _container?.Add(element);
     }
-
-    /// <inheritdoc />
+    
     public void Add(IEnumerable<TComponent> components)
     {
         if (components is null)
@@ -92,24 +85,20 @@ internal class ComponentCollection<TComponent> : ILogixComponentCollection<TComp
 
         _container?.Add(elements);
     }
-
-    /// <inheritdoc />
+    
     public void Clear() => _container?.RemoveNodes();
 
-    /// <inheritdoc />
     public bool Contains(string name) =>
         _container is not null && _container.Descendants(_name).Any(e => e.LogixName() == name);
 
     public int Count() => _container?.Elements().Count() ?? 0;
 
-    /// <inheritdoc />
     public TComponent? Find(string name)
     {
         var component = _container?.Descendants(_name).SingleOrDefault(e => e.LogixName() == name);
         return component != null ? _serializer.Deserialize(component) : default;
     }
 
-    /// <inheritdoc />
     public TComponent Get(string name)
     {
         if (_container is null)
@@ -124,71 +113,6 @@ internal class ComponentCollection<TComponent> : ILogixComponentCollection<TComp
         return _serializer.Deserialize(result);
     }
 
-    public void Import(TComponent component, bool overwrite)
-    {
-        if (component is null)
-            throw new ArgumentNullException(nameof(component));
-        
-        if (!component.Name.IsComponentName())
-            throw new ArgumentException($"The provided component name '{component.Name}' is not valid.");
-
-        if (_container is null)
-        {
-            _l5X.Normalize();
-            _container = _l5X.GetContainer(_name);
-        }
-
-        var element = _serializer.Serialize(component);
-
-        var target = _container?.Descendants(_name).SingleOrDefault(c => c.LogixName() == component.Name);
-
-        if (target is not null)
-        {
-            if (overwrite)
-                target.ReplaceWith(element);
-            return;
-        }
-
-        _container?.Add(element);
-    }
-
-    /// <inheritdoc />
-    public void Import(IEnumerable<TComponent> components, bool overwrite = false)
-    {
-        if (components is null)
-            throw new ArgumentNullException(nameof(components));
-
-        var dictionary = components.ToDictionary(c => c.Name);
-        if (dictionary.Count == 0) return;
-
-        //We only need to validate the incoming names, since existing will be replaced or skipped.
-        if (dictionary.Keys.Any(k => !k.IsComponentName()))
-            throw new ArgumentException("The provided components collection contains invalid component names.");
-
-        if (_container is null)
-        {
-            _l5X.Normalize();
-            _container = _l5X.GetContainer(_name);
-        }
-
-        foreach (var (key, component) in dictionary)
-        {
-            var element = _serializer.Serialize(component);
-
-            var target = _container?.Descendants(_name).SingleOrDefault(c => c.LogixName() == key);
-
-            if (target is not null)
-            {
-                if (overwrite)
-                    target.ReplaceWith(element);
-                continue;
-            }
-
-            _container?.Add(element);
-        }
-    }
-
-    /// <inheritdoc />
     public IEnumerable<TComponent> In(IEnumerable<string> names)
     {
         var components = _container?.Descendants(_name).Where(e => names.Any(n => n == e.LogixName()));
@@ -198,7 +122,7 @@ internal class ComponentCollection<TComponent> : ILogixComponentCollection<TComp
             : Enumerable.Empty<TComponent>();
     }
 
-    /// <inheritdoc />
+
     public bool Remove(string name)
     {
         var component = _container?.Descendants(_name).SingleOrDefault(c => c.LogixName() == name);
@@ -207,7 +131,7 @@ internal class ComponentCollection<TComponent> : ILogixComponentCollection<TComp
         return true;
     }
 
-    /// <inheritdoc />
+
     public int Remove(IEnumerable<string> names)
     {
         var components = _container?.Descendants(_name).Where(c => names.Any(n => n == c.LogixName())).ToList();
@@ -216,7 +140,7 @@ internal class ComponentCollection<TComponent> : ILogixComponentCollection<TComp
         return components.Count;
     }
 
-    /// <inheritdoc />
+
     public void Rename(string current, string name)
     {
         var component = _container?.Descendants(_name).SingleOrDefault(e => e.LogixName() == current);
@@ -226,45 +150,6 @@ internal class ComponentCollection<TComponent> : ILogixComponentCollection<TComp
 
         //We know if we get here component has a name since it would be null otherwise. 
         component.Attribute(L5XName.Name)!.Value = name;
-    }
-
-    /// <inheritdoc />
-    public bool Replace(TComponent component)
-    {
-        if (component is null)
-            throw new ArgumentNullException(nameof(component));
-
-        var target = _container?.Descendants(_name).SingleOrDefault(c => c.LogixName() == component.Name);
-        if (target is null) return false;
-
-        var element = _serializer.Serialize(component);
-        target.ReplaceWith(element);
-        return true;
-    }
-
-    public int Replace(IEnumerable<TComponent> components)
-    {
-        if (components is null)
-            throw new ArgumentNullException(nameof(components));
-
-        var dictionary = components.ToDictionary(c => c.Name);
-        if (dictionary.Count == 0) return 0;
-        if (_container is null) return 0;
-
-        var replaced = 0;
-
-        foreach (var (key, component) in dictionary)
-        {
-            var element = _serializer.Serialize(component);
-
-            var target = _container?.Descendants(_name).SingleOrDefault(c => c.LogixName() == key);
-            if (target is null) continue;
-                
-            target.ReplaceWith(element);
-            replaced++;
-        }
-
-        return replaced;
     }
 
     public void Update(TComponent component)
@@ -304,7 +189,7 @@ internal class ComponentCollection<TComponent> : ILogixComponentCollection<TComp
 
         //We only need to validate the incoming names, since existing will be replaced.
         if (dictionary.Keys.Any(k => !k.IsComponentName()))
-            throw new ArgumentException("The provided components collection contains invalid component names.");
+            throw new ArgumentException("The provided collection contains invalid component names.");
 
         if (_container is null)
         {
@@ -328,7 +213,64 @@ internal class ComponentCollection<TComponent> : ILogixComponentCollection<TComp
         }
     }
 
-    /// <inheritdoc />
+    public void Update(string name, Action<TComponent> config)
+    {
+        if (string.IsNullOrEmpty(name))
+            throw new ArgumentException("Name can not be null or empty.", nameof(name));
+
+        if (config is null)
+            throw new ArgumentNullException(nameof(config));
+
+        var target = _container?.Descendants(_name).SingleOrDefault(c => c.LogixName() == name);
+
+        if (target is null)
+            throw new InvalidOperationException($"No component with name {name} exists in the current collection.");
+
+        var component = _serializer.Deserialize(target);
+        
+        config.Invoke(component);
+        
+        target.ReplaceWith(_serializer.Serialize(component));
+    }
+
+    public void Update(Action<TComponent> config)
+    {
+        if (config is null)
+            throw new ArgumentNullException(nameof(config));
+
+        var elements = _container?.Descendants(_name);
+
+        if ( elements is null) return;
+
+        foreach (var element in elements)
+        {
+            var component = _serializer.Deserialize(element);
+            config.Invoke(component);
+            element.ReplaceWith(_serializer.Serialize(component));
+        }
+    }
+
+    public void Update(Func<TComponent, bool> condition, Action<TComponent> config)
+    {
+        if (condition is null)
+            throw new ArgumentNullException(nameof(condition));
+        
+        if (config is null)
+            throw new ArgumentNullException(nameof(config));
+        
+        var elements = _container?.Descendants(_name);
+        
+        if ( elements is null) return;
+        
+        foreach (var element in elements)
+        {
+            var component = _serializer.Deserialize(element);
+            if (!condition.Invoke(component)) continue;
+            config.Invoke(component);
+            element.ReplaceWith(_serializer.Serialize(component));
+        }
+    }
+
     public IEnumerator<TComponent> GetEnumerator() =>
         _container?.Descendants(_name).Select(e => _serializer.Deserialize(e)).GetEnumerator()
         ?? Enumerable.Empty<TComponent>().GetEnumerator();

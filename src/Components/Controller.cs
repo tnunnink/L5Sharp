@@ -29,7 +29,7 @@ public class Controller : ILogixComponent
     /// <summary>
     /// The catalog number representing the processor of the controller component.
     /// </summary>
-    /// <value>A <see cref="string"/> alpha numeric code.</value>
+    /// <value>A <see cref="string"/> representing the alpha numeric catalog number.</value>
     public string ProcessorType { get; set; } = string.Empty;
 
     /// <summary>

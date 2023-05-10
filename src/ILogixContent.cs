@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using L5Sharp.Components;
 using L5Sharp.Serialization;
 
@@ -21,6 +22,8 @@ public interface ILogixContent
     /// </summary>
     /// <returns>A <see cref="ILogixComponentCollection{TComponent}"/> for <see cref="DataType"/> components</returns>
     ILogixComponentCollection<DataType> DataTypes();
+    
+    
 
     /// <summary>
     /// Returns a component collection for querying and manipulating <see cref="AddOnInstruction"/> components
@@ -99,6 +102,13 @@ public interface ILogixContent
     /// <remarks>This allows the user to query essentially any data structure. All that is needed is a corresponding
     /// <see cref="ILogixSerializer{T}"/> so we know how to materialize the specified type.</remarks>
     IEnumerable<TEntity> Query<TEntity>() where TEntity : class;
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="fileName"></param>
+    /// <param name="overwrite"></param>
+    void Import(string fileName, bool overwrite = false);
 
     /// <summary>
     /// 

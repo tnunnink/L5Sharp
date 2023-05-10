@@ -15,19 +15,12 @@ public interface ILogixComponentCollection<TComponent> : IEnumerable<TComponent>
     /// <param name="component">The <see cref="ILogixComponent"/> to add to the collection.</param>
     /// <exception cref="ArgumentNullException"><c>component</c> is null.</exception>
     /// <exception cref="ArgumentException"><c>component</c> has an invalid logix name.</exception>
-    /// <exception cref="InvalidOperationException">A component with the same name as <c>component</c> already exists in the collection.</exception>
+    /// <exception cref="InvalidOperationException">A component with the same name already exists in the collection.</exception>
     /// <remarks>
     /// <para>
-    /// This method will validate the name and uniqueness of the component within the scope of the collection.
+    /// This method will validate the name (value and uniqueness) of the component within the scope of the collection.
     /// This will prevent and invalid components from being added to the L5X which could cause import errors. Outside
     /// of name validation, nothing else is checked upon adding a component.
-    /// </para>
-    /// <para>
-    /// Further, not all exported L5X files may contain proper "containing" elements. It is dependent on what component
-    /// type was exported. Therefore, when adding a component, if the containing element does not exists, this method
-    /// will "normalize" the L5X structure by injecting a controller element and child component container elements
-    /// into the current structure. It will also preserve any current content by moving it under the controller context
-    /// element that is created.
     /// </para>
     /// </remarks>
     void Add(TComponent component);
@@ -42,16 +35,9 @@ public interface ILogixComponentCollection<TComponent> : IEnumerable<TComponent>
     /// contains a component with a name from the provided <c>components</c> collection.</exception>
     /// <remarks>
     /// <para>
-    /// This method will validate the name and uniqueness of each component within the scope of the collection.
+    /// This method will validate the name (value and uniqueness) of the component within the scope of the collection.
     /// This will prevent and invalid components from being added to the L5X which could cause import errors. Outside
     /// of name validation, nothing else is checked upon adding a component.
-    /// </para>
-    /// <para>
-    /// Further, not all exported L5X files may contain proper "containing" elements. It is dependent on what component
-    /// type was exported. Therefore, when adding a component, if the containing element does not exists, this method
-    /// will "normalize" the L5X structure by injecting a controller element and child component container elements
-    /// into the current structure. It will also preserve any current content by moving it under the controller context
-    /// element that is created.
     /// </para>
     /// </remarks>
     void Add(IEnumerable<TComponent> components);
@@ -98,26 +84,6 @@ public interface ILogixComponentCollection<TComponent> : IEnumerable<TComponent>
     /// </remarks>
     /// <seealso cref="Find"/>
     TComponent Get(string name);
-    
-    /// <summary>
-    /// Imports a single component into the current collection by adding or overwriting existing components if
-    /// specified.
-    /// </summary>
-    /// <param name="component">The component to import.</param>
-    /// <param name="overwrite">Whether to overwrite an existing component if found.</param>
-    /// <remarks>The only difference between this and <see cref="Update(TComponent)"/> is that you can specify
-    /// whether or not to overwrite a component if already exists in the collection. <see cref="Update(TComponent)"/>
-    /// implies that you intend to overwrite. This method is used by <see cref="LogixContent"/> to merge incoming
-    /// components from another L5X file.</remarks>
-    void Import(TComponent component, bool overwrite);
-
-    /// <summary>
-    /// Imports a collection of component into the current collection by add or overwriting existing components if
-    /// specified.
-    /// </summary>
-    /// <param name="components">The collection of components to import.</param>
-    /// <param name="overwrite">Whether to overwrite any existing components if found.</param>
-    void Import(IEnumerable<TComponent> components, bool overwrite);
 
     /// <summary>
     /// Gets a collection of components that have a name in the provided list of component names.
@@ -132,7 +98,7 @@ public interface ILogixComponentCollection<TComponent> : IEnumerable<TComponent>
     /// <param name="name">The name of the component to remove.</param>
     /// <returns><c>true</c> if the component was found and removed; otherwise, <c>false</c>.</returns>
     bool Remove(string name);
-        
+
     /// <summary>
     /// Removes all components found from the provided list of names.
     /// </summary>
@@ -149,28 +115,35 @@ public interface ILogixComponentCollection<TComponent> : IEnumerable<TComponent>
     void Rename(string current, string name);
 
     /// <summary>
-    /// Replaces a component in the collection with the provided component if found.
-    /// </summary>
-    /// <param name="component">The component to replace.</param>
-    /// <returns><c>true</c> if the component was found and replaced; otherwise, <c>false</c>.</returns>
-    bool Replace(TComponent component);
-        
-    /// <summary>
-    /// Replaces all components in the collection with the provided collection of component where found.
-    /// </summary>
-    /// <param name="components">The collection of components to replace.</param>
-    /// <returns>An <see cref="int"/> representing the number of components replaced.</returns>
-    int Replace(IEnumerable<TComponent> components);
-
-    /// <summary>
-    /// Adds or replaces if found the the provided component in the collection.
+    /// Adds or replaces the the provided component in the collection.
     /// </summary>
     /// <param name="component">The component to add or replace.</param>
     void Update(TComponent component);
-        
+
     /// <summary>
-    /// Adds or replaces if found the the provided components in the collection.
+    /// Adds or replaces the the provided components in the collection.
     /// </summary>
     /// <param name="components">The components to add or replace.</param>
     void Update(IEnumerable<TComponent> components);
+
+    /// <summary>
+    /// Configures a component by applying the provided action delegate to the specified component.
+    /// </summary>
+    /// <param name="name">The name of the component to apply <c>config</c> to.</param>
+    /// <param name="config">The action delegate to apply to the component.</param>
+    void Update(string name, Action<TComponent> config);
+
+    /// <summary>
+    /// Configures all components by applying the provided action delegate.
+    /// </summary>
+    /// <param name="config">The action delegate to apply to the components.</param>
+    void Update(Action<TComponent> config);
+
+    /// <summary>
+    /// Configures all components by applying the provided action delegate to components that pass the provided condition
+    /// delegate.
+    /// </summary>
+    /// <param name="condition">The filter for which to determine which components to apply <c>config</c> to.</param>
+    /// <param name="config">The action delegate to apply to the components.</param>
+    void Update(Func<TComponent, bool> condition, Action<TComponent> config);
 }

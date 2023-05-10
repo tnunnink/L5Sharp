@@ -1,5 +1,4 @@
-﻿using System.Collections.Specialized;
-using FluentAssertions;
+﻿using FluentAssertions;
 using L5Sharp.Components;
 using L5Sharp.Core;
 using L5Sharp.Enums;
@@ -222,54 +221,6 @@ public class LogixContentDataTypeTests
     }
 
     [Test]
-    public void Import_NonExistingComponent_ShouldIncrementCount()
-    {
-        var content = LogixContent.Load(Known.Test);
-
-        var component = new DataType
-        {
-            Name = "ImportType",
-            Description = "this is a new imported component",
-            Members = new List<DataTypeMember>
-            {
-                new() { Name = "Timers", DataType = "TIMER", Dimension = new Dimensions(5) },
-                new() { Name = "Number", DataType = "DINT", Radix = Radix.Ascii },
-                new() { Name = "Flag", DataType = "BOOL", ExternalAccess = ExternalAccess.ReadOnly }
-            }
-        };
-
-        content.DataTypes().Import(component, true);
-    }
-
-    [Test]
-    public void Import_AlreadyExists_ShouldHaveNewValues()
-    {
-        var content = LogixContent.Load(Known.Test);
-
-        var component = new DataType
-        {
-            Name = Known.DataType,
-            Description = "this is a test",
-            Members = new List<DataTypeMember>
-            {
-                new() { Name = "Timers", DataType = "TIMER", Dimension = new Dimensions(5) },
-                new() { Name = "Number", DataType = "DINT", Radix = Radix.Ascii },
-                new() { Name = "Flag", DataType = "BOOL", ExternalAccess = ExternalAccess.ReadOnly }
-            }
-        };
-
-        content.DataTypes().Import(component, true);
-
-        var result = content.DataTypes().Get(Known.DataType);
-
-        result.Name.Should().Be(Known.DataType);
-        result.Description.Should().Be("this is a test");
-        result.Members.Should().Contain(m => m.Name == "Timers");
-        result.Members.Should().Contain(m => m.Name == "Number");
-        result.Members.Should().Contain(m => m.Name == "Flag");
-    }
-
-    [Test]
     public void Remove_Existing_ShouldBeTrue()
     {
         var content = LogixContent.Load(Known.Test);
@@ -288,56 +239,6 @@ public class LogixContentDataTypeTests
         var content = LogixContent.Load(Known.Test);
 
         var result = content.DataTypes().Remove("Fake");
-
-        result.Should().BeFalse();
-    }
-
-    [Test]
-    public void Replace_Existing_ShouldBeTrueAndExpected()
-    {
-        var content = LogixContent.Load(Known.Test);
-
-        var replacement = new DataType
-        {
-            Name = Known.DataType,
-            Description = "This is an updated type",
-            Members = new List<DataTypeMember>
-            {
-                new() { Name = "Timers", DataType = "TIMER", Dimension = new Dimensions(5) },
-                new() { Name = "Number", DataType = "DINT", Radix = Radix.Ascii },
-                new() { Name = "Flag", DataType = "BOOL", ExternalAccess = ExternalAccess.ReadOnly }
-            }
-        };
-
-        var result = content.DataTypes().Replace(replacement);
-
-        result.Should().BeTrue();
-
-        var component = content.DataTypes().Find(Known.DataType);
-        component.Should().NotBeNull();
-        component.Name.Should().Be(Known.DataType);
-        component.Description.Should().Be("This is an updated type");
-        component.Members.Should().HaveCount(3);
-    }
-
-    [Test]
-    public void Replace_NonExisting_ShouldBeFalse()
-    {
-        var content = LogixContent.Load(Known.Test);
-
-        var replacement = new DataType
-        {
-            Name = "Fake",
-            Description = "This is an updated type",
-            Members = new List<DataTypeMember>
-            {
-                new() { Name = "Timers", DataType = "TIMER", Dimension = new Dimensions(5) },
-                new() { Name = "Number", DataType = "DINT", Radix = Radix.Ascii },
-                new() { Name = "Flag", DataType = "BOOL", ExternalAccess = ExternalAccess.ReadOnly }
-            }
-        };
-
-        var result = content.DataTypes().Replace(replacement);
 
         result.Should().BeFalse();
     }
@@ -394,5 +295,22 @@ public class LogixContentDataTypeTests
         result.Name.Should().Be(Known.DataType);
         result.Description.Should().Be("This is a new component");
         result.Members.Should().HaveCount(3);
+    }
+
+    [Test]
+    public void Update_ValidNameAndAction_ShouldUpdateTheTargetComponent()
+    {
+        var content = LogixContent.Load(Known.Test);
+
+        content.DataTypes().Update(Known.DataType, d =>
+        {
+            d.Description = "This is a new description";
+            d.Members.Add(new DataTypeMember { Name = "New_Member", DataType = "REAL", Description = "hello"});
+        });
+
+        var result = content.DataTypes().Find(Known.DataType);
+
+        result.Description.Should().Be("This is a new description");
+        result.Members.SingleOrDefault(m => m.Name == "New_Member").Should().NotBeNull();
     }
 }

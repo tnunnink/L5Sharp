@@ -60,6 +60,9 @@
       <None Update="Serialization\StructureMemberSerializerTests.SerializeArrayMembers_ShouldBeApproved.verified.txt">
         <DependentUpon>StructureMemberSerializerTests.cs</DependentUpon>
       </None>
+      <None Update="TestFiles\BoolTest.xml">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
     </ItemGroup>
 
     <ItemGroup>

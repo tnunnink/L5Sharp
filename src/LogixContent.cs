@@ -59,11 +59,11 @@ public class LogixContent : ILogixContent
     public static LogixContent Parse(string text) => new(XElement.Parse(text));
 
     /// <summary>
-    /// Creates a new <see cref="LogixContent"/> with the provided logix component as the exported target type.
+    /// Creates a new <see cref="LogixContent"/> with the provided logix component as the target type.
     /// </summary>
-    /// <param name="component">The logix component to export.</param>
-    /// <returns>A <see cref="LogixContent"/> containing the exported component as the target of the L5X.</returns>
-    public static LogixContent Export<TComponent>(TComponent component) where TComponent : ILogixComponent =>
+    /// <param name="component">The L5X target component of the resulting content.</param>
+    /// <returns>A <see cref="LogixContent"/> containing the component as the target of the L5X.</returns>
+    public static LogixContent New<TComponent>(TComponent component) where TComponent : ILogixComponent =>
         new(L5X.Create(component));
 
     /// <summary>
@@ -164,22 +164,31 @@ public class LogixContent : ILogixContent
         return L5X.Descendants(name).Select(e => serializer.Deserialize(e));
     }
 
+
+    /// <inheritdoc />
+    public void Import(string fileName, bool overwrite = false)
+    {
+        if (string.IsNullOrEmpty(fileName))
+            throw new ArgumentException("FileName can not be null or empty.", nameof(fileName));
+
+        var content = Load(fileName);
+        
+        Import(content, overwrite);
+    }
+
     /// <inheritdoc />
     public void Import(LogixContent content, bool overwrite = false)
     {
         if (content is null)
             throw new ArgumentNullException(nameof(content));
-
+        
         if (L5X.ContainsContext is true)
-            throw new InvalidOperationException(
-                "The current L5X is contains context to a specific component type, which means it is not able to import other content." +
-                " Only project level L5X content files support this import feature.");
+            throw new InvalidOperationException("The target L5X does not contain context to a specific component.");
+        
+        if (content.L5X.ContainsContext is false)
+            throw new InvalidOperationException("The source L5X does not contain context to a specific component.");
 
-        DataTypes().Import(content.DataTypes().ToList(), overwrite);
-        Instructions().Import(content.Instructions().ToList(), overwrite);
-        Modules().Import(content.Modules().ToList(), overwrite);
-        Programs().Import(content.Programs().ToList(), overwrite);
-        Tasks().Import(content.Tasks().ToList(), overwrite);
+        L5X.Merge(content.L5X, overwrite);
     }
 
     /// <summary>
