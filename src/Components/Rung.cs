@@ -12,6 +12,9 @@ namespace L5Sharp.Components;
 public sealed class Rung : ILogixCode
 {
     /// <inheritdoc />
+    public Scope Scope { get; set; } = Scope.Null;
+
+    /// <inheritdoc />
     public string Container { get; set; } = string.Empty;
         
     /// <inheritdoc />
@@ -19,6 +22,9 @@ public sealed class Rung : ILogixCode
 
     /// <inheritdoc />
     public int Number { get; set; }
+
+    /// <inheritdoc />
+    public NeutralText Text { get; set; } = NeutralText.Empty;
 
     /// <summary>
     /// The <c>Rung</c> type, indicating edit information of the rung.
@@ -30,11 +36,6 @@ public sealed class Rung : ILogixCode
     /// </summary>
     /// <value>A <see cref="string"/> containing the text comment of the Rung.</value>
     public string Comment { get; set; } = string.Empty;
-
-    /// <summary>
-    /// The <see cref="Core.NeutralText"/> representing the Rung logic.
-    /// </summary>
-    public NeutralText Text { get; set; } = NeutralText.Empty;
 
     /// <inheritdoc />
     public override string ToString() => Text;

@@ -2,11 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
-using L5Sharp.Components;
 using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Extensions;
-using L5Sharp.Serialization;
 using L5Sharp.Utilities;
 
 namespace L5Sharp;
@@ -20,7 +18,10 @@ namespace L5Sharp;
 /// </remarks>
 public class L5X : XElement
 {
-    private const string DateTimeFormat = "ddd MMM d HH:mm:ss yyyy";
+    /// <summary>
+    /// The date/time format for the L5X content.
+    /// </summary>
+    public const string DateTimeFormat = "ddd MMM d HH:mm:ss yyyy";
 
     private static readonly Dictionary<string, string> Containers = new()
     {
@@ -41,6 +42,16 @@ public class L5X : XElement
     /// <param name="content"></param>
     public L5X(XElement content) : base(content)
     {
+        if (content is null)
+            throw new ArgumentNullException(nameof(content));
+
+        if (content.Name != L5XName.RSLogix5000Content)
+            throw new ArgumentException($"Expecting root element name of {L5XName.RSLogix5000Content}.");
+
+        // We will "normalize" (ensure consistent root controller element and component containers) for all
+        // files containing context (files that are not full projects) so that we won't have issues mutating the L5X.
+        if (ContainsContext is true || content.Element(L5XName.Controller) is null)
+            Normalize(this);
     }
 
     /// <summary>
@@ -82,70 +93,46 @@ public class L5X : XElement
     public DateTime? ExportDate => this.TryGetDateTime(L5XName.ExportDate, DateTimeFormat);
 
     /// <summary>
-    /// Gets either the controller root container element if it exists, or just the current RSLogixContent element.
-    /// One of these two will represent the root of the container elements depending on the type of L5X export file.
+    /// Gets the root controller element of the L5X file. 
     /// </summary>
-    private XContainer Root => Element(L5XName.Controller) is not null ? Element(L5XName.Controller)! : this;
+    public XElement Controller =>
+        Element(L5XName.Controller)
+        ?? throw new InvalidOperationException(
+            "Could not retrieve the root controller element XML content. Verify valid L5X format.");
 
     /// <summary>
-    /// Gets the known container element for the specified component name.
+    /// Gets the known container element for the specified component type name.
     /// </summary>
     /// <param name="name">The name of the component.</param>
     /// <returns>The <see cref="XContainer"/> which representing the root for the component name.</returns>
     /// <exception cref="ArgumentException"><c>name</c> does not have a known container.</exception>
-    public XElement? GetContainer(XName name)
+    public XElement GetContainer(XName name)
     {
-        if (!Containers.TryGetValue(name.ToString(), out var container))
-            throw new ArgumentException(
-                $"The provided name {name} does not have a corresponding component container.");
+        var container = DetermineContainer(name);
 
-        return Root.Elements(container).FirstOrDefault();
+        return Controller.Element(container) ??
+               throw new InvalidOperationException(
+                   $"The container with name {container} does not exist in the current L5X.");
+    }
+
+    /// <summary>
+    /// Gets the known container element for the specified component type name.
+    /// </summary>
+    /// <param name="name">The name of the component.</param>
+    /// <returns>The <see cref="XContainer"/> which representing the root for the component name.</returns>
+    /// <exception cref="ArgumentException"><c>name</c> does not have a known container.</exception>
+    public IEnumerable<XElement> GetContainers(XName name)
+    {
+        var container = DetermineContainer(name);
+
+        return Controller.Descendants(container);
     }
 
     /// <summary>
     /// Gets all primary/top level L5X component containers in the current L5X file.
     /// </summary>
     /// <returns>A <see cref="IEnumerable{T}"/> of <see cref="XElement"/> representing the L5X component containers.</returns>
-    public IEnumerable<XElement> GetContainers() => Containers.Values
-        .Select(name => Root.Elements(name).FirstOrDefault())
-        .Where(e => e is not null)
-        .ToList();
-
-    /// <summary>
-    /// Creates a new <see cref="XElement"/> representing the root logix content containing the provided component.
-    /// </summary>
-    /// <param name="target">The target component of the L5X.</param>
-    /// <returns>A <see cref="XElement"/> representing the new L5X content element with default properties and target
-    /// attributes set to specified component name and type.</returns>
-    internal static XElement Create<TComponent>(TComponent target) where TComponent : ILogixComponent
-    {
-        var content = new XElement(L5XName.RSLogix5000Content);
-        content.Add(new XAttribute(L5XName.SchemaRevision, new Revision().ToString()));
-        content.Add(new XAttribute(L5XName.TargetName, target.Name));
-        content.Add(new XAttribute(L5XName.TargetType, target.GetType().GetLogixName()));
-        content.Add(new XAttribute(L5XName.ContainsContext, target is not Controller));
-        content.Add(new XAttribute(L5XName.Owner, Environment.UserName));
-        content.Add(new XAttribute(L5XName.ExportDate, DateTime.Now.ToString(DateTimeFormat)));
-
-        var serializer = LogixSerializer.GetSerializer<TComponent>();
-        var component = serializer.Serialize(target);
-        component.AddFirst(new XAttribute(L5XName.Use, Use.Target));
-
-        var controller = component.Name == L5XName.Controller ? component : CreateContext();
-        EnsureContainersAdded(controller);
-
-        if (component.Name != L5XName.Controller)
-        {
-            if (!Containers.TryGetValue(component.Name.ToString(), out var containerName))
-                throw new ArgumentException(
-                    $"The provided name {component.Name} does not have a corresponding component container.");
-
-            controller.Element(containerName)?.Add(component);
-        }
-
-        content.Add(controller);
-        return content;
-    }
+    public IEnumerable<XElement> GetContainers() => Containers.Values.Select(name => Controller.Element(name)).ToList();
 
     /// <summary>
     /// Merges all top level containers and their immediate child elements between the current L5X content and the
@@ -163,85 +150,46 @@ public class L5X : XElement
             MergeContainers(pair.a, pair.b, overwrite);
     }
 
-    /// <summary>
-    /// Modifies the existing root content element to ensure it contains a controller element with all
-    /// known component containers (i.e. DataTypes, Modules, Tag. etc).
-    /// </summary>
-    /// <remarks>
-    /// This ensures that adding new content will be successful.
-    /// This will maintain existing content by transferring it under the controller element
-    /// if one is generated by calling this method.
-    /// </remarks>
-    /// <exception cref="InvalidOperationException">The current root content is not a component container.</exception>
-    internal void Normalize()
+    private static void Normalize(XContainer content)
     {
-        var content = Elements().FirstOrDefault();
+        var controller = new XElement(L5XName.Controller, new XAttribute(L5XName.Use, Use.Context));
 
-        if (content is null)
+        foreach (var container in Containers.Values)
         {
-            EnsureContextAdded();
-            return;
-        }
+            var existing = content.Descendants(container).FirstOrDefault();
 
-        //if the root content is controller, then just ensure all containers are added if not.
-        if (content.Name == L5XName.Controller)
-        {
-            EnsureContainersAdded(content);
-            return;
-        }
-
-        if (!Containers.ContainsValue(content.Name.ToString()))
-            throw new InvalidOperationException(
-                $"The root content element {content.Name} is not an valid component container.");
-
-        //Get a new controller element as the context.
-        var controller = CreateContext();
-
-        //Add containers and preserve current content. 
-        NormalizeContainers(controller, content);
-
-        //Replace the current root content with the new normalized controller context.
-        content.ReplaceWith(controller);
-    }
-
-    private void EnsureContextAdded()
-    {
-        var controller = CreateContext();
-        EnsureContainersAdded(controller);
-        Add(controller);
-    }
-
-    private static void NormalizeContainers(XContainer controller, XElement content)
-    {
-        foreach (var entry in Containers)
-        {
             //Add the existing content in place of an empty container.
-            if (entry.Value == content.Name)
+            if (existing is not null)
             {
-                controller.Add(content);
+                controller.Add(existing);
                 continue;
             }
 
-            controller.Add(new XElement(entry.Value));
+            controller.Add(new XElement(container));
         }
+
+        var current = content.Element(L5XName.Controller);
+        
+        if (current is null)
+        {
+            content.Add(controller);
+            return;
+        }
+        
+        current.ReplaceWith(controller);
     }
 
-    private static void EnsureContainersAdded(XContainer content)
+    private static string DetermineContainer(XName name)
     {
-        foreach (var entry in Containers.Where(entry => content.Element(entry.Value) is null))
-            content.Add(new XElement(entry.Value));
-    }
+        var target = name.ToString();
 
-    private static XElement CreateContext(string? name = null)
-    {
-        var element = new XElement(L5XName.Controller);
+        if (Containers.TryGetValue(target, out var container))
+            return container;
 
-        element.Add(new XAttribute(L5XName.Use, Use.Context));
+        if (Containers.ContainsValue(target))
+            return target;
 
-        if (!string.IsNullOrEmpty(name))
-            element.Add(new XAttribute(L5XName.Use, Use.Context));
-
-        return element;
+        throw new ArgumentException($"The provided name {name} does not have a corresponding component container.");
     }
 
     private static void MergeContainers(XContainer target, XContainer source, bool overwrite)
@@ -260,5 +208,28 @@ public class L5X : XElement
             if (overwrite)
                 match.ReplaceWith(element);
         }
+    }
+
+    private IEnumerable<XElement> GetScopedContainers(ILogixScoped scoped, string container)
+    {
+        if (scoped.Scope == Scope.Controller)
+        {
+            return Descendants(container).Where(c => c.Parent?.Name == L5XName.Controller);
+        }
+
+        if (scoped.Scope == Scope.Program)
+        {
+            return Descendants(container)
+                .Where(c => c.Ancestors(L5XName.Program).FirstOrDefault()?.LogixName() == scoped.Container);
+        }
+
+        if (scoped.Scope == Scope.Instruction)
+        {
+            return Descendants(container)
+                .Where(c => c.Ancestors(L5XName.AddOnInstructionDefinition).FirstOrDefault()?.LogixName() ==
+                            scoped.Container);
+        }
+
+        return Descendants(container);
     }
 }

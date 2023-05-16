@@ -48,10 +48,10 @@ public class ControllerSerializer : ILogixSerializer<Controller>
             Name = element.LogixName(),
             Description = element.LogixDescription(),
             ProcessorType = element.TryGetValue<string>(L5XName.ProcessorType) ?? string.Empty,
-            Revision = GetRevision(element),
+            Revision = GetRevision(element) ?? new Revision(),
             ProjectCreationDate = element.TryGetDateTime(L5XName.ProjectCreationDate, DateTimeFormat),
             LastModifiedDate = element.TryGetDateTime(L5XName.LastModifiedDate, DateTimeFormat),
-            TimeSlice = element.TryGetValue<string>(L5XName.TimeSlice) ?? string.Empty,
+            TimeSlice = element.TryGetValue<string>(L5XName.TimeSlice) ?? string.Empty
         };
     }
 

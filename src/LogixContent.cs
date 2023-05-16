@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using L5Sharp.Components;
+using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Extensions;
+using L5Sharp.Repositories;
 using L5Sharp.Serialization;
 using L5Sharp.Utilities;
 
@@ -23,12 +25,6 @@ public class LogixContent : ILogixContent
     /// <exception cref="ArgumentNullException"></exception>
     private LogixContent(XElement element)
     {
-        if (element is null)
-            throw new ArgumentNullException(nameof(element));
-
-        if (element.Name != L5XName.RSLogix5000Content)
-            throw new ArgumentException($"Expecting root element name of {L5XName.RSLogix5000Content}.");
-
         L5X = new L5X(element);
     }
 
@@ -61,13 +57,27 @@ public class LogixContent : ILogixContent
     /// <summary>
     /// Creates a new <see cref="LogixContent"/> with the provided logix component as the target type.
     /// </summary>
-    /// <param name="component">The L5X target component of the resulting content.</param>
+    /// <param name="target">The L5X target component of the resulting content.</param>
     /// <returns>A <see cref="LogixContent"/> containing the component as the target of the L5X.</returns>
-    public static LogixContent New<TComponent>(TComponent component) where TComponent : ILogixComponent =>
-        new(L5X.Create(component));
+    public static LogixContent Export(ILogixComponent target)
+    {
+        var content = new XElement(L5XName.RSLogix5000Content);
+        content.Add(new XAttribute(L5XName.SchemaRevision, new Revision().ToString()));
+        content.Add(new XAttribute(L5XName.TargetName, target.Name));
+        content.Add(new XAttribute(L5XName.TargetType, target.GetType().GetLogixName()));
+        content.Add(new XAttribute(L5XName.ContainsContext, target.GetType() != typeof(Controller)));
+        content.Add(new XAttribute(L5XName.Owner, Environment.UserName));
+        content.Add(new XAttribute(L5XName.ExportDate, DateTime.Now.ToString(L5X.DateTimeFormat)));
+
+        var component = LogixSerializer.Serialize(target);
+        component.AddFirst(new XAttribute(L5XName.Use, Use.Target));
+        content.Add(component);
+
+        return new LogixContent(content);
+    }
 
     /// <summary>
-    /// The root L5X content containing all raw XML data loaded, parsed, or created under the current <see cref="LogixContent"/>
+    /// The root L5X content containing all raw XML data for the <see cref="LogixContent"/>.
     /// </summary>
     /// <remarks>
     /// <see cref="L5X"/> inherits from <see cref="XElement"/> and adds some helper properties and methods
@@ -76,115 +86,68 @@ public class LogixContent : ILogixContent
     public L5X L5X { get; }
 
     /// <inheritdoc />
-    public Controller? Controller
-    {
-        get
-        {
-            var element = L5X.Element(L5XName.Controller);
-            if (element is null || element.Attribute(L5XName.Use)?.Value != Use.Target) return default;
-            return LogixSerializer.Deserialize<Controller>(element);
-        }
-    }
+    public Controller Controller => LogixSerializer.Deserialize<Controller>(L5X.Controller);
 
     /// <inheritdoc />
-    public ILogixComponentCollection<DataType> DataTypes()
-    {
-        var container = L5X.Descendants(L5XName.DataTypes).FirstOrDefault();
-        return new ComponentCollection<DataType>(L5X, container);
-    }
+    public ILogixComponentRepository<DataType> DataTypes => new ComponentRepository<DataType>(L5X);
 
     /// <inheritdoc />
-    public ILogixComponentCollection<AddOnInstruction> Instructions()
-    {
-        var container = L5X.Descendants(L5XName.AddOnInstructionDefinitions).FirstOrDefault();
-        return new ComponentCollection<AddOnInstruction>(L5X, container);
-    }
+    public ILogixComponentRepository<AddOnInstruction> Instructions => new ComponentRepository<AddOnInstruction>(L5X);
 
     /// <inheritdoc />
-    public ILogixComponentCollection<Module> Modules()
-    {
-        var container = L5X.Descendants(L5XName.Modules).FirstOrDefault();
-        return new ComponentCollection<Module>(L5X, container);
-    }
+    public ILogixComponentRepository<Module> Modules => new ComponentRepository<Module>(L5X);
 
     /// <inheritdoc />
-    public ILogixComponentCollection<Program> Programs()
-    {
-        var container = L5X.Descendants(L5XName.Programs).FirstOrDefault();
-        return new ComponentCollection<Program>(L5X, container);
-    }
+    public ILogixComponentRepository<Program> Programs => new ComponentRepository<Program>(L5X);
 
     /// <inheritdoc />
-    public ILogixComponentCollection<Tag> Tags()
-    {
-        var container = L5X.Element(L5XName.Controller)?.Element(L5XName.Tags);
-        return new ComponentCollection<Tag>(L5X, container);
-    }
+    public ILogixScopedRepository<Routine> Routines => new ScopedRepository<Routine>(L5X);
 
     /// <inheritdoc />
-    public ILogixComponentCollection<Tag> Tags(string programName)
-    {
-        var program = L5X.Descendants(L5XName.Program).FirstOrDefault(e => e.LogixName() == programName);
-
-        if (program is null)
-            throw new ArgumentException(
-                $"No program with '{programName}' found in the current L5X. Add the component via Programs() before accessing Tags.");
-
-        var container = program.Descendants(L5XName.Tags).FirstOrDefault();
-
-        return new ComponentCollection<Tag>(L5X, container);
-    }
+    public ILogixTagRepository Tags => new TagRepository(L5X);
 
     /// <inheritdoc />
-    public ILogixComponentCollection<Routine> Routines(string programName)
-    {
-        var program = L5X.Descendants(L5XName.Program).FirstOrDefault(e => e.LogixName() == programName);
-
-        if (program is null)
-            throw new ArgumentException(
-                $"No program with '{programName}' found in the current L5X. Add the component via Programs() before accessing Routines.");
-
-        var container = program.Descendants(L5XName.Routines).FirstOrDefault();
-
-        return new ComponentCollection<Routine>(L5X, container);
-    }
+    public ILogixComponentRepository<LogixTask> Tasks => new ComponentRepository<LogixTask>(L5X);
 
     /// <inheritdoc />
-    public ILogixComponentCollection<LogixTask> Tasks()
-    {
-        var container = L5X.Descendants(L5XName.Tasks).FirstOrDefault();
-        return new ComponentCollection<LogixTask>(L5X, container);
-    }
-
-    /// <inheritdoc />
-    public IEnumerable<TEntity> Query<TEntity>() where TEntity : class
+    public IEnumerable<TEntity> Find<TEntity>() where TEntity : class
     {
         var name = typeof(TEntity).GetLogixName();
         var serializer = LogixSerializer.GetSerializer<TEntity>();
         return L5X.Descendants(name).Select(e => serializer.Deserialize(e));
     }
 
-
-    /// <inheritdoc />
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="fileName"></param>
+    /// <param name="overwrite"></param>
+    /// <exception cref="ArgumentException"></exception>
     public void Import(string fileName, bool overwrite = false)
     {
         if (string.IsNullOrEmpty(fileName))
             throw new ArgumentException("FileName can not be null or empty.", nameof(fileName));
 
         var content = Load(fileName);
-        
+
         Import(content, overwrite);
     }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="content"></param>
+    /// <param name="overwrite"></param>
+    /// <exception cref="ArgumentNullException"></exception>
+    /// <exception cref="InvalidOperationException"></exception>
     public void Import(LogixContent content, bool overwrite = false)
     {
         if (content is null)
             throw new ArgumentNullException(nameof(content));
-        
+
         if (L5X.ContainsContext is true)
-            throw new InvalidOperationException("The target L5X does not contain context to a specific component.");
-        
+            throw new InvalidOperationException("The target L5X not a project file which does not support importing.");
+
         if (content.L5X.ContainsContext is false)
             throw new InvalidOperationException("The source L5X does not contain context to a specific component.");
 

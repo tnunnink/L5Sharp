@@ -1,4 +1,6 @@
 ﻿using FluentAssertions;
+using L5Sharp.Components;
+using L5Sharp.Core;
 using L5Sharp.Extensions;
 using L5Sharp.Utilities;
 
@@ -12,7 +14,7 @@ public class EnumerableExtensionTests
     {
         var content = LogixContent.Load(Known.Test);
 
-        var lookup = content.Logic().ToTagLookup();
+        var lookup = content.Text().ToTagLookup();
 
         lookup.Should().NotBeEmpty();
     }
@@ -22,9 +24,9 @@ public class EnumerableExtensionTests
     {
         var content = LogixContent.Load(Known.Template);
 
-        var moduleTags = content.Modules().SelectMany(m => m.Tags()).ToList();
+        var moduleTags = content.Modules.SelectMany(m => m.Tags()).ToList();
 
-        var lookup = content.Logic().ToTagLookup()
+        var lookup = content.Text().ToTagLookup()
             .Where(t => moduleTags.Any(x => TagNameComparer.BaseName.Equals(x.TagName, t.Key)))
             .ToList();
 

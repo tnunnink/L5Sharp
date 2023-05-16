@@ -3,17 +3,17 @@ using L5Sharp.Components;
 using L5Sharp.Core;
 using L5Sharp.Enums;
 
-namespace L5Sharp.Tests;
+namespace L5Sharp.Tests.Repositories;
 
 [TestFixture]
 public class LogixContentDataTypeTests
 {
     [Test]
-    public void Collection_WhenCalled_ShouldNotBeEmpty()
+    public void ToList_WhenCalled_ShouldNotBeEmpty()
     {
         var content = LogixContent.Load(Known.Test);
 
-        var dataTypes = content.DataTypes().ToList();
+        var dataTypes = content.DataTypes.ToList();
 
         dataTypes.Should().NotBeEmpty();
     }
@@ -35,10 +35,9 @@ public class LogixContentDataTypeTests
             }
         };
 
-        content.DataTypes().Add(component);
+        content.DataTypes.Add(component);
 
-        var result = content.DataTypes().Get("TestType");
-
+        var result = content.DataTypes.Find("TestType");
         result.Should().NotBeNull();
     }
 
@@ -59,10 +58,9 @@ public class LogixContentDataTypeTests
             }
         };
 
-        content.DataTypes().Add(component);
+        content.DataTypes.Add(component);
 
-        var result = content.DataTypes().Get("TestType");
-
+        var result = content.DataTypes.Find("TestType");
         result.Should().NotBeNull();
     }
 
@@ -83,7 +81,7 @@ public class LogixContentDataTypeTests
             }
         };
 
-        FluentActions.Invoking(() => content.DataTypes().Add(component)).Should().Throw<InvalidOperationException>();
+        FluentActions.Invoking(() => content.DataTypes.Add(component)).Should().Throw<InvalidOperationException>();
     }
 
     [Test]
@@ -91,7 +89,7 @@ public class LogixContentDataTypeTests
     {
         var content = LogixContent.Load(Known.Test);
 
-        var number = content.DataTypes().Count();
+        var number = content.DataTypes.Count();
 
         var components = new List<DataType>
         {
@@ -99,9 +97,9 @@ public class LogixContentDataTypeTests
             new() { Name = "testType2" }
         };
 
-        content.DataTypes().Add(components);
+        content.DataTypes.Add(components);
 
-        content.DataTypes().Should().HaveCount(number + 2);
+        content.DataTypes.Should().HaveCount(number + 2);
     }
 
     [Test]
@@ -115,7 +113,7 @@ public class LogixContentDataTypeTests
             new() { Name = "testType1" }
         };
 
-        FluentActions.Invoking(() => content.DataTypes().Add(components)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(() => content.DataTypes.Add(components)).Should().Throw<ArgumentException>();
     }
 
     [Test]
@@ -129,7 +127,7 @@ public class LogixContentDataTypeTests
             new() { Name = "!@#$" }
         };
 
-        FluentActions.Invoking(() => content.DataTypes().Add(components)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(() => content.DataTypes.Add(components)).Should().Throw<ArgumentException>();
     }
 
     [Test]
@@ -143,39 +141,7 @@ public class LogixContentDataTypeTests
             new() { Name = Known.DataType }
         };
 
-        FluentActions.Invoking(() => content.DataTypes().Add(components)).Should().Throw<InvalidOperationException>();
-    }
-
-    [Test]
-    public void Clear_WhenCalled_ShouldResetCount()
-    {
-        var content = LogixContent.Load(Known.Test);
-
-        content.DataTypes().Clear();
-
-        var count = content.DataTypes().Count();
-
-        count.Should().Be(0);
-    }
-
-    [Test]
-    public void Contains_Existing_ShouldBeTrue()
-    {
-        var content = LogixContent.Load(Known.Test);
-
-        var result = content.DataTypes().Contains(Known.DataType);
-
-        result.Should().BeTrue();
-    }
-
-    [Test]
-    public void Contains_NonExisting_ShouldBeFalse()
-    {
-        var content = LogixContent.Load(Known.Test);
-
-        var result = content.DataTypes().Contains("FakeType");
-
-        result.Should().BeFalse();
+        FluentActions.Invoking(() => content.DataTypes.Add(components)).Should().Throw<InvalidOperationException>();
     }
 
     [Test]
@@ -183,7 +149,7 @@ public class LogixContentDataTypeTests
     {
         var content = LogixContent.Load(Known.Test);
 
-        var result = content.DataTypes().Find(Known.DataType);
+        var result = content.DataTypes.Find(Known.DataType);
 
         result.Should().NotBeNull();
         result.Name.Should().Be(Known.DataType);
@@ -195,52 +161,31 @@ public class LogixContentDataTypeTests
     {
         var content = LogixContent.Load(Known.Test);
 
-        var result = content.DataTypes().Find("Fake");
+        var result = content.DataTypes.Find("Fake");
 
         result.Should().BeNull();
     }
 
     [Test]
-    public void Get_Existing_ShouldBeExpected()
+    public void Remove_Existing_ShouldBeNull()
     {
         var content = LogixContent.Load(Known.Test);
 
-        var result = content.DataTypes().Get(Known.DataType);
+        content.DataTypes.Remove(Known.DataType);
 
-        result.Should().NotBeNull();
-        result.Name.Should().Be(Known.DataType);
-        result.Members.Should().NotBeEmpty();
+        var result = content.DataTypes.Find(Known.DataType);
+        result.Should().BeNull();
     }
 
     [Test]
-    public void Get_NonExisting_ShouldThrowException()
+    public void Remove_NonExisting_ShouldBeNull()
     {
         var content = LogixContent.Load(Known.Test);
 
-        FluentActions.Invoking(() => content.DataTypes().Get("Fake")).Should().Throw<InvalidOperationException>();
-    }
-
-    [Test]
-    public void Remove_Existing_ShouldBeTrue()
-    {
-        var content = LogixContent.Load(Known.Test);
-
-        var result = content.DataTypes().Remove(Known.DataType);
-
-        result.Should().BeTrue();
-
-        var component = content.DataTypes().Find("SimpleTyp");
-        component.Should().BeNull();
-    }
-
-    [Test]
-    public void Remove_NonExisting_ShouldBeFalse()
-    {
-        var content = LogixContent.Load(Known.Test);
-
-        var result = content.DataTypes().Remove("Fake");
-
-        result.Should().BeFalse();
+        content.DataTypes.Remove("Fake");
+        
+        var result = content.DataTypes.Find("Fake");
+        result.Should().BeNull();
     }
 
     [Test]
@@ -260,9 +205,9 @@ public class LogixContentDataTypeTests
             }
         };
 
-        content.DataTypes().Update(component);
+        content.DataTypes.Update(component);
 
-        var result = content.DataTypes().Find("NewComponent");
+        var result = content.DataTypes.Find("NewComponent");
 
         result.Should().NotBeNull();
         result.Name.Should().Be("NewComponent");
@@ -287,9 +232,9 @@ public class LogixContentDataTypeTests
             }
         };
 
-        content.DataTypes().Update(component);
+        content.DataTypes.Update(component);
 
-        var result = content.DataTypes().Find(Known.DataType);
+        var result = content.DataTypes.Find(Known.DataType);
 
         result.Should().NotBeNull();
         result.Name.Should().Be(Known.DataType);
@@ -302,13 +247,13 @@ public class LogixContentDataTypeTests
     {
         var content = LogixContent.Load(Known.Test);
 
-        content.DataTypes().Update(Known.DataType, d =>
+        content.DataTypes.Update(Known.DataType, d =>
         {
             d.Description = "This is a new description";
             d.Members.Add(new DataTypeMember { Name = "New_Member", DataType = "REAL", Description = "hello"});
         });
 
-        var result = content.DataTypes().Find(Known.DataType);
+        var result = content.DataTypes.Find(Known.DataType);
 
         result.Description.Should().Be("This is a new description");
         result.Members.SingleOrDefault(m => m.Name == "New_Member").Should().NotBeNull();

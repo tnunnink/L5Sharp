@@ -9,7 +9,7 @@ using NUnit.Framework;
 namespace L5Sharp.Tests.Extensions
 {
     [TestFixture]
-    public class LogixTypeExtensionTests
+    public class LogixExtensionTests
     {
         [Test]
         public void ToType_ValidTypes_ShouldBeOfExpectedType()

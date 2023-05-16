@@ -1,4 +1,6 @@
-﻿namespace L5Sharp;
+﻿using L5Sharp.Repositories;
+
+namespace L5Sharp;
 
 /// <summary>
 /// Represents a <i>Logix</i> component or element of the L5X that is able to be identified by name.
@@ -27,7 +29,7 @@ public interface ILogixComponent
     /// underscore ('_') characters, start with a letter, and be between 1 and 40 characters.
     /// However, some internally generated components, such as module defined types, do not have the same
     /// restrictions, which is why this is a simple <see cref="string"/>. The name of a component will only
-    /// be validated when attempting to add it to a <see cref="ILogixComponentCollection{TComponent}"/>.
+    /// be validated when attempting to add it to a <see cref="ILogixComponentRepository{TComponent}"/>.
     /// </remarks>
     string Name { get; }
         

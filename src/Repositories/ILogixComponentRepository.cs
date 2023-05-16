@@ -1,16 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace L5Sharp;
+namespace L5Sharp.Repositories;
 
 /// <summary>
 /// An interface defining the primary API for working with a collection of components within an L5X file.
 /// </summary>
-/// <typeparam name="TComponent">The <see cref="ILogixComponent"/> type the collection represents (e.g. DataType, Tag, etc.).</typeparam>
-public interface ILogixComponentCollection<TComponent> : IEnumerable<TComponent> where TComponent : ILogixComponent
+/// <typeparam name="TComponent">The <see cref="ILogixComponent"/> type the collection represents (e.g. DataType, Module, Program).</typeparam>
+public interface ILogixComponentRepository<TComponent> : IEnumerable<TComponent> where TComponent : ILogixComponent
 {
     /// <summary>
-    /// Adds the provided component to the current collection.
+    /// Returns the number of components in the content collection.
+    /// </summary>
+    int Count { get; }
+    
+    /// <summary>
+    /// Adds the provided component to the content collection.
     /// </summary>
     /// <param name="component">The <see cref="ILogixComponent"/> to add to the collection.</param>
     /// <exception cref="ArgumentNullException"><c>component</c> is null.</exception>
@@ -24,9 +29,9 @@ public interface ILogixComponentCollection<TComponent> : IEnumerable<TComponent>
     /// </para>
     /// </remarks>
     void Add(TComponent component);
-        
+
     /// <summary>
-    /// Adds provided component collection to the current collection.
+    /// Adds the provided components to the content collection.
     /// </summary>
     /// <param name="components">A collection of <see cref="ILogixComponent"/> to add to the collection.</param>
     /// <exception cref="ArgumentNullException"><c>components</c> is null.</exception>
@@ -43,76 +48,56 @@ public interface ILogixComponentCollection<TComponent> : IEnumerable<TComponent>
     void Add(IEnumerable<TComponent> components);
 
     /// <summary>
-    /// Removes all components from the current collection.
+    /// 
     /// </summary>
-    void Clear();
-
-    /// <summary>
-    /// Determines whether a component with the specified name exists in the current collection.
-    /// </summary>
-    /// <param name="name">The name of the component to find.</param>
-    /// <returns><c>true</c> if the component exists; otherwise, <c>false</c>.</returns>
+    /// <param name="name"></param>
+    /// <returns></returns>
     bool Contains(string name);
 
     /// <summary>
-    /// Returns the number of components in the current collection.
-    /// </summary>
-    /// <returns>A <see cref="int"/> representing the number of components found.</returns>
-    int Count();
-
-    /// <summary>
-    /// Returns the component with the specified name if found. If not found, returns null. 
+    /// Returns a component with the specified name if found. If not found, return <c>null</c>.
     /// </summary>
     /// <param name="name">The name of the component to find.</param>
-    /// <returns>A <see cref="ILogixComponent"/> of the specified type if found; otherwise, <c>null</c>.</returns>
-    /// <remarks>
-    /// This is similar to <see cref="Get"/>, except that it does not throw an exception if a component
-    /// of the specified name does not exist in the collection.
-    /// </remarks>
-    /// <seealso cref="Get"/>
+    /// <returns>A <see cref="TComponent"/> with the specified name.</returns>
     TComponent? Find(string name);
 
     /// <summary>
-    /// Returns the component with the specified name.
+    /// Removes all components from the content collection.
     /// </summary>
-    /// <param name="name">The name of the component to get.</param>
-    /// <returns>A <see cref="ILogixComponent"/> of the specified type.</returns>
-    /// <exception cref="InvalidOperationException">When component is not found or doesn't exist in the collection.</exception>
-    /// <remarks>
-    /// This method will throw an exception if the component with the specified name is not found.
-    /// To find a single element that you are not sure exists, use <see cref="Find"/> and check that the result is not null.
-    /// </remarks>
-    /// <seealso cref="Find"/>
-    TComponent Get(string name);
+    void Remove();
+    
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="component"></param>
+    /// <returns></returns>
+    void Remove(TComponent component);
+    
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="components"></param>
+    /// <returns></returns>
+    void Remove(IEnumerable<TComponent> components);
 
     /// <summary>
-    /// Gets a collection of components that have a name in the provided list of component names.
-    /// </summary>
-    /// <param name="names">A collection of names for which to find components.</param>
-    /// <returns>A <see cref="IEnumerable{T}"/> containing components objects with the specified names.</returns>
-    IEnumerable<TComponent> In(IEnumerable<string> names);
-
-    /// <summary>
-    /// Removes the component with the specified name from the collection.
+    /// Removes a component with the specified name.
     /// </summary>
     /// <param name="name">The name of the component to remove.</param>
     /// <returns><c>true</c> if the component was found and removed; otherwise, <c>false</c>.</returns>
-    bool Remove(string name);
+    void Remove(string name);
 
     /// <summary>
     /// Removes all components found from the provided list of names.
     /// </summary>
     /// <param name="names">The names of the components to remove.</param>
-    /// <returns>An <see cref="int"/> representing the number of components that were removed.</returns>
-    int Remove(IEnumerable<string> names);
-
+    void Remove(IEnumerable<string> names);
+    
     /// <summary>
-    /// Renames a component of a specified name to a newly provided name.
+    /// Removes all components that satisfy the provided predicate condition.
     /// </summary>
-    /// <param name="current">The name of the component to rename.</param>
-    /// <param name="name">The new name of the component.</param>
-    /// <exception cref="ArgumentException">The provided name is not a valid logix component name.</exception>
-    void Rename(string current, string name);
+    /// <param name="predicate">The condition on which to remove a component.</param>
+    void Remove(Func<TComponent, bool> predicate);
 
     /// <summary>
     /// Adds or replaces the the provided component in the collection.
@@ -143,7 +128,7 @@ public interface ILogixComponentCollection<TComponent> : IEnumerable<TComponent>
     /// Configures all components by applying the provided action delegate to components that pass the provided condition
     /// delegate.
     /// </summary>
-    /// <param name="condition">The filter for which to determine which components to apply <c>config</c> to.</param>
+    /// <param name="predicate">The filter for which to determine which components to apply <c>config</c> to.</param>
     /// <param name="config">The action delegate to apply to the components.</param>
-    void Update(Func<TComponent, bool> condition, Action<TComponent> config);
+    void Update(Func<TComponent, bool> predicate, Action<TComponent> config);
 }

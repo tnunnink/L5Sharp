@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
 using L5Sharp.Components;
 
-namespace L5Sharp.Tests;
+namespace L5Sharp.Tests.Repositories;
 
 [TestFixture]
 public class LogixContentModuleTests
@@ -11,7 +11,7 @@ public class LogixContentModuleTests
     {
         var content = LogixContent.Load(Known.Test);
 
-        var dataTypes = content.Modules().ToList();
+        var dataTypes = content.Modules.ToList();
 
         dataTypes.Should().NotBeEmpty();
     }
@@ -27,9 +27,9 @@ public class LogixContentModuleTests
             Description = "This is a test",
         };
 
-        content.Modules().Add(component);
+        content.Modules.Add(component);
 
-        var result = content.Modules().Find("Test");
+        var result = content.Modules.Find("Test");
 
         result.Should().NotBeNull();
     }
@@ -45,9 +45,9 @@ public class LogixContentModuleTests
             Description = "This is a test",
         };
 
-        content.Modules().Add(component);
+        content.Modules.Add(component);
 
-        var result = content.Modules().Find("Test");
+        var result = content.Modules.Find("Test");
 
         result.Should().NotBeNull();
     }
@@ -63,7 +63,7 @@ public class LogixContentModuleTests
             Description = "This is a test",
         };
 
-        FluentActions.Invoking(() => content.Modules().Add(component)).Should().Throw<InvalidOperationException>();
+        FluentActions.Invoking(() => content.Modules.Add(component)).Should().Throw<InvalidOperationException>();
     }
 
     [Test]
@@ -71,7 +71,7 @@ public class LogixContentModuleTests
     {
         var content = LogixContent.Load(Known.Test);
 
-        var result = content.Modules().Contains(Known.Module);
+        var result = content.Modules.Contains(Known.Module);
 
         result.Should().BeTrue();
     }
@@ -81,7 +81,7 @@ public class LogixContentModuleTests
     {
         var content = LogixContent.Load(Known.Test);
 
-        var result = content.Modules().Contains("Fake");
+        var result = content.Modules.Contains("Fake");
 
         result.Should().BeFalse();
     }
@@ -91,7 +91,7 @@ public class LogixContentModuleTests
     {
         var content = LogixContent.Load(Known.Test);
 
-        var result = content.Modules().Find(Known.Module);
+        var result = content.Modules.Find(Known.Module);
 
         result.Should().NotBeNull();
         result.Name.Should().Be(Known.Module);
@@ -102,28 +102,9 @@ public class LogixContentModuleTests
     {
         var content = LogixContent.Load(Known.Test);
 
-        var result = content.Modules().Find("Fake");
+        var result = content.Modules.Find("Fake");
 
         result.Should().BeNull();
-    }
-
-    [Test]
-    public void Get_Existing_ShouldBeExpected()
-    {
-        var content = LogixContent.Load(Known.Test);
-
-        var result = content.Modules().Get(Known.Module);
-
-        result.Should().NotBeNull();
-        result.Name.Should().Be(Known.Module);
-    }
-    
-    [Test]
-    public void Get_NonExisting_ShouldThrowException()
-    {
-        var content = LogixContent.Load(Known.Test);
-
-        FluentActions.Invoking(() => content.Modules().Get("Fake")) .Should().Throw<InvalidOperationException>();
     }
 
     [Test]
@@ -131,11 +112,9 @@ public class LogixContentModuleTests
     {
         var content = LogixContent.Load(Known.Test);
 
-        var result = content.Modules().Remove(Known.Module);
+        content.Modules.Remove(Known.Module);
 
-        result.Should().BeTrue();
-
-        var component = content.Modules().Find(Known.Module);
+        var component = content.Modules.Find(Known.Module);
         component.Should().BeNull();
     }
     
@@ -144,9 +123,10 @@ public class LogixContentModuleTests
     {
         var content = LogixContent.Load(Known.Test);
 
-        var result = content.Modules().Remove("Fake");
+        content.Modules.Remove("Fake");
 
-        result.Should().BeFalse();
+        var component = content.Modules.Find("Fake");
+        component.Should().BeNull();
     }
 
     [Test]
@@ -160,9 +140,9 @@ public class LogixContentModuleTests
             Description = "This is a test",
         };
 
-        content.Modules().Update(component);
+        content.Modules.Update(component);
 
-        var result = content.Modules().Find("New");
+        var result = content.Modules.Find("New");
         
         result.Should().NotBeNull();
         result.Name.Should().Be("New");
@@ -180,9 +160,9 @@ public class LogixContentModuleTests
             Description = "This is a test"
         };
 
-        content.Modules().Update(component);
+        content.Modules.Update(component);
 
-        var result = content.Modules().Find(Known.Module);
+        var result = content.Modules.Find(Known.Module);
         
         result.Should().NotBeNull();
         result.Name.Should().Be(Known.Module);

@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
 
-namespace L5Sharp.Tests;
+namespace L5Sharp.Tests.Repositories;
 
 [TestFixture]
 public class LogixContentTasksTests
@@ -10,7 +10,7 @@ public class LogixContentTasksTests
     {
         var content = LogixContent.Load(Known.Test);
 
-        var dataTypes = content.Tasks().ToList();
+        var dataTypes = content.Tasks.ToList();
 
         dataTypes.Should().NotBeEmpty();
     }
@@ -26,9 +26,9 @@ public class LogixContentTasksTests
             Description = "This is a test",
         };
 
-        content.Tasks().Add(component);
+        content.Tasks.Add(component);
 
-        var result = content.Tasks().Find("Test");
+        var result = content.Tasks.Find("Test");
 
         result.Should().NotBeNull();
     }
@@ -44,9 +44,9 @@ public class LogixContentTasksTests
             Description = "This is a test",
         };
 
-        content.Tasks().Add(component);
+        content.Tasks.Add(component);
 
-        var result = content.Tasks().Find("Test");
+        var result = content.Tasks.Find("Test");
 
         result.Should().NotBeNull();
     }
@@ -62,27 +62,7 @@ public class LogixContentTasksTests
             Description = "This is a test",
         };
 
-        FluentActions.Invoking(() => content.Tasks().Add(component)).Should().Throw<InvalidOperationException>();
-    }
-
-    [Test]
-    public void Contains_Existing_ShouldBeTrue()
-    {
-        var content = LogixContent.Load(Known.Test);
-
-        var result = content.Tasks().Contains(Known.Task);
-
-        result.Should().BeTrue();
-    }
-    
-    [Test]
-    public void Contains_NonExisting_ShouldBeFalse()
-    {
-        var content = LogixContent.Load(Known.Test);
-
-        var result = content.Tasks().Contains("Fake");
-
-        result.Should().BeFalse();
+        FluentActions.Invoking(() => content.Tasks.Add(component)).Should().Throw<InvalidOperationException>();
     }
 
     [Test]
@@ -90,7 +70,7 @@ public class LogixContentTasksTests
     {
         var content = LogixContent.Load(Known.Test);
 
-        var result = content.Tasks().Find(Known.Task);
+        var result = content.Tasks.Find(Known.Task);
 
         result.Should().NotBeNull();
         result.Name.Should().Be(Known.Task);
@@ -101,51 +81,31 @@ public class LogixContentTasksTests
     {
         var content = LogixContent.Load(Known.Test);
 
-        var result = content.Tasks().Find("Fake");
+        var result = content.Tasks.Find("Fake");
 
         result.Should().BeNull();
     }
 
     [Test]
-    public void Get_Existing_ShouldBeExpected()
+    public void Remove_Existing_ShouldBeNull()
     {
         var content = LogixContent.Load(Known.Test);
 
-        var result = content.Tasks().Get(Known.Task);
+        content.Tasks.Remove(Known.Task);
 
-        result.Should().NotBeNull();
-        result.Name.Should().Be(Known.Task);
+        var result = content.Tasks.Find(Known.Task);
+        result.Should().BeNull();
     }
     
     [Test]
-    public void Get_NonExisting_ShouldThrowException()
+    public void Remove_NonExisting_ShouldBeNull()
     {
         var content = LogixContent.Load(Known.Test);
 
-        FluentActions.Invoking(() => content.Tasks().Get("Fake")) .Should().Throw<InvalidOperationException>();
-    }
+        content.Tasks.Remove("Fake");
 
-    [Test]
-    public void Remove_Existing_ShouldBeTrue()
-    {
-        var content = LogixContent.Load(Known.Test);
-
-        var result = content.Tasks().Remove(Known.Task);
-
-        result.Should().BeTrue();
-
-        var component = content.Tasks().Find(Known.Task);
-        component.Should().BeNull();
-    }
-    
-    [Test]
-    public void Remove_NonExisting_ShouldBeFalse()
-    {
-        var content = LogixContent.Load(Known.Test);
-
-        var result = content.Tasks().Remove("Fake");
-
-        result.Should().BeFalse();
+        var result = content.Tasks.Find("Fake");
+        result.Should().BeNull();
     }
 
     [Test]
@@ -159,9 +119,9 @@ public class LogixContentTasksTests
             Description = "This is a test",
         };
 
-        content.Tasks().Update(component);
+        content.Tasks.Update(component);
 
-        var result = content.Tasks().Find("New");
+        var result = content.Tasks.Find("New");
         
         result.Should().NotBeNull();
         result.Name.Should().Be("New");
@@ -179,9 +139,9 @@ public class LogixContentTasksTests
             Description = "This is a test"
         };
 
-        content.Tasks().Update(component);
+        content.Tasks.Update(component);
 
-        var result = content.Tasks().Find(Known.Task);
+        var result = content.Tasks.Find(Known.Task);
         
         result.Should().NotBeNull();
         result.Name.Should().Be(Known.Task);

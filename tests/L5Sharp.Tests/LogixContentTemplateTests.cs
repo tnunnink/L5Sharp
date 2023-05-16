@@ -14,7 +14,7 @@ public class LogixContentTemplateTests
     {
         var content = LogixContent.Load(Known.Template);
 
-        var components = content.DataTypes().ToList();
+        var components = content.DataTypes.ToList();
 
         components.Should().NotBeEmpty();
     }
@@ -24,7 +24,7 @@ public class LogixContentTemplateTests
     {
         var content = LogixContent.Load(Known.Template);
 
-        var components = content.Modules().ToList();
+        var components = content.Modules.ToList();
 
         components.Should().NotBeEmpty();
     }
@@ -34,7 +34,7 @@ public class LogixContentTemplateTests
     {
         var content = LogixContent.Load(Known.Template);
 
-        var components = content.Instructions().ToList();
+        var components = content.Instructions.ToList();
 
         components.Should().NotBeEmpty();
     }
@@ -44,7 +44,7 @@ public class LogixContentTemplateTests
     {
         var content = LogixContent.Load(Known.Template);
 
-        var components = content.Tags().ToList();
+        var components = content.Tags.ToList();
 
         components.Should().NotBeEmpty();
     }
@@ -54,7 +54,7 @@ public class LogixContentTemplateTests
     {
         var content = LogixContent.Load(Known.Template);
 
-        var components = content.Programs().ToList();
+        var components = content.Programs.ToList();
 
         components.Should().NotBeEmpty();
     }
@@ -64,7 +64,7 @@ public class LogixContentTemplateTests
     {
         var content = LogixContent.Load(Known.Template);
 
-        var components = content.Tasks().ToList();
+        var components = content.Tasks.ToList();
 
         components.Should().NotBeEmpty();
     }
@@ -74,7 +74,7 @@ public class LogixContentTemplateTests
     {
         var content = LogixContent.Load(Known.Template);
 
-        var components = content.Instructions().Select(i => i.Name).ToList();
+        var components = content.Instructions.Select(i => i.Name).ToList();
 
         components.Should().NotBeEmpty();
     }
@@ -84,7 +84,7 @@ public class LogixContentTemplateTests
     {
         var content = LogixContent.Load(Known.Template);
 
-        var components = content.Programs().Where(p => p.Type is null).ToList();
+        var components = content.Programs.Where(p => p.Type is null).ToList();
 
         components.Should().BeEmpty();
     }
@@ -94,7 +94,7 @@ public class LogixContentTemplateTests
     {
         var content = LogixContent.Load(Known.Template);
 
-        var references = content.Query<Rung>()
+        var references = content.Find<Rung>()
             .Select(r => r.Text)
             .SelectMany(t => t.References()).ToList();
 
@@ -106,9 +106,9 @@ public class LogixContentTemplateTests
     {
         var content = LogixContent.Load(Known.Template);
 
-        var aoiLookup = content.Instructions().ToDictionary(k => k.Name, v => v);
+        var aoiLookup = content.Instructions.ToDictionary(k => k.Name, v => v);
 
-        var aoiReferences = content.Query<Rung>()
+        var aoiReferences = content.Find<Rung>()
             .Select(r => r.Text)
             .SelectMany(t => aoiLookup.SelectMany(l => t.SplitByKey(l.Key)))
             .ToList();

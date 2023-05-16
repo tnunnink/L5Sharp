@@ -1,20 +1,17 @@
 ﻿using FluentAssertions;
-using L5Sharp.Components;
-using L5Sharp.Enums;
 using L5Sharp.Extensions;
-using NUnit.Framework.Internal;
 
-namespace L5Sharp.Tests.Extensions;
+namespace L5Sharp.Tests.Querying;
 
 [TestFixture]
-public class ContentLogicExtensionsTests
+public class LogixTextQueryTests
 {
     [Test]
     public void Logic_WhenCalled_ReturnsNotEmpty()
     {
         var content = LogixContent.Load(Known.Test);
 
-        var results = content.Logic().ToList();
+        var results = content.Text().ToList();
 
         results.Should().NotBeEmpty();
     }
@@ -24,7 +21,7 @@ public class ContentLogicExtensionsTests
     {
         var content = LogixContent.Load(Known.Test);
 
-        var results = content.LogicIn(Scope.Program, "MainProgram").ToList();
+        var results = content.Text().In("MainProgram").ToList();
 
         results.Should().NotBeEmpty();
         results.Should().HaveCount(10);
@@ -35,7 +32,7 @@ public class ContentLogicExtensionsTests
     {
         var content = LogixContent.Load(Known.Test);
 
-        var results = content.LogicIn(Scope.Routine, "Main").ToList();
+        var results = content.Text().In("Main").ToList();
 
         results.Should().NotBeEmpty();
         results.Should().HaveCount(11);
@@ -46,7 +43,7 @@ public class ContentLogicExtensionsTests
     {
         var content = LogixContent.Load(Known.Test);
 
-        var results = content.LogicIn("NProgram", "Main").ToList();
+        var results = content.Text().In("NProgram", "Main").ToList();
 
         results.Should().NotBeEmpty();
         results.Should().HaveCount(1);
@@ -57,7 +54,7 @@ public class ContentLogicExtensionsTests
     {
         var content = LogixContent.Load(Known.Test);
 
-        var results = content.Logic().Where(t => t.ContainsKey("MOV")).ToList();
+        var results = content.Text().Where(t => t.ContainsKey("MOV")).ToList();
 
         results.Should().NotBeEmpty();
     }
@@ -67,7 +64,7 @@ public class ContentLogicExtensionsTests
     {
         var content = LogixContent.Load(Known.Test);
 
-        var results = content.LogicFlatten().ToList();
+        var results = content.Text().Flatten().ToList();
 
         results.Should().NotBeEmpty();
     }
@@ -77,7 +74,7 @@ public class ContentLogicExtensionsTests
     {
         var content = LogixContent.Load(Known.Template);
 
-        var results = content.LogicFlatten().ToList();
+        var results = content.Text().Flatten().ToList();
 
         results.Should().NotBeEmpty();
     }

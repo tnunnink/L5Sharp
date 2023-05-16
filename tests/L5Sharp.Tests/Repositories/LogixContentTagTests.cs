@@ -1,17 +1,20 @@
 ﻿using FluentAssertions;
 using L5Sharp.Components;
+using L5Sharp.Extensions;
+using L5Sharp.Types.Atomics;
+using L5Sharp.Types.Predefined;
 
-namespace L5Sharp.Tests;
+namespace L5Sharp.Tests.Repositories;
 
 [TestFixture]
-public class LogixContentProgramTests
+public class LogixContentTagTests
 {
     [Test]
     public void Collection_WhenCalled_ShouldNotBeEmpty()
     {
         var content = LogixContent.Load(Known.Test);
 
-        var dataTypes = content.Programs().ToList();
+        var dataTypes = content.Tags.ToList();
 
         dataTypes.Should().NotBeEmpty();
     }
@@ -21,15 +24,16 @@ public class LogixContentProgramTests
     {
         var content = LogixContent.Load(Known.Test);
         
-        var component = new Program
+        var component = new Tag
         {
             Name = "Test",
             Description = "This is a test",
+            Data = new BOOL()
         };
 
-        content.Programs().Add(component);
+        content.Tags.Add(component);
 
-        var result = content.Programs().Find("Test");
+        var result = content.Tags.Find("Test");
 
         result.Should().NotBeNull();
     }
@@ -39,15 +43,16 @@ public class LogixContentProgramTests
     {
         var content = LogixContent.Load(Known.Empty);
         
-        var component = new Program
+        var component = new Tag
         {
             Name = "Test",
             Description = "This is a test",
+            Data = new BOOL()
         };
 
-        content.Programs().Add(component);
+        content.Tags.Add(component);
 
-        var result = content.Programs().Find("Test");
+        var result = content.Tags.Find("Test");
 
         result.Should().NotBeNull();
     }
@@ -57,13 +62,14 @@ public class LogixContentProgramTests
     {
         var content = LogixContent.Load(Known.Test);
         
-        var component = new Program
+        var component = new Tag
         {
-            Name = Known.Program,
+            Name = Known.Tag,
             Description = "This is a test",
+            Data = new BOOL()
         };
 
-        FluentActions.Invoking(() => content.Programs().Add(component)).Should().Throw<InvalidOperationException>();
+        FluentActions.Invoking(() => content.Tags.Add(component)).Should().Throw<InvalidOperationException>();
     }
 
     [Test]
@@ -71,7 +77,7 @@ public class LogixContentProgramTests
     {
         var content = LogixContent.Load(Known.Test);
 
-        var result = content.Programs().Contains(Known.Program);
+        var result = content.Tags.Contains(Known.Tag);
 
         result.Should().BeTrue();
     }
@@ -81,7 +87,7 @@ public class LogixContentProgramTests
     {
         var content = LogixContent.Load(Known.Test);
 
-        var result = content.Programs().Contains("Fake");
+        var result = content.Tags.Contains("Fake");
 
         result.Should().BeFalse();
     }
@@ -91,10 +97,12 @@ public class LogixContentProgramTests
     {
         var content = LogixContent.Load(Known.Test);
 
-        var result = content.Programs().Find(Known.Program);
+        var result = content.Tags.Find(Known.Tag);
 
         result.Should().NotBeNull();
-        result.Name.Should().Be(Known.Program);
+        result.Name.Should().Be(Known.Tag);
+        result.DataType.Should().Be("SimpleType");
+        result.Data.Should().NotBeNull();
     }
     
     [Test]
@@ -102,28 +110,9 @@ public class LogixContentProgramTests
     {
         var content = LogixContent.Load(Known.Test);
 
-        var result = content.Programs().Find("Fake");
+        var result = content.Tags.Find("Fake");
 
         result.Should().BeNull();
-    }
-
-    [Test]
-    public void Get_Existing_ShouldBeExpected()
-    {
-        var content = LogixContent.Load(Known.Test);
-
-        var result = content.Programs().Get(Known.Program);
-
-        result.Should().NotBeNull();
-        result.Name.Should().Be(Known.Program);
-    }
-    
-    [Test]
-    public void Get_NonExisting_ShouldThrowException()
-    {
-        var content = LogixContent.Load(Known.Test);
-
-        FluentActions.Invoking(() => content.Programs().Get("Fake")) .Should().Throw<InvalidOperationException>();
     }
 
     [Test]
@@ -131,11 +120,9 @@ public class LogixContentProgramTests
     {
         var content = LogixContent.Load(Known.Test);
 
-        var result = content.Programs().Remove(Known.Program);
+        content.Tags.Remove(Known.Tag);
 
-        result.Should().BeTrue();
-
-        var component = content.Programs().Find(Known.Program);
+        var component = content.Tags.Find(Known.Tag);
         component.Should().BeNull();
     }
     
@@ -144,48 +131,66 @@ public class LogixContentProgramTests
     {
         var content = LogixContent.Load(Known.Test);
 
-        var result = content.Programs().Remove("Fake");
+        content.Tags.Remove("Fake");
 
-        result.Should().BeFalse();
+        var component = content.Tags.Find("Fake");
+        component.Should().BeNull();
     }
 
     [Test]
-    public void Upsert_NonExisting_ShouldHaveExpected()
+    public void Update_NonExisting_ShouldHaveExpected()
     {
         var content = LogixContent.Load(Known.Test);
         
-        var component = new Program
+        var component = new Tag
         {
             Name = "New",
             Description = "This is a test",
+            Data = new TIMER()
         };
 
-        content.Programs().Update(component);
+        content.Tags.Update(component);
 
-        var result = content.Programs().Find("New");
+        var result = content.Tags.Find("New");
         
         result.Should().NotBeNull();
         result.Name.Should().Be("New");
-        result.Description.Should().Be("This is a test");
+        result.DataType.Should().Be("TIMER");
+        result.Data.Should().NotBeNull();
     }
 
     [Test]
-    public void Upsert_Existing_ShouldHaveExpected()
+    public void Update_Existing_ShouldHaveExpected()
     {
         var content = LogixContent.Load(Known.Test);
         
-        var component = new Program
+        var component = new Tag
         {
-            Name = Known.Program,
-            Description = "This is a test"
+            Name = Known.Tag,
+            Description = "This is a test",
+            Data = new BOOL()
         };
 
-        content.Programs().Update(component);
+        content.Tags.Update(component);
 
-        var result = content.Programs().Find(Known.Program);
+        var result = content.Tags.Find(Known.Tag);
         
         result.Should().NotBeNull();
-        result.Name.Should().Be(Known.Program);
+        result.Name.Should().Be(Known.Tag);
         result.Description.Should().Be("This is a test");
+        result.Data.Should().NotBeNull();
+        result.Data.As<BOOL>().Should().NotBeNull();
+    }
+
+    [Test]
+    public void GetSimpleAtomicTagBitMembers()
+    {
+        var content = LogixContent.Load(Known.Test);
+
+        var tag = content.Tags.Find(Known.Tag);
+
+        var members = tag.Members().ToList();
+
+        members.Should().Contain(t => t.TagName == "TestSimpleTag.IntMember.15");
     }
 }

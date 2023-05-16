@@ -18,6 +18,16 @@ namespace L5Sharp.Tests
         }
 
         [Test]
+        public void ApiTesting()
+        {
+            var content = LogixContent.Load(Known.Test);
+            
+            content.Routines
+                .In("MyProgram")
+                .Update(r => r.Content.Add(new Rung()));
+        }
+
+        [Test]
         public void New_ValidFile_ShouldHaveExpectedContent()
         {
             var content = LogixContent.Load(Known.Test);
@@ -39,10 +49,11 @@ namespace L5Sharp.Tests
 
             var controller = content.Controller;
 
-            controller?.Name.Should().Be("TestController");
-            controller?.ProcessorType.Should().Be("1756-L83E");
-            controller?.Description.Should().Be("This is a test project");
-            controller?.Revision.Should().Be(new Revision(32, 11));
+            controller.Name.Should().Be("TestController");
+            controller.ProcessorType.Should().Be("1756-L83E");
+            controller.Description.Should().Be("This is a test project");
+            controller.Revision.Should().Be(new Revision(32, 11));
+            controller.RedundancyInfo?.Enabled.Should().BeFalse();
         }
 
         [Test]
@@ -50,7 +61,7 @@ namespace L5Sharp.Tests
         {
             var content = LogixContent.Load(Known.Test);
 
-            var tags = content.Tags().Find("MultiDimensionalArray");
+            var tags = content.Tags.Find("MultiDimensionalArray");
 
             tags.Should().NotBeNull();
 
@@ -66,8 +77,8 @@ namespace L5Sharp.Tests
         public void FindDataTypeByName()
         {
             var content = LogixContent.Load(Known.Test);
- 
-            var type = content.DataTypes().Find("AlarmType");
+
+            var type = content.DataTypes.Find("AlarmType");
 
             type.Should().NotBeNull();
             type.Name.Should().Be("AlarmType");
@@ -80,7 +91,7 @@ namespace L5Sharp.Tests
         {
             var content = LogixContent.Load(Known.Test);
 
-            var results = content.DataTypes().Where(d => d.Members.Any(m => m.DataType == "BOOL")).ToList();
+            var results = content.DataTypes.Where(d => d.Members.Any(m => m.DataType == "BOOL")).ToList();
 
             results.Should().NotBeEmpty();
         }
@@ -90,7 +101,7 @@ namespace L5Sharp.Tests
         {
             var content = LogixContent.Load(Known.Test);
 
-            var timers = content.Tags().Where(t => t.DataType == "TIMER");
+            var timers = content.Tags.Where(t => t.DataType == "TIMER");
 
             timers.Should().NotBeEmpty();
         }
@@ -100,57 +111,58 @@ namespace L5Sharp.Tests
         {
             var content = LogixContent.Load(Known.Test);
 
-            var tags = content.Tags("MainProgram").Where(t => t.DataType == "DINT");
+            var tags = content.Tags.In("MainProgram").Where(t => t.DataType == "DINT");
 
             tags.Should().NotBeEmpty();
         }
 
         [Test]
-        public void Routine_Program_ShouldNotBeEmpty()
+        public void Routines_InProgram_ShouldNotBeEmpty()
         {
             var content = LogixContent.Load(Known.Test);
-            
-            var routines = content.Routines("MainProgram");
+
+            var routines = content.Routines.In("MainProgram");
 
             routines.Should().NotBeEmpty();
         }
 
         [Test]
-        public void Query_Testing_ShouldWork()
+        public void Find_RoutineWithName_ShouldHaveResultWithName()
         {
             var content = LogixContent.Load(Known.Test);
 
-            var results = content.Query<Routine>().Where(r => r.Name == "Test");
+            var results = content.Find<Routine>().Where(r => r.Name == "Main").ToList();
 
-            results.Should().BeEmpty();
+            results.Should().NotBeEmpty();
+            results.Should().Contain(r => r.Name == "Main");
         }
 
         [Test]
-        public void Query_Rungs_ShouldReturnsRungs()
+        public void Find_Rungs_ShouldReturnsRungs()
         {
             var content = LogixContent.Load(Known.Test);
 
-            var results = content.Query<Rung>().SelectMany(t => t.Text.Tags()).Distinct().ToList();
+            var results = content.Find<Rung>().SelectMany(t => t.Text.Tags()).Distinct().ToList();
 
             results.Should().NotBeEmpty();
         }
-        
+
         [Test]
         public void Query_DistinctReferencedTagNames_ShouldReturnsLotsOfTagNames()
         {
             var content = LogixContent.Load(Known.Test);
 
-            var results = content.Query<Rung>().SelectMany(t => t.Text.Tags()).Distinct().ToList();
+            var results = content.Find<Rung>().SelectMany(t => t.Text.Tags()).Distinct().ToList();
 
             results.Should().NotBeEmpty();
         }
-        
+
         [Test]
         public void Query_TagsInMovInstructions_ShouldReturnsLotsOfTagNames()
         {
             var content = LogixContent.Load(Known.Test);
 
-            var results = content.Query<Rung>()
+            var results = content.Find<Rung>()
                 .SelectMany(r => r.Text.TagsIn("MOV"))
                 .ToList();
 
@@ -158,21 +170,13 @@ namespace L5Sharp.Tests
         }
 
         [Test]
-        public void Logic_InProgram_ShouldNotBeEmpty()
+        public void Text_InProgramWithTag_ShouldNotBeEmpty()
         {
             var content = LogixContent.Load(Known.Test);
 
-            var logic = content.LogicIn(Scope.Program, "MainProgram").Where(t => t.ContainsTag("BoolTag"));
+            var logic = content.Text().In("MainProgram").With("SimpleBool");
 
-            logic.Should().BeEmpty();
-        }
-
-        [Test]
-        public void Add_Collection_ShouldNotBeEmpty()
-        {
-            var content = LogixContent.Load(Known.Test);
-            
-            content.DataTypes();
+            logic.Should().NotBeEmpty();
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
 using L5Sharp.Components;
 
-namespace L5Sharp.Tests;
+namespace L5Sharp.Tests.Repositories;
 
 [TestFixture]
 public class LogixContentAddOnInstructionTests
@@ -11,7 +11,7 @@ public class LogixContentAddOnInstructionTests
     {
         var content = LogixContent.Load(Known.Test);
 
-        var dataTypes = content.Instructions().ToList();
+        var dataTypes = content.Instructions.ToList();
 
         dataTypes.Should().NotBeEmpty();
     }
@@ -27,9 +27,9 @@ public class LogixContentAddOnInstructionTests
             Description = "This is a test",
         };
 
-        content.Instructions().Add(component);
+        content.Instructions.Add(component);
 
-        var result = content.Instructions().Find("Test");
+        var result = content.Instructions.Find("Test");
 
         result.Should().NotBeNull();
     }
@@ -45,9 +45,9 @@ public class LogixContentAddOnInstructionTests
             Description = "This is a test",
         };
 
-        content.Instructions().Add(component);
+        content.Instructions.Add(component);
 
-        var result = content.Instructions().Find("Test");
+        var result = content.Instructions.Find("Test");
 
         result.Should().NotBeNull();
     }
@@ -63,7 +63,7 @@ public class LogixContentAddOnInstructionTests
             Description = "This is a test",
         };
 
-        FluentActions.Invoking(() => content.Instructions().Add(component)).Should().Throw<InvalidOperationException>();
+        FluentActions.Invoking(() => content.Instructions.Add(component)).Should().Throw<InvalidOperationException>();
     }
 
     [Test]
@@ -71,7 +71,7 @@ public class LogixContentAddOnInstructionTests
     {
         var content = LogixContent.Load(Known.Test);
 
-        var result = content.Instructions().Contains(Known.AddOnInstruction);
+        var result = content.Instructions.Contains(Known.AddOnInstruction);
 
         result.Should().BeTrue();
     }
@@ -81,7 +81,7 @@ public class LogixContentAddOnInstructionTests
     {
         var content = LogixContent.Load(Known.Test);
 
-        var result = content.Instructions().Contains("Fake");
+        var result = content.Instructions.Contains("Fake");
 
         result.Should().BeFalse();
     }
@@ -91,7 +91,7 @@ public class LogixContentAddOnInstructionTests
     {
         var content = LogixContent.Load(Known.Test);
 
-        var result = content.Instructions().Find(Known.AddOnInstruction);
+        var result = content.Instructions.Find(Known.AddOnInstruction);
 
         result.Should().NotBeNull();
         result.Name.Should().Be(Known.AddOnInstruction);
@@ -102,28 +102,9 @@ public class LogixContentAddOnInstructionTests
     {
         var content = LogixContent.Load(Known.Test);
 
-        var result = content.Instructions().Find("Fake");
+        var result = content.Instructions.Find("Fake");
 
         result.Should().BeNull();
-    }
-
-    [Test]
-    public void Get_Existing_ShouldBeExpected()
-    {
-        var content = LogixContent.Load(Known.Test);
-
-        var result = content.Instructions().Get(Known.AddOnInstruction);
-
-        result.Should().NotBeNull();
-        result.Name.Should().Be(Known.AddOnInstruction);
-    }
-    
-    [Test]
-    public void Get_NonExisting_ShouldThrowException()
-    {
-        var content = LogixContent.Load(Known.Test);
-
-        FluentActions.Invoking(() => content.Instructions().Get("Fake")) .Should().Throw<InvalidOperationException>();
     }
 
     [Test]
@@ -131,11 +112,9 @@ public class LogixContentAddOnInstructionTests
     {
         var content = LogixContent.Load(Known.Test);
 
-        var result = content.Instructions().Remove(Known.AddOnInstruction);
+        content.Instructions.Remove(Known.AddOnInstruction);
 
-        result.Should().BeTrue();
-
-        var component = content.Instructions().Find(Known.AddOnInstruction);
+        var component = content.Instructions.Find(Known.AddOnInstruction);
         component.Should().BeNull();
     }
     
@@ -144,9 +123,10 @@ public class LogixContentAddOnInstructionTests
     {
         var content = LogixContent.Load(Known.Test);
 
-        var result = content.Instructions().Remove("Fake");
+        content.Instructions.Remove("Fake");
 
-        result.Should().BeFalse();
+        var component = content.Instructions.Find("Fake");
+        component.Should().BeNull();
     }
 
     [Test]
@@ -160,9 +140,9 @@ public class LogixContentAddOnInstructionTests
             Description = "This is a test",
         };
 
-        content.Instructions().Update(component);
+        content.Instructions.Update(component);
 
-        var result = content.Instructions().Find("New");
+        var result = content.Instructions.Find("New");
         
         result.Should().NotBeNull();
         result.Name.Should().Be("New");
@@ -180,9 +160,9 @@ public class LogixContentAddOnInstructionTests
             Description = "This is a test"
         };
 
-        content.Instructions().Update(component);
+        content.Instructions.Update(component);
 
-        var result = content.Instructions().Find(Known.AddOnInstruction);
+        var result = content.Instructions.Find(Known.AddOnInstruction);
         
         result.Should().NotBeNull();
         result.Name.Should().Be(Known.AddOnInstruction);

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
@@ -7,6 +8,7 @@ using System.Xml.Serialization;
 using L5Sharp.Types;
 using L5Sharp.Utilities;
 using System.Reflection;
+using L5Sharp.Enums;
 
 namespace L5Sharp.Extensions
 {
@@ -29,7 +31,7 @@ namespace L5Sharp.Extensions
             var attribute = type.GetCustomAttribute<XmlTypeAttribute>();
             return attribute is not null ? attribute.TypeName : type.Name;
         }
-        
+
         /// <summary>
         /// Gets the name attribute for the current L5X element.
         /// </summary>
@@ -180,6 +182,24 @@ namespace L5Sharp.Extensions
             var value = selector.Compile().Invoke(obj);
 
             element.AddText(value, name);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="elements"></param>
+        /// <param name="scoped"></param>
+        /// <returns></returns>
+        public static IEnumerable<XElement> ScopedTo(this IEnumerable<XElement> elements, ILogixScoped scoped)
+        {
+            if (scoped.Scope == Scope.Null)
+                return string.IsNullOrEmpty(scoped.Container)
+                    ? elements
+                    : elements.Where(e => e.LogixName() == scoped.Container);
+
+            return string.IsNullOrEmpty(scoped.Container)
+                ? elements.Where(e => e.Name == scoped.Scope.XName)
+                : elements.Where(e => e.Name == scoped.Scope.XName && e.LogixName() == scoped.Container);
         }
 
         /// <summary>

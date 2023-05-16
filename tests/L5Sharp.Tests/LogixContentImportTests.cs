@@ -13,8 +13,7 @@ public class LogixContentImportTests
         
         content.Import(dataType, true);
 
-        var result = content.DataTypes().Find("BoolTest");
-
+        var result = content.DataTypes.Find("BoolTest");
         result.Should().NotBeNull();
     }
 
