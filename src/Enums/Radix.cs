@@ -83,9 +83,9 @@ public abstract class Radix : LogixEnum<Radix, string>
     /// <see cref="Float"/> for <see cref="REAL"/> types.
     /// <see cref="Decimal"/> for all other atomic types.
     /// </returns>
-    public static Radix Default(ILogixType type)
+    public static Radix Default(LogixType type)
     {
-        if (type is ILogixArray<AtomicType> arrayType)
+        if (type is ArrayType<AtomicType> arrayType)
             type = arrayType.First();
 
         if (type is not AtomicType atomicType)
@@ -99,9 +99,9 @@ public abstract class Radix : LogixEnum<Radix, string>
     /// </summary>
     /// <param name="type">The logix type instance to evaluate.</param>
     /// <returns>true if the current radix value is valid for the given data type instance; otherwise, false.</returns>
-    public bool SupportsType(ILogixType type)
+    public bool SupportsType(LogixType type)
     {
-        if (type is ILogixArray<AtomicType> arrayType)
+        if (type is ArrayType<AtomicType> arrayType)
             type = arrayType.First();
 
         if (type is not AtomicType atomicType)
@@ -170,12 +170,48 @@ public abstract class Radix : LogixEnum<Radix, string>
     /// <returns>An <see cref="AtomicType"/> representing the value of the formatted string.</returns>
     public abstract AtomicType Parse(string input);
 
-    private static AtomicType ConvertToAtomic(string value, int bitsPerByte, int baseNumber)
+    /// <summary>
+    /// Converts the provided <see cref="AtomicType"/> to the specified base number.
+    /// </summary>
+    /// <param name="type">The atomic type to convert.</param>
+    /// <param name="baseNumber">The base of the return value, which must be 2, 8, 10, or 16.</param>
+    /// <returns>A <see cref="string"/> value representing the value in the specified base.</returns>
+    /// <exception cref="ArgumentException">baseNumber is not 2, 8, 10, or 16.</exception>
+    private static string ToBase(AtomicType type, int baseNumber)
+    {
+        var bitsPerByte = baseNumber switch
+        {
+            2 => 8,
+            8 => 3,
+            _ => 2
+        };
+
+        var bytes = type.ToBytes();
+        var builder = new StringBuilder();
+
+        for (var ctr = bytes.GetUpperBound(0); ctr >= bytes.GetLowerBound(0); ctr--)
+        {
+            var byteString = Convert.ToString(bytes[ctr], baseNumber).PadLeft(bitsPerByte, '0');
+            builder.Append(byteString);
+        }
+
+        return builder.ToString();
+    }
+
+    /// <summary>
+    /// Converts the provided <see cref="string"/> to a <see cref="AtomicType"/> given the provided bitsPerByte and baseNumber.
+    /// </summary>
+    /// <param name="value">The string value to convert.</param>
+    /// <param name="charsPerByte">The number of chars in <c>value</c> that represented a single byte of data.</param>
+    /// <param name="baseNumber">The base number of the return value, which must be 2, 8, 10, or 16.</param>
+    /// <returns>A <see cref="string"/> value representing the value in the specified base.</returns>
+    /// <exception cref="ArgumentException">baseNumber is not 2, 8, 10, or 16.</exception>
+    private static AtomicType ToAtomic(string value, int charsPerByte, int baseNumber)
     {
         if (value.IsEmpty())
             throw new ArgumentException("Value can not be empty.");
-            
-        var byteLength = value.Length / bitsPerByte;
+
+        var byteLength = value.Length / charsPerByte;
 
         return byteLength switch
         {
@@ -207,7 +243,7 @@ public abstract class Radix : LogixEnum<Radix, string>
         if (!SupportsType(atomic))
             throw new NotSupportedException($"{atomic.GetType()} is not supported by {Name} Radix.");
     }
-        
+
     private static readonly Dictionary<string, Func<string, bool>> Identifiers = new()
     {
         { nameof(Binary), s => Binary.HasFormat(s) },
@@ -258,7 +294,7 @@ public abstract class Radix : LogixEnum<Radix, string>
         {
             ValidateType(atomic);
 
-            var converted = atomic is not BOOL b ? atomic.ToBase(BaseNumber) : b ? "1" : "0";
+            var converted = atomic is not BOOL b ? ToBase(atomic, BaseNumber) : b ? "1" : "0";
 
             var formatted = Regex.Replace(converted, Pattern, ByteSeparator, RegexOptions.Compiled);
 
@@ -271,7 +307,7 @@ public abstract class Radix : LogixEnum<Radix, string>
 
             var value = input.Replace(Specifier, string.Empty).Replace(ByteSeparator, string.Empty);
 
-            return ConvertToAtomic(value, CharsPerByte, BaseNumber);
+            return ToAtomic(value, CharsPerByte, BaseNumber);
         }
     }
 
@@ -292,7 +328,7 @@ public abstract class Radix : LogixEnum<Radix, string>
         {
             ValidateType(atomic);
 
-            var converted = atomic is not BOOL b ? atomic.ToBase(BaseNumber) : b ? "1" : "0";
+            var converted = atomic is not BOOL b ? ToBase(atomic, BaseNumber) : b ? "1" : "0";
 
             var formatted = Regex.Replace(converted, Pattern, ByteSeparator, RegexOptions.Compiled);
 
@@ -305,7 +341,7 @@ public abstract class Radix : LogixEnum<Radix, string>
 
             var value = input.Replace(Specifier, string.Empty).Replace(ByteSeparator, string.Empty);
 
-            return ConvertToAtomic(value, CharsPerByte, BaseNumber);
+            return ToAtomic(value, CharsPerByte, BaseNumber);
         }
     }
 
@@ -396,7 +432,7 @@ public abstract class Radix : LogixEnum<Radix, string>
         {
             ValidateType(atomic);
 
-            var converted = atomic is not BOOL b ? atomic.ToBase(BaseNumber) : b ? "1" : "0";
+            var converted = atomic is not BOOL b ? ToBase(atomic, BaseNumber) : b ? "1" : "0";
 
             var formatted = Regex.Replace(converted, Pattern, ByteSeparator, RegexOptions.Compiled);
 
@@ -409,7 +445,7 @@ public abstract class Radix : LogixEnum<Radix, string>
 
             var value = input.Replace(Specifier, string.Empty).Replace(ByteSeparator, string.Empty);
 
-            return ConvertToAtomic(value, BitsPerByte, BaseNumber);
+            return ToAtomic(value, BitsPerByte, BaseNumber);
         }
     }
 
@@ -521,7 +557,7 @@ public abstract class Radix : LogixEnum<Radix, string>
         {
             ValidateType(atomic);
 
-            var converted = atomic.ToBase(BaseNumber);
+            var converted = ToBase(atomic, BaseNumber);
 
             var formatted = GenerateAscii(converted);
 
@@ -534,7 +570,7 @@ public abstract class Radix : LogixEnum<Radix, string>
 
             var value = GenerateHex(input.TrimSingle(SpecifierChar));
 
-            return ConvertToAtomic(value, BitsPerByte, BaseNumber);
+            return ToAtomic(value, BitsPerByte, BaseNumber);
         }
 
         private static string GenerateAscii(string str)

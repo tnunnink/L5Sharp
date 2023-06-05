@@ -11,7 +11,7 @@ public class StringTypeTests
     {
         var type = new StringType("Test", "");
 
-        type.Should().NotBeNull();
+        type.Should<StringType>().NotBeNull();
     }
 
     [Test]

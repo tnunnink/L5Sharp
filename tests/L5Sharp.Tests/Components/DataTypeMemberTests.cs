@@ -49,4 +49,15 @@ public class DataTypeMemberTests
         member.Radix.Should().Be(radix);
         member.ExternalAccess.Should().Be(externalAccess);
     }
+
+    [Test]
+    public void Something()
+    {
+        var member = new DataTypeMember();
+
+        var clone = member.Clone();
+
+        clone.Should().BeOfType<DataTypeMember>();
+        clone.Should().NotBeSameAs(member);
+    }
 }

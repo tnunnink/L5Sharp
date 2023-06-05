@@ -12,20 +12,22 @@ namespace L5Sharp.Types.Atomics;
 public class UDINT : AtomicType, IEquatable<UDINT>, IComparable<UDINT>
 {
     private readonly uint _value;
-        
+    
     /// <summary>
     /// Creates a new default <see cref="UDINT"/> type.
     /// </summary>
-    public UDINT() : base(nameof(UDINT))
+    public UDINT() : base(nameof(UDINT), Radix.Decimal, BitConverter.GetBytes(default(uint)))
     {
+        _value = BitConverter.ToUInt32(ToBytes());
     }
-        
+
     /// <summary>
     /// Creates a new <see cref="UDINT"/> value with the provided radix format.
     /// </summary>
     /// <param name="radix">The <see cref="Enums.Radix"/> number format of the value.</param>
-    public UDINT(Radix? radix) : base(nameof(UDINT), radix)
+    public UDINT(Radix radix) : base(nameof(UDINT), radix, BitConverter.GetBytes(default(uint)))
     {
+        _value = BitConverter.ToUInt32(ToBytes());
     }
 
     /// <summary>
@@ -33,28 +35,23 @@ public class UDINT : AtomicType, IEquatable<UDINT>, IComparable<UDINT>
     /// </summary>
     /// <param name="value">The value to initialize the type with.</param>
     /// <param name="radix">The optional radix format of the value.</param>
-    public UDINT(uint value, Radix? radix = null) : this(radix)
+    public UDINT(uint value, Radix? radix = null) : base(nameof(UDINT), radix ?? Radix.Decimal,
+        BitConverter.GetBytes(value))
     {
-        _value = value;
+        _value = BitConverter.ToUInt32(ToBytes());
     }
 
     /// <summary>
-    /// Creates a new <see cref="UDINT"/> with the provided string value.
+    /// Gets a <see cref="BOOL"/> at the specified bit index.
     /// </summary>
-    /// <param name="value">The string value to parse and convert to the value type.</param>
-    /// <param name="radix">The optional radix format of the value. If not provided, will be inferred
-    /// using <see cref="Enums.Radix.Infer"/>.</param>
-    public UDINT(string value, Radix? radix = null) : this(radix ?? Radix.Infer(value))
-    {
-        var converter = TypeDescriptor.GetConverter(GetType());
-        _value = (uint)(UDINT)converter.ConvertFrom(value)!;
-    }
+    /// <param name="bit">The bit index to access</param>
+    public BOOL this[int bit] => new(Value[bit]);
 
     /// <summary>
     /// Represents the largest possible value of <see cref="UDINT"/>.
     /// </summary>
     public const uint MaxValue = uint.MaxValue;
-        
+
     /// <summary>
     /// Represents the smallest possible value of <see cref="UDINT"/>.
     /// </summary>
@@ -66,20 +63,39 @@ public class UDINT : AtomicType, IEquatable<UDINT>, IComparable<UDINT>
     /// <param name="value">The value to convert.</param>
     /// <returns>A <see cref="UDINT"/> value.</returns>
     public static implicit operator UDINT(uint value) => new(value);
-        
+
     /// <summary>
-    /// Implicitly converts a <see cref="string"/> to a <see cref="UINT"/> value.
+    /// Implicitly converts a <see cref="string"/> to a <see cref="UDINT"/> value.
     /// </summary>
     /// <param name="value">The value to convert.</param>
-    /// <returns>A new <see cref="UINT"/> value.</returns>
-    public static implicit operator UDINT(string value) => new(value);
-        
+    /// <returns>A new <see cref="UDINT"/> value.</returns>
+    public static implicit operator UDINT(string value) => Parse(value);
+
     /// <summary>
-    /// Implicitly converts the provided <see cref="UINT"/> to a <see cref="string"/> value.
+    /// Implicitly converts the provided <see cref="UDINT"/> to a <see cref="string"/> value.
     /// </summary>
     /// <param name="value">The value to convert.</param>
     /// <returns>A new <see cref="string"/> value.</returns>
-    public static implicit operator UDINT(LINT value) => value.ToString();
+    public static implicit operator string(UDINT value) => value.ToString();
+
+    /// <summary>
+    /// Parses the provided string value to a new <see cref="UDINT"/>.
+    /// </summary>
+    /// <param name="value">The string value to parse.</param>
+    /// <returns>A <see cref="UDINT"/> representing the parsed value.</returns>
+    /// <exception cref="ArgumentException">The converted value returned null.</exception>
+    /// <exception cref="FormatException">The <see cref="Radix"/> format can not be inferred from <c>value</c>.</exception>
+    public static UDINT Parse(string value)
+    {
+        var radix = Radix.Infer(value);
+
+        var converter = TypeDescriptor.GetConverter(typeof(UDINT));
+
+        var type = converter.ConvertFrom(value) ??
+                   throw new ArgumentException($"The provided value '{value}' returned a null value after conversion.");
+
+        return new UDINT((uint)(UDINT)type, radix);
+    }
 
     /// <summary>
     /// Converts the provided <see cref="UDINT"/> to a <see cref="uint"/> value.

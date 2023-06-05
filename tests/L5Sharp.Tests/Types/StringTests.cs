@@ -84,9 +84,8 @@ namespace L5Sharp.Tests.Types
         {
             var fixture = new Fixture();
             var value = fixture.Create<string>();
-            var type = new STRING();
-            
-            type = (value);
+
+            STRING type = value;
 
             type.ToString().Should().Be(value);
         }

@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using L5Sharp.Components;
 using L5Sharp.Core;
+using L5Sharp.Entities;
 using NUnit.Framework;
 
 namespace L5Sharp.Tests.Core

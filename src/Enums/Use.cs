@@ -20,7 +20,7 @@ public class Use : LogixEnum<Use, string>
     public static readonly Use Context = new(nameof(Context), nameof(Context));
         
     /// <summary>
-    /// Get the Create <see cref="Use"/> option.
+    /// Get the Deserialize <see cref="Use"/> option.
     /// </summary>
     public static readonly Use Create = new(nameof(Create), nameof(Create));
         
@@ -45,7 +45,7 @@ public class Use : LogixEnum<Use, string>
     public static readonly Use Insert = new(nameof(Insert), nameof(Insert));
         
     /// <summary>
-    /// Get the Append <see cref="Use"/> option.
+    /// Get the AddMany <see cref="Use"/> option.
     /// </summary>
     public static readonly Use Append = new(nameof(Append), nameof(Append));
         

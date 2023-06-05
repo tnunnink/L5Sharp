@@ -57,17 +57,15 @@ namespace L5Sharp.Serialization.Data
 
             var elements = element.Elements().Select(e =>
             {
-                if (e.Attribute(L5XName.Value) is not null)
-                {
-                    var value = e.GetValue<string>(L5XName.Value);
-                    var format = Radix.Infer(value);
-                    return Logix.Atomic(dataType, value, !format.Equals(radix) ? format : radix);
-                }
-                    
+                if (e.Attribute(L5XName.Value) is null)
+                    return e.Element(L5XName.Structure) is not null
+                        ? TagDataSerializer.Structure.Deserialize(e.Element(L5XName.Structure)!)
+                        : Logix.Null;
+                
+                var value = e.GetValue<string>(L5XName.Value);
+                var format = Radix.Infer(value);
+                return Logix.Atomic(dataType, value, !format.Equals(radix) ? format : radix);
 
-                return e.Element(L5XName.Structure) is not null
-                    ? TagDataSerializer.Structure.Deserialize(e.Element(L5XName.Structure)!)
-                    : Logix.Null;
             });
 
             return new ArrayType<ILogixType>(dimensions, elements.ToList());

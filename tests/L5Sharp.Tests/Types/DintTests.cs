@@ -1,9 +1,9 @@
 ﻿using AutoFixture;
 using FluentAssertions;
+using L5Sharp.Core;
 using L5Sharp.Enums;
-using L5Sharp.Extensions;
+using L5Sharp.Types;
 using L5Sharp.Types.Atomics;
-using NUnit.Framework;
 
 namespace L5Sharp.Tests.Types
 {
@@ -36,7 +36,18 @@ namespace L5Sharp.Tests.Types
             type.Name.Should().Be(nameof(DINT).ToUpper());
             type.Class.Should().Be(DataTypeClass.Atomic);
             type.Family.Should().Be(DataTypeFamily.None);
+            type.Members.Should().HaveCount(32);
             type.Should().Be(0);
+        }
+
+        [Test]
+        public void New_RadixOverload_ShouldHaveExpectedFormat()
+        {
+            var type = new DINT(Radix.Binary);
+
+            var formatted = type.ToString();
+
+            formatted.Should().Be("2#0000_0000_0000_0000_0000_0000_0000_0000");
         }
 
         [Test]
@@ -45,6 +56,26 @@ namespace L5Sharp.Tests.Types
             var type = new DINT(_random);
 
             type.Should().Be(_random);
+        }
+
+        [Test]
+        public void Bit_ValidIndex_ShouldBeExpected()
+        {
+            var type = new DINT(1);
+
+            var bit0 = type[0];
+            var bit1 = type[1];
+
+            bit0.Should().Be(true);
+            bit1.Should().Be(false);
+        }
+
+        [Test]
+        public void Bit_InvalidIndex_ShouldThrowArgumentOutOfRangeException()
+        {
+            var type = new DINT(1);
+
+            FluentActions.Invoking(() => type[32]).Should().Throw<ArgumentOutOfRangeException>();
         }
 
         [Test]
@@ -78,7 +109,64 @@ namespace L5Sharp.Tests.Types
 
             format.Should().Be("2#0000_0000_0000_0000_0000_0000_0000_0000");
         }
-        
+
+        [Test]
+        public void ToBitArray_WhenCalled_ReturnsExpected()
+        {
+            var type = new DINT();
+
+            var bits = type.ToBitArray();
+
+            bits.Should().NotBeNull();
+            bits.Length.Should().Be(32);
+
+            foreach (bool bit in bits)
+            {
+                bit.Should().BeFalse();
+            }
+        }
+
+        [Test]
+        public void ToBitArray_PositiveValue_ReturnsExpected()
+        {
+            var type = new DINT(1);
+
+            var bits = type.ToBitArray();
+            
+            bits[0].Should().BeTrue();
+        }
+
+        [Test]
+        public void ToBytes_WhenCalled_ReturnsExpected()
+        {
+            var expected = BitConverter.GetBytes(_random);
+            var type = new DINT(_random);
+
+            var bytes = type.ToBytes();
+
+            CollectionAssert.AreEqual(bytes, expected);
+        }
+
+        [Test]
+        public Task Serialize_Default_ShouldBeValid()
+        {
+            var type = new DINT();
+
+            var xml = type.Serialize().ToString();
+
+            return Verify(xml);
+        }
+
+        [Test]
+        public Task Serialize_Value_ShouldBeValid()
+        {
+            var type = new DINT(123);
+
+            var xml = type.Serialize().ToString();
+
+            return Verify(xml);
+        }
+
         [Test]
         [TestCase(0)]
         [TestCase(1)]
@@ -105,6 +193,16 @@ namespace L5Sharp.Tests.Types
             int value = new DINT(_random);
 
             value.Should().Be(_random);
+        }
+
+        [Test]
+        [TestCase("0")]
+        [TestCase("1")]
+        [TestCase("-1")]
+        public void Set_String_ShouldBeExpected(string value)
+        {
+            DINT type = value;
+            type.Should().Be(int.Parse(value));
         }
 
         [Test]
@@ -239,6 +337,17 @@ namespace L5Sharp.Tests.Types
             var compare = first.CompareTo(second);
 
             compare.Should().Be(0);
+        }
+
+        [Test]
+        public void CreateLargeArrayOfAtomicValuesT()
+        {
+            var expected = new DINT();
+            
+            var array = ArrayType.New<DINT>(new Dimensions(65535));
+
+            array.Should().NotBeEmpty();
+            array.Should().AllBeEquivalentTo(expected);
         }
     }
 }

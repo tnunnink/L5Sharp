@@ -90,6 +90,8 @@ namespace L5Sharp.Tests.Types
 
             format.Should().Be("2#0000_0000_0000_0000");
         }
+        
+        
 
         [Test]
         public void TypeEquals_AreEqual_ShouldBeTrue()
@@ -223,16 +225,6 @@ namespace L5Sharp.Tests.Types
             var compare = first.CompareTo(second);
 
             compare.Should().Be(0);
-        }
-
-        [Test]
-        public void ToBase_WhenCalled_ShouldNotBeEmpty()
-        {
-            var type = new INT(33);
-
-            var result = type.ToBase(2);
-
-            result.Should().NotBeEmpty();
         }
 
         [Test]

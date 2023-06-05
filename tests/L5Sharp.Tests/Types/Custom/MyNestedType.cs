@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Xml.Linq;
 using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Types;
@@ -14,6 +15,16 @@ namespace L5Sharp.Tests.Types.Custom
     {
         public MyNestedType() : base(nameof(MyNestedType))
         {
+            Indy = new BOOL();
+            Str = new STRING();
+            Tmr = new TIMER();
+            Simple = new MySimpleType();
+            Flags = ArrayType.New<BOOL>(10);
+            Messages = ArrayType.New<MESSAGE>(5);
+        }
+
+        public MyNestedType(XElement element) : base(element)
+        {
         }
 
         public override DataTypeClass Class => DataTypeClass.User;
@@ -21,31 +32,55 @@ namespace L5Sharp.Tests.Types.Custom
         /// <summary>
         /// A simple boolean member
         /// </summary>
-        public BOOL Indy { get; set; } = new();
+        public BOOL Indy
+        {
+            get => GetMember<BOOL>();
+            set => SetMember(value);
+        }
 
         /// <summary>
         /// A string member
         /// </summary>
-        public STRING Str { get; set; } = new();
+        public STRING Str
+        {
+            get => GetMember<STRING>();
+            set => SetMember(value);
+        }
 
         /// <summary>
         /// A nested timer member
         /// </summary>
-        public TIMER Tmr { get; set; } = new();
+        public TIMER Tmr 
+        {
+            get => GetMember<TIMER>();
+            set => SetMember(value);
+        }
 
         /// <summary>
         /// A nested user defined type
         /// </summary>
-        public MySimpleType Simple { get; set; } = new();
+        public MySimpleType Simple
+        {
+            get => GetMember<MySimpleType>();
+            set => SetMember(value);
+        }
 
         /// <summary>
         /// A nested array of atomic values.
         /// </summary>
-        public ArrayType<BOOL> Flags { get; set; } = Logix.Array<BOOL>(10);
+        public ArrayType<BOOL> Flags
+        {
+            get => GetMember<ArrayType<BOOL>>();
+            set => SetMember(value);
+        }
 
         /// <summary>
         /// A nested array of structure types.
         /// </summary>
-        public ArrayType<MESSAGE> Messages { get; set; } = Logix.Array<MESSAGE>(10);
+        public ArrayType<MESSAGE> Messages 
+        {
+            get => GetMember<ArrayType<MESSAGE>>();
+            set => SetMember(value);
+        }
     }
 }

@@ -5,6 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using L5Sharp.Core;
 using L5Sharp.Enums;
+using L5Sharp.Types;
 using L5Sharp.Types.Atomics;
 
 namespace L5Sharp.Extensions
@@ -64,8 +65,8 @@ namespace L5Sharp.Extensions
         /// </summary>
         /// <param name="value">The string value.</param>
         /// <returns>An array of <see cref="SINT"/> atomic value types.</returns>
-        public static SINT[] ToSintArray(this string value) =>
-            Encoding.ASCII.GetBytes(value).Select(b => new SINT((sbyte)b, Radix.Ascii)).ToArray();
+        public static ArrayType<SINT> ToArrayType(this string value) =>
+            new(Encoding.ASCII.GetBytes(value).Select(b => new SINT((sbyte)b, Radix.Ascii)).ToArray());
 
         /// <summary>
         /// Returns the collection of <see cref="SINT"/> atomic type values as a <see cref="string"/> value.

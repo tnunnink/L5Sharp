@@ -12,20 +12,22 @@ namespace L5Sharp.Types.Atomics;
 public sealed class DINT : AtomicType, IEquatable<DINT>, IComparable<DINT>
 {
     private readonly int _value;
-        
+
     /// <summary>
     /// Creates a new default <see cref="DINT"/> type.
     /// </summary>
-    public DINT() : base(nameof(DINT))
+    public DINT() : base(nameof(DINT), Radix.Decimal, BitConverter.GetBytes(default(int)))
     {
+        _value = BitConverter.ToInt32(ToBytes());
     }
-        
+
     /// <summary>
     /// Creates a new <see cref="DINT"/> value with the provided radix format.
     /// </summary>
     /// <param name="radix">The <see cref="Enums.Radix"/> number format of the value.</param>
-    public DINT(Radix? radix) : base(nameof(DINT), radix)
+    public DINT(Radix radix) : base(nameof(DINT), radix, BitConverter.GetBytes(default(int)))
     {
+        _value = BitConverter.ToInt32(ToBytes());
     }
 
     /// <summary>
@@ -33,22 +35,17 @@ public sealed class DINT : AtomicType, IEquatable<DINT>, IComparable<DINT>
     /// </summary>
     /// <param name="value">The value to initialize the type with.</param>
     /// <param name="radix">The optional radix format of the value.</param>
-    public DINT(int value, Radix? radix = null) : this(radix)
+    public DINT(int value, Radix? radix = null) : base(nameof(DINT), radix ?? Radix.Decimal,
+        BitConverter.GetBytes(value))
     {
-        _value = value;
+        _value = BitConverter.ToInt32(ToBytes());
     }
 
     /// <summary>
-    /// Creates a new <see cref="DINT"/> with the provided string value.
+    /// Gets a <see cref="BOOL"/> at the specified bit index.
     /// </summary>
-    /// <param name="value">The string value to parse and convert to the value type.</param>
-    /// <param name="radix">The optional radix format of the value. If not provided, will be inferred
-    /// using <see cref="Enums.Radix.Infer"/>.</param>
-    public DINT(string value, Radix? radix = null) : this(radix ?? Radix.Infer(value))
-    {
-        var converter = TypeDescriptor.GetConverter(GetType());
-        _value = (int)(DINT)converter.ConvertFrom(value)!;
-    }
+    /// <param name="bit">The bit index to access</param>
+    public BOOL this[int bit] => new(Value[bit]);
 
     /// <summary>
     /// Represents the largest possible value of <see cref="DINT"/>.
@@ -73,20 +70,39 @@ public sealed class DINT : AtomicType, IEquatable<DINT>, IComparable<DINT>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="int"/> type value.</returns>
     public static implicit operator int(DINT atomic) => atomic._value;
-        
+
     /// <summary>
     /// Implicitly converts a <see cref="string"/> to a <see cref="DINT"/> value.
     /// </summary>
     /// <param name="value">The value to convert.</param>
     /// <returns>A new <see cref="DINT"/> value.</returns>
-    public static implicit operator DINT(string value) => new(value);
-        
+    public static implicit operator DINT(string value) => Parse(value);
+
     /// <summary>
     /// Implicitly converts the provided <see cref="DINT"/> to a <see cref="string"/> value.
     /// </summary>
     /// <param name="value">The value to convert.</param>
     /// <returns>A new <see cref="string"/> value.</returns>
     public static implicit operator string(DINT value) => value.ToString();
+
+    /// <summary>
+    /// Parses the provided string value to a new <see cref="DINT"/>.
+    /// </summary>
+    /// <param name="value">The string value to parse.</param>
+    /// <returns>A <see cref="DINT"/> representing the parsed value.</returns>
+    /// <exception cref="ArgumentException">The converted value returned null.</exception>
+    /// <exception cref="FormatException">The <see cref="Radix"/> format can not be inferred from <c>value</c>.</exception>
+    public static DINT Parse(string value)
+    {
+        var radix = Radix.Infer(value);
+
+        var converter = TypeDescriptor.GetConverter(typeof(DINT));
+
+        var type = converter.ConvertFrom(value) ??
+                   throw new ArgumentException($"The provided value '{value}' returned a null value after conversion.");
+
+        return new DINT((int)(DINT)type, radix);
+    }
 
     /// <inheritdoc />
     public bool Equals(DINT? other)

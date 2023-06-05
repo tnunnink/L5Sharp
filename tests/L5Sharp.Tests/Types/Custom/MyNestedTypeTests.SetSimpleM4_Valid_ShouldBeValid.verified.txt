@@ -1,0 +1,51 @@
+﻿<Structure DataType="MyNestedType">
+  <DataValueMember Name="Indy" DataType="BOOL" Value="0" />
+  <StructureMember Name="Str" DataType="STRING">
+    <DataValueMember Name="LEN" DataType="DINT" Radix="Decimal" Value="0" />
+    <DataValueMember Name="DATA" DataType="STRING" Radix="ASCII"><![CDATA[]]></DataValueMember>
+  </StructureMember>
+  <StructureMember Name="Tmr" DataType="TIMER">
+    <DataValueMember Name="PRE" DataType="DINT" Radix="Decimal" Value="0" />
+    <DataValueMember Name="ACC" DataType="DINT" Radix="Decimal" Value="0" />
+    <DataValueMember Name="EN" DataType="BOOL" Value="0" />
+    <DataValueMember Name="TT" DataType="BOOL" Value="0" />
+    <DataValueMember Name="DN" DataType="BOOL" Value="0" />
+  </StructureMember>
+  <StructureMember Name="Simple" DataType="MySimpleType">
+    <DataValueMember Name="M1" DataType="BOOL" Value="0" />
+    <DataValueMember Name="M2" DataType="SINT" Radix="Decimal" Value="0" />
+    <DataValueMember Name="M3" DataType="INT" Radix="Decimal" Value="0" />
+    <DataValueMember Name="M4" DataType="DINT" Radix="Decimal" Value="5000" />
+    <DataValueMember Name="M5" DataType="LINT" Radix="Decimal" Value="0" />
+    <DataValueMember Name="M6" DataType="REAL" Radix="Float" Value="0.0" />
+  </StructureMember>
+  <ArrayMember Name="Flags" DataType="BOOL" Dimensions="10">
+    <Element Index="[0]" Value="0" />
+    <Element Index="[1]" Value="0" />
+    <Element Index="[2]" Value="0" />
+    <Element Index="[3]" Value="0" />
+    <Element Index="[4]" Value="0" />
+    <Element Index="[5]" Value="0" />
+    <Element Index="[6]" Value="0" />
+    <Element Index="[7]" Value="0" />
+    <Element Index="[8]" Value="0" />
+    <Element Index="[9]" Value="0" />
+  </ArrayMember>
+  <ArrayMember Name="Messages" DataType="MESSAGE" Dimensions="5">
+    <Element Index="[0]">
+      <Structure DataType="MESSAGE" />
+    </Element>
+    <Element Index="[1]">
+      <Structure DataType="MESSAGE" />
+    </Element>
+    <Element Index="[2]">
+      <Structure DataType="MESSAGE" />
+    </Element>
+    <Element Index="[3]">
+      <Structure DataType="MESSAGE" />
+    </Element>
+    <Element Index="[4]">
+      <Structure DataType="MESSAGE" />
+    </Element>
+  </ArrayMember>
+</Structure>

@@ -1,4 +1,5 @@
-﻿using L5Sharp.Enums;
+﻿using System.Xml.Linq;
+using L5Sharp.Enums;
 
 namespace L5Sharp.Components;
 
@@ -9,13 +10,17 @@ namespace L5Sharp.Components;
 /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
 /// `Logix 5000 Controllers Import/Export`</a> for more information.
 /// </footer>
-public class Trend : ILogixComponent
+public class Trend : LogixComponent<Trend>
 {
     /// <inheritdoc />
-    public string Name { get; set; } = string.Empty;
+    public Trend()
+    {
+    }
 
     /// <inheritdoc />
-    public string Description { get; set; } = string.Empty;
+    public Trend(XElement element) : base(element)
+    {
+    }
 
     /// <summary>
     /// Specify how often trending tags are collected in milliseconds (1 msec...30 minutes).

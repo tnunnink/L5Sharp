@@ -10,7 +10,7 @@ namespace L5Sharp.Tests.Serialization
         [Test]
         public void GetSerializer_DataType_ShouldBeExpectedType()
         {
-            var serializer = LogixSerializer.GetSerializer<DataType>();
+            var serializer = L5XSerializer.GetSerializer<DataType>();
 
             serializer.Should().BeOfType<DataTypeSerializer>();
         }
@@ -18,7 +18,7 @@ namespace L5Sharp.Tests.Serialization
         [Test]
         public void GetSerializer_AddOnInstruction_ShouldBeExpectedType()
         {
-            var serializer = LogixSerializer.GetSerializer<AddOnInstruction>();
+            var serializer = L5XSerializer.GetSerializer<AddOnInstruction>();
 
             serializer.Should().BeOfType<AddOnInstructionSerializer>();
         }
@@ -26,7 +26,7 @@ namespace L5Sharp.Tests.Serialization
         [Test]
         public void GetSerializer_Module_ShouldBeExpectedType()
         {
-            var serializer = LogixSerializer.GetSerializer<Module>();
+            var serializer = L5XSerializer.GetSerializer<Module>();
 
             serializer.Should().BeOfType<ModuleSerializer>();
         }
@@ -34,7 +34,7 @@ namespace L5Sharp.Tests.Serialization
         [Test]
         public void GetSerializer_Tag_ShouldBeExpectedType()
         {
-            var serializer = LogixSerializer.GetSerializer<Tag>();
+            var serializer = L5XSerializer.GetSerializer<Tag>();
 
             serializer.Should().BeOfType<TagSerializer>();
         }
@@ -42,7 +42,7 @@ namespace L5Sharp.Tests.Serialization
         [Test]
         public void GetSerializer_Program_ShouldBeExpectedType()
         {
-            var serializer = LogixSerializer.GetSerializer<Program>();
+            var serializer = L5XSerializer.GetSerializer<Program>();
 
             serializer.Should().BeOfType<ProgramSerializer>();
         }
@@ -50,7 +50,7 @@ namespace L5Sharp.Tests.Serialization
         [Test]
         public void GetSerializer_Routine_ShouldBeExpectedType()
         {
-            var serializer = LogixSerializer.GetSerializer<Routine>();
+            var serializer = L5XSerializer.GetSerializer<Routine>();
 
             serializer.Should().BeOfType<RoutineSerializer>();
         }
@@ -58,7 +58,7 @@ namespace L5Sharp.Tests.Serialization
         [Test]
         public void GetSerializer_Task_ShouldBeExpectedType()
         {
-            var serializer = LogixSerializer.GetSerializer<LogixTask>();
+            var serializer = L5XSerializer.GetSerializer<LogixTask>();
 
             serializer.Should().BeOfType<TaskSerializer>();
         }

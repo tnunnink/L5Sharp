@@ -8,26 +8,29 @@ using L5Sharp.Types.Atomics.Converters;
 namespace L5Sharp.Types.Atomics;
 
 /// <summary>
-/// Represents a <i>BOOL</i> Logix atomic data type, or a type analogous to a <see cref="bool"/>.
+/// Represents a <i>BOOL</i> Logix atomic data type, or a type analogous to a <see cref="bool"/>. This object is meant
+/// to wrap the DataValue or DataValueMember data for the L5X tag data structure.
 /// </summary>
 [TypeConverter(typeof(BoolConverter))]
 public sealed class BOOL : AtomicType, IEquatable<BOOL>, IComparable<BOOL>
 {
     private readonly bool _value;
-
+    
     /// <summary>
     /// Creates a new default <see cref="BOOL"/> type.
     /// </summary>
-    public BOOL() : base(nameof(BOOL))
+    public BOOL() : base(nameof(BOOL), Radix.Decimal, new[] { false })
     {
+        _value = BitConverter.ToBoolean(ToBytes());
     }
-        
+
     /// <summary>
     /// Creates a new <see cref="BOOL"/> value with the provided radix format.
     /// </summary>
     /// <param name="radix">The <see cref="Enums.Radix"/> number format of the value.</param>
-    public BOOL(Radix? radix) : base(nameof(BOOL), radix)
+    public BOOL(Radix radix) : base(nameof(BOOL), radix, new[] { false })
     {
+        _value = BitConverter.ToBoolean(ToBytes());
     }
 
     /// <summary>
@@ -35,29 +38,18 @@ public sealed class BOOL : AtomicType, IEquatable<BOOL>, IComparable<BOOL>
     /// </summary>
     /// <param name="value">The value to initialize the type with.</param>
     /// <param name="radix"></param>
-    public BOOL(bool value, Radix? radix = null) : this(radix)
+    public BOOL(bool value, Radix? radix = null) : base(nameof(BOOL), radix ?? Radix.Decimal, new[] { value })
     {
-        _value = value;
-    }
-        
-    /// <summary>
-    /// Creates a new <see cref="BOOL"/> with the provided value.
-    /// </summary>
-    /// <param name="value">The value to initialize the type with.</param>
-    /// <param name="radix"></param>
-    public BOOL(string value, Radix? radix = null) : this(radix ?? Radix.Infer(value))
-    {
-        var converter = TypeDescriptor.GetConverter(GetType());
-        _value = (bool)(BOOL)converter.ConvertFrom(value)!;
+        _value = BitConverter.ToBoolean(ToBytes());
     }
 
     /// <summary>
     /// Creates a new instance of a BOOL with the provided number.
     /// </summary>
-    /// <param name="number">A number that will be evaluated to true if greater that zero, otherwise false</param>
-    public BOOL(int number) : this()
+    /// <param name="value">A number that will be evaluated to <c>false</c> if 0, otherwise <c>true</c>.</param>
+    public BOOL(int value) : base(nameof(BOOL), Radix.Decimal, BitConverter.GetBytes(value != 0))
     {
-        _value = number != 0;
+        _value = BitConverter.ToBoolean(ToBytes());
     }
 
     /// <inheritdoc />
@@ -76,7 +68,7 @@ public sealed class BOOL : AtomicType, IEquatable<BOOL>, IComparable<BOOL>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="bool"/> type value.</returns>
     public static implicit operator bool(BOOL atomic) => atomic._value;
-        
+
     /// <summary>
     /// Implicitly converts the provided <see cref="bool"/> to a <see cref="BOOL"/> value.
     /// </summary>
@@ -90,20 +82,39 @@ public sealed class BOOL : AtomicType, IEquatable<BOOL>, IComparable<BOOL>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="bool"/> type value.</returns>
     public static implicit operator int(BOOL atomic) => atomic._value ? 1 : 0;
-        
+
     /// <summary>
     /// Implicitly converts a <see cref="string"/> to a <see cref="BOOL"/> value.
     /// </summary>
     /// <param name="value">The value to convert.</param>
     /// <returns>A new <see cref="BOOL"/> value.</returns>
-    public static implicit operator BOOL(string value) => new(value);
-        
+    public static implicit operator BOOL(string value) => Parse(value);
+
     /// <summary>
     /// Implicitly converts the provided <see cref="BOOL"/> to a <see cref="string"/> value.
     /// </summary>
     /// <param name="value">The value to convert.</param>
     /// <returns>A new <see cref="string"/> value.</returns>
     public static implicit operator string(BOOL value) => value.ToString();
+
+    /// <summary>
+    /// Parses the provided string value to a new <see cref="BOOL"/>.
+    /// </summary>
+    /// <param name="value">The string value to parse.</param>
+    /// <returns>A <see cref="BOOL"/> representing the parsed value.</returns>
+    /// <exception cref="ArgumentException">The converted value returned null.</exception>
+    /// <exception cref="FormatException">The <see cref="Radix"/> format can not be inferred from <c>value</c>.</exception>
+    public static BOOL Parse(string value)
+    {
+        var radix = Radix.Infer(value);
+
+        var converter = TypeDescriptor.GetConverter(typeof(BOOL));
+
+        var type = converter.ConvertFrom(value) ??
+                   throw new ArgumentException($"The provided value '{value}' returned a null value after conversion.");
+
+        return new BOOL((bool)(BOOL)type, radix);
+    }
 
     /// <inheritdoc />
     public bool Equals(BOOL? other)

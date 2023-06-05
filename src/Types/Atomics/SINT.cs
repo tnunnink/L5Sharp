@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.ComponentModel;
 using L5Sharp.Enums;
 using L5Sharp.Types.Atomics.Converters;
@@ -12,20 +13,22 @@ namespace L5Sharp.Types.Atomics;
 public sealed class SINT : AtomicType, IEquatable<SINT>, IComparable<SINT>
 {
     private readonly sbyte _value;
-        
+
     /// <summary>
     /// Creates a new default <see cref="SINT"/> type.
     /// </summary>
-    public SINT() : base(nameof(SINT))
+    public SINT() : base(nameof(SINT), Radix.Decimal, new[] { default(byte) })
     {
+        _value = (sbyte)ToBytes()[0];
     }
-        
+
     /// <summary>
     /// Creates a new <see cref="SINT"/> value with the provided radix format.
     /// </summary>
     /// <param name="radix">The <see cref="Enums.Radix"/> number format of the value.</param>
-    public SINT(Radix? radix) : base(nameof(SINT), radix)
+    public SINT(Radix radix) : base(nameof(SINT), radix, new[] { default(byte) })
     {
+        _value = (sbyte)ToBytes()[0];
     }
 
     /// <summary>
@@ -33,22 +36,16 @@ public sealed class SINT : AtomicType, IEquatable<SINT>, IComparable<SINT>
     /// </summary>
     /// <param name="value">The value to initialize the type with.</param>
     /// <param name="radix">The optional radix format of the value.</param>
-    public SINT(sbyte value, Radix? radix = null) : this(radix)
+    public SINT(sbyte value, Radix? radix = null) : base(nameof(SINT), radix ?? Radix.Decimal, new[] { (byte)value })
     {
-        _value = value;
+        _value = (sbyte)ToBytes()[0];
     }
 
     /// <summary>
-    /// Creates a new <see cref="SINT"/> with the provided string value.
+    /// Gets a <see cref="BOOL"/> at the specified bit index.
     /// </summary>
-    /// <param name="value">The string value to parse and convert to the value type.</param>
-    /// <param name="radix">The optional radix format of the value. If not provided, will be inferred
-    /// using <see cref="Enums.Radix.Infer"/>.</param>
-    public SINT(string value, Radix? radix = null) : this(radix ?? Radix.Infer(value))
-    {
-        var converter = TypeDescriptor.GetConverter(GetType());
-        _value = (sbyte)(SINT)converter.ConvertFrom(value)!;
-    }
+    /// <param name="bit">The bit index to access</param>
+    public BOOL this[int bit] => new(Value[bit]);
 
     /// <summary>
     /// Represents the largest possible value of <see cref="SINT"/>.
@@ -73,20 +70,39 @@ public sealed class SINT : AtomicType, IEquatable<SINT>, IComparable<SINT>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="sbyte"/> type value.</returns>
     public static implicit operator sbyte(SINT atomic) => atomic._value;
-        
+
     /// <summary>
     /// Implicitly converts a <see cref="string"/> to a <see cref="SINT"/> value.
     /// </summary>
     /// <param name="value">The value to convert.</param>
     /// <returns>A new <see cref="SINT"/> value.</returns>
-    public static implicit operator SINT(string value) => new(value);
-        
+    public static implicit operator SINT(string value) => Parse(value);
+
     /// <summary>
     /// Implicitly converts the provided <see cref="SINT"/> to a <see cref="string"/> value.
     /// </summary>
     /// <param name="value">The value to convert.</param>
     /// <returns>A new <see cref="string"/> value.</returns>
     public static implicit operator string(SINT value) => value.ToString();
+
+    /// <summary>
+    /// Parses the provided string value to a new <see cref="SINT"/>.
+    /// </summary>
+    /// <param name="value">The string value to parse.</param>
+    /// <returns>A <see cref="SINT"/> representing the parsed value.</returns>
+    /// <exception cref="ArgumentException">The converted value returned null.</exception>
+    /// <exception cref="FormatException">The <see cref="Radix"/> format can not be inferred from <c>value</c>.</exception>
+    public static SINT Parse(string value)
+    {
+        var radix = Radix.Infer(value);
+
+        var converter = TypeDescriptor.GetConverter(typeof(SINT));
+
+        var type = converter.ConvertFrom(value) ??
+                   throw new ArgumentException($"The provided value '{value}' returned a null value after conversion.");
+
+        return new SINT((sbyte)(SINT)type, radix);
+    }
 
     /// <inheritdoc />
     public bool Equals(SINT? other)
@@ -95,7 +111,7 @@ public sealed class SINT : AtomicType, IEquatable<SINT>, IComparable<SINT>
         if (ReferenceEquals(this, other)) return true;
         return _value == other._value;
     }
-        
+
     /// <inheritdoc />
     public override bool Equals(object? obj) => Equals(obj as SINT);
 

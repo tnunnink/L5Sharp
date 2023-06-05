@@ -1,0 +1,5 @@
+﻿<Array DataType="DINT" Dimensions="3" Radix="Decimal">
+  <Element Index="[0]" Value="100" />
+  <Element Index="[1]" Value="200" />
+  <Element Index="[2]" Value="300" />
+</Array>

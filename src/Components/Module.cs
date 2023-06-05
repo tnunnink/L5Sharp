@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Xml.Linq;
 using L5Sharp.Core;
+using L5Sharp.Entities;
 using L5Sharp.Enums;
 using L5Sharp.Rockwell;
-using L5Sharp.Serialization;
 
 namespace L5Sharp.Components;
 
@@ -15,14 +16,17 @@ namespace L5Sharp.Components;
 /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
 /// `Logix 5000 Controllers Import/Export`</a> for more information.
 /// </footer>
-[LogixSerializer(typeof(ModuleSerializer))]
-public class Module : ILogixComponent
+public class Module : LogixComponent<Module>
 {
     /// <inheritdoc />
-    public string Name { get; set; } = string.Empty;
+    public Module()
+    {
+    }
 
     /// <inheritdoc />
-    public string Description { get; set; } = string.Empty;
+    public Module(XElement element) : base(element)
+    {
+    }
 
     /// <summary>
     /// The catalog number uniquely identifies the module. This is a rockwell defined convention.
@@ -120,7 +124,7 @@ public class Module : ILogixComponent
     /// <summary>
     /// A collection of <see cref="ModuleConnection"/> defining the input and output connection specific to the module.
     /// </summary>
-    public List<ModuleConnection> Connections { get; set; } = new();
+    public IEnumerable<ModuleConnection> Connections { get; set; }
 
     /// <summary>
     /// Gets the slot number of the current module if one exists. If the module does not have an slot, returns null.

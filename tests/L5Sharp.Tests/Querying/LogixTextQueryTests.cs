@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using L5Sharp.Enums;
 using L5Sharp.Extensions;
 
 namespace L5Sharp.Tests.Querying;
@@ -17,7 +18,7 @@ public class LogixTextQueryTests
     }
 
     [Test]
-    public void Logic_ProgramScope_ShouldReturnExpectedText()
+    public void Text_ProgramScope_ShouldReturnExpectedText()
     {
         var content = LogixContent.Load(Known.Test);
 
@@ -28,7 +29,7 @@ public class LogixTextQueryTests
     }
 
     [Test]
-    public void Logic_RoutineScope_ShouldReturnExpectedText()
+    public void Text_RoutineScope_ShouldReturnExpectedText()
     {
         var content = LogixContent.Load(Known.Test);
 
@@ -39,7 +40,7 @@ public class LogixTextQueryTests
     }
 
     [Test]
-    public void Logic_ProgramAndRoutineScope_ShouldHaveCount()
+    public void Text_ProgramAndRoutineScope_ShouldHaveCount()
     {
         var content = LogixContent.Load(Known.Test);
 
@@ -50,7 +51,17 @@ public class LogixTextQueryTests
     }
 
     [Test]
-    public void Logic_FilterFurther_ShouldHaveCount()
+    public void Text_WithInstruction_ShouldNotBeEmpty()
+    {
+        var content = LogixContent.Load(Known.Test);
+        
+        var results = content.Text().WithInstruction(Instruction.XIC).ToList();
+
+        results.Should().NotBeEmpty();
+    }
+
+    [Test]
+    public void Text_FilterFurther_ShouldHaveCount()
     {
         var content = LogixContent.Load(Known.Test);
 
@@ -60,7 +71,7 @@ public class LogixTextQueryTests
     }
 
     [Test]
-    public void LogicFlatten_WhenCalled_ShouldWOrk()
+    public void Flatten_WhenCalled_ShouldWOrk()
     {
         var content = LogixContent.Load(Known.Test);
 
@@ -70,7 +81,7 @@ public class LogixTextQueryTests
     }
     
     [Test]
-    public void LogicFlatten_AgainstLargerFile_ShouldWork()
+    public void Flatten_AgainstLargerFile_ShouldWork()
     {
         var content = LogixContent.Load(Known.Template);
 

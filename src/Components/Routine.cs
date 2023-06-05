@@ -1,6 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using System.Xml;
+using System.Xml.Linq;
 using L5Sharp.Enums;
-using L5Sharp.Serialization;
+using L5Sharp.Extensions;
 
 namespace L5Sharp.Components;
 
@@ -12,26 +15,33 @@ namespace L5Sharp.Components;
 /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
 /// `Logix 5000 Controllers Import/Export`</a> for more information.
 /// </footer>
-[LogixSerializer(typeof(RoutineSerializer))]
-public class Routine : ILogixComponent, ILogixScoped
+public class Routine : LogixComponent<Routine>, ILogixScoped
 {
     /// <inheritdoc />
-    public string Name { get; set; } = string.Empty;
+    public Routine()
+    {
+    }
 
     /// <inheritdoc />
-    public string Description { get; set; } = string.Empty;
+    public Routine(XElement element) : base(element)
+    {
+    }
 
     /// <inheritdoc />
-    public Scope Scope { get; set; } = Scope.Null;
+    public Scope Scope => Scope.FromElement(Element);
 
     /// <inheritdoc />
-    public string Container { get; set; } = string.Empty;
+    public string Container => Element.Ancestors(Scope.XName).FirstOrDefault()?.LogixName() ?? string.Empty;
 
     /// <summary>
     /// The type of the <see cref="Routine"/> component.
     /// </summary>
     /// <value>A <see cref="Enums.RoutineType"/> enum specifying the type content the routine contains.</value>
-    public RoutineType Type { get; set; } = RoutineType.Typeless;
+    public RoutineType Type
+    {
+        get => GetValue<RoutineType>() ?? throw new XmlException();
+        set => SetValue(value);
+    }
 
     /// <summary>
     /// The collection of <see cref="ILogixCode"/> objects that represent the content of the <see cref="Routine"/>.

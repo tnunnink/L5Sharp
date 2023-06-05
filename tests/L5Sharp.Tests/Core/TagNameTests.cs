@@ -1,7 +1,6 @@
 ﻿using AutoFixture;
 using FluentAssertions;
 using L5Sharp.Core;
-using L5Sharp.Utilities;
 
 namespace L5Sharp.Tests.Core
 {

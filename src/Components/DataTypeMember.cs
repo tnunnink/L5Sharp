@@ -1,8 +1,8 @@
-﻿using System.Xml.Serialization;
+﻿using System;
+using System.Xml.Linq;
+using System.Xml.Serialization;
 using L5Sharp.Core;
 using L5Sharp.Enums;
-using L5Sharp.Serialization;
-using L5Sharp.Utilities;
 
 namespace L5Sharp.Components;
 
@@ -14,27 +14,27 @@ namespace L5Sharp.Components;
 /// `Logix 5000 Controllers Import/Export`</a> for more information.
 /// </footer>
 [XmlType(L5XName.Member)]
-[LogixSerializer(typeof(DataTypeMemberSerializer))]
-public class DataTypeMember
+public class DataTypeMember : LogixComponent<DataTypeMember>
 {
     /// <summary>
-    /// The name of the member.
+    /// Creates a new <see cref="DataTypeMember"/> with default values.
     /// </summary>
-    /// <value>
-    /// A <see cref="string"/> containing the name of the member.
-    /// Default is <see cref="string.Empty"/>.
-    /// Valid value is required for valid import.
-    /// </value>
-    public string Name { get; set; } = string.Empty;
+    public DataTypeMember()
+    {
+        Name = string.Empty;
+        DataType = string.Empty;
+        Dimension = Dimensions.Empty;
+        Radix = Radix.Null;
+        ExternalAccess = ExternalAccess.ReadWrite;
+    }
 
     /// <summary>
-    /// The description of the member.
+    /// Creates a new <see cref="DataTypeMember"/> initialized with the provided <see cref="XElement"/>.
     /// </summary>
-    /// <value>
-    /// A <see cref="string"/> containing the description of the member.
-    /// Default is <see cref="string.Empty"/>.
-    /// </value>
-    public string Description { get; set; } = string.Empty;
+    /// <param name="element">The <see cref="XElement"/> to initialize the type with.</param>
+    public DataTypeMember(XElement element) : base(element)
+    {
+    }
 
     /// <summary>
     /// The name of the data type of the member.
@@ -44,7 +44,12 @@ public class DataTypeMember
     /// Default is <see cref="string.Empty"/>.
     /// Valid value is required for valid import.
     /// </value>
-    public string DataType { get; set; } = string.Empty;
+    public string DataType
+    {
+        get => GetValue<string>() ??
+               throw new InvalidOperationException($"Required property {nameof(DataType)} does not exist.");
+        set => SetValue(value);
+    }
 
     /// <summary>
     /// The array dimension of the member.
@@ -54,7 +59,11 @@ public class DataTypeMember
     /// Default is <see cref="Core.Dimensions.Empty"/>.
     /// Members should not have multidimensional arrays.
     /// </value>
-    public Dimensions Dimension { get; set; } = Dimensions.Empty;
+    public Dimensions? Dimension
+    {
+        get => GetValue<Dimensions>();
+        set => SetValue(value);
+    }
 
     /// <summary>
     /// The radix value format of the member.
@@ -64,7 +73,11 @@ public class DataTypeMember
     /// Default is <see cref="Enums.Radix.Null"/>.
     /// Should be <see cref="Enums.Radix.Null"/> for all non atomic types.
     /// </value>
-    public Radix Radix { get; set; } = Radix.Null;
+    public Radix? Radix
+    {
+        get => GetValue<Radix>();
+        set => SetValue(value?.Value);
+    }
 
     /// <summary>
     /// The external access of the member. 
@@ -73,5 +86,12 @@ public class DataTypeMember
     /// A <see cref="Enums.ExternalAccess"/> representing read/write access of the member.
     /// Default is <see cref="Enums.ExternalAccess.ReadWrite"/>.
     /// </value>
-    public ExternalAccess ExternalAccess { get; set; } = ExternalAccess.ReadWrite;
+    public ExternalAccess? ExternalAccess
+    {
+        get => GetValue<ExternalAccess>();
+        set => SetValue(value);
+    }
+
+    /// <inheritdoc />
+    public override DataTypeMember Clone() => new(Serialize());
 }

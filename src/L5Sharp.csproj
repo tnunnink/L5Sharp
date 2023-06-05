@@ -25,6 +25,7 @@
 
     <ItemGroup>
         <None Include="..\README.md" Pack="true" PackagePath="\" />
+        <None Remove="Serialization\**" />
     </ItemGroup>
 
     <ItemGroup>
@@ -42,9 +43,11 @@
 
     <ItemGroup>
       <EmbeddedResource Include="Rockwell\L5X.xsd" />
+      <EmbeddedResource Remove="Serialization\**" />
     </ItemGroup>
 
     <ItemGroup>
       <Compile Remove="Core\Bus.cs" />
+      <Compile Remove="Serialization\**" />
     </ItemGroup>
 </Project>

@@ -12,20 +12,22 @@ namespace L5Sharp.Types.Atomics;
 public sealed class LINT : AtomicType, IEquatable<LINT>, IComparable<LINT>
 {
     private readonly long _value;
-        
+
     /// <summary>
     /// Creates a new default <see cref="LINT"/> type.
     /// </summary>
-    public LINT() : base(nameof(LINT))
+    public LINT() : base(nameof(LINT), Radix.Decimal, BitConverter.GetBytes(default(long)))
     {
+        _value = BitConverter.ToInt64(ToBytes());
     }
-        
+
     /// <summary>
     /// Creates a new <see cref="LINT"/> value with the provided radix format.
     /// </summary>
     /// <param name="radix">The <see cref="Enums.Radix"/> number format of the value.</param>
-    public LINT(Radix? radix) : base(nameof(LINT), radix)
+    public LINT(Radix radix) : base(nameof(LINT), radix, BitConverter.GetBytes(default(long)))
     {
+        _value = BitConverter.ToInt64(ToBytes());
     }
 
     /// <summary>
@@ -33,28 +35,23 @@ public sealed class LINT : AtomicType, IEquatable<LINT>, IComparable<LINT>
     /// </summary>
     /// <param name="value">The value to initialize the type with.</param>
     /// <param name="radix">The optional radix format of the value.</param>
-    public LINT(long value, Radix? radix = null) : this(radix)
+    public LINT(long value, Radix? radix = null) : base(nameof(LINT), radix ?? Radix.Decimal,
+        BitConverter.GetBytes(value))
     {
-        _value = value;
+        _value = BitConverter.ToInt64(ToBytes());
     }
 
     /// <summary>
-    /// Creates a new <see cref="LINT"/> with the provided string value.
+    /// Gets a <see cref="BOOL"/> at the specified bit index.
     /// </summary>
-    /// <param name="value">The string value to parse and convert to the value type.</param>
-    /// <param name="radix">The optional radix format of the value. If not provided, will be inferred
-    /// using <see cref="Enums.Radix.Infer"/>.</param>
-    public LINT(string value, Radix? radix = null) : this(radix ?? Radix.Infer(value))
-    {
-        var converter = TypeDescriptor.GetConverter(GetType());
-        _value = (long)(LINT)converter.ConvertFrom(value)!;
-    }
+    /// <param name="bit">The bit index to access</param>
+    public BOOL this[int bit] => new(Value[bit]);
 
     /// <summary>
     /// Represents the largest possible value of <see cref="LINT"/>.
     /// </summary>
     public const long MaxValue = long.MaxValue;
-        
+
     /// <summary>
     /// Represents the smallest possible value of <see cref="LINT"/>.
     /// </summary>
@@ -73,14 +70,33 @@ public sealed class LINT : AtomicType, IEquatable<LINT>, IComparable<LINT>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="long"/> type value.</returns>
     public static implicit operator long(LINT atomic) => atomic._value;
-        
+
     /// <summary>
     /// Implicitly converts a <see cref="string"/> to a <see cref="LINT"/> value.
     /// </summary>
     /// <param name="value">The value to convert.</param>
     /// <returns>A new <see cref="LINT"/> value.</returns>
-    public static implicit operator LINT(string value) => new(value);
-        
+    public static implicit operator LINT(string value) => Parse(value);
+
+    /// <summary>
+    /// Parses the provided string value to a new <see cref="LINT"/>.
+    /// </summary>
+    /// <param name="value">The string value to parse.</param>
+    /// <returns>A <see cref="LINT"/> representing the parsed value.</returns>
+    /// <exception cref="ArgumentException">The converted value returned null.</exception>
+    /// <exception cref="FormatException">The <see cref="Radix"/> format can not be inferred from <c>value</c>.</exception>
+    public static LINT Parse(string value)
+    {
+        var radix = Radix.Infer(value);
+
+        var converter = TypeDescriptor.GetConverter(typeof(LINT));
+
+        var type = converter.ConvertFrom(value) ??
+                   throw new ArgumentException($"The provided value '{value}' returned a null value after conversion.");
+
+        return new LINT((long)(LINT)type, radix);
+    }
+
     /// <summary>
     /// Implicitly converts the provided <see cref="LINT"/> to a <see cref="string"/> value.
     /// </summary>

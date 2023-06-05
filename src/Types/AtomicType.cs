@@ -1,56 +1,90 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
+using System.Xml.Linq;
 using L5Sharp.Enums;
-using L5Sharp.Serialization;
-using L5Sharp.Serialization.Data;
 using L5Sharp.Types.Atomics;
 
 namespace L5Sharp.Types;
 
 /// <summary>
-/// A <see cref="ILogixType"/> that represents value type object.
+/// A <see cref="LogixType"/> that represents value type object.
 /// </summary>
 /// <remarks>
 /// Logix atomic types are types that have value (i.e. BOOL, SINT, INT, DINT, REAL, etc.).
-/// These type are synonymous with value types in .NET.
+/// These type are synonymous with value types in .NET. This is the common abstract class for all atomic types.
 /// </remarks>
 /// <footer>
 /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
 /// `Logix 5000 Controllers Import/Export`</a> for more information.
 /// </footer>
-[LogixSerializer(typeof(DataValueSerializer))]
-public abstract class AtomicType : ILogixType
+public abstract class AtomicType : LogixType
 {
     /// <summary>
     /// Creates a new <see cref="AtomicType"/> instance with the provided name.
     /// </summary>
     /// <param name="name">The name of the atomic type.</param>
-    /// <param name="radix"></param>
+    /// <param name="radix">The default <see cref="Enums.Radix"/> format of the type.</param>
+    /// <param name="bytes">An array of bytes that represent the value of the type.</param>
     /// <exception cref="ArgumentNullException">name is null.</exception>
-    protected internal AtomicType(string name, Radix? radix = null)
+    protected internal AtomicType(string name, Radix radix, byte[] bytes)
     {
         Name = name ?? throw new ArgumentNullException(nameof(name));
 
-        if (radix is not null && !radix.SupportsType(this))
-            throw new ArgumentException($"The provided radix {radix} is not supported by {GetType()}");
+        if (radix is null)
+            throw new ArgumentNullException(nameof(radix));
 
-        Radix = radix ?? Radix.Default(this);
+        if (!radix.SupportsType(this))
+            throw new ArgumentException($"The radix {radix} is not supported for atomic type {typeof(AtomicType)}");
+
+        Radix = radix;
+
+        if (bytes is null)
+            throw new ArgumentNullException(nameof(bytes));
+
+        Value = new BitArray(bytes);
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="AtomicType"/> instance with the provided name.
+    /// </summary>
+    /// <param name="name">The name of the atomic type.</param>
+    /// <param name="radix">The default <see cref="Enums.Radix"/> format of the type.</param>
+    /// <param name="bits">An array of bits that represent the value of the type.</param>
+    /// <exception cref="ArgumentNullException">name is null.</exception>
+    protected internal AtomicType(string name, Radix radix, bool[] bits)
+    {
+        Name = name ?? throw new ArgumentNullException(nameof(name));
+        
+        if (radix is null)
+            throw new ArgumentNullException(nameof(radix));
+
+        if (!radix.SupportsType(this))
+            throw new ArgumentException($"The radix {radix} is not supported for atomic type {typeof(AtomicType)}");
+
+        Radix = radix;
+
+        if (bits is null)
+            throw new ArgumentNullException(nameof(bits));
+
+        Value = new BitArray(bits);
     }
 
     /// <inheritdoc />
-    public string Name { get; }
+    public override string Name { get; }
 
     /// <inheritdoc />
-    public DataTypeFamily Family => DataTypeFamily.None;
+    public sealed override DataTypeClass Class => DataTypeClass.Atomic;
 
     /// <inheritdoc />
-    public DataTypeClass Class => DataTypeClass.Atomic;
-
-    /// <inheritdoc />
-    public virtual IEnumerable<Member> Members => GetBitMembers();
+    public override IEnumerable<Member> Members
+    {
+        get
+        {
+            for (var i = 0; i < Value.Count; i++)
+                yield return new Member(i.ToString(), new BOOL(Value[i]));
+        }
+    }
 
     /// <summary>
     /// The radix format for the <see cref="AtomicType"/>.
@@ -59,12 +93,20 @@ public abstract class AtomicType : ILogixType
     public Radix Radix { get; }
 
     /// <summary>
-    /// Gets the bit member of the current atomic value at the specified index.
+    /// The underlying value of the <see cref="AtomicType"/>.
     /// </summary>
-    /// <param name="index">The <see cref="int"/> bit number representing the member to get.</param>
-    public Member this[int index] => Members.SingleOrDefault(m => m.Name == index.ToString())
-                                     ?? throw new IndexOutOfRangeException(
-                                         $"The specified index {index} is out of ranges for the type {GetType()}");
+    /// <value>A <see cref="BitArray"/> representing the value of the type.</value>
+    protected BitArray Value { get; }
+
+    /// <inheritdoc />
+    public override XElement Serialize()
+    {
+        var element = new XElement(L5XName.DataValue);
+        element.Add(new XAttribute(L5XName.DataType, Name));
+        element.Add(new XAttribute(L5XName.Radix, Radix));
+        element.Add(new XAttribute(L5XName.Value, ToString()));
+        return element;
+    }
 
     /// <summary>
     /// Return the atomic value formatted using the current <see cref="Radix"/> format.
@@ -73,83 +115,26 @@ public abstract class AtomicType : ILogixType
     public override string ToString() => Radix.Format(this);
 
     /// <summary>
-    /// Returns the atomic value formatted using the provided <see cref="Enums.Radix"/> option.
+    /// Returns the atomic value formatted in the specified <see cref="Enums.Radix"/>.
     /// </summary>
     /// <param name="radix">The radix format.</param>
     /// <returns>A <see cref="string"/> representing the formatted atomic value.</returns>
     public string ToString(Radix radix) => radix.Format(this);
 
     /// <summary>
-    /// Converts the current <see cref="AtomicType"/> to the specified base number.
+    /// Returns the <see cref="AtomicType"/> value as a <see cref="BitArray"/>.  
     /// </summary>
-    /// <param name="baseNumber">The base of the return value, which must be 2, 8, 10, or 16.</param>
-    /// <returns>A <see cref="string"/> value representing the value in the specified base.</returns>
-    /// <exception cref="ArgumentException">baseNumber is not 2, 8, 10, or 16.</exception>
-    /// <exception cref="NotSupportedException">The atomic type is not a supported integer type
-    /// (i.e. it is <see cref="REAL"/> type).</exception>
-    /// <remarks>This is used internally be <see cref="Enums.Radix"/> for formatting atomic type values.</remarks>
-    public string ToBase(int baseNumber)
-    {
-        var bitsPerByte = baseNumber switch
-        {
-            2 => 8,
-            8 => 3,
-            _ => 2
-        };
-            
-        var bytes = GetBytes(this);
-
-        var builder = new StringBuilder();
-            
-        for (var ctr = bytes.GetUpperBound(0); ctr >= bytes.GetLowerBound(0); ctr--)
-        {
-            var byteString = Convert.ToString(bytes[ctr], baseNumber).PadLeft(bitsPerByte, '0');
-            builder.Append(byteString);
-        }
-
-        return builder.ToString();
-    }
+    /// <returns>A <see cref="BitArray"/> representing the underlying value of the type.</returns>
+    public BitArray ToBitArray() => Value;
 
     /// <summary>
-    /// Returns a collection of bit members based on the implementing type.
+    /// Returns the <see cref="AtomicType"/> value as an array of <see cref="byte"/>.
     /// </summary>
-    /// <returns></returns>
-    private IEnumerable<Member> GetBitMembers()
+    /// <returns>An array of <see cref="byte"/> representing the underlying value of the type.</returns>
+    public byte[] ToBytes()
     {
-        var chars = ToBase(2).ToCharArray();
-            
-        var members = new List<Member>();
-
-        for (var i = chars.Length - 1; i >= 0; i--)
-        {
-            var name = (chars.Length - 1 - i).ToString();
-            var value = new BOOL(chars[i] == '1');
-            members.Add(new Member(name, value));
-        }
-
-        return members;
-    }
-
-    /// <summary>
-    /// Converts the current value type to an array of bytes.
-    /// </summary>
-    /// <param name="atomicType">The current value type to convert.</param>
-    /// <returns>An array of bytes representing the value.</returns>
-    private static byte[] GetBytes(AtomicType atomicType)
-    {
-        return atomicType switch
-        {
-            BOOL value => BitConverter.GetBytes((bool)value),
-            SINT value => new[] { byte.Parse(((sbyte)value).ToString("X2"), NumberStyles.HexNumber) },
-            USINT value => new[] { (byte)value },
-            INT value => BitConverter.GetBytes(value),
-            UINT value => BitConverter.GetBytes(value),
-            DINT value => BitConverter.GetBytes(value),
-            UDINT value => BitConverter.GetBytes(value),
-            LINT value => BitConverter.GetBytes(value),
-            ULINT value => BitConverter.GetBytes(value),
-            _ => throw new NotSupportedException(
-                $"The provided atomic type {atomicType.GetType()} is not supported.")
-        };
+        var bytes = new byte[(Value.Length - 1) / 8 + 1];
+        Value.CopyTo(bytes, 0);
+        return bytes;
     }
 }

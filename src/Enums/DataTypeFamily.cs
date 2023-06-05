@@ -3,7 +3,7 @@
 namespace L5Sharp.Enums;
 
 /// <summary>
-/// An enumeration of all Logix <see cref="DataTypeFamily"/> options for a given <see cref="ILogixType"/>.
+/// An enumeration of all Logix <see cref="DataTypeFamily"/> options for a given <see cref="LogixType"/>.
 /// Valid options are None and String.
 /// </summary>
 public sealed class DataTypeFamily : LogixEnum<DataTypeFamily, string>
@@ -14,7 +14,7 @@ public sealed class DataTypeFamily : LogixEnum<DataTypeFamily, string>
 
     /// <summary>
     /// Represents no specific data type family.
-    /// All <see cref="ILogixType"/> objects except <see cref="StringType"/> should have this option.
+    /// All <see cref="LogixType"/> objects except <see cref="StringType"/> should have this option.
     /// </summary>
     public static readonly DataTypeFamily None = new(nameof(None), "NoFamily");
         

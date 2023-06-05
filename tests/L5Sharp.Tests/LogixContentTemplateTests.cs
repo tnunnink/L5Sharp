@@ -1,8 +1,8 @@
 ﻿using FluentAssertions;
 using L5Sharp.Components;
 using L5Sharp.Core;
+using L5Sharp.Entities;
 using L5Sharp.Extensions;
-using L5Sharp.Utilities;
 
 namespace L5Sharp.Tests;
 

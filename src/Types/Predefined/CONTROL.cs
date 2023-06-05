@@ -1,4 +1,5 @@
-﻿using L5Sharp.Enums;
+﻿using System.Xml.Linq;
+using L5Sharp.Enums;
 using L5Sharp.Types.Atomics;
 
 // ReSharper disable InconsistentNaming RSLogix naming
@@ -15,6 +16,21 @@ public sealed class CONTROL : StructureType
     /// </summary>
     public CONTROL() : base(nameof(CONTROL))
     {
+        LEN = new DINT();
+        POS = new DINT();
+        EN = new BOOL();
+        EU = new BOOL();
+        DN = new BOOL();
+        EM = new BOOL();
+        ER = new BOOL();
+        UL = new BOOL();
+        IN = new BOOL();
+        FD = new BOOL();
+    }
+
+    /// <inheritdoc />
+    public CONTROL(XElement element) : base(element)
+    {
     }
 
     /// <inheritdoc />
@@ -23,50 +39,90 @@ public sealed class CONTROL : StructureType
     /// <summary>
     /// Gets the <see cref="LEN"/> member of the <see cref="CONTROL"/> data type.
     /// </summary>
-    public DINT LEN { get; set; } = new();
-        
+    public DINT LEN
+    {
+        get => GetMember<DINT>();
+        set => SetMember(value);
+    }
+
     /// <summary>
     /// Gets the <see cref="POS"/> member of the <see cref="CONTROL"/> data type.
     /// </summary>
-    public DINT POS { get; set; } = new();
-        
+    public DINT POS
+    {
+        get => GetMember<DINT>();
+        set => SetMember(value);
+    }
+
     /// <summary>
     /// Gets the <see cref="EN"/> member of the <see cref="CONTROL"/> data type.
     /// </summary>
-    public BOOL EN { get; set; } = new();
-        
+    public BOOL EN
+    {
+        get => GetMember<BOOL>();
+        set => SetMember(value);
+    }
+
     /// <summary>
     /// Gets the <see cref="EU"/> member of the <see cref="CONTROL"/> data type.
     /// </summary>
-    public BOOL EU { get; set; } = new();
-        
+    public BOOL EU
+    {
+        get => GetMember<BOOL>();
+        set => SetMember(value);
+    }
+
     /// <summary>
     /// Gets the <see cref="DN"/> member of the <see cref="CONTROL"/> data type.
     /// </summary>
-    public BOOL DN { get; set; } = new();
-        
+    public BOOL DN
+    {
+        get => GetMember<BOOL>();
+        set => SetMember(value);
+    }
+
     /// <summary>
     /// Gets the <see cref="EM"/> member of the <see cref="CONTROL"/> data type.
     /// </summary>
-    public BOOL EM { get; set; } = new();
-        
+    public BOOL EM
+    {
+        get => GetMember<BOOL>();
+        set => SetMember(value);
+    }
+
     /// <summary>
     /// Gets the <see cref="ER"/> member of the <see cref="CONTROL"/> data type.
     /// </summary>
-    public BOOL ER { get; set; } = new();
-        
+    public BOOL ER
+    {
+        get => GetMember<BOOL>();
+        set => SetMember(value);
+    }
+
     /// <summary>
     /// Gets the <see cref="UL"/> member of the <see cref="CONTROL"/> data type.
     /// </summary>
-    public BOOL UL { get; set; } = new();
-        
+    public BOOL UL
+    {
+        get => GetMember<BOOL>();
+        set => SetMember(value);
+    }
+
     /// <summary>
     /// Gets the <see cref="IN"/> member of the <see cref="CONTROL"/> data type.
     /// </summary>
-    public BOOL IN { get; set; } = new();
-        
+    public BOOL IN
+    {
+        get => GetMember<BOOL>();
+        set => SetMember(value);
+    }
+
     /// <summary>
     /// Gets the <see cref="FD"/> member of the <see cref="CONTROL"/> data type.
     /// </summary>
-    public BOOL FD { get; set; } = new();
+    public BOOL FD
+    {
+        get => GetMember<BOOL>();
+        set => SetMember(value);
+    }
 }

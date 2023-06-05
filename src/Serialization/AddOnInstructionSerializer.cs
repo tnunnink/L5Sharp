@@ -24,7 +24,7 @@ public class AddOnInstructionSerializer : ILogixSerializer<AddOnInstruction>
     {
         Check.NotNull(obj);
 
-        var element = new XElement(typeof(AddOnInstruction).GetLogixName());
+        var element = new XElement(typeof(AddOnInstruction).LogixTypeName());
 
         element.AddValue(obj, o => o.Name);
         element.AddText(obj, o => o.Description);

@@ -1,9 +1,7 @@
-﻿using System.Xml.Serialization;
+﻿using System.Xml.Linq;
 using L5Sharp.Core;
 using L5Sharp.Enums;
-using L5Sharp.Serialization;
 using L5Sharp.Types;
-using L5Sharp.Utilities;
 
 namespace L5Sharp.Components;
 
@@ -14,28 +12,17 @@ namespace L5Sharp.Components;
 /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
 /// `Logix 5000 Controllers Import/Export`</a> for more information.
 /// </footer>
-[XmlType(L5XName.Parameter)]
-[LogixSerializer(typeof(ParameterSerializer))]
-public sealed class Parameter
+public sealed class Parameter : LogixComponent<Parameter>
 {
-    /// <summary>
-    /// The name of the parameter.
-    /// </summary>
-    /// <value>
-    /// A <see cref="string"/> containing the name of the parameter.
-    /// Default is <see cref="string.Empty"/>.
-    /// Valid value is required for valid import.
-    /// </value>
-    public string Name { get; set; } = string.Empty;
+    /// <inheritdoc />
+    public Parameter()
+    {
+    }
 
-    /// <summary>
-    /// The description of the parameter.
-    /// </summary>
-    /// <value>
-    /// A <see cref="string"/> containing the description of the parameter.
-    /// Default is <see cref="string.Empty"/>.
-    /// </value>
-    public string Description { get; set; } = string.Empty;
+    /// <inheritdoc />
+    public Parameter(XElement element) : base(element)
+    {
+    }
 
     /// <summary>
     /// The name of the data type of the parameter.
@@ -117,7 +104,7 @@ public sealed class Parameter
     /// <summary>
     /// A default value of the parameter when instantiated.
     /// </summary>
-    /// <value>An <see cref="ILogixType"/> representing the default value/data. Default is <c>null</c>.</value>
+    /// <value>An <see cref="AtomicType"/> representing the default value/data. Default is <c>null</c>.</value>
     public AtomicType? Default { get; set; }
         
     /// <summary>

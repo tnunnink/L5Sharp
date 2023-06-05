@@ -1,34 +1,20 @@
 ﻿using System.Xml.Linq;
 using FluentAssertions;
+using L5Sharp.Components;
 using L5Sharp.Core;
 using L5Sharp.Enums;
-using L5Sharp.Serialization;
 
 namespace L5Sharp.Tests.Serialization
 {
     [TestFixture]
     public class TaskSerializerTests
     {
-        private TaskSerializer _serializer;
-
-        [SetUp]
-        public void Setup()
-        {
-            _serializer = new TaskSerializer();
-        }
-
-        [Test]
-        public void Serialize_Null_ShouldThrowArgumentNullException()
-        {
-            FluentActions.Invoking(() => _serializer.Serialize(null!)).Should().Throw<ArgumentNullException>();
-        }
-
         [Test]
         public void Serialize_Task_ShouldNotBeNull()
         {
             var task = Logix.Task();
 
-            var xml = _serializer.Serialize(task);
+            var xml = task.Serialize();
 
             xml.Should().NotBeNull();
         }
@@ -36,7 +22,7 @@ namespace L5Sharp.Tests.Serialization
         [Test]
         public Task Serialize_ContinuousTask_ShouldBeApproved()
         {
-            var task = new L5Sharp.Components.LogixTask
+            var task = new LogixTask
             {
                 Name = "Test",
                 Type = TaskType.Continuous,
@@ -54,7 +40,7 @@ namespace L5Sharp.Tests.Serialization
                 Description = "This is a test continuous task"
             };
 
-            var xml = _serializer.Serialize(task);
+            var xml = task.Serialize();
 
             return Verify(xml.ToString());
         }
@@ -62,7 +48,7 @@ namespace L5Sharp.Tests.Serialization
         [Test]
         public Task Serialize_PeriodicTask_ShouldBeApproved()
         {
-            var task = new L5Sharp.Components.LogixTask
+            var task = new LogixTask
             {
                 Name = "Test",
                 Type = TaskType.Periodic,
@@ -80,7 +66,7 @@ namespace L5Sharp.Tests.Serialization
                 Description = "This is a test periodic task"
             };
 
-            var xml = _serializer.Serialize(task);
+            var xml = task.Serialize();
 
             return Verify(xml.ToString());
         }
@@ -88,7 +74,7 @@ namespace L5Sharp.Tests.Serialization
         [Test]
         public Task Serialize_EventTask_ShouldBeApproved()
         {
-            var task = new L5Sharp.Components.LogixTask
+            var task = new LogixTask
             {
                 Name = "Test",
                 Type = TaskType.Event,
@@ -106,15 +92,9 @@ namespace L5Sharp.Tests.Serialization
                 Description = "This is a test periodic task",
             };
 
-            var xml = _serializer.Serialize(task);
+            var xml = task.Serialize();
 
             return Verify(xml.ToString());
-        }
-
-        [Test]
-        public void Deserialize_Null_ShouldThrowArgumentNullException()
-        {
-            FluentActions.Invoking(() => _serializer.Deserialize(null!)).Should().Throw<ArgumentNullException>();
         }
 
         [Test]
@@ -122,7 +102,7 @@ namespace L5Sharp.Tests.Serialization
         {
             var element = XElement.Parse(GetContinuousTaskData());
 
-            var task = _serializer.Deserialize(element);
+            var task = new LogixTask(element);
 
             task.Should().NotBeNull();
         }
@@ -132,7 +112,7 @@ namespace L5Sharp.Tests.Serialization
         {
             var element = XElement.Parse(GetContinuousTaskData());
 
-            var task = _serializer.Deserialize(element);
+            var task = new LogixTask(element);
 
             task.Name.Should().Be("Continuous");
             task.Description.Should().Be("Test Continuous task");
@@ -149,7 +129,7 @@ namespace L5Sharp.Tests.Serialization
         {
             var element = XElement.Parse(GetPeriodicTaskData());
 
-            var task = _serializer.Deserialize(element);
+            var task = new LogixTask(element);
 
             task.Should().NotBeNull();
         }
@@ -159,7 +139,7 @@ namespace L5Sharp.Tests.Serialization
         {
             var element = XElement.Parse(GetPeriodicTaskData());
 
-            var task = _serializer.Deserialize(element);
+            var task = new LogixTask(element);
 
             task.Name.Should().Be("Periodic");
             task.Description.Should().Be("Test Periodic task");
@@ -176,7 +156,7 @@ namespace L5Sharp.Tests.Serialization
         {
             var element = XElement.Parse(GetEventTaskData());
 
-            var task = _serializer.Deserialize(element);
+            var task = new LogixTask(element);
 
             task.Should().NotBeNull();
         }
@@ -186,7 +166,7 @@ namespace L5Sharp.Tests.Serialization
         {
             var element = XElement.Parse(GetEventTaskData());
 
-            var task = _serializer.Deserialize(element);
+            var task = new LogixTask(element);
 
             task.Name.Should().Be("Event");
             task.Description.Should().Be("Test Event task");
@@ -203,7 +183,7 @@ namespace L5Sharp.Tests.Serialization
         {
             var element = XElement.Parse(GetTaskWithPrograms());
 
-            var task = _serializer.Deserialize(element);
+            var task = new LogixTask(element);
 
             task.Should().NotBeNull();
             task.ScheduledPrograms.Should().HaveCount(2);

@@ -17,7 +17,7 @@ public class ProofTests
 
         foreach (var tag in tags)
         {
-            tag.Data.To<DINT>().Should().BeGreaterOrEqualTo(0);
+            tag.Value.To<DINT>().Should().BeGreaterOrEqualTo(0);
         }
     }
 
@@ -43,15 +43,9 @@ public class ProofTests
 
         var config = content.Modules.Find("R0S4").Config;
 
-        var comment = string.Empty;
-
-        config?.Comments.TryGetValue(".CH0CountLimit", out comment);
+        var comment = config?.Member(".CH0CountLimit")?.Description;
 
         comment.Should().NotBeEmpty();
-
-        var member = config?.Member("Ch0CountLimit");
-
-        member?.As<TagMember>().Comment.Should().NotBeEmpty();
     }
 
     [Test]
@@ -59,15 +53,15 @@ public class ProofTests
     {
         var content = LogixContent.Load(@"C:\Users\tnunnink\Local\Tests\L5X\Template.L5X");
 
-         var tagLookup = content.Find<Tag>().SelectMany(t => t.MembersAndSelf()).ToLookup(k => k.TagName, t => t);
+        var tagLookup = content.Find<Tag>().SelectMany(t => t.MembersAndSelf()).ToLookup(k => k.TagName, t => t);
 
-         var target = tagLookup.FirstOrDefault(t => t.Key == "Spare_DI_Channel_5094.ChData");
-         target.Should().NotBeEmpty();
+        var target = tagLookup.FirstOrDefault(t => t.Key == "Spare_DI_Channel_5094.ChData");
+        target.Should().NotBeEmpty();
 
-         var result = tagLookup.Contains("Spare_DI_Channel_5094.ChData");
-         result.Should().BeTrue();
+        var result = tagLookup.Contains("Spare_DI_Channel_5094.ChData");
+        result.Should().BeTrue();
     }
-    
+
     [Test]
     public void GetLogixDigitalInputAoi()
     {
@@ -80,7 +74,7 @@ public class ProofTests
 
         logix.Should().NotBeEmpty();
     }
-    
+
     [Test]
     public void GetLogixMmInstruction()
     {
@@ -102,7 +96,6 @@ public class ProofTests
         var programs = content.Programs.ToList();
         foreach (var routine in programs.SelectMany(p => p.Routines))
         {
-            
         }
     }
 }

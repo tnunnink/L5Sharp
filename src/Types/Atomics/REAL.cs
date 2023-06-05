@@ -14,20 +14,22 @@ namespace L5Sharp.Types.Atomics;
 public sealed class REAL : AtomicType, IEquatable<REAL>, IComparable<REAL>
 {
     private readonly float _value;
-        
+    
     /// <summary>
     /// Creates a new default <see cref="REAL"/> type.
     /// </summary>
-    public REAL() : base(nameof(REAL))
+    public REAL() : base(nameof(REAL), Radix.Float, BitConverter.GetBytes(default(float)))
     {
+        _value = BitConverter.ToSingle(ToBytes());
     }
-        
+
     /// <summary>
     /// Creates a new <see cref="REAL"/> value with the provided radix format.
     /// </summary>
     /// <param name="radix">The <see cref="Enums.Radix"/> number format of the value.</param>
-    public REAL(Radix? radix) : base(nameof(REAL), radix)
+    public REAL(Radix radix) : base(nameof(REAL), radix, BitConverter.GetBytes(default(float)))
     {
+        _value = BitConverter.ToSingle(ToBytes());
     }
 
     /// <summary>
@@ -35,36 +37,25 @@ public sealed class REAL : AtomicType, IEquatable<REAL>, IComparable<REAL>
     /// </summary>
     /// <param name="value">The value to initialize the type with.</param>
     /// <param name="radix">The optional radix format of the value.</param>
-    public REAL(float value, Radix? radix = null) : this(radix)
+    public REAL(float value, Radix? radix = null) : base(nameof(REAL), radix ?? Radix.Float,
+        BitConverter.GetBytes(value))
     {
-        _value = value;
-    }
-
-    /// <summary>
-    /// Creates a new <see cref="REAL"/> with the provided string value.
-    /// </summary>
-    /// <param name="value">The string value to parse and convert to the value type.</param>
-    /// <param name="radix">The optional radix format of the value. If not provided, will be inferred
-    /// using <see cref="Enums.Radix.Infer"/>.</param>
-    public REAL(string value, Radix? radix = null) : this(radix ?? Radix.Infer(value))
-    {
-        var converter = TypeDescriptor.GetConverter(GetType());
-        _value = (float)(REAL)converter.ConvertFrom(value)!;
+        _value = BitConverter.ToSingle(ToBytes());
     }
 
     /// <summary>
     /// Represents the largest possible value of <see cref="REAL"/>.
     /// </summary>
     public const float MaxValue = float.MaxValue;
-        
+
     /// <summary>
     /// Represents the smallest possible value of <see cref="REAL"/>.
     /// </summary>
     public const float MinValue = float.MinValue;
-        
+
     /// <inheritdoc />
     public override IEnumerable<Member> Members => Enumerable.Empty<Member>();
-        
+
     /// <summary>
     /// Converts the provided <see cref="float"/> to a <see cref="REAL"/> value.
     /// </summary>
@@ -78,20 +69,43 @@ public sealed class REAL : AtomicType, IEquatable<REAL>, IComparable<REAL>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="float"/> type value.</returns>
     public static implicit operator float(REAL atomic) => atomic._value;
-        
+
     /// <summary>
     /// Converts the provided <see cref="bool"/> to a <see cref="BOOL"/> value.
     /// </summary>
     /// <param name="value">The value to convert.</param>
     /// <returns>A <see cref="BOOL"/> value.</returns>
-    public static implicit operator REAL(string value) => new(value);
-        
+    public static implicit operator REAL(string value) => Parse(value);
+
     /// <summary>
     /// Converts the provided <see cref="bool"/> to a <see cref="BOOL"/> value.
     /// </summary>
     /// <param name="value">The value to convert.</param>
     /// <returns>A <see cref="BOOL"/> value.</returns>
     public static implicit operator string(REAL value) => value.ToString();
+
+    /// <summary>
+    /// Parses the provided string value to a new <see cref="REAL"/>.
+    /// </summary>
+    /// <param name="value">The string value to parse.</param>
+    /// <returns>A <see cref="REAL"/> representing the parsed value.</returns>
+    /// <exception cref="ArgumentException">The converted value returned null.</exception>
+    /// <exception cref="FormatException">The <see cref="Radix"/> format can not be inferred from <c>value</c>.</exception>
+    public static REAL Parse(string value)
+    {
+        //todo need to handle NAN
+        //NOT really sure how to handle this better yet. Do we just throw an exception?
+        if (value == "1.#QNAN") return new REAL();
+        
+        var radix = Radix.Infer(value);
+
+        var converter = TypeDescriptor.GetConverter(typeof(REAL));
+
+        var type = converter.ConvertFrom(value) ??
+                   throw new ArgumentException($"The provided value '{value}' returned a null value after conversion.");
+
+        return new REAL((float)(REAL)type, radix);
+    }
 
     /// <inheritdoc />
     public bool Equals(REAL? other)

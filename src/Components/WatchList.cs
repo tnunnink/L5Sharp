@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Xml.Linq;
 using System.Xml.Serialization;
-using L5Sharp.Serialization;
-using L5Sharp.Utilities;
+using L5Sharp.Core;
+using L5Sharp.Entities;
 
 namespace L5Sharp.Components;
 
@@ -13,13 +14,15 @@ namespace L5Sharp.Components;
 /// `Logix 5000 Controllers Import/Export`</a> for more information.
 /// </footer>
 [XmlType(L5XName.QuickWatchList)]
-[LogixSerializer(typeof(QuickWatchListSerializer))]
-public class WatchList : List<WatchTag>, ILogixComponent
+public class WatchList : LogixComponent<WatchList>
 {
-    /// <summary>
-    /// Creates a new empty <see cref="WatchList"/> component.
-    /// </summary>
+    /// <inheritdoc />
     public WatchList()
+    {
+    }
+
+    /// <inheritdoc />
+    public WatchList(XElement element) : base(element)
     {
     }
 
@@ -27,14 +30,7 @@ public class WatchList : List<WatchTag>, ILogixComponent
     /// Initializes a new instance of the <see cref="WatchList"/> that contains tags copied from the provided collection.
     /// </summary>
     /// <param name="watchTags">The collection of <see cref="WatchTag"/> to initialize the list with.</param>
-    public WatchList(IEnumerable<WatchTag> watchTags) : base(watchTags)
+    public WatchList(IEnumerable<WatchTag> watchTags)
     {
     }
-
-    /// <inheritdoc />
-    public string Name { get; set; } = string.Empty;
-
-    /// <inheritdoc />
-    /// <remarks>Always empty since this property is not contained on the <see cref="WatchList"/> component.</remarks>
-    public string Description => string.Empty;
 }

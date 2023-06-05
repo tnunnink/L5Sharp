@@ -1,6 +1,6 @@
-﻿using L5Sharp.Enums;
+﻿using System.Xml.Linq;
+using L5Sharp.Enums;
 using L5Sharp.Types.Atomics;
-
 // ReSharper disable InconsistentNaming RSLogix naming
 
 namespace L5Sharp.Types.Predefined;
@@ -15,15 +15,16 @@ public sealed class TIMER : StructureType
     /// </summary>
     public TIMER() : base(nameof(TIMER))
     {
+        PRE = new DINT();
+        ACC = new DINT();
+        EN = new BOOL();
+        TT = new BOOL();
+        DN = new BOOL();
     }
 
-    /// <summary>
-    /// Creates a new <see cref="TIMER"/> data type instance with the provided <see cref="PRE"/> value. 
-    /// </summary>
-    /// <param name="pre">The <see cref="DINT"/> value to initialize <see cref="PRE"/> with.</param>
-    public TIMER(DINT pre) : this()
+    /// <inheritdoc />
+    public TIMER(XElement element) : base(element)
     {
-        PRE = pre;
     }
 
     /// <inheritdoc />
@@ -36,7 +37,11 @@ public sealed class TIMER : StructureType
     /// The preset value specifies the value (1 msec units) which the accumulated value must reach
     /// before the instruction sets the .DN bit.
     /// </remarks>
-    public DINT PRE { get; set; } = new();
+    public DINT PRE
+    {
+        get => GetMember<DINT>();
+        set => SetMember(value);
+    }
 
     /// <summary>
     /// Gets the <see cref="ACC"/> member of the <see cref="TIMER"/> data type.
@@ -45,7 +50,11 @@ public sealed class TIMER : StructureType
     /// The accumulated value specifies the number of milliseconds that have elapsed since the
     /// Timer instruction was enabled.
     /// </remarks>
-    public DINT ACC { get; set; } = new();
+    public DINT ACC
+    {
+        get => GetMember<DINT>();
+        set => SetMember(value);
+    }
 
     /// <summary>
     /// Gets the <see cref="EN"/> member of the <see cref="TIMER"/> data type.
@@ -53,7 +62,11 @@ public sealed class TIMER : StructureType
     /// <remarks>
     /// The enable bit indicates that the Timer instruction is enabled.
     /// </remarks>
-    public BOOL EN { get; set; } = new();
+    public BOOL EN
+    {
+        get => GetMember<BOOL>();
+        set => SetMember(value);
+    }
 
     /// <summary>
     /// Gets the <see cref="TT"/> member of the <see cref="TIMER"/> data type.
@@ -61,7 +74,11 @@ public sealed class TIMER : StructureType
     /// <remarks>
     /// The timing bit indicates that a timing operation is in process
     /// </remarks>
-    public BOOL TT { get; set; } = new();
+    public BOOL TT
+    {
+        get => GetMember<BOOL>();
+        set => SetMember(value);
+    }
 
     /// <summary>
     /// Gets the <see cref="DN"/> member of the <see cref="TIMER"/> data type.
@@ -69,5 +86,9 @@ public sealed class TIMER : StructureType
     /// <remarks>
     /// The done bit is set when .ACC ≥ .PRE.
     /// </remarks>
-    public BOOL DN { get; set; } = new();
+    public BOOL DN
+    {
+        get => GetMember<BOOL>();
+        set => SetMember(value);
+    }
 }

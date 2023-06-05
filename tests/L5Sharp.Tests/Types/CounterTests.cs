@@ -16,15 +16,7 @@ namespace L5Sharp.Tests.Types
             
             type.Should().NotBeNull();
         }
-        
-        [Test]
-        public void Constructor_ValidDint_ShouldHaveExpectedPREValue()
-        {
-            var type = new COUNTER(new DINT(5000));
-            
-            type.PRE.Should().Be(5000);
-        }
-        
+
         [Test]
         public void Class_GetValue_ShouldBeExpected()
         {

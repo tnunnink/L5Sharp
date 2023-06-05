@@ -16,7 +16,7 @@ public interface ILogixCode : ILogixScoped
     /// This helper property makes it easier to filter code objects, such as rungs, structured text, and sheets.
     /// This property is not serialized back to an L5X file, so setting it effectively does nothing useful.
     /// </remarks>
-    string Routine { get; set; }
+    string Routine { get; }
 
     /// <summary>
     /// The number or index of the <see cref="ILogixCode"/> position within it's containing <c>Routine</c>.

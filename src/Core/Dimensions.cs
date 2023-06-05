@@ -139,8 +139,7 @@ public sealed class Dimensions : IEquatable<Dimensions>
         if (array is null)
             throw new ArgumentNullException(nameof(array));
 
-        if (array.Length == 0)
-            throw new ArgumentException("Array must have at least one element to be constructed.");
+        if (array.Length == 0) return Empty;
 
         for (var i = 0; i < array.Rank; i++)
         {

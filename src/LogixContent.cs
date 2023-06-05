@@ -6,17 +6,14 @@ using L5Sharp.Components;
 using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Extensions;
-using L5Sharp.Repositories;
-using L5Sharp.Serialization;
-using L5Sharp.Utilities;
 
 namespace L5Sharp;
 
 /// <summary>
 /// A simple wrapper around a given <see cref="XElement"/>, which is expected to be the root RSLogix5000Content element
-/// of the L5X file. This class implements <see cref="ILogixContent"/> API.
+/// of the L5X file.
 /// </summary>
-public class LogixContent : ILogixContent
+public class LogixContent
 {
     /// <summary>
     /// 
@@ -26,6 +23,13 @@ public class LogixContent : ILogixContent
     private LogixContent(XElement element)
     {
         L5X = new L5X(element);
+
+        DataTypes = new LogixCollection<DataType>(L5X.Controller);
+        Instructions = new LogixCollection<AddOnInstruction>(L5X.Controller);
+        Modules = new LogixCollection<Module>(L5X.Controller);
+        Tags = new LogixCollection<Tag>(L5X.Controller);
+        Programs = new LogixCollection<Program>(L5X.Controller);
+        Tasks = new LogixCollection<LogixTask>(L5X.Controller);
     }
 
     /// <summary>
@@ -64,7 +68,7 @@ public class LogixContent : ILogixContent
         var content = new XElement(L5XName.RSLogix5000Content);
         content.Add(new XAttribute(L5XName.SchemaRevision, new Revision().ToString()));
         content.Add(new XAttribute(L5XName.TargetName, target.Name));
-        content.Add(new XAttribute(L5XName.TargetType, target.GetType().GetLogixName()));
+        content.Add(new XAttribute(L5XName.TargetType, target.GetType().LogixTypeName()));
         content.Add(new XAttribute(L5XName.ContainsContext, target.GetType() != typeof(Controller)));
         content.Add(new XAttribute(L5XName.Owner, Environment.UserName));
         content.Add(new XAttribute(L5XName.ExportDate, DateTime.Now.ToString(L5X.DateTimeFormat)));
@@ -85,36 +89,97 @@ public class LogixContent : ILogixContent
     /// </remarks>
     public L5X L5X { get; }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// 
+    /// </summary>
     public Controller Controller => LogixSerializer.Deserialize<Controller>(L5X.Controller);
 
-    /// <inheritdoc />
-    public ILogixComponentRepository<DataType> DataTypes => new ComponentRepository<DataType>(L5X);
+    /// <summary>
+    ///  Gets the collection of <see cref="DataType"/> components found in the L5X file.
+    /// </summary>
+    /// <value>A <see cref="ILogixCollection{TComponent}"/> of <see cref="DataType"/> components.</value>
+    public ILogixCollection<DataType> DataTypes { get; }
 
-    /// <inheritdoc />
-    public ILogixComponentRepository<AddOnInstruction> Instructions => new ComponentRepository<AddOnInstruction>(L5X);
+    /// <summary>
+    ///  Gets the collection of <see cref="AddOnInstruction"/> components found in the L5X file.
+    /// </summary>
+    /// <value>A <see cref="ILogixCollection{TComponent}"/> of <see cref="AddOnInstruction"/> components.</value>
+    public ILogixCollection<AddOnInstruction> Instructions { get; }
 
-    /// <inheritdoc />
-    public ILogixComponentRepository<Module> Modules => new ComponentRepository<Module>(L5X);
+    /// <summary>
+    ///  Gets the collection of <see cref="Module"/> components found in the L5X file.
+    /// </summary>
+    /// <value>A <see cref="ILogixCollection{TComponent}"/> of <see cref="Module"/> components.</value>
+    public ILogixCollection<Module> Modules { get; }
 
-    /// <inheritdoc />
-    public ILogixComponentRepository<Program> Programs => new ComponentRepository<Program>(L5X);
+    /// <summary>
+    ///  Gets the collection of Controller <see cref="Tags"/> components found in the L5X file.
+    /// </summary>
+    /// <value>A <see cref="ILogixCollection{TComponent}"/> of <see cref="Tags"/> components.</value>
+    /// <remarks>To access program specific tag collection user the <see cref="Programs"/> collection.</remarks>
+    public ILogixCollection<Tag> Tags { get; }
 
-    /// <inheritdoc />
-    public ILogixScopedRepository<Routine> Routines => new ScopedRepository<Routine>(L5X);
+    /// <summary>
+    ///  Gets the collection of <see cref="Program"/> components found in the L5X file.
+    /// </summary>
+    /// <value>A <see cref="ILogixCollection{TComponent}"/> of <see cref="Program"/> components.</value>
+    public ILogixCollection<Program> Programs { get; }
 
-    /// <inheritdoc />
-    public ILogixTagRepository Tags => new TagRepository(L5X);
+    /// <summary>
+    ///  Gets the collection of <see cref="LogixTask"/> components found in the L5X file.
+    /// </summary>
+    /// <value>A <see cref="ILogixCollection{TComponent}"/> of <see cref="LogixTask"/> components.</value>
+    public ILogixCollection<LogixTask> Tasks { get; }
 
-    /// <inheritdoc />
-    public ILogixComponentRepository<LogixTask> Tasks => new ComponentRepository<LogixTask>(L5X);
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="TEntity"></typeparam>
+    /// <returns></returns>
+    public IEnumerable<TEntity> Find<TEntity>() where TEntity : class => 
+        L5X.Descendants(typeof(TEntity).LogixTypeName()).Select(LogixSerializer.Deserialize<TEntity>);
 
-    /// <inheritdoc />
-    public IEnumerable<TEntity> Find<TEntity>() where TEntity : class
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="tagName"></param>
+    /// <returns></returns>
+    public TagMember FindTag(TagName tagName)
     {
-        var name = typeof(TEntity).GetLogixName();
-        var serializer = LogixSerializer.GetSerializer<TEntity>();
-        return L5X.Descendants(name).Select(e => serializer.Deserialize(e));
+        throw new NotImplementedException();
+    }
+    
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="tagName"></param>
+    /// <typeparam name="TLogixType"></typeparam>
+    /// <returns></returns>
+    /// <exception cref="NotImplementedException"></exception>
+    public TagMember<TLogixType> FindTag<TLogixType>(TagName tagName) where TLogixType : LogixType
+    {
+        throw new NotImplementedException();
+    }
+    
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="tagName"></param>
+    /// <typeparam name="TLogixType"></typeparam>
+    /// <returns></returns>
+    public TagMember<TLogixType> FindTags<TLogixType>(TagName tagName) where TLogixType : LogixType
+    {
+        throw new NotImplementedException();
+    }
+    
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="TLogixType"></typeparam>
+    /// <returns></returns>
+    public IEnumerable<TagMember<TLogixType>> FindTags<TLogixType>() where TLogixType : LogixType
+    {
+        throw new NotImplementedException();
     }
 
     /// <summary>

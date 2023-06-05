@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using L5Sharp.Types;
 using L5Sharp.Types.Atomics;
 using L5Sharp.Types.Predefined;
 
@@ -19,7 +20,7 @@ public class LogixTests
     [Test]
     public void Array_ValidDimensions_ShouldReturnInitializedArray()
     {
-        var array = Logix.Array<BOOL>(10);
+        var array = ArrayType.New<BOOL>(10);
 
         foreach (var element in array)
         {
@@ -33,6 +34,6 @@ public class LogixTests
         var tag = Logix.Tag<TIMER>("MyTimer");
 
         tag.Name.Should().Be("MyTimer");
-        tag.Data.Should().BeOfType<TIMER>();
+        tag.Value.Should().BeOfType<TIMER>();
     }
 }

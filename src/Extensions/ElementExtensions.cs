@@ -1,14 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 using L5Sharp.Types;
-using L5Sharp.Utilities;
 using System.Reflection;
-using L5Sharp.Enums;
 
 namespace L5Sharp.Extensions
 {
@@ -26,180 +21,52 @@ namespace L5Sharp.Extensions
         /// All this does is first look for the class attribute <see cref="XmlTypeAttribute"/> to use as the explicitly
         /// configured name, and if not found, returns the type name as the default element name.
         /// </remarks>
-        public static XName GetLogixName(this Type type)
+        public static XName LogixTypeName(this Type type)
         {
             var attribute = type.GetCustomAttribute<XmlTypeAttribute>();
             return attribute is not null ? attribute.TypeName : type.Name;
         }
 
         /// <summary>
-        /// Gets the name attribute for the current L5X element.
+        /// Gets the <c>Name</c> attribute value for the current <see cref="XElement"/>.
         /// </summary>
-        /// <param name="element">The <see cref="XElement"/> for which to get the value.</param>
+        /// <param name="element">The <see cref="XElement"/> instance.</param>
         /// <returns>A <see cref="string"/> representing the name value.</returns>
+        /// <remarks>
+        /// This is a helper since we access and use the name attribute so often I just wanted to make
+        /// the code more concise.
+        /// </remarks>
         public static string LogixName(this XElement element) => element.Attribute(L5XName.Name)?.Value ?? string.Empty;
 
         /// <summary>
-        /// Gets the description element value for the current L5X element.
+        /// Gets the <c>DataType</c> attribute value for the current <see cref="XElement"/>.
         /// </summary>
-        /// <param name="element">The <see cref="XElement"/> for which to get the value.</param>
-        /// <returns>A <see cref="string"/> representing the description value.</returns>
-        public static string LogixDescription(this XElement element) =>
-            element.Element(L5XName.Description)?.Value ?? string.Empty;
+        /// <param name="element">The <see cref="XElement"/> instance.</param>
+        /// <returns>The <see cref="string"/> value of the attribute if exists; otherwise, <c>null</c>.</returns>
+        /// <remarks>
+        /// This is a helper since we access and use the data type attribute often, I just wanted to make
+        /// the code more concise.
+        /// </remarks>
+        public static string? LogixType(this XElement element) => element.Attribute(L5XName.DataType)?.Value;
 
         /// <summary>
-        /// Gets the value of the specified attribute name from the current element parsed as the specified
-        /// generic type parameter.
+        /// Gets the value of the name or index attribute of the <see cref="XElement"/>.
         /// </summary>
-        /// <param name="element">The current element.</param>
-        /// <param name="name">The XName of the XAttribute to get the value of.</param>
-        /// <typeparam name="TValue">The type of the value to be parsed.</typeparam>
-        /// <returns>A value of the specified type if the attribute exists; otherwise, default.</returns>
-        /// <exception cref="InvalidOperationException">Attribute with <c>name</c> does not exists on element.</exception>
-        public static TValue GetValue<TValue>(this XElement element, XName name)
+        /// <param name="element">The <see cref="XElement"/> instance.</param>
+        /// <returns>
+        /// If name exists, the value of the name attribute.
+        /// If index exists, the value of the index attribute.
+        /// If neither exists, returns default.
+        /// </returns>
+        /// <remarks>
+        /// This is a helper since we access and use the member name attribute so often I just wanted to make
+        /// the code more concise.
+        /// </remarks>
+        public static string? MemberName(this XElement element)
         {
-            var property = element.Attribute(name);
-
-            if (property is null)
-                throw new InvalidOperationException(
-                    $"The attribute {name} does not exist on the element {element.Name}");
-
-            return property.Value.Parse<TValue>();
-        }
-
-        /// <summary>
-        /// Gets the value of the specified attribute name from the current element parsed as the specified
-        /// generic type parameter is it exists. If the attribute does not exist, returns default of specified generic
-        /// type parameter.
-        /// </summary>
-        /// <param name="element">The current element.</param>
-        /// <param name="name">The XName of the XAttribute to get the value of.</param>
-        /// <typeparam name="TValue">The type of the value to be parsed.</typeparam>
-        /// <returns>A value of the specified type if the attribute exists; otherwise, default.</returns>
-        public static TValue? TryGetValue<TValue>(this XElement element, XName name)
-        {
-            var value = element.Attribute(name)?.Value;
-            return value is not null ? value.Parse<TValue>() : default;
-        }
-
-        /// <summary>
-        /// Gets the date/time value of the specified attribute name from the current element if it exists.
-        /// If the attribute does not exist, returns default value
-        /// </summary>
-        /// <param name="element">The current element.</param>
-        /// <param name="name">The name of the date time attribute.</param>
-        /// <param name="format">The format of the date time.
-        /// If not provided will default to 'ddd MMM d HH:mm:ss yyyy' which is a typical L5X date time format.</param>
-        /// <returns>The parsed <see cref="DateTime"/> value of the attribute.</returns>
-        public static DateTime TryGetDateTime(this XElement element, XName name, string? format = null)
-        {
-            format ??= "ddd MMM d HH:mm:ss yyyy";
-
-            var attribute = element.Attribute(name);
-
-            return attribute is not null
-                ? DateTime.ParseExact(attribute.Value, format, CultureInfo.CurrentCulture)
-                : default;
-        }
-
-        /// <summary>
-        /// Adds the provided object value to the current <see cref="XElement"/> as a attribute or element.
-        /// </summary>
-        /// <param name="element">The current <see cref="XElement"/> object.</param>
-        /// <param name="value">The object value to add to the element. Only added if not null or empty.</param>
-        /// <param name="name">The name of the attribute or element to add.</param>
-        /// <param name="addCondition">An option condition that specifies when the value should be added.</param>
-        public static void AddValue<T>(this XElement element, T? value, string name, Predicate<T>? addCondition = null)
-        {
-            if (value is null || value.ToString().IsEmpty() || addCondition?.Invoke(value) == false)
-                return;
-
-            element.Add(new XAttribute(name, value.ToString()));
-        }
-
-        /// <summary>
-        /// Adds the provided object value to the current <see cref="XElement"/> as a attribute or element.
-        /// </summary>
-        /// <param name="element">The current <see cref="XElement"/> object.</param>
-        /// <param name="obj">The object for which add the specified property value.</param>
-        /// <param name="selector">The expression selecting the property value to add.</param>
-        /// <param name="addCondition"></param>
-        /// <exception cref="ArgumentNullException"><c>obj</c> or <c>selector</c> is null.</exception>
-        /// <exception cref="ArgumentException"><c>selector</c> is not a <see cref="MemberExpression"/>.</exception>
-        public static void AddValue<TObj, TValue>(this XElement element, TObj obj,
-            Expression<Func<TObj, TValue>> selector,
-            Predicate<TValue>? addCondition = null)
-        {
-            if (obj is null)
-                throw new ArgumentNullException(nameof(obj));
-
-            if (selector is null)
-                throw new ArgumentNullException(nameof(selector));
-
-            if (selector.Body is not MemberExpression memberExpression)
-                throw new ArgumentException($"The provided selector expression must be a {typeof(MemberExpression)}");
-
-            var name = memberExpression.Member.Name;
-            var value = selector.Compile().Invoke(obj);
-
-            element.AddValue(value, name, addCondition);
-        }
-
-        /// <summary>
-        /// Adds the provided text to the current <see cref="XElement"/> as a child element with text wrapped in CData.
-        /// </summary>
-        /// <param name="element">The current <see cref="XElement"/> object.</param>
-        /// <param name="value">The object value to add to the element. Only added if not null or empty.</param>
-        /// <param name="name">The name of the attribute or element to add.</param>
-        public static void AddText(this XElement element, string? value, string name)
-        {
-            if (string.IsNullOrEmpty(value))
-                return;
-
-            element.Add(new XElement(name, new XCData(value)));
-        }
-
-        /// <summary>
-        /// Adds the specified text property to the current <see cref="XElement"/> as a child element with text wrapped in CData.
-        /// </summary>
-        /// <param name="element">The current <see cref="XElement"/> object.</param>
-        /// <param name="obj">The object for which add the specified property value.</param>
-        /// <param name="selector">The expression selecting the property value to add.</param>
-        /// <exception cref="ArgumentNullException"><c>obj</c> or <c>selector</c> is null.</exception>
-        /// <exception cref="ArgumentException"><c>selector</c> is not a <see cref="MemberExpression"/>.</exception>
-        public static void AddText<T>(this XElement element, T obj, Expression<Func<T, string>> selector)
-        {
-            if (obj is null)
-                throw new ArgumentNullException(nameof(obj));
-
-            if (selector is null)
-                throw new ArgumentNullException(nameof(selector));
-
-            if (selector.Body is not MemberExpression memberExpression)
-                throw new ArgumentException($"The provided selector expression must be a {typeof(MemberExpression)}");
-
-            var name = memberExpression.Member.Name;
-            var value = selector.Compile().Invoke(obj);
-
-            element.AddText(value, name);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="elements"></param>
-        /// <param name="scoped"></param>
-        /// <returns></returns>
-        public static IEnumerable<XElement> ScopedTo(this IEnumerable<XElement> elements, ILogixScoped scoped)
-        {
-            if (scoped.Scope == Scope.Null)
-                return string.IsNullOrEmpty(scoped.Container)
-                    ? elements
-                    : elements.Where(e => e.LogixName() == scoped.Container);
-
-            return string.IsNullOrEmpty(scoped.Container)
-                ? elements.Where(e => e.Name == scoped.Scope.XName)
-                : elements.Where(e => e.Name == scoped.Scope.XName && e.LogixName() == scoped.Container);
+            var name = element.Attribute(L5XName.Name)?.Value;
+            var index = element.Attribute(L5XName.Index)?.Value;
+            return name ?? (index ?? default);
         }
 
         /// <summary>

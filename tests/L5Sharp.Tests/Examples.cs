@@ -1,8 +1,10 @@
 ﻿using FluentAssertions;
 using L5Sharp.Components;
 using L5Sharp.Core;
+using L5Sharp.Entities;
 using L5Sharp.Enums;
 using L5Sharp.Extensions;
+using L5Sharp.Types;
 
 namespace L5Sharp.Tests
 {
@@ -21,10 +23,8 @@ namespace L5Sharp.Tests
         public void ApiTesting()
         {
             var content = LogixContent.Load(Known.Test);
-            
-            content.Routines
-                .In("MyProgram")
-                .Update(r => r.Content.Add(new Rung()));
+
+            var routine = content.Programs["MyProgram"].Routines.Find("Setup");
         }
 
         [Test]
@@ -65,7 +65,7 @@ namespace L5Sharp.Tests
 
             tags.Should().NotBeNull();
 
-            var array = AssertionExtensions.As<ILogixArray<ILogixType>>(tags.Data);
+            var array = AssertionExtensions.As<ArrayType<LogixType>>(tags.Value);
 
             var elements = array.Members.ToList();
             elements.Should().NotBeEmpty();
@@ -104,26 +104,6 @@ namespace L5Sharp.Tests
             var timers = content.Tags.Where(t => t.DataType == "TIMER");
 
             timers.Should().NotBeEmpty();
-        }
-
-        [Test]
-        public void Tags_Program_ShouldNotBeEmpty()
-        {
-            var content = LogixContent.Load(Known.Test);
-
-            var tags = content.Tags.In("MainProgram").Where(t => t.DataType == "DINT");
-
-            tags.Should().NotBeEmpty();
-        }
-
-        [Test]
-        public void Routines_InProgram_ShouldNotBeEmpty()
-        {
-            var content = LogixContent.Load(Known.Test);
-
-            var routines = content.Routines.In("MainProgram");
-
-            routines.Should().NotBeEmpty();
         }
 
         [Test]
@@ -174,7 +154,7 @@ namespace L5Sharp.Tests
         {
             var content = LogixContent.Load(Known.Test);
 
-            var logic = content.Text().In("MainProgram").With("SimpleBool");
+            var logic = content.Text().In("MainProgram").WithTag("SimpleBool");
 
             logic.Should().NotBeEmpty();
         }

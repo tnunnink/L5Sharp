@@ -98,6 +98,14 @@ public class TagName : IEquatable<TagName>, IComparable<TagName>
     public string Path => Operand.StartsWith(".") ? Operand.Remove(0, 1) : Operand;
 
     /// <summary>
+    /// Gets the final member name of the full tag name path.
+    /// </summary>
+    /// <remarks>
+    /// This is 
+    /// </remarks>
+    public string Member => Members.Last();
+
+    /// <summary>
     /// 
     /// </summary>
     public IEnumerable<string> Members => Regex.Matches(_tagName, MembersPattern).Select(m => m.Value);
@@ -249,5 +257,86 @@ public class TagName : IEquatable<TagName>, IComparable<TagName>
         }
 
         return builder.ToString();
+    }
+}
+
+/// <summary>
+/// A <see cref="IEqualityComparer{T}"/> for the <see cref="TagName"/> object.
+/// </summary>
+public class TagNameComparer : IEqualityComparer<TagName>
+{
+    private TagNameComparer()
+    {
+    }
+
+    /// <summary>
+    /// An <see cref="IEqualityComparer{T}"/> that compares the full <see cref="TagName"/> value.
+    /// </summary>
+    public static TagNameComparer FullName { get; } = new();
+
+    /// <summary>
+    /// An <see cref="IEqualityComparer{T}"/> that compares the <see cref="TagName.Root"/> property of the
+    /// <see cref="TagName"/> value.
+    /// </summary>
+    public static TagNameComparer BaseName { get; } = new BaseTagNameComparer();
+
+    /// <summary>
+    /// An <see cref="IEqualityComparer{T}"/> that compares the <see cref="TagName.Path"/> property of the
+    /// <see cref="TagName"/> value.
+    /// </summary>
+    public static TagNameComparer PathName { get; } = new PathTagNameComparer();
+
+    /// <summary>
+    /// An <see cref="IEqualityComparer{T}"/> that compares the last member of the <see cref="TagName"/> value.
+    /// </summary>
+    public static TagNameComparer MemberName { get; } = new MemberTagNameComparer();
+
+    /// <inheritdoc />
+    public virtual bool Equals(TagName? x, TagName? y)
+    {
+        if (ReferenceEquals(x, y)) return true;
+        if (ReferenceEquals(x, null) || ReferenceEquals(y, null)) return false;
+        return x.Equals(y);
+    }
+
+    /// <inheritdoc />
+    public virtual int GetHashCode(TagName obj) => obj.GetHashCode();
+
+
+    private class BaseTagNameComparer : TagNameComparer
+    {
+        public override bool Equals(TagName? x, TagName? y)
+        {
+            if (ReferenceEquals(x, y)) return true;
+            if (ReferenceEquals(x, null) || ReferenceEquals(y, null)) return false;
+            return string.Equals(x.Root, y.Root, StringComparison.OrdinalIgnoreCase);
+        }
+
+        public override int GetHashCode(TagName obj) => StringComparer.OrdinalIgnoreCase.GetHashCode(obj.Root);
+    }
+
+    private class PathTagNameComparer : TagNameComparer
+    {
+        public override bool Equals(TagName? x, TagName? y)
+        {
+            if (ReferenceEquals(x, y)) return true;
+            if (ReferenceEquals(x, null) || ReferenceEquals(y, null)) return false;
+            return string.Equals(x.Path, y.Path, StringComparison.OrdinalIgnoreCase);
+        }
+
+        public override int GetHashCode(TagName obj) => StringComparer.OrdinalIgnoreCase.GetHashCode(obj.Path);
+    }
+
+    private class MemberTagNameComparer : TagNameComparer
+    {
+        public override bool Equals(TagName? x, TagName? y)
+        {
+            if (ReferenceEquals(x, y)) return true;
+            if (ReferenceEquals(x, null) || ReferenceEquals(y, null)) return false;
+            return string.Equals(x.Members.Last(), y.Members.Last(), StringComparison.OrdinalIgnoreCase);
+        }
+
+        public override int GetHashCode(TagName obj) =>
+            StringComparer.OrdinalIgnoreCase.GetHashCode(obj.Members.Last());
     }
 }

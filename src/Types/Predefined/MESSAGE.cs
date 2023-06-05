@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using L5Sharp.Core;
+﻿using System.Xml.Linq;
 using L5Sharp.Enums;
 using L5Sharp.Types.Atomics;
 
@@ -16,6 +15,11 @@ public sealed class MESSAGE : StructureType
     /// Creates a new <see cref="MESSAGE"/> data type instance.
     /// </summary>
     public MESSAGE() : base(nameof(MESSAGE))
+    {
+    }
+    
+    /// <inheritdoc />
+    public MESSAGE(XElement element) : base(element)
     {
     }
 

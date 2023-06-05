@@ -16,16 +16,18 @@ public sealed class INT : AtomicType, IEquatable<INT>, IComparable<INT>
     /// <summary>
     /// Creates a new default <see cref="INT"/> type.
     /// </summary>
-    public INT() : base(nameof(INT))
+    public INT() : base(nameof(INT), Radix.Decimal, BitConverter.GetBytes(default(short)))
     {
+        _value = BitConverter.ToInt16(ToBytes());
     }
 
     /// <summary>
     /// Creates a new <see cref="INT"/> value with the provided radix format.
     /// </summary>
     /// <param name="radix">The <see cref="Enums.Radix"/> number format of the value.</param>
-    public INT(Radix? radix) : base(nameof(INT), radix)
+    public INT(Radix radix) : base(nameof(INT), radix, BitConverter.GetBytes(default(short)))
     {
+        _value = BitConverter.ToInt16(ToBytes());
     }
 
     /// <summary>
@@ -33,21 +35,10 @@ public sealed class INT : AtomicType, IEquatable<INT>, IComparable<INT>
     /// </summary>
     /// <param name="value">The value to initialize the type with.</param>
     /// <param name="radix">The optional radix format of the value.</param>
-    public INT(short value, Radix? radix = null) : this(radix)
+    public INT(short value, Radix? radix = null) : base(nameof(INT), radix ?? Radix.Decimal,
+        BitConverter.GetBytes(value))
     {
-        _value = value;
-    }
-
-    /// <summary>
-    /// Creates a new <see cref="INT"/> with the provided string value.
-    /// </summary>
-    /// <param name="value">The string value to parse and convert to the value type.</param>
-    /// <param name="radix">The optional radix format of the value. If not provided, will be inferred
-    /// using <see cref="Enums.Radix.Infer"/>.</param>
-    public INT(string value, Radix? radix = null) : this(radix ?? Radix.Infer(value))
-    {
-        var converter = TypeDescriptor.GetConverter(GetType());
-        _value = (short)(INT)converter.ConvertFrom(value)!;
+        _value = BitConverter.ToInt16(ToBytes());
     }
 
     /// <summary>
@@ -59,6 +50,12 @@ public sealed class INT : AtomicType, IEquatable<INT>, IComparable<INT>
     /// Represents the smallest possible value of <see cref="INT"/>.
     /// </summary>
     public const short MinValue = short.MinValue;
+
+    /// <summary>
+    /// Gets or sets a <see cref="BOOL"/> at the specified bit index.
+    /// </summary>
+    /// <param name="bit">The bit index to access</param>
+    public BOOL this[int bit] => new(Value[bit]);
 
     /// <summary>
     /// Converts the provided <see cref="short"/> to a <see cref="INT"/> value.
@@ -79,7 +76,7 @@ public sealed class INT : AtomicType, IEquatable<INT>, IComparable<INT>
     /// </summary>
     /// <param name="value">The value to convert.</param>
     /// <returns>A new <see cref="INT"/> value.</returns>
-    public static implicit operator INT(string value) => new(value);
+    public static implicit operator INT(string value) => Parse(value);
 
     /// <summary>
     /// Implicitly converts the provided <see cref="INT"/> to a <see cref="string"/> value.
@@ -87,6 +84,45 @@ public sealed class INT : AtomicType, IEquatable<INT>, IComparable<INT>
     /// <param name="value">The value to convert.</param>
     /// <returns>A new <see cref="string"/> value.</returns>
     public static implicit operator string(INT value) => value.ToString();
+
+    /// <summary>
+    /// Parses the provided string value to a new <see cref="INT"/>.
+    /// </summary>
+    /// <param name="value">The string value to parse.</param>
+    /// <returns>A <see cref="INT"/> representing the parsed value.</returns>
+    /// <exception cref="ArgumentException">The converted value returned null.</exception>
+    /// <exception cref="FormatException">The <see cref="Radix"/> format can not be inferred from <c>value</c>.</exception>
+    public static INT Parse(string value)
+    {
+        var radix = Radix.Infer(value);
+
+        var converter = TypeDescriptor.GetConverter(typeof(INT));
+
+        var type = converter.ConvertFrom(value) ??
+                   throw new ArgumentException($"The provided value '{value}' returned a null value after conversion.");
+
+        return new INT((short)(INT)type, radix);
+    }
+
+    /// <summary>
+    /// Parses the provided string value to a new <see cref="INT"/>.
+    /// </summary>
+    /// <param name="value">The string value to parse.</param>
+    /// <param name="radix">The radix format of the string</param>
+    /// <returns>A <see cref="INT"/> representing the parsed value.</returns>
+    /// <exception cref="ArgumentException">The converted value returned null.</exception>
+    /// <exception cref="FormatException">The <see cref="Radix"/> format can not be inferred from <c>value</c>.</exception>
+    public static INT Parse(string value, Radix radix)
+    {
+        var atomic = radix.Parse(value);
+
+        var converter = TypeDescriptor.GetConverter(typeof(INT));
+
+        var type = converter.ConvertFrom(atomic) ??
+                   throw new ArgumentException($"The provided value '{value}' returned a null value after conversion.");
+
+        return new INT((short)(INT)type, radix);
+    }
 
     /// <inheritdoc />
     public bool Equals(INT? other)

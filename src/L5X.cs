@@ -5,7 +5,6 @@ using System.Xml.Linq;
 using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Extensions;
-using L5Sharp.Utilities;
 
 namespace L5Sharp;
 
@@ -59,74 +58,45 @@ public class L5X : XElement
     /// </summary>
     /// <value>A <see cref="Revision"/> type that represent the major/minor revision of the L5X schema.</value>
     /// <remarks>This is always 1.0. If the R</remarks>
-    public Revision? SchemaRevision => this.TryGetValue<Revision>(L5XName.SchemaRevision);
+    public Revision? SchemaRevision => Attribute(L5XName.SchemaRevision)?.Value.Parse<Revision>();
 
     /// <summary>
     /// Gets the value of the software revision for the current L5X content.
     /// </summary>
     /// <value>A <see cref="Revision"/> type that represent the major/minor revision of the software.</value>
-    public Revision? SoftwareRevision => this.TryGetValue<Revision>(L5XName.SoftwareRevision);
+    public Revision? SoftwareRevision => Attribute(L5XName.SoftwareRevision)?.Value.Parse<Revision>();
 
     /// <summary>
     /// Gets the name of the Logix component that is the target of the current L5X context.
     /// </summary>
-    public string? TargetName => this.TryGetValue<string>(L5XName.TargetName);
+    public string? TargetName => Attribute(L5XName.TargetName)?.Value.Parse<string>();
 
     /// <summary>
     /// Gets the type of Logix component that is the target of the current L5X context.
     /// </summary>
-    public string? TargetType => this.TryGetValue<string>(L5XName.TargetType);
+    public string? TargetType => Attribute(L5XName.TargetType)?.Value.Parse<string>();
 
     /// <summary>
     /// Gets the value indicating whether the current L5X is contextual..
     /// </summary>
-    public bool? ContainsContext => this.TryGetValue<bool>(L5XName.ContainsContext);
+    public bool? ContainsContext => Attribute(L5XName.ContainsContext)?.Value.Parse<bool>();
 
     /// <summary>
     /// Gets the owner that exported the current L5X file.
     /// </summary>
-    public string? Owner => this.TryGetValue<string>(L5XName.Owner);
+    public string? Owner => Attribute(L5XName.Owner)?.Value.Parse<string>();
 
     /// <summary>
     /// Gets the date time that the L5X file was exported.
     /// </summary>
-    public DateTime? ExportDate => this.TryGetDateTime(L5XName.ExportDate, DateTimeFormat);
+    public DateTime? ExportDate => Attribute(L5XName.ExportDate)?.Value is not null
+        ? DateTime.ParseExact(Attribute(L5XName.ExportDate)?.Value, DateTimeFormat, null)
+        : default;
 
     /// <summary>
     /// Gets the root controller element of the L5X file. 
     /// </summary>
-    public XElement Controller =>
-        Element(L5XName.Controller)
-        ?? throw new InvalidOperationException(
-            "Could not retrieve the root controller element XML content. Verify valid L5X format.");
-
-    /// <summary>
-    /// Gets the known container element for the specified component type name.
-    /// </summary>
-    /// <param name="name">The name of the component.</param>
-    /// <returns>The <see cref="XContainer"/> which representing the root for the component name.</returns>
-    /// <exception cref="ArgumentException"><c>name</c> does not have a known container.</exception>
-    public XElement GetContainer(XName name)
-    {
-        var container = DetermineContainer(name);
-
-        return Controller.Element(container) ??
-               throw new InvalidOperationException(
-                   $"The container with name {container} does not exist in the current L5X.");
-    }
-
-    /// <summary>
-    /// Gets the known container element for the specified component type name.
-    /// </summary>
-    /// <param name="name">The name of the component.</param>
-    /// <returns>The <see cref="XContainer"/> which representing the root for the component name.</returns>
-    /// <exception cref="ArgumentException"><c>name</c> does not have a known container.</exception>
-    public IEnumerable<XElement> GetContainers(XName name)
-    {
-        var container = DetermineContainer(name);
-
-        return Controller.Descendants(container);
-    }
+    public XElement Controller => Element(L5XName.Controller) ?? throw new L5XException(this);
 
     /// <summary>
     /// Gets all primary/top level L5X component containers in the current L5X file.
@@ -169,13 +139,13 @@ public class L5X : XElement
         }
 
         var current = content.Element(L5XName.Controller);
-        
+
         if (current is null)
         {
             content.Add(controller);
             return;
         }
-        
+
         current.ReplaceWith(controller);
     }
 
@@ -208,28 +178,5 @@ public class L5X : XElement
             if (overwrite)
                 match.ReplaceWith(element);
         }
-    }
-
-    private IEnumerable<XElement> GetScopedContainers(ILogixScoped scoped, string container)
-    {
-        if (scoped.Scope == Scope.Controller)
-        {
-            return Descendants(container).Where(c => c.Parent?.Name == L5XName.Controller);
-        }
-
-        if (scoped.Scope == Scope.Program)
-        {
-            return Descendants(container)
-                .Where(c => c.Ancestors(L5XName.Program).FirstOrDefault()?.LogixName() == scoped.Container);
-        }
-
-        if (scoped.Scope == Scope.Instruction)
-        {
-            return Descendants(container)
-                .Where(c => c.Ancestors(L5XName.AddOnInstructionDefinition).FirstOrDefault()?.LogixName() ==
-                            scoped.Container);
-        }
-
-        return Descendants(container);
     }
 }

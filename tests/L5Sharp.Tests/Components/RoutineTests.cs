@@ -1,5 +1,7 @@
 ﻿using FluentAssertions;
 using L5Sharp.Components;
+using L5Sharp.Core;
+using L5Sharp.Entities;
 using L5Sharp.Enums;
 
 namespace L5Sharp.Tests.Components;
@@ -25,7 +27,6 @@ public class RoutineTests
         routine.Type.Should().Be(RoutineType.Typeless);
         routine.Container.Should().BeEmpty();
         routine.Scope.Should().Be(Scope.Null);
-        routine.Content.Should().BeEmpty();
     }
 
     [Test]

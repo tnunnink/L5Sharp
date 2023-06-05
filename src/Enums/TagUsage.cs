@@ -20,7 +20,7 @@ public class TagUsage : LogixEnum<TagUsage, string>
     /// <see cref="Input"/> for atomic types.
     /// <see cref="InOut"/> for complex types.
     /// </returns>
-    public static TagUsage Default(ILogixType logixType) => logixType is AtomicType ? Input : InOut;
+    public static TagUsage Default(LogixType logixType) => logixType is AtomicType ? Input : InOut;
 
 
     /// <summary>

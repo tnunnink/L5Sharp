@@ -1,4 +1,5 @@
-﻿using L5Sharp.Enums;
+﻿using System.Xml.Linq;
+using L5Sharp.Enums;
 using L5Sharp.Types.Atomics;
 
 // ReSharper disable InconsistentNaming RSLogix naming
@@ -15,15 +16,18 @@ public sealed class COUNTER : StructureType
     /// </summary>
     public COUNTER() : base(nameof(COUNTER))
     {
+        PRE = new DINT();
+        ACC = new DINT();
+        CU = new BOOL();
+        CD = new BOOL();
+        DN = new BOOL();
+        OV = new BOOL();
+        UN = new BOOL();
     }
-        
-    /// <summary>
-    /// Creates a new <see cref="COUNTER"/> data type with the provided default <see cref="PRE"/> member value. 
-    /// </summary>
-    /// <param name="pre">The value of the preset for the timer.</param>
-    public COUNTER(DINT pre) : this()
+
+    /// <inheritdoc />
+    public COUNTER(XElement element) : base(element)
     {
-        PRE = pre;
     }
 
     /// <inheritdoc />
@@ -32,35 +36,63 @@ public sealed class COUNTER : StructureType
     /// <summary>
     /// Gets the <see cref="PRE"/> member of the <see cref="COUNTER"/> data type.
     /// </summary>
-    public DINT PRE { get; set; } = new();
+    public DINT PRE
+    {
+        get => GetMember<DINT>();
+        set => SetMember(value);
+    }
 
     /// <summary>
     /// Gets the <see cref="ACC"/> member of the <see cref="COUNTER"/> data type.
     /// </summary>
-    public DINT ACC { get; set; } = new();
-        
+    public DINT ACC
+    {
+        get => GetMember<DINT>();
+        set => SetMember(value);
+    }
+
     /// <summary>
     /// Gets the <see cref="CU"/> member of the <see cref="COUNTER"/> data type.
     /// </summary>
-    public BOOL CU { get; set; } = new();
-        
+    public BOOL CU
+    {
+        get => GetMember<BOOL>();
+        set => SetMember(value);
+    }
+
     /// <summary>
     /// Gets the <see cref="CD"/> member of the <see cref="COUNTER"/> data type.
     /// </summary>
-    public BOOL CD { get; set; } = new();
-        
+    public BOOL CD
+    {
+        get => GetMember<BOOL>();
+        set => SetMember(value);
+    }
+
     /// <summary>
     /// Gets the <see cref="DN"/> member of the <see cref="COUNTER"/> data type.
     /// </summary>
-    public BOOL DN { get; set; } = new();
-        
+    public BOOL DN
+    {
+        get => GetMember<BOOL>();
+        set => SetMember(value);
+    }
+
     /// <summary>
     /// Gets the <see cref="OV"/> member of the <see cref="COUNTER"/> data type.
     /// </summary>
-    public BOOL OV { get; set; } = new();
-        
+    public BOOL OV
+    {
+        get => GetMember<BOOL>();
+        set => SetMember(value);
+    }
+
     /// <summary>
     /// Gets the <see cref="UN"/> member of the <see cref="COUNTER"/> data type.
     /// </summary>
-    public BOOL UN { get; set; } = new();
+    public BOOL UN
+    {
+        get => GetMember<BOOL>();
+        set => SetMember(value);
+    }
 }

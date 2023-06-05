@@ -5,7 +5,7 @@ namespace L5Sharp.Enums;
 /// <summary>
 /// An enumeration of all <see cref="PassThroughOption"/> for a Logix <see cref="Controller"/>. 
 /// </summary>
-public class PassThroughOption : LogixEnum<CaptureSizeType, string>
+public class PassThroughOption : LogixEnum<PassThroughOption, string>
 {
     private PassThroughOption(string name, string value) : base(name, value)
     {

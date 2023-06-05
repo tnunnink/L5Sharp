@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Xml.Linq;
 using L5Sharp.Enums;
+using L5Sharp.Extensions;
 
 namespace L5Sharp.Types.Predefined;
 
@@ -11,14 +13,16 @@ public sealed class STRING : StringType, IEquatable<STRING>, IComparable<STRING>
     //This is the built in length of string types in Logix
     private const int PredefinedLength = 82;
 
-    private readonly string _value;
-
     /// <summary>
     /// Creates a new empty <see cref="STRING"/> type.
     /// </summary>
-    public STRING() : base(nameof(STRING), string.Empty)
+    public STRING() : base(nameof(STRING), PredefinedLength, string.Empty)
     {
-        _value = string.Empty;
+    }
+
+    /// <inheritdoc />
+    public STRING(XElement element) : base(element)
+    {
     }
 
     /// <summary>
@@ -29,16 +33,8 @@ public sealed class STRING : StringType, IEquatable<STRING>, IComparable<STRING>
     /// <exception cref="ArgumentOutOfRangeException">
     /// <c>value</c> length is greater than the predefined Logix string length of 82 characters.
     /// </exception>
-    public STRING(string value) : base(nameof(STRING), value)
+    public STRING(string value) : base(nameof(STRING), PredefinedLength, value)
     {
-        if (value is null)
-            throw new ArgumentNullException(nameof(value));
-
-        if (value.Length > PredefinedLength)
-            throw new ArgumentOutOfRangeException(
-                $"The length {value.Length} of value can not be greater than {PredefinedLength} characters.");
-
-        _value = value;
     }
 
     /// <inheritdoc />
@@ -56,24 +52,21 @@ public sealed class STRING : StringType, IEquatable<STRING>, IComparable<STRING>
     /// </summary>
     /// <param name="input">The value to convert.</param>
     /// <returns>A <see cref="string"/> type value.</returns>
-    public static implicit operator string(STRING input) => input._value;
+    public static implicit operator string(STRING input) => input.DATA.AsString();
 
     /// <inheritdoc />
     public bool Equals(STRING? other)
     {
         if (ReferenceEquals(null, other)) return false;
         if (ReferenceEquals(this, other)) return true;
-        return _value == other._value;
+        return DATA.AsString() == other.DATA.AsString();
     }
 
     /// <inheritdoc />
     public override bool Equals(object? obj) => Equals(obj as STRING);
 
     /// <inheritdoc />
-    public override int GetHashCode() => _value.GetHashCode();
-
-    /// <inheritdoc />
-    public override string ToString() => _value;
+    public override int GetHashCode() => DATA.AsString().GetHashCode();
 
     /// <summary>
     /// Determines if the provided objects are equal.
@@ -95,6 +88,8 @@ public sealed class STRING : StringType, IEquatable<STRING>, IComparable<STRING>
     public int CompareTo(STRING? other)
     {
         if (ReferenceEquals(this, other)) return 0;
-        return ReferenceEquals(other, null) ? 1 : string.Compare(_value, other._value, StringComparison.Ordinal);
+        return ReferenceEquals(other, null)
+            ? 1
+            : string.Compare(DATA.AsString(), other.DATA.AsString(), StringComparison.Ordinal);
     }
 }
