@@ -344,30 +344,30 @@ public class Member : LogixEntity<Member>
         data.Add(new XAttribute(L5XName.Name, nameof(type.DATA)));
         data.Add(new XAttribute(L5XName.DataType, type.Name));
         data.Add(new XAttribute(L5XName.Radix, Radix.Ascii.Value));
-        data.Add(new XCData(type.DATA.AsString()));
+        data.Add(new XCData(type.ToString()));
         element.Add(data);
 
         return element;
     }
 
-    private static XElement GenerateStringMember(string name, StringType type)
+    private static XElement GenerateStringMember(string name, LogixType type)
     {
         var element = new XElement(L5XName.StructureMember);
         element.Add(new XAttribute(L5XName.Name, name));
         element.Add(new XAttribute(L5XName.DataType, type.Name));
 
         var len = new XElement(L5XName.DataValueMember);
-        len.Add(new XAttribute(L5XName.Name, nameof(type.LEN)));
-        len.Add(new XAttribute(L5XName.DataType, type.LEN.Name));
+        len.Add(new XAttribute(L5XName.Name, "LEN"));
+        len.Add(new XAttribute(L5XName.DataType, "DINT"));
         len.Add(new XAttribute(L5XName.Radix, Radix.Decimal.Value));
-        len.Add(new XAttribute(L5XName.Value, type.LEN.ToString()));
+        len.Add(new XAttribute(L5XName.Value, type.ToString().Length));
         element.Add(len);
 
         var data = new XElement(L5XName.DataValueMember);
-        data.Add(new XAttribute(L5XName.Name, nameof(type.DATA)));
-        data.Add(new XAttribute(L5XName.DataType, type.Name));
+        data.Add(new XAttribute(L5XName.Name, "DATA"));
+        data.Add(new XAttribute(L5XName.DataType, "SINT"));
         data.Add(new XAttribute(L5XName.Radix, Radix.Ascii.Value));
-        data.Add(new XCData(type.DATA.AsString()));
+        data.Add(new XCData(type.ToString()));
         element.Add(data);
 
         return element;

@@ -5,7 +5,7 @@ namespace L5Sharp;
 /// <summary>
 /// A service for providing <see cref="CatalogEntry"/> data for a specified catalog number.
 /// </summary>
-public interface ICatalogService
+public interface ILogixCatalogService
 {
     /// <summary>
     /// Gets an <see cref="CatalogEntry"/> for the specified catalog number.

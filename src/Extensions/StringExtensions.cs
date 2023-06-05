@@ -59,14 +59,14 @@ namespace L5Sharp.Extensions
         public static bool IsTagName(this string input) => Regex.IsMatch(input,
             @"^[A-Za-z_][\w+:]{1,39}(?:(?:\[\d+\]|\[\d+,\d+\]|\[\d+,\d+,\d+\])?(?:\.[A-Za-z_]\w{1,39})?)+(?:\.[0-9][0-9]?)?$");
 
-        /// <summary>
+        /*/// <summary>
         /// Returns the current string value as an array of <see cref="SINT"/> atomic type with <see cref="Enums.Radix.Ascii"/>
         /// format that represent the bytes of the string.
         /// </summary>
         /// <param name="value">The string value.</param>
         /// <returns>An array of <see cref="SINT"/> atomic value types.</returns>
-        public static ArrayType<SINT> ToArrayType(this string value) =>
-            new(Encoding.ASCII.GetBytes(value).Select(b => new SINT((sbyte)b, Radix.Ascii)).ToArray());
+        public static ArrayType ToArrayType(this string value) =>
+            
 
         /// <summary>
         /// Returns the collection of <see cref="SINT"/> atomic type values as a <see cref="string"/> value.
@@ -74,7 +74,7 @@ namespace L5Sharp.Extensions
         /// <param name="array">The array or <see cref="IEnumerable{T}"/> of SINT to convert to string.</param>
         /// <returns>A <see cref="string"/> representing the ASCII character sequence of the SINT array.</returns>
         public static string AsString(this IEnumerable<SINT> array) =>
-            Encoding.ASCII.GetString(array.Where(s => s > 0).Select(b => (byte)(sbyte)b).ToArray());
+            Encoding.ASCII.GetString(array.Where(s => s > 0).Select(b => (byte)(sbyte)b).ToArray());*/
 
         
         internal static string ReplaceAll(this string value, IEnumerable<string> items, string replacement) =>

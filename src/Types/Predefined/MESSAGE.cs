@@ -1,6 +1,5 @@
 ﻿using System.Xml.Linq;
 using L5Sharp.Enums;
-using L5Sharp.Types.Atomics;
 
 // ReSharper disable InconsistentNaming RSLogix naming
 
@@ -21,12 +20,132 @@ public sealed class MESSAGE : StructureType
     /// <inheritdoc />
     public MESSAGE(XElement element) : base(element)
     {
+    
     }
 
     /// <inheritdoc />
     public override DataTypeClass Class => DataTypeClass.Predefined;
 
     /// <summary>
+    /// Gets the <see cref="MessageType"/> value of the <see cref="MESSAGE"/> parameters.
+    /// </summary>  /// <summary>
+    /// Gets the <see cref="MessageType"/> value of the <see cref="MESSAGE"/> parameters.
+    /// </summary>
+    public string MessageType
+    {
+        get => GetValue<string>() ?? throw new L5XException(Element);
+        set => SetValue(value);
+    }
+
+    /// <summary>
+    /// Gets the <see cref="RequestedLength"/> value of the <see cref="MESSAGE"/> parameters.
+    /// </summary>
+    public int RequestedLength
+    {
+        get => GetValue<int>();
+        set => SetValue(value);
+    }
+
+    /// <summary>
+    /// Gets the <see cref="ConnectedFlag"/> value of the <see cref="MESSAGE"/> parameters.
+    /// </summary>
+    public int ConnectedFlag  
+    {
+        get => GetValue<int>();
+        set => SetValue(value);
+    }
+
+    /// <summary>
+    /// Gets the <see cref="ConnectionPath"/> value of the <see cref="MESSAGE"/> parameters.
+    /// </summary>
+    public string? ConnectionPath 
+    {
+        get => GetValue<string>();
+        set => SetValue(value);
+    }
+
+    /// <summary>
+    /// Gets the <see cref="CommTypeCode"/> value of the <see cref="MESSAGE"/> parameters.
+    /// </summary>
+    public int CommTypeCode
+    {
+        get => GetValue<int>();
+        set => SetValue(value);
+    }
+
+    /// <summary>
+    /// Gets the <see cref="ServiceCode"/> value of the <see cref="MESSAGE"/> parameters.
+    /// </summary>
+    public string? ServiceCode
+    {
+        get => GetValue<string>();
+        set => SetValue(value);
+    }
+
+    /// <summary>
+    /// Gets the <see cref="ObjectType"/> value of the <see cref="MESSAGE"/> parameters.
+    /// </summary>
+    public string? ObjectType 
+    {
+        get => GetValue<string>();
+        set => SetValue(value);
+    }
+
+    /// <summary>
+    /// Gets the <see cref="TargetObject"/> value of the <see cref="MESSAGE"/> parameters.
+    /// </summary>
+    public string? TargetObject
+    {
+        get => GetValue<string>();
+        set => SetValue(value);
+    }
+
+    /// <summary>
+    /// Gets the <see cref="AttributeNumber"/> value of the <see cref="MESSAGE"/> parameters.
+    /// </summary>
+    public string? AttributeNumber
+    {
+        get => GetValue<string>();
+        set => SetValue(value);
+    }
+
+    /// <summary>
+    /// Gets the <see cref="LocalIndex"/> value of the <see cref="MESSAGE"/> parameters.
+    /// </summary>
+    public int LocalIndex 
+    {
+        get => GetValue<int>();
+        set => SetValue(value);
+    }
+
+    /// <summary>
+    /// Gets the <see cref="DestinationTag"/> value of the <see cref="MESSAGE"/> parameters.
+    /// </summary>
+    public string? DestinationTag 
+    {
+        get => GetValue<string>();
+        set => SetValue(value);
+    }
+
+    /// <summary>
+    /// Gets the <see cref="CacheConnections"/> value of the <see cref="MESSAGE"/> parameters.
+    /// </summary>
+    public bool CacheConnections
+    {
+        get => GetValue<bool>();
+        set => SetValue(value);
+    }
+
+    /// <summary>
+    /// Gets the <see cref="LargePacketUsage"/> value of the <see cref="MESSAGE"/> parameters.
+    /// </summary>
+    public bool LargePacketUsage
+    {
+        get => GetValue<bool>();
+        set => SetValue(value);
+    }
+
+    /*/// <summary>
     /// Gets the <see cref="Flags"/> member of the <see cref="MESSAGE"/> data type.
     /// </summary>
     public INT Flags { get; set; } = new(Radix.Hex);
@@ -174,5 +293,5 @@ public sealed class MESSAGE : StructureType
     /// <summary>
     /// Gets the <see cref="TimeoutMultiplier"/> member of the <see cref="MESSAGE"/> data type.
     /// </summary>
-    public SINT TimeoutMultiplier { get; set; } = new();
+    public SINT TimeoutMultiplier { get; set; } = new();*/
 }

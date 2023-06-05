@@ -60,6 +60,21 @@ public abstract class LogixType : LogixEntity<LogixType>
     /// </summary>
     /// <value>A <see cref="IEnumerable{T}"/> containing <see cref="Member"/> objects</value>
     public virtual IEnumerable<Member> Members => Enumerable.Empty<Member>();
+    
+    /// <summary>
+    /// Performs a explicit cast of the current <see cref="LogixType"/> to the type of the generic argument.
+    /// </summary>
+    /// <typeparam name="TLogixType">The logix type to cast to.</typeparam>
+    /// <returns>The instance casted as the specified generic type argument.</returns>
+    /// <exception cref="InvalidCastException">The current type is not compatible with specified generic argument type.</exception>
+    public TLogixType To<TLogixType>() where TLogixType : LogixType => (TLogixType)this;
+
+    /// <summary>
+    /// Performs a safe cast of the current <see cref="LogixType"/> to the type of the generic argument.
+    /// </summary>
+    /// <typeparam name="TLogixType">The logix type to cast to.</typeparam>
+    /// <returns>The instance casted as the specified generic type argument.</returns>
+    public TLogixType? As<TLogixType>() where TLogixType : LogixType => this as TLogixType;
 
     /// <summary>
     /// Converts the provided <see cref="bool"/> to a <see cref="LogixType"/>.
@@ -144,7 +159,7 @@ public abstract class LogixType : LogixEntity<LogixType>
     /// <param name="value">The value to convert.</param>
     /// <returns>A <see cref="LogixType"/> representing the converted value.</returns>
     public static implicit operator LogixType(Array value) => new ArrayType<LogixType>(value);
-    
+
     /// <summary>
     /// Converts the provided <see cref="Dictionary{TKey,TValue}"/> to a <see cref="LogixType"/>.
     /// </summary>

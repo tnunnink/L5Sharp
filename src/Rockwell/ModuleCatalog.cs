@@ -18,7 +18,7 @@ namespace L5Sharp.Rockwell
     /// the default embedded resource may not contain various Modules as it is dependant on installation of AOPs and EDS
     /// definitions. 
     /// </remarks>
-    public class ModuleCatalog : ICatalogService
+    public class ModuleCatalog : ILogixCatalogService
     {
         private const string RaDevice = "RADevice";
         private const string CatalogNumber = "CatalogNumber";

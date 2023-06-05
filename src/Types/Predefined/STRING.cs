@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Xml.Linq;
 using L5Sharp.Enums;
-using L5Sharp.Extensions;
 
 namespace L5Sharp.Types.Predefined;
 
@@ -52,21 +51,21 @@ public sealed class STRING : StringType, IEquatable<STRING>, IComparable<STRING>
     /// </summary>
     /// <param name="input">The value to convert.</param>
     /// <returns>A <see cref="string"/> type value.</returns>
-    public static implicit operator string(STRING input) => input.DATA.AsString();
+    public static implicit operator string(STRING input) => input.Value;
 
     /// <inheritdoc />
     public bool Equals(STRING? other)
     {
         if (ReferenceEquals(null, other)) return false;
         if (ReferenceEquals(this, other)) return true;
-        return DATA.AsString() == other.DATA.AsString();
+        return Value == other.Value;
     }
 
     /// <inheritdoc />
     public override bool Equals(object? obj) => Equals(obj as STRING);
 
     /// <inheritdoc />
-    public override int GetHashCode() => DATA.AsString().GetHashCode();
+    public override int GetHashCode() => Value.GetHashCode();
 
     /// <summary>
     /// Determines if the provided objects are equal.
@@ -88,8 +87,6 @@ public sealed class STRING : StringType, IEquatable<STRING>, IComparable<STRING>
     public int CompareTo(STRING? other)
     {
         if (ReferenceEquals(this, other)) return 0;
-        return ReferenceEquals(other, null)
-            ? 1
-            : string.Compare(DATA.AsString(), other.DATA.AsString(), StringComparison.Ordinal);
+        return ReferenceEquals(other, null) ? 1 : string.Compare(Value, Value, StringComparison.Ordinal);
     }
 }

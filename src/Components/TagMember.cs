@@ -34,7 +34,7 @@ public class TagMember : LogixEntity<TagMember>, ILogixScoped
     /// <summary>
     /// 
     /// </summary>
-    public string Name => Element.MemberName();
+    public string Name => Element.MemberName() ?? throw new L5XException(Element);
 
     /// <summary>
     /// The description of the tag which is either the root tag description or the inherited (pass through)
@@ -68,7 +68,7 @@ public class TagMember : LogixEntity<TagMember>, ILogixScoped
     /// <value>A <see cref="Core.Dimensions"/> value representing the array dimensions of the tag.</value>
     /// <remarks>
     /// This value will always point to the dimensions property of <see cref="Value"/>, assuming it is an
-    /// <see cref="ArrayType{TLogixType}"/>.
+    /// <see cref="ArrayType"/>.
     /// If <c>Data</c> is not an array type, this property will always return <see cref="Core.Dimensions.Empty"/>.
     /// </remarks>
     public Dimensions Dimensions => Value is ArrayType<LogixType> array ? array.Dimensions : Dimensions.Empty;
@@ -121,6 +121,57 @@ public class TagMember : LogixEntity<TagMember>, ILogixScoped
     public string Unit => throw new NotImplementedException();
 
     /// <summary>
+    /// Gets an element of the tag array.
+    /// </summary>
+    /// <param name="index">The index of the element to retrieve.</param>
+    /// <exception cref="ArgumentException"><c>index</c> does not represent a valid member for the tag member data structure.</exception>
+    public TagMember this[ushort index]
+    {
+        get
+        {
+            var name = $"[{index}]";
+            var member = Value.Members
+                .FirstOrDefault(m => string.Equals(m.Name, name, StringComparison.OrdinalIgnoreCase));
+
+            if (member is null)
+                throw new ArgumentException(
+                    $"No element with index '{name}' exists in the tag data structure for type {DataType}.");
+
+            return new TagMember(member, _root, this);
+        }
+    }
+
+    /// <summary>
+    /// Gets a descendent tag member with the provided tag name value.
+    /// </summary>
+    /// <param name="tagName">The tag name relative to the current tag member for which to retrieve.</param>
+    /// <exception cref="ArgumentNullException"><c>tagName</c> is null.</exception>
+    /// <exception cref="ArgumentException"><c>tagName</c> does not represent a valid member for the tag member data structure.</exception>
+    public TagMember this[TagName tagName]
+    {
+        get
+        {
+            if (tagName is null)
+                throw new ArgumentNullException(nameof(tagName));
+
+            var memberName = tagName.Members.FirstOrDefault() ?? string.Empty;
+
+            var member = Value.Members
+                .FirstOrDefault(m => string.Equals(m.Name, memberName, StringComparison.OrdinalIgnoreCase));
+
+            if (member is null)
+                throw new ArgumentException(
+                    $"No member with name '{memberName}' exists in the tag data structure for type {DataType}.");
+
+            var tagMember = new TagMember(member, _root, this);
+
+            var remaining = TagName.Combine(tagName.Members.Skip(1));
+
+            return remaining.IsEmpty ? tagMember : tagMember[remaining];
+        }
+    }
+
+    /// <summary>
     /// Gets a descendent tag member relative to the current tag member.
     /// </summary>
     /// <param name="tagName">The full <see cref="Core.TagName"/> path of the member to get.</param>
@@ -150,6 +201,32 @@ public class TagMember : LogixEntity<TagMember>, ILogixScoped
         var remaining = TagName.Combine(tagName.Members.Skip(1));
 
         return remaining.IsEmpty ? tagMember : tagMember.Member(remaining);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="tagName"></param>
+    /// <typeparam name="TLogixType"></typeparam>
+    /// <returns></returns>
+    /// <exception cref="ArgumentNullException"></exception>
+    public TagMember<TLogixType>? Member<TLogixType>(TagName tagName) where TLogixType : LogixType
+    {
+        if (tagName is null)
+            throw new ArgumentNullException(nameof(tagName));
+
+        var memberName = tagName.Members.FirstOrDefault() ?? string.Empty;
+
+        var member = Value.Members
+            .FirstOrDefault(m => string.Equals(m.Name, memberName, StringComparison.OrdinalIgnoreCase));
+
+        if (member is null) return default;
+
+        var remaining = TagName.Combine(tagName.Members.Skip(1));
+
+        return remaining.IsEmpty
+            ? new TagMember<TLogixType>(member, _root, this)
+            : new TagMember(member, _root, this).Member<TLogixType>(remaining);
     }
 
     /// <summary>
@@ -287,6 +364,9 @@ public class TagMember : LogixEntity<TagMember>, ILogixScoped
         return names;
     }
 
+    public TagMember<TLogixType> To<TLogixType>() where TLogixType : LogixType =>
+        new TagMember<TLogixType>(_member, _root, Parent);
+
     #region Internal
 
     private static IEnumerable<TagName> Names(TagName root, LogixType type)
@@ -307,7 +387,7 @@ public class TagMember : LogixEntity<TagMember>, ILogixScoped
     {
         if (_root.Name != L5XName.Tag)
             throw new InvalidOperationException();
-        
+
         var comment = _root.Descendants(L5XName.Comment)
             .FirstOrDefault(e => e.Attribute(L5XName.Operand)?.Value == TagName.Operand);
 
@@ -318,7 +398,7 @@ public class TagMember : LogixEntity<TagMember>, ILogixScoped
     {
         if (_root.Name != L5XName.Tag)
             throw new InvalidOperationException();
-        
+
         if (string.IsNullOrEmpty(value))
         {
             _root.Descendants(L5XName.Comment)

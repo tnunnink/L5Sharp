@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using L5Sharp.Components;
 using L5Sharp.Core;
@@ -12,25 +11,6 @@ namespace L5Sharp.Extensions;
 /// </summary>
 public static class LogixExtensions
 {
-    /// <summary>
-    /// Performs a explicit cast of the current <see cref="LogixType"/> to the type of the generic argument.
-    /// </summary>
-    /// <param name="logixType">The current logix type to cast</param>
-    /// <typeparam name="TLogixType">The logix type to cast to.</typeparam>
-    /// <returns>The instance casted as the specified generic type argument.</returns>
-    /// <exception cref="InvalidCastException">The current type is not compatible with specified generic argument type.</exception>
-    public static TLogixType To<TLogixType>(this LogixType logixType) where TLogixType : LogixType =>
-        (TLogixType)logixType;
-
-    /// <summary>
-    /// Performs a safe cast of the current <see cref="LogixType"/> to the type of the generic argument.
-    /// </summary>
-    /// <param name="logixType">The current logix type to cast</param>
-    /// <typeparam name="TLogixType">The logix type to cast to.</typeparam>
-    /// <returns>The instance casted as the specified generic type argument.</returns>
-    public static TLogixType? As<TLogixType>(this LogixType logixType) where TLogixType : LogixType =>
-        logixType as TLogixType;
-
     /// <summary>
     /// 
     /// </summary>

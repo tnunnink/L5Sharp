@@ -2,7 +2,6 @@
 using L5Sharp.Components;
 using L5Sharp.Core;
 using L5Sharp.Enums;
-using L5Sharp.Extensions;
 using L5Sharp.Tests.Types.Custom;
 using L5Sharp.Types;
 using L5Sharp.Types.Atomics;
@@ -16,22 +15,32 @@ namespace L5Sharp.Tests.Components
         [Test]
         public void ValueTesting()
         {
-            var members = new Dictionary<string, LogixType>
-            {
-                { "PRE", 5000 },
-                { "ACC", 1234 },
-                { "DN", false },
-                { "TT", 0 },
-                { "EN", 1 },
-            };
-            
-            var tag = new Tag
+            var tag = new Tag<TIMER>
             {
                 Name = "Test",
-                Value = members
+                Value = new TIMER(),
+                ["PRE"] = { Value = 5000 },
+                ["ACC"] = { Value = 1234 },
+                ["EN"] = { Value = true }
             };
 
-            tag.Should().NotBeNull();
+            tag.Value.PRE.Should().Be(5000);
+            tag.Value.ACC.Should().Be(1234);
+            tag.Value.DN.Should().Be(0);
+            tag.Value.TT.Should().Be(0);
+            tag.Value.EN.Should().Be(1);
+        }
+
+        [Test]
+        public void ArrayTags()
+        {
+            var array = new Tag
+            {
+                Name = "Test",
+                Value = new DINT[] { 1, 2, 3, 4, 5 }
+            };
+
+            array[0].Value.As<DINT>().Should().Be(1);
         }
 
         [Test]
@@ -56,7 +65,7 @@ namespace L5Sharp.Tests.Components
         public void New_Structure_ShouldNotBeNull()
         {
             var tag = new Tag { Name = "Test", Value = new TIMER() };
-            
+
             tag.Should().NotBeNull();
             tag.Name.Should().Be("Test");
             tag.Value.Should().BeOfType<TIMER>();
@@ -66,11 +75,11 @@ namespace L5Sharp.Tests.Components
         [Test]
         public void New_Array_ShouldNotBeNull()
         {
-            var tag = new Tag { Name = "Test", Value = new ArrayType<BOOL>(new BOOL[] { 0, 0, 1, 0, 1 }) };
+            var tag = new Tag { Name = "Test", Value = new BOOL[] { 0, 0, 1, 0, 1 } };
 
             tag.Should().NotBeNull();
             tag.Name.Should().Be("Test");
-            tag.Value.Should().BeOfType<ArrayType<LogixType>>();
+            tag.Value.Should().BeOfType<ArrayType>();
             tag.Dimensions.Should().Be(new Dimensions(5));
         }
 
@@ -127,11 +136,13 @@ namespace L5Sharp.Tests.Components
         {
             var tag = new Tag { Name = "Test", Value = new DINT(12) };
 
-            tag.Value = new DINT(21);
+            tag.Value = 21;
 
             tag.Value.As<DINT>().Should().Be(21);
 
-            var bits = tag.Value.To<DINT>();
+            var bits = tag.Value.To<DINT>().ToBitArray();
+
+            bits.Length.Should().Be(32);
         }
 
         [Test]
@@ -432,6 +443,20 @@ namespace L5Sharp.Tests.Components
 
             root.Should().NotBeNull();
             root.Should().BeSameAs(tag);
+        }
+
+        [Test]
+        public void Member_GenericNestedComplex_ShouldNotBeNullAndOfType()
+        {
+            var tag = new Tag
+            {
+                Name = "Test",
+                Value = new MyNestedType()
+            };
+
+            var tmr = tag.Member<TIMER>("Tmr");
+            
+            tmr?.Value.PRE.Should().Be(0);
         }
     }
 }

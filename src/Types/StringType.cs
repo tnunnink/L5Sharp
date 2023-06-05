@@ -2,9 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Xml.Linq;
 using L5Sharp.Enums;
-using L5Sharp.Extensions;
 using L5Sharp.Types.Atomics;
 
 namespace L5Sharp.Types;
@@ -34,9 +34,10 @@ public class StringType : StructureType, IEnumerable<char>, IEquatable<StringTyp
     public StringType(string value) : base(GenerateElement(value))
     {
         Name = nameof(StringType);
-        DATA = !value.IsEmpty() ? value.ToArrayType() : ArrayType.New<SINT>(1);
+        Value = value ?? throw new ArgumentNullException();
+        //DATA = !value.IsEmpty() ? value.ToArrayType() : ArrayType.New<SINT>(1);
     }
-    
+
     /// <summary>
     /// Creates a new <see cref="StringType"/> instance with the provided data.
     /// </summary>
@@ -45,7 +46,8 @@ public class StringType : StructureType, IEnumerable<char>, IEquatable<StringTyp
     public StringType(string name, string value) : base(GenerateElement(value))
     {
         Name = name ?? throw new ArgumentNullException(nameof(name));
-        DATA = !value.IsEmpty() ? value.ToArrayType() : ArrayType.New<SINT>(1);
+        //DATA = !value.IsEmpty() ? value.ToArrayType() : ArrayType.New<SINT>(1);
+        Value = value ?? throw new ArgumentNullException();
     }
 
     /// <inheritdoc />
@@ -55,14 +57,14 @@ public class StringType : StructureType, IEnumerable<char>, IEquatable<StringTyp
         {
             Name = element.Ancestors(L5XName.Tag).FirstOrDefault()?.Attribute(L5XName.DataType)?.Value
                    ?? throw new L5XException(L5XName.DataType, element);
-            DATA = element.Value.ToArrayType();
+            Value = element.Value;
             return;
         }
 
         Name = element.Attribute(L5XName.DataType)?.Value ?? throw new L5XException(L5XName.DataType, element);
-        DATA = element.Elements(L5XName.DataValueMember)
-                   .FirstOrDefault(e => e.MemberName() == nameof(DATA))?.Value.ToArrayType()
-               ?? throw new L5XException(L5XName.DataValueMember, element);
+        Value = element.Elements(L5XName.DataValueMember)
+                    .FirstOrDefault(e => e.Attribute(L5XName.Name)?.Value == nameof(DATA))?.Value ??
+                throw new L5XException(L5XName.DataValueMember, element);
     }
 
     /// <summary>
@@ -81,7 +83,8 @@ public class StringType : StructureType, IEnumerable<char>, IEquatable<StringTyp
             throw new ArgumentOutOfRangeException(
                 $"The length {value.Length} of value can not be greater than {length} characters.");
 
-        DATA = !value.IsEmpty() ? value.ToArrayType() : ArrayType.New<SINT>(1);
+        Value = value;
+        //DATA = !value.IsEmpty() ? value.ToArrayType() : ArrayType.New<SINT>(1);
     }
 
     /// <inheritdoc />
@@ -95,22 +98,27 @@ public class StringType : StructureType, IEnumerable<char>, IEquatable<StringTyp
     public override IEnumerable<Member> Members => new List<Member> { new(nameof(LEN), LEN), new(nameof(DATA), DATA) };
 
     /// <summary>
+    /// The string value of the type.
+    /// </summary>
+    protected readonly string Value;
+
+    /// <summary>
     /// Gets the character length value of the string. 
     /// </summary>
     /// <returns>A <see cref="DINT"/> logix atomic value representing the integer length of the string.</returns>
-    public DINT LEN => DATA.Count(s => s > 0);
+    public DINT LEN => Value.Length;
 
     /// <summary>
     /// Gets the array of bytes that represent the ASCII encoded string value.
     /// </summary>
     /// <returns>An array of <see cref="SINT"/> logix atomic values representing the bytes of the string.</returns>
-    public ArrayType<SINT> DATA { get; }
+    public ArrayType<SINT> DATA => new(Encoding.ASCII.GetBytes(Value).Select(b => new SINT((sbyte)b, Radix.Ascii)).ToArray());
 
     /// <inheritdoc />
-    public IEnumerator<char> GetEnumerator() => DATA.Select(s => (char)(sbyte)s).GetEnumerator();
+    public IEnumerator<char> GetEnumerator() => Value.GetEnumerator();
 
     /// <inheritdoc />
-    public override string ToString() => DATA.AsString();
+    public override string ToString() => Value;
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
@@ -119,14 +127,14 @@ public class StringType : StructureType, IEnumerable<char>, IEquatable<StringTyp
     {
         if (ReferenceEquals(null, other)) return false;
         if (ReferenceEquals(this, other)) return true;
-        return DATA.AsString() == other.DATA.AsString();
+        return Value == other.Value;
     }
 
     /// <inheritdoc />
     public override bool Equals(object? obj) => Equals(obj as StringType);
 
     /// <inheritdoc />
-    public override int GetHashCode() => DATA.AsString().GetHashCode();
+    public override int GetHashCode() => Value.GetHashCode();
 
     /// <summary>
     /// Determines if the provided objects are equal.
@@ -150,7 +158,7 @@ public class StringType : StructureType, IEnumerable<char>, IEquatable<StringTyp
         if (ReferenceEquals(this, other)) return 0;
         return ReferenceEquals(other, null)
             ? 1
-            : string.Compare(DATA.AsString(), other.DATA.AsString(), StringComparison.Ordinal);
+            : string.Compare(Value, other.Value, StringComparison.Ordinal);
     }
 
     /// <summary>

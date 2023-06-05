@@ -1,13 +1,16 @@
 ﻿using System.Xml.Linq;
-using L5Sharp.Extensions;
 using L5Sharp.Types;
 
 namespace L5Sharp.Components;
 
+/// <summary>
+/// A generic tag member ...
+/// </summary>
+/// <typeparam name="TLogixType"></typeparam>
 public class TagMember<TLogixType> : TagMember where TLogixType : LogixType
 {
     /// <inheritdoc />
-    protected TagMember(Member member, XElement? root = null, TagMember? parent = null) : base(member, root, parent)
+    internal TagMember(Member member, XElement? root = null, TagMember? parent = null) : base(member, root, parent)
     {
     }
 
