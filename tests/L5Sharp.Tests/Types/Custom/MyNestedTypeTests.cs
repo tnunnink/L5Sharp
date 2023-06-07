@@ -12,8 +12,8 @@ namespace L5Sharp.Tests.Types.Custom
         [SetUp]
         public void Setup()
         {
-            LogixData.Register<MySimpleType>();
-            LogixData.Register<MyNestedType>();
+            LogixType.Register<MySimpleType>();
+            LogixType.Register<MyNestedType>();
         }
         
         [Test]

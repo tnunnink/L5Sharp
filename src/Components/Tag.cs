@@ -23,11 +23,6 @@ public class Tag : TagMember, ILogixComponent
         Constant = false;
     }
 
-    private static XElement GenerateElement()
-    {
-        return new XElement(L5XName.Tag);
-    }
-
     /// <inheritdoc />
     public Tag(XElement element) : base(new Member(element))
     {
@@ -104,4 +99,6 @@ public class Tag : TagMember, ILogixComponent
         get => GetValue<bool>();
         set => SetValue(value);
     }
+
+    private static XElement GenerateElement() => new(L5XName.Tag);
 }

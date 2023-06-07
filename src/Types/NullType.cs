@@ -5,12 +5,12 @@ using System.Xml.Linq;
 namespace L5Sharp.Types;
 
 /// <summary>
-/// Represents a null <see cref="LogixType"/> implementation, or a type that is neither atomic, structure, array,
+/// Represents a null <see cref="L5Sharp.LogixType"/> implementation, or a type that is neither atomic, structure, array,
 /// or string.
 /// </summary>
 /// <remarks>This would be the default for any tag that has not data type defined.</remarks>
 // ReSharper disable once InconsistentNaming
-public sealed class NullType : LogixType
+public sealed class NullType : L5Sharp.LogixType
 {
     private static readonly NullType Null = new();
 

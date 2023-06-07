@@ -89,7 +89,7 @@ namespace L5Sharp.Tests.Components
             var tag = new Tag();
 
             tag.Name.Should().BeEmpty();
-            tag.Value.Should().Be(LogixData.Null);
+            tag.Value.Should().Be(LogixType.Null);
             tag.DataType.Should().Be("NULL");
             tag.Dimensions.Should().Be(Dimensions.Empty);
             tag.Radix.Should().Be(Radix.Null);
@@ -437,12 +437,25 @@ namespace L5Sharp.Tests.Components
         {
             var tag = new Tag { Name = "Test", Value = new MyNestedType() };
 
-            var member = tag.Member("Simple.M1");
+            var member = tag["Simple.M1"];
 
-            var root = member?.Root;
+            var root = member.Root;
 
             root.Should().NotBeNull();
             root.Should().BeSameAs(tag);
+        }
+
+        [Test]
+        public void Parent_WhenCalled_ShouldBeExpected()
+        {
+            var tag = new Tag { Name = "Test", Value = new MyNestedType() };
+
+            var member = tag["Simple.M1"];
+
+            var parent = member.Parent;
+
+            parent.Should().NotBeNull();
+            parent?.TagName.Should().Be("Test.Simple");
         }
 
         [Test]

@@ -2,78 +2,79 @@
 using FluentAssertions;
 using L5Sharp.Enums;
 using L5Sharp.Types.Atomics;
-using NUnit.Framework;
 
-namespace L5Sharp.Tests.Types
+namespace L5Sharp.Tests.Types.Atomics
 {
     [TestFixture]
-    public class SintTests
+    public class BoolTests
     {
-        private sbyte _random;
-
-        [SetUp]
-        public void Setup()
-        {
-            var fixture = new Fixture();
-            _random = fixture.Create<sbyte>();
-        }
-        
         [Test]
         public void New_Default_ShouldNotBeNull()
         {
-            var type = new SINT();
+            var type = new BOOL();
 
             type.Should().NotBeNull();
         }
-        
+
         [Test]
         public void New_Default_ShouldHaveExpectedDefaults()
         {
-            var type = new SINT();
-            
-            type.Name.Should().Be(nameof(SINT).ToUpper());
+            var type = new BOOL();
+
+            type.Should().NotBeNull();
+            type.Name.Should().Be(nameof(BOOL).ToUpper());
             type.Class.Should().Be(DataTypeClass.Atomic);
             type.Family.Should().Be(DataTypeFamily.None);
-            type.Should().Be(0);
+            type.Should().Be(false);
         }
 
         [Test]
         public void New_ValueOverload_ShouldHaveExpectedValue()
         {
-            var type = new SINT(_random);
-            
-            type.Should().Be(_random);
+            var type = new BOOL(true);
+
+            type.Should().Be(true);
         }
 
         [Test]
-        public void MaxValue_WhenCalled_ShouldBeExpected()
+        public void New_IntZeroOverload_ShouldBeFalse()
         {
-            SINT.MaxValue.Should().Be(sbyte.MaxValue);
-        }
-        
-        [Test]
-        public void MinValue_WhenCalled_ShouldBeExpected()
-        {
-            SINT.MinValue.Should().Be(sbyte.MinValue);
+            var type = new BOOL(0);
+
+            type.Should().Be(false);
         }
 
         [Test]
-        [TestCase(0)]
-        [TestCase(1)]
-        [TestCase(-1)]
-        [TestCase(127)]
-        [TestCase(-127)]
-        public void Set_ValidValues_ShouldBeExpectedValue(sbyte value)
+        public void New_IntPositiveOverload_ShouldBeTrue()
         {
-            SINT type = value;
+            var type = new BOOL(1);
+
+            type.Should().Be(true);
+        }
+
+        [Test]
+        public void New_IntNegativeOverload_ShouldBeTrue()
+        {
+            var type = new BOOL(-1);
+
+            type.Should().Be(true);
+        }
+
+        [Test]
+        public void SetValue_ValidValue_ShouldReturnExpected()
+        {
+            var fixture = new Fixture();
+            var value = fixture.Create<bool>();
+
+            BOOL type = value;
 
             type.Should().Be(value);
         }
 
         [Test]
-        public void ToString_DefaultRadix_ShouldBeExpected()
+        public void Format_DefaultRadix_ShouldBeExpected()
         {
-            var type = new SINT();
+            var type = new BOOL();
 
             var format = type.ToString();
 
@@ -81,122 +82,138 @@ namespace L5Sharp.Tests.Types
         }
         
         [Test]
-        public void ToString_OverloadedRadix_ShouldBeExpected()
+        public void Format_OverloadedRadix_ShouldBeExpected()
         {
-            var type = new SINT();
+            var type = new BOOL();
 
             var format = type.ToString(Radix.Binary);
 
-            format.Should().Be("2#0000_0000");
+            format.Should().Be("2#0");
+        }
+
+        [Test]
+        public void ImplicitOperator_Bool_ShouldBeTrue()
+        {
+            BOOL type = true;
+
+            type.Should().Be(true);
+        }
+
+        [Test]
+        public void ImplicitOperator_bool_ShouldBeTrue()
+        {
+            bool value = new BOOL();
+
+            value.Should().Be(false);
         }
 
         [Test]
         public void TypeEquals_AreEqual_ShouldBeTrue()
         {
-            var first = new SINT();
-            var second = new SINT();
+            var first = new BOOL();
+            var second = new BOOL();
 
             var result = first.Equals(second);
 
-            result.Should().BeTrue();
+            result.Should().Be(true);
         }
-        
+
         [Test]
         public void TypeEquals_AreSame_ShouldBeTrue()
         {
-            var first = new SINT();
+            var first = new BOOL();
 
             var result = first.Equals(first);
 
-            result.Should().BeTrue();
+            result.Should().Be(true);
         }
-        
-        
+
+
         [Test]
         public void TypeEquals_Null_ShouldBeFalse()
         {
-            var first = new SINT();
+            var first = new BOOL();
 
             var result = first.Equals(null);
 
-            result.Should().BeFalse();
+            result.Should().Be(false);
         }
-        
+
         [Test]
         public void ObjectEquals_AreEqual_ShouldBeTrue()
         {
-            var first = new SINT();
-            var second = new SINT();
+            var first = new BOOL();
+            var second = new BOOL();
 
             var result = first.Equals((object)second);
 
-            result.Should().BeTrue();
+            result.Should().Be(true);
         }
-        
+
         [Test]
         public void ObjectEquals_AreSame_ShouldBeTrue()
         {
-            var first = new SINT();
+            var first = new BOOL();
 
             var result = first.Equals((object)first);
 
-            result.Should().BeTrue();
+            result.Should().Be(true);
         }
-        
+
         [Test]
         public void ObjectEquals_Null_ShouldBeFalse()
         {
-            var first = new SINT();
+            var first = new BOOL();
 
             var result = first.Equals((object)null);
 
-            result.Should().BeFalse();
+            result.Should().Be(false);
         }
 
         [Test]
         public void OperatorEquals_AreEqual_ShouldBeTrue()
         {
-            var first = new SINT();
-            var second = new SINT();
+            var first = new BOOL();
+            var second = new BOOL();
 
             var result = first == second;
 
-            result.Should().BeTrue();
+            result.Should().Be(true);
         }
-        
+
         [Test]
         public void OperatorNotEquals_AreEqual_ShouldBeFalse()
         {
-            var first = new SINT();
-            var second = new SINT();
+            var first = new BOOL();
+            var second = new BOOL();
 
             var result = first != second;
 
-            result.Should().BeFalse();
+            result.Should().Be(false);
         }
 
         [Test]
-        public void GetHashCode_DefaultValue_ShouldBeHashOfName()
+        public void GetHashCode_DefaultValue_ShouldBeHashOfValue()
         {
-            var type = new SINT();
+            var type = new BOOL();
 
             var hash = type.GetHashCode();
 
-            hash.Should().Be(type.GetHashCode());
+            hash.Should().Be(false.GetHashCode());
         }
-        
+
         [Test]
         public void ToString_WhenCalled_ShouldBeValue()
         {
-            var type = new SINT();
+            var type = new BOOL();
 
             type.ToString().Should().Be("0");
         }
-        
+
         [Test]
         public void CompareTo_Same_ShouldBeZero()
         {
-            var type = new SINT();
+            var type = new BOOL();
 
             var compare = type.CompareTo(type);
 
@@ -206,7 +223,7 @@ namespace L5Sharp.Tests.Types
         [Test]
         public void CompareTo_Null_ShouldBeOne()
         {
-            var type = new SINT();
+            var type = new BOOL();
 
             var compare = type.CompareTo(null);
 
@@ -216,8 +233,8 @@ namespace L5Sharp.Tests.Types
         [Test]
         public void CompareTo_ValidOther_ShouldBeZero()
         {
-            var first = new SINT();
-            var second = new SINT();
+            var first = new BOOL();
+            var second = new BOOL();
 
             var compare = first.CompareTo(second);
 

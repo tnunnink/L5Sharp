@@ -49,5 +49,6 @@
     <ItemGroup>
       <Compile Remove="Core\Bus.cs" />
       <Compile Remove="Serialization\**" />
+      <Compile Remove="Types\LogixType.cs" />
     </ItemGroup>
 </Project>

@@ -1,14 +1,11 @@
 ﻿using System;
-using System.ComponentModel;
 using L5Sharp.Enums;
-using L5Sharp.Types.Atomics.Converters;
 
 namespace L5Sharp.Types.Atomics;
 
 /// <summary>
 /// Represents a <b>INT</b> Logix atomic data type, or a type analogous to a <see cref="short"/>.
 /// </summary>
-[TypeConverter(typeof(IntConverter))]
 public sealed class INT : AtomicType, IEquatable<INT>, IComparable<INT>
 {
     private readonly short _value;
@@ -54,74 +51,23 @@ public sealed class INT : AtomicType, IEquatable<INT>, IComparable<INT>
     /// <summary>
     /// Gets or sets a <see cref="BOOL"/> at the specified bit index.
     /// </summary>
-    /// <param name="bit">The bit index to access</param>
+    /// <param name="bit">The bit index to access.</param>
     public BOOL this[int bit] => new(Value[bit]);
 
     /// <summary>
-    /// Converts the provided <see cref="short"/> to a <see cref="INT"/> value.
-    /// </summary>
-    /// <param name="value">The value to convert.</param>
-    /// <returns>A <see cref="INT"/> value.</returns>
-    public static implicit operator INT(short value) => new(value);
-
-    /// <summary>
-    /// Converts the provided <see cref="INT"/> to a <see cref="short"/> value.
-    /// </summary>
-    /// <param name="atomic">The value to convert.</param>
-    /// <returns>A <see cref="short"/> type value.</returns>
-    public static implicit operator short(INT atomic) => atomic._value;
-
-    /// <summary>
-    /// Implicitly converts a <see cref="string"/> to a <see cref="INT"/> value.
-    /// </summary>
-    /// <param name="value">The value to convert.</param>
-    /// <returns>A new <see cref="INT"/> value.</returns>
-    public static implicit operator INT(string value) => Parse(value);
-
-    /// <summary>
-    /// Implicitly converts the provided <see cref="INT"/> to a <see cref="string"/> value.
-    /// </summary>
-    /// <param name="value">The value to convert.</param>
-    /// <returns>A new <see cref="string"/> value.</returns>
-    public static implicit operator string(INT value) => value.ToString();
-
-    /// <summary>
     /// Parses the provided string value to a new <see cref="INT"/>.
     /// </summary>
     /// <param name="value">The string value to parse.</param>
     /// <returns>A <see cref="INT"/> representing the parsed value.</returns>
-    /// <exception cref="ArgumentException">The converted value returned null.</exception>
     /// <exception cref="FormatException">The <see cref="Radix"/> format can not be inferred from <c>value</c>.</exception>
     public static INT Parse(string value)
     {
+        if (short.TryParse(value, out var result))
+            return new INT(result);
+
         var radix = Radix.Infer(value);
-
-        var converter = TypeDescriptor.GetConverter(typeof(INT));
-
-        var type = converter.ConvertFrom(value) ??
-                   throw new ArgumentException($"The provided value '{value}' returned a null value after conversion.");
-
-        return new INT((short)(INT)type, radix);
-    }
-
-    /// <summary>
-    /// Parses the provided string value to a new <see cref="INT"/>.
-    /// </summary>
-    /// <param name="value">The string value to parse.</param>
-    /// <param name="radix">The radix format of the string</param>
-    /// <returns>A <see cref="INT"/> representing the parsed value.</returns>
-    /// <exception cref="ArgumentException">The converted value returned null.</exception>
-    /// <exception cref="FormatException">The <see cref="Radix"/> format can not be inferred from <c>value</c>.</exception>
-    public static INT Parse(string value, Radix radix)
-    {
-        var atomic = radix.Parse(value);
-
-        var converter = TypeDescriptor.GetConverter(typeof(INT));
-
-        var type = converter.ConvertFrom(atomic) ??
-                   throw new ArgumentException($"The provided value '{value}' returned a null value after conversion.");
-
-        return new INT((short)(INT)type, radix);
+        var atomic = (INT)radix.Parse(value);
+        return new INT(atomic, radix);
     }
 
     /// <inheritdoc />
@@ -164,4 +110,99 @@ public sealed class INT : AtomicType, IEquatable<INT>, IComparable<INT>
         if (ReferenceEquals(this, other)) return 0;
         return ReferenceEquals(null, other) ? 1 : _value.CompareTo(other._value);
     }
+
+    #region Conversions
+
+    /// <summary>
+    /// Converts the provided <see cref="short"/> to a <see cref="INT"/> value.
+    /// </summary>
+    /// <param name="value">The value to convert.</param>
+    /// <returns>A <see cref="INT"/> value.</returns>
+    public static implicit operator INT(short value) => new(value);
+
+    /// <summary>
+    /// Converts the provided <see cref="INT"/> to a <see cref="short"/> value.
+    /// </summary>
+    /// <param name="atomic">The value to convert.</param>
+    /// <returns>A <see cref="short"/> type value.</returns>
+    public static implicit operator short(INT atomic) => atomic._value;
+
+    /// <summary>
+    /// Implicitly converts a <see cref="string"/> to a <see cref="INT"/> value.
+    /// </summary>
+    /// <param name="value">The value to convert.</param>
+    /// <returns>A new <see cref="INT"/> value.</returns>
+    public static implicit operator INT(string value) => Parse(value);
+
+    /// <summary>
+    /// Implicitly converts the provided <see cref="INT"/> to a <see cref="string"/> value.
+    /// </summary>
+    /// <param name="value">The value to convert.</param>
+    /// <returns>A new <see cref="string"/> value.</returns>
+    public static implicit operator string(INT value) => value.ToString();
+
+    /// <summary>
+    /// Converts the provided <see cref="INT"/> to a <see cref="BOOL"/> value.
+    /// </summary>
+    /// <param name="atomic">The value to convert.</param>
+    /// <returns>A <see cref="BOOL"/> type value.</returns>
+    public static explicit operator BOOL(INT atomic) => new(atomic._value != 0);
+
+    /// <summary>
+    /// Converts the provided <see cref="INT"/> to a <see cref="SINT"/> value.
+    /// </summary>
+    /// <param name="atomic">The value to convert.</param>
+    /// <returns>A <see cref="SINT"/> type value.</returns>
+    public static explicit operator SINT(INT atomic) => new((sbyte)atomic._value);
+
+    /// <summary>
+    /// Converts the provided <see cref="INT"/> to a <see cref="USINT"/> value.
+    /// </summary>
+    /// <param name="atomic">The value to convert.</param>
+    /// <returns>A <see cref="USINT"/> type value.</returns>
+    public static explicit operator USINT(INT atomic) => new((byte)atomic._value);
+
+    /// <summary>
+    /// Converts the provided <see cref="INT"/> to a <see cref="UINT"/> value.
+    /// </summary>
+    /// <param name="atomic">The value to convert.</param>
+    /// <returns>A <see cref="UINT"/> type value.</returns>
+    public static explicit operator UINT(INT atomic) => new((ushort)atomic._value);
+
+    /// <summary>
+    /// Converts the provided <see cref="INT"/> to a <see cref="DINT"/> value.
+    /// </summary>
+    /// <param name="atomic">The value to convert.</param>
+    /// <returns>A <see cref="DINT"/> type value.</returns>
+    public static implicit operator DINT(INT atomic) => new(atomic._value);
+
+    /// <summary>
+    /// Converts the provided <see cref="INT"/> to a <see cref="UDINT"/> value.
+    /// </summary>
+    /// <param name="atomic">The value to convert.</param>
+    /// <returns>A <see cref="UDINT"/> type value.</returns>
+    public static explicit operator UDINT(INT atomic) => new((uint)atomic._value);
+
+    /// <summary>
+    /// Converts the provided <see cref="INT"/> to a <see cref="LINT"/> value.
+    /// </summary>
+    /// <param name="atomic">The value to convert.</param>
+    /// <returns>A <see cref="LINT"/> type value.</returns>
+    public static implicit operator LINT(INT atomic) => new(atomic._value);
+
+    /// <summary>
+    /// Converts the provided <see cref="INT"/> to a <see cref="ULINT"/> value.
+    /// </summary>
+    /// <param name="atomic">The value to convert.</param>
+    /// <returns>A <see cref="ULINT"/> type value.</returns>
+    public static explicit operator ULINT(INT atomic) => new((ulong)atomic._value);
+
+    /// <summary>
+    /// Converts the provided <see cref="INT"/> to a <see cref="REAL"/> value.
+    /// </summary>
+    /// <param name="atomic">The value to convert.</param>
+    /// <returns>A <see cref="REAL"/> type value.</returns>
+    public static implicit operator REAL(INT atomic) => new(atomic._value);
+
+    #endregion
 }

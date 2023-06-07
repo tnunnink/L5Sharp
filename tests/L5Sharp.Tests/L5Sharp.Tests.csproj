@@ -64,12 +64,6 @@
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
       <None Remove="Serialization\**" />
-      <None Update="Types\DintTests.Serialize_Value_ShouldBeValid.verified.txt">
-        <DependentUpon>DintTests.cs</DependentUpon>
-      </None>
-      <None Update="Types\TimerTests.Serialize_Overload_ShouldBeVerified.verified.txt">
-        <DependentUpon>TimerTests.cs</DependentUpon>
-      </None>
       <None Update="Types\Custom\MyNestedTypeTests.SetSimpleM4_Valid_ShouldBeValid.verified.txt">
         <DependentUpon>MyNestedTypeTests.cs</DependentUpon>
       </None>
@@ -87,6 +81,18 @@
       </None>
       <None Update="Components\DataTypeTests.Serialize_Default_ShouldBeVerified.verified.txt">
         <DependentUpon>DataTypeTests.cs</DependentUpon>
+      </None>
+      <None Update="Types\Atomics\DintTests.Serialize_Default_ShouldBeValid.verified.txt">
+        <ParentFile>DintTests</ParentFile>
+        <DependentUpon>DintTests.cs</DependentUpon>
+      </None>
+      <None Update="Types\Atomics\DintTests.Serialize_Value_ShouldBeValid.verified.txt">
+        <DependentUpon>DintTests.cs</DependentUpon>
+        <ParentFile>DintTests</ParentFile>
+      </None>
+      <None Update="Types\Predefined\TimerTests.Serialize_Overload_ShouldBeVerified.verified.txt">
+        <DependentUpon>TimerTests.cs</DependentUpon>
+        <ParentFile>TimerTests</ParentFile>
       </None>
     </ItemGroup>
 

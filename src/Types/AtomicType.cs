@@ -8,7 +8,7 @@ using L5Sharp.Types.Atomics;
 namespace L5Sharp.Types;
 
 /// <summary>
-/// A <see cref="LogixType"/> that represents value type object.
+/// A <see cref="L5Sharp.LogixType"/> that represents value type object.
 /// </summary>
 /// <remarks>
 /// Logix atomic types are types that have value (i.e. BOOL, SINT, INT, DINT, REAL, etc.).
@@ -18,7 +18,7 @@ namespace L5Sharp.Types;
 /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
 /// `Logix 5000 Controllers Import/Export`</a> for more information.
 /// </footer>
-public abstract class AtomicType : LogixType
+public abstract class AtomicType : L5Sharp.LogixType
 {
     /// <summary>
     /// Creates a new <see cref="AtomicType"/> instance with the provided name.

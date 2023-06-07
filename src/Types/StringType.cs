@@ -10,7 +10,7 @@ using L5Sharp.Types.Atomics;
 namespace L5Sharp.Types;
 
 /// <summary>
-/// A <see cref="LogixType"/> that represents a string or collection of ASCII characters.
+/// A <see cref="L5Sharp.LogixType"/> that represents a string or collection of ASCII characters.
 /// </summary>
 /// <remarks>
 /// <para>
@@ -112,13 +112,46 @@ public class StringType : StructureType, IEnumerable<char>, IEquatable<StringTyp
     /// Gets the array of bytes that represent the ASCII encoded string value.
     /// </summary>
     /// <returns>An array of <see cref="SINT"/> logix atomic values representing the bytes of the string.</returns>
-    public ArrayType<SINT> DATA => new(Encoding.ASCII.GetBytes(Value).Select(b => new SINT((sbyte)b, Radix.Ascii)).ToArray());
+    public ArrayType<SINT> DATA => Encoding.ASCII.GetBytes(Value).Select(b => new SINT((sbyte)b, Radix.Ascii)).ToArray();
 
     /// <inheritdoc />
     public IEnumerator<char> GetEnumerator() => Value.GetEnumerator();
 
     /// <inheritdoc />
     public override string ToString() => Value;
+
+    /// <summary>
+    /// Returns a serialized instance of the <see cref="StringType"/> as a structure with the provided element name.
+    /// </summary>
+    /// <param name="name">The name (Structure/StructureMember) or the element.</param>
+    /// <returns>A <see cref="XElement"/> representing the serialized type.</returns>
+    internal XElement Serialize(string name)
+    {
+        if (name is null)
+            throw new ArgumentNullException(nameof(name));
+
+        if (name is not (L5XName.Structure or L5XName.StructureMember))
+            throw new ArgumentException("Expected name of element must be Structure or StructureMember");
+        
+        var element = new XElement(name);
+        element.Add(new XAttribute(L5XName.DataType, Name));
+
+        var len = new XElement(L5XName.DataValueMember);
+        len.Add(new XAttribute(L5XName.Name, nameof(LEN)));
+        len.Add(new XAttribute(L5XName.DataType, LEN.Name));
+        len.Add(new XAttribute(L5XName.Radix, Radix.Decimal.Value));
+        len.Add(new XAttribute(L5XName.Value, LEN.ToString()));
+        element.Add(len);
+
+        var data = new XElement(L5XName.DataValueMember);
+        data.Add(new XAttribute(L5XName.Name, nameof(DATA)));
+        data.Add(new XAttribute(L5XName.DataType, Name));
+        data.Add(new XAttribute(L5XName.Radix, Radix.Ascii.Value));
+        data.Add(new XCData(Value));
+        element.Add(data);
+
+        return element;
+    }
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 

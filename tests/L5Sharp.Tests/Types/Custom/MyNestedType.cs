@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using System.Xml.Linq;
-using L5Sharp.Core;
+﻿using System.Xml.Linq;
 using L5Sharp.Enums;
 using L5Sharp.Types;
 using L5Sharp.Types.Atomics;
@@ -53,7 +51,7 @@ namespace L5Sharp.Tests.Types.Custom
         public TIMER Tmr 
         {
             get => GetMember<TIMER>();
-            set => SetMember(value);
+            private init => SetMember(value);
         }
 
         /// <summary>
@@ -62,7 +60,7 @@ namespace L5Sharp.Tests.Types.Custom
         public MySimpleType Simple
         {
             get => GetMember<MySimpleType>();
-            set => SetMember(value);
+            private init => SetMember(value);
         }
 
         /// <summary>
@@ -71,7 +69,7 @@ namespace L5Sharp.Tests.Types.Custom
         public ArrayType<BOOL> Flags
         {
             get => GetMember<ArrayType<BOOL>>();
-            set => SetMember(value);
+            private init => SetMember(value);
         }
 
         /// <summary>
@@ -80,7 +78,7 @@ namespace L5Sharp.Tests.Types.Custom
         public ArrayType<MESSAGE> Messages 
         {
             get => GetMember<ArrayType<MESSAGE>>();
-            set => SetMember(value);
+            private init => SetMember(value);
         }
     }
 }

@@ -9,7 +9,7 @@ using L5Sharp.Extensions;
 namespace L5Sharp.Types;
 
 /// <summary>
-/// A <see cref="LogixType"/> that represents a complex structure containing members of different types.
+/// A <see cref="L5Sharp.LogixType"/> that represents a complex structure containing members of different types.
 /// </summary>
 /// <remarks>
 /// <para>
@@ -17,7 +17,7 @@ namespace L5Sharp.Types;
 /// user defined data types that can be used to create in memory representation of the tags for those types.
 /// </para>
 /// </remarks>
-public class StructureType : LogixType
+public class StructureType : L5Sharp.LogixType
 {
     /// <summary>
     /// Creates a new <see cref="StructureType"/> instance.
@@ -37,43 +37,28 @@ public class StructureType : LogixType
     /// 
     /// </summary>
     /// <param name="members"></param>
-    public StructureType(IEnumerable<KeyValuePair<string, LogixType>> members) : base(GenerateElement(members))
+    public StructureType(IEnumerable<KeyValuePair<string, L5Sharp.LogixType>> members) : base(GenerateElement(members))
     {
     }
-
-    /// <inheritdoc />
-    public override DataTypeFamily Family => DataTypeFamily.None;
-
-    /// <inheritdoc />
-    public override DataTypeClass Class => DataTypeClass.Unknown;
-
-    /// <summary>
-    /// The collection of <see cref="Member"/> objects that compose the structure of the logix type.
-    /// </summary>
-    /// <returns>A <see cref="IEnumerable{T}"/> containing <see cref="Member"/> objects.</returns>
-    public override IEnumerable<Member> Members => Element.Elements().Select(e => new Member(e));
-
-    /// <inheritdoc />
-    public override string ToString() => Name;
 
     /// <summary>
     /// Gets the member logix type for the specified name. 
     /// </summary>
     /// <param name="name">The member name to find.</param>
     /// <typeparam name="TLogixType">The logix type to return.</typeparam>
-    /// <returns>A new <see cref="LogixType"/> representing the deserialized data of the underlying type element member.</returns>
+    /// <returns>A new <see cref="L5Sharp.LogixType"/> representing the deserialized data of the underlying type element member.</returns>
     /// <exception cref="L5XException">A member with the specified name was not found in the underlying element.</exception>
     /// <remarks>
     /// This method is for users implementing custom user defined or predefined types.
     /// Use this as the getter for all members of the type.
     /// </remarks>
     protected TLogixType GetMember<TLogixType>([CallerMemberName] string? name = null)
-        where TLogixType : LogixType
+        where TLogixType : L5Sharp.LogixType
     {
         var member = Element.Elements().SingleOrDefault(e => e.MemberName() == name) ??
                      throw new L5XException("Could not find member name for element.", Element);
 
-        return (TLogixType)LogixData.Deserialize(member);
+        return (TLogixType)LogixType.Deserialize(member);
     }
 
     /// <summary>
@@ -90,7 +75,7 @@ public class StructureType : LogixType
     /// If the input type is <c>null</c>, this will remove the member
     /// </remarks>
     protected void SetMember<TLogixType>(TLogixType? value, [CallerMemberName] string? name = null)
-        where TLogixType : LogixType, ILogixSerializable
+        where TLogixType : L5Sharp.LogixType, ILogixSerializable
     {
         if (name is null)
             throw new ArgumentNullException(nameof(name));
@@ -127,7 +112,7 @@ public class StructureType : LogixType
     /// </summary>
     /// <param name="members"></param>
     /// <returns>A new <see cref="XElement"/> containing the default L5X data.</returns>
-    private static XElement GenerateElement(IEnumerable<KeyValuePair<string, LogixType>> members)
+    private static XElement GenerateElement(IEnumerable<KeyValuePair<string, L5Sharp.LogixType>> members)
     {
         var element = new XElement(L5XName.Structure);
         element.Add(new XAttribute(L5XName.DataType, nameof(StructureType)));

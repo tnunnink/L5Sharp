@@ -58,51 +58,20 @@ public sealed class LINT : AtomicType, IEquatable<LINT>, IComparable<LINT>
     public const long MinValue = long.MinValue;
 
     /// <summary>
-    /// Converts the provided <see cref="long"/> to a <see cref="LINT"/> value.
-    /// </summary>
-    /// <param name="value">The value to convert.</param>
-    /// <returns>A <see cref="LINT"/> value.</returns>
-    public static implicit operator LINT(long value) => new(value);
-
-    /// <summary>
-    /// Converts the provided <see cref="LINT"/> to a <see cref="long"/> value.
-    /// </summary>
-    /// <param name="atomic">The value to convert.</param>
-    /// <returns>A <see cref="long"/> type value.</returns>
-    public static implicit operator long(LINT atomic) => atomic._value;
-
-    /// <summary>
-    /// Implicitly converts a <see cref="string"/> to a <see cref="LINT"/> value.
-    /// </summary>
-    /// <param name="value">The value to convert.</param>
-    /// <returns>A new <see cref="LINT"/> value.</returns>
-    public static implicit operator LINT(string value) => Parse(value);
-
-    /// <summary>
     /// Parses the provided string value to a new <see cref="LINT"/>.
     /// </summary>
     /// <param name="value">The string value to parse.</param>
     /// <returns>A <see cref="LINT"/> representing the parsed value.</returns>
-    /// <exception cref="ArgumentException">The converted value returned null.</exception>
     /// <exception cref="FormatException">The <see cref="Radix"/> format can not be inferred from <c>value</c>.</exception>
     public static LINT Parse(string value)
     {
+        if (long.TryParse(value, out var result))
+            return new LINT(result);
+
         var radix = Radix.Infer(value);
-
-        var converter = TypeDescriptor.GetConverter(typeof(LINT));
-
-        var type = converter.ConvertFrom(value) ??
-                   throw new ArgumentException($"The provided value '{value}' returned a null value after conversion.");
-
-        return new LINT((long)(LINT)type, radix);
+        var atomic = (LINT)radix.Parse(value);
+        return new LINT(atomic, radix);
     }
-
-    /// <summary>
-    /// Implicitly converts the provided <see cref="LINT"/> to a <see cref="string"/> value.
-    /// </summary>
-    /// <param name="value">The value to convert.</param>
-    /// <returns>A new <see cref="string"/> value.</returns>
-    public static implicit operator string(LINT value) => value.ToString();
 
     /// <inheritdoc />
     public bool Equals(LINT? other)
@@ -144,4 +113,100 @@ public sealed class LINT : AtomicType, IEquatable<LINT>, IComparable<LINT>
         if (ReferenceEquals(this, other)) return 0;
         return ReferenceEquals(null, other) ? 1 : _value.CompareTo(other._value);
     }
+    
+    #region Conversions
+     
+    /// <summary>
+    /// Converts the provided <see cref="long"/> to a <see cref="LINT"/> value.
+    /// </summary>
+    /// <param name="value">The value to convert.</param>
+    /// <returns>A <see cref="LINT"/> value.</returns>
+    public static implicit operator LINT(long value) => new(value);
+
+    /// <summary>
+    /// Converts the provided <see cref="LINT"/> to a <see cref="long"/> value.
+    /// </summary>
+    /// <param name="atomic">The value to convert.</param>
+    /// <returns>A <see cref="long"/> type value.</returns>
+    public static implicit operator long(LINT atomic) => atomic._value;
+
+    /// <summary>
+    /// Implicitly converts a <see cref="string"/> to a <see cref="LINT"/> value.
+    /// </summary>
+    /// <param name="value">The value to convert.</param>
+    /// <returns>A new <see cref="LINT"/> value.</returns>
+    public static implicit operator LINT(string value) => Parse(value);
+
+    /// <summary>
+    /// Implicitly converts the provided <see cref="LINT"/> to a <see cref="string"/> value.
+    /// </summary>
+    /// <param name="value">The value to convert.</param>
+    /// <returns>A new <see cref="string"/> value.</returns>
+    public static implicit operator string(LINT value) => value.ToString();
+
+    /// <summary>
+    /// Converts the provided <see cref="LINT"/> to a <see cref="BOOL"/> value.
+    /// </summary>
+    /// <param name="atomic">The value to convert.</param>
+    /// <returns>A <see cref="BOOL"/> type value.</returns>
+    public static explicit operator BOOL(LINT atomic) => new(atomic._value != 0);
+
+    /// <summary>
+    /// Converts the provided <see cref="LINT"/> to a <see cref="SINT"/> value.
+    /// </summary>
+    /// <param name="atomic">The value to convert.</param>
+    /// <returns>A <see cref="SINT"/> type value.</returns>
+    public static explicit operator SINT(LINT atomic) => new((sbyte)atomic._value);
+
+    /// <summary>
+    /// Converts the provided <see cref="LINT"/> to a <see cref="USINT"/> value.
+    /// </summary>
+    /// <param name="atomic">The value to convert.</param>
+    /// <returns>A <see cref="USINT"/> type value.</returns>
+    public static explicit operator USINT(LINT atomic) => new((byte)atomic._value);
+
+    /// <summary>
+    /// Converts the provided <see cref="LINT"/> to a <see cref="INT"/> value.
+    /// </summary>
+    /// <param name="atomic">The value to convert.</param>
+    /// <returns>A <see cref="INT"/> type value.</returns>
+    public static explicit operator INT(LINT atomic) => new((short)atomic._value);
+
+    /// <summary>
+    /// Converts the provided <see cref="LINT"/> to a <see cref="UINT"/> value.
+    /// </summary>
+    /// <param name="atomic">The value to convert.</param>
+    /// <returns>A <see cref="UINT"/> type value.</returns>
+    public static explicit operator UINT(LINT atomic) => new((ushort)atomic._value);
+
+    /// <summary>
+    /// Converts the provided <see cref="LINT"/> to a <see cref="LINT"/> value.
+    /// </summary>
+    /// <param name="atomic">The value to convert.</param>
+    /// <returns>A <see cref="LINT"/> type value.</returns>
+    public static explicit operator DINT(LINT atomic) => new((int)atomic._value);
+
+    /// <summary>
+    /// Converts the provided <see cref="LINT"/> to a <see cref="UDINT"/> value.
+    /// </summary>
+    /// <param name="atomic">The value to convert.</param>
+    /// <returns>A <see cref="UDINT"/> type value.</returns>
+    public static explicit operator UDINT(LINT atomic) => new((uint)atomic._value);
+
+    /// <summary>
+    /// Converts the provided <see cref="LINT"/> to a <see cref="ULINT"/> value.
+    /// </summary>
+    /// <param name="atomic">The value to convert.</param>
+    /// <returns>A <see cref="ULINT"/> type value.</returns>
+    public static explicit operator ULINT(LINT atomic) => new((ulong)atomic._value);
+
+
+    /// <summary>
+    /// Converts the provided <see cref="LINT"/> to a <see cref="REAL"/> value.
+    /// </summary>
+    /// <param name="atomic">The value to convert.</param>
+    /// <returns>A <see cref="REAL"/> type value.</returns>
+    public static implicit operator REAL(LINT atomic) => new(atomic._value);
+
+    #endregion
 }

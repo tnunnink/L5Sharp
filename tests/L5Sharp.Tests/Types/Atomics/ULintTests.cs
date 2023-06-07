@@ -3,78 +3,79 @@ using FluentAssertions;
 using L5Sharp.Enums;
 using L5Sharp.Types.Atomics;
 
-namespace L5Sharp.Tests.Types
+namespace L5Sharp.Tests.Types.Atomics
 {
     [TestFixture]
-    public class BoolTests
+    public class ULintTests
     {
+        private ulong _random;
+
+        [SetUp]
+        public void Setup()
+        {
+            var fixture = new Fixture();
+            _random = fixture.Create<ulong>();
+        }
+        
         [Test]
         public void New_Default_ShouldNotBeNull()
         {
-            var type = new BOOL();
+            var type = new ULINT();
 
             type.Should().NotBeNull();
         }
-
+        
         [Test]
         public void New_Default_ShouldHaveExpectedDefaults()
         {
-            var type = new BOOL();
-
-            type.Should().NotBeNull();
-            type.Name.Should().Be(nameof(BOOL).ToUpper());
+            var type = new ULINT();
+            
+            type.Name.Should().Be(nameof(ULINT).ToUpper());
             type.Class.Should().Be(DataTypeClass.Atomic);
             type.Family.Should().Be(DataTypeFamily.None);
-            type.Should().Be(false);
+            type.Should().Be(0);
         }
-
+        
         [Test]
         public void New_ValueOverload_ShouldHaveExpectedValue()
         {
-            var type = new BOOL(true);
-
-            type.Should().Be(true);
+            var type = new ULINT(_random);
+            
+            type.Should().Be(_random);
+        }
+        
+        [Test]
+        public void MaxValue_WhenCalled_ShouldBeExpected()
+        {
+            ULINT.MaxValue.Should().Be(ulong.MaxValue);
+        }
+        
+        [Test]
+        public void MinValue_WhenCalled_ShouldBeExpected()
+        {
+            ULINT.MinValue.Should().Be(ulong.MinValue);
         }
 
         [Test]
-        public void New_IntZeroOverload_ShouldBeFalse()
+        public void SetValue_ValidShort_ShouldBeExpected()
         {
-            var type = new BOOL(0);
+            ULINT type = _random;
 
-            type.Should().Be(false);
+            type.Should().Be(_random);
         }
 
         [Test]
-        public void New_IntPositiveOverload_ShouldBeTrue()
+        public void SetValue_SameType_ShouldBeExpected()
         {
-            var type = new BOOL(1);
+            var type = new ULINT(_random);
 
-            type.Should().Be(true);
+            type.Should().Be(_random);
         }
 
         [Test]
-        public void New_IntNegativeOverload_ShouldBeTrue()
+        public void ToString_DefaultRadix_ShouldBeExpected()
         {
-            var type = new BOOL(-1);
-
-            type.Should().Be(true);
-        }
-
-        [Test]
-        public void SetValue_ValidValue_ShouldReturnExpected()
-        {
-            var fixture = new Fixture();
-            var value = fixture.Create<bool>();
-
-            BOOL type = value;
-
-            type.Should().Be(value);
-        }
-
-        [Test]
-        public void Format_DefaultRadix_ShouldBeExpected()
-        {
-            var type = new BOOL();
+            var type = new ULINT();
 
             var format = type.ToString();
 
@@ -82,138 +83,122 @@ namespace L5Sharp.Tests.Types
         }
         
         [Test]
-        public void Format_OverloadedRadix_ShouldBeExpected()
+        public void ToString_OverloadedRadix_ShouldBeExpected()
         {
-            var type = new BOOL();
+            var type = new ULINT();
 
             var format = type.ToString(Radix.Binary);
 
-            format.Should().Be("2#0");
-        }
-
-        [Test]
-        public void ImplicitOperator_Bool_ShouldBeTrue()
-        {
-            BOOL type = true;
-
-            type.Should().Be(true);
-        }
-
-        [Test]
-        public void ImplicitOperator_bool_ShouldBeTrue()
-        {
-            bool value = new BOOL();
-
-            value.Should().Be(false);
+            format.Should().Be("2#0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000");
         }
 
         [Test]
         public void TypeEquals_AreEqual_ShouldBeTrue()
         {
-            var first = new BOOL();
-            var second = new BOOL();
+            var first = new ULINT();
+            var second = new ULINT();
 
             var result = first.Equals(second);
 
-            result.Should().Be(true);
+            result.Should().BeTrue();
         }
-
+        
         [Test]
         public void TypeEquals_AreSame_ShouldBeTrue()
         {
-            var first = new BOOL();
+            var first = new ULINT();
 
             var result = first.Equals(first);
 
-            result.Should().Be(true);
+            result.Should().BeTrue();
         }
-
-
+        
+        
         [Test]
         public void TypeEquals_Null_ShouldBeFalse()
         {
-            var first = new BOOL();
+            var first = new ULINT();
 
             var result = first.Equals(null);
 
-            result.Should().Be(false);
+            result.Should().BeFalse();
         }
-
+        
         [Test]
         public void ObjectEquals_AreEqual_ShouldBeTrue()
         {
-            var first = new BOOL();
-            var second = new BOOL();
+            var first = new ULINT();
+            var second = new ULINT();
 
             var result = first.Equals((object)second);
 
-            result.Should().Be(true);
+            result.Should().BeTrue();
         }
-
+        
         [Test]
         public void ObjectEquals_AreSame_ShouldBeTrue()
         {
-            var first = new BOOL();
+            var first = new ULINT();
 
             var result = first.Equals((object)first);
 
-            result.Should().Be(true);
+            result.Should().BeTrue();
         }
-
+        
         [Test]
         public void ObjectEquals_Null_ShouldBeFalse()
         {
-            var first = new BOOL();
+            var first = new ULINT();
 
             var result = first.Equals((object)null);
 
-            result.Should().Be(false);
+            result.Should().BeFalse();
         }
 
         [Test]
         public void OperatorEquals_AreEqual_ShouldBeTrue()
         {
-            var first = new BOOL();
-            var second = new BOOL();
+            var first = new ULINT();
+            var second = new ULINT();
 
             var result = first == second;
 
-            result.Should().Be(true);
+            result.Should().BeTrue();
         }
-
+        
         [Test]
         public void OperatorNotEquals_AreEqual_ShouldBeFalse()
         {
-            var first = new BOOL();
-            var second = new BOOL();
+            var first = new ULINT();
+            var second = new ULINT();
 
             var result = first != second;
 
-            result.Should().Be(false);
+            result.Should().BeFalse();
         }
 
         [Test]
-        public void GetHashCode_DefaultValue_ShouldBeHashOfValue()
+        public void GetHashCode_DefaultValue_ShouldBeHashOfName()
         {
-            var type = new BOOL();
+            var type = new ULINT();
 
             var hash = type.GetHashCode();
 
-            hash.Should().Be(false.GetHashCode());
+            hash.Should().Be(type.GetHashCode());
         }
-
+        
         [Test]
-        public void ToString_WhenCalled_ShouldBeValue()
+        public void ToString_WhenCalled_ShouldBeName()
         {
-            var type = new BOOL();
+            var type = new ULINT();
 
-            type.ToString().Should().Be("0");
+            type.ToString().Should().Be(type.ToString());
         }
-
+        
         [Test]
         public void CompareTo_Same_ShouldBeZero()
         {
-            var type = new BOOL();
+            var type = new ULINT();
 
             var compare = type.CompareTo(type);
 
@@ -223,7 +208,7 @@ namespace L5Sharp.Tests.Types
         [Test]
         public void CompareTo_Null_ShouldBeOne()
         {
-            var type = new BOOL();
+            var type = new ULINT();
 
             var compare = type.CompareTo(null);
 
@@ -233,8 +218,8 @@ namespace L5Sharp.Tests.Types
         [Test]
         public void CompareTo_ValidOther_ShouldBeZero()
         {
-            var first = new BOOL();
-            var second = new BOOL();
+            var first = new ULINT();
+            var second = new ULINT();
 
             var compare = first.CompareTo(second);
 

@@ -48,7 +48,10 @@ public abstract class LogixEntity<TEntity> : ILogixSerializable where TEntity : 
         Element = element ?? throw new ArgumentNullException(nameof(element));
     }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Returns the underlying <see cref="XElement"/> for the <see cref="LogixEntity{TEntity}"/>.
+    /// </summary>
+    /// <returns>A <see cref="XElement"/> representing the serialized entity.</returns>
     public virtual XElement Serialize() => Element;
 
     /// <summary>
@@ -206,10 +209,8 @@ public abstract class LogixEntity<TEntity> : ILogixSerializable where TEntity : 
         
         if (setCondition?.Invoke(value) == false)
             return;
-        
-        Element.SetElementValue(name, new XCData(value?.ToString()));
 
-        /*if (value is null)
+        if (value is null)
         {
             Element.Element(name)?.Remove();
             return;
@@ -223,7 +224,7 @@ public abstract class LogixEntity<TEntity> : ILogixSerializable where TEntity : 
             return;
         }
 
-        element.Value = value.ToString();*/
+        element.Value = value.ToString();
     }
 
     /// <summary>

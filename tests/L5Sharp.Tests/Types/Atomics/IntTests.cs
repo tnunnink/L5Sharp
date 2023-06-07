@@ -1,12 +1,9 @@
 ﻿using AutoFixture;
 using FluentAssertions;
 using L5Sharp.Enums;
-using L5Sharp.Extensions;
-using L5Sharp.Types;
 using L5Sharp.Types.Atomics;
-using NUnit.Framework;
 
-namespace L5Sharp.Tests.Types
+namespace L5Sharp.Tests.Types.Atomics
 {
     [TestFixture]
     public class IntTests
@@ -26,6 +23,27 @@ namespace L5Sharp.Tests.Types
             var type = new INT();
 
             type.Should().NotBeNull();
+        }
+
+        [Test]
+        public void New_ValidRadix_ShouldHaveExpectedValues()
+        {
+            var type = new INT(Radix.Binary);
+
+            type.Radix.Should().Be(Radix.Binary);
+            type.ToString().Should().Be("2#0000_0000_0000_0000");
+        }
+
+        [Test]
+        public void New_NullRadix_ShouldThrowArgumentException()
+        {
+            FluentActions.Invoking(() => new INT(null!)).Should().Throw<ArgumentException>();
+        }
+
+        [Test]
+        public void New_InvalidRadix_ShouldThrowArgumentException()
+        {
+            FluentActions.Invoking(() => new INT(Radix.Exponential)).Should().Throw<ArgumentException>();
         }
 
         [Test]
@@ -61,14 +79,142 @@ namespace L5Sharp.Tests.Types
         }
 
         [Test]
-        public void SetValue_ValidByte_ShouldBeExpected()
+        public void Bit_ValidIndex_ShouldBeExpected()
+        {
+            var type = new INT(1);
+
+            var bit = type[0];
+
+            bit.Should().Be(true);
+        }
+
+        [Test]
+        public void Conversion_FromShort_ShouldBeExpectedValue()
         {
             var fixture = new Fixture();
-            var value = fixture.Create<byte>();
+            var value = fixture.Create<short>();
 
             INT type = value;
 
             type.Should().Be(value);
+        }
+
+        [Test]
+        public void Conversion_ToShort_ShouldBeExpectedValue()
+        {
+            var type = new INT();
+
+            short value = type;
+
+            value.Should().Be(0);
+        }
+
+        [Test]
+        public void Conversion_FromString_ShouldBeExpectedValue()
+        {
+            INT value = "1";
+
+            value.Should().Be(1);
+        }
+
+        [Test]
+        public void Conversion_ToString_ShouldBeExpectedValue()
+        {
+            var type = new INT(1);
+
+            string value = type;
+
+            value.Should().Be("1");
+        }
+
+        [Test]
+        public void Conversion_BOOL_ShouldBeExpectedValue()
+        {
+            var type = new INT();
+
+            var value = (BOOL)type;
+
+            value.Should().Be(false);
+        }
+
+        [Test]
+        public void Conversion_SINT_ShouldBeExpectedValue()
+        {
+            var type = new INT();
+
+            var value = (SINT)type;
+
+            value.Should().Be(0);
+        }
+
+        [Test]
+        public void Conversion_USINT_ShouldBeExpectedValue()
+        {
+            var type = new INT();
+
+            var value = (USINT)type;
+
+            value.Should().Be(0);
+        }
+
+        [Test]
+        public void Conversion_UINT_ShouldBeExpectedValue()
+        {
+            var type = new INT();
+
+            var value = (UINT)type;
+
+            value.Should().Be(0);
+        }
+
+        [Test]
+        public void Conversion_DINT_ShouldBeExpectedValue()
+        {
+            var type = new INT();
+
+            DINT value = type;
+
+            value.Should().Be(0);
+        }
+
+        [Test]
+        public void Conversion_UDINT_ShouldBeExpectedValue()
+        {
+            var type = new INT();
+
+            var value = (UDINT)type;
+
+            value.Should().Be(0);
+        }
+
+        [Test]
+        public void Conversion_LINT_ShouldBeExpectedValue()
+        {
+            var type = new INT();
+
+            LINT value = type;
+
+            value.Should().Be(0);
+        }
+
+        [Test]
+        public void Conversion_ULINT_ShouldBeExpectedValue()
+        {
+            var type = new INT();
+
+            var value = (ULINT)type;
+
+            value.Should().Be(0);
+        }
+
+        [Test]
+        public void Conversion_REAL_ShouldBeExpectedValue()
+        {
+            var type = new INT();
+
+            REAL value = type;
+
+            value.Should().Be(0);
         }
 
         [Test]
@@ -90,8 +236,26 @@ namespace L5Sharp.Tests.Types
 
             format.Should().Be("2#0000_0000_0000_0000");
         }
-        
-        
+
+        [Test]
+        [TestCase("123")]
+        [TestCase("2#0000_0000_0111_1011")]
+        [TestCase("8#000_173")]
+        [TestCase("16#007b")]
+        public void Parse_ValidFormat_ShouldBeExpectedValue(string value)
+        {
+            var type = INT.Parse(value);
+
+            type.Should().Be(123);
+        }
+
+        [Test]
+        public void Parse_InvalidFormat_ShouldThrowNewFormatException()
+        {
+            var fixture = new Fixture();
+
+            FluentActions.Invoking(() => INT.Parse(fixture.Create<string>())).Should().Throw<FormatException>();
+        }
 
         [Test]
         public void TypeEquals_AreEqual_ShouldBeTrue()

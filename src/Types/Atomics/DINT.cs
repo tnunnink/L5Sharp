@@ -58,34 +58,6 @@ public sealed class DINT : AtomicType, IEquatable<DINT>, IComparable<DINT>
     public const int MinValue = int.MinValue;
 
     /// <summary>
-    /// Converts the provided <see cref="int"/> to a <see cref="DINT"/> value.
-    /// </summary>
-    /// <param name="value">The value to convert.</param>
-    /// <returns>A <see cref="DINT"/> value.</returns>
-    public static implicit operator DINT(int value) => new(value);
-
-    /// <summary>
-    /// Converts the provided <see cref="DINT"/> to a <see cref="int"/> value.
-    /// </summary>
-    /// <param name="atomic">The value to convert.</param>
-    /// <returns>A <see cref="int"/> type value.</returns>
-    public static implicit operator int(DINT atomic) => atomic._value;
-
-    /// <summary>
-    /// Implicitly converts a <see cref="string"/> to a <see cref="DINT"/> value.
-    /// </summary>
-    /// <param name="value">The value to convert.</param>
-    /// <returns>A new <see cref="DINT"/> value.</returns>
-    public static implicit operator DINT(string value) => Parse(value);
-
-    /// <summary>
-    /// Implicitly converts the provided <see cref="DINT"/> to a <see cref="string"/> value.
-    /// </summary>
-    /// <param name="value">The value to convert.</param>
-    /// <returns>A new <see cref="string"/> value.</returns>
-    public static implicit operator string(DINT value) => value.ToString();
-
-    /// <summary>
     /// Parses the provided string value to a new <see cref="DINT"/>.
     /// </summary>
     /// <param name="value">The string value to parse.</param>
@@ -94,14 +66,12 @@ public sealed class DINT : AtomicType, IEquatable<DINT>, IComparable<DINT>
     /// <exception cref="FormatException">The <see cref="Radix"/> format can not be inferred from <c>value</c>.</exception>
     public static DINT Parse(string value)
     {
+        if (int.TryParse(value, out var result))
+            return new DINT(result);
+
         var radix = Radix.Infer(value);
-
-        var converter = TypeDescriptor.GetConverter(typeof(DINT));
-
-        var type = converter.ConvertFrom(value) ??
-                   throw new ArgumentException($"The provided value '{value}' returned a null value after conversion.");
-
-        return new DINT((int)(DINT)type, radix);
+        var atomic = (DINT)radix.Parse(value);
+        return new DINT(atomic, radix);
     }
 
     /// <inheritdoc />
@@ -144,4 +114,99 @@ public sealed class DINT : AtomicType, IEquatable<DINT>, IComparable<DINT>
         if (ReferenceEquals(this, other)) return 0;
         return ReferenceEquals(null, other) ? 1 : _value.CompareTo(other._value);
     }
+    
+     #region Conversions
+     
+     /// <summary>
+     /// Converts the provided <see cref="int"/> to a <see cref="DINT"/> value.
+     /// </summary>
+     /// <param name="value">The value to convert.</param>
+     /// <returns>A <see cref="DINT"/> value.</returns>
+     public static implicit operator DINT(int value) => new(value);
+
+     /// <summary>
+     /// Converts the provided <see cref="DINT"/> to a <see cref="int"/> value.
+     /// </summary>
+     /// <param name="atomic">The value to convert.</param>
+     /// <returns>A <see cref="int"/> type value.</returns>
+     public static implicit operator int(DINT atomic) => atomic._value;
+
+     /// <summary>
+     /// Implicitly converts a <see cref="string"/> to a <see cref="DINT"/> value.
+     /// </summary>
+     /// <param name="value">The value to convert.</param>
+     /// <returns>A new <see cref="DINT"/> value.</returns>
+     public static implicit operator DINT(string value) => Parse(value);
+
+     /// <summary>
+     /// Implicitly converts the provided <see cref="DINT"/> to a <see cref="string"/> value.
+     /// </summary>
+     /// <param name="value">The value to convert.</param>
+     /// <returns>A new <see cref="string"/> value.</returns>
+     public static implicit operator string(DINT value) => value.ToString();
+
+     /// <summary>
+     /// Converts the provided <see cref="DINT"/> to a <see cref="BOOL"/> value.
+     /// </summary>
+     /// <param name="atomic">The value to convert.</param>
+     /// <returns>A <see cref="BOOL"/> type value.</returns>
+     public static explicit operator BOOL(DINT atomic) => new(atomic._value != 0);
+
+     /// <summary>
+    /// Converts the provided <see cref="DINT"/> to a <see cref="SINT"/> value.
+    /// </summary>
+    /// <param name="atomic">The value to convert.</param>
+    /// <returns>A <see cref="SINT"/> type value.</returns>
+    public static explicit operator SINT(DINT atomic) => new((sbyte)atomic._value);
+
+     /// <summary>
+    /// Converts the provided <see cref="DINT"/> to a <see cref="USINT"/> value.
+    /// </summary>
+    /// <param name="atomic">The value to convert.</param>
+    /// <returns>A <see cref="USINT"/> type value.</returns>
+    public static explicit operator USINT(DINT atomic) => new((byte)atomic._value);
+
+    /// <summary>
+    /// Converts the provided <see cref="DINT"/> to a <see cref="INT"/> value.
+    /// </summary>
+    /// <param name="atomic">The value to convert.</param>
+    /// <returns>A <see cref="DINT"/> type value.</returns>
+    public static explicit operator INT(DINT atomic) => new((short)atomic._value);
+
+    /// <summary>
+    /// Converts the provided <see cref="DINT"/> to a <see cref="UINT"/> value.
+    /// </summary>
+    /// <param name="atomic">The value to convert.</param>
+    /// <returns>A <see cref="UINT"/> type value.</returns>
+    public static explicit operator UINT(DINT atomic) => new((ushort)atomic._value);
+
+    /// <summary>
+    /// Converts the provided <see cref="DINT"/> to a <see cref="UDINT"/> value.
+    /// </summary>
+    /// <param name="atomic">The value to convert.</param>
+    /// <returns>A <see cref="UDINT"/> type value.</returns>
+    public static explicit operator UDINT(DINT atomic) => new((uint)atomic._value);
+
+    /// <summary>
+    /// Converts the provided <see cref="DINT"/> to a <see cref="LINT"/> value.
+    /// </summary>
+    /// <param name="atomic">The value to convert.</param>
+    /// <returns>A <see cref="LINT"/> type value.</returns>
+    public static implicit operator LINT(DINT atomic) => new(atomic._value);
+
+    /// <summary>
+    /// Converts the provided <see cref="DINT"/> to a <see cref="ULINT"/> value.
+    /// </summary>
+    /// <param name="atomic">The value to convert.</param>
+    /// <returns>A <see cref="ULINT"/> type value.</returns>
+    public static explicit operator ULINT(DINT atomic) => new((ulong)atomic._value);
+
+    /// <summary>
+    /// Converts the provided <see cref="DINT"/> to a <see cref="REAL"/> value.
+    /// </summary>
+    /// <param name="atomic">The value to convert.</param>
+    /// <returns>A <see cref="REAL"/> type value.</returns>
+    public static implicit operator REAL(DINT atomic) => new(atomic._value);
+
+    #endregion
 }

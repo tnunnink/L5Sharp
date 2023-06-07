@@ -2,26 +2,25 @@
 using FluentAssertions;
 using L5Sharp.Enums;
 using L5Sharp.Types.Atomics;
-using NUnit.Framework;
 
-namespace L5Sharp.Tests.Types
+namespace L5Sharp.Tests.Types.Atomics
 {
     [TestFixture]
-    public class ULintTests
+    public class SintTests
     {
-        private ulong _random;
+        private sbyte _random;
 
         [SetUp]
         public void Setup()
         {
             var fixture = new Fixture();
-            _random = fixture.Create<ulong>();
+            _random = fixture.Create<sbyte>();
         }
         
         [Test]
         public void New_Default_ShouldNotBeNull()
         {
-            var type = new ULINT();
+            var type = new SINT();
 
             type.Should().NotBeNull();
         }
@@ -29,54 +28,51 @@ namespace L5Sharp.Tests.Types
         [Test]
         public void New_Default_ShouldHaveExpectedDefaults()
         {
-            var type = new ULINT();
+            var type = new SINT();
             
-            type.Name.Should().Be(nameof(ULINT).ToUpper());
+            type.Name.Should().Be(nameof(SINT).ToUpper());
             type.Class.Should().Be(DataTypeClass.Atomic);
             type.Family.Should().Be(DataTypeFamily.None);
             type.Should().Be(0);
         }
-        
+
         [Test]
         public void New_ValueOverload_ShouldHaveExpectedValue()
         {
-            var type = new ULINT(_random);
+            var type = new SINT(_random);
             
             type.Should().Be(_random);
         }
-        
+
         [Test]
         public void MaxValue_WhenCalled_ShouldBeExpected()
         {
-            ULINT.MaxValue.Should().Be(ulong.MaxValue);
+            SINT.MaxValue.Should().Be(sbyte.MaxValue);
         }
         
         [Test]
         public void MinValue_WhenCalled_ShouldBeExpected()
         {
-            ULINT.MinValue.Should().Be(ulong.MinValue);
+            SINT.MinValue.Should().Be(sbyte.MinValue);
         }
 
         [Test]
-        public void SetValue_ValidShort_ShouldBeExpected()
+        [TestCase(0)]
+        [TestCase(1)]
+        [TestCase(-1)]
+        [TestCase(127)]
+        [TestCase(-127)]
+        public void Set_ValidValues_ShouldBeExpectedValue(sbyte value)
         {
-            ULINT type = _random;
+            SINT type = value;
 
-            type.Should().Be(_random);
-        }
-
-        [Test]
-        public void SetValue_SameType_ShouldBeExpected()
-        {
-            var type = new ULINT(_random);
-
-            type.Should().Be(_random);
+            type.Should().Be(value);
         }
 
         [Test]
         public void ToString_DefaultRadix_ShouldBeExpected()
         {
-            var type = new ULINT();
+            var type = new SINT();
 
             var format = type.ToString();
 
@@ -86,18 +82,18 @@ namespace L5Sharp.Tests.Types
         [Test]
         public void ToString_OverloadedRadix_ShouldBeExpected()
         {
-            var type = new ULINT();
+            var type = new SINT();
 
             var format = type.ToString(Radix.Binary);
 
-            format.Should().Be("2#0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000");
+            format.Should().Be("2#0000_0000");
         }
 
         [Test]
         public void TypeEquals_AreEqual_ShouldBeTrue()
         {
-            var first = new ULINT();
-            var second = new ULINT();
+            var first = new SINT();
+            var second = new SINT();
 
             var result = first.Equals(second);
 
@@ -107,7 +103,7 @@ namespace L5Sharp.Tests.Types
         [Test]
         public void TypeEquals_AreSame_ShouldBeTrue()
         {
-            var first = new ULINT();
+            var first = new SINT();
 
             var result = first.Equals(first);
 
@@ -118,7 +114,7 @@ namespace L5Sharp.Tests.Types
         [Test]
         public void TypeEquals_Null_ShouldBeFalse()
         {
-            var first = new ULINT();
+            var first = new SINT();
 
             var result = first.Equals(null);
 
@@ -128,8 +124,8 @@ namespace L5Sharp.Tests.Types
         [Test]
         public void ObjectEquals_AreEqual_ShouldBeTrue()
         {
-            var first = new ULINT();
-            var second = new ULINT();
+            var first = new SINT();
+            var second = new SINT();
 
             var result = first.Equals((object)second);
 
@@ -139,7 +135,7 @@ namespace L5Sharp.Tests.Types
         [Test]
         public void ObjectEquals_AreSame_ShouldBeTrue()
         {
-            var first = new ULINT();
+            var first = new SINT();
 
             var result = first.Equals((object)first);
 
@@ -149,7 +145,7 @@ namespace L5Sharp.Tests.Types
         [Test]
         public void ObjectEquals_Null_ShouldBeFalse()
         {
-            var first = new ULINT();
+            var first = new SINT();
 
             var result = first.Equals((object)null);
 
@@ -159,8 +155,8 @@ namespace L5Sharp.Tests.Types
         [Test]
         public void OperatorEquals_AreEqual_ShouldBeTrue()
         {
-            var first = new ULINT();
-            var second = new ULINT();
+            var first = new SINT();
+            var second = new SINT();
 
             var result = first == second;
 
@@ -170,8 +166,8 @@ namespace L5Sharp.Tests.Types
         [Test]
         public void OperatorNotEquals_AreEqual_ShouldBeFalse()
         {
-            var first = new ULINT();
-            var second = new ULINT();
+            var first = new SINT();
+            var second = new SINT();
 
             var result = first != second;
 
@@ -181,7 +177,7 @@ namespace L5Sharp.Tests.Types
         [Test]
         public void GetHashCode_DefaultValue_ShouldBeHashOfName()
         {
-            var type = new ULINT();
+            var type = new SINT();
 
             var hash = type.GetHashCode();
 
@@ -189,17 +185,17 @@ namespace L5Sharp.Tests.Types
         }
         
         [Test]
-        public void ToString_WhenCalled_ShouldBeName()
+        public void ToString_WhenCalled_ShouldBeValue()
         {
-            var type = new ULINT();
+            var type = new SINT();
 
-            type.ToString().Should().Be(type.ToString());
+            type.ToString().Should().Be("0");
         }
         
         [Test]
         public void CompareTo_Same_ShouldBeZero()
         {
-            var type = new ULINT();
+            var type = new SINT();
 
             var compare = type.CompareTo(type);
 
@@ -209,7 +205,7 @@ namespace L5Sharp.Tests.Types
         [Test]
         public void CompareTo_Null_ShouldBeOne()
         {
-            var type = new ULINT();
+            var type = new SINT();
 
             var compare = type.CompareTo(null);
 
@@ -219,8 +215,8 @@ namespace L5Sharp.Tests.Types
         [Test]
         public void CompareTo_ValidOther_ShouldBeZero()
         {
-            var first = new ULINT();
-            var second = new ULINT();
+            var first = new SINT();
+            var second = new SINT();
 
             var compare = first.CompareTo(second);
 

@@ -57,39 +57,10 @@ public sealed class REAL : AtomicType, IEquatable<REAL>, IComparable<REAL>
     public override IEnumerable<Member> Members => Enumerable.Empty<Member>();
 
     /// <summary>
-    /// Converts the provided <see cref="float"/> to a <see cref="REAL"/> value.
-    /// </summary>
-    /// <param name="value">The value to convert.</param>
-    /// <returns>A <see cref="REAL"/> value.</returns>
-    public static implicit operator REAL(float value) => new(value);
-
-    /// <summary>
-    /// Converts the provided <see cref="REAL"/> to a <see cref="float"/> value.
-    /// </summary>
-    /// <param name="atomic">The value to convert.</param>
-    /// <returns>A <see cref="float"/> type value.</returns>
-    public static implicit operator float(REAL atomic) => atomic._value;
-
-    /// <summary>
-    /// Converts the provided <see cref="bool"/> to a <see cref="BOOL"/> value.
-    /// </summary>
-    /// <param name="value">The value to convert.</param>
-    /// <returns>A <see cref="BOOL"/> value.</returns>
-    public static implicit operator REAL(string value) => Parse(value);
-
-    /// <summary>
-    /// Converts the provided <see cref="bool"/> to a <see cref="BOOL"/> value.
-    /// </summary>
-    /// <param name="value">The value to convert.</param>
-    /// <returns>A <see cref="BOOL"/> value.</returns>
-    public static implicit operator string(REAL value) => value.ToString();
-
-    /// <summary>
     /// Parses the provided string value to a new <see cref="REAL"/>.
     /// </summary>
     /// <param name="value">The string value to parse.</param>
     /// <returns>A <see cref="REAL"/> representing the parsed value.</returns>
-    /// <exception cref="ArgumentException">The converted value returned null.</exception>
     /// <exception cref="FormatException">The <see cref="Radix"/> format can not be inferred from <c>value</c>.</exception>
     public static REAL Parse(string value)
     {
@@ -97,14 +68,12 @@ public sealed class REAL : AtomicType, IEquatable<REAL>, IComparable<REAL>
         //NOT really sure how to handle this better yet. Do we just throw an exception?
         if (value == "1.#QNAN") return new REAL();
         
+        if (float.TryParse(value, out var result))
+            return new REAL(result);
+
         var radix = Radix.Infer(value);
-
-        var converter = TypeDescriptor.GetConverter(typeof(REAL));
-
-        var type = converter.ConvertFrom(value) ??
-                   throw new ArgumentException($"The provided value '{value}' returned a null value after conversion.");
-
-        return new REAL((float)(REAL)type, radix);
+        var atomic = (REAL)radix.Parse(value);
+        return new REAL(atomic, radix);
     }
 
     /// <inheritdoc />
@@ -147,4 +116,92 @@ public sealed class REAL : AtomicType, IEquatable<REAL>, IComparable<REAL>
         if (ReferenceEquals(this, other)) return 0;
         return ReferenceEquals(null, other) ? 1 : _value.CompareTo(other._value);
     }
+    
+    #region Conversions
+
+    /// <summary>
+    /// Converts the provided <see cref="float"/> to a <see cref="REAL"/> value.
+    /// </summary>
+    /// <param name="value">The value to convert.</param>
+    /// <returns>A <see cref="REAL"/> value.</returns>
+    public static implicit operator REAL(float value) => new(value);
+
+    /// <summary>
+    /// Converts the provided <see cref="REAL"/> to a <see cref="float"/> value.
+    /// </summary>
+    /// <param name="atomic">The value to convert.</param>
+    /// <returns>A <see cref="float"/> type value.</returns>
+    public static implicit operator float(REAL atomic) => atomic._value;
+
+    /// <summary>
+    /// Converts the provided <see cref="bool"/> to a <see cref="BOOL"/> value.
+    /// </summary>
+    /// <param name="value">The value to convert.</param>
+    /// <returns>A <see cref="BOOL"/> value.</returns>
+    public static implicit operator REAL(string value) => Parse(value);
+
+    /// <summary>
+    /// Converts the provided <see cref="bool"/> to a <see cref="BOOL"/> value.
+    /// </summary>
+    /// <param name="value">The value to convert.</param>
+    /// <returns>A <see cref="BOOL"/> value.</returns>
+    public static implicit operator string(REAL value) => value.ToString();
+
+    /// <summary>
+    /// Converts the provided <see cref="REAL"/> to a <see cref="BOOL"/> value.
+    /// </summary>
+    /// <param name="atomic">The value to convert.</param>
+    /// <returns>A <see cref="BOOL"/> type value.</returns>
+    public static explicit operator BOOL(REAL atomic) => new(atomic._value != 0);
+
+    /// <summary>
+    /// Converts the provided <see cref="REAL"/> to a <see cref="SINT"/> value.
+    /// </summary>
+    /// <param name="atomic">The value to convert.</param>
+    /// <returns>A <see cref="SINT"/> type value.</returns>
+    public static explicit operator SINT(REAL atomic) => new((sbyte)atomic._value);
+
+    /// <summary>
+    /// Converts the provided <see cref="REAL"/> to a <see cref="USINT"/> value.
+    /// </summary>
+    /// <param name="atomic">The value to convert.</param>
+    /// <returns>A <see cref="USINT"/> type value.</returns>
+    public static explicit operator USINT(REAL atomic) => new((byte)atomic._value);
+
+    /// <summary>
+    /// Converts the provided <see cref="REAL"/> to a <see cref="INT"/> value.
+    /// </summary>
+    /// <param name="atomic">The value to convert.</param>
+    /// <returns>A <see cref="INT"/> type value.</returns>
+    public static explicit operator INT(REAL atomic) => new((short)atomic._value);
+
+    /// <summary>
+    /// Converts the provided <see cref="REAL"/> to a <see cref="UINT"/> value.
+    /// </summary>
+    /// <param name="atomic">The value to convert.</param>
+    /// <returns>A <see cref="UINT"/> type value.</returns>
+    public static explicit operator UINT(REAL atomic) => new((ushort)atomic._value);
+
+    /// <summary>
+    /// Converts the provided <see cref="REAL"/> to a <see cref="DINT"/> value.
+    /// </summary>
+    /// <param name="atomic">The value to convert.</param>
+    /// <returns>A <see cref="DINT"/> type value.</returns>
+    public static explicit operator DINT(REAL atomic) => new((int)atomic._value);
+
+    /// <summary>
+    /// Converts the provided <see cref="REAL"/> to a <see cref="UDINT"/> value.
+    /// </summary>
+    /// <param name="atomic">The value to convert.</param>
+    /// <returns>A <see cref="UDINT"/> type value.</returns>
+    public static explicit operator UDINT(REAL atomic) => new((uint)atomic._value);
+
+    /// <summary>
+    /// Converts the provided <see cref="REAL"/> to a <see cref="LINT"/> value.
+    /// </summary>
+    /// <param name="atomic">The value to convert.</param>
+    /// <returns>A <see cref="LINT"/> type value.</returns>
+    public static explicit operator LINT(REAL atomic) => new((long)atomic._value);
+
+    #endregion
 }

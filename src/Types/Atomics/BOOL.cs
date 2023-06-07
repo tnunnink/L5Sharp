@@ -56,6 +56,69 @@ public sealed class BOOL : AtomicType, IEquatable<BOOL>, IComparable<BOOL>
     public override IEnumerable<Member> Members => Enumerable.Empty<Member>();
 
     /// <summary>
+    /// Parses the provided string value to a new <see cref="BOOL"/>.
+    /// </summary>
+    /// <param name="value">The string value to parse.</param>
+    /// <returns>A <see cref="BOOL"/> representing the parsed value.</returns>
+    /// <exception cref="FormatException">The <see cref="Radix"/> format can not be inferred from <c>value</c>.</exception>
+    public static BOOL Parse(string value)
+    {
+        if (bool.TryParse(value, out var result))
+            return new BOOL(result);
+
+        switch (value)
+        {
+            case "1":
+                return new BOOL(true);
+            case "0":
+                return new BOOL();
+            default:
+                var radix = Radix.Infer(value);
+                var atomic = (BOOL)(SINT)radix.Parse(value);
+                return new BOOL(atomic, radix);
+        }
+    }
+
+    /// <inheritdoc />
+    public bool Equals(BOOL? other)
+    {
+        if (ReferenceEquals(null, other)) return false;
+        if (ReferenceEquals(this, other)) return true;
+        return _value == other._value;
+    }
+
+    /// <inheritdoc />
+    public override bool Equals(object? obj) => Equals(obj as BOOL);
+
+    /// <inheritdoc />
+    public override int GetHashCode() => _value.GetHashCode();
+
+    /// <summary>
+    /// Determines whether the objects are equal.
+    /// </summary>
+    /// <param name="left">An object to compare.</param>
+    /// <param name="right">An object to compare.</param>
+    /// <returns>true if the objects are equal, otherwise, false.</returns>
+    public static bool operator ==(BOOL? left, BOOL? right) => Equals(left, right);
+
+    /// <summary>
+    /// Determines whether the objects are not equal.
+    /// </summary>
+    /// <param name="left">An object to compare.</param>
+    /// <param name="right">An object to compare.</param>
+    /// <returns>true if the objects are not equal, otherwise, false.</returns>
+    public static bool operator !=(BOOL? left, BOOL? right) => !Equals(left, right);
+
+    /// <inheritdoc />
+    public int CompareTo(BOOL? other)
+    {
+        if (ReferenceEquals(this, other)) return 0;
+        return ReferenceEquals(null, other) ? 1 : _value.CompareTo(other._value);
+    }
+    
+    #region Conversions
+    
+    /// <summary>
     /// Implicitly converts the provided <see cref="bool"/> to a <see cref="BOOL"/> value.
     /// </summary>
     /// <param name="value">The value to convert.</param>
@@ -97,59 +160,5 @@ public sealed class BOOL : AtomicType, IEquatable<BOOL>, IComparable<BOOL>
     /// <returns>A new <see cref="string"/> value.</returns>
     public static implicit operator string(BOOL value) => value.ToString();
 
-    /// <summary>
-    /// Parses the provided string value to a new <see cref="BOOL"/>.
-    /// </summary>
-    /// <param name="value">The string value to parse.</param>
-    /// <returns>A <see cref="BOOL"/> representing the parsed value.</returns>
-    /// <exception cref="ArgumentException">The converted value returned null.</exception>
-    /// <exception cref="FormatException">The <see cref="Radix"/> format can not be inferred from <c>value</c>.</exception>
-    public static BOOL Parse(string value)
-    {
-        var radix = Radix.Infer(value);
-
-        var converter = TypeDescriptor.GetConverter(typeof(BOOL));
-
-        var type = converter.ConvertFrom(value) ??
-                   throw new ArgumentException($"The provided value '{value}' returned a null value after conversion.");
-
-        return new BOOL((bool)(BOOL)type, radix);
-    }
-
-    /// <inheritdoc />
-    public bool Equals(BOOL? other)
-    {
-        if (ReferenceEquals(null, other)) return false;
-        if (ReferenceEquals(this, other)) return true;
-        return _value == other._value;
-    }
-
-    /// <inheritdoc />
-    public override bool Equals(object? obj) => Equals(obj as BOOL);
-
-    /// <inheritdoc />
-    public override int GetHashCode() => _value.GetHashCode();
-
-    /// <summary>
-    /// Determines whether the objects are equal.
-    /// </summary>
-    /// <param name="left">An object to compare.</param>
-    /// <param name="right">An object to compare.</param>
-    /// <returns>true if the objects are equal, otherwise, false.</returns>
-    public static bool operator ==(BOOL? left, BOOL? right) => Equals(left, right);
-
-    /// <summary>
-    /// Determines whether the objects are not equal.
-    /// </summary>
-    /// <param name="left">An object to compare.</param>
-    /// <param name="right">An object to compare.</param>
-    /// <returns>true if the objects are not equal, otherwise, false.</returns>
-    public static bool operator !=(BOOL? left, BOOL? right) => !Equals(left, right);
-
-    /// <inheritdoc />
-    public int CompareTo(BOOL? other)
-    {
-        if (ReferenceEquals(this, other)) return 0;
-        return ReferenceEquals(null, other) ? 1 : _value.CompareTo(other._value);
-    }
+    #endregion
 }

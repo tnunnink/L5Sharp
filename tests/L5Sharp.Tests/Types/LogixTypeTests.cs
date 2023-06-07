@@ -13,7 +13,7 @@ public class LogixTypeTests
     [Test]
     public void Null_WhenCalled_ShouldBeNullType()
     {
-        var type = LogixData.Null;
+        var type = LogixType.Null;
 
         type.Should().BeOfType<NullType>();
     }
@@ -27,11 +27,11 @@ public class LogixTypeTests
     {
         var element = XElement.Parse(xml);
 
-        var type = LogixData.Deserialize(element).As<BOOL>();
+        var type = LogixType.Deserialize(element).To<BOOL>();
 
         type.Should().BeOfType<BOOL>();
         type.Name.Should().Be("BOOL");
-        type.As<BOOL>().Should().Be(true);
+        type.Should().Be(true);
     }
 
     [Test]
@@ -44,11 +44,11 @@ public class LogixTypeTests
     {
         var element = XElement.Parse(xml);
 
-        var type = LogixData.Deserialize(element).As<SINT>();
+        var type = LogixType.Deserialize(element).To<SINT>();
 
         type.Should().BeOfType<SINT>();
         type.Name.Should().Be("SINT");
-        type.As<SINT>().Should().Be(12);
+        type.Should().Be(12);
     }
 
     [Test]
@@ -61,11 +61,11 @@ public class LogixTypeTests
     {
         var element = XElement.Parse(xml);
 
-        var type = LogixData.Deserialize(element).As<INT>();
+        var type = LogixType.Deserialize(element).To<INT>();
 
         type.Should().BeOfType<INT>();
         type.Name.Should().Be("INT");
-        type.As<INT>().Should().Be(4321);
+        type.Should().Be(4321);
     }
 
     [Test]
@@ -78,11 +78,11 @@ public class LogixTypeTests
     {
         var element = XElement.Parse(xml);
 
-        var type = LogixData.Deserialize(element).As<DINT>();
+        var type = LogixType.Deserialize(element).To<DINT>();
 
         type.Should().BeOfType<DINT>();
         type.Name.Should().Be("DINT");
-        type.As<DINT>().Should().Be(123456);
+        type.Should().Be(123456);
     }
 
     [Test]
@@ -97,11 +97,11 @@ public class LogixTypeTests
     {
         var element = XElement.Parse(xml);
 
-        var type = LogixData.Deserialize(element).As<LINT>();
+        var type = LogixType.Deserialize(element).To<LINT>();
 
         type.Should().BeOfType<LINT>();
         type.Name.Should().Be("LINT");
-        type.As<LINT>().Should().Be(112230123);
+        type.Should().Be(112230123);
     }
 
     [Test]
@@ -111,17 +111,17 @@ public class LogixTypeTests
     {
         var element = XElement.Parse(xml);
 
-        var type = LogixData.Deserialize(element).As<REAL>();
+        var type = LogixType.Deserialize(element).To<REAL>();
 
         type.Should().BeOfType<REAL>();
         type.Name.Should().Be("REAL");
-        type.As<REAL>().Should().Be(1.23f);
+        type.Should().Be(1.23f);
     }
 
     [Test]
     public void IsRegistered_ByName_ShouldBeTrue()
     {
-        var result = LogixData.IsRegistered(nameof(TIMER));
+        var result = LogixType.IsRegistered(nameof(TIMER));
 
         result.Should().BeTrue();
     }
@@ -129,7 +129,7 @@ public class LogixTypeTests
     [Test]
     public void IsRegistered_ByType_ShouldBeTrue()
     {
-        var result = LogixData.IsRegistered<TIMER>();
+        var result = LogixType.IsRegistered<TIMER>();
 
         result.Should().BeTrue();
     }
@@ -137,9 +137,9 @@ public class LogixTypeTests
     [Test]
     public void Register_MyNestedType_ShouldBeRegistered()
     {
-        LogixData.Register<MyNestedType>();
+        LogixType.Register<MyNestedType>();
 
-        var result = LogixData.IsRegistered(nameof(MyNestedType));
+        var result = LogixType.IsRegistered(nameof(MyNestedType));
 
         result.Should().BeTrue();
     }
@@ -147,18 +147,18 @@ public class LogixTypeTests
     [Test]
     public void Scan_TestAssembly_ShouldHaveCustomTypesRegistered()
     {
-        LogixData.Scan(typeof(MySimpleType).Assembly);
+        LogixType.Scan(typeof(MySimpleType).Assembly);
 
-        LogixData.IsRegistered<MySimpleType>().Should().BeTrue();
-        LogixData.IsRegistered<MyNestedType>().Should().BeTrue();
+        LogixType.IsRegistered<MySimpleType>().Should().BeTrue();
+        LogixType.IsRegistered<MyNestedType>().Should().BeTrue();
     }
 
     [Test]
     public void ScanAll_WhenCalled_ShouldHaveCustomTypesRegistered()
     {
-        LogixData.ScanAll();
+        LogixType.ScanAll();
 
-        LogixData.IsRegistered<MySimpleType>().Should().BeTrue();
-        LogixData.IsRegistered<MyNestedType>().Should().BeTrue();
+        LogixType.IsRegistered<MySimpleType>().Should().BeTrue();
+        LogixType.IsRegistered<MyNestedType>().Should().BeTrue();
     }
 }

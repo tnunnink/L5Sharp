@@ -2,26 +2,25 @@
 using FluentAssertions;
 using L5Sharp.Enums;
 using L5Sharp.Types.Atomics;
-using NUnit.Framework;
 
-namespace L5Sharp.Tests.Types
+namespace L5Sharp.Tests.Types.Atomics
 {
     [TestFixture]
-    public class RealTests
+    public class UIntTests
     {
-        private float _random;
+        private ushort _random;
 
         [SetUp]
         public void Setup()
         {
             var fixture = new Fixture();
-            _random = fixture.Create<float>();
+            _random = fixture.Create<ushort>();
         }
         
         [Test]
         public void New_Default_ShouldNotBeNull()
         {
-            var type = new REAL();
+            var type = new UINT();
 
             type.Should().NotBeNull();
         }
@@ -29,18 +28,18 @@ namespace L5Sharp.Tests.Types
         [Test]
         public void New_Default_ShouldHaveExpectedDefaults()
         {
-            var type = new REAL();
+            var type = new UINT();
             
-            type.Name.Should().Be(nameof(REAL).ToUpper());
+            type.Name.Should().Be(nameof(UINT).ToUpper());
             type.Class.Should().Be(DataTypeClass.Atomic);
             type.Family.Should().Be(DataTypeFamily.None);
             type.Should().Be(0);
         }
-
+        
         [Test]
         public void New_ValueOverload_ShouldHaveExpectedValue()
         {
-            var type = new REAL(_random);
+            var type = new UINT(_random);
             
             type.Should().Be(_random);
         }
@@ -48,27 +47,29 @@ namespace L5Sharp.Tests.Types
         [Test]
         public void MaxValue_WhenCalled_ShouldBeExpected()
         {
-            REAL.MaxValue.Should().Be(float.MaxValue);
+            UINT.MaxValue.Should().Be(ushort.MaxValue);
         }
         
         [Test]
         public void MinValue_WhenCalled_ShouldBeExpected()
         {
-            REAL.MinValue.Should().Be(float.MinValue);
+            UINT.MinValue.Should().Be(ushort.MinValue);
         }
 
+    
+
         [Test]
-        public void SetValue_ValidValue_ShouldReturnExpected()
+        public void SetValue_ValidShort_ShouldBeExpected()
         {
-            REAL type = _random;
+            UINT type = _random;
 
             type.Should().Be(_random);
         }
-        
+
         [Test]
-        public void SetValue_SameType_ShouldReturnExpected()
+        public void SetValue_SameType_ShouldBeExpected()
         {
-            var type = new REAL(_random);
+            var type = new UINT(_random);
 
             type.Should().Be(_random);
         }
@@ -76,28 +77,28 @@ namespace L5Sharp.Tests.Types
         [Test]
         public void ToString_DefaultRadix_ShouldBeExpected()
         {
-            var type = new REAL();
+            var type = new UINT();
 
             var format = type.ToString();
 
-            format.Should().Be("0.0");
+            format.Should().Be("0");
         }
         
         [Test]
         public void ToString_OverloadedRadix_ShouldBeExpected()
         {
-            var type = new REAL();
+            var type = new UINT();
 
-            var format = type.ToString(Radix.Exponential);
+            var format = type.ToString(Radix.Binary);
 
-            format.Should().Be("0.00000000e+000");
+            format.Should().Be("2#0000_0000_0000_0000");
         }
 
         [Test]
         public void TypeEquals_AreEqual_ShouldBeTrue()
         {
-            var first = new REAL();
-            var second = new REAL();
+            var first = new UINT();
+            var second = new UINT();
 
             var result = first.Equals(second);
 
@@ -107,7 +108,7 @@ namespace L5Sharp.Tests.Types
         [Test]
         public void TypeEquals_AreSame_ShouldBeTrue()
         {
-            var first = new REAL();
+            var first = new UINT();
 
             var result = first.Equals(first);
 
@@ -118,7 +119,7 @@ namespace L5Sharp.Tests.Types
         [Test]
         public void TypeEquals_Null_ShouldBeFalse()
         {
-            var first = new REAL();
+            var first = new UINT();
 
             var result = first.Equals(null);
 
@@ -128,8 +129,8 @@ namespace L5Sharp.Tests.Types
         [Test]
         public void ObjectEquals_AreEqual_ShouldBeTrue()
         {
-            var first = new REAL();
-            var second = new REAL();
+            var first = new UINT();
+            var second = new UINT();
 
             var result = first.Equals((object)second);
 
@@ -139,7 +140,7 @@ namespace L5Sharp.Tests.Types
         [Test]
         public void ObjectEquals_AreSame_ShouldBeTrue()
         {
-            var first = new REAL();
+            var first = new UINT();
 
             var result = first.Equals((object)first);
 
@@ -149,7 +150,7 @@ namespace L5Sharp.Tests.Types
         [Test]
         public void ObjectEquals_Null_ShouldBeFalse()
         {
-            var first = new REAL();
+            var first = new UINT();
 
             var result = first.Equals((object)null);
 
@@ -159,8 +160,8 @@ namespace L5Sharp.Tests.Types
         [Test]
         public void OperatorEquals_AreEqual_ShouldBeTrue()
         {
-            var first = new REAL();
-            var second = new REAL();
+            var first = new UINT();
+            var second = new UINT();
 
             var result = first == second;
 
@@ -170,8 +171,8 @@ namespace L5Sharp.Tests.Types
         [Test]
         public void OperatorNotEquals_AreEqual_ShouldBeFalse()
         {
-            var first = new REAL();
-            var second = new REAL();
+            var first = new UINT();
+            var second = new UINT();
 
             var result = first != second;
 
@@ -181,17 +182,25 @@ namespace L5Sharp.Tests.Types
         [Test]
         public void GetHashCode_DefaultValue_ShouldBeHashOfName()
         {
-            var type = new REAL();
+            var type = new UINT();
 
             var hash = type.GetHashCode();
 
             hash.Should().Be(type.GetHashCode());
         }
+        
+        [Test]
+        public void ToString_WhenCalled_ShouldBeName()
+        {
+            var type = new UINT();
 
+            type.ToString().Should().Be(type.ToString());
+        }
+        
         [Test]
         public void CompareTo_Same_ShouldBeZero()
         {
-            var type = new REAL();
+            var type = new UINT();
 
             var compare = type.CompareTo(type);
 
@@ -201,18 +210,18 @@ namespace L5Sharp.Tests.Types
         [Test]
         public void CompareTo_Null_ShouldBeOne()
         {
-            var type = new REAL();
+            var type = new UINT();
 
             var compare = type.CompareTo(null);
 
             compare.Should().Be(1);
         }
-        
+
         [Test]
         public void CompareTo_ValidOther_ShouldBeZero()
         {
-            var first = new REAL();
-            var second = new REAL();
+            var first = new UINT();
+            var second = new UINT();
 
             var compare = first.CompareTo(second);
 

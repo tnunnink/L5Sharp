@@ -9,18 +9,18 @@ using L5Sharp.Types.Predefined;
 namespace L5Sharp.Types;
 
 /// <summary>
-/// A component of a <see cref="LogixType"/> that defines the structure or members of the type. 
+/// A component of a <see cref="L5Sharp.LogixType"/> that defines the structure or members of the type. 
 /// </summary>
 /// <remarks>
 /// <para>
-/// Members are used to define the structure of other <see cref="LogixType"/> objects.
+/// Members are used to define the structure of other <see cref="L5Sharp.LogixType"/> objects.
 /// Since each member holds a strongly typed reference to it's data type,
 /// the structure forms a hierarchical tree of nested members and types.
 /// </para>
 /// <para>
 /// This class effectively maps to the DataValueMember, StructureMember, ArrayMember elements of the L5X tag data
 /// structures. This class only defines, name and data type, since Dimension, Radix, and ExternalAccess are all either
-/// members or the specific <see cref="LogixType"/> set, or not inherent in the data structure when serialized or
+/// members or the specific <see cref="L5Sharp.LogixType"/> set, or not inherent in the data structure when serialized or
 /// deserialized.
 /// </para>
 /// </remarks>
@@ -34,9 +34,9 @@ public class Member : LogixEntity<Member>
     /// Creates a new <see cref="Member"/> object with the provided name and logix type.
     /// </summary>
     /// <param name="name">The name of the member.</param>
-    /// <param name="logixType">The <see cref="LogixType"/> object representing the member's data type data.</param>
+    /// <param name="logixType">The <see cref="L5Sharp.LogixType"/> object representing the member's data type data.</param>
     /// <exception cref="ArgumentNullException">name or datatype are null.</exception>
-    public Member(string name, LogixType logixType) : base(GenerateElement(name, logixType))
+    public Member(string name, L5Sharp.LogixType logixType) : base(GenerateElement(name, logixType))
     {
     }
 
@@ -54,12 +54,12 @@ public class Member : LogixEntity<Member>
     /// For array index element members, the name is the index of the array.
     /// This property is immutable as it defines the structure of the current type.
     /// </remarks>
-    public string Name => Element.MemberName();
+    public string Name => Element.MemberName() ?? throw new L5XException(Element);
 
     /// <summary>
     /// The logix type of the <see cref="Member"/> instance.
     /// </summary>
-    /// <returns>A <see cref="LogixType"/> representing the member data type.</returns>
+    /// <returns>A <see cref="L5Sharp.LogixType"/> representing the member data type.</returns>
     /// <remarks>
     /// The data type creates the hierarchical structure of complex types.
     /// This type can be atomic, structure, string, or array. Setting this property updates the underlying entity element
@@ -67,9 +67,9 @@ public class Member : LogixEntity<Member>
     /// </remarks>
     /// <exception cref="ArgumentNullException"><c>value</c> is null.</exception>
     /// <exception cref="ArgumentException">The provided logix type does not match the current data type.</exception>
-    public LogixType DataType
+    public L5Sharp.LogixType DataType
     {
-        get => LogixData.Deserialize(Element);
+        get => LogixType.Deserialize(Element);
         set => SetData(Element, value);
     }
 
@@ -79,9 +79,9 @@ public class Member : LogixEntity<Member>
     #region SetData
 
     /// <summary>
-    /// Handles setting the underlying <see cref="XElement"/> properties for a given <see cref="LogixType"/> value.
+    /// Handles setting the underlying <see cref="XElement"/> properties for a given <see cref="L5Sharp.LogixType"/> value.
     /// </summary>
-    private static void SetData(XElement element, LogixType value)
+    private static void SetData(XElement element, L5Sharp.LogixType value)
     {
         if (value is null) throw new ArgumentNullException(nameof(value));
 
@@ -108,7 +108,7 @@ public class Member : LogixEntity<Member>
     /// <summary>
     /// Handles setting the root data for a tag element and updating the properties of the tag component.
     /// </summary>
-    private static void SetTag(XElement element, LogixType value)
+    private static void SetTag(XElement element, L5Sharp.LogixType value)
     {
         var data = element.Elements(L5XName.Data)
             .FirstOrDefault(e => e.Attribute(L5XName.Format)?.Value != DataFormat.L5K)?.Elements().FirstOrDefault();
@@ -129,7 +129,7 @@ public class Member : LogixEntity<Member>
     /// <summary>
     /// Updates the data type, dimensions, and radix properties of the root tag to keep data in sync.
     /// </summary>
-    private static void UpdateTagProperties(XElement element, LogixType value)
+    private static void UpdateTagProperties(XElement element, L5Sharp.LogixType value)
     {
         element.SetAttributeValue(L5XName.DataType, value.Name);
 
@@ -151,7 +151,7 @@ public class Member : LogixEntity<Member>
     /// <summary>
     /// Handles setting the value attribute of a data value member element given an atomic type.
     /// </summary>
-    private static void SetValueMember(XElement element, LogixType value)
+    private static void SetValueMember(XElement element, L5Sharp.LogixType value)
     {
         if (value is not AtomicType atomicType)
             throw new ArgumentException(
@@ -163,9 +163,9 @@ public class Member : LogixEntity<Member>
     /// <summary>
     /// Handles setting the values of the elements of a array member element given an array type.
     /// </summary>
-    private static void SetArrayMember(XElement element, LogixType value)
+    private static void SetArrayMember(XElement element, L5Sharp.LogixType value)
     {
-        if (value is not ArrayType<LogixType> arrayType)
+        if (value is not ArrayType<L5Sharp.LogixType> arrayType)
             throw new ArgumentException(
                 $"The underlying element '{element.Name}' can not be set by logix type {value.GetType()}.");
 
@@ -187,7 +187,7 @@ public class Member : LogixEntity<Member>
     /// <summary>
     /// Handles setting the values of an array index element given a generic logix type.
     /// </summary>
-    private static void SetElementMember(XElement element, LogixType value)
+    private static void SetElementMember(XElement element, L5Sharp.LogixType value)
     {
         switch (value)
         {
@@ -207,7 +207,7 @@ public class Member : LogixEntity<Member>
     /// Handles setting the values of the members of a structure member element given a structure type.
     /// Will also handle special case of string member structure.
     /// </summary>
-    private static void SetStructureMember(XElement element, LogixType value)
+    private static void SetStructureMember(XElement element, L5Sharp.LogixType value)
     {
         if (value is not StructureType)
             throw new ArgumentException(
@@ -233,7 +233,7 @@ public class Member : LogixEntity<Member>
     /// <summary>
     /// Handles setting the values of a string structure member type.
     /// </summary>
-    private static void SetStringMember(XElement element, LogixType value)
+    private static void SetStringMember(XElement element, L5Sharp.LogixType value)
     {
         if (value is not StringType stringType)
             throw new ArgumentException(
@@ -257,7 +257,7 @@ public class Member : LogixEntity<Member>
 
     #region GenerateElement
 
-    private static XElement GenerateElement(string name, LogixType type)
+    private static XElement GenerateElement(string name, L5Sharp.LogixType type)
     {
         if (name is null)
             throw new ArgumentNullException(nameof(name));
@@ -268,7 +268,7 @@ public class Member : LogixEntity<Member>
         return type switch
         {
             AtomicType atomicType => GenerateValueMember(name, atomicType),
-            ArrayType<LogixType> arrayType => GenerateArrayMember(name, arrayType),
+            ArrayType arrayType => GenerateArrayMember(name, arrayType),
             StringType stringType => GenerateStringMember(name, stringType),
             StructureType structureType => GenerateStructureMember(name, structureType),
             _ => throw new NotSupportedException(
@@ -289,7 +289,7 @@ public class Member : LogixEntity<Member>
         return element;
     }
 
-    private static XElement GenerateStructureMember(string name, LogixType type)
+    private static XElement GenerateStructureMember(string name, L5Sharp.LogixType type)
     {
         var element = new XElement(L5XName.StructureMember);
         element.Add(new XAttribute(L5XName.Name, name));
@@ -298,7 +298,7 @@ public class Member : LogixEntity<Member>
         return element;
     }
 
-    private static XElement GenerateArrayMember(string name, ArrayType<LogixType> type)
+    private static XElement GenerateArrayMember(string name, ArrayType type)
     {
         var element = new XElement(L5XName.ArrayMember);
         element.Add(new XAttribute(L5XName.Name, name));
@@ -308,7 +308,7 @@ public class Member : LogixEntity<Member>
         return element;
     }
 
-    private static XElement GenerateElementMember(string name, LogixType type)
+    private static XElement GenerateElementMember(string name, L5Sharp.LogixType type)
     {
         var element = new XElement(L5XName.Element, new XAttribute(L5XName.Index, name));
 
@@ -350,7 +350,7 @@ public class Member : LogixEntity<Member>
         return element;
     }
 
-    private static XElement GenerateStringMember(string name, LogixType type)
+    private static XElement GenerateStringMember(string name, L5Sharp.LogixType type)
     {
         var element = new XElement(L5XName.StructureMember);
         element.Add(new XAttribute(L5XName.Name, name));
@@ -365,7 +365,7 @@ public class Member : LogixEntity<Member>
 
         var data = new XElement(L5XName.DataValueMember);
         data.Add(new XAttribute(L5XName.Name, "DATA"));
-        data.Add(new XAttribute(L5XName.DataType, "SINT"));
+        data.Add(new XAttribute(L5XName.DataType, name));
         data.Add(new XAttribute(L5XName.Radix, Radix.Ascii.Value));
         data.Add(new XCData(type.ToString()));
         element.Add(data);
@@ -373,7 +373,7 @@ public class Member : LogixEntity<Member>
         return element;
     }
 
-    private static XElement GenerateData(LogixType type)
+    private static XElement GenerateData(L5Sharp.LogixType type)
     {
         return type switch
         {

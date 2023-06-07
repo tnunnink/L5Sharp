@@ -132,7 +132,7 @@ namespace L5Sharp.Tests.Types
             var type = new DINT(1);
 
             var bits = type.ToBitArray();
-            
+
             bits[0].Should().BeTrue();
         }
 
@@ -343,11 +343,11 @@ namespace L5Sharp.Tests.Types
         public void CreateLargeArrayOfAtomicValuesT()
         {
             var expected = new DINT();
-            
+
             var array = ArrayType.New<DINT>(new Dimensions(65535));
 
-            array.Should().NotBeEmpty();
-            array.Should().AllBeEquivalentTo(expected);
+            array.Should<DINT>().NotBeEmpty();
+            array.Should<DINT>().AllBeEquivalentTo(expected);
         }
     }
 }
