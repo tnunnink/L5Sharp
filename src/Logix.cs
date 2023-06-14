@@ -5,6 +5,7 @@ using L5Sharp.Core;
 using L5Sharp.Entities;
 using L5Sharp.Enums;
 using L5Sharp.Rockwell;
+using L5Sharp.Types;
 
 namespace L5Sharp;
 

@@ -9,13 +9,6 @@ namespace L5Sharp.Tests.Types.Custom
     [TestFixture]
     public class MyNestedTypeTests
     {
-        [SetUp]
-        public void Setup()
-        {
-            LogixType.Register<MySimpleType>();
-            LogixType.Register<MyNestedType>();
-        }
-        
         [Test]
         public void New_Default_ShouldNotBeNull()
         {

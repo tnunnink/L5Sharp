@@ -25,6 +25,8 @@ namespace L5Sharp.Tests
             var content = LogixContent.Load(Known.Test);
 
             var routine = content.Programs["MyProgram"].Routines.Find("Setup");
+
+            var dependents = content.DataTypes.DependentsOf("SimpleType");
         }
 
         [Test]

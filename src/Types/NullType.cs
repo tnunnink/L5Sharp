@@ -10,7 +10,7 @@ namespace L5Sharp.Types;
 /// </summary>
 /// <remarks>This would be the default for any tag that has not data type defined.</remarks>
 // ReSharper disable once InconsistentNaming
-public sealed class NullType : L5Sharp.LogixType
+public sealed class NullType : LogixType
 {
     private static readonly NullType Null = new();
 

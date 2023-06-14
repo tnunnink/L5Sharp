@@ -5,14 +5,13 @@ using System.Linq;
 using System.Xml.Linq;
 using L5Sharp.Core;
 using L5Sharp.Enums;
-using L5Sharp.Extensions;
 
 namespace L5Sharp.Types;
 
 /// <summary>
 /// 
 /// </summary>
-public class ArrayType : L5Sharp.LogixType, IEnumerable<L5Sharp.LogixType>
+public class ArrayType : LogixType, IEnumerable<LogixType>
 {
     /// <inheritdoc />
     public ArrayType(XElement element) : base(element)
@@ -20,21 +19,12 @@ public class ArrayType : L5Sharp.LogixType, IEnumerable<L5Sharp.LogixType>
     }
 
     /// <summary>
-    /// 
+    /// Creates a new array type from the provided logix array object.
     /// </summary>
-    /// <param name="dimensions"></param>
-    public ArrayType(Dimensions dimensions) : base(GenerateElement(dimensions))
-    {
-    }
-
-    /// <summary>
-    /// Creates a new <see cref="ArrayType{TLogixType}"/> collection using the provided array of <see cref="L5Sharp.LogixType"/> objects.
-    /// </summary>
-    /// <param name="array">The array of element to initialize the array type with.</param>
-    /// <exception cref="ArgumentNullException"><c>array</c> is null.</exception>
-    /// <exception cref="ArgumentException"><c>array</c> is empty.</exception>
-    /// <exception cref="ArgumentOutOfRangeException">Any <c>array</c> dimensional length is greater than <see cref="ushort.MaxValue"/>.</exception>
-    public ArrayType(Array array) : base(GenerateElement(array))
+    /// <param name="array">An array of logix types</param>
+    /// <exception cref="ArgumentNullException"><c>array</c> or any element of <c>array</c> is null.</exception>
+    /// <exception cref="ArgumentException"></exception>
+    public ArrayType(Array array) : base(GenerateElement(array.Cast<LogixType>().ToList(), Dimensions.FromArray(array)))
     {
     }
 
@@ -58,33 +48,36 @@ public class ArrayType : L5Sharp.LogixType, IEnumerable<L5Sharp.LogixType>
     public Radix Radix => GetValue<Radix>() ?? Radix.Null;
 
     /// <summary>
-    /// Gets the <see cref="L5Sharp.LogixType"/> instance at the specified index.
+    /// Gets the <see cref="LogixType"/> instance at the specified index.
     /// </summary>
     /// <param name="x">The index of the array element</param>
-    public L5Sharp.LogixType this[ushort x]
+    /// <exception cref="ArgumentOutOfRangeException"><c>index</c> is out of range of the array.</exception>
+    public LogixType this[ushort x]
     {
         get => GetIndex($"[{x}]");
         set => SetIndex($"[{x}]", value);
     }
 
     /// <summary>
-    /// Gets the <see cref="L5Sharp.LogixType"/> instance at the specified index.
+    /// Gets the <see cref="LogixType"/> instance at the specified index.
     /// </summary>
     /// <param name="x">The x index of the array element</param>
     /// <param name="y">The y index of the array element</param>
-    public L5Sharp.LogixType this[ushort x, ushort y]
+    /// <exception cref="ArgumentOutOfRangeException"><c>index</c> is out of range of the array.</exception>
+    public LogixType this[ushort x, ushort y]
     {
         get => GetIndex($"[{x},{y}]");
         set => SetIndex($"[{x},{y}]", value);
     }
 
     /// <summary>
-    /// Gets the <see cref="L5Sharp.LogixType"/> instance at the specified index.
+    /// Gets the <see cref="LogixType"/> instance at the specified index.
     /// </summary>
     /// <param name="x">The x index of the array element</param>
     /// <param name="y">The y index of the array element</param>
     /// <param name="z">The z index of the array element</param>
-    public L5Sharp.LogixType this[ushort x, ushort y, ushort z]
+    /// <exception cref="ArgumentOutOfRangeException"><c>index</c> is out of range of the array.</exception>
+    public LogixType this[ushort x, ushort y, ushort z]
     {
         get => GetIndex($"[{x},{y},{z}]");
         set => SetIndex($"[{x},{y},{z}]", value);
@@ -95,42 +88,67 @@ public class ArrayType : L5Sharp.LogixType, IEnumerable<L5Sharp.LogixType>
     /// </summary>
     /// <param name="array"></param>
     /// <returns>A new <see cref="ArrayType{TLogixType}"/> containing the elements of the provided array.</returns>
-    public static implicit operator ArrayType(L5Sharp.LogixType[] array) => new(array);
+    public static implicit operator ArrayType(LogixType[] array) => new(array);
 
     /// <summary>
     /// Implicitly converts the provided array of logix type objects to an <see cref="ArrayType{TLogixType}"/>.
     /// </summary>
     /// <param name="array"></param>
     /// <returns>A new <see cref="ArrayType{TLogixType}"/> containing the elements of the provided array.</returns>
-    public static implicit operator ArrayType(L5Sharp.LogixType[,] array) => new(array);
+    public static implicit operator ArrayType(LogixType[,] array) => new(array);
 
     /// <summary>
     /// Implicitly converts the provided array of logix type objects to an <see cref="ArrayType{TLogixType}"/>.
     /// </summary>
     /// <param name="array"></param>
     /// <returns>A new <see cref="ArrayType{TLogixType}"/> containing the elements of the provided array.</returns>
-    public static implicit operator ArrayType(L5Sharp.LogixType[,,] array) => new(array);
+    public static implicit operator ArrayType(LogixType[,,] array) => new(array);
 
     /// <summary>
-    /// Created a new <see cref="ArrayType{TDataType}"/> of the specified type with the length of the provided dimensions.
+    /// Creates a new <see cref="ArrayType{TDataType}"/> of the specified type with the length of the provided dimensions.
     /// </summary>
     /// <param name="dimensions">The dimensions of the array to create.</param>
     /// <typeparam name="TDataType">The logix type for which to create.
     /// Must have a default parameterless constructor in order to generate instances.</typeparam>
     /// <returns>A <see cref="ArrayType{TDataType}"/> of the specified dimensions containing new objects of the specified type.</returns>
-    public static ArrayType<TDataType> New<TDataType>(Dimensions dimensions) where TDataType : L5Sharp.LogixType, new()
+    public static ArrayType<TDataType> New<TDataType>(Dimensions dimensions) where TDataType : LogixType, new()
     {
         if (dimensions is null)
             throw new ArgumentNullException(nameof(dimensions));
 
-        //todo technically not right
-        var elements = Enumerable.Range(0, dimensions.Length).Select(_ => new TDataType());
-
-        return new ArrayType<TDataType>(elements.ToArray());
+        switch (dimensions.Rank)
+        {
+            case 1:
+            {
+                var array = new TDataType[dimensions.X];
+                for (var i = 0; i < array.GetLength(0); i++)
+                    array[i] = new TDataType();
+                return array;
+            }
+            case 2:
+            {
+                var array = new TDataType[dimensions.X, dimensions.Y];
+                for (var i = 0; i < array.GetLength(0); i++)
+                for (var j = 0; j < array.GetLength(1); j++)
+                    array[i, j] = new TDataType();
+                return array;
+            }
+            case 3:
+            {
+                var array = new TDataType[dimensions.X, dimensions.Y, dimensions.Z];
+                for (var i = 0; i < array.GetLength(0); i++)
+                for (var j = 0; j < array.GetLength(1); j++)
+                for (var k = 0; k < array.GetLength(2); k++)
+                    array[i, j, k] = new TDataType();
+                return array;
+            }
+            default:
+                throw new ArgumentException($"The Rank {dimensions.Rank} is not valid.");
+        }
     }
 
     /// <inheritdoc />
-    public IEnumerator<L5Sharp.LogixType> GetEnumerator() => Element.Elements().Select(LogixType.Deserialize).GetEnumerator();
+    public IEnumerator<LogixType> GetEnumerator() => Members.Select(m => m.DataType).GetEnumerator();
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
@@ -140,9 +158,10 @@ public class ArrayType : L5Sharp.LogixType, IEnumerable<L5Sharp.LogixType>
     /// </summary>
     /// <typeparam name="TLogixType">The logix type to cast.</typeparam>
     /// <returns>A <see cref="ArrayType{TLogixType}"/> of the specified.</returns>
-    public ArrayType<TLogixType> ToType<TLogixType>() where TLogixType : L5Sharp.LogixType
+    public ArrayType<TLogixType> AsArray<TLogixType>() where TLogixType : LogixType
     {
-        var seed = this.FirstOrDefault(t => t is not null);
+        return new ArrayType<TLogixType>(this.Cast<TLogixType>().ToArray());
+        var seed = this.FirstOrDefault(t => t is not NullType);
 
         if (seed is not null && seed is not TLogixType)
             throw new InvalidCastException(
@@ -151,23 +170,22 @@ public class ArrayType : L5Sharp.LogixType, IEnumerable<L5Sharp.LogixType>
         return new ArrayType<TLogixType>(Element);
     }
 
-
     #region Internal
 
     /// <summary>
     /// Handles getting the logix type at the specified index of the current array from the underlying element. 
     /// </summary>
     /// <param name="index">The index at which to get the type.</param>
-    /// <returns>A <see cref="L5Sharp.LogixType"/> at the specified index.</returns>
+    /// <returns>A <see cref="LogixType"/> at the specified index.</returns>
     /// <exception cref="ArgumentOutOfRangeException"><c>index</c> is out of range of the array.</exception>
-    private L5Sharp.LogixType GetIndex(string index)
+    private LogixType GetIndex(string index)
     {
-        var element = Element.Elements().SingleOrDefault(e => e.MemberName() == index);
+        var member = Members.SingleOrDefault(m => m.Name == index);
 
-        if (element is null)
+        if (member is null)
             throw new ArgumentOutOfRangeException($"The index '{index}' is outside the bound of the array.");
 
-        return LogixType.Deserialize(element);
+        return member.DataType;
     }
 
     /// <summary>
@@ -176,44 +194,38 @@ public class ArrayType : L5Sharp.LogixType, IEnumerable<L5Sharp.LogixType>
     /// <param name="index">The index at which to set the type.</param>
     /// <param name="value">The logix type value to set.</param>
     /// <exception cref="ArgumentOutOfRangeException"><c>index</c> is out of range of the array.</exception>
-    private void SetIndex(string index, L5Sharp.LogixType value)
+    private void SetIndex(string index, LogixType value)
     {
         if (value is null)
             throw new ArgumentNullException(nameof(value));
 
-        //If the array was uninitialized, set the type and radix.
-        if (string.IsNullOrEmpty(Element.Attribute(L5XName.DataType)?.Value))
-        {
-            Element.SetAttributeValue(L5XName.DataType, value.Name);
-            if (value is AtomicType atomicType)
-                Element.SetAttributeValue(L5XName.Radix, atomicType.Radix);
-        }
+        var member = Members.SingleOrDefault(m => m.Name == index);
 
-        var element = Element.Elements().SingleOrDefault(e => e.MemberName() == index);
-
-        if (element is null)
+        if (member is null)
             throw new ArgumentOutOfRangeException($"The index '{index}' is outside the bound of the array.");
 
-        element.ReplaceWith(GenerateIndex(index, value));
+        member.DataType = value;
     }
 
     /// <summary>
     /// Creates a default <see cref="XElement"/> representing the backing data for the array type.
     /// </summary>
-    /// <param name="array">The array to serialize.</param>
+    /// <param name="collection">The array to serialize.</param>
+    /// <param name="dimensions"></param>
     /// <returns>A new <see cref="XElement"/> representing the array structure.</returns>
     /// <exception cref="ArgumentException"></exception>
-    private static XElement GenerateElement(Array array)
+    private static XElement GenerateElement(List<LogixType> collection, Dimensions dimensions)
     {
-        var dimension = Dimensions.FromArray(array);
+        if (collection is null) throw new ArgumentNullException(nameof(collection));
+        if (collection.Any(t => t is null)) throw new ArgumentNullException(nameof(collection));
+        if (collection.Select(t => t.Name).Distinct().Count() != 1)
+            throw new ArgumentException("Array type must be initialized with a single type.");
 
-        var collection = array.Cast<L5Sharp.LogixType>().ToList();
-
-        var seed = collection.FirstOrDefault();
+        var seed = collection.First();
 
         var element = new XElement(L5XName.Array);
-        element.Add(new XAttribute(L5XName.DataType, seed?.Name ?? string.Empty));
-        element.Add(new XAttribute(L5XName.Dimensions, dimension));
+        element.Add(new XAttribute(L5XName.DataType, seed.Name));
+        element.Add(new XAttribute(L5XName.Dimensions, dimensions));
 
         Radix? radix = null;
         if (seed is AtomicType atomicType)
@@ -222,25 +234,7 @@ public class ArrayType : L5Sharp.LogixType, IEnumerable<L5Sharp.LogixType>
             element.Add(new XAttribute(L5XName.Radix, radix));
         }
 
-        var elements = dimension.Indices().Zip(collection, (s, t) => GenerateIndex(s, t, radix));
-        element.Add(elements);
-
-        return element;
-    }
-
-    /// <summary>
-    /// Creates a default array <see cref="XElement"/> with the provided dimensions.
-    /// </summary>
-    /// <param name="dimensions">The <see cref="Core.Dimensions"/> of the array.</param>
-    /// <returns>A new <see cref="XElement"/> representing the array structure.</returns>
-    private static XElement GenerateElement(Dimensions dimensions)
-    {
-        var element = new XElement(L5XName.Array);
-        element.Add(new XAttribute(L5XName.DataType, string.Empty));
-        element.Add(new XAttribute(L5XName.Dimensions, dimensions));
-
-        var elements = dimensions.Indices()
-            .Select(i => new XElement(L5XName.Element, new XAttribute(L5XName.Index, i)));
+        var elements = dimensions.Indices().Zip(collection, (s, t) => GenerateIndex(s, t, radix));
         element.Add(elements);
 
         return element;
@@ -254,7 +248,7 @@ public class ArrayType : L5Sharp.LogixType, IEnumerable<L5Sharp.LogixType>
     /// <param name="radix">The optional radix format of the array.</param>
     /// <returns>A new <see cref="XElement"/> representing the serialized index of the array.</returns>
     /// <exception cref="ArgumentNullException"><c>type</c> is null.</exception>
-    private static XElement GenerateIndex(string index, L5Sharp.LogixType type, Radix? radix = null)
+    private static XElement GenerateIndex(string index, LogixType type, Radix? radix = null)
     {
         var element = new XElement(L5XName.Element, new XAttribute(L5XName.Index, index));
 
@@ -265,7 +259,7 @@ public class ArrayType : L5Sharp.LogixType, IEnumerable<L5Sharp.LogixType>
                 element.Add(new XAttribute(L5XName.Value, value));
                 break;
             case StringType stringType:
-                element.Add(stringType.Serialize(L5XName.Structure));
+                element.Add(GenerateStringStructure(stringType));
                 break;
             case StructureType structureType:
                 element.Add(structureType.Serialize());
@@ -275,6 +269,31 @@ public class ArrayType : L5Sharp.LogixType, IEnumerable<L5Sharp.LogixType>
         return element;
     }
 
+    private static XElement GenerateStringStructure(StringType type)
+    {
+        var element = new XElement(L5XName.Structure);
+        element.Add(new XAttribute(L5XName.DataType, type.Name));
+        element.Add(GenerateStringMembers(type));
+        return element;
+    }
+
+    private static IEnumerable<XElement> GenerateStringMembers(StringType type)
+    {
+        var len = new XElement(L5XName.DataValueMember);
+        len.Add(new XAttribute(L5XName.Name, nameof(type.LEN)));
+        len.Add(new XAttribute(L5XName.DataType, type.LEN.Name));
+        len.Add(new XAttribute(L5XName.Radix, Radix.Decimal));
+        len.Add(new XAttribute(L5XName.Value, type.LEN));
+        yield return len;
+
+        var data = new XElement(L5XName.DataValueMember);
+        data.Add(new XAttribute(L5XName.Name, nameof(type.DATA)));
+        data.Add(new XAttribute(L5XName.DataType, type.Name));
+        data.Add(new XAttribute(L5XName.Radix, Radix.Ascii));
+        data.Add(new XCData(type.ToString()));
+        yield return data;
+    }
+
     #endregion
 }
 
@@ -282,7 +301,7 @@ public class ArrayType : L5Sharp.LogixType, IEnumerable<L5Sharp.LogixType>
 /// A generic <see cref="ArrayType"/> that provides strongly type element access to indices of the array.
 /// </summary>
 /// <typeparam name="TLogixType">The logic type the array contains.</typeparam>
-public sealed class ArrayType<TLogixType> : ArrayType, IEnumerable<TLogixType> where TLogixType : L5Sharp.LogixType
+public sealed class ArrayType<TLogixType> : ArrayType, IEnumerable<TLogixType> where TLogixType : LogixType
 {
     /// <inheritdoc />
     public ArrayType(XElement element) : base(element)
@@ -295,7 +314,7 @@ public sealed class ArrayType<TLogixType> : ArrayType, IEnumerable<TLogixType> w
     }
 
     /// <summary>
-    /// Gets the <see cref="L5Sharp.LogixType"/> instance at the specified index.
+    /// Gets the <see cref="LogixType"/> instance at the specified index.
     /// </summary>
     /// <param name="x">The index of the array element</param>
     public new TLogixType this[ushort x]
@@ -305,7 +324,7 @@ public sealed class ArrayType<TLogixType> : ArrayType, IEnumerable<TLogixType> w
     }
 
     /// <summary>
-    /// Gets the <see cref="L5Sharp.LogixType"/> instance at the specified index.
+    /// Gets the <see cref="LogixType"/> instance at the specified index.
     /// </summary>
     /// <param name="x">The x index of the array element</param>
     /// <param name="y">The y index of the array element</param>
@@ -316,7 +335,7 @@ public sealed class ArrayType<TLogixType> : ArrayType, IEnumerable<TLogixType> w
     }
 
     /// <summary>
-    /// Gets the <see cref="L5Sharp.LogixType"/> instance at the specified index.
+    /// Gets the <see cref="LogixType"/> instance at the specified index.
     /// </summary>
     /// <param name="x">The x index of the array element</param>
     /// <param name="y">The y index of the array element</param>
@@ -326,7 +345,7 @@ public sealed class ArrayType<TLogixType> : ArrayType, IEnumerable<TLogixType> w
         get => (TLogixType)base[x, y, z];
         set => base[x, y, z] = value;
     }
-    
+
     /// <summary>
     /// Implicitly converts the provided array of logix type objects to an <see cref="ArrayType{TLogixType}"/>.
     /// </summary>
@@ -349,8 +368,7 @@ public sealed class ArrayType<TLogixType> : ArrayType, IEnumerable<TLogixType> w
     public static implicit operator ArrayType<TLogixType>(TLogixType[,,] array) => new(array);
 
     /// <inheritdoc />
-    public new IEnumerator<TLogixType> GetEnumerator() =>
-        Element.Elements().Select(e => (TLogixType)LogixType.Deserialize(e)).GetEnumerator();
+    public new IEnumerator<TLogixType> GetEnumerator() => Members.Select(m => (TLogixType)m.DataType).GetEnumerator();
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 }

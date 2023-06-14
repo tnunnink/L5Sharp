@@ -38,7 +38,7 @@ public class Tag : TagMember, ILogixComponent
     /// <inheritdoc />
     public new string Name
     {
-        get => GetValue<string>() ?? string.Empty;
+        get => GetValue<string>() ?? throw new L5XException(Element);
         set => SetValue(value);
     }
 

@@ -1,37 +1,61 @@
-﻿using System.Xml.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Xml.Linq;
 using L5Sharp.Enums;
+using L5Sharp.Types.Atomics;
 
 // ReSharper disable InconsistentNaming RSLogix naming
 
 namespace L5Sharp.Types.Predefined;
 
 /// <summary>
-/// A predefined or built in data type used with message instructions. 
+/// A predefined or built in data type used with message instructions. Note that the members of this type resemble those
+/// observed from exported L5X, and not that of the predefined data type.
 /// </summary>
 public sealed class MESSAGE : StructureType
 {
     /// <summary>
     /// Creates a new <see cref="MESSAGE"/> data type instance.
     /// </summary>
-    public MESSAGE() : base(nameof(MESSAGE))
+    public MESSAGE() : base(new XElement(L5XName.MessageParameters))
     {
-    }
-    
-    /// <inheritdoc />
-    public MESSAGE(XElement element) : base(element)
-    {
-    
+        MessageType = new STRING();
+        RequestedLength = new INT();
+        ConnectedFlag = new INT();
+        ConnectionPath = new STRING();
+        CommTypeCode = new INT();
+        ServiceCode = new INT(Radix.Hex);
+        ObjectType = new INT(Radix.Hex);
+        TargetObject = new INT();
+        AttributeNumber = new INT(Radix.Hex);
+        LocalIndex = new INT();
+        DestinationTag = new STRING();
+        CacheConnections = new BOOL();
+        LargePacketUsage = new BOOL();
     }
 
     /// <inheritdoc />
+    public MESSAGE(XElement element) : base(element)
+    {
+    }
+
+    /// <inheritdoc />
+    public override string Name => nameof(MESSAGE);
+
+    /// <inheritdoc />
     public override DataTypeClass Class => DataTypeClass.Predefined;
+    
+    /// <inheritdoc />
+    //todo this wont work for the string type. Do we need a generic logix type parse?
+    public override IEnumerable<Member> Members =>
+        Element.Attributes().Select(a => new Member(a.Name.ToString(), Atomic.Parse(a.Value))); 
 
     /// <summary>
     /// Gets the <see cref="MessageType"/> value of the <see cref="MESSAGE"/> parameters.
     /// </summary>  /// <summary>
     /// Gets the <see cref="MessageType"/> value of the <see cref="MESSAGE"/> parameters.
     /// </summary>
-    public string MessageType
+    public STRING MessageType
     {
         get => GetValue<string>() ?? throw new L5XException(Element);
         set => SetValue(value);
@@ -40,97 +64,97 @@ public sealed class MESSAGE : StructureType
     /// <summary>
     /// Gets the <see cref="RequestedLength"/> value of the <see cref="MESSAGE"/> parameters.
     /// </summary>
-    public int RequestedLength
+    public INT RequestedLength
     {
-        get => GetValue<int>();
+        get => GetValue<INT>() ?? throw new L5XException(Element);
         set => SetValue(value);
     }
 
     /// <summary>
     /// Gets the <see cref="ConnectedFlag"/> value of the <see cref="MESSAGE"/> parameters.
     /// </summary>
-    public int ConnectedFlag  
+    public INT ConnectedFlag
     {
-        get => GetValue<int>();
+        get => GetValue<INT>() ?? throw new L5XException(Element);
         set => SetValue(value);
     }
 
     /// <summary>
     /// Gets the <see cref="ConnectionPath"/> value of the <see cref="MESSAGE"/> parameters.
     /// </summary>
-    public string? ConnectionPath 
+    public STRING ConnectionPath
     {
-        get => GetValue<string>();
+        get => GetValue<string>() ?? throw new L5XException(Element);
         set => SetValue(value);
     }
 
     /// <summary>
     /// Gets the <see cref="CommTypeCode"/> value of the <see cref="MESSAGE"/> parameters.
     /// </summary>
-    public int CommTypeCode
+    public INT CommTypeCode
     {
-        get => GetValue<int>();
+        get => GetValue<INT>() ?? throw new L5XException(Element);
         set => SetValue(value);
     }
 
     /// <summary>
     /// Gets the <see cref="ServiceCode"/> value of the <see cref="MESSAGE"/> parameters.
     /// </summary>
-    public string? ServiceCode
+    public INT ServiceCode
     {
-        get => GetValue<string>();
+        get => GetValue<INT>() ?? throw new L5XException(Element);
         set => SetValue(value);
     }
 
     /// <summary>
     /// Gets the <see cref="ObjectType"/> value of the <see cref="MESSAGE"/> parameters.
     /// </summary>
-    public string? ObjectType 
+    public INT ObjectType
     {
-        get => GetValue<string>();
+        get => GetValue<INT>() ?? throw new L5XException(Element);
         set => SetValue(value);
     }
 
     /// <summary>
     /// Gets the <see cref="TargetObject"/> value of the <see cref="MESSAGE"/> parameters.
     /// </summary>
-    public string? TargetObject
+    public INT TargetObject
     {
-        get => GetValue<string>();
+        get => GetValue<INT>() ?? throw new L5XException(Element);
         set => SetValue(value);
     }
 
     /// <summary>
     /// Gets the <see cref="AttributeNumber"/> value of the <see cref="MESSAGE"/> parameters.
     /// </summary>
-    public string? AttributeNumber
+    public INT AttributeNumber
     {
-        get => GetValue<string>();
+        get => GetValue<INT>() ?? throw new L5XException(Element);
         set => SetValue(value);
     }
 
     /// <summary>
     /// Gets the <see cref="LocalIndex"/> value of the <see cref="MESSAGE"/> parameters.
     /// </summary>
-    public int LocalIndex 
+    public INT LocalIndex
     {
-        get => GetValue<int>();
+        get => GetValue<INT>() ?? throw new L5XException(Element);
         set => SetValue(value);
     }
 
     /// <summary>
     /// Gets the <see cref="DestinationTag"/> value of the <see cref="MESSAGE"/> parameters.
     /// </summary>
-    public string? DestinationTag 
+    public STRING DestinationTag
     {
-        get => GetValue<string>();
+        get => GetValue<string>() ?? throw new L5XException(Element);
         set => SetValue(value);
     }
 
     /// <summary>
     /// Gets the <see cref="CacheConnections"/> value of the <see cref="MESSAGE"/> parameters.
     /// </summary>
-    public bool CacheConnections
+    public BOOL CacheConnections
     {
         get => GetValue<bool>();
         set => SetValue(value);
@@ -139,159 +163,9 @@ public sealed class MESSAGE : StructureType
     /// <summary>
     /// Gets the <see cref="LargePacketUsage"/> value of the <see cref="MESSAGE"/> parameters.
     /// </summary>
-    public bool LargePacketUsage
+    public BOOL LargePacketUsage
     {
         get => GetValue<bool>();
         set => SetValue(value);
     }
-
-    /*/// <summary>
-    /// Gets the <see cref="Flags"/> member of the <see cref="MESSAGE"/> data type.
-    /// </summary>
-    public INT Flags { get; set; } = new(Radix.Hex);
-
-    /// <summary>
-    /// Gets the <see cref="EW"/> member of the <see cref="MESSAGE"/> data type.
-    /// </summary>
-    public BOOL EW { get; set; } = new();
-
-    /// <summary>
-    /// Gets the <see cref="ER"/> member of the <see cref="MESSAGE"/> data type.
-    /// </summary>
-    public BOOL DN { get; set; } = new();
-
-    /// <summary>
-    /// Gets the <see cref="DN"/> member of the <see cref="MESSAGE"/> data type.
-    /// </summary>
-    public BOOL ER { get; set; } = new();
-
-    /// <summary>
-    /// Gets the <see cref="ST"/> member of the <see cref="MESSAGE"/> data type.
-    /// </summary>
-    public BOOL ST { get; set; } = new();
-
-    /// <summary>
-    /// Gets the <see cref="EN"/> member of the <see cref="MESSAGE"/> data type.
-    /// </summary>
-    public BOOL EN { get; set; } = new();
-
-    /// <summary>
-    /// Gets the <see cref="TO"/> member of the <see cref="MESSAGE"/> data type.
-    /// </summary>
-    public BOOL TO { get; set; } = new();
-
-    /// <summary>
-    /// Gets the <see cref="EN_CC"/> member of the <see cref="MESSAGE"/> data type.
-    /// </summary>
-    public BOOL EN_CC { get; set; } = new();
-
-    /// <summary>
-    /// Gets the <see cref="ERR"/> member of the <see cref="MESSAGE"/> data type.
-    /// </summary>
-    public INT ERR { get; set; } = new(Radix.Hex);
-
-    /// <summary>
-    /// Gets the <see cref="EXERR"/> member of the <see cref="MESSAGE"/> data type.
-    /// </summary>
-    public DINT EXERR { get; set; } = new(Radix.Hex);
-
-    /// <summary>
-    /// Gets the <see cref="ERR_SRC"/> member of the <see cref="MESSAGE"/> data type.
-    /// </summary>
-    public SINT ERR_SRC { get; set; } = new();
-
-    /// <summary>
-    /// Gets the <see cref="DN_LEN"/> member of the <see cref="MESSAGE"/> data type.
-    /// </summary>
-    public INT DN_LEN { get; set; } = new();
-
-    /// <summary>
-    /// Gets the <see cref="REQ_LEN"/> member of the <see cref="MESSAGE"/> data type.
-    /// </summary>
-    public INT REQ_LEN { get; set; } = new();
-
-    /// <summary>
-    /// Gets the <see cref="DestinationLink"/> member of the <see cref="MESSAGE"/> data type.
-    /// </summary>
-    public INT DestinationLink { get; set; } = new();
-
-    /// <summary>
-    /// Gets the <see cref="DestinationNode"/> member of the <see cref="MESSAGE"/> data type.
-    /// </summary>
-    public INT DestinationNode { get; set; } = new(Radix.Octal);
-
-    /// <summary>
-    /// Gets the <see cref="SourceLink"/> member of the <see cref="MESSAGE"/> data type.
-    /// </summary>
-    public INT SourceLink { get; set; } = new();
-
-    /// <summary>
-    /// Gets the <see cref="MessageClass"/> member of the <see cref="MESSAGE"/> data type.
-    /// </summary>
-    public INT MessageClass { get; set; } = new(Radix.Hex);
-
-    /// <summary>
-    /// Gets the <see cref="Attribute"/> member of the <see cref="MESSAGE"/> data type.
-    /// </summary>
-    public INT Attribute { get; set; } = new(Radix.Hex);
-
-    /// <summary>
-    /// Gets the <see cref="Instance"/> member of the <see cref="MESSAGE"/> data type.
-    /// </summary>
-    public DINT Instance { get; set; } = new();
-
-    /// <summary>
-    /// Gets the <see cref="LocalIndex"/> member of the <see cref="MESSAGE"/> data type.
-    /// </summary>
-    public DINT LocalIndex { get; set; } = new();
-
-    /// <summary>
-    /// Gets the <see cref="Channel"/> member of the <see cref="MESSAGE"/> data type.
-    /// </summary>
-    public SINT Channel { get; set; } = new(Radix.Ascii);
-
-    /// <summary>
-    /// Gets the <see cref="Rack"/> member of the <see cref="MESSAGE"/> data type.
-    /// </summary>
-    public SINT Rack { get; set; } = new(Radix.Octal);
-
-    /// <summary>
-    /// Gets the <see cref="Group"/> member of the <see cref="MESSAGE"/> data type.
-    /// </summary>
-    public SINT Group { get; set; } = new();
-
-    /// <summary>
-    /// Gets the <see cref="Slot"/> member of the <see cref="MESSAGE"/> data type.
-    /// </summary>
-    public SINT Slot { get; set; } = new();
-
-    /// <summary>
-    /// Gets the <see cref="Path"/> member of the <see cref="MESSAGE"/> data type.
-    /// </summary>
-    public STRING Path { get; set; } = new();
-
-    /// <summary>
-    /// Gets the <see cref="RemoteIndex"/> member of the <see cref="MESSAGE"/> data type.
-    /// </summary>
-    public DINT RemoteIndex { get; set; } = new();
-
-    /// <summary>
-    /// Gets the <see cref="RemoteElement"/> member of the <see cref="MESSAGE"/> data type.
-    /// </summary>
-    public STRING RemoteElement { get; set; } = new();
-
-    /// <summary>
-    /// Gets the <see cref="UnconnectedTimeout"/> member of the <see cref="MESSAGE"/> data type.
-    /// </summary>
-    public DINT UnconnectedTimeout { get; set; } = new();
-
-    /// <summary>
-    /// Gets the <see cref="ConnectionRate"/> member of the <see cref="MESSAGE"/> data type.
-    /// </summary>
-    public DINT ConnectionRate { get; set; } = new();
-
-    /// <summary>
-    /// Gets the <see cref="TimeoutMultiplier"/> member of the <see cref="MESSAGE"/> data type.
-    /// </summary>
-    public SINT TimeoutMultiplier { get; set; } = new();*/
 }

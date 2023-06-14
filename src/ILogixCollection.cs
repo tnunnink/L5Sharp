@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Xml.Linq;
 
 namespace L5Sharp;
 
@@ -10,6 +11,11 @@ namespace L5Sharp;
 public interface ILogixCollection<TComponent> : IEnumerable<TComponent>
     where TComponent : ILogixComponent, ILogixSerializable
 {
+    /// <summary>
+    /// 
+    /// </summary>
+    XContainer Container { get; }
+
     /// <summary>
     /// Accesses a single component at the specified index of the collection.
     /// </summary>

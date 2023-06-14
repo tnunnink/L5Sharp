@@ -18,7 +18,7 @@ namespace L5Sharp.Types;
 /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
 /// `Logix 5000 Controllers Import/Export`</a> for more information.
 /// </footer>
-public abstract class AtomicType : L5Sharp.LogixType
+public abstract class AtomicType : LogixType
 {
     /// <summary>
     /// Creates a new <see cref="AtomicType"/> instance with the provided name.
@@ -27,22 +27,19 @@ public abstract class AtomicType : L5Sharp.LogixType
     /// <param name="radix">The default <see cref="Enums.Radix"/> format of the type.</param>
     /// <param name="bytes">An array of bytes that represent the value of the type.</param>
     /// <exception cref="ArgumentNullException">name is null.</exception>
-    protected internal AtomicType(string name, Radix radix, byte[] bytes)
+    protected internal AtomicType(string name, Radix radix, byte[] bytes) : base(GenerateElement(name, radix))
     {
-        Name = name ?? throw new ArgumentNullException(nameof(name));
-
         if (radix is null)
             throw new ArgumentNullException(nameof(radix));
 
         if (!radix.SupportsType(this))
             throw new ArgumentException($"The radix {radix} is not supported for atomic type {typeof(AtomicType)}");
 
-        Radix = radix;
-
         if (bytes is null)
             throw new ArgumentNullException(nameof(bytes));
 
         Value = new BitArray(bytes);
+        Element.SetAttributeValue(L5XName.Value, ToString(radix));
     }
 
     /// <summary>
@@ -52,26 +49,20 @@ public abstract class AtomicType : L5Sharp.LogixType
     /// <param name="radix">The default <see cref="Enums.Radix"/> format of the type.</param>
     /// <param name="bits">An array of bits that represent the value of the type.</param>
     /// <exception cref="ArgumentNullException">name is null.</exception>
-    protected internal AtomicType(string name, Radix radix, bool[] bits)
+    protected internal AtomicType(string name, Radix radix, bool[] bits): base(GenerateElement(name, radix))
     {
-        Name = name ?? throw new ArgumentNullException(nameof(name));
-        
         if (radix is null)
             throw new ArgumentNullException(nameof(radix));
 
         if (!radix.SupportsType(this))
             throw new ArgumentException($"The radix {radix} is not supported for atomic type {typeof(AtomicType)}");
 
-        Radix = radix;
-
         if (bits is null)
             throw new ArgumentNullException(nameof(bits));
 
         Value = new BitArray(bits);
+        Element.SetAttributeValue(L5XName.Value, ToString(radix));
     }
-
-    /// <inheritdoc />
-    public override string Name { get; }
 
     /// <inheritdoc />
     public sealed override DataTypeClass Class => DataTypeClass.Atomic;
@@ -90,23 +81,13 @@ public abstract class AtomicType : L5Sharp.LogixType
     /// The radix format for the <see cref="AtomicType"/>.
     /// </summary>
     /// <value>A <see cref="Enums.Radix"/> representing the format of the atomic type value.</value>
-    public Radix Radix { get; }
+    public Radix Radix => GetValue<Radix>() ?? throw new L5XException(Element);
 
     /// <summary>
     /// The underlying value of the <see cref="AtomicType"/>.
     /// </summary>
     /// <value>A <see cref="BitArray"/> representing the value of the type.</value>
     protected BitArray Value { get; }
-
-    /// <inheritdoc />
-    public override XElement Serialize()
-    {
-        var element = new XElement(L5XName.DataValue);
-        element.Add(new XAttribute(L5XName.DataType, Name));
-        element.Add(new XAttribute(L5XName.Radix, Radix));
-        element.Add(new XAttribute(L5XName.Value, ToString()));
-        return element;
-    }
 
     /// <summary>
     /// Return the atomic value formatted using the current <see cref="Radix"/> format.
@@ -136,5 +117,13 @@ public abstract class AtomicType : L5Sharp.LogixType
         var bytes = new byte[(Value.Length - 1) / 8 + 1];
         Value.CopyTo(bytes, 0);
         return bytes;
+    }
+
+    private static XElement GenerateElement(string name, Radix radix)
+    {
+        var element = new XElement(L5XName.DataValue);
+        element.Add(new XAttribute(L5XName.DataType, name));
+        element.Add(new XAttribute(L5XName.Radix, radix));
+        return element;
     }
 }

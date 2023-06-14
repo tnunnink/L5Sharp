@@ -36,7 +36,8 @@ namespace L5Sharp.Extensions
         /// This is a helper since we access and use the name attribute so often I just wanted to make
         /// the code more concise.
         /// </remarks>
-        public static string LogixName(this XElement element) => element.Attribute(L5XName.Name)?.Value ?? string.Empty;
+        public static string LogixName(this XElement element) => 
+            element.Attribute(L5XName.Name)?.Value ?? string.Empty;
 
         /// <summary>
         /// Gets the <c>DataType</c> attribute value for the current <see cref="XElement"/>.
@@ -47,7 +48,8 @@ namespace L5Sharp.Extensions
         /// This is a helper since we access and use the data type attribute often, I just wanted to make
         /// the code more concise.
         /// </remarks>
-        public static string? LogixType(this XElement element) => element.Attribute(L5XName.DataType)?.Value;
+        public static string LogixType(this XElement element) =>
+            element.Attribute(L5XName.DataType)?.Value ?? throw new L5XException(L5XName.DataType, element);
 
         /// <summary>
         /// Gets the value of the name or index attribute of the <see cref="XElement"/>.
@@ -62,12 +64,8 @@ namespace L5Sharp.Extensions
         /// This is a helper since we access and use the member name attribute so often I just wanted to make
         /// the code more concise.
         /// </remarks>
-        public static string? MemberName(this XElement element)
-        {
-            var name = element.Attribute(L5XName.Name)?.Value;
-            var index = element.Attribute(L5XName.Index)?.Value;
-            return name ?? (index ?? default);
-        }
+        public static string? MemberName(this XElement element) => 
+            element.Attribute(L5XName.Name)?.Value ?? (element.Attribute(L5XName.Index)?.Value ?? default);
 
         /// <summary>
         /// A helper extension for determining a <see cref="Module"/> tag name for an input, output, or config tag.

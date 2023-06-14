@@ -28,14 +28,14 @@ public abstract class LogixComponent<TComponent> : LogixEntity<TComponent>, ILog
     }
 
     /// <inheritdoc />
-    public virtual string Name
+    public string Name
     {
         get => GetValue<string>() ?? string.Empty;
         set => SetValue(value);
     }
 
     /// <inheritdoc />
-    public virtual string Description
+    public string Description
     {
         get => GetProperty<string>() ?? string.Empty;
         set => SetProperty(value);

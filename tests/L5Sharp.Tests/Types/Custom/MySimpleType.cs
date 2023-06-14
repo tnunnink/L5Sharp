@@ -5,7 +5,7 @@ using L5Sharp.Types.Atomics;
 
 namespace L5Sharp.Tests.Types.Custom;
 
-public class MySimpleType : StructureType
+public class MySimpleType : ComplexType
 {
     public MySimpleType() : base(nameof(MySimpleType))
     {

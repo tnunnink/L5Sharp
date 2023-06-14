@@ -98,8 +98,9 @@ public class StringType : StructureType, IEnumerable<char>, IEquatable<StringTyp
     public override IEnumerable<Member> Members => new List<Member> { new(nameof(LEN), LEN), new(nameof(DATA), DATA) };
 
     /// <summary>
-    /// The string value of the type.
+    /// The string value of the string type.
     /// </summary>
+    /// <value>A <see cref="string"/> containing the current value of the type.</value>
     protected readonly string Value;
 
     /// <summary>
@@ -117,43 +118,10 @@ public class StringType : StructureType, IEnumerable<char>, IEquatable<StringTyp
     /// <inheritdoc />
     public IEnumerator<char> GetEnumerator() => Value.GetEnumerator();
 
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
     /// <inheritdoc />
     public override string ToString() => Value;
-
-    /// <summary>
-    /// Returns a serialized instance of the <see cref="StringType"/> as a structure with the provided element name.
-    /// </summary>
-    /// <param name="name">The name (Structure/StructureMember) or the element.</param>
-    /// <returns>A <see cref="XElement"/> representing the serialized type.</returns>
-    internal XElement Serialize(string name)
-    {
-        if (name is null)
-            throw new ArgumentNullException(nameof(name));
-
-        if (name is not (L5XName.Structure or L5XName.StructureMember))
-            throw new ArgumentException("Expected name of element must be Structure or StructureMember");
-        
-        var element = new XElement(name);
-        element.Add(new XAttribute(L5XName.DataType, Name));
-
-        var len = new XElement(L5XName.DataValueMember);
-        len.Add(new XAttribute(L5XName.Name, nameof(LEN)));
-        len.Add(new XAttribute(L5XName.DataType, LEN.Name));
-        len.Add(new XAttribute(L5XName.Radix, Radix.Decimal.Value));
-        len.Add(new XAttribute(L5XName.Value, LEN.ToString()));
-        element.Add(len);
-
-        var data = new XElement(L5XName.DataValueMember);
-        data.Add(new XAttribute(L5XName.Name, nameof(DATA)));
-        data.Add(new XAttribute(L5XName.DataType, Name));
-        data.Add(new XAttribute(L5XName.Radix, Radix.Ascii.Value));
-        data.Add(new XCData(Value));
-        element.Add(data);
-
-        return element;
-    }
-
-    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
     /// <inheritdoc />
     public bool Equals(StringType? other)

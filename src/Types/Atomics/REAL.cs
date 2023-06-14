@@ -13,14 +13,13 @@ namespace L5Sharp.Types.Atomics;
 [TypeConverter(typeof(RealConverter))]
 public sealed class REAL : AtomicType, IEquatable<REAL>, IComparable<REAL>
 {
-    private readonly float _value;
+    private float GetValue => BitConverter.ToSingle(ToBytes());
     
     /// <summary>
     /// Creates a new default <see cref="REAL"/> type.
     /// </summary>
     public REAL() : base(nameof(REAL), Radix.Float, BitConverter.GetBytes(default(float)))
     {
-        _value = BitConverter.ToSingle(ToBytes());
     }
 
     /// <summary>
@@ -29,7 +28,6 @@ public sealed class REAL : AtomicType, IEquatable<REAL>, IComparable<REAL>
     /// <param name="radix">The <see cref="Enums.Radix"/> number format of the value.</param>
     public REAL(Radix radix) : base(nameof(REAL), radix, BitConverter.GetBytes(default(float)))
     {
-        _value = BitConverter.ToSingle(ToBytes());
     }
 
     /// <summary>
@@ -40,7 +38,6 @@ public sealed class REAL : AtomicType, IEquatable<REAL>, IComparable<REAL>
     public REAL(float value, Radix? radix = null) : base(nameof(REAL), radix ?? Radix.Float,
         BitConverter.GetBytes(value))
     {
-        _value = BitConverter.ToSingle(ToBytes());
     }
 
     /// <summary>
@@ -81,7 +78,7 @@ public sealed class REAL : AtomicType, IEquatable<REAL>, IComparable<REAL>
     {
         if (ReferenceEquals(null, other)) return false;
         if (ReferenceEquals(this, other)) return true;
-        return Math.Abs(_value - other._value) < float.Epsilon;
+        return Math.Abs(GetValue - other.GetValue) < float.Epsilon;
     }
 
     /// <inheritdoc />
@@ -92,7 +89,7 @@ public sealed class REAL : AtomicType, IEquatable<REAL>, IComparable<REAL>
     // NOT sure how else to handle since it needs to be settable and used for equality.
     // This would only be a problem if you created a hash table of atomic types.
     // NOT sure anyone would need to do that.
-    public override int GetHashCode() => _value.GetHashCode();
+    public override int GetHashCode() => GetValue.GetHashCode();
 
     /// <summary>
     /// Determines whether the objects are equal.
@@ -114,7 +111,7 @@ public sealed class REAL : AtomicType, IEquatable<REAL>, IComparable<REAL>
     public int CompareTo(REAL? other)
     {
         if (ReferenceEquals(this, other)) return 0;
-        return ReferenceEquals(null, other) ? 1 : _value.CompareTo(other._value);
+        return ReferenceEquals(null, other) ? 1 : GetValue.CompareTo(other.GetValue);
     }
     
     #region Conversions
@@ -131,7 +128,7 @@ public sealed class REAL : AtomicType, IEquatable<REAL>, IComparable<REAL>
     /// </summary>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="float"/> type value.</returns>
-    public static implicit operator float(REAL atomic) => atomic._value;
+    public static implicit operator float(REAL atomic) => atomic.GetValue;
 
     /// <summary>
     /// Converts the provided <see cref="bool"/> to a <see cref="BOOL"/> value.
@@ -152,56 +149,56 @@ public sealed class REAL : AtomicType, IEquatable<REAL>, IComparable<REAL>
     /// </summary>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="BOOL"/> type value.</returns>
-    public static explicit operator BOOL(REAL atomic) => new(atomic._value != 0);
+    public static explicit operator BOOL(REAL atomic) => new(atomic.GetValue != 0);
 
     /// <summary>
     /// Converts the provided <see cref="REAL"/> to a <see cref="SINT"/> value.
     /// </summary>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="SINT"/> type value.</returns>
-    public static explicit operator SINT(REAL atomic) => new((sbyte)atomic._value);
+    public static explicit operator SINT(REAL atomic) => new((sbyte)atomic.GetValue);
 
     /// <summary>
     /// Converts the provided <see cref="REAL"/> to a <see cref="USINT"/> value.
     /// </summary>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="USINT"/> type value.</returns>
-    public static explicit operator USINT(REAL atomic) => new((byte)atomic._value);
+    public static explicit operator USINT(REAL atomic) => new((byte)atomic.GetValue);
 
     /// <summary>
     /// Converts the provided <see cref="REAL"/> to a <see cref="INT"/> value.
     /// </summary>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="INT"/> type value.</returns>
-    public static explicit operator INT(REAL atomic) => new((short)atomic._value);
+    public static explicit operator INT(REAL atomic) => new((short)atomic.GetValue);
 
     /// <summary>
     /// Converts the provided <see cref="REAL"/> to a <see cref="UINT"/> value.
     /// </summary>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="UINT"/> type value.</returns>
-    public static explicit operator UINT(REAL atomic) => new((ushort)atomic._value);
+    public static explicit operator UINT(REAL atomic) => new((ushort)atomic.GetValue);
 
     /// <summary>
     /// Converts the provided <see cref="REAL"/> to a <see cref="DINT"/> value.
     /// </summary>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="DINT"/> type value.</returns>
-    public static explicit operator DINT(REAL atomic) => new((int)atomic._value);
+    public static explicit operator DINT(REAL atomic) => new((int)atomic.GetValue);
 
     /// <summary>
     /// Converts the provided <see cref="REAL"/> to a <see cref="UDINT"/> value.
     /// </summary>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="UDINT"/> type value.</returns>
-    public static explicit operator UDINT(REAL atomic) => new((uint)atomic._value);
+    public static explicit operator UDINT(REAL atomic) => new((uint)atomic.GetValue);
 
     /// <summary>
     /// Converts the provided <see cref="REAL"/> to a <see cref="LINT"/> value.
     /// </summary>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="LINT"/> type value.</returns>
-    public static explicit operator LINT(REAL atomic) => new((long)atomic._value);
+    public static explicit operator LINT(REAL atomic) => new((long)atomic.GetValue);
 
     #endregion
 }

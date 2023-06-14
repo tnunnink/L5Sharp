@@ -11,14 +11,13 @@ namespace L5Sharp.Types.Atomics;
 [TypeConverter(typeof(ULintConverter))]
 public class ULINT : AtomicType, IEquatable<ULINT>, IComparable<ULINT>
 {
-    private readonly ulong _value;
+    private ulong GetValue => BitConverter.ToUInt64(ToBytes());
     
     /// <summary>
     /// Creates a new default <see cref="ULINT"/> type.
     /// </summary>
     public ULINT() : base(nameof(ULINT), Radix.Decimal, BitConverter.GetBytes(default(ulong)))
     {
-        _value = BitConverter.ToUInt64(ToBytes());
     }
 
     /// <summary>
@@ -27,7 +26,6 @@ public class ULINT : AtomicType, IEquatable<ULINT>, IComparable<ULINT>
     /// <param name="radix">The <see cref="Enums.Radix"/> number format of the value.</param>
     public ULINT(Radix radix) : base(nameof(ULINT), radix, BitConverter.GetBytes(default(ulong)))
     {
-        _value = BitConverter.ToUInt64(ToBytes());
     }
 
     /// <summary>
@@ -38,7 +36,6 @@ public class ULINT : AtomicType, IEquatable<ULINT>, IComparable<ULINT>
     public ULINT(ulong value, Radix? radix = null) : base(nameof(ULINT), radix ?? Radix.Decimal,
         BitConverter.GetBytes(value))
     {
-        _value = BitConverter.ToUInt64(ToBytes());
     }
 
     /// <summary>
@@ -78,7 +75,7 @@ public class ULINT : AtomicType, IEquatable<ULINT>, IComparable<ULINT>
     {
         if (ReferenceEquals(null, other)) return false;
         if (ReferenceEquals(this, other)) return true;
-        return _value == other._value;
+        return GetValue == other.GetValue;
     }
 
     /// <inheritdoc />
@@ -89,7 +86,7 @@ public class ULINT : AtomicType, IEquatable<ULINT>, IComparable<ULINT>
     // NOT sure how else to handle since it needs to be settable and used for equality.
     // This would only be a problem if you created a hash table of atomic types.
     // NOT sure anyone would need to do that.
-    public override int GetHashCode() => _value.GetHashCode();
+    public override int GetHashCode() => GetValue.GetHashCode();
 
     /// <summary>
     /// Determines whether the objects are equal.
@@ -111,7 +108,7 @@ public class ULINT : AtomicType, IEquatable<ULINT>, IComparable<ULINT>
     public int CompareTo(ULINT? other)
     {
         if (ReferenceEquals(this, other)) return 0;
-        return ReferenceEquals(null, other) ? 1 : _value.CompareTo(other._value);
+        return ReferenceEquals(null, other) ? 1 : GetValue.CompareTo(other.GetValue);
     }
     
     #region Conversions
@@ -128,7 +125,7 @@ public class ULINT : AtomicType, IEquatable<ULINT>, IComparable<ULINT>
     /// </summary>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="ulong"/> type value.</returns>
-    public static implicit operator ulong(ULINT atomic) => atomic._value;
+    public static implicit operator ulong(ULINT atomic) => atomic.GetValue;
 
     /// <summary>
     /// Implicitly converts a <see cref="string"/> to a <see cref="ULINT"/> value.
@@ -149,63 +146,63 @@ public class ULINT : AtomicType, IEquatable<ULINT>, IComparable<ULINT>
     /// </summary>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="BOOL"/> type value.</returns>
-    public static explicit operator BOOL(ULINT atomic) => new(atomic._value != 0);
+    public static explicit operator BOOL(ULINT atomic) => new(atomic.GetValue != 0);
 
     /// <summary>
     /// Converts the provided <see cref="ULINT"/> to a <see cref="SINT"/> value.
     /// </summary>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="SINT"/> type value.</returns>
-    public static explicit operator SINT(ULINT atomic) => new((sbyte)atomic._value);
+    public static explicit operator SINT(ULINT atomic) => new((sbyte)atomic.GetValue);
 
     /// <summary>
     /// Converts the provided <see cref="ULINT"/> to a <see cref="USINT"/> value.
     /// </summary>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="USINT"/> type value.</returns>
-    public static explicit operator USINT(ULINT atomic) => new((byte)atomic._value);
+    public static explicit operator USINT(ULINT atomic) => new((byte)atomic.GetValue);
 
     /// <summary>
     /// Converts the provided <see cref="ULINT"/> to a <see cref="INT"/> value.
     /// </summary>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="INT"/> type value.</returns>
-    public static explicit operator INT(ULINT atomic) => new((short)atomic._value);
+    public static explicit operator INT(ULINT atomic) => new((short)atomic.GetValue);
 
     /// <summary>
     /// Converts the provided <see cref="ULINT"/> to a <see cref="UINT"/> value.
     /// </summary>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="UINT"/> type value.</returns>
-    public static explicit operator UINT(ULINT atomic) => new((ushort)atomic._value);
+    public static explicit operator UINT(ULINT atomic) => new((ushort)atomic.GetValue);
 
     /// <summary>
     /// Converts the provided <see cref="ULINT"/> to a <see cref="DINT"/> value.
     /// </summary>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="DINT"/> type value.</returns>
-    public static explicit operator DINT(ULINT atomic) => new((int)atomic._value);
+    public static explicit operator DINT(ULINT atomic) => new((int)atomic.GetValue);
 
     /// <summary>
     /// Converts the provided <see cref="ULINT"/> to a <see cref="UDINT"/> value.
     /// </summary>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="UDINT"/> type value.</returns>
-    public static explicit operator UDINT(ULINT atomic) => new((uint)atomic._value);
+    public static explicit operator UDINT(ULINT atomic) => new((uint)atomic.GetValue);
 
     /// <summary>
     /// Converts the provided <see cref="ULINT"/> to a <see cref="LINT"/> value.
     /// </summary>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="LINT"/> type value.</returns>
-    public static explicit operator LINT(ULINT atomic) => new((long)atomic._value);
+    public static explicit operator LINT(ULINT atomic) => new((long)atomic.GetValue);
 
     /// <summary>
     /// Converts the provided <see cref="ULINT"/> to a <see cref="REAL"/> value.
     /// </summary>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="REAL"/> type value.</returns>
-    public static implicit operator REAL(ULINT atomic) => new(atomic._value);
+    public static implicit operator REAL(ULINT atomic) => new(atomic.GetValue);
 
     #endregion
 }

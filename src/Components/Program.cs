@@ -15,7 +15,7 @@ namespace L5Sharp.Components;
 public class Program : LogixComponent<Program>
 {
     /// <inheritdoc />
-    public Program()
+    public Program() : base(GenerateElement())
     {
         Type = ProgramType.Normal;
     }
@@ -104,10 +104,13 @@ public class Program : LogixComponent<Program>
         set => SetCollection(value);
     }
 
-    /// <inheritdoc />
-    protected override XElement DefaultElement()
+    /// <summary>
+    /// Created the default backing element for the component. 
+    /// </summary>
+    /// <returns>A <see cref="XElement"/> representing the underlying L5X element for the type.</returns>
+    private static XElement GenerateElement()
     {
-        var element = base.DefaultElement();
+        var element = new XElement(L5XName.Program);
         element.Add(new XElement(L5XName.Tags));
         element.Add(new XElement(L5XName.Routines));
         return element;

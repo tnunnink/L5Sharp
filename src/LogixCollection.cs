@@ -14,7 +14,6 @@ namespace L5Sharp;
 public class LogixCollection<TComponent> : ILogixCollection<TComponent>
     where TComponent : ILogixComponent, ILogixSerializable
 {
-    private readonly XContainer _container;
     private readonly HashSet<string> _names;
 
     /// <summary>
@@ -22,8 +21,8 @@ public class LogixCollection<TComponent> : ILogixCollection<TComponent>
     /// </summary>
     public LogixCollection()
     {
-        _container = new XElement($"{typeof(TComponent).LogixTypeName()}s");
-        _names = _container.Elements().Select(e => e.LogixName()).ToHashSet();
+        Container = new XElement($"{typeof(TComponent).LogixTypeName()}s");
+        _names = new HashSet<string>();
     }
 
     /// <summary>
@@ -33,8 +32,8 @@ public class LogixCollection<TComponent> : ILogixCollection<TComponent>
     /// <exception cref="ArgumentNullException"><c>container</c> is null.</exception>
     public LogixCollection(XContainer container)
     {
-        _container = container ?? throw new ArgumentNullException(nameof(container));
-        _names = _container.Elements().Select(e => e.LogixName()).ToHashSet();
+        Container = container ?? throw new ArgumentNullException(nameof(container));
+        _names = Container.Elements().Select(e => e.LogixName()).ToHashSet();
     }
 
     /// <summary>
@@ -46,23 +45,26 @@ public class LogixCollection<TComponent> : ILogixCollection<TComponent>
         if (components is null)
             throw new ArgumentNullException(nameof(components));
 
-        _container = new XElement($"{typeof(TComponent).LogixTypeName()}s");
-        _container.Add(components.Select(e => e.Serialize()));
-        _names = _container.Elements().Select(e => e.LogixName()).ToHashSet();
+        Container = new XElement($"{typeof(TComponent).LogixTypeName()}s");
+        Container.Add(components.Select(e => e.Serialize()));
+        _names = Container.Elements().Select(e => e.LogixName()).ToHashSet();
     }
+
+    /// <inheritdoc />
+    public XContainer Container { get; }
 
     /// <inheritdoc />
     public TComponent this[int index]
     {
-        get => LogixSerializer.Deserialize<TComponent>(_container.Elements().ElementAt(index));
-        set => _container.Elements().ElementAt(index).ReplaceWith(value.Serialize()); //todo validation
+        get => LogixSerializer.Deserialize<TComponent>(Container.Elements().ElementAt(index));
+        set => Container.Elements().ElementAt(index).ReplaceWith(value.Serialize()); //todo validation
     }
 
     /// <inheritdoc />
     public TComponent this[string name]
     {
-        get => LogixSerializer.Deserialize<TComponent>(_container.Elements().Single(e => e.LogixName() == name));
-        set => _container.Elements().Single(e => e.LogixName() == name)
+        get => LogixSerializer.Deserialize<TComponent>(Container.Elements().Single(e => e.LogixName() == name));
+        set => Container.Elements().Single(e => e.LogixName() == name)
             .ReplaceWith(value.Serialize()); //todo validation
     }
 
@@ -72,7 +74,7 @@ public class LogixCollection<TComponent> : ILogixCollection<TComponent>
         ValidateComponent(component);
         ValidateUniqueness(component);
 
-        _container.Add(component.Serialize());
+        Container.Add(component.Serialize());
         _names.Add(component.Name);
     }
 
@@ -97,23 +99,23 @@ public class LogixCollection<TComponent> : ILogixCollection<TComponent>
             elements.Add(component.Serialize());
         }
 
-        _container.Add(elements);
+        Container.Add(elements);
         _names.UnionWith(names);
     }
 
     /// <inheritdoc />
-    public void Clear() => _container.RemoveNodes();
+    public void Clear() => Container.RemoveNodes();
 
     /// <inheritdoc />
-    public bool Contains(string name) => _container.Elements().Any(e => e.LogixName() == name);
+    public bool Contains(string name) => Container.Elements().Any(e => e.LogixName() == name);
 
     /// <inheritdoc />
-    public int Count() => _container.Elements().Count();
+    public int Count() => Container.Elements().Count();
 
     /// <inheritdoc />
     public TComponent? Find(string name)
     {
-        var component = _container.Elements().SingleOrDefault(e => e.LogixName() == name);
+        var component = Container.Elements().SingleOrDefault(e => e.LogixName() == name);
         return component is not null ? LogixSerializer.Deserialize<TComponent>(component) : default;
     }
 
@@ -123,36 +125,36 @@ public class LogixCollection<TComponent> : ILogixCollection<TComponent>
         if (component is null)
             throw new ArgumentNullException(nameof(component));
 
-        var count = _container.Elements().Count();
+        var count = Container.Elements().Count();
 
         if (index < 0 || index > count)
             throw new IndexOutOfRangeException();
 
         if (index == count)
         {
-            _container.Add(component.Serialize());
+            Container.Add(component.Serialize());
             return;
         }
 
-        _container.Elements().ElementAt(index).AddBeforeSelf(component.Serialize());
+        Container.Elements().ElementAt(index).AddBeforeSelf(component.Serialize());
     }
 
     /// <inheritdoc />
     public void Remove(int index)
     {
-        _container.Elements().ElementAt(index).Remove();
+        Container.Elements().ElementAt(index).Remove();
     }
 
     /// <inheritdoc />
     public void Remove(string name)
     {
-        _container.Elements().SingleOrDefault(c => c.LogixName() == name)?.Remove();
+        Container.Elements().SingleOrDefault(c => c.LogixName() == name)?.Remove();
     }
 
     /// <inheritdoc />
     public void Remove(Func<TComponent, bool> condition)
     {
-        _container.Elements().Where(e => condition.Invoke(LogixSerializer.Deserialize<TComponent>(e))).Remove();
+        Container.Elements().Where(e => condition.Invoke(LogixSerializer.Deserialize<TComponent>(e))).Remove();
     }
 
     /// <inheritdoc />
@@ -161,7 +163,7 @@ public class LogixCollection<TComponent> : ILogixCollection<TComponent>
         if (update is null)
             throw new ArgumentNullException(nameof(update));
 
-        var elements = _container.Elements();
+        var elements = Container.Elements();
 
         foreach (var element in elements)
         {
@@ -178,7 +180,7 @@ public class LogixCollection<TComponent> : ILogixCollection<TComponent>
     /// <inheritdoc />
     public void Update(Func<TComponent, bool> condition, Action<TComponent> update)
     {
-        foreach (var element in _container.Elements())
+        foreach (var element in Container.Elements())
         {
             var entity = LogixSerializer.Deserialize<TComponent>(element);
             if (!condition.Invoke(entity)) continue;
@@ -189,7 +191,7 @@ public class LogixCollection<TComponent> : ILogixCollection<TComponent>
 
     /// <inheritdoc />
     public IEnumerator<TComponent> GetEnumerator() =>
-        _container.Elements().Select(LogixSerializer.Deserialize<TComponent>).GetEnumerator();
+        Container.Elements().Select(LogixSerializer.Deserialize<TComponent>).GetEnumerator();
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 

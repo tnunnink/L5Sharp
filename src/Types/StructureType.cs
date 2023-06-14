@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Xml.Linq;
-using L5Sharp.Enums;
 using L5Sharp.Extensions;
 
 namespace L5Sharp.Types;
@@ -17,27 +16,30 @@ namespace L5Sharp.Types;
 /// user defined data types that can be used to create in memory representation of the tags for those types.
 /// </para>
 /// </remarks>
-public class StructureType : L5Sharp.LogixType
+public class StructureType : LogixType
 {
-    /// <summary>
-    /// Creates a new <see cref="StructureType"/> instance.
-    /// </summary>
-    /// <param name="name">The name of the type.</param>
-    /// <exception cref="ArgumentNullException">name is null.</exception>
-    protected StructureType(string name) : base(GenerateElement(name))
-    {
-    }
-
     /// <inheritdoc />
     public StructureType(XElement element) : base(element)
     {
     }
 
     /// <summary>
-    /// 
+    /// Creates a new <see cref="StructureType"/> with the provided name and collection of <see cref="Member"/> objects.
     /// </summary>
-    /// <param name="members"></param>
-    public StructureType(IEnumerable<KeyValuePair<string, L5Sharp.LogixType>> members) : base(GenerateElement(members))
+    /// <param name="name">The name of the structure type.</param>
+    /// <param name="members">The members of the structure type.</param>
+    /// <exception cref="ArgumentException"><c>name</c> is null or empty.</exception>
+    /// <exception cref="ArgumentNullException"><c>members</c> is null.</exception>
+    public StructureType(string name, IEnumerable<Member> members) : base(GenerateElement(name, members))
+    {
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="StructureType"/> instance.
+    /// </summary>
+    /// <param name="name">The name of the type.</param>
+    /// <exception cref="ArgumentException"><c>name</c> is null or empty.</exception>
+    protected StructureType(string name) : base(GenerateElement(name, Enumerable.Empty<Member>()))
     {
     }
 
@@ -52,14 +54,9 @@ public class StructureType : L5Sharp.LogixType
     /// This method is for users implementing custom user defined or predefined types.
     /// Use this as the getter for all members of the type.
     /// </remarks>
-    protected TLogixType GetMember<TLogixType>([CallerMemberName] string? name = null)
-        where TLogixType : L5Sharp.LogixType
-    {
-        var member = Element.Elements().SingleOrDefault(e => e.MemberName() == name) ??
-                     throw new L5XException("Could not find member name for element.", Element);
-
-        return (TLogixType)LogixType.Deserialize(member);
-    }
+    protected TLogixType GetMember<TLogixType>([CallerMemberName] string? name = null) where TLogixType : LogixType =>
+        Members.SingleOrDefault(m => m.Name == name)?.DataType.To<TLogixType>() ??
+        throw new L5XException(Element, name);
 
     /// <summary>
     /// Sets the underlying member element of the structure type with the provided logix type. 
@@ -72,18 +69,15 @@ public class StructureType : L5Sharp.LogixType
     /// This method is for users implementing custom user defined or predefined types.
     /// Use this as the setter for all members of the type. Internally this will update the L5X data structure
     /// by replacing the member with a new serialized member created from the provided name and logix type.
-    /// If the input type is <c>null</c>, this will remove the member
     /// </remarks>
-    protected void SetMember<TLogixType>(TLogixType? value, [CallerMemberName] string? name = null)
-        where TLogixType : L5Sharp.LogixType, ILogixSerializable
+    protected void SetMember<TLogixType>(TLogixType value, [CallerMemberName] string? name = null)
+        where TLogixType : LogixType
     {
         if (name is null)
             throw new ArgumentNullException(nameof(name));
 
-        if (value is null)
-            throw new ArgumentNullException(nameof(value));
-
         var member = new Member(name, value).Serialize();
+
         var target = Element.Elements().SingleOrDefault(e => e.MemberName() == name);
 
         if (target is null)
@@ -98,25 +92,20 @@ public class StructureType : L5Sharp.LogixType
     /// <summary>
     /// Generates the default backing element for the <see cref="StructureType"/>.
     /// </summary>
-    /// <param name="name">The name of the structure.</param>
+    /// <param name="name">The name of the structure type.</param>
+    /// <param name="members">The structure type's member.</param>
     /// <returns>A new <see cref="XElement"/> containing the default L5X data.</returns>
-    private static XElement GenerateElement(string name)
+    private static XElement GenerateElement(string name, IEnumerable<Member> members)
     {
+        if (string.IsNullOrEmpty(name))
+            throw new ArgumentException("Name can not be null or empty for a structure type object.");
+
+        if (members is null)
+            throw new ArgumentNullException(nameof(members), "Members can not be null for a structure type object.");
+
         var element = new XElement(L5XName.Structure);
         element.Add(new XAttribute(L5XName.DataType, name));
-        return element;
-    }
-
-    /// <summary>
-    /// Generates the default backing element for the <see cref="StructureType"/>.
-    /// </summary>
-    /// <param name="members"></param>
-    /// <returns>A new <see cref="XElement"/> containing the default L5X data.</returns>
-    private static XElement GenerateElement(IEnumerable<KeyValuePair<string, L5Sharp.LogixType>> members)
-    {
-        var element = new XElement(L5XName.Structure);
-        element.Add(new XAttribute(L5XName.DataType, nameof(StructureType)));
-        element.Add(members.Select(m => new Member(m.Key, m.Value).Serialize()));
+        element.Add(members.Select(m => m.Serialize()));
         return element;
     }
 }

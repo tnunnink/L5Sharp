@@ -1,4 +1,5 @@
-﻿using System.Xml.Linq;
+﻿using System.Collections;
+using System.Xml.Linq;
 using FluentAssertions;
 using L5Sharp.Core;
 using L5Sharp.Enums;
@@ -6,15 +7,23 @@ using L5Sharp.Types;
 using L5Sharp.Types.Atomics;
 using L5Sharp.Types.Predefined;
 
+// ReSharper disable UseObjectOrCollectionInitializer
+
 namespace L5Sharp.Tests.Types
 {
     [TestFixture]
     public class ArrayTypeTests
     {
         [Test]
-        public void Constructor_NullElements_ShouldThrowArgumentNullException()
+        public void Constructor_NullArray_ShouldThrowArgumentNullException()
         {
             FluentActions.Invoking(() => new ArrayType(((LogixType[])null)!)).Should().Throw<ArgumentNullException>();
+        }
+
+        [Test]
+        public void Constructor_ArrayOfNullTypes_ShouldThrowArgumentNullException()
+        {
+            FluentActions.Invoking(() => new ArrayType(new LogixType[5])).Should().Throw<ArgumentNullException>();
         }
 
         [Test]
@@ -25,52 +34,67 @@ namespace L5Sharp.Tests.Types
         }
 
         [Test]
-        public void Constructor_Dimensions_ShouldHaveExpected()
+        public void Constructor_ArrayOfDifferentTypes_ShouldThrowArgumentException()
         {
-            var array = new ArrayType(5);
-
-            array.Should().NotBeNull();
-            array.Name.Should().Be(string.Empty);
-            array.Dimensions.Length.Should().Be(5);
-            array.Radix.Should().Be(Radix.Null);
-            array.Family.Should().Be(DataTypeFamily.None);
-            array.Class.Should().Be(DataTypeClass.Unknown);
-
-            array[0].Should().Be(LogixType.Null);
-            array[1].Should().Be(LogixType.Null);
-            array[2].Should().Be(LogixType.Null);
-            array[3].Should().Be(LogixType.Null);
-            array[4].Should().Be(LogixType.Null);
+            FluentActions.Invoking(() => new ArrayType(new[] { new BOOL(), new DINT(), new TIMER(), LogixType.Null }))
+                .Should().Throw<ArgumentException>();
         }
 
         [Test]
-        public void Constructor_ComplexType_ShouldBeExpectedValues()
+        public void Constructor_ValidArray_ShouldNotBeNull()
         {
-            var array = new ArrayType<TIMER>(new TIMER[]
-                { new() { PRE = 1000 }, new() { PRE = 2000 }, new() { PRE = 3000 } });
+            var array = new ArrayType(new DINT[] { 1, 2, 3, 4 });
 
             array.Should().NotBeNull();
+        }
+
+        [Test]
+        public void Constructor_AtomicTypes_ShouldHaveExpectedValues()
+        {
+            var array = new ArrayType(new DINT[] { 1, 2, 3, 4 });
+
+            array.Name.Should().Be("DINT");
+            array.Dimensions.Length.Should().Be(4);
+            array.Radix.Should().Be(Radix.Decimal);
+            array.Class.Should().Be(DataTypeClass.Atomic);
+            array.Family.Should().Be(DataTypeFamily.None);
+            array.Members.Should().HaveCount(4);
+            array[0].To<DINT>().Should().Be(1);
+            array[1].To<DINT>().Should().Be(2);
+            array[2].To<DINT>().Should().Be(3);
+            array[3].To<DINT>().Should().Be(4);
+        }
+
+        [Test]
+        public void Constructor_StructureTypes_ShouldHaveExpectedValues()
+        {
+            var array = new ArrayType(new TIMER[] { new() { PRE = 1000 }, new() { PRE = 2000 }, new() { PRE = 3000 } });
+
             array.Name.Should().Be("TIMER");
             array.Dimensions.Length.Should().Be(3);
+            array.Radix.Should().Be(Radix.Null);
             array.Class.Should().Be(DataTypeClass.Predefined);
             array.Family.Should().Be(DataTypeFamily.None);
+            array.Members.Should().HaveCount(3);
+            array[0].To<TIMER>().PRE.Should().Be(1000);
+            array[1].To<TIMER>().PRE.Should().Be(2000);
+            array[2].To<TIMER>().PRE.Should().Be(3000);
         }
 
         [Test]
-        public void Constructor_OnDimensional_ShouldHaveExpectedProperties()
+        public void Constructor_StringTypes_ShouldHaveExpectedValues()
         {
-            var array = new ArrayType(new DINT[] { new(100), new(200), new(300) });
-
-            array.Should().NotBeNull();
-            array.Name.Should().Be("DINT");
+            var array = new ArrayType(new STRING[] { "Test", "Test", "Test" });
+            
+            array.Name.Should().Be("STRING");
             array.Dimensions.Length.Should().Be(3);
-            array.Radix.Should().Be(Radix.Decimal);
-            array.Family.Should().Be(DataTypeFamily.None);
-            array.Class.Should().Be(DataTypeClass.Atomic);
-
-            array[0].As<DINT>().Should().Be(100);
-            array[1].As<DINT>().Should().Be(200);
-            array[2].As<DINT>().Should().Be(300);
+            array.Radix.Should().Be(Radix.Null);
+            array.Class.Should().Be(DataTypeClass.Predefined);
+            array.Family.Should().Be(DataTypeFamily.String);
+            array.Members.Should().HaveCount(3);
+            array[0].ToString().Should().Be("Test");
+            array[1].ToString().Should().Be("Test");
+            array[2].ToString().Should().Be("Test");
         }
 
         [Test]
@@ -104,23 +128,48 @@ namespace L5Sharp.Tests.Types
         }
 
         [Test]
-        public void New_ValidArguments_ShouldBeExpected()
+        public void New_Empty_ShouldThrowArgumentException()
+        {
+            FluentActions.Invoking(() => ArrayType.New<TIMER>(0)).Should().Throw<ArgumentException>();
+        }
+
+        [Test]
+        public void New_OneDimensional_ShouldBeExpected()
         {
             var array = ArrayType.New<TIMER>(10);
 
             array.Should().NotBeNull();
             array.Should<TIMER>().NotBeEmpty();
             array.Dimensions.Length.Should().Be(10);
+            array.Should<TIMER>().AllBeOfType<TIMER>();
+        }
 
+        [Test]
+        public void New_TwoDimensional_ShouldBeExpected()
+        {
+            var array = ArrayType.New<TIMER>(new Dimensions(5, 5));
+
+            array.Should().NotBeNull();
+            array.Should<TIMER>().NotBeEmpty();
+            array.Dimensions.Length.Should().Be(25);
+            array.Should<TIMER>().AllBeOfType<TIMER>();
+        }
+
+        [Test]
+        public void New_ThreeDimensional_ShouldBeExpected()
+        {
+            var array = ArrayType.New<TIMER>(new Dimensions(2, 2, 2));
+
+            array.Should().NotBeNull();
+            array.Should<TIMER>().NotBeEmpty();
+            array.Dimensions.Length.Should().Be(8);
             array.Should<TIMER>().AllBeOfType<TIMER>();
         }
 
         [Test]
         public void GetIndex_OneDimensionalValidIndex_ShouldReturnExpected()
         {
-            var array = new DINT[] { 1, 2, 3, 4 };
-
-            var type = new ArrayType(array);
+            ArrayType type = new DINT[] { 1, 2, 3, 4 };
 
             var index = type[2];
 
@@ -128,19 +177,18 @@ namespace L5Sharp.Tests.Types
         }
 
         [Test]
-        public void GetIndex_OneDimensionalInValidIndex_ShouldThrowException()
+        public void GetIndex_OneDimensionalInValidIndex_ShouldThrowArgumentOutOfRangeException()
         {
-            var array = new DINT[] { 1, 2, 3, 4 };
+            ArrayType array = new DINT[] { 1, 2, 3, 4 };
 
-            var type = new ArrayType(array);
-
-            FluentActions.Invoking(() => type[5]).Should().Throw<ArgumentOutOfRangeException>();
+            FluentActions.Invoking(() => array[5]).Should().Throw<ArgumentOutOfRangeException>();
         }
+
 
         [Test]
         public void SetIndex_OneDimensionalValidIndex_ShouldReturnExpected()
         {
-            var type = new ArrayType(new DINT[] { 1, 2, 3, 4 });
+            ArrayType type = new DINT[] { 1, 2, 3, 4 };
 
             type[2] = 100;
 
@@ -148,57 +196,11 @@ namespace L5Sharp.Tests.Types
         }
 
         [Test]
-        public void SetIndex_OneDimensionalInValidIndex_ShouldThrowException()
+        public void SetIndex_OneDimensionalInValidIndex_ShouldThrowArgumentOutOfRangeException()
         {
-            var array = new DINT[] { 1, 2, 3, 4 };
+            ArrayType array = new DINT[] { 1, 2, 3, 4 };
 
-            var type = new ArrayType(array);
-
-            FluentActions.Invoking(() => type[5] = 1).Should().Throw<ArgumentOutOfRangeException>();
-        }
-
-        [Test]
-        public void SetIndex_InvalidType_ShouldThrowArgumentException()
-        {
-            var array = new ArrayType(new DINT[] { 1, 2, 3, 4 });
-
-            FluentActions.Invoking(() => array[0] = new TIMER()).Should().Throw<ArgumentException>();
-        }
-
-        [Test]
-        public void SetIndex_ComplexTypeArray_ShouldThrowArgumentException()
-        {
-            var array = new ArrayType(new TIMER[] { new(), new(), new(), new() });
-
-            array[0] = new TIMER { PRE = 5000 };
-
-            array[0].To<TIMER>().PRE.Should().Be(new DINT(5000));
-        }
-
-        [Test]
-        public void SetIndex_UninitializedArrayToAtomicValue_ShouldInitializeArrayValues()
-        {
-            var array = new ArrayType(10);
-
-            array[0] = 10;
-
-            array.Name.Should().Be(nameof(DINT));
-            array.Class.Should().Be(DataTypeClass.Atomic);
-            array.Radix.Should().Be(Radix.Decimal);
-            array[0].As<DINT>().Should().Be(10);
-        }
-
-        [Test]
-        public void SetIndex_UninitializedArrayToStructureType_ShouldInitializeArrayValues()
-        {
-            var array = new ArrayType(10);
-
-            array[1] = new TIMER();
-
-            array.Name.Should().Be(nameof(TIMER));
-            array.Dimensions.Length.Should().Be(10);
-            array.Class.Should().Be(DataTypeClass.Predefined);
-            array.Radix.Should().Be(Radix.Null);
+            FluentActions.Invoking(() => array[5] = 1).Should().Throw<ArgumentOutOfRangeException>();
         }
 
         [Test]
@@ -220,7 +222,7 @@ namespace L5Sharp.Tests.Types
         }
 
         [Test]
-        public void GetIndex_TwoDimensionalInValidIndex_ShouldThrowException()
+        public void GetIndex_TwoDimensionalInValidIndex_ShouldThrowArgumentOutOfRangeException()
         {
             var array = new DINT[,]
             {
@@ -234,7 +236,7 @@ namespace L5Sharp.Tests.Types
 
             FluentActions.Invoking(() => type[1, 2]).Should().Throw<ArgumentOutOfRangeException>();
         }
-        
+
         [Test]
         public void SetIndex_TwoDimensionalValidIndex_ShouldReturnExpected()
         {
@@ -245,7 +247,7 @@ namespace L5Sharp.Tests.Types
                 { 5, 6 },
                 { 7, 8 }
             };
-            
+
             var type = new ArrayType(array);
 
             type[1, 1] = 400;
@@ -254,7 +256,7 @@ namespace L5Sharp.Tests.Types
         }
 
         [Test]
-        public void SetIndex_TwoDimensionalInValidIndex_ShouldThrowException()
+        public void SetIndex_TwoDimensionalInValidIndex_ShouldThrowArgumentOutOfRangeException()
         {
             var array = new DINT[,]
             {
@@ -300,13 +302,100 @@ namespace L5Sharp.Tests.Types
         }
 
         [Test]
-        public void SetIndex_InvalidAtomic_NotSure()
+        public void SetIndex_ThreeDimensionalValidIndex_ShouldReturnExpected()
         {
-            var array = new ArrayType(new SINT[] {1, 2, 3, 4});
+            var array = new DINT[,,]
+            {
+                { { 1, 2, 3 }, { 4, 5, 6 } },
+                { { 7, 8, 9 }, { 10, 11, 12 } }
+            };
 
-            array[0] = 6;
+            var type = new ArrayType(array);
+
+            type[0, 1, 2] = 500;
+
+            type[0, 1, 2].As<DINT>().Should().Be(500);
+        }
+
+        [Test]
+        public void SetIndex_ThreeDimensionalInValidIndex_ShouldThrowArgumentOutOfRangeException()
+        {
+            var array = new DINT[,,]
+            {
+                { { 1, 2, 3 }, { 4, 5, 6 } },
+                { { 7, 8, 9 }, { 10, 11, 12 } }
+            };
+
+            var type = new ArrayType(array);
+
+            FluentActions.Invoking(() => type[2, 1, 2] = 1).Should().Throw<ArgumentOutOfRangeException>();
+        }
+
+        [Test]
+        public void SetIndex_InvalidType_ShouldThrowArgumentException()
+        {
+            ArrayType array = new DINT[] { 1, 2, 3, 4 };
+
+            FluentActions.Invoking(() => array[0] = new TIMER()).Should().Throw<ArgumentException>();
+        }
+
+        [Test]
+        public void SetIndex_DifferentAtomicType_ShouldHaveExpectedValues()
+        {
+            ArrayType array = new DINT[] { 1, 2, 3, 4 };
+
+            array[0] = new INT(10);
+
+            array[0].Should().BeOfType<DINT>();
+            array[0].As<DINT>().Should().Be(10);
+        }
+
+        [Test]
+        public void SetIndex_DifferentStructureType_ShouldThrowArgumentException()
+        {
+            ArrayType array = new TIMER[] { new(), new(), new(), new() };
+
+            FluentActions.Invoking(() => array[0] = new COUNTER { PRE = 5 }).Should().Throw<ArgumentException>();
+        }
+
+        [Test]
+        public void SetIndex_InvalidAtomicValue_NotSure()
+        {
+            var array = new ArrayType(new SINT[] { 1, 2, 3, 4 });
+
+            array[0] = 1000;
 
             array[0].As<SINT>().Should().Be(6);
+        }
+
+        [Test]
+        public void ImplicitOperator_OneDimensional_ShouldNotBeNull()
+        {
+            ArrayType array = new DINT[] { 1, 2, 3, 4 };
+
+            array.Should().NotBeNull();
+            array.Dimensions.Length.Should().Be(4);
+            array.Dimensions.Rank.Should().Be(1);
+        }
+
+        [Test]
+        public void ImplicitOperator_TwoDimensional_ShouldNotBeNull()
+        {
+            ArrayType array = new DINT[,] { { 1, 2 }, { 3, 4 } };
+
+            array.Should().NotBeNull();
+            array.Dimensions.Length.Should().Be(4);
+            array.Dimensions.Rank.Should().Be(2);
+        }
+
+        [Test]
+        public void ImplicitOperator_ThreeDimensional_ShouldNotBeNull()
+        {
+            ArrayType array = new DINT[,,] { { { 1, 2 }, { 3, 4 } }, { { 5, 6 }, { 7, 8 } } };
+
+            array.Should().NotBeNull();
+            array.Dimensions.Length.Should().Be(8);
+            array.Dimensions.Rank.Should().Be(3);
         }
 
         [Test]
@@ -339,47 +428,13 @@ namespace L5Sharp.Tests.Types
 
             enumerator.Should().NotBeNull();
         }
-
+        
         [Test]
-        public void GetIndex_ComplexTypeArray_ShouldReturnExpectedValue()
+        public void GetEnumerator_AsEnumerable_ShouldBeNull()
         {
-            var array = new ArrayType<TIMER>(new TIMER[]
-                { new() { PRE = 1000 }, new() { PRE = 2000 }, new() { PRE = 3000 } });
+            var array = (IEnumerable)new ArrayType(new DINT[] { new(100), new(200), new(300) });
 
-            var timer = array[1];
-
-            timer.Should().NotBeNull();
-            timer.PRE.Should().Be(2000);
-        }
-
-        [Test]
-        public void ToType_ValidType_ShouldNotBeNull()
-        {
-            var array = new ArrayType(new DINT[] { 1, 2, 3, 4 });
-
-            var casted = array.ToType<DINT>();
-            casted.Should().NotBeNull();
-            casted.Dimensions.Length.Should().Be(4);
-
-            var element = casted[0];
-            element.Should().NotBeNull();
-            element.Should().BeOfType<DINT>();
-        }
-
-        [Test]
-        public void ToString_WhenCalled_ShouldBeTypeName()
-        {
-            var array = new ArrayType(new DINT[] { 1, 2, 3, 4, });
-
-            array.ToString().Should().Be("DINT");
-        }
-
-        [Test]
-        public void GetEnumerator_WhenCalled_ShouldBeTypeName()
-        {
-            var array = new ArrayType(new DINT[] { 1, 2, 3, 4, });
-
-            using var enumerator = array.GetEnumerator();
+            var enumerator = array.GetEnumerator();
 
             enumerator.Should().NotBeNull();
         }
@@ -387,13 +442,54 @@ namespace L5Sharp.Tests.Types
         [Test]
         public void Iterate_WhenPerformed_AllShouldNotBeNull()
         {
-            var array = new ArrayType(10);
+            var array = new ArrayType(new DINT[] { 1, 2, 3, 4 });
 
             foreach (var type in array)
             {
                 type.Should().NotBeNull();
-                type.Should().BeOfType<NullType>();
+                type.Should().BeOfType<DINT>();
             }
+        }
+
+        [Test]
+        public void AsArray_ValidType_ShouldNotBeNull()
+        {
+            var array = new ArrayType(new DINT[] { 1, 2, 3, 4 });
+
+            var casted = array.AsArray<DINT>();
+            casted.Should().NotBeNull();
+            casted.Dimensions.Length.Should().Be(4);
+
+            var element = casted[0];
+            element.Should().NotBeNull();
+            element.Should().BeOfType<DINT>();
+        }
+        
+        [Test]
+        public void AsArray_InvalidType_ShouldThrowInvalidCastException()
+        {
+            var array = new ArrayType(new DINT[] { 1, 2, 3, 4 });
+
+            FluentActions.Invoking(() => array.AsArray<INT>()) .Should().Throw<InvalidCastException>();
+        }
+        
+        [Test]
+        public void AsArray_InvalidTypeUp_ShouldThrowInvalidCastException()
+        {
+            var array = new ArrayType(new INT[] { 1, 2, 3, 4 });
+
+            FluentActions.Invoking(() => array.AsArray<DINT>()) .Should().Throw<InvalidCastException>();
+        }
+        
+        [Test]
+        public void AsArray_BaseTypeOfStructure_ShouldWork()
+        {
+            var array = new ArrayType(new TIMER[] { new(), new(), new() });
+
+            var casted = array.AsArray<StructureType>();
+
+            casted.Should().NotBeNull();
+            casted.Should<StructureType>().AllBeOfType<TIMER>();
         }
 
         [Test]

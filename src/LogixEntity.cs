@@ -23,26 +23,19 @@ public abstract class LogixEntity<TEntity> : ILogixSerializable where TEntity : 
     protected readonly XElement Element;
 
     /// <summary>
-    /// A default <see cref="XElement"/> to initialize <see cref="Element"/> when using the default parameterless
-    /// constructor. This ensures we generate some stand in element to update as properties are set or updated. This
-    /// property simply points to the <see cref="DefaultElement"/> method which can be overriden so that deriving classes
-    /// can further define what the default element should look like.
-    /// </summary>
-    private XElement Default => DefaultElement();
-
-    /// <summary>
-    /// Creates a new default <see cref="LogixEntity{TEntity}"/> initialized with the <see cref="XElement"/> returned
-    /// by <see cref="DefaultElement"/>.
+    /// Creates a new default <see cref="LogixEntity{TEntity}"/> initialized with an <see cref="XElement"/> having the
+    /// <c>LogixTypeName</c> of the entity. 
     /// </summary>
     protected LogixEntity()
     {
-        Element = Default;
+        Element = new XElement(typeof(TEntity).LogixTypeName());
     }
 
     /// <summary>
     /// Initialized a new <see cref="LogixEntity{TEntity}"/> with the provided <see cref="XElement"/>
     /// </summary>
     /// <param name="element">The L5X <see cref="XElement"/> to initialize the entity with.</param>
+    /// <exception cref="ArgumentNullException"><c>element</c> is null.</exception>
     protected LogixEntity(XElement element)
     {
         Element = element ?? throw new ArgumentNullException(nameof(element));
@@ -60,13 +53,7 @@ public abstract class LogixEntity<TEntity> : ILogixSerializable where TEntity : 
     /// <returns>A new instance of the specified entity type with the same property values.</returns>
     /// <exception cref="InvalidOperationException">The object being cloned does not have a constructor accepting a single <see cref="XElement"/> argument.</exception>
     /// <remarks>This method will simply deserialize a new instance using the current underlying element data.</remarks>
-    public virtual TEntity Clone() => LogixSerializer.Deserialize<TEntity>(Element);
-
-    /// <summary>
-    /// Generates a default <see cref="XElement"/> to initialize a default instance of an entity.
-    /// </summary>
-    /// <returns>A <see cref="XElement"/> with default attribute values and elements.</returns>
-    protected virtual XElement DefaultElement() => new(typeof(TEntity).LogixTypeName());
+    public TEntity Clone() => (TEntity)LogixSerializer.Deserialize(GetType(), Element);
 
     /// <summary>
     /// Gets the value of the specified attribute name from the element parsed as the specified generic type parameter if it exists.

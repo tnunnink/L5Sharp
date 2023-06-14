@@ -1,4 +1,6 @@
-﻿using System.Xml.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Xml.Linq;
 using L5Sharp.Enums;
 using L5Sharp.Types.Atomics;
 
@@ -14,7 +16,7 @@ public sealed class ALARM_ANALOG : StructureType
     /// <summary>
     /// Creates a new <see cref="ALARM_ANALOG"/> data type instance.
     /// </summary>
-    public ALARM_ANALOG() : base(nameof(ALARM_ANALOG))
+    public ALARM_ANALOG() : base(new XElement(L5XName.AlarmAnalogParameters))
     {
         EnableIn = new BOOL();
         In = new REAL();
@@ -145,17 +147,24 @@ public sealed class ALARM_ANALOG : StructureType
     public ALARM_ANALOG(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    public override string Name => nameof(ALARM_ANALOG);
 
     /// <inheritdoc />
     public override DataTypeClass Class => DataTypeClass.Predefined;
+
+    /// <inheritdoc />
+    public override IEnumerable<Member> Members =>
+        Element.Attributes().Select(a => new Member(a.Name.ToString(), Atomic.Parse(a.Value)));
 
     /// <summary>
     /// Gets the <see cref="EnableIn"/> member of the <see cref="ALARM_ANALOG"/> data type.
     /// </summary>
     public BOOL EnableIn
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -172,8 +181,8 @@ public sealed class ALARM_ANALOG : StructureType
     /// </summary>
     public BOOL InFault
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -181,8 +190,8 @@ public sealed class ALARM_ANALOG : StructureType
     /// </summary>
     public BOOL HHEnabled
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -190,8 +199,8 @@ public sealed class ALARM_ANALOG : StructureType
     /// </summary>
     public BOOL HEnabled
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -199,8 +208,8 @@ public sealed class ALARM_ANALOG : StructureType
     /// </summary>
     public BOOL LEnabled
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -208,8 +217,8 @@ public sealed class ALARM_ANALOG : StructureType
     /// </summary>
     public BOOL LLEnabled
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -217,8 +226,8 @@ public sealed class ALARM_ANALOG : StructureType
     /// </summary>
     public BOOL AckRequired
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -226,8 +235,8 @@ public sealed class ALARM_ANALOG : StructureType
     /// </summary>
     public BOOL ProgAckAll
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -235,8 +244,8 @@ public sealed class ALARM_ANALOG : StructureType
     /// </summary>
     public BOOL OperAckAll
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -244,8 +253,8 @@ public sealed class ALARM_ANALOG : StructureType
     /// </summary>
     public BOOL HHProgAck
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -253,8 +262,8 @@ public sealed class ALARM_ANALOG : StructureType
     /// </summary>
     public BOOL HHOperAck
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -262,8 +271,8 @@ public sealed class ALARM_ANALOG : StructureType
     /// </summary>
     public BOOL HProgAck
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -271,8 +280,8 @@ public sealed class ALARM_ANALOG : StructureType
     /// </summary>
     public BOOL HOperAck
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -280,8 +289,8 @@ public sealed class ALARM_ANALOG : StructureType
     /// </summary>
     public BOOL LProgAck
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -289,8 +298,8 @@ public sealed class ALARM_ANALOG : StructureType
     /// </summary>
     public BOOL LOperAck
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -298,8 +307,8 @@ public sealed class ALARM_ANALOG : StructureType
     /// </summary>
     public BOOL LLProgAck
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -307,8 +316,8 @@ public sealed class ALARM_ANALOG : StructureType
     /// </summary>
     public BOOL LLOperAck
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -316,8 +325,8 @@ public sealed class ALARM_ANALOG : StructureType
     /// </summary>
     public BOOL ROCPosProgAck
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -325,8 +334,8 @@ public sealed class ALARM_ANALOG : StructureType
     /// </summary>
     public BOOL ROCPosOperAck
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -334,8 +343,8 @@ public sealed class ALARM_ANALOG : StructureType
     /// </summary>
     public BOOL ROCNegProgAck
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -343,8 +352,8 @@ public sealed class ALARM_ANALOG : StructureType
     /// </summary>
     public BOOL ROCNegOperAck
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -352,8 +361,8 @@ public sealed class ALARM_ANALOG : StructureType
     /// </summary>
     public BOOL ProgSuppress
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -361,8 +370,8 @@ public sealed class ALARM_ANALOG : StructureType
     /// </summary>
     public BOOL OperSuppress
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -370,8 +379,8 @@ public sealed class ALARM_ANALOG : StructureType
     /// </summary>
     public BOOL ProgUnsuppress
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -379,8 +388,8 @@ public sealed class ALARM_ANALOG : StructureType
     /// </summary>
     public BOOL OperUnsuppress
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -388,8 +397,8 @@ public sealed class ALARM_ANALOG : StructureType
     /// </summary>
     public BOOL HHOperShelve
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -397,8 +406,8 @@ public sealed class ALARM_ANALOG : StructureType
     /// </summary>
     public BOOL HOperShelve
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -406,8 +415,8 @@ public sealed class ALARM_ANALOG : StructureType
     /// </summary>
     public BOOL LOperShelve
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -415,8 +424,8 @@ public sealed class ALARM_ANALOG : StructureType
     /// </summary>
     public BOOL LLOperShelve
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -424,8 +433,8 @@ public sealed class ALARM_ANALOG : StructureType
     /// </summary>
     public BOOL ROCPosOperShelve
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -433,8 +442,8 @@ public sealed class ALARM_ANALOG : StructureType
     /// </summary>
     public BOOL ROCNegOperShelve
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -442,8 +451,8 @@ public sealed class ALARM_ANALOG : StructureType
     /// </summary>
     public BOOL ProgUnshelveAll
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -451,8 +460,8 @@ public sealed class ALARM_ANALOG : StructureType
     /// </summary>
     public BOOL HHOperUnshelve
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -460,8 +469,8 @@ public sealed class ALARM_ANALOG : StructureType
     /// </summary>
     public BOOL HOperUnshelve
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -469,8 +478,8 @@ public sealed class ALARM_ANALOG : StructureType
     /// </summary>
     public BOOL LOperUnshelve
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -478,8 +487,8 @@ public sealed class ALARM_ANALOG : StructureType
     /// </summary>
     public BOOL LLOperUnshelve
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -487,8 +496,8 @@ public sealed class ALARM_ANALOG : StructureType
     /// </summary>
     public BOOL ROCPosOperUnshelve
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -496,8 +505,8 @@ public sealed class ALARM_ANALOG : StructureType
     /// </summary>
     public BOOL ROCNegOperUnshelve
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -505,8 +514,8 @@ public sealed class ALARM_ANALOG : StructureType
     /// </summary>
     public BOOL ProgDisable
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -514,8 +523,8 @@ public sealed class ALARM_ANALOG : StructureType
     /// </summary>
     public BOOL OperDisable
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -523,8 +532,8 @@ public sealed class ALARM_ANALOG : StructureType
     /// </summary>
     public BOOL ProgEnable
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -532,8 +541,8 @@ public sealed class ALARM_ANALOG : StructureType
     /// </summary>
     public BOOL OperEnable
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -541,8 +550,8 @@ public sealed class ALARM_ANALOG : StructureType
     /// </summary>
     public BOOL AlarmCountReset
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -550,8 +559,8 @@ public sealed class ALARM_ANALOG : StructureType
     /// </summary>
     public BOOL HHMinDurationEnable
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -559,8 +568,8 @@ public sealed class ALARM_ANALOG : StructureType
     /// </summary>
     public BOOL HMinDurationEnable
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -568,8 +577,8 @@ public sealed class ALARM_ANALOG : StructureType
     /// </summary>
     public BOOL LMinDurationEnable
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -577,8 +586,8 @@ public sealed class ALARM_ANALOG : StructureType
     /// </summary>
     public BOOL LLMinDurationEnable
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -739,8 +748,8 @@ public sealed class ALARM_ANALOG : StructureType
     /// </summary>
     public BOOL EnableOut
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -748,8 +757,8 @@ public sealed class ALARM_ANALOG : StructureType
     /// </summary>
     public BOOL InAlarm
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -757,8 +766,8 @@ public sealed class ALARM_ANALOG : StructureType
     /// </summary>
     public BOOL AnyInAlarmUnack
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -766,8 +775,8 @@ public sealed class ALARM_ANALOG : StructureType
     /// </summary>
     public BOOL HHInAlarm
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -775,8 +784,8 @@ public sealed class ALARM_ANALOG : StructureType
     /// </summary>
     public BOOL HInAlarm
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -784,8 +793,8 @@ public sealed class ALARM_ANALOG : StructureType
     /// </summary>
     public BOOL LInAlarm
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -793,8 +802,8 @@ public sealed class ALARM_ANALOG : StructureType
     /// </summary>
     public BOOL LLInAlarm
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -802,8 +811,8 @@ public sealed class ALARM_ANALOG : StructureType
     /// </summary>
     public BOOL ROCPosInAlarm
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -811,8 +820,8 @@ public sealed class ALARM_ANALOG : StructureType
     /// </summary>
     public BOOL ROCNegInAlarm
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -829,8 +838,8 @@ public sealed class ALARM_ANALOG : StructureType
     /// </summary>
     public BOOL HHAcked
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -838,8 +847,8 @@ public sealed class ALARM_ANALOG : StructureType
     /// </summary>
     public BOOL HAcked
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -847,8 +856,8 @@ public sealed class ALARM_ANALOG : StructureType
     /// </summary>
     public BOOL LAcked
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -856,8 +865,8 @@ public sealed class ALARM_ANALOG : StructureType
     /// </summary>
     public BOOL LLAcked
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -865,8 +874,8 @@ public sealed class ALARM_ANALOG : StructureType
     /// </summary>
     public BOOL ROCPosAcked
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -874,8 +883,8 @@ public sealed class ALARM_ANALOG : StructureType
     /// </summary>
     public BOOL ROCNegAcked
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -883,8 +892,8 @@ public sealed class ALARM_ANALOG : StructureType
     /// </summary>
     public BOOL HHInAlarmUnack
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -892,8 +901,8 @@ public sealed class ALARM_ANALOG : StructureType
     /// </summary>
     public BOOL HInAlarmUnack
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -901,8 +910,8 @@ public sealed class ALARM_ANALOG : StructureType
     /// </summary>
     public BOOL LInAlarmUnack
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -910,8 +919,8 @@ public sealed class ALARM_ANALOG : StructureType
     /// </summary>
     public BOOL LLInAlarmUnack
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -919,8 +928,8 @@ public sealed class ALARM_ANALOG : StructureType
     /// </summary>
     public BOOL ROCPosInAlarmUnack
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -928,8 +937,8 @@ public sealed class ALARM_ANALOG : StructureType
     /// </summary>
     public BOOL ROCNegInAlarmUnack
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -937,8 +946,8 @@ public sealed class ALARM_ANALOG : StructureType
     /// </summary>
     public BOOL Suppressed
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -946,8 +955,8 @@ public sealed class ALARM_ANALOG : StructureType
     /// </summary>
     public BOOL HHShelved
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -955,8 +964,8 @@ public sealed class ALARM_ANALOG : StructureType
     /// </summary>
     public BOOL HShelved
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -964,8 +973,8 @@ public sealed class ALARM_ANALOG : StructureType
     /// </summary>
     public BOOL LShelved
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -973,8 +982,8 @@ public sealed class ALARM_ANALOG : StructureType
     /// </summary>
     public BOOL LLShelved
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -982,8 +991,8 @@ public sealed class ALARM_ANALOG : StructureType
     /// </summary>
     public BOOL ROCPosShelved
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -991,8 +1000,8 @@ public sealed class ALARM_ANALOG : StructureType
     /// </summary>
     public BOOL ROCNegShelved
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -1000,8 +1009,8 @@ public sealed class ALARM_ANALOG : StructureType
     /// </summary>
     public BOOL Disabled
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -1009,8 +1018,8 @@ public sealed class ALARM_ANALOG : StructureType
     /// </summary>
     public BOOL Commissioned
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -1189,8 +1198,8 @@ public sealed class ALARM_ANALOG : StructureType
     /// </summary>
     public BOOL InstructFault
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -1198,8 +1207,8 @@ public sealed class ALARM_ANALOG : StructureType
     /// </summary>
     public BOOL InFaulted
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -1207,8 +1216,8 @@ public sealed class ALARM_ANALOG : StructureType
     /// </summary>
     public BOOL SeverityInv
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -1216,8 +1225,8 @@ public sealed class ALARM_ANALOG : StructureType
     /// </summary>
     public BOOL AlarmLimitsInv
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -1225,8 +1234,8 @@ public sealed class ALARM_ANALOG : StructureType
     /// </summary>
     public BOOL DeadbandInv
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -1234,8 +1243,8 @@ public sealed class ALARM_ANALOG : StructureType
     /// </summary>
     public BOOL ROCPosLimitInv
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -1243,8 +1252,8 @@ public sealed class ALARM_ANALOG : StructureType
     /// </summary>
     public BOOL ROCNegLimitInv
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -1252,7 +1261,7 @@ public sealed class ALARM_ANALOG : StructureType
     /// </summary>
     public BOOL ROCPeriodInv
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 }

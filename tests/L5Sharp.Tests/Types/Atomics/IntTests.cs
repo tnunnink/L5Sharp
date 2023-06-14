@@ -353,14 +353,6 @@ namespace L5Sharp.Tests.Types.Atomics
         }
 
         [Test]
-        public void ToString_WhenCalled_ShouldBeName()
-        {
-            var type = new INT();
-
-            type.ToString().Should().Be(type.ToString());
-        }
-
-        [Test]
         public void CompareTo_Same_ShouldBeZero()
         {
             var type = new INT();
@@ -411,6 +403,74 @@ namespace L5Sharp.Tests.Types.Atomics
             var bitsEqualToOne = members.Where(m => m.DataType.As<BOOL>() == true).ToList();
 
             bitsEqualToOne.Should().NotBeEmpty();
+        }
+        
+        [Test]
+        public void ToBitArray_WhenCalled_ReturnsExpected()
+        {
+            var type = new DINT();
+
+            var bits = type.ToBitArray();
+
+            bits.Should().NotBeNull();
+            bits.Length.Should().Be(32);
+
+            foreach (bool bit in bits)
+            {
+                bit.Should().BeFalse();
+            }
+        }
+
+        [Test]
+        public void ToBitArray_PositiveValue_ReturnsExpected()
+        {
+            var type = new INT(1);
+
+            var bits = type.ToBitArray();
+
+            bits.Should().NotBeNull();
+            bits[0].Should().BeTrue();
+        }
+
+        [Test]
+        public void ToBytes_WhenCalled_ReturnsExpected()
+        {
+            var expected = BitConverter.GetBytes(_random);
+            var type = new INT(_random);
+
+            var bytes = type.ToBytes();
+
+            CollectionAssert.AreEqual(bytes, expected);
+        }
+
+        [Test]
+        public Task Serialize_Default_ShouldBeValid()
+        {
+            var type = new INT();
+
+            var xml = type.Serialize().ToString();
+
+            return Verify(xml);
+        }
+
+        [Test]
+        public Task Serialize_Value_ShouldBeValid()
+        {
+            var type = new INT(123);
+
+            var xml = type.Serialize().ToString();
+
+            return Verify(xml);
+        }
+        
+        [Test]
+        public Task Serialize_ValueAndRadix_ShouldBeValid()
+        {
+            var type = new INT(123, Radix.Hex);
+
+            var xml = type.Serialize().ToString();
+
+            return Verify(xml);
         }
     }
 }

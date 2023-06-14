@@ -1,4 +1,6 @@
-﻿using System.Xml.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Xml.Linq;
 using L5Sharp.Enums;
 using L5Sharp.Types.Atomics;
 
@@ -14,7 +16,7 @@ public sealed class ALARM_DIGITAL : StructureType
     /// <summary>
     /// Creates a new <see cref="ALARM_DIGITAL"/> data type instance.
     /// </summary>
-    public ALARM_DIGITAL() : base(nameof(ALARM_DIGITAL))
+    public ALARM_DIGITAL() : base(new XElement(L5XName.AlarmDigitalParameters))
     {
         EnableIn = new BOOL();
         In = new BOOL();
@@ -72,15 +74,22 @@ public sealed class ALARM_DIGITAL : StructureType
     }
 
     /// <inheritdoc />
+    public override string Name => nameof(ALARM_DIGITAL);
+
+    /// <inheritdoc />
     public override DataTypeClass Class => DataTypeClass.Predefined;
+    
+    /// <inheritdoc />
+    public override IEnumerable<Member> Members =>
+        Element.Attributes().Select(a => new Member(a.Name.ToString(), Atomic.Parse(a.Value)));
 
     /// <summary>
     /// Gets the <see cref="EnableIn"/> member of the <see cref="ALARM_DIGITAL"/> data type.
     /// </summary>
     public BOOL EnableIn
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -88,8 +97,8 @@ public sealed class ALARM_DIGITAL : StructureType
     /// </summary>
     public BOOL In
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -97,8 +106,8 @@ public sealed class ALARM_DIGITAL : StructureType
     /// </summary>
     public BOOL InFault
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -106,8 +115,8 @@ public sealed class ALARM_DIGITAL : StructureType
     /// </summary>
     public BOOL Condition
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -115,8 +124,8 @@ public sealed class ALARM_DIGITAL : StructureType
     /// </summary>
     public BOOL AckRequired
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -124,8 +133,8 @@ public sealed class ALARM_DIGITAL : StructureType
     /// </summary>
     public BOOL Latched
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -133,8 +142,8 @@ public sealed class ALARM_DIGITAL : StructureType
     /// </summary>
     public BOOL ProgAck
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -142,8 +151,8 @@ public sealed class ALARM_DIGITAL : StructureType
     /// </summary>
     public BOOL OperAck
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -151,8 +160,8 @@ public sealed class ALARM_DIGITAL : StructureType
     /// </summary>
     public BOOL ProgReset
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -160,8 +169,8 @@ public sealed class ALARM_DIGITAL : StructureType
     /// </summary>
     public BOOL OperReset
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -169,8 +178,8 @@ public sealed class ALARM_DIGITAL : StructureType
     /// </summary>
     public BOOL ProgSuppress
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -178,8 +187,8 @@ public sealed class ALARM_DIGITAL : StructureType
     /// </summary>
     public BOOL OperSuppress
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -187,8 +196,8 @@ public sealed class ALARM_DIGITAL : StructureType
     /// </summary>
     public BOOL ProgUnsuppress
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -196,8 +205,8 @@ public sealed class ALARM_DIGITAL : StructureType
     /// </summary>
     public BOOL OperUnsuppress
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -205,8 +214,8 @@ public sealed class ALARM_DIGITAL : StructureType
     /// </summary>
     public BOOL OperShelve
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -214,8 +223,8 @@ public sealed class ALARM_DIGITAL : StructureType
     /// </summary>
     public BOOL ProgUnshelve
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -223,8 +232,8 @@ public sealed class ALARM_DIGITAL : StructureType
     /// </summary>
     public BOOL OperUnshelve
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -232,8 +241,8 @@ public sealed class ALARM_DIGITAL : StructureType
     /// </summary>
     public BOOL ProgDisable
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -241,8 +250,8 @@ public sealed class ALARM_DIGITAL : StructureType
     /// </summary>
     public BOOL OperDisable
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -250,8 +259,8 @@ public sealed class ALARM_DIGITAL : StructureType
     /// </summary>
     public BOOL ProgEnable
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -259,8 +268,8 @@ public sealed class ALARM_DIGITAL : StructureType
     /// </summary>
     public BOOL OperEnable
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -268,8 +277,8 @@ public sealed class ALARM_DIGITAL : StructureType
     /// </summary>
     public BOOL AlarmCountReset
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -277,8 +286,8 @@ public sealed class ALARM_DIGITAL : StructureType
     /// </summary>
     public BOOL UseProgTime
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -331,8 +340,8 @@ public sealed class ALARM_DIGITAL : StructureType
     /// </summary>
     public BOOL EnableOut
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -340,8 +349,8 @@ public sealed class ALARM_DIGITAL : StructureType
     /// </summary>
     public BOOL InAlarm
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -349,8 +358,8 @@ public sealed class ALARM_DIGITAL : StructureType
     /// </summary>
     public BOOL Acked
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -358,8 +367,8 @@ public sealed class ALARM_DIGITAL : StructureType
     /// </summary>
     public BOOL InAlarmUnack
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -367,8 +376,8 @@ public sealed class ALARM_DIGITAL : StructureType
     /// </summary>
     public BOOL Suppressed
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -376,8 +385,8 @@ public sealed class ALARM_DIGITAL : StructureType
     /// </summary>
     public BOOL Shelved
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -385,8 +394,8 @@ public sealed class ALARM_DIGITAL : StructureType
     /// </summary>
     public BOOL Disabled
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -394,8 +403,8 @@ public sealed class ALARM_DIGITAL : StructureType
     /// </summary>
     public BOOL Commissioned
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -484,8 +493,8 @@ public sealed class ALARM_DIGITAL : StructureType
     /// </summary>
     public BOOL InstructFault
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -493,8 +502,8 @@ public sealed class ALARM_DIGITAL : StructureType
     /// </summary>
     public BOOL InFaulted
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 
     /// <summary>
@@ -502,7 +511,7 @@ public sealed class ALARM_DIGITAL : StructureType
     /// </summary>
     public BOOL SeverityInv
     {
-        get => GetValue<BOOL>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetValue<bool>();
+        set => SetValue<bool>(value);
     }
 }

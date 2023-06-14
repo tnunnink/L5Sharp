@@ -2,7 +2,7 @@
 using L5Sharp.Enums;
 using L5Sharp.Types.Predefined;
 
-namespace L5Sharp.Tests.Types
+namespace L5Sharp.Tests.Types.Predefined
 {
     [TestFixture]
     public class TimerTests

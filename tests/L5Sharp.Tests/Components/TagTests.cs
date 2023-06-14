@@ -468,7 +468,7 @@ namespace L5Sharp.Tests.Components
             };
 
             var tmr = tag.Member<TIMER>("Tmr");
-            
+
             tmr?.Value.PRE.Should().Be(0);
         }
     }

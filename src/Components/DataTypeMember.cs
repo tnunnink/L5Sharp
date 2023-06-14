@@ -1,5 +1,4 @@
-﻿using System;
-using System.Xml.Linq;
+﻿using System.Xml.Linq;
 using System.Xml.Serialization;
 using L5Sharp.Core;
 using L5Sharp.Enums;
@@ -26,6 +25,7 @@ public class DataTypeMember : LogixComponent<DataTypeMember>
         Dimension = Dimensions.Empty;
         Radix = Radix.Null;
         ExternalAccess = ExternalAccess.ReadWrite;
+        Hidden = false;
     }
 
     /// <summary>
@@ -46,8 +46,7 @@ public class DataTypeMember : LogixComponent<DataTypeMember>
     /// </value>
     public string DataType
     {
-        get => GetValue<string>() ??
-               throw new InvalidOperationException($"Required property {nameof(DataType)} does not exist.");
+        get => GetValue<string>() ?? throw new L5XException(Element);
         set => SetValue(value);
     }
 
@@ -92,6 +91,37 @@ public class DataTypeMember : LogixComponent<DataTypeMember>
         set => SetValue(value);
     }
 
-    /// <inheritdoc />
-    public override DataTypeMember Clone() => new(Serialize());
+    /// <summary>
+    /// An flag indicating whether the member is a hidden backing member for another boolean member of the data type. 
+    /// </summary>
+    /// <value><c>true</c> if member is a hidden member of the type, <c>false</c> if not, and <c>null</c> if the attribute
+    /// does not exist for the underlying element.</value>
+    public bool? Hidden
+    {
+        get => GetValue<bool>();
+        set => SetValue(value);
+    }
+
+    /// <summary>
+    /// The name of the hidden member that is the backing member for this data type member. 
+    /// </summary>
+    /// <value>A <see cref="string"/> representing the name of the hidden member. Logix appends 10 Zs to the hidden
+    /// members.
+    /// <c>null</c> if the attribute does not exist for the underlying element</value>
+    public string? Target
+    {
+        get => GetValue<string>();
+        set => SetValue(value);
+    }
+
+    /// <summary>
+    /// The bit number of the hidden member that this boolean member maps to or is backed by.
+    /// </summary>
+    /// <value>A zero-based integer representing the backing bit of the hidden member which corresponds to this member.
+    /// <c>null</c> if the attribute does not exist for the underlying element</value>
+    public int? BitNumber
+    {
+        get => GetValue<int>();
+        set => SetValue(value);
+    }
 }

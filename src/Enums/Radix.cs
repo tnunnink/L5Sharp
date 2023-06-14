@@ -74,6 +74,9 @@ public abstract class Radix : LogixEnum<Radix, string>
     /// </summary>
     public static readonly Radix DateTimeNs = new DateTimeNsRadix();
 
+    /// <inheritdoc />
+    public override string ToString() => Value;
+
     /// <summary>
     /// Gets the default <see cref="Radix"/> value for the provided logix type.
     /// </summary>
@@ -465,7 +468,7 @@ public abstract class Radix : LogixEnum<Radix, string>
                 input = input.Remove(0, 1);
             }
 
-            return !input.IsEmpty() && input.Contains('.') && input.Replace(".", string.Empty).All(char.IsDigit);
+            return input.Contains('.') && input.Replace(".", string.Empty).All(char.IsDigit);
         }
 
         public override string Format(AtomicType atomic)

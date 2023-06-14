@@ -15,7 +15,7 @@ public class DataType : LogixComponent<DataType>
     /// <summary>
     /// Creates a new <see cref="DataType"/> with default values.
     /// </summary>
-    public DataType()
+    public DataType() : base(GenerateElement())
     {
         Family = DataTypeFamily.None;
         Class = DataTypeClass.User;
@@ -64,9 +64,9 @@ public class DataType : LogixComponent<DataType>
         set => SetCollection(value);
     }
 
-    /// <inheritdoc />
-    public override DataType Clone() => new(Serialize());
-
-    /// <inheritdoc />
-    protected override XElement DefaultElement() => new(nameof(DataType), new XElement(L5XName.Members));
+    /// <summary>
+    /// Created the default backing element for the component. 
+    /// </summary>
+    /// <returns>A <see cref="XElement"/> representing the underlying L5X element for the type.</returns>
+    private static XElement GenerateElement() => new(nameof(DataType), new XElement(L5XName.Members));
 }

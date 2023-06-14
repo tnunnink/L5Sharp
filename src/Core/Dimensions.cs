@@ -12,6 +12,7 @@ namespace L5Sharp.Core;
 /// <remarks>
 /// Logix <c>Dimensions</c> can have one, two, or three dimensions.
 /// These dimensions are represented by the properties X, Y, and Z.
+/// This class also provides helpful methods and properties for working with dimensions of an array.
 /// </remarks>
 public sealed class Dimensions : IEquatable<Dimensions>
 {
@@ -131,7 +132,6 @@ public sealed class Dimensions : IEquatable<Dimensions>
     /// <param name="array">The array instance for which to determine the dimensions.</param>
     /// <returns></returns>
     /// <exception cref="ArgumentNullException"><c>array</c> is null.</exception>
-    /// <exception cref="ArgumentException"><c>array</c> has no elements or zero length (i.e. is empty).</exception>
     /// <exception cref="ArgumentOutOfRangeException"><c>array</c> has a dimensional rank that is greater than
     /// <see cref="ushort"/> max value -or- <c>array</c> has more than three dimensions.</exception>
     public static Dimensions FromArray(Array array)
@@ -167,7 +167,7 @@ public sealed class Dimensions : IEquatable<Dimensions>
     /// dimension array. If <see cref="Dimensions"/> are empty, then an empty collection.
     /// </value>
     /// <remarks>
-    /// The indices are determined be the dimensions (x, y, z) of the object.
+    /// The indices are determined by the dimensions (x, y, z) of the object.
     /// </remarks>
     public IEnumerable<string> Indices()
     {
@@ -242,7 +242,7 @@ public sealed class Dimensions : IEquatable<Dimensions>
     /// found in the provided value, or the numbers are not parsable to a <see cref="ushort"/>,
     /// then exception will be thrown.
     /// </remarks>
-    /// <example>1 2 3 -or- [1,2]</example>
+    /// <example>1 2 3 -or- [1,2,3]</example>
     /// <seealso cref="Parse"/>
     public static bool TryParse(string value, out Dimensions? dimensions)
     {
@@ -278,14 +278,14 @@ public sealed class Dimensions : IEquatable<Dimensions>
     /// Generates a string value that represents the <see cref="Dimensions"/> in the L5X format.
     /// </summary>
     /// <returns>A string of numbers separated by a single space.</returns>
+    /// <example>1 2 3</example>
     public override string ToString() => Z > 0 ? $"{X} {Y} {Z}" : Y > 0 ? $"{X} {Y}" : $"{X}";
 
     /// <summary>
     /// Generates a string value that represents the <see cref="Dimensions"/> in the array bracket notation.
     /// </summary>
-    /// <example>
-    /// 
-    /// </example>
+    /// <returns>A string of numbers separated by a comma and enclosed in brackets.</returns>
+    /// <example>[1,2,3]</example>
     public string ToIndex() => Z > 0 ? $"[{X},{Y},{Z}]" : Y > 0 ? $"[{X},{Y}]" : X > 0 ? $"[{X}]" : "[]";
 
     /// <summary>

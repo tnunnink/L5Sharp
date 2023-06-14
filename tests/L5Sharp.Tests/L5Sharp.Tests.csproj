@@ -94,6 +94,12 @@
         <DependentUpon>TimerTests.cs</DependentUpon>
         <ParentFile>TimerTests</ParentFile>
       </None>
+      <None Update="Types\Atomics\IntTests.Serialize_Value_ShouldBeValid.verified.txt">
+        <DependentUpon>IntTests.cs</DependentUpon>
+      </None>
+      <None Update="Types\Atomics\IntTests.Serialize_ValueAndRadix_ShouldBeValid.verified.txt">
+        <DependentUpon>IntTests.cs</DependentUpon>
+      </None>
     </ItemGroup>
 
     <ItemGroup>

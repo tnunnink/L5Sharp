@@ -78,9 +78,8 @@ public class TagMember : LogixEntity<TagMember>, ILogixScoped
     /// </summary>
     /// <value>A <see cref="Enums.Radix"/> option representing data format of the tag value.</value>
     /// <remarks>
-    /// This value will always point to the radix property of <see cref="Value"/>, assuming it is an
-    /// <see cref="AtomicType"/>.
-    /// If <c>Data</c> is not an atomic type, this property will always return <see cref="Enums.Radix.Null"/>.
+    /// This value will always point to the radix of <see cref="Value"/>, assuming it is an <see cref="AtomicType"/>.
+    /// If <c>Value</c> is not an atomic type, this property will always return <see cref="Enums.Radix.Null"/>.
     /// </remarks>
     public Radix Radix => Value is AtomicType atomic ? atomic.Radix : Radix.Null;
 
@@ -169,6 +168,22 @@ public class TagMember : LogixEntity<TagMember>, ILogixScoped
 
             return remaining.IsEmpty ? tagMember : tagMember[remaining];
         }
+    }
+
+    public void Add(string name, LogixType type)
+    {
+        if (Value is not ComplexType complexType)
+            throw new InvalidOperationException();
+        
+        complexType.Add(new Member(name, type));
+    }
+    
+    public void Remove(string name)
+    {
+        if (Value is not ComplexType complexType)
+            throw new InvalidOperationException();
+        
+        complexType.Remove(name);
     }
 
     /// <summary>
@@ -363,9 +378,6 @@ public class TagMember : LogixEntity<TagMember>, ILogixScoped
         names.AddRange(Names(TagName, Value));
         return names;
     }
-
-    public TagMember<TLogixType> To<TLogixType>() where TLogixType : LogixType =>
-        new TagMember<TLogixType>(_member, _root, Parent);
 
     #region Internal
 

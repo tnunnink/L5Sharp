@@ -1,9 +1,8 @@
 ﻿using FluentAssertions;
 using L5Sharp.Enums;
 using L5Sharp.Types.Predefined;
-using NUnit.Framework;
 
-namespace L5Sharp.Tests.Types
+namespace L5Sharp.Tests.Types.Predefined
 {
     [TestFixture]
     public class MessageTests

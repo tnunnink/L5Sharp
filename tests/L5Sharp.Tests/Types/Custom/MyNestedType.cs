@@ -9,7 +9,7 @@ namespace L5Sharp.Tests.Types.Custom
     /// <summary>
     /// A test type used to test nested complex data structure code
     /// </summary>
-    public class MyNestedType : StructureType
+    public class MyNestedType : ComplexType
     {
         public MyNestedType() : base(nameof(MyNestedType))
         {
