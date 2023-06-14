@@ -24,12 +24,12 @@ public class LogixContent
     {
         L5X = new L5X(element);
 
-        DataTypes = new LogixCollection<DataType>(L5X.Controller);
-        Instructions = new LogixCollection<AddOnInstruction>(L5X.Controller);
-        Modules = new LogixCollection<Module>(L5X.Controller);
-        Tags = new LogixCollection<Tag>(L5X.Controller);
-        Programs = new LogixCollection<Program>(L5X.Controller);
-        Tasks = new LogixCollection<LogixTask>(L5X.Controller);
+        DataTypes = new LogixContainer<DataType>(L5X.Controller);
+        Instructions = new LogixContainer<AddOnInstruction>(L5X.Controller);
+        Modules = new LogixContainer<Module>(L5X.Controller);
+        Tags = new LogixContainer<Tag>(L5X.Controller);
+        Programs = new LogixContainer<Program>(L5X.Controller);
+        Tasks = new LogixContainer<LogixTask>(L5X.Controller);
     }
 
     /// <summary>

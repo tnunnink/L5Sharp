@@ -44,9 +44,9 @@ public class DataTypeMember : LogixComponent<DataTypeMember>
     /// Default is <see cref="string.Empty"/>.
     /// Valid value is required for valid import.
     /// </value>
-    public string DataType
+    public string? DataType
     {
-        get => GetValue<string>() ?? throw new L5XException(Element);
+        get => GetValue<string>();
         set => SetValue(value);
     }
 

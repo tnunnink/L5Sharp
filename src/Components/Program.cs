@@ -15,9 +15,16 @@ namespace L5Sharp.Components;
 public class Program : LogixComponent<Program>
 {
     /// <inheritdoc />
-    public Program() : base(GenerateElement())
+    public Program()
     {
         Type = ProgramType.Normal;
+        TestEdits = default;
+        Disabled = default;
+        MainRoutineName = default;
+        FaultRoutineName = default;
+        UseAsFolder = default;
+        Tags = new LogixContainer<Tag>();
+        Routines = new LogixContainer<Routine>();
     }
 
     /// <inheritdoc />
@@ -31,7 +38,7 @@ public class Program : LogixComponent<Program>
     /// <value>A <see cref="Enums.ProgramType"/> enum representing the type of the program.</value>
     public ProgramType Type
     {
-        get => GetValue<ProgramType>();
+        get => GetValue<ProgramType>() ?? throw new L5XException(Element);
         set => SetValue(value);
     }
 
@@ -59,7 +66,7 @@ public class Program : LogixComponent<Program>
     /// The name of the routine that serves as the entry point for the program (i.e. main routine).
     /// </summary>
     /// <value>A <see cref="string"/> representing the name of the main routine for the program.</value>
-    public string MainRoutineName
+    public string? MainRoutineName
     {
         get => GetValue<string>();
         set => SetValue(value);
@@ -69,7 +76,7 @@ public class Program : LogixComponent<Program>
     /// The name of the routine that serves as the fault routine for the program.
     /// </summary>
     /// <value>A <see cref="string"/> representing the name of the fault routine for the program.</value>
-    public string FaultRoutineName
+    public string? FaultRoutineName
     {
         get => GetValue<string>();
         set => SetValue(value);
@@ -102,17 +109,5 @@ public class Program : LogixComponent<Program>
     {
         get => GetCollection<Routine>();
         set => SetCollection(value);
-    }
-
-    /// <summary>
-    /// Created the default backing element for the component. 
-    /// </summary>
-    /// <returns>A <see cref="XElement"/> representing the underlying L5X element for the type.</returns>
-    private static XElement GenerateElement()
-    {
-        var element = new XElement(L5XName.Program);
-        element.Add(new XElement(L5XName.Tags));
-        element.Add(new XElement(L5XName.Routines));
-        return element;
     }
 }

@@ -47,5 +47,5 @@ public interface ILogixComponent : ILogixSerializable
     /// The description of the <i>Logix</i> component.
     /// </summary>
     /// <value>A <see cref="string"/> containing the text description.</value>
-    string Description { get; }
+    string? Description { get; }
 }

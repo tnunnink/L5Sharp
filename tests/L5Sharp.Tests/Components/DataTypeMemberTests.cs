@@ -9,10 +9,10 @@ namespace L5Sharp.Tests.Components;
 public class DataTypeMemberTests
 {
     [Test]
-    public void DataTypeMember_DefaultConstructor_ShouldSetPropertiesToDefaultValues()
+    public void New_Default_ShouldHaveExpectedValues()
     {
         var member = new DataTypeMember();
-        
+
         member.Name.Should().BeEmpty();
         member.Description.Should().BeEmpty();
         member.DataType.Should().BeEmpty();

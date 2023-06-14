@@ -16,13 +16,6 @@ namespace L5Sharp;
 public abstract class LogixEntity<TEntity> : ILogixSerializable where TEntity : LogixEntity<TEntity>
 {
     /// <summary>
-    /// The underlying <see cref="XElement"/> representing the backing data for the entity. Use this object to store
-    /// and retrieve data for the component. This property is the basis for serialization and deserialization of
-    /// L5X data.
-    /// </summary>
-    protected readonly XElement Element;
-
-    /// <summary>
     /// Creates a new default <see cref="LogixEntity{TEntity}"/> initialized with an <see cref="XElement"/> having the
     /// <c>LogixTypeName</c> of the entity. 
     /// </summary>
@@ -42,6 +35,13 @@ public abstract class LogixEntity<TEntity> : ILogixSerializable where TEntity : 
     }
 
     /// <summary>
+    /// The underlying <see cref="XElement"/> representing the backing data for the entity. Use this object to store
+    /// and retrieve data for the component. This property is the basis for serialization and deserialization of
+    /// L5X data.
+    /// </summary>
+    protected readonly XElement Element;
+
+    /// <summary>
     /// Returns the underlying <see cref="XElement"/> for the <see cref="LogixEntity{TEntity}"/>.
     /// </summary>
     /// <returns>A <see cref="XElement"/> representing the serialized entity.</returns>
@@ -53,8 +53,35 @@ public abstract class LogixEntity<TEntity> : ILogixSerializable where TEntity : 
     /// <returns>A new instance of the specified entity type with the same property values.</returns>
     /// <exception cref="InvalidOperationException">The object being cloned does not have a constructor accepting a single <see cref="XElement"/> argument.</exception>
     /// <remarks>This method will simply deserialize a new instance using the current underlying element data.</remarks>
-    public TEntity Clone() => (TEntity)LogixSerializer.Deserialize(GetType(), Element);
+    public TEntity Clone() => (TEntity)LogixSerializer.Deserialize(GetType(), new XElement(Element));
+    
+    /// <summary>
+    /// Removes the entity from the L5X content.
+    /// </summary>
+    /// <exception cref="InvalidOperationException">No parent exists for the underlying element.
+    /// This could happen if the entity was created in memory and not yet added to the L5X.
+    /// </exception>
+    public void Remove()
+    {
+        if (Element.Parent is null)
+            throw new InvalidOperationException("Can not remote entity from disconnected L5X document.");
+        
+        Element.Remove();
+    }
 
+    /// <summary>
+    /// Replaces the entity instance with a new instance of the same type.
+    /// </summary>
+    /// <param name="entity">The new entity to replace this entity with.</param>
+    /// <exception cref="ArgumentNullException"><c>entity</c> is null.</exception>
+    public void Replace(TEntity entity)
+    {
+        if (entity is null)
+            throw new ArgumentNullException(nameof(entity));
+        
+        Element.ReplaceWith(entity.Serialize());
+    }
+    
     /// <summary>
     /// Gets the value of the specified attribute name from the element parsed as the specified generic type parameter if it exists.
     /// If the attribute does not exist, returns <c>default</c> value of the generic type parameter.
@@ -119,7 +146,7 @@ public abstract class LogixEntity<TEntity> : ILogixSerializable where TEntity : 
         if (container is null)
             throw new InvalidOperationException($"No container collection with name {name} exists.");
 
-        return new LogixCollection<T>(container);
+        return new LogixContainer<T>(container);
     }
 
     /// <summary>
@@ -155,32 +182,6 @@ public abstract class LogixEntity<TEntity> : ILogixSerializable where TEntity : 
     /// <summary>
     /// Adds or updates the specified attribute value with the provided value.
     /// </summary>
-    /// <param name="value">The value to set.</param>
-    /// <param name="selector"></param>
-    /// <param name="name"></param>
-    /// <typeparam name="T">The value type.</typeparam>
-    protected void SetValue<T>(T value, Func<XElement, XAttribute?> selector, [CallerMemberName] string? name = null)
-    {
-        var attribute = selector.Invoke(Element);
-        
-        if (attribute is null)
-        {
-            Element.SetAttributeValue(name, value);
-            return;
-        }
-        
-        if (value is null)
-        {
-            attribute.Remove();
-            return;
-        }
-
-        attribute.Value = value.ToString();
-    }
-
-    /// <summary>
-    /// Adds or updates the specified attribute value with the provided value.
-    /// </summary>
     /// <param name="name">The attribute name of the value to set.</param>
     /// <param name="value">The value to set.</param>
     /// <param name="setCondition">The optional value predicate on which the value will be set if evaluated to <c>true</c>.</param>
@@ -193,7 +194,6 @@ public abstract class LogixEntity<TEntity> : ILogixSerializable where TEntity : 
     /// </remarks>
     protected void SetProperty<T>(T value, [CallerMemberName] string? name = null, Predicate<T>? setCondition = null)
     {
-        
         if (setCondition?.Invoke(value) == false)
             return;
 
@@ -217,7 +217,7 @@ public abstract class LogixEntity<TEntity> : ILogixSerializable where TEntity : 
     /// <summary>
     /// Adds or updates the specified child element container with the provided collection.
     /// </summary>
-    /// <param name="value">The <see cref="LogixCollection{TEntity}"/> value to set.</param>
+    /// <param name="value">The <see cref="LogixContainerntainer{TComponent}"/> value to set.</param>
     /// <param name="name">The child element container name.</param>
     /// <typeparam name="T">The collection type parameter.</typeparam>
     /// <remarks>

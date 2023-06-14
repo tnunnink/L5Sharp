@@ -13,6 +13,7 @@ public abstract class LogixComponent<TComponent> : LogixEntity<TComponent>, ILog
     /// <inheritdoc />
     protected LogixComponent()
     {
+        Name = string.Empty;
     }
 
     /// <inheritdoc />
@@ -35,9 +36,19 @@ public abstract class LogixComponent<TComponent> : LogixEntity<TComponent>, ILog
     }
 
     /// <inheritdoc />
-    public string Description
+    public string? Description
     {
-        get => GetProperty<string>() ?? string.Empty;
-        set => SetProperty(value);
+        get => GetProperty<string>();
+        set
+        {
+            if (value is null)
+            {
+                Element.Element(L5XName.Description)?.Remove();
+                return;
+            }
+            
+            //description must be the first child element.
+            Element.AddFirst(new XElement(L5XName.Description, new XCData(value)));
+        }
     }
 }

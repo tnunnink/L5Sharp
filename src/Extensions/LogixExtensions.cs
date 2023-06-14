@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using L5Sharp.Components;
 using L5Sharp.Core;
@@ -23,9 +24,15 @@ public static class LogixExtensions
     /// </remarks>
     public static IEnumerable<DataType> DependentsOf(this ILogixCollection<DataType> dataTypes, string name)
     {
-        return dataTypes.Container.Descendants(L5XName.DataType)
+        return dataTypes.Serialize().Descendants(L5XName.DataType)
             .Where(e => e.Descendants(L5XName.Member).Any(m => m.Attribute(L5XName.DataType)?.Value == name))
             .Select(e => new DataType(e));
+    }
+
+    public static Module Parent(this Module module)
+    {
+        var parent = module.Serialize().Parent.Elements().FirstOrDefault(m => m.LogixName() == module.ParentModule);
+        return parent is not null ? new Module(parent) : throw new ArgumentException();
     }
 
     /// <summary>

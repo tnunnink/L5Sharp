@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Xml.Linq;
 
 namespace L5Sharp;
 
@@ -8,14 +7,9 @@ namespace L5Sharp;
 /// A simple enumerable interface for interacting with and updating <see cref="ILogixComponent"/> objects in a collection.
 /// </summary>
 /// <typeparam name="TComponent">The component type of the collection.</typeparam>
-public interface ILogixCollection<TComponent> : IEnumerable<TComponent>
+public interface ILogixCollection<TComponent> : IEnumerable<TComponent>, ILogixSerializable
     where TComponent : ILogixComponent, ILogixSerializable
 {
-    /// <summary>
-    /// 
-    /// </summary>
-    XContainer Container { get; }
-
     /// <summary>
     /// Accesses a single component at the specified index of the collection.
     /// </summary>

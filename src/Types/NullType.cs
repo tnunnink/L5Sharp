@@ -12,7 +12,7 @@ namespace L5Sharp.Types;
 // ReSharper disable once InconsistentNaming
 public sealed class NullType : LogixType
 {
-    private static readonly NullType Null = new();
+    private static readonly NullType Singleton = new();
 
     private NullType() : base(new XElement(L5XName.Data))
     {
@@ -27,5 +27,5 @@ public sealed class NullType : LogixType
     /// <summary>
     /// Gets the singleton instance of the <see cref="NullType"/> logix type.
     /// </summary>
-    public static readonly NullType Instance = Null;
+    public static readonly NullType Instance = Singleton;
 }
