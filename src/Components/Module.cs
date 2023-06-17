@@ -3,7 +3,7 @@ using System.Linq;
 using System.Net;
 using System.Xml.Linq;
 using L5Sharp.Core;
-using L5Sharp.Entities;
+using L5Sharp.Elements;
 using L5Sharp.Enums;
 using L5Sharp.Rockwell;
 
@@ -21,6 +21,17 @@ public class Module : LogixComponent<Module>
     /// <inheritdoc />
     public Module()
     {
+        CatalogNumber = string.Empty;
+        Vendor = Vendor.Unknown;
+        ProductType = ProductType.Unknown;
+        ProductCode = default;
+        Revision = new Revision();
+        ParentModule = string.Empty;
+        ParentPortId = default;
+        Inhibited = default;
+        MajorFault = default;
+        SafetyEnabled = default;
+        Keying = ElectronicKeying.CompatibleModule;
     }
 
     /// <inheritdoc />
@@ -32,7 +43,11 @@ public class Module : LogixComponent<Module>
     /// The catalog number uniquely identifies the module. This is a rockwell defined convention.
     /// </summary>
     /// <value>A <see cref="string"/> value containing the catalog number.</value>
-    public string CatalogNumber { get; set; } = string.Empty;
+    public string? CatalogNumber
+    {
+        get => GetValue<string>();
+        set => SetValue(value);
+    }
 
     /// <summary>
     /// The vendor or manufacturer of the module.
@@ -44,7 +59,11 @@ public class Module : LogixComponent<Module>
     /// <see cref="ILogixCatalogService"/> for catalog lookup. When deserializing from L5X file, typically only the vendor
     /// id is available on the module element.
     /// </remarks>
-    public Vendor Vendor { get; set; } = Vendor.Unknown;
+    public Vendor? Vendor
+    {
+        get => GetValue<Vendor>();
+        set => SetValue(value);
+    }
 
     /// <summary>
     /// The product type of the module, representing a category of the module.
@@ -55,7 +74,11 @@ public class Module : LogixComponent<Module>
     /// <see cref="ILogixCatalogService"/> for catalog lookup.
     /// This value will be validated by Logix upon import of the L5X. 
     /// </remarks>
-    public ProductType ProductType { get; set; } = ProductType.Unknown;
+    public ProductType? ProductType
+    {
+        get => GetValue<ProductType>();
+        set => SetValue(value);
+    }
 
     /// <summary>
     /// The unique product code value of the module.
@@ -65,7 +88,11 @@ public class Module : LogixComponent<Module>
     /// This value can be retrieved as part of the <see cref="CatalogEntry"/> object obtained using a
     /// <see cref="ILogixCatalogService"/> for catalog lookup, or when deserializing from an L5X file.
     /// </remarks>
-    public ushort ProductCode { get; set; }
+    public ushort ProductCode
+    {
+        get => GetValue<ushort>();
+        set => SetValue(value);
+    }
 
     /// <summary>
     /// The revision number or hardware version of the module.
@@ -74,47 +101,75 @@ public class Module : LogixComponent<Module>
     /// <remarks>
     /// All modules must have a specified revision number.
     /// </remarks>
-    public Revision Revision { get; set; } = new();
+    public Revision? Revision
+    {
+        get => GetValue<Revision>();
+        set => SetValue(value);
+    }
 
     /// <summary>
     /// The name of the parent module, or module that the current module is connected to upstream.
     /// This specifies how the module is connected within the module tree.
     /// </summary>
     /// <value>A <see cref="string"/> representing the parent module name. Default is an empty string.</value>
-    public string ParentModule { get; set; } = string.Empty;
+    public string? ParentModule
+    {
+        get => GetValue<string>();
+        set => SetValue(value);
+    }
 
     /// <summary>
     /// The port id of the parent module that the current module is connected to.
     /// This specified how the module is connected within the module tree.
     /// </summary>
     /// <value>A <see cref="int"/> representing the id of the parent port. Default is zero.</value>
-    public int ParentPortId { get; set; }
+    public int ParentPortId
+    {
+        get => GetValue<int>();
+        set => SetValue(value);
+    }
 
     /// <summary>
     /// An indication of whether the module is inhibited or disabled.
     /// </summary>
-    public bool Inhibited { get; set; }
+    public bool Inhibited
+    {
+        get => GetValue<bool>();
+        set => SetValue(value);
+    }
 
     /// <summary>
     /// An indication of whether the module the module will cause a major fault when faulted.
     /// </summary>
-    public bool MajorFault { get; set; }
+    public bool MajorFault
+    {
+        get => GetValue<bool>();
+        set => SetValue(value);
+    }
 
     /// <summary>
     /// An indication of whether whether the module has safety features enabled.
     /// </summary>
-    public bool SafetyEnabled { get; set; }
+    public bool SafetyEnabled
+    {
+        get => GetValue<bool>();
+        set => SetValue(value);
+    }
 
     /// <summary>
     /// The electronic keying mode of the module.
     /// </summary>
     /// <value>A <see cref="ElectronicKeying"/> enum value representing the mode.</value>
-    public ElectronicKeying Keying { get; set; } = ElectronicKeying.CompatibleModule;
+    public ElectronicKeying? Keying
+    {
+        get => GetProperty<ElectronicKeying>(); //todo not right
+        set => SetProperty(value);
+    }
 
     /// <summary>
     /// A collection of <see cref="Port"/> that define the module's connection within the module tree.
     /// </summary>
-    public List<Port> Ports { get; set; } = new();
+    public LogixContainer<Port> Ports { get; set; } = new();
 
     /// <summary>
     /// A <see cref="Tag"/> containing the configuration data for the module.

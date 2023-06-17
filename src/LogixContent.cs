@@ -15,16 +15,10 @@ namespace L5Sharp;
 /// </summary>
 public class LogixContent
 {
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="element"></param>
-    /// <exception cref="ArgumentNullException"></exception>
     private LogixContent(XElement element)
     {
         L5X = new L5X(element);
-
-        DataTypes = new LogixContainer<DataType>(L5X.Controller);
+        DataTypes = new LogixContainer<DataType>(L5X.Descendants(L5XName.DataTypes).First());
         Instructions = new LogixContainer<AddOnInstruction>(L5X.Controller);
         Modules = new LogixContainer<Module>(L5X.Controller);
         Tags = new LogixContainer<Tag>(L5X.Controller);
@@ -63,7 +57,8 @@ public class LogixContent
     /// </summary>
     /// <param name="target">The L5X target component of the resulting content.</param>
     /// <returns>A <see cref="LogixContent"/> containing the component as the target of the L5X.</returns>
-    public static LogixContent Export(ILogixComponent target)
+    public static LogixContent Export<TComponent>(LogixComponent<TComponent> target)
+        where TComponent : LogixComponent<TComponent>
     {
         var content = new XElement(L5XName.RSLogix5000Content);
         content.Add(new XAttribute(L5XName.SchemaRevision, new Revision().ToString()));
@@ -89,98 +84,53 @@ public class LogixContent
     /// </remarks>
     public L5X L5X { get; }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    public Controller Controller => LogixSerializer.Deserialize<Controller>(L5X.Controller);
+    
+    public Controller Controller => new(L5X.Controller);
 
     /// <summary>
-    ///  Gets the collection of <see cref="DataType"/> components found in the L5X file.
+    /// Gets the collection of <see cref="DataType"/> components found in the L5X file.
     /// </summary>
-    /// <value>A <see cref="ILogixCollection{TComponent}"/> of <see cref="DataType"/> components.</value>
-    public ILogixCollection<DataType> DataTypes { get; }
+    /// <value>A <see cref="LogixContainer{TComponent}"/> of <see cref="DataType"/> components.</value>
+    public LogixContainer<DataType> DataTypes { get; }
 
     /// <summary>
-    ///  Gets the collection of <see cref="AddOnInstruction"/> components found in the L5X file.
+    /// Gets the collection of <see cref="AddOnInstruction"/> components found in the L5X file.
     /// </summary>
-    /// <value>A <see cref="ILogixCollection{TComponent}"/> of <see cref="AddOnInstruction"/> components.</value>
-    public ILogixCollection<AddOnInstruction> Instructions { get; }
+    /// <value>A <see cref="LogixContainer{TComponent}"/> of <see cref="AddOnInstruction"/> components.</value>
+    public LogixContainer<AddOnInstruction> Instructions { get; }
 
     /// <summary>
-    ///  Gets the collection of <see cref="Module"/> components found in the L5X file.
+    /// Gets the collection of <see cref="Module"/> components found in the L5X file.
     /// </summary>
-    /// <value>A <see cref="ILogixCollection{TComponent}"/> of <see cref="Module"/> components.</value>
-    public ILogixCollection<Module> Modules { get; }
+    /// <value>A <see cref="LogixContainer{TComponent}"/> of <see cref="Module"/> components.</value>
+    public LogixContainer<Module> Modules { get; }
 
     /// <summary>
-    ///  Gets the collection of Controller <see cref="Tags"/> components found in the L5X file.
+    /// Gets the collection of Controller <see cref="Tags"/> components found in the L5X file.
     /// </summary>
-    /// <value>A <see cref="ILogixCollection{TComponent}"/> of <see cref="Tags"/> components.</value>
+    /// <value>A <see cref="LogixContainer{TComponent}"/> of <see cref="Tags"/> components.</value>
     /// <remarks>To access program specific tag collection user the <see cref="Programs"/> collection.</remarks>
-    public ILogixCollection<Tag> Tags { get; }
+    public LogixContainer<Tag> Tags { get; }
 
     /// <summary>
-    ///  Gets the collection of <see cref="Program"/> components found in the L5X file.
+    /// Gets the collection of <see cref="Program"/> components found in the L5X file.
     /// </summary>
-    /// <value>A <see cref="ILogixCollection{TComponent}"/> of <see cref="Program"/> components.</value>
-    public ILogixCollection<Program> Programs { get; }
+    /// <value>A <see cref="LogixContainer{TComponent}"/> of <see cref="Program"/> components.</value>
+    public LogixContainer<Program> Programs { get; }
 
     /// <summary>
-    ///  Gets the collection of <see cref="LogixTask"/> components found in the L5X file.
+    /// Gets the collection of <see cref="LogixTask"/> components found in the L5X file.
     /// </summary>
-    /// <value>A <see cref="ILogixCollection{TComponent}"/> of <see cref="LogixTask"/> components.</value>
-    public ILogixCollection<LogixTask> Tasks { get; }
+    /// <value>A <see cref="LogixContainer{TComponent}"/> of <see cref="LogixTask"/> components.</value>
+    public LogixContainer<LogixTask> Tasks { get; }
 
     /// <summary>
     /// 
     /// </summary>
     /// <typeparam name="TEntity"></typeparam>
     /// <returns></returns>
-    public IEnumerable<TEntity> Find<TEntity>() where TEntity : class => 
+    public IEnumerable<TEntity> Find<TEntity>() where TEntity : class =>
         L5X.Descendants(typeof(TEntity).LogixTypeName()).Select(LogixSerializer.Deserialize<TEntity>);
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="tagName"></param>
-    /// <returns></returns>
-    public TagMember FindTag(TagName tagName)
-    {
-        throw new NotImplementedException();
-    }
-    
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="tagName"></param>
-    /// <typeparam name="TLogixType"></typeparam>
-    /// <returns></returns>
-    /// <exception cref="NotImplementedException"></exception>
-    public TagMember<TLogixType> FindTag<TLogixType>(TagName tagName) where TLogixType : LogixType
-    {
-        throw new NotImplementedException();
-    }
-    
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="tagName"></param>
-    /// <typeparam name="TLogixType"></typeparam>
-    /// <returns></returns>
-    public TagMember<TLogixType> FindTags<TLogixType>(TagName tagName) where TLogixType : LogixType
-    {
-        throw new NotImplementedException();
-    }
-    
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <typeparam name="TLogixType"></typeparam>
-    /// <returns></returns>
-    public IEnumerable<TagMember<TLogixType>> FindTags<TLogixType>() where TLogixType : LogixType
-    {
-        throw new NotImplementedException();
-    }
 
     /// <summary>
     /// 
@@ -188,14 +138,14 @@ public class LogixContent
     /// <param name="fileName"></param>
     /// <param name="overwrite"></param>
     /// <exception cref="ArgumentException"></exception>
-    public void Import(string fileName, bool overwrite = false)
+    public void Merge(string fileName, bool overwrite = false)
     {
         if (string.IsNullOrEmpty(fileName))
             throw new ArgumentException("FileName can not be null or empty.", nameof(fileName));
 
         var content = Load(fileName);
 
-        Import(content, overwrite);
+        Merge(content, overwrite);
     }
 
     /// <summary>
@@ -205,7 +155,7 @@ public class LogixContent
     /// <param name="overwrite"></param>
     /// <exception cref="ArgumentNullException"></exception>
     /// <exception cref="InvalidOperationException"></exception>
-    public void Import(LogixContent content, bool overwrite = false)
+    public void Merge(LogixContent content, bool overwrite = false)
     {
         if (content is null)
             throw new ArgumentNullException(nameof(content));

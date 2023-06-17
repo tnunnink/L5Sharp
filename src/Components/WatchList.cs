@@ -2,7 +2,7 @@
 using System.Xml.Linq;
 using System.Xml.Serialization;
 using L5Sharp.Core;
-using L5Sharp.Entities;
+using L5Sharp.Elements;
 
 namespace L5Sharp.Components;
 

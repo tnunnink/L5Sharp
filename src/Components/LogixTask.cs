@@ -1,9 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 using L5Sharp.Core;
 using L5Sharp.Enums;
+using L5Sharp.Extensions;
 
 namespace L5Sharp.Components;
 
@@ -37,7 +38,7 @@ public class LogixTask : LogixComponent<LogixTask>
     /// <value>A <see cref="Enums.TaskType"/> enum representing the type of the task.</value>
     public TaskType Type
     {
-        get => GetValue<TaskType>() ?? throw new InvalidOperationException();
+        get => GetValue<TaskType>() ?? throw new L5XException(Element);
         set => SetValue(value.Value);
     }
 
@@ -94,6 +95,39 @@ public class LogixTask : LogixComponent<LogixTask>
     /// <summary>
     /// The collection of program names that are scheduled to the task.
     /// </summary>
-    /// <value>A <see cref="List{T}"/> containing the string program names.</value>
-    public List<string> ScheduledPrograms { get; set; } = new();
+    /// <value>A <see cref="IEnumerable{T}"/> containing the string program names.</value>
+    /// <remarks>This member just returns the read only list of scheduled programs. To modify the list, use </remarks>
+    public IEnumerable<string> ScheduledPrograms =>
+        Element.Descendants(L5XName.ScheduledProgram).Select(e => e.LogixName());
+
+    /// <summary>
+    /// Adds the provided program name to the underlying list of <see cref="ScheduledPrograms"/>.
+    /// </summary>
+    /// <param name="program">The name of the program to schedule.</param>
+    public void Schedule(string program)
+    {
+        var element = new XElement(L5XName.ScheduledProgram, new XAttribute(L5XName.Name, program));
+
+        if (Element.Element(L5XName.ScheduledPrograms) is null)
+            Element.Add(new XElement(L5XName.ScheduledPrograms));
+
+        Element.Element(L5XName.ScheduledPrograms)!.Add(element);
+    }
+    
+    /// <summary>
+    /// Removes the specified program name from the underlying list of <see cref="ScheduledPrograms"/>
+    /// </summary>
+    /// <param name="program">The name of the program to cancel.</param>
+    public void Cancel(string program)
+    {
+        var scheduled = Element.Element(L5XName.ScheduledPrograms);
+
+        if (scheduled is null) return;
+        
+        scheduled.Elements(L5XName.ScheduledProgram).FirstOrDefault(p => p.LogixName() == program)?.Remove();
+        
+        //Remove is no programs are scheduled
+        if (!scheduled.Elements().Any())
+            scheduled.Remove();
+    }
 }

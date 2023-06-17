@@ -15,7 +15,7 @@ namespace L5Sharp.Tests.Components
         [Test]
         public void ValueTesting()
         {
-            var tag = new Tag<TIMER>
+            var tag = new Tag
             {
                 Name = "Test",
                 Value = new TIMER(),
@@ -24,11 +24,13 @@ namespace L5Sharp.Tests.Components
                 ["EN"] = { Value = true }
             };
 
-            tag.Value.PRE.Should().Be(5000);
-            tag.Value.ACC.Should().Be(1234);
-            tag.Value.DN.Should().Be(0);
-            tag.Value.TT.Should().Be(0);
-            tag.Value.EN.Should().Be(1);
+            tag.Value.To<TIMER>().PRE.Should().Be(5000);
+            tag.Value.To<TIMER>().ACC.Should().Be(1234);
+            tag.Value.To<TIMER>().DN.Should().Be(0);
+            tag.Value.To<TIMER>().TT.Should().Be(0);
+            tag.Value.To<TIMER>().EN.Should().Be(1);
+            
+            tag.Replace(new Tag());
         }
 
         [Test]
@@ -456,20 +458,6 @@ namespace L5Sharp.Tests.Components
 
             parent.Should().NotBeNull();
             parent?.TagName.Should().Be("Test.Simple");
-        }
-
-        [Test]
-        public void Member_GenericNestedComplex_ShouldNotBeNullAndOfType()
-        {
-            var tag = new Tag
-            {
-                Name = "Test",
-                Value = new MyNestedType()
-            };
-
-            var tmr = tag.Member<TIMER>("Tmr");
-
-            tmr?.Value.PRE.Should().Be(0);
         }
     }
 }

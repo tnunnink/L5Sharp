@@ -1,4 +1,5 @@
-﻿using System.Xml.Linq;
+﻿using System;
+using System.Xml.Linq;
 using System.Xml.Serialization;
 using L5Sharp.Core;
 using L5Sharp.Enums;
@@ -20,7 +21,6 @@ public class DataTypeMember : LogixComponent<DataTypeMember>
     /// </summary>
     public DataTypeMember()
     {
-        Name = string.Empty;
         DataType = string.Empty;
         Dimension = Dimensions.Empty;
         Radix = Radix.Null;
@@ -32,6 +32,7 @@ public class DataTypeMember : LogixComponent<DataTypeMember>
     /// Creates a new <see cref="DataTypeMember"/> initialized with the provided <see cref="XElement"/>.
     /// </summary>
     /// <param name="element">The <see cref="XElement"/> to initialize the type with.</param>
+    /// <exception cref="ArgumentNullException"><c>element</c> is null.</exception>
     public DataTypeMember(XElement element) : base(element)
     {
     }

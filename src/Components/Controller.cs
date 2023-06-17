@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Xml.Linq;
 using L5Sharp.Core;
-using L5Sharp.Entities;
+using L5Sharp.Elements;
 using L5Sharp.Enums;
 
 namespace L5Sharp.Components;
@@ -18,7 +18,7 @@ public class Controller : LogixComponent<Controller>
     private const string DateTimeFormat = "ddd MMM d HH:mm:ss yyyy";
 
     /// <summary>
-    /// Default component constructor for the <see cref="Controller"/> type.
+    /// Creates a new <see cref="Controller"/> with default values.
     /// </summary>
     public Controller() : base(new XElement(L5XName.Controller))
     {
@@ -26,11 +26,10 @@ public class Controller : LogixComponent<Controller>
     }
 
     /// <summary>
-    /// Creates a new <see cref="Controller"/> component with data from provided <see cref="XElement"/>.
+    /// Creates a new <see cref="Controller"/> initialized with the provided <see cref="XElement"/>.
     /// </summary>
-    /// <param name="element">The element to initialize the component with.</param>
+    /// <param name="element">The <see cref="XElement"/> to initialize the type with.</param>
     /// <exception cref="ArgumentNullException"><c>element</c> is null.</exception>
-    /// <exception cref="ArgumentException"><c>element</c> name is not valid for the component type.</exception>
     public Controller(XElement element) : base(element)
     {
     }
@@ -264,7 +263,7 @@ public class Controller : LogixComponent<Controller>
     public string? EtherNetIPMode { get; set; } = string.Empty;
 
     /// <summary>
-    /// The <see cref="Entities.RedundancyInfo"/> object that specifies the redundancy configuration of the controller.
+    /// The <see cref="Elements.RedundancyInfo"/> object that specifies the redundancy configuration of the controller.
     /// </summary>
     public RedundancyInfo? RedundancyInfo { get; set; } = default;
 }

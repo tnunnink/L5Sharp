@@ -1,0 +1,9 @@
+﻿<Task Name="Test" Type="CONTINUOUS" Priority="13" Rate="300" Watchdog="501" InhibitTask="true" DisableUpdateOutputs="true">
+  <Description><![CDATA[This is a test]]></Description>
+  <ScheduledPrograms>
+    <ScheduledProgram Name="Program1" />
+    <ScheduledProgram Name="Test" />
+    <ScheduledProgram Name="Another" />
+    <ScheduledProgram Name="Another" />
+  </ScheduledPrograms>
+</Task>

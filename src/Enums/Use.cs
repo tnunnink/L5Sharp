@@ -45,7 +45,7 @@ public class Use : LogixEnum<Use, string>
     public static readonly Use Insert = new(nameof(Insert), nameof(Insert));
         
     /// <summary>
-    /// Get the AddMany <see cref="Use"/> option.
+    /// Get the Append <see cref="Use"/> option.
     /// </summary>
     public static readonly Use Append = new(nameof(Append), nameof(Append));
         

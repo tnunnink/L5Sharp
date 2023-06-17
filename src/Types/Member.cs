@@ -29,7 +29,7 @@ namespace L5Sharp.Types;
 /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
 /// `Logix 5000 Controllers Import/Export`</a> for more information.
 /// </footer>
-public class Member : LogixEntity<Member>
+public class Member : LogixElement<Member>
 {
     /// <inheritdoc />
     public Member(XElement element) : base(element)
@@ -73,6 +73,19 @@ public class Member : LogixEntity<Member>
         set => SetData(Element, value);
     }
 
+    /// <summary>
+    /// The parent <see cref="Member"/> of this member instance. 
+    /// </summary>
+    /// <value>A <see cref="Member"/> instance representing the parent of this member.</value>
+    public Member? Parent //todo just an idea for now
+    {
+        get
+        {
+            if (Element.Name == L5XName.Tag) return default;
+            return Element.Parent is not null ? new Member(Element.Parent) : default;
+        }
+    }
+
     // Following region contains methods for getting/deserializing the underlying element member to a logix type.
 
     #region GetData
@@ -89,7 +102,9 @@ public class Member : LogixEntity<Member>
         return element.Name.ToString() switch
         {
             L5XName.Tag => GetTag(element),
+            L5XName.LocalTag => GetTag(element),
             L5XName.Data => GetFormatted(element),
+            L5XName.DefaultData => GetFormatted(element),
             L5XName.DataValue => GetAtomic(element),
             L5XName.DataValueMember => GetAtomic(element),
             L5XName.Element => GetElement(element),
@@ -112,8 +127,8 @@ public class Member : LogixEntity<Member>
     /// </summary>
     private static LogixType GetTag(XContainer element)
     {
-        var data = element.Elements(L5XName.Data)
-            .FirstOrDefault(e => e.Attribute(L5XName.Format)?.Value != DataFormat.L5K);
+        var data = element.Elements().FirstOrDefault(e => e.Attribute(L5XName.Format) is not null &&
+                                                          e.Attribute(L5XName.Format)!.Value != DataFormat.L5K);
 
         return data is not null ? GetData(data) : LogixType.Null;
     }
@@ -160,7 +175,7 @@ public class Member : LogixEntity<Member>
         {
             if (element.Parent is null)
                 throw new InvalidOperationException("Can not retrieve type from disconnected element.");
-            
+
             var dataType = element.Parent.LogixType();
             var value = element.Attribute(L5XName.Value)!.Value;
             return Atomic.Parse(dataType, value);
@@ -191,7 +206,7 @@ public class Member : LogixEntity<Member>
     {
         if (element.Parent is null)
             throw new InvalidOperationException("Can not retrieve type from disconnected element.");
-        
+
         var dataType = element.Parent.LogixType();
 
         if (LogixSerializer.IsRegistered(dataType))
@@ -218,7 +233,13 @@ public class Member : LogixEntity<Member>
             case L5XName.Tag:
                 SetTag(element, value);
                 break;
+            case L5XName.LocalTag:
+                SetTag(element, value);
+                break;
             case L5XName.Data:
+                SetFormatted(element, value);
+                break;
+            case L5XName.DefaultData:
                 SetFormatted(element, value);
                 break;
             case L5XName.DataValue:
@@ -262,11 +283,6 @@ public class Member : LogixEntity<Member>
 
         var pairs = element.Attributes()
             .Join(alarm.Members, a => a.Name, m => m.Name, (a, m) => new { a, m });
-
-        foreach (var pair in pairs)
-        {
-            
-        }
     }
 
     /// <summary>

@@ -1,7 +1,7 @@
 ﻿using System.Xml.Linq;
 using L5Sharp.Components;
 
-namespace L5Sharp.Entities;
+namespace L5Sharp.Elements;
 
 /// <summary>
 /// An individual watch tag within a <see cref="WatchList"/> component.
@@ -10,7 +10,7 @@ namespace L5Sharp.Entities;
 /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
 /// `Logix 5000 Controllers Import/Export`</a> for more information.
 /// </footer>
-public sealed class WatchTag : LogixEntity<WatchTag>
+public sealed class WatchTag : LogixElement<WatchTag>
 {
     /// <inheritdoc />
     public WatchTag()

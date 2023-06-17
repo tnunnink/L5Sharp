@@ -2,7 +2,7 @@
 using L5Sharp.Components;
 using L5Sharp.Core;
 
-namespace L5Sharp.Entities;
+namespace L5Sharp.Elements;
 
 /// <summary>
 /// A component of a <see cref="Module"/> that represents the means for connecting devices on a network or in a chassis.
@@ -13,7 +13,7 @@ namespace L5Sharp.Entities;
 /// or the the network address (IP) of the device. Each port may (or may not) have a <see cref="BusSize"/>.
 /// Each port is identifiable by the <see cref="Id"/> property. 
 /// </remarks>
-public sealed class Port : LogixEntity<Port>
+public sealed class Port : LogixElement<Port>
 {
     /// <summary>
     /// Gets the Id of the <see cref="Port"/>.

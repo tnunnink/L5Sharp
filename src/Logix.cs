@@ -2,7 +2,7 @@
 using System.Linq;
 using L5Sharp.Components;
 using L5Sharp.Core;
-using L5Sharp.Entities;
+using L5Sharp.Elements;
 using L5Sharp.Enums;
 using L5Sharp.Rockwell;
 using L5Sharp.Types;
@@ -32,7 +32,7 @@ public static class Logix
     /// <returns>A <see cref="LogixTask"/> component with the provided property values.</returns>
     public static LogixTask Task(string? name = null, TaskType? type = null, string? description = null) => new()
     {
-        Name = name ?? string.Empty, 
+        Name = name ?? string.Empty,
         Type = type ?? TaskType.Periodic,
         Description = description ?? string.Empty
     };
@@ -53,7 +53,7 @@ public static class Logix
     {
         var catalog = new ModuleCatalog();
         var entry = catalog.Lookup(catalogNumber);
-            
+
         return new Module
         {
             Name = name,
@@ -62,13 +62,14 @@ public static class Logix
             Vendor = entry.Vendor,
             ProductType = entry.ProductType,
             ProductCode = entry.ProductCode,
-            Ports = entry.Ports.Select(p => new Port
-            {
-                Id = p.Number,
-                Type = p.Type,
-                Address = p.Type =="Ethernet" ? Address.DefaultIP() : Address.DefaultSlot(),
-                Upstream = !p.DownstreamOnly
-            }).ToList(),
+            Ports = new LogixContainer<Port>(
+                entry.Ports.Select(p => new Port
+                {
+                    Id = p.Number,
+                    Type = p.Type,
+                    Address = p.Type == "Ethernet" ? Address.DefaultIP() : Address.DefaultSlot(),
+                    Upstream = !p.DownstreamOnly
+                }).ToList()),
             Description = description ?? string.Empty
         };
     }

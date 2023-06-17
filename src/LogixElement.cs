@@ -9,27 +9,28 @@ using L5Sharp.Extensions;
 namespace L5Sharp;
 
 /// <summary>
-/// A base class for all Logix types that can be serialized and deserialized from a L5X file. This abstract class enforces
+/// A base class for all types that can be serialized and deserialized from a L5X file. This abstract class enforces
 /// the <see cref="ILogixSerializable"/> interface and a constructor taking a <see cref="XElement"/> for initialization
-/// from the L5X.
+/// of and underlying element object. Deriving classes will have access to the underlying element and
+/// methods for easily getting and setting data.
 /// </summary>
-public abstract class LogixEntity<TEntity> : ILogixSerializable where TEntity : LogixEntity<TEntity>
+public abstract class LogixElement<TElement> : ILogixSerializable where TElement : LogixElement<TElement>
 {
     /// <summary>
-    /// Creates a new default <see cref="LogixEntity{TEntity}"/> initialized with an <see cref="XElement"/> having the
+    /// Creates a new default <see cref="LogixElement{TEntity}"/> initialized with an <see cref="XElement"/> having the
     /// <c>LogixTypeName</c> of the entity. 
     /// </summary>
-    protected LogixEntity()
+    protected LogixElement()
     {
-        Element = new XElement(typeof(TEntity).LogixTypeName());
+        Element = new XElement(typeof(TElement).LogixTypeName());
     }
 
     /// <summary>
-    /// Initialized a new <see cref="LogixEntity{TEntity}"/> with the provided <see cref="XElement"/>
+    /// Initialized a new <see cref="LogixElement{TEntity}"/> with the provided <see cref="XElement"/>
     /// </summary>
     /// <param name="element">The L5X <see cref="XElement"/> to initialize the entity with.</param>
     /// <exception cref="ArgumentNullException"><c>element</c> is null.</exception>
-    protected LogixEntity(XElement element)
+    protected LogixElement(XElement element)
     {
         Element = element ?? throw new ArgumentNullException(nameof(element));
     }
@@ -42,7 +43,7 @@ public abstract class LogixEntity<TEntity> : ILogixSerializable where TEntity : 
     protected readonly XElement Element;
 
     /// <summary>
-    /// Returns the underlying <see cref="XElement"/> for the <see cref="LogixEntity{TEntity}"/>.
+    /// Returns the underlying <see cref="XElement"/> for the <see cref="LogixElement{TEntity}"/>.
     /// </summary>
     /// <returns>A <see cref="XElement"/> representing the serialized entity.</returns>
     public virtual XElement Serialize() => Element;
@@ -53,35 +54,8 @@ public abstract class LogixEntity<TEntity> : ILogixSerializable where TEntity : 
     /// <returns>A new instance of the specified entity type with the same property values.</returns>
     /// <exception cref="InvalidOperationException">The object being cloned does not have a constructor accepting a single <see cref="XElement"/> argument.</exception>
     /// <remarks>This method will simply deserialize a new instance using the current underlying element data.</remarks>
-    public TEntity Clone() => (TEntity)LogixSerializer.Deserialize(GetType(), new XElement(Element));
-    
-    /// <summary>
-    /// Removes the entity from the L5X content.
-    /// </summary>
-    /// <exception cref="InvalidOperationException">No parent exists for the underlying element.
-    /// This could happen if the entity was created in memory and not yet added to the L5X.
-    /// </exception>
-    public void Remove()
-    {
-        if (Element.Parent is null)
-            throw new InvalidOperationException("Can not remote entity from disconnected L5X document.");
-        
-        Element.Remove();
-    }
+    public TElement Clone() => (TElement)LogixSerializer.Deserialize(GetType(), new XElement(Element));
 
-    /// <summary>
-    /// Replaces the entity instance with a new instance of the same type.
-    /// </summary>
-    /// <param name="entity">The new entity to replace this entity with.</param>
-    /// <exception cref="ArgumentNullException"><c>entity</c> is null.</exception>
-    public void Replace(TEntity entity)
-    {
-        if (entity is null)
-            throw new ArgumentNullException(nameof(entity));
-        
-        Element.ReplaceWith(entity.Serialize());
-    }
-    
     /// <summary>
     /// Gets the value of the specified attribute name from the element parsed as the specified generic type parameter if it exists.
     /// If the attribute does not exist, returns <c>default</c> value of the generic type parameter.
@@ -92,6 +66,11 @@ public abstract class LogixEntity<TEntity> : ILogixSerializable where TEntity : 
     /// If found, the value of attribute parsed as the generic type parameter.
     /// If not found, returns <c>default</c>.
     /// </returns>
+    /// <remarks>
+    /// This method it only available to make getting/setting data on <see cref="Element"/> as concise
+    /// as possible from derived classes. This method uses the <see cref="CallerMemberNameAttribute"/> so the deriving
+    /// classes don't have to specify the property name (assuming its the name matches the underlying element property).
+    /// </remarks>
     protected T? GetValue<T>([CallerMemberName] string? name = null)
     {
         var value = Element.Attribute(name)?.Value;
@@ -109,6 +88,11 @@ public abstract class LogixEntity<TEntity> : ILogixSerializable where TEntity : 
     /// If found, the value of attribute parsed as the generic type parameter.
     /// If not found, returns <c>default</c>.
     /// </returns>
+    /// <remarks>
+    /// This method it only available to make getting/setting data on <see cref="Element"/> as concise
+    /// as possible from derived classes. This method uses the <see cref="CallerMemberNameAttribute"/> so the deriving
+    /// classes don't have to specify the property name (assuming its the name matches the underlying element property).
+    /// </remarks>
     protected T? GetValue<T>(Func<XElement, XAttribute?> selector)
     {
         var value = selector.Invoke(Element)?.Value;
@@ -125,6 +109,11 @@ public abstract class LogixEntity<TEntity> : ILogixSerializable where TEntity : 
     /// If found, the value of child element parsed as the generic type parameter.
     /// If not found, returns <c>default</c>.
     /// </returns>
+    /// <remarks>
+    /// This method it only available to make getting/setting data on <see cref="Element"/> as concise
+    /// as possible from derived classes. This method uses the <see cref="CallerMemberNameAttribute"/> so the deriving
+    /// classes don't have to specify the property name (assuming its the name matches the underlying element property).
+    /// </remarks>
     protected T? GetProperty<T>([CallerMemberName] string? name = null)
     {
         var value = Element.Element(name)?.Value;
@@ -132,31 +121,40 @@ public abstract class LogixEntity<TEntity> : ILogixSerializable where TEntity : 
     }
 
     /// <summary>
-    /// Gets the <see cref="ILogixCollection{TComponent}"/> representing the child elements of the specified element
-    /// container name.
+    /// Gets a child <see cref="LogixContainer{TEntity}"/> with the specified element name, representing the root of a
+    /// collection of contained entities.
     /// </summary>
-    /// <param name="name">The name of the collection container (e.g. Tags).</param>
-    /// <typeparam name="T">The generic component type to return.</typeparam>
-    /// <returns>A <see cref="ILogixCollection{TComponent}"/> containing all the child components of the type.</returns>
+    /// <param name="name">The name of the child container collection (e.g. Members).</param>
+    /// <typeparam name="TChild">The child entity type.</typeparam>
+    /// <returns>A <see cref="LogixContainer{TEntity}"/> containing all the child entities of the type.</returns>
     /// <exception cref="InvalidOperationException">A child element with <c>name</c> does not exist.</exception>
-    protected ILogixCollection<T> GetCollection<T>([CallerMemberName] string? name = null) where T : ILogixComponent
+    /// <remarks>
+    /// This method it only available to make getting/setting data on <see cref="Element"/> as concise
+    /// as possible from derived classes. This method uses the <see cref="CallerMemberNameAttribute"/> so the deriving
+    /// classes don't have to specify the property name (assuming its the name matches the underlying element property).
+    /// </remarks>
+    protected LogixContainer<TChild> GetContainer<TChild>([CallerMemberName] string? name = null)
+        where TChild : LogixElement<TChild>
     {
         var container = Element.Element(name);
 
-        if (container is null)
-            throw new InvalidOperationException($"No container collection with name {name} exists.");
+        if (container is null) throw new InvalidOperationException($"No container with name {name} exists.");
 
-        return new LogixContainer<T>(container);
+        return new LogixContainer<TChild>(container);
     }
 
     /// <summary>
     /// Gets the date/time value of the specified attribute name from the current element if it exists.
-    /// If the attribute does not exist, returns default value
+    /// If the attribute does not exist, returns default value.
     /// </summary>
     /// <param name="name">The name of the date time attribute.</param>
     /// <param name="format">The format of the date time.
     /// If not provided will default to 'ddd MMM d HH:mm:ss yyyy' which is a typical L5X date time format.</param>
     /// <returns>The parsed <see cref="DateTime"/> value of the attribute.</returns>
+    /// <remarks>
+    /// This is a specialized helper since the date time formats are different for different component
+    /// properties, we need to allow that to be specified.
+    /// </remarks>
     protected DateTime? GetDateTime(string? format = null, [CallerMemberName] string? name = null)
     {
         format ??= "ddd MMM d HH:mm:ss yyyy";
@@ -167,63 +165,61 @@ public abstract class LogixEntity<TEntity> : ILogixSerializable where TEntity : 
             ? DateTime.ParseExact(attribute.Value, format, CultureInfo.CurrentCulture)
             : default;
     }
-    
+
     /// <summary>
-    /// Adds or updates the specified attribute value with the provided value.
+    /// Sets the value of an attribute, adds an attribute, or removes an attribute.
     /// </summary>
-    /// <param name="name">The attribute name of the value to set.</param>
-    /// <param name="value">The value to set.</param>
+    /// <param name="name">The name of the attribute to set.</param>
+    /// <param name="value">The value to assign to the attribute. The attribute is removed if the value is null.
+    /// Otherwise, the value is converted to its string representation and assigned to the Value property of the attribute.</param>
     /// <typeparam name="T">The value type.</typeparam>
+    /// <remarks>
+    /// This method it only available to make getting/setting data on <see cref="Element"/> as concise
+    /// as possible from derived classes. This method uses the <see cref="CallerMemberNameAttribute"/> so the deriving
+    /// classes don't have to specify the property name (assuming its the name matches the underlying element property).
+    /// </remarks>
     protected void SetValue<T>(T value, [CallerMemberName] string? name = null)
     {
         Element.SetAttributeValue(name, value);
     }
 
     /// <summary>
-    /// Adds or updates the specified attribute value with the provided value.
+    /// Sets the value of a child element, adds a child element, or removes a child element.
     /// </summary>
-    /// <param name="name">The attribute name of the value to set.</param>
-    /// <param name="value">The value to set.</param>
-    /// <param name="setCondition">The optional value predicate on which the value will be set if evaluated to <c>true</c>.</param>
+    /// <param name="name">The name of the element to set.</param>
+    /// <param name="value">The value to assign to the child element. The child element is removed if the value is null.
+    /// Otherwise, the value is converted to its string representation, wrapped in a <see cref="XCData"/> object,
+    /// and assigned to the Value property of the child element.</param>
     /// <typeparam name="T">The value type.</typeparam>
     /// <remarks>
-    /// This is just a helper extension to preform the repetitive logic of adding or setting a property of
-    /// a component element. This method will remove the attribute if the provided value is null, add or update
-    /// otherwise, and only perform any of this if a set condition is specified and satisfied be the value.
-    /// Note that this method also calls ToString() on the provided value.
+    /// This method it only available to make getting/setting data on <see cref="Element"/> as concise
+    /// as possible from derived classes. This method uses the <see cref="CallerMemberNameAttribute"/> so the deriving
+    /// classes don't have to specify the property name (assuming its the name matches the underlying element property).
     /// </remarks>
-    protected void SetProperty<T>(T value, [CallerMemberName] string? name = null, Predicate<T>? setCondition = null)
+    protected void SetProperty<T>(T value, [CallerMemberName] string? name = null)
     {
-        if (setCondition?.Invoke(value) == false)
-            return;
-
         if (value is null)
         {
             Element.Element(name)?.Remove();
             return;
         }
-
-        var element = Element.Element(name);
-
-        if (element is null)
-        {
-            Element.Add(new XElement(name, new XCData(value.ToString())));
-            return;
-        }
-
-        element.Value = value.ToString();
+        
+        Element.SetElementValue(name, new XCData(value.ToString()));
     }
 
     /// <summary>
-    /// Adds or updates the specified child element container with the provided collection.
+    /// Sets the value of a child container, adds a child container, or removes a child container.
     /// </summary>
-    /// <param name="value">The <see cref="LogixContainerntainer{TComponent}"/> value to set.</param>
-    /// <param name="name">The child element container name.</param>
-    /// <typeparam name="T">The collection type parameter.</typeparam>
+    /// <param name="value">The <see cref="LogixContainer{TComponent}"/> value to set.</param>
+    /// <param name="name">The name of the child container collection (e.g. Members).</param>
+    /// <typeparam name="TChild">The container type parameter.</typeparam>
     /// <remarks>
+    /// This method it only available to make getting/setting data on <see cref="Element"/> as concise
+    /// as possible from derived classes. This method uses the <see cref="CallerMemberNameAttribute"/> so the deriving
+    /// classes don't have to specify the property name (assuming its the name matches the underlying element property).
     /// </remarks>
-    protected void SetCollection<T>(IEnumerable<T>? value, [CallerMemberName] string? name = null)
-        where T : ILogixComponent, ILogixSerializable
+    protected void SetContainer<TChild>(IEnumerable<TChild>? value, [CallerMemberName] string? name = null)
+        where TChild : LogixElement<TChild>
     {
         if (value is null)
         {
@@ -249,23 +245,18 @@ public abstract class LogixEntity<TEntity> : ILogixSerializable where TEntity : 
     /// Gets the date/time value of the specified attribute name from the current element if it exists.
     /// If the attribute does not exist, returns default value
     /// </summary>
-    /// <param name="value"></param>
+    /// <param name="value">The value to set.</param>
     /// <param name="format">The format of the date time.
     /// If not provided will default to 'ddd MMM d HH:mm:ss yyyy' which is a typical L5X date time format.</param>
     /// <param name="name">The name of the date time attribute.</param>
-    /// <returns>The parsed <see cref="DateTime"/> value of the attribute.</returns>
+    /// /// <remarks>
+    /// This is a specialized helper since the date time formats are different for different component
+    /// properties, we need to allow that to be specified.
+    /// </remarks>
     protected void SetDateTime(DateTime value, string? format = null, [CallerMemberName] string? name = null)
     {
         format ??= "ddd MMM d HH:mm:ss yyyy";
-
-        var attribute = Element.Attribute(name);
-
-        if (attribute is null)
-        {
-            Element.Add(new XAttribute(name, value.ToString(format)));
-            return;
-        }
-
-        attribute.Value = value.ToString(format);
+        var formatted = value.ToString(format);
+        Element.SetAttributeValue(name, formatted);
     }
 }

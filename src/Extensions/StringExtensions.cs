@@ -33,22 +33,11 @@ namespace L5Sharp.Extensions
         /// </remarks>
         public static bool IsComponentName(this string name)
         {
-            //Can not be null or empty.
-            if (string.IsNullOrEmpty(name))
-                return false;
-
+            if (string.IsNullOrEmpty(name)) return false;
             var characters = name.ToCharArray();
-
-            //First character has to be a letter or underscore.
-            if (!(char.IsLetter(characters[0]) || characters[0] == '_'))
-                return false;
-
-            //All characters must be alphanumeric or underscore.
-            if (!characters.All(c => char.IsLetter(c) || char.IsDigit(c) || c == '_'))
-                return false;
-
-            //Can not have name longer than 40 characters.
-            return name.Length <= 40;
+            if (name.Length > 40) return false;
+            if (!(char.IsLetter(characters[0]) || characters[0] == '_')) return false;
+            return characters.All(c => char.IsLetter(c) || char.IsDigit(c) || c == '_');
         }
 
         /// <summary>
@@ -59,24 +48,7 @@ namespace L5Sharp.Extensions
         public static bool IsTagName(this string input) => Regex.IsMatch(input,
             @"^[A-Za-z_][\w+:]{1,39}(?:(?:\[\d+\]|\[\d+,\d+\]|\[\d+,\d+,\d+\])?(?:\.[A-Za-z_]\w{1,39})?)+(?:\.[0-9][0-9]?)?$");
 
-        /*/// <summary>
-        /// Returns the current string value as an array of <see cref="SINT"/> atomic type with <see cref="Enums.Radix.Ascii"/>
-        /// format that represent the bytes of the string.
-        /// </summary>
-        /// <param name="value">The string value.</param>
-        /// <returns>An array of <see cref="SINT"/> atomic value types.</returns>
-        public static ArrayType ToArrayType(this string value) =>
-            
 
-        /// <summary>
-        /// Returns the collection of <see cref="SINT"/> atomic type values as a <see cref="string"/> value.
-        /// </summary>
-        /// <param name="array">The array or <see cref="IEnumerable{T}"/> of SINT to convert to string.</param>
-        /// <returns>A <see cref="string"/> representing the ASCII character sequence of the SINT array.</returns>
-        public static string AsString(this IEnumerable<SINT> array) =>
-            Encoding.ASCII.GetString(array.Where(s => s > 0).Select(b => (byte)(sbyte)b).ToArray());*/
-
-        
         internal static string ReplaceAll(this string value, IEnumerable<string> items, string replacement) =>
             items.Aggregate(value, (str, cItem) => str.Replace(cItem, replacement));
 
@@ -92,7 +64,7 @@ namespace L5Sharp.Extensions
             for (var i = 0; i < input.Length; i += length)
                 yield return input.Substring(i, i + length < input.Length ? length : input.Length - i);
         }
-        
+
         internal static string TrimSingle(this string value, char character)
         {
             if (value.StartsWith(character) && value.EndsWith(character))

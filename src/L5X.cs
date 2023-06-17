@@ -58,13 +58,21 @@ public class L5X : XElement
     /// </summary>
     /// <value>A <see cref="Revision"/> type that represent the major/minor revision of the L5X schema.</value>
     /// <remarks>This is always 1.0. If the R</remarks>
-    public Revision? SchemaRevision => Attribute(L5XName.SchemaRevision)?.Value.Parse<Revision>();
+    public Revision? SchemaRevision
+    {
+        get => Attribute(L5XName.SchemaRevision)?.Value.Parse<Revision>();
+        set => SetAttributeValue(L5XName.SchemaRevision, value);
+    }
 
     /// <summary>
     /// Gets the value of the software revision for the current L5X content.
     /// </summary>
     /// <value>A <see cref="Revision"/> type that represent the major/minor revision of the software.</value>
-    public Revision? SoftwareRevision => Attribute(L5XName.SoftwareRevision)?.Value.Parse<Revision>();
+    public Revision? SoftwareRevision
+    {
+        get => Attribute(L5XName.SoftwareRevision)?.Value.Parse<Revision>();
+        set => SetAttributeValue(L5XName.SoftwareRevision, value);
+    }
 
     /// <summary>
     /// Gets the name of the Logix component that is the target of the current L5X context.

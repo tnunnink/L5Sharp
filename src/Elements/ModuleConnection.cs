@@ -1,16 +1,15 @@
 ﻿using System.Linq;
-using System.Net.Http.Headers;
 using System.Xml.Linq;
 using L5Sharp.Components;
 using L5Sharp.Enums;
 using L5Sharp.Extensions;
 
-namespace L5Sharp.Entities;
+namespace L5Sharp.Elements;
 
 /// <summary>
 /// A component of a <see cref="Module"/> that represents the properties and data of the connection to the field device.
 /// </summary>
-public sealed class ModuleConnection : LogixEntity<ModuleConnection>
+public sealed class ModuleConnection : LogixElement<ModuleConnection>
 {
     /// <inheritdoc />
     public ModuleConnection()
@@ -30,7 +29,7 @@ public sealed class ModuleConnection : LogixEntity<ModuleConnection>
     /// <summary>
     /// Gets the name of the <see cref="ModuleConnection"/> component.
     /// </summary>
-    public string Name
+    public string? Name
     {
         get => GetValue<string>();
         set => SetValue(value);
@@ -84,7 +83,7 @@ public sealed class ModuleConnection : LogixEntity<ModuleConnection>
     /// <summary>
     /// Gets the <see cref="Enums.ConnectionType"/> value for the <see cref="ModuleConnection"/>.
     /// </summary>
-    public ConnectionType Type
+    public ConnectionType? Type
     {
         get => GetValue<ConnectionType>();
         set => SetValue(value);
@@ -93,7 +92,7 @@ public sealed class ModuleConnection : LogixEntity<ModuleConnection>
     /// <summary>
     /// Gets the <see cref="Enums.ConnectionPriority"/> value for the <see cref="ModuleConnection"/>.
     /// </summary>
-    public ConnectionPriority Priority
+    public ConnectionPriority? Priority
     {
         get => GetValue<ConnectionPriority>();
         set => SetValue(value);
@@ -102,7 +101,7 @@ public sealed class ModuleConnection : LogixEntity<ModuleConnection>
     /// <summary>
     /// Gets the <see cref="Enums.TransmissionType"/> value for the <see cref="ModuleConnection"/>.
     /// </summary>
-    public TransmissionType InputConnectionType
+    public TransmissionType? InputConnectionType
     {
         get => GetValue<TransmissionType>();
         set => SetValue(value);
@@ -120,7 +119,7 @@ public sealed class ModuleConnection : LogixEntity<ModuleConnection>
     /// <summary>
     /// Gets the <see cref="Enums.ProductionTrigger"/> value for the <see cref="ModuleConnection"/>.
     /// </summary>
-    public ProductionTrigger InputProductionTrigger
+    public ProductionTrigger? InputProductionTrigger
     {
         get => GetValue<ProductionTrigger>();
         set => SetValue(value);
@@ -138,7 +137,7 @@ public sealed class ModuleConnection : LogixEntity<ModuleConnection>
     /// <summary>
     /// Gets the value of the Event ID used in conjunction with an event task for the <see cref="ModuleConnection"/>.
     /// </summary>
-    public int EventId
+    public int? EventId
     {
         get => GetValue<int>();
         set => SetValue(value);
@@ -183,5 +182,18 @@ public sealed class ModuleConnection : LogixEntity<ModuleConnection>
     /// <summary>
     /// Gets the Tag that represents the output channel data for the <see cref="ModuleConnection"/>.
     /// </summary>
-    public Tag? Output { get; set; }
+    public Tag? Output
+    {
+        get
+        {
+            var element = Element.Descendants(L5XName.OutputTag).FirstOrDefault();
+
+            if (element is null) return default;
+
+            return new Tag(element)
+            {
+                Name = element.ModuleTagName(OutputTagSuffix)
+            };
+        }
+    }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using L5Sharp.Components;
 using L5Sharp.Core;
-using L5Sharp.Entities;
+using L5Sharp.Elements;
 
 namespace L5Sharp.Extensions;
 
@@ -12,6 +12,42 @@ namespace L5Sharp.Extensions;
 /// </summary>
 public static class LogixExtensions
 {
+    /// <summary>
+    /// Determines if a component with the specified name exists in the collection.
+    /// </summary>
+    /// <param name="container">The logix container of component objets.</param>
+    /// <param name="name">The name of the component.</param>
+    /// <returns><c>true</c> if a component with the specified name exists; otherwise, <c>false</c>.</returns>
+    public static bool Contains<TComponent>(this LogixContainer<TComponent> container, string name)
+        where TComponent : LogixComponent<TComponent> =>
+        container.Serialize().Elements().Any(e => e.LogixName() == name);
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="container"></param>
+    /// <param name="name"></param>
+    /// <typeparam name="TComponent"></typeparam>
+    /// <returns></returns>
+    public static TComponent? Find<TComponent>(this LogixContainer<TComponent> container, string name)
+        where TComponent : LogixComponent<TComponent>
+    {
+        var element = container.Serialize();
+        var component = element.Elements().SingleOrDefault(e => e.LogixName() == name);
+        return component is not null ? LogixSerializer.Deserialize<TComponent>(component) : default;
+    }
+    
+    /// <summary>
+    /// Removes a component with the specified name from the collection.
+    /// </summary>
+    /// <param name="container">The logix container of component objets.</param>
+    /// <param name="name">The name of the component to remove.</param>
+    public static void Remove<TComponent>(this LogixContainer<TComponent> container, string name)
+        where TComponent : LogixComponent<TComponent>
+    {
+        container.Serialize().Elements().SingleOrDefault(c => c.LogixName() == name)?.Remove();
+    }
+
     /// <summary>
     /// Returns all <see cref="DataType"/> instances that are dependent on the specified data type name.
     /// </summary>
@@ -22,13 +58,14 @@ public static class LogixExtensions
     /// This is mostly here as an example of how one could extend the API of certain component collections to
     /// add custom XML queries against the source L5X and return materialized components.
     /// </remarks>
-    public static IEnumerable<DataType> DependentsOf(this ILogixCollection<DataType> dataTypes, string name)
+    public static IEnumerable<DataType> DependentsOf(this LogixContainer<DataType> dataTypes, string name)
     {
         return dataTypes.Serialize().Descendants(L5XName.DataType)
             .Where(e => e.Descendants(L5XName.Member).Any(m => m.Attribute(L5XName.DataType)?.Value == name))
             .Select(e => new DataType(e));
     }
 
+    
     public static Module Parent(this Module module)
     {
         var parent = module.Serialize().Parent.Elements().FirstOrDefault(m => m.LogixName() == module.ParentModule);
@@ -107,15 +144,4 @@ public static class LogixExtensions
 
         return results;
     }
-
-    /// <summary>
-    /// Gets a lookup of all <see cref="TagMember"/> within the current <see cref="LogixContent"/> file.
-    /// </summary>
-    /// <param name="content">The current <see cref="LogixContent"/> instance.</param>
-    /// <returns>A <see cref="ILookup{TKey,TValue}"/> of all tag names and their corresponding
-    /// <see cref="TagMember"/> instance in the L5X file.</returns>
-    /// <remarks>This is helper to get a tag lookup for fast access to finding tags within the L5X file. Note that some
-    /// tags may have multiple <see cref="TagMember"/> instance if they are scoped (program) tags with the same tag name.</remarks>
-    public static ILookup<TagName, TagMember> TagLookup(this LogixContent content) =>
-        content.Find<Tag>().SelectMany(t => t.MembersAndSelf()).ToLookup(t => t.TagName, t => t);
 }

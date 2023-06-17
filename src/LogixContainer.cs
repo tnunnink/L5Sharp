@@ -8,19 +8,17 @@ using L5Sharp.Extensions;
 namespace L5Sharp;
 
 /// <summary>
-/// 
+///  
 /// </summary>
-/// <typeparam name="TEntity"></typeparam>
-public class LogixContainer<TEntity> : ILogixCollection<TEntity> where TEntity : ILogixComponent, ILogixSerializable
+/// <typeparam name="TElement">The type inheriting <see cref="LogixElement{TElement}"/>.</typeparam>
+public class LogixContainer<TElement> : IEnumerable<TElement>, ILogixSerializable where TElement : LogixElement<TElement>
 {
-    protected readonly XElement Container;
-
     /// <summary>
     /// Creates a empty <see cref="LogixContainer{TComponent}"/>.
     /// </summary>
     public LogixContainer()
     {
-        Container = new XElement($"{typeof(TEntity).LogixTypeName()}s");
+        _element = new XElement($"{typeof(TElement).LogixTypeName()}s");
     }
 
     /// <summary>
@@ -30,29 +28,32 @@ public class LogixContainer<TEntity> : ILogixCollection<TEntity> where TEntity :
     /// <exception cref="ArgumentNullException"><c>container</c> is null.</exception>
     public LogixContainer(XElement container)
     {
-        Container = container ?? throw new ArgumentNullException(nameof(container));
+        _element = container ?? throw new ArgumentNullException(nameof(container));
     }
 
     /// <summary>
     /// Creates a new <see cref="LogixContainer{TComponent}"/> initialized with the provided collection.
     /// </summary>
     /// <param name="components">The collection of components to initialize.</param>
-    public LogixContainer(IEnumerable<TEntity> components)
+    public LogixContainer(IEnumerable<TElement> components) : this()
     {
         if (components is null)
             throw new ArgumentNullException(nameof(components));
-
-        Container = new XElement($"{typeof(TEntity).LogixTypeName()}s");
 
         foreach (var component in components)
         {
             if (component is null)
                 throw new ArgumentNullException(nameof(component));
-            
-            Container.Add(component.Serialize());    
+
+            _element.Add(component.Serialize());
         }
-        
     }
+    
+    /// <summary>
+    /// The underlying <see cref="XElement"/> representing the backing data for the container. Use this object to store
+    /// and retrieve data for the the collection.
+    /// </summary>
+    private readonly XElement _element;
 
     /// <summary>
     /// Accesses a single component at the specified index of the collection.
@@ -60,20 +61,20 @@ public class LogixContainer<TEntity> : ILogixCollection<TEntity> where TEntity :
     /// <param name="index">The zero based index of the component to retrieve.</param>
     /// <exception cref="ArgumentOutOfRangeException"><c>index</c> is less than zero or greater than or equal to the
     /// number of components in the collection.</exception>
-    public virtual TEntity this[int index]
+    public TElement this[int index]
     {
-        get => LogixSerializer.Deserialize<TEntity>(Container.Elements().ElementAt(index));
-        set => Container.Elements().ElementAt(index).ReplaceWith(value.Serialize());
+        get => LogixSerializer.Deserialize<TElement>(_element.Elements().ElementAt(index));
+        set => _element.Elements().ElementAt(index).ReplaceWith(value.Serialize());
     }
-
+    
     /// <summary>
     /// Accesses a single component with the specified name.
     /// </summary>
     /// <param name="name">The name of the component to retrieve.</param>
-    public virtual TEntity this[string name]
+    public TElement this[string name]
     {
-        get => LogixSerializer.Deserialize<TEntity>(Container.Elements().Single(e => e.LogixName() == name));
-        set => Container.Elements().Single(e => e.LogixName() == name).ReplaceWith(value.Serialize());
+        get => LogixSerializer.Deserialize<TElement>(_element.Elements().Single(e => e.LogixName() == name));
+        set => _element.Elements().Single(e => e.LogixName() == name).ReplaceWith(value.Serialize());
     }
 
     /// <summary>
@@ -81,19 +82,19 @@ public class LogixContainer<TEntity> : ILogixCollection<TEntity> where TEntity :
     /// </summary>
     /// <param name="component">The component to add.</param>
     /// <exception cref="ArgumentNullException"><c>component</c> is null.</exception>
-    public virtual void Add(TEntity component)
+    public void Add(TElement component)
     {
         if (component is null)
             throw new ArgumentNullException(nameof(component));
 
-        Container.Add(component.Serialize());
+        _element.Add(component.Serialize());
     }
 
     /// <summary>
     /// Adds the provided components to the collection.
     /// </summary>
     /// <param name="components">The collection of components to add.</param>
-    public virtual void AddMany(IEnumerable<TEntity> components)
+    public void AddRange(IEnumerable<TElement> components)
     {
         if (components is null)
             throw new ArgumentNullException(nameof(components));
@@ -103,38 +104,20 @@ public class LogixContainer<TEntity> : ILogixCollection<TEntity> where TEntity :
             if (component is null)
                 throw new ArgumentNullException(nameof(component));
 
-            Container.Add(component);
+            _element.Add(component);
         }
     }
 
     /// <summary>
     /// Removes all components in the collection.
     /// </summary>
-    public virtual void Clear() => Container.RemoveNodes();
-
-    /// <summary>
-    /// Determines if a component with the specified name exists in the collection.
-    /// </summary>
-    /// <param name="name">The name of the component.</param>
-    /// <returns><c>true</c> if a component with the specified name exists; otherwise, <c>false</c>.</returns>
-    public virtual bool Contains(string name) => Container.Elements().Any(e => e.LogixName() == name);
+    public void Clear() => _element.RemoveNodes();
 
     /// <summary>
     /// Gets the number of components in the collection.
     /// </summary>
     /// <returns>A <see cref="int"/> representing the number of components in the collection.</returns>
-    public virtual int Count() => Container.Elements().Count();
-
-    /// <summary>
-    /// Returns a component with the specified name if found in the collection. If not found, returns <c>null</c>.
-    /// </summary>
-    /// <param name="name">The name of the component to find.</param>
-    /// <returns>If found, the component instance with the specified name; otherwise, <c>null</c>.</returns>
-    public virtual TEntity? Find(string name)
-    {
-        var component = Container.Elements().SingleOrDefault(e => e.LogixName() == name);
-        return component is not null ? LogixSerializer.Deserialize<TEntity>(component) : default;
-    }
+    public int Count() => _element.Elements().Count();
 
     /// <summary>
     /// Inserts the provided component at the specified index of the collection.
@@ -144,97 +127,49 @@ public class LogixContainer<TEntity> : ILogixCollection<TEntity> where TEntity :
     /// <exception cref="ArgumentNullException"><c>component</c> is null.</exception>
     /// <exception cref="ArgumentOutOfRangeException"><c>index</c> is less than zero or greater than or equal to the
     /// number of components in the collection.</exception>
-    public virtual void Insert(int index, TEntity component)
+    public void Insert(int index, TElement component)
     {
         if (component is null)
             throw new ArgumentNullException(nameof(component));
 
-        var count = Container.Elements().Count();
-
-        if (index < 0 || index > count)
-            throw new IndexOutOfRangeException();
+        var count = _element.Elements().Count();
 
         if (index == count)
         {
-            Container.Add(component.Serialize());
+            _element.Add(component.Serialize());
             return;
         }
 
-        Container.Elements().ElementAt(index).AddBeforeSelf(component.Serialize());
+        _element.Elements().ElementAt(index).AddBeforeSelf(component.Serialize());
     }
 
     /// <summary>
-    /// Removes a component at the specified index of the collection.
+    /// Removes a element at the specified index of the collection.
     /// </summary>
-    /// <param name="index">The zero based index of the component to remove.</param>
+    /// <param name="index">The zero based index of the element to remove.</param>
     /// <exception cref="ArgumentOutOfRangeException"><c>index</c> is less than zero or greater than or equal to the
     /// number of components in the collection.</exception>
-    public virtual void Remove(int index)
+    public void Remove(int index)
     {
-        Container.Elements().ElementAt(index).Remove();
+        _element.Elements().ElementAt(index).Remove();
     }
 
     /// <summary>
-    /// Removes a component with the specified name from the collection.
-    /// </summary>
-    /// <param name="name">The name of the component to remove.</param>
-    public virtual void Remove(string name)
-    {
-        Container.Elements().SingleOrDefault(c => c.LogixName() == name)?.Remove();
-    }
-
-    /// <summary>
-    /// Removes all components that satisfy the provided condition predicate.
+    /// Removes all elements that satisfy the provided condition predicate.
     /// </summary>
     /// <param name="condition">The condition for which to remove components.</param>
     /// <exception cref="ArgumentNullException"><c>condition</c> is null.</exception>
-    public virtual void Remove(Func<TEntity, bool> condition)
+    public void Remove(Func<TElement, bool> condition)
     {
-        Container.Elements().Where(e => condition.Invoke(LogixSerializer.Deserialize<TEntity>(e))).Remove();
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="update"></param>
-    /// <exception cref="ArgumentNullException"></exception>
-    public virtual void Update(Action<TEntity> update)
-    {
-        if (update is null)
-            throw new ArgumentNullException(nameof(update));
-
-        var elements = Container.Elements();
-
-        foreach (var element in elements)
-        {
-            var component = LogixSerializer.Deserialize<TEntity>(element);
-            update.Invoke(component);
-            element.ReplaceWith(component.Serialize());
-        }
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="condition"></param>
-    /// <param name="update"></param>
-    public virtual void Update(Func<TEntity, bool> condition, Action<TEntity> update)
-    {
-        foreach (var element in Container.Elements())
-        {
-            var entity = LogixSerializer.Deserialize<TEntity>(element);
-            if (!condition.Invoke(entity)) continue;
-            update.Invoke(entity);
-            element.ReplaceWith(entity.Serialize());
-        }
+        _element.Elements().Where(e => condition.Invoke(LogixSerializer.Deserialize<TElement>(e))).Remove();
     }
 
     /// <inheritdoc />
-    public IEnumerator<TEntity> GetEnumerator() =>
-        Container.Elements().Select(LogixSerializer.Deserialize<TEntity>).GetEnumerator();
+    public XElement Serialize() => _element;
+
+    /// <inheritdoc />
+    public IEnumerator<TElement> GetEnumerator() =>
+        _element.Elements().Select(LogixSerializer.Deserialize<TElement>).GetEnumerator();
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-
-    /// <inheritdoc />
-    public XElement Serialize() => Container;
 }

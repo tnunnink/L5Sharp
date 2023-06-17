@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 using L5Sharp.Core;
-using L5Sharp.Entities;
+using L5Sharp.Elements;
 using L5Sharp.Extensions;
 
 namespace L5Sharp.Components;
@@ -21,12 +21,18 @@ namespace L5Sharp.Components;
 [XmlType(L5XName.AddOnInstructionDefinition)]
 public class AddOnInstruction : LogixComponent<AddOnInstruction>
 {
-    /// <inheritdoc />
+    /// <summary>
+    /// Creates a new <see cref="AddOnInstruction"/> with default values.
+    /// </summary>
     public AddOnInstruction()
     {
     }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Creates a new <see cref="AddOnInstruction"/> initialized with the provided <see cref="XElement"/>.
+    /// </summary>
+    /// <param name="element">The <see cref="XElement"/> to initialize the type with.</param>
+    /// <exception cref="ArgumentNullException"><c>element</c> is null.</exception>
     public AddOnInstruction(XElement element) : base(element)
     {
     }
@@ -40,43 +46,71 @@ public class AddOnInstruction : LogixComponent<AddOnInstruction>
     /// Each revision number can be 1...65,535.
     /// If there is no period, the number is treated as a major revision only
     /// </remarks>
-    public Revision Revision { get; set; } = new();
+    public Revision? Revision
+    {
+        get => GetValue<Revision>();
+        set => SetValue(value);
+    }
 
     /// <summary>
     /// Additional text indicating or identifying the revision of the instruction.
     /// </summary>
     /// <value>A <see cref="string"/> containing text of the revision extension.</value>
-    public string RevisionExtension { get; set; } = string.Empty;
+    public string? RevisionExtension
+    {
+        get => GetValue<string>();
+        set => SetValue(value);
+    }
 
     /// <summary>
     /// Additional text describing release information or changes with the current revision(s).
     /// </summary>
     /// <value>A <see cref="string"/> containing the text of the revision note.</value>
-    public string RevisionNote { get; set; } = string.Empty;
+    public string? RevisionNote
+    {
+        get => GetProperty<string>();
+        set => SetProperty(value);
+    }
 
     /// <summary>
     /// The vendor or creator of the instruction.
     /// </summary>
     /// <value>A <see cref="string"/> value representing the name of the vendor.</value>
-    public string Vendor { get; set; } = string.Empty;
+    public string? Vendor
+    {
+        get => GetValue<string>();
+        set => SetValue(value);
+    }
 
     /// <summary>
     /// Indicates that the instruction has and executes a pre scan routine.
     /// </summary>
     /// <value><c>true</c> if the instruction executes a pre scan routine; otherwise, <c>false</c>.</value>
-    public bool ExecutePreScan { get; set; }
+    public bool ExecutePreScan
+    {
+        get => GetValue<bool>();
+        set => SetValue(value);
+    }
 
     /// <summary>
     /// Indicates that the instruction has and executes a post scan routine.
     /// </summary>
     /// <value><c>true</c> if the instruction executes a post scan routine; otherwise, <c>false</c>.</value>
-    public bool ExecutePostScan { get; set; }
+    public bool ExecutePostScan
+    {
+        get => GetValue<bool>();
+        set => SetValue(value);
+    }
 
     /// <summary>
     /// Indicates that the instruction has and executes a enable in false routine.
     /// </summary>
     /// <value>A <see cref="bool"/> - <c>true</c> if the instruction executes a enable in false routine; otherwise, <c>false</c>.</value>
-    public bool ExecuteEnableInFalse { get; set; }
+    public bool ExecuteEnableInFalse
+    {
+        get => GetValue<bool>();
+        set => SetValue(value);
+    }
 
     /// <summary>
     /// The date and time that the instruction was created.
@@ -113,28 +147,48 @@ public class AddOnInstruction : LogixComponent<AddOnInstruction>
     /// The help text specific to the Add-On Instruction.
     /// </summary>
     /// <value>A <see cref="string"/> containing the help text.</value>
-    public string AdditionalHelpText { get; set; } = string.Empty;
+    public string? AdditionalHelpText
+    {
+        get => GetProperty<string>();
+        set => SetProperty(value);
+    }
 
     /// <summary>
     /// Indicates whether the Add-On Instruction is protected with license-based Source Protection and locked
     /// </summary>
     /// <value><c>true</c> if the instruction is encrypted; otherwise, <c>false</c>.</value>
-    public bool IsEncrypted { get; set; }
+    public bool IsEncrypted
+    {
+        get => GetValue<bool>();
+        set => SetValue(value);
+    }
 
     /// <summary>
-    /// Gets the collection of <see cref="Parameter"/> objects that define the AOI structure type.
+    /// The collection of <see cref="Parameter"/> that make up the structure of the instruction component.
     /// </summary>
-    public List<Parameter> Parameters { get; set; } = new();
+    public LogixContainer<Parameter> Parameters
+    {
+        get => GetContainer<Parameter>();
+        set => SetContainer(value);
+    }
 
     /// <summary>
-    /// Gets the collection of local <see cref="Tag"/> objects used within the AOI logic.
+    /// The collection of local <see cref="Tag"/> objects used within the AOI logic.
     /// </summary>
-    public List<Tag> LocalTags { get; set; } = new();
+    public LogixContainer<Tag> LocalTags
+    {
+        get => GetContainer<Tag>();
+        set => SetContainer(value);
+    }
 
     /// <summary>
-    /// Gets the collection of <see cref="Routine"/> objects that contain the logic for the instruction.
+    /// The collection of local <see cref="Routine"/> objects that contain the logic for the instruction.
     /// </summary>
-    public List<Routine> Routines { get; set; } = new();
+    public LogixContainer<Routine> Routines
+    {
+        get => GetContainer<Routine>();
+        set => SetContainer(value);
+    }
 
     /// <summary>
     /// Returns the AOI instruction logic with the parameters of the instruction replaced with the provided neutral
@@ -177,7 +231,6 @@ public class AddOnInstruction : LogixComponent<AddOnInstruction>
                 if (!pair.Argument.IsTagName()) return current;
                 var replace = $@"(?<=[^.]){pair.Parameter}\b";
                 return Regex.Replace(current, replace, pair.Argument.ToString());
-
             }))
             .ToList();
     }

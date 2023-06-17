@@ -96,18 +96,18 @@ public class Program : LogixComponent<Program>
     /// <summary>
     /// The collection of <see cref="Tag"/> objects for the program component.
     /// </summary>
-    public ILogixCollection<Tag> Tags
+    public LogixContainer<Tag> Tags
     {
-        get => GetCollection<Tag>();
-        set => SetCollection(value);
+        get => GetContainer<Tag>();
+        set => SetContainer(value);
     }
 
     /// <summary>
     /// The collection of <see cref="Routine"/> objects for the program component.
     /// </summary>
-    public ILogixCollection<Routine> Routines
+    public LogixContainer<Routine> Routines
     {
-        get => GetCollection<Routine>();
-        set => SetCollection(value);
+        get => GetContainer<Routine>();
+        set => SetContainer(value);
     }
 }

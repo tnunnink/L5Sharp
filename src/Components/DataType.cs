@@ -1,4 +1,5 @@
-﻿using System.Xml.Linq;
+﻿using System;
+using System.Xml.Linq;
 using L5Sharp.Enums;
 
 namespace L5Sharp.Components;
@@ -15,16 +16,18 @@ public class DataType : LogixComponent<DataType>
     /// <summary>
     /// Creates a new <see cref="DataType"/> with default values.
     /// </summary>
-    public DataType() : base(GenerateElement())
+    public DataType()
     {
         Family = DataTypeFamily.None;
         Class = DataTypeClass.User;
+        Members = new LogixContainer<DataTypeMember>();
     }
 
     /// <summary>
     /// Creates a new <see cref="DataType"/> initialized with the provided <see cref="XElement"/>.
     /// </summary>
     /// <param name="element">The <see cref="XElement"/> to initialize the type with.</param>
+    /// <exception cref="ArgumentNullException"><c>element</c> is null.</exception>
     public DataType(XElement element) : base(element)
     {
     }
@@ -58,15 +61,9 @@ public class DataType : LogixComponent<DataType>
     /// <summary>
     /// The collection of <see cref="DataTypeMember"/> that make up the structure of the <c>DataType</c> component.
     /// </summary>
-    public ILogixCollection<DataTypeMember> Members
+    public LogixContainer<DataTypeMember> Members
     {
-        get => GetCollection<DataTypeMember>();
-        set => SetCollection(value);
+        get => GetContainer<DataTypeMember>();
+        set => SetContainer(value);
     }
-
-    /// <summary>
-    /// Created the default backing element for the component. 
-    /// </summary>
-    /// <returns>A <see cref="XElement"/> representing the underlying L5X element for the type.</returns>
-    private static XElement GenerateElement() => new(nameof(DataType), new XElement(L5XName.Members));
 }

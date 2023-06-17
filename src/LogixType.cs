@@ -30,7 +30,7 @@ namespace L5Sharp;
 /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
 /// `Logix 5000 Controllers Import/Export`</a> for more information.
 /// </footer>
-public abstract class LogixType : LogixEntity<LogixType>
+public abstract class LogixType : LogixElement<LogixType>
 {
     /// <summary>
     /// Initialized a new <see cref="LogixType"/> with the provided <see cref="XElement"/> object.

@@ -2,7 +2,6 @@
 using L5Sharp.Components;
 using L5Sharp.Core;
 using L5Sharp.Enums;
-using L5Sharp.Extensions;
 
 namespace L5Sharp.Tests.Components
 {
@@ -24,7 +23,7 @@ namespace L5Sharp.Tests.Components
 
             task.Name.Should().BeEmpty();
             task.Type.Should().Be(TaskType.Periodic);
-            task.Description.Should().BeEmpty();
+            task.Description.Should().BeNull();
             task.Priority.Should().Be(new TaskPriority(10));
             task.Rate.Should().Be(new ScanRate(10));
             task.Watchdog.Should().Be(new Watchdog(500));
@@ -46,12 +45,6 @@ namespace L5Sharp.Tests.Components
                 Watchdog = new Watchdog(501),
                 InhibitTask = true,
                 DisableUpdateOutputs = true,
-                ScheduledPrograms = new List<string>
-                {
-                    "MainProgram",
-                    "TestProgram",
-                    "Another"
-                }
             };
 
             task.Name.Should().Be("Test");
@@ -62,7 +55,7 @@ namespace L5Sharp.Tests.Components
             task.Watchdog.Should().Be(new Watchdog(501));
             task.InhibitTask.Should().BeTrue();
             task.DisableUpdateOutputs.Should().BeTrue();
-            task.ScheduledPrograms.Should().HaveCount(3);
+            task.ScheduledPrograms.Should().BeEmpty();
         }
 
         [Test]
@@ -81,10 +74,63 @@ namespace L5Sharp.Tests.Components
             
             clone.Type = TaskType.Event;
             task.Type.Should().Be(TaskType.Periodic);
+        }
+
+        [Test]
+        public void Schedule_ValidName_ShouldHaveExpectedPrograms()
+        {
+            var task = new LogixTask();
             
-            clone.ScheduledPrograms.Add("New");
-            clone.ScheduledPrograms.Should().HaveCount(1);
+            task.Schedule("Test");
+
+            task.ScheduledPrograms.Should().HaveCount(1);
+        }
+
+        [Test]
+        public void Cancel_Existing_ShouldHaveExpectedPrograms()
+        {
+            var task = new LogixTask();
+            
+            task.Schedule("Test");
+            task.ScheduledPrograms.Should().HaveCount(1);
+
+            task.Cancel("Test");
             task.ScheduledPrograms.Should().BeEmpty();
+        }
+
+        [Test]
+        public Task Serialize_Default_ShouldBeVerified()
+        {
+            var task = new LogixTask();
+
+            var xml = task.Serialize().ToString();
+
+            return Verify(xml);
+        }
+
+        [Test]
+        public Task Serialize_Initialized_ShouldBeVerified()
+        {
+            var task = new LogixTask
+            {
+                Name = "Test",
+                Type = TaskType.Continuous,
+                Description = "This is a test",
+                Priority = new TaskPriority(13),
+                Rate = new ScanRate(300),
+                Watchdog = new Watchdog(501),
+                InhibitTask = true,
+                DisableUpdateOutputs = true
+            };
+            
+            task.Schedule("Program1");
+            task.Schedule("Test");
+            task.Schedule("Another");
+            task.Schedule("Another");
+
+            var xml = task.Serialize().ToString();
+            
+            return Verify(xml);
         }
     }
 }

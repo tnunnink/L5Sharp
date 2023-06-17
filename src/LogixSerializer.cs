@@ -36,7 +36,7 @@ public static class LogixSerializer
         foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
         {
             var types = assembly.GetTypes().Where(t =>
-                IsDerivativeOf(t, typeof(LogixEntity<>))
+                IsDerivativeOf(t, typeof(LogixElement<>))
                 && t is { IsAbstract: false, IsPublic: true }
                 && t.GetConstructor(new[] { typeof(XElement) }) is not null);
 
@@ -146,7 +146,7 @@ public static class LogixSerializer
 
         if (type is null)
             throw new InvalidOperationException(
-                $"Type '{typeName}' is not registered. LogixSerializer only supports public, non-abstract classes inheriting from {typeof(LogixEntity<>)} which have a public constructor accepting a single {typeof(XElement)} argument.");
+                $"Type '{typeName}' is not registered. LogixSerializer only supports public, non-abstract classes inheriting from {typeof(LogixElement<>)} which have a public constructor accepting a single {typeof(XElement)} argument.");
 
         return Constructors.Value[type];
     }

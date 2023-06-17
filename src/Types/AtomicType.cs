@@ -32,11 +32,11 @@ public abstract class AtomicType : LogixType
         if (radix is null)
             throw new ArgumentNullException(nameof(radix));
 
-        if (!radix.SupportsType(this))
-            throw new ArgumentException($"The radix {radix} is not supported for atomic type {typeof(AtomicType)}");
-
         if (bytes is null)
             throw new ArgumentNullException(nameof(bytes));
+        
+        if (!radix.SupportsType(this))
+            throw new ArgumentException($"The radix {radix} is not supported for atomic type {typeof(AtomicType)}");
 
         Value = new BitArray(bytes);
         Element.SetAttributeValue(L5XName.Value, ToString(radix));

@@ -100,6 +100,9 @@
       <None Update="Types\Atomics\IntTests.Serialize_ValueAndRadix_ShouldBeValid.verified.txt">
         <DependentUpon>IntTests.cs</DependentUpon>
       </None>
+      <None Update="Components\TaskTests.Serialize_Default_ShouldBeVerified.verified.txt">
+        <DependentUpon>TaskTests.cs</DependentUpon>
+      </None>
     </ItemGroup>
 
     <ItemGroup>
