@@ -13,6 +13,7 @@ namespace L5Sharp.Types;
 /// <remarks>
 /// Logix atomic types are types that have value (i.e. BOOL, SINT, INT, DINT, REAL, etc.).
 /// These type are synonymous with value types in .NET. This is the common abstract class for all atomic types.
+/// Internally the atomic type
 /// </remarks>
 /// <footer>
 /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
@@ -29,38 +30,11 @@ public abstract class AtomicType : LogixType
     /// <exception cref="ArgumentNullException">name is null.</exception>
     protected internal AtomicType(string name, Radix radix, byte[] bytes) : base(GenerateElement(name, radix))
     {
-        if (radix is null)
-            throw new ArgumentNullException(nameof(radix));
-
-        if (bytes is null)
-            throw new ArgumentNullException(nameof(bytes));
-        
         if (!radix.SupportsType(this))
             throw new ArgumentException($"The radix {radix} is not supported for atomic type {typeof(AtomicType)}");
 
-        Value = new BitArray(bytes);
-        Element.SetAttributeValue(L5XName.Value, ToString(radix));
-    }
-
-    /// <summary>
-    /// Creates a new <see cref="AtomicType"/> instance with the provided name.
-    /// </summary>
-    /// <param name="name">The name of the atomic type.</param>
-    /// <param name="radix">The default <see cref="Enums.Radix"/> format of the type.</param>
-    /// <param name="bits">An array of bits that represent the value of the type.</param>
-    /// <exception cref="ArgumentNullException">name is null.</exception>
-    protected internal AtomicType(string name, Radix radix, bool[] bits): base(GenerateElement(name, radix))
-    {
-        if (radix is null)
-            throw new ArgumentNullException(nameof(radix));
-
-        if (!radix.SupportsType(this))
-            throw new ArgumentException($"The radix {radix} is not supported for atomic type {typeof(AtomicType)}");
-
-        if (bits is null)
-            throw new ArgumentNullException(nameof(bits));
-
-        Value = new BitArray(bits);
+        Radix = radix;
+        Value = bytes;
         Element.SetAttributeValue(L5XName.Value, ToString(radix));
     }
 
@@ -72,7 +46,7 @@ public abstract class AtomicType : LogixType
     {
         get
         {
-            for (var i = 0; i < Value.Count; i++)
+            for (var i = 0; i < ToBitArray().Count; i++)
                 yield return new Member(i.ToString(), new BOOL(Value[i]));
         }
     }
@@ -81,13 +55,19 @@ public abstract class AtomicType : LogixType
     /// The radix format for the <see cref="AtomicType"/>.
     /// </summary>
     /// <value>A <see cref="Enums.Radix"/> representing the format of the atomic type value.</value>
-    public Radix Radix => GetValue<Radix>() ?? throw new L5XException(Element);
+    public Radix Radix { get; }
 
     /// <summary>
     /// The underlying value of the <see cref="AtomicType"/>.
     /// </summary>
     /// <value>A <see cref="BitArray"/> representing the value of the type.</value>
-    protected BitArray Value { get; }
+    private byte[] Value { get; }
+
+    /// <summary>
+    /// Returns the <see cref="AtomicType"/> value as an array of <see cref="byte"/>.
+    /// </summary>
+    /// <returns>An array of <see cref="byte"/> representing the underlying value of the type.</returns>
+    public byte[] GetBytes() => Value;
 
     /// <summary>
     /// Return the atomic value formatted using the current <see cref="Radix"/> format.
@@ -106,21 +86,19 @@ public abstract class AtomicType : LogixType
     /// Returns the <see cref="AtomicType"/> value as a <see cref="BitArray"/>.  
     /// </summary>
     /// <returns>A <see cref="BitArray"/> representing the underlying value of the type.</returns>
-    public BitArray ToBitArray() => Value;
+    public BitArray ToBitArray() => new(Value);
 
-    /// <summary>
-    /// Returns the <see cref="AtomicType"/> value as an array of <see cref="byte"/>.
-    /// </summary>
-    /// <returns>An array of <see cref="byte"/> representing the underlying value of the type.</returns>
-    public byte[] ToBytes()
-    {
+    /*{
         var bytes = new byte[(Value.Length - 1) / 8 + 1];
         Value.CopyTo(bytes, 0);
         return bytes;
-    }
+    }*/
 
     private static XElement GenerateElement(string name, Radix radix)
     {
+        if (name is null) throw new ArgumentNullException(nameof(name));
+        if (radix is null) throw new ArgumentNullException(nameof(radix));
+
         var element = new XElement(L5XName.DataValue);
         element.Add(new XAttribute(L5XName.DataType, name));
         element.Add(new XAttribute(L5XName.Radix, radix));

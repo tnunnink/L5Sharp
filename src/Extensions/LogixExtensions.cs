@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using L5Sharp.Components;
 using L5Sharp.Core;
 using L5Sharp.Elements;
@@ -36,7 +37,7 @@ public static class LogixExtensions
         var component = element.Elements().SingleOrDefault(e => e.LogixName() == name);
         return component is not null ? LogixSerializer.Deserialize<TComponent>(component) : default;
     }
-    
+
     /// <summary>
     /// Removes a component with the specified name from the collection.
     /// </summary>
@@ -65,7 +66,7 @@ public static class LogixExtensions
             .Select(e => new DataType(e));
     }
 
-    
+
     public static Module Parent(this Module module)
     {
         var parent = module.Serialize().Parent.Elements().FirstOrDefault(m => m.LogixName() == module.ParentModule);
@@ -144,4 +145,48 @@ public static class LogixExtensions
 
         return results;
     }
+
+    #region StringExtensions
+
+    /// <summary>
+    /// Determines if the current string is equal to string.Empty.
+    /// </summary>
+    /// <param name="value">The string input to analyze.</param>
+    /// <returns>true if the string is empty. Otherwise false.</returns>
+    public static bool IsEmpty(this string value) => value.Equals(string.Empty);
+
+    /// <summary>
+    /// Tests the current string to indicate whether it is a valid Logix component name value. 
+    /// </summary>
+    /// <param name="name">The string name to test.</param>
+    /// <returns><c>true</c> if <c>name</c> passes the Logix component name requirements; otherwise, <c>false</c>.</returns>
+    /// <remarks>
+    /// Valid name must contain only alphanumeric or underscores, start with a letter or underscore,
+    /// and be between 1 and 40 characters.
+    /// </remarks>
+    public static bool IsComponentName(this string name)
+    {
+        if (string.IsNullOrEmpty(name)) return false;
+        var characters = name.ToCharArray();
+        if (name.Length > 40) return false;
+        if (!(char.IsLetter(characters[0]) || characters[0] == '_')) return false;
+        return characters.All(c => char.IsLetter(c) || char.IsDigit(c) || c == '_');
+    }
+
+    /// <summary>
+    /// Determines if the current string is a value <see cref="TagName"/> string.
+    /// </summary>
+    /// <param name="input">The string input to analyze.</param>
+    /// <returns><c>true</c> if the string is a valid tag name string; otherwise, <c>false</c>.</returns>
+    public static bool IsTagName(this string input) => Regex.IsMatch(input,
+        @"^[A-Za-z_][\w+:]{1,39}(?:(?:\[\d+\]|\[\d+,\d+\]|\[\d+,\d+,\d+\])?(?:\.[A-Za-z_]\w{1,39})?)+(?:\.[0-9][0-9]?)?$");
+
+    /// <summary>
+    /// Converts the current <see cref="string"/> text into a <see cref="TagName"/> object. 
+    /// </summary>
+    /// <param name="text">The text to convert.</param>
+    /// <returns>A <see cref="TagName"/> containing the value of the current text.</returns>
+    public static TagName ToTagName(this string text) => new(text);
+
+    #endregion
 }

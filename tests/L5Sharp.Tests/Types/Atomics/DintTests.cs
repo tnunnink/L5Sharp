@@ -142,7 +142,7 @@ namespace L5Sharp.Tests.Types
             var expected = BitConverter.GetBytes(_random);
             var type = new DINT(_random);
 
-            var bytes = type.ToBytes();
+            var bytes = type.GetBytes();
 
             CollectionAssert.AreEqual(bytes, expected);
         }

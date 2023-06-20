@@ -34,10 +34,7 @@ public class MemberTests
     [Test]
     public void New_EmptyName_ShouldHaveEmptyName()
     {
-        var member = new Member(string.Empty, new BOOL());
-
-        member.Should().NotBeNull();
-        member.Name.Should().BeEmpty();
+        FluentActions.Invoking(() => new Member(string.Empty, new BOOL())).Should().Throw<ArgumentNullException>();
     }
 
     [Test]
@@ -47,7 +44,7 @@ public class MemberTests
     }
 
     [Test]
-    public void New_NullLogixType_ShouldThrowArgumentNullException()
+    public void New_NullLogixType_ShouldThrowNotSupportedException()
     {
         FluentActions.Invoking(() => new Member("Test", LogixType.Null)).Should().Throw<NotSupportedException>();
     }

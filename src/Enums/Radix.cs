@@ -189,7 +189,7 @@ public abstract class Radix : LogixEnum<Radix, string>
             _ => 2
         };
 
-        var bytes = type.ToBytes();
+        var bytes = type.GetBytes();
         var builder = new StringBuilder();
 
         for (var ctr = bytes.GetUpperBound(0); ctr >= bytes.GetLowerBound(0); ctr--)
@@ -506,7 +506,7 @@ public abstract class Radix : LogixEnum<Radix, string>
 
             return !input.IsEmpty() && input.Contains(".")
                                     && input.Contains("e", StringComparison.OrdinalIgnoreCase)
-                                    && input.ReplaceAll(new[] { ".", "e", "E", "+", "-" }, string.Empty)
+                                    && ReplaceAll(input, new[] { ".", "e", "E", "+", "-" }, string.Empty)
                                         .All(char.IsDigit);
         }
 
@@ -525,6 +525,9 @@ public abstract class Radix : LogixEnum<Radix, string>
 
             return new REAL(float.Parse(input));
         }
+        
+        private static string ReplaceAll(string value, IEnumerable<string> items, string replacement) =>
+            items.Aggregate(value, (str, cItem) => str.Replace(cItem, replacement));
     }
 
     private class AsciiRadix : Radix
@@ -571,16 +574,27 @@ public abstract class Radix : LogixEnum<Radix, string>
         {
             ValidateFormat(input);
 
-            var value = GenerateHex(input.TrimSingle(SpecifierChar));
+            var value = GenerateHex(TrimSingle(input, SpecifierChar));
 
             return ToAtomic(value, BitsPerByte, BaseNumber);
+        }
+        
+        private static string TrimSingle(string value, char character)
+        {
+            if (value.StartsWith(character) && value.EndsWith(character))
+                return value.Substring(1, value.Length - 2);
+
+            if (value.StartsWith(character))
+                return value.Substring(1, value.Length - 1);
+
+            return value.EndsWith(character) ? value[..^2] : value;
         }
 
         private static string GenerateAscii(string str)
         {
             var builder = new StringBuilder();
 
-            var segments = str.Segment(BitsPerByte);
+            var segments = Segment(str, BitsPerByte);
 
             foreach (var segment in segments)
             {
@@ -620,6 +634,18 @@ public abstract class Radix : LogixEnum<Radix, string>
             }
 
             return builder.ToString();
+        }
+
+        private static IEnumerable<string> Segment(string input, int length)
+        {
+            if (input is null)
+                throw new ArgumentNullException(nameof(input));
+
+            if (length <= 0)
+                throw new ArgumentOutOfRangeException(nameof(length), "Length must be greater than 0");
+
+            for (var i = 0; i < input.Length; i += length)
+                yield return input.Substring(i, i + length < input.Length ? length : input.Length - i);
         }
     }
 

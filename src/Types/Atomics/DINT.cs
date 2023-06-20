@@ -11,7 +11,7 @@ namespace L5Sharp.Types.Atomics;
 [TypeConverter(typeof(DintConverter))]
 public sealed class DINT : AtomicType, IEquatable<DINT>, IComparable<DINT>
 {
-    private int GetValue => BitConverter.ToInt32(ToBytes());
+    private int Value => BitConverter.ToInt32(GetBytes());
 
     /// <summary>
     /// Creates a new default <see cref="DINT"/> type.
@@ -42,7 +42,7 @@ public sealed class DINT : AtomicType, IEquatable<DINT>, IComparable<DINT>
     /// Gets a <see cref="BOOL"/> at the specified bit index.
     /// </summary>
     /// <param name="bit">The bit index to access</param>
-    public BOOL this[int bit] => new(Value[bit]);
+    public BOOL this[int bit] => new(ToBitArray()[bit]);
 
     /// <summary>
     /// Represents the largest possible value of <see cref="DINT"/>.
@@ -76,7 +76,7 @@ public sealed class DINT : AtomicType, IEquatable<DINT>, IComparable<DINT>
     {
         if (ReferenceEquals(null, other)) return false;
         if (ReferenceEquals(this, other)) return true;
-        return GetValue == other.GetValue;
+        return Value == other.Value;
     }
 
     /// <inheritdoc />
@@ -87,7 +87,7 @@ public sealed class DINT : AtomicType, IEquatable<DINT>, IComparable<DINT>
     // NOT sure how else to handle since it needs to be settable and used for equality.
     // This would only be a problem if you created a hash table of atomic types.
     // NOT sure anyone would need to do that.
-    public override int GetHashCode() => GetValue.GetHashCode();
+    public override int GetHashCode() => Value.GetHashCode();
 
     /// <summary>
     /// Determines whether the objects are equal.
@@ -109,7 +109,7 @@ public sealed class DINT : AtomicType, IEquatable<DINT>, IComparable<DINT>
     public int CompareTo(DINT? other)
     {
         if (ReferenceEquals(this, other)) return 0;
-        return ReferenceEquals(null, other) ? 1 : GetValue.CompareTo(other.GetValue);
+        return ReferenceEquals(null, other) ? 1 : Value.CompareTo(other.Value);
     }
     
      #region Conversions
@@ -126,7 +126,7 @@ public sealed class DINT : AtomicType, IEquatable<DINT>, IComparable<DINT>
      /// </summary>
      /// <param name="atomic">The value to convert.</param>
      /// <returns>A <see cref="int"/> type value.</returns>
-     public static implicit operator int(DINT atomic) => atomic.GetValue;
+     public static implicit operator int(DINT atomic) => atomic.Value;
 
      /// <summary>
      /// Implicitly converts a <see cref="string"/> to a <see cref="DINT"/> value.
@@ -147,63 +147,63 @@ public sealed class DINT : AtomicType, IEquatable<DINT>, IComparable<DINT>
      /// </summary>
      /// <param name="atomic">The value to convert.</param>
      /// <returns>A <see cref="BOOL"/> type value.</returns>
-     public static explicit operator BOOL(DINT atomic) => new(atomic.GetValue != 0);
+     public static explicit operator BOOL(DINT atomic) => new(atomic.Value != 0);
 
      /// <summary>
     /// Converts the provided <see cref="DINT"/> to a <see cref="SINT"/> value.
     /// </summary>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="SINT"/> type value.</returns>
-    public static explicit operator SINT(DINT atomic) => new((sbyte)atomic.GetValue);
+    public static explicit operator SINT(DINT atomic) => new((sbyte)atomic.Value);
 
      /// <summary>
     /// Converts the provided <see cref="DINT"/> to a <see cref="USINT"/> value.
     /// </summary>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="USINT"/> type value.</returns>
-    public static explicit operator USINT(DINT atomic) => new((byte)atomic.GetValue);
+    public static explicit operator USINT(DINT atomic) => new((byte)atomic.Value);
 
     /// <summary>
     /// Converts the provided <see cref="DINT"/> to a <see cref="INT"/> value.
     /// </summary>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="DINT"/> type value.</returns>
-    public static explicit operator INT(DINT atomic) => new((short)atomic.GetValue);
+    public static explicit operator INT(DINT atomic) => new((short)atomic.Value);
 
     /// <summary>
     /// Converts the provided <see cref="DINT"/> to a <see cref="UINT"/> value.
     /// </summary>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="UINT"/> type value.</returns>
-    public static explicit operator UINT(DINT atomic) => new((ushort)atomic.GetValue);
+    public static explicit operator UINT(DINT atomic) => new((ushort)atomic.Value);
 
     /// <summary>
     /// Converts the provided <see cref="DINT"/> to a <see cref="UDINT"/> value.
     /// </summary>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="UDINT"/> type value.</returns>
-    public static explicit operator UDINT(DINT atomic) => new((uint)atomic.GetValue);
+    public static explicit operator UDINT(DINT atomic) => new((uint)atomic.Value);
 
     /// <summary>
     /// Converts the provided <see cref="DINT"/> to a <see cref="LINT"/> value.
     /// </summary>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="LINT"/> type value.</returns>
-    public static implicit operator LINT(DINT atomic) => new(atomic.GetValue);
+    public static implicit operator LINT(DINT atomic) => new(atomic.Value);
 
     /// <summary>
     /// Converts the provided <see cref="DINT"/> to a <see cref="ULINT"/> value.
     /// </summary>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="ULINT"/> type value.</returns>
-    public static explicit operator ULINT(DINT atomic) => new((ulong)atomic.GetValue);
+    public static explicit operator ULINT(DINT atomic) => new((ulong)atomic.Value);
 
     /// <summary>
     /// Converts the provided <see cref="DINT"/> to a <see cref="REAL"/> value.
     /// </summary>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="REAL"/> type value.</returns>
-    public static implicit operator REAL(DINT atomic) => new(atomic.GetValue);
+    public static implicit operator REAL(DINT atomic) => new(atomic.Value);
 
     #endregion
 }

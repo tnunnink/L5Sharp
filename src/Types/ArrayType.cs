@@ -158,17 +158,8 @@ public class ArrayType : LogixType, IEnumerable<LogixType>
     /// </summary>
     /// <typeparam name="TLogixType">The logix type to cast.</typeparam>
     /// <returns>A <see cref="ArrayType{TLogixType}"/> of the specified.</returns>
-    public ArrayType<TLogixType> AsArray<TLogixType>() where TLogixType : LogixType
-    {
-        return new ArrayType<TLogixType>(this.Cast<TLogixType>().ToArray());
-        var seed = this.FirstOrDefault(t => t is not NullType);
-
-        if (seed is not null && seed is not TLogixType)
-            throw new InvalidCastException(
-                $"The current array type {seed.GetType()} can not be case to type {typeof(TLogixType)}.");
-
-        return new ArrayType<TLogixType>(Element);
-    }
+    public ArrayType<TLogixType> AsArray<TLogixType>() where TLogixType : LogixType =>
+        new(this.Cast<TLogixType>().ToArray());
 
     #region Internal
 

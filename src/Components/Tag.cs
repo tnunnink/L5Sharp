@@ -45,6 +45,52 @@ public class Tag : LogixComponent<Tag>, ILogixScoped
     }
 
     /// <summary>
+    /// The full tag name path of the tag or tag member.
+    /// </summary>
+    /// <value>A <see cref="Core.TagName"/> type representing the tag name of the member.</value>
+    public TagName TagName => Parent is not null ? TagName.Combine(Parent.TagName, Name) : new TagName(Name);
+
+    /// <summary>
+    /// The name of the data type that the tag data contains. 
+    /// </summary>
+    /// <value>A <see cref="string"/> representing the name of the tag data type.</value>
+    /// <remarks>
+    /// This property simply points to the name property of <see cref="Value"/>.
+    /// This keeps the properties in sync. By setting value, you are setting the data type name.</remarks>
+    public string DataType => Value.Name;
+
+    /// <summary>
+    /// The dimensions of the tag, indicating the length and dimensions of it's array.
+    /// </summary>
+    /// <value>A <see cref="Core.Dimensions"/> value representing the array dimensions of the tag.</value>
+    /// <remarks>
+    /// This value will always point to the dimensions property of <see cref="Value"/>, assuming it is an
+    /// <see cref="ArrayType"/>.
+    /// If <c>Data</c> is not an array type, this property will always return <see cref="Core.Dimensions.Empty"/>.
+    /// </remarks>
+    public Dimensions Dimensions => Value is ArrayType<LogixType> array ? array.Dimensions : Dimensions.Empty;
+
+    /// <summary>
+    /// The radix format of the tags data value. Only applies if the tag is an <see cref="AtomicType"/>.
+    /// </summary>
+    /// <value>A <see cref="Enums.Radix"/> option representing data format of the tag value.</value>
+    /// <remarks>
+    /// This value will always point to the radix of <see cref="Value"/>, assuming it is an <see cref="AtomicType"/>.
+    /// If <c>Value</c> is not an atomic type, this property will always return <see cref="Enums.Radix.Null"/>.
+    /// </remarks>
+    public Radix Radix => Value is AtomicType atomic ? atomic.Radix : Radix.Null;
+
+    /// <summary>
+    /// The value of the <c>Tag</c> data.
+    /// </summary>
+    /// <value>A <see cref="LogixType"/> representing the value of the <c>Tag</c>.</value>
+    public LogixType Value
+    {
+        get => _member.DataType;
+        set => _member.DataType = value;
+    }
+
+    /// <summary>
     /// 
     /// </summary>
     public Tag() : this(new XElement(L5XName.Tag), new Member(new XElement(L5XName.Tag)))
@@ -114,52 +160,6 @@ public class Tag : LogixComponent<Tag>, ILogixScoped
     {
         get => GetComment();
         set => SetComment(value);
-    }
-
-    /// <summary>
-    /// The full tag name path of the tag or tag member.
-    /// </summary>
-    /// <value>A <see cref="Core.TagName"/> type representing the tag name of the member.</value>
-    public TagName TagName => Parent is not null ? TagName.Combine(Parent.TagName, Name) : new TagName(Name);
-
-    /// <summary>
-    /// The name of the data type that the tag data contains. 
-    /// </summary>
-    /// <value>A <see cref="string"/> representing the name of the tag data type.</value>
-    /// <remarks>
-    /// This property simply points to the name property of <see cref="Value"/>.
-    /// This keeps the properties in sync. By setting value, you are setting the data type name.</remarks>
-    public string DataType => Value.Name;
-
-    /// <summary>
-    /// The dimensions of the tag, indicating the length and dimensions of it's array.
-    /// </summary>
-    /// <value>A <see cref="Core.Dimensions"/> value representing the array dimensions of the tag.</value>
-    /// <remarks>
-    /// This value will always point to the dimensions property of <see cref="Value"/>, assuming it is an
-    /// <see cref="ArrayType"/>.
-    /// If <c>Data</c> is not an array type, this property will always return <see cref="Core.Dimensions.Empty"/>.
-    /// </remarks>
-    public Dimensions Dimensions => Value is ArrayType<LogixType> array ? array.Dimensions : Dimensions.Empty;
-
-    /// <summary>
-    /// The radix format of the tags data value. Only applies if the tag is an <see cref="AtomicType"/>.
-    /// </summary>
-    /// <value>A <see cref="Enums.Radix"/> option representing data format of the tag value.</value>
-    /// <remarks>
-    /// This value will always point to the radix of <see cref="Value"/>, assuming it is an <see cref="AtomicType"/>.
-    /// If <c>Value</c> is not an atomic type, this property will always return <see cref="Enums.Radix.Null"/>.
-    /// </remarks>
-    public Radix Radix => Value is AtomicType atomic ? atomic.Radix : Radix.Null;
-
-    /// <summary>
-    /// The value of the <c>Tag</c> data.
-    /// </summary>
-    /// <value>A <see cref="LogixType"/> representing the value of the <c>Tag</c>.</value>
-    public LogixType Value
-    {
-        get => _member.DataType;
-        set => _member.DataType = value;
     }
 
     /// <summary>

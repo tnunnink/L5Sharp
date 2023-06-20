@@ -8,7 +8,7 @@ using L5Sharp.Extensions;
 namespace L5Sharp.Types;
 
 /// <summary>
-/// A <see cref="L5Sharp.LogixType"/> that represents a complex structure containing members of different types.
+/// A <see cref="LogixType"/> that represents a complex structure containing members of different types.
 /// </summary>
 /// <remarks>
 /// <para>
@@ -18,8 +18,12 @@ namespace L5Sharp.Types;
 /// </remarks>
 public class StructureType : LogixType
 {
-    /// <inheritdoc />
-    public StructureType(XElement element) : base(element)
+    /// <summary>
+    /// Creates a new <see cref="StructureType"/> instance.
+    /// </summary>
+    /// <param name="name">The name of the type.</param>
+    /// <exception cref="ArgumentException"><c>name</c> is null or empty.</exception>
+    protected StructureType(string name) : base(GenerateElement(name, Enumerable.Empty<Member>()))
     {
     }
 
@@ -34,12 +38,8 @@ public class StructureType : LogixType
     {
     }
 
-    /// <summary>
-    /// Creates a new <see cref="StructureType"/> instance.
-    /// </summary>
-    /// <param name="name">The name of the type.</param>
-    /// <exception cref="ArgumentException"><c>name</c> is null or empty.</exception>
-    protected StructureType(string name) : base(GenerateElement(name, Enumerable.Empty<Member>()))
+    /// <inheritdoc />
+    public StructureType(XElement element) : base(element)
     {
     }
 

@@ -438,7 +438,7 @@ namespace L5Sharp.Tests.Types.Atomics
             var expected = BitConverter.GetBytes(_random);
             var type = new INT(_random);
 
-            var bytes = type.ToBytes();
+            var bytes = type.GetBytes();
 
             CollectionAssert.AreEqual(bytes, expected);
         }

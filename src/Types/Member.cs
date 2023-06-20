@@ -81,7 +81,7 @@ public class Member : LogixElement<Member>
     {
         get
         {
-            if (Element.Name == L5XName.Tag) return default;
+            if (Element.Name == L5XName.Tag || Element.Name == L5XName.LocalTag) return default;
             return Element.Parent is not null ? new Member(Element.Parent) : default;
         }
     }
@@ -360,30 +360,11 @@ public class Member : LogixElement<Member>
         if (value is not AtomicType atomicType)
             throw new ArgumentException(
                 $"The underlying element '{element.Name}' can not be set by logix type {value.GetType()}.");
-
-        if (element.Name == L5XName.DataValue)
-        {
-            //Set both properties in this case.
-            element.SetAttributeValue(L5XName.Radix, atomicType.Radix);
-            element.SetAttributeValue(L5XName.Value, atomicType);
-        }
-
-        if (element.Name == L5XName.DataValueMember)
-        {
-            // Conform the radix of the member to that of the element.
-            var radix = element.Attribute(L5XName.Radix)?.Value.Parse<Radix>();
-            var atomic = radix is not null ? atomicType.ToString(radix) : atomicType.ToString();
-            element.SetAttributeValue(L5XName.Value, atomic);
-            return;
-        }
-
-        if (element.Name != L5XName.Element) return;
-        {
-            // Conform the radix of the element to that of the parent array element.
-            var radix = element.Parent?.Attribute(L5XName.Radix)?.Value.Parse<Radix>();
-            var atomic = radix is not null ? atomicType.ToString(radix) : atomicType.ToString();
-            element.SetAttributeValue(L5XName.Value, atomic);
-        }
+        
+        var radix = element.Attribute(L5XName.Radix)?.Value.Parse<Radix>() ?? 
+                    element.Parent?.Attribute(L5XName.Radix)?.Value.Parse<Radix>();
+        var atomic = radix is not null ? atomicType.ToString(radix) : atomicType.ToString();
+        element.SetAttributeValue(L5XName.Value, atomic);
     }
 
     /// <summary>
@@ -434,6 +415,14 @@ public class Member : LogixElement<Member>
         if (value is not StructureType structureType)
             throw new ArgumentException(
                 $"The underlying element '{element.Name}' can not be set by logix type {value.GetType()}.");
+        
+        var dataType = element.LogixType() ?? throw new L5XException(L5XName.DataType, element);
+
+        if (value.Name == nameof(StructureType))
+            value = new StructureType(dataType, value.Members);
+
+        if (value.Name != dataType)
+            throw new ArgumentException($"Can not set structure type {dataType} with type {value.Name}");
 
         // String types can be disguised as a structure types.
         if (element.HasLogixStringStructure())

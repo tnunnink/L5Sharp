@@ -14,12 +14,12 @@ namespace L5Sharp.Types.Atomics;
 [TypeConverter(typeof(BoolConverter))]
 public sealed class BOOL : AtomicType, IEquatable<BOOL>, IComparable<BOOL>
 {
-    private bool GetValue => BitConverter.ToBoolean(ToBytes());
+    private bool GetValue => BitConverter.ToBoolean(GetBytes());
 
     /// <summary>
     /// Creates a new default <see cref="BOOL"/> type.
     /// </summary>
-    public BOOL() : base(nameof(BOOL), Radix.Decimal, new[] { false })
+    public BOOL() : base(nameof(BOOL), Radix.Decimal, BitConverter.GetBytes(default(bool)))
     {
     }
 
@@ -27,7 +27,7 @@ public sealed class BOOL : AtomicType, IEquatable<BOOL>, IComparable<BOOL>
     /// Creates a new <see cref="BOOL"/> value with the provided radix format.
     /// </summary>
     /// <param name="radix">The <see cref="Enums.Radix"/> number format of the value.</param>
-    public BOOL(Radix radix) : base(nameof(BOOL), radix, new[] { false })
+    public BOOL(Radix radix) : base(nameof(BOOL), radix, BitConverter.GetBytes(default(bool)))
     {
     }
 
@@ -36,7 +36,8 @@ public sealed class BOOL : AtomicType, IEquatable<BOOL>, IComparable<BOOL>
     /// </summary>
     /// <param name="value">The value to initialize the type with.</param>
     /// <param name="radix"></param>
-    public BOOL(bool value, Radix? radix = null) : base(nameof(BOOL), radix ?? Radix.Decimal, new[] { value })
+    public BOOL(bool value, Radix? radix = null) : base(nameof(BOOL), radix ?? Radix.Decimal,
+        BitConverter.GetBytes(value))
     {
     }
 

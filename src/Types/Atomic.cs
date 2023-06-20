@@ -26,6 +26,14 @@ public static class Atomic
     };
 
     /// <summary>
+    /// Parses the provided string value into an atomic type value.
+    /// </summary>
+    /// <param name="value">The value of the atomic type.</param>
+    /// <returns>A <see cref="AtomicType"/> representing the value and format of the provided value.</returns>
+    /// <exception cref="FormatException"><c>value</c> does not have a valid format to be parsed as an atomic type.</exception>
+    public static AtomicType Parse(string value) => Radix.Infer(value).Parse(value);
+
+    /// <summary>
     /// Parses the provided string value into the atomic type value specified by name.
     /// </summary>
     /// <param name="name">The name of the atomic type.</param>
@@ -40,14 +48,6 @@ public static class Atomic
 
         return Atomics[name].Invoke(value);
     }
-
-    /// <summary>
-    /// Parses the provided string value into an atomic type value.
-    /// </summary>
-    /// <param name="value">The value of the atomic type.</param>
-    /// <returns>A <see cref="AtomicType"/> representing the value and format of the provided value.</returns>
-    /// <exception cref="FormatException"><c>value</c> does not have a valid format to be parsed as an atomic type.</exception>
-    public static AtomicType Parse(string value) => Radix.Infer(value).Parse(value);
 
     /// <summary>
     /// Returns indication to whether the provided type name is the name of an atomic type.
