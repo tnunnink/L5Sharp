@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text.RegularExpressions;
+using System.Xml.Linq;
+using System.Xml.Serialization;
 using L5Sharp.Components;
 using L5Sharp.Core;
 using L5Sharp.Elements;
+using L5Sharp.Extensions;
 
-namespace L5Sharp.Extensions;
+namespace L5Sharp;
 
 /// <summary>
 /// Container for all public extensions methods that add functionality to the base components of the library.
@@ -14,22 +18,24 @@ namespace L5Sharp.Extensions;
 public static class LogixExtensions
 {
     /// <summary>
-    /// Determines if a component with the specified name exists in the collection.
+    /// Determines if a component with the specified name exists in the container.
     /// </summary>
     /// <param name="container">The logix container of component objets.</param>
-    /// <param name="name">The name of the component.</param>
+    /// <param name="name">The name of the component to find.</param>
     /// <returns><c>true</c> if a component with the specified name exists; otherwise, <c>false</c>.</returns>
     public static bool Contains<TComponent>(this LogixContainer<TComponent> container, string name)
-        where TComponent : LogixComponent<TComponent> =>
-        container.Serialize().Elements().Any(e => e.LogixName() == name);
-
+        where TComponent : LogixComponent<TComponent>
+    {
+        return container.Serialize().Elements().Any(e => e.LogixName() == name);
+    }
+    
     /// <summary>
-    /// 
+    /// Returns a component with the specified name if it exists in the container, otherwise returns <c>null</c>.
     /// </summary>
-    /// <param name="container"></param>
-    /// <param name="name"></param>
-    /// <typeparam name="TComponent"></typeparam>
-    /// <returns></returns>
+    /// <param name="container">The logix container of component objets.</param>
+    /// <param name="name">The name of the component to find.</param>
+    /// <typeparam name="TComponent">The component type to return.</typeparam>
+    /// <returns>A <see cref="LogixComponent{TComponent}"/> of the specified type if found; Otherwise, <c>null</c>.</returns>
     public static TComponent? Find<TComponent>(this LogixContainer<TComponent> container, string name)
         where TComponent : LogixComponent<TComponent>
     {
@@ -39,7 +45,25 @@ public static class LogixExtensions
     }
 
     /// <summary>
-    /// Removes a component with the specified name from the collection.
+    /// Returns a component with the specified name from the container.
+    /// </summary>
+    /// <param name="container">The logix container of component objets.</param>
+    /// <param name="name">The name of the component to find.</param>
+    /// <typeparam name="TComponent">The component type to return.</typeparam>
+    /// <returns>A <see cref="LogixComponent{TComponent}"/> of the specified type.</returns>
+    /// <exception cref="InvalidOperationException">No component having <c>name</c> exists in the container.</exception>
+    public static TComponent Get<TComponent>(this LogixContainer<TComponent> container, string name)
+        where TComponent : LogixComponent<TComponent>
+    {
+        var element = container.Serialize();
+        var component = element.Elements().SingleOrDefault(e => e.LogixName() == name);
+        return component is not null
+            ? LogixSerializer.Deserialize<TComponent>(component)
+            : throw new InvalidOperationException($"No component with name {name} was found in container.");
+    }
+
+    /// <summary>
+    /// Removes a component with the specified name from the container.
     /// </summary>
     /// <param name="container">The logix container of component objets.</param>
     /// <param name="name">The name of the component to remove.</param>
@@ -56,7 +80,7 @@ public static class LogixExtensions
     /// <param name="name">The name of the data type for which to find dependencies.</param>
     /// <returns>A <see cref="IEnumerable{T}"/> of <see cref="DataType"/> that are dependent on the specified data type name.</returns>
     /// <remarks>
-    /// This is mostly here as an example of how one could extend the API of certain component collections to
+    /// This extension serves as an example of how one could extend the API of specific component collections to
     /// add custom XML queries against the source L5X and return materialized components.
     /// </remarks>
     public static IEnumerable<DataType> DependentsOf(this LogixContainer<DataType> dataTypes, string name)
@@ -64,13 +88,6 @@ public static class LogixExtensions
         return dataTypes.Serialize().Descendants(L5XName.DataType)
             .Where(e => e.Descendants(L5XName.Member).Any(m => m.Attribute(L5XName.DataType)?.Value == name))
             .Select(e => new DataType(e));
-    }
-
-
-    public static Module Parent(this Module module)
-    {
-        var parent = module.Serialize().Parent.Elements().FirstOrDefault(m => m.LogixName() == module.ParentModule);
-        return parent is not null ? new Module(parent) : throw new ArgumentException();
     }
 
     /// <summary>
@@ -146,6 +163,36 @@ public static class LogixExtensions
         return results;
     }
 
+    #region ElementExtensions
+
+    /// <summary>
+    /// Gets the L5X element name for the specified type. 
+    /// </summary>
+    /// <param name="type">The type to get the L5X element name for.</param>
+    /// <returns>A <see cref="XName"/> representing the name of the element that corresponds to the type.</returns>
+    /// <remarks>
+    /// All this does is first look for the class attribute <see cref="XmlTypeAttribute"/> to use as the explicitly
+    /// configured name, and if not found, returns the type name as the default element name.
+    /// </remarks>
+    public static XName LogixTypeName(this Type type)
+    {
+        var attribute = type.GetCustomAttribute<XmlTypeAttribute>();
+        return attribute is not null ? attribute.TypeName : type.Name;
+    }
+
+    /// <summary>
+    /// Gets the <c>Name</c> attribute value for the current <see cref="XElement"/>.
+    /// </summary>
+    /// <param name="element">The <see cref="XElement"/> instance.</param>
+    /// <returns>A <see cref="string"/> representing the name value.</returns>
+    /// <remarks>
+    /// This is a helper since we access and use the name attribute so often I just wanted to make
+    /// the code more concise.
+    /// </remarks>
+    public static string LogixName(this XElement element) => element.Attribute(L5XName.Name)?.Value ?? string.Empty;
+
+    #endregion
+
     #region StringExtensions
 
     /// <summary>
@@ -180,13 +227,6 @@ public static class LogixExtensions
     /// <returns><c>true</c> if the string is a valid tag name string; otherwise, <c>false</c>.</returns>
     public static bool IsTagName(this string input) => Regex.IsMatch(input,
         @"^[A-Za-z_][\w+:]{1,39}(?:(?:\[\d+\]|\[\d+,\d+\]|\[\d+,\d+,\d+\])?(?:\.[A-Za-z_]\w{1,39})?)+(?:\.[0-9][0-9]?)?$");
-
-    /// <summary>
-    /// Converts the current <see cref="string"/> text into a <see cref="TagName"/> object. 
-    /// </summary>
-    /// <param name="text">The text to convert.</param>
-    /// <returns>A <see cref="TagName"/> containing the value of the current text.</returns>
-    public static TagName ToTagName(this string text) => new(text);
 
     #endregion
 }

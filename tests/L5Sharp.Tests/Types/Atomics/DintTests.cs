@@ -1,11 +1,10 @@
 ﻿using AutoFixture;
 using FluentAssertions;
-using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Types;
 using L5Sharp.Types.Atomics;
 
-namespace L5Sharp.Tests.Types
+namespace L5Sharp.Tests.Types.Atomics
 {
     [TestFixture]
     public class DintTests
@@ -59,7 +58,7 @@ namespace L5Sharp.Tests.Types
         }
 
         [Test]
-        public void Bit_ValidIndex_ShouldBeExpected()
+        public void GetBit_ValidIndex_ShouldBeExpected()
         {
             var type = new DINT(1);
 
@@ -71,11 +70,29 @@ namespace L5Sharp.Tests.Types
         }
 
         [Test]
-        public void Bit_InvalidIndex_ShouldThrowArgumentOutOfRangeException()
+        public void GetBit_InvalidIndex_ShouldThrowArgumentOutOfRangeException()
         {
             var type = new DINT(1);
 
             FluentActions.Invoking(() => type[32]).Should().Throw<ArgumentOutOfRangeException>();
+        }
+
+        [Test]
+        public void SetBit_ValidIndex_ShouldHaveExpectedValue()
+        {
+            var type = new DINT();
+
+            type[0] = true;
+
+            type.Should().Be(1);
+        }
+
+        [Test]
+        public void SetBit_InvalidIndex_ShouldThrowArgumentOutOfRangeException()
+        {
+            var type = new DINT();
+            
+            FluentActions.Invoking(() => type[32] = 1).Should().Throw<ArgumentOutOfRangeException>();
         }
 
         [Test]
@@ -111,11 +128,11 @@ namespace L5Sharp.Tests.Types
         }
 
         [Test]
-        public void ToBitArray_WhenCalled_ReturnsExpected()
+        public void ToBits_WhenCalled_ReturnsExpected()
         {
             var type = new DINT();
 
-            var bits = type.ToBitArray();
+            var bits = type.ToBits();
 
             bits.Should().NotBeNull();
             bits.Length.Should().Be(32);
@@ -127,11 +144,11 @@ namespace L5Sharp.Tests.Types
         }
 
         [Test]
-        public void ToBitArray_PositiveValue_ReturnsExpected()
+        public void ToBits_PositiveValue_ReturnsExpected()
         {
             var type = new DINT(1);
 
-            var bits = type.ToBitArray();
+            var bits = type.ToBits();
 
             bits[0].Should().BeTrue();
         }
@@ -142,7 +159,7 @@ namespace L5Sharp.Tests.Types
             var expected = BitConverter.GetBytes(_random);
             var type = new DINT(_random);
 
-            var bytes = type.GetBytes();
+            var bytes = type.ToBytes();
 
             CollectionAssert.AreEqual(bytes, expected);
         }
@@ -165,6 +182,74 @@ namespace L5Sharp.Tests.Types
             var xml = type.Serialize().ToString();
 
             return Verify(xml);
+        }
+
+        [Test]
+        public void Update_SameType_ShouldBeExpected()
+        {
+            var type = new DINT();
+
+            type.Update(new DINT(123));
+
+            type.Should().Be(123);
+        }
+
+        [Test]
+        public void Update_SmallerType_ShouldBeExpected()
+        {
+            var type = new DINT();
+
+            type.Update(new INT(123));
+
+            type.Should().Be(123);
+        }
+
+        [Test]
+        public void Update_LargerValueSmallerType_ShouldBeExpected()
+        {
+            var type = new DINT(DINT.MaxValue);
+
+            type.Update(new INT(123));
+
+            type.Should().Be(123);
+        }
+
+        [Test]
+        public void Update_LargerTypeWithSmallerValue_ShouldBeExpected()
+        {
+            var type = new DINT();
+
+            type.Update(new LINT(123));
+
+            type.Should().Be(123);
+        }
+
+        [Test]
+        public void Update_LargerTypeLargerValue_ShouldHaveDataLoss()
+        {
+            var type = new DINT();
+
+            type.Update(new LINT(LINT.MaxValue));
+
+            type.Should().Be(-1);
+        }
+
+        [Test]
+        public void Update_InvalidType_ShouldThrowArgumentException()
+        {
+            var type = new DINT();
+
+            FluentActions.Invoking(() => type.Update(new ComplexType("Test"))).Should().Throw<ArgumentException>();
+        }
+
+        [Test]
+        public void UpdateBitMemberDataTypeAndSeeWhatHappensToTheValue()
+        {
+            var type = new DINT();
+            
+            type.Members.First().DataType.Update(true);
+
+            type.Should().Be(0);
         }
 
         [Test]
@@ -340,14 +425,12 @@ namespace L5Sharp.Tests.Types
         }
 
         [Test]
-        public void CreateLargeArrayOfAtomicValuesT()
+        public void CreateLargeListOfAtomicValuesToEnsurePerformance()
         {
-            var expected = new DINT();
+            var array = Enumerable.Range(0, 1000000).Select(i => new DINT(i)).ToList();
 
-            var array = ArrayType.New<DINT>(new Dimensions(65535));
-
-            array.Should<DINT>().NotBeEmpty();
-            array.Should<DINT>().AllBeEquivalentTo(expected);
+            array.Should().NotBeEmpty();
+            array.Should().AllBeOfType<DINT>();
         }
     }
 }

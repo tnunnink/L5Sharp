@@ -174,7 +174,7 @@ public sealed class ModuleConnection : LogixElement<ModuleConnection>
 
             return new Tag(element)
             {
-                Name = element.ModuleTagName(InputTagSuffix)
+                Name = ModuleTagName(element, InputTagSuffix)
             };
         }
     }
@@ -192,8 +192,34 @@ public sealed class ModuleConnection : LogixElement<ModuleConnection>
 
             return new Tag(element)
             {
-                Name = element.ModuleTagName(OutputTagSuffix)
+                Name = ModuleTagName(element, OutputTagSuffix)
             };
         }
+    }
+    
+    /// <summary>
+    /// A helper for determining a <see cref="Module"/> tag name for an input, output, or config tag element.
+    /// </summary>
+    /// <param name="element">The current module tag element.</param>
+    /// <param name="suffix">The string suffix to append to the determines tag name. Default is 'C' for config tag.</param>
+    /// <returns>A <see cref="string"/> representing the tag name of the module tag.</returns>
+    private static string ModuleTagName(XNode element, string suffix = "C")
+    {
+        var moduleName = element.Ancestors(L5XName.Module)
+            .FirstOrDefault()?.Attribute(L5XName.Name)?.Value;
+
+        var parentName = element.Ancestors(L5XName.Module)
+            .FirstOrDefault()?.Attribute(L5XName.ParentModule)?.Value;
+
+        var slot = element
+            .Ancestors(L5XName.Module)
+            .Descendants(L5XName.Port)
+            .Where(p => bool.Parse(p.Attribute(L5XName.Upstream)?.Value!)
+                        && p.Attribute(L5XName.Type)?.Value != "Ethernet"
+                        && int.TryParse(p.Attribute(L5XName.Address)?.Value, out _))
+            .Select(p => p.Attribute(L5XName.Address)?.Value)
+            .FirstOrDefault();
+
+        return slot is not null ? $"{parentName}:{slot}:{suffix}" : $"{moduleName}:{suffix}";
     }
 }

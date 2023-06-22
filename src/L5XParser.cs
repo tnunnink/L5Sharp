@@ -4,6 +4,7 @@ using System.ComponentModel;
 using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Types.Atomics;
+using L5Sharp.Types.Predefined;
 
 namespace L5Sharp;
 
@@ -24,6 +25,7 @@ public static class L5XParser
         { typeof(UINT), UINT.Parse},
         { typeof(UDINT), UDINT.Parse},
         { typeof(ULINT), ULINT.Parse},
+        { typeof(STRING), s => new STRING(s)},
         { typeof(DateTime), s => DateTime.Parse(s) },
         { typeof(ConnectionPriority), ConnectionPriority.FromValue },
         { typeof(ConnectionType), ConnectionType.FromValue },

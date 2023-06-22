@@ -6,12 +6,12 @@ using L5Sharp.Types.Predefined;
 namespace L5Sharp.Tests.Types;
 
 [TestFixture]
-public class StructureTypeTests
+public class ComplexTypeTests
 {
     [Test]
     public void New_ValidArguments_ShouldNotBeNull()
     {
-        var type = new StructureType("Test", new List<Member>());
+        var type = new ComplexType("Test", new List<Member>());
 
         type.Should().NotBeNull();
     }
@@ -19,19 +19,19 @@ public class StructureTypeTests
     [Test]
     public void New_NullName_ShouldThrowArgumentException()
     {
-        FluentActions.Invoking(() => new StructureType(null!, new List<Member>())).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(() => new ComplexType(null!, new List<Member>())).Should().Throw<ArgumentException>();
     }
 
     [Test]
     public void New_NullMembers_ShouldThrowArgumentException()
     {
-        FluentActions.Invoking(() => new StructureType("Test", null!)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(() => new ComplexType("Test", null!)).Should().Throw<ArgumentException>();
     }
 
     [Test]
     public void New_EmptyMembers_ShouldHaveExpectedValues()
     {
-        var type = new StructureType("Test", new List<Member>());
+        var type = new ComplexType("Test", new List<Member>());
 
         type.Should().NotBeNull();
         type.Name.Should().Be("Test");
@@ -43,7 +43,7 @@ public class StructureTypeTests
     [Test]
     public void New_WithMembers_ShouldHaveExpectedValues()
     {
-        var type = new StructureType("Test", new List<Member>
+        var type = new ComplexType("Test", new List<Member>
         {
             new("Member1", true),
             new("Member2", (byte)255),
@@ -63,7 +63,7 @@ public class StructureTypeTests
     [Test]
     public void ToString_WhenCalled_ShouldBeName()
     {
-        var type = new StructureType("Test", new List<Member>());
+        var type = new ComplexType("Test", new List<Member>());
 
         var name = type.ToString();
 
@@ -73,7 +73,7 @@ public class StructureTypeTests
     [Test]
     public void Clone_WhenCalled_ShouldNotBeSameAsButEqual()
     {
-        var type = new StructureType("Test", new List<Member>
+        var type = new ComplexType("Test", new List<Member>
         {
             new("Member1", true),
             new("Member2", (byte)255),
@@ -82,9 +82,9 @@ public class StructureTypeTests
             new("Member5", new TIMER())
         });
         
-        var clone = (StructureType)type.Clone();
+        var clone = (ComplexType)type.Clone();
 
-        clone.Should().BeOfType<StructureType>();
+        clone.Should().BeOfType<ComplexType>();
         clone.Should().NotBeSameAs(type);
         clone.Name.Should().Be(type.Name);
         clone.Members.Should().HaveCount(type.Members.Count());

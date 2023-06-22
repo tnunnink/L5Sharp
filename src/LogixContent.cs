@@ -63,7 +63,7 @@ public class LogixContent
         var content = new XElement(L5XName.RSLogix5000Content);
         content.Add(new XAttribute(L5XName.SchemaRevision, new Revision().ToString()));
         content.Add(new XAttribute(L5XName.TargetName, target.Name));
-        content.Add(new XAttribute(L5XName.TargetType, target.GetType().LogixTypeName()));
+        content.Add(new XAttribute(L5XName.TargetType, target.TypeName));
         content.Add(new XAttribute(L5XName.ContainsContext, target.GetType() != typeof(Controller)));
         content.Add(new XAttribute(L5XName.Owner, Environment.UserName));
         content.Add(new XAttribute(L5XName.ExportDate, DateTime.Now.ToString(L5X.DateTimeFormat)));

@@ -4,8 +4,8 @@ using System.Linq;
 using System.Xml.Linq;
 using L5Sharp.Core;
 using L5Sharp.Enums;
-using L5Sharp.Extensions;
 using L5Sharp.Types;
+using L5Sharp.Types.Predefined;
 
 namespace L5Sharp.Components;
 
@@ -18,37 +18,58 @@ namespace L5Sharp.Components;
 /// </footer>
 public class Tag : LogixComponent<Tag>, ILogixScoped
 {
-    private readonly Member _member;
+    private Member _member;
 
     /// <summary>
-    /// base cons
+    /// Internal member constructor used for getting nested child members of the root tag structure.
     /// </summary>
-    private Tag(XElement element, Member member, Tag? parent = null) : base(element)
+    private Tag(Tag root, Member member, Tag? parent = null) : base(root.Element)
     {
         _member = member;
+        Root = root;
         Parent = parent;
     }
 
-    public Tag(Member member) : base(GetRoot(member))
+    /// <summary>
+    /// Creates a new <see cref="Tag"/> with default values.
+    /// </summary>
+    public Tag()
     {
-        
-    }
-
-    private static XElement GetRoot(Member member)
-    {
-        return member.Serialize().Ancestors(L5XName.Tag).FirstOrDefault();
-    }
-
-    /// <inheritdoc />
-    public Tag(XElement element) : this(element, new Member(element))
-    {
+        _member = new Member(Element);
+        Root = this;
+        TagType = TagType.Base;
+        ExternalAccess = ExternalAccess.ReadWrite;
+        Constant = false;
     }
 
     /// <summary>
-    /// The full tag name path of the tag or tag member.
+    /// Creates a new <see cref="DataType"/> initialized with the provided <see cref="XElement"/>.
     /// </summary>
-    /// <value>A <see cref="Core.TagName"/> type representing the tag name of the member.</value>
-    public TagName TagName => Parent is not null ? TagName.Combine(Parent.TagName, Name) : new TagName(Name);
+    /// <param name="element">The <see cref="XElement"/> to initialize the type with.</param>
+    /// <exception cref="ArgumentNullException"><c>element</c> is null.</exception>
+    public Tag(XElement element) : base(element)
+    {
+        _member = new Member(Element);
+        Root = this;
+    }
+
+    /// <summary>
+    /// The root tag of this <see cref="Tag"/> member.
+    /// </summary>
+    /// <value>A <see cref="Tag"/> representing the root tag.</value>
+    public Tag Root { get; }
+
+    /// <summary>
+    /// The parent tag of this <see cref="Tag"/> member.
+    /// </summary>
+    /// <value>A <see cref="Tag"/> representing the immediate parent tag of the this tag member.</value>
+    public Tag? Parent { get; }
+
+    /// <summary>
+    /// The full tag name path of the <see cref="Tag"/>.
+    /// </summary>
+    /// <value>A <see cref="Core.TagName"/> containing the full dot-down path of the tag member name.</value>
+    public TagName TagName => Parent is not null ? TagName.Combine(Parent.TagName, _member.Name) : new TagName(Name);
 
     /// <summary>
     /// The name of the data type that the tag data contains. 
@@ -68,7 +89,7 @@ public class Tag : LogixComponent<Tag>, ILogixScoped
     /// <see cref="ArrayType"/>.
     /// If <c>Data</c> is not an array type, this property will always return <see cref="Core.Dimensions.Empty"/>.
     /// </remarks>
-    public Dimensions Dimensions => Value is ArrayType<LogixType> array ? array.Dimensions : Dimensions.Empty;
+    public Dimensions Dimensions => Value is ArrayType array ? array.Dimensions : Dimensions.Empty;
 
     /// <summary>
     /// The radix format of the tags data value. Only applies if the tag is an <see cref="AtomicType"/>.
@@ -81,23 +102,45 @@ public class Tag : LogixComponent<Tag>, ILogixScoped
     public Radix Radix => Value is AtomicType atomic ? atomic.Radix : Radix.Null;
 
     /// <summary>
-    /// The value of the <c>Tag</c> data.
+    /// The value or data of the <see cref="Tag"/>.
     /// </summary>
-    /// <value>A <see cref="LogixType"/> representing the value of the <c>Tag</c>.</value>
+    /// <value>A <see cref="LogixType"/> containing the tag data.</value>
+    /// <remarks>
+    /// <para>
+    /// The <see cref="LogixType"/> is the basis for all tag data types. This property may represent the atomic
+    /// value (bool, integer, float), string, complex structure, or array. <c>LogixType</c> has built in implicit operators
+    /// to convert .NET types to <c>LogixType</c> objects so to make setting <c>Value</c> more concise.
+    /// </para>
+    /// <para>
+    /// Since the type can not be known at compile time when deserializing, we treat it as the abstract base class.
+    /// However, the <see cref="LogixSerializer"/> will attempt to create concrete instances of types that are available,
+    /// allowing the user to cast <c>Value</c> down to more derived types.
+    /// </para>
+    /// </remarks>
     public LogixType Value
     {
         get => _member.DataType;
-        set => _member.DataType = value;
-    }
+        set
+        {
+            if (value is null) throw new ArgumentNullException(nameof(value));
 
-    /// <summary>
-    /// 
-    /// </summary>
-    public Tag() : this(new XElement(L5XName.Tag), new Member(new XElement(L5XName.Tag)))
-    {
-        TagType = TagType.Base;
-        ExternalAccess = ExternalAccess.ReadWrite;
-        Constant = false;
+            //we have to handle the special case of value initially being null.
+            switch (_member.DataType)
+            {
+                case NullType when Parent is null:
+                    _member = new Member(_member.Name, value);
+                    break;
+                case NullType when Parent?.Value is ComplexType complexType:
+                    complexType.Replace(_member.Name, new Member(_member.Name, value));
+                    break;
+                default:
+                    _member.DataType.Update(value);
+                    break;
+            }
+
+            //Once set, update the underlying XML to keep in sync with in memory objects.
+            SetData();
+        }
     }
 
     /// <summary>
@@ -145,15 +188,15 @@ public class Tag : LogixComponent<Tag>, ILogixScoped
     /// </summary>
     /// <value><c>true</c> if the tag is constant; otherwise, <c>false</c>.</value>
     /// <remarks>Only value type tags have the ability to be set as a constant. Default is <c>false</c>.</remarks>
-    public bool Constant
+    public bool? Constant
     {
-        get => GetValue<bool>();
+        get => GetValue<bool?>();
         set => SetValue(value);
     }
 
     /// <summary>
-    /// The description of the tag which is either the root tag description or the inherited (pass through)
-    /// description of the descendent member.
+    /// The comment of the tag member, which is either the root tag description, the inherited (pass through)
+    /// description of the parent member, or the specific comment value found on the underlying tag element.
     /// </summary>
     /// <value>A <see cref="string"/> containing the text description for the tag.</value>
     public string? Comment
@@ -163,30 +206,21 @@ public class Tag : LogixComponent<Tag>, ILogixScoped
     }
 
     /// <summary>
-    /// The root tag of the current <see cref="Tag"/> member.
+    /// The configured unit value of the tag.
     /// </summary>
-    /// <value>A <see cref="Tag"/> representing the root tag of the current tag member.</value>
-    /// <remarks>This is here to assist in navigating back up the hierarchical data structure of the tag.</remarks>
-    public Tag Root => new(Element);
-
-    /// <summary>
-    /// The parent tag or tag member of the current <see cref="Tag"/> member.
-    /// </summary>
-    /// <value>A <see cref="Tag"/> representing the immediate parent tag of the current tag member.</value>
-    /// <remarks>This is here to assist in navigating back up the hierarchical data structure of the tag.</remarks>
-    public Tag? Parent { get; }
+    /// <value>A <see cref="string"/> representing the defined units of the tag.</value>
+    /// <remarks>This appears only used for module defined tags.</remarks>
+    public string? Unit
+    {
+        get => GetUnit();
+        set => SetUnit(value);
+    }
 
     /// <inheritdoc />
     public Scope Scope => Scope.FromElement(Element);
 
     /// <inheritdoc />
     public string Container => Scope != Scope.Null ? Element.Ancestors(Scope.XName).First().LogixName() : string.Empty;
-
-    /// <summary>
-    /// The units of the tag member. This appears to only apply to module defined tags...
-    /// </summary>
-    /// <value>A <see cref="string"/> representing the scaled units of the tag member.</value>
-    public string Unit => throw new NotImplementedException();
 
     /// <summary>
     /// Gets an element of the tag array.
@@ -205,7 +239,7 @@ public class Tag : LogixComponent<Tag>, ILogixScoped
                 throw new ArgumentException(
                     $"No element with index '{name}' exists in the tag data structure for type {DataType}.");
 
-            return new Tag(Element, member, this);
+            return new Tag(Root, member, this);
         }
     }
 
@@ -219,8 +253,7 @@ public class Tag : LogixComponent<Tag>, ILogixScoped
     {
         get
         {
-            if (tagName is null)
-                throw new ArgumentNullException(nameof(tagName));
+            if (tagName is null) throw new ArgumentNullException(nameof(tagName));
 
             var memberName = tagName.Members.FirstOrDefault() ?? string.Empty;
 
@@ -231,53 +264,10 @@ public class Tag : LogixComponent<Tag>, ILogixScoped
                 throw new ArgumentException(
                     $"No member with name '{memberName}' exists in the tag data structure for type {DataType}.");
 
-            var tag = new Tag(Element, member, this);
-
+            var tag = new Tag(Root, member, this);
             var remaining = TagName.Combine(tagName.Members.Skip(1));
-
             return remaining.IsEmpty ? tag : tag[remaining];
         }
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="member"></param>
-    /// <exception cref="InvalidOperationException"></exception>
-    public void Add(Member member)
-    {
-        if (Value is not ComplexType complexType)
-            throw new InvalidOperationException();
-        
-        complexType.Add(member);
-    }
-    
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="name"></param>
-    /// <exception cref="InvalidOperationException"></exception>
-    public void Remove(string name)
-    {
-        if (Value is not ComplexType complexType)
-            throw new InvalidOperationException();
-
-        complexType.Remove(name);
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="tag"></param>
-    public override void Replace(Tag tag)
-    {
-        if (Parent is null)
-        {
-            base.Replace(tag);
-            return;
-        }
-        
-        //todo not sure what to do here
     }
 
     /// <summary>
@@ -295,8 +285,7 @@ public class Tag : LogixComponent<Tag>, ILogixScoped
     /// </example>
     public Tag? Member(TagName tagName)
     {
-        if (tagName is null)
-            throw new ArgumentNullException(nameof(tagName));
+        if (tagName is null) throw new ArgumentNullException(nameof(tagName));
 
         var memberName = tagName.Members.FirstOrDefault() ?? string.Empty;
 
@@ -305,7 +294,7 @@ public class Tag : LogixComponent<Tag>, ILogixScoped
 
         if (member is null) return default;
 
-        var tag = new Tag(Element, member, this);
+        var tag = new Tag(Root, member, this);
 
         var remaining = TagName.Combine(tagName.Members.Skip(1));
 
@@ -324,7 +313,7 @@ public class Tag : LogixComponent<Tag>, ILogixScoped
 
         foreach (var member in Value.Members)
         {
-            var tag = new Tag(Element, member, this);
+            var tag = new Tag(Root, member, this);
             members.Add(tag);
             members.AddRange(tag.Members());
         }
@@ -344,7 +333,7 @@ public class Tag : LogixComponent<Tag>, ILogixScoped
 
         foreach (var member in Value.Members)
         {
-            var tagMember = new Tag(Element, member, this);
+            var tagMember = new Tag(Root, member, this);
             members.Add(tagMember);
             members.AddRange(tagMember.Members());
         }
@@ -368,7 +357,7 @@ public class Tag : LogixComponent<Tag>, ILogixScoped
 
         foreach (var member in Value.Members)
         {
-            var tagMember = new Tag(Element, member, this);
+            var tagMember = new Tag(Root, member, this);
 
             if (predicate.Invoke(tagMember.TagName))
                 members.Add(tagMember);
@@ -395,7 +384,7 @@ public class Tag : LogixComponent<Tag>, ILogixScoped
 
         foreach (var member in Value.Members)
         {
-            var tag = new Tag(Element, member, this);
+            var tag = new Tag(Root, member, this);
 
             if (predicate.Invoke(tag))
                 members.Add(tag);
@@ -425,7 +414,7 @@ public class Tag : LogixComponent<Tag>, ILogixScoped
 
         if (member is null) return Enumerable.Empty<Tag>();
 
-        var tag = new Tag(Element, member, this);
+        var tag = new Tag(Root, member, this);
 
         var remaining = TagName.Combine(tagName.Members.Skip(1));
 
@@ -447,6 +436,68 @@ public class Tag : LogixComponent<Tag>, ILogixScoped
         return names;
     }
 
+    #region Internal
+
+    /// <summary>
+    /// Handles setting the data of the root tag and updating the root properties
+    /// </summary>
+    private void SetData()
+    {
+        var data = Element.Elements()
+            .FirstOrDefault(e => e.Attribute(L5XName.Format) is not null &&
+                                 e.Attribute(L5XName.Format)!.Value != DataFormat.L5K);
+
+        // If uninitialized, add the root data to the base tag element and update the tag attributes.
+        if (data is null)
+        {
+            Element.Add(GenerateData(Root.Value));
+            Element.SetAttributeValue(L5XName.DataType, Root.Value.Name);
+            switch (Root.Value)
+            {
+                case AtomicType atomicType:
+                    Element.SetAttributeValue(L5XName.Radix, atomicType.Radix);
+                    break;
+                case ArrayType { Dimensions.IsEmpty: false } arrayType:
+                    Element.SetAttributeValue(L5XName.Dimensions, arrayType.Dimensions);
+                    if (arrayType.Radix != Radix.Null) Element.SetAttributeValue(L5XName.Radix, arrayType.Radix);
+                    break;
+            }
+
+            return;
+        }
+
+        data.RemoveNodes();
+        data.Add(Root.Value.Serialize());
+    }
+
+    /// <summary>
+    /// Generates the root data element for a tag component provided a logix type.
+    /// </summary>
+    private static XElement GenerateData(LogixType type)
+    {
+        return type switch
+        {
+            StringType stringType => stringType.Serialize(),
+            ALARM_ANALOG alarmAnalog => GenerateFormatted(alarmAnalog, DataFormat.Alarm),
+            ALARM_DIGITAL alarmDigital => GenerateFormatted(alarmDigital, DataFormat.Alarm),
+            MESSAGE message => GenerateFormatted(message, DataFormat.Message),
+            ILogixSerializable serializable => GenerateFormatted(serializable, DataFormat.Decorated)
+        };
+    }
+
+    /// <summary>
+    /// Generates data element with provided format value and serializable type.
+    /// </summary>
+    private static XElement GenerateFormatted(ILogixSerializable type, DataFormat format)
+    {
+        var data = new XElement(L5XName.Data, new XAttribute(L5XName.Format, format));
+        data.Add(type.Serialize());
+        return data;
+    }
+
+    /// <summary>
+    /// Traverses the value structure to retrieve and build all tag names of the type.
+    /// </summary>
     private static IEnumerable<TagName> Names(TagName root, LogixType type)
     {
         var names = new List<TagName>();
@@ -461,6 +512,9 @@ public class Tag : LogixComponent<Tag>, ILogixScoped
         return names;
     }
 
+    /// <summary>
+    /// Handles getting a comment value for the current tag name operand. 
+    /// </summary>
     private string? GetComment()
     {
         var comment = Element.Descendants(L5XName.Comment)
@@ -470,7 +524,7 @@ public class Tag : LogixComponent<Tag>, ILogixScoped
     }
 
     /// <summary>
-    /// Handles 
+    /// Handles setting a comment element of the root tag structure for the current tag name operand. 
     /// </summary>
     private void SetComment(string? value)
     {
@@ -481,38 +535,35 @@ public class Tag : LogixComponent<Tag>, ILogixScoped
             return;
         }
 
-        //If the value is null or empty clear the comment
         if (string.IsNullOrEmpty(value))
         {
             Element.Descendants(L5XName.Comment)
                 .FirstOrDefault(e => e.Attribute(L5XName.Operand)?.Value == TagName.Operand)?.Remove();
             return;
         }
-        
-        var comments = Element.Element(L5XName.Comments);
 
-        //If no comments, initialize the container.
+        var comments = Element.Element(L5XName.Comments);
         if (comments is null)
         {
             comments = new XElement(L5XName.Comments);
             Element.Add(comments);
-            return;
         }
-        
+
         var comment = comments.Elements(L5XName.Comment)
             .FirstOrDefault(e => e.Attribute(L5XName.Operand)?.Value == TagName.Operand);
-
-        //If it already exists, just update.
+        
         if (comment is not null)
         {
             comment.Value = value;
             return;
         }
-
-        //Otherwise add it
+        
         comments.Add(GenerateComment(value));
     }
 
+    /// <summary>
+    /// Generates a new comment element with the provided value.
+    /// </summary>
     private XElement GenerateComment(string value)
     {
         var comment = new XElement(L5XName.Comment);
@@ -520,4 +571,57 @@ public class Tag : LogixComponent<Tag>, ILogixScoped
         comment.Add(new XCData(value));
         return comment;
     }
+    
+    /// <summary>
+    /// Handles getting a unit value for the current tag name operand. 
+    /// </summary>
+    private string? GetUnit()
+    {
+        return Element.Descendants(L5XName.EngineeringUnit)
+            .FirstOrDefault(e => e.Attribute(L5XName.Operand)?.Value == TagName.Operand)?.Value;
+    }
+    
+    /// <summary>
+    /// Handles setting a unit element of the root tag structure for the current tag name operand. 
+    /// </summary>
+    private void SetUnit(string? value)
+    {
+        if (string.IsNullOrEmpty(value))
+        {
+            Element.Descendants(L5XName.EngineeringUnit)
+                .FirstOrDefault(e => e.Attribute(L5XName.Operand)?.Value == TagName.Operand)?.Remove();
+            return;
+        }
+
+        var units = Element.Element(L5XName.EngineeringUnits);
+        if (units is null)
+        {
+            units = new XElement(L5XName.EngineeringUnits);
+            Element.Add(units);
+        }
+
+        var unit = units.Elements(L5XName.EngineeringUnit)
+            .FirstOrDefault(e => e.Attribute(L5XName.Operand)?.Value == TagName.Operand);
+        
+        if (unit is not null)
+        {
+            unit.Value = value;
+            return;
+        }
+        
+        units.Add(GenerateUnit(value));
+    }
+
+    /// <summary>
+    /// Generates a new unit element with the provided value.
+    /// </summary>
+    private XElement GenerateUnit(string value)
+    {
+        var element = new XElement(L5XName.EngineeringUnit);
+        element.Add(new XAttribute(L5XName.Operand, TagName.Operand));
+        element.Add(new XCData(value));
+        return element;
+    }
+
+    #endregion
 }

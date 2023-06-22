@@ -18,13 +18,12 @@ namespace L5Sharp.Components;
 /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
 /// `Logix 5000 Controllers Import/Export`</a> for more information.
 /// </footer>
-[XmlType(L5XName.AddOnInstructionDefinition)]
 public class AddOnInstruction : LogixComponent<AddOnInstruction>
 {
     /// <summary>
     /// Creates a new <see cref="AddOnInstruction"/> with default values.
     /// </summary>
-    public AddOnInstruction()
+    public AddOnInstruction() : base(new XElement(L5XName.AddOnInstructionDefinition))
     {
     }
 

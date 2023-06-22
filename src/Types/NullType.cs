@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 
@@ -14,7 +15,7 @@ public sealed class NullType : LogixType
 {
     private static readonly NullType Singleton = new();
 
-    private NullType() : base(new XElement(L5XName.Data))
+    private NullType()
     {
     }
 
@@ -23,6 +24,13 @@ public sealed class NullType : LogixType
 
     /// <inheritdoc />
     public override IEnumerable<Member> Members => Enumerable.Empty<Member>();
+
+    /// <inheritdoc />
+    public override void Update(LogixType type) =>
+        throw new NotSupportedException($"Updating {GetType()} data is not supported.");
+
+    /// <inheritdoc />
+    public override XElement Serialize() => new(L5XName.Data);
 
     /// <summary>
     /// Gets the singleton instance of the <see cref="NullType"/> logix type.

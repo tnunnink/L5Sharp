@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using System.Xml.Linq;
+using FluentAssertions;
 using L5Sharp.Enums;
 using L5Sharp.Types.Predefined;
 
@@ -11,15 +12,15 @@ namespace L5Sharp.Tests.Types.Predefined
         public void New_WhenCalled_ShouldNotBeNull()
         {
             var type = new TIMER();
-            
+
             type.Should().NotBeNull();
         }
-        
+
         [Test]
         public void New_Default_ShouldHaveExpectedValues()
         {
             var type = new TIMER();
-            
+
             type.Class.Should().Be(DataTypeClass.Predefined);
             type.Members.Should().HaveCount(5);
             type.DN.Should().Be(0);
@@ -47,7 +48,27 @@ namespace L5Sharp.Tests.Types.Predefined
             timer.TT.Should().Be(true);
             timer.EN.Should().Be(true);
         }
-        
+
+        [Test]
+        public void New_Null_ShouldThrowArgumentNullException()
+        {
+            FluentActions.Invoking(() => new TIMER(null!)).Should().Throw<ArgumentNullException>();
+        }
+
+        [Test]
+        public void New_ElementWithName_ShouldNotBeNull()
+        {
+            var timer = new TIMER(new XElement(L5XName.Structure, new XAttribute(L5XName.DataType, "TIMER")));
+
+            timer.Should().NotBeNull();
+        }
+
+        [Test]
+        public void New_RealElement_ShouldHaveExpectedValues()
+        {
+            var timer = new TIMER();
+        }
+
         [Test]
         public Task Serialize_Overload_ShouldBeVerified()
         {

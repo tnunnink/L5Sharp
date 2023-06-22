@@ -32,21 +32,9 @@ public class MemberTests
     }
 
     [Test]
-    public void New_EmptyName_ShouldHaveEmptyName()
-    {
-        FluentActions.Invoking(() => new Member(string.Empty, new BOOL())).Should().Throw<ArgumentNullException>();
-    }
-
-    [Test]
     public void New_NullType_ShouldThrowArgumentNullException()
     {
         FluentActions.Invoking(() => new Member("Test", null!)).Should().Throw<ArgumentNullException>();
-    }
-
-    [Test]
-    public void New_NullLogixType_ShouldThrowNotSupportedException()
-    {
-        FluentActions.Invoking(() => new Member("Test", LogixType.Null)).Should().Throw<NotSupportedException>();
     }
 
     [Test]
@@ -90,7 +78,7 @@ public class MemberTests
     {
         var member = new Member("Test", 123);
 
-        member.DataType = 321;
+        member.DataType.Update(321);
 
         member.DataType.As<DINT>().Should().Be(321);
     }
@@ -100,7 +88,7 @@ public class MemberTests
     {
         var member = new Member("Test", new TIMER());
 
-        member.DataType = new TIMER { PRE = 5000, EN = true };
+        member.DataType.Update(new TIMER { PRE = 5000, EN = true });
 
         member.DataType.To<TIMER>().PRE.Should().Be(5000);
         member.DataType.To<TIMER>().EN.Should().Be(true);
@@ -111,7 +99,7 @@ public class MemberTests
     {
         var member = new Member("Test", new TIMER());
 
-        member.DataType = new StructureType("TIMER", new List<Member> { new("PRE", 5000), new("EN", true) });
+        member.DataType.Update(new ComplexType("TIMER", new List<Member> { new("PRE", 5000), new("EN", true) }));
 
         member.DataType.To<TIMER>().PRE.Should().Be(5000);
         member.DataType.To<TIMER>().EN.Should().Be(true);
@@ -122,11 +110,11 @@ public class MemberTests
     {
         var member = new Member("Test", new TIMER());
 
-        member.DataType = new Dictionary<string, LogixType>
+        member.DataType.Update(new Dictionary<string, LogixType>
         {
             { "PRE", 5000 },
             { "EN", true }
-        };
+        });
 
         member.DataType.To<TIMER>().PRE.Should().Be(5000);
         member.DataType.To<TIMER>().EN.Should().Be(true);
@@ -137,14 +125,14 @@ public class MemberTests
     {
         var member = new Member("Test", new TIMER());
 
-        member.DataType = new Dictionary<string, LogixType>
+        member.DataType.Update(new Dictionary<string, LogixType>
         {
             { "Test", 123 },
             { "PRE", 5000 },
             { "Array", new DINT[] { 1, 2, 3, 4 } },
-            { "EN", true}
-        };
-        
+            { "EN", true }
+        });
+
         member.DataType.To<TIMER>().PRE.Should().Be(5000);
         member.DataType.To<TIMER>().ACC.Should().Be(0);
         member.DataType.To<TIMER>().EN.Should().Be(true);

@@ -29,7 +29,7 @@ namespace L5Sharp.Tests.Components
             tag.Value.To<TIMER>().DN.Should().Be(0);
             tag.Value.To<TIMER>().TT.Should().Be(0);
             tag.Value.To<TIMER>().EN.Should().Be(1);
-            
+
             tag.Replace(new Tag());
         }
 
@@ -91,12 +91,12 @@ namespace L5Sharp.Tests.Components
             var tag = new Tag();
 
             tag.Name.Should().BeEmpty();
-            tag.Value.Should().Be(LogixType.Null);
+            tag.Value.Should().Be(LogixData.Null);
             tag.DataType.Should().Be("NULL");
             tag.Dimensions.Should().Be(Dimensions.Empty);
             tag.Radix.Should().Be(Radix.Null);
             tag.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);
-            tag.Description.Should().BeEmpty();
+            tag.Description.Should().BeNull();
             tag.Constant.Should().BeFalse();
             tag.TagType.Should().Be(TagType.Base);
             tag.TagName.Should().Be(TagName.Empty);
@@ -136,15 +136,11 @@ namespace L5Sharp.Tests.Components
         [Test]
         public void SetValue_IsAtomicNewAtomic_ShouldBeExpected()
         {
-            var tag = new Tag { Name = "Test", Value = new DINT(12) };
+            var tag = new Tag { Name = "Test", Value = new DINT() };
 
-            tag.Value = 21;
+            tag.Value = 123;
 
-            tag.Value.As<DINT>().Should().Be(21);
-
-            var bits = tag.Value.To<DINT>().ToBitArray();
-
-            bits.Length.Should().Be(32);
+            tag.Value.As<DINT>().Should().Be(123);
         }
 
         [Test]
@@ -156,16 +152,15 @@ namespace L5Sharp.Tests.Components
                 Value = new TIMER()
             };
 
-            var member = tag.Member("DN");
+            var member = tag["DN"];
 
             member.Should().NotBeNull();
-            member?.TagName.Should().Be("Test.DN");
-            member?.Value.Should().BeOfType<BOOL>();
-            member?.DataType.Should().Be("BOOL");
-            member?.Dimensions.Should().Be(Dimensions.Empty);
-            member?.Radix.Should().Be(Radix.Decimal);
-            member?.Description.Should().BeEmpty();
-            //member?.Unit.Should().BeEmpty();
+            member.TagName.Should().Be("Test.DN");
+            member.Value.Should().BeOfType<BOOL>();
+            member.DataType.Should().Be("BOOL");
+            member.Dimensions.Should().Be(Dimensions.Empty);
+            member.Radix.Should().Be(Radix.Decimal);
+            member.Description.Should().BeNull();
         }
 
         [Test]
@@ -404,13 +399,13 @@ namespace L5Sharp.Tests.Components
         }
 
         [Test]
-        public void Value_GetTimer_ShouldBeNull()
+        public void Value_SetAtomicBit_ShouldUpdateValue()
         {
-            var tag = new Tag { Name = "Test", Value = new TIMER() };
+            var tag = new Tag { Name = "Test", Value = new DINT() };
 
-            var value = tag.Value;
+            tag.Value.To<DINT>()[0] = 1;
 
-            value.Should().BeNull();
+            tag.Value.To<DINT>().Should().Be(1);
         }
 
         [Test]
@@ -418,7 +413,7 @@ namespace L5Sharp.Tests.Components
         {
             var tag = new Tag { Name = "Test", Value = new TIMER() };
 
-            FluentActions.Invoking(() => tag.Value = new REAL(43)).Should().Throw<InvalidOperationException>();
+            FluentActions.Invoking(() => tag.Value = new REAL(43)).Should().Throw<ArgumentException>();
         }
 
         [Test]

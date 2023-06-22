@@ -15,12 +15,7 @@ public sealed class STRING : StringType, IEquatable<STRING>, IComparable<STRING>
     /// <summary>
     /// Creates a new empty <see cref="STRING"/> type.
     /// </summary>
-    public STRING() : base(nameof(STRING), PredefinedLength, string.Empty)
-    {
-    }
-
-    /// <inheritdoc />
-    public STRING(XElement element) : base(element)
+    public STRING() : base(nameof(STRING), string.Empty)
     {
     }
 
@@ -32,7 +27,17 @@ public sealed class STRING : StringType, IEquatable<STRING>, IComparable<STRING>
     /// <exception cref="ArgumentOutOfRangeException">
     /// <c>value</c> length is greater than the predefined Logix string length of 82 characters.
     /// </exception>
-    public STRING(string value) : base(nameof(STRING), PredefinedLength, value)
+    public STRING(string value) : base(nameof(STRING), value)
+    {
+        if (value.Length > PredefinedLength)
+            throw new ArgumentOutOfRangeException(
+                $"The length {value.Length} of value can not be greater than {PredefinedLength} characters.");
+        
+        SetValue(value);
+    }
+
+    /// <inheritdoc />
+    public STRING(XElement element) : base(element)
     {
     }
 
@@ -51,21 +56,21 @@ public sealed class STRING : StringType, IEquatable<STRING>, IComparable<STRING>
     /// </summary>
     /// <param name="input">The value to convert.</param>
     /// <returns>A <see cref="string"/> type value.</returns>
-    public static implicit operator string(STRING input) => input.Value;
+    public static implicit operator string(STRING input) => input.ToString();
 
     /// <inheritdoc />
     public bool Equals(STRING? other)
     {
         if (ReferenceEquals(null, other)) return false;
         if (ReferenceEquals(this, other)) return true;
-        return Value == other.Value;
+        return GetValue() == other.GetValue();
     }
 
     /// <inheritdoc />
     public override bool Equals(object? obj) => Equals(obj as STRING);
 
     /// <inheritdoc />
-    public override int GetHashCode() => Value.GetHashCode();
+    public override int GetHashCode() => GetValue().GetHashCode();
 
     /// <summary>
     /// Determines if the provided objects are equal.
@@ -87,6 +92,6 @@ public sealed class STRING : StringType, IEquatable<STRING>, IComparable<STRING>
     public int CompareTo(STRING? other)
     {
         if (ReferenceEquals(this, other)) return 0;
-        return ReferenceEquals(other, null) ? 1 : string.Compare(Value, Value, StringComparison.Ordinal);
+        return ReferenceEquals(other, null) ? 1 : string.Compare(GetValue(), GetValue(), StringComparison.Ordinal);
     }
 }

@@ -36,7 +36,7 @@ namespace L5Sharp.Tests.Types
         [Test]
         public void Constructor_ArrayOfDifferentTypes_ShouldThrowArgumentException()
         {
-            FluentActions.Invoking(() => new ArrayType(new[] { new BOOL(), new DINT(), new TIMER(), LogixType.Null }))
+            FluentActions.Invoking(() => new ArrayType(new[] { new BOOL(), new DINT(), new TIMER(), LogixData.Null }))
                 .Should().Throw<ArgumentException>();
         }
 

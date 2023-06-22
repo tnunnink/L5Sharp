@@ -335,8 +335,7 @@ public sealed class Dimensions : IEquatable<Dimensions>
     /// <param name="right">An object to compare.</param>
     /// <returns>true if the objects are not equal, otherwise, false.</returns>
     public static bool operator !=(Dimensions left, Dimensions right) => !Equals(left, right);
-
-
+    
     private static string GenerateIndex(ushort x) => $"[{x}]";
 
     private static string GenerateIndex(ushort x, ushort y) => $"[{x},{y}]";

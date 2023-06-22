@@ -1,6 +1,7 @@
 ﻿using AutoFixture;
 using FluentAssertions;
 using L5Sharp.Enums;
+using L5Sharp.Types;
 using L5Sharp.Types.Atomics;
 
 namespace L5Sharp.Tests.Types.Atomics
@@ -55,6 +56,7 @@ namespace L5Sharp.Tests.Types.Atomics
             type.Name.Should().Be(nameof(INT).ToUpper());
             type.Class.Should().Be(DataTypeClass.Atomic);
             type.Family.Should().Be(DataTypeFamily.None);
+            type.Members.Should().HaveCount(16);
             type.Should().Be(0);
         }
 
@@ -79,13 +81,178 @@ namespace L5Sharp.Tests.Types.Atomics
         }
 
         [Test]
-        public void Bit_ValidIndex_ShouldBeExpected()
+        public void Members_PositiveValue_ShouldHaveBitsEqualToOne()
+        {
+            var type = new INT(33);
+
+            var members = type.Members.ToList();
+
+            var bitsEqualToOne = members.Where(m => m.DataType.As<BOOL>() == true).ToList();
+
+            bitsEqualToOne.Should().NotBeEmpty();
+        }
+        
+        [Test]
+        public void GetBit_ValidIndex_ShouldBeExpected()
         {
             var type = new INT(1);
 
             var bit = type[0];
 
             bit.Should().Be(true);
+        }
+
+        [Test]
+        public void GetBit_InvalidIndex_ShouldThrowArgumentOutOfRangeException()
+        {
+            var type = new INT(1);
+
+            FluentActions.Invoking(() => type[32]).Should().Throw<ArgumentOutOfRangeException>();
+        }
+
+        [Test]
+        public void SetBit_ValidIndex_ShouldHaveExpectedValue()
+        {
+            // ReSharper disable once UseObjectOrCollectionInitializer
+            var type = new INT();
+
+            type[0] = true;
+
+            type.Should().Be(1);
+        }
+
+        [Test]
+        public void SetBit_InvalidIndex_ShouldThrowArgumentOutOfRangeException()
+        {
+            var type = new INT();
+            
+            FluentActions.Invoking(() => type[32] = 1).Should().Throw<ArgumentOutOfRangeException>();
+        }
+        
+        [Test]
+        public void ToBits_WhenCalled_ReturnsExpected()
+        {
+            var type = new INT();
+
+            var bits = type.ToBits();
+
+            bits.Should().NotBeNull();
+            bits.Length.Should().Be(16);
+
+            foreach (bool bit in bits)
+            {
+                bit.Should().BeFalse();
+            }
+        }
+
+        [Test]
+        public void ToBits_PositiveValue_ReturnsExpected()
+        {
+            var type = new INT(1);
+
+            var bits = type.ToBits();
+
+            bits.Should().NotBeNull();
+            bits[0].Should().BeTrue();
+        }
+
+        [Test]
+        public void ToBytes_WhenCalled_ReturnsExpected()
+        {
+            var expected = BitConverter.GetBytes(_random);
+            var type = new INT(_random);
+
+            var bytes = type.ToBytes();
+
+            CollectionAssert.AreEqual(bytes, expected);
+        }
+
+        [Test]
+        public Task Serialize_Default_ShouldBeValid()
+        {
+            var type = new INT();
+
+            var xml = type.Serialize().ToString();
+
+            return Verify(xml);
+        }
+
+        [Test]
+        public Task Serialize_Value_ShouldBeValid()
+        {
+            var type = new INT(123);
+
+            var xml = type.Serialize().ToString();
+
+            return Verify(xml);
+        }
+        
+        [Test]
+        public Task Serialize_ValueAndRadix_ShouldBeValid()
+        {
+            var type = new INT(123, Radix.Hex);
+
+            var xml = type.Serialize().ToString();
+
+            return Verify(xml);
+        }
+        
+        [Test]
+        public void Update_SameType_ShouldBeExpected()
+        {
+            var type = new INT();
+
+            type.Update(new INT(_random));
+
+            type.Should().Be(_random);
+        }
+
+        [Test]
+        public void Update_SmallerType_ShouldBeExpected()
+        {
+            var type = new INT();
+
+            type.Update(new SINT(123));
+
+            type.Should().Be(123);
+        }
+
+        [Test]
+        public void Update_LargeValueSmallerType_ShouldBeExpected()
+        {
+            var type = new INT(INT.MaxValue);
+
+            type.Update(new SINT(123));
+
+            type.Should().Be(123);
+        }
+
+        [Test]
+        public void Update_LargerTypeValidValue_ShouldBeExpected()
+        {
+            var type = new INT();
+
+            type.Update(new LINT(123));
+
+            type.Should().Be(123);
+        }
+
+        [Test]
+        public void Update_LargerTypeLargerValue_ShouldHaveDataLoss()
+        {
+            var type = new INT();
+
+            type.Update(new LINT(LINT.MaxValue));
+
+            type.Should().NotBe(INT.MaxValue);
+        }
+
+        [Test]
+        public void Update_InvalidType_ShouldThrowArgumentException()
+        {
+            var type = new INT();
+
+            FluentActions.Invoking(() => type.Update(new ComplexType("Test"))).Should().Throw<ArgumentException>();
         }
 
         [Test]
@@ -381,96 +548,6 @@ namespace L5Sharp.Tests.Types.Atomics
             var compare = first.CompareTo(second);
 
             compare.Should().Be(0);
-        }
-
-        [Test]
-        public void Members_WhenCalled_ShouldHaveExpectedCount()
-        {
-            var type = new INT();
-
-            var members = type.Members.ToList();
-
-            members.Should().HaveCount(16);
-        }
-
-        [Test]
-        public void Members_PositiveValue_ShouldHaveBitsEqualToOne()
-        {
-            var type = new INT(33);
-
-            var members = type.Members.ToList();
-
-            var bitsEqualToOne = members.Where(m => m.DataType.As<BOOL>() == true).ToList();
-
-            bitsEqualToOne.Should().NotBeEmpty();
-        }
-        
-        [Test]
-        public void ToBitArray_WhenCalled_ReturnsExpected()
-        {
-            var type = new DINT();
-
-            var bits = type.ToBitArray();
-
-            bits.Should().NotBeNull();
-            bits.Length.Should().Be(32);
-
-            foreach (bool bit in bits)
-            {
-                bit.Should().BeFalse();
-            }
-        }
-
-        [Test]
-        public void ToBitArray_PositiveValue_ReturnsExpected()
-        {
-            var type = new INT(1);
-
-            var bits = type.ToBitArray();
-
-            bits.Should().NotBeNull();
-            bits[0].Should().BeTrue();
-        }
-
-        [Test]
-        public void ToBytes_WhenCalled_ReturnsExpected()
-        {
-            var expected = BitConverter.GetBytes(_random);
-            var type = new INT(_random);
-
-            var bytes = type.GetBytes();
-
-            CollectionAssert.AreEqual(bytes, expected);
-        }
-
-        [Test]
-        public Task Serialize_Default_ShouldBeValid()
-        {
-            var type = new INT();
-
-            var xml = type.Serialize().ToString();
-
-            return Verify(xml);
-        }
-
-        [Test]
-        public Task Serialize_Value_ShouldBeValid()
-        {
-            var type = new INT(123);
-
-            var xml = type.Serialize().ToString();
-
-            return Verify(xml);
-        }
-        
-        [Test]
-        public Task Serialize_ValueAndRadix_ShouldBeValid()
-        {
-            var type = new INT(123, Radix.Hex);
-
-            var xml = type.Serialize().ToString();
-
-            return Verify(xml);
         }
     }
 }

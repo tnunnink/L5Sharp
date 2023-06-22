@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using L5Sharp.Enums;
-using L5Sharp.Extensions;
 using L5Sharp.Types;
 using L5Sharp.Types.Atomics;
 using L5Sharp.Types.Predefined;
@@ -30,22 +29,13 @@ namespace L5Sharp;
 /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
 /// `Logix 5000 Controllers Import/Export`</a> for more information.
 /// </footer>
-public abstract class LogixType : LogixElement<LogixType>
+public abstract class LogixType : ILogixSerializable
 {
-    /// <summary>
-    /// Initialized a new <see cref="LogixType"/> with the provided <see cref="XElement"/> object.
-    /// </summary>
-    /// <param name="element">The L5X element to initialize the type with.</param>
-    /// <exception cref="ArgumentNullException"><c>element</c> is null.</exception>
-    protected LogixType(XElement element) : base(element)
-    {
-    }
-
     /// <summary>
     /// The name of the <c>Logix</c> type.
     /// </summary>
     /// <value>A <see cref="string"/> name identifying the logix type.</value>
-    public virtual string Name => Element.LogixType() ?? throw new L5XException(L5XName.DataType, Element);
+    public virtual string Name => string.Empty;
 
     /// <summary>
     /// The family (string or none) of the type.
@@ -63,7 +53,14 @@ public abstract class LogixType : LogixElement<LogixType>
     /// The collection of <see cref="Member"/> objects that make up the structure of the type.
     /// </summary>
     /// <value>A <see cref="IEnumerable{T}"/> containing <see cref="Member"/> objects</value>
-    public virtual IEnumerable<Member> Members => Element.Elements().Select(e => new Member(e));
+    public virtual IEnumerable<Member> Members => Enumerable.Empty<Member>();
+
+    /// <summary>
+    /// Performs a safe cast of the current <see cref="LogixType"/> to the type of the generic argument.
+    /// </summary>
+    /// <typeparam name="TLogixType">The logix type to cast to.</typeparam>
+    /// <returns>The instance casted as the specified generic type argument.</returns>
+    public TLogixType? As<TLogixType>() where TLogixType : LogixType => this as TLogixType;
 
     /// <summary>
     /// Performs a explicit cast of the current <see cref="LogixType"/> to the type of the generic argument.
@@ -74,14 +71,24 @@ public abstract class LogixType : LogixElement<LogixType>
     public TLogixType To<TLogixType>() where TLogixType : LogixType => (TLogixType)this;
 
     /// <summary>
-    /// Performs a safe cast of the current <see cref="LogixType"/> to the type of the generic argument.
+    /// Returns a new deep cloned instance of the current type.
     /// </summary>
-    /// <typeparam name="TLogixType">The logix type to cast to.</typeparam>
-    /// <returns>The instance casted as the specified generic type argument.</returns>
-    public TLogixType? As<TLogixType>() where TLogixType : LogixType => this as TLogixType;
+    /// <returns>A new instance of the specified entity type with the same property values.</returns>
+    /// <exception cref="InvalidOperationException">The object being cloned does not have a constructor accepting a single <see cref="XElement"/> argument.</exception>
+    /// <remarks>This method will simply deserialize a new instance using the current underlying element data.</remarks>
+    public LogixType Clone() => (LogixType)LogixSerializer.Deserialize(GetType(), new XElement(Serialize()));
 
     /// <inheritdoc />
     public override string ToString() => Name;
+
+    /// <inheritdoc />
+    public abstract XElement Serialize();
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="type"></param>
+    public abstract void Update(LogixType type);
 
     /// <summary>
     /// Converts the provided <see cref="bool"/> to a <see cref="LogixType"/>.
@@ -187,10 +194,5 @@ public abstract class LogixType : LogixElement<LogixType>
     /// <param name="value">The value to convert.</param>
     /// <returns>A <see cref="LogixType"/> representing the converted value.</returns>
     public static implicit operator LogixType(Dictionary<string, LogixType> value) =>
-        new StructureType(nameof(StructureType), value.Select(m => new Member(m.Key, m.Value)));
-    
-    /// <summary>
-    /// Returns the singleton null <see cref="LogixType"/> object.
-    /// </summary>
-    public static LogixType Null => NullType.Instance;
+        new ComplexType(string.Empty, value.Select(m => new Member(m.Key, m.Value)));
 }

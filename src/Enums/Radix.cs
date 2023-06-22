@@ -189,7 +189,7 @@ public abstract class Radix : LogixEnum<Radix, string>
             _ => 2
         };
 
-        var bytes = type.GetBytes();
+        var bytes = type.ToBytes();
         var builder = new StringBuilder();
 
         for (var ctr = bytes.GetUpperBound(0); ctr >= bytes.GetLowerBound(0); ctr--)

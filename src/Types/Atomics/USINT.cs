@@ -11,7 +11,7 @@ namespace L5Sharp.Types.Atomics;
 [TypeConverter(typeof(USintConverter))]
 public sealed class USINT : AtomicType, IEquatable<USINT>, IComparable<USINT>
 {
-    private byte Value => GetBytes()[0];
+    private byte Local => ToBytes()[0];
 
     /// <summary>
     /// Creates a new default <see cref="USINT"/> type.
@@ -41,7 +41,7 @@ public sealed class USINT : AtomicType, IEquatable<USINT>, IComparable<USINT>
     /// Gets a <see cref="BOOL"/> at the specified bit index.
     /// </summary>
     /// <param name="bit">The bit index to access</param>
-    public BOOL this[int bit] => new(ToBitArray()[bit]);
+    public BOOL this[int bit] => new(ToBits()[bit]);
 
     /// <summary>
     /// Represents the largest possible value of <see cref="USINT"/>.
@@ -74,7 +74,7 @@ public sealed class USINT : AtomicType, IEquatable<USINT>, IComparable<USINT>
     {
         if (ReferenceEquals(null, other)) return false;
         if (ReferenceEquals(this, other)) return true;
-        return Value == other.Value;
+        return Local == other.Local;
     }
 
     /// <inheritdoc />
@@ -85,7 +85,7 @@ public sealed class USINT : AtomicType, IEquatable<USINT>, IComparable<USINT>
     // NOT sure how else to handle since it needs to be settable and used for equality.
     // This would only be a problem if you created a hash table of atomic types.
     // NOT sure anyone would need to do that.
-    public override int GetHashCode() => Value.GetHashCode();
+    public override int GetHashCode() => Local.GetHashCode();
 
     /// <summary>
     /// Determines whether the objects are equal.
@@ -107,7 +107,7 @@ public sealed class USINT : AtomicType, IEquatable<USINT>, IComparable<USINT>
     public int CompareTo(USINT? other)
     {
         if (ReferenceEquals(this, other)) return 0;
-        return ReferenceEquals(null, other) ? 1 : Value.CompareTo(other.Value);
+        return ReferenceEquals(null, other) ? 1 : Local.CompareTo(other.Local);
     }
     
     #region Conversions
@@ -124,7 +124,7 @@ public sealed class USINT : AtomicType, IEquatable<USINT>, IComparable<USINT>
     /// </summary>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="byte"/> type value.</returns>
-    public static implicit operator byte(USINT atomic) => atomic.Value;
+    public static implicit operator byte(USINT atomic) => atomic.Local;
 
     /// <summary>
     /// Implicitly converts a <see cref="string"/> to a <see cref="ULINT"/> value.
@@ -145,63 +145,63 @@ public sealed class USINT : AtomicType, IEquatable<USINT>, IComparable<USINT>
     /// </summary>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="BOOL"/> type value.</returns>
-    public static explicit operator BOOL(USINT atomic) => new(atomic.Value != 0);
+    public static explicit operator BOOL(USINT atomic) => new(atomic.Local != 0);
 
     /// <summary>
     /// Converts the provided <see cref="USINT"/> to a <see cref="SINT"/> value.
     /// </summary>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="SINT"/> type value.</returns>
-    public static explicit operator SINT(USINT atomic) => new((sbyte)atomic.Value);
+    public static explicit operator SINT(USINT atomic) => new((sbyte)atomic.Local);
 
     /// <summary>
     /// Converts the provided <see cref="USINT"/> to a <see cref="INT"/> value.
     /// </summary>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="INT"/> type value.</returns>
-    public static implicit operator INT(USINT atomic) => new(atomic.Value);
+    public static implicit operator INT(USINT atomic) => new(atomic.Local);
 
     /// <summary>
     /// Converts the provided <see cref="USINT"/> to a <see cref="UINT"/> value.
     /// </summary>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="UINT"/> type value.</returns>
-    public static implicit operator UINT(USINT atomic) => new(atomic.Value);
+    public static implicit operator UINT(USINT atomic) => new(atomic.Local);
 
     /// <summary>
     /// Converts the provided <see cref="USINT"/> to a <see cref="DINT"/> value.
     /// </summary>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="DINT"/> type value.</returns>
-    public static implicit operator DINT(USINT atomic) => new(atomic.Value);
+    public static implicit operator DINT(USINT atomic) => new(atomic.Local);
 
     /// <summary>
     /// Converts the provided <see cref="USINT"/> to a <see cref="UDINT"/> value.
     /// </summary>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="UDINT"/> type value.</returns>
-    public static implicit operator UDINT(USINT atomic) => new(atomic.Value);
+    public static implicit operator UDINT(USINT atomic) => new(atomic.Local);
 
     /// <summary>
     /// Converts the provided <see cref="USINT"/> to a <see cref="LINT"/> value.
     /// </summary>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="LINT"/> type value.</returns>
-    public static implicit operator LINT(USINT atomic) => new(atomic.Value);
+    public static implicit operator LINT(USINT atomic) => new(atomic.Local);
 
     /// <summary>
     /// Converts the provided <see cref="USINT"/> to a <see cref="ULINT"/> value.
     /// </summary>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="ULINT"/> type value.</returns>
-    public static implicit operator ULINT(USINT atomic) => new(atomic.Value);
+    public static implicit operator ULINT(USINT atomic) => new(atomic.Local);
 
     /// <summary>
     /// Converts the provided <see cref="USINT"/> to a <see cref="REAL"/> value.
     /// </summary>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="REAL"/> type value.</returns>
-    public static implicit operator REAL(USINT atomic) => new(atomic.Value);
+    public static implicit operator REAL(USINT atomic) => new(atomic.Local);
 
     #endregion
 }

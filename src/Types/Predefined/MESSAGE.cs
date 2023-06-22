@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using System.Linq;
 using System.Xml.Linq;
 using L5Sharp.Enums;
@@ -17,7 +17,7 @@ public sealed class MESSAGE : StructureType
     /// <summary>
     /// Creates a new <see cref="MESSAGE"/> data type instance.
     /// </summary>
-    public MESSAGE() : base(new XElement(L5XName.MessageParameters))
+    public MESSAGE() : base(nameof(MESSAGE))
     {
         MessageType = new STRING();
         RequestedLength = new INT();
@@ -35,20 +35,35 @@ public sealed class MESSAGE : StructureType
     }
 
     /// <inheritdoc />
-    public MESSAGE(XElement element) : base(element)
+    public MESSAGE(XElement element) : base(nameof(MESSAGE))
     {
+        if (element is null) throw new ArgumentNullException(nameof(element));
+
+        MessageType = element.Attribute(nameof(MessageType))?.Value.Parse<STRING>() ?? new STRING();
+        RequestedLength = element.Attribute(nameof(RequestedLength))?.Value.Parse<INT>() ?? new INT();
+        ConnectedFlag = element.Attribute(nameof(ConnectedFlag))?.Value.Parse<INT>() ?? new INT();
+        ConnectionPath = element.Attribute(nameof(ConnectionPath))?.Value.Parse<STRING>() ?? new STRING();
+        CommTypeCode = element.Attribute(nameof(CommTypeCode))?.Value.Parse<INT>() ?? new INT();
+        ServiceCode = element.Attribute(nameof(ServiceCode))?.Value.Parse<INT>() ?? new INT();
+        ObjectType = element.Attribute(nameof(ObjectType))?.Value.Parse<INT>() ?? new INT();
+        TargetObject = element.Attribute(nameof(TargetObject))?.Value.Parse<INT>() ?? new INT();
+        AttributeNumber = element.Attribute(nameof(AttributeNumber))?.Value.Parse<INT>() ?? new INT();
+        LocalIndex = element.Attribute(nameof(LocalIndex))?.Value.Parse<INT>() ?? new INT();
+        DestinationTag = element.Attribute(nameof(DestinationTag))?.Value.Parse<STRING>() ?? new STRING();
+        CacheConnections = element.Attribute(nameof(CacheConnections))?.Value.Parse<BOOL>() ?? new BOOL();
+        LargePacketUsage = element.Attribute(nameof(LargePacketUsage))?.Value.Parse<BOOL>() ?? new BOOL();
     }
 
     /// <inheritdoc />
-    public override string Name => nameof(MESSAGE);
+    public override DataTypeClass Class => DataTypeClass.Predefined;
 
     /// <inheritdoc />
-    public override DataTypeClass Class => DataTypeClass.Predefined;
-    
-    /// <inheritdoc />
-    //todo this wont work for the string type. Do we need a generic logix type parse?
-    public override IEnumerable<Member> Members =>
-        Element.Attributes().Select(a => new Member(a.Name.ToString(), Atomic.Parse(a.Value))); 
+    public override XElement Serialize()
+    {
+        var element = new XElement(L5XName.MessageParameters);
+        element.Add(Members.Select(m => new XAttribute(m.Name, m.DataType)));
+        return element;
+    }
 
     /// <summary>
     /// Gets the <see cref="MessageType"/> value of the <see cref="MESSAGE"/> parameters.
@@ -57,8 +72,8 @@ public sealed class MESSAGE : StructureType
     /// </summary>
     public STRING MessageType
     {
-        get => GetValue<string>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetMember<STRING>();
+        set => SetMember(value);
     }
 
     /// <summary>
@@ -66,8 +81,8 @@ public sealed class MESSAGE : StructureType
     /// </summary>
     public INT RequestedLength
     {
-        get => GetValue<INT>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetMember<INT>();
+        set => SetMember(value);
     }
 
     /// <summary>
@@ -75,8 +90,8 @@ public sealed class MESSAGE : StructureType
     /// </summary>
     public INT ConnectedFlag
     {
-        get => GetValue<INT>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetMember<INT>();
+        set => SetMember(value);
     }
 
     /// <summary>
@@ -84,8 +99,8 @@ public sealed class MESSAGE : StructureType
     /// </summary>
     public STRING ConnectionPath
     {
-        get => GetValue<string>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetMember<STRING>();
+        set => SetMember(value);
     }
 
     /// <summary>
@@ -93,8 +108,8 @@ public sealed class MESSAGE : StructureType
     /// </summary>
     public INT CommTypeCode
     {
-        get => GetValue<INT>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetMember<INT>();
+        set => SetMember(value);
     }
 
     /// <summary>
@@ -102,8 +117,8 @@ public sealed class MESSAGE : StructureType
     /// </summary>
     public INT ServiceCode
     {
-        get => GetValue<INT>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetMember<INT>();
+        set => SetMember(value);
     }
 
     /// <summary>
@@ -111,8 +126,8 @@ public sealed class MESSAGE : StructureType
     /// </summary>
     public INT ObjectType
     {
-        get => GetValue<INT>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetMember<INT>();
+        set => SetMember(value);
     }
 
     /// <summary>
@@ -120,8 +135,8 @@ public sealed class MESSAGE : StructureType
     /// </summary>
     public INT TargetObject
     {
-        get => GetValue<INT>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetMember<INT>();
+        set => SetMember(value);
     }
 
     /// <summary>
@@ -129,8 +144,8 @@ public sealed class MESSAGE : StructureType
     /// </summary>
     public INT AttributeNumber
     {
-        get => GetValue<INT>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetMember<INT>();
+        set => SetMember(value);
     }
 
     /// <summary>
@@ -138,8 +153,8 @@ public sealed class MESSAGE : StructureType
     /// </summary>
     public INT LocalIndex
     {
-        get => GetValue<INT>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetMember<INT>();
+        set => SetMember(value);
     }
 
     /// <summary>
@@ -147,8 +162,8 @@ public sealed class MESSAGE : StructureType
     /// </summary>
     public STRING DestinationTag
     {
-        get => GetValue<string>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetMember<STRING>();
+        set => SetMember(value);
     }
 
     /// <summary>
@@ -156,8 +171,8 @@ public sealed class MESSAGE : StructureType
     /// </summary>
     public BOOL CacheConnections
     {
-        get => GetValue<bool>();
-        set => SetValue(value);
+        get => GetMember<BOOL>();
+        set => SetMember(value);
     }
 
     /// <summary>
@@ -165,7 +180,7 @@ public sealed class MESSAGE : StructureType
     /// </summary>
     public BOOL LargePacketUsage
     {
-        get => GetValue<bool>();
-        set => SetValue(value);
+        get => GetMember<BOOL>();
+        set => SetMember(value);
     }
 }

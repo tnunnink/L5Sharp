@@ -28,15 +28,19 @@ public abstract class AtomicType : LogixType
     /// <param name="radix">The default <see cref="Enums.Radix"/> format of the type.</param>
     /// <param name="bytes">An array of bytes that represent the value of the type.</param>
     /// <exception cref="ArgumentNullException">name is null.</exception>
-    protected internal AtomicType(string name, Radix radix, byte[] bytes) : base(GenerateElement(name, radix))
+    protected internal AtomicType(string name, Radix radix, byte[] bytes)
     {
+        if (radix is null) throw new ArgumentNullException(nameof(radix));
         if (!radix.SupportsType(this))
             throw new ArgumentException($"The radix {radix} is not supported for atomic type {typeof(AtomicType)}");
 
+        Name = name;
         Radix = radix;
-        Value = bytes;
-        Element.SetAttributeValue(L5XName.Value, ToString(radix));
+        Value = new BitArray(bytes);
     }
+
+    /// <inheritdoc />
+    public override string Name { get; }
 
     /// <inheritdoc />
     public sealed override DataTypeClass Class => DataTypeClass.Atomic;
@@ -46,7 +50,7 @@ public abstract class AtomicType : LogixType
     {
         get
         {
-            for (var i = 0; i < ToBitArray().Count; i++)
+            for (var i = 0; i < Value.Count; i++)
                 yield return new Member(i.ToString(), new BOOL(Value[i]));
         }
     }
@@ -61,13 +65,24 @@ public abstract class AtomicType : LogixType
     /// The underlying value of the <see cref="AtomicType"/>.
     /// </summary>
     /// <value>A <see cref="BitArray"/> representing the value of the type.</value>
-    private byte[] Value { get; }
+    protected BitArray Value { get; }
 
     /// <summary>
     /// Returns the <see cref="AtomicType"/> value as an array of <see cref="byte"/>.
     /// </summary>
     /// <returns>An array of <see cref="byte"/> representing the underlying value of the type.</returns>
-    public byte[] GetBytes() => Value;
+    public byte[] ToBytes()
+    {
+        var bytes = new byte[(Value.Length - 1) / 8 + 1];
+        Value.CopyTo(bytes, 0);
+        return bytes;
+    }
+
+    /// <summary>
+    /// Returns the <see cref="AtomicType"/> value as a <see cref="BitArray"/>.
+    /// </summary>
+    /// <returns>A <see cref="BitArray"/> representing the underlying value of the type.</returns>
+    public BitArray ToBits() => Value;
 
     /// <summary>
     /// Return the atomic value formatted using the current <see cref="Radix"/> format.
@@ -82,26 +97,25 @@ public abstract class AtomicType : LogixType
     /// <returns>A <see cref="string"/> representing the formatted atomic value.</returns>
     public string ToString(Radix radix) => radix.Format(this);
 
-    /// <summary>
-    /// Returns the <see cref="AtomicType"/> value as a <see cref="BitArray"/>.  
-    /// </summary>
-    /// <returns>A <see cref="BitArray"/> representing the underlying value of the type.</returns>
-    public BitArray ToBitArray() => new(Value);
-
-    /*{
-        var bytes = new byte[(Value.Length - 1) / 8 + 1];
-        Value.CopyTo(bytes, 0);
-        return bytes;
-    }*/
-
-    private static XElement GenerateElement(string name, Radix radix)
+    /// <inheritdoc />
+    public override XElement Serialize()
     {
-        if (name is null) throw new ArgumentNullException(nameof(name));
-        if (radix is null) throw new ArgumentNullException(nameof(radix));
-
         var element = new XElement(L5XName.DataValue);
-        element.Add(new XAttribute(L5XName.DataType, name));
-        element.Add(new XAttribute(L5XName.Radix, radix));
+        element.Add(new XAttribute(L5XName.DataType, Name));
+        element.Add(new XAttribute(L5XName.Radix, Radix));
+        element.Add(new XAttribute(L5XName.Value, ToString()));
         return element;
+    }
+
+    /// <inheritdoc />
+    public override void Update(LogixType type)
+    {
+        if (type is not AtomicType atomicType)
+            throw new ArgumentException($"Can not update {GetType().Name} with {type.GetType().Name}");
+        
+        //Updating the underlying bit array will work between different types so long as the incoming value is not larger
+        //than what can be represented by the length of the this type's bit array. Otherwise, data loss will occur.
+        for (var i = 0; i < Value.Length; i++)
+            Value[i] = i < atomicType.Value.Length ? atomicType.Value[i] : default;
     }
 }

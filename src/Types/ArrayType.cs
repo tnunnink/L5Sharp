@@ -13,10 +13,7 @@ namespace L5Sharp.Types;
 /// </summary>
 public class ArrayType : LogixType, IEnumerable<LogixType>
 {
-    /// <inheritdoc />
-    public ArrayType(XElement element) : base(element)
-    {
-    }
+    private readonly List<Member> _members;
 
     /// <summary>
     /// Creates a new array type from the provided logix array object.
@@ -24,9 +21,37 @@ public class ArrayType : LogixType, IEnumerable<LogixType>
     /// <param name="array">An array of logix types</param>
     /// <exception cref="ArgumentNullException"><c>array</c> or any element of <c>array</c> is null.</exception>
     /// <exception cref="ArgumentException"></exception>
-    public ArrayType(Array array) : base(GenerateElement(array.Cast<LogixType>().ToList(), Dimensions.FromArray(array)))
+    public ArrayType(Array array)
     {
+        if (array is null) throw new ArgumentNullException(nameof(array));
+
+        var collection = array.Cast<LogixType>().ToList();
+        if (collection.Any(t => t is null)) throw new ArgumentNullException(nameof(collection));
+
+        Name = collection.First().Name;
+        Dimensions = Dimensions.FromArray(array);
+        Radix = collection.First() is AtomicType atomicType ? atomicType.Radix : Radix.Null;
+        _members = Dimensions.Indices().Zip(collection, (i, t) => new Member(i, t)).ToList();
     }
+    
+    /// <summary>
+    /// Creates a new <see cref="ArrayType"/> initialized from the provided <see cref="XElement"/> data.
+    /// </summary>
+    /// <param name="element">The element to parse.</param>
+    /// <exception cref="ArgumentNullException"><c>element</c> is null.</exception>
+    /// <exception cref="L5XException"><c>element</c> does not have required attributes.</exception>
+    public ArrayType(XElement element)
+    {
+        if (element is null) throw new ArgumentNullException(nameof(element));
+
+        Name = element.Attribute(L5XName.DataType)?.Value ?? throw new L5XException(L5XName.DataType, element);
+        Dimensions = element.Attribute(L5XName.Dimensions)?.Value.Parse<Dimensions>() ?? throw new L5XException(L5XName.Dimensions, element);
+        Radix = element.Attribute(L5XName.Radix)?.Value.Parse<Radix>() ?? Radix.Null;
+        _members = element.Elements().Select(e => new Member(e)).ToList();
+    }
+
+    /// <inheritdoc />
+    public override string Name { get; }
 
     /// <inheritdoc />
     public override DataTypeFamily Family => this.FirstOrDefault(t => t is not NullType)?.Family ?? DataTypeFamily.None;
@@ -38,14 +63,60 @@ public class ArrayType : LogixType, IEnumerable<LogixType>
     /// Gets the dimensions of the the array.
     /// </summary>
     /// <value>A <see cref="Core.Dimensions"/> value representing the array dimensions.</value>
-    public Dimensions Dimensions => GetValue<Dimensions>() ?? throw new L5XException(Element);
+    public Dimensions Dimensions { get; }
 
     /// <summary>
     /// Gets the radix format of the the atomic type array.
     /// </summary>
     /// <value>A <see cref="Enums.Radix"/> format if the array is an atomic type array;
     /// otherwise, <see cref="Enums.Radix.Null"/>.</value>
-    public Radix Radix => GetValue<Radix>() ?? Radix.Null;
+    public Radix Radix { get; }
+
+    /// <inheritdoc />
+    public override IEnumerable<Member> Members => _members.AsEnumerable();
+
+    /// <inheritdoc />
+    public override XElement Serialize()
+    {
+        var element = new XElement(L5XName.Array);
+        element.Add(new XAttribute(L5XName.DataType, Name));
+        element.Add(new XAttribute(L5XName.Dimensions, Dimensions));
+        if (Radix != Radix.Null) element.Add(new XAttribute(L5XName.Radix, Radix));
+        element.Add(_members.Select(m =>
+        {
+            var index = new XElement(L5XName.Element, new XAttribute(L5XName.Index, m.Name));
+
+            switch (m.DataType)
+            {
+                case AtomicType atomicType:
+                    var value = Radix != Radix.Null ? atomicType.ToString(Radix) : atomicType.ToString();
+                    index.Add(new XAttribute(L5XName.Value, value));
+                    break;
+                case StringType stringType:
+                    element.Add(stringType.SerializeStructure());
+                    break;
+                case StructureType structureType:
+                    index.Add(structureType.Serialize());
+                    break;
+            }
+
+            return index;
+        }));
+
+        return element;
+    }
+
+    /// <inheritdoc />
+    public override void Update(LogixType type)
+    {
+        if (type is not ArrayType array)
+            throw new ArgumentException($"Can not update {GetType().Name} with {type.GetType().Name}");
+
+        var pairs = _members.Join(array.Members, m => m.Name, m => m.Name, (t, s) => new { Target = t, Source = s });
+
+        foreach (var pair in pairs)
+            pair.Target.DataType.Update(pair.Source.DataType);
+    }
 
     /// <summary>
     /// Gets the <see cref="LogixType"/> instance at the specified index.
@@ -161,10 +232,8 @@ public class ArrayType : LogixType, IEnumerable<LogixType>
     public ArrayType<TLogixType> AsArray<TLogixType>() where TLogixType : LogixType =>
         new(this.Cast<TLogixType>().ToArray());
 
-    #region Internal
-
     /// <summary>
-    /// Handles getting the logix type at the specified index of the current array from the underlying element. 
+    /// Handles getting the logix type at the specified index of the current array from the underlying member collection. 
     /// </summary>
     /// <param name="index">The index at which to get the type.</param>
     /// <returns>A <see cref="LogixType"/> at the specified index.</returns>
@@ -180,7 +249,7 @@ public class ArrayType : LogixType, IEnumerable<LogixType>
     }
 
     /// <summary>
-    /// Handles setting the logix type at the specified index of the current underlying array element. 
+    /// Handles setting the logix type at the specified index of the underlying member collection. 
     /// </summary>
     /// <param name="index">The index at which to set the type.</param>
     /// <param name="value">The logix type value to set.</param>
@@ -195,97 +264,8 @@ public class ArrayType : LogixType, IEnumerable<LogixType>
         if (member is null)
             throw new ArgumentOutOfRangeException($"The index '{index}' is outside the bound of the array.");
 
-        member.DataType = value;
+        member.DataType.Update(value);
     }
-
-    /// <summary>
-    /// Creates a default <see cref="XElement"/> representing the backing data for the array type.
-    /// </summary>
-    /// <param name="collection">The array to serialize.</param>
-    /// <param name="dimensions"></param>
-    /// <returns>A new <see cref="XElement"/> representing the array structure.</returns>
-    /// <exception cref="ArgumentException"></exception>
-    private static XElement GenerateElement(List<LogixType> collection, Dimensions dimensions)
-    {
-        if (collection is null) throw new ArgumentNullException(nameof(collection));
-        if (collection.Any(t => t is null)) throw new ArgumentNullException(nameof(collection));
-        if (collection.Select(t => t.Name).Distinct().Count() != 1)
-            throw new ArgumentException("Array type must be initialized with a single type.");
-
-        var seed = collection.First();
-
-        var element = new XElement(L5XName.Array);
-        element.Add(new XAttribute(L5XName.DataType, seed.Name));
-        element.Add(new XAttribute(L5XName.Dimensions, dimensions));
-
-        Radix? radix = null;
-        if (seed is AtomicType atomicType)
-        {
-            radix = atomicType.Radix;
-            element.Add(new XAttribute(L5XName.Radix, radix));
-        }
-
-        var elements = dimensions.Indices().Zip(collection, (s, t) => GenerateIndex(s, t, radix));
-        element.Add(elements);
-
-        return element;
-    }
-
-    /// <summary>
-    /// Creates a new array index <see cref="XElement"/> using the provided index and logix type.
-    /// </summary>
-    /// <param name="index">The array index of the element.</param>
-    /// <param name="type">The logix type of the element.</param>
-    /// <param name="radix">The optional radix format of the array.</param>
-    /// <returns>A new <see cref="XElement"/> representing the serialized index of the array.</returns>
-    /// <exception cref="ArgumentNullException"><c>type</c> is null.</exception>
-    private static XElement GenerateIndex(string index, LogixType type, Radix? radix = null)
-    {
-        var element = new XElement(L5XName.Element, new XAttribute(L5XName.Index, index));
-
-        switch (type)
-        {
-            case AtomicType atomicType:
-                var value = radix is not null ? atomicType.ToString(radix) : atomicType.ToString();
-                element.Add(new XAttribute(L5XName.Value, value));
-                break;
-            case StringType stringType:
-                element.Add(GenerateStringStructure(stringType));
-                break;
-            case StructureType structureType:
-                element.Add(structureType.Serialize());
-                break;
-        }
-
-        return element;
-    }
-
-    private static XElement GenerateStringStructure(StringType type)
-    {
-        var element = new XElement(L5XName.Structure);
-        element.Add(new XAttribute(L5XName.DataType, type.Name));
-        element.Add(GenerateStringMembers(type));
-        return element;
-    }
-
-    private static IEnumerable<XElement> GenerateStringMembers(StringType type)
-    {
-        var len = new XElement(L5XName.DataValueMember);
-        len.Add(new XAttribute(L5XName.Name, nameof(type.LEN)));
-        len.Add(new XAttribute(L5XName.DataType, type.LEN.Name));
-        len.Add(new XAttribute(L5XName.Radix, Radix.Decimal));
-        len.Add(new XAttribute(L5XName.Value, type.LEN));
-        yield return len;
-
-        var data = new XElement(L5XName.DataValueMember);
-        data.Add(new XAttribute(L5XName.Name, nameof(type.DATA)));
-        data.Add(new XAttribute(L5XName.DataType, type.Name));
-        data.Add(new XAttribute(L5XName.Radix, Radix.Ascii));
-        data.Add(new XCData(type.ToString()));
-        yield return data;
-    }
-
-    #endregion
 }
 
 /// <summary>

@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Xml.Linq;
 using L5Sharp.Core;
 using L5Sharp.Elements;
 using L5Sharp.Enums;
+using L5Sharp.Extensions;
 using L5Sharp.Rockwell;
 
 namespace L5Sharp.Components;
@@ -200,6 +202,28 @@ public class Module : LogixComponent<Module>
     /// </remarks>
     public IPAddress? IP => Ports.FirstOrDefault(p => p is { Type: "Ethernet", Address.IsIPv4: true })?.Address
         .ToIPAddress();
+
+    /// <summary>
+    /// Gets the parent module of this module object using the current <see cref="ParentModule"/> property and underlying
+    /// element structure.
+    /// </summary>
+    /// <returns>A <see cref="Module"/> representing the parent of this module if it exists; otherwise, <c>null</c>.</returns>
+    /// <remarks>
+    /// This method relies on the object being attached to the L5X hierarchy in order to find it's parent.
+    /// </remarks>
+    public Module? Parent()
+    {
+        var parent = Element.Parent?.Elements().FirstOrDefault(m => m.LogixName() == ParentModule);
+        return parent is not null ? new Module(parent) : default;
+    }
+
+    public IEnumerable<Module> Modules()
+    {
+        return Element.Parent?.Elements()
+            .Where(m => m.Attribute(L5XName.ParentModule)?.Value == Name)
+            .Select(e => new Module(e)) 
+               ?? Enumerable.Empty<Module>();
+    }
 
     /// <summary>
     /// Returns a collection of all non-null <see cref="Tag"/> objects for the current Module, including all

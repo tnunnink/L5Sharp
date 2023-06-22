@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Xml.Linq;
-using System.Xml.Serialization;
 using L5Sharp.Core;
 using L5Sharp.Enums;
 
@@ -13,13 +12,12 @@ namespace L5Sharp.Components;
 /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
 /// `Logix 5000 Controllers Import/Export`</a> for more information.
 /// </footer>
-[XmlType(L5XName.Member)]
 public class DataTypeMember : LogixComponent<DataTypeMember>
 {
     /// <summary>
     /// Creates a new <see cref="DataTypeMember"/> with default values.
     /// </summary>
-    public DataTypeMember()
+    public DataTypeMember() : base(new XElement(L5XName.Member))
     {
         DataType = string.Empty;
         Dimension = Dimensions.Empty;

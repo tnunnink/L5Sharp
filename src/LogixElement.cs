@@ -4,7 +4,6 @@ using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Xml.Linq;
-using L5Sharp.Extensions;
 
 namespace L5Sharp;
 
@@ -22,7 +21,7 @@ public abstract class LogixElement<TElement> : ILogixSerializable where TElement
     /// </summary>
     protected LogixElement()
     {
-        Element = new XElement(typeof(TElement).LogixTypeName());
+        Element = new XElement(typeof(TElement).Name);
     }
 
     /// <summary>
@@ -41,6 +40,11 @@ public abstract class LogixElement<TElement> : ILogixSerializable where TElement
     /// L5X data.
     /// </summary>
     protected readonly XElement Element;
+
+    /// <summary>
+    /// Returns the type name, or name of the underlying <see cref="XElement"/>.
+    /// </summary>
+    public string TypeName => Element.Name.ToString();
 
     /// <summary>
     /// Returns the underlying <see cref="XElement"/> for the <see cref="LogixElement{TEntity}"/>.

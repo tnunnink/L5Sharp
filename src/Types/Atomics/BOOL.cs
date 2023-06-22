@@ -14,7 +14,7 @@ namespace L5Sharp.Types.Atomics;
 [TypeConverter(typeof(BoolConverter))]
 public sealed class BOOL : AtomicType, IEquatable<BOOL>, IComparable<BOOL>
 {
-    private bool GetValue => BitConverter.ToBoolean(GetBytes());
+    private bool Value => BitConverter.ToBoolean(ToBytes());
 
     /// <summary>
     /// Creates a new default <see cref="BOOL"/> type.
@@ -87,14 +87,14 @@ public sealed class BOOL : AtomicType, IEquatable<BOOL>, IComparable<BOOL>
     {
         if (ReferenceEquals(null, other)) return false;
         if (ReferenceEquals(this, other)) return true;
-        return GetValue == other.GetValue;
+        return Value == other.Value;
     }
 
     /// <inheritdoc />
     public override bool Equals(object? obj) => Equals(obj as BOOL);
 
     /// <inheritdoc />
-    public override int GetHashCode() => GetValue.GetHashCode();
+    public override int GetHashCode() => Value.GetHashCode();
 
     /// <summary>
     /// Determines whether the objects are equal.
@@ -116,7 +116,7 @@ public sealed class BOOL : AtomicType, IEquatable<BOOL>, IComparable<BOOL>
     public int CompareTo(BOOL? other)
     {
         if (ReferenceEquals(this, other)) return 0;
-        return ReferenceEquals(null, other) ? 1 : GetValue.CompareTo(other.GetValue);
+        return ReferenceEquals(null, other) ? 1 : Value.CompareTo(other.Value);
     }
 
     #region Conversions
@@ -133,7 +133,7 @@ public sealed class BOOL : AtomicType, IEquatable<BOOL>, IComparable<BOOL>
     /// </summary>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="bool"/> type value.</returns>
-    public static implicit operator bool(BOOL atomic) => atomic.GetValue;
+    public static implicit operator bool(BOOL atomic) => atomic.Value;
 
     /// <summary>
     /// Implicitly converts the provided <see cref="bool"/> to a <see cref="BOOL"/> value.
@@ -147,7 +147,7 @@ public sealed class BOOL : AtomicType, IEquatable<BOOL>, IComparable<BOOL>
     /// </summary>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="bool"/> type value.</returns>
-    public static implicit operator int(BOOL atomic) => atomic.GetValue ? 1 : 0;
+    public static implicit operator int(BOOL atomic) => atomic.Value ? 1 : 0;
 
     /// <summary>
     /// Implicitly converts a <see cref="string"/> to a <see cref="BOOL"/> value.

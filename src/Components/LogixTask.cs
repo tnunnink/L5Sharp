@@ -15,11 +15,10 @@ namespace L5Sharp.Components;
 /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
 /// `Logix 5000 Controllers Import/Export`</a> for more information.
 /// </footer>
-[XmlType(L5XName.Task)]
 public class LogixTask : LogixComponent<LogixTask>
 {
     /// <inheritdoc />
-    public LogixTask()
+    public LogixTask(): base(new XElement(L5XName.Task))
     {
         Type = TaskType.Periodic;
         Priority = new TaskPriority(10);
