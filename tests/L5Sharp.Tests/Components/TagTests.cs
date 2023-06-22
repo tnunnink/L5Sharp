@@ -29,8 +29,6 @@ namespace L5Sharp.Tests.Components
             tag.Value.To<TIMER>().DN.Should().Be(0);
             tag.Value.To<TIMER>().TT.Should().Be(0);
             tag.Value.To<TIMER>().EN.Should().Be(1);
-
-            tag.Replace(new Tag());
         }
 
         [Test]
@@ -290,8 +288,8 @@ namespace L5Sharp.Tests.Components
             members.Should().Contain(t => t.TagName == "Test.Tmr.ACC");
             members.Should().Contain(t => t.TagName == "Test.Tmr.PRE");
             members.Should().Contain(t => t.TagName == "Test.Str.LEN");
-            members.Should().Contain(t => t.TagName == "Test.Str.Value");
-            members.Should().Contain(t => t.TagName == "Test.Str.Value[0]");
+            members.Should().Contain(t => t.TagName == "Test.Str.DATA");
+            members.Should().Contain(t => t.TagName == "Test.Str.DATA[0]");
         }
 
         [Test]

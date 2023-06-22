@@ -189,7 +189,7 @@ namespace L5Sharp.Tests.Types.Atomics
         {
             var type = new DINT();
 
-            type.Update(new DINT(123));
+            type.Set(new DINT(123));
 
             type.Should().Be(123);
         }
@@ -199,7 +199,7 @@ namespace L5Sharp.Tests.Types.Atomics
         {
             var type = new DINT();
 
-            type.Update(new INT(123));
+            type.Set(new INT(123));
 
             type.Should().Be(123);
         }
@@ -209,7 +209,7 @@ namespace L5Sharp.Tests.Types.Atomics
         {
             var type = new DINT(DINT.MaxValue);
 
-            type.Update(new INT(123));
+            type.Set(new INT(123));
 
             type.Should().Be(123);
         }
@@ -219,7 +219,7 @@ namespace L5Sharp.Tests.Types.Atomics
         {
             var type = new DINT();
 
-            type.Update(new LINT(123));
+            type.Set(new LINT(123));
 
             type.Should().Be(123);
         }
@@ -229,7 +229,7 @@ namespace L5Sharp.Tests.Types.Atomics
         {
             var type = new DINT();
 
-            type.Update(new LINT(LINT.MaxValue));
+            type.Set(new LINT(LINT.MaxValue));
 
             type.Should().Be(-1);
         }
@@ -239,7 +239,7 @@ namespace L5Sharp.Tests.Types.Atomics
         {
             var type = new DINT();
 
-            FluentActions.Invoking(() => type.Update(new ComplexType("Test"))).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(() => type.Set(new ComplexType("Test"))).Should().Throw<ArgumentException>();
         }
 
         [Test]
@@ -247,7 +247,7 @@ namespace L5Sharp.Tests.Types.Atomics
         {
             var type = new DINT();
             
-            type.Members.First().DataType.Update(true);
+            type.Members.First().DataType.Set(true);
 
             type.Should().Be(0);
         }

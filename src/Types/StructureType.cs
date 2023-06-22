@@ -80,7 +80,7 @@ public abstract class StructureType : LogixType
     }
 
     /// <inheritdoc />
-    public override void Update(LogixType type)
+    public override void Set(LogixType type)
     {
         if (type is not StructureType structure)
             throw new ArgumentException($"Can not update {GetType().Name} with {type.GetType().Name}");
@@ -89,7 +89,7 @@ public abstract class StructureType : LogixType
             (t, s) => new { Target = t, Source = s });
 
         foreach (var pair in pairs)
-            pair.Target.DataType.Update(pair.Source.DataType);
+            pair.Target.DataType.Set(pair.Source.DataType);
     }
 
     /// <summary>
@@ -142,7 +142,7 @@ public abstract class StructureType : LogixType
             return;
         }
 
-        member.DataType.Update(value);
+        member.DataType.Set(value);
     }
 
     /// <summary>

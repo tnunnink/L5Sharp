@@ -26,7 +26,7 @@ public sealed class NullType : LogixType
     public override IEnumerable<Member> Members => Enumerable.Empty<Member>();
 
     /// <inheritdoc />
-    public override void Update(LogixType type) =>
+    public override void Set(LogixType type) =>
         throw new NotSupportedException($"Updating {GetType()} data is not supported.");
 
     /// <inheritdoc />

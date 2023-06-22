@@ -31,12 +31,35 @@ public class StringType : LogixType, IEnumerable<char>, IEquatable<StringType>, 
     /// </summary>
     /// <param name="name">The name of the string type.</param>
     /// <param name="value">The string value of the type.</param>
+    /// <exception cref="ArgumentException"><c>name</c> is null or empty.</exception>
     public StringType(string name, string value)
     {
         if (string.IsNullOrEmpty(name))
             throw new ArgumentException("Name can not be null or empty for a string type object.");
+
         Name = name;
-        DATA = Encoding.ASCII.GetBytes(value).Select(b => new SINT((sbyte)b, Radix.Ascii)).ToArray();
+        DATA = GetData(value);
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="StringType"/> instance with the provided data.
+    /// </summary>
+    /// <param name="name">The name of the string type.</param>
+    /// <param name="value">The string value of the type.</param>
+    /// <param name="length"></param>
+    /// <exception cref="ArgumentException"><c>name</c> is null or empty.</exception>
+    /// <exception cref="ArgumentOutOfRangeException"><c>value</c> is longer than <c>length</c>.</exception>
+    protected StringType(string name, string value, int length)
+    {
+        if (string.IsNullOrEmpty(name))
+            throw new ArgumentException("Name can not be null or empty for a string type object.");
+        
+        if (value.Length > length)
+            throw new ArgumentOutOfRangeException(
+                $"The length {value.Length} of value can not be greater than {length} characters.");
+
+        Name = name;
+        DATA = GetData(value);
     }
 
     /// <summary>
@@ -53,7 +76,7 @@ public class StringType : LogixType, IEnumerable<char>, IEquatable<StringType>, 
         {
             Name = element.Ancestors(L5XName.Tag).FirstOrDefault()?.Attribute(L5XName.DataType)?.Value ??
                    throw new L5XException(L5XName.DataType, element);
-            DATA = Encoding.ASCII.GetBytes(element.Value).Select(b => new SINT((sbyte)b, Radix.Ascii)).ToArray();
+            DATA = GetData(element.Value);
             return;
         }
 
@@ -61,7 +84,7 @@ public class StringType : LogixType, IEnumerable<char>, IEquatable<StringType>, 
         var value = element.Elements(L5XName.DataValueMember)
                         .FirstOrDefault(e => e.Attribute(L5XName.Name)?.Value == nameof(DATA))?.Value ??
                     throw new L5XException(L5XName.DataValueMember, element);
-        DATA = Encoding.ASCII.GetBytes(value).Select(b => new SINT((sbyte)b, Radix.Ascii)).ToArray();
+        DATA = GetData(value);
     }
 
     /// <inheritdoc />
@@ -77,7 +100,7 @@ public class StringType : LogixType, IEnumerable<char>, IEquatable<StringType>, 
     /// Gets the character length value of the string. 
     /// </summary>
     /// <returns>A <see cref="DINT"/> logix atomic value representing the integer length of the string.</returns>
-    public DINT LEN => GetValue().Length;
+    public DINT LEN => ToString().Length;
 
     /// <summary>
     /// Gets the array of bytes that represent the ASCII encoded string value.
@@ -91,7 +114,7 @@ public class StringType : LogixType, IEnumerable<char>, IEquatable<StringType>, 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
     /// <inheritdoc />
-    public override string ToString() => GetValue();
+    public override string ToString() => GetString(DATA);
 
     /// <inheritdoc />
     public override XElement Serialize()
@@ -104,12 +127,12 @@ public class StringType : LogixType, IEnumerable<char>, IEquatable<StringType>, 
     }
 
     /// <inheritdoc />
-    public override void Update(LogixType type)
+    public override void Set(LogixType type)
     {
         if (type is not StringType stringType)
             throw new ArgumentException($"Can not update {GetType().Name} with {type.GetType().Name}");
 
-        SetValue(stringType.ToString());
+        DATA = GetData(stringType.ToString());
     }
 
     /// <inheritdoc />
@@ -117,14 +140,14 @@ public class StringType : LogixType, IEnumerable<char>, IEquatable<StringType>, 
     {
         if (ReferenceEquals(null, other)) return false;
         if (ReferenceEquals(this, other)) return true;
-        return GetValue() == other.GetValue();
+        return ToString() == other.ToString();
     }
 
     /// <inheritdoc />
     public override bool Equals(object? obj) => Equals(obj as StringType);
 
     /// <inheritdoc />
-    public override int GetHashCode() => GetValue().GetHashCode();
+    public override int GetHashCode() => ToString().GetHashCode();
 
     /// <summary>
     /// Determines if the provided objects are equal.
@@ -148,7 +171,7 @@ public class StringType : LogixType, IEnumerable<char>, IEquatable<StringType>, 
         if (ReferenceEquals(this, other)) return 0;
         return ReferenceEquals(other, null)
             ? 1
-            : string.Compare(GetValue(), other.GetValue(), StringComparison.Ordinal);
+            : string.Compare(ToString(), other.ToString(), StringComparison.Ordinal);
     }
 
     /// <summary>
@@ -160,7 +183,7 @@ public class StringType : LogixType, IEnumerable<char>, IEquatable<StringType>, 
     {
         var element = new XElement(L5XName.Structure);
         element.Add(new XAttribute(L5XName.DataType, Name));
-        
+
         var len = new XElement(L5XName.DataValueMember);
         len.Add(new XAttribute(L5XName.Name, nameof(LEN)));
         len.Add(new XAttribute(L5XName.DataType, LEN.Name));
@@ -174,21 +197,23 @@ public class StringType : LogixType, IEnumerable<char>, IEquatable<StringType>, 
         data.Add(new XAttribute(L5XName.Radix, Radix.Ascii));
         data.Add(new XCData(ToString()));
         element.Add(data);
-        
+
         return element;
     }
 
     /// <summary>
-    /// Returns the string value from the <see cref="DATA"/> member of the string type.
+    /// Converts the provided SINT array to a string value.
     /// </summary>
-    /// <returns>A <see cref="string"/> containing the sequence of ASCII characters of the type.</returns>
-    protected string GetValue() =>
-        Encoding.ASCII.GetString(DATA.Where<SINT>(s => s > 0).Select(b => (byte)(sbyte)b).ToArray());
+    private static string GetString(IEnumerable<SINT> array) =>
+        Encoding.ASCII.GetString(array.Where(s => s > 0).Select(b => (byte)(sbyte)b).ToArray());
 
     /// <summary>
-    /// Sets the <see cref="DATA"/> member to the value of the provided string.
+    /// Converts the provided string value to a SINT array. Handles empty or null string. SINT array can not be empty.
     /// </summary>
-    /// <param name="value">The string value to set.</param>
-    protected void SetValue(string value) =>
-        DATA = Encoding.ASCII.GetBytes(value).Select(b => new SINT((sbyte)b, Radix.Ascii)).ToArray();
+    private static SINT[] GetData(string value)
+    {
+        return !string.IsNullOrEmpty(value)
+            ? Encoding.ASCII.GetBytes(value).Select(b => new SINT((sbyte)b, Radix.Ascii)).ToArray()
+            : new SINT[] { new() };
+    }
 }

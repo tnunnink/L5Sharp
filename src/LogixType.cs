@@ -85,10 +85,16 @@ public abstract class LogixType : ILogixSerializable
     public abstract XElement Serialize();
 
     /// <summary>
-    /// 
+    /// Sets the data of the current <see cref="LogixType"/> with the provided logix type data. 
     /// </summary>
-    /// <param name="type"></param>
-    public abstract void Update(LogixType type);
+    /// <param name="type">The type to set this type with.</param>
+    /// <exception cref="ArgumentException">The provided type can not set this type. (e.g., Structure can not set Atomic).</exception>
+    /// <remarks>
+    /// This method is the basis for how underlying values are set in memory without replacement of the type.
+    /// Atomic and String type objects will set underlying values, whereas Structure and Array types will join members and
+    /// delegate the set down the hierarchical type structure.
+    /// </remarks>
+    public abstract void Set(LogixType type);
 
     /// <summary>
     /// Converts the provided <see cref="bool"/> to a <see cref="LogixType"/>.

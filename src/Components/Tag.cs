@@ -134,7 +134,7 @@ public class Tag : LogixComponent<Tag>, ILogixScoped
                     complexType.Replace(_member.Name, new Member(_member.Name, value));
                     break;
                 default:
-                    _member.DataType.Update(value);
+                    _member.DataType.Set(value);
                     break;
             }
 

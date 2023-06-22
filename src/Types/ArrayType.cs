@@ -107,7 +107,7 @@ public class ArrayType : LogixType, IEnumerable<LogixType>
     }
 
     /// <inheritdoc />
-    public override void Update(LogixType type)
+    public override void Set(LogixType type)
     {
         if (type is not ArrayType array)
             throw new ArgumentException($"Can not update {GetType().Name} with {type.GetType().Name}");
@@ -115,7 +115,7 @@ public class ArrayType : LogixType, IEnumerable<LogixType>
         var pairs = _members.Join(array.Members, m => m.Name, m => m.Name, (t, s) => new { Target = t, Source = s });
 
         foreach (var pair in pairs)
-            pair.Target.DataType.Update(pair.Source.DataType);
+            pair.Target.DataType.Set(pair.Source.DataType);
     }
 
     /// <summary>
@@ -264,7 +264,7 @@ public class ArrayType : LogixType, IEnumerable<LogixType>
         if (member is null)
             throw new ArgumentOutOfRangeException($"The index '{index}' is outside the bound of the array.");
 
-        member.DataType.Update(value);
+        member.DataType.Set(value);
     }
 }
 

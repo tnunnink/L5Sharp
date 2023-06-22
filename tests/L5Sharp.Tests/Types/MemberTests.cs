@@ -78,7 +78,7 @@ public class MemberTests
     {
         var member = new Member("Test", 123);
 
-        member.DataType.Update(321);
+        member.DataType.Set(321);
 
         member.DataType.As<DINT>().Should().Be(321);
     }
@@ -88,7 +88,7 @@ public class MemberTests
     {
         var member = new Member("Test", new TIMER());
 
-        member.DataType.Update(new TIMER { PRE = 5000, EN = true });
+        member.DataType.Set(new TIMER { PRE = 5000, EN = true });
 
         member.DataType.To<TIMER>().PRE.Should().Be(5000);
         member.DataType.To<TIMER>().EN.Should().Be(true);
@@ -99,7 +99,7 @@ public class MemberTests
     {
         var member = new Member("Test", new TIMER());
 
-        member.DataType.Update(new ComplexType("TIMER", new List<Member> { new("PRE", 5000), new("EN", true) }));
+        member.DataType.Set(new ComplexType("TIMER", new List<Member> { new("PRE", 5000), new("EN", true) }));
 
         member.DataType.To<TIMER>().PRE.Should().Be(5000);
         member.DataType.To<TIMER>().EN.Should().Be(true);
@@ -110,7 +110,7 @@ public class MemberTests
     {
         var member = new Member("Test", new TIMER());
 
-        member.DataType.Update(new Dictionary<string, LogixType>
+        member.DataType.Set(new Dictionary<string, LogixType>
         {
             { "PRE", 5000 },
             { "EN", true }
@@ -125,7 +125,7 @@ public class MemberTests
     {
         var member = new Member("Test", new TIMER());
 
-        member.DataType.Update(new Dictionary<string, LogixType>
+        member.DataType.Set(new Dictionary<string, LogixType>
         {
             { "Test", 123 },
             { "PRE", 5000 },

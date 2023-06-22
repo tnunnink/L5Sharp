@@ -27,13 +27,8 @@ public sealed class STRING : StringType, IEquatable<STRING>, IComparable<STRING>
     /// <exception cref="ArgumentOutOfRangeException">
     /// <c>value</c> length is greater than the predefined Logix string length of 82 characters.
     /// </exception>
-    public STRING(string value) : base(nameof(STRING), value)
+    public STRING(string value) : base(nameof(STRING), value, PredefinedLength)
     {
-        if (value.Length > PredefinedLength)
-            throw new ArgumentOutOfRangeException(
-                $"The length {value.Length} of value can not be greater than {PredefinedLength} characters.");
-        
-        SetValue(value);
     }
 
     /// <inheritdoc />
@@ -63,14 +58,14 @@ public sealed class STRING : StringType, IEquatable<STRING>, IComparable<STRING>
     {
         if (ReferenceEquals(null, other)) return false;
         if (ReferenceEquals(this, other)) return true;
-        return GetValue() == other.GetValue();
+        return ToString() == other.ToString();
     }
 
     /// <inheritdoc />
     public override bool Equals(object? obj) => Equals(obj as STRING);
 
     /// <inheritdoc />
-    public override int GetHashCode() => GetValue().GetHashCode();
+    public override int GetHashCode() => ToString().GetHashCode();
 
     /// <summary>
     /// Determines if the provided objects are equal.
@@ -92,6 +87,6 @@ public sealed class STRING : StringType, IEquatable<STRING>, IComparable<STRING>
     public int CompareTo(STRING? other)
     {
         if (ReferenceEquals(this, other)) return 0;
-        return ReferenceEquals(other, null) ? 1 : string.Compare(GetValue(), GetValue(), StringComparison.Ordinal);
+        return ReferenceEquals(other, null) ? 1 : string.Compare(ToString(), ToString(), StringComparison.Ordinal);
     }
 }

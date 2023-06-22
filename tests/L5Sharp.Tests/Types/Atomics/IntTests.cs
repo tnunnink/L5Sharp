@@ -202,7 +202,7 @@ namespace L5Sharp.Tests.Types.Atomics
         {
             var type = new INT();
 
-            type.Update(new INT(_random));
+            type.Set(new INT(_random));
 
             type.Should().Be(_random);
         }
@@ -212,7 +212,7 @@ namespace L5Sharp.Tests.Types.Atomics
         {
             var type = new INT();
 
-            type.Update(new SINT(123));
+            type.Set(new SINT(123));
 
             type.Should().Be(123);
         }
@@ -222,7 +222,7 @@ namespace L5Sharp.Tests.Types.Atomics
         {
             var type = new INT(INT.MaxValue);
 
-            type.Update(new SINT(123));
+            type.Set(new SINT(123));
 
             type.Should().Be(123);
         }
@@ -232,7 +232,7 @@ namespace L5Sharp.Tests.Types.Atomics
         {
             var type = new INT();
 
-            type.Update(new LINT(123));
+            type.Set(new LINT(123));
 
             type.Should().Be(123);
         }
@@ -242,7 +242,7 @@ namespace L5Sharp.Tests.Types.Atomics
         {
             var type = new INT();
 
-            type.Update(new LINT(LINT.MaxValue));
+            type.Set(new LINT(LINT.MaxValue));
 
             type.Should().NotBe(INT.MaxValue);
         }
@@ -252,7 +252,7 @@ namespace L5Sharp.Tests.Types.Atomics
         {
             var type = new INT();
 
-            FluentActions.Invoking(() => type.Update(new ComplexType("Test"))).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(() => type.Set(new ComplexType("Test"))).Should().Throw<ArgumentException>();
         }
 
         [Test]

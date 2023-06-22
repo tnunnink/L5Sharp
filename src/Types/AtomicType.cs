@@ -108,7 +108,7 @@ public abstract class AtomicType : LogixType
     }
 
     /// <inheritdoc />
-    public override void Update(LogixType type)
+    public override void Set(LogixType type)
     {
         if (type is not AtomicType atomicType)
             throw new ArgumentException($"Can not update {GetType().Name} with {type.GetType().Name}");
