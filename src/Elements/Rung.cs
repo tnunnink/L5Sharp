@@ -1,16 +1,13 @@
-﻿using System.Linq;
-using System.Xml.Linq;
+﻿using System.Xml.Linq;
 using L5Sharp.Core;
 using L5Sharp.Enums;
-using L5Sharp.Extensions;
 
 namespace L5Sharp.Elements;
 
 /// <summary>
-/// A Logix <c>Rung</c> component. This entity type contains the properties for a rung of ladder logic which are
-/// elements of the <c>Rll</c> routine type. This type also implements <see cref="ILogixCode"/>.
+/// A Logix <c>Rung</c> component. 
 /// </summary>
-public sealed class Rung : LogixElement<Rung>, ILogixCode
+public sealed class Rung : LogixElement<Rung>
 {
     /// <inheritdoc />
     public Rung()
@@ -25,27 +22,13 @@ public sealed class Rung : LogixElement<Rung>, ILogixCode
     {
     }
 
-    /// <inheritdoc />
-    public Scope Scope => Scope.FromElement(Element);
-
-    /// <inheritdoc />
-    public string Container => Element.Ancestors(L5XName.Program).FirstOrDefault()?.LogixName() ?? string.Empty;
-
-    /// <inheritdoc />
-    public string Routine => Element.Ancestors(L5XName.Routine).FirstOrDefault()?.LogixName() ?? string.Empty;
-
-    /// <inheritdoc />
+    /// <summary>
+    /// 
+    /// </summary>
     public int Number
     {
         get => GetValue<int>();
         set => SetValue(value);
-    }
-
-    /// <inheritdoc />
-    public NeutralText Text
-    {
-        get => GetProperty<NeutralText>() ?? throw new L5XException(Element);
-        set => SetProperty(value);
     }
 
     /// <summary>
@@ -55,6 +38,16 @@ public sealed class Rung : LogixElement<Rung>, ILogixCode
     {
         get => GetValue<RungType>();
         set => SetValue(value);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <exception cref="L5XException"></exception>
+    public NeutralText Text
+    {
+        get => GetProperty<NeutralText>() ?? NeutralText.Empty;
+        set => SetProperty(value);
     }
 
     /// <summary>

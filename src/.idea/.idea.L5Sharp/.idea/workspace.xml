@@ -7,7 +7,56 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="" />
+    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/Elements/Logic.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Elements/ParameterConnection.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Enums/TriggerOperation.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Enums/TriggerTargetType.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Enums/TriggerType.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/ModuleTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Components/AddOnInstruction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Components/AddOnInstruction.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Components/DataType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Components/DataType.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Components/DataTypeMember.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Components/DataTypeMember.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Components/LogixTask.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Components/LogixTask.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Components/Module.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Components/Module.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Components/Parameter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Components/Parameter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Components/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Components/Program.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Components/Routine.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Components/Routine.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Components/Tag.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Components/Tag.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Components/Trend.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Components/Trend.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Components/WatchList.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Components/WatchList.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Elements/Line.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Elements/Line.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Elements/ModuleConnection.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Elements/ModuleConnection.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Elements/Rung.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Elements/Rung.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Elements/WatchTag.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Elements/WatchTag.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Enums/DataFormat.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Enums/DataFormat.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Enums/ExternalAccess.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Enums/ExternalAccess.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Enums/LogixEnum.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LogixEnum.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Enums/RoutineType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Enums/RoutineType.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Enums/Scope.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Enums/Scope.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Enums/TransmissionType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Enums/TransmissionType.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ILogixCode.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ILogixScoped.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ILogixSerializable.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ILogixSerializable.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5X.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5X.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5XName.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5XName.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5XParser.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5XParser.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LogixComponent.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LogixComponent.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LogixContainer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LogixContainer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LogixContent.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LogixContent.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LogixElement.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LogixElement.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LogixExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LogixExtensions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LogixSerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LogixSerializer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LogixType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LogixType.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/RoutineTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/RoutineTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Enums/ExternalAccessTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Enums/ExternalAccessTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Examples.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Examples.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Extensions/EnumerableExtensionTests.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/ProofTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/ProofTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/Samples/Test.ACD" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/Samples/Test.ACD" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/Samples/Test.L5X" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/Samples/Test.L5X" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -71,22 +120,12 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/d056b4e3b34cd15e21dec611d5b5bbaf85e1f15b445f4e6b3e4dc6634d649042/WorkItem.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/d0c86751a71b371859eca08a2bf18eb15477d0bb3ddf2fdbff213ffc3121e/XElement.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/df9f21c9f518c36eff2e92c1d9ca5eeea502dee722c9bab81dcc5ce05bbd33/XContainer.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/Components/AddOnInstruction.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Core/Bus.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Enums/Instruction.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/LogixContent.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Serialization/Data/ArraySerializer.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/Types/ArrayType.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/Types/ArrayType.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/Types/ArrayType.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Types/ArrayType.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/Types/AtomicType.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/Types/AtomicType.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/Types/AtomicType.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/Types/AtomicType.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/Types/AtomicType.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/Types/AtomicType.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/Types/StringType.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/obj/Debug/netstandard2.1/.NETStandard,Version=v2.1.AssemblyAttributes.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../tests/L5Sharp.Tests/Serialization/AddOnInstructionSerializerTests.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../tests/L5Sharp.Tests/Serialization/DataTypeMemberSerializerTests.cs" root0="FORCE_HIGHLIGHTING" />
@@ -111,6 +150,7 @@
     &quot;Notification.DisplayName-DoNotAsk-Plugin Error&quot;: &quot;Plugins failed to load&quot;,
     &quot;Notification.DoNotAsk-Plugin Error&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;TODO_SCOPE&quot;: &quot;All Places&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
     &quot;git-widget-placeholder&quot;: &quot;test-SerializationRework&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
@@ -132,7 +172,7 @@
     ]
   }
 }</component>
-  <component name="RunManager" selected="1fb5a1a6-a6d8-4b63-8dfe-b6217724be25" />
+  <component name="RunManager" selected="8b1402ab-2b7b-4c79-ba86-e6e355dcb783" />
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -332,6 +372,8 @@
       <workItem from="1686240348180" duration="111530000" />
       <workItem from="1686864535195" duration="20780000" />
       <workItem from="1687290735372" duration="50208000" />
+      <workItem from="1687455447819" duration="5453000" />
+      <workItem from="1687468273536" duration="30235000" />
     </task>
     <task id="LOCAL-00199" summary="cleared warnings. preping to merge changes.">
       <created>1677621948966</created>
@@ -676,7 +718,7 @@
       <option name="project" value="LOCAL" />
       <updated>1687451515386</updated>
     </task>
-    <option name="localTasksCounter" value="248" />
+    <option name="localTasksCounter" value="249" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -743,7 +785,6 @@
       <path value="$PROJECT_DIR$/../.." />
     </ignored-roots>
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="updated version" />
     <MESSAGE value="Updated ILogixTag.cs to include public Base and Parent properties to allow pass through description to work and to make it API easier or capable of navigating back up through the hierarchical tree." />
     <MESSAGE value="Added ILogixScoped.cs to tag to see if this helps with filtering and identifying tags. Also added program and routine properties to rung for the same reason. Updated serializers." />
     <MESSAGE value="Updated version info" />
@@ -768,9 +809,27 @@
     <MESSAGE value="Preping to do some things with AtomicType.cs" />
     <MESSAGE value="still trying to get logix data stuff figure out in a satisfying way" />
     <MESSAGE value="Finishing updates to LogixType and tag. Now just need to touch up StringType.cs and do testing to make sure everything is covered" />
-    <option name="LAST_COMMIT_MESSAGE" value="Finishing updates to LogixType and tag. Now just need to touch up StringType.cs and do testing to make sure everything is covered" />
+    <MESSAGE value="Fixed issues with string type" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed issues with string type" />
   </component>
   <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/RoutineTests.cs</url>
+          <line>52</line>
+          <properties documentPath="C:\Users\tnunnink\Documents\GitHub\L5Sharp\tests\L5Sharp.Tests\Components\RoutineTests.cs" initialLine="52" containingFunctionPresentation="Method 'New_RungCollection_ShouldHaveExpectedCount'">
+            <startOffsets>
+              <option value="1342" />
+            </startOffsets>
+            <endOffsets>
+              <option value="1382" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
     <pin-to-top-manager>
       <pinned-members>
         <PinnedItemInfo parentTag="Type#L5Sharp.Core.Member" memberName="Target" />
@@ -782,6 +841,7 @@
         <PinnedItemInfo parentTag="Type#L5Sharp.LogixContext" memberName="Types" />
         <PinnedItemInfo parentTag="Frame#L5Sharp.Tests.LogixContentAgainstTemplateTests.FindReferencesToAnalogTag" memberName="this" />
         <PinnedItemInfo parentTag="Type#L5Sharp.Types.AtomicType" memberName="Radix" />
+        <PinnedItemInfo parentTag="Frame#L5Sharp.Tests.Components.RoutineTests.New_RungCollection_ShouldHaveExpectedCount" memberName="this" />
         <PinnedItemInfo parentTag="Frame#L5Sharp.Querying.RungQuery.Flatten" memberName="definition" />
         <PinnedItemInfo parentTag="Type#L5Sharp.LogixEntity`1" memberName="Element" />
         <PinnedItemInfo parentTag="Type#L5Sharp.Abstractions.Tests.ComponentCollectionTests" memberName="_collection" />

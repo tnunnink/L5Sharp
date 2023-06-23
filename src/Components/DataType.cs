@@ -20,7 +20,7 @@ public class DataType : LogixComponent<DataType>
     {
         Family = DataTypeFamily.None;
         Class = DataTypeClass.User;
-        Members = new LogixContainer<DataTypeMember>();
+        Members = new LogixContainer<DataTypeMember>(L5XName.Members);
     }
 
     /// <summary>

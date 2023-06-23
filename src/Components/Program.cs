@@ -1,4 +1,5 @@
-﻿using System.Xml.Linq;
+﻿using System;
+using System.Xml.Linq;
 using L5Sharp.Enums;
 
 namespace L5Sharp.Components;
@@ -14,7 +15,9 @@ namespace L5Sharp.Components;
 /// </footer>
 public class Program : LogixComponent<Program>
 {
-    /// <inheritdoc />
+    /// <summary>
+    /// Creates a new <see cref="Program"/> with default values.
+    /// </summary>
     public Program()
     {
         Type = ProgramType.Normal;
@@ -27,7 +30,11 @@ public class Program : LogixComponent<Program>
         Routines = new LogixContainer<Routine>();
     }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Creates a new <see cref="Program"/> initialized with the provided <see cref="XElement"/>.
+    /// </summary>
+    /// <param name="element">The <see cref="XElement"/> to initialize the type with.</param>
+    /// <exception cref="ArgumentNullException"><c>element</c> is null.</exception>
     public Program(XElement element) : base(element)
     {
     }
@@ -38,7 +45,7 @@ public class Program : LogixComponent<Program>
     /// <value>A <see cref="Enums.ProgramType"/> enum representing the type of the program.</value>
     public ProgramType Type
     {
-        get => GetValue<ProgramType>() ?? throw new L5XException(Element);
+        get => GetValue<ProgramType>() ?? ProgramType.Normal;
         set => SetValue(value);
     }
 

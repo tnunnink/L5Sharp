@@ -3,18 +3,40 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
-using L5Sharp.Extensions;
 
 namespace L5Sharp;
 
 /// <summary>
-///  
+/// A generic collection that provides operations over an underlying <see cref="XElement"/> container of <see cref="LogixElement{TElement}"/> objects.
 /// </summary>
 /// <typeparam name="TElement">The type inheriting <see cref="LogixElement{TElement}"/>.</typeparam>
-public class LogixContainer<TElement> : IEnumerable<TElement>, ILogixSerializable where TElement : LogixElement<TElement>
+/// <remarks>
+/// <para>
+/// This class represents a wrapper around a L5X element that contain a sequence of child element of the same type. This class
+/// exposes collection methods for querying and modifying child elements of the container.
+/// </para>
+/// <para>
+/// The class is was designed to only offer very simple/basic operations allowing it to be applicable to all container type elements,
+/// However, the user can extended via extension methods by calling <see cref="Serialize"/> to get the underlying <see cref="XElement"/> container object.
+/// </para>
+/// </remarks>
+public class LogixContainer<TElement> : IEnumerable<TElement>, ILogixSerializable
+    where TElement : LogixElement<TElement>
 {
     /// <summary>
-    /// Creates a empty <see cref="LogixContainer{TComponent}"/>.
+    /// The underlying <see cref="XElement"/> representing the backing data for the container. Use this object to store
+    /// and retrieve data for the the collection.
+    /// </summary>
+    private readonly XElement _element;
+
+    /// <summary>
+    /// The type name of the child elements in the container. This is needed as we support containers with different
+    /// element types, so we need to know the name of the correct type to return and deserialize.
+    /// </summary>
+    private readonly XName _typeName = typeof(TElement).LogixTypeName();
+
+    /// <summary>
+    /// Creates a empty <see cref="LogixContainer{TElement}"/> with the default type name.
     /// </summary>
     public LogixContainer()
     {
@@ -22,9 +44,18 @@ public class LogixContainer<TElement> : IEnumerable<TElement>, ILogixSerializabl
     }
 
     /// <summary>
-    /// Creates a new <see cref="LogixContainer{TComponent}"/> initialized with the provided <see cref="XContainer"/>. 
+    /// Creates a empty <see cref="LogixContainer{TElement}"/> with the specified name.
     /// </summary>
-    /// <param name="container">The <see cref="XContainer"/> containing a collection of components.</param>
+    /// <param name="name"></param>
+    public LogixContainer(string name)
+    {
+        _element = new XElement(name);
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="LogixContainer{TComponent}"/> initialized with the provided <see cref="XElement"/>. 
+    /// </summary>
+    /// <param name="container">The <see cref="XElement"/> containing a collection of elements.</param>
     /// <exception cref="ArgumentNullException"><c>container</c> is null.</exception>
     public LogixContainer(XElement container)
     {
@@ -34,7 +65,7 @@ public class LogixContainer<TElement> : IEnumerable<TElement>, ILogixSerializabl
     /// <summary>
     /// Creates a new <see cref="LogixContainer{TComponent}"/> initialized with the provided collection.
     /// </summary>
-    /// <param name="components">The collection of components to initialize.</param>
+    /// <param name="components">The collection of elements to initialize.</param>
     public LogixContainer(IEnumerable<TElement> components) : this()
     {
         if (components is null)
@@ -45,123 +76,178 @@ public class LogixContainer<TElement> : IEnumerable<TElement>, ILogixSerializabl
             if (component is null)
                 throw new ArgumentNullException(nameof(component));
 
-            _element.Add(component.Serialize());
+            var last = _element.Elements(_typeName).LastOrDefault();
+
+            if (last is null)
+            {
+                _element.Add(component.Serialize());
+                continue;
+            }
+
+            last.AddAfterSelf(component.Serialize());
         }
     }
-    
-    /// <summary>
-    /// The underlying <see cref="XElement"/> representing the backing data for the container. Use this object to store
-    /// and retrieve data for the the collection.
-    /// </summary>
-    private readonly XElement _element;
 
     /// <summary>
-    /// Accesses a single component at the specified index of the collection.
+    /// Accesses a single element at the specified index of the collection.
     /// </summary>
-    /// <param name="index">The zero based index of the component to retrieve.</param>
+    /// <param name="index">The zero based index of the element to retrieve.</param>
     /// <exception cref="ArgumentOutOfRangeException"><c>index</c> is less than zero or greater than or equal to the
-    /// number of components in the collection.</exception>
+    /// number of elements in the collection.</exception>
     public TElement this[int index]
     {
-        get => LogixSerializer.Deserialize<TElement>(_element.Elements().ElementAt(index));
-        set => _element.Elements().ElementAt(index).ReplaceWith(value.Serialize());
+        get => LogixSerializer.Deserialize<TElement>(_element.Elements(_typeName).ElementAt(index));
+        set => _element.Elements(_typeName).ElementAt(index).ReplaceWith(value.Serialize());
     }
-    
+
     /// <summary>
-    /// Accesses a single component with the specified name.
+    /// Accesses a single element with the specified name.
     /// </summary>
-    /// <param name="name">The name of the component to retrieve.</param>
+    /// <param name="name">The name of the element to retrieve.</param>
     public TElement this[string name]
     {
-        get => LogixSerializer.Deserialize<TElement>(_element.Elements().Single(e => e.LogixName() == name));
-        set => _element.Elements().Single(e => e.LogixName() == name).ReplaceWith(value.Serialize());
+        get => LogixSerializer.Deserialize<TElement>(_element.Elements(_typeName).Single(e => e.LogixName() == name));
+        set => _element.Elements(_typeName).Single(e => e.LogixName() == name).ReplaceWith(value.Serialize());
     }
 
     /// <summary>
-    /// Adds the provided component to the collection.
+    /// Adds the provided element to the collection.
     /// </summary>
-    /// <param name="component">The component to add.</param>
-    /// <exception cref="ArgumentNullException"><c>component</c> is null.</exception>
-    public void Add(TElement component)
+    /// <param name="element">The element to add.</param>
+    /// <exception cref="ArgumentNullException"><c>element</c> is null.</exception>
+    public void Add(TElement element)
     {
-        if (component is null)
-            throw new ArgumentNullException(nameof(component));
+        if (element is null)
+            throw new ArgumentNullException(nameof(element));
 
-        _element.Add(component.Serialize());
+        var last = _element.Elements(_typeName).LastOrDefault();
+
+        if (last is null)
+        {
+            _element.Add(element.Serialize());
+            return;
+        }
+
+        last.AddAfterSelf(element.Serialize());
     }
 
     /// <summary>
-    /// Adds the provided components to the collection.
+    /// Adds the provided elements to the collection.
     /// </summary>
-    /// <param name="components">The collection of components to add.</param>
-    public void AddRange(IEnumerable<TElement> components)
+    /// <param name="elements">The collection of elements to add.</param>
+    public void AddRange(IEnumerable<TElement> elements)
     {
-        if (components is null)
-            throw new ArgumentNullException(nameof(components));
+        if (elements is null)
+            throw new ArgumentNullException(nameof(elements));
 
-        foreach (var component in components)
+        foreach (var component in elements)
         {
             if (component is null)
                 throw new ArgumentNullException(nameof(component));
 
-            _element.Add(component);
+            var last = _element.Elements(_typeName).LastOrDefault();
+
+            if (last is null)
+            {
+                _element.Add(component.Serialize());
+                continue;
+            }
+
+            last.AddAfterSelf(component.Serialize());
         }
     }
 
     /// <summary>
-    /// Removes all components in the collection.
+    /// Gets the number of elements in the collection.
     /// </summary>
-    public void Clear() => _element.RemoveNodes();
+    /// <returns>A <see cref="int"/> representing the number of elements in the collection.</returns>
+    public int Count() => _element.Elements(_typeName).Count();
 
     /// <summary>
-    /// Gets the number of components in the collection.
+    /// Inserts the provided element at the specified index of the collection.
     /// </summary>
-    /// <returns>A <see cref="int"/> representing the number of components in the collection.</returns>
-    public int Count() => _element.Elements().Count();
-
-    /// <summary>
-    /// Inserts the provided component at the specified index of the collection.
-    /// </summary>
-    /// <param name="index">The zero based index at which to insert the component.</param>
-    /// <param name="component">The component to insert.</param>
-    /// <exception cref="ArgumentNullException"><c>component</c> is null.</exception>
+    /// <param name="index">The zero based index at which to insert the element.</param>
+    /// <param name="element">The element to insert.</param>
+    /// <exception cref="ArgumentNullException"><c>element</c> is null.</exception>
     /// <exception cref="ArgumentOutOfRangeException"><c>index</c> is less than zero or greater than or equal to the
-    /// number of components in the collection.</exception>
-    public void Insert(int index, TElement component)
+    /// number of elements in the collection.</exception>
+    public void Insert(int index, TElement element)
     {
-        if (component is null)
-            throw new ArgumentNullException(nameof(component));
+        if (element is null)
+            throw new ArgumentNullException(nameof(element));
 
-        var count = _element.Elements().Count();
+        var count = _element.Elements(_typeName).Count();
 
         if (index == count)
         {
-            _element.Add(component.Serialize());
+            _element.Add(element.Serialize());
             return;
         }
 
-        _element.Elements().ElementAt(index).AddBeforeSelf(component.Serialize());
+        _element.Elements(_typeName).ElementAt(index).AddBeforeSelf(element.Serialize());
     }
+
+    /// <summary>
+    /// Removes all elements in the collection.
+    /// </summary>
+    public void Remove() => _element.Elements(_typeName).Remove();
 
     /// <summary>
     /// Removes a element at the specified index of the collection.
     /// </summary>
     /// <param name="index">The zero based index of the element to remove.</param>
     /// <exception cref="ArgumentOutOfRangeException"><c>index</c> is less than zero or greater than or equal to the
-    /// number of components in the collection.</exception>
-    public void Remove(int index)
+    /// number of elements in the collection.</exception>
+    public void RemoveAt(int index)
     {
-        _element.Elements().ElementAt(index).Remove();
+        _element.Elements(_typeName).ElementAt(index).Remove();
     }
 
     /// <summary>
     /// Removes all elements that satisfy the provided condition predicate.
     /// </summary>
-    /// <param name="condition">The condition for which to remove components.</param>
+    /// <param name="condition">The condition for which to remove elements.</param>
     /// <exception cref="ArgumentNullException"><c>condition</c> is null.</exception>
     public void Remove(Func<TElement, bool> condition)
     {
-        _element.Elements().Where(e => condition.Invoke(LogixSerializer.Deserialize<TElement>(e))).Remove();
+        if (condition is null) throw new ArgumentNullException(nameof(condition));
+        _element.Elements(_typeName).Where(e => condition.Invoke(LogixSerializer.Deserialize<TElement>(e))).Remove();
+    }
+
+    /// <summary>
+    /// Updates all elements in the container by applying the provided update action delegate.
+    /// </summary>
+    /// <param name="update">A update to apply to each element.</param>
+    /// <exception cref="ArgumentNullException"><c>update</c> is null.</exception>
+    public void Update(Action<TElement> update)
+    {
+        if (update is null) throw new ArgumentNullException(nameof(update));
+
+        foreach (var child in _element.Elements(_typeName))
+        {
+            var element = LogixSerializer.Deserialize<TElement>(child);
+            update.Invoke(element);
+        }
+    }
+
+    /// <summary>
+    /// Updates all elements in the container that satisfy the provided condition predicate by applying the provided
+    /// update action delegate.
+    /// </summary>
+    /// <param name="update">A update to apply to each element.</param>
+    /// <param name="condition">The condition for which to remove elements.</param>
+    /// <exception cref="ArgumentNullException"><c>update</c> or <c>condition</c> is null.</exception>
+    public void Update(Action<TElement> update, Func<TElement, bool> condition)
+    {
+        if (update is null) throw new ArgumentNullException(nameof(update));
+        if (condition is null) throw new ArgumentNullException(nameof(condition));
+
+        foreach (var child in _element.Elements(_typeName))
+        {
+            var element = LogixSerializer.Deserialize<TElement>(child);
+            if (condition.Invoke(element))
+                update.Invoke(element);
+        }
     }
 
     /// <inheritdoc />
@@ -169,7 +255,7 @@ public class LogixContainer<TElement> : IEnumerable<TElement>, ILogixSerializabl
 
     /// <inheritdoc />
     public IEnumerator<TElement> GetEnumerator() =>
-        _element.Elements().Select(LogixSerializer.Deserialize<TElement>).GetEnumerator();
+        _element.Elements(_typeName).Select(LogixSerializer.Deserialize<TElement>).GetEnumerator();
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 }

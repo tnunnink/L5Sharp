@@ -1,6 +1,5 @@
 ﻿using FluentAssertions;
 using L5Sharp.Components;
-using L5Sharp.Core;
 using L5Sharp.Elements;
 using L5Sharp.Enums;
 
@@ -23,24 +22,36 @@ public class RoutineTests
         var routine = new Routine();
 
         routine.Name.Should().BeEmpty();
-        routine.Description.Should().BeEmpty();
-        routine.Type.Should().Be(RoutineType.Typeless);
-        routine.Container.Should().BeEmpty();
-        routine.Scope.Should().Be(Scope.Null);
+        routine.Description.Should().BeNull();
+        routine.Type.Should().Be(RoutineType.Rll);
+        routine.Content<Rung>().Should().NotBeNull();
+    }
+
+    [Test]
+    public void New_RoutineType_ShouldHaveExpectedValues()
+    {
+        var routine = new Routine(RoutineType.St);
+
+        routine.Name.Should().BeEmpty();
+        routine.Description.Should().BeNull();
+        routine.Type.Should().Be(RoutineType.St);
+        routine.Content<Line>().Should().NotBeNull();
     }
 
     [Test]
     public void New_RungCollection_ShouldHaveExpectedCount()
     {
+        var routine = new Routine();
+        
         var rungs = new List<Rung>
         {
             new() { Text = "XIC(SomeTag)OTE(SomeOtherTag);" },
             new() { Text = "XIC(SomeTag)OTE(SomeOtherTag);" },
             new() { Text = "XIC(SomeTag)OTE(SomeOtherTag);" }
         };
+        
+        routine.Content<Rung>().AddRange(rungs);
 
-        var routine = new Routine { Content = rungs.Cast<ILogixCode>().ToList() };
-
-        routine.Content.Count.Should().Be(3);
+        routine.Content<Rung>().Count().Should().Be(3);
     }
 }

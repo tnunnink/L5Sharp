@@ -16,7 +16,7 @@ namespace L5Sharp.Components;
 /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
 /// `Logix 5000 Controllers Import/Export`</a> for more information.
 /// </footer>
-public class Tag : LogixComponent<Tag>, ILogixScoped
+public class Tag : LogixComponent<Tag>
 {
     private Member _member;
 
@@ -215,12 +215,6 @@ public class Tag : LogixComponent<Tag>, ILogixScoped
         get => GetUnit();
         set => SetUnit(value);
     }
-
-    /// <inheritdoc />
-    public Scope Scope => Scope.FromElement(Element);
-
-    /// <inheritdoc />
-    public string Container => Scope != Scope.Null ? Element.Ancestors(Scope.XName).First().LogixName() : string.Empty;
 
     /// <summary>
     /// Gets an element of the tag array.

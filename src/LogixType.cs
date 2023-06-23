@@ -32,7 +32,7 @@ namespace L5Sharp;
 public abstract class LogixType : ILogixSerializable
 {
     /// <summary>
-    /// The name of the <c>Logix</c> type.
+    /// The name of the logix type.
     /// </summary>
     /// <value>A <see cref="string"/> name identifying the logix type.</value>
     public virtual string Name => string.Empty;
@@ -44,7 +44,7 @@ public abstract class LogixType : ILogixSerializable
     public virtual DataTypeFamily Family => DataTypeFamily.None;
 
     /// <summary>
-    /// The class (atomic, predefine, user defined) that the type belongs to.
+    /// The class (atomic, predefined, user-defined) that the type belongs to.
     /// </summary>
     /// <value>A <see cref="DataTypeClass"/> option representing the class type.</value>
     public virtual DataTypeClass Class => DataTypeClass.Unknown;
@@ -73,7 +73,7 @@ public abstract class LogixType : ILogixSerializable
     /// <summary>
     /// Returns a new deep cloned instance of the current type.
     /// </summary>
-    /// <returns>A new instance of the specified entity type with the same property values.</returns>
+    /// <returns>A new instance of the specified logix type with the same property values.</returns>
     /// <exception cref="InvalidOperationException">The object being cloned does not have a constructor accepting a single <see cref="XElement"/> argument.</exception>
     /// <remarks>This method will simply deserialize a new instance using the current underlying element data.</remarks>
     public LogixType Clone() => (LogixType)LogixSerializer.Deserialize(GetType(), new XElement(Serialize()));

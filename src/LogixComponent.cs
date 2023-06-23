@@ -24,7 +24,7 @@ public abstract class LogixComponent<TComponent> : LogixElement<TComponent>
     /// <inheritdoc />
     protected LogixComponent()
     {
-        Name = string.Empty;
+        Element.Add(new XAttribute(L5XName.Name, string.Empty));
     }
 
     /// <inheritdoc />
@@ -57,17 +57,17 @@ public abstract class LogixComponent<TComponent> : LogixElement<TComponent>
     /// underscore ('_') characters, start with a letter, and be between 1 and 40 characters.
     /// Validation is not performed by this library, so importing components with invalid names may fail.
     /// </remarks>
-    public string Name
+    public virtual string Name
     {
-        get => GetValue<string>() ?? string.Empty;
-        set => SetValue(value);
+        get => GetRequiredValue<string>();
+        set => SetRequiredValue(value);
     }
 
     /// <summary>
     /// The description of the component.
     /// </summary>
     /// <value>A <see cref="string"/> containing the component description.</value>
-    public virtual string? Description
+    public string? Description
     {
         get => GetProperty<string>();
         set
@@ -77,8 +77,7 @@ public abstract class LogixComponent<TComponent> : LogixElement<TComponent>
                 Element.Element(L5XName.Description)?.Remove();
                 return;
             }
-
-            //Description must be the first child element.
+            
             Element.AddFirst(new XElement(L5XName.Description, new XCData(value)));
         }
     }
@@ -95,10 +94,14 @@ public abstract class LogixComponent<TComponent> : LogixElement<TComponent>
     /// This method requires the component be attached to the L5X or <see cref="LogixContent"/>, as it will
     /// access the parent of the underlying <see cref="XElement"/> to perform the function.
     /// </remarks>
-    public virtual void AddAfter(TComponent component)
+    public void AddAfter(TComponent component)
     {
         if (component is null)
             throw new ArgumentNullException(nameof(component));
+
+        if (Element.Parent is null)
+            throw new InvalidOperationException(
+                "Can only perform operation for L5X attached elements. Add this element to the logix content before invoking.");
 
         Element.AddAfterSelf(component.Serialize());
     }
@@ -115,7 +118,7 @@ public abstract class LogixComponent<TComponent> : LogixElement<TComponent>
     /// This method requires the component be attached to the L5X or <see cref="LogixContent"/>, as it will
     /// access the parent of the underlying <see cref="XElement"/> to perform the function.
     /// </remarks>
-    public virtual void AddBefore(TComponent component)
+    public void AddBefore(TComponent component)
     {
         if (component is null)
             throw new ArgumentNullException(nameof(component));
@@ -133,8 +136,12 @@ public abstract class LogixComponent<TComponent> : LogixElement<TComponent>
     /// This method requires the component be attached to the L5X or <see cref="LogixContent"/>, as it will
     /// access the parent of the underlying <see cref="XElement"/> to perform the function.
     /// </remarks>
-    public virtual void Remove()
+    public void Remove()
     {
+        if (Element.Parent is null)
+            throw new InvalidOperationException(
+                "Can only perform operation for L5X attached elements. Add this element to the logix content before invoking.");
+        
         Element.Remove();
     }
 
@@ -150,10 +157,14 @@ public abstract class LogixComponent<TComponent> : LogixElement<TComponent>
     /// This method requires the component be attached to the L5X or <see cref="LogixContent"/>, as it will
     /// access the parent of the underlying <see cref="XElement"/> to perform the function.
     /// </remarks>
-    public virtual void Replace(TComponent component)
+    public void Replace(TComponent component)
     {
         if (component is null)
             throw new ArgumentNullException(nameof(component));
+        
+        if (Element.Parent is null)
+            throw new InvalidOperationException(
+                "Can only perform operation for L5X attached elements. Add this element to the logix content before invoking.");
 
         Element.ReplaceWith(component.Serialize());
     }

@@ -4,7 +4,6 @@ using System.Linq;
 using System.Xml.Linq;
 using L5Sharp.Core;
 using L5Sharp.Enums;
-using L5Sharp.Extensions;
 
 namespace L5Sharp;
 
@@ -12,8 +11,8 @@ namespace L5Sharp;
 /// A <see cref="XElement"/> decorator that adds members for interacting with the root L5X content.
 /// </summary>
 /// <remarks>
-/// Most of these methods and properties are meat to be internal and are referenced when mutating or querying the content
-/// of an L5X file.
+/// Most of these methods and properties are meant to be internal and are referenced when mutating or querying the content
+/// of an L5X file. However, the user can use this type to access the XML directly to extend or query the data.
 /// </remarks>
 public class L5X : XElement
 {
@@ -22,17 +21,20 @@ public class L5X : XElement
     /// </summary>
     public const string DateTimeFormat = "ddd MMM d HH:mm:ss yyyy";
 
-    private static readonly Dictionary<string, string> Containers = new()
+    /// <summary>
+    /// The list of top level component containers for a L5X content or controller element. 
+    /// </summary>
+    private static readonly List<string> Containers = new()
     {
-        { L5XName.DataType, L5XName.DataTypes },
-        { L5XName.Module, L5XName.Modules },
-        { L5XName.AddOnInstructionDefinition, L5XName.AddOnInstructionDefinitions },
-        { L5XName.Tag, L5XName.Tags },
-        { L5XName.Program, L5XName.Programs },
-        { L5XName.Task, L5XName.Tasks },
-        { L5XName.ParameterConnection, L5XName.ParameterConnections },
-        { L5XName.Trend, L5XName.Trends },
-        { L5XName.QuickWatchList, L5XName.QuickWatchLists }
+        L5XName.DataTypes,
+        L5XName.Modules,
+        L5XName.AddOnInstructionDefinitions,
+        L5XName.Tags,
+        L5XName.Programs,
+        L5XName.Tasks,
+        L5XName.ParameterConnections,
+        L5XName.Trends,
+        L5XName.QuickWatchLists
     };
 
     /// <summary>
@@ -77,22 +79,38 @@ public class L5X : XElement
     /// <summary>
     /// Gets the name of the Logix component that is the target of the current L5X context.
     /// </summary>
-    public string? TargetName => Attribute(L5XName.TargetName)?.Value.Parse<string>();
+    public string? TargetName
+    {
+        get => Attribute(L5XName.TargetName)?.Value;
+        set => SetAttributeValue(L5XName.TargetName, value);
+    }
 
     /// <summary>
     /// Gets the type of Logix component that is the target of the current L5X context.
     /// </summary>
-    public string? TargetType => Attribute(L5XName.TargetType)?.Value.Parse<string>();
+    public string? TargetType
+    {
+        get => Attribute(L5XName.TargetType)?.Value;
+        set => SetAttributeValue(L5XName.TargetType, value);
+    }
 
     /// <summary>
     /// Gets the value indicating whether the current L5X is contextual..
     /// </summary>
-    public bool? ContainsContext => Attribute(L5XName.ContainsContext)?.Value.Parse<bool>();
+    public bool? ContainsContext
+    {
+        get => Attribute(L5XName.ContainsContext)?.Value.Parse<bool>();
+        set => SetAttributeValue(L5XName.ContainsContext, value);
+    }
 
     /// <summary>
     /// Gets the owner that exported the current L5X file.
     /// </summary>
-    public string? Owner => Attribute(L5XName.Owner)?.Value.Parse<string>();
+    public string? Owner
+    {
+        get => Attribute(L5XName.Owner)?.Value;
+        set => SetAttributeValue(L5XName.Owner, value);
+    }
 
     /// <summary>
     /// Gets the date time that the L5X file was exported.
@@ -104,13 +122,15 @@ public class L5X : XElement
     /// <summary>
     /// Gets the root controller element of the L5X file. 
     /// </summary>
-    public XElement Controller => Element(L5XName.Controller) ?? throw new L5XException(this);
+    public XElement GetController() => Element(L5XName.Controller) ?? throw new L5XException(L5XName.Controller, this);
 
     /// <summary>
-    /// Gets all primary/top level L5X component containers in the current L5X file.
+    /// Gets a top level container element from the root controller element of the L5X.
     /// </summary>
-    /// <returns>A <see cref="IEnumerable{T}"/> of <see cref="XElement"/> representing the L5X component containers.</returns>
-    public IEnumerable<XElement> GetContainers() => Containers.Values.Select(name => Controller.Element(name)).ToList();
+    /// <param name="name">The name of the container to retrieve.</param>
+    /// <returns>A <see cref="XElement"/> representing the container with the provided name.</returns>
+    /// <exception cref="L5XException">The element does not exist.</exception>
+    public XElement GetContainer(string name) => GetController().Element(name) ?? throw new L5XException(name, this);
 
     /// <summary>
     /// Merges all top level containers and their immediate child elements between the current L5X content and the
@@ -132,11 +152,10 @@ public class L5X : XElement
     {
         var controller = new XElement(L5XName.Controller, new XAttribute(L5XName.Use, Use.Context));
 
-        foreach (var container in Containers.Values)
+        foreach (var container in Containers)
         {
             var existing = content.Descendants(container).FirstOrDefault();
-
-            //Add the existing content in place of an empty container.
+            
             if (existing is not null)
             {
                 controller.Add(existing);
@@ -157,25 +176,11 @@ public class L5X : XElement
         current.ReplaceWith(controller);
     }
 
-    private static string DetermineContainer(XName name)
-    {
-        var target = name.ToString();
-
-        if (Containers.TryGetValue(target, out var container))
-            return container;
-
-        if (Containers.ContainsValue(target))
-            return target;
-
-        throw new ArgumentException($"The provided name {name} does not have a corresponding component container.");
-    }
-
     private static void MergeContainers(XContainer target, XContainer source, bool overwrite)
     {
         foreach (var element in source.Elements())
         {
-            var name = element.LogixName();
-            var match = target.Elements().FirstOrDefault(e => e.LogixName() == name);
+            var match = target.Elements().FirstOrDefault(e => e.LogixName() == element.LogixName());
 
             if (match is null)
             {
@@ -187,4 +192,10 @@ public class L5X : XElement
                 match.ReplaceWith(element);
         }
     }
+
+    /// <summary>
+    /// Gets all primary/top level L5X component containers in the current L5X file.
+    /// </summary>
+    /// <returns>A <see cref="IEnumerable{T}"/> of <see cref="XElement"/> representing the L5X component containers.</returns>
+    private IEnumerable<XElement> GetContainers() => Containers.Select(name => GetController().Element(name)).ToList();
 }

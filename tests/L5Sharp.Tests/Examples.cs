@@ -1,4 +1,6 @@
-﻿using FluentAssertions;
+﻿using System.Text;
+using System.Xml.Linq;
+using FluentAssertions;
 using L5Sharp.Components;
 using L5Sharp.Core;
 using L5Sharp.Elements;
@@ -152,13 +154,28 @@ namespace L5Sharp.Tests
         }
 
         [Test]
-        public void Text_InProgramWithTag_ShouldNotBeEmpty()
+        public void CreateNameFile()
         {
-            var content = LogixContent.Load(Known.Test);
+            var doc = XDocument.Load(@"C:\Users\tnunnink\Documents\GitHub\L5Sharp\src\Rockwell\L5X.xsd");
 
-            var logic = content.Text().In("MainProgram").WithTag("SimpleBool");
+            var names = doc.Descendants().Where(e => e.Attribute("name") is not null)
+                .Select(e => e.Attribute("name")?.Value).Distinct().OrderBy(n => n).ToList();
 
-            logic.Should().NotBeEmpty();
+            names.Should().NotBeEmpty();
+
+            var builder = new StringBuilder();
+
+            foreach (var name in names)
+            {
+                builder.AppendLine("///<summary>");
+                builder.AppendLine($"/// Gets the <c>{name}</c> L5X name value.");
+                builder.AppendLine("///</summary>");
+                builder.AppendLine($"public const string {name} = \"{name}\";");
+                builder.AppendLine();
+            }
+
+            var file = builder.ToString();
+            File.WriteAllText(@"C:\Users\tnunnink\Documents\GitHub\L5Sharp\src\Rockwell\names.txt", file);
         }
     }
 }

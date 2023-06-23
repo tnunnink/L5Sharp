@@ -16,9 +16,9 @@ public static class LogixSerializer
     {
         var dictionary = new Dictionary<Type, ConstructorInfo>();
         if (Mode == ScanMode.None) return dictionary;
-        
+
         //todo rest of modes 
-        
+
         foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
         {
             var types = assembly.GetTypes().Where(t =>
@@ -32,7 +32,7 @@ public static class LogixSerializer
                 dictionary.TryAdd(type, constructor);
             }
         }
-        
+
         return dictionary;
     });
 
@@ -40,6 +40,13 @@ public static class LogixSerializer
     /// The <see cref="ScanMode"/> specifying how <see cref="LogixSerializer"/> should perform reflection scanning
     /// for types to pre-register for deserialization.
     /// </summary>
+    /// <remarks>
+    /// The serializer class will perform reflection based scanning for types matching the all the following criteria:
+    /// 
+    /// non-abstract classes that derive from <see cref="LogixElement{TElement}"/> or <see cref="LogixType"/> and have public
+    /// constructors accepting a <see cref="XElement"/> object. Types match this criteria will be cached and constructed
+    /// at runtime. 
+    /// </remarks>
     public static ScanMode Mode { get; set; } = ScanMode.All;
 
     /// <summary>
@@ -88,16 +95,16 @@ public static class LogixSerializer
         Constructor(name).Invoke(new object[] { element });
 
     /// <summary>
-    /// Register a custom type with the static <see cref="LogixType"/> factory to be used for created of the type during
-    /// deserialization of a L5X. 
+    /// Register a custom type so that it may be instantiated during deserialization of a L5X. The type must implement
+    /// a constructor accepting a single <see cref="XElement"/> argument. The type can either parse the element or
+    /// derive from <see cref="LogixElement{TElement}"/> and pas the element to the base constructor. 
     /// </summary>
     /// <typeparam name="T">The type of the logix type.</typeparam>
-    /// <returns><c>true</c> if the type was registered successfully; otherwise, false.</returns>
     public static void Register<T>() where T : class
     {
         var type = typeof(T);
         var constructor = type.GetConstructor(new[] { typeof(XElement) });
-        
+
         if (constructor is null)
             throw new InvalidOperationException(
                 @$"No element constructor defined for type {type}.
@@ -121,23 +128,24 @@ public static class LogixSerializer
     /// <returns><c>true</c> if the type is registered; otherwise, <c>false</c>.</returns>
     public static bool IsRegistered<T>() where T : class => Constructors.Value.ContainsKey(typeof(T));
 
-    
+    /// <summary>
+    /// 
+    /// </summary>
     private static ConstructorInfo Constructor(Type type)
     {
         if (Constructors.Value.TryGetValue(type, out var constructor))
             return constructor;
 
         var arguments = new[] { typeof(XElement) };
-        var constructorInfo = type.GetConstructor(arguments);
+        var ctor = type.GetConstructor(arguments);
 
-        if (constructorInfo is null)
+        if (ctor is null)
             throw new InvalidOperationException(
                 @$"No element constructor defined for type {type}.
                      Class must specify constructor accepting a single {typeof(XElement)} to be deserialized.");
 
-        Constructors.Value.TryAdd(type, constructorInfo);
-
-        return constructorInfo;
+        Constructors.Value.TryAdd(type, ctor);
+        return ctor;
     }
 
     /// <summary>
@@ -149,7 +157,8 @@ public static class LogixSerializer
 
         if (type is null)
             throw new InvalidOperationException(
-                $"Type '{typeName}' is not registered. LogixSerializer only supports public, non-abstract classes inheriting from {typeof(LogixElement<>)} which have a public constructor accepting a single {typeof(XElement)} argument.");
+                $"Type '{typeName}' is not registered. Either register type or have LogixSerializer perform assembly scanning. " +
+                $"Only public, non-abstract classes having a constructor accepting a single {typeof(XElement)} argument are supported.");
 
         return Constructors.Value[type];
     }
@@ -172,7 +181,6 @@ public static class LogixSerializer
 
         return false;
     }
-    
 }
 
 /// <summary>
@@ -181,17 +189,19 @@ public static class LogixSerializer
 public enum ScanMode
 {
     /// <summary>
-    /// Indicates that the <see cref="LogixSerializer"/> should scan all internal and external assemblies
+    /// Indicates that <see cref="LogixSerializer"/> should scan internal and external assemblies for types matching the
+    /// deserialization criteria
     /// </summary>
     All,
-        
+
     /// <summary>
-    /// Indicates that <see cref="LogixSerializer"/> should scan
+    /// Indicates that <see cref="LogixSerializer"/> should scan only internal assemblies for types matching the
+    /// deserialization criteria.
     /// </summary>
     Internal,
-        
+
     /// <summary>
-    /// Indicates that <see cref="LogixSerializer"/> should not perform reflection scan of types to automatically
+    /// Indicates that <see cref="LogixSerializer"/> should not perform reflection scanning of types to automatically
     /// register for deserialization.
     /// </summary>
     None,

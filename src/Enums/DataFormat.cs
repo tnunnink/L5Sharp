@@ -10,24 +10,6 @@ public class DataFormat : LogixEnum<DataFormat, string>
     private DataFormat(string name, string value) : base(name, value)
     {
     }
-        
-    /// <summary>
-    /// Gets the data format for the specified <see cref="LogixType"/>.
-    /// </summary>
-    /// <param name="type">The data type instance to determine the type for.</param>
-    /// <returns>The <see cref="DataFormat"/> value for the specified type.
-    /// Note that L5K is not going to be returned by this method because we are not currently supporting it.
-    /// </returns>
-    public static DataFormat FromDataType(LogixType type)
-    {
-        return type switch
-        {
-            ALARM_DIGITAL => Alarm,
-            ALARM_ANALOG => Alarm,
-            STRING => String,
-            _ => Decorated
-        };
-    }
 
     /// <summary>
     /// Represents a common verbose formatted data structure. 

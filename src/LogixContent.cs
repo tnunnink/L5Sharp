@@ -4,8 +4,8 @@ using System.Linq;
 using System.Xml.Linq;
 using L5Sharp.Components;
 using L5Sharp.Core;
+using L5Sharp.Elements;
 using L5Sharp.Enums;
-using L5Sharp.Extensions;
 
 namespace L5Sharp;
 
@@ -18,12 +18,15 @@ public class LogixContent
     private LogixContent(XElement element)
     {
         L5X = new L5X(element);
-        DataTypes = new LogixContainer<DataType>(L5X.Descendants(L5XName.DataTypes).First());
-        Instructions = new LogixContainer<AddOnInstruction>(L5X.Controller);
-        Modules = new LogixContainer<Module>(L5X.Controller);
-        Tags = new LogixContainer<Tag>(L5X.Controller);
-        Programs = new LogixContainer<Program>(L5X.Controller);
-        Tasks = new LogixContainer<LogixTask>(L5X.Controller);
+        DataTypes = new LogixContainer<DataType>(L5X.GetContainer(L5XName.DataTypes));
+        Instructions = new LogixContainer<AddOnInstruction>(L5X.GetContainer(L5XName.AddOnInstructionDefinitions));
+        Modules = new LogixContainer<Module>(L5X.GetContainer(L5XName.Modules));
+        Tags = new LogixContainer<Tag>(L5X.GetContainer(L5XName.Tags));
+        Programs = new LogixContainer<Program>(L5X.GetContainer(L5XName.Programs));
+        Tasks = new LogixContainer<LogixTask>(L5X.GetContainer(L5XName.Tasks));
+        ParameterConnections = new LogixContainer<ParameterConnection>(L5X.GetContainer(L5XName.ParameterConnections));
+        Trends = new LogixContainer<Trend>(L5X.GetContainer(L5XName.Trends));
+        WatchLists = new LogixContainer<WatchList>(L5X.GetContainer(L5XName.QuickWatchLists));
     }
 
     /// <summary>
@@ -56,21 +59,22 @@ public class LogixContent
     /// Creates a new <see cref="LogixContent"/> with the provided logix component as the target type.
     /// </summary>
     /// <param name="target">The L5X target component of the resulting content.</param>
+    /// <param name="softwareRevision">The optional software revision, or version of Studio to export the component as.</param>
     /// <returns>A <see cref="LogixContent"/> containing the component as the target of the L5X.</returns>
-    public static LogixContent Export<TComponent>(LogixComponent<TComponent> target)
+    public static LogixContent Export<TComponent>(LogixComponent<TComponent> target, Revision? softwareRevision = null)
         where TComponent : LogixComponent<TComponent>
     {
         var content = new XElement(L5XName.RSLogix5000Content);
-        content.Add(new XAttribute(L5XName.SchemaRevision, new Revision().ToString()));
+        content.Add(new XAttribute(L5XName.SchemaRevision, new Revision()));
+        if (softwareRevision is not null) content.Add(new XAttribute(L5XName.SoftwareRevision, softwareRevision));
         content.Add(new XAttribute(L5XName.TargetName, target.Name));
         content.Add(new XAttribute(L5XName.TargetType, target.TypeName));
         content.Add(new XAttribute(L5XName.ContainsContext, target.GetType() != typeof(Controller)));
         content.Add(new XAttribute(L5XName.Owner, Environment.UserName));
         content.Add(new XAttribute(L5XName.ExportDate, DateTime.Now.ToString(L5X.DateTimeFormat)));
 
-        var component = LogixSerializer.Serialize(target);
-        component.AddFirst(new XAttribute(L5XName.Use, Use.Target));
-        content.Add(component);
+        target.Use = Use.Target;
+        content.Add(target.Serialize());
 
         return new LogixContent(content);
     }
@@ -84,11 +88,17 @@ public class LogixContent
     /// </remarks>
     public L5X L5X { get; }
 
-    
-    public Controller Controller => new(L5X.Controller);
+    /// <summary>
+    /// The root <see cref="Components.Controller"/> component of the L5X file.
+    /// </summary>
+    /// <value>A <see cref="Components.Controller"/> component object.</value>
+    /// <remarks>If the L5X does not <c>ContainContext</c>, meaning it is a project export, this will container all the
+    /// relevant controller properties and configurations. Otherwise most data will be null as the controller serves as
+    /// just a root container for other component objects.</remarks>
+    public Controller Controller => new(L5X.GetController());
 
     /// <summary>
-    /// Gets the collection of <see cref="DataType"/> components found in the L5X file.
+    /// The container collection of <see cref="DataType"/> components found in the L5X file.
     /// </summary>
     /// <value>A <see cref="LogixContainer{TComponent}"/> of <see cref="DataType"/> components.</value>
     public LogixContainer<DataType> DataTypes { get; }
@@ -125,19 +135,26 @@ public class LogixContent
     public LogixContainer<LogixTask> Tasks { get; }
 
     /// <summary>
-    /// 
+    /// The container collection of <see cref="ParameterConnection"/> components found in the L5X file.
     /// </summary>
-    /// <typeparam name="TEntity"></typeparam>
-    /// <returns></returns>
+    /// <value>A <see cref="LogixContainer{TComponent}"/> of <see cref="ParameterConnection"/> components.</value>
+    public LogixContainer<ParameterConnection> ParameterConnections { get; }
+    
+    /// <summary>
+    /// The container collection of <see cref="Trend"/> components found in the L5X file.
+    /// </summary>
+    /// <value>A <see cref="LogixContainer{TComponent}"/> of <see cref="Trend"/> components.</value>
+    public LogixContainer<Trend> Trends { get; }
+
+    /// <summary>
+    /// The container collection of <see cref="WatchList"/> components found in the L5X file.
+    /// </summary>
+    /// <value>A <see cref="LogixContainer{TComponent}"/> of <see cref="WatchList"/> components.</value>
+    public LogixContainer<WatchList> WatchLists { get; }
+    
     public IEnumerable<TEntity> Find<TEntity>() where TEntity : class =>
         L5X.Descendants(typeof(TEntity).LogixTypeName()).Select(LogixSerializer.Deserialize<TEntity>);
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="fileName"></param>
-    /// <param name="overwrite"></param>
-    /// <exception cref="ArgumentException"></exception>
     public void Merge(string fileName, bool overwrite = false)
     {
         if (string.IsNullOrEmpty(fileName))
@@ -147,14 +164,7 @@ public class LogixContent
 
         Merge(content, overwrite);
     }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="content"></param>
-    /// <param name="overwrite"></param>
-    /// <exception cref="ArgumentNullException"></exception>
-    /// <exception cref="InvalidOperationException"></exception>
+    
     public void Merge(LogixContent content, bool overwrite = false)
     {
         if (content is null)

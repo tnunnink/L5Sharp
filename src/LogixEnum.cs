@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 
-namespace L5Sharp.Enums;
+namespace L5Sharp;
 
 /// <summary>
 /// A base class for all logix enumeration types.
@@ -186,7 +186,7 @@ public abstract class LogixEnum<TEnum, TValue> :
 
 
     /// <inheritdoc />
-    public override string ToString() => Name;
+    public override string ToString() => Value.ToString();
 
     /// <inheritdoc />
     public override bool Equals(object obj)

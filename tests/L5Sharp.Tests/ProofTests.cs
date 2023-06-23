@@ -1,6 +1,5 @@
 ﻿using FluentAssertions;
 using L5Sharp.Components;
-using L5Sharp.Extensions;
 using L5Sharp.Types.Atomics;
 
 namespace L5Sharp.Tests;
@@ -18,21 +17,6 @@ public class ProofTests
         foreach (var tag in tags)
         {
             tag.Value.To<DINT>().Should().BeGreaterOrEqualTo(0);
-        }
-    }
-
-    [Test]
-    public void UnusedTags()
-    {
-        var content = LogixContent.Load(Known.Test);
-
-        var referencedTags = content.Text().SelectMany(t => t.Tags());
-
-        var unused = content.Tags.Select(t => t.TagName).Where(t => referencedTags.All(r => r != t)).ToList();
-
-        foreach (var tagName in unused)
-        {
-            Console.WriteLine(tagName);
         }
     }
 

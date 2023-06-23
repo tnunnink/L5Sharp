@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Xml.Linq;
 using L5Sharp.Core;
 using L5Sharp.Elements;
 using L5Sharp.Enums;
-using L5Sharp.Extensions;
 using L5Sharp.Rockwell;
 
 namespace L5Sharp.Components;
@@ -34,11 +32,20 @@ public class Module : LogixComponent<Module>
         MajorFault = default;
         SafetyEnabled = default;
         Keying = ElectronicKeying.CompatibleModule;
+        Ports = new LogixContainer<Port>();
     }
 
     /// <inheritdoc />
     public Module(XElement element) : base(element)
     {
+    }
+
+    /// <inheritdoc />
+    //To prevent exceptions since Module is the only component that does not require name, we are overriding it as so.
+    public override string Name
+    {
+        get => GetValue<string>() ?? string.Empty;
+        set => SetValue(value);
     }
 
     /// <summary>
@@ -164,24 +171,61 @@ public class Module : LogixComponent<Module>
     /// <value>A <see cref="ElectronicKeying"/> enum value representing the mode.</value>
     public ElectronicKeying? Keying
     {
-        get => GetProperty<ElectronicKeying>(); //todo not right
-        set => SetProperty(value);
+        get => GetValue<ElectronicKeying>(e => e.Element(L5XName.EKey)?.Attribute(L5XName.State));
+        set
+        {
+            if (value is null)
+            {
+                Element.Element(L5XName.EKey)?.Remove();
+                return;
+            }
+                
+            if (Element.Element(L5XName.EKey) is null) 
+            {
+                Element.Add(new XElement(L5XName.EKey, new XAttribute(L5XName.State, value)));
+                return;
+            }
+
+            Element.Element(L5XName.EKey)!.SetAttributeValue(L5XName.State, value);
+        }
     }
 
     /// <summary>
     /// A collection of <see cref="Port"/> that define the module's connection within the module tree.
     /// </summary>
-    public LogixContainer<Port> Ports { get; set; } = new();
+    public LogixContainer<Port> Ports
+    {
+        get => GetContainer<Port>();
+        set => SetContainer(value);
+    }
 
     /// <summary>
     /// A <see cref="Tag"/> containing the configuration data for the module.
     /// </summary>
-    public Tag? Config { get; set; }
+    public Tag? Config
+    {
+        get
+        {
+            var element = Element.Descendants(L5XName.ConfigTag).FirstOrDefault();
+            return element is null ? default : new Tag(element) { Name = element.ModuleTagName() };
+        }
+    }
 
     /// <summary>
     /// A collection of <see cref="ModuleConnection"/> defining the input and output connection specific to the module.
     /// </summary>
-    public IEnumerable<ModuleConnection> Connections { get; set; }
+    public LogixContainer<ModuleConnection> Connections
+    {
+        get
+        {
+            var connections = Element.Element(L5XName.Communications)?.Element(L5XName.Connections);
+            
+            if (connections is null)
+                throw new InvalidOperationException("Could not find connections container for module element.");
+            
+            return new LogixContainer<ModuleConnection>(connections);
+        }
+    }
 
     /// <summary>
     /// Gets the slot number of the current module if one exists. If the module does not have an slot, returns null.
@@ -202,50 +246,4 @@ public class Module : LogixComponent<Module>
     /// </remarks>
     public IPAddress? IP => Ports.FirstOrDefault(p => p is { Type: "Ethernet", Address.IsIPv4: true })?.Address
         .ToIPAddress();
-
-    /// <summary>
-    /// Gets the parent module of this module object using the current <see cref="ParentModule"/> property and underlying
-    /// element structure.
-    /// </summary>
-    /// <returns>A <see cref="Module"/> representing the parent of this module if it exists; otherwise, <c>null</c>.</returns>
-    /// <remarks>
-    /// This method relies on the object being attached to the L5X hierarchy in order to find it's parent.
-    /// </remarks>
-    public Module? Parent()
-    {
-        var parent = Element.Parent?.Elements().FirstOrDefault(m => m.LogixName() == ParentModule);
-        return parent is not null ? new Module(parent) : default;
-    }
-
-    public IEnumerable<Module> Modules()
-    {
-        return Element.Parent?.Elements()
-            .Where(m => m.Attribute(L5XName.ParentModule)?.Value == Name)
-            .Select(e => new Module(e)) 
-               ?? Enumerable.Empty<Module>();
-    }
-
-    /// <summary>
-    /// Returns a collection of all non-null <see cref="Tag"/> objects for the current Module, including all
-    /// input, output, and config tags.
-    /// </summary>
-    /// <value>An <see cref="IEnumerable{T}"/> containing the base tags for the Module.</value>
-    public IEnumerable<Tag> Tags()
-    {
-        var tags = new List<Tag>();
-
-        if (Config is not null)
-            tags.Add(Config);
-
-        foreach (var connection in Connections)
-        {
-            if (connection.Input is not null)
-                tags.Add(connection.Input);
-
-            if (connection.Output is not null)
-                tags.Add(connection.Output);
-        }
-
-        return tags;
-    }
 }

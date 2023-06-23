@@ -4,7 +4,6 @@ using System.Xml.Linq;
 using System.Xml.Serialization;
 using L5Sharp.Core;
 using L5Sharp.Enums;
-using L5Sharp.Extensions;
 
 namespace L5Sharp.Components;
 
@@ -15,6 +14,7 @@ namespace L5Sharp.Components;
 /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
 /// `Logix 5000 Controllers Import/Export`</a> for more information.
 /// </footer>
+[XmlType(L5XName.Task)]
 public class LogixTask : LogixComponent<LogixTask>
 {
     /// <inheritdoc />
@@ -37,8 +37,8 @@ public class LogixTask : LogixComponent<LogixTask>
     /// <value>A <see cref="Enums.TaskType"/> enum representing the type of the task.</value>
     public TaskType Type
     {
-        get => GetValue<TaskType>() ?? throw new L5XException(Element);
-        set => SetValue(value.Value);
+        get => GetRequiredValue<TaskType>();
+        set => SetRequiredValue(value);
     }
 
     /// <summary>
@@ -125,7 +125,6 @@ public class LogixTask : LogixComponent<LogixTask>
         
         scheduled.Elements(L5XName.ScheduledProgram).FirstOrDefault(p => p.LogixName() == program)?.Remove();
         
-        //Remove is no programs are scheduled
         if (!scheduled.Elements().Any())
             scheduled.Remove();
     }

@@ -1,26 +1,24 @@
 ﻿using System;
 using System.Xml.Linq;
-using L5Sharp.Components;
-using L5Sharp.Core;
 
 namespace L5Sharp.Elements;
 
 /// <summary>
-/// A tag element within a <see cref="WatchList"/> component.
+/// A logix <c>ParameterConnection</c> element defining the connection between two different program tags.
 /// </summary>
 /// <footer>
 /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
 /// `Logix 5000 Controllers Import/Export`</a> for more information.
 /// </footer>
-public sealed class WatchTag : LogixElement<WatchTag>
+public class ParameterConnection : LogixElement<ParameterConnection>
 {
     /// <summary>
     /// Creates a new <see cref="WatchTag"/> with default values.
     /// </summary>
-    public WatchTag()
+    public ParameterConnection()
     {
-        Specifier = TagName.Empty;
-        Scope = string.Empty;
+        EndPoint1 = string.Empty;
+        EndPoint2 = string.Empty;
     }
 
     /// <summary>
@@ -28,25 +26,27 @@ public sealed class WatchTag : LogixElement<WatchTag>
     /// </summary>
     /// <param name="element">The <see cref="XElement"/> to initialize the type with.</param>
     /// <exception cref="ArgumentNullException"><c>element</c> is null.</exception>
-    public WatchTag(XElement element) : base(element)
+    public ParameterConnection(XElement element) : base(element)
     {
     }
     
     /// <summary>
-    /// Specify the tag or part of a tag to watch.
+    /// Specify the first end point of the parameter connection.
     /// </summary>
-    /// <value>A <see cref="string"/> representing the tag specifier.</value>
-    public TagName Specifier
+    /// <value>A <see cref="string"/> containing the end point path. The format for end point connections
+    /// is program_name.parameter_name</value>
+    public string EndPoint1
     {
-        get => GetRequiredValue<TagName>();
+        get => GetRequiredValue<string>();
         set => SetRequiredValue(value);
     }
 
     /// <summary>
-    /// Specify the name of program, equipment phase, or Add-On Instruction that contains the watch tag.
+    /// Specify the second end point of the parameter connection.
     /// </summary>
-    /// <value>A <see cref="string"/> representing the scope of the tag. If controller scope set to empty.</value>
-    public string Scope
+    /// <value>A <see cref="string"/> containing the end point path. The format for end point connections
+    /// is program_name.parameter_name</value>
+    public string EndPoint2
     {
         get => GetRequiredValue<string>();
         set => SetRequiredValue(value);

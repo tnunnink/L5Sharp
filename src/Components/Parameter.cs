@@ -102,9 +102,9 @@ public sealed class Parameter : LogixComponent<Parameter>
     /// A <see cref="Enums.TagType"/> option representing the type of parameter.
     /// Default is <see cref="Enums.TagType.Base"/>.
     /// </value>
-    public TagType TagType
+    public TagType? TagType
     {
-        get => GetValue<TagType>() ?? throw new L5XException(Element);
+        get => GetValue<TagType>();
         set => SetValue(value);
     }
         
@@ -118,8 +118,8 @@ public sealed class Parameter : LogixComponent<Parameter>
     /// </value>
     public TagUsage Usage
     {
-        get => GetValue<TagUsage>() ?? throw new L5XException(Element);
-        set => SetValue(value);
+        get => GetRequiredValue<TagUsage>();
+        set => SetRequiredValue(value);
     }
         
     /// <summary>
@@ -127,7 +127,7 @@ public sealed class Parameter : LogixComponent<Parameter>
     /// </summary>
     /// <value>
     /// <c>true</c> if the parameter is required; otherwise, false. Default is <c>false</c>.</value>
-    public bool Required
+    public bool? Required
     {
         get => GetValue<bool>();
         set => SetValue(value);
@@ -137,7 +137,7 @@ public sealed class Parameter : LogixComponent<Parameter>
     /// Indicates whether the parameter is visible from the instruction code block.
     /// </summary>
     /// <value><c>true</c> if the parameter is visible; otherwise, false. Default is <c>false</c>.</value>
-    public bool Visible 
+    public bool? Visible 
     {
         get => GetValue<bool>();
         set => SetValue(value);
@@ -164,7 +164,7 @@ public sealed class Parameter : LogixComponent<Parameter>
     /// </summary>
     /// <value><c>true</c> if the parameter is constant; otherwise, <c>false</c>.</value>
     /// <remarks>Only value type tags have the ability to be set as a constant. Default is <c>false</c>.</remarks>
-    public bool Constant
+    public bool? Constant
     {
         get => GetValue<bool>();
         set => SetValue(value);

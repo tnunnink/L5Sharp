@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Xml.Linq;
 
@@ -17,11 +15,11 @@ public abstract class LogixElement<TElement> : ILogixSerializable where TElement
 {
     /// <summary>
     /// Creates a new default <see cref="LogixElement{TEntity}"/> initialized with an <see cref="XElement"/> having the
-    /// <c>LogixTypeName</c> of the entity. 
+    /// type name of the element. 
     /// </summary>
     protected LogixElement()
     {
-        Element = new XElement(typeof(TElement).Name);
+        Element = new XElement(typeof(TElement).LogixTypeName());
     }
 
     /// <summary>
@@ -42,8 +40,9 @@ public abstract class LogixElement<TElement> : ILogixSerializable where TElement
     protected readonly XElement Element;
 
     /// <summary>
-    /// Returns the type name, or name of the underlying <see cref="XElement"/>.
+    /// Returns the type name, or name of the underlying <see cref="XElement"/> name.
     /// </summary>
+    /// <value>A <see cref="string"/> containing the name of the type.</value>
     public string TypeName => Element.Name.ToString();
 
     /// <summary>
@@ -71,8 +70,8 @@ public abstract class LogixElement<TElement> : ILogixSerializable where TElement
     /// If not found, returns <c>default</c>.
     /// </returns>
     /// <remarks>
-    /// This method it only available to make getting/setting data on <see cref="Element"/> as concise
-    /// as possible from derived classes. This method uses the <see cref="CallerMemberNameAttribute"/> so the deriving
+    /// This method it available to make getting/setting data on <see cref="Element"/> as concise
+    /// as possible for derived classes. This method uses the <see cref="CallerMemberNameAttribute"/> so the deriving
     /// classes don't have to specify the property name (assuming its the name matches the underlying element property).
     /// </remarks>
     protected T? GetValue<T>([CallerMemberName] string? name = null)
@@ -101,6 +100,25 @@ public abstract class LogixElement<TElement> : ILogixSerializable where TElement
     {
         var value = selector.Invoke(Element)?.Value;
         return value is not null ? value.Parse<T>() : default;
+    }
+
+    /// <summary>
+    /// Gets the value of the specified attribute name from the element parsed as the specified generic type parameter.
+    /// If the attribute does not exist, throw a <see cref="L5XException"/>.
+    /// </summary>
+    /// <param name="name">The name of the attribute.</param>
+    /// <typeparam name="T">The return type of the value.</typeparam>
+    /// <returns>The value of attribute parsed as the generic type parameter.</returns>
+    /// <exception cref="L5XException">No attribute with the provided name was found on <see cref="Element"/>.</exception>
+    /// <remarks>
+    /// This method it available to make getting/setting data on <see cref="Element"/> as concise
+    /// as possible for derived classes. This method uses the <see cref="CallerMemberNameAttribute"/> so the deriving
+    /// classes don't have to specify the property name (assuming its the name matches the underlying element property).
+    /// </remarks>
+    protected T GetRequiredValue<T>([CallerMemberName] string? name = null)
+    {
+        var value = Element.Attribute(name)?.Value;
+        return value is not null ? value.Parse<T>() : throw new L5XException(name!, Element);
     }
 
     /// <summary>
@@ -182,8 +200,29 @@ public abstract class LogixElement<TElement> : ILogixSerializable where TElement
     /// as possible from derived classes. This method uses the <see cref="CallerMemberNameAttribute"/> so the deriving
     /// classes don't have to specify the property name (assuming its the name matches the underlying element property).
     /// </remarks>
-    protected void SetValue<T>(T value, [CallerMemberName] string? name = null)
+    protected void SetValue<T>(T? value, [CallerMemberName] string? name = null)
     {
+        Element.SetAttributeValue(name, value);
+    }
+
+    /// <summary>
+    /// Sets or adds the value of an attribute on the underlying element.
+    /// </summary>
+    /// <param name="name">The name of the attribute to set.</param>
+    /// <param name="value">The value to assign to the attribute. If null, an exception will be thrown.</param>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <exception cref="ArgumentNullException"><c>value</c> is null.</exception>
+    /// <remarks>
+    /// This method it only available to make getting/setting data on <see cref="Element"/> as concise
+    /// as possible from derived classes. This method uses the <see cref="CallerMemberNameAttribute"/> so the deriving
+    /// classes don't have to specify the property name (assuming its the name matches the underlying element property).
+    /// This method will throw an exception if the <c>value</c> is null.
+    /// </remarks>
+    protected void SetRequiredValue<T>(T value, [CallerMemberName] string? name = null)
+    {
+        if (value is null)
+            throw new ArgumentNullException(nameof(value), $"Property {name} can not be null.");
+
         Element.SetAttributeValue(name, value);
     }
 
@@ -207,8 +246,16 @@ public abstract class LogixElement<TElement> : ILogixSerializable where TElement
             Element.Element(name)?.Remove();
             return;
         }
-        
-        Element.SetElementValue(name, new XCData(value.ToString()));
+
+        var child = Element.Element(name);
+
+        if (child is null)
+        {
+            Element.Add(new XElement(name, new XCData(value.ToString())));
+            return;
+        }
+
+        child.ReplaceNodes(new XCData(value.ToString()));
     }
 
     /// <summary>
@@ -222,7 +269,7 @@ public abstract class LogixElement<TElement> : ILogixSerializable where TElement
     /// as possible from derived classes. This method uses the <see cref="CallerMemberNameAttribute"/> so the deriving
     /// classes don't have to specify the property name (assuming its the name matches the underlying element property).
     /// </remarks>
-    protected void SetContainer<TChild>(IEnumerable<TChild>? value, [CallerMemberName] string? name = null)
+    protected void SetContainer<TChild>(LogixContainer<TChild>? value, [CallerMemberName] string? name = null)
         where TChild : LogixElement<TChild>
     {
         if (value is null)
@@ -231,23 +278,19 @@ public abstract class LogixElement<TElement> : ILogixSerializable where TElement
             return;
         }
 
-        var container = new XElement(name);
-        container.Add(value.Select(e => e.Serialize()));
-
         var existing = Element.Element(name);
 
         if (existing is null)
         {
-            Element.Add(container);
+            Element.Add(value.Serialize());
             return;
         }
 
-        existing.ReplaceWith(container);
+        existing.ReplaceWith(value.Serialize());
     }
 
     /// <summary>
-    /// Gets the date/time value of the specified attribute name from the current element if it exists.
-    /// If the attribute does not exist, returns default value
+    /// Sets the date/time value of a attribute, adds a attribute, or removes a attribute if null.
     /// </summary>
     /// <param name="value">The value to set.</param>
     /// <param name="format">The format of the date time.
@@ -255,12 +298,18 @@ public abstract class LogixElement<TElement> : ILogixSerializable where TElement
     /// <param name="name">The name of the date time attribute.</param>
     /// /// <remarks>
     /// This is a specialized helper since the date time formats are different for different component
-    /// properties, we need to allow that to be specified.
+    /// properties, we should allow that to be specified.
     /// </remarks>
-    protected void SetDateTime(DateTime value, string? format = null, [CallerMemberName] string? name = null)
+    protected void SetDateTime(DateTime? value, string? format = null, [CallerMemberName] string? name = null)
     {
+        if (value is null)
+        {
+            Element.Attribute(name)?.Remove();
+            return;
+        }
+
         format ??= "ddd MMM d HH:mm:ss yyyy";
-        var formatted = value.ToString(format);
+        var formatted = value.Value.ToString(format);
         Element.SetAttributeValue(name, formatted);
     }
 }
