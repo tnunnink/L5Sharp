@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Linq;
 using L5Sharp.Enums;
 using L5Sharp.Types.Atomics;
@@ -82,7 +83,7 @@ public abstract class AtomicType : LogixType
     /// Returns the <see cref="AtomicType"/> value as a <see cref="BitArray"/>.
     /// </summary>
     /// <returns>A <see cref="BitArray"/> representing the underlying value of the type.</returns>
-    public BitArray ToBits() => Value;
+    public BitArray ToBits() => new(Value);
 
     /// <summary>
     /// Return the atomic value formatted using the current <see cref="Radix"/> format.
@@ -96,6 +97,7 @@ public abstract class AtomicType : LogixType
     /// <param name="radix">The radix format.</param>
     /// <returns>A <see cref="string"/> representing the formatted atomic value.</returns>
     public string ToString(Radix radix) => radix.Format(this);
+
 
     /// <inheritdoc />
     public override XElement Serialize()
@@ -112,10 +114,33 @@ public abstract class AtomicType : LogixType
     {
         if (type is not AtomicType atomicType)
             throw new ArgumentException($"Can not update {GetType().Name} with {type.GetType().Name}");
-        
+
         //Updating the underlying bit array will work between different types so long as the incoming value is not larger
         //than what can be represented by the length of the this type's bit array. Otherwise, data loss will occur.
         for (var i = 0; i < Value.Length; i++)
             Value[i] = i < atomicType.Value.Length ? atomicType.Value[i] : default;
     }
+
+    /// <inheritdoc />
+    public override bool Equals(object? obj)
+    {
+        if (ReferenceEquals(null, obj)) return false;
+        if (ReferenceEquals(this, obj)) return true;
+        if (obj is not AtomicType atomic) return false;
+
+        var max = Math.Max(Value.Length, atomic.Value.Length);
+
+        for (var i = 0; i < max; i++)
+        {
+            var left = i < Value.Length && Value[i];
+            var right = i < atomic.Value.Length && atomic.Value[i];
+            if (!left.Equals(right))
+                return false;
+        }
+
+        return true;
+    }
+
+    /// <inheritdoc />
+    public override int GetHashCode() => ToBytes().Aggregate(0, (i, b) => i ^ b.GetHashCode());
 }

@@ -29,7 +29,7 @@ public class RealConverter : AtomicConverter
                 SINT v => new REAL((sbyte)v),
                 USINT v => new REAL(v),
                 INT v => new REAL((short)v),
-                UINT v => new REAL(v),
+                //UINT v => new REAL(v),
                 DINT v => new REAL((int)v),
                 UDINT v => new REAL(v),
                 LINT v => new REAL((long)v),

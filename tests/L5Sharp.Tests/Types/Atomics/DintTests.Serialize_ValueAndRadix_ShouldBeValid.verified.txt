@@ -1,0 +1,1 @@
+﻿<DataValue DataType="DINT" Radix="Hex" Value="16#0000_007b" />

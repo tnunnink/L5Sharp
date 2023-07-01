@@ -17,7 +17,8 @@ public abstract class AtomicConverter : TypeConverter
     /// <inheritdoc />
     public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
     {
-        return sourceType == typeof(sbyte) ||
+        return sourceType == typeof(bool) ||
+               sourceType == typeof(sbyte) ||
                sourceType == typeof(byte) ||
                sourceType == typeof(short) ||
                sourceType == typeof(ushort) ||
@@ -26,6 +27,7 @@ public abstract class AtomicConverter : TypeConverter
                sourceType == typeof(long) ||
                sourceType == typeof(ulong) ||
                sourceType == typeof(float) ||
+               sourceType == typeof(BOOL) ||
                sourceType == typeof(SINT) ||
                sourceType == typeof(USINT) ||
                sourceType == typeof(INT) ||
@@ -35,14 +37,14 @@ public abstract class AtomicConverter : TypeConverter
                sourceType == typeof(LINT) ||
                sourceType == typeof(ULINT) ||
                sourceType == typeof(REAL) ||
-               sourceType == typeof(string) ||
-               base.CanConvertFrom(context, sourceType);
+               sourceType == typeof(string);
     }
 
     /// <inheritdoc />
     public override bool CanConvertTo(ITypeDescriptorContext context, Type destinationType)
     {
-        return destinationType == typeof(sbyte) ||
+        return destinationType == typeof(bool) ||
+               destinationType == typeof(sbyte) ||
                destinationType == typeof(byte) ||
                destinationType == typeof(short) ||
                destinationType == typeof(ushort) ||
@@ -60,8 +62,7 @@ public abstract class AtomicConverter : TypeConverter
                destinationType == typeof(LINT) ||
                destinationType == typeof(ULINT) ||
                destinationType == typeof(REAL) ||
-               destinationType == typeof(string) ||
-               base.CanConvertFrom(context, destinationType);
+               destinationType == typeof(string);
     }
         
     /// <inheritdoc />
@@ -72,6 +73,7 @@ public abstract class AtomicConverter : TypeConverter
         {
             return destinationType switch
             {
+                not null when destinationType == typeof(bool) => Convert.ToBoolean(value),
                 not null when destinationType == typeof(sbyte) => Convert.ToSByte(value),
                 not null when destinationType == typeof(byte) => Convert.ToByte(value),
                 not null when destinationType == typeof(short) => Convert.ToInt16(value),
@@ -81,6 +83,7 @@ public abstract class AtomicConverter : TypeConverter
                 not null when destinationType == typeof(long) => Convert.ToInt64(value),
                 not null when destinationType == typeof(ulong) => Convert.ToUInt64(value),
                 not null when destinationType == typeof(float) => Convert.ToSingle(value),
+                not null when destinationType == typeof(BOOL) => new BOOL(Convert.ToBoolean(value)),
                 not null when destinationType == typeof(SINT) => new SINT(Convert.ToSByte(value)),
                 not null when destinationType == typeof(USINT) => new USINT(Convert.ToByte(value)),
                 not null when destinationType == typeof(INT) => new INT(Convert.ToInt16(value)),
@@ -93,7 +96,7 @@ public abstract class AtomicConverter : TypeConverter
                 not null when destinationType == typeof(string) => value.ToString(),
                 _ => base.ConvertTo(context, culture, value, destinationType!) ??
                      throw new NotSupportedException(
-                         $"The provided value of type {value.GetType()} is not supported for conversion.")
+                         $"The provided value type {value.GetType()} is not supported for conversion to {destinationType}.")
             };
         }
     }

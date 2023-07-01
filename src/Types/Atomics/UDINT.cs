@@ -9,9 +9,9 @@ namespace L5Sharp.Types.Atomics;
 /// Represents a <b>UDINT</b> Logix atomic data type, or a type analogous to a <see cref="uint"/>.
 /// </summary>
 [TypeConverter(typeof(UDintConverter))]
-public class UDINT : AtomicType, IEquatable<UDINT>, IComparable<UDINT>
+public class UDINT : AtomicType, IEquatable<UDINT>, IComparable<UDINT>, IComparable
 {
-    private uint Local => BitConverter.ToUInt32(ToBytes());
+    private uint Number => BitConverter.ToUInt32(ToBytes());
 
     /// <summary>
     /// Creates a new default <see cref="UDINT"/> type.
@@ -70,8 +70,9 @@ public class UDINT : AtomicType, IEquatable<UDINT>, IComparable<UDINT>
             return new UDINT(result);
 
         var radix = Radix.Infer(value);
-        var atomic = (UDINT)radix.Parse(value);
-        return new UDINT(atomic, radix);
+        var atomic = radix.Parse(value);
+        var converted = (TypeDescriptor.GetConverter(typeof(UDINT)).ConvertFrom(atomic) as UDINT)!;
+        return new UDINT(converted, radix);
     }
 
     /// <inheritdoc />
@@ -79,18 +80,50 @@ public class UDINT : AtomicType, IEquatable<UDINT>, IComparable<UDINT>
     {
         if (ReferenceEquals(null, other)) return false;
         if (ReferenceEquals(this, other)) return true;
-        return Local == other.Local;
+        return Number == other.Number;
     }
 
     /// <inheritdoc />
-    public override bool Equals(object? obj) => Equals(obj as UDINT);
+    public override bool Equals(object? obj)
+    {
+        switch (obj)
+        {
+            case UDINT value:
+                return Number.Equals(value.Number);
+            case AtomicType atomic:
+                var converted = TypeDescriptor.GetConverter(GetType()).ConvertFrom(atomic) as UDINT;
+                return Number.Equals(converted?.Number);
+            default:
+                return false;
+        }
+    }
 
     /// <inheritdoc />
-    // ReSharper disable once NonReadonlyMemberInGetHashCode
-    // NOT sure how else to handle since it needs to be settable and used for equality.
-    // This would only be a problem if you created a hash table of atomic types.
-    // NOT sure anyone would need to do that.
-    public override int GetHashCode() => Local.GetHashCode();
+    public override int GetHashCode() => Number.GetHashCode();
+
+    /// <inheritdoc />
+    public int CompareTo(UDINT? other)
+    {
+        if (ReferenceEquals(this, other)) return 0;
+        return ReferenceEquals(null, other) ? 1 : Number.CompareTo(other.Number);
+    }
+    
+    /// <inheritdoc />
+    public int CompareTo(object obj)
+    {
+        switch (obj)
+        {
+            case null:
+                return 1;
+            case UDINT value:
+                return Number.CompareTo(value.Number);
+            case AtomicType atomic:
+                var converted = TypeDescriptor.GetConverter(GetType()).ConvertFrom(atomic) as UDINT;
+                return Number.CompareTo(converted?.Number);
+            default:
+                throw new ArgumentException($"Cannot compare object of type {obj.GetType()} with {GetType()}.");
+        }
+    }
 
     /// <summary>
     /// Determines whether the objects are equal.
@@ -108,13 +141,6 @@ public class UDINT : AtomicType, IEquatable<UDINT>, IComparable<UDINT>
     /// <returns>true if the objects are not equal, otherwise, false.</returns>
     public static bool operator !=(UDINT left, UDINT right) => !Equals(left, right);
 
-    /// <inheritdoc />
-    public int CompareTo(UDINT? other)
-    {
-        if (ReferenceEquals(this, other)) return 0;
-        return ReferenceEquals(null, other) ? 1 : Local.CompareTo(other.Local);
-    }
-
     #region Conversions
 
     /// <summary>
@@ -129,7 +155,7 @@ public class UDINT : AtomicType, IEquatable<UDINT>, IComparable<UDINT>
     /// </summary>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="uint"/> type value.</returns>
-    public static implicit operator uint(UDINT atomic) => atomic.Local;
+    public static implicit operator uint(UDINT atomic) => atomic.Number;
 
     /// <summary>
     /// Implicitly converts a <see cref="string"/> to a <see cref="UDINT"/> value.
@@ -150,63 +176,63 @@ public class UDINT : AtomicType, IEquatable<UDINT>, IComparable<UDINT>
     /// </summary>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="BOOL"/> type value.</returns>
-    public static explicit operator BOOL(UDINT atomic) => new(atomic.Local != 0);
+    public static explicit operator BOOL(UDINT atomic) => new(atomic.Number != 0);
 
     /// <summary>
     /// Converts the provided <see cref="UDINT"/> to a <see cref="SINT"/> value.
     /// </summary>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="SINT"/> type value.</returns>
-    public static explicit operator SINT(UDINT atomic) => new((sbyte)atomic.Local);
+    public static explicit operator SINT(UDINT atomic) => new((sbyte)atomic.Number);
 
     /// <summary>
     /// Converts the provided <see cref="UDINT"/> to a <see cref="USINT"/> value.
     /// </summary>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="USINT"/> type value.</returns>
-    public static explicit operator USINT(UDINT atomic) => new((byte)atomic.Local);
+    public static explicit operator USINT(UDINT atomic) => new((byte)atomic.Number);
 
     /// <summary>
     /// Converts the provided <see cref="UDINT"/> to a <see cref="INT"/> value.
     /// </summary>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="INT"/> type value.</returns>
-    public static explicit operator INT(UDINT atomic) => new((short)atomic.Local);
+    public static explicit operator INT(UDINT atomic) => new((short)atomic.Number);
 
     /// <summary>
     /// Converts the provided <see cref="UDINT"/> to a <see cref="UINT"/> value.
     /// </summary>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="UINT"/> type value.</returns>
-    public static explicit operator UINT(UDINT atomic) => new((ushort)atomic.Local);
+    public static explicit operator UINT(UDINT atomic) => new((ushort)atomic.Number);
 
     /// <summary>
     /// Converts the provided <see cref="UDINT"/> to a <see cref="DINT"/> value.
     /// </summary>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="DINT"/> type value.</returns>
-    public static explicit operator DINT(UDINT atomic) => new((int)atomic.Local);
+    public static explicit operator DINT(UDINT atomic) => new((int)atomic.Number);
 
     /// <summary>
     /// Converts the provided <see cref="UDINT"/> to a <see cref="LINT"/> value.
     /// </summary>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="LINT"/> type value.</returns>
-    public static implicit operator LINT(UDINT atomic) => new(atomic.Local);
+    public static implicit operator LINT(UDINT atomic) => new(atomic.Number);
 
     /// <summary>
     /// Converts the provided <see cref="UDINT"/> to a <see cref="ULINT"/> value.
     /// </summary>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="ULINT"/> type value.</returns>
-    public static implicit operator ULINT(UDINT atomic) => new(atomic.Local);
+    public static implicit operator ULINT(UDINT atomic) => new(atomic.Number);
 
     /// <summary>
     /// Converts the provided <see cref="UDINT"/> to a <see cref="REAL"/> value.
     /// </summary>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="REAL"/> type value.</returns>
-    public static implicit operator REAL(UDINT atomic) => new(atomic.Local);
+    public static implicit operator REAL(UDINT atomic) => new(atomic.Number);
 
     #endregion
 }

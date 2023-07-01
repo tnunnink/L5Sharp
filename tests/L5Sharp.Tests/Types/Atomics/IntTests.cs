@@ -3,6 +3,7 @@ using FluentAssertions;
 using L5Sharp.Enums;
 using L5Sharp.Types;
 using L5Sharp.Types.Atomics;
+using L5Sharp.Types.Predefined;
 
 namespace L5Sharp.Tests.Types.Atomics
 {
@@ -198,7 +199,7 @@ namespace L5Sharp.Tests.Types.Atomics
         }
         
         [Test]
-        public void Update_SameType_ShouldBeExpected()
+        public void Set_SameType_ShouldBeExpected()
         {
             var type = new INT();
 
@@ -208,7 +209,7 @@ namespace L5Sharp.Tests.Types.Atomics
         }
 
         [Test]
-        public void Update_SmallerType_ShouldBeExpected()
+        public void Set_SmallerType_ShouldBeExpected()
         {
             var type = new INT();
 
@@ -218,7 +219,7 @@ namespace L5Sharp.Tests.Types.Atomics
         }
 
         [Test]
-        public void Update_LargeValueSmallerType_ShouldBeExpected()
+        public void Set_LargeValueSmallerType_ShouldBeExpected()
         {
             var type = new INT(INT.MaxValue);
 
@@ -228,7 +229,7 @@ namespace L5Sharp.Tests.Types.Atomics
         }
 
         [Test]
-        public void Update_LargerTypeValidValue_ShouldBeExpected()
+        public void Set_LargerTypeValidValue_ShouldBeExpected()
         {
             var type = new INT();
 
@@ -238,7 +239,7 @@ namespace L5Sharp.Tests.Types.Atomics
         }
 
         [Test]
-        public void Update_LargerTypeLargerValue_ShouldHaveDataLoss()
+        public void Set_LargerTypeLargerValue_ShouldHaveDataLoss()
         {
             var type = new INT();
 
@@ -248,7 +249,7 @@ namespace L5Sharp.Tests.Types.Atomics
         }
 
         [Test]
-        public void Update_InvalidType_ShouldThrowArgumentException()
+        public void Set_InvalidType_ShouldThrowArgumentException()
         {
             var type = new INT();
 
@@ -425,7 +426,7 @@ namespace L5Sharp.Tests.Types.Atomics
         }
 
         [Test]
-        public void TypeEquals_AreEqual_ShouldBeTrue()
+        public void Equals_TypedAreEqual_ShouldBeTrue()
         {
             var first = new INT();
             var second = new INT();
@@ -436,7 +437,7 @@ namespace L5Sharp.Tests.Types.Atomics
         }
 
         [Test]
-        public void TypeEquals_AreSame_ShouldBeTrue()
+        public void Equals_TypedAreSame_ShouldBeTrue()
         {
             var first = new INT();
 
@@ -447,7 +448,7 @@ namespace L5Sharp.Tests.Types.Atomics
 
 
         [Test]
-        public void TypeEquals_Null_ShouldBeFalse()
+        public void Equals_TypedNull_ShouldBeFalse()
         {
             var first = new INT();
 
@@ -457,7 +458,7 @@ namespace L5Sharp.Tests.Types.Atomics
         }
 
         [Test]
-        public void ObjectEquals_AreEqual_ShouldBeTrue()
+        public void Equals_ObjectAreEqual_ShouldBeTrue()
         {
             var first = new INT();
             var second = new INT();
@@ -466,9 +467,20 @@ namespace L5Sharp.Tests.Types.Atomics
 
             result.Should().BeTrue();
         }
+        
+        [Test]
+        public void Equals_ObjectAreNotEqual_ShouldBeFalse()
+        {
+            var first = new INT(1);
+            var second = new INT(2);
+
+            var result = first.Equals((object)second);
+
+            result.Should().BeFalse();
+        }
 
         [Test]
-        public void ObjectEquals_AreSame_ShouldBeTrue()
+        public void Equals_ObjectAreSame_ShouldBeTrue()
         {
             var first = new INT();
 
@@ -478,11 +490,46 @@ namespace L5Sharp.Tests.Types.Atomics
         }
 
         [Test]
-        public void ObjectEquals_Null_ShouldBeFalse()
+        public void Equals_ObjectNull_ShouldBeFalse()
         {
             var first = new INT();
 
             var result = first.Equals((object)null);
+
+            result.Should().BeFalse();
+        }
+
+        [Test]
+        public void Equals_DifferentAtomicEqualValue_ShouldBeTrue()
+        {
+            var first = new INT(1);
+            var second = new DINT(1);
+
+            // ReSharper disable once SuspiciousTypeConversion.Global this method supports different atomic types.
+            var result = first.Equals((object)second);
+
+            result.Should().BeTrue();
+        }
+        
+        [Test]
+        public void Equals_DifferentAtomicNotEqualValue_ShouldBeFalse()
+        {
+            var first = new INT(1);
+            var second = new DINT(2);
+
+            // ReSharper disable once SuspiciousTypeConversion.Global this method supports different atomic types.
+            var result = first.Equals((object)second);
+
+            result.Should().BeFalse();
+        }
+        
+        [Test]
+        public void Equals_InvalidType_ShouldBeFalse()
+        {
+            var first = new INT(0);
+
+            // ReSharper disable once SuspiciousTypeConversion.Global this method supports different atomic types.
+            var result = first.Equals(new TIMER());
 
             result.Should().BeFalse();
         }
@@ -497,6 +544,17 @@ namespace L5Sharp.Tests.Types.Atomics
 
             result.Should().BeTrue();
         }
+        
+        [Test]
+        public void OperatorEquals_AreNotEqual_ShouldBeFalse()
+        {
+            var first = new INT(1);
+            var second = new INT(2);
+
+            var result = first == second;
+
+            result.Should().BeFalse();
+        }
 
         [Test]
         public void OperatorNotEquals_AreEqual_ShouldBeFalse()
@@ -508,6 +566,17 @@ namespace L5Sharp.Tests.Types.Atomics
 
             result.Should().BeFalse();
         }
+        
+        [Test]
+        public void OperatorNotEquals_AreNotEqual_ShouldBeTrue()
+        {
+            var first = new INT(1);
+            var second = new INT(2);
+
+            var result = first != second;
+
+            result.Should().BeTrue();
+        }
 
         [Test]
         public void GetHashCode_DefaultValue_ShouldBeHashOfName()
@@ -517,6 +586,17 @@ namespace L5Sharp.Tests.Types.Atomics
             var hash = type.GetHashCode();
 
             hash.Should().Be(type.GetHashCode());
+        }
+
+        [Test]
+        public void CompareTo_Equal_ShouldBeZero()
+        {
+            var first = new INT();
+            var second = new INT();
+
+            var compare = first.CompareTo(second);
+
+            compare.Should().Be(0);
         }
 
         [Test]
@@ -540,14 +620,186 @@ namespace L5Sharp.Tests.Types.Atomics
         }
 
         [Test]
-        public void CompareTo_ValidOther_ShouldBeZero()
+        public void CompareTo_ObjectEqual_ShouldBeZero()
         {
-            var first = new INT();
-            var second = new INT();
+            var a = new INT(123);
+            var b = new INT(123);
 
-            var compare = first.CompareTo(second);
+            var result = a.CompareTo((object)b);
 
-            compare.Should().Be(0);
+            result.Should().Be(0);
+        }
+
+        [Test]
+        public void CompareTo_ObjectAGreater_ShouldBeOne()
+        {
+            var a = new INT(2);
+            var b = new INT(1);
+
+            var result = a.CompareTo((object)b);
+
+            result.Should().Be(1);
+        }
+
+        [Test]
+        public void CompareTo_ObjectBGreater_ShouldBeNegativeOne()
+        {
+            var a = new INT(1);
+            var b = new INT(2);
+
+            var result = a.CompareTo((object)b);
+
+            result.Should().Be(-1);
+        }
+
+        [Test]
+        public void CompareTo_ObjectSame_ShouldBeZero()
+        {
+            var type = new INT(1);
+
+            var result = type.CompareTo((object)type);
+
+            result.Should().Be(0);
+        }
+
+        [Test]
+        public void CompareTo_ObjectNull_ShouldBeOne()
+        {
+            var type = new INT();
+
+            var result = type.CompareTo(((object)null)!);
+
+            result.Should().Be(1);
+        }
+
+        [Test]
+        public void CompareTo_ObjectDifferentAtomicWithEqualValue_ShouldBeZero()
+        {
+            var a = new INT(1);
+            var b = new DINT(1);
+
+            var result = a.CompareTo(b);
+
+            result.Should().Be(0);
+        }
+
+        [Test]
+        public void CompareTo_ObjectDifferentAtomicWithLesserValue_ShouldBeOne()
+        {
+            var a = new INT(1);
+            var b = new DINT(0);
+
+            var result = a.CompareTo(b);
+
+            result.Should().Be(1);
+        }
+
+        [Test]
+        public void CompareTo_ObjectDifferentAtomicWithGreaterValue_ShouldBeNegativeOne()
+        {
+            var a = new INT(1);
+            var b = new DINT(2);
+
+            var result = a.CompareTo(b);
+
+            result.Should().Be(-1);
+        }
+
+        [Test]
+        public void CompareTo_ObjectInvalidType_ShouldThrowArgumentException()
+        {
+            var a = new INT();
+            var b = new TIMER();
+
+            FluentActions.Invoking(() => a.CompareTo(b)).Should().Throw<ArgumentException>();
+        }
+
+        [Test]
+        public void OperatorGreaterThan_AGreaterThanB_ShouldBeTrue()
+        {
+            var a = new INT(2);
+            var b = new INT(1);
+
+            var result = a > b;
+            
+            result.Should().BeTrue();
+        }
+
+        [Test]
+        public void OperatorGreaterThan_ALessThanB_ShouldBeFalse()
+        {
+            var a = new INT(1);
+            var b = new INT(2);
+
+            var result = a > b;
+            
+            result.Should().BeFalse();
+        }
+
+        [Test]
+        public void OperatorLessThan_AGreaterThanB_ShouldBeFalse()
+        {
+            var a = new INT(2);
+            var b = new INT(1);
+
+            var result = a < b;
+            
+            result.Should().BeFalse();
+        }
+
+        [Test]
+        public void OperatorLessThan_ALessThanB_ShouldBeTrue()
+        {
+            var a = new INT(1);
+            var b = new INT(2);
+
+            var result = a < b;
+            
+            result.Should().BeTrue();
+        }
+        
+        [Test]
+        public void OperatorGreaterThanOrEqualTo_AGreaterThanB_ShouldBeTrue()
+        {
+            var a = new INT(2);
+            var b = new INT(1);
+
+            var result = a >= b;
+            
+            result.Should().BeTrue();
+        }
+
+        [Test]
+        public void OperatorGreaterThanOrEqualTo_ALessThanB_ShouldBeFalse()
+        {
+            var a = new INT(1);
+            var b = new INT(2);
+
+            var result = a >= b;
+            
+            result.Should().BeFalse();
+        }
+
+        [Test]
+        public void OperatorLessThanOrEqualTo_AGreaterThanB_ShouldBeFalse()
+        {
+            var a = new INT(2);
+            var b = new INT(1);
+
+            var result = a <= b;
+            
+            result.Should().BeFalse();
+        }
+
+        [Test]
+        public void OperatorLessThanOrEqualTo_ALessThanB_ShouldBeTrue()
+        {
+            var a = new INT(1);
+            var b = new INT(2);
+
+            var result = a <= b;
+            
+            result.Should().BeTrue();
         }
     }
 }

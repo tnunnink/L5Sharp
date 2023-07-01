@@ -90,7 +90,7 @@ namespace L5Sharp.Tests.Types.Atomics
         }
 
         [Test]
-        public void TypeEquals_AreEqual_ShouldBeTrue()
+        public void Equals_AreEqual_ShouldBeTrue()
         {
             var first = new SINT();
             var second = new SINT();
@@ -101,53 +101,22 @@ namespace L5Sharp.Tests.Types.Atomics
         }
         
         [Test]
-        public void TypeEquals_AreSame_ShouldBeTrue()
+        public void Equals_AreSame_ShouldBeTrue()
         {
             var first = new SINT();
 
+            // ReSharper disable once EqualExpressionComparison this is for testing purposes
             var result = first.Equals(first);
 
             result.Should().BeTrue();
         }
         
-        
         [Test]
-        public void TypeEquals_Null_ShouldBeFalse()
+        public void Equals_Null_ShouldBeFalse()
         {
             var first = new SINT();
 
             var result = first.Equals(null);
-
-            result.Should().BeFalse();
-        }
-        
-        [Test]
-        public void ObjectEquals_AreEqual_ShouldBeTrue()
-        {
-            var first = new SINT();
-            var second = new SINT();
-
-            var result = first.Equals((object)second);
-
-            result.Should().BeTrue();
-        }
-        
-        [Test]
-        public void ObjectEquals_AreSame_ShouldBeTrue()
-        {
-            var first = new SINT();
-
-            var result = first.Equals((object)first);
-
-            result.Should().BeTrue();
-        }
-        
-        [Test]
-        public void ObjectEquals_Null_ShouldBeFalse()
-        {
-            var first = new SINT();
-
-            var result = first.Equals((object)null);
 
             result.Should().BeFalse();
         }

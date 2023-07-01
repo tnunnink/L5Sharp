@@ -8,54 +8,73 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Elements/Logic.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Elements/ParameterConnection.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Enums/TriggerOperation.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Enums/TriggerTargetType.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Enums/TriggerType.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/ModuleTests.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Atomics/DintTests.Serialize_ValueAndRadix_ShouldBeValid.verified.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Atomics/LintTests.Serialize_Default_ShouldBeValid.verified.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Atomics/LintTests.Serialize_ValueAndRadix_ShouldBeValid.verified.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Atomics/LintTests.Serialize_Value_ShouldBeValid.verified.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Atomics/UIntTests.Serialize_Default_ShouldBeValid.verified.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Atomics/UIntTests.Serialize_ValueAndRadix_ShouldBeValid.verified.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Atomics/UIntTests.Serialize_Value_ShouldBeValid.verified.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Components/AddOnInstruction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Components/AddOnInstruction.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Components/DataType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Components/DataType.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Components/DataTypeMember.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Components/DataTypeMember.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Components/LogixTask.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Components/LogixTask.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Components/Module.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Components/Module.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Components/Parameter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Components/Parameter.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Components/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Components/Program.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Components/Routine.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Components/Routine.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Components/Tag.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Components/Tag.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Components/Trend.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Components/Trend.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Components/WatchList.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Components/WatchList.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Elements/Line.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Elements/Line.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Elements/ModuleConnection.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Elements/ModuleConnection.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Elements/Rung.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Elements/Rung.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Elements/WatchTag.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Elements/WatchTag.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Enums/DataFormat.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Enums/DataFormat.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Enums/ExternalAccess.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Enums/ExternalAccess.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Enums/LogixEnum.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LogixEnum.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Enums/RoutineType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Enums/RoutineType.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Enums/Scope.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Enums/Scope.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Enums/TransmissionType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Enums/TransmissionType.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ILogixCode.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ILogixScoped.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ILogixSerializable.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ILogixSerializable.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5X.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5X.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5XName.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5XName.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5XParser.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5XParser.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LogixComponent.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LogixComponent.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LogixContainer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LogixContainer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LogixContent.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LogixContent.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LogixElement.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LogixElement.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LogixExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LogixExtensions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LogixSerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LogixSerializer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/Bus.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.sln.DotSettings" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.sln.DotSettings" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/LogixType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LogixType.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/RoutineTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/RoutineTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Enums/ExternalAccessTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Enums/ExternalAccessTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Examples.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Examples.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Extensions/EnumerableExtensionTests.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Serialization/AddOnInstructionSerializer.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Serialization/Data/AlarmAnalogSerializer.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Serialization/Data/AlarmDataSerializer.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Serialization/Data/AlarmDigitalSerializer.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Serialization/Data/ArrayMemberSerializer.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Serialization/Data/ArraySerializer.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Serialization/Data/DataValueMemberSerializer.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Serialization/Data/DataValueSerializer.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Serialization/Data/DecoratedDataSerializer.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Serialization/Data/FormattedDataSerializer.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Serialization/Data/MemberSerializer.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Serialization/Data/MessageDataSerializer.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Serialization/Data/StringDataSerializer.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Serialization/Data/StringMemberSerializer.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Serialization/Data/StringStructureSerializer.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Serialization/Data/StructureMemberSerializer.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Serialization/Data/StructureSerializer.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Serialization/Data/TagDataSerializer.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Serialization/ILogixSerializer.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Serialization/L5XSerializer.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Serialization/LogixSerializerAttribute.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Serialization/ModuleConnectionSerializer.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Serialization/ModuleSerializer.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Serialization/ParameterSerializer.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Types/Atomic.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Types/Atomic.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Types/AtomicType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Types/AtomicType.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Types/Atomics/BOOL.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Types/Atomics/BOOL.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Types/Atomics/Converters/AtomicConverter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Types/Atomics/Converters/AtomicConverter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Types/Atomics/Converters/BoolConverter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Types/Atomics/Converters/BoolConverter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Types/Atomics/Converters/DintConverter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Types/Atomics/Converters/DintConverter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Types/Atomics/Converters/RealConverter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Types/Atomics/Converters/RealConverter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Types/Atomics/Converters/UIntConverter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Types/Atomics/Converters/UIntConverter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Types/Atomics/DINT.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Types/Atomics/DINT.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Types/Atomics/INT.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Types/Atomics/INT.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Types/Atomics/LINT.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Types/Atomics/LINT.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Types/Atomics/REAL.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Types/Atomics/REAL.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Types/Atomics/SINT.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Types/Atomics/SINT.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Types/Atomics/UDINT.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Types/Atomics/UDINT.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Types/Atomics/UINT.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Types/Atomics/UINT.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Types/Atomics/ULINT.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Types/Atomics/ULINT.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Types/Atomics/USINT.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Types/Atomics/USINT.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Types/ComplexType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Types/ComplexType.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Types/NullType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Types/NullType.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/L5Sharp.Tests.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/L5Sharp.Tests.csproj" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/ProofTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/ProofTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/AtomicTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/AtomicTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Atomics/DintTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Atomics/DintTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Atomics/IntTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Atomics/IntTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Atomics/LintTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Atomics/LintTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Atomics/SintTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Atomics/SintTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Atomics/UIntTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Atomics/UIntTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Converters/RealConverterTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Converters/RealConverterTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/MemberTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/MemberTests.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../tests/Samples/Test.ACD" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/Samples/Test.ACD" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/Samples/Test.L5X" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/Samples/Test.L5X" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -103,15 +122,20 @@
     <setting file="file://$USER_HOME$/AppData/Local/Symbols/src/nunit/nunit/c933a883ea25263ec575a654dae69fa38000edd9/src/NUnitFramework/framework/Internal/Reflect.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/44cc6e8cd0e0487d89729775066aa4a5669a8/76/822102bd/Enumerable.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/56c1fbaaadf8426a91db87b46e8c8eaf50b78/dd/726a3a95/IList`1.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/56c1fbaaadf8426a91db87b46e8c8eaf50b78/ed/0e2cd6c3/Object.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/5980a88ae5314d4b9811fcde1734d236568bc0/8d/4f6b8e2c/InternalAssemblyBuilder.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/79c168b1be96433fb0378c8c43bf3523a378/ce/374d44d6/BitArray.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/b5d81ceb207846f3bb1234359c3cfc1691cf78/f1/f88377ef/IEquatable`1.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/3d01f114455568af59359da57dd47792bc75178c3d8c14b79b7536f79efbc2d/List.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/5bb63cc5ffb02289adfaf4c9c2be739b845eb7851b17965e1c60a9b3bb69e9/BitArray.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/62e9c91f8bc01417a6dc445e4aa3c19a5d1e746c8b4fdf41bba32df448965e9/Zip.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/697f4bc5cb7e4c72d18e93d85a57cd49fb8e9ad24c1940a45cc0879b2d11d/TypeConverter.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/8217dafc5f4dd893567d42241b3581aed5921778b21118d38b240accc3fa9f/Array.CoreCLR.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/833e9913cfea894121d36df3dbe63f69583989396ff52191a29aa53a4dd49941/Cast.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/895a9e6355543967629b3ee511eaec6b6e47f39778bac34ae953c613534d7488/Count.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/906d7cfe7139647e7fcafb24c420abecae95b3e4e75b63dd63c4cf38d6e3/AssertionExtensions.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/9dd6c47f428763683410ba6fa7f2df328cfa1e3d1ddaedb4e1c497abd15cf/CastHelpers.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/a9b35bc5d5da43a49af8d74dac7ab37ccc1bb654cb7dfe8f9a21501181ed9b/CastHelpers.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/b5d81ceb207846f3bb1234359c3cfc1691cf78/_7baea/ICollection.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/c625622e213fe87ffe77796b96b18d65375f6ae9ca9caae6940d27142bc625f/LateBoundTestFramework.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/ca4271bab3e53b61f244a7ba081b39413d465de6262bbffb78775592f4228f5/Reflect.cs" root0="SKIP_HIGHLIGHTING" />
@@ -120,11 +144,8 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/d056b4e3b34cd15e21dec611d5b5bbaf85e1f15b445f4e6b3e4dc6634d649042/WorkItem.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/d0c86751a71b371859eca08a2bf18eb15477d0bb3ddf2fdbff213ffc3121e/XElement.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/df9f21c9f518c36eff2e92c1d9ca5eeea502dee722c9bab81dcc5ce05bbd33/XContainer.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Core/Bus.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Enums/Instruction.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/LogixContent.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Serialization/Data/ArraySerializer.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/Types/ArrayType.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Types/ArrayType.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/obj/Debug/netstandard2.1/.NETStandard,Version=v2.1.AssemblyAttributes.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../tests/L5Sharp.Tests/Serialization/AddOnInstructionSerializerTests.cs" root0="FORCE_HIGHLIGHTING" />
@@ -172,7 +193,7 @@
     ]
   }
 }</component>
-  <component name="RunManager" selected="8b1402ab-2b7b-4c79-ba86-e6e355dcb783" />
+  <component name="RunManager" selected="c664ddf8-bceb-4b00-8d59-c0f709bdefb5" />
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -373,7 +394,12 @@
       <workItem from="1686864535195" duration="20780000" />
       <workItem from="1687290735372" duration="50208000" />
       <workItem from="1687455447819" duration="5453000" />
-      <workItem from="1687468273536" duration="30235000" />
+      <workItem from="1687468273536" duration="45316000" />
+      <workItem from="1687811966570" duration="856000" />
+      <workItem from="1687975253884" duration="778000" />
+      <workItem from="1687986301123" duration="6676000" />
+      <workItem from="1688142803782" duration="13112000" />
+      <workItem from="1688174563639" duration="328000" />
     </task>
     <task id="LOCAL-00199" summary="cleared warnings. preping to merge changes.">
       <created>1677621948966</created>
@@ -718,7 +744,7 @@
       <option name="project" value="LOCAL" />
       <updated>1687451515386</updated>
     </task>
-    <option name="localTasksCounter" value="249" />
+    <option name="localTasksCounter" value="250" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -728,38 +754,30 @@
     <option name="coveragePercentColumnWidth" value="45" />
     <option name="sortOrder" value="DESCENDING" />
     <option name="sortedColumn" value="1" />
-    <option name="symbolColumnWidth" value="312" />
+    <option name="symbolColumnWidth" value="389" />
     <coverage-tree-state>
       <expand>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 13% 11485/13172" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 11% 12674/14291" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 13% 11485/13172" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 14% 4681/5461" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 11% 12674/14291" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 10% 5201/5803" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 13% 11485/13172" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 14% 4681/5461" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="(0.11.0.0, .NETStandard,Version=v2.1) 14% 4681/5461" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 11% 12674/14291" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 10% 5201/5803" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="(0.11.0.0, .NETStandard,Version=v2.1) 10% 5201/5803" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 13% 11485/13172" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 14% 4681/5461" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="(0.11.0.0, .NETStandard,Version=v2.1) 14% 4681/5461" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 14% 4681/5461" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-        </path>
-        <path>
-          <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 13% 11485/13172" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 14% 4681/5461" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="(0.11.0.0, .NETStandard,Version=v2.1) 14% 4681/5461" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 14% 4681/5461" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="Types 18% 2027/2462" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 11% 12674/14291" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 10% 5201/5803" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="(0.11.0.0, .NETStandard,Version=v2.1) 10% 5201/5803" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 10% 5201/5803" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
       </expand>
       <select />
@@ -785,7 +803,6 @@
       <path value="$PROJECT_DIR$/../.." />
     </ignored-roots>
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="Updated ILogixTag.cs to include public Base and Parent properties to allow pass through description to work and to make it API easier or capable of navigating back up through the hierarchical tree." />
     <MESSAGE value="Added ILogixScoped.cs to tag to see if this helps with filtering and identifying tags. Also added program and routine properties to rung for the same reason. Updated serializers." />
     <MESSAGE value="Updated version info" />
     <MESSAGE value="Made ILogixTag.cs not dependent on implementations of Tag and TagMember" />
@@ -810,23 +827,37 @@
     <MESSAGE value="still trying to get logix data stuff figure out in a satisfying way" />
     <MESSAGE value="Finishing updates to LogixType and tag. Now just need to touch up StringType.cs and do testing to make sure everything is covered" />
     <MESSAGE value="Fixed issues with string type" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fixed issues with string type" />
+    <MESSAGE value="Lots of component updates and base functionality updates. Getting closer to finish" />
+    <option name="LAST_COMMIT_MESSAGE" value="Lots of component updates and base functionality updates. Getting closer to finish" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/RoutineTests.cs</url>
-          <line>52</line>
-          <properties documentPath="C:\Users\tnunnink\Documents\GitHub\L5Sharp\tests\L5Sharp.Tests\Components\RoutineTests.cs" initialLine="52" containingFunctionPresentation="Method 'New_RungCollection_ShouldHaveExpectedCount'">
+          <url>file://$PROJECT_DIR$/LogixType.cs</url>
+          <line>116</line>
+          <properties documentPath="C:\Users\tnunnink\Documents\GitHub\L5Sharp\src\LogixType.cs" initialLine="116" containingFunctionPresentation="">
             <startOffsets>
-              <option value="1342" />
+              <option value="5338" />
             </startOffsets>
             <endOffsets>
-              <option value="1382" />
+              <option value="5357" />
             </endOffsets>
           </properties>
-          <option name="timeStamp" value="1" />
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Types/AtomicType.cs</url>
+          <line>126</line>
+          <properties documentPath="C:\Users\tnunnink\Documents\GitHub\L5Sharp\src\Types\AtomicType.cs" initialLine="126" containingFunctionPresentation="Method 'Equals'">
+            <startOffsets>
+              <option value="4791" />
+            </startOffsets>
+            <endOffsets>
+              <option value="4822" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="3" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

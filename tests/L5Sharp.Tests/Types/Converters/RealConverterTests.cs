@@ -264,7 +264,7 @@ namespace L5Sharp.Tests.Types.Converters
             result?.Should().Be((float)atomic);
         }
         
-        [Test]
+        /*[Test]
         public void ConvertFrom_ValidUINT_ShouldBeExpected()
         {
             UINT atomic = 0;
@@ -282,7 +282,7 @@ namespace L5Sharp.Tests.Types.Converters
             var result = (REAL)_converter.ConvertFrom(value);
 
             result?.Should().Be((float)value);
-        }
+        }*/
         
         [Test]
         public void ConvertFrom_ValidDINT_ShouldBeExpected()

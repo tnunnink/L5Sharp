@@ -96,6 +96,90 @@ public abstract class LogixType : ILogixSerializable
     /// </remarks>
     public abstract void Set(LogixType type);
 
+    /// <inheritdoc />
+    public override bool Equals(object obj)
+    {
+        if (ReferenceEquals(null, obj)) return false;
+        if (ReferenceEquals(this, obj)) return true;
+        if (obj is not LogixType type) return false;
+        return Name == type.Name;
+    }
+
+    /// <inheritdoc />
+    public override int GetHashCode() => Name.GetHashCode();
+
+    /// <summary>
+    /// Determines whether the <see cref="LogixType"/> values are equal.
+    /// </summary>
+    /// <param name="left">An logix type to compare.</param>
+    /// <param name="right">An logix type to compare.</param>
+    /// <returns><c>true</c> if the objects are equal, otherwise, <c>false</c>.</returns>
+    public static bool operator ==(LogixType left, LogixType right) => Equals(left, right);
+
+    /// <summary>
+    /// Determines whether the <see cref="LogixType"/> values are not equal.
+    /// </summary>
+    /// <param name="left">An logix type to compare.</param>
+    /// <param name="right">An logix type to compare.</param>
+    /// <returns><c>true</c> if the objects are not equal, otherwise, <c>false</c>.</returns>
+    public static bool operator !=(LogixType left, LogixType right) => !Equals(left, right);
+
+    /// <summary>
+    /// Compares two objects and determines if a is greater than b.
+    /// </summary>
+    /// <param name="a">An logix type to compare.</param>
+    /// <param name="b">An logix type to compare.</param>
+    /// <returns><c>true</c> if <c>a</c> is greater than <c>b</c>, otherwise, <c>false</c>.</returns>
+    public static bool operator >(LogixType a, LogixType b)
+    {
+        if (a is not IComparable comparable)
+            throw new ArgumentException($"Type {a.GetType()} does not implement {typeof(IComparable)}.");
+
+        return comparable.CompareTo(b) > 0;
+    }
+
+    /// <summary>
+    /// Compares two objects and determines if a is less than b.
+    /// </summary>
+    /// <param name="a">An logix type to compare.</param>
+    /// <param name="b">An logix type to compare.</param>
+    /// <returns><c>true</c> if <c>a</c> is less than <c>b</c>, otherwise, <c>false</c>.</returns>
+    public static bool operator <(LogixType a, LogixType b)
+    {
+        if (a is not IComparable comparable)
+            throw new ArgumentException($"Type {a.GetType()} does not implement {typeof(IComparable)}.");
+
+        return comparable.CompareTo(b) < 0;
+    }
+
+    /// <summary>
+    /// Compares two objects and determines if a is greater or equal to than b.
+    /// </summary>
+    /// <param name="a">An logix type to compare.</param>
+    /// <param name="b">An logix type to compare.</param>
+    /// <returns><c>true</c> if <c>a</c> is greater than or equal to <c>b</c>, otherwise, <c>false</c>.</returns>
+    public static bool operator >=(LogixType a, LogixType b)
+    {
+        if (a is not IComparable comparable)
+            throw new ArgumentException($"Type {a.GetType()} does not implement {typeof(IComparable)}.");
+
+        return comparable.CompareTo(b) >= 0;
+    }
+
+    /// <summary>
+    /// Compares two objects and determines if a is less than or equal to b.
+    /// </summary>
+    /// <param name="a">An logix type to compare.</param>
+    /// <param name="b">An logix type to compare.</param>
+    /// <returns><c>true</c> if <c>a</c> is less than or equal to <c>b</c>, otherwise, <c>false</c>.</returns>
+    public static bool operator <=(LogixType a, LogixType b)
+    {
+        if (a is not IComparable comparable)
+            throw new ArgumentException($"Type {a.GetType()} does not implement {typeof(IComparable)}.");
+
+        return comparable.CompareTo(b) <= 0;
+    }
+
     /// <summary>
     /// Converts the provided <see cref="bool"/> to a <see cref="LogixType"/>.
     /// </summary>
@@ -200,5 +284,5 @@ public abstract class LogixType : ILogixSerializable
     /// <param name="value">The value to convert.</param>
     /// <returns>A <see cref="LogixType"/> representing the converted value.</returns>
     public static implicit operator LogixType(Dictionary<string, LogixType> value) =>
-        new ComplexType(string.Empty, value.Select(m => new Member(m.Key, m.Value)));
+        new ComplexType(nameof(ComplexType), value.Select(m => new Member(m.Key, m.Value)));
 }

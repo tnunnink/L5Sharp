@@ -1,10 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net5.0</TargetFramework>
         <IsPackable>false</IsPackable>
         <ImplicitUsings>true</ImplicitUsings>
         <LangVersion>10</LangVersion>
+        <TargetFramework>net7.0</TargetFramework>
     </PropertyGroup>
 
     <ItemGroup>
@@ -102,6 +102,15 @@
       </None>
       <None Update="Components\TaskTests.Serialize_Default_ShouldBeVerified.verified.txt">
         <DependentUpon>TaskTests.cs</DependentUpon>
+      </None>
+      <None Update="Types\Atomics\LintTests.Serialize_Default_ShouldBeValid.verified.txt">
+        <DependentUpon>LintTests.cs</DependentUpon>
+      </None>
+      <None Update="Types\Atomics\DintTests.Serialize_ValueAndRadix_ShouldBeValid.verified.txt">
+        <DependentUpon>DintTests.cs</DependentUpon>
+      </None>
+      <None Update="Types\Atomics\UIntTests.Serialize_ValueAndRadix_ShouldBeValid.verified.txt">
+        <DependentUpon>UIntTests.cs</DependentUpon>
       </None>
     </ItemGroup>
 

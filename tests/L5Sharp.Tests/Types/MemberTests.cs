@@ -54,11 +54,11 @@ public class MemberTests
     {
         var member = new Member("Test", new TIMER { PRE = 123 });
 
-        var dataType = member.DataType;
+        var dataType = member.DataType.To<TIMER>();
 
         dataType.Should().NotBeNull();
         dataType.Should().BeOfType<TIMER>();
-        dataType.As<TIMER>()?.PRE.Should().Be(123);
+        dataType.PRE.Should().Be(123);
     }
 
     [Test]
@@ -66,11 +66,11 @@ public class MemberTests
     {
         var member = new Member("Test", "This is a test");
 
-        var dataType = member.DataType;
+        var dataType = member.DataType.To<STRING>();
 
         dataType.Should().NotBeNull();
         dataType.Should().BeOfType<STRING>();
-        dataType.As<STRING>()?.Should<STRING>().Be("This is a test");
+        dataType.Should<STRING>().Be("This is a test");
     }
 
     [Test]

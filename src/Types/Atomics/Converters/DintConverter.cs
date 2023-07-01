@@ -17,6 +17,7 @@ public class DintConverter : AtomicConverter
         {
             return value switch
             {
+                bool v => new DINT(v ? 1 : 0),
                 sbyte v => new DINT(v),
                 byte v => new DINT(v),
                 short v => new DINT(v),
@@ -26,6 +27,7 @@ public class DintConverter : AtomicConverter
                 long v => new DINT((int)v),
                 ulong v => new DINT((int)v),
                 float v => new DINT((int)v),
+                BOOL v => new DINT(v ? 1 : 0),
                 SINT v => new DINT((sbyte)v),
                 USINT v => new DINT(v),
                 INT v => new DINT((short)v),

@@ -44,7 +44,7 @@ public static class Atomic
     public static AtomicType Parse(string name, string value)
     {
         if (!Atomics.ContainsKey(name))
-            throw new InvalidOperationException($"The type name '{name}' is not a valid {typeof(AtomicType)}");
+            throw new ArgumentException($"The type name '{name}' is not a valid {typeof(AtomicType)}");
 
         return Atomics[name].Invoke(value);
     }

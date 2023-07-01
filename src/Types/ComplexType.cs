@@ -73,7 +73,7 @@ public class ComplexType : StructureType
     /// 
     /// </summary>
     /// <param name="index"></param>
-    public void RemoveAt(int index) => RemoveMember(index);
+    public void Remove(int index) => RemoveMember(index);
 
     /// <summary>
     /// 

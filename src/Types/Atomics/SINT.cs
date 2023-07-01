@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.ComponentModel;
 using L5Sharp.Enums;
 using L5Sharp.Types.Atomics.Converters;
@@ -10,9 +9,9 @@ namespace L5Sharp.Types.Atomics;
 /// Represents a <b>SINT</b> Logix atomic data type, or a type analogous to <see cref="sbyte"/>.
 /// </summary>
 [TypeConverter(typeof(SintConverter))]
-public sealed class SINT : AtomicType, IEquatable<SINT>, IComparable<SINT>
+public sealed class SINT : AtomicType, IComparable
 {
-    private sbyte Local => (sbyte)ToBytes()[0];
+    private sbyte Number => (sbyte)ToBytes()[0];
 
     /// <summary>
     /// Creates a new default <see cref="SINT"/> type.
@@ -70,51 +69,46 @@ public sealed class SINT : AtomicType, IEquatable<SINT>, IComparable<SINT>
             return new SINT(result);
 
         var radix = Radix.Infer(value);
-        var atomic = (SINT)radix.Parse(value);
-        return new SINT(atomic, radix);
-    }
-
-    /// <inheritdoc />
-    public bool Equals(SINT? other)
-    {
-        if (ReferenceEquals(null, other)) return false;
-        if (ReferenceEquals(this, other)) return true;
-        return Local == other.Local;
-    }
-
-    /// <inheritdoc />
-    public override bool Equals(object? obj) => Equals(obj as SINT);
-
-    /// <inheritdoc />
-    // ReSharper disable once NonReadonlyMemberInGetHashCode
-    // NOT sure how else to handle since it needs to be settable and used for equality.
-    // This would only be a problem if you created a hash table of atomic types.
-    // NOT sure anyone would need to do that.
-    public override int GetHashCode() => Local.GetHashCode();
-
-    /// <summary>
-    /// Determines whether the objects are equal.
-    /// </summary>
-    /// <param name="left">An object to compare.</param>
-    /// <param name="right">An object to compare.</param>
-    /// <returns>true if the objects are equal, otherwise, false.</returns>
-    public static bool operator ==(SINT left, SINT right) => Equals(left, right);
-
-    /// <summary>
-    /// Determines whether the objects are not equal.
-    /// </summary>
-    /// <param name="left">An object to compare.</param>
-    /// <param name="right">An object to compare.</param>
-    /// <returns>true if the objects are not equal, otherwise, false.</returns>
-    public static bool operator !=(SINT left, SINT right) => !Equals(left, right);
-
-    /// <inheritdoc />
-    public int CompareTo(SINT? other)
-    {
-        if (ReferenceEquals(this, other)) return 0;
-        return ReferenceEquals(null, other) ? 1 : Local.CompareTo(other.Local);
+        var atomic = radix.Parse(value);
+        var converted = (TypeDescriptor.GetConverter(typeof(SINT)).ConvertFrom(atomic) as SINT)!;
+        return new SINT(converted, radix);
     }
     
+    /*/// <inheritdoc />
+    public override bool Equals(object? obj)
+    {
+        switch (obj)
+        {
+            case SINT value:
+                return Number.Equals(value.Number);
+            case AtomicType atomic:
+                var converted = TypeDescriptor.GetConverter(GetType()).ConvertFrom(atomic) as SINT;
+                return Number.Equals(converted?.Number);
+            default:
+                return false;
+        }
+    }*/
+
+    /// <inheritdoc />
+    public int CompareTo(object? obj)
+    {
+        switch (obj)
+        {
+            case null:
+                return 1;
+            case SINT value:
+                return Number.CompareTo(value.Number);
+            case AtomicType atomic:
+                var converted = TypeDescriptor.GetConverter(GetType()).ConvertFrom(atomic) as SINT;
+                return Number.CompareTo(converted?.Number);
+            default:
+                throw new ArgumentException($"Cannot compare object of type {obj.GetType()} with {GetType()}.");
+        }
+    }
+
+    /// <inheritdoc />
+    public override int GetHashCode() => Number.GetHashCode();
+
     #region Conversions
 
     /// <summary>
@@ -129,7 +123,7 @@ public sealed class SINT : AtomicType, IEquatable<SINT>, IComparable<SINT>
     /// </summary>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="sbyte"/> type value.</returns>
-    public static implicit operator sbyte(SINT atomic) => atomic.Local;
+    public static implicit operator sbyte(SINT atomic) => atomic.Number;
 
     /// <summary>
     /// Implicitly converts a <see cref="string"/> to a <see cref="SINT"/> value.
@@ -150,63 +144,63 @@ public sealed class SINT : AtomicType, IEquatable<SINT>, IComparable<SINT>
     /// </summary>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="BOOL"/> type value.</returns>
-    public static explicit operator BOOL(SINT atomic) => new(atomic.Local != 0);
+    public static explicit operator BOOL(SINT atomic) => new(atomic.Number != 0);
 
     /// <summary>
     /// Converts the provided <see cref="SINT"/> to a <see cref="USINT"/> value.
     /// </summary>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="USINT"/> type value.</returns>
-    public static explicit operator USINT(SINT atomic) => new((byte)atomic.Local);
+    public static explicit operator USINT(SINT atomic) => new((byte)atomic.Number);
 
     /// <summary>
     /// Converts the provided <see cref="SINT"/> to a <see cref="INT"/> value.
     /// </summary>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="INT"/> type value.</returns>
-    public static implicit operator INT(SINT atomic) => new(atomic.Local);
+    public static implicit operator INT(SINT atomic) => new(atomic.Number);
 
     /// <summary>
     /// Converts the provided <see cref="SINT"/> to a <see cref="UINT"/> value.
     /// </summary>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="UINT"/> type value.</returns>
-    public static explicit operator UINT(SINT atomic) => new((ushort)atomic.Local);
+    public static explicit operator UINT(SINT atomic) => new((ushort)atomic.Number);
 
     /// <summary>
     /// Converts the provided <see cref="SINT"/> to a <see cref="DINT"/> value.
     /// </summary>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="DINT"/> type value.</returns>
-    public static implicit operator DINT(SINT atomic) => new(atomic.Local);
+    public static implicit operator DINT(SINT atomic) => new(atomic.Number);
 
     /// <summary>
     /// Converts the provided <see cref="SINT"/> to a <see cref="UDINT"/> value.
     /// </summary>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="UDINT"/> type value.</returns>
-    public static explicit operator UDINT(SINT atomic) => new((uint)atomic.Local);
+    public static explicit operator UDINT(SINT atomic) => new((uint)atomic.Number);
 
     /// <summary>
     /// Converts the provided <see cref="SINT"/> to a <see cref="LINT"/> value.
     /// </summary>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="LINT"/> type value.</returns>
-    public static implicit operator LINT(SINT atomic) => new(atomic.Local);
+    public static implicit operator LINT(SINT atomic) => new(atomic.Number);
 
     /// <summary>
     /// Converts the provided <see cref="SINT"/> to a <see cref="ULINT"/> value.
     /// </summary>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="ULINT"/> type value.</returns>
-    public static explicit operator ULINT(SINT atomic) => new((ulong)atomic.Local);
+    public static explicit operator ULINT(SINT atomic) => new((ulong)atomic.Number);
 
     /// <summary>
     /// Converts the provided <see cref="SINT"/> to a <see cref="REAL"/> value.
     /// </summary>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="REAL"/> type value.</returns>
-    public static implicit operator REAL(SINT atomic) => new(atomic.Local);
+    public static implicit operator REAL(SINT atomic) => new(atomic.Number);
 
     #endregion
 }

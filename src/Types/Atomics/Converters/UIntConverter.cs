@@ -17,6 +17,7 @@ public class UIntConverter : AtomicConverter
         {
             return value switch
             {
+                bool v => v ? new USINT(1) : new USINT(),
                 sbyte v => new UINT((ushort)v),
                 byte v => new UINT(v),
                 short v => new UINT((ushort)v),
@@ -26,31 +27,29 @@ public class UIntConverter : AtomicConverter
                 long v => new UINT((ushort)v),
                 ulong v => new UINT((ushort)v),
                 float v => new UINT((ushort)v),
-                SINT v => new UINT((ushort)(sbyte)v),
-                USINT v => new UINT(v),
-                INT v => new UINT((ushort)(short)v),
+                BOOL v => v,
+                SINT v => (UINT)v,
+                USINT v => v,
+                INT v => (UINT)v,
                 UINT v => v,
-                DINT v => new UINT((ushort)v),
-                UDINT v => new UINT((ushort)v),
-                LINT v => new UINT((ushort)v),
-                ULINT v => new UINT((ushort)v),
-                REAL v => new UINT((ushort)v),
-                string v => ushort.TryParse(v, out var result)
-                    ? new UINT(result)
-                    : (UINT)ConvertFrom(Radix.Infer(v).Parse(v))!,
-                _ => base.ConvertFrom(context, culture, value)
-                     ?? throw new NotSupportedException(
-                         $"The provided value of type {value.GetType()} is not supported for conversion.")
+                DINT v => (UINT)v,
+                UDINT v => (UINT)v,
+                LINT v => (UINT)v,
+                ULINT v => (UINT)v,
+                REAL v => (UINT)v,
+                string v => (UINT)v,
+                _ => throw new NotSupportedException(
+                    $"The provided value type {value.GetType()} is not supported for conversion to {typeof(UINT)}.")
             };
         }
     }
-        
+
     /// <inheritdoc />
     public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value,
         Type destinationType)
     {
         if (value is not UINT atomic)
-            throw new InvalidOperationException($"Value must be of type {typeof(UINT)}.");
+            throw new ArgumentException($"Value must be of type {typeof(UINT)}.");
 
         var type = (ushort)atomic;
 

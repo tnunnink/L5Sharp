@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
+using L5Sharp.Enums;
 
 namespace L5Sharp.Types;
 
@@ -26,11 +27,10 @@ public sealed class NullType : LogixType
     public override IEnumerable<Member> Members => Enumerable.Empty<Member>();
 
     /// <inheritdoc />
-    public override void Set(LogixType type) =>
-        throw new NotSupportedException($"Updating {GetType()} data is not supported.");
+    public override void Set(LogixType type) => throw new ArgumentNullException($"Can not set {GetType()} data.");
 
     /// <inheritdoc />
-    public override XElement Serialize() => new(L5XName.Data);
+    public override XElement Serialize() => new(L5XName.Data, new XAttribute(L5XName.Format, DataFormat.Decorated));
 
     /// <summary>
     /// Gets the singleton instance of the <see cref="NullType"/> logix type.

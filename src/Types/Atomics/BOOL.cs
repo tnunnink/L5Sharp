@@ -12,9 +12,9 @@ namespace L5Sharp.Types.Atomics;
 /// to wrap the DataValue or DataValueMember data for the L5X tag data structure.
 /// </summary>
 [TypeConverter(typeof(BoolConverter))]
-public sealed class BOOL : AtomicType, IEquatable<BOOL>, IComparable<BOOL>
+public sealed class BOOL : AtomicType, IEquatable<BOOL>, IComparable<BOOL>, IComparable
 {
-    private bool Value => BitConverter.ToBoolean(ToBytes());
+    private bool Bit => BitConverter.ToBoolean(ToBytes());
 
     /// <summary>
     /// Creates a new default <see cref="BOOL"/> type.
@@ -72,13 +72,8 @@ public sealed class BOOL : AtomicType, IEquatable<BOOL>, IComparable<BOOL>
             default:
                 var radix = Radix.Infer(value);
                 var atomic = radix.Parse(value);
-                return atomic switch
-                {
-                    BOOL v => v,
-                    SINT v => new BOOL(v != 0, radix),
-                    _ => throw new ArgumentOutOfRangeException(nameof(atomic),
-                        $"The parsed atomic type is not convertable to a {typeof(BOOL)}.")
-                };
+                var converted = (TypeDescriptor.GetConverter(typeof(BOOL)).ConvertFrom(atomic) as BOOL)!;
+                return new BOOL(converted, radix);
         }
     }
 
@@ -87,14 +82,28 @@ public sealed class BOOL : AtomicType, IEquatable<BOOL>, IComparable<BOOL>
     {
         if (ReferenceEquals(null, other)) return false;
         if (ReferenceEquals(this, other)) return true;
-        return Value == other.Value;
+        return Bit == other.Bit;
     }
 
     /// <inheritdoc />
-    public override bool Equals(object? obj) => Equals(obj as BOOL);
+    public override bool Equals(object? obj)
+    { 
+        switch (obj)
+        {
+            case null:
+                return false;
+            case BOOL value:
+                return Bit.Equals(value.Bit);
+            case AtomicType atomic:
+                var converted = TypeDescriptor.GetConverter(GetType()).ConvertFrom(atomic) as BOOL;
+                return Equals(converted?.Bit);
+            default:
+                throw new ArgumentException($"Cannot compare object of type {obj.GetType()} with {GetType()}.");
+        }
+    }
 
     /// <inheritdoc />
-    public override int GetHashCode() => Value.GetHashCode();
+    public override int GetHashCode() => Bit.GetHashCode();
 
     /// <summary>
     /// Determines whether the objects are equal.
@@ -113,10 +122,24 @@ public sealed class BOOL : AtomicType, IEquatable<BOOL>, IComparable<BOOL>
     public static bool operator !=(BOOL? left, BOOL? right) => !Equals(left, right);
 
     /// <inheritdoc />
-    public int CompareTo(BOOL? other)
+    public int CompareTo(BOOL? other) => 
+        ReferenceEquals(null, other) ? 1 : ReferenceEquals(this, other) ? 0 : Bit.CompareTo(other.Bit);
+
+    /// <inheritdoc />
+    public int CompareTo(object obj)
     {
-        if (ReferenceEquals(this, other)) return 0;
-        return ReferenceEquals(null, other) ? 1 : Value.CompareTo(other.Value);
+        switch (obj)
+        {
+            case null:
+                return 1;
+            case BOOL value:
+                return Bit.CompareTo(value.Bit);
+            case AtomicType atomic:
+                var converted = TypeDescriptor.GetConverter(GetType()).ConvertFrom(atomic) as BOOL;
+                return Bit.CompareTo(converted?.Bit);
+            default:
+                throw new ArgumentException($"Cannot compare object of type {obj.GetType()} with {GetType()}.");
+        }
     }
 
     #region Conversions
@@ -133,7 +156,7 @@ public sealed class BOOL : AtomicType, IEquatable<BOOL>, IComparable<BOOL>
     /// </summary>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="bool"/> type value.</returns>
-    public static implicit operator bool(BOOL atomic) => atomic.Value;
+    public static implicit operator bool(BOOL atomic) => atomic.Bit;
 
     /// <summary>
     /// Implicitly converts the provided <see cref="bool"/> to a <see cref="BOOL"/> value.
@@ -147,7 +170,7 @@ public sealed class BOOL : AtomicType, IEquatable<BOOL>, IComparable<BOOL>
     /// </summary>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="bool"/> type value.</returns>
-    public static implicit operator int(BOOL atomic) => atomic.Value ? 1 : 0;
+    public static implicit operator int(BOOL atomic) => atomic.Bit ? 1 : 0;
 
     /// <summary>
     /// Implicitly converts a <see cref="string"/> to a <see cref="BOOL"/> value.
@@ -162,6 +185,69 @@ public sealed class BOOL : AtomicType, IEquatable<BOOL>, IComparable<BOOL>
     /// <param name="value">The value to convert.</param>
     /// <returns>A new <see cref="string"/> value.</returns>
     public static implicit operator string(BOOL value) => value.ToString();
+    
+    /// <summary>
+    /// Converts the provided <see cref="BOOL"/> to a <see cref="SINT"/> value.
+    /// </summary>
+    /// <param name="atomic">The value to convert.</param>
+    /// <returns>A <see cref="SINT"/> type value.</returns>
+    public static implicit operator SINT(BOOL atomic) => atomic.Bit ? new SINT(1) : new SINT();
+
+    /// <summary>
+    /// Converts the provided <see cref="BOOL"/> to a <see cref="USINT"/> value.
+    /// </summary>
+    /// <param name="atomic">The value to convert.</param>
+    /// <returns>A <see cref="USINT"/> type value.</returns>
+    public static implicit operator USINT(BOOL atomic) => atomic.Bit ? new USINT(1) : new USINT();
+
+    /// <summary>
+    /// Converts the provided <see cref="BOOL"/> to a <see cref="INT"/> value.
+    /// </summary>
+    /// <param name="atomic">The value to convert.</param>
+    /// <returns>A <see cref="INT"/> type value.</returns>
+    public static implicit operator INT(BOOL atomic) => atomic.Bit ? new INT(1) : new INT();
+    
+    /// <summary>
+    /// Converts the provided <see cref="BOOL"/> to a <see cref="INT"/> value.
+    /// </summary>
+    /// <param name="atomic">The value to convert.</param>
+    /// <returns>A <see cref="INT"/> type value.</returns>
+    public static implicit operator UINT(BOOL atomic) => atomic.Bit ? new UINT(1) : new UINT();
+
+    /// <summary>
+    /// Converts the provided <see cref="BOOL"/> to a <see cref="DINT"/> value.
+    /// </summary>
+    /// <param name="atomic">The value to convert.</param>
+    /// <returns>A <see cref="DINT"/> type value.</returns>
+    public static implicit operator DINT(BOOL atomic) => atomic.Bit ? new DINT(1) : new DINT();
+
+    /// <summary>
+    /// Converts the provided <see cref="BOOL"/> to a <see cref="UDINT"/> value.
+    /// </summary>
+    /// <param name="atomic">The value to convert.</param>
+    /// <returns>A <see cref="UDINT"/> type value.</returns>
+    public static implicit operator UDINT(BOOL atomic) => atomic.Bit ? new UDINT(1) : new UDINT();
+
+    /// <summary>
+    /// Converts the provided <see cref="BOOL"/> to a <see cref="LINT"/> value.
+    /// </summary>
+    /// <param name="atomic">The value to convert.</param>
+    /// <returns>A <see cref="LINT"/> type value.</returns>
+    public static implicit operator LINT(BOOL atomic) => atomic.Bit ? new LINT(1) : new LINT();
+
+    /// <summary>
+    /// Converts the provided <see cref="BOOL"/> to a <see cref="ULINT"/> value.
+    /// </summary>
+    /// <param name="atomic">The value to convert.</param>
+    /// <returns>A <see cref="ULINT"/> type value.</returns>
+    public static implicit operator ULINT(BOOL atomic) => atomic.Bit ? new ULINT(1) : new ULINT();
+
+    /// <summary>
+    /// Converts the provided <see cref="BOOL"/> to a <see cref="REAL"/> value.
+    /// </summary>
+    /// <param name="atomic">The value to convert.</param>
+    /// <returns>A <see cref="REAL"/> type value.</returns>
+    public static implicit operator REAL(BOOL atomic) => atomic.Bit ? new REAL(1) : new REAL();
 
     #endregion
 }

@@ -11,9 +11,9 @@ namespace L5Sharp.Types.Atomics;
 /// Represents a <b>REAL</b> Logix atomic data type, or a type analogous to a <see cref="float"/>.
 /// </summary>
 [TypeConverter(typeof(RealConverter))]
-public sealed class REAL : AtomicType, IEquatable<REAL>, IComparable<REAL>
+public sealed class REAL : AtomicType, IEquatable<REAL>, IComparable<REAL>, IComparable
 {
-    private float Local => BitConverter.ToSingle(ToBytes());
+    private float Number => BitConverter.ToSingle(ToBytes());
     
     /// <summary>
     /// Creates a new default <see cref="REAL"/> type.
@@ -61,16 +61,15 @@ public sealed class REAL : AtomicType, IEquatable<REAL>, IComparable<REAL>
     /// <exception cref="FormatException">The <see cref="Radix"/> format can not be inferred from <c>value</c>.</exception>
     public static REAL Parse(string value)
     {
-        //todo need to handle NAN
-        //NOT really sure how to handle this better yet. Do we just throw an exception?
-        if (value == "1.#QNAN") return new REAL();
-        
+        if (value.Contains("QNAN")) return new REAL(float.NaN);
+
         if (float.TryParse(value, out var result))
             return new REAL(result);
 
         var radix = Radix.Infer(value);
-        var atomic = (REAL)radix.Parse(value);
-        return new REAL(atomic, radix);
+        var atomic = radix.Parse(value);
+        var converted = (TypeDescriptor.GetConverter(typeof(REAL)).ConvertFrom(atomic) as REAL)!;
+        return new REAL(converted, radix);
     }
 
     /// <inheritdoc />
@@ -78,18 +77,50 @@ public sealed class REAL : AtomicType, IEquatable<REAL>, IComparable<REAL>
     {
         if (ReferenceEquals(null, other)) return false;
         if (ReferenceEquals(this, other)) return true;
-        return Math.Abs(Local - other.Local) < float.Epsilon;
+        return Math.Abs(Number - other.Number) < float.Epsilon;
     }
 
     /// <inheritdoc />
-    public override bool Equals(object? obj) => Equals(obj as REAL);
+    public override bool Equals(object? obj)
+    {
+        switch (obj)
+        {
+            case REAL value:
+                return Number.Equals(value.Number);
+            case AtomicType atomic:
+                var converted = TypeDescriptor.GetConverter(GetType()).ConvertFrom(atomic) as REAL;
+                return Number.Equals(converted?.Number);
+            default:
+                return false;
+        }
+    }
 
     /// <inheritdoc />
-    // ReSharper disable once NonReadonlyMemberInGetHashCode
-    // NOT sure how else to handle since it needs to be settable and used for equality.
-    // This would only be a problem if you created a hash table of atomic types.
-    // NOT sure anyone would need to do that.
-    public override int GetHashCode() => Local.GetHashCode();
+    public override int GetHashCode() => Number.GetHashCode();
+
+    /// <inheritdoc />
+    public int CompareTo(REAL? other)
+    {
+        if (ReferenceEquals(this, other)) return 0;
+        return ReferenceEquals(null, other) ? 1 : Number.CompareTo(other.Number);
+    }
+    
+    /// <inheritdoc />
+    public int CompareTo(object obj)
+    {
+        switch (obj)
+        {
+            case null:
+                return 1;
+            case REAL value:
+                return Number.CompareTo(value.Number);
+            case AtomicType atomic:
+                var converted = TypeDescriptor.GetConverter(GetType()).ConvertFrom(atomic) as REAL;
+                return Number.CompareTo(converted?.Number);
+            default:
+                throw new ArgumentException($"Cannot compare object of type {obj.GetType()} with {GetType()}.");
+        }
+    }
 
     /// <summary>
     /// Determines whether the objects are equal.
@@ -107,13 +138,6 @@ public sealed class REAL : AtomicType, IEquatable<REAL>, IComparable<REAL>
     /// <returns>true if the objects are not equal, otherwise, false.</returns>
     public static bool operator !=(REAL left, REAL right) => !Equals(left, right);
 
-    /// <inheritdoc />
-    public int CompareTo(REAL? other)
-    {
-        if (ReferenceEquals(this, other)) return 0;
-        return ReferenceEquals(null, other) ? 1 : Local.CompareTo(other.Local);
-    }
-    
     #region Conversions
 
     /// <summary>
@@ -128,7 +152,7 @@ public sealed class REAL : AtomicType, IEquatable<REAL>, IComparable<REAL>
     /// </summary>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="float"/> type value.</returns>
-    public static implicit operator float(REAL atomic) => atomic.Local;
+    public static implicit operator float(REAL atomic) => atomic.Number;
 
     /// <summary>
     /// Converts the provided <see cref="bool"/> to a <see cref="BOOL"/> value.
@@ -149,56 +173,56 @@ public sealed class REAL : AtomicType, IEquatable<REAL>, IComparable<REAL>
     /// </summary>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="BOOL"/> type value.</returns>
-    public static explicit operator BOOL(REAL atomic) => new(atomic.Local != 0);
+    public static explicit operator BOOL(REAL atomic) => new(atomic.Number != 0);
 
     /// <summary>
     /// Converts the provided <see cref="REAL"/> to a <see cref="SINT"/> value.
     /// </summary>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="SINT"/> type value.</returns>
-    public static explicit operator SINT(REAL atomic) => new((sbyte)atomic.Local);
+    public static explicit operator SINT(REAL atomic) => new((sbyte)atomic.Number);
 
     /// <summary>
     /// Converts the provided <see cref="REAL"/> to a <see cref="USINT"/> value.
     /// </summary>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="USINT"/> type value.</returns>
-    public static explicit operator USINT(REAL atomic) => new((byte)atomic.Local);
+    public static explicit operator USINT(REAL atomic) => new((byte)atomic.Number);
 
     /// <summary>
     /// Converts the provided <see cref="REAL"/> to a <see cref="INT"/> value.
     /// </summary>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="INT"/> type value.</returns>
-    public static explicit operator INT(REAL atomic) => new((short)atomic.Local);
+    public static explicit operator INT(REAL atomic) => new((short)atomic.Number);
 
     /// <summary>
     /// Converts the provided <see cref="REAL"/> to a <see cref="UINT"/> value.
     /// </summary>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="UINT"/> type value.</returns>
-    public static explicit operator UINT(REAL atomic) => new((ushort)atomic.Local);
+    public static explicit operator UINT(REAL atomic) => new((ushort)atomic.Number);
 
     /// <summary>
     /// Converts the provided <see cref="REAL"/> to a <see cref="DINT"/> value.
     /// </summary>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="DINT"/> type value.</returns>
-    public static explicit operator DINT(REAL atomic) => new((int)atomic.Local);
+    public static explicit operator DINT(REAL atomic) => new((int)atomic.Number);
 
     /// <summary>
     /// Converts the provided <see cref="REAL"/> to a <see cref="UDINT"/> value.
     /// </summary>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="UDINT"/> type value.</returns>
-    public static explicit operator UDINT(REAL atomic) => new((uint)atomic.Local);
+    public static explicit operator UDINT(REAL atomic) => new((uint)atomic.Number);
 
     /// <summary>
     /// Converts the provided <see cref="REAL"/> to a <see cref="LINT"/> value.
     /// </summary>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="LINT"/> type value.</returns>
-    public static explicit operator LINT(REAL atomic) => new((long)atomic.Local);
+    public static explicit operator LINT(REAL atomic) => new((long)atomic.Number);
 
     #endregion
 }

@@ -27,6 +27,17 @@ namespace L5Sharp.Tests.Types.Atomics
         }
 
         [Test]
+        public void OperatorTesting()
+        {
+            var a = new DINT(1);
+            var b = new INT(2);
+
+            var result = a > b;
+
+            result.Should().BeFalse();
+        }
+
+        [Test]
         public void New_Default_ShouldHaveExpectedDefaults()
         {
             var type = new DINT();
@@ -183,9 +194,19 @@ namespace L5Sharp.Tests.Types.Atomics
 
             return Verify(xml);
         }
+        
+        [Test]
+        public Task Serialize_ValueAndRadix_ShouldBeValid()
+        {
+            var type = new DINT(123, Radix.Hex);
+
+            var xml = type.Serialize().ToString();
+
+            return Verify(xml);
+        }
 
         [Test]
-        public void Update_SameType_ShouldBeExpected()
+        public void Set_SameType_ShouldBeExpected()
         {
             var type = new DINT();
 
@@ -195,7 +216,7 @@ namespace L5Sharp.Tests.Types.Atomics
         }
 
         [Test]
-        public void Update_SmallerType_ShouldBeExpected()
+        public void Set_SmallerType_ShouldBeExpected()
         {
             var type = new DINT();
 
@@ -205,7 +226,7 @@ namespace L5Sharp.Tests.Types.Atomics
         }
 
         [Test]
-        public void Update_LargerValueSmallerType_ShouldBeExpected()
+        public void Set_LargerValueSmallerType_ShouldBeExpected()
         {
             var type = new DINT(DINT.MaxValue);
 
@@ -215,7 +236,7 @@ namespace L5Sharp.Tests.Types.Atomics
         }
 
         [Test]
-        public void Update_LargerTypeWithSmallerValue_ShouldBeExpected()
+        public void Set_LargerTypeWithSmallerValue_ShouldBeExpected()
         {
             var type = new DINT();
 
@@ -225,7 +246,7 @@ namespace L5Sharp.Tests.Types.Atomics
         }
 
         [Test]
-        public void Update_LargerTypeLargerValue_ShouldHaveDataLoss()
+        public void Set_LargerTypeLargerValue_ShouldHaveDataLoss()
         {
             var type = new DINT();
 
@@ -235,7 +256,7 @@ namespace L5Sharp.Tests.Types.Atomics
         }
 
         [Test]
-        public void Update_InvalidType_ShouldThrowArgumentException()
+        public void Set_InvalidType_ShouldThrowArgumentException()
         {
             var type = new DINT();
 
