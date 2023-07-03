@@ -32,6 +32,17 @@ public static class Atomic
     /// <returns>A <see cref="AtomicType"/> representing the value and format of the provided value.</returns>
     /// <exception cref="FormatException"><c>value</c> does not have a valid format to be parsed as an atomic type.</exception>
     public static AtomicType Parse(string value) => Radix.Infer(value).Parse(value);
+    
+    /// <summary>
+    /// Parses the provided string value into an atomic type value.
+    /// </summary>
+    /// <param name="value">The value of the atomic type.</param>
+    /// <returns>A <see cref="AtomicType"/> representing the value and format of the provided value.</returns>
+    /// <exception cref="FormatException"><c>value</c> does not have a valid format to be parsed as an atomic type.</exception>
+    public static TAtomic Parse<TAtomic>(string value) where TAtomic : AtomicType
+    {
+        return (TAtomic)Convert.ChangeType(Radix.Infer(value).Parse(value), typeof(TAtomic));
+    }
 
     /// <summary>
     /// Parses the provided string value into the atomic type value specified by name.

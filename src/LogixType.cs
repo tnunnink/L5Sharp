@@ -35,40 +35,33 @@ public abstract class LogixType : ILogixSerializable
     /// The name of the logix type.
     /// </summary>
     /// <value>A <see cref="string"/> name identifying the logix type.</value>
-    public virtual string Name => string.Empty;
+    public abstract string Name { get; }
 
     /// <summary>
     /// The family (string or none) of the type.
     /// </summary>
     /// <value>A <see cref="DataTypeFamily"/> option representing the family value.</value>
-    public virtual DataTypeFamily Family => DataTypeFamily.None;
+    public abstract DataTypeFamily Family { get; }
 
     /// <summary>
     /// The class (atomic, predefined, user-defined) that the type belongs to.
     /// </summary>
     /// <value>A <see cref="DataTypeClass"/> option representing the class type.</value>
-    public virtual DataTypeClass Class => DataTypeClass.Unknown;
+    public abstract DataTypeClass Class { get; }
 
     /// <summary>
     /// The collection of <see cref="Member"/> objects that make up the structure of the type.
     /// </summary>
     /// <value>A <see cref="IEnumerable{T}"/> containing <see cref="Member"/> objects</value>
-    public virtual IEnumerable<Member> Members => Enumerable.Empty<Member>();
+    public abstract IEnumerable<Member> Members { get; }
 
     /// <summary>
-    /// Performs a safe cast of the current <see cref="LogixType"/> to the type of the generic argument.
+    /// Casts the <see cref="LogixType"/> to the type of the generic argument.
     /// </summary>
     /// <typeparam name="TLogixType">The logix type to cast to.</typeparam>
+    /// <exception cref="InvalidCastException">The object can not be casted to the specified type.</exception>
     /// <returns>The instance casted as the specified generic type argument.</returns>
-    public TLogixType? As<TLogixType>() where TLogixType : LogixType => this as TLogixType;
-
-    /// <summary>
-    /// Performs a explicit cast of the current <see cref="LogixType"/> to the type of the generic argument.
-    /// </summary>
-    /// <typeparam name="TLogixType">The logix type to cast to.</typeparam>
-    /// <returns>The instance casted as the specified generic type argument.</returns>
-    /// <exception cref="InvalidCastException">The current type is not compatible with specified generic argument type.</exception>
-    public TLogixType To<TLogixType>() where TLogixType : LogixType => (TLogixType)this;
+    public TLogixType As<TLogixType>() where TLogixType : LogixType => (TLogixType)this;
 
     /// <summary>
     /// Returns a new deep cloned instance of the current type.
@@ -89,12 +82,13 @@ public abstract class LogixType : ILogixSerializable
     /// </summary>
     /// <param name="type">The type to set this type with.</param>
     /// <exception cref="ArgumentException">The provided type can not set this type. (e.g., Structure can not set Atomic).</exception>
+    /// <returns>A <see cref="LogixType"/> with data updated from the provided logix type.</returns>
     /// <remarks>
-    /// This method is the basis for how underlying values are set in memory without replacement of the type.
+    /// This method is the basis for how underlying values are set in memory.
     /// Atomic and String type objects will set underlying values, whereas Structure and Array types will join members and
     /// delegate the set down the hierarchical type structure.
     /// </remarks>
-    public abstract void Set(LogixType type);
+    public abstract LogixType Set(LogixType type);
 
     /// <inheritdoc />
     public override bool Equals(object obj)

@@ -54,11 +54,11 @@ public class MemberTests
     {
         var member = new Member("Test", new TIMER { PRE = 123 });
 
-        var dataType = member.DataType.To<TIMER>();
+        var dataType = member.DataType;
 
         dataType.Should().NotBeNull();
         dataType.Should().BeOfType<TIMER>();
-        dataType.PRE.Should().Be(123);
+        dataType.As<TIMER>().PRE.Should().Be(123);
     }
 
     [Test]
@@ -66,11 +66,11 @@ public class MemberTests
     {
         var member = new Member("Test", "This is a test");
 
-        var dataType = member.DataType.To<STRING>();
+        var dataType = member.DataType;
 
         dataType.Should().NotBeNull();
         dataType.Should().BeOfType<STRING>();
-        dataType.Should<STRING>().Be("This is a test");
+        dataType.Should().BeEquivalentTo("This is a test");
     }
 
     [Test]
@@ -90,8 +90,8 @@ public class MemberTests
 
         member.DataType.Set(new TIMER { PRE = 5000, EN = true });
 
-        member.DataType.To<TIMER>().PRE.Should().Be(5000);
-        member.DataType.To<TIMER>().EN.Should().Be(true);
+        member.DataType.As<TIMER>().PRE.Should().Be(5000);
+        member.DataType.As<TIMER>().EN.Should().Be(true);
     }
 
     [Test]
@@ -101,8 +101,8 @@ public class MemberTests
 
         member.DataType.Set(new ComplexType("TIMER", new List<Member> { new("PRE", 5000), new("EN", true) }));
 
-        member.DataType.To<TIMER>().PRE.Should().Be(5000);
-        member.DataType.To<TIMER>().EN.Should().Be(true);
+        member.DataType.As<TIMER>().PRE.Should().Be(5000);
+        member.DataType.As<TIMER>().EN.Should().Be(true);
     }
 
     [Test]
@@ -116,8 +116,8 @@ public class MemberTests
             { "EN", true }
         });
 
-        member.DataType.To<TIMER>().PRE.Should().Be(5000);
-        member.DataType.To<TIMER>().EN.Should().Be(true);
+        member.DataType.As<TIMER>().PRE.Should().Be(5000);
+        member.DataType.As<TIMER>().EN.Should().Be(true);
     }
 
     [Test]
@@ -133,10 +133,10 @@ public class MemberTests
             { "EN", true }
         });
 
-        member.DataType.To<TIMER>().PRE.Should().Be(5000);
-        member.DataType.To<TIMER>().ACC.Should().Be(0);
-        member.DataType.To<TIMER>().EN.Should().Be(true);
-        member.DataType.To<TIMER>().TT.Should().Be(false);
-        member.DataType.To<TIMER>().DN.Should().Be(false);
+        member.DataType.As<TIMER>().PRE.Should().Be(5000);
+        member.DataType.As<TIMER>().ACC.Should().Be(0);
+        member.DataType.As<TIMER>().EN.Should().Be(true);
+        member.DataType.As<TIMER>().TT.Should().Be(false);
+        member.DataType.As<TIMER>().DN.Should().Be(false);
     }
 }

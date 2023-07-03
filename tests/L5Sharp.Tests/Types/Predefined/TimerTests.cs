@@ -58,7 +58,10 @@ namespace L5Sharp.Tests.Types.Predefined
         [Test]
         public void New_ElementWithName_ShouldNotBeNull()
         {
-            var timer = new TIMER(new XElement(L5XName.Structure, new XAttribute(L5XName.DataType, "TIMER")));
+            const string xml = @"<StructureMember Name=""TimeMember"" DataType=""TIMER""/>";
+            var element = XElement.Parse(xml);
+            
+            var timer = new TIMER(element);
 
             timer.Should().NotBeNull();
         }
@@ -66,7 +69,56 @@ namespace L5Sharp.Tests.Types.Predefined
         [Test]
         public void New_RealElement_ShouldHaveExpectedValues()
         {
+            const string xml = @"<StructureMember Name=""TimeMember"" DataType=""TIMER"">
+                <DataValueMember Name=""PRE"" DataType=""DINT"" Radix=""Decimal"" Value=""5000""/>
+                <DataValueMember Name=""ACC"" DataType=""DINT"" Radix=""Decimal"" Value=""1234""/>
+                <DataValueMember Name=""EN"" DataType=""BOOL"" Value=""1""/>
+                <DataValueMember Name=""TT"" DataType=""BOOL"" Value=""1""/>
+                <DataValueMember Name=""DN"" DataType=""BOOL"" Value=""1""/>
+                </StructureMember>";
+            var element = XElement.Parse(xml);
+            
+            var timer = new TIMER(element);
+
+            timer.Should().NotBeNull();
+            timer.PRE.Should().Be(5000);
+            timer.ACC.Should().Be(1234);
+            timer.EN.Should().Be(true);
+            timer.TT.Should().Be(true);
+            timer.DN.Should().Be(true);
+        }
+
+        [Test]
+        public void Clone_WhenCalled_ShouldBeOfSameType()
+        {
             var timer = new TIMER();
+
+            var clone = timer.Clone();
+
+            clone.Should().BeOfType<TIMER>();
+        }
+        
+        [Test]
+        public void Clone_WhenCalled_ShouldNotBeSameInstance()
+        {
+            var timer = new TIMER();
+
+            var clone = timer.Clone();
+
+            clone.Should().NotBeSameAs(timer);
+        }
+
+        [Test]
+        public void Set_ValidType_ShouldUpdateAsExpected()
+        {
+            var timer = new TIMER();
+            var expected = new TIMER { PRE = 5000 };
+
+            var set = timer.Set(expected).As<TIMER>();
+            
+            set.PRE.Should().Be(expected.PRE);
+            set.Should().NotBeSameAs(timer);
+            timer.PRE.Should().NotBe(expected.PRE);
         }
 
         [Test]

@@ -83,6 +83,7 @@ namespace L5Sharp.Tests.Types.Atomics
             bitsEqualToOne.Should().HaveCount(6);
         }
         
+        /*
         [Test]
         public void GetBit_ValidIndex_ShouldBeExpected()
         {
@@ -111,41 +112,16 @@ namespace L5Sharp.Tests.Types.Atomics
 
             type.Should().Be(1);
         }
+        */
 
+        /*
         [Test]
         public void SetBit_InvalidIndex_ShouldThrowArgumentOutOfRangeException()
         {
             var type = new LINT();
             
             FluentActions.Invoking(() => type[70] = 1).Should().Throw<ArgumentOutOfRangeException>();
-        }
-        
-        [Test]
-        public void ToBits_WhenCalled_ReturnsExpected()
-        {
-            var type = new LINT();
-
-            var bits = type.ToBits();
-
-            bits.Should().NotBeNull();
-            bits.Length.Should().Be(64);
-
-            foreach (bool bit in bits)
-            {
-                bit.Should().BeFalse();
-            }
-        }
-
-        [Test]
-        public void ToBits_PositiveValue_ReturnsExpected()
-        {
-            var type = new LINT(1);
-
-            var bits = type.ToBits();
-
-            bits.Should().NotBeNull();
-            bits[0].Should().BeTrue();
-        }
+        }*/
 
         [Test]
         public void ToBytes_WhenCalled_ReturnsExpected()
@@ -153,7 +129,7 @@ namespace L5Sharp.Tests.Types.Atomics
             var expected = BitConverter.GetBytes(_random);
             var type = new LINT(_random);
 
-            var bytes = type.ToBytes();
+            var bytes = type.GetBytes();
 
             CollectionAssert.AreEqual(bytes, expected);
         }

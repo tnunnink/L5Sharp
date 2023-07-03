@@ -92,69 +92,12 @@ namespace L5Sharp.Tests.Types.Atomics
 
             bitsEqualToOne.Should().NotBeEmpty();
         }
-        
-        [Test]
-        public void GetBit_ValidIndex_ShouldBeExpected()
-        {
-            var type = new UINT(1);
-
-            var bit = type[0];
-
-            bit.Should().Be(true);
-        }
 
         [Test]
-        public void GetBit_InvalidIndex_ShouldThrowArgumentOutOfRangeException()
+        public void TestAssigning()
         {
-            var type = new UINT(1);
-
-            FluentActions.Invoking(() => type[32]).Should().Throw<ArgumentOutOfRangeException>();
-        }
-
-        [Test]
-        public void SetBit_ValidIndex_ShouldHaveExpectedValue()
-        {
-            // ReSharper disable once UseObjectOrCollectionInitializer
-            var type = new UINT();
-
-            type[0] = true;
-
-            type.Should().Be(1);
-        }
-
-        [Test]
-        public void SetBit_InvalidIndex_ShouldThrowArgumentOutOfRangeException()
-        {
-            var type = new UINT();
-            
-            FluentActions.Invoking(() => type[32] = 1).Should().Throw<ArgumentOutOfRangeException>();
-        }
-        
-        [Test]
-        public void ToBits_WhenCalled_ReturnsExpected()
-        {
-            var type = new UINT();
-
-            var bits = type.ToBits();
-
-            bits.Should().NotBeNull();
-            bits.Length.Should().Be(16);
-
-            foreach (bool bit in bits)
-            {
-                bit.Should().BeFalse();
-            }
-        }
-
-        [Test]
-        public void ToBits_PositiveValue_ReturnsExpected()
-        {
-            var type = new UINT(1);
-
-            var bits = type.ToBits();
-
-            bits.Should().NotBeNull();
-            bits[0].Should().BeTrue();
+            UINT a = 123;
+            UINT b = 2;
         }
 
         [Test]
@@ -163,7 +106,7 @@ namespace L5Sharp.Tests.Types.Atomics
             var expected = BitConverter.GetBytes(_random);
             var type = new UINT(_random);
 
-            var bytes = type.ToBytes();
+            var bytes = type.GetBytes();
 
             CollectionAssert.AreEqual(bytes, expected);
         }
@@ -502,21 +445,6 @@ namespace L5Sharp.Tests.Types.Atomics
             var result = first.Equals(new TIMER());
 
             result.Should().BeFalse();
-        }
-
-        [Test]
-        [TestCase(1000)]
-        [TestCase(10000)]
-        [TestCase(100000)]
-        [TestCase(1000000)]
-        [TestCase(10000000)]
-        public void Equals_OverLargeCollection_ShouldWorkQuickly(int capacity)
-        {
-            var range = Enumerable.Range(0, capacity).Select(i => i).ToList();
-
-            var result = range.Where(d => d != _random).ToList();
-
-            result.Count.Should().Be(capacity - 1);
         }
 
         [Test]

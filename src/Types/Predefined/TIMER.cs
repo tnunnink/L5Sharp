@@ -1,4 +1,5 @@
-﻿using System.Xml.Linq;
+﻿using System.Collections.Generic;
+using System.Xml.Linq;
 using L5Sharp.Enums;
 using L5Sharp.Types.Atomics;
 // ReSharper disable InconsistentNaming RSLogix naming

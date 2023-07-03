@@ -9,8 +9,15 @@ using L5Sharp.Enums;
 namespace L5Sharp.Types;
 
 /// <summary>
-/// 
+/// A <see cref="L5Sharp.LogixType"/> that represents an array of other logix types (either atomic or structure).
 /// </summary>
+/// <remarks>
+/// 
+/// </remarks>
+/// <footer>
+/// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
+/// `Logix 5000 Controllers Import/Export`</a> for more information.
+/// </footer>
 public class ArrayType : LogixType, IEnumerable<LogixType>
 {
     private readonly List<Member> _members;
@@ -26,14 +33,17 @@ public class ArrayType : LogixType, IEnumerable<LogixType>
         if (array is null) throw new ArgumentNullException(nameof(array));
 
         var collection = array.Cast<LogixType>().ToList();
-        if (collection.Any(t => t is null)) throw new ArgumentNullException(nameof(collection));
+        if (collection.Count == 0)
+            throw new ArgumentException("Array can not be initialized with no items.", nameof(array));
+        if (collection.Any(t => t is null or NullType))
+            throw new ArgumentException("Array can not be initialized with null items.", nameof(array));
 
         Name = collection.First().Name;
         Dimensions = Dimensions.FromArray(array);
         Radix = collection.First() is AtomicType atomicType ? atomicType.Radix : Radix.Null;
         _members = Dimensions.Indices().Zip(collection, (i, t) => new Member(i, t)).ToList();
     }
-    
+
     /// <summary>
     /// Creates a new <see cref="ArrayType"/> initialized from the provided <see cref="XElement"/> data.
     /// </summary>
@@ -45,7 +55,8 @@ public class ArrayType : LogixType, IEnumerable<LogixType>
         if (element is null) throw new ArgumentNullException(nameof(element));
 
         Name = element.Attribute(L5XName.DataType)?.Value ?? throw new L5XException(L5XName.DataType, element);
-        Dimensions = element.Attribute(L5XName.Dimensions)?.Value.Parse<Dimensions>() ?? throw new L5XException(L5XName.Dimensions, element);
+        Dimensions = element.Attribute(L5XName.Dimensions)?.Value.Parse<Dimensions>() ??
+                     throw new L5XException(L5XName.Dimensions, element);
         Radix = element.Attribute(L5XName.Radix)?.Value.Parse<Radix>() ?? Radix.Null;
         _members = element.Elements().Select(e => new Member(e)).ToList();
     }
@@ -54,10 +65,10 @@ public class ArrayType : LogixType, IEnumerable<LogixType>
     public override string Name { get; }
 
     /// <inheritdoc />
-    public override DataTypeFamily Family => this.FirstOrDefault(t => t is not NullType)?.Family ?? DataTypeFamily.None;
+    public override DataTypeFamily Family => this.First().Family;
 
     /// <inheritdoc />
-    public override DataTypeClass Class => this.FirstOrDefault(t => t is not NullType)?.Class ?? DataTypeClass.Unknown;
+    public override DataTypeClass Class => this.First().Class;
 
     /// <summary>
     /// Gets the dimensions of the the array.
@@ -93,7 +104,7 @@ public class ArrayType : LogixType, IEnumerable<LogixType>
                     index.Add(new XAttribute(L5XName.Value, value));
                     break;
                 case StringType stringType:
-                    element.Add(stringType.SerializeStructure());
+                    index.Add(stringType.SerializeStructure());
                     break;
                 case StructureType structureType:
                     index.Add(structureType.Serialize());
@@ -107,15 +118,20 @@ public class ArrayType : LogixType, IEnumerable<LogixType>
     }
 
     /// <inheritdoc />
-    public override void Set(LogixType type)
+    public override LogixType Set(LogixType type)
     {
         if (type is not ArrayType array)
             throw new ArgumentException($"Can not update {GetType().Name} with {type.GetType().Name}");
 
-        var pairs = _members.Join(array.Members, m => m.Name, m => m.Name, (t, s) => new { Target = t, Source = s });
+        //This is so we generate a new instance and don't update the current one.
+        var clone = new ArrayType(Serialize());
+
+        var pairs = clone.Members.Join(array.Members, m => m.Name, m => m.Name, (t, s) => new { Target = t, Source = s });
 
         foreach (var pair in pairs)
-            pair.Target.DataType.Set(pair.Source.DataType);
+            pair.Target.DataType = pair.Source.DataType;
+
+        return clone;
     }
 
     /// <summary>
@@ -264,7 +280,7 @@ public class ArrayType : LogixType, IEnumerable<LogixType>
         if (member is null)
             throw new ArgumentOutOfRangeException($"The index '{index}' is outside the bound of the array.");
 
-        member.DataType.Set(value);
+        member.DataType = value;
     }
 }
 

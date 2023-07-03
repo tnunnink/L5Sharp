@@ -8,7 +8,7 @@ using L5Sharp.Types.Atomics;
 namespace L5Sharp.Types;
 
 /// <summary>
-/// A component of a <see cref="LogixType"/> that defines the structure or members of the type. 
+/// A component of a <see cref="LogixType"/> that defines the structure or hierarchy of the type. 
 /// </summary>
 /// <remarks>
 /// <para>
@@ -19,7 +19,7 @@ namespace L5Sharp.Types;
 /// <para>
 /// This class effectively maps to the DataValueMember, StructureMember, ArrayMember elements of the L5X tag data
 /// structures. This class only defines, name and data type, since Dimension, Radix, and ExternalAccess are all either
-/// members or the specific <see cref="LogixType"/> set, or not inherent in the data structure when serialized or
+/// members or the specific <see cref="LogixType"/>, or not inherent in the data structure when serialized or
 /// deserialized.
 /// </para>
 /// </remarks>
@@ -29,6 +29,8 @@ namespace L5Sharp.Types;
 /// </footer>
 public class Member : ILogixSerializable
 {
+    private LogixType _dataType;
+
     /// <summary>
     /// Creates a new <see cref="Member"/> object with the provided name and logix type.
     /// </summary>
@@ -38,7 +40,7 @@ public class Member : ILogixSerializable
     public Member(string name, LogixType type)
     {
         Name = name ?? throw new ArgumentNullException(nameof(name));
-        DataType = type ?? throw new ArgumentNullException(nameof(type));
+        _dataType = type ?? throw new ArgumentNullException(nameof(type));
     }
 
     /// <summary>
@@ -53,7 +55,7 @@ public class Member : ILogixSerializable
 
         Name = element.Attribute(L5XName.Name)?.Value ??
                (element.Attribute(L5XName.Index)?.Value ?? throw new L5XException(L5XName.Name, element));
-        DataType = LogixData.Deserialize(element);
+        _dataType = LogixData.Deserialize(element);
     }
 
     /// <summary>
@@ -61,8 +63,7 @@ public class Member : ILogixSerializable
     /// </summary>
     /// <value>A <see cref="string"/> representing the member name.</value>
     /// <remarks>
-    /// Member name can represent the structure name or array index name of an L5X element. This property is immutable
-    /// as it defines the structure of the type...
+    /// Member name can represent the member name, array element index name, or tag name of an L5X element.
     /// </remarks>
     public string Name { get; }
 
@@ -75,7 +76,11 @@ public class Member : ILogixSerializable
     /// The data type creates property the hierarchical structure of complex types.
     /// This type can be atomic, structure, string, or array.
     /// </remarks>
-    public LogixType DataType { get; }
+    public LogixType DataType
+    {
+        get => _dataType;
+        set => _dataType = value is not null ? _dataType.Set(value) : throw new ArgumentNullException(nameof(value));
+    }
 
     /// <summary>
     /// Converts a <see cref="KeyValuePair{TKey,TValue}"/> to a <see cref="Member"/>.
@@ -100,7 +105,7 @@ public class Member : ILogixSerializable
             ArrayType arrayType => SerializeArrayMember(Name, arrayType),
             StringType stringType => SerializeStringMember(Name, stringType),
             StructureType structureType => SerializeStructureMember(Name, structureType),
-            _ => throw new NotSupportedException($"Can not serialize member of type {DataType}.")
+            _ => throw new NotSupportedException($"Can not serialize member of type {DataType.Name}.")
         };
     }
 

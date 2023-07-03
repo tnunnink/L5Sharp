@@ -1,31 +1,45 @@
 ﻿using System;
-using System.ComponentModel;
 using L5Sharp.Enums;
-using L5Sharp.Types.Atomics.Converters;
 
 namespace L5Sharp.Types.Atomics;
 
 /// <summary>
 /// Represents a <b>INT</b> Logix atomic data type, or a type analogous to a <see cref="short"/>.
 /// </summary>
-[TypeConverter(typeof(IntConverter))]
-public sealed class INT : AtomicType, IEquatable<INT>, IComparable<INT>, IComparable
+public sealed class INT : AtomicType, IComparable
 {
-    private short Number => BitConverter.ToInt16(ToBytes());
+    private readonly short _value;
 
     /// <summary>
     /// Creates a new default <see cref="INT"/> type.
     /// </summary>
-    public INT() : base(nameof(INT), Radix.Decimal, BitConverter.GetBytes(default(short)))
+    public INT()
     {
+        _value = 0;
+        Radix = Radix.Decimal;
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="INT"/> with the provided value.
+    /// </summary>
+    /// <param name="value">The value to initialize the type with.</param>
+    public INT(short value)
+    {
+        _value = value;
+        Radix = Radix.Decimal;
     }
 
     /// <summary>
     /// Creates a new <see cref="INT"/> value with the provided radix format.
     /// </summary>
     /// <param name="radix">The <see cref="Enums.Radix"/> number format of the value.</param>
-    public INT(Radix radix) : base(nameof(INT), radix, BitConverter.GetBytes(default(short)))
+    public INT(Radix radix)
     {
+        _value = 0;
+        if (radix is null) throw new ArgumentNullException(nameof(radix));
+        if (!radix.SupportsType(this))
+            throw new ArgumentException($"Invalid Radix {radix} for atomic type {Name}.", nameof(radix));
+        Radix = radix;
     }
 
     /// <summary>
@@ -33,10 +47,20 @@ public sealed class INT : AtomicType, IEquatable<INT>, IComparable<INT>, ICompar
     /// </summary>
     /// <param name="value">The value to initialize the type with.</param>
     /// <param name="radix">The optional radix format of the value.</param>
-    public INT(short value, Radix? radix = null) : base(nameof(INT), radix ?? Radix.Decimal,
-        BitConverter.GetBytes(value))
+    public INT(short value, Radix radix)
     {
+        _value = value;
+        if (radix is null) throw new ArgumentNullException(nameof(radix));
+        if (!radix.SupportsType(this))
+            throw new ArgumentException($"Invalid Radix {radix} for atomic type {Name}.", nameof(radix));
+        Radix = radix;
     }
+
+    /// <inheritdoc />
+    public override string Name => nameof(INT);
+
+    /// <inheritdoc />
+    public override Radix Radix { get; }
 
     /// <summary>
     /// Represents the largest possible value of <see cref="INT"/>.
@@ -47,16 +71,6 @@ public sealed class INT : AtomicType, IEquatable<INT>, IComparable<INT>, ICompar
     /// Represents the smallest possible value of <see cref="INT"/>.
     /// </summary>
     public const short MinValue = short.MinValue;
-
-    /// <summary>
-    /// Gets the <see cref="BOOL"/> representing the bit value at the specified index.
-    /// </summary>
-    /// <param name="bit">The bit index to access.</param>
-    public BOOL this[int bit]
-    {
-        get => Value[bit];
-        set => Value[bit] = value;
-    }
 
     /// <summary>
     /// Parses the provided string value to a new <see cref="INT"/>.
@@ -71,74 +85,142 @@ public sealed class INT : AtomicType, IEquatable<INT>, IComparable<INT>, ICompar
 
         var radix = Radix.Infer(value);
         var atomic = radix.Parse(value);
-        var converted = (TypeDescriptor.GetConverter(typeof(INT)).ConvertFrom(atomic) as INT)!;
+        var converted = (short)Convert.ChangeType(atomic, typeof(short));
         return new INT(converted, radix);
     }
 
     /// <inheritdoc />
-    public bool Equals(INT? other)
+    public override LogixType Set(LogixType type)
     {
-        if (ReferenceEquals(null, other)) return false;
-        if (ReferenceEquals(this, other)) return true;
-        return Number == other.Number;
+        if (type is not AtomicType atomic)
+            throw new ArgumentException($"Can not set logix type {GetType().Name} with {type.GetType().Name}.");
+
+        if (type is INT value)
+            return new INT((short)value, value.Radix);
+
+        var bytes = SetBytes(atomic.GetBytes());
+        var converted = BitConverter.ToInt16(bytes);
+        return new INT(converted, atomic.Radix);
     }
+
+    /// <inheritdoc />
+    public override byte[] GetBytes() => BitConverter.GetBytes(_value);
 
     /// <inheritdoc />
     public override bool Equals(object? obj)
     {
-        switch (obj)
+        return obj switch
         {
-            case INT value:
-                return Number.Equals(value.Number);
-            case AtomicType atomic:
-                var converted = TypeDescriptor.GetConverter(GetType()).ConvertFrom(atomic) as INT;
-                return Number.Equals(converted?.Number);
-            default:
-                return false;
-        }
+            INT value => value._value == _value,
+            AtomicType value => base.Equals(value),
+            ValueType value => _value.Equals(Convert.ChangeType(value, typeof(short))),
+            _ => false
+        };
     }
 
     /// <inheritdoc />
-    public override int GetHashCode() => Number.GetHashCode();
+    public override int GetHashCode() => _value.GetHashCode();
 
     /// <inheritdoc />
-    public int CompareTo(INT? other) => 
-        ReferenceEquals(null, other) ? 1 : ReferenceEquals(this, other) ? 0 : Number.CompareTo(other.Number);
-    
-    /// <inheritdoc />
-    public int CompareTo(object obj)
+    public int CompareTo(object? obj)
     {
-        switch (obj)
+        return obj switch
         {
-            case null:
-                return 1;
-            case INT value:
-                return Number.CompareTo(value.Number);
-            case AtomicType atomic:
-                var converted = TypeDescriptor.GetConverter(GetType()).ConvertFrom(atomic) as INT;
-                return Number.CompareTo(converted?.Number);
-            default:
-                throw new ArgumentException($"Cannot compare object of type {obj.GetType()} with {GetType()}.");
-        }
+            null => 1,
+            INT typed => _value.CompareTo(typed._value),
+            AtomicType atomic => _value.CompareTo((short)Convert.ChangeType(atomic, typeof(short))),
+            ValueType value => _value.CompareTo((short)Convert.ChangeType(value, typeof(short))),
+            _ => throw new ArgumentException($"Cannot compare logix type {obj.GetType().Name} with {GetType().Name}.")
+        };
     }
 
-    /// <summary>
-    /// Determines whether the objects are equal.
-    /// </summary>
-    /// <param name="left">An object to compare.</param>
-    /// <param name="right">An object to compare.</param>
-    /// <returns>true if the objects are equal, otherwise, false.</returns>
-    public static bool operator ==(INT left, INT right) => Equals(left, right);
+    #region Operators
 
     /// <summary>
-    /// Determines whether the objects are not equal.
+    /// 
     /// </summary>
-    /// <param name="left">An object to compare.</param>
-    /// <param name="right">An object to compare.</param>
-    /// <returns>true if the objects are not equal, otherwise, false.</returns>
-    public static bool operator !=(INT left, INT right) => !Equals(left, right);
+    /// <param name="left"></param>
+    /// <param name="right"></param>
+    /// <returns></returns>
+    public static DINT operator +(INT left, INT right) => new(left._value + right._value);
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="left"></param>
+    /// <param name="right"></param>
+    /// <returns></returns>
+    public static DINT operator -(INT left, INT right) => new(left._value - right._value);
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="left"></param>
+    /// <param name="right"></param>
+    /// <returns></returns>
+    public static DINT operator *(INT left, INT right) => new(left._value * right._value);
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="left"></param>
+    /// <param name="right"></param>
+    /// <returns></returns>
+    public static DINT operator /(INT left, INT right) => new(left._value / right._value);
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="left"></param>
+    /// <param name="right"></param>
+    /// <returns></returns>
+    public static DINT operator %(INT left, INT right) => new(left._value % right._value);
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="left"></param>
+    /// <param name="right"></param>
+    /// <returns></returns>
+    public static INT operator &(INT left, INT right) => new((short)(left._value & right._value));
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="left"></param>
+    /// <param name="right"></param>
+    /// <returns></returns>
+    public static INT operator |(INT left, INT right) => new((short)(left._value | right._value));
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="left"></param>
+    /// <param name="right"></param>
+    /// <returns></returns>
+    public static INT operator ^(INT left, INT right) => new((short)(left._value ^ right._value));
+
+    #endregion
 
     #region Conversions
+    
+    /// <inheritdoc />
+    public override int ToInt32(IFormatProvider provider) => _value;
+
+    /// <inheritdoc />
+    public override uint ToUInt32(IFormatProvider provider) => (uint)_value;
+
+    /// <inheritdoc />
+    public override long ToInt64(IFormatProvider provider) => _value;
+
+    /// <inheritdoc />
+    public override ulong ToUInt64(IFormatProvider provider) => (ulong)_value;
+
+    /// <inheritdoc />
+    public override float ToSingle(IFormatProvider provider) => _value;
+    
+    /// <inheritdoc />
+    public override double ToDouble(IFormatProvider provider) => _value;
 
     /// <summary>
     /// Converts the provided <see cref="short"/> to a <see cref="INT"/> value.
@@ -152,7 +234,7 @@ public sealed class INT : AtomicType, IEquatable<INT>, IComparable<INT>, ICompar
     /// </summary>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="short"/> type value.</returns>
-    public static implicit operator short(INT atomic) => atomic.Number;
+    public static implicit operator short(INT atomic) => atomic._value;
 
     /// <summary>
     /// Implicitly converts a <see cref="string"/> to a <see cref="INT"/> value.
@@ -173,63 +255,63 @@ public sealed class INT : AtomicType, IEquatable<INT>, IComparable<INT>, ICompar
     /// </summary>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="BOOL"/> type value.</returns>
-    public static explicit operator BOOL(INT atomic) => new(atomic.Number != 0);
+    public static explicit operator BOOL(INT atomic) => new(atomic._value != 0);
 
     /// <summary>
     /// Converts the provided <see cref="INT"/> to a <see cref="SINT"/> value.
     /// </summary>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="SINT"/> type value.</returns>
-    public static explicit operator SINT(INT atomic) => new((sbyte)atomic.Number);
+    public static explicit operator SINT(INT atomic) => new((sbyte)atomic._value);
 
     /// <summary>
     /// Converts the provided <see cref="INT"/> to a <see cref="USINT"/> value.
     /// </summary>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="USINT"/> type value.</returns>
-    public static explicit operator USINT(INT atomic) => new((byte)atomic.Number);
+    public static explicit operator USINT(INT atomic) => new((byte)atomic._value);
 
     /// <summary>
     /// Converts the provided <see cref="INT"/> to a <see cref="UINT"/> value.
     /// </summary>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="UINT"/> type value.</returns>
-    public static explicit operator UINT(INT atomic) => new((ushort)atomic.Number);
+    public static explicit operator UINT(INT atomic) => new((ushort)atomic._value);
 
     /// <summary>
     /// Converts the provided <see cref="INT"/> to a <see cref="DINT"/> value.
     /// </summary>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="DINT"/> type value.</returns>
-    public static implicit operator DINT(INT atomic) => new(atomic.Number);
+    public static implicit operator DINT(INT atomic) => new(atomic._value);
 
     /// <summary>
     /// Converts the provided <see cref="INT"/> to a <see cref="UDINT"/> value.
     /// </summary>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="UDINT"/> type value.</returns>
-    public static explicit operator UDINT(INT atomic) => new((uint)atomic.Number);
+    public static explicit operator UDINT(INT atomic) => new((uint)atomic._value);
 
     /// <summary>
     /// Converts the provided <see cref="INT"/> to a <see cref="LINT"/> value.
     /// </summary>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="LINT"/> type value.</returns>
-    public static implicit operator LINT(INT atomic) => new(atomic.Number);
+    public static implicit operator LINT(INT atomic) => new(atomic._value);
 
     /// <summary>
     /// Converts the provided <see cref="INT"/> to a <see cref="ULINT"/> value.
     /// </summary>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="ULINT"/> type value.</returns>
-    public static explicit operator ULINT(INT atomic) => new((ulong)atomic.Number);
+    public static explicit operator ULINT(INT atomic) => new((ulong)atomic._value);
 
     /// <summary>
     /// Converts the provided <see cref="INT"/> to a <see cref="REAL"/> value.
     /// </summary>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="REAL"/> type value.</returns>
-    public static implicit operator REAL(INT atomic) => new(atomic.Number);
+    public static implicit operator REAL(INT atomic) => new(atomic._value);
 
     #endregion
 }

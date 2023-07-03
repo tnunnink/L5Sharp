@@ -18,7 +18,7 @@ namespace L5Sharp.Components;
 /// </footer>
 public class Tag : LogixComponent<Tag>
 {
-    private Member _member;
+    private readonly Member _member;
 
     /// <summary>
     /// Internal member constructor used for getting nested child members of the root tag structure.
@@ -122,24 +122,8 @@ public class Tag : LogixComponent<Tag>
         get => _member.DataType;
         set
         {
-            if (value is null) throw new ArgumentNullException(nameof(value));
-
-            //we have to handle the special case of value initially being null.
-            switch (_member.DataType)
-            {
-                case NullType when Parent is null:
-                    _member = new Member(_member.Name, value);
-                    break;
-                case NullType when Parent?.Value is ComplexType complexType:
-                    complexType.Replace(_member.Name, new Member(_member.Name, value));
-                    break;
-                default:
-                    _member.DataType.Set(value);
-                    break;
-            }
-
-            //Once set, update the underlying XML to keep in sync with in memory objects.
-            SetData();
+            _member.DataType = value;
+            SetData(); //this updates the underlying XML
         }
     }
 
@@ -217,10 +201,10 @@ public class Tag : LogixComponent<Tag>
     }
 
     /// <summary>
-    /// Gets an element of the tag array.
+    /// Gets an element of the tag array if the underlying value type is a <see cref="ArrayType"/>.
     /// </summary>
     /// <param name="index">The index of the element to retrieve.</param>
-    /// <exception cref="ArgumentException"><c>index</c> does not represent a valid member for the tag member data structure.</exception>
+    /// <exception cref="ArgumentException"><c>index</c> does not represent a valid member for the tag data structure.</exception>
     public Tag this[ushort index]
     {
         get

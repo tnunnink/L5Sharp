@@ -152,8 +152,13 @@ public class LogixContent
     /// <value>A <see cref="LogixContainer{TComponent}"/> of <see cref="WatchList"/> components.</value>
     public LogixContainer<WatchList> WatchLists { get; }
     
-    public IEnumerable<TEntity> Find<TEntity>() where TEntity : class =>
-        L5X.Descendants(typeof(TEntity).LogixTypeName()).Select(LogixSerializer.Deserialize<TEntity>);
+    /// <summary>
+    /// Finds elements of the specified type across the entire L5X and returns as a flat <see cref="IEnumerable{T}"/> of objects.
+    /// </summary>
+    /// <typeparam name="TElement">The element type to find.</typeparam>
+    /// <returns>A <see cref="IEnumerable{T}"/> containing all found objects of the specified type.</returns>
+    public IEnumerable<TElement> Find<TElement>() where TElement : class =>
+        L5X.Descendants(typeof(TElement).LogixTypeName()).Select(LogixSerializer.Deserialize<TElement>);
 
     public void Merge(string fileName, bool overwrite = false)
     {

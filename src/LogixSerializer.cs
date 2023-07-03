@@ -17,9 +17,11 @@ public static class LogixSerializer
         var dictionary = new Dictionary<Type, ConstructorInfo>();
         if (Mode == ScanMode.None) return dictionary;
 
-        //todo rest of modes 
+        var assemblies = Mode == ScanMode.Internal
+            ? new List<Assembly> { typeof(LogixSerializer).Assembly }
+            : AppDomain.CurrentDomain.GetAssemblies().ToList();
 
-        foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+        foreach (var assembly in assemblies)
         {
             var types = assembly.GetTypes().Where(t =>
                 (IsDerivativeOf(t, typeof(LogixElement<>)) || IsDerivativeOf(t, typeof(LogixType)))
@@ -190,7 +192,7 @@ public enum ScanMode
 {
     /// <summary>
     /// Indicates that <see cref="LogixSerializer"/> should scan internal and external assemblies for types matching the
-    /// deserialization criteria
+    /// deserialization criteria.
     /// </summary>
     All,
 
@@ -204,5 +206,5 @@ public enum ScanMode
     /// Indicates that <see cref="LogixSerializer"/> should not perform reflection scanning of types to automatically
     /// register for deserialization.
     /// </summary>
-    None,
+    None
 }

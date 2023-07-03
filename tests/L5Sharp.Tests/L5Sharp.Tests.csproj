@@ -124,4 +124,8 @@
       <EmbeddedResource Remove="Serialization\**" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Extensions\" />
+    </ItemGroup>
+
 </Project>

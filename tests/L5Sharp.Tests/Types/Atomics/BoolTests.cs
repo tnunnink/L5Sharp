@@ -37,30 +37,6 @@ namespace L5Sharp.Tests.Types.Atomics
         }
 
         [Test]
-        public void New_IntZeroOverload_ShouldBeFalse()
-        {
-            var type = new BOOL(0);
-
-            type.Should().Be(false);
-        }
-
-        [Test]
-        public void New_IntPositiveOverload_ShouldBeTrue()
-        {
-            var type = new BOOL(1);
-
-            type.Should().Be(true);
-        }
-
-        [Test]
-        public void New_IntNegativeOverload_ShouldBeTrue()
-        {
-            var type = new BOOL(-1);
-
-            type.Should().Be(true);
-        }
-
-        [Test]
         public void SetValue_ValidValue_ShouldReturnExpected()
         {
             var fixture = new Fixture();

@@ -59,10 +59,10 @@ namespace L5Sharp.Tests.Types
             array.Class.Should().Be(DataTypeClass.Atomic);
             array.Family.Should().Be(DataTypeFamily.None);
             array.Members.Should().HaveCount(4);
-            array[0].To<DINT>().Should().Be(1);
-            array[1].To<DINT>().Should().Be(2);
-            array[2].To<DINT>().Should().Be(3);
-            array[3].To<DINT>().Should().Be(4);
+            array[0].As<DINT>().Should().Be(1);
+            array[1].As<DINT>().Should().Be(2);
+            array[2].As<DINT>().Should().Be(3);
+            array[3].As<DINT>().Should().Be(4);
         }
 
         [Test]
@@ -76,9 +76,9 @@ namespace L5Sharp.Tests.Types
             array.Class.Should().Be(DataTypeClass.Predefined);
             array.Family.Should().Be(DataTypeFamily.None);
             array.Members.Should().HaveCount(3);
-            array[0].To<TIMER>().PRE.Should().Be(1000);
-            array[1].To<TIMER>().PRE.Should().Be(2000);
-            array[2].To<TIMER>().PRE.Should().Be(3000);
+            array[0].As<TIMER>().PRE.Should().Be(1000);
+            array[1].As<TIMER>().PRE.Should().Be(2000);
+            array[2].As<TIMER>().PRE.Should().Be(3000);
         }
 
         [Test]
@@ -599,8 +599,8 @@ namespace L5Sharp.Tests.Types
             array.Family.Should().Be(DataTypeFamily.None);
             array.Should().AllBeOfType<TIMER>();
 
-            array[1].To<TIMER>().PRE.Should().Be(1000);
-            array[1].To<TIMER>().EN.Should().Be(true);
+            array[1].As<TIMER>().PRE.Should().Be(1000);
+            array[1].As<TIMER>().EN.Should().Be(true);
         }
 
         private static string GetValueArrayXml()

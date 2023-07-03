@@ -9,7 +9,7 @@ namespace L5Sharp.Tests.Types.Custom
     /// <summary>
     /// A test type used to test nested complex data structure code
     /// </summary>
-    public class MyNestedType : ComplexType
+    public class MyNestedType : ComplexType //inheriting from complex type allows me to change structure after instantiated.
     {
         public MyNestedType() : base(nameof(MyNestedType))
         {
@@ -18,7 +18,8 @@ namespace L5Sharp.Tests.Types.Custom
             Tmr = new TIMER();
             Simple = new MySimpleType();
             Flags = ArrayType.New<BOOL>(10);
-            Messages = ArrayType.New<MESSAGE>(5);
+            Counters = ArrayType.New<COUNTER>(3);
+            Names = ArrayType.New<STRING>(5);
         }
 
         public MyNestedType(XElement element) : base(element)
@@ -75,9 +76,18 @@ namespace L5Sharp.Tests.Types.Custom
         /// <summary>
         /// A nested array of structure types.
         /// </summary>
-        public ArrayType<MESSAGE> Messages 
+        public ArrayType<COUNTER> Counters 
         {
-            get => GetMember<ArrayType<MESSAGE>>();
+            get => GetMember<ArrayType<COUNTER>>();
+            private init => SetMember(value);
+        }
+        
+        /// <summary>
+        /// A nested array of atomic values.
+        /// </summary>
+        public ArrayType<STRING> Names
+        {
+            get => GetMember<ArrayType<STRING>>();
             private init => SetMember(value);
         }
     }

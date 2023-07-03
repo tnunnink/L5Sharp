@@ -1,31 +1,32 @@
 ﻿using System;
-using System.ComponentModel;
 using L5Sharp.Enums;
-using L5Sharp.Types.Atomics.Converters;
 
 namespace L5Sharp.Types.Atomics;
 
 /// <summary>
 /// Represents a <b>LINT</b> Logix atomic data type, or a type analogous to a <see cref="long"/>.
 /// </summary>
-[TypeConverter(typeof(LintConverter))]
-public sealed class LINT : AtomicType, IEquatable<LINT>, IComparable<LINT>, IComparable
+public sealed class LINT : AtomicType, IComparable
 {
-    private long Number => BitConverter.ToInt64(ToBytes());
+    private readonly long _value;
 
     /// <summary>
     /// Creates a new default <see cref="LINT"/> type.
     /// </summary>
-    public LINT() : base(nameof(LINT), Radix.Decimal, BitConverter.GetBytes(default(long)))
+    public LINT()
     {
+        _value = 0;
+        Radix = Radix.Decimal;
     }
 
     /// <summary>
     /// Creates a new <see cref="LINT"/> value with the provided radix format.
     /// </summary>
     /// <param name="radix">The <see cref="Enums.Radix"/> number format of the value.</param>
-    public LINT(Radix radix) : base(nameof(LINT), radix, BitConverter.GetBytes(default(long)))
+    public LINT(Radix radix)
     {
+        _value = 0;
+        Radix = radix;
     }
 
     /// <summary>
@@ -33,20 +34,17 @@ public sealed class LINT : AtomicType, IEquatable<LINT>, IComparable<LINT>, ICom
     /// </summary>
     /// <param name="value">The value to initialize the type with.</param>
     /// <param name="radix">The optional radix format of the value.</param>
-    public LINT(long value, Radix? radix = null) : base(nameof(LINT), radix ?? Radix.Decimal,
-        BitConverter.GetBytes(value))
+    public LINT(long value, Radix? radix = null)
     {
+        Radix = radix ?? Radix.Decimal;
+        _value = value;
     }
 
-    /// <summary>
-    /// Gets the <see cref="BOOL"/> representing the bit value at the specified index.
-    /// </summary>
-    /// <param name="bit">The bit index to access.</param>
-    public BOOL this[int bit]
-    {
-        get => Value[bit];
-        set => Value[bit] = value;
-    }
+    /// <inheritdoc />
+    public override string Name => nameof(LINT);
+
+    /// <inheritdoc />
+    public override Radix Radix { get; }
 
     /// <summary>
     /// Represents the largest possible value of <see cref="LINT"/>.
@@ -71,75 +69,67 @@ public sealed class LINT : AtomicType, IEquatable<LINT>, IComparable<LINT>, ICom
 
         var radix = Radix.Infer(value);
         var atomic = radix.Parse(value);
-        var converted = (TypeDescriptor.GetConverter(typeof(LINT)).ConvertFrom(atomic) as LINT)!;
+        var converted = (long)Convert.ChangeType(atomic, typeof(long));
         return new LINT(converted, radix);
     }
 
     /// <inheritdoc />
-    public bool Equals(LINT? other)
+    public override LogixType Set(LogixType type)
     {
-        if (ReferenceEquals(null, other)) return false;
-        if (ReferenceEquals(this, other)) return true;
-        return Number == other.Number;
+        if (type is not AtomicType atomic)
+            throw new ArgumentException($"Can not set {GetType().Name} with type {type.GetType().Name}");
+
+        if (type is LINT value)
+            return new LINT((long)value, value.Radix);
+
+        var bytes = SetBytes(atomic.GetBytes());
+        var converted = BitConverter.ToInt64(bytes);
+        return new LINT(converted, atomic.Radix);
     }
+
+    /// <inheritdoc />
+    public override byte[] GetBytes() => BitConverter.GetBytes(_value);
 
     /// <inheritdoc />
     public override bool Equals(object? obj)
     {
-        switch (obj)
+        return obj switch
         {
-            case LINT value:
-                return Number.Equals(value.Number);
-            case AtomicType atomic:
-                var converted = TypeDescriptor.GetConverter(GetType()).ConvertFrom(atomic) as LINT;
-                return Number.Equals(converted?.Number);
-            default:
-                return false;
-        }
+            LINT value => _value == value._value,
+            AtomicType atomic => base.Equals(atomic),
+            ValueType value => _value.Equals(Convert.ChangeType(value, typeof(long))),
+            _ => false
+        };
     }
 
     /// <inheritdoc />
-    public override int GetHashCode() => Number.GetHashCode();
+    public override int GetHashCode() => _value.GetHashCode();
 
-    /// <inheritdoc />
-    public int CompareTo(LINT? other) => 
-        ReferenceEquals(null, other) ? 1 : ReferenceEquals(this, other) ? 0 : Number.CompareTo(other.Number);
-    
+
     /// <inheritdoc />
     public int CompareTo(object obj)
     {
-        switch (obj)
+        return obj switch
         {
-            case null:
-                return 1;
-            case LINT value:
-                return Number.CompareTo(value.Number);
-            case AtomicType atomic:
-                var converted = TypeDescriptor.GetConverter(GetType()).ConvertFrom(atomic) as LINT;
-                return Number.CompareTo(converted?.Number);
-            default:
-                throw new ArgumentException($"Cannot compare object of type {obj.GetType()} with {GetType()}.");
-        }
+            null => 1,
+            LINT typed => _value.CompareTo(typed._value),
+            AtomicType atomic => _value.CompareTo((long)Convert.ChangeType(atomic, typeof(long))),
+            ValueType value => _value.CompareTo((long)Convert.ChangeType(value, typeof(long))),
+            _ => throw new ArgumentException($"Cannot compare logix type {obj.GetType().Name} with {GetType().Name}.")
+        };
     }
 
-    /// <summary>
-    /// Determines whether the objects are equal.
-    /// </summary>
-    /// <param name="left">An object to compare.</param>
-    /// <param name="right">An object to compare.</param>
-    /// <returns>true if the objects are equal, otherwise, false.</returns>
-    public static bool operator ==(LINT left, LINT right) => Equals(left, right);
-
-    /// <summary>
-    /// Determines whether the objects are not equal.
-    /// </summary>
-    /// <param name="left">An object to compare.</param>
-    /// <param name="right">An object to compare.</param>
-    /// <returns>true if the objects are not equal, otherwise, false.</returns>
-    public static bool operator !=(LINT left, LINT right) => !Equals(left, right);
-
     #region Conversions
-     
+
+    /// <inheritdoc />
+    public override DateTime ToDateTime(IFormatProvider provider)
+    {
+        var milliseconds = _value / 1000;
+        var microseconds = _value % 1000;
+        var ticks = microseconds * (TimeSpan.TicksPerMillisecond / 1000);
+        return DateTimeOffset.FromUnixTimeMilliseconds(milliseconds).AddTicks(ticks).DateTime;
+    }
+    
     /// <summary>
     /// Converts the provided <see cref="long"/> to a <see cref="LINT"/> value.
     /// </summary>
@@ -152,7 +142,7 @@ public sealed class LINT : AtomicType, IEquatable<LINT>, IComparable<LINT>, ICom
     /// </summary>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="long"/> type value.</returns>
-    public static implicit operator long(LINT atomic) => atomic.Number;
+    public static implicit operator long(LINT atomic) => atomic._value;
 
     /// <summary>
     /// Implicitly converts a <see cref="string"/> to a <see cref="LINT"/> value.
@@ -173,56 +163,56 @@ public sealed class LINT : AtomicType, IEquatable<LINT>, IComparable<LINT>, ICom
     /// </summary>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="BOOL"/> type value.</returns>
-    public static explicit operator BOOL(LINT atomic) => new(atomic.Number != 0);
+    public static explicit operator BOOL(LINT atomic) => new(atomic._value != 0);
 
     /// <summary>
     /// Converts the provided <see cref="LINT"/> to a <see cref="SINT"/> value.
     /// </summary>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="SINT"/> type value.</returns>
-    public static explicit operator SINT(LINT atomic) => new((sbyte)atomic.Number);
+    public static explicit operator SINT(LINT atomic) => new((sbyte)atomic._value);
 
     /// <summary>
     /// Converts the provided <see cref="LINT"/> to a <see cref="USINT"/> value.
     /// </summary>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="USINT"/> type value.</returns>
-    public static explicit operator USINT(LINT atomic) => new((byte)atomic.Number);
+    public static explicit operator USINT(LINT atomic) => new((byte)atomic._value);
 
     /// <summary>
     /// Converts the provided <see cref="LINT"/> to a <see cref="INT"/> value.
     /// </summary>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="INT"/> type value.</returns>
-    public static explicit operator INT(LINT atomic) => new((short)atomic.Number);
+    public static explicit operator INT(LINT atomic) => new((short)atomic._value);
 
     /// <summary>
     /// Converts the provided <see cref="LINT"/> to a <see cref="UINT"/> value.
     /// </summary>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="UINT"/> type value.</returns>
-    public static explicit operator UINT(LINT atomic) => new((ushort)atomic.Number);
+    public static explicit operator UINT(LINT atomic) => new((ushort)atomic._value);
 
     /// <summary>
     /// Converts the provided <see cref="LINT"/> to a <see cref="LINT"/> value.
     /// </summary>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="LINT"/> type value.</returns>
-    public static explicit operator DINT(LINT atomic) => new((int)atomic.Number);
+    public static explicit operator DINT(LINT atomic) => new((int)atomic._value);
 
     /// <summary>
     /// Converts the provided <see cref="LINT"/> to a <see cref="UDINT"/> value.
     /// </summary>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="UDINT"/> type value.</returns>
-    public static explicit operator UDINT(LINT atomic) => new((uint)atomic.Number);
+    public static explicit operator UDINT(LINT atomic) => new((uint)atomic._value);
 
     /// <summary>
     /// Converts the provided <see cref="LINT"/> to a <see cref="ULINT"/> value.
     /// </summary>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="ULINT"/> type value.</returns>
-    public static explicit operator ULINT(LINT atomic) => new((ulong)atomic.Number);
+    public static explicit operator ULINT(LINT atomic) => new((ulong)atomic._value);
 
 
     /// <summary>
@@ -230,7 +220,7 @@ public sealed class LINT : AtomicType, IEquatable<LINT>, IComparable<LINT>, ICom
     /// </summary>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="REAL"/> type value.</returns>
-    public static implicit operator REAL(LINT atomic) => new(atomic.Number);
+    public static implicit operator REAL(LINT atomic) => new(atomic._value);
 
     #endregion
 }

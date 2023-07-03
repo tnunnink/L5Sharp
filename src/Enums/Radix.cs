@@ -4,7 +4,6 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using L5Sharp.Extensions;
 using L5Sharp.Types;
 using L5Sharp.Types.Atomics;
 
@@ -116,6 +115,7 @@ public abstract class Radix : LogixEnum<Radix, string>
             LINT => Equals(Binary) || Equals(Octal) || Equals(Decimal) || Equals(Hex) || Equals(Ascii) ||
                     Equals(DateTime) || Equals(DateTimeNs),
             REAL => Equals(Float) || Equals(Exponential),
+            LREAL => Equals(Float) || Equals(Exponential),
             _ => Equals(Binary) || Equals(Octal) || Equals(Decimal) || Equals(Hex) || Equals(Ascii)
         };
     }
@@ -189,7 +189,7 @@ public abstract class Radix : LogixEnum<Radix, string>
             _ => 2
         };
 
-        var bytes = type.ToBytes();
+        var bytes = type.GetBytes();
         var builder = new StringBuilder();
 
         for (var ctr = bytes.GetUpperBound(0); ctr >= bytes.GetLowerBound(0); ctr--)

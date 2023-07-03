@@ -24,7 +24,7 @@ namespace L5Sharp.Types;
 /// giving it it's own <see cref="DataFormat"/>. However, when serialized as a member of a complex structure, the data
 /// looks more like a generic structure type.</para>
 /// </remarks>
-public class StringType : LogixType, IEnumerable<char>, IEquatable<StringType>, IComparable<StringType>
+public class StringType : LogixType, IEnumerable<char>
 {
     /// <summary>
     /// Creates a new <see cref="StringType"/> instance with the provided data.
@@ -94,6 +94,9 @@ public class StringType : LogixType, IEnumerable<char>, IEquatable<StringType>, 
     public sealed override DataTypeFamily Family => DataTypeFamily.String;
 
     /// <inheritdoc />
+    public override DataTypeClass Class => DataTypeClass.Unknown;
+
+    /// <inheritdoc />
     public override IEnumerable<Member> Members => new List<Member> { new(nameof(LEN), LEN), new(nameof(DATA), DATA) };
 
     /// <summary>
@@ -127,24 +130,24 @@ public class StringType : LogixType, IEnumerable<char>, IEquatable<StringType>, 
     }
 
     /// <inheritdoc />
-    public override void Set(LogixType type)
+    public override LogixType Set(LogixType type)
     {
         if (type is not StringType stringType)
             throw new ArgumentException($"Can not update {GetType().Name} with {type.GetType().Name}");
 
-        DATA = GetData(stringType.ToString());
+        return new StringType(stringType.Name, stringType.ToString());
     }
 
     /// <inheritdoc />
-    public bool Equals(StringType? other)
+    public override bool Equals(object? obj)
     {
-        if (ReferenceEquals(null, other)) return false;
-        if (ReferenceEquals(this, other)) return true;
-        return ToString() == other.ToString();
+        return obj switch
+        {
+            StringType value => ToString() == value.ToString(),
+            string value => ToString() == value,
+            _ => false
+        };
     }
-
-    /// <inheritdoc />
-    public override bool Equals(object? obj) => Equals(obj as StringType);
 
     /// <inheritdoc />
     public override int GetHashCode() => ToString().GetHashCode();
@@ -164,15 +167,6 @@ public class StringType : LogixType, IEnumerable<char>, IEquatable<StringType>, 
     /// <param name="right">An object to compare.</param>
     /// <returns>true if the provided objects are not equal; otherwise, false.</returns>
     public static bool operator !=(StringType left, StringType right) => !Equals(left, right);
-
-    /// <inheritdoc />
-    public int CompareTo(StringType? other)
-    {
-        if (ReferenceEquals(this, other)) return 0;
-        return ReferenceEquals(other, null)
-            ? 1
-            : string.Compare(ToString(), other.ToString(), StringComparison.Ordinal);
-    }
 
     /// <summary>
     /// A custom serialization method that returns the string type as a structure element, instead of the string formatted

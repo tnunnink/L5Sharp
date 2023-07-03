@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Xml.Linq;
+using L5Sharp.Enums;
 
 namespace L5Sharp.Types;
 
@@ -66,6 +67,12 @@ public abstract class StructureType : LogixType
 
     /// <inheritdoc />
     public override string Name { get; }
+    
+    /// <inheritdoc />
+    public override DataTypeFamily Family => DataTypeFamily.None;
+
+    /// <inheritdoc />
+    public override DataTypeClass Class => DataTypeClass.Unknown;
 
     /// <inheritdoc />
     public override IEnumerable<Member> Members => _members.AsEnumerable();
@@ -80,16 +87,21 @@ public abstract class StructureType : LogixType
     }
 
     /// <inheritdoc />
-    public override void Set(LogixType type)
+    public override LogixType Set(LogixType type)
     {
         if (type is not StructureType structure)
             throw new ArgumentException($"Can not update {GetType().Name} with {type.GetType().Name}");
 
-        var pairs = _members.Join(structure.Members, m => m.Name, m => m.Name,
+        //This is so we generate a new instance of the strongly typed structure.
+        var clone = Clone();
+
+        var pairs = clone.Members.Join(structure.Members, m => m.Name, m => m.Name,
             (t, s) => new { Target = t, Source = s });
 
         foreach (var pair in pairs)
-            pair.Target.DataType.Set(pair.Source.DataType);
+            pair.Target.DataType = pair.Source.DataType;
+        
+        return clone;
     }
 
     /// <summary>
@@ -104,9 +116,15 @@ public abstract class StructureType : LogixType
     /// Use this as the getter for all member's logix types.
     /// The user of CallerMemberName allows the member name to be omitted assuming it matches the name of the calling property.
     /// </remarks>
-    protected TLogixType GetMember<TLogixType>([CallerMemberName] string? name = null) where TLogixType : LogixType =>
-        Members.SingleOrDefault(m => m.Name == name)?.DataType.To<TLogixType>() ??
-        throw new InvalidOperationException($"No member with name {name} exists for the structure type {Name}");
+    protected TLogixType GetMember<TLogixType>([CallerMemberName] string? name = null) where TLogixType : LogixType
+    {
+        var type = Members.SingleOrDefault(m => m.Name == name)?.DataType;
+
+        if (type is null)
+            throw new InvalidOperationException($"No member with name {name} exists for the structure type {Name}");
+        
+        return (TLogixType)type;
+    }
 
     /// <summary>
     /// Adds or updates the specified member's logix type with the provided value. 
@@ -142,7 +160,7 @@ public abstract class StructureType : LogixType
             return;
         }
 
-        member.DataType.Set(value);
+        member.DataType = value;
     }
 
     /// <summary>

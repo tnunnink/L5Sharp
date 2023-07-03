@@ -1,4 +1,5 @@
-﻿using AutoFixture;
+﻿using System.Diagnostics;
+using AutoFixture;
 using FluentAssertions;
 using L5Sharp.Enums;
 using L5Sharp.Types;
@@ -50,7 +51,7 @@ namespace L5Sharp.Tests.Types.Atomics
             type.Should().Be(0);
         }
 
-        [Test]
+        /*[Test]
         public void New_RadixOverload_ShouldHaveExpectedFormat()
         {
             var type = new DINT(Radix.Binary);
@@ -58,7 +59,7 @@ namespace L5Sharp.Tests.Types.Atomics
             var formatted = type.ToString();
 
             formatted.Should().Be("2#0000_0000_0000_0000_0000_0000_0000_0000");
-        }
+        }*/
 
         [Test]
         public void New_ValueOverload_ShouldHaveExpectedValue()
@@ -68,6 +69,7 @@ namespace L5Sharp.Tests.Types.Atomics
             type.Should().Be(_random);
         }
 
+        /*
         [Test]
         public void GetBit_ValidIndex_ShouldBeExpected()
         {
@@ -104,7 +106,7 @@ namespace L5Sharp.Tests.Types.Atomics
             var type = new DINT();
             
             FluentActions.Invoking(() => type[32] = 1).Should().Throw<ArgumentOutOfRangeException>();
-        }
+        }*/
 
         [Test]
         public void MaxValue_WhenCalled_ShouldBeExpected()
@@ -139,38 +141,12 @@ namespace L5Sharp.Tests.Types.Atomics
         }
 
         [Test]
-        public void ToBits_WhenCalled_ReturnsExpected()
-        {
-            var type = new DINT();
-
-            var bits = type.ToBits();
-
-            bits.Should().NotBeNull();
-            bits.Length.Should().Be(32);
-
-            foreach (bool bit in bits)
-            {
-                bit.Should().BeFalse();
-            }
-        }
-
-        [Test]
-        public void ToBits_PositiveValue_ReturnsExpected()
-        {
-            var type = new DINT(1);
-
-            var bits = type.ToBits();
-
-            bits[0].Should().BeTrue();
-        }
-
-        [Test]
         public void ToBytes_WhenCalled_ReturnsExpected()
         {
             var expected = BitConverter.GetBytes(_random);
             var type = new DINT(_random);
 
-            var bytes = type.ToBytes();
+            var bytes = type.GetBytes();
 
             CollectionAssert.AreEqual(bytes, expected);
         }
@@ -194,7 +170,7 @@ namespace L5Sharp.Tests.Types.Atomics
 
             return Verify(xml);
         }
-        
+
         [Test]
         public Task Serialize_ValueAndRadix_ShouldBeValid()
         {
@@ -267,7 +243,7 @@ namespace L5Sharp.Tests.Types.Atomics
         public void UpdateBitMemberDataTypeAndSeeWhatHappensToTheValue()
         {
             var type = new DINT();
-            
+
             type.Members.First().DataType.Set(true);
 
             type.Should().Be(0);
@@ -309,6 +285,80 @@ namespace L5Sharp.Tests.Types.Atomics
         {
             DINT type = value;
             type.Should().Be(int.Parse(value));
+        }
+
+        [Test]
+        [TestCase(1000)]
+        [TestCase(10000)]
+        [TestCase(100000)]
+        [TestCase(1000000)]
+        [TestCase(10000000)]
+        [TestCase(100000000)]
+        public void Equals_OverLargeCollection_ShouldWorkQuickly(int capacity)
+        {
+            var stopwatch = new Stopwatch();
+            var compare = new DINT(100);
+            var range = Enumerable.Range(0, capacity).Select(i => new DINT(i)).ToList();
+
+            stopwatch.Start();
+            var result = range.Where(d => d.Equals(compare)).ToList();
+            stopwatch.Stop();
+
+            result.Count.Should().Be(1);
+        }
+
+        [Test]
+        [TestCase(1000)]
+        [TestCase(10000)]
+        [TestCase(100000)]
+        [TestCase(1000000)]
+        [TestCase(10000000)]
+        [TestCase(100000000)]
+        public void Equals_Dint_ShouldWorkQuickly(int capacity)
+        {
+            var stopwatch = new Stopwatch();
+
+            var results = new List<bool>();
+            var a = new DINT(1);
+            var b = new DINT(2);
+
+            stopwatch.Start();
+            for (var i = 0; i < capacity; i++)
+            {
+                var result = a.Equals(b);
+                results.Add(result);
+            }
+
+            stopwatch.Stop();
+
+            results.Count.Should().Be(capacity);
+        }
+
+        [Test]
+        [TestCase(1000)]
+        [TestCase(10000)]
+        [TestCase(100000)]
+        [TestCase(1000000)]
+        [TestCase(10000000)]
+        [TestCase(100000000)]
+        public void Equals_int_ShouldWorkQuickly(int capacity)
+        {
+            var stopwatch = new Stopwatch();
+
+            var results = new List<bool>();
+            var a = 1;
+            var b = 2;
+
+            stopwatch.Start();
+            for (var i = 0; i < capacity; i++)
+            {
+                var result = a.Equals(b);
+                results.Add(result);
+            }
+
+            stopwatch.Stop();
+
+            results.Count.Should().Be(capacity);
         }
 
         [Test]

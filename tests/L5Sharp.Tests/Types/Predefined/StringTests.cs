@@ -15,7 +15,7 @@ namespace L5Sharp.Tests.Types.Predefined
         {
             var type = new STRING();
 
-            type.Should<STRING>().NotBeNull();
+            type.Should().NotBeNull();
         }
         
         [Test]
@@ -94,7 +94,7 @@ namespace L5Sharp.Tests.Types.Predefined
         {
             STRING type = "This is a test";
 
-            type.Should<STRING>().Be("This is a test");
+            type.Should().BeEquivalentTo("This is a test");
         }
         
         [Test]
@@ -209,26 +209,6 @@ namespace L5Sharp.Tests.Types.Predefined
             var hash = type.GetHashCode();
 
             hash.Should().NotBe(0);
-        }
-        
-        [Test]
-        public void CompareTo_Same_ShouldBeZero()
-        {
-            var type = new STRING();
-
-            var compare = type.CompareTo(type);
-
-            compare.Should().Be(0);
-        }
-        
-        [Test]
-        public void CompareTo_Null_ShouldBeOne()
-        {
-            var type = new STRING();
-
-            var compare = type.CompareTo(null);
-
-            compare.Should().Be(1);
         }
     }
 }

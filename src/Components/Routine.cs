@@ -59,12 +59,11 @@ public class Routine : LogixComponent<Routine>
     /// </summary>
     /// <typeparam name="TElement">The content element type to return.</typeparam>
     /// <returns>A <see cref="LogixContainer{TElement}"/> with access to the root content and specified element types.</returns>
-    /// <exception cref="L5XException">No content element corresponding to the specified type exists for the
-    /// underlying <see cref="XElement"/>. This can happen if the provided element is not valid or the specified type does
-    /// not match the underlying content type.</exception>
+    /// <exception cref="L5XException">No content element corresponding to the specified <see cref="Type"/> exists for the
+    /// underlying <see cref="XElement"/>. This can happen if the provided element is not valid.</exception>
     /// <remarks>
-    /// This method offers a dynamic interface for accessing content of any routine type. If the routine content does
-    /// not match the type specified, a L5XException will be thrown.
+    /// This method offers a dynamic interface for accessing content of any routine type. If the underlying routine
+    /// content does not match the <see cref="Type"/> specified, a L5XException will be thrown.
     /// </remarks>
     public LogixContainer<TElement> Content<TElement>() where TElement : LogixElement<TElement>
     {

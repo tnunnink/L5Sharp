@@ -16,6 +16,14 @@ public class ComplexType : StructureType
     }
 
     /// <summary>
+    /// Creates a new empty <see cref="ComplexType"/> with the name 'ComplexType' indicating this represents some generic
+    /// or non-descriptive type with members configured by the user. 
+    /// </summary>
+    public ComplexType() : base(nameof(ComplexType))
+    {
+    }
+
+    /// <summary>
     /// Creates a new <see cref="ComplexType"/> with the provided name.
     /// </summary>
     /// <param name="name">The name of the logix type.</param>

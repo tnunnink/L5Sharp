@@ -19,7 +19,7 @@
     <DataValueMember Name="M5" DataType="LINT" Radix="Decimal" Value="0" />
     <DataValueMember Name="M6" DataType="REAL" Radix="Float" Value="0.0" />
   </StructureMember>
-  <ArrayMember Name="Flags" DataType="BOOL" Dimensions="10">
+  <ArrayMember Name="Flags" DataType="BOOL" Dimensions="10" Radix="Decimal">
     <Element Index="[0]" Value="0" />
     <Element Index="[1]" Value="0" />
     <Element Index="[2]" Value="0" />
@@ -31,21 +31,66 @@
     <Element Index="[8]" Value="0" />
     <Element Index="[9]" Value="0" />
   </ArrayMember>
-  <ArrayMember Name="Messages" DataType="MESSAGE" Dimensions="5">
+  <ArrayMember Name="Counters" DataType="COUNTER" Dimensions="3">
     <Element Index="[0]">
-      <Structure DataType="MESSAGE" />
+      <Structure DataType="COUNTER">
+        <DataValueMember Name="PRE" DataType="DINT" Radix="Decimal" Value="0" />
+        <DataValueMember Name="ACC" DataType="DINT" Radix="Decimal" Value="0" />
+        <DataValueMember Name="CU" DataType="BOOL" Value="0" />
+        <DataValueMember Name="CD" DataType="BOOL" Value="0" />
+        <DataValueMember Name="DN" DataType="BOOL" Value="0" />
+        <DataValueMember Name="OV" DataType="BOOL" Value="0" />
+        <DataValueMember Name="UN" DataType="BOOL" Value="0" />
+      </Structure>
     </Element>
     <Element Index="[1]">
-      <Structure DataType="MESSAGE" />
+      <Structure DataType="COUNTER">
+        <DataValueMember Name="PRE" DataType="DINT" Radix="Decimal" Value="0" />
+        <DataValueMember Name="ACC" DataType="DINT" Radix="Decimal" Value="0" />
+        <DataValueMember Name="CU" DataType="BOOL" Value="0" />
+        <DataValueMember Name="CD" DataType="BOOL" Value="0" />
+        <DataValueMember Name="DN" DataType="BOOL" Value="0" />
+        <DataValueMember Name="OV" DataType="BOOL" Value="0" />
+        <DataValueMember Name="UN" DataType="BOOL" Value="0" />
+      </Structure>
     </Element>
     <Element Index="[2]">
-      <Structure DataType="MESSAGE" />
+      <Structure DataType="COUNTER">
+        <DataValueMember Name="PRE" DataType="DINT" Radix="Decimal" Value="0" />
+        <DataValueMember Name="ACC" DataType="DINT" Radix="Decimal" Value="0" />
+        <DataValueMember Name="CU" DataType="BOOL" Value="0" />
+        <DataValueMember Name="CD" DataType="BOOL" Value="0" />
+        <DataValueMember Name="DN" DataType="BOOL" Value="0" />
+        <DataValueMember Name="OV" DataType="BOOL" Value="0" />
+        <DataValueMember Name="UN" DataType="BOOL" Value="0" />
+      </Structure>
     </Element>
-    <Element Index="[3]">
-      <Structure DataType="MESSAGE" />
-    </Element>
-    <Element Index="[4]">
-      <Structure DataType="MESSAGE" />
-    </Element>
+  </ArrayMember>
+  <ArrayMember Name="Names" DataType="STRING" Dimensions="5">
+    <Structure DataType="STRING">
+      <DataValueMember Name="LEN" DataType="DINT" Radix="Decimal" Value="0" />
+      <DataValueMember Name="DATA" DataType="STRING" Radix="ASCII"><![CDATA[]]></DataValueMember>
+    </Structure>
+    <Element Index="[0]" />
+    <Structure DataType="STRING">
+      <DataValueMember Name="LEN" DataType="DINT" Radix="Decimal" Value="0" />
+      <DataValueMember Name="DATA" DataType="STRING" Radix="ASCII"><![CDATA[]]></DataValueMember>
+    </Structure>
+    <Element Index="[1]" />
+    <Structure DataType="STRING">
+      <DataValueMember Name="LEN" DataType="DINT" Radix="Decimal" Value="0" />
+      <DataValueMember Name="DATA" DataType="STRING" Radix="ASCII"><![CDATA[]]></DataValueMember>
+    </Structure>
+    <Element Index="[2]" />
+    <Structure DataType="STRING">
+      <DataValueMember Name="LEN" DataType="DINT" Radix="Decimal" Value="0" />
+      <DataValueMember Name="DATA" DataType="STRING" Radix="ASCII"><![CDATA[]]></DataValueMember>
+    </Structure>
+    <Element Index="[3]" />
+    <Structure DataType="STRING">
+      <DataValueMember Name="LEN" DataType="DINT" Radix="Decimal" Value="0" />
+      <DataValueMember Name="DATA" DataType="STRING" Radix="ASCII"><![CDATA[]]></DataValueMember>
+    </Structure>
+    <Element Index="[4]" />
   </ArrayMember>
 </Structure>

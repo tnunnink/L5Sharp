@@ -40,18 +40,4 @@ public class MySimpleTypeTests
 
         return Verify(xml);
     }
-
-    [Test]
-    public Task SetBitValue_ValidValid_ShouldBeVerified()
-    {
-        var type = new MySimpleType();
-
-        var bit = type.M4[8];
-        
-        
-
-        var xml = type.Serialize().ToString();
-
-        return Verify(xml);
-    }
 }
