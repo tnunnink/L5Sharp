@@ -1,0 +1,3 @@
+﻿<DataType Family="None" Class="User">
+  <Members />
+</DataType>

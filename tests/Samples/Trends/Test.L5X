@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--This is a test-->
+<RSLogix5000Content SchemaRevision="1.0" SoftwareRevision="32.02" TargetName="Test" TargetType="Trend" ContainsContext="true" Owner="tnunnink, EN Engineering" ExportDate="Fri Jun 23 08:14:47 2023" ExportOptions="NoRawData L5KData DecoratedData Context Dependencies ForceProtectedEncoding AllProjDocTrans">
+<Controller Use="Context" Name="TestController">
+<Trends Use="Context">
+<Trend Use="Target" Name="Test" SamplePeriod="10" NumberOfCaptures="1" CaptureSizeType="Samples" CaptureSize="60000" StartTriggerType="No Trigger" StopTriggerType="No Trigger" TrendxVersion="5.2">
+<Description>
+<![CDATA[This is a test]]>
+</Description>
+<Pens>
+<Pen Name="_Test" Color="16#00ff_0000" Visible="true" Style="0" Type="Analog" Width="1" Marker="0" Min="0.0" Max="100.0"/>
+<Pen Name="AsciiTag" Color="16#0000_ff00" Visible="true" Style="0" Type="Analog" Width="1" Marker="0" Min="0.0" Max="100.0"/>
+</Pens>
+</Trend>
+</Trends>
+</Controller>
+</RSLogix5000Content>

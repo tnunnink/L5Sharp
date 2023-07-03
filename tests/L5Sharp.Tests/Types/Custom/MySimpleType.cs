@@ -1,22 +1,61 @@
-﻿using L5Sharp.Enums;
+﻿using System.Xml.Linq;
+using L5Sharp.Enums;
 using L5Sharp.Types;
 using L5Sharp.Types.Atomics;
 
-namespace L5Sharp.Tests.Types.Custom
+namespace L5Sharp.Tests.Types.Custom;
+
+public class MySimpleType : ComplexType
 {
-    public class MySimpleType : StructureType
+    public MySimpleType() : base(nameof(MySimpleType))
     {
-        public MySimpleType() : base(nameof(MySimpleType))
-        {
-        }
+        M1 = new BOOL();
+        M2 = new SINT();
+        M3 = new INT();
+        M4 = new DINT();
+        M5 = new LINT();
+        M6 = new REAL();
+    }
 
-        public BOOL M1 { get; set; } = new();
-        public SINT M2 { get; set; } = new();
-        public INT M3 { get; set; } = new();
-        public DINT M4 { get; set; } = new();
-        public LINT M5 { get; set; } = new();
-        public REAL M6 { get; set; } = new();
+    public MySimpleType(XElement element) : base(element)
+    {
+    }
 
-        public override DataTypeClass Class => DataTypeClass.User;
+    public override DataTypeClass Class => DataTypeClass.User;
+
+    public BOOL M1
+    {
+        get => GetMember<BOOL>();
+        set => SetMember(value);
+    }
+
+    public SINT M2
+    {
+        get => GetMember<SINT>();
+        set => SetMember(value);
+    }
+
+    public INT M3
+    {
+        get => GetMember<INT>();
+        set => SetMember(value);
+    }
+
+    public DINT M4
+    {
+        get => GetMember<DINT>();
+        set => SetMember(value);
+    }
+
+    public LINT M5
+    {
+        get => GetMember<LINT>();
+        set => SetMember(value);
+    }
+
+    public REAL M6
+    {
+        get => GetMember<REAL>();
+        set => SetMember(value);
     }
 }

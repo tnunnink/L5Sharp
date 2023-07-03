@@ -43,7 +43,7 @@ public class LogixContentExportTests
         {
             Name = "TestType",
             Description = "this is a test",
-            Members = new List<DataTypeMember>
+            Members = new LogixContainer<DataTypeMember>
             {
                 new() { Name = "Timers", DataType = "TIMER", Dimension = new Dimensions(5) },
                 new() { Name = "Number", DataType = "DINT", Radix = Radix.Ascii },
@@ -65,7 +65,7 @@ public class LogixContentExportTests
         {
             Name = "TestType",
             Description = "this is a test",
-            Members = new List<DataTypeMember>
+            Members = new LogixContainer<DataTypeMember>
             {
                 new() { Name = "Timers", DataType = "TIMER", Dimension = new Dimensions(5) },
                 new() { Name = "Number", DataType = "DINT", Radix = Radix.Ascii },
@@ -80,7 +80,6 @@ public class LogixContentExportTests
         content.Save(output);
         
         FileAssert.Exists(output);
-        
         File.Delete(output);
     }
 }

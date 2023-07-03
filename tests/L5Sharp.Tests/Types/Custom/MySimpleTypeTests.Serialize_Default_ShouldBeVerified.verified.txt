@@ -1,0 +1,8 @@
+﻿<Structure DataType="MySimpleType">
+  <DataValueMember Name="M1" DataType="BOOL" Value="0" />
+  <DataValueMember Name="M2" DataType="SINT" Radix="Decimal" Value="0" />
+  <DataValueMember Name="M3" DataType="INT" Radix="Decimal" Value="0" />
+  <DataValueMember Name="M4" DataType="DINT" Radix="Decimal" Value="0" />
+  <DataValueMember Name="M5" DataType="LINT" Radix="Decimal" Value="0" />
+  <DataValueMember Name="M6" DataType="REAL" Radix="Float" Value="0.0" />
+</Structure>

@@ -1,100 +1,70 @@
-﻿using AutoFixture;
-using FluentAssertions;
-using L5Sharp.Enums;
-using L5Sharp.Extensions;
+﻿using FluentAssertions;
+using L5Sharp.Types;
 using L5Sharp.Types.Atomics;
 
-namespace L5Sharp.Tests.Types
+namespace L5Sharp.Tests.Types;
+
+[TestFixture]
+public class AtomicTests
 {
-    [TestFixture]
-    public class AtomicTests
+    [Test]
+    [TestCase("123")]
+    public void Parse_SintValues_ShouldReturnExpected(string value)
     {
-        [Test]
-        public void ParseValue_InvalidString_ShouldThrowFormatException()
-        {
-            var fixture = new Fixture();
+        var result = Atomic.Parse(value);
 
-            FluentActions.Invoking(() => Logix.Atomic(fixture.Create<string>())).Should().Throw<FormatException>();
-        }
+        result.Should().BeOfType<SINT>();
+        result.As<SINT>().Should().Be(123);
+    }
+    
+    [Test]
+    [TestCase("1234")]
+    public void Parse_IntValues_ShouldReturnExpected(string value)
+    {
+        var result = Atomic.Parse(value);
 
-        [Test]
-        public void ParseValue_ValidBinary_ShouldBeExpectedValue()
-        {
-            const string value = "2#0000_0101";
+        result.Should().BeOfType<INT>();
+        result.As<INT>().Should().Be(1234);
+    }
+    
+    [Test]
+    [TestCase("123456")]
+    public void Parse_DintValues_ShouldReturnExpected(string value)
+    {
+        var result = Atomic.Parse(value);
 
-            var parsed = Logix.Atomic(value);
+        result.Should().BeOfType<DINT>();
+        result.As<DINT>().Should().Be(123456);
+    }
 
-            parsed.ToString(Radix.Decimal).Should().Be("5");
-        }
+    [Test]
+    public void Parse_NameAndValue_ShouldReturnExpected()
+    {
+        var result = Atomic.Parse("INT", "1234");
 
-        [Test]
-        public void ParseValue_ValidOctal_ShouldBeExpectedValue()
-        {
-            const string value = "8#005";
+        result.Should().BeOfType<INT>();
+        result.As<INT>().Should().Be(1234);
+    }
 
-            var parsed = Logix.Atomic(value);
+    [Test]
+    public void Parse_InvalidName_ShouldThrowArgumentException()
+    {
+        FluentActions.Invoking(() => Atomic.Parse("TIMER", "123")).Should().Throw<ArgumentException>();
+    }
 
-            parsed.To<SINT>().Should().Be(5);
-        }
+    [Test]
+    public void IsAtomic_ValidAtomic_ShouldBeTrue()
+    {
+        var result = Atomic.IsAtomic("REAL");
 
-        [Test]
-        public void ParseValue_ValidDecimal_ShouldBeExpectedValue()
-        {
-            const string value = "5";
+        result.Should().BeTrue();
+    }
+    
+    [Test]
+    public void IsAtomic_NonAtomic_ShouldBeFalse()
+    {
+        var result = Atomic.IsAtomic("TIMER");
 
-            var parsed = Logix.Atomic(value);
-
-            parsed.To<SINT>().Should().Be(5);
-        }
-
-        [Test]
-        public void ParseValue_ValidHex_ShouldBeExpectedValue()
-        {
-            const string value = "16#05";
-
-            var parsed = Logix.Atomic(value);
-
-            parsed.To<SINT>().Should().Be(5);
-        }
-
-        [Test]
-        public void ParseValue_ValidAscii_ShouldBeExpectedValue()
-        {
-            const string value = "'$05'";
-
-            var parsed = Logix.Atomic(value);
-
-            parsed.To<SINT>().ToString().Should().Be("5");
-        }
-
-        [Test]
-        public void ParseValue_ValidFloat_ShouldBeExpected()
-        {
-            const string value = "5.0";
-
-            var parsed = Logix.Atomic(value);
-
-            parsed.To<REAL>().Should().Be(5.0f);
-        }
-
-        [Test]
-        public void ParseValue_ValidExponential_ShouldBeExpected()
-        {
-            const string value = "5.00000000e+000";
-
-            var parsed = Logix.Atomic(value);
-
-            parsed.To<REAL>().Should().Be(5.0f);
-        }
-
-        [Test]
-        public void ParseValue_ValidDateTime_ShouldBeExpected()
-        {
-            const string value = "DT#2022-01-01-06:00:00.000_000Z";
-
-            var parsed = Logix.Atomic(value);
-
-            parsed.As<LINT>().Should().Be(1641016800000000);
-        }
+        result.Should().BeFalse();
     }
 }

@@ -25,26 +25,10 @@
 
     <ItemGroup>
         <None Include="..\README.md" Pack="true" PackagePath="\" />
+        <None Remove="Serialization\**" />
     </ItemGroup>
 
     <ItemGroup>
         <None Remove="L5Sharp.sln.DotSettings" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <None Remove="Resources\L5X.xsd" />
-        <!--<None Include="Resources\icon.png" Pack="true" PackagePath="\"/>-->
-    </ItemGroup>
-
-    <ItemGroup>
-      <None Remove="L5X.xsd" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <EmbeddedResource Include="Rockwell\L5X.xsd" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Compile Remove="Core\Bus.cs" />
     </ItemGroup>
 </Project>

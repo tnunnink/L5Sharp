@@ -1,0 +1,1 @@
+﻿<Task Name="" Type="PERIODIC" Priority="10" Rate="10" Watchdog="500" />

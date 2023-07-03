@@ -1,8 +1,12 @@
-﻿using FluentAssertions;
+﻿using System.Text;
+using System.Xml.Linq;
+using FluentAssertions;
 using L5Sharp.Components;
 using L5Sharp.Core;
+using L5Sharp.Elements;
 using L5Sharp.Enums;
 using L5Sharp.Extensions;
+using L5Sharp.Types;
 
 namespace L5Sharp.Tests
 {
@@ -15,6 +19,16 @@ namespace L5Sharp.Tests
             var content = LogixContent.Load(Known.Test);
 
             content.Should().NotBeNull();
+        }
+
+        [Test]
+        public void ApiTesting()
+        {
+            var content = LogixContent.Load(Known.Test);
+
+            var routine = content.Programs["MyProgram"].Routines.Find("Setup");
+
+            var dependents = content.DataTypes.DependentsOf("SimpleType");
         }
 
         [Test]
@@ -39,10 +53,11 @@ namespace L5Sharp.Tests
 
             var controller = content.Controller;
 
-            controller?.Name.Should().Be("TestController");
-            controller?.ProcessorType.Should().Be("1756-L83E");
-            controller?.Description.Should().Be("This is a test project");
-            controller?.Revision.Should().Be(new Revision(32, 11));
+            controller.Name.Should().Be("TestController");
+            controller.ProcessorType.Should().Be("1756-L83E");
+            controller.Description.Should().Be("This is a test project");
+            controller.Revision.Should().Be(new Revision(32, 11));
+            controller.RedundancyInfo?.Enabled.Should().BeFalse();
         }
 
         [Test]
@@ -50,11 +65,11 @@ namespace L5Sharp.Tests
         {
             var content = LogixContent.Load(Known.Test);
 
-            var tags = content.Tags().Find("MultiDimensionalArray");
+            var tags = content.Tags.Find("MultiDimensionalArray");
 
             tags.Should().NotBeNull();
 
-            var array = AssertionExtensions.As<ILogixArray<ILogixType>>(tags.Data);
+            var array = AssertionExtensions.As<ArrayType<LogixType>>(tags.Value);
 
             var elements = array.Members.ToList();
             elements.Should().NotBeEmpty();
@@ -66,8 +81,8 @@ namespace L5Sharp.Tests
         public void FindDataTypeByName()
         {
             var content = LogixContent.Load(Known.Test);
- 
-            var type = content.DataTypes().Find("AlarmType");
+
+            var type = content.DataTypes.Find("AlarmType");
 
             type.Should().NotBeNull();
             type.Name.Should().Be("AlarmType");
@@ -80,7 +95,7 @@ namespace L5Sharp.Tests
         {
             var content = LogixContent.Load(Known.Test);
 
-            var results = content.DataTypes().Where(d => d.Members.Any(m => m.DataType == "BOOL")).ToList();
+            var results = content.DataTypes.Where(d => d.Members.Any(m => m.DataType == "BOOL")).ToList();
 
             results.Should().NotBeEmpty();
         }
@@ -90,67 +105,48 @@ namespace L5Sharp.Tests
         {
             var content = LogixContent.Load(Known.Test);
 
-            var timers = content.Tags().Where(t => t.DataType == "TIMER");
+            var timers = content.Tags.Where(t => t.DataType == "TIMER");
 
             timers.Should().NotBeEmpty();
         }
 
         [Test]
-        public void Tags_Program_ShouldNotBeEmpty()
+        public void Find_RoutineWithName_ShouldHaveResultWithName()
         {
             var content = LogixContent.Load(Known.Test);
 
-            var tags = content.Tags("MainProgram").Where(t => t.DataType == "DINT");
+            var results = content.Find<Routine>().Where(r => r.Name == "Main").ToList();
 
-            tags.Should().NotBeEmpty();
+            results.Should().NotBeEmpty();
+            results.Should().Contain(r => r.Name == "Main");
         }
 
         [Test]
-        public void Routine_Program_ShouldNotBeEmpty()
-        {
-            var content = LogixContent.Load(Known.Test);
-            
-            var routines = content.Routines("MainProgram");
-
-            routines.Should().NotBeEmpty();
-        }
-
-        [Test]
-        public void Query_Testing_ShouldWork()
+        public void Find_Rungs_ShouldReturnsRungs()
         {
             var content = LogixContent.Load(Known.Test);
 
-            var results = content.Query<Routine>().Where(r => r.Name == "Test");
-
-            results.Should().BeEmpty();
-        }
-
-        [Test]
-        public void Query_Rungs_ShouldReturnsRungs()
-        {
-            var content = LogixContent.Load(Known.Test);
-
-            var results = content.Query<Rung>().SelectMany(t => t.Text.Tags()).Distinct().ToList();
+            var results = content.Find<Rung>().SelectMany(t => t.Text.Tags()).Distinct().ToList();
 
             results.Should().NotBeEmpty();
         }
-        
+
         [Test]
         public void Query_DistinctReferencedTagNames_ShouldReturnsLotsOfTagNames()
         {
             var content = LogixContent.Load(Known.Test);
 
-            var results = content.Query<Rung>().SelectMany(t => t.Text.Tags()).Distinct().ToList();
+            var results = content.Find<Rung>().SelectMany(t => t.Text.Tags()).Distinct().ToList();
 
             results.Should().NotBeEmpty();
         }
-        
+
         [Test]
         public void Query_TagsInMovInstructions_ShouldReturnsLotsOfTagNames()
         {
             var content = LogixContent.Load(Known.Test);
 
-            var results = content.Query<Rung>()
+            var results = content.Find<Rung>()
                 .SelectMany(r => r.Text.TagsIn("MOV"))
                 .ToList();
 
@@ -158,21 +154,28 @@ namespace L5Sharp.Tests
         }
 
         [Test]
-        public void Logic_InProgram_ShouldNotBeEmpty()
+        public void CreateNameFile()
         {
-            var content = LogixContent.Load(Known.Test);
+            var doc = XDocument.Load(@"C:\Users\tnunnink\Documents\GitHub\L5Sharp\src\Rockwell\L5X.xsd");
 
-            var logic = content.LogicIn(Scope.Program, "MainProgram").Where(t => t.ContainsTag("BoolTag"));
+            var names = doc.Descendants().Where(e => e.Attribute("name") is not null)
+                .Select(e => e.Attribute("name")?.Value).Distinct().OrderBy(n => n).ToList();
 
-            logic.Should().BeEmpty();
-        }
+            names.Should().NotBeEmpty();
 
-        [Test]
-        public void Add_Collection_ShouldNotBeEmpty()
-        {
-            var content = LogixContent.Load(Known.Test);
-            
-            content.DataTypes();
+            var builder = new StringBuilder();
+
+            foreach (var name in names)
+            {
+                builder.AppendLine("///<summary>");
+                builder.AppendLine($"/// Gets the <c>{name}</c> L5X name value.");
+                builder.AppendLine("///</summary>");
+                builder.AppendLine($"public const string {name} = \"{name}\";");
+                builder.AppendLine();
+            }
+
+            var file = builder.ToString();
+            File.WriteAllText(@"C:\Users\tnunnink\Documents\GitHub\L5Sharp\src\Rockwell\names.txt", file);
         }
     }
 }

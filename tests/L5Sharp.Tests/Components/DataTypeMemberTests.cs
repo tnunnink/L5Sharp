@@ -9,10 +9,10 @@ namespace L5Sharp.Tests.Components;
 public class DataTypeMemberTests
 {
     [Test]
-    public void DataTypeMember_DefaultConstructor_ShouldSetPropertiesToDefaultValues()
+    public void New_Default_ShouldHaveExpectedValues()
     {
         var member = new DataTypeMember();
-        
+
         member.Name.Should().BeEmpty();
         member.Description.Should().BeEmpty();
         member.DataType.Should().BeEmpty();
@@ -48,5 +48,36 @@ public class DataTypeMemberTests
         member.Dimension.Should().BeEquivalentTo(dimension);
         member.Radix.Should().Be(radix);
         member.ExternalAccess.Should().Be(externalAccess);
+    }
+
+    [Test]
+    public void Clone_WhenCalled_ShouldReturnExpectedType()
+    {
+        var member = new DataTypeMember
+        {
+            Name = "Test",
+            DataType = "REAL",
+            Dimension = new Dimensions(3),
+            Radix = Radix.Exponential,
+            ExternalAccess = ExternalAccess.ReadWrite,
+            Description = "This is a test",
+            Hidden = true,
+            Target = "SomeOtherMember",
+            BitNumber = 12
+        };
+
+        var clone = member.Clone();
+
+        clone.Should().BeOfType<DataTypeMember>();
+        clone.Should().NotBeSameAs(member);
+        clone.Name.Should().Be(member.Name);
+        clone.DataType.Should().Be(member.DataType);
+        clone.Dimension.Should().Be(member.Dimension);
+        clone.Radix.Should().Be(member.Radix);
+        clone.ExternalAccess.Should().Be(member.ExternalAccess);
+        clone.Description.Should().Be(member.Description);
+        clone.Hidden.Should().Be(member.Hidden);
+        clone.Target.Should().Be(member.Target);
+        clone.BitNumber.Should().Be(member.BitNumber);
     }
 }

@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<RSLogix5000Content SchemaRevision="1.0" SoftwareRevision="32.02" TargetName="TestController" TargetType="Controller" ContainsContext="false" Owner="tnunnink, EN Engineering" ExportDate="Fri Mar 03 12:43:19 2023" ExportOptions="NoRawData L5KData DecoratedData ForceProtectedEncoding AllProjDocTrans">
-<Controller Use="Target" Name="TestController" ProcessorType="1756-L83E" MajorRev="32" MinorRev="11" ProjectCreationDate="Mon Sep 27 15:23:27 2021" LastModifiedDate="Fri Mar 03 12:43:08 2023" SFCExecutionControl="CurrentActive" SFCRestartPosition="MostRecent" SFCLastScan="DontScan" ProjectSN="16#0000_0000"
+<RSLogix5000Content SchemaRevision="1.0" SoftwareRevision="32.02" TargetName="TestController" TargetType="Controller" ContainsContext="false" Owner="tnunnink, EN Engineering" ExportDate="Fri Jun 23 08:48:08 2023" ExportOptions="NoRawData L5KData DecoratedData ForceProtectedEncoding AllProjDocTrans">
+<Controller Use="Target" Name="TestController" ProcessorType="1756-L83E" MajorRev="32" MinorRev="11" ProjectCreationDate="Mon Sep 27 16:23:27 2021" LastModifiedDate="Mon Jun 12 12:49:45 2023" SFCExecutionControl="CurrentActive" SFCRestartPosition="MostRecent" SFCLastScan="DontScan" ProjectSN="16#0000_0000"
  MatchProjectToController="false" CanUseRPIFromProducer="false" InhibitAutomaticFirmwareUpdate="0" PassThroughConfiguration="EnabledWithAppend" DownloadProjectDocumentationAndExtendedProperties="true" DownloadProjectCustomProperties="true" ReportMinorOverflow="false">
 <Description>
 <![CDATA[This is a test project]]>
@@ -200,7 +200,7 @@ Dint Array]]>
 <Member Name="ZZZZZZZZZZSimpleType0" DataType="SINT" Dimension="0" Radix="Decimal" Hidden="true" ExternalAccess="Read/Write"/>
 <Member Name="BoolMember" DataType="BIT" Dimension="0" Radix="Hex" Hidden="false" Target="ZZZZZZZZZZSimpleType0" BitNumber="0" ExternalAccess="Read/Write">
 <Description>
-<![CDATA[Test Boolean update]]>
+<![CDATA[Test Bool]]>
 </Description>
 </Member>
 <Member Name="SintMember" DataType="SINT" Dimension="0" Radix="Hex" Hidden="false" ExternalAccess="Read/Write">
@@ -215,7 +215,7 @@ Dint Array]]>
 </Member>
 <Member Name="DintMember" DataType="DINT" Dimension="0" Radix="ASCII" Hidden="false" ExternalAccess="None">
 <Description>
-<![CDATA[Test Dint comment]]>
+<![CDATA[Test Dint]]>
 </Description>
 </Member>
 <Member Name="LintMember" DataType="LINT" Dimension="0" Radix="Decimal" Hidden="false" ExternalAccess="Read/Write">
@@ -223,13 +223,21 @@ Dint Array]]>
 <![CDATA[Test Lint]]>
 </Description>
 </Member>
-<Member Name="NewMember" DataType="DINT" Dimension="0" Radix="Decimal" Hidden="false" ExternalAccess="Read/Write">
+<Member Name="RealMember" DataType="REAL" Dimension="0" Radix="Float" Hidden="false" ExternalAccess="Read/Write">
 <Description>
-<![CDATA[This is a test member]]>
+<![CDATA[Test Real]]>
 </Description>
 </Member>
-<Member Name="ZZZZZZZZZZSimpleType7" DataType="SINT" Dimension="0" Radix="Decimal" Hidden="true" ExternalAccess="Read/Write"/>
-<Member Name="A1" DataType="BIT" Dimension="0" Radix="Decimal" Hidden="false" Target="ZZZZZZZZZZSimpleType7" BitNumber="0" ExternalAccess="Read/Write"/>
+</Members>
+</DataType>
+<DataType Name="TestType" Family="NoFamily" Class="User">
+<Description>
+<![CDATA[this is a test]]>
+</Description>
+<Members>
+<Member Name="Timers" DataType="TIMER" Dimension="5" Radix="NullType" Hidden="false" ExternalAccess="Read/Write"/>
+<Member Name="Number" DataType="DINT" Dimension="0" Radix="ASCII" Hidden="false" ExternalAccess="Read/Write"/>
+<Member Name="Flag" DataType="BOOL" Dimension="0" Radix="Decimal" Hidden="false" ExternalAccess="Read Only"/>
 </Members>
 </DataType>
 </DataTypes>
@@ -6695,7 +6703,7 @@ Dint Array]]>
 <![CDATA[Description Test]]>
 </Description>
 <DefaultData Format="L5K">
-<![CDATA[[0,0,0,0,0,0,0]]]>
+<![CDATA[[0,0,0,0,0,0.00000000e+000]]]>
 </DefaultData>
 <DefaultData Format="Decorated">
 <Structure DataType="SimpleType">
@@ -6704,8 +6712,7 @@ Dint Array]]>
 <DataValueMember Name="IntMember" DataType="INT" Radix="Octal" Value="8#000_000"/>
 <DataValueMember Name="DintMember" DataType="DINT" Radix="ASCII" Value="'$00$00$00$00'"/>
 <DataValueMember Name="LintMember" DataType="LINT" Radix="Decimal" Value="0"/>
-<DataValueMember Name="NewMember" DataType="DINT" Radix="Decimal" Value="0"/>
-<DataValueMember Name="A1" DataType="BOOL" Value="0"/>
+<DataValueMember Name="RealMember" DataType="REAL" Radix="Float" Value="0.0"/>
 </Structure>
 </DefaultData>
 </LocalTag>
@@ -6772,7 +6779,7 @@ Dint Array]]>
 </Tag>
 <Tag Name="aoiTestInstance" TagType="Base" DataType="aoi_Test" Constant="false" ExternalAccess="Read/Write">
 <Data Format="L5K">
-<![CDATA[[1,0,0,0,[0,0,0,0,0,0,0],[0,0,0,0,0],[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
+<![CDATA[[1,0,0,0,[0,0,0,0,0,0.00000000e+000],[0,0,0,0,0],[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
 		]]]]>
 </Data>
 <Data Format="Decorated">
@@ -6921,11 +6928,13 @@ Dint Array]]>
 </Tag>
 <Tag Name="NewTag" TagType="Base" DataType="ComplexType" Constant="false" ExternalAccess="None">
 <Data Format="L5K">
-<![CDATA[[[0,0,0,0,0,0,0],[0,0,0],[0,0,0],[1,0.00000000e+000,3.40282347e+038,3.40282347e+038,-3.40282347e+038,-3.40282347e+038
-		,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000,0,0.00000000e+000,0,5.60519386e-045
-		,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000
-		,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000],[1,0,0,0,[0,0,0,0,0,0,0],[0,0,0,0,0],[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
-		]],[[0,0,0,0,0,0,0],[0,0,0,0,0,0,0],[0,0,0,0,0,0,0],[0,0,0,0,0,0,0],[0,0,0,0,0,0,0]],0,[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
+<![CDATA[[[0,0,0,0,0,0.00000000e+000],[0,0,0],[0,0,0],[1,0.00000000e+000,3.40282347e+038,3.40282347e+038,-3.40282347e+038
+		,-3.40282347e+038,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000,0,0.00000000e+000
+		,0,5.60519386e-045,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000
+		,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000],[1,0,0,0,[0,0
+		,0,0,0,0.00000000e+000],[0,0,0,0,0],[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
+		]],[[0,0,0,0,0,0.00000000e+000],[0,0,0,0,0,0.00000000e+000],[0,0,0,0,0,0.00000000e+000],[0,0,0,0,0,0.00000000e+000],[0
+		,0,0,0,0,0.00000000e+000]],0,[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
 		],[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
 		]]]]>
 </Data>
@@ -6937,8 +6946,7 @@ Dint Array]]>
 <DataValueMember Name="IntMember" DataType="INT" Radix="Octal" Value="8#000_000"/>
 <DataValueMember Name="DintMember" DataType="DINT" Radix="ASCII" Value="'$00$00$00$00'"/>
 <DataValueMember Name="LintMember" DataType="LINT" Radix="Decimal" Value="0"/>
-<DataValueMember Name="NewMember" DataType="DINT" Radix="Decimal" Value="0"/>
-<DataValueMember Name="A1" DataType="BOOL" Value="0"/>
+<DataValueMember Name="RealMember" DataType="REAL" Radix="Float" Value="0.0"/>
 </StructureMember>
 <StructureMember Name="CounterMember" DataType="COUNTER">
 <DataValueMember Name="PRE" DataType="DINT" Radix="Decimal" Value="0"/>
@@ -7000,8 +7008,7 @@ Dint Array]]>
 <DataValueMember Name="IntMember" DataType="INT" Radix="Octal" Value="8#000_000"/>
 <DataValueMember Name="DintMember" DataType="DINT" Radix="ASCII" Value="'$00$00$00$00'"/>
 <DataValueMember Name="LintMember" DataType="LINT" Radix="Decimal" Value="0"/>
-<DataValueMember Name="NewMember" DataType="DINT" Radix="Decimal" Value="0"/>
-<DataValueMember Name="A1" DataType="BOOL" Value="0"/>
+<DataValueMember Name="RealMember" DataType="REAL" Radix="Float" Value="0.0"/>
 </Structure>
 </Element>
 <Element Index="[1]">
@@ -7011,8 +7018,7 @@ Dint Array]]>
 <DataValueMember Name="IntMember" DataType="INT" Radix="Octal" Value="8#000_000"/>
 <DataValueMember Name="DintMember" DataType="DINT" Radix="ASCII" Value="'$00$00$00$00'"/>
 <DataValueMember Name="LintMember" DataType="LINT" Radix="Decimal" Value="0"/>
-<DataValueMember Name="NewMember" DataType="DINT" Radix="Decimal" Value="0"/>
-<DataValueMember Name="A1" DataType="BOOL" Value="0"/>
+<DataValueMember Name="RealMember" DataType="REAL" Radix="Float" Value="0.0"/>
 </Structure>
 </Element>
 <Element Index="[2]">
@@ -7022,8 +7028,7 @@ Dint Array]]>
 <DataValueMember Name="IntMember" DataType="INT" Radix="Octal" Value="8#000_000"/>
 <DataValueMember Name="DintMember" DataType="DINT" Radix="ASCII" Value="'$00$00$00$00'"/>
 <DataValueMember Name="LintMember" DataType="LINT" Radix="Decimal" Value="0"/>
-<DataValueMember Name="NewMember" DataType="DINT" Radix="Decimal" Value="0"/>
-<DataValueMember Name="A1" DataType="BOOL" Value="0"/>
+<DataValueMember Name="RealMember" DataType="REAL" Radix="Float" Value="0.0"/>
 </Structure>
 </Element>
 <Element Index="[3]">
@@ -7033,8 +7038,7 @@ Dint Array]]>
 <DataValueMember Name="IntMember" DataType="INT" Radix="Octal" Value="8#000_000"/>
 <DataValueMember Name="DintMember" DataType="DINT" Radix="ASCII" Value="'$00$00$00$00'"/>
 <DataValueMember Name="LintMember" DataType="LINT" Radix="Decimal" Value="0"/>
-<DataValueMember Name="NewMember" DataType="DINT" Radix="Decimal" Value="0"/>
-<DataValueMember Name="A1" DataType="BOOL" Value="0"/>
+<DataValueMember Name="RealMember" DataType="REAL" Radix="Float" Value="0.0"/>
 </Structure>
 </Element>
 <Element Index="[4]">
@@ -7044,8 +7048,7 @@ Dint Array]]>
 <DataValueMember Name="IntMember" DataType="INT" Radix="Octal" Value="8#000_000"/>
 <DataValueMember Name="DintMember" DataType="DINT" Radix="ASCII" Value="'$00$00$00$00'"/>
 <DataValueMember Name="LintMember" DataType="LINT" Radix="Decimal" Value="0"/>
-<DataValueMember Name="NewMember" DataType="DINT" Radix="Decimal" Value="0"/>
-<DataValueMember Name="A1" DataType="BOOL" Value="0"/>
+<DataValueMember Name="RealMember" DataType="REAL" Radix="Float" Value="0.0"/>
 </Structure>
 </Element>
 </ArrayMember>
@@ -7111,10 +7114,10 @@ Dint Array]]>
 </Tag>
 <Tag Name="SimpleDint" TagType="Base" DataType="DINT" Radix="Decimal" Constant="false" ExternalAccess="None">
 <Data Format="L5K">
-<![CDATA[123456]]>
+<![CDATA[123392]]>
 </Data>
 <Data Format="Decorated">
-<DataValue DataType="DINT" Radix="Decimal" Value="123456"/>
+<DataValue DataType="DINT" Radix="Decimal" Value="123392"/>
 </Data>
 </Tag>
 <Tag Name="SimpleInt" TagType="Base" DataType="INT" Radix="Decimal" Constant="false" ExternalAccess="None">
@@ -7162,11 +7165,11 @@ Dint Array]]>
 <![CDATA[This is a test string]]>
 </Description>
 <Data Format="L5K">
-<![CDATA[[26,'This is a test string type$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
+<![CDATA[[45,'This is a test string type$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
 		]]]>
 </Data>
-<Data Format="String" Length="26">
-<![CDATA['This is a test string type']]>
+<Data Format="String" Length="45">
+<![CDATA['This is a test string type$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00']]>
 </Data>
 </Tag>
 <Tag Name="SimpleUDint" TagType="Base" DataType="UDINT" Radix="Decimal" Constant="false" ExternalAccess="Read/Write">
@@ -7370,7 +7373,7 @@ Dint Array]]>
 </Tag>
 <Tag Name="TagParameter" TagType="Base" DataType="SimpleType" Constant="false" ExternalAccess="None">
 <Data Format="L5K">
-<![CDATA[[0,0,0,0,0,0,0]]]>
+<![CDATA[[0,0,0,0,0,0.00000000e+000]]]>
 </Data>
 <Data Format="Decorated">
 <Structure DataType="SimpleType">
@@ -7379,8 +7382,7 @@ Dint Array]]>
 <DataValueMember Name="IntMember" DataType="INT" Radix="Octal" Value="8#000_000"/>
 <DataValueMember Name="DintMember" DataType="DINT" Radix="ASCII" Value="'$00$00$00$00'"/>
 <DataValueMember Name="LintMember" DataType="LINT" Radix="Decimal" Value="0"/>
-<DataValueMember Name="NewMember" DataType="DINT" Radix="Decimal" Value="0"/>
-<DataValueMember Name="A1" DataType="BOOL" Value="0"/>
+<DataValueMember Name="RealMember" DataType="REAL" Radix="Float" Value="0.0"/>
 </Structure>
 </Data>
 </Tag>
@@ -7456,6 +7458,628 @@ Dint Array]]>
 <Array DataType="DINT" Dimensions="1,1,2" Radix="Decimal">
 <Element Index="[0,0,0]" Value="0"/>
 <Element Index="[0,0,1]" Value="0"/>
+</Array>
+</Data>
+</Tag>
+<Tag Name="TestArrayOfArray" TagType="Base" DataType="ArrayType" Dimensions="5" Constant="false" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[tessting an array of arrays]]>
+</Description>
+<Data Format="L5K">
+<![CDATA[[[[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000
+		],[2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0
+		,2#0,2#0,2#0,2#0,2#0],[[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
+		],[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
+		],[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
+		],[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
+		],[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
+		]]],[[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000
+		],[2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0
+		,2#0,2#0,2#0,2#0,2#0],[[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
+		],[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
+		],[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
+		],[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
+		],[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
+		]]],[[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000
+		],[2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0
+		,2#0,2#0,2#0,2#0,2#0],[[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
+		],[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
+		],[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
+		],[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
+		],[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
+		]]],[[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000
+		],[2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0
+		,2#0,2#0,2#0,2#0,2#0],[[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
+		],[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
+		],[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
+		],[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
+		],[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
+		]]],[[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000
+		],[2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0
+		,2#0,2#0,2#0,2#0,2#0],[[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
+		],[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
+		],[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
+		],[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
+		],[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
+		]]]]]]>
+</Data>
+<Data Format="Decorated">
+<Array DataType="ArrayType" Dimensions="5">
+<Element Index="[0]">
+<Structure DataType="ArrayType">
+<ArrayMember Name="SintArray" DataType="SINT" Dimensions="5" Radix="ASCII">
+<Element Index="[0]" Value="'$00'"/>
+<Element Index="[1]" Value="'$00'"/>
+<Element Index="[2]" Value="'$00'"/>
+<Element Index="[3]" Value="'$00'"/>
+<Element Index="[4]" Value="'$00'"/>
+</ArrayMember>
+<ArrayMember Name="IntArray" DataType="INT" Dimensions="5" Radix="Octal">
+<Element Index="[0]" Value="8#000_000"/>
+<Element Index="[1]" Value="8#000_000"/>
+<Element Index="[2]" Value="8#000_000"/>
+<Element Index="[3]" Value="8#000_000"/>
+<Element Index="[4]" Value="8#000_000"/>
+</ArrayMember>
+<ArrayMember Name="DintArray" DataType="DINT" Dimensions="5" Radix="Hex">
+<Element Index="[0]" Value="16#0000_0000"/>
+<Element Index="[1]" Value="16#0000_0000"/>
+<Element Index="[2]" Value="16#0000_0000"/>
+<Element Index="[3]" Value="16#0000_0000"/>
+<Element Index="[4]" Value="16#0000_0000"/>
+</ArrayMember>
+<ArrayMember Name="LintArray" DataType="LINT" Dimensions="5" Radix="Date/Time">
+<Element Index="[0]" Value="DT#1970-01-01-00:00:00.000_000Z"/>
+<Element Index="[1]" Value="DT#1970-01-01-00:00:00.000_000Z"/>
+<Element Index="[2]" Value="DT#1970-01-01-00:00:00.000_000Z"/>
+<Element Index="[3]" Value="DT#1970-01-01-00:00:00.000_000Z"/>
+<Element Index="[4]" Value="DT#1970-01-01-00:00:00.000_000Z"/>
+</ArrayMember>
+<ArrayMember Name="RealArray" DataType="REAL" Dimensions="5" Radix="Exponential">
+<Element Index="[0]" Value="0.00000000e+000"/>
+<Element Index="[1]" Value="0.00000000e+000"/>
+<Element Index="[2]" Value="0.00000000e+000"/>
+<Element Index="[3]" Value="0.00000000e+000"/>
+<Element Index="[4]" Value="0.00000000e+000"/>
+</ArrayMember>
+<ArrayMember Name="BoolArray" DataType="BOOL" Dimensions="32" Radix="Binary">
+<Element Index="[0]" Value="0"/>
+<Element Index="[1]" Value="0"/>
+<Element Index="[2]" Value="0"/>
+<Element Index="[3]" Value="0"/>
+<Element Index="[4]" Value="0"/>
+<Element Index="[5]" Value="0"/>
+<Element Index="[6]" Value="0"/>
+<Element Index="[7]" Value="0"/>
+<Element Index="[8]" Value="0"/>
+<Element Index="[9]" Value="0"/>
+<Element Index="[10]" Value="0"/>
+<Element Index="[11]" Value="0"/>
+<Element Index="[12]" Value="0"/>
+<Element Index="[13]" Value="0"/>
+<Element Index="[14]" Value="0"/>
+<Element Index="[15]" Value="0"/>
+<Element Index="[16]" Value="0"/>
+<Element Index="[17]" Value="0"/>
+<Element Index="[18]" Value="0"/>
+<Element Index="[19]" Value="0"/>
+<Element Index="[20]" Value="0"/>
+<Element Index="[21]" Value="0"/>
+<Element Index="[22]" Value="0"/>
+<Element Index="[23]" Value="0"/>
+<Element Index="[24]" Value="0"/>
+<Element Index="[25]" Value="0"/>
+<Element Index="[26]" Value="0"/>
+<Element Index="[27]" Value="0"/>
+<Element Index="[28]" Value="0"/>
+<Element Index="[29]" Value="0"/>
+<Element Index="[30]" Value="0"/>
+<Element Index="[31]" Value="0"/>
+</ArrayMember>
+<ArrayMember Name="StringArray" DataType="STRING" Dimensions="5">
+<Element Index="[0]">
+<Structure DataType="STRING">
+<DataValueMember Name="LEN" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="DATA" DataType="STRING" Radix="ASCII">
+<![CDATA[]]>
+</DataValueMember>
+</Structure>
+</Element>
+<Element Index="[1]">
+<Structure DataType="STRING">
+<DataValueMember Name="LEN" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="DATA" DataType="STRING" Radix="ASCII">
+<![CDATA[]]>
+</DataValueMember>
+</Structure>
+</Element>
+<Element Index="[2]">
+<Structure DataType="STRING">
+<DataValueMember Name="LEN" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="DATA" DataType="STRING" Radix="ASCII">
+<![CDATA[]]>
+</DataValueMember>
+</Structure>
+</Element>
+<Element Index="[3]">
+<Structure DataType="STRING">
+<DataValueMember Name="LEN" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="DATA" DataType="STRING" Radix="ASCII">
+<![CDATA[]]>
+</DataValueMember>
+</Structure>
+</Element>
+<Element Index="[4]">
+<Structure DataType="STRING">
+<DataValueMember Name="LEN" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="DATA" DataType="STRING" Radix="ASCII">
+<![CDATA[]]>
+</DataValueMember>
+</Structure>
+</Element>
+</ArrayMember>
+</Structure>
+</Element>
+<Element Index="[1]">
+<Structure DataType="ArrayType">
+<ArrayMember Name="SintArray" DataType="SINT" Dimensions="5" Radix="ASCII">
+<Element Index="[0]" Value="'$00'"/>
+<Element Index="[1]" Value="'$00'"/>
+<Element Index="[2]" Value="'$00'"/>
+<Element Index="[3]" Value="'$00'"/>
+<Element Index="[4]" Value="'$00'"/>
+</ArrayMember>
+<ArrayMember Name="IntArray" DataType="INT" Dimensions="5" Radix="Octal">
+<Element Index="[0]" Value="8#000_000"/>
+<Element Index="[1]" Value="8#000_000"/>
+<Element Index="[2]" Value="8#000_000"/>
+<Element Index="[3]" Value="8#000_000"/>
+<Element Index="[4]" Value="8#000_000"/>
+</ArrayMember>
+<ArrayMember Name="DintArray" DataType="DINT" Dimensions="5" Radix="Hex">
+<Element Index="[0]" Value="16#0000_0000"/>
+<Element Index="[1]" Value="16#0000_0000"/>
+<Element Index="[2]" Value="16#0000_0000"/>
+<Element Index="[3]" Value="16#0000_0000"/>
+<Element Index="[4]" Value="16#0000_0000"/>
+</ArrayMember>
+<ArrayMember Name="LintArray" DataType="LINT" Dimensions="5" Radix="Date/Time">
+<Element Index="[0]" Value="DT#1970-01-01-00:00:00.000_000Z"/>
+<Element Index="[1]" Value="DT#1970-01-01-00:00:00.000_000Z"/>
+<Element Index="[2]" Value="DT#1970-01-01-00:00:00.000_000Z"/>
+<Element Index="[3]" Value="DT#1970-01-01-00:00:00.000_000Z"/>
+<Element Index="[4]" Value="DT#1970-01-01-00:00:00.000_000Z"/>
+</ArrayMember>
+<ArrayMember Name="RealArray" DataType="REAL" Dimensions="5" Radix="Exponential">
+<Element Index="[0]" Value="0.00000000e+000"/>
+<Element Index="[1]" Value="0.00000000e+000"/>
+<Element Index="[2]" Value="0.00000000e+000"/>
+<Element Index="[3]" Value="0.00000000e+000"/>
+<Element Index="[4]" Value="0.00000000e+000"/>
+</ArrayMember>
+<ArrayMember Name="BoolArray" DataType="BOOL" Dimensions="32" Radix="Binary">
+<Element Index="[0]" Value="0"/>
+<Element Index="[1]" Value="0"/>
+<Element Index="[2]" Value="0"/>
+<Element Index="[3]" Value="0"/>
+<Element Index="[4]" Value="0"/>
+<Element Index="[5]" Value="0"/>
+<Element Index="[6]" Value="0"/>
+<Element Index="[7]" Value="0"/>
+<Element Index="[8]" Value="0"/>
+<Element Index="[9]" Value="0"/>
+<Element Index="[10]" Value="0"/>
+<Element Index="[11]" Value="0"/>
+<Element Index="[12]" Value="0"/>
+<Element Index="[13]" Value="0"/>
+<Element Index="[14]" Value="0"/>
+<Element Index="[15]" Value="0"/>
+<Element Index="[16]" Value="0"/>
+<Element Index="[17]" Value="0"/>
+<Element Index="[18]" Value="0"/>
+<Element Index="[19]" Value="0"/>
+<Element Index="[20]" Value="0"/>
+<Element Index="[21]" Value="0"/>
+<Element Index="[22]" Value="0"/>
+<Element Index="[23]" Value="0"/>
+<Element Index="[24]" Value="0"/>
+<Element Index="[25]" Value="0"/>
+<Element Index="[26]" Value="0"/>
+<Element Index="[27]" Value="0"/>
+<Element Index="[28]" Value="0"/>
+<Element Index="[29]" Value="0"/>
+<Element Index="[30]" Value="0"/>
+<Element Index="[31]" Value="0"/>
+</ArrayMember>
+<ArrayMember Name="StringArray" DataType="STRING" Dimensions="5">
+<Element Index="[0]">
+<Structure DataType="STRING">
+<DataValueMember Name="LEN" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="DATA" DataType="STRING" Radix="ASCII">
+<![CDATA[]]>
+</DataValueMember>
+</Structure>
+</Element>
+<Element Index="[1]">
+<Structure DataType="STRING">
+<DataValueMember Name="LEN" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="DATA" DataType="STRING" Radix="ASCII">
+<![CDATA[]]>
+</DataValueMember>
+</Structure>
+</Element>
+<Element Index="[2]">
+<Structure DataType="STRING">
+<DataValueMember Name="LEN" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="DATA" DataType="STRING" Radix="ASCII">
+<![CDATA[]]>
+</DataValueMember>
+</Structure>
+</Element>
+<Element Index="[3]">
+<Structure DataType="STRING">
+<DataValueMember Name="LEN" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="DATA" DataType="STRING" Radix="ASCII">
+<![CDATA[]]>
+</DataValueMember>
+</Structure>
+</Element>
+<Element Index="[4]">
+<Structure DataType="STRING">
+<DataValueMember Name="LEN" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="DATA" DataType="STRING" Radix="ASCII">
+<![CDATA[]]>
+</DataValueMember>
+</Structure>
+</Element>
+</ArrayMember>
+</Structure>
+</Element>
+<Element Index="[2]">
+<Structure DataType="ArrayType">
+<ArrayMember Name="SintArray" DataType="SINT" Dimensions="5" Radix="ASCII">
+<Element Index="[0]" Value="'$00'"/>
+<Element Index="[1]" Value="'$00'"/>
+<Element Index="[2]" Value="'$00'"/>
+<Element Index="[3]" Value="'$00'"/>
+<Element Index="[4]" Value="'$00'"/>
+</ArrayMember>
+<ArrayMember Name="IntArray" DataType="INT" Dimensions="5" Radix="Octal">
+<Element Index="[0]" Value="8#000_000"/>
+<Element Index="[1]" Value="8#000_000"/>
+<Element Index="[2]" Value="8#000_000"/>
+<Element Index="[3]" Value="8#000_000"/>
+<Element Index="[4]" Value="8#000_000"/>
+</ArrayMember>
+<ArrayMember Name="DintArray" DataType="DINT" Dimensions="5" Radix="Hex">
+<Element Index="[0]" Value="16#0000_0000"/>
+<Element Index="[1]" Value="16#0000_0000"/>
+<Element Index="[2]" Value="16#0000_0000"/>
+<Element Index="[3]" Value="16#0000_0000"/>
+<Element Index="[4]" Value="16#0000_0000"/>
+</ArrayMember>
+<ArrayMember Name="LintArray" DataType="LINT" Dimensions="5" Radix="Date/Time">
+<Element Index="[0]" Value="DT#1970-01-01-00:00:00.000_000Z"/>
+<Element Index="[1]" Value="DT#1970-01-01-00:00:00.000_000Z"/>
+<Element Index="[2]" Value="DT#1970-01-01-00:00:00.000_000Z"/>
+<Element Index="[3]" Value="DT#1970-01-01-00:00:00.000_000Z"/>
+<Element Index="[4]" Value="DT#1970-01-01-00:00:00.000_000Z"/>
+</ArrayMember>
+<ArrayMember Name="RealArray" DataType="REAL" Dimensions="5" Radix="Exponential">
+<Element Index="[0]" Value="0.00000000e+000"/>
+<Element Index="[1]" Value="0.00000000e+000"/>
+<Element Index="[2]" Value="0.00000000e+000"/>
+<Element Index="[3]" Value="0.00000000e+000"/>
+<Element Index="[4]" Value="0.00000000e+000"/>
+</ArrayMember>
+<ArrayMember Name="BoolArray" DataType="BOOL" Dimensions="32" Radix="Binary">
+<Element Index="[0]" Value="0"/>
+<Element Index="[1]" Value="0"/>
+<Element Index="[2]" Value="0"/>
+<Element Index="[3]" Value="0"/>
+<Element Index="[4]" Value="0"/>
+<Element Index="[5]" Value="0"/>
+<Element Index="[6]" Value="0"/>
+<Element Index="[7]" Value="0"/>
+<Element Index="[8]" Value="0"/>
+<Element Index="[9]" Value="0"/>
+<Element Index="[10]" Value="0"/>
+<Element Index="[11]" Value="0"/>
+<Element Index="[12]" Value="0"/>
+<Element Index="[13]" Value="0"/>
+<Element Index="[14]" Value="0"/>
+<Element Index="[15]" Value="0"/>
+<Element Index="[16]" Value="0"/>
+<Element Index="[17]" Value="0"/>
+<Element Index="[18]" Value="0"/>
+<Element Index="[19]" Value="0"/>
+<Element Index="[20]" Value="0"/>
+<Element Index="[21]" Value="0"/>
+<Element Index="[22]" Value="0"/>
+<Element Index="[23]" Value="0"/>
+<Element Index="[24]" Value="0"/>
+<Element Index="[25]" Value="0"/>
+<Element Index="[26]" Value="0"/>
+<Element Index="[27]" Value="0"/>
+<Element Index="[28]" Value="0"/>
+<Element Index="[29]" Value="0"/>
+<Element Index="[30]" Value="0"/>
+<Element Index="[31]" Value="0"/>
+</ArrayMember>
+<ArrayMember Name="StringArray" DataType="STRING" Dimensions="5">
+<Element Index="[0]">
+<Structure DataType="STRING">
+<DataValueMember Name="LEN" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="DATA" DataType="STRING" Radix="ASCII">
+<![CDATA[]]>
+</DataValueMember>
+</Structure>
+</Element>
+<Element Index="[1]">
+<Structure DataType="STRING">
+<DataValueMember Name="LEN" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="DATA" DataType="STRING" Radix="ASCII">
+<![CDATA[]]>
+</DataValueMember>
+</Structure>
+</Element>
+<Element Index="[2]">
+<Structure DataType="STRING">
+<DataValueMember Name="LEN" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="DATA" DataType="STRING" Radix="ASCII">
+<![CDATA[]]>
+</DataValueMember>
+</Structure>
+</Element>
+<Element Index="[3]">
+<Structure DataType="STRING">
+<DataValueMember Name="LEN" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="DATA" DataType="STRING" Radix="ASCII">
+<![CDATA[]]>
+</DataValueMember>
+</Structure>
+</Element>
+<Element Index="[4]">
+<Structure DataType="STRING">
+<DataValueMember Name="LEN" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="DATA" DataType="STRING" Radix="ASCII">
+<![CDATA[]]>
+</DataValueMember>
+</Structure>
+</Element>
+</ArrayMember>
+</Structure>
+</Element>
+<Element Index="[3]">
+<Structure DataType="ArrayType">
+<ArrayMember Name="SintArray" DataType="SINT" Dimensions="5" Radix="ASCII">
+<Element Index="[0]" Value="'$00'"/>
+<Element Index="[1]" Value="'$00'"/>
+<Element Index="[2]" Value="'$00'"/>
+<Element Index="[3]" Value="'$00'"/>
+<Element Index="[4]" Value="'$00'"/>
+</ArrayMember>
+<ArrayMember Name="IntArray" DataType="INT" Dimensions="5" Radix="Octal">
+<Element Index="[0]" Value="8#000_000"/>
+<Element Index="[1]" Value="8#000_000"/>
+<Element Index="[2]" Value="8#000_000"/>
+<Element Index="[3]" Value="8#000_000"/>
+<Element Index="[4]" Value="8#000_000"/>
+</ArrayMember>
+<ArrayMember Name="DintArray" DataType="DINT" Dimensions="5" Radix="Hex">
+<Element Index="[0]" Value="16#0000_0000"/>
+<Element Index="[1]" Value="16#0000_0000"/>
+<Element Index="[2]" Value="16#0000_0000"/>
+<Element Index="[3]" Value="16#0000_0000"/>
+<Element Index="[4]" Value="16#0000_0000"/>
+</ArrayMember>
+<ArrayMember Name="LintArray" DataType="LINT" Dimensions="5" Radix="Date/Time">
+<Element Index="[0]" Value="DT#1970-01-01-00:00:00.000_000Z"/>
+<Element Index="[1]" Value="DT#1970-01-01-00:00:00.000_000Z"/>
+<Element Index="[2]" Value="DT#1970-01-01-00:00:00.000_000Z"/>
+<Element Index="[3]" Value="DT#1970-01-01-00:00:00.000_000Z"/>
+<Element Index="[4]" Value="DT#1970-01-01-00:00:00.000_000Z"/>
+</ArrayMember>
+<ArrayMember Name="RealArray" DataType="REAL" Dimensions="5" Radix="Exponential">
+<Element Index="[0]" Value="0.00000000e+000"/>
+<Element Index="[1]" Value="0.00000000e+000"/>
+<Element Index="[2]" Value="0.00000000e+000"/>
+<Element Index="[3]" Value="0.00000000e+000"/>
+<Element Index="[4]" Value="0.00000000e+000"/>
+</ArrayMember>
+<ArrayMember Name="BoolArray" DataType="BOOL" Dimensions="32" Radix="Binary">
+<Element Index="[0]" Value="0"/>
+<Element Index="[1]" Value="0"/>
+<Element Index="[2]" Value="0"/>
+<Element Index="[3]" Value="0"/>
+<Element Index="[4]" Value="0"/>
+<Element Index="[5]" Value="0"/>
+<Element Index="[6]" Value="0"/>
+<Element Index="[7]" Value="0"/>
+<Element Index="[8]" Value="0"/>
+<Element Index="[9]" Value="0"/>
+<Element Index="[10]" Value="0"/>
+<Element Index="[11]" Value="0"/>
+<Element Index="[12]" Value="0"/>
+<Element Index="[13]" Value="0"/>
+<Element Index="[14]" Value="0"/>
+<Element Index="[15]" Value="0"/>
+<Element Index="[16]" Value="0"/>
+<Element Index="[17]" Value="0"/>
+<Element Index="[18]" Value="0"/>
+<Element Index="[19]" Value="0"/>
+<Element Index="[20]" Value="0"/>
+<Element Index="[21]" Value="0"/>
+<Element Index="[22]" Value="0"/>
+<Element Index="[23]" Value="0"/>
+<Element Index="[24]" Value="0"/>
+<Element Index="[25]" Value="0"/>
+<Element Index="[26]" Value="0"/>
+<Element Index="[27]" Value="0"/>
+<Element Index="[28]" Value="0"/>
+<Element Index="[29]" Value="0"/>
+<Element Index="[30]" Value="0"/>
+<Element Index="[31]" Value="0"/>
+</ArrayMember>
+<ArrayMember Name="StringArray" DataType="STRING" Dimensions="5">
+<Element Index="[0]">
+<Structure DataType="STRING">
+<DataValueMember Name="LEN" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="DATA" DataType="STRING" Radix="ASCII">
+<![CDATA[]]>
+</DataValueMember>
+</Structure>
+</Element>
+<Element Index="[1]">
+<Structure DataType="STRING">
+<DataValueMember Name="LEN" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="DATA" DataType="STRING" Radix="ASCII">
+<![CDATA[]]>
+</DataValueMember>
+</Structure>
+</Element>
+<Element Index="[2]">
+<Structure DataType="STRING">
+<DataValueMember Name="LEN" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="DATA" DataType="STRING" Radix="ASCII">
+<![CDATA[]]>
+</DataValueMember>
+</Structure>
+</Element>
+<Element Index="[3]">
+<Structure DataType="STRING">
+<DataValueMember Name="LEN" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="DATA" DataType="STRING" Radix="ASCII">
+<![CDATA[]]>
+</DataValueMember>
+</Structure>
+</Element>
+<Element Index="[4]">
+<Structure DataType="STRING">
+<DataValueMember Name="LEN" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="DATA" DataType="STRING" Radix="ASCII">
+<![CDATA[]]>
+</DataValueMember>
+</Structure>
+</Element>
+</ArrayMember>
+</Structure>
+</Element>
+<Element Index="[4]">
+<Structure DataType="ArrayType">
+<ArrayMember Name="SintArray" DataType="SINT" Dimensions="5" Radix="ASCII">
+<Element Index="[0]" Value="'$00'"/>
+<Element Index="[1]" Value="'$00'"/>
+<Element Index="[2]" Value="'$00'"/>
+<Element Index="[3]" Value="'$00'"/>
+<Element Index="[4]" Value="'$00'"/>
+</ArrayMember>
+<ArrayMember Name="IntArray" DataType="INT" Dimensions="5" Radix="Octal">
+<Element Index="[0]" Value="8#000_000"/>
+<Element Index="[1]" Value="8#000_000"/>
+<Element Index="[2]" Value="8#000_000"/>
+<Element Index="[3]" Value="8#000_000"/>
+<Element Index="[4]" Value="8#000_000"/>
+</ArrayMember>
+<ArrayMember Name="DintArray" DataType="DINT" Dimensions="5" Radix="Hex">
+<Element Index="[0]" Value="16#0000_0000"/>
+<Element Index="[1]" Value="16#0000_0000"/>
+<Element Index="[2]" Value="16#0000_0000"/>
+<Element Index="[3]" Value="16#0000_0000"/>
+<Element Index="[4]" Value="16#0000_0000"/>
+</ArrayMember>
+<ArrayMember Name="LintArray" DataType="LINT" Dimensions="5" Radix="Date/Time">
+<Element Index="[0]" Value="DT#1970-01-01-00:00:00.000_000Z"/>
+<Element Index="[1]" Value="DT#1970-01-01-00:00:00.000_000Z"/>
+<Element Index="[2]" Value="DT#1970-01-01-00:00:00.000_000Z"/>
+<Element Index="[3]" Value="DT#1970-01-01-00:00:00.000_000Z"/>
+<Element Index="[4]" Value="DT#1970-01-01-00:00:00.000_000Z"/>
+</ArrayMember>
+<ArrayMember Name="RealArray" DataType="REAL" Dimensions="5" Radix="Exponential">
+<Element Index="[0]" Value="0.00000000e+000"/>
+<Element Index="[1]" Value="0.00000000e+000"/>
+<Element Index="[2]" Value="0.00000000e+000"/>
+<Element Index="[3]" Value="0.00000000e+000"/>
+<Element Index="[4]" Value="0.00000000e+000"/>
+</ArrayMember>
+<ArrayMember Name="BoolArray" DataType="BOOL" Dimensions="32" Radix="Binary">
+<Element Index="[0]" Value="0"/>
+<Element Index="[1]" Value="0"/>
+<Element Index="[2]" Value="0"/>
+<Element Index="[3]" Value="0"/>
+<Element Index="[4]" Value="0"/>
+<Element Index="[5]" Value="0"/>
+<Element Index="[6]" Value="0"/>
+<Element Index="[7]" Value="0"/>
+<Element Index="[8]" Value="0"/>
+<Element Index="[9]" Value="0"/>
+<Element Index="[10]" Value="0"/>
+<Element Index="[11]" Value="0"/>
+<Element Index="[12]" Value="0"/>
+<Element Index="[13]" Value="0"/>
+<Element Index="[14]" Value="0"/>
+<Element Index="[15]" Value="0"/>
+<Element Index="[16]" Value="0"/>
+<Element Index="[17]" Value="0"/>
+<Element Index="[18]" Value="0"/>
+<Element Index="[19]" Value="0"/>
+<Element Index="[20]" Value="0"/>
+<Element Index="[21]" Value="0"/>
+<Element Index="[22]" Value="0"/>
+<Element Index="[23]" Value="0"/>
+<Element Index="[24]" Value="0"/>
+<Element Index="[25]" Value="0"/>
+<Element Index="[26]" Value="0"/>
+<Element Index="[27]" Value="0"/>
+<Element Index="[28]" Value="0"/>
+<Element Index="[29]" Value="0"/>
+<Element Index="[30]" Value="0"/>
+<Element Index="[31]" Value="0"/>
+</ArrayMember>
+<ArrayMember Name="StringArray" DataType="STRING" Dimensions="5">
+<Element Index="[0]">
+<Structure DataType="STRING">
+<DataValueMember Name="LEN" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="DATA" DataType="STRING" Radix="ASCII">
+<![CDATA[]]>
+</DataValueMember>
+</Structure>
+</Element>
+<Element Index="[1]">
+<Structure DataType="STRING">
+<DataValueMember Name="LEN" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="DATA" DataType="STRING" Radix="ASCII">
+<![CDATA[]]>
+</DataValueMember>
+</Structure>
+</Element>
+<Element Index="[2]">
+<Structure DataType="STRING">
+<DataValueMember Name="LEN" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="DATA" DataType="STRING" Radix="ASCII">
+<![CDATA[]]>
+</DataValueMember>
+</Structure>
+</Element>
+<Element Index="[3]">
+<Structure DataType="STRING">
+<DataValueMember Name="LEN" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="DATA" DataType="STRING" Radix="ASCII">
+<![CDATA[]]>
+</DataValueMember>
+</Structure>
+</Element>
+<Element Index="[4]">
+<Structure DataType="STRING">
+<DataValueMember Name="LEN" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="DATA" DataType="STRING" Radix="ASCII">
+<![CDATA[]]>
+</DataValueMember>
+</Structure>
+</Element>
+</ArrayMember>
+</Structure>
+</Element>
 </Array>
 </Data>
 </Tag>
@@ -7594,11 +8218,13 @@ Dint Array]]>
 <![CDATA[Base]]>
 </Description>
 <Data Format="L5K">
-<![CDATA[[[0,0,0,0,0,0,0],[0,0,0],[0,0,0],[1,0.00000000e+000,3.40282347e+038,3.40282347e+038,-3.40282347e+038,-3.40282347e+038
-		,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000,0,0.00000000e+000,0,5.60519386e-045
-		,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000
-		,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000],[1,0,0,0,[0,0,0,0,0,0,0],[0,0,0,0,0],[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
-		]],[[0,0,0,0,0,0,0],[0,0,0,0,0,0,0],[0,0,0,0,0,0,0],[0,0,0,0,0,0,0],[0,0,0,0,0,0,0]],0,[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
+<![CDATA[[[0,0,0,0,0,0.00000000e+000],[0,0,0],[0,0,0],[1,0.00000000e+000,3.40282347e+038,3.40282347e+038,-3.40282347e+038
+		,-3.40282347e+038,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000,0,0.00000000e+000
+		,0,5.60519386e-045,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000
+		,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000],[1,0,0,0,[0,0
+		,0,0,0,0.00000000e+000],[0,0,0,0,0],[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
+		]],[[0,0,0,0,0,0.00000000e+000],[0,0,0,0,0,0.00000000e+000],[0,0,0,0,0,0.00000000e+000],[0,0,0,0,0,0.00000000e+000],[0
+		,0,0,0,0,0.00000000e+000]],0,[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
 		],[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
 		]]]]>
 </Data>
@@ -7610,8 +8236,7 @@ Dint Array]]>
 <DataValueMember Name="IntMember" DataType="INT" Radix="Octal" Value="8#000_000"/>
 <DataValueMember Name="DintMember" DataType="DINT" Radix="ASCII" Value="'$00$00$00$00'"/>
 <DataValueMember Name="LintMember" DataType="LINT" Radix="Decimal" Value="0"/>
-<DataValueMember Name="NewMember" DataType="DINT" Radix="Decimal" Value="0"/>
-<DataValueMember Name="A1" DataType="BOOL" Value="0"/>
+<DataValueMember Name="RealMember" DataType="REAL" Radix="Float" Value="0.0"/>
 </StructureMember>
 <StructureMember Name="CounterMember" DataType="COUNTER">
 <DataValueMember Name="PRE" DataType="DINT" Radix="Decimal" Value="0"/>
@@ -7673,8 +8298,7 @@ Dint Array]]>
 <DataValueMember Name="IntMember" DataType="INT" Radix="Octal" Value="8#000_000"/>
 <DataValueMember Name="DintMember" DataType="DINT" Radix="ASCII" Value="'$00$00$00$00'"/>
 <DataValueMember Name="LintMember" DataType="LINT" Radix="Decimal" Value="0"/>
-<DataValueMember Name="NewMember" DataType="DINT" Radix="Decimal" Value="0"/>
-<DataValueMember Name="A1" DataType="BOOL" Value="0"/>
+<DataValueMember Name="RealMember" DataType="REAL" Radix="Float" Value="0.0"/>
 </Structure>
 </Element>
 <Element Index="[1]">
@@ -7684,8 +8308,7 @@ Dint Array]]>
 <DataValueMember Name="IntMember" DataType="INT" Radix="Octal" Value="8#000_000"/>
 <DataValueMember Name="DintMember" DataType="DINT" Radix="ASCII" Value="'$00$00$00$00'"/>
 <DataValueMember Name="LintMember" DataType="LINT" Radix="Decimal" Value="0"/>
-<DataValueMember Name="NewMember" DataType="DINT" Radix="Decimal" Value="0"/>
-<DataValueMember Name="A1" DataType="BOOL" Value="0"/>
+<DataValueMember Name="RealMember" DataType="REAL" Radix="Float" Value="0.0"/>
 </Structure>
 </Element>
 <Element Index="[2]">
@@ -7695,8 +8318,7 @@ Dint Array]]>
 <DataValueMember Name="IntMember" DataType="INT" Radix="Octal" Value="8#000_000"/>
 <DataValueMember Name="DintMember" DataType="DINT" Radix="ASCII" Value="'$00$00$00$00'"/>
 <DataValueMember Name="LintMember" DataType="LINT" Radix="Decimal" Value="0"/>
-<DataValueMember Name="NewMember" DataType="DINT" Radix="Decimal" Value="0"/>
-<DataValueMember Name="A1" DataType="BOOL" Value="0"/>
+<DataValueMember Name="RealMember" DataType="REAL" Radix="Float" Value="0.0"/>
 </Structure>
 </Element>
 <Element Index="[3]">
@@ -7706,8 +8328,7 @@ Dint Array]]>
 <DataValueMember Name="IntMember" DataType="INT" Radix="Octal" Value="8#000_000"/>
 <DataValueMember Name="DintMember" DataType="DINT" Radix="ASCII" Value="'$00$00$00$00'"/>
 <DataValueMember Name="LintMember" DataType="LINT" Radix="Decimal" Value="0"/>
-<DataValueMember Name="NewMember" DataType="DINT" Radix="Decimal" Value="0"/>
-<DataValueMember Name="A1" DataType="BOOL" Value="0"/>
+<DataValueMember Name="RealMember" DataType="REAL" Radix="Float" Value="0.0"/>
 </Structure>
 </Element>
 <Element Index="[4]">
@@ -7717,8 +8338,7 @@ Dint Array]]>
 <DataValueMember Name="IntMember" DataType="INT" Radix="Octal" Value="8#000_000"/>
 <DataValueMember Name="DintMember" DataType="DINT" Radix="ASCII" Value="'$00$00$00$00'"/>
 <DataValueMember Name="LintMember" DataType="LINT" Radix="Decimal" Value="0"/>
-<DataValueMember Name="NewMember" DataType="DINT" Radix="Decimal" Value="0"/>
-<DataValueMember Name="A1" DataType="BOOL" Value="0"/>
+<DataValueMember Name="RealMember" DataType="REAL" Radix="Float" Value="0.0"/>
 </Structure>
 </Element>
 </ArrayMember>
@@ -7748,7 +8368,7 @@ Dint Array]]>
 </Tag>
 <Tag Name="TestSimpleTag" TagType="Base" DataType="SimpleType" Constant="false" ExternalAccess="Read Only">
 <Data Format="L5K">
-<![CDATA[[0,0,14,1,0,0,0]]]>
+<![CDATA[[0,0,14,1,0,0.00000000e+000]]]>
 </Data>
 <Data Format="Decorated">
 <Structure DataType="SimpleType">
@@ -7757,8 +8377,7 @@ Dint Array]]>
 <DataValueMember Name="IntMember" DataType="INT" Radix="Octal" Value="8#000_016"/>
 <DataValueMember Name="DintMember" DataType="DINT" Radix="ASCII" Value="'$00$00$00$01'"/>
 <DataValueMember Name="LintMember" DataType="LINT" Radix="Decimal" Value="0"/>
-<DataValueMember Name="NewMember" DataType="DINT" Radix="Decimal" Value="0"/>
-<DataValueMember Name="A1" DataType="BOOL" Value="0"/>
+<DataValueMember Name="RealMember" DataType="REAL" Radix="Float" Value="0.0"/>
 </Structure>
 </Data>
 </Tag>
@@ -7881,6 +8500,10 @@ Dint Array]]>
 </Tag>
 </Tags>
 <Programs>
+<Program Name="Empty" TestEdits="false" Disabled="false" UseAsFolder="false">
+<Tags/>
+<Routines/>
+</Program>
 <Program Name="EPProgram" Type="EquipmentPhase" TestEdits="false" Disabled="false" InitialStepIndex="0" InitialState="Idle" CompleteStateIfNotImpl="StateComplete" LossOfCommCmd="None" ExternalRequestAction="None" UseAsFolder="false" AutoValueAssignStepToPhase="true"
  AutoValueAssignPhaseToStepOnComplete="true" AutoValueAssignPhaseToStepOnStopped="true" AutoValueAssignPhaseToStepOnAborted="true">
 <Description>
@@ -8200,11 +8823,13 @@ Dint Array]]>
 </Tag>
 <Tag Name="LocalComplex" TagType="Base" DataType="ComplexType" Constant="false" ExternalAccess="Read/Write">
 <Data Format="L5K">
-<![CDATA[[[0,0,0,0,0,0,0],[0,0,0],[0,0,0],[1,0.00000000e+000,3.40282347e+038,3.40282347e+038,-3.40282347e+038,-3.40282347e+038
-		,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000,0,0.00000000e+000,0,5.60519386e-045
-		,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000
-		,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000],[1,0,0,0,[0,0,0,0,0,0,0],[0,0,0,0,0],[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
-		]],[[0,0,0,0,0,0,0],[0,0,0,0,0,0,0],[0,0,0,0,0,0,0],[0,0,0,0,0,0,0],[0,0,0,0,0,0,0]],0,[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
+<![CDATA[[[0,0,0,0,0,0.00000000e+000],[0,0,0],[0,0,0],[1,0.00000000e+000,3.40282347e+038,3.40282347e+038,-3.40282347e+038
+		,-3.40282347e+038,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000,0,0.00000000e+000
+		,0,5.60519386e-045,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000
+		,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000],[1,0,0,0,[0,0
+		,0,0,0,0.00000000e+000],[0,0,0,0,0],[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
+		]],[[0,0,0,0,0,0.00000000e+000],[0,0,0,0,0,0.00000000e+000],[0,0,0,0,0,0.00000000e+000],[0,0,0,0,0,0.00000000e+000],[0
+		,0,0,0,0,0.00000000e+000]],0,[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
 		],[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
 		]]]]>
 </Data>
@@ -8216,8 +8841,7 @@ Dint Array]]>
 <DataValueMember Name="IntMember" DataType="INT" Radix="Octal" Value="8#000_000"/>
 <DataValueMember Name="DintMember" DataType="DINT" Radix="ASCII" Value="'$00$00$00$00'"/>
 <DataValueMember Name="LintMember" DataType="LINT" Radix="Decimal" Value="0"/>
-<DataValueMember Name="NewMember" DataType="DINT" Radix="Decimal" Value="0"/>
-<DataValueMember Name="A1" DataType="BOOL" Value="0"/>
+<DataValueMember Name="RealMember" DataType="REAL" Radix="Float" Value="0.0"/>
 </StructureMember>
 <StructureMember Name="CounterMember" DataType="COUNTER">
 <DataValueMember Name="PRE" DataType="DINT" Radix="Decimal" Value="0"/>
@@ -8279,8 +8903,7 @@ Dint Array]]>
 <DataValueMember Name="IntMember" DataType="INT" Radix="Octal" Value="8#000_000"/>
 <DataValueMember Name="DintMember" DataType="DINT" Radix="ASCII" Value="'$00$00$00$00'"/>
 <DataValueMember Name="LintMember" DataType="LINT" Radix="Decimal" Value="0"/>
-<DataValueMember Name="NewMember" DataType="DINT" Radix="Decimal" Value="0"/>
-<DataValueMember Name="A1" DataType="BOOL" Value="0"/>
+<DataValueMember Name="RealMember" DataType="REAL" Radix="Float" Value="0.0"/>
 </Structure>
 </Element>
 <Element Index="[1]">
@@ -8290,8 +8913,7 @@ Dint Array]]>
 <DataValueMember Name="IntMember" DataType="INT" Radix="Octal" Value="8#000_000"/>
 <DataValueMember Name="DintMember" DataType="DINT" Radix="ASCII" Value="'$00$00$00$00'"/>
 <DataValueMember Name="LintMember" DataType="LINT" Radix="Decimal" Value="0"/>
-<DataValueMember Name="NewMember" DataType="DINT" Radix="Decimal" Value="0"/>
-<DataValueMember Name="A1" DataType="BOOL" Value="0"/>
+<DataValueMember Name="RealMember" DataType="REAL" Radix="Float" Value="0.0"/>
 </Structure>
 </Element>
 <Element Index="[2]">
@@ -8301,8 +8923,7 @@ Dint Array]]>
 <DataValueMember Name="IntMember" DataType="INT" Radix="Octal" Value="8#000_000"/>
 <DataValueMember Name="DintMember" DataType="DINT" Radix="ASCII" Value="'$00$00$00$00'"/>
 <DataValueMember Name="LintMember" DataType="LINT" Radix="Decimal" Value="0"/>
-<DataValueMember Name="NewMember" DataType="DINT" Radix="Decimal" Value="0"/>
-<DataValueMember Name="A1" DataType="BOOL" Value="0"/>
+<DataValueMember Name="RealMember" DataType="REAL" Radix="Float" Value="0.0"/>
 </Structure>
 </Element>
 <Element Index="[3]">
@@ -8312,8 +8933,7 @@ Dint Array]]>
 <DataValueMember Name="IntMember" DataType="INT" Radix="Octal" Value="8#000_000"/>
 <DataValueMember Name="DintMember" DataType="DINT" Radix="ASCII" Value="'$00$00$00$00'"/>
 <DataValueMember Name="LintMember" DataType="LINT" Radix="Decimal" Value="0"/>
-<DataValueMember Name="NewMember" DataType="DINT" Radix="Decimal" Value="0"/>
-<DataValueMember Name="A1" DataType="BOOL" Value="0"/>
+<DataValueMember Name="RealMember" DataType="REAL" Radix="Float" Value="0.0"/>
 </Structure>
 </Element>
 <Element Index="[4]">
@@ -8323,8 +8943,7 @@ Dint Array]]>
 <DataValueMember Name="IntMember" DataType="INT" Radix="Octal" Value="8#000_000"/>
 <DataValueMember Name="DintMember" DataType="DINT" Radix="ASCII" Value="'$00$00$00$00'"/>
 <DataValueMember Name="LintMember" DataType="LINT" Radix="Decimal" Value="0"/>
-<DataValueMember Name="NewMember" DataType="DINT" Radix="Decimal" Value="0"/>
-<DataValueMember Name="A1" DataType="BOOL" Value="0"/>
+<DataValueMember Name="RealMember" DataType="REAL" Radix="Float" Value="0.0"/>
 </Structure>
 </Element>
 </ArrayMember>
@@ -8362,7 +8981,7 @@ Dint Array]]>
 </Tag>
 <Tag Name="LocalSimlpe" TagType="Base" DataType="SimpleType" Constant="false" ExternalAccess="Read/Write">
 <Data Format="L5K">
-<![CDATA[[0,0,0,0,0,0,0]]]>
+<![CDATA[[0,0,0,0,0,0.00000000e+000]]]>
 </Data>
 <Data Format="Decorated">
 <Structure DataType="SimpleType">
@@ -8371,8 +8990,7 @@ Dint Array]]>
 <DataValueMember Name="IntMember" DataType="INT" Radix="Octal" Value="8#000_000"/>
 <DataValueMember Name="DintMember" DataType="DINT" Radix="ASCII" Value="'$00$00$00$00'"/>
 <DataValueMember Name="LintMember" DataType="LINT" Radix="Decimal" Value="0"/>
-<DataValueMember Name="NewMember" DataType="DINT" Radix="Decimal" Value="0"/>
-<DataValueMember Name="A1" DataType="BOOL" Value="0"/>
+<DataValueMember Name="RealMember" DataType="REAL" Radix="Float" Value="0.0"/>
 </Structure>
 </Data>
 </Tag>
@@ -8394,7 +9012,15 @@ Dint Array]]>
 </Tag>
 </Tags>
 <Routines>
-<Routine Name="Fault" Type="RLL"/>
+<Routine Name="Fault" Type="RLL">
+<RLLContent>
+<Rung Number="0" Type="N">
+<Text>
+<![CDATA[;]]>
+</Text>
+</Rung>
+</RLLContent>
+</Routine>
 <Routine Name="Main" Type="RLL">
 <RLLContent>
 <Rung Number="0" Type="N">
@@ -8426,6 +9052,7 @@ Dint Array]]>
 <ScheduledPrograms>
 <ScheduledProgram Name="EPProgram"/>
 <ScheduledProgram Name="NProgram"/>
+<ScheduledProgram Name="Empty"/>
 </ScheduledPrograms>
 </Task>
 </Tasks>
@@ -8434,8 +9061,115 @@ Dint Array]]>
 </ParameterConnections>
 <CST MasterID="0"/>
 <WallClockTime LocalTimeAdjustment="0" TimeZone="0"/>
-<Trends/>
+<Trends>
+<Trend Name="Test" SamplePeriod="10" NumberOfCaptures="1" CaptureSizeType="Samples" CaptureSize="60001" StartTriggerType="Event Trigger" StartTriggerTag1="_Test" StartTriggerOperation1="0" StartTriggerTargetType1="Target Tag" StartTriggerTargetTag1="AsciiTag" StartTriggerLogicalOperation="AND"
+ StartTriggerTag2="AsciiTag" StartTriggerOperation2="1" StartTriggerTargetType2="Target Value" StartTriggerTargetValue2="1234" PreSampleType="Time Period" PreSamples="2000" StopTriggerType="No Trigger" TrendxVersion="5.2">
+<Description>
+<![CDATA[This is a test]]>
+</Description>
+<Template>208 207 17 224 161 177 26 225 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 62 0 3 0 254 255 9 0 6 0 0 0 0 0 0 0
+ 0 0 0 0 1 0 0 0 1 0 0 0 0 0 0 0 0 16 0 0 2 0 0 0 1 0 0 0 254 255 255 255 0 0 0 0 0 0 0 0
+ 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255
+ 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255
+ 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255
+ 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255
+ 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255
+ 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255
+ 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255
+ 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255
+ 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255
+ 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255
+ 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 253 255 255 255 254 255 255 255
+ 254 255 255 255 4 0 0 0 5 0 0 0 254 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255
+ 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255
+ 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255
+ 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255
+ 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255
+ 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255
+ 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255
+ 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255
+ 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255
+ 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255
+ 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255
+ 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255
+ 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 82 0 111 0 111 0 116 0 32 0 69 0 110 0 116 0
+ 114 0 121 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+ 0 0 0 0 0 0 0 0 22 0 5 0 255 255 255 255 255 255 255 255 1 0 0 0 14 52 81 191 9 48 205 65 159 190 222 136 174 167 50 40
+ 0 0 0 0 0 0 0 0 0 0 0 0 224 29 228 49 217 165 217 1 3 0 0 0 64 4 0 0 0 0 0 0 67 0 111 0 110 0 116 0
+ 101 0 110 0 116 0 115 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+ 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 18 0 2 1 255 255 255 255 255 255 255 255 255 255 255 255 0 0 0 0 0 0 0 0
+ 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 17 4 0 0 0 0 0 0
+ 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+ 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 255 255 255 255 255 255 255 255 255 255 255 255
+ 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+ 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+ 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 255 255 255 255
+ 255 255 255 255 255 255 255 255 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+ 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 2 0 0 0 3 0 0 0 4 0 0 0 5 0 0 0 6 0 0 0
+ 7 0 0 0 8 0 0 0 9 0 0 0 10 0 0 0 11 0 0 0 12 0 0 0 13 0 0 0 14 0 0 0 15 0 0 0 16 0 0 0
+ 254 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255
+ 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255
+ 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255
+ 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255
+ 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255
+ 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255
+ 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255
+ 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255
+ 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255
+ 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255
+ 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255
+ 255 255 255 255 255 255 255 255 4 0 0 0 131 157 0 0 202 79 0 0 0 0 0 0 13 0 0 0 255 254 255 4 84 0 101 0 115 0 116 0
+ 0 0 0 0 0 0 0 0 255 255 255 255 200 0 0 0 255 157 3 0 255 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 255 254 255
+ 0 255 254 255 0 1 96 234 0 0 0 0 0 0 255 255 255 0 0 0 0 0 0 0 0 0 0 166 3 0 0 2 0 255 255 1 0 13 0 67
+ 86 105 101 119 76 105 110 101 73 110 102 111 3 0 0 0 1 0 0 0 0 0 0 0 0 0 200 66 255 254 255 0 255 254 255 0 0 0 0 0
+ 0 0 0 0 3 0 0 0 0 0 0 0 255 254 255 0 255 254 255 0 255 254 255 0 255 254 255 5 95 0 84 0 101 0 115 0 116 0 32 1
+ 0 0 0 255 254 255 0 255 254 255 0 1 128 3 0 0 0 1 0 0 0 0 0 0 0 0 0 200 66 255 254 255 0 255 254 255 0 0 0 0
+ 0 0 0 0 0 3 0 0 0 0 0 0 0 255 254 255 0 255 254 255 0 255 254 255 0 255 254 255 8 65 0 115 0 99 0 105 0 105 0 84
+ 0 97 0 103 0 32 1 0 0 0 255 254 255 0 255 254 255 0 9 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 1 0 0 0 1 0
+ 0 0 1 0 0 0 1 0 0 0 1 0 0 0 1 0 0 0 1 0 0 0 1 0 0 0 1 0 0 0 1 0 0 0 1 0 0 0 1 0
+ 0 0 2 0 0 0 255 0 0 255 0 0 0 0 0 0 0 0 0 0 4 0 0 0 4 0 0 0 0 0 0 0 0 0 0 0 0 0 200 66
+ 0 0 0 0 0 0 0 0 12 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 2 0 1 0 0 0 1 0 0 0 2 0 0 0 0 0
+ 0 0 0 0 2 0 1 0 0 0 1 0 0 0 2 0 0 0 0 0 0 0 0 0 255 255 255 255 0 0 0 0 44 0 0 0 0 0 0 0
+ 0 0 0 0 12 0 0 0 0 0 0 0 0 0 136 4 28 51 157 91 0 0 0 0 0 0 0 0 12 0 0 0 0 0 0 0 128 128 128 0
+ 128 128 128 0 255 239 255 254 255 191 255 247 175 154 149 100 1 0 0 0 152 3 0 0 177 154 149 100 1 0 0 0 152 3 0 0 255 254 255 0
+ 1 0 0 0 1 0 0 0 2 0 0 0 0 0 0 0 0 0 2 0 0 0 40 0 0 0 50 0 0 0 0 0 0 0 0 0 0 0 92 0
+ 0 0 245 255 255 255 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 255 254
+ 255 5 65 0 114 0 105 0 97 0 108 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+ 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+ 0 0 0 0 3 0 0 0 0 0 0 0 255 254 255 0 255 254 255 0 255 254 255 0 255 254 255 0 32 1 0 0 0 255 254 255 0 255 254 255
+ 0 3 0 0 0 0 0 0 0 255 254 255 0 255 254 255 0 255 254 255 0 255 254 255 0 32 1 0 0 0 255 254 255 0 255 254 255 0 0 0
+ 0 0 0 0 0 0 255 255 255 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 8 0 0 0 2 0 0 0 0 0 0 0 0 0
+ 2 0 0 0 0 0 0 0 0 0 0 0 0 0 2 0 255 255 1 0 9 0 67 76 105 110 101 73 110 102 111 3 0 0 0 1 0 0 0 0
+ 0 0 0 0 0 200 66 255 254 255 0 255 254 255 0 0 0 0 0 0 0 0 0 3 0 0 0 0 0 0 0 255 254 255 0 255 254 255 0 255
+ 254 255 0 255 254 255 5 95 0 84 0 101 0 115 0 116 0 32 1 0 0 0 255 254 255 0 255 254 255 0 4 128 3 0 0 0 1 0 0 0
+ 0 0 0 0 0 0 200 66 255 254 255 0 255 254 255 0 0 0 0 0 0 0 0 0 3 0 0 0 0 0 0 0 255 254 255 0 255 254 255 0
+ 255 254 255 0 255 254 255 8 65 0 115 0 99 0 105 0 105 0 84 0 97 0 103 0 32 1 0 0 0 255 254 255 0 255 254 255 0 0 0 0
+ 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+ 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+ 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+ 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+ 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+ 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+ 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+ 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+ 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+ 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+ 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+ 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+ 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 247 51 3 0</Template>
+<Pens>
+<Pen Name="_Test" Color="16#00ff_0000" Visible="true" Style="0" Type="Analog" Width="1" Marker="0" Min="0.0" Max="100.0"/>
+<Pen Name="AsciiTag" Color="16#0000_ff00" Visible="true" Style="0" Type="Analog" Width="1" Marker="0" Min="0.0" Max="100.0"/>
+</Pens>
+</Trend>
+</Trends>
 <DataLogs/>
+<QuickWatchLists>
+<QuickWatchList Name="MyWatchList">
+<WatchTag Specifier="Another" Scope=""/>
+<WatchTag Specifier="TestAlarmTag" Scope=""/>
+</QuickWatchList>
+</QuickWatchLists>
 <TimeSynchronize Priority1="128" Priority2="128" PTPEnable="false"/>
 <EthernetPorts>
 <EthernetPort Port="1" Label="1" PortEnabled="true"/>

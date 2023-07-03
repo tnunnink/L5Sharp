@@ -2,11 +2,10 @@
 using L5Sharp.Components;
 using L5Sharp.Core;
 using L5Sharp.Enums;
-using L5Sharp.Extensions;
 using L5Sharp.Tests.Types.Custom;
+using L5Sharp.Types;
 using L5Sharp.Types.Atomics;
 using L5Sharp.Types.Predefined;
-using L5Sharp.Utilities;
 
 namespace L5Sharp.Tests.Components
 {
@@ -14,52 +13,117 @@ namespace L5Sharp.Tests.Components
     public class TagTests
     {
         [Test]
-        public void TagTesting()
+        public void ValueTesting()
+        {
+            var tag = new Tag
+            {
+                Name = "Test",
+                Value = new TIMER(),
+                ["PRE"] = { Value = 5000 },
+                ["ACC"] = { Value = 1234 },
+                ["EN"] = { Value = true }
+            };
+
+            tag.Value.As<TIMER>().PRE.Should().Be(5000);
+            tag.Value.As<TIMER>().ACC.Should().Be(1234);
+            tag.Value.As<TIMER>().DN.Should().Be(0);
+            tag.Value.As<TIMER>().TT.Should().Be(0);
+            tag.Value.As<TIMER>().EN.Should().Be(1);
+        }
+
+        [Test]
+        public void ArrayTags()
+        {
+            var array = new Tag
+            {
+                Name = "Test",
+                Value = new DINT[] { 1, 2, 3, 4, 5 }
+            };
+
+            array[0].Value.As<DINT>().Should().Be(1);
+        }
+
+        [Test]
+        public void New_Default_ShouldNotBeNull()
+        {
+            var tag = new Tag();
+
+            tag.Should().NotBeNull();
+        }
+
+        [Test]
+        public void New_Atomic_ShouldNotBeNull()
+        {
+            var tag = new Tag { Name = "Test", Value = new BOOL() };
+
+            tag.Should().NotBeNull();
+            tag.Name.Should().Be("Test");
+            tag.Value.Should().BeOfType<BOOL>();
+        }
+
+        [Test]
+        public void New_Structure_ShouldNotBeNull()
+        {
+            var tag = new Tag { Name = "Test", Value = new TIMER() };
+
+            tag.Should().NotBeNull();
+            tag.Name.Should().Be("Test");
+            tag.Value.Should().BeOfType<TIMER>();
+            tag.Value.As<TIMER>().DN.Should().Be(0);
+        }
+
+        [Test]
+        public void New_Array_ShouldNotBeNull()
+        {
+            var tag = new Tag { Name = "Test", Value = new BOOL[] { 0, 0, 1, 0, 1 } };
+
+            tag.Should().NotBeNull();
+            tag.Name.Should().Be("Test");
+            tag.Value.Should().BeOfType<ArrayType>();
+            tag.Dimensions.Should().Be(new Dimensions(5));
+        }
+
+        [Test]
+        public void New_Default_ShouldHaveDefaultValues()
         {
             var tag = new Tag();
 
             tag.Name.Should().BeEmpty();
-            tag.Data.Should().Be(Logix.Null);
+            tag.Value.Should().Be(LogixData.Null);
             tag.DataType.Should().Be("NULL");
             tag.Dimensions.Should().Be(Dimensions.Empty);
             tag.Radix.Should().Be(Radix.Null);
             tag.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);
-            tag.Description.Should().BeEmpty();
-            tag.Comments.Should().BeEmpty();
-            tag.Units.Should().BeEmpty();
+            tag.Description.Should().BeNull();
             tag.Constant.Should().BeFalse();
-            tag.Usage.Should().Be(TagUsage.Normal);
             tag.TagType.Should().Be(TagType.Base);
-            tag.AliasFor.Should<TagName>().Be(TagName.Empty);
-            tag.TagName.Should<TagName>().Be(TagName.Empty);
+            tag.TagName.Should().Be(TagName.Empty);
+            tag.Usage.Should().BeNull();
+            tag.AliasFor.Should().BeNull();
         }
 
         [Test]
-        public void New_ValueTypeTag_ShouldHaveExpectedProperties()
+        public void New_Overloaded_ShouldHaveExpectedProperties()
         {
             var tag = new Tag
             {
                 Name = "Test",
                 Description = "This is a test",
-                Data = new BOOL(),
+                Value = new BOOL(),
                 ExternalAccess = ExternalAccess.ReadOnly,
                 TagType = TagType.Alias,
                 Usage = TagUsage.Local,
                 AliasFor = new TagName("SomeOtherTag"),
-                Constant = true,
-                Comments = new Dictionary<string, string> { { "SomeOperand", "A test commend" } },
-                Units = new Dictionary<string, string> { { "SomeOperand", "A test unit" } }
+                Constant = true
             };
 
             tag.Name.Should().Be("Test");
-            tag.Data.Should().BeOfType<BOOL>();
+            tag.Value.Should().BeOfType<BOOL>();
             tag.DataType.Should().Be("BOOL");
             tag.Dimensions.Should().Be(Dimensions.Empty);
             tag.Radix.Should().Be(Radix.Decimal);
             tag.ExternalAccess.Should().Be(ExternalAccess.ReadOnly);
             tag.Description.Should().Be("This is a test");
-            tag.Comments.Should().HaveCount(1);
-            tag.Units.Should().HaveCount(1);
             tag.Constant.Should().BeTrue();
             tag.Usage.Should().Be(TagUsage.Local);
             tag.TagType.Should().Be(TagType.Alias);
@@ -68,24 +132,33 @@ namespace L5Sharp.Tests.Components
         }
 
         [Test]
+        public void SetValue_IsAtomicNewAtomic_ShouldBeExpected()
+        {
+            var tag = new Tag { Name = "Test", Value = new DINT() };
+
+            tag.Value = 123;
+
+            tag.Value.As<DINT>().Should().Be(123);
+        }
+
+        [Test]
         public void Member_ValidMember_ShouldBeExpectedTagMember()
         {
             var tag = new Tag
             {
                 Name = "Test",
-                Data = new TIMER()
+                Value = new TIMER()
             };
 
-            var member = tag.Member("DN");
+            var member = tag["DN"];
 
             member.Should().NotBeNull();
-            member?.TagName.Should().Be("Test.DN");
-            member?.Data.Should().BeOfType<BOOL>();
-            member?.DataType.Should().Be("BOOL");
-            member?.Dimensions.Should().Be(Dimensions.Empty);
-            member?.Radix.Should().Be(Radix.Decimal);
-            member?.As<TagMember>().Comment.Should().BeEmpty();
-            member?.As<TagMember>().Unit.Should().BeEmpty();
+            member.TagName.Should().Be("Test.DN");
+            member.Value.Should().BeOfType<BOOL>();
+            member.DataType.Should().Be("BOOL");
+            member.Dimensions.Should().Be(Dimensions.Empty);
+            member.Radix.Should().Be(Radix.Decimal);
+            member.Description.Should().BeNull();
         }
 
         [Test]
@@ -94,13 +167,13 @@ namespace L5Sharp.Tests.Components
             var tag = new Tag
             {
                 Name = "Test",
-                Data = new MyNestedType()
+                Value = new MyNestedType()
             };
 
-            var m1 = tag.Member("Simple.M1");
+            var member = tag.Member("Simple.M1");
 
-            m1.Should().NotBeNull();
-            m1?.TagName.Should<TagName>().Be("Test.Simple.M1");
+            member.Should().NotBeNull();
+            member?.TagName.Should().Be("Test.Simple.M1");
         }
 
         [Test]
@@ -109,22 +182,22 @@ namespace L5Sharp.Tests.Components
             var tag = new Tag
             {
                 Name = "Test",
-                Data = new MyNestedType()
+                Value = new MyNestedType()
             };
 
-            var m1 = tag.Member("Simple")?.Member("M1");
+            var nested = tag.Member("Simple")?.Member("M1");
 
-            m1.Should().NotBeNull();
-            m1?.TagName.Should<TagName>().Be("Test.Simple.M1");
+            nested.Should().NotBeNull();
+            nested?.TagName.Should().Be("Test.Simple.M1");
         }
 
         [Test]
         public void Member_NonExisting_ShouldReturnNull()
         {
-            var tag = new Tag()
+            var tag = new Tag
             {
                 Name = "Test",
-                Data = new TIMER()
+                Value = new TIMER()
             };
 
             var member = tag.Member("Fake");
@@ -138,10 +211,10 @@ namespace L5Sharp.Tests.Components
             var tag = new Tag
             {
                 Name = "Test",
-                Data = new TIMER()
+                Value = new TIMER()
             };
 
-            var members = tag.Members();
+            var members = tag.Members().ToList();
 
             members.Should().HaveCountGreaterThan(0);
         }
@@ -152,7 +225,7 @@ namespace L5Sharp.Tests.Components
             var tag = new Tag
             {
                 Name = "Test",
-                Data = new TIMER()
+                Value = new TIMER()
             };
 
             var members = tag.Members().ToList();
@@ -170,7 +243,7 @@ namespace L5Sharp.Tests.Components
             var tag = new Tag
             {
                 Name = "Test",
-                Data = new MyNestedType()
+                Value = new MyNestedType()
             };
 
             var members = tag.Members().ToList();
@@ -184,12 +257,12 @@ namespace L5Sharp.Tests.Components
             var tag = new Tag
             {
                 Name = "Test",
-                Data = new MyNestedType()
+                Value = new MyNestedType()
             };
 
-            var data = tag.Members().ToList().Select(m => m.Data).ToList();
+            var result = tag.Members().ToList().Select(m => m.Value).ToList();
 
-            data.Should().AllBeAssignableTo<ILogixType>();
+            result.Should().AllBeAssignableTo<LogixType>();
         }
 
         [Test]
@@ -198,7 +271,7 @@ namespace L5Sharp.Tests.Components
             var tag = new Tag
             {
                 Name = "Test",
-                Data = new MyNestedType()
+                Value = new MyNestedType()
             };
 
             var members = tag.Members().ToList();
@@ -225,7 +298,7 @@ namespace L5Sharp.Tests.Components
             var tag = new Tag
             {
                 Name = "Test",
-                Data = new MyNestedType()
+                Value = new MyNestedType()
             };
 
             var members = tag.Members(t => t.Contains("Tmr"));
@@ -239,7 +312,7 @@ namespace L5Sharp.Tests.Components
             var tag = new Tag
             {
                 Name = "Test",
-                Data = new MyNestedType()
+                Value = new MyNestedType()
             };
 
             var members = tag.Members(t => t.Members.Count() > 4);
@@ -253,7 +326,7 @@ namespace L5Sharp.Tests.Components
             var tag = new Tag
             {
                 Name = "Test",
-                Data = new MyNestedType()
+                Value = new MyNestedType()
             };
 
             var members = tag.Members(t => TagName.Equals(t, "M1", TagNameComparer.MemberName));
@@ -267,7 +340,7 @@ namespace L5Sharp.Tests.Components
             var tag = new Tag
             {
                 Name = "Test",
-                Data = new MyNestedType()
+                Value = new MyNestedType()
             };
 
             var members = tag.Members(t => t.DataType == "BOOL").ToList();
@@ -281,7 +354,7 @@ namespace L5Sharp.Tests.Components
             var tag = new Tag
             {
                 Name = "Test",
-                Data = new MyNestedType()
+                Value = new MyNestedType()
             };
 
             var members = tag.MembersOf("Tmr").ToList();
@@ -295,56 +368,56 @@ namespace L5Sharp.Tests.Components
             var tag = new Tag
             {
                 Name = "Test",
-                Data = new MyNestedType()
+                Value = new MyNestedType()
             };
 
             var members = tag.MembersOf("Fake").ToList();
 
             members.Should().BeEmpty();
         }
-        
+
         [Test]
         public void Value_GetAtomic_ShouldWork()
         {
-            var tag = new Tag { Name = "Test", Data = new DINT(33) };
+            var tag = new Tag { Name = "Test", Value = new DINT(33) };
 
             var value = tag.Value;
 
-            value?.As<DINT>().Should().Be(33);
+            value.As<DINT>().Should().Be(33);
         }
 
         [Test]
         public void Value_SetAtomic_ShouldWork()
         {
-            var tag = new Tag { Name = "Test", Data = new DINT() };
+            var tag = new Tag { Name = "Test", Value = new DINT() };
 
             tag.Value = new DINT(43);
 
             tag.Value.As<DINT>().Should().Be(43);
         }
 
-        [Test]
-        public void Value_GetTimer_ShouldBeNull()
+        /*[Test]
+        public void Value_SetAtomicBit_ShouldUpdateValue()
         {
-            var tag = new Tag { Name = "Test", Data = new TIMER() };
+            var tag = new Tag { Name = "Test", Value = new DINT() };
 
-            var value = tag.Value;
+            tag.Value.As<DINT>()[0] = 1;
 
-            value.Should().BeNull();
-        }
+            tag.Value.As<DINT>().Should().Be(1);
+        }*/
 
         [Test]
         public void Value_SetTimer_ShouldThrowException()
         {
-            var tag = new Tag { Name = "Test", Data = new TIMER() };
+            var tag = new Tag { Name = "Test", Value = new TIMER() };
 
-            FluentActions.Invoking(() => tag.Value = new REAL(43)).Should().Throw<InvalidOperationException>();
+            FluentActions.Invoking(() => tag.Value = new REAL(43)).Should().Throw<ArgumentException>();
         }
 
         [Test]
         public void Root_FromDescendantMember_ShouldNotBeNullAndSameAsTag()
         {
-            var tag = new Tag { Name = "Test", Data = new TIMER() };
+            var tag = new Tag { Name = "Test", Value = new TIMER() };
 
             var member = tag.Member("DN");
 
@@ -353,18 +426,31 @@ namespace L5Sharp.Tests.Components
             root.Should().NotBeNull();
             root.Should().BeSameAs(tag);
         }
-        
+
         [Test]
         public void Root_FromNestedDescendantMember_ShouldNotBeNullAndSameAsTag()
         {
-            var tag = new Tag { Name = "Test", Data = new MyNestedType() };
+            var tag = new Tag { Name = "Test", Value = new MyNestedType() };
 
-            var member = tag.Member("Simple.M1");
+            var member = tag["Simple.M1"];
 
-            var root = member?.Root;
+            var root = member.Root;
 
             root.Should().NotBeNull();
             root.Should().BeSameAs(tag);
+        }
+
+        [Test]
+        public void Parent_WhenCalled_ShouldBeExpected()
+        {
+            var tag = new Tag { Name = "Test", Value = new MyNestedType() };
+
+            var member = tag["Simple.M1"];
+
+            var parent = member.Parent;
+
+            parent.Should().NotBeNull();
+            parent?.TagName.Should().Be("Test.Simple");
         }
     }
 }

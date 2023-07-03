@@ -17,6 +17,16 @@ namespace L5Sharp.Tests.Components
         }
 
         [Test]
+        public Task Serialize_Default_ShouldBeVerified()
+        {
+            var component = new DataType();
+
+            var xml = component.Serialize().ToString();
+
+            return Verify(xml);
+        }
+
+        [Test]
         public void DataType_ShouldHaveDefaultValues()
         {
             var dataType = new DataType();
@@ -41,7 +51,7 @@ namespace L5Sharp.Tests.Components
                 Description = description,
                 Family = family,
                 Class = DataTypeClass.User,
-                Members = new List<DataTypeMember>()
+                
             };
 
             dataType.Name.Should().Be(name);
@@ -59,21 +69,11 @@ namespace L5Sharp.Tests.Components
             {
                 Name = "MyType",
                 Description = "This is a test type",
-                Members = new List<DataTypeMember>
+                Members = new LogixContainer<DataTypeMember>
                 {
-                    new()
-                    {
-                        Name = "Member01", DataType = "DINT", Radix = Radix.Hex, Description = "A test member"
-                    },
-                    new()
-                    {
-                        Name = "Member02", DataType = "REAL", Dimension = new Dimensions(10),
-                        Description = "A test member"
-                    },
-                    new()
-                    {
-                        Name = "Member03", DataType = "TIME", ExternalAccess = ExternalAccess.ReadOnly
-                    }
+                    new() { Name = "Member01", DataType = "DINT", Radix = Radix.Hex, Description = "A test member" },
+                    new() { Name = "Member02", DataType = "REAL", Dimension = new Dimensions(10), Description = "A test member" },
+                    new() { Name = "Member03", DataType = "TIME", ExternalAccess = ExternalAccess.ReadOnly }
                 }
             };
 

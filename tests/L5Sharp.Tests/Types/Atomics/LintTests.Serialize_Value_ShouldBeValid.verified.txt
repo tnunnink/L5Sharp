@@ -1,0 +1,1 @@
+﻿<DataValue DataType="LINT" Radix="Decimal" Value="123" />

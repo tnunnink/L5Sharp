@@ -1,0 +1,11 @@
+﻿<Program Name="Test" Type="EquipmentPhase" TestEdits="true" Disabled="true" UseAsFolder="true" Use="Target" MainRoutineName="Main" FaultRoutineName="Fault">
+  <Description><![CDATA[This is a test]]></Description>
+  <Tags>
+    <Tag Name="Test" TagType="Base" ExternalAccess="Read/Write" Constant="false" DataType="BOOL" Radix="Decimal">
+      <Data Format="Decorated">
+        <DataValue DataType="BOOL" Radix="Decimal" Value="1" />
+      </Data>
+    </Tag>
+  </Tags>
+  <Routines />
+</Program>

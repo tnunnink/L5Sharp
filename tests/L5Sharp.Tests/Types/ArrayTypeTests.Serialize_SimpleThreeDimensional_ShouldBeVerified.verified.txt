@@ -1,0 +1,14 @@
+﻿<Array DataType="DINT" Dimensions="2 2 3" Radix="Decimal">
+  <Element Index="[0,0,0]" Value="1" />
+  <Element Index="[0,0,1]" Value="2" />
+  <Element Index="[0,0,2]" Value="3" />
+  <Element Index="[0,1,0]" Value="4" />
+  <Element Index="[0,1,1]" Value="5" />
+  <Element Index="[0,1,2]" Value="6" />
+  <Element Index="[1,0,0]" Value="7" />
+  <Element Index="[1,0,1]" Value="8" />
+  <Element Index="[1,0,2]" Value="9" />
+  <Element Index="[1,1,0]" Value="10" />
+  <Element Index="[1,1,1]" Value="11" />
+  <Element Index="[1,1,2]" Value="12" />
+</Array>

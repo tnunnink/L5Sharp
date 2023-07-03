@@ -104,7 +104,7 @@ namespace L5Sharp.Tests.Enums
         [Test]
         public void SupportsType_AtomicAsIDataType_ShouldBeTrue()
         {
-            var type = (ILogixType)new BOOL();
+            var type = (LogixType)new BOOL();
 
             var result = Radix.Decimal.SupportsType(type);
 
@@ -114,11 +114,26 @@ namespace L5Sharp.Tests.Enums
         [Test]
         public void SupportsType_ComplexAsIDataType_ShouldBeFalse()
         {
-            var type = (ILogixType)new STRING();
+            var type = (LogixType)new STRING();
 
             var result = Radix.Decimal.SupportsType(type);
 
             result.Should().BeFalse();
+        }
+
+        [Test]
+        public void ToString_WhenCalled_ReturnsTheValue()
+        {
+            Radix.Null.ToString().Should().Be(Radix.Null.Value);
+            Radix.Binary.ToString().Should().Be(Radix.Binary.Value);
+            Radix.Octal.ToString().Should().Be(Radix.Octal.Value);
+            Radix.Hex.ToString().Should().Be(Radix.Hex.Value);
+            Radix.Decimal.ToString().Should().Be(Radix.Decimal.Value);
+            Radix.Float.ToString().Should().Be(Radix.Float.Value);
+            Radix.Exponential.ToString().Should().Be(Radix.Exponential.Value);
+            Radix.Ascii.ToString().Should().Be(Radix.Ascii.Value);
+            Radix.DateTime.ToString().Should().Be(Radix.DateTime.Value);
+            Radix.DateTimeNs.ToString().Should().Be(Radix.DateTimeNs.Value);
         }
     }
 }

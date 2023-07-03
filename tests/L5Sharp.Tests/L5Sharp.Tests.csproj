@@ -1,10 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net5.0</TargetFramework>
         <IsPackable>false</IsPackable>
         <ImplicitUsings>true</ImplicitUsings>
         <LangVersion>10</LangVersion>
+        <TargetFramework>net7.0</TargetFramework>
     </PropertyGroup>
 
     <ItemGroup>
@@ -60,10 +60,72 @@
       <None Update="Serialization\StructureMemberSerializerTests.SerializeArrayMembers_ShouldBeApproved.verified.txt">
         <DependentUpon>StructureMemberSerializerTests.cs</DependentUpon>
       </None>
+      <None Update="TestFiles\BoolTest.xml">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Remove="Serialization\**" />
+      <None Update="Types\Custom\MyNestedTypeTests.SetSimpleM4_Valid_ShouldBeValid.verified.txt">
+        <DependentUpon>MyNestedTypeTests.cs</DependentUpon>
+      </None>
+      <None Update="Types\ArrayTypeTests.Serialize_SimpleOneDimensional_ShouldBeVerified.verified.txt">
+        <DependentUpon>ArrayTypeTests.cs</DependentUpon>
+      </None>
+      <None Update="Types\ArrayTypeTests.Serialize_SimpleThreeDimensional_ShouldBeVerified.verified.txt">
+        <DependentUpon>ArrayTypeTests.cs</DependentUpon>
+      </None>
+      <None Update="Types\ArrayTypeTests.Serialize_SimpleTwoDimensional_ShouldBeVerified.verified.txt">
+        <DependentUpon>ArrayTypeTests.cs</DependentUpon>
+      </None>
+      <None Update="Types\ArrayTypeTests.Serialize_ComplexTypeArray_ShouldBeVerified.verified.txt">
+        <DependentUpon>ArrayTypeTests.cs</DependentUpon>
+      </None>
+      <None Update="Components\DataTypeTests.Serialize_Default_ShouldBeVerified.verified.txt">
+        <DependentUpon>DataTypeTests.cs</DependentUpon>
+      </None>
+      <None Update="Types\Atomics\DintTests.Serialize_Default_ShouldBeValid.verified.txt">
+        <ParentFile>DintTests</ParentFile>
+        <DependentUpon>DintTests.cs</DependentUpon>
+      </None>
+      <None Update="Types\Atomics\DintTests.Serialize_Value_ShouldBeValid.verified.txt">
+        <DependentUpon>DintTests.cs</DependentUpon>
+        <ParentFile>DintTests</ParentFile>
+      </None>
+      <None Update="Types\Predefined\TimerTests.Serialize_Overload_ShouldBeVerified.verified.txt">
+        <DependentUpon>TimerTests.cs</DependentUpon>
+        <ParentFile>TimerTests</ParentFile>
+      </None>
+      <None Update="Types\Atomics\IntTests.Serialize_Value_ShouldBeValid.verified.txt">
+        <DependentUpon>IntTests.cs</DependentUpon>
+      </None>
+      <None Update="Types\Atomics\IntTests.Serialize_ValueAndRadix_ShouldBeValid.verified.txt">
+        <DependentUpon>IntTests.cs</DependentUpon>
+      </None>
+      <None Update="Components\TaskTests.Serialize_Default_ShouldBeVerified.verified.txt">
+        <DependentUpon>TaskTests.cs</DependentUpon>
+      </None>
+      <None Update="Types\Atomics\LintTests.Serialize_Default_ShouldBeValid.verified.txt">
+        <DependentUpon>LintTests.cs</DependentUpon>
+      </None>
+      <None Update="Types\Atomics\DintTests.Serialize_ValueAndRadix_ShouldBeValid.verified.txt">
+        <DependentUpon>DintTests.cs</DependentUpon>
+      </None>
+      <None Update="Types\Atomics\UIntTests.Serialize_ValueAndRadix_ShouldBeValid.verified.txt">
+        <DependentUpon>UIntTests.cs</DependentUpon>
+      </None>
     </ItemGroup>
 
     <ItemGroup>
       <Compile Remove="Core\OperandTests.cs" />
+      <Compile Include="Serialization\AddOnInstructionSerializerTests.cs" />
+      <Compile Remove="Serialization\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Remove="Serialization\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Extensions\" />
     </ItemGroup>
 
 </Project>

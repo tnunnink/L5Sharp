@@ -1,7 +1,6 @@
 ﻿using AutoFixture;
 using FluentAssertions;
 using L5Sharp.Core;
-using L5Sharp.Utilities;
 
 namespace L5Sharp.Tests.Core
 {
@@ -50,7 +49,7 @@ namespace L5Sharp.Tests.Core
         {
             var tagName = new TagName("Test");
 
-            tagName.Tag.Should().Be("Test");
+            tagName.Root.Should().Be("Test");
             tagName.Operand.Should().BeEmpty();
             tagName.Path.Should().BeEmpty();
             tagName.Depth.Should().Be(0);
@@ -146,7 +145,7 @@ namespace L5Sharp.Tests.Core
         {
             var tagName = new TagName(TestTagName);
 
-            tagName.Tag.Should().Be(Base);
+            tagName.Root.Should().Be(Base);
             tagName.Operand.Should().Be(Operand);
             tagName.Path.Should().Be(Path);
             tagName.Depth.Should().Be(3);
@@ -168,7 +167,7 @@ namespace L5Sharp.Tests.Core
         {
             var tagName = new TagName("RackIO:1:I.Slot[2].Data.4");
 
-            tagName.Tag.Should().Be("RackIO:1:I");
+            tagName.Root.Should().Be("RackIO:1:I");
             tagName.Operand.Should().Be(".Slot[2].Data.4");
             tagName.Path.Should().Be("Slot[2].Data.4");
             tagName.Depth.Should().Be(4);
