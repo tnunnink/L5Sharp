@@ -44,12 +44,6 @@ public abstract class AtomicType : LogixType, IConvertible
     /// <value>A <see cref="Enums.Radix"/> representing the format of the atomic type value.</value>
     public abstract Radix Radix { get; }
 
-    /// <summary>
-    /// Returns the <see cref="AtomicType"/> value as an array of <see cref="byte"/> values.
-    /// </summary>
-    /// <returns>An array of <see cref="byte"/> representing the value of the type.</returns>
-    public abstract byte[] GetBytes();
-
     /// <inheritdoc />
     public override bool Equals(object? obj)
     {
@@ -71,6 +65,12 @@ public abstract class AtomicType : LogixType, IConvertible
 
         return true;
     }
+
+    /// <summary>
+    /// Returns the <see cref="AtomicType"/> value as an array of <see cref="byte"/> values.
+    /// </summary>
+    /// <returns>An array of <see cref="byte"/> representing the value of the type.</returns>
+    public abstract byte[] GetBytes();
 
     /// <inheritdoc />
     public override int GetHashCode() => GetBytes().Aggregate(0, (i, b) => i ^ b.GetHashCode());

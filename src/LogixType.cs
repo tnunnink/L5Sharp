@@ -103,6 +103,15 @@ public abstract class LogixType : ILogixSerializable
     public override int GetHashCode() => Name.GetHashCode();
 
     /// <summary>
+    /// Gets a <see cref="Types.Member"/> with the specified name if it exists for the <see cref="LogixType"/>;
+    /// Otherwise, returns <c>null</c>.
+    /// </summary>
+    /// <param name="name">The name of the member to get.</param>
+    /// <returns>A <see cref="Types.Member"/> with the specified name if found; Otherwise, <c>null</c>.</returns>
+     public Member? Member(string name) =>
+        Members.SingleOrDefault(m => string.Equals(m.Name, name, StringComparison.OrdinalIgnoreCase));
+
+    /// <summary>
     /// Determines whether the <see cref="LogixType"/> values are equal.
     /// </summary>
     /// <param name="left">An logix type to compare.</param>

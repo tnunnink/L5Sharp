@@ -6,7 +6,7 @@ namespace L5Sharp.Types.Atomics;
 /// <summary>
 /// Represents a <b>UINT</b> Logix atomic data type, or a type analogous to a <see cref="ushort"/>.
 /// </summary>
-public class UINT : AtomicType, IComparable
+public sealed class UINT : AtomicType, IComparable
 {
     private readonly ushort _value;
 
@@ -18,7 +18,17 @@ public class UINT : AtomicType, IComparable
         _value = 0;
         Radix = Radix.Decimal;
     }
-    
+
+    /// <summary>
+    /// Creates a new <see cref="UINT"/> with the provided value.
+    /// </summary>
+    /// <param name="value">The value to initialize the type with.</param>
+    public UINT(ushort value)
+    {
+        _value = value;
+        Radix = Radix.Decimal;
+    }
+
     /// <summary>
     /// Creates a new <see cref="UINT"/> value with the provided radix format.
     /// </summary>
@@ -26,6 +36,9 @@ public class UINT : AtomicType, IComparable
     public UINT(Radix radix)
     {
         _value = 0;
+        if (radix is null) throw new ArgumentNullException(nameof(radix));
+        if (!radix.SupportsType(this))
+            throw new ArgumentException($"Invalid Radix {radix} for atomic type {Name}.", nameof(radix));
         Radix = radix;
     }
 
@@ -34,10 +47,13 @@ public class UINT : AtomicType, IComparable
     /// </summary>
     /// <param name="value">The value to initialize the type with.</param>
     /// <param name="radix">The optional radix format of the value.</param>
-    public UINT(ushort value, Radix? radix = null)
+    public UINT(ushort value, Radix radix)
     {
-        Radix = radix ?? Radix.Decimal;
         _value = value;
+        if (radix is null) throw new ArgumentNullException(nameof(radix));
+        if (!radix.SupportsType(this))
+            throw new ArgumentException($"Invalid Radix {radix} for atomic type {Name}.", nameof(radix));
+        Radix = radix;
     }
     
     /// <inheritdoc />
@@ -55,6 +71,85 @@ public class UINT : AtomicType, IComparable
     /// Represents the smallest possible value of <see cref="UINT"/>.
     /// </summary>
     public const ushort MinValue = ushort.MinValue;
+    
+    /// <summary>
+    /// Gets the bit value as a <see cref="BOOL"/> at the specified zero based bit index of the atomic type.
+    /// </summary>
+    /// <param name="bit">The zero based bit index of the value to get.</param>
+    /// <returns>A <see cref="BOOL"/> representing the value of the specified bit.</returns>
+    /// <exception cref="ArgumentOutOfRangeException"><c>bit</c> is out of range of the atomic type bit length.</exception>
+    public BOOL Bit(int bit)
+    {
+        if (bit is < 0 or >= 16)
+            throw new ArgumentOutOfRangeException($"The bit {bit} is out of range for type {Name}", nameof(bit));
+        
+        return new BOOL((_value & (ushort)(1 << bit)) != 0);
+    }
+
+    /// <inheritdoc />
+    public int CompareTo(object? obj)
+    {
+        return obj switch
+        {
+            null => 1,
+            UINT typed => _value.CompareTo(typed._value),
+            AtomicType atomic => _value.CompareTo((ushort)Convert.ChangeType(atomic, typeof(ushort))),
+            ValueType value => _value.CompareTo((ushort)Convert.ChangeType(value, typeof(ushort))),
+            _ => throw new ArgumentException($"Cannot compare logix type {obj.GetType().Name} with {GetType().Name}.")
+        };
+    }
+
+    /// <inheritdoc />
+    public override bool Equals(object? obj)
+    {
+        return obj switch
+        {
+            UINT value => _value == value._value,
+            AtomicType atomic => base.Equals(atomic),
+            ValueType value => _value.Equals(Convert.ChangeType(value, typeof(ushort))),
+            _ => false
+        };
+    }
+
+    /// <inheritdoc />
+    public override byte[] GetBytes() => BitConverter.GetBytes(_value);
+
+    /// <inheritdoc />
+    public override int GetHashCode() => _value.GetHashCode();
+
+    /// <inheritdoc />
+    public override LogixType Set(LogixType type)
+    {
+        if (type is not AtomicType atomic)
+            throw new ArgumentException($"Can not set {GetType().Name} with type {type.GetType().Name}");
+
+        if (type is UINT value)
+            return new UINT((ushort)value, value.Radix);
+
+        var bytes = SetBytes(atomic.GetBytes());
+        var converted = BitConverter.ToUInt16(bytes);
+        return new UINT(converted, atomic.Radix);
+    }
+    
+    /// <summary>
+    /// Sets the specified bit of the atomic type to the provided <see cref="BOOL"/> value. 
+    /// </summary>
+    /// <param name="bit">The zero based bit index to set.</param>
+    /// <param name="value">The <see cref="BOOL"/> value to set.</param>
+    /// <returns>A new <see cref="UINT"/> with the updated value.</returns>
+    /// <exception cref="ArgumentNullException"><c>value</c> is null.</exception>
+    /// <exception cref="ArgumentOutOfRangeException"><c>bit</c> is out of range of the atomic type bit length.</exception>
+    public UINT Set(int bit, BOOL value)
+    {
+        if (value is null) 
+            throw new ArgumentNullException(nameof(value));
+
+        if (bit is < 0 or >= 16)
+            throw new ArgumentOutOfRangeException($"The bit {bit} is out of range for type {Name}", nameof(bit));
+        
+        var atomic = (ushort)(value ? _value | (ushort)(1 << bit) : _value & (ushort)~(1 << bit));
+        return new UINT(atomic, Radix);
+    }
 
     /// <summary>
     /// Parses the provided string value to a new <see cref="UINT"/>.
@@ -71,51 +166,6 @@ public class UINT : AtomicType, IComparable
         var atomic = radix.Parse(value);
         var converted = (ushort)Convert.ChangeType(atomic, typeof(ushort));
         return new UINT(converted, radix);
-    }
-    
-    /// <inheritdoc />
-    public override LogixType Set(LogixType type)
-    {
-        if (type is not AtomicType atomic)
-            throw new ArgumentException($"Can not set {GetType().Name} with type {type.GetType().Name}");
-
-        if (type is UINT value)
-            return new UINT((ushort)value, value.Radix);
-
-        var bytes = SetBytes(atomic.GetBytes());
-        var converted = BitConverter.ToUInt16(bytes);
-        return new UINT(converted, atomic.Radix);
-    }
-
-    /// <inheritdoc />
-    public override byte[] GetBytes() => BitConverter.GetBytes(_value);
-
-    /// <inheritdoc />
-    public override bool Equals(object? obj)
-    {
-        return obj switch
-        {
-            UINT value => _value == value._value,
-            AtomicType atomic => base.Equals(atomic),
-            ValueType value => _value.Equals(Convert.ChangeType(value, typeof(ushort))),
-            _ => false
-        };
-    }
-
-    /// <inheritdoc />
-    public override int GetHashCode() => _value.GetHashCode();
-
-    /// <inheritdoc />
-    public int CompareTo(object? obj)
-    {
-        return obj switch
-        {
-            null => 1,
-            UINT typed => _value.CompareTo(typed._value),
-            AtomicType atomic => _value.CompareTo((ushort)Convert.ChangeType(atomic, typeof(ushort))),
-            ValueType value => _value.CompareTo((ushort)Convert.ChangeType(value, typeof(ushort))),
-            _ => throw new ArgumentException($"Cannot compare logix type {obj.GetType().Name} with {GetType().Name}.")
-        };
     }
 
     #region Conversions
@@ -228,6 +278,13 @@ public class UINT : AtomicType, IComparable
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="REAL"/> type value.</returns>
     public static implicit operator REAL(UINT atomic) => new(atomic._value);
+    
+    /// <summary>
+    /// Converts the provided <see cref="UINT"/> to a <see cref="LREAL"/> value.
+    /// </summary>
+    /// <param name="atomic">The value to convert.</param>
+    /// <returns>A <see cref="REAL"/> type value.</returns>
+    public static implicit operator LREAL(UINT atomic) => new(atomic._value);
 
     #endregion
 }

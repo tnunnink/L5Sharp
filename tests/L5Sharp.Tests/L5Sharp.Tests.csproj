@@ -115,6 +115,9 @@
       <None Update="Types\Predefined\TimerTests.Serialize_Default_ShouldBeVerified.verified.txt">
         <DependentUpon>TimerTests.cs</DependentUpon>
       </None>
+      <None Update="Types\Atomics\SintTests.Serialize_ValueAndRadix_ShouldBeValid.verified.txt">
+        <DependentUpon>SintTests.cs</DependentUpon>
+      </None>
     </ItemGroup>
 
     <ItemGroup>

@@ -1,6 +1,9 @@
-﻿using AutoFixture;
+﻿using System.Diagnostics;
+using System.Globalization;
+using AutoFixture;
 using FluentAssertions;
 using L5Sharp.Enums;
+using L5Sharp.Tests.Types.Custom;
 using L5Sharp.Types;
 using L5Sharp.Types.Atomics;
 using L5Sharp.Types.Predefined;
@@ -26,25 +29,36 @@ namespace L5Sharp.Tests.Types.Atomics
 
             type.Should().NotBeNull();
         }
-        
+
         [Test]
-        public void New_Default_ShouldHaveExpectedDefaults()
+        public void New_Default_ShouldHaveExpectedValues()
         {
             var type = new LINT();
-            
+
+            type.Should().NotBeNull();
+            type.Should().Be(0);
             type.Name.Should().Be(nameof(LINT).ToUpper());
             type.Class.Should().Be(DataTypeClass.Atomic);
             type.Family.Should().Be(DataTypeFamily.None);
-            type.Should().Be(0);
+            type.Members.Should().HaveCount(64);
+            type.Radix.Should().Be(Radix.Decimal);
         }
-        
+
+        [Test]
+        public void New_Value_ShouldHaveExpectedValues()
+        {
+            var type = new LINT(_random);
+
+            type.Should().Be(_random);
+        }
+
         [Test]
         public void New_ValidRadix_ShouldHaveExpectedValues()
         {
-            var type = new LINT(Radix.Hex);
+            var type = new LINT(Radix.Binary);
 
-            type.Radix.Should().Be(Radix.Hex);
-            type.ToString().Should().Be("16#0000_0000_0000_0000");
+            type.Radix.Should().Be(Radix.Binary);
+            type.ToString().Should().Be("2#0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000");
         }
 
         [Test]
@@ -54,11 +68,30 @@ namespace L5Sharp.Tests.Types.Atomics
         }
 
         [Test]
-        public void New_ValueOverload_ShouldHaveExpectedValue()
+        public void New_InvalidRadix_ShouldThrowArgumentException()
         {
-            var type = new LINT(_random);
+            FluentActions.Invoking(() => new LINT(Radix.Exponential)).Should().Throw<ArgumentException>();
+        }
 
-            type.Should().Be(_random);
+        [Test]
+        public void New_ValueAndRadix_ShouldHaveExpectedValues()
+        {
+            var type = new LINT(123, Radix.Hex);
+
+            type.Should().Be(123);
+            type.Radix.Should().Be(Radix.Hex);
+        }
+
+        [Test]
+        public void New_ValueAndRadixNullRadix_ShouldThrowArgumentException()
+        {
+            FluentActions.Invoking(() => new LINT(123, null!)).Should().Throw<ArgumentException>();
+        }
+
+        [Test]
+        public void New_ValueAndRadixInvalidRadix_ShouldThrowArgumentException()
+        {
+            FluentActions.Invoking(() => new LINT(123, Radix.Exponential)).Should().Throw<ArgumentException>();
         }
 
         [Test]
@@ -76,55 +109,37 @@ namespace L5Sharp.Tests.Types.Atomics
         [Test]
         public void Members_PositiveValue_ShouldHaveBitsEqualToOne()
         {
-            var type = new LINT(123);
+            var type = new LINT(33);
 
-            var bitsEqualToOne = type.Members.Where(m => m.DataType > 0).ToList();
+            var members = type.Members.ToList();
 
-            bitsEqualToOne.Should().HaveCount(6);
+            var bitsEqualToOne = members.Where(m => m.DataType == true).ToList();
+
+            bitsEqualToOne.Should().NotBeEmpty();
+        }
+
+        [Test]
+        public void Bit_ValidIndex_ShouldBeExpected()
+        {
+            var type = new LINT(1);
+
+            var bit0 = type.Bit(0);
+            var bit1 = type.Bit(1);
+
+            bit0.Should().Be(true);
+            bit1.Should().Be(false);
         }
         
-        /*
         [Test]
-        public void GetBit_ValidIndex_ShouldBeExpected()
+        public void Bit_InvalidIndex_ShouldThrowArgumentOutOfRangeException()
         {
             var type = new LINT(1);
 
-            var bit = type[0];
-
-            bit.Should().Be(true);
+            FluentActions.Invoking(() => type.Bit(64)) .Should().Throw<ArgumentOutOfRangeException>();
         }
 
         [Test]
-        public void GetBit_InvalidIndex_ShouldThrowArgumentOutOfRangeException()
-        {
-            var type = new LINT(1);
-
-            FluentActions.Invoking(() => type[70]).Should().Throw<ArgumentOutOfRangeException>();
-        }
-
-        [Test]
-        public void SetBit_ValidIndex_ShouldHaveExpectedValue()
-        {
-            var type = new LINT
-            {
-                [0] = true
-            };
-
-            type.Should().Be(1);
-        }
-        */
-
-        /*
-        [Test]
-        public void SetBit_InvalidIndex_ShouldThrowArgumentOutOfRangeException()
-        {
-            var type = new LINT();
-            
-            FluentActions.Invoking(() => type[70] = 1).Should().Throw<ArgumentOutOfRangeException>();
-        }*/
-
-        [Test]
-        public void ToBytes_WhenCalled_ReturnsExpected()
+        public void GetBytes_WhenCalled_ReturnsExpected()
         {
             var expected = BitConverter.GetBytes(_random);
             var type = new LINT(_random);
@@ -153,7 +168,7 @@ namespace L5Sharp.Tests.Types.Atomics
 
             return Verify(xml);
         }
-        
+
         [Test]
         public Task Serialize_ValueAndRadix_ShouldBeValid()
         {
@@ -163,15 +178,15 @@ namespace L5Sharp.Tests.Types.Atomics
 
             return Verify(xml);
         }
-        
+
         [Test]
         public void Set_SameType_ShouldBeExpected()
         {
             var type = new LINT();
 
-            type.Set(new LINT(_random));
+            var value = type.Set(new LINT(_random));
 
-            type.Should().Be(_random);
+            value.Should().Be(_random);
         }
 
         [Test]
@@ -179,9 +194,9 @@ namespace L5Sharp.Tests.Types.Atomics
         {
             var type = new LINT();
 
-            type.Set(new SINT(123));
+            var value = type.Set(new SINT(123));
 
-            type.Should().Be(123);
+            value.Should().Be(123);
         }
 
         [Test]
@@ -189,9 +204,9 @@ namespace L5Sharp.Tests.Types.Atomics
         {
             var type = new LINT(LINT.MaxValue);
 
-            type.Set(new SINT(123));
+            var value = type.Set(new SINT(123));
 
-            type.Should().Be(123);
+            value.Should().Be(123);
         }
 
         [Test]
@@ -199,19 +214,19 @@ namespace L5Sharp.Tests.Types.Atomics
         {
             var type = new LINT();
 
-            type.Set(new ULINT(123));
+            var value = (LINT)type.Set(new LINT(123));
 
-            type.Should().Be(123);
+            value.Should().Be(123);
         }
 
         [Test]
-        public void Set_LargerTypeLargerValue_ShouldHaveDataLoss()
+        public void Set_LargerTypeLargerValue_ShouldHaveBeExpected()
         {
             var type = new LINT();
 
-            type.Set(new ULINT(ULINT.MaxValue));
+            var value = type.Set(new LINT(LINT.MaxValue));
 
-            type.Should().NotBe(LINT.MaxValue);
+            value.Should().Be(LINT.MaxValue);
         }
 
         [Test]
@@ -223,14 +238,314 @@ namespace L5Sharp.Tests.Types.Atomics
         }
 
         [Test]
-        public void Conversion_FromLong_ShouldBeExpectedValue()
+        public void Set_BitOverloadValidIndex_ShouldHaveExpectedValue()
+        {
+            var type = new LINT();
+
+            var set = type.Set(0, true);
+
+            set.Should().Be(1);
+        }
+
+        [Test]
+        public void Set_BitOverloadInvalidIndex_ShouldThrowArgumentOutOfRangeException()
+        {
+            var type = new LINT();
+
+            FluentActions.Invoking(() => type.Set(64, true)).Should().Throw<ArgumentOutOfRangeException>();
+        }
+        
+        [Test]
+        public void Set_BitOverloadNullValue_ShouldThrowArgumentNullException()
+        {
+            var type = new LINT();
+
+            FluentActions.Invoking(() => type.Set(1, null!)).Should().Throw<ArgumentNullException>();
+        }
+
+        [Test]
+        public void ToBoolean_WhenCalled_ShouldBeExpectedValue()
+        {
+            var type = new LINT();
+
+            var result = type.ToBoolean(CultureInfo.InvariantCulture);
+
+            result.Should().BeFalse();
+        }
+
+        [Test]
+        public void ToByte_WhenCalled_ShouldBeExpectedValue()
         {
             var fixture = new Fixture();
-            var value = fixture.Create<long>();
+            var value = fixture.Create<byte>();
+            var expected = (byte)Convert.ChangeType(value, typeof(byte));
+            var type = new LINT(value);
 
-            LINT type = value;
+            var result = type.ToByte(CultureInfo.InvariantCulture);
 
-            type.Should().Be(value);
+            result.Should().Be(expected);
+        }
+
+        [Test]
+        public void ToChar_WhenCalled_ShouldBeExpectedValue()
+        {
+            var expected = (char)Convert.ChangeType(_random, typeof(char));
+            var type = new LINT(_random);
+
+            var result = type.ToChar(CultureInfo.InvariantCulture);
+
+            result.Should().Be(expected);
+        }
+
+        [Test]
+        public void ToDateTime_WhenCalled_ShouldThrowInvalidCastException()
+        {
+            var milliseconds = _random / 1000;
+            var microseconds = _random % 1000;
+            var ticks = microseconds * (TimeSpan.TicksPerMillisecond / 1000);
+            var expected = DateTimeOffset.FromUnixTimeMilliseconds(milliseconds).AddTicks(ticks).DateTime;
+            var type = new LINT(_random);
+
+            var result = type.ToDateTime(CultureInfo.InvariantCulture);
+
+            result.Should().Be(expected);
+        }
+
+        [Test]
+        public void ToDecimal_WhenCalled_ShouldThrowInvalidCastException()
+        {
+            var type = new LINT(_random);
+
+            FluentActions.Invoking(() => type.ToDecimal(CultureInfo.InvariantCulture)).Should()
+                .Throw<InvalidCastException>();
+        }
+
+        [Test]
+        public void ToDouble_WhenCalled_ShouldBeExpectedValue()
+        {
+            var expected = (double)Convert.ChangeType(_random, typeof(double));
+            var type = new LINT(_random);
+
+            var result = type.ToDouble(CultureInfo.InvariantCulture);
+
+            result.Should().Be(expected);
+        }
+
+        [Test]
+        public void ToInt16_WhenCalled_ShouldBeExpectedValue()
+        {
+            var expected = (short)Convert.ChangeType(_random, typeof(short));
+            var type = new LINT(_random);
+
+            var result = type.ToInt16(CultureInfo.InvariantCulture);
+
+            result.Should().Be(expected);
+        }
+
+        [Test]
+        public void ToInt32_WhenCalled_ShouldBeExpectedValue()
+        {
+            var expected = (int)Convert.ChangeType(_random, typeof(int));
+            var type = new LINT(_random);
+
+            var result = type.ToInt32(CultureInfo.InvariantCulture);
+
+            result.Should().Be(expected);
+        }
+
+        [Test]
+        public void ToInt64_WhenCalled_ShouldBeExpectedValue()
+        {
+            var expected = (long)Convert.ChangeType(_random, typeof(long));
+            var type = new LINT(_random);
+
+            var result = type.ToInt64(CultureInfo.InvariantCulture);
+
+            result.Should().Be(expected);
+        }
+
+        [Test]
+        public void ToSByte_WhenCalled_ShouldBeExpectedValue()
+        {
+            var fixture = new Fixture();
+            var value = fixture.Create<sbyte>();
+            var expected = (sbyte)Convert.ChangeType(value, typeof(sbyte));
+            var type = new LINT(value);
+
+            var result = type.ToSByte(CultureInfo.InvariantCulture);
+
+            result.Should().Be(expected);
+        }
+
+        [Test]
+        public void ToSingle_WhenCalled_ShouldBeExpectedValue()
+        {
+            var expected = (float)Convert.ChangeType(_random, typeof(float));
+            var type = new LINT(_random);
+
+            var result = type.ToSingle(CultureInfo.InvariantCulture);
+
+            result.Should().Be(expected);
+        }
+
+        [Test]
+        public void ToUInt16_WhenCalled_ShouldBeExpectedValue()
+        {
+            var expected = (ushort)Convert.ChangeType(_random, typeof(ushort));
+            var type = new LINT(_random);
+
+            var result = type.ToUInt16(CultureInfo.InvariantCulture);
+
+            result.Should().Be(expected);
+        }
+
+        [Test]
+        public void ToUInt32_WhenCalled_ShouldBeExpectedValue()
+        {
+            var expected = (uint)Convert.ChangeType(_random, typeof(uint));
+            var type = new LINT(_random);
+
+            var result = type.ToUInt32(CultureInfo.InvariantCulture);
+
+            result.Should().Be(expected);
+        }
+
+        [Test]
+        public void ToUInt64_WhenCalled_ShouldBeExpectedValue()
+        {
+            var expected = (ulong)Convert.ChangeType(_random, typeof(ulong));
+            var type = new LINT(_random);
+
+            var result = type.ToUInt64(CultureInfo.InvariantCulture);
+
+            result.Should().Be(expected);
+        }
+        
+        [Test]
+        public void ToType_SINT_ShouldBeExpectedValue()
+        {
+            var expected = new SINT(1);
+            var type = new LINT(1);
+
+            var result = (SINT)type.ToType(typeof(SINT), CultureInfo.InvariantCulture);
+
+            result.Should().Be(expected);
+        }
+        
+        [Test]
+        public void ToType_INT_ShouldBeExpectedValue()
+        {
+            var expected = new LINT(1);
+            var type = new LINT(1);
+
+            var result = (LINT)type.ToType(typeof(LINT), CultureInfo.InvariantCulture);
+
+            result.Should().Be(expected);
+        }
+        
+        [Test]
+        public void ToType_DINT_ShouldBeExpectedValue()
+        {
+            var expected = new LINT(1);
+            var type = new LINT(1);
+
+            var result = (LINT)type.ToType(typeof(LINT), CultureInfo.InvariantCulture);
+
+            result.Should().Be(expected);
+        }
+        
+        [Test]
+        public void ToType_LINT_ShouldBeExpectedValue()
+        {
+            var expected = new LINT(1);
+            var type = new LINT(1);
+
+            var result = (LINT)type.ToType(typeof(LINT), CultureInfo.InvariantCulture);
+
+            result.Should().Be(expected);
+        }
+        
+        [Test]
+        public void ToType_REAL_ShouldBeExpectedValue()
+        {
+            var expected = new REAL(1);
+            var type = new LINT(1);
+
+            var result = (REAL)type.ToType(typeof(REAL), CultureInfo.InvariantCulture);
+
+            result.Should().Be(expected);
+        }
+        
+        [Test]
+        public void ToType_USINT_ShouldBeExpectedValue()
+        {
+            var expected = new USINT(1);
+            var type = new LINT(1);
+
+            var result = (USINT)type.ToType(typeof(USINT), CultureInfo.InvariantCulture);
+
+            result.Should().Be(expected);
+        }
+        
+        [Test]
+        public void ToType_UINT_ShouldBeExpectedValue()
+        {
+            var expected = new UINT(1);
+            var type = new LINT(1);
+
+            var result = (UINT)type.ToType(typeof(UINT), CultureInfo.InvariantCulture);
+
+            result.Should().Be(expected);
+        }
+        
+        [Test]
+        public void ToType_UDINT_ShouldBeExpectedValue()
+        {
+            var expected = new UDINT(1);
+            var type = new LINT(1);
+
+            var result = (UDINT)type.ToType(typeof(UDINT), CultureInfo.InvariantCulture);
+
+            result.Should().Be(expected);
+        }
+        
+        [Test]
+        public void ToType_ULINT_ShouldBeExpectedValue()
+        {
+            var expected = new ULINT(1);
+            var type = new LINT(1);
+
+            var result = (ULINT)type.ToType(typeof(ULINT), CultureInfo.InvariantCulture);
+
+            result.Should().Be(expected);
+        }
+        
+        [Test]
+        public void ToType_LREAL_ShouldBeExpectedValue()
+        {
+            var expected = new LREAL(1);
+            var type = new LINT(1);
+
+            var result = (LREAL)type.ToType(typeof(LREAL), CultureInfo.InvariantCulture);
+
+            result.Should().Be(expected);
+        }
+        
+        [Test]
+        public void ToType_TestAtomic_ShouldThrowInvalidCastException()
+        {
+            var type = new LINT();
+
+            FluentActions.Invoking(() => type.ToType(typeof(TestAtomic), CultureInfo.InvariantCulture)).Should()
+                .Throw<InvalidCastException>();
+        }
+
+        [Test]
+        public void Conversion_FromLong_ShouldBeExpectedValue()
+        {
+            LINT type = _random;
+
+            type.Should().Be(_random);
         }
 
         [Test]
@@ -264,91 +579,101 @@ namespace L5Sharp.Tests.Types.Atomics
         [Test]
         public void Conversion_BOOL_ShouldBeExpectedValue()
         {
-            var type = new LINT(1);
+            var type = new LINT();
 
             var value = (BOOL)type;
 
-            value.Should().Be(true);
+            value.Should().Be(false);
         }
 
         [Test]
         public void Conversion_SINT_ShouldBeExpectedValue()
         {
-            var type = new LINT(1);
+            var type = new LINT();
 
             var value = (SINT)type;
 
-            value.Should().Be(1);
+            value.Should().Be(0);
         }
 
         [Test]
         public void Conversion_USINT_ShouldBeExpectedValue()
         {
-            var type = new LINT(1);
+            var type = new LINT();
 
             var value = (USINT)type;
 
-            value.Should().Be(1);
-        }
-
-        [Test]
-        public void Conversion_INT_ShouldBeExpectedValue()
-        {
-            var type = new LINT(1);
-
-            var value = (INT)type;
-
-            value.Should().Be(1);
+            value.Should().Be(0);
         }
 
         [Test]
         public void Conversion_UINT_ShouldBeExpectedValue()
         {
-            var type = new LINT(1);
+            var type = new LINT();
 
             var value = (UINT)type;
 
-            value.Should().Be(1);
+            value.Should().Be(0);
+        }
+
+        [Test]
+        public void Conversion_INT_ShouldBeExpectedValue()
+        {
+            var type = new LINT();
+
+            var value = (INT)type;
+
+            value.Should().Be(0);
         }
 
         [Test]
         public void Conversion_DINT_ShouldBeExpectedValue()
         {
-            var type = new LINT(1);
+            var type = new LINT();
 
             var value = (DINT)type;
 
-            value.Should().Be(1);
+            value.Should().Be(0);
         }
 
         [Test]
         public void Conversion_UDINT_ShouldBeExpectedValue()
         {
-            var type = new LINT(1);
+            var type = new LINT();
 
             var value = (UDINT)type;
 
-            value.Should().Be(1);
+            value.Should().Be(0);
         }
 
         [Test]
         public void Conversion_ULINT_ShouldBeExpectedValue()
         {
-            var type = new LINT(1);
+            var type = new LINT();
 
             var value = (ULINT)type;
 
-            value.Should().Be(1);
+            value.Should().Be(0);
         }
 
         [Test]
         public void Conversion_REAL_ShouldBeExpectedValue()
         {
-            var type = new LINT(1);
+            var type = new LINT();
 
             REAL value = type;
 
-            value.Should().Be(1);
+            value.Should().Be(0);
+        }
+
+        [Test]
+        public void Conversion_LREAL_ShouldBeExpectedValue()
+        {
+            var type = new LINT();
+
+            LREAL value = type;
+
+            value.Should().Be(0);
         }
 
         [Test]
@@ -366,27 +691,25 @@ namespace L5Sharp.Tests.Types.Atomics
         {
             var type = new LINT();
 
-            var format = type.ToString(Radix.DateTime);
+            var format = type.ToString(Radix.Binary);
 
-            format.Should().Be("DT#1970-01-01-00:00:00.000_000Z");
+            format.Should().Be("2#0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000");
         }
 
         [Test]
         [TestCase("123")]
         [TestCase("2#0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0111_1011")]
-        [TestCase("8#0_000_000_000_000_000_000_173")]
+        [TestCase("8#000_000_000_000_000_173")]
         [TestCase("16#0000_0000_0000_007b")]
-        [TestCase("'$00$00$00$00$00$00$00{'")]
         public void Parse_ValidFormat_ShouldBeExpectedValue(string value)
         {
             var type = LINT.Parse(value);
 
-            type.Should().BeOfType<LINT>();
             type.Should().Be(123);
         }
 
         [Test]
-        public void Parse_InvalidFormat_ShouldThrowNewFormatException()
+        public void Parse_InvalidFormat_ShouldThrowFormatException()
         {
             var fixture = new Fixture();
 
@@ -394,7 +717,7 @@ namespace L5Sharp.Tests.Types.Atomics
         }
 
         [Test]
-        public void Equals_TypedAreEqual_ShouldBeTrue()
+        public void Equals_AreEqual_ShouldBeTrue()
         {
             var first = new LINT();
             var second = new LINT();
@@ -405,10 +728,22 @@ namespace L5Sharp.Tests.Types.Atomics
         }
 
         [Test]
-        public void Equals_TypedAreSame_ShouldBeTrue()
+        public void Equals_AreNotEqual_ShouldBeFalse()
+        {
+            var first = new LINT(1);
+            var second = new LINT(2);
+
+            var result = first.Equals(second);
+
+            result.Should().BeFalse();
+        }
+
+        [Test]
+        public void Equals_AreSame_ShouldBeTrue()
         {
             var first = new LINT();
 
+            // ReSharper disable once EqualExpressionComparison this is the test.
             var result = first.Equals(first);
 
             result.Should().BeTrue();
@@ -416,7 +751,7 @@ namespace L5Sharp.Tests.Types.Atomics
 
 
         [Test]
-        public void Equals_TypedNull_ShouldBeFalse()
+        public void Equals_Null_ShouldBeFalse()
         {
             var first = new LINT();
 
@@ -426,71 +761,29 @@ namespace L5Sharp.Tests.Types.Atomics
         }
 
         [Test]
-        public void Equals_ObjectAreEqual_ShouldBeTrue()
-        {
-            var first = new LINT();
-            var second = new LINT();
-
-            var result = first.Equals((object)second);
-
-            result.Should().BeTrue();
-        }
-        
-        [Test]
-        public void Equals_ObjectAreNotEqual_ShouldBeFalse()
-        {
-            var first = new LINT(1);
-            var second = new LINT(2);
-
-            var result = first.Equals((object)second);
-
-            result.Should().BeFalse();
-        }
-
-        [Test]
-        public void Equals_ObjectAreSame_ShouldBeTrue()
-        {
-            var first = new LINT();
-
-            var result = first.Equals((object)first);
-
-            result.Should().BeTrue();
-        }
-
-        [Test]
-        public void Equals_ObjectNull_ShouldBeFalse()
-        {
-            var first = new LINT();
-
-            var result = first.Equals((object)null);
-
-            result.Should().BeFalse();
-        }
-
-        [Test]
         public void Equals_DifferentAtomicEqualValue_ShouldBeTrue()
         {
             var first = new LINT(1);
-            var second = new DINT(1);
+            var second = new INT(1);
 
             // ReSharper disable once SuspiciousTypeConversion.Global this method supports different atomic types.
-            var result = first.Equals((object)second);
+            var result = first.Equals(second);
 
             result.Should().BeTrue();
         }
-        
+
         [Test]
         public void Equals_DifferentAtomicNotEqualValue_ShouldBeFalse()
         {
             var first = new LINT(1);
-            var second = new DINT(2);
+            var second = new INT(2);
 
             // ReSharper disable once SuspiciousTypeConversion.Global this method supports different atomic types.
-            var result = first.Equals((object)second);
+            var result = first.Equals(second);
 
             result.Should().BeFalse();
         }
-        
+
         [Test]
         public void Equals_InvalidType_ShouldBeFalse()
         {
@@ -503,57 +796,41 @@ namespace L5Sharp.Tests.Types.Atomics
         }
 
         [Test]
-        public void OperatorEquals_AreEqual_ShouldBeTrue()
+        [TestCase(1000)]
+        [TestCase(10000)]
+        [TestCase(100000)]
+        [TestCase(1000000)]
+        public void Equals_OverLargeCollection_ShouldWorkFairlyFast(int capacity)
         {
-            var first = new LINT();
-            var second = new LINT();
+            var stopwatch = new Stopwatch();
 
-            var result = first == second;
+            var range = Enumerable.Range(0, capacity).Select(_ => new LINT(_random)).ToList();
 
-            result.Should().BeTrue();
-        }
-        
-        [Test]
-        public void OperatorEquals_AreNotEqual_ShouldBeFalse()
-        {
-            var first = new LINT(1);
-            var second = new LINT(2);
+            stopwatch.Start();
+            var result = range.Where(v => v == new LINT(_random)).ToList();
+            stopwatch.Stop();
 
-            var result = first == second;
-
-            result.Should().BeFalse();
+            result.Count.Should().Be(capacity);
         }
 
         [Test]
-        public void OperatorNotEquals_AreEqual_ShouldBeFalse()
+        public void GetHashCode_RandomValue_ShouldBeHashOfValue()
         {
-            var first = new LINT();
-            var second = new LINT();
-
-            var result = first != second;
-
-            result.Should().BeFalse();
-        }
-        
-        [Test]
-        public void OperatorNotEquals_AreNotEqual_ShouldBeTrue()
-        {
-            var first = new LINT(1);
-            var second = new LINT(2);
-
-            var result = first != second;
-
-            result.Should().BeTrue();
-        }
-
-        [Test]
-        public void GetHashCode_DefaultValue_ShouldBeHashOfName()
-        {
-            var type = new LINT();
+            var type = new LINT(_random);
 
             var hash = type.GetHashCode();
 
-            hash.Should().Be(type.GetHashCode());
+            hash.Should().Be(_random.GetHashCode());
+        }
+
+        [Test]
+        public void GetTypeCode_WhenCalled_ShouldBeObjectType()
+        {
+            var type = new LINT();
+
+            var code = type.GetTypeCode();
+
+            code.Should().Be(TypeCode.Object);
         }
 
         [Test]
@@ -576,6 +853,16 @@ namespace L5Sharp.Tests.Types.Atomics
 
             compare.Should().Be(0);
         }
+        
+        [Test]
+        public void CompareTo_ValueTypeEqual_ShouldBeZero()
+        {
+            var type = new LINT();
+
+            var compare = type.CompareTo(0);
+
+            compare.Should().Be(0);
+        }
 
         [Test]
         public void CompareTo_Null_ShouldBeOne()
@@ -588,98 +875,111 @@ namespace L5Sharp.Tests.Types.Atomics
         }
 
         [Test]
-        public void CompareTo_ObjectEqual_ShouldBeZero()
-        {
-            var a = new LINT(123);
-            var b = new LINT(123);
-
-            var result = a.CompareTo((object)b);
-
-            result.Should().Be(0);
-        }
-
-        [Test]
-        public void CompareTo_ObjectAGreater_ShouldBeOne()
+        public void CompareTo_AGreater_ShouldBeOne()
         {
             var a = new LINT(2);
             var b = new LINT(1);
 
-            var result = a.CompareTo((object)b);
+            var result = a.CompareTo(b);
 
             result.Should().Be(1);
         }
 
         [Test]
-        public void CompareTo_ObjectBGreater_ShouldBeNegativeOne()
+        public void CompareTo_BGreater_ShouldBeNegativeOne()
         {
             var a = new LINT(1);
             var b = new LINT(2);
 
-            var result = a.CompareTo((object)b);
+            var result = a.CompareTo(b);
 
             result.Should().Be(-1);
         }
 
         [Test]
-        public void CompareTo_ObjectSame_ShouldBeZero()
+        public void CompareTo_DifferentAtomicWithEqualValue_ShouldBeZero()
         {
-            var type = new LINT(1);
+            var a = new LINT(1);
+            var b = new INT(1);
 
-            var result = type.CompareTo((object)type);
+            var result = a.CompareTo(b);
 
             result.Should().Be(0);
         }
 
         [Test]
-        public void CompareTo_ObjectNull_ShouldBeOne()
+        public void CompareTo_DifferentAtomicWithLesserValue_ShouldBeOne()
         {
-            var type = new LINT();
+            var a = new LINT(1);
+            var b = new INT(0);
 
-            var result = type.CompareTo(((object)null)!);
+            var result = a.CompareTo(b);
 
             result.Should().Be(1);
         }
 
         [Test]
-        public void CompareTo_ObjectDifferentAtomicWithEqualValue_ShouldBeZero()
+        public void CompareTo_DifferentAtomicWithGreaterValue_ShouldBeNegativeOne()
         {
             var a = new LINT(1);
-            var b = new DINT(1);
+            var b = new INT(2);
 
-            var result = a.CompareTo((object)b);
-
-            result.Should().Be(0);
-        }
-
-        [Test]
-        public void CompareTo_ObjectDifferentAtomicWithLesserValue_ShouldBeOne()
-        {
-            var a = new LINT(1);
-            var b = new DINT(0);
-
-            var result = a.CompareTo((object)b);
-
-            result.Should().Be(1);
-        }
-
-        [Test]
-        public void CompareTo_ObjectDifferentAtomicWithGreaterValue_ShouldBeNegativeOne()
-        {
-            var a = new LINT(1);
-            var b = new DINT(2);
-
-            var result = a.CompareTo((object)b);
+            var result = a.CompareTo(b);
 
             result.Should().Be(-1);
         }
 
         [Test]
-        public void CompareTo_ObjectInvalidType_ShouldThrowArgumentException()
+        public void CompareTo_InvalidType_ShouldThrowArgumentException()
         {
             var a = new LINT();
             var b = new TIMER();
 
             FluentActions.Invoking(() => a.CompareTo(b)).Should().Throw<ArgumentException>();
+        }
+
+        [Test]
+        public void OperatorEquals_AreEqual_ShouldBeTrue()
+        {
+            var first = new LINT();
+            var second = new LINT();
+
+            var result = first == second;
+
+            result.Should().BeTrue();
+        }
+
+        [Test]
+        public void OperatorEquals_AreNotEqual_ShouldBeFalse()
+        {
+            var first = new LINT(1);
+            var second = new LINT(2);
+
+            var result = first == second;
+
+            result.Should().BeFalse();
+        }
+
+        [Test]
+        public void OperatorNotEquals_AreEqual_ShouldBeFalse()
+        {
+            var first = new LINT();
+            var second = new LINT();
+
+            var result = first != second;
+
+            result.Should().BeFalse();
+        }
+
+        [Test]
+        public void OperatorNotEquals_AreNotEqual_ShouldBeTrue()
+        {
+            var first = new LINT(1);
+            var second = new LINT(2);
+
+            var result = first != second;
+
+            result.Should().BeTrue();
         }
 
         [Test]
@@ -689,7 +989,7 @@ namespace L5Sharp.Tests.Types.Atomics
             var b = new LINT(1);
 
             var result = a > b;
-            
+
             result.Should().BeTrue();
         }
 
@@ -700,7 +1000,7 @@ namespace L5Sharp.Tests.Types.Atomics
             var b = new LINT(2);
 
             var result = a > b;
-            
+
             result.Should().BeFalse();
         }
 
@@ -711,7 +1011,7 @@ namespace L5Sharp.Tests.Types.Atomics
             var b = new LINT(1);
 
             var result = a < b;
-            
+
             result.Should().BeFalse();
         }
 
@@ -722,10 +1022,10 @@ namespace L5Sharp.Tests.Types.Atomics
             var b = new LINT(2);
 
             var result = a < b;
-            
+
             result.Should().BeTrue();
         }
-        
+
         [Test]
         public void OperatorGreaterThanOrEqualTo_AGreaterThanB_ShouldBeTrue()
         {
@@ -733,7 +1033,7 @@ namespace L5Sharp.Tests.Types.Atomics
             var b = new LINT(1);
 
             var result = a >= b;
-            
+
             result.Should().BeTrue();
         }
 
@@ -744,7 +1044,7 @@ namespace L5Sharp.Tests.Types.Atomics
             var b = new LINT(2);
 
             var result = a >= b;
-            
+
             result.Should().BeFalse();
         }
 
@@ -755,7 +1055,7 @@ namespace L5Sharp.Tests.Types.Atomics
             var b = new LINT(1);
 
             var result = a <= b;
-            
+
             result.Should().BeFalse();
         }
 
@@ -766,8 +1066,19 @@ namespace L5Sharp.Tests.Types.Atomics
             var b = new LINT(2);
 
             var result = a <= b;
-            
+
             result.Should().BeTrue();
+        }
+
+        [Test]
+        public void Operator()
+        {
+            var a = new LINT(1);
+            var b = new LINT(2);
+
+            var result = (short)b % a;
+
+            result.Should().Be(0);
         }
     }
 }

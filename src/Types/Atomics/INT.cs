@@ -83,7 +83,7 @@ public sealed class INT : AtomicType, IComparable
         if (bit is < 0 or >= 16)
             throw new ArgumentOutOfRangeException($"The bit {bit} is out of range for type {Name}", nameof(bit));
         
-        return new BOOL((_value & 1 << bit) != 0);
+        return new BOOL((_value & (short)(1 << bit)) != 0);
     }
 
     /// <inheritdoc />

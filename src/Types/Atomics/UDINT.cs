@@ -6,7 +6,7 @@ namespace L5Sharp.Types.Atomics;
 /// <summary>
 /// Represents a <b>UDINT</b> Logix atomic data type, or a type analogous to a <see cref="uint"/>.
 /// </summary>
-public class UDINT : AtomicType, IComparable
+public sealed class UDINT : AtomicType, IComparable
 {
     private readonly uint _value;
 
@@ -55,6 +55,85 @@ public class UDINT : AtomicType, IComparable
     /// Represents the smallest possible value of <see cref="UDINT"/>.
     /// </summary>
     public const uint MinValue = uint.MinValue;
+    
+    /// <summary>
+    /// Gets the bit value as a <see cref="BOOL"/> at the specified zero based bit index of the atomic type.
+    /// </summary>
+    /// <param name="bit">The zero based bit index of the value to get.</param>
+    /// <returns>A <see cref="BOOL"/> representing the value of the specified bit.</returns>
+    /// <exception cref="ArgumentOutOfRangeException"><c>bit</c> is out of range of the atomic type bit length.</exception>
+    public BOOL Bit(int bit)
+    {
+        if (bit is < 0 or >= 32)
+            throw new ArgumentOutOfRangeException($"The bit {bit} is out of range for type {Name}", nameof(bit));
+        
+        return new BOOL((_value & 1 << bit) != 0);
+    }
+
+    /// <inheritdoc />
+    public int CompareTo(object obj)
+    {
+        return obj switch
+        {
+            null => 1,
+            UDINT typed => _value.CompareTo(typed._value),
+            AtomicType atomic => _value.CompareTo((uint)Convert.ChangeType(atomic, typeof(uint))),
+            ValueType value => _value.CompareTo((uint)Convert.ChangeType(value, typeof(uint))),
+            _ => throw new ArgumentException($"Cannot compare logix type {obj.GetType().Name} with {GetType().Name}.")
+        };
+    }
+
+    /// <inheritdoc />
+    public override bool Equals(object? obj)
+    {
+        return obj switch
+        {
+            UDINT value => _value == value._value,
+            AtomicType atomic => base.Equals(atomic),
+            ValueType value => _value.Equals(Convert.ChangeType(value, typeof(uint))),
+            _ => false
+        };
+    }
+
+    /// <inheritdoc />
+    public override byte[] GetBytes() => BitConverter.GetBytes(_value);
+
+    /// <inheritdoc />
+    public override int GetHashCode() => _value.GetHashCode();
+
+    /// <inheritdoc />
+    public override LogixType Set(LogixType type)
+    {
+        if (type is not AtomicType atomic)
+            throw new ArgumentException($"Can not set {GetType().Name} with type {type.GetType().Name}");
+
+        if (type is UDINT value)
+            return new UDINT((uint)value, value.Radix);
+
+        var bytes = SetBytes(atomic.GetBytes());
+        var converted = BitConverter.ToUInt32(bytes);
+        return new UDINT(converted, atomic.Radix);
+    }
+    
+    /// <summary>
+    /// Sets the specified bit of the atomic type to the provided <see cref="BOOL"/> value. 
+    /// </summary>
+    /// <param name="bit">The zero based bit index to set.</param>
+    /// <param name="value">The <see cref="BOOL"/> value to set.</param>
+    /// <returns>A new <see cref="UDINT"/> with the updated value.</returns>
+    /// <exception cref="ArgumentNullException"><c>value</c> is null.</exception>
+    /// <exception cref="ArgumentOutOfRangeException"><c>bit</c> is out of range of the atomic type bit length.</exception>
+    public UDINT Set(int bit, BOOL value)
+    {
+        if (value is null) 
+            throw new ArgumentNullException(nameof(value));
+
+        if (bit is < 0 or >= 32)
+            throw new ArgumentOutOfRangeException($"The bit {bit} is out of range for type {Name}", nameof(bit));
+        
+        var atomic = value ? _value | (uint)(1 << bit) : _value & (uint)~(1 << bit);
+        return new UDINT(atomic, Radix);
+    }
 
     /// <summary>
     /// Parses the provided string value to a new <see cref="UDINT"/>.
@@ -71,51 +150,6 @@ public class UDINT : AtomicType, IComparable
         var atomic = radix.Parse(value);
         var converted = (uint)Convert.ChangeType(atomic, typeof(uint));
         return new UDINT(converted, radix);
-    }
-    
-    /// <inheritdoc />
-    public override LogixType Set(LogixType type)
-    {
-        if (type is not AtomicType atomic)
-            throw new ArgumentException($"Can not set {GetType().Name} with type {type.GetType().Name}");
-
-        if (type is UDINT value)
-            return new UDINT((uint)value, value.Radix);
-
-        var bytes = SetBytes(atomic.GetBytes());
-        var converted = BitConverter.ToUInt32(bytes);
-        return new UDINT(converted, atomic.Radix);
-    }
-
-    /// <inheritdoc />
-    public override byte[] GetBytes() => BitConverter.GetBytes(_value);
-
-    /// <inheritdoc />
-    public override bool Equals(object? obj)
-    {
-        return obj switch
-        {
-            UDINT value => _value == value._value,
-            AtomicType atomic => base.Equals(atomic),
-            ValueType value => _value.Equals(Convert.ChangeType(value, typeof(uint))),
-            _ => false
-        };
-    }
-
-    /// <inheritdoc />
-    public override int GetHashCode() => _value.GetHashCode();
-
-    /// <inheritdoc />
-    public int CompareTo(object obj)
-    {
-        return obj switch
-        {
-            null => 1,
-            UDINT typed => _value.CompareTo(typed._value),
-            AtomicType atomic => _value.CompareTo((uint)Convert.ChangeType(atomic, typeof(uint))),
-            ValueType value => _value.CompareTo((uint)Convert.ChangeType(value, typeof(uint))),
-            _ => throw new ArgumentException($"Cannot compare logix type {obj.GetType().Name} with {GetType().Name}.")
-        };
     }
 
     #region Conversions
@@ -222,6 +256,13 @@ public class UDINT : AtomicType, IComparable
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="REAL"/> type value.</returns>
     public static implicit operator REAL(UDINT atomic) => new(atomic._value);
+    
+    /// <summary>
+    /// Converts the provided <see cref="UDINT"/> to a <see cref="REAL"/> value.
+    /// </summary>
+    /// <param name="atomic">The value to convert.</param>
+    /// <returns>A <see cref="REAL"/> type value.</returns>
+    public static implicit operator LREAL(UDINT atomic) => new(atomic._value);
 
     #endregion
 }

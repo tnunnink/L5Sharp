@@ -6,7 +6,7 @@ namespace L5Sharp.Types;
 
 /// <summary>
 /// A mutable <see cref="StructureType"/> allowing the user to further extend or transform the structure of a complex
-/// logix type.
+/// logix type after instantiation of the object.
 /// </summary>
 public class ComplexType : StructureType
 {
@@ -44,14 +44,14 @@ public class ComplexType : StructureType
     }
 
     /// <summary>
-    /// Adds the provided member to the end of the type's members collection.
+    /// Adds the provided member to the end of the type member collection.
     /// </summary>
     /// <param name="member">The <see cref="Member"/> to add.</param>
     /// <exception cref="ArgumentNullException"><c>member</c> is null.</exception>
     public void Add(Member member) => AddMember(member);
 
     /// <summary>
-    /// Adds the provided member collection to the end of the type's members collection.
+    /// Adds the provided member collection to the end of the type member collection.
     /// </summary>
     /// <param name="members">The collection of <see cref="Member"/> to add.</param>
     /// <exception cref="ArgumentNullException"><c>members</c> or any object in <c>members</c> is null.</exception>
@@ -63,37 +63,41 @@ public class ComplexType : StructureType
     public void Clear() => ClearMembers();
 
     /// <summary>
-    /// 
+    /// Inserts the provided member at the specified index of the type member collection. 
     /// </summary>
-    /// <param name="index"></param>
-    /// <param name="member"></param>
-    /// <exception cref="ArgumentNullException"></exception>
-    /// <exception cref="ArgumentOutOfRangeException">index is less than 0 or greater than or equal to the number of elements in source.</exception>
+    /// <param name="index">The zero-based index at which item should be inserted.</param>
+    /// <param name="member">The member to insert.</param>
+    /// <exception cref="ArgumentNullException"><c>member</c> is null.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">index is less than 0. -or- index is greater than the length of
+    /// the member collection.</exception>
     public void Insert(int index, Member member) => InsertMember(index, member);
 
     /// <summary>
-    /// Removed a member with the specified name from the complex type.
+    /// Removes a member with the specified name from the type member collection.
     /// </summary>
     /// <param name="name">The name of the member to remove.</param>
     public void Remove(string name) => RemoveMember(name);
 
     /// <summary>
-    /// 
+    /// Removes a member at the specified index from the type member collection.
     /// </summary>
-    /// <param name="index"></param>
+    /// <param name="index">The zero-based index of the member to remove.</param>
     public void Remove(int index) => RemoveMember(index);
 
     /// <summary>
-    /// 
+    /// Replaces a member having the specified name with the provided member instance.
     /// </summary>
-    /// <param name="name"></param>
-    /// <param name="member"></param>
+    /// <param name="name">The name of the member to replace.</param>
+    /// <param name="member">The member to replace the current member with.</param>
+    /// <exception cref="ArgumentNullException"><c>member</c> is null.</exception>
+    /// <exception cref="ArgumentException"><c>name</c> does not exists in the structure type.</exception>
     public void Replace(string name, Member member) => ReplaceMember(name, member);
 
     /// <summary>
-    /// 
+    /// Replaces a member at the specified index with the provided member instance.
     /// </summary>
-    /// <param name="index"></param>
-    /// <param name="member"></param>
+    /// <param name="index">The zer-based index at which to replace the member.</param>
+    /// <param name="member">The member to replace the current member with.</param>
+    /// <exception cref="ArgumentNullException"><c>member</c> is null.</exception>
     public void Replace(int index, Member member) => ReplaceMember(index, member);
 }

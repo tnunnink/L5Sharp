@@ -87,7 +87,7 @@ public sealed class DINT : AtomicType, IComparable
     }
 
     /// <inheritdoc />
-    public int CompareTo(object obj)
+    public int CompareTo(object? obj)
     {
         return obj switch
         {
@@ -168,74 +168,6 @@ public sealed class DINT : AtomicType, IComparable
         var converted = (int)Convert.ChangeType(atomic, typeof(int));
         return new DINT(converted, radix);
     }
-    
-    #region Operators
-    
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="left"></param>
-    /// <param name="right"></param>
-    /// <returns></returns>
-    public static DINT operator +(DINT left, DINT right) => new(left._value + right._value);
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="left"></param>
-    /// <param name="right"></param>
-    /// <returns></returns>
-    public static DINT operator -(DINT left, DINT right) => new(left._value - right._value);
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="left"></param>
-    /// <param name="right"></param>
-    /// <returns></returns>
-    public static DINT operator *(DINT left, DINT right) => new(left._value * right._value);
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="left"></param>
-    /// <param name="right"></param>
-    /// <returns></returns>
-    public static DINT operator /(DINT left, DINT right) => new(left._value / right._value);
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="left"></param>
-    /// <param name="right"></param>
-    /// <returns></returns>
-    public static DINT operator %(DINT left, DINT right) => new(left._value % right._value);
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="left"></param>
-    /// <param name="right"></param>
-    /// <returns></returns>
-    public static DINT operator &(DINT left, DINT right) => new(left._value & right._value);
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="left"></param>
-    /// <param name="right"></param>
-    /// <returns></returns>
-    public static DINT operator |(DINT left, DINT right) => new(left._value | right._value);
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="left"></param>
-    /// <param name="right"></param>
-    /// <returns></returns>
-    public static DINT operator ^(DINT left, DINT right) => new(left._value ^ right._value);
-
-    #endregion
 
     #region Conversions
 
@@ -341,6 +273,13 @@ public sealed class DINT : AtomicType, IComparable
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="REAL"/> type value.</returns>
     public static implicit operator REAL(DINT atomic) => new(atomic._value);
+    
+    /// <summary>
+    /// Converts the provided <see cref="DINT"/> to a <see cref="LREAL"/> value.
+    /// </summary>
+    /// <param name="atomic">The value to convert.</param>
+    /// <returns>A <see cref="LREAL"/> type value.</returns>
+    public static implicit operator LREAL(DINT atomic) => new(atomic._value);
 
     #endregion
 }

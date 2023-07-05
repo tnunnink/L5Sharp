@@ -475,9 +475,13 @@ public abstract class Radix : LogixEnum<Radix, string>
         {
             ValidateType(atomic);
 
-            var value = (float)(REAL)atomic;
+            if (atomic is LREAL lreal)
+            {
+                //todo need to see if LREAL has longer format
+                return ((double)lreal).ToString("0.0######", CultureInfo.InvariantCulture);
+            }
 
-            return value.ToString("0.0######", CultureInfo.InvariantCulture);
+            return ((float)(REAL)atomic).ToString("0.0######", CultureInfo.InvariantCulture);
         }
 
         public override AtomicType Parse(string input)
@@ -525,7 +529,7 @@ public abstract class Radix : LogixEnum<Radix, string>
 
             return new REAL(float.Parse(input));
         }
-        
+
         private static string ReplaceAll(string value, IEnumerable<string> items, string replacement) =>
             items.Aggregate(value, (str, cItem) => str.Replace(cItem, replacement));
     }
@@ -578,7 +582,7 @@ public abstract class Radix : LogixEnum<Radix, string>
 
             return ToAtomic(value, BitsPerByte, BaseNumber);
         }
-        
+
         private static string TrimSingle(string value, char character)
         {
             if (value.StartsWith(character) && value.EndsWith(character))

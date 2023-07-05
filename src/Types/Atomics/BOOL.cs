@@ -66,6 +66,51 @@ public sealed class BOOL : AtomicType, IComparable
     /// <inheritdoc />
     public override IEnumerable<Member> Members => Enumerable.Empty<Member>();
 
+    /// <inheritdoc />
+    public int CompareTo(object obj)
+    {
+        return obj switch
+        {
+            null => 1,
+            BOOL typed => _value.CompareTo(typed._value),
+            AtomicType atomic => _value.CompareTo((bool)Convert.ChangeType(atomic, typeof(bool))),
+            ValueType value => _value.CompareTo((bool)Convert.ChangeType(value, typeof(bool))),
+            _ => throw new ArgumentException($"Cannot compare logix type {obj.GetType().Name} with {GetType().Name}.")
+        };
+    }
+
+    /// <inheritdoc />
+    public override bool Equals(object? obj)
+    {
+        return obj switch
+        {
+            BOOL value => value._value == _value,
+            AtomicType value => base.Equals(value),
+            ValueType value => _value.Equals(Convert.ChangeType(value, typeof(bool))),
+            _ => false
+        };
+    }
+
+    /// <inheritdoc />
+    public override byte[] GetBytes() => BitConverter.GetBytes(_value);
+
+    /// <inheritdoc />
+    public override int GetHashCode() => _value.GetHashCode();
+
+    /// <inheritdoc />
+    public override LogixType Set(LogixType type)
+    {
+        if (type is not AtomicType atomic)
+            throw new ArgumentException($"Can not set {GetType().Name} with type {type.GetType().Name}");
+
+        if (type is BOOL value)
+            return new BOOL((bool)value, value.Radix);
+
+        var bytes = SetBytes(atomic.GetBytes());
+        var converted = BitConverter.ToBoolean(bytes);
+        return new BOOL(converted, atomic.Radix);
+    }
+
     /// <summary>
     /// Parses the provided string value to a new <see cref="BOOL"/>.
     /// </summary>
@@ -91,53 +136,8 @@ public sealed class BOOL : AtomicType, IComparable
         }
     }
 
-    /// <inheritdoc />
-    public override LogixType Set(LogixType type)
-    {
-        if (type is not AtomicType atomic)
-            throw new ArgumentException($"Can not set {GetType().Name} with type {type.GetType().Name}");
-
-        if (type is BOOL value)
-            return new BOOL((bool)value, value.Radix);
-
-        var bytes = SetBytes(atomic.GetBytes());
-        var converted = BitConverter.ToBoolean(bytes);
-        return new BOOL(converted, atomic.Radix);
-    }
-
-    /// <inheritdoc />
-    public override byte[] GetBytes() => BitConverter.GetBytes(_value);
-
-    /// <inheritdoc />
-    public override bool Equals(object? obj)
-    {
-        return obj switch
-        {
-            BOOL value => value._value == _value,
-            AtomicType value => base.Equals(value),
-            ValueType value => _value.Equals(Convert.ChangeType(value, typeof(bool))),
-            _ => false
-        };
-    }
-
-    /// <inheritdoc />
-    public override int GetHashCode() => _value.GetHashCode();
-
-    /// <inheritdoc />
-    public int CompareTo(object obj)
-    {
-        return obj switch
-        {
-            null => 1,
-            BOOL typed => _value.CompareTo(typed._value),
-            AtomicType atomic => _value.CompareTo((bool)Convert.ChangeType(atomic, typeof(bool))),
-            ValueType value => _value.CompareTo((bool)Convert.ChangeType(value, typeof(bool))),
-            _ => throw new ArgumentException($"Cannot compare logix type {obj.GetType().Name} with {GetType().Name}.")
-        };
-    }
-
     #region Conversions
-    
+
     /// <inheritdoc />
     public override short ToInt16(IFormatProvider provider) => _value ? (short)1 : default;
 

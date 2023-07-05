@@ -22,12 +22,25 @@ public sealed class REAL : AtomicType, IComparable
     }
 
     /// <summary>
+    /// Creates a new <see cref="REAL"/> with the provided value.
+    /// </summary>
+    /// <param name="value">The value to initialize the type with.</param>
+    public REAL(float value)
+    {
+        _value = value;
+        Radix = Radix.Float;
+    }
+
+    /// <summary>
     /// Creates a new <see cref="REAL"/> value with the provided radix format.
     /// </summary>
     /// <param name="radix">The <see cref="Enums.Radix"/> number format of the value.</param>
     public REAL(Radix radix)
     {
         _value = 0;
+        if (radix is null) throw new ArgumentNullException(nameof(radix));
+        if (!radix.SupportsType(this))
+            throw new ArgumentException($"Invalid Radix {radix} for atomic type {Name}.", nameof(radix));
         Radix = radix;
     }
 
@@ -36,10 +49,13 @@ public sealed class REAL : AtomicType, IComparable
     /// </summary>
     /// <param name="value">The value to initialize the type with.</param>
     /// <param name="radix">The optional radix format of the value.</param>
-    public REAL(float value, Radix? radix = null)
+    public REAL(float value, Radix radix)
     {
         _value = value;
-        Radix = radix ?? Radix.Float;
+        if (radix is null) throw new ArgumentNullException(nameof(radix));
+        if (!radix.SupportsType(this))
+            throw new ArgumentException($"Invalid Radix {radix} for atomic type {Name}.", nameof(radix));
+        Radix = radix;
     }
     
     /// <inheritdoc />
