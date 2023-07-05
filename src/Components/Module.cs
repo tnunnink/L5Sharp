@@ -212,9 +212,9 @@ public class Module : LogixComponent<Module>
     }
 
     /// <summary>
-    /// A collection of <see cref="ModuleConnection"/> defining the input and output connection specific to the module.
+    /// A collection of <see cref="Connection"/> defining the input and output connection specific to the module.
     /// </summary>
-    public LogixContainer<ModuleConnection> Connections
+    public LogixContainer<Connection> Connections
     {
         get
         {
@@ -223,27 +223,7 @@ public class Module : LogixComponent<Module>
             if (connections is null)
                 throw new InvalidOperationException("Could not find connections container for module element.");
             
-            return new LogixContainer<ModuleConnection>(connections);
+            return new LogixContainer<Connection>(connections);
         }
     }
-
-    /// <summary>
-    /// Gets the slot number of the current module if one exists. If the module does not have an slot, returns null.
-    /// </summary>
-    /// <value>An <see cref="byte"/> representing the slot number of the module.</value>
-    /// <remarks>
-    /// This is a helper that just looks for an upstream <see cref="Port"/> with a valid slot byte number.
-    /// </remarks>
-    public byte? Slot => Ports.FirstOrDefault(p => p.Upstream && p.Address.IsSlot)?.Address.ToSlot();
-
-    /// <summary>
-    /// Gets the IP address of the current module if one exists. If the module does not have an IP, returns null.
-    /// </summary>
-    /// <value>An <see cref="IPAddress"/> representing the IP of the module.</value>
-    /// <remarks>
-    /// This is a helper property that just looks for <see cref="Port"/> for an Ethernet port with a
-    /// valid IP address.
-    /// </remarks>
-    public IPAddress? IP => Ports.FirstOrDefault(p => p is { Type: "Ethernet", Address.IsIPv4: true })?.Address
-        .ToIPAddress();
 }

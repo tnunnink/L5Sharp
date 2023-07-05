@@ -67,7 +67,7 @@ public abstract class StructureType : LogixType
 
     /// <inheritdoc />
     public override string Name { get; }
-    
+
     /// <inheritdoc />
     public override DataTypeFamily Family => DataTypeFamily.None;
 
@@ -100,7 +100,7 @@ public abstract class StructureType : LogixType
 
         foreach (var pair in pairs)
             pair.Target.DataType = pair.Source.DataType;
-        
+
         return clone;
     }
 
@@ -122,7 +122,7 @@ public abstract class StructureType : LogixType
 
         if (type is null)
             throw new InvalidOperationException($"No member with name {name} exists for the structure type {Name}");
-        
+
         return (TLogixType)type;
     }
 
@@ -172,7 +172,7 @@ public abstract class StructureType : LogixType
     {
         if (member is null)
             throw new ArgumentNullException(nameof(member));
-        
+
         _members.Add(member);
     }
 
@@ -208,7 +208,7 @@ public abstract class StructureType : LogixType
     {
         if (member is null)
             throw new ArgumentNullException(nameof(member));
-        
+
         _members.Insert(index, member);
     }
 
@@ -241,13 +241,33 @@ public abstract class StructureType : LogixType
     {
         if (member is null)
             throw new ArgumentNullException(nameof(member));
-        
+
         var index = _members.FindIndex(m => string.Equals(m.Name, name, StringComparison.OrdinalIgnoreCase));
 
         if (index == -1)
             throw new ArgumentException($"No member with name {name} was found in the structure.");
 
         _members[index] = member;
+    }
+
+    /// <summary>
+    /// Replaces a member having the specified name with a new member instance of the same name and provided <see cref="LogixType"/>.
+    /// </summary>
+    /// <param name="name">The name of the member to replace.</param>
+    /// <param name="type">The <see cref="LogixType"/> data to update the specified member with.</param>
+    /// <exception cref="ArgumentNullException"><c>type</c> is null.</exception>
+    /// <exception cref="ArgumentException"><c>name</c> does not exists in the structure type.</exception>
+    protected void ReplaceMember(string name, LogixType type)
+    {
+        if (type is null)
+            throw new ArgumentNullException(nameof(type));
+
+        var index = _members.FindIndex(m => string.Equals(m.Name, name, StringComparison.OrdinalIgnoreCase));
+
+        if (index == -1)
+            throw new ArgumentException($"No member with name {name} was found in the structure.");
+
+        _members[index] = new Member(name, type);
     }
 
     /// <summary>

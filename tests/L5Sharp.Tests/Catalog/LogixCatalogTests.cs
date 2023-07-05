@@ -1,8 +1,7 @@
 using FluentAssertions;
 using L5Sharp.Catalog;
-using NUnit.Framework;
 
-namespace L5Sharp.Tests.Rockwell
+namespace L5Sharp.Tests.Catalog
 {
     public class LogixCatalogTests
     {

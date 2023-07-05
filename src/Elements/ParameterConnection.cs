@@ -13,7 +13,7 @@ namespace L5Sharp.Elements;
 public class ParameterConnection : LogixElement<ParameterConnection>
 {
     /// <summary>
-    /// Creates a new <see cref="WatchTag"/> with default values.
+    /// Creates a new <see cref="ParameterConnection"/> with default values.
     /// </summary>
     public ParameterConnection()
     {
@@ -22,7 +22,7 @@ public class ParameterConnection : LogixElement<ParameterConnection>
     }
 
     /// <summary>
-    /// Creates a new <see cref="WatchTag"/> initialized with the provided <see cref="XElement"/>.
+    /// Creates a new <see cref="ParameterConnection"/> initialized with the provided <see cref="XElement"/>.
     /// </summary>
     /// <param name="element">The <see cref="XElement"/> to initialize the type with.</param>
     /// <exception cref="ArgumentNullException"><c>element</c> is null.</exception>

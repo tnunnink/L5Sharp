@@ -24,15 +24,6 @@ public class LogixContent
     public LogixContent(XElement element)
     {
         L5X = new L5X(element);
-        DataTypes = new LogixContainer<DataType>(L5X.GetContainer(L5XName.DataTypes));
-        Instructions = new LogixContainer<AddOnInstruction>(L5X.GetContainer(L5XName.AddOnInstructionDefinitions));
-        Modules = new LogixContainer<Module>(L5X.GetContainer(L5XName.Modules));
-        Tags = new LogixContainer<Tag>(L5X.GetContainer(L5XName.Tags));
-        Programs = new LogixContainer<Program>(L5X.GetContainer(L5XName.Programs));
-        Tasks = new LogixContainer<LogixTask>(L5X.GetContainer(L5XName.Tasks));
-        ParameterConnections = new LogixContainer<ParameterConnection>(L5X.GetContainer(L5XName.ParameterConnections));
-        Trends = new LogixContainer<Trend>(L5X.GetContainer(L5XName.Trends));
-        WatchLists = new LogixContainer<WatchList>(L5X.GetContainer(L5XName.QuickWatchLists));
     }
 
     /// <summary>
@@ -107,57 +98,58 @@ public class LogixContent
     /// The container collection of <see cref="DataType"/> components found in the L5X file.
     /// </summary>
     /// <value>A <see cref="LogixContainer{TComponent}"/> of <see cref="DataType"/> components.</value>
-    public LogixContainer<DataType> DataTypes { get; }
+    public LogixContainer<DataType> DataTypes => new(L5X.GetContainer(L5XName.DataTypes));
 
     /// <summary>
     /// Gets the collection of <see cref="AddOnInstruction"/> components found in the L5X file.
     /// </summary>
     /// <value>A <see cref="LogixContainer{TComponent}"/> of <see cref="AddOnInstruction"/> components.</value>
-    public LogixContainer<AddOnInstruction> Instructions { get; }
+    public LogixContainer<AddOnInstruction> Instructions => new(L5X.GetContainer(L5XName.AddOnInstructionDefinitions));
 
     /// <summary>
     /// Gets the collection of <see cref="Module"/> components found in the L5X file.
     /// </summary>
     /// <value>A <see cref="LogixContainer{TComponent}"/> of <see cref="Module"/> components.</value>
-    public LogixContainer<Module> Modules { get; }
+    public LogixContainer<Module> Modules => new(L5X.GetContainer(L5XName.Modules));
 
     /// <summary>
     /// Gets the collection of Controller <see cref="Tags"/> components found in the L5X file.
     /// </summary>
     /// <value>A <see cref="LogixContainer{TComponent}"/> of <see cref="Tags"/> components.</value>
     /// <remarks>To access program specific tag collection user the <see cref="Programs"/> collection.</remarks>
-    public LogixContainer<Tag> Tags { get; }
+    public LogixContainer<Tag> Tags => new(L5X.GetContainer(L5XName.Tags));
 
     /// <summary>
     /// Gets the collection of <see cref="Program"/> components found in the L5X file.
     /// </summary>
     /// <value>A <see cref="LogixContainer{TComponent}"/> of <see cref="Program"/> components.</value>
-    public LogixContainer<Program> Programs { get; }
+    public LogixContainer<Program> Programs => new(L5X.GetContainer(L5XName.Programs));
 
     /// <summary>
     /// Gets the collection of <see cref="LogixTask"/> components found in the L5X file.
     /// </summary>
     /// <value>A <see cref="LogixContainer{TComponent}"/> of <see cref="LogixTask"/> components.</value>
-    public LogixContainer<LogixTask> Tasks { get; }
+    public LogixContainer<LogixTask> Tasks => new(L5X.GetContainer(L5XName.Tasks));
 
     /// <summary>
     /// The container collection of <see cref="ParameterConnection"/> components found in the L5X file.
     /// </summary>
     /// <value>A <see cref="LogixContainer{TComponent}"/> of <see cref="ParameterConnection"/> components.</value>
-    public LogixContainer<ParameterConnection> ParameterConnections { get; }
-    
+    public LogixContainer<ParameterConnection> ParameterConnections =>
+        new(L5X.GetContainer(L5XName.ParameterConnections));
+
     /// <summary>
     /// The container collection of <see cref="Trend"/> components found in the L5X file.
     /// </summary>
     /// <value>A <see cref="LogixContainer{TComponent}"/> of <see cref="Trend"/> components.</value>
-    public LogixContainer<Trend> Trends { get; }
+    public LogixContainer<Trend> Trends => new(L5X.GetContainer(L5XName.Trends));
 
     /// <summary>
     /// The container collection of <see cref="WatchList"/> components found in the L5X file.
     /// </summary>
     /// <value>A <see cref="LogixContainer{TComponent}"/> of <see cref="WatchList"/> components.</value>
-    public LogixContainer<WatchList> WatchLists { get; }
-    
+    public LogixContainer<WatchList> WatchLists => new(L5X.GetContainer(L5XName.QuickWatchLists));
+
     /// <summary>
     /// Finds elements of the specified type across the entire L5X and returns as a flat <see cref="IEnumerable{T}"/> of objects.
     /// </summary>
@@ -166,27 +158,30 @@ public class LogixContent
     public IEnumerable<TElement> Find<TElement>() where TElement : class =>
         L5X.Descendants(typeof(TElement).LogixTypeName()).Select(LogixSerializer.Deserialize<TElement>);
 
-    public void Merge(string fileName, bool overwrite = false)
+    /// <summary>
+    /// Merges the specified L5X file with the current <see cref="LogixContent"/> L5X by adding or overwriting logix components.
+    /// </summary>
+    /// <param name="fileName">The file name of L5X to merge.</param>
+    /// <param name="overwrite">A bit indicating whether to overwrite incoming components of the same name.</param>
+    /// <exception cref="ArgumentException"><c>fileName</c> is null or empty.</exception>
+    public void Merge(string fileName, bool overwrite = true)
     {
         if (string.IsNullOrEmpty(fileName))
             throw new ArgumentException("FileName can not be null or empty.", nameof(fileName));
-
         var content = Load(fileName);
-
         Merge(content, overwrite);
     }
-    
-    public void Merge(LogixContent content, bool overwrite = false)
+
+    /// <summary>
+    /// Merges another <see cref="LogixContent"/> file into the current L5X by adding or overwriting logix components.
+    /// </summary>
+    /// <param name="content">The <see cref="LogixContent"/> to merge.</param>
+    /// <param name="overwrite">A bit indicating whether to overwrite incoming components of the same name.</param>
+    /// <exception cref="ArgumentNullException"><c>content</c> is null.</exception>
+    public void Merge(LogixContent content, bool overwrite = true)
     {
         if (content is null)
             throw new ArgumentNullException(nameof(content));
-
-        if (L5X.ContainsContext is true)
-            throw new InvalidOperationException("The target L5X not a project file which does not support importing.");
-
-        if (content.L5X.ContainsContext is false)
-            throw new InvalidOperationException("The source L5X does not contain context to a specific component.");
-
         L5X.Merge(content.L5X, overwrite);
     }
 

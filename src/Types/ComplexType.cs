@@ -8,6 +8,12 @@ namespace L5Sharp.Types;
 /// A mutable <see cref="StructureType"/> allowing the user to further extend or transform the structure of a complex
 /// logix type after instantiation of the object.
 /// </summary>
+/// <remarks>
+/// This type simply exposes methods for modifying the underlying members collection of a structure type.
+/// Users can inherit from this type if they wish to mutate user defined types after instantiation. All structure type
+/// elements in the L5X will be deserialized as a complex type unless a specific type is found for them (e.g., TIMER).
+/// Predefined types will inherit structure type as they should not be mutated.
+/// </remarks>
 public class ComplexType : StructureType
 {
     /// <inheritdoc />
@@ -92,6 +98,16 @@ public class ComplexType : StructureType
     /// <exception cref="ArgumentNullException"><c>member</c> is null.</exception>
     /// <exception cref="ArgumentException"><c>name</c> does not exists in the structure type.</exception>
     public void Replace(string name, Member member) => ReplaceMember(name, member);
+    
+    /// <summary>
+    /// Replaces a member having the specified name with a new member instance of the same name and
+    /// provided <see cref="LogixType"/>.
+    /// </summary>
+    /// <param name="name">The name of the member to replace.</param>
+    /// <param name="type">The <see cref="LogixType"/> data to update the specified member with.</param>
+    /// <exception cref="ArgumentNullException"><c>type</c> is null.</exception>
+    /// <exception cref="ArgumentException"><c>name</c> does not exists in the structure type.</exception>
+    public void Replace(string name, LogixType type) => ReplaceMember(name, type);
 
     /// <summary>
     /// Replaces a member at the specified index with the provided member instance.

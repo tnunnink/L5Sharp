@@ -5,7 +5,7 @@ using L5Sharp.Elements;
 namespace L5Sharp.Enums;
 
 /// <summary>
-/// An enumeration of all Logix <see cref="ProductionTrigger"/> options for a given <see cref="ModuleConnection"/>.
+/// An enumeration of all Logix <see cref="ProductionTrigger"/> options for a given <see cref="Connection"/>.
 /// </summary>
 public class ProductionTrigger : LogixEnum<ProductionTrigger, string>
 {

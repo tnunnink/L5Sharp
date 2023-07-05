@@ -44,8 +44,7 @@ public static class LogixSerializer
     /// </summary>
     /// <remarks>
     /// The serializer class will perform reflection based scanning for types matching the all the following criteria:
-    /// 
-    /// non-abstract classes that derive from <see cref="LogixElement{TElement}"/> or <see cref="LogixType"/> and have public
+    /// Public non-abstract classes that derive from <see cref="LogixElement{TElement}"/> or <see cref="LogixType"/> and have public
     /// constructors accepting a <see cref="XElement"/> object. Types match this criteria will be cached and constructed
     /// at runtime. 
     /// </remarks>
@@ -57,8 +56,8 @@ public static class LogixSerializer
     /// <param name="obj">The object to serialize.</param>
     /// <typeparam name="TSerializable">The type of the object being serialized. Type must implement <see cref="ILogixSerializable"/>.</typeparam>
     /// <returns>An <see cref="XElement"/> representing the serialized object.</returns>
-    public static XElement Serialize<TSerializable>(TSerializable obj)
-        where TSerializable : ILogixSerializable => obj.Serialize();
+    public static XElement Serialize<TSerializable>(TSerializable obj) where TSerializable : ILogixSerializable =>
+        obj.Serialize();
 
     /// <summary>
     /// Deserializes a <see cref="XElement"/> into the specified object type.

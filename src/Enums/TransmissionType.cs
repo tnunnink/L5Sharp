@@ -3,7 +3,7 @@
 namespace L5Sharp.Enums;
 
 /// <summary>
-/// Represents an enumeration of all <see cref="TransmissionType"/> options for a given <see cref="ModuleConnection"/>.
+/// Represents an enumeration of all <see cref="TransmissionType"/> options for a given <see cref="Connection"/>.
 /// </summary>
 public sealed class TransmissionType : LogixEnum<TransmissionType, string>
 {

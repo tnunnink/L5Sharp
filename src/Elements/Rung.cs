@@ -1,15 +1,18 @@
-﻿using System.Xml.Linq;
+﻿using System;
+using System.Xml.Linq;
 using L5Sharp.Core;
 using L5Sharp.Enums;
 
 namespace L5Sharp.Elements;
 
 /// <summary>
-/// A Logix <c>Rung</c> component. 
+/// A Logix <c>Rung</c> element containing the properties for a L5X Rung component.
 /// </summary>
 public sealed class Rung : LogixElement<Rung>
 {
-    /// <inheritdoc />
+    /// <summary>
+    /// Creates a new <see cref="Rung"/> with default values.
+    /// </summary>
     public Rung()
     {
         Number = 0;
@@ -17,13 +20,17 @@ public sealed class Rung : LogixElement<Rung>
         Text = NeutralText.Empty;
     }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Creates a new <see cref="Rung"/> initialized with the provided <see cref="XElement"/>.
+    /// </summary>
+    /// <param name="element">The <see cref="XElement"/> to initialize the type with.</param>
+    /// <exception cref="ArgumentNullException"><c>element</c> is null.</exception>
     public Rung(XElement element) : base(element)
     {
     }
 
     /// <summary>
-    /// 
+    /// The zero based number indicating the position of the <see cref="Rung"/> within the containing routine.
     /// </summary>
     public int Number
     {
@@ -32,7 +39,7 @@ public sealed class Rung : LogixElement<Rung>
     }
 
     /// <summary>
-    /// The <c>Rung</c> type, indicating edit information of the rung.
+    /// The <see cref="RungType"/>, indicating edit state option of the rung.
     /// </summary>
     public RungType? Type
     {
@@ -41,9 +48,9 @@ public sealed class Rung : LogixElement<Rung>
     }
 
     /// <summary>
-    /// 
+    /// The logic of the <see cref="Rung"/> as a <see cref="NeutralText"/> value.
     /// </summary>
-    /// <exception cref="L5XException"></exception>
+    /// <exception cref="L5XException">The text element of the rung element does not exist.</exception>
     public NeutralText Text
     {
         get => GetProperty<NeutralText>() ?? NeutralText.Empty;
@@ -51,7 +58,7 @@ public sealed class Rung : LogixElement<Rung>
     }
 
     /// <summary>
-    /// The comment of the <c>Rung</c>.
+    /// The text comment of the <see cref="Rung"/>.
     /// </summary>
     /// <value>A <see cref="string"/> containing the text comment of the Rung.</value>
     public string? Comment

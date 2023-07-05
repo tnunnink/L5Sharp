@@ -5,7 +5,7 @@ using L5Sharp.Elements;
 namespace L5Sharp.Enums;
 
 /// <summary>
-/// An enumeration of all <see cref="ConnectionPriority"/> for a Logix <see cref="ModuleConnection"/>. 
+/// An enumeration of all <see cref="ConnectionPriority"/> for a Logix <see cref="Connection"/>. 
 /// </summary>
 public sealed class ConnectionPriority : LogixEnum<ConnectionPriority, string>
 {

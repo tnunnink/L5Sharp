@@ -47,38 +47,62 @@ public class Controller : LogixComponent<Controller>
     /// <summary>
     /// Percentage of available CPU time (10...90) that is assigned to communication.
     /// </summary>
-    public string? TimeSlice { get; set; }
+    public string? TimeSlice
+    {
+        get => GetValue<string>();
+        set => SetValue(value);
+    }
 
     /// <summary>
     /// Specify whether to share an unused <see cref="TimeSlice"/> or not.
     /// </summary>
-    public bool? ShareUnusedTimeSlice { get; set; } = default;
+    public bool? ShareUnusedTimeSlice
+    {
+        get => GetValue<bool>();
+        set => SetValue(value);
+    }
 
     /// <summary>
     /// Name of the program to be executed upon restart after a power loss.
     /// </summary>
     /// <value>A <see cref="string"/> representing the name of the program.</value>
-    public string? PowerLossProgram { get; set; }
+    public string? PowerLossProgram
+    {
+        get => GetValue<string>();
+        set => SetValue(value);
+    }
 
     /// <summary>
     /// Name of the program to be executed when a major fault occurs.
     /// </summary>
     /// <value>A <see cref="string"/> representing the name of the program.</value>
-    public string? MajorFaultProgram { get; set; }
+    public string? MajorFaultProgram 
+    {
+        get => GetValue<string>();
+        set => SetValue(value);
+    }
 
     /// <summary>
     /// Specify the devices in the communication path. The communication path ends with the 
     /// controller (\Backplane\1). This is exported only if you select manual configuration of the 
     /// communication path in RSLinx® software.
     /// </summary>
-    public string? CommPath { get; set; }
+    public string? CommPath 
+    {
+        get => GetValue<string>();
+        set => SetValue(value);
+    }
 
     /// <summary>
     /// Specify the type of communication driver. This is the name of the selected driver in 
     /// RSLinx® software. This is exported only if you select manual configuration of the 
     /// communication driver in RSLinx® software.
     /// </summary>
-    public string? CommDriver { get; set; }
+    public string? CommDriver
+    {
+        get => GetValue<string>();
+        set => SetValue(value);
+    }
 
     /// <summary>
     /// The revision or hardware version of the controller.
@@ -88,18 +112,14 @@ public class Controller : LogixComponent<Controller>
     {
         get
         {
-            // ReSharper disable once ExplicitCallerInfoArgument
-            var major = GetValue<string>(L5XName.MajorRev);
-            // ReSharper disable once ExplicitCallerInfoArgument
-            var minor = GetValue<string>(L5XName.MinorRev);
+            var major = Element.Attribute(L5XName.MajorRev)?.Value;
+            var minor = Element.Attribute(L5XName.MinorRev)?.Value;
             return major is not null && minor is not null ? Revision.Parse($"{major}.{minor}") : default;
         }
         set
         {
-            // ReSharper disable once ExplicitCallerInfoArgument
-            SetValue(value?.Major, L5XName.MajorRev);
-            // ReSharper disable once ExplicitCallerInfoArgument
-            SetValue(value?.Minor, L5XName.MinorRev);
+            Element.SetAttributeValue(L5XName.MajorRev, value?.Major);
+            Element.SetAttributeValue(L5XName.MinorRev, value?.Minor);
         }
     }
 
@@ -260,7 +280,11 @@ public class Controller : LogixComponent<Controller>
     /// and the physical Ethernet ports. The CIP™ EtherNet/IP™ port can be configured as one of two modes:
     /// Dual-IP, Linear/DLR
     /// </summary>
-    public string? EtherNetIPMode { get; set; } = string.Empty;
+    public string? EtherNetIPMode
+    {
+        get => GetValue<string>();
+        set => SetValue(value);
+    }
 
     /// <summary>
     /// The <see cref="Elements.RedundancyInfo"/> object that specifies the redundancy configuration of the controller.

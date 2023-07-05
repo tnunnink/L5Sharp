@@ -17,7 +17,8 @@ namespace L5Sharp;
 /// </para>
 /// <para>
 /// The class is was designed to only offer very simple/basic operations allowing it to be applicable to all container type elements,
-/// However, the user can extended via extension methods by calling <see cref="Serialize"/> to get the underlying <see cref="XElement"/> container object.
+/// However, the user can extended via extension methods by calling <see cref="Serialize"/> to get the underlying
+/// <see cref="XElement"/> container object. See <see cref="LogixExtensions"/> for examples.
 /// </para>
 /// </remarks>
 public class LogixContainer<TElement> : IEnumerable<TElement>, ILogixSerializable

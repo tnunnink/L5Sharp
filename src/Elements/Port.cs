@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Xml.Linq;
 using L5Sharp.Components;
 using L5Sharp.Core;
 
@@ -15,6 +16,26 @@ namespace L5Sharp.Elements;
 /// </remarks>
 public sealed class Port : LogixElement<Port>
 {
+    /// <summary>
+    /// Creates a new <see cref="Port"/> with default values.
+    /// </summary>
+    public Port()
+    {
+        Id = 0;
+        Type = string.Empty;
+        Address = Address.None;
+        Upstream = false;
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="Port"/> initialized with the provided <see cref="XElement"/>.
+    /// </summary>
+    /// <param name="element">The <see cref="XElement"/> to initialize the type with.</param>
+    /// <exception cref="ArgumentNullException"><c>element</c> is null.</exception>
+    public Port(XElement element) : base(element)
+    {
+    }
+    
     /// <summary>
     /// Gets the Id of the <see cref="Port"/>.
     /// </summary>

@@ -379,11 +379,12 @@ namespace L5Sharp.Tests.Components
         [Test]
         public void Value_GetAtomic_ShouldWork()
         {
-            var tag = new Tag { Name = "Test", Value = new DINT(33) };
+            var tag = new Tag { Name = "Test", Value = 33 };
 
             var value = tag.Value;
 
-            value.As<DINT>().Should().Be(33);
+            value.Should().BeOfType<DINT>();
+            value.Should().Be(33);
         }
 
         [Test]
@@ -395,16 +396,6 @@ namespace L5Sharp.Tests.Components
 
             tag.Value.As<DINT>().Should().Be(43);
         }
-
-        /*[Test]
-        public void Value_SetAtomicBit_ShouldUpdateValue()
-        {
-            var tag = new Tag { Name = "Test", Value = new DINT() };
-
-            tag.Value.As<DINT>()[0] = 1;
-
-            tag.Value.As<DINT>().Should().Be(1);
-        }*/
 
         [Test]
         public void Value_SetTimer_ShouldThrowException()
