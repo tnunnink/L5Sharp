@@ -71,6 +71,85 @@ public sealed class INT : AtomicType, IComparable
     /// Represents the smallest possible value of <see cref="INT"/>.
     /// </summary>
     public const short MinValue = short.MinValue;
+    
+    /// <summary>
+    /// Gets the bit value as a <see cref="BOOL"/> at the specified zero based bit index of the atomic type.
+    /// </summary>
+    /// <param name="bit">The zero based bit index of the value to get.</param>
+    /// <returns>A <see cref="BOOL"/> representing the value of the specified bit.</returns>
+    /// <exception cref="ArgumentOutOfRangeException"><c>bit</c> is out of range of the atomic type bit length.</exception>
+    public BOOL Bit(int bit)
+    {
+        if (bit is < 0 or >= 16)
+            throw new ArgumentOutOfRangeException($"The bit {bit} is out of range for type {Name}", nameof(bit));
+        
+        return new BOOL((_value & 1 << bit) != 0);
+    }
+
+    /// <inheritdoc />
+    public int CompareTo(object? obj)
+    {
+        return obj switch
+        {
+            null => 1,
+            INT typed => _value.CompareTo(typed._value),
+            AtomicType atomic => _value.CompareTo((short)Convert.ChangeType(atomic, typeof(short))),
+            ValueType value => _value.CompareTo((short)Convert.ChangeType(value, typeof(short))),
+            _ => throw new ArgumentException($"Cannot compare logix type {obj.GetType().Name} with {GetType().Name}.")
+        };
+    }
+
+    /// <inheritdoc />
+    public override bool Equals(object? obj)
+    {
+        return obj switch
+        {
+            INT value => value._value == _value,
+            AtomicType value => base.Equals(value),
+            ValueType value => _value.Equals(Convert.ChangeType(value, typeof(short))),
+            _ => false
+        };
+    }
+
+    /// <inheritdoc />
+    public override byte[] GetBytes() => BitConverter.GetBytes(_value);
+
+    /// <inheritdoc />
+    public override int GetHashCode() => _value.GetHashCode();
+
+    /// <inheritdoc />
+    public override LogixType Set(LogixType type)
+    {
+        if (type is not AtomicType atomic)
+            throw new ArgumentException($"Can not set logix type {GetType().Name} with {type.GetType().Name}.");
+
+        if (type is INT value)
+            return new INT((short)value, value.Radix);
+
+        var bytes = SetBytes(atomic.GetBytes());
+        var converted = BitConverter.ToInt16(bytes);
+        return new INT(converted, atomic.Radix);
+    }
+    
+    /// <summary>
+    /// Sets the specified bit of the atomic type to the provided <see cref="BOOL"/> value. 
+    /// </summary>
+    /// <param name="bit">The zero based bit index to set.</param>
+    /// <param name="value">The <see cref="BOOL"/> value to set.</param>
+    /// <returns>A new <see cref="INT"/> with the updated value.</returns>
+    /// <exception cref="ArgumentNullException"><c>value</c> is null.</exception>
+    /// <exception cref="ArgumentOutOfRangeException"><c>bit</c> is out of range of the atomic type bit length.</exception>
+    public INT Set(int bit, BOOL value)
+    {
+        if (value is null) 
+            throw new ArgumentNullException(nameof(value));
+
+        if (bit is < 0 or >= 16)
+            throw new ArgumentOutOfRangeException($"The bit {bit} is out of range for type {Name}", nameof(bit));
+        
+        var atomic = (short)(value ? _value | (short)(1 << bit) : _value & (short)~(1 << bit));
+        return new INT(atomic, Radix);
+    }
 
     /// <summary>
     /// Parses the provided string value to a new <see cref="INT"/>.
@@ -88,119 +167,6 @@ public sealed class INT : AtomicType, IComparable
         var converted = (short)Convert.ChangeType(atomic, typeof(short));
         return new INT(converted, radix);
     }
-
-    /// <inheritdoc />
-    public override LogixType Set(LogixType type)
-    {
-        if (type is not AtomicType atomic)
-            throw new ArgumentException($"Can not set logix type {GetType().Name} with {type.GetType().Name}.");
-
-        if (type is INT value)
-            return new INT((short)value, value.Radix);
-
-        var bytes = SetBytes(atomic.GetBytes());
-        var converted = BitConverter.ToInt16(bytes);
-        return new INT(converted, atomic.Radix);
-    }
-
-    /// <inheritdoc />
-    public override byte[] GetBytes() => BitConverter.GetBytes(_value);
-
-    /// <inheritdoc />
-    public override bool Equals(object? obj)
-    {
-        return obj switch
-        {
-            INT value => value._value == _value,
-            AtomicType value => base.Equals(value),
-            ValueType value => _value.Equals(Convert.ChangeType(value, typeof(short))),
-            _ => false
-        };
-    }
-
-    /// <inheritdoc />
-    public override int GetHashCode() => _value.GetHashCode();
-
-    /// <inheritdoc />
-    public int CompareTo(object? obj)
-    {
-        return obj switch
-        {
-            null => 1,
-            INT typed => _value.CompareTo(typed._value),
-            AtomicType atomic => _value.CompareTo((short)Convert.ChangeType(atomic, typeof(short))),
-            ValueType value => _value.CompareTo((short)Convert.ChangeType(value, typeof(short))),
-            _ => throw new ArgumentException($"Cannot compare logix type {obj.GetType().Name} with {GetType().Name}.")
-        };
-    }
-
-    #region Operators
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="left"></param>
-    /// <param name="right"></param>
-    /// <returns></returns>
-    public static DINT operator +(INT left, INT right) => new(left._value + right._value);
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="left"></param>
-    /// <param name="right"></param>
-    /// <returns></returns>
-    public static DINT operator -(INT left, INT right) => new(left._value - right._value);
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="left"></param>
-    /// <param name="right"></param>
-    /// <returns></returns>
-    public static DINT operator *(INT left, INT right) => new(left._value * right._value);
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="left"></param>
-    /// <param name="right"></param>
-    /// <returns></returns>
-    public static DINT operator /(INT left, INT right) => new(left._value / right._value);
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="left"></param>
-    /// <param name="right"></param>
-    /// <returns></returns>
-    public static DINT operator %(INT left, INT right) => new(left._value % right._value);
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="left"></param>
-    /// <param name="right"></param>
-    /// <returns></returns>
-    public static INT operator &(INT left, INT right) => new((short)(left._value & right._value));
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="left"></param>
-    /// <param name="right"></param>
-    /// <returns></returns>
-    public static INT operator |(INT left, INT right) => new((short)(left._value | right._value));
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="left"></param>
-    /// <param name="right"></param>
-    /// <returns></returns>
-    public static INT operator ^(INT left, INT right) => new((short)(left._value ^ right._value));
-
-    #endregion
 
     #region Conversions
     
@@ -312,6 +278,13 @@ public sealed class INT : AtomicType, IComparable
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="REAL"/> type value.</returns>
     public static implicit operator REAL(INT atomic) => new(atomic._value);
+    
+    /// <summary>
+    /// Converts the provided <see cref="INT"/> to a <see cref="LREAL"/> value.
+    /// </summary>
+    /// <param name="atomic">The value to convert.</param>
+    /// <returns>A <see cref="LREAL"/> type value.</returns>
+    public static implicit operator LREAL(INT atomic) => new(atomic._value);
 
     #endregion
 }

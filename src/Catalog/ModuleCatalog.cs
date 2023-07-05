@@ -6,7 +6,7 @@ using System.Xml.Linq;
 using L5Sharp.Components;
 using L5Sharp.Core;
 
-namespace L5Sharp.Rockwell
+namespace L5Sharp.Catalog
 {
     /// <summary>
     /// A service that allows lookups for <see cref="CatalogEntry"/> objects based on catalog numbers.
@@ -14,9 +14,7 @@ namespace L5Sharp.Rockwell
     /// <remarks>
     /// This service will attempt to load the Rockwell Catalog service file into memory in order to query for data.
     /// The catalog service file's existence and content will be system dependant. If this code is run on a machine that
-    /// does not have Rockwell's Studio 5000 installed, it will default to an copy embedded in the library. Note that
-    /// the default embedded resource may not contain various Modules as it is dependant on installation of AOPs and EDS
-    /// definitions. 
+    /// does not have Rockwell's Studio 5000 installed, instantiating this class will fail with <see cref="InvalidOperationException"/>.
     /// </remarks>
     public class ModuleCatalog
     {

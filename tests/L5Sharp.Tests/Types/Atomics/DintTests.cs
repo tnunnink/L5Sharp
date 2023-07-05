@@ -69,14 +69,13 @@ namespace L5Sharp.Tests.Types.Atomics
             type.Should().Be(_random);
         }
 
-        /*
         [Test]
         public void GetBit_ValidIndex_ShouldBeExpected()
         {
             var type = new DINT(1);
 
-            var bit0 = type[0];
-            var bit1 = type[1];
+            var bit0 = type.Bit(0);
+            var bit1 = type.Bit(1);
 
             bit0.Should().Be(true);
             bit1.Should().Be(false);
@@ -87,26 +86,8 @@ namespace L5Sharp.Tests.Types.Atomics
         {
             var type = new DINT(1);
 
-            FluentActions.Invoking(() => type[32]).Should().Throw<ArgumentOutOfRangeException>();
+            FluentActions.Invoking(() => type.Bit(32)).Should().Throw<ArgumentOutOfRangeException>();
         }
-
-        [Test]
-        public void SetBit_ValidIndex_ShouldHaveExpectedValue()
-        {
-            var type = new DINT();
-
-            type[0] = true;
-
-            type.Should().Be(1);
-        }
-
-        [Test]
-        public void SetBit_InvalidIndex_ShouldThrowArgumentOutOfRangeException()
-        {
-            var type = new DINT();
-            
-            FluentActions.Invoking(() => type[32] = 1).Should().Throw<ArgumentOutOfRangeException>();
-        }*/
 
         [Test]
         public void MaxValue_WhenCalled_ShouldBeExpected()
@@ -285,6 +266,24 @@ namespace L5Sharp.Tests.Types.Atomics
         {
             DINT type = value;
             type.Should().Be(int.Parse(value));
+        }
+
+        [Test]
+        public void Set_BitOverloadValidIndex_ShouldHaveExpectedValue()
+        {
+            var type = new DINT();
+
+            var set = type.Set(0, true);
+
+            set.Should().Be(1);
+        }
+
+        [Test]
+        public void Set_BitOverloadInvalidIndex_ShouldThrowArgumentOutOfRangeException()
+        {
+            var type = new DINT();
+            
+            FluentActions.Invoking(() => type.Set(32, true)).Should().Throw<ArgumentOutOfRangeException>();
         }
 
         [Test]

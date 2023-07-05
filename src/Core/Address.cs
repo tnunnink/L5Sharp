@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
-using L5Sharp.Extensions;
 
 namespace L5Sharp.Core;
 

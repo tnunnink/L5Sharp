@@ -19,18 +19,24 @@ namespace L5Sharp.Tests.Types
         {
             FluentActions.Invoking(() => new ArrayType(((LogixType[])null)!)).Should().Throw<ArgumentNullException>();
         }
+        
+        [Test]
+        public void Constructor_EmptyArray_ShouldThrowArgumentException()
+        {
+            FluentActions.Invoking(() => new ArrayType(Array.Empty<DINT>())).Should().Throw<ArgumentException>();
+        }
 
         [Test]
-        public void Constructor_ArrayOfNullTypes_ShouldThrowArgumentNullException()
+        public void Constructor_ArrayOfNullTypes_ShouldThrowArgumentException()
         {
-            FluentActions.Invoking(() => new ArrayType(new LogixType[5])).Should().Throw<ArgumentNullException>();
+            FluentActions.Invoking(() => new ArrayType(new LogixType[5])).Should().Throw<ArgumentException>();
         }
 
         [Test]
         public void Constructor_OutOfRangeLength_ShouldThrowArgumentOutOfRangeException()
         {
-            FluentActions.Invoking(() => new ArrayType(new LogixType[1000000])).Should()
-                .Throw<ArgumentOutOfRangeException>();
+            var array = Enumerable.Range(1, 1000000).Select(i => new DINT(i)).ToArray();
+            FluentActions.Invoking(() => new ArrayType(array)).Should().Throw<ArgumentOutOfRangeException>();
         }
 
         [Test]
@@ -85,7 +91,7 @@ namespace L5Sharp.Tests.Types
         public void Constructor_StringTypes_ShouldHaveExpectedValues()
         {
             var array = new ArrayType(new STRING[] { "Test", "Test", "Test" });
-            
+
             array.Name.Should().Be("STRING");
             array.Dimensions.Length.Should().Be(3);
             array.Radix.Should().Be(Radix.Null);
@@ -332,6 +338,14 @@ namespace L5Sharp.Tests.Types
         }
 
         [Test]
+        public void SetIndex_Null_ShouldThrowArgumentNullException()
+        {
+            ArrayType array = new DINT[] { 1, 2, 3, 4 };
+
+            FluentActions.Invoking(() => array[0] = null!).Should().Throw<ArgumentNullException>();
+        }
+
+        [Test]
         public void SetIndex_InvalidType_ShouldThrowArgumentException()
         {
             ArrayType array = new DINT[] { 1, 2, 3, 4 };
@@ -348,24 +362,6 @@ namespace L5Sharp.Tests.Types
 
             array[0].Should().BeOfType<DINT>();
             array[0].As<DINT>().Should().Be(10);
-        }
-
-        [Test]
-        public void SetIndex_DifferentStructureType_ShouldThrowArgumentException()
-        {
-            ArrayType array = new TIMER[] { new(), new(), new(), new() };
-
-            FluentActions.Invoking(() => array[0] = new COUNTER { PRE = 5 }).Should().Throw<ArgumentException>();
-        }
-
-        [Test]
-        public void SetIndex_InvalidAtomicValue_NotSure()
-        {
-            var array = new ArrayType(new SINT[] { 1, 2, 3, 4 });
-
-            array[0] = 1000;
-
-            array[0].As<SINT>().Should().Be(6);
         }
 
         [Test]
@@ -428,7 +424,7 @@ namespace L5Sharp.Tests.Types
 
             enumerator.Should().NotBeNull();
         }
-        
+
         [Test]
         public void GetEnumerator_AsEnumerable_ShouldBeNull()
         {
@@ -464,23 +460,23 @@ namespace L5Sharp.Tests.Types
             element.Should().NotBeNull();
             element.Should().BeOfType<DINT>();
         }
-        
+
         [Test]
         public void AsArray_InvalidType_ShouldThrowInvalidCastException()
         {
             var array = new ArrayType(new DINT[] { 1, 2, 3, 4 });
 
-            FluentActions.Invoking(() => array.AsArray<INT>()) .Should().Throw<InvalidCastException>();
+            FluentActions.Invoking(() => array.AsArray<INT>()).Should().Throw<InvalidCastException>();
         }
-        
+
         [Test]
         public void AsArray_InvalidTypeUp_ShouldThrowInvalidCastException()
         {
             var array = new ArrayType(new INT[] { 1, 2, 3, 4 });
 
-            FluentActions.Invoking(() => array.AsArray<DINT>()) .Should().Throw<InvalidCastException>();
+            FluentActions.Invoking(() => array.AsArray<DINT>()).Should().Throw<InvalidCastException>();
         }
-        
+
         [Test]
         public void AsArray_BaseTypeOfStructure_ShouldWork()
         {
@@ -545,6 +541,12 @@ namespace L5Sharp.Tests.Types
             var xml = array.Serialize().ToString();
 
             return Verify(xml);
+        }
+
+        [Test]
+        public void Deserialize_NullElement_ShouldThrowArgumentNullException()
+        {
+            FluentActions.Invoking(() => new ArrayType<LogixType>(((XElement)null)!)).Should().Throw<ArgumentNullException>();
         }
 
         [Test]

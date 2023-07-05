@@ -46,7 +46,7 @@ public class LogixContainer<TElement> : IEnumerable<TElement>, ILogixSerializabl
     /// <summary>
     /// Creates a empty <see cref="LogixContainer{TElement}"/> with the specified name.
     /// </summary>
-    /// <param name="name"></param>
+    /// <param name="name">The name of the container element.</param>
     public LogixContainer(string name)
     {
         _element = new XElement(name);
@@ -86,6 +86,19 @@ public class LogixContainer<TElement> : IEnumerable<TElement>, ILogixSerializabl
 
             last.AddAfterSelf(component.Serialize());
         }
+    }
+    
+    /// <summary>
+    /// Gets the container's attached root as a <see cref="LogixContent"/> instance if it exists. 
+    /// </summary>
+    /// <returns>If the current element is attached to a L5X document (i.e. has a root content element),
+    /// then a new <see cref="LogixContent"/> instance wrapping the root; Otherwise, <c>null</c>.</returns>
+    /// <remarks>When creating in memory instance, this will be null until it is attached or added to a L5X file via
+    /// the <c>LogixContent</c> class.</remarks>
+    public LogixContent? Content()
+    {
+        var content = _element.Ancestors(L5XName.RSLogix5000Content).FirstOrDefault();
+        return content is not null ? new LogixContent(content) : default;
     }
 
     /// <summary>

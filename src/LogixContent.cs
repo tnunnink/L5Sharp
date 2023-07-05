@@ -15,7 +15,13 @@ namespace L5Sharp;
 /// </summary>
 public class LogixContent
 {
-    private LogixContent(XElement element)
+    /// <summary>
+    /// Creates a new <see cref="LogixContent"/> instance with the provided root <see cref="XElement"/>.
+    /// </summary>
+    /// <param name="element">The root RSLogix5000Content element of the L5X.</param>
+    /// <exception cref="ArgumentNullException"><c>element</c> is null.</exception>
+    /// <exception cref="ArgumentException"><c>element</c> name is not root RSLogix5000Content name.</exception>
+    public LogixContent(XElement element)
     {
         L5X = new L5X(element);
         DataTypes = new LogixContainer<DataType>(L5X.GetContainer(L5XName.DataTypes));

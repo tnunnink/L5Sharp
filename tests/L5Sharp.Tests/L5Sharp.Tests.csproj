@@ -112,6 +112,9 @@
       <None Update="Types\Atomics\UIntTests.Serialize_ValueAndRadix_ShouldBeValid.verified.txt">
         <DependentUpon>UIntTests.cs</DependentUpon>
       </None>
+      <None Update="Types\Predefined\TimerTests.Serialize_Default_ShouldBeVerified.verified.txt">
+        <DependentUpon>TimerTests.cs</DependentUpon>
+      </None>
     </ItemGroup>
 
     <ItemGroup>
@@ -122,10 +125,6 @@
 
     <ItemGroup>
       <EmbeddedResource Remove="Serialization\**" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Extensions\" />
     </ItemGroup>
 
 </Project>

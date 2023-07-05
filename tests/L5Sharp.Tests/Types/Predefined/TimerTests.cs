@@ -21,6 +21,8 @@ namespace L5Sharp.Tests.Types.Predefined
         {
             var type = new TIMER();
 
+            type.Name.Should().Be(nameof(TIMER));
+            type.Family.Should().Be(DataTypeFamily.None);
             type.Class.Should().Be(DataTypeClass.Predefined);
             type.Members.Should().HaveCount(5);
             type.DN.Should().Be(0);
@@ -33,24 +35,24 @@ namespace L5Sharp.Tests.Types.Predefined
         [Test]
         public void New_Overload_ShouldHaveExpectedValues()
         {
-            var timer = new TIMER
+            var type = new TIMER
             {
-                DN = false,
+                DN = true,
                 PRE = 6000,
                 ACC = 3403,
                 TT = true,
                 EN = true
             };
 
-            timer.PRE.Should().Be(6000);
-            timer.ACC.Should().Be(3403);
-            timer.DN.Should().Be(false);
-            timer.TT.Should().Be(true);
-            timer.EN.Should().Be(true);
+            type.PRE.Should().Be(6000);
+            type.ACC.Should().Be(3403);
+            type.DN.Should().Be(true);
+            type.TT.Should().Be(true);
+            type.EN.Should().Be(true);
         }
 
         [Test]
-        public void New_Null_ShouldThrowArgumentNullException()
+        public void New_NullElement_ShouldThrowArgumentNullException()
         {
             FluentActions.Invoking(() => new TIMER(null!)).Should().Throw<ArgumentNullException>();
         }
@@ -61,9 +63,9 @@ namespace L5Sharp.Tests.Types.Predefined
             const string xml = @"<StructureMember Name=""TimeMember"" DataType=""TIMER""/>";
             var element = XElement.Parse(xml);
             
-            var timer = new TIMER(element);
+            var type = new TIMER(element);
 
-            timer.Should().NotBeNull();
+            type.Should().NotBeNull();
         }
 
         [Test]
@@ -78,22 +80,22 @@ namespace L5Sharp.Tests.Types.Predefined
                 </StructureMember>";
             var element = XElement.Parse(xml);
             
-            var timer = new TIMER(element);
+            var type = new TIMER(element);
 
-            timer.Should().NotBeNull();
-            timer.PRE.Should().Be(5000);
-            timer.ACC.Should().Be(1234);
-            timer.EN.Should().Be(true);
-            timer.TT.Should().Be(true);
-            timer.DN.Should().Be(true);
+            type.Should().NotBeNull();
+            type.PRE.Should().Be(5000);
+            type.ACC.Should().Be(1234);
+            type.EN.Should().Be(true);
+            type.TT.Should().Be(true);
+            type.DN.Should().Be(true);
         }
 
         [Test]
         public void Clone_WhenCalled_ShouldBeOfSameType()
         {
-            var timer = new TIMER();
+            var type = new TIMER();
 
-            var clone = timer.Clone();
+            var clone = type.Clone();
 
             clone.Should().BeOfType<TIMER>();
         }
@@ -101,30 +103,40 @@ namespace L5Sharp.Tests.Types.Predefined
         [Test]
         public void Clone_WhenCalled_ShouldNotBeSameInstance()
         {
-            var timer = new TIMER();
+            var type = new TIMER();
 
-            var clone = timer.Clone();
+            var clone = type.Clone();
 
-            clone.Should().NotBeSameAs(timer);
+            clone.Should().NotBeSameAs(type);
         }
 
         [Test]
         public void Set_ValidType_ShouldUpdateAsExpected()
         {
-            var timer = new TIMER();
+            var type = new TIMER();
             var expected = new TIMER { PRE = 5000 };
 
-            var set = timer.Set(expected).As<TIMER>();
+            var result = type.Set(expected).As<TIMER>();
             
-            set.PRE.Should().Be(expected.PRE);
-            set.Should().NotBeSameAs(timer);
-            timer.PRE.Should().NotBe(expected.PRE);
+            result.PRE.Should().Be(expected.PRE);
+            result.Should().NotBeSameAs(type);
+            type.PRE.Should().NotBe(expected.PRE);
+        }
+        
+        [Test]
+        public Task Serialize_Default_ShouldBeVerified()
+        {
+            var type = new TIMER();
+            
+            var xml = type.Serialize().ToString();
+
+            return Verify(xml);
         }
 
         [Test]
         public Task Serialize_Overload_ShouldBeVerified()
         {
-            var timer = new TIMER
+            var type = new TIMER
             {
                 DN = false,
                 PRE = 6000,
@@ -133,7 +145,7 @@ namespace L5Sharp.Tests.Types.Predefined
                 EN = true
             };
 
-            var xml = timer.Serialize().ToString();
+            var xml = type.Serialize().ToString();
 
             return Verify(xml);
         }

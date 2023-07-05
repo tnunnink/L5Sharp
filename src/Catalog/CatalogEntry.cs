@@ -4,13 +4,13 @@ using L5Sharp.Components;
 using L5Sharp.Core;
 using L5Sharp.Enums;
 
-namespace L5Sharp.Rockwell
+namespace L5Sharp.Catalog
 {
     /// <summary>
-    /// A set of properties that defines a <see cref="Module"/> component.
+    /// A set of properties that defines a catalog entry for a <see cref="Module"/> component.
     /// </summary>
     /// <remarks>
-    /// This object must be retrieved from the <see cref="ModuleCatalog"/> service object. It serves mostly as a container
+    /// This object must be retrieved from the <see cref="ModuleCatalog"/> service object. It serves  as a container
     /// of data that can be retrieved in order to created a valid <see cref="Module"/> instance using a known
     /// <see cref="CatalogNumber"/>. 
     /// </remarks>

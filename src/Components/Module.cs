@@ -2,10 +2,10 @@
 using System.Linq;
 using System.Net;
 using System.Xml.Linq;
+using L5Sharp.Catalog;
 using L5Sharp.Core;
 using L5Sharp.Elements;
 using L5Sharp.Enums;
-using L5Sharp.Rockwell;
 
 namespace L5Sharp.Components;
 

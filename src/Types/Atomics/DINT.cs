@@ -73,6 +73,85 @@ public sealed class DINT : AtomicType, IComparable
     public const int MinValue = int.MinValue;
 
     /// <summary>
+    /// Gets the bit value as a <see cref="BOOL"/> at the specified zero based bit index of the atomic type.
+    /// </summary>
+    /// <param name="bit">The zero based bit index of the value to get.</param>
+    /// <returns>A <see cref="BOOL"/> representing the value of the specified bit.</returns>
+    /// <exception cref="ArgumentOutOfRangeException"><c>bit</c> is out of range of the atomic type bit length.</exception>
+    public BOOL Bit(int bit)
+    {
+        if (bit is < 0 or >= 32)
+            throw new ArgumentOutOfRangeException($"The bit {bit} is out of range for type {Name}", nameof(bit));
+        
+        return new BOOL((_value & 1 << bit) != 0);
+    }
+
+    /// <inheritdoc />
+    public int CompareTo(object obj)
+    {
+        return obj switch
+        {
+            null => 1,
+            DINT typed => _value.CompareTo(typed._value),
+            AtomicType atomic => _value.CompareTo((int)Convert.ChangeType(atomic, typeof(int))),
+            ValueType value => _value.CompareTo((int)Convert.ChangeType(value, typeof(int))),
+            _ => throw new ArgumentException($"Cannot compare logix type {obj.GetType().Name} with {GetType().Name}.")
+        };
+    }
+
+    /// <inheritdoc />
+    public override bool Equals(object? obj)
+    {
+        return obj switch
+        {
+            DINT value => _value == value._value,
+            AtomicType atomic => base.Equals(atomic),
+            ValueType value => _value.Equals(Convert.ChangeType(value, typeof(int))),
+            _ => false
+        };
+    }
+
+    /// <inheritdoc />
+    public override byte[] GetBytes() => BitConverter.GetBytes(_value);
+
+    /// <inheritdoc />
+    public override int GetHashCode() => _value.GetHashCode();
+
+    /// <inheritdoc />
+    public override LogixType Set(LogixType type)
+    {
+        if (type is not AtomicType atomic)
+            throw new ArgumentException($"Can not set {GetType().Name} with type {type.GetType().Name}");
+
+        if (type is DINT value)
+            return new DINT((int)value, value.Radix);
+
+        var bytes = SetBytes(atomic.GetBytes());
+        var converted = BitConverter.ToInt32(bytes);
+        return new DINT(converted, atomic.Radix);
+    }
+
+    /// <summary>
+    /// Sets the specified bit of the atomic type to the provided <see cref="BOOL"/> value. 
+    /// </summary>
+    /// <param name="bit">The zero based bit index to set.</param>
+    /// <param name="value">The <see cref="BOOL"/> value to set.</param>
+    /// <returns>A new <see cref="DINT"/> with the updated value.</returns>
+    /// <exception cref="ArgumentNullException"><c>value</c> is null.</exception>
+    /// <exception cref="ArgumentOutOfRangeException"><c>bit</c> is out of range of the atomic type bit length.</exception>
+    public DINT Set(int bit, BOOL value)
+    {
+        if (value is null) 
+            throw new ArgumentNullException(nameof(value));
+
+        if (bit is < 0 or >= 32)
+            throw new ArgumentOutOfRangeException($"The bit {bit} is out of range for type {Name}", nameof(bit));
+        
+        var atomic = value ? _value | 1 << bit : _value & ~(1 << bit);
+        return new DINT(atomic, Radix);
+    }
+
+    /// <summary>
     /// Parses the provided string value to a new <see cref="DINT"/>.
     /// </summary>
     /// <param name="value">The string value to parse.</param>
@@ -89,51 +168,74 @@ public sealed class DINT : AtomicType, IComparable
         var converted = (int)Convert.ChangeType(atomic, typeof(int));
         return new DINT(converted, radix);
     }
+    
+    #region Operators
+    
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="left"></param>
+    /// <param name="right"></param>
+    /// <returns></returns>
+    public static DINT operator +(DINT left, DINT right) => new(left._value + right._value);
 
-    /// <inheritdoc />
-    public override LogixType Set(LogixType type)
-    {
-        if (type is not AtomicType atomic)
-            throw new ArgumentException($"Can not set {GetType().Name} with type {type.GetType().Name}");
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="left"></param>
+    /// <param name="right"></param>
+    /// <returns></returns>
+    public static DINT operator -(DINT left, DINT right) => new(left._value - right._value);
 
-        if (type is DINT value)
-            return new DINT((int)value, value.Radix);
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="left"></param>
+    /// <param name="right"></param>
+    /// <returns></returns>
+    public static DINT operator *(DINT left, DINT right) => new(left._value * right._value);
 
-        var bytes = SetBytes(atomic.GetBytes());
-        var converted = BitConverter.ToInt32(bytes);
-        return new DINT(converted, atomic.Radix);
-    }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="left"></param>
+    /// <param name="right"></param>
+    /// <returns></returns>
+    public static DINT operator /(DINT left, DINT right) => new(left._value / right._value);
 
-    /// <inheritdoc />
-    public override byte[] GetBytes() => BitConverter.GetBytes(_value);
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="left"></param>
+    /// <param name="right"></param>
+    /// <returns></returns>
+    public static DINT operator %(DINT left, DINT right) => new(left._value % right._value);
 
-    /// <inheritdoc />
-    public override bool Equals(object? obj)
-    {
-        return obj switch
-        {
-            DINT value => _value == value._value,
-            AtomicType atomic => base.Equals(atomic),
-            ValueType value => _value.Equals(Convert.ChangeType(value, typeof(int))),
-            _ => false
-        };
-    }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="left"></param>
+    /// <param name="right"></param>
+    /// <returns></returns>
+    public static DINT operator &(DINT left, DINT right) => new(left._value & right._value);
 
-    /// <inheritdoc />
-    public override int GetHashCode() => _value.GetHashCode();
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="left"></param>
+    /// <param name="right"></param>
+    /// <returns></returns>
+    public static DINT operator |(DINT left, DINT right) => new(left._value | right._value);
 
-    /// <inheritdoc />
-    public int CompareTo(object obj)
-    {
-        return obj switch
-        {
-            null => 1,
-            DINT typed => _value.CompareTo(typed._value),
-            AtomicType atomic => _value.CompareTo((int)Convert.ChangeType(atomic, typeof(int))),
-            ValueType value => _value.CompareTo((int)Convert.ChangeType(value, typeof(int))),
-            _ => throw new ArgumentException($"Cannot compare logix type {obj.GetType().Name} with {GetType().Name}.")
-        };
-    }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="left"></param>
+    /// <param name="right"></param>
+    /// <returns></returns>
+    public static DINT operator ^(DINT left, DINT right) => new(left._value ^ right._value);
+
+    #endregion
 
     #region Conversions
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Xml.Linq;
 
@@ -58,6 +59,17 @@ public abstract class LogixElement<TElement> : ILogixSerializable where TElement
     /// <exception cref="InvalidOperationException">The object being cloned does not have a constructor accepting a single <see cref="XElement"/> argument.</exception>
     /// <remarks>This method will simply deserialize a new instance using the current underlying element data.</remarks>
     public TElement Clone() => (TElement)LogixSerializer.Deserialize(GetType(), new XElement(Element));
+
+    /// <summary>
+    /// Gets the element's attached root as a <see cref="LogixContent"/> instance if it exists. 
+    /// </summary>
+    /// <returns>If the current element is attached to a L5X document (i.e. has a root content element),
+    /// then a new <see cref="LogixContent"/> instance wrapping the root; Otherwise, <c>null</c>.</returns>
+    public LogixContent? Content()
+    {
+        var content = Element.Ancestors(L5XName.RSLogix5000Content).FirstOrDefault();
+        return content is not null ? new LogixContent(content) : default;
+    }
 
     /// <summary>
     /// Gets the value of the specified attribute name from the element parsed as the specified generic type parameter if it exists.

@@ -2,7 +2,6 @@
 using AutoFixture;
 using FluentAssertions;
 using L5Sharp.Enums;
-using L5Sharp.Extensions;
 using L5Sharp.Types.Atomics;
 
 namespace L5Sharp.Tests.Enums
