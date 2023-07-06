@@ -122,8 +122,11 @@ public class Tag : LogixComponent<Tag>
         get => _member.DataType;
         set
         {
+            if (value is null) throw new ArgumentNullException(nameof(value));
+            _member.DataType.DataChanged -= OnDataChanged;
             _member.DataType = value;
-            SetData(); //this updates the underlying XML
+            _member.DataType.DataChanged += OnDataChanged;
+            SetData();
         }
     }
 
@@ -234,10 +237,7 @@ public class Tag : LogixComponent<Tag>
             if (tagName is null) throw new ArgumentNullException(nameof(tagName));
 
             var memberName = tagName.Members.FirstOrDefault() ?? string.Empty;
-
-            var member = Value.Members
-                .FirstOrDefault(m => string.Equals(m.Name, memberName, StringComparison.OrdinalIgnoreCase));
-
+            var member = Value.Member(memberName);
             if (member is null)
                 throw new ArgumentException(
                     $"No member with name '{memberName}' exists in the tag data structure for type {DataType}.");
@@ -266,16 +266,11 @@ public class Tag : LogixComponent<Tag>
         if (tagName is null) throw new ArgumentNullException(nameof(tagName));
 
         var memberName = tagName.Members.FirstOrDefault() ?? string.Empty;
-
-        var member = Value.Members
-            .FirstOrDefault(m => string.Equals(m.Name, memberName, StringComparison.OrdinalIgnoreCase));
-
+        var member = Value.Member(memberName);
         if (member is null) return default;
 
         var tag = new Tag(Root, member, this);
-
         var remaining = TagName.Combine(tagName.Members.Skip(1));
-
         return remaining.IsEmpty ? tag : tag.Member(remaining);
     }
 
@@ -382,20 +377,14 @@ public class Tag : LogixComponent<Tag>
     /// child/descendant members.</remarks>
     public IEnumerable<Tag> MembersOf(TagName tagName)
     {
-        if (tagName is null)
-            throw new ArgumentNullException(nameof(tagName));
+        if (tagName is null) throw new ArgumentNullException(nameof(tagName));
 
         var memberName = tagName.Members.FirstOrDefault() ?? string.Empty;
-
-        var member = Value.Members.FirstOrDefault(m =>
-            string.Equals(m.Name, memberName, StringComparison.OrdinalIgnoreCase));
-
+        var member = Value.Member(memberName);
         if (member is null) return Enumerable.Empty<Tag>();
 
         var tag = new Tag(Root, member, this);
-
         var remaining = TagName.Combine(tagName.Members.Skip(1));
-
         return remaining.IsEmpty ? tag.Members() : tag.MembersOf(remaining);
     }
 
@@ -415,6 +404,11 @@ public class Tag : LogixComponent<Tag>
     }
 
     #region Internal
+    
+    /// <summary>
+    /// Triggers <see cref="SetData"/> when a nested data type value of this tag's <see cref="Value"/> changes.
+    /// </summary>
+    private void OnDataChanged(object sender, EventArgs e) => SetData();
 
     /// <summary>
     /// Handles setting the data of the root tag and updating the root properties

@@ -52,13 +52,4 @@ public sealed class STRING : StringType
     /// <param name="input">The value to convert.</param>
     /// <returns>A <see cref="string"/> type value.</returns>
     public static implicit operator string(STRING input) => input.ToString();
-
-    /// <inheritdoc />
-    public override LogixType Set(LogixType type)
-    {
-        if (type is not StringType stringType)
-            throw new ArgumentException($"Can not update {GetType().Name} with {type.GetType().Name}");
-
-        return new STRING(stringType.ToString());
-    }
 }

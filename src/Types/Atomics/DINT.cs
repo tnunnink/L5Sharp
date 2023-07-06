@@ -8,7 +8,7 @@ namespace L5Sharp.Types.Atomics;
 /// </summary>
 public sealed class DINT : AtomicType, IComparable
 {
-    private readonly int _value;
+    private int _value;
 
     /// <summary>
     /// Creates a new default <see cref="DINT"/> type.
@@ -33,6 +33,8 @@ public sealed class DINT : AtomicType, IComparable
     /// Creates a new <see cref="DINT"/> value with the provided radix format.
     /// </summary>
     /// <param name="radix">The <see cref="Enums.Radix"/> number format of the value.</param>
+    /// <exception cref="ArgumentNullException"><c>radix</c> is null.</exception>
+    /// <exception cref="ArgumentException"><c>radix</c> is not supported by the atomic type.</exception>
     public DINT(Radix radix)
     {
         _value = 0;
@@ -43,10 +45,12 @@ public sealed class DINT : AtomicType, IComparable
     }
 
     /// <summary>
-    /// Creates a new <see cref="DINT"/> with the provided value.
+    /// Creates a new <see cref="DINT"/> with the provided value and radix format.
     /// </summary>
     /// <param name="value">The value to initialize the type with.</param>
     /// <param name="radix">The optional radix format of the value.</param>
+    /// <exception cref="ArgumentNullException"><c>radix</c> is null.</exception>
+    /// <exception cref="ArgumentException"><c>radix</c> is not supported by the atomic type.</exception>
     public DINT(int value, Radix radix)
     {
         _value = value;
@@ -115,7 +119,7 @@ public sealed class DINT : AtomicType, IComparable
     public override byte[] GetBytes() => BitConverter.GetBytes(_value);
 
     /// <inheritdoc />
-    public override int GetHashCode() => _value.GetHashCode();
+    public override int GetHashCode() => base.GetHashCode();
 
     /// <inheritdoc />
     public override LogixType Set(LogixType type)
@@ -123,12 +127,9 @@ public sealed class DINT : AtomicType, IComparable
         if (type is not AtomicType atomic)
             throw new ArgumentException($"Can not set {GetType().Name} with type {type.GetType().Name}");
 
-        if (type is DINT value)
-            return new DINT((int)value, value.Radix);
-
-        var bytes = SetBytes(atomic.GetBytes());
-        var converted = BitConverter.ToInt32(bytes);
-        return new DINT(converted, atomic.Radix);
+        _value = type is DINT value ? value._value : BitConverter.ToInt32( SetBytes(atomic.GetBytes()));
+        RaiseDataChanged();
+        return this;
     }
 
     /// <summary>
@@ -147,8 +148,9 @@ public sealed class DINT : AtomicType, IComparable
         if (bit is < 0 or >= 32)
             throw new ArgumentOutOfRangeException($"The bit {bit} is out of range for type {Name}", nameof(bit));
         
-        var atomic = value ? _value | 1 << bit : _value & ~(1 << bit);
-        return new DINT(atomic, Radix);
+        _value = value ? _value | 1 << bit : _value & ~(1 << bit);
+        RaiseDataChanged();
+        return this;
     }
 
     /// <summary>

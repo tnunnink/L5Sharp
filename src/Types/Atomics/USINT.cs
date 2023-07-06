@@ -8,7 +8,7 @@ namespace L5Sharp.Types.Atomics;
 /// </summary>
 public sealed class USINT : AtomicType, IComparable
 {
-    private readonly byte _value;
+    private byte _value;
 
     /// <summary>
     /// Creates a new default <see cref="USINT"/> type.
@@ -115,7 +115,7 @@ public sealed class USINT : AtomicType, IComparable
     public override byte[] GetBytes() => new[] { _value };
 
     /// <inheritdoc />
-    public override int GetHashCode() => _value.GetHashCode();
+    public override int GetHashCode() => base.GetHashCode();
 
     /// <inheritdoc />
     public override LogixType Set(LogixType type)
@@ -123,12 +123,9 @@ public sealed class USINT : AtomicType, IComparable
         if (type is not AtomicType atomic)
             throw new ArgumentException($"Can not set {GetType().Name} with type {type.GetType().Name}");
 
-        if (type is USINT value)
-            return new USINT((byte)value, value.Radix);
-
-        var bytes = SetBytes(atomic.GetBytes());
-        var converted = bytes[0];
-        return new USINT(converted, atomic.Radix);
+        _value = type is USINT value ? value._value : SetBytes(atomic.GetBytes())[0];
+        RaiseDataChanged();
+        return this;
     }
     
     /// <summary>
@@ -147,8 +144,9 @@ public sealed class USINT : AtomicType, IComparable
         if (bit is < 0 or >= 8)
             throw new ArgumentOutOfRangeException($"The bit {bit} is out of range for type {Name}", nameof(bit));
         
-        var atomic = (byte)(value ? _value | (byte)(1 << bit) : _value & (byte)~(1 << bit));
-        return new USINT(atomic, Radix);
+        _value = (byte)(value ? _value | (byte)(1 << bit) : _value & (byte)~(1 << bit));
+        RaiseDataChanged();
+        return this;
     }
 
     /// <summary>

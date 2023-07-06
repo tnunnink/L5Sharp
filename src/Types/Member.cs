@@ -109,6 +109,9 @@ public class Member : ILogixSerializable
         };
     }
 
+    /// <summary>
+    /// Handles serializing a <see cref="AtomicType"/> as a ValueMember element.
+    /// </summary>
     private static XElement SerializeValueMember(string name, AtomicType type)
     {
         var element = new XElement(L5XName.DataValueMember);
@@ -119,6 +122,9 @@ public class Member : ILogixSerializable
         return element;
     }
 
+    /// <summary>
+    /// Handles serializing a <see cref="ArrayType"/> as a ArrayMember element.
+    /// </summary>
     private static XElement SerializeArrayMember(string name, ArrayType type)
     {
         var element = new XElement(L5XName.ArrayMember);
@@ -148,6 +154,9 @@ public class Member : ILogixSerializable
         return element;
     }
 
+    /// <summary>
+    /// Handles serializing a <see cref="StructureType"/> as a StructureMember element.
+    /// </summary>
     private static XElement SerializeStructureMember(string name, LogixType type)
     {
         var element = new XElement(L5XName.StructureMember);
@@ -157,6 +166,9 @@ public class Member : ILogixSerializable
         return element;
     }
 
+    /// <summary>
+    /// Handles serializing a <see cref="StringType"/> as a StructureMember element.
+    /// </summary>
     private static XElement SerializeStringMember(string name, StringType type)
     {
         var element = new XElement(L5XName.StructureMember);

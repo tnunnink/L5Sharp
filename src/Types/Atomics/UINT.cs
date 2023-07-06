@@ -8,7 +8,7 @@ namespace L5Sharp.Types.Atomics;
 /// </summary>
 public sealed class UINT : AtomicType, IComparable
 {
-    private readonly ushort _value;
+    private ushort _value;
 
     /// <summary>
     /// Creates a new default <see cref="UINT"/> type.
@@ -115,7 +115,7 @@ public sealed class UINT : AtomicType, IComparable
     public override byte[] GetBytes() => BitConverter.GetBytes(_value);
 
     /// <inheritdoc />
-    public override int GetHashCode() => _value.GetHashCode();
+    public override int GetHashCode() => base.GetHashCode();
 
     /// <inheritdoc />
     public override LogixType Set(LogixType type)
@@ -123,12 +123,9 @@ public sealed class UINT : AtomicType, IComparable
         if (type is not AtomicType atomic)
             throw new ArgumentException($"Can not set {GetType().Name} with type {type.GetType().Name}");
 
-        if (type is UINT value)
-            return new UINT((ushort)value, value.Radix);
-
-        var bytes = SetBytes(atomic.GetBytes());
-        var converted = BitConverter.ToUInt16(bytes);
-        return new UINT(converted, atomic.Radix);
+        _value = type is UINT value ? value._value : BitConverter.ToUInt16( SetBytes(atomic.GetBytes()));
+        RaiseDataChanged();
+        return this;
     }
     
     /// <summary>
@@ -147,8 +144,9 @@ public sealed class UINT : AtomicType, IComparable
         if (bit is < 0 or >= 16)
             throw new ArgumentOutOfRangeException($"The bit {bit} is out of range for type {Name}", nameof(bit));
         
-        var atomic = (ushort)(value ? _value | (ushort)(1 << bit) : _value & (ushort)~(1 << bit));
-        return new UINT(atomic, Radix);
+        _value = (ushort)(value ? _value | (ushort)(1 << bit) : _value & (ushort)~(1 << bit));
+        RaiseDataChanged();
+        return this;
     }
 
     /// <summary>

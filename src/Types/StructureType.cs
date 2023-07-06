@@ -92,16 +92,14 @@ public abstract class StructureType : LogixType
         if (type is not StructureType structure)
             throw new ArgumentException($"Can not update {GetType().Name} with {type.GetType().Name}");
 
-        //This is so we generate a new instance of the strongly typed structure.
-        var clone = Clone();
-
-        var pairs = clone.Members.Join(structure.Members, m => m.Name, m => m.Name,
+        var pairs = _members.Join(structure.Members, m => m.Name, m => m.Name,
             (t, s) => new { Target = t, Source = s });
 
         foreach (var pair in pairs)
             pair.Target.DataType = pair.Source.DataType;
 
-        return clone;
+        RaiseDataChanged();
+        return this;
     }
 
     /// <summary>
@@ -152,15 +150,18 @@ public abstract class StructureType : LogixType
         if (name is null) throw new ArgumentNullException(nameof(name));
         if (value is null) throw new ArgumentNullException(nameof(value));
 
-        var member = _members.SingleOrDefault(e => e.Name == name);
+        var current = _members.SingleOrDefault(e => e.Name == name);
 
-        if (member is null)
+        if (current is null)
         {
-            _members.Add(new Member(name, value));
+            var member = new Member(name, value);
+            member.DataType.DataChanged += OnMemberDataChanged;
+            _members.Add(member);
+            RaiseDataChanged();
             return;
         }
 
-        member.DataType = value;
+        current.DataType = value;
     }
 
     /// <summary>
@@ -171,9 +172,10 @@ public abstract class StructureType : LogixType
     protected void AddMember(Member member)
     {
         if (member is null)
-            throw new ArgumentNullException(nameof(member));
-
+            throw new ArgumentNullException(nameof(member), "Structure type does not allow null members.");
+        member.DataType.DataChanged += OnMemberDataChanged;
         _members.Add(member);
+        RaiseDataChanged();
     }
 
     /// <summary>
@@ -185,16 +187,26 @@ public abstract class StructureType : LogixType
     {
         if (members is null) throw new ArgumentNullException(nameof(members));
 
-        if (members.Any(m => m is null))
-            throw new ArgumentNullException(nameof(members), "Structure type does not allow null members.");
+        foreach (var member in members)
+        {
+            if (member is null)
+                throw new ArgumentNullException(nameof(members), "Structure type does not allow null members.");
+            member.DataType.DataChanged += OnMemberDataChanged;
+            _members.Add(member);
+        }
 
-        _members.AddRange(members);
+        RaiseDataChanged();
     }
 
     /// <summary>
     /// Clears all members from the structure type.
     /// </summary>
-    protected void ClearMembers() => _members.Clear();
+    protected void ClearMembers()
+    {
+        foreach (var member in _members) member.DataType.DataChanged -= OnMemberDataChanged;
+        _members.Clear();
+        RaiseDataChanged();
+    }
 
     /// <summary>
     /// Inserts the provided member at the specified index of the structure type. 
@@ -207,9 +219,11 @@ public abstract class StructureType : LogixType
     protected void InsertMember(int index, Member member)
     {
         if (member is null)
-            throw new ArgumentNullException(nameof(member));
+            throw new ArgumentNullException(nameof(member), "Structure type does not allow null members.");
 
+        member.DataType.DataChanged += OnMemberDataChanged;
         _members.Insert(index, member);
+        RaiseDataChanged();
     }
 
     /// <summary>
@@ -218,7 +232,11 @@ public abstract class StructureType : LogixType
     /// <param name="name">The name of the member to remove.</param>
     protected void RemoveMember(string name)
     {
-        _members.RemoveAll(m => string.Equals(m.Name, name, StringComparison.OrdinalIgnoreCase));
+        var index = _members.FindIndex(m => string.Equals(m.Name, name, StringComparison.OrdinalIgnoreCase));
+        if (index == -1) return;
+        _members[index].DataType.DataChanged -= OnMemberDataChanged;
+        _members.RemoveAt(index);
+        RaiseDataChanged();
     }
 
     /// <summary>
@@ -227,7 +245,9 @@ public abstract class StructureType : LogixType
     /// <param name="index">The zero-based index of the member to remove.</param>
     protected void RemoveMember(int index)
     {
+        _members[index].DataType.DataChanged -= OnMemberDataChanged;
         _members.RemoveAt(index);
+        RaiseDataChanged();
     }
 
     /// <summary>
@@ -240,14 +260,17 @@ public abstract class StructureType : LogixType
     protected void ReplaceMember(string name, Member member)
     {
         if (member is null)
-            throw new ArgumentNullException(nameof(member));
+            throw new ArgumentNullException(nameof(member), "Structure type does not allow null members.");
 
         var index = _members.FindIndex(m => string.Equals(m.Name, name, StringComparison.OrdinalIgnoreCase));
 
         if (index == -1)
             throw new ArgumentException($"No member with name {name} was found in the structure.");
 
+        _members[index].DataType.DataChanged -= OnMemberDataChanged;
+        member.DataType.DataChanged += OnMemberDataChanged;
         _members[index] = member;
+        RaiseDataChanged();
     }
 
     /// <summary>
@@ -267,7 +290,11 @@ public abstract class StructureType : LogixType
         if (index == -1)
             throw new ArgumentException($"No member with name {name} was found in the structure.");
 
-        _members[index] = new Member(name, type);
+        _members[index].DataType.DataChanged -= OnMemberDataChanged;
+        var member = new Member(name, type);
+        member.DataType.DataChanged += OnMemberDataChanged;
+        _members[index] = member;
+        RaiseDataChanged();
     }
 
     /// <summary>
@@ -278,6 +305,15 @@ public abstract class StructureType : LogixType
     /// <exception cref="ArgumentNullException"><c>member</c> is null.</exception>
     protected void ReplaceMember(int index, Member member)
     {
-        _members[index] = member ?? throw new ArgumentNullException(nameof(member));
+        if (member is null) throw new ArgumentNullException(nameof(member), "Structure type does not allow null members.");
+        _members[index].DataType.DataChanged -= OnMemberDataChanged;
+        member.DataType.DataChanged += OnMemberDataChanged;
+        _members[index] = member;
+        RaiseDataChanged();
     }
+
+    /// <summary>
+    /// This method needs to be attached to each member of the type to enable the bubbling up of nested member data changed events.
+    /// </summary>
+    private void OnMemberDataChanged(object sender, EventArgs e) => RaiseDataChanged();
 }

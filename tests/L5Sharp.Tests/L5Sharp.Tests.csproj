@@ -121,6 +121,12 @@
       <None Update="Types\ComplexTypeTests.Serialize_Default_ShouldBeVerified.verified.txt">
         <DependentUpon>ComplexTypeTests.cs</DependentUpon>
       </None>
+      <None Update="Components\TagTests.Set_StaticMemberOfStructureType_ShouldBeVerifiedXml.verified.txt">
+        <DependentUpon>TagTests.cs</DependentUpon>
+      </None>
+      <None Update="Components\TagTests.Set_StaticMemberOfNestedType_ShouldBeVerifiedXml.verified.txt">
+        <DependentUpon>TagTests.cs</DependentUpon>
+      </None>
     </ItemGroup>
 
     <ItemGroup>

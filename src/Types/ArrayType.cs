@@ -37,11 +37,18 @@ public class ArrayType : LogixType, IEnumerable<LogixType>
             throw new ArgumentException("Array can not be initialized with no items.", nameof(array));
         if (collection.Any(t => t is null or NullType))
             throw new ArgumentException("Array can not be initialized with null items.", nameof(array));
+        if (collection.Select(t => t.Name).Distinct().Count() != 1)
+            throw new ArgumentException("Array can not be initialized with different logix type items.", nameof(array));
 
         Name = collection.First().Name;
         Dimensions = Dimensions.FromArray(array);
         Radix = collection.First() is AtomicType atomicType ? atomicType.Radix : Radix.Null;
-        _members = Dimensions.Indices().Zip(collection, (i, t) => new Member(i, t)).ToList();
+        _members = Dimensions.Indices().Zip(collection, (i, t) =>
+        {
+            var member = new Member(i, t);
+            member.DataType.DataChanged += OnMemberDataChanged;
+            return member;
+        }).ToList();
     }
 
     /// <summary>
@@ -58,7 +65,12 @@ public class ArrayType : LogixType, IEnumerable<LogixType>
         Dimensions = element.Attribute(L5XName.Dimensions)?.Value.Parse<Dimensions>() ??
                      throw new L5XException(L5XName.Dimensions, element);
         Radix = element.Attribute(L5XName.Radix)?.Value.Parse<Radix>() ?? Radix.Null;
-        _members = element.Elements().Select(e => new Member(e)).ToList();
+        _members = element.Elements().Select(e =>
+        {
+            var member = new Member(e);
+            member.DataType.DataChanged += OnMemberDataChanged;
+            return member;
+        }).ToList();
     }
 
     /// <inheritdoc />
@@ -123,15 +135,13 @@ public class ArrayType : LogixType, IEnumerable<LogixType>
         if (type is not ArrayType array)
             throw new ArgumentException($"Can not update {GetType().Name} with {type.GetType().Name}");
 
-        //This is so we generate a new instance and don't update the current one.
-        var clone = new ArrayType(Serialize());
-
-        var pairs = clone.Members.Join(array.Members, m => m.Name, m => m.Name, (t, s) => new { Target = t, Source = s });
+        var pairs = _members.Join(array.Members, m => m.Name, m => m.Name, (t, s) => new { Target = t, Source = s });
 
         foreach (var pair in pairs)
             pair.Target.DataType = pair.Source.DataType;
 
-        return clone;
+        RaiseDataChanged();
+        return this;
     }
 
     /// <summary>
@@ -282,6 +292,11 @@ public class ArrayType : LogixType, IEnumerable<LogixType>
 
         member.DataType = value;
     }
+    
+    /// <summary>
+    /// This method needs to be attached to each member of the type to enable the bubbling up of nested member data changed events.
+    /// </summary>
+    private void OnMemberDataChanged(object sender, EventArgs e) => RaiseDataChanged();
 }
 
 /// <summary>

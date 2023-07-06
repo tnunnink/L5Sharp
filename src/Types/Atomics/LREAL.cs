@@ -10,7 +10,7 @@ namespace L5Sharp.Types.Atomics;
 /// </summary>
 public sealed class LREAL : AtomicType, IComparable
 {
-    private readonly double _value;
+    private double _value;
 
     /// <summary>
     /// Creates a new default <see cref="LREAL"/> type.
@@ -77,6 +77,48 @@ public sealed class LREAL : AtomicType, IComparable
     /// <inheritdoc />
     public override IEnumerable<Member> Members => Enumerable.Empty<Member>();
 
+    /// <inheritdoc />
+    public int CompareTo(object obj)
+    {
+        return obj switch
+        {
+            null => 1,
+            LREAL typed => _value.CompareTo(typed._value),
+            AtomicType atomic => _value.CompareTo((double)Convert.ChangeType(atomic, typeof(double))),
+            ValueType value => _value.CompareTo((double)Convert.ChangeType(value, typeof(double))),
+            _ => throw new ArgumentException($"Cannot compare logix type {obj.GetType().Name} with {GetType().Name}.")
+        };
+    }
+
+    /// <inheritdoc />
+    public override bool Equals(object? obj)
+    {
+        return obj switch
+        {
+            LREAL value => Math.Abs(_value - value._value) < double.Epsilon,
+            AtomicType atomic => base.Equals(atomic),
+            ValueType value => _value.Equals(Convert.ChangeType(value, typeof(double))),
+            _ => false
+        };
+    }
+
+    /// <inheritdoc />
+    public override byte[] GetBytes() => BitConverter.GetBytes(_value);
+
+    /// <inheritdoc />
+    public override int GetHashCode() => base.GetHashCode();
+
+    /// <inheritdoc />
+    public override LogixType Set(LogixType type)
+    {
+        if (type is not AtomicType atomic)
+            throw new ArgumentException($"Can not set logix type {GetType().Name} with {type.GetType().Name}.");
+
+        _value = type is LREAL value ? value._value : BitConverter.ToDouble( SetBytes(atomic.GetBytes()));
+        RaiseDataChanged();
+        return this;
+    }
+
     /// <summary>
     /// Parses the provided string value to a new <see cref="LREAL"/>.
     /// </summary>
@@ -94,51 +136,6 @@ public sealed class LREAL : AtomicType, IComparable
         var atomic = radix.Parse(value);
         var converted = (double)Convert.ChangeType(atomic, typeof(double));
         return new LREAL(converted, radix);
-    }
-
-    /// <inheritdoc />
-    public override LogixType Set(LogixType type)
-    {
-        if (type is not AtomicType atomic)
-            throw new ArgumentException($"Can not set logix type {GetType().Name} with {type.GetType().Name}.");
-
-        if (type is LREAL value)
-            return new LREAL((double)value, value.Radix);
-
-        var bytes = SetBytes(atomic.GetBytes());
-        var converted = BitConverter.ToDouble(bytes);
-        return new LREAL(converted, atomic.Radix);
-    }
-
-    /// <inheritdoc />
-    public override byte[] GetBytes() => BitConverter.GetBytes(_value);
-
-    /// <inheritdoc />
-    public override bool Equals(object? obj)
-    {
-        return obj switch
-        {
-            LREAL value => Math.Abs(_value - value._value) < double.Epsilon,
-            AtomicType atomic => base.Equals(atomic),
-            ValueType value => _value.Equals(Convert.ChangeType(value, typeof(double))),
-            _ => false
-        };
-    }
-
-    /// <inheritdoc />
-    public override int GetHashCode() => _value.GetHashCode();
-
-    /// <inheritdoc />
-    public int CompareTo(object obj)
-    {
-        return obj switch
-        {
-            null => 1,
-            LREAL typed => _value.CompareTo(typed._value),
-            AtomicType atomic => _value.CompareTo((double)Convert.ChangeType(atomic, typeof(double))),
-            ValueType value => _value.CompareTo((double)Convert.ChangeType(value, typeof(double))),
-            _ => throw new ArgumentException($"Cannot compare logix type {obj.GetType().Name} with {GetType().Name}.")
-        };
     }
 
     #region Conversions

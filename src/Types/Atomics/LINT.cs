@@ -8,7 +8,7 @@ namespace L5Sharp.Types.Atomics;
 /// </summary>
 public sealed class LINT : AtomicType, IComparable
 {
-    private readonly long _value;
+    private long _value;
 
     /// <summary>
     /// Creates a new default <see cref="LINT"/> type.
@@ -115,7 +115,7 @@ public sealed class LINT : AtomicType, IComparable
     public override byte[] GetBytes() => BitConverter.GetBytes(_value);
 
     /// <inheritdoc />
-    public override int GetHashCode() => _value.GetHashCode();
+    public override int GetHashCode() => base.GetHashCode();
     
     /// <inheritdoc />
     public override LogixType Set(LogixType type)
@@ -123,12 +123,9 @@ public sealed class LINT : AtomicType, IComparable
         if (type is not AtomicType atomic)
             throw new ArgumentException($"Can not set {GetType().Name} with type {type.GetType().Name}");
 
-        if (type is LINT value)
-            return new LINT((long)value, value.Radix);
-
-        var bytes = SetBytes(atomic.GetBytes());
-        var converted = BitConverter.ToInt64(bytes);
-        return new LINT(converted, atomic.Radix);
+        _value = type is LINT value ? value._value : BitConverter.ToInt64( SetBytes(atomic.GetBytes()));
+        RaiseDataChanged();
+        return this;
     }
     
     /// <summary>
@@ -147,8 +144,9 @@ public sealed class LINT : AtomicType, IComparable
         if (bit is < 0 or >= 64)
             throw new ArgumentOutOfRangeException($"The bit {bit} is out of range for type {Name}", nameof(bit));
         
-        var atomic = value ? _value | (long)1 << bit : _value & ~(1 << bit);
-        return new LINT(atomic, Radix);
+        _value = value ? _value | (long)1 << bit : _value & ~(1 << bit);
+        RaiseDataChanged();
+        return this;
     }
 
     /// <summary>

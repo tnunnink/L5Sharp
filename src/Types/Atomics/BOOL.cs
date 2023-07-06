@@ -11,7 +11,7 @@ namespace L5Sharp.Types.Atomics;
 /// </summary>
 public sealed class BOOL : AtomicType, IComparable
 {
-    private readonly bool _value;
+    private bool _value;
 
     /// <summary>
     /// Creates a new default <see cref="BOOL"/> type.
@@ -95,7 +95,7 @@ public sealed class BOOL : AtomicType, IComparable
     public override byte[] GetBytes() => BitConverter.GetBytes(_value);
 
     /// <inheritdoc />
-    public override int GetHashCode() => _value.GetHashCode();
+    public override int GetHashCode() => base.GetHashCode();
 
     /// <inheritdoc />
     public override LogixType Set(LogixType type)
@@ -103,12 +103,9 @@ public sealed class BOOL : AtomicType, IComparable
         if (type is not AtomicType atomic)
             throw new ArgumentException($"Can not set {GetType().Name} with type {type.GetType().Name}");
 
-        if (type is BOOL value)
-            return new BOOL((bool)value, value.Radix);
-
-        var bytes = SetBytes(atomic.GetBytes());
-        var converted = BitConverter.ToBoolean(bytes);
-        return new BOOL(converted, atomic.Radix);
+        _value = type is BOOL value ? value._value : BitConverter.ToBoolean( SetBytes(atomic.GetBytes()));
+        RaiseDataChanged();
+        return this;
     }
 
     /// <summary>

@@ -8,7 +8,7 @@ namespace L5Sharp.Types.Atomics;
 /// </summary>
 public sealed class INT : AtomicType, IComparable
 {
-    private readonly short _value;
+    private short _value;
 
     /// <summary>
     /// Creates a new default <see cref="INT"/> type.
@@ -115,7 +115,7 @@ public sealed class INT : AtomicType, IComparable
     public override byte[] GetBytes() => BitConverter.GetBytes(_value);
 
     /// <inheritdoc />
-    public override int GetHashCode() => _value.GetHashCode();
+    public override int GetHashCode() => base.GetHashCode();
 
     /// <inheritdoc />
     public override LogixType Set(LogixType type)
@@ -123,12 +123,9 @@ public sealed class INT : AtomicType, IComparable
         if (type is not AtomicType atomic)
             throw new ArgumentException($"Can not set logix type {GetType().Name} with {type.GetType().Name}.");
 
-        if (type is INT value)
-            return new INT((short)value, value.Radix);
-
-        var bytes = SetBytes(atomic.GetBytes());
-        var converted = BitConverter.ToInt16(bytes);
-        return new INT(converted, atomic.Radix);
+        _value = type is INT value ? value._value : BitConverter.ToInt16( SetBytes(atomic.GetBytes()));
+        RaiseDataChanged();
+        return this;
     }
     
     /// <summary>
@@ -147,8 +144,10 @@ public sealed class INT : AtomicType, IComparable
         if (bit is < 0 or >= 16)
             throw new ArgumentOutOfRangeException($"The bit {bit} is out of range for type {Name}", nameof(bit));
         
-        var atomic = (short)(value ? _value | (short)(1 << bit) : _value & (short)~(1 << bit));
-        return new INT(atomic, Radix);
+        _value = (short)(value ? _value | (short)(1 << bit) : _value & (short)~(1 << bit));
+        RaiseDataChanged();
+        return this;
+        
     }
 
     /// <summary>

@@ -388,13 +388,36 @@ namespace L5Sharp.Tests.Components
         }
 
         [Test]
-        public void Value_SetAtomic_ShouldWork()
+        public void Value_SetAtomicSameType_ShouldHaveExpectedValeAndType()
         {
             var tag = new Tag { Name = "Test", Value = new DINT() };
 
-            tag.Value = new DINT(43);
+            tag.Value = 43;
 
+            tag.Value.Should().BeOfType<DINT>();
             tag.Value.As<DINT>().Should().Be(43);
+        }
+        
+        [Test]
+        public void Value_SetAtomicDifferentType_ShouldHaveExpectedValeAndType()
+        {
+            var tag = new Tag { Name = "Test", Value = new DINT() };
+
+            tag.Value = new INT(43);
+
+            tag.Value.Should().BeOfType<DINT>();
+            tag.Value.As<DINT>().Should().Be(43);
+        }
+        
+        [Test]
+        public void Value_SetAtomic_ShouldRaiseDataChanged()
+        {
+            var tag = new Tag { Name = "Test", Value = new DINT() };
+            using var monitor = tag.Value.Monitor();
+
+            tag.Value = 43;
+
+            monitor.Should().Raise("DataChanged");
         }
 
         [Test]
@@ -403,6 +426,39 @@ namespace L5Sharp.Tests.Components
             var tag = new Tag { Name = "Test", Value = new TIMER() };
 
             FluentActions.Invoking(() => tag.Value = new REAL(43)).Should().Throw<ArgumentException>();
+        }
+
+        [Test]
+        public void Set_StaticMemberOfStructureType_ShouldRaiseDataChanged()
+        {
+            var tag = new Tag { Name = "Test", Value = new TIMER() };
+            using var monitor = tag.Value.Monitor();
+
+            tag.Value.As<TIMER>().PRE = 5000;
+
+            monitor.Should().Raise("DataChanged");
+        }
+        
+        [Test]
+        public Task Set_StaticMemberOfStructureType_ShouldBeVerifiedXml()
+        {
+            var tag = new Tag { Name = "Test", Value = new TIMER() };
+
+            tag.Value.As<TIMER>().PRE = 5000;
+
+            var xml = tag.Serialize().ToString();
+            return Verify(xml);
+        }
+        
+        [Test]
+        public Task Set_StaticMemberOfNestedType_ShouldBeVerifiedXml()
+        {
+            var tag = new Tag { Name = "Test", Value = new MyNestedType() };
+
+            tag.Value.As<MyNestedType>().Simple.M4 = 5000;
+
+            var xml = tag.Serialize().ToString();
+            return Verify(xml);
         }
 
         [Test]
@@ -442,6 +498,25 @@ namespace L5Sharp.Tests.Components
 
             parent.Should().NotBeNull();
             parent?.TagName.Should().Be("Test.Simple");
+        }
+
+        [Test]
+        public void Names_WhenCalled_ContainsExpectedNames()
+        {
+            var tag = new Tag { Name = "Test", Value = new TIMER() };
+
+            var tagNames = tag.Names().ToList();
+
+            tagNames.Should().Contain("Test");
+            tagNames.Should().Contain("Test.PRE");
+            tagNames.Should().Contain("Test.PRE.0");
+            tagNames.Should().Contain("Test.PRE.31");
+            tagNames.Should().Contain("Test.ACC");
+            tagNames.Should().Contain("Test.ACC.0");
+            tagNames.Should().Contain("Test.ACC.31");
+            tagNames.Should().Contain("Test.DN");
+            tagNames.Should().Contain("Test.TT");
+            tagNames.Should().Contain("Test.EN");
         }
     }
 }

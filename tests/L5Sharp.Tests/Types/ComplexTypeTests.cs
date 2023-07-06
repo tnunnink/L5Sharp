@@ -554,7 +554,41 @@ public class ComplexTypeTests
     }
 
     [Test]
-    public void Set_ValidType_ShouldUpdateAsExpected()
+    public void Set_ValidType_ShouldRaiseDataChanged()
+    {
+        var type = new ComplexType("Test", new List<Member>
+        {
+            new("Atomic", 1),
+            new("String", "Test Value"),
+            new("Structure", new TIMER { PRE = 2000 })
+        });
+        
+        using var monitor = type.Monitor();
+
+        type.Set(new ComplexType("Test", new List<Member> { new("Atomic", 123) }));
+            
+        monitor.Should().Raise("DataChanged");
+    }
+    
+    [Test]
+    public void Set_ValidType_ShouldUpdateTypeAsExpected()
+    {
+        var type = new ComplexType("Test", new List<Member>
+        {
+            new("Atomic", 1),
+            new("String", "Test Value"),
+            new("Structure", new TIMER { PRE = 2000 })
+        });
+
+        type.Set(new ComplexType("Test", new List<Member> { new("Atomic", 123) }));
+        
+        type.Member("Atomic")?.DataType.Should().Be(123);
+        type.Member("String")?.DataType.Should().Be("Test Value");
+        type.Member("Structure")?.DataType.As<TIMER>().PRE.Should().Be(2000);
+    }
+
+    [Test]
+    public void Set_ValidType_ShouldReturnExpectedResult()
     {
         var type = new ComplexType("Test", new List<Member>
         {
@@ -566,9 +600,11 @@ public class ComplexTypeTests
         var result = type.Set(new ComplexType("Test", new List<Member> { new("Atomic", 123) }));
 
         result.Should().NotBeNull();
-        result.Should().NotBeSameAs(type);
+        result.Should().BeSameAs(type);
         result.Should().BeOfType<ComplexType>();
         result.Member("Atomic")?.DataType.Should().Be(123);
+        result.Member("String")?.DataType.Should().Be("Test Value");
+        result.Member("Structure")?.DataType.As<TIMER>().PRE.Should().Be(2000);
     }
 
     [Test]

@@ -8,7 +8,7 @@ namespace L5Sharp.Types.Atomics;
 /// </summary>
 public sealed class SINT : AtomicType, IComparable
 {
-    private readonly sbyte _value;
+    private sbyte _value;
 
     /// <summary>
     /// Creates a new default <see cref="SINT"/> type.
@@ -115,7 +115,7 @@ public sealed class SINT : AtomicType, IComparable
     public override byte[] GetBytes() => unchecked(new[] { (byte)_value });
 
     /// <inheritdoc />
-    public override int GetHashCode() => _value.GetHashCode();
+    public override int GetHashCode() => base.GetHashCode();
 
     /// <inheritdoc />
     public override LogixType Set(LogixType type)
@@ -123,12 +123,9 @@ public sealed class SINT : AtomicType, IComparable
         if (type is not AtomicType atomic)
             throw new ArgumentException($"Can not set {GetType().Name} with type {type.GetType().Name}");
 
-        if (type is SINT value)
-            return new SINT((sbyte)value, value.Radix);
-
-        var bytes = SetBytes(atomic.GetBytes());
-        var converted = unchecked((sbyte)bytes[0]);
-        return new SINT(converted, atomic.Radix);
+        _value = type is SINT value ? value._value : (sbyte)SetBytes(atomic.GetBytes())[0];
+        RaiseDataChanged();
+        return this;
     }
     
     /// <summary>
@@ -147,8 +144,9 @@ public sealed class SINT : AtomicType, IComparable
         if (bit is < 0 or >= 8)
             throw new ArgumentOutOfRangeException($"The bit {bit} is out of range for type {Name}", nameof(bit));
         
-        var atomic = (sbyte)(value ? _value | (sbyte)(1 << bit) : _value & (sbyte)~(1 << bit));
-        return new SINT(atomic, Radix);
+        _value = (sbyte)(value ? _value | (sbyte)(1 << bit) : _value & (sbyte)~(1 << bit));
+        RaiseDataChanged();
+        return this;
     }
 
     /// <summary>

@@ -264,6 +264,17 @@ namespace L5Sharp.Tests.Types.Atomics
         }
 
         [Test]
+        public void DataChanged_WhenSetIsCalled_ShouldRaiseEvent()
+        {
+            var type = new DINT();
+            using var monitor = type.Monitor();
+
+            type.Set(_random);
+            
+            monitor.Should().Raise("DataChanged");
+        }
+
+        [Test]
         public void ToBoolean_WhenCalled_ShouldBeExpectedValue()
         {
             var type = new DINT();

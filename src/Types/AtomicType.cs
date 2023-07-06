@@ -34,8 +34,18 @@ public abstract class AtomicType : LogixType, IConvertible
         {
             var bits = new BitArray(GetBytes());
             for (var i = 0; i < bits.Count; i++)
-                yield return new Member(i.ToString(), new BOOL(bits[i]));
+            {
+                var member = new Member(i.ToString(), new BOOL(bits[i]));
+                member.DataType.DataChanged += OnMemberDataChanged;
+                yield return member;
+            }
+                
         }
+    }
+
+    private void OnMemberDataChanged(object sender, EventArgs e)
+    {
+        RaiseDataChanged();
     }
 
     /// <summary>

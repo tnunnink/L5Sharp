@@ -54,6 +54,21 @@ public abstract class LogixType : ILogixSerializable
     /// </summary>
     /// <value>A <see cref="IEnumerable{T}"/> containing <see cref="Member"/> objects</value>
     public abstract IEnumerable<Member> Members { get; }
+    
+    /// <summary>
+    /// An event that triggers when the logix type data changes.
+    /// </summary>
+    /// <remarks>
+    /// This event is allowing us to detect when the value of a 
+    /// </remarks>
+    public event EventHandler? DataChanged;
+    
+    /// <summary>
+    /// Handles raising the <see cref="DataChanged"/> event for the type.
+    /// </summary>
+    protected void RaiseDataChanged() => DataChanged?.Invoke(this, EventArgs.Empty);
+    
+    protected void RaiseDataChanged(string member) => DataChanged?.Invoke(this, EventArgs.Empty);
 
     /// <summary>
     /// Casts the <see cref="LogixType"/> to the type of the generic argument.

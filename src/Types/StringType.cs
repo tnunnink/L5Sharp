@@ -134,8 +134,11 @@ public class StringType : LogixType, IEnumerable<char>
     {
         if (type is not StringType stringType)
             throw new ArgumentException($"Can not update {GetType().Name} with {type.GetType().Name}");
-
-        return new StringType(stringType.Name, stringType.ToString());
+        
+        DATA = GetData(stringType.ToString());
+        //return new StringType(stringType.Name, stringType.ToString());
+        RaiseDataChanged();
+        return this;
     }
 
     /// <inheritdoc />
