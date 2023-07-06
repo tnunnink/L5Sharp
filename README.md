@@ -48,22 +48,19 @@ content.L5X.ExportDate.Should().NotBeNull();
 ```
 
 ### Querying Content 
-Once the LogixContent is created, you can use the component collection methods
-to get access to most of the primary L5X components, 
+Once the LogixContent is created, you can use the container properties
+to get access to all of the primary L5X components, 
 such as `Tag`, `DataType`, `Module`, `Program`, and more. 
 The following shows some simple querying via the tags component collection interface.
 ```c#
 //Get all controller tags. 
-var controllerTags = content.Tags();
-
-//Get all tags in a program by providing a scope name.
-var programTags = content.Tags("MainProgram");
+var controllerTags = content.Tags;
 
 //Get a tag by name.
-var myTag = content.Tags().Find("MyTag");
+var myTag = content.Tags.Find("MyTag");
 
 //Use LINQ to query further.
-var timersInMaingProgram = content.Tags("MainProgram").Where(t => t.DataType == "TIMER");
+var timerTypeTags = content.Tags.Where(t => t.DataType == "TIMER");
 ```
 ### Modifying Content
 Modifying components is simple as well. 
@@ -72,19 +69,14 @@ removing, and replacing components.
 
 ```csharp
 //Add a new component.
-var tag = new Tag
-{
-    Name= "NewTag";
-    Data = new DINT();
-};
-
-content.Tags().Add(tag);
+var tag = new Tag { Name = "MyTag", Value = 100 };
+content.Tags.Add(tag);
 
 //Remove an existing component.
-var result = content.Tags().Remove("MyTag");
+var result = content.Tags.Remove("MyTag");
 
 //Repalce an existing component.
-var result = content.Tags().Replace(tag);
+var result = content.Tags.Find("MyTag").Replace(tag);
 
 //Save changes when done.
 content.Save("C:\PathToMyOutputFile\FileName.L5X");
@@ -98,12 +90,12 @@ This is why you have to specify a scope name for the tags collection when intera
 The same applies to `Routine`.
 
 But what if I just want to query across the entire file, how do I do that?
-The answer is use the `Query<T>()` method and specify the type to query as the 
+The answer is use the `Find<T>()` method and specify the type to query as the 
 generic argument.
 ```csharp
-var allTagsInFile = content.Query<Tag>();
+var allTagsInFile = content.Find<Tag>();
 ```
-NOTE: `Query<T>()` just returns an `IEnumerable<T>`, so it is essentially read only,
+NOTE: `Find<T>()` just returns an `IEnumerable<T>`, so it is essentially read only,
 but still allows you to form more complex queries using LINQ and the strongly typed
 components in the library.
 
@@ -113,15 +105,15 @@ Tag components also contain simple or complex data structures.
 This library includes prebuilt `Atomic` and `Predefined` data structures
 that allow in memory creation of tag data.
 
-When creating a Tag component, initialize the `Data` property to get
+When creating a Tag component, initialize the `Value` property to get
 a new instance of instantiated tag data for the type.
 
 The following creates a tag with the predefined `TIMER` tag structure.
 ```csharp
 var tag = new Tag
 {
-    Name = "TimerTag"
-    Data = new TIMER()
+    Name = "TimerTag",
+    Value = new TIMER()
 };
 ```
 
@@ -131,7 +123,7 @@ You can then get members of the tag using the Member() or Members() methods.
 var pre = tag.Member("PRE");
 
 //Set the value of the DINT preset member.
-pre.Data = 5000;
+pre.Value = 5000;
 
 //Get all tag members.
 var members = tag.Members();

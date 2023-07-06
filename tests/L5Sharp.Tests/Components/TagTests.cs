@@ -490,6 +490,12 @@ namespace L5Sharp.Tests.Components
         [Test]
         public void Parent_WhenCalled_ShouldBeExpected()
         {
+            var test = new Tag
+            {
+                Name = "TimerTag",
+                Value = new TIMER()
+            };
+            
             var tag = new Tag { Name = "Test", Value = new MyNestedType() };
 
             var member = tag["Simple.M1"];
