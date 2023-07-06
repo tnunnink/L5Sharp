@@ -7,33 +7,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="More testing and more clean up and modifications.">
-      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/TagTests.Set_StaticMemberOfNestedType_ShouldBeVerifiedXml.verified.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/TagTests.Set_StaticMemberOfStructureType_ShouldBeVerifiedXml.verified.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Components/Tag.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Components/Tag.cs" afterDir="false" />
+    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="Fixed bug with tag value update for nested members not triggering update of underlying XML since LogixType is a complex object. I added a new event called DataChanged for all logix types to fire when their data is set. Structure and Array types will bubble the events of their members up to root event for tag to know if the users changes the data structure at any point.">
       <change beforePath="$PROJECT_DIR$/LogixType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LogixType.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Types/ArrayType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Types/ArrayType.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Types/AtomicType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Types/AtomicType.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Types/Atomics/BOOL.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Types/Atomics/BOOL.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Types/Atomics/DINT.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Types/Atomics/DINT.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Types/Atomics/INT.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Types/Atomics/INT.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Types/Atomics/LINT.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Types/Atomics/LINT.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Types/Atomics/LREAL.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Types/Atomics/LREAL.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Types/Atomics/REAL.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Types/Atomics/REAL.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Types/Atomics/SINT.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Types/Atomics/SINT.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Types/Atomics/UDINT.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Types/Atomics/UDINT.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Types/Atomics/UINT.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Types/Atomics/UINT.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Types/Atomics/ULINT.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Types/Atomics/ULINT.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Types/Atomics/USINT.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Types/Atomics/USINT.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Types/Member.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Types/Member.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Types/Predefined/STRING.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Types/Predefined/STRING.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Types/StringType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Types/StringType.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Types/StructureType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Types/StructureType.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/TagTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/TagTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/L5Sharp.Tests.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/L5Sharp.Tests.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Atomics/DintTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Atomics/DintTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/ComplexTypeTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/ComplexTypeTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Custom/MyNestedType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Custom/MyNestedType.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -108,6 +85,7 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/df9f21c9f518c36eff2e92c1d9ca5eeea502dee722c9bab81dcc5ce05bbd33/XContainer.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Enums/Instruction.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/LogixContent.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/Types/ArrayType.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Types/ArrayType.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/obj/Debug/netstandard2.1/.NETStandard,Version=v2.1.AssemblyAttributes.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../tests/L5Sharp.Tests/Serialization/AddOnInstructionSerializerTests.cs" root0="FORCE_HIGHLIGHTING" />
@@ -362,7 +340,7 @@
       <workItem from="1687986301123" duration="6676000" />
       <workItem from="1688142803782" duration="13112000" />
       <workItem from="1688174563639" duration="57760000" />
-      <workItem from="1688478813026" duration="41943000" />
+      <workItem from="1688478813026" duration="42925000" />
     </task>
     <task id="LOCAL-00199" summary="cleared warnings. preping to merge changes.">
       <created>1677621948966</created>
@@ -707,7 +685,7 @@
       <option name="project" value="LOCAL" />
       <updated>1687451515386</updated>
     </task>
-    <option name="localTasksCounter" value="254" />
+    <option name="localTasksCounter" value="255" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -722,29 +700,29 @@
       <expand>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 27% 9970/13689" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 27% 9974/13693" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 27% 9970/13689" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 27% 9974/13693" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
           <item name="L5Sharp 20% 4773/5938" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 27% 9970/13689" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 20% 4773/5938" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="(0.11.0.0, .NETStandard,Version=v2.1) 20% 4773/5938" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-        </path>
-        <path>
-          <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 27% 9970/13689" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 27% 9974/13693" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
           <item name="L5Sharp 20% 4773/5938" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
           <item name="(0.11.0.0, .NETStandard,Version=v2.1) 20% 4773/5938" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+        </path>
+        <path>
+          <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
+          <item name="Total 27% 9974/13693" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 20% 4773/5938" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="(0.11.0.0, .NETStandard,Version=v2.1) 20% 4773/5938" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
           <item name="L5Sharp 20% 4773/5938" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 27% 9970/13689" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 27% 9974/13693" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
           <item name="L5Sharp 20% 4773/5938" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
           <item name="(0.11.0.0, .NETStandard,Version=v2.1) 20% 4773/5938" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
           <item name="L5Sharp 20% 4773/5938" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
@@ -774,7 +752,6 @@
       <path value="$PROJECT_DIR$/../.." />
     </ignored-roots>
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="Fixed bug with TagName.cs regex" />
     <MESSAGE value="Update version" />
     <MESSAGE value="Made updates to atomic types to include bit members so that these tags can be referenced or retrieved from the L5X. This included making Members a property of ILogixType.cs and implementing code in AtomicType.cs to return the appropriate collection of members. Removed TagName.cs member name validation as it was seeming unnecessary to throw exceptions on invalid names. Updated tests and documentation." />
     <MESSAGE value="Clean up and documentation updates" />
@@ -799,7 +776,8 @@
     <MESSAGE value="reorganized extensions into LogixExtensions.cs class. All extensions will be placed in this class under regions. Also continued to update atomic classes and perform testing" />
     <MESSAGE value="More Logix Type testing" />
     <MESSAGE value="More testing and more clean up and modifications." />
-    <option name="LAST_COMMIT_MESSAGE" value="More testing and more clean up and modifications." />
+    <MESSAGE value="Fixed bug with tag value update for nested members not triggering update of underlying XML since LogixType is a complex object. I added a new event called DataChanged for all logix types to fire when their data is set. Structure and Array types will bubble the events of their members up to root event for tag to know if the users changes the data structure at any point." />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed bug with tag value update for nested members not triggering update of underlying XML since LogixType is a complex object. I added a new event called DataChanged for all logix types to fire when their data is set. Structure and Array types will bubble the events of their members up to root event for tag to know if the users changes the data structure at any point." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -816,19 +794,6 @@
             </endOffsets>
           </properties>
           <option name="timeStamp" value="48" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/TagTests.cs</url>
-          <line>509</line>
-          <properties documentPath="C:\Users\tnunnink\Documents\GitHub\L5Sharp\tests\L5Sharp.Tests\Components\TagTests.cs" initialLine="509" containingFunctionPresentation="Method 'Names_WhenCalled_ContainsExpectedNames'">
-            <startOffsets>
-              <option value="15060" />
-            </startOffsets>
-            <endOffsets>
-              <option value="15094" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="52" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

@@ -3,13 +3,17 @@ using L5Sharp.Enums;
 using L5Sharp.Types;
 using L5Sharp.Types.Atomics;
 using L5Sharp.Types.Predefined;
+// ReSharper disable MemberCanBePrivate.Global
+
+// ReSharper disable PropertyCanBeMadeInitOnly.Global
 
 namespace L5Sharp.Tests.Types.Custom
 {
     /// <summary>
     /// A test type used to test nested complex data structure code
     /// </summary>
-    public class MyNestedType : ComplexType //inheriting from complex type allows me to change structure after instantiated.
+    //inheriting from complex type allows me to change structure after instantiated.
+    public class MyNestedType : ComplexType
     {
         public MyNestedType() : base(nameof(MyNestedType))
         {
@@ -49,10 +53,10 @@ namespace L5Sharp.Tests.Types.Custom
         /// <summary>
         /// A nested timer member
         /// </summary>
-        public TIMER Tmr 
+        public TIMER Tmr
         {
             get => GetMember<TIMER>();
-            private init => SetMember(value);
+            set => SetMember(value);
         }
 
         /// <summary>
@@ -61,7 +65,7 @@ namespace L5Sharp.Tests.Types.Custom
         public MySimpleType Simple
         {
             get => GetMember<MySimpleType>();
-            private init => SetMember(value);
+            set => SetMember(value);
         }
 
         /// <summary>
@@ -70,25 +74,25 @@ namespace L5Sharp.Tests.Types.Custom
         public ArrayType<BOOL> Flags
         {
             get => GetMember<ArrayType<BOOL>>();
-            private init => SetMember(value);
+            set => SetMember(value);
         }
 
         /// <summary>
         /// A nested array of structure types.
         /// </summary>
-        public ArrayType<COUNTER> Counters 
+        public ArrayType<COUNTER> Counters
         {
             get => GetMember<ArrayType<COUNTER>>();
-            private init => SetMember(value);
+            set => SetMember(value);
         }
-        
+
         /// <summary>
         /// A nested array of atomic values.
         /// </summary>
         public ArrayType<STRING> Names
         {
             get => GetMember<ArrayType<STRING>>();
-            private init => SetMember(value);
+            set => SetMember(value);
         }
     }
 }

@@ -8,12 +8,13 @@ using L5Sharp.Enums;
 namespace L5Sharp.Types;
 
 /// <summary>
-/// A <see cref="LogixType"/> that represents a complex structure containing members of different types.
+/// A <see cref="LogixType"/> that represents a structure containing members of different types.
 /// </summary>
 /// <remarks>
 /// <para>
 /// This type is a building block for all <c>Predefined</c> data types. Inherit from this class to create custom
 /// user defined data types that can be used to create in memory representation of the tags for those types.
+/// Inherit from <see cref="ComplexType"/> if you want the ability to mutate the member structure after instantiation.
 /// </para>
 /// </remarks>
 public abstract class StructureType : LogixType
@@ -43,13 +44,7 @@ public abstract class StructureType : LogixType
     /// <exception cref="ArgumentNullException"><c>members</c> is null.</exception>
     protected StructureType(string name, IEnumerable<Member> members) : this(name)
     {
-        if (members is null) throw new ArgumentNullException(nameof(members));
-
-        var collection = members.ToList();
-        if (collection.Any(m => m is null))
-            throw new ArgumentNullException(nameof(members), "Structure type does not allow null members.");
-
-        _members = collection;
+        AddMembers(members.ToList());
     }
 
     /// <summary>
@@ -62,7 +57,12 @@ public abstract class StructureType : LogixType
     {
         if (element is null) throw new ArgumentNullException(nameof(element));
         Name = element.Attribute(L5XName.DataType)?.Value ?? throw new L5XException(L5XName.DataType, element);
-        _members = element.Elements().Select(e => new Member(e)).ToList();
+        _members = element.Elements().Select(e =>
+        {
+            var member = new Member(e);
+            member.DataType.DataChanged += OnMemberDataChanged;
+            return member;
+        }).ToList();
     }
 
     /// <inheritdoc />

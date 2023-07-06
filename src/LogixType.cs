@@ -56,10 +56,11 @@ public abstract class LogixType : ILogixSerializable
     public abstract IEnumerable<Member> Members { get; }
     
     /// <summary>
-    /// An event that triggers when the logix type data changes.
+    /// An event that triggers when the <see cref="LogixType"/> data changes.
     /// </summary>
     /// <remarks>
-    /// This event is allowing us to detect when the value of a 
+    /// This event is allowing us to detect when the value of a immediate or nested logix type changes. This is important
+    /// for tag so that it can know when to update the underlying XML data structure represented by the in-memory data structure. 
     /// </remarks>
     public event EventHandler? DataChanged;
     
@@ -67,8 +68,6 @@ public abstract class LogixType : ILogixSerializable
     /// Handles raising the <see cref="DataChanged"/> event for the type.
     /// </summary>
     protected void RaiseDataChanged() => DataChanged?.Invoke(this, EventArgs.Empty);
-    
-    protected void RaiseDataChanged(string member) => DataChanged?.Invoke(this, EventArgs.Empty);
 
     /// <summary>
     /// Casts the <see cref="LogixType"/> to the type of the generic argument.
@@ -97,11 +96,14 @@ public abstract class LogixType : ILogixSerializable
     /// </summary>
     /// <param name="type">The type to set this type with.</param>
     /// <exception cref="ArgumentException">The provided type can not set this type. (e.g., Structure can not set Atomic).</exception>
-    /// <returns>A <see cref="LogixType"/> with data updated from the provided logix type.</returns>
+    /// <returns>The <see cref="LogixType"/> with data updated from the provided logix type.
+    /// This type will typically be the reference to the current type, except in the case of <see cref="NullType"/>,
+    /// which will return the provided type.</returns>
     /// <remarks>
     /// This method is the basis for how underlying values are set in memory.
     /// Atomic and String type objects will set underlying values, whereas Structure and Array types will join members and
-    /// delegate the set down the hierarchical type structure.
+    /// delegate the set down the hierarchical type structure. This method triggers the <see cref="DataChanged"/> event,
+    /// indicating to subscribers (Tag) that the hierarchical structure or data within the structure has changed. 
     /// </remarks>
     public abstract LogixType Set(LogixType type);
 
