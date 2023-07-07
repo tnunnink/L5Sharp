@@ -129,7 +129,7 @@ public sealed class NeutralText : IEquatable<NeutralText>
     /// specified by <c>comparer</c>.</returns>
     public bool ContainsTag(TagName tagName, IEqualityComparer<TagName>? comparer = null)
     {
-        comparer ??= TagNameComparer.FullName;
+        comparer ??= TagNameComparer.Qualified;
         return Tags().Any(t => comparer.Equals(t, tagName));
     }
 

@@ -1,4 +1,6 @@
-﻿using FluentAssertions;
+﻿using System.Diagnostics;
+using FluentAssertions;
+using L5Sharp.Components;
 using L5Sharp.Core;
 using L5Sharp.Elements;
 
@@ -44,6 +46,20 @@ public class LogixContentTemplateTests
 
         var components = content.Tags.ToList();
 
+        components.Should().NotBeEmpty();
+    }
+
+    [Test]
+    public void TagsAll_WhenEnumerated_ShouldWork()
+    {
+        var content = LogixContent.Load(Known.Template);
+
+        var stopwatch = new Stopwatch();
+        stopwatch.Start();
+        var components = content.Find<Tag>().SelectMany(t => t.Members()).ToList();
+        stopwatch.Stop();
+
+        Console.WriteLine(stopwatch.Elapsed);
         components.Should().NotBeEmpty();
     }
 

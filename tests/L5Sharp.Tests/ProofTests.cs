@@ -32,7 +32,7 @@ public class ProofTests
         comment.Should().NotBeEmpty();
     }
 
-    [Test]
+    /*[Test]
     public void TagLookup()
     {
         var content = LogixContent.Load(@"C:\Users\tnunnink\Local\Tests\L5X\Template.L5X");
@@ -44,7 +44,7 @@ public class ProofTests
 
         var result = tagLookup.Contains("Spare_DI_Channel_5094.ChData");
         result.Should().BeTrue();
-    }
+    }*/
 
     [Test]
     public void GetLogixDigitalInputAoi()

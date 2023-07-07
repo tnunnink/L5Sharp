@@ -115,16 +115,6 @@ public class LogixContainer<TElement> : IEnumerable<TElement>, ILogixSerializabl
     }
 
     /// <summary>
-    /// Accesses a single element with the specified name.
-    /// </summary>
-    /// <param name="name">The name of the element to retrieve.</param>
-    public TElement this[string name]
-    {
-        get => LogixSerializer.Deserialize<TElement>(_element.Elements(_typeName).Single(e => e.LogixName() == name));
-        set => _element.Elements(_typeName).Single(e => e.LogixName() == name).ReplaceWith(value.Serialize());
-    }
-
-    /// <summary>
     /// Adds the provided element to the collection.
     /// </summary>
     /// <param name="element">The element to add.</param>

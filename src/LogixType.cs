@@ -10,8 +10,7 @@ using L5Sharp.Types.Predefined;
 namespace L5Sharp;
 
 /// <summary>
-/// The base class for all logix data type classes. Also contains static members for registration and deserialization
-/// of logix types.
+/// The base class for all logix data type classes.
 /// </summary>
 /// <remarks>
 /// <para>
@@ -20,7 +19,7 @@ namespace L5Sharp;
 /// base types and LogixType classes so that the tag values may be set in a concise way.
 /// </para>
 /// </remarks>
-/// <seealso cref="AtomicType"/>.
+/// <seealso cref="AtomicType"/>
 /// <seealso cref="StructureType"/>
 /// <seealso cref="ArrayType"/>
 /// <seealso cref="StringType"/>
@@ -83,7 +82,7 @@ public abstract class LogixType : ILogixSerializable
     /// <returns>A new instance of the specified logix type with the same property values.</returns>
     /// <exception cref="InvalidOperationException">The object being cloned does not have a constructor accepting a single <see cref="XElement"/> argument.</exception>
     /// <remarks>This method will simply deserialize a new instance using the current underlying element data.</remarks>
-    public LogixType Clone() => (LogixType)LogixSerializer.Deserialize(GetType(), new XElement(Serialize()));
+    public LogixType Clone() => LogixData.Deserialize(new XElement(Serialize()));
 
     /// <inheritdoc />
     public override string ToString() => Name;

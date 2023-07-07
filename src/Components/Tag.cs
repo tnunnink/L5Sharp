@@ -126,7 +126,7 @@ public class Tag : LogixComponent<Tag>
             _member.DataType.DataChanged -= OnDataChanged;
             _member.DataType = value;
             _member.DataType.DataChanged += OnDataChanged;
-            SetData();
+            SetData(Root.Value);
         }
     }
 
@@ -134,9 +134,9 @@ public class Tag : LogixComponent<Tag>
     /// The external access option indicating the read/write access of the tag.
     /// </summary>
     /// <value>A <see cref="Enums.ExternalAccess"/> option representing read/write access of the tag.</value>
-    public ExternalAccess ExternalAccess
+    public ExternalAccess? ExternalAccess
     {
-        get => GetValue<ExternalAccess>() ?? throw new L5XException(Element);
+        get => GetValue<ExternalAccess>();
         set => SetValue(value);
     }
 
@@ -144,9 +144,9 @@ public class Tag : LogixComponent<Tag>
     /// A type indicating whether the current tag component is a base tag, or alias for another tag instance.
     /// </summary>
     /// <value>A <see cref="Enums.TagType"/> option representing the type of tag component.</value>
-    public TagType TagType
+    public TagType? TagType
     {
-        get => GetValue<TagType>() ?? throw new L5XException(Element);
+        get => GetValue<TagType>();
         set => SetValue(value);
     }
 
@@ -235,17 +235,34 @@ public class Tag : LogixComponent<Tag>
         get
         {
             if (tagName is null) throw new ArgumentNullException(nameof(tagName));
+            if (tagName.IsEmpty) throw new ArgumentException("Can not retrieve member from empty tag name.");
 
-            var memberName = tagName.Members.FirstOrDefault() ?? string.Empty;
-            var member = Value.Member(memberName);
+            var member = Value.Member(tagName.Root);
             if (member is null)
                 throw new ArgumentException(
-                    $"No member with name '{memberName}' exists in the tag data structure for type {DataType}.");
+                    $"No member with name '{tagName.Root}' exists in the tag data structure for type {DataType}.");
 
             var tag = new Tag(Root, member, this);
             var remaining = TagName.Combine(tagName.Members.Skip(1));
             return remaining.IsEmpty ? tag : tag[remaining];
         }
+    }
+
+    /// <summary>
+    /// Adds a new <see cref="Types.Member"/> to the tags data structure.
+    /// </summary>
+    /// <param name="member">The member to add to the tag's data structure.</param>
+    /// <exception cref="ArgumentNullException"><c>member</c> is null.</exception>
+    /// <exception cref="InvalidOperationException"><see cref="Value"/> is not a <see cref="ComplexType"/> object.</exception>
+    /// <remarks>This will operate relative to the current tag member object, and is simply a call to the underlying
+    /// <see cref="ComplexType"/> method.</remarks>
+    public void Add(Member member)
+    {
+        if (member is null) throw new ArgumentNullException(nameof(member));
+        if (Value is not ComplexType complexType)
+            throw new InvalidOperationException($"Can only mutate {DataType} type tags.");
+
+        complexType.Add(member);
     }
 
     /// <summary>
@@ -264,9 +281,9 @@ public class Tag : LogixComponent<Tag>
     public Tag? Member(TagName tagName)
     {
         if (tagName is null) throw new ArgumentNullException(nameof(tagName));
+        if (tagName.IsEmpty) throw new ArgumentException("Can not retrieve member from empty tag name.");
 
-        var memberName = tagName.Members.FirstOrDefault() ?? string.Empty;
-        var member = Value.Member(memberName);
+        var member = Value.Member(tagName.Root);
         if (member is null) return default;
 
         var tag = new Tag(Root, member, this);
@@ -275,32 +292,14 @@ public class Tag : LogixComponent<Tag>
     }
 
     /// <summary>
-    /// Gets all descendent tag members relative to the current tag member.
+    /// Gets this and all descendent tag members of the tag data structure.
     /// </summary>
     /// <returns>A <see cref="IEnumerable{T}"/> containing <see cref="Tag"/> objects.</returns>
-    /// <remarks>This recursively traverses the hierarchical data structure of the tag and returns all
-    /// child/descendant members.</remarks>
+    /// <remarks>
+    /// This recursively traverses the hierarchical data structure of the tag and returns all
+    /// child/descendant tags, as well as this tag.
+    /// </remarks>
     public IEnumerable<Tag> Members()
-    {
-        var members = new List<Tag>();
-
-        foreach (var member in Value.Members)
-        {
-            var tag = new Tag(Root, member, this);
-            members.Add(tag);
-            members.AddRange(tag.Members());
-        }
-
-        return members;
-    }
-
-    /// <summary>
-    /// Gets all descendent tag members relative to the current tag member including the current tag member.
-    /// </summary>
-    /// <returns>A <see cref="IEnumerable{T}"/> containing <see cref="Tag"/> objects.</returns>
-    /// <remarks>This recursively traverses the hierarchical data structure of the tag and returns all
-    /// child/descendant members.</remarks>
-    public IEnumerable<Tag> MembersAndSelf()
     {
         var members = new List<Tag> { this };
 
@@ -315,45 +314,47 @@ public class Tag : LogixComponent<Tag>
     }
 
     /// <summary>
-    /// Gets all descendent tag members that satisfy the specified tag name predicate expression.
+    /// Gets this and all descendent tag members of the tag data structure that satisfy the specified tag name predicate.
     /// </summary>
     /// <param name="predicate">A predicate expression specifying the tag name filter.</param>
     /// <returns>A <see cref="IEnumerable{T}"/> containing <see cref="Tag"/> objects that satisfy the predicate.</returns>
-    /// <remarks>This recursively traverses the hierarchical data structure of the tag and returns all
-    /// child/descendant members that satisfy the specified predicate.</remarks>
+    /// <remarks>
+    /// This recursively traverses the hierarchical data structure of the tag and returns all
+    /// tags that satisfy the specified predicate.
+    /// </remarks>
     public IEnumerable<Tag> Members(Predicate<TagName> predicate)
     {
-        if (predicate is null)
-            throw new ArgumentNullException(nameof(predicate));
+        if (predicate is null) throw new ArgumentNullException(nameof(predicate));
 
-        var members = new List<Tag>();
+        var members = Parent is null && predicate.Invoke(TagName) ? new List<Tag> { this } : new List<Tag>();
 
         foreach (var member in Value.Members)
         {
-            var tagMember = new Tag(Root, member, this);
+            var tag = new Tag(Root, member, this);
 
-            if (predicate.Invoke(tagMember.TagName))
-                members.Add(tagMember);
+            if (predicate.Invoke(tag.TagName))
+                members.Add(tag);
 
-            members.AddRange(tagMember.Members(predicate));
+            members.AddRange(tag.Members(predicate));
         }
 
         return members;
     }
 
     /// <summary>
-    /// Gets all descendent tag members that satisfy the specified tag member predicate expression.
+    /// Gets this and all descendent tag members of the tag data structure that that satisfy the specified tag predicate.
     /// </summary>
-    /// <param name="predicate">A predicate expression specifying the tag member filter.</param>
+    /// <param name="predicate">A predicate expression specifying the tag filter.</param>
     /// <returns>A <see cref="IEnumerable{T}"/> containing <see cref="Tag"/> objects that satisfy the predicate.</returns>
-    /// <remarks>This recursively traverses the hierarchical data structure of the tag and returns all
-    /// child/descendant members that satisfy the specified predicate.</remarks>
+    /// <remarks>
+    /// This recursively traverses the hierarchical data structure of the tag and returns all
+    /// tags that satisfy the specified predicate.
+    /// </remarks>
     public IEnumerable<Tag> Members(Predicate<Tag> predicate)
     {
-        if (predicate is null)
-            throw new ArgumentNullException(nameof(predicate));
+        if (predicate is null) throw new ArgumentNullException(nameof(predicate));
 
-        var members = new List<Tag>();
+        var members = Parent is null && predicate.Invoke(this) ? new List<Tag> { this } : new List<Tag>();
 
         foreach (var member in Value.Members)
         {
@@ -369,7 +370,7 @@ public class Tag : LogixComponent<Tag>
     }
 
     /// <summary>
-    /// Gets all descendent tag members of the tag member specified by the provided tag name path.
+    /// Gets all descendent tags of the tag specified by the provided tag name.
     /// </summary>
     /// <param name="tagName">A tag name path to the tag member for which to get members of.</param>
     /// <returns>A <see cref="IEnumerable{T}"/> containing <see cref="Tag"/> objects.</returns>
@@ -378,9 +379,9 @@ public class Tag : LogixComponent<Tag>
     public IEnumerable<Tag> MembersOf(TagName tagName)
     {
         if (tagName is null) throw new ArgumentNullException(nameof(tagName));
+        if (tagName.IsEmpty) throw new ArgumentException("Can not retrieve members from empty tag name.");
 
-        var memberName = tagName.Members.FirstOrDefault() ?? string.Empty;
-        var member = Value.Member(memberName);
+        var member = Value.Member(tagName.Root);
         if (member is null) return Enumerable.Empty<Tag>();
 
         var tag = new Tag(Root, member, this);
@@ -390,11 +391,10 @@ public class Tag : LogixComponent<Tag>
 
     /// <summary>
     /// Returns a collection of all descendent tag names of the current <c>Tag</c>, including the tag name of the
-    /// current <c>Tag</c>. 
+    /// this <c>Tag</c>. 
     /// </summary>
     /// <returns>
-    /// A <see cref="IEnumerable{T}"/> of <see cref="TagName"/> containing the current <c>Tag</c> tag name and
-    /// all child tag names.
+    /// A <see cref="IEnumerable{T}"/> of <see cref="TagName"/> containing the this tag name and all child tag names.
     /// </returns>
     public IEnumerable<TagName> Names()
     {
@@ -403,43 +403,69 @@ public class Tag : LogixComponent<Tag>
         return names;
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="value"></param>
+    /// <returns></returns>
+    public Tag With(LogixType value)
+    {
+        if (Parent is null)
+        {
+            SetData(value);
+            return new Tag(Element);
+        }
+
+        if (Parent.Value is not ComplexType complexType)
+            throw new InvalidOperationException("Can only ...");
+
+        complexType.Replace(TagName.Member, value);
+        var member = complexType.Member(TagName.Member)!;
+        return new Tag(Root, member, Parent);
+    }
+
     #region Internal
-    
+
     /// <summary>
     /// Triggers <see cref="SetData"/> when a nested data type value of this tag's <see cref="Value"/> changes.
     /// </summary>
-    private void OnDataChanged(object sender, EventArgs e) => SetData();
+    private void OnDataChanged(object sender, EventArgs e) => SetData(Root.Value);
 
     /// <summary>
     /// Handles setting the data of the root tag and updating the root properties
     /// </summary>
-    private void SetData()
+    private void SetData(LogixType value)
     {
         var data = Element.Elements()
-            .FirstOrDefault(e => e.Attribute(L5XName.Format) is not null &&
-                                 e.Attribute(L5XName.Format)!.Value != DataFormat.L5K);
+            .FirstOrDefault(e => e.Attribute(L5XName.Format) is not null
+                                 && DataFormat.All().Where(f => f != DataFormat.L5K)
+                                     .Any(f => f.Value == e.Attribute(L5XName.Format)!.Value));
 
         // If uninitialized, add the root data to the base tag element and update the tag attributes.
         if (data is null)
+            Element.Add(GenerateData(value));
+        else
+            data.ReplaceNodes(value.Serialize());
+
+        SetTagAttributes(value);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    private void SetTagAttributes(LogixType value)
+    {
+        Element.SetAttributeValue(L5XName.DataType, value.Name);
+        switch (value)
         {
-            Element.Add(GenerateData(Root.Value));
-            Element.SetAttributeValue(L5XName.DataType, Root.Value.Name);
-            switch (Root.Value)
-            {
-                case AtomicType atomicType:
-                    Element.SetAttributeValue(L5XName.Radix, atomicType.Radix);
-                    break;
-                case ArrayType { Dimensions.IsEmpty: false } arrayType:
-                    Element.SetAttributeValue(L5XName.Dimensions, arrayType.Dimensions);
-                    if (arrayType.Radix != Radix.Null) Element.SetAttributeValue(L5XName.Radix, arrayType.Radix);
-                    break;
-            }
-
-            return;
+            case AtomicType atomicType:
+                Element.SetAttributeValue(L5XName.Radix, atomicType.Radix);
+                break;
+            case ArrayType { Dimensions.IsEmpty: false } arrayType:
+                Element.SetAttributeValue(L5XName.Dimensions, arrayType.Dimensions);
+                if (arrayType.Radix != Radix.Null) Element.SetAttributeValue(L5XName.Radix, arrayType.Radix);
+                break;
         }
-
-        data.RemoveNodes();
-        data.Add(Root.Value.Serialize());
     }
 
     /// <summary>
@@ -523,13 +549,13 @@ public class Tag : LogixComponent<Tag>
 
         var comment = comments.Elements(L5XName.Comment)
             .FirstOrDefault(e => e.Attribute(L5XName.Operand)?.Value == TagName.Operand);
-        
+
         if (comment is not null)
         {
             comment.Value = value;
             return;
         }
-        
+
         comments.Add(GenerateComment(value));
     }
 
@@ -543,7 +569,7 @@ public class Tag : LogixComponent<Tag>
         comment.Add(new XCData(value));
         return comment;
     }
-    
+
     /// <summary>
     /// Handles getting a unit value for the current tag name operand. 
     /// </summary>
@@ -552,7 +578,7 @@ public class Tag : LogixComponent<Tag>
         return Element.Descendants(L5XName.EngineeringUnit)
             .FirstOrDefault(e => e.Attribute(L5XName.Operand)?.Value == TagName.Operand)?.Value;
     }
-    
+
     /// <summary>
     /// Handles setting a unit element of the root tag structure for the current tag name operand. 
     /// </summary>
@@ -574,13 +600,13 @@ public class Tag : LogixComponent<Tag>
 
         var unit = units.Elements(L5XName.EngineeringUnit)
             .FirstOrDefault(e => e.Attribute(L5XName.Operand)?.Value == TagName.Operand);
-        
+
         if (unit is not null)
         {
             unit.Value = value;
             return;
         }
-        
+
         units.Add(GenerateUnit(value));
     }
 

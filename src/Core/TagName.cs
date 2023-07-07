@@ -13,7 +13,7 @@ namespace L5Sharp.Core;
 /// This value type class make working with string tag name easier by providing
 /// methods fo analyzing and breaking the tag name into constituent parts (members).
 /// </remarks>
-public class TagName : IEquatable<TagName>, IComparable<TagName>
+public sealed class TagName : IComparable<TagName>
 {
     private readonly string _tagName;
 
@@ -63,8 +63,7 @@ public class TagName : IEquatable<TagName>, IComparable<TagName>
     /// <remarks>
     /// <para>
     /// The root portion of a given tag name is simply the beginning part of the tag name up to the first
-    /// member separator character ('.'). For Module defined tags, this includes the colon separator. This represent
-    /// the actual user configured tag name. The remaining tag name string (if any) represents the data type structure member.
+    /// member separator character ('.'). For Module defined tags, this includes the colon separator.
     /// </para>
     /// <para>
     /// This value can be swapped out easily using <see cref="Rename"/> to return a new <see cref="TagName"/> with the
@@ -79,7 +78,7 @@ public class TagName : IEquatable<TagName>, IComparable<TagName>
     /// Gets the operand portion of the <see cref="TagName"/> value.
     /// </summary>
     /// <remarks>
-    /// The operand of a tag name represents the part of the name after <see cref="Root"/>. This value will always be
+    /// The <c>Operand</c> of a tag name represents the part of the name after <see cref="Root"/>. This value will always be
     /// the full tag name value without the leading root name. The operand will include the leading '.' character.
     /// </remarks>
     /// <seealso cref="Path"/>
@@ -89,7 +88,7 @@ public class TagName : IEquatable<TagName>, IComparable<TagName>
     /// Gets the member path of the tag name value.
     /// </summary>
     /// <remarks>
-    /// The path of a tag name represents a name relative to <see cref="Root"/>. The value will always be the full tag name
+    /// The <c>Path</c> of a tag name represents a name relative to <see cref="Root"/>. The value will always be the full tag name
     /// without the leading root name. This is similar to <see cref="Operand"/>, except that is also removes any
     /// leading member separator character ('.'). 
     /// </remarks>
@@ -97,16 +96,21 @@ public class TagName : IEquatable<TagName>, IComparable<TagName>
     public string Path => Operand.StartsWith(".") ? Operand.Remove(0, 1) : Operand;
 
     /// <summary>
-    /// Gets the final member name of the full tag name path.
+    /// Gets the member name, or the last member of <see cref="Members"/>, of the tag name value.
     /// </summary>
     /// <remarks>
-    /// This is 
+    /// The <c>Member</c> of a tag name represents the last member name of the string. This is the string after the final
+    /// member separator character.
     /// </remarks>
     public string Member => Members.Last();
 
     /// <summary>
-    /// 
+    /// Returns a collection of string names representing each individual member of the full tag name value.
     /// </summary>
+    /// <remarks>
+    /// Each member of a tag name can be represented by a string, array bracket, or bit index value.
+    /// For example, MyTag[1].MemberName.5 has 4 members.
+    /// </remarks>
     public IEnumerable<string> Members => Regex.Matches(_tagName, MembersPattern).Select(m => m.Value);
 
     /// <summary>
@@ -168,6 +172,14 @@ public class TagName : IEquatable<TagName>, IComparable<TagName>
     /// <returns>A new <see cref="TagName"/> value representing the value of the tag name.</returns>
     public static implicit operator TagName(string tagName) => new(tagName);
 
+    /// <inheritdoc />
+    public int CompareTo(TagName? other)
+    {
+        return ReferenceEquals(this, other) ? 0
+            : ReferenceEquals(null, other) ? 1
+            : StringComparer.OrdinalIgnoreCase.Compare(_tagName, other._tagName);
+    }
+
     /// <summary>
     /// Determines if the provided tagName is contained within the current value.
     /// </summary>
@@ -183,6 +195,31 @@ public class TagName : IEquatable<TagName>, IComparable<TagName>
     }
 
     /// <summary>
+    /// Determines whether the specified <see cref="TagName"/> objects are equal using the specified <see cref="IEqualityComparer{T}"/>.
+    /// </summary>
+    /// <param name="first">A tag name object to compare.</param>
+    /// <param name="second">A tag name object to compare.</param>
+    /// <param name="comparer">The equality comparer to use for comparison.</param>
+    /// <returns><c>true</c> if the tag name are equal according too the provided comparer; otherwise, false.</returns>
+    /// <remarks>Use the prebuilt <see cref="TagNameComparer"/> class for several predefined comparers.</remarks>
+    public static bool Equals(TagName first, TagName second, IEqualityComparer<TagName> comparer) =>
+        comparer.Equals(first, second);
+
+    /// <inheritdoc />
+    public override bool Equals(object? obj)
+    {
+        return obj switch
+        {
+            TagName other => StringComparer.OrdinalIgnoreCase.Equals(_tagName, other._tagName),
+            string other => StringComparer.OrdinalIgnoreCase.Equals(_tagName, other),
+            _ => false
+        };
+    }
+
+    /// <inheritdoc />
+    public override int GetHashCode() => StringComparer.OrdinalIgnoreCase.GetHashCode(_tagName);
+
+    /// <summary>
     /// Returns a new tag name with the root <see cref="Root"/> value replaced with the provided string tag.
     /// </summary>
     /// <param name="tag">The new root tag name value to replace.</param>
@@ -193,30 +230,6 @@ public class TagName : IEquatable<TagName>, IComparable<TagName>
 
     /// <inheritdoc />
     public override string ToString() => _tagName;
-
-    /// <summary>
-    /// Determines whether the specified <see cref="TagName"/> objects are equal using the specified <see cref="IEqualityComparer{T}"/>.
-    /// </summary>
-    /// <param name="first">A tag name object to compare.</param>
-    /// <param name="second">A tag name object to compare.</param>
-    /// <param name="comparer">The equality comparer to use for comparison.</param>
-    /// <returns><c>true</c> if the tag name are equal according too the provided comparer; otherwise, false.</returns>
-    public static bool Equals(TagName first, TagName second, IEqualityComparer<TagName> comparer) =>
-        comparer.Equals(first, second);
-
-    /// <inheritdoc /> 
-    public bool Equals(TagName? other)
-    {
-        if (ReferenceEquals(null, other)) return false;
-        return ReferenceEquals(this, other) ||
-               StringComparer.OrdinalIgnoreCase.Equals(_tagName, other._tagName);
-    }
-
-    /// <inheritdoc />
-    public override bool Equals(object? obj) => Equals(obj as TagName);
-
-    /// <inheritdoc />
-    public override int GetHashCode() => StringComparer.OrdinalIgnoreCase.GetHashCode(_tagName);
 
     /// <summary>
     /// Determines if the provided objects are equal.
@@ -234,15 +247,9 @@ public class TagName : IEquatable<TagName>, IComparable<TagName>
     /// <returns>true if the provided objects are not equal; otherwise, false.</returns>
     public static bool operator !=(TagName? left, TagName? right) => !Equals(left, right);
 
-    /// <inheritdoc />
-    public int CompareTo(TagName? other)
-    {
-        if (ReferenceEquals(this, other)) return 0;
-        return ReferenceEquals(null, other)
-            ? 1
-            : string.Compare(_tagName, other._tagName, StringComparison.OrdinalIgnoreCase);
-    }
-
+    /// <summary>
+    /// Handles combining an enumerable containing string member names into a single <see cref="TagName"/> value.
+    /// </summary>
     private static string ConcatenateMembers(IEnumerable<string> members)
     {
         var builder = new StringBuilder();
@@ -269,26 +276,27 @@ public class TagNameComparer : IEqualityComparer<TagName>
     }
 
     /// <summary>
-    /// An <see cref="IEqualityComparer{T}"/> that compares the full <see cref="TagName"/> value.
+    /// An <see cref="IEqualityComparer{T}"/> that compares the full qualified <see cref="TagName"/> value.
     /// </summary>
-    public static TagNameComparer FullName { get; } = new();
+    public static TagNameComparer Qualified { get; } = new();
 
     /// <summary>
     /// An <see cref="IEqualityComparer{T}"/> that compares the <see cref="TagName.Root"/> property of the
     /// <see cref="TagName"/> value.
     /// </summary>
-    public static TagNameComparer BaseName { get; } = new BaseTagNameComparer();
+    public static TagNameComparer Root { get; } = new RootTagNameComparer();
 
     /// <summary>
     /// An <see cref="IEqualityComparer{T}"/> that compares the <see cref="TagName.Path"/> property of the
     /// <see cref="TagName"/> value.
     /// </summary>
-    public static TagNameComparer PathName { get; } = new PathTagNameComparer();
+    public static TagNameComparer Path { get; } = new PathTagNameComparer();
 
     /// <summary>
-    /// An <see cref="IEqualityComparer{T}"/> that compares the last member of the <see cref="TagName"/> value.
+    /// An <see cref="IEqualityComparer{T}"/> that compares the <see cref="TagName.Member"/> property of the
+    /// <see cref="TagName"/> value.
     /// </summary>
-    public static TagNameComparer MemberName { get; } = new MemberTagNameComparer();
+    public static TagNameComparer Member { get; } = new MemberTagNameComparer();
 
     /// <inheritdoc />
     public virtual bool Equals(TagName? x, TagName? y)
@@ -302,7 +310,7 @@ public class TagNameComparer : IEqualityComparer<TagName>
     public virtual int GetHashCode(TagName obj) => obj.GetHashCode();
 
 
-    private class BaseTagNameComparer : TagNameComparer
+    private class RootTagNameComparer : TagNameComparer
     {
         public override bool Equals(TagName? x, TagName? y)
         {
@@ -332,10 +340,9 @@ public class TagNameComparer : IEqualityComparer<TagName>
         {
             if (ReferenceEquals(x, y)) return true;
             if (ReferenceEquals(x, null) || ReferenceEquals(y, null)) return false;
-            return string.Equals(x.Members.Last(), y.Members.Last(), StringComparison.OrdinalIgnoreCase);
+            return string.Equals(x.Member, y.Member, StringComparison.OrdinalIgnoreCase);
         }
 
-        public override int GetHashCode(TagName obj) =>
-            StringComparer.OrdinalIgnoreCase.GetHashCode(obj.Members.Last());
+        public override int GetHashCode(TagName obj) => StringComparer.OrdinalIgnoreCase.GetHashCode(obj.Member);
     }
 }

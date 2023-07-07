@@ -39,13 +39,7 @@ public abstract class AtomicType : LogixType, IConvertible
                 member.DataType.DataChanged += OnMemberDataChanged;
                 yield return member;
             }
-                
         }
-    }
-
-    private void OnMemberDataChanged(object sender, EventArgs e)
-    {
-        RaiseDataChanged();
     }
 
     /// <summary>
@@ -263,4 +257,9 @@ public abstract class AtomicType : LogixType, IConvertible
 
     /// <inheritdoc />
     public virtual ulong ToUInt64(IFormatProvider provider) => BitConverter.ToUInt64(GetBytes());
+    
+    private void OnMemberDataChanged(object sender, EventArgs e)
+    {
+        RaiseDataChanged();
+    }
 }

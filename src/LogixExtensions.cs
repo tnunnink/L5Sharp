@@ -465,10 +465,32 @@ public static class LogixExtensions
     /// All this does is first look for the class attribute <see cref="XmlTypeAttribute"/> to use as the explicitly
     /// configured name, and if not found, returns the type name as the default element name.
     /// </remarks>
-    internal static XName LogixTypeName(this Type type)
+    internal static string LogixTypeName(this Type type)
     {
         var attribute = type.GetCustomAttribute<XmlTypeAttribute>();
         return attribute is not null ? attribute.TypeName : type.Name;
+    }
+    
+    /// <summary>
+    /// Determines if a type is derived from the base type, even if the base type is a generic type.
+    /// </summary>
+    /// <param name="type"></param>
+    /// <param name="baseType"></param>
+    /// <returns></returns>
+    internal static bool IsDerivativeOf(this Type type, Type baseType)
+    {
+        if (type == baseType) return false;
+
+        var current = type.BaseType;
+
+        while (current != typeof(object) && current != null)
+        {
+            var definition = current.IsGenericType ? current.GetGenericTypeDefinition() : current;
+            if (definition == baseType) return true;
+            current = current.BaseType;
+        }
+
+        return false;
     }
 
     #endregion

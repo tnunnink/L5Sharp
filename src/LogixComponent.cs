@@ -96,8 +96,7 @@ public abstract class LogixComponent<TComponent> : LogixElement<TComponent>
     /// </remarks>
     public void AddAfter(TComponent component)
     {
-        if (component is null)
-            throw new ArgumentNullException(nameof(component));
+        if (component is null) throw new ArgumentNullException(nameof(component));
 
         if (Element.Parent is null)
             throw new InvalidOperationException(
@@ -120,10 +119,14 @@ public abstract class LogixComponent<TComponent> : LogixElement<TComponent>
     /// </remarks>
     public void AddBefore(TComponent component)
     {
-        if (component is null)
+        if (component is null) 
             throw new ArgumentNullException(nameof(component));
-
-        Element.AddAfterSelf(component.Serialize());
+        
+        if (Element.Parent is null)
+            throw new InvalidOperationException(
+                "Can only perform operation for L5X attached elements. Add this element to the logix content before invoking.");
+        
+        Element.AddBeforeSelf(component.Serialize());
     }
 
     /// <summary>

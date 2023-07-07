@@ -31,8 +31,13 @@ public static class Atomic
     /// <param name="value">The value of the atomic type.</param>
     /// <returns>A <see cref="AtomicType"/> representing the value and format of the provided value.</returns>
     /// <exception cref="FormatException"><c>value</c> does not have a valid format to be parsed as an atomic type.</exception>
-    public static AtomicType Parse(string value) => Radix.Infer(value).Parse(value);
-    
+    public static AtomicType Parse(string value)
+    {
+        return string.Equals(value, "true", StringComparison.OrdinalIgnoreCase) ? new BOOL(true)
+            : string.Equals(value, "false", StringComparison.OrdinalIgnoreCase) ? new BOOL()
+            : Radix.Infer(value).Parse(value);
+    }
+
     /// <summary>
     /// Parses the provided string value into an atomic type value.
     /// </summary>
@@ -41,7 +46,10 @@ public static class Atomic
     /// <exception cref="FormatException"><c>value</c> does not have a valid format to be parsed as an atomic type.</exception>
     public static TAtomic Parse<TAtomic>(string value) where TAtomic : AtomicType
     {
-        return (TAtomic)Convert.ChangeType(Radix.Infer(value).Parse(value), typeof(TAtomic));
+        var atomic = string.Equals(value, "true", StringComparison.OrdinalIgnoreCase) ? new BOOL(true)
+            : string.Equals(value, "false", StringComparison.OrdinalIgnoreCase) ? new BOOL()
+            : Radix.Infer(value).Parse(value);
+        return (TAtomic)Convert.ChangeType(atomic, typeof(TAtomic));
     }
 
     /// <summary>

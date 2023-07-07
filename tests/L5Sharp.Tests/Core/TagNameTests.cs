@@ -275,7 +275,7 @@ namespace L5Sharp.Tests.Core
         [Test]
         public void StaticEqualsFullTagName_EqualTagName_ShouldBeTrue()
         {
-            var result = TagName.Equals("MyTag", "MyTag", TagNameComparer.FullName);
+            var result = TagName.Equals("MyTag", "MyTag", TagNameComparer.Qualified);
 
             result.Should().BeTrue();
         }
@@ -283,7 +283,7 @@ namespace L5Sharp.Tests.Core
         [Test]
         public void StaticEqualsFullTagName_NotEqualTagName_ShouldBeTrue()
         {
-            var result = TagName.Equals("MyTag", "AnotherTag", TagNameComparer.FullName);
+            var result = TagName.Equals("MyTag", "AnotherTag", TagNameComparer.Qualified);
 
             result.Should().BeFalse();
         }
@@ -291,7 +291,7 @@ namespace L5Sharp.Tests.Core
         [Test]
         public void StaticEqualsBase_EqualTagName_ShouldBeTrue()
         {
-            var result = TagName.Equals("MyTag.SomeMember", "MyTag.AnotherMember", TagNameComparer.BaseName);
+            var result = TagName.Equals("MyTag.SomeMember", "MyTag.AnotherMember", TagNameComparer.Root);
 
             result.Should().BeTrue();
         }
@@ -299,7 +299,7 @@ namespace L5Sharp.Tests.Core
         [Test]
         public void StaticEqualsBase_NotEqualTagName_ShouldBeTrue()
         {
-            var result = TagName.Equals("MyTag.SomeMember", "AnotherTag.SomeMember", TagNameComparer.BaseName);
+            var result = TagName.Equals("MyTag.SomeMember", "AnotherTag.SomeMember", TagNameComparer.Root);
 
             result.Should().BeFalse();
         }
@@ -307,7 +307,7 @@ namespace L5Sharp.Tests.Core
         [Test]
         public void StaticEqualsPath_EqualTagName_ShouldBeTrue()
         {
-            var result = TagName.Equals("MyTag.SomeMember.SubPathMember", "DifferentTag.SomeMember.SubPathMember", TagNameComparer.PathName);
+            var result = TagName.Equals("MyTag.SomeMember.SubPathMember", "DifferentTag.SomeMember.SubPathMember", TagNameComparer.Path);
 
             result.Should().BeTrue();
         }
@@ -315,7 +315,7 @@ namespace L5Sharp.Tests.Core
         [Test]
         public void StaticEqualsPath_NotEqualTagName_ShouldBeTrue()
         {
-            var result = TagName.Equals("MyTag.SomeMember.SubPathMember", "MyTag.SomeMember.SubPath", TagNameComparer.PathName);
+            var result = TagName.Equals("MyTag.SomeMember.SubPathMember", "MyTag.SomeMember.SubPath", TagNameComparer.Path);
 
             result.Should().BeFalse();
         }
@@ -323,7 +323,7 @@ namespace L5Sharp.Tests.Core
         [Test]
         public void StaticEqualsMember_EqualTagName_ShouldBeTrue()
         {
-            var result = TagName.Equals("MyTag.SomeMember.SubPathMember", "DifferentTag.AnotherMember.SubPathMember", TagNameComparer.MemberName);
+            var result = TagName.Equals("MyTag.SomeMember.SubPathMember", "DifferentTag.AnotherMember.SubPathMember", TagNameComparer.Member);
 
             result.Should().BeTrue();
         }
@@ -331,7 +331,7 @@ namespace L5Sharp.Tests.Core
         [Test]
         public void StaticEqualsMember_NotEqualTagName_ShouldBeTrue()
         {
-            var result = TagName.Equals("MyTag.SomeMember.SubPathMember", "MyTag.SomeMember.SubPath", TagNameComparer.MemberName);
+            var result = TagName.Equals("MyTag.SomeMember.SubPathMember", "MyTag.SomeMember.SubPath", TagNameComparer.Member);
 
             result.Should().BeFalse();
         }
