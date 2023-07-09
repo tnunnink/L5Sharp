@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
-using System.Xml.Serialization;
 using L5Sharp.Core;
 using L5Sharp.Enums;
 
@@ -10,15 +10,26 @@ namespace L5Sharp.Components;
 /// <summary>
 /// A logix <c>Task</c> component. Contains the properties that comprise the L5X Task element.
 /// </summary>
+/// <remarks>
+/// Observe these guidelines when defining a task:<br/>
+///     • Tasks must be defined after programs and before controller objects.<br/>
+///     • There is a maximum of 32 tasks.<br/>
+///     • There is one continuous task only.<br/>
+///     • A program can be scheduled under one task only.<br/>
+///     • Scheduled programs must be defined (must exist).<br/>
+/// </remarks>
 /// <footer>
 /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
 /// `Logix 5000 Controllers Import/Export`</a> for more information.
 /// </footer>
-[XmlType(L5XName.Task)]
-public class LogixTask : LogixComponent<LogixTask>
+public class Task : LogixComponent<Task>
 {
-    /// <inheritdoc />
-    public LogixTask(): base(new XElement(L5XName.Task))
+    /// <summary>
+    /// Creates a new <see cref="Task"/> with default values.
+    /// </summary>
+    /// <remarks>By default uses <see cref="TaskType.Periodic"/>, 10ms <see cref="Priority"/>, 10ms <see cref="Rate"/>,
+    /// and 500ms <see cref="Watchdog"/>.</remarks>
+    public Task() : base(new XElement(L5XName.Task))
     {
         Type = TaskType.Periodic;
         Priority = new TaskPriority(10);
@@ -26,8 +37,12 @@ public class LogixTask : LogixComponent<LogixTask>
         Watchdog = new Watchdog(500);
     }
 
-    /// <inheritdoc />
-    public LogixTask(XElement element) : base(element)
+    /// <summary>
+    /// Creates a new <see cref="Task"/> initialized with the provided <see cref="XElement"/>.
+    /// </summary>
+    /// <param name="element">The <see cref="XElement"/> to initialize the type with.</param>
+    /// <exception cref="ArgumentNullException"><c>element</c> is null.</exception>
+    public Task(XElement element) : base(element)
     {
     }
 
@@ -35,7 +50,7 @@ public class LogixTask : LogixComponent<LogixTask>
     /// Gets the type of the task component (Continuous, Periodic, Event).
     /// </summary>
     /// <value>A <see cref="Enums.TaskType"/> enum representing the type of the task.</value>
-    public TaskType Type
+    public TaskType? Type
     {
         get => GetRequiredValue<TaskType>();
         set => SetRequiredValue(value);
@@ -92,6 +107,44 @@ public class LogixTask : LogixComponent<LogixTask>
     }
 
     /// <summary>
+    /// The trigger for the event task. Only used for event tasks.
+    /// </summary>
+    /// <value>
+    /// A <see cref="TaskEventTrigger"/> value indicating what triggers the task. Returns <c>null</c> for non-event tasks.
+    /// </value>
+    public TaskEventTrigger? EventTrigger
+    {
+        get => GetValue<TaskEventTrigger>(L5XName.EventInfo.XName());
+        set => SetValue(value, L5XName.EventInfo.XName());
+    }
+    
+    /// <summary>
+    /// The tag name that the event task consumes. Only used for event tasks.
+    /// </summary>
+    /// <value>
+    /// A <see cref="TagName"/> value indicating what tag to consume. Returns <c>null</c> for non-event tasks.
+    /// </value>
+    /// <remarks>Only used for event tasks with a Consumed Tag trigger or a Module Input Data State Change trigger.</remarks>
+    public TagName? EventTag
+    {
+        get => GetValue<TagName>(L5XName.EventInfo.XName());
+        set => SetValue(value, L5XName.EventInfo.XName());
+    }
+    
+    /// <summary>
+    /// The value indicating whether timeouts are enabled for the event task. Only used for event tasks.
+    /// </summary>
+    /// <value>
+    /// If the task is an event type task, <c>true</c> indicating that timeouts are enabled, <c>false</c> to indicate
+    /// they are disabled. Returns <c>null</c> for non-event tasks.
+    /// </value>
+    public bool? EnableTimeout
+    {
+        get => GetValue<bool>(L5XName.EventInfo.XName());
+        set => SetValue(value, L5XName.EventInfo.XName());
+    }
+
+    /// <summary>
     /// The collection of program names that are scheduled to the task.
     /// </summary>
     /// <value>A <see cref="IEnumerable{T}"/> containing the string program names.</value>
@@ -112,7 +165,7 @@ public class LogixTask : LogixComponent<LogixTask>
 
         Element.Element(L5XName.ScheduledPrograms)!.Add(element);
     }
-    
+
     /// <summary>
     /// Removes the specified program name from the underlying list of <see cref="ScheduledPrograms"/>
     /// </summary>
@@ -122,9 +175,9 @@ public class LogixTask : LogixComponent<LogixTask>
         var scheduled = Element.Element(L5XName.ScheduledPrograms);
 
         if (scheduled is null) return;
-        
+
         scheduled.Elements(L5XName.ScheduledProgram).FirstOrDefault(p => p.LogixName() == program)?.Remove();
-        
+
         if (!scheduled.Elements().Any())
             scheduled.Remove();
     }

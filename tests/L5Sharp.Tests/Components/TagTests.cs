@@ -6,6 +6,7 @@ using L5Sharp.Tests.Types.Custom;
 using L5Sharp.Types;
 using L5Sharp.Types.Atomics;
 using L5Sharp.Types.Predefined;
+using Task = System.Threading.Tasks.Task;
 
 namespace L5Sharp.Tests.Components
 {
@@ -642,7 +643,7 @@ namespace L5Sharp.Tests.Components
         {
             var tag = new Tag { Name = "Test", Value = new TIMER() };
 
-            FluentActions.Invoking(() => tag.Add(new Member("Test", 123))).Should().Throw<InvalidOperationException>();
+            FluentActions.Invoking(() => tag.Add("Test", 123)).Should().Throw<InvalidOperationException>();
         }
 
         [Test]
@@ -650,7 +651,7 @@ namespace L5Sharp.Tests.Components
         {
             var tag = new Tag { Name = "Test", Value = new MySimpleType() };
 
-            tag.Add(new Member("Test", 123));
+            tag.Add("Test", 123);
 
             tag["Test"].Should().NotBeNull();
             tag["Test"].Value.Should().BeOfType<DINT>();
@@ -662,10 +663,52 @@ namespace L5Sharp.Tests.Components
         {
             var tag = new Tag { Name = "Test", Value = new MySimpleType() };
 
-            tag.Add(new Member("Test", 123));
+            tag.Add("Test", 123);
 
             var xml = tag.Serialize().ToString();
             return Verify(xml);
+        }
+
+        [Test]
+        public Task Remove_ValidTag_ShouldBeVerified()
+        {
+            var tag = new Tag { Name = "Test", Value = new MySimpleType() };
+
+            tag.Remove("M3");
+
+            var xml = tag.Serialize().ToString();
+            return Verify(xml);
+        }
+
+        [Test]
+        public void With_RootTagValidValue_ShouldUpdateValue()
+        {
+            var tag = new Tag { Name = "Test", Value = new DINT() };
+
+            var result = tag.With(new REAL(2.3f));
+
+            result.Should().NotBeNull();
+            result.Name.Should().Be("Test");
+            result.DataType.Should().Be("REAL");
+            result.Value.Should().BeOfType<REAL>();
+            result.Value.Should().Be(2.3f);
+        }
+
+        [Test]
+        public void With_NestedComplexType_ShouldHaveUpdatedValue()
+        {
+            var tag = new Tag { Name = "Test", Value = new MyNestedType() };
+
+            var member = tag["Simple.M4"];
+
+            var result = member.With(new REAL(2.3f));
+
+            result.Should().NotBeNull();
+            result.Name.Should().Be("Test");
+            result.TagName.Should().Be("Test.Simple.M4");
+            result.DataType.Should().Be("REAL");
+            result.Value.Should().BeOfType<REAL>();
+            result.Value.Should().Be(2.3f);
         }
     }
 }

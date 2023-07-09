@@ -21,16 +21,6 @@ public class Tag : LogixComponent<Tag>
     private readonly Member _member;
 
     /// <summary>
-    /// Internal member constructor used for getting nested child members of the root tag structure.
-    /// </summary>
-    private Tag(Tag root, Member member, Tag? parent = null) : base(root.Element)
-    {
-        _member = member;
-        Root = root;
-        Parent = parent;
-    }
-
-    /// <summary>
     /// Creates a new <see cref="Tag"/> with default values.
     /// </summary>
     public Tag()
@@ -43,7 +33,7 @@ public class Tag : LogixComponent<Tag>
     }
 
     /// <summary>
-    /// Creates a new <see cref="DataType"/> initialized with the provided <see cref="XElement"/>.
+    /// Creates a new <see cref="Tag"/> initialized with the provided <see cref="XElement"/>.
     /// </summary>
     /// <param name="element">The <see cref="XElement"/> to initialize the type with.</param>
     /// <exception cref="ArgumentNullException"><c>element</c> is null.</exception>
@@ -51,6 +41,24 @@ public class Tag : LogixComponent<Tag>
     {
         _member = new Member(Element);
         Root = this;
+    }
+
+    /// <summary>
+    /// Creates a new nested member <see cref="Tag"/> initialized with the root tag, underlying member,
+    /// and optional parent tag.
+    /// </summary>
+    /// <param name="root">The root or base tag of this tag member.</param>
+    /// <param name="member">The underlying member that this tag wraps.</param>
+    /// <param name="parent">The parent tag of this tag member.</param>
+    /// <remarks>
+    /// This constructor is used internally for methods like <see cref="Member"/> to return new
+    /// tag member objects.
+    /// </remarks>
+    private Tag(Tag root, Member member, Tag? parent = null) : base(root.Element)
+    {
+        _member = member ?? throw new ArgumentNullException(nameof(member));
+        Root = root ?? throw new ArgumentNullException(nameof(root));
+        Parent = parent;
     }
 
     /// <summary>
@@ -72,12 +80,14 @@ public class Tag : LogixComponent<Tag>
     public TagName TagName => Parent is not null ? TagName.Combine(Parent.TagName, _member.Name) : new TagName(Name);
 
     /// <summary>
-    /// The name of the data type that the tag data contains. 
+    /// The name of the data type that <c>Value</c> represents. 
     /// </summary>
     /// <value>A <see cref="string"/> representing the name of the tag data type.</value>
     /// <remarks>
     /// This property simply points to the name property of <see cref="Value"/>.
-    /// This keeps the properties in sync. By setting value, you are setting the data type name.</remarks>
+    /// This keeps the properties in sync. By initializing value, you are setting the data type name.
+    /// Once initialized, the data type won't change. To change the tag's type, use <see cref="With"/>.
+    /// </remarks>
     public string DataType => Value.Name;
 
     /// <summary>
@@ -87,12 +97,12 @@ public class Tag : LogixComponent<Tag>
     /// <remarks>
     /// This value will always point to the dimensions property of <see cref="Value"/>, assuming it is an
     /// <see cref="ArrayType"/>.
-    /// If <c>Data</c> is not an array type, this property will always return <see cref="Core.Dimensions.Empty"/>.
+    /// If <c>Value</c> is not an array type, this property will always return <see cref="Core.Dimensions.Empty"/>.
     /// </remarks>
     public Dimensions Dimensions => Value is ArrayType array ? array.Dimensions : Dimensions.Empty;
 
     /// <summary>
-    /// The radix format of the tags data value. Only applies if the tag is an <see cref="AtomicType"/>.
+    /// The radix format of <c>Value</c>. Only applies if the tag is an <see cref="AtomicType"/>.
     /// </summary>
     /// <value>A <see cref="Enums.Radix"/> option representing data format of the tag value.</value>
     /// <remarks>
@@ -249,20 +259,34 @@ public class Tag : LogixComponent<Tag>
     }
 
     /// <summary>
-    /// Adds a new <see cref="Types.Member"/> to the tags data structure.
+    /// Adds a new member to the tag's complex data structure.
     /// </summary>
-    /// <param name="member">The member to add to the tag's data structure.</param>
-    /// <exception cref="ArgumentNullException"><c>member</c> is null.</exception>
+    /// <param name="name">The name of the member to add to the tag's data structure.</param>
+    /// <param name="value">The <see cref="LogixType"/> of the member to add to the tag's data structure.</param>
+    /// <exception cref="ArgumentNullException"><c>name</c> or <c>value</c> is null.</exception>
     /// <exception cref="InvalidOperationException"><see cref="Value"/> is not a <see cref="ComplexType"/> object.</exception>
     /// <remarks>This will operate relative to the current tag member object, and is simply a call to the underlying
     /// <see cref="ComplexType"/> method.</remarks>
-    public void Add(Member member)
+    public void Add(string name, LogixType value)
     {
-        if (member is null) throw new ArgumentNullException(nameof(member));
+        var member = new Member(name, value);
         if (Value is not ComplexType complexType)
-            throw new InvalidOperationException($"Can only mutate {DataType} type tags.");
-
+            throw new InvalidOperationException("Can only mutate ComplexType tags.");
         complexType.Add(member);
+    }
+
+    /// <summary>
+    /// Removes a member with the specified name from the tag's complex data structure.
+    /// </summary>
+    /// <param name="name">The name of the member to remove.</param>
+    /// <exception cref="InvalidOperationException"><see cref="Value"/> is not a <see cref="ComplexType"/> object.</exception>
+    /// <remarks>This will operate relative to the current tag member object, and is simply a call to the underlying
+    /// <see cref="ComplexType"/> method.</remarks>
+    public void Remove(string name)
+    {
+        if (Value is not ComplexType complexType)
+            throw new InvalidOperationException("Can only mutate ComplexType tags.");
+        complexType.Remove(name);
     }
 
     /// <summary>
@@ -404,10 +428,28 @@ public class Tag : LogixComponent<Tag>
     }
 
     /// <summary>
-    /// 
+    /// Returns as new <see cref="Tag"/> with the updated data type value provided. 
     /// </summary>
-    /// <param name="value"></param>
-    /// <returns></returns>
+    /// <param name="value">The <see cref="LogixType"/> value to change to.</param>
+    /// <returns>
+    /// A <see cref="Tag"/> with the same underlying <see cref="XElement"/> and corresponding properties with
+    /// <see cref="Value"/> changed to the provided <see cref="LogixType"/>.
+    /// </returns>
+    /// <exception cref="InvalidOperationException">When this tag is a nested tag member and it's parent tag's
+    /// <see cref="Value"/> property is not a <see cref="ComplexType"/> object.</exception>
+    /// <remarks>
+    /// <para>
+    /// This is meant to be a concise way to change the data type of tag while leaving all else the same, since setting
+    /// <see cref="Value"/> should only ever update the value and not change the data type.
+    /// </para>
+    /// <para>
+    /// If this is called for the <c>Root</c> tag object, then the entire data element is replaced and a new instance
+    /// is returned. The Tag will still be attached as we are mutating the underlying element object in place.
+    /// If this is called for a nested tag member, then this method checks if the parent tag is a complex type, and if so,
+    /// calls the underlying Replace method for the current member name. Therefore, calls to this method for nested tags
+    /// will fail if <see cref="Value"/> for the parent tag is not a complex type object.
+    /// </para>
+    /// </remarks>
     public Tag With(LogixType value)
     {
         if (Parent is null)
@@ -417,11 +459,12 @@ public class Tag : LogixComponent<Tag>
         }
 
         if (Parent.Value is not ComplexType complexType)
-            throw new InvalidOperationException("Can only ...");
+            throw new InvalidOperationException(
+                $"Can not mutate tag data for parent type {Parent.DataType} as it is not a complex type instance.");
 
         complexType.Replace(TagName.Member, value);
-        var member = complexType.Member(TagName.Member)!;
-        return new Tag(Root, member, Parent);
+        var member = complexType.Member(TagName.Member);
+        return new Tag(Root, member!, Parent);
     }
 
     #region Internal

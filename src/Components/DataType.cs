@@ -7,6 +7,24 @@ namespace L5Sharp.Components;
 /// <summary>
 /// A logix <c>DataType</c> component. Contains the properties that comprise the L5X DataType element.
 /// </summary>
+/// <remarks>
+/// Observe these guidelines when defining a DataType:<br/>
+///     • DataTypes must be defined first within the controller body.<br/>
+///     • DataTypes can be defined out of order. For example, if Type1 depends on Type2, Type2 can be defined first.<br/>
+///     • DataTypes can be unverified. For example if Type1 depends on Type2 and Type2 is never defined, then Type1<br/>
+///       will be accessible as an unverified type. Type2 will be typeless type. Tags of Type1 may be created but not of Type2.<br/>
+///     • Datatype members can be arrays but only one dimension is allowed.<br/>
+///     • These DataTypes cannot be used in a user-defined datatype:<br/>
+///     • ALARM_ANALOG<br/>
+///     • ALARM_DIGITAL<br/>
+///     • AXIS types<br/>
+///     • COORDINATE_SYSTEM<br/>
+///     • MOTION_GROUP<br/>
+///     • MESSAGE<br/>
+///     • MODULE<br/>
+///     • If one user-defined datatype references a second user-defined datatype defined in the file, the second<br/>
+///       user-defined datatype appears before the first one in the import/export file.<br/>
+/// </remarks>
 /// <footer>
 /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
 /// `Logix 5000 Controllers Import/Export`</a> for more information.

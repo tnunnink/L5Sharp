@@ -130,6 +130,9 @@
       <None Update="LogixContentDataTypeTests.Add_ValidComponent_ShouldBeVerified.verified.txt">
         <DependentUpon>LogixContentDataTypeTests.cs</DependentUpon>
       </None>
+      <None Update="Components\TagTests.Remove_ValidTag_ShouldBeVerified.verified.txt">
+        <DependentUpon>TagTests.cs</DependentUpon>
+      </None>
     </ItemGroup>
 
     <ItemGroup>

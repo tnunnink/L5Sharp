@@ -1,7 +1,6 @@
 ﻿using AutoFixture;
 using FluentAssertions;
 using L5Sharp.Core;
-using NUnit.Framework;
 
 namespace L5Sharp.Tests.Core
 {
@@ -18,7 +17,7 @@ namespace L5Sharp.Tests.Core
         }
 
         [Test]
-        public void New_Valid_ShouldNotBeNull()
+        public void New_Default_ShouldNotBeNull()
         {
             var revision = new Revision();
 
@@ -26,7 +25,7 @@ namespace L5Sharp.Tests.Core
         }
 
         [Test]
-        public void New_Valid_ShouldHaveExpectedDefaults()
+        public void New_Default_ShouldHaveExpectedDefaults()
         {
             var revision = new Revision();
 
@@ -35,7 +34,23 @@ namespace L5Sharp.Tests.Core
         }
 
         [Test]
-        public void EqualsTyped_Equal_ShouldBeTrue()
+        public void New_MajorMinor_ShouldHaveExpectedValues()
+        {
+            var revision = new Revision(1, 23);
+
+            revision.Should().Be(1.23);
+        }
+        
+        [Test]
+        public void New_DoubleValue_ShouldHaveExpectedValues()
+        {
+            var revision = new Revision(1.23);
+
+            revision.Should().Be(1.23);
+        }
+
+        [Test]
+        public void Equals_Equal_ShouldBeTrue()
         {
             var first = new Revision();
             var second = new Revision();
@@ -46,74 +61,22 @@ namespace L5Sharp.Tests.Core
         }
 
         [Test]
-        public void EqualsTyped_Same_ShouldBeTrue()
+        public void Equals_Same_ShouldBeTrue()
         {
             var first = new Revision();
 
+            // ReSharper disable once EqualExpressionComparison
             var result = first.Equals(first);
 
             result.Should().BeTrue();
         }
 
         [Test]
-        public void EqualsTyped_Null_ShouldBeFalse()
+        public void Equals_Null_ShouldBeFalse()
         {
             var first = new Revision();
 
             var result = first.Equals(null);
-
-            result.Should().BeFalse();
-        }
-
-        [Test]
-        public void EqualsObject_Equal_ShouldBeTrue()
-        {
-            var first = new Revision();
-            var second = new Revision();
-
-            var result = first.Equals((object)second);
-
-            result.Should().BeTrue();
-        }
-
-        [Test]
-        public void EqualsObject_Same_ShouldBeTrue()
-        {
-            var first = new Revision();
-
-            var result = first.Equals((object)first);
-
-            result.Should().BeTrue();
-        }
-
-        [Test]
-        public void EqualsObject_Null_ShouldBeFalse()
-        {
-            var first = new Revision();
-
-            var result = first.Equals((object)null);
-
-            result.Should().BeFalse();
-        }
-
-        [Test]
-        public void EqualsOperator_Equal_ShouldBeTrue()
-        {
-            var first = new Revision();
-            var second = new Revision();
-
-            var result = first == second;
-
-            result.Should().BeTrue();
-        }
-
-        [Test]
-        public void NotEqualsOperator_Equal_ShouldBeFalse()
-        {
-            var first = new Revision();
-            var second = new Revision();
-
-            var result = first != second;
 
             result.Should().BeFalse();
         }
@@ -126,6 +89,72 @@ namespace L5Sharp.Tests.Core
             var hash = revision.GetHashCode();
 
             hash.Should().NotBe(0);
+        }
+
+        [Test]
+        public void OperatorEquals_Equal_ShouldBeTrue()
+        {
+            var first = new Revision();
+            var second = new Revision();
+
+            var result = first == second;
+
+            result.Should().BeTrue();
+        }
+
+        [Test]
+        public void OperatorNotEquals_Equal_ShouldBeFalse()
+        {
+            var first = new Revision();
+            var second = new Revision();
+
+            var result = first != second;
+
+            result.Should().BeFalse();
+        }
+        
+        [Test]
+        public void OperatorGreaterThan_FirstGreaterThanSecond_ShouldBeTrue()
+        {
+            var first = new Revision(1.2);
+            var second = new Revision(1.1);
+
+            var result = first > second;
+
+            result.Should().BeTrue();
+        }
+        
+        [Test]
+        public void OperatorLessThan_FirstGreaterThanSecond_ShouldBeFalse()
+        {
+            var first = new Revision(1.2);
+            var second = new Revision(1.1);
+
+            var result = first < second;
+
+            result.Should().BeFalse();
+        }
+        
+        [Test]
+        public void OperatorGreaterThanOrEqual_FirstGreaterThanSecond_ShouldBeTrue()
+        {
+            var first = new Revision(1.2);
+            var second = new Revision(1.1);
+
+            var result = first >= second;
+
+            result.Should().BeTrue();
+        }
+        
+        [Test]
+        public void OperatorLessThanOrEqual_FirstGreaterThanSecond_ShouldBeFalse()
+        {
+            var first = new Revision(1.2);
+            var second = new Revision(1.1);
+
+            var result = first <= second;
+
+            result.Should().BeFalse();
         }
     }
 }

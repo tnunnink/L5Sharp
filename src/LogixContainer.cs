@@ -34,21 +34,21 @@ public class LogixContainer<TElement> : IEnumerable<TElement>, ILogixSerializabl
     /// The type name of the child elements in the container. This is needed as we support containers with different
     /// element types, so we need to know the name of the correct type to return and deserialize.
     /// </summary>
-    private readonly XName _typeName = typeof(TElement).LogixTypeName();
+    private readonly XName _typeName = typeof(TElement).L5XType();
 
     /// <summary>
     /// Creates a empty <see cref="LogixContainer{TElement}"/> with the default type name.
     /// </summary>
     public LogixContainer()
     {
-        _element = new XElement($"{typeof(TElement).LogixTypeName()}s");
+        _element = new XElement($"{typeof(TElement).L5XType()}s");
     }
 
     /// <summary>
     /// Creates a empty <see cref="LogixContainer{TElement}"/> with the specified name.
     /// </summary>
     /// <param name="name">The name of the container element.</param>
-    public LogixContainer(string name)
+    public LogixContainer(XName name)
     {
         _element = new XElement(name);
     }

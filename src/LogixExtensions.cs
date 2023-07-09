@@ -457,15 +457,23 @@ public static class LogixExtensions
     #region InternalExtensions
 
     /// <summary>
+    /// Returns the string value as a <see cref="XName"/> value object.
+    /// </summary>
+    /// <param name="value">The string value.</param>
+    /// <returns>A <see cref="XName"/> object containing the string value.</returns>
+    /// <remarks>This is to make converting from string to XName concise.</remarks>
+    internal static XName XName(this string value) => System.Xml.Linq.XName.Get(value);
+
+    /// <summary>
     /// Gets the L5X element name for the specified type. 
     /// </summary>
     /// <param name="type">The type to get the L5X element name for.</param>
-    /// <returns>A <see cref="XName"/> representing the name of the element that corresponds to the type.</returns>
+    /// <returns>A <see cref="System.Xml.Linq.XName"/> representing the name of the element that corresponds to the type.</returns>
     /// <remarks>
     /// All this does is first look for the class attribute <see cref="XmlTypeAttribute"/> to use as the explicitly
     /// configured name, and if not found, returns the type name as the default element name.
     /// </remarks>
-    internal static string LogixTypeName(this Type type)
+    internal static string L5XType(this Type type)
     {
         var attribute = type.GetCustomAttribute<XmlTypeAttribute>();
         return attribute is not null ? attribute.TypeName : type.Name;
@@ -474,9 +482,9 @@ public static class LogixExtensions
     /// <summary>
     /// Determines if a type is derived from the base type, even if the base type is a generic type.
     /// </summary>
-    /// <param name="type"></param>
-    /// <param name="baseType"></param>
-    /// <returns></returns>
+    /// <param name="type">The type to test.</param>
+    /// <param name="baseType">The base type to check.</param>
+    /// <returns><c>true</c> if <c>type</c> inherits directly or indirectly from <c>baseType</c>.</returns>
     internal static bool IsDerivativeOf(this Type type, Type baseType)
     {
         if (type == baseType) return false;

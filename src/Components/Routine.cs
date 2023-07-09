@@ -24,7 +24,7 @@ public class Routine : LogixComponent<Routine>
     public Routine()
     {
         Element.Add(new XAttribute(L5XName.Type, RoutineType.Rll));
-        Element.Add(new XElement($"{Type.Value}Content"));
+        Element.Add(new XElement(ContentName(RoutineType.Rll)));
     }
 
     /// <summary>
@@ -36,7 +36,7 @@ public class Routine : LogixComponent<Routine>
     {
         if (type is null) throw new ArgumentNullException(nameof(type));
         Element.Add(new XAttribute(L5XName.Type, type));
-        Element.Add(new XElement($"{Type.Value}Content"));
+        Element.Add(new XElement(ContentName(type)));
     }
 
     /// <summary>
@@ -55,6 +55,45 @@ public class Routine : LogixComponent<Routine>
     public RoutineType Type => GetRequiredValue<RoutineType>();
 
     /// <summary>
+    /// The online edit type for the <c>ST</c>/<c>FBD</c>/<c>SFC</c> <see cref="Routine"/> type.
+    /// </summary>
+    /// <value>
+    /// If the routine is a <c>ST</c>, <c>FBD</c>, or <c>SFC</c> type, then the <see cref="Enums.OnlineEditType"/> value;
+    /// Otherwise, <c>null</c> for <c>RLL</c> routines.
+    /// </value>
+    public OnlineEditType? OnlineEditType
+    {
+        get => GetValue<OnlineEditType>(e => e.Element(ContentName(Type))?.Attribute(L5XName.OnlineEditType));
+        set => SetValue(value);
+    }
+
+    /// <summary>
+    /// The sheet size for the <c>FBD</c> or <c>SFC</c> <see cref="Routine"/> type.
+    /// </summary>
+    /// <value>
+    /// If the routine is a <c>FBD</c> or <c>SFC</c> type, then the <see cref="Enums.SheetSize"/> value;
+    /// Otherwise, <c>null</c> for <c>RLL</c> or <c>ST</c> routines.
+    /// </value>
+    public SheetSize? SheetSize
+    {
+        get => GetValue<SheetSize>(e => e.Element(ContentName(Type))?.Attribute(L5XName.SheetSize));
+        set => SetValue(value);
+    }
+
+    /// <summary>
+    /// The sheet orientation for the <c>FBD</c> or <c>SFC</c> <see cref="Routine"/> type.
+    /// </summary>
+    /// <value>
+    /// If the routine is a <c>FBD</c> or <c>SFC</c> type, then the <see cref="Enums.SheetOrientation"/> value;
+    /// Otherwise, <c>null</c> for <c>RLL</c> or <c>ST</c> routines.
+    /// </value>
+    public SheetOrientation? SheetOrientation
+    {
+        get => GetValue<SheetOrientation>(e => e.Element(ContentName(Type))?.Attribute(L5XName.SheetOrientation));
+        set => SetValue(value);
+    }
+
+    /// <summary>
     /// Gets the routine content as a <see cref="LogixContainer{TElement}"/> containing elements of the specified type.
     /// </summary>
     /// <typeparam name="TElement">The content element type to return.</typeparam>
@@ -67,10 +106,18 @@ public class Routine : LogixComponent<Routine>
     /// </remarks>
     public LogixContainer<TElement> Content<TElement>() where TElement : LogixElement<TElement>
     {
-        var content = Element.Element($"{Type.Value}Content");
+        var content = Element.Element(ContentName(Type));
 
         return content is not null
             ? new LogixContainer<TElement>(content)
-            : throw new L5XException($"{Type.Value}Content", Element);
+            : throw new L5XException(ContentName(Type), Element);
     }
+
+    /// <summary>
+    /// Generates the L5XName representing the child content element for the routine based on the specified
+    /// <see cref="RoutineType"/>. 
+    /// </summary>
+    /// <param name="type">The routine type for which to generate the L5XName.</param>
+    /// <returns>A <see cref="string"/> representing the L5XName of the routine content element.</returns>
+    private static string ContentName(RoutineType type) => $"{type.Value}Content";
 }

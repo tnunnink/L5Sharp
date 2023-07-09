@@ -3,7 +3,7 @@
 namespace L5Sharp.Enums;
 
 /// <summary>
-/// An enumeration of all <see cref="TaskEventTrigger"/> options for a given <see cref="LogixTask"/>.
+/// An enumeration of all <see cref="TaskEventTrigger"/> options for a given <see cref="Task"/>.
 /// </summary>
 public class TaskEventTrigger : LogixEnum<TaskEventTrigger, string>
 {

@@ -29,8 +29,8 @@ public static class Logix
     /// <param name="name">The name of the task.</param>
     /// <param name="type">The <see cref="Enums.TaskType"/> specifying the type of task.</param>
     /// <param name="description">The description of the task.</param>
-    /// <returns>A <see cref="LogixTask"/> component with the provided property values.</returns>
-    public static LogixTask Task(string? name = null, TaskType? type = null, string? description = null) => new()
+    /// <returns>A <see cref="Components.Task"/> component with the provided property values.</returns>
+    public static Task Task(string? name = null, TaskType? type = null, string? description = null) => new()
     {
         Name = name ?? string.Empty,
         Type = type ?? TaskType.Periodic,

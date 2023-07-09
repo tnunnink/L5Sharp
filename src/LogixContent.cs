@@ -126,10 +126,10 @@ public class LogixContent
     public LogixContainer<Program> Programs => new(L5X.GetContainer(L5XName.Programs));
 
     /// <summary>
-    /// Gets the collection of <see cref="LogixTask"/> components found in the L5X file.
+    /// Gets the collection of <see cref="Task"/> components found in the L5X file.
     /// </summary>
-    /// <value>A <see cref="LogixContainer{TComponent}"/> of <see cref="LogixTask"/> components.</value>
-    public LogixContainer<LogixTask> Tasks => new(L5X.GetContainer(L5XName.Tasks));
+    /// <value>A <see cref="LogixContainer{TComponent}"/> of <see cref="Task"/> components.</value>
+    public LogixContainer<Task> Tasks => new(L5X.GetContainer(L5XName.Tasks));
 
     /// <summary>
     /// The container collection of <see cref="ParameterConnection"/> components found in the L5X file.
@@ -156,7 +156,7 @@ public class LogixContent
     /// <typeparam name="TElement">The element type to find.</typeparam>
     /// <returns>A <see cref="IEnumerable{T}"/> containing all found objects of the specified type.</returns>
     public IEnumerable<TElement> Find<TElement>() where TElement : LogixElement<TElement> =>
-        L5X.Descendants(typeof(TElement).LogixTypeName()).Select(LogixSerializer.Deserialize<TElement>);
+        L5X.Descendants(typeof(TElement).L5XType()).Select(LogixSerializer.Deserialize<TElement>);
 
     /// <summary>
     /// Merges the specified L5X file with the current <see cref="LogixContent"/> L5X by adding or overwriting logix components.

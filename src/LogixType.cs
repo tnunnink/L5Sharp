@@ -240,6 +240,13 @@ public abstract class LogixType : ILogixSerializable
     /// <param name="value">The value to convert.</param>
     /// <returns>A <see cref="LogixType"/> representing the converted value.</returns>
     public static implicit operator LogixType(float value) => new REAL(value);
+    
+    /// <summary>
+    /// Converts the provided <see cref="double"/> to a <see cref="LogixType"/>.
+    /// </summary>
+    /// <param name="value">The value to convert.</param>
+    /// <returns>A <see cref="LogixType"/> representing the converted value.</returns>
+    public static implicit operator LogixType(double value) => new LREAL(value);
 
     /// <summary>
     /// Converts the provided <see cref="byte"/> to a <see cref="LogixType"/>.

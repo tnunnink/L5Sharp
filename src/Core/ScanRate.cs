@@ -5,13 +5,13 @@ using L5Sharp.Components;
 namespace L5Sharp.Core;
 
 /// <summary>
-/// A configurable property of a <see cref="LogixTask"/> that controls the rate at which the task will be evaluated or scanned.
+/// A configurable property of a <see cref="Task"/> that controls the rate at which the task will be evaluated or scanned.
 /// </summary>
 /// <remarks>
 /// <see cref="ScanRate"/> is a simple float value that must be between 0.1 and 2,000,000.0ms.
 /// Attempting to set the <see cref="ScanRate"/> to a value outside that range will result in an
 /// <see cref="ArgumentOutOfRangeException"/>.
-/// This parameter will control the rate at which the <see cref="LogixTask"/> component is scanned.
+/// This parameter will control the rate at which the <see cref="Task"/> component is scanned.
 /// </remarks>
 public readonly struct ScanRate : IEquatable<ScanRate>
 {

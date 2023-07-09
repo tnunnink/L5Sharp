@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Threading;
 using System.Xml.Linq;
 using L5Sharp.Enums;
 using L5Sharp.Types;
@@ -16,8 +15,8 @@ namespace L5Sharp;
 public static class LogixData
 {
     /// <summary>
-    /// The global constructor cache for all <see cref="StructureType"/> objects. This is how we are creating strongly
-    /// types instance of complex type objects.
+    /// The global constructor cache for all <see cref="StructureType"/> objects. This is what we are using to create
+    /// strongly typed structure type objects at runtime.
     /// </summary>
     private static readonly Lazy<Dictionary<string, ConstructorInfo>> Constructors =
         new(() =>
@@ -26,14 +25,14 @@ public static class LogixData
             {
                 ScanMode.None => new Dictionary<string, ConstructorInfo>(),
                 ScanMode.Internal => ScanTypes(typeof(LogixData).Assembly)
-                    .ToDictionary(k => k.Key, k => k.Value, StringComparer.OrdinalIgnoreCase),
+                    .ToDictionary(k => k.Key, k => k.Value),
                 ScanMode.All => AppDomain.CurrentDomain.GetAssemblies()
                     .SelectMany(ScanTypes)
-                    .ToDictionary(k => k.Key, k => k.Value, StringComparer.OrdinalIgnoreCase),
+                    .ToDictionary(k => k.Key, k => k.Value),
                 _ => throw new ArgumentOutOfRangeException(nameof(ScanMode),
                     "Can evaluate constructor cache from current scan mode.")
             };
-        }, LazyThreadSafetyMode.PublicationOnly);
+        });
 
     /// <summary>
     /// 
@@ -103,7 +102,7 @@ public static class LogixData
             throw new ArgumentException(
                 $"Can not register type without a constructor accepting a single {typeof(XElement)} object.");
 
-        var key = type.LogixTypeName();
+        var key = type.L5XType();
 
         if (!Constructors.Value.TryAdd(key, constructor))
             throw new InvalidOperationException($"The type {key} is already registered.");
@@ -252,7 +251,7 @@ public static class LogixData
     /// <summary>
     /// Performs reflection scanning of provided <see cref="Assembly"/> to get all public non abstract types
     /// inheriting from <see cref="StructureType"/> that have the supported deserialization constructor, and returns
-    /// the "LogixTypeName" and <see cref="ConstructorInfo"/> pair for fast lookup. 
+    /// the "L5XType" and <see cref="ConstructorInfo"/> pair for fast lookup. 
     /// </summary>
     private static IEnumerable<KeyValuePair<string, ConstructorInfo>> ScanTypes(Assembly assembly)
     {
@@ -265,7 +264,7 @@ public static class LogixData
         foreach (var type in types)
         {
             var constructor = type.GetConstructor(new[] { typeof(XElement) });
-            yield return new KeyValuePair<string, ConstructorInfo>(type.LogixTypeName(), constructor);
+            yield return new KeyValuePair<string, ConstructorInfo>(type.L5XType(), constructor);
         }
     }
 }
