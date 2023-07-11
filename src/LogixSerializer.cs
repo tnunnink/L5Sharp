@@ -7,8 +7,8 @@ using System.Xml.Linq;
 namespace L5Sharp;
 
 /// <summary>
-/// A static serialization class that handles serializing and deserializing <see cref="LogixElement{TElement}"/>
-/// and <see cref="LogixType"/> objects and their derivatives.
+/// A static deserialization class for <see cref="LogixElement{TElement}"/> objects and their derivatives.
+/// Deserialization requires..
 /// </summary>
 public static class LogixSerializer
 {
@@ -29,18 +29,6 @@ public static class LogixSerializer
 
         return dictionary;
     });
-
-    /*/// <summary>
-    /// The <see cref="ScanMode"/> specifying how <see cref="LogixSerializer"/> should perform reflection scanning
-    /// for types to pre-register for deserialization.
-    /// </summary>
-    /// <remarks>
-    /// The serializer class will perform reflection based scanning for types matching the all the following criteria:
-    /// Public non-abstract classes that derive from <see cref="LogixElement{TElement}"/> or <see cref="LogixType"/> and have public
-    /// constructors accepting a <see cref="XElement"/> object. Types match this criteria will be cached and constructed
-    /// at runtime. 
-    /// </remarks>
-    public static ScanMode Mode { get; set; } = ScanMode.All;*/
 
     /// <summary>
     /// Deserializes a <see cref="XElement"/> into the specified object type.

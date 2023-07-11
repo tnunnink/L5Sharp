@@ -30,6 +30,23 @@ public sealed class Rung : LogixElement<Rung>
     }
 
     /// <summary>
+    /// Creates a new <see cref="Rung"/> initialized with the provided <see cref="NeutralText"/>.
+    /// </summary>
+    /// <param name="text">The <see cref="NeutralText"/> representing the rung logic.</param>
+    /// <param name="comment">The optional string comment of the rung. Default is <c>null</c> (no comment).</param>
+    /// <remarks>This will initialize <see cref="Number"/> to '0' and <see cref="Type"/> to 'Normal'.
+    /// When importing, Logix ignores the rung number and imports Rung's in order of the container sequence,
+    /// meaning, its really only necessary to specify valid text, which is why this constructor is available,
+    /// allowing concise construction of a <c>Rung</c> object.</remarks>
+    public Rung(NeutralText text, string? comment = null)
+    {
+        Number = 0;
+        Type = RungType.Normal;
+        Text = text;
+        Comment = comment;
+    }
+
+    /// <summary>
     /// The zero based number indicating the position of the <see cref="Rung"/> within the containing routine.
     /// </summary>
     public int Number

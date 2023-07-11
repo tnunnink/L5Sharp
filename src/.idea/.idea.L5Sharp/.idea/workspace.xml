@@ -7,38 +7,26 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="Further refinement of Tag/TagName and serialization Fixed critical bugs with deserialization by splitting code between LogixSerializer.cs and LogixData.cs">
-      <change afterPath="$PROJECT_DIR$/Enums/OnlineEditType.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Enums/SheetOrientation.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Enums/SheetSize.cs" afterDir="false" />
+    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="Random clean up and optimizations and testing">
+      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/LogixContentDataTypeTests.RemoveAt_ValidIndex_ShouldBeVerified.verified.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/LogixContentDataTypeTests.Update_ValidDelegateAndCondition_ShouldBeVerified.verified.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/LogixContentDataTypeTests.Update_ValidDelegate_ShouldBeVerified.verified.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Components/DataType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Components/DataType.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Components/LogixTask.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Components/Task.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Components/Module.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Components/Module.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Components/Routine.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Components/Routine.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Components/Tag.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Components/Tag.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/Revision.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/Revision.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/ScanRate.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/ScanRate.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/TaskPriority.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/TaskPriority.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/Watchdog.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/Watchdog.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Enums/TaskEventTrigger.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Enums/TaskEventTrigger.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.sln.DotSettings" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.sln.DotSettings" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5X.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5X.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5XException.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5XException.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5XName.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5XName.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Logix.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Logix.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Elements/Port.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Elements/Port.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Elements/Rung.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Elements/Rung.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LogixComponent.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LogixComponent.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/LogixContainer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LogixContainer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LogixContent.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LogixContent.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/LogixData.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LogixData.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/LogixElement.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LogixElement.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/LogixExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LogixExtensions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LogixType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LogixType.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/DataTypeTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/DataTypeTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/ModuleTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/ModuleTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/ProgramTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/ProgramTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/TagTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/TagTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/TaskTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/TaskTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Core/RevisionTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Core/RevisionTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LogixSerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LogixSerializer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/L5Sharp.Tests.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/L5Sharp.Tests.csproj" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/LogixContentDataTypeTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/LogixContentDataTypeTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/LogixContentMergeTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/LogixContentMergeTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/ProofTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/ProofTests.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -374,7 +362,8 @@
       <workItem from="1687986301123" duration="6676000" />
       <workItem from="1688142803782" duration="13112000" />
       <workItem from="1688174563639" duration="57760000" />
-      <workItem from="1688478813026" duration="84766000" />
+      <workItem from="1688478813026" duration="93342000" />
+      <workItem from="1689024389332" duration="4953000" />
     </task>
     <task id="LOCAL-00199" summary="cleared warnings. preping to merge changes.">
       <created>1677621948966</created>
@@ -719,7 +708,7 @@
       <option name="project" value="LOCAL" />
       <updated>1687451515386</updated>
     </task>
-    <option name="localTasksCounter" value="258" />
+    <option name="localTasksCounter" value="259" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -734,32 +723,32 @@
       <expand>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 27% 10266/14048" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 27% 10306/14088" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 27% 10266/14048" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 19% 4896/6046" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 27% 10306/14088" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 19% 4913/6063" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 27% 10266/14048" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 19% 4896/6046" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="(0.11.0.0, .NETStandard,Version=v2.1) 19% 4896/6046" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 27% 10306/14088" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 19% 4913/6063" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="(0.11.0.0, .NETStandard,Version=v2.1) 19% 4913/6063" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 27% 10266/14048" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 19% 4896/6046" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="(0.11.0.0, .NETStandard,Version=v2.1) 19% 4896/6046" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 19% 4896/6046" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 27% 10306/14088" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 19% 4913/6063" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="(0.11.0.0, .NETStandard,Version=v2.1) 19% 4913/6063" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 19% 4913/6063" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 27% 10266/14048" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 19% 4896/6046" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="(0.11.0.0, .NETStandard,Version=v2.1) 19% 4896/6046" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 19% 4896/6046" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 27% 10306/14088" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 19% 4913/6063" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="(0.11.0.0, .NETStandard,Version=v2.1) 19% 4913/6063" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 19% 4913/6063" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
           <item name="Types 29% 1970/2776" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
       </expand>
@@ -786,7 +775,6 @@
       <path value="$PROJECT_DIR$/../.." />
     </ignored-roots>
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="Fix bug with instruction GetLogic and renamed method." />
     <MESSAGE value="Fixed Instruction Logix regex bug" />
     <MESSAGE value="updated project version" />
     <MESSAGE value="Added lots of new methods to the ComponentCollection.cs for interacting with collections of components. Added Import functionality. Reworked the Routine.cs component. Adding tags and routines to the Program.cs component. Updated documentation. Added QuickWatchList.cs component." />
@@ -811,7 +799,8 @@
     <MESSAGE value="more minor fixes regarding logix types." />
     <MESSAGE value="started to update README.md but need to make new documentation" />
     <MESSAGE value="Further refinement of Tag/TagName and serialization Fixed critical bugs with deserialization by splitting code between LogixSerializer.cs and LogixData.cs" />
-    <option name="LAST_COMMIT_MESSAGE" value="Further refinement of Tag/TagName and serialization Fixed critical bugs with deserialization by splitting code between LogixSerializer.cs and LogixData.cs" />
+    <MESSAGE value="Random clean up and optimizations and testing" />
+    <option name="LAST_COMMIT_MESSAGE" value="Random clean up and optimizations and testing" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

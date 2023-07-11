@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using L5Sharp.Components;
+using L5Sharp.Elements;
 using L5Sharp.Enums;
 using Task = System.Threading.Tasks.Task;
 
@@ -164,6 +165,37 @@ public class LogixContentDataTypeTests
 
         component.Serialize().ToString().Should().Be(result.Serialize().ToString());
     }
+
+    [Test]
+    public void Count_WhenCalled_ShouldNotBeZero()
+    {
+        var content = LogixContent.Load(Known.Test);
+
+        var count = content.DataTypes.Count();
+
+        count.Should().BeGreaterThan(0);
+    }
+
+    [Test]
+    public void RemoveAt_ValidIndex_ShouldHaveExpectedCount()
+    {
+        var content = LogixContent.Load(Known.Test);
+        var count = content.DataTypes.ToList().Count;
+        
+        content.DataTypes.RemoveAt(1);
+
+        content.DataTypes.Count().Should().Be(count - 1);
+    }
+    
+    [Test]
+    public Task RemoveAt_ValidIndex_ShouldBeVerified()
+    {
+        var content = LogixContent.Load(Known.Test);
+
+        content.DataTypes.RemoveAt(1);
+
+        return Verify(content.DataTypes.Serialize().ToString());
+    }
     
     [Test]
     public void Replace_ValidComponent_ShouldHaveExpectedCount()
@@ -206,5 +238,53 @@ public class LogixContentDataTypeTests
         var result = content.DataTypes[0];
 
         component.Serialize().ToString().Should().Be(result.Serialize().ToString());
+    }
+
+    [Test]
+    public void Remove_ValidComponent_ShouldNotLongExists()
+    {
+        var content = LogixContent.Load(Known.Test);
+        
+        var component = content.DataTypes[0];
+        var count = content.DataTypes.Count();
+        var name = component.Name;
+        
+        component.Remove();
+
+        content.DataTypes[0].Name.Should().NotBe(name);
+        content.DataTypes.Count().Should().Be(count - 1);
+    }
+
+    [Test]
+    public void Update_ValidDelegate_ShouldUpdateAllComponents()
+    {
+        var content = LogixContent.Load(Known.Test);
+        
+        content.DataTypes.Update(d => d.Description = "This is an update test");
+
+        foreach (var dataType in content.DataTypes)
+        {
+            dataType.Description.Should().Be("This is an update test");
+        }
+    }
+    
+    [Test]
+    public Task Update_ValidDelegate_ShouldBeVerified()
+    {
+        var content = LogixContent.Load(Known.Test);
+        
+        content.DataTypes.Update(d => d.Description = "This is an update test");
+
+        return Verify(content.DataTypes.Serialize().ToString());
+    }
+
+    [Test]
+    public Task Update_ValidDelegateAndCondition_ShouldBeVerified()
+    {
+        var content = LogixContent.Load(Known.Test);
+        
+        content.DataTypes.Update(d => d.Description = "This is a update", d => d.Name.Contains("Type"));
+
+        return Verify(content.DataTypes.Serialize().ToString());
     }
 }

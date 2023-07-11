@@ -52,7 +52,11 @@ public class Routine : LogixComponent<Routine>
     /// The type of the <see cref="Routine"/> component.
     /// </summary>
     /// <value>A <see cref="Enums.RoutineType"/> enum specifying the type content the routine contains.</value>
-    public RoutineType Type => GetRequiredValue<RoutineType>();
+    public RoutineType Type
+    {
+        get => GetRequiredValue<RoutineType>();
+        set => SetRequiredValue(value);
+    }
 
     /// <summary>
     /// The online edit type for the <c>ST</c>/<c>FBD</c>/<c>SFC</c> <see cref="Routine"/> type.
@@ -63,8 +67,8 @@ public class Routine : LogixComponent<Routine>
     /// </value>
     public OnlineEditType? OnlineEditType
     {
-        get => GetValue<OnlineEditType>(e => e.Element(ContentName(Type))?.Attribute(L5XName.OnlineEditType));
-        set => SetValue(value);
+        get => GetValue<OnlineEditType>(e => e.Element(ContentName(Type)));
+        set => SetValue(value, e => e.Element(ContentName(Type)));
     }
 
     /// <summary>
@@ -76,8 +80,8 @@ public class Routine : LogixComponent<Routine>
     /// </value>
     public SheetSize? SheetSize
     {
-        get => GetValue<SheetSize>(e => e.Element(ContentName(Type))?.Attribute(L5XName.SheetSize));
-        set => SetValue(value);
+        get => GetValue<SheetSize>(e => e.Element(ContentName(Type)));
+        set => SetValue(value, e => e.Element(ContentName(Type)));
     }
 
     /// <summary>
@@ -89,8 +93,8 @@ public class Routine : LogixComponent<Routine>
     /// </value>
     public SheetOrientation? SheetOrientation
     {
-        get => GetValue<SheetOrientation>(e => e.Element(ContentName(Type))?.Attribute(L5XName.SheetOrientation));
-        set => SetValue(value);
+        get => GetValue<SheetOrientation>(e => e.Element(ContentName(Type)));
+        set => SetValue(value, e => e.Element(ContentName(Type)));
     }
 
     /// <summary>

@@ -171,7 +171,7 @@ public class Module : LogixComponent<Module>
     /// <value>A <see cref="ElectronicKeying"/> enum value representing the mode.</value>
     public ElectronicKeying? Keying
     {
-        get => GetValue<ElectronicKeying>(e => e.Element(L5XName.EKey)?.Attribute(L5XName.State));
+        get => Element.Element(L5XName.EKey)?.Attribute(L5XName.State)?.Value.Parse<ElectronicKeying>();
         set
         {
             if (value is null)

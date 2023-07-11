@@ -35,8 +35,15 @@ public static class LogixData
         });
 
     /// <summary>
-    /// 
+    /// The <see cref="ScanMode"/> specifying how <see cref="LogixData"/> should perform reflection scanning
+    /// for types to pre-register for deserialization.
     /// </summary>
+    /// <remarks>
+    /// This class will perform reflection based scanning for types matching the all the following criteria:
+    /// Public non-abstract classes that derive from <see cref="LogixElement{TElement}"/> or <see cref="LogixType"/> and have public
+    /// constructors accepting a <see cref="XElement"/> object. Types match this criteria will be cached and constructed
+    /// at runtime. 
+    /// </remarks>
     public static ScanMode ScanMode { get; set; } = ScanMode.All;
 
     /// <summary>

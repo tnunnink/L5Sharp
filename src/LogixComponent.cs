@@ -77,8 +77,15 @@ public abstract class LogixComponent<TComponent> : LogixElement<TComponent>
                 Element.Element(L5XName.Description)?.Remove();
                 return;
             }
+
+            var description = Element.Element(L5XName.Description);
+            if (description is null)
+            {
+                Element.AddFirst(new XElement(L5XName.Description, new XCData(value)));
+                return;
+            }
             
-            Element.AddFirst(new XElement(L5XName.Description, new XCData(value)));
+            description.ReplaceWith(new XElement(L5XName.Description, new XCData(value)));
         }
     }
 

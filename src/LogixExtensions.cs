@@ -128,6 +128,32 @@ public static class LogixExtensions
 
     #endregion
 
+    #region TagExtensions
+
+    /// <summary>
+    /// Returns a filtered collection of <see cref="Tag"/> that are contained in the specified program name.
+    /// </summary>
+    /// <param name="tags">A collection of <see cref="Tag"/> objects.</param>
+    /// <param name="programName">The program name to filter the tags for.</param>
+    /// <returns>A <see cref="IEnumerable{T}"/> containing tags in the specified program.</returns>
+    public static IEnumerable<Tag> In(this IEnumerable<Tag> tags, string programName)
+    {
+        return tags.Where(t => t.Container() == programName);
+    }
+    
+    /// <summary>
+    /// Returns a filtered collection of <see cref="Tag"/> that have the specified <see cref="Enums.Scope"/> value.
+    /// </summary>
+    /// <param name="tags">A collection of <see cref="Tag"/> objects.</param>
+    /// <param name="scope">The <see cref="Enums.Scope"/> to filter the tags for.</param>
+    /// <returns>A <see cref="IEnumerable{T}"/> containing tags in the specified program.</returns>
+    public static IEnumerable<Tag> In(this IEnumerable<Tag> tags, Scope scope)
+    {
+        return tags.Where(t => t.Scope() == scope);
+    }
+
+    #endregion
+
     #region InstructionExtensions
 
     /// <summary>

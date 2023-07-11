@@ -96,8 +96,9 @@ public abstract class LogixElement<TElement> : ILogixSerializable where TElement
     /// Gets the value of the selected attribute parsed as the specified generic type parameter if it exists.
     /// If the attribute does not exist, returns <c>default</c> value of the generic type parameter.
     /// </summary>
-    /// <param name="selector">A selection delegate that allows custom selection of a attribute relative to the entity element.
-    /// Use this to reach up or down the element hierarchy for different properties</param>
+    /// <param name="selector">A selection delegate that allows custom selection of a element relative to <see cref="Element"/>.
+    /// Use this to reach down the element hierarchy for nested values.</param>
+    /// <param name="name">The name of the attribute.</param>
     /// <typeparam name="T">The return type of the value.</typeparam>
     /// <returns>
     /// If found, the value of attribute parsed as the generic type parameter.
@@ -108,9 +109,9 @@ public abstract class LogixElement<TElement> : ILogixSerializable where TElement
     /// as possible from derived classes. This method uses the <see cref="CallerMemberNameAttribute"/> so the deriving
     /// classes don't have to specify the property name (assuming its the name matches the underlying element property).
     /// </remarks>
-    protected T? GetValue<T>(Func<XElement, XAttribute?> selector)
+    protected T? GetValue<T>(Func<XElement, XElement?> selector, [CallerMemberName] string? name = null)
     {
-        var value = selector.Invoke(Element)?.Value;
+        var value = selector.Invoke(Element)?.Attribute(name)?.Value;
         return value is not null ? value.Parse<T>() : default;
     }
     
@@ -193,9 +194,7 @@ public abstract class LogixElement<TElement> : ILogixSerializable where TElement
         where TChild : LogixElement<TChild>
     {
         var container = Element.Element(name);
-
-        if (container is null) throw new InvalidOperationException($"No container with name {name} exists.");
-
+        if (container is null) throw new L5XException(name!, Element);
         return new LogixContainer<TChild>(container);
     }
 
@@ -230,9 +229,9 @@ public abstract class LogixElement<TElement> : ILogixSerializable where TElement
     /// Otherwise, the value is converted to its string representation and assigned to the Value property of the attribute.</param>
     /// <typeparam name="T">The value type.</typeparam>
     /// <remarks>
-    /// This method it only available to make getting/setting data on <see cref="Element"/> as concise
-    /// as possible from derived classes. This method uses the <see cref="CallerMemberNameAttribute"/> so the deriving
-    /// classes don't have to specify the property name (assuming its the name matches the underlying element property).
+    /// This method makes getting/setting data on <see cref="Element"/> as concise as possible from derived classes.
+    /// This method uses the <see cref="CallerMemberNameAttribute"/> so the deriving classes don't have to specify
+    /// the property name (assuming its the name matches the underlying element property).
     /// </remarks>
     protected void SetValue<T>(T? value, [CallerMemberName] string? name = null)
     {
@@ -240,32 +239,56 @@ public abstract class LogixElement<TElement> : ILogixSerializable where TElement
     }
 
     /// <summary>
+    /// Sets the value of an attribute, adds an attribute, or removes an attribute for a element obtained using the
+    /// provided selector delegate.
+    /// </summary>
+    /// <param name="value">
+    /// The value to assign to the attribute. The attribute is removed if the value is null.
+    /// Otherwise, the value is converted to its string representation and assigned to the Value property of the attribute.
+    /// </param>
+    /// <param name="selector">A selection delegate that allows custom selection of a element relative to <see cref="Element"/>.
+    /// Use this to reach down the element hierarchy for nested values.</param>
+    /// <param name="name">The name of the attribute to set.</param>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <remarks>
+    /// This method helps make getting/setting data on <see cref="Element"/> as concise as possible from derived classes.
+    /// This method uses the <see cref="CallerMemberNameAttribute"/> so the deriving classes don't have to specify
+    /// the property name (assuming its the name matches the underlying element property).
+    /// </remarks>
+    protected void SetValue<T>(T? value, Func<XElement, XElement?> selector, [CallerMemberName] string? name = null)
+    {
+        var element = selector.Invoke(Element);
+        if (element is null) throw new L5XException(name!, Element);
+        element.SetAttributeValue(name, value);
+    }
+
+    /// <summary>
     /// Sets the value of an attribute, adds an attribute, or removes an attribute for a nested element
     /// specified by provided element name.
     /// </summary>
     /// <param name="name">The name of the attribute to set.</param>
-    /// <param name="childName">The name of the child <see cref="XElement"/> for which to set the attribute.
+    /// <param name="child">The name of the child <see cref="XElement"/> for which to set the attribute.
     /// If the element does not exist and attribute is not null, will create the element and add to the parent <see cref="Element"/>.</param>
     /// <param name="value">The value to assign to the attribute. The attribute is removed if the value is null.
     /// Otherwise, the value is converted to its string representation and assigned to the Value property of the attribute.</param>
     /// <typeparam name="T">The value type.</typeparam>
     /// <remarks>
-    /// This method it only available to make getting/setting data on <see cref="Element"/> as concise
-    /// as possible from derived classes. This method uses the <see cref="CallerMemberNameAttribute"/> so the deriving
-    /// classes don't have to specify the property name (assuming its the name matches the underlying element property).
+    /// This method makes getting/setting data on <see cref="Element"/> as concise as possible from derived classes.
+    /// This method uses the <see cref="CallerMemberNameAttribute"/> so the deriving classes don't have to specify
+    /// the property name (assuming its the name matches the underlying element property).
     /// </remarks>
-    protected void SetValue<T>(T? value, XName childName, [CallerMemberName] string? name = null)
+    protected void SetValue<T>(T? value, XName child, [CallerMemberName] string? name = null)
     {
-        var child = Element.Element(childName);
+        var element = Element.Element(child);
 
-        if (child is null)
+        if (element is null)
         {
             if (value is null) return;
-            Element.Add(new XElement(childName));
-            child = Element.Element(childName);
+            element = new XElement(child);
+            Element.Add(element);
         }
         
-        child!.SetAttributeValue(name, value);
+        element.SetAttributeValue(name, value);
     }
 
     /// <summary>

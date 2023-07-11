@@ -11,7 +11,7 @@ public class LogixContentMergeTests
         var content = LogixContent.Load(Known.Test);
         var dataType = LogixContent.Load(Known.DataTypeContent);
         
-        content.Merge(dataType, true);
+        content.Merge(dataType);
 
         var result = content.DataTypes.Find("BoolTest");
         result.Should().NotBeNull();

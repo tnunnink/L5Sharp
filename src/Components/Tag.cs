@@ -54,11 +54,11 @@ public class Tag : LogixComponent<Tag>
     /// This constructor is used internally for methods like <see cref="Member"/> to return new
     /// tag member objects.
     /// </remarks>
-    private Tag(Tag root, Member member, Tag? parent = null) : base(root.Element)
+    private Tag(Tag root, Member member, Tag parent) : base(root.Element)
     {
         _member = member ?? throw new ArgumentNullException(nameof(member));
         Root = root ?? throw new ArgumentNullException(nameof(root));
-        Parent = parent;
+        Parent = parent ?? throw new ArgumentNullException(nameof(parent));
     }
 
     /// <summary>
@@ -196,6 +196,10 @@ public class Tag : LogixComponent<Tag>
     /// description of the parent member, or the specific comment value found on the underlying tag element.
     /// </summary>
     /// <value>A <see cref="string"/> containing the text description for the tag.</value>
+    /// <remarks>
+    /// Setting this value for a nested tag member will update the underlying comments element for the tag.
+    /// Setting this value for the root tag will simply update the <see cref="LogixComponent{TComponent}.Description"/> property.
+    /// </remarks>
     public string? Comment
     {
         get => GetComment();
@@ -494,21 +498,20 @@ public class Tag : LogixComponent<Tag>
     }
 
     /// <summary>
-    /// 
+    /// Handles setting the <see cref="DataType"/>, <see cref="Radix"/>, and <see cref="Dimensions"/> of the underlying
+    /// element for the tag.
     /// </summary>
     private void SetTagAttributes(LogixType value)
     {
         Element.SetAttributeValue(L5XName.DataType, value.Name);
-        switch (value)
-        {
-            case AtomicType atomicType:
-                Element.SetAttributeValue(L5XName.Radix, atomicType.Radix);
-                break;
-            case ArrayType { Dimensions.IsEmpty: false } arrayType:
-                Element.SetAttributeValue(L5XName.Dimensions, arrayType.Dimensions);
-                if (arrayType.Radix != Radix.Null) Element.SetAttributeValue(L5XName.Radix, arrayType.Radix);
-                break;
-        }
+
+        var radix = value is AtomicType atomicType ? atomicType.Radix
+            : value is ArrayType arrayType && arrayType.Radix != Radix.Null ? arrayType.Radix
+            : null;
+        Element.SetAttributeValue(L5XName.Radix, radix);
+
+        var dimensions = value is ArrayType array ? array.Dimensions : null;
+        Element.SetAttributeValue(L5XName.Dimensions, dimensions);
     }
 
     /// <summary>

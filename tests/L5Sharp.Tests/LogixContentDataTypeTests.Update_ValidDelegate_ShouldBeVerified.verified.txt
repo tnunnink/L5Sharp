@@ -1,0 +1,149 @@
+﻿<DataTypes>
+  <DataType Name="AlarmType" Family="NoFamily" Class="User">
+    <Description><![CDATA[This is an update test]]></Description>
+    <Members>
+      <Member Name="DigitalMember" DataType="CAM" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write">
+        <Description><![CDATA[Test digital member]]></Description>
+      </Member>
+    </Members>
+  </DataType>
+  <DataType Name="ArrayType" Family="NoFamily" Class="User">
+    <Description><![CDATA[This is an update test]]></Description>
+    <Members>
+      <Member Name="SintArray" DataType="SINT" Dimension="5" Radix="ASCII" Hidden="false" ExternalAccess="Read/Write">
+        <Description><![CDATA[Test Sint Array]]></Description>
+      </Member>
+      <Member Name="IntArray" DataType="INT" Dimension="5" Radix="Octal" Hidden="false" ExternalAccess="Read/Write">
+        <Description><![CDATA[Test Int Array]]></Description>
+      </Member>
+      <Member Name="DintArray" DataType="DINT" Dimension="5" Radix="Hex" Hidden="false" ExternalAccess="Read/Write">
+        <Description><![CDATA[Test 
+Dint Array]]></Description>
+      </Member>
+      <Member Name="LintArray" DataType="LINT" Dimension="5" Radix="Date/Time" Hidden="false" ExternalAccess="Read/Write">
+        <Description><![CDATA[Test Lint Array]]></Description>
+      </Member>
+      <Member Name="RealArray" DataType="REAL" Dimension="5" Radix="Exponential" Hidden="false" ExternalAccess="Read/Write">
+        <Description><![CDATA[Test Real Array]]></Description>
+      </Member>
+      <Member Name="BoolArray" DataType="BOOL" Dimension="32" Radix="Binary" Hidden="false" ExternalAccess="Read/Write">
+        <Description><![CDATA[Test Bool Array]]></Description>
+      </Member>
+      <Member Name="StringArray" DataType="STRING" Dimension="5" Radix="NullType" Hidden="false" ExternalAccess="Read/Write">
+        <Description><![CDATA[Test String Array]]></Description>
+      </Member>
+    </Members>
+  </DataType>
+  <DataType Name="BoolTest" Family="NoFamily" Class="User">
+    <Description><![CDATA[This is an update test]]></Description>
+    <Members>
+      <Member Name="Member01" DataType="BOOL" Dimension="0" Radix="Decimal" Hidden="false" ExternalAccess="Read/Write" />
+      <Member Name="Member02" DataType="BOOL" Dimension="0" Radix="Decimal" Hidden="false" ExternalAccess="Read/Write" />
+      <Member Name="Member04" DataType="BOOL" Dimension="0" Radix="Decimal" Hidden="false" ExternalAccess="Read/Write" />
+      <Member Name="Member05" DataType="BOOL" Dimension="0" Radix="Decimal" Hidden="false" ExternalAccess="Read/Write" />
+    </Members>
+  </DataType>
+  <DataType Name="ComplexType" Family="NoFamily" Class="User">
+    <Description><![CDATA[This is an update test]]></Description>
+    <Members>
+      <Member Name="SimpleMember" DataType="SimpleType" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write">
+        <Description><![CDATA[User defined complex type]]></Description>
+      </Member>
+      <Member Name="CounterMember" DataType="COUNTER" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write">
+        <Description><![CDATA[Test counter member]]></Description>
+      </Member>
+      <Member Name="TimeMember" DataType="TIMER" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write">
+        <Description><![CDATA[Test Timer member]]></Description>
+      </Member>
+      <Member Name="AlarmMember" DataType="ALARM" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write">
+        <Description><![CDATA[Test Analog Alarm]]></Description>
+      </Member>
+      <Member Name="AOIType" DataType="aoi_Test" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write">
+        <Description><![CDATA[Test aoi]]></Description>
+      </Member>
+      <Member Name="SimplArray" DataType="SimpleType" Dimension="5" Radix="NullType" Hidden="false" ExternalAccess="Read/Write">
+        <Description><![CDATA[Test simple array type]]></Description>
+      </Member>
+      <Member Name="ZZZZZZZZZZComplexTyp6" DataType="SINT" Dimension="0" Radix="Decimal" Hidden="true" ExternalAccess="Read/Write" />
+      <Member Name="NewMember" DataType="BIT" Dimension="0" Radix="Decimal" Hidden="false" Target="ZZZZZZZZZZComplexTyp6" BitNumber="0" ExternalAccess="Read/Write">
+        <Description><![CDATA[This is a new member]]></Description>
+      </Member>
+      <Member Name="StringMember" DataType="STRING" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write">
+        <Description><![CDATA[This is a test string member]]></Description>
+      </Member>
+      <Member Name="MyStringMember" DataType="MyStringType" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write">
+        <Description><![CDATA[This is a test custom string type]]></Description>
+      </Member>
+    </Members>
+  </DataType>
+  <DataType Name="FakeString" Family="NoFamily" Class="User">
+    <Description><![CDATA[This is an update test]]></Description>
+    <Members>
+      <Member Name="LEN" DataType="DINT" Dimension="0" Radix="Decimal" Hidden="false" ExternalAccess="Read/Write" />
+      <Member Name="DATA" DataType="SINT" Dimension="23" Radix="Decimal" Hidden="false" ExternalAccess="Read/Write" />
+    </Members>
+  </DataType>
+  <DataType Name="InvalidType" Family="NoFamily" Class="User">
+    <Description><![CDATA[This is an update test]]></Description>
+    <Members>
+      <Member Name="Invalid01" DataType="NULL" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write">
+        <Description><![CDATA[Test]]></Description>
+      </Member>
+    </Members>
+  </DataType>
+  <DataType Name="ModuleType" Family="NoFamily" Class="User">
+    <Description><![CDATA[This is an update test]]></Description>
+    <Members>
+      <Member Name="AIChannel" DataType="CHANNEL_AI:O:0" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write">
+        <Description><![CDATA[This is a test]]></Description>
+      </Member>
+      <Member Name="TestChannel" DataType="CHANNEL_AI:O:0" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write">
+        <Description><![CDATA[This is a test]]></Description>
+      </Member>
+    </Members>
+  </DataType>
+  <DataType Name="MyStringType" Family="StringFamily" Class="User">
+    <Description><![CDATA[This is an update test]]></Description>
+    <Members>
+      <Member Name="LEN" DataType="DINT" Dimension="0" Radix="Decimal" Hidden="false" ExternalAccess="Read/Write" />
+      <Member Name="DATA" DataType="SINT" Dimension="100" Radix="ASCII" Hidden="false" ExternalAccess="Read/Write" />
+    </Members>
+  </DataType>
+  <DataType Name="NestedType" Family="NoFamily" Class="User">
+    <Description><![CDATA[This is an update test]]></Description>
+    <Members>
+      <Member Name="Complex" DataType="ComplexType" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write">
+        <Description><![CDATA[This is the nested complex type]]></Description>
+      </Member>
+      <Member Name="Simple" DataType="SimpleType" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write">
+        <Description><![CDATA[This is a nested simple type]]></Description>
+      </Member>
+    </Members>
+  </DataType>
+  <DataType Name="SimpleType" Family="NoFamily" Class="User">
+    <Description><![CDATA[This is an update test]]></Description>
+    <Members>
+      <Member Name="ZZZZZZZZZZSimpleType0" DataType="SINT" Dimension="0" Radix="Decimal" Hidden="true" ExternalAccess="Read/Write" />
+      <Member Name="BoolMember" DataType="BIT" Dimension="0" Radix="Hex" Hidden="false" Target="ZZZZZZZZZZSimpleType0" BitNumber="0" ExternalAccess="Read/Write">
+        <Description><![CDATA[Test Boolean update]]></Description>
+      </Member>
+      <Member Name="SintMember" DataType="SINT" Dimension="0" Radix="Hex" Hidden="false" ExternalAccess="Read/Write">
+        <Description><![CDATA[Test Sint]]></Description>
+      </Member>
+      <Member Name="IntMember" DataType="INT" Dimension="0" Radix="Octal" Hidden="false" ExternalAccess="Read/Write">
+        <Description><![CDATA[Test Int]]></Description>
+      </Member>
+      <Member Name="DintMember" DataType="DINT" Dimension="0" Radix="ASCII" Hidden="false" ExternalAccess="None">
+        <Description><![CDATA[Test Dint comment]]></Description>
+      </Member>
+      <Member Name="LintMember" DataType="LINT" Dimension="0" Radix="Decimal" Hidden="false" ExternalAccess="Read/Write">
+        <Description><![CDATA[Test Lint]]></Description>
+      </Member>
+      <Member Name="NewMember" DataType="DINT" Dimension="0" Radix="Decimal" Hidden="false" ExternalAccess="Read/Write">
+        <Description><![CDATA[This is a test member]]></Description>
+      </Member>
+      <Member Name="ZZZZZZZZZZSimpleType7" DataType="SINT" Dimension="0" Radix="Decimal" Hidden="true" ExternalAccess="Read/Write" />
+      <Member Name="A1" DataType="BIT" Dimension="0" Radix="Decimal" Hidden="false" Target="ZZZZZZZZZZSimpleType7" BitNumber="0" ExternalAccess="Read/Write" />
+    </Members>
+  </DataType>
+</DataTypes>

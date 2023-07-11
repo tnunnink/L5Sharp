@@ -56,9 +56,9 @@ public sealed class Port : LogixElement<Port>
     /// This value appears to be specific to the product. Ports with IP will have 'Network' for their type. This
     /// property is required for importing a <see cref="Module"/> correctly.
     /// </remarks>
-    public string Type
+    public string? Type
     {
-        get => GetValue<string>() ?? string.Empty;
+        get => GetValue<string>();
         set => SetValue(value);
     }
 
@@ -99,7 +99,23 @@ public sealed class Port : LogixElement<Port>
     /// </remarks>
     public byte? BusSize
     {
-        get => GetValue<byte?>(e => e.Element(L5XName.Bus)?.Attribute(L5XName.Size));
-        set => throw new NotImplementedException();
+        get => Element.Element(L5XName.Bus)?.Attribute(L5XName.Size)?.Value.Parse<byte>();
+        set
+        {
+            if (value is null)
+            {
+                Element.Element(L5XName.Bus)?.Remove();
+                return;
+            }
+            
+            var bus = Element.Element(L5XName.Bus);
+            if (bus is null)
+            {
+                bus = new XElement(L5XName.Bus);
+                Element.Add(bus);
+            }
+            
+            bus.SetAttributeValue(L5XName.Size, value);
+        }
     }
 }

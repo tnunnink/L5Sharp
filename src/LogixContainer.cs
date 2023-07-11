@@ -12,13 +12,15 @@ namespace L5Sharp;
 /// <typeparam name="TElement">The type inheriting <see cref="LogixElement{TElement}"/>.</typeparam>
 /// <remarks>
 /// <para>
-/// This class represents a wrapper around a L5X element that contain a sequence of child element of the same type. This class
-/// exposes collection methods for querying and modifying child elements of the container.
+/// This class represents a wrapper around a L5X element that contains a sequence of child elements of the same type.
+/// This class exposes collection methods for querying and modifying child elements of the container.
+/// Note that a container could potentially contain more than one type of child element, but this container class will
+/// only operate over the specified element type.
 /// </para>
 /// <para>
-/// The class is was designed to only offer very simple/basic operations allowing it to be applicable to all container type elements,
-/// However, the user can extended via extension methods by calling <see cref="Serialize"/> to get the underlying
-/// <see cref="XElement"/> container object. See <see cref="LogixExtensions"/> for examples.
+/// The class is designed to only offer very basic operations, allowing it to be applicable to all container type elements,
+/// However, the user can extended the API for any container type using extension methods and <see cref="Serialize"/>
+/// to get the underlying <see cref="XElement"/> container object. See <see cref="LogixExtensions"/> for examples.
 /// </para>
 /// </remarks>
 public class LogixContainer<TElement> : IEnumerable<TElement>, ILogixSerializable
@@ -45,7 +47,7 @@ public class LogixContainer<TElement> : IEnumerable<TElement>, ILogixSerializabl
     }
 
     /// <summary>
-    /// Creates a empty <see cref="LogixContainer{TElement}"/> with the specified name.
+    /// Creates a empty <see cref="LogixContainer{TElement}"/> with the specified type name.
     /// </summary>
     /// <param name="name">The name of the container element.</param>
     public LogixContainer(XName name)
@@ -77,45 +79,32 @@ public class LogixContainer<TElement> : IEnumerable<TElement>, ILogixSerializabl
             if (component is null)
                 throw new ArgumentNullException(nameof(component));
 
-            var last = _element.Elements(_typeName).LastOrDefault();
-
-            if (last is null)
-            {
-                _element.Add(component.Serialize());
-                continue;
-            }
-
-            last.AddAfterSelf(component.Serialize());
+            _element.Add(component.Serialize());
         }
     }
-    
-    /// <summary>
-    /// Gets the container's attached root as a <see cref="LogixContent"/> instance if it exists. 
-    /// </summary>
-    /// <returns>If the current element is attached to a L5X document (i.e. has a root content element),
-    /// then a new <see cref="LogixContent"/> instance wrapping the root; Otherwise, <c>null</c>.</returns>
-    /// <remarks>When creating in memory instance, this will be null until it is attached or added to a L5X file via
-    /// the <c>LogixContent</c> class.</remarks>
-    public LogixContent? Content()
-    {
-        var content = _element.Ancestors(L5XName.RSLogix5000Content).FirstOrDefault();
-        return content is not null ? new LogixContent(content) : default;
-    }
 
     /// <summary>
-    /// Accesses a single element at the specified index of the collection.
+    /// Accesses a single element at the specified index of the container collection.
     /// </summary>
     /// <param name="index">The zero based index of the element to retrieve.</param>
+    /// <returns>The element at the specified position in the source container.</returns>
     /// <exception cref="ArgumentOutOfRangeException"><c>index</c> is less than zero or greater than or equal to the
     /// number of elements in the collection.</exception>
+    /// <exception cref="ArgumentNullException"><c>value</c> is null when setting index.</exception>
     public TElement this[int index]
     {
         get => LogixSerializer.Deserialize<TElement>(_element.Elements(_typeName).ElementAt(index));
-        set => _element.Elements(_typeName).ElementAt(index).ReplaceWith(value.Serialize());
+        set
+        {
+            if (value is null)
+                throw new ArgumentNullException(nameof(value),
+                    $"Can not set container element of type {typeof(TElement)} null instance.");
+            _element.Elements(_typeName).ElementAt(index).ReplaceWith(value.Serialize());
+        }
     }
 
     /// <summary>
-    /// Adds the provided element to the collection.
+    /// Adds the provided element to the logix container at the end of the collection.
     /// </summary>
     /// <param name="element">The element to add.</param>
     /// <exception cref="ArgumentNullException"><c>element</c> is null.</exception>
@@ -136,28 +125,29 @@ public class LogixContainer<TElement> : IEnumerable<TElement>, ILogixSerializabl
     }
 
     /// <summary>
-    /// Adds the provided elements to the collection.
+    /// Adds the provided elements to the logix container at the end of the collection.
     /// </summary>
     /// <param name="elements">The collection of elements to add.</param>
+    /// <exception cref="ArgumentNullException"><c>elements</c> or any element in <c>elements</c> is null.</exception>
     public void AddRange(IEnumerable<TElement> elements)
     {
         if (elements is null)
             throw new ArgumentNullException(nameof(elements));
 
-        foreach (var component in elements)
+        foreach (var element in elements)
         {
-            if (component is null)
-                throw new ArgumentNullException(nameof(component));
+            if (element is null)
+                throw new ArgumentNullException(nameof(element));
 
             var last = _element.Elements(_typeName).LastOrDefault();
 
             if (last is null)
             {
-                _element.Add(component.Serialize());
+                _element.Add(element.Serialize());
                 continue;
             }
 
-            last.AddAfterSelf(component.Serialize());
+            last.AddAfterSelf(element.Serialize());
         }
     }
 
@@ -168,7 +158,7 @@ public class LogixContainer<TElement> : IEnumerable<TElement>, ILogixSerializabl
     public int Count() => _element.Elements(_typeName).Count();
 
     /// <summary>
-    /// Inserts the provided element at the specified index of the collection.
+    /// Inserts the provided element at the specified index of the container collection.
     /// </summary>
     /// <param name="index">The zero based index at which to insert the element.</param>
     /// <param name="element">The element to insert.</param>
@@ -180,21 +170,24 @@ public class LogixContainer<TElement> : IEnumerable<TElement>, ILogixSerializabl
         if (element is null)
             throw new ArgumentNullException(nameof(element));
 
-        var count = _element.Elements(_typeName).Count();
-
-        if (index == count)
-        {
-            _element.Add(element.Serialize());
-            return;
-        }
-
         _element.Elements(_typeName).ElementAt(index).AddBeforeSelf(element.Serialize());
     }
 
     /// <summary>
-    /// Removes all elements in the collection.
+    /// Removes all elements in the container collection.
     /// </summary>
-    public void Remove() => _element.Elements(_typeName).Remove();
+    public void RemoveAll() => _element.Elements(_typeName).Remove();
+
+    /// <summary>
+    /// Removes all elements that satisfy the provided condition predicate.
+    /// </summary>
+    /// <param name="condition">The condition for which to remove elements.</param>
+    /// <exception cref="ArgumentNullException"><c>condition</c> is null.</exception>
+    public void RemoveAll(Func<TElement, bool> condition)
+    {
+        if (condition is null) throw new ArgumentNullException(nameof(condition));
+        _element.Elements(_typeName).Where(e => condition.Invoke(LogixSerializer.Deserialize<TElement>(e))).Remove();
+    }
 
     /// <summary>
     /// Removes a element at the specified index of the collection.
@@ -205,17 +198,6 @@ public class LogixContainer<TElement> : IEnumerable<TElement>, ILogixSerializabl
     public void RemoveAt(int index)
     {
         _element.Elements(_typeName).ElementAt(index).Remove();
-    }
-
-    /// <summary>
-    /// Removes all elements that satisfy the provided condition predicate.
-    /// </summary>
-    /// <param name="condition">The condition for which to remove elements.</param>
-    /// <exception cref="ArgumentNullException"><c>condition</c> is null.</exception>
-    public void Remove(Func<TElement, bool> condition)
-    {
-        if (condition is null) throw new ArgumentNullException(nameof(condition));
-        _element.Elements(_typeName).Where(e => condition.Invoke(LogixSerializer.Deserialize<TElement>(e))).Remove();
     }
 
     /// <summary>
@@ -239,7 +221,7 @@ public class LogixContainer<TElement> : IEnumerable<TElement>, ILogixSerializabl
     /// update action delegate.
     /// </summary>
     /// <param name="update">A update to apply to each element.</param>
-    /// <param name="condition">The condition for which to remove elements.</param>
+    /// <param name="condition">The condition for which to update elements.</param>
     /// <exception cref="ArgumentNullException"><c>update</c> or <c>condition</c> is null.</exception>
     public void Update(Action<TElement> update, Func<TElement, bool> condition)
     {

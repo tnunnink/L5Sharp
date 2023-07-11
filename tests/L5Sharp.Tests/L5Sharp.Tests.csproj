@@ -133,6 +133,15 @@
       <None Update="Components\TagTests.Remove_ValidTag_ShouldBeVerified.verified.txt">
         <DependentUpon>TagTests.cs</DependentUpon>
       </None>
+      <None Update="LogixContentDataTypeTests.Update_ValidDelegate_ShouldBeVerified.verified.txt">
+        <DependentUpon>LogixContentDataTypeTests.cs</DependentUpon>
+      </None>
+      <None Update="LogixContentDataTypeTests.Update_ValidDelegateAndCondition_ShouldBeVerified.verified.txt">
+        <DependentUpon>LogixContentDataTypeTests.cs</DependentUpon>
+      </None>
+      <None Update="LogixContentDataTypeTests.RemoveAt_ValidIndex_ShouldBeVerified.verified.txt">
+        <DependentUpon>LogixContentDataTypeTests.cs</DependentUpon>
+      </None>
     </ItemGroup>
 
     <ItemGroup>
