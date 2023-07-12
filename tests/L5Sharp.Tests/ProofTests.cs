@@ -10,34 +10,31 @@ namespace L5Sharp.Tests;
 [TestFixture]
 public class ProofTests
 {
+    /// <summary>
+    /// This creates a tag lookup table based on the full TagName so that tags can be retrieved by TagName
+    /// very quickly.
+    /// </summary>
     [Test]
-    public void ModuleTagComments()
-    {
-        var content = LogixContent.Load(@"C:\Users\tnunnink\Local\Transfer\Site.L5X");
-
-        var config = content.Modules.Get("R0S4").Config;
-
-        var comment = config?.Member(".CH0CountLimit")?.Description;
-
-        comment.Should().NotBeEmpty();
-    }
-
-    /*[Test]
     public void TagLookup()
     {
         var content = LogixContent.Load(@"C:\Users\tnunnink\Local\Tests\L5X\Template.L5X");
 
-        var tagLookup = content.Find<Tag>().SelectMany(t => t.MembersAndSelf()).ToLookup(k => k.TagName, t => t);
+        var tagLookup = content.Find<Tag>().SelectMany(t => t.Members()).ToLookup(k => k.TagName, t => t);
 
         var target = tagLookup.FirstOrDefault(t => t.Key == "Spare_DI_Channel_5094.ChData");
         target.Should().NotBeEmpty();
 
         var result = tagLookup.Contains("Spare_DI_Channel_5094.ChData");
         result.Should().BeTrue();
-    }*/
+    }
 
+
+    /// <summary>
+    /// This query gets a ordered list of all tags that have TIMER data type and returns the results as
+    /// TagName/Description/Preset anonymous object
+    /// </summary>
     [Test]
-    public void SomeBasicTagQuerying()
+    public void SampleQuery001()
     {
         var content = LogixContent.Load(Known.Template);
 
@@ -50,9 +47,9 @@ public class ProofTests
 
         results.Should().NotBeEmpty();
     }
-    
+
     [Test]
-    public void SomeAlarmTagQuerying()
+    public void SampleQuery002()
     {
         var content = LogixContent.Load(Known.Template);
 
@@ -65,8 +62,11 @@ public class ProofTests
         results.Should().NotBeEmpty();
     }
 
+    /// <summary>
+    /// Get all program tags of type DINT that are not arrays.
+    /// </summary>
     [Test]
-    public void SomeTagQueryForTagsInProgramWithType()
+    public void SampleQuery003()
     {
         var content = LogixContent.Load(Known.Test);
 
@@ -75,6 +75,9 @@ public class ProofTests
         results.Should().NotBeEmpty();
     }
 
+    /// <summary>
+    /// Verify getting a module member tag comment is working
+    /// </summary>
     [Test]
     public void GetLogixDigitalInputAoi()
     {
@@ -88,6 +91,24 @@ public class ProofTests
         logix.Should().NotBeEmpty();
     }
 
+    /// <summary>
+    /// Verify getting a module member tag comment is working
+    /// </summary>
+    [Test]
+    public void ModuleTagComments()
+    {
+        var content = LogixContent.Load(@"C:\Users\tnunnink\Local\Transfer\Site.L5X");
+
+        var config = content.Modules.Get("R0S4").Config;
+
+        var comment = config?.Member("CH0CountLimit")?.Comment;
+
+        comment.Should().NotBeNull();
+    }
+
+    /// <summary>
+    /// Verify the Logic exension is working for custom instruction
+    /// </summary>
     [Test]
     public void GetLogixMmInstruction()
     {

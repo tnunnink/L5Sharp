@@ -24,7 +24,7 @@ public abstract class LogixComponent<TComponent> : LogixElement<TComponent>
     /// <inheritdoc />
     protected LogixComponent()
     {
-        Element.Add(new XAttribute(L5XName.Name, string.Empty));
+        Element.SetAttributeValue(L5XName.Name, string.Empty);
     }
 
     /// <inheritdoc />

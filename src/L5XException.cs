@@ -33,17 +33,6 @@ public class L5XException : XmlException
     }
 
     /// <summary>
-    /// Creates a new <see cref="L5XException"/> with the provided custom message and target <see cref="XElement"/> that
-    /// the exception was throw for.
-    /// </summary>
-    /// <param name="message">The custom error message for the exception.</param>
-    /// <param name="element">The element generating the exception.</param>
-    public L5XException(string message, XElement element) : base(message)
-    {
-        Element = element;
-    }
-
-    /// <summary>
     /// The <see cref="XElement"/> that produced the exception.
     /// </summary>
     // ReSharper disable once UnusedAutoPropertyAccessor.Global

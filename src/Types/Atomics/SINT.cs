@@ -15,7 +15,7 @@ public sealed class SINT : AtomicType, IComparable
     /// </summary>
     public SINT()
     {
-        _value = 0;
+        _value = default;
         Radix = Radix.Decimal;
     }
 
@@ -35,7 +35,7 @@ public sealed class SINT : AtomicType, IComparable
     /// <param name="radix">The <see cref="Enums.Radix"/> number format of the value.</param>
     public SINT(Radix radix)
     {
-        _value = 0;
+        _value = default;
         if (radix is null) throw new ArgumentNullException(nameof(radix));
         if (!radix.SupportsType(this))
             throw new ArgumentException($"Invalid Radix {radix} for atomic type {Name}.", nameof(radix));

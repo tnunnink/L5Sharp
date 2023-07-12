@@ -52,9 +52,7 @@ public class Member : ILogixSerializable
     public Member(XElement element)
     {
         if (element is null) throw new ArgumentNullException(nameof(element));
-
-        Name = element.Attribute(L5XName.Name)?.Value ??
-               (element.Attribute(L5XName.Index)?.Value ?? throw new L5XException(L5XName.Name, element));
+        Name = element.Attribute(L5XName.Name)?.Value ?? (element.Attribute(L5XName.Index)?.Value ?? string.Empty);
         _dataType = LogixData.Deserialize(element);
     }
 

@@ -8,7 +8,6 @@ namespace L5Sharp;
 
 /// <summary>
 /// A static deserialization class for <see cref="LogixElement{TElement}"/> objects and their derivatives.
-/// Deserialization requires..
 /// </summary>
 public static class LogixSerializer
 {

@@ -70,7 +70,7 @@ public class MemberTests
 
         dataType.Should().NotBeNull();
         dataType.Should().BeOfType<STRING>();
-        dataType.Should().BeEquivalentTo("This is a test");
+        dataType.Should().Be("This is a test");
     }
 
     [Test]

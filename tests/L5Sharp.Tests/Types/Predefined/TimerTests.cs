@@ -119,8 +119,7 @@ namespace L5Sharp.Tests.Types.Predefined
             var result = type.Set(expected).As<TIMER>();
             
             result.PRE.Should().Be(expected.PRE);
-            result.Should().NotBeSameAs(type);
-            type.PRE.Should().NotBe(expected.PRE);
+            result.Should().BeSameAs(type);
         }
         
         [Test]

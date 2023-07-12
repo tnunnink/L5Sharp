@@ -17,12 +17,14 @@ public class StringTypeTests
     [Test]
     public void New_NullName_ShouldThrowException()
     {
-        FluentActions.Invoking(() => new StringType(null!, "")).Should().Throw<ArgumentNullException>();
+        FluentActions.Invoking(() => new StringType(null!, "")).Should().Throw<ArgumentException>();
     }
     
     [Test]
     public void New_NullValue_ShouldThrowException()
     {
-        FluentActions.Invoking(() => new StringType("Test", null!)).Should().Throw<ArgumentNullException>();
+        var type = new StringType("Test", null!);
+
+        type.Should().BeEmpty(string.Empty);
     }
 }

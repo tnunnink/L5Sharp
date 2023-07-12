@@ -66,6 +66,9 @@ public static class LogixData
         {
             L5XName.Tag => DeserializeData(element),
             L5XName.LocalTag => DeserializeData(element),
+            L5XName.ConfigTag => DeserializeData(element),
+            L5XName.InputTag => DeserializeData(element),
+            L5XName.OutputTag => DeserializeData(element),
             L5XName.Data => DeserializeFormatted(element),
             L5XName.DefaultData => DeserializeFormatted(element),
             L5XName.DataValue => DeserializeAtomic(element),

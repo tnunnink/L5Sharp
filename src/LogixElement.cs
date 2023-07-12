@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Globalization;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Xml.Linq;
 
@@ -56,20 +55,10 @@ public abstract class LogixElement<TElement> : ILogixSerializable where TElement
     /// Returns a new deep cloned instance of the current type.
     /// </summary>
     /// <returns>A new instance of the specified entity type with the same property values.</returns>
-    /// <exception cref="InvalidOperationException">The object being cloned does not have a constructor accepting a single <see cref="XElement"/> argument.</exception>
+    /// <exception cref="InvalidOperationException">The object being cloned does not have a constructor accepting a
+    /// single <see cref="XElement"/> argument.</exception>
     /// <remarks>This method will simply deserialize a new instance using the current underlying element data.</remarks>
     public TElement Clone() => (TElement)LogixSerializer.Deserialize(GetType(), new XElement(Element));
-
-    /// <summary>
-    /// Gets the element's attached root as a <see cref="LogixContent"/> instance if it exists. 
-    /// </summary>
-    /// <returns>If the current element is attached to a L5X document (i.e. has a root content element),
-    /// then a new <see cref="LogixContent"/> instance wrapping the root; Otherwise, <c>null</c>.</returns>
-    public LogixContent? Content()
-    {
-        var content = Element.Ancestors(L5XName.RSLogix5000Content).FirstOrDefault();
-        return content is not null ? new LogixContent(content) : default;
-    }
 
     /// <summary>
     /// Gets the value of the specified attribute name from the element parsed as the specified generic type parameter if it exists.
@@ -82,9 +71,9 @@ public abstract class LogixElement<TElement> : ILogixSerializable where TElement
     /// If not found, returns <c>default</c>.
     /// </returns>
     /// <remarks>
-    /// This method it available to make getting/setting data on <see cref="Element"/> as concise
-    /// as possible for derived classes. This method uses the <see cref="CallerMemberNameAttribute"/> so the deriving
-    /// classes don't have to specify the property name (assuming its the name matches the underlying element property).
+    /// This method makes getting/setting data on <see cref="Element"/> as concise as possible from derived classes.
+    /// This method uses the <see cref="CallerMemberNameAttribute"/> so the deriving classes don't have to specify
+    /// the property name (assuming its the name matches the underlying element property).
     /// </remarks>
     protected T? GetValue<T>([CallerMemberName] string? name = null)
     {
@@ -105,9 +94,9 @@ public abstract class LogixElement<TElement> : ILogixSerializable where TElement
     /// If not found, returns <c>default</c>.
     /// </returns>
     /// <remarks>
-    /// This method it only available to make getting/setting data on <see cref="Element"/> as concise
-    /// as possible from derived classes. This method uses the <see cref="CallerMemberNameAttribute"/> so the deriving
-    /// classes don't have to specify the property name (assuming its the name matches the underlying element property).
+    /// This method makes getting/setting data on <see cref="Element"/> as concise as possible from derived classes.
+    /// This method uses the <see cref="CallerMemberNameAttribute"/> so the deriving classes don't have to specify
+    /// the property name (assuming its the name matches the underlying element property).
     /// </remarks>
     protected T? GetValue<T>(Func<XElement, XElement?> selector, [CallerMemberName] string? name = null)
     {
@@ -127,9 +116,9 @@ public abstract class LogixElement<TElement> : ILogixSerializable where TElement
     /// If not found, returns <c>default</c>.
     /// </returns>
     /// <remarks>
-    /// This method makes getting/setting data on <see cref="Element"/> as concise
-    /// as possible from derived classes. This method uses the <see cref="CallerMemberNameAttribute"/> so the deriving
-    /// classes don't have to specify the property name (assuming its the name matches the underlying element property).
+    /// This method makes getting/setting data on <see cref="Element"/> as concise as possible from derived classes.
+    /// This method uses the <see cref="CallerMemberNameAttribute"/> so the deriving classes don't have to specify
+    /// the property name (assuming its the name matches the underlying element property).
     /// </remarks>
     protected T? GetValue<T>(XName child, [CallerMemberName] string? name = null)
     {
@@ -146,9 +135,9 @@ public abstract class LogixElement<TElement> : ILogixSerializable where TElement
     /// <returns>The value of attribute parsed as the generic type parameter.</returns>
     /// <exception cref="L5XException">No attribute with the provided name was found on <see cref="Element"/>.</exception>
     /// <remarks>
-    /// This method it available to make getting/setting data on <see cref="Element"/> as concise
-    /// as possible for derived classes. This method uses the <see cref="CallerMemberNameAttribute"/> so the deriving
-    /// classes don't have to specify the property name (assuming its the name matches the underlying element property).
+    /// This method makes getting/setting data on <see cref="Element"/> as concise as possible from derived classes.
+    /// This method uses the <see cref="CallerMemberNameAttribute"/> so the deriving classes don't have to specify
+    /// the property name (assuming its the name matches the underlying element property).
     /// </remarks>
     protected T GetRequiredValue<T>([CallerMemberName] string? name = null)
     {
@@ -167,9 +156,9 @@ public abstract class LogixElement<TElement> : ILogixSerializable where TElement
     /// If not found, returns <c>default</c>.
     /// </returns>
     /// <remarks>
-    /// This method it only available to make getting/setting data on <see cref="Element"/> as concise
-    /// as possible from derived classes. This method uses the <see cref="CallerMemberNameAttribute"/> so the deriving
-    /// classes don't have to specify the property name (assuming its the name matches the underlying element property).
+    /// This method makes getting/setting data on <see cref="Element"/> as concise as possible from derived classes.
+    /// This method uses the <see cref="CallerMemberNameAttribute"/> so the deriving classes don't have to specify
+    /// the property name (assuming its the name matches the underlying element property).
     /// </remarks>
     protected T? GetProperty<T>([CallerMemberName] string? name = null)
     {
@@ -179,16 +168,16 @@ public abstract class LogixElement<TElement> : ILogixSerializable where TElement
 
     /// <summary>
     /// Gets a child <see cref="LogixContainer{TEntity}"/> with the specified element name, representing the root of a
-    /// collection of contained entities.
+    /// collection of contained elements.
     /// </summary>
     /// <param name="name">The name of the child container collection (e.g. Members).</param>
-    /// <typeparam name="TChild">The child entity type.</typeparam>
-    /// <returns>A <see cref="LogixContainer{TEntity}"/> containing all the child entities of the type.</returns>
-    /// <exception cref="InvalidOperationException">A child element with <c>name</c> does not exist.</exception>
+    /// <typeparam name="TChild">The child element type.</typeparam>
+    /// <returns>A <see cref="LogixContainer{TEntity}"/> containing all the child elements of the specified type.</returns>
+    /// <exception cref="L5XException">A child element with <c>name</c> does not exist.</exception>
     /// <remarks>
-    /// This method it only available to make getting/setting data on <see cref="Element"/> as concise
-    /// as possible from derived classes. This method uses the <see cref="CallerMemberNameAttribute"/> so the deriving
-    /// classes don't have to specify the property name (assuming its the name matches the underlying element property).
+    /// This method makes getting/setting data on <see cref="Element"/> as concise as possible from derived classes.
+    /// This method uses the <see cref="CallerMemberNameAttribute"/> so the deriving classes don't have to specify
+    /// the property name (assuming its the name matches the underlying element property).
     /// </remarks>
     protected LogixContainer<TChild> GetContainer<TChild>([CallerMemberName] string? name = null)
         where TChild : LogixElement<TChild>
@@ -279,11 +268,15 @@ public abstract class LogixElement<TElement> : ILogixSerializable where TElement
     /// </remarks>
     protected void SetValue<T>(T? value, XName child, [CallerMemberName] string? name = null)
     {
+        if (value is null)
+        {
+            Element.Element(child)?.Attribute(name)?.Remove();
+            return;
+        }
+        
         var element = Element.Element(child);
-
         if (element is null)
         {
-            if (value is null) return;
             element = new XElement(child);
             Element.Add(element);
         }
@@ -333,21 +326,21 @@ public abstract class LogixElement<TElement> : ILogixSerializable where TElement
             return;
         }
 
-        var child = Element.Element(name);
-
-        if (child is null)
+        var element = Element.Element(name);
+        if (element is null)
         {
             Element.Add(new XElement(name, new XCData(value.ToString())));
             return;
         }
 
-        child.ReplaceNodes(new XCData(value.ToString()));
+        element.ReplaceWith(new XElement(name, new XCData(value.ToString())));
     }
 
     /// <summary>
     /// Sets the value of a child container, adds a child container, or removes a child container.
     /// </summary>
-    /// <param name="value">The <see cref="LogixContainer{TComponent}"/> value to set.</param>
+    /// <param name="value">The <see cref="LogixContainer{TComponent}"/> value to set. The child container is removed
+    /// if the value is null. Otherwise, the value is serialized and added (or replaces the existing) to underlying parent element.</param>
     /// <param name="name">The name of the child container collection (e.g. Members).</param>
     /// <typeparam name="TChild">The container type parameter.</typeparam>
     /// <remarks>
@@ -365,7 +358,6 @@ public abstract class LogixElement<TElement> : ILogixSerializable where TElement
         }
 
         var existing = Element.Element(name);
-
         if (existing is null)
         {
             Element.Add(value.Serialize());

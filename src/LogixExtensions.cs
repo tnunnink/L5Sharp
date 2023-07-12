@@ -15,10 +15,29 @@ using Module = L5Sharp.Components.Module;
 namespace L5Sharp;
 
 /// <summary>
-/// Container for all public extensions methods that add functionality to the base components of the library.
+/// Container for all public extensions methods that add additional functionality to the base elements of the library.
 /// </summary>
 public static class LogixExtensions
 {
+    #region CommonExtensions
+
+    /// <summary>
+    /// Gets the element's attached <see cref="LogixContent"/> instance if it exists. 
+    /// </summary>
+    /// <returns>If the current element is attached to a L5X document (i.e. has a root content element),
+    /// then a new <see cref="LogixContent"/> instance wrapping the root; Otherwise, <c>null</c>.</returns>
+    /// <remarks>
+    /// This allows attached logix elements to reach back up to the content file in order to traverse or retrieve
+    /// other elements in the L5X. This is helpful for other extensions that need rely on the L5X to perform functions.
+    /// </remarks>
+    public static LogixContent? Content(this ILogixSerializable element)
+    {
+        var content = element.Serialize().Ancestors(L5XName.RSLogix5000Content).FirstOrDefault();
+        return content is not null ? new LogixContent(content) : default;
+    }
+
+    #endregion
+    
     #region ComponentExtensions
 
     /// <summary>
@@ -108,6 +127,10 @@ public static class LogixExtensions
     {
         container.Serialize().Elements().SingleOrDefault(c => c.LogixName() == name)?.Remove();
     }
+
+    #endregion
+
+    #region DataTypeExtensions
 
     /// <summary>
     /// Returns all <see cref="DataType"/> instances that are dependent on the specified data type name.

@@ -19,7 +19,7 @@ public class DataTypeMember : LogixComponent<DataTypeMember>
     /// <summary>
     /// Creates a new <see cref="DataTypeMember"/> with default values.
     /// </summary>
-    public DataTypeMember() : base(new XElement(L5XName.Member))
+    public DataTypeMember()
     {
         DataType = string.Empty;
         Dimension = Dimensions.Empty;

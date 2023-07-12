@@ -142,6 +142,12 @@
       <None Update="LogixContentDataTypeTests.RemoveAt_ValidIndex_ShouldBeVerified.verified.txt">
         <DependentUpon>LogixContentDataTypeTests.cs</DependentUpon>
       </None>
+      <None Update="Components\DataTypeMemberTests.Serialize_WhenCalled_ShouldBeVerified.verified.txt">
+        <DependentUpon>DataTypeMemberTests.cs</DependentUpon>
+      </None>
+      <None Update="Components\ModuleTests.Serialize_Default_ShouldBeVerified.verified.txt">
+        <DependentUpon>ModuleTests.cs</DependentUpon>
+      </None>
     </ItemGroup>
 
     <ItemGroup>

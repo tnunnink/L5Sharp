@@ -33,7 +33,7 @@ namespace L5Sharp.Tests.Components
             var dataType = new DataType();
 
             dataType.Name.Should().BeEmpty();
-            dataType.Description.Should().BeEmpty();
+            dataType.Description.Should().BeNull();
             dataType.Family.Should().Be(DataTypeFamily.None);
             dataType.Class.Should().Be(DataTypeClass.User);
             dataType.Members.Should().NotBeNull();

@@ -1,0 +1,4 @@
+﻿<Module Name="" CatalogNumber="" Vendor="" ProductType="" ProductCode="0" Revision="1.0" ParentModule="" ParentPortId="0" Inhibited="false" MajorFault="false" SafetyEnabled="false">
+  <EKey State="CompatibleModule" />
+  <Ports />
+</Module>

@@ -2,6 +2,7 @@
 using L5Sharp.Components;
 using L5Sharp.Core;
 using L5Sharp.Enums;
+using Task = System.Threading.Tasks.Task;
 
 namespace L5Sharp.Tests.Components;
 
@@ -11,11 +12,11 @@ public class DataTypeMemberTests
     [Test]
     public void New_Default_ShouldHaveExpectedValues()
     {
-        var member = new DataTypeMember();
+        var member = new DataTypeMember { Name = "Test", DataType = "BOOL" };
 
-        member.Name.Should().BeEmpty();
-        member.Description.Should().BeEmpty();
-        member.DataType.Should().BeEmpty();
+        member.Name.Should().Be("Test");
+        member.Description.Should().BeNull();
+        member.DataType.Should().Be("BOOL");
         member.Dimension.Should().BeEquivalentTo(Dimensions.Empty);
         member.Radix.Should().Be(Radix.Null);
         member.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);
@@ -30,7 +31,7 @@ public class DataTypeMemberTests
         var dimension = new Dimensions(10);
         var radix = Radix.Decimal;
         var externalAccess = ExternalAccess.ReadOnly;
-        
+
         var member = new DataTypeMember
         {
             Name = name,
@@ -41,7 +42,7 @@ public class DataTypeMemberTests
             ExternalAccess = externalAccess
         };
 
-        
+
         member.Name.Should().Be(name);
         member.Description.Should().Be(description);
         member.DataType.Should().Be(dataType);
@@ -79,5 +80,15 @@ public class DataTypeMemberTests
         clone.Hidden.Should().Be(member.Hidden);
         clone.Target.Should().Be(member.Target);
         clone.BitNumber.Should().Be(member.BitNumber);
+    }
+
+    [Test]
+    public Task Serialize_WhenCalled_ShouldBeVerified()
+    {
+        var member = new DataTypeMember();
+
+        var xml = member.Serialize().ToString();
+
+        return Verify(xml);
     }
 }

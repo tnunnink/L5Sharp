@@ -633,7 +633,7 @@ public class ComplexTypeTests
         var result = type.Set(new ComplexType());
 
         result.Should().NotBeNull();
-        result.Should().NotBeSameAs(type);
+        result.Should().BeSameAs(type);
         result.Should().BeOfType<ComplexType>();
         result.Members.Should().HaveCount(3);
         result.Member("Atomic")?.DataType.Should().Be(1);

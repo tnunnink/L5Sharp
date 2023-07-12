@@ -562,7 +562,8 @@ public class Tag : LogixComponent<Tag>
     private string? GetComment()
     {
         var comment = Element.Descendants(L5XName.Comment)
-            .FirstOrDefault(e => e.Attribute(L5XName.Operand)?.Value == TagName.Operand);
+                .FirstOrDefault(e => string.Equals(e.Attribute(L5XName.Operand)?.Value, TagName.Operand,
+                        StringComparison.OrdinalIgnoreCase));
 
         return comment is not null ? comment.Value : Parent is not null ? Parent.Description : Description;
     }
@@ -582,7 +583,8 @@ public class Tag : LogixComponent<Tag>
         if (string.IsNullOrEmpty(value))
         {
             Element.Descendants(L5XName.Comment)
-                .FirstOrDefault(e => e.Attribute(L5XName.Operand)?.Value == TagName.Operand)?.Remove();
+                .FirstOrDefault(e => string.Equals(e.Attribute(L5XName.Operand)?.Value, TagName.Operand,
+                    StringComparison.OrdinalIgnoreCase))?.Remove();
             return;
         }
 
@@ -594,7 +596,8 @@ public class Tag : LogixComponent<Tag>
         }
 
         var comment = comments.Elements(L5XName.Comment)
-            .FirstOrDefault(e => e.Attribute(L5XName.Operand)?.Value == TagName.Operand);
+            .FirstOrDefault(e => string.Equals(e.Attribute(L5XName.Operand)?.Value, TagName.Operand,
+                StringComparison.OrdinalIgnoreCase));
 
         if (comment is not null)
         {
@@ -611,7 +614,7 @@ public class Tag : LogixComponent<Tag>
     private XElement GenerateComment(string value)
     {
         var comment = new XElement(L5XName.Comment);
-        comment.Add(new XAttribute(L5XName.Operand, TagName.Operand));
+        comment.Add(new XAttribute(L5XName.Operand, TagName.Operand.ToUpper()));
         comment.Add(new XCData(value));
         return comment;
     }
@@ -622,7 +625,8 @@ public class Tag : LogixComponent<Tag>
     private string? GetUnit()
     {
         return Element.Descendants(L5XName.EngineeringUnit)
-            .FirstOrDefault(e => e.Attribute(L5XName.Operand)?.Value == TagName.Operand)?.Value;
+            .FirstOrDefault(e => string.Equals(e.Attribute(L5XName.Operand)?.Value, TagName.Operand,
+                StringComparison.OrdinalIgnoreCase))?.Value;
     }
 
     /// <summary>
@@ -633,7 +637,8 @@ public class Tag : LogixComponent<Tag>
         if (string.IsNullOrEmpty(value))
         {
             Element.Descendants(L5XName.EngineeringUnit)
-                .FirstOrDefault(e => e.Attribute(L5XName.Operand)?.Value == TagName.Operand)?.Remove();
+                .FirstOrDefault(e => string.Equals(e.Attribute(L5XName.Operand)?.Value, TagName.Operand,
+                    StringComparison.OrdinalIgnoreCase))?.Remove();
             return;
         }
 
@@ -645,7 +650,8 @@ public class Tag : LogixComponent<Tag>
         }
 
         var unit = units.Elements(L5XName.EngineeringUnit)
-            .FirstOrDefault(e => e.Attribute(L5XName.Operand)?.Value == TagName.Operand);
+            .FirstOrDefault(e => string.Equals(e.Attribute(L5XName.Operand)?.Value, TagName.Operand,
+                StringComparison.OrdinalIgnoreCase));
 
         if (unit is not null)
         {
@@ -662,7 +668,7 @@ public class Tag : LogixComponent<Tag>
     private XElement GenerateUnit(string value)
     {
         var element = new XElement(L5XName.EngineeringUnit);
-        element.Add(new XAttribute(L5XName.Operand, TagName.Operand));
+        element.Add(new XAttribute(L5XName.Operand, TagName.Operand.ToUpper()));
         element.Add(new XCData(value));
         return element;
     }

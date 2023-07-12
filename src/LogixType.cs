@@ -62,11 +62,6 @@ public abstract class LogixType : ILogixSerializable
     /// for tag so that it can know when to update the underlying XML data structure represented by the in-memory data structure. 
     /// </remarks>
     public event EventHandler? DataChanged;
-    
-    /// <summary>
-    /// Handles raising the <see cref="DataChanged"/> event for the type.
-    /// </summary>
-    protected void RaiseDataChanged() => DataChanged?.Invoke(this, EventArgs.Empty);
 
     /// <summary>
     /// Casts the <see cref="LogixType"/> to the type of the generic argument.
@@ -83,6 +78,33 @@ public abstract class LogixType : ILogixSerializable
     /// <exception cref="InvalidOperationException">The object being cloned does not have a constructor accepting a single <see cref="XElement"/> argument.</exception>
     /// <remarks>This method will simply deserialize a new instance using the current underlying element data.</remarks>
     public LogixType Clone() => LogixData.Deserialize(new XElement(Serialize()));
+
+    /// <inheritdoc />
+    public override bool Equals(object obj)
+    {
+        if (ReferenceEquals(null, obj)) return false;
+        if (ReferenceEquals(this, obj)) return true;
+        if (obj is not LogixType type) return false;
+        return Name == type.Name;
+    }
+
+    /// <inheritdoc />
+    public override int GetHashCode() => Name.GetHashCode();
+
+    /// <summary>
+    /// Gets a <see cref="Types.Member"/> with the specified name if it exists for the <see cref="LogixType"/>;
+    /// Otherwise, returns <c>null</c>.
+    /// </summary>
+    /// <param name="name">The name of the member to get.</param>
+    /// <returns>A <see cref="Types.Member"/> with the specified name if found; Otherwise, <c>null</c>.</returns>
+    /// <remarks>This performs a case insensitive comparison for the member name.</remarks>
+    public Member? Member(string name) =>
+        Members.SingleOrDefault(m => string.Equals(m.Name, name, StringComparison.OrdinalIgnoreCase));
+
+    /// <summary>
+    /// Handles raising the <see cref="DataChanged"/> event for the type.
+    /// </summary>
+    protected void RaiseDataChanged() => DataChanged?.Invoke(this, EventArgs.Empty);
 
     /// <inheritdoc />
     public override string ToString() => Name;
@@ -105,27 +127,6 @@ public abstract class LogixType : ILogixSerializable
     /// indicating to subscribers (Tag) that the hierarchical structure or data within the structure has changed. 
     /// </remarks>
     public abstract LogixType Set(LogixType type);
-
-    /// <inheritdoc />
-    public override bool Equals(object obj)
-    {
-        if (ReferenceEquals(null, obj)) return false;
-        if (ReferenceEquals(this, obj)) return true;
-        if (obj is not LogixType type) return false;
-        return Name == type.Name;
-    }
-
-    /// <inheritdoc />
-    public override int GetHashCode() => Name.GetHashCode();
-
-    /// <summary>
-    /// Gets a <see cref="Types.Member"/> with the specified name if it exists for the <see cref="LogixType"/>;
-    /// Otherwise, returns <c>null</c>.
-    /// </summary>
-    /// <param name="name">The name of the member to get.</param>
-    /// <returns>A <see cref="Types.Member"/> with the specified name if found; Otherwise, <c>null</c>.</returns>
-     public Member? Member(string name) =>
-        Members.SingleOrDefault(m => string.Equals(m.Name, name, StringComparison.OrdinalIgnoreCase));
 
     /// <summary>
     /// Determines whether the <see cref="LogixType"/> values are equal.

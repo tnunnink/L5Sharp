@@ -24,7 +24,7 @@ public class L5X : XElement
     /// <summary>
     /// The list of top level component containers for a L5X content or controller element. 
     /// </summary>
-    private static readonly List<XName> Containers = new()
+    private static readonly List<string> Containers = new()
     {
         L5XName.DataTypes,
         L5XName.Modules,
