@@ -22,8 +22,7 @@ public class ArrayTypeGenericTests
     {
         var array = new ArrayType<DINT>(new DINT[] { 1, 2, 3, 4 });
 
-        array[0] = new INT(2);
-
+        array[0] = new DINT(2);
     }
 
     [Test]

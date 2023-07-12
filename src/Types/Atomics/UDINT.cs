@@ -6,7 +6,7 @@ namespace L5Sharp.Types.Atomics;
 /// <summary>
 /// Represents a <b>UDINT</b> Logix atomic data type, or a type analogous to a <see cref="uint"/>.
 /// </summary>
-public sealed class UDINT : AtomicType, IComparable
+public sealed class UDINT : AtomicType, IComparable, IConvertible
 {
     private uint _value;
 
@@ -149,20 +149,10 @@ public sealed class UDINT : AtomicType, IComparable
         var converted = (uint)Convert.ChangeType(atomic, typeof(uint));
         return new UDINT(converted, radix);
     }
+    
+    // Contains the implicit .NET conversions for the type.
 
     #region Conversions
-    
-    /// <inheritdoc />
-    public override long ToInt64(IFormatProvider provider) => _value;
-
-    /// <inheritdoc />
-    public override ulong ToUInt64(IFormatProvider provider) => _value;
-
-    /// <inheritdoc />
-    public override float ToSingle(IFormatProvider provider) => _value;
-
-    /// <inheritdoc />
-    public override double ToDouble(IFormatProvider provider) => _value;
 
     /// <summary>
     /// Converts the provided <see cref="uint"/> to a <see cref="UDINT"/> value.
@@ -192,75 +182,127 @@ public sealed class UDINT : AtomicType, IComparable
     /// <returns>A new <see cref="string"/> value.</returns>
     public static implicit operator string(UDINT value) => value.ToString();
 
-    /// <summary>
-    /// Converts the provided <see cref="UDINT"/> to a <see cref="BOOL"/> value.
-    /// </summary>
-    /// <param name="atomic">The value to convert.</param>
-    /// <returns>A <see cref="BOOL"/> type value.</returns>
-    public static explicit operator BOOL(UDINT atomic) => new(atomic._value != 0);
+    #endregion
+    
+    // Contains the IConvertible implementation for the type. I am explicitly implementing this interface for each
+    // atomic type to avoid polluting the API, and to have the implementation as performant as possible.
+    // To perform conversion, use the recommended .NET Convert.ChangeType() method and specify the target type.
+    
+    #region Convertible
 
-    /// <summary>
-    /// Converts the provided <see cref="UDINT"/> to a <see cref="SINT"/> value.
-    /// </summary>
-    /// <param name="atomic">The value to convert.</param>
-    /// <returns>A <see cref="SINT"/> type value.</returns>
-    public static explicit operator SINT(UDINT atomic) => new((sbyte)atomic._value);
+    /// <inheritdoc />
+    TypeCode IConvertible.GetTypeCode() => TypeCode.Object;
 
-    /// <summary>
-    /// Converts the provided <see cref="UDINT"/> to a <see cref="USINT"/> value.
-    /// </summary>
-    /// <param name="atomic">The value to convert.</param>
-    /// <returns>A <see cref="USINT"/> type value.</returns>
-    public static explicit operator USINT(UDINT atomic) => new((byte)atomic._value);
+    /// <inheritdoc />
+    bool IConvertible.ToBoolean(IFormatProvider provider) => _value != 0;
 
-    /// <summary>
-    /// Converts the provided <see cref="UDINT"/> to a <see cref="INT"/> value.
-    /// </summary>
-    /// <param name="atomic">The value to convert.</param>
-    /// <returns>A <see cref="INT"/> type value.</returns>
-    public static explicit operator INT(UDINT atomic) => new((short)atomic._value);
+    /// <inheritdoc />
+    byte IConvertible.ToByte(IFormatProvider provider) => (byte)_value;
 
-    /// <summary>
-    /// Converts the provided <see cref="UDINT"/> to a <see cref="UINT"/> value.
-    /// </summary>
-    /// <param name="atomic">The value to convert.</param>
-    /// <returns>A <see cref="UINT"/> type value.</returns>
-    public static explicit operator UINT(UDINT atomic) => new((ushort)atomic._value);
+    /// <inheritdoc />
+    char IConvertible.ToChar(IFormatProvider provider) => (char)_value;
 
-    /// <summary>
-    /// Converts the provided <see cref="UDINT"/> to a <see cref="DINT"/> value.
-    /// </summary>
-    /// <param name="atomic">The value to convert.</param>
-    /// <returns>A <see cref="DINT"/> type value.</returns>
-    public static explicit operator DINT(UDINT atomic) => new((int)atomic._value);
+    /// <inheritdoc />
+    DateTime IConvertible.ToDateTime(IFormatProvider provider) =>
+        throw new InvalidCastException($"Conversion from {Name} to {nameof(DateTime)} is not supported.");
 
-    /// <summary>
-    /// Converts the provided <see cref="UDINT"/> to a <see cref="LINT"/> value.
-    /// </summary>
-    /// <param name="atomic">The value to convert.</param>
-    /// <returns>A <see cref="LINT"/> type value.</returns>
-    public static implicit operator LINT(UDINT atomic) => new(atomic._value);
+    /// <inheritdoc />
+    decimal IConvertible.ToDecimal(IFormatProvider provider) =>
+        throw new InvalidCastException($"Conversion from {Name} to {nameof(Decimal)} is not supported.");
 
-    /// <summary>
-    /// Converts the provided <see cref="UDINT"/> to a <see cref="ULINT"/> value.
-    /// </summary>
-    /// <param name="atomic">The value to convert.</param>
-    /// <returns>A <see cref="ULINT"/> type value.</returns>
-    public static implicit operator ULINT(UDINT atomic) => new(atomic._value);
+    /// <inheritdoc />
+    double IConvertible.ToDouble(IFormatProvider provider) => _value;
 
-    /// <summary>
-    /// Converts the provided <see cref="UDINT"/> to a <see cref="REAL"/> value.
-    /// </summary>
-    /// <param name="atomic">The value to convert.</param>
-    /// <returns>A <see cref="REAL"/> type value.</returns>
-    public static implicit operator REAL(UDINT atomic) => new(atomic._value);
+    /// <inheritdoc />
+    short IConvertible.ToInt16(IFormatProvider provider) => (short)_value;
+
+    /// <inheritdoc />
+    int IConvertible.ToInt32(IFormatProvider provider) => (int)_value;
+
+    /// <inheritdoc />
+    long IConvertible.ToInt64(IFormatProvider provider) => _value;
+
+    /// <inheritdoc />
+    sbyte IConvertible.ToSByte(IFormatProvider provider) => (sbyte)_value;
+
+    /// <inheritdoc />
+    float IConvertible.ToSingle(IFormatProvider provider) => _value;
+
+    /// <inheritdoc />
+    string IConvertible.ToString(IFormatProvider provider) => ToString();
+
+    /// <inheritdoc />
+    object IConvertible.ToType(Type conversionType, IFormatProvider provider)
+    {
+        var convertible = (IConvertible)this;
+        
+        return Type.GetTypeCode(conversionType) switch
+        {
+            TypeCode.Boolean => convertible.ToBoolean(provider),
+            TypeCode.Byte => convertible.ToByte(provider),
+            TypeCode.Char => convertible.ToChar(provider),
+            TypeCode.DateTime => convertible.ToDateTime(provider),
+            TypeCode.Decimal => convertible.ToDecimal(provider),
+            TypeCode.Double => convertible.ToDouble(provider),
+            TypeCode.Empty => throw new ArgumentNullException(nameof(conversionType)),
+            TypeCode.Int16 => convertible.ToInt16(provider),
+            TypeCode.Int32 => convertible.ToInt32(provider),
+            TypeCode.Int64 => convertible.ToInt64(provider),
+            TypeCode.Object => ToAtomic(conversionType),
+            TypeCode.SByte => convertible.ToSByte(provider),
+            TypeCode.Single => convertible.ToSingle(provider),
+            TypeCode.String => ToString(),
+            TypeCode.UInt16 => convertible.ToUInt16(provider),
+            TypeCode.UInt32 => convertible.ToUInt32(provider),
+            TypeCode.UInt64 => convertible.ToUInt64(provider),
+            TypeCode.DBNull => throw new InvalidCastException(
+                "Conversion for type code 'DbNull' not supported by AtomicType."),
+            _ => throw new InvalidCastException($"Conversion for {conversionType.Name} not supported by AtomicType.")
+        };
+    }
+
+    /// <inheritdoc />
+    ushort IConvertible.ToUInt16(IFormatProvider provider) => (ushort)_value;
+
+    /// <inheritdoc />
+    uint IConvertible.ToUInt32(IFormatProvider provider) => _value;
+
+    /// <inheritdoc />
+    ulong IConvertible.ToUInt64(IFormatProvider provider) => _value;
     
     /// <summary>
-    /// Converts the provided <see cref="UDINT"/> to a <see cref="REAL"/> value.
+    /// Converts the current atomic type to the specified atomic type.
     /// </summary>
-    /// <param name="atomic">The value to convert.</param>
-    /// <returns>A <see cref="REAL"/> type value.</returns>
-    public static implicit operator LREAL(UDINT atomic) => new(atomic._value);
+    /// <param name="conversionType">The atomic type to convert to.</param>
+    /// <returns>A <see cref="object"/> representing the converted atomic type value.</returns>
+    /// <exception cref="InvalidCastException">The specified type is not a valid atomic type.</exception>
+    private object ToAtomic(Type conversionType)
+    {
+        if (conversionType == typeof(BOOL))
+            return new BOOL(_value != 0);
+        if (conversionType == typeof(SINT))
+            return new SINT((sbyte)_value);
+        if (conversionType == typeof(INT))
+            return new INT((short)_value);
+        if (conversionType == typeof(DINT))
+            return new DINT((int)_value);
+        if (conversionType == typeof(LINT))
+            return new LINT(_value);
+        if (conversionType == typeof(REAL))
+            return new REAL(_value);
+        if (conversionType == typeof(LREAL))
+            return new LREAL(_value);
+        if (conversionType == typeof(USINT))
+            return new USINT((byte)_value);
+        if (conversionType == typeof(UINT))
+            return new UINT((ushort)_value);
+        if (conversionType == typeof(UDINT))
+            return new UDINT(_value);
+        if (conversionType == typeof(ULINT))
+            return new ULINT(_value);
+        
+        throw new InvalidCastException($"Cannot convert from {GetType().Name} to {conversionType.Name}.");
+    }
 
     #endregion
 }

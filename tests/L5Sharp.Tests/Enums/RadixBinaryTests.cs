@@ -111,7 +111,7 @@ namespace L5Sharp.Tests.Enums
         {
             var atomic = Radix.Binary.Parse("2#0");
 
-            atomic.As<BOOL>().Should().Be(false);
+            atomic.Should().Be(false);
         }
         
         [Test]
@@ -119,7 +119,7 @@ namespace L5Sharp.Tests.Enums
         {
             var atomic = Radix.Binary.Parse("2#1");
 
-            atomic.As<BOOL>().Should().Be(true);
+            atomic.Should().Be(true);
         }
 
         [Test]
@@ -127,7 +127,7 @@ namespace L5Sharp.Tests.Enums
         {
             var value = Radix.Binary.Parse("2#0001_0100");
 
-            value.As<SINT>().Should().Be(new SINT(20));
+            value.Should().Be(new SINT(20));
         }
 
         [Test]
@@ -135,7 +135,7 @@ namespace L5Sharp.Tests.Enums
         {
             var value = Radix.Binary.Parse("2#0000_0000_0001_0100");
 
-            value.As<INT>().Should().Be(new INT(20));
+            value.Should().Be(new INT(20));
         }
 
         [Test]
@@ -143,7 +143,7 @@ namespace L5Sharp.Tests.Enums
         {
             var value = Radix.Binary.Parse("2#0000_0000_0000_0000_0000_0000_0001_0100");
 
-            value.As<DINT>().Should().Be(new DINT(20));
+            value.Should().Be(new DINT(20));
         }
 
 
@@ -153,7 +153,7 @@ namespace L5Sharp.Tests.Enums
             var value = Radix.Binary.Parse(
                 "2#0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0001_0100");
 
-            value.As<LINT>().Should().Be(new LINT(20));
+            value.Should().Be(new LINT(20));
         }
     }
 }

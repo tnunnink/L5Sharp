@@ -1,8 +1,6 @@
-﻿using System;
-using FluentAssertions;
+﻿using FluentAssertions;
 using L5Sharp.Enums;
 using L5Sharp.Types.Atomics;
-using NUnit.Framework;
 
 namespace L5Sharp.Tests.Enums
 {
@@ -118,7 +116,7 @@ namespace L5Sharp.Tests.Enums
         {
             var atomic = Radix.Ascii.Parse("'$t'");
 
-            atomic.As<SINT>().Should().Be(9);
+            atomic.Should().Be(9);
         }
 
         [Test]
@@ -126,7 +124,7 @@ namespace L5Sharp.Tests.Enums
         {
             var atomic = Radix.Ascii.Parse("'$l'");
 
-            atomic.As<SINT>().Should().Be(10);
+            atomic.Should().Be(10);
         }
 
         [Test]
@@ -134,7 +132,7 @@ namespace L5Sharp.Tests.Enums
         {
             var atomic = Radix.Ascii.Parse("'$p'");
 
-            atomic.As<SINT>().Should().Be(12);
+            atomic.Should().Be(12);
         }
 
         [Test]
@@ -142,7 +140,7 @@ namespace L5Sharp.Tests.Enums
         {
             var atomic = Radix.Ascii.Parse("'$r'");
 
-            atomic.As<SINT>().Should().Be(13);
+            atomic.Should().Be(13);
         }
 
         [Test]
@@ -150,7 +148,7 @@ namespace L5Sharp.Tests.Enums
         {
             var atomic = Radix.Ascii.Parse("'$$'");
 
-            atomic.As<SINT>().Should().Be(36);
+            atomic.Should().Be(36);
         }
 
         [Test]
@@ -158,7 +156,7 @@ namespace L5Sharp.Tests.Enums
         {
             var atomic = Radix.Ascii.Parse("'$''");
 
-            atomic.As<SINT>().Should().Be(39);
+            atomic.Should().Be(39);
         }
 
         [Test]
@@ -166,7 +164,7 @@ namespace L5Sharp.Tests.Enums
         {
             var value = Radix.Ascii.Parse("'$14'");
 
-            value.As<SINT>().Should().Be(new SINT(20));
+            value.Should().Be(new SINT(20));
         }
 
         [Test]
@@ -174,7 +172,7 @@ namespace L5Sharp.Tests.Enums
         {
             var value = Radix.Ascii.Parse("'$00$01$E2@'");
 
-            value.As<DINT>().Should().Be(new DINT(123456));
+            value.Should().Be(new DINT(123456));
         }
 
         [Test]
@@ -182,7 +180,7 @@ namespace L5Sharp.Tests.Enums
         {
             var value = Radix.Ascii.Parse("'$12D$F1A'");
 
-            value.As<DINT>().Should().Be(new DINT(306508097));
+            value.Should().Be(new DINT(306508097));
         }
     }
 }

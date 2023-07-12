@@ -129,13 +129,13 @@ namespace L5Sharp.Tests.Types.Atomics
             bit0.Should().Be(true);
             bit1.Should().Be(false);
         }
-        
+
         [Test]
         public void Bit_InvalidIndex_ShouldThrowArgumentOutOfRangeException()
         {
             var type = new INT(1);
 
-            FluentActions.Invoking(() => type.Bit(16)) .Should().Throw<ArgumentOutOfRangeException>();
+            FluentActions.Invoking(() => type.Bit(16)).Should().Throw<ArgumentOutOfRangeException>();
         }
 
         [Test]
@@ -254,7 +254,7 @@ namespace L5Sharp.Tests.Types.Atomics
 
             FluentActions.Invoking(() => type.Set(16, true)).Should().Throw<ArgumentOutOfRangeException>();
         }
-        
+
         [Test]
         public void Set_BitOverloadNullValue_ShouldThrowArgumentNullException()
         {
@@ -266,7 +266,7 @@ namespace L5Sharp.Tests.Types.Atomics
         [Test]
         public void ToBoolean_WhenCalled_ShouldBeExpectedValue()
         {
-            var type = new INT();
+            var type = new INT() as IConvertible;
 
             var result = type.ToBoolean(CultureInfo.InvariantCulture);
 
@@ -279,7 +279,7 @@ namespace L5Sharp.Tests.Types.Atomics
             var fixture = new Fixture();
             var value = fixture.Create<byte>();
             var expected = (byte)Convert.ChangeType(value, typeof(byte));
-            var type = new INT(value);
+            var type = new INT(value) as IConvertible;
 
             var result = type.ToByte(CultureInfo.InvariantCulture);
 
@@ -290,7 +290,7 @@ namespace L5Sharp.Tests.Types.Atomics
         public void ToChar_WhenCalled_ShouldBeExpectedValue()
         {
             var expected = (char)Convert.ChangeType(_random, typeof(char));
-            var type = new INT(_random);
+            var type = new INT(_random) as IConvertible;
 
             var result = type.ToChar(CultureInfo.InvariantCulture);
 
@@ -300,7 +300,7 @@ namespace L5Sharp.Tests.Types.Atomics
         [Test]
         public void ToDateTime_WhenCalled_ShouldThrowInvalidCastException()
         {
-            var type = new INT(_random);
+            var type = new INT(_random) as IConvertible;
 
             FluentActions.Invoking(() => type.ToDateTime(CultureInfo.InvariantCulture)).Should()
                 .Throw<InvalidCastException>();
@@ -309,7 +309,7 @@ namespace L5Sharp.Tests.Types.Atomics
         [Test]
         public void ToDecimal_WhenCalled_ShouldThrowInvalidCastException()
         {
-            var type = new INT(_random);
+            var type = new INT(_random) as IConvertible;
 
             FluentActions.Invoking(() => type.ToDecimal(CultureInfo.InvariantCulture)).Should()
                 .Throw<InvalidCastException>();
@@ -319,7 +319,7 @@ namespace L5Sharp.Tests.Types.Atomics
         public void ToDouble_WhenCalled_ShouldBeExpectedValue()
         {
             var expected = (double)Convert.ChangeType(_random, typeof(double));
-            var type = new INT(_random);
+            var type = new INT(_random) as IConvertible;
 
             var result = type.ToDouble(CultureInfo.InvariantCulture);
 
@@ -330,7 +330,7 @@ namespace L5Sharp.Tests.Types.Atomics
         public void ToInt16_WhenCalled_ShouldBeExpectedValue()
         {
             var expected = (short)Convert.ChangeType(_random, typeof(short));
-            var type = new INT(_random);
+            var type = new INT(_random) as IConvertible;
 
             var result = type.ToInt16(CultureInfo.InvariantCulture);
 
@@ -341,7 +341,7 @@ namespace L5Sharp.Tests.Types.Atomics
         public void ToInt32_WhenCalled_ShouldBeExpectedValue()
         {
             var expected = (int)Convert.ChangeType(_random, typeof(int));
-            var type = new INT(_random);
+            var type = new INT(_random) as IConvertible;
 
             var result = type.ToInt32(CultureInfo.InvariantCulture);
 
@@ -352,7 +352,7 @@ namespace L5Sharp.Tests.Types.Atomics
         public void ToInt64_WhenCalled_ShouldBeExpectedValue()
         {
             var expected = (long)Convert.ChangeType(_random, typeof(long));
-            var type = new INT(_random);
+            var type = new INT(_random) as IConvertible;
 
             var result = type.ToInt64(CultureInfo.InvariantCulture);
 
@@ -365,7 +365,7 @@ namespace L5Sharp.Tests.Types.Atomics
             var fixture = new Fixture();
             var value = fixture.Create<sbyte>();
             var expected = (sbyte)Convert.ChangeType(value, typeof(sbyte));
-            var type = new INT(value);
+            var type = new INT(value) as IConvertible;
 
             var result = type.ToSByte(CultureInfo.InvariantCulture);
 
@@ -376,7 +376,7 @@ namespace L5Sharp.Tests.Types.Atomics
         public void ToSingle_WhenCalled_ShouldBeExpectedValue()
         {
             var expected = (float)Convert.ChangeType(_random, typeof(float));
-            var type = new INT(_random);
+            var type = new INT(_random) as IConvertible;
 
             var result = type.ToSingle(CultureInfo.InvariantCulture);
 
@@ -387,7 +387,7 @@ namespace L5Sharp.Tests.Types.Atomics
         public void ToUInt16_WhenCalled_ShouldBeExpectedValue()
         {
             var expected = (ushort)Convert.ChangeType(_random, typeof(ushort));
-            var type = new INT(_random);
+            var type = new INT(_random) as IConvertible;
 
             var result = type.ToUInt16(CultureInfo.InvariantCulture);
 
@@ -398,7 +398,7 @@ namespace L5Sharp.Tests.Types.Atomics
         public void ToUInt32_WhenCalled_ShouldBeExpectedValue()
         {
             var expected = (uint)Convert.ChangeType(_random, typeof(uint));
-            var type = new INT(_random);
+            var type = new INT(_random) as IConvertible;
 
             var result = type.ToUInt32(CultureInfo.InvariantCulture);
 
@@ -409,127 +409,127 @@ namespace L5Sharp.Tests.Types.Atomics
         public void ToUInt64_WhenCalled_ShouldBeExpectedValue()
         {
             var expected = (ulong)Convert.ChangeType(_random, typeof(ulong));
-            var type = new INT(_random);
+            var type = new INT(_random) as IConvertible;
 
             var result = type.ToUInt64(CultureInfo.InvariantCulture);
 
             result.Should().Be(expected);
         }
-        
+
         [Test]
         public void ToType_SINT_ShouldBeExpectedValue()
         {
             var expected = new SINT(1);
-            var type = new INT(1);
+            var type = new INT(1) as IConvertible;
 
             var result = (SINT)type.ToType(typeof(SINT), CultureInfo.InvariantCulture);
 
             result.Should().Be(expected);
         }
-        
+
         [Test]
         public void ToType_INT_ShouldBeExpectedValue()
         {
             var expected = new INT(1);
-            var type = new INT(1);
+            var type = new INT(1) as IConvertible;
 
             var result = (INT)type.ToType(typeof(INT), CultureInfo.InvariantCulture);
 
             result.Should().Be(expected);
         }
-        
+
         [Test]
         public void ToType_DINT_ShouldBeExpectedValue()
         {
             var expected = new DINT(1);
-            var type = new INT(1);
+            var type = new INT(1) as IConvertible;
 
             var result = (DINT)type.ToType(typeof(DINT), CultureInfo.InvariantCulture);
 
             result.Should().Be(expected);
         }
-        
+
         [Test]
         public void ToType_LINT_ShouldBeExpectedValue()
         {
             var expected = new LINT(1);
-            var type = new INT(1);
+            var type = new INT(1) as IConvertible;
 
             var result = (LINT)type.ToType(typeof(LINT), CultureInfo.InvariantCulture);
 
             result.Should().Be(expected);
         }
-        
+
         [Test]
         public void ToType_REAL_ShouldBeExpectedValue()
         {
             var expected = new REAL(1);
-            var type = new INT(1);
+            var type = new INT(1) as IConvertible;
 
             var result = (REAL)type.ToType(typeof(REAL), CultureInfo.InvariantCulture);
 
             result.Should().Be(expected);
         }
-        
+
         [Test]
         public void ToType_USINT_ShouldBeExpectedValue()
         {
             var expected = new USINT(1);
-            var type = new INT(1);
+            var type = new INT(1) as IConvertible;
 
             var result = (USINT)type.ToType(typeof(USINT), CultureInfo.InvariantCulture);
 
             result.Should().Be(expected);
         }
-        
+
         [Test]
         public void ToType_UINT_ShouldBeExpectedValue()
         {
             var expected = new UINT(1);
-            var type = new INT(1);
+            var type = new INT(1) as IConvertible;
 
             var result = (UINT)type.ToType(typeof(UINT), CultureInfo.InvariantCulture);
 
             result.Should().Be(expected);
         }
-        
+
         [Test]
         public void ToType_UDINT_ShouldBeExpectedValue()
         {
             var expected = new UDINT(1);
-            var type = new INT(1);
+            var type = new INT(1) as IConvertible;
 
             var result = (UDINT)type.ToType(typeof(UDINT), CultureInfo.InvariantCulture);
 
             result.Should().Be(expected);
         }
-        
+
         [Test]
         public void ToType_ULINT_ShouldBeExpectedValue()
         {
             var expected = new ULINT(1);
-            var type = new INT(1);
+            var type = new INT(1) as IConvertible;
 
             var result = (ULINT)type.ToType(typeof(ULINT), CultureInfo.InvariantCulture);
 
             result.Should().Be(expected);
         }
-        
+
         [Test]
         public void ToType_LREAL_ShouldBeExpectedValue()
         {
             var expected = new LREAL(1);
-            var type = new INT(1);
+            var type = new INT(1) as IConvertible;
 
             var result = (LREAL)type.ToType(typeof(LREAL), CultureInfo.InvariantCulture);
 
             result.Should().Be(expected);
         }
-        
+
         [Test]
         public void ToType_TestAtomic_ShouldThrowInvalidCastException()
         {
-            var type = new INT();
+            var type = new INT() as IConvertible;
 
             FluentActions.Invoking(() => type.ToType(typeof(TestAtomic), CultureInfo.InvariantCulture)).Should()
                 .Throw<InvalidCastException>();
@@ -572,106 +572,6 @@ namespace L5Sharp.Tests.Types.Atomics
             string value = type;
 
             value.Should().Be("1");
-        }
-
-        [Test]
-        public void Conversion_BOOL_ShouldBeExpectedValue()
-        {
-            var type = new INT();
-
-            var value = (BOOL)type;
-
-            value.Should().Be(false);
-        }
-
-        [Test]
-        public void Conversion_SINT_ShouldBeExpectedValue()
-        {
-            var type = new INT();
-
-            var value = (SINT)type;
-
-            value.Should().Be(0);
-        }
-
-        [Test]
-        public void Conversion_USINT_ShouldBeExpectedValue()
-        {
-            var type = new INT();
-
-            var value = (USINT)type;
-
-            value.Should().Be(0);
-        }
-
-        [Test]
-        public void Conversion_UINT_ShouldBeExpectedValue()
-        {
-            var type = new INT();
-
-            var value = (UINT)type;
-
-            value.Should().Be(0);
-        }
-
-        [Test]
-        public void Conversion_DINT_ShouldBeExpectedValue()
-        {
-            var type = new INT();
-
-            DINT value = type;
-
-            value.Should().Be(0);
-        }
-
-        [Test]
-        public void Conversion_UDINT_ShouldBeExpectedValue()
-        {
-            var type = new INT();
-
-            var value = (UDINT)type;
-
-            value.Should().Be(0);
-        }
-
-        [Test]
-        public void Conversion_LINT_ShouldBeExpectedValue()
-        {
-            var type = new INT();
-
-            LINT value = type;
-
-            value.Should().Be(0);
-        }
-
-        [Test]
-        public void Conversion_ULINT_ShouldBeExpectedValue()
-        {
-            var type = new INT();
-
-            var value = (ULINT)type;
-
-            value.Should().Be(0);
-        }
-
-        [Test]
-        public void Conversion_REAL_ShouldBeExpectedValue()
-        {
-            var type = new INT();
-
-            REAL value = type;
-
-            value.Should().Be(0);
-        }
-
-        [Test]
-        public void Conversion_LREAL_ShouldBeExpectedValue()
-        {
-            var type = new INT();
-
-            LREAL value = type;
-
-            value.Should().Be(0);
         }
 
         [Test]
@@ -824,7 +724,7 @@ namespace L5Sharp.Tests.Types.Atomics
         [Test]
         public void GetTypeCode_WhenCalled_ShouldBeObjectType()
         {
-            var type = new INT();
+            var type = new INT() as IConvertible;
 
             var code = type.GetTypeCode();
 
@@ -851,7 +751,7 @@ namespace L5Sharp.Tests.Types.Atomics
 
             compare.Should().Be(0);
         }
-        
+
         [Test]
         public void CompareTo_ValueTypeEqual_ShouldBeZero()
         {

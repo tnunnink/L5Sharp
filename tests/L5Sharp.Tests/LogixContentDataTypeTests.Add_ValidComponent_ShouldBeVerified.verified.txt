@@ -149,9 +149,9 @@ Dint Array]]></Description>
   <DataType Name="TestType" Family="NoFamily" Class="User">
     <Description><![CDATA[This is a test]]></Description>
     <Members>
-      <Member DataType="DINT" Dimension="0" Radix="Binary" ExternalAccess="Read/Write" Hidden="false" Name="Member1" />
-      <Member DataType="BOOL" Dimension="0" Radix="NullType" ExternalAccess="Read/Write" Hidden="true" Name="Member2" Target="Other" BitNumber="0" />
-      <Member DataType="SomeType" Dimension="0" Radix="NullType" ExternalAccess="Read Only" Hidden="false" Name="Member3" />
+      <Member Name="Member1" DataType="DINT" Dimension="0" Radix="Binary" ExternalAccess="Read/Write" Hidden="false" />
+      <Member Name="Member2" DataType="BOOL" Dimension="0" Radix="NullType" ExternalAccess="Read/Write" Hidden="true" Target="Other" BitNumber="0" />
+      <Member Name="Member3" DataType="SomeType" Dimension="0" Radix="NullType" ExternalAccess="Read Only" Hidden="false" />
     </Members>
   </DataType>
 </DataTypes>

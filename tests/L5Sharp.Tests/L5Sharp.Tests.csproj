@@ -127,9 +127,6 @@
       <None Update="Components\TagTests.Add_ComplexType_ShouldBeVerified.verified.txt">
         <DependentUpon>TagTests.cs</DependentUpon>
       </None>
-      <None Update="LogixContentDataTypeTests.Add_ValidComponent_ShouldBeVerified.verified.txt">
-        <DependentUpon>LogixContentDataTypeTests.cs</DependentUpon>
-      </None>
       <None Update="Components\TagTests.Remove_ValidTag_ShouldBeVerified.verified.txt">
         <DependentUpon>TagTests.cs</DependentUpon>
       </None>

@@ -76,7 +76,7 @@ namespace L5Sharp.Tests.Enums
             
             var result = radix.Parse("LDT#1970-01-19-17:04:37.952_000_000(UTC-06:00)");
 
-            result.As<LINT>().Should().Be(1638277952000000);
+            result.Should().Be(1638277952000000);
         }
         
         [Test]
@@ -93,7 +93,7 @@ namespace L5Sharp.Tests.Enums
 
             var result = radix.Parse("LDT#2022-01-01-00:00:00.000_000_000(UTC-06:00)");
 
-            result.As<LINT>().Should().Be(1641016800000000000);
+            result.Should().Be(1641016800000000000);
         }
     }
 }

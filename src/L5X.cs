@@ -51,8 +51,8 @@ public class L5X : XElement
 
         // We will "normalize" (ensure consistent root controller element and component containers) for all
         // files containing context (files that are not full projects) so that we won't have issues mutating the L5X.
-        if (ContainsContext is true || content.Element(L5XName.Controller) is null)
-            Normalize(this);
+        //if (ContainsContext is true || content.Element(L5XName.Controller) is null)
+        Normalize(this);
     }
 
     /// <summary>
@@ -150,12 +150,13 @@ public class L5X : XElement
 
     private static void Normalize(XContainer content)
     {
-        var controller = new XElement(L5XName.Controller, new XAttribute(L5XName.Use, Use.Context));
+        var controller = content.Element(L5XName.Controller) ??
+                         new XElement(L5XName.Controller, new XAttribute(L5XName.Use, Use.Context));
 
         foreach (var container in Containers)
         {
             var existing = content.Descendants(container).FirstOrDefault();
-            
+
             if (existing is not null)
             {
                 controller.Add(existing);
@@ -164,16 +165,9 @@ public class L5X : XElement
 
             controller.Add(new XElement(container));
         }
-
-        var current = content.Element(L5XName.Controller);
-
-        if (current is null)
-        {
-            content.Add(controller);
-            return;
-        }
-
-        current.ReplaceWith(controller);
+        
+        if (content.Element(L5XName.Controller) is not null) return;
+        content.Add(controller);
     }
 
     private static void MergeContainers(XContainer target, XContainer source, bool overwrite)

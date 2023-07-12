@@ -15,11 +15,11 @@ public class LogixContentExportTests
     {
         VerifierSettings.AddExtraDatetimeFormat("ddd MMM d HH:mm:ss yyyy");
     }
-    
+
     [Test]
     public void Export_ValidComponent_ShouldNotBeNull()
     {
-        var controller = new Controller();
+        var controller = new Controller { Name = "Test" };
 
         var content = LogixContent.Export(controller);
 
@@ -60,7 +60,7 @@ public class LogixContentExportTests
     public void Export_DataType_WriteToFileForImport()
     {
         const string output = @"C:\Users\tnunnink\Documents\GitHub\L5Sharp\tests\Samples\Generated\DataType.L5X";
-        
+
         var component = new DataType
         {
             Name = "TestType",
@@ -78,7 +78,7 @@ public class LogixContentExportTests
         content.Should().NotBeNull();
 
         content.Save(output);
-        
+
         FileAssert.Exists(output);
         File.Delete(output);
     }

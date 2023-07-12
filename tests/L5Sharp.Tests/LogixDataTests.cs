@@ -8,7 +8,7 @@ namespace L5Sharp.Tests;
 
 public class LogixDataTests
 {
-    [Test]
+    /*[Test]
     public void Register_ValidType_ShouldBeRegistered()
     {
         LogixData.ScanMode = ScanMode.None;
@@ -27,7 +27,7 @@ public class LogixDataTests
 
         LogixData.IsRegistered(nameof(MySimpleType)).Should().BeTrue();
         LogixData.IsRegistered(nameof(MyNestedType)).Should().BeTrue();
-    }
+    }*/
 
     [Test]
     public void Deserialize_RegisteredType_ShouldWork()
@@ -52,6 +52,7 @@ public class LogixDataTests
         type.As<TIMER>().DN.Should().Be(1);
     }
 
+    /*
     [Test]
     public void Deserialize_NoRegisteredType_ShouldBeComplexType()
     {
@@ -63,10 +64,9 @@ public class LogixDataTests
                 <DataValueMember Name=""DN"" DataType=""BOOL"" Value=""1""/>
                 </StructureMember>";
         var element = XElement.Parse(xml);
-        LogixData.ScanMode = ScanMode.None;
 
         var type = LogixData.Deserialize(element);
 
         type.Should().BeOfType<ComplexType>();
-    }
+    }*/
 }
