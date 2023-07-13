@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Net;
 using System.Xml.Linq;
 using L5Sharp.Catalog;
 using L5Sharp.Core;
