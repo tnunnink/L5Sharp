@@ -1,7 +1,6 @@
 ﻿using AutoFixture;
 using FluentAssertions;
 using L5Sharp.Enums;
-using L5Sharp.Types;
 using L5Sharp.Types.Atomics;
 using L5Sharp.Types.Predefined;
 
@@ -94,13 +93,6 @@ namespace L5Sharp.Tests.Types.Atomics
         }
 
         [Test]
-        public void TestAssigning()
-        {
-            UINT a = 123;
-            UINT b = 2;
-        }
-
-        [Test]
         public void ToBytes_WhenCalled_ReturnsExpected()
         {
             var expected = BitConverter.GetBytes(_random);
@@ -139,64 +131,6 @@ namespace L5Sharp.Tests.Types.Atomics
             var xml = type.Serialize().ToString();
 
             return Verify(xml);
-        }
-        
-        [Test]
-        public void Set_SameType_ShouldBeExpected()
-        {
-            var type = new UINT();
-
-            type.Set(new UINT(_random));
-
-            type.Should().Be(_random);
-        }
-
-        [Test]
-        public void Set_SmallerType_ShouldBeExpected()
-        {
-            var type = new UINT();
-
-            type.Set(new SINT(123));
-
-            type.Should().Be(123);
-        }
-
-        [Test]
-        public void Set_LargeValueSmallerType_ShouldBeExpected()
-        {
-            var type = new UINT(UINT.MaxValue);
-
-            type.Set(new SINT(123));
-
-            type.Should().Be(123);
-        }
-
-        [Test]
-        public void Set_LargerTypeValidValue_ShouldBeExpected()
-        {
-            var type = new UINT();
-
-            type.Set(new LINT(123));
-
-            type.Should().Be(123);
-        }
-
-        [Test]
-        public void Set_LargerTypeLargerValue_ShouldHaveDataLoss()
-        {
-            var type = new UINT();
-
-            type.Set(new LINT(LINT.MaxValue));
-
-            type.Should().Be(UINT.MaxValue);
-        }
-
-        [Test]
-        public void Set_InvalidType_ShouldThrowArgumentException()
-        {
-            var type = new UINT();
-
-            FluentActions.Invoking(() => type.Set(new ComplexType("Test"))).Should().Throw<ArgumentException>();
         }
 
         [Test]

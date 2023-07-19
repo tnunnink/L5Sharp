@@ -10,7 +10,7 @@ namespace L5Sharp.Types.Atomics;
 /// </summary>
 public sealed class REAL : AtomicType, IComparable, IConvertible
 {
-    private float _value;
+    private readonly float _value;
 
     /// <summary>
     /// Creates a new default <see cref="REAL"/> type.
@@ -75,7 +75,7 @@ public sealed class REAL : AtomicType, IComparable, IConvertible
     public const float MinValue = float.MinValue;
 
     /// <inheritdoc />
-    public override IEnumerable<Member> Members => Enumerable.Empty<Member>();
+    public override IEnumerable<LogixMember> Members => Enumerable.Empty<LogixMember>();
 
     /// <inheritdoc />
     public int CompareTo(object obj)
@@ -96,7 +96,7 @@ public sealed class REAL : AtomicType, IComparable, IConvertible
         return obj switch
         {
             REAL value => Math.Abs(_value - value._value) < float.Epsilon,
-            AtomicType atomic => base.Equals(atomic),
+            AtomicType atomic => _value.Equals((float)Convert.ChangeType(atomic, typeof(float))),
             ValueType value => _value.Equals(Convert.ChangeType(value, typeof(float))),
             _ => false
         };
@@ -106,19 +106,8 @@ public sealed class REAL : AtomicType, IComparable, IConvertible
     public override byte[] GetBytes() => BitConverter.GetBytes(_value);
 
     /// <inheritdoc />
-    public override int GetHashCode() => base.GetHashCode();
-
-    /// <inheritdoc />
-    public override LogixType Set(LogixType type)
-    {
-        if (type is not AtomicType atomic)
-            throw new ArgumentException($"Can not set logix type {GetType().Name} with {type.GetType().Name}.");
-
-        _value = type is REAL value ? value._value : BitConverter.ToSingle(SetBytes(atomic.GetBytes()));
-        RaiseDataChanged();
-        return this;
-    }
-
+    public override int GetHashCode() => _value.GetHashCode();
+    
     /// <summary>
     /// Parses the provided string value to a new <see cref="REAL"/>.
     /// </summary>

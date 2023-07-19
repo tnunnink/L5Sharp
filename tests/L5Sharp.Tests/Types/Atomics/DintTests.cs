@@ -3,8 +3,6 @@ using System.Globalization;
 using AutoFixture;
 using FluentAssertions;
 using L5Sharp.Enums;
-using L5Sharp.Tests.Types.Custom;
-using L5Sharp.Types;
 using L5Sharp.Types.Atomics;
 using L5Sharp.Types.Predefined;
 
@@ -123,8 +121,8 @@ namespace L5Sharp.Tests.Types.Atomics
         {
             var type = new DINT(1);
 
-            var bit0 = type.Bit(0);
-            var bit1 = type.Bit(1);
+            var bit0 = type[0];
+            var bit1 = type[1];
 
             bit0.Should().Be(true);
             bit1.Should().Be(false);
@@ -135,7 +133,7 @@ namespace L5Sharp.Tests.Types.Atomics
         {
             var type = new DINT(1);
 
-            FluentActions.Invoking(() => type.Bit(32)) .Should().Throw<ArgumentOutOfRangeException>();
+            FluentActions.Invoking(() => type[32]) .Should().Throw<ArgumentOutOfRangeException>();
         }
 
         [Test]
@@ -180,71 +178,13 @@ namespace L5Sharp.Tests.Types.Atomics
         }
 
         [Test]
-        public void Set_SameType_ShouldBeExpected()
-        {
-            var type = new DINT();
-
-            var value = type.Set(new DINT(_random));
-
-            value.Should().Be(_random);
-        }
-
-        [Test]
-        public void Set_SmallerType_ShouldBeExpected()
-        {
-            var type = new DINT();
-
-            var value = type.Set(new SINT(123));
-
-            value.Should().Be(123);
-        }
-
-        [Test]
-        public void Set_LargeValueSmallerType_ShouldBeExpected()
-        {
-            var type = new DINT(DINT.MaxValue);
-
-            var value = type.Set(new SINT(123));
-
-            value.Should().Be(123);
-        }
-
-        [Test]
-        public void Set_LargerTypeValidValue_ShouldBeExpected()
-        {
-            var type = new DINT();
-
-            var value = (DINT)type.Set(new LINT(123));
-
-            value.Should().Be(123);
-        }
-
-        [Test]
-        public void Set_LargerTypeLargerValue_ShouldHaveOverflow()
-        {
-            var type = new DINT();
-
-            var value = type.Set(new LINT(LINT.MaxValue));
-
-            value.Should().Be(-1);
-        }
-
-        [Test]
-        public void Set_InvalidType_ShouldThrowArgumentException()
-        {
-            var type = new DINT();
-
-            FluentActions.Invoking(() => type.Set(new ComplexType("Test"))).Should().Throw<ArgumentException>();
-        }
-
-        [Test]
         public void Set_BitOverloadValidIndex_ShouldHaveExpectedValue()
         {
             var type = new DINT();
 
-            var set = type.Set(0, true);
+            type[0] = true;
 
-            set.Should().Be(1);
+            type.Should().Be(1);
         }
 
         [Test]
@@ -252,7 +192,7 @@ namespace L5Sharp.Tests.Types.Atomics
         {
             var type = new DINT();
 
-            FluentActions.Invoking(() => type.Set(32, true)).Should().Throw<ArgumentOutOfRangeException>();
+            FluentActions.Invoking(() => type[32] = true).Should().Throw<ArgumentOutOfRangeException>();
         }
         
         [Test]
@@ -260,16 +200,16 @@ namespace L5Sharp.Tests.Types.Atomics
         {
             var type = new DINT();
 
-            FluentActions.Invoking(() => type.Set(1, null!)).Should().Throw<ArgumentNullException>();
+            FluentActions.Invoking(() => type[1] = null!).Should().Throw<ArgumentNullException>();
         }
 
         [Test]
-        public void DataChanged_WhenSetIsCalled_ShouldRaiseEvent()
+        public void DataChanged_WhenMemberIsSet_ShouldRaiseEvent()
         {
             var type = new DINT();
             using var monitor = type.Monitor();
 
-            type.Set(_random);
+            type.Members.First().DataType = true;
             
             monitor.Should().Raise("DataChanged");
         }
@@ -535,15 +475,6 @@ namespace L5Sharp.Tests.Types.Atomics
             var result = (LREAL)type.ToType(typeof(LREAL), CultureInfo.InvariantCulture);
 
             result.Should().Be(expected);
-        }
-        
-        [Test]
-        public void ToType_TestAtomic_ShouldThrowInvalidCastException()
-        {
-            var type = new DINT() as IConvertible;
-
-            FluentActions.Invoking(() => type.ToType(typeof(TestAtomic), CultureInfo.InvariantCulture)).Should()
-                .Throw<InvalidCastException>();
         }
 
         [Test]

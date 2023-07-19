@@ -8,7 +8,7 @@ namespace L5Sharp.Types.Atomics;
 /// </summary>
 public sealed class LINT : AtomicType, IComparable, IConvertible
 {
-    private long _value;
+    private readonly long _value;
 
     /// <summary>
     /// Creates a new default <see cref="LINT"/> type.
@@ -105,7 +105,7 @@ public sealed class LINT : AtomicType, IComparable, IConvertible
         return obj switch
         {
             LINT value => _value == value._value,
-            AtomicType atomic => base.Equals(atomic),
+            AtomicType atomic => _value.Equals((long)Convert.ChangeType(atomic, typeof(long))),
             ValueType value => _value.Equals(Convert.ChangeType(value, typeof(long))),
             _ => false
         };
@@ -115,39 +115,7 @@ public sealed class LINT : AtomicType, IComparable, IConvertible
     public override byte[] GetBytes() => BitConverter.GetBytes(_value);
 
     /// <inheritdoc />
-    public override int GetHashCode() => base.GetHashCode();
-
-    /// <inheritdoc />
-    public override LogixType Set(LogixType type)
-    {
-        if (type is not AtomicType atomic)
-            throw new ArgumentException($"Can not set {GetType().Name} with type {type.GetType().Name}");
-
-        _value = type is LINT value ? value._value : BitConverter.ToInt64(SetBytes(atomic.GetBytes()));
-        RaiseDataChanged();
-        return this;
-    }
-
-    /// <summary>
-    /// Sets the specified bit of the atomic type to the provided <see cref="BOOL"/> value. 
-    /// </summary>
-    /// <param name="bit">The zero based bit index to set.</param>
-    /// <param name="value">The <see cref="BOOL"/> value to set.</param>
-    /// <returns>A new <see cref="LINT"/> with the updated value.</returns>
-    /// <exception cref="ArgumentNullException"><c>value</c> is null.</exception>
-    /// <exception cref="ArgumentOutOfRangeException"><c>bit</c> is out of range of the atomic type bit length.</exception>
-    public LINT Set(int bit, BOOL value)
-    {
-        if (value is null)
-            throw new ArgumentNullException(nameof(value));
-
-        if (bit is < 0 or >= 64)
-            throw new ArgumentOutOfRangeException($"The bit {bit} is out of range for type {Name}", nameof(bit));
-
-        _value = value ? _value | (long)1 << bit : _value & ~(1 << bit);
-        RaiseDataChanged();
-        return this;
-    }
+    public override int GetHashCode() => _value.GetHashCode();
 
     /// <summary>
     /// Parses the provided string value to a new <see cref="LINT"/>.
@@ -164,6 +132,28 @@ public sealed class LINT : AtomicType, IComparable, IConvertible
         var atomic = radix.Parse(value);
         var converted = (long)Convert.ChangeType(atomic, typeof(long));
         return new LINT(converted, radix);
+    }
+    
+    /// <summary>
+    /// Executes the logic to update the atomic value and forward the data changed event up the type/member hierarchy. 
+    /// </summary>
+    /// <param name="sender">The member sending the change event.</param>
+    /// <param name="e">The event args of the event.</param>
+    /// <remarks>
+    /// Atomic members (bits) represent the value of the type. When the member data changed event is triggered,
+    /// we want to intercept that on the parent atomic type in order to change/update the reflected value. We can do that
+    /// by getting the changed member (sender) name (bit number) and value (bit value) and setting to get the updated
+    /// value. However, since atomic types ar immutable, we have to send the changed value up the chain to the parent
+    /// member (Tag, DataValue, DataValueMember) so that it can replace it's data type with the new atomic value. This is
+    /// captured in <see cref="LogixMember"/>.
+    /// </remarks>
+    protected override void OnMemberDataChanged(object sender, EventArgs e)
+    {
+        var member = (LogixMember)sender;
+        var bit = int.Parse(member.Name);
+        var value = member.DataType.As<BOOL>();
+        var result = value ? _value | (long)1 << bit : _value & ~(1 << bit);
+        RaiseDataChanged(new LINT(result, Radix));
     }
 
     // Contains the implicit .NET conversions for the type.

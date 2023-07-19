@@ -65,7 +65,7 @@ public class LogixContent
         content.Add(new XAttribute(L5XName.SchemaRevision, new Revision()));
         if (softwareRevision is not null) content.Add(new XAttribute(L5XName.SoftwareRevision, softwareRevision));
         content.Add(new XAttribute(L5XName.TargetName, target.Name));
-        content.Add(new XAttribute(L5XName.TargetType, target.TypeName));
+        content.Add(new XAttribute(L5XName.TargetType, target.GetType().L5XType()));
         content.Add(new XAttribute(L5XName.ContainsContext, target.GetType() != typeof(Controller)));
         content.Add(new XAttribute(L5XName.Owner, Environment.UserName));
         content.Add(new XAttribute(L5XName.ExportDate, DateTime.Now.ToString(L5X.DateTimeFormat)));
@@ -182,20 +182,14 @@ public class LogixContent
     {
         if (content is null)
             throw new ArgumentNullException(nameof(content));
-        L5X.Merge(content.L5X, overwrite);
+        L5X.MergeContent(content.L5X, overwrite);
     }
 
     /// <summary>
     /// Serialize this <see cref="LogixContent"/> to a file, overwriting an existing file, if it exists.
     /// </summary>
     /// <param name="fileName">A string that contains the name of the file.</param>
-    public void Save(string fileName)
-    {
-        var declaration = new XDeclaration("1.0", "UTF-8", "yes");
-        var document = new XDocument(declaration);
-        document.Add(L5X);
-        document.Save(fileName);
-    }
+    public void Save(string fileName) => L5X.SaveContent(fileName);
 
     /// <inheritdoc />
     public override string ToString() => L5X.ToString();

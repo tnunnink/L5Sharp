@@ -180,90 +180,6 @@ namespace L5Sharp.Tests.Types.Atomics
         }
 
         [Test]
-        public void Set_SameType_ShouldBeExpected()
-        {
-            var type = new LINT();
-
-            var value = type.Set(new LINT(_random));
-
-            value.Should().Be(_random);
-        }
-
-        [Test]
-        public void Set_SmallerType_ShouldBeExpected()
-        {
-            var type = new LINT();
-
-            var value = type.Set(new SINT(123));
-
-            value.Should().Be(123);
-        }
-
-        [Test]
-        public void Set_LargeValueSmallerType_ShouldBeExpected()
-        {
-            var type = new LINT(LINT.MaxValue);
-
-            var value = type.Set(new SINT(123));
-
-            value.Should().Be(123);
-        }
-
-        [Test]
-        public void Set_LargerTypeValidValue_ShouldBeExpected()
-        {
-            var type = new LINT();
-
-            var value = (LINT)type.Set(new LINT(123));
-
-            value.Should().Be(123);
-        }
-
-        [Test]
-        public void Set_LargerTypeLargerValue_ShouldHaveBeExpected()
-        {
-            var type = new LINT();
-
-            var value = type.Set(new LINT(LINT.MaxValue));
-
-            value.Should().Be(LINT.MaxValue);
-        }
-
-        [Test]
-        public void Set_InvalidType_ShouldThrowArgumentException()
-        {
-            var type = new LINT();
-
-            FluentActions.Invoking(() => type.Set(new ComplexType("Test"))).Should().Throw<ArgumentException>();
-        }
-
-        [Test]
-        public void Set_BitOverloadValidIndex_ShouldHaveExpectedValue()
-        {
-            var type = new LINT();
-
-            var set = type.Set(0, true);
-
-            set.Should().Be(1);
-        }
-
-        [Test]
-        public void Set_BitOverloadInvalidIndex_ShouldThrowArgumentOutOfRangeException()
-        {
-            var type = new LINT();
-
-            FluentActions.Invoking(() => type.Set(64, true)).Should().Throw<ArgumentOutOfRangeException>();
-        }
-        
-        [Test]
-        public void Set_BitOverloadNullValue_ShouldThrowArgumentNullException()
-        {
-            var type = new LINT();
-
-            FluentActions.Invoking(() => type.Set(1, null!)).Should().Throw<ArgumentNullException>();
-        }
-
-        [Test]
         public void ToBoolean_WhenCalled_ShouldBeExpectedValue()
         {
             var type = new LINT() as IConvertible;
@@ -529,15 +445,6 @@ namespace L5Sharp.Tests.Types.Atomics
             var result = (LREAL)type.ToType(typeof(LREAL), CultureInfo.InvariantCulture);
 
             result.Should().Be(expected);
-        }
-        
-        [Test]
-        public void ToType_TestAtomic_ShouldThrowInvalidCastException()
-        {
-            var type = new LINT() as IConvertible;
-
-            FluentActions.Invoking(() => type.ToType(typeof(TestAtomic), CultureInfo.InvariantCulture)).Should()
-                .Throw<InvalidCastException>();
         }
 
         [Test]

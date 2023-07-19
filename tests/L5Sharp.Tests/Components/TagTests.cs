@@ -268,7 +268,7 @@ namespace L5Sharp.Tests.Components
             var tag = new Tag { Name = "Test", Value = new TIMER() };
 
             //Name does not matter just the members
-            tag.Value = new ComplexType("Test", new List<Member>
+            tag.Value = new ComplexType("Test", new List<LogixMember>
             {
                 new("PRE", 5000),
                 new("ACC", 1234),

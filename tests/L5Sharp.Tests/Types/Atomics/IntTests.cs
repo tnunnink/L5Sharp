@@ -3,8 +3,6 @@ using System.Globalization;
 using AutoFixture;
 using FluentAssertions;
 using L5Sharp.Enums;
-using L5Sharp.Tests.Types.Custom;
-using L5Sharp.Types;
 using L5Sharp.Types.Atomics;
 using L5Sharp.Types.Predefined;
 
@@ -117,27 +115,7 @@ namespace L5Sharp.Tests.Types.Atomics
 
             bitsEqualToOne.Should().NotBeEmpty();
         }
-
-        [Test]
-        public void Bit_ValidIndex_ShouldBeExpected()
-        {
-            var type = new INT(1);
-
-            var bit0 = type.Bit(0);
-            var bit1 = type.Bit(1);
-
-            bit0.Should().Be(true);
-            bit1.Should().Be(false);
-        }
-
-        [Test]
-        public void Bit_InvalidIndex_ShouldThrowArgumentOutOfRangeException()
-        {
-            var type = new INT(1);
-
-            FluentActions.Invoking(() => type.Bit(16)).Should().Throw<ArgumentOutOfRangeException>();
-        }
-
+        
         [Test]
         public void GetBytes_WhenCalled_ReturnsExpected()
         {
@@ -177,64 +155,6 @@ namespace L5Sharp.Tests.Types.Atomics
             var xml = type.Serialize().ToString();
 
             return Verify(xml);
-        }
-
-        [Test]
-        public void Set_SameType_ShouldBeExpected()
-        {
-            var type = new INT();
-
-            var value = type.Set(new INT(_random));
-
-            value.Should().Be(_random);
-        }
-
-        [Test]
-        public void Set_SmallerType_ShouldBeExpected()
-        {
-            var type = new INT();
-
-            var value = type.Set(new SINT(123));
-
-            value.Should().Be(123);
-        }
-
-        [Test]
-        public void Set_LargeValueSmallerType_ShouldBeExpected()
-        {
-            var type = new INT(INT.MaxValue);
-
-            var value = type.Set(new SINT(123));
-
-            value.Should().Be(123);
-        }
-
-        [Test]
-        public void Set_LargerTypeValidValue_ShouldBeExpected()
-        {
-            var type = new INT();
-
-            var value = (INT)type.Set(new LINT(123));
-
-            value.Should().Be(123);
-        }
-
-        [Test]
-        public void Set_LargerTypeLargerValue_ShouldHaveOverflow()
-        {
-            var type = new INT();
-
-            var value = type.Set(new LINT(LINT.MaxValue));
-
-            value.Should().Be(-1);
-        }
-
-        [Test]
-        public void Set_InvalidType_ShouldThrowArgumentException()
-        {
-            var type = new INT();
-
-            FluentActions.Invoking(() => type.Set(new ComplexType("Test"))).Should().Throw<ArgumentException>();
         }
 
         [Test]
@@ -524,15 +444,6 @@ namespace L5Sharp.Tests.Types.Atomics
             var result = (LREAL)type.ToType(typeof(LREAL), CultureInfo.InvariantCulture);
 
             result.Should().Be(expected);
-        }
-
-        [Test]
-        public void ToType_TestAtomic_ShouldThrowInvalidCastException()
-        {
-            var type = new INT() as IConvertible;
-
-            FluentActions.Invoking(() => type.ToType(typeof(TestAtomic), CultureInfo.InvariantCulture)).Should()
-                .Throw<InvalidCastException>();
         }
 
         [Test]

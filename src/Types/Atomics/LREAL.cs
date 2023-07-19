@@ -10,14 +10,14 @@ namespace L5Sharp.Types.Atomics;
 /// </summary>
 public sealed class LREAL : AtomicType, IComparable, IConvertible
 {
-    private double _value;
+    private readonly double _value;
 
     /// <summary>
     /// Creates a new default <see cref="LREAL"/> type.
     /// </summary>
     public LREAL()
     {
-        _value = 0;
+        _value = default;
         Radix = Radix.Float;
     }
 
@@ -37,7 +37,7 @@ public sealed class LREAL : AtomicType, IComparable, IConvertible
     /// <param name="radix">The <see cref="Enums.Radix"/> number format of the value.</param>
     public LREAL(Radix radix)
     {
-        _value = 0;
+        _value = default;
         if (radix is null) throw new ArgumentNullException(nameof(radix));
         if (!radix.SupportsType(this))
             throw new ArgumentException($"Invalid Radix {radix} for atomic type {Name}.", nameof(radix));
@@ -75,7 +75,7 @@ public sealed class LREAL : AtomicType, IComparable, IConvertible
     public const double MinValue = double.MinValue;
 
     /// <inheritdoc />
-    public override IEnumerable<Member> Members => Enumerable.Empty<Member>();
+    public override IEnumerable<LogixMember> Members => Enumerable.Empty<LogixMember>();
 
     /// <inheritdoc />
     public int CompareTo(object obj)
@@ -96,7 +96,7 @@ public sealed class LREAL : AtomicType, IComparable, IConvertible
         return obj switch
         {
             LREAL value => Math.Abs(_value - value._value) < double.Epsilon,
-            AtomicType atomic => base.Equals(atomic),
+            AtomicType atomic => _value.Equals((double)Convert.ChangeType(atomic, typeof(double))),
             ValueType value => _value.Equals(Convert.ChangeType(value, typeof(double))),
             _ => false
         };
@@ -106,18 +106,7 @@ public sealed class LREAL : AtomicType, IComparable, IConvertible
     public override byte[] GetBytes() => BitConverter.GetBytes(_value);
 
     /// <inheritdoc />
-    public override int GetHashCode() => base.GetHashCode();
-
-    /// <inheritdoc />
-    public override LogixType Set(LogixType type)
-    {
-        if (type is not AtomicType atomic)
-            throw new ArgumentException($"Can not set logix type {GetType().Name} with {type.GetType().Name}.");
-
-        _value = type is LREAL value ? value._value : BitConverter.ToDouble( SetBytes(atomic.GetBytes()));
-        RaiseDataChanged();
-        return this;
-    }
+    public override int GetHashCode() => _value.GetHashCode();
 
     /// <summary>
     /// Parses the provided string value to a new <see cref="LREAL"/>.

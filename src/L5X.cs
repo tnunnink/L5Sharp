@@ -8,11 +8,13 @@ using L5Sharp.Enums;
 namespace L5Sharp;
 
 /// <summary>
-/// A <see cref="XElement"/> decorator that adds members for interacting with the root L5X content.
+/// A <see cref="XElement"/> decorator that adds members for interacting with the root L5X content. This class should
+/// represent the root RSLogix5000Content element of the L5X file.
 /// </summary>
 /// <remarks>
-/// Most of these methods and properties are meant to be internal and are referenced when mutating or querying the content
-/// of an L5X file. However, the user can use this type to access the XML directly to extend or query the data.
+/// Most of these methods and properties are meant to be internal and are used by <see cref="LogixContent"/>.
+/// However, the user can use this type if they need direct access to the underlying XML to perform custom query
+/// or extend the API.
 /// </remarks>
 public class L5X : XElement
 {
@@ -50,9 +52,8 @@ public class L5X : XElement
             throw new ArgumentException($"Expecting root element name of {L5XName.RSLogix5000Content}.");
 
         // We will "normalize" (ensure consistent root controller element and component containers) for all
-        // files containing context (files that are not full projects) so that we won't have issues mutating the L5X.
-        //if (ContainsContext is true || content.Element(L5XName.Controller) is null)
-        Normalize(this);
+        // files so that we won't have issues getting top level containers. When saving we can remove unused containers.
+        Normalize();
     }
 
     /// <summary>
@@ -138,7 +139,7 @@ public class L5X : XElement
     /// </summary>
     /// <param name="l5X">The L5X element to merge with the current target element.</param>
     /// <param name="overwrite">A flag to indicate whether to overwrite child elements of matching name.</param>
-    internal void Merge(L5X l5X, bool overwrite)
+    internal void MergeContent(L5X l5X, bool overwrite)
     {
         var containerPairs = GetContainers()
             .Join(l5X.GetContainers(), e => e.Name, e => e.Name, (a, b) => new { a, b })
@@ -148,28 +149,51 @@ public class L5X : XElement
             MergeContainers(pair.a, pair.b, overwrite);
     }
 
-    private static void Normalize(XContainer content)
+    /// <summary>
+    /// Create document, adds default declaration, and saves the current L5X content to the specified file name.
+    /// </summary>
+    /// <param name="fileName">A string that contains the name of the file.</param>
+    internal void SaveContent(string fileName)
     {
-        var controller = content.Element(L5XName.Controller) ??
-                         new XElement(L5XName.Controller, new XAttribute(L5XName.Use, Use.Context));
+        //This will sanitize containers that were perhaps added when normalizing that went unused.
+        foreach (var container in GetContainers().Where(c => !c.HasElements))
+            container.Remove();
 
-        foreach (var container in Containers)
+        var declaration = new XDeclaration("1.0", "UTF-8", "yes");
+        var document = new XDocument(declaration);
+        document.Add(this);
+        document.Save(fileName);
+    }
+    
+    /// <summary>
+    /// If no root controller element exists, adds new context controller and moves all root elements into that controller
+    /// element. Then adds missing top level containers to ensure consistent structure of the root L5X.
+    /// </summary>
+    private void Normalize()
+    {
+        if (Element(L5XName.Controller) is null)
         {
-            var existing = content.Descendants(container).FirstOrDefault();
+            var context = new XElement(L5XName.Controller, new XAttribute(L5XName.Use, Use.Context));
+            context.Add(Elements());
+            RemoveNodes();
+            Add(context);
+        }
 
-            if (existing is not null)
-            {
-                controller.Add(existing);
-                continue;
-            }
+        var controller = Element(L5XName.Controller)!;
 
+        foreach (var container in from container in Containers
+                 let existing = controller.Element(container)
+                 where existing is null
+                 select container)
+        {
             controller.Add(new XElement(container));
         }
-        
-        if (content.Element(L5XName.Controller) is not null) return;
-        content.Add(controller);
     }
 
+    /// <summary>
+    /// Given to top level containers, adds or replaces all child elements matching based on the logix name of the elements.
+    /// todo This will likely fail for elements without a logix name (module).
+    /// </summary>
     private static void MergeContainers(XContainer target, XContainer source, bool overwrite)
     {
         foreach (var element in source.Elements())

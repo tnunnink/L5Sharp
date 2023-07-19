@@ -72,7 +72,7 @@ public sealed class ALARM_DIGITAL : StructureType
     public ALARM_DIGITAL(XElement element) : base(nameof(ALARM_DIGITAL))
     {
         if (element is null) throw new ArgumentNullException(nameof(element));
-        var members = element.Attributes().Select(a => new Member(a.Name.ToString(), Atomic.Parse(a.Value)));
+        var members = element.Attributes().Select(a => new LogixMember(a.Name.ToString(), Atomic.Parse(a.Value)));
         AddMembers(members.ToList());
     }
 

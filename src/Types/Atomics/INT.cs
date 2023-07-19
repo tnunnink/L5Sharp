@@ -8,14 +8,14 @@ namespace L5Sharp.Types.Atomics;
 /// </summary>
 public sealed class INT : AtomicType, IComparable, IConvertible
 {
-    private short _value;
+    private readonly short _value;
 
     /// <summary>
     /// Creates a new default <see cref="INT"/> type.
     /// </summary>
     public INT()
     {
-        _value = 0;
+        _value = default;
         Radix = Radix.Decimal;
     }
 
@@ -35,7 +35,7 @@ public sealed class INT : AtomicType, IComparable, IConvertible
     /// <param name="radix">The <see cref="Enums.Radix"/> number format of the value.</param>
     public INT(Radix radix)
     {
-        _value = 0;
+        _value = default;
         if (radix is null) throw new ArgumentNullException(nameof(radix));
         if (!radix.SupportsType(this))
             throw new ArgumentException($"Invalid Radix {radix} for atomic type {Name}.", nameof(radix));
@@ -73,17 +73,15 @@ public sealed class INT : AtomicType, IComparable, IConvertible
     public const short MinValue = short.MinValue;
 
     /// <summary>
-    /// Gets the bit value as a <see cref="BOOL"/> at the specified zero based bit index of the atomic type.
+    /// Gets or sets a child bit member's data type value. 
     /// </summary>
     /// <param name="bit">The zero based bit index of the value to get.</param>
-    /// <returns>A <see cref="BOOL"/> representing the value of the specified bit.</returns>
+    /// <returns>A <see cref="BOOL"/> representing the value of the specified bit value (0/1).</returns>
     /// <exception cref="ArgumentOutOfRangeException"><c>bit</c> is out of range of the atomic type bit length.</exception>
-    public BOOL Bit(int bit)
+    public BOOL this[int bit]
     {
-        if (bit is < 0 or >= 16)
-            throw new ArgumentOutOfRangeException($"The bit {bit} is out of range for type {Name}", nameof(bit));
-
-        return new BOOL((_value & (short)(1 << bit)) != 0);
+        get => BitMember(bit).DataType.As<BOOL>();
+        set => BitMember(bit).DataType = value;
     }
 
     /// <inheritdoc />
@@ -105,7 +103,7 @@ public sealed class INT : AtomicType, IComparable, IConvertible
         return obj switch
         {
             INT value => value._value == _value,
-            AtomicType value => base.Equals(value),
+            AtomicType atomic => _value.Equals((short)Convert.ChangeType(atomic, typeof(short))),
             ValueType value => _value.Equals(Convert.ChangeType(value, typeof(short))),
             _ => false
         };
@@ -115,18 +113,7 @@ public sealed class INT : AtomicType, IComparable, IConvertible
     public override byte[] GetBytes() => BitConverter.GetBytes(_value);
 
     /// <inheritdoc />
-    public override int GetHashCode() => base.GetHashCode();
-
-    /// <inheritdoc />
-    public override LogixType Set(LogixType type)
-    {
-        if (type is not AtomicType atomic)
-            throw new ArgumentException($"Can not set logix type {GetType().Name} with {type.GetType().Name}.");
-
-        _value = type is INT value ? value._value : BitConverter.ToInt16(SetBytes(atomic.GetBytes()));
-        RaiseDataChanged();
-        return this;
-    }
+    public override int GetHashCode() => _value.GetHashCode();
 
     /// <summary>
     /// Sets the specified bit of the atomic type to the provided <see cref="BOOL"/> value. 
@@ -144,9 +131,8 @@ public sealed class INT : AtomicType, IComparable, IConvertible
         if (bit is < 0 or >= 16)
             throw new ArgumentOutOfRangeException($"The bit {bit} is out of range for type {Name}", nameof(bit));
 
-        _value = (short)(value ? _value | (short)(1 << bit) : _value & (short)~(1 << bit));
-        RaiseDataChanged();
-        return this;
+        var result = (short)(value ? _value | (short)(1 << bit) : _value & (short)~(1 << bit));
+        return new INT(result, Radix);
     }
 
     /// <summary>
@@ -164,6 +150,28 @@ public sealed class INT : AtomicType, IComparable, IConvertible
         var atomic = radix.Parse(value);
         var converted = (short)Convert.ChangeType(atomic, typeof(short));
         return new INT(converted, radix);
+    }
+    
+    /// <summary>
+    /// Executes the logic to update the atomic value and forward the data changed event up the type/member hierarchy. 
+    /// </summary>
+    /// <param name="sender">The member sending the change event.</param>
+    /// <param name="e">The event args of the event.</param>
+    /// <remarks>
+    /// Atomic members (bits) represent the value of the type. When the member data changed event is triggered,
+    /// we want to intercept that on the parent atomic type in order to change/update the reflected value. We can do that
+    /// by getting the changed member (sender) name (bit number) and value (bit value) and setting to get the updated
+    /// value. However, since atomic types ar immutable, we have to send the changed value up the chain to the parent
+    /// member (Tag, DataValue, DataValueMember) so that it can replace it's data type with the new atomic value. This is
+    /// captured in <see cref="LogixMember"/>.
+    /// </remarks>
+    protected override void OnMemberDataChanged(object sender, EventArgs e)
+    {
+        var member = (LogixMember)sender;
+        var bit = int.Parse(member.Name);
+        var value = member.DataType.As<BOOL>();
+        var result = (short)(value ? _value | (short)(1 << bit) : _value & (short)~(1 << bit));
+        RaiseDataChanged(new INT(result, Radix));
     }
     
     // Contains the implicit .NET conversions for the type.

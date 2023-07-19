@@ -18,14 +18,16 @@ namespace L5Sharp.Components;
 /// </footer>
 public class Tag : LogixComponent<Tag>
 {
-    private readonly Member _member;
+    private readonly LogixMember _member;
 
     /// <summary>
     /// Creates a new <see cref="Tag"/> with default values.
     /// </summary>
     public Tag()
     {
-        _member = new Member(Element);
+        _member = new LogixMember(Element);
+        _member.DataChanged += OnDataChanged;
+        
         Root = this;
         TagType = TagType.Base;
         ExternalAccess = ExternalAccess.ReadWrite;
@@ -39,7 +41,9 @@ public class Tag : LogixComponent<Tag>
     /// <exception cref="ArgumentNullException"><c>element</c> is null.</exception>
     public Tag(XElement element) : base(element)
     {
-        _member = new Member(Element);
+        _member = new LogixMember(Element);
+        _member.DataChanged += OnDataChanged;
+        
         Root = this;
     }
 
@@ -54,7 +58,7 @@ public class Tag : LogixComponent<Tag>
     /// This constructor is used internally for methods like <see cref="Member"/> to return new
     /// tag member objects.
     /// </remarks>
-    private Tag(Tag root, Member member, Tag parent) : base(root.Element)
+    private Tag(Tag root, LogixMember member, Tag parent) : base(root.Element)
     {
         _member = member ?? throw new ArgumentNullException(nameof(member));
         Root = root ?? throw new ArgumentNullException(nameof(root));
@@ -130,14 +134,7 @@ public class Tag : LogixComponent<Tag>
     public LogixType Value
     {
         get => _member.DataType;
-        set
-        {
-            if (value is null) throw new ArgumentNullException(nameof(value));
-            _member.DataType.DataChanged -= OnDataChanged;
-            _member.DataType = value;
-            _member.DataType.DataChanged += OnDataChanged;
-            SetData(Root.Value);
-        }
+        set => _member.DataType = value;
     }
 
     /// <summary>
@@ -273,7 +270,7 @@ public class Tag : LogixComponent<Tag>
     /// <see cref="ComplexType"/> method.</remarks>
     public void Add(string name, LogixType value)
     {
-        var member = new Member(name, value);
+        var member = new LogixMember(name, value);
         if (Value is not ComplexType complexType)
             throw new InvalidOperationException("Can only mutate ComplexType tags.");
         complexType.Add(member);

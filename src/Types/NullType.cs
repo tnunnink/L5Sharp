@@ -29,10 +29,7 @@ public sealed class NullType : LogixType
     public override DataTypeClass Class => DataTypeClass.Unknown;
 
     /// <inheritdoc />
-    public override IEnumerable<Member> Members => Enumerable.Empty<Member>();
-
-    /// <inheritdoc />
-    public override LogixType Set(LogixType type) => type;
+    public override IEnumerable<LogixMember> Members => Enumerable.Empty<LogixMember>();
 
     /// <inheritdoc />
     public override XElement Serialize() => new(L5XName.Data, new XAttribute(L5XName.Format, DataFormat.Decorated));

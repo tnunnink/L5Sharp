@@ -11,14 +11,14 @@ namespace L5Sharp.Types.Atomics;
 /// </summary>
 public sealed class BOOL : AtomicType, IComparable, IConvertible
 {
-    private bool _value;
+    private readonly bool _value;
 
     /// <summary>
     /// Creates a new default <see cref="BOOL"/> type.
     /// </summary>
     public BOOL()
     {
-        _value = false;
+        _value = default;
         Radix = Radix.Decimal;
     }
 
@@ -38,7 +38,7 @@ public sealed class BOOL : AtomicType, IComparable, IConvertible
     /// <param name="radix">The <see cref="Enums.Radix"/> number format of the value.</param>
     public BOOL(Radix radix)
     {
-        _value = false;
+        _value = default;
         if (radix is null) throw new ArgumentNullException(nameof(radix));
         if (!radix.SupportsType(this)) throw new ArgumentException("", nameof(radix));
         Radix = radix;
@@ -64,7 +64,7 @@ public sealed class BOOL : AtomicType, IComparable, IConvertible
     public override Radix Radix { get; }
 
     /// <inheritdoc />
-    public override IEnumerable<Member> Members => Enumerable.Empty<Member>();
+    public override IEnumerable<LogixMember> Members => Enumerable.Empty<LogixMember>();
 
     /// <inheritdoc />
     public int CompareTo(object obj)
@@ -95,18 +95,7 @@ public sealed class BOOL : AtomicType, IComparable, IConvertible
     public override byte[] GetBytes() => BitConverter.GetBytes(_value);
 
     /// <inheritdoc />
-    public override int GetHashCode() => base.GetHashCode();
-
-    /// <inheritdoc />
-    public override LogixType Set(LogixType type)
-    {
-        if (type is not AtomicType atomic)
-            throw new ArgumentException($"Can not set {GetType().Name} with type {type.GetType().Name}");
-
-        _value = type is BOOL value ? value._value : BitConverter.ToBoolean(SetBytes(atomic.GetBytes()));
-        RaiseDataChanged();
-        return this;
-    }
+    public override int GetHashCode() => _value.GetHashCode();
 
     /// <summary>
     /// Parses the provided string value to a new <see cref="BOOL"/>.

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Xml.Linq;
 using L5Sharp.Enums;
 using L5Sharp.Types.Atomics;
@@ -12,8 +11,16 @@ namespace L5Sharp.Types;
 /// A <see cref="L5Sharp.LogixType"/> that represents value type object.
 /// </summary>
 /// <remarks>
-/// Logix atomic types are types that have value (i.e. BOOL, SINT, INT, DINT, REAL, etc.).
-/// These type are synonymous with value types in .NET. This is the common abstract class for all atomic types.
+/// <para>
+/// Logix atomic types are types that have value (e.g., BOOL, SINT, INT, DINT, REAL, etc.).
+/// These type are synonymous with value types in .NET and in fact wrap the .NET value types internally while adding
+/// the common <see cref="LogixType"/> API. Atomic types also add <see cref="Radix"/> to indicate the format of the current
+/// type value.
+/// </para>
+/// <para>
+/// All derived atomic types will implement value equality and comparison semantics to allow common operations to be performed.
+/// They will also implement the <see cref="IConvertible"/> interface explicitly so to allow conversion between types. 
+/// </para>
 /// </remarks>
 /// <footer>
 /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
@@ -28,15 +35,15 @@ public abstract class AtomicType : LogixType
     public sealed override DataTypeClass Class => DataTypeClass.Atomic;
 
     /// <inheritdoc />
-    public override IEnumerable<Member> Members
+    public override IEnumerable<LogixMember> Members
     {
         get
         {
             var bits = new BitArray(GetBytes());
             for (var i = 0; i < bits.Count; i++)
             {
-                var member = new Member(i.ToString(), new BOOL(bits[i]));
-                member.DataType.DataChanged += OnMemberDataChanged;
+                var member = new LogixMember(i.ToString(), new BOOL(bits[i]));
+                member.DataChanged += OnMemberDataChanged;
                 yield return member;
             }
         }
@@ -48,36 +55,11 @@ public abstract class AtomicType : LogixType
     /// <value>A <see cref="Enums.Radix"/> representing the format of the atomic type value.</value>
     public abstract Radix Radix { get; }
 
-    /// <inheritdoc />
-    public override bool Equals(object? obj)
-    {
-        if (ReferenceEquals(null, obj)) return false;
-        if (ReferenceEquals(this, obj)) return true;
-        if (obj is not AtomicType atomic) return false;
-
-        var a = GetBytes();
-        var b = atomic.GetBytes();
-
-        var max = Math.Max(a.Length, b.Length);
-
-        for (var i = 0; i < max; i++)
-        {
-            var left = i < a.Length ? a[i] : (byte)0;
-            var right = i < b.Length ? b[i] : (byte)0;
-            if (left != right) return false;
-        }
-
-        return true;
-    }
-
     /// <summary>
     /// Returns the <see cref="AtomicType"/> value as an array of <see cref="byte"/> values.
     /// </summary>
     /// <returns>An array of <see cref="byte"/> representing the value of the type.</returns>
     public abstract byte[] GetBytes();
-
-    /// <inheritdoc />
-    public override int GetHashCode() => GetBytes().Aggregate(0, (i, b) => i ^ b.GetHashCode());
 
     /// <summary>
     /// Return the atomic value formatted using the current <see cref="Radix"/> format.
@@ -106,28 +88,23 @@ public abstract class AtomicType : LogixType
     }
 
     /// <summary>
-    /// Returns a new byte array updated with the provided byte array data.
+    /// Gets a bit member for the atomic type at the specified bit index.
     /// </summary>
-    /// <param name="other">The array of <see cref="byte"/> to update the underlying value with.</param>
-    /// <returns>A new array of <see cref="byte"/> containing the updated data.</returns>
-    /// <remarks>
-    /// This method can be used when setting data between mismatched atomic types (i.e. type conversion).
-    /// Obviously data loss or overflow may occur depending on the length and values of the byte arrays.
-    /// This will always return a byte array of the same length as the byte array for the current value to
-    /// ensure it can be converted via <see cref="BitConverter"/> back into the .NET integral type.
-    /// </remarks>
-    protected byte[] SetBytes(byte[] other)
+    /// <param name="index">The zero based bit index of the value to get.</param>
+    /// <returns>A <see cref="LogixMember"/> representing the bit member of the atomic type.</returns>
+    /// <exception cref="ArgumentOutOfRangeException"><c>index</c> is out of range for the atomic type value.</exception>
+    protected LogixMember BitMember(int index)
     {
-        var value = GetBytes();
-
-        for (var i = 0; i < value.Length; i++)
-            value[i] = i < other.Length ? other[i] : default;
-
-        return value;
+        return Member(index.ToString()) ??
+               throw new ArgumentOutOfRangeException(nameof(index),
+                   $"The bit index {index} is out of range for a {Name} atomic value.");
     }
 
-    private void OnMemberDataChanged(object sender, EventArgs e)
-    {
-        RaiseDataChanged();
-    }
+    /// <summary>
+    /// Trigger the <see cref="LogixType.DataChanged"/> event when a atomic member data changed event is fired to forward
+    /// the call up the type/member hierarchy.
+    /// </summary>
+    /// <param name="sender">The member sending the data changed event.</param>
+    /// <param name="e">The event args.</param>
+    protected virtual void OnMemberDataChanged(object sender, EventArgs e) => RaiseDataChanged(sender);
 }

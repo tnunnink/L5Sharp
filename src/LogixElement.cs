@@ -15,7 +15,7 @@ public abstract class LogixElement<TElement> : ILogixSerializable where TElement
 {
     /// <summary>
     /// Creates a new default <see cref="LogixElement{TEntity}"/> initialized with an <see cref="XElement"/> having the
-    /// type name of the element. 
+    /// L5XType name of the element. 
     /// </summary>
     protected LogixElement()
     {
@@ -23,7 +23,7 @@ public abstract class LogixElement<TElement> : ILogixSerializable where TElement
     }
 
     /// <summary>
-    /// Initialized a new <see cref="LogixElement{TEntity}"/> with the provided <see cref="XElement"/>
+    /// Initializes a new <see cref="LogixElement{TEntity}"/> with the provided <see cref="XElement"/>
     /// </summary>
     /// <param name="element">The L5X <see cref="XElement"/> to initialize the entity with.</param>
     /// <exception cref="ArgumentNullException"><c>element</c> is null.</exception>
@@ -38,12 +38,6 @@ public abstract class LogixElement<TElement> : ILogixSerializable where TElement
     /// L5X data.
     /// </summary>
     protected readonly XElement Element;
-
-    /// <summary>
-    /// Returns the type name, or name of the underlying <see cref="XElement"/> name.
-    /// </summary>
-    /// <value>A <see cref="string"/> containing the name of the type.</value>
-    public string TypeName => Element.Name.ToString();
 
     /// <summary>
     /// Returns the underlying <see cref="XElement"/> for the <see cref="LogixElement{TEntity}"/>.

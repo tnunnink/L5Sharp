@@ -20,7 +20,7 @@ namespace L5Sharp.Types;
 /// </footer>
 public class ArrayType : LogixType, IEnumerable<LogixType>
 {
-    private readonly List<Member> _members;
+    private readonly List<LogixMember> _members;
 
     /// <summary>
     /// Creates a new array type from the provided logix array object.
@@ -45,8 +45,8 @@ public class ArrayType : LogixType, IEnumerable<LogixType>
         Radix = collection.First() is AtomicType atomicType ? atomicType.Radix : Radix.Null;
         _members = Dimensions.Indices().Zip(collection, (i, t) =>
         {
-            var member = new Member(i, t);
-            member.DataType.DataChanged += OnMemberDataChanged;
+            var member = new LogixMember(i, t);
+            member.DataChanged += OnMemberDataChanged;
             return member;
         }).ToList();
     }
@@ -56,7 +56,7 @@ public class ArrayType : LogixType, IEnumerable<LogixType>
     /// </summary>
     /// <param name="element">The element to parse.</param>
     /// <exception cref="ArgumentNullException"><c>element</c> is null.</exception>
-    /// <exception cref="L5XException"><c>element</c> does not have required attributes.</exception>
+    /// <exception cref="L5XException"><c>element</c> does not have required attributes or elements.</exception>
     public ArrayType(XElement element)
     {
         if (element is null) throw new ArgumentNullException(nameof(element));
@@ -67,8 +67,8 @@ public class ArrayType : LogixType, IEnumerable<LogixType>
         Radix = element.Attribute(L5XName.Radix)?.Value.Parse<Radix>() ?? Radix.Null;
         _members = element.Elements().Select(e =>
         {
-            var member = new Member(e);
-            member.DataType.DataChanged += OnMemberDataChanged;
+            var member = new LogixMember(e);
+            member.DataChanged += OnMemberDataChanged;
             return member;
         }).ToList();
     }
@@ -96,7 +96,7 @@ public class ArrayType : LogixType, IEnumerable<LogixType>
     public Radix Radix { get; }
 
     /// <inheritdoc />
-    public override IEnumerable<Member> Members => _members.AsEnumerable();
+    public override IEnumerable<LogixMember> Members => _members.AsEnumerable();
 
     /// <inheritdoc />
     public override XElement Serialize()
@@ -127,21 +127,6 @@ public class ArrayType : LogixType, IEnumerable<LogixType>
         }));
 
         return element;
-    }
-
-    /// <inheritdoc />
-    public override LogixType Set(LogixType type)
-    {
-        if (type is not ArrayType array)
-            throw new ArgumentException($"Can not update {GetType().Name} with {type.GetType().Name}");
-
-        var pairs = _members.Join(array.Members, m => m.Name, m => m.Name, (t, s) => new { Target = t, Source = s });
-
-        foreach (var pair in pairs)
-            pair.Target.DataType = pair.Source.DataType;
-
-        RaiseDataChanged();
-        return this;
     }
 
     /// <summary>
@@ -255,7 +240,7 @@ public class ArrayType : LogixType, IEnumerable<LogixType>
     /// </summary>
     /// <typeparam name="TLogixType">The logix type to cast.</typeparam>
     /// <returns>A <see cref="ArrayType{TLogixType}"/> of the specified.</returns>
-    public ArrayType<TLogixType> AsArray<TLogixType>() where TLogixType : LogixType =>
+    public ArrayType<TLogixType> OfType<TLogixType>() where TLogixType : LogixType =>
         new(this.Cast<TLogixType>().ToArray());
 
     /// <summary>
@@ -296,7 +281,7 @@ public class ArrayType : LogixType, IEnumerable<LogixType>
     /// <summary>
     /// This method needs to be attached to each member of the type to enable the bubbling up of nested member data changed events.
     /// </summary>
-    private void OnMemberDataChanged(object sender, EventArgs e) => RaiseDataChanged();
+    private void OnMemberDataChanged(object sender, EventArgs e) => RaiseDataChanged(sender);
 }
 
 /// <summary>

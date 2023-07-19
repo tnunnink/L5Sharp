@@ -3,8 +3,6 @@ using System.Globalization;
 using AutoFixture;
 using FluentAssertions;
 using L5Sharp.Enums;
-using L5Sharp.Tests.Types.Custom;
-using L5Sharp.Types;
 using L5Sharp.Types.Atomics;
 using L5Sharp.Types.Predefined;
 
@@ -178,90 +176,6 @@ namespace L5Sharp.Tests.Types.Atomics
             var xml = type.Serialize().ToString();
 
             return Verify(xml);
-        }
-
-        [Test]
-        public void Set_SameType_ShouldBeExpected()
-        {
-            var type = new SINT();
-
-            var value = type.Set(new SINT(_random));
-
-            value.Should().Be(_random);
-        }
-
-        [Test]
-        public void Set_SameTypeSmallerValue_ShouldBeExpected()
-        {
-            var type = new SINT(_random);
-
-            var value = type.Set(new SINT(1));
-
-            value.Should().Be(1);
-        }
-
-        [Test]
-        public void Set_LargeValueSmallerValue_ShouldBeExpected()
-        {
-            var type = new SINT(SINT.MaxValue);
-
-            var value = type.Set(new SINT(123));
-
-            value.Should().Be(123);
-        }
-
-        [Test]
-        public void Set_LargerTypeValidValue_ShouldBeExpected()
-        {
-            var type = new SINT();
-
-            var value = (SINT)type.Set(new LINT(123));
-
-            value.Should().Be(123);
-        }
-
-        [Test]
-        public void Set_LargerTypeLargerValue_ShouldHaveOverflow()
-        {
-            var type = new SINT();
-
-            var value = type.Set(new LINT(LINT.MaxValue));
-
-            value.Should().Be(-1);
-        }
-
-        [Test]
-        public void Set_InvalidType_ShouldThrowArgumentException()
-        {
-            var type = new SINT();
-
-            FluentActions.Invoking(() => type.Set(new ComplexType("Test"))).Should().Throw<ArgumentException>();
-        }
-
-        [Test]
-        public void Set_BitOverloadValidIndex_ShouldHaveExpectedValue()
-        {
-            var type = new SINT();
-
-            var set = type.Set(0, true);
-
-            set.Should().Be(1);
-        }
-
-        [Test]
-        public void Set_BitOverloadInvalidIndex_ShouldThrowArgumentOutOfRangeException()
-        {
-            var type = new SINT();
-
-            FluentActions.Invoking(() => type.Set(8, true)).Should().Throw<ArgumentOutOfRangeException>();
-        }
-
-        [Test]
-        public void Set_BitOverloadNullValue_ShouldThrowArgumentNullException()
-        {
-            var type = new SINT();
-
-            FluentActions.Invoking(() => type.Set(1, null!)).Should().Throw<ArgumentNullException>();
         }
 
         [Test]
@@ -523,15 +437,6 @@ namespace L5Sharp.Tests.Types.Atomics
             var result = (LREAL)type.ToType(typeof(LREAL), CultureInfo.InvariantCulture);
 
             result.Should().Be(expected);
-        }
-
-        [Test]
-        public void ToType_TestAtomic_ShouldThrowInvalidCastException()
-        {
-            var type = new SINT() as IConvertible;
-
-            FluentActions.Invoking(() => type.ToType(typeof(TestAtomic), CultureInfo.InvariantCulture)).Should()
-                .Throw<InvalidCastException>();
         }
 
         [Test]

@@ -19,7 +19,7 @@ namespace L5Sharp.Types;
 /// </remarks>
 public abstract class StructureType : LogixType
 {
-    private readonly List<Member> _members;
+    private readonly List<LogixMember> _members;
 
     /// <summary>
     /// Creates a new <see cref="StructureType"/> instance.
@@ -32,17 +32,17 @@ public abstract class StructureType : LogixType
             throw new ArgumentException("Name can not be null or empty for a structure type object.");
 
         Name = name;
-        _members = new List<Member>();
+        _members = new List<LogixMember>();
     }
 
     /// <summary>
-    /// Creates a new <see cref="StructureType"/> with the provided name and collection of <see cref="Member"/> objects.
+    /// Creates a new <see cref="StructureType"/> with the provided name and collection of <see cref="LogixMember"/> objects.
     /// </summary>
     /// <param name="name">The name of the structure type.</param>
     /// <param name="members">The members of the structure type.</param>
     /// <exception cref="ArgumentException"><c>name</c> is null or empty.</exception>
     /// <exception cref="ArgumentNullException"><c>members</c> is null.</exception>
-    protected StructureType(string name, IEnumerable<Member> members) : this(name)
+    protected StructureType(string name, IEnumerable<LogixMember> members) : this(name)
     {
         AddMembers(members.ToList());
     }
@@ -59,8 +59,8 @@ public abstract class StructureType : LogixType
         Name = element.Attribute(L5XName.DataType)?.Value ?? throw new L5XException(L5XName.DataType, element);
         _members = element.Elements().Select(e =>
         {
-            var member = new Member(e);
-            member.DataType.DataChanged += OnMemberDataChanged;
+            var member = new LogixMember(e);
+            member.DataChanged += OnMemberDataChanged;
             return member;
         }).ToList();
     }
@@ -75,7 +75,7 @@ public abstract class StructureType : LogixType
     public override DataTypeClass Class => DataTypeClass.Unknown;
 
     /// <inheritdoc />
-    public override IEnumerable<Member> Members => _members.AsEnumerable();
+    public override IEnumerable<LogixMember> Members => _members.AsEnumerable();
 
     /// <inheritdoc />
     public override XElement Serialize()
@@ -84,22 +84,6 @@ public abstract class StructureType : LogixType
         element.Add(new XAttribute(L5XName.DataType, Name));
         element.Add(_members.Select(m => m.Serialize()));
         return element;
-    }
-
-    /// <inheritdoc />
-    public override LogixType Set(LogixType type)
-    {
-        if (type is not StructureType structure)
-            throw new ArgumentException($"Can not update {GetType().Name} with {type.GetType().Name}");
-
-        var pairs = _members.Join(structure.Members, m => m.Name, m => m.Name,
-            (t, s) => new { Target = t, Source = s });
-
-        foreach (var pair in pairs)
-            pair.Target.DataType = pair.Source.DataType;
-
-        RaiseDataChanged();
-        return this;
     }
 
     /// <summary>
@@ -154,10 +138,10 @@ public abstract class StructureType : LogixType
 
         if (current is null)
         {
-            var member = new Member(name, value);
-            member.DataType.DataChanged += OnMemberDataChanged;
+            var member = new LogixMember(name, value);
+            member.DataChanged += OnMemberDataChanged;
             _members.Add(member);
-            RaiseDataChanged();
+            RaiseDataChanged(this);
             return;
         }
 
@@ -169,13 +153,13 @@ public abstract class StructureType : LogixType
     /// </summary>
     /// <param name="member">The member to add.</param>
     /// <exception cref="ArgumentNullException"><c>member</c> is null.</exception>
-    protected void AddMember(Member member)
+    protected void AddMember(LogixMember member)
     {
         if (member is null)
             throw new ArgumentNullException(nameof(member), "Structure type does not allow null members.");
-        member.DataType.DataChanged += OnMemberDataChanged;
+        member.DataChanged += OnMemberDataChanged;
         _members.Add(member);
-        RaiseDataChanged();
+        RaiseDataChanged(this);
     }
 
     /// <summary>
@@ -183,7 +167,7 @@ public abstract class StructureType : LogixType
     /// </summary>
     /// <param name="members">The collection of members to add.</param>
     /// <exception cref="ArgumentNullException"><c>members</c> is null or any member in <c>members</c> is null.</exception>
-    protected void AddMembers(ICollection<Member> members)
+    protected void AddMembers(ICollection<LogixMember> members)
     {
         if (members is null) throw new ArgumentNullException(nameof(members));
 
@@ -191,11 +175,11 @@ public abstract class StructureType : LogixType
         {
             if (member is null)
                 throw new ArgumentNullException(nameof(members), "Structure type does not allow null members.");
-            member.DataType.DataChanged += OnMemberDataChanged;
+            member.DataChanged += OnMemberDataChanged;
             _members.Add(member);
         }
 
-        RaiseDataChanged();
+        RaiseDataChanged(this);
     }
 
     /// <summary>
@@ -203,9 +187,9 @@ public abstract class StructureType : LogixType
     /// </summary>
     protected void ClearMembers()
     {
-        foreach (var member in _members) member.DataType.DataChanged -= OnMemberDataChanged;
+        foreach (var member in _members) member.DataChanged -= OnMemberDataChanged;
         _members.Clear();
-        RaiseDataChanged();
+        RaiseDataChanged(this);
     }
 
     /// <summary>
@@ -216,14 +200,14 @@ public abstract class StructureType : LogixType
     /// <exception cref="ArgumentNullException"><c>member</c> is null.</exception>
     /// <exception cref="ArgumentOutOfRangeException">index is less than 0. -or- index is greater than the length of
     /// the member collection.</exception>
-    protected void InsertMember(int index, Member member)
+    protected void InsertMember(int index, LogixMember member)
     {
         if (member is null)
             throw new ArgumentNullException(nameof(member), "Structure type does not allow null members.");
 
-        member.DataType.DataChanged += OnMemberDataChanged;
+        member.DataChanged += OnMemberDataChanged;
         _members.Insert(index, member);
-        RaiseDataChanged();
+        RaiseDataChanged(this);
     }
 
     /// <summary>
@@ -234,9 +218,10 @@ public abstract class StructureType : LogixType
     {
         var index = _members.FindIndex(m => string.Equals(m.Name, name, StringComparison.OrdinalIgnoreCase));
         if (index == -1) return;
-        _members[index].DataType.DataChanged -= OnMemberDataChanged;
+        var member = _members[index];
+        member.DataChanged -= OnMemberDataChanged;
         _members.RemoveAt(index);
-        RaiseDataChanged();
+        RaiseDataChanged(this);
     }
 
     /// <summary>
@@ -245,9 +230,10 @@ public abstract class StructureType : LogixType
     /// <param name="index">The zero-based index of the member to remove.</param>
     protected void RemoveMember(int index)
     {
-        _members[index].DataType.DataChanged -= OnMemberDataChanged;
+        var member = _members[index];
+        member.DataChanged -= OnMemberDataChanged;
         _members.RemoveAt(index);
-        RaiseDataChanged();
+        RaiseDataChanged(this);
     }
 
     /// <summary>
@@ -257,7 +243,7 @@ public abstract class StructureType : LogixType
     /// <param name="member">The member to replace the current member with.</param>
     /// <exception cref="ArgumentNullException"><c>member</c> is null.</exception>
     /// <exception cref="ArgumentException"><c>name</c> does not exists in the structure type.</exception>
-    protected void ReplaceMember(string name, Member member)
+    protected void ReplaceMember(string name, LogixMember member)
     {
         if (member is null)
             throw new ArgumentNullException(nameof(member), "Structure type does not allow null members.");
@@ -266,11 +252,10 @@ public abstract class StructureType : LogixType
 
         if (index == -1)
             throw new ArgumentException($"No member with name {name} was found in the structure.");
-
-        _members[index].DataType.DataChanged -= OnMemberDataChanged;
-        member.DataType.DataChanged += OnMemberDataChanged;
+        
+        Resubscribe(_members[index], member);
         _members[index] = member;
-        RaiseDataChanged();
+        RaiseDataChanged(this);
     }
 
     /// <summary>
@@ -289,12 +274,11 @@ public abstract class StructureType : LogixType
 
         if (index == -1)
             throw new ArgumentException($"No member with name {name} was found in the structure.");
-
-        _members[index].DataType.DataChanged -= OnMemberDataChanged;
-        var member = new Member(name, type);
-        member.DataType.DataChanged += OnMemberDataChanged;
+        
+        var member = new LogixMember(name, type);
+        Resubscribe(_members[index], member);
         _members[index] = member;
-        RaiseDataChanged();
+        RaiseDataChanged(this);
     }
 
     /// <summary>
@@ -303,17 +287,27 @@ public abstract class StructureType : LogixType
     /// <param name="index">The zer-based index at which to replace the member.</param>
     /// <param name="member">The member to replace the current member with.</param>
     /// <exception cref="ArgumentNullException"><c>member</c> is null.</exception>
-    protected void ReplaceMember(int index, Member member)
+    protected void ReplaceMember(int index, LogixMember member)
     {
-        if (member is null) throw new ArgumentNullException(nameof(member), "Structure type does not allow null members.");
-        _members[index].DataType.DataChanged -= OnMemberDataChanged;
-        member.DataType.DataChanged += OnMemberDataChanged;
+        if (member is null)
+            throw new ArgumentNullException(nameof(member), "Structure type does not allow null members.");
+
+        Resubscribe(_members[index], member);
         _members[index] = member;
-        RaiseDataChanged();
+        RaiseDataChanged(this);
     }
 
     /// <summary>
     /// This method needs to be attached to each member of the type to enable the bubbling up of nested member data changed events.
     /// </summary>
-    private void OnMemberDataChanged(object sender, EventArgs e) => RaiseDataChanged();
+    private void OnMemberDataChanged(object sender, EventArgs e) => RaiseDataChanged(sender);
+
+    /// <summary>
+    /// Remove old event handler and attach new to ensure no memory leak.
+    /// </summary>
+    private void Resubscribe(LogixMember remove, LogixMember add)
+    {
+        remove.DataChanged -= OnMemberDataChanged;
+        add.DataChanged += OnMemberDataChanged;
+    }
 }

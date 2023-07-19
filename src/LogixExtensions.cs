@@ -10,6 +10,7 @@ using L5Sharp.Components;
 using L5Sharp.Core;
 using L5Sharp.Elements;
 using L5Sharp.Enums;
+using L5Sharp.Types;
 using Module = L5Sharp.Components.Module;
 
 namespace L5Sharp;
@@ -37,7 +38,7 @@ public static class LogixExtensions
     }
 
     #endregion
-    
+
     #region ComponentExtensions
 
     /// <summary>
@@ -151,6 +152,48 @@ public static class LogixExtensions
 
     #endregion
 
+    #region LogixTypeExtensions
+
+    /// <summary>
+    /// Traverses the type/member hierarchy of the <see cref="StructureType"/> data and builds a collection of
+    /// <see cref="DataType"/> objects based on all the user defined types in the tree.
+    /// </summary>
+    /// <param name="type">The structure type for which to generate a list of user defined type objects.</param>
+    /// <returns>A <see cref="IEnumerable{T}"/> containing a <see cref="DataType"/> for each user type in the
+    /// structure's type/member hierarchy</returns>
+    public static IEnumerable<DataType> BuildUserTypes(this ComplexType type)
+    {
+        var results = new List<DataType>();
+
+        if (type.Class == DataTypeClass.User)
+        {
+            var userType = new DataType
+            {
+                Name = type.Name,
+                Class = type.Class,
+                Family = type.Family,
+                Members = new LogixContainer<DataTypeMember>(type.Members.Select(m => new DataTypeMember
+                {
+                    Name = m.Name,
+                    DataType = m.DataType.Name,
+                    Dimension = m.DataType is ArrayType array ? array.Dimensions : Dimensions.Empty,
+                    Radix = Radix.Default(m.DataType),
+                    ExternalAccess = ExternalAccess.ReadWrite
+                }))
+            };
+            
+            results.Add(userType);
+        }
+        
+        foreach (var member in type.Members)
+            if (member.DataType is ComplexType structureType)
+                results.AddRange(structureType.BuildUserTypes());
+
+        return results;
+    }
+
+    #endregion
+
     #region TagExtensions
 
     /// <summary>
@@ -163,7 +206,7 @@ public static class LogixExtensions
     {
         return tags.Where(t => t.Container() == programName);
     }
-    
+
     /// <summary>
     /// Returns a filtered collection of <see cref="Tag"/> that have the specified <see cref="Enums.Scope"/> value.
     /// </summary>
@@ -527,7 +570,7 @@ public static class LogixExtensions
         var attribute = type.GetCustomAttribute<XmlTypeAttribute>();
         return attribute is not null ? attribute.TypeName : type.Name;
     }
-    
+
     /// <summary>
     /// Determines if a type is derived from the base type, even if the base type is a generic type.
     /// </summary>

@@ -39,6 +39,7 @@ public class StringType : LogixType, IEnumerable<char>
 
         Name = name;
         DATA = GetData(value);
+        DATA.DataChanged += OnDataChanged;
     }
 
     /// <summary>
@@ -53,13 +54,14 @@ public class StringType : LogixType, IEnumerable<char>
     {
         if (string.IsNullOrEmpty(name))
             throw new ArgumentException("Name can not be null or empty for a string type object.");
-        
+
         if (value.Length > length)
             throw new ArgumentOutOfRangeException(
                 $"The length {value.Length} of value can not be greater than {length} characters.");
 
         Name = name;
         DATA = GetData(value);
+        DATA.DataChanged += OnDataChanged;
     }
 
     /// <summary>
@@ -77,6 +79,7 @@ public class StringType : LogixType, IEnumerable<char>
             Name = element.Ancestors(L5XName.Tag).FirstOrDefault()?.Attribute(L5XName.DataType)?.Value ??
                    throw new L5XException(L5XName.DataType, element);
             DATA = GetData(element.Value);
+            DATA.DataChanged += OnDataChanged;
             return;
         }
 
@@ -85,6 +88,7 @@ public class StringType : LogixType, IEnumerable<char>
                         .FirstOrDefault(e => e.Attribute(L5XName.Name)?.Value == nameof(DATA))?.Value ??
                     throw new L5XException(L5XName.DataValueMember, element);
         DATA = GetData(value);
+        DATA.DataChanged += OnDataChanged;
     }
 
     /// <inheritdoc />
@@ -97,7 +101,7 @@ public class StringType : LogixType, IEnumerable<char>
     public override DataTypeClass Class => DataTypeClass.Unknown;
 
     /// <inheritdoc />
-    public override IEnumerable<Member> Members => new List<Member> { new(nameof(LEN), LEN), new(nameof(DATA), DATA) };
+    public override IEnumerable<LogixMember> Members => new List<LogixMember> { new(nameof(LEN), LEN), new(nameof(DATA), DATA) };
 
     /// <summary>
     /// Gets the character length value of the string. 
@@ -109,7 +113,7 @@ public class StringType : LogixType, IEnumerable<char>
     /// Gets the array of bytes that represent the ASCII encoded string value.
     /// </summary>
     /// <returns>An array of <see cref="SINT"/> logix atomic values representing the bytes of the string.</returns>
-    public ArrayType<SINT> DATA { get; private set; }
+    public ArrayType<SINT> DATA { get; }
 
     /// <inheritdoc />
     public IEnumerator<char> GetEnumerator() => ToString().GetEnumerator();
@@ -117,7 +121,8 @@ public class StringType : LogixType, IEnumerable<char>
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
     /// <inheritdoc />
-    public override string ToString() => GetString(DATA);
+    public override string ToString() =>
+        Encoding.ASCII.GetString(DATA.Cast<SINT>().Where(s => s > 0).Select(b => (byte)(sbyte)b).ToArray());
 
     /// <inheritdoc />
     public override XElement Serialize()
@@ -127,18 +132,6 @@ public class StringType : LogixType, IEnumerable<char>
         element.Add(new XAttribute(L5XName.Length, LEN.ToString()));
         element.Add(new XCData(ToString()));
         return element;
-    }
-
-    /// <inheritdoc />
-    public override LogixType Set(LogixType type)
-    {
-        if (type is not StringType stringType)
-            throw new ArgumentException($"Can not update {GetType().Name} with {type.GetType().Name}");
-        
-        DATA = GetData(stringType.ToString());
-        //return new StringType(stringType.Name, stringType.ToString());
-        RaiseDataChanged();
-        return this;
     }
 
     /// <inheritdoc />
@@ -154,22 +147,6 @@ public class StringType : LogixType, IEnumerable<char>
 
     /// <inheritdoc />
     public override int GetHashCode() => ToString().GetHashCode();
-
-    /// <summary>
-    /// Determines if the provided objects are equal.
-    /// </summary>
-    /// <param name="left">An object to compare.</param>
-    /// <param name="right">An object to compare.</param>
-    /// <returns>true if the provided objects are equal; otherwise, false.</returns>
-    public static bool operator ==(StringType left, StringType right) => Equals(left, right);
-
-    /// <summary>
-    /// Determines if the provided objects not are equal.
-    /// </summary>
-    /// <param name="left">An object to compare.</param>
-    /// <param name="right">An object to compare.</param>
-    /// <returns>true if the provided objects are not equal; otherwise, false.</returns>
-    public static bool operator !=(StringType left, StringType right) => !Equals(left, right);
 
     /// <summary>
     /// A custom serialization method that returns the string type as a structure element, instead of the string formatted
@@ -199,12 +176,6 @@ public class StringType : LogixType, IEnumerable<char>
     }
 
     /// <summary>
-    /// Converts the provided SINT array to a string value.
-    /// </summary>
-    private static string GetString(IEnumerable<SINT> array) =>
-        Encoding.ASCII.GetString(array.Where(s => s > 0).Select(b => (byte)(sbyte)b).ToArray());
-
-    /// <summary>
     /// Converts the provided string value to a SINT array. Handles empty or null string. SINT array can not be empty.
     /// </summary>
     private static SINT[] GetData(string value)
@@ -213,4 +184,9 @@ public class StringType : LogixType, IEnumerable<char>
             ? Encoding.ASCII.GetBytes(value).Select(b => new SINT((sbyte)b, Radix.Ascii)).ToArray()
             : new SINT[] { new() };
     }
+    
+    /// <summary>
+    /// When the DATA array type data change event fires, forward the call by raising this types data changed event.
+    /// </summary>
+    private void OnDataChanged(object sender, EventArgs e) => RaiseDataChanged(sender);
 }

@@ -10,7 +10,7 @@ using L5Sharp.Types.Predefined;
 namespace L5Sharp;
 
 /// <summary>
-/// The base class for all logix data type classes.
+/// The base class for all logix type classes, which represent the value or data structure of a logix tag component.
 /// </summary>
 /// <remarks>
 /// <para>
@@ -49,13 +49,13 @@ public abstract class LogixType : ILogixSerializable
     public abstract DataTypeClass Class { get; }
 
     /// <summary>
-    /// The collection of <see cref="Member"/> objects that make up the structure of the type.
+    /// The collection of <see cref="LogixMember"/> objects that make up the structure of the type.
     /// </summary>
-    /// <value>A <see cref="IEnumerable{T}"/> containing <see cref="Member"/> objects</value>
-    public abstract IEnumerable<Member> Members { get; }
+    /// <value>A <see cref="IEnumerable{T}"/> containing <see cref="LogixMember"/> objects</value>
+    public abstract IEnumerable<LogixMember> Members { get; }
     
     /// <summary>
-    /// An event that triggers when the <see cref="LogixType"/> data changes.
+    /// An event that triggers when the <see cref="LogixType"/> members collection changes.
     /// </summary>
     /// <remarks>
     /// This event is allowing us to detect when the value of a immediate or nested logix type changes. This is important
@@ -92,41 +92,25 @@ public abstract class LogixType : ILogixSerializable
     public override int GetHashCode() => Name.GetHashCode();
 
     /// <summary>
-    /// Gets a <see cref="Types.Member"/> with the specified name if it exists for the <see cref="LogixType"/>;
+    /// Gets a <see cref="LogixMember"/> with the specified name if it exists for the <see cref="LogixType"/>;
     /// Otherwise, returns <c>null</c>.
     /// </summary>
     /// <param name="name">The name of the member to get.</param>
-    /// <returns>A <see cref="Types.Member"/> with the specified name if found; Otherwise, <c>null</c>.</returns>
+    /// <returns>A <see cref="LogixMember"/> with the specified name if found; Otherwise, <c>null</c>.</returns>
     /// <remarks>This performs a case insensitive comparison for the member name.</remarks>
-    public Member? Member(string name) =>
+    public LogixMember? Member(string name) =>
         Members.SingleOrDefault(m => string.Equals(m.Name, name, StringComparison.OrdinalIgnoreCase));
 
     /// <summary>
-    /// Handles raising the <see cref="DataChanged"/> event for the type.
+    /// Handles raising the <see cref="DataChanged"/> event for the type with the provided object sender.
     /// </summary>
-    protected void RaiseDataChanged() => DataChanged?.Invoke(this, EventArgs.Empty);
+    protected void RaiseDataChanged(object sender) => DataChanged?.Invoke(sender, EventArgs.Empty);
 
     /// <inheritdoc />
     public override string ToString() => Name;
 
     /// <inheritdoc />
     public abstract XElement Serialize();
-
-    /// <summary>
-    /// Sets the data of the current <see cref="LogixType"/> with the provided logix type data. 
-    /// </summary>
-    /// <param name="type">The type to set this type with.</param>
-    /// <exception cref="ArgumentException">The provided type can not set this type. (e.g., Structure can not set Atomic).</exception>
-    /// <returns>The <see cref="LogixType"/> with data updated from the provided logix type.
-    /// This type will typically be the reference to the current type, except in the case of <see cref="NullType"/>,
-    /// which will return the provided type.</returns>
-    /// <remarks>
-    /// This method is the basis for how underlying values are set in memory.
-    /// Atomic and String type objects will set underlying values, whereas Structure and Array types will join members and
-    /// delegate the set down the hierarchical type structure. This method triggers the <see cref="DataChanged"/> event,
-    /// indicating to subscribers (Tag) that the hierarchical structure or data within the structure has changed. 
-    /// </remarks>
-    public abstract LogixType Set(LogixType type);
 
     /// <summary>
     /// Determines whether the <see cref="LogixType"/> values are equal.
@@ -311,5 +295,5 @@ public abstract class LogixType : ILogixSerializable
     /// <param name="value">The value to convert.</param>
     /// <returns>A <see cref="LogixType"/> representing the converted value.</returns>
     public static implicit operator LogixType(Dictionary<string, LogixType> value) =>
-        new ComplexType(nameof(ComplexType), value.Select(m => new Member(m.Key, m.Value)));
+        new ComplexType(nameof(ComplexType), value.Select(m => new LogixMember(m.Key, m.Value)));
 }

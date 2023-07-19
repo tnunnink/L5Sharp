@@ -1,6 +1,7 @@
 ﻿using System.Xml.Linq;
 using FluentAssertions;
 using L5Sharp.Enums;
+using L5Sharp.Tests.Types.Custom;
 using L5Sharp.Types;
 using L5Sharp.Types.Atomics;
 using L5Sharp.Types.Predefined;
@@ -25,7 +26,7 @@ public class ComplexTypeTests
     [Test]
     public void New_NullMemberInList_ShouldThrowArgumentNullException()
     {
-        FluentActions.Invoking(() => new ComplexType("Test", new Member[]{null!})).Should().Throw<ArgumentNullException>();
+        FluentActions.Invoking(() => new ComplexType("Test", new LogixMember[]{null!})).Should().Throw<ArgumentNullException>();
     }
 
     [Test]
@@ -50,7 +51,7 @@ public class ComplexTypeTests
     [Test]
     public void New_ValidArguments_ShouldNotBeNull()
     {
-        var type = new ComplexType("Test", new List<Member>());
+        var type = new ComplexType("Test", new List<LogixMember>());
 
         type.Should().NotBeNull();
     }
@@ -58,7 +59,7 @@ public class ComplexTypeTests
     [Test]
     public void New_NullName_ShouldThrowArgumentException()
     {
-        FluentActions.Invoking(() => new ComplexType(null!, new List<Member>())).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(() => new ComplexType(null!, new List<LogixMember>())).Should().Throw<ArgumentException>();
     }
 
     [Test]
@@ -70,7 +71,7 @@ public class ComplexTypeTests
     [Test]
     public void New_EmptyMembers_ShouldHaveExpectedValues()
     {
-        var type = new ComplexType("Test", new List<Member>());
+        var type = new ComplexType("Test", new List<LogixMember>());
 
         type.Should().NotBeNull();
         type.Name.Should().Be("Test");
@@ -82,7 +83,7 @@ public class ComplexTypeTests
     [Test]
     public void New_WithMembers_ShouldHaveExpectedValues()
     {
-        var type = new ComplexType("Test", new List<Member>
+        var type = new ComplexType("Test", new List<LogixMember>
         {
             new("Member1", true),
             new("Member2", (byte)255),
@@ -102,7 +103,7 @@ public class ComplexTypeTests
     [Test]
     public void ToString_WhenCalled_ShouldBeName()
     {
-        var type = new ComplexType("Test", new List<Member>());
+        var type = new ComplexType("Test", new List<LogixMember>());
 
         var name = type.ToString();
 
@@ -112,7 +113,7 @@ public class ComplexTypeTests
     [Test]
     public void Clone_WhenCalled_ShouldNotBeSameAsButEqual()
     {
-        var type = new ComplexType("Test", new List<Member>
+        var type = new ComplexType("Test", new List<LogixMember>
         {
             new("Member1", true),
             new("Member2", (byte)255),
@@ -134,7 +135,7 @@ public class ComplexTypeTests
     {
         var type = new ComplexType();
 
-        type.Add(new Member("Member", 123));
+        type.Add(new LogixMember("Member", 123));
 
         type.Members.Should().HaveCount(1);
     }
@@ -144,7 +145,7 @@ public class ComplexTypeTests
     {
         var type = new ComplexType();
 
-        type.Add(new Member("Member", 123));
+        type.Add(new LogixMember("Member", 123));
 
         var result = type.Members.First();
 
@@ -164,7 +165,7 @@ public class ComplexTypeTests
     [Test]
     public void AddRange_ValidMembers_ShouldHaveExpectedCount()
     {
-        var expected = new List<Member>
+        var expected = new List<LogixMember>
         {
             new("Atomic", 1),
             new("String", "Test Value"),
@@ -180,7 +181,7 @@ public class ComplexTypeTests
     [Test]
     public void AddRange_ValidMembers_ShouldHaveExpectedMember()
     {
-        var expected = new List<Member>
+        var expected = new List<LogixMember>
         {
             new("Atomic", 123),
             new("String", "Test Value"),
@@ -217,7 +218,7 @@ public class ComplexTypeTests
     [Test]
     public void AddRange_NullMembers_ShouldThrowArgumentNullException()
     {
-        var members = new Member[] { null!, null!, null! };
+        var members = new LogixMember[] { null!, null!, null! };
         var type = new ComplexType("Test");
 
         FluentActions.Invoking(() => type.AddRange(members)).Should().Throw<ArgumentNullException>();
@@ -226,7 +227,7 @@ public class ComplexTypeTests
     [Test]
     public void Clear_WhenCalled_ShouldHaveExpectedCount()
     {
-        var type = new ComplexType("Test", new List<Member> { new("Test", 123) });
+        var type = new ComplexType("Test", new List<LogixMember> { new("Test", 123) });
 
         type.Clear();
 
@@ -236,14 +237,14 @@ public class ComplexTypeTests
     [Test]
     public void Insert_ValidIndexAndMember_ShouldHaveExpectedCount()
     {
-        var type = new ComplexType("Test", new List<Member>
+        var type = new ComplexType("Test", new List<LogixMember>
         {
             new("Atomic", 1),
             new("String", "Test Value"),
             new("Structure", new TIMER { PRE = 2000 }),
         });
 
-        type.Insert(1, new Member("Insert", -123));
+        type.Insert(1, new LogixMember("Insert", -123));
 
         type.Members.Should().HaveCount(4);
     }
@@ -251,14 +252,14 @@ public class ComplexTypeTests
     [Test]
     public void Insert_ValidIndexAndMember_ShouldHaveExpectedMember()
     {
-        var type = new ComplexType("Test", new List<Member>
+        var type = new ComplexType("Test", new List<LogixMember>
         {
             new("Atomic", 1),
             new("String", "Test Value"),
             new("Structure", new TIMER { PRE = 2000 }),
         });
 
-        type.Insert(1, new Member("Insert", -123));
+        type.Insert(1, new LogixMember("Insert", -123));
 
         var result = type.Member("Insert");
 
@@ -271,7 +272,7 @@ public class ComplexTypeTests
     [Test]
     public void Insert_NullMember_ShouldThrowArgumentNullException()
     {
-        var type = new ComplexType("Test", new List<Member>
+        var type = new ComplexType("Test", new List<LogixMember>
         {
             new("Atomic", 1),
             new("String", "Test Value"),
@@ -284,21 +285,21 @@ public class ComplexTypeTests
     [Test]
     public void Insert_InvalidIndex_ShouldThrowArgumentOutOfRangeException()
     {
-        var type = new ComplexType("Test", new List<Member>
+        var type = new ComplexType("Test", new List<LogixMember>
         {
             new("Atomic", 1),
             new("String", "Test Value"),
             new("Structure", new TIMER { PRE = 2000 })
         });
 
-        FluentActions.Invoking(() => type.Insert(4, new Member("Insert", 123))).Should()
+        FluentActions.Invoking(() => type.Insert(4, new LogixMember("Insert", 123))).Should()
             .Throw<ArgumentOutOfRangeException>();
     }
 
     [Test]
     public void Remove_ByName_ShouldHaveExpectedCount()
     {
-        var type = new ComplexType("Test", new List<Member>
+        var type = new ComplexType("Test", new List<LogixMember>
         {
             new("Atomic", 1),
             new("String", "Test Value"),
@@ -315,7 +316,7 @@ public class ComplexTypeTests
     [Test]
     public void Remove_NonExistingName_ShouldHaveExpectedCount()
     {
-        var type = new ComplexType("Test", new List<Member>
+        var type = new ComplexType("Test", new List<LogixMember>
         {
             new("Atomic", 1),
             new("String", "Test Value"),
@@ -333,7 +334,7 @@ public class ComplexTypeTests
     [Test]
     public void Remove_ByIndex_ShouldHaveExpectedCount()
     {
-        var type = new ComplexType("Test", new List<Member>
+        var type = new ComplexType("Test", new List<LogixMember>
         {
             new("Atomic", 1),
             new("String", "Test Value"),
@@ -350,7 +351,7 @@ public class ComplexTypeTests
     [Test]
     public void Remove_InvalidIndex_ShouldThrowArgumentOutOfRangeException()
     {
-        var type = new ComplexType("Test", new List<Member>
+        var type = new ComplexType("Test", new List<LogixMember>
         {
             new("Atomic", 1),
             new("String", "Test Value"),
@@ -363,14 +364,14 @@ public class ComplexTypeTests
     [Test]
     public void Replace_ByNameValidNameAndMember_ShouldHaveExpectedCount()
     {
-        var type = new ComplexType("Test", new List<Member>
+        var type = new ComplexType("Test", new List<LogixMember>
         {
             new("Atomic", 1),
             new("String", "Test Value"),
             new("Structure", new TIMER { PRE = 2000 })
         });
 
-        type.Replace(1, new Member("String", "Different Value"));
+        type.Replace(1, new LogixMember("String", "Different Value"));
 
         type.Members.Should().HaveCount(3);
         type.Member("String").Should().NotBeNull();
@@ -380,14 +381,14 @@ public class ComplexTypeTests
     [Test]
     public void Replace_ByNameValidNameAndMember_ShouldHaveExpectedMember()
     {
-        var type = new ComplexType("Test", new List<Member>
+        var type = new ComplexType("Test", new List<LogixMember>
         {
             new("Atomic", 1),
             new("String", "Test Value"),
             new("Structure", new TIMER { PRE = 2000 })
         });
 
-        type.Replace("Structure", new Member("Structure", new COUNTER { PRE = 3000 }));
+        type.Replace("Structure", new LogixMember("Structure", new COUNTER { PRE = 3000 }));
 
         var result = type.Member("Insert");
 
@@ -400,41 +401,41 @@ public class ComplexTypeTests
     [Test]
     public void Replace_ByNameNullMember_ShouldThrowArgumentNullException()
     {
-        var type = new ComplexType("Test", new List<Member>
+        var type = new ComplexType("Test", new List<LogixMember>
         {
             new("Atomic", 1),
             new("String", "Test Value"),
             new("Structure", new TIMER { PRE = 2000 }),
         });
 
-        FluentActions.Invoking(() => type.Replace("Atomic", ((Member)null!)!)).Should().Throw<ArgumentNullException>();
+        FluentActions.Invoking(() => type.Replace("Atomic", ((LogixMember)null!)!)).Should().Throw<ArgumentNullException>();
     }
 
     [Test]
     public void Replace_ByNameInvalidName_ShouldThrowArgumentException()
     {
-        var type = new ComplexType("Test", new List<Member>
+        var type = new ComplexType("Test", new List<LogixMember>
         {
             new("Atomic", 1),
             new("String", "Test Value"),
             new("Structure", new TIMER { PRE = 2000 })
         });
 
-        FluentActions.Invoking(() => type.Replace("Fake", new Member("Replaced", 123))).Should()
+        FluentActions.Invoking(() => type.Replace("Fake", new LogixMember("Replaced", 123))).Should()
             .Throw<ArgumentException>();
     }
 
     [Test]
     public void Replace_ByIndexValidIndexAndMember_ShouldHaveExpectedCount()
     {
-        var type = new ComplexType("Test", new List<Member>
+        var type = new ComplexType("Test", new List<LogixMember>
         {
             new("Atomic", 1),
             new("String", "Test Value"),
             new("Structure", new TIMER { PRE = 2000 }),
         });
 
-        type.Replace(1, new Member("String", "Different Value"));
+        type.Replace(1, new LogixMember("String", "Different Value"));
 
         type.Members.Should().HaveCount(3);
         type.Member("String").Should().NotBeNull();
@@ -444,14 +445,14 @@ public class ComplexTypeTests
     [Test]
     public void Replace_ByIndexValidIndexAndMember_ShouldHaveExpectedMember()
     {
-        var type = new ComplexType("Test", new List<Member>
+        var type = new ComplexType("Test", new List<LogixMember>
         {
             new("Atomic", 1),
             new("String", "Test Value"),
             new("Structure", new TIMER { PRE = 2000 }),
         });
 
-        type.Replace(1, new Member("Insert", -123));
+        type.Replace(1, new LogixMember("Insert", -123));
 
         var result = type.Member("Insert");
 
@@ -464,7 +465,7 @@ public class ComplexTypeTests
     [Test]
     public void Replace_ByIndexNullMember_ShouldThrowArgumentNullException()
     {
-        var type = new ComplexType("Test", new List<Member>
+        var type = new ComplexType("Test", new List<LogixMember>
         {
             new("Atomic", 1),
             new("String", "Test Value"),
@@ -477,21 +478,21 @@ public class ComplexTypeTests
     [Test]
     public void Replace_ByIndexInvalidIndex_ShouldThrowArgumentOutOfRangeException()
     {
-        var type = new ComplexType("Test", new List<Member>
+        var type = new ComplexType("Test", new List<LogixMember>
         {
             new("Atomic", 1),
             new("String", "Test Value"),
             new("Structure", new TIMER { PRE = 2000 })
         });
 
-        FluentActions.Invoking(() => type.Insert(4, new Member("Insert", 123))).Should()
+        FluentActions.Invoking(() => type.Insert(4, new LogixMember("Insert", 123))).Should()
             .Throw<ArgumentOutOfRangeException>();
     }
 
     [Test]
     public void Replace_ByNameValidNameAndType_ShouldHaveExpectedCount()
     {
-        var type = new ComplexType("Test", new List<Member>
+        var type = new ComplexType("Test", new List<LogixMember>
         {
             new("Atomic", 1),
             new("String", "Test Value"),
@@ -508,7 +509,7 @@ public class ComplexTypeTests
     [Test]
     public void Replace_ByNameValidNameAndType_ShouldHaveExpectedMember()
     {
-        var type = new ComplexType("Test", new List<Member>
+        var type = new ComplexType("Test", new List<LogixMember>
         {
             new("Atomic", 1),
             new("String", "Test Value"),
@@ -528,7 +529,7 @@ public class ComplexTypeTests
     [Test]
     public void Replace_ByNameAndTypeNullMember_ShouldThrowArgumentNullException()
     {
-        var type = new ComplexType("Test", new List<Member>
+        var type = new ComplexType("Test", new List<LogixMember>
         {
             new("Atomic", 1),
             new("String", "Test Value"),
@@ -542,7 +543,7 @@ public class ComplexTypeTests
     [Test]
     public void Replace_ByNameAndTypeInvalidName_ShouldThrowArgumentException()
     {
-        var type = new ComplexType("Test", new List<Member>
+        var type = new ComplexType("Test", new List<LogixMember>
         {
             new("Atomic", 1),
             new("String", "Test Value"),
@@ -551,94 +552,6 @@ public class ComplexTypeTests
 
         FluentActions.Invoking(() => type.Replace("Fake", 123)).Should()
             .Throw<ArgumentException>();
-    }
-
-    [Test]
-    public void Set_ValidType_ShouldRaiseDataChanged()
-    {
-        var type = new ComplexType("Test", new List<Member>
-        {
-            new("Atomic", 1),
-            new("String", "Test Value"),
-            new("Structure", new TIMER { PRE = 2000 })
-        });
-        
-        using var monitor = type.Monitor();
-
-        type.Set(new ComplexType("Test", new List<Member> { new("Atomic", 123) }));
-            
-        monitor.Should().Raise("DataChanged");
-    }
-    
-    [Test]
-    public void Set_ValidType_ShouldUpdateTypeAsExpected()
-    {
-        var type = new ComplexType("Test", new List<Member>
-        {
-            new("Atomic", 1),
-            new("String", "Test Value"),
-            new("Structure", new TIMER { PRE = 2000 })
-        });
-
-        type.Set(new ComplexType("Test", new List<Member> { new("Atomic", 123) }));
-        
-        type.Member("Atomic")?.DataType.Should().Be(123);
-        type.Member("String")?.DataType.Should().Be("Test Value");
-        type.Member("Structure")?.DataType.As<TIMER>().PRE.Should().Be(2000);
-    }
-
-    [Test]
-    public void Set_ValidType_ShouldReturnExpectedResult()
-    {
-        var type = new ComplexType("Test", new List<Member>
-        {
-            new("Atomic", 1),
-            new("String", "Test Value"),
-            new("Structure", new TIMER { PRE = 2000 })
-        });
-
-        var result = type.Set(new ComplexType("Test", new List<Member> { new("Atomic", 123) }));
-
-        result.Should().NotBeNull();
-        result.Should().BeSameAs(type);
-        result.Should().BeOfType<ComplexType>();
-        result.Member("Atomic")?.DataType.Should().Be(123);
-        result.Member("String")?.DataType.Should().Be("Test Value");
-        result.Member("Structure")?.DataType.As<TIMER>().PRE.Should().Be(2000);
-    }
-
-    [Test]
-    public void Set_InvalidType_ShouldThrowArgumentException()
-    {
-        var type = new ComplexType("Test", new List<Member>
-        {
-            new("Atomic", 1),
-            new("String", "Test Value"),
-            new("Structure", new TIMER { PRE = 2000 })
-        });
-
-        FluentActions.Invoking(() => type.Set(new StringType("Test", "Some Vale"))).Should().Throw<ArgumentException>();
-    }
-
-    [Test]
-    public void Set_DifferentStructureWithOverlappingMember_ShouldUpdateCommonMembers()
-    {
-        var type = new ComplexType("Test", new List<Member>
-        {
-            new("Atomic", 1),
-            new("String", "Test Value"),
-            new("Structure", new TIMER { PRE = 2000 })
-        });
-
-        var result = type.Set(new ComplexType());
-
-        result.Should().NotBeNull();
-        result.Should().BeSameAs(type);
-        result.Should().BeOfType<ComplexType>();
-        result.Members.Should().HaveCount(3);
-        result.Member("Atomic")?.DataType.Should().Be(1);
-        result.Member("String")?.DataType.Should().Be("Test Value");
-        result.Member("Structure")?.DataType.As<TIMER>().PRE.Should().Be(2000);
     }
 
     [Test]
@@ -654,7 +567,7 @@ public class ComplexTypeTests
     [Test]
     public Task Serialize_Test_ShouldBeVerified()
     {
-        var type = new ComplexType("Test", new List<Member>
+        var type = new ComplexType("Test", new List<LogixMember>
         {
             new("Atomic", 1),
             new("String", "Test Value"),
@@ -664,5 +577,21 @@ public class ComplexTypeTests
         var xml = type.Serialize().ToString();
 
         return Verify(xml);
+    }
+
+    [Test]
+    public void BuildUserTypes_ValidUserType_ShouldWork()
+    {
+        var type = new ComplexType("Test", new List<LogixMember>
+        {
+            new("Atomic", 1),
+            new("String", "Test Value"),
+            new("Structure", new TIMER { PRE = 2000 }),
+            new("UserType", new MySimpleType())
+        });
+
+        var userTypes = type.BuildUserTypes().ToList();
+
+        userTypes.Should().HaveCount(1);
     }
 }

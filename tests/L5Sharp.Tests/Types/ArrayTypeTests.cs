@@ -452,7 +452,7 @@ namespace L5Sharp.Tests.Types
         {
             var array = new ArrayType(new DINT[] { 1, 2, 3, 4 });
 
-            var casted = array.AsArray<DINT>();
+            var casted = array.OfType<DINT>();
             casted.Should().NotBeNull();
             casted.Dimensions.Length.Should().Be(4);
 
@@ -466,7 +466,7 @@ namespace L5Sharp.Tests.Types
         {
             var array = new ArrayType(new DINT[] { 1, 2, 3, 4 });
 
-            FluentActions.Invoking(() => array.AsArray<INT>()).Should().Throw<InvalidCastException>();
+            FluentActions.Invoking(() => array.OfType<INT>()).Should().Throw<InvalidCastException>();
         }
 
         [Test]
@@ -474,7 +474,7 @@ namespace L5Sharp.Tests.Types
         {
             var array = new ArrayType(new INT[] { 1, 2, 3, 4 });
 
-            FluentActions.Invoking(() => array.AsArray<DINT>()).Should().Throw<InvalidCastException>();
+            FluentActions.Invoking(() => array.OfType<DINT>()).Should().Throw<InvalidCastException>();
         }
 
         [Test]
@@ -482,7 +482,7 @@ namespace L5Sharp.Tests.Types
         {
             var array = new ArrayType(new TIMER[] { new(), new(), new() });
 
-            var casted = array.AsArray<StructureType>();
+            var casted = array.OfType<StructureType>();
 
             casted.Should().NotBeNull();
             casted.Should<StructureType>().AllBeOfType<TIMER>();

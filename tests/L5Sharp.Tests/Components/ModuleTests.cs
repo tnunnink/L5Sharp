@@ -25,7 +25,7 @@ public class ModuleTests
         module.Name.Should().BeEmpty();
         module.Description.Should().BeNull();
         module.CatalogNumber.Should().BeEmpty();
-        module.Revision.Should().Be(new Revision());
+        module.Revision.Should().Be("1.0");
         module.Vendor.Should().Be(Vendor.Unknown);
         module.ProductType.Should().Be(ProductType.Unknown);
         module.ProductCode.Should().Be(0);

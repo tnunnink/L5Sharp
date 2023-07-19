@@ -111,18 +111,6 @@ namespace L5Sharp.Tests.Types.Predefined
         }
 
         [Test]
-        public void Set_ValidType_ShouldUpdateAsExpected()
-        {
-            var type = new TIMER();
-            var expected = new TIMER { PRE = 5000 };
-
-            var result = type.Set(expected).As<TIMER>();
-            
-            result.PRE.Should().Be(expected.PRE);
-            result.Should().BeSameAs(type);
-        }
-        
-        [Test]
         public Task Serialize_Default_ShouldBeVerified()
         {
             var type = new TIMER();
