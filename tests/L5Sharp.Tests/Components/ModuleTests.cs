@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using L5Sharp.Components;
 using L5Sharp.Core;
+using L5Sharp.Elements;
 using L5Sharp.Enums;
 using Task = System.Threading.Tasks.Task;
 
@@ -40,12 +41,75 @@ public class ModuleTests
     }
 
     [Test]
+    public void New_Initialized_ShouldHaveExpectedValues()
+    {
+        var module = new Module
+        {
+            Name = "Test",
+            Description = "This is a test module",
+            CatalogNumber = "ABCD-1234",
+            Revision = 1.3,
+            Vendor = Vendor.Rockwell,
+            ProductType = ProductType.Analog,
+            ProductCode = 1,
+            ParentModule = "Local",
+            ParentPortId = 1,
+            Inhibited = true,
+            SafetyEnabled = true,
+            MajorFault = true,
+            Keying = ElectronicKeying.Disabled,
+            Ports = new LogixContainer<Port> { new() { Id = 1, Type = "ICP", Address = "1", Upstream = true } },
+        };
+
+        module.Should().NotBeNull();
+        module.Name.Should().Be("Test");
+        module.Description.Should().Be("This is a test module");
+        module.CatalogNumber.Should().Be("ABCD-1234");
+        module.Revision.Should().Be( 1.3);
+        module.Vendor.Should().Be(Vendor.Rockwell);
+        module.ProductType.Should().Be(ProductType.Analog);
+        module.ProductCode.Should().Be(1);
+        module.ParentModule.Should().Be("Local");
+        module.ParentPortId.Should().Be(1);
+        module.Inhibited.Should().Be(true);
+        module.SafetyEnabled.Should().Be(true);
+        module.MajorFault.Should().Be(true);
+        module.Keying.Should().Be(ElectronicKeying.Disabled);
+    }
+
+    [Test]
     public Task Serialize_Default_ShouldBeVerified()
     {
         var module = new Module();
 
         var xml = module.Serialize().ToString();
-        
+
+        return Verify(xml);
+    }
+    
+    [Test]
+    public Task Serialize_Initialized_ShouldBeVerified()
+    {
+        var module = new Module
+        {
+            Name = "Test",
+            Description = "This is a test module",
+            CatalogNumber = "ABCD-1234",
+            Revision = 1.3,
+            Vendor = Vendor.Rockwell,
+            ProductType = ProductType.Analog,
+            ProductCode = 1,
+            ParentModule = "Local",
+            ParentPortId = 1,
+            Inhibited = true,
+            SafetyEnabled = true,
+            MajorFault = true,
+            Keying = ElectronicKeying.Disabled,
+            Ports = new LogixContainer<Port> { new() { Id = 1, Type = "ICP", Address = "1", Upstream = true } },
+        };
+
+        var xml = module.Serialize().ToString();
+
         return Verify(xml);
     }
 }

@@ -1,7 +1,6 @@
 ﻿using AutoFixture;
 using FluentAssertions;
 using L5Sharp.Core;
-using NUnit.Framework;
 
 namespace L5Sharp.Tests.Core
 {
@@ -122,7 +121,7 @@ namespace L5Sharp.Tests.Core
         }
 
         [Test]
-        public void TypedEquals_AreEqual_ShouldBeTrue()
+        public void Equals_AreEqual_ShouldBeTrue()
         {
             var value = _fixture.Create<ushort>();
             var first = new Vendor(value);
@@ -134,58 +133,57 @@ namespace L5Sharp.Tests.Core
         }
 
         [Test]
-        public void TypedEquals_AreSame_ShouldBeTrue()
+        public void Equals_AreSame_ShouldBeTrue()
         {
             var value = _fixture.Create<ushort>();
             var first = new Vendor(value);
 
+            // ReSharper disable once EqualExpressionComparison
             var result = first.Equals(first);
 
             result.Should().BeTrue();
         }
+        
+        
+        [Test]
+        public void Equals_Test_ShouldBeTrue()
+        {
+            // ReSharper disable once EqualExpressionComparison
+            var result = Vendor.Rockwell.Equals(Vendor.Rockwell);
 
+            result.Should().BeTrue();
+        }
+        
+        [Test]
+        public void Equals_ToValue_ShouldBeTrue()
+        {
+            var value = _fixture.Create<ushort>();
+            var first = new Vendor(value);
+
+            // ReSharper disable once SuspiciousTypeConversion.Global
+            var result = first.Equals(value);
+
+            result.Should().BeTrue();
+        }
 
         [Test]
-        public void TypedEquals_Null_ShouldBeFalse()
+        public void Equals_ToInt_ShouldBeTrue()
+        {
+            var first = Vendor.Rockwell;
+
+            // ReSharper disable once SuspiciousTypeConversion.Global
+            var result = first.Equals(1);
+
+            result.Should().BeTrue();
+        }
+
+        [Test]
+        public void Equals_Null_ShouldBeFalse()
         {
             var value = _fixture.Create<ushort>();
             var first = new Vendor(value);
 
             var result = first.Equals(null);
-
-            result.Should().BeFalse();
-        }
-
-        [Test]
-        public void ObjectEquals_AreEqual_ShouldBeTrue()
-        {
-            var value = _fixture.Create<ushort>();
-            var first = new Vendor(value);
-            var second = new Vendor(value);
-
-            var result = first.Equals((object)second);
-
-            result.Should().BeTrue();
-        }
-
-        [Test]
-        public void ObjectEquals_AreSame_ShouldBeTrue()
-        {
-            var value = _fixture.Create<ushort>();
-            var first = new Vendor(value);
-
-            var result = first.Equals((object)first);
-
-            result.Should().BeTrue();
-        }
-
-        [Test]
-        public void ObjectEquals_Null_ShouldBeFalse()
-        {
-            var value = _fixture.Create<ushort>();
-            var first = new Vendor(value);
-
-            var result = first.Equals((object)null);
 
             result.Should().BeFalse();
         }

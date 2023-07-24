@@ -73,16 +73,14 @@ public sealed class USINT : AtomicType, IComparable, IConvertible
     public const byte MinValue = byte.MinValue;
     
     /// <summary>
-    /// Gets or sets a child bit member's data type value. 
+    /// Gets bit member's data type value at the specified bit index. 
     /// </summary>
     /// <param name="bit">The zero based bit index of the value to get.</param>
     /// <returns>A <see cref="BOOL"/> representing the value of the specified bit value (0/1).</returns>
     /// <exception cref="ArgumentOutOfRangeException"><c>bit</c> is out of range of the atomic type bit length.</exception>
-    public BOOL this[int bit]
-    {
-        get => BitMember(bit).DataType.As<BOOL>();
-        set => BitMember(bit).DataType = value;
-    }
+    public BOOL this[int bit] =>
+        Member(bit.ToString())?.DataType.As<BOOL>() ??
+        throw new ArgumentOutOfRangeException($"The bit index {bit} is out of range for a {Name} atomic value.");
 
     /// <inheritdoc />
     public int CompareTo(object obj)

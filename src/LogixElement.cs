@@ -159,6 +159,27 @@ public abstract class LogixElement<TElement> : ILogixSerializable where TElement
         var value = Element.Element(name)?.Value;
         return value is not null ? value.Parse<T>() : default;
     }
+    
+    /// <summary>
+    /// Gets a child <see cref="LogixElement{TElement}"/> deserialized as the specified type if it exists.
+    /// If the element does not exist, returns <c>default</c> value of the generic type parameter.
+    /// </summary>
+    /// <param name="name">The name of the child element.</param>
+    /// <typeparam name="T">The return type of the element.</typeparam>
+    /// <returns>
+    /// If found, the value of child element deserialized as the generic type parameter.
+    /// If not found, returns <c>default</c>.
+    /// </returns>
+    /// <remarks>
+    /// This method makes getting/setting data on <see cref="Element"/> as concise as possible from derived classes.
+    /// This method uses the <see cref="CallerMemberNameAttribute"/> so the deriving classes don't have to specify
+    /// the property name (assuming its the name matches the underlying element property).
+    /// </remarks>
+    protected T? GetComplex<T>([CallerMemberName] string? name = null) where T : LogixElement<T>
+    {
+        var value = Element.Element(name);
+        return value is not null ? LogixSerializer.Deserialize<T>(value) : default;
+    }
 
     /// <summary>
     /// Gets a child <see cref="LogixContainer{TEntity}"/> with the specified element name, representing the root of a
@@ -328,6 +349,38 @@ public abstract class LogixElement<TElement> : ILogixSerializable where TElement
         }
 
         element.ReplaceWith(new XElement(name, new XCData(value.ToString())));
+    }
+    
+    /// <summary>
+    /// Sets the complex type object of a child element, adds a child element, or removes a child element.
+    /// </summary>
+    /// <param name="name">The name of the element to set.</param>
+    /// <param name="value">The complex type to assign to the child element.
+    /// The child element is removed if the value is null.
+    /// Otherwise, the value is serialized and added as a child element to the current type's element.</param>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <remarks>
+    /// This method it only available to make getting/setting data on <see cref="Element"/> as concise
+    /// as possible from derived classes. This method uses the <see cref="CallerMemberNameAttribute"/> so the deriving
+    /// classes don't have to specify the property name (assuming its the name matches the underlying element property).
+    /// </remarks>
+    protected void SetComplex<T>(T? value, [CallerMemberName] string? name = null) where T : ILogixSerializable
+    {
+        var element = Element.Element(name);
+        
+        if (value is null)
+        {
+            element?.Remove();
+            return;
+        }
+        
+        if (element is null)
+        {
+            Element.Add(value.Serialize());
+            return;
+        }
+
+        element.ReplaceWith(value.Serialize());
     }
 
     /// <summary>

@@ -254,7 +254,7 @@ public class ArrayType : LogixType, IEnumerable<LogixType>
         var member = Members.SingleOrDefault(m => m.Name == index);
 
         if (member is null)
-            throw new ArgumentOutOfRangeException($"The index '{index}' is outside the bound of the array.");
+            throw new ArgumentOutOfRangeException(nameof(index), $"The index '{index}' is outside the bound of the array.");
 
         return member.DataType;
     }
@@ -273,7 +273,7 @@ public class ArrayType : LogixType, IEnumerable<LogixType>
         var member = Members.SingleOrDefault(m => m.Name == index);
 
         if (member is null)
-            throw new ArgumentOutOfRangeException($"The index '{index}' is outside the bound of the array.");
+            throw new ArgumentOutOfRangeException(nameof(index), $"The index '{index}' is outside the bound of the array.");
 
         member.DataType = value;
     }

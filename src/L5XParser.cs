@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using L5Sharp.Core;
 using L5Sharp.Enums;
+using L5Sharp.Types;
 using L5Sharp.Types.Atomics;
 using L5Sharp.Types.Predefined;
 
@@ -21,18 +22,25 @@ public static class L5XParser
         { typeof(DINT), DINT.Parse},
         { typeof(LINT), LINT.Parse},
         { typeof(REAL), REAL.Parse},
+        { typeof(LREAL), LREAL.Parse},
         { typeof(USINT), USINT.Parse},
         { typeof(UINT), UINT.Parse},
         { typeof(UDINT), UDINT.Parse},
         { typeof(ULINT), ULINT.Parse},
+        { typeof(AtomicType), Atomic.Parse},
         { typeof(STRING), s => new STRING(s)},
         { typeof(DateTime), s => DateTime.Parse(s) },
         { typeof(ConnectionPriority), ConnectionPriority.FromValue },
         { typeof(ConnectionType), ConnectionType.FromValue },
         { typeof(DataTypeClass), DataTypeClass.FromValue },
         { typeof(DataTypeFamily), DataTypeFamily.FromValue },
-        { typeof(ExternalAccess), ExternalAccess.FromValue },
         { typeof(ElectronicKeying), ElectronicKeying.FromValue },
+        { typeof(ExternalAccess), ExternalAccess.FromValue },
+        { typeof(Function), Function.FromValue },
+        { typeof(OnlineEditType), OnlineEditType.FromValue },
+        { typeof(Operator), Operator.FromValue },
+        { typeof(PassThroughOption), PassThroughOption.FromValue },
+        { typeof(PenType), PenType.FromValue },
         { typeof(ProductionTrigger), ProductionTrigger.FromValue },
         { typeof(ProgramType), ProgramType.FromValue },
         { typeof(Radix), Radix.FromValue },
@@ -42,6 +50,8 @@ public static class L5XParser
         { typeof(SFCExecutionControl), SFCExecutionControl.FromValue },
         { typeof(SFCRestartPosition), SFCRestartPosition.FromValue },
         { typeof(SFCLastScan), SFCLastScan.FromValue },
+        { typeof(SheetOrientation), SheetOrientation.FromValue },
+        { typeof(SheetSize), SheetSize.FromValue },
         { typeof(TagType), TagType.FromValue },
         { typeof(TagUsage), TagUsage.FromValue },
         { typeof(TaskEventTrigger), TaskEventTrigger.FromValue },

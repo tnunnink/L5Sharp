@@ -119,26 +119,6 @@ namespace L5Sharp.Tests.Types.Atomics
         }
 
         [Test]
-        public void Bit_ValidIndex_ShouldBeExpected()
-        {
-            var type = new LINT(1);
-
-            var bit0 = type.Bit(0);
-            var bit1 = type.Bit(1);
-
-            bit0.Should().Be(true);
-            bit1.Should().Be(false);
-        }
-        
-        [Test]
-        public void Bit_InvalidIndex_ShouldThrowArgumentOutOfRangeException()
-        {
-            var type = new LINT(1);
-
-            FluentActions.Invoking(() => type.Bit(64)) .Should().Throw<ArgumentOutOfRangeException>();
-        }
-
-        [Test]
         public void GetBytes_WhenCalled_ReturnsExpected()
         {
             var expected = BitConverter.GetBytes(_random);

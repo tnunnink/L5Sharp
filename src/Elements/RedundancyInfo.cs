@@ -1,13 +1,32 @@
-﻿using L5Sharp.Components;
+﻿using System;
+using System.Xml.Linq;
+using L5Sharp.Components;
 
 namespace L5Sharp.Elements;
 
 /// <summary>
-/// A sub component of the <see cref="Controller"/> component that contains properties or configuration
+/// A sub element of the <see cref="Controller"/> component that contains properties or configuration
 /// related to the controller redundancy.
 /// </summary>
 public class RedundancyInfo : LogixElement<RedundancyInfo>
 {
+    
+    /// <summary>
+    /// Creates a new <see cref="RedundancyInfo"/> with default values.
+    /// </summary>
+    public RedundancyInfo()
+    {
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="WatchTag"/> initialized with the provided <see cref="XElement"/>.
+    /// </summary>
+    /// <param name="element">The <see cref="XElement"/> to initialize the type with.</param>
+    /// <exception cref="ArgumentNullException"><c>element</c> is null.</exception>
+    public RedundancyInfo(XElement element) : base(element)
+    {
+    }
+    
     /// <summary>
     /// Specify whether redundancy is used.
     /// </summary>

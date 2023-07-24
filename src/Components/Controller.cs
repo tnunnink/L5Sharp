@@ -289,5 +289,18 @@ public class Controller : LogixComponent<Controller>
     /// <summary>
     /// The <see cref="Elements.RedundancyInfo"/> object that specifies the redundancy configuration of the controller.
     /// </summary>
-    public RedundancyInfo? RedundancyInfo { get; set; } = default;
+    public RedundancyInfo? RedundancyInfo
+    {
+        get => GetComplex<RedundancyInfo>();
+        set => SetComplex(value);
+    }
+    
+    /// <summary>
+    /// The <see cref="Elements.SafetyInfo"/> object that specifies the safety configuration of the controller.
+    /// </summary>
+    public SafetyInfo? SafetyInfo
+    {
+        get => GetComplex<SafetyInfo>();
+        set => SetComplex(value);
+    }
 }

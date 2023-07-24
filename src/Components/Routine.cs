@@ -23,8 +23,8 @@ public class Routine : LogixComponent<Routine>
     /// </remarks>
     public Routine()
     {
-        Element.Add(new XAttribute(L5XName.Type, RoutineType.Rll));
-        Element.Add(new XElement(ContentName(RoutineType.Rll)));
+        Element.Add(new XAttribute(L5XName.Type, RoutineType.RLL));
+        Element.Add(new XElement(ContentName(RoutineType.RLL)));
     }
 
     /// <summary>

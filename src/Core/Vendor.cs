@@ -13,7 +13,7 @@ namespace L5Sharp.Core;
 /// This information is obtained from the L5X or from the <see cref="ModuleCatalog"/> service by lookup of a given
 /// catalog number. Use <see cref="Rockwell"/> as it is the most common vendor for compatible devices.
 /// </remarks>
-public class Vendor : IEquatable<Vendor>
+public class Vendor
 {
     /// <summary>
     /// Creates a new <see cref="Vendor"/> value with the provided id and name.
@@ -74,15 +74,17 @@ public class Vendor : IEquatable<Vendor>
     public override string ToString() => Name;
 
     /// <inheritdoc />
-    public bool Equals(Vendor? other)
+    public override bool Equals(object? obj)
     {
-        if (ReferenceEquals(null, other)) return false;
-        if (ReferenceEquals(this, other)) return true;
-        return Id == other.Id;
+        return obj switch
+        {
+            Vendor other => Id.Equals(other.Id),
+            int other => ((int)Id).Equals(other),
+            ushort other => Id.Equals(other),
+            ValueType other => Id.Equals(other),
+            _ => false
+        };
     }
-
-    /// <inheritdoc />
-    public override bool Equals(object? obj) => Equals(obj as Vendor);
 
     /// <inheritdoc />
     public override int GetHashCode() => Id.GetHashCode();

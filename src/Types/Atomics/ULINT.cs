@@ -73,18 +73,14 @@ public sealed class ULINT : AtomicType, IComparable, IConvertible
     public const ulong MinValue = ulong.MinValue;
     
     /// <summary>
-    /// Gets the bit value as a <see cref="BOOL"/> at the specified zero based bit index of the atomic type.
+    /// Gets bit member's data type value at the specified bit index. 
     /// </summary>
     /// <param name="bit">The zero based bit index of the value to get.</param>
-    /// <returns>A <see cref="BOOL"/> representing the value of the specified bit.</returns>
+    /// <returns>A <see cref="BOOL"/> representing the value of the specified bit value (0/1).</returns>
     /// <exception cref="ArgumentOutOfRangeException"><c>bit</c> is out of range of the atomic type bit length.</exception>
-    public BOOL Bit(int bit)
-    {
-        if (bit is < 0 or >= 64)
-            throw new ArgumentOutOfRangeException($"The bit {bit} is out of range for type {Name}", nameof(bit));
-        
-        return new BOOL((_value & (ulong)(1 << bit)) != 0);
-    }
+    public BOOL this[int bit] =>
+        Member(bit.ToString())?.DataType.As<BOOL>() ??
+        throw new ArgumentOutOfRangeException($"The bit index {bit} is out of range for a {Name} atomic value.");
 
     /// <inheritdoc />
     public int CompareTo(object obj)

@@ -14,7 +14,7 @@ namespace L5Sharp.Core;
 /// catalog number. Some known/common types that are available as static members of this class
 /// include <see cref="Discrete"/>, <see cref="Analog"/>, <see cref="Controller"/>, and <see cref="Communications"/>.
 /// </remarks>
-public class ProductType : IEquatable<ProductType>
+public class ProductType
 {
     /// <summary>
     /// Creates a new <see cref="ProductType"/> entity with the provided id and name.
@@ -88,15 +88,15 @@ public class ProductType : IEquatable<ProductType>
     public override string ToString() => Name;
 
     /// <inheritdoc />
-    public bool Equals(ProductType? other)
+    public override bool Equals(object? obj)
     {
-        if (ReferenceEquals(null, other)) return false;
-        if (ReferenceEquals(this, other)) return true;
-        return Id == other.Id;
+        return obj switch
+        {
+            ProductType other => Id.Equals(other.Id),
+            ValueType other => Id.Equals(other),
+            _ => false
+        };
     }
-
-    /// <inheritdoc />
-    public override bool Equals(object? obj) => Equals(obj as ProductType);
 
     /// <inheritdoc />
     public override int GetHashCode() => Id.GetHashCode();

@@ -47,6 +47,7 @@ public class LogixMember : ILogixSerializable
     {
         Name = name ?? string.Empty;
         _dataType = type ?? LogixData.Null;
+        _dataType.DataChanged += OnDataTypeChanged;
     }
 
     /// <summary>
@@ -60,6 +61,7 @@ public class LogixMember : ILogixSerializable
         if (element is null) throw new ArgumentNullException(nameof(element));
         Name = element.Attribute(L5XName.Name)?.Value ?? (element.Attribute(L5XName.Index)?.Value ?? string.Empty);
         _dataType = LogixData.Deserialize(element);
+        _dataType.DataChanged += OnDataTypeChanged;
     }
 
     /// <summary>
@@ -129,14 +131,14 @@ public class LogixMember : ILogixSerializable
     private LogixType Set(LogixType? type)
     {
         if (type is null) return LogixData.Null;
-        
+
         return _dataType switch
         {
-            AtomicType atomicType => SetAtomic(atomicType, type),
-            ArrayType arrayType => SetArray(arrayType, type),
-            StringType stringType => SetString(stringType, type),
-            StructureType structureType => SetStructure(structureType, type),
             NullType => type,
+            AtomicType atomicType => SetAtomic(atomicType, type),
+            ArrayType arrayType => SetMembers(arrayType, type),
+            StringType stringType => SetMembers(stringType, type),
+            StructureType structureType => SetMembers(structureType, type),
             _ => throw new NotSupportedException($"Member does not support setting DataType to type {type.GetType()}.")
         };
     }
@@ -160,63 +162,23 @@ public class LogixMember : ILogixSerializable
             UINT value => new UINT((ushort)Convert.ChangeType(type, typeof(ushort)), value.Radix),
             ULINT value => new ULINT((ulong)Convert.ChangeType(type, typeof(ulong)), value.Radix),
             USINT value => new USINT((byte)Convert.ChangeType(type, typeof(byte)), value.Radix),
-            _ => throw new ArgumentException($"Can not set {current.Name} with type {type.Name}")
+            _ => throw new ArgumentException($"Can not set {current.Name} with type {type.Name}.")
         };
     }
 
     /// <summary>
-    /// Handles creating a new string type with the updated value. This joins string members on name and delegates the
-    /// set of each member down the type/member hierarchy.
+    /// Handles cloning and setting members of any given logix type that is considered a structure, array, or string type.
+    /// This simply joins members on name and delegates the set of each member down the type/member hierarchy,
+    /// eventually arriving at atomic type values.
     /// </summary>
-    private static LogixType SetString(LogixType current, LogixType type)
+    private static LogixType SetMembers(LogixType current, LogixType type)
     {
-        if (type is not StringType stringType)
-            throw new ArgumentException($"Can not set {current.Name} with type {type.Name}");
-
-        var clone = current.Clone();
+        if (type is AtomicType)
+            throw new ArgumentException($"Can not set {current.Name} with atomic type {type.Name}.");
         
-        var pairs = clone.Members.Join(stringType.Members, m => m.Name, m => m.Name,
-            (t, s) => new { Target = t, Source = s });
-        
-        foreach (var pair in pairs)
-            pair.Target.DataType = pair.Source.DataType;
-
-        return clone;
-    }
-
-    /// <summary>
-    /// Handles creating a new array type with the updated values. This joins array elements on index and delegates the
-    /// set of each member down the type/member hierarchy.
-    /// </summary>
-    private static LogixType SetArray(LogixType current, LogixType type)
-    {
-        if (type is not ArrayType array)
-            throw new ArgumentException($"Can not set {current.Name} with type {type.Name}");
-
-        //Instantiating array like this might be slightly faster than clone
-        var clone = new ArrayType(current.Serialize());
-
-        var pairs = clone.Members.Join(array.Members, m => m.Name, m => m.Name,
-            (t, s) => new { Target = t, Source = s });
-
-        foreach (var pair in pairs)
-            pair.Target.DataType = pair.Source.DataType;
-
-        return clone;
-    }
-
-    /// <summary>
-    /// Handles creating a new structure type with the updated values. This joins members on name and delegates the
-    /// set of each member down the type/member hierarchy.
-    /// </summary>
-    private static LogixType SetStructure(LogixType current, LogixType type)
-    {
-        if (type is not StructureType structure)
-            throw new ArgumentException($"Can not set {current.Name} with type {type.Name}");
-
         var clone = current.Clone();
 
-        var pairs = clone.Members.Join(structure.Members, m => m.Name, m => m.Name,
+        var pairs = clone.Members.Join(type.Members, m => m.Name, m => m.Name,
             (t, s) => new { Target = t, Source = s });
 
         foreach (var pair in pairs)
@@ -258,7 +220,7 @@ public class LogixMember : ILogixSerializable
                     index.Add(new XAttribute(L5XName.Value, value));
                     break;
                 case StringType stringType:
-                    element.Add(stringType.SerializeStructure());
+                    index.Add(stringType.SerializeStructure());
                     break;
                 case StructureType structureType:
                     index.Add(structureType.Serialize());
@@ -320,8 +282,9 @@ public class LogixMember : ILogixSerializable
     private void OnDataTypeChanged(object sender, EventArgs e)
     {
         //If the sender is an atomic type (which is intercepted by atomic types)
-        //then we realize this is a value change and need to replace the member type with the new value.
-        //This is the only way we can update the atomic value on the L5X for a bit member change.
+        //  then we realize this is a value change and need to replace the member type with the new value.
+        //This is the only way we can update the atomic value on the L5X for a bit member change, since
+        //  atomic bit members don't exist in the L5X data structure.
         //Note that setting DataType this way will in turn trigger the member's data changed event. 
         if (sender is AtomicType atomicType)
         {
@@ -329,7 +292,7 @@ public class LogixMember : ILogixSerializable
             return;
         }
 
-        //Otherwise the member change was already handled and we just forward the member sender up the chain.
+        //Otherwise the member change was already handled and we just forward the sender up the chain.
         RaiseDataChanged(sender);
     }
 }

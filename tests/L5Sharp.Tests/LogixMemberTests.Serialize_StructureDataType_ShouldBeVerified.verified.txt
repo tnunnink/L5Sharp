@@ -1,0 +1,7 @@
+﻿<StructureMember Name="Test" DataType="TIMER">
+  <DataValueMember Name="PRE" DataType="DINT" Radix="Decimal" Value="1000" />
+  <DataValueMember Name="ACC" DataType="DINT" Radix="Decimal" Value="2000" />
+  <DataValueMember Name="EN" DataType="BOOL" Value="1" />
+  <DataValueMember Name="TT" DataType="BOOL" Value="1" />
+  <DataValueMember Name="DN" DataType="BOOL" Value="1" />
+</StructureMember>

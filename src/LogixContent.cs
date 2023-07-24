@@ -10,8 +10,8 @@ using L5Sharp.Enums;
 namespace L5Sharp;
 
 /// <summary>
-/// A simple wrapper around a given <see cref="XElement"/>, which is expected to be the root RSLogix5000Content element
-/// of the L5X file.
+/// Represents the root content of a RSLogix5000 L5X file, providing access to query and manipulate primary components
+/// such as Tag, DataType, Module, and more; This is the primary entry point for interacting with the L5X file.
 /// </summary>
 public class LogixContent
 {

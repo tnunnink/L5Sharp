@@ -77,16 +77,14 @@ public sealed class DINT : AtomicType, IComparable, IConvertible
     public const int MinValue = int.MinValue;
 
     /// <summary>
-    /// Gets or sets a child bit member's data type value. 
+    /// Gets bit member's data type value at the specified bit index. 
     /// </summary>
     /// <param name="bit">The zero based bit index of the value to get.</param>
     /// <returns>A <see cref="BOOL"/> representing the value of the specified bit value (0/1).</returns>
     /// <exception cref="ArgumentOutOfRangeException"><c>bit</c> is out of range of the atomic type bit length.</exception>
-    public BOOL this[int bit]
-    {
-        get => BitMember(bit).DataType.As<BOOL>();
-        set => BitMember(bit).DataType = value;
-    }
+    public BOOL this[int bit] =>
+        Member(bit.ToString())?.DataType.As<BOOL>() ??
+        throw new ArgumentOutOfRangeException($"The bit index {bit} is out of range for a {Name} atomic value.");
 
     /// <inheritdoc />
     public int CompareTo(object? obj)
@@ -190,13 +188,13 @@ public sealed class DINT : AtomicType, IComparable, IConvertible
     /// <param name="value">The value to convert.</param>
     /// <returns>A new <see cref="string"/> value.</returns>
     public static implicit operator string(DINT value) => value.ToString();
-    
+
     #endregion
-    
+
     // Contains the IConvertible implementation for the type. I am explicitly implementing this interface for each
     // atomic type to avoid polluting the API, and to have the implementation as performant as possible.
     // To perform conversion, use the recommended .NET Convert.ChangeType() method and specify the target type.
-    
+
     #region Convertible
 
     /// <inheritdoc />
@@ -244,7 +242,7 @@ public sealed class DINT : AtomicType, IComparable, IConvertible
     object IConvertible.ToType(Type conversionType, IFormatProvider provider)
     {
         var convertible = (IConvertible)this;
-        
+
         return Type.GetTypeCode(conversionType) switch
         {
             TypeCode.Boolean => convertible.ToBoolean(provider),
@@ -278,7 +276,7 @@ public sealed class DINT : AtomicType, IComparable, IConvertible
 
     /// <inheritdoc />
     ulong IConvertible.ToUInt64(IFormatProvider provider) => (ulong)_value;
-    
+
     /// <summary>
     /// Converts the current atomic type to the specified atomic type.
     /// </summary>
@@ -309,7 +307,7 @@ public sealed class DINT : AtomicType, IComparable, IConvertible
             return new UDINT((uint)_value);
         if (conversionType == typeof(ULINT))
             return new ULINT((ulong)_value);
-        
+
         throw new InvalidCastException($"Cannot convert from {GetType().Name} to {conversionType.Name}.");
     }
 

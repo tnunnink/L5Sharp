@@ -17,7 +17,7 @@ namespace L5Sharp.Core;
 /// </remarks>
 /// <seealso cref="Instruction"/>
 /// <seealso cref="TagName"/>
-public sealed class NeutralText : IEquatable<NeutralText>
+public sealed class NeutralText
 {
     private readonly string _text;
 
@@ -343,15 +343,15 @@ public sealed class NeutralText : IEquatable<NeutralText>
     public override string ToString() => _text;
 
     /// <inheritdoc />
-    public bool Equals(NeutralText? other)
+    public override bool Equals(object? obj)
     {
-        if (ReferenceEquals(null, other)) return false;
-        return ReferenceEquals(this, other) ||
-               string.Equals(_text, other._text, StringComparison.OrdinalIgnoreCase);
+        return obj switch
+        {
+            NeutralText other => string.Equals(_text, other._text, StringComparison.OrdinalIgnoreCase),
+            string other => string.Equals(_text, other, StringComparison.OrdinalIgnoreCase),
+            _ => false
+        };
     }
-
-    /// <inheritdoc />
-    public override bool Equals(object? obj) => Equals(obj as NeutralText);
 
     /// <inheritdoc />
     public override int GetHashCode() => StringComparer.OrdinalIgnoreCase.GetHashCode(_text.GetHashCode());

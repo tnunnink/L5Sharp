@@ -23,18 +23,18 @@ public class RoutineTests
 
         routine.Name.Should().BeEmpty();
         routine.Description.Should().BeNull();
-        routine.Type.Should().Be(RoutineType.Rll);
+        routine.Type.Should().Be(RoutineType.RLL);
         routine.Content<Rung>().Should().NotBeNull();
     }
 
     [Test]
     public void New_RoutineType_ShouldHaveExpectedValues()
     {
-        var routine = new Routine(RoutineType.St);
+        var routine = new Routine(RoutineType.ST);
 
         routine.Name.Should().BeEmpty();
         routine.Description.Should().BeNull();
-        routine.Type.Should().Be(RoutineType.St);
+        routine.Type.Should().Be(RoutineType.ST);
         routine.Content<Line>().Should().NotBeNull();
     }
 
@@ -45,9 +45,9 @@ public class RoutineTests
         
         var rungs = new List<Rung>
         {
-            new() { Text = "XIC(SomeTag)OTE(SomeOtherTag);" },
-            new() { Text = "XIC(SomeTag)OTE(SomeOtherTag);" },
-            new() { Text = "XIC(SomeTag)OTE(SomeOtherTag);" }
+            new("XIC(SomeTag)OTE(SomeOtherTag);"),
+            new("XIC(SomeTag)OTE(SomeOtherTag);"),
+            new("XIC(SomeTag)OTE(SomeOtherTag);"),
         };
         
         routine.Content<Rung>().AddRange(rungs);

@@ -70,7 +70,7 @@ public class Module : LogixComponent<Module>
     public Vendor? Vendor
     {
         get => GetValue<Vendor>();
-        set => SetValue(value);
+        set => SetValue(value?.Id);
     }
 
     /// <summary>
@@ -85,7 +85,7 @@ public class Module : LogixComponent<Module>
     public ProductType? ProductType
     {
         get => GetValue<ProductType>();
-        set => SetValue(value);
+        set => SetValue(value?.Id);
     }
 
     /// <summary>
@@ -111,8 +111,17 @@ public class Module : LogixComponent<Module>
     /// </remarks>
     public Revision? Revision
     {
-        get => GetValue<Revision>();
-        set => SetValue(value);
+        get
+        {
+            var major = Element.Attribute(L5XName.Major)?.Value;
+            var minor = Element.Attribute(L5XName.Minor)?.Value;
+            return major is not null && minor is not null ? Revision.Parse($"{major}.{minor}") : default;
+        }
+        set
+        {
+            Element.SetAttributeValue(L5XName.Major, value?.Major);
+            Element.SetAttributeValue(L5XName.Minor, value?.Minor);
+        }
     }
 
     /// <summary>

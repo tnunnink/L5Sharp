@@ -266,8 +266,8 @@ public static class LogixData
     private static IEnumerable<KeyValuePair<string, ConstructorInfo>> ScanTypes(Assembly assembly)
     {
         var types = assembly.GetTypes().Where(t =>
-            t.IsDerivativeOf(typeof(StructureType))
-            && t != typeof(ComplexType)
+            t.IsDerivativeOf(typeof(StructureType)) | t.IsDerivativeOf(typeof(StringType))
+            && t != typeof(ComplexType) && t != typeof(StringType)
             && t is { IsAbstract: false, IsPublic: true }
             && t.GetConstructor(new[] { typeof(XElement) }) is not null);
 

@@ -88,19 +88,6 @@ public abstract class AtomicType : LogixType
     }
 
     /// <summary>
-    /// Gets a bit member for the atomic type at the specified bit index.
-    /// </summary>
-    /// <param name="index">The zero based bit index of the value to get.</param>
-    /// <returns>A <see cref="LogixMember"/> representing the bit member of the atomic type.</returns>
-    /// <exception cref="ArgumentOutOfRangeException"><c>index</c> is out of range for the atomic type value.</exception>
-    protected LogixMember BitMember(int index)
-    {
-        return Member(index.ToString()) ??
-               throw new ArgumentOutOfRangeException(nameof(index),
-                   $"The bit index {index} is out of range for a {Name} atomic value.");
-    }
-
-    /// <summary>
     /// Trigger the <see cref="LogixType.DataChanged"/> event when a atomic member data changed event is fired to forward
     /// the call up the type/member hierarchy.
     /// </summary>

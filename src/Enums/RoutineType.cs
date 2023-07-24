@@ -23,20 +23,20 @@ public sealed class RoutineType : LogixEnum<RoutineType, string>
     /// <summary>
     /// Represents a Relay Ladder Logic routine type. 
     /// </summary>
-    public static readonly RoutineType Rll = new(nameof(Rll), "RLL");
+    public static readonly RoutineType RLL = new(nameof(RLL), nameof(RLL));
         
     /// <summary>
     /// Represents a Function Block Diagram routine type. 
     /// </summary>
-    public static readonly RoutineType Fbd = new(nameof(Fbd), "FBD");
+    public static readonly RoutineType FBD = new(nameof(FBD), nameof(FBD));
         
     /// <summary>
     /// Represents a Sequential Function Chart routine type. 
     /// </summary>
-    public static readonly RoutineType Sfc = new(nameof(Sfc), "SFC");
+    public static readonly RoutineType SFC = new(nameof(SFC), nameof(SFC));
         
     /// <summary>
     /// Represents a Structured Text routine type.
     /// </summary>
-    public static readonly RoutineType St = new(nameof(St), "ST");
+    public static readonly RoutineType ST = new(nameof(ST), nameof(ST));
 }
