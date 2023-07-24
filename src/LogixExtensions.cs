@@ -47,10 +47,7 @@ public static class LogixExtensions
     /// <value>A <see cref="Enums.Scope"/> option indicating the container type for the scoped component.</value>
     /// <remarks>
     /// </remarks>
-    public static Scope Scope<TElement>(this LogixElement<TElement> component) where TElement : LogixElement<TElement>
-    {
-        return Enums.Scope.FromElement(component.Serialize());
-    }
+    public static Scope Scope(this LogixElement component) => Enums.Scope.FromElement(component.Serialize());
 
     /// <summary>
     /// The scope name of the component.
@@ -58,8 +55,7 @@ public static class LogixExtensions
     /// <value>A <see cref="string"/> representing the container (program, controller, routine) name of the component.</value>
     /// <remarks>
     /// </remarks>
-    public static string Container<TElement>(this LogixElement<TElement> component)
-        where TElement : LogixElement<TElement>
+    public static string ScopeName(this LogixElement component)
     {
         var containers = Enums.Scope.All().Select(s => s.XName.ToString());
 
@@ -181,10 +177,10 @@ public static class LogixExtensions
                     ExternalAccess = ExternalAccess.ReadWrite
                 }))
             };
-            
+
             results.Add(userType);
         }
-        
+
         foreach (var member in type.Members)
             if (member.DataType is ComplexType structureType)
                 results.AddRange(structureType.BuildUserTypes());
@@ -204,7 +200,7 @@ public static class LogixExtensions
     /// <returns>A <see cref="IEnumerable{T}"/> containing tags in the specified program.</returns>
     public static IEnumerable<Tag> In(this IEnumerable<Tag> tags, string programName)
     {
-        return tags.Where(t => t.Container() == programName);
+        return tags.Where(t => t.ScopeName() == programName);
     }
 
     /// <summary>
@@ -419,7 +415,7 @@ public static class LogixExtensions
     /// to scope the rung collection to a specific combination of program/routine or instruction/routine.</remarks>
     public static IEnumerable<Rung> In(this IEnumerable<Rung> rungs, string container)
     {
-        return rungs.Where(r => r.Container() == container);
+        return rungs.Where(r => r.ScopeName() == container);
     }
 
     #endregion

@@ -18,8 +18,7 @@ namespace L5Sharp;
 /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
 /// `Logix 5000 Controllers Import/Export`</a> for more information.
 /// </footer> 
-public abstract class LogixComponent<TComponent> : LogixElement<TComponent>
-    where TComponent : LogixComponent<TComponent>
+public abstract class LogixComponent<TComponent> : LogixElement where TComponent : LogixComponent<TComponent>
 {
     /// <inheritdoc />
     protected LogixComponent()
@@ -84,7 +83,7 @@ public abstract class LogixComponent<TComponent> : LogixElement<TComponent>
                 Element.AddFirst(new XElement(L5XName.Description, new XCData(value)));
                 return;
             }
-            
+
             description.ReplaceWith(new XElement(L5XName.Description, new XCData(value)));
         }
     }
@@ -126,15 +125,24 @@ public abstract class LogixComponent<TComponent> : LogixElement<TComponent>
     /// </remarks>
     public void AddBefore(TComponent component)
     {
-        if (component is null) 
+        if (component is null)
             throw new ArgumentNullException(nameof(component));
-        
+
         if (Element.Parent is null)
             throw new InvalidOperationException(
                 "Can only perform operation for L5X attached elements. Add this element to the logix content before invoking.");
-        
+
         Element.AddBeforeSelf(component.Serialize());
     }
+
+    /// <summary>
+    /// Returns a new deep cloned instance of the current <see cref="LogixComponent{TComponent}"/>.
+    /// </summary>
+    /// <returns>A new instance of the specified component with the same property values.</returns>
+    /// <exception cref="InvalidOperationException">The object being cloned does not have a constructor accepting a
+    /// single <see cref="XElement"/> argument.</exception>
+    /// <remarks>This method will simply deserialize a new instance using the current underlying element data.</remarks>
+    public new TComponent Clone() => (TComponent)LogixSerializer.Deserialize(GetType(), new XElement(Element));
 
     /// <summary>
     /// Removes the component from it's parent container.
@@ -151,7 +159,7 @@ public abstract class LogixComponent<TComponent> : LogixElement<TComponent>
         if (Element.Parent is null)
             throw new InvalidOperationException(
                 "Can only perform operation for L5X attached elements. Add this element to the logix content before invoking.");
-        
+
         Element.Remove();
     }
 
@@ -171,7 +179,7 @@ public abstract class LogixComponent<TComponent> : LogixElement<TComponent>
     {
         if (component is null)
             throw new ArgumentNullException(nameof(component));
-        
+
         if (Element.Parent is null)
             throw new InvalidOperationException(
                 "Can only perform operation for L5X attached elements. Add this element to the logix content before invoking.");

@@ -7,7 +7,7 @@ namespace L5Sharp.Elements;
 /// <summary>
 /// A Logix <c>Line</c> element containing the properties for a L5X Line component.
 /// </summary>
-public sealed class Line : LogixElement<Line>
+public sealed class Line : LogixElement
 {
     /// <summary>
     /// Creates a new <see cref="Line"/> with default values.

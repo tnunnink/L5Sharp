@@ -7,9 +7,9 @@ using System.Xml.Linq;
 namespace L5Sharp;
 
 /// <summary>
-/// A generic collection that provides operations over an underlying <see cref="XElement"/> container of <see cref="LogixElement{TElement}"/> objects.
+/// A generic collection that provides operations over an underlying <see cref="XElement"/> container of <see cref="LogixElement"/> objects.
 /// </summary>
-/// <typeparam name="TElement">The type inheriting <see cref="LogixElement{TElement}"/>.</typeparam>
+/// <typeparam name="TElement">The type inheriting <see cref="LogixElement"/>.</typeparam>
 /// <remarks>
 /// <para>
 /// This class represents a wrapper around a L5X element that contains a sequence of child elements of the same type.
@@ -23,8 +23,7 @@ namespace L5Sharp;
 /// to get the underlying <see cref="XElement"/> container object. See <see cref="LogixExtensions"/> for examples.
 /// </para>
 /// </remarks>
-public class LogixContainer<TElement> : IEnumerable<TElement>, ILogixSerializable
-    where TElement : LogixElement<TElement>
+public class LogixContainer<TElement> : IEnumerable<TElement>, ILogixSerializable where TElement : LogixElement
 {
     /// <summary>
     /// The underlying <see cref="XElement"/> representing the backing data for the container. Use this object to store

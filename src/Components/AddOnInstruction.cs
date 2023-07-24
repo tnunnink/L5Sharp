@@ -31,7 +31,7 @@ public class AddOnInstruction : LogixComponent<AddOnInstruction>
         EditedBy = Environment.UserName;
         IsEncrypted = false;
         Parameters = new LogixContainer<Parameter>();
-        LocalTags = new LogixContainer<Tag>(L5XName.LocalTags);
+        LocalTags = new LogixContainer<LocalTag>();
         Routines = new LogixContainer<Routine>();
     }
 
@@ -202,9 +202,9 @@ public class AddOnInstruction : LogixComponent<AddOnInstruction>
     /// <summary>
     /// The collection of local <see cref="Tag"/> objects used within the AOI logic.
     /// </summary>
-    public LogixContainer<Tag> LocalTags
+    public LogixContainer<LocalTag> LocalTags
     {
-        get => GetContainer<Tag>();
+        get => GetContainer<LocalTag>();
         set => SetContainer(value);
     }
 

@@ -8,7 +8,7 @@ namespace L5Sharp.Elements;
 /// A sub element of the <see cref="Controller"/> component that contains properties or configuration
 /// related to the controller safety.
 /// </summary>
-public class SafetyInfo : LogixElement<SafetyInfo>
+public class SafetyInfo : LogixElement
 {
     /// <summary>
     /// Creates a new <see cref="SafetyInfo"/> with default values.

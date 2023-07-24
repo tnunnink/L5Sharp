@@ -8,7 +8,7 @@ namespace L5Sharp.Elements;
 /// <summary>
 /// A Logix <c>Rung</c> element containing the properties for a L5X Rung component.
 /// </summary>
-public sealed class Rung : LogixElement<Rung>
+public sealed class Rung : LogixElement
 {
     /// <summary>
     /// Creates a new <see cref="Rung"/> with default values.

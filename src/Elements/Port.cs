@@ -14,7 +14,7 @@ namespace L5Sharp.Elements;
 /// or the the network address (IP) of the device. Each port may (or may not) have a <see cref="BusSize"/>.
 /// Each port is identifiable by the <see cref="Id"/> property. 
 /// </remarks>
-public sealed class Port : LogixElement<Port>
+public sealed class Port : LogixElement
 {
     /// <summary>
     /// Creates a new <see cref="Port"/> with default values.

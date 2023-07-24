@@ -155,7 +155,7 @@ public class LogixContent
     /// </summary>
     /// <typeparam name="TElement">The element type to find.</typeparam>
     /// <returns>A <see cref="IEnumerable{T}"/> containing all found objects of the specified type.</returns>
-    public IEnumerable<TElement> Find<TElement>() where TElement : LogixElement<TElement> =>
+    public IEnumerable<TElement> Find<TElement>() where TElement : LogixElement =>
         L5X.Descendants(typeof(TElement).L5XType()).Select(LogixSerializer.Deserialize<TElement>);
 
     /// <summary>

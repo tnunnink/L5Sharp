@@ -9,7 +9,7 @@ namespace L5Sharp.Elements;
 /// <summary>
 /// A component of a <see cref="Module"/> that represents the properties and data of the connection to the field device.
 /// </summary>
-public sealed class Connection : LogixElement<Connection>
+public sealed class Connection : LogixElement
 {
     /// <summary>
     /// Creates a new <see cref="Connection"/> with default values.

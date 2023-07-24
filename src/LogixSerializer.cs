@@ -7,7 +7,7 @@ using System.Xml.Linq;
 namespace L5Sharp;
 
 /// <summary>
-/// A static deserialization class for <see cref="LogixElement{TElement}"/> objects and their derivatives.
+/// A static deserialization class for <see cref="LogixElement"/> objects and their derivatives.
 /// </summary>
 public static class LogixSerializer
 {
@@ -16,7 +16,7 @@ public static class LogixSerializer
         var dictionary = new Dictionary<Type, ConstructorInfo>();
 
         var types = typeof(LogixSerializer).Assembly.GetTypes().Where(t =>
-            t.IsDerivativeOf(typeof(LogixElement<>))
+            t.IsDerivativeOf(typeof(LogixElement))
             && t is { IsAbstract: false, IsPublic: true }
             && t.GetConstructor(new[] { typeof(XElement) }) is not null);
 
@@ -38,7 +38,7 @@ public static class LogixSerializer
     /// <remarks>
     /// The return object must specify a constructor accepting a single <see cref="XElement"/> for deserialization to work.
     /// </remarks>
-    public static TElement Deserialize<TElement>(XElement element) where TElement : LogixElement<TElement> =>
+    public static TElement Deserialize<TElement>(XElement element) where TElement : LogixElement =>
         (TElement)Constructor(typeof(TElement)).Invoke(new object[] { element });
 
     /// <summary>
@@ -54,7 +54,7 @@ public static class LogixSerializer
 
     /// <summary>
     /// Handles getting the constructor for the specified type. If the type is not cached, this method will check
-    /// if the type inherits <see cref="LogixElement{TElement}"/> and has a valid constructor. If so, it will add to the
+    /// if the type inherits <see cref="LogixElement"/> and has a valid constructor. If so, it will add to the
     /// global constructor cache and return the <see cref="ConstructorInfo"/> object.
     /// </summary>
     private static ConstructorInfo Constructor(Type type)
@@ -62,9 +62,9 @@ public static class LogixSerializer
         if (Constructors.Value.TryGetValue(type, out var constructor))
             return constructor;
 
-        if (!type.IsDerivativeOf(typeof(LogixElement<>)))
+        if (!type.IsDerivativeOf(typeof(LogixElement)))
             throw new ArgumentException(
-                $"LogixSerializer is only compatible for types inheriting from {typeof(LogixElement<>)}");
+                $"LogixSerializer is only compatible for types inheriting from {typeof(LogixElement)}");
 
         var info = type.GetConstructor(new[] { typeof(XElement) });
 

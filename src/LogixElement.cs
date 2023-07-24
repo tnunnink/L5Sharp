@@ -11,19 +11,19 @@ namespace L5Sharp;
 /// of and underlying element object. Deriving classes will have access to the underlying element and
 /// methods for easily getting and setting data.
 /// </summary>
-public abstract class LogixElement<TElement> : ILogixSerializable where TElement : LogixElement<TElement>
+public abstract class LogixElement : ILogixSerializable
 {
     /// <summary>
-    /// Creates a new default <see cref="LogixElement{TEntity}"/> initialized with an <see cref="XElement"/> having the
+    /// Creates a new default <see cref="LogixElement"/> initialized with an <see cref="XElement"/> having the
     /// L5XType name of the element. 
     /// </summary>
     protected LogixElement()
     {
-        Element = new XElement(typeof(TElement).L5XType());
+        Element = new XElement(GetType().L5XType());
     }
 
     /// <summary>
-    /// Initializes a new <see cref="LogixElement{TEntity}"/> with the provided <see cref="XElement"/>
+    /// Initializes a new <see cref="LogixElement"/> with the provided <see cref="XElement"/>
     /// </summary>
     /// <param name="element">The L5X <see cref="XElement"/> to initialize the entity with.</param>
     /// <exception cref="ArgumentNullException"><c>element</c> is null.</exception>
@@ -40,7 +40,7 @@ public abstract class LogixElement<TElement> : ILogixSerializable where TElement
     protected readonly XElement Element;
 
     /// <summary>
-    /// Returns the underlying <see cref="XElement"/> for the <see cref="LogixElement{TEntity}"/>.
+    /// Returns the underlying <see cref="XElement"/> for the <see cref="LogixElement"/>.
     /// </summary>
     /// <returns>A <see cref="XElement"/> representing the serialized entity.</returns>
     public virtual XElement Serialize() => Element;
@@ -48,11 +48,23 @@ public abstract class LogixElement<TElement> : ILogixSerializable where TElement
     /// <summary>
     /// Returns a new deep cloned instance of the current type.
     /// </summary>
-    /// <returns>A new instance of the specified entity type with the same property values.</returns>
+    /// <returns>A new <see cref="LogixElement"/> type with the same property values.</returns>
     /// <exception cref="InvalidOperationException">The object being cloned does not have a constructor accepting a
     /// single <see cref="XElement"/> argument.</exception>
     /// <remarks>This method will simply deserialize a new instance using the current underlying element data.</remarks>
-    public TElement Clone() => (TElement)LogixSerializer.Deserialize(GetType(), new XElement(Element));
+    public LogixElement Clone() => (LogixElement)LogixSerializer.Deserialize(GetType(), new XElement(Element));
+
+    /// <summary>
+    /// Returns a new deep cloned instance as the specified <see cref="LogixElement"/> type.
+    /// </summary>
+    /// <typeparam name="TElement">The <see cref="LogixElement"/> type to cast to.</typeparam>
+    /// <returns>A new instance of the specified element type with the same property values.</returns>
+    /// <exception cref="InvalidOperationException">The object being cloned does not have a constructor accepting a
+    /// single <see cref="XElement"/> argument.</exception>
+    /// <exception cref="InvalidCastException">The deserialized type can not be cast to the specified generic type parameter.</exception>
+    /// <remarks>This method will simply deserialize a new instance using the current underlying element data.</remarks>
+    public TElement Clone<TElement>() where TElement : LogixElement =>
+        (TElement)LogixSerializer.Deserialize(GetType(), new XElement(Element));
 
     /// <summary>
     /// Gets the value of the specified attribute name from the element parsed as the specified generic type parameter if it exists.
@@ -97,7 +109,7 @@ public abstract class LogixElement<TElement> : ILogixSerializable where TElement
         var value = selector.Invoke(Element)?.Attribute(name)?.Value;
         return value is not null ? value.Parse<T>() : default;
     }
-    
+
     /// <summary>
     /// Gets the value of a child element attribute parsed as the specified generic type parameter if it exists.
     /// If the attribute does not exist, returns <c>default</c> value of the generic type parameter.
@@ -159,9 +171,9 @@ public abstract class LogixElement<TElement> : ILogixSerializable where TElement
         var value = Element.Element(name)?.Value;
         return value is not null ? value.Parse<T>() : default;
     }
-    
+
     /// <summary>
-    /// Gets a child <see cref="LogixElement{TElement}"/> deserialized as the specified type if it exists.
+    /// Gets a child <see cref="LogixElement"/> deserialized as the specified type if it exists.
     /// If the element does not exist, returns <c>default</c> value of the generic type parameter.
     /// </summary>
     /// <param name="name">The name of the child element.</param>
@@ -175,7 +187,7 @@ public abstract class LogixElement<TElement> : ILogixSerializable where TElement
     /// This method uses the <see cref="CallerMemberNameAttribute"/> so the deriving classes don't have to specify
     /// the property name (assuming its the name matches the underlying element property).
     /// </remarks>
-    protected T? GetComplex<T>([CallerMemberName] string? name = null) where T : LogixElement<T>
+    protected T? GetComplex<T>([CallerMemberName] string? name = null) where T : LogixElement
     {
         var value = Element.Element(name);
         return value is not null ? LogixSerializer.Deserialize<T>(value) : default;
@@ -195,7 +207,7 @@ public abstract class LogixElement<TElement> : ILogixSerializable where TElement
     /// the property name (assuming its the name matches the underlying element property).
     /// </remarks>
     protected LogixContainer<TChild> GetContainer<TChild>([CallerMemberName] string? name = null)
-        where TChild : LogixElement<TChild>
+        where TChild : LogixElement
     {
         var container = Element.Element(name);
         if (container is null) throw new L5XException(name!, Element);
@@ -288,14 +300,14 @@ public abstract class LogixElement<TElement> : ILogixSerializable where TElement
             Element.Element(child)?.Attribute(name)?.Remove();
             return;
         }
-        
+
         var element = Element.Element(child);
         if (element is null)
         {
             element = new XElement(child);
             Element.Add(element);
         }
-        
+
         element.SetAttributeValue(name, value);
     }
 
@@ -350,7 +362,7 @@ public abstract class LogixElement<TElement> : ILogixSerializable where TElement
 
         element.ReplaceWith(new XElement(name, new XCData(value.ToString())));
     }
-    
+
     /// <summary>
     /// Sets the complex type object of a child element, adds a child element, or removes a child element.
     /// </summary>
@@ -367,13 +379,13 @@ public abstract class LogixElement<TElement> : ILogixSerializable where TElement
     protected void SetComplex<T>(T? value, [CallerMemberName] string? name = null) where T : ILogixSerializable
     {
         var element = Element.Element(name);
-        
+
         if (value is null)
         {
             element?.Remove();
             return;
         }
-        
+
         if (element is null)
         {
             Element.Add(value.Serialize());
@@ -396,7 +408,7 @@ public abstract class LogixElement<TElement> : ILogixSerializable where TElement
     /// classes don't have to specify the property name (assuming its the name matches the underlying element property).
     /// </remarks>
     protected void SetContainer<TChild>(LogixContainer<TChild>? value, [CallerMemberName] string? name = null)
-        where TChild : LogixElement<TChild>
+        where TChild : LogixElement
     {
         if (value is null)
         {

@@ -108,7 +108,7 @@ public class Routine : LogixComponent<Routine>
     /// This method offers a dynamic interface for accessing content of any routine type. If the underlying routine
     /// content does not match the <see cref="Type"/> specified, a L5XException will be thrown.
     /// </remarks>
-    public LogixContainer<TElement> Content<TElement>() where TElement : LogixElement<TElement>
+    public LogixContainer<TElement> Content<TElement>() where TElement : LogixElement
     {
         var content = Element.Element(ContentName(Type));
 
