@@ -74,10 +74,25 @@
         <article data-uid="">
 <h1 id="l5sharp">L5Sharp</h1>
 
-<p>A C# library for interacting with Rockwell's L5X import/export files.
-The goal of this project was to provide a simple and reusable library for
-querying and manipulating L5X files to aid in the creation of tools that
-automate tasks related RSLogix5000 PLC development.</p>
+<p>A C# library for interacting with Rockwell's L5X import/export files.</p>
+<h2 id="purpose">Purpose</h2>
+<p>The purpose of this library is to offer a reusable, strongly typed, intuitive API
+over Rockwell's L5X schema, allowing developers to quickly modify or generate L5X content,
+that be used to build PLC projects files. In doing so, this library can aid in
+creation of tools or scripts that automate the PLC development, maintenance, or testing processes
+for automation engineers.</p>
+<h2 id="goals">Goals</h2>
+<p>The following are some high level goals this project aimed to accomplish.</p>
+<ol>
+<li>Provide a simple and intuitive API, making the learning curve as low as possible.</li>
+<li>Ensure performance as much as possible without sacrificing simplicity.</li>
+<li>Make it easy and seamless to extend the API to support custom queries or functions.</li>
+<li>Support strongly typed mutable tag data, so we can reference complex structures statically at compile time.</li>
+</ol>
+<h2 id="feedback">Feedback</h2>
+<p>If you like or use this project, leave a star. If you have questions or issues,
+please post in the <a href="https://github.com/tnunnink/L5Sharp/issues">issues</a> tab
+of the project repository. Any feedback is always appreciated. Enjoy!</p>
 <h2 id="quick-start">Quick Start</h2>
 <p>Install package from Nuget.</p>
 <pre><code class="lang-powershell">Install-Package L5Sharp
@@ -85,7 +100,7 @@ automate tasks related RSLogix5000 PLC development.</p>
 <p>Load an L5X file using the primary entry point <code>LogixContent</code> class.</p>
 <pre><code class="lang-c#">var content = LogixContent.Load(&quot;C:\PathToMyFile\FileName.L5X&quot;);
 </code></pre>
-<p>Query any type across the L5X using the <code>Find&lt;T&gt;()</code> method.</p>
+<p>Get started by querying any type across the L5X using the <code>Find&lt;T&gt;()</code> method.</p>
 <pre><code class="lang-csharp">var tags = content.Find&lt;Tag&gt;();
 </code></pre>
 <div class="NOTE">
@@ -99,39 +114,82 @@ will return all <strong>Tag</strong> components found, including controller and 
 <p>The <code>LogixContent</code> class contains <code>LogixContainer</code> collections for all L5X components,
 such as <a class="xref" href="api/L5Sharp.Components.Tag.html">Tag</a>, <a class="xref" href="api/L5Sharp.Components.DataType.html">DataType</a>,
 <a class="xref" href="api/L5Sharp.Components.Module.html">Moulde</a>, and more.
-These classes expose methods for querying and modifying the collections
-and components within the collections.</p>
+These classes expose methods for querying and modifying the collections and components within the collections.
+The following set of examples demonstrate these features using the Tags container.</p>
 <h6 id="get-all">Get All</h6>
+<p>Gets a list of all tags.</p>
 <pre><code class="lang-c#">var tags = content.Tags.ToList();
 </code></pre>
 <div class="NOTE">
 <h5>Note</h5>
 <p><code>Tags</code> on the root <code>LogixContent</code> class is controller tags only.
-To get program specific <code>Tags</code>, access the Tags collection of a
+To get program specific tags, access the <code>Tags</code> container of a
 specific <code>Program</code> component.</p>
 </div>
-<h6 id="get-by-name">Get By Name</h6>
+<h6 id="get-single">Get Single</h6>
+<p>Get a tag by name.</p>
 <pre><code class="lang-c#">var tag = content.Tags.Get(&quot;MyTag&quot;);
 </code></pre>
+<p>Get a tag by index.</p>
+<pre><code class="lang-c#">var tag = content.Tags[4];
+</code></pre>
+<p>Find a tag by name.</p>
+<pre><code class="lang-c#">var tag = content.Tags.Find(&quot;SomeTag&quot;);
+</code></pre>
+<div class="NOTE">
+<h5>Note</h5>
+<p>Using <code>Find</code> will not throw an exception if the specified component is not found in
+the L5X. Rather, it will simply return <code>null</code>.</p>
+</div>
 <h6 id="filter">Filter</h6>
+<p>Perform complex filtering using LINQ.</p>
 <pre><code class="lang-c#">var tags = content.Tags.Where(t =&gt; t.DataType == &quot;TIMER&quot; &amp;&amp; t.Dimensions.IsEmpty &amp;&amp; t[&quot;PRE&quot;].Value &gt;= 5000);
 </code></pre>
 <h6 id="add">Add</h6>
+<p>Adds a new component to the container.</p>
 <pre><code class="lang-c#">var tag = new Tag { Name = &quot;MyTag&quot;, Value = 100 };
 content.Tags.Add(tag);
 </code></pre>
+<p>Add a new list of components to the container.</p>
+<pre><code class="lang-c#">content.Tags.AddRange(new List&lt;Tag&gt;
+{
+    new() { Name = &quot;tag01&quot;, Value = 100 },
+    new() { Name = &quot;tag02&quot;, Value = 200 },
+    new() { Name = &quot;tag03&quot;, Value = 300 }
+});
+</code></pre>
 <h6 id="update">Update</h6>
+<p>Updating properties of a component will directly update the underlying L5X content.</p>
 <pre><code class="lang-c#">var tag = content.Tags.Get(&quot;MyTag&quot;);
 tag.Value = 1234;
 tag.Description = &quot;This is a tag's description&quot;;
 </code></pre>
+<p>You may also want to apply and update to all components in a collection.</p>
+<pre><code class="lang-csharp">content.Tags.Update(t =&gt; t.Comment = string.Empty);
+</code></pre>
+<p>Or better yet, update only components that satisfy a condition.</p>
+<pre><code class="lang-csharp">content.Tags.Update(t =&gt; t.DataType == &quot;MyType&quot;, t =&gt; t.Comment = &quot;This is an instance ot MyType&quot;);
+</code></pre>
+<h6 id="insert">Insert</h6>
+<p>Insert a component at a specific position in the container.</p>
+<pre><code class="lang-c#">content.Tags.Insert(3, new new Tag { Name = &quot;MyTag&quot;, Value = 100 });
+</code></pre>
 <h6 id="remove">Remove</h6>
+<p>Remove a component by name.</p>
 <pre><code class="lang-c#">content.Tags.Remove(&quot;MyTag&quot;);
 </code></pre>
+<p>Remove all components that satisfy a condition.</p>
+<pre><code class="lang-csharp">content.Tags.Remove(t =&gt; t.DataType == &quot;TypeName&quot;);
+</code></pre>
 <h6 id="save">Save</h6>
+<p>Saving will write the current underlying L5X content to the specified file.</p>
 <pre><code class="lang-c#">content.Save(&quot;C:\PathToMyOutputFile\FileName.L5X&quot;);
 </code></pre>
-<p>See ... for more information.</p>
+<h2 id="tag-data">Tag Data</h2>
+<h2 id="extensions">Extensions</h2>
+<h2 id="references">References</h2>
+<p>For more information regarding the structure and content of Rockwell's L5X file,
+see [Logix 5000 Controllers Import Export](../refs/Logix 5000 Controllers Import Export.pdf)</p>
 </article>
 
         <div class="contribution d-print-none">
