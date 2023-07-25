@@ -13,7 +13,7 @@ Load an L5X file using the primary entry point `LogixContent` class.
 ```c#
 var content = LogixContent.Load("C:\PathToMyFile\FileName.L5X");
 ```
-Query any type across the L5X using the `Find<T>()` method on the content class.
+Query any type across the L5X using the `Find<T>()` method.
 ```csharp
 var tags = content.Find<Tag>();
 ```
@@ -30,34 +30,38 @@ such as [Tag](xref:L5Sharp.Components.Tag), [DataType](xref:L5Sharp.Components.D
 These classes expose methods for querying and modifying the collections
 and components within the collections.
 
-#### Get All Components
+###### Get All
 ```c# 
 var tags = content.Tags.ToList();
 ```
-#### Get Component By Name
+>[!NOTE]
+>`Tags` on the root `LogixContent` class is controller tags only.
+> To get program specific `Tags`, access the Tags collection of a 
+> specific `Program` component.
+###### Get By Name
 ```c#
-var tag = content.Tags.Find("MyTag");
+var tag = content.Tags.Get("MyTag");
 ```
-#### Filter Components
+###### Filter
 ```c#
 var tags = content.Tags.Where(t => t.DataType == "TIMER" && t.Dimensions.IsEmpty && t["PRE"].Value >= 5000);
 ```
-#### Add Component
+###### Add
 ```c#
 var tag = new Tag { Name = "MyTag", Value = 100 };
 content.Tags.Add(tag);
 ```
-#### Update Component
+###### Update
 ```c#
 var tag = content.Tags.Get("MyTag");
 tag.Value = 1234;
 tag.Description = "This is a tag's description";
 ```
-#### Remove Component
+###### Remove
 ```c#
 content.Tags.Remove("MyTag");
 ```
-#### Save Changes
+###### Save
 ```c#
 content.Save("C:\PathToMyOutputFile\FileName.L5X");
 ``` 
