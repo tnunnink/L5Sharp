@@ -78,48 +78,50 @@
 The goal of this project was to provide a simple and reusable library for
 querying and manipulating L5X files to aid in the creation of tools that
 automate tasks related RSLogix5000 PLC development.</p>
-<p>If you would like to contribute, have feedback or questions, please reach out!
-If you are using or like the progress being made, please leave a star. Thanks!</p>
 <h2 id="quick-start">Quick Start</h2>
 <p>Install package from Nuget.</p>
 <pre><code class="lang-powershell">Install-Package L5Sharp
 </code></pre>
 <p>The main entry point to the L5X is the <code>LogixContent</code> class.
-Use the factory methods <code>Load</code> to load a L5S file or <code>Parse</code> to parse a L5X string.</p>
+Use the factory methods <code>Load</code> to load a L5X file or <code>Parse</code> to parse a L5X string.</p>
 <pre><code class="lang-c#">var content = LogixContent.Load(&quot;C:\PathToMyFile\FileName.L5X&quot;);
 </code></pre>
-<p>Quickly query any type using the <code>Find&lt;T&gt;()</code> method on the content class.</p>
+<p>Query any type across the L5X using the <code>Find&lt;T&gt;()</code> method on the content class.
+<code>Find&lt;T&gt;()</code> just returns an <code>IEnumerable&lt;T&gt;</code>, allowing for more complex queries
+using LINQ and the strongly typed objects in the library.</p>
 <pre><code class="lang-csharp">var tags = content.Find&lt;Tag&gt;();
 </code></pre>
-<p>NOTE: <code>Find&lt;T&gt;()</code> just returns an <code>IEnumerable&lt;T&gt;</code>, so it is essentially read only,
-but allows you to form more complex queries using LINQ and the strongly typed
-components in the library. To mutate components, see the following section.</p>
-<h3 id="components">Components</h3>
-<p>Query or mutate components in the file using the top level <code>LogixContainer</code> collections,
-such as <code>Tag</code>, <code>DataType</code>, <code>Module</code>, <code>Program</code>, and more.</p>
-<p>The following shows some simple querying via the controller tags container:</p>
-<pre><code class="lang-c#">//Get all controller tags. 
-var controllerTags = content.Tags;
-
-//Get a tag by name.
-var myTag = content.Tags.Find(&quot;MyTag&quot;);
-
-//Use LINQ to query further.
-var timerTypeTags = content.Tags.Where(t =&gt; t.DataType == &quot;TIMER&quot;);
+<p>[!NOTE]
+Ths above query will return all Tag elements found, including controller and all program tags.</p>
+<h2 id="usage">Usage</h2>
+<p>The <code>LogixContent</code> class contains <code>LogixContainer</code> collections for all L5X components,
+such as <a class="xref" href="api/L5Sharp.Components.Tag.html">Tag</a>, <a class="xref" href="api/L5Sharp.Components.DataType.html">DataType</a>,
+<a class="xref" href="api/L5Sharp.Components.Module.html">Moulde</a>, and more.
+These classes expose methods for querying and modifying the collections
+and components within the collections.</p>
+<h4 id="get-all-components">Get All Components</h4>
+<pre><code class="lang-c#">var tags = content.Tags.ToList();
 </code></pre>
-<p>The following shows some simple modifications via the controller tags container:</p>
-<pre><code class="lang-csharp">//Add a new component.
-var tag = new Tag { Name = &quot;MyTag&quot;, Value = 100 };
+<h4 id="get-component-by-name">Get Component By Name</h4>
+<pre><code class="lang-c#">var tag = content.Tags.Find(&quot;MyTag&quot;);
+</code></pre>
+<h4 id="filter-components">Filter Components</h4>
+<pre><code class="lang-c#">var tags = content.Tags.Where(t =&gt; t.DataType == &quot;TIMER&quot; &amp;&amp; t.Dimensions.IsEmpty &amp;&amp; t[&quot;PRE&quot;].Value &gt;= 5000);
+</code></pre>
+<h4 id="add-component">Add Component</h4>
+<pre><code class="lang-c#">var tag = new Tag { Name = &quot;MyTag&quot;, Value = 100 };
 content.Tags.Add(tag);
-
-//Remove an existing component.
-content.Tags.Remove(&quot;MyTag&quot;);
-
-//Repalce an existing component.
-content.Tags.Find(&quot;MyTag&quot;).Replace(tag);
-
-//Save changes when done.
-content.Save(&quot;C:\PathToMyOutputFile\FileName.L5X&quot;);
+</code></pre>
+<h4 id="update-component">Update Component</h4>
+<pre><code class="lang-c#">var tag = content.Tags.Get(&quot;MyTag&quot;);
+tag.Value = 1234;
+tag.Description = &quot;This is a tag's description&quot;;
+</code></pre>
+<h4 id="remove-component">Remove Component</h4>
+<pre><code class="lang-c#">content.Tags.Remove(&quot;MyTag&quot;);
+</code></pre>
+<h4 id="save-changes">Save Changes</h4>
+<pre><code class="lang-c#">content.Save(&quot;C:\PathToMyOutputFile\FileName.L5X&quot;);
 </code></pre>
 <p>See ... for more information.</p>
 </article>

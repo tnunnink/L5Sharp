@@ -7,11 +7,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="Made LogixElement.cs not generic and the Clone method return simple LogixElement. Added generic method for casting. made new CLone method in component to return string type. Did this so that we can create element derivatives from other elements and use them in container since they don't also need to implement LogixElement&lt;OfTheStrongType&gt;">
+    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../docfx/toc.yml" beforeDir="false" afterPath="$PROJECT_DIR$/../docfx/toc.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Catalog/ModuleCatalog.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Catalog/ModuleCatalog.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Components/LocalTag.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Components/LocalTag.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LogixData.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LogixData.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -355,7 +353,7 @@
       <workItem from="1689710535616" duration="10163000" />
       <workItem from="1689783804369" duration="2224000" />
       <workItem from="1689802133525" duration="21759000" />
-      <workItem from="1690031790030" duration="13983000" />
+      <workItem from="1690031790030" duration="14853000" />
     </task>
     <task id="LOCAL-00199" summary="cleared warnings. preping to merge changes.">
       <created>1677621948966</created>

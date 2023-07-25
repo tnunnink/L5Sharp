@@ -4,9 +4,6 @@ The goal of this project was to provide a simple and reusable library for
 querying and manipulating L5X files to aid in the creation of tools that
 automate tasks related RSLogix5000 PLC development.
 
-If you would like to contribute, have feedback or questions, please reach out!
-If you are using or like the progress being made, please leave a star. Thanks!
-
 ## Quick Start
 Install package from Nuget.
 ```powershell
@@ -14,48 +11,56 @@ Install-Package L5Sharp
 ```
 
 The main entry point to the L5X is the `LogixContent` class. 
-Use the factory methods `Load` to load a L5S file or `Parse` to parse a L5X string.
+Use the factory methods `Load` to load a L5X file or `Parse` to parse a L5X string.
 ```c#
 var content = LogixContent.Load("C:\PathToMyFile\FileName.L5X");
 ```
 
-Quickly query any type using the `Find<T>()` method on the content class.
+Query any type across the L5X using the `Find<T>()` method on the content class.
+`Find<T>()` just returns an `IEnumerable<T>`, allowing for more complex queries
+using LINQ and the strongly typed objects in the library. 
 ```csharp
 var tags = content.Find<Tag>();
 ```
-NOTE: `Find<T>()` just returns an `IEnumerable<T>`, so it is essentially read only,
-but allows you to form more complex queries using LINQ and the strongly typed
-components in the library. To mutate components, see the following section.
+[!NOTE]
+Ths above query will return all Tag elements found, including controller and all program tags.
 
-### Components
-Query or mutate components in the file using the top level `LogixContainer` collections,
- such as `Tag`, `DataType`, `Module`, `Program`, and more. 
+## Usage
+The `LogixContent` class contains `LogixContainer` collections for all L5X components, 
+such as [Tag](xref:L5Sharp.Components.Tag), [DataType](xref:L5Sharp.Components.DataType),
+[Moulde](xref:L5Sharp.Components.Module), and more. 
+These classes expose methods for querying and modifying the collections
+and components within the collections.
 
-The following shows some simple querying via the controller tags container:
-```c#
-//Get all controller tags. 
-var controllerTags = content.Tags;
-
-//Get a tag by name.
-var myTag = content.Tags.Find("MyTag");
-
-//Use LINQ to query further.
-var timerTypeTags = content.Tags.Where(t => t.DataType == "TIMER");
+#### Get All Components
+```c# 
+var tags = content.Tags.ToList();
 ```
-
-The following shows some simple modifications via the controller tags container:
-```csharp
-//Add a new component.
+#### Get Component By Name
+```c#
+var tag = content.Tags.Find("MyTag");
+```
+#### Filter Components
+```c#
+var tags = content.Tags.Where(t => t.DataType == "TIMER" && t.Dimensions.IsEmpty && t["PRE"].Value >= 5000);
+```
+#### Add Component
+```c#
 var tag = new Tag { Name = "MyTag", Value = 100 };
 content.Tags.Add(tag);
-
-//Remove an existing component.
+```
+#### Update Component
+```c#
+var tag = content.Tags.Get("MyTag");
+tag.Value = 1234;
+tag.Description = "This is a tag's description";
+```
+#### Remove Component
+```c#
 content.Tags.Remove("MyTag");
-
-//Repalce an existing component.
-content.Tags.Find("MyTag").Replace(tag);
-
-//Save changes when done.
+```
+#### Save Changes
+```c#
 content.Save("C:\PathToMyOutputFile\FileName.L5X");
 ``` 
 
