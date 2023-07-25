@@ -9,21 +9,19 @@ Install package from Nuget.
 ```powershell
 Install-Package L5Sharp
 ```
-
-The main entry point to the L5X is the `LogixContent` class. 
-Use the factory methods `Load` to load a L5X file or `Parse` to parse a L5X string.
+Load an L5X file using the primary entry point `LogixContent` class.
 ```c#
 var content = LogixContent.Load("C:\PathToMyFile\FileName.L5X");
 ```
-
 Query any type across the L5X using the `Find<T>()` method on the content class.
-`Find<T>()` just returns an `IEnumerable<T>`, allowing for more complex queries
-using LINQ and the strongly typed objects in the library. 
 ```csharp
 var tags = content.Find<Tag>();
 ```
-[!NOTE]
-Ths above query will return all Tag elements found, including controller and all program tags.
+>[!NOTE]
+>`Find<T>()` returns an `IEnumerable<T>`, allowing for complex queries
+using LINQ and the strongly typed objects in the library. 
+> Since `Find<T>()` queries the entire L5X for the specified type, the above query
+> will return all **Tag** components found, including controller and program tags.
 
 ## Usage
 The `LogixContent` class contains `LogixContainer` collections for all L5X components, 

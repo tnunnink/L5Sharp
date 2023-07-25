@@ -82,17 +82,19 @@ automate tasks related RSLogix5000 PLC development.</p>
 <p>Install package from Nuget.</p>
 <pre><code class="lang-powershell">Install-Package L5Sharp
 </code></pre>
-<p>The main entry point to the L5X is the <code>LogixContent</code> class.
-Use the factory methods <code>Load</code> to load a L5X file or <code>Parse</code> to parse a L5X string.</p>
+<p>Load an L5X file using the primary entry point <code>LogixContent</code> class.</p>
 <pre><code class="lang-c#">var content = LogixContent.Load(&quot;C:\PathToMyFile\FileName.L5X&quot;);
 </code></pre>
-<p>Query any type across the L5X using the <code>Find&lt;T&gt;()</code> method on the content class.
-<code>Find&lt;T&gt;()</code> just returns an <code>IEnumerable&lt;T&gt;</code>, allowing for more complex queries
-using LINQ and the strongly typed objects in the library.</p>
+<p>Query any type across the L5X using the <code>Find&lt;T&gt;()</code> method on the content class.</p>
 <pre><code class="lang-csharp">var tags = content.Find&lt;Tag&gt;();
 </code></pre>
-<p>[!NOTE]
-Ths above query will return all Tag elements found, including controller and all program tags.</p>
+<div class="NOTE">
+<h5>Note</h5>
+<p><code>Find&lt;T&gt;()</code> returns an <code>IEnumerable&lt;T&gt;</code>, allowing for complex queries
+using LINQ and the strongly typed objects in the library.
+Since <code>Find&lt;T&gt;()</code> queries the entire L5X for the specified type, the above query
+will return all <strong>Tag</strong> components found, including controller and program tags.</p>
+</div>
 <h2 id="usage">Usage</h2>
 <p>The <code>LogixContent</code> class contains <code>LogixContainer</code> collections for all L5X components,
 such as <a class="xref" href="api/L5Sharp.Components.Tag.html">Tag</a>, <a class="xref" href="api/L5Sharp.Components.DataType.html">DataType</a>,
